@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {numericValue, mathematicalDamage, generateMathTargets,solveMath,bestMathSolution,planMathAiTurn} from './mathCombatEngine.js';
+const c=(n,suit='hearts')=>({id:`${suit}_${n}`,value:n,displayVal:n===1?'A':n===11?'J':n===12?'Q':n===13?'K':String(n),suit});
+test('mazzo standard e figure',()=>{assert.equal(numericValue(c(1)),1);assert.equal(numericValue(c(13)),13);assert.equal(numericValue({isJoker:true}),null)});
+test('quattro operazioni',()=>{for(const [op,target,cards] of [['+',9,[c(5),c(4)]],['-',3,[c(8),c(5)]],['*',20,[c(5),c(4)]],['/',4,[c(8),c(2)]]])assert.equal(solveMath(cards,{op,target})?.result,target)});
+test('l ordine conta per - e /',()=>{assert.ok(solveMath([c(2),c(8)],{op:'/',target:4}));assert.ok(solveMath([c(4),c(9)],{op:'-',target:5}));});
+test('non accetta risultato vicino o poker',()=>{assert.equal(solveMath([c(5),c(4)],{op:'*',target:21}),null);assert.equal(solveMath([c(5),c(5)],{op:'=',target:10}),null)});
+test('premio carte extra',()=>{assert.equal(mathematicalDamage('*',2),16);assert.equal(mathematicalDamage('*',4),20)});
+test('bersagli non dipendono dalla mano',()=>{assert.deepEqual(generateMathTargets({rng:()=>0,turn:0}).map(o=>o.op),['+','-','*']);assert.deepEqual(generateMathTargets({rng:()=>0,turn:1}).map(o=>o.op),['+','-','/'])});
+test('AI risolve senza carte inventate',()=>{const p=planMathAiTurn([],[c(5),c(4)],[{op:'*',target:20}]);assert.ok(p);assert.equal(p.handCardsToPlay.length,2);assert.equal(planMathAiTurn([],[c(2),c(3)],[{op:'*',target:60}]),null)});
+test('banco condiviso e risposta con una carta',()=>{const p=planMathAiTurn([c(5)],[c(4)],[{op:'*',target:20}]);assert.ok(p);assert.equal(p.handCardsToPlay.length,1)});
+test('soluzione piu remunerativa',()=>{const b=bestMathSolution([c(5),c(4),c(9)],[{op:'+',target:9},{op:'*',target:20}]);assert.equal(b.resolvedObj.op,'*')});

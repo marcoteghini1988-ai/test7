@@ -1,0 +1,45 @@
+ECLISSI STELLARE — RIPRISTINO 3D CON BERSAGLI MATEMATICI
+
+BASE: ECLISSI_STELLARE_R12_GIOCO_COMPLETO_31_10_2026.zip
+
+Questa revisione parte dal progetto 3D R12 originale, NON dal porting 2.1
+con nuova interfaccia. Tutti gli asset public/, gli sfondi, le sequenze
+animate, il campo 9:16, le posizioni della plancia e i CSS originali
+sono mantenuti. Non e' una pagina HTML standalone: e' React/Vite.
+
+CAMBIAMENTI:
+- Campagna: attiva la plancia originale ClassicBattleView in modalita'
+  matematica, al posto del motore Poker 20s / 20s / 30s.
+- Carte originali con ♠ ♥ ♦ ♣ e numeri riconoscibili; niente simboli
+  inventati o famiglie opache.
+- Tre bersagli matematici rinnovati e NON costruiti sulla mano iniziale:
+  addizione, sottrazione, moltiplicazione/divisione.
+- Quattro armi 3D gia' equipaggiate: l'ultimo hardpoint condivide il
+  bersaglio 3; requisiti numerici sovrapposti alle immagini delle armi.
+- Danni base per operazione 10/12/16/20, con bonus contenuto per livello
+  arma e munizioni; eventuale inceppamento mantiene la penalita'.
+- IA legacy corretta: attacca solo se esiste davvero una soluzione a 2
+  carte sul banco, e consuma quelle precise carte; puo' fallire o passare.
+- Sacrificio di 2 carte: meno 3 secondi al successivo turno effettivo,
+  invece di scalare una riserva temporale eventualmente vuota.
+- Nasconde il pulsante sperimentale della Fase 10 nella plancia legacy.
+
+LIMITI / COSA NON E' STATO VERIFICATO:
+- Sintassi controllata sui 72 file JS/TS/JSX/TSX; 400 turni di bersagli
+  matematici generati e controllati.
+- Impossibile fare npm ci --offline: dipendenze non in cache. Quindi non
+  e' stata provata la compilazione Vite ne' l'esecuzione in browser.
+- Le modalita' secondarie Sfida Giornaliera Poker e PvP simulato Poker
+  conservano ancora la logica originale: non sono state convertite.
+- Il bilanciamento dei settori, dei boss e delle ricompense non e' stato
+  validato con una campagna giocata fino in fondo.
+- Questo e' un ripristino della campagna 3D matematica, non un gioco
+  ricostruito e collaudato end-to-end. Fare test su StackBlitz prima di
+  sostituire definitivamente la versione principale.
+
+INSTALLAZIONE
+- E' il progetto completo React/Vite. Estrarre e sostituire il contenuto
+  del repository, conservando prima una copia originale.
+- Aprire StackBlitz e usare npm install / npm run dev, se necessario.
+- Il file index.html e' il punto di ingresso Vite e NON una variante
+  autonoma del gioco.

@@ -1,0 +1,16 @@
+ECLISSI STELLARE — PROGETTO COMPLETO R12 (31 OTTOBRE 2026)
+
+ZIP completo ricostruito dai pacchetti disponibili in questa conversazione:
+- progetto React/Vite completo R9.5;
+- grafica pannelli confermata R10.1 (conservata nei file R12);
+- effetti personalizzati delle armi R11;
+- ultimi file aggiornati e 51 immagini carte arma R12;
+- correzioni integrate in R12: pulsante ATTACCA, indicatori BOOST,
+  immagini armi, distribuzione carte, fusione Poker e animazioni di ricarica.
+
+Struttura: file package.json e index.html nella radice; cartelle src/ e public/.
+Caricamento: trasferire il contenuto di questo ZIP preservando le directory.
+
+ATTENZIONE: questo archivio e' una ricostruzione delle versioni consegnate,
+non una copia live del repository GitHub. L'ultima compilazione e il test
+visivo in StackBlitz non sono stati confermati. Non modifica le regole di gioco.

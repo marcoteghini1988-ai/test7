@@ -1,14 +1,16 @@
 {
-  "name": "eclissi-stellare-react",
+  "name": "vite-react-typescript-starter",
   "private": true,
-  "version": "2.1.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
+    "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview --host 0.0.0.0",
-    "test:logic": "node --test src/tactical/*.test.mjs",
-    "check": "npm run test:logic && npm run build"
+    "preview": "vite preview",
+    "test:combat": "node --test src/mathCombatEngine.test.js",
+    "verify:logic": "node --test src/*.test.js src/newCombat/*.test.js",
+    "preflight": "node scripts/check-structure.mjs",
+    "check:structure": "node scripts/check-structure.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -22,6 +24,5 @@
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "~5.7.2",
     "vite": "^6.2.0"
-  },
-  "description": "Eclissi Stellare React/Vite con combattimento numerico"
+  }
 }
