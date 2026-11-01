@@ -1,0 +1,13 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose} from './mathDuelEngine.js';
+const rng=()=>.5;
+test('52 carte, sette in mano, pescata corretta',()=>{const s=createShip(1,false,{},rng);assert.equal(s.hand.length,7);assert.equal(s.deck.length,45);assert.equal(new Set([...s.hand,...s.deck].map(x=>x.id)).size,52);});
+test('quattro operazioni',()=>{assert.ok(evaluatePair('plus',5,4,9));assert.ok(evaluatePair('minus',3,9,6));assert.ok(evaluatePair('times',5,4,20));assert.ok(evaluatePair('divide',2,10,5));assert.equal(evaluatePair('divide',3,5,4),null);});
+test('bersagli indipendenti dalla mano',()=>{const t=generateTargets(rng);assert.deepEqual(Object.keys(t),['plus','minus','times','divide']);});
+test('attacco consuma solo le 2 carte scelte',()=>{const s=createShip(1,false,{},rng);const x=consumeAttack(s,[0,1]);assert.equal(x.hand.length,7);assert.equal(x.deck.length,43);assert.equal(x.discard.length,2);});
+test('sacrifici cumulativi',()=>{let a=createShip(1,false,{},rng),b=createShip(1,true,{},rng);let t=sacrificeCard(a,0,b,60);assert.equal(t.ship.sacrifices,1);assert.equal(t.ship.deck.length,44);assert.equal(healthScore(t.ship)<1,true);t=sacrificeCard(t.ship,0,t.opponent,60);assert.equal(t.seconds,57);t=sacrificeCard(t.ship,0,t.opponent,57);assert.equal(t.ship.sacrifices,3);assert.equal(sacrificeCard(t.ship,0,t.opponent,57),null);});
+test('etere non permette uso senza risorsa',()=>{let s=createShip(1,false,{},rng);let x=etherChange(s,0);assert.equal(x.ether,1);x=etherChange(x,0);assert.equal(etherChange(x,0),null);});
+test('un motore distrutto non rigenera',()=>{let a=createShip(1,false,{},rng),b=createShip(1,true,{},rng);b.engines.times.hp=2;const h=dealHit(b,a,'times',20);assert.equal(h.defender.engines.times.hp,0);assert.equal(h.destroyed,true);});
+test('condizione vittoria quattro motori a zero',()=>{let s=createShip(1,true,{},rng);s.engines.plus.hp=0;assert.equal(isDestroyed(s),false);for(const k of Object.keys(s.engines))s.engines[k].hp=0;assert.ok(isDestroyed(s));});
+test('vince chi ha percentuale maggiore a mazzo esaurito',()=>{const a=createShip(1,false,{},rng),b=createShip(1,true,{},rng);b.engines.minus.hp=1;assert.equal(deckVerdict(a,b),'player');});
+test('IA usa solo combinazioni presenti in mano',()=>{const b=initialBattle(1,{},rng);const move=aiChoose(b.enemy,b.player,b.targets,rng);if(move){assert.ok(move.i>=0&&move.j<7);assert.ok(evaluatePair(move.op,b.enemy.hand[move.i].value,b.enemy.hand[move.j].value,b.targets[move.op]));}});

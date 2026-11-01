@@ -1,4 +1,3 @@
-import { generateMathTargets, solveMath, bestMathSolution, mathematicalDamage } from './mathCombatEngine.js';
 // ============================================================================
 // PARTE 1 / 2: CLASSICBATTLEVIEW.JSX (LOGICA, GESTORI & STILI ORIGINALI)
 // ============================================================================
@@ -55,19 +54,12 @@ function WeaponSlotArtwork({ weapon, level, ammo }) {
     return <div className="weapon-slot-artwork weapon-art-fallback" aria-label={isBoost ? 'BOOST' : hasEquippedWeapon ? 'Immagine arma non disponibile' : 'Slot arma non equipaggiato'}>
       <span className="weapon-art-fallback-icon">{isBoost ? '⚡' : weapon?.isLocked ? '🔒' : '◈'}</span>
       <span className="weapon-art-fallback-label">{isBoost ? 'BOOST' : hasEquippedWeapon ? (weapon?.name || 'ARMA') : 'BLOCCATA'}</span>
-      {weapon?.slotType === 'math' && !weapon?.isLocked && <span style={{position:'absolute',top:0,left:0,right:0,background:'#06182b',color:'#b6f7ff',fontSize:'11px',fontWeight:900}}>{weapon.reqDescription}</span>}
     </div>;
   }
   return <div className="weapon-slot-artwork" aria-label={`${weapon?.name || 'Arma'} livello ${lvl}`}>
     <img key={url} src={url} alt={weapon?.name || 'Arma'} loading="eager" decoding="async" onError={() => setAttempt(i => Math.min(i + 1, candidates.length))} />
     {weapon?.isLocked && <span className="weapon-art-locked">🔒</span>}
-    {!isBoost && weapon?.slotType === 'math' && !weapon?.isLocked && <span
-      className="math-target-art-label" style={{position:'absolute',top:0,left:'1px',right:'1px',textAlign:'center',zIndex:6,
-        background:'rgba(0,8,24,.90)',color:'#fff',fontSize:'11px',lineHeight:'16px',fontWeight:900,
-        border:'1px solid #00e5ff',borderRadius:'3px',textShadow:'0 0 3px #00bdf8'}}>
-      {weapon.reqDescription}
-    </span>}
-    {!isBoost && !weapon?.isLocked && weapon?.slotType !== 'math' && <>
+    {!isBoost && !weapon?.isLocked && <>
       <span className="weapon-art-ammo">{Number(ammo) || 0}</span>
       <span className="weapon-art-capacity"><i style={{width:`${Math.max(0,Math.min(100,(Number(ammo)||0)/(Number(weapon?.maxCapacity)||10)*100))}%`}} /></span>
     </>}
@@ -328,33 +320,242 @@ const getMatchingPermutation = (cards, op, target, tolerance, activeAnomaly) => 
 };
 
 
-const evaluateAllWeaponTriggers = (cards, weapon) => {
-  const cardsOnBoard=(cards || []).filter(Boolean);
-  if (weapon?.slotType !== 'math' || cardsOnBoard.length < 2) return [];
-  const objective={op:weapon.mathOp,target:weapon.target};
-  const solutions=[];
-  // Un solo tipo di attacco: si raggiunge un numero bersaglio con 2-4 carte.
-  // Non si cercano coppie, scale, colori o altre figure.
-  const indices=cardsOnBoard.map((_,i)=>i);
-  for(let mask=1;mask<(1<<indices.length);mask++){
-    const selected=cardsOnBoard.filter((_,i)=>Boolean(mask&(1<<i)));
-    if(selected.length<2||selected.length>4)continue;
-    const solution=solveMath(selected,objective,{minCards:selected.length,maxCards:selected.length});
-    if(solution)solutions.push(solution);
+const evaluateAllWeaponTriggers = (cards, weapon, activeAnomaly = null) => {
+  const validCards = (cards || []).filter(Boolean);
+  if (validCards.length < 2) return [];
+
+  const found = [];
+  const isMathSlot = weapon.slotType === 'math' || weapon.type === 'math' || (weapon.slotIdx !== undefined && weapon.slotIdx >= 2);
+
+  if (!isMathSlot) {
+    // SLOT POKER (Slot 0 e 1)
+    const patternToCheck = weapon.pattern || weapon.allowedPatterns?.[0] || 'one_pair';
+    const targetDef = CLASSIC_POKER_PATTERNS.find(p => p.id === patternToCheck) || CLASSIC_POKER_PATTERNS[0];
+    const reqCount = targetDef.cardsCount || 2;
+
+    if (reqCount === 2) {
+      for (let i = 0; i < validCards.length; i++) {
+        for (let j = i + 1; j < validCards.length; j++) {
+          if (validateClassicPokerPattern([validCards[i], validCards[j]], patternToCheck)) {
+            found.push([validCards[i], validCards[j]]);
+          }
+        }
+      }
+    } else if (reqCount === 3) {
+      for (let i = 0; i < validCards.length; i++) {
+        for (let j = i + 1; j < validCards.length; j++) {
+          for (let k = j + 1; k < validCards.length; k++) {
+            if (validateClassicPokerPattern([validCards[i], validCards[j], validCards[k]], patternToCheck)) {
+              found.push([validCards[i], validCards[j], validCards[k]]);
+            }
+          }
+        }
+      }
+    } else if (reqCount === 4) {
+      for (let i = 0; i < validCards.length; i++) {
+        for (let j = i + 1; j < validCards.length; j++) {
+          for (let k = j + 1; k < validCards.length; k++) {
+            for (let m = k + 1; m < validCards.length; m++) {
+              if (validateClassicPokerPattern([validCards[i], validCards[j], validCards[k], validCards[m]], patternToCheck)) {
+                found.push([validCards[i], validCards[j], validCards[k], validCards[m]]);
+              }
+            }
+          }
+        }
+      }
+    } else if (reqCount === 5 && validCards.length >= 5) {
+      if (validateClassicPokerPattern(validCards.slice(0, 5), patternToCheck)) {
+        found.push(validCards.slice(0, 5));
+      }
+    }
+    } else {
+        // SLOT CALCOLO (Slot 2 e 3)
+    const rawOp = weapon.mathOp || weapon.mathInfo?.op || (weapon.slotIdx === 3 ? '*' : '+');
+    const op = cleanOp(rawOp);
+    const parseNum = (v, defVal) => {
+      if (typeof v === 'number' && !isNaN(v)) return v;
+      const clean = String(v ?? '').replace(/[^0-9.-]/g, '');
+      const n = Number(clean);
+      return !isNaN(n) && n !== 0 ? n : defVal;
+    };
+    const target = parseNum(weapon.target ?? weapon.mathInfo?.target, (op === '*' ? 24 : 14));
+
+
+
+    // Genera combinazioni da 2 a 5 carte per verificare ogni formula valida sul banco
+    const getSubsets = (arr, minSize = 2, maxSize = 5) => {
+      const results = [];
+      const backtrack = (start, current) => {
+        if (current.length >= minSize) results.push([...current]);
+        if (current.length === maxSize) return;
+        for (let i = start; i < arr.length; i++) {
+          current.push(arr[i]);
+          backtrack(i + 1, current);
+          current.pop();
+        }
+      };
+      backtrack(0, []);
+      return results;
+    };
+
+    const subsets = getSubsets(validCards, 2, Math.min(5, validCards.length));
+    for (const subset of subsets) {
+      const match = getMatchingPermutation(subset, op, target, 0, activeAnomaly);
+      if (match) {
+        found.push(match.cards);
+      }
+    }
   }
-  return solutions;
+
+  return found;
 };
 
 
-export const getClassicOpDamage = (op) => mathematicalDamage(op, 2);
-let mathTurnSerial = 0;
-export const generateClassicObjectives = (_hand=[], isBombAllowed=false, existingBomb=null) => {
-  const goals=generateMathTargets({turn:mathTurnSerial++,bomb:isBombAllowed,existingBomb});
-  return goals;
+
+export const getClassicOpDamage = (op) => {
+  switch (op) {
+    case '/': return 20;
+    case '*': return 16;
+    case '-': return 12;
+    case '+': default: return 10;
+  }
 };
-export const calculateAiTurnClassic = (boardCards, objectives) => {
-  const match=bestMathSolution(boardCards,objectives);
-  return match ? {...match,cardIndices:match.cardsUsed.map(c=>boardCards.indexOf(c))} : {found:false,shouldExchange:true};
+
+export const generateClassicObjectives = (handCards = [], isBombAllowed = false, existingBomb = null) => {
+  // Estrai i valori numerici effettivi (A=1/14, J=11, Q=12, K=13)
+  const handValues = (handCards || [])
+    .filter(c => c && !c.isJoker)
+    .map(c => getCardEffectiveValue(c))
+    .filter(v => v > 0);
+  
+    // 1. OBIETTIVO ADDIZIONE (Slot 2, Quadri ♦)
+  let p1Op = '+';
+  const ADD_POOL = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
+  let p1Target = ADD_POOL[Math.floor(Math.random() * ADD_POOL.length)];
+
+  if (handValues.length >= 2) {
+    const sums = [];
+    for (let i = 0; i < handValues.length; i++) {
+      for (let j = i + 1; j < handValues.length; j++) {
+        const s = handValues[i] + handValues[j];
+        if (s >= 5 && s <= 28) sums.push(s);
+      }
+    }
+    if (sums.length > 0) {
+      p1Target = sums[Math.floor(Math.random() * sums.length)];
+    }
+  }
+
+
+  const pedestal1 = {
+    type: 'math',
+    op: p1Op,
+    target: p1Target,
+    damage: 10,
+    isBomb: false
+  };
+
+  // 2. OBIETTIVO POKER (Slot 1, Cuori ♥)
+  const patternWeights = ['one_pair', 'one_pair', 'two_pair', 'two_pair', 'three_of_a_kind', 'straight', 'flush', 'full_house'];
+  const chosenPatternId = patternWeights[Math.floor(Math.random() * patternWeights.length)];
+  const pDef = CLASSIC_POKER_PATTERNS.find(p => p.id === chosenPatternId) || CLASSIC_POKER_PATTERNS[0];
+  const pedestal2 = {
+    type: 'pattern',
+    patternId: pDef.id,
+    name: pDef.name,
+    cardsCount: pDef.cardsCount,
+    damage: pDef.damage,
+    isBomb: false
+  };
+
+  // 3. OBIETTIVO MOLTIPLICAZIONE (Slot 3/4, Fiori ♣)
+  let pedestal3;
+  if (isBombAllowed) {
+    if (existingBomb && existingBomb.turnsRemaining > 0) {
+      pedestal3 = existingBomb;
+    } else {
+      const bOp = Math.random() < 0.5 ? '*' : '/';
+      const bTarget = bOp === '*' ? [24, 30, 36, 40][Math.floor(Math.random() * 4)] : [3, 4, 5][Math.floor(Math.random() * 3)];
+      pedestal3 = {
+        type: 'math',
+        op: bOp,
+        target: bTarget,
+        damage: 30,
+        turnsRemaining: 3,
+        isBomb: true
+      };
+    }
+  } else {
+    let p3Op = '*';
+    const MULT_POOL = [12, 14, 15, 16, 18, 20, 24, 28, 30, 32, 36, 40, 48];
+    // Valore di default casuale (non più fisso a 24!)
+    let p3Target = MULT_POOL[Math.floor(Math.random() * MULT_POOL.length)];
+
+    // Se ci sono carte in mano, cerca tra tutte le possibili coppie una moltiplicazione fattibile
+    if (handValues.length >= 2) {
+      const prods = [];
+      for (let i = 0; i < handValues.length; i++) {
+        for (let j = i + 1; j < handValues.length; j++) {
+          const pr = handValues[i] * handValues[j];
+          if (pr >= 6 && pr <= 60) prods.push(pr);
+        }
+      }
+      if (prods.length > 0) {
+        p3Target = prods[Math.floor(Math.random() * prods.length)];
+      }
+    }
+
+    pedestal3 = {
+      type: 'math',
+      op: p3Op,
+      target: p3Target,
+      damage: 16,
+      isBomb: false
+    };
+  }
+
+  return [pedestal1, pedestal2, pedestal3];
+};
+
+
+export const calculateAiTurnClassic = (aiHand, objectives, activeAnomaly = null) => {
+  if (!aiHand || aiHand.length === 0 || !objectives || objectives.length === 0) {
+    return { found: false, shouldExchange: false };
+  }
+
+  for (let o = 0; o < objectives.length; o++) {
+    const obj = objectives[o];
+    if (obj.type === 'pattern') {
+      const count = obj.cardsCount || 2;
+      if (aiHand.length >= count) {
+        for (let i = 0; i < aiHand.length; i++) {
+          for (let j = i + 1; j < aiHand.length; j++) {
+            if (count === 2 && validateClassicPokerPattern([aiHand[i], aiHand[j]], obj.patternId)) {
+              return { found: true, objectiveIndex: o, cardIndices: [i, j], cardsUsed: [aiHand[i], aiHand[j]], resolvedObj: obj };
+            }
+          }
+        }
+      }
+      continue;
+    }
+
+    const { op, target } = obj;
+    if (activeAnomaly?.blockedOp === op) continue;
+
+    for (let i = 0; i < aiHand.length; i++) {
+      for (let j = 0; j < aiHand.length; j++) {
+        if (i === j) continue;
+        const c1 = aiHand[i], c2 = aiHand[j];
+        if (!c1 || !c2) continue;
+        const res = calculateExpressionResult([c1, c2], op, activeAnomaly);
+        if (!isNaN(res) && Math.abs(res - target) < 1e-5) {
+          return { found: true, objectiveIndex: o, cardIndices: [i, j], cardsUsed: [c1, c2], op, target, resolvedObj: obj };
+        }
+      }
+    }
+  }
+
+  return { found: false, shouldExchange: Math.random() > 0.4 };
 };
 
 // ============================================================================
@@ -2572,36 +2773,99 @@ export default function ClassicBattleView({
 
                           const resolvedWeapons = useMemo(() => {
     if (pokerMode) return pokerBridge.weapons;
-    const targets = (Array.isArray(effectiveObjectives) ? effectiveObjectives : [])
-      .filter(o => o && (o.type === 'math' || o.op || o.mathOp));
-    const SLOT_SUITS = ['spades', 'hearts', 'diamonds', 'clubs'];
-    const SLOT_COLORS = ['#c084fc', '#f43f5e', '#00f2fe', '#10b981'];
-    return (equippedWeapons || []).slice(0, 4).map((wId,slotIdx) => {
+    const rawObjs = Array.isArray(effectiveObjectives) ? effectiveObjectives : [];
+    const mathObjs = rawObjs.filter(o => o && (o.type === 'math' || o.op || o.mathOp || o.target !== undefined));
+    const patternObjs = rawObjs.filter(o => o && (o.type === 'pattern' || o.patternId || o.pattern));
+
+    const plusObj = mathObjs.find(o => cleanOp(o.op || o.mathOp) === '+') || mathObjs[0] || rawObjs[0];
+    const multObj = mathObjs.find(o => (cleanOp(o.op || o.mathOp) === '*' || o.isBomb) && o !== plusObj) || mathObjs.find(o => o !== plusObj) || rawObjs[2];
+
+    const mathObj1 = plusObj;                        // 1° Obiettivo Matematico (Quadri ♦, +)
+    const patternObj = patternObjs[0] || rawObjs[1];  // Obiettivo Poker (Cuori ♥)
+    const mathObj2 = multObj;                        // 2° Obiettivo Matematico (Fiori ♣, *)
+                        // 2° Obiettivo Matematico (Fiori ♣, *)
+
+
+
+    return (equippedWeapons || []).slice(0, 4).map((wId, slotIdx) => {
       const def = WEAPONS_DATABASE.find(w => w.id === wId) || WEAPONS_DATABASE[slotIdx] || WEAPONS_DATABASE[0];
       const curLvl = weaponsLevels?.[def.id] || 1;
       const lvlData = def.levels?.[curLvl] || def.levels?.[1] || {};
-      const isLocked = slotIdx >= 3; // Tre armi/bersagli attivi fin dal primo settore; quarto modulo solo scenico.
-      // Tre obiettivi, quattro moduli arma: l'ultimo e' una seconda opzione
-      // sul bersaglio piu' difficile, non inventa un quarto numero.
-      const obj = targets[slotIdx] || targets[0] || {op:'+',target:14};
-      const op = cleanOp(obj.op || obj.mathOp);
-      const target = Number(obj.target) || 14;
-      const isBomb = Boolean(isBombAllowed && obj.isBomb);
-      const opSymbol = op === '*' ? '×' : op === '/' ? '÷' : op;
+      const isLocked = (slotIdx === 1 && !isSlot2Unlocked) || (slotIdx === 3 && !isSlot4Unlocked);
       const maxCap = def.maxCapacity || def.maxSalvo || 10;
+
+      const isMath = slotIdx >= 2;
+      let activeOp = def.mathOp || (slotIdx === 3 ? '*' : '+');
+      let activeTarget = def.target !== undefined ? def.target : (slotIdx === 3 ? 24 : 14);
+      let isBomb = false;
+      let turnsRemaining = undefined;
+      let activePattern = def.pattern || def.allowedPatterns?.[0] || (slotIdx === 1 ? 'two_pair' : 'one_pair');
+
+                          const getTargetNumber = (obj, fallback) => {
+                      if (!obj) return fallback;
+                      const raw = obj.target ?? obj.targetValue ?? obj.value ?? obj.val ?? obj.goal;
+                      if (typeof raw === 'number' && !isNaN(raw)) return raw;
+                      const clean = String(raw ?? '').replace(/[^0-9.-]/g, '');
+                      const n = Number(clean);
+                      return !isNaN(n) && n !== 0 ? n : fallback;
+                    };
+
+                    if (slotIdx === 1 && patternObj?.patternId) {
+                      activePattern = patternObj.patternId;
+                    } else if (slotIdx === 2 && mathObj1) {
+                      activeOp = mathObj1.op || mathObj1.mathOp || '+';
+                      activeTarget = getTargetNumber(mathObj1, 14);
+                    } else if (slotIdx === 3 && mathObj2) {
+                      activeOp = mathObj2.op || mathObj2.mathOp || '*';
+                      activeTarget = getTargetNumber(mathObj2, 24);
+                      isBomb = Boolean(isBombAllowed && mathObj2.isBomb);
+                      turnsRemaining = isBomb ? mathObj2.turnsRemaining : undefined;
+                    }
+
+
+      const opSymbol = activeOp === '*' ? '×' : (activeOp === '/' ? '÷' : activeOp);
+      const dynamicReqDesc = isBomb
+        ? `💥 ${opSymbol}${activeTarget}`
+        : (isMath ? `${opSymbol}${activeTarget}` : (slotIdx === 1 && patternObj?.name ? patternObj.name : def.reqDescription));
+
+      // Assegnazione rigorosa dell'effetto visivo autentico della carta arma
+      const weaponFx = def.fxType 
+        || (def.type && def.type !== 'poker' && def.type !== 'math' ? def.type : null) 
+        || (slotIdx === 0 ? 'gatling' : (slotIdx === 1 ? 'arrow_barrage' : (slotIdx === 2 ? 'lightning_strike' : 'heavy_cannon')));
+
+            // Mappatura fissa e coerente dei 4 semi per i 4 slot
+      const SLOT_SUITS = ['spades', 'hearts', 'diamonds', 'clubs'];
+      const SLOT_COLORS = ['#c084fc', '#f43f5e', '#00f2fe', '#10b981'];
+      const assignedSuit = SLOT_SUITS[slotIdx];
+      const assignedColor = SLOT_COLORS[slotIdx];
+
       return {
         ...def,
-        suit:SLOT_SUITS[slotIdx],themeColor:SLOT_COLORS[slotIdx],
-        fxType:def.fxType || (slotIdx === 0 ? 'gatling' : slotIdx === 1 ? 'arrow_barrage' : slotIdx === 2 ? 'lightning_strike' : 'heavy_cannon'),
-        maxCapacity:maxCap,maxSalvo:def.maxSalvo || maxCap,
-        slotIdx,slotType:'math',pattern:null,allowedPatterns:[],
-        isLocked,currentLevel:curLvl,currentDamage:lvlData.damage || def.baseDamage || 2,
-        mathOp:op,target,isBomb,turnsRemaining:obj.turnsRemaining,
-        reqDescription:`${opSymbol} ${target}`,
-        mathInfo:{op,target,isBomb,turnsRemaining:obj.turnsRemaining}
+        suit: assignedSuit,          // Assegna il seme dello slot (0: ♠, 1: ♥, 2: ♦, 3: ♣)
+        themeColor: assignedColor,   // Assegna il colore coordinato allo slot
+        fxType: weaponFx,
+        maxCapacity: maxCap,
+        maxSalvo: def.maxSalvo || maxCap,
+        slotIdx,
+        slotType: isMath ? 'math' : 'poker',
+        pattern: activePattern,
+        allowedPatterns: def.allowedPatterns || [activePattern],
+        isLocked,
+        currentLevel: curLvl,
+        currentDamage: lvlData.damage || def.baseDamage || 2,
+        mathOp: activeOp,
+        target: activeTarget,
+        isBomb,
+        turnsRemaining,
+        reqDescription: dynamicReqDesc,
+        mathInfo: { op: activeOp, target: activeTarget, isBomb, turnsRemaining }
       };
+
     });
-  },[equippedWeapons,weaponsLevels,isSlot2Unlocked,isSlot4Unlocked,effectiveObjectives,isBombAllowed,pokerMode,pokerBridge?.weapons]);
+   }, [equippedWeapons, weaponsLevels, isSlot2Unlocked, isSlot4Unlocked, effectiveObjectives, isBombAllowed, pokerMode, pokerBridge?.weapons]);
+
+
+
 
 
 
@@ -2623,8 +2887,19 @@ export default function ClassicBattleView({
 
     const calcWeaponDamage = (wp, comboCards) => {
       if (pistonOverrideActive) return pistonOverrideDamage;
-      const levelBonus = Math.min(4, Math.max(0, (Number(wp.currentLevel)||1)-1));
-      return mathematicalDamage(wp.mathOp,comboCards.length)+levelBonus;
+      const maxCap = wp.maxCapacity || wp.maxTankCapacity || 10;
+      const storedAmmo = weaponTanks[wp.suit] || 0;
+      const addedAmmoFromCombo = (comboCards || [])
+        .filter(c => getCardSuit(c) === wp.suit)
+        .reduce((acc, c) => acc + (Number(c?.value) || 0), 0);
+      const rawAmmo = storedAmmo + addedAmmoFromCombo;
+      const isJammed = rawAmmo > maxCap;
+      const salvo = Math.min(rawAmmo, wp.maxSalvo || maxCap);
+      let dmg = salvo > 0 ? (wp.currentDamage * salvo) : wp.currentDamage;
+      if (isJammed) {
+        dmg = Math.max(1, Math.round(dmg * 0.5));
+      }
+      return dmg;
     };
 
     const triggersMap = {};
@@ -2633,16 +2908,15 @@ export default function ClassicBattleView({
     // 1. Rileva tutti i colpi singoli per ogni arma
     resolvedWeapons.forEach((wp, wIdx) => {
       if (wp.isLocked) return;
-      // Nessun blocco di ricarica nascosto: la formula valida sblocca il colpo.
+      const heatInfo = weaponHeatState[wp.id] || { heat: 0, cooldownTurns: 0 };
+      if (heatInfo.cooldownTurns > 0) return;
 
       const matchedSets = evaluateAllWeaponTriggers(validCards, wp, activeAnomaly);
-      matchedSets.forEach(solution => {
-        const cardsSet = solution.cardsUsed;
+      matchedSets.forEach(cardsSet => {
         const hit = {
           weapon: wp,
           weaponIdx: wIdx,
           cards: cardsSet,
-          formula: solution.formula,
           damage: calcWeaponDamage(wp, cardsSet)
         };
         singleHits.push(hit);
@@ -2659,12 +2933,91 @@ export default function ClassicBattleView({
 
   // Risolve quali armi fanno fuoco (singola o combinata disgiunta)
   const bestTrigger = useMemo(() => {
-    const requested=manuallySelectedWeaponId ? allHitScenarios.filter(hit=>hit.weapon.id===manuallySelectedWeaponId):allHitScenarios;
-    if(!requested.length)return null;
-    const best=[...requested].sort((a,b)=>b.damage-a.damage || a.cards.length-b.cards.length)[0];
-    return {weapon:best.weapon,weapons:[best.weapon],weaponIdx:best.weaponIdx,
-      participatingCards:best.cards,damage:best.damage,formula:best.formula,isDual:false};
-  },[allHitScenarios,manuallySelectedWeaponId]);
+    if (allHitScenarios.length === 0) return null;
+
+    // Funzione ausiliaria per verificare se due gruppi di carte non condividono alcuna carta
+    const areDisjoint = (cardsA, cardsB) => {
+      const setA = new Set(cardsA.map(c => c?.id || c));
+      return !cardsB.some(c => setA.has(c?.id || c));
+    };
+
+    // CASO A: Il giocatore ha cliccato manualmente un'arma in conflitto/preferita
+    if (manuallySelectedWeaponId && weaponTriggersMap[manuallySelectedWeaponId]) {
+      const primaryHit = weaponTriggersMap[manuallySelectedWeaponId];
+
+      // Cerca se esiste un'altra arma pronta che usa carte completamente differenti
+      let bestSecondaryHit = null;
+      allHitScenarios.forEach(hit => {
+        if (hit.weapon.id !== primaryHit.weapon.id && areDisjoint(primaryHit.cards, hit.cards)) {
+          if (!bestSecondaryHit || hit.damage > bestSecondaryHit.damage) {
+            bestSecondaryHit = hit;
+          }
+        }
+      });
+
+      if (bestSecondaryHit) {
+        return {
+          weapons: [primaryHit.weapon, bestSecondaryHit.weapon],
+          weapon: primaryHit.weapon,
+          weaponIdx: primaryHit.weaponIdx,
+          participatingCards: [...primaryHit.cards, ...bestSecondaryHit.cards],
+          damage: primaryHit.damage + bestSecondaryHit.damage,
+          isDual: true
+        };
+      }
+
+      return {
+        weapons: [primaryHit.weapon],
+        weapon: primaryHit.weapon,
+        weaponIdx: primaryHit.weaponIdx,
+        participatingCards: primaryHit.cards,
+        damage: primaryHit.damage,
+        isDual: false
+      };
+    }
+
+    // CASO B: Selezione automatica (prevale la combinazione con danno totale maggiore)
+    const combinedScenarios = [];
+
+    // 1. Prova combinazioni a 2 armi con carte differenti
+    for (let i = 0; i < allHitScenarios.length; i++) {
+      for (let j = i + 1; j < allHitScenarios.length; j++) {
+        const hitA = allHitScenarios[i];
+        const hitB = allHitScenarios[j];
+
+        if (hitA.weapon.id !== hitB.weapon.id && areDisjoint(hitA.cards, hitB.cards)) {
+          combinedScenarios.push({
+            weapons: [hitA.weapon, hitB.weapon],
+            weapon: hitA.weapon,
+            weaponIdx: hitA.weaponIdx,
+            participatingCards: [...hitA.cards, ...hitB.cards],
+            damage: hitA.damage + hitB.damage,
+            isDual: true
+          });
+        }
+      }
+    }
+
+    // 2. Aggiunge gli scenari a singola arma (quando le armi condividono le stesse carte)
+    allHitScenarios.forEach(hit => {
+      combinedScenarios.push({
+        weapons: [hit.weapon],
+        weapon: hit.weapon,
+        weaponIdx: hit.weaponIdx,
+        participatingCards: hit.cards,
+        damage: hit.damage,
+        isDual: false
+      });
+    });
+
+    // Ordina per danno decrescente (le combinazioni a 2 armi vinceranno naturalmente se valide)
+    combinedScenarios.sort((a, b) => {
+      if (b.damage !== a.damage) return b.damage - a.damage;
+      return b.participatingCards.length - a.participatingCards.length;
+    });
+
+    return combinedScenarios[0] || null;
+  }, [weaponTriggersMap, allHitScenarios, manuallySelectedWeaponId]);
 
 
 
@@ -2747,7 +3100,7 @@ export default function ClassicBattleView({
         for (let i = 0; i < playerHand.length; i++) {
           for (let j = 0; j < playerHand.length; j++) {
             if (i === j) continue;
-            const match = solveMath([playerHand[i], playerHand[j]], {op, target});
+            const match = getMatchingPermutation([playerHand[i], playerHand[j]], op, target, 0, activeAnomaly);
             if (match) {
               const sol = [i, j];
               const nextUnselected = sol.find(idx => !selectedIndices.includes(idx));
@@ -2962,7 +3315,20 @@ export default function ClassicBattleView({
     const primaryWeapon = firingWeapons[0];
 
         // Verifica Inceppamento per il solo calcolo del rinculo sullo scafo (il danno è già stato calibrato in bestTrigger)
-    const totalRecoilDamage = 0; // I semi non influiscono sul calcolo o sui danni.
+    let totalRecoilDamage = 0;
+
+    firingWeapons.forEach(wp => {
+      const tankAmmo = weaponTanks[wp.suit] || 0;
+      const addedAmmo = (participatingCards || [])
+        .filter(c => getCardSuit(c) === wp.suit)
+        .reduce((acc, c) => acc + (Number(c?.value) || 0), 0);
+      const totalAmmo = tankAmmo + addedAmmo;
+      const maxCap = wp.maxCapacity || wp.maxTankCapacity || 10;
+
+      if (totalAmmo > maxCap) {
+        totalRecoilDamage += 6;
+      }
+    });
 
     const attackDamage = pistonOverrideActive ? pistonOverrideDamage : damage;
 
@@ -3071,7 +3437,7 @@ export default function ClassicBattleView({
       setManuallySelectedWeaponId(null);
 
       // Mappatura corretta tra lo slot dell'arma (0..3) e l'indice dell'obiettivo nel genitore (0..2)
-      const resolvedObjectiveIdx = Math.min(primaryWeapon.slotIdx ?? 0, 2);
+      const resolvedObjectiveIdx = primaryWeapon.slotIdx === 3 ? 2 : (primaryWeapon.slotIdx === 2 ? 0 : 1);
 
       // Rigenera immediatamente l'obiettivo completato
       const freshObjectives = generateClassicObjectives(playerHand, isBombAllowed);
@@ -3090,7 +3456,7 @@ export default function ClassicBattleView({
 
 
       const payload = {
-        targetIndex: resolvedObjectiveIdx, // 0 = addizione, 1 = sottrazione, 2 = moltiplicazione/divisione
+        targetIndex: resolvedObjectiveIdx, // 0 = Math +, 1 = Poker, 2 = Math *
         objectiveIndex: resolvedObjectiveIdx,
         slotIdx: primaryWeapon.slotIdx,
         slotIndex: primaryWeapon.slotIdx,
@@ -3149,7 +3515,7 @@ export default function ClassicBattleView({
           <div className="guided-hud-badge">ISTRUZIONI MISSIONE</div>
           <div className="guided-hud-text">
 
-            {currentTut === 'S1' && guidedStep === 1 && "1. Scegli uno dei tre bersagli numerici sulla rampa centrale."}
+            {currentTut === 'S1' && guidedStep === 1 && "1. Scegli il bersaglio numerico o figura Poker sulla rampa centrale."}
             {currentTut === 'S1' && guidedStep === 2 && "2. Tocca le carte dalla tua mano per caricarle nel banco (min. 2 carte)."}
             {currentTut === 'S1' && guidedStep === 3 && "3. Calcolo valido! Premi ATTACCA per sferrare il colpo!"}
             {currentTut === 'S2' && "♥ CUORI: Gioca o scarta carte Cuori per rigenerare i tuoi HP."}
@@ -3172,8 +3538,8 @@ export default function ClassicBattleView({
       <div className="battle-viewport-tris battle-viewport-classic" style={{ transform: `scale(${scale})` }}>
         {showCinematicSplash && (
           <div className="classic-cinematic-overlay">
-            <div className="classic-cinematic-sub">{pokerMode ? "✦ NUOVO POKER ✦" : "✦ TATTICA MATEMATICA ✦"}</div>
-            <div className="classic-cinematic-main">{pokerMode ? "BOTTA E RISPOSTA" : "CALCOLO STELLARE"}</div>
+            <div className="classic-cinematic-sub">{pokerMode ? "✦ NUOVO POKER ✦" : "✦ MODALITÀ CLASSICA ✦"}</div>
+            <div className="classic-cinematic-main">{pokerMode ? "BOTTA E RISPOSTA" : "CALCOLO & POKER"}</div>
           </div>
         )}
 
@@ -3454,7 +3820,7 @@ export default function ClassicBattleView({
                 }}>
                   <span style={{ color: '#c084fc' }}>♠</span>
                   <span style={{ color: '#f43f5e' }}>♥</span>
-                  <span>{pokerMode ? "ARMI LEGG./MED." : "ARMI / BERSAGLI"}</span>
+                  <span>{pokerMode ? "ARMI LEGG./MED." : "SLOT POKER"}</span>
                 </div>
 
                                                 <div style={{ display: 'flex', gap: '5px' }}>
@@ -3545,7 +3911,7 @@ export default function ClassicBattleView({
                 }}>
                   <span style={{ color: '#00f2fe' }}>♦</span>
                   <span style={{ color: '#10b981' }}>♣</span>
-                  <span>{pokerMode ? "PESANTE / BOOST" : "ARMI / BERSAGLI"}</span>
+                  <span>{pokerMode ? "PESANTE / BOOST" : "SLOT CALCOLO"}</span>
                 </div>
 
                                                 <div style={{ display: 'flex', gap: '5px' }}>
@@ -3640,14 +4006,7 @@ export default function ClassicBattleView({
                 lineHeight: 1
               }}>
                 <span style={{ color: '#facc15' }}>✦</span>
-                <span>{pokerMode ? 'BANCO COMUNE' : 'BERSAGLI'}</span>
-                {!pokerMode && (effectiveObjectives || []).slice(0,3).map((goal,i) =>
-                  <span key={`math_goal_${i}`} style={{display:'inline-flex',alignItems:'center',border:'1px solid #36c8e8',
-                    color:i===2?'#fbbf24':'#b7fbff',background:'rgba(0,8,26,.9)',borderRadius:3,
-                    padding:'0px 3px',fontSize:'0.55rem',fontWeight:900,letterSpacing:0}}>
-                    {goal.op==='*'?'×':goal.op==='/'?'÷':goal.op}{goal.target}
-                  </span>
-                )}
+                <span>BANCO COMUNE</span>
                 <span style={{ color: '#facc15' }}>✦</span>
               </div>
 
@@ -3778,7 +4137,7 @@ export default function ClassicBattleView({
                 }}>
                   <span style={{ color: '#c084fc' }}>♠</span>
                   <span style={{ color: '#f43f5e' }}>♥</span>
-                  <span>{pokerMode ? "ARMI LEGG./MED." : "ARMI / BERSAGLI"}</span>
+                  <span>{pokerMode ? "ARMI LEGG./MED." : "SLOT POKER"}</span>
                 </div>
 
                                                                 <div style={{ display: 'flex', gap: '5px' }}>
@@ -3788,7 +4147,7 @@ export default function ClassicBattleView({
 
                     const storedBullets = weaponTanks[wp.suit] || 0;
                     const heatInfo = weaponHeatState[wp.id] || { heat: 0, shotsFired: 0, cooldownTurns: 0 };
-                    const isFrozen = false; // Ricarica integrata nell'attacco matematico.
+                    const isFrozen = pokerMode ? Boolean(wp.isFrozen) : heatInfo.cooldownTurns > 0;
                     const triggerDmg = weaponTriggersMap[wp.id]?.damage || wp.currentDamage;
                     const equipStateClass = (dealPhase === 'waiting' || dealPhase === 'shuffling') ? 'deal-item-hidden' : (dealPhase === 'equipping' ? 'weapon-deploy-anim' : '');
                     const isDropTargetHovered = activeDrag?.hoveredTarget?.type === 'player-tank' && activeDrag.hoveredTarget.suit === wp.suit;
@@ -3962,7 +4321,7 @@ export default function ClassicBattleView({
                 }}>
                   <span style={{ color: '#00f2fe' }}>♦</span>
                   <span style={{ color: '#10b981' }}>♣</span>
-                  <span>{pokerMode ? "PESANTE / BOOST" : "ARMI / BERSAGLI"}</span>
+                  <span>{pokerMode ? "PESANTE / BOOST" : "SLOT CALCOLO"}</span>
                 </div>
 
                 <div style={{ display: 'flex', gap: '5px' }}>
@@ -3972,7 +4331,7 @@ export default function ClassicBattleView({
 
                     const storedBullets = weaponTanks[wp.suit] || 0;
                     const heatInfo = weaponHeatState[wp.id] || { heat: 0, shotsFired: 0, cooldownTurns: 0 };
-                    const isFrozen = false; // Ricarica integrata nell'attacco matematico.
+                    const isFrozen = pokerMode ? Boolean(wp.isFrozen) : heatInfo.cooldownTurns > 0;
                     const triggerDmg = weaponTriggersMap[wp.id]?.damage || wp.currentDamage;
                     const equipStateClass = (dealPhase === 'waiting' || dealPhase === 'shuffling') ? 'deal-item-hidden' : (dealPhase === 'equipping' ? 'weapon-deploy-anim' : '');
                     const isDropTargetHovered = activeDrag?.hoveredTarget?.type === 'player-tank' && activeDrag.hoveredTarget.suit === wp.suit;
@@ -4121,7 +4480,9 @@ export default function ClassicBattleView({
                                 suitKey === 'spades' ? 'card-spades' :
                                 suitKey === 'clubs' ? 'card-clubs' : 'card-hearts';
 
-              const suitTag = 'VALORE'; // I semi servono solo a riconoscere le carte.
+              const suitTag = pokerMode ? (pokerBridge.canPrepare ? 'PREPARA' : 'COMBO') : suitKey === 'diamonds' ? '+2🌟' :
+                              suitKey === 'spades' ? '+3HP' :
+                              suitKey === 'clubs' ? '+5s' : '+8% HP';
 
               const isSuggested = scannerOn && !isSelectingDiscard && (activeScannerHints?.cardIndices || []).includes(idx);
 
@@ -4545,11 +4906,6 @@ export default function ClassicBattleView({
                   </div>
                 )}
 
-                {!pokerMode && visibleBestTrigger?.formula && (
-                  <div className="math-formula-hud" aria-live="polite" title="Calcolo che attiva l'arma">
-                    {visibleBestTrigger.formula}
-                  </div>
-                )}
                 <button 
                   type="button"
                   className={`tactile-btn-mech tactile-btn-attack ${isFireReady ? 'ready-attack' : ''}`}

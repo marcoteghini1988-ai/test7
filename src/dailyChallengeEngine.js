@@ -157,14 +157,14 @@ function generateDailyProceduralName(rng) {
 
 // 2.0 CONFIGURATORE DETERMINISTICO DEL GIORNO
 export function generateDailyChallengeConfig(dateStr = getRomeDateString()) {
-  // Tutti i giorni si gioca la sfida matematica; il vecchio formato Poker non e' piu' attivo.
+  if(isDailyPokerDate(dateStr)) return createDailyPokerConfig(dateStr);
   const seed = hashDateString(dateStr);
   const rng = createMulberry32(seed);
 
-  const modes = ['classic'];
+  const modes = ['classic', 'vector', 'double_stage', 'tris'];
   const mode = modes[Math.floor(rng() * modes.length)];
 
-  const turnTimes = [45, 50, 60];
+  const turnTimes = [20, 25, 30, 40, 45, 60];
   const turnTime = turnTimes[Math.floor(rng() * turnTimes.length)];
 
   const livesProvided = rng() < 0.4 ? 1 : 0;

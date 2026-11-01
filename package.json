@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test:combat": "node --test src/mathCombatEngine.test.js",
+    "test:combat": "node --test src/newCombat/*.test.js",
     "verify:logic": "node --test src/*.test.js src/newCombat/*.test.js",
     "preflight": "node scripts/check-structure.mjs",
-    "check:structure": "node scripts/check-structure.mjs"
+    "check:structure": "node scripts/check-structure.mjs",
+    "cleanup:shadows": "node scripts/cleanup-legacy-shadows.mjs --apply",
+    "cleanup:r2": "node scripts/cleanup-r2-legacy.mjs --apply"
   },
   "dependencies": {
     "react": "^19.0.0",

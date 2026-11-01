@@ -182,9 +182,3 @@
     border-right-color: var(--border);
   }
 }
-
-/* Eclissi 3D Matematica: feedback leggibile senza cambiare plancia e prospettiva. */
-.math-formula-hud {display:flex;align-items:center;justify-content:center;flex:1;min-width:90px;
- padding:3px 5px;border:1px solid #22d3ee;border-radius:5px;background:rgba(0,10,26,.95);
- color:#e0faff;font-weight:900;font-size:clamp(9px,1.3vw,13px);line-height:1.2;text-align:center;
- box-shadow:0 0 9px rgba(34,211,238,.32);white-space:normal;}
