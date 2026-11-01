@@ -149,3 +149,43 @@
 @keyframes screenFlash{15%{opacity:.13}100%{opacity:0}}
 .es-math-scope.game-viewport{position:fixed;inset:0;width:100vw;height:100dvh;z-index:100000;}
 .es-math-scope .math-exit{font-size:13px!important;}
+/* Fase 1 — navicelle integrate, selezione della flotta e motori fisicamente danneggiati */
+.es-math-scope .fleet-ships{position:absolute;inset:0;pointer-events:none;z-index:1}
+.es-math-scope .fleet-ship-img{position:absolute;top:15px;transform:translateX(-50%);height:150px;width:158px;object-fit:contain;filter:drop-shadow(0 0 12px #67aaff72);animation:shipHover 4s ease-in-out infinite alternate;opacity:.92}
+.es-math-scope .ship-enemy .fleet-ship-img{filter:drop-shadow(0 0 10px #ff565688)}
+.es-math-scope .fleet-ship-img.focused{width:290px;height:180px;top:-2px;opacity:1;z-index:2}
+.es-math-scope .fleet-ship-img.dead-ship{filter:grayscale(1) brightness(.35);opacity:.38}
+.es-math-scope .engine{z-index:3;overflow:hidden}
+.es-math-scope .motor-sprite{position:absolute;right:-12px;top:-14px;width:65px;height:74px;object-fit:contain;opacity:.58;pointer-events:none;mix-blend-mode:screen}
+.es-math-scope .engine .engine-sign,.es-math-scope .engine .engine-info{z-index:1;position:relative}
+.es-math-scope .engine-locked{opacity:.3!important;filter:grayscale(1)}
+.es-math-scope .motor-smoke{position:absolute;right:10px;top:5px;width:30px;height:28px;border-radius:50%;background:#2b2726;filter:blur(7px);animation:smokePulse 1.9s infinite alternate;pointer-events:none}
+.es-math-scope .fleet-picker-inline{pointer-events:auto;position:absolute;bottom:-3px;left:84px;right:84px;display:flex;align-items:center;justify-content:center;gap:4px;z-index:5}
+.es-math-scope .fleet-picker-inline button{display:flex;align-items:center;gap:3px;flex:1;justify-content:center;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:8px;font-weight:800;color:#d1edff;background:#051227e8;border:1px solid #357aaf;border-radius:5px;padding:3px 2px}
+.es-math-scope .fleet-picker-inline button.focus{border-color:#fff0a6;background:#07577baa;box-shadow:0 0 10px #70d0ff88}
+.es-math-scope .fleet-picker-inline button:disabled{opacity:.85}
+.es-math-scope .fleet-dot{display:inline-block;flex:none;background:#16c4ff;width:5px;height:5px;border-radius:50%}
+.es-math-scope .fleet-dot.lost{background:#a63b45}
+.es-math-scope .fleet-eliminated{position:absolute;left:25%;top:45%;color:#ffb6b6;font-size:14px;font-weight:900;text-shadow:0 0 14px red;z-index:4}
+.es-math-scope .shot-label{position:absolute;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 0 6px black;font-size:9px;font-weight:800;animation:damageFloat 1s both}
+.es-math-scope .projectile{animation-delay:var(--shot-delay);z-index:5}
+.es-math-scope .projectile b{position:absolute;top:-16px;left:5px;color:var(--beam-color);font-size:11px;text-shadow:0 0 8px var(--beam-color)}
+.es-math-scope .shot-h span{border-radius:50px;height:10px;background:linear-gradient(transparent,#ff5677,#fff,#ff5677,transparent)}
+.es-math-scope .shot-d span{background:linear-gradient(transparent,#52daff,#fff,#52daff,transparent);clip-path:polygon(0 50%,85% 30%,100% 50%,85% 70%)}
+.es-math-scope .shot-c span{background:linear-gradient(transparent,#35ff9c,#efffff,#35ff9c,transparent);height:6px;box-shadow:0 0 16px #48ffa6}
+.es-math-scope .shot-s span{background:linear-gradient(transparent,#c067ff,#fff,#c067ff,transparent);height:14px;clip-path:polygon(0 50%,80% 0,100% 50%,80% 100%)}
+.es-math-scope .charge-notice{position:absolute;top:335px;left:110px;right:110px;padding:8px;background:#0c1f40ee;color:#9cdeff;text-align:center;border:1px solid #7ae3ff;border-radius:8px;font-size:11px;letter-spacing:1px;font-weight:bold;animation:pulse 1s infinite}
+.es-math-scope .fleet-setup{padding:15px;gap:8px;max-height:755px}
+.es-math-scope .fleet-setup-list{display:flex;flex-direction:column;gap:3px;max-height:420px;overflow-y:auto}
+.es-math-scope .fleet-setup-list button{display:flex;gap:10px;align-items:center;width:100%;height:67px;flex:none;text-align:left;color:#d2e6fb;border:1px solid #235075;border-radius:8px;background:#07162ecc;padding:4px 8px}
+.es-math-scope .fleet-setup-list button.on{border-color:#5ce6ff;background:#0c3860dd;box-shadow:inset 0 0 10px #50bbff33}
+.es-math-scope .fleet-setup-list img{width:72px;height:59px;object-fit:contain}
+.es-math-scope .fleet-setup-list span{display:flex;flex-direction:column;gap:3px;flex:1}
+.es-math-scope .fleet-setup-list span b{font-size:13px}
+.es-math-scope .fleet-setup-list span small{font-size:10px;color:#8fcbe7}
+.es-math-scope .fleet-setup-list strong{font-size:24px}
+.es-math-scope .fleet-level-row{font-size:11px;font-weight:700;display:flex;align-items:center;gap:9px}
+.es-math-scope .fleet-level-row input{flex:1;accent-color:#1cc7ff}
+.es-math-scope .fleet-setup-actions{display:flex;justify-content:center;gap:10px}
+.es-math-scope .fleet-setup-actions button{flex:1}
+@keyframes smokePulse{from{opacity:.3;transform:translateY(2px) scale(.8)}to{opacity:.75;transform:translateY(-10px) scale(1.4)}}

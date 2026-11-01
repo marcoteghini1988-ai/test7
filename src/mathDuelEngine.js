@@ -1,106 +1,102 @@
-// Eclissi Stellare: motore numerico puro, indipendente da React e dal rendering.
-export const ENGINE_KEYS = ['plus', 'minus', 'times', 'divide'];
-export const META = {
-  plus:   { sign: '+', name: 'Scudi',      color: '#26baff', title: 'Schermo difensivo' },
-  minus:  { sign: '−', name: 'Evasione',   color: '#57e4a1', title: 'Contromisure' },
-  times:  { sign: '×', name: 'Attacco',    color: '#ff674d', title: 'Armamento' },
-  divide: { sign: '÷', name: 'Energia',    color: '#b780ff', title: 'Alimentazione' },
-};
-export const BASE_HP = { plus: 72, minus: 72, times: 85, divide: 72 };
-export const TOTAL_LEVELS = 30;
-export const campaignInfo = (level) => ({
-  level, isBoss: level % 5 === 0, world: Math.ceil(level / 5),
-  name: level % 5 === 0 ? `Guardiano del settore ${level}` : ['Ricognitore di frontiera','Predone orbitale','Custode delle rovine','Squadrone d’assalto'][(level - 1) % 5],
-  credits: 35 + level * 7 + (level % 5 === 0 ? 80 : 0),
-});
-export function shuffled(a, rng = Math.random) {
-  const v = [...a]; for (let i=v.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1));[v[i],v[j]]=[v[j],v[i]]; } return v;
+// Eclissi Stellare — Fase 1: calcolo = grilletto, carte = munizioni, navi = armi integrate.
+import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+export const ENGINE_KEYS=['plus','minus','times','divide'];
+export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
+export const SUIT_KEYS={'♥':'H','♦':'D','♣':'C','♠':'S'};
+export const SUIT_SIGNS={H:'♥',D:'♦',C:'♣',S:'♠'};
+export const BASE_HP={plus:72,minus:72,times:85,divide:72};
+export const TOTAL_LEVELS=30;
+export const PHASE1_SHIPS=PHASE1_CATALOG.ships;
+export function shuffled(a,rng=Math.random){const v=[...a];for(let i=v.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[v[i],v[j]]=[v[j],v[i]];}return v;}
+export function newDeck(rng=Math.random){return shuffled(['♥','♦','♣','♠'].flatMap(suit=>Array.from({length:13},(_,i)=>({id:`${suit}${i+1}`,suit,value:i+1}))),rng);}
+export function getShipDefinition(id){return PHASE1_CATALOG.ships.find(x=>x.id===id)||null;}
+export function getWeaponsForShip(id){return PHASE1_CATALOG.weapons.filter(x=>x.nave_id===id);}
+export function supportedOperators(side){const found=new Set();for(const v of side.fleet)for(const k of ENGINE_KEYS)if(v.engines[k]?.max>0&&v.engines[k].hp>0)found.add(k);return ENGINE_KEYS.filter(x=>found.has(x));}
+export function validFleet(ids){
+ if(!Array.isArray(ids)||ids.length<1||ids.length>3||ids.some(x=>!getShipDefinition(x))||new Set(ids).size!==ids.length)return false;
+ const counts={H:0,D:0,C:0,S:0};
+ for(const id of ids){if(id==='N00')continue;const triggers=new Set(getWeaponsForShip(id).flatMap(w=>w.seme_trigger==='*'?[]:[w.seme_trigger]));for(const t of triggers){if(!(t in counts))return false;counts[t]++;if(counts[t]>2)return false;}}
+ return true;
 }
-export function newDeck(rng=Math.random) { return shuffled(['♥','♦','♣','♠'].flatMap((suit)=>Array.from({length:13}, (_,i)=>({id:`${suit}${i+1}`,suit,value:i+1}))),rng); }
-export function newShip(level=1, isEnemy=false, upgrades={}) {
-  const boost = isEnemy ? Math.min(45,Math.floor((level-1)*1.35)+(level%5===0?13:0)) : 0;
-  const engines={}; for(const k of ENGINE_KEYS){ const max=BASE_HP[k] + boost + (isEnemy?0:(upgrades[k]||0)*7);engines[k]={hp:max,max}; }
-  return { engines, hand:[], deck:[], discard:[], sacrifices:0, ether: isEnemy ? 1 : 2 };
+function shipLevel(id,level){return PHASE1_CATALOG.shipLevels.find(x=>x.nave_id===id&&x.livello===level);}
+function gunLevel(id,level){return PHASE1_CATALOG.weaponLevels.find(x=>x.arma_id===id&&x.livello===level);}
+export function newVessel(id='N00',level=1){
+ const def=getShipDefinition(id);if(!def)throw Error('Nave inesistente '+id);
+ const l=Math.max(1,Math.min(5,Math.floor(level)));
+ const prog=shipLevel(id,l);if(!prog)throw Error('Progressione assente '+id+'/'+l);
+ const engines={};ENGINE_KEYS.forEach((op,i)=>{if(i<prog.motori)engines[op]={hp:prog.hp_per_motore,max:prog.hp_per_motore};});
+ return {id,name:def.nome,rarity:def.rarita,level:l,engines,weapons:getWeaponsForShip(id).map(w=>({...w,damage:gunLevel(w.id,l)?.danno_per_proiettile??w.danno_colpo_L1,charge:0})),};
 }
-export function fillHand(ship){ const next={...ship,hand:[...ship.hand],deck:[...ship.deck]};while(next.hand.length<7 && next.deck.length)next.hand.push(next.deck.pop());return next; }
-export function createShip(level,isEnemy,upgrades,rng=Math.random){let ship=newShip(level,isEnemy,upgrades);ship.deck=newDeck(rng);return fillHand(ship);}
-export function generateTargets(rng=Math.random, level=1){
-  const ri=(lo,hi)=>lo+Math.floor(rng()*(hi-lo+1));
-  return {plus:ri(6,23), minus:ri(1,11), times:ri(8,39+Math.min(12,Math.floor(level/4))), divide:ri(1,10)};
-}
-export function calculation(op,a,b) {
-  if(op==='plus')return a+b;
-  if(op==='minus')return a-b;
-  if(op==='times')return a*b;
-  if(op==='divide')return b===0?NaN:a/b;
-  return NaN;
-}
-export function evaluatePair(op, first, second, target){
-  if(!Number.isFinite(target))return null;
-  const f=calculation(op,first,second);if(Number.isInteger(f) && f===target)return {a:first,b:second,result:f};
-  if(op==='minus'||op==='divide'){
-    const rev=calculation(op,second,first);if(Number.isInteger(rev)&&rev===target)return {a:second,b:first,result:rev};
+export function newShip(_level=1,isEnemy=false,upgrades={}){const ids=Array.isArray(upgrades.fleetIds)&&validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];const level=Number(upgrades.shipLevel)||1;return {fleet:ids.map(id=>newVessel(id,level)),hand:[],deck:[],discard:[],sacrifices:0,ether:isEnemy?1:2};}
+export function fillHand(side){const n={...side,hand:[...side.hand],deck:[...side.deck]};while(n.hand.length<7&&n.deck.length)n.hand.push(n.deck.pop());return n;}
+export function createShip(level=1,isEnemy=false,upgrades={},rng=Math.random){let s=newShip(level,isEnemy,upgrades);s.deck=newDeck(rng);return fillHand(s);}
+export function generateTargets(rng=Math.random,level=1){const ri=(lo,hi)=>lo+Math.floor(rng()*(hi-lo+1));return {plus:ri(6,23),minus:ri(1,11),times:ri(8,39+Math.min(12,Math.floor(level/4))),divide:ri(1,10)};}
+export function calculation(op,a,b){return op==='plus'?a+b:op==='minus'?a-b:op==='times'?a*b:op==='divide'?(b===0?NaN:a/b):NaN;}
+export function evaluatePair(op,first,second,target){if(!Number.isFinite(target))return null;const f=calculation(op,first,second);if(Number.isInteger(f)&&f===target)return {a:first,b:second,result:f};if(op==='minus'||op==='divide'){const r=calculation(op,second,first);if(Number.isInteger(r)&&r===target)return {a:second,b:first,result:r};}return null;}
+export function totalHP(side){return side.fleet.reduce((sum,v)=>sum+ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.hp||0),0),0);}
+export function totalMax(side){return side.fleet.reduce((sum,v)=>sum+ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.max||0),0),0);}
+export function vesselDestroyed(v){return ENGINE_KEYS.every(k=>!v.engines[k]||v.engines[k].hp<=0);}
+export function isDestroyed(side){return side.fleet.every(vesselDestroyed);}
+export function healthScore(side){return totalMax(side)?totalHP(side)/totalMax(side):0;}
+export function deckExhausted(a,b){return a.deck.length===0||b.deck.length===0;}
+export function deckVerdict(a,b){const x=healthScore(a),y=healthScore(b);return Math.abs(x-y)<1e-5?'draw':x>y?'player':'enemy';}
+// Each valid calculation consumes ONLY the 2 selected cards. Their face values are ammo, their suits are triggers.
+export function getAmmo(cards){const a={H:0,D:0,C:0,S:0};for(const c of cards)a[SUIT_KEYS[c.suit]]=(a[SUIT_KEYS[c.suit]]||0)+c.value;return a;}
+export function previewVolley(side,cards){
+ const ammo=getAmmo(cards);const shots=[];const newFleet=side.fleet.map((v,vi)=>({ ...v,weapons:v.weapons.map(w=>({...w}))}));
+ for(const [vi,v] of newFleet.entries()){
+  if(vesselDestroyed(v))continue;
+  for(const w of v.weapons){
+   const n=w.seme_trigger==='*'?Object.values(ammo).reduce((a,b)=>a+b,0):ammo[w.seme_trigger]||0;
+   if(n===0)continue;
+   if(w.tipo==='Combo simultanea'){const requires=(w.combo||'').split('+');if(!requires.every(s=>(ammo[s]||0)>0))continue;}
+   if(w.tipo==='Combo a memoria')continue; // non presente nelle cinque navi della Fase 1.
+   let count=n,charging=false;
+   if(w.tipo==='Accumulo'){
+    w.charge=(w.charge||0)+n;const threshold=Math.max(1,w.soglia_munizioni||1);
+    if(w.charge<threshold){count=0;charging=true;}
+    else{count=threshold;w.charge-=threshold;} // Una sola scarica per calcolo; resto conservato.
+   }
+   shots.push({vesselIndex:vi,shipId:v.id,weaponId:w.id,weapon:w.nome,suit:w.seme_trigger,bullets:count,damagePerBullet:w.damage,damage:count*w.damage,charging,charge:w.charge||0,kind:w.tipo,visual:w.effetto_visivo});
   }
-  return null;
+ }
+ return {shots,totalDamage:shots.reduce((s,x)=>s+x.damage,0),fleet:newFleet};
 }
-export function findMoves(ship,defender,targets){
-  const moves=[];
-  ENGINE_KEYS.forEach(op=>{
-    if(defender.engines[op].hp<=0)return;
-    for(let i=0;i<ship.hand.length;i++)for(let j=i+1;j<ship.hand.length;j++){
-      const p=evaluatePair(op,ship.hand[i].value,ship.hand[j].value,targets[op]);
-      if(p)moves.push({op,i,j,...p});
-    }
-  });return moves;
+export function chooseTarget(side,op,preferredIndex=0){
+ const candidates=side.fleet.map((v,i)=>({v,i})).filter(({v})=>(v.engines[op]?.hp||0)>0);
+ return candidates.find(x=>x.i===preferredIndex)?.i??candidates[0]?.i??-1;
 }
-export function totalHP(ship){return ENGINE_KEYS.reduce((s,k)=>s+ship.engines[k].hp,0);}
-export function totalMax(ship){return ENGINE_KEYS.reduce((s,k)=>s+ship.engines[k].max,0);}
-export function isDestroyed(ship){return ENGINE_KEYS.every(k=>ship.engines[k].hp<=0);}
-export function healthScore(ship){return totalHP(ship)/totalMax(ship);}
-export function deckExhausted(player,enemy){return player.deck.length===0 || enemy.deck.length===0;}
-export function deckVerdict(player,enemy){const a=healthScore(player),b=healthScore(enemy);return Math.abs(a-b)<0.00001?'draw':a>b?'player':'enemy';}
-export function dealHit(defender,attacker,op,target){
-  const e=defender.engines[op]; if(!e||e.hp<=0) return {defender,damage:0,destroyed:false};
-  // Risultato matematico = danno iniziale. Le difese dei quattro sistemi possono ridurlo.
-  let mult=1;
-  if(attacker.engines.times.hp>0)mult+=.08;
-  if(defender.engines.plus.hp>0 && op!=='plus')mult-=.12;
-  if(defender.engines.minus.hp>0 && op!=='minus')mult-=.05;
-  const damage=Math.min(e.hp,Math.max(1,Math.round(target*mult)));
-  const updated={...defender,engines:{...defender.engines,[op]:{...e,hp:e.hp-damage}}};
-  return {defender:updated,damage,destroyed:e.hp>0 && e.hp-damage<=0,raw:target};
+export function dealHit(defender,attacker,op,_target,cards,preferredIndex=0){
+ const vi=chooseTarget(defender,op,preferredIndex);if(vi<0)return {defender,attacker,damage:0,destroyed:false,volley:[]};
+ const volley=previewVolley(attacker,cards||[]);
+ const target=defender.fleet[vi].engines[op];const damage=Math.min(target.hp,volley.totalDamage);
+ const fleet=defender.fleet.map((v,i)=>i!==vi?v:{...v,engines:{...v.engines,[op]:{...target,hp:target.hp-damage}}});
+ return {defender:{...defender,fleet},attacker:{...attacker,fleet:volley.fleet},damage,destroyed:target.hp>0&&target.hp-damage<=0,volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage};
 }
-export function consumeAttack(ship,indices){
-  const ids=new Set(indices);const used=ship.hand.filter((_,i)=>ids.has(i));
-  return fillHand({...ship,hand:ship.hand.filter((_,i)=>!ids.has(i)),discard:[...ship.discard,...used]});
-}
-export function sacrificeCard(ship, index, opponent, secondsLeft=60){
-  if(ship.sacrifices>=3||ship.deck.length===0||index<0||index>=ship.hand.length)return null;
-  const order=ship.sacrifices;let next={...ship,hand:[...ship.hand],deck:[...ship.deck],discard:[...ship.discard],engines:{...ship.engines},sacrifices:order+1};
-  const [removed]=next.hand.splice(index,1);next.discard.push(removed); next=fillHand(next);
-  let other={...opponent,engines:{...opponent.engines}};let seconds=secondsLeft;let detail='';
-  if(order===2){const live=ENGINE_KEYS.filter(k=>next.engines[k].hp>0).sort((a,b)=>next.engines[a].hp-next.engines[b].hp);if(live.length){const k=live[0];next.engines[k]={...next.engines[k],hp:Math.max(0,next.engines[k].hp-3)};}detail='−3 HP alla tua nave';}
-  if(order===1){seconds=Math.max(0,seconds-3);detail='−3 secondi';}
-  if(order===0){const live=ENGINE_KEYS.filter(k=>other.engines[k].hp>0).sort((a,b)=>other.engines[a].hp-other.engines[b].hp);if(live.length){const k=live[0];other.engines[k]={...other.engines[k],max:other.engines[k].max+3,hp:other.engines[k].hp+3};}detail='+3 HP al nemico';}
-  return {ship:next,opponent:other,seconds,detail};
-}
-export function etherChange(ship,index){if(!ship.ether||ship.deck.length===0||index<0||index>=ship.hand.length)return null;
-  const next={...ship,ether:ship.ether-1,hand:[...ship.hand],deck:[...ship.deck],discard:[...ship.discard]};
-  const [old]=next.hand.splice(index,1);next.discard.push(old);return fillHand(next);
-}
-export function aiChoose(ship,defender,targets,rng=Math.random){
-  const moves=findMoves(ship,defender,targets);if(!moves.length)return null;
-  // prioritizza un motore vicino alla distruzione, senza conoscenza di carte future
-  const scored=moves.map(m=>{
-    const e=defender.engines[m.op];const lethal=e.hp<=targets[m.op]*1.08;
-    const priority=lethal?120:0;
-    const systemBonus=m.op==='plus'?9:m.op==='times'?8:m.op==='divide'?5:2;
-    return {...m,score:priority+Math.min(targets[m.op],e.hp)+systemBonus+rng()*3};
-  }).sort((a,b)=>b.score-a.score);
-  return scored[0];
-}
+export function findMoves(side,defender,targets){const moves=[];for(const op of supportedOperators(side)){
+  for(let vi=0;vi<defender.fleet.length;vi++){
+   if(!(defender.fleet[vi].engines[op]?.hp>0))continue;
+   for(let i=0;i<side.hand.length;i++)for(let j=i+1;j<side.hand.length;j++){
+    const p=evaluatePair(op,side.hand[i].value,side.hand[j].value,targets[op]);if(p)moves.push({op,i,j,targetShip:vi,...p});
+   }
+  }
+ }return moves;}
+export function consumeAttack(side,indices){const s=new Set(indices),used=side.hand.filter((_,i)=>s.has(i));return fillHand({...side,hand:side.hand.filter((_,i)=>!s.has(i)),discard:[...side.discard,...used]});}
+function weakestLiveEngine(side){const a=[];for(let i=0;i<side.fleet.length;i++)for(const op of ENGINE_KEYS){const e=side.fleet[i].engines[op];if(e?.hp>0)a.push({i,op,e});}return a.sort((x,y)=>x.e.hp-y.e.hp)[0];}
+export function sacrificeCard(side,index,opponent,secondsLeft=60){if(side.sacrifices>=3||side.deck.length===0||index<0||index>=side.hand.length)return null;
+ const order=side.sacrifices;let next={...side,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard],fleet:structuredClone(side.fleet),sacrifices:order+1};const [c]=next.hand.splice(index,1);next.discard.push(c);next=fillHand(next);
+ let other={...opponent,fleet:structuredClone(opponent.fleet)},seconds=secondsLeft,detail='';
+ if(order===0){const w=weakestLiveEngine(other);if(w){w.e.hp+=3;w.e.max+=3;}detail='+3 HP al motore nemico';}
+ if(order===1){seconds=Math.max(0,seconds-3);detail='−3 secondi';}
+ if(order===2){const w=weakestLiveEngine(next);if(w)w.e.hp=Math.max(0,w.e.hp-3);detail='−3 HP a un tuo motore';}
+ return {ship:next,opponent:other,seconds,detail};}
+export function etherChange(side,index){if(!side.ether||side.deck.length===0||index<0||index>=side.hand.length)return null;const n={...side,ether:side.ether-1,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard]};const [c]=n.hand.splice(index,1);n.discard.push(c);return fillHand(n);}
+export function aiChoose(side,defender,targets,rng=Math.random){const moves=findMoves(side,defender,targets);if(!moves.length)return null;
+ return moves.map(m=>{const e=defender.fleet[m.targetShip].engines[m.op],v=previewVolley(side,[side.hand[m.i],side.hand[m.j]]);const dmg=Math.min(e.hp,v.totalDamage);return {...m,score:dmg+(e.hp<=dmg?100:0)+(m.op==='plus'?6:0)+rng()*2};}).sort((a,b)=>b.score-a.score)[0];}
 export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign'){
-  return {level,mode,player:createShip(level,false,upgrades,rng),enemy:createShip(level,true,{},rng),
-    actor:'player',round:1,seconds:60,targets:generateTargets(rng,level), selected:[],target:'times',
-    phase:'ready',effect:null,notice:'Scegli un motore nemico e due carte.',logs:['Battaglia iniziata. Quattro motori da neutralizzare.'],winner:null};
+ const fleetIds=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];const shipLevel=Math.max(1,Math.min(5,Number(upgrades.shipLevel)||1));
+ // Opponent receives comparable fleet count and vessel engine capacity. AI has no secret advantages.
+ const aiIds=validFleet(upgrades.enemyFleetIds)?upgrades.enemyFleetIds:fleetIds;
+ return {level,mode,player:createShip(level,false,{fleetIds,shipLevel},rng),enemy:createShip(level,true,{fleetIds:aiIds,shipLevel},rng),
+ actor:'player',round:1,seconds:60,targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }
