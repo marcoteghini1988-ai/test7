@@ -189,3 +189,111 @@
 .es-math-scope .fleet-setup-actions{display:flex;justify-content:center;gap:10px}
 .es-math-scope .fleet-setup-actions button{flex:1}
 @keyframes smokePulse{from{opacity:.3;transform:translateY(2px) scale(.8)}to{opacity:.75;transform:translateY(-10px) scale(1.4)}}
+
+/* Fase 1A: feedback esplicito sui calcoli, anche quando il bersaglio non e raggiunto. */
+.es-math-scope .formula small{font-size:9px;letter-spacing:0;max-width:194px;text-align:center;white-space:nowrap;}
+
+/* Fase 1B — armi visibili, navi orientate correttamente, motori ancorati alla nave */
+.es-math-scope .fleet-ship-wrap{position:absolute;top:0;transform:translateX(-50%);width:158px;height:150px;pointer-events:none}
+.es-math-scope .fleet-ship-wrap.focused{width:290px;height:182px;top:-2px}
+.es-math-scope .fleet-ship-wrap .fleet-ship-img{position:absolute;inset:0;width:100%;height:100%;top:0;left:0;transform:none}
+.es-math-scope .fleet-ship-wrap .fleet-ship-img.player-facing{transform:scaleY(1)}
+.es-math-scope .ship-hardpoints{position:absolute;inset:0;pointer-events:none;z-index:4}
+.es-math-scope .weapon-hardpoint{position:absolute;transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;border:1px solid rgba(255,255,255,.45);box-shadow:0 0 10px rgba(255,255,255,.25), inset 0 0 8px rgba(255,255,255,.2);background:rgba(7,18,39,.7)}
+.es-math-scope .weapon-hardpoint.weapon-charge{width:24px;height:24px;box-shadow:0 0 14px rgba(255,255,255,.4), inset 0 0 10px rgba(255,255,255,.28)}
+.es-math-scope .weapon-hardpoint.suit-h{color:#ff7a8b;border-color:#ff7a8b;box-shadow:0 0 12px #ff506c,inset 0 0 8px #ff506c55}
+.es-math-scope .weapon-hardpoint.suit-d{color:#79e6ff;border-color:#79e6ff;box-shadow:0 0 12px #58e6ff,inset 0 0 8px #58e6ff55}
+.es-math-scope .weapon-hardpoint.suit-c{color:#74eacb;border-color:#74eacb;box-shadow:0 0 12px #4aff9b,inset 0 0 8px #4aff9b55}
+.es-math-scope .weapon-hardpoint.suit-s{color:#d59bff;border-color:#d59bff;box-shadow:0 0 12px #c176ff,inset 0 0 8px #c176ff55}
+.es-math-scope .weapon-hardpoint.universal{color:#ecfcff;border-color:#ecfcff;box-shadow:0 0 12px #ecfcff,inset 0 0 8px #ecfcff55}
+
+.es-math-scope .ship-enemy .e-lt{left:72px;top:24px}
+.es-math-scope .ship-enemy .e-rt{right:72px;top:24px}
+.es-math-scope .ship-enemy .e-lb{left:86px;top:106px}
+.es-math-scope .ship-enemy .e-rb{right:86px;top:106px}
+.es-math-scope .ship-player .e-lt{left:72px;top:42px}
+.es-math-scope .ship-player .e-rt{right:72px;top:42px}
+.es-math-scope .ship-player .e-lb{left:86px;top:122px}
+.es-math-scope .ship-player .e-rb{right:86px;top:122px}
+
+.es-math-scope .engine{width:112px;height:60px;background:linear-gradient(140deg,rgba(6,24,44,.72),rgba(3,10,22,.56));backdrop-filter:blur(3px)}
+.es-math-scope .engine .engine-target{font-size:11px}
+.es-math-scope .engine .engine-health{font-size:8px}
+.es-math-scope .motor-sprite{right:-3px;top:-4px;width:48px;height:48px;opacity:.9;mix-blend-mode:screen}
+
+.es-math-scope .projectile{height:20px;transform-origin:left center}
+.es-math-scope .projectile span{display:block;width:100%;height:100%;animation:beamShow .45s ease-out forwards;filter:drop-shadow(0 0 8px var(--beam-color))}
+.es-math-scope .shot-universal span{background:linear-gradient(transparent,#ecfcff,#fff,#ecfcff,transparent);height:8px;border-radius:20px}
+.es-math-scope .vfx-layer{position:absolute;inset:0;pointer-events:none;z-index:20}
+
+/* Fase 1C — motori e armi come parti delle navi; tutti i punti vivono nello
+   stesso sistema di coordinate dello sprite, anche con 2–3 astronavi. */
+.es-math-scope .fleet-ship-wrap{width:136px;height:132px;top:22px;transform:translateX(-50%);pointer-events:none;animation:fleetFloat 4.4s ease-in-out infinite alternate}
+.es-math-scope .fleet-ship-wrap.focused{width:254px;height:172px;top:-1px;z-index:3;animation-duration:5.2s}
+.es-math-scope .fleet-ship-wrap .fleet-ship-img{inset:0;position:absolute;width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 0 9px rgba(55,184,255,.45));animation:none!important;transform:none!important;opacity:1}
+.es-math-scope .ship-enemy .fleet-ship-wrap .fleet-ship-img{filter:drop-shadow(0 0 10px rgba(255,52,64,.55))}
+.es-math-scope .fleet-ship-wrap.dead-ship{opacity:.38;filter:grayscale(1)}
+.es-math-scope .fleet-ship-wrap.dead-ship .vessel-engine{pointer-events:none}
+.es-math-scope .ship-hardpoints{position:absolute;inset:0;z-index:8;pointer-events:none}
+.es-math-scope .weapon-mount{position:absolute;z-index:9;transform:translate(-50%,-50%);width:26px;height:31px;filter:drop-shadow(0 0 5px var(--gun));pointer-events:none}
+.es-math-scope .weapon-mount:before{content:"";position:absolute;inset:2px 3px 5px;border-radius:5px 5px 10px 10px;background:linear-gradient(100deg,#51697c,#182639 28%,#99adc7 52%,#101b30 78%,#5c768e);border:1px solid #b6d5ee;box-shadow:0 1px 4px #000, inset 0 0 3px #d9f2ff}
+.es-math-scope .weapon-barrel{position:absolute;width:11px;height:23px;left:7.5px;top:3px;background:linear-gradient(90deg,#0b172d,#566d84 30%,#ebf4ff 50%,#314c68 72%,#07182d);border:1px solid #c1d3e5;border-radius:6px;z-index:1;box-shadow:0 0 4px var(--gun)}
+.es-math-scope .weapon-tip{position:absolute;left:9px;top:21px;width:8px;height:8px;border:1px solid #fff;border-radius:50%;background:var(--gun);box-shadow:0 0 11px 3px var(--gun);z-index:2}
+.es-math-scope .ship-player .weapon-mount{transform:translate(-50%,-50%) rotate(180deg)}
+.es-math-scope .weapon-sign{position:absolute;left:18px;top:-5px;min-width:14px;height:14px;line-height:13px;text-align:center;border-radius:4px;background:#061426ee;border:1px solid var(--gun);font-size:11px;font-weight:900;color:var(--gun);z-index:5;box-shadow:0 0 5px var(--gun)}
+.es-math-scope .weapon-mount.charging:after{content:"";position:absolute;z-index:6;left:-4px;right:-4px;bottom:0;height:3px;background:linear-gradient(90deg,var(--gun) var(--charge),#17243c var(--charge));border:1px solid #cde6ff;border-radius:5px}
+.es-math-scope .vessel-engine{position:absolute;transform:translate(-50%,-50%);width:64px;height:59px;padding:0;background:none!important;border:none!important;box-shadow:none!important;overflow:visible!important;z-index:10;pointer-events:auto;opacity:1!important;cursor:pointer;filter:drop-shadow(0 0 3px #1b71b4)}
+.es-math-scope .vessel-engine-art{position:absolute;top:0;left:5px;width:54px;height:46px;object-fit:contain;pointer-events:none;filter:drop-shadow(0 0 3px #25bbff)}
+.es-math-scope .ve-enemy .vessel-engine-art{filter:drop-shadow(0 0 4px #ff454d)}
+.es-math-scope .vessel-engine-hud{position:absolute;top:34px;left:3px;width:58px;min-height:23px;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:0;background:linear-gradient(160deg,#06172bee,#020816ed);border:1px solid #54bffd;border-radius:4px;box-shadow:0 0 5px #35aeff55;white-space:nowrap;pointer-events:none}
+.es-math-scope .ve-enemy .vessel-engine-hud{border-color:#ff647e;box-shadow:0 0 6px #ff304b55}
+.es-math-scope .vessel-engine-hud strong{font-size:12px;font-weight:900;color:#f5faff;line-height:13px}
+.es-math-scope .vessel-engine-hud small{font-size:8px;font-weight:700;color:#cce8fd;line-height:10px}
+.es-math-scope .vessel-engine-meter{display:block;width:50px;height:2px;position:relative;background:#152640;overflow:hidden}
+.es-math-scope .vessel-engine-meter em{display:block;height:100%;background:linear-gradient(90deg,#35efb2,#d8f9a0)}
+.es-math-scope .vessel-engine.selected{filter:drop-shadow(0 0 10px #fff183)}
+.es-math-scope .vessel-engine.selected .vessel-engine-hud{border-color:#ffe790;box-shadow:0 0 12px #fff3ab}
+.es-math-scope .vessel-engine.dead .vessel-engine-hud{background:#180e10ef;border-color:#685b60}
+.es-math-scope .vessel-engine.dead .vessel-engine-art{filter:grayscale(.8) brightness(.6)}
+.es-math-scope .vessel-engine.hit{animation:engineImpact .4s ease-out 2}
+.es-math-scope .vessel-smoke{position:absolute;left:18px;top:2px;width:29px;height:29px;border-radius:50%;background:#292d33bb;filter:blur(9px);animation:smokePulse 2s infinite alternate;pointer-events:none}
+.es-math-scope .fleet-picker-inline{bottom:-1px;left:92px;right:92px;z-index:18}
+.es-math-scope .fleet-picker-inline button{box-shadow:0 1px 3px #000;border-color:#3087b8}
+.es-math-scope .vfx-layer{z-index:25;isolation:isolate}
+.es-math-scope .tracer-shell{position:absolute;display:block;width:17px;height:7px;opacity:0;pointer-events:none;z-index:10;transform:translate(-50%,-50%);animation:bulletTravel .64s cubic-bezier(.35,0,.67,1) var(--delay) forwards}
+.es-math-scope .tracer-core{position:absolute;inset:0;display:block;background:#fff;box-shadow:0 0 5px 2px var(--bullet),0 0 11px 5px var(--bullet);border:2px solid var(--bullet);border-radius:100% 30% 30% 100%;transform:rotate(var(--angle))}
+.es-math-scope .tracer-d .tracer-core{border-radius:0;clip-path:polygon(0 50%,50% 0,100% 50%,50% 100%)}
+.es-math-scope .tracer-c .tracer-core{height:4px;top:2px;border-radius:3px}
+.es-math-scope .tracer-s .tracer-core{clip-path:polygon(0 50%,80% 0,100% 50%,80% 100%)}
+.es-math-scope .tracer-all .tracer-core{border-radius:50%}
+.es-math-scope .delayed-impact{animation-delay:.7s!important;animation-fill-mode:both!important}
+.es-math-scope .impact.delayed-impact{animation-duration:.65s}
+.es-math-scope .impact-ring.delayed-impact{animation-duration:.65s}
+.es-math-scope .impact-number.delayed-impact{animation-duration:.7s}
+@keyframes bulletTravel{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.6)}8%{opacity:1}82%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(1.25)}}
+@keyframes fleetFloat{from{transform:translateX(-50%) translateY(-2px)}to{transform:translateX(-50%) translateY(2px)}}
+.es-math-scope .delayed-impact{animation-delay:1.05s!important}
+/* Congela l'oscillazione durante il tiro: le estremità del proiettile restano allineate. */
+.es-math-scope .ship-zone.ship-in-combat .fleet-ship-wrap{animation-play-state:paused}
+
+/* Fase 1D: sincronismo reale tra proiettili e impatto. */
+.es-math-scope .delayed-impact{animation-delay:var(--impact-delay,890ms)!important}
+/* Il colpo nasce dalla canna, non dal centro della torretta. */
+.es-math-scope .weapon-tip{min-width:8px;min-height:8px}
+/* I punti dei motori rimangono cliccabili, ma l'immagine e il suo HP si leggono 
+   anche quando la nave e' circondata da altre navi. */
+.es-math-scope .vessel-engine:focus-visible{outline:2px solid #fff5a0;outline-offset:2px;border-radius:7px}
+.es-math-scope .vessel-engine.selected{z-index:21}
+.es-math-scope .vessel-engine-art{filter:drop-shadow(0 0 5px #35cfff)}
+.es-math-scope .ve-enemy .vessel-engine-art{filter:drop-shadow(0 0 5px #ff626c)}
+
+/* Fase 1D: impatto di distruzione distinguibile da un colpo normale. */
+.es-math-scope .vfx-layer.motor-break .impact{filter:drop-shadow(0 0 22px #ffb248) saturate(1.35);transform:scale(1.2)}
+.es-math-scope .vfx-layer.motor-break .impact-ring{border-width:3px;box-shadow:0 0 15px #ff994f}
+.es-math-scope .vfx-layer.motor-break .impact-number{font-size:26px;text-shadow:0 0 10px #ff3c15,0 0 25px #fda65b}
+/* Binari e fasce metalliche laterali della plancia, senza sovrapporsi alle carte. */
+.es-math-scope .space-back::before,.es-math-scope .space-back::after{content:'';position:absolute;top:99px;bottom:207px;width:16px;pointer-events:none;z-index:0;opacity:.82;
+ background:linear-gradient(90deg,#061324,#587a97 15%,#1c3557 38%,#050b16 65%,#00ddff 80%,#021020);
+ box-shadow:0 0 10px #0d91ff, inset 0 0 4px #7fdfff;border:1px solid #254a78}
+.es-math-scope .space-back::before{left:-3px;transform:skewY(-7deg)}
+.es-math-scope .space-back::after{right:-3px;transform:skewY(7deg)}

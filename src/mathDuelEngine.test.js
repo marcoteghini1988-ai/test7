@@ -20,3 +20,63 @@ test('sacrifici primo +3 HP nemico, secondo -3 sec, terzo -3 HP proprio',()=>{le
 test('etere consuma una risorsa e non crea carte',()=>{let s=createShip(1,false,{},rng);let x=etherChange(s,0);assert.equal(x.ether,1);assert.equal(x.hand.length,7);x=etherChange(x,0);assert.equal(etherChange(x,0),null);});
 test('IA sceglie solo operatori attivi e calcoli validi con carte proprie',()=>{const b=initialBattle(1,{},rng),move=aiChoose(b.enemy,b.player,b.targets,rng);if(move){assert.ok(move.i>=0&&move.j<7);assert.ok(evaluatePair(move.op,b.enemy.hand[move.i].value,b.enemy.hand[move.j].value,b.targets[move.op]));assert.ok(supportedOperators(b.enemy).includes(move.op));}});
 test('500 colpi simulati: munizioni e HP mai negativi',()=>{for(let i=0;i<500;i++){const a=createShip(1,false,{fleetIds:['N00','C02','C03'],shipLevel:(i%5)+1},Math.random),b=createShip(1,true,{fleetIds:['N00','C01','C04'],shipLevel:(i%5)+1},Math.random),c=cards(i%13+1,['♥','♦','♣','♠'][i%4],(i*7)%13+1,['♥','♦','♣','♠'][(i+2)%4]),op=i%3===0?'plus':i%3===1?'minus':'times';if(!b.fleet[0].engines[op])continue;const h=dealHit(b,a,op,9,c);assert.ok(h.damage>=0);assert.ok(h.damage<=h.rawDamage);assert.ok(healthScore(h.defender)>=0);for(const s of h.volley)assert.ok(s.charge>=0&&s.damage>=0);}});
+
+// Fase 1A — test di regressione del riconoscimento matematico e dei bersagli.
+import {ENGINE_KEYS,TARGET_POOLS,rankLabel,inspectCalculation,calculation} from './mathDuelEngine.js';
+test('asso e figure hanno i valori visualizzati e calcolati coerenti',()=>{
+ assert.equal(rankLabel(1),'A');assert.equal(rankLabel(11),'J');assert.equal(rankLabel(12),'Q');assert.equal(rankLabel(13),'K');
+ assert.equal(calculation('plus',1,13),14);assert.equal(calculation('times',11,12),132);
+ assert.ok(evaluatePair('plus',1,13,14));assert.ok(evaluatePair('minus',13,1,12));
+ assert.ok(evaluatePair('divide',12,3,4));assert.ok(evaluatePair('times',11,13,143));
+});
+test('tutte le 4 operazioni e le inversioni consentite sono riconosciute',()=>{
+ for(const [op,a,b,target] of [['plus',8,1,9],['times',8,3,24],['minus',3,8,5],['divide',3,12,4]]){
+  const valid=inspectCalculation(op,a,b,target);
+  assert.equal(valid.valid,true,`${op} ${a} ${b} → ${target}`);
+  assert.equal(valid.result,target);
+ }
+ assert.equal(inspectCalculation('plus',8,1,17).valid,false);
+ assert.equal(inspectCalculation('plus',8,1,17).result,9);
+ assert.equal(inspectCalculation('divide',8,3,3).valid,false); // 8 ÷ 3 non è esatta
+});
+test('nessun falso negativo su tutte le coppie A..K e tutti gli operatori',()=>{
+ for(const op of ENGINE_KEYS)for(let a=1;a<=13;a++)for(let b=1;b<=13;b++){
+  const result=calculation(op,a,b);
+  if(!Number.isInteger(result))continue;
+  const hit=evaluatePair(op,a,b,result);
+  assert.ok(hit,`Falso negativo ${a} ${op} ${b} = ${result}`);
+  assert.equal(hit.result,result);
+  assert.equal(inspectCalculation(op,a,b,result).valid,true);
+ }
+});
+test('nessun falso positivo per bersagli diversi dai risultati possibili',()=>{
+ for(const op of ENGINE_KEYS)for(let a=1;a<=13;a++)for(let b=1;b<=13;b++){
+  const expected=[calculation(op,a,b)];
+  if(op==='minus'||op==='divide')expected.push(calculation(op,b,a));
+  for(let goal=-5;goal<=40;goal++){
+   const valid=expected.some(v=>Number.isInteger(v)&&v===goal);
+   assert.equal(Boolean(evaluatePair(op,a,b,goal)),valid,`${a} ${op} ${b} → ${goal}`);
+  }
+ }
+});
+test('ogni bersaglio generabile è risolvibile in teoria con due carte 1..13',()=>{
+ for(const op of ENGINE_KEYS)for(const goal of TARGET_POOLS[op]){
+  let possible=false;
+  for(let a=1;a<=13&&!possible;a++)for(let b=1;b<=13;b++)if(evaluatePair(op,a,b,goal)){possible=true;break;}
+  assert.ok(possible,`Bersaglio irraggiungibile ${op} ${goal}`);
+ }
+});
+test('50.000 generazioni indipendenti dalla mano non producono bersagli irraggiungibili',()=>{
+ const possible=Object.fromEntries(ENGINE_KEYS.map(op=>[op,new Set(TARGET_POOLS[op])]));
+ for(let i=0;i<50000;i++){
+  const targets=generateTargets(Math.random,1+i%30);
+  for(const op of ENGINE_KEYS)assert.ok(possible[op].has(targets[op]),`Target impossibile ${op} ${targets[op]}`);
+ }
+});
+test('operazioni non sbloccate rimangono indisponibili, non sono errori matematici',()=>{
+ const starter=createShip(1,false,{fleetIds:['N00']},rng);
+ assert.deepEqual(supportedOperators(starter),['plus','minus']);
+ const unlock=createShip(1,false,{fleetIds:['C03'],shipLevel:4},rng);
+ assert.ok(supportedOperators(unlock).includes('times'));
+ assert.ok(evaluatePair('times',8,3,24));
+});

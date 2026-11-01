@@ -4,6 +4,8 @@ export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
 export const SUIT_KEYS={'♥':'H','♦':'D','♣':'C','♠':'S'};
 export const SUIT_SIGNS={H:'♥',D:'♦',C:'♣',S:'♠'};
+// Rank cards are displayed as letters, while arithmetic always uses 1..13.
+export const rankLabel=value=>value===1?'A':value===11?'J':value===12?'Q':value===13?'K':String(value);
 export const BASE_HP={plus:72,minus:72,times:85,divide:72};
 export const TOTAL_LEVELS=30;
 export const PHASE1_SHIPS=PHASE1_CATALOG.ships;
@@ -30,9 +32,48 @@ export function newVessel(id='N00',level=1){
 export function newShip(_level=1,isEnemy=false,upgrades={}){const ids=Array.isArray(upgrades.fleetIds)&&validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];const level=Number(upgrades.shipLevel)||1;return {fleet:ids.map(id=>newVessel(id,level)),hand:[],deck:[],discard:[],sacrifices:0,ether:isEnemy?1:2};}
 export function fillHand(side){const n={...side,hand:[...side.hand],deck:[...side.deck]};while(n.hand.length<7&&n.deck.length)n.hand.push(n.deck.pop());return n;}
 export function createShip(level=1,isEnemy=false,upgrades={},rng=Math.random){let s=newShip(level,isEnemy,upgrades);s.deck=newDeck(rng);return fillHand(s);}
-export function generateTargets(rng=Math.random,level=1){const ri=(lo,hi)=>lo+Math.floor(rng()*(hi-lo+1));return {plus:ri(6,23),minus:ri(1,11),times:ri(8,39+Math.min(12,Math.floor(level/4))),divide:ri(1,10)};}
-export function calculation(op,a,b){return op==='plus'?a+b:op==='minus'?a-b:op==='times'?a*b:op==='divide'?(b===0?NaN:a/b):NaN;}
-export function evaluatePair(op,first,second,target){if(!Number.isFinite(target))return null;const f=calculation(op,first,second);if(Number.isInteger(f)&&f===target)return {a:first,b:second,result:f};if(op==='minus'||op==='divide'){const r=calculation(op,second,first);if(Number.isInteger(r)&&r===target)return {a:second,b:first,result:r};}return null;}
+// Bersagli teoricamente risolvibili con DUE carte da 1 a 13. Non dipendono
+// dalle carte effettivamente in mano: non esiste soluzione garantita per turno.
+// Al livello 1 sono favoriti prodotti e quozienti con molte coppie possibili.
+export const TARGET_POOLS={
+ plus:Array.from({length:19},(_,i)=>i+4),
+ minus:Array.from({length:11},(_,i)=>i+1),
+ times:[6,8,9,10,12,14,15,16,18,20,21,24,25,27,28,30,32,33,35,36,39,40,42,44,45,48,49,50,52,54,55,56,60,63,64,65,66,70,72,77,78,80,81,84,88,90,91,96,99,100,104,108,110,117,120,121,130,132,143,144,156,169],
+ divide:Array.from({length:13},(_,i)=>i+1)
+};
+function drawTarget(pool,rng){const roll=Number(rng());return pool[Math.min(pool.length-1,Math.max(0,Math.floor((Number.isFinite(roll)?roll:0)*pool.length)))];}
+export function generateTargets(rng=Math.random,level=1){
+ const difficulty=Math.max(1,Number(level)||1);
+ const products=TARGET_POOLS.times.filter(n=>n<=(difficulty>=21?169:difficulty>=11?80:40));
+ const quotients=TARGET_POOLS.divide.filter(n=>n<=(difficulty>=21?13:difficulty>=11?10:7));
+ return {plus:drawTarget(TARGET_POOLS.plus,rng),minus:drawTarget(TARGET_POOLS.minus,rng),times:drawTarget(products,rng),divide:drawTarget(quotients,rng)};
+}
+export function calculation(op,a,b){
+ if(!ENGINE_KEYS.includes(op)||!Number.isInteger(a)||!Number.isInteger(b)||a<1||a>13||b<1||b>13)return NaN;
+ return op==='plus'?a+b:op==='minus'?a-b:op==='times'?a*b:op==='divide'?a/b:NaN;
+}
+// + e × sono commutative; per − e ÷ le carte possono essere invertite.
+// Divisione valida solo con risultato intero e uguale al bersaglio.
+export function evaluatePair(op,first,second,target){
+ if(!ENGINE_KEYS.includes(op)||!Number.isInteger(target))return null;
+ const f=calculation(op,first,second);
+ if(Number.isInteger(f)&&f===target)return {a:first,b:second,result:f};
+ if(op==='minus'||op==='divide'){
+  const r=calculation(op,second,first);
+  if(Number.isInteger(r)&&r===target)return {a:second,b:first,result:r};
+ }
+ return null;
+}
+// Unica fonte di verità per il messaggio mostrato al giocatore e il controllo ATTACCA.
+export function inspectCalculation(op,first,second,target){
+ const match=evaluatePair(op,first,second,target);
+ if(match)return {...match,valid:true,target};
+ const options=[{a:first,b:second,result:calculation(op,first,second)}];
+ if(op==='minus'||op==='divide')options.push({a:second,b:first,result:calculation(op,second,first)});
+ options.sort((x,y)=>Math.abs(x.result-target)-Math.abs(y.result-target));
+ const best=options[0];
+ return {...best,valid:false,target,reason:Number.isFinite(best.result)?'target_mismatch':'invalid_cards'};
+}
 export function totalHP(side){return side.fleet.reduce((sum,v)=>sum+ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.hp||0),0),0);}
 export function totalMax(side){return side.fleet.reduce((sum,v)=>sum+ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.max||0),0),0);}
 export function vesselDestroyed(v){return ENGINE_KEYS.every(k=>!v.engines[k]||v.engines[k].hp<=0);}
