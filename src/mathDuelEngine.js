@@ -79,9 +79,9 @@ export function sacrificeCard(ship, index, opponent, secondsLeft=60){
   const order=ship.sacrifices;let next={...ship,hand:[...ship.hand],deck:[...ship.deck],discard:[...ship.discard],engines:{...ship.engines},sacrifices:order+1};
   const [removed]=next.hand.splice(index,1);next.discard.push(removed); next=fillHand(next);
   let other={...opponent,engines:{...opponent.engines}};let seconds=secondsLeft;let detail='';
-  if(order===0){const live=ENGINE_KEYS.filter(k=>next.engines[k].hp>0).sort((a,b)=>next.engines[a].hp-next.engines[b].hp);if(live.length){const k=live[0];next.engines[k]={...next.engines[k],hp:Math.max(0,next.engines[k].hp-3)};}detail='−3 HP alla tua nave';}
+  if(order===2){const live=ENGINE_KEYS.filter(k=>next.engines[k].hp>0).sort((a,b)=>next.engines[a].hp-next.engines[b].hp);if(live.length){const k=live[0];next.engines[k]={...next.engines[k],hp:Math.max(0,next.engines[k].hp-3)};}detail='−3 HP alla tua nave';}
   if(order===1){seconds=Math.max(0,seconds-3);detail='−3 secondi';}
-  if(order===2){const valid=ENGINE_KEYS.filter(k=>other.engines[k].hp>0 && other.engines[k].hp<other.engines[k].max).sort((a,b)=>other.engines[a].hp-other.engines[b].hp);if(valid.length){const k=valid[0];other.engines[k]={...other.engines[k],hp:Math.min(other.engines[k].max,other.engines[k].hp+3)};}detail='+3 HP al nemico';}
+  if(order===0){const live=ENGINE_KEYS.filter(k=>other.engines[k].hp>0).sort((a,b)=>other.engines[a].hp-other.engines[b].hp);if(live.length){const k=live[0];other.engines[k]={...other.engines[k],max:other.engines[k].max+3,hp:other.engines[k].hp+3};}detail='+3 HP al nemico';}
   return {ship:next,opponent:other,seconds,detail};
 }
 export function etherChange(ship,index){if(!ship.ether||ship.deck.length===0||index<0||index>=ship.hand.length)return null;
