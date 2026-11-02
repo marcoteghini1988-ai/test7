@@ -45,7 +45,7 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
     const focusedShip=i===focused,dead=vesselDestroyed(v),count=v.weapons.length;
     return <div key={i} className={`fleet-ship-wrap${focusedShip?' focused':''}${dead?' dead-ship':''}`}
      style={{left:`${shipX(i,ship.fleet.length,focused)/450*100}%`,zIndex:focusedShip?3:1}}>
-     <img ref={node=>registerShipRef?.(side,i,node)} className="fleet-ship-img" src={`${SHIPS}${v.id}${side==='player'?'_player':''}.png`}
+     <img ref={node=>registerShipRef?.(side,i,node)} className="fleet-ship-img" src={`${SHIPS}views/${side==='player'?'player_to_enemy':'enemy_to_player'}/${v.id}.png`}
       alt={`${v.name}, livello ${v.level}`} draggable="false"/>
      <div className="ship-hardpoints">{v.weapons.map((w,wi)=>{
        const [x,y]=gunPoint(side,count,wi);
@@ -65,10 +65,10 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
    })}
    <div className={'engine-thruster '+(enemy?'red':'blue')}/>
   </div>
-  <div className="fleet-picker-inline">{ship.fleet.map((v,i)=><button key={i} type="button"
+  <div className={`fleet-picker-inline${ship.fleet.length===1?' single-ship':''}`}>{ship.fleet.map((v,i)=><button key={i} type="button"
    className={focused===i?'focus':''} onClick={()=>onSelectShip?.(i)}
    disabled={enemy&&phase!=='ready'} title={`${v.name} · ${v.level}`}>
-   <span className={`fleet-dot${vesselDestroyed(v)?' lost':''}`}/>{v.name.split(' ')[0]} L{v.level}</button>)}</div>
+   <span className={`fleet-dot${vesselDestroyed(v)?' lost':''}`}/>{v.name} · L{v.level}</button>)}</div>
   {ship.fleet.every(vesselDestroyed)&&<span className="fleet-eliminated">FLOTTA DISTRUTTA</span>}
  </div>;
 }
