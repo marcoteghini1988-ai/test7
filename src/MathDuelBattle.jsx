@@ -1,6 +1,6 @@
 import React,{useState,useEffect,useRef,useLayoutEffect} from 'react';
 
-import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed} from './mathDuelEngine.js';
+import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,gunPoint,volleyTimeline} from './mathFleetGeometry.js';
 import './MathDuelBattle.css';
 const URL='/assets/mathduel/';const SHIPS='/assets/mathfleet/';
@@ -18,7 +18,7 @@ function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,e
  const state=dead?'destroyed':ratio<=.3?'critical':ratio<=.65?'damaged':'intact';
  const [px,py]=enginePoint(side,vessel.id,op);
  return <button type="button" style={{left:`${px*100}%`,top:`${py*100}%`}}
-  className={`vessel-engine ve-${op} ve-${side}${selected?' selected':''}${dead?' dead':''}${hit?' hit':''}`}
+  className={`vessel-engine ve-${op} ve-${side}${selected&&!dead?' selected':''}${dead?' dead':''}${hit?' hit':''}`}
   disabled={!enabled||dead||!available} onClick={()=>onSelect?.(op)}
   aria-label={`${side==='enemy'?'Nemico':'Tu'}: motore ${META[op].name}, ${engine.hp} di ${engine.max} HP, bersaglio ${target??'non disponibile'}`}>
   <img ref={engineRef} className="vessel-engine-art" src={`${SHIPS}motor_${op}_${state}.png`} alt="" draggable="false"/>
@@ -32,8 +32,8 @@ function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,e
 }
 function shipX(index,count,focused){if(index===focused)return 225;
  const others=Array.from({length:count},(_,i)=>i).filter(i=>i!==focused);
- if(count===2)return index<focused?100:350;
- return index===others[0]?100:350;
+ if(count===2)return index<focused?118:332;
+ return index===others[0]?108:342;
 }
 function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,phase,effect,availableOps,registerShipRef,registerEngineRef,registerGunRef}){
  const enemy=side==='enemy',targetable=enemy&&phase==='ready';
@@ -154,6 +154,13 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   b.selected=[];b.effect=null;b.targets=generateTargets(Math.random,b.level);
   if(side==='player'){b.actor='enemy';b.phase='thinking';b.notice='Turno avversario';}
   else{b.actor='player';b.phase='ready';b.round+=1;b.seconds=60;b.player.sacrifices=0;b.enemy.sacrifices=0;b.notice='Nuovi bersagli: seleziona un motore';}
+  // Retarget after destruction: never keep selecting a knocked-out engine.
+  const next=nextAttackTarget(b.player,b.enemy,b.targetShip,b.target);
+  if(next){
+   const changed=next.targetShip!==b.targetShip||next.target!==b.target;
+   b.targetShip=next.targetShip;b.target=next.target;
+   if(changed)b.notice=`Motore ${META[next.target].sign} selezionato: ${b.enemy.fleet[next.targetShip].name}`;
+  }else if(b.actor==='player')b.notice='Nessun motore nemico attaccabile: passa il turno';
   return b;
  }
  function fire(side,move){const b=gameRef.current;if(b.phase==='finished'||b.phase==='animating'||b.actor!==side)return;
@@ -174,10 +181,21 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    write(transition(next,side));
   },timing.settleMs);
  }
- function attack(){const b=gameRef.current;if(b.phase!=='ready'||b.selected.length!==2){notice('Seleziona due carte');return;}fire('player',{op:b.target,targetShip:b.targetShip,i:b.selected[0],j:b.selected[1]});}
+ function attack(){const b=gameRef.current;if(b.phase!=='ready'||b.actor!=='player')return;
+  const next=nextAttackTarget(b.player,b.enemy,b.targetShip,b.target);
+  if(!next){notice('Nessun motore nemico attaccabile');return;}
+  if(next.targetShip!==b.targetShip||next.target!==b.target){
+   write({...b,...next});notice('Bersaglio distrutto: motore successivo selezionato');return;
+  }
+  if(b.selected.length!==2){notice('Seleziona due carte');return;}
+  fire('player',{op:b.target,targetShip:b.targetShip,i:b.selected[0],j:b.selected[1]});}
  function pick(i){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;const next=clone(b);next.selected=next.selected.includes(i)?next.selected.filter(x=>x!==i):next.selected.length>=2?[next.selected[1],i]:[...next.selected,i];write(next);tone('click');}
  function selectEngine(op){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;if(!supportedOperators(b.player).includes(op)){notice('La tua flotta non ha ancora questo motore operativo');return;}if((b.enemy.fleet[b.targetShip]?.engines[op]?.hp||0)<=0)return;write({...b,target:op});}
- function chooseEnemy(i){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;const v=b.enemy.fleet[i];if(!v||vesselDestroyed(v))return;const op=ENGINE_KEYS.find(k=>(v.engines[k]?.hp||0)>0&&supportedOperators(b.player).includes(k))||b.target;write({...b,targetShip:i,target:op});}
+ function chooseEnemy(i){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;
+  const v=b.enemy.fleet[i];if(!v||vesselDestroyed(v))return;
+  const target=nextAttackTarget(b.player,b.enemy,i,b.target);
+  if(!target||target.targetShip!==i){notice('Questa nave non ha motori attaccabili con le operazioni disponibili');return;}
+  write({...b,...target});}
  function change(withEther){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;if(b.selected.length!==1){notice('Seleziona UNA carta da cambiare');return;}
   const n=clone(b),i=n.selected[0];if(withEther){const ship=etherChange(n.player,i);if(!ship){notice('Etere insufficiente o mazzo vuoto');return;}n.player=ship;onEtherConsumed?.(1);n.notice='Carta sostituita con Etere';}
   else{const swap=sacrificeCard(n.player,i,n.enemy,n.seconds);if(!swap){notice('Non puoi cambiare altre carte');return;}n.player=swap.ship;n.enemy=swap.opponent;n.seconds=swap.seconds;n.notice=`Sacrificio ${n.player.sacrifices}/3: ${swap.detail}`;}

@@ -9,19 +9,19 @@ export const ENGINE_POINTS={
 // Some ships have wider wings or more central engine nacelles; four generic
 // percentages would place a target outside the visible hull.
 export const SHIP_ENGINE_POINTS={
- N00:{plus:[.36,.37],minus:[.64,.37],times:[.28,.61],divide:[.72,.61]},
- C01:{plus:[.35,.41],minus:[.65,.41],times:[.26,.65],divide:[.74,.65]},
- C02:{plus:[.35,.38],minus:[.65,.38],times:[.26,.65],divide:[.74,.65]},
- C03:{plus:[.35,.40],minus:[.65,.40],times:[.26,.66],divide:[.74,.66]},
- C04:{plus:[.36,.42],minus:[.64,.42],times:[.27,.62],divide:[.73,.62]},
+ N00:{plus:[.37,.33],minus:[.63,.33],times:[.29,.58],divide:[.71,.58]},
+ C01:{plus:[.35,.36],minus:[.65,.36],times:[.27,.61],divide:[.73,.61]},
+ C02:{plus:[.36,.34],minus:[.64,.34],times:[.27,.60],divide:[.73,.60]},
+ C03:{plus:[.35,.35],minus:[.65,.35],times:[.28,.59],divide:[.72,.59]},
+ C04:{plus:[.36,.35],minus:[.64,.35],times:[.29,.59],divide:[.71,.59]},
 };
 export function enginePoint(side,shipId,op){
  const point=SHIP_ENGINE_POINTS[shipId]?.[op] || ENGINE_POINTS.enemy[op];
  return side==='player'?[point[0],1-point[1]]:point;
 }
 export const GUN_POINTS={
- enemy:{1:[[.50,.77]],2:[[.30,.72],[.70,.72]],3:[[.32,.82],[.50,.89],[.68,.82]],4:[[.28,.86],[.43,.91],[.57,.91],[.72,.86]]},
- player:{1:[[.50,.23]],2:[[.30,.28],[.70,.28]],3:[[.32,.18],[.50,.11],[.68,.18]],4:[[.28,.14],[.43,.09],[.57,.09],[.72,.14]]}
+ enemy:{1:[[.50,.66]],2:[[.35,.62],[.65,.62]],3:[[.33,.72],[.50,.80],[.67,.72]],4:[[.30,.78],[.43,.84],[.57,.84],[.70,.78]]},
+ player:{1:[[.50,.34]],2:[[.35,.38],[.65,.38]],3:[[.33,.28],[.50,.20],[.67,.28]],4:[[.30,.22],[.43,.16],[.57,.16],[.70,.22]]}
 };
 export function gunPoint(side,count,index){return (GUN_POINTS[side]?.[count]||GUN_POINTS[side]?.[4]||[])[index]||[.5,.5];}
 export function boardPoint(rootBox,objectBox){

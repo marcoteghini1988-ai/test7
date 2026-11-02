@@ -79,6 +79,22 @@ export function totalMax(side){return side.fleet.reduce((sum,v)=>sum+ENGINE_KEYS
 export function vesselDestroyed(v){return ENGINE_KEYS.every(k=>!v.engines[k]||v.engines[k].hp<=0);}
 export function isDestroyed(side){return side.fleet.every(vesselDestroyed);}
 export function healthScore(side){return totalMax(side)?totalHP(side)/totalMax(side):0;}
+// Prefer a surviving engine on the selected ship, then proceed to another ship.
+// Only operators still available to the attacking fleet can be targeted.
+export function nextAttackTarget(attacker,defender,preferredShip=0,preferredOp='plus'){
+ const operators=supportedOperators(attacker);
+ if(!operators.length||!defender?.fleet?.length)return null;
+ const n=defender.fleet.length;
+ const selected=Number.isInteger(preferredShip)&&preferredShip>=0&&preferredShip<n?preferredShip:0;
+ const order=[selected,...Array.from({length:n-1},(_,offset)=>(selected+offset+1)%n)];
+ for(const index of order){
+  const v=defender.fleet[index];
+  if(!v)continue;
+  const ops=index===selected&&operators.includes(preferredOp)?[preferredOp,...operators.filter(x=>x!==preferredOp)]:operators;
+  for(const op of ops)if((v.engines[op]?.hp||0)>0)return {targetShip:index,target:op};
+ }
+ return null;
+}
 export function deckExhausted(a,b){return a.deck.length===0||b.deck.length===0;}
 export function deckVerdict(a,b){const x=healthScore(a),y=healthScore(b);return Math.abs(x-y)<1e-5?'draw':x>y?'player':'enemy';}
 // Each valid calculation consumes ONLY the 2 selected cards. Their face values are ammo, their suits are triggers.

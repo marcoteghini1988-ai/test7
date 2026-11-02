@@ -80,3 +80,38 @@ test('operazioni non sbloccate rimangono indisponibili, non sono errori matemati
  assert.ok(supportedOperators(unlock).includes('times'));
  assert.ok(evaluatePair('times',8,3,24));
 });
+
+// Fase 1F — engine target selector regression tests.
+import {nextAttackTarget} from './mathDuelEngine.js';
+test('after plus reaches 0 HP, minus on the same ship becomes selected',()=>{
+ const player=createShip(1,false,{fleetIds:['N00']},rng);
+ const enemy=createShip(1,true,{fleetIds:['N00']},rng);
+ enemy.fleet[0].engines.plus.hp=0;
+ assert.deepEqual(nextAttackTarget(player,enemy,0,'plus'),{targetShip:0,target:'minus'});
+});
+test('destroying both engines on one enemy ship selects the next ship',()=>{
+ const player=createShip(1,false,{fleetIds:['N00','C01']},rng);
+ const enemy=createShip(1,true,{fleetIds:['N00','C01']},rng);
+ enemy.fleet[0].engines.plus.hp=0;
+ enemy.fleet[0].engines.minus.hp=0;
+ assert.deepEqual(nextAttackTarget(player,enemy,0,'plus'),{targetShip:1,target:'plus'});
+});
+test('retains an intact selected engine and lets user select the other one manually',()=>{
+ const player=createShip(1,false,{fleetIds:['N00']},rng);
+ const enemy=createShip(1,true,{fleetIds:['N00']},rng);
+ assert.deepEqual(nextAttackTarget(player,enemy,0,'plus'),{targetShip:0,target:'plus'});
+ assert.deepEqual(nextAttackTarget(player,enemy,0,'minus'),{targetShip:0,target:'minus'});
+});
+test('dead operators on player side cannot target enemies, but other operators can',()=>{
+ const player=createShip(1,false,{fleetIds:['N00']},rng);
+ const enemy=createShip(1,true,{fleetIds:['N00']},rng);
+ player.fleet[0].engines.plus.hp=0;
+ assert.deepEqual(nextAttackTarget(player,enemy,0,'plus'),{targetShip:0,target:'minus'});
+});
+test('when no compatible enemy motor remains, return null rather than selecting a destroyed motor',()=>{
+ const player=createShip(1,false,{fleetIds:['N00']},rng);
+ const enemy=createShip(1,true,{fleetIds:['N00']},rng);
+ enemy.fleet[0].engines.plus.hp=0;
+ enemy.fleet[0].engines.minus.hp=0;
+ assert.equal(nextAttackTarget(player,enemy,0,'plus'),null);
+});
