@@ -6,6 +6,21 @@ import React, {
   useMemo,
 } from 'react';
 import { LEGACY_TUTORIALS_ENABLED } from './legacyTutorialConfig';
+
+// Optional telemetry passed by the existing battle views to campaign settlement.
+type BattleResultMeta = {
+  matchStats?: Record<string, unknown>;
+  turnsElapsed?: number;
+  activeTimeElapsedMs?: number;
+  remainingHpPct?: number;
+  isDraw?: boolean;
+  isPvP?: boolean;
+  pvpChannel?: string;
+  pvpTrophiesAwarded?: number;
+  pvpBonusDiamonds?: number;
+  starsEarned?: boolean[];
+  usedRevive?: boolean;
+};
 import { ref, onValue, update, onDisconnect } from './offlineLegacyNetwork.js';
 import {
   db,
@@ -708,10 +723,10 @@ const evaluate5CardPokerHand = (cards) => {
   }
 
 
-  const values = validCards.map(c => Number(c.value) || 0).sort((a, b) => a - b);
+  const values: number[] = validCards.map(c => Number(c.value) || 0).sort((a, b) => a - b);
   const suits = validCards.map(c => getCardSuit(c));
 
-  const counts = {};
+  const counts: Record<number, number> = {};
   values.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
   const freq = Object.values(counts).sort((a, b) => b - a);
 
@@ -898,10 +913,10 @@ const validateClassicPokerPattern = (cards, patternId) => {
 
   const jokers = validCards.filter(c => c.isJoker || c.suit === 'joker').length;
   const nonJokers = validCards.filter(c => !c.isJoker && c.suit !== 'joker');
-  const nonJokerVals = nonJokers.map(c => Number(c.value) || 0).sort((a, b) => a - b);
+  const nonJokerVals: number[] = nonJokers.map(c => Number(c.value) || 0).sort((a, b) => a - b);
   const nonJokerSuits = nonJokers.map(c => getCardSuit(c));
 
-  const counts = {};
+  const counts: Record<number, number> = {};
   nonJokerVals.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
   const freq = Object.values(counts).sort((a, b) => b - a);
 
@@ -3582,7 +3597,7 @@ const PLANET_ZONE_NAMES = Object.freeze([
 // 2.4 COMPONENTE VENTAGLI D'ANGOLO DEI 4 ASSI (CORNERACEFAN)
 //     CON VISIBILITÃ€ DEL DORSO ESTRUSA E DOPPI INDICI REATTIVI
 // ============================================================================
-function CornerAceFan({ suitId, selectedDeck, currentDeckObj, corner = 'nw', onClick }) {
+function CornerAceFan({ suitId, selectedDeck, currentDeckObj, corner = 'nw', onClick = undefined }) {
   const suitInfo = SUITS.find(s => s.id === suitId) || SUITS[0];
 
   return (
@@ -7765,7 +7780,7 @@ const generateTrisStellareObjectives = (
 
 
 
-const getSectorGameType = () => {
+const getSectorGameType = (_planet?: number, _level?: number, _bossPhase?: number) => {
   return 'classic';
 };
 
@@ -8593,7 +8608,8 @@ const isTrisMode = false;
         level: Math.min(cardLvl, getMaxAllowedLevelForPilot(level, 3)),
         isTriggered: false,
         isExhausted: false,
-        canRearm: false
+        canRearm: false,
+        autoRearmTurns: 0
       };
     });
   });
@@ -8625,7 +8641,8 @@ const isTrisMode = false;
         level: aiTerrainTier,
         isTriggered: false,
         isExhausted: false,
-        canRearm: false
+        canRearm: false,
+        autoRearmTurns: 0
       };
     });
   });
@@ -8697,7 +8714,7 @@ const isTrisMode = false;
   });
 
 
-  const bombStateRef = useRef(bombState);
+  const bombStateRef = useRef<typeof bombState & { isNew?: boolean }>(bombState);
   useEffect(() => { bombStateRef.current = bombState; }, [bombState]);
 
 
@@ -9025,7 +9042,9 @@ const isTrisMode = false;
 
   
     // Modalità Tris Stellare: Formula ad Incastro con 3 Bersagli (2 Normali + 1 Bomba)
-  const [trisObjectives, setTrisObjectives] = useState(() => 
+  const [trisObjectives, setTrisObjectives] = useState<
+    ReturnType<typeof generateTrisStellareObjectives> & { op2?: string }
+  >(() =>
     generateTrisStellareObjectives(
       bombState, 
       (currentAdvPlanet - 1) * 10 + currentAdvLevel, 
@@ -9731,8 +9750,8 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
     }
   };
 
-  const onScoreSuccessRef = useRef();
-  const declareWinnerRef = useRef();
+  const onScoreSuccessRef = useRef<typeof onScoreSuccess>(undefined);
+  const declareWinnerRef = useRef<typeof declareWinner>(undefined);
   const activeAdventureRef = useRef(activeAdventure);
   const tierConfigRef = useRef(tierConfig);
     const availableReviveLivesRef = useRef(availableReviveLives);
@@ -9881,7 +9900,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
         setWonBattleRewards({
           stardust: Math.round(baseRew.stardust * rewardMult),
           xp: baseRew.xp,
-          credits: Math.round(baseRew.credits * rewardMult || 0),
+          credits: 0, // Campaign rewards currently grant dust, diamonds and XP only.
           diamonds: baseRew.diamonds,
           trophies: 0,
           voidCrystals: 0,
@@ -10523,7 +10542,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
   }, [maxPlayerHp, malusMaxTicks, maxBattleEther, playerTraits, addStardustWithCap, setEther, setDiamonds, triggerFloatingText, triggerPlayerHealFx, triggerPopup]);
 
 
-    const checkAndTriggerTerrainCards = useCallback((condition, isPlayer = true, extraData = {}) => {
+    const checkAndTriggerTerrainCards = useCallback((condition, isPlayer = true, extraData: { incomingDamage?: number } = {}) => {
     if (!isTerrainAllowed) return false;
     // P16 Gliese 581g: blocco delle trappole a microgravit  a meno di sblocco temporaneo per parit /disparit 
     if (isAdv && isTerrainDisabledForBoss(currentAdvPlanet, currentAdvLevel, temporaryTerrainUnlocked)) {
@@ -11131,7 +11150,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
     }
 
         if (isTrisMode) {
-      const newTris = generateTrisStellareObjectives(
+      const newTris: typeof trisObjectives = generateTrisStellareObjectives(
         bombStateRef.current,
         (currentAdvPlanet - 1) * 10 + currentAdvLevel,
         isBombAllowed,
@@ -17616,7 +17635,7 @@ function App() {
       const saved = localStorage.getItem('eclissi_deck_inventory');
       if (saved) return JSON.parse(saved);
       const legacyUnlocked = JSON.parse(localStorage.getItem('eclissi_unlocked_decks') || '{"neutral_starter":true}');
-      const initialMap = {};
+      const initialMap: Record<string, { level: number; unlocked: boolean }> = {};
       Object.keys(legacyUnlocked).forEach(dId => {
         initialMap[dId] = { level: 1, unlocked: true };
       });
@@ -17977,7 +17996,7 @@ function App() {
     triggerPopup('Arma equipaggiata nel suo slot di classe.');
   };
 
-  const handleUnlockWeapon = useCallback((weaponId, cost = {}) => {
+  const handleUnlockWeapon = useCallback((weaponId, cost: { dust?: number; diamonds?: number } = {}) => {
     const dustCost = cost.dust || 0;
     const diaCost = cost.diamonds || 0;
     if (stardust < dustCost || diamonds < diaCost) {
@@ -18708,7 +18727,7 @@ function App() {
     }
   }, [diamonds, voidCrystals, primordialMatter, tankConfig, level, addVoidCrystalsSafe, addPrimordialMatterSafe, addStardustSafe, triggerPopup]);
 
-    const handleGameEnd = useCallback((winnerName, battleMeta = {}) => {
+    const handleGameEnd = useCallback((winnerName, battleMeta: BattleResultMeta = {}) => {
     const isPlayerWin = (winnerName === nickname);
 
        // TRACCIAMENTO GLOBALE CONTRATTI (ATTIVO IN TUTTE LE MODALITÀ: CAMPAGNA, PVE, PVP)

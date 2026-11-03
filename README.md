@@ -1,29 +1,42 @@
-# Eclissi Stellare — Matematica 3D (React / Vite)
+# Eclissi Stellare — Duello dei Motori
 
-## Versione
-Revisione basata **sulla plancia 3D originale R12**, non sull'app HTML autonoma 2.0 e non sul redesign React 2.1. Il progetto resta React/Vite e contiene `src/`, `public/`, `package.json`, `index.html` (solo punto d'ingresso Vite).
+Gioco React/Vite esistente, con Home, Shop, assetto/Hangar e campagna. Il combattimento attivo usa `MathDuelBattle.jsx`: i vecchi moduli Poker rimangono nel progetto per compatibilità, ma non sono il regolamento del duello attivo.
 
-## Regole attive
-- Mazzo francese standard: 52 carte, quattro semi ♥ ♦ ♣ ♠. A=1, J=11, Q=12, K=13. Nessun Jolly nel mazzo di base.
-- Tre obiettivi matematici variabili e non generati in base alla mano. Addizione e sottrazione sempre presenti, moltiplicazione e divisione si alternano.
-- Risolvi un obiettivo esattamente con 2–4 carte sul banco, anche riutilizzando le carte già presenti. Viene visualizzata la formula calcolata e un solo attacco per turno.
-- Danni base: +10, −12, ×16, ÷20; +2 HP per ogni carta oltre le prime due (massimo quattro). Eventuali potenziamenti della nave e del pilota possono modificare i danni finali.
-- I semi non attivano bonus segreti nel combattimento matematico. Le armi restano parte della scenografia e della progressione.
-- Tre bersagli disponibili fin dal primo settore. La difficoltà è data dalle carte disponibili e dalla gestione delle risorse.
-- Cambio fino a tre carte con le penalità cumulative già presenti: +3 HP al nemico per la prima, −3 secondi al turno successivo per la seconda, −3 HP propri per la terza; sblocchi e abilità preesistenti possono modificarne i costi.
-- IA: seleziona realmente carte utilizzabili dal proprio mazzo e da quelle sul banco condiviso, poi può attaccare solo con una formula valida; la probabilità di esecuzione dipende dal settore.
-- Campagna, sfide quotidiane e combattimenti passano dal ramo matematico nella plancia 3D. Le vecchie modalità Poker non sono selezionate come sistema di combattimento attivo.
+## Versione da proseguire
 
-## Installazione su StackBlitz / GitHub
-1. Fai una copia del repository prima di sostituirlo.
-2. Estrai questo archivio e sostituisci **tutto il contenuto** del repository (non creare una sottocartella aggiuntiva).
-3. In StackBlitz attendi l'installazione delle dipendenze, quindi avvia `npm run dev`.
-4. Per la versione compilata: `npm run build`.
+Il passo 1 del piano di lavoro è descritto in [docs/PASSO_1_VERIFICA_E_AVVIO.md](docs/PASSO_1_VERIFICA_E_AVVIO.md).
 
-`index.html` è necessario a Vite; il gioco è un'app React e non un HTML autonomo.
+La base attuale contiene le prime **5 navicelle e 7 armi** della Fase 1I. Il catalogo concordato di 17 navi e 42 armi è da completare progressivamente. Le copie salvate su StackBlitz devono essere confrontate con il ramo GitHub prima di modificarle.
 
-## Stato delle verifiche
-- **Superati:** 9 test automatici sul motore matematico con Node (`npm run test:combat`), controllo sintattico di 74 sorgenti JS/TS/JSX/TSX e integrità del pacchetto.
-- **Non eseguiti qui:** `npm run build` e test grafico su un telefono/StackBlitz. Il registry npm non è raggiungibile da questo ambiente.
-- **Compatibilità storica:** nei sorgenti restano moduli e funzioni legacy non attivi, perché la loro cancellazione fisica richiederebbe un refactoring completo del monolite `App.tsx` e dei riferimenti di progressione. La modalità di combattimento attiva non applica figure Poker. Non considerare la rimozione del codice legacy ancora completata.
-- Dopo la prima installazione sono indispensabili prove reali di partita completa, salvataggi e campagna; test automatici e parsing non bastano a garantire l'assenza di difetti in gioco.
+## Regole del combattimento attivo
+
+- Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.
+- Turno da 60 secondi; un attacco valido conclude il turno.
+- Si sceglie un motore nemico e si risolve il suo bersaglio con due carte. Sottrazione e divisione verificano gli ordini ammessi; la divisione deve essere esatta.
+- Il risultato matematico abilita lo sparo. I valori delle carte forniscono munizioni e i semi attivano le armi; il risultato non è il danno.
+- Ogni arma compatibile di ciascuna nave riceve le munizioni previste. Accumulo e danni per proiettile dipendono dal catalogo.
+- Ogni motore ha HP propri. Dopo un KO si può selezionare un motore superstite o una nave nemica ancora attiva.
+- Aurora-0 è l'universale iniziale con due motori, + e −. Le flotte di prova arrivano a tre navi; non equivalgono a proprietà e acquisti permanenti.
+
+## Avvio e verifiche
+
+```sh
+npm ci
+npm run dev
+npm run build
+npm run test:combat
+npm run verify:logic
+npm run preflight
+```
+
+`build` esegue TypeScript e Vite. `test:combat` esegue i 40 test del duello dei motori e della geometria; `verify:logic` include anche i 9 test della precedente logica matematica.
+
+Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `npm run check:unused`: al termine del passo 1 segnala ancora 94 elementi. Non sono stati cancellati componenti, hook o funzionalità per eliminare queste segnalazioni. La build continua a verificare i tipi; non usa `noCheck` o `ts-nocheck`.
+
+## Stato reale
+
+Il passo 1 ha verificato build, struttura, test e avvio reale della battaglia con attacco e risposta IA. Sono stati aperti anche Home, Shop, assetto e briefing di campagna.
+
+La plancia corrente mostra ancora la griglia azzurra: la sostituzione con l'arena metallica 3D è il **passo 2**, non un risultato già consegnato. Formazioni affiancate, catalogo completo, evoluzioni, carte-navicella persistenti e intro rimangono nei passi successivi.
+
+Il collaudo del passo 1 usa l'anteprima dell'ambiente di lavoro. In questa sessione StackBlitz è autenticato ma il suo WebContainer non parte; non dichiarare che il collaudo StackBlitz sia stato completato.

@@ -16,10 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    /* Unused legacy code is checked separately by npm run check:unused. */
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
