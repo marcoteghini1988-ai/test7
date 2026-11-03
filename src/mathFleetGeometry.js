@@ -94,14 +94,3 @@ export function sourceToTarget(rootBox,sourceBox,targetBox){
  if(!start||!end)return null;
  return {x:start[0],y:start[1],dx:end[0]-start[0],dy:end[1]-start[1],angle:Math.atan2(end[1]-start[1],end[0]-start[0])*180/Math.PI};
 }
-
-// The final bullet must reach the real motor before its impact animation begins.
-// CSS bulletTravel duration: 640ms; per-weapon stagger: 60ms; the last
-// round in a multi-projectile volley leaves 250ms after the first.
-export function volleyTimeline(volleys){
- const shots=(volleys||[]).filter(s=>Number(s?.bullets)>0);
- if(!shots.length)return {arrivalMs:0,settleMs:550};
- const arrivals=shots.map((shot,i)=>640+i*60+(Number(shot.bullets)>1?250:0));
- const arrivalMs=Math.ceil(Math.max(...arrivals));
- return {arrivalMs,settleMs:arrivalMs+650};
-}

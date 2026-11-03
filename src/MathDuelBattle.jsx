@@ -1,7 +1,8 @@
 import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
 import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget} from './mathDuelEngine.js';
-import {enginePoint,boardPoint,volleyTimeline,fleetFormation,engineHudShift,engineVisualState,engineSurface,weaponMount} from './mathFleetGeometry.js';
+import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineVisualState,engineSurface,weaponMount} from './mathFleetGeometry.js';
+import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
 import './MathDuelBattle.css';
 const ASSET_ROOT=(import.meta.env.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 const URL=`${ASSET_ROOT}/mathduel/`;const SHIPS=`${ASSET_ROOT}/mathfleet/`;
@@ -14,6 +15,21 @@ const bulletColors={H:'#ff576b',D:'#58e6ff',C:'#4aff9b',S:'#c176ff','*':'#ecfcff
 const label=rankLabel;
 const clone=v=>structuredClone(v);
 function tone(name){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=window.__eclissiMathAudio||(window.__eclissiMathAudio=new C());if(ctx.state==='suspended')ctx.resume();const o=ctx.createOscillator(),g=ctx.createGain(),now=ctx.currentTime;o.type=name==='shot'?'sawtooth':'sine';o.frequency.setValueAtTime(name==='shot'?180:470,now);o.frequency.exponentialRampToValueAtTime(name==='shot'?46:650,now+.19);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.025,now+.014);g.gain.exponentialRampToValueAtTime(.0001,now+.22);o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+.23);}catch{}}
+function volleySound(salvos){try{
+ const C=window.AudioContext||window.webkitAudioContext;if(!C)return;
+ const ctx=window.__eclissiMathAudio||(window.__eclissiMathAudio=new C());if(ctx.state==='suspended')ctx.resume();
+ // One quiet synthesizer per weapon, with an envelope for every actual round.
+ const volume=.022/Math.sqrt(Math.max(1,salvos.length));
+ for(const {fx,rounds} of salvos){
+  const o=ctx.createOscillator(),g=ctx.createGain(),now=ctx.currentTime;
+  o.type=fx.sound;g.gain.setValueAtTime(.0001,now);
+  for(const round of rounds){const at=now+round.launchMs/1000,next=rounds[round.index+1],duration=Math.min(.065,next?(next.launchMs-round.launchMs)/1000*.8:.065);
+   o.frequency.setValueAtTime(fx.hz,at);o.frequency.exponentialRampToValueAtTime(fx.endHz,at+duration);
+   g.gain.setValueAtTime(.0001,at);g.gain.linearRampToValueAtTime(volume,at+.004);g.gain.exponentialRampToValueAtTime(.0001,at+duration);
+  }
+  o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+(rounds.at(-1).launchMs+90)/1000);
+ }
+}catch{}}
 // Position of the FOUR visible engine modules on the actual starship illustration.
 // Coordinates follow each sprite's camera view without flipping its orientation.
 const GLYPH={H:'♥',D:'♦',C:'♣',S:'♠','*':'◎'};
@@ -39,13 +55,16 @@ function ShipSkin({side,vessel,imageRef}){
   {damaged.map(e=><image key={e.op} href={src} width="1000" height="1000" clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`}/>) }
  </svg>;
 }
-function WeaponMount({side,vessel,weapon,registerGunRef,index}){
+function WeaponMount({side,vessel,weapon,registerGunRef,index,effect}){
  const mount=weaponMount(side,vessel.id,weapon.id),metalId=`metal-${useId().replace(/[^a-zA-Z0-9_-]/g,'')}`;
  if(!mount)return null;
- const accumulating=weapon.tipo==='Accumulo',charge=accumulating?Math.min(1,(weapon.charge||0)/weapon.soglia_munizioni):0;
+ const event=effect?.side===side?effect.volleys.find(s=>s.vesselIndex===index&&s.weaponId===weapon.id):null;
+ const salvo=effect?.side===side?effect.salvos.find(s=>s.shot.vesselIndex===index&&s.shot.weaponId===weapon.id):null;
+ const accumulating=weapon.tipo==='Accumulo',charge=accumulating?Math.min(1,(event?.charge??weapon.charge??0)/weapon.soglia_munizioni):0;
  const color=bulletColors[weapon.seme_trigger]||'#e8ffff';
- return <div className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}`} data-weapon={weapon.id} data-charge={Math.round(charge*100)}
-  style={{left:`${mount.point[0]*100}%`,top:`${mount.point[1]*100}%`,width:`${mount.width*100}%`,height:`${mount.length*100}%`,'--gun':color}}
+ return <div className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}${salvo?' firing':''}${event?.charging?' charge-received':''}`} data-weapon={weapon.id} data-charge={Math.round(charge*100)}
+  style={{left:`${mount.point[0]*100}%`,top:`${mount.point[1]*100}%`,width:`${mount.width*100}%`,height:`${mount.length*100}%`,'--gun':color,
+   ...(salvo?{'--recoil-delay':`${salvo.startMs}ms`,'--recoil-duration':`${Math.max(24,(salvo.lastLaunchMs-salvo.startMs)/Math.max(1,salvo.rounds.length-1))}ms`,'--recoil-count':salvo.rounds.length}:{})}}
   title={`${weapon.nome}: ${GLYPH[weapon.seme_trigger]||'◎'} · ${weapon.tipo} · ${weapon.damage} danni/proiettile${accumulating?` · Carica ${weapon.charge||0}/${weapon.soglia_munizioni}`:''}`}>
   <svg className="weapon-hardware" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
    <defs><linearGradient id={metalId}><stop offset="0" stopColor="#101826"/><stop offset=".3" stopColor="#8198ab"/><stop offset=".5" stopColor="#dbe4ea"/><stop offset=".72" stopColor="#3b4b60"/><stop offset="1" stopColor="#101826"/></linearGradient></defs>
@@ -61,14 +80,14 @@ function WeaponMount({side,vessel,weapon,registerGunRef,index}){
   <span ref={node=>registerGunRef?.(side,index,weapon.id,node)} className="weapon-tip muzzle-anchor"/>
  </div>;
 }
-function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation}){
+function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation,impactDelay}){
  const engine=vessel.engines[op];if(!engine)return null;
  const dead=engine.hp<=0,ratio=Math.max(0,engine.hp/engine.max);
  const state=engineVisualState(engine),surface=engineSurface(side,vessel.id,op),aux=op==='times'||op==='divide';
  const [px,py]=enginePoint(side,vessel.id,op);
  const narrow=side==='player'&&vessel.id==='C04'&&(op==='plus'||op==='minus');
  return <button type="button" style={{left:`${px*100}%`,top:`${py*100}%`,
-  '--hud-shift':`${engineHudShift(side,vessel.id,op,formation.size,formation.hudWidth)}px`,
+  '--hud-shift':`${engineHudShift(side,vessel.id,op,formation.size,formation.hudWidth)}px`,'--hit-delay':`${impactDelay||0}ms`,
   '--core-width':`${surface.radius[0]*2*formation.size}px`,'--core-height':`${surface.radius[1]*2*formation.size}px`,'--engine-color':SHIP_GLOW[vessel.id]||'#5edbff',
   ...(narrow?{'--engine-width':`${Math.min(24,formation.size*.11-2)}px`}:{})}}
   className={`vessel-engine ve-${op} ve-${side}${aux?' auxiliary-engine':''}${selected&&!dead?' selected':''}${dead?' dead':''}${hit?' hit':''}`}
@@ -97,11 +116,11 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
      style={{left:`${formation.centers[i]/450*100}%`,top:formation.top,width:formation.size,height:formation.size,
       '--engine-size':`${formation.engineSize}px`,'--engine-hud-width':`${formation.hudWidth}px`,zIndex:focusedShip?3:1}}>
      <ShipSkin key={v.id} side={side} vessel={v} imageRef={node=>registerShipRef?.(side,i,node)}/>
-     <div className="ship-hardpoints">{v.weapons.map(w=><WeaponMount key={w.id} side={side} vessel={v} weapon={w} index={i} registerGunRef={registerGunRef}/>)}</div>
+     <div className="ship-hardpoints">{v.weapons.map(w=><WeaponMount key={w.id} side={side} vessel={v} weapon={w} index={i} effect={effect} registerGunRef={registerGunRef}/>)}</div>
      {ENGINE_KEYS.map(op=><Engine key={op} side={side} op={op} vessel={v} formation={formation}
       target={targets?.[op]} selected={enemy&&focusedShip&&selectedTarget===op} onSelect={()=>onTarget?.(i,op)} enabled={targetable}
       available={!enemy||availableOps.includes(op)} hit={!!effect&&effect.side!==side&&effect.targetShip===i&&effect.op===op}
-      engineRef={node=>registerEngineRef?.(side,i,op,node)}/>) }
+      engineRef={node=>registerEngineRef?.(side,i,op,node)} impactDelay={effect?.arrivalMs}/>) }
     </div>;
    })}
    <div className={'engine-thruster '+(enemy?'red':'blue')}/>
@@ -116,6 +135,28 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
 }
 function Pips({ship}){return <div className="pips">{ship.fleet.map((v,i)=><span key={i} className={vesselDestroyed(v)?'broken':'good'}/>)}</div>}
 function rootCoords(root,node){return root&&node?boardPoint(root.getBoundingClientRect(),node.getBoundingClientRect()):null;}
+function RoundGlyph({profile,index}){
+ return <svg viewBox="-24 -16 48 32" preserveAspectRatio="none" className="round-glyph" aria-hidden="true">
+  {profile==='pulse'&&<><path d="M-23 0H-9M-17-4H-9M-17 4H-9" className="round-tail"/><circle r="8" className="round-fill"/><circle r="11" className="round-line"/><circle r="3" fill="#fff"/></>}
+  {profile==='laser'&&<><path d="M-23 0H22" className="round-line" strokeWidth="7"/><path d="M-21 0H20" stroke="#fff1f4" strokeWidth="2"/><path d="M-22-5H-12M-22 5H-12" className="round-tail"/></>}
+  {profile==='prism'&&<><path d="M-23-5-18-8-15-5-18-2ZM-21 7-17 3-13 7-17 11" className="round-fill"/><circle cx="3" r="10" className="round-fill"/><path d="M3-10 12 0 3 10-6 0ZM3-10V10M-6 0H12" className="round-line" stroke="#edfeff"/></>}
+  {profile==='dart'&&<g transform={`scale(1 ${index%2?-1:1})`}><path d="M-22 0H-9" className="round-tail"/><path d="M-12-3 18 0-12 3-7 0Z" fill="#b6d0c1" stroke="currentColor"/><path d="M-11-3-17-8-4-3M-11 3-17 8-4 3" className="round-fill"/><path d="M-7 0H14" stroke="#effff7"/></g>}
+  {profile==='arc'&&<><path d="M-23 10Q-12-7 1-5" className="round-tail"/><path d="M-10-10Q5-11 17 0L-5 11 2 0Z" className="round-fill"/><path d="M-10-10Q8-8 17 0L-5 11" className="round-line" stroke="#f8deff"/></>}
+  {profile==='needle'&&<><path d="M-24 0H-11" className="round-tail"/><path d="M-15-2 23 0-15 2-9 0Z" fill="#f9edff"/><path d="M-17-3 21 0-17 3" className="round-line"/></>}
+  {profile==='capsule'&&<><path d="M-23-3-14 0-23 3M-20-6-11 0-20 6" className="round-tail"/><rect x="-10" y="-7" width="25" height="14" rx="6" fill="#8e2933" stroke="currentColor" strokeWidth="2"/><path d="M-3-5V5M7-5V5" stroke="#ffdb87" strokeWidth="3"/><ellipse cx="14" rx="4" ry="6" fill="#fff0b8"/></>}
+ </svg>;
+}
+function ImpactGlyph({profile}){
+ return <svg viewBox="-40 -40 80 80" aria-hidden="true">
+  {profile==='pulse'&&<><circle r="16"/><circle r="27" strokeWidth="1"/><path d="M-33 0H-23M23 0H33M0-33V-23M0 23V33M-20-20-14-14M20 20 14 14"/></>}
+  {profile==='laser'&&<><path d="M-7-25 3-5-3 6 7 25" strokeWidth="6"/><path d="M-8-23 2-5-4 6 6 23" stroke="#fff4dc" strokeWidth="2"/><path d="M-23-17-13-8M18 13 28 23M-24 6-14 3M16-8 25-16"/></>}
+  {profile==='prism'&&<><path d="M0-12 12 0 0 12-12 0ZM-9-20-14-34-19-20-15-15ZM19-15 31-23 26-8ZM19 18 29 32 12 25ZM-19 11-33 20-19 27Z"/><path d="M0-12V12M-12 0H12M-25-4-33-6M8-23 12-33" stroke="#efffff"/></>}
+  {profile==='dart'&&<><path d="M-25-14-11-7M-26-3-10 0M-25 9-10 5M13-8 29-17M13 0H31M13 8 29 18"/><path d="M-5-13H3M-7-2H1M-5 9H3" stroke="#e0fff1" strokeWidth="4"/></>}
+  {profile==='arc'&&<><path d="M-24 23 24-23" strokeWidth="5"/><path d="M-18 26 27-19M-28 10-20 5M10-24 15-31" stroke="#f3d4ff" strokeWidth="1.5"/><path d="M-10-15-18-28-23-16ZM17 9 31 17 19 24Z"/></>}
+  {profile==='needle'&&<><path d="M0-27V27M-13-17 13 17M-10 19 10-19"/><circle r="5" fill="#fff"/><circle r="12" strokeWidth="1"/></>}
+  {profile==='capsule'&&<><path d="M-18 19Q-30 3-16-12L-12-3Q-9-23 3-31L8-12 17-18Q34 7 18 23Z" fill="currentColor" stroke="none" opacity=".8"/><path d="M-9 18Q-17 5-4-8L0 2 8-11Q22 11 9 21Z" fill="#ffe8a4" stroke="none"/><path d="M-27-20-30-29M23-18 31-26M-28 13-36 17M25 17 33 23"/></>}
+ </svg>;
+}
 function Projectile({effect,rootRef,engineRefs,gunRefs}){
  const [geometry,setGeometry]=useState(null);
  useLayoutEffect(()=>{
@@ -123,33 +164,34 @@ function Projectile({effect,rootRef,engineRefs,gunRefs}){
   const targetSide=effect?.side==='player'?'enemy':'player';
   const target=rootCoords(rootRef.current,engineRefs.current[targetSide][`${effect?.targetShip}/${effect?.op}`]);
   if(!effect||!target){setGeometry(null);return;}
-  const shots=effect.volleys.filter(x=>x.bullets>0).flatMap((s,i)=>{
-   const gun=gunRefs.current[effect.side][`${s.vesselIndex}/${s.weaponId}`];
+  const shots=effect.salvos.flatMap(salvo=>{
+   const s=salvo.shot,gun=gunRefs.current[effect.side][`${s.vesselIndex}/${s.weaponId}`];
    const source=rootCoords(rootRef.current,gun);
    if(!source)return [];
    const [x,y]=source,dx=target[0]-x,dy=target[1]-y;
-   return [{s,i,x,y,dx,dy,count:Math.max(0,Math.min(26,s.bullets)),
-    bulletColor:bulletColors[s.suit]||'#e8ffff'}];
+   return [{...salvo,x,y,dx,dy,roundWidth:projectileWidth(salvo,Math.hypot(dx,dy))}];
   });
   setGeometry({target,shots});
  },[effect,rootRef,engineRefs,gunRefs]);
  if(!effect||!geometry)return null;
  const {target,shots}=geometry;
- return <div className={`vfx-layer${effect.destroyed?' motor-break':''}`} aria-hidden="true">
- {shots.flatMap(({s,i,x,y,dx,dy,count,bulletColor})=>{
-  const spread=count>1?250/Math.max(1,count-1):0;
-  const start=i*.06;
-  return Array.from({length:count},(_,j)=><span key={`${i}/${j}`}
-   className={`tracer-shell tracer-${s.suit==='*'?'all':s.suit.toLowerCase()}`}
-   style={{left:x,top:y,'--dx':`${dx}px`,'--dy':`${dy}px`,'--bullet':bulletColor,
-   '--delay':`${(start*1000+j*spread)/1000}s`,
-   '--angle':`${Math.atan2(dy,dx)*180/Math.PI}deg`}}><i className="tracer-core"/></span>);
- })}
- {effect.damage>0&&<>
-  <img className="impact delayed-impact" src={`${URL}impact.png`} style={{left:target[0]-67,top:target[1]-67,'--impact-color':'#9eeaff','--impact-delay':`${effect.arrivalMs}ms`}} alt=""/>
-  <div className="impact-ring delayed-impact" style={{left:target[0]-48,top:target[1]-48,borderColor:effect.primaryColor||'#ffdf83','--impact-delay':`${effect.arrivalMs}ms`}}/>
-  <div className="impact-number delayed-impact" style={{left:target[0]-52,top:target[1]-64,color:effect.primaryColor||'#ffdf83','--impact-delay':`${effect.arrivalMs}ms`}}>−{effect.damage}</div>
- </>}
+ return <div className={`vfx-layer${effect.destroyed?' motor-break':''}`} aria-hidden="true" data-arrival-ms={effect.arrivalMs}>
+ {shots.map(({shot,fx,rounds,x,y,dx,dy,arrivalMs,roundWidth})=><React.Fragment key={`${shot.vesselIndex}/${shot.weaponId}`}>
+  {rounds.map(round=>{
+   const frames=[0,.25,.5,.75,1].map(t=>projectileFrame(dx,dy,round.bend,t));
+   const trajectory=Object.fromEntries(frames.flatMap((f,i)=>[[`--x${i}`,`${f.x}px`],[`--y${i}`,`${f.y}px`],[`--a${i}`,`${f.angle}deg`]]));
+   return <React.Fragment key={round.index}>
+    <span className={`weapon-flight round-${fx.profile}`} data-weapon={shot.weaponId} data-vessel-index={shot.vesselIndex} data-round={round.index}
+     style={{left:x,top:y,...trajectory,'--fx-color':fx.color,'--flight-time':`${fx.durationMs}ms`,'--launch-delay':`${round.launchMs}ms`,'--round-width':`${roundWidth}px`,'--round-height':`${fx.height}px`}}>
+     <RoundGlyph profile={fx.profile} index={round.index}/>
+    </span>
+    <span className={`muzzle-flash muzzle-${fx.profile}`} style={{left:x,top:y,color:fx.color,'--launch-delay':`${round.launchMs}ms`,'--muzzle-angle':`${frames[0].angle}deg`}}><i/></span>
+    <span className={`weapon-contact contact-${fx.profile}`} style={{left:target[0],top:target[1],color:fx.color,'--contact-delay':`${round.arrivalMs}ms`}}><ImpactGlyph profile={fx.profile}/></span>
+   </React.Fragment>;
+  })}
+  <span className={`weapon-impact impact-${fx.profile}`} data-weapon={shot.weaponId} style={{left:target[0],top:target[1],color:fx.color,'--contact-delay':`${arrivalMs}ms`}}><ImpactGlyph profile={fx.profile}/></span>
+ </React.Fragment>)}
+ {effect.damage>0&&<div className="impact-number delayed-impact" style={{left:target[0]-52,top:target[1]-64,color:effect.primaryColor||'#ffdf83','--impact-delay':`${effect.arrivalMs}ms`}}>−{effect.damage}</div>}
  {shots.length===0&&<div className="charge-notice">MUNIZIONI IN CARICA</div>}
  </div>;
 }
@@ -216,10 +258,10 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(!proof.valid){if(side==='player')notice(`${label(proof.a)} ${META[move.op].sign} ${label(proof.b)} = ${Number.isInteger(proof.result)?proof.result:Math.round(proof.result*100)/100}. Bersaglio: ${goal}`);return;}
   const index=move.targetShip??0,e=defShip.fleet[index]?.engines[move.op];if(!e||e.hp<=0){if(side==='player')notice('Motore non disponibile');return;}
   const strike=dealHit(defShip,attackShip,move.op,goal,cards,index);
-  const timing=volleyTimeline(strike.volley);
+  const timing=volleyTimeline(strike.volley),salvos=planWeaponSalvos(strike.volley);
   const strongest=[...strike.volley].sort((a,b)=>(b.damage||0)-(a.damage||0))[0];
-  const anim={...clone(b),...(side==='enemy'?{shownPlayer:index}:{targetShip:index}),phase:'animating',selected:[],effect:{side,op:move.op,targetShip:index,damage:strike.damage,destroyed:strike.destroyed,volleys:strike.volley,arrivalMs:timing.arrivalMs,primaryColor:bulletColors[strongest?.suit]||'#ffdf83',shipCount:attackShip.fleet.length,sourceFocus:side==='player'?b.shownPlayer:b.targetShip}};
-  write(anim);tone(strike.damage>0?'shot':'click');
+  const anim={...clone(b),...(side==='enemy'?{shownPlayer:index}:{targetShip:index}),phase:'animating',selected:[],effect:{side,op:move.op,targetShip:index,damage:strike.damage,destroyed:strike.destroyed,volleys:strike.volley,salvos,arrivalMs:timing.arrivalMs,primaryColor:bulletColors[strongest?.suit]||'#ffdf83',shipCount:attackShip.fleet.length,sourceFocus:side==='player'?b.shownPlayer:b.targetShip}};
+  write(anim);if(salvos.length)volleySound(salvos);else tone('click');
   later(()=>{const active=gameRef.current;if(active.phase!=='animating')return;const next=clone(active),attacker=next[side];const used=[attacker.hand[move.i],attacker.hand[move.j]];
    const impact=dealHit(next[receiver],attacker,move.op,goal,used,index);next[side]=consumeAttack(impact.attacker,[move.i,move.j]);next[receiver]=impact.defender;
    next.logs=[`${side==='player'?'TU':'IA'}: ${used[0].value}${used[0].suit} ${META[move.op].sign} ${used[1].value}${used[1].suit} = ${goal} — ${impact.damage} HP`,...next.logs].slice(0,6);

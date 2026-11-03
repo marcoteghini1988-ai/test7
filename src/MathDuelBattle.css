@@ -260,19 +260,7 @@
 .es-math-scope .fleet-picker-inline{bottom:-1px;left:92px;right:92px;z-index:18}
 .es-math-scope .fleet-picker-inline button{box-shadow:0 1px 3px #000;border-color:#3087b8}
 .es-math-scope .vfx-layer{z-index:25;isolation:isolate}
-.es-math-scope .tracer-shell{position:absolute;display:block;width:17px;height:7px;opacity:0;pointer-events:none;z-index:10;transform:translate(-50%,-50%);animation:bulletTravel .64s cubic-bezier(.35,0,.67,1) var(--delay) forwards}
-.es-math-scope .tracer-core{position:absolute;inset:0;display:block;background:#fff;box-shadow:0 0 5px 2px var(--bullet),0 0 11px 5px var(--bullet);border:2px solid var(--bullet);border-radius:100% 30% 30% 100%;transform:rotate(var(--angle))}
-.es-math-scope .tracer-d .tracer-core{border-radius:0;clip-path:polygon(0 50%,50% 0,100% 50%,50% 100%)}
-.es-math-scope .tracer-c .tracer-core{height:4px;top:2px;border-radius:3px}
-.es-math-scope .tracer-s .tracer-core{clip-path:polygon(0 50%,80% 0,100% 50%,80% 100%)}
-.es-math-scope .tracer-all .tracer-core{border-radius:50%}
-.es-math-scope .delayed-impact{animation-delay:.7s!important;animation-fill-mode:both!important}
-.es-math-scope .impact.delayed-impact{animation-duration:.65s}
-.es-math-scope .impact-ring.delayed-impact{animation-duration:.65s}
-.es-math-scope .impact-number.delayed-impact{animation-duration:.7s}
-@keyframes bulletTravel{0%{opacity:0;transform:translate(-50%,-50%) translate(0,0) scale(.6)}8%{opacity:1}82%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(1.25)}}
 @keyframes fleetFloat{from{transform:translateX(-50%) translateY(-2px)}to{transform:translateX(-50%) translateY(2px)}}
-.es-math-scope .delayed-impact{animation-delay:1.05s!important}
 /* Congela l'oscillazione durante il tiro: le estremità del proiettile restano allineate. */
 .es-math-scope .ship-zone.ship-in-combat .fleet-ship-wrap{animation-play-state:paused}
 
@@ -336,7 +324,7 @@
 /* Fixed formations: selection highlights a slot without resizing or moving it. */
 .es-math-scope .fleet-ship-wrap.complete-ship{animation:none}
 .es-math-scope .fleet-ships{animation:formationFloat 4.4s ease-in-out infinite alternate}
-.es-math-scope .ship-in-combat .fleet-ships{animation-play-state:paused}
+.es-math-scope .ship-in-combat .fleet-ships{animation:none;transform:translateY(0)}
 @keyframes formationFloat{from{transform:translateY(-2px)}to{transform:translateY(2px)}}
 @media(prefers-reduced-motion:reduce){.es-math-scope .fleet-ships{animation:none}}
 .es-math-scope .complete-ship .vessel-engine{width:var(--engine-width,var(--engine-size));height:var(--engine-size);filter:none}
@@ -373,6 +361,58 @@
 .es-math-scope .weapon-hardware{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px #000a)}
 .es-math-scope .complete-ship .integrated-mount .muzzle-anchor{position:absolute;left:50%;top:0;width:2px;height:2px;min-width:0;min-height:0;transform:translate(-50%,-50%);border:0;background:none;box-shadow:none;opacity:0}
 @media(prefers-reduced-motion:reduce){.es-math-scope .engine-fracture,.es-math-scope .vessel-smoke{animation:none!important}}
+
+/* Passo 5: seven physical ammunition signatures. Timing comes from JS salvos. */
+.es-math-scope .weapon-flight{position:absolute;width:0;height:0;opacity:0;z-index:12;pointer-events:none;animation:weaponFlight var(--flight-time) linear var(--launch-delay) both}
+.es-math-scope .round-glyph{position:absolute;left:0;top:0;width:var(--round-width);height:var(--round-height);overflow:visible;transform:translate(-50%,-50%);color:var(--fx-color);filter:drop-shadow(0 0 2px var(--fx-color)) drop-shadow(0 0 5px var(--fx-color))}
+.es-math-scope .round-fill{fill:currentColor;stroke:currentColor;stroke-width:1}
+.es-math-scope .round-line{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.es-math-scope .round-tail{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;opacity:.65}
+.es-math-scope .round-dart .round-glyph{filter:drop-shadow(0 0 2px #63f09b)}
+.es-math-scope .round-needle .round-glyph{filter:drop-shadow(0 0 3px #d68fff)}
+.es-math-scope .muzzle-flash{position:absolute;width:0;height:0;z-index:11;opacity:0;animation:muzzlePop 85ms ease-out var(--launch-delay) both}
+.es-math-scope .muzzle-flash i{position:absolute;left:0;top:0;width:18px;height:8px;transform:translate(-20%,-50%) rotate(var(--muzzle-angle));transform-origin:20% 50%;background:currentColor;clip-path:polygon(0 36%,60% 0,42% 36%,100% 50%,42% 64%,60% 100%,0 64%);filter:drop-shadow(0 0 3px currentColor)}
+.es-math-scope .muzzle-prism i,.es-math-scope .muzzle-pulse i{width:13px;height:13px;clip-path:none;border-radius:50%;background:#f4fdff;box-shadow:0 0 8px currentColor}
+.es-math-scope .muzzle-arc i{clip-path:polygon(0 0,90% 15%,30% 50%,90% 85%,0 100%,15% 50%)}
+.es-math-scope .muzzle-needle i{height:3px;width:22px}
+.es-math-scope .weapon-contact,.es-math-scope .weapon-impact{position:absolute;pointer-events:none;opacity:0;z-index:13;width:28px;height:28px;transform:translate(-50%,-50%);animation:weaponContact 220ms ease-out var(--contact-delay) both}
+.es-math-scope .weapon-contact svg,.es-math-scope .weapon-impact svg{display:block;width:100%;height:100%;overflow:visible;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px currentColor)}
+.es-math-scope .weapon-impact{width:66px;height:66px;z-index:14;animation:weaponImpact 600ms ease-out var(--contact-delay) both}
+.es-math-scope .impact-laser{width:48px;height:64px}
+.es-math-scope .impact-prism{width:78px;height:78px}
+.es-math-scope .impact-dart{width:60px;height:44px}
+.es-math-scope .impact-arc{width:65px;height:65px}
+.es-math-scope .impact-needle{width:42px;height:58px}
+.es-math-scope .impact-capsule{width:62px;height:72px;transform-origin:50% 65%}
+.es-math-scope .impact-number.delayed-impact{z-index:16;animation-duration:650ms;animation-fill-mode:both}
+.es-math-scope .vessel-engine.hit{animation:engineImpact 500ms ease-out var(--hit-delay) both}
+.es-math-scope .integrated-mount.firing .weapon-hardware{animation:weaponRecoil var(--recoil-duration) linear var(--recoil-delay) var(--recoil-count);transform-origin:50% 50%}
+.es-math-scope .integrated-mount.mount-arc.firing .weapon-hardware{animation-name:arcRecoil}
+.es-math-scope .integrated-mount.charge-received .weapon-hardware{animation:chargeReceived 480ms ease-out both}
+.es-math-scope .vfx-layer.motor-break .weapon-impact{filter:drop-shadow(0 0 7px #ffac57)}
+@keyframes weaponFlight{
+ 0%{opacity:0;transform:translate(var(--x0),var(--y0)) rotate(var(--a0))}
+ 5%{opacity:1}
+ 25%{transform:translate(var(--x1),var(--y1)) rotate(var(--a1))}
+ 50%{transform:translate(var(--x2),var(--y2)) rotate(var(--a2))}
+ 75%{transform:translate(var(--x3),var(--y3)) rotate(var(--a3))}
+ 97%{opacity:1}
+ 100%{opacity:0;transform:translate(var(--x4),var(--y4)) rotate(var(--a4))}
+}
+@keyframes muzzlePop{0%{opacity:0}12%{opacity:.9}100%{opacity:0}}
+@keyframes weaponContact{0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}18%{opacity:.85}100%{opacity:0;transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes weaponImpact{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}15%{opacity:1}60%{opacity:.6}100%{opacity:0;transform:translate(-50%,-50%) scale(1.25)}}
+@keyframes weaponRecoil{0%,100%{transform:translateY(0)}25%{transform:translateY(4px)}}
+@keyframes arcRecoil{0%,100%{transform:scaleX(1)}35%{transform:scaleX(.82)}}
+@keyframes chargeReceived{0%{filter:brightness(1)}35%{filter:brightness(1.8) drop-shadow(0 0 3px var(--gun))}100%{filter:brightness(1)}}
+@keyframes weaponDirectFlight{0%{opacity:0;transform:translate(0,0) rotate(var(--a4))}8%,92%{opacity:.8}100%{opacity:0;transform:translate(var(--x4),var(--y4)) rotate(var(--a4))}}
+@keyframes weaponSoftImpact{0%,100%{opacity:0}40%{opacity:.65}}
+@media(prefers-reduced-motion:reduce){
+ .es-math-scope .weapon-flight{animation-name:weaponDirectFlight}
+ .es-math-scope .muzzle-flash,.es-math-scope .weapon-contact{display:none}
+ .es-math-scope .weapon-impact{animation-name:weaponSoftImpact}
+ .es-math-scope .integrated-mount.firing .weapon-hardware,.es-math-scope .integrated-mount.charge-received .weapon-hardware,.es-math-scope .vessel-engine.hit{animation:none}
+}
 .es-math-scope .fleet-picker-inline{left:0;right:0;width:auto;max-width:none;bottom:0;height:22px;transform:none;display:block}
 .es-math-scope .fleet-picker-inline button{position:absolute;top:0;height:21px;transform:translateX(-50%);padding:3px 4px;font-size:9px}
 .es-math-scope .fleet-side-toggle{display:flex;gap:6px}

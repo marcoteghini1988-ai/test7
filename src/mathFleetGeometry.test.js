@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,volleyTimeline,fleetFormation,engineHudShift,WEAPON_MOUNTS,weaponMount,engineSurface,engineVisualState} from './mathFleetGeometry.js';
+import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,fleetFormation,engineHudShift,WEAPON_MOUNTS,weaponMount,engineSurface,engineVisualState} from './mathFleetGeometry.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {newVessel} from './mathDuelEngine.js';
 const box=(left,top,width,height)=>({left,top,width,height});
@@ -41,13 +41,6 @@ test('rifiuta riferimenti non validi senza generare NaN nei proiettili',()=>{
  assert.equal(boardPoint(null,box(0,0,4,4)),null);
  assert.equal(boardPoint(box(0,0,0,800),box(0,0,4,4)),null);
  assert.equal(sourceToTarget(box(0,0,450,800),null,box(0,0,4,4)),null);
-});
-
-test("l'impatto segue l'ultimo proiettile, anche con piu armi",()=>{
- assert.deepEqual(volleyTimeline([]),{arrivalMs:0,settleMs:550});
- assert.deepEqual(volleyTimeline([{bullets:1}]),{arrivalMs:640,settleMs:1290});
- assert.deepEqual(volleyTimeline([{bullets:8}]),{arrivalMs:890,settleMs:1540});
- assert.deepEqual(volleyTimeline([{bullets:8},{bullets:1},{bullets:13}]),{arrivalMs:1010,settleMs:1660});
 });
 
 test('motori calibrati per i cinque modelli e per le due viste della nave',()=>{
