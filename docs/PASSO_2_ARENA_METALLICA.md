@@ -34,8 +34,12 @@ Il collaudo è stato effettuato con una nave per lato nella preview dell'ambient
 
 ## Limiti e punto di ripresa
 
-Il blocco del runtime StackBlitz segnalato nel passo 1 rimane distinto dalle verifiche svolte qui. L'accesso all'account e ai file è disponibile; non è stato dichiarato un collaudo riuscito nel suo WebContainer.
+Il blocco del runtime StackBlitz segnalato nel primo collaudo è stato risolto nella sessione successiva per la copia salvata `github-edu2s6xy`. La mancata visibilità della nuova arena dipendeva da due copie rimaste indietro: `main` non era stato aggiornato al passo 2 e il progetto salvato `/edit/...` è indipendente dal repository. Entrambi sono stati aggiornati.
+
+La copia StackBlitz è stata salvata e ricaricata; sono stati verificati il sorgente aggiornato, la configurazione pubblica degli asset e la nuova scena reale con le immagini delle navi caricate. Il limite di 1 MB sui nuovi caricamenti di immagini è gestito tramite `VITE_ASSET_ROOT`, senza acquisti o modifiche al piano. Gli undici nuovi binari restano nel repository; la copia salvata carica dal percorso pubblico GitHub gli asset del duello. Gli asset originali della copia sono conservati. L'avvio normale del repository continua a usare `/assets` se la variabile non è definita.
+
+Anche nella copia StackBlitz ricaricata sono riusciti `npm run build` (TypeScript e Vite, con il warning già noto sul bundle grande) e `npm run verify:logic` (49 test superati, zero errori). La build locale senza variabile d'ambiente e i medesimi 49 test sono riusciti.
 
 Navi multiple, sovrapposizioni fra indicatori, disposizione definitiva dell'HUD e montaggi delle armi non sono stati completati in questo passo. Rimangono inoltre le segnalazioni di codice legacy inutilizzato, il warning sul bundle grande e l'allineamento dei testi dei menu già registrati.
 
-**Passo 2 completato nel codice e nell'anteprima di lavoro. Prossimo: passo 3 — una nave centrale, due navi affiancate, tre navi affiancate, con campo 9:16 invariato.**
+**Passo 2 completato nel codice, nell'anteprima di lavoro e nella copia StackBlitz salvata e ricaricata. Prossimo: passo 3 — una nave centrale, due navi affiancate, tre navi affiancate, con campo 9:16 invariato.**

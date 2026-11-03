@@ -41,4 +41,18 @@ Il passo 1 ha verificato build, struttura, test e avvio reale della battaglia co
 
 La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con ombre delle navi, senza la precedente griglia azzurra. La build, i 49 test e un attacco reale sul nuovo sfondo sono stati verificati nell'anteprima di lavoro. Il prossimo intervento è il **passo 3: formazioni affiancate di 1, 2 o 3 navi**. Catalogo completo, evoluzioni, carte-navicella persistenti e intro rimangono nei passi successivi.
 
-Il collaudo del passo 1 usa l'anteprima dell'ambiente di lavoro. In questa sessione StackBlitz è autenticato ma il suo WebContainer non parte; non dichiarare che il collaudo StackBlitz sia stato completato.
+Il primo collaudo è stato svolto nell'anteprima dell'ambiente di lavoro. Nella verifica successiva il WebContainer della copia salvata di StackBlitz è ripartito: la copia è stata aggiornata, salvata e ricaricata, e la nuova arena con le immagini delle navi è stata verificata anche lì. L'apertura diretta del repository ha invece ancora restituito un errore di clonazione.
+
+## Copia salvata di StackBlitz
+
+Un progetto salvato con URL `/edit/...` è una copia separata: aggiornare GitHub non ne aggiorna automaticamente i file. Dopo ogni fase occorre sincronizzare e salvare anche questa copia, oppure aprire direttamente il repository corrente.
+
+Per le copie con spazio limitato per le immagini, `VITE_ASSET_ROOT` può indicare una cartella pubblica di asset già ospitati. In assenza della variabile il gioco usa `/assets`, come prima. La copia Test7 di StackBlitz usa questa configurazione pubblica in `.env.local`:
+
+```text
+VITE_ASSET_ROOT=https://raw.githubusercontent.com/marcoteghini1988-ai/test7/main/public/assets
+```
+
+Questa variabile contiene soltanto un URL pubblico. Le immagini restano incluse nel repository per i normali avvii e le build autonome. La copia salvata usa GitHub per le immagini del duello, evitando di aggiungere gli undici nuovi file binari al limite di caricamento del piano StackBlitz. Dopo ogni modifica verificare il salvataggio con un ricaricamento e una prova della scena reale.
+
+La copia verificata è https://stackblitz.com/edit/github-edu2s6xy?file=README.md. Al termine di questa correzione anche `main` contiene il passo 2; le fasi successive devono aggiornare `main` e sincronizzare esplicitamente la copia salvata.

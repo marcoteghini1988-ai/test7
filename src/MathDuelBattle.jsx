@@ -3,7 +3,8 @@ import React,{useState,useEffect,useRef,useLayoutEffect} from 'react';
 import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,gunPoint,volleyTimeline} from './mathFleetGeometry.js';
 import './MathDuelBattle.css';
-const URL='/assets/mathduel/';const SHIPS='/assets/mathfleet/';
+const ASSET_ROOT=(import.meta.env.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
+const URL=`${ASSET_ROOT}/mathduel/`;const SHIPS=`${ASSET_ROOT}/mathfleet/`;
 const ARENA_BACKGROUND=`${URL}arena_titanio_9x16.webp`;
 function ArenaBackdrop(){
  return <div className="space-back metal-arena" aria-hidden="true" style={{backgroundImage:`url('${ARENA_BACKGROUND}')`}}/>;
