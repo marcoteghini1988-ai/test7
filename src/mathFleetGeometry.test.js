@@ -48,13 +48,15 @@ test("l'impatto segue l'ultimo proiettile, anche con piu armi",()=>{
  assert.deepEqual(volleyTimeline([{bullets:8},{bullets:1},{bullets:13}]),{arrivalMs:1010,settleMs:1660});
 });
 
-test('motori calibrati per tutti e cinque i modelli; le navi nemiche e proprie sono specchiate',()=>{
+test('motori calibrati per i cinque modelli e per le due viste della nave',()=>{
  for(const id of ['N00','C01','C02','C03','C04'])for(const op of Object.keys(ENGINE_POINTS.enemy)){
   const e=enginePoint('enemy',id,op),p=enginePoint('player',id,op);
   assert.deepEqual(e,SHIP_ENGINE_POINTS[id][op]);
   assert.ok(e[0]>.2&&e[0]<.8&&e[1]>.25&&e[1]<.8);
+  assert.ok(p[0]>.2&&p[0]<.8&&p[1]>.25&&p[1]<.8);
   assert.ok(Math.abs(e[0]-p[0])<1e-12);
-  assert.ok(Math.abs(e[1]+p[1]-1)<1e-12);
+  if(id!=='N00')assert.ok(Math.abs(e[1]+p[1]-1)<1e-12);
+  else if(op==='plus'||op==='minus')assert.ok(e[1]<.5&&p[1]>.5,'motori sui lati di scarico delle due viste');
  }
 });
 

@@ -19,7 +19,7 @@ function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,e
  const [px,py]=enginePoint(side,vessel.id,op);
  return <button type="button" style={{left:`${px*100}%`,top:`${py*100}%`}}
   className={`vessel-engine ve-${op} ve-${side}${selected&&!dead?' selected':''}${dead?' dead':''}${hit?' hit':''}`}
-  disabled={!enabled||dead||!available} onClick={()=>onSelect?.(op)}
+  disabled={!enabled||dead||!available} data-state={state} onClick={()=>onSelect?.(op)}
   aria-label={`${side==='enemy'?'Nemico':'Tu'}: motore ${META[op].name}, ${engine.hp} di ${engine.max} HP, bersaglio ${target??'non disponibile'}`}>
   <img ref={engineRef} className="vessel-engine-art" src={`${SHIPS}motor_${op}_${state}.png`} alt="" draggable="false"/>
   <span className="vessel-engine-hud">
@@ -43,12 +43,12 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
   <div className="fleet-ships">
    {ship.fleet.map((v,i)=>{
     const focusedShip=i===focused,dead=vesselDestroyed(v),count=v.weapons.length;
-    return <div key={i} className={`fleet-ship-wrap${focusedShip?' focused':''}${dead?' dead-ship':''}`}
+    return <div key={i} className={`fleet-ship-wrap${v.id==='N00'?' complete-ship':''}${focusedShip?' focused':''}${dead?' dead-ship':''}`}
      style={{left:`${shipX(i,ship.fleet.length,focused)/450*100}%`,zIndex:focusedShip?3:1}}>
-     <img ref={node=>registerShipRef?.(side,i,node)} className="fleet-ship-img" src={`${SHIPS}views/${side==='player'?'player_to_enemy':'enemy_to_player'}/${v.id}.png`}
+     <img ref={node=>registerShipRef?.(side,i,node)} className="fleet-ship-img" src={`${SHIPS}views/${side==='player'?'player_to_enemy':'enemy_to_player'}/${v.id}${v.id==='N00'?'_complete':''}.png`}
       alt={`${v.name}, livello ${v.level}`} draggable="false"/>
      <div className="ship-hardpoints">{v.weapons.map((w,wi)=>{
-       const [x,y]=gunPoint(side,count,wi);
+       const [x,y]=gunPoint(side,count,wi,v.id);
        const charge=w.tipo==='Accumulo'&&w.soglia_munizioni>0?Math.min(100,(w.charge||0)/w.soglia_munizioni*100):100;
        return <div key={w.id}
         className={`weapon-mount weapon-${w.seme_trigger==='*'?'all':w.seme_trigger.toLowerCase()}${w.tipo==='Accumulo'?' charging':''}`}

@@ -336,3 +336,26 @@
 .es-math-scope .formula small{font-size:8px;max-width:180px}
 .es-math-scope .deck-graphic{width:44px;height:60px;font-size:28px}
 .es-math-scope .top-brand{top:10px;left:13px;font-size:21px}.es-math-scope .top-brand b{font-size:27px}
+
+/* Aurora-0: complete square sprites and attachment points share one canvas. */
+.es-math-scope .fleet-ship-wrap.complete-ship{width:130px;height:130px;top:24px}
+.es-math-scope .fleet-ship-wrap.complete-ship.focused{width:218px;height:218px;top:-6px}
+.es-math-scope .ship-player .fleet-ship-wrap.complete-ship.focused{top:8px}
+.es-math-scope .complete-ship .vessel-engine{width:40px;height:40px;filter:none}
+.es-math-scope .complete-ship .vessel-engine-art{left:2px;top:2px;width:36px;height:36px;opacity:0}
+.es-math-scope .complete-ship .vessel-engine:before{content:"";position:absolute;inset:3px;border:2px solid #66dfff;border-radius:50%;background:transparent;opacity:.28;pointer-events:none}
+.es-math-scope .ship-enemy .complete-ship .vessel-engine:before{border-color:#ff7894}
+.es-math-scope .complete-ship .vessel-engine.selected:before{border-color:#ffe790;opacity:1;box-shadow:0 0 9px #ffe79088}
+.es-math-scope .complete-ship .vessel-engine[data-state="damaged"]:before{border-color:#ffd16a;opacity:.85}
+.es-math-scope .complete-ship .vessel-engine[data-state="critical"]:before{border-color:#ff705f;opacity:1}
+.es-math-scope .complete-ship .vessel-engine.dead:before{background:#09101edb;border-color:#685b60;opacity:1}
+.es-math-scope .complete-ship .vessel-engine-hud{top:calc(100% + 2px);left:50%;width:54px;min-height:22px;transform:translateX(-50%)}
+.es-math-scope .ship-enemy .complete-ship .vessel-engine-hud{top:auto;bottom:calc(100% + 2px)}
+.es-math-scope .complete-ship .vessel-smoke{left:6px;top:4px}
+.es-math-scope .complete-ship .weapon-mount{width:14px;height:24px;filter:drop-shadow(0 0 3px var(--gun))}
+.es-math-scope .complete-ship .weapon-mount:before{inset:2px 2px 4px}
+.es-math-scope .complete-ship .weapon-barrel{left:3px;top:2px;width:8px;height:18px}
+.es-math-scope .complete-ship .weapon-tip{left:4px;top:18px;width:6px;height:6px;box-shadow:0 0 5px 1px var(--gun)}
+.es-math-scope .complete-ship .weapon-sign{left:11px;top:-5px;min-width:10px;height:11px;line-height:10px;font-size:8px}
+.es-math-scope .fleet-picker-inline{left:50%;right:auto;width:max-content;max-width:calc(100% - 80px);bottom:3px;transform:translateX(-50%);gap:4px}
+.es-math-scope .fleet-picker-inline button{flex:0 1 auto;padding:3px 7px;font-size:8px}
