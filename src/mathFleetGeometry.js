@@ -1,6 +1,22 @@
 // Coordinate normalized to each ship's sprite. The playable board is 450 × 800.
 // No fixed screen pixels: this also supports dynamically resized mobile displays.
 export const BOARD_SIZE={width:450,height:800};
+// Each side keeps fixed slots. Selecting a vessel never changes its size or row.
+export function fleetFormation(count,side){
+ if(!Number.isInteger(count)||count<1||count>3)throw new RangeError('Fleet must contain 1–3 vessels');
+ const size=[0,218,184,124][count],gap=count===2?24:18;
+ const span=count*size+(count-1)*gap,start=(BOARD_SIZE.width-span)/2;
+ return {size,top:(side==='player'?117:103)-size/2,
+  centers:Array.from({length:count},(_,i)=>start+size/2+i*(size+gap)),
+  hudWidth:[0,54,44,32][count],engineSize:[0,40,34,24][count]};
+}
+// Separate close readouts with the smallest symmetric offset from their motors.
+export function engineHudShift(side,shipId,op,size,hudWidth){
+ const pair=op==='plus'||op==='minus'?['plus','minus']:['times','divide'];
+ const [left,right]=pair.map(key=>enginePoint(side,shipId,key)[0]*size);
+ const shift=Math.max(0,(hudWidth+6-(right-left))/2);
+ return op===pair[0]?-shift:shift;
+}
 export const ENGINE_POINTS={
  enemy:{plus:[.32,.30],minus:[.68,.30],times:[.24,.61],divide:[.76,.61]},
  player:{plus:[.32,.70],minus:[.68,.70],times:[.24,.39],divide:[.76,.39]}

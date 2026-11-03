@@ -8,6 +8,8 @@ Il passo 1 del piano di lavoro è descritto in [docs/PASSO_1_VERIFICA_E_AVVIO.md
 
 Il passo 2 integra l'arena metallica verticale ed è descritto in [docs/PASSO_2_ARENA_METALLICA.md](docs/PASSO_2_ARENA_METALLICA.md).
 
+Il passo 3 dispone una, due o tre navi in posti fissi, con scala uniforme per lato e selezione diretta di tutti i motori installati. Verifiche e formazioni miste: [docs/PASSO_3_FORMAZIONI.md](docs/PASSO_3_FORMAZIONI.md).
+
 La base attuale contiene le prime **5 navicelle e 7 armi** della Fase 1I. Il catalogo concordato di 17 navi e 42 armi è da completare progressivamente. Le copie salvate su StackBlitz devono essere confrontate con il ramo GitHub prima di modificarle.
 
 ## Regole del combattimento attivo
@@ -31,7 +33,7 @@ npm run verify:logic
 npm run preflight
 ```
 
-`build` esegue TypeScript e Vite. `test:combat` esegue i 40 test del duello dei motori e della geometria; `verify:logic` include anche i 9 test della precedente logica matematica.
+`build` esegue TypeScript e Vite. `test:combat` esegue i 42 test del duello dei motori e della geometria; `verify:logic` include anche i 9 test della precedente logica matematica, per un totale di 51.
 
 Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `npm run check:unused`: al termine del passo 1 segnala ancora 94 elementi. Non sono stati cancellati componenti, hook o funzionalità per eliminare queste segnalazioni. La build continua a verificare i tipi; non usa `noCheck` o `ts-nocheck`.
 
@@ -39,7 +41,7 @@ Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `n
 
 Il passo 1 ha verificato build, struttura, test e avvio reale della battaglia con attacco e risposta IA. Sono stati aperti anche Home, Shop, assetto e briefing di campagna.
 
-La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con ombre delle navi, senza la precedente griglia azzurra. La build, i 49 test e un attacco reale sul nuovo sfondo sono stati verificati nell'anteprima di lavoro. Il prossimo intervento è il **passo 3: formazioni affiancate di 1, 2 o 3 navi**. Catalogo completo, evoluzioni, carte-navicella persistenti e intro rimangono nei passi successivi.
+La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con ombre delle navi. Una nave è centrale; due e tre sono affiancate in una sola riga, senza ingrandimenti o ricentramenti al cambio di bersaglio. Sono state verificate le formazioni 1 contro 1, 2 contro 1, 1 contro 3 e 3 contro 3, i 51 test e due attacchi reali a un motore laterale con successivo KO. Il prossimo intervento è il **passo 4: integrazione fisica di navi, motori e armi delle prime cinque navicelle**. Catalogo completo, evoluzioni, carte-navicella persistenti e intro rimangono nei passi successivi.
 
 Il primo collaudo è stato svolto nell'anteprima dell'ambiente di lavoro. Nella verifica successiva il WebContainer della copia salvata di StackBlitz è ripartito: la copia è stata aggiornata, salvata e ricaricata, e la nuova arena con le immagini delle navi è stata verificata anche lì. L'apertura diretta del repository ha invece ancora restituito un errore di clonazione.
 
@@ -55,4 +57,4 @@ VITE_ASSET_ROOT=https://raw.githubusercontent.com/marcoteghini1988-ai/test7/main
 
 Questa variabile contiene soltanto un URL pubblico. Le immagini restano incluse nel repository per i normali avvii e le build autonome. La copia salvata usa GitHub per le immagini del duello, evitando di aggiungere gli undici nuovi file binari al limite di caricamento del piano StackBlitz. Dopo ogni modifica verificare il salvataggio con un ricaricamento e una prova della scena reale.
 
-La copia verificata è https://stackblitz.com/edit/github-edu2s6xy?file=README.md. Al termine di questa correzione anche `main` contiene il passo 2; le fasi successive devono aggiornare `main` e sincronizzare esplicitamente la copia salvata.
+La copia di consegna è https://stackblitz.com/edit/github-edu2s6xy?file=README.md. Ogni fase deve aggiornare `main` e sincronizzare esplicitamente la copia salvata, quindi verificarla dopo un ricaricamento.

@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,volleyTimeline} from './mathFleetGeometry.js';
+import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,volleyTimeline,fleetFormation,engineHudShift} from './mathFleetGeometry.js';
 const box=(left,top,width,height)=>({left,top,width,height});
 test('quattro motori per lato, posizione sempre dentro lo sprite',()=>{
  for(const side of ['enemy','player']){
@@ -65,5 +65,32 @@ test('indicatori HP separati sulle due coppie dei moduli, nessuna sovrapposizion
   // Dardo uses 46px readouts; the other sprites use 54px readouts on 218px ships.
   assert.ok((a.minus[0]-a.plus[0])*218>=(id==='C04'?46:54),id+' coppia superiore');
   assert.ok(a.divide[0]-a.times[0]>=.27,id+' coppia inferiore');
+ }
+});
+
+test('formazioni 1–3: stessa riga, scala uniforme, margini e intervalli senza sovrapposizioni',()=>{
+ for(const side of ['player','enemy'])for(const count of [1,2,3]){
+  const {centers,size,top}=fleetFormation(count,side);
+  assert.equal(centers.length,count);
+  assert.equal((centers[0]+centers.at(-1))/2,BOARD_SIZE.width/2,'formazione centrata');
+  assert.ok(centers[0]-size/2>=20,'ala sinistra dentro la plancia');
+  assert.ok(centers.at(-1)+size/2<=BOARD_SIZE.width-20,'ala destra dentro la plancia');
+  for(let i=1;i<count;i++)assert.ok(centers[i]-centers[i-1]-size>=18,'sprite distinti');
+  const absoluteTop=(side==='enemy'?88:326)+top;
+  assert.ok(absoluteTop>=75&&absoluteTop+size<=(side==='enemy'?300:560),'nessun contatto con carte o timer');
+ }
+ assert.ok(fleetFormation(1,'enemy').size>fleetFormation(2,'enemy').size);
+ assert.ok(fleetFormation(2,'enemy').size>fleetFormation(3,'enemy').size);
+});
+
+test('HP e bersagli leggibili anche su tre navi e sui motori ravvicinati del Dardo',()=>{
+ for(const side of ['player','enemy'])for(const count of [1,2,3])for(const id of ['N00','C01','C02','C03','C04']){
+  const {size,hudWidth}=fleetFormation(count,side);
+  for(const pair of [['plus','minus'],['times','divide']]){
+   const centers=pair.map(op=>enginePoint(side,id,op)[0]*size+engineHudShift(side,id,op,size,hudWidth));
+   assert.ok(centers[0]-hudWidth/2>=0,id+' HUD sinistro dentro lo slot');
+   assert.ok(centers[1]+hudWidth/2<=size,id+' HUD destro dentro lo slot');
+   assert.ok(centers[1]-centers[0]>=hudWidth+5.99,id+' bersagli separati');
+  }
  }
 });

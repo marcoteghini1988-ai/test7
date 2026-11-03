@@ -333,35 +333,34 @@
 .es-math-scope .deck-graphic{width:44px;height:60px;font-size:28px}
 .es-math-scope .top-brand{top:10px;left:13px;font-size:21px}.es-math-scope .top-brand b{font-size:27px}
 
-/* Aurora-0: complete square sprites and attachment points share one canvas. */
-.es-math-scope .fleet-ship-wrap.complete-ship{width:130px;height:130px;top:24px}
-.es-math-scope .fleet-ship-wrap.complete-ship.focused{width:218px;height:218px;top:-6px}
-.es-math-scope .ship-player .fleet-ship-wrap.complete-ship.focused{top:8px}
-.es-math-scope .complete-ship .vessel-engine{width:40px;height:40px;filter:none}
-.es-math-scope .complete-ship .vessel-engine-art{left:2px;top:2px;width:36px;height:36px;opacity:0}
+/* Fixed formations: selection highlights a slot without resizing or moving it. */
+.es-math-scope .fleet-ship-wrap.complete-ship{animation:none}
+.es-math-scope .fleet-ships{animation:formationFloat 4.4s ease-in-out infinite alternate}
+.es-math-scope .ship-in-combat .fleet-ships{animation-play-state:paused}
+@keyframes formationFloat{from{transform:translateY(-2px)}to{transform:translateY(2px)}}
+@media(prefers-reduced-motion:reduce){.es-math-scope .fleet-ships{animation:none}}
+.es-math-scope .complete-ship .vessel-engine{width:var(--engine-width,var(--engine-size));height:var(--engine-size);filter:none}
+.es-math-scope .complete-ship .vessel-engine-art{left:50%;top:50%;width:90%;height:90%;transform:translate(-50%,-50%);opacity:0}
 .es-math-scope .complete-ship .vessel-engine:before{content:"";position:absolute;inset:3px;border:2px solid #66dfff;border-radius:50%;background:transparent;opacity:.28;pointer-events:none}
 .es-math-scope .ship-enemy .complete-ship .vessel-engine:before{border-color:#ff7894}
 .es-math-scope .complete-ship .vessel-engine.selected:before{border-color:#ffe790;opacity:1;box-shadow:0 0 9px #ffe79088}
 .es-math-scope .complete-ship .vessel-engine[data-state="damaged"]:before{border-color:#ffd16a;opacity:.85}
 .es-math-scope .complete-ship .vessel-engine[data-state="critical"]:before{border-color:#ff705f;opacity:1}
 .es-math-scope .complete-ship .vessel-engine.dead:before{background:#09101edb;border-color:#685b60;opacity:1}
-.es-math-scope .complete-ship .vessel-engine-hud{top:calc(100% + 2px);left:50%;width:54px;min-height:22px;transform:translateX(-50%)}
+.es-math-scope .complete-ship .vessel-engine-hud{top:calc(100% + 2px);left:50%;width:var(--engine-hud-width);margin-left:var(--hud-shift);min-height:22px;transform:translateX(-50%)}
+.es-math-scope .complete-ship .vessel-engine-meter{width:calc(var(--engine-hud-width) - 8px)}
 .es-math-scope .ship-enemy .complete-ship .vessel-engine-hud{top:auto;bottom:calc(100% + 2px)}
+.es-math-scope [data-fleet-size="3"] .vessel-engine-hud strong{font-size:10px;line-height:10px}
+.es-math-scope [data-fleet-size="3"] .vessel-engine-hud small{font-size:7px;line-height:8px}
 .es-math-scope .complete-ship .vessel-smoke{left:6px;top:4px}
 .es-math-scope .complete-ship .weapon-mount{width:14px;height:24px;filter:drop-shadow(0 0 3px var(--gun))}
 .es-math-scope .complete-ship .weapon-mount:before{inset:2px 2px 4px}
 .es-math-scope .complete-ship .weapon-barrel{left:3px;top:2px;width:8px;height:18px}
 .es-math-scope .complete-ship .weapon-tip{left:4px;top:18px;width:6px;height:6px;box-shadow:0 0 5px 1px var(--gun)}
 .es-math-scope .complete-ship .weapon-sign{left:11px;top:-5px;min-width:10px;height:11px;line-height:10px;font-size:8px}
-/* Dardo has two close rear nozzles. Keep each hit area on its own nozzle
-   and move only the readouts outward so neither label hides the other. */
-.es-math-scope .complete-ship[data-ship="C04"] .vessel-engine-hud{width:46px}
-.es-math-scope .complete-ship[data-ship="C04"] .vessel-engine-meter{width:42px}
-.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-plus,
-.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-minus{width:24px;height:24px}
-.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-plus .vessel-engine-art,
-.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-minus .vessel-engine-art{width:20px;height:20px}
-.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-plus .vessel-engine-hud{margin-left:-20px}
-.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-minus .vessel-engine-hud{margin-left:20px}
-.es-math-scope .fleet-picker-inline{left:50%;right:auto;width:max-content;max-width:calc(100% - 80px);bottom:3px;transform:translateX(-50%);gap:4px}
-.es-math-scope .fleet-picker-inline button{flex:0 1 auto;padding:3px 7px;font-size:8px}
+.es-math-scope .fleet-picker-inline{left:0;right:0;width:auto;max-width:none;bottom:0;height:22px;transform:none;display:block}
+.es-math-scope .fleet-picker-inline button{position:absolute;top:0;height:21px;transform:translateX(-50%);padding:3px 4px;font-size:9px}
+.es-math-scope .fleet-side-toggle{display:flex;gap:6px}
+.es-math-scope .fleet-side-toggle button{flex:1;padding:9px 4px;background:#07162e;color:#b7d7ea;border:1px solid #235075;border-radius:7px;font-size:11px;font-weight:800}
+.es-math-scope .fleet-side-toggle button[aria-pressed="true"]{background:#0c3860;border-color:#5ce6ff;color:#fff}
+.es-math-scope .fleet-match{display:flex;gap:8px;align-items:center;font-size:12px;color:#cbe6f6}

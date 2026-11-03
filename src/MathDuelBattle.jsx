@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useRef,useLayoutEffect} from 'react';
 
 import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget} from './mathDuelEngine.js';
-import {enginePoint,boardPoint,gunPoint,volleyTimeline} from './mathFleetGeometry.js';
+import {enginePoint,boardPoint,gunPoint,volleyTimeline,fleetFormation,engineHudShift} from './mathFleetGeometry.js';
 import './MathDuelBattle.css';
 const ASSET_ROOT=(import.meta.env.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 const URL=`${ASSET_ROOT}/mathduel/`;const SHIPS=`${ASSET_ROOT}/mathfleet/`;
@@ -17,15 +17,19 @@ function tone(name){try{const C=window.AudioContext||window.webkitAudioContext;i
 // Position of the FOUR visible engine modules on the actual starship illustration.
 // Coordinates follow each sprite's camera view without flipping its orientation.
 const GLYPH={H:'♥',D:'♦',C:'♣',S:'♠','*':'◎'};
-function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef}){
+function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation}){
  const engine=vessel.engines[op];if(!engine)return null;
  const dead=engine.hp<=0,ratio=Math.max(0,engine.hp/engine.max);
  const state=dead?'destroyed':ratio<=.3?'critical':ratio<=.65?'damaged':'intact';
  const [px,py]=enginePoint(side,vessel.id,op);
- return <button type="button" style={{left:`${px*100}%`,top:`${py*100}%`}}
+ const narrow=side==='player'&&vessel.id==='C04'&&(op==='plus'||op==='minus');
+ return <button type="button" style={{left:`${px*100}%`,top:`${py*100}%`,
+  '--hud-shift':`${engineHudShift(side,vessel.id,op,formation.size,formation.hudWidth)}px`,
+  ...(narrow?{'--engine-width':`${Math.min(24,formation.size*.11-2)}px`}:{})}}
   className={`vessel-engine ve-${op} ve-${side}${selected&&!dead?' selected':''}${dead?' dead':''}${hit?' hit':''}`}
   disabled={!enabled||dead||!available} data-state={state} onClick={()=>onSelect?.(op)}
-  aria-label={`${side==='enemy'?'Nemico':'Tu'}: motore ${META[op].name}, ${engine.hp} di ${engine.max} HP, bersaglio ${target??'non disponibile'}`}>
+  aria-pressed={!!selected}
+  aria-label={`${side==='enemy'?'Nemico':'Tu'}: ${vessel.name}, motore ${META[op].name}, ${engine.hp} di ${engine.max} HP, bersaglio ${target??'non disponibile'}`}>
   <img ref={engineRef} className="vessel-engine-art" src={`${SHIPS}motor_${op}_${state}.png`} alt="" draggable="false"/>
   <span className="vessel-engine-hud">
    <strong>{dead?'✕':enabled&&target!=null?`${META[op].sign}${target}`:META[op].sign}</strong>
@@ -35,21 +39,17 @@ function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,e
   {dead&&<span className="vessel-smoke"/>}
  </button>;
 }
-function shipX(index,count,focused){if(index===focused)return 225;
- const others=Array.from({length:count},(_,i)=>i).filter(i=>i!==focused);
- if(count===2)return index<focused?118:332;
- return index===others[0]?108:342;
-}
 function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,phase,effect,availableOps,registerShipRef,registerEngineRef,registerGunRef}){
  const enemy=side==='enemy',targetable=enemy&&phase==='ready';
- const vessel=ship.fleet[focused]||ship.fleet[0];
+ const formation=fleetFormation(ship.fleet.length,side);
  const hit=effect&&effect.side!==side&&effect.targetShip===focused;
- return <div className={`ship-zone ship-${side}${hit?' ship-struck':''}${effect?' ship-in-combat':''}`}>
+ return <div data-fleet-size={ship.fleet.length} className={`ship-zone ship-${side}${hit?' ship-struck':''}${effect?' ship-in-combat':''}`}>
   <div className="fleet-ships">
    {ship.fleet.map((v,i)=>{
     const focusedShip=i===focused,dead=vesselDestroyed(v),count=v.weapons.length;
-    return <div key={i} data-ship={v.id} className={`fleet-ship-wrap complete-ship${focusedShip?' focused':''}${dead?' dead-ship':''}`}
-     style={{left:`${shipX(i,ship.fleet.length,focused)/450*100}%`,zIndex:focusedShip?3:1}}>
+    return <div key={i} data-ship={v.id} data-vessel-index={i} className={`fleet-ship-wrap complete-ship${focusedShip?' focused':''}${dead?' dead-ship':''}`}
+     style={{left:`${formation.centers[i]/450*100}%`,top:formation.top,width:formation.size,height:formation.size,
+      '--engine-size':`${formation.engineSize}px`,'--engine-hud-width':`${formation.hudWidth}px`,zIndex:focusedShip?3:1}}>
      <img ref={node=>registerShipRef?.(side,i,node)} className="fleet-ship-img" src={`${SHIPS}views/${side==='player'?'player_to_enemy':'enemy_to_player'}/${v.id}_complete.png`}
       alt={`${v.name}, livello ${v.level}`} draggable="false"/>
      <div className="ship-hardpoints">{v.weapons.map((w,wi)=>{
@@ -62,16 +62,17 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
         <span className="weapon-barrel"/><span ref={node=>registerGunRef?.(side,i,w.id,node)} className="weapon-tip"/><span className="weapon-sign">{GLYPH[w.seme_trigger]||'◎'}</span>
        </div>;
      })}</div>
-     {focusedShip&&ENGINE_KEYS.map(op=><Engine key={op} side={side} op={op} vessel={v}
-      target={targets?.[op]} selected={enemy&&selectedTarget===op} onSelect={onTarget} enabled={targetable}
-      available={!enemy||availableOps.includes(op)} hit={!!hit&&effect.op===op}
-      engineRef={node=>registerEngineRef?.(side,op,node)}/>) }
+     {ENGINE_KEYS.map(op=><Engine key={op} side={side} op={op} vessel={v} formation={formation}
+      target={targets?.[op]} selected={enemy&&focusedShip&&selectedTarget===op} onSelect={()=>onTarget?.(i,op)} enabled={targetable}
+      available={!enemy||availableOps.includes(op)} hit={!!effect&&effect.side!==side&&effect.targetShip===i&&effect.op===op}
+      engineRef={node=>registerEngineRef?.(side,i,op,node)}/>) }
     </div>;
    })}
    <div className={'engine-thruster '+(enemy?'red':'blue')}/>
   </div>
   <div className={`fleet-picker-inline${ship.fleet.length===1?' single-ship':''}`}>{ship.fleet.map((v,i)=><button key={i} type="button"
-   className={focused===i?'focus':''} onClick={()=>onSelectShip?.(i)}
+   className={focused===i?'focus':''} onClick={()=>onSelectShip?.(i)} aria-pressed={focused===i}
+   style={{left:`${formation.centers[i]/450*100}%`,width:Math.min(160,formation.size-8)}}
    disabled={enemy&&phase!=='ready'} title={`${v.name} · ${v.level}`}>
    <span className={`fleet-dot${vesselDestroyed(v)?' lost':''}`}/>{v.name} · L{v.level}</button>)}</div>
   {ship.fleet.every(vesselDestroyed)&&<span className="fleet-eliminated">FLOTTA DISTRUTTA</span>}
@@ -82,10 +83,9 @@ function rootCoords(root,node){return root&&node?boardPoint(root.getBoundingClie
 function Projectile({effect,rootRef,engineRefs,gunRefs}){
  const [geometry,setGeometry]=useState(null);
  useLayoutEffect(()=>{
-  // Measurements happen AFTER React has committed a change of focused ship.
-  // Before this fix the enemy could fire at the engine of the previously displayed ship.
+  // Read the exact vessel's motor after React commits. Every vessel stays mounted.
   const targetSide=effect?.side==='player'?'enemy':'player';
-  const target=rootCoords(rootRef.current,engineRefs.current[targetSide][effect?.op]);
+  const target=rootCoords(rootRef.current,engineRefs.current[targetSide][`${effect?.targetShip}/${effect?.op}`]);
   if(!effect||!target){setGeometry(null);return;}
   const shots=effect.volleys.filter(x=>x.bullets>0).flatMap((s,i)=>{
    const gun=gunRefs.current[effect.side][`${s.vesselIndex}/${s.weaponId}`];
@@ -130,16 +130,20 @@ function Formula({game}){
    <small>{inspection?.valid?(preview.totalDamage?`BERSAGLIO ${goal} ✓ · FUOCO ${preview.totalDamage} HP`: `BERSAGLIO ${goal} ✓ · CARICA / NESSUN COLPO`):inspection?(alternative?`BERSAGLIO ${goal} ✗ · USA ${META[alternative].sign} ${game.targets[alternative]}`:`BERSAGLIO ${goal} ✗ · RISULTATO ${fmt(inspection.result)}`):'SELEZIONA DUE CARTE'}</small>
   </div>;
 }
-function FleetSetup({onClose,onStart,selected,setSelected,level,setLevel,sector}){
- const toggle=id=>{const next=selected.includes(id)?selected.filter(x=>x!==id):[...selected,id];if(validFleet(next))setSelected(next);};
+function FleetSetup({onClose,onStart,selected,setSelected,enemySelected,setEnemySelected,level,setLevel}){
+ const [side,setSide]=useState('player');
+ const ids=side==='player'?selected:enemySelected??selected;
+ const toggle=id=>{const next=ids.includes(id)?ids.filter(x=>x!==id):[...ids,id];if(validFleet(next))(side==='player'?setSelected:setEnemySelected)(next);};
  return <div className="modal-shade"><div className="help-card fleet-setup"><h2>FLOTTA — FASE 1</h2><p>La prima nave è <b>Aurora-0</b>, universale. Le quattro comuni sono disponibili qui per provare il combattimento: non sono acquisti dello Shop R12.</p>
-  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><button key={s.id} className={selected.includes(s.id)?'on':''} onClick={()=>toggle(s.id)}><img src={`${SHIPS}${s.id}.png`} alt=""/><span><b>{s.nome}</b><small>{s.n_armi} {s.n_armi===1?'arma':'armi'} · {s.motori_iniziali}–{s.motori_massimi} motori</small></span><strong>{selected.includes(s.id)?'✓':'+'}</strong></button>)}</div>
+  <div className="fleet-side-toggle"><button type="button" aria-pressed={side==='player'} onClick={()=>setSide('player')}>LA TUA FLOTTA</button><button type="button" aria-pressed={side==='enemy'} onClick={()=>setSide('enemy')}>AVVERSARIO DI PROVA</button></div>
+  {side==='enemy'&&<label className="fleet-match"><input type="checkbox" checked={enemySelected===null} onChange={e=>setEnemySelected(e.target.checked?null:[...selected])}/> Stessa flotta del giocatore</label>}
+  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><button key={s.id} aria-pressed={ids.includes(s.id)} className={ids.includes(s.id)?'on':''} onClick={()=>toggle(s.id)}><img src={`${SHIPS}${s.id}.png`} alt=""/><span><b>{s.nome}</b><small>{s.n_armi} {s.n_armi===1?'arma':'armi'} · {s.motori_iniziali}–{s.motori_massimi} motori</small></span><strong>{ids.includes(s.id)?'✓':'+'}</strong></button>)}</div>
   <label className="fleet-level-row">Livello di prova (non acquistato) <b>{level}</b><input type="range" min="1" max="5" value={level} onChange={e=>setLevel(Number(e.target.value))}/></label>
   <p>Massimo 3 navi. L'universale è unica; ogni seme può attivare al massimo due navi specializzate. Le operazioni si sbloccano secondo il livello del modello.</p>
   <div className="fleet-setup-actions"><button className="es-button" onClick={onClose}>ANNULLA</button><button className="es-button primary" onClick={onStart}>INIZIA DUELLO</button></div></div></div>;
 }
 export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,onEtherConsumed,onResult,onExit}){
- const [scale,setScale]=useState(1);const [fleetIds,setFleetIds]=useState(['N00']);const [testLevel,setTestLevel]=useState(1);
+ const [scale,setScale]=useState(1);const [fleetIds,setFleetIds]=useState(['N00']);const [enemyFleetIds,setEnemyFleetIds]=useState(null);const [testLevel,setTestLevel]=useState(1);
  const [game,setGame]=useState(()=>{const b=initialBattle(Math.max(1,sectorNumber),{fleetIds:['N00']},Math.random,gameMode);b.player.ether=Math.max(0,Number(ether)||0);return b;});
  const rootRef=useRef(null);
  const shipRefs=useRef({player:{},enemy:{}});
@@ -147,7 +151,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  const gunRefs=useRef({player:{},enemy:{}});
  const gameRef=useRef(game);gameRef.current=game;
  const registerShipRef=(side,index,node)=>{if(node)shipRefs.current[side][index]=node; else delete shipRefs.current[side][index];};
- const registerEngineRef=(side,op,node)=>{if(node)engineRefs.current[side][op]=node; else delete engineRefs.current[side][op];};
+ const registerEngineRef=(side,index,op,node)=>{const key=`${index}/${op}`;if(node)engineRefs.current[side][key]=node; else delete engineRefs.current[side][key];};
  const registerGunRef=(side,index,id,node)=>{const key=`${index}/${id}`;if(node)gunRefs.current[side][key]=node;else delete gunRefs.current[side][key];};const [help,setHelp]=useState(false),[fleetMenu,setFleetMenu]=useState(false),[message,setMessage]=useState('');const queue=useRef([]),resultClaimed=useRef(false);
  function later(f,ms){const handle=setTimeout(f,ms);queue.current.push(handle);return handle;}
  useEffect(()=>()=>queue.current.forEach(clearTimeout),[]);
@@ -195,7 +199,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(b.selected.length!==2){notice('Seleziona due carte');return;}
   fire('player',{op:b.target,targetShip:b.targetShip,i:b.selected[0],j:b.selected[1]});}
  function pick(i){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;const next=clone(b);next.selected=next.selected.includes(i)?next.selected.filter(x=>x!==i):next.selected.length>=2?[next.selected[1],i]:[...next.selected,i];write(next);tone('click');}
- function selectEngine(op){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;if(!supportedOperators(b.player).includes(op)){notice('La tua flotta non ha ancora questo motore operativo');return;}if((b.enemy.fleet[b.targetShip]?.engines[op]?.hp||0)<=0)return;write({...b,target:op});}
+ function selectEngine(index,op){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;if(!supportedOperators(b.player).includes(op)){notice('La tua flotta non ha ancora questo motore operativo');return;}if((b.enemy.fleet[index]?.engines[op]?.hp||0)<=0)return;write({...b,targetShip:index,target:op});}
  function chooseEnemy(i){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;
   const v=b.enemy.fleet[i];if(!v||vesselDestroyed(v))return;
   const target=nextAttackTarget(b.player,b.enemy,i,b.target);
@@ -211,7 +215,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  useEffect(()=>{if(game.actor!=='enemy'||game.phase!=='thinking')return;const timer=later(()=>{const b=gameRef.current;if(b.phase!=='thinking'||b.actor!=='enemy')return;let n=clone(b),move=aiChoose(n.enemy,n.player,n.targets);if(!move&&n.enemy.sacrifices<3&&n.enemy.deck.length){const swap=sacrificeCard(n.enemy,Math.floor(Math.random()*n.enemy.hand.length),n.player,60);if(swap){n.enemy=swap.ship;n.player=swap.opponent;write(n);move=aiChoose(n.enemy,n.player,n.targets);}}
   if(isDestroyed(n.enemy)){write(finish(n,'player','Flotta nemica distrutta'));return;}if(deckExhausted(n.player,n.enemy)){write(finish(n,deckVerdict(n.player,n.enemy),'Mazzo terminato'));return;}if(move){write(n);fire('enemy',move);}else write(transition(n,'enemy'));
  },1000);return()=>clearTimeout(timer);},[game.actor,game.phase,game.round]);
- function restartWithFleet(){if(!validFleet(fleetIds))return;const b=initialBattle(Math.max(1,sectorNumber),{fleetIds,shipLevel:testLevel},Math.random,gameMode);b.player.ether=Math.max(0,Number(ether)||0);write(b);setFleetMenu(false);resultClaimed.current=false;}
+ function restartWithFleet(){if(!validFleet(fleetIds))return;const b=initialBattle(Math.max(1,sectorNumber),{fleetIds,enemyFleetIds,shipLevel:testLevel},Math.random,gameMode);b.player.ether=Math.max(0,Number(ether)||0);write(b);setFleetMenu(false);resultClaimed.current=false;}
  function exitBattle(){const b=gameRef.current;if(b?.phase==='finished'&&!resultClaimed.current){resultClaimed.current=true;const h=healthScore(b.player);onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,starsEarned:[true,h>=.65,h>=.9],matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),turnsElapsed:b.round}});}onExit?.();}
  const availableOps=supportedOperators(game.player);
  return <div className="es-math-scope game-viewport" role="region" aria-label="Duello matematico spaziale">
@@ -231,7 +235,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    {game.effect&&<Projectile effect={game.effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs}/>}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
    {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>Ogni nave monta inizialmente + e −; alcuni modelli sbloccano × e ÷. Tutti i motori installati devono essere distrutti per eliminare una nave. Vinci distruggendo tutta la flotta nemica.</p><p>Ogni turno dura 60 secondi. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo costa 3 secondi e il terzo −3 HP a te. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA è una selezione di prova per la fase 1: non modifica acquisti o salvataggi dello Shop R12.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
-   {fleetMenu&&<FleetSetup selected={fleetIds} setSelected={setFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet} sector={sectorNumber}/>}
+   {fleetMenu&&<FleetSetup selected={fleetIds} setSelected={setFleetIds} enemySelected={enemyFleetIds} setEnemySelected={setEnemyFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet}/>}
   </div>
  </div>;
 }
