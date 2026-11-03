@@ -10,15 +10,19 @@ export const ENGINE_POINTS={
 // percentages would place a target outside the visible hull.
 export const SHIP_ENGINE_POINTS={
  N00:{plus:[.35,.43],minus:[.64,.43],times:[.29,.64],divide:[.71,.64]},
- C01:{plus:[.35,.36],minus:[.65,.36],times:[.27,.61],divide:[.73,.61]},
- C02:{plus:[.36,.34],minus:[.64,.34],times:[.27,.60],divide:[.73,.60]},
- C03:{plus:[.35,.35],minus:[.65,.35],times:[.28,.59],divide:[.72,.59]},
- C04:{plus:[.36,.35],minus:[.64,.35],times:[.29,.59],divide:[.71,.59]},
+ C01:{plus:[.35,.37],minus:[.65,.37],times:[.27,.71],divide:[.73,.71]},
+ C02:{plus:[.35,.33],minus:[.64,.33],times:[.30,.66],divide:[.70,.66]},
+ C03:{plus:[.35,.37],minus:[.65,.37],times:[.28,.75],divide:[.72,.75]},
+ C04:{plus:[.38,.37],minus:[.62,.37],times:[.25,.57],divide:[.75,.57]},
 };
-// The complete Aurora sprites use two different camera views, not a CSS flip.
+// The complete sprites use two different camera views, not a CSS flip.
 // Engine centers therefore follow each PNG rather than mirroring a rectangle.
 export const SHIP_PLAYER_ENGINE_POINTS={
  N00:{plus:[.35,.59],minus:[.64,.59],times:[.29,.38],divide:[.71,.38]},
+ C01:{plus:[.34,.70],minus:[.66,.70],times:[.27,.34],divide:[.73,.34]},
+ C02:{plus:[.32,.68],minus:[.68,.68],times:[.32,.34],divide:[.68,.34]},
+ C03:{plus:[.31,.64],minus:[.69,.64],times:[.31,.27],divide:[.69,.27]},
+ C04:{plus:[.445,.71],minus:[.555,.71],times:[.27,.49],divide:[.73,.49]},
 };
 export function enginePoint(side,shipId,op){
  if(side==='player'&&SHIP_PLAYER_ENGINE_POINTS[shipId]?.[op])return SHIP_PLAYER_ENGINE_POINTS[shipId][op];
@@ -29,8 +33,18 @@ export const GUN_POINTS={
  enemy:{1:[[.50,.66]],2:[[.35,.62],[.65,.62]],3:[[.33,.72],[.50,.80],[.67,.72]],4:[[.30,.78],[.43,.84],[.57,.84],[.70,.78]]},
  player:{1:[[.50,.34]],2:[[.35,.38],[.65,.38]],3:[[.33,.28],[.50,.20],[.67,.28]],4:[[.30,.22],[.43,.16],[.57,.16],[.70,.22]]}
 };
+// Physical muzzle locations in each illustration. Ship weapon counts and
+// firing rules remain in the fleet catalog; these only anchor the visuals.
+export const SHIP_GUN_POINTS={
+ N00:{enemy:[[.495,.81]],player:[[.495,.125]]},
+ C01:{enemy:[[.495,.87]],player:[[.495,.10]]},
+ C02:{enemy:[[.495,.87]],player:[[.495,.10]]},
+ C03:{enemy:[[.28,.73],[.72,.73]],player:[[.30,.24],[.70,.24]]},
+ C04:{enemy:[[.24,.65],[.75,.65]],player:[[.27,.27],[.73,.27]]},
+};
 export function gunPoint(side,count,index,shipId){
- if(shipId==='N00'&&count===1&&index===0)return side==='player'?[.495,.125]:[.495,.81];
+ const mounts=SHIP_GUN_POINTS[shipId]?.[side];
+ if(mounts?.length===count&&mounts[index])return mounts[index];
  return (GUN_POINTS[side]?.[count]||GUN_POINTS[side]?.[4]||[])[index]||[.5,.5];
 }
 export function boardPoint(rootBox,objectBox){

@@ -10,7 +10,7 @@ const label=rankLabel;
 const clone=v=>structuredClone(v);
 function tone(name){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=window.__eclissiMathAudio||(window.__eclissiMathAudio=new C());if(ctx.state==='suspended')ctx.resume();const o=ctx.createOscillator(),g=ctx.createGain(),now=ctx.currentTime;o.type=name==='shot'?'sawtooth':'sine';o.frequency.setValueAtTime(name==='shot'?180:470,now);o.frequency.exponentialRampToValueAtTime(name==='shot'?46:650,now+.19);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.025,now+.014);g.gain.exponentialRampToValueAtTime(.0001,now+.22);o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+.23);}catch{}}
 // Position of the FOUR visible engine modules on the actual starship illustration.
-// Coordinates are relative to each ship sprite and flip with the player's facing.
+// Coordinates follow each sprite's camera view without flipping its orientation.
 const GLYPH={H:'♥',D:'♦',C:'♣',S:'♠','*':'◎'};
 function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef}){
  const engine=vessel.engines[op];if(!engine)return null;
@@ -43,9 +43,9 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
   <div className="fleet-ships">
    {ship.fleet.map((v,i)=>{
     const focusedShip=i===focused,dead=vesselDestroyed(v),count=v.weapons.length;
-    return <div key={i} className={`fleet-ship-wrap${v.id==='N00'?' complete-ship':''}${focusedShip?' focused':''}${dead?' dead-ship':''}`}
+    return <div key={i} data-ship={v.id} className={`fleet-ship-wrap complete-ship${focusedShip?' focused':''}${dead?' dead-ship':''}`}
      style={{left:`${shipX(i,ship.fleet.length,focused)/450*100}%`,zIndex:focusedShip?3:1}}>
-     <img ref={node=>registerShipRef?.(side,i,node)} className="fleet-ship-img" src={`${SHIPS}views/${side==='player'?'player_to_enemy':'enemy_to_player'}/${v.id}${v.id==='N00'?'_complete':''}.png`}
+     <img ref={node=>registerShipRef?.(side,i,node)} className="fleet-ship-img" src={`${SHIPS}views/${side==='player'?'player_to_enemy':'enemy_to_player'}/${v.id}_complete.png`}
       alt={`${v.name}, livello ${v.level}`} draggable="false"/>
      <div className="ship-hardpoints">{v.weapons.map((w,wi)=>{
        const [x,y]=gunPoint(side,count,wi,v.id);

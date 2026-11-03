@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,volleyTimeline} from './mathFleetGeometry.js';
+import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,volleyTimeline} from './mathFleetGeometry.js';
 const box=(left,top,width,height)=>({left,top,width,height});
 test('quattro motori per lato, posizione sempre dentro lo sprite',()=>{
  for(const side of ['enemy','player']){
@@ -54,16 +54,16 @@ test('motori calibrati per i cinque modelli e per le due viste della nave',()=>{
   assert.deepEqual(e,SHIP_ENGINE_POINTS[id][op]);
   assert.ok(e[0]>.2&&e[0]<.8&&e[1]>.25&&e[1]<.8);
   assert.ok(p[0]>.2&&p[0]<.8&&p[1]>.25&&p[1]<.8);
-  assert.ok(Math.abs(e[0]-p[0])<1e-12);
-  if(id!=='N00')assert.ok(Math.abs(e[1]+p[1]-1)<1e-12);
-  else if(op==='plus'||op==='minus')assert.ok(e[1]<.5&&p[1]>.5,'motori sui lati di scarico delle due viste');
+  assert.deepEqual(p,SHIP_PLAYER_ENGINE_POINTS[id][op]);
+  if(op==='plus'||op==='minus')assert.ok(e[1]<.5&&p[1]>.5,'motori sui lati di scarico delle due viste');
  }
 });
 
 test('indicatori HP separati sulle due coppie dei moduli, nessuna sovrapposizione laterale',()=>{
  for(const id of ['N00','C01','C02','C03','C04']){
   const a=SHIP_ENGINE_POINTS[id];
-  assert.ok(a.minus[0]-a.plus[0]>=.27,id+' coppia superiore');
+  // Dardo uses 46px readouts; the other sprites use 54px readouts on 218px ships.
+  assert.ok((a.minus[0]-a.plus[0])*218>=(id==='C04'?46:54),id+' coppia superiore');
   assert.ok(a.divide[0]-a.times[0]>=.27,id+' coppia inferiore');
  }
 });

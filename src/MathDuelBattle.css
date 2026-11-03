@@ -357,5 +357,15 @@
 .es-math-scope .complete-ship .weapon-barrel{left:3px;top:2px;width:8px;height:18px}
 .es-math-scope .complete-ship .weapon-tip{left:4px;top:18px;width:6px;height:6px;box-shadow:0 0 5px 1px var(--gun)}
 .es-math-scope .complete-ship .weapon-sign{left:11px;top:-5px;min-width:10px;height:11px;line-height:10px;font-size:8px}
+/* Dardo has two close rear nozzles. Keep each hit area on its own nozzle
+   and move only the readouts outward so neither label hides the other. */
+.es-math-scope .complete-ship[data-ship="C04"] .vessel-engine-hud{width:46px}
+.es-math-scope .complete-ship[data-ship="C04"] .vessel-engine-meter{width:42px}
+.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-plus,
+.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-minus{width:24px;height:24px}
+.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-plus .vessel-engine-art,
+.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-minus .vessel-engine-art{width:20px;height:20px}
+.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-plus .vessel-engine-hud{margin-left:-20px}
+.es-math-scope .ship-player .complete-ship[data-ship="C04"] .ve-minus .vessel-engine-hud{margin-left:20px}
 .es-math-scope .fleet-picker-inline{left:50%;right:auto;width:max-content;max-width:calc(100% - 80px);bottom:3px;transform:translateX(-50%);gap:4px}
 .es-math-scope .fleet-picker-inline button{flex:0 1 auto;padding:3px 7px;font-size:8px}
