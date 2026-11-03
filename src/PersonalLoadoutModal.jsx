@@ -326,7 +326,7 @@ export default function PersonalLoadoutModal({
                   return (
                     <div 
                       key={idx}
-                      title={card ? (describePhase16HTerrain(card.id) || card.desc || card.name) : `Slot ${idx+1} libero`}
+                      title={itemObj ? (itemObj.desc || itemObj.description || itemObj.name) : `Slot ${idx+1} libero`}
                       style={{ 
                         background: 'rgba(2, 6, 23, 0.75)', 
                         border: itemObj ? `1px solid ${itemObj.color || '#facc15'}` : '1px dashed rgba(255,255,255,0.15)', 
