@@ -1,7 +1,7 @@
-import React,{useState,useEffect,useRef,useLayoutEffect} from 'react';
+import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
 import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget} from './mathDuelEngine.js';
-import {enginePoint,boardPoint,gunPoint,volleyTimeline,fleetFormation,engineHudShift} from './mathFleetGeometry.js';
+import {enginePoint,boardPoint,volleyTimeline,fleetFormation,engineHudShift,engineVisualState,engineSurface,weaponMount} from './mathFleetGeometry.js';
 import './MathDuelBattle.css';
 const ASSET_ROOT=(import.meta.env.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 const URL=`${ASSET_ROOT}/mathduel/`;const SHIPS=`${ASSET_ROOT}/mathfleet/`;
@@ -17,20 +17,66 @@ function tone(name){try{const C=window.AudioContext||window.webkitAudioContext;i
 // Position of the FOUR visible engine modules on the actual starship illustration.
 // Coordinates follow each sprite's camera view without flipping its orientation.
 const GLYPH={H:'♥',D:'♦',C:'♣',S:'♠','*':'◎'};
+const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',C04:'#d261ff'};
+function EngineArea({surface,fill}){
+ const [x,y]=surface.point.map(n=>n*1000),[rx,ry]=surface.radius.map(n=>n*1000);
+ return <g fill={fill}><ellipse cx={x} cy={y} rx={rx} ry={ry}/>
+  {surface.exhaustY!=null&&<polygon points={`${x-rx*.65},${y} ${x+rx*.65},${y} ${x+rx*.25},${surface.exhaustY*1000} ${x-rx*.25},${surface.exhaustY*1000}`}/>}</g>;
+}
+function ShipSkin({side,vessel,imageRef}){
+ const id=`hull-${useId().replace(/[^a-zA-Z0-9_-]/g,'')}`,[loaded,setLoaded]=useState(false);
+ const src=`${SHIPS}views/${side==='player'?'player_to_enemy':'enemy_to_player'}/${vessel.id}_complete.png`;
+ const damaged=Object.entries(vessel.engines).map(([op,engine])=>({op,state:engineVisualState(engine),surface:engineSurface(side,vessel.id,op)})).filter(e=>e.state!=='intact');
+ return <svg ref={imageRef} className="fleet-ship-img" viewBox="0 0 1000 1000" role="img" aria-label={`${vessel.name}, livello ${vessel.level}`} data-loaded={loaded}>
+  <defs>
+   <mask id={`${id}-healthy`} maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000"><rect width="1000" height="1000" fill="white"/>{damaged.map(e=><EngineArea key={e.op} surface={e.surface} fill="black"/>)}</mask>
+   {damaged.map(e=><React.Fragment key={e.op}>
+    <clipPath id={`${id}-${e.op}-area`}><EngineArea surface={e.surface}/></clipPath>
+    <filter id={`${id}-${e.op}-burn`} colorInterpolationFilters="sRGB"><feColorMatrix type="saturate" values={e.state==='destroyed'?'.05':'.45'}/><feComponentTransfer>{['R','G','B'].map(channel=>React.createElement(`feFunc${channel}`,{key:channel,type:'linear',slope:e.state==='destroyed'?.22:e.state==='critical'?.42:.68}))}</feComponentTransfer></filter>
+   </React.Fragment>)}
+  </defs>
+  <image href={src} width="1000" height="1000" onLoad={()=>setLoaded(true)} mask={damaged.length?`url(#${id}-healthy)`:undefined}/>
+  {damaged.map(e=><image key={e.op} href={src} width="1000" height="1000" clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`}/>) }
+ </svg>;
+}
+function WeaponMount({side,vessel,weapon,registerGunRef,index}){
+ const mount=weaponMount(side,vessel.id,weapon.id),metalId=`metal-${useId().replace(/[^a-zA-Z0-9_-]/g,'')}`;
+ if(!mount)return null;
+ const accumulating=weapon.tipo==='Accumulo',charge=accumulating?Math.min(1,(weapon.charge||0)/weapon.soglia_munizioni):0;
+ const color=bulletColors[weapon.seme_trigger]||'#e8ffff';
+ return <div className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}`} data-weapon={weapon.id} data-charge={Math.round(charge*100)}
+  style={{left:`${mount.point[0]*100}%`,top:`${mount.point[1]*100}%`,width:`${mount.width*100}%`,height:`${mount.length*100}%`,'--gun':color}}
+  title={`${weapon.nome}: ${GLYPH[weapon.seme_trigger]||'◎'} · ${weapon.tipo} · ${weapon.damage} danni/proiettile${accumulating?` · Carica ${weapon.charge||0}/${weapon.soglia_munizioni}`:''}`}>
+  <svg className="weapon-hardware" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+   <defs><linearGradient id={metalId}><stop offset="0" stopColor="#101826"/><stop offset=".3" stopColor="#8198ab"/><stop offset=".5" stopColor="#dbe4ea"/><stop offset=".72" stopColor="#3b4b60"/><stop offset="1" stopColor="#101826"/></linearGradient></defs>
+   <path d="M28 16 72 16 86 85 68 96 32 96 14 85Z" fill={`url(#${metalId})`} stroke="#111c2b" strokeWidth="5"/>
+   {mount.profile==='adaptive'&&<><path d="M32 54 32 15Q50-8 68 15V54" fill="#142533" stroke="#b3d9e9" strokeWidth="6"/><ellipse cx="50" cy="8" rx="14" ry="7" fill={color}/><path d="M31 68H69M31 80H69" stroke="#70c7e4" strokeWidth="5"/></>}
+   {mount.profile==='laser'&&<><path d="M39 8H61V75H39Z" fill="#35141e" stroke="#f3adb7" strokeWidth="5"/><path d="M46 8V60" stroke={color} strokeWidth="10"/><ellipse cx="50" cy="4" rx="12" ry="5" fill="#ffbec8"/><path d="M25 59H35M65 59H75M25 75H35M65 75H75" stroke={color} strokeWidth="6"/></>}
+   {mount.profile==='prism'&&<><path d="M50 2 73 32 67 69 50 87 33 69 27 32Z" fill="#092d49" stroke="#77d9f1" strokeWidth="4"/><path d="M50 8 66 35 50 75 34 35Z" fill={color} opacity={.22+charge*.78}/><path d="M50 8V75M34 35H66" stroke="#dcfaff" strokeWidth="3"/><path d="M25 88H75" stroke="#102839" strokeWidth="8"/><path d={`M25 88H${25+charge*50}`} stroke={color} strokeWidth="8"/></>}
+   {mount.profile==='gatling'&&<><path d="M28 54V6H43V54M57 54V6H72V54M44 63V0H56V63" fill="#182b26" stroke="#a9c0ad" strokeWidth="4"/><path d="M23 39H77V51H23Z" fill="#435650" stroke="#111d1a" strokeWidth="4"/><path d="M33 7H40M60 7H67M47 2H53" stroke={color} strokeWidth="6"/><path d="M33 76H67" stroke={color} strokeWidth="5"/></>}
+   {mount.profile==='arc'&&<><path d="M22 69Q8 26 36 5L42 16Q24 37 35 66M78 69Q92 26 64 5L58 16Q76 37 65 66" fill="#483556" stroke="#c7a5e2" strokeWidth="4"/><ellipse cx="50" cy="10" rx="8" ry="10" fill={color}/><path d="M29 55Q50 80 71 55M34 70Q50 90 66 70" fill="none" stroke={color} strokeWidth="5"/></>}
+   {mount.profile==='needles'&&<><path d="M24 58 30 7 37 58M42 62 50 0 58 62M63 58 70 7 76 58" fill="#bda1d2" stroke="#31213e" strokeWidth="4"/><path d="M23 64H77V77H23Z" fill="#392748" stroke="#9b7eb6" strokeWidth="4"/><path d="M30 8 33 25M50 3V24M70 8 67 25" stroke={color} strokeWidth="4"/></>}
+   {mount.profile==='drum'&&<><path d="M40 8H60V43H40Z" fill="#201e29" stroke="#b1a7b4" strokeWidth="5"/><ellipse cx="50" cy="5" rx="12" ry="5" fill={color}/><ellipse cx="50" cy="63" rx="32" ry="25" fill="#28222c" stroke="#bda6ac" strokeWidth="6"/><path d="M27 48V78M42 41V85M58 41V85M73 48V78" stroke="#624852" strokeWidth="5"/><ellipse cx="50" cy="63" rx="24" ry="18" fill="none" stroke={color} strokeWidth="5" strokeDasharray={`${charge*132} 132`} opacity={.3+charge*.7}/></>}
+  </svg>
+  <span ref={node=>registerGunRef?.(side,index,weapon.id,node)} className="weapon-tip muzzle-anchor"/>
+ </div>;
+}
 function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation}){
  const engine=vessel.engines[op];if(!engine)return null;
  const dead=engine.hp<=0,ratio=Math.max(0,engine.hp/engine.max);
- const state=dead?'destroyed':ratio<=.3?'critical':ratio<=.65?'damaged':'intact';
+ const state=engineVisualState(engine),surface=engineSurface(side,vessel.id,op),aux=op==='times'||op==='divide';
  const [px,py]=enginePoint(side,vessel.id,op);
  const narrow=side==='player'&&vessel.id==='C04'&&(op==='plus'||op==='minus');
  return <button type="button" style={{left:`${px*100}%`,top:`${py*100}%`,
   '--hud-shift':`${engineHudShift(side,vessel.id,op,formation.size,formation.hudWidth)}px`,
+  '--core-width':`${surface.radius[0]*2*formation.size}px`,'--core-height':`${surface.radius[1]*2*formation.size}px`,'--engine-color':SHIP_GLOW[vessel.id]||'#5edbff',
   ...(narrow?{'--engine-width':`${Math.min(24,formation.size*.11-2)}px`}:{})}}
-  className={`vessel-engine ve-${op} ve-${side}${selected&&!dead?' selected':''}${dead?' dead':''}${hit?' hit':''}`}
+  className={`vessel-engine ve-${op} ve-${side}${aux?' auxiliary-engine':''}${selected&&!dead?' selected':''}${dead?' dead':''}${hit?' hit':''}`}
   disabled={!enabled||dead||!available} data-state={state} onClick={()=>onSelect?.(op)}
   aria-pressed={!!selected}
   aria-label={`${side==='enemy'?'Nemico':'Tu'}: ${vessel.name}, motore ${META[op].name}, ${engine.hp} di ${engine.max} HP, bersaglio ${target??'non disponibile'}`}>
-  <img ref={engineRef} className="vessel-engine-art" src={`${SHIPS}motor_${op}_${state}.png`} alt="" draggable="false"/>
+  <span ref={engineRef} className="engine-anchor" aria-hidden="true"/>
+  <span className="engine-core" aria-hidden="true"><i className="engine-iris"/><svg className="engine-fracture" viewBox="0 0 100 100"><path d="M13 23 42 40 30 62 63 54 87 82M61 12 52 38 73 27M32 65 24 86"/></svg></span>
   <span className="vessel-engine-hud">
    <strong>{dead?'✕':enabled&&target!=null?`${META[op].sign}${target}`:META[op].sign}</strong>
    <small>{dead?'KO':`${engine.hp} HP`}</small>
@@ -46,22 +92,12 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
  return <div data-fleet-size={ship.fleet.length} className={`ship-zone ship-${side}${hit?' ship-struck':''}${effect?' ship-in-combat':''}`}>
   <div className="fleet-ships">
    {ship.fleet.map((v,i)=>{
-    const focusedShip=i===focused,dead=vesselDestroyed(v),count=v.weapons.length;
+    const focusedShip=i===focused,dead=vesselDestroyed(v);
     return <div key={i} data-ship={v.id} data-vessel-index={i} className={`fleet-ship-wrap complete-ship${focusedShip?' focused':''}${dead?' dead-ship':''}`}
      style={{left:`${formation.centers[i]/450*100}%`,top:formation.top,width:formation.size,height:formation.size,
       '--engine-size':`${formation.engineSize}px`,'--engine-hud-width':`${formation.hudWidth}px`,zIndex:focusedShip?3:1}}>
-     <img ref={node=>registerShipRef?.(side,i,node)} className="fleet-ship-img" src={`${SHIPS}views/${side==='player'?'player_to_enemy':'enemy_to_player'}/${v.id}_complete.png`}
-      alt={`${v.name}, livello ${v.level}`} draggable="false"/>
-     <div className="ship-hardpoints">{v.weapons.map((w,wi)=>{
-       const [x,y]=gunPoint(side,count,wi,v.id);
-       const charge=w.tipo==='Accumulo'&&w.soglia_munizioni>0?Math.min(100,(w.charge||0)/w.soglia_munizioni*100):100;
-       return <div key={w.id}
-        className={`weapon-mount weapon-${w.seme_trigger==='*'?'all':w.seme_trigger.toLowerCase()}${w.tipo==='Accumulo'?' charging':''}`}
-        style={{left:`${x*100}%`,top:`${y*100}%`,'--gun':bulletColors[w.seme_trigger]||'#e8ffff','--charge':`${charge}%`}}
-        title={`${w.nome}: ${GLYPH[w.seme_trigger]||'◎'} · ${w.tipo} · ${w.damage} danni/proiettile`}>
-        <span className="weapon-barrel"/><span ref={node=>registerGunRef?.(side,i,w.id,node)} className="weapon-tip"/><span className="weapon-sign">{GLYPH[w.seme_trigger]||'◎'}</span>
-       </div>;
-     })}</div>
+     <ShipSkin key={v.id} side={side} vessel={v} imageRef={node=>registerShipRef?.(side,i,node)}/>
+     <div className="ship-hardpoints">{v.weapons.map(w=><WeaponMount key={w.id} side={side} vessel={v} weapon={w} index={i} registerGunRef={registerGunRef}/>)}</div>
      {ENGINE_KEYS.map(op=><Engine key={op} side={side} op={op} vessel={v} formation={formation}
       target={targets?.[op]} selected={enemy&&focusedShip&&selectedTarget===op} onSelect={()=>onTarget?.(i,op)} enabled={targetable}
       available={!enemy||availableOps.includes(op)} hit={!!effect&&effect.side!==side&&effect.targetShip===i&&effect.op===op}

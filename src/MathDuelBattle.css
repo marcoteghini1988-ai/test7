@@ -340,24 +340,39 @@
 @keyframes formationFloat{from{transform:translateY(-2px)}to{transform:translateY(2px)}}
 @media(prefers-reduced-motion:reduce){.es-math-scope .fleet-ships{animation:none}}
 .es-math-scope .complete-ship .vessel-engine{width:var(--engine-width,var(--engine-size));height:var(--engine-size);filter:none}
-.es-math-scope .complete-ship .vessel-engine-art{left:50%;top:50%;width:90%;height:90%;transform:translate(-50%,-50%);opacity:0}
+.es-math-scope .engine-anchor{position:absolute;left:50%;top:50%;width:2px;height:2px;transform:translate(-50%,-50%);pointer-events:none}
+.es-math-scope .engine-core{position:absolute;left:50%;top:50%;width:var(--core-width);height:var(--core-height);transform:translate(-50%,-50%);border-radius:50%;pointer-events:none}
+.es-math-scope .auxiliary-engine .engine-core{border:2px solid #98a8b6;background:radial-gradient(ellipse,#0a1223 28%,#334150 35%,#adb7c0 45%,#172131 64%,#4c5965 74%,#111b2c 88%);box-shadow:0 1px 2px #000}
+.es-math-scope .engine-iris{display:none;position:absolute;inset:26%;border-radius:50%;background:var(--engine-color);box-shadow:0 0 3px var(--engine-color)}
+.es-math-scope .auxiliary-engine .engine-iris{display:block}
+.es-math-scope .engine-fracture{display:none;position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#ffb276;stroke-width:5;stroke-linecap:round}
+.es-math-scope .vessel-engine[data-state="damaged"] .engine-core{background:radial-gradient(ellipse,transparent 25%,#7c42286b 75%,transparent)}
+.es-math-scope .vessel-engine[data-state="critical"] .engine-core{background:radial-gradient(ellipse,#39160a77 25%,#c14d2788 75%,transparent)}
+.es-math-scope .vessel-engine:not([data-state="intact"]) .engine-fracture{display:block}
+.es-math-scope .vessel-engine[data-state="critical"] .engine-fracture{filter:drop-shadow(0 0 2px #ff602b);animation:engineFlicker .8s steps(3) infinite}
+.es-math-scope .vessel-engine[data-state="destroyed"] .engine-core{border:2px solid #574c49;background:radial-gradient(ellipse,#05070b 30%,#151820 48%,#4e3930 62%,#141720 78%)}
+.es-math-scope .vessel-engine[data-state="destroyed"] .engine-iris{background:#16191f;box-shadow:none}
+.es-math-scope .vessel-engine[data-state="destroyed"] .engine-fracture{stroke:#99745b;stroke-width:7}
+@keyframes engineFlicker{50%{opacity:.35}}
 .es-math-scope .complete-ship .vessel-engine:before{content:"";position:absolute;inset:3px;border:2px solid #66dfff;border-radius:50%;background:transparent;opacity:.28;pointer-events:none}
 .es-math-scope .ship-enemy .complete-ship .vessel-engine:before{border-color:#ff7894}
 .es-math-scope .complete-ship .vessel-engine.selected:before{border-color:#ffe790;opacity:1;box-shadow:0 0 9px #ffe79088}
 .es-math-scope .complete-ship .vessel-engine[data-state="damaged"]:before{border-color:#ffd16a;opacity:.85}
 .es-math-scope .complete-ship .vessel-engine[data-state="critical"]:before{border-color:#ff705f;opacity:1}
-.es-math-scope .complete-ship .vessel-engine.dead:before{background:#09101edb;border-color:#685b60;opacity:1}
+.es-math-scope .complete-ship .vessel-engine.dead:before{background:transparent;border-color:#685b60;opacity:.5}
 .es-math-scope .complete-ship .vessel-engine-hud{top:calc(100% + 2px);left:50%;width:var(--engine-hud-width);margin-left:var(--hud-shift);min-height:22px;transform:translateX(-50%)}
 .es-math-scope .complete-ship .vessel-engine-meter{width:calc(var(--engine-hud-width) - 8px)}
 .es-math-scope .ship-enemy .complete-ship .vessel-engine-hud{top:auto;bottom:calc(100% + 2px)}
 .es-math-scope [data-fleet-size="3"] .vessel-engine-hud strong{font-size:10px;line-height:10px}
 .es-math-scope [data-fleet-size="3"] .vessel-engine-hud small{font-size:7px;line-height:8px}
-.es-math-scope .complete-ship .vessel-smoke{left:6px;top:4px}
-.es-math-scope .complete-ship .weapon-mount{width:14px;height:24px;filter:drop-shadow(0 0 3px var(--gun))}
-.es-math-scope .complete-ship .weapon-mount:before{inset:2px 2px 4px}
-.es-math-scope .complete-ship .weapon-barrel{left:3px;top:2px;width:8px;height:18px}
-.es-math-scope .complete-ship .weapon-tip{left:4px;top:18px;width:6px;height:6px;box-shadow:0 0 5px 1px var(--gun)}
-.es-math-scope .complete-ship .weapon-sign{left:11px;top:-5px;min-width:10px;height:11px;line-height:10px;font-size:8px}
+.es-math-scope .complete-ship .vessel-smoke{left:50%;top:50%;width:var(--core-width);height:var(--core-height);filter:blur(3px);animation:engineSmoke 2.4s ease-out infinite}
+@keyframes engineSmoke{from{opacity:.65;transform:translate(-50%,-70%) scale(.6)}to{opacity:0;transform:translate(-60%,-220%) scale(1.6)}}
+.es-math-scope .complete-ship .weapon-mount.integrated-mount{min-width:0;min-height:0;transform:translateX(-50%);transform-origin:50% 0;filter:none;pointer-events:none}
+.es-math-scope .ship-enemy .complete-ship .weapon-mount.integrated-mount{transform:translateX(-50%) rotate(180deg)}
+.es-math-scope .integrated-mount:before,.es-math-scope .integrated-mount:after{display:none}
+.es-math-scope .weapon-hardware{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 1px 1px #000a)}
+.es-math-scope .complete-ship .integrated-mount .muzzle-anchor{position:absolute;left:50%;top:0;width:2px;height:2px;min-width:0;min-height:0;transform:translate(-50%,-50%);border:0;background:none;box-shadow:none;opacity:0}
+@media(prefers-reduced-motion:reduce){.es-math-scope .engine-fracture,.es-math-scope .vessel-smoke{animation:none!important}}
 .es-math-scope .fleet-picker-inline{left:0;right:0;width:auto;max-width:none;bottom:0;height:22px;transform:none;display:block}
 .es-math-scope .fleet-picker-inline button{position:absolute;top:0;height:21px;transform:translateX(-50%);padding:3px 4px;font-size:9px}
 .es-math-scope .fleet-side-toggle{display:flex;gap:6px}

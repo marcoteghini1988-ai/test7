@@ -1,5 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,volleyTimeline,fleetFormation,engineHudShift} from './mathFleetGeometry.js';
+import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,volleyTimeline,fleetFormation,engineHudShift,WEAPON_MOUNTS,weaponMount,engineSurface,engineVisualState} from './mathFleetGeometry.js';
+import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {newVessel} from './mathDuelEngine.js';
 const box=(left,top,width,height)=>({left,top,width,height});
 test('quattro motori per lato, posizione sempre dentro lo sprite',()=>{
  for(const side of ['enemy','player']){
@@ -59,12 +61,12 @@ test('motori calibrati per i cinque modelli e per le due viste della nave',()=>{
  }
 });
 
-test('indicatori HP separati sulle due coppie dei moduli, nessuna sovrapposizione laterale',()=>{
+test('i due motori di scarico hanno punti distinti per ogni modello',()=>{
  for(const id of ['N00','C01','C02','C03','C04']){
   const a=SHIP_ENGINE_POINTS[id];
   // Dardo uses 46px readouts; the other sprites use 54px readouts on 218px ships.
   assert.ok((a.minus[0]-a.plus[0])*218>=(id==='C04'?46:54),id+' coppia superiore');
-  assert.ok(a.divide[0]-a.times[0]>=.27,id+' coppia inferiore');
+  assert.ok(a.plus[0]<a.minus[0],id+' ordine dei moduli');
  }
 });
 
@@ -83,14 +85,49 @@ test('formazioni 1–3: stessa riga, scala uniforme, margini e intervalli senza 
  assert.ok(fleetFormation(2,'enemy').size>fleetFormation(3,'enemy').size);
 });
 
-test('HP e bersagli leggibili anche su tre navi e sui motori ravvicinati del Dardo',()=>{
- for(const side of ['player','enemy'])for(const count of [1,2,3])for(const id of ['N00','C01','C02','C03','C04']){
-  const {size,hudWidth}=fleetFormation(count,side);
-  for(const pair of [['plus','minus'],['times','divide']]){
-   const centers=pair.map(op=>enginePoint(side,id,op)[0]*size+engineHudShift(side,id,op,size,hudWidth));
-   assert.ok(centers[0]-hudWidth/2>=0,id+' HUD sinistro dentro lo slot');
-   assert.ok(centers[1]+hudWidth/2<=size,id+' HUD destro dentro lo slot');
-   assert.ok(centers[1]-centers[0]>=hudWidth+5.99,id+' bersagli separati');
+test('HP dei motori realmente sbloccati non si sovrappongono, per ogni livello e formazione',()=>{
+ for(const side of ['player','enemy'])for(const count of [1,2,3])for(const id of ['N00','C01','C02','C03','C04'])for(const level of [1,2,3,4,5]){
+  const {size,hudWidth,engineSize}=fleetFormation(count,side),height=count===3?22:27;
+  const rects=Object.keys(newVessel(id,level).engines).map(op=>{
+   const [x,y]=enginePoint(side,id,op);
+   return {left:x*size+engineHudShift(side,id,op,size,hudWidth)-hudWidth/2,
+    top:y*size+(side==='enemy'?-engineSize/2-2-height:engineSize/2+2),width:hudWidth,height};
+  });
+  for(const a of rects)assert.ok(a.left>=0&&a.left+a.width<=size,id+' HUD nello slot');
+  for(let i=0;i<rects.length;i++)for(let j=i+1;j<rects.length;j++){
+   const a=rects[i],b=rects[j];
+   assert.ok(Math.min(a.left+a.width,b.left+b.width)<=Math.max(a.left,b.left)||Math.min(a.top+a.height,b.top+b.height)<=Math.max(a.top,b.top),`${id}/${side}/${count}/${level}: letture separate`);
   }
  }
+});
+
+test('ogni arma del catalogo iniziale ha un attacco proprio e una bocca per entrambe le viste',()=>{
+ assert.equal(Object.keys(WEAPON_MOUNTS).length,PHASE1_CATALOG.weapons.length);
+ for(const weapon of PHASE1_CATALOG.weapons)for(const side of ['player','enemy']){
+  const mount=weaponMount(side,weapon.nave_id,weapon.id);
+  assert.ok(mount,weapon.id+' presente');
+  const [x,y]=mount.point;
+  assert.ok(x>.1&&x<.9&&y>.07&&y<.93,'bocca dentro il canvas');
+  assert.ok(mount.width>0&&mount.length>0,'montaggio dimensionato con lo sprite');
+  for(const op of Object.keys(newVessel(weapon.nave_id,5).engines)){
+   const [ex,ey]=enginePoint(side,weapon.nave_id,op);
+   assert.ok(Math.hypot(x-ex,y-ey)>.12,weapon.id+' non usa un motore come bocca');
+  }
+ }
+ assert.equal(weaponMount('player','N00','W07'),null,'nessuna arma su una nave diversa');
+});
+
+test('il danno visivo segue la propria gondola e non cambia lo stato degli altri motori',()=>{
+ for(const side of ['player','enemy'])for(const id of ['N00','C01','C02','C03','C04'])for(const op of Object.keys(newVessel(id,5).engines)){
+  const s=engineSurface(side,id,op);
+  assert.deepEqual(s.point,enginePoint(side,id,op));
+  for(const r of s.radius)assert.ok(r>0&&r<.1);
+  if(op==='times')assert.equal(s.exhaustY,null,'reattore ausiliario senza scia inventata');
+  else assert.ok(side==='player'?s.exhaustY>s.point[1]:s.exhaustY<s.point[1]);
+ }
+ const engines={plus:{hp:100,max:100},minus:{hp:100,max:100}};
+ engines.plus.hp=65;assert.equal(engineVisualState(engines.plus),'damaged');
+ engines.plus.hp=30;assert.equal(engineVisualState(engines.plus),'critical');
+ engines.plus.hp=0;assert.equal(engineVisualState(engines.plus),'destroyed');
+ assert.equal(engineVisualState(engines.minus),'intact');
 });

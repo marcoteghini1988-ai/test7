@@ -12,6 +12,7 @@ export function fleetFormation(count,side){
 }
 // Separate close readouts with the smallest symmetric offset from their motors.
 export function engineHudShift(side,shipId,op,size,hudWidth){
+ if(op==='times'&&(shipId==='C03'||shipId==='C04'))return 0;
  const pair=op==='plus'||op==='minus'?['plus','minus']:['times','divide'];
  const [left,right]=pair.map(key=>enginePoint(side,shipId,key)[0]*size);
  const shift=Math.max(0,(hudWidth+6-(right-left))/2);
@@ -28,8 +29,8 @@ export const SHIP_ENGINE_POINTS={
  N00:{plus:[.35,.43],minus:[.64,.43],times:[.29,.64],divide:[.71,.64]},
  C01:{plus:[.35,.37],minus:[.65,.37],times:[.27,.71],divide:[.73,.71]},
  C02:{plus:[.35,.33],minus:[.64,.33],times:[.30,.66],divide:[.70,.66]},
- C03:{plus:[.35,.37],minus:[.65,.37],times:[.28,.75],divide:[.72,.75]},
- C04:{plus:[.38,.37],minus:[.62,.37],times:[.25,.57],divide:[.75,.57]},
+ C03:{plus:[.35,.37],minus:[.65,.37],times:[.50,.76],divide:[.72,.75]},
+ C04:{plus:[.38,.37],minus:[.62,.37],times:[.50,.59],divide:[.75,.57]},
 };
 // The complete sprites use two different camera views, not a CSS flip.
 // Engine centers therefore follow each PNG rather than mirroring a rectangle.
@@ -37,13 +38,24 @@ export const SHIP_PLAYER_ENGINE_POINTS={
  N00:{plus:[.35,.59],minus:[.64,.59],times:[.29,.38],divide:[.71,.38]},
  C01:{plus:[.34,.70],minus:[.66,.70],times:[.27,.34],divide:[.73,.34]},
  C02:{plus:[.32,.68],minus:[.68,.68],times:[.32,.34],divide:[.68,.34]},
- C03:{plus:[.31,.64],minus:[.69,.64],times:[.31,.27],divide:[.69,.27]},
- C04:{plus:[.445,.71],minus:[.555,.71],times:[.27,.49],divide:[.73,.49]},
+ C03:{plus:[.31,.64],minus:[.69,.64],times:[.50,.27],divide:[.69,.27]},
+ C04:{plus:[.445,.71],minus:[.555,.71],times:[.50,.47],divide:[.73,.49]},
 };
 export function enginePoint(side,shipId,op){
  if(side==='player'&&SHIP_PLAYER_ENGINE_POINTS[shipId]?.[op])return SHIP_PLAYER_ENGINE_POINTS[shipId][op];
  const point=SHIP_ENGINE_POINTS[shipId]?.[op] || ENGINE_POINTS.enemy[op];
  return side==='player'?[point[0],1-point[1]]:point;
+}
+export function engineVisualState(engine){
+ const ratio=engine.max>0?engine.hp/engine.max:0;
+ return engine.hp<=0?'destroyed':ratio<=.3?'critical':ratio<=.65?'damaged':'intact';
+}
+// Damage follows the painted nacelle and its own exhaust, never a neighboring gun.
+export function engineSurface(side,shipId,op){
+ const primary=op==='plus'||op==='minus',narrow=shipId==='C04'&&side==='player';
+ const radius=!primary?[.045,.045]:narrow?[.033,.045]:shipId==='C02'?[.055,.067]:[.067,.075];
+ return {point:enginePoint(side,shipId,op),radius,
+  exhaustY:primary?(side==='player'?{N00:.91,C01:.91,C02:.91,C03:.88,C04:.93}[shipId]:.075):null};
 }
 export const GUN_POINTS={
  enemy:{1:[[.50,.66]],2:[[.35,.62],[.65,.62]],3:[[.33,.72],[.50,.80],[.67,.72]],4:[[.30,.78],[.43,.84],[.57,.84],[.70,.78]]},
@@ -51,13 +63,21 @@ export const GUN_POINTS={
 };
 // Physical muzzle locations in each illustration. Ship weapon counts and
 // firing rules remain in the fleet catalog; these only anchor the visuals.
-export const SHIP_GUN_POINTS={
- N00:{enemy:[[.495,.81]],player:[[.495,.125]]},
- C01:{enemy:[[.495,.87]],player:[[.495,.10]]},
- C02:{enemy:[[.495,.87]],player:[[.495,.10]]},
- C03:{enemy:[[.28,.73],[.72,.73]],player:[[.30,.24],[.70,.24]]},
- C04:{enemy:[[.24,.65],[.75,.65]],player:[[.27,.27],[.73,.27]]},
+export const WEAPON_MOUNTS={
+ W01:{shipId:'N00',profile:'adaptive',width:.075,length:.09,enemy:[.495,.81],player:[.495,.125]},
+ W02:{shipId:'C01',profile:'laser',width:.07,length:.105,enemy:[.50,.84],player:[.50,.13]},
+ W03:{shipId:'C02',profile:'prism',width:.105,length:.14,enemy:[.50,.80],player:[.50,.17]},
+ W04:{shipId:'C03',profile:'gatling',width:.11,length:.14,enemy:[.29,.73],player:[.31,.245]},
+ W05:{shipId:'C03',profile:'arc',width:.105,length:.14,enemy:[.72,.73],player:[.69,.245]},
+ W06:{shipId:'C04',profile:'needles',width:.11,length:.14,enemy:[.27,.67],player:[.30,.28]},
+ W07:{shipId:'C04',profile:'drum',width:.11,length:.14,enemy:[.73,.67],player:[.70,.28]},
 };
+export function weaponMount(side,shipId,weaponId){
+ const mount=WEAPON_MOUNTS[weaponId];
+ return mount?.shipId===shipId&&mount[side]?{...mount,point:mount[side]}:null;
+}
+export const SHIP_GUN_POINTS=Object.fromEntries(['N00','C01','C02','C03','C04'].map(id=>[id,
+ Object.fromEntries(['enemy','player'].map(side=>[side,Object.values(WEAPON_MOUNTS).filter(m=>m.shipId===id).map(m=>m[side])]))]));
 export function gunPoint(side,count,index,shipId){
  const mounts=SHIP_GUN_POINTS[shipId]?.[side];
  if(mounts?.length===count&&mounts[index])return mounts[index];

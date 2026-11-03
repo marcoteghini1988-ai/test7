@@ -10,6 +10,8 @@ Il passo 2 integra l'arena metallica verticale ed è descritto in [docs/PASSO_2_
 
 Il passo 3 dispone una, due o tre navi in posti fissi, con scala uniforme per lato e selezione diretta di tutti i motori installati. Verifiche e formazioni miste: [docs/PASSO_3_FORMAZIONI.md](docs/PASSO_3_FORMAZIONI.md).
 
+Il passo 4 integra le sette armi nelle prime cinque navi e localizza il danno sulle gondole dei motori: [docs/PASSO_4_MONTAGGI_FISICI.md](docs/PASSO_4_MONTAGGI_FISICI.md).
+
 La base attuale contiene le prime **5 navicelle e 7 armi** della Fase 1I. Il catalogo concordato di 17 navi e 42 armi è da completare progressivamente. Le copie salvate su StackBlitz devono essere confrontate con il ramo GitHub prima di modificarle.
 
 ## Regole del combattimento attivo
@@ -33,7 +35,7 @@ npm run verify:logic
 npm run preflight
 ```
 
-`build` esegue TypeScript e Vite. `test:combat` esegue i 42 test del duello dei motori e della geometria; `verify:logic` include anche i 9 test della precedente logica matematica, per un totale di 51.
+`build` esegue TypeScript e Vite. `test:combat` esegue i 44 test del duello dei motori e della geometria; `verify:logic` include anche i 9 test della precedente logica matematica, per un totale di 53.
 
 Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `npm run check:unused`: al termine del passo 1 segnala ancora 94 elementi. Non sono stati cancellati componenti, hook o funzionalità per eliminare queste segnalazioni. La build continua a verificare i tipi; non usa `noCheck` o `ts-nocheck`.
 
@@ -41,7 +43,7 @@ Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `n
 
 Il passo 1 ha verificato build, struttura, test e avvio reale della battaglia con attacco e risposta IA. Sono stati aperti anche Home, Shop, assetto e briefing di campagna.
 
-La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con ombre delle navi. Una nave è centrale; due e tre sono affiancate in una sola riga, senza ingrandimenti o ricentramenti al cambio di bersaglio. Sono state verificate le formazioni 1 contro 1, 2 contro 1, 1 contro 3 e 3 contro 3, i 51 test e due attacchi reali a un motore laterale con successivo KO. Il prossimo intervento è il **passo 4: integrazione fisica di navi, motori e armi delle prime cinque navicelle**. Catalogo completo, evoluzioni, carte-navicella persistenti e intro rimangono nei passi successivi.
+La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con flotte affiancate in posti fissi. Le prime cinque navi hanno sette montaggi distinti, bocche normalizzate per le due viste e danno fisico localizzato: una gondola critica o distrutta e la sua scia si oscurano senza alterare il motore superstite. Sono stati verificati i 53 test, le viste delle cinque navi, un tiro dalle nuove bocche, il KO e la selezione del superstite. Il prossimo intervento è il **passo 5: proiettili, raffiche e impatti caratteristici delle prime sette armi**. Catalogo completo, evoluzioni, carte-navicella persistenti e intro rimangono nei passi successivi.
 
 Il primo collaudo è stato svolto nell'anteprima dell'ambiente di lavoro. Nella verifica successiva il WebContainer della copia salvata di StackBlitz è ripartito: la copia è stata aggiornata, salvata e ricaricata, e la nuova arena con le immagini delle navi è stata verificata anche lì. L'apertura diretta del repository ha invece ancora restituito un errore di clonazione.
 
