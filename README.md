@@ -6,6 +6,8 @@ Gioco React/Vite esistente, con Home, Shop, assetto/Hangar e campagna. Il combat
 
 Il passo 1 del piano di lavoro è descritto in [docs/PASSO_1_VERIFICA_E_AVVIO.md](docs/PASSO_1_VERIFICA_E_AVVIO.md).
 
+Il passo 2 integra l'arena metallica verticale ed è descritto in [docs/PASSO_2_ARENA_METALLICA.md](docs/PASSO_2_ARENA_METALLICA.md).
+
 La base attuale contiene le prime **5 navicelle e 7 armi** della Fase 1I. Il catalogo concordato di 17 navi e 42 armi è da completare progressivamente. Le copie salvate su StackBlitz devono essere confrontate con il ramo GitHub prima di modificarle.
 
 ## Regole del combattimento attivo
@@ -37,6 +39,6 @@ Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `n
 
 Il passo 1 ha verificato build, struttura, test e avvio reale della battaglia con attacco e risposta IA. Sono stati aperti anche Home, Shop, assetto e briefing di campagna.
 
-La plancia corrente mostra ancora la griglia azzurra: la sostituzione con l'arena metallica 3D è il **passo 2**, non un risultato già consegnato. Formazioni affiancate, catalogo completo, evoluzioni, carte-navicella persistenti e intro rimangono nei passi successivi.
+La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con ombre delle navi, senza la precedente griglia azzurra. La build, i 49 test e un attacco reale sul nuovo sfondo sono stati verificati nell'anteprima di lavoro. Il prossimo intervento è il **passo 3: formazioni affiancate di 1, 2 o 3 navi**. Catalogo completo, evoluzioni, carte-navicella persistenti e intro rimangono nei passi successivi.
 
 Il collaudo del passo 1 usa l'anteprima dell'ambiente di lavoro. In questa sessione StackBlitz è autenticato ma il suo WebContainer non parte; non dichiarare che il collaudo StackBlitz sia stato completato.

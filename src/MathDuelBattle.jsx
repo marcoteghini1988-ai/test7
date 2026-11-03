@@ -4,6 +4,10 @@ import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluat
 import {enginePoint,boardPoint,gunPoint,volleyTimeline} from './mathFleetGeometry.js';
 import './MathDuelBattle.css';
 const URL='/assets/mathduel/';const SHIPS='/assets/mathfleet/';
+const ARENA_BACKGROUND=`${URL}arena_titanio_9x16.webp`;
+function ArenaBackdrop(){
+ return <div className="space-back metal-arena" aria-hidden="true" style={{backgroundImage:`url('${ARENA_BACKGROUND}')`}}/>;
+}
 const suits={'♥':'#ff727d','♦':'#68d6ff','♠':'#c47dff','♣':'#74eacb'};
 const bulletColors={H:'#ff576b',D:'#58e6ff',C:'#4aff9b',S:'#c176ff','*':'#ecfcff'};
 const label=rankLabel;
@@ -211,7 +215,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  const availableOps=supportedOperators(game.player);
  return <div className="es-math-scope game-viewport" role="region" aria-label="Duello matematico spaziale">
   <div ref={rootRef} className="es-root" style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
-   <div className="space-back" style={{backgroundImage:`url('${URL}space_battle_bg.jpg')`}}/>
+   <ArenaBackdrop/>
    <div className="top-brand">ECLISSI <b>STELLARE</b></div>
    <div className="toolbar"><button onClick={()=>setHelp(true)} aria-label="Regole">?</button><button onClick={()=>{if(game.round===1&&game.player.discard.length===0)setFleetMenu(true);else notice('La flotta si configura prima del primo attacco');}} title="Flotta di prova" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
    <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {displaySector&&`• ${displaySector}`}</b><small>INTEGRITÀ FLOTTA {Math.round(healthScore(game.enemy)*100)}%</small></div><Pips ship={game.enemy}/></div>
