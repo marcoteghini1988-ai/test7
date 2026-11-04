@@ -14,7 +14,9 @@ Il passo 4 integra le sette armi nelle prime cinque navi e localizza il danno su
 
 Il passo 5 distingue proiettili, raffiche, traiettorie, suoni e impatti delle prime sette armi, sincronizzati con le munizioni effettive: [docs/PASSO_5_FIRME_DELLE_ARMI.md](docs/PASSO_5_FIRME_DELLE_ARMI.md).
 
-Il passo 6A aggiunge quattro navicelle rare e nove armi. Nel duello sono ora disponibili **9 navicelle e 16 armi** delle 17 navicelle e 42 armi previste dal catalogo. Dati e prove del passo sono in [docs/PASSO_6A_FLOTTA_RARA.md](docs/PASSO_6A_FLOTTA_RARA.md).
+Il passo 6A aggiunge quattro navicelle rare e nove armi. Dati e prove sono in [docs/PASSO_6A_FLOTTA_RARA.md](docs/PASSO_6A_FLOTTA_RARA.md).
+
+Il passo 6B aggiunge quattro navicelle epiche e tredici armi. Il duello offre **13 navicelle e 29 armi** delle 17 navicelle e 42 armi previste. Le epiche sbloccano la Divisione al livello 4. Il rapporto è in [docs/PASSO_6B_FLOTTA_EPICA.md](docs/PASSO_6B_FLOTTA_EPICA.md).
 
 ## Regole del combattimento attivo
 
@@ -37,7 +39,7 @@ npm run verify:logic
 npm run preflight
 ```
 
-`build` esegue TypeScript e Vite. `test:combat` esegue i 63 test del duello, del catalogo, della geometria e degli effetti delle armi. `verify:logic` include anche i 9 test della precedente logica matematica, per un totale di 72.
+`build` esegue TypeScript e Vite. `test:combat` esegue i 69 test del duello, del catalogo, della geometria e degli effetti delle armi. `verify:logic` include anche i 9 test della precedente logica matematica, per un totale di 78.
 
 Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `npm run check:unused`: al termine del passo 1 segnala ancora 94 elementi. Non sono stati cancellati componenti, hook o funzionalità per eliminare queste segnalazioni. La build continua a verificare i tipi; non usa `noCheck` o `ts-nocheck`.
 
@@ -45,7 +47,7 @@ Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `n
 
 Il passo 1 ha verificato build, struttura, test e avvio reale della battaglia con attacco e risposta IA. Sono stati aperti anche Home, Shop, assetto e briefing di campagna.
 
-La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con flotte affiancate in posti fissi. Ogni colpo parte dalla propria bocca e arriva sul motore selezionato. Impatti e applicazione degli HP seguono la stessa sequenza temporale. Le armi ad accumulo sparano al raggiungimento della soglia e il danno fisico rimane localizzato sulla gondola colpita. Le prossime aggiunte al catalogo sono le epiche del passo 6B e le leggendarie del passo 6C.
+La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con flotte affiancate in posti fissi. Ogni colpo parte dalla propria bocca e arriva sul motore selezionato. Impatti e applicazione degli HP seguono la stessa sequenza temporale. Le armi ad accumulo sparano al raggiungimento della soglia e il danno fisico rimane localizzato sulla gondola colpita. Le prossime aggiunte al catalogo sono le leggendarie del passo 6C.
 
 Il primo collaudo è stato svolto nell'anteprima dell'ambiente di lavoro. Nella verifica successiva il WebContainer della copia salvata di StackBlitz è ripartito: la copia è stata aggiornata, salvata e ricaricata, e la nuova arena con le immagini delle navi è stata verificata anche lì. L'apertura diretta del repository ha invece ancora restituito un errore di clonazione.
 
@@ -59,6 +61,6 @@ Per le copie con spazio limitato per le immagini, `VITE_ASSET_ROOT` può indicar
 VITE_ASSET_ROOT=https://raw.githubusercontent.com/marcoteghini1988-ai/test7/main/public/assets
 ```
 
-Questa variabile contiene soltanto un URL pubblico. Le immagini restano incluse nel repository per i normali avvii e le build autonome. La copia salvata usa GitHub per le immagini del duello, incluse le due viste WebP di ciascuna nave rara. Dopo ogni modifica verificare il salvataggio con un ricaricamento e una prova della scena reale.
+Questa variabile contiene soltanto un URL pubblico. Le immagini restano incluse nel repository per i normali avvii e le build autonome. La copia salvata usa GitHub per le immagini del duello, incluse le due viste WebP di ciascuna nave rara ed epica. Dopo ogni modifica verificare il salvataggio con un ricaricamento e una prova della scena reale.
 
 La copia di consegna è https://stackblitz.com/edit/github-edu2s6xy?file=README.md. Ogni fase deve aggiornare `main` e sincronizzare esplicitamente la copia salvata, quindi verificarla dopo un ricaricamento.

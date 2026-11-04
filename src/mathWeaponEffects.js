@@ -15,7 +15,20 @@ export const WEAPON_EFFECTS=Object.freeze({
  W13:Object.freeze({profile:'facet',color:'#ffdc78',durationMs:650,cadenceMs:36,burstMs:600,width:29,height:23,sound:'triangle',hz:930,endHz:540}),
  W14:Object.freeze({profile:'shadow',color:'#b77aff',durationMs:810,cadenceMs:44,burstMs:520,width:34,height:31,sound:'sine',hz:95,endHz:42}),
  W15:Object.freeze({profile:'lance',color:'#d9f0ff',durationMs:500,cadenceMs:50,burstMs:650,width:47,height:12,sound:'triangle',hz:240,endHz:75}),
- W16:Object.freeze({profile:'orbit',color:'#90ffc0',durationMs:830,cadenceMs:40,burstMs:560,width:36,height:32,sound:'sine',hz:120,endHz:34})
+ W16:Object.freeze({profile:'orbit',color:'#90ffc0',durationMs:830,cadenceMs:40,burstMs:560,width:36,height:32,sound:'sine',hz:120,endHz:34}),
+ W17:Object.freeze({profile:'corona',color:'#ff624f',durationMs:610,cadenceMs:49,burstMs:620,width:37,height:28,sound:'sawtooth',hz:450,endHz:180}),
+ W18:Object.freeze({profile:'nucleus',color:'#74daff',durationMs:800,cadenceMs:46,burstMs:540,width:34,height:32,sound:'triangle',hz:570,endHz:300}),
+ W19:Object.freeze({profile:'vector',color:'#87ff8d',durationMs:490,cadenceMs:43,burstMs:590,width:44,height:24,sound:'sawtooth',hz:630,endHz:170}),
+ W20:Object.freeze({profile:'shuriken',color:'#d080ff',durationMs:590,cadenceMs:37,burstMs:610,width:29,height:26,sound:'triangle',hz:650,endHz:210}),
+ W21:Object.freeze({profile:'comb',color:'#58ffab',durationMs:530,cadenceMs:44,burstMs:580,width:37,height:27,sound:'triangle',hz:310,endHz:95}),
+ W22:Object.freeze({profile:'magnetic',color:'#ff547e',durationMs:480,cadenceMs:56,burstMs:690,width:43,height:10,sound:'square',hz:875,endHz:320}),
+ W23:Object.freeze({profile:'talon',color:'#ff922d',durationMs:580,cadenceMs:45,burstMs:580,width:32,height:24,sound:'sawtooth',hz:280,endHz:125}),
+ W24:Object.freeze({profile:'shock',color:'#ffd45c',durationMs:790,cadenceMs:48,burstMs:580,width:37,height:32,sound:'sine',hz:190,endHz:43}),
+ W25:Object.freeze({profile:'rebirth',color:'#ce86ff',durationMs:680,cadenceMs:54,burstMs:670,width:43,height:27,sound:'triangle',hz:1040,endHz:185}),
+ W26:Object.freeze({profile:'hex-chain',color:'#67ffad',durationMs:570,cadenceMs:41,burstMs:600,width:39,height:23,sound:'square',hz:225,endHz:100}),
+ W27:Object.freeze({profile:'solar-crystal',color:'#ffdc75',durationMs:820,cadenceMs:51,burstMs:580,width:34,height:31,sound:'triangle',hz:810,endHz:465}),
+ W28:Object.freeze({profile:'shadow-arrow',color:'#ad7dff',durationMs:450,cadenceMs:32,burstMs:560,width:39,height:12,sound:'triangle',hz:1160,endHz:260}),
+ W29:Object.freeze({profile:'bipolar',color:'#ff789e',durationMs:500,cadenceMs:55,burstMs:650,width:43,height:15,sound:'sawtooth',hz:480,endHz:100})
 });
 export function weaponEffect(weaponId){return WEAPON_EFFECTS[weaponId]||WEAPON_EFFECTS.W01;}
 
@@ -26,7 +39,7 @@ export function planWeaponSalvos(volleys=[]){
   const span=raw(count-1),compression=span>fx.burstMs?fx.burstMs/span:1,startMs=salvoIndex*80;
   const rounds=Array.from({length:count},(_,i)=>{
    const launchMs=startMs+Math.round(raw(i)*compression);
-   const bend=shot.weaponId==='W05'?(i%2?-1:1)*(22+i%3*8):shot.weaponId==='W06'?(count===1?0:(i/(count-1)-.5)*36):['W11','W13','W14'].includes(shot.weaponId)?(i%2?-1:1)*16:0;
+   const bend=shot.weaponId==='W05'?(i%2?-1:1)*(22+i%3*8):['W06','W17'].includes(shot.weaponId)?(count===1?0:(i/(count-1)-.5)*36):['W11','W13','W14','W20','W23','W25'].includes(shot.weaponId)?(i%2?-1:1)*16:0;
    return {index:i,launchMs,arrivalMs:launchMs+fx.durationMs,bend,muzzleIndex:shot.weaponId==='W08'?i%2:0};
   });
   return {shot,fx,rounds,startMs,lastLaunchMs:rounds.at(-1).launchMs,arrivalMs:rounds.at(-1).arrivalMs};
@@ -42,7 +55,7 @@ export function volleyTimeline(volleys){
 
 // Leave visible space between pulsed laser segments, even at maximum ammo.
 export function projectileWidth(salvo,distance){
- if(!['W02','W08'].includes(salvo.shot.weaponId)||salvo.rounds.length<2)return salvo.fx.width;
+ if(!['W02','W08','W22'].includes(salvo.shot.weaponId)||salvo.rounds.length<2)return salvo.fx.width;
  const gap=Math.min(...salvo.rounds.slice(1).map((r,i)=>r.launchMs-salvo.rounds[i].launchMs));
  return Math.min(salvo.fx.width,distance/salvo.fx.durationMs*gap*.55);
 }

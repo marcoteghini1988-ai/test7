@@ -33,11 +33,11 @@ function volleySound(salvos){try{
 // Position of the FOUR visible engine modules on the actual starship illustration.
 // Coordinates follow each sprite's camera view without flipping its orientation.
 const GLYPH={H:'♥',D:'♦',C:'♣',S:'♠','*':'◎'};
-const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',C04:'#d261ff',R01:'#ffb269',R02:'#63ffce',R03:'#d4c3ff',R04:'#9dffd4'};
-const RARE_IDS=new Set(PHASE1_SHIPS.filter(s=>s.rarita==='Rara').map(s=>s.id));
+const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',C04:'#d261ff',R01:'#ffb269',R02:'#63ffce',R03:'#d4c3ff',R04:'#9dffd4',E01:'#b097ff',E02:'#8cff83',E03:'#ffb75b',E04:'#68ffb5'};
+const WEBP_HULLS=new Set(PHASE1_SHIPS.filter(s=>s.rarita!=='Comune').map(s=>s.id));
 function ShipArtwork({side,shipId,onLoad,...props}){
  const facing=side==='player'?'player_to_enemy':'enemy_to_player';
- const format=RARE_IDS.has(shipId)?'webp':'png';
+ const format=WEBP_HULLS.has(shipId)?'webp':'png';
  return <image {...props} href={`${SHIPS}views/${facing}/${shipId}_complete.${format}`} width="1000" height="1000" onLoad={onLoad}/>;
 }
 function EngineArea({surface,fill}){
@@ -168,6 +168,19 @@ function RoundGlyph({profile,index}){
   {profile==='shadow'&&<><path d="M-22 8Q-15-6-5-5M-20-10-12-13-8-6" className="round-tail"/><circle r="12" fill="#38195b" stroke="currentColor" strokeWidth="2"/><path d="M-8-7Q9-14 11 0T-9 8M-10 1 0-6 6 2-2 7" className="round-line"/><circle cx="3" cy="-2" r="3" fill="#f8dfff"/></>}
   {profile==='lance'&&<><path d="M-23-6H8M-23 6H8" className="round-tail"/><path d="M-20-3 8-3 23 0 8 3-20 3-13 0Z" fill="#b7ccd8" stroke="#effaff" strokeWidth="1"/><path d="M-17 0H19" stroke="#fff"/></>}
   {profile==='orbit'&&<><circle r="8" fill="#79f6aa"/><circle r="4" fill="#edfff0"/><g className="orbit-spin"><ellipse rx="19" ry="7" transform="rotate(35)" className="round-line"/><ellipse rx="19" ry="7" transform="rotate(-35)" className="round-line"/><circle cx="18" r="2.5" fill="#eaffed"/></g></>}
+  {profile==='corona'&&<><path d="M-22-12Q-5-12 21 0Q-5 12-22 12Q-9 6-12 0Q-9-6-22-12Z" className="round-fill"/><path d="M-12-8 19 0-12 8M-9 0H20" stroke="#fff0cb" fill="none" strokeWidth="2"/></>}
+  {profile==='nucleus'&&<><path d="M-13-8 0-15 14-8 19 4 5 14-10 10Z" className="round-fill"/><path d="M0-15 4 1 19 4M4 1 5 14M4 1-13-8M-10 10 4 1 14-8" stroke="#eaffff" fill="none" strokeWidth="2"/><path d="M-23-4H-16M-23 6H-14" className="round-tail"/></>}
+  {profile==='vector'&&<><path d="M-22 10-11-7-4 7 4-7 11 0 22-7" className="round-line" strokeWidth="4"/><path d="M-22-9-13 4-4-9 5 9 13 4 22 7" stroke="#ffd468" fill="none" strokeWidth="2"/><circle cx="4" cy="-7" r="3" fill="#fffde7"/></>}
+  {profile==='shuriken'&&<g className="crystal-spin"><path d="M0-15 4-5 14-4 6 2 8 13 0 6-11 10-6 1-13-8-3-6Z" className="round-fill"/><path d="M0-15V6M14-4-6 1M8 13-3-6" stroke="#f7ddff" fill="none"/><circle r="3" fill="#fff"/></g>}
+  {profile==='comb'&&<><path d="M-21-12Q5-15 19 0Q5 15-21 12M-16-8Q1-10 13 0Q1 10-16 8" className="round-line" strokeWidth="2.5"/><path d="M-18-6H8M-18 0H19M-18 6H8" stroke="#d5ffdb" strokeWidth="2"/></>}
+  {profile==='magnetic'&&<><path d="M-23 0H21" stroke="#b264ff" strokeWidth="10"/><path d="M-21 0H22" stroke="currentColor" strokeWidth="5"/><path d="M-20 0H20" stroke="#fff0f5" strokeWidth="2"/></>}
+  {profile==='talon'&&<><path d="M-23 11Q-16-5 18-10Q3-3 1 7Q-10 1-23 11Z" className="round-fill"/><path d="M-10 13Q2 1 22-1L13 7Q6 4-10 13Z" fill="#ffd074"/><path d="M-15 5Q-3-5 14-9" stroke="#fff0c8" fill="none" strokeWidth="2"/></>}
+  {profile==='shock'&&<><path d="M-8-14Q-21 0-8 14M-15-12Q-24 0-15 12" className="round-line" strokeWidth="2"/><circle cx="6" r="12" className="round-fill"/><circle cx="6" r="6" fill="#fff6c8"/><circle cx="6" r="9" stroke="#fff1a2" fill="none"/></>}
+  {profile==='rebirth'&&<><path d="M22 0 12 4Q0 16-16 13L-6 6-23 7-11 0-23-7-6-6-16-13Q0-16 12-4Z" className="round-fill"/><path d="M-15-8Q5-5 13 0Q5 5-15 8M-13 0H19" stroke="#f6deff" fill="none" strokeWidth="2"/></>}
+  {profile==='hex-chain'&&<><path d="M-21-4-15-8-9-4V4L-15 8-21 4ZM-8-5-1-10 6-5V5L-1 10-8 5ZM7-6 15-12 23-6V6L15 12 7 6Z" className="round-line" strokeWidth="2"/><path d="M-18 0H20" stroke="#e8ffed" strokeWidth="2"/></>}
+  {profile==='solar-crystal'&&<g className="crystal-spin"><path d="M0-15 13-6 11 8 0 15-11 8-13-6Z" className="round-fill"/><path d="M0-15 6-3 0 15-6-3ZM-13-6 0 1 13-6M-11 8 0 1 11 8" stroke="#fff6c2" fill="none" strokeWidth="2"/></g>}
+  {profile==='shadow-arrow'&&<><path d="M-23-8-16 0-23 8M-14-8-8 0-14 8" className="round-tail"/><path d="M-10 0H20M8-9 21 0 8 9" className="round-line" strokeWidth="4"/><path d="M-3 0H17" stroke="#f3eaff" strokeWidth="2"/></>}
+  {profile==='bipolar'&&<><path d="M-23-6 12-6 23 0-21 0Z" fill="#ff696d"/><path d="M-21 0H23L12 6H-23Z" fill="#a47cff"/><path d="M-22 0H21" stroke="#fff4e8" strokeWidth="2"/><path d="M-22-11H7M-22 11H7" className="round-tail"/></>}
  </svg>;
 }
 function ImpactGlyph({profile}){
@@ -188,6 +201,19 @@ function ImpactGlyph({profile}){
   {profile==='shadow'&&<><circle r="24" strokeWidth="6" opacity=".45"/><path d="M-26 1Q-22-25 0-22T25 4Q21 30-4 23T-26 1M-14-7 4-15 16 4-2 14Z"/><circle r="8" fill="#e4bdff" opacity=".6" stroke="none"/></>}
   {profile==='lance'&&<><path d="M-6-7-13-31 1-17 7-7 30-12 16 0 7 7 12 30-1 17-7 7-30 12-17-1Z"/><path d="M-6-7 7 7M7-7-7 7" stroke="#fff" strokeWidth="3"/></>}
   {profile==='orbit'&&<><circle r="25"/><ellipse rx="34" ry="12" transform="rotate(35)"/><ellipse rx="34" ry="12" transform="rotate(-35)"/><circle r="6" fill="#f4fff0"/><path d="M0-36V-30M0 30V36M-36 0H-30M30 0H36"/></>}
+  {profile==='corona'&&<><path d="M-33 5Q0-34 33 5M-27 14Q0-17 27 14M-18 21Q0 3 18 21" strokeWidth="3"/><path d="M0-22V-34M-21-15-27-23M21-15 27-23" stroke="#ffe5bc"/></>}
+  {profile==='nucleus'&&<><path d="M0-32 27-16 24 18 0 32-24 18-27-16ZM0-32V32M-27-16 24 18M27-16-24 18"/><circle r="8" fill="#e5ffff"/></>}
+  {profile==='vector'&&<><path d="M-31-17-14 1-6-12 9 17 15 4 34 16" strokeWidth="4"/><path d="M-34 16-16 3-10 12 7-16 15-2 30-19" stroke="#ffd669"/><circle r="9"/></>}
+  {profile==='shuriken'&&<path d="M0-34 8-9 34-8 12 8 19 34 0 18-22 28-11 6-33-13-8-12Z"/>}
+  {profile==='comb'&&<><path d="M-34 4Q0-22 34 4M-28 14Q0-6 28 14M-20 22Q0 10 20 22" strokeWidth="3"/><path d="M-18-3-26-14M-8-8-11-22M0-10V-26M8-8 11-22M18-3 26-14"/></>}
+  {profile==='magnetic'&&<><path d="M-32 8Q0-27 32 8M-29 17Q0 4 29 17" stroke="#be78ff"/><path d="M-24-19 22 18" strokeWidth="5"/><circle r="7" fill="#fff0f6"/></>}
+  {profile==='talon'&&<><path d="M-26 17Q-10-16 20-25M-11 25Q0-10 28-21M6 29Q12 8 32-8" strokeWidth="4"/><path d="M-29-9-34-18M19 20 27 29" stroke="#fff0b1"/></>}
+  {profile==='shock'&&<><circle r="35" strokeWidth="2"/><circle r="24" strokeWidth="4"/><circle r="12" fill="#ffec94" opacity=".8"/></>}
+  {profile==='rebirth'&&<><path d="M0 21Q-21 14-33-16L-11-7 0-21 11-7 33-16Q21 14 0 21Z"/><path d="M0 12-20-2M0 12 20-2M0 12V28" stroke="#f9e3ff"/></>}
+  {profile==='hex-chain'&&<><path d="M0-29 25-15V15L0 29-25 15V-15Z"/><path d="M0-17 15-8V8L0 17-15 8V-8ZM-25-15-34-21M25 15 34 21M25-15 34-21M-25 15-34 21"/></>}
+  {profile==='solar-crystal'&&<><path d="M0-33 21 0 0 33-21 0ZM0-33 7 0 0 33-7 0Z" strokeWidth="2"/><path d="M-33 0H33M-25-19-30-24M25 19 30 24M25-19 30-24M-25 19-30 24" stroke="#fff2ad"/></>}
+  {profile==='shadow-arrow'&&<><path d="M-32 0H25M5-21 27 0 5 21M-17-12-4 0-17 12" strokeWidth="3"/><circle r="11" stroke="#f4e7ff"/></>}
+  {profile==='bipolar'&&<><path d="M-26-26 25 24" stroke="#ff6f6d" strokeWidth="5"/><path d="M-24 25 26-26" stroke="#aa7dff" strokeWidth="5"/><path d="M0-28 8-7 27 0 8 7 0 28-8 7-27 0-8-7Z" stroke="#fff1df"/></>}
  </svg>;
 }
 function Projectile({effect,rootRef,engineRefs,gunRefs}){
@@ -250,11 +276,11 @@ function FleetSetup({onClose,onStart,selected,setSelected,enemySelected,setEnemy
  const ids=side==='player'?selected:enemySelected??selected;
  const matchup=fleetCompatibility(selected,enemySelected??selected,level);
  const toggle=id=>{const next=ids.includes(id)?ids.filter(x=>x!==id):[...ids,id];if(validFleet(next))(side==='player'?setSelected:setEnemySelected)(next);};
- return <div className="modal-shade"><div className="help-card fleet-setup"><h2>FLOTTA — COMUNI E RARE</h2><p><b>Aurora-0</b> è l'universale iniziale. Quattro comuni e quattro rare sono disponibili per provare il combattimento; questa scelta non modifica acquisti o collezione.</p>
+ return <div className="modal-shade"><div className="help-card fleet-setup"><h2>FLOTTA DI PROVA</h2><p><b>Aurora-0</b> è l'universale iniziale. Puoi schierare comuni, rare ed epiche. Questa scelta è temporanea.</p>
   <div className="fleet-side-toggle"><button type="button" aria-pressed={side==='player'} onClick={()=>setSide('player')}>LA TUA FLOTTA</button><button type="button" aria-pressed={side==='enemy'} onClick={()=>setSide('enemy')}>AVVERSARIO DI PROVA</button></div>
   {side==='enemy'&&<label className="fleet-match"><input type="checkbox" checked={enemySelected===null} onChange={e=>setEnemySelected(e.target.checked?null:[...selected])}/> Stessa flotta del giocatore</label>}
   <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><button key={s.id} aria-pressed={ids.includes(s.id)} data-rarity={s.rarita} className={ids.includes(s.id)?'on':''} onClick={()=>toggle(s.id)}>
-   {RARE_IDS.has(s.id)?<svg className="fleet-portrait" viewBox="0 0 1000 1000" aria-hidden="true"><ShipArtwork side="player" shipId={s.id}/></svg>:<img src={`${SHIPS}${s.id}.png`} alt=""/>}
+   {WEBP_HULLS.has(s.id)?<svg className="fleet-portrait" viewBox="0 0 1000 1000" aria-hidden="true"><ShipArtwork side="player" shipId={s.id}/></svg>:<img src={`${SHIPS}${s.id}.png`} alt=""/>}
    <span><b>{s.nome}</b><small>{s.rarita} · {s.n_armi} {s.n_armi===1?'arma':'armi'} · {s.motori_iniziali}–{s.motori_massimi} motori</small>{getWeaponsForShip(s.id).filter(w=>w.combo).map(w=><small key={w.id}>Combo {w.combo.split('+').map(t=>GLYPH[t]||t).join(' + ')}</small>)}</span><strong>{ids.includes(s.id)?'✓':'+'}</strong></button>)}</div>
   <label className="fleet-level-row">Livello di prova (non acquistato) <b>{level}</b><input type="range" min="1" max="5" value={level} onChange={e=>setLevel(Number(e.target.value))}/></label>
   <p>Massimo 3 navi. L'universale è unica; ogni seme può attivare al massimo due navi specializzate. Le operazioni si sbloccano secondo il livello del modello.</p>

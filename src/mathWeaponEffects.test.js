@@ -5,7 +5,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {createShip,previewVolley} from './mathDuelEngine.js';
 const cards=(value,suit,other=1)=>[{id:'a',value,suit},{id:'b',value:other,suit:'♣'}];
 
-test('sedici armi comuni e rare: anche le armi dello stesso seme sono distinte',()=>{
+test('tutte le armi del duello hanno un effetto distinto, anche nello stesso seme',()=>{
  assert.deepEqual(Object.keys(WEAPON_EFFECTS),PHASE1_CATALOG.weapons.map(w=>w.id));
  assert.equal(new Set(Object.values(WEAPON_EFFECTS).map(f=>f.profile)).size,PHASE1_CATALOG.weapons.length);
  for(const [a,b] of [['W02','W07'],['W05','W06']]){
@@ -96,8 +96,8 @@ test('ritmo meccanico a terzine distinto dagli impulsi laser e durata della raff
 });
 
 test('i segmenti laser restano separati anche a corta distanza e con 26 munizioni',()=>{
- for(const bullets of [2,13,26])for(const distance of [150,250,450]){
-  const [s]=planWeaponSalvos([{weaponId:'W02',bullets}]),width=projectileWidth(s,distance);
+ for(const weaponId of ['W02','W08','W22'])for(const bullets of [2,13,26])for(const distance of [150,250,450]){
+  const [s]=planWeaponSalvos([{weaponId,bullets}]),width=projectileWidth(s,distance);
   assert.ok(width>0&&width<=s.fx.width);
   for(let i=1;i<s.rounds.length;i++){
    const spacing=distance*(s.rounds[i].launchMs-s.rounds[i-1].launchMs)/s.fx.durationMs;

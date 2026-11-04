@@ -8,11 +8,10 @@ const rng=()=>.5;
 const side=(ids,level=1)=>createShip(1,false,{fleetIds:ids,shipLevel:level},rng);
 const cards=(a,sa,b,sb)=>[{id:'a',value:a,suit:sa},{id:'b',value:b,suit:sb}];
 
-test('il blocco 6A espone nove navi e sedici armi, senza anticipare epiche e leggendarie',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,9);assert.equal(PHASE1_CATALOG.weapons.length,16);
- assert.deepEqual(PHASE1_CATALOG.ships.filter(s=>s.rarita==='Rara').map(s=>s.id),['R01','R02','R03','R04']);
- assert.equal(PHASE1_CATALOG.shipLevels.length,45);assert.equal(PHASE1_CATALOG.weaponLevels.length,80);
- assert.equal(validFleet(['E01']),false);assert.equal(validFleet(['L01']),false);
+test('il catalogo conserva le quattro rare e i loro nove armamenti',()=>{
+ const ids=PHASE1_CATALOG.ships.filter(s=>s.rarita==='Rara').map(s=>s.id);
+ assert.deepEqual(ids,['R01','R02','R03','R04']);
+ assert.deepEqual(PHASE1_CATALOG.weapons.filter(w=>ids.includes(w.nave_id)).map(w=>w.id),['W08','W09','W10','W11','W12','W13','W14','W15','W16']);
 });
 
 test('HP e sblocco × delle quattro rare seguono la progressione v0.1',()=>{

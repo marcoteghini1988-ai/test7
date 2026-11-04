@@ -414,10 +414,12 @@
  .es-math-scope .integrated-mount.firing .weapon-hardware,.es-math-scope .integrated-mount.charge-received .weapon-hardware,.es-math-scope .vessel-engine.hit{animation:none}
 }
 
-/* Passo 6A: rare hull portraits use their own paired camera renders. */
+/* Le navi rare ed epiche usano le viste di battaglia anche nel selettore. */
 .es-math-scope .fleet-setup-list .fleet-portrait{width:72px;height:59px;flex:none;overflow:visible}
 .es-math-scope .fleet-setup-list [data-rarity="Rara"]{border-left:3px solid #b897f1}
 .es-math-scope .fleet-setup-list [data-rarity="Rara"] small{color:#c9b6f0}
+.es-math-scope .fleet-setup-list [data-rarity="Epica"]{border-left:3px solid #f0b966}
+.es-math-scope .fleet-setup-list [data-rarity="Epica"] small{color:#f4cc92}
 .es-math-scope .fleet-match-warning{color:#ffd499!important;border:1px solid #a67745;border-radius:7px;padding:7px;background:#35251999}
 .es-math-scope .complete-ship .vessel-engine.hud-above .vessel-engine-hud{top:auto;bottom:calc(100% + 2px)}
 .es-math-scope .complete-ship .vessel-engine.hud-below .vessel-engine-hud{top:calc(100% + 2px);bottom:auto}

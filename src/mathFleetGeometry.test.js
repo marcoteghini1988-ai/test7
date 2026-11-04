@@ -115,7 +115,7 @@ test('il danno visivo segue la propria gondola e non cambia lo stato degli altri
   const s=engineSurface(side,id,op);
   assert.deepEqual(s.point,enginePoint(side,id,op));
   for(const r of s.radius)assert.ok(r>0&&r<.1);
-  if(op==='times')assert.equal(s.exhaustY,null,'reattore ausiliario senza scia inventata');
+  if(op==='times'||op==='divide')assert.equal(s.exhaustY,null,'reattore ausiliario senza scia inventata');
   else assert.ok(side==='player'?s.exhaustY>s.point[1]:s.exhaustY<s.point[1]);
  }
  const engines={plus:{hp:100,max:100},minus:{hp:100,max:100}};
