@@ -3,21 +3,20 @@ import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 import {ENGINE_KEYS,META,PHASE1_SHIPS,newShip,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
-import {ASSET_ROOT,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
+import {ASSET_ROOT,CARD_SUIT_COLORS,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import './MathDuelBattle.css';
 import './MathDuelIntro.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
 const INTRO_STAGES=[
  {id:'deal',label:'Distribuzione delle carte',duration:1150},
- {id:'deploy',label:'Schieramento delle flotte',duration:1000},
+ {id:'deploy',label:'Schieramento delle flotte',duration:1900},
  {id:'materialize',label:'Materializzazione delle navi',duration:850},
  {id:'arm',label:'Armi e motori in linea',duration:850},
 ];
 function ArenaBackdrop(){
  return <div className="space-back metal-arena" aria-hidden="true" style={{backgroundImage:`url('${ARENA_BACKGROUND}')`}}/>;
 }
-const suits={'♥':'#ff727d','♦':'#68d6ff','♠':'#c47dff','♣':'#74eacb'};
 const label=rankLabel;
 const clone=v=>structuredClone(v);
 function tone(name){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=window.__eclissiMathAudio||(window.__eclissiMathAudio=new C());if(ctx.state==='suspended')ctx.resume();const o=ctx.createOscillator(),g=ctx.createGain(),now=ctx.currentTime;o.type=name==='shot'?'sawtooth':'sine';o.frequency.setValueAtTime(name==='shot'?180:470,now);o.frequency.exponentialRampToValueAtTime(name==='shot'?46:650,now+.19);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.025,now+.014);g.gain.exponentialRampToValueAtTime(.0001,now+.22);o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+.23);}catch{}}
@@ -98,7 +97,7 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
       available={!enemy||availableOps.includes(op)} hit={!!effect&&effect.side!==side&&effect.targetShip===i&&effect.op===op}
       engineRef={node=>registerEngineRef?.(side,i,op,node)} impactDelay={effect?.arrivalMs}/>) }
      {(intro==='deploy'||intro==='materialize')&&<div className="intro-vessel-card" aria-hidden="true"
-      style={{'--deploy-delay':`${i*90+(enemy?90:0)}ms`}}><ShipCard vessel={v}/></div>}
+      style={{'--deploy-delay':`${i*90+(enemy?90:0)}ms`}}><ShipCard vessel={v} compact/></div>}
     </div>;
    })}
    <div className={'engine-thruster '+(enemy?'red':'blue')}/>
@@ -248,7 +247,7 @@ function Projectile({effect,rootRef,engineRefs,gunRefs}){
  {shots.length===0&&<div className="charge-notice">{effect.volleys.some(s=>s.charging)?'MUNIZIONI IN CARICA':effect.memoryPending?'MEMORIA AGGIORNATA':'NESSUNA ARMA ATTIVATA'}</div>}
  </div>;
 }
-function Hand({cards,selected,onSelect,disabled}){return <div className="hand" aria-label="Le tue sette carte">{cards.map((c,i)=><button key={c.id} title={`${label(c.value)} ${c.suit}`} disabled={disabled} className={'number-card'+(selected.includes(i)?' active':'')} style={{'--suit':suits[c.suit],'--deal-index':i}} onClick={()=>onSelect(i)}><span className="card-suit">{c.suit}</span><strong>{label(c.value)}</strong><span className="card-suit second">{c.suit}</span></button>)}</div>}
+function Hand({cards,selected,onSelect,disabled}){return <div className="hand" aria-label="Le tue sette carte">{cards.map((c,i)=><button key={c.id} title={`${label(c.value)} ${c.suit}`} disabled={disabled} className={'number-card'+(selected.includes(i)?' active':'')} style={{'--suit':CARD_SUIT_COLORS[c.suit],'--deal-index':i}} onClick={()=>onSelect(i)}><span className="card-suit">{c.suit}</span><strong>{label(c.value)}</strong><span className="card-suit second">{c.suit}</span></button>)}</div>}
 function MemoryCombos({ship}){
  const weapons=ship.fleet.filter(v=>!vesselDestroyed(v)).flatMap(v=>v.weapons.filter(w=>w.tipo==='Combo a memoria'));
  if(!weapons.length)return null;

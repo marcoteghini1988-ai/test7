@@ -62,7 +62,7 @@
 .es-math-scope .deck small{display:block;font-size:8px;font-weight:900;margin-top:3px}
 .es-math-scope .deck strong{font-size:11px}
 .es-math-scope .hand{position:absolute;top:578px;left:60px;width:330px;display:flex;align-items:center;justify-content:center;gap:1px;z-index:5;height:99px}
-.es-math-scope .number-card{border:0;position:relative;min-width:0;width:47px;height:81px;flex:none;background:url("/assets/mathduel/card_number.png") center/100% 100% no-repeat;filter:drop-shadow(0 0 4px #06baffaf);padding:0;color:#fff;transition:transform .15s,filter .15s}
+.es-math-scope .number-card{border:0;position:relative;min-width:0;width:47px;height:81px;flex:none;filter:drop-shadow(0 0 4px #06baffaf);padding:0;color:#fff;transition:transform .15s,filter .15s}
 .es-math-scope .number-card:nth-child(1){transform:rotate(-9deg) translateY(5px)}
 .es-math-scope .number-card:nth-child(2){transform:rotate(-5deg)}
 .es-math-scope .number-card:nth-child(3){transform:rotate(-2deg) translateY(-3px)}
@@ -177,24 +177,104 @@
 .es-math-scope .charge-notice{position:absolute;top:335px;left:110px;right:110px;padding:8px;background:#0c1f40ee;color:#9cdeff;text-align:center;border:1px solid #7ae3ff;border-radius:8px;font-size:11px;letter-spacing:1px;font-weight:bold;animation:pulse 1s infinite}
 .es-math-scope .fleet-setup{padding:15px;gap:8px;max-height:755px}
 .es-math-scope .fleet-setup-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:7px;max-height:430px;min-height:0;overflow-y:auto;padding:2px 4px 2px 2px}
-.es-math-scope .ship-card{--rarity-ink:#a0c2df;display:flex;flex-direction:column;align-items:stretch;gap:3px;min-width:0;line-height:1.22;text-align:left;color:#e4f0fc;border:1px solid var(--rarity-ink);border-radius:10px;background:radial-gradient(ellipse at 50% 46%,#183651,#08182b 60%,#06111f);padding:6px 7px;cursor:pointer}
-.es-math-scope .ship-card.on{border-color:#79eaff;background:radial-gradient(ellipse at 50% 46%,#224869,#0b253e 62%,#06111f);box-shadow:inset 0 0 9px #71dcff4a}
-.es-math-scope .ship-card:focus-visible{outline:2px solid #a5f4ff;outline-offset:-3px}
-.es-math-scope .ship-card[data-rarity="Rara"]{--rarity-ink:#b897f1}
-.es-math-scope .ship-card[data-rarity="Epica"]{--rarity-ink:#f0b966}
-.es-math-scope .ship-card[data-rarity="Leggendaria"]{--rarity-ink:#ffd761}
-.es-math-scope .ship-card-meta,.es-math-scope .ship-card-stats{display:flex;align-items:center;gap:5px;font-size:10px}
-.es-math-scope .ship-card-meta{color:var(--rarity-ink);font-weight:700}
-.es-math-scope .ship-card-meta b{margin-left:auto;padding:1px 5px;border:1px solid #658aa8;border-radius:4px;color:#e6f2fc}
-.es-math-scope .ship-card-meta span:last-child{width:13px;text-align:center;color:#8ceaff;font-size:13px}
-.es-math-scope .ship-card-name{font-weight:800;font-size:13px;min-height:16px}
-.es-math-scope .ship-card-render{position:relative;display:block;align-self:center;width:min(100%,104px);aspect-ratio:1}
-.es-math-scope .ship-card-render>svg{position:absolute;inset:0;width:100%;height:100%}
-.es-math-scope .ship-card-stats{justify-content:space-between}
-.es-math-scope .ship-card-stats b{color:#a8e9ff}
-.es-math-scope .ship-card-operations{display:flex;gap:3px}
-.es-math-scope .ship-card-operations b{font-size:11px;min-width:16px;text-align:center;border:1px solid #436f92;border-radius:3px;background:#102841}
-.es-math-scope .ship-card-combo{font-size:9px;color:var(--rarity-ink)}
+.es-math-scope .ship-card {
+  --rarity-ink: #afd2e8;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+  padding: 5px;
+  border: 1px solid #355d79;
+  border-radius: 10px;
+  background: #0a182b;
+  color: #e4f0fc;
+  text-align: center;
+}
+.es-math-scope button.ship-card { cursor: pointer; }
+.es-math-scope .ship-card.on { border-color: #79eaff; box-shadow: inset 0 0 9px #71dcff4a; }
+.es-math-scope .ship-card:focus-visible { outline: 2px solid #a5f4ff; outline-offset: -3px; }
+.es-math-scope .ship-card[data-rarity="Rara"] { --rarity-ink: #d1b4ff; }
+.es-math-scope .ship-card[data-rarity="Epica"] { --rarity-ink: #f5be75; }
+.es-math-scope .ship-card[data-rarity="Leggendaria"] { --rarity-ink: #ffe080; }
+
+.es-math-scope :is(.number-card, .ship-card-face) {
+  background: url("/assets/mathduel/card_number.png") center / 100% 100% no-repeat;
+}
+.es-math-scope .ship-card-face {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 4px;
+  align-self: center;
+  width: min(100%, 140px);
+  min-height: 146px;
+  padding: 12px 10px;
+  border-radius: 9px;
+  background-color: #08172a;
+  color: #f2fbff;
+  line-height: 1.12;
+  text-align: center;
+}
+.es-math-scope .ship-card-index,
+.es-math-scope .ship-card-meta,
+.es-math-scope .ship-card-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+.es-math-scope .ship-card-suits {
+  display: flex;
+  gap: 2px;
+  font-size: 17px;
+}
+.es-math-scope .ship-card-level { color: #fff; font-size: 17px; }
+.es-math-scope .ship-card-name {
+  min-height: 2.24em;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+.es-math-scope .ship-card-role { color: #b9d6e8; font-size: 10px; }
+.es-math-scope .ship-card-stats { justify-content: center; gap: 8px; font-size: 10px; white-space: nowrap; }
+.es-math-scope .ship-card-stats b { color: #fff; font-size: 13px; }
+.es-math-scope .ship-card-operations { display: flex; justify-content: center; gap: 3px; }
+.es-math-scope .ship-card-operations b {
+  min-width: 14px;
+  border: 1px solid #5584a9;
+  border-radius: 3px;
+  background: #102841;
+  font-size: 11px;
+}
+.es-math-scope .ship-card-meta { color: var(--rarity-ink); font-size: 9px; font-weight: 750; }
+.es-math-scope .ship-card-selection {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #123858;
+  color: #a5f4ff;
+  font-size: 11px;
+}
+.es-math-scope .ship-card-render {
+  position: relative;
+  display: block;
+  align-self: center;
+  width: min(100%, 84px);
+  aspect-ratio: 1;
+}
+.es-math-scope .ship-card-render>svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.es-math-scope .ship-card-combo { color: var(--rarity-ink); font-size: 10px; }
 .es-math-scope .fleet-level-row{font-size:11px;font-weight:700;display:flex;align-items:center;gap:9px}
 .es-math-scope .fleet-level-row input{flex:1;accent-color:#1cc7ff}
 .es-math-scope .fleet-setup-actions{display:flex;justify-content:center;gap:10px}

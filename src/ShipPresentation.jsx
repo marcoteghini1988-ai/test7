@@ -1,5 +1,5 @@
 import React,{useId} from 'react';
-import {META,PHASE1_SHIPS,SUIT_SIGNS,newVessel} from './mathDuelEngine.js';
+import {META,PHASE1_SHIPS,SUIT_SIGNS,getShipDefinition,newVessel,shipSuits} from './mathDuelEngine.js';
 import {engineSurface,weaponMount,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {shipEvolution} from './shipEvolution.js';
 
@@ -48,6 +48,8 @@ export function ShipArtwork({side,vessel,onLoad,...props}){
 
 export const WEAPON_COLORS={H:'#ff576b',D:'#58e6ff',C:'#4aff9b',S:'#c176ff','*':'#ecfcff'};
 export const WEAPON_SIGNS={...SUIT_SIGNS,'*':'◎'};
+export const CARD_SUIT_COLORS={'♥':'#ff727d','♦':'#68d6ff','♠':'#c47dff','♣':'#74eacb'};
+const SUIT_NAMES={H:'Cuori',D:'Quadri',C:'Fiori',S:'Picche'};
 export function comboLabel(weapon){
  const [codes,limit]=weapon.combo.split('@'),symbols=codes.split('+').map(s=>WEAPON_SIGNS[s]).join(' + ');
  return limit?`Memoria ${symbols} · entro ${limit} calcoli`:`Combo ${symbols}`;
@@ -100,35 +102,51 @@ export function MountedWeapons({side,vessel,index,effect,registerGunRef}){
    side={side} vessel={vessel} weapon={weapon} index={index} effect={effect} muzzleIndex={muzzleIndex} registerGunRef={registerGunRef}/>))}</span>;
 }
 
-export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,onSelect,status,disabled}){
+function ShipCardModel({vessel,engines}){
+ return <span className="ship-card-render complete-ship" aria-hidden="true">
+  <svg viewBox="0 0 1000 1000">
+   <ShipArtwork side="player" vessel={vessel}/>
+   {engines.filter(op=>op==='times'||op==='divide').map(op=>{
+    const {point,radius}=engineSurface('player',vessel.id,op);
+    const [x,y]=point.map(n=>n*1000),[rx,ry]=radius.map(n=>n*1000);
+    return <g key={op} data-card-reactor={op}><ellipse cx={x} cy={y} rx={rx} ry={ry} fill="#24384b" stroke="#98a8b6" strokeWidth="12"/>
+     <ellipse cx={x} cy={y} rx={rx*.47} ry={ry*.47} fill={SHIP_GLOW[vessel.id]}/></g>;
+   })}
+  </svg>
+  <MountedWeapons side="player" vessel={vessel}/>
+ </span>;
+}
+
+export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,onSelect,status,disabled,compact=false}){
  const Tag=onSelect?'button':'article';
  const interactive=onSelect?{type:'button','aria-pressed':selected,onClick:onSelect,disabled}:{};
  const engines=Object.keys(vessel.engines);
  const totalHp=Object.values(vessel.engines).reduce((hp,engine)=>hp+engine.max,0);
- const triggers=[...new Set(vessel.weapons.map(weapon=>weapon.seme_trigger))];
+ const suits=shipSuits(vessel.id);
+ const cardSuits=suits.length?suits:Object.keys(SUIT_SIGNS);
+ const combos=vessel.weapons.filter(weapon=>weapon.combo);
  return <Tag className={`ship-card${selected?' on':''}`} data-ship-card={vessel.id} data-rarity={vessel.rarity} data-level={vessel.level} {...interactive}>
-  <span className="ship-card-meta"><span>{vessel.rarity}</span><b>L{vessel.level}</b>{onSelect&&<span aria-hidden="true">{selected?'✓':'+'}</span>}</span>
-  <span className="ship-card-name">{vessel.name}</span>
-  <span className="ship-card-render complete-ship" aria-hidden="true">
-   <svg viewBox="0 0 1000 1000">
-    <ShipArtwork side="player" vessel={vessel}/>
-    {engines.filter(op=>op==='times'||op==='divide').map(op=>{
-     const {point,radius}=engineSurface('player',vessel.id,op);
-     const [x,y]=point.map(n=>n*1000),[rx,ry]=radius.map(n=>n*1000);
-     return <g key={op} data-card-reactor={op}><ellipse cx={x} cy={y} rx={rx} ry={ry} fill="#24384b" stroke="#98a8b6" strokeWidth="12"/>
-      <ellipse cx={x} cy={y} rx={rx*.47} ry={ry*.47} fill={SHIP_GLOW[vessel.id]}/></g>;
-    })}
-   </svg>
-   <MountedWeapons side="player" vessel={vessel}/>
+  <span className="ship-card-face">
+   <span className="ship-card-index">
+    <span className="ship-card-suits" role="img" aria-label={suits.length?cardSuits.map(suit=>SUIT_NAMES[suit]).join(', '):'Tutti i semi'}>
+     {cardSuits.map(suit=><b key={suit} aria-hidden="true" style={{color:CARD_SUIT_COLORS[WEAPON_SIGNS[suit]]}}>{WEAPON_SIGNS[suit]}</b>)}
+    </span>
+    <b className="ship-card-level">L{vessel.level}</b>
+   </span>
+   <span className="ship-card-name">{vessel.name}</span>
+   <span className="ship-card-role">{getShipDefinition(vessel.id).ruolo}</span>
+   <span className="ship-card-stats">
+    <span><b>{totalHp}</b> HP</span>
+    <span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>
+   </span>
+   <span className="ship-card-operations" aria-label={`Motori ${engines.map(op=>META[op].name).join(', ')}`}>
+    {engines.map(op=><b key={op} data-card-engine={op}>{META[op].sign}</b>)}
+   </span>
+   <span className="ship-card-meta"><span>{vessel.rarity}</span><span>{vessel.id}</span></span>
   </span>
-  <span className="ship-card-stats">
-   <span>{vessel.weapons.length} {vessel.weapons.length===1?'arma':'armi'} <b>{triggers.map(s=>SUIT_SIGNS[s]??'◎').join(' ')}</b></span>
-   <span>{totalHp} HP</span>
-  </span>
-  <span className="ship-card-operations" aria-label={`Motori ${engines.map(op=>META[op].name).join(', ')}`}>
-   {engines.map(op=><b key={op} data-card-engine={op}>{META[op].sign}</b>)}
-  </span>
-  {vessel.weapons.some(weapon=>weapon.combo)&&<span className="ship-card-combo">{vessel.weapons.filter(weapon=>weapon.combo).map(comboLabel).join(' · ')}</span>}
+  {onSelect&&<span className="ship-card-selection" aria-hidden="true">{selected?'✓':'+'}</span>}
+  {!compact&&<ShipCardModel vessel={vessel} engines={engines}/>}
+  {!compact&&combos.length>0&&<span className="ship-card-combo">{combos.map(comboLabel).join(' · ')}</span>}
   {status&&<span className="ship-card-status">{status}</span>}
  </Tag>;
 }
