@@ -13,33 +13,43 @@ export function shuffled(a,rng=Math.random){const v=[...a];for(let i=v.length-1;
 export function newDeck(rng=Math.random){return shuffled(['♥','♦','♣','♠'].flatMap(suit=>Array.from({length:13},(_,i)=>({id:`${suit}${i+1}`,suit,value:i+1}))),rng);}
 export function getShipDefinition(id){return PHASE1_CATALOG.ships.find(x=>x.id===id)||null;}
 export function getWeaponsForShip(id){return PHASE1_CATALOG.weapons.filter(x=>x.nave_id===id);}
+export function shipSuits(id){
+ return [...new Set(getWeaponsForShip(id).flatMap(w=>[
+  w.seme_trigger,...w.combo.split('@')[0].split('+'),
+ ]).filter(s=>Object.hasOwn(SUIT_SIGNS,s)))];
+}
 export function supportedOperators(side){const found=new Set();for(const v of side.fleet)for(const k of ENGINE_KEYS)if(v.engines[k]?.max>0&&v.engines[k].hp>0)found.add(k);return ENGINE_KEYS.filter(x=>found.has(x));}
 export function validFleet(ids){
  if(!Array.isArray(ids)||ids.length<1||ids.length>3||ids.some(x=>!getShipDefinition(x))||new Set(ids).size!==ids.length)return false;
  const counts={H:0,D:0,C:0,S:0};
- for(const id of ids){if(id==='N00')continue;const triggers=new Set(getWeaponsForShip(id).flatMap(w=>w.seme_trigger==='*'?[]:[w.seme_trigger]));for(const t of triggers){if(!(t in counts))return false;counts[t]++;if(counts[t]>2)return false;}}
+ for(const id of ids){if(id==='N00')continue;for(const suit of shipSuits(id))if(++counts[suit]>2)return false;}
  return true;
 }
+function vesselLevel(level){return Math.max(1,Math.min(5,Math.floor(Number(level)||1)));}
 function shipLevel(id,level){return PHASE1_CATALOG.shipLevels.find(x=>x.nave_id===id&&x.livello===level);}
 function gunLevel(id,level){return PHASE1_CATALOG.weaponLevels.find(x=>x.arma_id===id&&x.livello===level);}
 // Both fleets must be able to target every operator installed at battle start.
-export function fleetCompatibility(playerIds,enemyIds,level=1){
+export function fleetCompatibility(playerIds,enemyIds,level=1,playerLevels={},enemyLevels={}){
  if(!validFleet(playerIds)||!validFleet(enemyIds))return {compatible:false,playerMissing:[],enemyMissing:[]};
- const l=Math.max(1,Math.min(5,Math.floor(level)));
- const operators=ids=>new Set(ids.flatMap(id=>ENGINE_KEYS.slice(0,shipLevel(id,l).motori)));
- const player=operators(playerIds),enemy=operators(enemyIds);
+ const operators=(ids,levels)=>new Set(ids.flatMap(id=>
+  ENGINE_KEYS.slice(0,shipLevel(id,vesselLevel(levels[id]??level)).motori)));
+ const player=operators(playerIds,playerLevels),enemy=operators(enemyIds,enemyLevels);
  const playerMissing=ENGINE_KEYS.filter(op=>enemy.has(op)&&!player.has(op));
  const enemyMissing=ENGINE_KEYS.filter(op=>player.has(op)&&!enemy.has(op));
  return {compatible:!playerMissing.length&&!enemyMissing.length,playerMissing,enemyMissing};
 }
 export function newVessel(id='N00',level=1){
  const def=getShipDefinition(id);if(!def)throw Error('Nave inesistente '+id);
- const l=Math.max(1,Math.min(5,Math.floor(level)));
+ const l=vesselLevel(level);
  const prog=shipLevel(id,l);if(!prog)throw Error('Progressione assente '+id+'/'+l);
  const engines={};ENGINE_KEYS.forEach((op,i)=>{if(i<prog.motori)engines[op]={hp:prog.hp_per_motore,max:prog.hp_per_motore};});
  return {id,name:def.nome,rarity:def.rarita,level:l,engines,weapons:getWeaponsForShip(id).map(w=>({...w,damage:gunLevel(w.id,l)?.danno_per_proiettile??w.danno_colpo_L1,charge:0})),};
 }
-export function newShip(_level=1,isEnemy=false,upgrades={}){const ids=Array.isArray(upgrades.fleetIds)&&validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];const level=Number(upgrades.shipLevel)||1;return {fleet:ids.map(id=>newVessel(id,level)),hand:[],deck:[],discard:[],sacrifices:0,ether:isEnemy?1:2};}
+export function newShip(_level=1,isEnemy=false,upgrades={}){
+ const ids=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];
+ const fleet=ids.map(id=>newVessel(id,upgrades.shipLevels?.[id]??upgrades.shipLevel));
+ return {fleet,hand:[],deck:[],discard:[],sacrifices:0,ether:isEnemy?1:2};
+}
 export function fillHand(side){const n={...side,hand:[...side.hand],deck:[...side.deck]};while(n.hand.length<7&&n.deck.length)n.hand.push(n.deck.pop());return n;}
 export function createShip(level=1,isEnemy=false,upgrades={},rng=Math.random){let s=newShip(level,isEnemy,upgrades);s.deck=newDeck(rng);return fillHand(s);}
 // Bersagli teoricamente risolvibili con DUE carte da 1 a 13. Non dipendono
@@ -180,9 +190,12 @@ export function etherChange(side,index){if(!side.ether||side.deck.length===0||in
 export function aiChoose(side,defender,targets,rng=Math.random){const moves=findMoves(side,defender,targets);if(!moves.length)return null;
  return moves.map(m=>{const e=defender.fleet[m.targetShip].engines[m.op],v=previewVolley(side,[side.hand[m.i],side.hand[m.j]]);const dmg=Math.min(e.hp,v.totalDamage);return {...m,score:dmg+(e.hp<=dmg?100:0)+(m.op==='plus'?6:0)+rng()*2};}).sort((a,b)=>b.score-a.score)[0];}
 export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign'){
- const fleetIds=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];const shipLevel=Math.max(1,Math.min(5,Number(upgrades.shipLevel)||1));
+ const fleetIds=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];
+ const {shipLevel=1,shipLevels={},enemyFleetIds,enemyShipLevels={}}=upgrades;
  // Opponent receives comparable fleet count and vessel engine capacity. AI has no secret advantages.
- const aiIds=fleetCompatibility(fleetIds,upgrades.enemyFleetIds,shipLevel).compatible?upgrades.enemyFleetIds:fleetIds;
- return {level,mode,player:createShip(level,false,{fleetIds,shipLevel},rng),enemy:createShip(level,true,{fleetIds:aiIds,shipLevel},rng),
+ const playerFleet={fleetIds,shipLevel,shipLevels};
+ const enemyFleet=fleetCompatibility(fleetIds,enemyFleetIds,shipLevel,shipLevels,enemyShipLevels).compatible
+  ?{fleetIds:enemyFleetIds,shipLevel,shipLevels:enemyShipLevels}:playerFleet;
+ return {level,mode,player:createShip(level,false,playerFleet,rng),enemy:createShip(level,true,enemyFleet,rng),
  actor:'player',round:1,seconds:60,targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }

@@ -1,10 +1,11 @@
 import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
-import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,newVessel,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory} from './mathDuelEngine.js';
+import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,newVessel,newShip,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMount,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
 import {ASSET_ROOT,SHIP_GLOW,ShipArtwork,ShipCard} from './ShipPresentation.jsx';
 import {shipEvolution} from './shipEvolution.js';
+import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import './MathDuelBattle.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
 function ArenaBackdrop(){
@@ -321,31 +322,72 @@ function Formula({game}){
    <small>{inspection?.valid?(preview.totalDamage?`BERSAGLIO ${goal} ✓ · FUOCO ${preview.totalDamage} HP`: `BERSAGLIO ${goal} ✓ · ${preview.shots.some(s=>s.charging)?'CARICA':preview.memoryPending?'MEMORIA':'NESSUNA ARMA ATTIVA'}`):inspection?(alternative?`BERSAGLIO ${goal} ✗ · USA ${META[alternative].sign} ${game.targets[alternative]}`:`BERSAGLIO ${goal} ✗ · RISULTATO ${fmt(inspection.result)}`):'SELEZIONA DUE CARTE'}</small>
   </div>;
 }
-function FleetSetup({onClose,onStart,selected,setSelected,enemySelected,setEnemySelected,level,setLevel}){
+function SetupShipCard({shipId,level,selected,onSelect}){
+ const vessel=newVessel(shipId,level);
+ return <ShipCard vessel={vessel} selected={selected} onSelect={onSelect}
+  comboLabels={vessel.weapons.filter(w=>w.combo).map(comboLabel)}><MountedWeapons side="player" vessel={vessel}/></ShipCard>;
+}
+function FleetSetup({onClose,onStart,onEquip,collection,selected,setSelected,enemySelected,setEnemySelected,level,setLevel}){
+ const [practice,setPractice]=useState(false);
  const [side,setSide]=useState('player');
+ const [loadout,setLoadout]=useState(collection?.loadout??[]);
+ const [error,setError]=useState('');
+ const [saving,setSaving]=useState(false);
  const ids=side==='player'?selected:enemySelected??selected;
  const matchup=fleetCompatibility(selected,enemySelected??selected,level);
  const toggle=id=>{const next=ids.includes(id)?ids.filter(x=>x!==id):[...ids,id];if(validFleet(next))(side==='player'?setSelected:setEnemySelected)(next);};
- return <div className="modal-shade"><div className="help-card fleet-setup"><h2>FLOTTA DI PROVA</h2><p><b>Aurora-0</b> è l'universale iniziale. Puoi schierare tutte le 17 navi del catalogo. Questa scelta è temporanea.</p>
+ function toggleOwned(id){
+  if(saving)return;
+  const next=loadout.includes(id)?loadout.filter(x=>x!==id):[...loadout,id];
+  try{
+   if(next.length) equipShipCards(collection,next);
+   setLoadout(next);setError('');
+  }catch(e){setError(e.message);}
+ }
+ async function equip(){
+  setSaving(true);
+  try{await onEquip(loadout);}
+  catch{setSaving(false);setError('Impossibile salvare la flotta. Riapri la collezione e riprova.');}
+ }
+ return <div className="modal-shade"><div className="help-card fleet-setup"><h2>{practice?'FLOTTA DI PROVA':'FLOTTA E COLLEZIONE'}</h2>
+  <div className="fleet-side-toggle"><button type="button" aria-pressed={!practice} onClick={()=>setPractice(false)}>COLLEZIONE</button><button type="button" aria-pressed={practice} disabled={saving} onClick={()=>setPractice(true)}>PROVA</button></div>
+  {practice?<><p>Prova tutte le 17 navi del catalogo con livelli temporanei. I risultati di prova non assegnano ricompense.</p>
   <div className="fleet-side-toggle"><button type="button" aria-pressed={side==='player'} onClick={()=>setSide('player')}>LA TUA FLOTTA</button><button type="button" aria-pressed={side==='enemy'} onClick={()=>setSide('enemy')}>AVVERSARIO DI PROVA</button></div>
   {side==='enemy'&&<label className="fleet-match"><input type="checkbox" checked={enemySelected===null} onChange={e=>setEnemySelected(e.target.checked?null:[...selected])}/> Stessa flotta del giocatore</label>}
   <label className="fleet-level-row">Livello di prova (non acquistato) <b>{level}</b><input type="range" min="1" max="5" value={level} onChange={e=>setLevel(Number(e.target.value))}/></label>
-  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=>{
-   const vessel=newVessel(s.id,level);
-   return <ShipCard key={s.id} vessel={vessel} selected={ids.includes(s.id)} onSelect={()=>toggle(s.id)}
-    comboLabels={vessel.weapons.filter(w=>w.combo).map(comboLabel)}><MountedWeapons side="player" vessel={vessel}/></ShipCard>;
-  })}</div>
+  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><SetupShipCard key={s.id} shipId={s.id} level={level} selected={ids.includes(s.id)} onSelect={()=>toggle(s.id)}/>)}</div>
   <p>Massimo 3 navi. L'universale è unica; ogni seme può attivare al massimo due navi specializzate. Le operazioni si sbloccano secondo il livello del modello.</p>
   {!matchup.compatible&&<p className="fleet-match-warning" role="status">Flotte non compatibili a L{level}: {matchup.playerMissing.length?`alla tua flotta manca ${matchup.playerMissing.map(op=>META[op].sign).join(', ')}. `:''}{matchup.enemyMissing.length?`All'avversaria manca ${matchup.enemyMissing.map(op=>META[op].sign).join(', ')}.`:''} Scegli una nave con le operazioni mancanti oppure cambia il livello.</p>}
-  <div className="fleet-setup-actions"><button className="es-button" onClick={onClose}>ANNULLA</button><button className="es-button primary" disabled={!matchup.compatible} onClick={onStart}>INIZIA DUELLO</button></div></div></div>;
+  </>:collection?<><p>Carte possedute <b>{collection.cards.length}</b>. Seleziona da una a tre navi ai loro livelli effettivi.</p>
+   <div className="fleet-setup-list">{collection.cards.map(card=><SetupShipCard key={card.instanceId} shipId={card.shipId} level={card.level}
+    selected={loadout.includes(card.instanceId)} onSelect={()=>toggleOwned(card.instanceId)}/>)}</div>
+   {error&&<p className="fleet-match-warning" role="alert">{error}</p>}
+  </>:<p className="fleet-match-warning" role="alert">Il salvataggio della collezione non è leggibile. Puoi accedere alla flotta di prova.</p>}
+  <div className="fleet-setup-actions"><button className="es-button" disabled={saving} onClick={onClose}>ANNULLA</button>
+   {practice?<button className="es-button primary" disabled={!matchup.compatible} onClick={onStart}>INIZIA DUELLO</button>
+    :<button className="es-button primary" disabled={saving||!loadout.length} onClick={equip}>SALVA E SCHIERA</button>}
+  </div>
+ </div></div>;
+}
+function readCollection(){
+ try{return readShipCollection();}catch{return null;}
 }
 export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,onEtherConsumed,onResult,onExit}){
  const [scale,setScale]=useState(1);const [fleetIds,setFleetIds]=useState(['N00']);const [enemyFleetIds,setEnemyFleetIds]=useState(null);const [testLevel,setTestLevel]=useState(1);
- const [game,setGame]=useState(()=>{const b=initialBattle(Math.max(1,sectorNumber),{fleetIds:['N00']},Math.random,gameMode);b.player.ether=Math.max(0,Number(ether)||0);return b;});
+ const [collection,setCollection]=useState(readCollection);
+ function startBattle(options,practice=false){
+  const b=initialBattle(Math.max(1,sectorNumber),options,Math.random,gameMode);
+  b.practice=practice;
+  if(!practice)b.player.ether=Math.max(0,Number(ether)||0);
+  return b;
+ }
+ const [game,setGame]=useState(()=>startBattle(collection?collectionBattleOptions(collection):{}));
+ useEffect(()=>{updateShipCollection(current=>current).catch(()=>{/* Keep an unreadable save intact. */});},[]);
  const rootRef=useRef(null);
  const shipRefs=useRef({player:{},enemy:{}});
  const engineRefs=useRef({player:{},enemy:{}});
  const gunRefs=useRef({player:{},enemy:{}});
+ const realBattleRef=useRef(null);
  const gameRef=useRef(game);gameRef.current=game;
  const registerShipRef=(side,index,node)=>{if(node)shipRefs.current[side][index]=node; else delete shipRefs.current[side][index];};
  const registerEngineRef=(side,index,op,node)=>{const key=`${index}/${op}`;if(node)engineRefs.current[side][key]=node; else delete engineRefs.current[side][key];};
@@ -408,7 +450,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(!target||target.targetShip!==i){notice('Questa nave non ha motori attaccabili con le operazioni disponibili');return;}
   write({...b,...target});}
  function change(withEther){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;if(b.selected.length!==1){notice('Seleziona UNA carta da cambiare');return;}
-  const n=clone(b),i=n.selected[0];if(withEther){const ship=etherChange(n.player,i);if(!ship){notice('Etere insufficiente o mazzo vuoto');return;}n.player=ship;onEtherConsumed?.(1);n.notice='Carta sostituita con Etere';}
+  const n=clone(b),i=n.selected[0];if(withEther){const ship=etherChange(n.player,i);if(!ship){notice('Etere insufficiente o mazzo vuoto');return;}n.player=ship;if(!b.practice)onEtherConsumed?.(1);n.notice='Carta sostituita con Etere';}
   else{const swap=sacrificeCard(n.player,i,n.enemy,n.seconds);if(!swap){notice('Non puoi cambiare altre carte');return;}n.player=swap.ship;n.enemy=swap.opponent;n.seconds=swap.seconds;n.notice=`Sacrificio ${n.player.sacrifices}/3: ${swap.detail}`;}
   n.selected=[];n.logs=[n.notice,...n.logs].slice(0,6);write(isDestroyed(n.player)?finish(n,'enemy','Flotta distrutta durante un sacrificio'):deckExhausted(n.player,n.enemy)?finish(n,deckVerdict(n.player,n.enemy),'Mazzo esaurito'):n);
  }
@@ -417,27 +459,50 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  useEffect(()=>{if(game.actor!=='enemy'||game.phase!=='thinking')return;const timer=later(()=>{const b=gameRef.current;if(b.phase!=='thinking'||b.actor!=='enemy')return;let n=clone(b),move=aiChoose(n.enemy,n.player,n.targets);if(!move&&n.enemy.sacrifices<3&&n.enemy.deck.length){const swap=sacrificeCard(n.enemy,Math.floor(Math.random()*n.enemy.hand.length),n.player,60);if(swap){n.enemy=swap.ship;n.player=swap.opponent;write(n);move=aiChoose(n.enemy,n.player,n.targets);}}
   if(isDestroyed(n.enemy)){write(finish(n,'player','Flotta nemica distrutta'));return;}if(deckExhausted(n.player,n.enemy)){write(finish(n,deckVerdict(n.player,n.enemy),'Mazzo terminato'));return;}if(move){write(n);fire('enemy',move);}else write(transition(n,'enemy'));
  },1000);return()=>clearTimeout(timer);},[game.actor,game.phase,game.round]);
- function restartWithFleet(){if(!fleetCompatibility(fleetIds,enemyFleetIds??fleetIds,testLevel).compatible)return;const b=initialBattle(Math.max(1,sectorNumber),{fleetIds,enemyFleetIds,shipLevel:testLevel},Math.random,gameMode);b.player.ether=Math.max(0,Number(ether)||0);write(b);setFleetMenu(false);resultClaimed.current=false;}
- function exitBattle(){const b=gameRef.current;if(b?.phase==='finished'&&!resultClaimed.current){resultClaimed.current=true;const h=healthScore(b.player);onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,starsEarned:[true,h>=.65,h>=.9],matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),turnsElapsed:b.round}});}onExit?.();}
+ function openFleet(){
+  const b=gameRef.current;
+  if(b.round!==1||b.player.discard.length||b.phase!=='ready'){notice('La flotta si configura prima del primo attacco');return;}
+  setCollection(readCollection());setFleetMenu(true);
+ }
+ function restartWithFleet(){
+  if(fleetCompatibility(fleetIds,enemyFleetIds??fleetIds,testLevel).compatible){
+   if(!gameRef.current.practice)realBattleRef.current=gameRef.current;
+   write(startBattle({fleetIds,enemyFleetIds,shipLevel:testLevel},true));setFleetMenu(false);
+  }
+ }
+ async function saveLoadout(loadout){
+  const next=await updateShipCollection(current=>equipShipCards(current,loadout));
+  const options=collectionBattleOptions(next),b=realBattleRef.current??gameRef.current;
+  setCollection(next);
+  const {fleet}=newShip(b.level,false,options);
+  const unchanged=fleet.length===b.player.fleet.length&&fleet.every((v,i)=>v.id===b.player.fleet[i].id&&v.level===b.player.fleet[i].level);
+  if(unchanged){if(b!==gameRef.current)write(b);}
+  else{
+   write({...b,player:{...b.player,fleet},enemy:{...b.enemy,fleet:clone(fleet)},
+    target:'plus',targetShip:0,shownPlayer:0});
+  }
+  realBattleRef.current=null;setFleetMenu(false);
+ }
+ function exitBattle(){const b=gameRef.current;if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){resultClaimed.current=true;const h=healthScore(b.player);onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,starsEarned:[true,h>=.65,h>=.9],matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),turnsElapsed:b.round}});}onExit?.();}
  const availableOps=supportedOperators(game.player);
  return <div className="es-math-scope game-viewport" role="region" aria-label="Duello matematico spaziale">
   <div ref={rootRef} className="es-root" style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
    <ArenaBackdrop/>
    <div className="top-brand">ECLISSI <b>STELLARE</b></div>
-   <div className="toolbar"><button onClick={()=>setHelp(true)} aria-label="Regole">?</button><button onClick={()=>{if(game.round===1&&game.player.discard.length===0)setFleetMenu(true);else notice('La flotta si configura prima del primo attacco');}} title="Flotta di prova" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
-   <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {displaySector&&`• ${displaySector}`}</b><small>INTEGRITÀ FLOTTA {Math.round(healthScore(game.enemy)*100)}%</small></div><Pips ship={game.enemy}/></div>
+   <div className="toolbar"><button onClick={()=>setHelp(true)} aria-label="Regole">?</button><button onClick={openFleet} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
+   <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}</b><small>INTEGRITÀ FLOTTA {Math.round(healthScore(game.enemy)*100)}%</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    <div className="center-bar"><span className="round-tag">TURNO {game.round}</span><MemoryCombos ship={game.player}/><div className={'timer-pill'+(game.seconds<=10?' urgent':'')}><strong>{game.actor==='player'?`${game.seconds}s`:game.actor==='enemy'?'AVVERSARIO':'COLPO'}</strong></div></div>
    <Ship side="player" ship={game.player} targets={game.actor==='enemy'?game.targets:null} focused={game.shownPlayer} onSelectShip={i=>write({...gameRef.current,shownPlayer:i})} phase="idle" effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    <div className="deck left"><div className="deck-graphic">✦</div><small>MAZZO</small><strong>{game.player.deck.length}</strong></div><div className="deck right"><div className="deck-graphic trash">▤</div><small>SCARTI</small><strong>{game.player.discard.length}</strong></div>
    <Hand cards={game.player.hand} selected={game.selected} onSelect={pick} disabled={game.phase!=='ready'||game.actor!=='player'}/>
    <div className="play-controls"><Formula game={game}/><button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
-   <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={pass} disabled={game.phase!=='ready'}>PASSA »</button><button onClick={()=>{if(game.round===1&&!game.player.discard.length)setFleetMenu(true);else setHelp(true)}}>FLOTTA ⚙</button></div>
+   <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={pass} disabled={game.phase!=='ready'}>PASSA »</button><button onClick={openFleet}>FLOTTA ⚙</button></div>
    <div className="player-status"><b>TU</b><span className="my-hp">FLOTTA {Math.round(healthScore(game.player)*100)}%</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
    {game.effect&&<Projectile effect={game.effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs}/>}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
-   {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>Ogni nave monta inizialmente + e −; alcuni modelli sbloccano × e ÷. Tutti i motori installati devono essere distrutti per eliminare una nave. Vinci distruggendo tutta la flotta nemica.</p><p>Ogni turno dura 60 secondi. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo costa 3 secondi e il terzo −3 HP a te. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA è una selezione di prova per la fase 1: non modifica acquisti o salvataggi dello Shop R12.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
-   {fleetMenu&&<FleetSetup selected={fleetIds} setSelected={setFleetIds} enemySelected={enemyFleetIds} setEnemySelected={setEnemyFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet}/>}
+   {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>Ogni nave monta inizialmente + e −; alcuni modelli sbloccano × e ÷. Tutti i motori installati devono essere distrutti per eliminare una nave. Vinci distruggendo tutta la flotta nemica.</p><p>Ogni turno dura 60 secondi. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo costa 3 secondi e il terzo −3 HP a te. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
+   {fleetMenu&&<FleetSetup collection={collection} onEquip={saveLoadout} selected={fleetIds} setSelected={setFleetIds} enemySelected={enemyFleetIds} setEnemySelected={setEnemyFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet}/>}
   </div>
  </div>;
 }

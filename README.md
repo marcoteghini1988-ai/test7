@@ -28,6 +28,8 @@ Il passo 7C aggiunge le **20 evoluzioni visive delle quattro epiche**. In **Flot
 
 Il passo 7D completa le **85 configurazioni visive delle 17 navicelle** con le evoluzioni delle quattro leggendarie. Tutte e quattro mostrano i quattro motori dal livello 1. [Rapporto del passo 7D](docs/PASSO_7D_EVOLUZIONE_LEGGENDARIE.md).
 
+Il passo 8 salva proprietà, livelli e flotta nel browser. Prima del primo attacco, apri **Flotta → Collezione** per equipaggiare le carte possedute. **Prova** offre il catalogo completo con livelli temporanei. [Rapporto del passo 8](docs/PASSO_8_COLLEZIONE.md).
+
 ## Regole del combattimento attivo
 
 - Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.
