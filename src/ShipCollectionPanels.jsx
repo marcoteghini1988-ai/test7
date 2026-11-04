@@ -31,7 +31,7 @@ export function ShipShopPanel() {
     <h4>Catalogo navicelle</h4>
     <p>Consulta i modelli e i loro potenziamenti. Acquisti e upgrade saranno disponibili quando verranno definite le condizioni.</p>
     {collection
-      ? <p>{collection.cards.length} carte possedute su {PHASE1_SHIPS.length}</p>
+      ? <p>Carte possedute · {collection.cards.length} su {PHASE1_SHIPS.length}</p>
       : <p role="status">Il salvataggio della collezione è illeggibile. Puoi consultare il catalogo.</p>}
     <label className="ship-collection-preview">
       Livello di anteprima
