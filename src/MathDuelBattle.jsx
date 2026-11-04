@@ -1,10 +1,9 @@
 import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
-import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,newVessel,newShip,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory} from './mathDuelEngine.js';
-import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMount,weaponMuzzleCount} from './mathFleetGeometry.js';
+import {ENGINE_KEYS,META,PHASE1_SHIPS,newShip,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory} from './mathDuelEngine.js';
+import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
-import {ASSET_ROOT,SHIP_GLOW,ShipArtwork,ShipCard} from './ShipPresentation.jsx';
-import {shipEvolution} from './shipEvolution.js';
+import {ASSET_ROOT,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import './MathDuelBattle.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
@@ -12,7 +11,6 @@ function ArenaBackdrop(){
  return <div className="space-back metal-arena" aria-hidden="true" style={{backgroundImage:`url('${ARENA_BACKGROUND}')`}}/>;
 }
 const suits={'♥':'#ff727d','♦':'#68d6ff','♠':'#c47dff','♣':'#74eacb'};
-const bulletColors={H:'#ff576b',D:'#58e6ff',C:'#4aff9b',S:'#c176ff','*':'#ecfcff'};
 const label=rankLabel;
 const clone=v=>structuredClone(v);
 function tone(name){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=window.__eclissiMathAudio||(window.__eclissiMathAudio=new C());if(ctx.state==='suspended')ctx.resume();const o=ctx.createOscillator(),g=ctx.createGain(),now=ctx.currentTime;o.type=name==='shot'?'sawtooth':'sine';o.frequency.setValueAtTime(name==='shot'?180:470,now);o.frequency.exponentialRampToValueAtTime(name==='shot'?46:650,now+.19);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.025,now+.014);g.gain.exponentialRampToValueAtTime(.0001,now+.22);o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+.23);}catch{}}
@@ -31,13 +29,6 @@ function volleySound(salvos){try{
   o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+(rounds.at(-1).launchMs+90)/1000);
  }
 }catch{}}
-// Position of the FOUR visible engine modules on the actual starship illustration.
-// Coordinates follow each sprite's camera view without flipping its orientation.
-const GLYPH={H:'♥',D:'♦',C:'♣',S:'♠','*':'◎'};
-function comboLabel(weapon){
- const [codes,limit]=weapon.combo.split('@'),symbols=codes.split('+').map(s=>GLYPH[s]).join(' + ');
- return limit?`Memoria ${symbols} · entro ${limit} calcoli`:`Combo ${symbols}`;
-}
 function EngineArea({surface,fill}){
  const [x,y]=surface.point.map(n=>n*1000),[rx,ry]=surface.radius.map(n=>n*1000);
  return <g fill={fill}><ellipse cx={x} cy={y} rx={rx} ry={ry}/>
@@ -57,53 +48,6 @@ function ShipSkin({side,vessel,imageRef}){
   <ShipArtwork side={side} vessel={vessel} onLoad={()=>setLoaded(true)} mask={damaged.length?`url(#${id}-healthy)`:undefined}/>
   {damaged.map(e=><ShipArtwork key={e.op} side={side} vessel={vessel} clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`}/>) }
  </svg>;
-}
-function WeaponMount({side,vessel,weapon,registerGunRef,index,effect,muzzleIndex=0}){
- const mount=weaponMount(side,vessel.id,weapon.id,muzzleIndex),metalId=`metal-${useId().replace(/[^a-zA-Z0-9_-]/g,'')}`;
- if(!mount)return null;
- const event=effect?.side===side?effect.volleys.find(s=>s.vesselIndex===index&&s.weaponId===weapon.id):null;
- const salvo=effect?.side===side?effect.salvos.find(s=>s.shot.vesselIndex===index&&s.shot.weaponId===weapon.id):null;
- const rounds=salvo?.rounds.filter(r=>r.muzzleIndex===muzzleIndex)||[];
- const accumulating=weapon.tipo==='Accumulo',charge=accumulating?Math.min(1,(event?.charge??weapon.charge??0)/weapon.soglia_munizioni):0;
- const color=bulletColors[weapon.seme_trigger]||'#e8ffff';
- const armor=shipEvolution(vessel.id,vessel.level)&&vessel.level>=3?vessel.level===5?2:1:0;
- return <span className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}${rounds.length?' firing':''}${event?.charging?' charge-received':''}`} data-weapon={weapon.id} data-muzzle-index={muzzleIndex} data-charge={Math.round(charge*100)} data-armor={armor||undefined}
-  style={{left:`${mount.point[0]*100}%`,top:`${mount.point[1]*100}%`,width:`${mount.width*(1+armor*.12)*100}%`,height:`${mount.length*(1+armor*.08)*100}%`,'--gun':color,
-   ...(rounds.length?{'--recoil-delay':`${rounds[0].launchMs}ms`,'--recoil-duration':`${Math.max(24,(rounds.at(-1).launchMs-rounds[0].launchMs)/Math.max(1,rounds.length-1))}ms`,'--recoil-count':rounds.length}:{})}}
-  title={`${weapon.nome}: ${GLYPH[weapon.seme_trigger]||'◎'} · ${weapon.tipo} · ${weapon.damage} danni/proiettile${accumulating?` · Carica ${event?.charge??weapon.charge??0}/${weapon.soglia_munizioni}`:''}${weapon.combo?` · ${comboLabel(weapon)}`:''}`}>
-  <svg className="weapon-hardware" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-   <defs><linearGradient id={metalId}><stop offset="0" stopColor="#101826"/><stop offset=".3" stopColor="#8198ab"/><stop offset=".5" stopColor="#dbe4ea"/><stop offset=".72" stopColor="#3b4b60"/><stop offset="1" stopColor="#101826"/></linearGradient></defs>
-   <path d="M28 16 72 16 86 85 68 96 32 96 14 85Z" fill={`url(#${metalId})`} stroke="#111c2b" strokeWidth="5"/>
-   {mount.profile==='adaptive'&&<><path d="M32 54 32 15Q50-8 68 15V54" fill="#142533" stroke="#b3d9e9" strokeWidth="6"/><ellipse cx="50" cy="8" rx="14" ry="7" fill={color}/><path d="M31 68H69M31 80H69" stroke="#70c7e4" strokeWidth="5"/></>}
-   {mount.profile==='laser'&&<><path d="M39 8H61V75H39Z" fill="#35141e" stroke="#f3adb7" strokeWidth="5"/><path d="M46 8V60" stroke={color} strokeWidth="10"/><ellipse cx="50" cy="4" rx="12" ry="5" fill="#ffbec8"/><path d="M25 59H35M65 59H75M25 75H35M65 75H75" stroke={color} strokeWidth="6"/></>}
-   {mount.profile==='prism'&&<><path d="M50 2 73 32 67 69 50 87 33 69 27 32Z" fill="#092d49" stroke="#77d9f1" strokeWidth="4"/><path d="M50 8 66 35 50 75 34 35Z" fill={color} opacity={.22+charge*.78}/><path d="M50 8V75M34 35H66" stroke="#dcfaff" strokeWidth="3"/><path d="M25 88H75" stroke="#102839" strokeWidth="8"/><path d={`M25 88H${25+charge*50}`} stroke={color} strokeWidth="8"/></>}
-   {mount.profile==='gatling'&&<><path d="M28 54V6H43V54M57 54V6H72V54M44 63V0H56V63" fill="#182b26" stroke="#a9c0ad" strokeWidth="4"/><path d="M23 39H77V51H23Z" fill="#435650" stroke="#111d1a" strokeWidth="4"/><path d="M33 7H40M60 7H67M47 2H53" stroke={color} strokeWidth="6"/><path d="M33 76H67" stroke={color} strokeWidth="5"/></>}
-   {mount.profile==='arc'&&<><path d="M22 69Q8 26 36 5L42 16Q24 37 35 66M78 69Q92 26 64 5L58 16Q76 37 65 66" fill="#483556" stroke="#c7a5e2" strokeWidth="4"/><ellipse cx="50" cy="10" rx="8" ry="10" fill={color}/><path d="M29 55Q50 80 71 55M34 70Q50 90 66 70" fill="none" stroke={color} strokeWidth="5"/></>}
-   {mount.profile==='needles'&&<><path d="M24 58 30 7 37 58M42 62 50 0 58 62M63 58 70 7 76 58" fill="#bda1d2" stroke="#31213e" strokeWidth="4"/><path d="M23 64H77V77H23Z" fill="#392748" stroke="#9b7eb6" strokeWidth="4"/><path d="M30 8 33 25M50 3V24M70 8 67 25" stroke={color} strokeWidth="4"/></>}
-   {mount.profile==='drum'&&<><path d="M40 8H60V43H40Z" fill="#201e29" stroke="#b1a7b4" strokeWidth="5"/><ellipse cx="50" cy="5" rx="12" ry="5" fill={color}/><ellipse cx="50" cy="63" rx="32" ry="25" fill="#28222c" stroke="#bda6ac" strokeWidth="6"/><path d="M27 48V78M42 41V85M58 41V85M73 48V78" stroke="#624852" strokeWidth="5"/><ellipse cx="50" cy="63" rx="24" ry="18" fill="none" stroke={color} strokeWidth="5" strokeDasharray={`${charge*132} 132`} opacity={.3+charge*.7}/></>}
-   {mount.profile==='twin'&&<><path d="M36 6H64V74H36Z" fill="#481f29" stroke="#dfb88a" strokeWidth="5"/><path d="M44 7V61M56 7V61" stroke={color} strokeWidth="5"/><ellipse cx="50" cy="4" rx="13" ry="5" fill="#fff0db"/><path d="M23 66H77M25 78H75" stroke="#bda078" strokeWidth="6"/></>}
-   {mount.profile==='crystal'&&<><path d="M37 5H63L70 76 50 91 30 76Z" fill="#183844" stroke="#b4efff" strokeWidth="5"/><path d="M50 0 61 22 50 72 39 22Z" fill={color} opacity={.35+charge*.65}/><path d="M50 0V72M39 22H61" stroke="#eafcff" strokeWidth="3"/><path d="M25 89H75" stroke="#182d39" strokeWidth="7"/><path d={`M25 89H${25+50*charge}`} stroke={color} strokeWidth="7"/></>}
-   {mount.profile==='coil'&&<><path d="M35 12H65V83H35Z" fill="#17352e" stroke="#a4cbbf" strokeWidth="4"/>{[22,39,56,73].map(y=><ellipse key={y} cx="50" cy={y} rx="26" ry="10" fill="none" stroke={color} strokeWidth="6"/>)}<path d="M44 3H56V80H44Z" fill="#dafff0" opacity=".65"/></>}
-   {mount.profile==='cross'&&<><path d="M17 73 29 5 43 68M57 68 71 5 83 73" fill="#3b2b52" stroke="#bc9dd7" strokeWidth="5"/><path d="M29 5 50 28 71 5M27 25 50 45 73 25" fill="none" stroke="#86ffc1" strokeWidth="4"/><path d="M29 5 71 5" stroke={color} strokeWidth="6"/></>}
-   {mount.profile==='photon'&&<><path d="M34 20H66V79H34Z" fill="#493042" stroke="#f7c9c4" strokeWidth="5"/><ellipse cx="50" cy="16" rx="22" ry="14" fill="#ffb6ad" stroke="#fff4e6" strokeWidth="4"/><ellipse cx="50" cy="16" rx="10" ry="7" fill="#fff8ec"/><path d="M26 54H74M29 71H71" stroke="#f7c9c4" strokeWidth="5"/></>}
-   {mount.profile==='facet'&&<><path d="M50 1 74 35 68 79 50 95 32 79 26 35Z" fill="#775831" stroke="#ffe2a0" strokeWidth="5"/><path d="M50 4 66 35 50 81 34 35Z" fill="#ffc85f"/><path d="M50 4V81M34 35H66" stroke="#fffae3" strokeWidth="3"/></>}
-   {mount.profile==='plasma'&&<><path d="M31 68V20H69V68Z" fill="#352642" stroke="#c6b2e7" strokeWidth="5"/><ellipse cx="50" cy="28" rx="27" ry="23" fill="#452063" stroke="#c09bff" strokeWidth="4"/><ellipse cx="50" cy="28" rx="16" ry="14" fill={color} opacity={.18+charge*.8}/><path d="M18 73H82M25 85H75" stroke="#8d70b1" strokeWidth="5"/><path d={`M25 85H${25+50*charge}`} stroke={color} strokeWidth="6"/></>}
-   {mount.profile==='harpoon'&&<><path d="M37 6H63V84H37Z" fill="#24313b" stroke="#d1e1e7" strokeWidth="6"/><path d="M50 0 60 24H54V68H46V24H40Z" fill="#ecfbff"/>{[36,51,66,81].map(y=><path key={y} d={`M29 ${y}H71`} stroke="#819baf" strokeWidth="5"/>)}</>}
-   {mount.profile==='compressor'&&<><ellipse cx="50" cy="49" rx="34" ry="37" fill="#173a2c" stroke="#b6d3bb" strokeWidth="6"/><ellipse cx="50" cy="43" rx="24" ry="26" fill="#07231d" stroke={color} strokeWidth="5"/><ellipse cx="50" cy="43" rx="14" ry="16" fill={color} opacity={.15+charge*.85}/><path d="M15 42H85M50 9V77" stroke="#bbffd5" strokeWidth="3" opacity=".5"/><path d={`M21 88H${21+58*charge}`} stroke={color} strokeWidth="7"/></>}
-   {mount.profile==='eclipse-core'&&<><path d="M20 83 29 18 50 2 71 18 80 83 50 94Z" fill="#241733" stroke="#e8b56b" strokeWidth="6"/><ellipse cx="50" cy="26" rx="20" ry="17" fill="#0b0715" stroke={color} strokeWidth="5"/><path d="M29 61H71M26 77H74" stroke="#a995be" strokeWidth="4"/></>}
-   {mount.profile==='void-core'&&<><path d="M29 10H71L83 74 67 92H33L17 74Z" fill="#1d2f48" stroke="#eee3d5" strokeWidth="5"/><ellipse cx="50" cy="30" rx="22" ry="21" fill="#0d0b22" stroke={color} strokeWidth="5"/><path d="M50 4V15M50 45V62M21 30H32M68 30H79" stroke="#e4daff" strokeWidth="5"/></>}
-   {armor>0&&<><path d="M16 23 34 17 35 31 29 71 14 79 9 59ZM84 23 66 17 65 31 71 71 86 79 91 59Z" fill={`url(#${metalId})`} stroke="#202d3f" strokeWidth="5"/>
-    <path d="M20 32 16 54M80 32 84 54" stroke={color} strokeWidth="5"/></>}
-   {armor===2&&<><path d="M26 77 42 67H58L74 77 69 95H31Z" fill="#8294a7" stroke="#1d2b3a" strokeWidth="5"/>
-    <path d="M36 83H64M42 90H58" stroke={color} strokeWidth="5"/></>}
-  </svg>
-  <span ref={node=>registerGunRef?.(side,index,`${weapon.id}${muzzleIndex?`/${muzzleIndex}`:''}`,node)} className="weapon-tip muzzle-anchor"/>
- </span>;
-}
-function MountedWeapons({side,vessel,index,effect,registerGunRef}){
- return <span className="ship-hardpoints">{vessel.weapons.flatMap(weapon=>
-  Array.from({length:weaponMuzzleCount(weapon.id)},(_,muzzleIndex)=><WeaponMount key={`${weapon.id}/${muzzleIndex}`}
-   side={side} vessel={vessel} weapon={weapon} index={index} effect={effect} muzzleIndex={muzzleIndex} registerGunRef={registerGunRef}/>))}</span>;
 }
 function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation,impactDelay}){
  const engine=vessel.engines[op];if(!engine)return null;
@@ -303,9 +247,9 @@ function MemoryCombos({ship}){
   const {required,limit,history,totals}=memoryComboStatus(w);
   const seen=required.filter(s=>totals[s]>0);
   return <div key={w.id} className="memory-combo" data-weapon={w.id} title={comboLabel(w)}
-   aria-label={`${w.nome}, ${history.length} su ${limit} calcoli, semi raccolti ${seen.map(s=>GLYPH[s]).join(' ')||'nessuno'}`}>
+   aria-label={`${w.nome}, ${history.length} su ${limit} calcoli, semi raccolti ${seen.map(s=>WEAPON_SIGNS[s]).join(' ')||'nessuno'}`}>
    <b>{w.id==='W33'?'Giudizio':'Arca'}</b>
-   {required.map(s=><i key={s} className={totals[s]>0?'collected':''} style={{color:bulletColors[s]}}>{GLYPH[s]}</i>)}
+   {required.map(s=><i key={s} className={totals[s]>0?'collected':''} style={{color:WEAPON_COLORS[s]}}>{WEAPON_SIGNS[s]}</i>)}
    <small>{history.length}/{limit}</small>
   </div>;
  })}</div>;
@@ -321,11 +265,6 @@ function Formula({game}){
    <span>{inspection?`${label(inspection.a)} ${META[game.target].sign} ${label(inspection.b)} = ${fmt(inspection.result)}`:`${META[game.target].sign} ${goal}`}</span>
    <small>{inspection?.valid?(preview.totalDamage?`BERSAGLIO ${goal} ✓ · FUOCO ${preview.totalDamage} HP`: `BERSAGLIO ${goal} ✓ · ${preview.shots.some(s=>s.charging)?'CARICA':preview.memoryPending?'MEMORIA':'NESSUNA ARMA ATTIVA'}`):inspection?(alternative?`BERSAGLIO ${goal} ✗ · USA ${META[alternative].sign} ${game.targets[alternative]}`:`BERSAGLIO ${goal} ✗ · RISULTATO ${fmt(inspection.result)}`):'SELEZIONA DUE CARTE'}</small>
   </div>;
-}
-function SetupShipCard({shipId,level,selected,onSelect}){
- const vessel=newVessel(shipId,level);
- return <ShipCard vessel={vessel} selected={selected} onSelect={onSelect}
-  comboLabels={vessel.weapons.filter(w=>w.combo).map(comboLabel)}><MountedWeapons side="player" vessel={vessel}/></ShipCard>;
 }
 function FleetSetup({onClose,onStart,onEquip,collection,selected,setSelected,enemySelected,setEnemySelected,level,setLevel}){
  const [practice,setPractice]=useState(false);
@@ -355,11 +294,11 @@ function FleetSetup({onClose,onStart,onEquip,collection,selected,setSelected,ene
   <div className="fleet-side-toggle"><button type="button" aria-pressed={side==='player'} onClick={()=>setSide('player')}>LA TUA FLOTTA</button><button type="button" aria-pressed={side==='enemy'} onClick={()=>setSide('enemy')}>AVVERSARIO DI PROVA</button></div>
   {side==='enemy'&&<label className="fleet-match"><input type="checkbox" checked={enemySelected===null} onChange={e=>setEnemySelected(e.target.checked?null:[...selected])}/> Stessa flotta del giocatore</label>}
   <label className="fleet-level-row">Livello di prova (non acquistato) <b>{level}</b><input type="range" min="1" max="5" value={level} onChange={e=>setLevel(Number(e.target.value))}/></label>
-  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><SetupShipCard key={s.id} shipId={s.id} level={level} selected={ids.includes(s.id)} onSelect={()=>toggle(s.id)}/>)}</div>
+  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><ShipCard key={s.id} shipId={s.id} level={level} selected={ids.includes(s.id)} onSelect={()=>toggle(s.id)}/>)}</div>
   <p>Massimo 3 navi. L'universale è unica; ogni seme può attivare al massimo due navi specializzate. Le operazioni si sbloccano secondo il livello del modello.</p>
   {!matchup.compatible&&<p className="fleet-match-warning" role="status">Flotte non compatibili a L{level}: {matchup.playerMissing.length?`alla tua flotta manca ${matchup.playerMissing.map(op=>META[op].sign).join(', ')}. `:''}{matchup.enemyMissing.length?`All'avversaria manca ${matchup.enemyMissing.map(op=>META[op].sign).join(', ')}.`:''} Scegli una nave con le operazioni mancanti oppure cambia il livello.</p>}
   </>:collection?<><p>Carte possedute <b>{collection.cards.length}</b>. Seleziona da una a tre navi ai loro livelli effettivi.</p>
-   <div className="fleet-setup-list">{collection.cards.map(card=><SetupShipCard key={card.instanceId} shipId={card.shipId} level={card.level}
+   <div className="fleet-setup-list">{collection.cards.map(card=><ShipCard key={card.instanceId} shipId={card.shipId} level={card.level}
     selected={loadout.includes(card.instanceId)} onSelect={()=>toggleOwned(card.instanceId)}/>)}</div>
    {error&&<p className="fleet-match-warning" role="alert">{error}</p>}
   </>:<p className="fleet-match-warning" role="alert">Il salvataggio della collezione non è leggibile. Puoi accedere alla flotta di prova.</p>}
@@ -426,7 +365,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const strike=dealHit(defShip,attackShip,move.op,goal,cards,index);
   const timing=volleyTimeline(strike.volley),salvos=planWeaponSalvos(strike.volley);
   const strongest=[...strike.volley].sort((a,b)=>(b.damage||0)-(a.damage||0))[0];
-  const anim={...clone(b),...(side==='enemy'?{shownPlayer:index}:{targetShip:index}),phase:'animating',selected:[],effect:{side,op:move.op,targetShip:index,damage:strike.damage,destroyed:strike.destroyed,volleys:strike.volley,salvos,memoryPending:strike.memoryPending,arrivalMs:timing.arrivalMs,primaryColor:bulletColors[strongest?.suit]||'#ffdf83',shipCount:attackShip.fleet.length,sourceFocus:side==='player'?b.shownPlayer:b.targetShip}};
+  const anim={...clone(b),...(side==='enemy'?{shownPlayer:index}:{targetShip:index}),phase:'animating',selected:[],effect:{side,op:move.op,targetShip:index,damage:strike.damage,destroyed:strike.destroyed,volleys:strike.volley,salvos,memoryPending:strike.memoryPending,arrivalMs:timing.arrivalMs,primaryColor:WEAPON_COLORS[strongest?.suit]||'#ffdf83',shipCount:attackShip.fleet.length,sourceFocus:side==='player'?b.shownPlayer:b.targetShip}};
   write(anim);if(salvos.length)volleySound(salvos);else tone('click');
   later(()=>{const active=gameRef.current;if(active.effect!==anim.effect)return;const next=clone(active);
    next[side]=consumeAttack(strike.attacker,[move.i,move.j]);next[receiver]=strike.defender;

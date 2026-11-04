@@ -6,6 +6,7 @@ import { getWeaponDefinition } from './newCombat/weaponCatalog.js';
 import { normalizePhase7Armory } from './newCombat/phase7Armory.js';
 import { WeaponCardArt } from './newCombat/WeaponVisuals.jsx';
 import {describePhase16HTerrain} from './newCombat/phase16HProgression.js';
+import {ShipHangarPanel} from './ShipCollectionPanels.jsx';
 
 export default function PersonalLoadoutModal({
   nickname = 'Pilota',
@@ -116,6 +117,7 @@ export default function PersonalLoadoutModal({
 
         {/* CONTENUTO SCORREVOLE */}
         <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.55rem', paddingRight: '0.2rem' }}>
+          <ShipHangarPanel onOpenCatalog={() => onOpenShopTab('ships')}/>
           
           {/* 2. SCHEDA PILOTA & STATUS */}
           <div style={{ background: 'linear-gradient(135deg, rgba(8, 145, 178, 0.25), rgba(15, 23, 42, 0.85))', padding: '0.5rem 0.75rem', borderRadius: '8px', border: '1px solid #00f2fe', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

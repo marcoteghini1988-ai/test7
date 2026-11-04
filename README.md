@@ -30,6 +30,8 @@ Il passo 7D completa le **85 configurazioni visive delle 17 navicelle** con le e
 
 Il passo 8 salva proprietà, livelli e flotta nel browser. Prima del primo attacco, apri **Flotta → Collezione** per equipaggiare le carte possedute. **Prova** offre il catalogo completo con livelli temporanei. [Rapporto del passo 8](docs/PASSO_8_COLLEZIONE.md).
 
+Il passo 9 collega la collezione al **Bazar → Navi** e all’**Assetto → Hangar della flotta**. Nel Bazar puoi vedere proprietà, livelli e anteprime. Nell’Hangar puoi salvare la formazione prima di entrare in battaglia. [Rapporto del passo 9](docs/PASSO_9_SHOP_HANGAR.md).
+
 ## Regole del combattimento attivo
 
 - Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.

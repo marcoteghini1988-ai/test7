@@ -1,0 +1,78 @@
+.ship-collection-panel {
+  display: grid;
+  gap: .55rem;
+  padding: .7rem;
+  color: #dbeafe;
+  background: #0b1629;
+  border: 1px solid #31647e;
+  border-radius: 8px;
+  font-size: .76rem;
+}
+
+.ship-collection-panel h4,
+.ship-collection-panel p,
+.ship-collection-formation {
+  margin: 0;
+}
+
+.ship-collection-panel h4 {
+  color: #9aecff;
+  font-size: .95rem;
+}
+
+.ship-collection-preview,
+.ship-collection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .45rem;
+}
+
+.ship-collection-preview select {
+  max-width: 100%;
+  padding: .28rem;
+  color: #e4f0fc;
+  background: #102841;
+  border: 1px solid #658aa8;
+  border-radius: 4px;
+}
+
+.ship-collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 135px), 1fr));
+  gap: .45rem;
+  min-width: 0;
+}
+
+.ship-hangar {
+  flex: 0 0 auto;
+}
+
+.ship-hangar .ship-collection-grid {
+  max-height: min(45dvh, 360px);
+  overflow: auto;
+}
+
+.ship-collection-panel article.ship-card {
+  cursor: default;
+}
+
+.ship-collection-panel button:disabled {
+  opacity: .55;
+  cursor: default;
+}
+
+.ship-collection-formation {
+  padding-inline-start: 1.4rem;
+}
+
+.ship-collection-panel .ship-card-status {
+  color: #c6e5f7;
+  font-size: .66rem;
+  margin-top: auto;
+}
+
+.ship-collection-actions button {
+  padding: .4rem .65rem;
+  font-size: .68rem;
+}

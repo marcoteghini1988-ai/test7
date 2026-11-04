@@ -9,6 +9,7 @@ import NewArsenalCatalogPreview from './NewArsenalCatalogPreview';
 import {describePhase16EDeck} from './newCombat/phase16EDecks.js';
 import {describePhase16FModule} from './newCombat/phase16FModules.js';
 import {getPhase16HTerrainOffers,describePhase16HTerrain} from './newCombat/phase16HProgression.js';
+import {ShipShopPanel} from './ShipCollectionPanels.jsx';
 
 // ============================================================================
 // MATRICE COSTI POTENZIAMENTO ARMI (3 LIVELLI TOTALI: 1 -> 2 -> 3)
@@ -194,6 +195,7 @@ export default function ShopModal({
   };
 
   const mainTabs = [
+    { id: 'ships', label: 'Navi', icon: '🛸' },
     { id: 'characters', label: 'Piloti', icon: '👤' },
     { id: 'weapons', label: 'Armi', icon: '🚀' },
     { id: 'decks', label: 'Mazzi', icon: '🃏' },
@@ -323,8 +325,8 @@ export default function ShopModal({
           </div>
         </div>
 
-        {/* I 7 TAB PRINCIPALI */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '2px', width: '100%', marginBottom: '4px', flexShrink: 0, zIndex: 11, position: 'relative', boxSizing: 'border-box' }}>
+        {/* TAB PRINCIPALI */}
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mainTabs.length}, minmax(0, 1fr))`, gap: '2px', width: '100%', marginBottom: '4px', flexShrink: 0, zIndex: 11, position: 'relative', boxSizing: 'border-box' }}>
           {mainTabs.map(t => {
             const isTabActive = activeTab === t.id;
             return (
@@ -358,6 +360,7 @@ export default function ShopModal({
 
         {/* CONTENUTO SCHEDE */}
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', paddingRight: '2px', position: 'relative', zIndex: 5 }}>
+          {activeTab === 'ships' && <ShipShopPanel/>}
           
           {/* TAB 1: PILOTI */}
           {activeTab === 'characters' && (
