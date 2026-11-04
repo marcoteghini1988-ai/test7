@@ -176,14 +176,25 @@
 .es-math-scope .shot-s span{background:linear-gradient(transparent,#c067ff,#fff,#c067ff,transparent);height:14px;clip-path:polygon(0 50%,80% 0,100% 50%,80% 100%)}
 .es-math-scope .charge-notice{position:absolute;top:335px;left:110px;right:110px;padding:8px;background:#0c1f40ee;color:#9cdeff;text-align:center;border:1px solid #7ae3ff;border-radius:8px;font-size:11px;letter-spacing:1px;font-weight:bold;animation:pulse 1s infinite}
 .es-math-scope .fleet-setup{padding:15px;gap:8px;max-height:755px}
-.es-math-scope .fleet-setup-list{display:flex;flex-direction:column;gap:3px;max-height:420px;overflow-y:auto}
-.es-math-scope .fleet-setup-list button{display:flex;gap:10px;align-items:center;width:100%;height:67px;flex:none;text-align:left;color:#d2e6fb;border:1px solid #235075;border-radius:8px;background:#07162ecc;padding:4px 8px}
-.es-math-scope .fleet-setup-list button.on{border-color:#5ce6ff;background:#0c3860dd;box-shadow:inset 0 0 10px #50bbff33}
-.es-math-scope .fleet-setup-list img{width:72px;height:59px;object-fit:contain}
-.es-math-scope .fleet-setup-list span{display:flex;flex-direction:column;gap:3px;flex:1}
-.es-math-scope .fleet-setup-list span b{font-size:13px}
-.es-math-scope .fleet-setup-list span small{font-size:10px;color:#8fcbe7}
-.es-math-scope .fleet-setup-list strong{font-size:24px}
+.es-math-scope .fleet-setup-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:7px;max-height:430px;min-height:0;overflow-y:auto;padding:2px 4px 2px 2px}
+.es-math-scope .ship-card{--rarity-ink:#a0c2df;display:flex;flex-direction:column;align-items:stretch;gap:3px;min-width:0;line-height:1.22;text-align:left;color:#e4f0fc;border:1px solid var(--rarity-ink);border-radius:10px;background:radial-gradient(ellipse at 50% 46%,#183651,#08182b 60%,#06111f);padding:6px 7px;cursor:pointer}
+.es-math-scope .ship-card.on{border-color:#79eaff;background:radial-gradient(ellipse at 50% 46%,#224869,#0b253e 62%,#06111f);box-shadow:inset 0 0 9px #71dcff4a}
+.es-math-scope .ship-card:focus-visible{outline:2px solid #a5f4ff;outline-offset:-3px}
+.es-math-scope .ship-card[data-rarity="Rara"]{--rarity-ink:#b897f1}
+.es-math-scope .ship-card[data-rarity="Epica"]{--rarity-ink:#f0b966}
+.es-math-scope .ship-card[data-rarity="Leggendaria"]{--rarity-ink:#ffd761}
+.es-math-scope .ship-card-meta,.es-math-scope .ship-card-stats{display:flex;align-items:center;gap:5px;font-size:10px}
+.es-math-scope .ship-card-meta{color:var(--rarity-ink);font-weight:700}
+.es-math-scope .ship-card-meta b{margin-left:auto;padding:1px 5px;border:1px solid #658aa8;border-radius:4px;color:#e6f2fc}
+.es-math-scope .ship-card-meta span:last-child{width:13px;text-align:center;color:#8ceaff;font-size:13px}
+.es-math-scope .ship-card-name{font-weight:800;font-size:13px;min-height:16px}
+.es-math-scope .ship-card-render{position:relative;display:block;align-self:center;width:min(100%,104px);aspect-ratio:1}
+.es-math-scope .ship-card-render>svg{position:absolute;inset:0;width:100%;height:100%}
+.es-math-scope .ship-card-stats{justify-content:space-between}
+.es-math-scope .ship-card-stats b{color:#a8e9ff}
+.es-math-scope .ship-card-operations{display:flex;gap:3px}
+.es-math-scope .ship-card-operations b{font-size:11px;min-width:16px;text-align:center;border:1px solid #436f92;border-radius:3px;background:#102841}
+.es-math-scope .ship-card-combo{font-size:9px;color:var(--rarity-ink)}
 .es-math-scope .fleet-level-row{font-size:11px;font-weight:700;display:flex;align-items:center;gap:9px}
 .es-math-scope .fleet-level-row input{flex:1;accent-color:#1cc7ff}
 .es-math-scope .fleet-setup-actions{display:flex;justify-content:center;gap:10px}
@@ -414,14 +425,6 @@
  .es-math-scope .integrated-mount.firing .weapon-hardware,.es-math-scope .integrated-mount.charge-received .weapon-hardware,.es-math-scope .vessel-engine.hit{animation:none}
 }
 
-/* Le navi rare ed epiche usano le viste di battaglia anche nel selettore. */
-.es-math-scope .fleet-setup-list .fleet-portrait{width:72px;height:59px;flex:none;overflow:visible}
-.es-math-scope .fleet-setup-list [data-rarity="Rara"]{border-left:3px solid #b897f1}
-.es-math-scope .fleet-setup-list [data-rarity="Rara"] small{color:#c9b6f0}
-.es-math-scope .fleet-setup-list [data-rarity="Epica"]{border-left:3px solid #f0b966}
-.es-math-scope .fleet-setup-list [data-rarity="Epica"] small{color:#f4cc92}
-.es-math-scope .fleet-setup-list [data-rarity="Leggendaria"]{border-left:3px solid #ffd761}
-.es-math-scope .fleet-setup-list [data-rarity="Leggendaria"] small{color:#ffe693}
 .es-math-scope .center-bar:has(.memory-combos){display:grid;grid-template-columns:84px minmax(0,1fr) 100px;justify-items:center;gap:5px}
 .es-math-scope .center-bar:has(.memory-combos) .round-tag{padding:6px 8px;line-height:1.25;white-space:nowrap}
 .es-math-scope .center-bar:has(.memory-combos) .timer-pill strong{font-size:14px;min-width:0}

@@ -20,6 +20,8 @@ Il passo 6B aggiunge quattro navicelle epiche e tredici armi. Le epiche sbloccan
 
 Il passo 6C completa le **17 navicelle e 42 armi** del catalogo nel duello di prova. Le leggendarie hanno quattro motori dal livello 1. La memoria delle combo è visibile in arena. Il rapporto è in [docs/PASSO_6C_FLOTTA_LEGGENDARIA.md](docs/PASSO_6C_FLOTTA_LEGGENDARIA.md).
 
+Il primo blocco del passo 7 integra le **25 evoluzioni visive delle cinque comuni**. In **Flotta** il selettore di livello aggiorna carta, scocca, armi, motori e HP di prova. [Rapporto del passo 7A](docs/PASSO_7A_EVOLUZIONE_COMUNI.md).
+
 ## Regole del combattimento attivo
 
 - Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.
@@ -50,7 +52,7 @@ Il controllo dei simboli legacy inutilizzati è disponibile separatamente con `n
 
 Il passo 1 ha verificato build, struttura, test e avvio reale della battaglia con attacco e risposta IA. Sono stati aperti anche Home, Shop, assetto e briefing di campagna.
 
-La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con flotte affiancate in posti fissi. Ogni colpo parte dalla propria bocca e arriva sul motore selezionato. Impatti e applicazione degli HP seguono la stessa sequenza temporale. Le armi ad accumulo sparano al raggiungimento della soglia e il danno fisico rimane localizzato sulla gondola colpita. Il passo 7 è dedicato alle evoluzioni visive dei livelli e alle carte-navicella.
+La plancia corrente usa l'arena metallica in prospettiva nel formato 9:16, con flotte affiancate in posti fissi. Ogni colpo parte dalla propria bocca e arriva sul motore selezionato. Impatti e applicazione degli HP seguono la stessa sequenza temporale. Le armi ad accumulo sparano al raggiungimento della soglia e il danno fisico rimane localizzato sulla gondola colpita. Le evoluzioni delle rare costituiscono il blocco successivo del passo 7.
 
 Il primo collaudo è stato svolto nell'anteprima dell'ambiente di lavoro. Nella verifica successiva il WebContainer della copia salvata di StackBlitz è ripartito: la copia è stata aggiornata, salvata e ricaricata, e la nuova arena con le immagini delle navi è stata verificata anche lì. L'apertura diretta del repository ha invece ancora restituito un errore di clonazione.
 

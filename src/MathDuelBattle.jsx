@@ -1,12 +1,12 @@
 import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
-import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,getWeaponsForShip,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory} from './mathDuelEngine.js';
+import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,newVessel,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMount,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
+import {ASSET_ROOT,SHIP_GLOW,ShipArtwork,ShipCard} from './ShipPresentation.jsx';
+import {shipEvolution} from './shipEvolution.js';
 import './MathDuelBattle.css';
-const ASSET_ROOT=(import.meta.env.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
-const URL=`${ASSET_ROOT}/mathduel/`;const SHIPS=`${ASSET_ROOT}/mathfleet/`;
-const ARENA_BACKGROUND=`${URL}arena_titanio_9x16.webp`;
+const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
 function ArenaBackdrop(){
  return <div className="space-back metal-arena" aria-hidden="true" style={{backgroundImage:`url('${ARENA_BACKGROUND}')`}}/>;
 }
@@ -33,16 +33,9 @@ function volleySound(salvos){try{
 // Position of the FOUR visible engine modules on the actual starship illustration.
 // Coordinates follow each sprite's camera view without flipping its orientation.
 const GLYPH={H:'♥',D:'♦',C:'♣',S:'♠','*':'◎'};
-const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',C04:'#d261ff',R01:'#ffb269',R02:'#63ffce',R03:'#d4c3ff',R04:'#9dffd4',E01:'#b097ff',E02:'#8cff83',E03:'#ffb75b',E04:'#68ffb5',L01:'#ffca63',L02:'#c394ff',L03:'#ff914e',L04:'#9df4ff'};
-const WEBP_HULLS=new Set(PHASE1_SHIPS.filter(s=>s.rarita!=='Comune').map(s=>s.id));
 function comboLabel(weapon){
  const [codes,limit]=weapon.combo.split('@'),symbols=codes.split('+').map(s=>GLYPH[s]).join(' + ');
  return limit?`Memoria ${symbols} · entro ${limit} calcoli`:`Combo ${symbols}`;
-}
-function ShipArtwork({side,shipId,onLoad,...props}){
- const facing=side==='player'?'player_to_enemy':'enemy_to_player';
- const format=WEBP_HULLS.has(shipId)?'webp':'png';
- return <image {...props} href={`${SHIPS}views/${facing}/${shipId}_complete.${format}`} width="1000" height="1000" onLoad={onLoad}/>;
 }
 function EngineArea({surface,fill}){
  const [x,y]=surface.point.map(n=>n*1000),[rx,ry]=surface.radius.map(n=>n*1000);
@@ -60,8 +53,8 @@ function ShipSkin({side,vessel,imageRef}){
     <filter id={`${id}-${e.op}-burn`} colorInterpolationFilters="sRGB"><feColorMatrix type="saturate" values={e.state==='destroyed'?'.05':'.45'}/><feComponentTransfer>{['R','G','B'].map(channel=>React.createElement(`feFunc${channel}`,{key:channel,type:'linear',slope:e.state==='destroyed'?.22:e.state==='critical'?.42:.68}))}</feComponentTransfer></filter>
    </React.Fragment>)}
   </defs>
-  <ShipArtwork side={side} shipId={vessel.id} onLoad={()=>setLoaded(true)} mask={damaged.length?`url(#${id}-healthy)`:undefined}/>
-  {damaged.map(e=><ShipArtwork key={e.op} side={side} shipId={vessel.id} clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`}/>) }
+  <ShipArtwork side={side} vessel={vessel} onLoad={()=>setLoaded(true)} mask={damaged.length?`url(#${id}-healthy)`:undefined}/>
+  {damaged.map(e=><ShipArtwork key={e.op} side={side} vessel={vessel} clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`}/>) }
  </svg>;
 }
 function WeaponMount({side,vessel,weapon,registerGunRef,index,effect,muzzleIndex=0}){
@@ -72,8 +65,9 @@ function WeaponMount({side,vessel,weapon,registerGunRef,index,effect,muzzleIndex
  const rounds=salvo?.rounds.filter(r=>r.muzzleIndex===muzzleIndex)||[];
  const accumulating=weapon.tipo==='Accumulo',charge=accumulating?Math.min(1,(event?.charge??weapon.charge??0)/weapon.soglia_munizioni):0;
  const color=bulletColors[weapon.seme_trigger]||'#e8ffff';
- return <div className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}${rounds.length?' firing':''}${event?.charging?' charge-received':''}`} data-weapon={weapon.id} data-muzzle-index={muzzleIndex} data-charge={Math.round(charge*100)}
-  style={{left:`${mount.point[0]*100}%`,top:`${mount.point[1]*100}%`,width:`${mount.width*100}%`,height:`${mount.length*100}%`,'--gun':color,
+ const armor=shipEvolution(vessel.id,vessel.level)&&vessel.level>=3?vessel.level===5?2:1:0;
+ return <span className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}${rounds.length?' firing':''}${event?.charging?' charge-received':''}`} data-weapon={weapon.id} data-muzzle-index={muzzleIndex} data-charge={Math.round(charge*100)} data-armor={armor||undefined}
+  style={{left:`${mount.point[0]*100}%`,top:`${mount.point[1]*100}%`,width:`${mount.width*(1+armor*.12)*100}%`,height:`${mount.length*(1+armor*.08)*100}%`,'--gun':color,
    ...(rounds.length?{'--recoil-delay':`${rounds[0].launchMs}ms`,'--recoil-duration':`${Math.max(24,(rounds.at(-1).launchMs-rounds[0].launchMs)/Math.max(1,rounds.length-1))}ms`,'--recoil-count':rounds.length}:{})}}
   title={`${weapon.nome}: ${GLYPH[weapon.seme_trigger]||'◎'} · ${weapon.tipo} · ${weapon.damage} danni/proiettile${accumulating?` · Carica ${event?.charge??weapon.charge??0}/${weapon.soglia_munizioni}`:''}${weapon.combo?` · ${comboLabel(weapon)}`:''}`}>
   <svg className="weapon-hardware" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -97,9 +91,18 @@ function WeaponMount({side,vessel,weapon,registerGunRef,index,effect,muzzleIndex
    {mount.profile==='compressor'&&<><ellipse cx="50" cy="49" rx="34" ry="37" fill="#173a2c" stroke="#b6d3bb" strokeWidth="6"/><ellipse cx="50" cy="43" rx="24" ry="26" fill="#07231d" stroke={color} strokeWidth="5"/><ellipse cx="50" cy="43" rx="14" ry="16" fill={color} opacity={.15+charge*.85}/><path d="M15 42H85M50 9V77" stroke="#bbffd5" strokeWidth="3" opacity=".5"/><path d={`M21 88H${21+58*charge}`} stroke={color} strokeWidth="7"/></>}
    {mount.profile==='eclipse-core'&&<><path d="M20 83 29 18 50 2 71 18 80 83 50 94Z" fill="#241733" stroke="#e8b56b" strokeWidth="6"/><ellipse cx="50" cy="26" rx="20" ry="17" fill="#0b0715" stroke={color} strokeWidth="5"/><path d="M29 61H71M26 77H74" stroke="#a995be" strokeWidth="4"/></>}
    {mount.profile==='void-core'&&<><path d="M29 10H71L83 74 67 92H33L17 74Z" fill="#1d2f48" stroke="#eee3d5" strokeWidth="5"/><ellipse cx="50" cy="30" rx="22" ry="21" fill="#0d0b22" stroke={color} strokeWidth="5"/><path d="M50 4V15M50 45V62M21 30H32M68 30H79" stroke="#e4daff" strokeWidth="5"/></>}
+   {armor>0&&<><path d="M16 23 34 17 35 31 29 71 14 79 9 59ZM84 23 66 17 65 31 71 71 86 79 91 59Z" fill={`url(#${metalId})`} stroke="#202d3f" strokeWidth="5"/>
+    <path d="M20 32 16 54M80 32 84 54" stroke={color} strokeWidth="5"/></>}
+   {armor===2&&<><path d="M26 77 42 67H58L74 77 69 95H31Z" fill="#8294a7" stroke="#1d2b3a" strokeWidth="5"/>
+    <path d="M36 83H64M42 90H58" stroke={color} strokeWidth="5"/></>}
   </svg>
   <span ref={node=>registerGunRef?.(side,index,`${weapon.id}${muzzleIndex?`/${muzzleIndex}`:''}`,node)} className="weapon-tip muzzle-anchor"/>
- </div>;
+ </span>;
+}
+function MountedWeapons({side,vessel,index,effect,registerGunRef}){
+ return <span className="ship-hardpoints">{vessel.weapons.flatMap(weapon=>
+  Array.from({length:weaponMuzzleCount(weapon.id)},(_,muzzleIndex)=><WeaponMount key={`${weapon.id}/${muzzleIndex}`}
+   side={side} vessel={vessel} weapon={weapon} index={index} effect={effect} muzzleIndex={muzzleIndex} registerGunRef={registerGunRef}/>))}</span>;
 }
 function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation,impactDelay}){
  const engine=vessel.engines[op];if(!engine)return null;
@@ -133,11 +136,11 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
   <div className="fleet-ships">
    {ship.fleet.map((v,i)=>{
     const focusedShip=i===focused,dead=vesselDestroyed(v);
-    return <div key={i} data-ship={v.id} data-vessel-index={i} className={`fleet-ship-wrap complete-ship${focusedShip?' focused':''}${dead?' dead-ship':''}`}
+    return <div key={i} data-ship={v.id} data-level={v.level} data-vessel-index={i} className={`fleet-ship-wrap complete-ship${focusedShip?' focused':''}${dead?' dead-ship':''}`}
      style={{left:`${formation.centers[i]/450*100}%`,top:formation.top,width:formation.size,height:formation.size,
       '--engine-size':`${formation.engineSize}px`,'--engine-hud-width':`${formation.hudWidth}px`,zIndex:focusedShip?3:1}}>
      <ShipSkin key={v.id} side={side} vessel={v} imageRef={node=>registerShipRef?.(side,i,node)}/>
-     <div className="ship-hardpoints">{v.weapons.flatMap(w=>Array.from({length:weaponMuzzleCount(w.id)},(_,muzzleIndex)=><WeaponMount key={`${w.id}/${muzzleIndex}`} side={side} vessel={v} weapon={w} index={i} effect={effect} muzzleIndex={muzzleIndex} registerGunRef={registerGunRef}/>) )}</div>
+     <MountedWeapons side={side} vessel={v} index={i} effect={effect} registerGunRef={registerGunRef}/>
      {ENGINE_KEYS.map(op=><Engine key={op} side={side} op={op} vessel={v} formation={formation}
       target={targets?.[op]} selected={enemy&&focusedShip&&selectedTarget===op} onSelect={()=>onTarget?.(i,op)} enabled={targetable}
       available={!enemy||availableOps.includes(op)} hit={!!effect&&effect.side!==side&&effect.targetShip===i&&effect.op===op}
@@ -326,10 +329,12 @@ function FleetSetup({onClose,onStart,selected,setSelected,enemySelected,setEnemy
  return <div className="modal-shade"><div className="help-card fleet-setup"><h2>FLOTTA DI PROVA</h2><p><b>Aurora-0</b> è l'universale iniziale. Puoi schierare tutte le 17 navi del catalogo. Questa scelta è temporanea.</p>
   <div className="fleet-side-toggle"><button type="button" aria-pressed={side==='player'} onClick={()=>setSide('player')}>LA TUA FLOTTA</button><button type="button" aria-pressed={side==='enemy'} onClick={()=>setSide('enemy')}>AVVERSARIO DI PROVA</button></div>
   {side==='enemy'&&<label className="fleet-match"><input type="checkbox" checked={enemySelected===null} onChange={e=>setEnemySelected(e.target.checked?null:[...selected])}/> Stessa flotta del giocatore</label>}
-  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><button key={s.id} aria-pressed={ids.includes(s.id)} data-rarity={s.rarita} className={ids.includes(s.id)?'on':''} onClick={()=>toggle(s.id)}>
-   {WEBP_HULLS.has(s.id)?<svg className="fleet-portrait" viewBox="0 0 1000 1000" aria-hidden="true"><ShipArtwork side="player" shipId={s.id}/></svg>:<img src={`${SHIPS}${s.id}.png`} alt=""/>}
-   <span><b>{s.nome}</b><small>{s.rarita} · {s.n_armi} {s.n_armi===1?'arma':'armi'} · {s.motori_iniziali}–{s.motori_massimi} motori</small>{getWeaponsForShip(s.id).filter(w=>w.combo).map(w=><small key={w.id}>{comboLabel(w)}</small>)}</span><strong>{ids.includes(s.id)?'✓':'+'}</strong></button>)}</div>
   <label className="fleet-level-row">Livello di prova (non acquistato) <b>{level}</b><input type="range" min="1" max="5" value={level} onChange={e=>setLevel(Number(e.target.value))}/></label>
+  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=>{
+   const vessel=newVessel(s.id,level);
+   return <ShipCard key={s.id} vessel={vessel} selected={ids.includes(s.id)} onSelect={()=>toggle(s.id)}
+    comboLabels={vessel.weapons.filter(w=>w.combo).map(comboLabel)}><MountedWeapons side="player" vessel={vessel}/></ShipCard>;
+  })}</div>
   <p>Massimo 3 navi. L'universale è unica; ogni seme può attivare al massimo due navi specializzate. Le operazioni si sbloccano secondo il livello del modello.</p>
   {!matchup.compatible&&<p className="fleet-match-warning" role="status">Flotte non compatibili a L{level}: {matchup.playerMissing.length?`alla tua flotta manca ${matchup.playerMissing.map(op=>META[op].sign).join(', ')}. `:''}{matchup.enemyMissing.length?`All'avversaria manca ${matchup.enemyMissing.map(op=>META[op].sign).join(', ')}.`:''} Scegli una nave con le operazioni mancanti oppure cambia il livello.</p>}
   <div className="fleet-setup-actions"><button className="es-button" onClick={onClose}>ANNULLA</button><button className="es-button primary" disabled={!matchup.compatible} onClick={onStart}>INIZIA DUELLO</button></div></div></div>;
