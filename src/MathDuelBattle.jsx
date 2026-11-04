@@ -6,7 +6,14 @@ import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from '.
 import {ASSET_ROOT,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import './MathDuelBattle.css';
+import './MathDuelIntro.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
+const INTRO_STAGES=[
+ {id:'deal',label:'Distribuzione delle carte',duration:1150},
+ {id:'deploy',label:'Schieramento delle flotte',duration:1000},
+ {id:'materialize',label:'Materializzazione delle navi',duration:850},
+ {id:'arm',label:'Armi e motori in linea',duration:850},
+];
 function ArenaBackdrop(){
  return <div className="space-back metal-arena" aria-hidden="true" style={{backgroundImage:`url('${ARENA_BACKGROUND}')`}}/>;
 }
@@ -73,7 +80,7 @@ function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,e
   {dead&&<span className="vessel-smoke"/>}
  </button>;
 }
-function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,phase,effect,availableOps,registerShipRef,registerEngineRef,registerGunRef}){
+function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,phase,intro,effect,availableOps,registerShipRef,registerEngineRef,registerGunRef}){
  const enemy=side==='enemy',targetable=enemy&&phase==='ready';
  const formation=fleetFormation(ship.fleet.length,side);
  const hit=effect&&effect.side!==side&&effect.targetShip===focused;
@@ -90,6 +97,8 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
       target={targets?.[op]} selected={enemy&&focusedShip&&selectedTarget===op} onSelect={()=>onTarget?.(i,op)} enabled={targetable}
       available={!enemy||availableOps.includes(op)} hit={!!effect&&effect.side!==side&&effect.targetShip===i&&effect.op===op}
       engineRef={node=>registerEngineRef?.(side,i,op,node)} impactDelay={effect?.arrivalMs}/>) }
+     {(intro==='deploy'||intro==='materialize')&&<div className="intro-vessel-card" aria-hidden="true"
+      style={{'--deploy-delay':`${i*90+(enemy?90:0)}ms`}}><ShipCard vessel={v}/></div>}
     </div>;
    })}
    <div className={'engine-thruster '+(enemy?'red':'blue')}/>
@@ -97,7 +106,7 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
   <div className={`fleet-picker-inline${ship.fleet.length===1?' single-ship':''}`}>{ship.fleet.map((v,i)=><button key={i} type="button"
    className={focused===i?'focus':''} onClick={()=>onSelectShip?.(i)} aria-pressed={focused===i}
    style={{left:`${formation.centers[i]/450*100}%`,width:Math.min(160,formation.size-8)}}
-   disabled={enemy&&phase!=='ready'} title={`${v.name} · ${v.level}`}>
+   disabled={!!intro||(enemy&&phase!=='ready')} title={`${v.name} · ${v.level}`}>
    <span className={`fleet-dot${vesselDestroyed(v)?' lost':''}`}/>{v.name} · L{v.level}</button>)}</div>
   {ship.fleet.every(vesselDestroyed)&&<span className="fleet-eliminated">FLOTTA DISTRUTTA</span>}
  </div>;
@@ -239,7 +248,7 @@ function Projectile({effect,rootRef,engineRefs,gunRefs}){
  {shots.length===0&&<div className="charge-notice">{effect.volleys.some(s=>s.charging)?'MUNIZIONI IN CARICA':effect.memoryPending?'MEMORIA AGGIORNATA':'NESSUNA ARMA ATTIVATA'}</div>}
  </div>;
 }
-function Hand({cards,selected,onSelect,disabled}){return <div className="hand" aria-label="Le tue sette carte">{cards.map((c,i)=><button key={c.id} title={`${label(c.value)} ${c.suit}`} disabled={disabled} className={'number-card'+(selected.includes(i)?' active':'')} style={{'--suit':suits[c.suit]}} onClick={()=>onSelect(i)}><span className="card-suit">{c.suit}</span><strong>{label(c.value)}</strong><span className="card-suit second">{c.suit}</span></button>)}</div>}
+function Hand({cards,selected,onSelect,disabled}){return <div className="hand" aria-label="Le tue sette carte">{cards.map((c,i)=><button key={c.id} title={`${label(c.value)} ${c.suit}`} disabled={disabled} className={'number-card'+(selected.includes(i)?' active':'')} style={{'--suit':suits[c.suit],'--deal-index':i}} onClick={()=>onSelect(i)}><span className="card-suit">{c.suit}</span><strong>{label(c.value)}</strong><span className="card-suit second">{c.suit}</span></button>)}</div>}
 function MemoryCombos({ship}){
  const weapons=ship.fleet.filter(v=>!vesselDestroyed(v)).flatMap(v=>v.weapons.filter(w=>w.tipo==='Combo a memoria'));
  if(!weapons.length)return null;
@@ -314,9 +323,12 @@ function readCollection(){
 export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,onEtherConsumed,onResult,onExit}){
  const [scale,setScale]=useState(1);const [fleetIds,setFleetIds]=useState(['N00']);const [enemyFleetIds,setEnemyFleetIds]=useState(null);const [testLevel,setTestLevel]=useState(1);
  const [collection,setCollection]=useState(readCollection);
+ const [introIndex,setIntroIndex]=useState(0);
+ const [reducedIntro,setReducedIntro]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  function startBattle(options,practice=false){
   const b=initialBattle(Math.max(1,sectorNumber),options,Math.random,gameMode);
   b.practice=practice;
+  b.phase='intro';
   if(!practice)b.player.ether=Math.max(0,Number(ether)||0);
   return b;
  }
@@ -335,6 +347,19 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  useEffect(()=>()=>queue.current.forEach(clearTimeout),[]);
  useEffect(()=>{const resize=()=>setScale(Math.max(.3,Math.min(window.innerWidth/450,window.innerHeight/800)));resize();window.addEventListener('resize',resize);return()=>window.removeEventListener('resize',resize);},[]);
  function write(b){gameRef.current=b;setGame(b)}
+ const intro=game.phase==='intro'?INTRO_STAGES[introIndex]:null;
+ function finishIntro(){
+  const b=gameRef.current;
+  if(b.phase==='intro')write({...b,phase:'ready'});
+ }
+ useEffect(()=>{
+  if(!intro)return;
+  const timer=setTimeout(()=>{
+   if(introIndex===INTRO_STAGES.length-1)finishIntro();
+   else setIntroIndex(introIndex+1);
+  },reducedIntro?180:intro.duration);
+  return()=>clearTimeout(timer);
+ },[intro,introIndex,reducedIntro]);
  function notice(text){setMessage(text);later(()=>setMessage(''),2200)}
  function finish(b,winner,reason){return {...b,actor:'none',phase:'finished',winner,reason,effect:null};}
  function transition(state,side){let b=clone(state);if(isDestroyed(b.player))return finish(b,'enemy','Tutte le tue navicelle sono distrutte');if(isDestroyed(b.enemy))return finish(b,'player','Flotta avversaria distrutta');if(deckExhausted(b.player,b.enemy))return finish(b,deckVerdict(b.player,b.enemy),'Mazzo esaurito: confronto integrità delle flotte');
@@ -350,7 +375,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   }else if(b.actor==='player')b.notice='Nessun motore nemico attaccabile: passa il turno';
   return b;
  }
- function fire(side,move){const b=gameRef.current;if(b.phase==='finished'||b.phase==='animating'||b.actor!==side)return;
+ function fire(side,move){const b=gameRef.current;if(b.phase!==(side==='player'?'ready':'thinking')||b.actor!==side)return;
   const attackShip=b[side],receiver=side==='player'?'enemy':'player',defShip=b[receiver],goal=b.targets[move.op],cards=[attackShip.hand[move.i],attackShip.hand[move.j]];
   if(cards.some(x=>!x)){if(side==='player')notice('Seleziona due carte valide');return;}
   if(!supportedOperators(attackShip).includes(move.op)){if(side==='player')notice('Operazione non sbloccata: serve una nave con quel motore operativo');return;}
@@ -406,6 +431,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  function restartWithFleet(){
   if(fleetCompatibility(fleetIds,enemyFleetIds??fleetIds,testLevel).compatible){
    if(!gameRef.current.practice)realBattleRef.current=gameRef.current;
+   setIntroIndex(0);
    write(startBattle({fleetIds,enemyFleetIds,shipLevel:testLevel},true));setFleetMenu(false);
   }
  }
@@ -425,18 +451,25 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  function exitBattle(){const b=gameRef.current;if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){resultClaimed.current=true;const h=healthScore(b.player);onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,starsEarned:[true,h>=.65,h>=.9],matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),turnsElapsed:b.round}});}onExit?.();}
  const availableOps=supportedOperators(game.player);
  return <div className="es-math-scope game-viewport" role="region" aria-label="Duello matematico spaziale">
-  <div ref={rootRef} className="es-root" style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
+  <div ref={rootRef} className="es-root" data-intro={intro?.id} data-intro-motion={intro&&reducedIntro?'reduced':undefined}
+   style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
    <ArenaBackdrop/>
    <div className="top-brand">ECLISSI <b>STELLARE</b></div>
-   <div className="toolbar"><button onClick={()=>setHelp(true)} aria-label="Regole">?</button><button onClick={openFleet} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
+   <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
    <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}</b><small>INTEGRITÀ FLOTTA {Math.round(healthScore(game.enemy)*100)}%</small></div><Pips ship={game.enemy}/></div>
-   <Ship side="enemy" ship={game.enemy} targets={game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
-   <div className="center-bar"><span className="round-tag">TURNO {game.round}</span><MemoryCombos ship={game.player}/><div className={'timer-pill'+(game.seconds<=10?' urgent':'')}><strong>{game.actor==='player'?`${game.seconds}s`:game.actor==='enemy'?'AVVERSARIO':'COLPO'}</strong></div></div>
-   <Ship side="player" ship={game.player} targets={game.actor==='enemy'?game.targets:null} focused={game.shownPlayer} onSelectShip={i=>write({...gameRef.current,shownPlayer:i})} phase="idle" effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
+   <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
+   {intro?<div className="battle-intro">
+    <div className="battle-intro-status" role="status">{intro.label}</div>
+    <div className="battle-intro-actions">
+     {!reducedIntro&&<button type="button" className="es-button" onClick={()=>setReducedIntro(true)}>Riduci movimento</button>}
+     <button type="button" className="es-button primary" onClick={finishIntro}>Salta intro</button>
+    </div>
+   </div>:<div className="center-bar"><span className="round-tag">TURNO {game.round}</span><MemoryCombos ship={game.player}/><div className={'timer-pill'+(game.seconds<=10?' urgent':'')}><strong>{game.actor==='player'?`${game.seconds}s`:game.actor==='enemy'?'AVVERSARIO':'COLPO'}</strong></div></div>}
+   <Ship side="player" ship={game.player} targets={game.actor==='enemy'?game.targets:null} focused={game.shownPlayer} onSelectShip={i=>write({...gameRef.current,shownPlayer:i})} phase="idle" intro={intro?.id} effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    <div className="deck left"><div className="deck-graphic">✦</div><small>MAZZO</small><strong>{game.player.deck.length}</strong></div><div className="deck right"><div className="deck-graphic trash">▤</div><small>SCARTI</small><strong>{game.player.discard.length}</strong></div>
    <Hand cards={game.player.hand} selected={game.selected} onSelect={pick} disabled={game.phase!=='ready'||game.actor!=='player'}/>
-   <div className="play-controls"><Formula game={game}/><button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
-   <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={pass} disabled={game.phase!=='ready'}>PASSA »</button><button onClick={openFleet}>FLOTTA ⚙</button></div>
+   <div className="play-controls">{!intro&&<Formula game={game}/>}<button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
+   <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={pass} disabled={game.phase!=='ready'}>PASSA »</button><button onClick={openFleet} disabled={!!intro}>FLOTTA ⚙</button></div>
    <div className="player-status"><b>TU</b><span className="my-hp">FLOTTA {Math.round(healthScore(game.player)*100)}%</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
    {game.effect&&<Projectile effect={game.effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs}/>}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}

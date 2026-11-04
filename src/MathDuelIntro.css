@@ -1,0 +1,148 @@
+.es-math-scope .battle-intro {
+  position: absolute;
+  top: 288px;
+  left: 57px;
+  right: 57px;
+  z-index: 9;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid #3eb6dc;
+  border-radius: 10px;
+  color: #e0f6ff;
+  background: #06182cf5;
+  box-shadow: 0 0 14px #27b6f353;
+}
+
+.es-math-scope .battle-intro-status {
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.es-math-scope .battle-intro-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.es-math-scope .battle-intro-actions .es-button {
+  min-height: 36px;
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+.es-math-scope .es-root[data-intro] :is(.play-controls, .utility-bar, .fleet-picker-inline, .engine-thruster) {
+  visibility: hidden;
+}
+
+.es-math-scope .es-root[data-intro] .fleet-ships {
+  animation: none;
+}
+
+.es-math-scope .es-root[data-intro] .number-card:disabled {
+  opacity: 1;
+}
+
+.es-math-scope .es-root[data-intro="deal"] .number-card {
+  animation: introDeal 360ms cubic-bezier(.16,.8,.24,1) calc(80ms + 105ms * var(--deal-index)) both;
+}
+
+.es-math-scope .es-root:is([data-intro="deal"], [data-intro="deploy"]) .fleet-ship-img,
+.es-math-scope .es-root:is([data-intro="deal"], [data-intro="deploy"], [data-intro="materialize"])
+  .fleet-ship-wrap > :is(.ship-hardpoints, .vessel-engine) {
+  visibility: hidden;
+}
+
+.es-math-scope .intro-vessel-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(105px, 95%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.es-math-scope .intro-vessel-card .ship-card {
+  padding: 5px;
+  border-color: #6dddff;
+  box-shadow: 0 0 12px #55bff780;
+  text-align: center;
+  cursor: default;
+}
+
+.es-math-scope .ship-enemy .intro-vessel-card .ship-card {
+  border-color: #ff8094;
+  box-shadow: 0 0 12px #f47a8370;
+}
+
+.es-math-scope .intro-vessel-card .ship-card-name {
+  min-height: 0;
+  font-size: 10px;
+}
+
+.es-math-scope .intro-vessel-card .ship-card-render {
+  width: 67px;
+}
+
+.es-math-scope .intro-vessel-card :is(.ship-card-stats, .ship-card-operations, .ship-card-combo) {
+  display: none;
+}
+
+.es-math-scope .es-root[data-intro="deploy"] .intro-vessel-card {
+  --deploy-y: 42px;
+  animation: introDeploy 520ms ease-out var(--deploy-delay) both;
+}
+
+.es-math-scope .es-root[data-intro="deploy"] .ship-enemy .intro-vessel-card {
+  --deploy-y: -42px;
+}
+
+.es-math-scope .es-root[data-intro="materialize"] .intro-vessel-card {
+  animation: introCardFade 540ms ease-in both;
+}
+
+.es-math-scope .es-root[data-intro="materialize"] .fleet-ship-img {
+  animation: introHull 750ms ease-out both;
+}
+
+.es-math-scope .es-root[data-intro="arm"] .fleet-ship-wrap > :is(.ship-hardpoints, .vessel-engine) {
+  animation: introArm 560ms ease-out both;
+}
+
+/* Keep every stage readable while suppressing animated travel and scale. */
+.es-math-scope .es-root[data-intro-motion="reduced"] :is(.number-card, .intro-vessel-card, .fleet-ship-img),
+.es-math-scope .es-root[data-intro-motion="reduced"] .fleet-ship-wrap > :is(.ship-hardpoints, .vessel-engine) {
+  animation: none;
+}
+
+.es-math-scope .es-root[data-intro-motion="reduced"][data-intro="materialize"] .intro-vessel-card {
+  visibility: hidden;
+}
+
+@keyframes introDeal {
+  from { opacity: 0; translate: calc(-58px - 48px * var(--deal-index)) -35px; scale: .72; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
+}
+
+@keyframes introDeploy {
+  from { opacity: 0; translate: 0 var(--deploy-y); }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes introCardFade {
+  from { opacity: 1; scale: 1; }
+  to { opacity: 0; scale: .82; }
+}
+
+@keyframes introHull {
+  from { opacity: 0; scale: .83; }
+  to { opacity: 1; scale: 1; }
+}
+
+@keyframes introArm {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

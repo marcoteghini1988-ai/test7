@@ -32,6 +32,8 @@ Il passo 8 salva proprietà, livelli e flotta nel browser. Prima del primo attac
 
 Il passo 9 collega la collezione al **Bazar → Navi** e all’**Assetto → Hangar della flotta**. Nel Bazar puoi vedere proprietà, livelli e anteprime. Nell’Hangar puoi salvare la formazione prima di entrare in battaglia. [Rapporto del passo 9](docs/PASSO_9_SHOP_HANGAR.md).
 
+Il passo 10 introduce la sequenza di apertura del duello. Dopo la distribuzione delle sette carte, le flotte si schierano, le navi si materializzano e armi e motori entrano in linea. **Salta intro** e **Riduci movimento** sono disponibili durante la sequenza. [Rapporto del passo 10](docs/PASSO_10_INTRO_DUELLO.md).
+
 ## Regole del combattimento attivo
 
 - Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.

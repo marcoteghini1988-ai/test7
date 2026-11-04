@@ -100,8 +100,8 @@ export function MountedWeapons({side,vessel,index,effect,registerGunRef}){
    side={side} vessel={vessel} weapon={weapon} index={index} effect={effect} muzzleIndex={muzzleIndex} registerGunRef={registerGunRef}/>))}</span>;
 }
 
-export function ShipCard({shipId,level,selected,onSelect,status,disabled}){
- const vessel=newVessel(shipId,level),Tag=onSelect?'button':'article';
+export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,onSelect,status,disabled}){
+ const Tag=onSelect?'button':'article';
  const interactive=onSelect?{type:'button','aria-pressed':selected,onClick:onSelect,disabled}:{};
  const engines=Object.keys(vessel.engines);
  const totalHp=Object.values(vessel.engines).reduce((hp,engine)=>hp+engine.max,0);
