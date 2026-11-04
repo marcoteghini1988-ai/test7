@@ -8,13 +8,14 @@ export const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',
 const WEBP_HULLS=new Set(PHASE1_SHIPS.filter(s=>s.rarita!=='Comune').map(s=>s.id));
 
 function HullPlating({side,vessel,upgrade}){
- const id=useId(),{level}=vessel,{color,plate,wing,fin}=upgrade;
+ const id=useId(),{level}=vessel,{color,plate,wing,fin,finish=['#e4edf2','#9babbd','#4d6078','#263446','#8299ad']}=upgrade;
+ const [highlight,bevel,panel,shadow,edge]=finish;
  const [left,right,y]=upgrade[side].plate,[wingLeft,wingRight,wingY]=upgrade[side].wing;
  const facing=side==='player'?1:-1;
  const metal=`url(#${id})`;
  return <g data-plating-level={level} strokeLinejoin="round">
   <defs><linearGradient id={id} x1="0" x2=".8" y1="0" y2="1">
-   <stop stopColor="#e4edf2"/><stop offset=".27" stopColor="#9babbd"/><stop offset=".47" stopColor="#4d6078"/><stop offset=".73" stopColor="#263446"/><stop offset="1" stopColor="#8299ad"/>
+   <stop stopColor={highlight}/><stop offset=".27" stopColor={bevel}/><stop offset=".47" stopColor={panel}/><stop offset=".73" stopColor={shadow}/><stop offset="1" stopColor={edge}/>
   </linearGradient></defs>
   {[left,right].map((x,i)=><g key={i} transform={`translate(${x} ${y}) scale(${i===0?1:-1} ${facing})`}>
    <path d={plate} fill={metal} stroke="#152335" strokeWidth="7"/>

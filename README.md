@@ -26,6 +26,8 @@ Il passo 7B aggiunge le **20 evoluzioni visive delle quattro rare**. Falco Binar
 
 Il passo 7C aggiunge le **20 evoluzioni visive delle quattro epiche**. In **Flotta**, Nebulosa, Tempesta, Fenice e Orizzonte mostrano la Divisione dal livello 4. [Rapporto del passo 7C](docs/PASSO_7C_EVOLUZIONE_EPICHE.md).
 
+Il passo 7D completa le **85 configurazioni visive delle 17 navicelle** con le evoluzioni delle quattro leggendarie. Tutte e quattro mostrano i quattro motori dal livello 1. [Rapporto del passo 7D](docs/PASSO_7D_EVOLUZIONE_LEGGENDARIE.md).
+
 ## Regole del combattimento attivo
 
 - Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.
