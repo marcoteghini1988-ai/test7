@@ -5,9 +5,9 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {createShip,previewVolley} from './mathDuelEngine.js';
 const cards=(value,suit,other=1)=>[{id:'a',value,suit},{id:'b',value:other,suit:'♣'}];
 
-test('sette armi, sette firme: anche le armi dello stesso seme sono distinte',()=>{
+test('sedici armi comuni e rare: anche le armi dello stesso seme sono distinte',()=>{
  assert.deepEqual(Object.keys(WEAPON_EFFECTS),PHASE1_CATALOG.weapons.map(w=>w.id));
- assert.equal(new Set(Object.values(WEAPON_EFFECTS).map(f=>f.profile)).size,7);
+ assert.equal(new Set(Object.values(WEAPON_EFFECTS).map(f=>f.profile)).size,PHASE1_CATALOG.weapons.length);
  for(const [a,b] of [['W02','W07'],['W05','W06']]){
   assert.notEqual(weaponEffect(a).profile,weaponEffect(b).profile);
   assert.notEqual(weaponEffect(a).durationMs,weaponEffect(b).durationMs);

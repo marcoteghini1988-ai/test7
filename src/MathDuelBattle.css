@@ -413,6 +413,30 @@
  .es-math-scope .weapon-impact{animation-name:weaponSoftImpact}
  .es-math-scope .integrated-mount.firing .weapon-hardware,.es-math-scope .integrated-mount.charge-received .weapon-hardware,.es-math-scope .vessel-engine.hit{animation:none}
 }
+
+/* Passo 6A: rare hull portraits use their own paired camera renders. */
+.es-math-scope .fleet-setup-list .fleet-portrait{width:72px;height:59px;flex:none;overflow:visible}
+.es-math-scope .fleet-setup-list [data-rarity="Rara"]{border-left:3px solid #b897f1}
+.es-math-scope .fleet-setup-list [data-rarity="Rara"] small{color:#c9b6f0}
+.es-math-scope .fleet-match-warning{color:#ffd499!important;border:1px solid #a67745;border-radius:7px;padding:7px;background:#35251999}
+.es-math-scope .complete-ship .vessel-engine.hud-above .vessel-engine-hud{top:auto;bottom:calc(100% + 2px)}
+.es-math-scope .complete-ship .vessel-engine.hud-below .vessel-engine-hud{top:calc(100% + 2px);bottom:auto}
+.es-math-scope .round-twin .round-glyph{filter:drop-shadow(0 0 2px #ff365d) drop-shadow(0 0 4px #ff365d)}
+.es-math-scope .crystal-spin{transform-box:fill-box;transform-origin:center;animation:crystalRoll 420ms linear infinite}
+.es-math-scope .orbit-spin{transform-box:fill-box;transform-origin:center;animation:orbitRoll 620ms linear infinite}
+.es-math-scope .impact-twin{width:61px;height:64px}
+.es-math-scope .impact-diamond{width:79px;height:79px}
+.es-math-scope .impact-ion{width:74px;height:74px}
+.es-math-scope .impact-cross-ion{width:80px;height:76px}
+.es-math-scope .impact-photon{width:64px;height:64px}
+.es-math-scope .impact-facet{width:69px;height:69px}
+.es-math-scope .impact-shadow{width:82px;height:82px}
+.es-math-scope .impact-lance{width:71px;height:71px}
+.es-math-scope .impact-orbit{width:84px;height:84px}
+.es-math-scope .muzzle-ion i,.es-math-scope .muzzle-cross-ion i{clip-path:polygon(0 35%,40% 0,31% 40%,100% 10%,60% 50%,100% 90%,31% 60%,40% 100%,0 65%)}
+@keyframes crystalRoll{to{transform:rotate(360deg)}}
+@keyframes orbitRoll{to{transform:rotate(360deg) scale(.8)}}
+@media(prefers-reduced-motion:reduce){.es-math-scope .crystal-spin,.es-math-scope .orbit-spin{animation:none}}
 .es-math-scope .fleet-picker-inline{left:0;right:0;width:auto;max-width:none;bottom:0;height:22px;transform:none;display:block}
 .es-math-scope .fleet-picker-inline button{position:absolute;top:0;height:21px;transform:translateX(-50%);padding:3px 4px;font-size:9px}
 .es-math-scope .fleet-side-toggle{display:flex;gap:6px}

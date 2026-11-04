@@ -22,6 +22,16 @@ export function validFleet(ids){
 }
 function shipLevel(id,level){return PHASE1_CATALOG.shipLevels.find(x=>x.nave_id===id&&x.livello===level);}
 function gunLevel(id,level){return PHASE1_CATALOG.weaponLevels.find(x=>x.arma_id===id&&x.livello===level);}
+// Both fleets must be able to target every operator installed at battle start.
+export function fleetCompatibility(playerIds,enemyIds,level=1){
+ if(!validFleet(playerIds)||!validFleet(enemyIds))return {compatible:false,playerMissing:[],enemyMissing:[]};
+ const l=Math.max(1,Math.min(5,Math.floor(level)));
+ const operators=ids=>new Set(ids.flatMap(id=>ENGINE_KEYS.slice(0,shipLevel(id,l).motori)));
+ const player=operators(playerIds),enemy=operators(enemyIds);
+ const playerMissing=ENGINE_KEYS.filter(op=>enemy.has(op)&&!player.has(op));
+ const enemyMissing=ENGINE_KEYS.filter(op=>player.has(op)&&!enemy.has(op));
+ return {compatible:!playerMissing.length&&!enemyMissing.length,playerMissing,enemyMissing};
+}
 export function newVessel(id='N00',level=1){
  const def=getShipDefinition(id);if(!def)throw Error('Nave inesistente '+id);
  const l=Math.max(1,Math.min(5,Math.floor(level)));
@@ -107,7 +117,7 @@ export function previewVolley(side,cards){
    const n=w.seme_trigger==='*'?Object.values(ammo).reduce((a,b)=>a+b,0):ammo[w.seme_trigger]||0;
    if(n===0)continue;
    if(w.tipo==='Combo simultanea'){const requires=(w.combo||'').split('+');if(!requires.every(s=>(ammo[s]||0)>0))continue;}
-   if(w.tipo==='Combo a memoria')continue; // non presente nelle cinque navi della Fase 1.
+   if(w.tipo==='Combo a memoria')continue; // riservata alle rarità dei prossimi blocchi.
    let count=n,charging=false;
    if(w.tipo==='Accumulo'){
     w.charge=(w.charge||0)+n;const threshold=Math.max(1,w.soglia_munizioni||1);
@@ -153,7 +163,7 @@ export function aiChoose(side,defender,targets,rng=Math.random){const moves=find
 export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign'){
  const fleetIds=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];const shipLevel=Math.max(1,Math.min(5,Number(upgrades.shipLevel)||1));
  // Opponent receives comparable fleet count and vessel engine capacity. AI has no secret advantages.
- const aiIds=validFleet(upgrades.enemyFleetIds)?upgrades.enemyFleetIds:fleetIds;
+ const aiIds=fleetCompatibility(fleetIds,upgrades.enemyFleetIds,shipLevel).compatible?upgrades.enemyFleetIds:fleetIds;
  return {level,mode,player:createShip(level,false,{fleetIds,shipLevel},rng),enemy:createShip(level,true,{fleetIds:aiIds,shipLevel},rng),
  actor:'player',round:1,seconds:60,targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }

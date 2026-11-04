@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,fleetFormation,engineHudShift,WEAPON_MOUNTS,weaponMount,engineSurface,engineVisualState} from './mathFleetGeometry.js';
+import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,fleetFormation,engineHudShift,engineHudPlacement,WEAPON_MOUNTS,weaponMount,weaponMuzzleCount,engineSurface,engineVisualState} from './mathFleetGeometry.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {newVessel} from './mathDuelEngine.js';
 const box=(left,top,width,height)=>({left,top,width,height});
@@ -79,12 +79,12 @@ test('formazioni 1–3: stessa riga, scala uniforme, margini e intervalli senza 
 });
 
 test('HP dei motori realmente sbloccati non si sovrappongono, per ogni livello e formazione',()=>{
- for(const side of ['player','enemy'])for(const count of [1,2,3])for(const id of ['N00','C01','C02','C03','C04'])for(const level of [1,2,3,4,5]){
+ for(const side of ['player','enemy'])for(const count of [1,2,3])for(const {id} of PHASE1_CATALOG.ships)for(const level of [1,2,3,4,5]){
   const {size,hudWidth,engineSize}=fleetFormation(count,side),height=count===3?22:27;
   const rects=Object.keys(newVessel(id,level).engines).map(op=>{
    const [x,y]=enginePoint(side,id,op);
    return {left:x*size+engineHudShift(side,id,op,size,hudWidth)-hudWidth/2,
-    top:y*size+(side==='enemy'?-engineSize/2-2-height:engineSize/2+2),width:hudWidth,height};
+    top:y*size+(engineHudPlacement(side,id,op)==='above'?-engineSize/2-2-height:engineSize/2+2),width:hudWidth,height};
   });
   for(const a of rects)assert.ok(a.left>=0&&a.left+a.width<=size,id+' HUD nello slot');
   for(let i=0;i<rects.length;i++)for(let j=i+1;j<rects.length;j++){
@@ -96,8 +96,8 @@ test('HP dei motori realmente sbloccati non si sovrappongono, per ogni livello e
 
 test('ogni arma del catalogo iniziale ha un attacco proprio e una bocca per entrambe le viste',()=>{
  assert.equal(Object.keys(WEAPON_MOUNTS).length,PHASE1_CATALOG.weapons.length);
- for(const weapon of PHASE1_CATALOG.weapons)for(const side of ['player','enemy']){
-  const mount=weaponMount(side,weapon.nave_id,weapon.id);
+ for(const weapon of PHASE1_CATALOG.weapons)for(const side of ['player','enemy'])for(let muzzleIndex=0;muzzleIndex<weaponMuzzleCount(weapon.id);muzzleIndex++){
+  const mount=weaponMount(side,weapon.nave_id,weapon.id,muzzleIndex);
   assert.ok(mount,weapon.id+' presente');
   const [x,y]=mount.point;
   assert.ok(x>.1&&x<.9&&y>.07&&y<.93,'bocca dentro il canvas');
@@ -111,7 +111,7 @@ test('ogni arma del catalogo iniziale ha un attacco proprio e una bocca per entr
 });
 
 test('il danno visivo segue la propria gondola e non cambia lo stato degli altri motori',()=>{
- for(const side of ['player','enemy'])for(const id of ['N00','C01','C02','C03','C04'])for(const op of Object.keys(newVessel(id,5).engines)){
+ for(const side of ['player','enemy'])for(const {id} of PHASE1_CATALOG.ships)for(const op of Object.keys(newVessel(id,5).engines)){
   const s=engineSurface(side,id,op);
   assert.deepEqual(s.point,enginePoint(side,id,op));
   for(const r of s.radius)assert.ok(r>0&&r<.1);
