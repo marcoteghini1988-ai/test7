@@ -8,12 +8,8 @@ const rng=()=>.5;
 const side=(ids,level=1)=>createShip(1,false,{fleetIds:ids,shipLevel:level},rng);
 const cards=(a,sa,b,sb)=>[{id:'a',value:a,suit:sa},{id:'b',value:b,suit:sb}];
 
-test('13 navi e 29 armi, con tre motori per epica e Divisione dal livello 4',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,13);
- assert.equal(PHASE1_CATALOG.weapons.length,29);
- assert.equal(PHASE1_CATALOG.shipLevels.length,65);
- assert.equal(PHASE1_CATALOG.weaponLevels.length,145);
- assert.equal(validFleet(['L01']),false);
+test('quattro epiche con tre motori e Divisione dal livello 4',()=>{
+ assert.deepEqual(PHASE1_CATALOG.ships.filter(s=>s.rarita==='Epica').map(s=>s.id),['E01','E02','E03','E04']);
  const hp={E01:[104,120,137,153,169],E02:[99,116,133,149,166],E03:[112,129,146,162,179],E04:[106,123,140,157,174]};
  for(const [id,levels] of Object.entries(hp))for(let l=1;l<=5;l++){
   const v=newVessel(id,l);

@@ -1,6 +1,6 @@
 import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
-import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,getWeaponsForShip,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility} from './mathDuelEngine.js';
+import {ENGINE_KEYS,META,PHASE1_SHIPS,SUIT_SIGNS,SUIT_KEYS,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,getWeaponsForShip,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMount,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
 import './MathDuelBattle.css';
@@ -33,8 +33,12 @@ function volleySound(salvos){try{
 // Position of the FOUR visible engine modules on the actual starship illustration.
 // Coordinates follow each sprite's camera view without flipping its orientation.
 const GLYPH={H:'♥',D:'♦',C:'♣',S:'♠','*':'◎'};
-const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',C04:'#d261ff',R01:'#ffb269',R02:'#63ffce',R03:'#d4c3ff',R04:'#9dffd4',E01:'#b097ff',E02:'#8cff83',E03:'#ffb75b',E04:'#68ffb5'};
+const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',C04:'#d261ff',R01:'#ffb269',R02:'#63ffce',R03:'#d4c3ff',R04:'#9dffd4',E01:'#b097ff',E02:'#8cff83',E03:'#ffb75b',E04:'#68ffb5',L01:'#ffca63',L02:'#c394ff',L03:'#ff914e',L04:'#9df4ff'};
 const WEBP_HULLS=new Set(PHASE1_SHIPS.filter(s=>s.rarita!=='Comune').map(s=>s.id));
+function comboLabel(weapon){
+ const [codes,limit]=weapon.combo.split('@'),symbols=codes.split('+').map(s=>GLYPH[s]).join(' + ');
+ return limit?`Memoria ${symbols} · entro ${limit} calcoli`:`Combo ${symbols}`;
+}
 function ShipArtwork({side,shipId,onLoad,...props}){
  const facing=side==='player'?'player_to_enemy':'enemy_to_player';
  const format=WEBP_HULLS.has(shipId)?'webp':'png';
@@ -71,7 +75,7 @@ function WeaponMount({side,vessel,weapon,registerGunRef,index,effect,muzzleIndex
  return <div className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}${rounds.length?' firing':''}${event?.charging?' charge-received':''}`} data-weapon={weapon.id} data-muzzle-index={muzzleIndex} data-charge={Math.round(charge*100)}
   style={{left:`${mount.point[0]*100}%`,top:`${mount.point[1]*100}%`,width:`${mount.width*100}%`,height:`${mount.length*100}%`,'--gun':color,
    ...(rounds.length?{'--recoil-delay':`${rounds[0].launchMs}ms`,'--recoil-duration':`${Math.max(24,(rounds.at(-1).launchMs-rounds[0].launchMs)/Math.max(1,rounds.length-1))}ms`,'--recoil-count':rounds.length}:{})}}
-  title={`${weapon.nome}: ${GLYPH[weapon.seme_trigger]||'◎'} · ${weapon.tipo} · ${weapon.damage} danni/proiettile${accumulating?` · Carica ${event?.charge??weapon.charge??0}/${weapon.soglia_munizioni}`:''}${weapon.combo?` · Combo ${weapon.combo.split('+').map(s=>GLYPH[s]||s).join('+')}`:''}`}>
+  title={`${weapon.nome}: ${GLYPH[weapon.seme_trigger]||'◎'} · ${weapon.tipo} · ${weapon.damage} danni/proiettile${accumulating?` · Carica ${event?.charge??weapon.charge??0}/${weapon.soglia_munizioni}`:''}${weapon.combo?` · ${comboLabel(weapon)}`:''}`}>
   <svg className="weapon-hardware" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
    <defs><linearGradient id={metalId}><stop offset="0" stopColor="#101826"/><stop offset=".3" stopColor="#8198ab"/><stop offset=".5" stopColor="#dbe4ea"/><stop offset=".72" stopColor="#3b4b60"/><stop offset="1" stopColor="#101826"/></linearGradient></defs>
    <path d="M28 16 72 16 86 85 68 96 32 96 14 85Z" fill={`url(#${metalId})`} stroke="#111c2b" strokeWidth="5"/>
@@ -91,6 +95,8 @@ function WeaponMount({side,vessel,weapon,registerGunRef,index,effect,muzzleIndex
    {mount.profile==='plasma'&&<><path d="M31 68V20H69V68Z" fill="#352642" stroke="#c6b2e7" strokeWidth="5"/><ellipse cx="50" cy="28" rx="27" ry="23" fill="#452063" stroke="#c09bff" strokeWidth="4"/><ellipse cx="50" cy="28" rx="16" ry="14" fill={color} opacity={.18+charge*.8}/><path d="M18 73H82M25 85H75" stroke="#8d70b1" strokeWidth="5"/><path d={`M25 85H${25+50*charge}`} stroke={color} strokeWidth="6"/></>}
    {mount.profile==='harpoon'&&<><path d="M37 6H63V84H37Z" fill="#24313b" stroke="#d1e1e7" strokeWidth="6"/><path d="M50 0 60 24H54V68H46V24H40Z" fill="#ecfbff"/>{[36,51,66,81].map(y=><path key={y} d={`M29 ${y}H71`} stroke="#819baf" strokeWidth="5"/>)}</>}
    {mount.profile==='compressor'&&<><ellipse cx="50" cy="49" rx="34" ry="37" fill="#173a2c" stroke="#b6d3bb" strokeWidth="6"/><ellipse cx="50" cy="43" rx="24" ry="26" fill="#07231d" stroke={color} strokeWidth="5"/><ellipse cx="50" cy="43" rx="14" ry="16" fill={color} opacity={.15+charge*.85}/><path d="M15 42H85M50 9V77" stroke="#bbffd5" strokeWidth="3" opacity=".5"/><path d={`M21 88H${21+58*charge}`} stroke={color} strokeWidth="7"/></>}
+   {mount.profile==='eclipse-core'&&<><path d="M20 83 29 18 50 2 71 18 80 83 50 94Z" fill="#241733" stroke="#e8b56b" strokeWidth="6"/><ellipse cx="50" cy="26" rx="20" ry="17" fill="#0b0715" stroke={color} strokeWidth="5"/><path d="M29 61H71M26 77H74" stroke="#a995be" strokeWidth="4"/></>}
+   {mount.profile==='void-core'&&<><path d="M29 10H71L83 74 67 92H33L17 74Z" fill="#1d2f48" stroke="#eee3d5" strokeWidth="5"/><ellipse cx="50" cy="30" rx="22" ry="21" fill="#0d0b22" stroke={color} strokeWidth="5"/><path d="M50 4V15M50 45V62M21 30H32M68 30H79" stroke="#e4daff" strokeWidth="5"/></>}
   </svg>
   <span ref={node=>registerGunRef?.(side,index,`${weapon.id}${muzzleIndex?`/${muzzleIndex}`:''}`,node)} className="weapon-tip muzzle-anchor"/>
  </div>;
@@ -181,6 +187,19 @@ function RoundGlyph({profile,index}){
   {profile==='solar-crystal'&&<g className="crystal-spin"><path d="M0-15 13-6 11 8 0 15-11 8-13-6Z" className="round-fill"/><path d="M0-15 6-3 0 15-6-3ZM-13-6 0 1 13-6M-11 8 0 1 11 8" stroke="#fff6c2" fill="none" strokeWidth="2"/></g>}
   {profile==='shadow-arrow'&&<><path d="M-23-8-16 0-23 8M-14-8-8 0-14 8" className="round-tail"/><path d="M-10 0H20M8-9 21 0 8 9" className="round-line" strokeWidth="4"/><path d="M-3 0H17" stroke="#f3eaff" strokeWidth="2"/></>}
   {profile==='bipolar'&&<><path d="M-23-6 12-6 23 0-21 0Z" fill="#ff696d"/><path d="M-21 0H23L12 6H-23Z" fill="#a47cff"/><path d="M-22 0H21" stroke="#fff4e8" strokeWidth="2"/><path d="M-22-11H7M-22 11H7" className="round-tail"/></>}
+  {profile==='royal'&&<><path d="M-22-9-9-8 1-3M-23 0H7M-21 9-8 8 1 3" className="round-tail"/><ellipse cx="7" rx="14" ry="9" className="round-fill"/><path d="M-10 0H21M0-6 12 0 0 6" stroke="#ffe486" fill="none" strokeWidth="2"/><circle cx="15" r="3" fill="#fff6d3"/></>}
+  {profile==='meteor'&&<><path d="M-23-10-12-8M-23 8-12 6M-21 0H-10" className="round-tail"/><path d="M-11-9-2-14 13-12 21-4 17 9 5 14-10 8Z" fill="#273a58" stroke="currentColor" strokeWidth="2"/><path d="M-8-3 0-12 3 1-4 7ZM4 1 12-9 18-4 13 7ZM-1 9 6 3 11 10 5 14Z" className="round-fill"/></>}
+  {profile==='cyclone'&&<><path d="M-23-5Q-10-16 4-9T22 1M-19 11Q-6 14 9 6T19-5M-8 2Q-4-6 6-4T12 4" className="round-line" strokeWidth="2.5"/><circle cx="-14" cy="-9" r="2" fill="#f0ffd8"/><circle cx="6" cy="8" r="2" fill="#f0ffd8"/><circle cx="19" cy="-6" r="2" fill="#f0ffd8"/></>}
+  {profile==='eclipse'&&<><path d="M-23 0H22" stroke="#1a0729" strokeWidth="12"/><path d="M-23-4Q-15-13-8-4T7-4T22-4M-23 0Q-15 9-8 0T7 0T22 0M-23 4Q-15-3-8 4T7 4T22 4" className="round-line" strokeWidth="2"/></>}
+  {profile==='gravity'&&<><ellipse cx="3" rx="11" ry="8" fill="#25143d" stroke="#dbb1ff"/><path d="M-23-10Q-6-16 17-5Q-9-10-23-10ZM-23 10Q-6 16 17 5Q-9 10-23 10Z" className="round-fill"/><path d="M-8 0H15" className="round-line"/></>}
+  {profile==='fulcrum'&&<><circle cx="5" r="12" fill="#1c5948" stroke="currentColor" strokeWidth="2"/><path d="M-5-8 2-4 0 2 12-1 9 7 16 4M-21-9-13-3-22 2-12 9" className="round-line" strokeWidth="2"/><circle cx="5" r="5" fill="#e5ffb8"/></>}
+  {profile==='gemini'&&<><path d="M-22-9H-9M-21 7H-5" className="round-tail"/><path d="M-10-7 1-15 13-11 11-3 0 1ZM0 6 11-3 23 1 20 11 9 15Z" className="round-fill"/><path d="M1-15 0 1 13-11M11-3 9 15 23 1" fill="none" stroke="#effbff"/></>}
+  {profile==='titan'&&<><path d="M-23-13-9-7M-24 0H-8M-23 13-9 7" className="round-tail"/><path d="M-15-9-6-15 12-12 23 0 12 12-6 15-15 9Z" fill="#92472e" stroke="currentColor" strokeWidth="2"/><path d="M-8-8 10-9 19 0 10 9-8 8 0 0Z" className="round-fill"/><path d="M4-8 10 0 4 8M-4 0H18" stroke="#fff2bb" fill="none" strokeWidth="2"/></>}
+  {profile==='howitzer'&&<><path d="M-17-14Q-26 0-17 14M-10-14Q-19 0-10 14" className="round-line"/><path d="M-9-9 9-12 21 0 9 12-9 9Z" fill="#241834" stroke="currentColor" strokeWidth="2"/><path d="M-4-10V10M3-10V10M14-7V7" className="round-line"/></>}
+  {profile==='crimson-star'&&<><path d="M-24-11Q-13-6 7-5M-24 0Q-13-6 7 0M-24 11Q-13 6 7 5" className="round-line"/><path d="M8-14 13-5 23 0 13 5 8 14 3 5-7 0 3-5Z" className="round-fill"/><circle cx="8" r="4" fill="#fff2da"/></>}
+  {profile==='starlight'&&<><path d="M-23-9-15-6M-23 6-14 4" className="round-tail"/><path d="M-10-8-3-14 4-9-4-4ZM1 6 9 2 14 10 7 15ZM5-5 14-12 23-4 15 3Z" className="round-fill"/><path d="M-10-8H4M5-5 23-4M1 6 14 10" stroke="#fff4bf"/></>}
+  {profile==='flora'&&<><circle cx="4" r="13" fill="#195735" stroke="currentColor" strokeWidth="2"/><path d="M4 0C-9-12 4-17 4 0C17-12 23 0 4 0C17 13 4 17 4 0C-9 13-15 0 4 0Z" className="round-fill"/><circle cx="4" r="4" fill="#efffc1"/></>}
+  {profile==='void-ark'&&<><ellipse cx="4" rx="13" ry="12" fill="#0c0918" stroke="currentColor" strokeWidth="3"/><path d="M4-15V-8M4 8V15M-15 0H-6M14 0H23" stroke="#e5daff" strokeWidth="3"/><ellipse cx="4" rx="7" ry="6" className="round-line"/></>}
  </svg>;
 }
 function ImpactGlyph({profile}){
@@ -214,6 +233,19 @@ function ImpactGlyph({profile}){
   {profile==='solar-crystal'&&<><path d="M0-33 21 0 0 33-21 0ZM0-33 7 0 0 33-7 0Z" strokeWidth="2"/><path d="M-33 0H33M-25-19-30-24M25 19 30 24M25-19 30-24M-25 19-30 24" stroke="#fff2ad"/></>}
   {profile==='shadow-arrow'&&<><path d="M-32 0H25M5-21 27 0 5 21M-17-12-4 0-17 12" strokeWidth="3"/><circle r="11" stroke="#f4e7ff"/></>}
   {profile==='bipolar'&&<><path d="M-26-26 25 24" stroke="#ff6f6d" strokeWidth="5"/><path d="M-24 25 26-26" stroke="#aa7dff" strokeWidth="5"/><path d="M0-28 8-7 27 0 8 7 0 28-8 7-27 0-8-7Z" stroke="#fff1df"/></>}
+  {profile==='royal'&&<><path d="M-30 8-25-14-12-5 0-23 12-5 25-14 30 8Z" stroke="#ffdd83"/><path d="M-22 16H22M-18 23H18"/><circle r="7" fill="#fff2b9"/></>}
+  {profile==='meteor'&&<><path d="M0-30 23-15 30 10 7 30-21 20-30-6Z"/><path d="M0-30 3-4 23-15M30 10 3-4 7 30M-21 20 3-4-30-6" stroke="#e4faff"/></>}
+  {profile==='cyclone'&&<><path d="M3 1Q16-15 25 1T8 27Q-20 31-26 9T-9-30Q22-37 33-13" strokeWidth="3"/><circle r="9" stroke="#efffd9"/></>}
+  {profile==='eclipse'&&<><circle r="17" fill="#130a21"/><path d="M-30-15Q-15-27 0-12T30-15M-32 0Q-16 13 0 0T32 0M-30 15Q-15 3 0 18T30 15" strokeWidth="3"/></>}
+  {profile==='gravity'&&<><ellipse rx="27" ry="12" transform="rotate(38)"/><path d="M-32 2Q-10-21 19-18M32-2Q10 21-19 18" strokeWidth="5"/><circle r="7" fill="#eee0ff"/></>}
+  {profile==='fulcrum'&&<><circle r="23"/><path d="M-35 12-18 0-20-16-2-9 8-28 12-11 31-15 18 3 32 13 13 17 10 34-2 18-17 28-14 10Z"/><circle r="8" fill="#e2ffb4"/></>}
+  {profile==='gemini'&&<><path d="M-21-27-4-13-12 8-32-2ZM12-8 32 2 21 27 4 13Z" strokeWidth="3"/><path d="M-21-27-12 8M12-8 21 27" stroke="#effaff"/></>}
+  {profile==='titan'&&<><path d="M-32 20-25-4-15 5-5-24 4-12 13-30 21-8 31-4 34 20Z" fill="currentColor" opacity=".7"/><path d="M-29 23H29M-19 30H19" stroke="#fff0b0" strokeWidth="3"/></>}
+  {profile==='howitzer'&&<><circle r="35" strokeWidth="3"/><circle r="24" fill="#2f2142"/><path d="M-15 0H15M0-15V15M-11-11 11 11M-11 11 11-11" stroke="#f3deff" strokeWidth="2"/></>}
+  {profile==='crimson-star'&&<><path d="M0-34 8-10 29-13 15 5 22 27 0 15-22 27-15 5-29-13-8-10Z"/><path d="M-27 3Q-9-14 6 0T29-4M-19 20Q-12-1 0 3T16-21" stroke="#ffbbbf"/></>}
+  {profile==='starlight'&&<><path d="M0-33 5-9 26-23 13-4 34 0 13 4 26 23 5 9 0 33-5 9-26 23-13 4-34 0-13-4-26-23-5-9Z"/><circle r="7" fill="#fff7d0"/></>}
+  {profile==='flora'&&<><circle r="28"/><path d="M0 0C-31-22 0-34 0 0C24-30 34 0 0 0C32 22 0 34 0 0C-22 32-34 0 0 0Z" stroke="#d9ff9b" strokeWidth="2"/><circle r="7" fill="#edffd3"/></>}
+  {profile==='void-ark'&&<><circle r="21" fill="#0a0718" strokeWidth="4"/><circle r="12" stroke="#dcd0ff"/><path d="M0-36V-19M0 19V36M-36 0H-19M19 0H36" stroke="#e4dbff" strokeWidth="4"/></>}
  </svg>;
 }
 function Projectile({effect,rootRef,engineRefs,gunRefs}){
@@ -241,6 +273,7 @@ function Projectile({effect,rootRef,engineRefs,gunRefs}){
  {shots.map(({shot,fx,rounds,arrivalMs})=><React.Fragment key={`${shot.vesselIndex}/${shot.weaponId}`}>
   {rounds.map(round=>{
    const {x,y,dx,dy,roundWidth}=round;
+   const showPulse=round.index===rounds.length-1||round.index%Math.ceil(rounds.length/26)===0;
    const frames=[0,.25,.5,.75,1].map(t=>projectileFrame(dx,dy,round.bend,t));
    const trajectory=Object.fromEntries(frames.flatMap((f,i)=>[[`--x${i}`,`${f.x}px`],[`--y${i}`,`${f.y}px`],[`--a${i}`,`${f.angle}deg`]]));
    return <React.Fragment key={round.index}>
@@ -248,17 +281,31 @@ function Projectile({effect,rootRef,engineRefs,gunRefs}){
      style={{left:x,top:y,...trajectory,'--fx-color':fx.color,'--flight-time':`${fx.durationMs}ms`,'--launch-delay':`${round.launchMs}ms`,'--round-width':`${roundWidth}px`,'--round-height':`${fx.height}px`}}>
      <RoundGlyph profile={fx.profile} index={round.index}/>
     </span>
-    <span className={`muzzle-flash muzzle-${fx.profile}`} style={{left:x,top:y,color:fx.color,'--launch-delay':`${round.launchMs}ms`,'--muzzle-angle':`${frames[0].angle}deg`}}><i/></span>
-    <span className={`weapon-contact contact-${fx.profile}`} style={{left:target[0],top:target[1],color:fx.color,'--contact-delay':`${round.arrivalMs}ms`}}><ImpactGlyph profile={fx.profile}/></span>
+    {showPulse&&<><span className={`muzzle-flash muzzle-${fx.profile}`} style={{left:x,top:y,color:fx.color,'--launch-delay':`${round.launchMs}ms`,'--muzzle-angle':`${frames[0].angle}deg`}}><i/></span>
+    <span className={`weapon-contact contact-${fx.profile}`} style={{left:target[0],top:target[1],color:fx.color,'--contact-delay':`${round.arrivalMs}ms`}}><ImpactGlyph profile={fx.profile}/></span></>}
    </React.Fragment>;
   })}
   <span className={`weapon-impact impact-${fx.profile}`} data-weapon={shot.weaponId} style={{left:target[0],top:target[1],color:fx.color,'--contact-delay':`${arrivalMs}ms`}}><ImpactGlyph profile={fx.profile}/></span>
  </React.Fragment>)}
  {effect.damage>0&&<div className="impact-number delayed-impact" style={{left:target[0]-52,top:target[1]-64,color:effect.primaryColor||'#ffdf83','--impact-delay':`${effect.arrivalMs}ms`}}>−{effect.damage}</div>}
- {shots.length===0&&<div className="charge-notice">{effect.volleys.some(s=>s.charging)?'MUNIZIONI IN CARICA':'NESSUNA ARMA ATTIVATA'}</div>}
+ {shots.length===0&&<div className="charge-notice">{effect.volleys.some(s=>s.charging)?'MUNIZIONI IN CARICA':effect.memoryPending?'MEMORIA AGGIORNATA':'NESSUNA ARMA ATTIVATA'}</div>}
  </div>;
 }
 function Hand({cards,selected,onSelect,disabled}){return <div className="hand" aria-label="Le tue sette carte">{cards.map((c,i)=><button key={c.id} title={`${label(c.value)} ${c.suit}`} disabled={disabled} className={'number-card'+(selected.includes(i)?' active':'')} style={{'--suit':suits[c.suit]}} onClick={()=>onSelect(i)}><span className="card-suit">{c.suit}</span><strong>{label(c.value)}</strong><span className="card-suit second">{c.suit}</span></button>)}</div>}
+function MemoryCombos({ship}){
+ const weapons=ship.fleet.filter(v=>!vesselDestroyed(v)).flatMap(v=>v.weapons.filter(w=>w.tipo==='Combo a memoria'));
+ if(!weapons.length)return null;
+ return <div className="memory-combos" aria-label="Combo a memoria">{weapons.map(w=>{
+  const {required,limit,history,totals}=memoryComboStatus(w);
+  const seen=required.filter(s=>totals[s]>0);
+  return <div key={w.id} className="memory-combo" data-weapon={w.id} title={comboLabel(w)}
+   aria-label={`${w.nome}, ${history.length} su ${limit} calcoli, semi raccolti ${seen.map(s=>GLYPH[s]).join(' ')||'nessuno'}`}>
+   <b>{w.id==='W33'?'Giudizio':'Arca'}</b>
+   {required.map(s=><i key={s} className={totals[s]>0?'collected':''} style={{color:bulletColors[s]}}>{GLYPH[s]}</i>)}
+   <small>{history.length}/{limit}</small>
+  </div>;
+ })}</div>;
+}
 function Formula({game}){
  const [a,b]=game.selected.map(i=>game.player.hand[i]);
  const goal=game.targets[game.target];
@@ -268,7 +315,7 @@ function Formula({game}){
  const fmt=v=>Number.isInteger(v)?String(v):Number.isFinite(v)?String(Math.round(v*100)/100).replace('.',','):'—';
  return <div className={`formula${inspection?.valid?' valid':inspection?' invalid':''}`} aria-live="polite">
    <span>{inspection?`${label(inspection.a)} ${META[game.target].sign} ${label(inspection.b)} = ${fmt(inspection.result)}`:`${META[game.target].sign} ${goal}`}</span>
-   <small>{inspection?.valid?(preview.totalDamage?`BERSAGLIO ${goal} ✓ · FUOCO ${preview.totalDamage} HP`: `BERSAGLIO ${goal} ✓ · ${preview.shots.some(s=>s.charging)?'CARICA':'NESSUNA ARMA ATTIVA'}`):inspection?(alternative?`BERSAGLIO ${goal} ✗ · USA ${META[alternative].sign} ${game.targets[alternative]}`:`BERSAGLIO ${goal} ✗ · RISULTATO ${fmt(inspection.result)}`):'SELEZIONA DUE CARTE'}</small>
+   <small>{inspection?.valid?(preview.totalDamage?`BERSAGLIO ${goal} ✓ · FUOCO ${preview.totalDamage} HP`: `BERSAGLIO ${goal} ✓ · ${preview.shots.some(s=>s.charging)?'CARICA':preview.memoryPending?'MEMORIA':'NESSUNA ARMA ATTIVA'}`):inspection?(alternative?`BERSAGLIO ${goal} ✗ · USA ${META[alternative].sign} ${game.targets[alternative]}`:`BERSAGLIO ${goal} ✗ · RISULTATO ${fmt(inspection.result)}`):'SELEZIONA DUE CARTE'}</small>
   </div>;
 }
 function FleetSetup({onClose,onStart,selected,setSelected,enemySelected,setEnemySelected,level,setLevel}){
@@ -276,12 +323,12 @@ function FleetSetup({onClose,onStart,selected,setSelected,enemySelected,setEnemy
  const ids=side==='player'?selected:enemySelected??selected;
  const matchup=fleetCompatibility(selected,enemySelected??selected,level);
  const toggle=id=>{const next=ids.includes(id)?ids.filter(x=>x!==id):[...ids,id];if(validFleet(next))(side==='player'?setSelected:setEnemySelected)(next);};
- return <div className="modal-shade"><div className="help-card fleet-setup"><h2>FLOTTA DI PROVA</h2><p><b>Aurora-0</b> è l'universale iniziale. Puoi schierare comuni, rare ed epiche. Questa scelta è temporanea.</p>
+ return <div className="modal-shade"><div className="help-card fleet-setup"><h2>FLOTTA DI PROVA</h2><p><b>Aurora-0</b> è l'universale iniziale. Puoi schierare tutte le 17 navi del catalogo. Questa scelta è temporanea.</p>
   <div className="fleet-side-toggle"><button type="button" aria-pressed={side==='player'} onClick={()=>setSide('player')}>LA TUA FLOTTA</button><button type="button" aria-pressed={side==='enemy'} onClick={()=>setSide('enemy')}>AVVERSARIO DI PROVA</button></div>
   {side==='enemy'&&<label className="fleet-match"><input type="checkbox" checked={enemySelected===null} onChange={e=>setEnemySelected(e.target.checked?null:[...selected])}/> Stessa flotta del giocatore</label>}
   <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><button key={s.id} aria-pressed={ids.includes(s.id)} data-rarity={s.rarita} className={ids.includes(s.id)?'on':''} onClick={()=>toggle(s.id)}>
    {WEBP_HULLS.has(s.id)?<svg className="fleet-portrait" viewBox="0 0 1000 1000" aria-hidden="true"><ShipArtwork side="player" shipId={s.id}/></svg>:<img src={`${SHIPS}${s.id}.png`} alt=""/>}
-   <span><b>{s.nome}</b><small>{s.rarita} · {s.n_armi} {s.n_armi===1?'arma':'armi'} · {s.motori_iniziali}–{s.motori_massimi} motori</small>{getWeaponsForShip(s.id).filter(w=>w.combo).map(w=><small key={w.id}>Combo {w.combo.split('+').map(t=>GLYPH[t]||t).join(' + ')}</small>)}</span><strong>{ids.includes(s.id)?'✓':'+'}</strong></button>)}</div>
+   <span><b>{s.nome}</b><small>{s.rarita} · {s.n_armi} {s.n_armi===1?'arma':'armi'} · {s.motori_iniziali}–{s.motori_massimi} motori</small>{getWeaponsForShip(s.id).filter(w=>w.combo).map(w=><small key={w.id}>{comboLabel(w)}</small>)}</span><strong>{ids.includes(s.id)?'✓':'+'}</strong></button>)}</div>
   <label className="fleet-level-row">Livello di prova (non acquistato) <b>{level}</b><input type="range" min="1" max="5" value={level} onChange={e=>setLevel(Number(e.target.value))}/></label>
   <p>Massimo 3 navi. L'universale è unica; ogni seme può attivare al massimo due navi specializzate. Le operazioni si sbloccano secondo il livello del modello.</p>
   {!matchup.compatible&&<p className="fleet-match-warning" role="status">Flotte non compatibili a L{level}: {matchup.playerMissing.length?`alla tua flotta manca ${matchup.playerMissing.map(op=>META[op].sign).join(', ')}. `:''}{matchup.enemyMissing.length?`All'avversaria manca ${matchup.enemyMissing.map(op=>META[op].sign).join(', ')}.`:''} Scegli una nave con le operazioni mancanti oppure cambia il livello.</p>}
@@ -322,16 +369,21 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(cards.some(x=>!x)){if(side==='player')notice('Seleziona due carte valide');return;}
   if(!supportedOperators(attackShip).includes(move.op)){if(side==='player')notice('Operazione non sbloccata: serve una nave con quel motore operativo');return;}
   const proof=inspectCalculation(move.op,cards[0].value,cards[1].value,goal);
-  if(!proof.valid){if(side==='player')notice(`${label(proof.a)} ${META[move.op].sign} ${label(proof.b)} = ${Number.isInteger(proof.result)?proof.result:Math.round(proof.result*100)/100}. Bersaglio: ${goal}`);return;}
+  if(!proof.valid){
+   const cleared=resetComboMemory(attackShip),reset=cleared!==attackShip;
+   if(reset)write({...b,[side]:cleared});
+   if(side==='player')notice(`${label(proof.a)} ${META[move.op].sign} ${label(proof.b)} = ${Number.isInteger(proof.result)?proof.result:Math.round(proof.result*100)/100}. Bersaglio: ${goal}${reset?' · Memoria azzerata':''}`);
+   return;
+  }
   const index=move.targetShip??0,e=defShip.fleet[index]?.engines[move.op];if(!e||e.hp<=0){if(side==='player')notice('Motore non disponibile');return;}
   const strike=dealHit(defShip,attackShip,move.op,goal,cards,index);
   const timing=volleyTimeline(strike.volley),salvos=planWeaponSalvos(strike.volley);
   const strongest=[...strike.volley].sort((a,b)=>(b.damage||0)-(a.damage||0))[0];
-  const anim={...clone(b),...(side==='enemy'?{shownPlayer:index}:{targetShip:index}),phase:'animating',selected:[],effect:{side,op:move.op,targetShip:index,damage:strike.damage,destroyed:strike.destroyed,volleys:strike.volley,salvos,arrivalMs:timing.arrivalMs,primaryColor:bulletColors[strongest?.suit]||'#ffdf83',shipCount:attackShip.fleet.length,sourceFocus:side==='player'?b.shownPlayer:b.targetShip}};
+  const anim={...clone(b),...(side==='enemy'?{shownPlayer:index}:{targetShip:index}),phase:'animating',selected:[],effect:{side,op:move.op,targetShip:index,damage:strike.damage,destroyed:strike.destroyed,volleys:strike.volley,salvos,memoryPending:strike.memoryPending,arrivalMs:timing.arrivalMs,primaryColor:bulletColors[strongest?.suit]||'#ffdf83',shipCount:attackShip.fleet.length,sourceFocus:side==='player'?b.shownPlayer:b.targetShip}};
   write(anim);if(salvos.length)volleySound(salvos);else tone('click');
-  later(()=>{const active=gameRef.current;if(active.phase!=='animating')return;const next=clone(active),attacker=next[side];const used=[attacker.hand[move.i],attacker.hand[move.j]];
-   const impact=dealHit(next[receiver],attacker,move.op,goal,used,index);next[side]=consumeAttack(impact.attacker,[move.i,move.j]);next[receiver]=impact.defender;
-   next.logs=[`${side==='player'?'TU':'IA'}: ${used[0].value}${used[0].suit} ${META[move.op].sign} ${used[1].value}${used[1].suit} = ${goal} — ${impact.damage} HP`,...next.logs].slice(0,6);
+  later(()=>{const active=gameRef.current;if(active.effect!==anim.effect)return;const next=clone(active);
+   next[side]=consumeAttack(strike.attacker,[move.i,move.j]);next[receiver]=strike.defender;
+   next.logs=[`${side==='player'?'TU':'IA'}: ${cards[0].value}${cards[0].suit} ${META[move.op].sign} ${cards[1].value}${cards[1].suit} = ${goal} — ${strike.damage} HP`,...next.logs].slice(0,6);
    write(transition(next,side));
   },timing.settleMs);
  }
@@ -370,7 +422,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    <div className="toolbar"><button onClick={()=>setHelp(true)} aria-label="Regole">?</button><button onClick={()=>{if(game.round===1&&game.player.discard.length===0)setFleetMenu(true);else notice('La flotta si configura prima del primo attacco');}} title="Flotta di prova" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
    <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {displaySector&&`• ${displaySector}`}</b><small>INTEGRITÀ FLOTTA {Math.round(healthScore(game.enemy)*100)}%</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
-   <div className="center-bar"><span className="round-tag">TURNO {game.round}</span><div className={'timer-pill'+(game.seconds<=10?' urgent':'')}><strong>{game.actor==='player'?`${game.seconds}s`:game.actor==='enemy'?'AVVERSARIO':'COLPO'}</strong></div></div>
+   <div className="center-bar"><span className="round-tag">TURNO {game.round}</span><MemoryCombos ship={game.player}/><div className={'timer-pill'+(game.seconds<=10?' urgent':'')}><strong>{game.actor==='player'?`${game.seconds}s`:game.actor==='enemy'?'AVVERSARIO':'COLPO'}</strong></div></div>
    <Ship side="player" ship={game.player} targets={game.actor==='enemy'?game.targets:null} focused={game.shownPlayer} onSelectShip={i=>write({...gameRef.current,shownPlayer:i})} phase="idle" effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    <div className="deck left"><div className="deck-graphic">✦</div><small>MAZZO</small><strong>{game.player.deck.length}</strong></div><div className="deck right"><div className="deck-graphic trash">▤</div><small>SCARTI</small><strong>{game.player.discard.length}</strong></div>
    <Hand cards={game.player.hand} selected={game.selected} onSelect={pick} disabled={game.phase!=='ready'||game.actor!=='player'}/>
@@ -379,7 +431,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    <div className="player-status"><b>TU</b><span className="my-hp">FLOTTA {Math.round(healthScore(game.player)*100)}%</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
    {game.effect&&<Projectile effect={game.effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs}/>}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
-   {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>Ogni nave monta inizialmente + e −; alcuni modelli sbloccano × e ÷. Tutti i motori installati devono essere distrutti per eliminare una nave. Vinci distruggendo tutta la flotta nemica.</p><p>Ogni turno dura 60 secondi. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo costa 3 secondi e il terzo −3 HP a te. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA è una selezione di prova per la fase 1: non modifica acquisti o salvataggi dello Shop R12.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
+   {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>Ogni nave monta inizialmente + e −; alcuni modelli sbloccano × e ÷. Tutti i motori installati devono essere distrutti per eliminare una nave. Vinci distruggendo tutta la flotta nemica.</p><p>Ogni turno dura 60 secondi. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo costa 3 secondi e il terzo −3 HP a te. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA è una selezione di prova per la fase 1: non modifica acquisti o salvataggi dello Shop R12.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
    {fleetMenu&&<FleetSetup selected={fleetIds} setSelected={setFleetIds} enemySelected={enemyFleetIds} setEnemySelected={setEnemyFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet}/>}
   </div>
  </div>;

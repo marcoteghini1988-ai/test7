@@ -28,7 +28,20 @@ export const WEAPON_EFFECTS=Object.freeze({
  W26:Object.freeze({profile:'hex-chain',color:'#67ffad',durationMs:570,cadenceMs:41,burstMs:600,width:39,height:23,sound:'square',hz:225,endHz:100}),
  W27:Object.freeze({profile:'solar-crystal',color:'#ffdc75',durationMs:820,cadenceMs:51,burstMs:580,width:34,height:31,sound:'triangle',hz:810,endHz:465}),
  W28:Object.freeze({profile:'shadow-arrow',color:'#ad7dff',durationMs:450,cadenceMs:32,burstMs:560,width:39,height:12,sound:'triangle',hz:1160,endHz:260}),
- W29:Object.freeze({profile:'bipolar',color:'#ff789e',durationMs:500,cadenceMs:55,burstMs:650,width:43,height:15,sound:'sawtooth',hz:480,endHz:100})
+ W29:Object.freeze({profile:'bipolar',color:'#ff789e',durationMs:500,cadenceMs:55,burstMs:650,width:43,height:15,sound:'sawtooth',hz:480,endHz:100}),
+ W30:Object.freeze({profile:'royal',color:'#ff6747',durationMs:600,cadenceMs:43,burstMs:620,width:33,height:25,sound:'sine',hz:1050,endHz:560}),
+ W31:Object.freeze({profile:'meteor',color:'#77ddff',durationMs:780,cadenceMs:47,burstMs:560,width:39,height:29,sound:'triangle',hz:335,endHz:118}),
+ W32:Object.freeze({profile:'cyclone',color:'#71ff9a',durationMs:540,cadenceMs:41,burstMs:570,width:37,height:25,sound:'sawtooth',hz:580,endHz:205}),
+ W33:Object.freeze({profile:'eclipse',color:'#c784ff',durationMs:570,cadenceMs:49,burstMs:820,width:42,height:19,sound:'sawtooth',hz:245,endHz:55}),
+ W34:Object.freeze({profile:'gravity',color:'#b67cff',durationMs:510,cadenceMs:42,burstMs:625,width:36,height:24,sound:'triangle',hz:660,endHz:150}),
+ W35:Object.freeze({profile:'fulcrum',color:'#5cffac',durationMs:780,cadenceMs:47,burstMs:570,width:36,height:30,sound:'sine',hz:425,endHz:65}),
+ W36:Object.freeze({profile:'gemini',color:'#a3e8ff',durationMs:660,cadenceMs:45,burstMs:615,width:40,height:28,sound:'triangle',hz:780,endHz:205}),
+ W37:Object.freeze({profile:'titan',color:'#ffad5f',durationMs:690,cadenceMs:54,burstMs:630,width:44,height:29,sound:'square',hz:145,endHz:42}),
+ W38:Object.freeze({profile:'howitzer',color:'#bc91ea',durationMs:805,cadenceMs:47,burstMs:575,width:43,height:32,sound:'sine',hz:92,endHz:28}),
+ W39:Object.freeze({profile:'crimson-star',color:'#ff5d8c',durationMs:610,cadenceMs:39,burstMs:610,width:37,height:26,sound:'sawtooth',hz:850,endHz:285}),
+ W40:Object.freeze({profile:'starlight',color:'#ffd977',durationMs:560,cadenceMs:41,burstMs:590,width:36,height:23,sound:'triangle',hz:1350,endHz:520}),
+ W41:Object.freeze({profile:'flora',color:'#75ff7c',durationMs:790,cadenceMs:45,burstMs:550,width:36,height:33,sound:'sine',hz:290,endHz:88}),
+ W42:Object.freeze({profile:'void-ark',color:'#a993ff',durationMs:600,cadenceMs:46,burstMs:820,width:39,height:31,sound:'sawtooth',hz:185,endHz:38})
 });
 export function weaponEffect(weaponId){return WEAPON_EFFECTS[weaponId]||WEAPON_EFFECTS.W01;}
 
@@ -39,7 +52,7 @@ export function planWeaponSalvos(volleys=[]){
   const span=raw(count-1),compression=span>fx.burstMs?fx.burstMs/span:1,startMs=salvoIndex*80;
   const rounds=Array.from({length:count},(_,i)=>{
    const launchMs=startMs+Math.round(raw(i)*compression);
-   const bend=shot.weaponId==='W05'?(i%2?-1:1)*(22+i%3*8):['W06','W17'].includes(shot.weaponId)?(count===1?0:(i/(count-1)-.5)*36):['W11','W13','W14','W20','W23','W25'].includes(shot.weaponId)?(i%2?-1:1)*16:0;
+   const bend=shot.weaponId==='W05'?(i%2?-1:1)*(22+i%3*8):['W06','W17','W30','W40'].includes(shot.weaponId)?(count===1?0:(i/(count-1)-.5)*36):['W11','W13','W14','W20','W23','W25','W32','W34','W36'].includes(shot.weaponId)?(i%2?-1:1)*16:0;
    return {index:i,launchMs,arrivalMs:launchMs+fx.durationMs,bend,muzzleIndex:shot.weaponId==='W08'?i%2:0};
   });
   return {shot,fx,rounds,startMs,lastLaunchMs:rounds.at(-1).launchMs,arrivalMs:rounds.at(-1).arrivalMs};
@@ -55,7 +68,7 @@ export function volleyTimeline(volleys){
 
 // Leave visible space between pulsed laser segments, even at maximum ammo.
 export function projectileWidth(salvo,distance){
- if(!['W02','W08','W22'].includes(salvo.shot.weaponId)||salvo.rounds.length<2)return salvo.fx.width;
+ if(!['W02','W08','W22','W33'].includes(salvo.shot.weaponId)||salvo.rounds.length<2)return salvo.fx.width;
  const gap=Math.min(...salvo.rounds.slice(1).map((r,i)=>r.launchMs-salvo.rounds[i].launchMs));
  return Math.min(salvo.fx.width,distance/salvo.fx.durationMs*gap*.55);
 }

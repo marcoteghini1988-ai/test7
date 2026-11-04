@@ -420,6 +420,15 @@
 .es-math-scope .fleet-setup-list [data-rarity="Rara"] small{color:#c9b6f0}
 .es-math-scope .fleet-setup-list [data-rarity="Epica"]{border-left:3px solid #f0b966}
 .es-math-scope .fleet-setup-list [data-rarity="Epica"] small{color:#f4cc92}
+.es-math-scope .fleet-setup-list [data-rarity="Leggendaria"]{border-left:3px solid #ffd761}
+.es-math-scope .fleet-setup-list [data-rarity="Leggendaria"] small{color:#ffe693}
+.es-math-scope .center-bar:has(.memory-combos){display:grid;grid-template-columns:84px minmax(0,1fr) 100px;justify-items:center;gap:5px}
+.es-math-scope .center-bar:has(.memory-combos) .timer-pill strong{font-size:14px;min-width:0}
+.es-math-scope .memory-combos{display:grid;gap:2px;max-width:100%;color:#e6d8ff}
+.es-math-scope .memory-combo{display:flex;align-items:center;gap:3px;padding:2px 4px;background:#0d1426e8;border:1px solid #79679e;border-radius:5px;white-space:nowrap;font-size:9px}
+.es-math-scope .memory-combo i{font-style:normal;font-size:11px;opacity:.42}
+.es-math-scope .memory-combo i.collected{opacity:1;text-shadow:0 0 6px currentColor}
+.es-math-scope .memory-combo small{margin-left:auto;font-size:9px;color:#d6c6f6}
 .es-math-scope .fleet-match-warning{color:#ffd499!important;border:1px solid #a67745;border-radius:7px;padding:7px;background:#35251999}
 .es-math-scope .complete-ship .vessel-engine.hud-above .vessel-engine-hud{top:auto;bottom:calc(100% + 2px)}
 .es-math-scope .complete-ship .vessel-engine.hud-below .vessel-engine-hud{top:calc(100% + 2px);bottom:auto}

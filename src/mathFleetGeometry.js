@@ -19,7 +19,7 @@ export function engineHudShift(side,shipId,op,size,hudWidth){
  return op===pair[0]?-shift:shift;
 }
 export function engineHudPlacement(side,shipId,op){
- const auxiliary=/^[RE]/.test(shipId)&&(op==='times'||op==='divide');
+ const auxiliary=/^[REL]/.test(shipId)&&(op==='times'||op==='divide');
  return (side==='enemy')!==auxiliary?'above':'below';
 }
 export const ENGINE_POINTS={
@@ -43,6 +43,10 @@ export const SHIP_ENGINE_POINTS={
  E02:{plus:[.374,.271],minus:[.626,.271],times:[.419,.388],divide:[.589,.388]},
  E03:{plus:[.380,.256],minus:[.644,.255],times:[.422,.361],divide:[.603,.361]},
  E04:{plus:[.360,.241],minus:[.652,.241],times:[.364,.393],divide:[.646,.393]},
+ L01:{plus:[.377,.231],minus:[.632,.232],times:[.368,.395],divide:[.639,.395]},
+ L02:{plus:[.375,.236],minus:[.627,.236],times:[.382,.397],divide:[.617,.397]},
+ L03:{plus:[.372,.221],minus:[.625,.221],times:[.366,.407],divide:[.635,.407]},
+ L04:{plus:[.373,.233],minus:[.636,.233],times:[.377,.394],divide:[.637,.394]},
 };
 // The complete sprites use two different camera views, not a CSS flip.
 // Engine centers follow the artwork in each view.
@@ -60,6 +64,10 @@ export const SHIP_PLAYER_ENGINE_POINTS={
  E02:{plus:[.353,.722],minus:[.652,.722],times:[.428,.441],divide:[.582,.441]},
  E03:{plus:[.351,.732],minus:[.652,.732],times:[.426,.435],divide:[.585,.435]},
  E04:{plus:[.337,.731],minus:[.670,.731],times:[.387,.388],divide:[.617,.388]},
+ L01:{plus:[.342,.751],minus:[.655,.753],times:[.374,.390],divide:[.627,.390]},
+ L02:{plus:[.334,.747],minus:[.672,.747],times:[.405,.431],divide:[.602,.431]},
+ L03:{plus:[.335,.795],minus:[.663,.795],times:[.391,.390],divide:[.617,.390]},
+ L04:{plus:[.360,.771],minus:[.636,.771],times:[.397,.396],divide:[.608,.396]},
 };
 export function enginePoint(side,shipId,op){
  if(side==='player'&&SHIP_PLAYER_ENGINE_POINTS[shipId]?.[op])return SHIP_PLAYER_ENGINE_POINTS[shipId][op];
@@ -75,7 +83,7 @@ export function engineSurface(side,shipId,op){
  const primary=op==='plus'||op==='minus',narrow=shipId==='C04'&&side==='player';
  const radius=!primary?[.045,.045]:narrow?[.033,.045]:shipId.startsWith('R')?[.065,.068]:shipId==='C02'?[.055,.067]:[.067,.075];
  return {point:enginePoint(side,shipId,op),radius,
-  exhaustY:primary?(side==='player'?{N00:.91,C01:.91,C02:.91,C03:.88,C04:.93,R01:.94,R02:.94,R03:.94,R04:.94,E01:.93,E02:.97,E03:.97,E04:.96}[shipId]:{E02:.025,E03:.04,E04:.045}[shipId]??.075):null};
+  exhaustY:primary?(side==='player'?{N00:.91,C01:.91,C02:.91,C03:.88,C04:.93,R01:.94,R02:.94,R03:.94,R04:.94,E01:.93,E02:.97,E03:.97,E04:.96,L01:.97,L02:.99,L03:.97,L04:.99}[shipId]:{E02:.025,E03:.04,E04:.045,L01:.025,L02:.01,L03:.04,L04:.01}[shipId]??.075):null};
 }
 export const GUN_POINTS={
  enemy:{1:[[.50,.66]],2:[[.35,.62],[.65,.62]],3:[[.33,.72],[.50,.80],[.67,.72]],4:[[.30,.78],[.43,.84],[.57,.84],[.70,.78]]},
@@ -113,6 +121,19 @@ export const WEAPON_MOUNTS={
  W27:{shipId:'E04',profile:'crystal',width:.071,length:.092,enemy:[.273,.543],player:[.289,.512]},
  W28:{shipId:'E04',profile:'needles',width:.067,length:.089,enemy:[.732,.542],player:[.707,.514]},
  W29:{shipId:'E04',profile:'harpoon',width:.064,length:.091,enemy:[.856,.473],player:[.826,.483]},
+ W30:{shipId:'L01',profile:'photon',width:.071,length:.097,enemy:[.196,.448],player:[.181,.484]},
+ W31:{shipId:'L01',profile:'crystal',width:.075,length:.108,enemy:[.312,.560],player:[.284,.516]},
+ W32:{shipId:'L01',profile:'coil',width:.075,length:.105,enemy:[.696,.560],player:[.715,.520]},
+ W33:{shipId:'L01',profile:'eclipse-core',width:.080,length:.104,enemy:[.813,.449],player:[.805,.483]},
+ W34:{shipId:'L02',profile:'arc',width:.076,length:.112,enemy:[.245,.361],player:[.239,.494]},
+ W35:{shipId:'L02',profile:'compressor',width:.083,length:.114,enemy:[.609,.596],player:[.501,.526]},
+ W36:{shipId:'L02',profile:'twin',width:.073,length:.110,enemy:[.752,.361],player:[.760,.496]},
+ W37:{shipId:'L03',profile:'drum',width:.096,length:.122,enemy:[.309,.645],player:[.340,.170]},
+ W38:{shipId:'L03',profile:'plasma',width:.096,length:.122,enemy:[.697,.645],player:[.655,.170]},
+ W39:{shipId:'L04',profile:'photon',width:.066,length:.094,enemy:[.162,.476],player:[.184,.486]},
+ W40:{shipId:'L04',profile:'facet',width:.068,length:.102,enemy:[.285,.542],player:[.305,.534]},
+ W41:{shipId:'L04',profile:'compressor',width:.075,length:.098,enemy:[.727,.540],player:[.692,.534]},
+ W42:{shipId:'L04',profile:'void-core',width:.078,length:.106,enemy:[.851,.475],player:[.810,.487]},
 };
 export function weaponMuzzleCount(weaponId){return WEAPON_MOUNTS[weaponId]?.second?2:1;}
 export function weaponMount(side,shipId,weaponId,muzzleIndex=0){

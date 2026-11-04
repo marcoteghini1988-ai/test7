@@ -109,25 +109,44 @@ export function deckExhausted(a,b){return a.deck.length===0||b.deck.length===0;}
 export function deckVerdict(a,b){const x=healthScore(a),y=healthScore(b);return Math.abs(x-y)<1e-5?'draw':x>y?'player':'enemy';}
 // Each valid calculation consumes ONLY the 2 selected cards. Their face values are ammo, their suits are triggers.
 export function getAmmo(cards){const a={H:0,D:0,C:0,S:0};for(const c of cards)a[SUIT_KEYS[c.suit]]=(a[SUIT_KEYS[c.suit]]||0)+c.value;return a;}
+// A memory weapon has its own rolling history and spends it on discharge.
+export function memoryComboStatus(weapon,ammo){
+ const [suits,size]=weapon.combo.split('@'),required=suits.split('+'),limit=Number(size);
+ const history=ammo?[...(weapon.memory??[]),ammo].slice(-limit):weapon.memory??[];
+ const totals=getAmmo([]);
+ for(const turn of history)for(const suit of required)totals[suit]+=turn[suit];
+ const ready=required.every(suit=>totals[suit]>0);
+ return {required,limit,history,totals,ready};
+}
+export function resetComboMemory(side){
+ if(!side.fleet.some(v=>v.weapons.some(w=>w.memory?.length)))return side;
+ return {...side,fleet:side.fleet.map(v=>({...v,weapons:v.weapons.map(w=>w.memory?.length?{...w,memory:[]}:w)}))};
+}
 export function previewVolley(side,cards){
  const ammo=getAmmo(cards);const shots=[];const newFleet=side.fleet.map((v,vi)=>({ ...v,weapons:v.weapons.map(w=>({...w}))}));
+ let memoryPending=false;
  for(const [vi,v] of newFleet.entries()){
   if(vesselDestroyed(v))continue;
   for(const w of v.weapons){
-   const n=w.seme_trigger==='*'?Object.values(ammo).reduce((a,b)=>a+b,0):ammo[w.seme_trigger]||0;
-   if(n===0)continue;
+   let count=w.seme_trigger==='*'?Object.values(ammo).reduce((a,b)=>a+b,0):ammo[w.seme_trigger]||0,charging=false;
+   if(w.tipo==='Combo a memoria'){
+    if(cards.length!==2)continue;
+    const {history,totals,ready}=memoryComboStatus(w,ammo);
+    w.memory=ready?[]:history;
+    if(!ready){memoryPending=true;continue;}
+    count=totals[w.seme_trigger];
+   }
+   if(count===0)continue;
    if(w.tipo==='Combo simultanea'){const requires=(w.combo||'').split('+');if(!requires.every(s=>(ammo[s]||0)>0))continue;}
-   if(w.tipo==='Combo a memoria')continue; // riservata alle rarità dei prossimi blocchi.
-   let count=n,charging=false;
    if(w.tipo==='Accumulo'){
-    w.charge=(w.charge||0)+n;const threshold=Math.max(1,w.soglia_munizioni||1);
+    w.charge=(w.charge||0)+count;const threshold=Math.max(1,w.soglia_munizioni||1);
     if(w.charge<threshold){count=0;charging=true;}
     else{count=threshold;w.charge-=threshold;} // Una sola scarica per calcolo; resto conservato.
    }
    shots.push({vesselIndex:vi,shipId:v.id,weaponId:w.id,weapon:w.nome,suit:w.seme_trigger,bullets:count,damagePerBullet:w.damage,damage:count*w.damage,charging,charge:w.charge||0,kind:w.tipo,visual:w.effetto_visivo});
   }
  }
- return {shots,totalDamage:shots.reduce((s,x)=>s+x.damage,0),fleet:newFleet};
+ return {shots,totalDamage:shots.reduce((s,x)=>s+x.damage,0),fleet:newFleet,memoryPending};
 }
 export function chooseTarget(side,op,preferredIndex=0){
  const candidates=side.fleet.map((v,i)=>({v,i})).filter(({v})=>(v.engines[op]?.hp||0)>0);
@@ -138,7 +157,7 @@ export function dealHit(defender,attacker,op,_target,cards,preferredIndex=0){
  const volley=previewVolley(attacker,cards||[]);
  const target=defender.fleet[vi].engines[op];const damage=Math.min(target.hp,volley.totalDamage);
  const fleet=defender.fleet.map((v,i)=>i!==vi?v:{...v,engines:{...v.engines,[op]:{...target,hp:target.hp-damage}}});
- return {defender:{...defender,fleet},attacker:{...attacker,fleet:volley.fleet},damage,destroyed:target.hp>0&&target.hp-damage<=0,volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage};
+ return {defender:{...defender,fleet},attacker:{...attacker,fleet:volley.fleet},damage,destroyed:target.hp>0&&target.hp-damage<=0,volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage,memoryPending:volley.memoryPending};
 }
 export function findMoves(side,defender,targets){const moves=[];for(const op of supportedOperators(side)){
   for(let vi=0;vi<defender.fleet.length;vi++){
