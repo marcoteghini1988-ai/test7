@@ -24,6 +24,8 @@ Il primo blocco del passo 7 integra le **25 evoluzioni visive delle cinque comun
 
 Il passo 7B aggiunge le **20 evoluzioni visive delle quattro rare**. Falco Binario, Manta Ionica e Iride mostrano il motore × dal livello 3. Squalo del Vuoto lo monta già al livello 1. [Rapporto del passo 7B](docs/PASSO_7B_EVOLUZIONE_RARE.md).
 
+Il passo 7C aggiunge le **20 evoluzioni visive delle quattro epiche**. In **Flotta**, Nebulosa, Tempesta, Fenice e Orizzonte mostrano la Divisione dal livello 4. [Rapporto del passo 7C](docs/PASSO_7C_EVOLUZIONE_EPICHE.md).
+
 ## Regole del combattimento attivo
 
 - Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.
