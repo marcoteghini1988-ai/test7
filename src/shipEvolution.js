@@ -1,6 +1,6 @@
 // Coordinates on the existing 1000 × 1000 hull renders. The two views have
 // their own attachment points. No plating changes an engine or weapon anchor.
-const COMMON_HULLS={
+const HULL_UPGRADES={
  N00:{
   color:'#73ddff',plate:'M-30-9-9-31 34-20 42 4 18 23-32 13Z',
   wing:'M24-28-17-35-88-63-106-45-54-14-23 26 24 17Z',
@@ -36,8 +36,36 @@ const COMMON_HULLS={
   player:{plate:[262,738,507],wing:[192,808,538]},
   enemy:{plate:[261,739,505],wing:[188,812,551]},
  },
+ R01:{
+  color:'#ffc56e',plate:'M-38 2-18-25 13-27 41-9 26 14-19 28Z',
+  wing:'M31-28-12-31-74-6-106 23-69 20-91 49-37 30 17 14Z',
+  fin:'M18-20-25-16-94 14-153 64-102 54-124 78-65 52-38 29 12 15Z',
+  player:{plate:[268,732,526],wing:[213,787,568]},
+  enemy:{plate:[264,736,421],wing:[213,787,449]},
+ },
+ R02:{
+  color:'#91ffd8',plate:'M-43-3Q-27-32 10-27L39-11 32 11 1 24-36 17Z',
+  wing:'M34-25Q-49-33-90-66Q-116-84-112-38Q-102 12-57 39L10 22Z',
+  fin:'M17-11Q-72-28-121-92Q-136-70-124-27Q-114 12-76 32L-39 25-10 8Z',
+  player:{plate:[227,773,443],wing:[169,831,448]},
+  enemy:{plate:[215,785,469],wing:[169,831,465]},
+ },
+ R03:{
+  color:'#f2c5ff',plate:'M-41-5-9-32 37-21 29 11-3 30Z',
+  wing:'M27-25-22-38-67-77-102-66-82-24-106 22-73 52-36 22 17 9Z',
+  fin:'M17-14-37-32-108-104-124-63-99-23-123 27-104 65-81 32-55 15-9 10Z',
+  player:{plate:[222,778,490],wing:[165,835,505]},
+  enemy:{plate:[216,784,481],wing:[163,837,476]},
+ },
+ R04:{
+  color:'#9affaa',plate:'M-42-12 19-25 40-3 29 20-30 25-45 10Z',
+  wing:'M31-34-31-32-101-9-129 17-98 35-32 30 28 11Z',
+  fin:'M18-22-51-19-133 6-162 31-107 46-67 35-53 59-18 38 16 11Z',
+  player:{plate:[236,764,553],wing:[210,790,581]},
+  enemy:{plate:[235,765,437],wing:[207,793,466]},
+ },
 };
 
 export function shipEvolution(shipId,level){
- return level>1?COMMON_HULLS[shipId]??null:null;
+ return level>1?HULL_UPGRADES[shipId]??null:null;
 }
