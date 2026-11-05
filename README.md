@@ -95,3 +95,9 @@ Riferimento: scaletta master di **53 punti**, distinta dalla vecchia numerazione
 - **Carte speciali:** mano separata da 5, reintegro immediato, contenuto delle singole carte da decidere soltanto dopo il completamento delle altre meccaniche.
 
 **Non confondere "prototipo" con "meccanica definitiva".** Non sono stati alterati gli asset delle 17 navi, le 42 armi, il Bazar e l'Hangar. La grafica finale e le nuove scudiere saranno affrontate nelle fasi dedicate.
+
+## Combattimento continuo — colpi contemporanei (5 novembre 2026)
+- Gli attacchi non si bloccano tra loro: il giocatore può continuare a scegliere e usare carte mentre i proiettili sono in volo e l'IA può sparare contemporaneamente.
+- Le carte vengono consumate al lancio; gli HP vengono ridotti all'arrivo, applicandoli allo stato più recente del bersaglio. Gli attacchi in volo non possono sovrascrivere i danni fra loro.
+- Il risultato per distruzione della flotta o per esaurimento del mazzo attende gli impatti ancora da applicare.
+- Nessuna grafica o catalogo modificato. Le prossime fasi migreranno il vecchio sistema di quattro motori alle parti vitali, scudi e scudiere previste dalla nuova scaletta.

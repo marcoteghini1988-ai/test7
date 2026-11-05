@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose,validFleet,newVessel,previewVolley,getAmmo,supportedOperators,vesselDestroyed,REALTIME_AI_MIN_MS,REALTIME_AI_MAX_MS,REALTIME_AI_FINAL_REDUCTION_MS,aiDecisionWindow,nextAiActionDelay} from './mathDuelEngine.js';
+import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose,validFleet,newVessel,previewVolley,getAmmo,supportedOperators,vesselDestroyed,applyPendingHit,REALTIME_AI_MIN_MS,REALTIME_AI_MAX_MS,REALTIME_AI_FINAL_REDUCTION_MS,aiDecisionWindow,nextAiActionDelay} from './mathDuelEngine.js';
 const rng=()=>.5, cards=(a,sa,b,sb)=>[{value:a,suit:sa,id:'a'},{value:b,suit:sb,id:'b'}];
 test('mazzo 52 carte, mano sette, nessuna carta duplicata',()=>{const s=createShip(1,false,{},rng);assert.equal(s.hand.length,7);assert.equal(s.deck.length,45);assert.equal(new Set([...s.hand,...s.deck].map(x=>x.id)).size,52);});
 test('quattro calcoli matematici corretti anche in ordine inverso',()=>{assert.ok(evaluatePair('plus',5,4,9));assert.ok(evaluatePair('minus',3,9,6));assert.ok(evaluatePair('times',5,4,20));assert.ok(evaluatePair('divide',2,10,5));assert.equal(evaluatePair('divide',3,5,4),null);});
@@ -137,4 +137,29 @@ test('IA 35-40 secondi iniziali; più rapida in campagna avanzata',()=>{
  assert.equal(nextAiActionDelay(()=>.999999,30,'campaign'),30000);
  assert.equal(nextAiActionDelay(()=>.5,30,'pvp'),37500);
  for(let level=2;level<=30;level++)assert.ok(aiDecisionWindow(level).minMs<=aiDecisionWindow(level-1).minMs);
+});
+
+test('due impatti successivi mantengono entrambi i danni',()=>{
+ const d=createShip(1,true,{fleetIds:['N00']},rng);
+ const a=applyPendingHit(d,0,'plus',12),b=applyPendingHit(a.defender,0,'plus',18);
+ assert.equal(b.defender.fleet[0].engines.plus.hp,25);
+ assert.equal(a.damage,12);assert.equal(b.damage,18);
+ assert.equal(d.fleet[0].engines.plus.hp,55);
+});
+test('colpi sovrapposti non generano HP negativi',()=>{
+ const d=createShip(1,true,{},rng),a=applyPendingHit(d,0,'plus',1000);
+ const b=applyPendingHit(a.defender,0,'plus',200);
+ assert.equal(a.damage,55);assert.equal(a.destroyed,true);
+ assert.equal(b.damage,0);assert.equal(b.destroyed,false);
+ assert.equal(b.defender.fleet[0].engines.minus.hp,55);
+});
+test('impatto su zona inesistente o danno negativo non altera HP',()=>{
+ const d=createShip(1,true,{},rng);
+ for(const [i,op,n] of [[9,'plus',20],[0,'divide',20],[0,'plus',-1],[0,'plus',NaN]]){
+  const hit=applyPendingHit(d,i,op,n);assert.strictEqual(hit.defender,d);assert.equal(hit.damage,0);
+ }
+});
+test('gli eventi dei proiettili sono isolati per battaglia',()=>{
+ const a=initialBattle(1,{},rng),b=initialBattle(1,{},rng);
+ assert.deepEqual(a.effects,[]);a.effects.push({id:1});assert.deepEqual(b.effects,[]);
 });

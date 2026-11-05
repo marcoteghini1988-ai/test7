@@ -179,12 +179,20 @@ export function chooseTarget(side,op,preferredIndex=0){
  const candidates=side.fleet.map((v,i)=>({v,i})).filter(({v})=>(v.engines[op]?.hp||0)>0);
  return candidates.find(x=>x.i===preferredIndex)?.i??candidates[0]?.i??-1;
 }
+// Resolve impact against the current defender: overlapping hits never overwrite HP.
+export function applyPendingHit(defender,shipIndex,op,rawDamage){
+ const target=defender?.fleet?.[shipIndex]?.engines?.[op];
+ if(!target||target.hp<=0||!Number.isFinite(rawDamage)||rawDamage<=0)
+  return {defender,damage:0,destroyed:false};
+ const damage=Math.min(target.hp,Math.floor(rawDamage));
+ const fleet=defender.fleet.map((v,i)=>i!==shipIndex?v:{...v,engines:{...v.engines,[op]:{...target,hp:target.hp-damage}}});
+ return {defender:{...defender,fleet},damage,destroyed:damage>0&&damage>=target.hp};
+}
 export function dealHit(defender,attacker,op,_target,cards,preferredIndex=0){
  const vi=chooseTarget(defender,op,preferredIndex);if(vi<0)return {defender,attacker,damage:0,destroyed:false,volley:[]};
  const volley=previewVolley(attacker,cards||[]);
- const target=defender.fleet[vi].engines[op];const damage=Math.min(target.hp,volley.totalDamage);
- const fleet=defender.fleet.map((v,i)=>i!==vi?v:{...v,engines:{...v.engines,[op]:{...target,hp:target.hp-damage}}});
- return {defender:{...defender,fleet},attacker:{...attacker,fleet:volley.fleet},damage,destroyed:target.hp>0&&target.hp-damage<=0,volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage,memoryPending:volley.memoryPending};
+ const hit=applyPendingHit(defender,vi,op,volley.totalDamage);
+ return {...hit,attacker:{...attacker,fleet:volley.fleet},volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage,memoryPending:volley.memoryPending};
 }
 export function findMoves(side,defender,targets){const moves=[];for(const op of supportedOperators(side)){
   for(let vi=0;vi<defender.fleet.length;vi++){
@@ -214,5 +222,5 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
  const enemyFleet=fleetCompatibility(fleetIds,enemyFleetIds,shipLevel,shipLevels,enemyShipLevels).compatible
   ?{fleetIds:enemyFleetIds,shipLevel,shipLevels:enemyShipLevels}:playerFleet;
  return {level,mode,player:createShip(level,false,playerFleet,rng),enemy:createShip(level,true,enemyFleet,rng),
- actor:'player',round:1,aiDueAt:0,targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
+ actor:'player',round:1,aiDueAt:0,effects:[],targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }

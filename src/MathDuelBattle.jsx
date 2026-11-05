@@ -1,6 +1,6 @@
 import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
-import {ENGINE_KEYS,META,PHASE1_SHIPS,newShip,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory,nextAiActionDelay} from './mathDuelEngine.js';
+import {ENGINE_KEYS,META,PHASE1_SHIPS,newShip,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory,nextAiActionDelay,applyPendingHit} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
 import {ASSET_ROOT,CARD_SUIT_COLORS,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
@@ -79,11 +79,13 @@ function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,e
   {dead&&<span className="vessel-smoke"/>}
  </button>;
 }
-function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,phase,intro,effect,availableOps,registerShipRef,registerEngineRef,registerGunRef}){
+function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,phase,intro,effects=[],availableOps,registerShipRef,registerEngineRef,registerGunRef}){
  const enemy=side==='enemy',targetable=enemy&&phase==='ready';
  const formation=fleetFormation(ship.fleet.length,side);
- const hit=effect&&effect.side!==side&&effect.targetShip===focused;
- return <div data-fleet-size={ship.fleet.length} className={`ship-zone ship-${side}${hit?' ship-struck':''}${effect?' ship-in-combat':''}`}>
+ const attacking=effects.filter(e=>e.side===side).at(-1)??null;
+ const incoming=effects.filter(e=>e.side!==side);
+ const hit=incoming.some(e=>e.targetShip===focused);
+ return <div data-fleet-size={ship.fleet.length} className={`ship-zone ship-${side}${hit?' ship-struck':''}${effects.length?' ship-in-combat':''}`}>
   <div className="fleet-ships">
    {ship.fleet.map((v,i)=>{
     const focusedShip=i===focused,dead=vesselDestroyed(v);
@@ -91,11 +93,11 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
      style={{left:`${formation.centers[i]/450*100}%`,top:formation.top,width:formation.size,height:formation.size,
       '--engine-size':`${formation.engineSize}px`,'--engine-hud-width':`${formation.hudWidth}px`,zIndex:focusedShip?3:1}}>
      <ShipSkin key={v.id} side={side} vessel={v} imageRef={node=>registerShipRef?.(side,i,node)}/>
-     <MountedWeapons side={side} vessel={v} index={i} effect={effect} registerGunRef={registerGunRef}/>
+     <MountedWeapons side={side} vessel={v} index={i} effect={attacking} registerGunRef={registerGunRef}/>
      {ENGINE_KEYS.map(op=><Engine key={op} side={side} op={op} vessel={v} formation={formation}
       target={targets?.[op]} selected={enemy&&focusedShip&&selectedTarget===op} onSelect={()=>onTarget?.(i,op)} enabled={targetable}
-      available={!enemy||availableOps.includes(op)} hit={!!effect&&effect.side!==side&&effect.targetShip===i&&effect.op===op}
-      engineRef={node=>registerEngineRef?.(side,i,op,node)} impactDelay={effect?.arrivalMs}/>) }
+      available={!enemy||availableOps.includes(op)} hit={incoming.some(e=>e.targetShip===i&&e.op===op)}
+      engineRef={node=>registerEngineRef?.(side,i,op,node)} impactDelay={incoming.find(e=>e.targetShip===i&&e.op===op)?.arrivalMs}/>) }
      {(intro==='deploy'||intro==='materialize')&&<div className="intro-vessel-card" aria-hidden="true"
       style={{'--deploy-delay':`${i*90+(enemy?90:0)}ms`}}><ShipCard vessel={v} compact/></div>}
     </div>;
@@ -222,7 +224,7 @@ function Projectile({effect,rootRef,engineRefs,gunRefs}){
    return [{...salvo,rounds}];
   });
   setGeometry({target,shots});
- },[effect,rootRef,engineRefs,gunRefs]);
+ },[effect?.id,rootRef,engineRefs,gunRefs]);
  if(!effect||!geometry)return null;
  const {target,shots}=geometry;
  return <div className={`vfx-layer${effect.destroyed?' motor-break':''}`} aria-hidden="true" data-arrival-ms={effect.arrivalMs}>
@@ -341,7 +343,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  const gameRef=useRef(game);gameRef.current=game;
  const registerShipRef=(side,index,node)=>{if(node)shipRefs.current[side][index]=node; else delete shipRefs.current[side][index];};
  const registerEngineRef=(side,index,op,node)=>{const key=`${index}/${op}`;if(node)engineRefs.current[side][key]=node; else delete engineRefs.current[side][key];};
- const registerGunRef=(side,index,id,node)=>{const key=`${index}/${id}`;if(node)gunRefs.current[side][key]=node;else delete gunRefs.current[side][key];};const [help,setHelp]=useState(false),[fleetMenu,setFleetMenu]=useState(false),[message,setMessage]=useState('');const queue=useRef([]),resultClaimed=useRef(false);
+ const registerGunRef=(side,index,id,node)=>{const key=`${index}/${id}`;if(node)gunRefs.current[side][key]=node;else delete gunRefs.current[side][key];};const [help,setHelp]=useState(false),[fleetMenu,setFleetMenu]=useState(false),[message,setMessage]=useState('');const queue=useRef([]),resultClaimed=useRef(false),attackSerial=useRef(0);
  const pauseClockRef=useRef(false),pauseStartRef=useRef(0);
  pauseClockRef.current=help||fleetMenu;
  function later(f,ms){const handle=setTimeout(f,ms);queue.current.push(handle);return handle;}
@@ -378,51 +380,68 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   return()=>clearTimeout(timer);
  },[intro,introIndex,reducedIntro]);
  function notice(text){setMessage(text);later(()=>setMessage(''),2200)}
- function finish(b,winner,reason){return {...b,actor:'none',phase:'finished',winner,reason,effect:null};}
- function transition(state,side){
-  let b=clone(state);
+ function finish(b,winner,reason){return {...b,actor:'none',phase:'finished',winner,reason};}
+ function resolveOutcome(b){
+  if(b.effects?.some(effect=>!effect.resolved))return b;
   if(isDestroyed(b.player))return finish(b,'enemy','La tua flotta è stata distrutta');
   if(isDestroyed(b.enemy))return finish(b,'player','Flotta avversaria distrutta');
   if(deckExhausted(b.player,b.enemy))return finish(b,deckVerdict(b.player,b.enemy),'Mazzo esaurito: confronto integrità delle flotte');
-  // Gioco continuo: nessuna scadenza o alternanza obbligatoria per il giocatore.
-  // I bersagli matematici restano fissi durante tutta la battaglia.
-  b.selected=[];b.effect=null;b.actor='player';b.phase='ready';b.round+=1;
-  if(side==='player'){
-   b.player.sacrifices=0;
-   b.notice='Attacco eseguito: prepara pure il prossimo colpo';
-  }else{
-   b.enemy.sacrifices=0;
-   b.notice='L’IA ha attaccato: continua a giocare senza limite di tempo';
-  }
-  const next=nextAttackTarget(b.player,b.enemy,b.targetShip,b.target);
-  if(next){
-   const changed=next.targetShip!==b.targetShip||next.target!==b.target;
-   b.targetShip=next.targetShip;b.target=next.target;
-   if(changed)b.notice=`Bersaglio selezionato: ${b.enemy.fleet[next.targetShip].name}`;
-  }else b.notice='Nessun bersaglio raggiungibile';
   return b;
  }
- function fire(side,move){const b=gameRef.current;if(b.phase!=='ready'||b.actor!=='player')return;
-  const attackShip=b[side],receiver=side==='player'?'enemy':'player',defShip=b[receiver],goal=b.targets[move.op],cards=[attackShip.hand[move.i],attackShip.hand[move.j]];
-  if(cards.some(x=>!x)){if(side==='player')notice('Seleziona due carte valide');return;}
-  if(!supportedOperators(attackShip).includes(move.op)){if(side==='player')notice('Operazione non sbloccata: serve una nave con quel motore operativo');return;}
-  const proof=inspectCalculation(move.op,cards[0].value,cards[1].value,goal);
-  if(!proof.valid){
-   const cleared=resetComboMemory(attackShip),reset=cleared!==attackShip;
-   if(reset)write({...b,[side]:cleared});
-   if(side==='player')notice(`${label(proof.a)} ${META[move.op].sign} ${label(proof.b)} = ${Number.isInteger(proof.result)?proof.result:Math.round(proof.result*100)/100}. Bersaglio: ${goal}${reset?' · Memoria azzerata':''}`);
+ function retarget(b){
+  const next=nextAttackTarget(b.player,b.enemy,b.targetShip,b.target);
+  return next?{...b,...next}:b;
+ }
+ function fire(side,move){
+  const b=gameRef.current;
+  if(b.phase!=='ready'||b.actor!=='player'||deckExhausted(b.player,b.enemy))return;
+  const attacker=b[side],receiver=side==='player'?'enemy':'player',defender=b[receiver],
+   goal=b.targets[move.op],cards=[attacker.hand[move.i],attacker.hand[move.j]];
+  if(cards.some(card=>!card)){if(side==='player')notice('Seleziona due carte valide');return;}
+  if(!supportedOperators(attacker).includes(move.op)){if(side==='player')notice('Operazione non disponibile');return;}
+  if(!inspectCalculation(move.op,cards[0].value,cards[1].value,goal).valid){
+   const reset=resetComboMemory(attacker);
+   if(reset!==attacker)write({...b,[side]:reset});
+   if(side==='player')notice(`Calcolo non valido: bersaglio ${goal}`);
    return;
   }
-  const index=move.targetShip??0,e=defShip.fleet[index]?.engines[move.op];if(!e||e.hp<=0){if(side==='player')notice('Motore non disponibile');return;}
-  const strike=dealHit(defShip,attackShip,move.op,goal,cards,index);
-  const timing=volleyTimeline(strike.volley),salvos=planWeaponSalvos(strike.volley);
-  const strongest=[...strike.volley].sort((a,b)=>(b.damage||0)-(a.damage||0))[0];
-  const anim={...clone(b),...(side==='enemy'?{shownPlayer:index}:{targetShip:index}),phase:'animating',selected:[],effect:{side,op:move.op,targetShip:index,damage:strike.damage,destroyed:strike.destroyed,volleys:strike.volley,salvos,memoryPending:strike.memoryPending,arrivalMs:timing.arrivalMs,primaryColor:WEAPON_COLORS[strongest?.suit]||'#ffdf83',shipCount:attackShip.fleet.length,sourceFocus:side==='player'?b.shownPlayer:b.targetShip}};
-  write(anim);if(salvos.length)volleySound(salvos);else tone('click');
-  later(()=>{const active=gameRef.current;if(active.effect!==anim.effect)return;const next=clone(active);
-   next[side]=consumeAttack(strike.attacker,[move.i,move.j]);next[receiver]=strike.defender;
-   next.logs=[`${side==='player'?'TU':'IA'}: ${cards[0].value}${cards[0].suit} ${META[move.op].sign} ${cards[1].value}${cards[1].suit} = ${goal} — ${strike.damage} HP`,...next.logs].slice(0,6);
-   write(transition(next,side));
+  if((defender.fleet[move.targetShip]?.engines?.[move.op]?.hp||0)<=0){
+   if(side==='player')notice('Bersaglio già distrutto');return;
+  }
+  const strike=dealHit(defender,attacker,move.op,goal,cards,move.targetShip),
+   timing=volleyTimeline(strike.volley),salvos=planWeaponSalvos(strike.volley),
+   strongest=[...strike.volley].sort((a,b)=>(b.damage||0)-(a.damage||0))[0];
+  const effect={
+   id:++attackSerial.current,side,op:move.op,targetShip:move.targetShip,
+   rawDamage:strike.rawDamage,damage:0,destroyed:false,resolved:false,
+   volleys:strike.volley,salvos,memoryPending:strike.memoryPending,
+   arrivalMs:timing.arrivalMs,primaryColor:WEAPON_COLORS[strongest?.suit]||'#ffdf83',
+   shipCount:attacker.fleet.length,sourceFocus:side==='player'?b.shownPlayer:b.targetShip
+  };
+  const next=clone(b);
+  next[side]=consumeAttack(strike.attacker,[move.i,move.j]);
+  if(side==='player'){next.selected=[];next.targetShip=move.targetShip;}
+  else next.shownPlayer=move.targetShip;
+  next.effects=[...(b.effects||[]),effect];next.round+=1;
+  next.notice=side==='player'?'Attacco lanciato: prepara il prossimo':'L’IA ha sparato: puoi continuare';
+  write(next);
+  if(salvos.length)volleySound(salvos);else tone('click');
+  later(()=>{
+   const active=gameRef.current;
+   if(active.phase==='finished'||!active.effects?.some(e=>e.id===effect.id))return;
+   const state=clone(active),idx=state.effects.findIndex(e=>e.id===effect.id);
+   if(state.effects[idx].resolved)return;
+   const result=applyPendingHit(state[receiver],effect.targetShip,effect.op,effect.rawDamage);
+   state[receiver]=result.defender;
+   state.effects[idx]={...state.effects[idx],resolved:true,damage:result.damage,destroyed:result.destroyed};
+   state.logs=[`${side==='player'?'TU':'IA'}: ${cards[0].value}${cards[0].suit} ${META[move.op].sign} ${cards[1].value}${cards[1].suit} = ${goal} — ${result.damage} HP`,...state.logs].slice(0,6);
+   write(resolveOutcome(retarget(state)));
+  },timing.arrivalMs);
+  later(()=>{
+   const active=gameRef.current;
+   if(!active.effects?.some(e=>e.id===effect.id))return;
+   const state={...active,effects:active.effects.filter(e=>e.id!==effect.id)};
+   write(resolveOutcome(state));
   },timing.settleMs);
  }
  function attack(){const b=gameRef.current;if(b.phase!=='ready'||b.actor!=='player')return;
@@ -443,7 +462,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  function change(withEther){const b=gameRef.current;if(b.actor!=='player'||b.phase!=='ready')return;if(b.selected.length!==1){notice('Seleziona UNA carta da cambiare');return;}
   const n=clone(b),i=n.selected[0];if(withEther){const ship=etherChange(n.player,i);if(!ship){notice('Etere insufficiente o mazzo vuoto');return;}n.player=ship;if(!b.practice)onEtherConsumed?.(1);n.notice='Carta sostituita con Etere';}
   else{const swap=sacrificeCard(n.player,i,n.enemy,null);if(!swap){notice('Non puoi cambiare altre carte');return;}n.player=swap.ship;n.enemy=swap.opponent;n.notice=`Sacrificio ${n.player.sacrifices}/3: ${swap.detail}`;}
-  n.selected=[];n.logs=[n.notice,...n.logs].slice(0,6);write(isDestroyed(n.player)?finish(n,'enemy','Flotta distrutta durante un sacrificio'):deckExhausted(n.player,n.enemy)?finish(n,deckVerdict(n.player,n.enemy),'Mazzo esaurito'):n);
+  n.selected=[];n.logs=[n.notice,...n.logs].slice(0,6);write(resolveOutcome(n));
  }
  // L'IA usa un intervallo indipendente. Un attacco in animazione viene
  // terminato prima di risolvere un eventuale tentativo IA già maturo.
@@ -460,7 +479,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    }
    if(isDestroyed(n.player)){write(finish(n,'enemy','Flotta distrutta'));return;}
    if(isDestroyed(n.enemy)){write(finish(n,'player','Flotta nemica distrutta'));return;}
-   if(deckExhausted(n.player,n.enemy)){write(finish(n,deckVerdict(n.player,n.enemy),'Mazzo esaurito'));return;}
+   if(deckExhausted(n.player,n.enemy)){write(resolveOutcome(n));return;}
    if(move){write(n);fire('enemy',move);}
    else{n.notice='L’IA cerca una combinazione valida';write(n);}
   },250);
@@ -500,7 +519,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    <div className="top-brand">ECLISSI <b>STELLARE</b></div>
    <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
    <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}</b><small>INTEGRITÀ FLOTTA {Math.round(healthScore(game.enemy)*100)}%</small></div><Pips ship={game.enemy}/></div>
-   <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
+   <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effects={game.effects} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    {intro?<div className="battle-intro">
     <div className="battle-intro-status" role="status">{intro.label}</div>
     <div className="battle-intro-actions">
@@ -508,15 +527,15 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      <button type="button" className="es-button primary" onClick={finishIntro}>Salta intro</button>
     </div>
    </div>:<div className="center-bar"><span className="round-tag">COLPI {game.round-1}</span><MemoryCombos ship={game.player}/><div className="timer-pill"><strong>CONTINUO</strong></div></div>}
-   <Ship side="player" ship={game.player} targets={game.actor==='enemy'?game.targets:null} focused={game.shownPlayer} onSelectShip={i=>write({...gameRef.current,shownPlayer:i})} phase="idle" intro={intro?.id} effect={game.effect} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
+   <Ship side="player" ship={game.player} targets={null} focused={game.shownPlayer} onSelectShip={i=>write({...gameRef.current,shownPlayer:i})} phase="idle" intro={intro?.id} effects={game.effects} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    <div className="deck left"><div className="deck-graphic">✦</div><small>MAZZO</small><strong>{game.player.deck.length}</strong></div><div className="deck right"><div className="deck-graphic trash">▤</div><small>SCARTI</small><strong>{game.player.discard.length}</strong></div>
    <Hand cards={game.player.hand} selected={game.selected} onSelect={pick} disabled={game.phase!=='ready'||game.actor!=='player'}/>
    <div className="play-controls">{!intro&&<Formula game={game}/>}<button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
    <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={openFleet} disabled={!!intro}>FLOTTA ⚙</button></div>
    <div className="player-status"><b>TU</b><span className="my-hp">FLOTTA {Math.round(healthScore(game.player)*100)}%</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
-   {game.effect&&<Projectile effect={game.effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs}/>}
+   {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs}/>)}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
-   {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>Ogni nave monta inizialmente + e −; alcuni modelli sbloccano × e ÷. Tutti i motori installati devono essere distrutti per eliminare una nave. Vinci distruggendo tutta la flotta nemica.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo costa 3 secondi e il terzo −3 HP a te. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
+   {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>Ogni nave monta inizialmente + e −; alcuni modelli sbloccano × e ÷. Tutti i motori installati devono essere distrutti per eliminare una nave. Vinci distruggendo tutta la flotta nemica.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo costa 3 secondi e il terzo −3 HP a te. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
    {fleetMenu&&<FleetSetup collection={collection} onEquip={saveLoadout} selected={fleetIds} setSelected={setFleetIds} enemySelected={enemyFleetIds} setEnemySelected={setEnemyFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet}/>}
   </div>
  </div>;
