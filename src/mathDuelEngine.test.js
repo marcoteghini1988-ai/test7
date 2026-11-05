@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose,validFleet,newVessel,previewVolley,getAmmo,supportedOperators,vesselDestroyed,REALTIME_PLAYER_SECONDS,REALTIME_AI_MIN_MS,REALTIME_AI_MAX_MS,nextAiActionDelay} from './mathDuelEngine.js';
+import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose,validFleet,newVessel,previewVolley,getAmmo,supportedOperators,vesselDestroyed,REALTIME_AI_MIN_MS,REALTIME_AI_MAX_MS,REALTIME_AI_FINAL_REDUCTION_MS,aiDecisionWindow,nextAiActionDelay} from './mathDuelEngine.js';
 const rng=()=>.5, cards=(a,sa,b,sb)=>[{value:a,suit:sa,id:'a'},{value:b,suit:sb,id:'b'}];
 test('mazzo 52 carte, mano sette, nessuna carta duplicata',()=>{const s=createShip(1,false,{},rng);assert.equal(s.hand.length,7);assert.equal(s.deck.length,45);assert.equal(new Set([...s.hand,...s.deck].map(x=>x.id)).size,52);});
 test('quattro calcoli matematici corretti anche in ordine inverso',()=>{assert.ok(evaluatePair('plus',5,4,9));assert.ok(evaluatePair('minus',3,9,6));assert.ok(evaluatePair('times',5,4,20));assert.ok(evaluatePair('divide',2,10,5));assert.equal(evaluatePair('divide',3,5,4),null);});
@@ -116,15 +116,25 @@ test('when no compatible enemy motor remains, return null rather than selecting 
  assert.equal(nextAttackTarget(player,enemy,0,'plus'),null);
 });
 
-// Fase realtime: temporizzazione indipendente dall'alternanza dei vecchi turni.
-test('prima azione: 40 secondi giocatore, IA a 35-40 secondi, bersagli iniziali fissi',()=>{
+// Fase continuo: nessun timer per il giocatore, solo ritmo IA.
+test('nessun timer o scadenza in mano al giocatore',()=>{
  const b=initialBattle(1,{},rng);
- assert.equal(b.seconds,REALTIME_PLAYER_SECONDS);
- assert.equal(b.playerDueAt,0);
+ assert.equal(Object.hasOwn(b,'seconds'),false);
+ assert.equal(Object.hasOwn(b,'playerDueAt'),false);
+ assert.equal(Object.hasOwn(b,'aiDueAt'),true);
  assert.equal(b.aiDueAt,0);
- assert.deepEqual(Object.keys(b.targets),['plus','minus','times','divide']);
  assert.equal(b.actor,'player');
+ assert.deepEqual(Object.keys(b.targets),['plus','minus','times','divide']);
+});
+test('IA 35-40 secondi iniziali; più rapida in campagna avanzata',()=>{
+ assert.deepEqual(aiDecisionWindow(1),{minMs:35000,maxMs:40000});
  assert.equal(nextAiActionDelay(()=>0),REALTIME_AI_MIN_MS);
  assert.equal(nextAiActionDelay(()=>.5),37500);
  assert.equal(nextAiActionDelay(()=>.999999),REALTIME_AI_MAX_MS);
+ assert.equal(REALTIME_AI_FINAL_REDUCTION_MS,10000);
+ assert.deepEqual(aiDecisionWindow(30),{minMs:25000,maxMs:30000});
+ assert.equal(nextAiActionDelay(()=>0,30,'campaign'),25000);
+ assert.equal(nextAiActionDelay(()=>.999999,30,'campaign'),30000);
+ assert.equal(nextAiActionDelay(()=>.5,30,'pvp'),37500);
+ for(let level=2;level<=30;level++)assert.ok(aiDecisionWindow(level).minMs<=aiDecisionWindow(level-1).minMs);
 });

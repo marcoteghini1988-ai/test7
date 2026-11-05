@@ -543,3 +543,6 @@
 .es-math-scope .center-bar .timer-pill{gap:6px}
 .es-math-scope .center-bar .timer-pill strong{min-width:0;font-size:17px}
 .es-math-scope .center-bar .timer-pill .ai-clock{display:inline-block;color:#f8cda0;font-size:10px;font-weight:800;white-space:nowrap;border-left:1px solid #4d6e84;padding-left:6px}
+
+/* Combattimento continuo: indicatore statico, senza timer per il giocatore. */
+.es-math-scope .center-bar .timer-pill strong,.es-math-scope .center-bar:has(.memory-combos) .timer-pill strong{font-size:12px;letter-spacing:.3px;white-space:nowrap;min-width:0}

@@ -37,7 +37,7 @@ Il passo 10 introduce la sequenza di apertura del duello. Dopo la distribuzione 
 ## Regole del combattimento attivo
 
 - Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.
-- **Prototipo di combattimento simultaneo (nuova scaletta, punti 08–09):** nessuna alternanza obbligatoria fra giocatore e IA. L'IA tenta una mossa ogni 35–40 secondi, mentre il giocatore può preparare il colpo. Temporaneamente è stata lasciata una finestra di 40 secondi per il giocatore: **non è una regola definitiva e va confermata dopo i test**. Le animazioni degli attacchi sono ancora risolte una per volta.
+- **Combattimento continuo (nuova scaletta, punti 08–09):** il giocatore **non ha turni né limiti di tempo**, può giocare in qualsiasi momento. L'IA tenta un'azione ogni 35–40 secondi nei primi settori della campagna; diventa progressivamente più veloce fino a 25–30 secondi al settore 30 (**valore avanzato provvisorio da bilanciare**). Le animazioni vengono ancora risolte una per volta.
 - Si sceglie un motore nemico e si risolve il suo bersaglio con due carte. Sottrazione e divisione verificano gli ordini ammessi; la divisione deve essere esatta.
 - Il risultato matematico abilita lo sparo. I valori delle carte forniscono munizioni e i semi attivano le armi; il risultato non è il danno.
 - Ogni arma compatibile di ciascuna nave riceve le munizioni previste. Accumulo e danni per proiettile dipendono dal catalogo.
@@ -87,8 +87,8 @@ La copia di consegna è https://stackblitz.com/edit/github-edu2s6xy?file=README.
 
 Riferimento: scaletta master di **53 punti**, distinta dalla vecchia numerazione dei passi del motore.
 
-- **Punto 08 — IN PROTOTIPO:** eliminata l'alternanza delle azioni, sostituita da orologi indipendenti. Restano da decidere input durante le animazioni, cooldown e priorità degli eventi simultanei.
-- **Punto 09 — IN PROTOTIPO:** l'IA tenta una mossa dopo un intervallo casuale di 35–40 secondi. L'intervallo è provvisorio; una mossa può essere un attacco oppure la sostituzione di una carta se non ci sono combinazioni. Non è ancora l'IA tattica finale.
+- **Punto 08 — IN PROTOTIPO:** eliminati i turni alternati e ogni timer del giocatore. L'azione del giocatore non scade: prepara e attacca quando vuole. Per ora gli effetti di due attacchi simultanei vengono animati in sequenza, senza turno avversario obbligatorio.
+- **Punto 09 — IN PROTOTIPO:** solo l'IA ha un intervallo di decisione (35–40 s iniziali). In campagna esso diminuisce progressivamente fino a 25–30 s all'ultimo dei 30 settori; la riduzione finale è un parametro **da collaudare**, non una scelta definitiva dell'utente. Se non ha un calcolo valido, l'IA tenta uno scambio e aspetta la prossima decisione. L'IA tattica definitiva verrà progettata separatamente.
 - **Punto 13 — PARZIALE:** i bersagli matematici restano fissi per tutto lo scontro, ma devono ancora essere sostituiti con i requisiti permanenti di ogni parte vitale e con le figure Poker.
 - **Punto 21 — DECISO, DA IMPLEMENTARE:** il seme è **solo un identificativo di caricamento delle munizioni**, senza cura/danno/tempo/Etere automatici. Il valore della carta determina i proiettili; ogni arma o nave accetta da uno fino a quattro semi alternativi secondo il catalogo futuro. Non confondere con le vecchie combo simultanee obbligatorie.
 - **Punti 03–04, 10–12, 14, 16–20 e successivi — DA MIGRARE:** le attuali tre navi indipendenti, i quattro motori con HP, il vecchio sistema di danno e le sole coppie numeriche sono ancora codice legacy. La nuova flotta sarà madre + scudiere sbloccate ai livelli 3 e 5; scudi, quattro parti vitali, colpi finali e carte speciali richiedono implementazioni successive.

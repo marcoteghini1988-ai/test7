@@ -8,14 +8,22 @@ export const SUIT_SIGNS={H:'♥',D:'♦',C:'♣',S:'♠'};
 export const rankLabel=value=>value===1?'A':value===11?'J':value===12?'Q':value===13?'K':String(value);
 export const BASE_HP={plus:72,minus:72,times:85,divide:72};
 export const TOTAL_LEVELS=30;
-// Durate provvisorie del combattimento simultaneo: verranno bilanciate giocando.
-export const REALTIME_PLAYER_SECONDS=40;
+// Nessun timer per il giocatore; i tempi appartengono solo all'IA.
+// Campagna: settore 1 = 35-40 s; settore 30 = 25-30 s, da bilanciare.
 export const REALTIME_AI_MIN_MS=35000;
 export const REALTIME_AI_MAX_MS=40000;
-export function nextAiActionDelay(rng=Math.random){
+export const REALTIME_AI_FINAL_REDUCTION_MS=10000;
+export function aiDecisionWindow(level=1,mode='campaign'){
+ const sector=Math.max(1,Math.min(TOTAL_LEVELS,Math.floor(Number(level)||1)));
+ const progress=mode==='campaign'?(sector-1)/(TOTAL_LEVELS-1):0;
+ const reduction=Math.round(REALTIME_AI_FINAL_REDUCTION_MS*progress);
+ return {minMs:REALTIME_AI_MIN_MS-reduction,maxMs:REALTIME_AI_MAX_MS-reduction};
+}
+export function nextAiActionDelay(rng=Math.random,level=1,mode='campaign'){
+ const {minMs,maxMs}=aiDecisionWindow(level,mode);
  const sample=Number(rng());
  const unit=Number.isFinite(sample)?Math.min(0.999999999,Math.max(0,sample)):0;
- return REALTIME_AI_MIN_MS+Math.floor(unit*(REALTIME_AI_MAX_MS-REALTIME_AI_MIN_MS+1));
+ return minMs+Math.floor(unit*(maxMs-minMs+1));
 }
 export const PHASE1_SHIPS=PHASE1_CATALOG.ships;
 export function shuffled(a,rng=Math.random){const v=[...a];for(let i=v.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[v[i],v[j]]=[v[j],v[i]];}return v;}
@@ -192,7 +200,7 @@ export function sacrificeCard(side,index,opponent,secondsLeft=60){if(side.sacrif
  const order=side.sacrifices;let next={...side,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard],fleet:structuredClone(side.fleet),sacrifices:order+1};const [c]=next.hand.splice(index,1);next.discard.push(c);next=fillHand(next);
  let other={...opponent,fleet:structuredClone(opponent.fleet)},seconds=secondsLeft,detail='';
  if(order===0){const w=weakestLiveEngine(other);if(w){w.e.hp+=3;w.e.max+=3;}detail='+3 HP al motore nemico';}
- if(order===1){seconds=Math.max(0,seconds-3);detail='−3 secondi';}
+ if(order===1){if(Number.isFinite(secondsLeft)){seconds=Math.max(0,seconds-3);detail='−3 secondi';}else detail='Secondo cambio: costo da riequilibrare';}
  if(order===2){const w=weakestLiveEngine(next);if(w)w.e.hp=Math.max(0,w.e.hp-3);detail='−3 HP a un tuo motore';}
  return {ship:next,opponent:other,seconds,detail};}
 export function etherChange(side,index){if(!side.ether||side.deck.length===0||index<0||index>=side.hand.length)return null;const n={...side,ether:side.ether-1,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard]};const [c]=n.hand.splice(index,1);n.discard.push(c);return fillHand(n);}
@@ -206,5 +214,5 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
  const enemyFleet=fleetCompatibility(fleetIds,enemyFleetIds,shipLevel,shipLevels,enemyShipLevels).compatible
   ?{fleetIds:enemyFleetIds,shipLevel,shipLevels:enemyShipLevels}:playerFleet;
  return {level,mode,player:createShip(level,false,playerFleet,rng),enemy:createShip(level,true,enemyFleet,rng),
- actor:'player',round:1,seconds:REALTIME_PLAYER_SECONDS,playerDueAt:0,aiDueAt:0,aiSeconds:0,targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
+ actor:'player',round:1,aiDueAt:0,targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }
