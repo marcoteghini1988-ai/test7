@@ -1,5 +1,6 @@
 // Eclissi Stellare — Fase 1: calcolo = grilletto, carte = munizioni, navi = armi integrate.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {PHASE16A_CAMPAIGN_PLANET_IDS,PHASE16A_TOTAL_SECTORS} from './newCombat/phase16ACatalog.js';
 import {VITAL_IDS,createMotherDefense,motherDestroyed,damageMotherShield,hitMotherPart} from './vitalDefense.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
@@ -14,9 +15,15 @@ export const TOTAL_LEVELS=30;
 export const REALTIME_AI_MIN_MS=35000;
 export const REALTIME_AI_MAX_MS=40000;
 export const REALTIME_AI_FINAL_REDUCTION_MS=10000;
+export const AI_CAMPAIGN_LAST_SECTOR=PHASE16A_TOTAL_SECTORS;
 export function aiDecisionWindow(level=1,mode='campaign'){
- const sector=Math.max(1,Math.min(TOTAL_LEVELS,Math.floor(Number(level)||1)));
- const progress=mode==='campaign'?(sector-1)/(TOTAL_LEVELS-1):0;
+ const raw=Math.max(1,Math.floor(Number(level)||1));
+ // App passes Adventure sectors encoded as (historical planet ID - 1) * 10 + sector.
+ const planet=Math.floor((raw-1)/10)+1;
+ const index=PHASE16A_CAMPAIGN_PLANET_IDS.indexOf(planet);
+ const normalized=mode==='adventure'&&index>=0?index*10+(raw-1)%10+1:raw;
+ const sector=Math.max(1,Math.min(AI_CAMPAIGN_LAST_SECTOR,normalized));
+ const progress=(mode==='adventure'||mode==='campaign')?(sector-1)/(AI_CAMPAIGN_LAST_SECTOR-1):0;
  const reduction=Math.round(REALTIME_AI_FINAL_REDUCTION_MS*progress);
  return {minMs:REALTIME_AI_MIN_MS-reduction,maxMs:REALTIME_AI_MAX_MS-reduction};
 }

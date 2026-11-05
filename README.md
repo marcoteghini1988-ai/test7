@@ -37,7 +37,7 @@ Il passo 10 introduce la sequenza di apertura del duello. Dopo la distribuzione 
 ## Regole del combattimento attivo
 
 - Mazzo standard da 52 carte, sette carte in mano; A=1, J=11, Q=12, K=13.
-- **Combattimento continuo (nuova scaletta, punti 08–09):** il giocatore **non ha turni né limiti di tempo**, può giocare in qualsiasi momento. L'IA tenta un'azione ogni 35–40 secondi nei primi settori della campagna; diventa progressivamente più veloce fino a 25–30 secondi al settore 30 (**valore avanzato provvisorio da bilanciare**). Le animazioni vengono ancora risolte una per volta.
+- **Combattimento continuo (nuova scaletta, punti 08–09):** il giocatore **non ha turni né limiti di tempo**, può giocare in qualsiasi momento. L'IA tenta un'azione ogni 35–40 secondi nei primi settori della campagna; diventa progressivamente più veloce fino a 25–30 secondi all'ultimo dei 120 settori (**valore avanzato provvisorio da bilanciare**). Le animazioni vengono ancora risolte una per volta.
 - Si sceglie un motore nemico e si risolve il suo bersaglio con due carte. Sottrazione e divisione verificano gli ordini ammessi; la divisione deve essere esatta.
 - Il risultato matematico abilita lo sparo. I valori delle carte forniscono munizioni e i semi attivano le armi; il risultato non è il danno.
 - Ogni arma compatibile di ciascuna nave riceve le munizioni previste. Accumulo e danni per proiettile dipendono dal catalogo.
@@ -88,7 +88,7 @@ La copia di consegna è https://stackblitz.com/edit/github-edu2s6xy?file=README.
 Riferimento: scaletta master di **53 punti**, distinta dalla vecchia numerazione dei passi del motore.
 
 - **Punto 08 — IN PROTOTIPO:** eliminati i turni alternati e ogni timer del giocatore. L'azione del giocatore non scade: prepara e attacca quando vuole. Per ora gli effetti di due attacchi simultanei vengono animati in sequenza, senza turno avversario obbligatorio.
-- **Punto 09 — IN PROTOTIPO:** solo l'IA ha un intervallo di decisione (35–40 s iniziali). In campagna esso diminuisce progressivamente fino a 25–30 s all'ultimo dei 30 settori; la riduzione finale è un parametro **da collaudare**, non una scelta definitiva dell'utente. Se non ha un calcolo valido, l'IA tenta uno scambio e aspetta la prossima decisione. L'IA tattica definitiva verrà progettata separatamente.
+- **Punto 09 — IN PROTOTIPO:** solo l'IA ha un intervallo di decisione (35–40 s iniziali). In campagna esso diminuisce progressivamente fino a 25–30 s all'ultimo dei 120 settori; la riduzione finale è un parametro **da collaudare**, non una scelta definitiva dell'utente. Se non ha un calcolo valido, l'IA tenta uno scambio e aspetta la prossima decisione. L'IA tattica definitiva verrà progettata separatamente.
 - **Punto 13 — PARZIALE:** i bersagli matematici restano fissi per tutto lo scontro, ma devono ancora essere sostituiti con i requisiti permanenti di ogni parte vitale e con le figure Poker.
 - **Punto 21 — DECISO, DA IMPLEMENTARE:** il seme è **solo un identificativo di caricamento delle munizioni**, senza cura/danno/tempo/Etere automatici. Il valore della carta determina i proiettili; ogni arma o nave accetta da uno fino a quattro semi alternativi secondo il catalogo futuro. Non confondere con le vecchie combo simultanee obbligatorie.
 - **Punti 03–04, 10–12, 14, 16–20 e successivi — DA MIGRARE:** le attuali tre navi indipendenti, i quattro motori con HP, il vecchio sistema di danno e le sole coppie numeriche sono ancora codice legacy. La nuova flotta sarà madre + scudiere sbloccate ai livelli 3 e 5; scudi, quattro parti vitali, colpi finali e carte speciali richiedono implementazioni successive.
@@ -113,3 +113,6 @@ Nel duello **una madre contro una madre**, il nuovo HUD dell'arena 9:16 mostra l
 La condizione matematica per danneggiare un sistema esposto è *temporaneamente* la stessa operazione numerica già valida nel duello precedente: **le firme permanenti per ciascuno dei 17 modelli non sono state inventate**. Gli HP di prova derivano dalle caratteristiche attuali della nave e saranno riequilibrati. Gli indicatori fisici delle vecchie gondole restano come selettori dei calcoli, ma non rappresentano più le quattro parti vitali.
 
 Le flotte con più navicelle usano temporaneamente il vecchio sistema: non vengono falsamente convertite in scudiere. Le immagini delle navi, l'arena e le carte collezionabili non sono state sostituite. Le bocche delle armi e i bersagli VFX per i quattro vitali andranno raccordati al modello visivo definitivo.
+
+
+**Precisione sulla cadenza dell'IA (5 novembre 2026).** La campagna attiva nell'app usa la modalità `adventure`, non `campaign`. I 12 pianeti hanno 10 settori ciascuno e ID storici non consecutivi: il motore ora li converte nella progressione corretta di 120 settori. L'IA parte da 35–40 secondi e accelera fino a 25–30 secondi soltanto all'ultimo settore, non già al trentesimo. Il giocatore non ha timer.

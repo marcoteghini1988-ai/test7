@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose,validFleet,newVessel,previewVolley,getAmmo,supportedOperators,vesselDestroyed,applyPendingHit,withPrototypeMother,REALTIME_AI_MIN_MS,REALTIME_AI_MAX_MS,REALTIME_AI_FINAL_REDUCTION_MS,aiDecisionWindow,nextAiActionDelay} from './mathDuelEngine.js';
+import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose,validFleet,newVessel,previewVolley,getAmmo,supportedOperators,vesselDestroyed,applyPendingHit,withPrototypeMother,REALTIME_AI_MIN_MS,REALTIME_AI_MAX_MS,REALTIME_AI_FINAL_REDUCTION_MS,AI_CAMPAIGN_LAST_SECTOR,aiDecisionWindow,nextAiActionDelay} from './mathDuelEngine.js';
 const rng=()=>.5, cards=(a,sa,b,sb)=>[{value:a,suit:sa,id:'a'},{value:b,suit:sb,id:'b'}];
 test('mazzo 52 carte, mano sette, nessuna carta duplicata',()=>{const s=createShip(1,false,{},rng);assert.equal(s.hand.length,7);assert.equal(s.deck.length,45);assert.equal(new Set([...s.hand,...s.deck].map(x=>x.id)).size,52);});
 test('quattro calcoli matematici corretti anche in ordine inverso',()=>{assert.ok(evaluatePair('plus',5,4,9));assert.ok(evaluatePair('minus',3,9,6));assert.ok(evaluatePair('times',5,4,20));assert.ok(evaluatePair('divide',2,10,5));assert.equal(evaluatePair('divide',3,5,4),null);});
@@ -132,11 +132,15 @@ test('IA 35-40 secondi iniziali; più rapida in campagna avanzata',()=>{
  assert.equal(nextAiActionDelay(()=>.5),37500);
  assert.equal(nextAiActionDelay(()=>.999999),REALTIME_AI_MAX_MS);
  assert.equal(REALTIME_AI_FINAL_REDUCTION_MS,10000);
- assert.deepEqual(aiDecisionWindow(30),{minMs:25000,maxMs:30000});
- assert.equal(nextAiActionDelay(()=>0,30,'campaign'),25000);
- assert.equal(nextAiActionDelay(()=>.999999,30,'campaign'),30000);
+ assert.equal(AI_CAMPAIGN_LAST_SECTOR,120);
+ assert.deepEqual(aiDecisionWindow(120),{minMs:25000,maxMs:30000});
+ assert.equal(nextAiActionDelay(()=>0,120,'campaign'),25000);
+ assert.equal(nextAiActionDelay(()=>.999999,120,'campaign'),30000);
  assert.equal(nextAiActionDelay(()=>.5,30,'pvp'),37500);
- for(let level=2;level<=30;level++)assert.ok(aiDecisionWindow(level).minMs<=aiDecisionWindow(level-1).minMs);
+ assert.deepEqual(aiDecisionWindow(200,'adventure'),{minMs:25000,maxMs:30000});
+ assert.deepEqual(aiDecisionWindow(1,'adventure'),{minMs:35000,maxMs:40000});
+ assert.ok(aiDecisionWindow(51,'adventure').minMs<aiDecisionWindow(30,'adventure').minMs);
+ for(let level=2;level<=120;level++)assert.ok(aiDecisionWindow(level).minMs<=aiDecisionWindow(level-1).minMs);
 });
 
 test('due impatti successivi mantengono entrambi i danni',()=>{
