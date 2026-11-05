@@ -199,3 +199,11 @@ test('le flotte multiple mantengono la difesa precedente per non sostituire navi
  assert.equal(b.vitalPrototype,false);
  assert.equal(b.player.fleet[0].defense,undefined);
 });
+
+test('madre singola: le scudiere si sbloccano a L3 e L5 senza carte aggiuntive',()=>{
+ const l3=initialBattle(1,{vitalPrototype:true,shipLevel:3},rng);
+ const l5=initialBattle(1,{vitalPrototype:true,shipLevel:5},rng);
+ assert.equal(l3.player.fleet.length,1);assert.equal(l3.player.escorts.length,1);
+ assert.equal(l5.player.fleet.length,1);assert.equal(l5.player.escorts.length,2);
+ assert.equal(l5.enemy.escorts.length,2);
+});
