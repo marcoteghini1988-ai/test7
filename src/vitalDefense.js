@@ -114,13 +114,14 @@ export function exposeMotherPart(defense,id){
  const next=reconcile({...defense,exposureOrder:[...defense.exposureOrder,id]});
  return {defense:next,exposed:next.parts[id].exposed};
 }
-export function hitMotherPart(defense,id,rawDamage,cards){
+export function hitMotherPart(defense,id,rawDamage,cards,signatureOverride=null){
  if(defense?.kind!=='mother'||!validKey(id))return {defense,damage:0,reason:'part_missing'};
  const part=defense.parts[id];
  if(!part||part.hp===0)return {defense,damage:0,reason:'destroyed'};
  if(!part.exposed)return {defense,damage:0,reason:'protected'};
- if(!part.signature)return {defense,damage:0,reason:'signature_undecided'};
- if(!matchesVitalSignature(part.signature,cards))return {defense,damage:0,reason:'wrong_combination'};
+ const signature=part.signature??signatureOverride;
+ if(!signature)return {defense,damage:0,reason:'signature_undecided'};
+ if(!matchesVitalSignature(signature,cards))return {defense,damage:0,reason:'wrong_combination'};
  const damage=Math.min(part.hp,amount(rawDamage));
  const nextPart={...part,hp:part.hp-damage};
  const next=reconcile({...defense,parts:{...defense.parts,[id]:nextPart}});

@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose,validFleet,newVessel,previewVolley,getAmmo,supportedOperators,vesselDestroyed,applyPendingHit,REALTIME_AI_MIN_MS,REALTIME_AI_MAX_MS,REALTIME_AI_FINAL_REDUCTION_MS,aiDecisionWindow,nextAiActionDelay} from './mathDuelEngine.js';
+import {createShip,evaluatePair,generateTargets,findMoves,consumeAttack,initialBattle,sacrificeCard,etherChange,dealHit,healthScore,deckVerdict,isDestroyed,aiChoose,validFleet,newVessel,previewVolley,getAmmo,supportedOperators,vesselDestroyed,applyPendingHit,withPrototypeMother,REALTIME_AI_MIN_MS,REALTIME_AI_MAX_MS,REALTIME_AI_FINAL_REDUCTION_MS,aiDecisionWindow,nextAiActionDelay} from './mathDuelEngine.js';
 const rng=()=>.5, cards=(a,sa,b,sb)=>[{value:a,suit:sa,id:'a'},{value:b,suit:sb,id:'b'}];
 test('mazzo 52 carte, mano sette, nessuna carta duplicata',()=>{const s=createShip(1,false,{},rng);assert.equal(s.hand.length,7);assert.equal(s.deck.length,45);assert.equal(new Set([...s.hand,...s.deck].map(x=>x.id)).size,52);});
 test('quattro calcoli matematici corretti anche in ordine inverso',()=>{assert.ok(evaluatePair('plus',5,4,9));assert.ok(evaluatePair('minus',3,9,6));assert.ok(evaluatePair('times',5,4,20));assert.ok(evaluatePair('divide',2,10,5));assert.equal(evaluatePair('divide',3,5,4),null);});
@@ -162,4 +162,36 @@ test('impatto su zona inesistente o danno negativo non altera HP',()=>{
 test('gli eventi dei proiettili sono isolati per battaglia',()=>{
  const a=initialBattle(1,{},rng),b=initialBattle(1,{},rng);
  assert.deepEqual(a.effects,[]);a.effects.push({id:1});assert.deepEqual(b.effects,[]);
+});
+
+test('in modalità madre singola i calcoli indeboliscono lo scudo e non i motori legacy',()=>{
+ const b=initialBattle(1,{vitalPrototype:true},()=>.5);
+ assert.equal(b.vitalPrototype,true);
+ const mother=b.enemy.fleet[0];
+ const max=mother.defense.shield.max;
+ const hp=mother.engines.plus.hp;
+ const hit=applyPendingHit(b.enemy,0,'plus',25);
+ assert.equal(hit.defender.fleet[0].defense.shield.hp,max-25);
+ assert.equal(hit.defender.fleet[0].engines.plus.hp,hp);
+ assert.equal(hit.damage,25);
+});
+test('duello madre: parte esposta danneggiabile con convalida aritmetica di prova',()=>{
+ let b=initialBattle(1,{vitalPrototype:true},()=>.5);
+ b.enemy=applyPendingHit(b.enemy,0,'plus',40).defender;
+ const defense=b.enemy.fleet[0].defense;
+ assert.ok(defense.shield.hp/defense.shield.max<=.75);
+ b.enemy.fleet[0].defense={
+  ...defense,exposureOrder:['engine'],
+  parts:{...defense.parts,engine:{...defense.parts.engine,exposed:true}}
+ };
+ const hp0=b.enemy.fleet[0].defense.parts.engine.hp;
+ const hit=applyPendingHit(b.enemy,0,'plus',7,
+  {vitalId:'engine',cards:cards(4,'♣',6,'♥'),signatureOverride:{kind:'math',op:'plus',target:10}});
+ assert.equal(hit.defender.fleet[0].defense.parts.engine.hp,hp0-7);
+ assert.equal(hit.defender.fleet[0].defense.shield.hp,defense.shield.hp);
+});
+test('le flotte multiple mantengono la difesa precedente per non sostituire navicelle con scudiere fittizie',()=>{
+ const b=initialBattle(1,{vitalPrototype:true,fleetIds:['N00','C02','C03']},()=>.5);
+ assert.equal(b.vitalPrototype,false);
+ assert.equal(b.player.fleet[0].defense,undefined);
 });

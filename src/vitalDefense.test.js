@@ -124,3 +124,13 @@ test('firme e HP differenziabili per modello senza mutare altri dati',()=>{
  assert.equal(d.parts.command.signature.pattern,'fullHouse');
  assert.equal(d.parts.weapons.signature,null);
 });
+
+test('la firma di prova può essere verificata senza scriverla nel modello',()=>{
+ let d=damageMotherShield(createMotherDefense({shipId:'N00'}),25).defense;
+ d=exposeMotherPart(d,'engine').defense;
+ const override={kind:'math',op:'plus',target:10};
+ assert.equal(hitMotherPart(d,'engine',10,cc([2,3]),override).reason,'wrong_combination');
+ const r=hitMotherPart(d,'engine',10,cc([4,6]),override);
+ assert.equal(r.damage,10);
+ assert.equal(r.defense.parts.engine.signature,null);
+});

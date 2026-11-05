@@ -1,5 +1,6 @@
 // Eclissi Stellare — Fase 1: calcolo = grilletto, carte = munizioni, navi = armi integrate.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {VITAL_IDS,createMotherDefense,motherDestroyed,damageMotherShield,hitMotherPart} from './vitalDefense.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
 export const SUIT_KEYS={'♥':'H','♦':'D','♣':'C','♠':'S'};
@@ -111,9 +112,9 @@ export function inspectCalculation(op,first,second,target){
  const best=options[0];
  return {...best,valid:false,target,reason:Number.isFinite(best.result)?'target_mismatch':'invalid_cards'};
 }
-export function totalHP(side){return side.fleet.reduce((sum,v)=>sum+ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.hp||0),0),0);}
-export function totalMax(side){return side.fleet.reduce((sum,v)=>sum+ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.max||0),0),0);}
-export function vesselDestroyed(v){return ENGINE_KEYS.every(k=>!v.engines[k]||v.engines[k].hp<=0);}
+export function totalHP(side){return side.fleet.reduce((sum,v)=>sum+(v.defense?.kind==='mother'?v.defense.shield.hp+VITAL_IDS.reduce((s,id)=>s+v.defense.parts[id].hp,0):ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.hp||0),0)),0);}
+export function totalMax(side){return side.fleet.reduce((sum,v)=>sum+(v.defense?.kind==='mother'?v.defense.shield.max+VITAL_IDS.reduce((s,id)=>s+v.defense.parts[id].max,0):ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.max||0),0)),0);}
+export function vesselDestroyed(v){return v.defense?.kind==='mother'?motherDestroyed(v.defense):ENGINE_KEYS.every(k=>!v.engines[k]||v.engines[k].hp<=0);}
 export function isDestroyed(side){return side.fleet.every(vesselDestroyed);}
 export function healthScore(side){return totalMax(side)?totalHP(side)/totalMax(side):0;}
 // Prefer a surviving engine on the selected ship, then proceed to another ship.
@@ -180,7 +181,17 @@ export function chooseTarget(side,op,preferredIndex=0){
  return candidates.find(x=>x.i===preferredIndex)?.i??candidates[0]?.i??-1;
 }
 // Resolve impact against the current defender: overlapping hits never overwrite HP.
-export function applyPendingHit(defender,shipIndex,op,rawDamage){
+export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
+ const vessel=defender?.fleet?.[shipIndex];
+ if(vessel?.defense?.kind==='mother'){
+  const detail=options.vitalId
+   ?hitMotherPart(vessel.defense,options.vitalId,rawDamage,options.cards,options.signatureOverride)
+   :damageMotherShield(vessel.defense,rawDamage);
+  const defense=detail.defense;
+  const fleet=defender.fleet.map((v,i)=>i===shipIndex?{...v,defense}:v);
+  return {defender:{...defender,fleet},damage:detail.damage||0,destroyed:motherDestroyed(defense),
+   vitalId:options.vitalId??null,reason:detail.reason??'shield'};
+ }
  const target=defender?.fleet?.[shipIndex]?.engines?.[op];
  if(!target||target.hp<=0||!Number.isFinite(rawDamage)||rawDamage<=0)
   return {defender,damage:0,destroyed:false};
@@ -188,10 +199,10 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage){
  const fleet=defender.fleet.map((v,i)=>i!==shipIndex?v:{...v,engines:{...v.engines,[op]:{...target,hp:target.hp-damage}}});
  return {defender:{...defender,fleet},damage,destroyed:damage>0&&damage>=target.hp};
 }
-export function dealHit(defender,attacker,op,_target,cards,preferredIndex=0){
+export function dealHit(defender,attacker,op,_target,cards,preferredIndex=0,options={}){
  const vi=chooseTarget(defender,op,preferredIndex);if(vi<0)return {defender,attacker,damage:0,destroyed:false,volley:[]};
  const volley=previewVolley(attacker,cards||[]);
- const hit=applyPendingHit(defender,vi,op,volley.totalDamage);
+ const hit=applyPendingHit(defender,vi,op,volley.totalDamage,options);
  return {...hit,attacker:{...attacker,fleet:volley.fleet},volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage,memoryPending:volley.memoryPending};
 }
 export function findMoves(side,defender,targets){const moves=[];for(const op of supportedOperators(side)){
@@ -214,6 +225,15 @@ export function sacrificeCard(side,index,opponent,secondsLeft=60){if(side.sacrif
 export function etherChange(side,index){if(!side.ether||side.deck.length===0||index<0||index>=side.hand.length)return null;const n={...side,ether:side.ether-1,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard]};const [c]=n.hand.splice(index,1);n.discard.push(c);return fillHand(n);}
 export function aiChoose(side,defender,targets,rng=Math.random){const moves=findMoves(side,defender,targets);if(!moves.length)return null;
  return moves.map(m=>{const e=defender.fleet[m.targetShip].engines[m.op],v=previewVolley(side,[side.hand[m.i],side.hand[m.j]]);const dmg=Math.min(e.hp,v.totalDamage);return {...m,score:dmg+(e.hp<=dmg?100:0)+(m.op==='plus'?6:0)+rng()*2};}).sort((a,b)=>b.score-a.score)[0];}
+// Stage-one bridge: only 1v1 mother matches use this provisional model.
+// Multi-ship battles still run the previous code until genuine linked escorts exist.
+export function withPrototypeMother(side){
+ if(side.fleet.length!==1)return side;
+ const vessel=side.fleet[0];
+ const shieldMax=Object.values(vessel.engines).reduce((n,part)=>n+part.max,0);
+ const defense=createMotherDefense({shipId:vessel.id,shieldMax,partHp:Math.max(12,Math.round(shieldMax/4))});
+ return {...side,fleet:[{...vessel,defense}]};
+}
 export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign'){
  const fleetIds=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];
  const {shipLevel=1,shipLevels={},enemyFleetIds,enemyShipLevels={}}=upgrades;
@@ -221,6 +241,11 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
  const playerFleet={fleetIds,shipLevel,shipLevels};
  const enemyFleet=fleetCompatibility(fleetIds,enemyFleetIds,shipLevel,shipLevels,enemyShipLevels).compatible
   ?{fleetIds:enemyFleetIds,shipLevel,shipLevels:enemyShipLevels}:playerFleet;
- return {level,mode,player:createShip(level,false,playerFleet,rng),enemy:createShip(level,true,enemyFleet,rng),
- actor:'player',round:1,aiDueAt:0,effects:[],targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
+ const rawPlayer=createShip(level,false,playerFleet,rng),rawEnemy=createShip(level,true,enemyFleet,rng);
+ const vitalPrototype=upgrades.vitalPrototype===true&&rawPlayer.fleet.length===1&&rawEnemy.fleet.length===1;
+ const player=vitalPrototype?withPrototypeMother(rawPlayer):rawPlayer;
+ const enemy=vitalPrototype?withPrototypeMother(rawEnemy):rawEnemy;
+ return {level,mode,player,enemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
+  targets:generateTargets(rng,level),selected:[],target:'plus',targetVital:null,targetShip:0,shownPlayer:0,phase:'ready',
+  effect:null,notice:vitalPrototype?'Indebolisci lo scudo e scegli le parti vitali da esporre.':'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }
