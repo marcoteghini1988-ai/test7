@@ -101,3 +101,7 @@ Riferimento: scaletta master di **53 punti**, distinta dalla vecchia numerazione
 - Le carte vengono consumate al lancio; gli HP vengono ridotti all'arrivo, applicandoli allo stato più recente del bersaglio. Gli attacchi in volo non possono sovrascrivere i danni fra loro.
 - Il risultato per distruzione della flotta o per esaurimento del mazzo attende gli impatti ancora da applicare.
 - Nessuna grafica o catalogo modificato. Le prossime fasi migreranno il vecchio sistema di quattro motori alle parti vitali, scudi e scudiere previste dalla nuova scaletta.
+
+## Fase difesa, punto 10: implementazione logica autonoma
+
+Prima di intervenire sull'arena attiva, la nuova macchina a stati di **scudo madre / 4 vitali / scudiere** è stata isolata in [src/vitalDefense.js](src/vitalDefense.js), con [test dedicati](src/vitalDefense.test.js). Le soglie 75/50/25/0, la scelta dell'attaccante, gli HP separati e la riprotezione dopo la riparazione sono implementati. La futura battaglia dovrà ancora collegare la nuova logica alla UI, all'IA e ai colpi delle armi. Le firme per modello e gli HP definitivi sono lasciati aperti. [Specifiche del punto 10](docs/PUNTO_10_DIFESA_MADRE_VITALI.md).
