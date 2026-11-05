@@ -546,3 +546,23 @@
 
 /* Combattimento continuo: indicatore statico, senza timer per il giocatore. */
 .es-math-scope .center-bar .timer-pill strong,.es-math-scope .center-bar:has(.memory-combos) .timer-pill strong{font-size:12px;letter-spacing:.3px;white-space:nowrap;min-width:0}
+
+/* Punto 10: plancia madre, indicatori scudo e quattro vitali. Asset 3D invariati. */
+.es-math-scope .vital-panel{position:absolute;top:290px;left:8px;right:8px;height:65px;padding:5px 7px;border:1px solid #657a98;border-radius:8px;z-index:6;background:linear-gradient(155deg,#060f22f7,#142338f5);box-shadow:0 1px 12px #081329ee;display:flex;flex-direction:column;gap:4px}
+.es-math-scope .vital-shield{display:flex;align-items:center;gap:7px;height:15px;line-height:1;color:#bfefff}
+.es-math-scope .vital-shield b{font-size:9px;white-space:nowrap;letter-spacing:.2px}
+.es-math-scope .vital-shield strong{font-size:9px;min-width:46px;text-align:right}
+.es-math-scope .vital-shield small{font-size:9px;color:#efbc8b;min-width:48px;text-align:right}
+.es-math-scope .vital-shield-track{flex:1;height:7px;border:1px solid #42647c;border-radius:4px;background:#1b283b;overflow:hidden}
+.es-math-scope .vital-shield-track i{display:block;height:100%;background:linear-gradient(90deg,#008dc9,#82e9ff);transition:width .25s}
+.es-math-scope .vital-parts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;flex:1}
+.es-math-scope .vital-part{min-width:0;display:grid;grid-template-columns:1fr auto;column-gap:3px;align-items:center;padding:3px 5px;border-radius:5px;border:1px solid #56617a;background:#0d1b32;color:#e4ebff;text-align:left;opacity:.69}
+.es-math-scope .vital-part b{font-size:9px;white-space:nowrap}
+.es-math-scope .vital-part small{font-size:8px;white-space:nowrap;opacity:.85}
+.es-math-scope .vital-part-track{grid-column:1/-1;height:4px;border-radius:3px;background:#273549;overflow:hidden}
+.es-math-scope .vital-part-track i{display:block;height:100%;background:#ddaa6a;transition:width .25s}
+.es-math-scope .vital-part.exposed{opacity:1;border-color:#fcac6c;background:#392015}
+.es-math-scope .vital-part.chosen{border-color:#f7eeba;box-shadow:inset 0 0 7px #ff8e3b99,0 0 8px #e38a4866}
+.es-math-scope .vital-part.destroyed{opacity:.4;color:#aab0b8;background:#171b23;border-color:#343943}
+.es-math-scope .vital-part:disabled{cursor:default}
+.es-math-scope .vital-part:focus-visible{outline:2px solid #fff;outline-offset:1px}

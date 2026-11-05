@@ -13,7 +13,7 @@ Data: 5 novembre 2026
 ## Implementazione
 - `src/vitalDefense.js`: funzioni pure e indipendenti per scudi, soglie, esposizione a scelta, HP dei sistemi, riparazioni, firme math/poker e scudiere.
 - `src/vitalDefense.test.js`: verifica dei vincoli.
-- Il motore è **isolato** e volutamente **non collegato alla battaglia attiva**: `MathDuelBattle.jsx` e gli asset restano intatti, per non sostituire i vecchi quattro motori prima di avere la gestione corretta delle navicelle madri/scudiere.
+- Il motore è ora **collegato alla battaglia attiva 1v1** come prototipo, tramite `mathDuelEngine.js` e `MathDuelBattle.jsx`. La mano conserva 7 carte numeriche e la scelta del calcolo. Nei combattimenti con più navi resta il vecchio sistema finché le vere scudiere non saranno create. Gli asset approvati non sono stati ridisegnati.
 
 ## Decisioni ancora aperte
 1. Valori numerici definitivi degli HP scudi e delle quattro parti per ogni nave e per ogni livello evolutivo.
@@ -23,3 +23,7 @@ Data: 5 novembre 2026
 5. Navicelle scudiere specifiche della madre, sbloccate a L3 e L5 (non carte navicella autonome).
 
 **HP di default (100 scudo, 25 vitali, 60 scudiera) sono unicamente segnaposto di test, non numeri approvati.** Le firme non vengono inventate: in assenza di firma, il codice rifiuta di danneggiare la parte e restituisce `signature_undecided`.
+
+
+## Stato successivo — collegamento HUD 9:16 (5 novembre 2026)
+Il pannello sopra la navicella del giocatore espone scudo HP e quattro parti vitali nemiche con selezione manuale. I colpi indeboliscono lo scudo oppure il vitale selezionato, con HP applicati all'impatto. L'IA sceglie la parte da esporre. Per il solo prototipo, l'attacco su un vitale esposto richiede il calcolo già riconosciuto dal vecchio motore; i criteri definitivi per modello restano DA DEFINIRE. Le altre flotta restano nel legacy senza conversione impropria a scudiere. Mancano ancora rappresentazione fisica del vitale, danno localizzato sulla scocca, vere scudiere, firma 17×4 e bilanciamento.
