@@ -119,3 +119,5 @@ Le flotte con più navicelle usano temporaneamente il vecchio sistema: non vengo
 
 ## Punto 11 — Scudiere collegate (prototipo)
 Ai livelli L3/L5 si schierano una/due scudiere, senza nuove carte da acquistare. Ognuna ha scudo e bersaglio separati; intercetta il 20% del danno diretto alla madre quando ha scudo attivo (bilanciamento provvisorio). Le scudiere si selezionano dall'arena e l'IA può sceglierle come bersaglio. A scudo zero la formula math visualizzata in arena distrugge la scudiera (firma provvisoria per la partita, **non definitiva per modello**). La madre può essere distrutta anche se le scudiere sono ancora vive. Sagome SVG temporanee: le immagini individuali, le armi e le sinergie di tutte le 17 flotte restano da progettare. Flotte con più carte equipaggiate mantengono temporaneamente il duello precedente. I livelli salvati nella collezione sono preservati.
+
+**Scheda di passaggio a Work e grafica scudiere:** [docs/PUNTO_11_SCUDIERE_INTEGRATE.md](docs/PUNTO_11_SCUDIERE_INTEGRATE.md). Distingue il prototipo già nel codice dai ruoli, HP, immagini e firme ancora da progettare.
