@@ -8,6 +8,15 @@ export const SUIT_SIGNS={H:'♥',D:'♦',C:'♣',S:'♠'};
 export const rankLabel=value=>value===1?'A':value===11?'J':value===12?'Q':value===13?'K':String(value);
 export const BASE_HP={plus:72,minus:72,times:85,divide:72};
 export const TOTAL_LEVELS=30;
+// Durate provvisorie del combattimento simultaneo: verranno bilanciate giocando.
+export const REALTIME_PLAYER_SECONDS=40;
+export const REALTIME_AI_MIN_MS=35000;
+export const REALTIME_AI_MAX_MS=40000;
+export function nextAiActionDelay(rng=Math.random){
+ const sample=Number(rng());
+ const unit=Number.isFinite(sample)?Math.min(0.999999999,Math.max(0,sample)):0;
+ return REALTIME_AI_MIN_MS+Math.floor(unit*(REALTIME_AI_MAX_MS-REALTIME_AI_MIN_MS+1));
+}
 export const PHASE1_SHIPS=PHASE1_CATALOG.ships;
 export function shuffled(a,rng=Math.random){const v=[...a];for(let i=v.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[v[i],v[j]]=[v[j],v[i]];}return v;}
 export function newDeck(rng=Math.random){return shuffled(['♥','♦','♣','♠'].flatMap(suit=>Array.from({length:13},(_,i)=>({id:`${suit}${i+1}`,suit,value:i+1}))),rng);}
@@ -197,5 +206,5 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
  const enemyFleet=fleetCompatibility(fleetIds,enemyFleetIds,shipLevel,shipLevels,enemyShipLevels).compatible
   ?{fleetIds:enemyFleetIds,shipLevel,shipLevels:enemyShipLevels}:playerFleet;
  return {level,mode,player:createShip(level,false,playerFleet,rng),enemy:createShip(level,true,enemyFleet,rng),
- actor:'player',round:1,seconds:60,targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
+ actor:'player',round:1,seconds:REALTIME_PLAYER_SECONDS,playerDueAt:0,aiDueAt:0,aiSeconds:0,targets:generateTargets(rng,level),selected:[],target:'plus',targetShip:0,shownPlayer:0,phase:'ready',effect:null,notice:'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }
