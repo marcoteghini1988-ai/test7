@@ -342,10 +342,25 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  const registerShipRef=(side,index,node)=>{if(node)shipRefs.current[side][index]=node; else delete shipRefs.current[side][index];};
  const registerEngineRef=(side,index,op,node)=>{const key=`${index}/${op}`;if(node)engineRefs.current[side][key]=node; else delete engineRefs.current[side][key];};
  const registerGunRef=(side,index,id,node)=>{const key=`${index}/${id}`;if(node)gunRefs.current[side][key]=node;else delete gunRefs.current[side][key];};const [help,setHelp]=useState(false),[fleetMenu,setFleetMenu]=useState(false),[message,setMessage]=useState('');const queue=useRef([]),resultClaimed=useRef(false);
+ const pauseClockRef=useRef(false),pauseStartRef=useRef(0);
+ pauseClockRef.current=help||fleetMenu;
  function later(f,ms){const handle=setTimeout(f,ms);queue.current.push(handle);return handle;}
  useEffect(()=>()=>queue.current.forEach(clearTimeout),[]);
  useEffect(()=>{const resize=()=>setScale(Math.max(.3,Math.min(window.innerWidth/450,window.innerHeight/800)));resize();window.addEventListener('resize',resize);return()=>window.removeEventListener('resize',resize);},[]);
  function write(b){gameRef.current=b;setGame(b)}
+ // I due orologi si fermano quando il giocatore legge le regole o gestisce la flotta.
+ useEffect(()=>{
+  const paused=help||fleetMenu,now=Date.now();
+  if(paused){
+   if(!pauseStartRef.current)pauseStartRef.current=now;
+  }else if(pauseStartRef.current){
+   const elapsed=now-pauseStartRef.current;pauseStartRef.current=0;
+   const b=gameRef.current;
+   if(b.phase==='ready'&&b.playerDueAt&&b.aiDueAt){
+    write({...b,playerDueAt:b.playerDueAt+elapsed,aiDueAt:b.aiDueAt+elapsed});
+   }
+  }
+ },[help,fleetMenu]);
  const intro=game.phase==='intro'?INTRO_STAGES[introIndex]:null;
  function finishIntro(){
   const b=gameRef.current;
@@ -438,7 +453,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  useEffect(()=>{
   const timer=setInterval(()=>{
    const b=gameRef.current;
-   if(b.phase!=='ready'||b.actor!=='player'||!b.playerDueAt)return;
+   if(pauseClockRef.current||b.phase!=='ready'||b.actor!=='player'||!b.playerDueAt)return;
    const now=Date.now(),remaining=Math.max(0,Math.ceil((b.playerDueAt-now)/1000));
    const aiSeconds=b.aiDueAt?Math.max(0,Math.ceil((b.aiDueAt-now)/1000)):0;
    if(remaining===0){
@@ -456,7 +471,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  useEffect(()=>{
   const timer=setInterval(()=>{
    const b=gameRef.current;
-   if(b.phase!=='ready'||b.actor!=='player'||!b.aiDueAt||Date.now()<b.aiDueAt)return;
+   if(pauseClockRef.current||b.phase!=='ready'||b.actor!=='player'||!b.aiDueAt||Date.now()<b.aiDueAt)return;
    const n=clone(b),now=Date.now(),delay=nextAiActionDelay();
    n.aiDueAt=now+delay;n.aiSeconds=Math.ceil(delay/1000);
    let move=aiChoose(n.enemy,n.player,n.targets);
