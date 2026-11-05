@@ -566,3 +566,30 @@
 .es-math-scope .vital-part.destroyed{opacity:.4;color:#aab0b8;background:#171b23;border-color:#343943}
 .es-math-scope .vital-part:disabled{cursor:default}
 .es-math-scope .vital-part:focus-visible{outline:2px solid #fff;outline-offset:1px}
+
+/* Punto 11: scudiere vettoriali temporanee in attesa degli asset dedicati. */
+.es-math-scope .escort-pods{position:absolute;inset:0;z-index:4;pointer-events:none}
+.es-math-scope .escort-pod{position:absolute;top:34px;width:77px;height:99px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:2px 3px;border:1px solid #6182a2;background:#091629e3;border-radius:8px;color:#d9edff;pointer-events:auto}
+.es-math-scope .ship-enemy .escort-pod{background:#261422e3;border-color:#ad5268;color:#ffe5e5}
+.es-math-scope .ship-player .escort-pod{pointer-events:none}
+.es-math-scope .escort-slot-1{left:14px}
+.es-math-scope .escort-slot-2{right:14px}
+.es-math-scope .escort-ship-hull{display:block;width:60px;height:52px;filter:drop-shadow(0 0 5px #55bbed99)}
+.es-math-scope .ship-enemy .escort-ship-hull{filter:drop-shadow(0 0 5px #ec4c6899)}
+.es-math-scope .escort-ship-hull svg{display:block;width:100%;height:100%}
+.es-math-scope .escort-armor{fill:#4b637e;stroke:#b4cedc;stroke-width:2}
+.es-math-scope .escort-inner{fill:#182d4a;stroke:#44abd2;stroke-width:2}
+.es-math-scope .escort-reactor{fill:#9fe9ff}
+.es-math-scope .escort-engines{fill:none;stroke:#53edfe;stroke-width:5;stroke-linecap:round}
+.es-math-scope .ship-enemy .escort-reactor{fill:#ffc1ad}
+.es-math-scope .ship-enemy .escort-engines{stroke:#ff7b55}
+.es-math-scope .escort-pod b{font-size:8px;line-height:1;white-space:nowrap}
+.es-math-scope .escort-hp-meter{height:5px;border-radius:3px;width:100%;overflow:hidden;background:#26374b;border:1px solid #4d677d}
+.es-math-scope .escort-hp-meter i{display:block;height:100%;background:linear-gradient(90deg,#3699b4,#84f2ff);transition:width .2s}
+.es-math-scope .escort-pod small{font-size:8px;line-height:1.1;white-space:nowrap}
+.es-math-scope .escort-pod.selected{border-color:#ffed9d;box-shadow:0 0 12px #ffd166aa}
+.es-math-scope .escort-pod.under-fire{filter:brightness(1.5)}
+.es-math-scope .escort-pod.destroyed{opacity:.37;filter:grayscale(1)}
+.es-math-scope .vital-shield .mother-target{font-size:9px;border:1px solid #526f8d;border-radius:4px;background:#10233a;color:#e7faff;padding:2px 4px;cursor:pointer}
+.es-math-scope .vital-shield .mother-target.selected{border-color:#ffdf9e;color:#fff7cc}
+.es-math-scope .ship-player .escort-pod{opacity:.89}
