@@ -7,6 +7,8 @@ import { playSound } from './audio';
 import { WEAPONS_DATABASE as DEFAULT_WEAPONS_DB } from './weaponsSystem';
 import NewArsenalCatalogPreview from './NewArsenalCatalogPreview';
 import {describePhase16EDeck} from './newCombat/phase16EDecks.js';
+import {activeNumericBossAbilities,numericBossDeck} from './bossNumericDecks.js';
+const currentDeckPassives=(id,level)=>numericBossDeck(id)?activeNumericBossAbilities(id,level).map(x=>x.unlocked?x.name+' · Grado '+x.grade+'/3 · '+x.description.replace('%',x.value+'%').replace('in secondi',': '+x.value+' secondi'):x.name+' · sblocco L'+x.unlockAt).join(' | '):null;
 import {describePhase16FModule} from './newCombat/phase16FModules.js';
 import {getPhase16HTerrainOffers,describePhase16HTerrain} from './newCombat/phase16HProgression.js';
 import {ShipShopPanel} from './ShipCollectionPanels.jsx';
@@ -755,7 +757,7 @@ export default function ShopModal({
                         <div style={{ fontSize: '0.85rem', fontWeight: 900, color: deck.color, textAlign: 'center' }}>{deck.name}</div>
                         <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
                           <div style={{ color: '#facc15', fontWeight: 900 }}>PASSIVA:</div>
-                          <div style={{ color: '#6ee7b7' }}>{describePhase16EDeck(deck.id,curLvl) || deck.levels?.[curLvl]?.desc || deck.desc}</div>
+                          <div style={{ color: '#6ee7b7' }}>{currentDeckPassives(deck.id,curLvl) || describePhase16EDeck(deck.id,curLvl) || deck.levels?.[curLvl]?.desc || deck.desc}</div>
                         </div>
                       </div>
 
@@ -788,8 +790,8 @@ export default function ShopModal({
                                   voidCrystals: nextCostConfig.voidCrystals || 0,
                                   primordialMatter: nextCostConfig.primordialMatter || 0
                                 },
-                                currentBonus: describePhase16EDeck(deck.id,curLvl) || deck.levels?.[curLvl]?.desc || 'Passiva base',
-                                nextBonus: describePhase16EDeck(deck.id,curLvl + 1) || deck.levels?.[curLvl + 1]?.desc || 'Nuova abilità passiva'
+                                currentBonus: currentDeckPassives(deck.id,curLvl) || describePhase16EDeck(deck.id,curLvl) || deck.levels?.[curLvl]?.desc || 'Passiva base',
+                                nextBonus: currentDeckPassives(deck.id,curLvl + 1) || describePhase16EDeck(deck.id,curLvl + 1) || deck.levels?.[curLvl + 1]?.desc || 'Nuova abilità passiva'
                               });
                             }} 
                             className="cyber-btn cyber-btn-warning" 
@@ -1360,7 +1362,7 @@ export default function ShopModal({
                 </div>
                 <div style={{ width: '100%', background: 'rgba(15, 23, 42, 0.85)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem', color: '#cbd5e1', lineHeight: 1.4 }}>
                   <div style={{ color: '#facc15', fontWeight: 900, marginBottom: '4px' }}>EFFETTO PASSIVO:</div>
-                  {describePhase16EDeck(inspectedItem.data?.id,inspectedItem.curLvl) || inspectedItem.data?.levels?.[inspectedItem.curLvl]?.desc || inspectedItem.data?.desc}
+                  {currentDeckPassives(inspectedItem.data?.id,inspectedItem.curLvl) || describePhase16EDeck(inspectedItem.data?.id,inspectedItem.curLvl) || inspectedItem.data?.levels?.[inspectedItem.curLvl]?.desc || inspectedItem.data?.desc}
                 </div>
               </>
             )}
