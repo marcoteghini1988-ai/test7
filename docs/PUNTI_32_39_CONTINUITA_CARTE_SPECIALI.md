@@ -7,9 +7,9 @@
 | Punto | Definizione originale | Stato verificato | Decisioni ancora aperte |
 | --- | --- | --- | --- |
 | 32 | Cinque speciali in mano | **Implementato**: `SPECIAL_HAND_SIZE=5`, mano diversa dalle sette numeriche | Solo prova pratica UI 9:16 |
-| 33 | Dimensione del mazzo speciale | **Prototipo 24 carte**, valida costruzione e riutilizzo degli scarti | Confermare se 24 diventa definitivo |
+| 33 | Dimensione del mazzo speciale | **Confermato: 24 carte esatte** nel mazzo equipaggiato, con validazione comune a editor e duello | Da collaudare sul dispositivo reale |
 | 34 | Costruzione personalizzata | **Implementato**: editor Hangar e schermata flotta, inventario persistente | Bilanciamento rarità/frequenze |
-| 35 | Carte speciali duplicate | **Implementato**: più copie vere, fino a 6 per tipo | Confermare il tetto di 6 copie |
+| 35 | Carte speciali duplicate | **Confermato: massimo 6 copie** dello stesso tipo, sempre entro il numero posseduto | Da misurare il bilanciamento nelle partite |
 | 36 | Acquisizione delle speciali | **Implementato in prova**: 1 credito pacchetto alla prima vittoria per settore, 3 copie reali per apertura | Rarità, ricompense future, economia Shop |
 | 37 | Combinazione numerica + speciale | **Prima implementazione**: numeriche attivano colpi validi; una o due speciali reali modificano l'effetto della scarica | Casi avanzati delle 17 flotte e nuove abilità |
 | 38 | Più speciali e ripescaggio | **Implementato**: fino a due effetti offensivi distinti nella stessa scarica, refill dopo ogni carta, scarti riutilizzati | Bilanciamento del ritmo, altri effetti combinabili |
@@ -36,8 +36,31 @@ La nuova suite `src/specialFlow.test.js` copre:
 
 **CI GitHub Actions:** 311 test logici superati, build e preflight riusciti sul commit `2deda8ea393a7faff98cf23fa8e7fb13c151fdaf`: https://github.com/marcoteghini1988-ai/test7/actions/runs/42212283860
 
-## Proposta non ancora definitiva per i punti 33 e 35
+## Decisione approvata — Punti 33 e 35 (6 novembre 2026)
 
-Mantenere **24 carte nel mazzo** e **massimo 6 copie dello stesso tipo**, per compatibilità con le collezioni già salvate, una proporzione equilibrata su otto tipi e la possibilità di specializzare realmente il mazzo. Fino alla decisione finale, non convertire queste quantità provvisorie in vincoli irreversibili.
+L'utente ha confermato **24 carte esatte per mazzo speciale** e **massimo 6 copie equipaggiate per tipologia**. La dimensione e il limite copie diventano regole del gioco; una eventuale revisione futura sarà una scelta di bilanciamento esplicita, non un valore implicito o provvisorio.
 
-Dopo la conferma 33/35 si potrà definire il punto 36 (economia e frequenze), completare i casi avanzati del punto 37 e, solo al punto 39, rendere il catalogo definitivo. La grafica 3D e gli effetti audio finali restano rinviati.
+- La fonte unica dei valori è `src/specialCards.js`: `SPECIAL_DECK_SIZE=24` e `SPECIAL_DECK_COPY_LIMIT=6`. Il builder importa e riesporta questi valori, senza duplicarli.
+- L'editor non consente di superare 24 slot o 6 copie per tipo; il validatore non permette di superare le copie possedute.
+- L'inizializzatore del combattimento rifiuta mazzi di 23/25 carte e la settima copia. Le istanze hanno ID propri e i salvataggi esistenti rimangono sullo schema v1 (nessuna migrazione necessaria per i limiti invariati).
+- Aggiunti i test ai confini in `src/specialDeckBuilder.test.js` e il test di **96 cicli di ripescaggio** in `src/specialFlow.test.js`, per verificare 24 ID stabili e mano numerica intatta.
+
+## Prossimo sviluppo, senza decidere prematuramente l'economia
+
+- **36 — Acquisizione:** mantenere il prototipo giocabile (un pacchetto gratuito alla prima vittoria del settore, tre carte vere a estrazione). Non dichiarare definitive le probabilità uniformi, rarità, prezzi o nuove valute prima di provarne l'effetto sulla progressione.
+- **37 — Numeriche + speciali:** la firma matematica resta obbligatoria per colpire i vitali; gli effetti speciali si applicano solo ai tiri effettivi. Estendere i collaudi ai diversi ruoli delle 17 flotte senza nuovi vantaggi gratuiti.
+- **38 — Uso multiplo e ripescaggio:** confermare i due effetti offensivi distinti per scarica e il reintegro immediato a cinque, verificando che il riciclo conservi solo carte realmente scartate.
+- **39 — Catalogo:** otto tipologie operative, non ancora catalogo finale. Ampliare solo con nuove funzioni strategiche distinguibili emerse da playtest o da regole concordate.
+
+## Prove pratiche indispensabili su smartphone 9:16
+
+1. Entrare nell'Hangar, tentare di salvare 23 e 25 speciali: il salvataggio deve essere bloccato; salvare 24 è consentito se possedute.
+2. Ottenere abbastanza copie dai pacchetti e tentare la settima dello stesso tipo: il controllo deve bloccarla; sei sono ammesse.
+3. Entrare in duello, verificare **7 numeriche + 5 speciali separate**, e che l'uso di una speciale ripristini subito la mano a 5.
+4. Preparare Perforante + Ionico per un colpo matematicamente valido; un terzo effetto offensivo deve essere rifiutato senza consumo.
+5. Verificare che fusione e supporti senza requisiti non consumino carte. Giocare diversi cicli di mazzo e verificare eventuali blocchi/ripetizioni inattese.
+6. Riavviare la pagina e controllare che collezione, mazzo equipaggiato e crediti pacchetto persistano. Il bilanciamento delle 24 carte va misurato giocando.
+
+**CI precedente:** 311 test, build e preflight riusciti sul commit `2deda8ea393a7faff98cf23fa8e7fb13c151fdaf`; le modifiche alla regola 24/6 necessitano di una nuova verifica CI dopo il push.
+
+La grafica 3D e gli effetti audio definitivi restano rinviati.
