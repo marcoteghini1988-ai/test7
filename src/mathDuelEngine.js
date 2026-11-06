@@ -210,7 +210,7 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
     escortIndex:options.escortIndex,reason:hit.reason};
   }
   const interception=defender.maneuvers
-   ?interceptManeuverVolley(defender,rawDamage,Date.now(),defensiveEscortShare,options)
+   ?interceptManeuverVolley(defender,rawDamage,options.nowMs??Date.now(),defensiveEscortShare,options)
    :interceptMotherVolley(defender.escorts||[],rawDamage,vessel.defense,options);
   let maneuvers=interception.maneuvers;
   if(maneuvers&&interception.intercepted>0&&options.hitId!=null)
