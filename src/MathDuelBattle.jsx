@@ -418,7 +418,7 @@ function MotherDefenseControls({defense,selected,onChoose,selectedEscort,onChoos
 function readCollection(){
  try{return readShipCollection();}catch{return null;}
 }
-export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,selectedBossDeck='neutral_starter',bossDeckInventory={},onEtherConsumed,onResult,onExit}){
+export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,selectedBossDeck='neutral_starter',bossDeckInventory={},bossPlanetId=null,bossSectorLevel=null,onEtherConsumed,onResult,onExit}){
  const [scale,setScale]=useState(1);const [fleetIds,setFleetIds]=useState(['N00']);const [enemyFleetIds,setEnemyFleetIds]=useState(null);const [testLevel,setTestLevel]=useState(1);
  const [collection,setCollection]=useState(readCollection);
  const [introIndex,setIntroIndex]=useState(0);
@@ -427,8 +427,10 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const chosen=numericBossDeck(selectedBossDeck),owned=bossDeckInventory?.[selectedBossDeck];
   const playerId=chosen&&owned?.unlocked?chosen.id:'neutral_starter';
   const playerLevel=playerId==='neutral_starter'?1:Math.min(chosen.maxLevel,Math.max(1,Number(owned.level)||1));
-  const planet=PHASE16A_CAMPAIGN_PLANETS[Math.floor((sectorNumber-1)/10)];
-  const enemyId=!practice&&['adventure','campaign'].includes(gameMode)&&sectorNumber%10===0?planet?.deck:null;
+  const planet=bossPlanetId!=null?PHASE16A_CAMPAIGN_PLANETS.find(p=>p.id===Number(bossPlanetId)):
+   PHASE16A_CAMPAIGN_PLANETS[Math.floor((sectorNumber-1)/10)];
+  const isBossSector=gameMode==='adventure'?Number(bossSectorLevel)===10:sectorNumber%10===0;
+  const enemyId=!practice&&['adventure','campaign'].includes(gameMode)&&isBossSector?planet?.deck:null;
   const boss=numericBossDeck(enemyId);
   return {playerBossDeckId:playerId,playerBossDeckLevel:playerLevel,
    enemyBossDeckId:boss?.id||'neutral_starter',enemyBossDeckLevel:boss?Math.min(boss.maxLevel,1+Math.floor((sectorNumber-1)/20)):1};
