@@ -12,7 +12,8 @@ import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVi
 import {activeArmaments} from './escortArmory.js';
 import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
 import {commanderAbilityStatus,commanderAttackFactor,commanderDefenseFactor,rememberCommanderImpact} from './commanderAbilities.js';
-import {arenaAttackFactor,arenaMotherDefenseFactor,applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing} from './battleArenas.js';
+import {arenaAttackFactor,arenaMotherDefenseFactor,applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment} from './battleArenas.js';
+import ArenaEnvironment from './ArenaEnvironment.jsx';
 import {systemState} from './fleetSystems.js';
 import {chooseCombatMove} from './aiBattleTactics.js';
 import {recoverStalledHand,battlePacingReport} from './battlePacing.js';
@@ -673,6 +674,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    armedShotEffects(attacker):[];
   const effect={
    id:++attackSerial.current,side,op:move.op,targetShip:move.targetShip,
+   environmentStage:arenaEnvironment(prepared.arena?.id,prepared.round).stage,
    vitalId,escortIndex,pokerProof:pokerProof?.pattern??null,rawDamage:strike.rawDamage,damage:0,destroyed:false,resolved:false,
    strikeEffects:firedStrategicEffects,strikeCombo:shotCombinationName(firedStrategicEffects),
    volleys:strike.volley,salvos,memoryPending:strike.memoryPending,
@@ -686,7 +688,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    const credited=recordManeuverEvent(next[side].maneuvers,
     {id:'calc:'+effect.id+':'+side,type:'valid_calculation'});
    next[side]=applyBossNumericSync(applyArenaCalculationSync(
-     {...next[side],maneuvers:credited.state},next.arena?.id,credited.credited),credited.credited);
+     {...next[side],maneuvers:credited.state},next.arena?.id,credited.credited,effect.environmentStage),credited.credited);
   }
   if(side==='player'){next.selected=[];next.targetShip=move.targetShip;}
   else next.shownPlayer=move.targetShip;
@@ -718,6 +720,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    options.strikeEffects=effect.strikeEffects;
    options.nowMs=Date.now();
    const context={op:effect.op,cards,vitalId:effect.vitalId,escortIndex:effect.escortIndex,nowMs:options.nowMs,legalAttack:true,
+    environmentStage:effect.environmentStage,
     weaponKey:strongest?.weaponId||strongest?.id||null,reshufflesAtLaunch:attacker.reshuffles||0,
     escortShot:strike.volley.some(shot=>shot.escortSlot!=null),motherShot:strike.volley.some(shot=>shot.escortSlot==null),strikeEffects:effect.strikeEffects};
    const originalSync=state[receiver].maneuvers?.sync??0;
@@ -732,7 +735,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    const boostedDamage=Math.floor(effect.rawDamage*Math.min(1.35,offense*commanderOffense*arenaOffense)+1e-9);
    options.motherDefenseFactor=Math.max(.65,defense*commanderDefense*arenaDefense);
    const result=applyPendingHit(state[receiver],effect.targetShip,effect.op,boostedDamage,options);
-   const arenaDefender=applyArenaIonResistance(result.defender,state.arena?.id,result.strategicApplied,options.nowMs);
+   const arenaDefender=applyArenaIonResistance(result.defender,state.arena?.id,result.strategicApplied,options.nowMs,effect.environmentStage);
    const remembered=rememberBossNumericImpact(state[side],arenaDefender,context,result);
    const commanderRemembered=rememberCommanderImpact(remembered.attacker,remembered.defender,context,result);
    state[side]=commanderRemembered.attacker;
@@ -978,11 +981,13 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   .map(item=>VITAL_SHORT[item.id]+(item.state==='destroyed'?' KO':' AVARIA'))
   .join(' · '):'';
  const maneuverArmaments=activeArmaments(game.player.maneuvers?prepareSideForAmmoRouting(game.player,uiClock).side:game.player);
+ const ambient=arenaEnvironment(game.arena?.id,game.round);
  return <div className="es-math-scope game-viewport" role="region" aria-label="Duello matematico spaziale">
   <div ref={rootRef} className="es-root" data-intro={intro?.id} data-intro-motion={intro&&reducedIntro?'reduced':undefined}
    style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
    <ArenaBackdrop/>
-   <div className="top-brand">ECLISSI <b>STELLARE</b><small title={game.arena?.description} aria-label={'Arena tattica: '+(game.arena?.name||'Piattaforma di Titanio')}>{'ARENA · '+(game.arena?.shortLabel||'TITANIO')}</small></div>
+   <ArenaEnvironment arenaId={game.arena?.id} round={game.round}/>
+   <div className="top-brand">ECLISSI <b>STELLARE</b><small title={game.arena?.description} aria-label={'Arena tattica: '+(game.arena?.name||'Piattaforma di Titanio')}>{'ARENA · '+(game.arena?.shortLabel||'TITANIO')+(ambient.neutral?'':' · '+ambient.label+' · '+ambient.calculationsUntilChange+' COLPI')}</small></div>
    <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
    <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>{game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effects={game.effects} onSelectEscort={selectEscort} selectedEscort={game.targetEscort} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
@@ -1056,7 +1061,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2>
     <h3>CONDIZIONI ARENA: {game.arena?.name||'Piattaforma di Titanio'}</h3>
     {(()=>{const briefing=arenaTacticalBriefing(game.arena?.id,{
-      player:game.player,enemy:game.enemy,selectedCount:game.selected?.length
+      player:game.player,enemy:game.enemy,round:game.round,selectedCount:game.selected?.length
      });return <><p>{briefing.introduction}</p>{briefing.conditions.map(condition=>
       <p key={condition.id}><strong>{condition.label}.</strong> {condition.activation} <em>{condition.strategy}</em>{condition.status?' '+condition.status:''}</p>
      )}</>})()}<p>{game.vitalPrototype?'PROTOTIPO MADRE 1 CONTRO 1: lo scudo protegge quattro parti vitali. A 75%, 50%, 25% e 0% puoi scegliere una parte da esporre; un calcolo valido la danneggia. Vinci quando tutte e quattro le parti nemiche arrivano a zero HP. Le firme definitive di ogni navicella sono ancora da progettare. Le scudiere ai lati della madre si sbloccano a L3 e L5, hanno scudi propri e possono intercettare i colpi. La formula finale è temporanea; le immagini delle scudiere sono nella cartella delle risorse.':'FLOTTE MULTIPLE (versione precedente): ogni nave monta le operazioni disponibili con i relativi HP. Le scudiere collegate alla madre saranno aggiunte successivamente.'}</p><p>MAZZI SEPARATI: sette carte numeriche per i calcoli e cinque speciali nella mano tattica. Copertura Tattica usa una speciale e, per il prossimo impatto entro 15 secondi, assorbe fino al 75% del colpo sfruttando lo scudo reale della prima scudiera; non crea HP. Dal pulsante MANOVRE scegli una scudiera e gioca una carta Fusione Barriera o Fusione Assalto: la Sincronia 100 è necessaria, ma non attiva la fusione da sola. Ogni speciale giocata viene rimpiazzata immediatamente. La scudiera agganciata non può sparare autonomamente.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Puoi selezionare due oppure tre carte numeriche: con tre carte si applica la stessa operazione due volte in sequenza, con risultati intermedi interi positivi. Alcuni modelli consentono anche COPPIA o TRIS come firma alternativa dei vitali esposti: non servono poteri aggiuntivi dei semi. Ogni vitale ha una firma matematica di prova assegnata all’inizio della battaglia e mostrata sul bersaglio; i requisiti Poker definitivi rimangono da bilanciare. Le quattro parti vitali hanno HP localizzati: quando scendono al 50% o meno entrano in AVARIA con penalità reali, a zero diventano KO. Motore, armi, generatore scudi e centralina hanno effetti differenti; la distruzione del generatore azzera lo scudo. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo ha una penalità ancora da definire per il combattimento senza turni e il terzo −3 HP a te. Il numero di carte e il limite del mazzo sono provvisori. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
