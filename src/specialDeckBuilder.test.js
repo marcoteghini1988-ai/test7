@@ -215,3 +215,38 @@ test('30: storage migration can initialize on first access without affecting old
  assert.deepEqual(same,first);
  assert.equal(openSpecialPack(first,rng).reason,'no_pack');
 });
+
+test('vecchio salvataggio con nove speciali: le due fusioni nuove entrano con zero copie',()=>{
+ const original=createSpecialCollection();
+ const old={...original,owned:{...original.owned},packCredits:5,openedPacks:11,
+  claimedRewards:['adventure:sector:42']};
+ delete old.owned['fusion-twin'];
+ delete old.owned['fusion-triad'];
+ const migrated=normalizeSpecialCollection(old);
+ assert.equal(migrated.owned['fusion-twin'],0);
+ assert.equal(migrated.owned['fusion-triad'],0);
+ assert.equal(migrated.loadout.length,24);
+ assert.equal(migrated.packCredits,5);
+ assert.equal(migrated.openedPacks,11);
+ assert.deepEqual(migrated.claimedRewards,old.claimedRewards);
+ assert.deepEqual(migrated.loadout,original.loadout);
+ assert.equal(validateSpecialDeck(migrated,original.loadout).valid,true);
+});
+
+test('nuove fusioni si trovano nei pacchetti e non sono regalate agli inventari esistenti',()=>{
+ const base=createSpecialCollection();
+ assert.equal(base.owned['fusion-twin'],0);
+ assert.equal(base.owned['fusion-triad'],0);
+ for(const [type,unit] of [['fusion-twin',.20],['fusion-triad',.29]]){
+  const withCredit=specialPackReward(base,'adventure:sector:51').collection;
+  const opened=openSpecialPack(withCredit,()=>unit);
+  assert.equal(opened.opened,true);
+  assert.deepEqual(opened.drawn,[type,type,type]);
+  const loadout=[type,...base.loadout.slice(1)];
+  assert.equal(validateSpecialDeck(base,loadout).reason,'not_owned');
+  assert.equal(validateSpecialDeck(opened.collection,loadout).valid,true);
+  const player=initialBattle(1,{vitalPrototype:true,shipLevel:5,fleetIds:['N00'],
+   specialDeckTypes:equipSpecialDeck(opened.collection,loadout).loadout},rng).player;
+  assert.equal(cardsOf(player).filter(c=>c.type===type).length,1);
+ }
+});
