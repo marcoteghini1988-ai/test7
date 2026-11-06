@@ -745,24 +745,23 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    <div className="play-controls">{!intro&&<Formula game={game}/>}<button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
    <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={openFleet} disabled={!!intro}>FLOTTA ⚙</button>
     <button onClick={()=>setManeuverMenu(value=>!value)} disabled={game.phase!=='ready'||!maneuverHUD}>MANOVRE {maneuverHUD?maneuverHUD.sync+'%':''}</button></div>
-   {maneuverMenu&&maneuverHUD&&game.phase==='ready'&&<section className="maneuver-panel" aria-label="Comandi tattici della flotta">
-    <header><b>MANOVRE DI FLOTTA</b><button type="button" onClick={()=>setManeuverMenu(false)} aria-label="Chiudi manovre">×</button></header>
-    <div className="maneuver-sync"><span>SINCRONIA {maneuverHUD.sync}/100</span><div><i style={{width:maneuverHUD.sync+'%'}}/></div></div>
-    <p>FORMAZIONE · seleziona un assetto</p>
-    <div className="maneuver-options">
-     <button className={maneuverHUD.formation==='balanced'?'active':''} onClick={()=>orderManeuver('balanced')}>EQUILIBRATA</button>
-     <button className={maneuverHUD.formation==='guard'?'active':''} onClick={()=>orderManeuver('guard')}>GUARDIA</button>
-     <button className={maneuverHUD.formation==='assault'?'active':''} onClick={()=>orderManeuver('assault')}>ASSALTO</button>
-    </div>
-    <p>FUSIONE · 100 sincronia, 12 secondi</p>
-    {maneuverHUD.fusion?<div className="maneuver-options"><strong>SCUDIERA {maneuverHUD.fusion.escortSlot+1} · {maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} · {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</strong><button onClick={undock}>SGANCIA</button></div>:
-     <div className="maneuver-fusion-list">{maneuverHUD.availableEscorts.map(item=><div key={item.slot}>
-      <span>SCUDIERA {item.slot+1}</span>
-      <button disabled={!item.available||maneuverHUD.sync<100||maneuverHUD.fusionCooldownRemainingMs>0} onClick={()=>orderFusion(item.slot,'barrier')}>BARRIERA</button>
-      <button disabled={!item.available||maneuverHUD.sync<100||maneuverHUD.fusionCooldownRemainingMs>0} onClick={()=>orderFusion(item.slot,'strike')}>ASSALTO</button>
-     </div>)}</div>}
-    {maneuverHUD.fusionCooldownRemainingMs>0&&<small>Fusione disponibile tra {Math.ceil(maneuverHUD.fusionCooldownRemainingMs/1000)}s</small>}
-   </section>}
+   {maneuverMenu&&maneuverHUD&&game.phase==='ready'&&<div className="maneuver-panel">
+     <header><b>MANOVRE DI FLOTTA</b><button onClick={()=>setManeuverMenu(false)}>CHIUDI</button></header>
+     <div className="maneuver-sync"><span>SINCRONIA {maneuverHUD.sync}/100</span><div><i style={{width:maneuverHUD.sync+'%'}}/></div></div>
+     <p>FORMAZIONE</p>
+     <div className="maneuver-options">
+       <button onClick={()=>orderManeuver('balanced')}>EQUILIBRATA</button>
+       <button onClick={()=>orderManeuver('guard')}>GUARDIA</button>
+       <button onClick={()=>orderManeuver('assault')}>ASSALTO</button>
+     </div>
+     <p>FUSIONE - 100 SINCRONIA</p>
+     {maneuverHUD.availableEscorts.map(item=><div key={item.slot} className="maneuver-options">
+       <span>SCUDIERA {item.slot+1}</span>
+       <button disabled={!item.available||maneuverHUD.sync<100||!!maneuverHUD.fusion||maneuverHUD.fusionCooldownRemainingMs>0} onClick={()=>orderFusion(item.slot,'barrier')}>BARRIERA</button>
+       <button disabled={!item.available||maneuverHUD.sync<100||!!maneuverHUD.fusion||maneuverHUD.fusionCooldownRemainingMs>0} onClick={()=>orderFusion(item.slot,'strike')}>ASSALTO</button>
+     </div>)}
+     {maneuverHUD.fusion&&<div className="maneuver-options"><span>{maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>}
+   </div>}
    <div className="player-status"><b>TU</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
    {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs} escortRefs={escortRefs}/>)}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
