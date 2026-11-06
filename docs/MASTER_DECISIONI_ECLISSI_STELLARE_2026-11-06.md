@@ -139,3 +139,9 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Salvataggio della collezione speciale separato e non distruttivo rispetto alla collezione navicelle, con validazione proprietà/copertura. Un salvataggio corrotto non viene sovrascritto silenziosamente.
 - **295 test logici riusciti**, build e preflight automatizzati su `test7/main`. Non è ancora un collaudo di giocabilità su telefono e il bilanciamento resta sperimentale.
 - Riferimento `docs/PUNTO_30_MAZZO_CARTE_SPECIALI.md`. Prossimi punti 31–39: rispettare la scaletta numerata originale; il testo integrale non è incluso nei documenti correnti. La fase audio-visiva definitiva rimane rinviata.
+
+### Ultimo avanzamento — Punto 31 (6 novembre 2026)
+- Corretto un errore della progettazione provvisoria: la scala dei boss **non** è uniforme a 9 livelli. Su 12 boss attivi, 4 mazzi hanno una sola abilità (max L3), 5 ne hanno due (max L6), 3 ne hanno tre (max L9). Tutte le abilità hanno tre gradi consecutivi; **23 abilità** totali.
+- Nuove abilità definite in `src/bossNumericDecks.js`, cablate alla battaglia matematica madre/scudiere, allo Shop preesistente e alla progressione equipaggiata senza sovrascrivere inventario, costi e ID originali.
+- Le abilità non modificano le firme, non creano carte, non accendono fusioni senza speciale. Effetti registrati ad impatto; Sincronia e Riparazione sono bonus soltanto a eventi reali, con limiti.
+- Spec: `docs/PUNTO_31_PASSIVE_MAZZI_BOSS.md`. Test: `src/bossNumericDecks.test.js`; verifiche CI, bilanciamento e playtest ancora da completare. Prossima fase: continuare la scaletta con punto 32 dopo i controlli, senza intervenire sulla grafica/sonoro definitivo.
