@@ -50,7 +50,10 @@ export function normalizeSpecialCollection(raw){
     !Array.isArray(raw.claimedRewards))throw new Error('Salvataggio speciale incompleto');
  const owned=emptyCounts();
  for(const type of SPECIAL_TYPES){
-  const value=raw.owned[type];
+  // Saved schema v1 predates this new card; only its missing zero is migrated.
+  // Missing existing card types remain an error (never reset a corrupt save).
+  const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
+   type==='support-escort-repair'?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
