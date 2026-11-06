@@ -101,3 +101,48 @@ test('initialization is idempotent and does not erase battle state',()=>{
  const s=initializeSpecialDeck(ship(),zero);
  assert.equal(initializeSpecialDeck(s,zero),s);
 });
+
+test('nuove carte Gemellare e Trina richiedono due scudiere, 100 Sincronia e consumano una copia reale',async()=>{
+ const {initialBattle}=await import('./mathDuelEngine.js');
+ const {SPECIAL_DEFAULT_TYPES}=await import('./specialCards.js');
+ const types=[...SPECIAL_DEFAULT_TYPES];
+ types[0]='fusion-twin';types[1]='fusion-triad';
+ const bring=(side,type)=>{
+  const inHand=side.specialHand.findIndex(c=>c.type===type);
+  if(inHand>=0)return {...side,maneuvers:{...side.maneuvers,sync:100}};
+  const index=side.specialDeck.findIndex(c=>c.type===type);
+  assert.ok(index>=0);
+  const hand=[...side.specialHand],deck=[...side.specialDeck];
+  [hand[0],deck[index]]=[deck[index],hand[0]];
+  return {...side,specialHand:hand,specialDeck:deck,
+   maneuvers:{...side.maneuvers,sync:100}};
+ };
+ for(const [type,mode] of [['fusion-twin','twin'],['fusion-triad','triad']]){
+  const game=initialBattle(1,{vitalPrototype:true,shipLevel:5,fleetIds:['N00'],
+   specialDeckTypes:types},()=>.5);
+  const ready=bring(game.player,type);
+  const initialIds=[...ready.specialHand,...ready.specialDeck,...ready.specialDiscard]
+   .map(c=>c.id).sort();
+  const idx=ready.specialHand.findIndex(c=>c.type===type);
+  const played=playSpecialCard(ready,idx,{escortSlot:1},1000,()=>0);
+  assert.equal(played.played,true);
+  assert.equal(played.card.type,type);
+  assert.equal(played.side.maneuvers.fusion.mode,mode);
+  assert.deepEqual(played.side.maneuvers.fusion.escortSlots,[0,1]);
+  assert.equal(played.side.maneuvers.sync,0);
+  assert.equal(played.side.specialUses,1);
+  assert.equal(played.side.specialHand.length,5);
+  assert.equal(played.side.specialDiscard.length,1);
+  assert.deepEqual(
+   [...played.side.specialHand,...played.side.specialDeck,...played.side.specialDiscard]
+    .map(c=>c.id).sort(),initialIds);
+  assert.deepEqual(ready.specialDiscard,[]);
+  const noEscorts={...ready,escorts:[ready.escorts[0],
+   {...ready.escorts[1],defense:{...ready.escorts[1].defense,
+     shield:{...ready.escorts[1].defense.shield,hp:0}}}]};
+  const denied=playSpecialCard(noEscorts,idx,{escortSlot:0},1000,()=>0);
+  assert.equal(denied.played,false);
+  assert.equal(denied.reason,'escort_unavailable');
+  assert.deepEqual(denied.side,noEscorts);
+ }
+});
