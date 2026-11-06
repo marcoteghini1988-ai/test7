@@ -57,6 +57,16 @@ export function battlePacingReport(game,endedAtMs=Date.now()){
   playerDeckRecycles:player.reshuffles||0,
   enemyDeckRecycles:enemy.reshuffles||0,
   playerDeadlockRecovers:player.recoveryCount||0,
-  enemyDeadlockRecovers:enemy.recoveryCount||0
+  enemyDeadlockRecovers:enemy.recoveryCount||0,
+  playerSpecialCardsUsed:player.specialUses||0,
+  enemySpecialCardsUsed:enemy.specialUses||0,
+  balanceResolvedImpacts:game?.balanceMetrics?.resolvedImpacts||0,
+  balancePlayerImpacts:game?.balanceMetrics?.playerImpacts||0,
+  balanceEnemyImpacts:game?.balanceMetrics?.enemyImpacts||0,
+  balancePassiveCaps:game?.balanceMetrics?.passiveCaps||0,
+  balanceFusionStackCaps:game?.balanceMetrics?.fusionStackCaps||0,
+  balanceDefenseCaps:game?.balanceMetrics?.defenseCaps||0,
+  balancePeakImpacts:game?.balanceMetrics?.peakImpacts||0,
+  balanceSpecialImpacts:game?.balanceMetrics?.specialImpacts||0
  };
 }
