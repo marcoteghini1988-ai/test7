@@ -660,3 +660,14 @@
 .es-math-scope .special-card-hand button small,.es-math-scope .special-card-hand button span{font-size:7px;letter-spacing:0}
 .es-math-scope .special-card-hand button:disabled{opacity:.48;filter:grayscale(.35)}
 .es-math-scope .special-card-hand button:not(:disabled):focus-visible{outline:3px solid #fcf0a1;outline-offset:2px}
+
+/* Punto 25: carta di difesa attiva, senza alterare il tavolo 9:16. */
+.es-math-scope .special-card-hand button.special-tactical-cover{
+ border-color:#91d5a5;
+ background:linear-gradient(160deg,#2e6658,#102b36);
+}
+.es-math-scope .tactical-cover-status{
+ display:block;padding:5px 7px;border-radius:5px;
+ border:1px solid #92c9a8;background:#153d34;color:#d8ffeb;
+ font-size:10px;text-align:center;
+}
