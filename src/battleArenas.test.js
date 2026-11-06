@@ -52,7 +52,7 @@ test('42: progressione di ogni pianeta: L1-2 neutra, L3-6 uno, L7-9 due, L10 bos
  const bosses=PHASE16A_CAMPAIGN_PLANETS.map(planet=>BATTLE_ARENAS['boss_'+planet.id]);
  assert.equal(new Set(bosses.map(a=>a.id)).size,12);
  assert.equal(new Set(bosses.map(a=>a.name)).size,12);
- assert.equal(new Set(bosses.map(a=>JSON.stringify(a.effects))).size,12);
+ assert.equal(new Set(bosses.map(a=>JSON.stringify(Object.entries(a.effects).sort(([x],[y])=>x.localeCompare(y))))).size,12);
 });
 
 test('42: parametri espliciti del pianeta usati anche con numerazione legacy',()=>{
