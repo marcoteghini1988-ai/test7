@@ -2,6 +2,8 @@
 // un'arena esclusiva per ciascuno dei 12 boss. Gli sfondi comprati restano estetici.
 // Gli effetti valgono per entrambi i lati e richiedono un'azione reale già valida.
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
+import {SHOT_RULES} from './strategicShots.js';
+import {COMBAT_BALANCE_LIMITS} from './combatBalance.js';
 
 const EFFECT_FAMILIES=Object.freeze(['debris','plasma','ionic','resonance']);
 const effectValues=(types=[],bossStep=null,bossVariant=0)=>{
@@ -146,8 +148,15 @@ export function applyArenaIonResistance(side,arenaId,applied=[],nowMs=0,environm
  const until=side?.strategicStatuses?.ionizedUntil;
  if(!(Number.isFinite(until)&&until>nowMs))return side;
  // Solo una ionizzazione realmente applicata dalla speciale.
+ // Ion resistance from a boss deck is already reflected in 'until'.
+ // The arena cannot drive the *combined* resistance past 50% of the
+ // genuine 12s status; it must never extend an existing shorter effect.
+ const nominalMs=SHOT_RULES.ionizedDurationMs;
+ const lowerBound=nowMs+Math.ceil(nominalMs*(1-COMBAT_BALANCE_LIMITS.maxCombinedIonResistance));
+ const reducedUntil=nowMs+Math.ceil((until-nowMs)*factor);
+ const cappedUntil=Math.min(until,Math.max(lowerBound,reducedUntil));
  return {...side,strategicStatuses:{...side.strategicStatuses,
-  ionizedUntil:nowMs+Math.ceil((until-nowMs)*factor)}};
+  ionizedUntil:cappedUntil}};
 }
 export function applyArenaCalculationSync(side,arenaId,credited=0,environmentStage='quiet'){
  const bonus=arenaPhaseModifiers(arenaId,environmentStage).syncPerCalculation;
