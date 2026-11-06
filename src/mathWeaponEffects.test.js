@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {WEAPON_EFFECTS,weaponEffect,planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
+import {WEAPON_EFFECTS,weaponEffect,planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth,projectileSourceIndex} from './mathWeaponEffects.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {createShip,previewVolley} from './mathDuelEngine.js';
 const cards=(value,suit,other=1)=>[{id:'a',value,suit},{id:'b',value:other,suit:'♣'}];
@@ -106,4 +106,11 @@ test('i segmenti laser restano separati anche a corta distanza e con 26 munizion
  }
  const [pulse]=planWeaponSalvos([{weaponId:'W01',bullets:26}]);
  assert.equal(projectileWidth(pulse,150),pulse.fx.width);
+});
+
+test('scudiera con singola bocca riutilizza correttamente gli effetti doppi',()=>{
+ assert.equal(projectileSourceIndex({escortSlot:0},{muzzleIndex:1}),0);
+ assert.equal(projectileSourceIndex({escortSlot:1},{muzzleIndex:1}),0);
+ assert.equal(projectileSourceIndex({vesselIndex:0},{muzzleIndex:1}),1);
+ assert.equal(projectileSourceIndex({vesselIndex:0},{muzzleIndex:0}),0);
 });

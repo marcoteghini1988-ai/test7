@@ -80,3 +80,9 @@ export function projectileFrame(dx,dy,bend,t){
  const offset=2*(1-t)*t*bend,tangent=2*(1-2*t)*bend;
  return {x:dx*t+nx*offset,y:dy*t+ny*offset,angle:Math.atan2(dy+ny*tangent,dx+nx*tangent)*180/Math.PI};
 }
+
+// Le scudiere hanno un unico punto di lancio visibile anche quando ereditano
+// un profilo VFX con due bocche di fuoco dalla madre.
+export function projectileSourceIndex(shot,round){
+ return shot?.escortSlot!==undefined&&shot?.escortSlot!==null?0:(round?.muzzleIndex||0);
+}

@@ -2,7 +2,7 @@ import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
 import {ENGINE_KEYS,META,PHASE1_SHIPS,newShip,initialBattle,evaluatePair,inspectCalculation,rankLabel,aiChoose,findMoves,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory,nextAiActionDelay,applyPendingHit} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMuzzleCount} from './mathFleetGeometry.js';
-import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth} from './mathWeaponEffects.js';
+import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth,projectileSourceIndex} from './mathWeaponEffects.js';
 import {ASSET_ROOT,CARD_SUIT_COLORS,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart} from './vitalDefense.js';
@@ -250,7 +250,7 @@ function Projectile({effect,rootRef,engineRefs,gunRefs,escortRefs}){
    });
    if(sources.some(source=>!source))return [];
    const rounds=salvo.rounds.map(round=>{
-    const [x,y]=sources[round.muzzleIndex||0],dx=target[0]-x,dy=target[1]-y;
+    const [x,y]=sources[projectileSourceIndex(s,round)],dx=target[0]-x,dy=target[1]-y;
     return {...round,x,y,dx,dy,roundWidth:projectileWidth(salvo,Math.hypot(dx,dy))};
    });
    return [{...salvo,rounds}];

@@ -128,3 +128,5 @@ Sono state aggiunte **34 immagini SVG individuali** in `public/assets/escorts/` 
 
 ## Munizioni e armi delle scudiere (6 novembre 2026)
 Sono configurate 34 armi subordinate in `src/escortArmory.js`, con semi ammessi alternativi, danni, fuoco immediato o accumulo, e intercettazione distinta per modello. Il seme non ha un effetto automatico: alimenta un cannone compatibile. Nel prototipo madre + scudiere `src/escortFiring.js` assegna ogni carta a una sola arma, e il selettore ARMA consente di scegliere la destinazione preferita. Le munizioni ad accumulo persistono fra gli attacchi. I proiettili delle scudiere partono dai rispettivi asset; i 42 armamenti della madre e le flotte legacy restano conservati. Tutti i valori di bilanciamento sono di prova.
+
+**Correzione VFX:** i profili di armi a doppia bocca vengono adattati al punto di lancio unico della scudiera, evitando colpi senza coordinate in arena. Il comportamento della madre rimane inalterato.
