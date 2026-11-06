@@ -56,7 +56,8 @@ test('39: zero escort shield can be restored, but destroyed escort cannot be rev
  const zero=damageEscort(b,0,0);
  const valid=playSpecialCard(zero,0,{escortSlot:0},1000,rng);
  assert.equal(valid.played,true);
- assert.equal(valid.side.escorts[0].defense.shield.hp,15);
+ assert.equal(valid.side.escorts[0].defense.shield.hp,
+  Math.min(SUPPORT_RULES.escortShieldRepair,b.escorts[0].defense.shield.max));
  assert.equal(valid.side.escorts[0].defense.destroyed,false);
  const destroyed=damageEscort(b,0,0,{destroyed:true});
  const denied=playSpecialCard(destroyed,0,{escortSlot:0},1000,rng);
