@@ -1,4 +1,5 @@
 import {createEscortDefense,damageEscortShield,destroyExposedEscort} from './vitalDefense.js';
+import {escortArmamentFor} from './escortArmory.js';
 // Scudiere subordinate, non carte equipaggiabili. HP e firme provvisori per collaudo.
 export const ESCORT_UNLOCK_LEVELS=Object.freeze([3,5]);
 export const ESCORT_INTERCEPT_SHARE=0.20;
@@ -6,12 +7,16 @@ const dmg=n=>Number.isFinite(n)&&n>0?Math.floor(n):0;
 export function buildLinkedEscorts(mother,targets){
  if(!mother?.id||!mother?.level||!targets)return [];
  const hp=mother.defense?.shield.max??Object.values(mother.engines||{}).reduce((sum,x)=>sum+(x.max||0),0);
- return ESCORT_UNLOCK_LEVELS.flatMap((level,slot)=>mother.level<level?[]:[{
-  id:`${mother.id}:escort:${slot+1}`,parentShipId:mother.id,slot,unlockLevel:level,
-  name:`Scudiera ${slot+1} · ${mother.name}`,
-  defense:createEscortDefense({shieldMax:Math.max(12,Math.round(hp*(slot===0?.28:.24))),
-   signature:{kind:'math',op:slot===0?'plus':'minus',target:targets[slot===0?'plus':'minus']}})
- }]);
+ return ESCORT_UNLOCK_LEVELS.flatMap((level,slot)=>{
+  if(mother.level<level)return [];
+  const weapon=escortArmamentFor(mother,slot);
+  const defense=createEscortDefense({
+   shieldMax:Math.max(12,Math.round(hp*weapon.shieldFactor)),
+   signature:{kind:'math',op:slot===0?'plus':'minus',target:targets[slot===0?'plus':'minus']}
+  });
+  return [{id:`${mother.id}:escort:${slot+1}`,parentShipId:mother.id,slot,unlockLevel:level,
+   name:`Scudiera ${slot+1} · ${mother.name}`,weapon,defense}];
+ });
 }
 export function escortAvailable(escort){return !!escort?.defense&&!escort.defense.destroyed;}
 export function escortShieldsActive(escorts=[]){return escorts.filter(e=>escortAvailable(e)&&e.defense.shield.hp>0);}
@@ -27,17 +32,16 @@ export function impactLinkedEscort(escorts=[],index,raw,cards=[]){
 export function interceptMotherVolley(escorts=[],rawDamage){
  const raw=dmg(rawDamage),active=escortShieldsActive(escorts);
  if(!active.length||raw===0)return {escorts,remaining:raw,intercepted:0,details:[]};
- const requested=Math.min(raw,Math.floor(raw*ESCORT_INTERCEPT_SHARE*active.length));
- let left=requested,updated=escorts;
+ let updated=escorts,intercepted=0;
  const details=[];
  for(const escort of active){
   const slot=updated.findIndex(e=>e.id===escort.id);
-  const portion=Math.ceil(left/(active.length-details.length));
-  const hit=damageEscortShield(updated[slot].defense,portion);
-  left-=hit.damage;
+  const share=escort.weapon?.interceptShare??ESCORT_INTERCEPT_SHARE;
+  const budget=Math.min(raw-intercepted,Math.floor(raw*share));
+  const hit=damageEscortShield(updated[slot].defense,budget);
+  intercepted+=hit.damage;
   updated=updated.map((e,i)=>i===slot?{...e,defense:hit.defense}:e);
   details.push({slot,intercepted:hit.damage});
  }
- const intercepted=requested-left;
  return {escorts:updated,remaining:raw-intercepted,intercepted,details};
 }

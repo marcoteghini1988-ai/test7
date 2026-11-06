@@ -18,14 +18,14 @@ test('nessuna carta aggiuntiva e nessuna arma duplicata nelle scudiere',()=>{
  assert.equal(b.player.escorts.length,2);assert.equal(b.enemy.escorts.length,2);
  assert.notStrictEqual(b.player.escorts[0],b.enemy.escorts[0]);
 });
-test('intercettazione con due scudiere: 40% di 100, scudo madre salvo',()=>{
+test('intercettazione differenziata di scudiere con ruolo proprio',()=>{
  const b=initialBattle(1,{vitalPrototype:true,shipLevel:5},()=>.5);
  const escorts=b.player.escorts;
  const hit=interceptMotherVolley(escorts,100);
  assert.equal(ESCORT_INTERCEPT_SHARE,.20);
- assert.equal(hit.intercepted,40);assert.equal(hit.remaining,60);
+ assert.equal(hit.intercepted,27);assert.equal(hit.remaining,73);
  assert.equal(hit.escorts[0].defense.shield.hp,escorts[0].defense.shield.hp-20);
- assert.equal(hit.escorts[1].defense.shield.hp,escorts[1].defense.shield.hp-20);
+ assert.equal(hit.escorts[1].defense.shield.hp,escorts[1].defense.shield.hp-7);
 });
 test('scudiera a scudo esaurito resta viva ma perde l intercettazione',()=>{
  const b=initialBattle(1,{vitalPrototype:true,shipLevel:3},()=>.5);
