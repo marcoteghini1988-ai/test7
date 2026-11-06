@@ -8,7 +8,6 @@ import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
-import {maneuverStatus,changeFormation,startFusion,cancelFusion,recordManeuverEvent} from './fleetManeuvers.js';
 import './MathDuelBattle.css';
 import './MathDuelIntro.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
@@ -55,9 +54,8 @@ function ShipSkin({side,vessel,imageRef}){
     <filter id={`${id}-${e.op}-burn`} colorInterpolationFilters="sRGB"><feColorMatrix type="saturate" values={e.state==='destroyed'?'.05':'.45'}/><feComponentTransfer>{['R','G','B'].map(channel=>React.createElement(`feFunc${channel}`,{key:channel,type:'linear',slope:e.state==='destroyed'?.22:e.state==='critical'?.42:.68}))}</feComponentTransfer></filter>
    </React.Fragment>)}
   </defs>
-  <g opacity=".30"><ShipArtwork side={side} vessel={vessel} onLoad={()=>setLoaded(true)} mask={damaged.length?`url(#${id}-healthy)`:undefined}/></g>
-  <image href={`${ASSET_ROOT}/ship-shells/${vessel.id}.svg`} x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet" mask={damaged.length?`url(#${id}-healthy)`:undefined} aria-hidden="true"/>
-  {damaged.map(e=><image key={e.op} href={`${ASSET_ROOT}/ship-shells/${vessel.id}.svg`} x="0" y="0" width="1000" height="1000" clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`} aria-hidden="true"/>)}
+  <ShipArtwork side={side} vessel={vessel} onLoad={()=>setLoaded(true)} mask={damaged.length?`url(#${id}-healthy)`:undefined}/>
+  {damaged.map(e=><ShipArtwork key={e.op} side={side} vessel={vessel} clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`}/>) }
  </svg>;
 }
 function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation,impactDelay,mathMode=false}){
@@ -113,11 +111,10 @@ function EscortPods({side,escorts=[],selected,onSelect,registerRef,disabled,inco
 function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,phase,intro,effects=[],availableOps,registerShipRef,registerEngineRef,registerGunRef,registerEscortRef,onSelectEscort,selectedEscort}){
  const enemy=side==='enemy',targetable=enemy&&phase==='ready';
  const formation=fleetFormation(ship.fleet.length,side);
- const maneuver=ship.maneuvers?maneuverStatus(ship.maneuvers,ship,Date.now()):null;
  const attacking=effects.filter(e=>e.side===side).at(-1)??null;
  const incoming=effects.filter(e=>e.side!==side);
  const hit=incoming.some(e=>e.escortIndex==null&&e.targetShip===focused);
- return <div data-fleet-size={ship.fleet.length} data-formation={maneuver?.formation||'balanced'} data-fusion={maneuver?.fusion?.mode||'off'} data-fusion-slot={maneuver?.fusion?.escortSlot??'none'} className={`ship-zone ship-${side}${hit?' ship-struck':''}${effects.length?' ship-in-combat':''}`}>
+ return <div data-fleet-size={ship.fleet.length} className={`ship-zone ship-${side}${hit?' ship-struck':''}${effects.length?' ship-in-combat':''}`}>
   <div className="fleet-ships">
    {ship.fleet.map((v,i)=>{
     const focusedShip=i===focused,dead=vesselDestroyed(v);
@@ -401,10 +398,6 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   return b;
  }
  const [game,setGame]=useState(()=>startBattle(collection?collectionBattleOptions(collection):{}));
- const [maneuverMenu,setManeuverMenu]=useState(false);
- const [uiClock,setUiClock]=useState(Date.now);
- useEffect(()=>{const timer=setInterval(()=>setUiClock(Date.now()),500);return()=>clearInterval(timer);},[]);
- const maneuverHUD=game.player?.maneuvers?maneuverStatus(game.player.maneuvers,game.player,uiClock):null;
  useEffect(()=>{updateShipCollection(current=>current).catch(()=>{/* Keep an unreadable save intact. */});},[]);
  const rootRef=useRef(null);
  const shipRefs=useRef({player:{},enemy:{}});
@@ -470,31 +463,6 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const part=state.enemy.fleet[0]?.defense?.parts?.[state.targetVital];
   return part&&part.hp>0&&part.exposed?state:{...state,targetVital:null};
  }
- function orderManeuver(formation){
-  const b=gameRef.current;
-  if(b.phase!=='ready'||!b.player?.maneuvers)return;
-  const n=clone(b),result=changeFormation(n.player.maneuvers,n.player,formation,Date.now());
-  n.player.maneuvers=result.state;
-  n.notice=result.changed?'FORMAZIONE: '+({balanced:'EQUILIBRATA',guard:'GUARDIA',assault:'ASSALTO'}[formation]||formation):
-   result.reason==='formation_cooldown'?'Formazione in ricarica':result.reason==='command_offline'?'Centralina disattivata':result.reason==='fusion_active'?'Attendi la fine della fusione':'Ordine non disponibile';
-  write(n);
- }
- function orderFusion(slot,mode){
-  const b=gameRef.current;
-  if(b.phase!=='ready'||!b.player?.maneuvers)return;
-  const n=clone(b),result=startFusion(n.player.maneuvers,n.player,slot,mode,Date.now());
-  n.player.maneuvers=result.state;
-  n.notice=result.started?('FUSIONE '+(mode==='barrier'?'BARRIERA':'ASSALTO')+' CON SCUDIERA '+(slot+1)):
-   ({not_enough_sync:'Sincronia insufficiente',fusion_cooldown:'Fusione in ricarica',escort_unavailable:'Scudiera non disponibile',mother_not_ready:'Motore o centralina disattivati',fusion_active:'Fusione già attiva'}[result.reason]||'Fusione non disponibile');
-  if(result.started)setManeuverMenu(false);
-  write(n);
- }
- function undock(){
-  const b=gameRef.current,n=clone(b),result=cancelFusion(n.player.maneuvers,n.player,Date.now());
-  n.player.maneuvers=result.state;
-  n.notice=result.cancelled?'SGANCIO COMPLETATO':'Nessuna fusione attiva';
-  write(n);setManeuverMenu(false);
- }
  function fire(side,move){
   const b=gameRef.current;
   if(b.phase!=='ready'||b.actor!=='player'||deckExhausted(b.player,b.enemy))return;
@@ -556,8 +524,6 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   };
   const next=clone(prepared);
   next[side]=consumeAttack(strike.attacker,[move.i,move.j]);
-  if(next[side].maneuvers)next[side].maneuvers=recordManeuverEvent(next[side].maneuvers,
-   {id:'calc:'+effect.id+':'+side,type:'valid_calculation'}).state;
   if(side==='player'){next.selected=[];next.targetShip=move.targetShip;}
   else next.shownPlayer=move.targetShip;
   next.effects=[...(prepared.effects||[]),effect];next.round+=1;
@@ -574,12 +540,8 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    if(state.effects[idx].resolved)return;
    // Firma fissa per modello ancora da definire; solo il prototipo riusa il bersaglio matematico corrente.
    const options=escortIndex!=null?{escortIndex,cards}:vitalId?{vitalId,cards,signatureOverride:{kind:'math',op:move.op,target:goal}}:{};
-   options.hitId=effect.id+':'+receiver;
    const result=applyPendingHit(state[receiver],effect.targetShip,effect.op,effect.rawDamage,options);
    state[receiver]=result.defender;
-   if(escortIndex!=null&&result.damage>0&&state[side].maneuvers)
-    state[side].maneuvers=recordManeuverEvent(state[side].maneuvers,
-     {id:'escortHit:'+effect.id+':'+side,type:'escort_hit',amount:result.damage}).state;
    state.effects[idx]={...state.effects[idx],resolved:true,damage:result.damage,destroyed:result.destroyed};
    const systemLog=result.systemMessage?`${side==='player'?'NEMICO':'TU'}: ${result.systemMessage}`:null;
    if(systemLog)state.notice=systemLog;
@@ -652,17 +614,6 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    if(pauseClockRef.current||b.phase!=='ready'||b.actor!=='player'||!b.aiDueAt||Date.now()<b.aiDueAt)return;
    const n=clone(b),now=Date.now(),delay=nextAiActionDelay(Math.random,b.level,b.mode);
    n.aiDueAt=now+delay;
-   if(n.enemy.maneuvers){
-    const status=maneuverStatus(n.enemy.maneuvers,n.enemy,now);
-    n.enemy.maneuvers=status.state;
-    if(status.sync>=100&&!status.fusion&&status.availableEscorts.some(x=>x.available)){
-     const target=status.availableEscorts.find(x=>x.available);
-     const mode=n.enemy.fleet[0].defense.shield.hp<n.enemy.fleet[0].defense.shield.max*.55?'barrier':'strike';
-     n.enemy.maneuvers=startFusion(status.state,n.enemy,target.slot,mode,now).state;
-    }else if(!status.fusion&&status.formation==='balanced'&&status.availableEscorts.length){
-     n.enemy.maneuvers=changeFormation(status.state,n.enemy,'guard',now).state;
-    }
-   }
    let move=aiChoose(n.enemy,n.player,n.targets);
    if(!move&&n.enemy.sacrifices<3&&n.enemy.deck.length&&n.enemy.hand.length){
     const swap=sacrificeCard(n.enemy,Math.floor(Math.random()*n.enemy.hand.length),n.player,null);
@@ -743,8 +694,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    <div className="deck left"><div className="deck-graphic">✦</div><small>MAZZO</small><strong>{game.player.deck.length}</strong></div><div className="deck right"><div className="deck-graphic trash">▤</div><small>SCARTI</small><strong>{game.player.discard.length}</strong></div>
    <Hand cards={game.player.hand} selected={game.selected} onSelect={pick} disabled={game.phase!=='ready'||game.actor!=='player'}/>
    <div className="play-controls">{!intro&&<Formula game={game}/>}<button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
-   <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={openFleet} disabled={!!intro}>FLOTTA ⚙</button>
-    <button onClick={()=>setManeuverMenu(value=>!value)} disabled={game.phase!=='ready'||!maneuverHUD}>MANOVRE {maneuverHUD?maneuverHUD.sync+'%':''}</button></div>
+   <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={openFleet} disabled={!!intro}>FLOTTA ⚙</button></div>
    <div className="player-status"><b>TU</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
    {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs} escortRefs={escortRefs}/>)}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
