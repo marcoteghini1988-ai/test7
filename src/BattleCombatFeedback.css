@@ -1,0 +1,86 @@
+/* Eclissi Stellare — Punto 47. Nessun asset duplicato, nessun punto
+   cliccabile sopra la plancia: solo risposta visiva agli eventi del motore. */
+.es-math-scope .battle-combat-cue{
+ position:absolute;left:114px;top:343px;width:222px;min-height:35px;
+ box-sizing:border-box;display:flex;align-items:center;justify-content:center;
+ gap:7px;padding:5px 8px;z-index:10;pointer-events:none;
+ border:1px solid var(--cue-color,#6ed8ff);border-radius:8px;
+ color:#effaff;background:linear-gradient(105deg,#071326f2,#09233eea);
+ box-shadow:0 0 13px -3px var(--cue-color,#6ed8ff);
+ text-shadow:0 0 8px var(--cue-color,#6ed8ff);
+ animation:combatCueReveal 2.1s ease-out both;
+}
+.es-math-scope .cue-enemy{border-color:#ff7b82;--cue-color:#ff6d7f}
+.es-math-scope .cue-charge{--cue-color:#8ed6ff}
+.es-math-scope .cue-blocked{--cue-color:#a0b5c6}
+.es-math-scope .cue-impact{--cue-color:#a9eefe}
+.es-math-scope .cue-critical{--cue-color:#ffa957}
+.es-math-scope .cue-special,.es-math-scope .cue-volley{--cue-color:#bb98ff}
+.es-math-scope .cue-fusion{--cue-color:#6eeccc}
+.es-math-scope .cue-support{--cue-color:#98eea1}
+.es-math-scope .cue-defense{--cue-color:#a2d9ff}
+.es-math-scope .battle-cue-symbol{font-size:23px;flex:none;line-height:1;color:var(--cue-color,#8de4ff)}
+.es-math-scope .battle-cue-copy{display:flex;flex-direction:column;align-items:flex-start;min-width:0;gap:3px}
+.es-math-scope .battle-cue-copy strong{
+ font-size:11px;letter-spacing:.7px;font-weight:900;line-height:1.1;
+ overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:181px
+}
+.es-math-scope .battle-cue-copy small{
+ font-size:8px;line-height:1.1;color:#c7e3f4;
+ overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:181px
+}
+.es-math-scope .battle-ammo-flow{
+ position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden;
+}
+.es-math-scope .battle-ammo-token{
+ position:absolute;width:26px;height:33px;border:1px solid var(--ammo-color);
+ border-radius:4px;background:linear-gradient(150deg,#0b1b33e0,#051020d0);
+ color:var(--ammo-color);display:flex;flex-direction:column;
+ justify-content:center;align-items:center;gap:0;line-height:1;
+ box-shadow:0 0 10px var(--ammo-color);
+ filter:drop-shadow(0 0 4px var(--ammo-color));
+ animation:combatAmmoCharge .73s cubic-bezier(.3,.2,.6,1) var(--ammo-delay) both;
+}
+.es-math-scope .battle-ammo-token b{font-size:11px}
+.es-math-scope .battle-ammo-token i{font-size:10px;font-style:normal}
+.es-math-scope .enemy-status.boss-marked{
+ border-color:#edac6b;box-shadow:0 0 9px #f1ae6488, inset 0 0 16px #782c182b;
+}
+.es-math-scope .enemy-status.boss-marked::after{
+ content:"BOSS";position:absolute;right:5px;bottom:-13px;
+ font-size:8px;font-weight:950;letter-spacing:2px;
+ color:#ffc68b;text-shadow:0 0 7px #f9b45f;
+}
+.es-math-scope .result-card[data-outcome="player"]{
+ border-color:#89f9b9;box-shadow:0 0 32px #4cff8c6a;
+}
+.es-math-scope .result-card[data-outcome="enemy"]{
+ border-color:#ff8e8a;box-shadow:0 0 32px #ff38386a;
+}
+.es-math-scope .battle-result-emblem{
+ font-size:43px;line-height:1;
+ color:#a4eaff;text-shadow:0 0 15px #4bceff;
+ animation:combatVictoryEmblem .7s ease-out both;
+}
+.es-math-scope .result-card[data-outcome="player"] .battle-result-emblem{color:#7cffa9;text-shadow:0 0 19px #48ff93}
+.es-math-scope .result-card[data-outcome="enemy"] .battle-result-emblem{color:#ff938b;text-shadow:0 0 19px #ff5b55}
+@keyframes combatAmmoCharge{
+ 0%{opacity:0;transform:translate3d(0,0,0) scale(.94)}
+ 18%{opacity:1}
+ 72%{opacity:1}
+ 100%{opacity:0;transform:translate3d(var(--ammo-dx),var(--ammo-dy),0) scale(.25)}
+}
+@keyframes combatCueReveal{
+ 0%{opacity:0;transform:translateY(6px) scale(.95)}
+ 10%,68%{opacity:1;transform:translateY(0) scale(1)}
+ 100%{opacity:0;transform:translateY(-5px) scale(.98)}
+}
+@keyframes combatVictoryEmblem{0%{opacity:0;transform:scale(.6)}100%{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){
+ .es-math-scope .battle-ammo-token{animation:none!important;display:none}
+ .es-math-scope .battle-combat-cue{
+  animation:combatCueStill 2.1s linear both!important;transform:none!important
+ }
+ .es-math-scope .battle-result-emblem{animation:none!important}
+}
+@keyframes combatCueStill{0%,75%{opacity:1}100%{opacity:0}}
