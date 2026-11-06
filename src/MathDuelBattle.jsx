@@ -800,7 +800,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
       </button>)}
      </div>
      <small>Le fusioni richiedono una carta speciale e 100 Sincronia. Una carta usata viene rimpiazzata subito.</small>
-     {maneuverHUD.fusion&&<div className="maneuver-options"><span>{maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>
+     {maneuverHUD.fusion&&<div className="maneuver-options"><span>{maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>}
    </div>}
    <div className="player-status"><b>TU</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
    {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs} escortRefs={escortRefs}/>)}
