@@ -37,7 +37,7 @@ test('32/37/38: due speciali offensive diverse si armano nello stesso momento, s
  assert.equal(second.specialHand.length,5);
  assert.equal(second.specialUses,2);
  assert.deepEqual(second.hand.map(c=>c.id),originalNumeric);
- assert.equal(shotCombinationName(armedShotEffects(second)),'Breccia Ionica');
+ assert.equal(shotCombinationName(armedShotEffects(second)),'BRECCIA IONICA');
  assert.deepEqual(allCards(second).map(c=>c.id).sort(),originalSpecialIds);
  const thirdIdx=second.specialHand.findIndex(c=>c.type==='shot-corrosion');
  assert.ok(thirdIdx>=0);
