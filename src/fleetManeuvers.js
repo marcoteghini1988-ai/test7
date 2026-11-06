@@ -1,4 +1,5 @@
 // Eclissi Stellare — Punto 22: manovre e fusioni. Bilanciamento provvisorio.
+import {SHOT_RULES} from './strategicShots.js';
 export const MANEUVER_RULES=Object.freeze({
  syncGoal:100,syncPerCalculation:15,syncPerInterception:10,syncPerEscortHit:12,
  formationCooldownMs:10000,fusionDurationMs:12000,fusionCooldownMs:28000,
@@ -145,6 +146,8 @@ export function interceptManeuverVolley(side,rawDamage,nowMs,calculateShare,opti
   let share=typeof calculateShare==='function'?calculateShare(e,mother(side),options):.20;
   if(n.formation==='guard')share+=MANEUVER_RULES.guardInterceptBonus;
   if(n.formation==='assault')share-=MANEUVER_RULES.assaultInterceptPenalty;
+  // Ionization disrupts only passive formation interceptions, never card-paid cover or docked fusion.
+  if(side?.strategicStatuses?.ionizedUntil>nowMs)share*=SHOT_RULES.ionizedInterceptMultiplier;
   absorb(slot,Math.floor(raw*bounded(share,0,MANEUVER_RULES.maxSharePerEscort)),'escort');
  });
  return {maneuvers:n,escorts,remaining,intercepted:raw-remaining,details};
