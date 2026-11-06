@@ -180,3 +180,13 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Nessuna vecchia passiva dei personaggi Poker viene applicata automaticamente al nuovo combattimento. **Punto 41** ancora da progettare: ruoli delle carte personaggio, abilità e bilanciamento coerenti con le quattro parti vitali e la flotta.
 - Test aggiunti in `src/fleetCommander.test.js` e test integrato colpo/scudo/riparazione scudiera in `src/escortRepair.test.js`. Test e build dei nuovi commit **non ancora certificati** tramite Actions, che non restituisce i workflow push con l'integrazione disponibile; verificare su Actions o eseguire `npm run verify:logic`, `npm run build` e `npm run preflight`.
 - Specifica: `docs/PUNTO_40_COMANDANTE_DI_FLOTTA.md`. Grafica/audio finali rinviati, repository unico `test7/main` senza copie.
+
+
+### Avanzamento — Punto 41 (6 novembre 2026)
+- **33 carte personaggio** del catalogo esistente, ciascuna con una nuova abilità tattica unica nel combattimento continuo e cinque livelli, senza importare passivi del Poker classico. La loro identità e gli ID originali rimangono invariati.
+- Un solo comandante per flotta, preso dall'inventario originale; rifiutati gli ID non catalogati e gli NPC sentinella. Nessuna copia di carte o nuova chiave di salvataggio.
+- Bonus condizionati a veri calcoli/proiettili, oppure a danni veri alla madre, scudi e vitali. Memoria aggiornata solo dopo gli impatti efficaci. Effetti simmetrici per giocatore e IA.
+- Combinazione con le 12 passive dei mazzi numerici boss: cap condiviso +35% danno e -35% protezione madre, senza applicare protezione extra alle scudiere.
+- Le nuove descrizioni L1-L5 sono visibili nell'Hangar, tenendo separati i testi delle modalità classiche. Moduli: `src/commanderAbilities.js`, `src/commanderAbilities.test.js`, `src/MathDuelBattle.jsx`, `src/fleetCommander.js`, `src/pilotsSystem.jsx`.
+- Dettagli e condizioni delle 33 abilità: `docs/PUNTO_41_ABILITA_PERSONAGGI.md`. **Le nuove verifiche CI/test e il playtest 9:16 non sono confermati** dal connettore (combined statuses vuoti). Non dichiarare il punto collaudato o il bilanciamento definitivo.
+- Prossimo: **punto 42 — arene**. Non rifare la plancia artistica già approvata, non anticipare asset 3D/audio finali e non creare copie di `test7`.
