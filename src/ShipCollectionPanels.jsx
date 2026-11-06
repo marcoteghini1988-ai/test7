@@ -3,6 +3,7 @@ import {getShipDefinition, PHASE1_SHIPS} from './mathDuelEngine.js';
 import {ShipCard} from './ShipPresentation.jsx';
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {SHIP_COLLECTION_KEY, equipShipCards, readShipCollection, updateShipCollection} from './shipCollection.js';
+import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import './ShipCollectionPanels.css';
 
 function readCollection() {
@@ -45,9 +46,10 @@ export function ShipShopPanel() {
       {PHASE1_SHIPS.map(ship => {
         const card = collection?.cards.find(entry => entry.shipId === ship.id);
         const equipped = card && collection.loadout[0]===card.instanceId;
+        const milestone=SHIP_CAMPAIGN_UNLOCKS.find(item=>item.shipId===ship.id);
         const status = card
           ? `${equipped ? 'Equipaggiata' : 'Posseduta'} · L${card.level}${card.level === 5 ? ' · Livello massimo' : ''}`
-          : collection ? 'Da ottenere' : 'Proprietà non disponibile';
+          : collection ? milestone?'Campagna · vittoria settore '+milestone.sector:'Da ottenere' : 'Proprietà non disponibile';
         return <ShipCard key={ship.id} shipId={ship.id} level={Number(preview) || card?.level || 1} status={status}/>;
       })}
     </div>
