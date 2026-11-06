@@ -61,7 +61,8 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - **22 completato come prototipo logico e di UI**: formazioni, protezione e fusioni; corretto ora il metodo d'attivazione.
 - **22B / preparazione del 30: mazzi separati e carte fusione**. Sono già presenti modulo, UI, IA e test. Non è una rinumerazione della scaletta da 53 punti.
 - **23: collaborazione madre/scudiere**. Protezione, fuoco coordinato e ruoli esistenti verificati con test aggiuntivi; sinergie avanzate NON concluse. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
-- **24–29 (blocco meccaniche)**: identità e ruoli (24), difesa madre (25), danni ai sistemi (26), effetti dei colpi (27), requisiti matematici/armi/condizioni (28), ritmo (29). Da proseguire nell'ordine della master originale.
+- **24 (identità e ruoli)**: le 17 madri possiedono 34 scudiere con ruolo difensivo nel primo slot e offensivo nel secondo. La verifica è inclusa nei test; approfondimenti tattici da completare. Vedi `docs/PUNTO_24_RUOLI_FLOTTA.md`.
+- **25–29 (blocco meccaniche)**: difesa madre (25), danni ai sistemi (26), effetti dei colpi (27), requisiti matematici/armi/condizioni (28), ritmo (29). Da proseguire nell'ordine della master originale.
 - **30 e successivi (costruzione mazzi speciali)**: estendere la base già pronta con le singole carte decise, pacchetti e deckbuilding, sblocchi, varianti e compatibilità, dopo la definizione delle relative meccaniche.
 - **Altri blocchi della master**: parti vitali (51–52), piloti/comandante (40–41), arene (42–43), campagna (44–45), Shop (46), IA (47), grafica/sonoro finale e boss/mazzi dedicati (53). Le varianti estetiche e audiovisive sono rinviate per ora, senza cambiare le decisioni tattiche.
 
@@ -79,3 +80,10 @@ Verificare sempre GitHub Actions del ramo prima di dichiarare una fase conclusa.
 
 ## Documento da seguire alla ripresa
 Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/specialCards.js` e da `src/MathDuelBattle.jsx`. Aggiornare i rapporti dopo ogni nuova decisione e non modificare `test7/main` fino a una consegna espressamente richiesta.
+
+## Chiusura operativa di questa sessione
+- Carta fusione obbligatoria per giocatore e IA; due mani indipendenti.
+- Punto 23: nuovi test cooperazione madre e scudiere.
+- Punto 24: nuovi test di tutti i ruoli per 17 famiglie, con scudiera 1 difensiva e scudiera 2 offensiva.
+- 200 test logici superati (12 aggiunti per le speciali, 3 cooperazione, 4 identità dei ruoli rispetto ai 181 iniziali), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
+- **Prossima priorità: punto 25, protezione della madre e meccaniche attive**, senza completare ancora audio/visivo.
