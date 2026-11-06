@@ -78,6 +78,41 @@ export function arenaForBattle(level=1,mode='campaign',overrideId=null,context={
  if(localSector<=9)return battleArena('planet_'+id+'_advanced');
  return battleArena('boss_'+id);
 }
+// Punto 44 — tempo atmosferico spaziale deterministico: un cambio ogni 3
+// calcoli validi di QUALUNQUE flotta, non un timer né un RNG. Non cambia la
+// mano, la precisione dei calcoli, gli HP iniziali o la frequenza degli attacchi.
+export const ARENA_ENVIRONMENT_STAGES=Object.freeze([
+ Object.freeze({id:'quiet',label:'CALMA',intensity:0}),
+ Object.freeze({id:'charged',label:'TURBOLENZA',intensity:1}),
+ Object.freeze({id:'surge',label:'PICCO',intensity:2})
+]);
+const BOSS_ENVIRONMENT_PALETTES=Object.freeze([
+ '#7fc9fa','#ff925e','#ffd06b','#d6adff','#8fe5f8','#527ff2',
+ '#a795e6','#a5e7ff','#ed9bfa','#89c4c9','#ff9761','#c8e6fc'
+]);
+const ENVIRONMENT_FAMILIES=Object.freeze({
+ shieldDamageFactor:'debris',tripleAttackFactor:'plasma',
+ ionDurationFactor:'ionic',syncPerCalculation:'resonance'
+});
+export function arenaEnvironment(arenaId,round=1){
+ const arena=battleArena(arenaId);
+ const families=Object.freeze(Object.keys(arena.effects).map(key=>ENVIRONMENT_FAMILIES[key]).filter(Boolean));
+ const neutral=families.length===0;
+ const count=Number.isFinite(Number(round))?Math.max(0,Math.floor(Number(round))-1):0;
+ const stage=ARENA_ENVIRONMENT_STAGES[neutral?0:Math.floor(count/3)%3];
+ const bossIndex=PHASE16A_CAMPAIGN_PLANETS.findIndex(p=>'boss_'+p.id===arena.id);
+ return Object.freeze({
+  arenaId:arena.id,neutral,boss:arena.kind==='boss',stage:stage.id,
+  label:stage.label,intensity:stage.intensity,
+  calculationsUntilChange:neutral?null:3-count%3,
+  cycle:neutral?0:Math.floor(count/9)+1,families,
+  accent:bossIndex>=0?BOSS_ENVIRONMENT_PALETTES[bossIndex]:'#8ad8f9'
+ });
+}
+// Il modificatore di fase è valido solo per una fase espressamente nota.
+// Le chiamate senza fase mantengono tutti i vecchi valori (retrocompatibilità).
+const ambientRank=stage=>ARENA_ENVIRONMENT_STAGES.find(p=>p.id===stage)?.intensity||0;
+
 const mother=side=>side?.fleet?.[0]?.defense?.kind==='mother'?side.fleet[0].defense:null;
 // Le numeriche devono essere state consumate e l'attacco validato nel motore.
 export function arenaAttackFactor(arenaId,context={}){
@@ -85,17 +120,18 @@ export function arenaAttackFactor(arenaId,context={}){
  if(!factor||context.legalAttack!==true||!Array.isArray(context.cards)||
   context.cards.length!==3||
   context.cards.some(c=>!c||!Number.isInteger(c.value)||c.value<1||c.value>13))return 1;
- return factor;
+ return Math.min(1.18,factor+ambientRank(context.environmentStage)*.015);
 }
 // Solo scudo madre, dopo l'intercettazione. Non modifica scudiere o firme vitali.
 export function arenaMotherDefenseFactor(arenaId,defender,context={}){
  const factor=battleArena(arenaId).effects.shieldDamageFactor;
  if(!factor||context.vitalId!=null||context.escortIndex!=null||
   !(mother(defender)?.shield?.hp>0))return 1;
- return factor;
+ return Math.max(.73,factor-ambientRank(context.environmentStage)*.008);
 }
-export function applyArenaIonResistance(side,arenaId,applied=[],nowMs=0){
- const factor=battleArena(arenaId).effects.ionDurationFactor;
+export function applyArenaIonResistance(side,arenaId,applied=[],nowMs=0,environmentStage='quiet'){
+ const base=battleArena(arenaId).effects.ionDurationFactor;
+ const factor=base?Math.max(.45,base-ambientRank(environmentStage)*.035):base;
  if(!factor||!Array.isArray(applied)||!applied.includes('shot-ion'))return side;
  const until=side?.strategicStatuses?.ionizedUntil;
  if(!(Number.isFinite(until)&&until>nowMs))return side;
@@ -103,8 +139,9 @@ export function applyArenaIonResistance(side,arenaId,applied=[],nowMs=0){
  return {...side,strategicStatuses:{...side.strategicStatuses,
   ionizedUntil:nowMs+Math.ceil((until-nowMs)*factor)}};
 }
-export function applyArenaCalculationSync(side,arenaId,credited=0){
- const bonus=battleArena(arenaId).effects.syncPerCalculation||0;
+export function applyArenaCalculationSync(side,arenaId,credited=0,environmentStage='quiet'){
+ const base=battleArena(arenaId).effects.syncPerCalculation||0;
+ const bonus=base?base+ambientRank(environmentStage):0;
  if(!bonus||!(Number(credited)>0)||!side?.maneuvers)return side;
  const current=Math.max(0,Math.min(100,Number(side.maneuvers.sync)||0));
  if(current>=100)return side;
@@ -119,6 +156,7 @@ export function applyArenaCalculationSync(side,arenaId,credited=0){
  */
 export function arenaTacticalBriefing(arenaId,context={}){
  const arena=battleArena(arenaId),effects=arena.effects,conditions=[];
+ const environment=arenaEnvironment(arenaId,context.round);
  const add=(id,label,activation,strategy,status='')=>conditions.push(
   Object.freeze({id,label,activation,strategy,status})
  );
@@ -155,11 +193,14 @@ export function arenaTacticalBriefing(arenaId,context={}){
  }
  return Object.freeze({
   id:arena.id,name:arena.name,kind:arena.kind,effectCount:arena.effectCount,
+  environment,
   neutral:conditions.length===0,
   introduction:conditions.length===0?
    'Arena base neutra: nessun bonus o penalità ambientale. Conta soltanto il combattimento.':
    (arena.kind==='boss'?'Arena esclusiva del boss. ':'')+
-    'Le condizioni si applicano a entrambe le flotte soltanto quando si verifica l’evento richiesto.',
+    'Le condizioni si applicano a entrambe le flotte soltanto quando si verifica l’evento richiesto. '
+    +'Fase '+environment.label+': varia ogni tre calcoli validi complessivi, anche dell’avversario. '
+    +'Durante Turbolenza e Picco i modificatori sono più intensi; la fase del colpo resta fissata al lancio.',
   conditions:Object.freeze(conditions)
  });
 }
