@@ -536,7 +536,12 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    const result=applyPendingHit(state[receiver],effect.targetShip,effect.op,effect.rawDamage,options);
    state[receiver]=result.defender;
    state.effects[idx]={...state.effects[idx],resolved:true,damage:result.damage,destroyed:result.destroyed};
-   state.logs=[`${side==='player'?'TU':'IA'}: ${cards[0].value}${cards[0].suit} ${META[move.op].sign} ${cards[1].value}${cards[1].suit} = ${goal} — ${result.damage} HP ${escortIndex!=null?'SCUDIERA '+(escortIndex+1):vitalId?VITAL_SHORT[vitalId]:'SCUDO'}`,...state.logs].slice(0,6);
+   const systemLog=result.systemMessage?`${side==='player'?'NEMICO':'TU'}: ${result.systemMessage}`:null;
+   if(systemLog)state.notice=systemLog;
+   state.logs=[...(systemLog?[systemLog]:[]),
+    `${side==='player'?'TU':'IA'}: ${cards[0].value}${cards[0].suit} ${META[move.op].sign} ${cards[1].value}${cards[1].suit} = ${goal} — ${result.damage} HP ${escortIndex!=null?'SCUDIERA '+(escortIndex+1):vitalId?VITAL_SHORT[vitalId]:'SCUDO'}`,
+    ...(result.shieldCollapsed>0?[`GENERATORE DISTRUTTO: -${result.shieldCollapsed} HP scudo`]:[]),
+    ...state.logs].slice(0,6);
    write(resolveOutcome(retarget(state)));
   },timing.arrivalMs);
   later(()=>{

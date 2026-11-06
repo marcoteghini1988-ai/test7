@@ -1,6 +1,7 @@
 // Calcolo di scarica: in presenza di scudiere una carta alimenta una sola arma.
 // I colpi in carica mantengono la propria munizione fino alla soglia di sparo.
 import {routedAmmo} from './escortArmory.js';
+import {effectiveGunDamage} from './fleetSystems.js';
 function accumulate(weapon,loaded,threshold){
  const ammo=(weapon.charge||0)+loaded;
  if(ammo<threshold){weapon.charge=ammo;return {bullets:0,charging:true};}
@@ -40,7 +41,8 @@ export function previewEscortedVolley(side,cards,focus='auto'){
    }
    shots.push({vesselIndex,shipId:vessel.id,weaponId:weapon.id,weapon:weapon.nome,
     suit:weapon.seme_trigger,bullets,damagePerBullet:weapon.damage,
-    damage:bullets*weapon.damage,charging,charge:weapon.charge||0,kind:weapon.tipo,visual:weapon.effetto_visivo});
+    damage:effectiveGunDamage(vessel.defense,'mother',bullets*weapon.damage),
+    charging,charge:weapon.charge||0,kind:weapon.tipo,visual:weapon.effetto_visivo});
   }
  }
  for(const escort of escorts){
@@ -53,7 +55,8 @@ export function previewEscortedVolley(side,cards,focus='auto'){
   shots.push({vesselIndex:0,escortSlot:escort.slot,shipId:escort.parentShipId,
    weaponId:weapon.sourceWeaponId,escortWeaponId:weapon.id,weapon:weapon.name,
    suit,bullets:status.bullets,damagePerBullet:weapon.damage,
-   damage:status.bullets*weapon.damage,charging:status.charging,
+   damage:effectiveGunDamage(side.fleet[0]?.defense,'escort',status.bullets*weapon.damage),
+   charging:status.charging,
    charge:weapon.charge||0,kind:weapon.tipo,visual:'escort'});
  }
  return {fleet,escorts,shots,totalDamage:shots.reduce((sum,shot)=>sum+shot.damage,0),

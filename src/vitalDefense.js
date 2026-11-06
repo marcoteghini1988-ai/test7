@@ -103,6 +103,7 @@ export function damageMotherShield(defense,rawDamage){
 }
 export function restoreMotherShield(defense,rawRepair){
  if(defense?.kind!=='mother')throw new TypeError('Richiesta una navicella madre');
+ if(defense.parts.shieldGenerator.hp===0)return {defense,repaired:0,blocked:'generator_destroyed'};
  const repaired=Math.min(defense.shield.max-defense.shield.hp,amount(rawRepair));
  const next=reconcile({...defense,shield:{...defense.shield,hp:defense.shield.hp+repaired}});
  return {defense:next,repaired};

@@ -4,6 +4,7 @@ import {PHASE16A_CAMPAIGN_PLANET_IDS,PHASE16A_TOTAL_SECTORS} from './newCombat/p
 import {VITAL_IDS,createMotherDefense,motherDestroyed,damageMotherShield,hitMotherPart} from './vitalDefense.js';
 import {buildLinkedEscorts,impactLinkedEscort,interceptMotherVolley} from './linkedEscorts.js';
 import {previewEscortedVolley} from './escortFiring.js';
+import {SYSTEM_CONSEQUENCES} from './fleetSystems.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
 export const SUIT_KEYS={'♥':'H','♦':'D','♣':'C','♠':'S'};
@@ -205,15 +206,20 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
    return {defender:{...defender,escorts:hit.escorts},damage:hit.damage,destroyed:hit.destroyed,
     escortIndex:options.escortIndex,reason:hit.reason};
   }
-  const interception=interceptMotherVolley(defender.escorts||[],rawDamage);
+  const interception=interceptMotherVolley(defender.escorts||[],rawDamage,vessel.defense);
   const detail=options.vitalId
    ?hitMotherPart(vessel.defense,options.vitalId,interception.remaining,options.cards,options.signatureOverride)
    :damageMotherShield(vessel.defense,interception.remaining);
-  const defense=detail.defense;
+  let defense=detail.defense;
+  const systemDisabled=options.vitalId&&detail.destroyed?options.vitalId:null;
+  const shieldCollapsed=systemDisabled==='shieldGenerator'?defense.shield.hp:0;
+  if(shieldCollapsed)defense=damageMotherShield(defense,shieldCollapsed).defense;
   const fleet=defender.fleet.map((v,i)=>i===shipIndex?{...v,defense}:v);
   return {defender:{...defender,fleet,escorts:interception.escorts},
    damage:(detail.damage||0)+interception.intercepted,motherDamage:detail.damage||0,
-   intercepted:interception.intercepted,destroyed:motherDestroyed(defense),
+   intercepted:interception.intercepted,shieldCollapsed,systemDisabled,
+   systemMessage:systemDisabled?SYSTEM_CONSEQUENCES[systemDisabled]:null,
+   destroyed:motherDestroyed(defense),
    vitalId:options.vitalId??null,reason:detail.reason??'shield'};
  }
  const target=defender?.fleet?.[shipIndex]?.engines?.[op];
