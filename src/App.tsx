@@ -19973,6 +19973,8 @@ function App() {
           key={`math_battle_${battleSessionId}`}
           nickname={nickname}
           gameMode={gameMode}
+          selectedBossDeck={selectedDeck}
+          bossDeckInventory={deckInventory}
           sectorNumber={gameMode === 'adventure' ? ((activeAdventure?.planet || 1) - 1) * 10 + (activeAdventure?.level || 1) : Math.max(1, level)}
           displaySector={activeAdventure ? `${activeAdventure.planet}-${activeAdventure.level}` : ''}
           ether={ether}
