@@ -1,0 +1,21 @@
+/* Point 30: editing the tactical deck, without changing the main 9:16 arena. */
+.special-deck-collapsible{margin:10px 0;border:1px solid #436481;border-radius:10px;background:#142538;}
+.special-deck-collapsible summary{cursor:pointer;padding:10px;font-weight:800;color:#daf2ff;font-size:13px}
+.special-deck-editor{padding:10px;background:#101e30;color:#e4f5ff;border:1px solid #37536d;border-radius:10px;font-size:12px;}
+.special-deck-editor p{margin:4px 0 10px;line-height:1.45}
+.special-deck-summary{display:flex;flex-wrap:wrap;gap:6px;justify-content:space-between;padding:8px;border:1px solid #446b83;background:#1d354a;border-radius:7px}
+.special-deck-summary strong{color:#adeaff}
+.special-deck-types{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.special-deck-entry{display:flex;flex-direction:column;justify-content:space-between;gap:8px;padding:8px;border:1px solid #3a6077;background:#203348;border-radius:9px;min-width:0}
+.special-deck-entry>div:first-child{min-width:0}
+.special-deck-entry strong{display:block;color:#e8f9ff;font-size:12px}
+.special-deck-entry small{display:block;font-size:10px;line-height:1.35;color:#bdd4e4}
+.special-deck-quantity{display:flex;align-items:center;justify-content:center;gap:8px}
+.special-deck-quantity span{min-width:38px;text-align:center;font-variant-numeric:tabular-nums;font-weight:800}
+.special-deck-quantity button{width:32px;height:30px;border:1px solid #80c8ed;background:#244c66;color:white;font-weight:900;border-radius:6px;cursor:pointer}
+.special-deck-quantity button:disabled{opacity:.35;cursor:default}
+.special-deck-actions{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.special-deck-actions button{padding:9px;border-radius:7px;background:#2d6681;color:#fff;border:1px solid #83c7e6;cursor:pointer;font-weight:800;font-size:11px}
+.special-deck-actions button:disabled{opacity:.36;cursor:default}
+.special-deck-notice{color:#c5f0d0;font-weight:700}
+@media(max-width:390px){.special-deck-types{grid-template-columns:1fr}}
