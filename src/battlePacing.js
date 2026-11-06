@@ -1,6 +1,7 @@
 // Point 29: fair deadlock recovery for the new continuous mother battle.
 // No invented cards, no free damage, no forced clock for the human player.
 import {chooseCombatMove} from './aiBattleTactics.js';
+import {bossNumericRecoveryMs} from './bossNumericDecks.js';
 
 export const RECOVERY_COOLDOWN_MS=15000;
 const bounded=(v)=>Number.isFinite(v)?Math.max(0,Math.min(.999999999,v)):0;
@@ -37,7 +38,7 @@ export function recoverStalledHand(side,defender,targets,nowMs=Date.now(),rng=Ma
  discard.push(replaced);
  const next={...side,hand,deck,discard,
   recoveryCount:(side.recoveryCount||0)+1,
-  recoveryReadyAt:nowMs+RECOVERY_COOLDOWN_MS};
+  recoveryReadyAt:nowMs+bossNumericRecoveryMs(side,RECOVERY_COOLDOWN_MS)};
  return {recovered:true,reason:'ok',side:next,replaced:replaced.id,drawn:hand[index].id};
 }
 
