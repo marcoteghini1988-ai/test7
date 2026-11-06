@@ -10,6 +10,7 @@ import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {readSpecialCollection,claimFirstWinSpecialPack,specialDeckCounts} from './specialDeckBuilder.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVitalSignature} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
+import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
 import {systemState} from './fleetSystems.js';
 import {chooseCombatMove} from './aiBattleTactics.js';
 import {recoverStalledHand,battlePacingReport} from './battlePacing.js';
@@ -418,7 +419,7 @@ function MotherDefenseControls({defense,selected,onChoose,selectedEscort,onChoos
 function readCollection(){
  try{return readShipCollection();}catch{return null;}
 }
-export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,selectedBossDeck='neutral_starter',bossDeckInventory={},bossPlanetId=null,bossSectorLevel=null,onEtherConsumed,onResult,onExit}){
+export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,selectedBossDeck='neutral_starter',bossDeckInventory={},selectedPilot='pilot_com_1',pilotInventory={},commanderDisplayName='',bossPlanetId=null,bossSectorLevel=null,onEtherConsumed,onResult,onExit}){
  const [scale,setScale]=useState(1);const [fleetIds,setFleetIds]=useState(['N00']);const [enemyFleetIds,setEnemyFleetIds]=useState(null);const [testLevel,setTestLevel]=useState(1);
  const [collection,setCollection]=useState(readCollection);
  const [introIndex,setIntroIndex]=useState(0);
@@ -435,13 +436,18 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   return {playerBossDeckId:playerId,playerBossDeckLevel:playerLevel,
    enemyBossDeckId:boss?.id||'neutral_starter',enemyBossDeckLevel:boss?Math.min(boss.maxLevel,1+Math.floor((sectorNumber-1)/20)):1};
  }
+ function commanderChoices(){
+  const commander=commanderFromInventory(selectedPilot,pilotInventory);
+  return {playerCommanderId:commander?.id??null,playerCommanderLevel:commander?.level??1,
+   enemyCommanderId:FLEET_COMMANDER_DEFAULT_ID,enemyCommanderLevel:1};
+ }
  function startBattle(options,practice=false){
   // Owned special cards are read from their independent persistent collection.
   // Never overwrite an unreadable save or block the battle.
   let specialDeckTypes=null;
   try{specialDeckTypes=readSpecialCollection().loadout;}catch{}
   const b=initialBattle(Math.max(1,sectorNumber),
-   {...options,...bossChoices(practice),vitalPrototype:true,specialDeckTypes},Math.random,gameMode);
+   {...options,...bossChoices(practice),...commanderChoices(),vitalPrototype:true,specialDeckTypes},Math.random,gameMode);
   b.practice=practice;
   b.phase='intro';
   if(!practice)b.player.ether=Math.max(0,Number(ether)||0);
@@ -922,16 +928,16 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const unchanged=sameSpecialDeck&&fleet.length===b.player.fleet.length&&fleet.every((v,i)=>v.id===b.player.fleet[i].id&&v.level===b.player.fleet[i].level);
   if(unchanged){if(b!==gameRef.current)write(b);}
   else{
-   const refreshed=initialBattle(b.level,{...options,...bossChoices(Boolean(b.practice)),vitalPrototype:true,specialDeckTypes:equippedTypes},Math.random,b.mode);
+   const refreshed=initialBattle(b.level,{...options,...bossChoices(Boolean(b.practice)),...commanderChoices(),vitalPrototype:true,specialDeckTypes:equippedTypes},Math.random,b.mode);
    write({...b,player:{...b.player,fleet:refreshed.player.fleet,escorts:refreshed.player.escorts,
      maneuvers:refreshed.player.maneuvers,specialHand:refreshed.player.specialHand,
      specialDeck:refreshed.player.specialDeck,specialDiscard:refreshed.player.specialDiscard,specialUses:0,
-     bossNumericDeck:refreshed.player.bossNumericDeck,
+     bossNumericDeck:refreshed.player.bossNumericDeck,commander:refreshed.player.commander,
      armedVolleyEffects:[],strategicStatuses:{}},
     enemy:{...b.enemy,fleet:refreshed.enemy.fleet,escorts:refreshed.enemy.escorts,
      maneuvers:refreshed.enemy.maneuvers,specialHand:refreshed.enemy.specialHand,
      specialDeck:refreshed.enemy.specialDeck,specialDiscard:refreshed.enemy.specialDiscard,specialUses:0,
-     bossNumericDeck:refreshed.enemy.bossNumericDeck,
+     bossNumericDeck:refreshed.enemy.bossNumericDeck,commander:refreshed.enemy.commander,
      armedVolleyEffects:[],strategicStatuses:{}},
     vitalPrototype:refreshed.vitalPrototype,weaponFocus:'auto',targetVital:null,targetEscort:null,target:'plus',targetShip:0,shownPlayer:0});
   }
@@ -1033,7 +1039,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      <small>Fusioni: carta + 100 Sincronia. Copertura: scudiera 1 protegge la madre. Puoi combinare 2 diversi colpi speciali per la stessa scarica. Riparazione Scudo, Riparazione Scudiera e Pulizia Sistemi consumano carte vere e funzionano solo quando utili. Seleziona la scudiera da riparare; una scudiera distrutta non può essere rianimata. Mano sempre a 5.</small>
      {maneuverHUD.fusion&&<div className="maneuver-options"><span>{maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>}
    </div>}
-   <div className="player-status"><b title={game.player.bossNumericDeck?activeNumericBossAbilities(game.player.bossNumericDeck.id,game.player.bossNumericDeck.level).filter(ability=>ability.unlocked).map(ability=>ability.name+' · Grado '+ability.grade+'/3').join(' | '):'Mazzo neutro · nessuna passiva'}>TU{game.player.bossNumericDeck?' · '+numericBossDeck(game.player.bossNumericDeck.id)?.name+' L'+game.player.bossNumericDeck.level:''}</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{playerSystemAlerts?playerSystemAlerts+' · ':''}{ownStrategicStatus.ionizedUntil?'IONIZZATA · ':''}{ownStrategicStatus.corrodedUntil?'SCUDO CORROSO · ':''}{message||game.notice}</small></div>
+   <div className="player-status"><b title={(game.player.commander?'Comandante '+(commanderDisplayName||game.player.commander.id)+' L'+game.player.commander.level+' · ':'Nessun comandante · ')+(game.player.bossNumericDeck?activeNumericBossAbilities(game.player.bossNumericDeck.id,game.player.bossNumericDeck.level).filter(ability=>ability.unlocked).map(ability=>ability.name+' · Grado '+ability.grade+'/3').join(' | '):'Mazzo neutro · nessuna passiva')}>TU{game.player.bossNumericDeck?' · '+numericBossDeck(game.player.bossNumericDeck.id)?.name+' L'+game.player.bossNumericDeck.level:''}{game.player.commander?' · CMD L'+game.player.commander.level:''}</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{playerSystemAlerts?playerSystemAlerts+' · ':''}{ownStrategicStatus.ionizedUntil?'IONIZZATA · ':''}{ownStrategicStatus.corrodedUntil?'SCUDO CORROSO · ':''}{message||game.notice}</small></div>
    {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs} escortRefs={escortRefs}/>)}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
    {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>{game.vitalPrototype?'PROTOTIPO MADRE 1 CONTRO 1: lo scudo protegge quattro parti vitali. A 75%, 50%, 25% e 0% puoi scegliere una parte da esporre; un calcolo valido la danneggia. Vinci quando tutte e quattro le parti nemiche arrivano a zero HP. Le firme definitive di ogni navicella sono ancora da progettare. Le scudiere ai lati della madre si sbloccano a L3 e L5, hanno scudi propri e possono intercettare i colpi. La formula finale è temporanea; le immagini delle scudiere sono nella cartella delle risorse.':'FLOTTE MULTIPLE (versione precedente): ogni nave monta le operazioni disponibili con i relativi HP. Le scudiere collegate alla madre saranno aggiunte successivamente.'}</p><p>MAZZI SEPARATI: sette carte numeriche per i calcoli e cinque speciali nella mano tattica. Copertura Tattica usa una speciale e, per il prossimo impatto entro 15 secondi, assorbe fino al 75% del colpo sfruttando lo scudo reale della prima scudiera; non crea HP. Dal pulsante MANOVRE scegli una scudiera e gioca una carta Fusione Barriera o Fusione Assalto: la Sincronia 100 è necessaria, ma non attiva la fusione da sola. Ogni speciale giocata viene rimpiazzata immediatamente. La scudiera agganciata non può sparare autonomamente.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Puoi selezionare due oppure tre carte numeriche: con tre carte si applica la stessa operazione due volte in sequenza, con risultati intermedi interi positivi. Alcuni modelli consentono anche COPPIA o TRIS come firma alternativa dei vitali esposti: non servono poteri aggiuntivi dei semi. Ogni vitale ha una firma matematica di prova assegnata all’inizio della battaglia e mostrata sul bersaglio; i requisiti Poker definitivi rimangono da bilanciare. Le quattro parti vitali hanno HP localizzati: quando scendono al 50% o meno entrano in AVARIA con penalità reali, a zero diventano KO. Motore, armi, generatore scudi e centralina hanno effetti differenti; la distruzione del generatore azzera lo scudo. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo ha una penalità ancora da definire per il combattimento senza turni e il terzo −3 HP a te. Il numero di carte e il limite del mazzo sono provvisori. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
