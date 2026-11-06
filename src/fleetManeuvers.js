@@ -6,16 +6,19 @@ export const MANEUVER_RULES=Object.freeze({
  guardInterceptBonus:.08,guardOutgoingMultiplier:.85,
  assaultInterceptPenalty:.08,assaultOutgoingMultiplier:1.10,
  barrierFusionInterceptShare:.60,strikeFusionShieldMultiplier:1.25,
+ twinFusionInterceptShare:.55,triadFusionInterceptShare:.40,triadFusionShieldMultiplier:1.35,
  maxSharePerEscort:.45,
  tacticalCoverDurationMs:15000,tacticalCoverInterceptShare:.75
 });
 export const FORMATIONS=Object.freeze(['balanced','guard','assault']);
-export const FUSION_MODES=Object.freeze(['barrier','strike']);
+export const FUSION_MODES=Object.freeze(['barrier','strike','twin','triad']);
 const bounded=(n,a,b)=>Math.min(b,Math.max(a,n));
 const whole=n=>Number.isFinite(n)&&n>0?Math.floor(n):0;
 const mother=side=>side?.fleet?.[0]?.defense?.kind==='mother'?side.fleet[0].defense:null;
 const command=side=>!!mother(side)?.parts?.command?.hp;
 const readyEscort=e=>!!e&&!e.defense?.destroyed&&e.defense?.shield?.hp>0;
+const fusedSlots=f=>f?Array.isArray(f.escortSlots)?f.escortSlots:[f.escortSlot]:[];
+const fusedIds=f=>f?Array.isArray(f.escortIds)?f.escortIds:[f.escortId]:[];
 export function newManeuverState(){return {formation:'balanced',sync:0,formationReadyAt:0,fusion:null,fusionReadyAt:0,cover:null,processedEventIds:[]};}
 export function advanceManeuvers(state,side,nowMs){
  let n=state||newManeuverState();
@@ -27,8 +30,11 @@ export function advanceManeuvers(state,side,nowMs){
  }
  const f=n.fusion;
  if(!f)return n;
- const e=side?.escorts?.[f.escortSlot];
- const expired=nowMs>=f.endsAt,broken=!readyEscort(e)||e.id!==f.escortId||!command(side)||!(mother(side)?.parts?.engine?.hp);
+ const brokenEscort=fusedSlots(f).some((slot,i)=>{
+  const e=side?.escorts?.[slot];
+  return !readyEscort(e)||e.id!==fusedIds(f)[i];
+ });
+ const expired=nowMs>=f.endsAt,broken=brokenEscort||!command(side)||!(mother(side)?.parts?.engine?.hp);
  if(!expired&&!broken)return n;
  return {...n,fusion:null,fusionReadyAt:Math.max(n.fusionReadyAt,(expired?f.endsAt:nowMs)+MANEUVER_RULES.fusionCooldownMs)};
 }
@@ -78,9 +84,16 @@ export function startFusion(state,side,escortSlot,mode,nowMs){
  if(n.cover)return {state:n,started:false,reason:'cover_active'};
  if(nowMs<n.fusionReadyAt)return {state:n,started:false,reason:'fusion_cooldown'};
  if(n.sync<100)return {state:n,started:false,reason:'not_enough_sync'};
- const e=side?.escorts?.[escortSlot];
- if(!Number.isInteger(escortSlot)||!readyEscort(e))return {state:n,started:false,reason:'escort_unavailable'};
- return {state:{...n,sync:n.sync-100,fusion:{escortSlot,escortId:e.id,mode,startedAt:nowMs,endsAt:nowMs+MANEUVER_RULES.fusionDurationMs}},started:true,reason:'ok'};
+ const multi=mode==='twin'||mode==='triad';
+ const slots=multi?[0,1]:[escortSlot];
+ if(slots.some(slot=>!Number.isInteger(slot)||!readyEscort(side?.escorts?.[slot])))
+  return {state:n,started:false,reason:'escort_unavailable'};
+ const escorts=slots.map(slot=>side.escorts[slot]);
+ return {state:{...n,sync:n.sync-100,fusion:{
+  escortSlot:slots[0],escortId:escorts[0].id,
+  escortSlots:slots,escortIds:escorts.map(e=>e.id),
+  mode,startedAt:nowMs,endsAt:nowMs+MANEUVER_RULES.fusionDurationMs
+ }},started:true,reason:'ok'};
 }
 export function cancelFusion(state,side,nowMs){
  const n=advanceManeuvers(state,side,nowMs);
@@ -101,7 +114,7 @@ export function maneuverStatus(state,side,nowMs){
 export function prepareSideForAmmoRouting(side,nowMs){
  const n=advanceManeuvers(side?.maneuvers,side,nowMs);
  const f=n.fusion;
- return {side:f?{...side,escorts:(side.escorts||[]).filter((_,i)=>i!==f.escortSlot)}:side,maneuvers:n};
+ return {side:f?{...side,escorts:(side.escorts||[]).filter((_,i)=>!fusedSlots(f).includes(i))}:side,maneuvers:n};
 }
 export function mergeRoutedEscorts(originalSide,routedEscorts){
  const map=new Map((routedEscorts||[]).map(e=>[e.id,e]));
@@ -112,11 +125,14 @@ export function adjustOutgoingVolley(volley,side,nowMs,context={}){
  const f=n.fusion;
  const shots=(volley.shots||[]).map(shot=>{
   const isEscort=shot.escortSlot!==undefined&&shot.escortSlot!==null;
-  const disabled=isEscort&&f?.escortSlot===shot.escortSlot;
+  const disabled=isEscort&&fusedSlots(f).includes(shot.escortSlot);
   let factor=1;
   if(isEscort&&n.formation==='guard')factor=MANEUVER_RULES.guardOutgoingMultiplier;
   if(isEscort&&n.formation==='assault')factor=MANEUVER_RULES.assaultOutgoingMultiplier;
-  if(!isEscort&&f?.mode==='strike'&&context.targetKind==='motherShield')factor=MANEUVER_RULES.strikeFusionShieldMultiplier;
+  if(!isEscort&&context.targetKind==='motherShield'){
+   if(f?.mode==='strike')factor=MANEUVER_RULES.strikeFusionShieldMultiplier;
+   if(f?.mode==='triad')factor=MANEUVER_RULES.triadFusionShieldMultiplier;
+  }
   const damage=disabled?0:Math.floor(whole(shot.damage)*factor);
   return {...shot,damage,bullets:disabled?0:shot.bullets,maneuverBonus:damage-whole(shot.damage),suppressedByFusion:!!disabled};
  });
@@ -141,8 +157,15 @@ export function interceptManeuverVolley(side,rawDamage,nowMs,calculateShare,opti
   if(details.some(d=>d.mode==='tactical-cover'))n={...n,cover:null};
  }
  if(f?.mode==='barrier')absorb(f.escortSlot,Math.floor(raw*MANEUVER_RULES.barrierFusionInterceptShare),'barrier');
+ if(f?.mode==='twin'||f?.mode==='triad'){
+  const limit=Math.floor(raw*(f.mode==='twin'?
+   MANEUVER_RULES.twinFusionInterceptShare:MANEUVER_RULES.triadFusionInterceptShare));
+  const first=Math.floor(limit/2),second=limit-first;
+  absorb(f.escortSlots[0],first,f.mode);
+  absorb(f.escortSlots[1],second,f.mode);
+ }
  escorts.forEach((e,slot)=>{
-  if(f?.escortSlot===slot||cover?.escortSlot===slot||!readyEscort(e))return;
+  if(fusedSlots(f).includes(slot)||cover?.escortSlot===slot||!readyEscort(e))return;
   let share=typeof calculateShare==='function'?calculateShare(e,mother(side),options):.20;
   if(n.formation==='guard')share+=MANEUVER_RULES.guardInterceptBonus;
   if(n.formation==='assault')share-=MANEUVER_RULES.assaultInterceptPenalty;
