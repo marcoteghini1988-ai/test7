@@ -105,7 +105,10 @@ test('cover does not activate if fusion is active and vice versa',()=>{
 });
 test('cover cannot stack without another card, no accidental consumption',()=>{
  const s=side(),active=coverCard(s,1000).side;
- const second=playSpecialCard(active,findCoverCardIndex(active),{escortSlot:0},1001,rnd);
+ const extraCover=active.specialDeck.find(card=>card.type==='tactical-cover');
+ assert.ok(extraCover,'a second card exists elsewhere in the deck');
+ const withSecond={...active,specialHand:[extraCover,...active.specialHand.slice(1)]};
+ const second=playSpecialCard(withSecond,0,{escortSlot:0},1001,rnd);
  assert.equal(second.played,false);
  assert.equal(second.reason,'cover_active');
  assert.equal(second.side.specialUses,1);
