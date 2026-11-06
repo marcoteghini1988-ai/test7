@@ -319,7 +319,17 @@ export function findThreeCardMoves(side,defender,targets){
  }
  return moves;
 }
-export function consumeAttack(side,indices){const s=new Set(indices),used=side.hand.filter((_,i)=>s.has(i));return fillHand({...side,hand:side.hand.filter((_,i)=>!s.has(i)),discard:[...side.discard,...used]});}
+export function consumeAttack(side,indices){
+ const selected=new Set(indices),used=side.hand.filter((_,i)=>selected.has(i));
+ const count=used.length;
+ return fillHand({...side,
+  hand:side.hand.filter((_,i)=>!selected.has(i)),
+  discard:[...side.discard,...used],
+  numericCardsSpent:(side.numericCardsSpent||0)+count,
+  numericShotsTwo:(side.numericShotsTwo||0)+(count===2?1:0),
+  numericShotsThree:(side.numericShotsThree||0)+(count===3?1:0)
+ });
+}
 function weakestLiveEngine(side){const a=[];for(let i=0;i<side.fleet.length;i++)for(const op of ENGINE_KEYS){const e=side.fleet[i].engines[op];if(e?.hp>0)a.push({i,op,e});}return a.sort((x,y)=>x.e.hp-y.e.hp)[0];}
 export function sacrificeCard(side,index,opponent,secondsLeft=60){if(side.sacrifices>=3||(!side.deck.length&&(!side.recycleNumericDeck||!side.discard.length))||index<0||index>=side.hand.length)return null;
  const order=side.sacrifices;let next={...side,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard],fleet:structuredClone(side.fleet),sacrifices:order+1};const [c]=next.hand.splice(index,1);next.discard.push(c);next=fillHand(next);
