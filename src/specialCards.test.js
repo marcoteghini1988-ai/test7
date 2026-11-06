@@ -11,8 +11,8 @@ function ship(level=5){
  maneuvers:{...newManeuverState(),sync:100}};
 }
 const zero=()=>0;
-test('only explicitly designed fusion cards exist in this initial catalog',()=>{
- assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).sort(),['fusion-barrier','fusion-strike','shot-corrosion','shot-ion','shot-piercing','support-escort-repair','support-shield-repair','support-status-purge','tactical-cover']);
+test('every explicitly designed fusion and support card is registered',()=>{
+ assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).sort(),['fusion-barrier','fusion-strike','fusion-triad','fusion-twin','shot-corrosion','shot-ion','shot-piercing','support-escort-repair','support-shield-repair','support-status-purge','tactical-cover']);
 });
 test('initial special hand is separate from numeric cards and has exactly five',()=>{
  const input={...ship(),hand:[{value:8,suit:'♥'}],deck:[{value:13,suit:'♠'}]};
