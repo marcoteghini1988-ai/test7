@@ -43,3 +43,6 @@ Lo schema della collezione resta invariato. Gli oggetti scudiera vengono creati 
 `src/MathDuelBattle.jsx`: controllo dei bersagli e visualizzazione delle scudiere.
 
 I test di logica possono essere eseguiti con `npm run test:combat` e `npm run verify:logic`. La **build Vite/TypeScript e il controllo visivo 9:16 in StackBlitz restano da eseguire**. Questa non è una dichiarazione di funzionamento grafico verificato.
+
+## Munizioni e armi delle scudiere (6 novembre 2026)
+Sono configurate 34 armi subordinate in `src/escortArmory.js`, con semi ammessi alternativi, danni, fuoco immediato o accumulo, e intercettazione distinta per modello. Il seme non ha un effetto automatico: alimenta un cannone compatibile. Nel prototipo madre + scudiere `src/escortFiring.js` assegna ogni carta a una sola arma, e il selettore ARMA consente di scegliere la destinazione preferita. Le munizioni ad accumulo persistono fra gli attacchi. I proiettili delle scudiere partono dai rispettivi asset; i 42 armamenti della madre e le flotte legacy restano conservati. Tutti i valori di bilanciamento sono di prova.

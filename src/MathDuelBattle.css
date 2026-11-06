@@ -603,3 +603,11 @@
 .es-math-scope .ship-enemy .escort-ship-hull img{filter:drop-shadow(0 0 4px #ff696d99)}
 .es-math-scope .escort-pod.selected .escort-ship-hull img{filter:drop-shadow(0 0 8px #ffe8aa)}
 .es-math-scope .escort-pod b{font-size:9px}
+
+/* Selettore arma compatibile, distinto dalle sette carte in mano. */
+.es-math-scope .weapon-focus-control{position:absolute;top:538px;left:73px;width:304px;height:30px;display:flex;align-items:center;gap:6px;padding:3px 6px;box-sizing:border-box;border:1px solid #517cab;border-radius:6px;background:#05162bea;color:#b5ebff;z-index:8}
+.es-math-scope .weapon-focus-control span{font-size:9px;font-weight:900;letter-spacing:.5px}
+.es-math-scope .weapon-focus-control select{min-width:0;flex:1;height:24px;border:1px solid #276d9c;border-radius:4px;background:#10263f;color:#e8f8ff;font-size:10px;padding:1px 4px}
+.es-math-scope .escort-pod.firing .escort-ship-hull img{animation:escortRecoil .3s ease-out 1;filter:drop-shadow(0 0 8px #8bf7ff)}
+.es-math-scope .ship-enemy .escort-pod.firing .escort-ship-hull img{filter:drop-shadow(0 0 9px #ff9586)}
+@keyframes escortRecoil{0%{transform:translateY(0) scale(1)}35%{transform:translateY(4px) scale(.97)}100%{transform:translateY(0) scale(1)}}

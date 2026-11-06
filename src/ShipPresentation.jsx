@@ -57,8 +57,8 @@ export function comboLabel(weapon){
 function WeaponMount({side,vessel,weapon,registerGunRef,index,effect,muzzleIndex=0}){
  const mount=weaponMount(side,vessel.id,weapon.id,muzzleIndex),metalId=`metal-${useId().replace(/[^a-zA-Z0-9_-]/g,'')}`;
  if(!mount)return null;
- const event=effect?.side===side?effect.volleys.find(s=>s.vesselIndex===index&&s.weaponId===weapon.id):null;
- const salvo=effect?.side===side?effect.salvos.find(s=>s.shot.vesselIndex===index&&s.shot.weaponId===weapon.id):null;
+ const event=effect?.side===side?effect.volleys.find(s=>s.escortSlot==null&&s.vesselIndex===index&&s.weaponId===weapon.id):null;
+ const salvo=effect?.side===side?effect.salvos.find(s=>s.shot.escortSlot==null&&s.shot.vesselIndex===index&&s.shot.weaponId===weapon.id):null;
  const rounds=salvo?.rounds.filter(r=>r.muzzleIndex===muzzleIndex)||[];
  const accumulating=weapon.tipo==='Accumulo',charge=accumulating?Math.min(1,(event?.charge??weapon.charge??0)/weapon.soglia_munizioni):0;
  const color=WEAPON_COLORS[weapon.seme_trigger]||'#e8ffff';
