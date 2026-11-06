@@ -66,7 +66,7 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - **26 (danni localizzati)**: AVARIA al 50% HP, KO a zero; riduzioni progressive operative a motore, armi, generatore scudi e centralina. HUD, log e test aggiornati. Vedi `docs/PUNTO_26_DANNI_LOCALIZZATI.md`; bilanciamento da collaudare.
 - **27 (effetti dei colpi)**: tre nuove carte strategiche Perforante, Ionico e Corrosione, con durata, interazione e consumo verificati da test. Il catalogo completo è ora di sei tipi (dati di bilanciamento ancora provvisori). Vedi `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`.
 - **28 (calcoli e firme)**: 2/3 numeriche giocabili con catena esatta, firme matematiche fisse a inizio battaglia per modello, coppia/tris facoltativi su alcuni vitali, senza mai rendere Poker l'unica strada. L'IA dispone di ricerca delle triple. Firme definitive e Poker a 4/5 carte da sviluppare. Vedi `docs/PUNTO_28_CALCOLI_FIRME_VITALI.md`.
-- **29 (ritmo e bilanciamento)**: fase successiva; tempi, difficoltà, possibilità reale di risolvere le firme, carte, boss e attacchi da provare e calibrare.
+- **29 (ritmo e bilanciamento)**: IA con scelta di colpi validi contro firme math/Poker, mazzo numerico riciclato senza duplicazioni solo nelle nuove battaglie, ricambio manuale/IA da una carta quando non esiste un attacco valido (ricarica tecnica 15 s), e metriche di fine partita per calibrare durata e risorse. **Prototipo logico verificato; bilanciamento empirico ancora aperto**. Vedi `docs/PUNTO_29_RITMO_BILANCIAMENTO.md`.
 - **30 e successivi (costruzione mazzi speciali)**: estendere la base già pronta con le singole carte decise, pacchetti e deckbuilding, sblocchi, varianti e compatibilità, dopo la definizione delle relative meccaniche.
 - **Altri blocchi della master**: parti vitali (51–52), piloti/comandante (40–41), arene (42–43), campagna (44–45), Shop (46), IA (47), grafica/sonoro finale e boss/mazzi dedicati (53). Le varianti estetiche e audiovisive sono rinviate per ora, senza cambiare le decisioni tattiche.
 
@@ -90,7 +90,7 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Punto 23: nuovi test cooperazione madre e scudiere.
 - Punto 24: nuovi test di tutti i ruoli per 17 famiglie, con scudiera 1 difensiva e scudiera 2 offensiva.
 - 257 test logici superati (17 nuovi test Punto 28, oltre ai 240 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
-- **Prossima priorità: punto 29, ritmo e bilanciamento della battaglia**, senza completare ancora audio/visivo.
+- **Prossima priorità: punto 30, costruzione delle carte speciali e del mazzo**, senza completare ancora audio/visivo.
 
 
 ### Ultimo avanzamento — Punto 26 (6 novembre 2026)
@@ -118,3 +118,12 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - L'IA può cercare triple quando necessario e mira ai vitali compatibili con la firma matematica. Non usa ancora le alternative Poker deliberatamente.
 - **257 test automatici riusciti**, build e preflight superati. Playtest manuale e controlli su telefono ancora da effettuare.
 - **Prossimo: Punto 29**, calibratura e ritmo. Combinazioni Poker a 4/5 carte e firme definitive dei boss non ancora implementate, grafica/sonoro finale rinviati.
+
+
+### Ultimo avanzamento — Punto 29 (6 novembre 2026)
+- La battaglia madre/scudiere resta continua; l'IA usa un intervallo autonomo e ora sceglie soltanto mosse che possano davvero soddisfare la firma dei vitali esposti, inclusa l'alternativa Poker quando presente.
+- Nel nuovo combattimento il mazzo da 52 numeriche ricicla gli scarti quando la pesca finisce: nessuna duplicazione o creazione di carte. Le modalità precedenti non cambiano.
+- Se non esiste alcun attacco valido, il giocatore può usare **RICAMBIO NUMERICO** dentro MANOVRE: un solo cambio con ricarica di 15 s. Anche l'IA può farlo, senza carte supplementari.
+- Un rapporto di fine partita conta durata, coppie/triple giocate, carte spese, ricicli e ricambi per calibrare la difficoltà.
+- **272 test automatici riusciti**, build e preflight superati su `test7/main`. Le durate obiettivo, il bilanciamento delle 17 flotte, la leggibilità 9:16 e la resa su telefono devono essere collaudati realmente.
+- **Prossimo punto: 30**, ampliamento delle carte speciali e dei mazzi. Grafica 3D e sonoro definitivi successivamente.
