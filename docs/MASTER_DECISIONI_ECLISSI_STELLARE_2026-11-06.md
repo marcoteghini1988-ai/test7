@@ -65,7 +65,8 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - **25 (protezione madre)**: tre difese distinte, automatica / formazione / carta Copertura Tattica da 15 s e un solo impatto, sempre consumando HP reali della scudiera 1. Logica e interfaccia create, bilanciamento aperto. Vedi `docs/PUNTO_25_PROTEZIONE_MADRE.md`.
 - **26 (danni localizzati)**: AVARIA al 50% HP, KO a zero; riduzioni progressive operative a motore, armi, generatore scudi e centralina. HUD, log e test aggiornati. Vedi `docs/PUNTO_26_DANNI_LOCALIZZATI.md`; bilanciamento da collaudare.
 - **27 (effetti dei colpi)**: tre nuove carte strategiche Perforante, Ionico e Corrosione, con durata, interazione e consumo verificati da test. Il catalogo completo è ora di sei tipi (dati di bilanciamento ancora provvisori). Vedi `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`.
-- **28–29**: requisiti matematici/armi/condizioni (28) e ritmo (29). Non completati.
+- **28 (calcoli e firme)**: 2/3 numeriche giocabili con catena esatta, firme matematiche fisse a inizio battaglia per modello, coppia/tris facoltativi su alcuni vitali, senza mai rendere Poker l'unica strada. L'IA dispone di ricerca delle triple. Firme definitive e Poker a 4/5 carte da sviluppare. Vedi `docs/PUNTO_28_CALCOLI_FIRME_VITALI.md`.
+- **29 (ritmo e bilanciamento)**: fase successiva; tempi, difficoltà, possibilità reale di risolvere le firme, carte, boss e attacchi da provare e calibrare.
 - **30 e successivi (costruzione mazzi speciali)**: estendere la base già pronta con le singole carte decise, pacchetti e deckbuilding, sblocchi, varianti e compatibilità, dopo la definizione delle relative meccaniche.
 - **Altri blocchi della master**: parti vitali (51–52), piloti/comandante (40–41), arene (42–43), campagna (44–45), Shop (46), IA (47), grafica/sonoro finale e boss/mazzi dedicati (53). Le varianti estetiche e audiovisive sono rinviate per ora, senza cambiare le decisioni tattiche.
 
@@ -88,8 +89,8 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Carta fusione obbligatoria per giocatore e IA; due mani indipendenti.
 - Punto 23: nuovi test cooperazione madre e scudiere.
 - Punto 24: nuovi test di tutti i ruoli per 17 famiglie, con scudiera 1 difensiva e scudiera 2 offensiva.
-- 240 test logici superati (15 nuovi test Punto 27, oltre ai 225 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
-- **Prossima priorità: punto 28, requisiti dei calcoli e delle parti vitali**, senza completare ancora audio/visivo.
+- 257 test logici superati (17 nuovi test Punto 28, oltre ai 240 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
+- **Prossima priorità: punto 29, ritmo e bilanciamento della battaglia**, senza completare ancora audio/visivo.
 
 
 ### Ultimo avanzamento — Punto 26 (6 novembre 2026)
@@ -108,3 +109,12 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Mazzo di **prova**: 24 istanze distribuite in 6 tipi × 4 copie. Non corrisponde a una regola definitiva di deckbuilding.
 - **240 test**, build e preflight verificati su `test7/main`; playtest e qualità visiva ancora da collaudare.
 - **Successivo: Punto 28**. Differenziare requisiti d'attivazione e firme per modello, includendo calcoli da 2/3 numeriche e requisiti Poker senza confondere il vecchio motore.
+
+
+### Ultimo avanzamento — Punto 28 (6 novembre 2026)
+- 7 carte numeriche in mano; scelta di 2 o 3, con ripetizione della stessa operazione nelle triple, permutazioni e risultati intermedi interi positivi. Le 5 carte speciali e le carte tattiche rimangono separate.
+- Quattro vitali con firme matematiche **fissate a inizio partita** in base al modello e agli operatori realmente disponibili. La firma è mostrata sul bersaglio ed è verificata quando il proiettile arriva; non può essere rimpiazzata dall'attaccante.
+- Famiglie C/R/E/L: **coppia** opzionale per colpire il sistema armi. Famiglie E/L: **tris** opzionale per la centralina. È sempre disponibile anche una firma matematica di 2/3 carte. Queste varianti sono prototipi non il catalogo finale.
+- L'IA può cercare triple quando necessario e mira ai vitali compatibili con la firma matematica. Non usa ancora le alternative Poker deliberatamente.
+- **257 test automatici riusciti**, build e preflight superati. Playtest manuale e controlli su telefono ancora da effettuare.
+- **Prossimo: Punto 29**, calibratura e ritmo. Combinazioni Poker a 4/5 carte e firme definitive dei boss non ancora implementate, grafica/sonoro finale rinviati.
