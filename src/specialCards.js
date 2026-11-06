@@ -21,7 +21,9 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
  'support-shield-repair':Object.freeze({type:'support-shield-repair',name:'Riparazione Scudo',short:'RIPARAZIONE',
    family:'support',description:'Ripara fino a 20 HP dello scudo madre. Il generatore danneggiato riduce l’efficacia; a KO blocca la riparazione.'}),
  'support-status-purge':Object.freeze({type:'support-status-purge',name:'Pulizia Sistemi',short:'PURIFICAZIONE',
-   family:'support',description:'Rimuove Ionizzazione e Corrosione attive dalla propria madre, senza creare HP.'})
+   family:'support',description:'Rimuove Ionizzazione e Corrosione attive dalla propria madre, senza creare HP.'}),
+ 'support-escort-repair':Object.freeze({type:'support-escort-repair',name:'Riparazione Scudiera',short:'SCUDIERA +',
+   family:'support',description:'Ripara fino a 15 HP dello scudo della scudiera selezionata. Non rianima scudiere distrutte; richiede centralina attiva.'})
 });
 // Regole confermate il 6 novembre 2026: dimensione mazzo e limite per tipo.
 export const SPECIAL_DECK_SIZE=24;
@@ -95,7 +97,7 @@ export function specialCardReadiness(side,handIndex,escortSlot,nowMs=Date.now())
   const armed=armShotEffect(side,definition.type);
   return {ready:armed.armed,reason:armed.reason,definition,armedSide:armed.side};
  }else if(definition.family==='support'){
-  const support=useSupportCard(side,definition.type,nowMs);
+  const support=useSupportCard(side,definition.type,nowMs,escortSlot);
   return {ready:support.activated,reason:support.reason,definition,
    supportSide:support.side,amount:support.amount||0};
  }else return {ready:false,reason:'ability_unavailable',definition};
@@ -107,6 +109,7 @@ export function playSpecialCard(side,handIndex,{escortSlot}={},nowMs=Date.now(),
  const hand=[...side.specialHand];
  const [used]=hand.splice(handIndex,1);
  const patch=ready.supportSide?{fleet:ready.supportSide.fleet,
+  escorts:ready.supportSide.escorts,
   strategicStatuses:ready.supportSide.strategicStatuses}:
   ready.armedSide?{armedVolleyEffects:ready.armedSide.armedVolleyEffects}:
   {maneuvers:ready.state};
