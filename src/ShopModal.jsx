@@ -101,6 +101,7 @@ export default function ShopModal({
   onUnlockOrEquipEnvironment,
   onPreviewEnvironment,
   // Risorse & Store Packages
+  onUpgradeShip,
   stardust = 0,
   diamonds = 0,
   voidCrystals = 0,
@@ -362,7 +363,7 @@ export default function ShopModal({
 
         {/* CONTENUTO SCHEDE */}
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', paddingRight: '2px', position: 'relative', zIndex: 5 }}>
-          {activeTab === 'ships' && <ShipShopPanel/>}
+          {activeTab === 'ships' && <ShipShopPanel stardust={stardust} onUpgradeShip={onUpgradeShip}/>}
           
           {/* TAB 1: PILOTI */}
           {activeTab === 'characters' && (
