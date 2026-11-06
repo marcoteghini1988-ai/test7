@@ -88,3 +88,8 @@ La dimensione di **24 speciali equipaggiate** e il massimo di **6 copie per tipo
 - Grafica, effetti 3D e audio definitivi rimandati fino al consolidamento delle meccaniche.
 
 **Continuità:** sviluppare direttamente `test7/main`, senza creare altri repository o rami-copia.
+
+
+## Evoluzione successiva al punto 30 — Punto 39
+
+Il catalogo era di **otto carte** al completamento del punto 30. È stata aggiunta, successivamente, la nona tipologia **Riparazione Scudiera**: 15 HP massimi di scudo per una scudiera esistente scelta, a fronte del consumo di una carta reale, senza rianimazione di scudiere distrutte. Si trova solo nei pacchetti; i salvataggi della collezione v1 restano compatibili. Regole e test: `docs/PUNTI_32_39_CONTINUITA_CARTE_SPECIALI.md` e `src/escortRepair.test.js`.
