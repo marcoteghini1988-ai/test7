@@ -9,6 +9,7 @@ import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipColl
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVitalSignature} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
 import {systemState} from './fleetSystems.js';
+import {chooseCombatMove} from './aiBattleTactics.js';
 import {vitalSignatureLabel,primaryVitalMathGate} from './modelSignatures.js';
 import {maneuverStatus,changeFormation,cancelFusion,recordManeuverEvent,prepareSideForAmmoRouting} from './fleetManeuvers.js';
 import {playSpecialCard,findFusionCardIndex,findCoverCardIndex,findVolleyCardIndex,specialCardDefinition,specialCardReadiness} from './specialCards.js';
@@ -551,9 +552,13 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    if(side==='player')notice('Seleziona 2 o 3 carte valide e diverse');return;
   }
   if(!supportedOperators(attacker).includes(move.op)){if(side==='player')notice('Operazione non disponibile');return;}
-  const candidateVital=move.escortIndex==null&&side==='player'?
-   b[receiver].fleet[move.targetShip]?.defense?.parts?.[b.targetVital]:null;
-  const pokerProof=candidateVital?.exposed&&candidateVital.signature?.kind==='any'?
+  const defendingMother=b[receiver].fleet[move.targetShip]?.defense;
+  const chosenVital=side==='player'?b.targetVital:move.vitalId;
+  const candidateVital=move.escortIndex==null?
+   defendingMother?.parts?.[chosenVital]:null;
+  const canExposeAI=side==='enemy'&&defendingMother?.kind==='mother'&&
+   remainingExposureSlots(defendingMother)>0;
+  const pokerProof=(candidateVital?.exposed||canExposeAI)&&candidateVital?.signature?.kind==='any'?
    candidateVital.signature.options.find(sig=>sig.kind==='poker'&&matchesVitalSignature(sig,cards)):null;
   if(!inspectCalculationCards(move.op,cards,goal).valid&&!pokerProof){
    const reset=resetComboMemory(attacker);
@@ -581,19 +586,19 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
     }
     else if(mother.shield.hp===0){notice('Lo scudo è esaurito: scegli una parte vitale da colpire');return;}
    }else{
-    // L'IA sceglie autonomamente tra le parti disponibili: l'ordine non è imposto al giocatore.
-    vitalId=VITAL_IDS.find(id=>mother.parts[id].exposed&&mother.parts[id].hp>0&&
-     (!primaryVitalMathGate(mother.parts[id].signature)?.op||primaryVitalMathGate(mother.parts[id].signature).op===move.op))??null;
-    if(!vitalId&&remainingExposureSlots(mother)>0){
-     const candidate=VITAL_IDS.filter(id=>mother.parts[id].hp>0&&!mother.parts[id].exposed&&
-      (!primaryVitalMathGate(mother.parts[id].signature)?.op||primaryVitalMathGate(mother.parts[id].signature).op===move.op));
-     const choice=candidate[Math.floor(Math.random()*candidate.length)];
-     const result=choice?exposeMotherPart(mother,choice):{defense:mother,exposed:false};
-     if(result.exposed){
-      vitalId=choice;
-      prepared=clone(b);
-      prepared[receiver].fleet[move.targetShip].defense=result.defense;
-      defender=prepared[receiver];
+    // The AI is allowed to target a vital only when its NUMERIC/POKER hand
+    // satisfies that particular model signature. No silent wasted volleys.
+    const id=move.vitalId,part=mother.parts?.[id];
+    if(part?.hp>0&&matchesVitalSignature(part.signature,cards)){
+     if(part.exposed)vitalId=id;
+     else if(remainingExposureSlots(mother)>0){
+      const exposed=exposeMotherPart(mother,id);
+      if(exposed.exposed){
+       vitalId=id;
+       prepared=clone(b);
+       prepared[receiver].fleet[move.targetShip].defense=exposed.defense;
+       defender=prepared[receiver];
+      }
      }
     }
     if(!vitalId&&mother.shield.hp===0)return;
@@ -752,28 +757,16 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      n.enemy.maneuvers=changeFormation(status.state,n.enemy,'guard',now).state;
     }
    }
-   let move=aiChoose(n.enemy,n.player,n.targets);
-   // Prefer a math operation that can actually strike an exposed, fixed-signature vital.
-   const ownDefense=n.player.fleet[0]?.defense;
-   if(ownDefense?.kind==='mother'&&ownDefense.shield.hp===0){
-    const exposed=VITAL_IDS.filter(id=>ownDefense.parts[id].exposed&&ownDefense.parts[id].hp>0);
-    if(exposed.length){
-     const options=[...findMoves(n.enemy,n.player,n.targets),
-      ...findThreeCardMoves(n.enemy,n.player,n.targets)];
-     move=options.find(item=>exposed.some(id=>primaryVitalMathGate(ownDefense.parts[id].signature)?.op===item.op))??null;
-    }
-   }
-   if(!move&&!(ownDefense?.kind==='mother'&&ownDefense.shield.hp===0))
-    move=findThreeCardMoves(n.enemy,n.player,n.targets)[0]??null;
-   if(!move&&n.enemy.sacrifices<3&&n.enemy.deck.length&&n.enemy.hand.length){
+   let move=chooseCombatMove(n.enemy,n.player,n.targets,Math.random);
+   // Stalled AI may use an already-approved numeric exchange, without
+   // changing the player's continuous clock or conjuring free ammunition.
+   if(!move&&n.enemy.sacrifices<3&&
+      (n.enemy.deck.length||(n.enemy.recycleNumericDeck&&n.enemy.discard.length))&&n.enemy.hand.length){
     const swap=sacrificeCard(n.enemy,Math.floor(Math.random()*n.enemy.hand.length),n.player,null);
-    if(swap){n.enemy=swap.ship;n.player=swap.opponent;
-     const candidate=aiChoose(n.enemy,n.player,n.targets)||findThreeCardMoves(n.enemy,n.player,n.targets)[0]||null;
-     const defense=n.player.fleet[0]?.defense;
-     move=defense?.kind==='mother'&&defense.shield.hp===0?
-      [...findMoves(n.enemy,n.player,n.targets),...findThreeCardMoves(n.enemy,n.player,n.targets)]
-       .find(option=>VITAL_IDS.some(id=>defense.parts[id].exposed&&defense.parts[id].hp>0&&
-        primaryVitalMathGate(defense.parts[id].signature)?.op===option.op))??null:candidate;}
+    if(swap){
+     n.enemy=swap.ship;n.player=swap.opponent;
+     move=chooseCombatMove(n.enemy,n.player,n.targets,Math.random);
+    }
    }
    if(isDestroyed(n.player)){write(finish(n,'enemy','Flotta distrutta'));return;}
    if(isDestroyed(n.enemy)){write(finish(n,'player','Flotta nemica distrutta'));return;}
@@ -781,7 +774,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    if(move){
     const live=(n.player.escorts||[]).map((escort,index)=>({escort,index}))
      .filter(({escort})=>!escort.defense.destroyed);
-    if(live.length&&Math.random()<.45){
+    if(!move.vitalId&&live.length&&Math.random()<.45){
      const chosen=live[Math.floor(Math.random()*live.length)];
      const op=chosen.escort.defense.shield.hp===0?chosen.escort.defense.signature?.op:move.op;
      const candidate=op===move.op?move:findMoves(n.enemy,n.player,n.targets).find(m=>m.op===op&&m.targetShip===0);
