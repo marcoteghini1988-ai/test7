@@ -303,7 +303,7 @@ function Projectile({effect,rootRef,engineRefs,gunRefs,escortRefs}){
  },[effect?.id,rootRef,engineRefs,gunRefs,escortRefs]);
  if(!effect||!geometry)return null;
  const {target,shots}=geometry;
- return <div className={`vfx-layer${effect.destroyed?' motor-break':''}`} aria-hidden="true" data-arrival-ms={effect.arrivalMs}>
+ return <div className={`vfx-layer${effect.destroyed||effect.systemDisabled?' motor-break':''}`} aria-hidden="true" data-arrival-ms={effect.arrivalMs}>
  {shots.map(({shot,fx,rounds,arrivalMs})=><React.Fragment key={`${shot.vesselIndex}/${shot.weaponId}`}>
   {rounds.map(round=>{
    const {x,y,dx,dy,roundWidth}=round;
@@ -321,6 +321,13 @@ function Projectile({effect,rootRef,engineRefs,gunRefs,escortRefs}){
   })}
   <span className={`weapon-impact impact-${fx.profile}`} data-weapon={shot.weaponId} style={{left:target[0],top:target[1],color:fx.color,'--contact-delay':`${arrivalMs}ms`}}><ImpactGlyph profile={fx.profile}/></span>
  </React.Fragment>)}
+ {effect.resolved&&(effect.systemDisabled||effect.destroyed||effect.systemDamaged)&&
+  <span className={'battle-impact-ring'+(effect.systemDisabled||effect.destroyed?' battle-impact-ko':' battle-impact-damaged')}
+   style={{left:target[0],top:target[1]}}/>}
+ {effect.resolved&&Array.isArray(effect.strategicApplied)&&effect.strategicApplied.length>0&&
+  <span className={'battle-impact-status'+
+   (effect.strategicApplied.includes('shot-ion')?' battle-status-ion':' battle-status-corrosion')}
+   style={{left:target[0],top:target[1]}}/>}
  {effect.damage>0&&<div className="impact-number delayed-impact" style={{left:target[0]-52,top:target[1]-64,color:effect.primaryColor||'#ffdf83','--impact-delay':`${effect.resolved?0:effect.arrivalMs}ms`}}>−{effect.damage}</div>}
  {shots.length===0&&<div className="charge-notice">{effect.volleys.some(s=>s.charging)?'MUNIZIONI IN CARICA':effect.memoryPending?'MEMORIA AGGIORNATA':'NESSUNA ARMA ATTIVATA'}</div>}
  </div>;
@@ -778,7 +785,9 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
     peakImpacts:(previousBalance.peakImpacts||0)+(effect.environmentStage==='surge'?1:0),
     specialImpacts:(previousBalance.specialImpacts||0)+(result.strategicApplied?.length?1:0)
    };
-   state.effects[idx]={...state.effects[idx],resolved:true,damage:result.damage,destroyed:result.destroyed};
+   state.effects[idx]={...state.effects[idx],resolved:true,damage:result.damage,destroyed:result.destroyed,
+    systemDisabled:result.systemDisabled||null,systemDamaged:result.systemDamaged||null,
+    strategicApplied:result.strategicApplied||[]};
    state.combatCue=impactBattleCue({id:effect.id,side,result,effect});
    if(result.damage>0)tone(result.destroyed||result.systemDisabled?'critical':'impact');
    const systemLog=result.systemMessage?`${side==='player'?'NEMICO':'TU'}: ${result.systemMessage}`:null;
