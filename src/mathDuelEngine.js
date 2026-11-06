@@ -84,7 +84,24 @@ export function newShip(_level=1,isEnemy=false,upgrades={}){
  const fleet=ids.map(id=>newVessel(id,upgrades.shipLevels?.[id]??upgrades.shipLevel));
  return {fleet,hand:[],deck:[],discard:[],sacrifices:0,ether:isEnemy?1:2};
 }
-export function fillHand(side){const n={...side,hand:[...side.hand],deck:[...side.deck]};while(n.hand.length<7&&n.deck.length)n.hand.push(n.deck.pop());return n;}
+export function fillHand(side,rng=Math.random){
+ const n={...side,hand:[...side.hand],deck:[...side.deck],
+  discard:[...(side.discard||[])]};
+ while(n.hand.length<7){
+  if(!n.deck.length){
+   // In the new mother/escort game, recycle only cards that were legitimately
+   // used. The original 52 distinct numeric cards remain the entire pool.
+   // Legacy modes keep their original finite-deck rules.
+   if(!n.recycleNumericDeck||!n.discard.length)break;
+   n.deck=shuffled(n.discard,rng);
+   n.discard=[];
+   n.reshuffles=(n.reshuffles||0)+1;
+  }
+  if(!n.deck.length)break;
+  n.hand.push(n.deck.pop());
+ }
+ return n;
+}
 export function createShip(level=1,isEnemy=false,upgrades={},rng=Math.random){let s=newShip(level,isEnemy,upgrades);s.deck=newDeck(rng);return fillHand(s);}
 // Bersagli teoricamente risolvibili con DUE carte da 1 a 13. Non dipendono
 // dalle carte effettivamente in mano: non esiste soluzione garantita per turno.
@@ -164,7 +181,12 @@ export function nextAttackTarget(attacker,defender,preferredShip=0,preferredOp='
  }
  return null;
 }
-export function deckExhausted(a,b){return a.deck.length===0||b.deck.length===0;}
+export function deckExhausted(a,b){
+ const empty=side=>side?.recycleNumericDeck?
+  (side.hand.length<2&&!side.deck.length&&!side.discard.length):
+  side.deck.length===0;
+ return empty(a)||empty(b);
+}
 export function deckVerdict(a,b){const x=healthScore(a),y=healthScore(b);return Math.abs(x-y)<1e-5?'draw':x>y?'player':'enemy';}
 // Each valid calculation consumes ONLY the 2 selected cards. Their face values are ammo, their suits are triggers.
 export function getAmmo(cards){const a={H:0,D:0,C:0,S:0};for(const c of cards)a[SUIT_KEYS[c.suit]]=(a[SUIT_KEYS[c.suit]]||0)+c.value;return a;}
@@ -299,14 +321,14 @@ export function findThreeCardMoves(side,defender,targets){
 }
 export function consumeAttack(side,indices){const s=new Set(indices),used=side.hand.filter((_,i)=>s.has(i));return fillHand({...side,hand:side.hand.filter((_,i)=>!s.has(i)),discard:[...side.discard,...used]});}
 function weakestLiveEngine(side){const a=[];for(let i=0;i<side.fleet.length;i++)for(const op of ENGINE_KEYS){const e=side.fleet[i].engines[op];if(e?.hp>0)a.push({i,op,e});}return a.sort((x,y)=>x.e.hp-y.e.hp)[0];}
-export function sacrificeCard(side,index,opponent,secondsLeft=60){if(side.sacrifices>=3||side.deck.length===0||index<0||index>=side.hand.length)return null;
+export function sacrificeCard(side,index,opponent,secondsLeft=60){if(side.sacrifices>=3||(!side.deck.length&&(!side.recycleNumericDeck||!side.discard.length))||index<0||index>=side.hand.length)return null;
  const order=side.sacrifices;let next={...side,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard],fleet:structuredClone(side.fleet),sacrifices:order+1};const [c]=next.hand.splice(index,1);next.discard.push(c);next=fillHand(next);
  let other={...opponent,fleet:structuredClone(opponent.fleet)},seconds=secondsLeft,detail='';
  if(order===0){const w=weakestLiveEngine(other);if(w){w.e.hp+=3;w.e.max+=3;}detail='+3 HP al motore nemico';}
  if(order===1){if(Number.isFinite(secondsLeft)){seconds=Math.max(0,seconds-3);detail='−3 secondi';}else detail='Secondo cambio: costo da riequilibrare';}
  if(order===2){const w=weakestLiveEngine(next);if(w)w.e.hp=Math.max(0,w.e.hp-3);detail='−3 HP a un tuo motore';}
  return {ship:next,opponent:other,seconds,detail};}
-export function etherChange(side,index){if(!side.ether||side.deck.length===0||index<0||index>=side.hand.length)return null;const n={...side,ether:side.ether-1,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard]};const [c]=n.hand.splice(index,1);n.discard.push(c);return fillHand(n);}
+export function etherChange(side,index){if(!side.ether||(!side.deck.length&&(!side.recycleNumericDeck||!side.discard.length))||index<0||index>=side.hand.length)return null;const n={...side,ether:side.ether-1,hand:[...side.hand],deck:[...side.deck],discard:[...side.discard]};const [c]=n.hand.splice(index,1);n.discard.push(c);return fillHand(n);}
 export function aiChoose(side,defender,targets,rng=Math.random){const moves=findMoves(side,defender,targets);if(!moves.length)return null;
  return moves.map(m=>{const e=defender.fleet[m.targetShip].engines[m.op],v=previewVolley(side,[side.hand[m.i],side.hand[m.j]]);const dmg=Math.min(e.hp,v.totalDamage);return {...m,score:dmg+(e.hp<=dmg?100:0)+(m.op==='plus'?6:0)+rng()*2};}).sort((a,b)=>b.score-a.score)[0];}
 // Stage-one bridge: only 1v1 mother matches use this provisional model.
@@ -321,7 +343,8 @@ export function withPrototypeMother(side,targets,attackerOperators=null){
  const defense=createMotherDefense({shipId:vessel.id,shieldMax,
   partHp:Math.max(12,Math.round(shieldMax/4)),signatures});
  const mother={...vessel,defense};
- return {...side,fleet:[mother],escorts:buildLinkedEscorts(mother,targets),maneuvers:newManeuverState()};
+ return {...side,fleet:[mother],escorts:buildLinkedEscorts(mother,targets),maneuvers:newManeuverState(),
+  recycleNumericDeck:true,reshuffles:0};
 }
 export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign'){
  const fleetIds=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];
