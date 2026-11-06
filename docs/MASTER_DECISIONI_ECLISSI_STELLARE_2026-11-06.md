@@ -145,3 +145,10 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Nuove abilità definite in `src/bossNumericDecks.js`, cablate alla battaglia matematica madre/scudiere, allo Shop preesistente e alla progressione equipaggiata senza sovrascrivere inventario, costi e ID originali.
 - Le abilità non modificano le firme, non creano carte, non accendono fusioni senza speciale. Effetti registrati ad impatto; Sincronia e Riparazione sono bonus soltanto a eventi reali, con limiti.
 - Spec: `docs/PUNTO_31_PASSIVE_MAZZI_BOSS.md`. Test: `src/bossNumericDecks.test.js`; verifiche CI, bilanciamento e playtest ancora da completare. Prossima fase: continuare la scaletta con punto 32 dopo i controlli, senza intervenire sulla grafica/sonoro definitivo.
+
+### Verifiche dopo il Punto 31 e continuità 32–39
+- Il precedente fallimento CI del punto 31 era un arrotondamento floating point nel moltiplicatore di Risonanza. Corretto; il run `42211895724` ha confermato **309/309 test**, build e preflight riusciti.
+- Aggiunta `src/specialFlow.test.js` per coprire due speciali offensive sulla stessa scarica, rifiuto della terza senza consumo, reintegro immediato della mano a cinque e due supporti giocabili consecutivamente senza consumare numeriche.
+- Run `42212283860`: **311/311 test** e build/preflight riusciti, su commit `2deda8ea393a7faff98cf23fa8e7fb13c151fdaf`.
+- Scaletta originale ripristinata: 32 cinque speciali in mano; 33 dimensione mazzo speciale; 34 costruzione; 35 duplicate; 36 acquisizione; 37 combinazione numerica/speciale; 38 più speciali e ripescaggio; 39 catalogo definitivo.
+- **Punti 33 e 35 non ancora definitivi**: 24 carte e 6 copie massime per tipo funzionano come prototipo. Prima di fissare questi limiti va confermata la scelta. Documento: `docs/PUNTI_32_39_CONTINUITA_CARTE_SPECIALI.md`.
