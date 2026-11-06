@@ -12,6 +12,7 @@ import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVi
 import {activeArmaments} from './escortArmory.js';
 import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
 import {commanderAbilityStatus,commanderAttackFactor,commanderDefenseFactor,rememberCommanderImpact} from './commanderAbilities.js';
+import {balancedCombatImpact} from './combatBalance.js';
 import {arenaAttackFactor,arenaMotherDefenseFactor,applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import {systemState} from './fleetSystems.js';
@@ -675,6 +676,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const effect={
    id:++attackSerial.current,side,op:move.op,targetShip:move.targetShip,
    environmentStage:arenaEnvironment(prepared.arena?.id,prepared.round).stage,
+   unmodifiedVolleyDamage:strike.volley.reduce((sum,shot)=>sum+Math.max(0,(shot.damage||0)-(shot.maneuverBonus||0)),0),
    vitalId,escortIndex,pokerProof:pokerProof?.pattern??null,rawDamage:strike.rawDamage,damage:0,destroyed:false,resolved:false,
    strikeEffects:firedStrategicEffects,strikeCombo:shotCombinationName(firedStrategicEffects),
    volleys:strike.volley,salvos,memoryPending:strike.memoryPending,
@@ -728,13 +730,17 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    const defense=bossNumericDefenseFactor(state[receiver],context);
    const commanderOffense=commanderAttackFactor(state[side],state[receiver],context);
    const commanderDefense=commanderDefenseFactor(state[receiver],state[side],context);
-   // Both passive families affect only a real projectile at its arrival.
-   // Total offense cap +35%, total mother-only mitigation cap 35%.
+   // One balance policy for real ammunition, passive abilities, fusion and
+   // mother-only mitigation. Keep the launch snapshot for airborne volleys.
    const arenaOffense=arenaAttackFactor(state.arena?.id,context);
    const arenaDefense=arenaMotherDefenseFactor(state.arena?.id,state[receiver],context);
-   const boostedDamage=Math.floor(effect.rawDamage*Math.min(1.35,offense*commanderOffense*arenaOffense)+1e-9);
-   options.motherDefenseFactor=Math.max(.65,defense*commanderDefense*arenaDefense);
-   const result=applyPendingHit(state[receiver],effect.targetShip,effect.op,boostedDamage,options);
+   const balance=balancedCombatImpact(effect.rawDamage,{
+    bossAttack:offense,commanderAttack:commanderOffense,arenaAttack:arenaOffense,
+    bossDefense:defense,commanderDefense,arenaDefense,
+    unmodifiedVolleyDamage:effect.unmodifiedVolleyDamage
+   });
+   options.motherDefenseFactor=balance.defenseFactor;
+   const result=applyPendingHit(state[receiver],effect.targetShip,effect.op,balance.damage,options);
    const arenaDefender=applyArenaIonResistance(result.defender,state.arena?.id,result.strategicApplied,options.nowMs,effect.environmentStage);
    const remembered=rememberBossNumericImpact(state[side],arenaDefender,context,result);
    const commanderRemembered=rememberCommanderImpact(remembered.attacker,remembered.defender,context,result);
@@ -745,6 +751,17 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      {id:'escortHit:'+effect.id+':'+side,type:'escort_hit',amount:result.damage});
     state[side]=applyBossNumericSync({...state[side],maneuvers:credited.state},credited.credited);
    }
+   const previousBalance=state.balanceMetrics||{};
+   state.balanceMetrics={
+    resolvedImpacts:(previousBalance.resolvedImpacts||0)+1,
+    playerImpacts:(previousBalance.playerImpacts||0)+(side==='player'?1:0),
+    enemyImpacts:(previousBalance.enemyImpacts||0)+(side==='enemy'?1:0),
+    passiveCaps:(previousBalance.passiveCaps||0)+(balance.passiveCapApplied?1:0),
+    fusionStackCaps:(previousBalance.fusionStackCaps||0)+(balance.fusionStackCapApplied?1:0),
+    defenseCaps:(previousBalance.defenseCaps||0)+(balance.motherDefenseCapApplied?1:0),
+    peakImpacts:(previousBalance.peakImpacts||0)+(effect.environmentStage==='surge'?1:0),
+    specialImpacts:(previousBalance.specialImpacts||0)+(result.strategicApplied?.length?1:0)
+   };
    state.effects[idx]={...state.effects[idx],resolved:true,damage:result.damage,destroyed:result.destroyed};
    const systemLog=result.systemMessage?`${side==='player'?'NEMICO':'TU'}: ${result.systemMessage}`:null;
    const tacticalCombo=result.strategicApplied?.length===2?shotCombinationName(result.strategicApplied):null;
