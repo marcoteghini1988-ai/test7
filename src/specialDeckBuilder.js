@@ -10,7 +10,7 @@ export const SPECIAL_COLLECTION_KEY='eclissi_special_collection_v1';
 export const SPECIAL_COLLECTION_VERSION=1;
 export const SPECIAL_PACK_SIZE=3;
 export const SPECIAL_TYPES=Object.freeze(Object.keys(SPECIAL_CARD_CATALOG));
-// The two new support cards are unlocked through actual packs, not assigned for free.
+// Support cards are unlocked via real packs; none are assigned to new players for free.
 export const STARTER_SPECIAL_COUNTS=Object.freeze(Object.fromEntries(SPECIAL_TYPES.map(type=>
  [type,type.startsWith('support-')?0:4])));
 const MAX_OWNED_COPIES=999;
