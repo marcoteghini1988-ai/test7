@@ -366,8 +366,10 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
  const rawPlayer=createShip(level,false,playerFleet,rng),rawEnemy=createShip(level,true,enemyFleet,rng);
  const vitalPrototype=upgrades.vitalPrototype===true&&rawPlayer.fleet.length===1&&rawEnemy.fleet.length===1;
  const targets=generateTargets(rng,level);
- const player=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawPlayer,targets,supportedOperators(rawEnemy)):rawPlayer,rng);
- const enemy=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawEnemy,targets,supportedOperators(rawPlayer)):rawEnemy,rng);
+ const player=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawPlayer,targets,supportedOperators(rawEnemy)):rawPlayer,
+  rng,upgrades.specialDeckTypes??null);
+ const enemy=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawEnemy,targets,supportedOperators(rawPlayer)):rawEnemy,
+  rng,upgrades.enemySpecialDeckTypes??upgrades.specialDeckTypes??null);
  return {level,mode,player,enemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
   targets,selected:[],target:'plus',targetVital:null,targetEscort:null,weaponFocus:'auto',targetShip:0,shownPlayer:0,phase:'ready',
   effect:null,notice:vitalPrototype?'Indebolisci lo scudo e scegli le parti vitali da esporre.':'Seleziona un motore nemico e due carte.',logs:[],winner:null};
