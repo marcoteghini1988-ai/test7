@@ -13,7 +13,9 @@ function targetVital(id){
  const weakened=damageMotherShield(v.defense,Math.ceil(v.defense.shield.max*.25)).defense;
  const exposed=exposeMotherPart(weakened,id).defense;
  assert.equal(exposed.parts[id].exposed,true);
- return {...b.enemy,escorts:[],fleet:[{...v,defense:exposed}]};
+ // Isolate point-26 damage penalties from point-28's fixed gameplay signatures.
+ const sandbox={...exposed,parts:{...exposed.parts,[id]:{...exposed.parts[id],signature:null}}};
+ return {...b.enemy,escorts:[],fleet:[{...v,defense:sandbox}]};
 }
 function strike(side,id,raw=1000){
  return applyPendingHit(side,0,'plus',raw,{vitalId:id,cards,signatureOverride:proof,nowMs:1000});
