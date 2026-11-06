@@ -1,6 +1,6 @@
 import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
-import {ENGINE_KEYS,META,PHASE1_SHIPS,newShip,initialBattle,inspectCalculationCards,rankLabel,aiChoose,findMoves,findThreeCardMoves,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory,nextAiActionDelay,applyPendingHit} from './mathDuelEngine.js';
+import {ENGINE_KEYS,META,PHASE1_SHIPS,newShip,initialBattle,inspectCalculationCards,rankLabel,aiChoose,findMoves,findThreeCardMoves,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,fleetCompatibility,memoryComboStatus,resetComboMemory,nextAiActionDelay} from './mathDuelEngine.js';
 import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth,projectileSourceIndex} from './mathWeaponEffects.js';
 import {ASSET_ROOT,CARD_SUIT_COLORS,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
@@ -11,9 +11,9 @@ import {readSpecialCollection,claimFirstWinSpecialPack,specialDeckCounts} from '
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVitalSignature} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
 import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
-import {commanderAbilityStatus,commanderAttackFactor,commanderDefenseFactor,rememberCommanderImpact} from './commanderAbilities.js';
-import {balancedCombatImpact} from './combatBalance.js';
-import {arenaAttackFactor,arenaMotherDefenseFactor,applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment} from './battleArenas.js';
+import {commanderAbilityStatus} from './commanderAbilities.js';
+import {resolveCombatImpact} from './resolveCombatImpact.js';
+import {applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import {systemState} from './fleetSystems.js';
 import {chooseCombatMove} from './aiBattleTactics.js';
@@ -23,7 +23,7 @@ import {maneuverStatus,changeFormation,cancelFusion,recordManeuverEvent,prepareS
 import {playSpecialCard,findFusionCardIndex,findCoverCardIndex,findVolleyCardIndex,specialCardDefinition,specialCardReadiness} from './specialCards.js';
 import {armedShotEffects,strategicStatus,STRATEGIC_EFFECT_LABELS,shotCombinationName} from './strategicShots.js';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
-import {numericBossDeck,activeNumericBossAbilities,bossNumericDamageFactor,bossNumericDefenseFactor,rememberBossNumericImpact,applyBossNumericSync} from './bossNumericDecks.js';
+import {numericBossDeck,activeNumericBossAbilities,applyBossNumericSync} from './bossNumericDecks.js';
 import './MathDuelBattle.css';
 import './MathDuelIntro.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
@@ -725,27 +725,14 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
     environmentStage:effect.environmentStage,
     weaponKey:strongest?.weaponId||strongest?.id||null,reshufflesAtLaunch:attacker.reshuffles||0,
     escortShot:strike.volley.some(shot=>shot.escortSlot!=null),motherShot:strike.volley.some(shot=>shot.escortSlot==null),strikeEffects:effect.strikeEffects};
-   const originalSync=state[receiver].maneuvers?.sync??0;
-   const offense=bossNumericDamageFactor(state[side],state[receiver],context);
-   const defense=bossNumericDefenseFactor(state[receiver],context);
-   const commanderOffense=commanderAttackFactor(state[side],state[receiver],context);
-   const commanderDefense=commanderDefenseFactor(state[receiver],state[side],context);
-   // One balance policy for real ammunition, passive abilities, fusion and
-   // mother-only mitigation. Keep the launch snapshot for airborne volleys.
-   const arenaOffense=arenaAttackFactor(state.arena?.id,context);
-   const arenaDefense=arenaMotherDefenseFactor(state.arena?.id,state[receiver],context);
-   const balance=balancedCombatImpact(effect.rawDamage,{
-    bossAttack:offense,commanderAttack:commanderOffense,arenaAttack:arenaOffense,
-    bossDefense:defense,commanderDefense,arenaDefense,
-    unmodifiedVolleyDamage:effect.unmodifiedVolleyDamage
+   // Stesso risolutore dei test integrati: nessuna formula duplicata nella UI.
+   const resolution=resolveCombatImpact({
+    attacker:state[side],defender:state[receiver],arenaId:state.arena?.id,
+    effect,context,options
    });
-   options.motherDefenseFactor=balance.defenseFactor;
-   const result=applyPendingHit(state[receiver],effect.targetShip,effect.op,balance.damage,options);
-   const arenaDefender=applyArenaIonResistance(result.defender,state.arena?.id,result.strategicApplied,options.nowMs,effect.environmentStage);
-   const remembered=rememberBossNumericImpact(state[side],arenaDefender,context,result);
-   const commanderRemembered=rememberCommanderImpact(remembered.attacker,remembered.defender,context,result);
-   state[side]=commanderRemembered.attacker;
-   state[receiver]=applyBossNumericSync(commanderRemembered.defender,(commanderRemembered.defender.maneuvers?.sync??0)-originalSync);
+   const {result,balance}=resolution;
+   state[side]=resolution.attacker;
+   state[receiver]=resolution.defender;
    if(escortIndex!=null&&result.damage>0&&state[side].maneuvers){
     const credited=recordManeuverEvent(state[side].maneuvers,
      {id:'escortHit:'+effect.id+':'+side,type:'escort_hit',amount:result.damage});
