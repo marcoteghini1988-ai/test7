@@ -645,3 +645,18 @@
 .es-math-scope .ship-zone[data-fusion-slot="1"] .escort-slot-2{transform:translate(-130px,30px) scale(.52);opacity:.45;filter:drop-shadow(0 0 10px #78ddff)}
 @keyframes point22Barrier{from{opacity:.35;transform:scale(.96)}to{opacity:.8;transform:scale(1.09)}}
 @media (prefers-reduced-motion:reduce){.es-math-scope .ship-zone .escort-pod{transition:none}.es-math-scope .ship-zone[data-fusion="barrier"] .fleet-ships:after{animation:none}}
+
+
+/* Punto 23: le cinque carte speciali non sostituiscono le sette numeriche. */
+.es-math-scope .maneuver-panel{top:278px;gap:6px}
+.es-math-scope .special-escort-target{display:flex;gap:5px}
+.es-math-scope .special-escort-target button{flex:1;min-width:0;background:#0d314f;color:#d8eeff;border:1px solid #4380a7;border-radius:5px;padding:6px 4px;font-size:9px;font-weight:800}
+.es-math-scope .special-escort-target button.active{background:#24648c;color:white;border-color:#b5f5ff}
+.es-math-scope .special-escort-target button:disabled{opacity:.4}
+.es-math-scope .special-card-hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;min-height:76px}
+.es-math-scope .special-card-hand button{display:flex;min-width:0;align-items:center;justify-content:space-between;flex-direction:column;gap:3px;padding:7px 1px;border:1px solid #7ecded;color:#fff;font-weight:800;border-radius:6px;background:linear-gradient(165deg,#255277,#0a1931);box-shadow:0 1px 5px #0008}
+.es-math-scope .special-card-hand button.special-fusion-strike{background:linear-gradient(165deg,#914726,#251226);border-color:#e5a57e}
+.es-math-scope .special-card-hand button strong{font-size:9px;word-break:break-word;line-height:1.2}
+.es-math-scope .special-card-hand button small,.es-math-scope .special-card-hand button span{font-size:7px;letter-spacing:0}
+.es-math-scope .special-card-hand button:disabled{opacity:.48;filter:grayscale(.35)}
+.es-math-scope .special-card-hand button:not(:disabled):focus-visible{outline:3px solid #fcf0a1;outline-offset:2px}
