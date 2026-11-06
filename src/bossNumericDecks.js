@@ -123,7 +123,7 @@ export function bossNumericDamageFactor(attacker,defender,context={}){
    if(b.powerAfterKo)bonus+=bossValue(attacker,2);
    break;
  }
- return 1+pct(Math.min(30,bonus)); // ceiling across combined passives
+ return (100+Math.min(30,bonus))/100; // bounded exact percentage factor
 }
 export function bossNumericDefenseFactor(defender,context={}){
  const b=defender?.bossNumericDeck;if(!b||!mother(defender))return 1;
