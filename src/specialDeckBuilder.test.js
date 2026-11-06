@@ -15,15 +15,15 @@ function storage(){
   setItem:(key,value)=>values.set(key,value)};
 }
 const cardsOf=side=>[...side.specialHand,...side.specialDeck,...side.specialDiscard];
-test('30: starter collection owns six types and equips exactly 24 unique card slots',()=>{
+test('30: starter collection owns eight types, six initially equipped and equips exactly 24 unique card slots',()=>{
  const coll=createSpecialCollection(),counts=specialDeckCounts(coll.loadout);
  assert.equal(coll.schemaVersion,1);
  assert.equal(coll.loadout.length,SPECIAL_DECK_SIZE);
  assert.deepEqual(SPECIAL_TYPES,Object.keys(SPECIAL_CARD_CATALOG));
- assert.equal(SPECIAL_TYPES.length,6);
+ assert.equal(SPECIAL_TYPES.length,8);
  for(const type of SPECIAL_TYPES){
   assert.equal(coll.owned[type],STARTER_SPECIAL_COUNTS[type]);
-  assert.equal(counts[type],4);
+  assert.equal(counts[type],STARTER_SPECIAL_COUNTS[type]);
  }
  assert.equal(validateSpecialDeck(coll,coll.loadout).valid,true);
  assert.equal(coll.packCredits,0);
@@ -77,7 +77,7 @@ test('30: packs only increase ownership; deck must be edited and saved manually'
  const pack=openSpecialPack(specialPackReward(coll,'campaign:sector:2').collection,()=>.9);
  const before=pack.collection.loadout;
  const equipped=equipSpecialDeck(pack.collection,
-   before.map((t,i)=>i===0?'shot-corrosion':t));
+   before.map((t,i)=>i===0?'support-status-purge':t));
  assert.equal(equipped.loadout.length,24);
  assert.equal(before[0],'fusion-barrier');
  assert.notDeepEqual(equipped.loadout,before);
