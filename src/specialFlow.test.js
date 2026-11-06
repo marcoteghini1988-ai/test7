@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {initialBattle,applyPendingHit} from './mathDuelEngine.js';
-import {playSpecialCard,makeSpecialInstances,SPECIAL_HAND_SIZE} from './specialCards.js';
+import {playSpecialCard,makeSpecialInstances,refillSpecialHand,SPECIAL_HAND_SIZE} from './specialCards.js';
 import {armedShotEffects,shotCombinationName} from './strategicShots.js';
 const rng=()=>.5;
 const allCards=side=>[...(side.specialHand||[]),...(side.specialDeck||[]),...(side.specialDiscard||[])];
@@ -51,6 +51,22 @@ test('32/37/38: due speciali offensive diverse si armano nello stesso momento, s
  assert.ok(impact.motherDamage>0);
  assert.ok(impact.strategicApplied.includes('shot-ion'));
  assert.deepEqual(second.hand.map(c=>c.id),originalNumeric);
+});
+test('33/35/38: 96 ricicli preservano 24 istanze speciali uniche e le 7 numeriche',()=>{
+ const battle=initialBattle(1,{vitalPrototype:true,fleetIds:['N00'],shipLevel:5},rng);
+ let side=battle.player;
+ const initialIds=allCards(side).map(card=>card.id).sort();
+ const numericIds=side.hand.map(card=>card.id);
+ for(let i=0;i<96;i++){
+  const [used,...remaining]=side.specialHand;
+  side=refillSpecialHand({...side,specialHand:remaining,
+   specialDiscard:[...side.specialDiscard,used]},rng);
+  const ids=allCards(side).map(card=>card.id).sort();
+  assert.equal(side.specialHand.length,SPECIAL_HAND_SIZE);
+  assert.deepEqual(ids,initialIds);
+  assert.equal(new Set(ids).size,24);
+  assert.deepEqual(side.hand.map(card=>card.id),numericIds);
+ }
 });
 test('37/38: usare supporti diversi consuma solo le speciali possedute e ripristina subito la mano a cinque',()=>{
  const types=['support-shield-repair','support-status-purge','shot-piercing','shot-ion']
