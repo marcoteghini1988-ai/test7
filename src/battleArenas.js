@@ -113,25 +113,35 @@ export function arenaEnvironment(arenaId,round=1){
 // Le chiamate senza fase mantengono tutti i vecchi valori (retrocompatibilità).
 const ambientRank=stage=>ARENA_ENVIRONMENT_STAGES.find(p=>p.id===stage)?.intensity||0;
 
+// Una sola fonte per i fattori di fase: motore e pannello mostrano gli
+// stessi valori. I valori assenti rimangono assenti, anche al PICCO.
+export function arenaPhaseModifiers(arenaId,environmentStage='quiet'){
+ const base=battleArena(arenaId).effects,rank=ambientRank(environmentStage);
+ return Object.freeze({
+  shieldDamageFactor:base.shieldDamageFactor?Math.max(.73,base.shieldDamageFactor-rank*.008):null,
+  tripleAttackFactor:base.tripleAttackFactor?Math.min(1.18,base.tripleAttackFactor+rank*.015):null,
+  ionDurationFactor:base.ionDurationFactor?Math.max(.45,base.ionDurationFactor-rank*.035):null,
+  syncPerCalculation:base.syncPerCalculation?base.syncPerCalculation+rank:0
+ });
+}
 const mother=side=>side?.fleet?.[0]?.defense?.kind==='mother'?side.fleet[0].defense:null;
 // Le numeriche devono essere state consumate e l'attacco validato nel motore.
 export function arenaAttackFactor(arenaId,context={}){
- const factor=battleArena(arenaId).effects.tripleAttackFactor;
+ const factor=arenaPhaseModifiers(arenaId,context.environmentStage).tripleAttackFactor;
  if(!factor||context.legalAttack!==true||!Array.isArray(context.cards)||
   context.cards.length!==3||
   context.cards.some(c=>!c||!Number.isInteger(c.value)||c.value<1||c.value>13))return 1;
- return Math.min(1.18,factor+ambientRank(context.environmentStage)*.015);
+ return factor;
 }
 // Solo scudo madre, dopo l'intercettazione. Non modifica scudiere o firme vitali.
 export function arenaMotherDefenseFactor(arenaId,defender,context={}){
- const factor=battleArena(arenaId).effects.shieldDamageFactor;
+ const factor=arenaPhaseModifiers(arenaId,context.environmentStage).shieldDamageFactor;
  if(!factor||context.vitalId!=null||context.escortIndex!=null||
   !(mother(defender)?.shield?.hp>0))return 1;
- return Math.max(.73,factor-ambientRank(context.environmentStage)*.008);
+ return factor;
 }
 export function applyArenaIonResistance(side,arenaId,applied=[],nowMs=0,environmentStage='quiet'){
- const base=battleArena(arenaId).effects.ionDurationFactor;
- const factor=base?Math.max(.45,base-ambientRank(environmentStage)*.035):base;
+ const factor=arenaPhaseModifiers(arenaId,environmentStage).ionDurationFactor;
  if(!factor||!Array.isArray(applied)||!applied.includes('shot-ion'))return side;
  const until=side?.strategicStatuses?.ionizedUntil;
  if(!(Number.isFinite(until)&&until>nowMs))return side;
@@ -140,8 +150,7 @@ export function applyArenaIonResistance(side,arenaId,applied=[],nowMs=0,environm
   ionizedUntil:nowMs+Math.ceil((until-nowMs)*factor)}};
 }
 export function applyArenaCalculationSync(side,arenaId,credited=0,environmentStage='quiet'){
- const base=battleArena(arenaId).effects.syncPerCalculation||0;
- const bonus=base?base+ambientRank(environmentStage):0;
+ const bonus=arenaPhaseModifiers(arenaId,environmentStage).syncPerCalculation;
  if(!bonus||!(Number(credited)>0)||!side?.maneuvers)return side;
  const current=Math.max(0,Math.min(100,Number(side.maneuvers.sync)||0));
  if(current>=100)return side;
@@ -157,11 +166,12 @@ export function applyArenaCalculationSync(side,arenaId,credited=0,environmentSta
 export function arenaTacticalBriefing(arenaId,context={}){
  const arena=battleArena(arenaId),effects=arena.effects,conditions=[];
  const environment=arenaEnvironment(arenaId,context.round);
+ const phase=arenaPhaseModifiers(arenaId,environment.stage);
  const add=(id,label,activation,strategy,status='')=>conditions.push(
   Object.freeze({id,label,activation,strategy,status})
  );
  if(effects.shieldDamageFactor){
-  const reduction=percent(1-effects.shieldDamageFactor);
+  const reduction=percent(1-phase.shieldDamageFactor);
   const hp=context?.enemy?.fleet?.[0]?.defense?.shield?.hp;
   add('debris','Detriti e copertura',
    'Lo scudo della nave madre riceve '+reduction+'% di danni in meno quando intercetta un impatto reale.',
@@ -169,7 +179,7 @@ export function arenaTacticalBriefing(arenaId,context={}){
    Number.isFinite(hp)?hp>0?'Scudo madre avversario attivo.':'Scudo madre avversario esaurito.':'');
  }
  if(effects.tripleAttackFactor){
-  const increase=percent(effects.tripleAttackFactor-1);
+  const increase=percent(phase.tripleAttackFactor-1);
   const count=context?.selectedCount;
   add('plasma','Plasma e raffiche',
    'Un attacco valido che consuma esattamente tre numeriche ottiene +'+increase+'% di danni.',
@@ -178,13 +188,13 @@ export function arenaTacticalBriefing(arenaId,context={}){
    Number.isInteger(count)?'Carte numeriche selezionate: '+count+' su 3 per la scarica potenziata.':'');
  }
  if(effects.ionDurationFactor){
-  const reduction=percent(1-effects.ionDurationFactor);
+  const reduction=percent(1-phase.ionDurationFactor);
   add('ionic','Disturbo ionico',
    'Le ionizzazioni già applicate da una carta speciale reale durano il '+reduction+'% in meno.',
    'Non basare la difesa su un blocco ionico prolungato; conserva alternative di attacco e copertura.');
  }
  if(effects.syncPerCalculation){
-  const gain=effects.syncPerCalculation;
+  const gain=phase.syncPerCalculation;
   const sync=context?.player?.maneuvers?.sync;
   add('resonance','Risonanza di Sincronia',
    'Ogni calcolo valido accreditato aggiunge '+gain+' Sincronia, fino al massimo di 100.',
