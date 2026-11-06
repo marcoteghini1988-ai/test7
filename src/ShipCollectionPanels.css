@@ -77,3 +77,20 @@
   padding: .4rem .65rem;
   font-size: .68rem;
 }
+
+/* Carta madre acquistata: anteprima e upgrade con polvere stellare.
+   Nessun pulsante sul contenuto non posseduto; niente microtransazioni. */
+.ship-collection-panel .ship-shop-offer{
+ display:flex;flex-direction:column;gap:.28rem;min-width:0;
+}
+.ship-collection-panel .ship-shop-offer .ship-card{flex:1}
+.ship-collection-panel .ship-upgrade-button{
+ width:100%;padding:.4rem .23rem;
+ color:#ddf9ff;background:#113246;
+ border:1px solid #67c6ee;border-radius:5px;
+ font-weight:850;font-size:.62rem;letter-spacing:.2px;
+ cursor:pointer;
+}
+.ship-collection-panel .ship-upgrade-button:not(:disabled):active{
+ background:#205c76;
+}
