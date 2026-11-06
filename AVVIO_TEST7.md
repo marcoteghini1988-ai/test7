@@ -27,7 +27,7 @@ GitHub Actions esegue le prime quattro verifiche automaticamente su `main`. La p
 
 - Il repository unico di sviluppo è `test7`. Non occorre creare repository o copie denominate `test8`.
 - Gli scafi sono **SVG vettoriali con stile metallico**, non modelli mesh 3D. Il posizionamento fisico di armi, parti vitali e motori sulle nuove forme richiede la rifinitura grafica finale.
-- La **mano da cinque speciali** è già implementata con i due tipi di fusione; le altre carte speciali, la fusione tripla e le firme finali per modello devono ancora essere progettate.
+- La **mano da cinque speciali** è implementata con due Fusioni e **Copertura Tattica**; ulteriori carte, fusioni triple e firme finali restano da progettare.
 - Tutti i bonus, i tempi e le percentuali della fusione sono parametri iniziali di test.
 
 Specifiche complete: [docs/PUNTO_22_INTEGRAZIONE.md](docs/PUNTO_22_INTEGRAZIONE.md).
@@ -36,3 +36,7 @@ Specifiche complete: [docs/PUNTO_22_INTEGRAZIONE.md](docs/PUNTO_22_INTEGRAZIONE.
 **Ripresa successiva:** consultare `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md` per tutti i requisiti consolidati. Audio/visivo rinviati.
 
 **Nota numerazione:** le carte speciali delle fusioni sono il blocco 22B / base del punto 30; la collaborazione navicelle è il punto 23 ufficiale. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
+
+
+## Punto 25: protezione attiva
+In **MANOVRE**, seleziona **SCUDIERA 1**, poi gioca la carta **COPERTURA** dalla mano speciale. Non richiede 100 Sincronia; protegge dal primo successivo attacco alla madre entro 15 s, consumando fino al 75% del danno dallo scudo reale della scudiera. La carta viene sostituita immediatamente e non è cumulabile con una fusione. Documento: `docs/PUNTO_25_PROTEZIONE_MADRE.md`.
