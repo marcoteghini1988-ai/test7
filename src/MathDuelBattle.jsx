@@ -594,7 +594,9 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    n.notice=result.definition.family==='volley'?'COLPO STRATEGICO ARMATO: '+result.definition.name:
     result.definition.family==='support'?'SUPPORTO: '+result.definition.name+
      (result.amount?' · +'+result.amount+' HP':''):
-    'CARTA SPECIALE: '+result.definition.name+' · SCUDIERA '+(specialEscortSlot+1);
+    'CARTA SPECIALE: '+result.definition.name+
+     (['twin','triad'].includes(result.definition.mode)?' · DUE SCUDIERE':
+      ' · SCUDIERA '+(specialEscortSlot+1));
    n.logs=[n.notice,...n.logs].slice(0,6);
    setManeuverMenu(false);
   }else{
@@ -885,11 +887,16 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
     n.enemy.maneuvers=status.state;
     if(status.sync>=100&&!status.fusion&&!status.cover&&status.availableEscorts.some(x=>x.available)){
      const target=status.availableEscorts.find(x=>x.available);
-     const preferred=n.enemy.fleet[0].defense.shield.hp<n.enemy.fleet[0].defense.shield.max*.55?'barrier':'strike';
-     let cardIndex=findFusionCardIndex(n.enemy,preferred);
-     if(cardIndex<0)cardIndex=findFusionCardIndex(n.enemy,preferred==='barrier'?'strike':'barrier');
-     if(cardIndex>=0){
-      const played=playSpecialCard(n.enemy,cardIndex,{escortSlot:target.slot},now);
+     const shield=n.enemy.fleet[0].defense.shield;
+     const defensive=shield.hp<shield.max*.55;
+     const duo=status.availableEscorts.filter(x=>x.available).length===2;
+     const priorities=defensive?['twin','barrier','triad','strike']:
+      ['triad','strike','barrier','twin'];
+     const available=priorities.map(mode=>({mode,index:findFusionCardIndex(n.enemy,mode)}))
+      .find(candidate=>candidate.index>=0&&
+       (!['twin','triad'].includes(candidate.mode)||duo));
+     if(available){
+      const played=playSpecialCard(n.enemy,available.index,{escortSlot:target.slot},now);
       if(played.played)n.enemy=played.side;
      }
     }else if(!status.fusion&&status.formation==='balanced'&&status.availableEscorts.length){
@@ -1118,7 +1125,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
       </button>)}
      </div>
      <small>Fusioni: carta + 100 Sincronia. Copertura: scudiera 1 protegge la madre. Puoi combinare 2 diversi colpi speciali per la stessa scarica. Riparazione Scudo, Riparazione Scudiera e Pulizia Sistemi consumano carte vere e funzionano solo quando utili. Seleziona la scudiera da riparare; una scudiera distrutta non può essere rianimata. Mano sempre a 5.</small>
-     {maneuverHUD.fusion&&<div className="maneuver-options"><span>{maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>}
+     {maneuverHUD.fusion&&<div className="maneuver-options"><span>{({barrier:'BARRIERA',strike:'ASSALTO',twin:'GEMELLARE',triad:'TRINA'})[maneuverHUD.fusion.mode]||'FUSIONE'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>}
    </div>}
    <div className="player-status"><b title={(game.player.commander?'Comandante '+(commanderAbilityStatus(game.player)?.name||commanderDisplayName||game.player.commander.id)+' L'+game.player.commander.level+(commanderAbilityStatus(game.player)?' · '+commanderAbilityStatus(game.player).description+' +'+commanderAbilityStatus(game.player).value+'% · ':' · '):'Nessun comandante · ')+(game.player.bossNumericDeck?activeNumericBossAbilities(game.player.bossNumericDeck.id,game.player.bossNumericDeck.level).filter(ability=>ability.unlocked).map(ability=>ability.name+' · Grado '+ability.grade+'/3').join(' | '):'Mazzo neutro · nessuna passiva')}>TU{game.player.bossNumericDeck?' · '+numericBossDeck(game.player.bossNumericDeck.id)?.name+' L'+game.player.bossNumericDeck.level:''}{game.player.commander?' · CMD L'+game.player.commander.level:''}</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{playerSystemAlerts?playerSystemAlerts+' · ':''}{ownStrategicStatus.ionizedUntil?'IONIZZATA · ':''}{ownStrategicStatus.corrodedUntil?'SCUDO CORROSO · ':''}{message||game.notice}</small></div>
    {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs} escortRefs={escortRefs}/>)}
