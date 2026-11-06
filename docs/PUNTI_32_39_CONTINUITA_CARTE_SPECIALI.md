@@ -13,7 +13,7 @@
 | 36 | Acquisizione delle speciali | **Implementato in prova**: 1 credito pacchetto alla prima vittoria per settore, 3 copie reali per apertura | Rarità, ricompense future, economia Shop |
 | 37 | Combinazione numerica + speciale | **Prima implementazione**: numeriche attivano colpi validi; una o due speciali reali modificano l'effetto della scarica | Casi avanzati delle 17 flotte e nuove abilità |
 | 38 | Più speciali e ripescaggio | **Implementato**: fino a due effetti offensivi distinti nella stessa scarica, refill dopo ogni carta, scarti riutilizzati | Bilanciamento del ritmo, altri effetti combinabili |
-| 39 | Catalogo definitivo speciali | **Non definitivo**: otto tipi giocabili, sei iniziali + due supporti da ottenere | Completare le meccaniche prima di fissare catalogo e rarità |
+| 39 | Catalogo definitivo speciali | **Ampliamento in corso**: nove tipi giocabili, sei iniziali + tre supporti da ottenere | Provare le nuove interazioni e definire soltanto dopo il catalogo finale |
 
 ## Vincoli già approvati e preservati
 
@@ -64,3 +64,19 @@ L'utente ha confermato **24 carte esatte per mazzo speciale** e **massimo 6 copi
 **CI precedente:** 311 test, build e preflight riusciti sul commit `2deda8ea393a7faff98cf23fa8e7fb13c151fdaf`; le modifiche alla regola 24/6 necessitano di una nuova verifica CI dopo il push.
 
 La grafica 3D e gli effetti audio definitivi restano rinviati.
+
+## Avanzamento — Punto 39: carta Riparazione Scudiera
+
+Nuova carta **Riparazione Scudiera** (`support-escort-repair`), nona tipologia operativa nel prototipo. È un supporto distinto dalla riparazione dello scudo della madre: seleziona **una scudiera esistente**, restituisce fino a **15 HP** al suo scudo, senza oltrepassare il massimo, e **consuma una vera carta speciale**. Il valore 15 resta da bilanciare giocando.
+
+- Serve una madre con **centralina funzionante**, una scudiera esistente e non distrutta, scudo non pieno. Si può riattivare uno scudo scudiera arrivato a zero se la scudiera **non è stata distrutta**, ma non si rianima una scudiera distrutta.
+- Una scudiera ancora **agganciata in fusione** non può ricevere la riparazione. La carta non viene consumata in caso di bersaglio errato, scudo pieno, centralina KO, fusione incompatibile o scudiera distrutta.
+- Il selettore delle speciali ora consente di scegliere anche una scudiera con scudo a zero (non distrutta). L'IA può scegliere e consumare la stessa carta se lo scudo di una propria scudiera è sotto il 55%.
+- La mano speciale torna immediatamente a **5**, le **7 numeriche** restano separate e il mazzo speciale resta di **24** con massimo **6 copie** per tipo.
+- Nuova tipologia **non distribuita gratuitamente** nel mazzo iniziale. È ottenibile nei pacchetti da tre; le probabilità del prototipo sono uniformi fra i nove tipi, non ancora bilanciate.
+- **Compatibilità salvataggi**: una collezione v1 precedente, senza il nuovo campo di proprietà della carta, viene letta attribuendo **0 copie iniziali** al solo nuovo tipo; crediti, ricompense, mazzo e inventario preesistenti restano invariati. La mancanza di una tipologia storica resta errore, non reset automatico.
+- Test in `src/escortRepair.test.js` e `src/specialDeckBuilder.test.js`: scudiera selezionata, scudo pieno/zero, distruzione, centralina/fusione, limite HP, consumo reale, ripescaggio, vecchi salvataggi e acquisizione dai pacchetti.
+
+**Verifiche:** file pubblicati su `test7/main`; non risulta ancora disponibile un esito CI leggibile per i nuovi commit. Non dichiarare superati i nuovi test o riuscita la build finché non si ottengono risultati verificati. Prova pratica su telefono ancora necessaria.
+
+Il catalogo NON è ancora definitivo; le nuove speciali andranno validate in partita per valore strategico e bilanciamento prima di chiudere il punto 39.
