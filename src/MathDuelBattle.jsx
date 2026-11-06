@@ -4,6 +4,7 @@ import {ENGINE_KEYS,META,PHASE1_SHIPS,newShip,initialBattle,evaluatePair,inspect
 import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth,projectileSourceIndex} from './mathWeaponEffects.js';
 import {ASSET_ROOT,CARD_SUIT_COLORS,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
+import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
@@ -93,12 +94,14 @@ function EscortPods({side,escorts=[],selected,onSelect,registerRef,disabled,inco
    const label=dead?'DISTRUTTA':d.shield.hp>0?`${d.shield.hp}/${d.shield.max} SCUDO`:`FINALE ${sign} ${d.signature?.target??'?'}`;
    return <Tag key={escort.id} {...props}
     className={`escort-pod escort-slot-${index+1}${enemy&&selected===index?' selected':''}${dead?' destroyed':''}${incoming.some(fx=>fx.escortIndex===index)?' under-fire':''}${outgoing.some(salvo=>salvo.shot.escortSlot===index)?' firing':''}`}
-    aria-label={`${escort.name}: ${label}`} title={`${escort.name}: ${label}`}>
+    aria-label={`${escort.name}, ${escort.weapon?.role||'Scudiera'}: ${label}`}
+    title={`${escort.weapon?.name} · ${escort.weapon?.role}: ${ESCORT_ROLE_HELP[escort.weapon?.role]||''}`}>
     <span className="escort-ship-hull" ref={node=>registerRef?.(side,index,node)}>
      <img src={`${ASSET_ROOT}/escorts/${escort.parentShipId}_escort_${index+1}.svg`}
       alt="" draggable={false} loading="eager" decoding="async"/>
     </span>
     <b>SCUDIERA {index+1}</b>
+    <strong className="escort-role">{escort.weapon?.role}</strong>
     <span className="escort-hp-meter"><i style={{width:`${Math.round(d.shield.hp/d.shield.max*100)}%`}}/></span>
     <small>{label}</small>
    </Tag>;
@@ -300,7 +303,8 @@ function Formula({game}){
  const [a,b]=game.selected.map(i=>game.player.hand[i]);
  const goal=game.targets[game.target];
  const inspection=a&&b?inspectCalculation(game.target,a.value,b.value,goal):null;
- const preview=inspection?.valid?previewVolley(game.player,[a,b],game.weaponFocus||'auto'):null;
+ const preview=inspection?.valid?previewVolley(game.player,[a,b],game.weaponFocus||'auto',
+ {targetKind:attackTargetKind(game.enemy,{escortIndex:game.targetEscort,vitalId:game.targetEscort==null?game.targetVital:null})}):null;
  const alternative=a&&b&&!inspection.valid?supportedOperators(game.player).find(op=>op!==game.target&&game.enemy.fleet[game.targetShip]?.engines[op]?.hp>0&&evaluatePair(op,a.value,b.value,game.targets[op])):null;
  const fmt=v=>Number.isInteger(v)?String(v):Number.isFinite(v)?String(Math.round(v*100)/100).replace('.',','):'—';
  return <div className={`formula${inspection?.valid?' valid':inspection?' invalid':''}`} aria-live="polite">

@@ -611,3 +611,8 @@
 .es-math-scope .escort-pod.firing .escort-ship-hull img{animation:escortRecoil .3s ease-out 1;filter:drop-shadow(0 0 8px #8bf7ff)}
 .es-math-scope .ship-enemy .escort-pod.firing .escort-ship-hull img{filter:drop-shadow(0 0 9px #ff9586)}
 @keyframes escortRecoil{0%{transform:translateY(0) scale(1)}35%{transform:translateY(4px) scale(.97)}100%{transform:translateY(0) scale(1)}}
+
+/* Ruoli delle scudiere visibili anche con le immagini approvate. */
+.es-math-scope .escort-pod{height:129px;top:9px}
+.es-math-scope .escort-role{font-size:8px;line-height:1.1;font-weight:600;color:#93dfff;white-space:nowrap}
+.es-math-scope .ship-enemy .escort-role{color:#ffbbb0}

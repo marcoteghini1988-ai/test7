@@ -1,6 +1,7 @@
 import {createEscortDefense,damageEscortShield,destroyExposedEscort} from './vitalDefense.js';
 import {escortArmamentFor} from './escortArmory.js';
 import {escortsCoordinated} from './fleetSystems.js';
+import {defensiveEscortShare} from './escortTactics.js';
 // Scudiere subordinate, non carte equipaggiabili. HP e firme provvisori per collaudo.
 export const ESCORT_UNLOCK_LEVELS=Object.freeze([3,5]);
 export const ESCORT_INTERCEPT_SHARE=0.20;
@@ -30,7 +31,7 @@ export function impactLinkedEscort(escorts=[],index,raw,cards=[]){
  return {escorts:change,damage:hit.damage||0,destroyed:hit.destroyed||false,
   reason:escort.defense.shield.hp>0?'shield':hit.destroyed?'finisher':'wrong_combination'};
 }
-export function interceptMotherVolley(escorts=[],rawDamage,motherDefense=null){
+export function interceptMotherVolley(escorts=[],rawDamage,motherDefense=null,options={}){
  const raw=dmg(rawDamage);
  if(!escortsCoordinated(motherDefense))
   return {escorts,remaining:raw,intercepted:0,details:[],disabledByCommand:true};
@@ -40,7 +41,7 @@ export function interceptMotherVolley(escorts=[],rawDamage,motherDefense=null){
  const details=[];
  for(const escort of active){
   const slot=updated.findIndex(e=>e.id===escort.id);
-  const share=escort.weapon?.interceptShare??ESCORT_INTERCEPT_SHARE;
+  const share=escort.weapon?defensiveEscortShare(escort,motherDefense,options):ESCORT_INTERCEPT_SHARE;
   const budget=Math.min(raw-intercepted,Math.floor(raw*share));
   const hit=damageEscortShield(updated[slot].defense,budget);
   intercepted+=hit.damage;

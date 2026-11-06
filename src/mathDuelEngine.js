@@ -4,6 +4,7 @@ import {PHASE16A_CAMPAIGN_PLANET_IDS,PHASE16A_TOTAL_SECTORS} from './newCombat/p
 import {VITAL_IDS,createMotherDefense,motherDestroyed,damageMotherShield,hitMotherPart} from './vitalDefense.js';
 import {buildLinkedEscorts,impactLinkedEscort,interceptMotherVolley} from './linkedEscorts.js';
 import {previewEscortedVolley} from './escortFiring.js';
+import {attackTargetKind} from './escortTactics.js';
 import {SYSTEM_CONSEQUENCES} from './fleetSystems.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
@@ -166,8 +167,8 @@ export function resetComboMemory(side){
  if(!side.fleet.some(v=>v.weapons.some(w=>w.memory?.length)))return side;
  return {...side,fleet:side.fleet.map(v=>({...v,weapons:v.weapons.map(w=>w.memory?.length?{...w,memory:[]}:w)}))};
 }
-export function previewVolley(side,cards,weaponFocus='auto'){
- if(Array.isArray(side.escorts))return previewEscortedVolley(side,cards,weaponFocus);
+export function previewVolley(side,cards,weaponFocus='auto',context=null){
+ if(Array.isArray(side.escorts))return previewEscortedVolley(side,cards,weaponFocus,context);
  const ammo=getAmmo(cards);const shots=[];const newFleet=side.fleet.map((v,vi)=>({ ...v,weapons:v.weapons.map(w=>({...w}))}));
  let memoryPending=false;
  for(const [vi,v] of newFleet.entries()){
@@ -206,7 +207,7 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
    return {defender:{...defender,escorts:hit.escorts},damage:hit.damage,destroyed:hit.destroyed,
     escortIndex:options.escortIndex,reason:hit.reason};
   }
-  const interception=interceptMotherVolley(defender.escorts||[],rawDamage,vessel.defense);
+  const interception=interceptMotherVolley(defender.escorts||[],rawDamage,vessel.defense,options);
   const detail=options.vitalId
    ?hitMotherPart(vessel.defense,options.vitalId,interception.remaining,options.cards,options.signatureOverride)
    :damageMotherShield(vessel.defense,interception.remaining);
@@ -231,7 +232,7 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
 }
 export function dealHit(defender,attacker,op,_target,cards,preferredIndex=0,options={},weaponFocus='auto'){
  const vi=chooseTarget(defender,op,preferredIndex);if(vi<0)return {defender,attacker,damage:0,destroyed:false,volley:[]};
- const volley=previewVolley(attacker,cards||[],weaponFocus);
+ const volley=previewVolley(attacker,cards||[],weaponFocus,{targetKind:attackTargetKind(defender,options)});
  const hit=applyPendingHit(defender,vi,op,volley.totalDamage,options);
  return {...hit,attacker:{...attacker,fleet:volley.fleet,...(volley.escorts?{escorts:volley.escorts}:{})},volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage,memoryPending:volley.memoryPending};
 }
