@@ -1,3 +1,5 @@
+> **AGGIORNAMENTO PUNTO 27 (6 novembre 2026):** il catalogo attuale contiene **sei carte speciali**: Fusione Barriera, Fusione Assalto, Copertura Tattica, Colpo Perforante, Impulso Ionico e Corrosione. Il mazzo tecnico è ancora di 24 carte, ma ora contiene **4 copie per ciascuna tipologia**, non più 8 × 3. Fino a due carte offensive diverse possono armare il prossimo attacco effettivo allo scudo madre. Per le regole aggiornate leggere `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`. Il resto di questo documento descrive lo stato storico del blocco 22B/25.
+
 # Blocco 22B / fondazione punto 30 — Mazzo numerico e speciale separati
 
 Data: 6 novembre 2026. Numerazione corretta: punto 23 ufficiale = collaborazione tra navicelle; il mazzo speciale appartiene alla scelta Attacco/Abilità (22) e alla costruzione dei mazzi (30). Stato: modulo collegato al combattimento, interfaccia funzionale essenziale, verifiche automatiche riuscite; bilanciamento e collaudo su telefono ancora aperti.
