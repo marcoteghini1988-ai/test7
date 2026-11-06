@@ -4,9 +4,9 @@
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
 ## Repository di lavoro — vincolo inderogabile
-- Base storica: `marcoteghini1988-ai/test7` (`main` non modificato).
-- Versione di lavoro integrata: branch `work/test8-punto22-fusioni-2026-11-06` nello stesso repository; **non esiste ancora un repository autonomo test8**.
-- Il ramo incorpora sorgenti React/Vite, catalogo, asset, collezione, Shop, Hangar, duello e test.
+- Repository unico di sviluppo: `marcoteghini1988-ai/test7`, ramo ufficiale `main`, aggiornato direttamente su richiesta dell'utente.
+- La versione corrente del gioco è su `test7/main`. Nessuna copia/repository `test8` da usare per gli sviluppi futuri.
+- `main` incorpora sorgenti React/Vite, catalogo, asset, collezione, Shop, Hangar, duello e test.
 - Continuare su questa base, senza reinizializzare il progetto né reintrodurre come regolamento il vecchio Poker Battle. Tenere i vecchi componenti dove servono alla compatibilità.
 
 ## Punti già presenti nel codice
@@ -76,10 +76,10 @@ npm run verify:logic
 npm run build
 npm run preflight
 ```
-Verificare sempre GitHub Actions del ramo prima di dichiarare una fase conclusa. Una build automatica non certifica la giocabilità o la resa su Samsung Z Fold o altri dispositivi reali.
+Verificare sempre GitHub Actions di `main` prima di dichiarare una fase conclusa. Una build automatica non certifica la giocabilità o la resa su Samsung Z Fold o altri dispositivi reali.
 
 ## Documento da seguire alla ripresa
-Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/specialCards.js` e da `src/MathDuelBattle.jsx`. Aggiornare i rapporti dopo ogni nuova decisione e non modificare `test7/main` fino a una consegna espressamente richiesta.
+Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/specialCards.js` e da `src/MathDuelBattle.jsx`. Aggiornare i rapporti dopo ogni nuova decisione e applicare i prossimi aggiornamenti direttamente a `test7/main`, senza nuove copie su GitHub.
 
 ## Chiusura operativa di questa sessione
 - Carta fusione obbligatoria per giocatore e IA; due mani indipendenti.
