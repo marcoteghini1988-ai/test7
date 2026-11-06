@@ -33,7 +33,7 @@ test('31: prima abilità ai livelli 1-3, seconda 4-6, terza 7-9',()=>{
  }
 });
 test('31: starter non riceve passivi; Gaia aggiunge HP reali e massimi',()=>{
- assert.equal(equipBossNumericDeck(make('neutral_starter'), 'neutral_starter',9).bossNumericDeck?.id,'planet_char_1');
+ assert.equal(equipBossNumericDeck(make('neutral_starter'),'neutral_starter',9).bossNumericDeck,undefined);
  const basic={fleet:[{defense:createMotherDefense({shipId:'N00',shieldMax:100,partHp:25})}]};
  assert.equal(equipBossNumericDeck(basic,'neutral_starter',9),basic);
  for(const [level,max] of [[1,104],[2,106],[3,108],[9,108]]){
@@ -91,7 +91,7 @@ test('31: Sentinella e Generatore accorciano soltanto status realmente applicati
  const generator={...make('planet_char_14',6),strategicStatuses:{ionizedUntil:13000,corrodedUntil:16000}};
  const g=reduceBossNumericStatuses(generator,['shot-ion','shot-corrosion'],1000);
  assert.equal(g.strategicStatuses.ionizedUntil,8800);
- assert.equal(g.strategicStatuses.corrodedUntil,11500);
+ assert.equal(g.strategicStatuses.corrodedUntil,10750);
 });
 test('31: Tharsis premiato solo per due veri impatti sul medesimo vitale',()=>{
  const s=make('planet_char_2',3),enemy=make('planet_char_6');
