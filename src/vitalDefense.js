@@ -1,5 +1,6 @@
 // Eclissi Stellare — difesa madre/scudiere, modello indipendente dalle vecchie gondole matematiche.
 // Valori HP e firme sono parametri di prova: nessuna scelta di bilanciamento viene imposta.
+import {shieldRepairEfficiency} from './fleetSystems.js';
 export const VITAL_IDS=Object.freeze(['engine','weapons','shieldGenerator','command']);
 export const VITAL_LABELS=Object.freeze({
  engine:'Motore',weapons:'Sistema armi',shieldGenerator:'Generatore scudi',command:'Centralina di comando'
@@ -104,7 +105,9 @@ export function damageMotherShield(defense,rawDamage){
 export function restoreMotherShield(defense,rawRepair){
  if(defense?.kind!=='mother')throw new TypeError('Richiesta una navicella madre');
  if(defense.parts.shieldGenerator.hp===0)return {defense,repaired:0,blocked:'generator_destroyed'};
- const repaired=Math.min(defense.shield.max-defense.shield.hp,amount(rawRepair));
+ // Generator damage can impair future repair cards, but NEVER creates a free repair.
+ const repaired=Math.min(defense.shield.max-defense.shield.hp,
+  Math.floor(amount(rawRepair)*shieldRepairEfficiency(defense)+1e-9));
  const next=reconcile({...defense,shield:{...defense.shield,hp:defense.shield.hp+repaired}});
  return {defense:next,repaired};
 }
