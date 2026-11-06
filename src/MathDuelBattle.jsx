@@ -987,7 +987,13 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
    <ArenaBackdrop/>
    <ArenaEnvironment arenaId={game.arena?.id} round={game.round}/>
-   <div className="top-brand">ECLISSI <b>STELLARE</b><small title={game.arena?.description} aria-label={'Arena tattica: '+(game.arena?.name||'Piattaforma di Titanio')}>{'ARENA · '+(game.arena?.shortLabel||'TITANIO')+(ambient.neutral?'':' · '+ambient.label+' · '+ambient.calculationsUntilChange+' COLPI')}</small></div>
+   <div className="top-brand">ECLISSI <b>STELLARE</b><small title={game.arena?.description} aria-label={'Arena tattica: '+(game.arena?.name||'Piattaforma di Titanio')}>{'ARENA · '+(game.arena?.shortLabel||'TITANIO')}</small></div>
+   {!ambient.neutral&&<div className={'arena-phase-indicator arena-phase-'+ambient.stage}
+     style={{'--arena-accent':ambient.accent}}
+     title="La fase cambia ogni tre attacchi matematici validi complessivi, di entrambe le flotte."
+     role="status" aria-live="polite" aria-label={'Condizione ambientale '+ambient.label+', '+ambient.calculationsUntilChange+' attacchi validi al cambio'}>
+     <strong>{ambient.label}</strong><small>CAMBIO FRA {ambient.calculationsUntilChange}</small>
+   </div>}
    <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
    <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>{game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effects={game.effects} onSelectEscort={selectEscort} selectedEscort={game.targetEscort} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
