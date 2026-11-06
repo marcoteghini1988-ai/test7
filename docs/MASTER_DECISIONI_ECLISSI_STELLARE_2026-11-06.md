@@ -190,3 +190,18 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Le nuove descrizioni L1-L5 sono visibili nell'Hangar, tenendo separati i testi delle modalità classiche. Moduli: `src/commanderAbilities.js`, `src/commanderAbilities.test.js`, `src/MathDuelBattle.jsx`, `src/fleetCommander.js`, `src/pilotsSystem.jsx`.
 - Dettagli e condizioni delle 33 abilità: `docs/PUNTO_41_ABILITA_PERSONAGGI.md`. **Le nuove verifiche CI/test e il playtest 9:16 non sono confermati** dal connettore (combined statuses vuoti). Non dichiarare il punto collaudato o il bilanciamento definitivo.
 - Prossimo: **punto 42 — arene**. Non rifare la plancia artistica già approvata, non anticipare asset 3D/audio finali e non creare copie di `test7`.
+
+
+## Aggiornamento dopo la ricognizione dei punti aperti — 6 novembre 2026
+
+**Nuovo rapporto vincolante:** [`docs/RECUPERO_E_COMPLETAMENTO_SISTEMI_APERTI.md`](RECUPERO_E_COMPLETAMENTO_SISTEMI_APERTI.md).
+
+La precedente numerazione locale dei punti 44–47 NON è la chiusura della master originale di 53 punti. Sono stati eseguiti interventi nel codice ufficiale `test7/main`, non semplici definizioni:
+- duello madre unica in ogni avvio (senza ritorno nascosto al motore legacy per collezioni con 2–3 carte);
+- madre avversaria compatibile e differenziata per settore, comandante IA diverso per i 12 boss;
+- Hangar coerente, ricompense permanenti di 16 navicelle nella campagna e upgrade fino a L5 con Polvere Stellare;
+- due nuove carte di fusione **Gemellare** e **Trina**: 100 Sincronia, due scudiere, HP veri, mano speciale ancora 5 e mazzo ancora 24/6;
+- catalogo di 11 speciali, nuovi tipi non regalati e salvataggi v1 migrati solo con copia iniziale 0;
+- PvP del nuovo motore identificato come simulazione IA finché non esisterà un protocollo online autentico.
+
+**Non risultano risolti** tutti i 53 punti. Restano le firme matematiche definitive, l'ulteriore varietà di attacchi e boss, il bilanciamento in partite reali, la migrazione/realizzazione del PvP online, le economie più avanzate, gli asset 3D e il collaudo fisico. Non anticipare i tutorial: richiesta dell'utente. Utilizzare il nuovo rapporto operativo per le prossime correzioni senza ripetere domande già decise.
