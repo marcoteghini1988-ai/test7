@@ -7,7 +7,7 @@ import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {
  BATTLE_ARENAS,BATTLE_ARENA_IDS,battleArena,arenaForBattle,
  arenaAttackFactor,arenaMotherDefenseFactor,
- applyArenaIonResistance,applyArenaCalculationSync
+ applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing
 } from './battleArenas.js';
 
 const rng=()=>.5;
@@ -141,4 +141,59 @@ test('42: le arene non favoriscono il giocatore o IA e non dipendono dallo shop'
  assert.equal(arenaMotherDefenseFactor('debris',b.player,{}),arenaMotherDefenseFactor('debris',b.enemy,{}));
  assert.equal(arenaAttackFactor('plasma',{legalAttack:true,cards:triple}),1.06);
  assert.equal(arenaAttackFactor('plasma',{legalAttack:true,cards:triple}),1.06);
+});
+
+
+test('43: briefing dell’arena neutra non inventa alcun modificatore',()=>{
+ const base=arenaTacticalBriefing('titanium');
+ assert.equal(base.id,'titanium');
+ assert.equal(base.neutral,true);
+ assert.equal(base.effectCount,0);
+ assert.deepEqual(base.conditions,[]);
+ assert.match(base.introduction,/nessun bonus/i);
+ assert.equal(arenaTacticalBriefing('invalid').id,'titanium');
+});
+
+test('43: ogni effetto descrive solo la propria condizione reale',()=>{
+ const player=initialBattle(3,up,rng,'adventure').player;
+ const enemy=initialBattle(3,up,rng,'adventure').enemy;
+ const debris=arenaTacticalBriefing('debris',{player,enemy});
+ assert.deepEqual(debris.conditions.map(c=>c.id),['debris']);
+ assert.match(debris.conditions[0].activation,/8%/);
+ assert.match(debris.conditions[0].status,/attivo/);
+ const withoutShield=structuredClone(enemy);
+ withoutShield.fleet[0].defense.shield.hp=0;
+ assert.match(arenaTacticalBriefing('debris',{enemy:withoutShield}).conditions[0].status,/esaurito/);
+ const plasma=arenaTacticalBriefing('plasma',{selectedCount:3});
+ assert.equal(plasma.conditions.length,1);
+ assert.match(plasma.conditions[0].activation,/6%/);
+ assert.match(plasma.conditions[0].status,/calcolo valido/);
+ assert.match(arenaTacticalBriefing('plasma',{selectedCount:2}).conditions[0].status,/2 su 3/);
+ assert.match(arenaTacticalBriefing('ionic').conditions[0].activation,/25%/);
+ assert.match(arenaTacticalBriefing('resonance',{player}).conditions[0].activation,/massimo di 100/);
+ assert.equal(arenaTacticalBriefing('resonance',{player}).conditions[0].id,'resonance');
+});
+
+test('43: tutte le 12 arene boss sono distinguibili, senza cambiare bilanciamento',()=>{
+ const b=initialBattle(3,up,rng,'adventure');
+ const seen=new Set();
+ for(const planet of PHASE16A_CAMPAIGN_PLANETS){
+  const id='boss_'+planet.id;
+  const preview=arenaTacticalBriefing(id,{player:b.player,enemy:b.enemy});
+  assert.equal(preview.id,id);
+  assert.equal(preview.kind,'boss');
+  assert.equal(preview.neutral,false);
+  assert.equal(preview.effectCount,2);
+  assert.equal(preview.conditions.length,2);
+  assert.ok(preview.conditions.every(c=>c.activation&&c.strategy));
+  assert.match(preview.introduction,/entrambe le flotte/);
+  const fingerprint=preview.conditions.map(c=>c.activation).join(';');
+  assert.equal(seen.has(fingerprint),false,id+' deve distinguersi per effetti o intensità');
+  seen.add(fingerprint);
+ }
+ assert.equal(seen.size,12);
+ // La sola lettura delle condizioni è pura: nessun HP, carta o effetto viene toccato.
+ const snapshot=structuredClone(b);
+ arenaTacticalBriefing('boss_1',{player:b.player,enemy:b.enemy,selectedCount:3});
+ assert.deepEqual(b,snapshot);
 });
