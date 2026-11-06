@@ -66,6 +66,54 @@
  box-shadow:inset 7px 0 22px -12px var(--arena-accent),inset -7px 0 22px -12px var(--arena-accent);
  opacity:.6;
 }
+/* Le dodici arene boss hanno firme VISIVE distinte, non solo una tinta.
+   Sono texture leggere, disegnate sul perimetro senza occultare le navi. */
+.es-math-scope .arena-is-boss .arena-boss-corona::before{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ border-radius:inherit;opacity:.36;
+ background:var(--boss-pattern);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_1"]{
+ --boss-pattern:repeating-linear-gradient(60deg,transparent 0 36px,#8fd5ff3a 37px 38px,transparent 39px 72px),
+ repeating-linear-gradient(120deg,transparent 0 36px,#8fd5ff2a 37px 38px,transparent 39px 72px);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_2"]{
+ --boss-pattern:repeating-linear-gradient(25deg,transparent 0 38px,#ff8c483f 39px 43px,transparent 44px 99px);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_3"]{
+ --boss-pattern:repeating-radial-gradient(ellipse at 50% -4%,transparent 0 31px,#ffd17e55 32px 35px,transparent 36px 67px);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_6"]{
+ --boss-pattern:repeating-radial-gradient(ellipse 58% 36% at 50% 50%,transparent 0 32px,#d9afff5a 33px 35px,transparent 36px 76px);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_7"]{
+ --boss-pattern:repeating-linear-gradient(111deg,transparent 0 53px,#a0f4ff56 54px 60px,transparent 61px 122px);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_8"]{
+ --boss-pattern:repeating-conic-gradient(from 15deg at 50% 50%,transparent 0deg 25deg,#749dff44 26deg 28deg,transparent 29deg 58deg);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_9"]{
+ --boss-pattern:linear-gradient(105deg,#d6b9ff26 0%,transparent 35% 65%,#8a76c53f 100%);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_11"]{
+ --boss-pattern:repeating-linear-gradient(45deg,transparent 0 44px,#b3f0ff4c 45px 47px,transparent 48px 88px),
+ repeating-linear-gradient(-45deg,transparent 0 49px,#b3f0ff36 50px 52px,transparent 53px 93px);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_14"]{
+ --boss-pattern:radial-gradient(circle at 24% 16%,#ffc4fd7a 0 5px,transparent 32px),
+ radial-gradient(circle at 78% 12%,#ff97ec75 0 3px,transparent 28px);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_17"]{
+ --boss-pattern:repeating-linear-gradient(133deg,transparent 0 61px,#a4e5eb59 62px 66px,transparent 67px 105px);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_19"]{
+ --boss-pattern:radial-gradient(ellipse at 25% 85%,#ff592b83,transparent 40%),
+ radial-gradient(ellipse at 81% 20%,#ffe08965,transparent 35%);
+}
+.es-math-scope .arena-atmosphere[data-arena="boss_20"]{
+ --boss-pattern:repeating-linear-gradient(90deg,transparent 0 40px,#d8efff53 41px 43px,transparent 44px 83px);
+}
+
 @keyframes arenaDebrisDrift{from{transform:translate3d(-3%,2%,0)}to{transform:translate3d(3%,-2%,0)}}
 @keyframes arenaPlasmaBreathe{from{transform:scale(1) translateX(-2%)}to{transform:scale(1.06) translateX(2%)}}
 @keyframes arenaIonFlow{from{transform:translateY(-3%) skewX(-2deg)}to{transform:translateY(3%) skewX(2deg)}}
