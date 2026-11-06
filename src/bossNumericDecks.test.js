@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createMotherDefense} from './vitalDefense.js';
 import {useSupportCard} from './specialSupport.js';
+import {initialBattle,applyPendingHit} from './mathDuelEngine.js';
 import {
  BOSS_NUMERIC_DECK_IDS,BOSS_NUMERIC_DECKS,activeNumericBossAbilities,
  numericBossAbilityGrade,equipBossNumericDeck,bossNumericDamageFactor,
@@ -124,4 +125,26 @@ test('31: Sovrano non ripara un sistema KO, attenua l ultimo vitale vivo',()=>{
  const last={...s,fleet:[{...s.fleet[0],defense:{...original,parts,shield:{...original.shield,hp:0}}}]};
  assert.equal(bossNumericDefenseFactor(last,{}),.76);
  assert.equal(last.fleet[0].defense.parts.engine.hp,0);
+});
+
+test('31: il duello crea mazzi realmente equipaggiati senza alterare le sette numeriche',()=>{
+ const b=initialBattle(1,{vitalPrototype:true,playerBossDeckId:'planet_char_1',
+  playerBossDeckLevel:3,enemyBossDeckId:'planet_char_19',enemyBossDeckLevel:7},()=>.5);
+ assert.equal(b.player.bossNumericDeck.id,'planet_char_1');
+ assert.equal(b.player.bossNumericDeck.level,3);
+ assert.equal(b.enemy.bossNumericDeck.id,'planet_char_19');
+ assert.equal(b.enemy.bossNumericDeck.level,7);
+ assert.equal(b.player.hand.length,7);
+ assert.equal(b.enemy.hand.length,7);
+ assert.equal(b.player.hand.length+b.player.deck.length+b.player.discard.length,52);
+ assert.equal(b.enemy.hand.length+b.enemy.deck.length+b.enemy.discard.length,52);
+});
+test('31: Crono attenua solo il danno arrivato alla madre, non crea HP',()=>{
+ const side=make('planet_char_6',3);
+ const plain=applyPendingHit(side,0,'plus',10,{});
+ const reduced=applyPendingHit(side,0,'plus',10,{motherDefenseFactor:.84});
+ assert.equal(plain.motherDamage,10);
+ assert.equal(reduced.motherDamage,8);
+ assert.equal(reduced.defender.fleet[0].defense.shield.hp,92);
+ assert.equal(reduced.defender.fleet[0].defense.shield.max,100);
 });
