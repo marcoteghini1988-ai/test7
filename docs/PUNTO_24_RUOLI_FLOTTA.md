@@ -24,7 +24,7 @@ Questa suddivisione NON crea nuove carte-navicella: le scudiere sono subordinate
 - Bilanciamento finale di tutte le percentuali, di L1–L5 e dei settori.
 - Grafica 3D, reattività su telefono e effetti audiovisivi definitivi, **espressamente rinviati** finché le meccaniche non saranno stabilite.
 
-## Prossimo punto 25
-Protezione della madre e decisioni attive di difesa. Attualmente intercettazione realistica, scudi e fusione Barriera sono disponibili; resta da distinguere protezione automatica, protezione tattica e relative carte speciali. Nessun nuovo effetto è da considerarsi approvato prima della definizione delle regole.
+## Punto 25 implementato come primo prototipo
+La difesa della madre è articolata in intercettazione automatica, formazione Guardia e una carta Copertura Tattica che impiega gli HP dello scudo reale della prima scudiera sul successivo colpo diretto alla madre. Il catalogo comprende ora tre speciali, sempre in una mano separata da cinque. Parametri provvisori, dettagli e test in `PUNTO_25_PROTEZIONE_MADRE.md`. Passaggio successivo: punto 26, danni localizzati ai sistemi.
 
 Riferimento: `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md`.
