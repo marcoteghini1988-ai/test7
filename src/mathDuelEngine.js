@@ -7,7 +7,7 @@ import {previewEscortedVolley} from './escortFiring.js';
 import {attackTargetKind,defensiveEscortShare} from './escortTactics.js';
 import {newManeuverState,interceptManeuverVolley,recordManeuverEvent} from './fleetManeuvers.js';
 import {initializeSpecialDeck} from './specialCards.js';
-import {SYSTEM_CONSEQUENCES} from './fleetSystems.js';
+import {SYSTEM_CONSEQUENCES,SYSTEM_DAMAGE_MESSAGES,systemState} from './fleetSystems.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
 export const SUIT_KEYS={'♥':'H','♦':'D','♣':'C','♠':'S'};
@@ -215,18 +215,26 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
   let maneuvers=interception.maneuvers;
   if(maneuvers&&interception.intercepted>0&&options.hitId!=null)
    maneuvers=recordManeuverEvent(maneuvers,{id:'intercept:'+options.hitId,type:'escort_interception',amount:interception.intercepted}).state;
+  const previousSystemState=options.vitalId?systemState(vessel.defense,options.vitalId):null;
   const detail=options.vitalId
    ?hitMotherPart(vessel.defense,options.vitalId,interception.remaining,options.cards,options.signatureOverride)
    :damageMotherShield(vessel.defense,interception.remaining);
   let defense=detail.defense;
+  const currentSystemState=options.vitalId?systemState(defense,options.vitalId):null;
+  // An exposed vital crossing 50% loses functionality immediately. Further hits
+  // retain the effect; only a new state transition produces a damage notice.
+  const systemDamaged=options.vitalId&&detail.damage>0&&previousSystemState==='healthy'
+   &&currentSystemState==='damaged'?options.vitalId:null;
   const systemDisabled=options.vitalId&&detail.destroyed?options.vitalId:null;
   const shieldCollapsed=systemDisabled==='shieldGenerator'?defense.shield.hp:0;
   if(shieldCollapsed)defense=damageMotherShield(defense,shieldCollapsed).defense;
   const fleet=defender.fleet.map((v,i)=>i===shipIndex?{...v,defense}:v);
   return {defender:{...defender,fleet,escorts:interception.escorts,...(maneuvers?{maneuvers}:{})},
    damage:(detail.damage||0)+interception.intercepted,motherDamage:detail.damage||0,
-   intercepted:interception.intercepted,shieldCollapsed,systemDisabled,
-   systemMessage:systemDisabled?SYSTEM_CONSEQUENCES[systemDisabled]:null,
+   intercepted:interception.intercepted,shieldCollapsed,systemDamaged,systemDisabled,
+   systemCondition:currentSystemState,
+   systemMessage:systemDisabled?SYSTEM_CONSEQUENCES[systemDisabled]:
+    systemDamaged?SYSTEM_DAMAGE_MESSAGES[systemDamaged]:null,
    destroyed:motherDestroyed(defense),
    vitalId:options.vitalId??null,reason:detail.reason??'shield'};
  }
