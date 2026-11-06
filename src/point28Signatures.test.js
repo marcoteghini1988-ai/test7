@@ -147,7 +147,7 @@ test('28: rare ship has an optional poker pair signature without removing arithm
  const hit=hitMotherPart(d,'weapons',7,ranks([7,7]));
  assert.equal(hit.damage,7);
  assert.equal(hit.defense.parts.weapons.hp,18);
- const wrong=hitMotherPart(d,'weapons',7,ranks([2,5]));
+ const wrong=hitMotherPart(d,'weapons',7,ranks([2,9]));
  assert.equal(wrong.damage,0);
 });
 test('28: epic/legendary command vital accepts optional tris while math remains valid',()=>{
