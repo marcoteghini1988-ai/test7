@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {getPhase16GPilotDescription} from './newCombat/phase16GPilots.js';
+import {commanderAbility} from './commanderAbilities.js';
 
 // ============================================================================
 // MATRICE DELLE 4 FORZE COSMICHE E REGOLE DI DOMINANZA TERMODINAMICA
@@ -2311,8 +2312,13 @@ export function TacticalHangarModal({
               </div>
             </div>
 
+            {commanderAbility(inspectedPilot.id) && <div className="cyber-panel" style={{ padding: '0.5rem', background: 'rgba(8, 47, 73, 0.6)', border: '1px solid rgba(0, 242, 254, 0.4)' }}>
+              <div style={{ fontSize: '0.62rem', color: '#00f2fe', fontWeight: '900' }}>COMANDANTE · DUELLO CONTINUO</div>
+              <div style={{ fontSize: '0.68rem', color: '#fff', marginTop: '2px', lineHeight: '1.3' }}><strong>{commanderAbility(inspectedPilot.id).role}:</strong> {commanderAbility(inspectedPilot.id).description}.</div>
+              <div style={{ fontSize: '0.65rem', color: '#fde047', marginTop: '4px' }}>Bonus L{curLevel}: {commanderAbility(inspectedPilot.id).levels[Math.max(0,Math.min(4,curLevel-1))]}% · 1 comandante per flotta</div>
+            </div>}
             <div className="cyber-panel" style={{ padding: '0.5rem', background: 'rgba(15, 23, 42, 0.85)' }}>
-              <div style={{ fontSize: '0.62rem', color: '#00f2fe', fontWeight: '900' }}>{getPhase16GPilotDescription(inspectedPilot.id) ? 'ABILITÀ PILOTA · CAMPAGNA POKER' : 'EFFETTO CARTA (TRATTO)'}</div>
+              <div style={{ fontSize: '0.62rem', color: '#00f2fe', fontWeight: '900' }}>{getPhase16GPilotDescription(inspectedPilot.id) ? 'ABILITÀ PILOTA · CAMPAGNA POKER (LEGACY)' : 'EFFETTO CARTA · MODALITÀ CLASSICA'}</div>
               <div style={{ fontSize: '0.68rem', color: '#fff', marginTop: '2px', lineHeight: '1.3' }}>{getPhase16GPilotDescription(inspectedPilot.id) || inspectedPilot.trait}</div>
               {getPhase16GPilotDescription(inspectedPilot.id) && <div style={{ fontSize: '0.59rem', color: '#94a3b8', marginTop: '4px' }}>Nelle modalità classiche resta attiva la caratteristica originale: {inspectedPilot.trait}</div>}
             </div>
