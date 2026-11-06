@@ -170,3 +170,13 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Collezioni precedenti nello schema v1 senza la nuova tipologia vengono migrate in lettura con 0 copie del solo nuovo tipo. Non azzerare gli sblocchi; la nona carta può arrivare dai pacchetti, senza assegnazione automatica.
 - Aggiunti `src/escortRepair.test.js` e test di migrazione/acquisizione in `src/specialDeckBuilder.test.js`.
 - Resta aperta la verifica della nuova CI, il playtest, il bilanciamento del valore 15 e il catalogo speciale definitivo. Fase audiovisiva invariata e rinviata. Per dettagli: `docs/PUNTI_32_39_CONTINUITA_CARTE_SPECIALI.md`.
+
+
+### Avanzamento successivo — Fondazione punto 40: comandante unico di flotta (6 novembre 2026)
+- **Un comandante per l'intera flotta**, equipaggiato dallo stesso inventario di piloti già salvato nell'app. Nessun comandante separato per madre o scudiere.
+- `App.tsx` comunica il pilota selezionato e l'inventario a `MathDuelBattle.jsx`; `src/fleetCommander.js` ammette solo piloti sbloccati e normalizza il loro livello L1–L5.
+- `src/mathDuelEngine.js` conserva l'assegnazione su `side.commander`, fuori dai singoli elementi di `fleet`; l'assegnazione non sparisce quando una scudiera o un vitale viene distrutto.
+- Visibilità iniziale `CMD L…` nell'HUD; riuso della stessa assegnazione anche nei duelli di prova e nelle riconfigurazioni di flotta, senza nuove chiavi di salvataggio o perdita di progressione.
+- Nessuna vecchia passiva dei personaggi Poker viene applicata automaticamente al nuovo combattimento. **Punto 41** ancora da progettare: ruoli delle carte personaggio, abilità e bilanciamento coerenti con le quattro parti vitali e la flotta.
+- Test aggiunti in `src/fleetCommander.test.js` e test integrato colpo/scudo/riparazione scudiera in `src/escortRepair.test.js`. Test e build dei nuovi commit **non ancora certificati** tramite Actions, che non restituisce i workflow push con l'integrazione disponibile; verificare su Actions o eseguire `npm run verify:logic`, `npm run build` e `npm run preflight`.
+- Specifica: `docs/PUNTO_40_COMANDANTE_DI_FLOTTA.md`. Grafica/audio finali rinviati, repository unico `test7/main` senza copie.
