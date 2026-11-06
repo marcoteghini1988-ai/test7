@@ -1,0 +1,111 @@
+import React,{useState,useEffect} from 'react';
+import {SPECIAL_CARD_CATALOG} from './specialCards.js';
+import {
+ SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,SPECIAL_COLLECTION_KEY,
+ readSpecialCollection,updateSpecialCollection,specialDeckCounts,
+ validateSpecialDeck,equipSpecialDeck,openSpecialPack
+} from './specialDeckBuilder.js';
+import './SpecialDeckPanel.css';
+
+// Reusable Hangar + pre-battle editor. A corrupt save is never overwritten.
+function readSafe(){
+ try{return {collection:readSpecialCollection(),error:''};}
+ catch{return {collection:null,error:'Salvataggio del mazzo speciale non leggibile. Nessun dato è stato modificato.'};}
+}
+export default function SpecialDeckPanel({compact=false,onSaved}){
+ const [snapshot,setSnapshot]=useState(readSafe);
+ const [draft,setDraft]=useState(null);
+ const [status,setStatus]=useState('');
+ const [saving,setSaving]=useState(false);
+ const collection=snapshot.collection,types=draft??collection?.loadout??[];
+ const counts=specialDeckCounts(types),check=collection?validateSpecialDeck(collection,types):{valid:false};
+ const changed=!!collection&&draft!==null&&
+  (types.length!==collection.loadout.length||types.some((t,i)=>t!==collection.loadout[i]));
+ const refresh=()=>setSnapshot(readSafe());
+ useEffect(()=>{
+  const sync=e=>{if(e.key===SPECIAL_COLLECTION_KEY||e.key===null){refresh();setDraft(null);}};
+  window.addEventListener('storage',sync);
+  return()=>window.removeEventListener('storage',sync);
+ },[]);
+ const updateDraft=(type,amount)=>{
+  if(saving||!collection)return;
+  if(amount>0){
+   if(types.length>=SPECIAL_DECK_SIZE||
+     counts[type]>=Math.min(SPECIAL_DECK_COPY_LIMIT,collection.owned[type]))return;
+   setDraft([...types,type]);
+  }else{
+   const index=types.lastIndexOf(type);
+   if(index<0)return;
+   setDraft(types.filter((_,i)=>i!==index));
+  }
+  setStatus('');
+ };
+ function save(){
+  if(!collection||!changed||!check.valid||saving)return;
+  setSaving(true);
+  try{
+   const next=updateSpecialCollection(current=>equipSpecialDeck(current,types));
+   setSnapshot({collection:next,error:''});setDraft(null);
+   setStatus('Mazzo speciale salvato. Verrà usato alla prossima battaglia.');
+   onSaved?.(next.loadout);
+  }catch(error){setStatus(error.message||'Impossibile salvare il mazzo speciale.');refresh();}
+  finally{setSaving(false);}
+ }
+ function openPack(){
+  if(!collection||saving)return;
+  setSaving(true);
+  try{
+   let result;
+   const next=updateSpecialCollection(current=>{
+    result=openSpecialPack(current);
+    return result.collection;
+   });
+   setSnapshot({collection:next,error:''});
+   if(result?.opened)setStatus('Pacchetto aperto: '+result.drawn.map(t=>SPECIAL_CARD_CATALOG[t].short).join(' + ')+'. Carte aggiunte alla collezione.');
+   else setStatus('Nessun pacchetto disponibile.');
+  }catch(error){setStatus(error.message||'Apertura non riuscita.');refresh();}
+  finally{setSaving(false);}
+ }
+ const body=<section className="special-deck-editor" aria-label="Costruzione mazzo speciale">
+  <p>Le 7 carte numeriche restano separate. Qui scegli solo le 24 speciali per la prossima battaglia. Massimo 6 copie per tipo, senza superare le copie possedute.</p>
+  {snapshot.error&&<p role="alert">{snapshot.error}</p>}
+  {collection&&<>
+   <div className="special-deck-summary">
+    <strong>{types.length}/{SPECIAL_DECK_SIZE} speciali</strong>
+    <span>Pacchetti da aprire: <b>{collection.packCredits}</b></span>
+    <span>Pacchetti aperti: {collection.openedPacks}</span>
+   </div>
+   <div className="special-deck-types">
+    {SPECIAL_TYPES.map(type=>{
+     const info=SPECIAL_CARD_CATALOG[type],n=counts[type],owned=collection.owned[type];
+     return <div className="special-deck-entry" key={type}>
+      <div><strong>{info.short}</strong><small>{info.description}</small></div>
+      <div className="special-deck-quantity">
+       <button type="button" aria-label={'Rimuovi '+info.name} disabled={saving||!n}
+        onClick={()=>updateDraft(type,-1)}>−</button>
+       <span aria-label={'Equipaggiate '+n+' possedute '+owned}>{n}/{owned}</span>
+       <button type="button" aria-label={'Aggiungi '+info.name}
+        disabled={saving||types.length>=SPECIAL_DECK_SIZE||n>=Math.min(owned,SPECIAL_DECK_COPY_LIMIT)}
+        onClick={()=>updateDraft(type,1)}>+</button>
+      </div>
+     </div>;
+    })}
+   </div>
+   {types.length!==SPECIAL_DECK_SIZE&&<p role="status">Mancano {SPECIAL_DECK_SIZE-types.length} carte per completare il mazzo.</p>}
+   {!check.valid&&types.length===SPECIAL_DECK_SIZE&&<p role="status">Il mazzo non rispetta i limiti delle copie possedute.</p>}
+   <div className="special-deck-actions">
+    <button type="button" disabled={saving||!changed||!check.valid} onClick={save}>SALVA MAZZO</button>
+    <button type="button" disabled={saving||collection.packCredits<1} onClick={openPack}>
+     APRI PACCHETTO · 3 CARTE
+    </button>
+    <button type="button" disabled={saving||!changed} onClick={()=>{setDraft(null);setStatus('Modifiche annullate.');}}>ANNULLA</button>
+   </div>
+   <small>Il primo successo in un nuovo settore Campagna/Avventura assegna un pacchetto. Le prove e i successi ripetuti nello stesso settore non ne assegnano altri. Prezzi e rarità dei pacchetti non sono ancora definiti.</small>
+  </>}
+  {status&&<p role="status" className="special-deck-notice">{status}</p>}
+ </section>;
+ return compact?<details className="special-deck-collapsible">
+  <summary>MAZZO CARTE SPECIALI · {collection?collection.loadout.length+' carte':'salvataggio non disponibile'}</summary>
+  {body}
+ </details>:body;
+}
