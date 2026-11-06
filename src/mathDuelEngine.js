@@ -386,7 +386,7 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
  const equippedEnemy=equipFleetCommander(
   equipBossNumericDeck(enemy,upgrades.enemyBossDeckId,upgrades.enemyBossDeckLevel),
   upgrades.enemyCommanderId,upgrades.enemyCommanderLevel);
- return {level,mode,arena:arenaForBattle(level,mode,upgrades.arenaId),player:equippedPlayer,enemy:equippedEnemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
+ return {level,mode,arena:arenaForBattle(level,mode,upgrades.arenaId,{planetId:upgrades.arenaPlanetId,sectorLevel:upgrades.arenaSectorLevel}),player:equippedPlayer,enemy:equippedEnemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
   targets,selected:[],target:'plus',targetVital:null,targetEscort:null,weaponFocus:'auto',targetShip:0,shownPlayer:0,phase:'ready',
   effect:null,notice:vitalPrototype?'Indebolisci lo scudo e scegli le parti vitali da esporre.':'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }
