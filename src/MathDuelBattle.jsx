@@ -8,7 +8,7 @@ import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
-import {maneuverStatus,changeFormation,startFusion,cancelFusion,recordManeuverEvent} from './fleetManeuvers.js';
+import {maneuverStatus,changeFormation,startFusion,cancelFusion,recordManeuverEvent,prepareSideForAmmoRouting} from './fleetManeuvers.js';
 import './MathDuelBattle.css';
 import './MathDuelIntro.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
@@ -403,7 +403,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  const [game,setGame]=useState(()=>startBattle(collection?collectionBattleOptions(collection):{}));
  const [maneuverMenu,setManeuverMenu]=useState(false);
  const [uiClock,setUiClock]=useState(Date.now);
- useEffect(()=>{const timer=setInterval(()=>setUiClock(Date.now()),500);return()=>clearInterval(timer);},[]);
+ useEffect(()=>{const timer=setInterval(()=>setUiClock(Date.now()),1000);return()=>clearInterval(timer);},[]);
  const maneuverHUD=game.player?.maneuvers?maneuverStatus(game.player.maneuvers,game.player,uiClock):null;
  useEffect(()=>{updateShipCollection(current=>current).catch(()=>{/* Keep an unreadable save intact. */});},[]);
  const rootRef=useRef(null);
@@ -714,6 +714,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  }
  function exitBattle(){const b=gameRef.current;if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){resultClaimed.current=true;const h=healthScore(b.player);onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,starsEarned:[true,h>=.65,h>=.9],matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),turnsElapsed:b.round}});}onExit?.();}
  const availableOps=supportedOperators(game.player);
+ const maneuverArmaments=activeArmaments(game.player.maneuvers?prepareSideForAmmoRouting(game.player,uiClock).side:game.player);
  return <div className="es-math-scope game-viewport" role="region" aria-label="Duello matematico spaziale">
   <div ref={rootRef} className="es-root" data-intro={intro?.id} data-intro-motion={intro&&reducedIntro?'reduced':undefined}
    style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
@@ -732,10 +733,10 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    <Ship side="player" ship={game.player} targets={null} focused={game.shownPlayer} onSelectShip={i=>write({...gameRef.current,shownPlayer:i})} phase="idle" intro={intro?.id} effects={game.effects} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    {game.vitalPrototype&&!intro&&<label className="weapon-focus-control" aria-label="Seleziona arma da caricare">
     <span>ARMA</span>
-    <select value={activeArmaments(game.player).some(gun=>gun.id===game.weaponFocus)?game.weaponFocus:'auto'}
+    <select value={maneuverArmaments.some(gun=>gun.id===game.weaponFocus)?game.weaponFocus:'auto'}
       onChange={event=>write({...gameRef.current,weaponFocus:event.target.value})}>
      <option value="auto">AUTOMATICA · una sola arma per carta</option>
-     {activeArmaments(game.player).map(gun=><option key={gun.id} value={gun.id}>
+     {maneuverArmaments.map(gun=><option key={gun.id} value={gun.id}>
       {gun.kind==='escort'?'SCUDIERA '+(gun.slot+1):'MADRE'} · {gun.name} ({gun.suits.map(suit=>WEAPON_SIGNS[suit]||suit).join(' ')})
      </option>)}
     </select>
@@ -750,9 +751,9 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      <div className="maneuver-sync"><span>SINCRONIA {maneuverHUD.sync}/100</span><div><i style={{width:maneuverHUD.sync+'%'}}/></div></div>
      <p>FORMAZIONE</p>
      <div className="maneuver-options">
-       <button onClick={()=>orderManeuver('balanced')}>EQUILIBRATA</button>
-       <button onClick={()=>orderManeuver('guard')}>GUARDIA</button>
-       <button onClick={()=>orderManeuver('assault')}>ASSALTO</button>
+       <button className={maneuverHUD.formation==='balanced'?'active':''} onClick={()=>orderManeuver('balanced')}>EQUILIBRATA</button>
+       <button className={maneuverHUD.formation==='guard'?'active':''} onClick={()=>orderManeuver('guard')}>GUARDIA</button>
+       <button className={maneuverHUD.formation==='assault'?'active':''} onClick={()=>orderManeuver('assault')}>ASSALTO</button>
      </div>
      <p>FUSIONE - 100 SINCRONIA</p>
      {maneuverHUD.availableEscorts.map(item=><div key={item.slot} className="maneuver-options">
