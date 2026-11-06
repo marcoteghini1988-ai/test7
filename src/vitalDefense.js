@@ -1,6 +1,7 @@
 // Eclissi Stellare — difesa madre/scudiere, modello indipendente dalle vecchie gondole matematiche.
 // Valori HP e firme sono parametri di prova: nessuna scelta di bilanciamento viene imposta.
 import {shieldRepairEfficiency} from './fleetSystems.js';
+import {evaluateMathChain} from './mathChains.js';
 export const VITAL_IDS=Object.freeze(['engine','weapons','shieldGenerator','command']);
 export const VITAL_LABELS=Object.freeze({
  engine:'Motore',weapons:'Sistema armi',shieldGenerator:'Generatore scudi',command:'Centralina di comando'
@@ -33,6 +34,10 @@ export function matchesVitalSignature(signature,cards){
  if(!signature||!Array.isArray(cards))return false;
  const values=handValues(cards);
  if(!values)return false;
+ if(signature.kind==='mathGate'){
+  return (signature.allowedCardCounts||[2,3]).includes(values.length)&&
+   !!evaluateMathChain(signature.op,values,signature.target);
+ }
  if(signature.kind==='math'){
   const ops=signature.ops??(signature.op?[signature.op]:[]);
   if(![2,3].includes(values.length)||ops.length!==values.length-1||!Number.isInteger(signature.target))return false;
