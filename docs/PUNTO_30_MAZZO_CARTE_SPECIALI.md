@@ -74,6 +74,10 @@ Il mazzo da 7 numeriche continua a essere separato, così il sistema matematico 
 - `src/specialDeckBuilder.test.js`, `src/specialSupport.test.js`, `src/specialCards.test.js` e `src/strategicShots.test.js`: proprietà, salvataggi, duplicati, pacchetti, protezioni, consumo carta, supporti e combo.
 - **295/295 test automatici riusciti**, compilazione React/Vite e preflight eseguiti su `test7/main` durante lo sviluppo del punto 30.
 
+## Conferma successiva — Punti 33 e 35 (6 novembre 2026)
+
+La dimensione di **24 speciali equipaggiate** e il massimo di **6 copie per tipo** sono stati confermati come regole, senza cambiare i salvataggi esistenti. Il motore di combattimento è la fonte unica dei due valori e il builder li riesporta, così editor e partita non possono divergere per errore. I pacchetti da tre carte, le probabilità uniformi e le regole economiche rimangono invece soggette ai playtest del punto 36. Verifiche aggiunte in `src/specialDeckBuilder.test.js` e `src/specialFlow.test.js`.
+
 ## Da provare e completare
 
 - Collaudo della scelta del mazzo e dell'apertura dei pacchetti sullo schermo 9:16, inclusa persistenza fra riavvii.
