@@ -107,3 +107,56 @@ export function applyArenaCalculationSync(side,arenaId,credited=0){
  if(current>=100)return side;
  return {...side,maneuvers:{...side.maneuvers,sync:Math.min(100,current+bonus)}};
 }
+
+/**
+ * Punto 43 — lettura tattica delle condizioni ambientali realmente attive.
+ * Non introduce bonus, danni o eventi aggiuntivi: espone i requisiti degli
+ * effetti già risolti da questo motore, simmetrici per giocatore e IA.
+ * Lo stato contestuale è solo informativo e non modifica il combattimento.
+ */
+export function arenaTacticalBriefing(arenaId,context={}){
+ const arena=battleArena(arenaId),effects=arena.effects,conditions=[];
+ const add=(id,label,activation,strategy,status='')=>conditions.push(
+  Object.freeze({id,label,activation,strategy,status})
+ );
+ if(effects.shieldDamageFactor){
+  const reduction=Math.round((1-effects.shieldDamageFactor)*100);
+  const hp=context?.enemy?.fleet?.[0]?.defense?.shield?.hp;
+  add('debris','Detriti e copertura',
+   'Lo scudo della nave madre riceve '+reduction+'% di danni in meno quando intercetta un impatto reale.',
+   'Prima di puntare ai vitali, indebolisci lo scudo; la riduzione non protegge direttamente scudiere o vitali.',
+   Number.isFinite(hp)?hp>0?'Scudo madre avversario attivo.':'Scudo madre avversario esaurito.':'');
+ }
+ if(effects.tripleAttackFactor){
+  const increase=Math.round((effects.tripleAttackFactor-1)*100);
+  const count=context?.selectedCount;
+  add('plasma','Plasma e raffiche',
+   'Un attacco valido che consuma esattamente tre numeriche ottiene +'+increase+'% di danni.',
+   'Valuta la combinazione di tre carte quando il risultato è valido; non rinunciare a un attacco certo con due carte solo per cercare il bonus.',
+   count===3?'Tre carte selezionate: il bonus richiede comunque un calcolo valido.':
+   Number.isInteger(count)?'Carte numeriche selezionate: '+count+' su 3 per la scarica potenziata.':'');
+ }
+ if(effects.ionDurationFactor){
+  const reduction=Math.round((1-effects.ionDurationFactor)*100);
+  add('ionic','Disturbo ionico',
+   'Le ionizzazioni già applicate da una carta speciale reale durano il '+reduction+'% in meno.',
+   'Non basare la difesa su un blocco ionico prolungato; conserva alternative di attacco e copertura.');
+ }
+ if(effects.syncPerCalculation){
+  const gain=effects.syncPerCalculation;
+  const sync=context?.player?.maneuvers?.sync;
+  add('resonance','Risonanza di Sincronia',
+   'Ogni calcolo valido accreditato aggiunge '+gain+' Sincronia, fino al massimo di 100.',
+   'Sfrutta calcoli affidabili per preparare le manovre; la risonanza non attiva da sola carte fusione.',
+   Number.isFinite(sync)?'Sincronia attuale: '+Math.max(0,Math.min(100,sync))+'/100.':'');
+ }
+ return Object.freeze({
+  id:arena.id,name:arena.name,kind:arena.kind,effectCount:arena.effectCount,
+  neutral:conditions.length===0,
+  introduction:conditions.length===0?
+   'Arena base neutra: nessun bonus o penalità ambientale. Conta soltanto il combattimento.':
+   (arena.kind==='boss'?'Arena esclusiva del boss. ':'')+
+    'Le condizioni si applicano a entrambe le flotte soltanto quando si verifica l’evento richiesto.',
+  conditions:Object.freeze(conditions)
+ });
+}
