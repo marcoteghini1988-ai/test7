@@ -1,0 +1,159 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {SPECIAL_CARD_CATALOG,initializeSpecialDeck,refillSpecialHand} from './specialCards.js';
+import {initialBattle} from './mathDuelEngine.js';
+import {
+ SPECIAL_COLLECTION_KEY,SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,
+ SPECIAL_PACK_SIZE,STARTER_SPECIAL_COUNTS,createSpecialCollection,
+ normalizeSpecialCollection,specialDeckCounts,validateSpecialDeck,equipSpecialDeck,
+ specialPackReward,openSpecialPack,readSpecialCollection,updateSpecialCollection,
+ claimFirstWinSpecialPack
+} from './specialDeckBuilder.js';
+const rng=()=>0;
+function storage(){
+ const values=new Map();return {getItem:key=>values.get(key)??null,
+  setItem:(key,value)=>values.set(key,value)};
+}
+const cardsOf=side=>[...side.specialHand,...side.specialDeck,...side.specialDiscard];
+test('30: starter collection owns six types and equips exactly 24 unique card slots',()=>{
+ const coll=createSpecialCollection(),counts=specialDeckCounts(coll.loadout);
+ assert.equal(coll.schemaVersion,1);
+ assert.equal(coll.loadout.length,SPECIAL_DECK_SIZE);
+ assert.deepEqual(SPECIAL_TYPES,Object.keys(SPECIAL_CARD_CATALOG));
+ assert.equal(SPECIAL_TYPES.length,6);
+ for(const type of SPECIAL_TYPES){
+  assert.equal(coll.owned[type],STARTER_SPECIAL_COUNTS[type]);
+  assert.equal(counts[type],4);
+ }
+ assert.equal(validateSpecialDeck(coll,coll.loadout).valid,true);
+ assert.equal(coll.packCredits,0);
+});
+test('30: custom deck can rebalance only genuinely owned copies, to copy limit six',()=>{
+ let collection=createSpecialCollection();
+ const base=[...collection.loadout];
+ const invalid=base.filter(type=>type!=='fusion-barrier').concat(Array(8).fill('fusion-barrier'));
+ assert.equal(invalid.length,28);
+ assert.equal(validateSpecialDeck(collection,invalid).reason,'deck_size');
+ const balanced=[...base];balanced[0]='shot-ion';
+ assert.equal(validateSpecialDeck(collection,balanced).reason,'not_owned');
+ collection={...collection,owned:{...collection.owned,'shot-ion':5}};
+ const next=equipSpecialDeck(collection,balanced);
+ assert.equal(next.loadout.filter(x=>x==='shot-ion').length,5);
+ assert.equal(next.loadout.filter(x=>x==='fusion-barrier').length,3);
+ assert.equal(collection.loadout.filter(x=>x==='fusion-barrier').length,4);
+ assert.equal(next.owned['shot-ion'],5);
+ const many=base.map((t,i)=>i<7?'shot-ion':t);
+ assert.equal(validateSpecialDeck({...next,owned:{...next.owned,'shot-ion':20}},many).reason,'copy_limit');
+});
+test('30: invalid/unknown/unowned special cards never enter an equipped deck',()=>{
+ const coll=createSpecialCollection();
+ for(const [candidate,reason] of [
+  [coll.loadout.slice(1),'deck_size'],
+  [[...coll.loadout.slice(0,-1),'bogus'],'unknown_card'],
+  [[...coll.loadout.slice(0,-1),'shot-ion'],'not_owned']
+ ]){
+  assert.equal(validateSpecialDeck(coll,candidate).reason,reason);
+  assert.throws(()=>equipSpecialDeck(coll,candidate));
+ }
+ assert.throws(()=>initializeSpecialDeck({},rng,['bogus']));
+});
+test('30: opening a pack requires an earned credit; three genuine cards are added',()=>{
+ const c=createSpecialCollection();
+ const denied=openSpecialPack(c,rng);
+ assert.equal(denied.opened,false);assert.strictEqual(denied.collection,c);
+ const granted=specialPackReward(c,'campaign:sector:1');
+ assert.equal(granted.granted,true);
+ const pack=openSpecialPack(granted.collection,rng);
+ assert.equal(pack.opened,true);
+ assert.equal(pack.drawn.length,SPECIAL_PACK_SIZE);
+ assert.deepEqual(pack.drawn,['fusion-barrier','fusion-barrier','fusion-barrier']);
+ assert.equal(pack.collection.owned['fusion-barrier'],7);
+ assert.equal(pack.collection.packCredits,0);
+ assert.equal(pack.collection.openedPacks,1);
+ assert.deepEqual(pack.collection.loadout,c.loadout);
+});
+test('30: packs only increase ownership; deck must be edited and saved manually',()=>{
+ const coll=createSpecialCollection();
+ const pack=openSpecialPack(specialPackReward(coll,'campaign:sector:2').collection,()=>.9);
+ const before=pack.collection.loadout;
+ const equipped=equipSpecialDeck(pack.collection,
+   before.map((t,i)=>i===0?'shot-corrosion':t));
+ assert.equal(equipped.loadout.length,24);
+ assert.equal(before[0],'fusion-barrier');
+ assert.notDeepEqual(equipped.loadout,before);
+});
+test('30: first-win reward cannot be farmed by replaying the same sector',()=>{
+ const s=storage();
+ const first=claimFirstWinSpecialPack('campaign',3,s);
+ const second=claimFirstWinSpecialPack('campaign',3,s);
+ const other=claimFirstWinSpecialPack('campaign',4,s);
+ assert.equal(first.granted,true);
+ assert.equal(second.granted,false);
+ assert.equal(other.granted,true);
+ assert.equal(readSpecialCollection(s).packCredits,2);
+ assert.equal(readSpecialCollection(s).claimedRewards.length,2);
+});
+test('30: trials and invalid modes cannot generate pack rewards',()=>{
+ const s=storage();
+ for(const [mode,id] of [['practice',1],['pvp',1],['campaign',-1],['adventure',0]]){
+  const r=claimFirstWinSpecialPack(mode,id,s);
+  assert.equal(r.granted,false);
+ }
+ assert.equal(readSpecialCollection(s).packCredits,0);
+});
+test('30: separate storage never overwrites or reinitializes ship collection',()=>{
+ const s=storage();
+ s.setItem('eclissi_ship_collection','KEEP_THIS_SAVE');
+ updateSpecialCollection(c=>specialPackReward(c,'adventure:sector:1').collection,s);
+ const first=readSpecialCollection(s);
+ assert.equal(first.packCredits,1);
+ assert.equal(s.getItem('eclissi_ship_collection'),'KEEP_THIS_SAVE');
+ assert.ok(s.getItem(SPECIAL_COLLECTION_KEY).includes('special'));
+});
+test('30: writing invalid collection must preserve previous serialized data',()=>{
+ const s=storage();
+ updateSpecialCollection(c=>c,s);
+ const before=s.getItem(SPECIAL_COLLECTION_KEY);
+ assert.throws(()=>updateSpecialCollection(c=>({...c,owned:{...c.owned,'shot-ion':-5}}),s));
+ assert.equal(s.getItem(SPECIAL_COLLECTION_KEY),before);
+ s.setItem(SPECIAL_COLLECTION_KEY,'{');
+ assert.throws(()=>updateSpecialCollection(c=>c,s));
+ assert.equal(s.getItem(SPECIAL_COLLECTION_KEY),'{');
+});
+test('30: custom equipped special deck actually changes both sides in a live battle',()=>{
+ const c=createSpecialCollection();
+ const granted={...c,owned:{...c.owned,'shot-piercing':5}};
+ const deck=equipSpecialDeck(granted,c.loadout.map((t,i)=>i===0?'shot-piercing':t)).loadout;
+ const b=initialBattle(1,{vitalPrototype:true,fleetIds:['N00'],shipLevel:5,
+   specialDeckTypes:deck},rng);
+ for(const side of [b.player,b.enemy]){
+  const all=cardsOf(side);
+  assert.equal(all.length,24);
+  assert.equal(all.filter(x=>x.type==='shot-piercing').length,5);
+  assert.equal(all.filter(x=>x.type==='fusion-barrier').length,3);
+  assert.equal(new Set(all.map(x=>x.id)).size,24);
+  assert.equal(side.specialHand.length,5);
+  assert.equal(side.hand.length,7);
+ }
+});
+test('30: repeated special-card cycles never duplicate or create owned instances',()=>{
+ const types=createSpecialCollection().loadout;
+ let side=initializeSpecialDeck({fleet:[{defense:{kind:'mother',parts:{command:{hp:10},
+   engine:{hp:10}},shield:{hp:100}}}],escorts:[],maneuvers:{},hand:[]},rng,types);
+ const ids=cardsOf(side).map(x=>x.id).sort();
+ for(let i=0;i<70;i++){
+  // Replace a card with ordinary discard+refill; ability semantics tested separately.
+  const [used,...rest]=side.specialHand;
+  side=refillSpecialHand({...side,specialHand:rest,
+   specialDiscard:[...side.specialDiscard,used]},rng);
+  assert.deepEqual(cardsOf(side).map(x=>x.id).sort(),ids);
+ }
+});
+test('30: storage migration can initialize on first access without affecting old modes',()=>{
+ const s=storage(),first=readSpecialCollection(s);
+ assert.equal(first.loadout.length,24);
+ assert.equal(s.getItem(SPECIAL_COLLECTION_KEY),null);
+ const same=normalizeSpecialCollection(first);
+ assert.deepEqual(same,first);
+ assert.equal(openSpecialPack(first,rng).reason,'no_pack');
+});
