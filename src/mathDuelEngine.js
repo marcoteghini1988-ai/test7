@@ -3,6 +3,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {PHASE16A_CAMPAIGN_PLANET_IDS,PHASE16A_TOTAL_SECTORS} from './newCombat/phase16ACatalog.js';
 import {VITAL_IDS,createMotherDefense,motherDestroyed,damageMotherShield,hitMotherPart} from './vitalDefense.js';
 import {buildLinkedEscorts,impactLinkedEscort,interceptMotherVolley} from './linkedEscorts.js';
+import {previewEscortedVolley} from './escortFiring.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
 export const SUIT_KEYS={'♥':'H','♦':'D','♣':'C','♠':'S'};
@@ -164,7 +165,8 @@ export function resetComboMemory(side){
  if(!side.fleet.some(v=>v.weapons.some(w=>w.memory?.length)))return side;
  return {...side,fleet:side.fleet.map(v=>({...v,weapons:v.weapons.map(w=>w.memory?.length?{...w,memory:[]}:w)}))};
 }
-export function previewVolley(side,cards){
+export function previewVolley(side,cards,weaponFocus='auto'){
+ if(Array.isArray(side.escorts))return previewEscortedVolley(side,cards,weaponFocus);
  const ammo=getAmmo(cards);const shots=[];const newFleet=side.fleet.map((v,vi)=>({ ...v,weapons:v.weapons.map(w=>({...w}))}));
  let memoryPending=false;
  for(const [vi,v] of newFleet.entries()){
@@ -221,11 +223,11 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
  const fleet=defender.fleet.map((v,i)=>i!==shipIndex?v:{...v,engines:{...v.engines,[op]:{...target,hp:target.hp-damage}}});
  return {defender:{...defender,fleet},damage,destroyed:damage>0&&damage>=target.hp};
 }
-export function dealHit(defender,attacker,op,_target,cards,preferredIndex=0,options={}){
+export function dealHit(defender,attacker,op,_target,cards,preferredIndex=0,options={},weaponFocus='auto'){
  const vi=chooseTarget(defender,op,preferredIndex);if(vi<0)return {defender,attacker,damage:0,destroyed:false,volley:[]};
- const volley=previewVolley(attacker,cards||[]);
+ const volley=previewVolley(attacker,cards||[],weaponFocus);
  const hit=applyPendingHit(defender,vi,op,volley.totalDamage,options);
- return {...hit,attacker:{...attacker,fleet:volley.fleet},volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage,memoryPending:volley.memoryPending};
+ return {...hit,attacker:{...attacker,fleet:volley.fleet,...(volley.escorts?{escorts:volley.escorts}:{})},volley:volley.shots,targetShip:vi,rawDamage:volley.totalDamage,memoryPending:volley.memoryPending};
 }
 export function findMoves(side,defender,targets){const moves=[];for(const op of supportedOperators(side)){
   for(let vi=0;vi<defender.fleet.length;vi++){
@@ -270,6 +272,6 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
  const player=vitalPrototype?withPrototypeMother(rawPlayer,targets):rawPlayer;
  const enemy=vitalPrototype?withPrototypeMother(rawEnemy,targets):rawEnemy;
  return {level,mode,player,enemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
-  targets,selected:[],target:'plus',targetVital:null,targetEscort:null,targetShip:0,shownPlayer:0,phase:'ready',
+  targets,selected:[],target:'plus',targetVital:null,targetEscort:null,weaponFocus:'auto',targetShip:0,shownPlayer:0,phase:'ready',
   effect:null,notice:vitalPrototype?'Indebolisci lo scudo e scegli le parti vitali da esporre.':'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }

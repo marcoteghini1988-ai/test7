@@ -37,7 +37,7 @@ export function escortArmamentFor(mother,slot){
 export function activeArmaments(side){
  const mother=side.fleet.flatMap((v,index)=>v.weapons.map(w=>({
   kind:'mother',vesselIndex:index,id:w.id,name:w.nome,
-  suits:w.seme_trigger==='*'?ALL_SEMES:[w.seme_trigger],
+  suits:w.tipo==='Combo a memoria'?(w.combo||'').split('@')[0].split('+'):w.seme_trigger==='*'?ALL_SEMES:[w.seme_trigger],
   sourceWeaponId:w.id
  })));
  const escorts=(side.escorts||[]).filter(e=>!e.defense.destroyed).map(e=>({
