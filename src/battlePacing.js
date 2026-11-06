@@ -40,3 +40,22 @@ export function recoverStalledHand(side,defender,targets,nowMs=Date.now(),rng=Ma
   recoveryReadyAt:nowMs+RECOVERY_COOLDOWN_MS};
  return {recovered:true,reason:'ok',side:next,replaced:replaced.id,drawn:hand[index].id};
 }
+
+export function battlePacingReport(game,endedAtMs=Date.now()){
+ const start=Number.isFinite(game?.combatStartedAt)?game.combatStartedAt:endedAtMs;
+ const elapsedSeconds=Math.max(0,Math.floor((endedAtMs-start)/1000));
+ const player=game?.player||{},enemy=game?.enemy||{};
+ return {
+  elapsedSeconds,
+  playerTwoCardShots:player.numericShotsTwo||0,
+  playerThreeCardShots:player.numericShotsThree||0,
+  enemyTwoCardShots:enemy.numericShotsTwo||0,
+  enemyThreeCardShots:enemy.numericShotsThree||0,
+  playerNumericCardsSpent:player.numericCardsSpent||0,
+  enemyNumericCardsSpent:enemy.numericCardsSpent||0,
+  playerDeckRecycles:player.reshuffles||0,
+  enemyDeckRecycles:enemy.reshuffles||0,
+  playerDeadlockRecovers:player.recoveryCount||0,
+  enemyDeadlockRecovers:enemy.recoveryCount||0
+ };
+}
