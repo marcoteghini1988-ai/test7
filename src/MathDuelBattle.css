@@ -691,3 +691,10 @@
  display:block;padding:5px 7px;border-radius:5px;
  background:#142641;border:1px solid #9cc8ff;color:#dceaff;font-size:10px;text-align:center
 }
+
+/* Punto 28 — firma numerica visibile sul vitale; nessuna modifica alla plancia. */
+.es-math-scope .vital-signature-hint{
+ grid-column:1/-1;line-height:1;font-style:normal;font-size:7px;font-weight:800;
+ white-space:nowrap;letter-spacing:0;color:#f6e3a7;text-align:left;
+}
+.es-math-scope .vital-part[aria-pressed="true"] .vital-signature-hint{color:#fff5ba}
