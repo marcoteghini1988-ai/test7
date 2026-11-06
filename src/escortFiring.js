@@ -3,6 +3,7 @@
 import {routedAmmo} from './escortArmory.js';
 import {effectiveGunDamage} from './fleetSystems.js';
 import {tacticalEscortDamage} from './escortTactics.js';
+import {prepareSideForAmmoRouting,mergeRoutedEscorts,adjustOutgoingVolley} from './fleetManeuvers.js';
 function accumulate(weapon,loaded,threshold){
  const ammo=(weapon.charge||0)+loaded;
  if(ammo<threshold){weapon.charge=ammo;return {bullets:0,charging:true};}
@@ -20,9 +21,11 @@ function memoryVolley(weapon,routing){
  return {bullets:ready?(totals[weapon.seme_trigger]||0):0,charging:!ready};
 }
 export function previewEscortedVolley(side,cards,focus='auto',context=null){
- const routing=routedAmmo(side,cards,focus);
+ const nowMs=Date.now();
+ const routingSide=prepareSideForAmmoRouting(side,nowMs).side;
+ const routing=routedAmmo(routingSide,cards,focus);
  const fleet=side.fleet.map(v=>({...v,weapons:v.weapons.map(w=>({...w}))}));
- const escorts=(side.escorts||[]).map(e=>({...e,weapon:{...e.weapon}}));
+ const escorts=(routingSide.escorts||[]).map(e=>({...e,weapon:{...e.weapon}}));
  const shots=[];let memoryPending=false;
  const usedSuits=new Set(routing.routing.filter(r=>r.weaponId).map(r=>r.suit));
  for(let vesselIndex=0;vesselIndex<fleet.length;vesselIndex++){
@@ -62,6 +65,7 @@ export function previewEscortedVolley(side,cards,focus='auto',context=null){
    charging:status.charging,
    charge:weapon.charge||0,kind:weapon.tipo,visual:'escort'});
  }
- return {fleet,escorts,shots,totalDamage:shots.reduce((sum,shot)=>sum+shot.damage,0),
-  memoryPending,routing:routing.routing};
+ const output={fleet,escorts:mergeRoutedEscorts(side,escorts),shots,
+  totalDamage:shots.reduce((sum,shot)=>sum+shot.damage,0),memoryPending,routing:routing.routing};
+ return adjustOutgoingVolley(output,side,nowMs,context||{});
 }
