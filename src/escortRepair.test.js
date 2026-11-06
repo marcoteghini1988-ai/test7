@@ -1,7 +1,7 @@
 // Punto 39: an owned SPECIAL card repairs a selected escort, not the mother.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {initialBattle} from './mathDuelEngine.js';
+import {initialBattle,applyPendingHit} from './mathDuelEngine.js';
 import {playSpecialCard,specialCardReadiness} from './specialCards.js';
 import {SUPPORT_RULES} from './specialSupport.js';
 const rng=()=>.5;
@@ -94,4 +94,22 @@ test('39: lost command or a currently docked escort blocks support, not the deck
  assert.strictEqual(refused.side,docked);
  const afterDock=playSpecialCard(docked,0,{escortSlot:0},9000,rng);
  assert.equal(afterDock.played,true);
+});
+
+// Integration: the damage comes from the real combat impact resolver.
+test('39: an actual attack on an escort shield can be repaired without changing either numeric hand',()=>{
+ const initial=battleSide();
+ const beforeEnemy=initial.escorts[1].defense.shield.hp;
+ const attack=applyPendingHit(initial,0,'plus',11,{escortIndex:1,nowMs:1000,hitId:'escort-real-impact'});
+ assert.equal(attack.reason,'shield');
+ assert.equal(attack.damage,Math.min(11,beforeEnemy));
+ assert.equal(attack.defender.escorts[1].defense.shield.hp,beforeEnemy-attack.damage);
+ const hand=attack.defender.hand.map(c=>c.id);
+ const specialIds=cardsOf(attack.defender).map(c=>c.id).sort();
+ const healed=playSpecialCard(attack.defender,0,{escortSlot:1},1001,rng);
+ assert.equal(healed.played,true);
+ assert.equal(healed.amount,attack.damage);
+ assert.equal(healed.side.escorts[1].defense.shield.hp,beforeEnemy);
+ assert.deepEqual(healed.side.hand.map(c=>c.id),hand);
+ assert.deepEqual(cardsOf(healed.side).map(c=>c.id).sort(),specialIds);
 });
