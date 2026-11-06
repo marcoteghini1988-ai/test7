@@ -138,3 +138,7 @@ Nel prototipo madre + scudiere, i componenti distrutti ora incidono sul combatti
 
 ## Scudiere: sette ruoli tattici (6 novembre 2026)
 Le famiglie in `src/escortArmory.js` applicano ora, tramite `src/escortTactics.js`, un ruolo difensivo o offensivo. **Guardia:** +8% intercettazione quando lo scudo madre è al 50% o meno. **Intercettore:** +10% contro colpi ai vitali. **Baluardo:** +12% con scudo madre al 25% o meno. **Assalto:** +25% danni agli scudi delle scudiere. **Incursore:** +25% danni ai vitali. **Assedio:** +35% danni allo scudo madre. **Artiglieria:** +20% danni agli scudi. I bonus all'intercettazione consumano scudo delle scudiere; la centralina KO continua a disabilitare l'intercettazione. Il seme resta un semplice instradamento di munizioni (una carta, una arma), non conferisce poteri. La previsione dei danni tiene conto del bersaglio scelto. Questi valori sono provvisori. Verifica `src/escortTactics.test.js`.
+
+
+## Punto 12 — Dottrine delle 17 flotte (6 novembre 2026)
+Le sette abilità di ruolo precedenti sono state mantenute e integrate con 17 dottrine di flotta. Ogni madre ha un bonus di attacco contro uno specifico bersaglio e un bonus difensivo sotto il 50% dello scudo. Le dottrine cessano di funzionare se viene distrutta la centralina. Il sistema non altera il significato dei semi né duplica le munizioni. Dettagli e valori provvisori nella scheda docs/PUNTO_12_DOTTRINE_FLOTTA.md. Verifica eseguita: 108 test logici su 108, senza compilazione completa o prova visiva browser.
