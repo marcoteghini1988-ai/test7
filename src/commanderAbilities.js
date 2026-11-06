@@ -114,7 +114,7 @@ export function commanderDefenseFactor(defender,attacker,context={}){
   case 'two_damaged_vitals':active=damaged(m)>=2;break;
   case 'no_shield':active=m.shield.hp<=0;break;
  }
- return active?1-a.value/100:1;
+ return active?(100-a.value)/100:1; // exact decimal factor for percentage defenses
 }
 // Update memory only on real resolved damage; avoid granting extra turns,
 // ammo, HP or status effects. Both human and AI use this event.
