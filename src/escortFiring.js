@@ -54,11 +54,11 @@ export function previewEscortedVolley(side,cards,focus='auto',context=null){
    {bullets:loaded,charging:false};
   const suit=routing.routing.find(item=>item.weaponId===weapon.id)?.suit||weapon.suits[0];
   const base=effectiveGunDamage(side.fleet[0]?.defense,'escort',status.bullets*weapon.damage);
-  const tactic=tacticalEscortDamage(weapon.role,base,context);
+  const tactic=tacticalEscortDamage(weapon.role,base,context,escort,side.fleet[0]?.defense);
   shots.push({vesselIndex:0,escortSlot:escort.slot,shipId:escort.parentShipId,
    weaponId:weapon.sourceWeaponId,escortWeaponId:weapon.id,weapon:weapon.name,
    suit,bullets:status.bullets,damagePerBullet:weapon.damage,
-   damage:tactic.damage,bonusDamage:tactic.bonus,tacticalRole:weapon.role,
+   damage:tactic.damage,bonusDamage:tactic.bonus,tacticalRole:weapon.role,tacticalDoctrine:tactic.doctrine,
    charging:status.charging,
    charge:weapon.charge||0,kind:weapon.tipo,visual:'escort'});
  }
