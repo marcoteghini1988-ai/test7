@@ -1,4 +1,4 @@
-// Point 30: tactical support effects are paid for by an actual SPECIAL card.
+// Points 30/39: tactical support effects are paid for by an actual SPECIAL card.
 // They never create damage or become free effects of numeric suits.
 import {restoreMotherShield} from './vitalDefense.js';
 import {bossNumericRepairAmount} from './bossNumericDecks.js';
