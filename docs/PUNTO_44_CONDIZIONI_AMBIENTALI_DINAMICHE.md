@@ -42,6 +42,8 @@ Tabella relativa alle **arene ordinarie**; le arene boss partono dai fattori esc
 
 Le intensità visive seguono le tre fasi. I livelli sono relegati all'area del campo (non coprono carte, pulsanti né HUD), hanno `pointer-events:none` e sono inseriti dopo il fondale ma dietro alle navi. La preferenza di accessibilità `prefers-reduced-motion` disabilita tutte le animazioni.
 
+Un badge indipendente in alto a sinistra mostra **CALMA / TURBOLENZA / PICCO** e il numero di attacchi validi mancanti al cambio. Non è interattivo e ha una descrizione accessibile per gli screen reader. L'indicazione testuale nel pannello **Regole** mostra i valori realmente attivi nella fase corrente, non soltanto le percentuali base.
+
 ## Moduli modificati
 - `src/battleArenas.js`: `arenaEnvironment`, `arenaPhaseModifiers`, fattori a fase, briefing contestuale.
 - `src/MathDuelBattle.jsx`: fase al lancio fissata nel colpo, passaggio a motore e visualizzazione, indicatore in testata e descrizioni nella guida.
