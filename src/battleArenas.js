@@ -123,7 +123,7 @@ export function arenaTacticalBriefing(arenaId,context={}){
   Object.freeze({id,label,activation,strategy,status})
  );
  if(effects.shieldDamageFactor){
-  const reduction=Math.round((1-effects.shieldDamageFactor)*100);
+  const reduction=percent(1-effects.shieldDamageFactor);
   const hp=context?.enemy?.fleet?.[0]?.defense?.shield?.hp;
   add('debris','Detriti e copertura',
    'Lo scudo della nave madre riceve '+reduction+'% di danni in meno quando intercetta un impatto reale.',
@@ -131,7 +131,7 @@ export function arenaTacticalBriefing(arenaId,context={}){
    Number.isFinite(hp)?hp>0?'Scudo madre avversario attivo.':'Scudo madre avversario esaurito.':'');
  }
  if(effects.tripleAttackFactor){
-  const increase=Math.round((effects.tripleAttackFactor-1)*100);
+  const increase=percent(effects.tripleAttackFactor-1);
   const count=context?.selectedCount;
   add('plasma','Plasma e raffiche',
    'Un attacco valido che consuma esattamente tre numeriche ottiene +'+increase+'% di danni.',
@@ -140,7 +140,7 @@ export function arenaTacticalBriefing(arenaId,context={}){
    Number.isInteger(count)?'Carte numeriche selezionate: '+count+' su 3 per la scarica potenziata.':'');
  }
  if(effects.ionDurationFactor){
-  const reduction=Math.round((1-effects.ionDurationFactor)*100);
+  const reduction=percent(1-effects.ionDurationFactor);
   add('ionic','Disturbo ionico',
    'Le ionizzazioni già applicate da una carta speciale reale durano il '+reduction+'% in meno.',
    'Non basare la difesa su un blocco ionico prolungato; conserva alternative di attacco e copertura.');
