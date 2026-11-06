@@ -10,7 +10,7 @@ import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVi
 import {activeArmaments} from './escortArmory.js';
 import {systemState} from './fleetSystems.js';
 import {chooseCombatMove} from './aiBattleTactics.js';
-import {recoverStalledHand} from './battlePacing.js';
+import {recoverStalledHand,battlePacingReport} from './battlePacing.js';
 import {vitalSignatureLabel,primaryVitalMathGate} from './modelSignatures.js';
 import {maneuverStatus,changeFormation,cancelFusion,recordManeuverEvent,prepareSideForAmmoRouting} from './fleetManeuvers.js';
 import {playSpecialCard,findFusionCardIndex,findCoverCardIndex,findVolleyCardIndex,specialCardDefinition,specialCardReadiness} from './specialCards.js';
@@ -469,7 +469,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const b=gameRef.current;
   if(b.phase==='intro'){
    const now=Date.now(),delay=nextAiActionDelay(Math.random,b.level,b.mode);
-   write({...b,phase:'ready',aiDueAt:now+delay});
+   write({...b,phase:'ready',aiDueAt:now+delay,combatStartedAt:now});
   }
  }
  useEffect(()=>{
@@ -856,7 +856,8 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   }
   realBattleRef.current=null;setFleetMenu(false);
  }
- function exitBattle(){const b=gameRef.current;if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){resultClaimed.current=true;const h=healthScore(b.player);onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,starsEarned:[true,h>=.65,h>=.9],matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),turnsElapsed:b.round}});}onExit?.();}
+ function exitBattle(){const b=gameRef.current;if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){resultClaimed.current=true;const h=healthScore(b.player);onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,starsEarned:[true,h>=.65,h>=.9],matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),turnsElapsed:b.round,
+  ...battlePacingReport(b,Date.now())}});}onExit?.();}
  const availableOps=supportedOperators(game.player);
  const playerSystemAlerts=game.vitalPrototype?VITAL_IDS
   .map(id=>({id,state:systemState(game.player.fleet[0].defense,id)}))
