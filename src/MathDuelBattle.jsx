@@ -527,7 +527,10 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(side==='player'){next.selected=[];next.targetShip=move.targetShip;}
   else next.shownPlayer=move.targetShip;
   next.effects=[...(prepared.effects||[]),effect];next.round+=1;
-  next.notice=side==='player'?'Attacco lanciato: prepara il prossimo':'L’IA ha sparato: puoi continuare';
+  const doctrinalShots=strike.volley.filter(shot=>shot.tacticalDoctrine);
+  next.notice=doctrinalShots.length?
+   'BONUS FLOTTA: '+doctrinalShots.map(shot=>shot.tacticalDoctrine).join(' / '):
+   side==='player'?'Attacco lanciato: prepara il prossimo':'L’IA ha sparato: puoi continuare';
   write(next);
   if(salvos.length)volleySound(salvos);else tone('click');
   later(()=>{
