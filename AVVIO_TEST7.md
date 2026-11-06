@@ -40,3 +40,7 @@ Specifiche complete: [docs/PUNTO_22_INTEGRAZIONE.md](docs/PUNTO_22_INTEGRAZIONE.
 
 ## Punto 25: protezione attiva
 In **MANOVRE**, seleziona **SCUDIERA 1**, poi gioca la carta **COPERTURA** dalla mano speciale. Non richiede 100 Sincronia; protegge dal primo successivo attacco alla madre entro 15 s, consumando fino al 75% del danno dallo scudo reale della scudiera. La carta viene sostituita immediatamente e non è cumulabile con una fusione. Documento: `docs/PUNTO_25_PROTEZIONE_MADRE.md`.
+
+
+## Punto 26: danni localizzati ai vitali
+Ogni sistema della madre entra in **AVARIA** quando rimane al 50% degli HP o meno, e in **KO** a zero HP. I danni influiscono realmente sulla flotta: motore -10%/-25%, armi madre -20%/-50%, centralina scudiere -15%/-40% con intercettazione disabilitata a KO, generatore scudi riparazioni dimezzate in avaria e scudo azzerato a KO. Le parti colpite devono essere esposte e richiedono la firma matematica corretta. I danni vengono applicati all'impatto; gli stati compaiono nella plancia. Regolamento completo: `docs/PUNTO_26_DANNI_LOCALIZZATI.md`. Prossimo blocco: Punto 27; audio e grafica definitiva più avanti.
