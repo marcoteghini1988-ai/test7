@@ -111,7 +111,7 @@ test('31: Leviatano non accredita il riciclo avvenuto dopo il lancio',()=>{
 });
 test('31: Risonanza richiede armi e semi reali, non inventati',()=>{
  const enemy=make('planet_char_6'),s=make('planet_char_17',9);
- assert.equal(bossNumericDamageFactor(s,enemy,{weaponKey:'W01',cards:[{suit:'♥'},{suit:'♠'}],escortShot:true}),1.14);
+ assert.equal(bossNumericDamageFactor(s,enemy,{weaponKey:'W01',cards:[{suit:'♥'},{suit:'♠'}],escortShot:true,motherShot:true}),1.14);
  const shot=rememberBossNumericImpact(s,enemy,{weaponKey:'W01'},{damage:7,motherDamage:7});
  assert.equal(bossNumericDamageFactor(shot.attacker,enemy,{weaponKey:'W02'}),1.08);
  assert.equal(bossNumericDamageFactor(shot.attacker,enemy,{weaponKey:'W01'}),1);
