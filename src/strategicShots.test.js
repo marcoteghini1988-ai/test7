@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {initialBattle,applyPendingHit} from './mathDuelEngine.js';
 import {damageMotherShield,exposeMotherPart} from './vitalDefense.js';
 import {SPECIAL_CARD_CATALOG,playSpecialCard,specialCardReadiness} from './specialCards.js';
-import {SHOT_RULES,armedShotEffects,armShotEffect,consumeArmedShotEffects,
+import {SHOT_COMBO_NAMES,shotCombinationName,SHOT_RULES,armedShotEffects,armShotEffect,consumeArmedShotEffects,
  previewStrategicImpact,strategicStatus,STRATEGIC_EFFECT_LABELS} from './strategicShots.js';
 import {interceptManeuverVolley} from './fleetManeuvers.js';
 const rnd=()=>0;
@@ -165,4 +165,30 @@ test('27: cards that are unavailable do not consume themselves',()=>{
  const used=playSpecialCard(a,0,{escortSlot:0},time,rnd);
  assert.equal(used.played,false);assert.equal(used.reason,'already_armed');
  assert.equal(used.side.specialUses,0);
+});
+
+test('30: all three compatible tactical pairs have a unique combo name',()=>{
+ const ids=['shot-piercing','shot-ion','shot-corrosion'];
+ for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++){
+  const pair=[ids[i],ids[j]],name=shotCombinationName(pair);
+  assert.ok(name);
+  assert.equal(shotCombinationName([...pair].reverse()),name);
+  assert.equal(name,SHOT_COMBO_NAMES[[...pair].sort().join('+')]);
+ }
+});
+test('30: repeated or foreign special effects cannot become an offensive combo',()=>{
+ assert.equal(shotCombinationName(['shot-ion','shot-ion']),null);
+ assert.equal(shotCombinationName(['fusion-barrier','shot-ion']),null);
+ assert.equal(shotCombinationName(['shot-ion']),null);
+ assert.equal(shotCombinationName(['shot-ion','shot-corrosion','shot-piercing']),null);
+});
+test('30: named combo uses existing individual mechanics and no invented damage',()=>{
+ const s=withoutEscorts(makeSide());
+ const combo=applyPendingHit(s,0,'plus',20,{
+  nowMs:time,strikeEffects:['shot-ion','shot-corrosion']});
+ assert.equal(shotCombinationName(combo.strategicApplied),'DISGREGAZIONE IONICA');
+ assert.equal(combo.motherDamage,20);
+ assert.equal(combo.strategicCorrosionBonus,0);
+ assert.equal(combo.defender.strategicStatuses.ionizedUntil,time+SHOT_RULES.ionizedDurationMs);
+ assert.equal(combo.defender.strategicStatuses.corrodedUntil,time+SHOT_RULES.corrosionDurationMs);
 });
