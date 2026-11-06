@@ -671,3 +671,8 @@
  border:1px solid #92c9a8;background:#153d34;color:#d8ffeb;
  font-size:10px;text-align:center;
 }
+
+/* Punto 26: feedback funzionale, senza alterare la plancia 9:16. */
+.es-math-scope .vital-part.impaired{border-color:#f5b756;background:#3a2b19;color:#fff0ce;opacity:1}
+.es-math-scope .vital-part.impaired .vital-part-track i{background:linear-gradient(90deg,#db8031,#f9db82)}
+.es-math-scope .vital-part.impaired small{color:#ffdf8f;font-weight:800}
