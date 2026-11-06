@@ -4,7 +4,7 @@
 > **STATO ATTUALE — 6 novembre 2026**  
 > La sorgente di continuità della scaletta ufficiale di 53 punti è [MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md](docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md).  
 > **Punto 22B:** due mani separate (7 numeriche + 5 speciali), attivazione delle fusioni esclusivamente giocando una speciale. **Punto 23:** collaborazione madre/scudiere verificata; sinergie avanzate ancora da completare. **Punto 24 e successivi:** proseguire sulle meccaniche e rimandare audio/visivo.  
-> Verifica del codice: 196 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
+> Verifica del codice: 200 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
 > Il ramo **work/test8-punto22-fusioni-2026-11-06** contiene il lavoro, mentre **test7/main** resta intatto.
 
 
@@ -160,3 +160,7 @@ I 7 valori numerici e le 5 carte speciali costituiscono **due mani distinte**. S
 
 ## Punto 23 ufficiale — Cooperazione navicelle
 Madre e scudiere possono sparare e proteggersi nello stesso combattimento: le numeriche sono assegnate a un solo cannone per carta, le scudiere assorbono danni con gli HP effettivi e si applicano ruoli e dottrine. I nuovi test d'integrazione sono in `src/fleetCooperation.test.js`. Resta da ampliare la cooperazione avanzata non basata sulla fusione. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
+
+
+## Punto 24 — Identità delle 34 scudiere
+I 17 modelli madre hanno la scudiera 1 difensiva (Guardia/Intercettore/Baluardo) e la scudiera 2 offensiva (Assalto/Incursore/Assedio/Artiglieria). Nuovi test automatici in `src/escortRolesMatrix.test.js` e rapporto in `docs/PUNTO_24_RUOLI_FLOTTA.md`. I ruoli avanzati sono ancora aperti e il successivo blocco è il punto 25, protezione attiva della madre.
