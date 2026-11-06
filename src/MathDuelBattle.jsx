@@ -12,6 +12,7 @@ import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVi
 import {activeArmaments} from './escortArmory.js';
 import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
 import {commanderAbilityStatus,commanderAttackFactor,commanderDefenseFactor,rememberCommanderImpact} from './commanderAbilities.js';
+import {arenaAttackFactor,arenaMotherDefenseFactor,applyArenaIonResistance,applyArenaCalculationSync} from './battleArenas.js';
 import {systemState} from './fleetSystems.js';
 import {chooseCombatMove} from './aiBattleTactics.js';
 import {recoverStalledHand,battlePacingReport} from './battlePacing.js';
@@ -684,7 +685,8 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(next[side].maneuvers){
    const credited=recordManeuverEvent(next[side].maneuvers,
     {id:'calc:'+effect.id+':'+side,type:'valid_calculation'});
-   next[side]=applyBossNumericSync({...next[side],maneuvers:credited.state},credited.credited);
+   next[side]=applyBossNumericSync(applyArenaCalculationSync(
+     {...next[side],maneuvers:credited.state},next.arena?.id,credited.credited),credited.credited);
   }
   if(side==='player'){next.selected=[];next.targetShip=move.targetShip;}
   else next.shownPlayer=move.targetShip;
@@ -715,7 +717,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    options.hitId=effect.id+':'+receiver;
    options.strikeEffects=effect.strikeEffects;
    options.nowMs=Date.now();
-   const context={op:effect.op,cards,vitalId:effect.vitalId,escortIndex:effect.escortIndex,nowMs:Date.now(),
+   const context={op:effect.op,cards,vitalId:effect.vitalId,escortIndex:effect.escortIndex,nowMs:options.nowMs,legalAttack:true,
     weaponKey:strongest?.weaponId||strongest?.id||null,reshufflesAtLaunch:attacker.reshuffles||0,
     escortShot:strike.volley.some(shot=>shot.escortSlot!=null),motherShot:strike.volley.some(shot=>shot.escortSlot==null),strikeEffects:effect.strikeEffects};
    const originalSync=state[receiver].maneuvers?.sync??0;
@@ -725,10 +727,13 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    const commanderDefense=commanderDefenseFactor(state[receiver],state[side],context);
    // Both passive families affect only a real projectile at its arrival.
    // Total offense cap +35%, total mother-only mitigation cap 35%.
-   const boostedDamage=Math.floor(effect.rawDamage*Math.min(1.35,offense*commanderOffense)+1e-9);
-   options.motherDefenseFactor=Math.max(.65,defense*commanderDefense);
+   const arenaOffense=arenaAttackFactor(state.arena?.id,context);
+   const arenaDefense=arenaMotherDefenseFactor(state.arena?.id,state[receiver],context);
+   const boostedDamage=Math.floor(effect.rawDamage*Math.min(1.35,offense*commanderOffense*arenaOffense)+1e-9);
+   options.motherDefenseFactor=Math.max(.65,defense*commanderDefense*arenaDefense);
    const result=applyPendingHit(state[receiver],effect.targetShip,effect.op,boostedDamage,options);
-   const remembered=rememberBossNumericImpact(state[side],result.defender,context,result);
+   const arenaDefender=applyArenaIonResistance(result.defender,state.arena?.id,result.strategicApplied,options.nowMs);
+   const remembered=rememberBossNumericImpact(state[side],arenaDefender,context,result);
    const commanderRemembered=rememberCommanderImpact(remembered.attacker,remembered.defender,context,result);
    state[side]=commanderRemembered.attacker;
    state[receiver]=applyBossNumericSync(commanderRemembered.defender,(commanderRemembered.defender.maneuvers?.sync??0)-originalSync);
@@ -977,7 +982,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   <div ref={rootRef} className="es-root" data-intro={intro?.id} data-intro-motion={intro&&reducedIntro?'reduced':undefined}
    style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
    <ArenaBackdrop/>
-   <div className="top-brand">ECLISSI <b>STELLARE</b></div>
+   <div className="top-brand">ECLISSI <b>STELLARE</b><small title={game.arena?.description} aria-label={'Arena tattica: '+(game.arena?.name||'Piattaforma di Titanio')}>{'ARENA · '+(game.arena?.shortLabel||'TITANIO')}</small></div>
    <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
    <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>{game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effects={game.effects} onSelectEscort={selectEscort} selectedEscort={game.targetEscort} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
