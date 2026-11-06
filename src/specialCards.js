@@ -18,10 +18,20 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
  'shot-corrosion':Object.freeze({type:'shot-corrosion',name:'Corrosione',short:'CORROSIONE',
    family:'volley',description:'Un colpo allo scudo madre lo indebolisce per il colpo successivo; non perfora i vitali.'})
 });
-const CARD_SEQUENCE=Object.freeze(Array.from({length:24},(_,i)=>({
- id:'special-'+String(i+1).padStart(2,'0'),
- type:['fusion-barrier','fusion-strike','tactical-cover','shot-piercing','shot-ion','shot-corrosion'][i%6]
-})));
+export const SPECIAL_DECK_SIZE=24;
+export const SPECIAL_DEFAULT_TYPES=Object.freeze(Array.from({length:SPECIAL_DECK_SIZE},(_,i)=>
+ ['fusion-barrier','fusion-strike','tactical-cover','shot-piercing','shot-ion','shot-corrosion'][i%6]));
+export function makeSpecialInstances(typeList=SPECIAL_DEFAULT_TYPES){
+ if(!Array.isArray(typeList)||typeList.length!==SPECIAL_DECK_SIZE||
+    typeList.some(type=>!Object.hasOwn(SPECIAL_CARD_CATALOG,type)))
+  throw new Error('Mazzo speciale non valido');
+ const copies={};
+ for(const type of typeList){
+  copies[type]=(copies[type]||0)+1;
+  if(copies[type]>6)throw new Error('Troppe copie di una speciale');
+ }
+ return typeList.map((type,i)=>({id:'special-'+String(i+1).padStart(2,'0'),type}));
+}
 function sample01(rng){
  const value=Number(rng());
  return Number.isFinite(value)?Math.min(.999999999999,Math.max(0,value)):0;
@@ -45,10 +55,11 @@ export function refillSpecialHand(side,rng=Math.random){
  }
  return {...side,specialHand:hand,specialDeck:deck,specialDiscard:discard};
 }
-export function initializeSpecialDeck(side,rng=Math.random){
+export function initializeSpecialDeck(side,rng=Math.random,loadout=null){
  if(side.specialHand&&side.specialDeck&&side.specialDiscard)return side;
+ const cards=makeSpecialInstances(loadout??SPECIAL_DEFAULT_TYPES);
  return refillSpecialHand({...side,specialHand:[],
-  specialDeck:shuffled(CARD_SEQUENCE.map(card=>({...card})),rng),specialDiscard:[],specialUses:0},rng);
+  specialDeck:shuffled(cards,rng),specialDiscard:[],specialUses:0},rng);
 }
 export function specialCardDefinition(card){
  return card?SPECIAL_CARD_CATALOG[card.type]??null:null;
