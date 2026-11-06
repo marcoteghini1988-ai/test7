@@ -256,10 +256,14 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
    maneuvers=recordManeuverEvent(maneuvers,{id:'intercept:'+options.hitId,type:'escort_interception',amount:interception.intercepted}).state;
   const previousSystemState=options.vitalId?systemState(vessel.defense,options.vitalId):null;
   const realMotherPacket=interception.remaining+strategic.piercingBypass;
+  // Passive difensive applicate solo al pacchetto che raggiunge la madre,
+  // DOPO le intercettazioni: non regalano protezioni alle scudiere.
+  const motherFactor=Number.isFinite(options.motherDefenseFactor)?Math.max(0,Math.min(1,options.motherDefenseFactor)):1;
+  const reducedMotherPacket=Math.floor(realMotherPacket*motherFactor+1e-9);
   const shieldPacket=strategic.shield
-   ?strategicShieldDamage(realMotherPacket,strategic.corrosionActive):realMotherPacket;
+   ?strategicShieldDamage(reducedMotherPacket,strategic.corrosionActive):reducedMotherPacket;
   const detail=options.vitalId
-   ?hitMotherPart(vessel.defense,options.vitalId,realMotherPacket,options.cards,options.signatureOverride)
+   ?hitMotherPart(vessel.defense,options.vitalId,reducedMotherPacket,options.cards,options.signatureOverride)
    :damageMotherShield(vessel.defense,shieldPacket);
   const appliedStrategic=finalizeStrategicImpact(defender,strategic,strikeEffects,nowMs,
    strategic.shield?detail.damage:0);
