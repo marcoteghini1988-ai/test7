@@ -913,10 +913,12 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    write({...b,player:{...b.player,fleet:refreshed.player.fleet,escorts:refreshed.player.escorts,
      maneuvers:refreshed.player.maneuvers,specialHand:refreshed.player.specialHand,
      specialDeck:refreshed.player.specialDeck,specialDiscard:refreshed.player.specialDiscard,specialUses:0,
+     bossNumericDeck:refreshed.player.bossNumericDeck,
      armedVolleyEffects:[],strategicStatuses:{}},
     enemy:{...b.enemy,fleet:refreshed.enemy.fleet,escorts:refreshed.enemy.escorts,
      maneuvers:refreshed.enemy.maneuvers,specialHand:refreshed.enemy.specialHand,
      specialDeck:refreshed.enemy.specialDeck,specialDiscard:refreshed.enemy.specialDiscard,specialUses:0,
+     bossNumericDeck:refreshed.enemy.bossNumericDeck,
      armedVolleyEffects:[],strategicStatuses:{}},
     vitalPrototype:refreshed.vitalPrototype,weaponFocus:'auto',targetVital:null,targetEscort:null,target:'plus',targetShip:0,shownPlayer:0});
   }
