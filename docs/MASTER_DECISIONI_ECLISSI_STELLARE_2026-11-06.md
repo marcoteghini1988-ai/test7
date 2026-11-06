@@ -161,3 +161,12 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - **Punti 37–38:** due effetti speciali offensivi distinti consentiti per un colpo matematico valido, il terzo rifiutato; reintegro immediato delle cinque speciali. Nuovi test di regressione sul riciclo.
 - **Punto 39:** catalogo di otto tipologie operativo, ancora da ampliare dopo verifica delle meccaniche e prove pratiche. Nessuna nuova carta introdotta senza ruolo distinto.
 - Resta necessario controllare la nuova esecuzione CI e provarne la giocabilità su telefono. Non anticipare la fase audiovisiva finale.
+
+
+### Proseguimento del punto 39 — Riparazione Scudiera (6 novembre 2026)
+- Aggiunta nona carta speciale `support-escort-repair`: ripara **fino a 15 HP dello scudo di una scudiera selezionata** usando una copia reale, senza creare una nuova scudiera, rianimare distrutte o oltrepassare il massimo.
+- Il bersaglio della riparazione può avere scudo a 0 se la scudiera non è distrutta. Centrale madre KO, scudiera fusa ancora agganciata, scudo pieno o bersaglio assente impediscono l'uso e non consumano la carta.
+- Il giocatore sceglie la scudiera dal pannello, l'IA usa lo stesso percorso con la carta effettivamente nella sua mano; nessuna modifica alle sette numeriche.
+- Collezioni precedenti nello schema v1 senza la nuova tipologia vengono migrate in lettura con 0 copie del solo nuovo tipo. Non azzerare gli sblocchi; la nona carta può arrivare dai pacchetti, senza assegnazione automatica.
+- Aggiunti `src/escortRepair.test.js` e test di migrazione/acquisizione in `src/specialDeckBuilder.test.js`.
+- Resta aperta la verifica della nuova CI, il playtest, il bilanciamento del valore 15 e il catalogo speciale definitivo. Fase audiovisiva invariata e rinviata. Per dettagli: `docs/PUNTI_32_39_CONTINUITA_CARTE_SPECIALI.md`.
