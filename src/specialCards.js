@@ -23,7 +23,9 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
  'support-status-purge':Object.freeze({type:'support-status-purge',name:'Pulizia Sistemi',short:'PURIFICAZIONE',
    family:'support',description:'Rimuove Ionizzazione e Corrosione attive dalla propria madre, senza creare HP.'})
 });
+// Regole confermate il 6 novembre 2026: dimensione mazzo e limite per tipo.
 export const SPECIAL_DECK_SIZE=24;
+export const SPECIAL_DECK_COPY_LIMIT=6;
 export const SPECIAL_DEFAULT_TYPES=Object.freeze(Array.from({length:SPECIAL_DECK_SIZE},(_,i)=>
  ['fusion-barrier','fusion-strike','tactical-cover','shot-piercing','shot-ion','shot-corrosion'][i%6]));
 export function makeSpecialInstances(typeList=SPECIAL_DEFAULT_TYPES){
@@ -33,7 +35,7 @@ export function makeSpecialInstances(typeList=SPECIAL_DEFAULT_TYPES){
  const copies={};
  for(const type of typeList){
   copies[type]=(copies[type]||0)+1;
-  if(copies[type]>6)throw new Error('Troppe copie di una speciale');
+  if(copies[type]>SPECIAL_DECK_COPY_LIMIT)throw new Error('Troppe copie di una speciale');
  }
  return typeList.map((type,i)=>({id:'special-'+String(i+1).padStart(2,'0'),type}));
 }
