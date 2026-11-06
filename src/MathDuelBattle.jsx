@@ -994,18 +994,10 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const unchanged=sameSpecialDeck&&fleet.length===b.player.fleet.length&&fleet.every((v,i)=>v.id===b.player.fleet[i].id&&v.level===b.player.fleet[i].level);
   if(unchanged){if(b!==gameRef.current)write(b);}
   else{
-   const refreshed=initialBattle(b.level,{...options,...bossChoices(Boolean(b.practice)),...commanderChoices(),vitalPrototype:true,arenaPlanetId:bossPlanetId,arenaSectorLevel:bossSectorLevel,specialDeckTypes:equippedTypes},Math.random,b.mode);
-   write({...b,player:{...b.player,fleet:refreshed.player.fleet,escorts:refreshed.player.escorts,
-     maneuvers:refreshed.player.maneuvers,specialHand:refreshed.player.specialHand,
-     specialDeck:refreshed.player.specialDeck,specialDiscard:refreshed.player.specialDiscard,specialUses:0,
-     bossNumericDeck:refreshed.player.bossNumericDeck,commander:refreshed.player.commander,
-     armedVolleyEffects:[],strategicStatuses:{}},
-    enemy:{...b.enemy,fleet:refreshed.enemy.fleet,escorts:refreshed.enemy.escorts,
-     maneuvers:refreshed.enemy.maneuvers,specialHand:refreshed.enemy.specialHand,
-     specialDeck:refreshed.enemy.specialDeck,specialDiscard:refreshed.enemy.specialDiscard,specialUses:0,
-     bossNumericDeck:refreshed.enemy.bossNumericDeck,commander:refreshed.enemy.commander,
-     armedVolleyEffects:[],strategicStatuses:{}},
-    vitalPrototype:refreshed.vitalPrototype,weaponFocus:'auto',targetVital:null,targetEscort:null,target:'plus',targetShip:0,shownPlayer:0});
+   // Un nuovo schieramento richiede una vera nuova partita: non mescolare
+   // firme, bersagli, mazzi numerici e HP dello scontro precedente.
+   setIntroIndex(0);
+   write(startBattle(options,!!b.practice));
   }
   realBattleRef.current=null;setFleetMenu(false);
  }
