@@ -119,7 +119,7 @@ test('46: tutti i 120 settori si inizializzano con mani reali 7+5 e arene corret
   assert.ok(Number.isFinite(healthScore(g.player)));
   assert.ok(Number.isFinite(healthScore(g.enemy)));
   if(local===10)assert.equal(g.enemy.bossNumericDeck?.id,planet.deck);
-  else assert.equal(g.enemy.bossNumericDeck,null);
+  else assert.equal(g.enemy.bossNumericDeck??null,null);
   sectors++;
  }
  assert.equal(sectors,120);
@@ -130,12 +130,11 @@ test('46: 12 boss vengono colpiti attraverso formula, munizioni vere e risolutor
  for(const planet of PHASE16A_CAMPAIGN_PLANETS){
   const {game}=playableBoss(planet);
   const before=structuredClone(game);
-  const {impact,strike}=fireRealShieldImpact(game,'player',7);
+  const {impact,strike,cards}=fireRealShieldImpact(game,'player',7);
   assert.ok(strike.rawDamage>0);
   assert.ok(impact.defender.fleet[0].defense.shield.hp<=before.enemy.fleet[0].defense.shield.hp);
   assert.deepEqual(game,before,'Il risolutore non deve mutare lo stato iniziale');
-  assert.equal(impact.attacker.numericCardsSpent,2+game.player.numericCardsSpent||
-   impact.attacker.numericCardsSpent);
+  assert.equal(impact.attacker.numericCardsSpent,cards.length+(game.player.numericCardsSpent||0));
   checked++;
  }
  assert.equal(checked,12);
