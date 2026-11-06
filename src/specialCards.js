@@ -2,6 +2,7 @@
 // nessun potere deriva automaticamente dai semi delle carte numeriche.
 import {startFusion,activateTacticalCover} from './fleetManeuvers.js';
 import {armShotEffect,armedShotEffects,SHOT_RULES} from './strategicShots.js';
+import {useSupportCard} from './specialSupport.js';
 
 export const SPECIAL_HAND_SIZE=5;
 export const SPECIAL_CARD_CATALOG=Object.freeze({
@@ -16,7 +17,11 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
  'shot-ion':Object.freeze({type:'shot-ion',name:'Impulso Ionico',short:'IONICO',
    family:'volley',description:'Un colpo effettivo allo scudo madre riduce per poco tempo le intercettazioni automatiche nemiche.'}),
  'shot-corrosion':Object.freeze({type:'shot-corrosion',name:'Corrosione',short:'CORROSIONE',
-   family:'volley',description:'Un colpo allo scudo madre lo indebolisce per il colpo successivo; non perfora i vitali.'})
+   family:'volley',description:'Un colpo allo scudo madre lo indebolisce per il colpo successivo; non perfora i vitali.'}),
+ 'support-shield-repair':Object.freeze({type:'support-shield-repair',name:'Riparazione Scudo',short:'RIPARAZIONE',
+   family:'support',description:'Ripara fino a 20 HP dello scudo madre. Il generatore danneggiato riduce l’efficacia; a KO blocca la riparazione.'}),
+ 'support-status-purge':Object.freeze({type:'support-status-purge',name:'Pulizia Sistemi',short:'PURIFICAZIONE',
+   family:'support',description:'Rimuove Ionizzazione e Corrosione attive dalla propria madre, senza creare HP.'})
 });
 export const SPECIAL_DECK_SIZE=24;
 export const SPECIAL_DEFAULT_TYPES=Object.freeze(Array.from({length:SPECIAL_DECK_SIZE},(_,i)=>
@@ -87,6 +92,10 @@ export function specialCardReadiness(side,handIndex,escortSlot,nowMs=Date.now())
  else if(definition.family==='volley'){
   const armed=armShotEffect(side,definition.type);
   return {ready:armed.armed,reason:armed.reason,definition,armedSide:armed.side};
+ }else if(definition.family==='support'){
+  const support=useSupportCard(side,definition.type,nowMs);
+  return {ready:support.activated,reason:support.reason,definition,
+   supportSide:support.side,amount:support.amount||0};
  }else return {ready:false,reason:'ability_unavailable',definition};
  return {ready:!!(action.started||action.activated),reason:action.reason,state:action.state,definition};
 }
@@ -95,8 +104,12 @@ export function playSpecialCard(side,handIndex,{escortSlot}={},nowMs=Date.now(),
  if(!ready.ready)return {played:false,reason:ready.reason,side};
  const hand=[...side.specialHand];
  const [used]=hand.splice(handIndex,1);
- const next=refillSpecialHand({...side,...(ready.armedSide?{armedVolleyEffects:ready.armedSide.armedVolleyEffects}:{maneuvers:ready.state}),
+ const patch=ready.supportSide?{fleet:ready.supportSide.fleet,
+  strategicStatuses:ready.supportSide.strategicStatuses}:
+  ready.armedSide?{armedVolleyEffects:ready.armedSide.armedVolleyEffects}:
+  {maneuvers:ready.state};
+ const next=refillSpecialHand({...side,...patch,
   specialHand:hand,specialDiscard:[...side.specialDiscard,used],
   specialUses:(side.specialUses||0)+1},rng);
- return {played:true,reason:'ok',side:next,card:used,definition:ready.definition};
+ return {played:true,reason:'ok',side:next,card:used,definition:ready.definition,amount:ready.amount||0};
 }
