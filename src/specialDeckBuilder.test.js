@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SPECIAL_CARD_CATALOG,initializeSpecialDeck,refillSpecialHand} from './specialCards.js';
+import {SPECIAL_CARD_CATALOG,initializeSpecialDeck,refillSpecialHand,makeSpecialInstances} from './specialCards.js';
 import {initialBattle} from './mathDuelEngine.js';
 import {
  SPECIAL_COLLECTION_KEY,SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,
@@ -44,6 +44,27 @@ test('30: custom deck can rebalance only genuinely owned copies, to copy limit s
  assert.equal(next.owned['shot-ion'],5);
  const many=base.map((t,i)=>i<7?'shot-ion':t);
  assert.equal(validateSpecialDeck({...next,owned:{...next.owned,'shot-ion':20}},many).reason,'copy_limit');
+});
+test('33/35: exactly 24 cards and at most 6 real copies per type in builder AND battle engine',()=>{
+ assert.equal(SPECIAL_DECK_SIZE,24);
+ assert.equal(SPECIAL_DECK_COPY_LIMIT,6);
+ const starter=createSpecialCollection();
+ const collection={...starter,owned:{...starter.owned,'shot-ion':20}};
+ const legal=[...Array(6).fill('shot-ion'),
+  ...starter.loadout.filter(type=>type!=='shot-ion').slice(0,18)];
+ assert.equal(legal.length,24);
+ assert.equal(validateSpecialDeck(collection,legal).valid,true);
+ assert.equal(equipSpecialDeck(collection,legal).loadout.length,24);
+ assert.equal(makeSpecialInstances(legal).length,24);
+ const illegal=[...legal];illegal[6]='shot-ion';
+ assert.equal(validateSpecialDeck(collection,illegal).reason,'copy_limit');
+ assert.throws(()=>makeSpecialInstances(illegal),/Troppe copie/);
+ for(const short of [legal.slice(1),legal.slice(0,23)]){
+  assert.equal(validateSpecialDeck(collection,short).reason,'deck_size');
+  assert.throws(()=>makeSpecialInstances(short),/Mazzo speciale non valido/);
+ }
+ assert.equal(validateSpecialDeck(collection,[...legal,legal[0]]).reason,'deck_size');
+ assert.throws(()=>makeSpecialInstances([...legal,legal[0]]),/Mazzo speciale non valido/);
 });
 test('30: invalid/unknown/unowned special cards never enter an equipped deck',()=>{
  const coll=createSpecialCollection();
