@@ -6,6 +6,8 @@ import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth,projecti
 import {ASSET_ROOT,CARD_SUIT_COLORS,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
 import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
+import SpecialDeckPanel from './SpecialDeckPanel.jsx';
+import {readSpecialCollection,claimFirstWinSpecialPack,specialDeckCounts} from './specialDeckBuilder.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVitalSignature} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
 import {systemState} from './fleetSystems.js';
@@ -371,6 +373,7 @@ function FleetSetup({onClose,onStart,onEquip,collection,selected,setSelected,ene
     selected={loadout.includes(card.instanceId)} onSelect={()=>toggleOwned(card.instanceId)}/>)}</div>
    {error&&<p className="fleet-match-warning" role="alert">{error}</p>}
   </>:<p className="fleet-match-warning" role="alert">Il salvataggio della collezione non è leggibile. Puoi accedere alla flotta di prova.</p>}
+  <SpecialDeckPanel compact/>
   <div className="fleet-setup-actions"><button className="es-button" disabled={saving} onClick={onClose}>ANNULLA</button>
    {practice?<button className="es-button primary" disabled={!matchup.compatible} onClick={onStart}>INIZIA DUELLO</button>
     :<button className="es-button primary" disabled={saving||!loadout.length} onClick={equip}>SALVA E SCHIERA</button>}
@@ -419,7 +422,12 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  const [introIndex,setIntroIndex]=useState(0);
  const [reducedIntro,setReducedIntro]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
  function startBattle(options,practice=false){
-  const b=initialBattle(Math.max(1,sectorNumber),{...options,vitalPrototype:true},Math.random,gameMode);
+  // Owned special cards are read from their independent persistent collection.
+  // Never overwrite an unreadable save or block the battle.
+  let specialDeckTypes=null;
+  try{specialDeckTypes=readSpecialCollection().loadout;}catch{}
+  const b=initialBattle(Math.max(1,sectorNumber),
+   {...options,vitalPrototype:true,specialDeckTypes},Math.random,gameMode);
   b.practice=practice;
   b.phase='intro';
   if(!practice)b.player.ether=Math.max(0,Number(ether)||0);
@@ -840,10 +848,17 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const options=collectionBattleOptions(next),b=realBattleRef.current??gameRef.current;
   setCollection(next);
   const {fleet}=newShip(b.level,false,options);
-  const unchanged=fleet.length===b.player.fleet.length&&fleet.every((v,i)=>v.id===b.player.fleet[i].id&&v.level===b.player.fleet[i].level);
+  let equippedTypes=null;
+  try{equippedTypes=readSpecialCollection().loadout;}catch{}
+  const existingTypes=[...(b.player.specialHand||[]),...(b.player.specialDeck||[]),
+   ...(b.player.specialDiscard||[])].map(card=>card.type);
+  const counts=specialDeckCounts(existingTypes);
+  const wantedCounts=specialDeckCounts(equippedTypes);
+  const sameSpecialDeck=!equippedTypes||Object.keys(wantedCounts).every(type=>counts[type]===wantedCounts[type]);
+  const unchanged=sameSpecialDeck&&fleet.length===b.player.fleet.length&&fleet.every((v,i)=>v.id===b.player.fleet[i].id&&v.level===b.player.fleet[i].level);
   if(unchanged){if(b!==gameRef.current)write(b);}
   else{
-   const refreshed=initialBattle(b.level,{...options,vitalPrototype:true},Math.random,b.mode);
+   const refreshed=initialBattle(b.level,{...options,vitalPrototype:true,specialDeckTypes:equippedTypes},Math.random,b.mode);
    write({...b,player:{...b.player,fleet:refreshed.player.fleet,escorts:refreshed.player.escorts,
      maneuvers:refreshed.player.maneuvers,specialHand:refreshed.player.specialHand,
      specialDeck:refreshed.player.specialDeck,specialDiscard:refreshed.player.specialDiscard,specialUses:0,
@@ -856,8 +871,23 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   }
   realBattleRef.current=null;setFleetMenu(false);
  }
- function exitBattle(){const b=gameRef.current;if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){resultClaimed.current=true;const h=healthScore(b.player);onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,starsEarned:[true,h>=.65,h>=.9],matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),turnsElapsed:b.round,
-  ...battlePacingReport(b,Date.now())}});}onExit?.();}
+ function exitBattle(){
+  const b=gameRef.current;
+  if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){
+   resultClaimed.current=true;
+   let specialPackEarned=false;
+   if(b.winner==='player'){
+    try{specialPackEarned=claimFirstWinSpecialPack(b.mode,sectorNumber).granted;}
+    catch{/* A damaged collection cannot block the ordinary battle reward. */}
+   }
+   const h=healthScore(b.player);
+   onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,
+    starsEarned:[true,h>=.65,h>=.9],
+    matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),
+     turnsElapsed:b.round,specialPackEarned,...battlePacingReport(b,Date.now())}});
+  }
+  onExit?.();
+ }
  const availableOps=supportedOperators(game.player);
  const playerSystemAlerts=game.vitalPrototype?VITAL_IDS
   .map(id=>({id,state:systemState(game.player.fleet[0].defense,id)}))
