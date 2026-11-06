@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createShip,initialBattle,consumeAttack,deckExhausted,
  fillHand,inspectCalculationCards} from './mathDuelEngine.js';
 import {chooseCombatMove} from './aiBattleTactics.js';
-import {findDeadlock,recoverStalledHand,RECOVERY_COOLDOWN_MS} from './battlePacing.js';
+import {findDeadlock,recoverStalledHand,battlePacingReport,RECOVERY_COOLDOWN_MS} from './battlePacing.js';
 import {damageMotherShield,exposeMotherPart,VITAL_IDS,matchesVitalSignature} from './vitalDefense.js';
 
 const rng=()=>.5,zero=()=>0;
@@ -137,4 +137,33 @@ test('29: recovery is never available in legacy non-continuous matches',()=>{
  const r=recoverStalledHand(legacy,enemy,impossible,1000,zero);
  assert.equal(r.recovered,false);
  assert.equal(r.side,legacy);
+});
+
+test('29: numeric firing records only actual two- and three-card attacks',()=>{
+ const b=start();
+ let next=consumeAttack(b.player,[0,1]);
+ next=consumeAttack(next,[0,1,2]);
+ const report=battlePacingReport({player:next,enemy:b.enemy,combatStartedAt:1000},11000);
+ assert.equal(report.elapsedSeconds,10);
+ assert.equal(report.playerTwoCardShots,1);
+ assert.equal(report.playerThreeCardShots,1);
+ assert.equal(report.playerNumericCardsSpent,5);
+ assert.equal(report.enemyTwoCardShots,0);
+ assert.equal(report.playerDeckRecycles,0);
+});
+test('29: finish report never claims elapsed time if battle timing is absent',()=>{
+ const b=start();
+ const report=battlePacingReport(b,20000);
+ assert.equal(report.elapsedSeconds,0);
+ assert.equal(report.playerNumericCardsSpent,0);
+ assert.equal(report.playerDeadlockRecovers,0);
+});
+test('29: a recovered hand is counted without inventing a mathematical attack',()=>{
+ const b=start();
+ const recovered=recoverStalledHand(b.player,b.enemy,impossible,1000,zero).side;
+ const report=battlePacingReport({player:recovered,enemy:b.enemy,combatStartedAt:1000},16000);
+ assert.equal(report.elapsedSeconds,15);
+ assert.equal(report.playerDeadlockRecovers,1);
+ assert.equal(report.playerTwoCardShots,0);
+ assert.equal(report.playerThreeCardShots,0);
 });
