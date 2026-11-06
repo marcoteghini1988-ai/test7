@@ -19975,7 +19975,7 @@ function App() {
           gameMode={gameMode}
           selectedBossDeck={selectedDeck}
           bossDeckInventory={deckInventory}
-          selectedPilot={selectedPilot}
+          selectedPilot={getPilotById(selectedPilot)?selectedPilot:null}
           pilotInventory={pilotInventory}
           commanderDisplayName={getPilotById(selectedPilot)?.name || ''}
           bossPlanetId={activeAdventure?.planet ?? null}
