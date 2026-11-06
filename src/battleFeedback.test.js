@@ -131,7 +131,7 @@ test('47: livelli grafici non intercettano input e rispettano movimento ridotto'
  const js=readFileSync(new URL('./BattleCombatFeedback.jsx',import.meta.url),'utf8');
  const css=readFileSync(new URL('./BattleCombatFeedback.css',import.meta.url),'utf8');
  const game=readFileSync(new URL('./MathDuelBattle.jsx',import.meta.url),'utf8');
- assert.match(js,/pointer-events/); // no interactions in this component
+ assert.doesNotMatch(js,/\bonClick\s*=/); // no interactions in this component
  assert.match(css,/pointer-events:none/);
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.match(js,/aria-live="polite"/);
