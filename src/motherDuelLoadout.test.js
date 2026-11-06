@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {initialBattle,PHASE1_SHIPS,fleetCompatibility} from './mathDuelEngine.js';
-import {prepareMotherDuelOptions,chooseCampaignMotherRival} from './motherDuelLoadout.js';
+import {prepareMotherDuelOptions,chooseCampaignMotherRival,chooseCampaignRivalCommander} from './motherDuelLoadout.js';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {collectionBattleOptions,readShipCollection,grantShipCard,equipShipCards} from './shipCollection.js';
 
@@ -91,3 +91,50 @@ test('prova flotta: modello incompatibile non sostituisce il motore avversario p
  assert.equal(o.vitalPrototype,true);
 });
 
+
+test('12 boss: ogni pianeta ha un comandante IA reale e differente',()=>{
+ const names=new Set();
+ for(const [index,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
+  const global=index*10+10;
+  const options=prepareMotherDuelOptions({fleetIds:['N00'],shipLevel:5},{
+   mode:'adventure',globalSector:global,planetId:planet.id,planetSector:10});
+  const rival=chooseCampaignRivalCommander({
+   mode:'adventure',globalSector:global,planetId:planet.id,
+   planetSector:10,shipId:options.enemyFleetIds[0],
+   shipLevel:options.enemyShipLevels[options.enemyFleetIds[0]]
+  });
+  assert.equal(rival.isBoss,true);
+  assert.ok(!names.has(rival.id),'Ogni boss ha una propria identità comandante');
+  names.add(rival.id);
+  const encounter=initialBattle(global,{
+   ...options,enemyBossDeckId:planet.deck,enemyBossDeckLevel:1,
+   enemyCommanderId:rival.id,enemyCommanderLevel:rival.level
+  },rng,'adventure');
+  assert.equal(encounter.enemy.commander.id,rival.id);
+  assert.equal(encounter.enemy.bossNumericDeck.id,planet.deck);
+  assert.equal(encounter.vitalPrototype,true);
+ }
+ assert.equal(names.size,12);
+});
+
+test('120 settori: i comandanti IA rimangono del catalogo e la prova è neutra',()=>{
+ const seen=new Set();
+ for(const planet of PHASE16A_CAMPAIGN_PLANETS)
+  for(let local=1;local<=10;local++){
+   const global=(planet.order-1)*10+local;
+   const rival=chooseCampaignRivalCommander({
+    mode:'adventure',globalSector:global,planetId:planet.id,
+    planetSector:local,shipId:'N00',shipLevel:1
+   });
+   assert.ok(rival.id.startsWith('pilot_'));
+   assert.equal(rival.isBoss,local===10);
+   assert.ok(rival.level>=1&&rival.level<=5);
+   seen.add(rival.id);
+  }
+ assert.ok(seen.size>=12);
+ const practice=chooseCampaignRivalCommander({
+  mode:'adventure',globalSector:120,planetId:20,
+  planetSector:10,practice:true,shipId:'N00'});
+ assert.equal(practice.id,'pilot_com_1');
+ assert.equal(practice.isBoss,false);
+});
