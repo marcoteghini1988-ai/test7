@@ -21,7 +21,7 @@ test('punto23: madre e scudiera possono sparare nella stessa scarica senza dupli
  assert.ok(r.shots.some(shot=>shot.escortSlot!==undefined&&shot.damage>0));
 });
 test('punto23: fusione da speciale disattiva il cannone autonomo della scudiera collegata',()=>{
- const b=battle(),s={...b.player,maneuvers:{...b.player.maneuvers,sync:100}},now=Date.now();
+ const b=initialBattle(1,{vitalPrototype:true,fleetIds:['C01'],shipLevel:5},()=>.9),s={...b.player,maneuvers:{...b.player.maneuvers,sync:100}},now=Date.now();
  const i=findFusionCardIndex(s,'strike');
  const activated=playSpecialCard(s,i,{escortSlot:1},now,rng);
  assert.equal(activated.played,true);
