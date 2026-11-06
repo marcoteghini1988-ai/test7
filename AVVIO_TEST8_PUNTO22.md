@@ -34,3 +34,5 @@ Specifiche complete: [docs/PUNTO_22_INTEGRAZIONE.md](docs/PUNTO_22_INTEGRAZIONE.
 
 
 **Ripresa successiva:** consultare `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md` per tutti i requisiti consolidati. Audio/visivo rinviati.
+
+**Nota numerazione:** le carte speciali delle fusioni sono il blocco 22B / base del punto 30; la collaborazione navicelle è il punto 23 ufficiale. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
