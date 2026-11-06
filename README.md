@@ -4,7 +4,7 @@
 > **STATO ATTUALE — 6 novembre 2026**  
 > La sorgente di continuità della scaletta ufficiale di 53 punti è [MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md](docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md).  
 > **Punto 22B:** due mani separate (7 numeriche + 5 speciali), attivazione delle fusioni esclusivamente giocando una speciale. **Punto 23:** collaborazione madre/scudiere verificata; sinergie avanzate ancora da completare. **Punto 24 e successivi:** proseguire sulle meccaniche e rimandare audio/visivo.  
-> Verifica del codice: 200 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
+> Verifica del codice: 213 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
 > Il progetto ufficiale aggiornato è **test7/main**. Ogni aggiornamento successivo va applicato direttamente alla versione principale, senza nuove copie su GitHub.
 
 
@@ -163,4 +163,8 @@ Madre e scudiere possono sparare e proteggersi nello stesso combattimento: le nu
 
 
 ## Punto 24 — Identità delle 34 scudiere
-I 17 modelli madre hanno la scudiera 1 difensiva (Guardia/Intercettore/Baluardo) e la scudiera 2 offensiva (Assalto/Incursore/Assedio/Artiglieria). Nuovi test automatici in `src/escortRolesMatrix.test.js` e rapporto in `docs/PUNTO_24_RUOLI_FLOTTA.md`. I ruoli avanzati sono ancora aperti e il successivo blocco è il punto 25, protezione attiva della madre.
+I 17 modelli madre hanno la scudiera 1 difensiva (Guardia/Intercettore/Baluardo) e la scudiera 2 offensiva (Assalto/Incursore/Assedio/Artiglieria). Nuovi test automatici in `src/escortRolesMatrix.test.js` e rapporto in `docs/PUNTO_24_RUOLI_FLOTTA.md`. I ruoli avanzati sono ancora aperti e il punto 25 introduce ora Copertura Tattica e il passo successivo è il punto 26, danni localizzati ai sistemi.
+
+
+## Punto 25 — Protezione della madre e Copertura Tattica
+Tre difese distinte: intercettazione automatica delle scudiere, formazione Guardia e nuova carta speciale **Copertura Tattica**. Quest'ultima attiva l'intervento della scudiera 1 sul prossimo colpo diretto alla madre entro 15 s; può intercettarne fino al 75%, ma solo consumando lo scudo reale della scudiera. La carta non costa Sincronia, si consuma al gioco e non si cumula con una fusione. Anche l'IA deve possederla e consumarla. Il mazzo tecnico da 24 speciali è ora diviso in 8 Barriera, 8 Assalto e 8 Copertura. **213 test logici superati**, build e preflight verificati. I valori sono provvisori: documentazione in `docs/PUNTO_25_PROTEZIONE_MADRE.md`. Passaggio successivo: punto 26, danni localizzati ai quattro vitali. Nessuna rifinitura audio/visiva in questa fase.
