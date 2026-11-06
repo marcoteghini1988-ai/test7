@@ -7,7 +7,7 @@ import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {
  BATTLE_ARENAS,BATTLE_ARENA_IDS,battleArena,arenaForBattle,
  arenaAttackFactor,arenaMotherDefenseFactor,
- applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing
+ applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment
 } from './battleArenas.js';
 
 const rng=()=>.5;
@@ -196,4 +196,91 @@ test('43: tutte le 12 arene boss sono distinguibili, senza cambiare bilanciament
  const snapshot=structuredClone(b);
  arenaTacticalBriefing('boss_1',{player:b.player,enemy:b.enemy,selectedCount:3});
  assert.deepEqual(b,snapshot);
+});
+
+
+test('44: il ciclo atmosferico cambia ogni tre calcoli validi senza usare timer',()=>{
+ const expected=[
+  [1,'quiet',3,1],[2,'quiet',2,1],[3,'quiet',1,1],
+  [4,'charged',3,1],[6,'charged',1,1],
+  [7,'surge',3,1],[9,'surge',1,1],[10,'quiet',3,2],
+  [13,'charged',3,2],[16,'surge',3,2]
+ ];
+ for(const [round,stage,left,cycle] of expected){
+  const e=arenaEnvironment('plasma',round);
+  assert.equal(e.stage,stage);
+  assert.equal(e.calculationsUntilChange,left);
+  assert.equal(e.cycle,cycle);
+ }
+ const neutral=arenaEnvironment('titanium',300);
+ assert.equal(neutral.stage,'quiet');
+ assert.equal(neutral.calculationsUntilChange,null);
+ assert.deepEqual(neutral.families,[]);
+ assert.equal(arenaEnvironment('invalid',4).neutral,true);
+ assert.equal(arenaEnvironment('plasma',NaN).stage,'quiet');
+ assert.deepEqual(arenaEnvironment('planet_1_advanced',7).families,['debris','plasma']);
+});
+
+test('44: le fasi modulano soltanto bonus condizionali già esistenti',()=>{
+ const player=initialBattle(3,up,rng,'adventure').player;
+ const leg={legalAttack:true,cards:triple};
+ const q=arenaEnvironment('plasma',1).stage;
+ const c=arenaEnvironment('plasma',4).stage;
+ const p=arenaEnvironment('plasma',7).stage;
+ assert.equal(arenaAttackFactor('plasma',{...leg,environmentStage:q}),1.06);
+ assert.ok(Math.abs(arenaAttackFactor('plasma',{...leg,environmentStage:c})-1.075)<1e-10);
+ assert.ok(Math.abs(arenaAttackFactor('plasma',{...leg,environmentStage:p})-1.09)<1e-10);
+ assert.equal(arenaAttackFactor('plasma',{...leg,environmentStage:p,legalAttack:false}),1);
+ assert.equal(arenaAttackFactor('plasma',{...leg,environmentStage:p,cards:triple.slice(0,2)}),1);
+ assert.equal(arenaMotherDefenseFactor('debris',player,{environmentStage:q}),.92);
+ assert.ok(Math.abs(arenaMotherDefenseFactor('debris',player,{environmentStage:p})-.904)<1e-10);
+ assert.equal(arenaMotherDefenseFactor('debris',player,{environmentStage:p,vitalId:'engine'}),1);
+ assert.equal(arenaMotherDefenseFactor('debris',player,{environmentStage:p,escortIndex:0}),1);
+ assert.equal(arenaMotherDefenseFactor('titanium',player,{environmentStage:p}),1);
+ assert.equal(arenaAttackFactor('titanium',{...leg,environmentStage:p}),1);
+});
+
+test('44: ionizzazione e Sincronia non si creano durante Turbolenza o Picco',()=>{
+ const b=initialBattle(4,up,rng,'adventure');
+ const hit=applyPendingHit(b.player,0,'plus',10,{
+  nowMs:1000,strikeEffects:['shot-ion'],hitId:'ambient-44'});
+ assert.ok(hit.strategicApplied.includes('shot-ion'));
+ const remaining=hit.defender.strategicStatuses.ionizedUntil-1000;
+ const calm=applyArenaIonResistance(hit.defender,'ionic',hit.strategicApplied,1000,'quiet');
+ const peak=applyArenaIonResistance(hit.defender,'ionic',hit.strategicApplied,1000,'surge');
+ assert.equal(calm.strategicStatuses.ionizedUntil,1000+Math.ceil(remaining*.75));
+ assert.equal(peak.strategicStatuses.ionizedUntil,1000+Math.ceil(remaining*.68));
+ assert.strictEqual(applyArenaIonResistance(hit.defender,'ionic',[],1000,'surge'),hit.defender);
+ assert.strictEqual(applyArenaIonResistance(hit.defender,'titanium',hit.strategicApplied,1000,'surge'),hit.defender);
+ const side={...hit.defender,maneuvers:{...hit.defender.maneuvers,sync:50}};
+ assert.equal(applyArenaCalculationSync(side,'resonance',1,'quiet').maneuvers.sync,51);
+ assert.equal(applyArenaCalculationSync(side,'resonance',1,'charged').maneuvers.sync,52);
+ assert.equal(applyArenaCalculationSync(side,'resonance',1,'surge').maneuvers.sync,53);
+ assert.equal(applyArenaCalculationSync(side,'resonance',0,'surge'),side);
+ assert.equal(applyArenaCalculationSync({...side,maneuvers:{...side.maneuvers,sync:99}},'resonance',1,'surge').maneuvers.sync,100);
+ assert.strictEqual(applyArenaCalculationSync(side,'titanium',1,'surge'),side);
+});
+
+test('44: 12 boss con identità cromatiche e combinazioni ambientali coerenti',()=>{
+ const colors=new Set();
+ for(const planet of PHASE16A_CAMPAIGN_PLANETS){
+  const arena='boss_'+planet.id;
+  const e=arenaEnvironment(arena,7);
+  assert.equal(e.boss,true);
+  assert.equal(e.stage,'surge');
+  assert.equal(e.families.length,2);
+  assert.match(e.accent,/^#[0-9a-f]{6}$/i);
+  colors.add(e.accent);
+  assert.deepEqual(e.families,
+   arenaEnvironment(arena,1).families);
+ }
+ assert.equal(colors.size,12);
+ for(const id of BATTLE_ARENA_IDS){
+  const e=arenaEnvironment(id,4);
+  assert.equal(e.neutral,battleArena(id).effectCount===0);
+  assert.equal(e.families.length,battleArena(id).effectCount);
+ }
+ const briefing=arenaTacticalBriefing('boss_1',{round:7});
+ assert.equal(briefing.environment.stage,'surge');
+ assert.match(briefing.introduction,/PICCO/);
 });
