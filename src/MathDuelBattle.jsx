@@ -40,7 +40,28 @@ function ArenaBackdrop(){
 }
 const label=rankLabel;
 const clone=v=>structuredClone(v);
-function tone(name){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=window.__eclissiMathAudio||(window.__eclissiMathAudio=new C());if(ctx.state==='suspended')ctx.resume();const o=ctx.createOscillator(),g=ctx.createGain(),now=ctx.currentTime;o.type=name==='shot'?'sawtooth':'sine';o.frequency.setValueAtTime(name==='shot'?180:470,now);o.frequency.exponentialRampToValueAtTime(name==='shot'?46:650,now+.19);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(.025,now+.014);g.gain.exponentialRampToValueAtTime(.0001,now+.22);o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+.23);}catch{}}
+function tone(name){
+ try{
+  const C=window.AudioContext||window.webkitAudioContext;if(!C)return;
+  const ctx=window.__eclissiMathAudio||(window.__eclissiMathAudio=new C());
+  if(ctx.state==='suspended')ctx.resume();
+  const profiles={
+   shot:{wave:'sawtooth',start:180,end:46,duration:.21,volume:.024},
+   special:{wave:'triangle',start:520,end:1020,duration:.25,volume:.019},
+   impact:{wave:'triangle',start:220,end:74,duration:.18,volume:.020},
+   critical:{wave:'sawtooth',start:170,end:39,duration:.29,volume:.026},
+   charge:{wave:'sine',start:320,end:600,duration:.17,volume:.014}
+  };
+  const p=profiles[name]||{wave:'sine',start:470,end:650,duration:.2,volume:.019};
+  const o=ctx.createOscillator(),g=ctx.createGain(),now=ctx.currentTime;
+  o.type=p.wave;o.frequency.setValueAtTime(p.start,now);
+  o.frequency.exponentialRampToValueAtTime(p.end,now+p.duration);
+  g.gain.setValueAtTime(.0001,now);
+  g.gain.exponentialRampToValueAtTime(p.volume,now+.015);
+  g.gain.exponentialRampToValueAtTime(.0001,now+p.duration);
+  o.connect(g);g.connect(ctx.destination);o.start(now);o.stop(now+p.duration+.01);
+ }catch{}
+}
 function volleySound(salvos){try{
  const C=window.AudioContext||window.webkitAudioContext;if(!C)return;
  const ctx=window.__eclissiMathAudio||(window.__eclissiMathAudio=new C());if(ctx.state==='suspended')ctx.resume();
@@ -718,7 +739,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    'BONUS FLOTTA: '+doctrinalShots.map(shot=>shot.tacticalDoctrine).join(' / '):
    side==='player'?'Attacco lanciato: prepara il prossimo':'L’IA ha sparato: puoi continuare';
   write(next);
-  if(salvos.length)volleySound(salvos);else tone('click');
+  if(salvos.length)volleySound(salvos);else tone('charge');
   later(()=>{
    const active=gameRef.current;
    if(active.phase==='finished'||!active.effects?.some(e=>e.id===effect.id))return;
