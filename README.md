@@ -4,7 +4,7 @@
 > **STATO ATTUALE — 6 novembre 2026**  
 > La sorgente di continuità della scaletta ufficiale di 53 punti è [MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md](docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md).  
 > **Punto 22B:** due mani separate (7 numeriche + 5 speciali), attivazione delle fusioni esclusivamente giocando una speciale. **Punto 23:** collaborazione madre/scudiere verificata; sinergie avanzate ancora da completare. **Punto 24 e successivi:** proseguire sulle meccaniche e rimandare audio/visivo.  
-> Verifica del codice: 257 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
+> Verifica del codice: 272 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
 > Il progetto ufficiale aggiornato è **test7/main**. Ogni aggiornamento successivo va applicato direttamente alla versione principale, senza nuove copie su GitHub.
 
 
@@ -184,3 +184,7 @@ Il duello permette di selezionare **due oppure tre numeriche**, ripetendo la med
 Le quattro parti vitali della madre ricevono ora **una firma matematica fissa a inizio partita**, differenziata per modello e limitata alle operazioni realmente disponibili. Le firme di prova accettano 2/3 carte. Alcune famiglie ammettono **COPPIA** come alternativa per il sistema armi (C/R/E/L), oppure **TRIS** per la centralina (E/L); il percorso matematico resta sempre disponibile. Le firme Poker a quattro/cinque carte e i requisiti definitivi per boss non sono ancora giocabili. L'IA può cercare combinazioni con tre carte, ma non sfrutta ancora attivamente le alternative Poker.
 
 **257 test automatici superati**, compilazione React/Vite e preflight verificati. Documentazione: `docs/PUNTO_28_CALCOLI_FIRME_VITALI.md`. Il blocco successivo è **Punto 29: ritmo e bilanciamento**. Grafica/audio definitivi sempre rinviati.
+
+
+## Punto 29 — Ritmo e bilanciamento tecnico (6 novembre 2026)
+L'IA valuta i **calcoli a 2/3 carte** e le **firme matematiche o Poker** realmente colpibili, evitando attacchi sprecati contro vitali incompatibili. Il giocatore continua a combattere **senza timer di turno**. Nel nuovo duello madre/scudiere gli scarti delle **52 numeriche** vengono riciclati alla fine della pesca senza carte doppie o nuove, così il combattimento non finisce soltanto per esaurimento del mazzo. Le modalità legacy conservano la regola precedente. Quando non esiste nessun colpo valido, il pulsante **RICAMBIO NUMERICO** nelle MANOVRE scambia una sola carta vera, con ricarica provvisoria di **15 s**; anche l'IA può usarlo con le stesse condizioni. Il risultato finale registra durata effettiva, attacchi a 2/3 carte, numeriche consumate, ricicli e ricambi, per il bilanciamento successivo. **272 test superati**, build/preflight verificati; non significa che la durata definitiva delle partite sia già calibrata. Vedi `docs/PUNTO_29_RITMO_BILANCIAMENTO.md`. **Prossimo: Punto 30, costruzione del mazzo delle carte speciali.** I perfezionamenti audio-visivi restano rinviati.
