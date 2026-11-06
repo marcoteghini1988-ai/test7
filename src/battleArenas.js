@@ -4,21 +4,24 @@
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 
 const EFFECT_FAMILIES=Object.freeze(['debris','plasma','ionic','resonance']);
-const effectValues=(types=[],bossStep=null)=>{
+const effectValues=(types=[],bossStep=null,bossVariant=0)=>{
+ // Arene boss con stessa coppia di famiglie non devono avere gli stessi valori.
+ // Lo scarto minimo conserva i valori del primo gruppo e cresce moderatamente.
  const effects={};
  for(const type of types){
-  if(type==='debris')effects.shieldDamageFactor=bossStep==null?.92:.91-bossStep*.01;
-  if(type==='plasma')effects.tripleAttackFactor=bossStep==null?1.06:1.06+bossStep*.01;
-  if(type==='ionic')effects.ionDurationFactor=bossStep==null?.75:.74-bossStep*.05;
+  if(type==='debris')effects.shieldDamageFactor=bossStep==null?.92:.91-bossStep*.01-bossVariant*.004;
+  if(type==='plasma')effects.tripleAttackFactor=bossStep==null?1.06:1.06+bossStep*.01+bossVariant*.004;
+  if(type==='ionic')effects.ionDurationFactor=bossStep==null?.75:.74-bossStep*.05-bossVariant*.02;
   if(type==='resonance')effects.syncPerCalculation=1;
  }
  return effects;
 };
+const percent=change=>String(Math.round(change*1000)/10).replace('.',',');
 const effectDescription=effects=>{
  const result=[];
- if(effects.shieldDamageFactor)result.push('danni allo scudo madre −'+Math.round((1-effects.shieldDamageFactor)*100)+'%');
- if(effects.tripleAttackFactor)result.push('scarica valida con tre numeriche +'+Math.round((effects.tripleAttackFactor-1)*100)+'%');
- if(effects.ionDurationFactor)result.push('durata ionizzazione da speciale −'+Math.round((1-effects.ionDurationFactor)*100)+'%');
+ if(effects.shieldDamageFactor)result.push('danni allo scudo madre −'+percent(1-effects.shieldDamageFactor)+'%');
+ if(effects.tripleAttackFactor)result.push('scarica valida con tre numeriche +'+percent(effects.tripleAttackFactor-1)+'%');
+ if(effects.ionDurationFactor)result.push('durata ionizzazione da speciale −'+percent(1-effects.ionDurationFactor)+'%');
  if(effects.syncPerCalculation)result.push('+'+effects.syncPerCalculation+' Sincronia per calcolo valido');
  return result.length?result.join('; '):'Nessun modificatore';
 };
@@ -46,7 +49,7 @@ const planets=PHASE16A_CAMPAIGN_PLANETS.flatMap((planet,index)=>{
   makeArena('planet_'+planet.id+'_advanced','Settore avanzato di '+planet.name,'AVANZATA',
    effectValues([primary,ordinarySecond]),'advanced'),
   makeArena('boss_'+planet.id,bossNames[index]||'Arena del boss di '+planet.name,'BOSS '+(index+1),
-   effectValues([primary,bossSecond],index%3),'boss')
+   effectValues([primary,bossSecond],index%3,Math.floor(index/3)),'boss')
  ];
 });
 export const BATTLE_ARENAS=Object.freeze(Object.fromEntries([...base,...planets].map(arena=>[arena.id,arena])));
