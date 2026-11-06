@@ -54,8 +54,13 @@ test('29: AI uses real fixed math signatures and rejects wrong operations',()=>{
  const b=start(),target=selectVital(b.player,'engine',
   {kind:'mathGate',op:'plus',target:10,allowedCardCounts:[2,3]});
  const hand=cards([4,6,2,5,8,11,13]);
+ // All other vitals are unavailable, so we test the exact engine signature.
+ const mother=target.fleet[0];
+ const locked={...target,fleet:[{...mother,defense:{...mother.defense,parts:
+  Object.fromEntries(Object.entries(mother.defense.parts).map(([id,part])=>
+   [id,id==='engine'?part:{...part,hp:0}]))}}]};
  const s={...b.enemy,hand};
- const move=chooseCombatMove(s,target,{...b.targets,plus:10});
+ const move=chooseCombatMove(s,locked,{...b.targets,plus:10});
  assert.ok(move,'an achievable plus proof exists');
  assert.equal(move.vitalId,'engine');
  assert.equal(move.op,'plus');
