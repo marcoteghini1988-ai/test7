@@ -4,6 +4,7 @@ import {ShipCard} from './ShipPresentation.jsx';
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {SHIP_COLLECTION_KEY, equipShipCards, readShipCollection, updateShipCollection} from './shipCollection.js';
 import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
+import {shipUpgradeDustCost} from './shipUpgrades.js';
 import './ShipCollectionPanels.css';
 
 function readCollection() {
@@ -26,9 +27,23 @@ function useShipCollection() {
   return [collection, setCollection];
 }
 
-export function ShipShopPanel() {
-  const [collection] = useShipCollection();
-  const [preview, setPreview] = useState('');
+export function ShipShopPanel({stardust=0,onUpgradeShip=null}) {
+  const [collection,setCollection] = useShipCollection();
+  const [preview,setPreview] = useState('');
+  const [upgrading,setUpgrading] = useState(false);
+  const [message,setMessage] = useState('');
+  async function upgrade(card){
+    if(!card||upgrading||!onUpgradeShip)return;
+    const target=card.level+1,cost=shipUpgradeDustCost(card.shipId,target);
+    if(cost===null||!Number.isFinite(stardust)||stardust<cost)return;
+    setUpgrading(true);
+    try{
+     const done=await onUpgradeShip(card.instanceId,target,cost);
+     if(done){setCollection(readCollection());setMessage('Navicella potenziata al livello '+target);}
+     else setMessage('Potenziamento non eseguito. Verifica le risorse.');
+    }catch{setMessage('Potenziamento non salvato: la carta precedente è conservata.');}
+    finally{setUpgrading(false);}
+  }
   return <section className="ship-collection-panel es-math-scope" aria-label="Catalogo navicelle">
     <h4>Catalogo navicelle</h4>
     <p>Ottieni nuove carte-navicella vincendo i settori chiave della Campagna. Ogni navicella ottenuta è permanente; i livelli successivi saranno gestiti nei potenziamenti.</p>
@@ -42,6 +57,7 @@ export function ShipShopPanel() {
         {[1, 2, 3, 4, 5].map(level => <option key={level} value={level}>Anteprima L{level}</option>)}
       </select>
     </label>
+    {message&&<p role="status">{message}</p>}
     <div className="ship-collection-grid">
       {PHASE1_SHIPS.map(ship => {
         const card = collection?.cards.find(entry => entry.shipId === ship.id);
@@ -50,7 +66,16 @@ export function ShipShopPanel() {
         const status = card
           ? `${equipped ? 'Equipaggiata' : 'Posseduta'} · L${card.level}${card.level === 5 ? ' · Livello massimo' : ''}`
           : collection ? milestone?'Campagna · vittoria settore '+milestone.sector:'Da ottenere' : 'Proprietà non disponibile';
-        return <ShipCard key={ship.id} shipId={ship.id} level={Number(preview) || card?.level || 1} status={status}/>;
+        const nextLevel=card?.level<5?card.level+1:null;
+        const cost=nextLevel?shipUpgradeDustCost(ship.id,nextLevel):null;
+        return <div key={ship.id} className="ship-shop-offer">
+          <ShipCard shipId={ship.id} level={Number(preview) || card?.level || 1} status={status}/>
+          {nextLevel&&<button type="button" className="ship-upgrade-button"
+            disabled={upgrading||!!preview||!onUpgradeShip||!Number.isFinite(stardust)||stardust<cost}
+            onClick={()=>upgrade(card)}>
+            POTENZIA L{nextLevel} · {cost} 🌟
+          </button>}
+        </div>;
       })}
     </div>
   </section>;
