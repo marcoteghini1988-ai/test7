@@ -64,6 +64,44 @@
 }
 .es-math-scope .result-card[data-outcome="player"] .battle-result-emblem{color:#7cffa9;text-shadow:0 0 19px #48ff93}
 .es-math-scope .result-card[data-outcome="enemy"] .battle-result-emblem{color:#ff938b;text-shadow:0 0 19px #ff5b55}
+/* Riscontri locali alla posizione reale del proiettile: il bersaglio
+   cambia solo DOPO che il motore ha registrato danni o status. */
+.es-math-scope .battle-impact-ring,
+.es-math-scope .battle-impact-status{
+ position:absolute;pointer-events:none;z-index:2;border-radius:50%;
+ transform:translate(-50%,-50%);
+}
+.es-math-scope .battle-impact-ring{
+ width:110px;height:110px;border:3px solid #ffb06e;
+ box-shadow:inset 0 0 22px #ff9d4266,0 0 22px #ffb060;
+ animation:combatImpactRupture .64s ease-out both;
+}
+.es-math-scope .battle-impact-ko{
+ border-color:#fff1b7;box-shadow:0 0 27px 8px #ff6b39c9,inset 0 0 27px #ff8b389c;
+}
+.es-math-scope .battle-impact-damaged{
+ border-color:#ffc972;box-shadow:0 0 15px #ffb05ea1;
+}
+.es-math-scope .battle-impact-status{
+ width:75px;height:75px;border:2px dotted #95e9ff;
+ animation:combatStatusPulse .95s ease-out both;
+}
+.es-math-scope .battle-status-ion{
+ border-color:#74dfff;box-shadow:0 0 13px #2ee7ffbb;
+}
+.es-math-scope .battle-status-corrosion{
+ border-color:#c2ff78;box-shadow:0 0 13px #b9ff87bb;
+}
+@keyframes combatImpactRupture{
+ 0%{opacity:0;transform:translate(-50%,-50%) scale(.25)}
+ 20%{opacity:1}
+ 100%{opacity:0;transform:translate(-50%,-50%) scale(1.52)}
+}
+@keyframes combatStatusPulse{
+ 0%{opacity:.9;transform:translate(-50%,-50%) scale(.65)}
+ 100%{opacity:0;transform:translate(-50%,-50%) scale(1.6)}
+}
+
 @keyframes combatAmmoCharge{
  0%{opacity:0;transform:translate3d(0,0,0) scale(.94)}
  18%{opacity:1}
@@ -82,5 +120,6 @@
   animation:combatCueStill 2.1s linear both!important;transform:none!important
  }
  .es-math-scope .battle-result-emblem{animation:none!important}
+ .es-math-scope .battle-impact-ring,.es-math-scope .battle-impact-status{animation:none!important;display:none}
 }
 @keyframes combatCueStill{0%,75%{opacity:1}100%{opacity:0}}
