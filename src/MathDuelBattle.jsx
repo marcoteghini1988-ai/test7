@@ -8,7 +8,8 @@ import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
-import {maneuverStatus,changeFormation,startFusion,cancelFusion,recordManeuverEvent,prepareSideForAmmoRouting} from './fleetManeuvers.js';
+import {maneuverStatus,changeFormation,cancelFusion,recordManeuverEvent,prepareSideForAmmoRouting} from './fleetManeuvers.js';
+import {playSpecialCard,findFusionCardIndex,specialCardDefinition} from './specialCards.js';
 import './MathDuelBattle.css';
 import './MathDuelIntro.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
@@ -402,6 +403,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  }
  const [game,setGame]=useState(()=>startBattle(collection?collectionBattleOptions(collection):{}));
  const [maneuverMenu,setManeuverMenu]=useState(false);
+ const [specialEscortSlot,setSpecialEscortSlot]=useState(0);
  const [uiClock,setUiClock]=useState(Date.now);
  useEffect(()=>{const timer=setInterval(()=>setUiClock(Date.now()),1000);return()=>clearInterval(timer);},[]);
  const maneuverHUD=game.player?.maneuvers?maneuverStatus(game.player.maneuvers,game.player,uiClock):null;
@@ -479,14 +481,27 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    result.reason==='formation_cooldown'?'Formazione in ricarica':result.reason==='command_offline'?'Centralina disattivata':result.reason==='fusion_active'?'Attendi la fine della fusione':'Ordine non disponibile';
   write(n);
  }
- function orderFusion(slot,mode){
+ function playFusionCard(cardIndex){
   const b=gameRef.current;
   if(b.phase!=='ready'||!b.player?.maneuvers)return;
-  const n=clone(b),result=startFusion(n.player.maneuvers,n.player,slot,mode,Date.now());
-  n.player.maneuvers=result.state;
-  n.notice=result.started?('FUSIONE '+(mode==='barrier'?'BARRIERA':'ASSALTO')+' CON SCUDIERA '+(slot+1)):
-   ({not_enough_sync:'Sincronia insufficiente',fusion_cooldown:'Fusione in ricarica',escort_unavailable:'Scudiera non disponibile',mother_not_ready:'Motore o centralina disattivati',fusion_active:'Fusione già attiva'}[result.reason]||'Fusione non disponibile');
-  if(result.started)setManeuverMenu(false);
+  const n=clone(b);
+  const result=playSpecialCard(n.player,cardIndex,{escortSlot:specialEscortSlot},Date.now());
+  if(result.played){
+   n.player=result.side;
+   n.notice='CARTA SPECIALE: '+result.definition.name+' · SCUDIERA '+(specialEscortSlot+1);
+   n.logs=[n.notice,...n.logs].slice(0,6);
+   setManeuverMenu(false);
+  }else{
+   n.notice=({
+    card_missing:'La carta speciale non è nella mano',
+    not_enough_sync:'Sincronia insufficiente (richiesta: 100)',
+    fusion_active:'Una fusione è già attiva',
+    fusion_cooldown:'Fusione in ricarica',
+    escort_unavailable:'Scegli una scudiera con scudo attivo',
+    mother_not_ready:'Motore o centralina non disponibili',
+    ability_unavailable:'Abilità non ancora disponibile'
+   })[result.reason]||'Carta speciale non utilizzabile';
+  }
   write(n);
  }
  function undock(){
@@ -657,8 +672,13 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
     n.enemy.maneuvers=status.state;
     if(status.sync>=100&&!status.fusion&&status.availableEscorts.some(x=>x.available)){
      const target=status.availableEscorts.find(x=>x.available);
-     const mode=n.enemy.fleet[0].defense.shield.hp<n.enemy.fleet[0].defense.shield.max*.55?'barrier':'strike';
-     n.enemy.maneuvers=startFusion(status.state,n.enemy,target.slot,mode,now).state;
+     const preferred=n.enemy.fleet[0].defense.shield.hp<n.enemy.fleet[0].defense.shield.max*.55?'barrier':'strike';
+     let cardIndex=findFusionCardIndex(n.enemy,preferred);
+     if(cardIndex<0)cardIndex=findFusionCardIndex(n.enemy,preferred==='barrier'?'strike':'barrier');
+     if(cardIndex>=0){
+      const played=playSpecialCard(n.enemy,cardIndex,{escortSlot:target.slot},now);
+      if(played.played)n.enemy=played.side;
+     }
     }else if(!status.fusion&&status.formation==='balanced'&&status.availableEscorts.length){
      n.enemy.maneuvers=changeFormation(status.state,n.enemy,'guard',now).state;
     }
@@ -707,7 +727,12 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(unchanged){if(b!==gameRef.current)write(b);}
   else{
    const refreshed=initialBattle(b.level,{...options,vitalPrototype:true},Math.random,b.mode);
-   write({...b,player:{...b.player,fleet:refreshed.player.fleet,escorts:refreshed.player.escorts},enemy:{...b.enemy,fleet:refreshed.enemy.fleet,escorts:refreshed.enemy.escorts},
+   write({...b,player:{...b.player,fleet:refreshed.player.fleet,escorts:refreshed.player.escorts,
+     maneuvers:refreshed.player.maneuvers,specialHand:refreshed.player.specialHand,
+     specialDeck:refreshed.player.specialDeck,specialDiscard:refreshed.player.specialDiscard,specialUses:0},
+    enemy:{...b.enemy,fleet:refreshed.enemy.fleet,escorts:refreshed.enemy.escorts,
+     maneuvers:refreshed.enemy.maneuvers,specialHand:refreshed.enemy.specialHand,
+     specialDeck:refreshed.enemy.specialDeck,specialDiscard:refreshed.enemy.specialDiscard,specialUses:0},
     vitalPrototype:refreshed.vitalPrototype,weaponFocus:'auto',targetVital:null,targetEscort:null,target:'plus',targetShip:0,shownPlayer:0});
   }
   realBattleRef.current=null;setFleetMenu(false);
@@ -755,13 +780,27 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
        <button className={maneuverHUD.formation==='guard'?'active':''} onClick={()=>orderManeuver('guard')}>GUARDIA</button>
        <button className={maneuverHUD.formation==='assault'?'active':''} onClick={()=>orderManeuver('assault')}>ASSALTO</button>
      </div>
-     <p>FUSIONE - 100 SINCRONIA</p>
-     {maneuverHUD.availableEscorts.map(item=><div key={item.slot} className="maneuver-options">
-       <span>SCUDIERA {item.slot+1}</span>
-       <button disabled={!item.available||maneuverHUD.sync<100||!!maneuverHUD.fusion||maneuverHUD.fusionCooldownRemainingMs>0} onClick={()=>orderFusion(item.slot,'barrier')}>BARRIERA</button>
-       <button disabled={!item.available||maneuverHUD.sync<100||!!maneuverHUD.fusion||maneuverHUD.fusionCooldownRemainingMs>0} onClick={()=>orderFusion(item.slot,'strike')}>ASSALTO</button>
-     </div>)}
-     {maneuverHUD.fusion&&<div className="maneuver-options"><span>{maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>}
+     <p>MAZZO SPECIALE · MANO {game.player.specialHand?.length||0}/5</p>
+     <div className="special-escort-target" role="group" aria-label="Scudiera da agganciare">
+      {maneuverHUD.availableEscorts.map(item=><button key={item.slot}
+       className={specialEscortSlot===item.slot?'active':''}
+       disabled={!item.available}
+       onClick={()=>setSpecialEscortSlot(item.slot)}>SCUDIERA {item.slot+1}</button>)}
+     </div>
+     <div className="special-card-hand" aria-label="Cinque carte speciali separate dalle numeriche">
+      {(game.player.specialHand||[]).map((card,i)=><button key={card.id} type="button"
+       className={'special-card special-'+card.type}
+       title={specialCardDefinition(card)?.description||'Carta speciale'}
+       disabled={!!maneuverHUD.fusion||maneuverHUD.sync<100||maneuverHUD.fusionCooldownRemainingMs>0
+        ||!maneuverHUD.availableEscorts.some(item=>item.slot===specialEscortSlot&&item.available)}
+       onClick={()=>playFusionCard(i)}>
+       <small>CARTA {i+1}</small>
+       <strong>{specialCardDefinition(card)?.short||'SPECIALE'}</strong>
+       <span>FUSIONE</span>
+      </button>)}
+     </div>
+     <small>Le fusioni richiedono una carta speciale e 100 Sincronia. Una carta usata viene rimpiazzata subito.</small>
+     {maneuverHUD.fusion&&<div className="maneuver-options"><span>{maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>
    </div>}
    <div className="player-status"><b>TU</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
    {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs} escortRefs={escortRefs}/>)}
