@@ -12,7 +12,7 @@ function ship(level=5){
 }
 const zero=()=>0;
 test('only explicitly designed fusion cards exist in this initial catalog',()=>{
- assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).sort(),['fusion-barrier','fusion-strike']);
+ assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).sort(),['fusion-barrier','fusion-strike','tactical-cover']);
 });
 test('initial special hand is separate from numeric cards and has exactly five',()=>{
  const input={...ship(),hand:[{value:8,suit:'♥'}],deck:[{value:13,suit:'♠'}]};
@@ -26,8 +26,9 @@ test('the special deck has intentional duplicates and unique instance IDs',()=>{
  const s=initializeSpecialDeck(ship(),zero),all=[...s.specialHand,...s.specialDeck];
  assert.equal(all.length,24);
  assert.equal(new Set(all.map(x=>x.id)).size,24);
- assert.equal(all.filter(x=>x.type==='fusion-barrier').length,12);
- assert.equal(all.filter(x=>x.type==='fusion-strike').length,12);
+ assert.equal(all.filter(x=>x.type==='fusion-barrier').length,8);
+ assert.equal(all.filter(x=>x.type==='fusion-strike').length,8);
+ assert.equal(all.filter(x=>x.type==='tactical-cover').length,8);
 });
 test('fusion cannot be triggered with a nonexistent special card',()=>{
  const s=initializeSpecialDeck(ship(),zero);
