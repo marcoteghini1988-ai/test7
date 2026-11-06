@@ -29,7 +29,7 @@ La branch `main` non viene modificata e resta la versione di riferimento. Non è
 
 ## Compatibilità e differenze non ancora definitive
 - 17 carte madri, 42 armi integrate, quattro rarità, cinque livelli, collezione, Bazar, Hangar e 34 asset delle scudiere non sono stati rimossi.
-- La seconda mano separata da 5 carte speciali resta un lavoro successivo: non viene spacciata per già implementata.
+- **Aggiornamento 6 novembre:** la mano separata da 5 speciali è implementata, ma al momento soltanto due tipi di carte sono giocabili: Fusione Barriera e Fusione Assalto. La fusione richiede il consumo della carta; la mano si reintegra immediatamente. Il resto delle speciali va ancora definito.
 - Le nuove silhouette sono **SVG con effetti di profondità**, non veri mesh 3D. I motori e i punti d'impatto sono ancora posizionati come nell'arena esistente e richiedono revisione specifica per forma.
 - Fusioni fra scudiere e fusione tripla non sono incluse nel punto 22 iniziale.
 - Verifica visiva su telefono e bilanciamento delle 17 madri L1–L5 devono seguire i test automatici.
@@ -48,3 +48,6 @@ Aprire la branch GitHub indicata, selezionare **Code → Download ZIP**. Contien
 
 ## Criteri di accettazione
 Le fusioni non generano HP, non riutilizzano carte già consumate, non sparano dalle scudiere agganciate, non cambiano le firme dei vitali e non bloccano gli attacchi contemporanei. Gli HP vengono calcolati quando arrivano i proiettili; i salvataggi storici non si perdono.
+
+## Correzione del punto 23: fusioni via carte speciali
+I comandi MANOVRE cambiano soltanto la formazione; non offrono più i pulsanti di fusione gratuita. Le carte Fusione Barriera e Fusione Assalto sono le uniche attivazioni delle fusioni per il giocatore e per l'IA. La Sincronia costituisce un requisito aggiuntivo. I nuovi test sono in `src/specialCards.test.js`. Per le altre decisioni e il rinvio audiovisivo: `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md`.
