@@ -1,5 +1,13 @@
 # Eclissi Stellare — Duello dei Motori
 
+
+> **STATO ATTUALE — 6 novembre 2026**  
+> La sorgente di continuità della scaletta ufficiale di 53 punti è [MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md](docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md).  
+> **Punto 22B:** due mani separate (7 numeriche + 5 speciali), attivazione delle fusioni esclusivamente giocando una speciale. **Punto 23:** collaborazione madre/scudiere verificata; sinergie avanzate ancora da completare. **Punto 24 e successivi:** proseguire sulle meccaniche e rimandare audio/visivo.  
+> Verifica del codice: 196 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
+> Il ramo **work/test8-punto22-fusioni-2026-11-06** contiene il lavoro, mentre **test7/main** resta intatto.
+
+
 Gioco React/Vite esistente, con Home, Shop, assetto/Hangar e campagna. Il combattimento attivo usa `MathDuelBattle.jsx`: i vecchi moduli Poker rimangono nel progetto per compatibilità, ma non sono il regolamento del duello attivo.
 
 ## Versione da proseguire
