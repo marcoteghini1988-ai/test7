@@ -9,7 +9,7 @@ import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipColl
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
 import {maneuverStatus,changeFormation,cancelFusion,recordManeuverEvent,prepareSideForAmmoRouting} from './fleetManeuvers.js';
-import {playSpecialCard,findFusionCardIndex,specialCardDefinition} from './specialCards.js';
+import {playSpecialCard,findFusionCardIndex,findCoverCardIndex,specialCardDefinition,specialCardReadiness} from './specialCards.js';
 import './MathDuelBattle.css';
 import './MathDuelIntro.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
@@ -481,7 +481,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    result.reason==='formation_cooldown'?'Formazione in ricarica':result.reason==='command_offline'?'Centralina disattivata':result.reason==='fusion_active'?'Attendi la fine della fusione':'Ordine non disponibile';
   write(n);
  }
- function playFusionCard(cardIndex){
+ function playTacticalCard(cardIndex){
   const b=gameRef.current;
   if(b.phase!=='ready'||!b.player?.maneuvers)return;
   const n=clone(b);
@@ -496,6 +496,9 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
     card_missing:'La carta speciale non è nella mano',
     not_enough_sync:'Sincronia insufficiente (richiesta: 100)',
     fusion_active:'Una fusione è già attiva',
+    cover_active:'Copertura tattica già pronta',
+    defensive_escort_required:'La copertura usa soltanto la prima scudiera',
+    command_offline:'Centralina madre distrutta',
     fusion_cooldown:'Fusione in ricarica',
     escort_unavailable:'Scegli una scudiera con scudo attivo',
     mother_not_ready:'Motore o centralina non disponibili',
@@ -576,6 +579,16 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(side==='player'){next.selected=[];next.targetShip=move.targetShip;}
   else next.shownPlayer=move.targetShip;
   next.effects=[...(prepared.effects||[]),effect];next.round+=1;
+  // AI acts defensively only after a real mother-bound salvo has launched.
+  // It must own and consume a Copertura Tattica card, just like the player.
+  if(side==='player'&&escortIndex==null&&effect.rawDamage>0&&next.enemy?.maneuvers){
+   const coverIndex=findCoverCardIndex(next.enemy);
+   const motherShield=next.enemy.fleet[0]?.defense?.shield;
+   if(coverIndex>=0&&motherShield&&effect.rawDamage>=Math.max(12,motherShield.max*.15)){
+    const cover=playSpecialCard(next.enemy,coverIndex,{escortSlot:0},Date.now());
+    if(cover.played)next.enemy=cover.side;
+   }
+  }
   const doctrinalShots=strike.volley.filter(shot=>shot.tacticalDoctrine);
   next.notice=doctrinalShots.length?
    'BONUS FLOTTA: '+doctrinalShots.map(shot=>shot.tacticalDoctrine).join(' / '):
@@ -670,7 +683,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    if(n.enemy.maneuvers){
     const status=maneuverStatus(n.enemy.maneuvers,n.enemy,now);
     n.enemy.maneuvers=status.state;
-    if(status.sync>=100&&!status.fusion&&status.availableEscorts.some(x=>x.available)){
+    if(status.sync>=100&&!status.fusion&&!status.cover&&status.availableEscorts.some(x=>x.available)){
      const target=status.availableEscorts.find(x=>x.available);
      const preferred=n.enemy.fleet[0].defense.shield.hp<n.enemy.fleet[0].defense.shield.max*.55?'barrier':'strike';
      let cardIndex=findFusionCardIndex(n.enemy,preferred);
@@ -781,6 +794,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
        <button className={maneuverHUD.formation==='assault'?'active':''} onClick={()=>orderManeuver('assault')}>ASSALTO</button>
      </div>
      <p>MAZZO SPECIALE · MANO {game.player.specialHand?.length||0}/5</p>
+     {maneuverHUD.cover&&<strong className="tactical-cover-status">COPERTURA PRONTA · {Math.ceil(maneuverHUD.coverRemainingMs/1000)}s · SCUDIERA 1</strong>}
      <div className="special-escort-target" role="group" aria-label="Scudiera da agganciare">
       {maneuverHUD.availableEscorts.map(item=><button key={item.slot}
        className={specialEscortSlot===item.slot?'active':''}
@@ -791,21 +805,20 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
       {(game.player.specialHand||[]).map((card,i)=><button key={card.id} type="button"
        className={'special-card special-'+card.type}
        title={specialCardDefinition(card)?.description||'Carta speciale'}
-       disabled={!!maneuverHUD.fusion||maneuverHUD.sync<100||maneuverHUD.fusionCooldownRemainingMs>0
-        ||!maneuverHUD.availableEscorts.some(item=>item.slot===specialEscortSlot&&item.available)}
-       onClick={()=>playFusionCard(i)}>
+       disabled={!specialCardReadiness(game.player,i,specialEscortSlot,uiClock).ready}
+       onClick={()=>playTacticalCard(i)}>
        <small>CARTA {i+1}</small>
        <strong>{specialCardDefinition(card)?.short||'SPECIALE'}</strong>
-       <span>FUSIONE</span>
+       <span>{specialCardDefinition(card)?.family==='defense'?'DIFESA':'FUSIONE'}</span>
       </button>)}
      </div>
-     <small>Le fusioni richiedono una carta speciale e 100 Sincronia. Una carta usata viene rimpiazzata subito.</small>
+     <small>Le fusioni richiedono una speciale e 100 Sincronia. La Copertura Tattica consuma una speciale e lo scudo reale della scudiera 1 al prossimo impatto (max 15s). La mano torna sempre a cinque.</small>
      {maneuverHUD.fusion&&<div className="maneuver-options"><span>{maneuverHUD.fusion.mode==='barrier'?'BARRIERA':'ASSALTO'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>}
    </div>}
    <div className="player-status"><b>TU</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{message||game.notice}</small></div>
    {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs} escortRefs={escortRefs}/>)}
    {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
-   {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>{game.vitalPrototype?'PROTOTIPO MADRE 1 CONTRO 1: lo scudo protegge quattro parti vitali. A 75%, 50%, 25% e 0% puoi scegliere una parte da esporre; un calcolo valido la danneggia. Vinci quando tutte e quattro le parti nemiche arrivano a zero HP. Le firme definitive di ogni navicella sono ancora da progettare. Le scudiere ai lati della madre si sbloccano a L3 e L5, hanno scudi propri e possono intercettare i colpi. La formula finale è temporanea; le immagini delle scudiere sono nella cartella delle risorse.':'FLOTTE MULTIPLE (versione precedente): ogni nave monta le operazioni disponibili con i relativi HP. Le scudiere collegate alla madre saranno aggiunte successivamente.'}</p><p>MAZZI SEPARATI: sette carte numeriche per i calcoli e cinque speciali nella mano tattica. Dal pulsante MANOVRE scegli una scudiera e gioca una carta Fusione Barriera o Fusione Assalto: la Sincronia 100 è necessaria, ma non attiva la fusione da sola. Ogni speciale giocata viene rimpiazzata immediatamente. La scudiera agganciata non può sparare autonomamente.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo ha una penalità ancora da definire per il combattimento senza turni e il terzo −3 HP a te. Il numero di carte e il limite del mazzo sono provvisori. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
+   {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2><p>{game.vitalPrototype?'PROTOTIPO MADRE 1 CONTRO 1: lo scudo protegge quattro parti vitali. A 75%, 50%, 25% e 0% puoi scegliere una parte da esporre; un calcolo valido la danneggia. Vinci quando tutte e quattro le parti nemiche arrivano a zero HP. Le firme definitive di ogni navicella sono ancora da progettare. Le scudiere ai lati della madre si sbloccano a L3 e L5, hanno scudi propri e possono intercettare i colpi. La formula finale è temporanea; le immagini delle scudiere sono nella cartella delle risorse.':'FLOTTE MULTIPLE (versione precedente): ogni nave monta le operazioni disponibili con i relativi HP. Le scudiere collegate alla madre saranno aggiunte successivamente.'}</p><p>MAZZI SEPARATI: sette carte numeriche per i calcoli e cinque speciali nella mano tattica. Copertura Tattica usa una speciale e, per il prossimo impatto entro 15 secondi, assorbe fino al 75% del colpo sfruttando lo scudo reale della prima scudiera; non crea HP. Dal pulsante MANOVRE scegli una scudiera e gioca una carta Fusione Barriera o Fusione Assalto: la Sincronia 100 è necessaria, ma non attiva la fusione da sola. Ogni speciale giocata viene rimpiazzata immediatamente. La scudiera agganciata non può sparare autonomamente.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo ha una penalità ancora da definire per il combattimento senza turni e il terzo −3 HP a te. Il numero di carte e il limite del mazzo sono provvisori. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
    {fleetMenu&&<FleetSetup collection={collection} onEquip={saveLoadout} selected={fleetIds} setSelected={setFleetIds} enemySelected={enemyFleetIds} setEnemySelected={setEnemyFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet}/>}
   </div>
  </div>;
