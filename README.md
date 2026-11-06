@@ -4,7 +4,7 @@
 > **STATO ATTUALE — 6 novembre 2026**  
 > La sorgente di continuità della scaletta ufficiale di 53 punti è [MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md](docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md).  
 > **Punto 22B:** due mani separate (7 numeriche + 5 speciali), attivazione delle fusioni esclusivamente giocando una speciale. **Punto 23:** collaborazione madre/scudiere verificata; sinergie avanzate ancora da completare. **Punto 24 e successivi:** proseguire sulle meccaniche e rimandare audio/visivo.  
-> Verifica del codice: 240 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
+> Verifica del codice: 257 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
 > Il progetto ufficiale aggiornato è **test7/main**. Ogni aggiornamento successivo va applicato direttamente alla versione principale, senza nuove copie su GitHub.
 
 
@@ -176,3 +176,11 @@ Ogni componente della madre è **operativo oltre 50% HP**, in **AVARIA tra 1 e 5
 
 ## Punto 27 — Tre effetti strategici dei colpi (6 novembre 2026)
 Il mazzo speciale da **5 carte in mano**, separato dalle **7 numeriche**, contiene ora **sei tipologie operative**: Fusione Barriera, Fusione Assalto, Copertura Tattica, Colpo Perforante, Impulso Ionico e Corrosione. I semi numerici NON generano bonus. Le nuove carte possono essere preparate fino a **due diverse per scarica** e si consumano soltanto da mano speciale: **Perforante** fa raggiungere allo scudo madre il 20% del danno senza intercettazione scudiere, senza oltrepassare lo scudo; **Ionico** riduce del 30% l'intercettazione automatica nemica per 12 s dopo un colpo efficace; **Corrosione** aumenta di 25% il prossimo danno allo scudo, entro 15 s. L'IA segue le stesse regole di possesso e consumo. Il mazzo dimostrativo ha **24 carte, 4 copie per ciascuno dei 6 tipi**; deckbuilding definitivo ancora aperto. **240 test automatici superati, build e preflight riusciti**. Documentazione: `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`. Prossimo: **punto 28, firme e requisiti dei calcoli con 2/3 carte**. Grafica/sonoro definitivo rinviati.
+
+
+## Punto 28 — Calcoli 2/3 carte, firme dei vitali e Poker alternativo (6 novembre 2026)
+Il duello permette di selezionare **due oppure tre numeriche**, ripetendo la medesima operazione due volte da sinistra a destra per i calcoli a tre carte, con risultati intermedi interi positivi. Le sette carte numeriche restano separate dalle cinque carte speciali; la singola numerica carica una sola arma e le due/tre carte giocate vengono rimpiazzate.
+
+Le quattro parti vitali della madre ricevono ora **una firma matematica fissa a inizio partita**, differenziata per modello e limitata alle operazioni realmente disponibili. Le firme di prova accettano 2/3 carte. Alcune famiglie ammettono **COPPIA** come alternativa per il sistema armi (C/R/E/L), oppure **TRIS** per la centralina (E/L); il percorso matematico resta sempre disponibile. Le firme Poker a quattro/cinque carte e i requisiti definitivi per boss non sono ancora giocabili. L'IA può cercare combinazioni con tre carte, ma non sfrutta ancora attivamente le alternative Poker.
+
+**257 test automatici superati**, compilazione React/Vite e preflight verificati. Documentazione: `docs/PUNTO_28_CALCOLI_FIRME_VITALI.md`. Il blocco successivo è **Punto 29: ritmo e bilanciamento**. Grafica/audio definitivi sempre rinviati.
