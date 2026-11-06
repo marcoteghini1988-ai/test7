@@ -12,7 +12,7 @@ function ship(level=5){
 }
 const zero=()=>0;
 test('only explicitly designed fusion cards exist in this initial catalog',()=>{
- assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).sort(),['fusion-barrier','fusion-strike','tactical-cover']);
+ assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).sort(),['fusion-barrier','fusion-strike','shot-corrosion','shot-ion','shot-piercing','tactical-cover']);
 });
 test('initial special hand is separate from numeric cards and has exactly five',()=>{
  const input={...ship(),hand:[{value:8,suit:'♥'}],deck:[{value:13,suit:'♠'}]};
@@ -26,9 +26,11 @@ test('the special deck has intentional duplicates and unique instance IDs',()=>{
  const s=initializeSpecialDeck(ship(),zero),all=[...s.specialHand,...s.specialDeck];
  assert.equal(all.length,24);
  assert.equal(new Set(all.map(x=>x.id)).size,24);
- assert.equal(all.filter(x=>x.type==='fusion-barrier').length,8);
- assert.equal(all.filter(x=>x.type==='fusion-strike').length,8);
- assert.equal(all.filter(x=>x.type==='tactical-cover').length,8);
+ assert.equal(all.filter(x=>x.type==='fusion-barrier').length,4);
+ assert.equal(all.filter(x=>x.type==='fusion-strike').length,4);
+ assert.equal(all.filter(x=>x.type==='tactical-cover').length,4);
+ for(const type of ['shot-piercing','shot-ion','shot-corrosion'])
+  assert.equal(all.filter(x=>x.type===type).length,4,type);
 });
 test('fusion cannot be triggered with a nonexistent special card',()=>{
  const s=initializeSpecialDeck(ship(),zero);
@@ -48,7 +50,7 @@ test('playing a barrier card immediately returns the special hand to five',()=>{
  assert.equal(s.specialUses,0);
 });
 test('playing strike consumes the strike card rather than any numerical card',()=>{
- const s=initializeSpecialDeck({...ship(),hand:[{value:4,suit:'♣'}]},zero);
+ const s=initializeSpecialDeck({...ship(),hand:[{value:4,suit:'♣'}]},()=>.9);
  const index=findFusionCardIndex(s,'strike');
  assert.ok(index>=0);
  const result=playSpecialCard(s,index,{escortSlot:0},1000,zero);
@@ -64,16 +66,16 @@ test('not enough sync leaves card and deck untouched',()=>{
  assert.equal(result.side.specialUses,0);
 });
 test('an unavailable escort prevents consuming the special card',()=>{
- const s=initializeSpecialDeck(ship(1),zero);
+ const s=initializeSpecialDeck(ship(1),()=>.9);
  const i=findFusionCardIndex(s,'strike'),res=playSpecialCard(s,i,{escortSlot:0},1,zero);
  assert.equal(res.played,false);assert.equal(res.reason,'escort_unavailable');
  assert.equal(s.specialHand.length,5);
 });
 test('fusion cannot be stacked, even with several special cards',()=>{
- const s=initializeSpecialDeck(ship(),zero);
+ const s=initializeSpecialDeck(ship(),()=>.9);
  const first=playSpecialCard(s,findFusionCardIndex(s,'strike'),{escortSlot:0},1,zero);
  assert.equal(first.played,true);
- const second=playSpecialCard(first.side,0,{escortSlot:0},2,zero);
+ const second=playSpecialCard(first.side,findFusionCardIndex(first.side,'barrier'),{escortSlot:0},2,zero);
  assert.equal(second.played,false);
  assert.equal(second.reason,'fusion_active');
  assert.equal(second.side.specialUses,1);
