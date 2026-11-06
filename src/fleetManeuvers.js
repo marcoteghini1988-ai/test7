@@ -5,7 +5,8 @@ export const MANEUVER_RULES=Object.freeze({
  guardInterceptBonus:.08,guardOutgoingMultiplier:.85,
  assaultInterceptPenalty:.08,assaultOutgoingMultiplier:1.10,
  barrierFusionInterceptShare:.60,strikeFusionShieldMultiplier:1.25,
- maxSharePerEscort:.45
+ maxSharePerEscort:.45,
+ tacticalCoverDurationMs:15000,tacticalCoverInterceptShare:.75
 });
 export const FORMATIONS=Object.freeze(['balanced','guard','assault']);
 export const FUSION_MODES=Object.freeze(['barrier','strike']);
@@ -14,14 +15,40 @@ const whole=n=>Number.isFinite(n)&&n>0?Math.floor(n):0;
 const mother=side=>side?.fleet?.[0]?.defense?.kind==='mother'?side.fleet[0].defense:null;
 const command=side=>!!mother(side)?.parts?.command?.hp;
 const readyEscort=e=>!!e&&!e.defense?.destroyed&&e.defense?.shield?.hp>0;
-export function newManeuverState(){return {formation:'balanced',sync:0,formationReadyAt:0,fusion:null,fusionReadyAt:0,processedEventIds:[]};}
+export function newManeuverState(){return {formation:'balanced',sync:0,formationReadyAt:0,fusion:null,fusionReadyAt:0,cover:null,processedEventIds:[]};}
 export function advanceManeuvers(state,side,nowMs){
- const n=state||newManeuverState(),f=n.fusion;
+ let n=state||newManeuverState();
+ const cover=n.cover;
+ if(cover){
+  const protector=side?.escorts?.[cover.escortSlot];
+  if(nowMs>=cover.expiresAt||!readyEscort(protector)||protector.id!==cover.escortId||!command(side))
+   n={...n,cover:null};
+ }
+ const f=n.fusion;
  if(!f)return n;
  const e=side?.escorts?.[f.escortSlot];
  const expired=nowMs>=f.endsAt,broken=!readyEscort(e)||e.id!==f.escortId||!command(side)||!(mother(side)?.parts?.engine?.hp);
  if(!expired&&!broken)return n;
  return {...n,fusion:null,fusionReadyAt:Math.max(n.fusionReadyAt,(expired?f.endsAt:nowMs)+MANEUVER_RULES.fusionCooldownMs)};
+}
+// Point 25 — active cover is a special-card command, not free shield regeneration.
+// It protects the mother against ONE subsequent hit using escort #1 real HP.
+export function activateTacticalCover(state,side,escortSlot,nowMs){
+ const n=advanceManeuvers(state,side,nowMs);
+ if(!mother(side)||!command(side))return {state:n,activated:false,reason:'command_offline'};
+ if(n.cover)return {state:n,activated:false,reason:'cover_active'};
+ if(n.fusion)return {state:n,activated:false,reason:'fusion_active'};
+ if(escortSlot!==0)return {state:n,activated:false,reason:'defensive_escort_required'};
+ const escort=side?.escorts?.[escortSlot];
+ if(!readyEscort(escort))return {state:n,activated:false,reason:'escort_unavailable'};
+ return {state:{...n,cover:{
+  escortSlot,escortId:escort.id,startedAt:nowMs,
+  expiresAt:nowMs+MANEUVER_RULES.tacticalCoverDurationMs
+ }},activated:true,reason:'ok'};
+}
+export function cancelTacticalCover(state,side,nowMs){
+ const n=advanceManeuvers(state,side,nowMs);
+ return n.cover?{state:{...n,cover:null},cancelled:true}:{state:n,cancelled:false};
 }
 export function recordManeuverEvent(state,{id,type,amount=1}={}){
  const n=state||newManeuverState();
@@ -47,6 +74,7 @@ export function startFusion(state,side,escortSlot,mode,nowMs){
  if(!FUSION_MODES.includes(mode))return {state:n,started:false,reason:'invalid_mode'};
  if(!command(side)||!mother(side)?.parts?.engine?.hp)return {state:n,started:false,reason:'mother_not_ready'};
  if(n.fusion)return {state:n,started:false,reason:'fusion_active'};
+ if(n.cover)return {state:n,started:false,reason:'cover_active'};
  if(nowMs<n.fusionReadyAt)return {state:n,started:false,reason:'fusion_cooldown'};
  if(n.sync<100)return {state:n,started:false,reason:'not_enough_sync'};
  const e=side?.escorts?.[escortSlot];
@@ -60,7 +88,8 @@ export function cancelFusion(state,side,nowMs){
 }
 export function maneuverStatus(state,side,nowMs){
  const n=advanceManeuvers(state,side,nowMs);
- return {state:n,formation:n.formation,sync:n.sync,fusion:n.fusion,
+ return {state:n,formation:n.formation,sync:n.sync,fusion:n.fusion,cover:n.cover,
+ coverRemainingMs:n.cover?Math.max(0,n.cover.expiresAt-nowMs):0,
  fusionRemainingMs:n.fusion?Math.max(0,n.fusion.endsAt-nowMs):0,
  fusionCooldownRemainingMs:Math.max(0,n.fusionReadyAt-nowMs),
  formationCooldownRemainingMs:Math.max(0,n.formationReadyAt-nowMs),
@@ -94,8 +123,8 @@ export function adjustOutgoingVolley(volley,side,nowMs,context={}){
 }
 // Apply at projectile impact against CURRENT escort shield totals; never invent HP.
 export function interceptManeuverVolley(side,rawDamage,nowMs,calculateShare,options={}){
- const n=advanceManeuvers(side?.maneuvers,side,nowMs),raw=whole(rawDamage);
- const escorts=[...(side?.escorts||[])],f=n.fusion,details=[];
+ let n=advanceManeuvers(side?.maneuvers,side,nowMs),raw=whole(rawDamage);
+ const escorts=[...(side?.escorts||[])],f=n.fusion,cover=n.cover,details=[];
  if(!mother(side)||!command(side)||!raw)return {maneuvers:n,escorts,remaining:raw,intercepted:0,details};
  let remaining=raw;
  function absorb(slot,limit,mode){
@@ -106,9 +135,13 @@ export function interceptManeuverVolley(side,rawDamage,nowMs,calculateShare,opti
   escorts[slot]={...e,defense:{...e.defense,shield:{...e.defense.shield,hp:e.defense.shield.hp-damage}}};
   remaining-=damage;details.push({escortSlot:slot,damage,mode});
  }
+ if(cover){
+  absorb(cover.escortSlot,Math.floor(raw*MANEUVER_RULES.tacticalCoverInterceptShare),'tactical-cover');
+  if(details.some(d=>d.mode==='tactical-cover'))n={...n,cover:null};
+ }
  if(f?.mode==='barrier')absorb(f.escortSlot,Math.floor(raw*MANEUVER_RULES.barrierFusionInterceptShare),'barrier');
  escorts.forEach((e,slot)=>{
-  if(f?.escortSlot===slot||!readyEscort(e))return;
+  if(f?.escortSlot===slot||cover?.escortSlot===slot||!readyEscort(e))return;
   let share=typeof calculateShare==='function'?calculateShare(e,mother(side),options):.20;
   if(n.formation==='guard')share+=MANEUVER_RULES.guardInterceptBonus;
   if(n.formation==='assault')share-=MANEUVER_RULES.assaultInterceptPenalty;
