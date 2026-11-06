@@ -1,3 +1,9 @@
+# NOTA DI CONTINUITÀ — Stato nuovo, 6 novembre 2026
+
+La scaletta che segue è **una fotografia storica** del progetto precedente. Non usarla come stato corrente del combattimento. Per la scaletta ufficiale a 53 punti, 7 numeriche + 5 speciali, fusioni SOLO da carte speciali e cooperazione madre/scudiere, leggere `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md`.
+
+---
+
 # ECLISSI STELLARE 2.1 — STATO LAVORI
 
 ## Obiettivo richiesto
