@@ -15,6 +15,8 @@ import {commanderAbilityStatus} from './commanderAbilities.js';
 import {resolveCombatImpact} from './resolveCombatImpact.js';
 import {applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
+import BattleCombatFeedback from './BattleCombatFeedback.jsx';
+import {spentCardTrail,launchBattleCue,impactBattleCue,specialBattleCue} from './battleFeedback.js';
 import {systemState} from './fleetSystems.js';
 import {chooseCombatMove} from './aiBattleTactics.js';
 import {recoverStalledHand,battlePacingReport} from './battlePacing.js';
@@ -476,7 +478,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  const registerShipRef=(side,index,node)=>{if(node)shipRefs.current[side][index]=node; else delete shipRefs.current[side][index];};
  const registerEngineRef=(side,index,op,node)=>{const key=`${index}/${op}`;if(node)engineRefs.current[side][key]=node; else delete engineRefs.current[side][key];};
  const registerEscortRef=(side,index,node)=>{if(node)escortRefs.current[side][index]=node;else delete escortRefs.current[side][index];};
- const registerGunRef=(side,index,id,node)=>{const key=`${index}/${id}`;if(node)gunRefs.current[side][key]=node;else delete gunRefs.current[side][key];};const [help,setHelp]=useState(false),[fleetMenu,setFleetMenu]=useState(false),[message,setMessage]=useState('');const queue=useRef([]),resultClaimed=useRef(false),attackSerial=useRef(0);
+ const registerGunRef=(side,index,id,node)=>{const key=`${index}/${id}`;if(node)gunRefs.current[side][key]=node;else delete gunRefs.current[side][key];};const [help,setHelp]=useState(false),[fleetMenu,setFleetMenu]=useState(false),[message,setMessage]=useState('');const queue=useRef([]),resultClaimed=useRef(false),attackSerial=useRef(0),cueSerial=useRef(0);
  const pauseClockRef=useRef(false),pauseStartRef=useRef(0);
  pauseClockRef.current=help||fleetMenu;
  function later(f,ms){const handle=setTimeout(f,ms);queue.current.push(handle);return handle;}
@@ -546,6 +548,9 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const result=playSpecialCard(n.player,cardIndex,{escortSlot:specialEscortSlot},Date.now());
   if(result.played){
    n.player=result.side;
+   n.combatCue=specialBattleCue({id:++cueSerial.current,side:'player',
+    played:true,definition:result.definition,amount:result.amount});
+   tone('special');
    n.notice=result.definition.family==='volley'?'COLPO STRATEGICO ARMATO: '+result.definition.name:
     result.definition.family==='support'?'SUPPORTO: '+result.definition.name+
      (result.amount?' · +'+result.amount+' HP':''):
@@ -676,6 +681,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const effect={
    id:++attackSerial.current,side,op:move.op,targetShip:move.targetShip,
    environmentStage:arenaEnvironment(prepared.arena?.id,prepared.round).stage,
+   spentCards:spentCardTrail(cards,indices,side),
    unmodifiedVolleyDamage:strike.volley.reduce((sum,shot)=>sum+Math.max(0,(shot.damage||0)-(shot.maneuverBonus||0)),0),
    vitalId,escortIndex,pokerProof:pokerProof?.pattern??null,rawDamage:strike.rawDamage,damage:0,destroyed:false,resolved:false,
    strikeEffects:firedStrategicEffects,strikeCombo:shotCombinationName(firedStrategicEffects),
@@ -695,6 +701,8 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(side==='player'){next.selected=[];next.targetShip=move.targetShip;}
   else next.shownPlayer=move.targetShip;
   next.effects=[...(prepared.effects||[]),effect];next.round+=1;
+  next.combatCue=launchBattleCue({id:effect.id,side,cards,rawDamage:effect.rawDamage,
+   shots:strike.volley,effects:firedStrategicEffects});
   // AI acts defensively only after a real mother-bound salvo has launched.
   // It must own and consume a Copertura Tattica card, just like the player.
   if(side==='player'&&escortIndex==null&&effect.rawDamage>0&&next.enemy?.maneuvers){
@@ -750,6 +758,8 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
     specialImpacts:(previousBalance.specialImpacts||0)+(result.strategicApplied?.length?1:0)
    };
    state.effects[idx]={...state.effects[idx],resolved:true,damage:result.damage,destroyed:result.destroyed};
+   state.combatCue=impactBattleCue({id:effect.id,side,result,effect});
+   if(result.damage>0)tone(result.destroyed||result.systemDisabled?'critical':'impact');
    const systemLog=result.systemMessage?`${side==='player'?'NEMICO':'TU'}: ${result.systemMessage}`:null;
    const tacticalCombo=result.strategicApplied?.length===2?shotCombinationName(result.strategicApplied):null;
    const strategicLog=result.strategicApplied?.length?
@@ -991,6 +1001,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    style={{transform:`translate(-50%, -50%) scale(${scale})`}}>
    <ArenaBackdrop/>
    <ArenaEnvironment arenaId={game.arena?.id} round={game.round}/>
+   <BattleCombatFeedback cue={game.combatCue} effects={game.effects} intro={!!intro}/>
    <div className="top-brand">ECLISSI <b>STELLARE</b><small title={game.arena?.description} aria-label={'Arena tattica: '+(game.arena?.name||'Piattaforma di Titanio')}>{'ARENA · '+(game.arena?.shortLabel||'TITANIO')}</small></div>
    {!ambient.neutral&&<div className={'arena-phase-indicator arena-phase-'+ambient.stage}
      style={{'--arena-accent':ambient.accent}}
@@ -999,10 +1010,12 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      <strong>{ambient.label}</strong><small>CAMBIO FRA {ambient.calculationsUntilChange}</small>
    </div>}
    <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
-   <div className="enemy-status"><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>{game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
+   <div className={'enemy-status'+(game.enemy.bossNumericDeck?' boss-marked':'')}><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>{game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effects={game.effects} onSelectEscort={selectEscort} selectedEscort={game.targetEscort} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    {intro?<div className="battle-intro">
-    <div className="battle-intro-status" role="status">{intro.label}</div>
+    <div className="battle-intro-status" role="status">{intro.label}
+     {intro.id==='arm'&&game.enemy.bossNumericDeck?
+      ' · BOSS '+(numericBossDeck(game.enemy.bossNumericDeck.id)?.name||'') :''}</div>
     <div className="battle-intro-actions">
      {!reducedIntro&&<button type="button" className="es-button" onClick={()=>setReducedIntro(true)}>Riduci movimento</button>}
      <button type="button" className="es-button primary" onClick={finishIntro}>Salta intro</button>
@@ -1067,7 +1080,8 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    </div>}
    <div className="player-status"><b title={(game.player.commander?'Comandante '+(commanderAbilityStatus(game.player)?.name||commanderDisplayName||game.player.commander.id)+' L'+game.player.commander.level+(commanderAbilityStatus(game.player)?' · '+commanderAbilityStatus(game.player).description+' +'+commanderAbilityStatus(game.player).value+'% · ':' · '):'Nessun comandante · ')+(game.player.bossNumericDeck?activeNumericBossAbilities(game.player.bossNumericDeck.id,game.player.bossNumericDeck.level).filter(ability=>ability.unlocked).map(ability=>ability.name+' · Grado '+ability.grade+'/3').join(' | '):'Mazzo neutro · nessuna passiva')}>TU{game.player.bossNumericDeck?' · '+numericBossDeck(game.player.bossNumericDeck.id)?.name+' L'+game.player.bossNumericDeck.level:''}{game.player.commander?' · CMD L'+game.player.commander.level:''}</b><span className="my-hp">{game.vitalPrototype?`SCUDO ${game.player.fleet[0].defense.shield.hp}/${game.player.fleet[0].defense.shield.max} · PARTI ${VITAL_IDS.filter(id=>game.player.fleet[0].defense.parts[id].hp>0).length}/4`:`FLOTTA ${Math.round(healthScore(game.player)*100)}%`}</span><Pips ship={game.player}/><small>{playerSystemAlerts?playerSystemAlerts+' · ':''}{ownStrategicStatus.ionizedUntil?'IONIZZATA · ':''}{ownStrategicStatus.corrodedUntil?'SCUDO CORROSO · ':''}{message||game.notice}</small></div>
    {game.effects?.map(effect=><Projectile key={effect.id} effect={effect} rootRef={rootRef} engineRefs={engineRefs} gunRefs={gunRefs} escortRefs={escortRefs}/>)}
-   {game.phase==='finished'&&<div className="modal-shade"><div className="result-card"><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
+   {game.phase==='finished'&&<div className="modal-shade"><div className="result-card" data-outcome={game.winner}><div className="battle-result-emblem" aria-hidden="true">
+    {game.winner==='player'?'✦':game.winner==='draw'?'◇':'✕'}</div><h1>{game.winner==='player'?'VITTORIA':game.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1><p>{game.reason}</p><div className="result-score"><span>TUA FLOTTA <b>{Math.round(healthScore(game.player)*100)}%</b></span><span>AVVERSARIO <b>{Math.round(healthScore(game.enemy)*100)}%</b></span></div><button className="es-button primary" onClick={exitBattle}>CONFERMA E TORNA</button></div></div>}
    {help&&<div className="modal-shade"><div className="help-card"><h2>REGOLE DEL DUELLO</h2>
     <h3>CONDIZIONI ARENA: {game.arena?.name||'Piattaforma di Titanio'}</h3>
     {(()=>{const briefing=arenaTacticalBriefing(game.arena?.id,{
