@@ -19975,6 +19975,9 @@ function App() {
           gameMode={gameMode}
           selectedBossDeck={selectedDeck}
           bossDeckInventory={deckInventory}
+          selectedPilot={selectedPilot}
+          pilotInventory={pilotInventory}
+          commanderDisplayName={getPilotById(selectedPilot)?.name || ''}
           bossPlanetId={activeAdventure?.planet ?? null}
           bossSectorLevel={activeAdventure?.level ?? null}
           sectorNumber={gameMode === 'adventure' ? ((activeAdventure?.planet || 1) - 1) * 10 + (activeAdventure?.level || 1) : Math.max(1, level)}
