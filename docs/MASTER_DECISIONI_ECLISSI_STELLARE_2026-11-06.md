@@ -39,7 +39,7 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - Due mazzi e due mani separate: **7 numeriche + 5 speciali**.
 - Dopo ogni speciale usata, pescata **immediata** fino a 5 speciali; nessun limite arbitrario aggiuntivo alla frequenza di pescata/uso.
 - Si ammettono più copie dello stesso tipo speciale. Si potranno giocare più speciali nella stessa finestra d'azione purché gli effetti siano compatibili. Il motore attuale impedisce due fusioni simultanee della medesima madre, perché sono incompatibili.
-- Catalogo attualmente **implementato**: solo `Fusione Barriera` e `Fusione Assalto` come carte speciali operative. Il mazzo dimostrativo usa 24 istanze (12 per tipo), numero provvisorio, con recupero degli scarti per mantenere la mano a cinque.
+- Catalogo attualmente **implementato**: `Fusione Barriera`, `Fusione Assalto`, `Copertura Tattica`. Il mazzo dimostrativo contiene 24 istanze (8 per tipo), distribuzione provvisoria, con recupero degli scarti per mantenere la mano a cinque. Copertura Tattica protegge la madre dal prossimo colpo entro 15 secondi usando lo scudo della prima scudiera; non richiede Sincronia, non si cumula con le fusioni.
 - L'utente sceglie la carta dalla propria mano e la scudiera bersaglio. Se manca Sincronia/una scudiera disponibile, la carta NON viene consumata.
 - Numeriche e speciali non si sostituiscono; l'azione speciale non utilizza o modifica le sette numeriche.
 - Le altre speciali non devono essere inventate prematuramente; definire prima meccaniche, effetti, costi, sinergie e limiti. Lo schema del motore è predisposto per ampliare il catalogo.
@@ -62,7 +62,8 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - **22B / preparazione del 30: mazzi separati e carte fusione**. Sono già presenti modulo, UI, IA e test. Non è una rinumerazione della scaletta da 53 punti.
 - **23: collaborazione madre/scudiere**. Protezione, fuoco coordinato e ruoli esistenti verificati con test aggiuntivi; sinergie avanzate NON concluse. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
 - **24 (identità e ruoli)**: le 17 madri possiedono 34 scudiere con ruolo difensivo nel primo slot e offensivo nel secondo. La verifica è inclusa nei test; approfondimenti tattici da completare. Vedi `docs/PUNTO_24_RUOLI_FLOTTA.md`.
-- **25–29 (blocco meccaniche)**: difesa madre (25), danni ai sistemi (26), effetti dei colpi (27), requisiti matematici/armi/condizioni (28), ritmo (29). Da proseguire nell'ordine della master originale.
+- **25 (protezione madre)**: tre difese distinte, automatica / formazione / carta Copertura Tattica da 15 s e un solo impatto, sempre consumando HP reali della scudiera 1. Logica e interfaccia create, bilanciamento aperto. Vedi `docs/PUNTO_25_PROTEZIONE_MADRE.md`.
+- **26–29**: danni ai sistemi (26), effetti dei colpi (27), requisiti matematici/armi/condizioni (28), ritmo (29). Da proseguire nell'ordine della master.
 - **30 e successivi (costruzione mazzi speciali)**: estendere la base già pronta con le singole carte decise, pacchetti e deckbuilding, sblocchi, varianti e compatibilità, dopo la definizione delle relative meccaniche.
 - **Altri blocchi della master**: parti vitali (51–52), piloti/comandante (40–41), arene (42–43), campagna (44–45), Shop (46), IA (47), grafica/sonoro finale e boss/mazzi dedicati (53). Le varianti estetiche e audiovisive sono rinviate per ora, senza cambiare le decisioni tattiche.
 
@@ -85,5 +86,5 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Carta fusione obbligatoria per giocatore e IA; due mani indipendenti.
 - Punto 23: nuovi test cooperazione madre e scudiere.
 - Punto 24: nuovi test di tutti i ruoli per 17 famiglie, con scudiera 1 difensiva e scudiera 2 offensiva.
-- 200 test logici superati (12 aggiunti per le speciali, 3 cooperazione, 4 identità dei ruoli rispetto ai 181 iniziali), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
-- **Prossima priorità: punto 25, protezione della madre e meccaniche attive**, senza completare ancora audio/visivo.
+- 213 test logici superati (13 nuovi test Punto 25, oltre ai 200 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
+- **Prossima priorità: punto 26, danni localizzati ai sistemi vitali**, senza completare ancora audio/visivo.
