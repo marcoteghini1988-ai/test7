@@ -67,7 +67,8 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - **27 (effetti dei colpi)**: tre nuove carte strategiche Perforante, Ionico e Corrosione, con durata, interazione e consumo verificati da test. Il catalogo completo è ora di sei tipi (dati di bilanciamento ancora provvisori). Vedi `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`.
 - **28 (calcoli e firme)**: 2/3 numeriche giocabili con catena esatta, firme matematiche fisse a inizio battaglia per modello, coppia/tris facoltativi su alcuni vitali, senza mai rendere Poker l'unica strada. L'IA dispone di ricerca delle triple. Firme definitive e Poker a 4/5 carte da sviluppare. Vedi `docs/PUNTO_28_CALCOLI_FIRME_VITALI.md`.
 - **29 (ritmo e bilanciamento)**: IA con scelta di colpi validi contro firme math/Poker, mazzo numerico riciclato senza duplicazioni solo nelle nuove battaglie, ricambio manuale/IA da una carta quando non esiste un attacco valido (ricarica tecnica 15 s), e metriche di fine partita per calibrare durata e risorse. **Prototipo logico verificato; bilanciamento empirico ancora aperto**. Vedi `docs/PUNTO_29_RITMO_BILANCIAMENTO.md`.
-- **30 e successivi (costruzione mazzi speciali)**: estendere la base già pronta con le singole carte decise, pacchetti e deckbuilding, sblocchi, varianti e compatibilità, dopo la definizione delle relative meccaniche.
+- **30 (costruzione mazzi speciali)**: inventario persistente indipendente, editor di 24 carte, copia massima 6 per tipo e saldo possedute/equipaggiate, pacchetti ricompensa da tre carte sulla prima vittoria per settore, due nuove speciali di supporto e tre combinazioni offensive a due carte. Prima versione operativa, rarità/economia/bilanciamento ancora da definire. Vedi `docs/PUNTO_30_MAZZO_CARTE_SPECIALI.md`.
+- **Punti successivi**: completare i sistemi speciali, le loro interazioni/rarità, le sinergie fra flotte e le meccaniche ancora aperte. La denominazione esatta del punto 31 e l'ordine dei 32–39 vanno recuperati dal documento ufficiale originale, senza inventarli.
 - **Altri blocchi della master**: parti vitali (51–52), piloti/comandante (40–41), arene (42–43), campagna (44–45), Shop (46), IA (47), grafica/sonoro finale e boss/mazzi dedicati (53). Le varianti estetiche e audiovisive sono rinviate per ora, senza cambiare le decisioni tattiche.
 
 ## Audio-visivo: RINVIATO SU RICHIESTA
@@ -90,7 +91,7 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Punto 23: nuovi test cooperazione madre e scudiere.
 - Punto 24: nuovi test di tutti i ruoli per 17 famiglie, con scudiera 1 difensiva e scudiera 2 offensiva.
 - 257 test logici superati (17 nuovi test Punto 28, oltre ai 240 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
-- **Prossima priorità: punto 30, costruzione delle carte speciali e del mazzo**, senza completare ancora audio/visivo.
+- **Prossima priorità: proseguire i punti originali successivi al 30, verificandone la numerazione**, senza completare ancora audio/visivo.
 
 
 ### Ultimo avanzamento — Punto 26 (6 novembre 2026)
@@ -127,3 +128,14 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Un rapporto di fine partita conta durata, coppie/triple giocate, carte spese, ricicli e ricambi per calibrare la difficoltà.
 - **272 test automatici riusciti**, build e preflight superati su `test7/main`. Le durate obiettivo, il bilanciamento delle 17 flotte, la leggibilità 9:16 e la resa su telefono devono essere collaudati realmente.
 - **Prossimo punto: 30**, ampliamento delle carte speciali e dei mazzi. Grafica 3D e sonoro definitivi successivamente.
+
+
+### Ultimo avanzamento — Punto 30 (6 novembre 2026)
+- **Due mazzi separati**: 7 numeriche e 5 speciali in mano. Il mazzo speciale equipaggiato contiene 24 carte reali, separate dalle copie possedute e personalizzabile nel pannello dell'Hangar e della flotta prepartita.
+- **8 tipologie giocabili**: Fusione Barriera, Fusione Assalto, Copertura Tattica, Perforante, Ionico, Corrosione, **Riparazione Scudo**, **Pulizia Sistemi**. Le due nuove speciali di supporto sono inizialmente non possedute e si trovano nei pacchetti.
+- Le carte di supporto consumano carte speciali vere: Riparazione max 20 HP, influenzata dal generatore danneggiato; Pulizia elimina Ionizzazione e Corrosione attive. Non vengono assegnati HP o effetti senza carta.
+- Tre coppie di effetti offensivi compatibili con nome proprio; **nessun moltiplicatore aggiuntivo**. L'IA usa solo le carte nel proprio mazzo e sa utilizzare supporti quando servono.
+- **Pacchetti da 3 carte**: un credito per la prima vittoria di ogni settore di Campagna/Avventura, senza premi nei test, senza ripetizione sullo stesso settore e senza valuta reale. Frequenze e rarità ancora provvisorie.
+- Salvataggio della collezione speciale separato e non distruttivo rispetto alla collezione navicelle, con validazione proprietà/copertura. Un salvataggio corrotto non viene sovrascritto silenziosamente.
+- **295 test logici riusciti**, build e preflight automatizzati su `test7/main`. Non è ancora un collaudo di giocabilità su telefono e il bilanciamento resta sperimentale.
+- Riferimento `docs/PUNTO_30_MAZZO_CARTE_SPECIALI.md`. Prossimi punti 31–39: rispettare la scaletta numerata originale; il testo integrale non è incluso nei documenti correnti. La fase audio-visiva definitiva rimane rinviata.
