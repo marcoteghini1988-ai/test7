@@ -44,3 +44,7 @@ In **MANOVRE**, seleziona **SCUDIERA 1**, poi gioca la carta **COPERTURA** dalla
 
 ## Punto 26: danni localizzati ai vitali
 Ogni sistema della madre entra in **AVARIA** quando rimane al 50% degli HP o meno, e in **KO** a zero HP. I danni influiscono realmente sulla flotta: motore -10%/-25%, armi madre -20%/-50%, centralina scudiere -15%/-40% con intercettazione disabilitata a KO, generatore scudi riparazioni dimezzate in avaria e scudo azzerato a KO. Le parti colpite devono essere esposte e richiedono la firma matematica corretta. I danni vengono applicati all'impatto; gli stati compaiono nella plancia. Regolamento completo: `docs/PUNTO_26_DANNI_LOCALIZZATI.md`. Prossimo blocco: Punto 27; audio e grafica definitiva più avanti.
+
+
+## Punto 27 — Effetti dei colpi (6 novembre 2026)
+Le cinque speciali possono includere **PERFORANTE** (20% scorta aggirata, mai scudo madre/vitale), **IONICO** (−30% intercettazioni automatiche nemiche per 12 s dopo un colpo efficace) e **CORROSIONE** (+25% al prossimo danno allo scudo entro 15 s). Si possono preparare fino a due effetti diversi per una scarica; vengono consumati dalla mano speciale, che torna subito a cinque. I calcoli usano ancora sette numeriche, senza nuovi poteri dei semi. Mazzo dimostrativo: 24 carte totali, quattro copie di ciascuno dei sei tipi. **240 test automatici superati** e build/preflight riusciti. I dettagli sono in `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`. Prossimo: Punto 28; audio-visivo finale rinviato.
