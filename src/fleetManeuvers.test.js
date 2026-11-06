@@ -87,3 +87,63 @@ test('status exposes remaining cooldown without changing shield',()=>{
  assert.equal(maneuverStatus(st,s,3000).fusionRemainingMs,9000);
  assert.equal(s.escorts[1].defense.shield.hp,50);
 });
+
+test('fusione gemellare richiede due scudiere vive e la carta potrà spendere 100 Sincronia',()=>{
+ const a=side(),start=startFusion(charged(),a,0,'twin',1000);
+ assert.equal(start.started,true);
+ assert.equal(start.state.sync,0);
+ assert.deepEqual(start.state.fusion.escortSlots,[0,1]);
+ assert.equal(start.state.fusion.escortIds.length,2);
+ assert.equal(start.state.fusion.endsAt,13000);
+ assert.equal(startFusion(charged(),side({shieldB:0}),0,'twin',1000).reason,'escort_unavailable');
+ assert.equal(startFusion(charged(),side({shieldA:0}),0,'triad',1000).reason,'escort_unavailable');
+ assert.equal(startFusion(newManeuverState(),a,0,'twin',0).reason,'not_enough_sync');
+ assert.equal(startFusion(start.state,a,0,'triad',1100).reason,'fusion_active');
+});
+
+test('fusione gemellare: la madre spara, le due scudiere non sparano e consumano HP autentici',()=>{
+ const base=side({shieldA:60,shieldB:60});
+ base.maneuvers=startFusion(charged(),base,0,'twin',1000).state;
+ const ammo=prepareSideForAmmoRouting(base,1500);
+ assert.equal(ammo.side.escorts.length,0);
+ assert.equal(base.escorts.length,2);
+ const volley=adjustOutgoingVolley({shots:[
+  {damage:20,bullets:4,escortSlot:0},
+  {damage:15,bullets:3,escortSlot:1},
+  {damage:40,bullets:10}
+ ],totalDamage:75},base,1500,{targetKind:'motherShield'});
+ assert.deepEqual(volley.shots.map(s=>s.damage),[0,0,40]);
+ assert.equal(volley.shots[0].bullets,0);
+ assert.equal(volley.shots[1].bullets,0);
+ const hit=interceptManeuverVolley(base,100,2000,()=>.20);
+ assert.equal(hit.intercepted,55);
+ assert.equal(hit.remaining,45);
+ assert.equal(hit.escorts[0].defense.shield.hp,33);
+ assert.equal(hit.escorts[1].defense.shield.hp,32);
+ assert.equal(base.escorts[0].defense.shield.hp,60);
+ assert.equal(base.escorts[1].defense.shield.hp,60);
+});
+
+test('fusione trina: +35% solo allo scudo madre e protezione reale senza munizioni aggiunte',()=>{
+ const a=side({shieldA:40,shieldB:40});
+ a.maneuvers=startFusion(charged(),a,1,'triad',100).state;
+ const packet={shots:[
+  {damage:30,bullets:5,escortSlot:0},
+  {damage:20,bullets:5,escortSlot:1},
+  {damage:40,bullets:10}
+ ],totalDamage:90};
+ const shield=adjustOutgoingVolley(packet,a,1000,{targetKind:'motherShield'});
+ assert.deepEqual(shield.shots.map(s=>s.damage),[0,0,54]);
+ assert.equal(shield.shots[2].bullets,10);
+ assert.equal(shield.shots[2].maneuverBonus,14);
+ const vital=adjustOutgoingVolley(packet,a,1000,{targetKind:'motherVital'});
+ assert.deepEqual(vital.shots.map(s=>s.damage),[0,0,40]);
+ const defended=interceptManeuverVolley(a,100,1000,()=>.20);
+ assert.equal(defended.intercepted,40);
+ assert.equal(defended.remaining,60);
+ assert.equal(defended.escorts[0].defense.shield.hp,20);
+ assert.equal(defended.escorts[1].defense.shield.hp,20);
+ const broken=advanceManeuvers(a.maneuvers,side({shieldA:0}),1000);
+ assert.equal(broken.fusion,null);
+ assert.ok(broken.fusionReadyAt>1000);
+});
