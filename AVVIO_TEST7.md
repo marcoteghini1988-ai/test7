@@ -1,0 +1,38 @@
+# ECLISSI STELLARE — VERSIONE UFFICIALE TEST7
+
+Questo è il progetto unico **`test7/main`**, comprensivo di sorgenti, asset, manovre, fusioni e carte speciali. Da ora i prossimi aggiornamenti si applicano direttamente a `main`, senza copie GitHub.
+
+## Per provare la partita
+
+1. Apri `https://github.com/marcoteghini1988-ai/test7` sul ramo `main` e premi **Code → Download ZIP** per il progetto completo, oppure importa direttamente `test7` in StackBlitz.
+2. Apri il progetto React/Vite, installa le dipendenze con `npm ci` e lancia `npm run dev`.
+3. In **Flotta → Prova**, scegli una singola nave madre al livello **3 o superiore**: al livello 3 arriva la prima scudiera, al livello 5 arriva la seconda.
+4. Durante un duello, usa **MANOVRE** sotto le carte per scegliere **Equilibrata**, **Guardia** o **Assalto**. I calcoli matematici corretti e gli interventi delle scudiere caricano la **Sincronia**.
+5. A 100 Sincronia, apri **MANOVRE**, scegli **SCUDIERA 1/2** e gioca una delle tue **5 CARTE SPECIALI** (Fusione Barriera o Fusione Assalto). La carta viene consumata e sostituita subito. Una fusione dura provvisoriamente **12 secondi**; **SGANCIA** interrompe la fusione con ricarica.
+6. Le nuove sagome delle 17 navicelle madri sono in `public/assets/ship-shells/`. Le carte madre originali e i 34 asset delle scudiere sono conservati.
+
+## Verifiche
+
+```bash
+npm ci
+npm run verify:logic
+npm run build
+npm run preflight
+npm run dev
+```
+
+GitHub Actions esegue le prime quattro verifiche automaticamente su `main`. La prova grafica sullo schermo reale (soprattutto 9:16) non è sostituita dai test automatici.
+
+## Limiti ancora aperti
+
+- Il repository unico di sviluppo è `test7`. Non occorre creare repository o copie denominate `test8`.
+- Gli scafi sono **SVG vettoriali con stile metallico**, non modelli mesh 3D. Il posizionamento fisico di armi, parti vitali e motori sulle nuove forme richiede la rifinitura grafica finale.
+- La **mano da cinque speciali** è già implementata con i due tipi di fusione; le altre carte speciali, la fusione tripla e le firme finali per modello devono ancora essere progettate.
+- Tutti i bonus, i tempi e le percentuali della fusione sono parametri iniziali di test.
+
+Specifiche complete: [docs/PUNTO_22_INTEGRAZIONE.md](docs/PUNTO_22_INTEGRAZIONE.md).
+
+
+**Ripresa successiva:** consultare `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md` per tutti i requisiti consolidati. Audio/visivo rinviati.
+
+**Nota numerazione:** le carte speciali delle fusioni sono il blocco 22B / base del punto 30; la collaborazione navicelle è il punto 23 ufficiale. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
