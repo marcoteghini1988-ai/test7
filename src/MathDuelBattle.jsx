@@ -55,8 +55,9 @@ function ShipSkin({side,vessel,imageRef}){
     <filter id={`${id}-${e.op}-burn`} colorInterpolationFilters="sRGB"><feColorMatrix type="saturate" values={e.state==='destroyed'?'.05':'.45'}/><feComponentTransfer>{['R','G','B'].map(channel=>React.createElement(`feFunc${channel}`,{key:channel,type:'linear',slope:e.state==='destroyed'?.22:e.state==='critical'?.42:.68}))}</feComponentTransfer></filter>
    </React.Fragment>)}
   </defs>
-  <ShipArtwork side={side} vessel={vessel} onLoad={()=>setLoaded(true)} mask={damaged.length?`url(#${id}-healthy)`:undefined}/>
-  {damaged.map(e=><ShipArtwork key={e.op} side={side} vessel={vessel} clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`}/>) }
+  <g opacity=".30"><ShipArtwork side={side} vessel={vessel} onLoad={()=>setLoaded(true)} mask={damaged.length?`url(#${id}-healthy)`:undefined}/></g>
+  <image href={`${ASSET_ROOT}/ship-shells/${vessel.id}.svg`} x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet" mask={damaged.length?`url(#${id}-healthy)`:undefined} aria-hidden="true"/>
+  {damaged.map(e=><image key={e.op} href={`${ASSET_ROOT}/ship-shells/${vessel.id}.svg`} x="0" y="0" width="1000" height="1000" clipPath={`url(#${id}-${e.op}-area)`} filter={`url(#${id}-${e.op}-burn)`} aria-hidden="true"/>)}
  </svg>;
 }
 function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation,impactDelay,mathMode=false}){
