@@ -111,7 +111,7 @@ export function bossNumericDamageFactor(attacker,defender,context={}){
   case 'planet_char_17':
    if(weaponKey&&b.lastWeapon&&weaponKey!==b.lastWeapon)bonus+=bossValue(attacker,0);
    if(new Set(cards.map(c=>c?.suit).filter(Boolean)).size>=2)bonus+=bossValue(attacker,1);
-   if(escortShot)bonus+=bossValue(attacker,2);
+   if(escortShot&&context.motherShot)bonus+=bossValue(attacker,2);
    break;
   case 'planet_char_19':
    if(escortIndex==null&&!vitalId&&e.shield.hp>0&&b.shieldHits%3===2)
