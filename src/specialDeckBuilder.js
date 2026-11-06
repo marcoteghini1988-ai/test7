@@ -10,7 +10,9 @@ export const SPECIAL_DECK_SIZE=24;
 export const SPECIAL_DECK_COPY_LIMIT=6;
 export const SPECIAL_PACK_SIZE=3;
 export const SPECIAL_TYPES=Object.freeze(Object.keys(SPECIAL_CARD_CATALOG));
-export const STARTER_SPECIAL_COUNTS=Object.freeze(Object.fromEntries(SPECIAL_TYPES.map(type=>[type,4])));
+// The two new support cards are unlocked through actual packs, not assigned for free.
+export const STARTER_SPECIAL_COUNTS=Object.freeze(Object.fromEntries(SPECIAL_TYPES.map(type=>
+ [type,type.startsWith('support-')?0:4])));
 const MAX_OWNED_COPIES=999;
 const MAX_CLAIMS=5000;
 const cleanNumber=n=>Number.isInteger(n)&&n>=0&&n<=MAX_OWNED_COPIES;
