@@ -35,7 +35,9 @@
 - **27**: effetti strategici delle armi.
 - **28**: condizioni di attivazione, matematica 2/3 carte, coppie/tris/sequenze/semi e fusioni.
 - **29**: ritmo e bilanciamento delle battaglie.
-- **30**: costruzione vera del mazzo speciale, tipologie oltre alle due fusioni, acquisti/sblocchi/copie.
+- **30**: costruzione vera del mazzo speciale, nuove tipologie oltre alle due fusioni e alla Copertura Tattica, acquisti/sblocchi/copie.
 Queste sono etichette della scaletta storica: non dichiarare i blocchi conclusi solo perché esiste un prototipo.
 
 Riferimento master: `MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md`.
+
+**Aggiornamento punto 25:** alla protezione automatica si aggiunge la speciale `Copertura Tattica`, vincolata alla scudiera difensiva 1, con un singolo impatto protetto e scudo reale. Vedi `PUNTO_25_PROTEZIONE_MADRE.md`.
