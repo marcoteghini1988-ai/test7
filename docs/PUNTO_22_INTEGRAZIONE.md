@@ -51,3 +51,5 @@ Le fusioni non generano HP, non riutilizzano carte già consumate, non sparano d
 
 ## Correzione del punto 23: fusioni via carte speciali
 I comandi MANOVRE cambiano soltanto la formazione; non offrono più i pulsanti di fusione gratuita. Le carte Fusione Barriera e Fusione Assalto sono le uniche attivazioni delle fusioni per il giocatore e per l'IA. La Sincronia costituisce un requisito aggiuntivo. I nuovi test sono in `src/specialCards.test.js`. Per le altre decisioni e il rinvio audiovisivo: `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md`.
+
+**Numerazione scaletta:** il mazzo speciale implementato ora è una correzione del punto 22 e prepara il punto 30; il punto 23 della master ufficiale è la collaborazione navicelle, documentata in `PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
