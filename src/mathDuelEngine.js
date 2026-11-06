@@ -1,3 +1,4 @@
+import {equipBossNumericDeck,reduceBossNumericStatuses} from './bossNumericDecks.js';
 // Eclissi Stellare — Fase 1: calcolo = grilletto, carte = munizioni, navi = armi integrate.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {PHASE16A_CAMPAIGN_PLANET_IDS,PHASE16A_TOTAL_SECTORS} from './newCombat/phase16ACatalog.js';
@@ -272,8 +273,9 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
   const shieldCollapsed=systemDisabled==='shieldGenerator'?defense.shield.hp:0;
   if(shieldCollapsed)defense=damageMotherShield(defense,shieldCollapsed).defense;
   const fleet=defender.fleet.map((v,i)=>i===shipIndex?{...v,defense}:v);
-  return {defender:{...defender,fleet,escorts:interception.escorts,
-    ...(maneuvers?{maneuvers}:{}),strategicStatuses:appliedStrategic.strategicStatuses},
+  const restoredStatuses=reduceBossNumericStatuses({...defender,strategicStatuses:appliedStrategic.strategicStatuses},appliedStrategic.applied,nowMs);
+  return {defender:{...restoredStatuses,fleet,escorts:interception.escorts,
+    ...(maneuvers?{maneuvers}:{})},
    damage:(detail.damage||0)+interception.intercepted,motherDamage:detail.damage||0,
    strategicApplied:appliedStrategic.applied,
    strategicPiercingBypass:strategic.piercingBypass,
@@ -370,7 +372,9 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
   rng,upgrades.specialDeckTypes??null);
  const enemy=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawEnemy,targets,supportedOperators(rawPlayer)):rawEnemy,
   rng,upgrades.enemySpecialDeckTypes??upgrades.specialDeckTypes??null);
- return {level,mode,player,enemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
+ const equippedPlayer=equipBossNumericDeck(player,upgrades.playerBossDeckId,upgrades.playerBossDeckLevel);
+ const equippedEnemy=equipBossNumericDeck(enemy,upgrades.enemyBossDeckId,upgrades.enemyBossDeckLevel);
+ return {level,mode,player:equippedPlayer,enemy:equippedEnemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
   targets,selected:[],target:'plus',targetVital:null,targetEscort:null,weaponFocus:'auto',targetShip:0,shownPlayer:0,phase:'ready',
   effect:null,notice:vitalPrototype?'Indebolisci lo scudo e scegli le parti vitali da esporre.':'Seleziona un motore nemico e due carte.',logs:[],winner:null};
 }
