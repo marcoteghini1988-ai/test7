@@ -16,6 +16,9 @@ test('40: equipaggia soltanto un comandante realmente sbloccato, da inventario s
   {id:'pilot_com_1',level:3,scope:'fleet'});
  assert.equal(commanderFromInventory('pilot_com_2',inventory),null);
  assert.equal(commanderFromInventory('pilot_unknown',inventory),null);
+ assert.equal(commanderFromInventory('pilot_unknown',{pilot_unknown:{unlocked:true,level:5}}),null);
+ assert.equal(commanderFromInventory('pilot_sentinel_1',{pilot_sentinel_1:{unlocked:true,level:5}}),null);
+ assert.equal(normalizeFleetCommander('pilot_sentinel_1',2),null);
  assert.equal(commanderFromInventory('',inventory),null);
  assert.equal(commanderFromInventory('pilot_com_1',null),null);
 });
