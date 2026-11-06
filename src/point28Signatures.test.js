@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {evaluateMathChain,inspectMathChain,mathChainText} from './mathChains.js';
-import {prototypeModelSignatures,vitalSignatureLabel} from './modelSignatures.js';
+import {prototypeModelSignatures,vitalSignatureLabel,primaryVitalMathGate} from './modelSignatures.js';
 import {createMotherDefense,damageMotherShield,exposeMotherPart,hitMotherPart,matchesVitalSignature,VITAL_IDS} from './vitalDefense.js';
 import {initialBattle,inspectCalculationCards,findThreeCardMoves,findMoves,
  consumeAttack,previewVolley} from './mathDuelEngine.js';
@@ -54,20 +54,21 @@ test('28: mother signature map is complete, stable, restricted to available oper
  assert.deepEqual(a,b);
  assert.deepEqual(Object.keys(a),VITAL_IDS);
  for(const id of VITAL_IDS){
-  assert.equal(a[id].kind,'mathGate');
-  assert.equal(a[id].target,targets[a[id].op]);
-  assert.deepEqual(a[id].allowedCardCounts,[2,3]);
+  const gate=primaryVitalMathGate(a[id]);
+  assert.equal(gate.kind,'mathGate');
+  assert.equal(gate.target,targets[gate.op]);
+  assert.deepEqual(gate.allowedCardCounts,[2,3]);
   assert.ok(vitalSignatureLabel(a[id]).includes('CARTE'));
  }
  const narrow=prototypeModelSignatures('C01',targets,['times']);
- assert.ok(VITAL_IDS.every(id=>narrow[id].op==='times'));
+ assert.ok(VITAL_IDS.every(id=>primaryVitalMathGate(narrow[id]).op==='times'));
  assert.ok(VITAL_IDS.every(id=>prototypeModelSignatures('C01',targets,[])[id]===null));
 });
 test('28: two different mother models have different fixed prototype signatures',()=>{
  const a=prototypeModelSignatures('C01',targets,ops);
  const b=prototypeModelSignatures('C02',targets,ops);
  assert.notDeepEqual(a,b);
- assert.notEqual(a.engine.op,b.engine.op);
+ assert.notEqual(primaryVitalMathGate(a.engine).op,primaryVitalMathGate(b.engine).op);
 });
 test('28: fixed prototype signature rejects the wrong operation, even with correct numbers',()=>{
  const signature={kind:'mathGate',op:'plus',target:10,allowedCardCounts:[2,3]};
@@ -95,15 +96,17 @@ test('28: poker signatures remain separately recognized and never auto-applied',
  assert.equal(matchesVitalSignature({kind:'poker',pattern:'fullHouse'},ranks([7,7,7,9,9])),true);
  assert.equal(matchesVitalSignature({kind:'poker',pattern:'fullHouse'},ranks([7,7,9])),false);
  const profiles=prototypeModelSignatures('R01',targets,ops);
- assert.equal(VITAL_IDS.some(id=>profiles[id].kind==='poker'),false);
+ assert.equal(profiles.weapons.kind,'any');
+ assert.equal(profiles.weapons.options.some(opt=>opt.kind==='poker'&&opt.pattern==='pair'),true);
 });
 test('28: live battle creates signatures once for all 4 vital targets on both sides',()=>{
  const b=initialBattle(1,{vitalPrototype:true,fleetIds:['C01'],shipLevel:5},()=>.5);
  for(const side of [b.player,b.enemy]){
   const d=side.fleet[0].defense;
   for(const id of VITAL_IDS){
-   assert.equal(d.parts[id].signature.kind,'mathGate');
-   assert.equal(d.parts[id].signature.target,b.targets[d.parts[id].signature.op]);
+   const gate=primaryVitalMathGate(d.parts[id].signature);
+   assert.equal(gate.kind,'mathGate');
+   assert.equal(gate.target,b.targets[gate.op]);
   }
  }
 });
@@ -131,4 +134,32 @@ test('28: three-card gate cannot be satisfied by a different poker hand',()=>{
  assert.equal(matchesVitalSignature(math,ranks([4,6])),false);
  assert.equal(matchesVitalSignature(math,ranks([2,3,5])),true);
  assert.equal(matchesVitalSignature({kind:'poker',pattern:'trips'},ranks([2,3,5])),false);
+});
+
+test('28: rare ship has an optional poker pair signature without removing arithmetic',()=>{
+ const signatures=prototypeModelSignatures('C01',targets,ops);
+ const sig=signatures.weapons;
+ assert.equal(sig.kind,'any');
+ assert.equal(matchesVitalSignature(sig,ranks([7,7])),true);
+ assert.equal(matchesVitalSignature(sig,ranks(examples[primaryVitalMathGate(sig).op].pair)),true);
+ let d=createMotherDefense({shipId:'C01',signatures,shieldMax:100,partHp:25});
+ d=exposeMotherPart(damageMotherShield(d,25).defense,'weapons').defense;
+ const hit=hitMotherPart(d,'weapons',7,ranks([7,7]));
+ assert.equal(hit.damage,7);
+ assert.equal(hit.defense.parts.weapons.hp,18);
+ const wrong=hitMotherPart(d,'weapons',7,ranks([2,5]));
+ assert.equal(wrong.damage,0);
+});
+test('28: epic/legendary command vital accepts optional tris while math remains valid',()=>{
+ for(const modelId of ['E01','L01']){
+  const signature=prototypeModelSignatures(modelId,targets,ops).command;
+  assert.equal(signature.kind,'any');
+  assert.equal(matchesVitalSignature(signature,ranks([7,7,7])),true);
+  const gate=primaryVitalMathGate(signature);
+  assert.equal(matchesVitalSignature(signature,ranks(examples[gate.op].triple)),true);
+ }
+});
+test('28: starter mother never requires a poker combination to finish',()=>{
+ const signatures=prototypeModelSignatures('N00',targets,ops);
+ for(const id of VITAL_IDS)assert.equal(signatures[id].kind,'mathGate');
 });
