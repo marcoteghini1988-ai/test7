@@ -13,7 +13,7 @@ import {activeArmaments} from './escortArmory.js';
 import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
 import {commanderAbilityStatus} from './commanderAbilities.js';
 import {resolveCombatImpact} from './resolveCombatImpact.js';
-import {prepareMotherDuelOptions} from './motherDuelLoadout.js';
+import {prepareMotherDuelOptions,chooseCampaignRivalCommander} from './motherDuelLoadout.js';
 import {applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import BattleCombatFeedback from './BattleCombatFeedback.jsx';
@@ -471,10 +471,16 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   return {playerBossDeckId:playerId,playerBossDeckLevel:playerLevel,
    enemyBossDeckId:boss?.id||'neutral_starter',enemyBossDeckLevel:boss?Math.min(boss.maxLevel,1+Math.floor((sectorNumber-1)/20)):1};
  }
- function commanderChoices(){
+ function commanderChoices(practice=false,motherOptions={}){
   const commander=commanderFromInventory(selectedPilot,pilotInventory);
+  const enemyId=motherOptions.enemyFleetIds?.[0]||'N00';
+  const rival=chooseCampaignRivalCommander({
+   mode:gameMode,globalSector:sectorNumber,planetId:bossPlanetId,
+   planetSector:bossSectorLevel,shipId:enemyId,
+   shipLevel:motherOptions.enemyShipLevels?.[enemyId]??motherOptions.shipLevel,
+   practice});
   return {playerCommanderId:commander?.id??null,playerCommanderLevel:commander?.level??1,
-   enemyCommanderId:FLEET_COMMANDER_DEFAULT_ID,enemyCommanderLevel:1};
+   enemyCommanderId:rival.id,enemyCommanderLevel:rival.level};
  }
  function startBattle(options,practice=false){
   // Owned special cards are read from their independent persistent collection.
@@ -485,7 +491,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    mode:gameMode,globalSector:sectorNumber,planetId:bossPlanetId,
    planetSector:bossSectorLevel,practice});
   const b=initialBattle(Math.max(1,sectorNumber),
-   {...motherOptions,...bossChoices(practice),...commanderChoices(),
+   {...motherOptions,...bossChoices(practice),...commanderChoices(practice,motherOptions),
     arenaPlanetId:bossPlanetId,arenaSectorLevel:bossSectorLevel,specialDeckTypes},Math.random,gameMode);
   b.practice=practice;
   b.phase='intro';
@@ -1040,7 +1046,8 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      <strong>{ambient.label}</strong><small>CAMBIO FRA {ambient.calculationsUntilChange}</small>
    </div>}
    <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
-   <div className={'enemy-status'+(game.enemy.bossNumericDeck?' boss-marked':'')}><div className="portrait">◆</div><div><b>{gameMode==='pvp'?'IA SIMULATA · NON ONLINE':'AVVERSARIO'} {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>{game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
+   <div className={'enemy-status'+(game.enemy.bossNumericDeck?' boss-marked':'')}
+     title={'COMANDANTE NEMICO: '+(commanderAbilityStatus(game.enemy)?.name||'Cadetto')}><div className="portrait">◆</div><div><b>{gameMode==='pvp'?'IA SIMULATA · NON ONLINE':'AVVERSARIO'} {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>CMD {commanderAbilityStatus(game.enemy)?.name||'BASE'} · {game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effects={game.effects} onSelectEscort={selectEscort} selectedEscort={game.targetEscort} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    {intro?<div className="battle-intro">
     <div className="battle-intro-status" role="status">{intro.label}
