@@ -40,7 +40,7 @@ export function previewStrategicImpact(side,rawDamage,effects=[],nowMs=Date.now(
  const amount=raw(rawDamage),statuses=strategicStatus(side,nowMs);
  // A mathematical signature is NEVER bypassed or changed.
  const shield=options.escortIndex==null&&options.vitalId==null
-  &&side?.fleet?.[0]?.defense?.kind==='mother';
+  &&side?.fleet?.[0]?.defense?.kind==='mother'&&side.fleet[0].defense.shield.hp>0;
  const piercingBypass=shield&&has(effects,'shot-piercing')
   ?Math.floor(amount*SHOT_RULES.piercingBypassShare):0;
  return {
