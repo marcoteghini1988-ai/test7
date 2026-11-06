@@ -616,3 +616,32 @@
 .es-math-scope .escort-pod{height:129px;top:9px}
 .es-math-scope .escort-role{font-size:8px;line-height:1.1;font-weight:600;color:#93dfff;white-space:nowrap}
 .es-math-scope .ship-enemy .escort-role{color:#ffbbb0}
+
+
+/* Punto 22: the tactical panel does not replace the 7-card hand. */
+.es-math-scope .maneuver-panel{position:absolute;top:313px;left:79px;width:292px;z-index:90;box-sizing:border-box;border:1px solid #6bbfea;border-radius:11px;padding:10px;background:linear-gradient(155deg,#061b36f7,#0d1e30f9);color:#e8f8ff;box-shadow:0 15px 35px #000c,0 0 18px #2aa8d744;pointer-events:auto;display:flex;flex-direction:column;gap:7px}
+.es-math-scope .maneuver-panel header{display:flex;align-items:center;justify-content:space-between;font-size:12px;letter-spacing:.07em}
+.es-math-scope .maneuver-panel header button{font-size:19px;background:#172a42;color:#eafaff;border:1px solid #4e89b4;border-radius:6px;min-width:28px}
+.es-math-scope .maneuver-panel p{margin:2px 0 0;color:#b9dafa;font-size:10px;font-weight:800}
+.es-math-scope .maneuver-panel small{color:#c3d7e9;font-size:10px}
+.es-math-scope .maneuver-sync span{font-size:10px;font-weight:bold}
+.es-math-scope .maneuver-sync>div{margin-top:3px;width:100%;height:9px;border-radius:5px;border:1px solid #2e769e;overflow:hidden;background:#0b1c30}
+.es-math-scope .maneuver-sync i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#287bcd,#7bedfa);transition:width .2s}
+.es-math-scope .maneuver-options,.es-math-scope .maneuver-fusion-list>div{display:flex;gap:5px;align-items:center}
+.es-math-scope .maneuver-options button,.es-math-scope .maneuver-fusion-list button{flex:1;min-width:0;padding:7px 2px;border:1px solid #39739b;border-radius:5px;background:#102c48;color:#dbefff;font-size:9px;font-weight:800}
+.es-math-scope .maneuver-options button.active{border-color:#b2f9fc;background:#235d7b;color:white}
+.es-math-scope .maneuver-options strong{font-size:10px;flex:1}
+.es-math-scope .maneuver-fusion-list{display:flex;flex-direction:column;gap:5px}
+.es-math-scope .maneuver-fusion-list>div{width:100%}
+.es-math-scope .maneuver-fusion-list span{font-size:9px;font-weight:700;width:82px;flex-shrink:0}
+.es-math-scope .maneuver-panel button:disabled{opacity:.42;cursor:not-allowed}
+.es-math-scope .ship-zone .escort-pod{transition:transform .5s ease,opacity .4s ease,filter .4s ease}
+.es-math-scope .ship-zone[data-formation="guard"] .escort-slot-1{transform:translate(23px,11px)}
+.es-math-scope .ship-zone[data-formation="guard"] .escort-slot-2{transform:translate(-23px,11px)}
+.es-math-scope .ship-zone[data-formation="assault"] .escort-pod{transform:translateY(-16px);filter:drop-shadow(0 0 7px #53d2fa)}
+.es-math-scope .ship-zone[data-fusion="barrier"] .fleet-ships:after{content:"";position:absolute;left:37%;top:0;width:26%;height:76%;border:2px solid #79deff;box-shadow:0 0 18px #60e1ff inset,0 0 12px #60e1ffbb;border-radius:50%;pointer-events:none;animation:point22Barrier 1.6s ease-in-out infinite alternate}
+.es-math-scope .ship-zone[data-fusion="strike"] .fleet-ship-img{filter:drop-shadow(0 0 17px #ffbe6d)}
+.es-math-scope .ship-zone[data-fusion-slot="0"] .escort-slot-1{transform:translate(130px,30px) scale(.52);opacity:.45;filter:drop-shadow(0 0 10px #78ddff)}
+.es-math-scope .ship-zone[data-fusion-slot="1"] .escort-slot-2{transform:translate(-130px,30px) scale(.52);opacity:.45;filter:drop-shadow(0 0 10px #78ddff)}
+@keyframes point22Barrier{from{opacity:.35;transform:scale(.96)}to{opacity:.8;transform:scale(1.09)}}
+@media (prefers-reduced-motion:reduce){.es-math-scope .ship-zone .escort-pod{transition:none}.es-math-scope .ship-zone[data-fusion="barrier"] .fleet-ships:after{animation:none}}
