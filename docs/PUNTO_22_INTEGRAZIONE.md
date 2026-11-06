@@ -2,8 +2,8 @@
 Data: 6 novembre 2026
 
 ## Stato
-**Integrazione in ramo di lavoro completo**: `work/test8-punto22-fusioni-2026-11-06` del repository `marcoteghini1988-ai/test7`.
-La branch `main` non viene modificata e resta la versione di riferimento. Non è stato creato un repository autonomo denominato `test8` perché l'accesso GitHub disponibile consente di gestire rami/file ma non di creare repository.
+**Integrazione nella versione ufficiale**: `main` del repository `marcoteghini1988-ai/test7`.
+Su indicazione dell'utente, ogni miglioramento deve aggiornare direttamente `test7/main`. Non creare altri repository o copie di lavoro.
 
 ## Componenti collegati
 - `src/fleetManeuvers.js`: tre formazioni, sincronia 0–100, fusione Barriera / Assalto, durata/cooldown, invalidazione al KO di motore o centralina, consumi reali scudo scudiera.
@@ -13,7 +13,7 @@ La branch `main` non viene modificata e resta la versione di riferimento. Non è
 - `src/MathDuelBattle.jsx`: pulsante MANOVRE, pannello di scelta formazione e fusioni, barra Sincronia, attivazione/scadenza e sgancio; l'IA sceglie una formazione e può usare la fusione. Gli eventi di lancio e impatto incrementano la Sincronia senza duplicazioni.
 - `src/MathDuelBattle.css`: posizioni difensive/offensive, animazione d'aggancio e aura barriera; layout originale 9:16 e sette carte mantenuti.
 - `public/assets/ship-shells/<ID>.svg`: **17 nuove silhouette vettoriali** uniche, dal disco della Eclisse al doppio scafo Falco e al corpo a manta. Renderizzate sovrapposte alla nave esistente per preservare alcuni dettagli delle 85 evoluzioni, salvo futuri adeguamenti artistici.
-- `.github/workflows/test8-point22.yml`: verifica automatica test logici, build Vite/TypeScript e struttura.
+- `.github/workflows/test7-ci.yml`: verifica automatica test logici, build Vite/TypeScript e struttura.
 
 ## Regole provvisorie (bilanciamento da playtest)
 - Formazione Equilibrata: bonus assenti.
@@ -44,7 +44,7 @@ npm run dev
 ```
 
 ## Download della versione completa
-Aprire la branch GitHub indicata, selezionare **Code → Download ZIP**. Contiene gli asset originali del repository e tutte le nuove modifiche; non è la vecchia patch isolata.
+Aprire il repository `test7` sul ramo `main`, quindi selezionare **Code → Download ZIP**. Contiene gli asset originali del repository e tutte le nuove modifiche; non è la vecchia patch isolata.
 
 ## Criteri di accettazione
 Le fusioni non generano HP, non riutilizzano carte già consumate, non sparano dalle scudiere agganciate, non cambiano le firme dei vitali e non bloccano gli attacchi contemporanei. Gli HP vengono calcolati quando arrivano i proiettili; i salvataggi storici non si perdono.
