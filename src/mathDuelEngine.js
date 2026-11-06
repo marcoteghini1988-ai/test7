@@ -7,6 +7,7 @@ import {previewEscortedVolley} from './escortFiring.js';
 import {attackTargetKind,defensiveEscortShare} from './escortTactics.js';
 import {newManeuverState,interceptManeuverVolley,recordManeuverEvent} from './fleetManeuvers.js';
 import {initializeSpecialDeck} from './specialCards.js';
+import {previewStrategicImpact,strategicShieldDamage,finalizeStrategicImpact} from './strategicShots.js';
 import {SYSTEM_CONSEQUENCES,SYSTEM_DAMAGE_MESSAGES,systemState} from './fleetSystems.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
@@ -209,16 +210,25 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
    return {defender:{...defender,escorts:hit.escorts},damage:hit.damage,destroyed:hit.destroyed,
     escortIndex:options.escortIndex,reason:hit.reason};
   }
+  const nowMs=options.nowMs??Date.now(),strikeEffects=options.strikeEffects||[];
+  const strategic=previewStrategicImpact(defender,rawDamage,strikeEffects,nowMs,options);
+  // Piercing bypasses a fraction of the escort interception packet only.
+  // It does NOT bypass the mother shield or the mathematical signature.
   const interception=defender.maneuvers
-   ?interceptManeuverVolley(defender,rawDamage,options.nowMs??Date.now(),defensiveEscortShare,options)
-   :interceptMotherVolley(defender.escorts||[],rawDamage,vessel.defense,options);
+   ?interceptManeuverVolley(defender,strategic.interceptedPacket,nowMs,defensiveEscortShare,options)
+   :interceptMotherVolley(defender.escorts||[],strategic.interceptedPacket,vessel.defense,options);
   let maneuvers=interception.maneuvers;
   if(maneuvers&&interception.intercepted>0&&options.hitId!=null)
    maneuvers=recordManeuverEvent(maneuvers,{id:'intercept:'+options.hitId,type:'escort_interception',amount:interception.intercepted}).state;
   const previousSystemState=options.vitalId?systemState(vessel.defense,options.vitalId):null;
+  const realMotherPacket=interception.remaining+strategic.piercingBypass;
+  const shieldPacket=strategic.shield
+   ?strategicShieldDamage(realMotherPacket,strategic.corrosionActive):realMotherPacket;
   const detail=options.vitalId
-   ?hitMotherPart(vessel.defense,options.vitalId,interception.remaining,options.cards,options.signatureOverride)
-   :damageMotherShield(vessel.defense,interception.remaining);
+   ?hitMotherPart(vessel.defense,options.vitalId,realMotherPacket,options.cards,options.signatureOverride)
+   :damageMotherShield(vessel.defense,shieldPacket);
+  const appliedStrategic=finalizeStrategicImpact(defender,strategic,strikeEffects,nowMs,
+   strategic.shield?detail.damage:0);
   let defense=detail.defense;
   const currentSystemState=options.vitalId?systemState(defense,options.vitalId):null;
   // An exposed vital crossing 50% loses functionality immediately. Further hits
@@ -229,8 +239,12 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
   const shieldCollapsed=systemDisabled==='shieldGenerator'?defense.shield.hp:0;
   if(shieldCollapsed)defense=damageMotherShield(defense,shieldCollapsed).defense;
   const fleet=defender.fleet.map((v,i)=>i===shipIndex?{...v,defense}:v);
-  return {defender:{...defender,fleet,escorts:interception.escorts,...(maneuvers?{maneuvers}:{})},
+  return {defender:{...defender,fleet,escorts:interception.escorts,
+    ...(maneuvers?{maneuvers}:{}),strategicStatuses:appliedStrategic.strategicStatuses},
    damage:(detail.damage||0)+interception.intercepted,motherDamage:detail.damage||0,
+   strategicApplied:appliedStrategic.applied,
+   strategicPiercingBypass:strategic.piercingBypass,
+   strategicCorrosionBonus:Math.max(0,shieldPacket-realMotherPacket),
    intercepted:interception.intercepted,shieldCollapsed,systemDamaged,systemDisabled,
    systemCondition:currentSystemState,
    systemMessage:systemDisabled?SYSTEM_CONSEQUENCES[systemDisabled]:
