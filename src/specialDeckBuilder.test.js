@@ -15,12 +15,12 @@ function storage(){
   setItem:(key,value)=>values.set(key,value)};
 }
 const cardsOf=side=>[...side.specialHand,...side.specialDeck,...side.specialDiscard];
-test('30: starter collection owns eight types, six initially equipped and equips exactly 24 unique card slots',()=>{
+test('30: starter collection owns nine types, six initially equipped and equips exactly 24 unique card slots',()=>{
  const coll=createSpecialCollection(),counts=specialDeckCounts(coll.loadout);
  assert.equal(coll.schemaVersion,1);
  assert.equal(coll.loadout.length,SPECIAL_DECK_SIZE);
  assert.deepEqual(SPECIAL_TYPES,Object.keys(SPECIAL_CARD_CATALOG));
- assert.equal(SPECIAL_TYPES.length,8);
+ assert.equal(SPECIAL_TYPES.length,9);
  for(const type of SPECIAL_TYPES){
   assert.equal(coll.owned[type],STARTER_SPECIAL_COUNTS[type]);
   assert.equal(counts[type],STARTER_SPECIAL_COUNTS[type]);
@@ -95,13 +95,50 @@ test('30: opening a pack requires an earned credit; three genuine cards are adde
 });
 test('30: packs only increase ownership; deck must be edited and saved manually',()=>{
  const coll=createSpecialCollection();
- const pack=openSpecialPack(specialPackReward(coll,'campaign:sector:2').collection,()=>.9);
+ const pack=openSpecialPack(specialPackReward(coll,'campaign:sector:2').collection,()=>.85);
  const before=pack.collection.loadout;
  const equipped=equipSpecialDeck(pack.collection,
    before.map((t,i)=>i===0?'support-status-purge':t));
  assert.equal(equipped.loadout.length,24);
  assert.equal(before[0],'fusion-barrier');
  assert.notDeepEqual(equipped.loadout,before);
+});
+test('39: pre-existing v1 collection accepts missing newly introduced escort-repair card without losing progress',()=>{
+ const s=storage();
+ const original=createSpecialCollection();
+ const old={...original,owned:{...original.owned},packCredits:7,openedPacks:12,
+  claimedRewards:['campaign:sector:5','campaign:sector:6']};
+ delete old.owned['support-escort-repair'];
+ s.setItem(SPECIAL_COLLECTION_KEY,JSON.stringify(old));
+ const loaded=readSpecialCollection(s);
+ assert.equal(loaded.owned['support-escort-repair'],0);
+ assert.equal(loaded.packCredits,7);
+ assert.equal(loaded.openedPacks,12);
+ assert.deepEqual(loaded.claimedRewards,old.claimedRewards);
+ assert.deepEqual(loaded.loadout,old.loadout);
+ assert.equal(JSON.parse(s.getItem(SPECIAL_COLLECTION_KEY)).owned['support-escort-repair'],undefined);
+ updateSpecialCollection(c=>c,s);
+ assert.equal(readSpecialCollection(s).owned['support-escort-repair'],0);
+ assert.equal(readSpecialCollection(s).packCredits,7);
+ const damaged={...old,owned:{...old.owned}};
+ delete damaged.owned['shot-ion'];
+ assert.throws(()=>normalizeSpecialCollection(damaged),/Numero di carte/);
+});
+test('39: only packs can grant escort repair and a real owned copy can be equipped',()=>{
+ const base=createSpecialCollection();
+ assert.equal(base.owned['support-escort-repair'],0);
+ const denied=base.loadout.map((type,i)=>i===0?'support-escort-repair':type);
+ assert.equal(validateSpecialDeck(base,denied).reason,'not_owned');
+ const earned=specialPackReward(base,'campaign:sector:17').collection;
+ const opened=openSpecialPack(earned,()=>.999999);
+ assert.equal(opened.opened,true);
+ assert.deepEqual(opened.drawn,['support-escort-repair','support-escort-repair','support-escort-repair']);
+ const equipped=equipSpecialDeck(opened.collection,denied);
+ assert.equal(equipped.loadout.filter(type=>type==='support-escort-repair').length,1);
+ assert.equal(opened.collection.owned['support-escort-repair'],3);
+ const battle=initialBattle(1,{vitalPrototype:true,fleetIds:['N00'],shipLevel:5,
+  specialDeckTypes:equipped.loadout},rng);
+ assert.equal(cardsOf(battle.player).filter(card=>card.type==='support-escort-repair').length,1);
 });
 test('30: first-win reward cannot be farmed by replaying the same sector',()=>{
  const s=storage();
