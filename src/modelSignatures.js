@@ -10,14 +10,25 @@ export function prototypeModelSignatures(modelId,targets,availableOperators=[]){
   Number.isInteger(targets?.[op])&&targets[op]>0);
  if(!available.length)return Object.fromEntries(VITAL_IDS.map(id=>[id,null]));
  const offset=modelOffset(modelId)%available.length;
- return Object.fromEntries(VITAL_IDS.map((id,index)=>[id,Object.freeze({
-  kind:'mathGate',op:available[(index+offset)%available.length],
-  target:targets[available[(index+offset)%available.length]],
-  allowedCardCounts:[...MATH_CHAIN_COUNTS],modelId,prototype:true
- })]));
+ return Object.fromEntries(VITAL_IDS.map((id,index)=>{
+  const op=available[(index+offset)%available.length];
+  const math=Object.freeze({kind:'mathGate',op,target:targets[op],
+   allowedCardCounts:[...MATH_CHAIN_COUNTS],modelId,prototype:true});
+  // Poker is an OPTIONAL second way to trigger a vital hit; never a hard lock.
+  const poker=id==='weapons'&&modelId!=='N00'?'pair':
+   id==='command'&&/^[EL]/.test(modelId)?'trips':null;
+  return [id,poker?Object.freeze({kind:'any',options:Object.freeze([
+   math,Object.freeze({kind:'poker',pattern:poker,prototype:true})
+  ])}):math];
+ }));
+}
+export function primaryVitalMathGate(signature){
+ if(signature?.kind==='mathGate')return signature;
+ return signature?.kind==='any'?signature.options?.find(x=>x.kind==='mathGate')??null:null;
 }
 export function vitalSignatureLabel(signature){
  if(!signature)return 'FIRMA NON DEFINITA';
+ if(signature.kind==='any')return signature.options.map(vitalSignatureLabel).join(' O ');
  if(signature.kind==='mathGate'||signature.kind==='math'){
   const op=signature.op??signature.ops?.[0];
   const signs={plus:'+',minus:'−',times:'×',divide:'÷'};
