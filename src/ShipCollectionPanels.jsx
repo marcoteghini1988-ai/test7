@@ -30,7 +30,7 @@ export function ShipShopPanel() {
   const [preview, setPreview] = useState('');
   return <section className="ship-collection-panel es-math-scope" aria-label="Catalogo navicelle">
     <h4>Catalogo navicelle</h4>
-    <p>Consulta i modelli e i loro potenziamenti. Acquisti e upgrade saranno disponibili quando verranno definite le condizioni.</p>
+    <p>Ottieni nuove carte-navicella vincendo i settori chiave della Campagna. Ogni navicella ottenuta è permanente; i livelli successivi saranno gestiti nei potenziamenti.</p>
     {collection
       ? <p>Carte possedute · {collection.cards.length} su {PHASE1_SHIPS.length}</p>
       : <p role="status">Il salvataggio della collezione è illeggibile. Puoi consultare il catalogo.</p>}
@@ -44,7 +44,7 @@ export function ShipShopPanel() {
     <div className="ship-collection-grid">
       {PHASE1_SHIPS.map(ship => {
         const card = collection?.cards.find(entry => entry.shipId === ship.id);
-        const equipped = card && collection.loadout.includes(card.instanceId);
+        const equipped = card && collection.loadout[0]===card.instanceId;
         const status = card
           ? `${equipped ? 'Equipaggiata' : 'Posseduta'} · L${card.level}${card.level === 5 ? ' · Livello massimo' : ''}`
           : collection ? 'Da ottenere' : 'Proprietà non disponibile';
@@ -59,14 +59,14 @@ export function ShipHangarPanel({onOpenCatalog}) {
   const [draft, setDraft] = useState(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
-  const loadout = draft ?? collection?.loadout ?? [];
+  const loadout = (draft ?? collection?.loadout ?? []).slice(0,1);
   const changed = draft !== null && (
     loadout.length !== collection?.loadout.length ||
     loadout.some((id, index) => id !== collection.loadout[index])
   );
 
   function toggle(id) {
-    const next = loadout.includes(id) ? loadout.filter(entry => entry !== id) : [...loadout, id];
+    const next = [id]; // La madre equipaggiata è UNA: le altre carte restano possedute.
     try {
       if (next.length) equipShipCards(collection, next);
       setDraft(next);
@@ -93,8 +93,8 @@ export function ShipHangarPanel({onOpenCatalog}) {
   return <section className="ship-collection-panel ship-hangar es-math-scope" aria-label="Flotta Hangar">
     <h4>Hangar della flotta</h4>
     {collection ? <>
-      <p>Seleziona da una a tre carte possedute. Il prossimo duello userà la formazione salvata.</p>
-      <ol className="ship-collection-formation" aria-label="Ordine di schieramento">
+      <p>Seleziona la carta MADRE da utilizzare nel prossimo duello. Le scudiere si attivano automaticamente ai livelli 3 e 5. Cambiare madre non elimina le altre carte possedute.</p>
+      <ol className="ship-collection-formation" aria-label="Navicella madre equipaggiata">
         {loadout.map(id => {
           const card = collection.cards.find(entry => entry.instanceId === id);
           return <li key={id}>{card ? `${getShipDefinition(card.shipId).nome} · L${card.level}` : 'Carta non disponibile'}</li>;
