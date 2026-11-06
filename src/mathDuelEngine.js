@@ -7,6 +7,8 @@ import {previewEscortedVolley} from './escortFiring.js';
 import {attackTargetKind,defensiveEscortShare} from './escortTactics.js';
 import {newManeuverState,interceptManeuverVolley,recordManeuverEvent} from './fleetManeuvers.js';
 import {initializeSpecialDeck} from './specialCards.js';
+import {evaluateMathChain,inspectMathChain} from './mathChains.js';
+import {prototypeModelSignatures} from './modelSignatures.js';
 import {previewStrategicImpact,strategicShieldDamage,finalizeStrategicImpact} from './strategicShots.js';
 import {SYSTEM_CONSEQUENCES,SYSTEM_DAMAGE_MESSAGES,systemState} from './fleetSystems.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
@@ -125,6 +127,15 @@ export function inspectCalculation(op,first,second,target){
  options.sort((x,y)=>Math.abs(x.result-target)-Math.abs(y.result-target));
  const best=options[0];
  return {...best,valid:false,target,reason:Number.isFinite(best.result)?'target_mismatch':'invalid_cards'};
+}
+export function inspectCalculationCards(op,cards,target){
+ if(!Array.isArray(cards)||![2,3].includes(cards.length)||cards.some(card=>!card))
+  return {valid:false,op,target,reason:'invalid_cards'};
+ if(cards.length===2){
+  const preview=inspectCalculation(op,cards[0].value,cards[1].value,target);
+  return {...preview,op,order:preview.valid?[preview.a,preview.b]:[cards[0].value,cards[1].value],count:2};
+ }
+ return inspectMathChain(op,cards.map(card=>card.value),target);
 }
 export function totalHP(side){
  const mother=side.fleet.reduce((sum,v)=>sum+(v.defense?.kind==='mother'?v.defense.shield.hp+VITAL_IDS.reduce((s,id)=>s+v.defense.parts[id].hp,0):ENGINE_KEYS.reduce((s,k)=>s+(v.engines[k]?.hp||0),0)),0);
@@ -273,6 +284,19 @@ export function findMoves(side,defender,targets){const moves=[];for(const op of 
    }
   }
  }return moves;}
+// Three cards may be chained with the same operator, left-to-right.
+export function findThreeCardMoves(side,defender,targets){
+ const moves=[];
+ for(const op of supportedOperators(side))for(let vi=0;vi<defender.fleet.length;vi++){
+  if(!(defender.fleet[vi].engines[op]?.hp>0))continue;
+  for(let i=0;i<side.hand.length;i++)for(let j=i+1;j<side.hand.length;j++)
+   for(let k=j+1;k<side.hand.length;k++){
+    const match=evaluateMathChain(op,[side.hand[i].value,side.hand[j].value,side.hand[k].value],targets[op]);
+    if(match)moves.push({op,i,j,k,indices:[i,j,k],targetShip:vi,...match});
+   }
+ }
+ return moves;
+}
 export function consumeAttack(side,indices){const s=new Set(indices),used=side.hand.filter((_,i)=>s.has(i));return fillHand({...side,hand:side.hand.filter((_,i)=>!s.has(i)),discard:[...side.discard,...used]});}
 function weakestLiveEngine(side){const a=[];for(let i=0;i<side.fleet.length;i++)for(const op of ENGINE_KEYS){const e=side.fleet[i].engines[op];if(e?.hp>0)a.push({i,op,e});}return a.sort((x,y)=>x.e.hp-y.e.hp)[0];}
 export function sacrificeCard(side,index,opponent,secondsLeft=60){if(side.sacrifices>=3||side.deck.length===0||index<0||index>=side.hand.length)return null;
@@ -287,11 +311,15 @@ export function aiChoose(side,defender,targets,rng=Math.random){const moves=find
  return moves.map(m=>{const e=defender.fleet[m.targetShip].engines[m.op],v=previewVolley(side,[side.hand[m.i],side.hand[m.j]]);const dmg=Math.min(e.hp,v.totalDamage);return {...m,score:dmg+(e.hp<=dmg?100:0)+(m.op==='plus'?6:0)+rng()*2};}).sort((a,b)=>b.score-a.score)[0];}
 // Stage-one bridge: only 1v1 mother matches use this provisional model.
 // Multi-ship battles still run the previous code until genuine linked escorts exist.
-export function withPrototypeMother(side,targets){
+export function withPrototypeMother(side,targets,attackerOperators=null){
  if(side.fleet.length!==1)return side;
  const vessel=side.fleet[0];
  const shieldMax=Object.values(vessel.engines).reduce((n,part)=>n+part.max,0);
- const defense=createMotherDefense({shipId:vessel.id,shieldMax,partHp:Math.max(12,Math.round(shieldMax/4))});
+ const ownOps=supportedOperators(side);
+ const allowed=attackerOperators?ownOps.filter(op=>attackerOperators.includes(op)):ownOps;
+ const signatures=prototypeModelSignatures(vessel.id,targets,allowed);
+ const defense=createMotherDefense({shipId:vessel.id,shieldMax,
+  partHp:Math.max(12,Math.round(shieldMax/4)),signatures});
  const mother={...vessel,defense};
  return {...side,fleet:[mother],escorts:buildLinkedEscorts(mother,targets),maneuvers:newManeuverState()};
 }
@@ -305,8 +333,8 @@ export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign
  const rawPlayer=createShip(level,false,playerFleet,rng),rawEnemy=createShip(level,true,enemyFleet,rng);
  const vitalPrototype=upgrades.vitalPrototype===true&&rawPlayer.fleet.length===1&&rawEnemy.fleet.length===1;
  const targets=generateTargets(rng,level);
- const player=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawPlayer,targets):rawPlayer,rng);
- const enemy=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawEnemy,targets):rawEnemy,rng);
+ const player=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawPlayer,targets,supportedOperators(rawEnemy)):rawPlayer,rng);
+ const enemy=initializeSpecialDeck(vitalPrototype?withPrototypeMother(rawEnemy,targets,supportedOperators(rawPlayer)):rawEnemy,rng);
  return {level,mode,player,enemy,vitalPrototype,actor:'player',round:1,aiDueAt:0,effects:[],
   targets,selected:[],target:'plus',targetVital:null,targetEscort:null,weaponFocus:'auto',targetShip:0,shownPlayer:0,phase:'ready',
   effect:null,notice:vitalPrototype?'Indebolisci lo scudo e scegli le parti vitali da esporre.':'Seleziona un motore nemico e due carte.',logs:[],winner:null};
