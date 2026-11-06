@@ -63,7 +63,8 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - **23: collaborazione madre/scudiere**. Protezione, fuoco coordinato e ruoli esistenti verificati con test aggiuntivi; sinergie avanzate NON concluse. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
 - **24 (identità e ruoli)**: le 17 madri possiedono 34 scudiere con ruolo difensivo nel primo slot e offensivo nel secondo. La verifica è inclusa nei test; approfondimenti tattici da completare. Vedi `docs/PUNTO_24_RUOLI_FLOTTA.md`.
 - **25 (protezione madre)**: tre difese distinte, automatica / formazione / carta Copertura Tattica da 15 s e un solo impatto, sempre consumando HP reali della scudiera 1. Logica e interfaccia create, bilanciamento aperto. Vedi `docs/PUNTO_25_PROTEZIONE_MADRE.md`.
-- **26–29**: danni ai sistemi (26), effetti dei colpi (27), requisiti matematici/armi/condizioni (28), ritmo (29). Da proseguire nell'ordine della master.
+- **26 (danni localizzati)**: AVARIA al 50% HP, KO a zero; riduzioni progressive operative a motore, armi, generatore scudi e centralina. HUD, log e test aggiornati. Vedi `docs/PUNTO_26_DANNI_LOCALIZZATI.md`; bilanciamento da collaudare.
+- **27–29**: effetti strategici dei colpi (27), requisiti matematici/armi/condizioni (28), ritmo (29). Non completati.
 - **30 e successivi (costruzione mazzi speciali)**: estendere la base già pronta con le singole carte decise, pacchetti e deckbuilding, sblocchi, varianti e compatibilità, dopo la definizione delle relative meccaniche.
 - **Altri blocchi della master**: parti vitali (51–52), piloti/comandante (40–41), arene (42–43), campagna (44–45), Shop (46), IA (47), grafica/sonoro finale e boss/mazzi dedicati (53). Le varianti estetiche e audiovisive sono rinviate per ora, senza cambiare le decisioni tattiche.
 
@@ -86,5 +87,13 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Carta fusione obbligatoria per giocatore e IA; due mani indipendenti.
 - Punto 23: nuovi test cooperazione madre e scudiere.
 - Punto 24: nuovi test di tutti i ruoli per 17 famiglie, con scudiera 1 difensiva e scudiera 2 offensiva.
-- 213 test logici superati (13 nuovi test Punto 25, oltre ai 200 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
-- **Prossima priorità: punto 26, danni localizzati ai sistemi vitali**, senza completare ancora audio/visivo.
+- 225 test logici superati (12 nuovi test Punto 26, oltre ai 213 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
+- **Prossima priorità: punto 27, effetti strategici dei colpi e delle armi**, senza completare ancora audio/visivo.
+
+
+### Ultimo avanzamento — Punto 26 (6 novembre 2026)
+- Vitali madre con soglia **AVARIA 50%**, stato **KO** e log evento senza ripetizioni.
+- Effetti progressivi reali su colpi madre, colpi scudiere, capacità di riparare lo scudo e coordinazione. La protezione generale non trasmette danni ai vitali senza firma valida.
+- Componente scudiere, formazioni, fusioni e carte speciali precedenti mantenuti; la parte audiovisiva finale rimane posticipata.
+- **225 test automatici**, build e preflight superati. Nessun collaudo fisico sul telefono ancora effettuato.
+- **Prossimo: Punto 27**. Sviluppare gli effetti speciali solo con regole distinte e verificabili, senza inventare poteri automatici dei semi.
