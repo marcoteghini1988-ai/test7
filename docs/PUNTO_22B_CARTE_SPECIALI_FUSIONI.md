@@ -8,7 +8,7 @@ Data: 6 novembre 2026. Numerazione corretta: punto 23 ufficiale = collaborazione
 - `src/specialCards.js` è la porta di ingresso alle fusioni via carte. UI giocatore e IA chiamano **la medesima** `playSpecialCard`.
 - Quando una speciale funziona, la sua istanza viene scartata e la mano torna immediatamente a cinque; non è imposto un limite aggiuntivo alle pescate.
 - Se la fusione non è disponibile (Sincronia, scudiere, centralina, cooldown), **la carta non si consuma**.
-- Sono ammesse copie del medesimo tipo. Il mazzo di prova contiene **24 carte**: 12 Barriera e 12 Assalto, quantità tecnica NON definitiva. Gli scarti tornano nel mazzo dopo il suo esaurimento.
+- Sono ammesse copie del medesimo tipo. Il mazzo di prova contiene **24 carte**: 8 Barriera, 8 Assalto e 8 Copertura Tattica, quantità tecnica NON definitiva. Gli scarti tornano nel mazzo dopo il suo esaurimento.
 - L'IA sceglie la fusione soltanto se ha una carta compatibile nella mano speciale; non può ricorrere al vecchio `startFusion` direttamente.
 - Durante la fusione, la scudiera agganciata non riceve munizioni numeriche e non spara autonomamente. Il consumo degli scudi resta reale.
 
@@ -19,7 +19,7 @@ Data: 6 novembre 2026. Numerazione corretta: punto 23 ufficiale = collaborazione
 | Fusione Barriera | Aggancia una scudiera alla madre; intercetta parte dei colpi consumando il suo scudo | Logica e mano collegate |
 | Fusione Assalto | Aggancia una scudiera; potenzia il tiro della madre contro lo scudo nemico, senza tiro indipendente della scudiera | Logica e mano collegate |
 
-Il sistema delle altre carte strategiche, delle combinazioni di 1–2 speciali e delle abilità per le navi di livello 1–2 è **da progettare e implementare dopo aver fissato le meccaniche**. Non fingere che il catalogo iniziale di sole due carte costituisca il mazzo definitivo.
+Il sistema delle ulteriori carte strategiche, delle combinazioni di 1–2 speciali e delle abilità per le navi di livello 1–2 è **da progettare e implementare dopo aver fissato le meccaniche**. Il catalogo iniziale di tre carte non costituisce il mazzo definitivo.
 
 ## Percorso tecnico
 
@@ -33,7 +33,7 @@ Il sistema delle altre carte strategiche, delle combinazioni di 1–2 speciali e
 - Sincronia per fusione: 100.
 - Durata: 12 secondi.
 - Cooldown: 28 secondi.
-- Mazzo tecnico: 24 carte, 2 tipologie.
+- Mazzo tecnico: 24 carte, 3 tipologie; la terza è Copertura Tattica, che non richiede Sincronia e usa lo scudo reale della scudiera 1.
 - Formazione Guardia/Assalto: percentuali del precedente punto 22.
 
 ## Verifiche
@@ -48,3 +48,6 @@ Il sistema delle altre carte strategiche, delle combinazioni di 1–2 speciali e
 6. Solo dopo: finalizzazione **audio-visiva**, animazioni fisiche, 3D e collaudo grafico.
 
 Riferimento generale: `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md`.
+
+## Punto 25: Copertura Tattica (correzione al catalogo)
+Una terza carta speciale, **Copertura Tattica**, consuma la carta ma non la Sincronia: la prima scudiera protegge la madre dal prossimo colpo entro 15 s, intercettando al massimo il 75% del danno grezzo, limitato agli HP di scudo esistenti. Non può attivarsi durante una fusione o sovrapporsi a un'altra copertura. La versione tecnica dimostrativa ora ha 8 copie per tipo (24 carte totali); il deckbuilding finale resta da progettare. Vedi `docs/PUNTO_25_PROTEZIONE_MADRE.md`.
