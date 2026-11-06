@@ -144,7 +144,11 @@ Le famiglie in `src/escortArmory.js` applicano ora, tramite `src/escortTactics.j
 Le sette abilità di ruolo precedenti sono state mantenute e integrate con 17 dottrine di flotta. Ogni madre ha un bonus di attacco contro uno specifico bersaglio e un bonus difensivo sotto il 50% dello scudo. Le dottrine cessano di funzionare se viene distrutta la centralina. Il sistema non altera il significato dei semi né duplica le munizioni. Dettagli e valori provvisori nella scheda docs/PUNTO_12_DOTTRINE_FLOTTA.md. Verifica eseguita: 108 test logici su 108, senza compilazione completa o prova visiva browser.
 
 
-## Punto 23 — Due mazzi, fusione SOLO con carta speciale (6 novembre 2026)
+## Punto 22B — Fusione SOLO con carta speciale, fondazione del punto 30 (6 novembre 2026)
 I 7 valori numerici e le 5 carte speciali costituiscono **due mani distinte**. Sono disponibili **Fusione Barriera** e **Fusione Assalto** come primi due tipi di speciale (copie ammesse). Una fusione si attiva esclusivamente giocando e consumando la relativa speciale. Dopo l'uso la mano speciale viene immediatamente ripristinata a 5; l'IA usa le stesse carte. La Sincronia non autorizza fusioni gratuite. La capacità delle altre carte speciali resta da progettare con le relative meccaniche. `src/specialCards.js`, `src/specialCards.test.js`; guida e decisioni aggiornate: `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md`.
 
 **Non lavorare ancora alla rifinitura audiovisiva**: priorità alla logica, ai mazzi e alla collaborazione tra navicelle.
+
+
+## Punto 23 ufficiale — Cooperazione navicelle
+Madre e scudiere possono sparare e proteggersi nello stesso combattimento: le numeriche sono assegnate a un solo cannone per carta, le scudiere assorbono danni con gli HP effettivi e si applicano ruoli e dottrine. I nuovi test d'integrazione sono in `src/fleetCooperation.test.js`. Resta da ampliare la cooperazione avanzata non basata sulla fusione. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
