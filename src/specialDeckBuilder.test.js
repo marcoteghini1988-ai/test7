@@ -15,12 +15,12 @@ function storage(){
   setItem:(key,value)=>values.set(key,value)};
 }
 const cardsOf=side=>[...side.specialHand,...side.specialDeck,...side.specialDiscard];
-test('30: starter collection owns nine types, six initially equipped and equips exactly 24 unique card slots',()=>{
+test('30: starter collection has eleven types, six initially equipped and equips exactly 24 unique card slots',()=>{
  const coll=createSpecialCollection(),counts=specialDeckCounts(coll.loadout);
  assert.equal(coll.schemaVersion,1);
  assert.equal(coll.loadout.length,SPECIAL_DECK_SIZE);
  assert.deepEqual(SPECIAL_TYPES,Object.keys(SPECIAL_CARD_CATALOG));
- assert.equal(SPECIAL_TYPES.length,9);
+ assert.equal(SPECIAL_TYPES.length,11);
  for(const type of SPECIAL_TYPES){
   assert.equal(coll.owned[type],STARTER_SPECIAL_COUNTS[type]);
   assert.equal(counts[type],STARTER_SPECIAL_COUNTS[type]);
