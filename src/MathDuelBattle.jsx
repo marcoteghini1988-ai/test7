@@ -449,7 +449,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   let specialDeckTypes=null;
   try{specialDeckTypes=readSpecialCollection().loadout;}catch{}
   const b=initialBattle(Math.max(1,sectorNumber),
-   {...options,...bossChoices(practice),...commanderChoices(),vitalPrototype:true,specialDeckTypes},Math.random,gameMode);
+   {...options,...bossChoices(practice),...commanderChoices(),vitalPrototype:true,arenaPlanetId:bossPlanetId,arenaSectorLevel:bossSectorLevel,specialDeckTypes},Math.random,gameMode);
   b.practice=practice;
   b.phase='intro';
   if(!practice)b.player.ether=Math.max(0,Number(ether)||0);
@@ -939,7 +939,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const unchanged=sameSpecialDeck&&fleet.length===b.player.fleet.length&&fleet.every((v,i)=>v.id===b.player.fleet[i].id&&v.level===b.player.fleet[i].level);
   if(unchanged){if(b!==gameRef.current)write(b);}
   else{
-   const refreshed=initialBattle(b.level,{...options,...bossChoices(Boolean(b.practice)),...commanderChoices(),vitalPrototype:true,specialDeckTypes:equippedTypes},Math.random,b.mode);
+   const refreshed=initialBattle(b.level,{...options,...bossChoices(Boolean(b.practice)),...commanderChoices(),vitalPrototype:true,arenaPlanetId:bossPlanetId,arenaSectorLevel:bossSectorLevel,specialDeckTypes:equippedTypes},Math.random,b.mode);
    write({...b,player:{...b.player,fleet:refreshed.player.fleet,escorts:refreshed.player.escorts,
      maneuvers:refreshed.player.maneuvers,specialHand:refreshed.player.specialHand,
      specialDeck:refreshed.player.specialDeck,specialDiscard:refreshed.player.specialDiscard,specialUses:0,
