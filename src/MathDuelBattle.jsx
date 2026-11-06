@@ -13,6 +13,7 @@ import {activeArmaments} from './escortArmory.js';
 import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
 import {commanderAbilityStatus} from './commanderAbilities.js';
 import {resolveCombatImpact} from './resolveCombatImpact.js';
+import {prepareMotherDuelOptions} from './motherDuelLoadout.js';
 import {applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import BattleCombatFeedback from './BattleCombatFeedback.jsx';
@@ -377,15 +378,15 @@ function Formula({game}){
 function FleetSetup({onClose,onStart,onEquip,collection,selected,setSelected,enemySelected,setEnemySelected,level,setLevel}){
  const [practice,setPractice]=useState(false);
  const [side,setSide]=useState('player');
- const [loadout,setLoadout]=useState(collection?.loadout??[]);
+ const [loadout,setLoadout]=useState((collection?.loadout??[]).slice(0,1));
  const [error,setError]=useState('');
  const [saving,setSaving]=useState(false);
  const ids=side==='player'?selected:enemySelected??selected;
- const matchup=fleetCompatibility(selected,enemySelected??selected,level);
- const toggle=id=>{const next=ids.includes(id)?ids.filter(x=>x!==id):[...ids,id];if(validFleet(next))(side==='player'?setSelected:setEnemySelected)(next);};
+ const matchup=fleetCompatibility(selected.slice(0,1),(enemySelected??selected).slice(0,1),level);
+ const toggle=id=>{(side==='player'?setSelected:setEnemySelected)([id]);};
  function toggleOwned(id){
   if(saving)return;
-  const next=loadout.includes(id)?loadout.filter(x=>x!==id):[...loadout,id];
+  const next=[id]; // Un'unica madre attiva, nessuna carta viene eliminata dall'inventario.
   try{
    if(next.length) equipShipCards(collection,next);
    setLoadout(next);setError('');
@@ -403,9 +404,9 @@ function FleetSetup({onClose,onStart,onEquip,collection,selected,setSelected,ene
   {side==='enemy'&&<label className="fleet-match"><input type="checkbox" checked={enemySelected===null} onChange={e=>setEnemySelected(e.target.checked?null:[...selected])}/> Stessa flotta del giocatore</label>}
   <label className="fleet-level-row">Livello di prova (non acquistato) <b>{level}</b><input type="range" min="1" max="5" value={level} onChange={e=>setLevel(Number(e.target.value))}/></label>
   <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><ShipCard key={s.id} shipId={s.id} level={level} selected={ids.includes(s.id)} onSelect={()=>toggle(s.id)}/>)}</div>
-  <p>Massimo 3 navi. L'universale è unica; ogni seme può attivare al massimo due navi specializzate. Le operazioni si sbloccano secondo il livello del modello.</p>
+  <p>Una sola navicella madre per parte. Le scudiere si schierano automaticamente ai livelli 3 e 5. I modelli devono condividere operazioni attaccabili.</p>
   {!matchup.compatible&&<p className="fleet-match-warning" role="status">Flotte non compatibili a L{level}: {matchup.playerMissing.length?`alla tua flotta manca ${matchup.playerMissing.map(op=>META[op].sign).join(', ')}. `:''}{matchup.enemyMissing.length?`All'avversaria manca ${matchup.enemyMissing.map(op=>META[op].sign).join(', ')}.`:''} Scegli una nave con le operazioni mancanti oppure cambia il livello.</p>}
-  </>:collection?<><p>Carte possedute <b>{collection.cards.length}</b>. Seleziona da una a tre navi ai loro livelli effettivi.</p>
+  </>:collection?<><p>Carte possedute <b>{collection.cards.length}</b>. Scegli la navicella MADRE da schierare: le scudiere si sbloccano ai livelli 3 e 5. Tutte le altre carte rimangono nella collezione.</p>
    <div className="fleet-setup-list">{collection.cards.map(card=><ShipCard key={card.instanceId} shipId={card.shipId} level={card.level}
     selected={loadout.includes(card.instanceId)} onSelect={()=>toggleOwned(card.instanceId)}/>)}</div>
    {error&&<p className="fleet-match-warning" role="alert">{error}</p>}
@@ -480,8 +481,12 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   // Never overwrite an unreadable save or block the battle.
   let specialDeckTypes=null;
   try{specialDeckTypes=readSpecialCollection().loadout;}catch{}
+  const motherOptions=prepareMotherDuelOptions(options,{
+   mode:gameMode,globalSector:sectorNumber,planetId:bossPlanetId,
+   planetSector:bossSectorLevel,practice});
   const b=initialBattle(Math.max(1,sectorNumber),
-   {...options,...bossChoices(practice),...commanderChoices(),vitalPrototype:true,arenaPlanetId:bossPlanetId,arenaSectorLevel:bossSectorLevel,specialDeckTypes},Math.random,gameMode);
+   {...motherOptions,...bossChoices(practice),...commanderChoices(),
+    arenaPlanetId:bossPlanetId,arenaSectorLevel:bossSectorLevel,specialDeckTypes},Math.random,gameMode);
   b.practice=practice;
   b.phase='intro';
   if(!practice)b.player.ether=Math.max(0,Number(ether)||0);
@@ -973,7 +978,10 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  }
  async function saveLoadout(loadout){
   const next=await updateShipCollection(current=>equipShipCards(current,loadout));
-  const options=collectionBattleOptions(next),b=realBattleRef.current??gameRef.current;
+  const b=realBattleRef.current??gameRef.current;
+  const options=prepareMotherDuelOptions(collectionBattleOptions(next),{
+   mode:b.mode,globalSector:b.level,planetId:bossPlanetId,
+   planetSector:bossSectorLevel,practice:!!b.practice});
   setCollection(next);
   const {fleet}=newShip(b.level,false,options);
   let equippedTypes=null;
@@ -1006,12 +1014,12 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){
    resultClaimed.current=true;
    let specialPackEarned=false;
-   if(b.winner==='player'){
+   if(b.winner==='player'&&['adventure','campaign'].includes(b.mode)){
     try{specialPackEarned=claimFirstWinSpecialPack(b.mode,sectorNumber).granted;}
     catch{/* A damaged collection cannot block the ordinary battle reward. */}
    }
    const h=healthScore(b.player);
-   onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,
+   if(b.mode!=='pvp')onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,
     starsEarned:[true,h>=.65,h>=.9],
     matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),
      turnsElapsed:b.round,specialPackEarned,...battlePacingReport(b,Date.now())}});
@@ -1040,7 +1048,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      <strong>{ambient.label}</strong><small>CAMBIO FRA {ambient.calculationsUntilChange}</small>
    </div>}
    <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
-   <div className={'enemy-status'+(game.enemy.bossNumericDeck?' boss-marked':'')}><div className="portrait">◆</div><div><b>AVVERSARIO {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>{game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
+   <div className={'enemy-status'+(game.enemy.bossNumericDeck?' boss-marked':'')}><div className="portrait">◆</div><div><b>{gameMode==='pvp'?'IA SIMULATA · NON ONLINE':'AVVERSARIO'} {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>{game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effects={game.effects} onSelectEscort={selectEscort} selectedEscort={game.targetEscort} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    {intro?<div className="battle-intro">
     <div className="battle-intro-status" role="status">{intro.label}
