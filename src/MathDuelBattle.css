@@ -676,3 +676,18 @@
 .es-math-scope .vital-part.impaired{border-color:#f5b756;background:#3a2b19;color:#fff0ce;opacity:1}
 .es-math-scope .vital-part.impaired .vital-part-track i{background:linear-gradient(90deg,#db8031,#f9db82)}
 .es-math-scope .vital-part.impaired small{color:#ffdf8f;font-weight:800}
+
+/* Punto 27: carte offensive separate dal mazzo numerico. Nessun restyling dell'arena. */
+.es-math-scope .special-card-hand button.special-shot-piercing{
+ background:linear-gradient(165deg,#5c5d88,#1d1c36);border-color:#acb8ff
+}
+.es-math-scope .special-card-hand button.special-shot-ion{
+ background:linear-gradient(165deg,#216c82,#0c273e);border-color:#7be7ff
+}
+.es-math-scope .special-card-hand button.special-shot-corrosion{
+ background:linear-gradient(165deg,#4f7234,#182b21);border-color:#b0e37b
+}
+.es-math-scope .strategic-armed-status{
+ display:block;padding:5px 7px;border-radius:5px;
+ background:#142641;border:1px solid #9cc8ff;color:#dceaff;font-size:10px;text-align:center
+}
