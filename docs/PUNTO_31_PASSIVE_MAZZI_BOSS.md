@@ -67,3 +67,6 @@ Non cambiano ID originali, inventario `eclissi_deck_inventory`, selezione `eclis
 Le percentuali sono **provvisorie**. Verificare con `npm run verify:logic`, `npm run build`, `npm run preflight`; testare inoltre mano a 7+5, riavvio/salvataggi, interfaccia 9:16 e boss IA su smartphone. Questi controlli non equivalgono a una conferma di giocabilità fino alla prova manuale. La grafica e l'audio definitivi restano rinviati.
 
 **Prossimo lavoro:** bilanciamento empirico delle 23 abilità; mantenere il repository **test7/main** senza copie.
+
+## Verifica automatica completata (6 novembre 2026)
+Dopo la correzione dei moltiplicatori percentuali: **309/309 test**, build React/Vite e preflight superati nella GitHub Actions del commit `aea8101c155dd11e7a3cb327273c2f9f7816d35d` (run [42211895724](https://github.com/marcoteghini1988-ai/test7/actions/runs/42211895724)). Rimane da effettuare il collaudo reale su smartphone e il bilanciamento.
