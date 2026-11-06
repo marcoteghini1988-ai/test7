@@ -54,6 +54,8 @@ import {getPhase16EDeckTraits,isPhase16EDeck} from './newCombat/phase16EDecks.js
 import {getPhase16HSectorChallenge,getPhase16HBountyProgress} from './newCombat/phase16HProgression.js';
 import ClassicBattleView, { calculateAiTurnClassic, generateClassicObjectives } from './ClassicBattleView';
 import MathDuelBattle from './MathDuelBattle.jsx';
+import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
+import {validateShipUpgradePurchase} from './shipUpgrades.js';
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
 import NewCombatPhase3Preview from './NewCombatPhase3Preview';
 import { isPhase13CampaignEligible, validatePhase13Settlement, createPhase13OnceGuard, getPhase13EnemyPilotId } from './newCombat/phase13Campaign.js';
@@ -21579,6 +21581,28 @@ function App() {
                                     {/* MODALE BAZAR GALATTICO UNIFICATO (6 TABS) */}
       {showUnifiedShop && (
         <ShopModal
+          onUpgradeShip={async (instanceId, targetLevel, shownCost) => {
+            try {
+              const before=readShipCollection();
+              const check=validateShipUpgradePurchase(before,instanceId,targetLevel,stardust);
+              if(!check.allowed||check.cost!==shownCost){
+                triggerPopup(check.reason==='insufficient_dust'?'Polvere Stellare insufficiente':'Potenziamento non disponibile');
+                return false;
+              }
+              await updateShipCollection(current=>{
+                const currentCheck=validateShipUpgradePurchase(current,instanceId,targetLevel,stardust);
+                if(!currentCheck.allowed||currentCheck.cost!==shownCost)
+                  throw new Error('Il potenziamento non è più valido');
+                return upgradeShipCard(current,instanceId,targetLevel);
+              });
+              setStardust(current=>Math.max(0,current-check.cost));
+              triggerPopup('Navicella potenziata al livello '+targetLevel);
+              return true;
+            } catch {
+              triggerPopup('Potenziamento annullato: risorse o salvataggio da verificare');
+              return false;
+            }
+          }}
           armoryV2={armoryV2}
           onBuyArmoryV2={handleBuyArmoryV2} onUpgradeArmoryV2={handleUpgradeArmoryV2}
           onEquipArmoryV2={handleEquipArmoryV2}
