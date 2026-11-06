@@ -706,3 +706,31 @@
 .es-math-scope .special-card-hand button.special-support-status-purge{
  background:linear-gradient(160deg,#5958a4,#252c57);border-color:#b4b0ff;
 }
+
+/* Due nuove fusioni: riusa le scudiere già sulla plancia, senza varchi
+   aggiuntivi. La geometria originale e i punti di fuoco non cambiano. */
+.es-math-scope .ship-zone[data-fusion="twin"] .escort-slot-1{
+ transform:translate(65px,17px) scale(.72);
+ opacity:.72;filter:drop-shadow(0 0 12px #5ef1d9);
+}
+.es-math-scope .ship-zone[data-fusion="twin"] .escort-slot-2{
+ transform:translate(-65px,17px) scale(.72);
+ opacity:.72;filter:drop-shadow(0 0 12px #5ef1d9);
+}
+.es-math-scope .ship-zone[data-fusion="triad"] .escort-slot-1{
+ transform:translate(130px,30px) scale(.52);
+ opacity:.56;filter:drop-shadow(0 0 14px #eab8ff);
+}
+.es-math-scope .ship-zone[data-fusion="triad"] .escort-slot-2{
+ transform:translate(-130px,30px) scale(.52);
+ opacity:.56;filter:drop-shadow(0 0 14px #eab8ff);
+}
+.es-math-scope .ship-zone[data-fusion="triad"] .fleet-ship-img{
+ filter:drop-shadow(0 0 18px #d8aaff);
+}
+.es-math-scope .special-card-hand button.special-fusion-twin{
+ background:linear-gradient(165deg,#0b665b,#092934);border-color:#61ddc8;
+}
+.es-math-scope .special-card-hand button.special-fusion-triad{
+ background:linear-gradient(165deg,#633f83,#27102f);border-color:#e0b4ff;
+}
