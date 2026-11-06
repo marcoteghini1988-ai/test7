@@ -2,12 +2,13 @@
 // Tutti gli effetti si applicano soltanto a impatti/calcoli già autorizzati.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {initialBattle,applyPendingHit} from './mathDuelEngine.js';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {
  BATTLE_ARENAS,BATTLE_ARENA_IDS,battleArena,arenaForBattle,
  arenaAttackFactor,arenaMotherDefenseFactor,
- applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment
+ applyArenaIonResistance,applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment,arenaPhaseModifiers
 } from './battleArenas.js';
 
 const rng=()=>.5;
@@ -283,4 +284,44 @@ test('44: 12 boss con identità cromatiche e combinazioni ambientali coerenti',(
  const briefing=arenaTacticalBriefing('boss_1',{round:7});
  assert.equal(briefing.environment.stage,'surge');
  assert.match(briefing.introduction,/PICCO/);
+});
+
+
+test('44: pannello regole mostra esattamente i fattori attivi della fase',()=>{
+ const quiet=arenaPhaseModifiers('titanium','surge');
+ assert.deepEqual(quiet,{shieldDamageFactor:null,tripleAttackFactor:null,
+  ionDurationFactor:null,syncPerCalculation:0});
+ const check=[
+  ['debris',/9,6%/],['plasma',/9%/],
+  ['ionic',/32%/],['resonance',/3 Sincronia/]
+ ];
+ for(const [id,description] of check){
+  const b=arenaTacticalBriefing(id,{round:7});
+  assert.equal(b.environment.stage,'surge');
+  assert.equal(b.conditions.length,1);
+  assert.match(b.conditions[0].activation,description);
+ }
+ for(const id of BATTLE_ARENA_IDS){
+  const env=arenaEnvironment(id,7),modifiers=arenaPhaseModifiers(id,env.stage);
+  const briefing=arenaTacticalBriefing(id,{round:7});
+  assert.equal(briefing.conditions.length,env.families.length);
+  assert.equal(modifiers.shieldDamageFactor!==null,env.families.includes('debris'));
+  assert.equal(modifiers.tripleAttackFactor!==null,env.families.includes('plasma'));
+  assert.equal(modifiers.ionDurationFactor!==null,env.families.includes('ionic'));
+  assert.equal(modifiers.syncPerCalculation>0,env.families.includes('resonance'));
+ }
+});
+
+test('44: tutte le 12 arene boss hanno motivi CSS dedicati e accessibilità',()=>{
+ const css=readFileSync(new URL('./ArenaEnvironment.css',import.meta.url),'utf8');
+ const visual=readFileSync(new URL('./ArenaEnvironment.jsx',import.meta.url),'utf8');
+ for(const planet of PHASE16A_CAMPAIGN_PLANETS){
+  assert.ok(css.includes('data-arena="boss_'+planet.id+'"'),planet.name);
+ }
+ for(const family of ['debris','plasma','ionic','resonance']){
+  assert.ok(css.includes('.arena-weather-'+family));
+ }
+ assert.match(css,/prefers-reduced-motion:reduce/);
+ assert.match(css,/pointer-events:none/);
+ assert.match(visual,/aria-hidden="true"/);
 });
