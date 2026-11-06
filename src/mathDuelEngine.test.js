@@ -186,7 +186,7 @@ test('duello madre: parte esposta danneggiabile con convalida aritmetica di prov
  assert.ok(defense.shield.hp/defense.shield.max<=.75);
  b.enemy.fleet[0].defense={
   ...defense,exposureOrder:['engine'],
-  parts:{...defense.parts,engine:{...defense.parts.engine,exposed:true}}
+  parts:{...defense.parts,engine:{...defense.parts.engine,exposed:true,signature:null}}
  };
  const hp0=b.enemy.fleet[0].defense.parts.engine.hp;
  const hit=applyPendingHit(b.enemy,0,'plus',7,
