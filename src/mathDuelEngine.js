@@ -4,7 +4,8 @@ import {PHASE16A_CAMPAIGN_PLANET_IDS,PHASE16A_TOTAL_SECTORS} from './newCombat/p
 import {VITAL_IDS,createMotherDefense,motherDestroyed,damageMotherShield,hitMotherPart} from './vitalDefense.js';
 import {buildLinkedEscorts,impactLinkedEscort,interceptMotherVolley} from './linkedEscorts.js';
 import {previewEscortedVolley} from './escortFiring.js';
-import {attackTargetKind} from './escortTactics.js';
+import {attackTargetKind,defensiveEscortShare} from './escortTactics.js';
+import {newManeuverState,interceptManeuverVolley,recordManeuverEvent} from './fleetManeuvers.js';
 import {SYSTEM_CONSEQUENCES} from './fleetSystems.js';
 export const ENGINE_KEYS=['plus','minus','times','divide'];
 export const META={plus:{sign:'+',name:'Addizione',color:'#26baff'},minus:{sign:'−',name:'Sottrazione',color:'#57e4a1'},times:{sign:'×',name:'Moltiplicazione',color:'#ff674d'},divide:{sign:'÷',name:'Divisione',color:'#b780ff'}};
@@ -207,7 +208,12 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
    return {defender:{...defender,escorts:hit.escorts},damage:hit.damage,destroyed:hit.destroyed,
     escortIndex:options.escortIndex,reason:hit.reason};
   }
-  const interception=interceptMotherVolley(defender.escorts||[],rawDamage,vessel.defense,options);
+  const interception=defender.maneuvers
+   ?interceptManeuverVolley(defender,rawDamage,Date.now(),defensiveEscortShare,options)
+   :interceptMotherVolley(defender.escorts||[],rawDamage,vessel.defense,options);
+  let maneuvers=interception.maneuvers;
+  if(maneuvers&&interception.intercepted>0&&options.hitId!=null)
+   maneuvers=recordManeuverEvent(maneuvers,{id:'intercept:'+options.hitId,type:'escort_interception',amount:interception.intercepted}).state;
   const detail=options.vitalId
    ?hitMotherPart(vessel.defense,options.vitalId,interception.remaining,options.cards,options.signatureOverride)
    :damageMotherShield(vessel.defense,interception.remaining);
@@ -216,7 +222,7 @@ export function applyPendingHit(defender,shipIndex,op,rawDamage,options={}){
   const shieldCollapsed=systemDisabled==='shieldGenerator'?defense.shield.hp:0;
   if(shieldCollapsed)defense=damageMotherShield(defense,shieldCollapsed).defense;
   const fleet=defender.fleet.map((v,i)=>i===shipIndex?{...v,defense}:v);
-  return {defender:{...defender,fleet,escorts:interception.escorts},
+  return {defender:{...defender,fleet,escorts:interception.escorts,...(maneuvers?{maneuvers}:{})},
    damage:(detail.damage||0)+interception.intercepted,motherDamage:detail.damage||0,
    intercepted:interception.intercepted,shieldCollapsed,systemDisabled,
    systemMessage:systemDisabled?SYSTEM_CONSEQUENCES[systemDisabled]:null,
@@ -264,7 +270,7 @@ export function withPrototypeMother(side,targets){
  const shieldMax=Object.values(vessel.engines).reduce((n,part)=>n+part.max,0);
  const defense=createMotherDefense({shipId:vessel.id,shieldMax,partHp:Math.max(12,Math.round(shieldMax/4))});
  const mother={...vessel,defense};
- return {...side,fleet:[mother],escorts:buildLinkedEscorts(mother,targets)};
+ return {...side,fleet:[mother],escorts:buildLinkedEscorts(mother,targets),maneuvers:newManeuverState()};
 }
 export function initialBattle(level=1,upgrades={},rng=Math.random,mode='campaign'){
  const fleetIds=validFleet(upgrades.fleetIds)?upgrades.fleetIds:['N00'];
