@@ -698,3 +698,11 @@
  white-space:nowrap;letter-spacing:0;color:#f6e3a7;text-align:left;
 }
 .es-math-scope .vital-part[aria-pressed="true"] .vital-signature-hint{color:#fff5ba}
+
+/* Punto 30 — tipi supporto ottenibili: visibili e diversi dalle carte offensive. */
+.es-math-scope .special-card-hand button.special-support-shield-repair{
+ background:linear-gradient(160deg,#2c7855,#173c40);border-color:#90e3bd;
+}
+.es-math-scope .special-card-hand button.special-support-status-purge{
+ background:linear-gradient(160deg,#5958a4,#252c57);border-color:#b4b0ff;
+}
