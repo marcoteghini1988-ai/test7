@@ -108,7 +108,7 @@ test('30: separate storage never overwrites or reinitializes ship collection',()
  const first=readSpecialCollection(s);
  assert.equal(first.packCredits,1);
  assert.equal(s.getItem('eclissi_ship_collection'),'KEEP_THIS_SAVE');
- assert.ok(s.getItem(SPECIAL_COLLECTION_KEY).includes('special'));
+ assert.equal(JSON.parse(s.getItem(SPECIAL_COLLECTION_KEY)).schemaVersion,1);
 });
 test('30: writing invalid collection must preserve previous serialized data',()=>{
  const s=storage();
