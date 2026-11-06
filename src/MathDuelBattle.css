@@ -593,3 +593,13 @@
 .es-math-scope .vital-shield .mother-target{font-size:9px;border:1px solid #526f8d;border-radius:4px;background:#10233a;color:#e7faff;padding:2px 4px;cursor:pointer}
 .es-math-scope .vital-shield .mother-target.selected{border-color:#ffdf9e;color:#fff7cc}
 .es-math-scope .ship-player .escort-pod{opacity:.89}
+
+/* 34 asset SVG metallizzati della collezione — sostituiscono le sagome segnaposto. */
+.es-math-scope .escort-pod{width:95px;height:120px;top:19px;gap:1px}
+.es-math-scope .escort-slot-1{left:4px}
+.es-math-scope .escort-slot-2{right:4px}
+.es-math-scope .escort-ship-hull{width:85px;height:77px;display:block;overflow:visible}
+.es-math-scope .escort-ship-hull img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;filter:drop-shadow(0 0 4px #4ddaff88)}
+.es-math-scope .ship-enemy .escort-ship-hull img{filter:drop-shadow(0 0 4px #ff696d99)}
+.es-math-scope .escort-pod.selected .escort-ship-hull img{filter:drop-shadow(0 0 8px #ffe8aa)}
+.es-math-scope .escort-pod b{font-size:9px}

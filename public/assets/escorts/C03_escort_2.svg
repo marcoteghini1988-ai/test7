@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Corvo a Impulsi, scudiera 2">
+<title>Corvo a Impulsi — scudiera 2</title>
+<defs>
+<linearGradient id="metal" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#edf7ff"/><stop offset=".22" stop-color="#b9cadd"/><stop offset=".49" stop-color="#62768d"/><stop offset=".8" stop-color="#313b53"/><stop offset="1" stop-color="#101a2c"/></linearGradient>
+<linearGradient id="cannon" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#e2eeff"/><stop offset=".36" stop-color="#627a94"/><stop offset=".67" stop-color="#101c2e"/><stop offset="1" stop-color="#a4bfd8"/></linearGradient>
+<linearGradient id="canopy" x1="0" y1="0" x2=".65" y2="1"><stop stop-color="#e8ffff"/><stop offset=".16" stop-color="#79ed83"/><stop offset=".55" stop-color="#17385c"/><stop offset=".84" stop-color="#091223"/><stop offset="1" stop-color="#79ed83"/></linearGradient>
+<radialGradient id="thruster"><stop stop-color="#fff"/><stop offset=".22" stop-color="#79ed83"/><stop offset=".68" stop-color="#237bac"/><stop offset="1" stop-color="#142540"/></radialGradient>
+<filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="11"/></filter>
+</defs>
+<ellipse cx="256" cy="367" rx="205" ry="105" fill="#02070f" opacity=".58" filter="url(#shadow)"/>
+<g stroke-linejoin="round">
+
+<path d="M230 186L146 168L66 243L17 323L77 357L216 306Z" fill="url(#metal)" stroke="#18263a" stroke-width="11"/>
+<path d="M282 186L366 168L446 243L495 323L435 357L296 306Z" fill="url(#metal)" stroke="#18263a" stroke-width="11"/>
+<path d="M63 253L35 310L75 338M449 253L477 310L437 338" stroke="#79ed83" stroke-width="7" opacity=".88"/>
+<path d="M111 266L202 246L176 294L109 320Z M401 266L310 246L336 294L403 320Z" fill="#192c44" stroke="#79ed83" stroke-width="4"/>
+<g><ellipse cx="148" cy="367.6" rx="37" ry="68" fill="#101d33" stroke="#a6b6d0" stroke-width="9"/><ellipse cx="148" cy="384.6" rx="28" ry="48" fill="url(#thruster)" stroke="#2c3e60" stroke-width="8"/><ellipse cx="148" cy="382.6" rx="17" ry="22" fill="#e8fbff" opacity=".85"/></g><g><ellipse cx="364" cy="367.6" rx="37" ry="68" fill="#101d33" stroke="#a6b6d0" stroke-width="9"/><ellipse cx="364" cy="384.6" rx="28" ry="48" fill="url(#thruster)" stroke="#2c3e60" stroke-width="8"/><ellipse cx="364" cy="382.6" rx="17" ry="22" fill="#e8fbff" opacity=".85"/></g>
+<path d="M162 257L146 97L172 97L188 257Z" fill="url(#cannon)" stroke="#dae6f4" stroke-width="5"/><path d="M159 99L175 235" stroke="#79ed83" stroke-width="8" opacity=".87"/><path d="M324 257L340 97L366 97L350 257Z" fill="url(#cannon)" stroke="#dae6f4" stroke-width="5"/><path d="M353 99L337 235" stroke="#79ed83" stroke-width="8" opacity=".87"/>
+<path d="M256 53L297 145L330 298L301 439L256 458L211 439L182 298L215 145Z" fill="url(#metal)" stroke="#162235" stroke-width="11"/>
+<path d="M256 71L274 149L283 324L256 388L229 324L238 149Z" fill="url(#canopy)" stroke="#cfdceb" stroke-width="7"/>
+<path d="M256 84L261 170L260 300" stroke="#f4feff" stroke-width="6" opacity=".65"/>
+<path d="M208 206L186 295L219 351M304 206L326 295L293 351" stroke="#e1ebf5" stroke-width="6" opacity=".5"/>
+<path d="M207 233L197 289M305 233L315 289" stroke="#79ed83" stroke-width="7"/>
+<path d="M236 375L256 397L276 375L256 410Z" fill="#273950" stroke="#79ed83" stroke-width="5"/>
+<circle cx="256" cy="194" r="27" fill="#14253b" stroke="#d5e3ec" stroke-width="7"/>
+<circle cx="256" cy="194" r="19" fill="#25374b" stroke="#79ed83" stroke-width="5"/>
+<circle cx="256" cy="194" r="8" fill="#79ed83" stroke="#dceeff" stroke-width="4"/>
+<path d="M190 291L212 299" stroke="#79ed83" stroke-width="3" opacity=".6"/><path d="M197 302L220 310" stroke="#79ed83" stroke-width="3" opacity=".6"/><path d="M204 313L228 321" stroke="#79ed83" stroke-width="3" opacity=".6"/>
+</g></svg>

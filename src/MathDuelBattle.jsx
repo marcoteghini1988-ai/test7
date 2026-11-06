@@ -86,9 +86,6 @@ function EscortPods({side,escorts=[],selected,onSelect,registerRef,disabled,inco
  return <div className="escort-pods">
   {escorts.map((escort,index)=>{
    const d=escort.defense,dead=d.destroyed;
-   const seed=[...escort.parentShipId].reduce((sum,ch)=>sum+ch.charCodeAt(0),index*17);
-   const wing=15+seed%11,fin=28+seed%13;
-   const hull=`M50 2 L${50+wing} 17 L${50+fin} 32 L${50+wing} 44 L50 59 L${50-wing} 44 L${50-fin} 32 L${50-wing} 17 Z`;
    const Tag=enemy?'button':'span';
    const props=enemy?{type:'button',onClick:()=>onSelect?.(index),disabled:disabled||dead,'aria-pressed':selected===index&&!dead}:{};
    const sign=d.signature?.op==='minus'?'−':d.signature?.op==='plus'?'+':'✦';
@@ -97,12 +94,8 @@ function EscortPods({side,escorts=[],selected,onSelect,registerRef,disabled,inco
     className={`escort-pod escort-slot-${index+1}${enemy&&selected===index?' selected':''}${dead?' destroyed':''}${incoming.some(fx=>fx.escortIndex===index)?' under-fire':''}`}
     aria-label={`${escort.name}: ${label}`} title={`${escort.name}: ${label}`}>
     <span className="escort-ship-hull" ref={node=>registerRef?.(side,index,node)}>
-     <svg viewBox="0 0 100 62" aria-hidden="true">
-      <path className="escort-armor" d={hull}/>
-      <path className="escort-inner" d={`M50 8 L${50+Math.floor(wing/2)} 31 L50 51 L${50-Math.floor(wing/2)} 31 Z`}/>
-      <circle className="escort-reactor" cx="50" cy="31" r="5"/>
-      <path className="escort-engines" d={`M${50-wing} 42V53 M${50+wing} 42V53`}/>
-     </svg>
+     <img src={`${ASSET_ROOT}/escorts/${escort.parentShipId}_escort_${index+1}.svg`}
+      alt="" draggable={false} loading="eager" decoding="async"/>
     </span>
     <b>SCUDIERA {index+1}</b>
     <span className="escort-hp-meter"><i style={{width:`${Math.round(d.shield.hp/d.shield.max*100)}%`}}/></span>
