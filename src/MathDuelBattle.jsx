@@ -708,7 +708,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    options.nowMs=Date.now();
    const context={op:effect.op,cards,vitalId:effect.vitalId,escortIndex:effect.escortIndex,
     weaponKey:strongest?.weaponId||strongest?.id||null,reshufflesAtLaunch:attacker.reshuffles||0,
-    escortShot:strike.volley.some(shot=>shot.escortSlot!=null),strikeEffects:effect.strikeEffects};
+    escortShot:strike.volley.some(shot=>shot.escortSlot!=null),motherShot:strike.volley.some(shot=>shot.escortSlot==null),strikeEffects:effect.strikeEffects};
    const originalSync=state[receiver].maneuvers?.sync??0;
    const offense=bossNumericDamageFactor(state[side],state[receiver],context);
    const defense=bossNumericDefenseFactor(state[receiver],context);
@@ -906,7 +906,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const unchanged=sameSpecialDeck&&fleet.length===b.player.fleet.length&&fleet.every((v,i)=>v.id===b.player.fleet[i].id&&v.level===b.player.fleet[i].level);
   if(unchanged){if(b!==gameRef.current)write(b);}
   else{
-   const refreshed=initialBattle(b.level,{...options,...bossChoices(true),vitalPrototype:true,specialDeckTypes:equippedTypes},Math.random,b.mode);
+   const refreshed=initialBattle(b.level,{...options,...bossChoices(Boolean(b.practice)),vitalPrototype:true,specialDeckTypes:equippedTypes},Math.random,b.mode);
    write({...b,player:{...b.player,fleet:refreshed.player.fleet,escorts:refreshed.player.escorts,
      maneuvers:refreshed.player.maneuvers,specialHand:refreshed.player.specialHand,
      specialDeck:refreshed.player.specialDeck,specialDiscard:refreshed.player.specialDiscard,specialUses:0,
