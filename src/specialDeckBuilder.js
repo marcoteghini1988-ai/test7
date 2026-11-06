@@ -1,13 +1,13 @@
 // Eclissi Stellare — Punto 30: collection and construction of the SPECIAL deck.
 // Persistent data is intentionally separate from legacy ship collection saves.
 // Prices / monetization are NOT defined: packs are granted once for a unique
-// completed campaign sector. All limits and drop rates are prototype settings.
-import {SPECIAL_CARD_CATALOG} from './specialCards.js';
+// completed campaign sector. Pack sizes / drop rates are still prototype settings;
+// deck size and duplicate limit are confirmed gameplay rules.
+import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT} from './specialCards.js';
+export {SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT};
 
 export const SPECIAL_COLLECTION_KEY='eclissi_special_collection_v1';
 export const SPECIAL_COLLECTION_VERSION=1;
-export const SPECIAL_DECK_SIZE=24;
-export const SPECIAL_DECK_COPY_LIMIT=6;
 export const SPECIAL_PACK_SIZE=3;
 export const SPECIAL_TYPES=Object.freeze(Object.keys(SPECIAL_CARD_CATALOG));
 // The two new support cards are unlocked through actual packs, not assigned for free.
