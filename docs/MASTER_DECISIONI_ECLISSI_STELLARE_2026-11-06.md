@@ -39,7 +39,7 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - Due mazzi e due mani separate: **7 numeriche + 5 speciali**.
 - Dopo ogni speciale usata, pescata **immediata** fino a 5 speciali; nessun limite arbitrario aggiuntivo alla frequenza di pescata/uso.
 - Si ammettono più copie dello stesso tipo speciale. Si potranno giocare più speciali nella stessa finestra d'azione purché gli effetti siano compatibili. Il motore attuale impedisce due fusioni simultanee della medesima madre, perché sono incompatibili.
-- Catalogo attualmente **implementato**: `Fusione Barriera`, `Fusione Assalto`, `Copertura Tattica`. Il mazzo dimostrativo contiene 24 istanze (8 per tipo), distribuzione provvisoria, con recupero degli scarti per mantenere la mano a cinque. Copertura Tattica protegge la madre dal prossimo colpo entro 15 secondi usando lo scudo della prima scudiera; non richiede Sincronia, non si cumula con le fusioni.
+- Catalogo **attuale implementato (Punto 27)**: sei tipologie di carte speciali: `Fusione Barriera`, `Fusione Assalto`, `Copertura Tattica`, `Colpo Perforante`, `Impulso Ionico`, `Corrosione`. Mazzo dimostrativo 24 istanze (**4 per tipo**), distribuzione temporanea con recupero degli scarti per mantenere la mano a cinque. Copertura Tattica protegge la madre dal prossimo colpo entro 15 s usando lo scudo della prima scudiera; non richiede Sincronia, non si cumula con le fusioni. Perforante, Ionico e Corrosione si applicano solo a una scarica effettiva contro lo scudo madre, fino a **due effetti distinti per attacco**, senza attribuire poteri ai semi numerici. Vedi `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`.
 - L'utente sceglie la carta dalla propria mano e la scudiera bersaglio. Se manca Sincronia/una scudiera disponibile, la carta NON viene consumata.
 - Numeriche e speciali non si sostituiscono; l'azione speciale non utilizza o modifica le sette numeriche.
 - Le altre speciali non devono essere inventate prematuramente; definire prima meccaniche, effetti, costi, sinergie e limiti. Lo schema del motore è predisposto per ampliare il catalogo.
@@ -64,7 +64,8 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 - **24 (identità e ruoli)**: le 17 madri possiedono 34 scudiere con ruolo difensivo nel primo slot e offensivo nel secondo. La verifica è inclusa nei test; approfondimenti tattici da completare. Vedi `docs/PUNTO_24_RUOLI_FLOTTA.md`.
 - **25 (protezione madre)**: tre difese distinte, automatica / formazione / carta Copertura Tattica da 15 s e un solo impatto, sempre consumando HP reali della scudiera 1. Logica e interfaccia create, bilanciamento aperto. Vedi `docs/PUNTO_25_PROTEZIONE_MADRE.md`.
 - **26 (danni localizzati)**: AVARIA al 50% HP, KO a zero; riduzioni progressive operative a motore, armi, generatore scudi e centralina. HUD, log e test aggiornati. Vedi `docs/PUNTO_26_DANNI_LOCALIZZATI.md`; bilanciamento da collaudare.
-- **27–29**: effetti strategici dei colpi (27), requisiti matematici/armi/condizioni (28), ritmo (29). Non completati.
+- **27 (effetti dei colpi)**: tre nuove carte strategiche Perforante, Ionico e Corrosione, con durata, interazione e consumo verificati da test. Il catalogo completo è ora di sei tipi (dati di bilanciamento ancora provvisori). Vedi `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`.
+- **28–29**: requisiti matematici/armi/condizioni (28) e ritmo (29). Non completati.
 - **30 e successivi (costruzione mazzi speciali)**: estendere la base già pronta con le singole carte decise, pacchetti e deckbuilding, sblocchi, varianti e compatibilità, dopo la definizione delle relative meccaniche.
 - **Altri blocchi della master**: parti vitali (51–52), piloti/comandante (40–41), arene (42–43), campagna (44–45), Shop (46), IA (47), grafica/sonoro finale e boss/mazzi dedicati (53). Le varianti estetiche e audiovisive sono rinviate per ora, senza cambiare le decisioni tattiche.
 
@@ -87,8 +88,8 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Carta fusione obbligatoria per giocatore e IA; due mani indipendenti.
 - Punto 23: nuovi test cooperazione madre e scudiere.
 - Punto 24: nuovi test di tutti i ruoli per 17 famiglie, con scudiera 1 difensiva e scudiera 2 offensiva.
-- 225 test logici superati (12 nuovi test Punto 26, oltre ai 213 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
-- **Prossima priorità: punto 27, effetti strategici dei colpi e delle armi**, senza completare ancora audio/visivo.
+- 240 test logici superati (15 nuovi test Punto 27, oltre ai 225 precedenti), build e preflight automatizzati; interfaccia reale e bilanciamento da collaudare.
+- **Prossima priorità: punto 28, requisiti dei calcoli e delle parti vitali**, senza completare ancora audio/visivo.
 
 
 ### Ultimo avanzamento — Punto 26 (6 novembre 2026)
@@ -97,3 +98,13 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Componente scudiere, formazioni, fusioni e carte speciali precedenti mantenuti; la parte audiovisiva finale rimane posticipata.
 - **225 test automatici**, build e preflight superati. Nessun collaudo fisico sul telefono ancora effettuato.
 - **Prossimo: Punto 27**. Sviluppare gli effetti speciali solo con regole distinte e verificabili, senza inventare poteri automatici dei semi.
+
+
+### Ultimo avanzamento — Punto 27 (6 novembre 2026)
+- **Colpo Perforante**: 20% del danno scavalca l'intercettazione delle scudiere, ma non lo scudo madre o le firme matematiche.
+- **Impulso Ionico**: riduce per 12 s al 70% l'intercettazione automatica delle scudiere dopo un colpo efficace allo scudo madre; non indebolisce Copertura Tattica.
+- **Corrosione**: lo scudo generale subisce +25% sul primo colpo efficace successivo entro 15 s.
+- 2 effetti speciali distinti possono essere preparati per una scarica; la mano da 5 speciali si reintegra dopo ciascuna carta giocata, senza toccare le 7 numeriche. Anche l'IA consuma carte vere.
+- Mazzo di **prova**: 24 istanze distribuite in 6 tipi × 4 copie. Non corrisponde a una regola definitiva di deckbuilding.
+- **240 test**, build e preflight verificati su `test7/main`; playtest e qualità visiva ancora da collaudare.
+- **Successivo: Punto 28**. Differenziare requisiti d'attivazione e firme per modello, includendo calcoli da 2/3 numeriche e requisiti Poker senza confondere il vecchio motore.
