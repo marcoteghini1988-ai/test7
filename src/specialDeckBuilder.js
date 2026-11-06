@@ -11,8 +11,12 @@ export const SPECIAL_COLLECTION_VERSION=1;
 export const SPECIAL_PACK_SIZE=3;
 export const SPECIAL_TYPES=Object.freeze(Object.keys(SPECIAL_CARD_CATALOG));
 // Support cards are unlocked via real packs; none are assigned to new players for free.
+const ORIGINAL_STARTER_SPECIALS=new Set([
+ 'fusion-barrier','fusion-strike','tactical-cover',
+ 'shot-piercing','shot-ion','shot-corrosion'
+]);
 export const STARTER_SPECIAL_COUNTS=Object.freeze(Object.fromEntries(SPECIAL_TYPES.map(type=>
- [type,type.startsWith('support-')?0:4])));
+ [type,ORIGINAL_STARTER_SPECIALS.has(type)?4:0])));
 const MAX_OWNED_COPIES=999;
 const MAX_CLAIMS=5000;
 const cleanNumber=n=>Number.isInteger(n)&&n>=0&&n<=MAX_OWNED_COPIES;
@@ -53,7 +57,7 @@ export function normalizeSpecialCollection(raw){
   // Saved schema v1 predates this new card; only its missing zero is migrated.
   // Missing existing card types remain an error (never reset a corrupt save).
   const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
-   type==='support-escort-repair'?0:undefined;
+   ['support-escort-repair','fusion-twin','fusion-triad'].includes(type)?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
