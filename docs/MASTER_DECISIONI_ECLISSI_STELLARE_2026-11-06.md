@@ -151,4 +151,13 @@ Iniziare da **questo master**, da `docs/PUNTO_22_INTEGRAZIONE.md`, da `src/speci
 - Aggiunta `src/specialFlow.test.js` per coprire due speciali offensive sulla stessa scarica, rifiuto della terza senza consumo, reintegro immediato della mano a cinque e due supporti giocabili consecutivamente senza consumare numeriche.
 - Run `42212283860`: **311/311 test** e build/preflight riusciti, su commit `2deda8ea393a7faff98cf23fa8e7fb13c151fdaf`.
 - Scaletta originale ripristinata: 32 cinque speciali in mano; 33 dimensione mazzo speciale; 34 costruzione; 35 duplicate; 36 acquisizione; 37 combinazione numerica/speciale; 38 più speciali e ripescaggio; 39 catalogo definitivo.
-- **Punti 33 e 35 non ancora definitivi**: 24 carte e 6 copie massime per tipo funzionano come prototipo. Prima di fissare questi limiti va confermata la scelta. Documento: `docs/PUNTI_32_39_CONTINUITA_CARTE_SPECIALI.md`.
+- **Punti 33 e 35 confermati il 6 novembre 2026**: 24 speciali per mazzo e massimo 6 copie equipaggiate di ogni tipo, sempre tra quelle possedute. La regola è condivisa fra motore ed editor; limiti salvati v1 invariati. Documento: `docs/PUNTI_32_39_CONTINUITA_CARTE_SPECIALI.md`.
+
+
+### Conferma successiva — Limiti speciali e avanzamento 32–39
+- **24 carte speciali esatte** per mazzo costruito, **massimo 6 copie dello stesso tipo**: confermate dall'utente e non più numeri provvisori.
+- In `src/specialCards.js` sono centralizzate le costanti lette da `src/specialDeckBuilder.js`; entrambi i percorsi validano 24/6. Aggiornati i test di 23/25 carte, sei/sette copie e riciclo prolungato senza creare nuove istanze o toccare le sette numeriche.
+- **Punto 36:** sistema attuale di pacchetti gratuiti utilizzabile; rarità, costi e distribuzione rimangono sperimentali fino ai playtest.
+- **Punti 37–38:** due effetti speciali offensivi distinti consentiti per un colpo matematico valido, il terzo rifiutato; reintegro immediato delle cinque speciali. Nuovi test di regressione sul riciclo.
+- **Punto 39:** catalogo di otto tipologie operativo, ancora da ampliare dopo verifica delle meccaniche e prove pratiche. Nessuna nuova carta introdotta senza ruolo distinto.
+- Resta necessario controllare la nuova esecuzione CI e provarne la giocabilità su telefono. Non anticipare la fase audiovisiva finale.
