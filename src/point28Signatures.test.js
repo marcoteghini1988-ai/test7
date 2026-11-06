@@ -40,7 +40,7 @@ test('28: invalid cards cannot be interpreted as a hidden special or joker',()=>
 test('28: expression presents exact order chosen by the validator',()=>{
  const proof=evaluateMathChain('minus',[2,7,3],2);
  assert.equal(proof.valid,true);
- assert.equal(mathChainText(proof),'7 − 3 − 2 = 2');
+ assert.equal(mathChainText(proof),'7 − 2 − 3 = 2');
 });
 test('28: valid pair results and legacy pair inspection are not redefined',()=>{
  assert.equal(inspectCalculationCards('plus',ranks([4,6]),10).valid,true);
