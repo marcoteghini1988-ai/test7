@@ -147,3 +147,19 @@ test('fusione trina: +35% solo allo scudo madre e protezione reale senza munizio
  assert.equal(broken.fusion,null);
  assert.ok(broken.fusionReadyAt>1000);
 });
+
+test('fusione trina con passive non può superare il tetto cumulativo +45%',async()=>{
+ const {balancedCombatImpact}=await import('./combatBalance.js');
+ const s=side({shieldA:60,shieldB:60});
+ s.maneuvers=startFusion(charged(),s,0,'triad',1000).state;
+ const volley=adjustOutgoingVolley({shots:[{damage:40,bullets:10}],totalDamage:40},
+  s,1500,{targetKind:'motherShield'});
+ assert.equal(volley.totalDamage,54);
+ const combined=balancedCombatImpact(volley.totalDamage,{
+  bossAttack:1.30,commanderAttack:1.12,arenaAttack:1.08,
+  unmodifiedVolleyDamage:40
+ });
+ assert.equal(combined.damage,58);
+ assert.equal(combined.fusionStackCapApplied,true);
+ assert.equal(combined.passiveFactor,1.35);
+});
