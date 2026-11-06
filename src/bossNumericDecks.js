@@ -97,7 +97,7 @@ export function bossNumericDamageFactor(attacker,defender,context={}){
    if(vitalId&&b.lastVital===vitalId)bonus+=bossValue(attacker,0);
    break;
   case 'planet_char_8':
-   if(attacker.reshuffles>b.seenRecycle)bonus+=bossValue(attacker,0);
+   if((context.reshufflesAtLaunch??attacker.reshuffles??0)>b.seenRecycle)bonus+=bossValue(attacker,0);
    if(cards.length===3)bonus+=bossValue(attacker,1);
    break;
   case 'planet_char_9':
@@ -145,7 +145,7 @@ export function rememberBossNumericImpact(attacker,defender,context={},hit={}){
   if(toMother&&context.vitalId)next.lastVital=context.vitalId;
   if(toMother&&!context.vitalId&&context.escortIndex==null)next.shieldHits++;
   if(context.weaponKey)next.lastWeapon=context.weaponKey;
-  if(attacker.reshuffles>next.seenRecycle)next.seenRecycle=attacker.reshuffles;
+  if((context.reshufflesAtLaunch??attacker.reshuffles??0)>next.seenRecycle)next.seenRecycle=context.reshufflesAtLaunch??attacker.reshuffles;
   if(next.powerAfterKo)next.powerAfterKo=false; // spend on actual effective strike
   if(hit.systemDisabled)next.powerAfterKo=true; // next attack after actual KO
   nextAttacker={...attacker,bossNumericDeck:next};
