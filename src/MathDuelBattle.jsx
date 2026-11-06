@@ -10,6 +10,7 @@ import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVi
 import {activeArmaments} from './escortArmory.js';
 import {systemState} from './fleetSystems.js';
 import {chooseCombatMove} from './aiBattleTactics.js';
+import {recoverStalledHand} from './battlePacing.js';
 import {vitalSignatureLabel,primaryVitalMathGate} from './modelSignatures.js';
 import {maneuverStatus,changeFormation,cancelFusion,recordManeuverEvent,prepareSideForAmmoRouting} from './fleetManeuvers.js';
 import {playSpecialCard,findFusionCardIndex,findCoverCardIndex,findVolleyCardIndex,specialCardDefinition,specialCardReadiness} from './specialCards.js';
@@ -535,6 +536,24 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   }
   write(n);
  }
+ function recoverNumericHand(){
+  const b=gameRef.current;
+  if(b.phase!=='ready'||b.actor!=='player')return;
+  const res=recoverStalledHand(b.player,b.enemy,b.targets,Date.now());
+  if(res.recovered){
+   const next=clone(b);
+   next.player=res.side;
+   next.selected=[];
+   next.notice='RICAMBIO NUMERICO: 1 carta sostituita, senza consumare speciali';
+   next.logs=[next.notice,...next.logs].slice(0,6);
+   write(next);
+  }else{
+   notice(({legal_move_available:'Hai già almeno un attacco valido',
+    cooldown:'Ricambio in ricarica',
+    insufficient_hand:'Carte insufficienti',
+    no_draw_pile:'Non ci sono carte disponibili da pescare'})[res.reason]||'Ricambio non disponibile');
+  }
+ }
  function undock(){
   const b=gameRef.current,n=clone(b),result=cancelFusion(n.player.maneuvers,n.player,Date.now());
   n.player.maneuvers=result.state;
@@ -768,6 +787,13 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      move=chooseCombatMove(n.enemy,n.player,n.targets,Math.random);
     }
    }
+   if(!move&&n.enemy.recycleNumericDeck){
+    const rescued=recoverStalledHand(n.enemy,n.player,n.targets,now,Math.random);
+    if(rescued.recovered){
+     n.enemy=rescued.side;
+     move=chooseCombatMove(n.enemy,n.player,n.targets,Math.random);
+    }
+   }
    if(isDestroyed(n.player)){write(finish(n,'enemy','Flotta distrutta'));return;}
    if(isDestroyed(n.enemy)){write(finish(n,'player','Flotta nemica distrutta'));return;}
    if(deckExhausted(n.player,n.enemy)){write(resolveOutcome(n));return;}
@@ -878,6 +904,14 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
        <button className={maneuverHUD.formation==='guard'?'active':''} onClick={()=>orderManeuver('guard')}>GUARDIA</button>
        <button className={maneuverHUD.formation==='assault'?'active':''} onClick={()=>orderManeuver('assault')}>ASSALTO</button>
      </div>
+     <div className="maneuver-options">
+      <button type="button" onClick={recoverNumericHand}
+       disabled={uiClock<(game.player.recoveryReadyAt||0)}>
+       RICAMBIO NUMERICO{uiClock<(game.player.recoveryReadyAt||0)?
+        ' · '+Math.ceil((game.player.recoveryReadyAt-uiClock)/1000)+'s':''}
+      </button>
+     </div>
+     <small>Disponibile solo se nessun calcolo o firma attaccabile è realizzabile: cambia una carta vera, senza crearne.</small>
      <p>MAZZO SPECIALE · MANO {game.player.specialHand?.length||0}/5</p>
      {armedEffects.length>0&&<strong className="strategic-armed-status">COLPO PRONTO {armedEffects.length}/2: {armedEffects.map(id=>STRATEGIC_EFFECT_LABELS[id]).join(' + ')}</strong>}
      {maneuverHUD.cover&&<strong className="tactical-cover-status">COPERTURA PRONTA · {Math.ceil(maneuverHUD.coverRemainingMs/1000)}s · SCUDIERA 1</strong>}
