@@ -34,6 +34,8 @@ export function matchesVitalSignature(signature,cards){
  if(!signature||!Array.isArray(cards))return false;
  const values=handValues(cards);
  if(!values)return false;
+ if(signature.kind==='any')return Array.isArray(signature.options)&&signature.options.length>0&&
+  signature.options.some(option=>matchesVitalSignature(option,cards));
  if(signature.kind==='mathGate'){
   return (signature.allowedCardCounts||[2,3]).includes(values.length)&&
    !!evaluateMathChain(signature.op,values,signature.target);
