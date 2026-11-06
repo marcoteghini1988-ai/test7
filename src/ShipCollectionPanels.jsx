@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {getShipDefinition, PHASE1_SHIPS} from './mathDuelEngine.js';
 import {ShipCard} from './ShipPresentation.jsx';
+import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {SHIP_COLLECTION_KEY, equipShipCards, readShipCollection, updateShipCollection} from './shipCollection.js';
 import './ShipCollectionPanels.css';
 
@@ -106,6 +107,7 @@ export function ShipHangarPanel({onOpenCatalog}) {
       </div>
     </> : <p role="status">Il salvataggio della collezione è illeggibile.</p>}
     {message && <p role="status">{message}</p>}
+    <SpecialDeckPanel/>
     <div className="ship-collection-actions">
       <button type="button" className="cyber-btn" onClick={onOpenCatalog} disabled={saving}>Catalogo navi</button>
       <button type="button" className="cyber-btn cyber-btn-primary" onClick={save}
