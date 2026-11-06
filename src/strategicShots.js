@@ -2,6 +2,19 @@
 // Le speciali offensive armano al massimo due modificatori compatibili; sono
 // consumate dalla mano speciale. Nessun colpo o status nasce da un seme numerico.
 export const VOLLEY_EFFECT_IDS=Object.freeze(['shot-piercing','shot-ion','shot-corrosion']);
+// Two differently named offensive cards combine by resolving BOTH existing
+// effects. The combo label adds no hidden damage, extra timer or new resource.
+export const SHOT_COMBO_NAMES=Object.freeze({
+ 'shot-ion+shot-piercing':'BRECCIA IONICA',
+ 'shot-corrosion+shot-piercing':'FRATTURA CORROSIVA',
+ 'shot-corrosion+shot-ion':'DISGREGAZIONE IONICA'
+});
+export function shotCombinationName(effects){
+ if(!Array.isArray(effects)||effects.length!==2)return null;
+ const unique=[...new Set(effects)];
+ if(unique.length!==2||unique.some(x=>!VOLLEY_EFFECT_IDS.includes(x)))return null;
+ return SHOT_COMBO_NAMES[[...unique].sort().join('+')]??null;
+}
 export const SHOT_RULES=Object.freeze({
  maxArmed:2,
  piercingBypassShare:.20,             // Scorta aggirata, MAI uno scudo/vitale.
