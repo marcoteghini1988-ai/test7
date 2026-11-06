@@ -1,0 +1,48 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {initialBattle,previewVolley,applyPendingHit} from './mathDuelEngine.js';
+import {activeArmaments} from './escortArmory.js';
+import {findFusionCardIndex,playSpecialCard} from './specialCards.js';
+const rng=()=>.5;
+const battle=()=>initialBattle(1,{vitalPrototype:true,fleetIds:['C01'],shipLevel:5},rng);
+const suit={H:'♥',D:'♦',C:'♣',S:'♠'};
+test('punto23: madre e scudiera possono sparare nella stessa scarica senza duplicare carte',()=>{
+ const b=battle(),guns=activeArmaments(b.player),mother=guns.find(g=>g.kind==='mother'&&g.suits.length===1);
+ assert.ok(mother);
+ const support=guns.find(g=>g.kind==='escort'&&g.suits.some(x=>!mother.suits.includes(x)));
+ assert.ok(support);
+ const supportSuit=support.suits.find(x=>!mother.suits.includes(x));
+ const cards=[{value:8,suit:suit[mother.suits[0]]},{value:3,suit:suit[supportSuit]}];
+ const r=previewVolley(b.player,cards,'auto',{targetKind:'motherShield'});
+ assert.equal(r.routing.length,2);
+ assert.equal(r.routing.reduce((total,route)=>total+route.value,0),11);
+ assert.notEqual(r.routing[0].weaponId,r.routing[1].weaponId);
+ assert.ok(r.shots.some(shot=>shot.escortSlot===undefined&&shot.damage>0));
+ assert.ok(r.shots.some(shot=>shot.escortSlot!==undefined&&shot.damage>0));
+});
+test('punto23: fusione da speciale disattiva il cannone autonomo della scudiera collegata',()=>{
+ const b=battle(),s={...b.player,maneuvers:{...b.player.maneuvers,sync:100}},now=Date.now();
+ const i=findFusionCardIndex(s,'strike');
+ const activated=playSpecialCard(s,i,{escortSlot:1},now,rng);
+ assert.equal(activated.played,true);
+ const before=activeArmaments(s).find(g=>g.kind==='escort'&&g.slot===1);
+ assert.ok(before);
+ const card={value:7,suit:suit[before.suits[0]]};
+ const r=previewVolley(activated.side,[card],before.id,{targetKind:'motherShield'});
+ assert.equal(r.routing.length,1);
+ assert.notEqual(r.routing[0].weaponId,before.id);
+ assert.ok(r.shots.every(shot=>shot.escortSlot!==1||shot.bullets===0));
+});
+test('punto23: Barriera spende HP scudo della scudiera a impatto e lascia il resto alla madre',()=>{
+ const b=battle(),s={...b.player,maneuvers:{...b.player.maneuvers,sync:100}};
+ const i=findFusionCardIndex(s,'barrier');
+ const activated=playSpecialCard(s,i,{escortSlot:0},Date.now(),rng);
+ assert.equal(activated.played,true);
+ const originalShield=activated.side.escorts[0].defense.shield.hp;
+ const motherShield=activated.side.fleet[0].defense.shield.hp;
+ const r=applyPendingHit(activated.side,0,'plus',100,{hitId:'coop-unique'});
+ assert.ok(r.intercepted>0);
+ assert.ok(r.defender.escorts[0].defense.shield.hp<originalShield);
+ assert.ok(r.defender.fleet[0].defense.shield.hp<motherShield);
+ assert.equal(r.defender.fleet[0].defense.shield.hp>=0,true);
+});
