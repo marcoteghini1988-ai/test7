@@ -1,11 +1,12 @@
-// Eclissi Stellare — punti 40/41, fondazione comandante di FLOTTA.
+import {commanderAbility} from './commanderAbilities.js';
+// Eclissi Stellare — punti 40/41, comandante di FLOTTA.
 // L'identità appartiene allo schieramento, NON a una singola nave o scudiera.
-// Le abilità pilota del vecchio motore Poker non vengono attivate qui.
+// Il catalogo del nuovo motore è separato dalle abilità Poker legacy.
 export const FLEET_COMMANDER_MAX_LEVEL=5;
 export const FLEET_COMMANDER_DEFAULT_ID='pilot_com_1';
 
 export function commanderFromInventory(id,inventory={}){
- if(typeof id!=='string'||!/^pilot_[a-z0-9_]+$/.test(id))return null;
+ if(typeof id!=='string'||!commanderAbility(id))return null;
  if(!inventory||typeof inventory!=='object'||Array.isArray(inventory))return null;
  const owned=inventory[id];
  if(!owned||owned.unlocked!==true)return null;
@@ -13,7 +14,7 @@ export function commanderFromInventory(id,inventory={}){
 }
 
 export function normalizeFleetCommander(id,level=1){
- if(typeof id!=='string'||!/^pilot_[a-z0-9_]+$/.test(id))return null;
+ if(typeof id!=='string'||!commanderAbility(id))return null;
  const number=Number(level);
  const clamped=Number.isFinite(number)?Math.max(1,Math.min(FLEET_COMMANDER_MAX_LEVEL,Math.floor(number))):1;
  return Object.freeze({id,level:clamped,scope:'fleet'});
