@@ -707,7 +707,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    options.strikeEffects=effect.strikeEffects;
    options.nowMs=Date.now();
    const context={op:effect.op,cards,vitalId:effect.vitalId,escortIndex:effect.escortIndex,
-    weaponKey:strongest?.weaponId||strongest?.id||null,
+    weaponKey:strongest?.weaponId||strongest?.id||null,reshufflesAtLaunch:attacker.reshuffles||0,
     escortShot:strike.volley.some(shot=>shot.escortSlot!=null),strikeEffects:effect.strikeEffects};
    const originalSync=state[receiver].maneuvers?.sync??0;
    const offense=bossNumericDamageFactor(state[side],state[receiver],context);
