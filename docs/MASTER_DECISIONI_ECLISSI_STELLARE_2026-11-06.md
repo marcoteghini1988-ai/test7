@@ -32,7 +32,7 @@
 - Due fusioni PROTOTIPO: **Fusione Barriera** e **Fusione Assalto**, tra madre e una scudiera. Consumo 100 Sincronia, durata 12 s, ricarica 28 s, numeri NON definitivi. Una scudiera agganciata non spara né riceve numeriche da sola; la difesa consuma il suo scudo esistente.
 - L'altra scudiera resta indipendente. Fusioni fra scudiere e fusione tripla DA PROGETTARE.
 
-## Correzione vincolante e Punto 23 — carte speciali (6 novembre)
+## Correzione vincolante del Punto 22 e fondazione del Punto 30 — carte speciali (6 novembre)
 **UNA FUSIONE SI ATTIVA ESCLUSIVAMENTE GIOCANDO LA RELATIVA CARTA DEL MAZZO SPECIALE.**
 La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOVRE può ancora cambiare formazione, ma non effettua fusioni gratuite. Anche l'IA deve possedere e consumare una speciale.
 
@@ -59,10 +59,11 @@ La Sincronia piena non autorizza più una fusione senza carta. Il pulsante MANOV
 ## ORDINE DI SVILUPPO — prossimi punti della scaletta master
 
 - **22 completato come prototipo logico e di UI**: formazioni, protezione e fusioni; corretto ora il metodo d'attivazione.
-- **23 attuale: separazione dei mazzi e attivazione delle fusioni mediante speciali**. Presenti modulo, UI, IA e test; la restante parte delle interazioni madre/scudiere andrà ampliata.
-- **24–29 (blocco meccaniche)**: ruoli/azioni cooperative, protezione, danno alle parti, effetti dei colpi, requisiti e concatenazioni dei calcoli, ritmo e bilanciamento. Ordine interno da seguire dalla master originale, senza rinumerare i 53 punti già concordati.
-- **30 e successivi (mazzi speciali)**: creare le singole carte soltanto dopo le rispettive meccaniche, definire pacchetti e deckbuilding, sblocchi, varianti e compatibilità.
-- **Altri blocchi master**: flotte/parti vitali (26, 28, 51–52); evoluzioni (29); piloti/comandante (40–41); arene (42–43); campagna (44–45); Shop (46); IA (9, 47); grafica e suoni (6, 7, 23, 24, 50); boss e mazzi dedicati (53). Questi riferimenti provengono dalla scaletta storica e le descrizioni potrebbero avere sovrapposizioni: per le funzioni vale questo registro, senza dichiarare chiusa l'intera master.
+- **22B / preparazione del 30: mazzi separati e carte fusione**. Sono già presenti modulo, UI, IA e test. Non è una rinumerazione della scaletta da 53 punti.
+- **23: collaborazione madre/scudiere**. Protezione, fuoco coordinato e ruoli esistenti verificati con test aggiuntivi; sinergie avanzate NON concluse. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
+- **24–29 (blocco meccaniche)**: identità e ruoli (24), difesa madre (25), danni ai sistemi (26), effetti dei colpi (27), requisiti matematici/armi/condizioni (28), ritmo (29). Da proseguire nell'ordine della master originale.
+- **30 e successivi (costruzione mazzi speciali)**: estendere la base già pronta con le singole carte decise, pacchetti e deckbuilding, sblocchi, varianti e compatibilità, dopo la definizione delle relative meccaniche.
+- **Altri blocchi della master**: parti vitali (51–52), piloti/comandante (40–41), arene (42–43), campagna (44–45), Shop (46), IA (47), grafica/sonoro finale e boss/mazzi dedicati (53). Le varianti estetiche e audiovisive sono rinviate per ora, senza cambiare le decisioni tattiche.
 
 ## Audio-visivo: RINVIATO SU RICHIESTA
 **NON dedicare ora lo sviluppo alla lucidatura audio/visiva.** Le 17 sagome SVG e gli effetti di aggancio sono riferimenti tecnici temporanei. I modelli fisici 3D, l'allineamento delle bocche, l'animazione di fusione e gli effetti audiovisivi definitivi arriveranno DOPO aver inserito e provato le regole del gioco.
