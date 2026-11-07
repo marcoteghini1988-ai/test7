@@ -12,6 +12,15 @@
 
 Non esiste più l'ingresso `?tacticalPreview=1`, né il menu `Flotta → Prova`: non seguirne le vecchie istruzioni.
 
+## Pulizia delle schermate di prova — 7 novembre 2026
+
+- Eliminato il pulsante **PROVA FASE 10 · COLLAUDO COMPLETO** dall'app, la finestra temporanea associata e i blocchi di pausa dei timer che dipendevano dalla sua apertura.
+- Rimossi i vecchi file di presentazione inutilizzati `src/SandboxBattleView.jsx`, `src/NewCombatPhase3Preview.jsx`, `src/NewArsenalCatalogPreview.jsx` e `src/newCombat/phase3Preview.css`.
+- Il catalogo di 48 armi del negozio NON è stato eliminato: usa ora `src/ArsenalCatalog.jsx`, con le stesse funzioni reali di acquisto, miglioramento ed equipaggiamento.
+- Il precedente combattimento Poker NON è stato eliminato: è conservato in `src/LegacyPokerBattle.jsx` e `src/newCombat/legacyPokerBattle.css` per compatibilità con le modalità e il codice storico. **Non è un secondo gioco di prova**; la battaglia corrente parte solo da `MathDuelBattle.jsx`.
+- Non eliminare `BossBattle3D.jsx`, i motori delle sfide storiche, i test `*.test.js` o gli script di verifica: rimangono necessari per preservare le funzioni non ancora migrate.
+- `npm run preflight` blocca il ritorno dei vecchi nomi, del pulsante di prova e degli ingressi sperimentali. Il collaudo grafico su smartphone resta un controllo separato.
+
 ## Motore e compatibilità
 
 - **Duelli standard compatibili:** `src/OfficialBattle3D.jsx`, `src/simultaneousDuelEngine.js`, `src/officialBattleSetup.js`. Usano la plancia metallica Titanio 9:16, le 17 navicelle, le 42 armi montate e gli asset originali delle scudiere.
