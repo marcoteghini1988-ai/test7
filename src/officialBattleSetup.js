@@ -2,6 +2,8 @@
 import {chooseCampaignMotherRival,chooseCampaignRivalCommander} from './motherDuelLoadout.js';
 import {commanderFromInventory,normalizeFleetCommander} from './fleetCommander.js';
 import {tacticalCommanderReady} from './tacticalCommanders.js';
+import {tacticalBossDeckReady} from './tacticalBossDecks.js';
+import {numericBossDeck} from './bossNumericDecks.js';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES,validateTacticalLoadout} from './simultaneousDuelEngine.js';
 import {buildTacticalBossDeck,tacticalBossProfile} from './tacticalSpecialPresets.js';
 import {validateSpecialDeck} from './specialDeckBuilder.js';
@@ -9,7 +11,8 @@ import {arenaForBattle} from './battleArenas.js';
 
 export function officialBattleSetup({
  mode='campaign',sectorNumber=1,bossPlanetId=null,bossSectorLevel=null,
- shipCollection,specialCollection,selectedPilot=null,pilotInventory={},nowMs=0,seed=18
+ shipCollection,specialCollection,selectedPilot=null,pilotInventory={},
+ selectedBossDeck='neutral_starter',bossDeckInventory={},nowMs=0,seed=18
 }={}){
  if(!shipCollection?.cards||!Array.isArray(shipCollection.loadout))
   throw new Error('Collezione navicelle non leggibile: salvataggio conservato');
@@ -22,6 +25,17 @@ export function officialBattleSetup({
  // simultaneo. In presenza di carte non ancora convertite fermarsi, non sostituirle.
  if(!validateTacticalLoadout(specialCollection.loadout))
   throw new Error('Una carta speciale equipaggiata non è ancora compatibile con il nuovo duello');
+ // I mazzi numerici boss non fanno parte delle 24 speciali.
+ // Il giocatore può usare Gaia solo se la carta è posseduta ed equipaggiata.
+ let ownedBossDeck=null;
+ if(selectedBossDeck&&selectedBossDeck!=='neutral_starter'){
+  const owned=bossDeckInventory?.[selectedBossDeck];
+  const definition=numericBossDeck(selectedBossDeck);
+  if(!tacticalBossDeckReady(selectedBossDeck)||!definition||owned?.unlocked!==true)
+   throw new Error('Mazzo boss non sbloccato o ancora non convertito: nessuna carta concessa');
+  const level=Math.max(1,Math.min(definition.maxLevel,Math.floor(Number(owned.level)||1)));
+  ownedBossDeck={id:selectedBossDeck,level};
+ }
  const rival=chooseCampaignMotherRival(equipped.shipId,equipped.level,sectorNumber,bossPlanetId,bossSectorLevel);
  const arena=arenaForBattle(sectorNumber,mode,null,{planetId:bossPlanetId,sectorLevel:bossSectorLevel});
  // L'ID del giocatore deve essere sbloccato nell'inventario persistente.
@@ -43,6 +57,7 @@ export function officialBattleSetup({
   shipB:rival.shipId,levelB:rival.level,
   seed,nowMs,arenaId:arena.id,shuffleNumericOpening:true,
   commanderA:ownedPilot,commanderB:enemyPilot,
+  bossNumericDeckA:ownedBossDeck,
   specialDeckA:[...specialCollection.loadout],
   specialDeckB:opponentDeck,bossPlanetB:boss?Number(bossPlanetId):null
  };
