@@ -1,6 +1,6 @@
 # Eclissi Stellare — documento di trasferimento per ChatGPT Work
 
-> **Stato aggiornato — 7 novembre 2026:** l'ingresso unico è `src/MathDuelBattle.jsx`. La campagna standard usa `OfficialBattle3D.jsx` e il motore simultaneo reale 30+8; `BossBattle3D.jsx` preserva temporaneamente i boss, le passive non convertite e la durata degli effetti ionici senza sacrificare salvataggi e progressione. Tutte le viste riutilizzano gli asset 3D del gioco. `TacticalDuelPrototype` e `?tacticalPreview=1` sono rimossi.
+> **Stato aggiornato — 7 novembre 2026:** l'ingresso unico è `src/MathDuelBattle.jsx`. La campagna standard usa `OfficialBattle3D.jsx` e il motore simultaneo reale 30+8; `BossBattle3D.jsx` preserva temporaneamente i boss, le passive non convertite e la durata degli effetti ionici senza sacrificare salvataggi e progressione. Tutte le viste riutilizzano gli asset 3D del gioco. `TacticalDuelPrototype` e `?tacticalPreview=1` sono rimossi. **Nuovo stato:** già funzionanti nel motore simultaneo 4 piloti comuni (`pilot_com_1`-`4`, L1-L5), il Baluardo di Gaia e Primo anello di Crono (3 gradi). Le altre 21 passive boss e i piloti avanzati rimangono sul percorso compatibile.
 **Versione:** bozza operativa, 7 novembre 2026. **Repository:** `marcoteghini1988-ai/test7`, ramo `main`.  
 **Stato:** progettazione in corso; NON considerare questa bozza un ordine di eseguire immediatamente tutte le modifiche. Da aggiornare al termine della progettazione e dopo la consegna di ogni asset PNG.
 
