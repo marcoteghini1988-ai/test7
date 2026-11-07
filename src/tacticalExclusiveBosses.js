@@ -1,8 +1,8 @@
 // Capacita ESCLUSIVE dei boss nemici, distinte dalle 23 passive collezionabili.
-// Gaia, Tharsis, Matriarca Tossica e Crono sono attualmente attivi nel duello simultaneo.
+// Gaia, Tharsis, Matriarca Tossica, Crono e Sentinella Ionica sono attivi nel motore simultaneo.
 // Il numero del pianeta viene dal catalogo boss ufficiale, non dalla carta mazzo.
 // Nessun danno gratuito, nessuna lettura delle mani/ordini avversari.
-export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6]);
+export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6,7]);
 export const exclusiveBossReady=id=>READY_EXCLUSIVE_BOSS_IDS.includes(Number(id));
 
 export function createExclusiveBossState(planetId){
@@ -105,4 +105,29 @@ export function rememberExclusiveChronoNativeHit(attacker,round,barrierDamage,bo
   attacker.bossExclusive={...state,counterArmedAfterRound:0,counterExpiresRound:0};
  }
  return attacker;
+}
+
+
+// Sentinella Ionica (Urano, ID 7): Sifone Quantico.
+// A native volley must actually damage the mother BARRIER, not merely an
+// escort or a protected vital. Transfer REAL existing sync from the defender
+// to the boss, after both native volleys and before the cycle's sync rewards.
+// The transfer is limited by victim holdings AND boss free capacity; no
+// resource is created, no overflow is discarded, and each round has one shot.
+// This ability belongs to the ENEMY BOSS, not the numeric deck of Urano.
+export const IONIC_SIPHON_MAX=8;
+export function transferExclusiveIonicSync(attacker,defender,barrierDamage){
+ const inactive={transferred:0,reason:'inactive'};
+ if(attacker?.bossExclusive?.id!==7)return inactive;
+ if(!Number.isFinite(barrierDamage)||barrierDamage<=0)
+  return {...inactive,reason:'no_barrier_damage'};
+ const ours=attacker.sync,theirs=defender?.sync;
+ if(!Number.isSafeInteger(ours)||!Number.isSafeInteger(theirs)||
+    ours<0||ours>100||theirs<0||theirs>100)
+  return {...inactive,reason:'invalid_sync'};
+ const transferred=Math.min(IONIC_SIPHON_MAX,theirs,100-ours);
+ if(transferred<=0)return {...inactive,reason:theirs<=0?'defender_empty':'attacker_full'};
+ attacker.sync=ours+transferred;
+ defender.sync=theirs-transferred;
+ return {transferred,reason:'transferred'};
 }
