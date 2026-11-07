@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react';
-import {SPECIAL_CARD_CATALOG} from './specialCards.js';
+import {SPECIAL_CARD_CATALOG,specialCardMaxCopies} from './specialCards.js';
+import {isBossCharacterCard} from './bossCharacterCards.js';
 import {
  SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,SPECIAL_COLLECTION_KEY,
  readSpecialCollection,updateSpecialCollection,specialDeckCounts,
@@ -31,7 +32,7 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
   if(saving||!collection)return;
   if(amount>0){
    if(types.length>=SPECIAL_DECK_SIZE||
-     counts[type]>=Math.min(SPECIAL_DECK_COPY_LIMIT,collection.owned[type]))return;
+     counts[type]>=Math.min(specialCardMaxCopies(type),collection.owned[type]))return;
    setDraft([...types,type]);
   }else{
    const index=types.lastIndexOf(type);
@@ -67,7 +68,7 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
   finally{setSaving(false);}
  }
  const body=<section className="special-deck-editor" aria-label="Costruzione mazzo speciale">
-  <p>Le 7 carte numeriche restano separate. Qui scegli solo le 24 speciali per la prossima battaglia. Massimo 6 copie per tipo, senza superare le copie possedute.</p>
+  <p>Le 7 carte numeriche restano separate. Qui scegli solo le 24 speciali per la prossima battaglia. Massimo 6 copie per tipo ordinario, una per ciascun Personaggio Boss posseduto. Un solo Personaggio attivo alla volta.</p>
   {snapshot.error&&<p role="alert">{snapshot.error}</p>}
   {collection&&<>
    <div className="special-deck-summary">
@@ -79,13 +80,16 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
     {SPECIAL_TYPES.map(type=>{
      const info=SPECIAL_CARD_CATALOG[type],n=counts[type],owned=collection.owned[type];
      return <div className="special-deck-entry" key={type}>
-      <div><strong>{info.short}</strong><small>{info.description}</small></div>
+      <div><strong>{info.short}</strong>
+       <small>{isBossCharacterCard(type)?'PERSONAGGIO BOSS · 2 CICLI · ':''}{info.description}</small>
+       {isBossCharacterCard(type)&&!owned&&<small>Si sblocca sconfiggendo il boss del pianeta.</small>}
+      </div>
       <div className="special-deck-quantity">
        <button type="button" aria-label={'Rimuovi '+info.name} disabled={saving||!n}
         onClick={()=>updateDraft(type,-1)}>−</button>
        <span aria-label={'Equipaggiate '+n+' possedute '+owned}>{n}/{owned}</span>
        <button type="button" aria-label={'Aggiungi '+info.name}
-        disabled={saving||types.length>=SPECIAL_DECK_SIZE||n>=Math.min(owned,SPECIAL_DECK_COPY_LIMIT)}
+        disabled={saving||types.length>=SPECIAL_DECK_SIZE||n>=Math.min(owned,specialCardMaxCopies(type))}
         onClick={()=>updateDraft(type,1)}>+</button>
       </div>
      </div>;
@@ -100,6 +104,7 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
     </button>
     <button type="button" disabled={saving||!changed} onClick={()=>{setDraft(null);setStatus('Modifiche annullate.');}}>ANNULLA</button>
    </div>
+   <small>I Personaggi Boss si ricevono solo dopo la vittoria contro il rispettivo boss, non nei pacchetti. Dopo lo sblocco possono sostituire una delle 24 speciali. </small>
    <small>Il primo successo in un nuovo settore Campagna/Avventura assegna un pacchetto. Le prove e i successi ripetuti nello stesso settore non ne assegnano altri. Prezzi e rarità dei pacchetti non sono ancora definiti.</small>
   </>}
   {status&&<p role="status" className="special-deck-notice">{status}</p>}
