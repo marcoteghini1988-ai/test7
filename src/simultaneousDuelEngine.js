@@ -30,7 +30,7 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit,
  tacticalGeneratorSyncBonus,tacticalResonanceNativeBonus,rememberTacticalResonanceNativeHit,
  tacticalResonanceVitalBonus,rememberTacticalResonanceVitalHit,
- tacticalAfroditeRepairAmount} from './tacticalBossDecks.js';
+ tacticalAfroditeRepairAmount,tacticalAfroditeRecycleCooldownMs} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
 import {tacticalCombatClock,tacticalStatusActive,applyTacticalTimedStatus,clearTacticalTimedStatuses} from './tacticalTimedStatus.js';
@@ -173,7 +173,7 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',
  specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null,bossNumericDeckA=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
- return {schemaVersion:1,arenaId,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
+ const battle={schemaVersion:1,arenaId,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB)},
@@ -183,6 +183,13 @@ export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,se
   ]:bossPlanetB===19?[
    'B: Nucleo Magmatico · fase CARICA per il ciclo 1 (rotazione ogni 3 cicli)'
   ]:[]};
+ // This does not create any cards: it merely schedules the first legitimate
+ // Afrodite numeric exchange after the real opening cooldown.
+ for(const side of Object.values(battle.sides)){
+  const cooldown=tacticalAfroditeRecycleCooldownMs(side);
+  if(cooldown)side.numericExchangeReadyAt=nowMs+cooldown;
+ }
+ return battle;
 }
 function uniqueIndices(value,max,limit){
  return Array.isArray(value)&&value.length<=limit&&value.every(x=>Number.isInteger(x)&&x>=0&&x<max)&&new Set(value).size===value.length;
@@ -278,6 +285,38 @@ function recyclePile(pile,indices,size,random,firstDrawChoice=0){
  }
  return {hand,deck,discard};
 }
+// Live numeric change for an OWNED Afrodite deck only. The replaced card is
+// spent and the replacement is drawn from its authentic 52-card numeric pile.
+// No exchange after Ready, no alteration of a sealed order, no free cards.
+export function exchangeTacticalNumericDuringPlanning(battle,key,index,nowMs){
+ const denied=reason=>({ok:false,reason,battle});
+ if(!battle||battle.phase!=='planning'||!['A','B'].includes(key)||
+    battle.orders[key])return denied('already_committed');
+ if(!Number.isFinite(nowMs)||nowMs>=battle.deadlineMs)return denied('preparation_expired');
+ const original=battle.sides[key],cooldown=tacticalAfroditeRecycleCooldownMs(original);
+ if(!cooldown)return denied('harmonic_recycle_unavailable');
+ if(!Number.isInteger(index)||index<0||index>=original.numeric.hand.length)
+  return denied('numeric_selection');
+ const readyAt=original.numericExchangeReadyAt??battle.deadlineMs-TACTICAL_TIMING.prepareMs+cooldown;
+ if(nowMs<readyAt)return denied('harmonic_recycle_cooldown');
+ const side=clone(original),pile=side.numeric;
+ const spent=pile.hand[index];
+ let deck=[...pile.deck],discard=[...pile.discard,spent];
+ if(deck.length===0){
+  deck=shuffle(discard,seedRandom((battle.round*997+(key==='A'?199:311)+
+   (side.numericInstantExchanges||0)*129)>>>0));
+  discard=[];
+ }
+ if(!deck.length)return denied('numeric_deck_empty');
+ const incoming=deck.shift();
+ side.numeric={hand:pile.hand.map((c,i)=>i===index?incoming:c),deck,discard};
+ side.numericInstantExchanges=(side.numericInstantExchanges||0)+1;
+ side.numericExchangeReadyAt=nowMs+cooldown;
+ return {ok:true,reason:'ok',spent:spent.id,drawn:incoming.id,
+  battle:{...battle,sides:{...battle.sides,[key]:side},
+   lastEvents:[...battle.lastEvents,key+': Afrodite · Ricambio armonico: 1 numerica sostituita dal mazzo vero, prossimo ricambio tra '+cooldown/1000+' s']}};
+}
+
 function specialTypes(side,order){return order.specialIndices.map(i=>side.special.hand[i].type);}
 function applyPreparation(sides,orders,log,round){
  const status={};
