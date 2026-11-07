@@ -11,9 +11,11 @@ import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 
 const BATTLE_MODES=new Set(['classic','adventure','campaign','pvp']);
 
-// La campagna boss continua a usare le passive e il motore esistenti
-// sino a quando tutte le 23 abilita saranno convertite e testate.
-// Idem per i mazzi boss equipaggiati: nessuna perdita silenziosa di poteri.
+// Le 23 passive numeriche e i 12 poteri esclusivi sono ora convertiti.
+// I settori boss mantengono il percorso storico finché arene esclusive,
+// fasi campagna, ricompense e grafica delle battaglie boss non sono testate
+// nel nuovo sistema. Il solo superamento dei test logici NON autorizza
+// un cambio di plancia, salvataggi o regole dei boss ufficiali.
 export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
   bossSectorLevel=null,selectedBossDeck='neutral_starter',bossDeckInventory={},selectedPilot='pilot_com_1'}={}){
  if(!BATTLE_MODES.has(gameMode))return {enabled:false,reason:'mode'};
