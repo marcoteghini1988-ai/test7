@@ -28,7 +28,6 @@ const offenceCards=(side,order)=>{
  const indices=order?.numericIndices||[];
  if(![2,3].includes(indices.length)||new Set(indices).size!==indices.length)
   return null;
- const target=side?.opponentTarget; // no shared target is ever stored on the attacker
  return indices.map(i=>side.numeric?.hand?.[i]);
 };
 const validSignature=(attacker,defender,order)=>{
