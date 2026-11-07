@@ -115,7 +115,7 @@ export default function OfficialBattle3D({
  bossPlanetId=null,bossSectorLevel=null,onEtherConsumed,onResult,onExit
 }){
  const options={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel,
-  selectedPilot,pilotInventory};
+  selectedPilot,pilotInventory,selectedBossDeck,bossDeckInventory};
  const [session,setSession]=useState(()=>startSession(options));
  const [battle,setBattle]=useState(()=>session.battle);
  const [draft,setDraft]=useState(freshOrder);
@@ -334,7 +334,7 @@ export default function OfficialBattle3D({
      <b>{nickname||'TU'} · {player.name}</b>
      <span className="my-hp">{'SCUDO '+displayed.A.defense.shield.hp+'/'+displayed.A.defense.shield.max}</span>
      <small title={player.commander?commanderAbility(player.commander.id)?.description||'':undefined}>
-      {'SINCRONIA '+player.sync+'/100'+(player.commander?' · '+
+      {'SINCRONIA '+player.sync+'/100'+(player.bossNumericDeck?' · '+player.bossNumericDeck.ability+' L'+player.bossNumericDeck.level:'')+(player.commander?' · '+
         (commanderAbility(player.commander.id)?.name||'PILOTA')+' L'+player.commander.level:'')}
      </small>
     </div>
