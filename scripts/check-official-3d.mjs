@@ -22,8 +22,10 @@ verify(!app.includes('TacticalDuelPrototype')&&!app.includes('tacticalPreview'),
 verify(!exists('src/TacticalDuelPrototype.jsx')&&!exists('src/TacticalDuelPrototype.css'),
  'La schermata prototipo separata non deve esistere');
 verify(source.includes('<MathDuelBattle'), 'La campagna deve usare la plancia MathDuelBattle originale');
-verify(battleEntry.includes("export {default} from './OfficialBattle3D.jsx';"),
- 'MathDuelBattle deve avviare direttamente la sola plancia simultanea ufficiale');
+verify(battleEntry.includes("import OfficialBattle3D from './OfficialBattle3D.jsx'")&&
+ battleEntry.includes("officialSimultaneousEligibility(props)")&&
+ battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'"),
+ 'Unico accesso 3D: motore simultaneo e compatibilita boss con passive conservate');
 verify(arena.includes('MathDuelBattle.css')&&arena.includes('arena_titanio_9x16.webp'),
  'La battaglia ufficiale deve usare il CSS e lo sfondo Titanio 9:16');
 verify(arena.includes('<ShipArtwork')&&arena.includes('<MountedWeapons'),
