@@ -277,7 +277,7 @@ export default function OfficialBattle3D({
     <div className="enemy-status">
      <div className="portrait">◆</div>
      <div><b>{gameMode==='pvp'?'AVVERSARIO · IA LOCALE':
-      session.bossEncounter?'BOSS · '+session.bossEncounter.name:'AVVERSARIO'
+      session.bossEncounter?'BOSS · '+session.bossEncounter.name:'AVVERSARIO'}
       {displaySector?' · '+displaySector:''}</b>
       <small>SCUDO {displayed.B.defense.shield.hp}/{displayed.B.defense.shield.max} ·
        SCUDIERE {displayed.B.escorts.filter(e=>e.hp>0).length}</small></div>
