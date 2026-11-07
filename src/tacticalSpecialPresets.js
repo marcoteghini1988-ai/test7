@@ -1,4 +1,4 @@
-// Preset di PROVA del duello simultaneo. Non regalano carte alla collezione.
+// Mazzi tattici del duello ufficiale per IA locale e boss; non regalano carte alla collezione.
 // Ogni configurazione ha 24 istanze reali; 5 vengono pescate in mano.
 import {TACTICAL_STARTER_TYPES,validateTacticalLoadout} from './simultaneousDuelEngine.js';
 import {PHASE16D_BOSS_PROFILES} from './newCombat/phase16DBosses.js';
