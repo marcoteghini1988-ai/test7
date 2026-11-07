@@ -11,7 +11,7 @@ export const TACTICAL_TIMING=Object.freeze({prepareMs:30000,resolveMs:8000,maxRo
 export const TACTICAL_SPECIALS=Object.freeze({
  'tactic-power-shift':{name:'Deviazione energia',kind:'offense',help:'+6 danni alla barriera, ma subisci +3 al prossimo attacco'},
  'tactic-scan':{name:'Scansione tattica',kind:'intel',help:'Rivela le firme di due vitali nemici'},
- 'tactic-suppress':{name:'Soppressione scorta',kind:'offense',help:'Una scudiera nemica non intercetta nel prossimo scontro'},
+ 'tactic-suppress':{name:'Soppressione scorta',kind:'offense',help:'Disattiva l’intercettazione della prima scudiera nemica attiva per questo scontro'},
  'fusion-barrier':{name:'Fusione barriera',kind:'fusion',help:'100 Sincronia; scudiera protegge usando il suo scudo reale'},
  'tactic-counter':{name:'Contromisura programmata',kind:'reaction',help:'Blocca il prossimo colpo a un vitale indicato, solo in questo scontro'},
  'tactic-reactive':{name:'Paratia reattiva',kind:'defense',help:'Assorbe 9 danni alla barriera nel prossimo scontro'},
@@ -19,7 +19,7 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'tactic-impact':{name:"Schermo d'urto",kind:'defense',help:'Riduce del 20% il pacchetto sulla barriera'},
  'support-shield-repair':{name:'Riparazione scudo',kind:'support',help:'+20 HP alla barriera se il generatore è attivo'},
  'shot-piercing':{name:'Colpo perforante',kind:'offense',help:'Bypassa intercettazione scudiera sul 20% del pacchetto, non le firme'},
- 'shot-ion':{name:'Impulso ionico',kind:'control',help:'Intercettazioni nemiche ridotte nello scontro successivo'},
+ 'shot-ion':{name:'Impulso ionico',kind:'control',help:'Se la barriera nemica subisce danno, l’intercettazione delle scudiere si riduce nello scontro successivo'},
  'tactic-numeric-recycle':{name:'Ricambio numerico',kind:'support',help:'Scarta fino a due carte numeriche a fine scontro e ripescale'}
 });
 export const TACTICAL_STARTER_TYPES=Object.freeze(Object.keys(TACTICAL_SPECIALS).flatMap(type=>[type,type]));
@@ -144,9 +144,10 @@ function specialTypes(side,order){return order.specialIndices.map(i=>side.specia
 function applyPreparation(sides,orders,log){
  const status={};
  for(const key of ['A','B']){
-  const side=sides[key],enemy=sides[other(key)],types=specialTypes(side,orders[key]);
+  const side=sides[key],types=specialTypes(side,orders[key]);
   const active={types,newCounter:types.includes('tactic-counter')?orders[key].counterVitalId:null,
-   interceptDisabled:types.includes('tactic-suppress'),fusion:types.includes('fusion-barrier'),piercing:types.includes('shot-piercing')};
+   suppressFirstEscort:types.includes('tactic-suppress'),fusion:types.includes('fusion-barrier'),
+   piercing:types.includes('shot-piercing'),ionizedDefense:!!side.ionized};
   if(types.includes('support-shield-repair')){
    const shield=side.defense.shield;
    const fixed=Math.min(20,shield.max-shield.hp);
@@ -159,7 +160,6 @@ function applyPreparation(sides,orders,log){
    log.push(key+': scansione, firme rivelate: '+next.join(', '));
   }
   if(active.fusion){side.sync-=100;log.push(key+': fusione difensiva con scudiera, costo 100 Sincronia');}
-  if(types.includes('shot-ion'))enemy.ionized=true;
   status[key]=active;
  }
  return status;
@@ -173,16 +173,21 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts){
  if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
  if(res.types.includes('tactic-impact'))total=Math.floor(total*.8);
  let intercepted=0;
- if(def.defense.parts.command.hp>0&&!t.interceptDisabled){
+ // Piercing avoids ESCORT interception on a 20% packet; it cannot ignore the
+ // mother shield or a mathematical vital signature.
+ const escortPacket=total-(t.piercing?Math.floor(total*.20):0);
+ if(def.defense.parts.command.hp>0){
+  let suppressed=false,available=escortPacket;
   for(const e of def.escorts){
    if(e.hp<=0)continue;
-   const share=res.fusion?.60:(def.ionized?.10:.20);
-   let take=Math.min(e.hp,Math.floor(total*share));
-   e.hp-=take;intercepted+=take;total-=take;
+   if(t.suppressFirstEscort&&!suppressed){suppressed=true;continue;}
+   const share=res.fusion?.60:(res.ionizedDefense?.10:.20);
+   const take=Math.min(e.hp,Math.floor(escortPacket*share),available);
+   e.hp-=take;intercepted+=take;available-=take;
    if(res.fusion)break;
   }
  }
- const hit=damageMotherShield(def.defense,total);
+ const hit=damageMotherShield(def.defense,total-intercepted);
  def.defense=hit.defense;
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id)});
  log.push(key+': armi native '+atk.weapons.map(w=>w.name).join(' + ')+
@@ -263,7 +268,10 @@ function resolveCycle(battle,nowMs){
   side.special=recyclePile(side.special,order.specialIndices,5,random);
   side.numeric=recyclePile(side.numeric,[...order.numericIndices,...order.exchangeIndices],7,random);
   side.sync=Math.min(100,side.sync+25+((key==='A'?hitsA:hitsB)>0?25:0));
-  side.ionized=false;
+  // Persistent status is ONE following cycle only, and requires a real barrier hit.
+  const enemyKey=other(key);
+  const enemyShieldDamage=enemyKey==='A'?a:b;
+  side.ionized=status[enemyKey].types.includes('shot-ion')&&enemyShieldDamage>0;
  }
  let winner=winState(sides);
  if(battle.round>=TACTICAL_TIMING.maxRounds&&!winner)winner='draw';
