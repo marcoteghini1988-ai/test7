@@ -33,6 +33,7 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalAfroditeRepairAmount} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
+import {tacticalCombatClock,tacticalStatusActive,applyTacticalTimedStatus,clearTacticalTimedStatuses} from './tacticalTimedStatus.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
@@ -320,7 +321,7 @@ function applyPreparation(sides,orders,log,round){
    log.push(key+': scudiera riparata +'+fixed);
   }
   if(types.includes('support-status-purge')){
-   side.ionized=false;side.corroded=false;side.heated=false;
+   clearTacticalTimedStatuses(side);side.heated=false;
    active.ionizedDefense=false;
    log.push(key+': ionizzazione, corrosione e calore rimossi');
   }
@@ -641,6 +642,11 @@ function winState(sides){
 }
 function resolveCycle(battle,nowMs){
  const sides=clone(battle.sides),orders=clone(battle.orders);
+ // Planning does not consume actual combat seconds.
+ for(const key of ['A','B'])for(const type of ['ionized','corroded']){
+  if(sides[key].statusUntil)
+   sides[key][type]=tacticalStatusActive(sides[key],type,battle.round);
+ }
  const before=combatSnapshot(sides),impacts=[];
  const environmentStage=arenaEnvironment(battle.arenaId,battle.arenaValidCalculations+1).stage;
  const modifiers=arenaPhaseModifiers(battle.arenaId,environmentStage);
@@ -710,9 +716,17 @@ function resolveCycle(battle,nowMs){
   const enemyKey=other(key);
   const enemyShieldDamage=enemyKey==='A'?a:b;
   const enemyStatus=status[enemyKey];
-  side.ionized=enemyShieldDamage>0&&
+  const ionHit=enemyShieldDamage>0&&
    (enemyStatus.types.includes('shot-ion')||enemyStatus.tech==='ionico');
-  side.corroded=enemyShieldDamage>0&&enemyStatus.types.includes('shot-corrosion');
+  const corrosionHit=enemyShieldDamage>0&&enemyStatus.types.includes('shot-corrosion');
+  if(ionHit){
+   const duration=applyTacticalTimedStatus(side,'ionized',battle.round,modifiers);
+   log.push(key+': ionizzazione '+duration.durationMs/1000+' s di combattimento (preparazione sospesa)');
+  }else side.ionized=(side.statusUntil?.ionized||0)>tacticalCombatClock(battle.round+1);
+  if(corrosionHit){
+   const duration=applyTacticalTimedStatus(side,'corroded',battle.round,modifiers);
+   log.push(key+': corrosione '+duration.durationMs/1000+' s di combattimento (preparazione sospesa)');
+  }else side.corroded=(side.statusUntil?.corroded||0)>tacticalCombatClock(battle.round+1);
   side.heated=enemyShieldDamage>0&&enemyStatus.tech==='plasma'&&
    !tacticalEpicProtectsFromHeat(side,battle.round);
   // A hit this cycle schedules the next round; previous status expires now.
