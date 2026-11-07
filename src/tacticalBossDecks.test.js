@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {PHASE16D_BOSS_PROFILES} from './newCombat/phase16DBosses.js';
 import {TACTICAL_STARTER_TYPES,validateTacticalLoadout,createTacticalDuel,sealTacticalOrder} from './simultaneousDuelEngine.js';
 import {TACTICAL_PRESETS,TACTICAL_BOSS_PLANS,tacticalBossProfile,buildTacticalBossDeck} from './tacticalSpecialPresets.js';
-import {planTacticalDemoAi} from './tacticalDuelDemoAi.js';
+import {planTacticalAi} from './tacticalDuelAi.js';
 
 test('Tutti i preset del giocatore hanno 24 carte, 5 in mano e max 6 copie per tipo',()=>{
  assert.equal(TACTICAL_STARTER_TYPES.length,24);
@@ -37,7 +37,7 @@ test('I 12 boss storici hanno identita e mazzi 24/5/6 distinti e compatibili L1,
    assert.equal(game.sides.B.special.hand.length,5);
    assert.equal(game.sides.B.special.deck.length,19);
    assert.deepEqual([...game.sides.B.special.hand,...game.sides.B.special.deck].map(c=>c.type).sort(),[...deck].sort());
-   const action=planTacticalDemoAi(game,'B');
+   const action=planTacticalAi(game,'B');
    assert.equal(sealTacticalOrder(game,'B',action,1).ok,true,'IA '+id+' L'+level);
   }
  }
@@ -46,13 +46,13 @@ test('I 12 boss storici hanno identita e mazzi 24/5/6 distinti e compatibili L1,
 test('Il boss senza scansione non legge le firme dei vitali ancora protetti',()=>{
  const b=createTacticalDuel({shipA:'C01',shipB:'L03',levelB:5,
   specialDeckB:buildTacticalBossDeck(2,5,3),bossPlanetB:2});
- const original=planTacticalDemoAi(b,'B');
+ const original=planTacticalAi(b,'B');
  const manipulated=structuredClone(b);
  manipulated.sides.A.defense.parts.shieldGenerator.signature={kind:'mathGate',op:'times',target:6,allowedCardCounts:[2,3]};
  manipulated.sides.A.defense.parts.weapons.signature={kind:'poker',pattern:'pair'};
  manipulated.orders.A={specialIndices:[],numericIndices:[0,1],op:'times',vitalId:'engine'};
  manipulated.sides.A.numeric.hand.reverse();
- assert.deepEqual(planTacticalDemoAi(manipulated,'B'),original);
+ assert.deepEqual(planTacticalAi(manipulated,'B'),original);
 });
 test('Le tipologie non compatibili o con copie eccessive vengono respinte',()=>{
  const invalid=Array(24).fill('fusion-triad');
@@ -74,7 +74,7 @@ test('Ogni boss prepara una scansione reale prima di usare firme ancora nascoste
   [p.hand[0],p.deck[deckIndex]]=[p.deck[deckIndex],p.hand[0]];
   at=0;
  }
- const action=planTacticalDemoAi(b,'B');
+ const action=planTacticalAi(b,'B');
  assert.ok(action.specialIndices.includes(at));
  assert.equal(action.numericIndices.length,0,'non legge combinazioni di vitali segreti');
  assert.equal(sealTacticalOrder(b,'B',action,1).ok,true);
