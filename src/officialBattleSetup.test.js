@@ -39,4 +39,7 @@ test('le ricompense si abilitano solo a vittoria conclusa non PvP',()=>{
  assert.equal(officialBattleResult(won,'campaign',1).eligibleForRewards,true);
  assert.equal(officialBattleResult(lost,'campaign',1).eligibleForRewards,false);
  assert.equal(officialBattleResult(won,'pvp',1).eligibleForRewards,false);
+ assert.equal(officialBattleResult(won,'classic',1).eligibleForRewards,false);
+ assert.equal(officialBattleResult(won,'daily_challenge',1).eligibleForRewards,false);
+ assert.equal(officialBattleResult(won,'adventure',1).eligibleForRewards,true);
 });
