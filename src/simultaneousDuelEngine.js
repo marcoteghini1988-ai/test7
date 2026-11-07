@@ -86,7 +86,7 @@ function numericPile(key,seed){
  const ids=new Set(hand.map(c=>c.id));
  return {hand,deck:shuffle(all.filter(c=>!ids.has(c.id)),seedRandom(seed)),discard:[]};
 }
-function specialPile(key,seed,loadout=null){
+function specialPile(key,seed,loadout=null,epicOpening=null){
  const types=loadout??TACTICAL_STARTER_TYPES;
  if(!validateTacticalLoadout(types))throw new Error('Mazzo tattico non valido: 24 carte, massimo 6 copie');
  const cards=types.map((type,i)=>({id:key+'-s-'+i,type}));
@@ -97,6 +97,11 @@ function specialPile(key,seed,loadout=null){
   SPECIAL_STARTS[key].map(type=>{
    const card=cards.find(c=>c.type===type&&!used.has(c.id));used.add(card.id);return card;
   });
+ if(epicOpening){
+  const card=cards.find(c=>c.type===epicOpening);
+  if(!card||!isTacticalEpic(epicOpening))throw new Error('Anteprima Epica mancante dal mazzo');
+  if(!opening.some(c=>c.id===card.id))opening[0]=card;
+ }
  for(const card of opening)used.add(card.id);
  return {hand:opening,deck:shuffle(cards.filter(c=>!used.has(c.id)),seedRandom(seed)),discard:[]};
 }
@@ -107,11 +112,12 @@ function nativeWeapons(shipId,level){
  }));
 }
 export function nativeBarrierPacket(side){return tacticalBarrierPower(side).amount;}
-function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[]){
+function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null){
  const ship=SHIPS.find(x=>x.id===shipId);
  if(!ship||!Number.isInteger(level)||level<1||level>5)throw new Error('Navicella o livello non valido');
  if(!Array.isArray(epicEntitlements)||epicEntitlements.some(id=>!isTacticalEpic(id)))
   throw new Error('Inventario Epico non valido');
+ if(epicOpening&&!epicEntitlements.includes(epicOpening))throw new Error('Anteprima Epica non autorizzata');
  if((specialDeck||[]).some(type=>isTacticalEpic(type)&&!epicEntitlements.includes(type)))
   throw new Error('Oggetto Epico non ancora ottenuto dalla fusione delle reliquie');
  const defense=createMotherDefense({shipId,shieldMax:60,partHp:10,signatures:tacticalShipSignatures(shipId)});
@@ -121,14 +127,14 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
   sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,seen:[],
   epic:{active:null,used:[],entitlements:[...epicEntitlements],peek:[],exchangeCredits:0,
    exchangeUntilRound:0,dustPreview:0},
-  numeric:numericPile(key,seed+3),special:specialPile(key,seed+13,specialDeck)};
+  numeric:numericPile(key,seed+3),special:specialPile(key,seed+13,specialDeck,epicOpening)};
 }
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,
- specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[]}={}){
+ specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
  return {schemaVersion:1,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
-  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA),
+  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB)},
   history:[],lastEvents:[]};
 }
