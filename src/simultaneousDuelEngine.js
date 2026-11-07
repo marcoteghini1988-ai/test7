@@ -6,7 +6,8 @@ import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
 import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit,
- tacticalBossVitalBonus,rememberTacticalBossVitalHit} from './tacticalBossDecks.js';
+ tacticalBossVitalBonus,rememberTacticalBossVitalHit,tacticalBossConditionSnapshot,
+ tacticalBossOutgoingBonus,rememberTacticalBossOutgoingHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
@@ -254,7 +255,8 @@ function applyPreparation(sides,orders,log,round){
   const playedEpic=types.find(isTacticalEpic);
   if(playedEpic)activateTacticalEpic(side,playedEpic,round,0,log);
   const fusion=types.find(type=>type.startsWith('fusion-'))??null;
-  const active={types,newCounter:types.includes('tactic-counter')?orders[key].counterVitalId:null,
+  const active={types,bossSnapshot:tacticalBossConditionSnapshot(side),
+   newCounter:types.includes('tactic-counter')?orders[key].counterVitalId:null,
    suppressFirstEscort:types.includes('tactic-suppress'),
    fusion,fusionDefense:({'fusion-barrier':.60,'fusion-twin':.55,'fusion-triad':.40})[fusion]||0,
    fusionAssault:({'fusion-strike':.25,'fusion-triad':.35})[fusion]||0,
@@ -312,6 +314,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=base+Math.min(Math.floor(base*.45),bonus)+pilot.extra;
  if(res.types.includes('tactic-power-shift'))total+=3;
+ const ombre=tacticalBossOutgoingBonus(atk,total,{snapshot:t.bossSnapshot});
+ total+=ombre.extra;
  const before=total;
  if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
  if(res.types.includes('tactic-impact'))total=Math.floor(total*.8);
@@ -353,6 +357,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
  rememberTacticalBossMotherHit(def,hit.damage);
+ rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
+ if(ombre.active&&hit.damage>0)
+  log.push(key+': Ombre · '+ombre.abilities.join(' + ')+' ('+
+   ombre.percentage+'%, +'+ombre.extra+' HP, resto '+ombre.remainder+'/100)');
  if(hit.damage>0&&bossDefenseFactor<1)
   log.push(other(key)+': Primo anello · primo impatto alla madre ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
@@ -394,6 +402,9 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  // vitale. La protezione della nave avversaria puo ancora assorbirlo.
  const tharsis=tacticalBossVitalBonus(atk,target,damage);
  damage+=tharsis.extra;
+ const ombre=tacticalBossOutgoingBonus(atk,damage,{vitalId:target,
+  snapshot:status[key].bossSnapshot});
+ damage+=ombre.extra;
  const defenseStatus=status[other(key)];
  if(def.defense.parts.command.hp>0){
   const protector=def.escorts.find(e=>e.hp>0);
@@ -421,6 +432,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  def.defense=hit.defense;
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberTacticalBossVitalHit(atk,target,hit.damage,tharsis);
+ rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
+ if(ombre.active&&hit.damage>0)
+  log.push(key+': Ombre · '+ombre.abilities.join(' + ')+' ('+
+   ombre.percentage+'%, +'+ombre.extra+' HP, resto '+ombre.remainder+'/100)');
  if(tharsis.active&&hit.damage>0)
   log.push(key+': Pressione marziana '+tharsis.percentage+'%, bonus '+
    tharsis.extra+' HP (resto '+tharsis.remainder+'/100)');
