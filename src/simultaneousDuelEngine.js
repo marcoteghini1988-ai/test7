@@ -5,7 +5,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
-import {equipTacticalBossDeck} from './tacticalBossDecks.js';
+import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
@@ -347,9 +347,13 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  }
  // L'ambiente protegge solo la barriera madre, dopo le scudiere reali.
  const motherPacket=Math.max(0,total-intercepted);
- const effectivePacket=Math.floor(motherPacket*(modifiers?.shieldDamageFactor||1));
+ const bossDefenseFactor=tacticalBossMotherFactor(def);
+ const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor)*(modifiers?.shieldDamageFactor||1));
  const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
+ rememberTacticalBossMotherHit(def,hit.damage);
+ if(hit.damage>0&&bossDefenseFactor<1)
+  log.push(other(key)+': Primo anello · primo impatto alla madre ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
   technology:t.tech,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id),
   pilotBonus:pilot.extra,pilotId:pilot.active?pilot.pilotId:null});
@@ -406,8 +410,13 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
    if(maxTake-remaining>0)log.push(other(key)+': fusione assorbe '+(maxTake-remaining)+' HP reali');
   }
  }
+ const bossDefenseFactor=tacticalBossMotherFactor(def);
+ damage=Math.floor(damage*bossDefenseFactor);
  const hit=hitMotherPart(defense,target,damage,cards);
  def.defense=hit.defense;
+ rememberTacticalBossMotherHit(def,hit.damage);
+ if(hit.damage>0&&bossDefenseFactor<1)
+  log.push(other(key)+': Primo anello · primo colpo vitale ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'precision',by:key,target,damage:hit.damage||0,absorbed,reason:hit.reason,destroyed:!!hit.destroyed});
  if(target==='shieldGenerator'&&hit.destroyed){
   // La barriera madre collassa quando il suo vero generatore va KO.
