@@ -12,6 +12,7 @@ const app=read('src/main.tsx');
 const battleEntry=read('src/MathDuelBattle.jsx');
 const arena=read('src/OfficialBattle3D.jsx');
 const bossArena=read('src/BossBattle3D.jsx');
+const physicalHull=exists('src/ShipPhysicalVitals.jsx')?read('src/ShipPhysicalVitals.jsx'):'';
 const css=read('src/MathDuelBattle.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
@@ -47,14 +48,20 @@ verify(battleEntry.includes("import OfficialBattle3D from './OfficialBattle3D.js
  'Unico accesso 3D: motore simultaneo e compatibilita boss con passive conservate');
 verify(arena.includes('MathDuelBattle.css')&&arena.includes('arena_titanio_9x16.webp'),
  'La battaglia ufficiale deve usare il CSS e lo sfondo Titanio 9:16');
-verify(arena.includes('<ShipArtwork')&&arena.includes('<MountedWeapons'),
+verify((arena.includes('<ShipArtwork')||
+ (arena.includes('<ShipPhysicalVitals')&&physicalHull.includes('<ShipArtwork')))&&
+ arena.includes('<MountedWeapons'),
  'Navi e montaggi delle armi originali non devono essere sostituiti');
 verify(!arena.includes('/ship-shells/')&&!bossArena.includes('/ship-shells/'),
  'La plancia non deve piu sovrapporre disegni SVG delle navi ai render raster originali');
 verify(!/<g\s+opacity=["']\.30?["']>\s*<ShipArtwork/.test(arena)&&
  !/<g\s+opacity=["']\.30?["']>\s*<ShipArtwork/.test(bossArena),
  'Le immagini 3D delle navi devono essere visibili a piena opacita');
-verify(arena.includes('<ShipArtwork side={side} vessel={visual}/>')&&
+verify((arena.includes('<ShipArtwork side={side} vessel={visual}/>')||
+ (arena.includes('<ShipPhysicalVitals')&&
+ physicalHull.includes('physicalVitalSurfaces(')&&physicalHull.includes('VITAL_IDS.map(')&&
+ physicalHull.includes('clipPath=')&&
+ physicalHull.includes('<ShipArtwork side={side} vessel={vessel}/>')))&&
  bossArena.includes('<ShipArtwork side={side} vessel={vessel} onLoad=')&&
  bossArena.includes('<ShipArtwork side={side} vessel={vessel}/>'),
  'Le battaglie standard e boss devono usare le viste raster anche quando la nave e danneggiata');
