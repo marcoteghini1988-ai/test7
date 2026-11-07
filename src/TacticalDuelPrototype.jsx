@@ -1,6 +1,8 @@
 import React,{useEffect,useRef,useState} from 'react';
 import {ShipArtwork} from './ShipPresentation.jsx';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {dominantTacticalTechnology} from './tacticalArmamentBalance.js';
+import {TACTICAL_PRESETS,TACTICAL_BOSS_PLANS,tacticalBossProfile,buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {TACTICAL_SPECIALS,createTacticalDuel,
  sealTacticalOrder,advanceTacticalDuel,nativeBarrierPacket} from './simultaneousDuelEngine.js';
@@ -36,7 +38,7 @@ function Vessel({side,title,facing,hullRef}){
    </svg>
   </div>
   <Meter label="Barriera" hp={defense.shield.hp} max={defense.shield.max}/>
-  <div className="tdp-tech">Armi: {side.weapons.map(w=>w.name).join(' · ')} · Potenza base {nativeBarrierPacket(side)}</div>
+  <div className="tdp-tech">Armi: {side.weapons.map(w=>w.name).join(' · ')} · Potenza {nativeBarrierPacket(side)} · {dominantTacticalTechnology(side.weapons)}</div>
   <div className="tdp-escort">Scudiere: {escorts.length?escorts.map(e=>e.hp+'/'+e.max+' HP').join(' · '):'nessuna'}</div>
   <div className="tdp-parts" aria-label={'Sistemi vitali di '+side.name}>
    {VITAL_IDS.map(id=>{
@@ -68,7 +70,11 @@ const explainError={
  numeric_selection:'Scelta numerica non valida.',numeric_count:'Seleziona 2 o 3 numeriche.',
  invalid_precision:'Seleziona un vitale e una formula.',
  special_selection:'Puoi preparare massimo 2 speciali.',duplicate_special:'Le due speciali devono essere diverse.',
- fusion_unavailable:'Fusione: servono una scudiera, 100 Sincronia, motore e centralina operativi.',
+ fusion_unavailable:'Fusione: 100 Sincronia, motore e centralina operativi; una o due scudiere in base alla carta.',
+ fusion_conflict:'Puoi preparare una sola fusione per scontro.',
+ cover_unavailable:'Copertura richiede una scudiera operativa e centralina attiva.',
+ escort_repair_unavailable:'Non ci sono scudiere operative danneggiate da riparare.',
+ purge_unavailable:'Pulizia Sistemi richiede uno stato negativo attivo.',
  counter_target:'La contromisura richiede un vitale da proteggere.',
  repair_unavailable:'Riparazione non possibile: barriera piena o generatore KO.',
  recycle_requires_card:'Serve la carta Ricambio Numerico.',card_double_spend:'Non puoi usare la stessa numerica due volte.'
@@ -82,6 +88,8 @@ export default function TacticalDuelPrototype(){
  const [shipChoiceB,setShipChoiceB]=useState('R04');
  const [shipLevelA,setShipLevelA]=useState(3);
  const [shipLevelB,setShipLevelB]=useState(3);
+ const [presetA,setPresetA]=useState('starter');
+ const [bossPlanet,setBossPlanet]=useState(0);
  const hullA=useRef(null),hullB=useRef(null);
  useEffect(()=>{
   const tick=setInterval(()=>{
@@ -121,8 +129,11 @@ export default function TacticalDuelPrototype(){
  }
  function restart(){
   const time=Date.now();
+  const bossSpecials=bossPlanet?buildTacticalBossDeck(bossPlanet,shipLevelB,shipLevelA):null;
   setBattle(createTacticalDuel({shipA:shipChoiceA,shipB:shipChoiceB,
-   levelA:shipLevelA,levelB:shipLevelB,nowMs:time}));
+   levelA:shipLevelA,levelB:shipLevelB,nowMs:time,
+   specialDeckA:presetA==='starter'?null:TACTICAL_PRESETS[presetA].types,
+   specialDeckB:bossSpecials,bossPlanetB:bossPlanet||null}));
   setDraft(BLANK());setError('');setNow(time);
  }
  const seconds=planning?Math.ceil(Math.max(0,battle.deadlineMs-now)/1000):Math.ceil(Math.max(0,(battle.resolveUntilMs??now)-now)/1000);
@@ -157,6 +168,20 @@ export default function TacticalDuelPrototype(){
      </select>
     </label>
    </div>
+   <div className="tdp-setup-extra">
+    <label>Mazzo speciale giocatore
+     <select value={presetA} onChange={e=>setPresetA(e.target.value)}>
+      {Object.entries(TACTICAL_PRESETS).map(([id,plan])=><option key={id} value={id}>{plan.label} · 24 carte</option>)}
+     </select>
+    </label>
+    <label>IA avversaria
+     <select value={bossPlanet} onChange={e=>setBossPlanet(Number(e.target.value))}>
+      <option value={0}>IA normale</option>
+      {Object.keys(TACTICAL_BOSS_PLANS).map(id=><option key={id} value={id}>{tacticalBossProfile(id).name}</option>)}
+     </select>
+    </label>
+   </div>
+   {bossPlanet>0&&<p className="tdp-boss-note">Piano IA: {tacticalBossProfile(bossPlanet).style}. Mazzo boss da 24 carte con scudiere compatibili.</p>}
    <button type="button" onClick={restart}>AVVIA PARTITA CON QUESTE NAVI</button>
   </section>
   <section className="tdp-cycle">
@@ -164,7 +189,7 @@ export default function TacticalDuelPrototype(){
    <div className="tdp-clock"><strong>{seconds}s</strong><small>{planning?'30 s per preparare':'8 s di scontro'}</small></div>
   </section>
   <div className="tdp-arena">
-   <Vessel side={visibleB} title="AVVERSARIO · IA DI PROVA" facing="enemy" hullRef={hullB}/>
+   <Vessel side={visibleB} title={b.bossPlanetId?"BOSS · "+tacticalBossProfile(b.bossPlanetId)?.name:"AVVERSARIO · IA DI PROVA"} facing="enemy" hullRef={hullB}/>
    <div className="tdp-divider"><span>SCUDI · BRECCE · SISTEMI VITALI</span></div>
    <Vessel side={visibleA} title="LA TUA NAVE" facing="player" hullRef={hullA}/>
    <TacticalCombatPlayback battle={battle} nowMs={now} hulls={{A:hullA,B:hullB}}/>
