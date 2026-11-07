@@ -39,7 +39,7 @@ test('6 oggetti epici e 12 reliquie: ID e abbinamenti originali immutati',()=>{
  ]);
  const unique=new Set();
  for(const r of PHASE16A_RIFTS){
-  unique.add(...r.relicsRequired);
+  for(const id of r.relicsRequired)unique.add(id);
   const epic=TACTICAL_EPIC_CARDS[r.itemId];
   assert.equal(epic.name,PHASE16C_EPICS[r.itemId]);
   assert.deepEqual(epic.relicsRequired,r.relicsRequired);
@@ -142,4 +142,18 @@ test('Matrice: soltanto al 30% dei vitali e con vera arma pesante; non elude fir
  const result=play(b,{specialIndices:[0],numericIndices:[0,1],vitalId:'engine',op:'pair'});
  assert.equal(result.sides.B.defense.parts.engine.hp,10);
  assert.ok(result.lastEvents.some(e=>e.includes('combinazione non valida')));
+});
+
+test('Anteprima sandbox: un Epico nella mano iniziale non modifica i 24 pezzi e richiede autorizzazione esplicita',()=>{
+ const ids=Object.keys(TACTICAL_EPIC_CARDS);
+ for(const id of ids){
+  const b=createTacticalDuel({specialDeckA:custom(id),epicEntitlementsA:[id],previewEpicOpeningA:id});
+  assert.equal(b.sides.A.special.hand[0].type,id);
+  const cards=[...b.sides.A.special.hand,...b.sides.A.special.deck,...b.sides.A.special.discard];
+  assert.equal(cards.length,24);
+  assert.equal(new Set(cards.map(c=>c.id)).size,24);
+  assert.equal(cards.filter(c=>c.type===id).length,1);
+ }
+ assert.throws(()=>createTacticalDuel({specialDeckA:custom('epic_item_8'),
+  previewEpicOpeningA:'epic_item_8'}),/non autorizzata/);
 });
