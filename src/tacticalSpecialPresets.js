@@ -60,6 +60,10 @@ export function buildTacticalBossDeck(planetId,level=5,enemyLevel=3){
  const escortCount=level>=5?2:level>=3?1:0;
  const enemyHasEscorts=enemyLevel>=3;
  const choices=profile.types.flatMap(type=>Array(4).fill(type));
+ // Un boss non può conoscere firme nascoste senza Scansione. Garantiamo
+ // quattro carte di ricognizione nei 24 slot reali (non pescate gratuitamente).
+ if(!choices.includes('tactic-scan'))choices.splice(choices.length-4,4,
+  'tactic-scan','tactic-scan','tactic-scan','tactic-scan');
  const counts={};
  const useful=type=>{
   if(type==='fusion-twin'||type==='fusion-triad')return escortCount>=2;
