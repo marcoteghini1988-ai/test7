@@ -33,8 +33,8 @@ verify(arena.includes('<ShipArtwork')&&arena.includes('<MountedWeapons'),
  'Navi e montaggi delle armi originali non devono essere sostituiti');
 verify(!arena.includes('/ship-shells/')&&!bossArena.includes('/ship-shells/'),
  'La plancia non deve piu sovrapporre disegni SVG delle navi ai render raster originali');
-verify(!/<g\\s+opacity=["']\\.30?["']>\\s*<ShipArtwork/.test(arena)&&
- !/<g\\s+opacity=["']\\.30?["']>\\s*<ShipArtwork/.test(bossArena),
+verify(!/<g\s+opacity=["']\.30?["']>\s*<ShipArtwork/.test(arena)&&
+ !/<g\s+opacity=["']\.30?["']>\s*<ShipArtwork/.test(bossArena),
  'Le immagini 3D delle navi devono essere visibili a piena opacita');
 verify(arena.includes('<ShipArtwork side={side} vessel={visual}/>')&&
  bossArena.includes('<ShipArtwork side={side} vessel={vessel} onLoad=')&&
