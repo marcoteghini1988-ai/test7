@@ -54,12 +54,13 @@ export function expireBossCharacter(side,round){
  }
  return false;
 }
-export function bossCharacterNativeBonus(side,enemy,round,base){
+export function bossCharacterNativeBonus(side,enemy,round,base,shieldHpAtStart=null){
  const character=bossCharacterActive(side,round);
  if(!character||!(base>0))return {active:false,extra:0};
  const kind=character.effect;
+ const startingHp=Number.isFinite(shieldHpAtStart)?shieldHpAtStart:side.defense.shield.hp;
  const eligible=kind==='assault'||
-  kind==='shadow'&&side.defense.shield.hp<=side.defense.shield.max*.35||
+  kind==='shadow'&&startingHp<=side.defense.shield.max*.35||
   kind==='magma'&&!!enemy?.corroded;
  if(!eligible)return {active:false,extra:0};
  const pct=kind==='shadow'?9:8;
