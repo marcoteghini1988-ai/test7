@@ -8,7 +8,9 @@ import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCom
 import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit,
  tacticalBossVitalBonus,rememberTacticalBossVitalHit,tacticalBossConditionSnapshot,
  tacticalBossOutgoingBonus,rememberTacticalBossOutgoingHit,
- tacticalIdraBonus,rememberTacticalIdraHit} from './tacticalBossDecks.js';
+ tacticalIdraBonus,rememberTacticalIdraHit,
+ tacticalLeviatanoBonus,rememberTacticalLeviatanoHit,
+ rememberTacticalLeviatanoRecycle} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
@@ -415,6 +417,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  damage+=ombre.extra;
  const idra=tacticalIdraBonus(atk,def,order,damage,{vitalId:target});
  damage+=idra.extra;
+ // Riciclo numerico e tripla autentica modificano SOLO il colpo di
+ // precisione, mai le armi native che sparano senza carte numeriche.
+ const leviatano=tacticalLeviatanoBonus(atk,def,order,damage);
+ damage+=leviatano.extra;
  const defenseStatus=status[other(key)];
  if(def.defense.parts.command.hp>0){
   const protector=def.escorts.find(e=>e.hp>0);
@@ -444,6 +450,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  rememberTacticalBossVitalHit(atk,target,hit.damage,tharsis);
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
  rememberTacticalIdraHit(atk,hit.damage,idra,{vitalId:target});
+ rememberTacticalLeviatanoHit(atk,hit.damage,leviatano);
+ if(leviatano.active&&hit.damage>0)
+  log.push(key+': Leviatano · '+leviatano.abilities.join(' + ')+' ('+
+   leviatano.percentage+'%, +'+leviatano.extra+' HP, resto '+leviatano.remainder+'/100)');
  if(idra.active&&hit.damage>0)
   log.push(key+': Idra · '+idra.abilities.join(' + ')+' ('+
    idra.percentage+'%, +'+idra.extra+' HP, resto '+idra.remainder+'/100)');
@@ -499,8 +509,11 @@ function resolveCycle(battle,nowMs){
   const side=sides[key],order=orders[key];
   const random=seedRandom((battle.round*997+ (key==='A'?199:311))>>>0);
   side.special=recyclePile(side.special,order.specialIndices,5,random);
-  side.numeric=recyclePile(side.numeric,[...order.numericIndices,...order.exchangeIndices],7,random,
+  const previousNumerics=side.numeric;
+  const spentNumerics=[...order.numericIndices,...order.exchangeIndices];
+  side.numeric=recyclePile(previousNumerics,spentNumerics,7,random,
    tacticalEpicNumericChoice(side,battle.round));
+  rememberTacticalLeviatanoRecycle(side,previousNumerics,spentNumerics.length);
   side.sync=Math.min(100,side.sync+25+((key==='A'?hitsA:hitsB)>0?25:0)+
    (validCalculation[key]?modifiers.syncPerCalculation:0));
   if(side.epic.exchangeUntilRound===battle.round){
