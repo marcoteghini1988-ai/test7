@@ -10,6 +10,26 @@ export function fleetFormation(count,side){
   centers:Array.from({length:count},(_,i)=>start+size/2+i*(size+gap)),
   hudWidth:[0,54,44,32][count],engineSize:[0,40,34,24][count]};
 }
+// Layout storico della flotta: su 3 navi la carta MADRE occupa sempre
+// il centro (225); le due altre carte rimangono a sinistra (83) e a destra
+// (367). Non si cambia l'ordine dei dati: danni, selezioni, armi e livelli
+// continuano a riferirsi all'indice originale della carta equipaggiata.
+// Con 1 o 2 navi conserviamo gli slot e le dimensioni del 3 novembre.
+export function fleetDisplayCenters(fleet,side){
+ if(!Array.isArray(fleet)||!fleet.length||fleet.length>3)
+  throw new RangeError('La formazione richiede da 1 a 3 navicelle');
+ const {centers}=fleetFormation(fleet.length,side);
+ if(fleet.length<3)return [...centers];
+ const namedMother=fleet.findIndex(ship=>ship?.defense?.kind==='mother');
+ const mother=namedMother>=0?namedMother:0;
+ const others=[0,1,2].filter(i=>i!==mother);
+ const placed=[0,0,0];
+ placed[mother]=centers[1];
+ placed[others[0]]=centers[0];
+ placed[others[1]]=centers[2];
+ return placed;
+}
+
 // Separate close readouts with the smallest symmetric offset from their motors.
 export function engineHudShift(side,shipId,op,size,hudWidth){
  if(op==='times'&&['C03','C04','R01','R02','R03','R04'].includes(shipId))return 0;
