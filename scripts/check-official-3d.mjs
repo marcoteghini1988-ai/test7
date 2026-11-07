@@ -70,8 +70,15 @@ verify(PHASE1_CATALOG.weapons.length===42,
 for(const ship of catalog){
  const extension=ship.rarita==='Comune'?'png':'webp';
  for(const side of ['enemy_to_player','player_to_enemy']){
-  verify(exists(`public/assets/mathfleet/views/${side}/${ship.id}_complete.${extension}`),
-   `Manca la vista originale ${side} di ${ship.id}`);
+  const file=`public/assets/mathfleet/views/${side}/${ship.id}_complete.${extension}`;
+  verify(exists(file),`Manca la vista originale ${side} di ${ship.id}`);
+  if(exists(file)){
+   const bytes=readFileSync(resolve(root,file));
+   const isPng=bytes.length>=8&&bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
+   const isWebp=bytes.length>=12&&bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WEBP';
+   verify(bytes.length>=50000&&(extension==='png'?isPng:isWebp),
+    `Vista ${side} di ${ship.id}: deve essere una vera immagine PNG/WebP, non un segnaposto SVG`);
+  }
  }
  for(const escort of [1,2]){
   verify(exists(`public/assets/escorts/${ship.id}_escort_${escort}.svg`),
