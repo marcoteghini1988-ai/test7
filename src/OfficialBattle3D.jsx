@@ -5,6 +5,7 @@ import {readShipCollection,updateShipCollection,equipShipCards} from './shipColl
 import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuilder.js';
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
+import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
@@ -117,6 +118,8 @@ function niceError(reason){
   escort_repair_unavailable:'Nessuna scudiera danneggiata e operativa da riparare',
   purge_unavailable:'Non ci sono effetti negativi da rimuovere',
   epic_locked:'Non possiedi questo Oggetto Epico',
+  character_conflict:'Un solo Personaggio Boss può essere attivato per ciclo',
+  character_already_active:'Attendi che il Personaggio Boss attivo termini i suoi cicli',
   preparation_expired:'Il tempo di preparazione è scaduto'
  })[reason]||reason||'Ordine non valido';
 }
@@ -188,17 +191,23 @@ export default function OfficialBattle3D({
   setBusy(true);
   try{
    const outcome=officialBattleResult(battle,gameMode,sectorNumber);
-   let specialPackEarned=false,shipRewardEarned=null;
+   let specialPackEarned=false,shipRewardEarned=null,bossCharacterEarned=null;
    if(outcome.eligibleForRewards){
     try{specialPackEarned=claimFirstWinSpecialPack(gameMode,sectorNumber).granted;}
     catch{/* Non sovrascrivere collezioni non leggibili. */}
     try{const reward=await claimCampaignShipUnlock(gameMode,sectorNumber);if(reward.granted)shipRewardEarned=reward.shipId;}
     catch{/* L'uscita dalla battaglia non modifica un salvataggio danneggiato. */}
+    try{
+     const trophy=claimBossCharacterFromVictory({winner:outcome.winner,
+      mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel});
+     if(trophy.granted)bossCharacterEarned=trophy.type;
+    }catch{/* La collezione non leggibile non viene modificata. */}
    }
    resultClaimed.current=true;
    if(gameMode!=='pvp'){
     outcome.meta.matchStats.specialPackEarned=specialPackEarned;
     outcome.meta.matchStats.shipRewardEarned=shipRewardEarned;
+    outcome.meta.matchStats.bossCharacterEarned=bossCharacterEarned;
     onResult?.(outcome.winner,outcome.meta);
    }
    onExit?.();
