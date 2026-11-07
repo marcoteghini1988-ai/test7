@@ -147,13 +147,33 @@ export function validateTacticalOrder(battle,key,order){
  if(new Set(types).size!==types.length)return {ok:false,reason:'duplicate_special'};
  if(ni.length!==0&&![2,3].includes(ni.length))return {ok:false,reason:'numeric_count'};
  if(ni.length>0&&(!VITAL_IDS.includes(order.vitalId)||!['plus','minus','times','divide','pair','trips'].includes(order.op)))return {ok:false,reason:'invalid_precision'};
- // Anti-stall: with no precise attack, one numerical discard is always possible.
- // Two exchanges, or an exchange alongside a precision attack, cost the REAL special.
- if(!types.includes('tactic-numeric-recycle')&&ei.length&&
-   (ei.length>1||ni.length>0))return {ok:false,reason:'recycle_requires_card'};
+ // Anti-stall: one free replacement without a precision attack.
+ // Pendulum grants ONE additional replacement on the cycle after real damage.
+ const freePendulum=side.epic.exchangeUntilRound===battle.round?side.epic.exchangeCredits:0;
+ const allowedFree=(ni.length===0?1:0)+freePendulum;
+ if(!types.includes('tactic-numeric-recycle')&&ei.length>allowedFree)
+  return {ok:false,reason:'recycle_requires_card'};
  if(order.weaponFocusId!=null&&!side.weapons.some(w=>w.id===order.weaponFocusId))
   return {ok:false,reason:'weapon_focus_invalid'};
  if(ni.some(i=>ei.includes(i)))return {ok:false,reason:'card_double_spend'};
+ const epics=types.filter(isTacticalEpic);
+ if(epics.length>1)return {ok:false,reason:'epic_conflict'};
+ if(epics.length){
+  const id=epics[0],profile=TACTICAL_EPIC_CARDS[id];
+  if(!side.epic.entitlements.includes(id))return {ok:false,reason:'epic_locked'};
+  if(side.epic.used.includes(id))return {ok:false,reason:'epic_already_used'};
+  if(side.epic.active&&side.epic.active.untilRound>=battle.round)
+   return {ok:false,reason:'epic_already_active'};
+  if(['epic_item_1','epic_item_9'].includes(id)&&!tacticalEpicCritical(side))
+   return {ok:false,reason:'epic_not_critical'};
+  if(id==='epic_item_9'&&!side.weapons.some(w=>w.kind==='Accumulo'))
+   return {ok:false,reason:'epic_requires_heavy'};
+  if(id==='epic_item_3'&&!ei.length)
+   return {ok:false,reason:'epic_requires_exchange'};
+  if(order.epicChoice!=null&&(!Number.isInteger(order.epicChoice)||order.epicChoice<0||
+    order.epicChoice>=(id==='epic_item_1'?10:id==='epic_item_3'?2:1)))
+   return {ok:false,reason:'epic_choice_invalid'};
+ }else if(order.epicChoice!=null)return {ok:false,reason:'epic_choice_invalid'};
  const fusionTypes=types.filter(type=>type.startsWith('fusion-'));
  if(fusionTypes.length>1)return {ok:false,reason:'fusion_conflict'};
  if(fusionTypes.length){
@@ -182,7 +202,7 @@ export function sealTacticalOrder(battle,key,order=EMPTY_ORDER,nowMs=0){
   specialIndices:[...(order.specialIndices??[])],numericIndices:[...(order.numericIndices??[])],
   vitalId:order.numericIndices?.length?order.vitalId:null,op:order.numericIndices?.length?order.op:null,
   counterVitalId:order.counterVitalId??null,exchangeIndices:[...(order.exchangeIndices??[])],
-  weaponFocusId:order.weaponFocusId??null
+  weaponFocusId:order.weaponFocusId??null,epicChoice:order.epicChoice??null
  };
  const next={...battle,orders:{...battle.orders,[key]:normalized}};
  return {ok:true,battle:next};
