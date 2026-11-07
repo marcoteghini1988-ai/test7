@@ -1,6 +1,6 @@
 # Eclissi Stellare — documento di trasferimento per ChatGPT Work
 
-> **Stato aggiornato — 7 novembre 2026:** la sola interfaccia di gioco è la plancia 3D in `src/MathDuelBattle.jsx`; le cinque carte speciali e i due mazzi sono stati portati sulla plancia, senza cambiare navi, armi o arena originale. Le schermate `TacticalDuelPrototype.jsx/.css` e l'accesso `?tacticalPreview=1` sono stati rimossi; i motori tattici non ancora integrati restano conservati come codice da migrare. Le sezioni storiche sotto descrivono test precedenti, NON una seconda modalità disponibile.
+> **Stato aggiornato — 7 novembre 2026:** l'ingresso unico è `src/MathDuelBattle.jsx`. La campagna standard usa `OfficialBattle3D.jsx` e il motore simultaneo reale 30+8; `BossBattle3D.jsx` preserva temporaneamente i boss, le passive non convertite e la durata degli effetti ionici senza sacrificare salvataggi e progressione. Tutte le viste riutilizzano gli asset 3D del gioco. `TacticalDuelPrototype` e `?tacticalPreview=1` sono rimossi.
 **Versione:** bozza operativa, 7 novembre 2026. **Repository:** `marcoteghini1988-ai/test7`, ramo `main`.  
 **Stato:** progettazione in corso; NON considerare questa bozza un ordine di eseguire immediatamente tutte le modifiche. Da aggiornare al termine della progettazione e dopo la consegna di ogni asset PNG.
 
@@ -8,10 +8,10 @@
 Una volta terminata la progettazione e aggiunti gli asset, ChatGPT Work dovrà aprire il repository, leggere **prima** questo documento e la roadmap collegata, verificare graficamente e funzionalmente il gioco su un'anteprima eseguibile, correggere posizionamenti/asset/interfaccia, eseguire test e compilazione e riportare cosa è stato controllato. **Non dedurre che il solo caricamento del file avvii automaticamente il lavoro:** è necessario dare a Work un incarico esplicito e autorizzargli l'accesso al repository, se richiesto.
 
 ## Riferimenti obbligatori
-- `docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md`: regole del nuovo combattimento, stato verificato del sandbox e lavori aperti.
+- `docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md`: regole del duello ufficiale, verifica del motore simultaneo, compatibilità delle passive e lavoro residuo.
 - `docs/PUNTO_31_PASSIVE_MAZZI_BOSS.md`, `src/bossNumericDecks.js`: **12 mazzi numerici boss, 23 abilità passive**, fino a 1/2/3 abilità per mazzo, tre gradi ciascuna. I mazzi NON sono le carte Personaggio Boss.
 - `src/newCombat/phase16DBosses.js`: dodici identità e abilità dei boss nel vecchio combattimento.
-- `src/MathDuelBattle.jsx`, `src/MathDuelBattle.css`, `src/ShipPresentation.jsx`: un'unica plancia 3D ufficiale. `src/simultaneousDuelEngine.js`: meccaniche tattiche da integrare; la vecchia UI separata e `?tacticalPreview=1` sono stati rimossi.
+- `src/MathDuelBattle.jsx` è l'unico ingresso al combattimento; `src/OfficialBattle3D.jsx` risolve 30+8, `src/BossBattle3D.jsx` preserva le capacità legacy non convertite, `src/simultaneousDuelEngine.js` risolve gli ordini simultanei. `src/ShipPresentation.jsx` e gli asset Titanio/mathfleet sono riferimento grafico obbligatorio.
 - `src/newCombat/phase16BCombat.js`: Dadi Quantici, Numero Bomba, Malus, Carta Dorata nel codice storico.
 - `src/newCombat/phase16FModules.js`: equipaggiamenti/moduli che accumulano carica e si attivano.
 - `src/newCombat/phase16CEpics.js`, `src/newCombat/phase15LegacyPassives.js`, `src/vulnerabilityRift.js`: Epici, reliquie, effetti del terreno e altri sistemi preesistenti.
