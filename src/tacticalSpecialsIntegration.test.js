@@ -34,7 +34,7 @@ const count=p=>p.hand.length+p.deck.length+p.discard.length;
 
 test('Le undici speciali ufficiali hanno un vero tipo consumabile nel sandbox',()=>{
  const official=Object.keys(SPECIAL_CARD_CATALOG);
- assert.equal(official.length,11);
+ assert.equal(official.length,23); // include i 12 personaggi sbloccabili
  for(const id of official){
   assert.ok(Object.hasOwn(TACTICAL_SPECIALS,id),id);
   const game=setup({a:[id]});
