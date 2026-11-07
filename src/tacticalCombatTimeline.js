@@ -108,7 +108,8 @@ export function currentTacticalPlayback(battle,nowMs){
   elapsedMs,stage:tacticalPlaybackStage(elapsedMs),
   shots:events.filter(e=>['gun','escort_gun'].includes(e.type)&&
    elapsedMs>=e.atMs&&elapsedMs<e.atMs+e.durationMs),
-  notices:events.filter(e=>e.type!=='gun'&&e.type!=='outcome'&&elapsedMs>=e.atMs&&elapsedMs<e.atMs+e.durationMs),
+  notices:events.filter(e=>!['gun','escort_gun','outcome'].includes(e.type)&&
+   elapsedMs>=e.atMs&&elapsedMs<e.atMs+e.durationMs),
   outcome:events.find(e=>e.type==='outcome'&&elapsedMs>=e.atMs),
   sides:projectedCombatSides(battle,elapsedMs)
  };
