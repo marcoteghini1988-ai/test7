@@ -33,6 +33,15 @@ function Vessel({side,title,facing,hullRef}){
   <Meter label="Barriera" hp={defense.shield.hp} max={defense.shield.max}/>
   <div className="tdp-tech">Armi: {side.weapons.map(w=>w.name).join(' · ')} · Potenza base {nativeBarrierPacket(side)}</div>
   <div className="tdp-escort">Scudiere: {escorts.length?escorts.map(e=>e.hp+'/'+e.max+' HP').join(' · '):'nessuna'}</div>
+  <div className="tdp-parts" aria-label={'Sistemi vitali di '+side.name}>
+   {VITAL_IDS.map(id=>{
+    const part=defense.parts[id];
+    const damaged=part.hp<part.max;
+    return <span key={id} className={'tdp-part'+(part.hp===0?' tdp-part--ko':damaged?' tdp-part--damaged':'')}>
+     <b>{VITAL_LABELS[id]}</b><small>{part.hp===0?'KO':part.hp+'/'+part.max}</small>
+    </span>;
+   })}
+  </div>
  </article>;
 }
 function CurrentVitals({side,viewer,choose,selected}){
