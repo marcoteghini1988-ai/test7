@@ -11,7 +11,7 @@ import {officialSimultaneousEligibility} from './officialSimultaneousBridge.js';
 
 const EMPTY={numericIndices:[],specialIndices:[]};
 function make({numericBoss=null,level=5}={}){
- const b=createTacticalDuel({shipA:'C01',levelA:level,shipB:'C02',levelB:1});
+ const b=createTacticalDuel({shipA:'R04',levelA:Math.min(5,level),shipB:'C02',levelB:1});
  if(numericBoss)b.sides.A.bossNumericDeck={id:numericBoss,level,
   lastFocusedWeaponId:null,resonanceNativeRemainder:0,resonanceVitalRemainder:0};
  b.sides.B.defense.shield.hp=40;
