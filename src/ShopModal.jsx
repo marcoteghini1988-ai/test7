@@ -5,7 +5,7 @@ import { PILOTS_DATABASE, PilotCard } from './pilotsSystem';
 import DeepSpaceUniverseCanvas from './DeepSpaceUniverseCanvas';
 import { playSound } from './audio';
 import { WEAPONS_DATABASE as DEFAULT_WEAPONS_DB } from './weaponsSystem';
-import NewArsenalCatalogPreview from './NewArsenalCatalogPreview';
+import ArsenalCatalog from './ArsenalCatalog';
 import {describePhase16EDeck} from './newCombat/phase16EDecks.js';
 import {activeNumericBossAbilities,numericBossDeck} from './bossNumericDecks.js';
 const currentDeckPassives=(id,level)=>numericBossDeck(id)?activeNumericBossAbilities(id,level).map(x=>x.unlocked?x.name+' · Grado '+x.grade+'/3 · '+x.description.replace('%',x.value+'%').replace('in secondi',': '+x.value+' secondi'):x.name+' · sblocco L'+x.unlockAt).join(' | '):null;
@@ -119,7 +119,7 @@ export default function ShopModal({
   onCloseToHome
 }) {
   const [activeTab, setActiveTab] = useState(initialTab || 'characters');
-  const [showArsenal2Preview, setShowArsenal2Preview] = useState(true);
+  const [showArsenalCatalog, setShowArsenalCatalog] = useState(true);
 
   useEffect(() => {
     if (initialTab) setActiveTab(initialTab);
@@ -500,10 +500,10 @@ export default function ShopModal({
           {/* TAB 2: ARMI HARDPOINT (DIREZIONAMENTO DETERMINISTICO SUGLI SLOT 1, 2, 3, 4) */}
           {activeTab === 'weapons' && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <button type="button" onClick={() => setShowArsenal2Preview(v => !v)} className="cyber-btn" style={{ padding: '0.6rem', marginBottom: '0.55rem', borderColor: '#38bdf8', color: '#7dd3fc', fontWeight: 900 }}>
-                {showArsenal2Preview ? '▾ CHIUDI ARSENALE 2.0' : '▸ APRI ARSENALE 2.0 · 48 ARMI'}
+              <button type="button" onClick={() => setShowArsenalCatalog(v => !v)} className="cyber-btn" style={{ padding: '0.6rem', marginBottom: '0.55rem', borderColor: '#38bdf8', color: '#7dd3fc', fontWeight: 900 }}>
+                {showArsenalCatalog ? '▾ CHIUDI ARSENALE 2.0' : '▸ APRI ARSENALE 2.0 · 48 ARMI'}
               </button>
-              {showArsenal2Preview && <div style={{marginBottom:'0.7rem'}}><NewArsenalCatalogPreview armoryV2={armoryV2} stardust={stardust} pilotLevel={level} onBuy={onBuyArmoryV2} onUpgrade={onUpgradeArmoryV2} onEquip={onEquipArmoryV2} /></div>}
+              {showArsenalCatalog && <div style={{marginBottom:'0.7rem'}}><ArsenalCatalog armoryV2={armoryV2} stardust={stardust} pilotLevel={level} onBuy={onBuyArmoryV2} onUpgrade={onUpgradeArmoryV2} onEquip={onEquipArmoryV2} /></div>}
               <div style={{fontSize:'.63rem',fontWeight:900,color:'#94a3b8',margin:'0.55rem 0 0.35rem'}}>HARDPOINT ORIGINALI DELLA CAMPAGNA · SISTEMA PRECEDENTE</div>
               {renderRarityFilter(weaponRarityFilter, setWeaponRarityFilter)}
 
