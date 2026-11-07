@@ -554,6 +554,58 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   ' ('+before+' potenziali, '+intercepted+' intercettati), barriera '+hit.damage);
  return hit.damage;
 }
+// Escort ordnance exists ONLY if a real numeric card was committed and loaded
+// into the catalogued escort weapon. It is a separate shield-only shot, with
+// one real interception pass, never a clone of the mother's native volley.
+function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modifiers,motherDamage){
+ if(!plan)return 0;
+ if(!plan.ready){
+  if(plan.reason==='charging')
+   log.push(key+': scudiera '+(plan.escortSlot+1)+' ricarica '+plan.charge+'/'+plan.threshold+
+    ' con una numerica vera (nessun proiettile ancora)');
+  return 0;
+ }
+ const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
+ const harmony=tacticalResonanceCooperationBonus(atk,plan.packet,motherDamage);
+ const packet=Math.min(plan.packet+Math.floor(plan.packet*.45),plan.packet+harmony.extra);
+ let intercepted=0,suppressed=false;
+ const efficiency=escortInterceptionEfficiency(def.defense);
+ if(efficiency>0){
+  for(const escort of def.escorts){
+   if(escort.hp<=0)continue;
+   if(t.suppressFirstEscort&&!suppressed){suppressed=true;continue;}
+   const baseShare=Number.isFinite(escort.weapon?.interceptShare)?
+    Math.min(.45,Math.max(0,escort.weapon.interceptShare)):.20;
+   const share=res.ionizedDefense?baseShare*.5:baseShare;
+   const absorbed=Math.min(escort.hp,Math.floor(packet*share*efficiency),
+    packet-intercepted);
+   if(absorbed>0){escort.hp-=absorbed;intercepted+=absorbed;}
+  }
+ }
+ const motherPacket=Math.max(0,packet-intercepted);
+ const defenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
+ const armor=exclusiveBossShieldFactor(def);
+ const actual=Math.floor(Math.floor(motherPacket*defenseFactor*armor)*
+  (modifiers?.shieldDamageFactor||1));
+ const hit=damageMotherShield(def.defense,actual);
+ def.defense=hit.defense;
+ rememberTacticalBossMotherHit(def,hit.damage);
+ rememberExclusiveBossDefenseHit(def,hit.damage);
+ rememberTacticalResonanceCooperationHit(atk,hit.damage,harmony);
+ impacts.push({kind:'escort_barrier',by:key,target:other(key),
+  packet,intercepted,damage:hit.damage,escortSlot:plan.escortSlot,
+  cardId:plan.cardId,escortWeaponId:plan.escortWeaponId,
+  weaponIds:[plan.weaponId],technology:'scudiera'});
+ log.push(key+': scudiera '+(plan.escortSlot+1)+' · '+plan.weaponName+
+  ': numerica '+plan.cardId+' consumata, '+packet+' HP potenziali, '+
+  intercepted+' intercettati, '+hit.damage+' danni reali alla barriera');
+ if(harmony.active&&hit.damage>0)
+  log.push(key+': Risonanza (mazzo numerico) · Sinfonia di flotta +'+
+   harmony.percentage+'% (+'+harmony.extra+' HP sul colpo scudiera, resto '+
+   harmony.remainder+'/100; madre e scudiera hanno colpito entrambe)');
+ return hit.damage;
+}
+
 function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const atk=sides[key],def=sides[other(key)];
  if(!order.numericIndices.length)return 0;
@@ -722,9 +774,16 @@ function resolveCycle(battle,nowMs){
   log.push('B: Signore delle Ombre · Patto di sangue: -'+bloodPact.paid+
    ' HP reali alla propria barriera, +8% armato per questo scontro');
  const status=applyPreparation(sides,orders,log,battle.round);
+ // Queue real escort munitions BEFORE either mother shot. A scudiera that
+ // falls during simultaneous exchange retains its already-loaded shot.
+ const escortPlans=Object.fromEntries(['A','B'].map(key=>[key,
+  orders[key].escortAmmoIndex==null?null:prepareTacticalEscortVolley(sides[key],
+   sides[key].numeric.hand[orders[key].escortAmmoIndex])]));
  const prepared=combatSnapshot(sides);
  const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers,battle.round,before);
  const b=applyBarrierAttack(sides,'B',orders,status,log,impacts,modifiers,battle.round,before);
+ const escortA=applyEscortBarrierVolley(sides,'A',escortPlans.A,orders,status,log,impacts,modifiers,a);
+ const escortB=applyEscortBarrierVolley(sides,'B',escortPlans.B,orders,status,log,impacts,modifiers,b);
  // Urano: only the B boss can siphon. Use the already-computed REAL barrier
  // damage after escort intercept/defense. Sync moved here is pre-reward sync:
  // no stealing the 25/50 sync that players will earn later in this cycle.
@@ -753,7 +812,8 @@ function resolveCycle(battle,nowMs){
   const random=seedRandom((battle.round*997+ (key==='A'?199:311))>>>0);
   side.special=recyclePile(side.special,order.specialIndices,5,random);
   const previousNumerics=side.numeric;
-  const spentNumerics=[...order.numericIndices,...order.exchangeIndices];
+  const spentNumerics=[...order.numericIndices,...order.exchangeIndices,
+   ...(order.escortAmmoIndex==null?[]:[order.escortAmmoIndex])];
   side.numeric=recyclePile(previousNumerics,spentNumerics,7,random,
    tacticalEpicNumericChoice(side,battle.round));
   rememberTacticalLeviatanoRecycle(side,previousNumerics,spentNumerics.length);
@@ -792,7 +852,8 @@ function resolveCycle(battle,nowMs){
  // Only the numeric cards actually spent by player A are public now;
  // they can arm the boss for the NEXT round, never retroactively.
  if(rememberExclusiveResonanceDiscards(sides.B,
-   orders.A.numericIndices.length+orders.A.exchangeIndices.length,battle.round))
+   orders.A.numericIndices.length+orders.A.exchangeIndices.length+
+    Number(orders.A.escortAmmoIndex!=null),battle.round))
   log.push('B: Cristallo di Risonanza · Memoria degli scarti armata per il prossimo ciclo');
  resolveTacticalEpicAfterCombat(sides,battle.round,impacts,log);
  let winner=winState(sides);
@@ -801,7 +862,8 @@ function resolveCycle(battle,nowMs){
  if(winner)log.push(winner==='draw'?'Pareggio: limite/doppio KO':'Vince '+winner);
  return {...battle,sides,phase:'resolving',resolveUntilMs:nowMs+TACTICAL_TIMING.resolveMs,
   arenaValidCalculations:battle.arenaValidCalculations+Number(validCalculation.A)+Number(validCalculation.B),
-  orders,history:[...battle.history,{round:battle.round,orders,events:log,shieldA:a,shieldB:b,hitsA,hitsB,
+  orders,history:[...battle.history,{round:battle.round,orders,events:log,
+   shieldA:a+escortA,shieldB:b+escortB,escortA,escortB,hitsA,hitsB,
    snapshots:{before,prepared,afterBarrier,afterPrecision},impacts,playedSpecials,
    environmentStage}],lastEvents:log,winner};
 }
