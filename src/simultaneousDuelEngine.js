@@ -164,7 +164,7 @@ function applyPreparation(sides,orders,log){
  }
  return status;
 }
-function applyBarrierAttack(sides,key,orders,status,log){
+function applyBarrierAttack(sides,key,orders,status,log,impacts){
  const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
  let total=nativeBarrierPacket(atk)+ (t.types.includes('tactic-power-shift')?6:0)+
   (t.types.includes('tactic-kinetic')?6:0);
@@ -184,11 +184,12 @@ function applyBarrierAttack(sides,key,orders,status,log){
  }
  const hit=damageMotherShield(def.defense,total);
  def.defense=hit.defense;
+ impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id)});
  log.push(key+': armi native '+atk.weapons.map(w=>w.name).join(' + ')+
   ' ('+before+' potenziali, '+intercepted+' intercettati), barriera '+hit.damage);
  return hit.damage;
 }
-function applyVitalAttack(sides,key,order,status,log){
+function applyVitalAttack(sides,key,order,status,log,impacts){
  const atk=sides[key],def=sides[other(key)];
  if(!order.numericIndices.length)return 0;
  const cards=order.numericIndices.map(i=>atk.numeric.hand[i]);
@@ -197,30 +198,35 @@ function applyVitalAttack(sides,key,order,status,log){
  const signature=defense.parts[target].signature;
  const matches=matchesVitalSignature(signature,cards);
  if(!matches||((signature?.kind==='poker')!==(order.op==='pair'))){
+  impacts.push({kind:'precision',by:key,target,damage:0,reason:'invalid_signature'});
   log.push(key+': combinazione non valida per '+target+' — numeriche consumate');
   return 0;
  }
  if(signature?.kind!=='poker'&&signature.op!==order.op){
+  impacts.push({kind:'precision',by:key,target,damage:0,reason:'invalid_operation'});
   log.push(key+': operazione non valida per '+target);return 0;
  }
  if(!defense.parts[target].exposed&&remainingExposureSlots(defense)>0)
    defense=exposeMotherPart(defense,target).defense;
  if(!defense.parts[target].exposed){
+  impacts.push({kind:'precision',by:key,target,damage:0,reason:'protected'});
   log.push(key+': '+target+' ancora protetto dalla barriera');return 0;
  }
  if(status[other(key)].newCounter===target){
+  impacts.push({kind:'precision',by:key,target,damage:0,reason:'countered'});
   log.push(key+': attacco a '+target+' respinto da Contromisura programmata');
   return 0;
  }
- let damage=10;
+ let damage=10,absorbed=0;
  const protector=def.escorts.find(e=>e.hp>0);
  if(status[other(key)].fusion&&protector){
-  const absorbed=Math.min(protector.hp,Math.floor(damage*.60));
+  absorbed=Math.min(protector.hp,Math.floor(damage*.60));
   protector.hp-=absorbed;damage-=absorbed;
   log.push(other(key)+': scudiera fusa assorbe '+absorbed+' HP reali');
  }
  const hit=hitMotherPart(defense,target,damage,cards);
  def.defense=hit.defense;
+ impacts.push({kind:'precision',by:key,target,damage:hit.damage||0,absorbed,reason:hit.reason,destroyed:!!hit.destroyed});
  if(target==='shieldGenerator'&&hit.destroyed){
   // La barriera madre collassa quando il suo vero generatore va KO.
   def.defense=damageMotherShield(def.defense,def.defense.shield.hp).defense;
@@ -229,18 +235,26 @@ function applyVitalAttack(sides,key,order,status,log){
  log.push(key+': '+target+' '+(hit.reason==='hit'?'-'+hit.damage+' HP'+(hit.destroyed?' [KO]':''):'nessun danno: '+hit.reason));
  return hit.damage||0;
 }
+// Only public combat condition snapshots, never hands/deck or hidden orders.
+function combatSnapshot(sides){return Object.fromEntries(['A','B'].map(key=>[key,{
+  defense:clone(sides[key].defense),escorts:clone(sides[key].escorts)
+}]));}
 function winState(sides){
  const a=motherDestroyed(sides.A.defense),b=motherDestroyed(sides.B.defense);
  return a&&b?'draw':a?'B':b?'A':null;
 }
 function resolveCycle(battle,nowMs){
  const sides=clone(battle.sides),orders=clone(battle.orders);
+ const before=combatSnapshot(sides),impacts=[];
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
  const status=applyPreparation(sides,orders,log);
- const a=applyBarrierAttack(sides,'A',orders,status,log);
- const b=applyBarrierAttack(sides,'B',orders,status,log);
- const hitsA=applyVitalAttack(sides,'A',orders.A,status,log);
- const hitsB=applyVitalAttack(sides,'B',orders.B,status,log);
+ const prepared=combatSnapshot(sides);
+ const a=applyBarrierAttack(sides,'A',orders,status,log,impacts);
+ const b=applyBarrierAttack(sides,'B',orders,status,log,impacts);
+ const afterBarrier=combatSnapshot(sides);
+ const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts);
+ const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts);
+ const afterPrecision=combatSnapshot(sides);
  for(const key of ['A','B']){
   const side=sides[key],order=orders[key];
   const random=seedRandom((battle.round*997+ (key==='A'?199:311))>>>0);
@@ -254,7 +268,8 @@ function resolveCycle(battle,nowMs){
  log.push('Barriere: A '+sides.A.defense.shield.hp+'/60; B '+sides.B.defense.shield.hp+'/60');
  if(winner)log.push(winner==='draw'?'Pareggio: limite/doppio KO':'Vince '+winner);
  return {...battle,sides,phase:'resolving',resolveUntilMs:nowMs+TACTICAL_TIMING.resolveMs,
-  orders,history:[...battle.history,{round:battle.round,orders,events:log,shieldA:a,shieldB:b,hitsA,hitsB}],lastEvents:log,winner};
+  orders,history:[...battle.history,{round:battle.round,orders,events:log,shieldA:a,shieldB:b,hitsA,hitsB,
+   snapshots:{before,prepared,afterBarrier,afterPrecision},impacts}],lastEvents:log,winner};
 }
 export function advanceTacticalDuel(battle,nowMs=0){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
