@@ -9,7 +9,8 @@ const errors=[];
 const verify=(condition,message)=>{if(!condition)errors.push(message);};
 const exists=file=>existsSync(resolve(root,file));
 const app=read('src/main.tsx');
-const arena=read('src/MathDuelBattle.jsx');
+const battleEntry=read('src/MathDuelBattle.jsx');
+const arena=read('src/OfficialBattle3D.jsx');
 const css=read('src/MathDuelBattle.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
@@ -21,6 +22,8 @@ verify(!app.includes('TacticalDuelPrototype')&&!app.includes('tacticalPreview'),
 verify(!exists('src/TacticalDuelPrototype.jsx')&&!exists('src/TacticalDuelPrototype.css'),
  'La schermata prototipo separata non deve esistere');
 verify(source.includes('<MathDuelBattle'), 'La campagna deve usare la plancia MathDuelBattle originale');
+verify(battleEntry.includes("export {default} from './OfficialBattle3D.jsx';"),
+ 'MathDuelBattle deve avviare direttamente la sola plancia simultanea ufficiale');
 verify(arena.includes('MathDuelBattle.css')&&arena.includes('arena_titanio_9x16.webp'),
  'La battaglia ufficiale deve usare il CSS e lo sfondo Titanio 9:16');
 verify(arena.includes('<ShipArtwork')&&arena.includes('<MountedWeapons'),
@@ -31,8 +34,8 @@ verify(arena.includes('className="deck left deck-number"')&&
  arena.includes('className="deck left deck-special"'),
  'Servono i due mazzi distinti: numerico e speciale');
 verify(arena.includes('className="special-board"')&&
- arena.includes("game.player.specialHand?.[i]")&&
- arena.includes('onClick={()=>playTacticalCard(i)}'),
+ arena.includes('player.special.hand[i]')&&
+ arena.includes('specialIndices:toggle(d.specialIndices,i,2)'),
  'Le cinque carte speciali reali devono essere accessibili sulla plancia');
 verify(arena.includes('[0,1,2,3,4].map(')&&
  arena.includes('<Hand cards={game.player.hand}')&&
@@ -43,6 +46,8 @@ verify(!arena.includes('className="special-card-hand"')&&
  'Le interfacce duplicate o la flotta di prova devono essere rimosse');
 verify(css.includes('.es-math-scope .special-board')&&css.includes('.deck.deck-special'),
  'La plancia deve posizionare i nuovi comandi senza sovrapporre un secondo gioco');
+verify(exists('src/OfficialBattle3D.css')&&arena.includes('officialBattleSetup')&&arena.includes('sealTacticalOrder'),
+ 'La plancia deve usare il motore simultaneo reale e gli asset ufficiali');
 verify(exists('public/assets/mathduel/arena_titanio_9x16.webp'),
  'Manca il render originale 9:16');
 
