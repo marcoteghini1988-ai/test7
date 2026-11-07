@@ -5,7 +5,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
-import {activateTacticalEpic,expireTacticalEpic,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
+import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
 import {
   VITAL_IDS,createMotherDefense,damageMotherShield,restoreMotherShield,exposeMotherPart,
   hitMotherPart,remainingExposureSlots,motherDestroyed
@@ -169,12 +169,16 @@ export function validateTacticalOrder(battle,key,order){
    return {ok:false,reason:'epic_not_critical'};
   if(id==='epic_item_9'&&!side.weapons.some(w=>w.kind==='Accumulo'))
    return {ok:false,reason:'epic_requires_heavy'};
-  if(id==='epic_item_3'&&!ei.length)
-   return {ok:false,reason:'epic_requires_exchange'};
-  if(order.epicChoice!=null&&(!Number.isInteger(order.epicChoice)||order.epicChoice<0||
-    order.epicChoice>=(id==='epic_item_1'?10:id==='epic_item_3'?2:1)))
-   return {ok:false,reason:'epic_choice_invalid'};
- }else if(order.epicChoice!=null)return {ok:false,reason:'epic_choice_invalid'};
+  // Möbius/Astrolabio reveal cards ON activation; selection happens later.
+  if(order.epicChoice!=null)return {ok:false,reason:'epic_choice_not_ready'};
+ }else if(order.epicChoice!=null){
+  const active=side.epic.active;
+  if(!active||active.untilRound<battle.round||active.startedRound>=battle.round||
+    !['epic_item_1','epic_item_3'].includes(active.id)||
+    !Number.isInteger(order.epicChoice)||order.epicChoice<0||
+    order.epicChoice>=(active.id==='epic_item_1'?10:2))
+    return {ok:false,reason:'epic_choice_invalid'};
+ }
  const fusionTypes=types.filter(type=>type.startsWith('fusion-'));
  if(fusionTypes.length>1)return {ok:false,reason:'fusion_conflict'};
  if(fusionTypes.length){
@@ -227,8 +231,9 @@ function applyPreparation(sides,orders,log,round){
  for(const key of ['A','B']){
   const side=sides[key],types=specialTypes(side,orders[key]);
   expireTacticalEpic(side,round);
+  prepareTacticalEpicChoice(side,round,orders[key].epicChoice,log);
   const playedEpic=types.find(isTacticalEpic);
-  if(playedEpic)activateTacticalEpic(side,playedEpic,round,orders[key].epicChoice??0,log);
+  if(playedEpic)activateTacticalEpic(side,playedEpic,round,0,log);
   const fusion=types.find(type=>type.startsWith('fusion-'))??null;
   const active={types,newCounter:types.includes('tactic-counter')?orders[key].counterVitalId:null,
    suppressFirstEscort:types.includes('tactic-suppress'),
