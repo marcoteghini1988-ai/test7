@@ -12,7 +12,7 @@ export function nativeWeaponCycleWeight(weapon){
 export function tacticalWeaponTechnology(weapon){
  const fx=weaponEffect(weapon.id);
  const label=(weapon.name+' '+fx.profile).toLowerCase();
- if(/ion|arc|magnet|fulmine|impuls|onde|ciclone/.test(label))return 'ionico';
+ if(/ionico|ionica|ionic|fulmine|magnet|impuls|onde|ciclone|\barc\b|\bion\b/.test(label))return 'ionico';
  if(/laser|raggio|fot|luce|stella|solare|corona|ecliss/.test(label))return 'laser';
  if(/plasma|fenice|scarlatto|cremisi|ardente|reattor|fuoco/.test(label))return 'plasma';
  if(/obice|cannone|pungigl|mitrag|lancia|ago|dardo|titan|diamante|artigli|lama/.test(label))return 'cinetico';
