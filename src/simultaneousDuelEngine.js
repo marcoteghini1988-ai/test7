@@ -2,6 +2,7 @@
 // NON viene usato dalla campagna/PvP ufficiale e NON accredita ricompense.
 // Gli armamenti sono i 42 del catalogo esistente: i calcoli non alimentano lo scudo.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
@@ -135,10 +136,10 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
    exchangeUntilRound:0,dustPreview:0},
   numeric:numericPile(key,seed+3,shuffleOpening),special:specialPile(key,seed+13,specialDeck,epicOpening)};
 }
-export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,
+export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',
  specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
- return {schemaVersion:1,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
+ return {schemaVersion:1,arenaId,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening)},
@@ -284,7 +285,7 @@ function applyPreparation(sides,orders,log,round){
  }
  return status;
 }
-function applyBarrierAttack(sides,key,orders,status,log,impacts){
+function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
  const base=nativeBarrierPacket(atk);
  // Every bonus modifies the REAL native weapon packet; two different special
@@ -331,7 +332,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts){
    splash=Math.min(2,def.escorts[1].hp);def.escorts[1].hp-=splash;
   }
  }
- const hit=damageMotherShield(def.defense,total-intercepted);
+ // L'ambiente protegge solo la barriera madre, dopo le scudiere reali.
+ const motherPacket=Math.max(0,total-intercepted);
+ const effectivePacket=Math.floor(motherPacket*(modifiers?.shieldDamageFactor||1));
+ const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
   technology:t.tech,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id)});
@@ -339,7 +343,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts){
   ' ('+before+' potenziali, '+intercepted+' intercettati), barriera '+hit.damage);
  return hit.damage;
 }
-function applyVitalAttack(sides,key,order,status,log,impacts,round){
+function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const atk=sides[key],def=sides[other(key)];
  if(!order.numericIndices.length)return 0;
  const cards=order.numericIndices.map(i=>atk.numeric.hand[i]);
@@ -364,6 +368,9 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round){
   return 0;
  }
  let damage=10+tacticalEpicMatriceDamage(atk,round,order.op),absorbed=0;
+ // Bonus Plasma esclusivamente su tre numeriche e firma autentica valida.
+ if(cards.length===3&&modifiers?.tripleAttackFactor)
+  damage=Math.max(1,Math.round(damage*modifiers.tripleAttackFactor));
  const defenseStatus=status[other(key)];
  if(def.defense.parts.command.hp>0){
   const protector=def.escorts.find(e=>e.hp>0);
@@ -407,24 +414,34 @@ function winState(sides){
 function resolveCycle(battle,nowMs){
  const sides=clone(battle.sides),orders=clone(battle.orders);
  const before=combatSnapshot(sides),impacts=[];
+ const environmentStage=arenaEnvironment(battle.arenaId,battle.arenaValidCalculations+1).stage;
+ const modifiers=arenaPhaseModifiers(battle.arenaId,environmentStage);
  const playedSpecials=Object.fromEntries(['A','B'].map(key=>[key,
   orders[key].specialIndices.map(i=>sides[key].special.hand[i].type)]));
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
  const status=applyPreparation(sides,orders,log,battle.round);
  const prepared=combatSnapshot(sides);
- const a=applyBarrierAttack(sides,'A',orders,status,log,impacts);
- const b=applyBarrierAttack(sides,'B',orders,status,log,impacts);
+ const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers);
+ const b=applyBarrierAttack(sides,'B',orders,status,log,impacts,modifiers);
  const afterBarrier=combatSnapshot(sides);
- const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts,battle.round);
- const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts,battle.round);
+ const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts,battle.round,modifiers);
+ const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts,battle.round,modifiers);
  const afterPrecision=combatSnapshot(sides);
+ const validCalculation={};
+ for(const key of ['A','B']){
+  const order=orders[key],atk=sides[key],def=sides[key==='A'?'B':'A'];
+  validCalculation[key]=order.numericIndices.length>=2&&
+   tacticalSignatureMatches(def.defense.parts[order.vitalId]?.signature,
+    order.op,order.numericIndices.map(i=>atk.numeric.hand[i]));
+ }
  for(const key of ['A','B']){
   const side=sides[key],order=orders[key];
   const random=seedRandom((battle.round*997+ (key==='A'?199:311))>>>0);
   side.special=recyclePile(side.special,order.specialIndices,5,random);
   side.numeric=recyclePile(side.numeric,[...order.numericIndices,...order.exchangeIndices],7,random,
    tacticalEpicNumericChoice(side,battle.round));
-  side.sync=Math.min(100,side.sync+25+((key==='A'?hitsA:hitsB)>0?25:0));
+  side.sync=Math.min(100,side.sync+25+((key==='A'?hitsA:hitsB)>0?25:0)+
+   (validCalculation[key]?modifiers.syncPerCalculation:0));
   if(side.epic.exchangeUntilRound===battle.round){
    side.epic.exchangeCredits=0;side.epic.exchangeUntilRound=0;
   }
@@ -444,8 +461,10 @@ function resolveCycle(battle,nowMs){
  log.push('Barriere: A '+sides.A.defense.shield.hp+'/60; B '+sides.B.defense.shield.hp+'/60');
  if(winner)log.push(winner==='draw'?'Pareggio: limite/doppio KO':'Vince '+winner);
  return {...battle,sides,phase:'resolving',resolveUntilMs:nowMs+TACTICAL_TIMING.resolveMs,
+  arenaValidCalculations:battle.arenaValidCalculations+Number(validCalculation.A)+Number(validCalculation.B),
   orders,history:[...battle.history,{round:battle.round,orders,events:log,shieldA:a,shieldB:b,hitsA,hitsB,
-   snapshots:{before,prepared,afterBarrier,afterPrecision},impacts,playedSpecials}],lastEvents:log,winner};
+   snapshots:{before,prepared,afterBarrier,afterPrecision},impacts,playedSpecials,
+   environmentStage}],lastEvents:log,winner};
 }
 export function advanceTacticalDuel(battle,nowMs=0){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
