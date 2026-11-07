@@ -1,7 +1,8 @@
 import React,{useEffect,useRef,useState} from 'react';
 import {ShipArtwork} from './ShipPresentation.jsx';
+import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
-import {TACTICAL_SPECIALS,TACTICAL_SIGNATURES,createTacticalDuel,
+import {TACTICAL_SPECIALS,createTacticalDuel,
  sealTacticalOrder,advanceTacticalDuel,nativeBarrierPacket} from './simultaneousDuelEngine.js';
 import {planTacticalDemoAi} from './tacticalDuelDemoAi.js';
 import {projectedCombatSides,tacticalPlaybackElapsed} from './tacticalCombatTimeline.js';
@@ -10,9 +11,13 @@ import './TacticalDuelPrototype.css';
 
 const BLANK=()=>({specialIndices:[],numericIndices:[],vitalId:null,op:'plus',
  counterVitalId:'shieldGenerator',exchangeIndices:[]});
-const OPS=[['plus','+'],['minus','−'],['times','×'],['divide','÷'],['pair','COPPIA']];
-const format=(sig)=>!sig?'?':sig.kind==='poker'?'Poker · coppia':
- OPS.find(([op])=>op===sig.op)?.[1]+' → '+sig.target;
+const OPS=[['plus','+'],['minus','−'],['times','×'],['divide','÷'],['pair','COPPIA'],['trips','TRIS']];
+const format=sig=>{
+ if(!sig)return '?';
+ if(sig.kind==='any')return sig.options.map(format).join(' oppure ');
+ if(sig.kind==='poker')return sig.pattern==='trips'?'Poker · tris':'Poker · coppia';
+ return (OPS.find(([op])=>op===sig.op)?.[1]??'?')+' → '+sig.target;
+};
 const hpPct=(hp,max)=>max>0?Math.round(hp/max*100):0;
 const clamp=n=>Math.max(0,Math.min(100,n));
 function Meter({hp,max,label}){
@@ -73,6 +78,10 @@ export default function TacticalDuelPrototype(){
  const [draft,setDraft]=useState(BLANK);
  const [now,setNow]=useState(Date.now());
  const [error,setError]=useState('');
+ const [shipChoiceA,setShipChoiceA]=useState('C01');
+ const [shipChoiceB,setShipChoiceB]=useState('R04');
+ const [shipLevelA,setShipLevelA]=useState(3);
+ const [shipLevelB,setShipLevelB]=useState(3);
  const hullA=useRef(null),hullB=useRef(null);
  useEffect(()=>{
   const tick=setInterval(()=>{
@@ -111,7 +120,8 @@ export default function TacticalDuelPrototype(){
  }
  function restart(){
   const time=Date.now();
-  setBattle(createTacticalDuel({nowMs:time}));
+  setBattle(createTacticalDuel({shipA:shipChoiceA,shipB:shipChoiceB,
+   levelA:shipLevelA,levelB:shipLevelB,nowMs:time}));
   setDraft(BLANK());setError('');setNow(time);
  }
  const seconds=planning?Math.ceil(Math.max(0,battle.deadlineMs-now)/1000):Math.ceil(Math.max(0,(battle.resolveUntilMs??now)-now)/1000);
@@ -122,6 +132,32 @@ export default function TacticalDuelPrototype(){
    <div><p>ESPERIMENTO · NON MODIFICA I SALVATAGGI</p><h1>DUELLO TATTICO</h1></div>
    <a href={window.location.pathname} className="tdp-exit">Torna al gioco</a>
   </header>
+  <section className="tdp-setup" aria-label="Configurazione flotta di prova">
+   <p>PROVA LE 17 NAVICELLE · NESSUN SBLOCCO O SPESA</p>
+   <div className="tdp-setup-grid">
+    <label>Tua nave
+     <select value={shipChoiceA} onChange={e=>setShipChoiceA(e.target.value)}>
+      {PHASE1_CATALOG.ships.map(ship=><option key={ship.id} value={ship.id}>{ship.nome}</option>)}
+     </select>
+    </label>
+    <label>Livello
+     <select value={shipLevelA} onChange={e=>setShipLevelA(Number(e.target.value))}>
+      {[1,2,3,4,5].map(n=><option key={n} value={n}>L{n}</option>)}
+     </select>
+    </label>
+    <label>Nemico
+     <select value={shipChoiceB} onChange={e=>setShipChoiceB(e.target.value)}>
+      {PHASE1_CATALOG.ships.map(ship=><option key={ship.id} value={ship.id}>{ship.nome}</option>)}
+     </select>
+    </label>
+    <label>Livello
+     <select value={shipLevelB} onChange={e=>setShipLevelB(Number(e.target.value))}>
+      {[1,2,3,4,5].map(n=><option key={n} value={n}>L{n}</option>)}
+     </select>
+    </label>
+   </div>
+   <button type="button" onClick={restart}>AVVIA PARTITA CON QUESTE NAVI</button>
+  </section>
   <section className="tdp-cycle">
    <div><small>CICLO {battle.round}</small><strong>{status}</strong></div>
    <div className="tdp-clock"><strong>{seconds}s</strong><small>{planning?'30 s per preparare':'8 s di scontro'}</small></div>
