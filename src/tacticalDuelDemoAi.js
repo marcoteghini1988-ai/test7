@@ -69,7 +69,7 @@ export function planTacticalDemoAi(battle,key='B'){
  // Non usa una speciale solo perché è in mano: deve servire e non contraddire
  // l'altra già impegnata (massimo una fusione, 24 carte reali).
  const chosen=[],types=new Set();
- for(const type of [...priorities,'tactic-scan','tactic-numeric-recycle','tactic-kinetic']){
+ for(const type of [...(ours.seen.length<4?['tactic-scan']:[]),...priorities,'tactic-numeric-recycle','tactic-kinetic']){
   if(chosen.length>=2)break;
   if(types.has(type)||!playable(type,ours,enemy,shot))continue;
   const index=ours.special.hand.findIndex((c,i)=>c.type===type&&!chosen.includes(i));
