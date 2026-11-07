@@ -26,7 +26,7 @@ export function officialBattleSetup({
  if(!validateTacticalLoadout(specialCollection.loadout))
   throw new Error('Una carta speciale equipaggiata non è ancora compatibile con il nuovo duello');
  // I mazzi numerici boss non fanno parte delle 24 speciali.
- // Il giocatore può usare Gaia solo se la carta è posseduta ed equipaggiata.
+ // Attiva soltanto i mazzi le cui passive sono convertite, se posseduti ed equipaggiati.
  let ownedBossDeck=null;
  if(selectedBossDeck&&selectedBossDeck!=='neutral_starter'){
   const owned=bossDeckInventory?.[selectedBossDeck];
