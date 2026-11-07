@@ -82,7 +82,7 @@ test('Risonanza: focus alternato nel vero pacchetto nativo cambia il danno, non 
  const weapons=b.sides.A.weapons;
  assert.ok(weapons.length>=2);
  b.sides.A.bossNumericDeck.lastFocusedWeaponId=weapons[0].id;
- const compare=make();
+ const compare=make({level:3});
  compare.sides.A.bossNumericDeck=null;
  const a=turn(b,{weaponFocusId:weapons[1].id});
  const normal=turn(compare,{weaponFocusId:compare.sides.A.weapons[1].id});
