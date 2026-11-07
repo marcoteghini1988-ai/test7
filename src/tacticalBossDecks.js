@@ -4,7 +4,7 @@
 import {numericBossDeck,activeNumericBossAbilities} from './bossNumericDecks.js';
 import {tacticalSignatureMatches} from './tacticalShipSignatures.js';
 
-export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_8','planet_char_9','planet_char_11','planet_char_19']);
+export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_8','planet_char_9','planet_char_11','planet_char_19','planet_char_20']);
 export const tacticalBossDeckReady=id=>TACTICAL_READY_BOSS_DECKS.includes(id);
 
 export function equipTacticalBossDeck(side,selection=null){
@@ -19,8 +19,9 @@ export function equipTacticalBossDeck(side,selection=null){
   lastVital:null,vitalBonusRemainder:0,outgoingBonusRemainder:0,
   idraBarrierRemainder:0,idraVitalRemainder:0,
   recyclePending:false,leviatanoRemainder:0,
-  magmaShieldHits:0,magmaNativeRemainder:0,magmaVitalRemainder:0};
- if(['planet_char_6','planet_char_2','planet_char_8','planet_char_9','planet_char_11','planet_char_19'].includes(selection.id))
+  magmaShieldHits:0,magmaNativeRemainder:0,magmaVitalRemainder:0,
+  supremacyArmedAfterRound:0};
+ if(['planet_char_6','planet_char_2','planet_char_8','planet_char_9','planet_char_11','planet_char_19','planet_char_20'].includes(selection.id))
   return {...side,bossNumericDeck:state};
  // Gaia: stessa regola del combattimento precedente, floor sullo scudo massimo.
  // Solo HP della barriera; non modifica vitali, scudiere o mazzi.
@@ -32,8 +33,15 @@ export function equipTacticalBossDeck(side,selection=null){
 
 // Anelli di Crono: primo danno vero alla madre -8/-12/-16%.
 // Scudiere e danni nulli non consumano la protezione.
-export function tacticalBossMotherFactor(side){
+export function tacticalBossMotherFactor(side,snapshot=null){
  const state=side?.bossNumericDeck;
+ if(state?.id==='planet_char_20'){
+  const conditions=snapshot||tacticalBossConditionSnapshot(side);
+  const abilities=activeNumericBossAbilities(state.id,state.level);
+  const first=conditions.destroyedVitals===3?abilities[0]?.value||0:0;
+  const second=conditions.criticalShield?abilities[1]?.value||0:0;
+  return 1-Math.min(35,first+second)/100;
+ }
  if(state?.id!=='planet_char_6'||state.firstHitUsed)return 1;
  const value=activeNumericBossAbilities(state.id,state.level)[0]?.value||0;
  return 1-value/100;
@@ -78,6 +86,7 @@ export function tacticalBossConditionSnapshot(side){
  const parts=side?.defense?.parts;
  return {
   lowShield:!!shield&&shield.max>0&&shield.hp/shield.max<=.35,
+  criticalShield:!!shield&&shield.max>0&&shield.hp/shield.max<=.25,
   destroyedVitals:parts?Object.values(parts).filter(part=>part.hp<=0).length:0
  };
 }
@@ -251,4 +260,34 @@ export function rememberTacticalMagmaVitalHit(side,damage,bonus){
  if(state?.id!=='planet_char_19'||!(damage>0)||!bonus?.active)return side;
  side.bossNumericDeck={...state,magmaVitalRemainder:bonus.remainder};
  return side;
+}
+
+
+// Sovrano NUMERIC deck, not the Encelado exclusive dominant-suit ability.
+// Ultimo presidio: 3 OWN destroyed vitals, exactly one remaining;
+// Vuoto difensivo: <=25% mother barrier at cycle start (when available).
+// Both share a bounded defensive factor, already in tacticalBossMotherFactor.
+// Supremazia: after a REAL KO of an enemy vital, the NEXT effective attack
+// (native barrier or valid precision) gains +4/+6/+8% and consumes the
+// charge only if it deals actual damage. It does NOT activate in the same cycle.
+export function tacticalSovereignSupremacyBonus(side,base,round){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,percentage:0,extra:0};
+ if(state?.id!=='planet_char_20'||!Number.isSafeInteger(round)||
+   !Number.isSafeInteger(base)||base<=0)return inactive;
+ const a=activeNumericBossAbilities(state.id,state.level)[2];
+ if(!a?.unlocked||!(state.supremacyArmedAfterRound>0)||
+   round<=state.supremacyArmedAfterRound)return inactive;
+ return {active:true,percentage:a.value,extra:Math.ceil(base*a.value/100-1e-9)};
+}
+export function rememberTacticalSovereignHit(side,round,damage,bonus,{destroyedEnemyVital=false}={}){
+ const state=side?.bossNumericDeck;
+ const inactive={consumed:false,armed:false};
+ if(state?.id!=='planet_char_20'||!(damage>0)||!Number.isSafeInteger(round))
+  return inactive;
+ const consumed=!!bonus?.active;
+ let armedAt=consumed?0:state.supremacyArmedAfterRound||0;
+ if(destroyedEnemyVital)armedAt=round;
+ side.bossNumericDeck={...state,supremacyArmedAfterRound:armedAt};
+ return {consumed,armed:!!destroyedEnemyVital};
 }
