@@ -15,6 +15,12 @@ test('BOSS: il motore vecchio conserva le passive esistenti',()=>{
  assert.equal(officialSimultaneousEligibility({gameMode:'classic',selectedBossDeck:'boss_a',
   bossDeckInventory:{boss_a:{unlocked:true}}}).enabled,false);
 });
+test('durata degli effetti ionici ancora non convertita: usa la 3D ufficiale preesistente',()=>{
+ const arena=officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:23});
+ assert.equal(arena.enabled,false);
+ assert.equal(arena.reason,'ionic_arena_duration_pending');
+ assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1}).enabled,true);
+});
 test('mazzo ufficiale equipaggiato: 24 carte e 5 reali in mano, nessuna scrittura',()=>{
  const storage=memoryStorage();
  const special=createSpecialCollection();
