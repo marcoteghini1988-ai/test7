@@ -11,6 +11,7 @@ import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 import {tacticalPlaybackElapsed,projectedCombatSides} from './tacticalCombatTimeline.js';
 import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
+import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
 import {commanderAbility} from './commanderAbilities.js';
 import {activeNumericBossAbilities} from './bossNumericDecks.js';
 import ShipPhysicalVitals,{physicalVitalCondition} from './ShipPhysicalVitals.jsx';
@@ -380,6 +381,13 @@ export default function OfficialBattle3D({
      <p>Hai 30 secondi per preparare un ordine. Anche l'avversario prepara il proprio ordine senza leggere le tue carte. Conferma o lascia scadere il tempo: gli ordini si risolvono insieme in 8 secondi.</p>
      <p>Le 7 numeriche attaccano un sistema vitale solo con una firma matematica o Poker valida e se il sistema è esposto. Le 5 speciali provengono dal tuo mazzo da 24 carte e se ne possono impegnare al massimo 2 per ciclo.</p>
      <p>Le armi native della tua nave agiscono sulla barriera; scudiere, fusioni e riparazioni utilizzano HP e carte reali. Dopo lo scontro le mani vengono ripristinate pescando dal mazzo.</p>
+     <h3>I QUATTRO COMPONENTI DISTRUGGIBILI</h3>
+     <p>I vitali partono con 10 HP: 10–6 integro, 5–1 danneggiato, 0 distrutto. Scegli quale colpire quando la barriera apre un bersaglio. Tutti e quattro distrutti = vittoria.</p>
+     {VITAL_IDS.map(id=><p key={id}>
+      <b>{VITAL_LABELS[id]}</b>
+      <span>{'A 5 HP: '+TACTICAL_VITAL_EFFECTS[id].damaged+
+       ' A 0 HP: '+TACTICAL_VITAL_EFFECTS[id].destroyed}</span>
+     </p>)}
      <p>{'Arena: '+arena.name+'. '+arena.description}</p>
      {player.bossNumericDeck&&<>
       <h3>PASSIVE DEL MAZZO BOSS EQUIPAGGIATO</h3>
