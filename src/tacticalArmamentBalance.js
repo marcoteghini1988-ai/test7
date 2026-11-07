@@ -3,6 +3,7 @@
 // quattro cannoni leggendari azzerino automaticamente 60 HP in un solo ciclo.
 // Non modifica il catalogo, i potenziamenti o altre modalità.
 import {weaponEffect} from './mathWeaponEffects.js';
+import {gunEfficiency} from './fleetSystems.js';
 
 export function nativeWeaponCycleWeight(weapon){
  if(weapon.kind==='Accumulo')return 3;
@@ -40,9 +41,12 @@ export function tacticalBarrierPower(side){
  const {raw,scaled,contributions}=tacticalArmamentProfile(side.weapons);
  const level=Number.isInteger(side.level)?Math.max(1,Math.min(5,side.level)):1;
  let amount=scaled>0?Math.min(45,scaled+level-1):0;
- const p=side.defense.parts;
- if(p.weapons.hp===0)amount=Math.floor(amount*.5);
- if(p.engine.hp===0)amount=Math.floor(amount*.75);
+ // Legacy system thresholds also govern the simultaneous battle:
+ // 5/10 HP or less = damage (engine -10%, weapons -20%).
+ // KO retains existing -25%/-50% penalties; combine before flooring once.
+ // The two effects always apply to the actual native gun packet, never to
+ // numeric-card signatures or to unrelated abilities.
+ amount=Math.floor(amount*gunEfficiency(side.defense,'mother')+1e-9);
  return {raw,scaled,amount,contributions};
 }
 
