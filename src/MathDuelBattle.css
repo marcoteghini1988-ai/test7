@@ -651,19 +651,16 @@
 .es-math-scope .special-escort-target button{flex:1;min-width:0;background:#0d314f;color:#d8eeff;border:1px solid #4380a7;border-radius:5px;padding:6px 4px;font-size:9px;font-weight:800}
 .es-math-scope .special-escort-target button.active{background:#24648c;color:white;border-color:#b5f5ff}
 .es-math-scope .special-escort-target button:disabled{opacity:.4}
-.es-math-scope .special-card-hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;min-height:76px}
-.es-math-scope .special-card-hand button{display:flex;min-width:0;align-items:center;justify-content:space-between;flex-direction:column;gap:3px;padding:7px 1px;border:1px solid #7ecded;color:#fff;font-weight:800;border-radius:6px;background:linear-gradient(165deg,#255277,#0a1931);box-shadow:0 1px 5px #0008}
-.es-math-scope .special-card-hand button.special-fusion-strike{background:linear-gradient(165deg,#914726,#251226);border-color:#e5a57e}
-.es-math-scope .special-card-hand button strong{font-size:9px;word-break:break-word;line-height:1.2}
-.es-math-scope .special-card-hand button small,.es-math-scope .special-card-hand button span{font-size:7px;letter-spacing:0}
-.es-math-scope .special-card-hand button:disabled{opacity:.48;filter:grayscale(.35)}
-.es-math-scope .special-card-hand button:not(:disabled):focus-visible{outline:3px solid #fcf0a1;outline-offset:2px}
+
+
+
+
+
+
+
 
 /* Punto 25: carta di difesa attiva, senza alterare il tavolo 9:16. */
-.es-math-scope .special-card-hand button.special-tactical-cover{
- border-color:#91d5a5;
- background:linear-gradient(160deg,#2e6658,#102b36);
-}
+
 .es-math-scope .tactical-cover-status{
  display:block;padding:5px 7px;border-radius:5px;
  border:1px solid #92c9a8;background:#153d34;color:#d8ffeb;
@@ -676,15 +673,9 @@
 .es-math-scope .vital-part.impaired small{color:#ffdf8f;font-weight:800}
 
 /* Punto 27: carte offensive separate dal mazzo numerico. Nessun restyling dell'arena. */
-.es-math-scope .special-card-hand button.special-shot-piercing{
- background:linear-gradient(165deg,#5c5d88,#1d1c36);border-color:#acb8ff
-}
-.es-math-scope .special-card-hand button.special-shot-ion{
- background:linear-gradient(165deg,#216c82,#0c273e);border-color:#7be7ff
-}
-.es-math-scope .special-card-hand button.special-shot-corrosion{
- background:linear-gradient(165deg,#4f7234,#182b21);border-color:#b0e37b
-}
+
+
+
 .es-math-scope .strategic-armed-status{
  display:block;padding:5px 7px;border-radius:5px;
  background:#142641;border:1px solid #9cc8ff;color:#dceaff;font-size:10px;text-align:center
@@ -698,12 +689,8 @@
 .es-math-scope .vital-part[aria-pressed="true"] .vital-signature-hint{color:#fff5ba}
 
 /* Punto 30 — tipi supporto ottenibili: visibili e diversi dalle carte offensive. */
-.es-math-scope .special-card-hand button.special-support-shield-repair{
- background:linear-gradient(160deg,#2c7855,#173c40);border-color:#90e3bd;
-}
-.es-math-scope .special-card-hand button.special-support-status-purge{
- background:linear-gradient(160deg,#5958a4,#252c57);border-color:#b4b0ff;
-}
+
+
 
 /* Due nuove fusioni: riusa le scudiere già sulla plancia, senza varchi
    aggiuntivi. La geometria originale e i punti di fuoco non cambiano. */
@@ -726,12 +713,8 @@
 .es-math-scope .ship-zone[data-fusion="triad"] .fleet-ship-img{
  filter:drop-shadow(0 0 18px #d8aaff);
 }
-.es-math-scope .special-card-hand button.special-fusion-twin{
- background:linear-gradient(165deg,#0b665b,#092934);border-color:#61ddc8;
-}
-.es-math-scope .special-card-hand button.special-fusion-triad{
- background:linear-gradient(165deg,#633f83,#27102f);border-color:#e0b4ff;
-}
+
+
 
 /* PLANCIA 3D UFFICIALE — due mazzi effettivi, due mani indipendenti.
    Conservare intatti asset arena_titanio_9x16, ShipArtwork e MountedWeapons.
