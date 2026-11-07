@@ -5,6 +5,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
+import {activateTacticalEpic,expireTacticalEpic,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
 import {
   VITAL_IDS,createMotherDefense,damageMotherShield,restoreMotherShield,exposeMotherPart,
   hitMotherPart,remainingExposureSlots,motherDestroyed
@@ -207,21 +208,27 @@ export function sealTacticalOrder(battle,key,order=EMPTY_ORDER,nowMs=0){
  const next={...battle,orders:{...battle.orders,[key]:normalized}};
  return {ok:true,battle:next};
 }
-function recyclePile(pile,indices,size,random){
+function recyclePile(pile,indices,size,random,firstDrawChoice=0){
  const spent=indices.map(i=>pile.hand[i]);
  const keep=pile.hand.filter((_,i)=>!indices.includes(i));
  let deck=[...pile.deck],discard=[...pile.discard,...spent],hand=[...keep];
+ let draws=0;
  while(hand.length<size){
   if(!deck.length){if(!discard.length)break;deck=shuffle(discard,random);discard=[];}
-  hand.push(deck.shift());
+  const pos=draws===0&&firstDrawChoice===1&&deck.length>=2?1:0;
+  hand.push(deck.splice(pos,1)[0]);
+  draws++;
  }
  return {hand,deck,discard};
 }
 function specialTypes(side,order){return order.specialIndices.map(i=>side.special.hand[i].type);}
-function applyPreparation(sides,orders,log){
+function applyPreparation(sides,orders,log,round){
  const status={};
  for(const key of ['A','B']){
   const side=sides[key],types=specialTypes(side,orders[key]);
+  expireTacticalEpic(side,round);
+  const playedEpic=types.find(isTacticalEpic);
+  if(playedEpic)activateTacticalEpic(side,playedEpic,round,orders[key].epicChoice??0,log);
   const fusion=types.find(type=>type.startsWith('fusion-'))??null;
   const active={types,newCounter:types.includes('tactic-counter')?orders[key].counterVitalId:null,
    suppressFirstEscort:types.includes('tactic-suppress'),
@@ -230,7 +237,8 @@ function applyPreparation(sides,orders,log){
    cover:types.includes('tactical-cover'),coverUsed:false,
    piercing:types.includes('shot-piercing'),ionizedDefense:!!side.ionized,
    weaponFocusId:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.weaponId??null,
-   tech:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.technology??null};
+   tech:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.technology??null,
+   epicId:side.epic.active?.id??null};
   if(types.includes('support-shield-repair')){
    const fixed=restoreMotherShield(side.defense,20);
    side.defense=fixed.defense;
@@ -314,7 +322,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts){
   ' ('+before+' potenziali, '+intercepted+' intercettati), barriera '+hit.damage);
  return hit.damage;
 }
-function applyVitalAttack(sides,key,order,status,log,impacts){
+function applyVitalAttack(sides,key,order,status,log,impacts,round){
  const atk=sides[key],def=sides[other(key)];
  if(!order.numericIndices.length)return 0;
  const cards=order.numericIndices.map(i=>atk.numeric.hand[i]);
@@ -338,7 +346,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts){
   log.push(key+': attacco a '+target+' respinto da Contromisura programmata');
   return 0;
  }
- let damage=10,absorbed=0;
+ let damage=10+tacticalEpicMatriceDamage(atk,round,order.op),absorbed=0;
  const defenseStatus=status[other(key)];
  if(def.defense.parts.command.hp>0){
   const protector=def.escorts.find(e=>e.hp>0);
@@ -385,20 +393,24 @@ function resolveCycle(battle,nowMs){
  const playedSpecials=Object.fromEntries(['A','B'].map(key=>[key,
   orders[key].specialIndices.map(i=>sides[key].special.hand[i].type)]));
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
- const status=applyPreparation(sides,orders,log);
+ const status=applyPreparation(sides,orders,log,battle.round);
  const prepared=combatSnapshot(sides);
  const a=applyBarrierAttack(sides,'A',orders,status,log,impacts);
  const b=applyBarrierAttack(sides,'B',orders,status,log,impacts);
  const afterBarrier=combatSnapshot(sides);
- const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts);
- const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts);
+ const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts,battle.round);
+ const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts,battle.round);
  const afterPrecision=combatSnapshot(sides);
  for(const key of ['A','B']){
   const side=sides[key],order=orders[key];
   const random=seedRandom((battle.round*997+ (key==='A'?199:311))>>>0);
   side.special=recyclePile(side.special,order.specialIndices,5,random);
-  side.numeric=recyclePile(side.numeric,[...order.numericIndices,...order.exchangeIndices],7,random);
+  side.numeric=recyclePile(side.numeric,[...order.numericIndices,...order.exchangeIndices],7,random,
+   tacticalEpicNumericChoice(side,battle.round));
   side.sync=Math.min(100,side.sync+25+((key==='A'?hitsA:hitsB)>0?25:0));
+  if(side.epic.exchangeUntilRound===battle.round){
+   side.epic.exchangeCredits=0;side.epic.exchangeUntilRound=0;
+  }
   // Persistent status is ONE following cycle only, and requires a real barrier hit.
   const enemyKey=other(key);
   const enemyShieldDamage=enemyKey==='A'?a:b;
@@ -406,8 +418,10 @@ function resolveCycle(battle,nowMs){
   side.ionized=enemyShieldDamage>0&&
    (enemyStatus.types.includes('shot-ion')||enemyStatus.tech==='ionico');
   side.corroded=enemyShieldDamage>0&&enemyStatus.types.includes('shot-corrosion');
-  side.heated=enemyShieldDamage>0&&enemyStatus.tech==='plasma';
+  side.heated=enemyShieldDamage>0&&enemyStatus.tech==='plasma'&&
+   !tacticalEpicProtectsFromHeat(side,battle.round);
  }
+ resolveTacticalEpicAfterCombat(sides,battle.round,impacts,log);
  let winner=winState(sides);
  if(battle.round>=TACTICAL_TIMING.maxRounds&&!winner)winner='draw';
  log.push('Barriere: A '+sides.A.defense.shield.hp+'/60; B '+sides.B.defense.shield.hp+'/60');
