@@ -9,7 +9,13 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
  rememberExclusiveChronoCounter,exclusiveChronoNativeBonus,
  rememberExclusiveChronoNativeHit,transferExclusiveIonicSync,
  exclusiveLeviatanoNativeBonus,rememberExclusiveLeviatanoNativeHit,
- prepareExclusiveBloodPact,exclusiveBloodPactNativeBonus} from './tacticalExclusiveBosses.js';
+ prepareExclusiveBloodPact,exclusiveBloodPactNativeBonus,
+ prepareExclusiveIdraRegen,rememberExclusiveIdraBarrierHit,cancelExclusiveIdraByHeart,
+ exclusiveChaosNativeBonus,rememberExclusiveChaosNativeHit,
+ rememberExclusiveResonanceDiscards,collectExclusiveResonanceSync,
+ exclusiveMagmaPhase,exclusiveMagmaNativeAdjustment,
+ exclusiveVoidDominantSuit,exclusiveVoidPrecisionBonus,rememberExclusiveVoidCounter
+} from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
@@ -322,6 +328,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const chronoNative=exclusiveChronoNativeBonus(atk,base,round);
  const abyss=exclusiveLeviatanoNativeBonus(atk,base,cycleStart[other(key)].defense.shield);
  const bloodPact=exclusiveBloodPactNativeBonus(atk,base,round);
+ const chaos=exclusiveChaosNativeBonus(atk,base);
+ const magma=exclusiveMagmaNativeAdjustment(atk,base,round);
  const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
@@ -339,11 +347,15 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const cap=Math.floor(base*.45);
  const bonusWithAbyss=bonusWithoutAbyss+abyss.extra;
  const appliedAbyssExtra=Math.min(cap,bonusWithAbyss)-Math.min(cap,bonusWithoutAbyss);
- const bonus=bonusWithAbyss+bloodPact.extra;
- const appliedBloodPactExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithAbyss);
+ const bonusWithPact=bonusWithAbyss+bloodPact.extra;
+ const appliedBloodPactExtra=Math.min(cap,bonusWithPact)-Math.min(cap,bonusWithAbyss);
+ const bonusWithChaos=bonusWithPact+chaos.extra;
+ const appliedChaosExtra=Math.min(cap,bonusWithChaos)-Math.min(cap,bonusWithPact);
+ const bonus=bonusWithChaos+magma.extra;
+ const appliedMagmaExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithChaos);
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
- let total=base+Math.min(cap,bonus)+pilot.extra;
+ let total=Math.max(0,base-magma.penalty+Math.min(cap,bonus)+pilot.extra);
  if(res.types.includes('tactic-power-shift'))total+=3;
  const ombre=tacticalBossOutgoingBonus(atk,total,{snapshot:t.bossSnapshot});
  total+=ombre.extra;
@@ -402,6 +414,18 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  rememberExclusiveBossNativeHit(atk,hit.damage,exclusiveNative);
  rememberExclusiveChronoNativeHit(atk,round,hit.damage,chronoNative);
  rememberExclusiveLeviatanoNativeHit(atk,hit.damage,abyss);
+ const chaosProgress=rememberExclusiveChaosNativeHit(atk,hit.damage,chaos);
+ if(rememberExclusiveIdraBarrierHit(atk,hit.damage,round))
+  log.push(key+': Idra Criogenica · Rigenerazione +4 HP programmata per il ciclo successivo');
+ if(chaosProgress.released&&hit.damage>0)
+  log.push(key+': Generatore del Caos · Scarica del reattore +10% (+'+appliedChaosExtra+
+   ' HP effettivi), cariche azzerate');
+ else if(atk.bossExclusive?.id===14&&hit.damage>0)
+  log.push(key+': Generatore del Caos · Reattore carica '+chaosProgress.charges+'/3');
+ if(magma.phase==='eruzione'&&hit.damage>0)
+  log.push(key+': Nucleo Magmatico · Eruzione +10% (+'+appliedMagmaExtra+' HP effettivi)');
+ if(magma.phase==='raffreddamento')
+  log.push(key+': Nucleo Magmatico · Raffreddamento −10% armi native ('+magma.penalty+' HP)');
  if(abyss.active&&hit.damage>0)
   log.push(key+': Leviatano Abissale · Pressione degli abissi +8% sulla salva reale ('+
    'bonus applicato '+appliedAbyssExtra+' HP, resto '+abyss.remainder+
@@ -477,6 +501,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  // precisione, mai le armi native che sparano senza carte numeriche.
  const leviatano=tacticalLeviatanoBonus(atk,def,order,damage);
  damage+=leviatano.extra;
+ const voidBonus=exclusiveVoidPrecisionBonus(atk,cards,damage,round);
+ damage+=voidBonus.extra;
  const defenseStatus=status[other(key)];
  const escortEfficiency=escortInterceptionEfficiency(def.defense);
  if(escortEfficiency>0){
@@ -509,6 +535,14 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
  rememberTacticalIdraHit(atk,hit.damage,idra,{vitalId:target});
  rememberTacticalLeviatanoHit(atk,hit.damage,leviatano);
+ if(rememberExclusiveVoidCounter(def,hit.damage,cards,round))
+  log.push(other(key)+': Sovrano del Vuoto · seme dominante '+exclusiveVoidDominantSuit(round)+
+   ' contrastato da un vero colpo vitale, bonus disattivato nel prossimo ciclo');
+ if(voidBonus.active&&hit.damage>0)
+  log.push(key+': Sovrano del Vuoto · '+voidBonus.suit+
+   ' dominante: +7% sul colpo valido ('+voidBonus.extra+' HP prima delle difese)');
+ if(cancelExclusiveIdraByHeart(def,hit.damage,cards,round))
+  log.push(other(key)+': Idra Criogenica · Rigenerazione annullata da Cuori su vitale esposto');
  if(rememberExclusiveVenusPrecisionHit(atk,def,hit.damage,round))
   log.push(key+': Matriarca Tossica · Neurotossina inflitta a '+other(key)+
    ' (prossimo ciclo: −10% alla riparazione della barriera, rimovibile con Pulizia Sistemi)');
