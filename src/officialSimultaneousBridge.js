@@ -1,10 +1,9 @@
 // Eclissi Stellare — ponte del combattimento simultaneo UFFICIALE.
 // Sorgenti: collezioni reali; nessuna concessione di carte o livelli di prova.
 // Le ricompense restano nel controller MathDuelBattle, una sola volta alla fine.
-import {readShipCollection,collectionBattleOptions} from './shipCollection.js';
+import {readShipCollection} from './shipCollection.js';
 import {readSpecialCollection} from './specialDeckBuilder.js';
-import {prepareMotherDuelOptions} from './motherDuelLoadout.js';
-import {createTacticalDuel,validateTacticalLoadout} from './simultaneousDuelEngine.js';
+import {officialBattleSetup} from './officialBattleSetup.js';
 import {newVessel} from './mathDuelEngine.js';
 import {VITAL_IDS} from './vitalDefense.js';
 import {arenaForBattle} from './battleArenas.js';
@@ -38,25 +37,20 @@ export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
  return {enabled:true,reason:'official_simultaneous'};
 }
 
-// Nessuna lettura dei salvataggi avviene nel motore tattico:
-// l'unico punto di accesso alle carte equipaggiate e quello ufficiale.
+// Unico creatore ufficiale: i controlli e il gioco passano dalla STESSA
+// validazione di collezioni, boss, piloti e ambienti. Non esiste un secondo
+// combattimento con regole diverse. Questo adattatore non scrive salvataggi.
 export function createOfficialSimultaneousDuel(props={},nowMs=Date.now(),storage=null){
- const collection=storage?readShipCollection(storage):readShipCollection();
- const specials=storage?readSpecialCollection(storage):readSpecialCollection();
- const chosen=collectionBattleOptions(collection);
- const options=prepareMotherDuelOptions(chosen,{
-  mode:props.gameMode,globalSector:props.sectorNumber,
-  planetId:props.bossPlanetId,planetSector:props.bossSectorLevel
+ const shipCollection=storage?readShipCollection(storage):readShipCollection();
+ const specialCollection=storage?readSpecialCollection(storage):readSpecialCollection();
+ const setup=officialBattleSetup({
+  mode:props.gameMode??'campaign',sectorNumber:props.sectorNumber,
+  bossPlanetId:props.bossPlanetId,bossSectorLevel:props.bossSectorLevel,
+  selectedPilot:props.selectedPilot,pilotInventory:props.pilotInventory,
+  selectedBossDeck:props.selectedBossDeck,bossDeckInventory:props.bossDeckInventory,
+  shipCollection,specialCollection,nowMs,seed:props.seed??18
  });
- const shipA=options.fleetIds[0],shipB=options.enemyFleetIds[0];
- const levelA=options.shipLevels[shipA],levelB=options.enemyShipLevels[shipB];
- if(!validateTacticalLoadout(specials.loadout))
-  throw new Error('Il mazzo speciale equipaggiato non e compatibile con il duello simultaneo. Nessun salvataggio e stato modificato.');
- const battle=createTacticalDuel({
-  shipA,shipB,levelA,levelB,nowMs,
-  specialDeckA:[...specials.loadout]
- });
- return {battle,shipA,shipB,levelA,levelB};
+ return {...setup,levelA:setup.battle.sides.A.level,levelB:setup.battle.sides.B.level};
 }
 
 // Adattatore SOLO visivo: non modifica gli HP autorevoli e non crea armi.
