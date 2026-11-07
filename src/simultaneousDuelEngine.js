@@ -3,7 +3,9 @@
 // Gli armamenti sono i 42 del catalogo esistente: i calcoli non alimentano lo scudo.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBossDefenseHit,
- exclusiveBossNativeBonus,rememberExclusiveBossNativeHit} from './tacticalExclusiveBosses.js';
+ exclusiveBossNativeBonus,rememberExclusiveBossNativeHit,
+ rememberExclusiveVenusPrecisionHit,exclusiveNeurotoxinActive,
+ exclusiveNeurotoxinRepairAmount,clearExclusiveNeurotoxin,expireExclusiveNeurotoxin} from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
@@ -143,7 +145,7 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
  return equipTacticalBossDeck({key,shipId,name:ship.nome,level,weapons:nativeWeapons(shipId,level),defense,
   escorts:Array.from({length:escortCount},(_,i)=>({id:key+'-escort-'+i,hp:20,max:20})),
   sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,
-  bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
+  neurotoxinUntilRound:0,bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
   commander:commander&&tacticalCommanderReady(commander.id)?{
    id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
   }:null,
@@ -221,7 +223,8 @@ export function validateTacticalOrder(battle,key,order){
  if(types.includes('support-escort-repair')&&(!side.escorts.some(e=>e.hp>0&&e.hp<e.max)||
    side.defense.parts.command.hp<=0))return {ok:false,reason:'escort_repair_unavailable'};
  if(types.includes('support-status-purge')&&
-   !(side.ionized||side.corroded||side.heated))return {ok:false,reason:'purge_unavailable'};
+   !(side.ionized||side.corroded||side.heated||exclusiveNeurotoxinActive(side,battle.round)))
+  return {ok:false,reason:'purge_unavailable'};
  if(types.includes('tactic-counter')&&!VITAL_IDS.includes(order.counterVitalId))return {ok:false,reason:'counter_target'};
  if(types.includes('support-shield-repair')&&(side.defense.parts.shieldGenerator.hp<=0||side.defense.shield.hp>=side.defense.shield.max))
    return {ok:false,reason:'repair_unavailable'};
@@ -273,10 +276,17 @@ function applyPreparation(sides,orders,log,round){
    weaponFocusId:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.weaponId??null,
    tech:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.technology??null,
    epicId:side.epic.active?.id??null};
+  // With simultaneous orders the cleanse takes priority over the actual
+  // repair card when both are present in the same five-card hand.
+  if(types.includes('support-status-purge')&&clearExclusiveNeurotoxin(side,round))
+   log.push(key+': Neurotossina rimossa con Pulizia Sistemi');
   if(types.includes('support-shield-repair')){
-   const fixed=restoreMotherShield(side.defense,20);
+   const poisoned=exclusiveNeurotoxinActive(side,round);
+   const repair=exclusiveNeurotoxinRepairAmount(side,round,20);
+   const fixed=restoreMotherShield(side.defense,repair);
    side.defense=fixed.defense;
-   log.push(key+': barriera riparata +'+fixed.repaired);
+   log.push(key+': barriera riparata +'+fixed.repaired+
+    (poisoned?' (Neurotossina: −10% riparazione)':''));
   }
   if(types.includes('support-escort-repair')){
    const escort=side.escorts.find(e=>e.hp>0&&e.hp<e.max);
@@ -473,6 +483,9 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
  rememberTacticalIdraHit(atk,hit.damage,idra,{vitalId:target});
  rememberTacticalLeviatanoHit(atk,hit.damage,leviatano);
+ if(rememberExclusiveVenusPrecisionHit(atk,def,hit.damage,round))
+  log.push(key+': Matriarca Tossica · Neurotossina inflitta a '+other(key)+
+   ' (prossimo ciclo: −10% alla riparazione della barriera, rimovibile con Pulizia Sistemi)');
  if(leviatano.active&&hit.damage>0)
   log.push(key+': Leviatano · '+leviatano.abilities.join(' + ')+' ('+
    leviatano.percentage+'%, +'+leviatano.extra+' HP, resto '+leviatano.remainder+'/100)');
@@ -551,6 +564,8 @@ function resolveCycle(battle,nowMs){
   side.corroded=enemyShieldDamage>0&&enemyStatus.types.includes('shot-corrosion');
   side.heated=enemyShieldDamage>0&&enemyStatus.tech==='plasma'&&
    !tacticalEpicProtectsFromHeat(side,battle.round);
+  // A hit this cycle schedules the next round; previous status expires now.
+  expireExclusiveNeurotoxin(side,battle.round);
  }
  resolveTacticalEpicAfterCombat(sides,battle.round,impacts,log);
  let winner=winState(sides);
