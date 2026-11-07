@@ -130,13 +130,22 @@ test('47: lancio e impatto veri mantengono identico il risultato con o senza cue
 test('47: livelli grafici non intercettano input e rispettano movimento ridotto',()=>{
  const js=readFileSync(new URL('./BattleCombatFeedback.jsx',import.meta.url),'utf8');
  const css=readFileSync(new URL('./BattleCombatFeedback.css',import.meta.url),'utf8');
- const game=readFileSync(new URL('./MathDuelBattle.jsx',import.meta.url),'utf8');
- assert.doesNotMatch(js,/\bonClick\s*=/); // no interactions in this component
+ const game=readFileSync(new URL('./OfficialBattle3D.jsx',import.meta.url),'utf8');
+ const playback=readFileSync(new URL('./TacticalCombatPlayback.jsx',import.meta.url),'utf8');
+ const tactical=readFileSync(new URL('./simultaneousDuelEngine.js',import.meta.url),'utf8');
+ const visuals=readFileSync(new URL('./OfficialBattle3D.css',import.meta.url),'utf8');
+ assert.doesNotMatch(js,/\bonClick\s*=/); // componente grafico storico non interattivo
  assert.match(css,/pointer-events:none/);
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.match(js,/aria-live="polite"/);
- assert.match(game,/spentCards:spentCardTrail\(cards,indices,side\)/);
- assert.match(game,/impactBattleCue\(\{id:effect.id,side,result,effect\}\)/);
- assert.match(game,/result\.played/);
- assert.match(game,/BattleCombatFeedback/);
+ // Nel combattimento ufficiale simultaneo i proiettili mostrano eventi gia
+ // risolti dal motore autorevole, senza applicare nuovamente gli HP.
+ assert.match(game,/sealTacticalOrder/);
+ assert.match(game,/advanceTacticalDuel/);
+ assert.match(game,/TacticalCombatPlayback/);
+ assert.match(tactical,/impacts\.push/);
+ assert.match(playback,/currentTacticalPlayback/);
+ assert.doesNotMatch(playback,/\bonClick\s*=/);
+ assert.match(visuals,/pointer-events:none/);
+ assert.match(visuals,/prefers-reduced-motion:\s*reduce/);
 });
