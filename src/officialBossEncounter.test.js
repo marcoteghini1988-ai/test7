@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
+import {chooseCampaignRivalCommander} from './motherDuelLoadout.js';
 import {officialBattleSetup,officialBattleResult} from './officialBattleSetup.js';
 import {createSpecialCollection} from './specialDeckBuilder.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
@@ -36,6 +37,11 @@ test('12/12 boss: stessa identità storica, stesso mazzo numerico, grado evoluti
    assert.equal(b.sides.B.bossExclusive.id,planet.id);
    assert.equal(b.sides.B.bossNumericDeck.id,planet.deck);
    assert.equal(b.sides.B.bossNumericDeck.level,encounter.numericDeckLevel);
+   const rivalPilot=chooseCampaignRivalCommander({mode,globalSector:global,
+    planetId:planet.id,planetSector:10,shipId:created.shipB,shipLevel:b.sides.B.level});
+   assert.equal(b.sides.B.commander?.id,rivalPilot.id,
+    planet.name+' conserva il proprio pilota storico');
+   assert.equal(b.sides.B.commander?.level,rivalPilot.level);
    assert.equal(b.sides.A.bossExclusive??null,null);
    assert.equal(b.sides.A.bossNumericDeck??null,null);
    assert.equal(b.sides.A.special.hand.length,5);
