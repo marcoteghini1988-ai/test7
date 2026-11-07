@@ -21,7 +21,8 @@
 .tdp-vessel-heading small{font-size:12px;font-weight:800;color:#fff}
 .tdp-hull{grid-column:1;grid-row:1/5;min-height:110px;display:flex;align-items:center;justify-content:center}
 .tdp-hull svg{display:block;width:125px;height:125px;filter:drop-shadow(0 0 10px #379ee652)}
-.tdp-enemy .tdp-hull svg{transform:rotate(180deg)}
+/* Lo sprite enemy_to_player è già orientato: non ruotarlo, altrimenti le bocche di fuoco non combaciano. */
+.tdp-enemy .tdp-hull svg{transform:none}
 .tdp-enemy .tdp-vessel-heading strong{color:#ff9b82}
 .tdp-meter{grid-column:2;grid-row:2}
 .tdp-meter-label{display:flex;justify-content:space-between;font-size:11px;color:#c1e3f2}
