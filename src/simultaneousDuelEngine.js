@@ -5,7 +5,9 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBossDefenseHit,
  exclusiveBossNativeBonus,rememberExclusiveBossNativeHit,
  rememberExclusiveVenusPrecisionHit,exclusiveNeurotoxinActive,
- exclusiveNeurotoxinRepairAmount,clearExclusiveNeurotoxin,expireExclusiveNeurotoxin} from './tacticalExclusiveBosses.js';
+ exclusiveNeurotoxinRepairAmount,clearExclusiveNeurotoxin,expireExclusiveNeurotoxin,
+ rememberExclusiveChronoCounter,exclusiveChronoNativeBonus,
+ rememberExclusiveChronoNativeHit} from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
@@ -311,10 +313,11 @@ function applyPreparation(sides,orders,log,round){
  }
  return status;
 }
-function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
+function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round){
  const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
  const base=nativeBarrierPacket(atk);
  const exclusiveNative=exclusiveBossNativeBonus(atk,base);
+ const chronoNative=exclusiveChronoNativeBonus(atk,base,round);
  const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
@@ -328,7 +331,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
   Math.floor(base*t.fusionAssault)+
   (t.tech==='laser'&&!def.escorts.some(e=>e.hp>0)?2:0)+
   (def.corroded?Math.floor(base*.25):0)+
-  (def.heated?3:0)+exclusiveNative.extra;
+  (def.heated?3:0)+exclusiveNative.extra+chronoNative.extra;
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=base+Math.min(Math.floor(base*.45),bonus)+pilot.extra;
@@ -388,6 +391,9 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberExclusiveBossDefenseHit(def,hit.damage);
  rememberExclusiveBossNativeHit(atk,hit.damage,exclusiveNative);
+ rememberExclusiveChronoNativeHit(atk,round,hit.damage,chronoNative);
+ if(chronoNative.active&&chronoNative.extra>0&&hit.damage>0)
+  log.push(key+': Crono · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
  if(hit.damage>0&&exclusiveDefenseFactor<1)
   log.push(other(key)+': Gaia · Corazza tellurica consumata (−20% primo impatto alla barriera)');
  if(hit.damage>0&&exclusiveNative.active)
@@ -430,6 +436,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(key+': '+target+' ancora protetto dalla barriera');return 0;
  }
  if(status[other(key)].newCounter===target){
+  if(rememberExclusiveChronoCounter(def,round))
+   log.push(other(key)+': Crono · Controtempo caricato da Contromisura programmata effettiva, per i prossimi 2 cicli');
   impacts.push({kind:'precision',by:key,target,damage:0,reason:'countered'});
   log.push(key+': attacco a '+target+' respinto da Contromisura programmata');
   return 0;
@@ -528,8 +536,8 @@ function resolveCycle(battle,nowMs){
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
  const status=applyPreparation(sides,orders,log,battle.round);
  const prepared=combatSnapshot(sides);
- const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers);
- const b=applyBarrierAttack(sides,'B',orders,status,log,impacts,modifiers);
+ const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers,battle.round);
+ const b=applyBarrierAttack(sides,'B',orders,status,log,impacts,modifiers,battle.round);
  const afterBarrier=combatSnapshot(sides);
  const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts,battle.round,modifiers);
  const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts,battle.round,modifiers);
