@@ -1,8 +1,8 @@
 // Capacita ESCLUSIVE dei boss nemici, distinte dalle 23 passive collezionabili.
-// Gaia, Tharsis, Matriarca Tossica, Crono e Sentinella Ionica sono attivi nel motore simultaneo.
+// Gaia, Tharsis, Matriarca Tossica, Crono, Sentinella Ionica e Leviatano sono attivi nel motore simultaneo.
 // Il numero del pianeta viene dal catalogo boss ufficiale, non dalla carta mazzo.
 // Nessun danno gratuito, nessuna lettura delle mani/ordini avversari.
-export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6,7]);
+export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6,7,8]);
 export const exclusiveBossReady=id=>READY_EXCLUSIVE_BOSS_IDS.includes(Number(id));
 
 export function createExclusiveBossState(planetId){
@@ -130,4 +130,36 @@ export function transferExclusiveIonicSync(attacker,defender,barrierDamage){
  attacker.sync=ours+transferred;
  defender.sync=theirs-transferred;
  return {transferred,reason:'transferred'};
+}
+
+
+// Leviatano Abissale (Nettuno, ID 8) - Pressione degli abissi.
+// The enemy barrier is sampled at the START of the simultaneous cycle,
+// before repair, native fire, precision or other resolution-phase changes.
+// No access to the opponent's hidden order, draw or numeric signature.
+// Native weapons only; the modifier shares the normal +45% volley bonus cap.
+export const ABYSSAL_PRESSURE_THRESHOLD_PERCENT=40;
+export const ABYSSAL_PRESSURE_BONUS_PERCENT=8;
+export function exclusiveLeviatanoNativeBonus(attacker,base,enemyShieldAtCycleStart){
+ const inactive={active:false,percentage:0,extra:0,remainder:0};
+ if(attacker?.bossExclusive?.id!==8||!Number.isSafeInteger(base)||base<=0)
+  return inactive;
+ const shield=enemyShieldAtCycleStart;
+ if(!shield||!Number.isFinite(shield.hp)||!Number.isFinite(shield.max)||
+    shield.max<=0||shield.hp<0||shield.hp>shield.max||
+    shield.hp*100>shield.max*ABYSSAL_PRESSURE_THRESHOLD_PERCENT)
+  return inactive;
+ const stored=attacker.bossExclusive.pressureRemainder;
+ const previous=Number.isInteger(stored)&&stored>=0&&stored<100?stored:0;
+ const points=base*ABYSSAL_PRESSURE_BONUS_PERCENT+previous;
+ return {active:true,percentage:ABYSSAL_PRESSURE_BONUS_PERCENT,
+  extra:Math.floor(points/100),remainder:points%100};
+}
+// Carry fractional damage ONLY after a volley truly damages the mother
+// barrier. Fully intercepted shots cannot grow future boss power.
+export function rememberExclusiveLeviatanoNativeHit(attacker,barrierDamage,bonus){
+ const state=attacker?.bossExclusive;
+ if(state?.id!==8||!bonus?.active||!(barrierDamage>0))return attacker;
+ attacker.bossExclusive={...state,pressureRemainder:bonus.remainder};
+ return attacker;
 }
