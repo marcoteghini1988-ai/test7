@@ -16,6 +16,7 @@ import {commanderAbilityStatus} from './commanderAbilities.js';
 import {resolveCombatImpact} from './resolveCombatImpact.js';
 import {prepareMotherDuelOptions,chooseCampaignRivalCommander} from './motherDuelLoadout.js';
 import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
+import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
 import {applyArenaCalculationSync,arenaTacticalBriefing,arenaEnvironment} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import BattleCombatFeedback from './BattleCombatFeedback.jsx';
@@ -1013,7 +1014,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const b=gameRef.current;
   if(b?.phase==='finished'&&!b.practice&&!resultClaimed.current){
    resultClaimed.current=true;
-   let specialPackEarned=false,shipRewardEarned=null;
+   let specialPackEarned=false,shipRewardEarned=null,bossCharacterEarned=null;
    if(b.winner==='player'&&['adventure','campaign'].includes(b.mode)){
     try{specialPackEarned=claimFirstWinSpecialPack(b.mode,sectorNumber).granted;}
     catch{/* A damaged collection cannot block the ordinary battle reward. */}
@@ -1021,12 +1022,17 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      const ship=await claimCampaignShipUnlock(b.mode,sectorNumber);
      if(ship.granted)shipRewardEarned=ship.shipId;
     }catch{/* La ricompensa navicella non azzera il salvataggio. */}
+    try{
+     const trophy=claimBossCharacterFromVictory({winner:b.winner,mode:b.mode,
+      sectorNumber,bossPlanetId,bossSectorLevel});
+     if(trophy.granted)bossCharacterEarned=trophy.type;
+    }catch{/* Non cancellare una collezione illeggibile. */}
    }
    const h=healthScore(b.player);
    if(b.mode!=='pvp')onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,
     starsEarned:[true,h>=.65,h>=.9],
     matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),
-     turnsElapsed:b.round,specialPackEarned,shipRewardEarned,...battlePacingReport(b,Date.now())}});
+     turnsElapsed:b.round,specialPackEarned,shipRewardEarned,bossCharacterEarned,...battlePacingReport(b,Date.now())}});
   }
   onExit?.();
  }
