@@ -1,8 +1,8 @@
 // Capacita ESCLUSIVE dei boss nemici, distinte dalle 23 passive collezionabili.
-// Gaia, Tharsis e Matriarca Tossica sono attualmente attive nel duello simultaneo.
+// Gaia, Tharsis, Matriarca Tossica e Crono sono attualmente attivi nel duello simultaneo.
 // Il numero del pianeta viene dal catalogo boss ufficiale, non dalla carta mazzo.
 // Nessun danno gratuito, nessuna lettura delle mani/ordini avversari.
-export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3]);
+export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6]);
 export const exclusiveBossReady=id=>READY_EXCLUSIVE_BOSS_IDS.includes(Number(id));
 
 export function createExclusiveBossState(planetId){
@@ -76,4 +76,33 @@ export function clearExclusiveNeurotoxin(side,round){
 export function expireExclusiveNeurotoxin(side,round){
  if((side?.neurotoxinUntilRound||0)<=round)side.neurotoxinUntilRound=0;
  return side;
+}
+
+// Crono (Saturno): a real tactic-counter card must block a valid incoming
+// precision strike. Only then charge one native +5% volley. The shot must
+// hurt the barrier within the NEXT TWO cycles, otherwise charge expires.
+// No extra projectiles or retaliation if the boss has no real gun hit.
+export function rememberExclusiveChronoCounter(defender,round){
+ const state=defender?.bossExclusive;
+ if(state?.id!==6||!Number.isSafeInteger(round)||round<1)return false;
+ defender.bossExclusive={...state,counterArmedAfterRound:round,counterExpiresRound:round+2};
+ return true;
+}
+export function exclusiveChronoNativeBonus(attacker,base,round){
+ const state=attacker?.bossExclusive;
+ const inactive={active:false,percentage:0,extra:0};
+ if(state?.id!==6||!Number.isSafeInteger(round)||!Number.isSafeInteger(base)||base<=0||
+    !(state.counterArmedAfterRound>0)||
+    round<=state.counterArmedAfterRound||round>state.counterExpiresRound)return inactive;
+ return {active:true,percentage:5,extra:Math.floor(base*.05+1e-9)};
+}
+export function rememberExclusiveChronoNativeHit(attacker,round,barrierDamage,bonus){
+ const state=attacker?.bossExclusive;
+ if(state?.id!==6)return attacker;
+ if(bonus?.active&&barrierDamage>0){
+  attacker.bossExclusive={...state,counterArmedAfterRound:0,counterExpiresRound:0};
+ }else if(state.counterExpiresRound>0&&state.counterExpiresRound<=round){
+  attacker.bossExclusive={...state,counterArmedAfterRound:0,counterExpiresRound:0};
+ }
+ return attacker;
 }
