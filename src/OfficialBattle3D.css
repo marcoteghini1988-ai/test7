@@ -236,3 +236,101 @@
 @media (prefers-reduced-motion: reduce){
  .es-math-scope .official-duel-3d .official-mother{animation:none}
 }
+
+
+/* Recupero dell'aggancio fisico dei bersagli: non quattro schede in mezzo al campo. */
+.es-math-scope .official-duel-3d .official-middle{
+ top:296px;height:27px;padding:3px 6px;
+ border-color:#527996a8;background:linear-gradient(90deg,#061325dd,#0c2340dd,#061325dd);
+}
+.es-math-scope .official-duel-3d .official-cycle{
+ height:19px;border:0;margin:0;
+}
+.es-math-scope .official-duel-3d .official-mother .official-physical-hull{
+ pointer-events:auto;
+}
+.es-math-scope .official-duel-3d .official-hull-part{
+ pointer-events:none;
+ opacity:.8;
+}
+.es-math-scope .official-duel-3d .official-hull-part.protected{opacity:.38}
+.es-math-scope .official-duel-3d .official-hull-part.exposed{opacity:.96}
+.es-math-scope .official-duel-3d .official-hull-part-core{
+ fill:rgba(10,29,42,.43);stroke:#7599b0;stroke-width:4;
+}
+.es-math-scope .official-duel-3d .official-hull-part-ring{
+ fill:none;stroke:#82bdcf;stroke-width:7;
+}
+.es-math-scope .official-duel-3d .ship-enemy .official-hull-part-core{stroke:#e28a89}
+.es-math-scope .official-duel-3d .ship-enemy .official-hull-part-ring{stroke:#f88f93}
+.es-math-scope .official-duel-3d .official-hull-part.chosen{
+ opacity:1;filter:drop-shadow(0 0 11px #fff4a0);
+}
+.es-math-scope .official-duel-3d .official-hull-part.chosen .official-hull-part-ring{
+ stroke:#ffe990;stroke-width:13;
+ animation:officialVitalPulse 1.15s ease-in-out infinite alternate;
+}
+.es-math-scope .official-duel-3d .official-hull-part[data-condition="damaged"] .official-hull-part-ring{
+ stroke:#ffd484;
+}
+.es-math-scope .official-duel-3d .official-hull-part[data-condition="critical"] .official-hull-part-ring{
+ stroke:#ff694e;animation:officialVitalPulse .7s steps(2) infinite alternate;
+}
+.es-math-scope .official-duel-3d .official-hull-part[data-condition="destroyed"]{
+ opacity:1;
+}
+.es-math-scope .official-duel-3d .official-hull-part[data-condition="destroyed"] .official-hull-part-core{
+ fill:#0c1016;stroke:#463c40;
+}
+.es-math-scope .official-duel-3d .official-hull-part[data-condition="destroyed"] .official-hull-part-ring{
+ stroke:#5a4442;stroke-dasharray:18 12;
+}
+.es-math-scope .official-duel-3d .official-hull-crack{
+ fill:none;stroke:#ff9d56;stroke-width:8;stroke-linejoin:round;
+ filter:drop-shadow(0 0 3px #ff5f29);
+}
+.es-math-scope .official-duel-3d .official-hull-wreck{fill:#080b0e;stroke:#654137;stroke-width:6}
+.es-math-scope .official-duel-3d .official-hull-smoke{
+ fill:#292b34;opacity:.4;filter:blur(8px);
+ transform-box:fill-box;transform-origin:center;
+ animation:officialVitalSmoke 2.25s ease-out infinite;
+}
+.es-math-scope .official-duel-3d .official-hull-impact{
+ fill:none;stroke:#fff4c4;stroke-width:24;opacity:0;
+ transform-box:fill-box;transform-origin:center;
+ animation:officialVitalBlast .8s ease-out both;
+}
+.es-math-scope .official-duel-3d .official-hull-part.just-destroyed .official-hull-impact{
+ stroke:#ff742d;stroke-width:32;
+}
+.es-math-scope .official-duel-3d .ship-enemy .official-hull-hit-zone{
+ fill:rgba(255,255,255,.001);stroke:none;pointer-events:all;cursor:crosshair;
+}
+.es-math-scope .official-duel-3d .ship-player .official-hull-hit-zone{
+ fill:none;stroke:none;pointer-events:none;
+}
+.es-math-scope .official-duel-3d .official-hull-part:focus-visible .official-hull-part-ring{
+ stroke:#fff2ad;stroke-width:14;
+}
+.es-math-scope .official-duel-3d .official-mother[data-vital-weapons="damaged"] .weapon-hardware{
+ filter:saturate(.65) brightness(.85);
+}
+.es-math-scope .official-duel-3d .official-mother[data-vital-weapons="critical"] .weapon-hardware,
+.es-math-scope .official-duel-3d .official-mother[data-vital-weapons="destroyed"] .weapon-hardware{
+ filter:saturate(.18) brightness(.52);
+}
+@keyframes officialVitalPulse{from{opacity:.65}to{opacity:1}}
+@keyframes officialVitalSmoke{
+ from{opacity:.67;transform:translateY(0) scale(.6)}
+ to{opacity:0;transform:translateY(-80px) scale(1.7)}
+}
+@keyframes officialVitalBlast{
+ 0%{opacity:0;transform:scale(.4)}
+ 30%{opacity:1;transform:scale(1.2)}
+ 100%{opacity:0;transform:scale(2.15)}
+}
+@media(prefers-reduced-motion:reduce){
+ .es-math-scope .official-duel-3d .official-hull-part-ring,
+ .es-math-scope .official-duel-3d .official-hull-smoke,
+ .es-math-scope .official-duel-3d .official-hull-impact{animation:none!important}
+}
