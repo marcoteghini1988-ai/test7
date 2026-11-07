@@ -193,7 +193,7 @@ test('Sovrano: precisione valida con seme dominante +7%, Cuori o Picche avversar
  b.sides.B.defense.parts.engine.max=30;
  const r=cycle(b,aHeartToB,bSpadeToA);
  assert.ok(precision(r).some(i=>i.by==='B'&&i.damage===11));
- assert.equal(r.sides.B.bossExclusive.voidBlockedRound,0);
+ assert.equal(r.sides.B.bossExclusive.voidBlockedRound??0,0);
  const c=duel(20,{ah:40,bh:40});
  c.sides.A.defense.parts.engine.max=30;c.sides.A.defense.parts.engine.hp=30;
  c.sides.B.defense.parts.engine.max=30;c.sides.B.defense.parts.engine.hp=30;
