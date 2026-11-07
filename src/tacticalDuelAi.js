@@ -5,6 +5,7 @@ import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 import {tacticalWeaponTechnology} from './tacticalArmamentBalance.js';
 import {nativeBarrierPacket,validateTacticalOrder} from './simultaneousDuelEngine.js';
 import {tacticalBossProfile} from './tacticalSpecialPresets.js';
+import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 
 const NORMAL_PRIORITY=['shieldGenerator','weapons','command','engine'];
 function findPrecision(ours,enemy,priority){
@@ -79,8 +80,16 @@ export function planTacticalAi(battle,key='B'){
  }
  const exchanges=shot.numericIndices.length?[]:
   chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?[0,1]:[0];
+ // The opponent may load ONE numeric card into its actual escort armory.
+ // It chooses only from its OWN visible hand, never the player's hidden cards.
+ const used=new Set([...shot.numericIndices,...exchanges]);
+ const defensiveAssignment=[...types].some(type=>type.startsWith('fusion-')||type==='tactical-cover');
+ const ammo=defensiveAssignment?null:ours.numeric.hand
+  .map((card,i)=>({i,card}))
+  .filter(({i,card})=>!used.has(i)&&selectTacticalEscortForAmmo(ours,card))
+  .sort((a,b)=>b.card.value-a.card.value||a.i-b.i)[0]?.i??null;
  let result={specialIndices:chosen,counterVitalId:threatened,exchangeIndices:exchanges,
-  weaponFocusId:focusWeapon?.id??null,...shot};
+  escortAmmoIndex:ammo,weaponFocusId:focusWeapon?.id??null,...shot};
  while(!validateTacticalOrder(battle,key,result).ok&&result.specialIndices.length){
   result={...result,specialIndices:result.specialIndices.slice(0,-1)};
   if(!result.specialIndices.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle'))
