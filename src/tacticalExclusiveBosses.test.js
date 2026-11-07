@@ -14,9 +14,9 @@ function cycle(start,at=101){
  assert.equal(b.ok,true,b.reason);
  return advanceTacticalDuel(b.battle,at);
 }
-test('Sei poteri esclusivi attivi; gli altri sei restano da convertire',()=>{
- for(const id of [1,2,3,6,7,8])assert.equal(exclusiveBossReady(id),true);
- for(const id of [9,11,14,17,19,20])assert.equal(createExclusiveBossState(id),null);
+test('Sette poteri esclusivi attivi; gli altri cinque restano da convertire',()=>{
+ for(const id of [1,2,3,6,7,8,9])assert.equal(exclusiveBossReady(id),true);
+ for(const id of [11,14,17,19,20])assert.equal(createExclusiveBossState(id),null);
  assert.equal(createExclusiveBossState(null),null);
 });
 test('Gaia: corazza non si consuma se non esiste un danno autentico alla barriera',()=>{
