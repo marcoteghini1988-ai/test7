@@ -69,3 +69,19 @@ Le identità e le associazioni pianeta-boss sono recuperate dal codice storico `
 **Ancora aperto per Gaia:** la contromossa proposta «tre semi differenti rompono la corazza residua» è solo di progettazione e NON è implementata. Al momento la corazza si consuma quando attenua il primo danno effettivo alla barriera.
 
 **Successivo nell'ordine dei boss:** Venere / Matriarca Tossica (status Neurotossina, protezioni e durata deterministica), poi Crono e Sentinella Ionica. Le parti grafiche restano fuori da questa fase.
+
+## Continuazione della scaletta boss — 7 novembre 2026 (ripresa dopo i vitali)
+
+**Ordine confermato dalle chat:** completare prima i boss e le relative passive, poi affrontare punti aggiuntivi come carte Personaggio Boss, Terreni PvP, Mutazione della Firma, reliquie/Oggetti Epici e il resto delle espansioni. Non riprogettare la plancia né creare nuovi ingressi di prova.
+
+**Quattro abilità esclusive implementate e testate nel motore simultaneo, senza alterare le 23 passive dei mazzi numerici:**
+1. **Gaia (ID 1):** Corazza tellurica, primo impatto autentico alla barriera ridotto del 20% una sola volta.
+2. **Tharsis (ID 2):** Assalto progressivo +3/+6/+9% dopo sequenze di colpi nativi reali; azzeramento senza danno.
+3. **Matriarca Tossica di Venere (ID 3):** Neurotossina soltanto dopo una precisione con firma valida che danneggi un vitale esposto. Diminuisce del 10% una riparazione reale della barriera nel **ciclo successivo**, non nell'attuale; dura un solo ciclo, non infligge danni gratuiti, può essere rimossa anticipatamente con la carta reale Pulizia Sistemi. Test di colpo valido, formula errata, protezione, Contromisura, riparazione, pulizia ed espirazione in `src/tacticalVenusExclusive.test.js`.
+4. **Crono di Saturno (ID 6):** Controtempo +5% al successivo pacchetto di armi native che colpisca davvero la barriera entro **due cicli** dopo una Contromisura programmata che abbia respinto un vero colpo di precisione. Non si attiva su formula errata, vitale protetto o carta mai giocata. Percentuale arrotondata al punto intero superiore per non risultare zero sulle navi leggere e sempre limitata dal cap offensivo preesistente. Test in `src/tacticalChronoExclusive.test.js`.
+
+**Stato:** 4/12 poteri esclusivi funzionanti **nel motore**, 8 non ancora convertiti. Prossimo boss in ordine: **Sentinella Ionica / Urano (ID 7)**, poi Leviatano (8), Ombre (9), Idra (11), Generatore (14), Risonanza (17), Nucleo Magmatico (19) e Sovrano (20).
+
+**Parallelamente, non confondere i mazzi numerici:** 9/23 passive sono convertite in 6 mazzi; **14 passive in 6 mazzi** ancora da trasferire: Afrodite, Sentinella Ionica, Generatore, Risonanza, Nucleo Magmatico, Sovrano. L'ordine originario e i 3 gradi per abilità restano invariati. I settori boss della campagna rimangono temporaneamente indirizzati a `BossBattle3D.jsx` per conservare le abilità pregresse: **non dichiarare i quattro poteri attivi in campagna** finché non viene collaudata la migrazione completa.
+
+**Verifica:** test logici, build e preflight GitHub Actions verdi sul commit `3cde397709f03f7a904ba3d444b47672e3031f99` (workflow `42399655572`). Non è ancora una verifica visiva nel gioco, né un collaudo delle partite boss complete.
