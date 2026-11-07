@@ -51,7 +51,7 @@ jobs:
             const seven=await page.locator('.hand .number-card').count();
             if(seven!==7)throw new Error('Numero carte non uguale a 7: '+seven);
             fs.mkdirSync('docs/screenshots',{recursive:true});
-            await page.screenshot({path:'docs/screenshots/plancia-attuale-battaglia.png',fullPage:true,animations:'disabled'});
+            await page.screenshot({path:'docs/screenshots/plancia-attuale-battaglia.jpg',type:'jpeg',quality:88,fullPage:true,animations:'disabled'});
             console.log('CATTURA REALE: '+seven+' carte, '+JSON.stringify({errors}));
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
@@ -61,14 +61,14 @@ jobs:
         with:
           name: plancia-reale-attuale
           path: |
-            docs/screenshots/plancia-attuale-battaglia.png
+            docs/screenshots/plancia-attuale-battaglia.jpg
             /tmp/eclissi-mancata-battaglia.png
           if-no-files-found: warn
       - name: Pubblica solo la cattura, senza modificare l'app
         run: |
-          if [ ! -f docs/screenshots/plancia-attuale-battaglia.png ]; then exit 1; fi
+          if [ ! -f docs/screenshots/plancia-attuale-battaglia.jpg ]; then exit 1; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/screenshots/plancia-attuale-battaglia.png
+          git add docs/screenshots/plancia-attuale-battaglia.jpg
           git commit -m 'Salva cattura reale della plancia 3D e sette carte'
           git push
