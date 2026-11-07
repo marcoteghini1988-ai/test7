@@ -38,3 +38,25 @@ test('Real muzzle mapping changes with different weapons, not one generic firing
  assert.ok(a.mounted&&b.mounted);
  assert.notDeepEqual(a.start,b.start);
 });
+
+
+test('I proiettili delle scudiere partono dalla loro vera immagine laterale nel DOM',()=>{
+ const escortBoxes={
+  A:[{left:3,top:74,width:8,height:7},{left:50,top:73,width:9,height:8}],
+  B:[{left:3,top:17,width:8,height:7},{left:51,top:17,width:9,height:8}]
+ };
+ for(const by of ['A','B'])for(const escortSlot of [0,1]){
+  const shot={by,type:'escort_gun',weaponId:'W01',escortSlot};
+  const computed=tacticalWeaponTrajectory(shot,{A:'R04',B:'C01'},boxes,escortBoxes);
+  assert.ok(computed?.mounted);
+  assert.equal(computed.source,'actual_escort_dom');
+  assert.equal(computed.escortSlot,escortSlot);
+  const actual=escortBoxes[by][escortSlot];
+  assert.equal(computed.start.x,actual.left+actual.width*.5);
+  assert.equal(computed.start.y,actual.top+actual.height*.5);
+  assert.equal(computed.end.y,boxes[by==='A'?'B':'A'].top+
+   boxes[by==='A'?'B':'A'].height*.5);
+  // Without measured sprite, do not put a misleading projectile on the mother.
+  assert.equal(tacticalWeaponTrajectory(shot,{A:'R04',B:'C01'},boxes,null),null);
+ }
+});
