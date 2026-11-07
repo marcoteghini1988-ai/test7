@@ -105,3 +105,20 @@ Le identità e le associazioni pianeta-boss sono recuperate dal codice storico `
 
 **Prossimo punto: Leviatano Abissale, Nettuno (ID 8)**, potere esclusivo «Pressione degli abissi», da applicare SOLO alle armi native quando lo scudo dell'avversario è <=40% all'inizio del ciclo. Documentare e testare istantanea simmetrica del ciclo, barriere zero, colpi annullati, bonus +8% entro cap +45% e convivenza con i due poteri del mazzo numerico Leviatano, senza duplicazioni.
 
+## Aggiornamento Leviatano Abissale — sesto boss esclusivo
+
+**Implementato e verificato nel motore simultaneo** il potere esclusivo Pressione degli abissi, Nettuno (ID 8). Resta distinto dalle due passive collezionabili Leviatano: Marea del riciclo e Profondità tattica (già convertite, invariate).
+
+**Condizione:** la barriera dell'avversario del boss deve avere <=40% degli HP massimi all'INIZIO del ciclo. Il motore usa lo snapshot precedente alla preparazione: riparazioni, danni, scudiere e precisioni risolti nello stesso ciclo non spostano la soglia. Con barriera a zero e nessun danno effettivo, il bonus non viene applicato.
+
+**Effetto:** +8% alle armi native del boss (non ai calcoli matematici). Accumulo del resto percentuale tra soli colpi che abbiano davvero inflitto danno alla barriera; una salva totalmente intercettata non fa progredire il resto. Il bonus concorre al tetto offensivo del +45% e il registro riporta il bonus realmente applicato dopo il cap. Nessun attacco o risorsa gratuita.
+
+**Codice:** src/tacticalExclusiveBosses.js (exclusiveLeviatanoNativeBonus, rememberExclusiveLeviatanoNativeHit) e src/simultaneousDuelEngine.js (snapshot before e registro).
+
+**Test:** src/tacticalLeviatanoExclusive.test.js verifica 40% contro >40%, risoluzione simultanea, riparazioni reali, scudo zero, cumulativo, firme numeriche invariate, bonus entro +45%, spesa carte vere e coesistenza con le passive. I test dei boss ora elencano sei ID pronti.
+
+**Verifica:** GitHub Actions workflow 42401994425 sul commit 7fe3b789ec70e440b46a42060bff16bea3be221a: suite logica, build e preflight verdi. Nessuna modifica grafica.
+
+**Stato: 6/12 poteri esclusivi nel nuovo motore**. Rimangono Ombre (9), Idra (11), Generatore (14), Risonanza (17), Nucleo Magmatico (19), Sovrano (20). Le passive numeriche restano a 9/23, con 14 da migrare. La campagna boss utilizza ancora BossBattle3D.jsx per compatibilità: l'integrazione dei nuovi poteri nei settori ufficiali non è ancora completata.
+
+**Prossimo punto della scaletta:** Signore delle Ombre — Plutone (ID 9), Patto di sangue. Sacrificio reale di 4 HP della barriera del boss, almeno 13 HP prima del costo, generatore integro, cooldown 3 cicli, +8% sulle armi native vere; il costo si paga anche se il colpo fallisce. Potere distinto dalle due passive del mazzo Ombre.
