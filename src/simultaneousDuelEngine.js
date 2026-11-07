@@ -170,7 +170,10 @@ export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,se
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB)},
-  history:[],lastEvents:[]};
+  history:[],lastEvents:bossPlanetB===20?[
+   'B: Sovrano del Vuoto · seme dominante '+exclusiveVoidDominantSuit(1)+
+   ' (cicli 1–3, rotazione ogni 3 cicli)'
+  ]:[]};
 }
 function uniqueIndices(value,max,limit){
  return Array.isArray(value)&&value.length<=limit&&value.every(x=>Number.isInteger(x)&&x>=0&&x<max)&&new Set(value).size===value.length;
@@ -586,6 +589,11 @@ function resolveCycle(battle,nowMs){
  const playedSpecials=Object.fromEntries(['A','B'].map(key=>[key,
   orders[key].specialIndices.map(i=>sides[key].special.hand[i].type)]));
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
+ const idraRegen=prepareExclusiveIdraRegen(sides.B,battle.round);
+ if(idraRegen.repaired>0)
+  log.push('B: Idra Criogenica · Rigenerazione +'+idraRegen.repaired+' HP reali alla barriera');
+ const magmaStage=exclusiveMagmaPhase(sides.B,battle.round);
+ if(magmaStage)log.push('B: Nucleo Magmatico · fase '+magmaStage.toUpperCase()+' del ciclo');
  // Boss Plutone pays REAL shield HP at cycle start, BEFORE all card repairs,
  // native volleys and precision. This never reads the opponent's hidden order.
  const bloodPact=prepareExclusiveBloodPact(sides.B,battle.round,nativeBarrierPacket(sides.B));
@@ -604,6 +612,10 @@ function resolveCycle(battle,nowMs){
  if(ionicSiphon.transferred>0)
   log.push('B: Sentinella Ionica · Sifone Quantico trasferisce '+
    ionicSiphon.transferred+' Sincronia reale da A a B');
+ const resonance=collectExclusiveResonanceSync(sides.B,b,battle.round);
+ if(resonance>0)
+  log.push('B: Cristallo di Risonanza · Memoria degli scarti +'+resonance+
+   ' Sincronia reale (due o più carte numeriche scartate nel ciclo precedente)');
  const afterBarrier=combatSnapshot(sides);
  const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts,battle.round,modifiers);
  const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts,battle.round,modifiers);
@@ -641,6 +653,11 @@ function resolveCycle(battle,nowMs){
   // A hit this cycle schedules the next round; previous status expires now.
   expireExclusiveNeurotoxin(side,battle.round);
  }
+ // Only the numeric cards actually spent by player A are public now;
+ // they can arm the boss for the NEXT round, never retroactively.
+ if(rememberExclusiveResonanceDiscards(sides.B,
+   orders.A.numericIndices.length+orders.A.exchangeIndices.length,battle.round))
+  log.push('B: Cristallo di Risonanza · Memoria degli scarti armata per il prossimo ciclo');
  resolveTacticalEpicAfterCombat(sides,battle.round,impacts,log);
  let winner=winState(sides);
  if(battle.round>=TACTICAL_TIMING.maxRounds&&!winner)winner='draw';
@@ -658,8 +675,13 @@ export function advanceTacticalDuel(battle,nowMs=0){
  if(battle.phase==='resolving'){
   if(nowMs<battle.resolveUntilMs)return battle;
   if(battle.winner)return {...battle,phase:'finished'};
-  return {...battle,phase:'planning',round:battle.round+1,orders:{A:null,B:null},
-   deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,resolveUntilMs:null};
+  const nextRound=battle.round+1;
+  const bossSuit=battle.sides.B.bossExclusive?.id===20?exclusiveVoidDominantSuit(nextRound):null;
+  return {...battle,phase:'planning',round:nextRound,orders:{A:null,B:null},
+   deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,resolveUntilMs:null,
+   lastEvents:bossSuit?[...battle.lastEvents,
+    'B: Sovrano del Vuoto · seme dominante '+bossSuit+' per il ciclo '+nextRound
+   ]:battle.lastEvents};
  }
  if(battle.phase!=='planning')return battle;
  if(battle.orders.A&&battle.orders.B||nowMs>=battle.deadlineMs){
