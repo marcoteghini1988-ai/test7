@@ -246,6 +246,8 @@ function winState(sides){
 function resolveCycle(battle,nowMs){
  const sides=clone(battle.sides),orders=clone(battle.orders);
  const before=combatSnapshot(sides),impacts=[];
+ const playedSpecials=Object.fromEntries(['A','B'].map(key=>[key,
+  orders[key].specialIndices.map(i=>sides[key].special.hand[i].type)]));
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
  const status=applyPreparation(sides,orders,log);
  const prepared=combatSnapshot(sides);
@@ -269,7 +271,7 @@ function resolveCycle(battle,nowMs){
  if(winner)log.push(winner==='draw'?'Pareggio: limite/doppio KO':'Vince '+winner);
  return {...battle,sides,phase:'resolving',resolveUntilMs:nowMs+TACTICAL_TIMING.resolveMs,
   orders,history:[...battle.history,{round:battle.round,orders,events:log,shieldA:a,shieldB:b,hitsA,hitsB,
-   snapshots:{before,prepared,afterBarrier,afterPrecision},impacts}],lastEvents:log,winner};
+   snapshots:{before,prepared,afterBarrier,afterPrecision},impacts,playedSpecials}],lastEvents:log,winner};
 }
 export function advanceTacticalDuel(battle,nowMs=0){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
