@@ -41,7 +41,7 @@ test('Crono: entro due cicli +5% solo sul colpo nativo reale e carica consumata'
  const normalRound2=turn(advanceTacticalDuel(ordinary,8102),empty(),empty(),8200);
  const chronoRound2=turn(advanceTacticalDuel(chrono,8102),empty(),empty(),8200);
  assert.equal(barrierB(chronoRound2).damage,barrierB(normalRound2).damage+
-  Math.floor(nativeBarrierPacket(chrono.sides.B)*.05+1e-9));
+  Math.ceil(nativeBarrierPacket(chrono.sides.B)*.05-1e-9));
  assert.ok(chronoRound2.lastEvents.some(t=>t.includes('Controtempo +5%')));
  assert.equal(chronoRound2.sides.B.bossExclusive.counterArmedAfterRound,0);
  assert.equal(chronoRound2.sides.B.bossExclusive.counterExpiresRound,0);
