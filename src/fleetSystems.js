@@ -55,4 +55,12 @@ export function effectiveGunDamage(defense,kind,rawDamage){
 export function shieldRepairEfficiency(defense){
  return efficiency(defense,'shieldGenerator',SYSTEM_PENALTIES.damagedGeneratorRepair,0);
 }
+// The tactical escorts are HP-bearing interceptors, not extra mother guns.
+// Centralina at <=50% HP weakens their actual interception by 15%;
+// at KO the command network cannot coordinate interceptions at all.
+// Legacy weapon power for escorts remains a separate calculation.
+export function escortInterceptionEfficiency(defense){
+ const state=systemState(defense,'command');
+ return state==='destroyed'?0:state==='damaged'?SYSTEM_PENALTIES.damagedCommand:1;
+}
 export function escortsCoordinated(defense){return !vitalOffline(defense,'command');}
