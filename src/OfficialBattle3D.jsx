@@ -5,7 +5,7 @@ import {readShipCollection,updateShipCollection,equipShipCards} from './shipColl
 import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuilder.js';
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
-import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder} from './simultaneousDuelEngine.js';
+import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 import {tacticalPlaybackElapsed,projectedCombatSides} from './tacticalCombatTimeline.js';
@@ -14,6 +14,7 @@ import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
 import {commanderAbility} from './commanderAbilities.js';
 import {activeNumericBossAbilities} from './bossNumericDecks.js';
+import {tacticalAfroditeRecycleCooldownMs} from './tacticalBossDecks.js';
 import ShipPhysicalVitals,{physicalVitalCondition} from './ShipPhysicalVitals.jsx';
 import {arenaForBattle} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
@@ -217,6 +218,22 @@ export default function OfficialBattle3D({
  const selected=(draft.numericIndices||[]).map(i=>player.numeric.hand[i]).filter(Boolean);
  const specials=(draft.specialIndices||[]).map(i=>player.special.hand[i]?.type);
  const recycle=specials.includes('tactic-numeric-recycle');
+ const afroditeCooldown=tacticalAfroditeRecycleCooldownMs(player);
+ const afroditeReadyIn=afroditeCooldown?
+  Math.max(0,Math.ceil(((player.numericExchangeReadyAt??0)-now)/1000)):0;
+ const swapAfrodite=()=>{
+  const index=draft.exchangeIndices?.[0];
+  if(index==null){setMessage('Seleziona una carta numerica da ricambiare.');return;}
+  const changed=exchangeTacticalNumericDuringPlanning(battle,'A',index,Date.now());
+  if(!changed.ok){
+   setMessage(changed.reason==='harmonic_recycle_cooldown'?
+    'Ricambio armonico non ancora pronto.':'Ricambio non disponibile: '+changed.reason);
+   return;
+  }
+  setBattle(changed.battle);
+  setDraft(d=>({...d,numericIndices:[],op:null,exchangeIndices:[]}));
+  setMessage('Afrodite: carta sostituita dal mazzo numerico reale.');
+ };
  const nextSeconds=Math.max(0,Math.ceil((
   battle.phase==='planning'?battle.deadlineMs: battle.resolveUntilMs||now
  )-now)/1000);
@@ -357,11 +374,18 @@ export default function OfficialBattle3D({
     {menu==='exchange'&&<div className="modal-shade"><section className="help-card official-details">
      <h2>RICAMBIO NUMERICO</h2>
      <p>Se non prepari un attacco di precisione puoi cambiare una carta; con Ricambio Numerico fino a due. Le carte sono realmente consumate nel ciclo.</p>
+     {afroditeCooldown&&<p><strong>RICAMBIO ARMONICO — AFRODITE</strong>
+      {' · una carta subito, ogni '+afroditeCooldown/1000+' secondi. '}
+      {afroditeReadyIn>0?'Pronto tra '+afroditeReadyIn+' s.':'Pronto ora.'}
+     </p>}
      <div className="official-exchange-cards">{player.numeric.hand.map((c,i)=><button key={c.id}
       disabled={draft.numericIndices.includes(i)}
       aria-pressed={draft.exchangeIndices.includes(i)}
       onClick={()=>setDraft(d=>({...d,exchangeIndices:toggle(d.exchangeIndices,i,recycle?2:1)}))}>
       {rankLabel(c.value)+c.suit}</button>)}</div>
+     {afroditeCooldown&&<button className="es-button primary" type="button"
+      disabled={locked||afroditeReadyIn>0||draft.exchangeIndices.length!==1}
+      onClick={swapAfrodite}>RICAMBIA ORA · AFRODITE</button>}
      <button className="es-button primary" onClick={()=>setMenu('')}>CONFERMA SCELTA</button>
     </section></div>}
     {menu==='armaments'&&<div className="modal-shade"><section className="help-card official-details">
