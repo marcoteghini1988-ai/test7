@@ -85,3 +85,23 @@ Le identità e le associazioni pianeta-boss sono recuperate dal codice storico `
 **Parallelamente, non confondere i mazzi numerici:** 9/23 passive sono convertite in 6 mazzi; **14 passive in 6 mazzi** ancora da trasferire: Afrodite, Sentinella Ionica, Generatore, Risonanza, Nucleo Magmatico, Sovrano. L'ordine originario e i 3 gradi per abilità restano invariati. I settori boss della campagna rimangono temporaneamente indirizzati a `BossBattle3D.jsx` per conservare le abilità pregresse: **non dichiarare i quattro poteri attivi in campagna** finché non viene collaudata la migrazione completa.
 
 **Verifica:** test logici, build e preflight GitHub Actions verdi sul commit `3cde397709f03f7a904ba3d444b47672e3031f99` (workflow `42399655572`). Non è ancora una verifica visiva nel gioco, né un collaudo delle partite boss complete.
+
+## Aggiornamento Sentinella Ionica — quinto boss esclusivo
+
+**Implementato nel motore simultaneo**: Sentinella Ionica, ID pianeta 7, **Sifone Quantico**. La capacità corrisponde al profilo originale di Urano e NON alla passiva collezionabile «Isolamento ionico» (ancora non convertita).
+
+**Regola esatta:**
+- Si attiva soltanto quando il pacchetto di armi native del boss infligge **danno maggiore di zero alla barriera della madre**. Un danno alle sole scudiere, una barriera a zero, o un colpo annullato NON attivano nulla.
+- Trasferisce **min(8, Sincronia disponibile del giocatore, 100 − Sincronia del boss)**. Il giocatore perde esattamente la quantità ricevuta dal boss: nessuna risorsa viene creata e nessuna Sincronia va persa per superamento del limite.
+- La sottrazione avviene **dopo entrambi i colpi nativi dello stesso ciclo**, ma **prima** dell'assegnazione della Sincronia di fine ciclo. La Sincronia consumata in preparazione per fusioni non è più disponibile; quella guadagnata al termine del ciclo non può essere rubata anticipatamente.
+- Un solo tentativo per ciclo: è associato all'unico vero pacchetto nativo del boss. Il registro mostra la quantità realmente trasferita e tace per tentativi a trasferimento nullo.
+- Non modifica equipaggiamenti, 7 numeriche, 5 speciali, firme, danno o HP; non legge carte o ordini nascosti.
+
+**Codice:** \`src/tacticalExclusiveBosses.js\` esporta \`transferExclusiveIonicSync\`, \`src/simultaneousDuelEngine.js\` applica la regola alla fine della fase dei due attacchi nativi. Test \`src/tacticalIonicSiphonExclusive.test.js\` coprono trasferimento reale, equivalenza del danno con il duello ordinario, cap 100, risorse esaurite, assenza di danno, costo fusione e dati invalidi.
+
+**Verifica:** GitHub Actions verde (test logici, build Vite, preflight), workflow \`42400928503\`, commit \`24a441c0bbf1924d6883b2d81fcec6fe16a2385f\`.
+
+**Stato aggiornato: 5/12 poteri esclusivi convertiti nel nuovo motore**, 7 rimanenti: Leviatano (8), Ombre (9), Idra (11), Generatore (14), Risonanza (17), Nucleo Magmatico (19), Sovrano (20). **Passive mazzi: 9/23**, 14 ancora da convertire. I veri settori boss della campagna sono ancora sul percorso di compatibilità \`BossBattle3D.jsx\`; nessuna falsa attivazione nella campagna e nessuna modifica grafica.
+
+**Prossimo punto: Leviatano Abissale, Nettuno (ID 8)**, potere esclusivo «Pressione degli abissi», da applicare SOLO alle armi native quando lo scudo dell'avversario è <=40% all'inizio del ciclo. Documentare e testare istantanea simmetrica del ciclo, barriere zero, colpi annullati, bonus +8% entro cap +45% e convivenza con i due poteri del mazzo numerico Leviatano, senza duplicazioni.
+
