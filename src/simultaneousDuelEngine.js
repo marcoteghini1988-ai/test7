@@ -8,7 +8,8 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
  exclusiveNeurotoxinRepairAmount,clearExclusiveNeurotoxin,expireExclusiveNeurotoxin,
  rememberExclusiveChronoCounter,exclusiveChronoNativeBonus,
  rememberExclusiveChronoNativeHit,transferExclusiveIonicSync,
- exclusiveLeviatanoNativeBonus,rememberExclusiveLeviatanoNativeHit} from './tacticalExclusiveBosses.js';
+ exclusiveLeviatanoNativeBonus,rememberExclusiveLeviatanoNativeHit,
+ prepareExclusiveBloodPact,exclusiveBloodPactNativeBonus} from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
@@ -320,6 +321,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const exclusiveNative=exclusiveBossNativeBonus(atk,base);
  const chronoNative=exclusiveChronoNativeBonus(atk,base,round);
  const abyss=exclusiveLeviatanoNativeBonus(atk,base,cycleStart[other(key)].defense.shield);
+ const bloodPact=exclusiveBloodPactNativeBonus(atk,base,round);
  const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
@@ -335,8 +337,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   (def.corroded?Math.floor(base*.25):0)+
   (def.heated?3:0)+exclusiveNative.extra+chronoNative.extra;
  const cap=Math.floor(base*.45);
- const bonus=bonusWithoutAbyss+abyss.extra;
- const appliedAbyssExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithoutAbyss);
+ const bonusWithAbyss=bonusWithoutAbyss+abyss.extra;
+ const appliedAbyssExtra=Math.min(cap,bonusWithAbyss)-Math.min(cap,bonusWithoutAbyss);
+ const bonus=bonusWithAbyss+bloodPact.extra;
+ const appliedBloodPactExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithAbyss);
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=base+Math.min(cap,bonus)+pilot.extra;
@@ -402,6 +406,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   log.push(key+': Leviatano Abissale · Pressione degli abissi +8% sulla salva reale ('+
    'bonus applicato '+appliedAbyssExtra+' HP, resto '+abyss.remainder+
    '/100; barriera nemica <=40% all\'inizio del ciclo)');
+ if(bloodPact.active)
+  log.push(key+': Signore delle Ombre · Patto di sangue +8% sul pacchetto nativo ('+
+   'bonus applicato '+appliedBloodPactExtra+' HP, danno barriera '+hit.damage+
+   '; costo 4 HP già pagato anche se il colpo fallisce)');
  if(chronoNative.active&&chronoNative.extra>0&&hit.damage>0)
   log.push(key+': Crono · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
  if(hit.damage>0&&exclusiveDefenseFactor<1)
@@ -544,6 +552,12 @@ function resolveCycle(battle,nowMs){
  const playedSpecials=Object.fromEntries(['A','B'].map(key=>[key,
   orders[key].specialIndices.map(i=>sides[key].special.hand[i].type)]));
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
+ // Boss Plutone pays REAL shield HP at cycle start, BEFORE all card repairs,
+ // native volleys and precision. This never reads the opponent's hidden order.
+ const bloodPact=prepareExclusiveBloodPact(sides.B,battle.round,nativeBarrierPacket(sides.B));
+ if(bloodPact.armed)
+  log.push('B: Signore delle Ombre · Patto di sangue: -'+bloodPact.paid+
+   ' HP reali alla propria barriera, +8% armato per questo scontro');
  const status=applyPreparation(sides,orders,log,battle.round);
  const prepared=combatSnapshot(sides);
  const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers,battle.round,before);
