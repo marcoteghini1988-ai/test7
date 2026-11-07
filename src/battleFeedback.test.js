@@ -127,25 +127,23 @@ test('47: lancio e impatto veri mantengono identico il risultato con o senza cue
  assert.deepEqual(battle,original);
 });
 
-test('47: livelli grafici non intercettano input e rispettano movimento ridotto',()=>{
- const js=readFileSync(new URL('./BattleCombatFeedback.jsx',import.meta.url),'utf8');
- const css=readFileSync(new URL('./BattleCombatFeedback.css',import.meta.url),'utf8');
- const game=readFileSync(new URL('./OfficialBattle3D.jsx',import.meta.url),'utf8');
+test('47: livelli grafici non intercettano input; il duello definitivo mostra solo eventi risolti',()=>{
+ const oldUi=readFileSync(new URL('./BattleCombatFeedback.jsx',import.meta.url),'utf8');
+ const oldCss=readFileSync(new URL('./BattleCombatFeedback.css',import.meta.url),'utf8');
+ const official=readFileSync(new URL('./OfficialBattle3D.jsx',import.meta.url),'utf8');
  const playback=readFileSync(new URL('./TacticalCombatPlayback.jsx',import.meta.url),'utf8');
- const tactical=readFileSync(new URL('./simultaneousDuelEngine.js',import.meta.url),'utf8');
- const visuals=readFileSync(new URL('./OfficialBattle3D.css',import.meta.url),'utf8');
- assert.doesNotMatch(js,/\bonClick\s*=/); // componente grafico storico non interattivo
- assert.match(css,/pointer-events:none/);
- assert.match(css,/prefers-reduced-motion:reduce/);
- assert.match(js,/aria-live="polite"/);
- // Nel combattimento ufficiale simultaneo i proiettili mostrano eventi gia
- // risolti dal motore autorevole, senza applicare nuovamente gli HP.
- assert.match(game,/sealTacticalOrder/);
- assert.match(game,/advanceTacticalDuel/);
- assert.match(game,/TacticalCombatPlayback/);
- assert.match(tactical,/impacts\.push/);
- assert.match(playback,/currentTacticalPlayback/);
- assert.doesNotMatch(playback,/\bonClick\s*=/);
- assert.match(visuals,/pointer-events:none/);
- assert.match(visuals,/prefers-reduced-motion:\s*reduce/);
+ const css=readFileSync(new URL('./OfficialBattle3D.css',import.meta.url),'utf8');
+ const timeline=readFileSync(new URL('./tacticalCombatTimeline.js',import.meta.url),'utf8');
+ const entry=readFileSync(new URL('./MathDuelBattle.jsx',import.meta.url),'utf8');
+ assert.doesNotMatch(oldUi,/\bonClick\s*=/);
+ assert.match(oldCss,/pointer-events:none/);
+ assert.match(oldCss,/prefers-reduced-motion:reduce/);
+ assert.match(oldUi,/aria-live="polite"/);
+ assert.match(entry,/OfficialBattle3D\.jsx/);
+ assert.match(official,/<TacticalCombatPlayback/);
+ assert.match(playback,/currentTacticalPlayback\(battle,nowMs\)/);
+ assert.match(timeline,/cycle\.impacts/);
+ assert.match(css,/\.tdp-playback[^{]*\{[^}]*pointer-events:none/);
+ assert.match(css,/prefers-reduced-motion:\s*reduce/);
+ assert.doesNotMatch(playback,/\bdealHit\s*\(|\bdamageMotherShield\s*\(/);
 });
