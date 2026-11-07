@@ -6,7 +6,6 @@ import {readSpecialCollection} from './specialDeckBuilder.js';
 import {officialBattleSetup} from './officialBattleSetup.js';
 import {newVessel} from './mathDuelEngine.js';
 import {VITAL_IDS} from './vitalDefense.js';
-import {arenaForBattle} from './battleArenas.js';
 import {tacticalCommanderReady} from './tacticalCommanders.js';
 import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 
@@ -29,11 +28,8 @@ export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
  const last=Number(bossSectorLevel??((Math.max(1,Number(sectorNumber)||1)-1)%10+1));
  if(['adventure','campaign'].includes(gameMode)&&last===10)
   return {enabled:false,reason:'boss_sector'};
- // L'ionizzazione e il suo tempo di resistenza dipendono dal motore precedente:
- // finche la durata non e convertita, non alterare le arene planetarie ionic.
- const arena=arenaForBattle(sectorNumber,gameMode,null,{sectorLevel:bossSectorLevel});
- if(arena.effects?.ionDurationFactor)
-  return {enabled:false,reason:'ionic_arena_duration_pending'};
+ // Durate Ionizzazione/Corrosione e fattori dell'arena ionica ora sono
+ // risolti dal tempo di combattimento e dalle passive originali.
  return {enabled:true,reason:'official_simultaneous'};
 }
 
