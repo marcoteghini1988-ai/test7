@@ -8,16 +8,18 @@ import {newVessel} from './mathDuelEngine.js';
 import {VITAL_IDS} from './vitalDefense.js';
 import {tacticalCommanderReady} from './tacticalCommanders.js';
 import {tacticalBossDeckReady} from './tacticalBossDecks.js';
+import {officialBossEncounter} from './officialBossEncounter.js';
 
 const BATTLE_MODES=new Set(['classic','adventure','campaign','pvp']);
 
-// Le 23 passive numeriche e i 12 poteri esclusivi sono ora convertiti.
-// I settori boss mantengono il percorso storico finché arene esclusive,
-// fasi campagna, ricompense e grafica delle battaglie boss non sono testate
-// nel nuovo sistema. Il solo superamento dei test logici NON autorizza
-// un cambio di plancia, salvataggi o regole dei boss ufficiali.
+// Le 23 passive numeriche, i 12 poteri esclusivi, le arene boss e i
+// mazzi boss nemici sono ora verificati nel motore simultaneo.
+// I boss riconosciuti passano alla plancia 3D già ufficiale; per salvataggi
+// con settore o pianeta incoerente rimane il motore storico BossBattle3D.
+// Il cambio non modifica la collezione, la progressione o le ricompense.
 export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
-  bossSectorLevel=null,selectedBossDeck='neutral_starter',bossDeckInventory={},selectedPilot='pilot_com_1'}={}){
+  bossPlanetId=null,bossSectorLevel=null,selectedBossDeck='neutral_starter',
+  bossDeckInventory={},selectedPilot='pilot_com_1'}={}){
  if(!BATTLE_MODES.has(gameMode))return {enabled:false,reason:'mode'};
  // Una carta boss equipaggiata resta attiva, anche con inventari vecchi.
  if(selectedBossDeck&&selectedBossDeck!=='neutral_starter'&&
@@ -28,8 +30,14 @@ export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
  if(selectedPilot&&!tacticalCommanderReady(selectedPilot))
   return {enabled:false,reason:'commander_abilities_pending'};
  const last=Number(bossSectorLevel??((Math.max(1,Number(sectorNumber)||1)-1)%10+1));
- if(['adventure','campaign'].includes(gameMode)&&last===10)
-  return {enabled:false,reason:'boss_sector'};
+ if(['adventure','campaign'].includes(gameMode)&&last===10){
+  const encounter=officialBossEncounter({mode:gameMode,sectorNumber,
+   planetId:bossPlanetId,sectorLevel:bossSectorLevel});
+  // An inconsistent or unsupported historical save stays on BossBattle3D,
+  // never silently replacing the boss with a generic enemy.
+  if(!encounter)return {enabled:false,reason:'boss_sector'};
+  return {enabled:true,reason:'boss_simultaneous',bossId:encounter.planetId};
+ }
  // Durate Ionizzazione/Corrosione e fattori dell'arena ionica ora sono
  // risolti dal tempo di combattimento e dalle passive originali.
  return {enabled:true,reason:'official_simultaneous'};
