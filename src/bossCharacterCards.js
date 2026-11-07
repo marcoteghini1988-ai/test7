@@ -72,7 +72,7 @@ export function bossCharacterShieldFactor(side,round){
  return 1;
 }
 export function bossCharacterIonFactor(side,round){
- return bossCharacterActive(side,round)?.effect==='ionGuard'?.70:1;
+ return bossCharacterActive(side,round)?.effect==='ionGuard' ? .70 : 1;
 }
 export function bossCharacterPrecisionExtra(side,round,cards,damage){
  if(bossCharacterActive(side,round)?.effect!=='precision'||!(damage>0)||
@@ -92,7 +92,7 @@ export function bossCharacterCounterSync(side,round,actualCounter){
 }
 export function bossCharacterRememberHit(side,round,actualDamage){
  if(!(actualDamage>0)||bossCharacterActive(side,round)?.effect!=='regeneration'||
-  side.bossCharacter.regenerated)return false;
+  side.bossCharacter.regenerated||round>=side.bossCharacter.untilRound)return false;
  // Queue one repair for following cycle, never a free heal on this hit.
  side.bossCharacter.regenDue=round+1;
  return true;
