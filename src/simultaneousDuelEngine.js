@@ -328,15 +328,18 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  }
  // Every bonus modifies the REAL native weapon packet; two different special
  // cards never exceed the established +45% offensive cap.
- const bonus=(t.types.includes('tactic-power-shift')?6:0)+
+ const bonusWithoutAbyss=(t.types.includes('tactic-power-shift')?6:0)+
   (t.types.includes('tactic-kinetic')?6:0)+
   Math.floor(base*t.fusionAssault)+
   (t.tech==='laser'&&!def.escorts.some(e=>e.hp>0)?2:0)+
   (def.corroded?Math.floor(base*.25):0)+
-  (def.heated?3:0)+exclusiveNative.extra+chronoNative.extra+abyss.extra;
+  (def.heated?3:0)+exclusiveNative.extra+chronoNative.extra;
+ const cap=Math.floor(base*.45);
+ const bonus=bonusWithoutAbyss+abyss.extra;
+ const appliedAbyssExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithoutAbyss);
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
- let total=base+Math.min(Math.floor(base*.45),bonus)+pilot.extra;
+ let total=base+Math.min(cap,bonus)+pilot.extra;
  if(res.types.includes('tactic-power-shift'))total+=3;
  const ombre=tacticalBossOutgoingBonus(atk,total,{snapshot:t.bossSnapshot});
  total+=ombre.extra;
@@ -397,7 +400,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  rememberExclusiveLeviatanoNativeHit(atk,hit.damage,abyss);
  if(abyss.active&&hit.damage>0)
   log.push(key+': Leviatano Abissale · Pressione degli abissi +8% sulla salva reale ('+
-   'bonus '+abyss.extra+' HP, resto '+abyss.remainder+'/100; barriera nemica <=40% all\'inizio del ciclo)');
+   'bonus applicato '+appliedAbyssExtra+' HP, resto '+abyss.remainder+
+   '/100; barriera nemica <=40% all\'inizio del ciclo)');
  if(chronoNative.active&&chronoNative.extra>0&&hit.damage>0)
   log.push(key+': Crono · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
  if(hit.damage>0&&exclusiveDefenseFactor<1)
