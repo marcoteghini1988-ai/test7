@@ -57,6 +57,11 @@ export function resolveTacticalEpicAfterCombat(sides,round,impacts,log=[]){
  const total=impacts.reduce((sum,e)=>sum+Math.max(0,e.damage||0),0);
  for(const key of ['A','B']){
   const side=sides[key],incoming=impacts.some(e=>e.by!==key&&(e.damage||0)>0);
+  // Show the ACTUAL next draws after the current round's real hand refill.
+  if(tacticalEpicActive(side,'epic_item_1',round)&&side.epic.active.untilRound>round)
+   side.epic.peek=side.numeric.deck.slice(0,10).map(c=>({value:c.value,suit:c.suit}));
+  if(tacticalEpicActive(side,'epic_item_3',round)&&side.epic.active.untilRound>round)
+   side.epic.peek=side.numeric.deck.slice(0,2).map(c=>({value:c.value,suit:c.suit}));
   if(tacticalEpicActive(side,'epic_item_6',round)&&incoming&&side.epic.active.untilRound>round){
    side.epic.exchangeCredits=1;
    side.epic.exchangeUntilRound=round+1;
