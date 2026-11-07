@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {ShipArtwork,MountedWeapons} from './ShipPresentation.jsx';
+import {ASSET_ROOT,ShipArtwork,MountedWeapons} from './ShipPresentation.jsx';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {dominantTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
@@ -47,7 +47,7 @@ function Vessel({side,title,facing,hullRef}){
   {escorts.map((escort,index)=><div key={escort.id}
     className={'tdp-escort-ship tdp-escort-ship-'+(index+1)+(escort.hp<=0?' is-destroyed':'')}
     title={'Scudiera '+(index+1)+' · '+escort.hp+'/'+escort.max+' HP'}>
-    <img src={'/assets/escorts/'+side.shipId+'_escort_'+(index+1)+'.svg'}
+    <img src={ASSET_ROOT+'/escorts/'+side.shipId+'_escort_'+(index+1)+'.svg'}
       alt={'Scudiera '+(index+1)} loading="eager"/>
     <small>{escort.hp}/{escort.max}</small>
    </div>)}
@@ -224,7 +224,8 @@ export default function TacticalDuelPrototype(){
    <div><small>CICLO {battle.round}</small><strong>{status}</strong></div>
    <div className="tdp-clock"><strong>{seconds}s</strong><small>{planning?'30 s per preparare':'8 s di scontro'}</small></div>
   </section>
-  <div className="tdp-arena" aria-label="Piattaforma di Titanio originale, Eclissi Stellare">
+  <div className="tdp-arena" aria-label="Piattaforma di Titanio originale, Eclissi Stellare"
+   style={{'--tdp-original-arena':`url("${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp")`}}>
    <div className="tdp-arena-rim" aria-hidden="true"/>
    <Vessel side={visibleB} title={b.bossPlanetId?"BOSS · "+tacticalBossProfile(b.bossPlanetId)?.name:"AVVERSARIO · IA DI PROVA"} facing="enemy" hullRef={hullB}/>
    <div className="tdp-divider"><span>SCUDI · BRECCE · SISTEMI VITALI</span></div>
