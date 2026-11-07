@@ -24,12 +24,17 @@ function turn(b,a=EMPTY,at=100){
 }
 const gun=b=>b.history.at(-1).impacts.find(i=>i.kind==='barrier'&&i.by==='A');
 
-test('Mazzi parziali Generatore e Risonanza NON sono equipaggiabili fino alla conversione completa',()=>{
- for(const id of ['planet_char_14','planet_char_17']){
-  assert.equal(tacticalBossDeckReady(id),false);
-  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
-   selectedBossDeck:id,bossDeckInventory:{[id]:{unlocked:true,level:9}}}).enabled,false);
- }
+test('Generatore completo: equipaggiabile solo se posseduto. Risonanza resta bloccata',()=>{
+ assert.equal(tacticalBossDeckReady('planet_char_14'),true);
+ assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
+  selectedBossDeck:'planet_char_14',
+  bossDeckInventory:{planet_char_14:{unlocked:true,level:6}}}).enabled,true);
+ assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
+  selectedBossDeck:'planet_char_14',bossDeckInventory:{}}).enabled,false);
+ assert.equal(tacticalBossDeckReady('planet_char_17'),false);
+ assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
+  selectedBossDeck:'planet_char_17',
+  bossDeckInventory:{planet_char_17:{unlocked:true,level:9}}}).enabled,false);
 });
 
 test('Generatore: Accumulo energetico +10/20/30% solo su Sincronia effettivamente guadagnata',()=>{
