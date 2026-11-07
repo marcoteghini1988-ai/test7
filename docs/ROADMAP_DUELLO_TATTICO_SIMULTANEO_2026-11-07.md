@@ -107,3 +107,32 @@
 1. **Riprendere la lavorazione interrotta dalla raccolta delle idee:** progettazione delle **12 abilità/passive dei boss nel duello simultaneo**, mantenendo separati i 23 livelli/passive dei mazzi numerici storici e le carte Personaggio Boss sbloccabili; poi procedere ai comandanti/personaggi secondo la scaletta precedente.
 2. **Nuovi requisiti confermati, da realizzare dopo:** carte Personaggio temporanee, comprese quelle ottenute dai boss; carte Terreno attivabili soltanto nel PvP, con arena boss della campagna non sovrascrivibile; conversione definitiva degli Epici da reliquie in carte speciali preservando le fusioni storiche; *Mutazione della Firma*.
 3. **Raccolta ancora aperta:** l'utente ha annunciato altre modifiche da aggiungere alla scaletta. Non anticipare la loro implementazione né cambiare priorità finché non sono state elencate.
+
+
+## Revisione plancia 9:16 — due mani, due mazzi e slot di preparazione
+**Richiesta del 7 novembre 2026 — DA PROGETTARE, NON ANCORA IMPLEMENTATA.** L'utente ha chiesto di raccogliere i requisiti nella scaletta prima di riprendere la lavorazione interrotta delle passive boss e dei personaggi.
+
+### Componenti confermati dall'utente
+- **Zona centrale della plancia:** mantenere le navicelle e il combattimento spaziale metallico 3D stabilito, senza rimettere carte arma o boss nel centro e senza tornare alla griglia azzurra.
+- **Lato sinistro:** due mazzi *distinti* e riconoscibili, **Mazzo Numerico** e **Mazzo Speciale**; non un mazzo mescolato.
+- **Lato destro:** cestino/scarti, chiarendo visivamente la destinazione delle carte utilizzate. Da valutare scarti separati o selettore numeriche/speciali se i regolamenti delle due pile differiscono.
+- **Mani del giocatore:** **7 carte numeriche** come già stabilito e, separate da un piccolo spazio, **5 carte speciali**. Devono essere visibili e selezionabili in verticale 9:16, senza confondere le due categorie.
+- **Zona di preparazione ordini:** slot sul campo nei quali il giocatore impegna le carte durante i **30 secondi di preparazione simultanea**. Serve distinguere visivamente il bersaglio ai vitali dalle manovre/tattiche generali.
+- **Slot BERSAGLIO dedicato:** uno spazio mirato al sistema vitale già esposto/scoperto in cui si inseriscono le carte numeriche che costruiscono **una combinazione matematica o Poker valida per quella firma**. Il giocatore sceglie il vitale, vede la firma esposta, seleziona operatore/alternativa e impegna **2 oppure 3 numeriche secondo la regola della firma**; chiarire se e quando è ammesso usarne una. Le numeriche rimanenti non diventano automaticamente colpi extra: possono restare in mano o servire manovre consentite dalla regola del ciclo.
+- **Altri slot di preparazione:** dedicati a speciali, difese, trappole, ordini o altre azioni consentite, senza confondere l'attacco matematico con il fuoco automatico delle armi native sulla barriera.
+- **Numero carte per ciclo da bilanciare:** l'utente ipotizza **fino a 3 numeriche** e **2 o 3 speciali**. **MANTENERE per ora il limite sandbox di 2 speciali per preparazione** finché non verrà deciso/testato l'eventuale passaggio a 3; non cambiare unilateralmente i costi, le mani, la frequenza delle carte o la durata.
+
+### Proposta iniziale d'impaginazione, da validare con mockup 9:16
+1. Area superiore: nave avversaria, sistema vitale visibile soltanto se esposto, eventuali effetti d'arena. Durante la preparazione gli ordini avversari restano nascosti.
+2. Area centrale: due navi con armi integrate, barriera/scudiere e animazioni del combattimento; niente copertura permanente della scena da parte delle carte.
+3. Area immediatamente sotto il campo: **pannello bersaglio (fino a 3 alloggi numerici + formula/Poker + sistema selezionato)** e, distinta, **barra ordini speciali (2 alloggi iniziali)**. Layout compattabile/espandibile per non sacrificare le navi grandi.
+4. Area bassa del giocatore: **mano numerica da 7 carte**, separatore sottile, **mano speciale da 5 carte**; sinistra: icone delle due pile; destra: cestino/scarti. Evitare l'effetto «12 carte minuscole tutte nella stessa riga»: due righe, gesti sicuri al tocco e indicatore chiaro delle carte impegnate.
+5. Conferma *Pronto*: numeriche e speciali scelte diventano ordini sigillati. Nella risoluzione da **8 secondi** le speciali difensive (es. *Mutazione della Firma*) possono agire **prima** della verifica dell'attacco al vitale. Mostrare chiaramente vecchia/nuova firma e colpo valido/annullato.
+
+### Da testare prima di implementare
+- Mockup su smartphone 9:16 (incluse dimensioni touch delle 7+5 carte), visibilità navi e spazio residuo per timer/HP.
+- Modalità di riordino/cambio carta impegnata finché il giocatore non preme *Pronto*, comportamento del cestino e ricambio quando non esiste firma compatibile.
+- Gestione di firma aritmetica e alternative Poker nello stesso slot (nessuna carta impegnata può servire simultaneamente ad azioni incompatibili); validazione simultanea A/B e replay deterministico.
+- Presentazione di effetti speciali e personaggi/terreni futuri senza aumentare arbitrariamente il numero di slot.
+
+**Priorità:** requisito *in scaletta*, non sostituisce l'attività interrotta (12 passive boss, poi personaggi). Aspettare le ulteriori idee che l'utente vuole elencare; non applicare questo redesign alla campagna ufficiale prima dell'approvazione del layout e dei test di gameplay.
