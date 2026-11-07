@@ -3,7 +3,7 @@
 // Gli armamenti sono i 42 del catalogo esistente: i calcoli non alimentano lo scudo.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
-import {tacticalBarrierPower} from './tacticalArmamentBalance.js';
+import {tacticalBarrierPower,dominantTacticalTechnology} from './tacticalArmamentBalance.js';
 import {
   VITAL_IDS,createMotherDefense,damageMotherShield,restoreMotherShield,exposeMotherPart,
   hitMotherPart,remainingExposureSlots,motherDestroyed
@@ -191,7 +191,8 @@ function applyPreparation(sides,orders,log){
    fusion,fusionDefense:({'fusion-barrier':.60,'fusion-twin':.55,'fusion-triad':.40})[fusion]||0,
    fusionAssault:({'fusion-strike':.25,'fusion-triad':.35})[fusion]||0,
    cover:types.includes('tactical-cover'),coverUsed:false,
-   piercing:types.includes('shot-piercing'),ionizedDefense:!!side.ionized};
+   piercing:types.includes('shot-piercing'),ionizedDefense:!!side.ionized,
+   tech:dominantTacticalTechnology(side.weapons)};
   if(types.includes('support-shield-repair')){
    const fixed=restoreMotherShield(side.defense,20);
    side.defense=fixed.defense;
@@ -220,30 +221,55 @@ function applyPreparation(sides,orders,log){
 }
 function applyBarrierAttack(sides,key,orders,status,log,impacts){
  const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
- let total=nativeBarrierPacket(atk)+ (t.types.includes('tactic-power-shift')?6:0)+
-  (t.types.includes('tactic-kinetic')?6:0);
+ const base=nativeBarrierPacket(atk);
+ // Every bonus modifies the REAL native weapon packet; two different special
+ // cards never exceed the established +45% offensive cap.
+ const bonus=(t.types.includes('tactic-power-shift')?6:0)+
+  (t.types.includes('tactic-kinetic')?6:0)+
+  Math.floor(base*t.fusionAssault)+
+  (t.tech==='laser'&&!def.escorts.some(e=>e.hp>0)?2:0)+
+  (def.corroded?Math.floor(base*.25):0)+
+  (def.heated?3:0);
+ let total=base+Math.min(Math.floor(base*.45),bonus);
  if(res.types.includes('tactic-power-shift'))total+=3;
  const before=total;
  if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
  if(res.types.includes('tactic-impact'))total=Math.floor(total*.8);
- let intercepted=0;
- // Piercing avoids ESCORT interception on a 20% packet; it cannot ignore the
- // mother shield or a mathematical vital signature.
- const escortPacket=total-(t.piercing?Math.floor(total*.20):0);
+ let intercepted=0,splash=0;
+ // Kinetic and the real Piercing card bypass ESCORT interception, never mother
+ // shields nor numeric vital signatures.
+ const bypass=(t.piercing?.20:0)+(t.tech==='cinetico'?.10:0);
+ const escortPacket=total-Math.floor(total*Math.min(.35,bypass));
  if(def.defense.parts.command.hp>0){
-  let suppressed=false,available=escortPacket;
+  const live=def.escorts.filter(e=>e.hp>0);
+  const maxIntercept=Math.min(escortPacket,Math.floor(total*.75));
+  if(res.cover&&live.length&&def.defense.shield.hp>0){
+   const take=Math.min(live[0].hp,Math.floor(total*.75),maxIntercept);
+   live[0].hp-=take;intercepted+=take;res.coverUsed=take>0;
+  }
+  let suppressed=false;
+  const supported=live.filter(e=>e.hp>0).length;
   for(const e of def.escorts){
    if(e.hp<=0)continue;
    if(t.suppressFirstEscort&&!suppressed){suppressed=true;continue;}
-   const share=res.fusion?.60:(res.ionizedDefense?.10:.20);
-   const take=Math.min(e.hp,Math.floor(escortPacket*share),available);
-   e.hp-=take;intercepted+=take;available-=take;
-   if(res.fusion)break;
+   const share=res.fusionDefense?(res.fusion==='fusion-twin'||res.fusion==='fusion-triad'
+     ?res.fusionDefense/Math.max(1,supported):res.fusionDefense)
+     :(res.ionizedDefense?.10:.20);
+   const nerfed=res.ionizedDefense&&res.fusionDefense?share*.5:share;
+   const take=Math.max(0,Math.min(e.hp,Math.floor(escortPacket*nerfed),maxIntercept-intercepted));
+   e.hp-=take;intercepted+=take;
+   if(res.fusion==='fusion-barrier'||res.fusion==='fusion-strike')break;
+  }
+  // Explosive native technology spreads a small real HP impact to a second
+  // active escort; it never injures a protected vital.
+  if(t.tech==='esplosivo'&&def.escorts.length>1&&def.escorts[1].hp>0){
+   splash=Math.min(2,def.escorts[1].hp);def.escorts[1].hp-=splash;
   }
  }
  const hit=damageMotherShield(def.defense,total-intercepted);
  def.defense=hit.defense;
- impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id)});
+ impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
+  technology:t.tech,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id)});
  log.push(key+': armi native '+atk.weapons.map(w=>w.name).join(' + ')+
   ' ('+before+' potenziali, '+intercepted+' intercettati), barriera '+hit.damage);
  return hit.damage;
@@ -273,11 +299,26 @@ function applyVitalAttack(sides,key,order,status,log,impacts){
   return 0;
  }
  let damage=10,absorbed=0;
- const protector=def.escorts.find(e=>e.hp>0);
- if(status[other(key)].fusion&&protector){
-  absorbed=Math.min(protector.hp,Math.floor(damage*.60));
-  protector.hp-=absorbed;damage-=absorbed;
-  log.push(other(key)+': scudiera fusa assorbe '+absorbed+' HP reali');
+ const defenseStatus=status[other(key)];
+ if(def.defense.parts.command.hp>0){
+  const protector=def.escorts.find(e=>e.hp>0);
+  if(protector&&defenseStatus.cover&&!defenseStatus.coverUsed){
+   const take=Math.min(protector.hp,Math.floor(damage*.75));
+   protector.hp-=take;damage-=take;absorbed+=take;
+   defenseStatus.coverUsed=take>0;
+   log.push(other(key)+': copertura tattica assorbe '+take+' HP reali');
+  }
+  if(damage>0&&defenseStatus.fusionDefense&&defenseStatus.fusion){
+   const defenders=def.escorts.filter(e=>e.hp>0);
+   const maxTake=Math.floor(damage*defenseStatus.fusionDefense);
+   let remaining=maxTake;
+   for(const protector of defenders){
+    const take=Math.min(protector.hp,remaining);
+    protector.hp-=take;remaining-=take;damage-=take;absorbed+=take;
+    if(defenseStatus.fusion==='fusion-barrier'||defenseStatus.fusion==='fusion-strike'||remaining<=0)break;
+   }
+   if(maxTake-remaining>0)log.push(other(key)+': fusione assorbe '+(maxTake-remaining)+' HP reali');
+  }
  }
  const hit=hitMotherPart(defense,target,damage,cards);
  def.defense=hit.defense;
@@ -321,7 +362,11 @@ function resolveCycle(battle,nowMs){
   // Persistent status is ONE following cycle only, and requires a real barrier hit.
   const enemyKey=other(key);
   const enemyShieldDamage=enemyKey==='A'?a:b;
-  side.ionized=status[enemyKey].types.includes('shot-ion')&&enemyShieldDamage>0;
+  const enemyStatus=status[enemyKey];
+  side.ionized=enemyShieldDamage>0&&
+   (enemyStatus.types.includes('shot-ion')||enemyStatus.tech==='ionico');
+  side.corroded=enemyShieldDamage>0&&enemyStatus.types.includes('shot-corrosion');
+  side.heated=enemyShieldDamage>0&&enemyStatus.tech==='plasma';
  }
  let winner=winState(sides);
  if(battle.round>=TACTICAL_TIMING.maxRounds&&!winner)winner='draw';
