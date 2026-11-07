@@ -57,7 +57,7 @@ import MathDuelBattle from './MathDuelBattle.jsx';
 import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
-import NewCombatPhase3Preview from './NewCombatPhase3Preview';
+import LegacyPokerBattle from './LegacyPokerBattle';
 import { isPhase13CampaignEligible, validatePhase13Settlement, createPhase13OnceGuard, getPhase13EnemyPilotId } from './newCombat/phase13Campaign.js';
 import { ARMORY_V2_STORAGE_KEY, createPhase7Armory, normalizePhase7Armory, buyPhase7Weapon, equipPhase7Weapon, upgradePhase7Weapon } from './newCombat/phase7Armory.js';
 import {phase17GlobalSector,phase17ExpectedPilotLevel,phase17PilotHp,phase17EnemyHp,phase17CampaignXpAward,phase17CampaignDustAward,phase17EnemyLoadout,phase17EnemyWeaponLevels,phase17PlayerBattleLoadout,phase17PlayerWeaponLevels,phase17StartingAmmo,phase17Features,F17_UNLOCKS} from './newCombat/phase17Balance.js';
@@ -8235,7 +8235,7 @@ function CampaignNewCombatBattle({activeAdventure,selectedDeck,deckInventory,lev
   const enemyHp=phase17EnemyHp(activeAdventure.planet,activeAdventure.level);
   const playerBattleLoadout=phase17PlayerBattleLoadout(armoryV2,activeAdventure.planet,activeAdventure.level);
   const enemyBattleLoadout=phase17EnemyLoadout(activeAdventure.planet,activeAdventure.level);
-  return <NewCombatPhase3Preview
+  return <LegacyPokerBattle
     campaignMode={true} onBattleComplete={(game,telemetry)=>onBattleComplete(game,stageContext,telemetry)}
     onCampaignEtherConsumed={onEtherConsumed}
     onClose={onAbandon}
@@ -8264,7 +8264,7 @@ function DailyPokerChallengeBattle({config,sessionKey,onAbandon,onBattleComplete
   const dailyContext=useMemo(()=>({gameMode:'daily_challenge',
     activeAdventure:{planet:9,level:9,modifier:{id:'standard'}},
     isBoss:false,hasNetworkOpponent:false,sectorMode:'classic'}),[]);
-  return <NewCombatPhase3Preview key={`poker_daily_${sessionKey}_${config.dateStr}`}
+  return <LegacyPokerBattle key={`poker_daily_${sessionKey}_${config.dateStr}`}
     fixedLoadout={true} campaignMode={true}
     onBattleComplete={(game,telemetry)=>onBattleComplete(game,telemetry)}
     onClose={onAbandon}
@@ -8290,7 +8290,7 @@ function PvpPokerBotBattle({meta,armoryV2,playerLevel,sessionKey,onAbandon,onBat
     opponent:meta.opponent,playerLevel}),[meta.roomId,armoryV2,meta.opponent,playerLevel,sessionKey]);
   const ctx=useMemo(()=>({gameMode:'pvp_bot',hasNetworkOpponent:false,
     activeAdventure:{planet:1,level:1},sectorMode:'classic',isBoss:false}),[]);
-  return <NewCombatPhase3Preview key={`pvp_bot_${sessionKey}_${meta.roomId}`}
+  return <LegacyPokerBattle key={`pvp_bot_${sessionKey}_${meta.roomId}`}
     pvpBotMode={true} onDuelComplete={onBattleComplete} onClose={onAbandon}
     playerHand={setup.playerHand} playerDeck={setup.playerDeck}
     aiHand={setup.aiHand} aiDeck={setup.aiDeck}
@@ -8363,8 +8363,6 @@ function GameScreen({
 
 
 
-    // FASE 3: anteprima isolata. Nessuna modifica a HP, salvataggi o sincronizzazione legacy.
-    const [phase3PreviewOpen, setPhase3PreviewOpen] = useState(false);
     const isPvP = gameMode === 'pvp' && Boolean(pvpMeta?.roomId);
   const isGhostMatch = Boolean(pvpMeta?.isGhostMatch);
   const isRealPvP = isPvP && !isGhostMatch;
@@ -10194,7 +10192,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
 
         // TIMER AVVERSARIO CON CONSUMO SERBATOIO E TIMEOUT REALE (IN PAUSA DURANTE IL CAMBIO CARTE)
   useEffect(() => {
-    if (winner || showReviveModal || turn !== 'ai' || activeDiscoveryTutorial || isExchangeMode || phase3PreviewOpen) return;
+    if (winner || showReviveModal || turn !== 'ai' || activeDiscoveryTutorial || isExchangeMode) return;
 
     const interval = setInterval(() => {
 
@@ -10237,7 +10235,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
     }, 1000);
 
         return () => clearInterval(interval);
-  }, [turn, winner, showReviveModal, activeDiscoveryTutorial, isExchangeMode, phase3PreviewOpen, clearAiTurnTimeouts]);
+  }, [turn, winner, showReviveModal, activeDiscoveryTutorial, isExchangeMode, clearAiTurnTimeouts]);
 
 
 
@@ -12449,7 +12447,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
   // MOTORE AVVERSARIO CON TIMING REALISTICI (IN PAUSA SE IL GIOCATORE CAMBIA CARTE)
   // --------------------------------------------------------------------------
     useEffect(() => {
-    if (isRealPvP || turn !== 'ai' || winner || activeDiscoveryTutorial || isExchangeMode || phase3PreviewOpen) {
+    if (isRealPvP || turn !== 'ai' || winner || activeDiscoveryTutorial || isExchangeMode) {
       clearAiTurnTimeouts();
       return;
     }
@@ -13453,7 +13451,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
 
 
 
-  }, [turn, activeDiscoveryTutorial, isExchangeMode, phase3PreviewOpen]);
+  }, [turn, activeDiscoveryTutorial, isExchangeMode]);
 
 
   // GESTIONE SCARTO MANUALE SU PASSA TURNO & TIMEOUT
@@ -13549,7 +13547,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
 
             // TIMER GIOCATORE CON CONSUMO SCANNER E SOCCORSO EMERGENZA (CONGELATO DURANTE IL FACE-OFF)
   useEffect(() => {
-    if (winner || showReviveModal || turn !== 'player1' || activeDiscoveryTutorial || showFaceOff || phase3PreviewOpen) return;
+    if (winner || showReviveModal || turn !== 'player1' || activeDiscoveryTutorial || showFaceOff) return;
 
     // Se il pilota attivo rimuove il timer (Re del Ghiaccio), il tempo non scorre
 
@@ -13641,7 +13639,7 @@ const accumulateAbilityDamage = useCallback((amountOrHits, isPlayer = true, forc
     }, 1000);
 
         return () => clearInterval(interval);
-  }, [turn, winner, showReviveModal, getBaseTime, isEclipseStormActive, activeDiscoveryTutorial, showFaceOff, phase3PreviewOpen, checkAndTriggerTerrainCards]);
+  }, [turn, winner, showReviveModal, getBaseTime, isEclipseStormActive, activeDiscoveryTutorial, showFaceOff, checkAndTriggerTerrainCards]);
 
 
 
@@ -16351,21 +16349,7 @@ const playExpression = async (payload) => {
 
                         {!isHardpointMode && !isTrisMode && !isVectorMode && !isDoubleStageMode && (
         <>
-        {!isRealPvP && <div style={{position:'relative',zIndex:30,textAlign:'center',padding:'4px 0'}}>
-          <button type="button" onClick={() => setPhase3PreviewOpen(true)}
-            style={{fontSize:'0.68rem',padding:'8px 14px',background:'#092d42',border:'1px solid #33c5da',color:'#bdf3ff',borderRadius:8,cursor:'pointer',fontWeight:800}}>
-            ⚡ PROVA FASE 10 · COLLAUDO COMPLETO
-          </button>
-        </div>}
-        {phase3PreviewOpen ? <NewCombatPhase3Preview
-          onClose={() => setPhase3PreviewOpen(false)}
-          playerHand={playerHand} playerDeck={playerDeck} aiHand={aiHand} aiDeck={aiDeck}
-          initialBoard={tableSlots} battleEther={battleEther}
-          playerAmmo={weaponTanks} enemyAmmo={aiWeaponTanks}
-          armoryV2={armoryV2}
-          initialPlayerHp={playerHp} initialEnemyHp={aiHp}
-          battleContext={{gameMode,activeAdventure,bettingTier,isBoss:Boolean(isAdv&&currentAdvLevel===10),hasNetworkOpponent:isRealPvP}}
-        /> : <ClassicBattleView
+        <ClassicBattleView
           showFaceOff={showFaceOff}
           equippedWeapons={equippedWeapons}
           weaponsLevels={weaponsLevels}
@@ -16480,7 +16464,7 @@ const playExpression = async (payload) => {
           turn={turn}
           isBombAllowed={isBombAllowed}
           t={t}
-        />}
+        />
         </>
 
       )}
