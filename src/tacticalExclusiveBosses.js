@@ -94,7 +94,7 @@ export function exclusiveChronoNativeBonus(attacker,base,round){
  if(state?.id!==6||!Number.isSafeInteger(round)||!Number.isSafeInteger(base)||base<=0||
     !(state.counterArmedAfterRound>0)||
     round<=state.counterArmedAfterRound||round>state.counterExpiresRound)return inactive;
- return {active:true,percentage:5,extra:Math.floor(base*.05+1e-9)};
+ return {active:true,percentage:5,extra:Math.ceil(base*.05-1e-9)};
 }
 export function rememberExclusiveChronoNativeHit(attacker,round,barrierDamage,bonus){
  const state=attacker?.bossExclusive;
