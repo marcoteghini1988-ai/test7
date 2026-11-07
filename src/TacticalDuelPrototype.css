@@ -112,3 +112,11 @@
 .tdp-part--damaged small{color:#ffd17c}
 .tdp-part--ko{background:#4b2025;border-color:#d66c6d}
 .tdp-part--ko small{color:#ff8f99}
+
+/* Selettore di modelli: sandbox indipendente dagli sblocchi del giocatore. */
+.tdp-setup{margin:7px 0 10px;padding:8px 9px;border:1px solid #345975;border-radius:10px;background:#0b1e31}
+.tdp-setup p{font-size:9px;color:#9bbbd2;letter-spacing:.7px;margin:0 0 7px}
+.tdp-setup-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(55px,1fr) minmax(0,2fr) minmax(55px,1fr);gap:5px}
+.tdp-setup-grid label{min-width:0;display:flex;flex-direction:column;gap:3px;color:#bdd2e4;font-size:10px}
+.tdp-setup select{display:block;width:100%;min-width:0;max-width:100%;background:#142e47;border:1px solid #4d7491;border-radius:5px;padding:6px 3px;color:#e1f4ff;font-size:11px}
+.tdp-setup button{margin-top:8px;width:100%;background:#16466f;border:1px solid #4e9fc3;border-radius:6px;color:#f2fcff;font-size:10px;font-weight:800;padding:8px}
