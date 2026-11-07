@@ -1,10 +1,9 @@
-// Conversione progressiva delle passive dei 12 mazzi numerici boss ufficiali.
-// Non concede mazzi o livelli: l'inventario viene verificato da officialBattleSetup.
-// Solo gli effetti identici alle regole precedenti vengono qui abilitati.
+// Conversione progressiva delle passive dei mazzi numerici boss ufficiali.
+// Non concede mazzi o livelli: il possesso si verifica solo in officialBattleSetup.
+// Le percentuali e il numero dei gradi vengono dal catalogo esistente.
 import {numericBossDeck,activeNumericBossAbilities} from './bossNumericDecks.js';
 
-export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1']);
-
+export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_6']);
 export const tacticalBossDeckReady=id=>TACTICAL_READY_BOSS_DECKS.includes(id);
 
 export function equipTacticalBossDeck(side,selection=null){
@@ -15,11 +14,28 @@ export function equipTacticalBossDeck(side,selection=null){
  const lv=Math.max(1,Math.min(deck.maxLevel,Math.floor(Number(selection.level)||1)));
  const ability=activeNumericBossAbilities(selection.id,lv)[0];
  if(!ability?.unlocked)throw new Error('Abilita boss non sbloccata');
- // Gaia: medesima regola del precedente motore (floor sullo scudo massimo).
- // Solo HP della barriera madre; non ritoccare vitali o scudiere.
+ const state={id:deck.id,level:lv,ability:ability.name,firstHitUsed:false,shieldBonus:0};
+ if(selection.id==='planet_char_6')
+  return {...side,bossNumericDeck:state};
+ // Gaia: stessa regola del combattimento precedente, floor sullo scudo massimo.
+ // Solo HP della barriera; non modifica vitali, scudiere o mazzi.
  const shield=side.defense.shield;
  const bonus=Math.floor(shield.max*ability.value/100);
  const defense={...side.defense,shield:{hp:shield.hp+bonus,max:shield.max+bonus}};
- return {...side,defense,bossNumericDeck:{id:deck.id,level:lv,ability:ability.name,
-  shieldBonus:bonus}};
+ return {...side,defense,bossNumericDeck:{...state,shieldBonus:bonus}};
+}
+
+// Anelli di Crono: primo danno vero alla madre -8/-12/-16%.
+// Scudiere e danni nulli non consumano la protezione.
+export function tacticalBossMotherFactor(side){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_6'||state.firstHitUsed)return 1;
+ const value=activeNumericBossAbilities(state.id,state.level)[0]?.value||0;
+ return 1-value/100;
+}
+export function rememberTacticalBossMotherHit(side,damage){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_6'||state.firstHitUsed||!(damage>0))return side;
+ side.bossNumericDeck={...state,firstHitUsed:true};
+ return side;
 }
