@@ -5,7 +5,7 @@ import {tacticalCommanderReady} from './tacticalCommanders.js';
 import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 import {numericBossDeck} from './bossNumericDecks.js';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES,validateTacticalLoadout} from './simultaneousDuelEngine.js';
-import {buildTacticalBossDeck,tacticalBossProfile} from './tacticalSpecialPresets.js';
+import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {validateSpecialDeck} from './specialDeckBuilder.js';
 import {arenaForBattle} from './battleArenas.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
