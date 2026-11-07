@@ -2,7 +2,7 @@
 import React,{useState,useEffect,useRef,useLayoutEffect,useId} from 'react';
 
 import {ENGINE_KEYS,META,newShip,initialBattle,inspectCalculationCards,rankLabel,aiChoose,findMoves,findThreeCardMoves,dealHit,consumeAttack,sacrificeCard,etherChange,isDestroyed,deckExhausted,deckVerdict,healthScore,generateTargets,supportedOperators,validFleet,previewVolley,vesselDestroyed,nextAttackTarget,memoryComboStatus,resetComboMemory,nextAiActionDelay} from './mathDuelEngine.js';
-import {enginePoint,boardPoint,fleetFormation,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMuzzleCount} from './mathFleetGeometry.js';
+import {enginePoint,boardPoint,fleetFormation,fleetDisplayCenters,engineHudShift,engineHudPlacement,engineVisualState,engineSurface,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {planWeaponSalvos,volleyTimeline,projectileFrame,projectileWidth,projectileSourceIndex} from './mathWeaponEffects.js';
 import {ASSET_ROOT,CARD_SUIT_COLORS,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapons,WEAPON_SIGNS,WEAPON_COLORS,comboLabel} from './ShipPresentation.jsx';
 import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
@@ -161,6 +161,8 @@ function EscortPods({side,escorts=[],selected,onSelect,registerRef,disabled,inco
 function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,phase,intro,effects=[],availableOps,registerShipRef,registerEngineRef,registerGunRef,registerEscortRef,onSelectEscort,selectedEscort}){
  const enemy=side==='enemy',targetable=enemy&&phase==='ready';
  const formation=fleetFormation(ship.fleet.length,side);
+ const centers=fleetDisplayCenters(ship.fleet,side);
+ const motherIndex=ship.fleet.findIndex(v=>v.defense?.kind==='mother');
  const maneuver=ship.maneuvers?maneuverStatus(ship.maneuvers,ship,Date.now()):null;
  const attacking=effects.filter(e=>e.side===side).at(-1)??null;
  const incoming=effects.filter(e=>e.side!==side);
@@ -170,7 +172,8 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
    {ship.fleet.map((v,i)=>{
     const focusedShip=i===focused,dead=vesselDestroyed(v);
     return <div key={i} data-ship={v.id} data-level={v.level} data-vessel-index={i} className={`fleet-ship-wrap complete-ship${focusedShip?' focused':''}${dead?' dead-ship':''}`}
-     style={{left:`${formation.centers[i]/450*100}%`,top:formation.top,width:formation.size,height:formation.size,
+     data-fleet-role={i===(motherIndex>=0?motherIndex:0)?'mother':'lateral'}
+     style={{left:`${centers[i]/450*100}%`,top:formation.top,width:formation.size,height:formation.size,
       '--engine-size':`${formation.engineSize}px`,'--engine-hud-width':`${formation.hudWidth}px`,zIndex:focusedShip?3:1}}>
      <ShipSkin key={v.id} side={side} vessel={v} imageRef={node=>registerShipRef?.(side,i,node)}/>
      <MountedWeapons side={side} vessel={v} index={i} effect={attacking} registerGunRef={registerGunRef}/>
@@ -187,7 +190,7 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
   <EscortPods side={side} escorts={ship.escorts} selected={selectedEscort} onSelect={onSelectEscort} registerRef={registerEscortRef} disabled={!!intro||phase!=='ready'} incoming={incoming} outgoing={attacking?.salvos||[]}/>
   <div className={`fleet-picker-inline${ship.fleet.length===1?' single-ship':''}`}>{ship.fleet.map((v,i)=><button key={i} type="button"
    className={focused===i?'focus':''} onClick={()=>onSelectShip?.(i)} aria-pressed={focused===i}
-   style={{left:`${formation.centers[i]/450*100}%`,width:Math.min(160,formation.size-8)}}
+   style={{left:`${centers[i]/450*100}%`,width:Math.min(160,formation.size-8)}}
    disabled={!!intro||(enemy&&phase!=='ready')} title={`${v.name} · ${v.level}`}>
    <span className={`fleet-dot${vesselDestroyed(v)?' lost':''}`}/>{v.name} · L{v.level}</button>)}</div>
   {ship.fleet.every(vesselDestroyed)&&<span className="fleet-eliminated">FLOTTA DISTRUTTA</span>}
