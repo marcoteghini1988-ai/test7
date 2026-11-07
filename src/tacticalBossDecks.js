@@ -4,7 +4,7 @@
 import {numericBossDeck,activeNumericBossAbilities} from './bossNumericDecks.js';
 import {tacticalSignatureMatches} from './tacticalShipSignatures.js';
 
-export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_9','planet_char_11']);
+export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_8','planet_char_9','planet_char_11']);
 export const tacticalBossDeckReady=id=>TACTICAL_READY_BOSS_DECKS.includes(id);
 
 export function equipTacticalBossDeck(side,selection=null){
@@ -17,8 +17,9 @@ export function equipTacticalBossDeck(side,selection=null){
  if(!ability?.unlocked)throw new Error('Abilita boss non sbloccata');
  const state={id:deck.id,level:lv,ability:ability.name,firstHitUsed:false,shieldBonus:0,
   lastVital:null,vitalBonusRemainder:0,outgoingBonusRemainder:0,
-  idraBarrierRemainder:0,idraVitalRemainder:0};
- if(['planet_char_6','planet_char_2','planet_char_9','planet_char_11'].includes(selection.id))
+  idraBarrierRemainder:0,idraVitalRemainder:0,
+  recyclePending:false,leviatanoRemainder:0};
+ if(['planet_char_6','planet_char_2','planet_char_8','planet_char_9','planet_char_11'].includes(selection.id))
   return {...side,bossNumericDeck:state};
  // Gaia: stessa regola del combattimento precedente, floor sullo scudo massimo.
  // Solo HP della barriera; non modifica vitali, scudiere o mazzi.
@@ -145,5 +146,51 @@ export function rememberTacticalIdraHit(side,damage,bonus,{vitalId=null}={}){
  // caso non consuma il resto accumulato da un precedente bonus di Idra.
  const update=bonus?.active?{[key]:bonus.remainder}:{};
  side.bossNumericDeck={...state,...update,lastVital:vitalId||state.lastVital};
+ return side;
+}
+
+
+// Leviatano — Marea del riciclo / Profondità tattica.
+// Il riciclo esiste solo quando le carte numeriche esauriscono il
+// mazzo fisico e lo scarto è DAVVERO rimescolato. Un semplice scarto
+// o una carta speciale non attivano la passiva.
+export function rememberTacticalLeviatanoRecycle(side,pile,spentCount=0){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_8')return side;
+ const count=Number(spentCount)||0;
+ if(count>0&&pile?.deck?.length<count&&
+  (pile?.discard?.length||0)+count>0)
+  side.bossNumericDeck={...state,recyclePending:true};
+ return side;
+}
+export function tacticalLeviatanoBonus(side,enemy,order,baseDamage){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,extra:0,remainder:0,percentage:0,abilities:[]};
+ if(state?.id!=='planet_char_8'||!Number.isSafeInteger(baseDamage)||baseDamage<=0)return inactive;
+ const indices=order?.numericIndices;
+ const target=enemy?.defense?.parts?.[order?.vitalId];
+ if(!Array.isArray(indices)||![2,3].includes(indices.length)||
+    new Set(indices).size!==indices.length||!target||target.hp<=0)return inactive;
+ const cards=indices.map(i=>side?.numeric?.hand?.[i]);
+ if(cards.some(card=>!card)||
+    !tacticalSignatureMatches(target.signature,order.op,cards))return inactive;
+ const abilities=activeNumericBossAbilities(state.id,state.level);
+ const selected=[];
+ if(state.recyclePending&&abilities[0]?.unlocked)selected.push(abilities[0]);
+ if(cards.length===3&&abilities[1]?.unlocked)selected.push(abilities[1]);
+ if(!selected.length)return inactive;
+ const percentage=Math.min(30,selected.reduce((sum,a)=>sum+a.value,0));
+ const prev=state.leviatanoRemainder;
+ const remainder=Number.isInteger(prev)&&prev>=0&&prev<100?prev:0;
+ const points=baseDamage*percentage+remainder;
+ return {active:true,percentage,extra:Math.floor(points/100),
+  remainder:points%100,abilities:selected.map(a=>a.name),
+  spendsRecycle:!!state.recyclePending};
+}
+export function rememberTacticalLeviatanoHit(side,damage,bonus){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_8'||!(damage>0)||!bonus?.active)return side;
+ side.bossNumericDeck={...state,leviatanoRemainder:bonus.remainder,
+  recyclePending:bonus.spendsRecycle?false:state.recyclePending};
  return side;
 }
