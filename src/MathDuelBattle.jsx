@@ -366,7 +366,8 @@ function Formula({game}){
  const displayed=inspection?.order||cards.map(card=>card.value);
  const expression=displayed.map(label).join(' '+META[game.target].sign+' ');
  const kind=cards.length===3?'3 CARTE':'2 CARTE';
- return <div className={`formula${calculationAccepted?' valid':inspection?' invalid':''}`} aria-live="polite">
+ return <div className={`formula${calculationAccepted?' valid':inspection?' invalid':''}`} aria-live="polite" aria-label="Slot bersaglio e calcolo numerico">
+  <b className="formula-target">BERSAGLIO · {game.targetEscort!=null?'SCUDIERA '+(game.targetEscort+1):game.targetVital?VITAL_LABELS[game.targetVital]||'MADRE':'MADRE'}</b>
   <span>{matchedPoker?`POKER ${matchedPoker.pattern==='pair'?'COPPIA':'TRIS'} ✓`:
    inspection?`${expression} = ${fmt(inspection.result)}`:`${META[game.target].sign} ${goal}`}</span>
   <small>{calculationAccepted?(preview.totalDamage?`${kind} · BERSAGLIO ${goal} ✓ · FUOCO ${preview.totalDamage} HP`:
@@ -1071,7 +1072,37 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
     </div>
    </div>:(game.vitalPrototype?<MotherDefenseControls defense={game.enemy.fleet[0].defense} selected={game.targetVital} selectedEscort={game.targetEscort} onChoose={selectVitalPart} onChooseMother={selectMother}/>:<div className="center-bar"><span className="round-tag">COLPI {game.round-1}</span><MemoryCombos ship={game.player}/><div className="timer-pill"><strong>CONTINUO</strong></div></div>)}
    <Ship side="player" ship={game.player} targets={null} focused={game.shownPlayer} onSelectShip={i=>write({...gameRef.current,shownPlayer:i})} phase="idle" intro={intro?.id} effects={game.effects} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
-   {game.vitalPrototype&&!intro&&<label className="weapon-focus-control" aria-label="Seleziona arma da caricare">
+   <div className="deck left deck-special" aria-label="Mazzo delle carte speciali">
+    <div className="deck-graphic">✧</div><small>SPECIALI</small><strong>{game.player.specialDeck?.length||0}</strong>
+   </div>
+   <div className="deck left deck-number" aria-label="Mazzo delle carte numeriche">
+    <div className="deck-graphic">✦</div><small>NUMERI</small><strong>{game.player.deck.length}</strong>
+   </div>
+   <div className="deck right" aria-label="Scarti delle carte numeriche">
+    <div className="deck-graphic trash">▤</div><small>SCARTI</small><strong>{game.player.discard.length}</strong>
+   </div>
+   <div className="special-board" role="group" aria-label="Le tue cinque carte speciali, indipendenti dalle sette numeriche">
+    {[0,1,2,3,4].map(i=>{
+     const card=game.player.specialHand?.[i];
+     const definition=card?specialCardDefinition(card):null;
+     const readiness=card?specialCardReadiness(game.player,i,specialEscortSlot,uiClock):null;
+     return <button key={card?.id||'empty-'+i} type="button"
+      className={'special-board-card'+(card?' special-'+card.type:' is-empty')}
+      title={definition?.description||'Slot speciale vuoto'}
+      disabled={!!intro||game.phase!=='ready'||!readiness?.ready}
+      onClick={()=>playTacticalCard(i)}>
+      <small>{'S'+(i+1)}</small>
+      <strong>{definition?.short||'VUOTO'}</strong>
+     </button>;
+    })}
+   </div>
+   <Hand cards={game.player.hand} selected={game.selected} onSelect={pick} disabled={game.phase!=='ready'||game.actor!=='player'}/>
+   <div className="play-controls">{!intro&&<Formula game={game}/>}<button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
+   <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={openFleet} disabled={!!intro}>FLOTTA ⚙</button>
+    <button onClick={()=>setManeuverMenu(value=>!value)} disabled={game.phase!=='ready'||!maneuverHUD}>MANOVRE {maneuverHUD?maneuverHUD.sync+'%':''}</button></div>
+   {maneuverMenu&&maneuverHUD&&game.phase==='ready'&&<div className="maneuver-panel">
+     <header><b>MANOVRE DI FLOTTA</b><button onClick={()=>setManeuverMenu(false)}>CHIUDI</button></header>
+     {game.vitalPrototype&&!intro&&<label className="maneuver-weapon-focus" aria-label="Seleziona arma da caricare">
     <span>ARMA</span>
     <select value={maneuverArmaments.some(gun=>gun.id===game.weaponFocus)?game.weaponFocus:'auto'}
       onChange={event=>write({...gameRef.current,weaponFocus:event.target.value})}>
@@ -1080,14 +1111,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
       {gun.kind==='escort'?'SCUDIERA '+(gun.slot+1):'MADRE'} · {gun.name} ({gun.suits.map(suit=>WEAPON_SIGNS[suit]||suit).join(' ')})
      </option>)}
     </select>
-   </label>}
-   <div className="deck left"><div className="deck-graphic">✦</div><small>MAZZO</small><strong>{game.player.deck.length}</strong></div><div className="deck right"><div className="deck-graphic trash">▤</div><small>SCARTI</small><strong>{game.player.discard.length}</strong></div>
-   <Hand cards={game.player.hand} selected={game.selected} onSelect={pick} disabled={game.phase!=='ready'||game.actor!=='player'}/>
-   <div className="play-controls">{!intro&&<Formula game={game}/>}<button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
-   <div className="utility-bar"><button onClick={()=>change(false)} disabled={game.phase!=='ready'}>CAMBIA <b>{game.player.sacrifices}/3</b></button><button onClick={()=>change(true)} disabled={game.phase!=='ready'||!game.player.ether}>ETERE <b>{game.player.ether}</b></button><button onClick={openFleet} disabled={!!intro}>FLOTTA ⚙</button>
-    <button onClick={()=>setManeuverMenu(value=>!value)} disabled={game.phase!=='ready'||!maneuverHUD}>MANOVRE {maneuverHUD?maneuverHUD.sync+'%':''}</button></div>
-   {maneuverMenu&&maneuverHUD&&game.phase==='ready'&&<div className="maneuver-panel">
-     <header><b>MANOVRE DI FLOTTA</b><button onClick={()=>setManeuverMenu(false)}>CHIUDI</button></header>
+     </label>}
      <div className="maneuver-sync"><span>SINCRONIA {maneuverHUD.sync}/100</span><div><i style={{width:maneuverHUD.sync+'%'}}/></div></div>
      <p>FORMAZIONE</p>
      <div className="maneuver-options">
@@ -1113,17 +1137,6 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
        disabled={!!escort.defense?.destroyed}
        onClick={()=>setSpecialEscortSlot(slot)}>SCUDIERA {slot+1}</button>)}
      </div>
-     <div className="special-card-hand" aria-label="Cinque carte speciali separate dalle numeriche">
-      {(game.player.specialHand||[]).map((card,i)=><button key={card.id} type="button"
-       className={'special-card special-'+card.type}
-       title={specialCardDefinition(card)?.description||'Carta speciale'}
-       disabled={!specialCardReadiness(game.player,i,specialEscortSlot,uiClock).ready}
-       onClick={()=>playTacticalCard(i)}>
-       <small>CARTA {i+1}</small>
-       <strong>{specialCardDefinition(card)?.short||'SPECIALE'}</strong>
-       <span>{specialCardDefinition(card)?.family==='defense'?'DIFESA':specialCardDefinition(card)?.family==='volley'?'COLPO':specialCardDefinition(card)?.family==='support'?'SUPPORTO':'FUSIONE'}</span>
-      </button>)}
-     </div>
      <small>Fusioni: carta + 100 Sincronia. Copertura: scudiera 1 protegge la madre. Puoi combinare 2 diversi colpi speciali per la stessa scarica. Riparazione Scudo, Riparazione Scudiera e Pulizia Sistemi consumano carte vere e funzionano solo quando utili. Seleziona la scudiera da riparare; una scudiera distrutta non può essere rianimata. Mano sempre a 5.</small>
      {maneuverHUD.fusion&&<div className="maneuver-options"><span>{({barrier:'BARRIERA',strike:'ASSALTO',twin:'GEMELLARE',triad:'TRINA'})[maneuverHUD.fusion.mode]||'FUSIONE'} - {Math.ceil(maneuverHUD.fusionRemainingMs/1000)}s</span><button onClick={undock}>SGANCIA</button></div>}
    </div>}
@@ -1137,7 +1150,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
       player:game.player,enemy:game.enemy,round:game.round,selectedCount:game.selected?.length
      });return <><p>{briefing.introduction}</p>{briefing.conditions.map(condition=>
       <p key={condition.id}><strong>{condition.label}.</strong> {condition.activation} <em>{condition.strategy}</em>{condition.status?' '+condition.status:''}</p>
-     )}</>})()}<p>{game.vitalPrototype?'PROTOTIPO MADRE 1 CONTRO 1: lo scudo protegge quattro parti vitali. A 75%, 50%, 25% e 0% puoi scegliere una parte da esporre; un calcolo valido la danneggia. Vinci quando tutte e quattro le parti nemiche arrivano a zero HP. Le firme definitive di ogni navicella sono ancora da progettare. Le scudiere ai lati della madre si sbloccano a L3 e L5, hanno scudi propri e possono intercettare i colpi. La formula finale è temporanea; le immagini delle scudiere sono nella cartella delle risorse.':'FLOTTE MULTIPLE (versione precedente): ogni nave monta le operazioni disponibili con i relativi HP. Le scudiere collegate alla madre saranno aggiunte successivamente.'}</p><p>MAZZI SEPARATI: sette carte numeriche per i calcoli e cinque speciali nella mano tattica. Copertura Tattica usa una speciale e, per il prossimo impatto entro 15 secondi, assorbe fino al 75% del colpo sfruttando lo scudo reale della prima scudiera; non crea HP. Dal pulsante MANOVRE scegli una scudiera e gioca una carta Fusione Barriera o Fusione Assalto: la Sincronia 100 è necessaria, ma non attiva la fusione da sola. Ogni speciale giocata viene rimpiazzata immediatamente. La scudiera agganciata non può sparare autonomamente.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Puoi selezionare due oppure tre carte numeriche: con tre carte si applica la stessa operazione due volte in sequenza, con risultati intermedi interi positivi. Alcuni modelli consentono anche COPPIA o TRIS come firma alternativa dei vitali esposti: non servono poteri aggiuntivi dei semi. Ogni vitale ha una firma matematica di prova assegnata all’inizio della battaglia e mostrata sul bersaglio; i requisiti Poker definitivi rimangono da bilanciare. Le quattro parti vitali hanno HP localizzati: quando scendono al 50% o meno entrano in AVARIA con penalità reali, a zero diventano KO. Motore, armi, generatore scudi e centralina hanno effetti differenti; la distruzione del generatore azzera lo scudo. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo ha una penalità ancora da definire per il combattimento senza turni e il terzo −3 HP a te. Il numero di carte e il limite del mazzo sono provvisori. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
+     )}</>})()}<p>{game.vitalPrototype?'DUELLO MADRE 1 CONTRO 1: lo scudo protegge quattro parti vitali. A 75%, 50%, 25% e 0% puoi scegliere una parte da esporre; un calcolo valido la danneggia. Vinci quando tutte e quattro le parti nemiche arrivano a zero HP. Le firme definitive di ogni navicella sono ancora da progettare. Le scudiere ai lati della madre si sbloccano a L3 e L5, hanno scudi propri e possono intercettare i colpi. La formula finale è temporanea; le immagini delle scudiere sono nella cartella delle risorse.':'FLOTTE MULTIPLE (versione precedente): ogni nave monta le operazioni disponibili con i relativi HP. Le scudiere collegate alla madre saranno aggiunte successivamente.'}</p><p>MAZZI SEPARATI: sette carte numeriche per i calcoli e cinque speciali nella mano tattica. Copertura Tattica usa una speciale e, per il prossimo impatto entro 15 secondi, assorbe fino al 75% del colpo sfruttando lo scudo reale della prima scudiera; non crea HP. Dal pulsante MANOVRE scegli una scudiera e gioca una carta Fusione Barriera o Fusione Assalto: la Sincronia 100 è necessaria, ma non attiva la fusione da sola. Ogni speciale giocata viene rimpiazzata immediatamente. La scudiera agganciata non può sparare autonomamente.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Puoi selezionare due oppure tre carte numeriche: con tre carte si applica la stessa operazione due volte in sequenza, con risultati intermedi interi positivi. Alcuni modelli consentono anche COPPIA o TRIS come firma alternativa dei vitali esposti: non servono poteri aggiuntivi dei semi. Ogni vitale ha una firma matematica di prova assegnata all’inizio della battaglia e mostrata sul bersaglio; i requisiti Poker definitivi rimangono da bilanciare. Le quattro parti vitali hanno HP localizzati: quando scendono al 50% o meno entrano in AVARIA con penalità reali, a zero diventano KO. Motore, armi, generatore scudi e centralina hanno effetti differenti; la distruzione del generatore azzera lo scudo. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo ha una penalità ancora da definire per il combattimento senza turni e il terzo −3 HP a te. Il numero di carte e il limite del mazzo sono provvisori. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
    {fleetMenu&&<FleetSetup collection={collection} onEquip={saveLoadout} selected={fleetIds} setSelected={setFleetIds} enemySelected={enemyFleetIds} setEnemySelected={setEnemyFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet}/>}
   </div>
  </div>;
