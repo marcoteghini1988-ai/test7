@@ -15,6 +15,7 @@ import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
 import {commanderAbility} from './commanderAbilities.js';
 import {activeNumericBossAbilities} from './bossNumericDecks.js';
 import {tacticalAfroditeRecycleCooldownMs} from './tacticalBossDecks.js';
+import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import ShipPhysicalVitals,{physicalVitalCondition} from './ShipPhysicalVitals.jsx';
 import {arenaForBattle} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
@@ -24,7 +25,7 @@ import './OfficialBattle3D.css';
 
 const OPS=[['plus','+'],['minus','−'],['times','×'],['divide','÷'],['pair','COPPIA'],['trips','TRIS']];
 const freshOrder=()=>({numericIndices:[],specialIndices:[],vitalId:null,op:null,
- counterVitalId:'engine',exchangeIndices:[],weaponFocusId:null,epicChoice:null});
+ counterVitalId:'engine',exchangeIndices:[],weaponFocusId:null,epicChoice:null,escortAmmoIndex:null});
 const toggle=(indices,i,limit)=>indices.includes(i)?indices.filter(x=>x!==i):
  indices.length>=limit?[...indices.slice(1),i]:[...indices,i];
 const pct=(value,max)=>max?Math.round(100*value/max):0;
@@ -104,6 +105,9 @@ function niceError(reason){
   invalid_precision:'Scegli un vitale e una operazione valida',
   recycle_requires_card:'Per cambiare due numeriche serve Ricambio Numerico',
   card_double_spend:'Una carta numerica non può essere impegnata due volte',
+  escort_selection:'Selezione della munizione scudiera non valida',
+  escort_ammo_unavailable:'Nessuna scudiera operativa compatibile con il seme selezionato',
+  escort_tactical_conflict:'Una scudiera non può sparare mentre è assegnata a copertura o fusione',
   fusion_unavailable:'Per la fusione servono 100 Sincronia e scudiere operative',
   fusion_conflict:'Una sola fusione alla volta',
   counter_target:'Seleziona un sistema da proteggere',
@@ -251,7 +255,8 @@ export default function OfficialBattle3D({
   const signature=battle.sides.B.defense.parts[d.vitalId]?.signature;
   const op=signature&&next.length>=2?tacticalSignatureOperation(
    signature,next.map(index=>player.numeric.hand[index])):null;
-  return {...d,numericIndices:next,op:op||d.op,exchangeIndices:[]};
+  return {...d,numericIndices:next,op:op||d.op,exchangeIndices:[],
+   escortAmmoIndex:next.includes(d.escortAmmoIndex)?null:d.escortAmmoIndex};
  });
  const showMenu=menu==='fleet'||menu==='rules'||menu==='cards'||menu==='exchange'||menu==='armaments';
  return <div className="es-math-scope game-viewport" role="region"
@@ -394,6 +399,20 @@ export default function OfficialBattle3D({
      <div className="official-armament-list">{player.weapons.map(w=><button key={w.id}
       aria-pressed={draft.weaponFocusId===w.id} onClick={()=>setDraft(d=>({...d,weaponFocusId:w.id}))}>
       {w.name}</button>)}</div>
+     {!!player.escorts.some(e=>e.hp>0)&&<section aria-label="Munizioni reali delle scudiere">
+      <p><strong>FUOCO SCUDIERA · UNA NUMERICA</strong>
+       {' · scegli una carta non usata nel calcolo. La scudiera carica o spara secondo il proprio arsenale, consumando quella carta.'}</p>
+      <div className="official-exchange-cards">{player.numeric.hand.map((card,i)=>{
+       const escort=selectTacticalEscortForAmmo(player,card);
+       return <button key={card.id} type="button"
+        disabled={locked||!escort||draft.numericIndices.includes(i)||draft.exchangeIndices.includes(i)||
+         specials.some(type=>type?.startsWith('fusion-')||type==='tactical-cover')}
+        aria-pressed={draft.escortAmmoIndex===i}
+        onClick={()=>setDraft(d=>({...d,escortAmmoIndex:d.escortAmmoIndex===i?null:i}))}>
+        {rankLabel(card.value)+card.suit}{escort?' · S'+(escort.slot+1):''}
+       </button>;
+      })}</div>
+     </section>}
      {counter&&<label>Contromisura: difendi
       <select value={draft.counterVitalId} onChange={e=>setDraft(d=>({...d,counterVitalId:e.target.value}))}>
        {VITAL_IDS.map(id=><option key={id} value={id}>{VITAL_LABELS[id]}</option>)}
