@@ -39,9 +39,17 @@
 
 ## Registro avanzamento
 - [x] Definizione approvata: preparazione simultanea, risoluzione a eventi, armi native / precisione numerica.
-- [ ] Motore + test.
-- [ ] Prototipo UI.
-- [ ] Collegamento modalità ufficiali.
-- [ ] Ribilanciamento e collaudo su dispositivo.
+- [x] **Prima implementazione del motore + test riusciti**: `src/simultaneousDuelEngine.js`, `src/simultaneousDuelEngine.test.js`. Stati di preparazione/risoluzione, clock 30s/8s, sigillo ordini A/B, fallback temporale, armi native del catalogo, barriera, precisione, trappole, fusioni e KO simultaneo.
+- [x] **Prima UI sperimentale collegata**: `src/TacticalDuelPrototype.jsx` + CSS, avviabile dalla normale anteprima Vite/StackBlitz con `?tacticalPreview=1`. IA locale e test dedicati `src/tacticalDuelDemoAi.js` / `.test.js`.
+- [x] Separazione rigorosa: query opt-in in `src/main.tsx`; nessuna modifica a salvataggi, progressione o pagamenti.
+- [ ] Bilanciamento realistico di ognuna delle 42 armi (ora usiamo il suo **danno catalogato**, ma la cadenza/animazione dei colpi è ancora semplificata).
+- [ ] Firme dei 17 modelli (nel sandbox sono **quattro firme dimostrative condivise**, così possiamo verificare i calcoli e il Poker).
+- [ ] Estensione di tutti gli equipaggiamenti e delle 11 speciali ufficiali al motore nuovo (la sandbox usa **12 effetti di prova**, alcuni già esistenti, altri ancora sperimentali).
+- [ ] Proiettili audiovisivi realmente distribuiti nei 8 s di animazione (ora la risoluzione è **logica immediata** e il display resta in stato scontro per 8 s).
+- [ ] IA avanzata, mazzi boss, tecnologie e compatibilità completa con le 17 navi.
+- [ ] Collegamento alla modalità di gioco ufficiale e ricompense.
+- [ ] Verifica interattiva su telefono, ribilanciamento e vero PvP online.
+
+**Per provare:** apri l'anteprima del repository già collegato a StackBlitz e aggiungi `?tacticalPreview=1` all'URL della pagina dell'anteprima (non all'URL GitHub del file). Il prototipo è **A contro IA simulata**, non multiplayer online. Le speciali si selezionano per tocco, non ancora con trascinamento.
 
 **Non segnare una fase come conclusa fino a commit e CI riusciti.**
