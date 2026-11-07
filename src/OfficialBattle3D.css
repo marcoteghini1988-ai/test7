@@ -6,7 +6,10 @@
 .es-math-scope .official-duel-3d .ship-zone.ship-enemy{top:88px;height:215px}
 .es-math-scope .official-duel-3d .ship-zone.ship-player{top:326px;height:238px}
 .es-math-scope .official-duel-3d .official-mother{
- position:absolute;transform:translateX(-50%);animation:formationFloat 4.4s ease-in-out infinite alternate;
+ position:absolute;
+ left:50%;
+ transform:translateX(-50%);
+ animation:formationFloat 4.4s ease-in-out infinite alternate;
 }
 .es-math-scope .official-duel-3d .official-mother .fleet-ship-img{
  position:absolute;left:0;top:0;inset:0;display:block;
