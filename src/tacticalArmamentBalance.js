@@ -45,3 +45,13 @@ export function tacticalBarrierPower(side){
  if(p.engine.hp===0)amount=Math.floor(amount*.75);
  return {raw,scaled,amount,contributions};
 }
+
+export function dominantTacticalTechnology(weapons=[]){
+ const profile=tacticalArmamentProfile(weapons);
+ const totals=new Map();
+ for(const shot of profile.contributions)
+  totals.set(shot.technology,(totals.get(shot.technology)||0)+shot.raw);
+ if(!totals.size)return null;
+ // On equal damage, pick first existing native armament order. No arbitrary roulette.
+ return [...totals.entries()].sort((a,b)=>b[1]-a[1])[0][0];
+}
