@@ -75,7 +75,8 @@ verify(arena.includes('className="deck left deck-number"')&&
  'Servono i due mazzi distinti: numerico e speciale');
 verify(arena.includes('className="special-board"')&&
  arena.includes('player.special.hand[i]')&&
- arena.includes('specialIndices:toggle(d.specialIndices,i,2)'),
+ (arena.includes('specialIndices:toggle(d.specialIndices,i,2)')||
+ (arena.includes('const chosen=toggle(d.specialIndices,i,2)')&&arena.includes('specialIndices:chosen'))),
  'Le cinque carte speciali reali devono essere accessibili sulla plancia');
 verify(arena.includes('[0,1,2,3,4].map(')&&
  arena.includes('player.numeric.hand.map(')&&
