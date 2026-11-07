@@ -34,6 +34,7 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalResonanceCooperationBonus,rememberTacticalResonanceCooperationHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
+import {tacticalBossCommanderAttackBonus,tacticalBossCommanderDefenseBonus,rememberTacticalBossCommanderImpact} from './tacticalBossCommanderBridge.js';
 import {createTacticalEscortArmament,selectTacticalEscortForAmmo,prepareTacticalEscortVolley} from './tacticalEscortVolley.js';
 import {tacticalCombatClock,tacticalStatusActive,applyTacticalTimedStatus,clearTacticalTimedStatuses} from './tacticalTimedStatus.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
@@ -406,7 +407,9 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const magmaDeck=tacticalMagmaNativeBonus(atk,t.types,base);
  const resonanceDeck=tacticalResonanceNativeBonus(atk,t.weaponFocusId,base);
  const supremacy=tacticalSovereignSupremacyBonus(atk,base,round);
- const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
+ const standardPilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
+ const advancedPilot=tacticalBossCommanderAttackBonus(atk,def,orders[key],t.types,base,round);
+ const pilot=advancedPilot.active?advancedPilot:standardPilot;
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
   log.push(key+': '+pilot.pilotId+' · calcolo '+orders[key].op+
@@ -488,9 +491,14 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const motherPacket=Math.max(0,total-intercepted);
  const bossDefenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const exclusiveDefenseFactor=exclusiveBossShieldFactor(def);
- const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor*exclusiveDefenseFactor)*(modifiers?.shieldDamageFactor||1));
+ const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
+ const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor*
+  exclusiveDefenseFactor*pilotDefense.factor)*(modifiers?.shieldDamageFactor||1));
  const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
+ rememberTacticalBossCommanderImpact(atk,def,orders[key],t.types,hit.damage,round);
+ if(pilotDefense.active&&hit.damage>0)
+  log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% sul danno reale alla madre');
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberExclusiveBossDefenseHit(def,hit.damage);
  rememberExclusiveBossNativeHit(atk,hit.damage,exclusiveNative);
@@ -585,10 +593,14 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  const motherPacket=Math.max(0,packet-intercepted);
  const defenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const armor=exclusiveBossShieldFactor(def);
- const actual=Math.floor(Math.floor(motherPacket*defenseFactor*armor)*
+ const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
+ const actual=Math.floor(Math.floor(motherPacket*defenseFactor*armor*pilotDefense.factor)*
   (modifiers?.shieldDamageFactor||1));
  const hit=damageMotherShield(def.defense,actual);
  def.defense=hit.defense;
+ rememberTacticalBossCommanderImpact(atk,def,orders[key],t.types,hit.damage,round);
+ if(pilotDefense.active&&hit.damage>0)
+  log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% contro scudiera');
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberExclusiveBossDefenseHit(def,hit.damage);
  rememberTacticalResonanceCooperationHit(atk,hit.damage,harmony);
@@ -680,10 +692,14 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   }
  }
  const bossDefenseFactor=tacticalBossMotherFactor(def,status[other(key)].bossSnapshot);
- damage=Math.floor(damage*bossDefenseFactor);
+ const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
+ damage=Math.floor(damage*bossDefenseFactor*pilotDefense.factor);
  const hit=hitMotherPart(defense,target,damage,cards);
  const consequence=hit.damage>0?tacticalVitalTransition(defense,hit.defense,target):null;
  def.defense=hit.defense;
+ rememberTacticalBossCommanderImpact(atk,def,order,status[key].types,hit.damage,round,{vitalId:target});
+ if(pilotDefense.active&&hit.damage>0)
+  log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% sul vitale '+target);
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberTacticalBossVitalHit(atk,target,hit.damage,tharsis);
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
@@ -814,6 +830,8 @@ function resolveCycle(battle,nowMs){
   const previousNumerics=side.numeric;
   const spentNumerics=[...order.numericIndices,...order.exchangeIndices,
    ...(order.escortAmmoIndex==null?[]:[order.escortAmmoIndex])];
+  if(order.exchangeIndices.length>0)
+   side.numericRecyclesTotal=(side.numericRecyclesTotal||0)+order.exchangeIndices.length;
   side.numeric=recyclePile(previousNumerics,spentNumerics,7,random,
    tacticalEpicNumericChoice(side,battle.round));
   rememberTacticalLeviatanoRecycle(side,previousNumerics,spentNumerics.length);
