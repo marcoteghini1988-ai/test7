@@ -40,7 +40,7 @@ verify(arena.includes('className="special-board"')&&
  arena.includes('specialIndices:toggle(d.specialIndices,i,2)'),
  'Le cinque carte speciali reali devono essere accessibili sulla plancia');
 verify(arena.includes('[0,1,2,3,4].map(')&&
- arena.includes('<Hand cards={game.player.hand}')&&
+ arena.includes('player.numeric.hand.map(')&&
  arena.includes('className="formula-target"'),
  'Devono restare 5 speciali, 7 numeriche e il bersaglio separato');
 verify(!arena.includes('className="special-card-hand"')&&
