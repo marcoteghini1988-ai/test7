@@ -1,17 +1,27 @@
-# ECLISSI STELLARE — VERSIONE UFFICIALE TEST7
+# ECLISSI STELLARE — AVVIO DEL GIOCO UFFICIALE
 
-Questo è il progetto unico **`test7/main`**, comprensivo di sorgenti, asset, manovre, fusioni e carte speciali. Da ora i prossimi aggiornamenti si applicano direttamente a `main`, senza copie GitHub.
+**Repository unico:** [marcoteghini1988-ai/test7](https://github.com/marcoteghini1988-ai/test7), ramo `main`. Non creare copie, altri repository, ingressi paralleli o schermate di prova.
 
-## Per provare la partita
+## Aprire il gioco
 
-1. Apri `https://github.com/marcoteghini1988-ai/test7` sul ramo `main` e premi **Code → Download ZIP** per il progetto completo, oppure importa direttamente `test7` in StackBlitz.
-2. Apri il progetto React/Vite, installa le dipendenze con `npm ci` e lancia `npm run dev`.
-3. In **Flotta → Prova**, scegli una singola nave madre al livello **3 o superiore**: al livello 3 arriva la prima scudiera, al livello 5 arriva la seconda.
-4. Durante un duello, usa **MANOVRE** sotto le carte per scegliere **Equilibrata**, **Guardia** o **Assalto**. I calcoli matematici corretti e gli interventi delle scudiere caricano la **Sincronia**.
-5. A 100 Sincronia, apri **MANOVRE**, scegli **SCUDIERA 1/2** e gioca una delle tue **5 CARTE SPECIALI** (Fusione Barriera o Fusione Assalto). La carta viene consumata e sostituita subito. Una fusione dura provvisoriamente **12 secondi**; **SGANCIA** interrompe la fusione con ricarica.
-6. Le nuove sagome delle 17 navicelle madri sono in `public/assets/ship-shells/`. Le carte madre originali e i 34 asset delle scudiere sono conservati.
+1. Apri `test7` in StackBlitz oppure scarica il repository GitHub completo.
+2. Esegui `npm ci` e poi `npm run dev` (StackBlitz può eseguire questi comandi nel terminale).
+3. Entra nel gioco normalmente dalla Home: `src/main.tsx` avvia soltanto `App.tsx`, e `src/MathDuelBattle.jsx` sceglie il combattimento **3D ufficiale**.
+4. Nel duello simultaneo seleziona **2 o 3 carte numeriche**, un **sistema vitale** e l'operazione richiesta. Puoi aggiungere **fino a 2 carte speciali** dalla mano di cinque. Usa **CONFERMA** per sigillare l'ordine; il tempo massimo è 30 secondi. La risoluzione di entrambi gli ordini dura **8 secondi**.
+5. I pulsanti **RICAMBIO**, **ARMI**, **HANGAR** e **REGISTRO** appartengono alla stessa schermata 3D. In Hangar puoi schierare le navicelle che possiedi e configurare il mazzo speciale da 24 carte. Le 7 numeriche vengono pescate dal mazzo reale di 52 carte.
 
-## Verifiche
+Non esiste più l'ingresso `?tacticalPreview=1`, né il menu `Flotta → Prova`: non seguirne le vecchie istruzioni.
+
+## Motore e compatibilità
+
+- **Duelli standard compatibili:** `src/OfficialBattle3D.jsx`, `src/simultaneousDuelEngine.js`, `src/officialBattleSetup.js`. Usano la plancia metallica Titanio 9:16, le 17 navicelle, le 42 armi montate e gli asset originali delle scudiere.
+- **Piloti comuni convertiti:** `pilot_com_1`–`pilot_com_4`, gradi L1-L5. I bonus delle armi valgono soltanto con calcoli matematici corretti e un pilota effettivamente sbloccato.
+- **Passiva Gaia:** `planet_char_1` (Baluardo terrestre), tre gradi di aumento dello scudo iniziale/massimo.
+- **Passiva Crono:** `planet_char_6` (Primo anello), tre gradi di riduzione del primo colpo efficace alla madre.
+- **Compatibilità preservata:** `src/BossBattle3D.jsx` continua a gestire battaglie boss, piloti avanzati, le 21 passive boss non ancora migrate e gli ambienti con effetti ionici non ancora convertiti. Non è un gioco di prova, ma il percorso 3D preesistente che conserva poteri e salvataggi fino alla migrazione.
+- **IA locale:** `src/tacticalDuelAi.js` prepara gli ordini dell'avversario senza conoscere la mano o gli ordini nascosti del giocatore. Il PvP online con server autoritativo non è ancora implementato.
+
+## Controlli automatici
 
 ```bash
 npm ci
@@ -21,42 +31,20 @@ npm run preflight
 npm run dev
 ```
 
-GitHub Actions esegue le prime quattro verifiche automaticamente su `main`. La prova grafica sullo schermo reale (soprattutto 9:16) non è sostituita dai test automatici.
+GitHub Actions esegue test logici, compilazione e preflight su `main`. `scripts/check-official-3d.mjs` verifica l'ingresso unico, i mazzi separati e gli asset del combattimento. **I test non sostituiscono un collaudo visivo su smartphone.**
 
-## Limiti ancora aperti
+## Grafica da conservare
 
-- Il repository unico di sviluppo è `test7`. Non occorre creare repository o copie denominate `test8`.
-- Gli scafi sono **SVG vettoriali con stile metallico**, non modelli mesh 3D. Il posizionamento fisico di armi, parti vitali e motori sulle nuove forme richiede la rifinitura grafica finale.
-- La **mano da cinque speciali** è implementata con due Fusioni e **Copertura Tattica**; ulteriori carte, fusioni triple e firme finali restano da progettare.
-- Tutti i bonus, i tempi e le percentuali della fusione sono parametri iniziali di test.
+- Arena base: `public/assets/mathduel/arena_titanio_9x16.webp`.
+- Navi in due prospettive: `public/assets/mathfleet/views/`.
+- Scafi sovrapposti: `public/assets/ship-shells/`.
+- Scudiere originali: `public/assets/escorts/`.
+- Montaggi originali delle armi: `ShipPresentation.jsx` e `mathFleetGeometry.js`.
 
-Specifiche complete: [docs/PUNTO_22_INTEGRAZIONE.md](docs/PUNTO_22_INTEGRAZIONE.md).
+La rappresentazione è una composizione 3D prospettica realizzata con asset raster e SVG: non è ancora una scena con mesh tridimensionali e telecamera libera. L'allineamento mobile di navi, carte e colpi deve ancora essere verificato su dispositivo reale.
 
+## Lavoro residuo
 
-**Ripresa successiva:** consultare `docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md` per tutti i requisiti consolidati. Audio/visivo rinviati.
+Convertire le altre **21 passive dei boss**, i piloti non comuni, gli effetti a durata delle arene ioniche e le nuove **carte Personaggio e Terreno**; realizzare e collaudare le animazioni complete di armi, fusioni e scontri in formato 9:16. Non eliminare `BossBattle3D.jsx` prima della copertura funzionale e dei relativi test.
 
-**Nota numerazione:** le carte speciali delle fusioni sono il blocco 22B / base del punto 30; la collaborazione navicelle è il punto 23 ufficiale. Vedi `docs/PUNTO_23_COLLABORAZIONE_NAVICELLE.md`.
-
-
-## Punto 25: protezione attiva
-In **MANOVRE**, seleziona **SCUDIERA 1**, poi gioca la carta **COPERTURA** dalla mano speciale. Non richiede 100 Sincronia; protegge dal primo successivo attacco alla madre entro 15 s, consumando fino al 75% del danno dallo scudo reale della scudiera. La carta viene sostituita immediatamente e non è cumulabile con una fusione. Documento: `docs/PUNTO_25_PROTEZIONE_MADRE.md`.
-
-
-## Punto 26: danni localizzati ai vitali
-Ogni sistema della madre entra in **AVARIA** quando rimane al 50% degli HP o meno, e in **KO** a zero HP. I danni influiscono realmente sulla flotta: motore -10%/-25%, armi madre -20%/-50%, centralina scudiere -15%/-40% con intercettazione disabilitata a KO, generatore scudi riparazioni dimezzate in avaria e scudo azzerato a KO. Le parti colpite devono essere esposte e richiedono la firma matematica corretta. I danni vengono applicati all'impatto; gli stati compaiono nella plancia. Regolamento completo: `docs/PUNTO_26_DANNI_LOCALIZZATI.md`. Prossimo blocco: Punto 27; audio e grafica definitiva più avanti.
-
-
-## Punto 27 — Effetti dei colpi (6 novembre 2026)
-Le cinque speciali possono includere **PERFORANTE** (20% scorta aggirata, mai scudo madre/vitale), **IONICO** (−30% intercettazioni automatiche nemiche per 12 s dopo un colpo efficace) e **CORROSIONE** (+25% al prossimo danno allo scudo entro 15 s). Si possono preparare fino a due effetti diversi per una scarica; vengono consumati dalla mano speciale, che torna subito a cinque. I calcoli usano ancora sette numeriche, senza nuovi poteri dei semi. Mazzo dimostrativo: 24 carte totali, quattro copie di ciascuno dei sei tipi. **240 test automatici superati** e build/preflight riusciti. I dettagli sono in `docs/PUNTO_27_EFFETTI_STRATEGICI_COLPI.md`. Prossimo: Punto 28; audio-visivo finale rinviato.
-
-
-## Punto 28 — Due/tre numeriche e firme dei vitali
-Il giocatore può selezionare **due o tre carte numeriche** dalla mano di sette. Con tre carte si ripete la stessa operazione due volte, da sinistra a destra, scegliendo un ordine valido e senza risultati intermedi frazionari o non positivi. La firma di ciascun vitale è assegnata **all'avvio della battaglia** e compare accanto alla parte da colpire. L'operazione richiesta dipende dal modello. Alcuni vitali ammettono **COPPIA** o **TRIS** come alternativa al calcolo, mai come obbligo; sono sperimentali. L'IA può cercare soluzioni a tre carte. I requisiti Poker a quattro/cinque carte e le firme definitive per boss restano da progettare. **257 test superati**, compilazione e preflight riusciti. Il riferimento è `docs/PUNTO_28_CALCOLI_FIRME_VITALI.md`. Punto successivo: 29, bilanciamento e ritmo; audio-visivo finale rinviato.
-
-
-## Punto 29 — Riciclo, IA e ricambio numerico
-Nel duello madre/scudiere gli scarti vengono riciclati quando il mazzo numerico si esaurisce: le numeriche restano **52, tutte uniche**, e la mano continua ad avere sette carte. Quando non puoi eseguire alcun colpo valido, apri **MANOVRE → RICAMBIO NUMERICO**: verrà cambiata una carta numerica con ricarica di **15 secondi** (tempo provvisorio). Se hai già un attacco valido, la funzione non consuma nulla e te lo segnala. L'IA controlla le firme math/Poker effettive dei vitali prima di sparare e può utilizzare lo stesso recupero. Il sistema registra durata, attacchi a 2/3 carte, ricicli e recuperi al termine della partita. **272 test logici superati**, build e preflight riusciti; il bilanciamento reale resta da misurare. Riferimento: `docs/PUNTO_29_RITMO_BILANCIAMENTO.md`. Prossimo: Punto 30, ampliamento del mazzo speciale.
-
-
-## Punto 30 — Collezione e costruzione mazzo speciale
-Dal menu **Hangar** o dalla configurazione della flotta apri **MAZZO CARTE SPECIALI**. Il mazzo deve contenere **24 speciali** equipaggiate, selezionate in base alle copie realmente possedute, con un massimo provvisorio di **6 copie per tipo**. Usa i pulsanti +/− e premi **SALVA MAZZO**. Nella prossima battaglia userai la composizione salvata (mano iniziale **5 speciali**, distinta dalle **7 numeriche**). Per il primo successo di ogni settore Campagna/Avventura ottieni un credito pacchetto; nell'Hangar premi **APRI PACCHETTO · 3 CARTE**. Il pacchetto può fornire **Riparazione Scudo** o **Pulizia Sistemi**, le due nuove speciali sbloccabili. Le combo offensive a due carte hanno nomi propri, ma solo gli effetti già implementati. Lo Shop a pagamento, le rarità e i parametri economici definitivi non sono stati introdotti. **295 test automatici superati**, compilazione e preflight riusciti. Documento completo: `docs/PUNTO_30_MAZZO_CARTE_SPECIALI.md`. Prima delle fasi successive, seguire esattamente la scaletta originale e non inventare la numerazione del punto 31.
+**Specifiche correnti:** [Roadmap del duello simultaneo](docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md) · [Trasferimento e checklist visiva](docs/WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md). Le vecchie istruzioni dei punti 22–30 restano disponibili nella cartella `docs/` come documentazione storica e non vanno usate per avviare il regolamento simultaneo.
