@@ -45,7 +45,7 @@ export function officialBattleResult(battle,mode,sectorNumber){
  const health=max?current/max:0;
  const winner=battle.winner==='A'?'player':battle.winner==='B'?'enemy':'draw';
  return {
-  winner,eligibleForRewards:winner==='player'&&mode!=='pvp',
+  winner,eligibleForRewards:winner==='player'&&['adventure','campaign'].includes(mode),
   meta:{
    turnsElapsed:battle.round,
    remainingHpPct:health,
