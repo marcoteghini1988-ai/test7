@@ -28,6 +28,7 @@ test('I 12 boss storici hanno identita e mazzi 24/5/6 distinti e compatibili L1,
   for(const level of [1,3,5])for(const enemyLevel of [1,3,5]){
    const deck=buildTacticalBossDeck(id,level,enemyLevel);
    assert.ok(validateTacticalLoadout(deck),id+' L'+level);
+   assert.ok(deck.filter(type=>type==='tactic-scan').length>=4,id+' deve poter scoprire le firme');
    if(level<3)assert.ok(deck.every(t=>!['fusion-barrier','fusion-strike','fusion-twin','fusion-triad','tactical-cover','support-escort-repair'].includes(t)),id);
    if(level<5)assert.ok(deck.every(t=>!['fusion-twin','fusion-triad'].includes(t)),id);
    if(enemyLevel<3)assert.ok(deck.every(t=>!['tactic-suppress','shot-piercing'].includes(t)),id);
@@ -60,4 +61,21 @@ test('Le tipologie non compatibili o con copie eccessive vengono respinte',()=>{
  assert.equal(validateTacticalLoadout(['fusion-barrier']),false);
  assert.throws(()=>buildTacticalBossDeck(99,5,5));
  assert.throws(()=>createTacticalDuel({specialDeckA:invalid}));
+});
+
+test('Ogni boss prepara una scansione reale prima di usare firme ancora nascoste',()=>{
+ const deck=buildTacticalBossDeck(2,5,3);
+ const b=createTacticalDuel({specialDeckB:deck,bossPlanetB:2,shipB:'L03',levelB:5});
+ const p=b.sides.B.special;
+ let at=p.hand.findIndex(c=>c.type==='tactic-scan');
+ if(at<0){
+  const deckIndex=p.deck.findIndex(c=>c.type==='tactic-scan');
+  assert.ok(deckIndex>=0);
+  [p.hand[0],p.deck[deckIndex]]=[p.deck[deckIndex],p.hand[0]];
+  at=0;
+ }
+ const action=planTacticalDemoAi(b,'B');
+ assert.ok(action.specialIndices.includes(at));
+ assert.equal(action.numericIndices.length,0,'non legge combinazioni di vitali segreti');
+ assert.equal(sealTacticalOrder(b,'B',action,1).ok,true);
 });
