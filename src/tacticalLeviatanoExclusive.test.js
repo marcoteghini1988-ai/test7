@@ -39,7 +39,7 @@ test('Il Leviatano e il sesto potere ESCLUSIVO, distinto dal mazzo boss collezio
  assert.equal(exclusiveBossReady(8),true);
  assert.equal(createExclusiveBossState(8)?.id,8);
  assert.equal(createExclusiveBossState(9)?.id,9);
- assert.equal(createExclusiveBossState(11),null);
+ assert.equal(createExclusiveBossState(11)?.id,11);
  assert.equal(exclusiveLeviatanoNativeBonus({bossExclusive:null},40,{hp:20,max:60}).active,false);
  assert.equal(exclusiveLeviatanoNativeBonus({bossExclusive:{id:8}},40,null).active,false);
  for(const shield of [{hp:-1,max:60},{hp:61,max:60},{hp:20,max:0}]){
