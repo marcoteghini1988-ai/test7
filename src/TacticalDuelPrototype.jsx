@@ -11,7 +11,7 @@ import {projectedCombatSides,tacticalPlaybackElapsed} from './tacticalCombatTime
 import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import './TacticalDuelPrototype.css';
 
-const BLANK=()=>({specialIndices:[],numericIndices:[],vitalId:null,op:'plus',
+const BLANK=()=>({specialIndices:[],numericIndices:[],weaponFocusId:null,vitalId:null,op:'plus',
  counterVitalId:'shieldGenerator',exchangeIndices:[]});
 const OPS=[['plus','+'],['minus','−'],['times','×'],['divide','÷'],['pair','COPPIA'],['trips','TRIS']];
 const format=sig=>{
@@ -77,7 +77,8 @@ const explainError={
  purge_unavailable:'Pulizia Sistemi richiede uno stato negativo attivo.',
  counter_target:'La contromisura richiede un vitale da proteggere.',
  repair_unavailable:'Riparazione non possibile: barriera piena o generatore KO.',
- recycle_requires_card:'Serve la carta Ricambio Numerico.',card_double_spend:'Non puoi usare la stessa numerica due volte.'
+ recycle_requires_card:'Serve la carta Ricambio Numerico.',card_double_spend:'Non puoi usare la stessa numerica due volte.',
+ weapon_focus_invalid:'Scegli un’arma realmente equipaggiata sulla navicella.'
 };
 export default function TacticalDuelPrototype(){
  const [battle,setBattle]=useState(()=>createTacticalDuel({nowMs:Date.now()}));
@@ -194,6 +195,16 @@ export default function TacticalDuelPrototype(){
    <Vessel side={visibleA} title="LA TUA NAVE" facing="player" hullRef={hullA}/>
    <TacticalCombatPlayback battle={battle} nowMs={now} hulls={{A:hullA,B:hullB}}/>
   </div>
+  <section className="tdp-section">
+   <h2>Armi integrate · priorità tecnologica</h2>
+   <label className="tdp-focus">Privilegia una delle tue armi nel prossimo scontro
+    <select value={draft.weaponFocusId??a.weapons[0]?.id??''} disabled={locked}
+     onChange={e=>setDraft(d=>({...d,weaponFocusId:e.target.value}))}>
+     {a.weapons.map(w=><option key={w.id} value={w.id}>{w.name} · {dominantTacticalTechnology([w])}</option>)}
+    </select>
+   </label>
+   <p className="tdp-help">Tutte le armi sparano sulla barriera. L’arma scelta determina il comportamento tecnologico: nessuna munizione speciale uguale per tutte.</p>
+  </section>
   <section className="tdp-section">
    <h2>Seleziona il sistema vitale nemico</h2>
    <CurrentVitals side={visibleB} viewer={a} selected={draft.vitalId}
