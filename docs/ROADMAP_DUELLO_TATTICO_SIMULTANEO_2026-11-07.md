@@ -83,3 +83,13 @@
 - [ ] **Prossimo sviluppo dopo la raccolta requisiti**: 12 identità/passive boss nel duello simultaneo, preservando le 23 passive dei mazzi numerici e senza confondere l'abilità del boss di campagna con la carta Personaggio Boss sbloccabile.
 
 **Documento di consegna per Work:** [WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md](./WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md). È una bozza che va completata man mano che le regole e i PNG sono approvati.
+
+
+## 7 novembre 2026 — Sei OGGETTI EPICI trasformati in speciali (sandbox)
+- [x] Ricostruiti gli sblocchi delle **12 reliquie** e delle **6 fusioni** mantenendo gli ID originali e le coppie boss: fonte `src/newCombat/phase16ACatalog.js`, effetti storici `src/newCombat/phase16CEpics.js`.
+- [x] `src/tacticalEpicCards.js`: sei carte collezionabili temporanee (Calice, Pendolo, Monolite, Matrice, Möbius, Astrolabio), proprietà del proprietario da `fused`/inventario, niente Epico equipaggiabile se non ottenuto.
+- [x] `src/tacticalEpicRuntime.js`: effetti reali durante 1–2 cicli, con un Epico attivo alla volta, massimo uno per tipo e due nel mazzo. Il Calice **non accredita Polvere Stellare reale**, ma registra solo una previsione nella sandbox. Möbius/Astrolabio rivelano le pescate dopo l'uso e permettono di scegliere nel ciclo successivo.
+- [x] `src/TacticalDuelPrototype.jsx`: anteprima esplicita di uno dei sei Epici, in apertura della mano solo per test, senza sblocco account, senza modificare il mazzo ufficiale. Test in `src/tacticalEpicCards.test.js` con GitHub Actions verdi.
+- [ ] **Resta da completare nella modalità ufficiale**: migratore di `phase16CEpics.js` (vecchi passivi) e `specialDeckBuilder.js`, rispetto dei limiti pilota L20/L60, salvataggi/ricompense; nessun bonus doppio passivo+speciale.
+- [ ] **Scelte confermate ma non implementate**: carte Personaggio (anche i 12 boss ottenibili) nel mazzo speciale con durate limitate; carte Terreno PvP che cambiano scena e regole, **vietate contro il boss** il cui ambiente è immutabile; filtro in pesca per evitarne mani morte.
+- [x] Specifica completa: [MAZZO_UNIFICATO_EPICI_PERSONAGGI_TERRENI_2026-11-07.md](./MAZZO_UNIFICATO_EPICI_PERSONAGGI_TERRENI_2026-11-07.md).
