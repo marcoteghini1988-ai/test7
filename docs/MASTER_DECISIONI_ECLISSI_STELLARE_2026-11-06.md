@@ -213,3 +213,11 @@ La precedente numerazione locale dei punti 44–47 NON è la chiusura della mast
 - Specifica e checklist: [ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md](./ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md).
 - Prima implementazione reale separata in `src/simultaneousDuelEngine.js`, `src/tacticalDuelDemoAi.js`, `src/TacticalDuelPrototype.jsx` e relativi test e CSS. Accesso anteprima soltanto via `?tacticalPreview=1`. Non attribuisce ricompense; l'App ufficiale resta disponibile senza parametro.
 - Ancora mancanti: firme definitive per 17 modelli, armamenti/animazioni fedeli nel tempo, tutte le speciali, IA boss, integrazione alle modalità, vero PvP online e collaudo telefono.
+
+
+## 7 novembre 2026 — Decisioni nuove per mazzo speciale: Personaggi, Terreni, Oggetti Epici
+- **Personaggi** inclusi nel mazzo speciale, con abilità temporanee e massimo uno attivo; anche i personaggi-boss sbloccati dopo la vittoria diventano carte giocabili, non bonus permanenti.
+- **Terreni** come carte speciali attivabili nel PvP, con ambiente di sfondo diverso e bonus/malus temporanei. **Boss campagna**: il boss porta sempre il suo terreno esclusivo, che non si può sostituire; carte Terreno del giocatore non giocabili durante il boss anche se nel mazzo.
+- **Reliquie**: 12 reliquie ottenute dai 12 boss, fuse in sei Oggetti Epici usando le coppie storiche. Gli Oggetti Epici passano da passivi legacy a speciali temporanee senza cambiare gli ID delle ricompense o cancellare sblocchi.
+- **Codice sperimentale disponibile**: `src/tacticalEpicCards.js`, `src/tacticalEpicRuntime.js`, `src/tacticalEpicCards.test.js`, schermata `?tacticalPreview=1`. La migrazione ufficiale di salvataggi/bonus non è ancora attiva.
+- Regole dettagliate e limiti d'integrazione: [MAZZO_UNIFICATO_EPICI_PERSONAGGI_TERRENI_2026-11-07.md](./MAZZO_UNIFICATO_EPICI_PERSONAGGI_TERRENI_2026-11-07.md).
