@@ -15,22 +15,27 @@ function relativeBox(svg,root){
 }
 
 // Only replays authoritative events. Does not change combat logic or spend cards.
-export default function TacticalCombatPlayback({battle,nowMs,hulls}){
+export default function TacticalCombatPlayback({battle,nowMs,hulls,escorts=null}){
  const root=useRef(null),[boxes,setBoxes]=useState(null);
  useLayoutEffect(()=>{
   if(battle.phase!=='resolving')return;
   const measure=()=>{
    const a=relativeBox(hulls?.A?.current,root.current);
    const b=relativeBox(hulls?.B?.current,root.current);
-   if(a&&b)setBoxes({A:a,B:b});
+   if(a&&b)setBoxes({A:a,B:b,
+    escorts:{A:(escorts?.A?.current||[]).map(node=>relativeBox(node,root.current)),
+     B:(escorts?.B?.current||[]).map(node=>relativeBox(node,root.current))}});
+
   };
   measure();
   const obs=typeof ResizeObserver!=='undefined'?new ResizeObserver(measure):null;
   if(obs&&hulls?.A?.current)obs.observe(hulls.A.current);
   if(obs&&hulls?.B?.current)obs.observe(hulls.B.current);
+  for(const side of ['A','B'])for(const node of escorts?.[side]?.current||[])
+   if(obs&&node)obs.observe(node);
   window.addEventListener('resize',measure);
   return ()=>{obs?.disconnect();window.removeEventListener('resize',measure);};
- },[battle.phase,battle.round,battle.sides.A.shipId,battle.sides.B.shipId,hulls?.A,hulls?.B]);
+ },[battle.phase,battle.round,battle.sides.A.shipId,battle.sides.B.shipId,hulls?.A,hulls?.B,escorts?.A,escorts?.B]);
  if(battle.phase!=='resolving')return null;
  const frame=currentTacticalPlayback(battle,nowMs);
  const ships={A:battle.sides.A.shipId,B:battle.sides.B.shipId};
@@ -42,7 +47,10 @@ export default function TacticalCombatPlayback({battle,nowMs,hulls}){
    const fx=weaponEffect(shot.weaponId);
    const p=Math.max(0,Math.min(1,(frame.elapsedMs-shot.atMs)/shot.durationMs));
    const byA=shot.by==='A';
-   const trajectory=tacticalWeaponTrajectory(shot,ships,boxes);
+   const trajectory=tacticalWeaponTrajectory(shot,ships,boxes,boxes?.escorts);
+   // A lateral escort shot must originate from its actual visible sprite.
+   // Never pretend it was fired by the mother or from a guessed coordinate.
+   if(shot.type==='escort_gun'&&!trajectory)return null;
    const start=trajectory?.start??{x:30,y:byA?78:22};
    const end=trajectory?.end??{x:34,y:byA?23:77};
    const bend=(shot.profile.includes('arc')||shot.profile.includes('ion'))?9:
@@ -54,6 +62,8 @@ export default function TacticalCombatPlayback({battle,nowMs,hulls}){
     className={'tdp-shot tdp-shot--'+shot.profile.replace(/[^a-zA-Z0-9-]/g,'')}
     data-weapon={shot.weaponId} title={shot.weaponName}
     data-mounted={trajectory?.mounted?'yes':'pending'}
+    data-fleet-origin={shot.type==='escort_gun'?'escort':'mother'}
+    data-escort-slot={shot.escortSlot??'none'}
     style={{
      left:(start.x+coords.x)+'%',top:(start.y+coords.y)+'%',
      '--shot-color':shot.color,'--shot-width':width+'px','--shot-height':height+'px',
@@ -68,7 +78,7 @@ export default function TacticalCombatPlayback({battle,nowMs,hulls}){
    return <div key={event.id}
     className={'tdp-playback-notice '+pos+(event.type==='special'?' tdp-notice--special':'')+(blocked?' tdp-notice--blocked':'')}>
     <strong>{event.label}</strong>
-    {event.type==='barrier'&&event.intercepted>0&&<small>Scudiera: {event.intercepted} assorbiti</small>}
+    {(event.type==='barrier'||event.type==='escort_barrier')&&event.intercepted>0&&<small>Scudiera: {event.intercepted} assorbiti</small>}
     {event.type==='barrier'&&event.pilotBonus>0&&<small>Pilota: +{event.pilotBonus} HP al fuoco</small>}
     {precision&&event.absorbed>0&&<small>Fusione: {event.absorbed} assorbiti</small>}
    </div>;
