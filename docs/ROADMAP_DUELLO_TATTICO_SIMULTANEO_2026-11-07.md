@@ -150,3 +150,15 @@
 - **Recupero tramite GitHub**: `backup-prima-combattimento-realtime-2026-11-05` conserva un backup del progetto precedente alle variazioni in tempo reale, e `backup-prima-scudiere-collegate-2026-11-05` conserva la fase precedente alle scudiere collegate. Conservare questi riferimenti senza sostituire indiscriminatamente `main`.
 
 **Regola:** aggiornamenti futuri = estendere la plancia originale, NON inventare una plancia nuova. Non confondere screenshot artistico, render generato e stato reale del browser.
+
+## Consolidamento della plancia ufficiale — 7 novembre 2026
+
+**Vincolo definitivo:** ogni modifica di gioco deve intervenire su `test7/main` e sulla schermata `src/MathDuelBattle.jsx`; non aggiungere un'altra schermata o route `?preview` / `?tacticalPreview`. Conservare e riutilizzare `public/assets/mathduel/arena_titanio_9x16.webp`, le immagini in entrambe le prospettive di `public/assets/mathfleet/views/`, i montaggi `MountedWeapons` e le scudiere `public/assets/escorts/`.
+
+**Eseguito e confermato tramite GitHub Actions:**
+- La sola app avviata è `App.tsx`, e la campagna usa ancora il componente ufficiale `MathDuelBattle`.
+- Sulla stessa plancia sono presenti due mazzi visibili, 5 carte speciali reali con dettagli accessibili sul telefono, 7 carte numeriche e il bersaglio di calcolo separato.
+- È stata eliminata la schermata separata `TacticalDuelPrototype.jsx/.css`, la route ad essa collegata e la scelta della flotta di prova; rimangono soltanto i moduli logici che contengono meccaniche da migrare.
+- `npm run preflight` ora esegue `scripts/check-official-3d.mjs`: controlla un solo ingresso, grafica originale, 17 navi, 42 armi, 34 viste, 34 scudiere e due mani indipendenti. CI verde dopo le modifiche.
+
+**NON ancora completato:** l'attuale campagna utilizza `mathDuelEngine.js` con combattimento continuo; `simultaneousDuelEngine.js` implementa già 30 s di preparazione e 8 s di risoluzione, ma deve essere integrato in modo coerente con gli attuali salvataggi, i 12 mazzi boss, i personaggi, le abilità e le ricompense senza simulare ordini che non producono effetti reali. Non dichiarare finita tale conversione senza test end-to-end. Mancano anche una verifica visiva reale della disposizione su Android/StackBlitz e il confronto materiale con lo ZIP storico non presente nel runtime di questo intervento.
