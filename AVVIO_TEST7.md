@@ -56,6 +56,19 @@ GitHub Actions esegue test logici, compilazione e preflight su `main`. `scripts/
 
 La rappresentazione è una composizione 3D prospettica realizzata con asset raster e SVG: non è ancora una scena con mesh tridimensionali e telecamera libera. L'allineamento mobile di navi, carte e colpi deve ancora essere verificato su dispositivo reale.
 
+## Ripristino dei quattro vitali fisici — 7 novembre 2026
+
+La versione standard simultanea **non disegna più quattro caselle nel centro della plancia**. Usa gli stessi componenti grafici che esistevano nella versione di recupero:
+
+- `src/BossBattle3D.jsx` espone `ShipSkin` e `Engine`: maschera della scocca raster originale, scolorimento localizzato, fratture, fumo persistente sul componente KO e animazione d'impatto. Le battaglie compatibili mantengono esattamente lo stesso comportamento grafico di prima.
+- `src/ShipPhysicalVitals.jsx` è ora un semplice adattatore a questi due componenti, **non** un renderer alternativo. I veri HP del duello determinano quale pezzo è integro, danneggiato, critico o KO; i bersagli si selezionano direttamente sui loro punti fisici.
+- `src/officialVitalMotorAdapter.js` usa **solo le quattro coordinate storiche** di `mathFleetGeometry.js` per ogni modello: Motore → `plus`, Armi → `minus`, Generatore → `times`, Centralina → `divide`. Non introduce coordinate disegnate a mano, copie di navi o HP fittizi.
+- La plancia Titanio, le navicelle e le rispettive dimensioni, le mani 7+5, i mazzi e il pannello di preparazione non sono stati riposizionati. L'area del vecchio pannello dei vitali è stata liberata, lasciando solo il timer del ciclo.
+- `src/officialVitalMotorAdapter.test.js` confronta le quattro posizioni originarie su **17 navi × 2 viste**, oltre alla proiezione degli HP senza mutare i dati originali. `.github/workflows/capture-official-battle.yml` controlla nel browser quattro bersagli, allineamento pixel allo sprite e selezione del Motore.
+- **Screenshot reali del browser:** `docs/screenshots/plancia-attuale-battaglia.jpg` (app avviata). `docs/screenshots/plancia-vitali-danneggiati.jpg` è invece un **test grafico a HP imposti temporaneamente nel browser**, non l'esito di una partita reale: dimostra la resa del motore KO, di Armi critico, di Generatore danneggiato e di Centralina integra. Il test temporaneo non viene aggiunto al codice del gioco.
+
+**Rimane aperta una sola verifica distinta:** il collaudo diretto degli effetti animati durante una partita completa su dispositivo fisico, in particolare fumo in movimento, scie e fluidità Android. Il test grafico e la build non devono essere descritti come quel collaudo.
+
 ## Lavoro residuo
 
 Convertire le altre **14 passive dei boss**, i piloti non comuni, gli effetti a durata delle arene ioniche e le nuove **carte Personaggio e Terreno**; realizzare e collaudare le animazioni complete di armi, fusioni e scontri in formato 9:16. Non eliminare `BossBattle3D.jsx` prima della copertura funzionale e dei relativi test.
