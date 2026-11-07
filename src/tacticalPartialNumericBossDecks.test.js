@@ -24,17 +24,14 @@ function turn(b,a=EMPTY,at=100){
 }
 const gun=b=>b.history.at(-1).impacts.find(i=>i.kind==='barrier'&&i.by==='A');
 
-test('Generatore completo: equipaggiabile solo se posseduto. Risonanza resta bloccata',()=>{
- assert.equal(tacticalBossDeckReady('planet_char_14'),true);
- assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
-  selectedBossDeck:'planet_char_14',
-  bossDeckInventory:{planet_char_14:{unlocked:true,level:6}}}).enabled,true);
- assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
-  selectedBossDeck:'planet_char_14',bossDeckInventory:{}}).enabled,false);
- assert.equal(tacticalBossDeckReady('planet_char_17'),false);
- assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
-  selectedBossDeck:'planet_char_17',
-  bossDeckInventory:{planet_char_17:{unlocked:true,level:9}}}).enabled,false);
+test('Generatore e Risonanza completi: equipaggiabili solo con inventario posseduto',()=>{
+ for(const [id,level] of [['planet_char_14',6],['planet_char_17',9]]){
+  assert.equal(tacticalBossDeckReady(id),true);
+  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
+   selectedBossDeck:id,bossDeckInventory:{[id]:{unlocked:true,level}}}).enabled,true);
+  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
+   selectedBossDeck:id,bossDeckInventory:{}}).enabled,false);
+ }
 });
 
 test('Generatore: Accumulo energetico +10/20/30% solo su Sincronia effettivamente guadagnata',()=>{
