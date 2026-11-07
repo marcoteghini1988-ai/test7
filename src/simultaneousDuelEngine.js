@@ -100,7 +100,7 @@ export function validateTacticalOrder(battle,key,order){
  const types=si.map(i=>side.special.hand[i].type);
  if(new Set(types).size!==types.length)return {ok:false,reason:'duplicate_special'};
  if(ni.length!==0&&![2,3].includes(ni.length))return {ok:false,reason:'numeric_count'};
- if(ni.length>0&&(!VITAL_IDS.includes(order.vitalId)||!['plus','minus','times','divide','pair'].includes(order.op)))return {ok:false,reason:'invalid_precision'};
+ if(ni.length>0&&(!VITAL_IDS.includes(order.vitalId)||!['plus','minus','times','divide','pair','trips'].includes(order.op)))return {ok:false,reason:'invalid_precision'};
  if(!types.includes('tactic-numeric-recycle')&&ei.length)return {ok:false,reason:'recycle_requires_card'};
  if(ni.some(i=>ei.includes(i)))return {ok:false,reason:'card_double_spend'};
  if(types.includes('fusion-barrier')&&(!side.escorts.some(e=>e.hp>0)||side.sync<100||side.defense.parts.command.hp<=0||side.defense.parts.engine.hp<=0))
