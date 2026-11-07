@@ -141,8 +141,9 @@ export function rememberTacticalIdraHit(side,damage,bonus,{vitalId=null}={}){
  const state=side?.bossNumericDeck;
  if(state?.id!=='planet_char_11'||!(damage>0))return side;
  const key=vitalId?'idraVitalRemainder':'idraBarrierRemainder';
- side.bossNumericDeck={...state,
-  [key]:bonus?.active?bonus.remainder:0,
-  lastVital:vitalId||state.lastVital};
+ // La raffica nativa continua anche senza una divisione valida; in quel
+ // caso non consuma il resto accumulato da un precedente bonus di Idra.
+ const update=bonus?.active?{[key]:bonus.remainder}:{};
+ side.bossNumericDeck={...state,...update,lastVital:vitalId||state.lastVital};
  return side;
 }
