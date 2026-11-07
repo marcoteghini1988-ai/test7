@@ -5,7 +5,8 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
-import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit} from './tacticalBossDecks.js';
+import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit,
+ tacticalBossVitalBonus,rememberTacticalBossVitalHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
@@ -389,6 +390,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  // Bonus Plasma esclusivamente su tre numeriche e firma autentica valida.
  if(cards.length===3&&modifiers?.tripleAttackFactor)
   damage=Math.max(1,Math.round(damage*modifiers.tripleAttackFactor));
+ // Pressione marziana: bonus solo con un precedente colpo efficace allo stesso
+ // vitale. La protezione della nave avversaria puo ancora assorbirlo.
+ const tharsis=tacticalBossVitalBonus(atk,target,damage);
+ damage+=tharsis.extra;
  const defenseStatus=status[other(key)];
  if(def.defense.parts.command.hp>0){
   const protector=def.escorts.find(e=>e.hp>0);
@@ -415,6 +420,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const hit=hitMotherPart(defense,target,damage,cards);
  def.defense=hit.defense;
  rememberTacticalBossMotherHit(def,hit.damage);
+ rememberTacticalBossVitalHit(atk,target,hit.damage,tharsis);
+ if(tharsis.active&&hit.damage>0)
+  log.push(key+': Pressione marziana '+tharsis.percentage+'%, bonus '+
+   tharsis.extra+' HP (resto '+tharsis.remainder+'/100)');
  if(hit.damage>0&&bossDefenseFactor<1)
   log.push(other(key)+': Primo anello · primo colpo vitale ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'precision',by:key,target,damage:hit.damage||0,absorbed,reason:hit.reason,destroyed:!!hit.destroyed});
