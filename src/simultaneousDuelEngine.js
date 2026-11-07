@@ -4,6 +4,7 @@
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
+import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {
   VITAL_IDS,createMotherDefense,damageMotherShield,restoreMotherShield,exposeMotherPart,
   hitMotherPart,remainingExposureSlots,motherDestroyed
@@ -29,7 +30,8 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'tactical-cover':{name:'Copertura Tattica',kind:'defense',help:'Scudiera viva: fino al 75% di un impatto assorbito dal suo scudo reale'},
  'shot-corrosion':{name:'Corrosione',kind:'control',help:'Se la barriera subisce un colpo, il successivo colpo nativo infligge +25% alla barriera'},
  'support-status-purge':{name:'Pulizia Sistemi',kind:'support',help:'Rimuove Ionico e Corrosione dalla propria madre, non ripara HP'},
- 'support-escort-repair':{name:'Riparazione Scudiera',kind:'support',help:'Ripara fino a 15 HP su una scudiera operativa, senza rianimarla'}
+ 'support-escort-repair':{name:'Riparazione Scudiera',kind:'support',help:'Ripara fino a 15 HP su una scudiera operativa, senza rianimarla'},
+ ...Object.fromEntries(Object.values(TACTICAL_EPIC_CARDS).map(epic=>[epic.id,{name:epic.name,kind:'epic',help:epic.help}]))
 });
 // The twelve-card-family prototype starter is preserved for old tests and
 // existing snapshots; new loadout presets are opt-in and still use 24 cards.
@@ -43,11 +45,15 @@ export const TACTICAL_SPECIAL_DECK_SIZE=24;
 export const TACTICAL_SPECIAL_COPY_LIMIT=6;
 export function validateTacticalLoadout(types){
  if(!Array.isArray(types)||types.length!==TACTICAL_SPECIAL_DECK_SIZE)return false;
- const counts={};
+ const counts={};let epics=0;
  for(const type of types){
   if(!Object.hasOwn(TACTICAL_SPECIALS,type))return false;
   counts[type]=(counts[type]||0)+1;
   if(counts[type]>TACTICAL_SPECIAL_COPY_LIMIT)return false;
+  if(isTacticalEpic(type)){
+   epics++;
+   if(counts[type]>1||epics>2)return false;
+  }
  }
  return true;
 }
@@ -100,21 +106,29 @@ function nativeWeapons(shipId,level){
  }));
 }
 export function nativeBarrierPacket(side){return tacticalBarrierPower(side).amount;}
-function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null){
+function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[]){
  const ship=SHIPS.find(x=>x.id===shipId);
  if(!ship||!Number.isInteger(level)||level<1||level>5)throw new Error('Navicella o livello non valido');
+ if(!Array.isArray(epicEntitlements)||epicEntitlements.some(id=>!isTacticalEpic(id)))
+  throw new Error('Inventario Epico non valido');
+ if((specialDeck||[]).some(type=>isTacticalEpic(type)&&!epicEntitlements.includes(type)))
+  throw new Error('Oggetto Epico non ancora ottenuto dalla fusione delle reliquie');
  const defense=createMotherDefense({shipId,shieldMax:60,partHp:10,signatures:tacticalShipSignatures(shipId)});
  const escortCount=level>=5?2:level>=3?1:0;
  return {key,shipId,name:ship.nome,level,weapons:nativeWeapons(shipId,level),defense,
   escorts:Array.from({length:escortCount},(_,i)=>({id:key+'-escort-'+i,hp:20,max:20})),
-  sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,seen:[],numeric:numericPile(key,seed+3),special:specialPile(key,seed+13,specialDeck)};
+  sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,seen:[],
+  epic:{active:null,used:[],entitlements:[...epicEntitlements],peek:[],exchangeCredits:0,
+   exchangeUntilRound:0,dustPreview:0},
+  numeric:numericPile(key,seed+3),special:specialPile(key,seed+13,specialDeck)};
 }
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,
- specialDeckA=null,specialDeckB=null,bossPlanetB=null}={}){
+ specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[]}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
  return {schemaVersion:1,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
-  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA),B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB)},
+  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA),
+   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB)},
   history:[],lastEvents:[]};
 }
 function uniqueIndices(value,max,limit){
