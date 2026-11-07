@@ -165,16 +165,17 @@ export default function OfficialBattle3D({
   setMessage('Ordini confermati. La flotta attende la risoluzione simultanea.');
  }
  async function leave(){
-  if(busy)return;
+  if(busy||(battle?.phase==='finished'&&resultClaimed.current))return;
   if(battle?.phase!=='finished'){
    if(window.confirm('Abbandonare il combattimento senza ricompense?'))onExit?.();
    return;
   }
+  resultClaimed.current=true;
   setBusy(true);
   try{
    const outcome=officialBattleResult(battle,gameMode,sectorNumber);
    let specialPackEarned=false,shipRewardEarned=null;
-   if(outcome.eligibleForRewards&&!resultClaimed.current){
+   if(outcome.eligibleForRewards){
     try{specialPackEarned=claimFirstWinSpecialPack(gameMode,sectorNumber).granted;}
     catch{/* Non sovrascrivere collezioni non leggibili. */}
     try{const reward=await claimCampaignShipUnlock(gameMode,sectorNumber);if(reward.granted)shipRewardEarned=reward.shipId;}
@@ -376,7 +377,7 @@ export default function OfficialBattle3D({
      <button className="es-button primary" onClick={()=>setMenu('')}>CHIUDI</button>
     </section></div>}
     {menu==='fleet'&&<OfficialFleetPanel collection={session.shipCollection}
-     onClose={()=>{setMenu('');restart();}} onEquip={equip}/>}
+     onClose={()=>setMenu('')} onEquip={equip}/>}
     {result&&<div className="modal-shade"><div className="result-card" data-outcome={result.winner}>
      <h1>{result.winner==='player'?'VITTORIA':result.winner==='draw'?'PAREGGIO':'SCONFITTA'}</h1>
      <p>{'CICLI '+battle.round+' · INTEGRITÀ '+pct(result.meta.remainingHpPct,1)+'%'}</p>
