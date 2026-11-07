@@ -1,67 +1,87 @@
-// IA dimostrativa locale: usa esclusivamente la propria mano, gli HP visibili
-// dell'avversario e le firme del rulebook prototipale. Mai la mano o gli ordini segreti di A.
-import {VITAL_IDS} from './vitalDefense.js';
+// IA locale di prova per preparazione simultanea.
+// Non legge la mano, gli ordini impegnati o le firme nascoste del giocatore.
+// I dodici boss possiedono piani e priorità derivati dai boss storici.
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 import {nativeBarrierPacket,validateTacticalOrder} from './simultaneousDuelEngine.js';
+import {tacticalBossProfile} from './tacticalSpecialPresets.js';
 
-const PRIORITY=['shieldGenerator','weapons','command','engine'];
-function pickPrecision(ours,enemy){
+const NORMAL_PRIORITY=['shieldGenerator','weapons','command','engine'];
+function findPrecision(ours,enemy,priority){
  const shield=enemy.defense.shield.hp;
  const projected=Math.max(0,shield-nativeBarrierPacket(ours));
  if(projected>45)return {numericIndices:[],vitalId:null,op:null};
- for(const id of PRIORITY){
-  const p=enemy.defense.parts[id];
-  if(p.hp<=0)continue;
-  const sig=p.signature;
+ for(const id of priority){
+  const part=enemy.defense.parts[id];
+  if(!part||part.hp<=0)continue;
+  // Un'IA non può usare una firma protetta/non ancora scansionata.
+  if(!part.exposed&&!ours.seen.includes(id))continue;
+  const sig=part.signature;
   for(let i=0;i<ours.numeric.hand.length;i++)
    for(let j=i+1;j<ours.numeric.hand.length;j++){
-    const cards=[ours.numeric.hand[i],ours.numeric.hand[j]];
-    const op=tacticalSignatureOperation(sig,cards);
+    const op=tacticalSignatureOperation(sig,[ours.numeric.hand[i],ours.numeric.hand[j]]);
     if(op)return {numericIndices:[i,j],vitalId:id,op};
    }
-  // The same real 7-card hand may offer only a three-card formula.
   for(let i=0;i<ours.numeric.hand.length;i++)
    for(let j=i+1;j<ours.numeric.hand.length;j++)
     for(let k=j+1;k<ours.numeric.hand.length;k++){
-     const cards=[ours.numeric.hand[i],ours.numeric.hand[j],ours.numeric.hand[k]];
-     const op=tacticalSignatureOperation(sig,cards);
+     const op=tacticalSignatureOperation(sig,[ours.numeric.hand[i],ours.numeric.hand[j],ours.numeric.hand[k]]);
      if(op)return {numericIndices:[i,j,k],vitalId:id,op};
     }
  }
  return {numericIndices:[],vitalId:null,op:null};
 }
+function playable(type,ours,enemy,shot){
+ const escorts=ours.escorts.filter(e=>e.hp>0).length;
+ const command=ours.defense.parts.command.hp>0,engine=ours.defense.parts.engine.hp>0;
+ switch(type){
+  case 'fusion-twin':case 'fusion-triad':return escorts>=2&&ours.sync>=100&&command&&engine;
+  case 'fusion-barrier':case 'fusion-strike':return escorts>=1&&ours.sync>=100&&command&&engine;
+  case 'tactical-cover':return escorts>=1&&command&&ours.defense.shield.hp<=45;
+  case 'support-escort-repair':return command&&ours.escorts.some(e=>e.hp>0&&e.hp<e.max);
+  case 'support-shield-repair':return ours.defense.parts.shieldGenerator.hp>0&&ours.defense.shield.hp<ours.defense.shield.max;
+  case 'support-status-purge':return !!(ours.ionized||ours.corroded||ours.heated);
+  case 'tactic-counter':return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
+  case 'tactic-scan':return ours.seen.length<4;
+  case 'shot-piercing':case 'tactic-suppress':return enemy.escorts.some(e=>e.hp>0)&&enemy.defense.shield.hp>0;
+  case 'shot-corrosion':case 'shot-ion':return enemy.defense.shield.hp>0;
+  case 'tactic-numeric-recycle':return shot.numericIndices.length===0;
+  case 'tactic-reactive':case 'tactic-impact':return ours.defense.shield.hp>0;
+  default:return true;
+ }
+}
 export function planTacticalDemoAi(battle,key='B'){
  if(battle?.phase!=='planning'||!['A','B'].includes(key))return null;
  const ours=battle.sides[key],enemy=battle.sides[key==='B'?'A':'B'];
- const target=pickPrecision(ours,enemy);
- const ownShield=ours.defense.shield.hp;
- const desired=[];
- if(ours.seen.length<4)desired.push('tactic-scan');
- if(ownShield<=40&&ours.defense.parts.shieldGenerator.hp>0)desired.push('support-shield-repair');
- if(ours.sync>=100&&ours.escorts.some(e=>e.hp>0))desired.push('fusion-barrier');
- if(ownShield<=45)desired.push('tactic-counter','tactic-reactive','tactic-impact');
- if(enemy.escorts.some(e=>e.hp>0))desired.push('tactic-suppress','shot-piercing');
- desired.push('tactic-kinetic','tactic-power-shift','tactic-scan','tactic-impact','shot-ion','tactic-numeric-recycle');
- const indexes=[],seen=new Set();
- for(const type of desired){
-  if(indexes.length>=2)break;
-  if(seen.has(type))continue;
-  const idx=ours.special.hand.findIndex((c,i)=>c.type===type&&!indexes.includes(i));
-  if(idx<0)continue;
-  seen.add(type);indexes.push(idx);
+ const profile=tacticalBossProfile(ours.bossPlanetId);
+ const priority=profile?.targets||NORMAL_PRIORITY;
+ const shot=findPrecision(ours,enemy,priority);
+ const threatened=priority.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)
+   ??priority.find(id=>ours.defense.parts[id].hp>0)??'shieldGenerator';
+ const priorities=profile?.types??[
+  'tactic-scan','support-shield-repair','fusion-barrier','tactic-counter',
+  'tactic-reactive','tactic-impact','tactic-suppress','shot-piercing',
+  'tactic-kinetic','tactic-power-shift','shot-ion','tactic-numeric-recycle'
+ ];
+ // Non usa una speciale solo perché è in mano: deve servire e non contraddire
+ // l'altra già impegnata (massimo una fusione, 24 carte reali).
+ const chosen=[],types=new Set();
+ for(const type of [...priorities,'tactic-scan','tactic-numeric-recycle','tactic-kinetic']){
+  if(chosen.length>=2)break;
+  if(types.has(type)||!playable(type,ours,enemy,shot))continue;
+  const index=ours.special.hand.findIndex((c,i)=>c.type===type&&!chosen.includes(i));
+  if(index<0)continue;
+  if(type.startsWith('fusion-')&&[...types].some(t=>t.startsWith('fusion-')))continue;
+  types.add(type);chosen.push(index);
  }
- // Defence must target OUR exposed/threatened vital, not the enemy vital we're attacking.
- const counterVitalId=PRIORITY.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)
-  ??PRIORITY.find(id=>ours.defense.parts[id].hp>0)??'shieldGenerator';
- const recycleSelected=indexes.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle');
- const exchangeIndices=target.numericIndices.length===0?(recycleSelected?[0,1]:[0]):[];
- let order={specialIndices:indexes,counterVitalId,exchangeIndices,...target};
- while(!validateTacticalOrder(battle,key,order).ok&&order.specialIndices.length){
-  order={...order,specialIndices:order.specialIndices.slice(0,-1)};
-  if(!order.specialIndices.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle'))
-   order.exchangeIndices=order.exchangeIndices.slice(0,1);
+ const exchanges=shot.numericIndices.length?[]:
+  chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?[0,1]:[0];
+ let result={specialIndices:chosen,counterVitalId:threatened,exchangeIndices:exchanges,...shot};
+ while(!validateTacticalOrder(battle,key,result).ok&&result.specialIndices.length){
+  result={...result,specialIndices:result.specialIndices.slice(0,-1)};
+  if(!result.specialIndices.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle'))
+   result.exchangeIndices=result.exchangeIndices.slice(0,1);
  }
- if(!validateTacticalOrder(battle,key,order).ok)
-  order={specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,exchangeIndices:[]};
- return order;
+ if(!validateTacticalOrder(battle,key,result).ok)
+  result={specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,exchangeIndices:[0]};
+ return result;
 }
