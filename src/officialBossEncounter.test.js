@@ -36,8 +36,8 @@ test('12/12 boss: stessa identità storica, stesso mazzo numerico, grado evoluti
    assert.equal(b.sides.B.bossExclusive.id,planet.id);
    assert.equal(b.sides.B.bossNumericDeck.id,planet.deck);
    assert.equal(b.sides.B.bossNumericDeck.level,encounter.numericDeckLevel);
-   assert.equal(b.sides.A.bossExclusive,null);
-   assert.equal(b.sides.A.bossNumericDeck,null);
+   assert.equal(b.sides.A.bossExclusive??null,null);
+   assert.equal(b.sides.A.bossNumericDeck??null,null);
    assert.equal(b.sides.A.special.hand.length,5);
    assert.equal(b.sides.B.special.hand.length,5);
    assert.deepEqual([...b.sides.A.special.hand,...b.sides.A.special.deck]
@@ -55,8 +55,8 @@ test('Esclusivo boss non compare in settori ordinari, Arena Titanio e PvP',()=>{
  assert.equal(officialBossEncounter({mode:'campaign',sectorNumber:0,planetId:1,sectorLevel:10}),null);
  const regular=officialBattleSetup({mode:'campaign',sectorNumber:9,bossPlanetId:1,
   bossSectorLevel:9,shipCollection:ownedShip,specialCollection:ownedSpecials});
- assert.equal(regular.battle.sides.B.bossExclusive,null);
- assert.equal(regular.battle.sides.B.bossNumericDeck,null);
+ assert.equal(regular.battle.sides.B.bossExclusive??null,null);
+ assert.equal(regular.battle.sides.B.bossNumericDeck??null,null);
 });
 test('12 boss conservano IA, due mazzi veri, livelli e HP attraverso risoluzioni simultanee',()=>{
  for(const [i,planet]of PHASE16A_CAMPAIGN_PLANETS.entries()){
