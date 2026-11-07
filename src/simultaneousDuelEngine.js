@@ -24,7 +24,9 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalBossOutgoingBonus,rememberTacticalBossOutgoingHit,
  tacticalIdraBonus,rememberTacticalIdraHit,
  tacticalLeviatanoBonus,rememberTacticalLeviatanoHit,
- rememberTacticalLeviatanoRecycle} from './tacticalBossDecks.js';
+ rememberTacticalLeviatanoRecycle,
+ tacticalMagmaNativeBonus,rememberTacticalMagmaBarrierHit,
+ tacticalMagmaVitalBonus,rememberTacticalMagmaVitalHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
@@ -333,6 +335,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const bloodPact=exclusiveBloodPactNativeBonus(atk,base,round);
  const chaos=exclusiveChaosNativeBonus(atk,base);
  const magma=exclusiveMagmaNativeAdjustment(atk,base,round);
+ const magmaDeck=tacticalMagmaNativeBonus(atk,t.types,base);
  const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
@@ -354,8 +357,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const appliedBloodPactExtra=Math.min(cap,bonusWithPact)-Math.min(cap,bonusWithAbyss);
  const bonusWithChaos=bonusWithPact+chaos.extra;
  const appliedChaosExtra=Math.min(cap,bonusWithChaos)-Math.min(cap,bonusWithPact);
- const bonus=bonusWithChaos+magma.extra;
- const appliedMagmaExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithChaos);
+ const bonusWithCycle=bonusWithChaos+magma.extra;
+ const appliedMagmaExtra=Math.min(cap,bonusWithCycle)-Math.min(cap,bonusWithChaos);
+ const bonus=bonusWithCycle+magmaDeck.extra;
+ const appliedMagmaDeckExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithCycle);
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=Math.max(0,base-magma.penalty+Math.min(cap,bonus)+pilot.extra);
@@ -417,6 +422,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  rememberExclusiveBossNativeHit(atk,hit.damage,exclusiveNative);
  rememberExclusiveChronoNativeHit(atk,round,hit.damage,chronoNative);
  rememberExclusiveLeviatanoNativeHit(atk,hit.damage,abyss);
+ rememberTacticalMagmaBarrierHit(atk,hit.damage,magmaDeck);
+ if(magmaDeck.active&&hit.damage>0)
+  log.push(key+': Nucleo Magmatico (mazzo numerico) · '+magmaDeck.abilities.join(' + ')+
+   ' +'+magmaDeck.percentage+'% ('+appliedMagmaDeckExtra+' HP effettivi)');
  const chaosProgress=rememberExclusiveChaosNativeHit(atk,hit.damage,chaos);
  if(rememberExclusiveIdraBarrierHit(atk,hit.damage,round))
   log.push(key+': Idra Criogenica · Rigenerazione +4 HP programmata per il ciclo successivo');
@@ -506,6 +515,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  damage+=leviatano.extra;
  const voidBonus=exclusiveVoidPrecisionBonus(atk,cards,damage,round);
  damage+=voidBonus.extra;
+ const magmaVital=tacticalMagmaVitalBonus(atk,order,{...def,defense},damage);
+ damage+=magmaVital.extra;
  const defenseStatus=status[other(key)];
  const escortEfficiency=escortInterceptionEfficiency(def.defense);
  if(escortEfficiency>0){
@@ -538,6 +549,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
  rememberTacticalIdraHit(atk,hit.damage,idra,{vitalId:target});
  rememberTacticalLeviatanoHit(atk,hit.damage,leviatano);
+ rememberTacticalMagmaVitalHit(atk,hit.damage,magmaVital);
+ if(magmaVital.active&&hit.damage>0)
+  log.push(key+': Nucleo Magmatico (mazzo numerico) · Forgia moltiplicatrice +'+
+   magmaVital.percentage+'% ('+magmaVital.extra+' HP prima delle difese)');
  if(rememberExclusiveVoidCounter(def,hit.damage,cards,round))
   log.push(other(key)+': Sovrano del Vuoto · seme dominante '+exclusiveVoidDominantSuit(round)+
    ' contrastato da un vero colpo vitale, bonus disattivato nel prossimo ciclo');
