@@ -111,3 +111,29 @@ test('The game winner and barrier impacts are read from the result, never recalc
  assert.equal(frame.outcome,undefined);
  assert.equal(currentTacticalPlayback(b,start+7800).outcome.label,'NUOVO CICLO');
 });
+
+
+test('Lateral escort shots replay ONLY from real barrier-impact events, never charge-only actions',()=>{
+ const b=withShields(createTacticalDuel({shipA:'R04',shipB:'C01',levelA:5,levelB:1}),40);
+ const fired=cycle(b,{escortAmmoIndex:3});
+ const events=tacticalCombatTimeline(fired);
+ const escort=fired.history[0].impacts.find(i=>i.kind==='escort_barrier'&&i.by==='A');
+ assert.ok(escort?.packet>0);
+ const real=events.find(e=>e.type==='escort_gun'&&e.by==='A');
+ assert.ok(real);
+ assert.equal(real.escortSlot,escort.escortSlot);
+ assert.equal(real.weaponId,escort.weaponIds[0]);
+ assert.equal(real.escortWeaponId,escort.escortWeaponId);
+ assert.equal(real.profile,weaponEffect(real.weaponId).profile);
+ assert.ok(real.atMs+real.durationMs<=4500);
+ const stage=currentTacticalPlayback(fired,fired.resolveUntilMs-8000+real.atMs+100);
+ assert.ok(stage.shots.some(e=>e.type==='escort_gun'));
+ assert.ok(!stage.notices.some(e=>e.type==='escort_gun'));
+ const notice=events.find(e=>e.type==='escort_barrier');
+ assert.equal(notice.damage,escort.damage);
+ assert.equal(notice.intercepted,escort.intercepted);
+ const charging=cycle(createTacticalDuel({shipA:'R04',shipB:'C01',levelA:5,levelB:1}),
+  {escortAmmoIndex:4});
+ assert.equal(charging.history[0].impacts.some(i=>i.kind==='escort_barrier'&&i.by==='A'),false);
+ assert.equal(tacticalCombatTimeline(charging).some(e=>e.type==='escort_gun'),false);
+});
