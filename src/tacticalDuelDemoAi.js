@@ -1,6 +1,7 @@
 // IA dimostrativa locale: usa esclusivamente la propria mano, gli HP visibili
 // dell'avversario e le firme del rulebook prototipale. Mai la mano o gli ordini segreti di A.
-import {matchesVitalSignature,VITAL_IDS} from './vitalDefense.js';
+import {VITAL_IDS} from './vitalDefense.js';
+import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 import {nativeBarrierPacket,validateTacticalOrder} from './simultaneousDuelEngine.js';
 
 const PRIORITY=['shieldGenerator','weapons','command','engine'];
@@ -15,16 +16,16 @@ function pickPrecision(ours,enemy){
   for(let i=0;i<ours.numeric.hand.length;i++)
    for(let j=i+1;j<ours.numeric.hand.length;j++){
     const cards=[ours.numeric.hand[i],ours.numeric.hand[j]];
-    if(matchesVitalSignature(sig,cards))
-     return {numericIndices:[i,j],vitalId:id,op:sig.kind==='poker'?'pair':sig.op};
+    const op=tacticalSignatureOperation(sig,cards);
+    if(op)return {numericIndices:[i,j],vitalId:id,op};
    }
   // The same real 7-card hand may offer only a three-card formula.
-  if(sig.kind!=='poker')for(let i=0;i<ours.numeric.hand.length;i++)
+  for(let i=0;i<ours.numeric.hand.length;i++)
    for(let j=i+1;j<ours.numeric.hand.length;j++)
     for(let k=j+1;k<ours.numeric.hand.length;k++){
      const cards=[ours.numeric.hand[i],ours.numeric.hand[j],ours.numeric.hand[k]];
-     if(matchesVitalSignature(sig,cards))
-      return {numericIndices:[i,j,k],vitalId:id,op:sig.op};
+     const op=tacticalSignatureOperation(sig,cards);
+     if(op)return {numericIndices:[i,j,k],vitalId:id,op};
     }
  }
  return {numericIndices:[],vitalId:null,op:null};
@@ -35,6 +36,7 @@ export function planTacticalDemoAi(battle,key='B'){
  const target=pickPrecision(ours,enemy);
  const ownShield=ours.defense.shield.hp;
  const desired=[];
+ if(ours.seen.length<4)desired.push('tactic-scan');
  if(ownShield<=40&&ours.defense.parts.shieldGenerator.hp>0)desired.push('support-shield-repair');
  if(ours.sync>=100&&ours.escorts.some(e=>e.hp>0))desired.push('fusion-barrier');
  if(ownShield<=45)desired.push('tactic-counter','tactic-reactive','tactic-impact');
@@ -48,7 +50,9 @@ export function planTacticalDemoAi(battle,key='B'){
   if(idx<0)continue;
   seen.add(type);indexes.push(idx);
  }
- const counterVitalId=target.vitalId??'shieldGenerator';
+ // Defence must target OUR exposed/threatened vital, not the enemy vital we're attacking.
+ const counterVitalId=PRIORITY.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)
+  ??PRIORITY.find(id=>ours.defense.parts[id].hp>0)??'shieldGenerator';
  let order={specialIndices:indexes,counterVitalId,exchangeIndices:[],...target};
  while(!validateTacticalOrder(battle,key,order).ok&&order.specialIndices.length)
   order={...order,specialIndices:order.specialIndices.slice(0,-1)};
