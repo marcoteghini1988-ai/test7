@@ -160,6 +160,7 @@ test('Cristallo: un solo scarto, barriera a zero o Sincronia piena non concedono
 
 test('Nucleo Magmatico: CARICA, ERUZIONE, RAFFREDDAMENTO in successione pubblica deterministica',()=>{
  let a=duel(19),b=duel(null);
+ assert.ok(a.lastEvents.some(e=>e.includes('fase CARICA per il ciclo 1')));
  let baseline=nativeBarrierPacket(a.sides.B);
  const labels=['carica','eruzione','raffreddamento','carica'];
  for(let round=1;round<=4;round++){
@@ -171,7 +172,10 @@ test('Nucleo Magmatico: CARICA, ERUZIONE, RAFFREDDAMENTO in successione pubblica
   if(round===1||round===4)assert.equal(differential,0);
   if(round===2)assert.equal(differential,Math.min(Math.floor(baseline*.45),Math.ceil(baseline*.10-1e-9)));
   if(round===3)assert.equal(differential,-Math.ceil(baseline*.10-1e-9));
-  if(round<4){a=next(result);b=next(normal);}
+  if(round<4){
+   a=next(result);b=next(normal);
+   assert.ok(a.lastEvents.some(e=>e.includes('fase '+labels[round].toUpperCase()+' per il ciclo '+(round+1))));
+  }
  }
 });
 
