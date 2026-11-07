@@ -11,6 +11,7 @@ const exists=file=>existsSync(resolve(root,file));
 const app=read('src/main.tsx');
 const battleEntry=read('src/MathDuelBattle.jsx');
 const arena=read('src/OfficialBattle3D.jsx');
+const bossArena=read('src/BossBattle3D.jsx');
 const css=read('src/MathDuelBattle.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
@@ -30,6 +31,15 @@ verify(arena.includes('MathDuelBattle.css')&&arena.includes('arena_titanio_9x16.
  'La battaglia ufficiale deve usare il CSS e lo sfondo Titanio 9:16');
 verify(arena.includes('<ShipArtwork')&&arena.includes('<MountedWeapons'),
  'Navi e montaggi delle armi originali non devono essere sostituiti');
+verify(!arena.includes('/ship-shells/')&&!bossArena.includes('/ship-shells/'),
+ 'La plancia non deve piu sovrapporre disegni SVG delle navi ai render raster originali');
+verify(!/<g\\s+opacity=["']\\.30?["']>\\s*<ShipArtwork/.test(arena)&&
+ !/<g\\s+opacity=["']\\.30?["']>\\s*<ShipArtwork/.test(bossArena),
+ 'Le immagini 3D delle navi devono essere visibili a piena opacita');
+verify(arena.includes('<ShipArtwork side={side} vessel={visual}/>')&&
+ bossArena.includes('<ShipArtwork side={side} vessel={vessel} onLoad=')&&
+ bossArena.includes('<ShipArtwork side={side} vessel={vessel}/>'),
+ 'Le battaglie standard e boss devono usare le viste raster anche quando la nave e danneggiata');
 verify(ships.includes('/mathfleet/views/')&&ships.includes('weaponMount('),
  'Le prospettive nave e le bocche di fuoco devono restare collegate agli asset');
 verify(arena.includes('className="deck left deck-number"')&&
@@ -73,4 +83,4 @@ if(errors.length){
  for(const error of errors)console.error(' - '+error);
  process.exit(1);
 }
-console.log('Arena 3D ufficiale OK: una sola app, 17 navi, 42 armi, 34 viste, 34 scudiere, 2 mazzi e mani separate.');
+console.log('Arena 3D ufficiale OK: viste raster non coperte da sagome SVG, sia standard che boss, 17 navi, 42 armi, 34 viste e 34 scudiere.');
