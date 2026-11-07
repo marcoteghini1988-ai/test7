@@ -30,9 +30,11 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit,
  tacticalGeneratorSyncBonus,tacticalResonanceNativeBonus,rememberTacticalResonanceNativeHit,
  tacticalResonanceVitalBonus,rememberTacticalResonanceVitalHit,
- tacticalAfroditeRepairAmount,tacticalAfroditeRecycleCooldownMs} from './tacticalBossDecks.js';
+ tacticalAfroditeRepairAmount,tacticalAfroditeRecycleCooldownMs,
+ tacticalResonanceCooperationBonus,rememberTacticalResonanceCooperationHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
+import {createTacticalEscortArmament,selectTacticalEscortForAmmo,prepareTacticalEscortVolley} from './tacticalEscortVolley.js';
 import {tacticalCombatClock,tacticalStatusActive,applyTacticalTimedStatus,clearTacticalTimedStatuses} from './tacticalTimedStatus.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
@@ -159,8 +161,12 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
   throw new Error('Oggetto Epico non ancora ottenuto dalla fusione delle reliquie');
  const defense=createMotherDefense({shipId,shieldMax:60,partHp:10,signatures:tacticalShipSignatures(shipId)});
  const escortCount=level>=5?2:level>=3?1:0;
- return equipTacticalBossDeck({key,shipId,name:ship.nome,level,weapons:nativeWeapons(shipId,level),defense,
-  escorts:Array.from({length:escortCount},(_,i)=>({id:key+'-escort-'+i,hp:20,max:20})),
+ const weapons=nativeWeapons(shipId,level);
+ return equipTacticalBossDeck({key,shipId,name:ship.nome,level,weapons,defense,
+  escorts:Array.from({length:escortCount},(_,i)=>({
+   id:key+'-escort-'+i,hp:20,max:20,slot:i,
+   weapon:createTacticalEscortArmament(shipId,weapons,i)
+  })),
   sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,
   neurotoxinUntilRound:0,bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
   commander:commander&&tacticalCommanderReady(commander.id)?{
@@ -194,7 +200,7 @@ export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,se
 function uniqueIndices(value,max,limit){
  return Array.isArray(value)&&value.length<=limit&&value.every(x=>Number.isInteger(x)&&x>=0&&x<max)&&new Set(value).size===value.length;
 }
-const EMPTY_ORDER=Object.freeze({specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,exchangeIndices:[]});
+const EMPTY_ORDER=Object.freeze({specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,exchangeIndices:[],escortAmmoIndex:null});
 export function validateTacticalOrder(battle,key,order){
  if(battle?.phase!=='planning'||!['A','B'].includes(key)||battle.orders[key])return {ok:false,reason:'already_committed'};
  if(!order||typeof order!=='object')return {ok:false,reason:'invalid_order'};
@@ -216,6 +222,17 @@ export function validateTacticalOrder(battle,key,order){
  if(order.weaponFocusId!=null&&!side.weapons.some(w=>w.id===order.weaponFocusId))
   return {ok:false,reason:'weapon_focus_invalid'};
  if(ni.some(i=>ei.includes(i)))return {ok:false,reason:'card_double_spend'};
+ const ammoIndex=order.escortAmmoIndex??null;
+ if(ammoIndex!==null){
+  if(!Number.isInteger(ammoIndex)||ammoIndex<0||ammoIndex>=side.numeric.hand.length)
+   return {ok:false,reason:'escort_selection'};
+  if(ni.includes(ammoIndex)||ei.includes(ammoIndex))
+   return {ok:false,reason:'card_double_spend'};
+  if(types.some(type=>type.startsWith('fusion-'))||types.includes('tactical-cover'))
+   return {ok:false,reason:'escort_tactical_conflict'};
+  if(!selectTacticalEscortForAmmo(side,side.numeric.hand[ammoIndex]))
+   return {ok:false,reason:'escort_ammo_unavailable'};
+ }
  const epics=types.filter(isTacticalEpic);
  if(epics.length>1)return {ok:false,reason:'epic_conflict'};
  if(epics.length){
@@ -267,7 +284,8 @@ export function sealTacticalOrder(battle,key,order=EMPTY_ORDER,nowMs=0){
   specialIndices:[...(order.specialIndices??[])],numericIndices:[...(order.numericIndices??[])],
   vitalId:order.numericIndices?.length?order.vitalId:null,op:order.numericIndices?.length?order.op:null,
   counterVitalId:order.counterVitalId??null,exchangeIndices:[...(order.exchangeIndices??[])],
-  weaponFocusId:order.weaponFocusId??null,epicChoice:order.epicChoice??null
+  weaponFocusId:order.weaponFocusId??null,epicChoice:order.epicChoice??null,
+  escortAmmoIndex:order.escortAmmoIndex??null
  };
  const next={...battle,orders:{...battle.orders,[key]:normalized}};
  return {ok:true,battle:next};
