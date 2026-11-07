@@ -69,6 +69,7 @@ export default function TacticalCombatPlayback({battle,nowMs,hulls}){
     className={'tdp-playback-notice '+pos+(event.type==='special'?' tdp-notice--special':'')+(blocked?' tdp-notice--blocked':'')}>
     <strong>{event.label}</strong>
     {event.type==='barrier'&&event.intercepted>0&&<small>Scudiera: {event.intercepted} assorbiti</small>}
+    {event.type==='barrier'&&event.pilotBonus>0&&<small>Pilota: +{event.pilotBonus} HP al fuoco</small>}
     {precision&&event.absorbed>0&&<small>Fusione: {event.absorbed} assorbiti</small>}
    </div>;
   })}
