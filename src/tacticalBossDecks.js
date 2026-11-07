@@ -4,7 +4,7 @@
 import {numericBossDeck,activeNumericBossAbilities} from './bossNumericDecks.js';
 import {tacticalSignatureMatches} from './tacticalShipSignatures.js';
 
-export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_8','planet_char_9','planet_char_11']);
+export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_8','planet_char_9','planet_char_11','planet_char_19']);
 export const tacticalBossDeckReady=id=>TACTICAL_READY_BOSS_DECKS.includes(id);
 
 export function equipTacticalBossDeck(side,selection=null){
@@ -18,8 +18,9 @@ export function equipTacticalBossDeck(side,selection=null){
  const state={id:deck.id,level:lv,ability:ability.name,firstHitUsed:false,shieldBonus:0,
   lastVital:null,vitalBonusRemainder:0,outgoingBonusRemainder:0,
   idraBarrierRemainder:0,idraVitalRemainder:0,
-  recyclePending:false,leviatanoRemainder:0};
- if(['planet_char_6','planet_char_2','planet_char_8','planet_char_9','planet_char_11'].includes(selection.id))
+  recyclePending:false,leviatanoRemainder:0,
+  magmaShieldHits:0,magmaNativeRemainder:0,magmaVitalRemainder:0};
+ if(['planet_char_6','planet_char_2','planet_char_8','planet_char_9','planet_char_11','planet_char_19'].includes(selection.id))
   return {...side,bossNumericDeck:state};
  // Gaia: stessa regola del combattimento precedente, floor sullo scudo massimo.
  // Solo HP della barriera; non modifica vitali, scudiere o mazzi.
@@ -192,5 +193,62 @@ export function rememberTacticalLeviatanoHit(side,damage,bonus){
  if(state?.id!=='planet_char_8'||!(damage>0)||!bonus?.active)return side;
  side.bossNumericDeck={...state,leviatanoRemainder:bonus.remainder,
   recyclePending:bonus.spendsRecycle?false:state.recyclePending};
+ return side;
+}
+
+
+// Nucleo Magmatico numeric deck — three independently graded passive
+// abilities. This is NOT the planet-19 enemy's Magma cycle.
+// Risonanza termica: bonus only on the 3rd REAL shield hit (counts 1,2,3).
+// Corrosione ardente: real Corrosione card actually committed this round.
+// Forgia moltiplicatrice: VALID times signature on an exposed enemy vital.
+// Neither fake native guns nor mathematical hits outside real signatures.
+export function tacticalMagmaNativeBonus(side,playedTypes,base){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,percentage:0,extra:0,remainder:0,abilities:[]};
+ if(state?.id!=='planet_char_19'||!Number.isSafeInteger(base)||base<=0)
+  return inactive;
+ const abilities=activeNumericBossAbilities(state.id,state.level);
+ const triggered=[];
+ if(state.magmaShieldHits%3===2&&abilities[0]?.unlocked)triggered.push(abilities[0]);
+ if(Array.isArray(playedTypes)&&playedTypes.includes('shot-corrosion')&&abilities[1]?.unlocked)
+  triggered.push(abilities[1]);
+ if(!triggered.length)return inactive;
+ const percentage=Math.min(30,triggered.reduce((n,a)=>n+a.value,0));
+ const prior=Number.isSafeInteger(state.magmaNativeRemainder)?state.magmaNativeRemainder:0;
+ const points=base*percentage+prior;
+ return {active:true,percentage,extra:Math.floor(points/100),remainder:points%100,
+  abilities:triggered.map(a=>a.name)};
+}
+export function rememberTacticalMagmaBarrierHit(side,barrierDamage,bonus){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_19'||!(barrierDamage>0))return side;
+ side.bossNumericDeck={...state,magmaShieldHits:(state.magmaShieldHits||0)+1,
+  magmaNativeRemainder:bonus?.active?bonus.remainder:state.magmaNativeRemainder};
+ return side;
+}
+export function tacticalMagmaVitalBonus(side,order,defender,base){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,percentage:0,extra:0,remainder:0,abilities:[]};
+ if(state?.id!=='planet_char_19'||order?.op!=='times'||
+    !Number.isSafeInteger(base)||base<=0)return inactive;
+ const ability=activeNumericBossAbilities(state.id,state.level)[2];
+ if(!ability?.unlocked)return inactive;
+ const part=defender?.defense?.parts?.[order.vitalId];
+ const indices=order.numericIndices||[];
+ if(!part||part.hp<=0||!part.exposed||
+    ![2,3].includes(indices.length)||new Set(indices).size!==indices.length)return inactive;
+ const cards=indices.map(i=>side.numeric?.hand?.[i]);
+ if(cards.some(c=>!c)||!tacticalSignatureMatches(part.signature,order.op,cards))
+  return inactive;
+ const remainder=Number.isSafeInteger(state.magmaVitalRemainder)?state.magmaVitalRemainder:0;
+ const points=base*ability.value+remainder;
+ return {active:true,percentage:ability.value,extra:Math.floor(points/100),
+  remainder:points%100,abilities:[ability.name]};
+}
+export function rememberTacticalMagmaVitalHit(side,damage,bonus){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_19'||!(damage>0)||!bonus?.active)return side;
+ side.bossNumericDeck={...state,magmaVitalRemainder:bonus.remainder};
  return side;
 }
