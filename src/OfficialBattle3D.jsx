@@ -1,6 +1,6 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {newVessel,rankLabel} from './mathDuelEngine.js';
-import {ASSET_ROOT,CARD_SUIT_COLORS,ShipArtwork,MountedWeapons,ShipCard} from './ShipPresentation.jsx';
+import {ASSET_ROOT,CARD_SUIT_COLORS,MountedWeapons,ShipCard} from './ShipPresentation.jsx';
 import {readShipCollection,updateShipCollection,equipShipCards} from './shipCollection.js';
 import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuilder.js';
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
@@ -13,6 +13,7 @@ import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {commanderAbility} from './commanderAbilities.js';
 import {activeNumericBossAbilities} from './bossNumericDecks.js';
+import ShipPhysicalVitals,{physicalVitalCondition} from './ShipPhysicalVitals.jsx';
 import {arenaForBattle} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import {officialBattleSetup,officialBattleResult} from './officialBattleSetup.js';
@@ -34,7 +35,10 @@ function startSession(options){
   return {battle:setup.battle,error:'',shipCollection};
  }catch(e){return {battle:null,error:e?.message||'Impossibile caricare il duello',shipCollection:null};}
 }
-function Ship3D({side,snapshot,hullRef,phase}){
+function Ship3D({
+ side,snapshot,hullRef,phase,selectedVital,onSelectVital,
+ canTarget=false,knownVitals=[],impactedVitals=[]
+}){
  const player=side==='player';
  const ship=useMemo(()=>newVessel(snapshot.shipId,snapshot.level),[snapshot.shipId,snapshot.level]);
  const visual={...ship,defense:snapshot.defense};
@@ -43,13 +47,13 @@ function Ship3D({side,snapshot,hullRef,phase}){
  return <div className={'ship-zone ship-'+side+(phase==='resolving'?' ship-in-combat':'')}
   data-fleet-size="1" data-formation="balanced" data-fusion="off">
   <div className="fleet-ships">
-   <div className="fleet-ship-wrap complete-ship focused official-mother" data-fleet-role="mother" data-ship={visual.id}
-    data-level={visual.level} style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
-    <svg ref={hullRef} className="fleet-ship-img" viewBox="0 0 1000 1000" role="img"
-     aria-label={visual.name+' navicella 3D originale, livello '+visual.level}>
-     {/* Vista raster originale della navicella: nessuna sagoma SVG sovrapposta. */}
-     <ShipArtwork side={side} vessel={visual}/>
-    </svg>
+   <div className="fleet-ship-wrap complete-ship focused official-mother" data-fleet-role="mother"
+    data-ship={visual.id} data-level={visual.level}
+    data-vital-weapons={physicalVitalCondition(snapshot.defense.parts.weapons)}
+    style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
+    <ShipPhysicalVitals side={side} vessel={visual} defense={snapshot.defense}
+     hullRef={hullRef} selectedVital={selectedVital} onSelectVital={onSelectVital}
+     canTarget={canTarget} knownVitals={knownVitals} impactedVitals={impactedVitals}/>
     <MountedWeapons side={side} vessel={visual} index={0} effect={null}/>
    </div>
   </div>
@@ -200,6 +204,13 @@ export default function OfficialBattle3D({
  </main>;
  const elapsed=tacticalPlaybackElapsed(battle,now);
  const displayed=projectedCombatSides(battle,elapsed);
+ // Time-locked hull effects: do not show damage before the precision impact.
+ const snap=battle.history?.at(-1)?.snapshots;
+ const recentImpacts=Object.fromEntries(['A','B'].map(key=>[key,
+  battle.phase==='resolving'&&elapsed>=6250&&snap?
+   VITAL_IDS.filter(id=>snap.before[key].defense.parts[id].hp>
+    snap.afterPrecision[key].defense.parts[id].hp):[]
+ ]));
  const player=battle.sides.A,enemy=battle.sides.B;
  const locked=battle.phase!=='planning'||!!battle.orders.A;
  const selected=(draft.numericIndices||[]).map(i=>player.numeric.hand[i]).filter(Boolean);
@@ -246,31 +257,22 @@ export default function OfficialBattle3D({
       <small>SCUDO {displayed.B.defense.shield.hp}/{displayed.B.defense.shield.max} ·
        SCUDIERE {displayed.B.escorts.filter(e=>e.hp>0).length}</small></div>
     </div>
-    <Ship3D side="enemy" snapshot={displayed.B} hullRef={hullB} phase={battle.phase}/>
-    <section className="official-middle">
+    <Ship3D side="enemy" snapshot={displayed.B} hullRef={hullB} phase={battle.phase}
+     selectedVital={draft.vitalId} canTarget={!locked} knownVitals={player.seen}
+     impactedVitals={recentImpacts.B} onSelectVital={id=>setDraft(d=>{
+      const part=battle.sides.B.defense.parts[id];
+      const op=tacticalSignatureOperation(part.signature,d.numericIndices.map(i=>player.numeric.hand[i]));
+      return {...d,vitalId:id,op:op||d.op};
+     })}/>
+    <section className="official-middle" aria-label="Fase e timer di combattimento">
      <div className="official-cycle">
       <strong>{'CICLO '+battle.round}</strong>
       <b>{battle.phase==='finished'?'TERMINATO':battle.phase==='resolving'?'SCONTRO · 8s':'PREPARAZIONE · 30s'}</b>
       <em>{battle.phase==='finished'?'✓':nextSeconds+'s'}</em>
      </div>
-     <div className="official-targets" role="group" aria-label="Selezione bersaglio vitale avversario">
-      {VITAL_IDS.map(id=>{
-       const part=enemy.defense.parts[id];
-       const selectedTarget=draft.vitalId===id;
-       const shown=part.exposed||player.seen.includes(id);
-       return <button type="button" key={id} className={'official-vital'+(selectedTarget?' chosen':'')}
-        disabled={locked||part.hp<=0} aria-pressed={selectedTarget}
-        onClick={()=>setDraft(d=>{
-         const op=tacticalSignatureOperation(part.signature,d.numericIndices.map(i=>player.numeric.hand[i]));
-         return {...d,vitalId:id,op:op||d.op};
-        })} title={shown?JSON.stringify(part.signature):'Firma non rivelata'}>
-        <b>{({engine:'MOTORE',weapons:'ARMI',shieldGenerator:'SCUDI',command:'CENTRALINA'})[id]}</b>
-        <small>{part.hp<=0?'KO':part.exposed?'ESPOSTO':shown?'SCANSIONATO':'PROTETTO'} · {part.hp}HP</small>
-       </button>;
-      })}
-     </div>
     </section>
-    <Ship3D side="player" snapshot={displayed.A} hullRef={hullA} phase={battle.phase}/>
+    <Ship3D side="player" snapshot={displayed.A} hullRef={hullA} phase={battle.phase}
+     impactedVitals={recentImpacts.A}/>
     <div className="deck left deck-special" aria-label="Mazzo delle carte speciali">
      <div className="deck-graphic">✧</div><small>SPECIALI</small><strong>{player.special.deck.length}</strong>
     </div>
