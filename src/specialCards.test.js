@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newManeuverState} from './fleetManeuvers.js';
+import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
 import {SPECIAL_HAND_SIZE,SPECIAL_CARD_CATALOG,initializeSpecialDeck,refillSpecialHand,
  specialCardDefinition,findFusionCardIndex,playSpecialCard} from './specialCards.js';
 
@@ -12,7 +13,9 @@ function ship(level=5){
 }
 const zero=()=>0;
 test('every explicitly designed fusion and support card is registered',()=>{
- assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).sort(),['fusion-barrier','fusion-strike','fusion-triad','fusion-twin','shot-corrosion','shot-ion','shot-piercing','support-escort-repair','support-shield-repair','support-status-purge','tactical-cover']);
+ assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).filter(x=>!isBossCharacterCard(x)).sort(),['fusion-barrier','fusion-strike','fusion-triad','fusion-twin','shot-corrosion','shot-ion','shot-piercing','support-escort-repair','support-shield-repair','support-status-purge','tactical-cover']);
+ assert.equal(BOSS_CHARACTER_TYPES.length,12);
+ assert.ok(BOSS_CHARACTER_TYPES.every(x=>SPECIAL_CARD_CATALOG[x]?.family==='boss-character'));
 });
 test('initial special hand is separate from numeric cards and has exactly five',()=>{
  const input={...ship(),hand:[{value:8,suit:'♥'}],deck:[{value:13,suit:'♠'}]};
