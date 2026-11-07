@@ -1,4 +1,6 @@
 # Eclissi Stellare — documento di trasferimento per ChatGPT Work
+
+> **Stato aggiornato — 7 novembre 2026:** la sola interfaccia di gioco è la plancia 3D in `src/MathDuelBattle.jsx`; le cinque carte speciali e i due mazzi sono stati portati sulla plancia, senza cambiare navi, armi o arena originale. Le schermate `TacticalDuelPrototype.jsx/.css` e l'accesso `?tacticalPreview=1` sono stati rimossi; i motori tattici non ancora integrati restano conservati come codice da migrare. Le sezioni storiche sotto descrivono test precedenti, NON una seconda modalità disponibile.
 **Versione:** bozza operativa, 7 novembre 2026. **Repository:** `marcoteghini1988-ai/test7`, ramo `main`.  
 **Stato:** progettazione in corso; NON considerare questa bozza un ordine di eseguire immediatamente tutte le modifiche. Da aggiornare al termine della progettazione e dopo la consegna di ogni asset PNG.
 
@@ -9,7 +11,7 @@ Una volta terminata la progettazione e aggiunti gli asset, ChatGPT Work dovrà a
 - `docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md`: regole del nuovo combattimento, stato verificato del sandbox e lavori aperti.
 - `docs/PUNTO_31_PASSIVE_MAZZI_BOSS.md`, `src/bossNumericDecks.js`: **12 mazzi numerici boss, 23 abilità passive**, fino a 1/2/3 abilità per mazzo, tre gradi ciascuna. I mazzi NON sono le carte Personaggio Boss.
 - `src/newCombat/phase16DBosses.js`: dodici identità e abilità dei boss nel vecchio combattimento.
-- `src/simultaneousDuelEngine.js`, `src/TacticalDuelPrototype.jsx`: prototipo di duello simultaneo, accessibile con `?tacticalPreview=1`.
+- `src/MathDuelBattle.jsx`, `src/MathDuelBattle.css`, `src/ShipPresentation.jsx`: un'unica plancia 3D ufficiale. `src/simultaneousDuelEngine.js`: meccaniche tattiche da integrare; la vecchia UI separata e `?tacticalPreview=1` sono stati rimossi.
 - `src/newCombat/phase16BCombat.js`: Dadi Quantici, Numero Bomba, Malus, Carta Dorata nel codice storico.
 - `src/newCombat/phase16FModules.js`: equipaggiamenti/moduli che accumulano carica e si attivano.
 - `src/newCombat/phase16CEpics.js`, `src/newCombat/phase15LegacyPassives.js`, `src/vulnerabilityRift.js`: Epici, reliquie, effetti del terreno e altri sistemi preesistenti.
