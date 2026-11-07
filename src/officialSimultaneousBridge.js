@@ -9,6 +9,7 @@ import {newVessel} from './mathDuelEngine.js';
 import {VITAL_IDS} from './vitalDefense.js';
 import {arenaForBattle} from './battleArenas.js';
 import {tacticalCommanderReady} from './tacticalCommanders.js';
+import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 
 const BATTLE_MODES=new Set(['classic','adventure','campaign','pvp']);
 
@@ -19,7 +20,9 @@ export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
   bossSectorLevel=null,selectedBossDeck='neutral_starter',bossDeckInventory={},selectedPilot='pilot_com_1'}={}){
  if(!BATTLE_MODES.has(gameMode))return {enabled:false,reason:'mode'};
  // Una carta boss equipaggiata resta attiva, anche con inventari vecchi.
- if(selectedBossDeck&&selectedBossDeck!=='neutral_starter')
+ if(selectedBossDeck&&selectedBossDeck!=='neutral_starter'&&
+   (!tacticalBossDeckReady(selectedBossDeck)||
+    bossDeckInventory?.[selectedBossDeck]?.unlocked!==true))
   return {enabled:false,reason:'equipped_boss_passives'};
  // Le abilita non basiche dei piloti vengono conservate finche convertite.
  if(selectedPilot&&!tacticalCommanderReady(selectedPilot))
