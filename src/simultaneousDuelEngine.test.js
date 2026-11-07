@@ -126,7 +126,9 @@ test('Le carte non vengono generate dal nulla, riciclo e vincoli degli ordini',(
  assert.equal(validateTacticalOrder(b,'A',order({specialIndices:[1,1]})).reason,'special_selection');
  assert.equal(validateTacticalOrder(b,'A',order({numericIndices:[1]})).reason,'numeric_count');
  assert.equal(validateTacticalOrder(b,'A',order({numericIndices:[0,1],vitalId:'engine',op:'nonsense'})).reason,'invalid_precision');
- assert.equal(validateTacticalOrder(b,'A',order({exchangeIndices:[1]})).reason,'recycle_requires_card');
+ assert.equal(validateTacticalOrder(b,'A',order({exchangeIndices:[1]})).ok,true);
+ assert.equal(validateTacticalOrder(b,'A',order({exchangeIndices:[1,2]})).reason,'recycle_requires_card');
+ assert.equal(validateTacticalOrder(b,'A',order({exchangeIndices:[1],numericIndices:[3,2],vitalId:'weapons',op:'minus'})).reason,'recycle_requires_card');
  assert.equal(validateTacticalOrder(b,'A',order({specialIndices:[3]})).reason,'fusion_unavailable');
  assert.equal(validateTacticalOrder(b,'A',order({specialIndices:[4]})).reason,'counter_target');
  const r=commit(b,order({specialIndices:[0,1]}));
