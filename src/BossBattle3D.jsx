@@ -85,7 +85,7 @@ function EngineArea({surface,fill}){
  return <g fill={fill}><ellipse cx={x} cy={y} rx={rx} ry={ry}/>
   {surface.exhaustY!=null&&<polygon points={`${x-rx*.65},${y} ${x+rx*.65},${y} ${x+rx*.25},${surface.exhaustY*1000} ${x-rx*.25},${surface.exhaustY*1000}`}/>}</g>;
 }
-function ShipSkin({side,vessel,imageRef}){
+export function ShipSkin({side,vessel,imageRef}){
  const id=`hull-${useId().replace(/[^a-zA-Z0-9_-]/g,'')}`,[loaded,setLoaded]=useState(false);
  const damaged=Object.entries(vessel.engines).map(([op,engine])=>({op,state:engineVisualState(engine),surface:engineSurface(side,vessel.id,op)})).filter(e=>e.state!=='intact');
  return <svg ref={imageRef} className="fleet-ship-img" viewBox="0 0 1000 1000" role="img" aria-label={`${vessel.name}, livello ${vessel.level}`} data-loaded={loaded}>
@@ -108,7 +108,7 @@ function ShipSkin({side,vessel,imageRef}){
    </g>)}
  </svg>;
 }
-function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation,impactDelay,mathMode=false}){
+export function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,engineRef,formation,impactDelay,mathMode=false,vitalLabel=null,vitalName=null}){
  const engine=vessel.engines[op];if(!engine)return null;
  const dead=engine.hp<=0,ratio=Math.max(0,engine.hp/engine.max);
  const state=engineVisualState(engine),surface=engineSurface(side,vessel.id,op),aux=op==='times'||op==='divide';
@@ -121,12 +121,12 @@ function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,available,e
   className={`vessel-engine ve-${op} ve-${side} hud-${engineHudPlacement(side,vessel.id,op)}${aux?' auxiliary-engine':''}${selected&&!dead?' selected':''}${dead?' dead':''}${hit?' hit':''}`}
   disabled={!enabled||dead||!available} data-state={state} onClick={()=>onSelect?.(op)}
   aria-pressed={!!selected}
-  aria-label={mathMode?`Operazione ${META[op].name}, bersaglio ${target??'non disponibile'}`:`${side==='enemy'?'Nemico':'Tu'}: ${vessel.name}, motore ${META[op].name}, ${engine.hp} di ${engine.max} HP, bersaglio ${target??'non disponibile'}`}>
+  aria-label={vitalName?`${side==='enemy'?'Nemico':'Tu'}: ${vessel.name}, ${vitalName}, ${engine.hp} di ${engine.max} HP`:(mathMode?`Operazione ${META[op].name}, bersaglio ${target??'non disponibile'}`:`${side==='enemy'?'Nemico':'Tu'}: ${vessel.name}, motore ${META[op].name}, ${engine.hp} di ${engine.max} HP, bersaglio ${target??'non disponibile'}`)}>
   <span ref={engineRef} className="engine-anchor" aria-hidden="true"/>
   <span className="engine-core" aria-hidden="true"><i className="engine-iris"/><svg className="engine-fracture" viewBox="0 0 100 100"><path d="M13 23 42 40 30 62 63 54 87 82M61 12 52 38 73 27M32 65 24 86"/></svg></span>
   <span className="vessel-engine-hud">
-   <strong>{dead?'✕':enabled&&target!=null?`${META[op].sign}${target}`:META[op].sign}</strong>
-   <small>{mathMode?'CALC':dead?'KO':`${engine.hp} HP`}</small>
+   <strong>{dead?'✕':vitalLabel|| (enabled&&target!=null?`${META[op].sign}${target}`:META[op].sign)}</strong>
+   <small>{vitalName?(dead?'KO':`${engine.hp} HP`):mathMode?'CALC':dead?'KO':`${engine.hp} HP`}</small>
    {!mathMode&&<i className="vessel-engine-meter"><em style={{width:`${ratio*100}%`}}/></i>}
   </span>
   {dead&&<span className="vessel-smoke"/>}
