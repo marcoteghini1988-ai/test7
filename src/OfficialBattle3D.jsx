@@ -6,6 +6,7 @@ import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuild
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
+import {bossCharacterActive} from './bossCharacterCards.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
@@ -391,6 +392,11 @@ export default function OfficialBattle3D({
     </div>}
     {menu==='cards'&&<div className="modal-shade"><section className="help-card official-details">
      <h2>CARTE SPECIALI EQUIPAGGIATE</h2>
+     {bossCharacterActive(player,battle.round)&&<p>
+      <b>{'PERSONAGGIO ATTIVO · '+bossCharacterActive(player,battle.round).name}</b>
+      <span>{'Abilità: '+bossCharacterActive(player,battle.round).skill+
+       '. Termina alla fine del ciclo '+player.bossCharacter.untilRound+'. Un solo personaggio alla volta.'}</span>
+     </p>}
      {player.special.hand.map((card,i)=><p key={card.id}><b>{i+1}. {TACTICAL_SPECIALS[card.type]?.name}</b>
       <span>{TACTICAL_SPECIALS[card.type]?.help}</span></p>)}
      <button className="es-button primary" onClick={()=>setMenu('')}>CHIUDI</button>
