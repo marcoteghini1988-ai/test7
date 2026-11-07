@@ -10,10 +10,11 @@
     "preview": "vite preview",
     "test:combat": "node --test src/specialFlow.test.js src/bossNumericDecks.test.js src/specialSupport.test.js src/specialDeckBuilder.test.js src/strategicShots.test.js src/localizedSystems.test.js src/motherCover.test.js src/escortRolesMatrix.test.js src/fleetCooperation.test.js src/specialCards.test.js src/fleetManeuvers.test.js src/escortDoctrine.test.js src/escortTactics.test.js src/escortArmory.test.js src/escortFiring.test.js src/fleetSystems.test.js src/linkedEscorts.test.js src/mathDuelEngine.test.js src/mathFleetGeometry.test.js src/mathWeaponEffects.test.js src/rareFleetCatalog.test.js src/epicFleetCatalog.test.js src/legendaryFleetCatalog.test.js",
     "verify:logic": "node --test src/*.test.js src/newCombat/*.test.js",
-    "preflight": "node scripts/check-structure.mjs",
+    "preflight": "node scripts/check-structure.mjs && node scripts/check-official-3d.mjs",
     "check:structure": "node scripts/check-structure.mjs",
     "cleanup:shadows": "node scripts/cleanup-legacy-shadows.mjs --apply",
-    "cleanup:r2": "node scripts/cleanup-r2-legacy.mjs --apply"
+    "cleanup:r2": "node scripts/cleanup-r2-legacy.mjs --apply",
+    "check:official-3d": "node scripts/check-official-3d.mjs"
   },
   "dependencies": {
     "react": "^19.0.0",
