@@ -20,7 +20,7 @@ test('Gaia convertita: gli altri mazzi non autorizzati restano nel percorso prec
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_1',bossDeckInventory:{planet_char_1:{unlocked:true,level:2}}}).enabled,true);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
-  selectedBossDeck:'planet_char_17',bossDeckInventory:{planet_char_17:{unlocked:true,level:1}}}).enabled,false);
+  selectedBossDeck:'planet_char_30',bossDeckInventory:{planet_char_30:{unlocked:true,level:1}}}).enabled,false);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_1',bossDeckInventory:{}}).enabled,false);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:10,
@@ -54,8 +54,8 @@ test('Gaia bloccata non regala HP e non modifica inventario',()=>{
  assert.throws(()=>officialBattleSetup({...options,selectedBossDeck:'planet_char_1',
   bossDeckInventory:inventory}),/Mazzo boss non sbloccato/);
  assert.deepEqual(inventory,original);
- assert.throws(()=>officialBattleSetup({...options,selectedBossDeck:'planet_char_17',
-  bossDeckInventory:{planet_char_17:{unlocked:true,level:3}}}),/non sbloccato o ancora non convertito/);
+ assert.throws(()=>officialBattleSetup({...options,selectedBossDeck:'planet_char_30',
+  bossDeckInventory:{planet_char_30:{unlocked:true,level:3}}}),/non sbloccato o ancora non convertito/);
 });
 
 test('equipaggiamento Gaia non muta lo stato di partenza del motore',()=>{
@@ -64,5 +64,5 @@ test('equipaggiamento Gaia non muta lo stato di partenza del motore',()=>{
  const boosted=equipTacticalBossDeck(init.sides.A,{id:'planet_char_1',level:3});
  assert.equal(boosted.defense.shield.max,original.defense.shield.max+4);
  assert.deepEqual(init.sides.A,original);
- assert.throws(()=>equipTacticalBossDeck(init.sides.A,{id:'planet_char_17',level:1}),/non ancora convertita/);
+ assert.throws(()=>equipTacticalBossDeck(init.sides.A,{id:'planet_char_30',level:1}),/non ancora convertita/);
 });
