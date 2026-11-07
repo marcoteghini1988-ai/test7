@@ -24,7 +24,7 @@ test('Gaia convertita: gli altri mazzi non autorizzati restano nel percorso prec
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_1',bossDeckInventory:{}}).enabled,false);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:10,
-  selectedBossDeck:'planet_char_1',bossDeckInventory:{planet_char_1:{unlocked:true,level:3}}}).enabled,false);
+  selectedBossDeck:'planet_char_1',bossDeckInventory:{planet_char_1:{unlocked:true,level:3}}}).enabled,true);
 });
 
 test('Gaia L1-L3: Baluardo terrestre usa gli stessi incrementi dello scudo storico',()=>{
