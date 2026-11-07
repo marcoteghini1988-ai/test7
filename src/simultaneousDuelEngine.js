@@ -1,5 +1,5 @@
-// Eclissi Stellare: sandbox deterministico del duello tattico simultaneo.
-// NON viene usato dalla campagna/PvP ufficiale e NON accredita ricompense.
+// Eclissi Stellare: motore deterministico del duello tattico simultaneo ufficiale.
+// Usato nella plancia 3D della campagna standard; i premi vengono assegnati dal controller, non dal motore.
 // Gli armamenti sono i 42 del catalogo esistente: i calcoli non alimentano lo scudo.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
