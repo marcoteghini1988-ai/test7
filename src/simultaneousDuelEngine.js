@@ -177,12 +177,12 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
   numeric:numericPile(key,seed+3,shuffleOpening),special:specialPile(key,seed+13,specialDeck,epicOpening)},bossNumericDeck);
 }
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',
- specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null,bossNumericDeckA=null}={}){
+ specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null,bossNumericDeckA=null,bossNumericDeckB=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
  const battle={schemaVersion:1,arenaId,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA),
-   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB)},
+   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB,bossNumericDeckB)},
   history:[],lastEvents:bossPlanetB===20?[
    'B: Sovrano del Vuoto · seme dominante '+exclusiveVoidDominantSuit(1)+
    ' (cicli 1–3, rotazione ogni 3 cicli)'
