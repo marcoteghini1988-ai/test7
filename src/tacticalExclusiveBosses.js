@@ -1,8 +1,9 @@
+import {damageMotherShield} from './vitalDefense.js';
 // Capacita ESCLUSIVE dei boss nemici, distinte dalle 23 passive collezionabili.
-// Gaia, Tharsis, Matriarca Tossica, Crono, Sentinella Ionica e Leviatano sono attivi nel motore simultaneo.
+// Gaia, Tharsis, Matriarca Tossica, Crono, Sentinella Ionica, Leviatano e Signore delle Ombre sono attivi nel motore simultaneo.
 // Il numero del pianeta viene dal catalogo boss ufficiale, non dalla carta mazzo.
 // Nessun danno gratuito, nessuna lettura delle mani/ordini avversari.
-export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6,7,8]);
+export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6,7,8,9]);
 export const exclusiveBossReady=id=>READY_EXCLUSIVE_BOSS_IDS.includes(Number(id));
 
 export function createExclusiveBossState(planetId){
@@ -162,4 +163,46 @@ export function rememberExclusiveLeviatanoNativeHit(attacker,barrierDamage,bonus
  if(state?.id!==8||!bonus?.active||!(barrierDamage>0))return attacker;
  attacker.bossExclusive={...state,pressureRemainder:bonus.remainder};
  return attacker;
+}
+
+
+// Signore delle Ombre (Plutone, boss ID 9) — Patto di sangue.
+// A voluntary trade: 4 REAL shield HP for +8% to this cycle's REAL
+// native-weapon packet. The shield debit happens BEFORE preparations and
+// opposing volleys, so the price remains paid even if the shot is intercepted.
+// No debit with shield <=12 HP, destroyed generator, or on cooldown.
+// The last activation round is held in the boss-only exclusive state.
+// First eligible round: 1; next eligible rounds: 4, 7, 10, ...
+export const BLOOD_PACT_COST=4;
+export const BLOOD_PACT_MIN_SHIELD_EXCLUSIVE=12;
+export const BLOOD_PACT_COOLDOWN_ROUNDS=3;
+export const BLOOD_PACT_BONUS_PERCENT=8;
+export function prepareExclusiveBloodPact(side,round,realNativePacket){
+ const inactive={armed:false,paid:0,reason:'inactive'};
+ if(side?.bossExclusive?.id!==9)return inactive;
+ if(!Number.isSafeInteger(round)||round<1)return {...inactive,reason:'invalid_round'};
+ if(!Number.isSafeInteger(realNativePacket)||realNativePacket<=0)
+  return {...inactive,reason:'no_native_guns'};
+ const last=side.bossExclusive.bloodPactLastRound;
+ if(Number.isSafeInteger(last)&&round-last<BLOOD_PACT_COOLDOWN_ROUNDS)
+  return {...inactive,reason:'cooldown'};
+ const defense=side.defense;
+ if(!defense||defense.kind!=='mother'||defense.parts?.shieldGenerator?.hp<=0)
+  return {...inactive,reason:'generator_offline'};
+ if(!Number.isSafeInteger(defense.shield?.hp)||defense.shield.hp<=BLOOD_PACT_MIN_SHIELD_EXCLUSIVE)
+  return {...inactive,reason:'insufficient_shield'};
+ const paid=damageMotherShield(defense,BLOOD_PACT_COST);
+ if(paid.damage!==BLOOD_PACT_COST)throw new Error('Patto di sangue: costo reale non pagato');
+ side.defense=paid.defense;
+ side.bossExclusive={...side.bossExclusive,bloodPactLastRound:round,bloodPactArmedRound:round};
+ return {armed:true,paid:paid.damage,round,percentage:BLOOD_PACT_BONUS_PERCENT};
+}
+export function exclusiveBloodPactNativeBonus(side,base,round){
+ const inactive={active:false,percentage:0,extra:0};
+ if(side?.bossExclusive?.id!==9||side.bossExclusive.bloodPactArmedRound!==round||
+    !Number.isSafeInteger(base)||base<=0)return inactive;
+ // Small authentic guns must not pay four shield HP for an 8% bonus
+ // rounded all the way to zero; the global +45% cap still applies.
+ return {active:true,percentage:BLOOD_PACT_BONUS_PERCENT,
+  extra:Math.ceil(base*BLOOD_PACT_BONUS_PERCENT/100-1e-9)};
 }
