@@ -777,3 +777,69 @@
  flex:1;min-width:0;height:25px;padding:1px 4px;
  border:1px solid #276d9c;border-radius:4px;background:#10263f;color:#e8f8ff;font-size:9px;
 }
+
+/* Carte speciali definitive: profondità e dettagli sulla plancia 3D unica.
+   Le carte usano la mano reale e non introducono oggetti di prova. */
+.es-math-scope .special-board-card{
+ position:relative;overflow:hidden;
+ transform:perspective(210px) rotateX(5deg);
+ background:linear-gradient(150deg,#664863 0%,#24445b 42%,#07172c 100%);
+ box-shadow:inset 1px 1px 0 #ffffff75,inset -2px -2px 0 #031023d0,
+  0 3px 8px #000c,0 0 5px #92cafa33;
+}
+.es-math-scope .special-board-card:before{
+ content:"";position:absolute;inset:1px;pointer-events:none;
+ border:1px solid #ffffff25;border-radius:3px;
+ background:linear-gradient(120deg,#ffffff29,transparent 30%,transparent 65%,#ffffff14 100%);
+}
+.es-math-scope .special-board-card small{
+ position:absolute;top:2px;right:3px;color:#ffe1b0;font-size:7px;
+}
+.es-math-scope .special-board-card .special-board-glyph{
+ display:block;font-size:16px;line-height:16px;font-weight:900;
+ color:#ffd69f;text-shadow:0 0 6px #ffb950b3,1px 1px 1px #000;
+}
+.es-math-scope .special-board-card strong{
+ position:relative;z-index:1;font-size:8px;line-height:9px;
+ max-width:96%;text-shadow:0 1px 2px #000;
+}
+.es-math-scope .special-board-card[data-family="fusion"]{
+ border-color:#d4aeed;background:linear-gradient(145deg,#6b4584,#30234e 52%,#121a34);
+}
+.es-math-scope .special-board-card[data-family="defense"]{
+ border-color:#82eec4;background:linear-gradient(145deg,#256a60,#193c50 52%,#10182c);
+}
+.es-math-scope .special-board-card[data-family="volley"]{
+ border-color:#ffab78;background:linear-gradient(145deg,#914635,#48314d 52%,#151b35);
+}
+.es-math-scope .special-board-card[data-family="support"]{
+ border-color:#92d7ff;background:linear-gradient(145deg,#276588,#293967 52%,#101d33);
+}
+.es-math-scope .special-board .special-board-info{
+ position:absolute;top:1px;right:-23px;width:21px;height:23px;z-index:11;
+ padding:0;border:1px solid #80dfff;border-radius:50%;
+ font-size:12px;line-height:20px;font-weight:900;text-align:center;
+ color:#e8faff;background:#123958e8;box-shadow:0 0 6px #39cbff66;
+}
+.es-math-scope .special-board-explain{
+ position:absolute;bottom:43px;left:0;width:100%;max-height:190px;
+ box-sizing:border-box;overflow:auto;overscroll-behavior:contain;
+ padding:8px 9px;z-index:12;
+ border:1px solid #8fbedc;border-radius:8px;
+ background:linear-gradient(150deg,#091a32f5,#182b40fa);
+ box-shadow:0 10px 23px #000b;color:#e8f7ff;
+}
+.es-math-scope .special-board-explain>b{
+ display:block;margin-bottom:5px;letter-spacing:.7px;font-size:10px;
+ color:#a6dcff;
+}
+.es-math-scope .special-board-explain p{
+ display:flex;gap:3px;flex-direction:column;justify-content:flex-start;
+ margin:3px 0;padding:4px 0;border-top:1px solid #6288a54d;
+}
+.es-math-scope .special-board-explain p strong{
+ font-size:10px;color:#fff0c6;
+}
+.es-math-scope .special-board-explain p span{
+ font-size:9px;line-height:1.4;color:#d5e9f6;
+}
