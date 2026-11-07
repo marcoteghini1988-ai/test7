@@ -229,7 +229,7 @@ export default function OfficialBattle3D({
     style={{transform:'translate(-50%, -50%) scale('+scale+')'}}>
     <div className="space-back metal-arena" aria-hidden="true"
      style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
-    <ArenaEnvironment arenaId={arena.id} round={battle.round}/>
+    <ArenaEnvironment arenaId={battle.arenaId||arena.id} round={battle.arenaValidCalculations+1}/>
     <div className="top-brand">ECLISSI <b>STELLARE</b><small>
      {'ARENA · '+(arena.shortLabel||'TITANIO')}</small></div>
     <div className="toolbar">
