@@ -29,15 +29,17 @@ export function tacticalArmamentProfile(weapons=[]){
   });
  });
  const raw=contributions.reduce((sum,w)=>sum+w.raw,0);
- // For nonzero native guns: base ship reactor + square-root throughput.
- // With L1 figures, N00: 13, C01: 14, R04: 18, legendary L04 ~26;
- // all differences survive without a first-cycle automatic one-shot.
- const scaled=raw>0?Math.min(45,9+Math.floor(2*Math.sqrt(raw))):0;
+ // Rendimento decrescente degli armamenti originali: la nave più pesante
+ // resta più potente, ma non cancella 60 HP in una sola risoluzione.
+ // Il contributo del REATTORE L1 viene completato da un bonus misurabile L2..L5
+ // in tacticalBarrierPower, non da nuove munizioni generiche.
+ const scaled=raw>0?Math.min(41,7+Math.floor(2*Math.sqrt(raw))):0;
  return {raw,scaled,contributions};
 }
 export function tacticalBarrierPower(side){
  const {raw,scaled,contributions}=tacticalArmamentProfile(side.weapons);
- let amount=scaled;
+ const level=Number.isInteger(side.level)?Math.max(1,Math.min(5,side.level)):1;
+ let amount=scaled>0?Math.min(45,scaled+level-1):0;
  const p=side.defense.parts;
  if(p.weapons.hp===0)amount=Math.floor(amount*.5);
  if(p.engine.hp===0)amount=Math.floor(amount*.75);
