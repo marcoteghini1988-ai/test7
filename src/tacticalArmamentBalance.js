@@ -55,3 +55,9 @@ export function dominantTacticalTechnology(weapons=[]){
  // On equal damage, pick first existing native armament order. No arbitrary roulette.
  return [...totals.entries()].sort((a,b)=>b[1]-a[1])[0][0];
 }
+
+export function focusedTacticalTechnology(side,weaponFocusId=null){
+ const weapons=Array.isArray(side?.weapons)?side.weapons:[];
+ const selected=weapons.find(w=>w.id===weaponFocusId)??weapons[0];
+ return selected?{weaponId:selected.id,technology:tacticalWeaponTechnology(selected)}:null;
+}
