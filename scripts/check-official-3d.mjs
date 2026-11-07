@@ -13,6 +13,7 @@ const battleEntry=read('src/MathDuelBattle.jsx');
 const arena=read('src/OfficialBattle3D.jsx');
 const bossArena=read('src/BossBattle3D.jsx');
 const physicalHull=exists('src/ShipPhysicalVitals.jsx')?read('src/ShipPhysicalVitals.jsx'):'';
+const vitalAdapter=exists('src/officialVitalMotorAdapter.js')?read('src/officialVitalMotorAdapter.js'):'';
 const css=read('src/MathDuelBattle.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
@@ -48,23 +49,25 @@ verify(battleEntry.includes("import OfficialBattle3D from './OfficialBattle3D.js
  'Unico accesso 3D: motore simultaneo e compatibilita boss con passive conservate');
 verify(arena.includes('MathDuelBattle.css')&&arena.includes('arena_titanio_9x16.webp'),
  'La battaglia ufficiale deve usare il CSS e lo sfondo Titanio 9:16');
-verify((arena.includes('<ShipArtwork')||
- (arena.includes('<ShipPhysicalVitals')&&physicalHull.includes('<ShipArtwork')))&&
+verify(arena.includes('<ShipPhysicalVitals')&&
+ physicalHull.includes('<ShipSkin')&&physicalHull.includes('<Engine')&&
+ bossArena.includes('export function ShipSkin(')&&bossArena.includes('export function Engine(')&&
  arena.includes('<MountedWeapons'),
- 'Navi e montaggi delle armi originali non devono essere sostituiti');
+ 'La battaglia simultanea deve riusare la carrozzeria e i motori originali, senza ricostruirli');
 verify(!arena.includes('/ship-shells/')&&!bossArena.includes('/ship-shells/'),
  'La plancia non deve piu sovrapporre disegni SVG delle navi ai render raster originali');
 verify(!/<g\s+opacity=["']\.30?["']>\s*<ShipArtwork/.test(arena)&&
  !/<g\s+opacity=["']\.30?["']>\s*<ShipArtwork/.test(bossArena),
  'Le immagini 3D delle navi devono essere visibili a piena opacita');
-verify((arena.includes('<ShipArtwork side={side} vessel={visual}/>')||
- (arena.includes('<ShipPhysicalVitals')&&
- physicalHull.includes('physicalVitalSurfaces(')&&physicalHull.includes('VITAL_IDS.map(')&&
- physicalHull.includes('clipPath=')&&
- physicalHull.includes('<ShipArtwork side={side} vessel={vessel}/>')))&&
+verify(physicalHull.includes('vesselWithPhysicalVitalDamage(')&&
+ vitalAdapter.includes("engine:'plus'")&&vitalAdapter.includes("weapons:'minus'")&&
+ vitalAdapter.includes("shieldGenerator:'times'")&&vitalAdapter.includes("command:'divide'")&&
  bossArena.includes('<ShipArtwork side={side} vessel={vessel} onLoad=')&&
  bossArena.includes('<ShipArtwork side={side} vessel={vessel}/>'),
- 'Le battaglie standard e boss devono usare le viste raster anche quando la nave e danneggiata');
+ 'Le quattro parti vitali devono riusare i quattro motori e la stessa maschera raster originale');
+verify(!arena.includes('className="official-targets"')&&
+ !physicalHull.includes('physicalVitalSurfaces('),
+ 'I vecchi riquadri centrali e le coordinate fisiche inventate devono restare rimossi');
 verify(ships.includes('/mathfleet/views/')&&ships.includes('weaponMount('),
  'Le prospettive nave e le bocche di fuoco devono restare collegate agli asset');
 verify(arena.includes('className="deck left deck-number"')&&
