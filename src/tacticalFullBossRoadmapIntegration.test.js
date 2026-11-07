@@ -42,8 +42,8 @@ test('Completamento cataloghi: dodici boss, dodici mazzi e tutte 23 passive ai t
  }
  assert.equal(total,23);
  assert.ok(keys.every(exclusiveBossReady));
- assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:10,bossSectorLevel:10}).enabled,false,
-  'The actual boss campaign sector still preserves its old visual/rules engine until separately migrated');
+ assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:10,bossSectorLevel:10}).enabled,true,
+  'The real Terra boss sector now uses the validated simultaneous engine with its original numeric deck');
 });
 
 test('Stress: ogni boss combatte realmente 5 cicli contro navi L1/L3/L5 e tutte le risorse restano coerenti',()=>{
