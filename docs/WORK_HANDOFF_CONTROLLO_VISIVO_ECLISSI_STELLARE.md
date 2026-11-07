@@ -41,7 +41,7 @@ Una volta terminata la progettazione e aggiunti gli asset, ChatGPT Work dovrà a
 - [ ] Aprire l'app di `test7/main` e confrontare i principali schermi con i riferimenti artistici forniti.
 - [ ] Controllare formato verticale **9:16**, area sicura mobile, mani 7 numeriche + 5 speciali, pulsanti sempre cliccabili, nessuna sovrapposizione tra navicelle e carte.
 - [ ] Verificare tutte le immagini PNG approvate: nessuna rotta sbagliata, proporzioni o versioni scambiate, illustrazioni dei mazzi diverse dalle carte personaggio, nessun segnaposto grafico rimasto dove previsto un PNG.
-- [ ] Testare sandbox `?tacticalPreview=1`: 30 s preparazione simultanea, 8 s playback, entrambe le flotte, attacchi/firme, scudiere/fusioni, carte ed effetti; non attribuire funzionalità implementate a voci ancora in scaletta.
+- [ ] Controllare sull'unica schermata ufficiale `MathDuelBattle.jsx` le immagini 3D e le coordinate dei due mazzi a sinistra, cinque speciali, sette numeriche, slot Bersaglio, scarti a destra, armi e scudiere. Successivamente integrare, testare e collegare alla campagna il duello simultaneo 30 s preparazione / 8 s risoluzione senza creare schermate parallele.
 - [ ] Verificare le restrizioni delle Carte Terreno nei boss e la resa dello sfondo nel PvP, **solo dopo che saranno state implementate**.
 - [ ] Verificare sblocco e funzionamento delle Carte Personaggio Boss **solo dopo l'implementazione**.
 - [ ] Fare controlli di responsive su Android/schermo pieghevole e desktop, testare asset e interazioni con screenshot.
