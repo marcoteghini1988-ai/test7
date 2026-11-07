@@ -62,6 +62,24 @@ export function tacticalCombatTimeline(battle){
   }
  }
  for(const impact of cycle.impacts??[]){
+  if(impact.kind==='escort_barrier'){
+   // Only a real escort shot becomes an animation. Recharging a real
+   // Accumulo weapon without firing produces no projectile at all.
+   const fx=weaponEffect(impact.weaponIds?.[0]??'W01');
+   events.push({id:'escort-gun-'+impact.by+'-'+impact.escortSlot,
+    type:'escort_gun',by:impact.by,escortSlot:impact.escortSlot,
+    weaponId:impact.weaponIds?.[0]??'W01',
+    escortWeaponId:impact.escortWeaponId,weaponName:'Scudiera '+(impact.escortSlot+1),
+    profile:fx.profile,color:fx.color,
+    atMs:3280+(impact.by==='B'?90:0)+impact.escortSlot*160,
+    durationMs:Math.max(410,Math.min(900,fx.durationMs))});
+   events.push({id:'escort-barrier-'+impact.by+'-'+impact.escortSlot,
+    type:'escort_barrier',by:impact.by,
+    atMs:5040+(impact.by==='B'?75:0),durationMs:650,
+    damage:impact.damage,intercepted:impact.intercepted,
+    label:impact.damage>0?'-'+impact.damage+' BARRIERA · SCUDIERA':
+     impact.intercepted?'SCUDIERA INTERCETTATA':'SCUDIERA · NESSUN DANNO'});
+  }
   if(impact.kind==='barrier'){
    events.push({id:'barrier-'+impact.by,type:'barrier',by:impact.by,
     atMs:4610,durationMs:750,damage:impact.damage,intercepted:impact.intercepted,
@@ -88,7 +106,8 @@ export function currentTacticalPlayback(battle,nowMs){
  const events=tacticalCombatTimeline(battle);
  return {
   elapsedMs,stage:tacticalPlaybackStage(elapsedMs),
-  shots:events.filter(e=>e.type==='gun'&&elapsedMs>=e.atMs&&elapsedMs<e.atMs+e.durationMs),
+  shots:events.filter(e=>['gun','escort_gun'].includes(e.type)&&
+   elapsedMs>=e.atMs&&elapsedMs<e.atMs+e.durationMs),
   notices:events.filter(e=>e.type!=='gun'&&e.type!=='outcome'&&elapsedMs>=e.atMs&&elapsedMs<e.atMs+e.durationMs),
   outcome:events.find(e=>e.type==='outcome'&&elapsedMs>=e.atMs),
   sides:projectedCombatSides(battle,elapsedMs)
