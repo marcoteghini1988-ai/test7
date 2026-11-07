@@ -6,7 +6,7 @@ import {activeNumericBossAbilities} from './bossNumericDecks.js';
 
 export const COMBAT_CYCLE_MS=8000;
 export const tacticalCombatClock=round=>Math.max(0,(Math.max(1,Math.floor(round||1))-1)*COMBAT_CYCLE_MS);
-export function tacticalStatusDuration(side,type,{ionDurationFactor=null}={}){
+export function tacticalStatusDuration(side,type,{ionDurationFactor=null,characterIonFactor=1}={}){
  if(!['ionized','corroded'].includes(type))return 0;
  const base=type==='ionized'?SHOT_RULES.ionizedDurationMs:SHOT_RULES.corrosionDurationMs;
  const state=side?.bossNumericDeck;
@@ -17,7 +17,8 @@ export function tacticalStatusDuration(side,type,{ionDurationFactor=null}={}){
   resistance=activeNumericBossAbilities(state.id,state.level)[0]?.value||0;
  const arena=type==='ionized'&&Number.isFinite(ionDurationFactor)&&ionDurationFactor>0?
   ionDurationFactor:1;
- return Math.max(0,Math.floor(base*(100-resistance)/100*arena+1e-9));
+ const character=type==='ionized'&&Number.isFinite(characterIonFactor)&&characterIonFactor>0?characterIonFactor:1;
+ return Math.max(0,Math.floor(base*(100-resistance)/100*arena*character+1e-9));
 }
 export function tacticalStatusActive(side,type,round){
  const until=side?.statusUntil?.[type];
