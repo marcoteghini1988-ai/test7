@@ -35,7 +35,7 @@ function startSession(options){
   const specialCollection=readSpecialCollection();
   const setup=officialBattleSetup({...options,shipCollection,specialCollection,
    seed:Math.floor(Math.random()*0x7fffffff)+1,nowMs:Date.now()});
-  return {battle:setup.battle,error:'',shipCollection};
+  return {battle:setup.battle,bossEncounter:setup.bossEncounter,error:'',shipCollection};
  }catch(e){return {battle:null,error:e?.message||'Impossibile caricare il duello',shipCollection:null};}
 }
 function Ship3D({
@@ -277,7 +277,7 @@ export default function OfficialBattle3D({
     <div className="enemy-status">
      <div className="portrait">◆</div>
      <div><b>{gameMode==='pvp'?'AVVERSARIO · IA LOCALE':
-      bossPlanetId&&bossSectorLevel===10?'BOSS DEL PIANETA':'AVVERSARIO'}
+      session.bossEncounter?'BOSS · '+session.bossEncounter.name:'AVVERSARIO'
       {displaySector?' · '+displaySector:''}</b>
       <small>SCUDO {displayed.B.defense.shield.hp}/{displayed.B.defense.shield.max} ·
        SCUDIERE {displayed.B.escorts.filter(e=>e.hp>0).length}</small></div>
@@ -442,6 +442,11 @@ export default function OfficialBattle3D({
        ' A 0 HP: '+TACTICAL_VITAL_EFFECTS[id].destroyed}</span>
      </p>)}
      <p>{'Arena: '+arena.name+'. '+arena.description}</p>
+     {session.bossEncounter&&<p><b>{'BOSS · '+session.bossEncounter.name}</b>
+      <span>{'Potere esclusivo: '+session.bossEncounter.exclusiveAbility+
+       '. Mazzo numerico: '+session.bossEncounter.numericDeckId+
+       ' · livello '+session.bossEncounter.numericDeckLevel+
+       '. Arena esclusiva: '+arena.name+'.'}</span></p>}
      {player.bossNumericDeck&&<>
       <h3>PASSIVE DEL MAZZO BOSS EQUIPAGGIATO</h3>
       {activeNumericBossAbilities(player.bossNumericDeck.id,player.bossNumericDeck.level)
