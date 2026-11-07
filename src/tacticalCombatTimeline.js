@@ -65,6 +65,7 @@ export function tacticalCombatTimeline(battle){
   if(impact.kind==='barrier'){
    events.push({id:'barrier-'+impact.by,type:'barrier',by:impact.by,
     atMs:4610,durationMs:750,damage:impact.damage,intercepted:impact.intercepted,
+    pilotBonus:impact.pilotBonus||0,pilotId:impact.pilotId||null,
     label:impact.damage>0?'-'+impact.damage+' BARRIERA':impact.intercepted?'INTERCETTATO':'NESSUN DANNO'});
   }
   if(impact.kind==='precision'){
