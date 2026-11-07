@@ -9,15 +9,30 @@ export function activateTacticalEpic(side,id,round,choice=0,log=[]){
  side.epic.active={id,untilRound:round+rule.cycles-1,startedRound:round};
  side.epic.used.push(id);
  if(id==='epic_item_7')side.heated=false;
- if(id==='epic_item_1'){
-  const deck=side.numeric.deck;
-  const index=Math.min(choice,Math.min(10,deck.length)-1);
-  if(index>0)deck.unshift(deck.splice(index,1)[0]);
-  side.epic.peek=deck.slice(0,10).map(c=>({value:c.value,suit:c.suit}));
- }
- if(id==='epic_item_3')side.epic.drawChoice=choice;
+ if(id==='epic_item_1')
+  side.epic.peek=side.numeric.deck.slice(0,10).map(c=>({value:c.value,suit:c.suit}));
+ if(id==='epic_item_3')
+  side.epic.peek=side.numeric.deck.slice(0,2).map(c=>({value:c.value,suit:c.suit}));
  log.push(side.key+': '+rule.name+' attivato per '+rule.cycles+
   (rule.cycles===1?' scontro':' scontri')+' (carta consumata)');
+}
+// Choice is made only AFTER the player has spent the Epic in a prior cycle.
+export function prepareTacticalEpicChoice(side,round,choice,log=[]){
+ if(!Number.isInteger(choice))return;
+ if(!side.epic.active||side.epic.active.startedRound>=round)return;
+ const id=side.epic.active.id;
+ if(id==='epic_item_1'){
+  const deck=side.numeric.deck;
+  if(choice<0||choice>=Math.min(10,deck.length))return;
+  if(choice>0)deck.unshift(deck.splice(choice,1)[0]);
+  side.epic.peek=deck.slice(0,10).map(c=>({value:c.value,suit:c.suit}));
+  log.push(side.key+': Möbius anticipa una carta reale tra le dieci viste');
+ }
+ if(id==='epic_item_3'){
+  side.epic.drawChoice=choice;
+  log.push(side.key+': Astrolabio sceglie la '+(choice===0?'prima':'seconda')+
+   ' carta reale alla prossima pesca');
+ }
 }
 export function expireTacticalEpic(side,round){
  if(side.epic?.active&&side.epic.active.untilRound<round)side.epic.active=null;
@@ -34,7 +49,7 @@ export function tacticalEpicMatriceDamage(side,round,op){
   side.weapons.some(w=>w.kind==='Accumulo')?2:0;
 }
 export function tacticalEpicNumericChoice(side,round){
- return tacticalEpicActive(side,'epic_item_3',round)&&side.epic.active.startedRound===round?
+ return tacticalEpicActive(side,'epic_item_3',round)&&side.epic.active.startedRound<round?
   side.epic.drawChoice??0:0;
 }
 export function resolveTacticalEpicAfterCombat(sides,round,impacts,log=[]){
