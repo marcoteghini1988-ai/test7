@@ -1,5 +1,6 @@
+import {readFileSync} from 'node:fs';
 import test from 'node:test';import assert from 'node:assert/strict';
-import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,fleetFormation,engineHudShift,engineHudPlacement,WEAPON_MOUNTS,weaponMount,weaponMuzzleCount,engineSurface,engineVisualState} from './mathFleetGeometry.js';
+import {BOARD_SIZE,ENGINE_POINTS,SHIP_ENGINE_POINTS,SHIP_PLAYER_ENGINE_POINTS,GUN_POINTS,gunPoint,enginePoint,boardPoint,sourceToTarget,fleetFormation,fleetDisplayCenters,engineHudShift,engineHudPlacement,WEAPON_MOUNTS,weaponMount,weaponMuzzleCount,engineSurface,engineVisualState} from './mathFleetGeometry.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {newVessel} from './mathDuelEngine.js';
 const box=(left,top,width,height)=>({left,top,width,height});
@@ -123,4 +124,41 @@ test('il danno visivo segue la propria gondola e non cambia lo stato degli altri
  engines.plus.hp=30;assert.equal(engineVisualState(engines.plus),'critical');
  engines.plus.hp=0;assert.equal(engineVisualState(engines.plus),'destroyed');
  assert.equal(engineVisualState(engines.minus),'intact');
+});
+
+
+test('ripristino ZIP 03/11: madre centro, nave 2 sinistra e nave 3 destra a 9:16',()=>{
+ for(const side of ['enemy','player']){
+  const ships=[{id:'N00'},{id:'C01'},{id:'R01'}];
+  assert.deepEqual(fleetDisplayCenters(ships,side),[225,83,367]);
+  assert.deepEqual(fleetDisplayCenters(ships.slice(0,1),side),[225]);
+  assert.deepEqual(fleetDisplayCenters(ships.slice(0,2),side),[121,329]);
+  const slots=fleetDisplayCenters(ships,side);
+  const frame=fleetFormation(3,side);
+  assert.equal(frame.size,124);
+  assert.equal(slots[0],BOARD_SIZE.width/2);
+  assert.equal(slots[1]+slots[2],BOARD_SIZE.width);
+  assert.equal(ships.length,3,'nessuna carta navicella scartata nel calcolo degli slot');
+ }
+});
+
+test('madre centrale anche se nello stato della flotta compare in posizione diversa',()=>{
+ for(const mother of [0,1,2]){
+  const fleet=Array.from({length:3},(_,i)=>({
+   id:'C0'+(i+1),defense:i===mother?{kind:'mother'}:null
+  }));
+  const centers=fleetDisplayCenters(fleet,'player');
+  assert.equal(centers[mother],225);
+  assert.deepEqual([...centers].sort((a,b)=>a-b),[83,225,367]);
+ }
+ assert.throws(()=>fleetDisplayCenters([],'enemy'),RangeError);
+ assert.throws(()=>fleetDisplayCenters(Array(4).fill({id:'N00'}),'player'),RangeError);
+});
+
+test('la plancia boss usa gli stessi centri per scafi, armi e selezione slot',()=>{
+ const source=readFileSync(new URL('./BossBattle3D.jsx',import.meta.url),'utf8');
+ assert.match(source,/const centers=fleetDisplayCenters\(ship\.fleet,side\)/);
+ assert.equal(source.split('centers[i]/450*100').length-1,2,
+  'sia la nave sia il pulsante della stessa nave seguono il suo indice');
+ assert.match(source,/data-fleet-role=/);
 });
