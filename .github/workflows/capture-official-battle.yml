@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - .github/workflows/capture-official-battle.yml
+  workflow_dispatch:
 jobs:
   capture:
     runs-on: ubuntu-latest
@@ -50,6 +51,20 @@ jobs:
             await page.waitForTimeout(1300);
             const seven=await page.locator('.hand .number-card').count();
             if(seven!==7)throw new Error('Numero carte non uguale a 7: '+seven);
+            const four=await page.locator('.ship-enemy .official-original-motor-targets .vessel-engine').count();
+            if(four!==4)throw new Error('La nave deve avere quattro bersagli fisici, trovati: '+four);
+            const align=await page.evaluate(()=>{
+              const hull=document.querySelector('.ship-enemy .official-mother .fleet-ship-img');
+              const targets=document.querySelector('.ship-enemy .official-original-motor-targets');
+              if(!hull||!targets)return null;
+              const a=hull.getBoundingClientRect(),b=targets.getBoundingClientRect();
+              return {dx:Math.abs(b.left-(a.left+(a.width-a.height)/2)),
+               dy:Math.abs(b.top-a.top),dw:Math.abs(b.width-a.height),
+               vitalNames:[...targets.querySelectorAll('.vessel-engine')].map(e=>e.getAttribute('aria-label'))};
+            });
+            if(!align||align.dx>2||align.dy>2||align.dw>2)
+              throw new Error('Il vecchio sistema di agganci non coincide con la scocca: '+JSON.stringify(align));
+            console.log('VITALI FISICI ORIGINALI: '+four+' per nave; SVG e bersagli allineati: '+JSON.stringify(align));
             fs.mkdirSync('docs/screenshots',{recursive:true});
             await page.screenshot({path:'docs/screenshots/plancia-attuale-battaglia.jpg',type:'jpeg',quality:88,fullPage:true,animations:'disabled'});
             console.log('CATTURA REALE: '+seven+' carte, '+JSON.stringify({errors}));
