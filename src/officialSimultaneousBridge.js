@@ -16,8 +16,12 @@ const BATTLE_MODES=new Set(['classic','adventure','campaign','pvp']);
 export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
   bossSectorLevel=null,selectedBossDeck='neutral_starter',bossDeckInventory={}}={}){
  if(!BATTLE_MODES.has(gameMode))return {enabled:false,reason:'mode'};
- if(selectedBossDeck!=='neutral_starter'&&bossDeckInventory?.[selectedBossDeck]?.unlocked)
+ // Una carta boss equipaggiata resta attiva, anche con inventari vecchi.
+ if(selectedBossDeck&&selectedBossDeck!=='neutral_starter')
   return {enabled:false,reason:'equipped_boss_passives'};
+ // Le abilita non basiche dei piloti vengono conservate finche convertite.
+ if(arguments[0]?.selectedPilot&&arguments[0].selectedPilot!=='pilot_com_1')
+  return {enabled:false,reason:'commander_abilities_pending'};
  const last=Number(bossSectorLevel??((Math.max(1,Number(sectorNumber)||1)-1)%10+1));
  if(['adventure','campaign'].includes(gameMode)&&last===10)
   return {enabled:false,reason:'boss_sector'};
