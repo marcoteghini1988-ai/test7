@@ -291,3 +291,73 @@ export function rememberTacticalSovereignHit(side,round,damage,bonus,{destroyedE
  side.bossNumericDeck={...state,supremacyArmedAfterRound:armedAt};
  return {consumed,armed:!!destroyedEnemyVital};
 }
+
+
+// PARTIAL conversions kept gated: Generatore (14) still needs the
+// timed resistance passive; Risonanza (17) still needs real escort OFFENSE.
+// Neither deck is marked tacticalBossDeckReady until all its abilities work.
+//
+// Generatore / Accumulo energetico: extra sync can only follow a true
+// positive end-of-cycle earned amount; cap of the authentic 100 sync.
+export function tacticalGeneratorSyncBonus(side,earned){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_14'||!Number.isSafeInteger(earned)||earned<=0)
+  return 0;
+ const ability=activeNumericBossAbilities(state.id,state.level)[1];
+ if(!ability?.unlocked)return 0;
+ return Math.floor(earned*ability.value/100+1e-9);
+}
+
+// Risonanza / Armi armoniche: the REAL selected weapon focus must change
+// from a previous focus that actually damaged the enemy barrier.
+// This does NOT fabricate offensive shots from the defensive escorts.
+export function tacticalResonanceNativeBonus(side,focusedWeaponId,base){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,percentage:0,extra:0,remainder:0};
+ if(state?.id!=='planet_char_17'||!Number.isSafeInteger(base)||base<=0||
+   !focusedWeaponId||!side.weapons?.some(w=>w.id===focusedWeaponId)||
+   !state.lastFocusedWeaponId||state.lastFocusedWeaponId===focusedWeaponId)
+  return inactive;
+ const ability=activeNumericBossAbilities(state.id,state.level)[0];
+ if(!ability?.unlocked)return inactive;
+ const old=Number.isSafeInteger(state.resonanceNativeRemainder)?
+  state.resonanceNativeRemainder:0;
+ const points=base*ability.value+old;
+ return {active:true,percentage:ability.value,extra:Math.floor(points/100),
+  remainder:points%100};
+}
+export function rememberTacticalResonanceNativeHit(side,focus,damage,bonus){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_17'||!(damage>0)||
+   !side.weapons?.some(w=>w.id===focus))return side;
+ side.bossNumericDeck={...state,lastFocusedWeaponId:focus,
+  resonanceNativeRemainder:bonus?.active?bonus.remainder:state.resonanceNativeRemainder};
+ return side;
+}
+// Risonanza / Frequenza multipla: a VALID precision signature including
+// at least two different real suits (not merely an arbitrary hand display).
+export function tacticalResonanceVitalBonus(side,defender,order,base){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,percentage:0,extra:0,remainder:0};
+ if(state?.id!=='planet_char_17'||!Number.isSafeInteger(base)||base<=0)
+  return inactive;
+ const ability=activeNumericBossAbilities(state.id,state.level)[1];
+ if(!ability?.unlocked)return inactive;
+ const part=defender?.defense?.parts?.[order?.vitalId],indices=order?.numericIndices;
+ if(!part||part.hp<=0||!part.exposed||!Array.isArray(indices)||
+   ![2,3].includes(indices.length)||new Set(indices).size!==indices.length)
+  return inactive;
+ const cards=indices.map(i=>side.numeric?.hand?.[i]);
+ if(cards.some(c=>!c)||new Set(cards.map(c=>c.suit)).size<2||
+   !tacticalSignatureMatches(part.signature,order.op,cards))return inactive;
+ const old=Number.isSafeInteger(state.resonanceVitalRemainder)?state.resonanceVitalRemainder:0;
+ const points=base*ability.value+old;
+ return {active:true,percentage:ability.value,extra:Math.floor(points/100),
+  remainder:points%100};
+}
+export function rememberTacticalResonanceVitalHit(side,damage,bonus){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_17'||!(damage>0)||!bonus?.active)return side;
+ side.bossNumericDeck={...state,resonanceVitalRemainder:bonus.remainder};
+ return side;
+}
