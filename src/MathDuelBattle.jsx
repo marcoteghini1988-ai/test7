@@ -377,21 +377,17 @@ function Formula({game}){
     `SELEZIONA 2 O 3 CARTE (${cards.length}/3)`}</small>
  </div>;
 }
-function FleetSetup({onClose,onStart,onEquip,collection,selected,setSelected,enemySelected,setEnemySelected,level,setLevel}){
- const [practice,setPractice]=useState(false);
- const [side,setSide]=useState('player');
+function FleetSetup({onClose,onEquip,collection}){
  const [loadout,setLoadout]=useState((collection?.loadout??[]).slice(0,1));
  const [error,setError]=useState('');
  const [saving,setSaving]=useState(false);
- const ids=side==='player'?selected:enemySelected??selected;
- const matchup=fleetCompatibility(selected.slice(0,1),(enemySelected??selected).slice(0,1),level);
- const toggle=id=>{(side==='player'?setSelected:setEnemySelected)([id]);};
  function toggleOwned(id){
-  if(saving)return;
-  const next=[id]; // Un'unica madre attiva, nessuna carta viene eliminata dall'inventario.
+  if(saving||!collection)return;
+  const next=[id];
   try{
-   if(next.length) equipShipCards(collection,next);
-   setLoadout(next);setError('');
+   equipShipCards(collection,next);
+   setLoadout(next);
+   setError('');
   }catch(e){setError(e.message);}
  }
  async function equip(){
@@ -399,24 +395,17 @@ function FleetSetup({onClose,onStart,onEquip,collection,selected,setSelected,ene
   try{await onEquip(loadout);}
   catch{setSaving(false);setError('Impossibile salvare la flotta. Riapri la collezione e riprova.');}
  }
- return <div className="modal-shade"><div className="help-card fleet-setup"><h2>{practice?'FLOTTA DI PROVA':'FLOTTA E COLLEZIONE'}</h2>
-  <div className="fleet-side-toggle"><button type="button" aria-pressed={!practice} onClick={()=>setPractice(false)}>COLLEZIONE</button><button type="button" aria-pressed={practice} disabled={saving} onClick={()=>setPractice(true)}>PROVA</button></div>
-  {practice?<><p>Prova tutte le 17 navi del catalogo con livelli temporanei. I risultati di prova non assegnano ricompense.</p>
-  <div className="fleet-side-toggle"><button type="button" aria-pressed={side==='player'} onClick={()=>setSide('player')}>LA TUA FLOTTA</button><button type="button" aria-pressed={side==='enemy'} onClick={()=>setSide('enemy')}>AVVERSARIO DI PROVA</button></div>
-  {side==='enemy'&&<label className="fleet-match"><input type="checkbox" checked={enemySelected===null} onChange={e=>setEnemySelected(e.target.checked?null:[...selected])}/> Stessa flotta del giocatore</label>}
-  <label className="fleet-level-row">Livello di prova (non acquistato) <b>{level}</b><input type="range" min="1" max="5" value={level} onChange={e=>setLevel(Number(e.target.value))}/></label>
-  <div className="fleet-setup-list">{PHASE1_SHIPS.map(s=><ShipCard key={s.id} shipId={s.id} level={level} selected={ids.includes(s.id)} onSelect={()=>toggle(s.id)}/>)}</div>
-  <p>Una sola navicella madre per parte. Le scudiere si schierano automaticamente ai livelli 3 e 5. I modelli devono condividere operazioni attaccabili.</p>
-  {!matchup.compatible&&<p className="fleet-match-warning" role="status">Flotte non compatibili a L{level}: {matchup.playerMissing.length?`alla tua flotta manca ${matchup.playerMissing.map(op=>META[op].sign).join(', ')}. `:''}{matchup.enemyMissing.length?`All'avversaria manca ${matchup.enemyMissing.map(op=>META[op].sign).join(', ')}.`:''} Scegli una nave con le operazioni mancanti oppure cambia il livello.</p>}
-  </>:collection?<><p>Carte possedute <b>{collection.cards.length}</b>. Scegli la navicella MADRE da schierare: le scudiere si sbloccano ai livelli 3 e 5. Tutte le altre carte rimangono nella collezione.</p>
+ return <div className="modal-shade"><div className="help-card fleet-setup">
+  <h2>FLOTTA E COLLEZIONE</h2>
+  {collection?<><p>Carte possedute <b>{collection.cards.length}</b>. Scegli la navicella MADRE da schierare: le scudiere si sbloccano ai livelli 3 e 5. Le altre carte restano nella collezione.</p>
    <div className="fleet-setup-list">{collection.cards.map(card=><ShipCard key={card.instanceId} shipId={card.shipId} level={card.level}
     selected={loadout.includes(card.instanceId)} onSelect={()=>toggleOwned(card.instanceId)}/>)}</div>
    {error&&<p className="fleet-match-warning" role="alert">{error}</p>}
-  </>:<p className="fleet-match-warning" role="alert">Il salvataggio della collezione non è leggibile. Puoi accedere alla flotta di prova.</p>}
+  </>:<p className="fleet-match-warning" role="alert">Il salvataggio della collezione non è leggibile. Nessuna modifica sarà applicata.</p>}
   <SpecialDeckPanel compact/>
-  <div className="fleet-setup-actions"><button className="es-button" disabled={saving} onClick={onClose}>ANNULLA</button>
-   {practice?<button className="es-button primary" disabled={!matchup.compatible} onClick={onStart}>INIZIA DUELLO</button>
-    :<button className="es-button primary" disabled={saving||!loadout.length} onClick={equip}>SALVA E SCHIERA</button>}
+  <div className="fleet-setup-actions">
+   <button className="es-button" disabled={saving} onClick={onClose}>ANNULLA</button>
+   <button className="es-button primary" disabled={saving||!collection||!loadout.length} onClick={equip}>SALVA E SCHIERA</button>
   </div>
  </div></div>;
 }
@@ -457,7 +446,7 @@ function readCollection(){
  try{return readShipCollection();}catch{return null;}
 }
 export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,selectedBossDeck='neutral_starter',bossDeckInventory={},selectedPilot='pilot_com_1',pilotInventory={},commanderDisplayName='',bossPlanetId=null,bossSectorLevel=null,onEtherConsumed,onResult,onExit}){
- const [scale,setScale]=useState(1);const [fleetIds,setFleetIds]=useState(['N00']);const [enemyFleetIds,setEnemyFleetIds]=useState(null);const [testLevel,setTestLevel]=useState(1);
+ const [scale,setScale]=useState(1);
  const [collection,setCollection]=useState(readCollection);
  const [introIndex,setIntroIndex]=useState(0);
  const [reducedIntro,setReducedIntro]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -514,7 +503,6 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  const engineRefs=useRef({player:{},enemy:{}});
  const gunRefs=useRef({player:{},enemy:{}});
  const escortRefs=useRef({player:{},enemy:{}});
- const realBattleRef=useRef(null);
  const gameRef=useRef(game);gameRef.current=game;
  const registerShipRef=(side,index,node)=>{if(node)shipRefs.current[side][index]=node; else delete shipRefs.current[side][index];};
  const registerEngineRef=(side,index,op,node)=>{const key=`${index}/${op}`;if(node)engineRefs.current[side][key]=node; else delete engineRefs.current[side][key];};
@@ -984,16 +972,9 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   if(b.round!==1||b.player.discard.length||b.phase!=='ready'){notice('La flotta si configura prima del primo attacco');return;}
   setCollection(readCollection());setFleetMenu(true);
  }
- function restartWithFleet(){
-  if(fleetCompatibility(fleetIds,enemyFleetIds??fleetIds,testLevel).compatible){
-   if(!gameRef.current.practice)realBattleRef.current=gameRef.current;
-   setIntroIndex(0);
-   write(startBattle({fleetIds,enemyFleetIds,shipLevel:testLevel},true));setFleetMenu(false);
-  }
- }
  async function saveLoadout(loadout){
   const next=await updateShipCollection(current=>equipShipCards(current,loadout));
-  const b=realBattleRef.current??gameRef.current;
+  const b=gameRef.current;
   const options=prepareMotherDuelOptions(collectionBattleOptions(next),{
    mode:b.mode,globalSector:b.level,planetId:bossPlanetId,
    planetSector:bossSectorLevel,practice:!!b.practice});
@@ -1007,14 +988,14 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   const wantedCounts=specialDeckCounts(equippedTypes);
   const sameSpecialDeck=!equippedTypes||Object.keys(wantedCounts).every(type=>counts[type]===wantedCounts[type]);
   const unchanged=sameSpecialDeck&&fleet.length===b.player.fleet.length&&fleet.every((v,i)=>v.id===b.player.fleet[i].id&&v.level===b.player.fleet[i].level);
-  if(unchanged){if(b!==gameRef.current)write(b);}
+  if(unchanged){/* La flotta equipaggiata è già attiva. */}
   else{
    // Un nuovo schieramento richiede una vera nuova partita: non mescolare
    // firme, bersagli, mazzi numerici e HP dello scontro precedente.
    setIntroIndex(0);
    write(startBattle(options,!!b.practice));
   }
-  realBattleRef.current=null;setFleetMenu(false);
+  setFleetMenu(false);
  }
  async function exitBattle(){
   const b=gameRef.current;
@@ -1060,7 +1041,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    </div>}
    <div className="toolbar"><button onClick={()=>setHelp(true)} disabled={!!intro} aria-label="Regole">?</button><button onClick={openFleet} disabled={!!intro} title="Flotta e collezione" aria-label="Flotta">⚙</button><button className="math-exit" onClick={()=>{if(game.phase==='finished'||window.confirm('Abbandonare la battaglia?'))exitBattle()}} aria-label="Torna al menu">⌂</button></div>
    <div className={'enemy-status'+(game.enemy.bossNumericDeck?' boss-marked':'')}
-     title={'COMANDANTE NEMICO: '+(commanderAbilityStatus(game.enemy)?.name||'Cadetto')}><div className="portrait">◆</div><div><b>{gameMode==='pvp'?'IA SIMULATA · NON ONLINE':'AVVERSARIO'} {game.practice?'• PROVA':displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>CMD {commanderAbilityStatus(game.enemy)?.name||'BASE'} · {game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
+     title={'COMANDANTE NEMICO: '+(commanderAbilityStatus(game.enemy)?.name||'Cadetto')}><div className="portrait">◆</div><div><b>{gameMode==='pvp'?'IA SIMULATA · NON ONLINE':'AVVERSARIO'} {displaySector&&`• ${displaySector}`}{game.enemy.bossNumericDeck?' · '+numericBossDeck(game.enemy.bossNumericDeck.id)?.name:''}</b><small>CMD {commanderAbilityStatus(game.enemy)?.name||'BASE'} · {game.vitalPrototype?`SCUDO ${game.enemy.fleet[0].defense.shield.hp}/${game.enemy.fleet[0].defense.shield.max} · VITALI ${VITAL_IDS.filter(id=>game.enemy.fleet[0].defense.parts[id].hp>0).length}/4`:`INTEGRITÀ FLOTTA ${Math.round(healthScore(game.enemy)*100)}%`}</small></div><Pips ship={game.enemy}/></div>
    <Ship side="enemy" ship={game.enemy} targets={!intro&&game.actor==='player'?game.targets:null} focused={game.targetShip} onSelectShip={chooseEnemy} selectedTarget={game.target} onTarget={selectEngine} phase={game.phase} intro={intro?.id} effects={game.effects} onSelectEscort={selectEscort} selectedEscort={game.targetEscort} registerEscortRef={registerEscortRef} availableOps={availableOps} registerShipRef={registerShipRef} registerEngineRef={registerEngineRef} registerGunRef={registerGunRef}/>
    {intro?<div className="battle-intro">
     <div className="battle-intro-status" role="status">{intro.label}
@@ -1150,8 +1131,8 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
       player:game.player,enemy:game.enemy,round:game.round,selectedCount:game.selected?.length
      });return <><p>{briefing.introduction}</p>{briefing.conditions.map(condition=>
       <p key={condition.id}><strong>{condition.label}.</strong> {condition.activation} <em>{condition.strategy}</em>{condition.status?' '+condition.status:''}</p>
-     )}</>})()}<p>{game.vitalPrototype?'DUELLO MADRE 1 CONTRO 1: lo scudo protegge quattro parti vitali. A 75%, 50%, 25% e 0% puoi scegliere una parte da esporre; un calcolo valido la danneggia. Vinci quando tutte e quattro le parti nemiche arrivano a zero HP. Le firme definitive di ogni navicella sono ancora da progettare. Le scudiere ai lati della madre si sbloccano a L3 e L5, hanno scudi propri e possono intercettare i colpi. La formula finale è temporanea; le immagini delle scudiere sono nella cartella delle risorse.':'FLOTTE MULTIPLE (versione precedente): ogni nave monta le operazioni disponibili con i relativi HP. Le scudiere collegate alla madre saranno aggiunte successivamente.'}</p><p>MAZZI SEPARATI: sette carte numeriche per i calcoli e cinque speciali nella mano tattica. Copertura Tattica usa una speciale e, per il prossimo impatto entro 15 secondi, assorbe fino al 75% del colpo sfruttando lo scudo reale della prima scudiera; non crea HP. Dal pulsante MANOVRE scegli una scudiera e gioca una carta Fusione Barriera o Fusione Assalto: la Sincronia 100 è necessaria, ma non attiva la fusione da sola. Ogni speciale giocata viene rimpiazzata immediatamente. La scudiera agganciata non può sparare autonomamente.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Puoi selezionare due oppure tre carte numeriche: con tre carte si applica la stessa operazione due volte in sequenza, con risultati intermedi interi positivi. Alcuni modelli consentono anche COPPIA o TRIS come firma alternativa dei vitali esposti: non servono poteri aggiuntivi dei semi. Ogni vitale ha una firma matematica di prova assegnata all’inizio della battaglia e mostrata sul bersaglio; i requisiti Poker definitivi rimangono da bilanciare. Le quattro parti vitali hanno HP localizzati: quando scendono al 50% o meno entrano in AVARIA con penalità reali, a zero diventano KO. Motore, armi, generatore scudi e centralina hanno effetti differenti; la distruzione del generatore azzera lo scudo. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo ha una penalità ancora da definire per il combattimento senza turni e il terzo −3 HP a te. Il numero di carte e il limite del mazzo sono provvisori. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute. La scheda Prova usa il catalogo e livelli temporanei.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
-   {fleetMenu&&<FleetSetup collection={collection} onEquip={saveLoadout} selected={fleetIds} setSelected={setFleetIds} enemySelected={enemyFleetIds} setEnemySelected={setEnemyFleetIds} level={testLevel} setLevel={setTestLevel} onClose={()=>setFleetMenu(false)} onStart={restartWithFleet}/>}
+     )}</>})()}<p>{game.vitalPrototype?'DUELLO MADRE 1 CONTRO 1: lo scudo protegge quattro parti vitali. A 75%, 50%, 25% e 0% puoi scegliere una parte da esporre; un calcolo valido la danneggia. Vinci quando tutte e quattro le parti nemiche arrivano a zero HP. Le firme definitive di ogni navicella sono ancora da progettare. Le scudiere ai lati della madre si sbloccano a L3 e L5, hanno scudi propri e possono intercettare i colpi. La formula finale è temporanea; le immagini delle scudiere sono nella cartella delle risorse.':'FLOTTE MULTIPLE (versione precedente): ogni nave monta le operazioni disponibili con i relativi HP. Le scudiere collegate alla madre saranno aggiunte successivamente.'}</p><p>MAZZI SEPARATI: sette carte numeriche per i calcoli e cinque speciali nella mano tattica. Copertura Tattica usa una speciale e, per il prossimo impatto entro 15 secondi, assorbe fino al 75% del colpo sfruttando lo scudo reale della prima scudiera; non crea HP. Dal pulsante MANOVRE scegli una scudiera e gioca una carta Fusione Barriera o Fusione Assalto: la Sincronia 100 è necessaria, ma non attiva la fusione da sola. Ogni speciale giocata viene rimpiazzata immediatamente. La scudiera agganciata non può sparare autonomamente.</p><p>Il combattimento è continuo: il giocatore non ha turni né timer e può attaccare quando ha una combinazione pronta, anche mentre altri proiettili sono in volo. L’IA decide inizialmente ogni 35–40 secondi e diventa progressivamente più veloce nei settori alti della campagna. I bersagli numerici restano fissi fino alla fine della partita. Puoi selezionare due oppure tre carte numeriche: con tre carte si applica la stessa operazione due volte in sequenza, con risultati intermedi interi positivi. Alcuni modelli consentono anche COPPIA o TRIS come firma alternativa dei vitali esposti: non servono poteri aggiuntivi dei semi. Ogni vitale ha una firma matematica di prova assegnata all’inizio della battaglia e mostrata sul bersaglio; i requisiti Poker definitivi rimangono da bilanciare. Le quattro parti vitali hanno HP localizzati: quando scendono al 50% o meno entrano in AVARIA con penalità reali, a zero diventano KO. Motore, armi, generatore scudi e centralina hanno effetti differenti; la distruzione del generatore azzera lo scudo. Tocca una nave nemica, scegli uno dei suoi motori e seleziona due carte. A=1, J=11, Q=12, K=13; la sottrazione e la divisione possono invertire le carte, ma la divisione deve essere esatta. Il risultato esatto fa scattare tutte le armi della flotta attivate dai semi delle carte.</p><p>I VALORI delle carte sono proiettili: 8♣ × 3♦ = 24 significa 8 proiettili ♣ e 3 ♦; il 24 sblocca il tiro, non è il danno. L'arma determina il danno per proiettile. Alcune armi accumulano munizioni. Le combo simultanee richiedono entrambi i semi indicati nella stessa coppia di carte.</p><p>Le combo a memoria raccolgono i semi degli ultimi 3 o 4 calcoli corretti. Quando trovi tutti i semi richiesti, l’arma spara le munizioni del proprio seme raccolte nella finestra. Dopo lo sparo o un calcolo errato la memoria dell’arma si svuota.</p><p>La nave universale spara con qualsiasi seme ma ha poca potenza. Il primo cambio carta dà +3 HP al nemico, il secondo ha una penalità ancora da definire per il combattimento senza turni e il terzo −3 HP a te. Il numero di carte e il limite del mazzo sono provvisori. A mazzo esaurito prevale l'integrità percentuale della flotta.</p><p>⚙ FLOTTA schiera le carte possedute.</p><button className="es-button primary" onClick={()=>setHelp(false)}>CHIUDI</button></div></div>}
+   {fleetMenu&&<FleetSetup collection={collection} onEquip={saveLoadout} onClose={()=>setFleetMenu(false)}/>}
   </div>
  </div>;
 }
