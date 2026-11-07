@@ -82,24 +82,6 @@
 .es-math-scope .official-duel-3d .official-cycle strong{font-size:10px;color:#a8e0ff}
 .es-math-scope .official-duel-3d .official-cycle b{font-size:11px;color:#fff}
 .es-math-scope .official-duel-3d .official-cycle em{font-style:normal;font-size:15px;font-weight:900;color:#88f2ff}
-.es-math-scope .official-duel-3d .official-targets{
- display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;
- height:30px;
-}
-.es-math-scope .official-duel-3d .official-vital{
- display:flex;flex-direction:column;justify-content:center;align-items:center;
- gap:2px;min-width:0;padding:2px;
- color:#d7f0ff;background:#0c2444;border:1px solid #427296;border-radius:4px;
- pointer-events:auto;
-}
-.es-math-scope .official-duel-3d .official-vital b{
- font-size:8px;line-height:10px;overflow:hidden;white-space:nowrap;
-}
-.es-math-scope .official-duel-3d .official-vital small{font-size:7px;line-height:9px;color:#a2cce8}
-.es-math-scope .official-duel-3d .official-vital.chosen{
- border-color:#ffd27b;background:#39426b;box-shadow:inset 0 0 7px #f9c57377;
-}
-.es-math-scope .official-duel-3d .official-vital:disabled{opacity:.4}
 .es-math-scope .official-duel-3d .special-board{top:535px;z-index:9}
 .es-math-scope .official-duel-3d .special-board-card.active{
  border-color:#fff1bb;outline:2px solid #ffdf7a;
