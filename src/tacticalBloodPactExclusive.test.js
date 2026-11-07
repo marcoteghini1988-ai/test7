@@ -167,5 +167,5 @@ test('Patto: helper rifiuta armi assenti, nemici comuni, round non validi e non 
  assert.equal(exclusiveBloodPactNativeBonus(side,15,1).extra,2);
  assert.equal(exclusiveBloodPactNativeBonus(side,15,2).active,false);
  assert.deepEqual(side.defense.parts,before.defense.parts);
- assert.equal(createExclusiveBossState(11),null);
+ assert.equal(createExclusiveBossState(11)?.id,11);
 });
