@@ -67,6 +67,47 @@ jobs:
             console.log('VITALI FISICI ORIGINALI: '+four+' per nave; SVG e bersagli allineati: '+JSON.stringify(align));
             fs.mkdirSync('docs/screenshots',{recursive:true});
             await page.screenshot({path:'docs/screenshots/plancia-attuale-battaglia.jpg',type:'jpeg',quality:88,fullPage:true,animations:'disabled'});
+            // Verify that the original physical target, not a detached HUD tile,
+            // actually selects the authoritative vital in the 30+8 UI.
+            await page.locator('.ship-enemy .official-original-motor-targets .vessel-engine')
+              .first().click({timeout:5000});
+            const selected=await page.locator('.formula-target').innerText();
+            if(!selected.includes('MOTORE'))
+              throw new Error('Selezione fisica del motore non funzionante: '+selected);
+            console.log('TAP BERSAGLIO FISICO -> '+selected);
+
+            // CI-only mount of the ORIGINAL damage renderer, no second game screen.
+            // This fixture is never committed, never added to the app or its routes.
+            fs.writeFileSync('src/__ci_vital_damage_fixture.jsx',[
+              "import React from 'react';",
+              "import {createRoot} from 'react-dom/client';",
+              "import {newVessel} from './mathDuelEngine.js';",
+              "import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';",
+              "export function mountDamageFixture(){",
+              " const root=document.querySelector('.ship-enemy .official-mother');",
+              " if(!root)throw Error('Nave reale mancante');",
+              " const previous=root.querySelector('.fleet-ship-img');if(previous)previous.style.opacity='0';",
+              " const prevTargets=root.querySelector('.official-original-motor-targets');if(prevTargets)prevTargets.style.opacity='0';",
+              " const container=document.createElement('div');",
+              " container.style.cssText='position:absolute;inset:0;pointer-events:none;z-index:15';",
+              " root.appendChild(container);",
+              " const hp={engine:0,weapons:3,shieldGenerator:6,command:10};",
+              " const defense={parts:Object.fromEntries(Object.entries(hp).map(([k,v])=>[k,{hp:v,max:10,exposed:true}]))};",
+              " createRoot(container).render(React.createElement(ShipPhysicalVitals,{",
+              "  side:'enemy',vessel:newVessel('C01',1),defense,canTarget:false,",
+              "  impactedVitals:['engine','weapons']",
+              " }));",
+              " return Object.entries(hp);",
+              "}"
+            ].join('\n'));
+            const demo=await page.evaluate(async()=>{
+              const mod=await import('/src/__ci_vital_damage_fixture.jsx');
+              return mod.mountDamageFixture();
+            });
+            await page.waitForTimeout(950);
+            await page.screenshot({path:'docs/screenshots/plancia-vitali-danneggiati.jpg',
+              type:'jpeg',quality:90,fullPage:true,animations:'disabled'});
+            console.log('CATTURA DANNI DI PROVA (non partita reale): '+JSON.stringify(demo));
             console.log('CATTURA REALE: '+seven+' carte, '+JSON.stringify({errors}));
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
@@ -77,6 +118,7 @@ jobs:
           name: plancia-reale-attuale
           path: |
             docs/screenshots/plancia-attuale-battaglia.jpg
+            docs/screenshots/plancia-vitali-danneggiati.jpg
             /tmp/eclissi-mancata-battaglia.png
           if-no-files-found: warn
       - name: Pubblica solo la cattura, senza modificare l'app
@@ -84,6 +126,6 @@ jobs:
           if [ ! -f docs/screenshots/plancia-attuale-battaglia.jpg ]; then exit 1; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add docs/screenshots/plancia-attuale-battaglia.jpg
-          git commit -m 'Salva cattura reale della plancia 3D e sette carte'
+          git add docs/screenshots/plancia-attuale-battaglia.jpg docs/screenshots/plancia-vitali-danneggiati.jpg
+          git commit -m 'Cattura plancia reale e verifica visiva dei quattro vitali fisici'
           git push
