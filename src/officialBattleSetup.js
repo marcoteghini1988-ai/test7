@@ -3,6 +3,7 @@ import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES,validateTacticalLoadout} from './simultaneousDuelEngine.js';
 import {buildTacticalBossDeck,tacticalBossProfile} from './tacticalSpecialPresets.js';
 import {validateSpecialDeck} from './specialDeckBuilder.js';
+import {arenaForBattle} from './battleArenas.js';
 
 export function officialBattleSetup({
  mode='campaign',sectorNumber=1,bossPlanetId=null,bossSectorLevel=null,
@@ -20,19 +21,20 @@ export function officialBattleSetup({
  if(!validateTacticalLoadout(specialCollection.loadout))
   throw new Error('Una carta speciale equipaggiata non è ancora compatibile con il nuovo duello');
  const rival=chooseCampaignMotherRival(equipped.shipId,equipped.level,sectorNumber,bossPlanetId,bossSectorLevel);
+ const arena=arenaForBattle(sectorNumber,mode,null,{planetId:bossPlanetId,sectorLevel:bossSectorLevel});
  const local=Number(bossSectorLevel)||((Math.max(1,Number(sectorNumber)||1)-1)%10+1);
  const boss=mode!=='pvp'&&local===10&&tacticalBossProfile(bossPlanetId);
  const opponentDeck=boss?buildTacticalBossDeck(bossPlanetId,rival.level,equipped.level):[...TACTICAL_STARTER_TYPES];
  const options={
   shipA:equipped.shipId,levelA:equipped.level,
   shipB:rival.shipId,levelB:rival.level,
-  seed,nowMs,specialDeckA:[...specialCollection.loadout],
+  seed,nowMs,arenaId:arena.id,specialDeckA:[...specialCollection.loadout],
   specialDeckB:opponentDeck,bossPlanetB:boss?Number(bossPlanetId):null
  };
  return {
   battle:createTacticalDuel(options),
   shipA:equipped.shipId,shipB:rival.shipId,
-  bossId:boss?Number(bossPlanetId):null,mode
+  bossId:boss?Number(bossPlanetId):null,arena,mode
  };
 }
 
