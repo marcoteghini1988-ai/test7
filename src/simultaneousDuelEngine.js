@@ -2,6 +2,8 @@
 // Usato nella plancia 3D della campagna standard; i premi vengono assegnati dal controller, non dal motore.
 // Gli armamenti sono i 42 del catalogo esistente: i calcoli non alimentano lo scudo.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBossDefenseHit,
+ exclusiveBossNativeBonus,rememberExclusiveBossNativeHit} from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
@@ -138,7 +140,8 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
  const escortCount=level>=5?2:level>=3?1:0;
  return equipTacticalBossDeck({key,shipId,name:ship.nome,level,weapons:nativeWeapons(shipId,level),defense,
   escorts:Array.from({length:escortCount},(_,i)=>({id:key+'-escort-'+i,hp:20,max:20})),
-  sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,seen:[],
+  sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,
+  bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
   commander:commander&&tacticalCommanderReady(commander.id)?{
    id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
   }:null,
@@ -299,6 +302,7 @@ function applyPreparation(sides,orders,log,round){
 function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
  const base=nativeBarrierPacket(atk);
+ const exclusiveNative=exclusiveBossNativeBonus(atk,base);
  const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
@@ -312,7 +316,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
   Math.floor(base*t.fusionAssault)+
   (t.tech==='laser'&&!def.escorts.some(e=>e.hp>0)?2:0)+
   (def.corroded?Math.floor(base*.25):0)+
-  (def.heated?3:0);
+  (def.heated?3:0)+exclusiveNative.extra;
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=base+Math.min(Math.floor(base*.45),bonus)+pilot.extra;
@@ -359,10 +363,18 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  // L'ambiente protegge solo la barriera madre, dopo le scudiere reali.
  const motherPacket=Math.max(0,total-intercepted);
  const bossDefenseFactor=tacticalBossMotherFactor(def);
- const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor)*(modifiers?.shieldDamageFactor||1));
+ const exclusiveDefenseFactor=exclusiveBossShieldFactor(def);
+ const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor*exclusiveDefenseFactor)*(modifiers?.shieldDamageFactor||1));
  const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
  rememberTacticalBossMotherHit(def,hit.damage);
+ rememberExclusiveBossDefenseHit(def,hit.damage);
+ rememberExclusiveBossNativeHit(atk,hit.damage,exclusiveNative);
+ if(hit.damage>0&&exclusiveDefenseFactor<1)
+  log.push(other(key)+': Gaia · Corazza tellurica consumata (−20% primo impatto alla barriera)');
+ if(hit.damage>0&&exclusiveNative.active)
+  log.push(key+': Tharsis · Assalto progressivo +'+exclusiveNative.percentage+
+   '% sulla salva nativa (bonus '+exclusiveNative.extra+', resto '+exclusiveNative.remainder+'/100)');
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
  rememberTacticalIdraHit(atk,hit.damage,idra);
  if(idra.active&&hit.damage>0)
