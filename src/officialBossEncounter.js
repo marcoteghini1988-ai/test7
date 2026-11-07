@@ -14,10 +14,15 @@ export function officialBossEncounter({mode='campaign',sectorNumber=1,planetId=n
  if(!Number.isInteger(global)||global<1)return null;
  const local=sectorLevel==null?((global-1)%10)+1:Number(sectorLevel);
  if(local!==10)return null;
+ // Campaign uses global sectors 10,20,...120; Adventure's local routing
+ // must provide the explicit planet, otherwise the old boss battle is safer.
+ if(mode==='campaign'&&((global-1)%10)+1!==10)return null;
  const selected=planetId==null?null:PHASE16A_CAMPAIGN_PLANETS.find(x=>x.id===Number(planetId));
  const fromGlobal=PHASE16A_CAMPAIGN_PLANETS[Math.floor((global-1)/10)]??null;
+ if(mode==='adventure'&&!selected)return null;
+ if(mode==='campaign'&&selected&&selected.id!==fromGlobal?.id)return null;
  const planet=selected??fromGlobal;
- if(!planet||!selected&&mode==='adventure'&&global>120)return null;
+ if(!planet)return null;
  const profile=tacticalBossProfile(planet.id);
  const deck=numericBossDeck(planet.deck);
  const arena=battleArena('boss_'+planet.id);
