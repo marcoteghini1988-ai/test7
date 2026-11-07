@@ -205,3 +205,11 @@ La precedente numerazione locale dei punti 44–47 NON è la chiusura della mast
 - PvP del nuovo motore identificato come simulazione IA finché non esisterà un protocollo online autentico.
 
 **Non risultano risolti** tutti i 53 punti. Restano le firme matematiche definitive, l'ulteriore varietà di attacchi e boss, il bilanciamento in partite reali, la migrazione/realizzazione del PvP online, le economie più avanzate, gli asset 3D e il collaudo fisico. Non anticipare i tutorial: richiesta dell'utente. Utilizzare il nuovo rapporto operativo per le prossime correzioni senza ripetere domande già decise.
+
+
+## 7 novembre 2026 — Nuovo DUELLO TATTICO simultaneo (decisione successiva)
+- L'utente ha approvato come nuova meccanica di riferimento la simulazione a sei scontri: **30 secondi preparazione simultanea** di A e B, ordini sigillati o scadenza, **8 secondi di risoluzione**; non turni attacco/difesa alternati, non sparatutto continuo.
+- **Armi integrate delle navicelle** = danni alla barriera; **calcoli 2/3 carte e Poker** = attacchi ai quattro vitali esposti. Carte speciali = ordini, contromisure, potenziamenti tattici, fusioni e riparazioni, non munizioni generiche. Struttura collezionabile 17 navi/42 armi, 24/5 speciali e 7 numeriche.
+- Specifica e checklist: [ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md](./ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md).
+- Prima implementazione reale separata in `src/simultaneousDuelEngine.js`, `src/tacticalDuelDemoAi.js`, `src/TacticalDuelPrototype.jsx` e relativi test e CSS. Accesso anteprima soltanto via `?tacticalPreview=1`. Non attribuisce ricompense; l'App ufficiale resta disponibile senza parametro.
+- Ancora mancanti: firme definitive per 17 modelli, armamenti/animazioni fedeli nel tempo, tutte le speciali, IA boss, integrazione alle modalità, vero PvP online e collaudo telefono.
