@@ -136,3 +136,15 @@
 - Presentazione di effetti speciali e personaggi/terreni futuri senza aumentare arbitrariamente il numero di slot.
 
 **Priorità:** requisito *in scaletta*, non sostituisce l'attività interrotta (12 passive boss, poi personaggi). Aspettare le ulteriori idee che l'utente vuole elencare; non applicare questo redesign alla campagna ufficiale prima dell'approvazione del layout e dei test di gameplay.
+
+## Ripristino del riferimento grafico originale test7 — 7 novembre 2026
+
+**Richiesta vincolante:** gli utenti hanno respinto le plance ridisegnate e i piccoli widget nave del prototipo. Il riferimento storico ESATTO è l'archivio `ECLISSI_STELLARE_TRASFERIMENTO_COMPLETO_CHAT_WORK_03_11_2026.zip` (contenente `RIFERIMENTO_VISIVO_OBBLIGATORIO_PLANCIA_3D.png` e la base Fase 1I). Lo ZIP master `ECLISSI_STELLARE_MEMORIA_MASTER_53_PUNTI_05_11_2026.zip` registra la stessa direzione artistica. Non confondere questo materiale con le nuove immagini generative della plancia del 7 novembre, che NON sono il riferimento.
+
+- **Arena originale**: immagine REALE e già versionata `public/assets/mathduel/arena_titanio_9x16.webp`, già usata da `src/MathDuelBattle.jsx`. Pavimento metallico 3D, prospettiva, bordi e luci rossi sopra e blu sotto, pianeta e galassia. Niente griglia digitale piatta né nuovo campo generato.
+- **Navicelle originali**: `src/ShipPresentation.jsx` `ShipArtwork`, viste diverse `public/assets/mathfleet/views/enemy_to_player/` e `player_to_enemy/`, evoluzione dello scafo L1-L5; `MountedWeapons` con montaggi originali e vere bocche da fuoco; scudiere con asset esistenti `public/assets/escorts/<id>_escort_<n>.svg`.
+- **Codice del duello tattico recuperato**: `src/TacticalDuelPrototype.jsx` e `.css` ora riutilizzano quegli stessi asset. Il layout della zona di battaglia è 9:16, con navi grandi sopra e sotto, senza sostituire `MathDuelBattle`. Il menu sperimentale è comprimibile per lasciare spazio all'arena. La logica di 30 s + 8 s, le 7 numeriche e le 5 speciali non viene sovrascritta.
+- **Limite da verificare**: la composizione grafica finale nel browser mobile non è ancora stata osservata direttamente; serve il collaudo su StackBlitz e un ulteriore passaggio per inserire nelle stesse coordinate **fisiche della plancia storica** i due mazzi, gli slot di combinazione, le cinque speciali e il cestino. Non spostare o ridisegnare navi e scenario senza approvazione.
+- **Recupero tramite GitHub**: `backup-prima-combattimento-realtime-2026-11-05` conserva un backup del progetto precedente alle variazioni in tempo reale, e `backup-prima-scudiere-collegate-2026-11-05` conserva la fase precedente alle scudiere collegate. Conservare questi riferimenti senza sostituire indiscriminatamente `main`.
+
+**Regola:** aggiornamenti futuri = estendere la plancia originale, NON inventare una plancia nuova. Non confondere screenshot artistico, render generato e stato reale del browser.
