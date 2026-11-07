@@ -22,9 +22,35 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'support-shield-repair':{name:'Riparazione scudo',kind:'support',help:'+20 HP alla barriera se il generatore è attivo'},
  'shot-piercing':{name:'Colpo perforante',kind:'offense',help:'Bypassa intercettazione scudiera sul 20% del pacchetto, non le firme'},
  'shot-ion':{name:'Impulso ionico',kind:'control',help:'Se la barriera nemica subisce danno, l’intercettazione delle scudiere si riduce nello scontro successivo'},
- 'tactic-numeric-recycle':{name:'Ricambio numerico',kind:'support',help:'Scarta fino a due carte numeriche a fine scontro e ripescale'}
+ 'tactic-numeric-recycle':{name:'Ricambio numerico',kind:'support',help:'Scarta fino a due carte numeriche a fine scontro e ripescale'},
+ 'fusion-strike':{name:'Fusione Assalto',kind:'fusion',help:'Una scudiera viva, 100 Sincronia: +25% barriera madre, scudiera agganciata senza fuoco autonomo'},
+ 'fusion-twin':{name:'Fusione Gemellare',kind:'fusion',help:'Due scudiere vive, 100 Sincronia: intercettazione fino al 55% su HP veri'},
+ 'fusion-triad':{name:'Fusione Trina',kind:'fusion',help:'Due scudiere vive, 100 Sincronia: +35% barriera e intercettazione fino al 40% su HP veri'},
+ 'tactical-cover':{name:'Copertura Tattica',kind:'defense',help:'Scudiera viva: fino al 75% di un impatto assorbito dal suo scudo reale'},
+ 'shot-corrosion':{name:'Corrosione',kind:'control',help:'Se la barriera subisce un colpo, il successivo colpo nativo infligge +25% alla barriera'},
+ 'support-status-purge':{name:'Pulizia Sistemi',kind:'support',help:'Rimuove Ionico e Corrosione dalla propria madre, non ripara HP'},
+ 'support-escort-repair':{name:'Riparazione Scudiera',kind:'support',help:'Ripara fino a 15 HP su una scudiera operativa, senza rianimarla'}
 });
-export const TACTICAL_STARTER_TYPES=Object.freeze(Object.keys(TACTICAL_SPECIALS).flatMap(type=>[type,type]));
+// The twelve-card-family prototype starter is preserved for old tests and
+// existing snapshots; new loadout presets are opt-in and still use 24 cards.
+const TACTICAL_STARTER_FAMILIES=Object.freeze([
+ 'tactic-power-shift','tactic-scan','tactic-suppress','fusion-barrier',
+ 'tactic-counter','tactic-reactive','tactic-kinetic','tactic-impact',
+ 'support-shield-repair','shot-piercing','shot-ion','tactic-numeric-recycle'
+]);
+export const TACTICAL_STARTER_TYPES=Object.freeze(TACTICAL_STARTER_FAMILIES.flatMap(type=>[type,type]));
+export const TACTICAL_SPECIAL_DECK_SIZE=24;
+export const TACTICAL_SPECIAL_COPY_LIMIT=6;
+export function validateTacticalLoadout(types){
+ if(!Array.isArray(types)||types.length!==TACTICAL_SPECIAL_DECK_SIZE)return false;
+ const counts={};
+ for(const type of types){
+  if(!Object.hasOwn(TACTICAL_SPECIALS,type))return false;
+  counts[type]=(counts[type]||0)+1;
+  if(counts[type]>TACTICAL_SPECIAL_COPY_LIMIT)return false;
+ }
+ return true;
+}
 const CARD_SUITS=['♣','♦','♥','♠'];
 const NATIVE_GUNS=PHASE1_CATALOG.weapons;
 const SHIPS=PHASE1_CATALOG.ships;
@@ -53,14 +79,19 @@ function numericPile(key,seed){
  const ids=new Set(hand.map(c=>c.id));
  return {hand,deck:shuffle(all.filter(c=>!ids.has(c.id)),seedRandom(seed)),discard:[]};
 }
-function specialPile(key,seed){
- const cards=TACTICAL_STARTER_TYPES.map((type,i)=>({id:key+'-s-'+i,type}));
- // Pick one actual instance for every preselected type.
+function specialPile(key,seed,loadout=null){
+ const types=loadout??TACTICAL_STARTER_TYPES;
+ if(!validateTacticalLoadout(types))throw new Error('Mazzo tattico non valido: 24 carte, massimo 6 copie');
+ const cards=types.map((type,i)=>({id:key+'-s-'+i,type}));
  const used=new Set();
- const realHand=SPECIAL_STARTS[key].map(type=>{
+ // The baseline duel retains its original demonstrative opening hands.
+ // All other decks draw five real instances from the 24-card list.
+ const opening=loadout?shuffle(cards,seedRandom(seed+59)).slice(0,5):
+  SPECIAL_STARTS[key].map(type=>{
    const card=cards.find(c=>c.type===type&&!used.has(c.id));used.add(card.id);return card;
- });
- return {hand:realHand,deck:shuffle(cards.filter(c=>!used.has(c.id)),seedRandom(seed)),discard:[]};
+  });
+ for(const card of opening)used.add(card.id);
+ return {hand:opening,deck:shuffle(cards.filter(c=>!used.has(c.id)),seedRandom(seed)),discard:[]};
 }
 function nativeWeapons(shipId,level){
  return NATIVE_GUNS.filter(w=>w.nave_id===shipId).map(w=>({
@@ -69,20 +100,21 @@ function nativeWeapons(shipId,level){
  }));
 }
 export function nativeBarrierPacket(side){return tacticalBarrierPower(side).amount;}
-function createSide(key,shipId,level,seed){
+function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null){
  const ship=SHIPS.find(x=>x.id===shipId);
  if(!ship||!Number.isInteger(level)||level<1||level>5)throw new Error('Navicella o livello non valido');
  const defense=createMotherDefense({shipId,shieldMax:60,partHp:10,signatures:tacticalShipSignatures(shipId)});
  const escortCount=level>=5?2:level>=3?1:0;
  return {key,shipId,name:ship.nome,level,weapons:nativeWeapons(shipId,level),defense,
   escorts:Array.from({length:escortCount},(_,i)=>({id:key+'-escort-'+i,hp:20,max:20})),
-  sync:0,ionized:false,seen:[],numeric:numericPile(key,seed+3),special:specialPile(key,seed+13)};
+  sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,seen:[],numeric:numericPile(key,seed+3),special:specialPile(key,seed+13,specialDeck)};
 }
-export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0}={}){
+export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,
+ specialDeckA=null,specialDeckB=null,bossPlanetB=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
  return {schemaVersion:1,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
-  sides:{A:createSide('A',shipA,levelA,seed),B:createSide('B',shipB,levelB,seed+43)},
+  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA),B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB)},
   history:[],lastEvents:[]};
 }
 function uniqueIndices(value,max,limit){
