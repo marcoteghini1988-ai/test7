@@ -127,3 +127,8 @@
 .tdp-setup-extra select{width:100%;min-width:0;max-width:100%;padding:7px 4px;border:1px solid #527996;border-radius:6px;background:#122f49;color:#dbeefa;font-size:11px}
 .tdp-boss-note{color:#bde0ff!important;font-size:10px!important;letter-spacing:normal!important;margin-top:7px!important}
 @media(max-width:365px){.tdp-setup-extra{grid-template-columns:1fr}.tdp-setup-grid{grid-template-columns:2fr 1fr 2fr 1fr}}
+
+/* Scelta della vera arma integrata nella fase di preparazione. */
+.tdp-focus{display:flex;align-items:flex-start;flex-direction:column;gap:5px;color:#bcd9ea;font-size:11px}
+.tdp-focus select{width:100%;padding:8px;border-radius:7px;background:#102b44;border:1px solid #4e89aa;color:#e6f6ff;font-size:12px}
+.tdp-focus select:focus-visible{outline:2px solid #78c9f5}
