@@ -420,7 +420,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const magma=exclusiveMagmaNativeAdjustment(atk,base,round);
  const magmaDeck=tacticalMagmaNativeBonus(atk,t.types,base);
  const resonanceDeck=tacticalResonanceNativeBonus(atk,t.weaponFocusId,base);
- const characterNative=bossCharacterNativeBonus(atk,def,round,base);
+ const characterNative=bossCharacterNativeBonus(atk,def,round,base,
+  cycleStart[key].defense.shield.hp);
  const supremacy=tacticalSovereignSupremacyBonus(atk,base,round);
  const standardPilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  const advancedPilot=tacticalBossCommanderAttackBonus(atk,def,orders[key],t.types,base,round);
