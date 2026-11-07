@@ -2,9 +2,11 @@
 // NON viene usato dalla campagna/PvP ufficiale e NON accredita ricompense.
 // Gli armamenti sono i 42 del catalogo esistente: i calcoli non alimentano lo scudo.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
+import {tacticalBarrierPower} from './tacticalArmamentBalance.js';
 import {
   VITAL_IDS,createMotherDefense,damageMotherShield,exposeMotherPart,
-  hitMotherPart,remainingExposureSlots,matchesVitalSignature,motherDestroyed
+  hitMotherPart,remainingExposureSlots,motherDestroyed
 } from './vitalDefense.js';
 
 export const TACTICAL_TIMING=Object.freeze({prepareMs:30000,resolveMs:8000,maxRounds:20});
@@ -34,13 +36,9 @@ const SPECIAL_STARTS={
  A:['tactic-power-shift','tactic-scan','tactic-suppress','fusion-barrier','tactic-counter'],
  B:['tactic-reactive','tactic-scan','tactic-kinetic','tactic-counter','tactic-impact']
 };
-const SIGNATURES=Object.freeze({
- engine:{kind:'mathGate',op:'times',target:12,allowedCardCounts:[2,3]},
- weapons:{kind:'mathGate',op:'minus',target:3,allowedCardCounts:[2,3]},
- shieldGenerator:{kind:'mathGate',op:'plus',target:9,allowedCardCounts:[2,3]},
- command:{kind:'poker',pattern:'pair'}
-});
-export const TACTICAL_SIGNATURES=SIGNATURES;
+// Compatibilità esterna con il prototipo iniziale. Le 17 firme vive sono ora
+// selezionate attraverso tacticalShipSignatures(shipId), mai condivise.
+export const TACTICAL_SIGNATURES=tacticalShipSignatures('C01');
 const clone=o=>structuredClone(o);
 const positive=n=>Number.isFinite(n)&&n>0?Math.floor(n):0;
 const other=side=>side==='A'?'B':'A';
@@ -70,17 +68,11 @@ function nativeWeapons(shipId,level){
    damage:w.danno_colpo_L1+Math.floor((w.danno_colpo_L5-w.danno_colpo_L1)*(level-1)/4)
  }));
 }
-export function nativeBarrierPacket(side){
- let amount=side.weapons.reduce((sum,w)=>sum+w.damage*(w.kind==='Accumulo'?3:4),0);
- const d=side.defense.parts;
- if(d.weapons.hp===0)amount=Math.floor(amount*.5);
- if(d.engine.hp===0)amount=Math.floor(amount*.75);
- return amount;
-}
+export function nativeBarrierPacket(side){return tacticalBarrierPower(side).amount;}
 function createSide(key,shipId,level,seed){
  const ship=SHIPS.find(x=>x.id===shipId);
  if(!ship||!Number.isInteger(level)||level<1||level>5)throw new Error('Navicella o livello non valido');
- const defense=createMotherDefense({shipId,shieldMax:60,partHp:10,signatures:SIGNATURES});
+ const defense=createMotherDefense({shipId,shieldMax:60,partHp:10,signatures:tacticalShipSignatures(shipId)});
  const escortCount=level>=5?2:level>=3?1:0;
  return {key,shipId,name:ship.nome,level,weapons:nativeWeapons(shipId,level),defense,
   escorts:Array.from({length:escortCount},(_,i)=>({id:key+'-escort-'+i,hp:20,max:20})),
@@ -201,15 +193,11 @@ function applyVitalAttack(sides,key,order,status,log,impacts){
  const target=order.vitalId;
  let defense=def.defense;
  const signature=defense.parts[target].signature;
- const matches=matchesVitalSignature(signature,cards);
- if(!matches||((signature?.kind==='poker')!==(order.op==='pair'))){
+ const matches=tacticalSignatureMatches(signature,order.op,cards);
+ if(!matches){
   impacts.push({kind:'precision',by:key,target,damage:0,reason:'invalid_signature'});
   log.push(key+': combinazione non valida per '+target+' — numeriche consumate');
   return 0;
- }
- if(signature?.kind!=='poker'&&signature.op!==order.op){
-  impacts.push({kind:'precision',by:key,target,damage:0,reason:'invalid_operation'});
-  log.push(key+': operazione non valida per '+target);return 0;
  }
  if(!defense.parts[target].exposed&&remainingExposureSlots(defense)>0)
    defense=exposeMotherPart(defense,target).defense;
