@@ -122,3 +122,23 @@ Le identità e le associazioni pianeta-boss sono recuperate dal codice storico `
 **Stato: 6/12 poteri esclusivi nel nuovo motore**. Rimangono Ombre (9), Idra (11), Generatore (14), Risonanza (17), Nucleo Magmatico (19), Sovrano (20). Le passive numeriche restano a 9/23, con 14 da migrare. La campagna boss utilizza ancora BossBattle3D.jsx per compatibilità: l'integrazione dei nuovi poteri nei settori ufficiali non è ancora completata.
 
 **Prossimo punto della scaletta:** Signore delle Ombre — Plutone (ID 9), Patto di sangue. Sacrificio reale di 4 HP della barriera del boss, almeno 13 HP prima del costo, generatore integro, cooldown 3 cicli, +8% sulle armi native vere; il costo si paga anche se il colpo fallisce. Potere distinto dalle due passive del mazzo Ombre.
+
+## Aggiornamento Signore delle Ombre — settimo boss esclusivo
+
+**Implementato su test7/main nel motore simultaneo** Patto di sangue, Signore delle Ombre di Plutone (ID 9). Rimane indipendente dalle due passive NUMERICHE collezionabili del mazzo Ombre, Potenza disperata e Oscurità terminale, che non sono state alterate.
+
+**Costo e scelta automatica del boss:** all'inizio del ciclo il boss può sacrificare 4 HP REALI della propria barriera, soltanto con barriera >12 HP, generatore operativo, armi native presenti e cooldown rispettato. La logica automatica usa solo salute, generatore, armi e contatore pubblico del boss; non legge mano, ordini nascosti o pesca del giocatore. Il sacrificio passa attraverso damageMotherShield, aggiorna davvero gli HP, ed è già visibile nella fotografia preparata: può anche esporre vitali secondo le soglie normali.
+
+**Tempistica:** il costo viene pagato DOPO aver registrato la fotografia iniziale del ciclo e PRIMA delle riparazioni e dei due colpi nativi. Una riparazione nel medesimo ciclo NON permette di aggirare la soglia >12 se alla partenza gli HP erano 12; se invece il Patto è valido la riparazione successiva non restituisce gratuitamente i 4 HP. Il costo rimane perso anche se il colpo del boss è annullato o se la barriera bersaglio è già a zero.
+
+**Intervallo:** prima attivazione possibile al ciclo 1, poi cicli 4, 7, 10 ecc., solo se i requisiti restano soddisfatti. Stato persistente bloodPactLastRound e bloodPactArmedRound, bonus applicabile esclusivamente al ciclo pagato; mai due addebiti nello stesso ciclo.
+
+**Effetto:** +8% sulle armi NATIVE del boss, con arrotondamento superiore al punto intero per non rendere nullo il bonus sulle navicelle leggere. L'incremento condivide il tetto +45% con altri potenziamenti nativi/speciali; il registro indica il bonus effettivamente applicato e separatamente il costo già versato. Non esistono attacchi extra, munizioni o ricostruzioni di HP.
+
+**Codice:** src/tacticalExclusiveBosses.js (prepareExclusiveBloodPact, exclusiveBloodPactNativeBonus), src/simultaneousDuelEngine.js (pagamento prima di applyPreparation, stesso pacchetto nativo reale), src/tacticalBloodPactExclusive.test.js (8 test dedicati). Il vecchio test del Leviatano è stato aggiornato perché Ombre è ora pronto, senza alterarne le due passive.
+
+**Verifiche:** workflow GitHub Actions 42404582665, commit 1620a96c03afcdcb54d04fef203a25bc4ed8f3d3, test logici, build e preflight superati. Nessuna modifica alla grafica dell'arena e delle navicelle.
+
+**Stato: 7/12 poteri esclusivi pronti NEL MOTORE SIMULTANEO**, cinque da convertire: Idra Criogenica (11), Generatore del Caos (14), Cristallo di Risonanza (17), Nucleo Magmatico (19), Sovrano del Vuoto (20). Le passive numeriche rimangono 9/23 convertite e 14 mancanti, filone separato. I veri settori boss campagna continuano a utilizzare il percorso compatibile BossBattle3D.jsx: il Patto non è ancora attivo in campagna.
+
+**Prossimo boss:** Idra Criogenica, Europa (ID 11), Rigenerazione criogenica. Necessario: un vero danno nativo alla barriera, generatore boss operativo, recupero di 4 HP REALI dello scudo madre nel ciclo seguente, limite originale, cooldown tre cicli, contrasto con Cuori su vitale esposto (colpo realmente valido) e nessuna riparazione di vitali KO o scudiere distrutte.
