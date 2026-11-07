@@ -65,3 +65,21 @@
 **Per provare:** apri l'anteprima del repository già collegato a StackBlitz e aggiungi `?tacticalPreview=1` all'URL della pagina dell'anteprima (non all'URL GitHub del file). Il prototipo è **A contro IA simulata**, non multiplayer online. Le speciali si selezionano per tocco, non ancora con trascinamento.
 
 **Non segnare una fase come conclusa fino a commit e CI riusciti.**
+
+
+## Decisioni aggiuntive di progettazione — 7 novembre 2026
+**Stato di questa sezione: requisiti approvati o da precisare, NON implementazioni completate.**
+- [ ] **Carte Personaggio**: non bonus fissi per tutta la partita, ma carte temporanee nel mazzo speciale, massimo un personaggio attivo alla volta, durata e potenza specifiche per carta; collezionabilità e miglioramenti conservati.
+- [ ] **Carte Personaggio Boss**: si sbloccano sconfiggendo il boss; sono diverse dai **12 mazzi numerici boss** e dalle loro **23 passive**. Le abilità della carta giocabile sono versioni bilanciate di quelle del boss nemico.
+- [ ] **Carte Terreno PvP**: carte speciali che sostituiscono visivamente l'ambiente dell'arena per una durata definita e applicano vantaggi/svantaggi; **nei boss di campagna le Carte Terreno non possono essere attivate**, perché l'arena è fissa e imposta dal boss. Conservare le arene normali dei livelli planetari.
+- [ ] **Reliquie ed Epici storici**: inventariare e convertire in carte speciali quando opportuno, preservando inventari, sblocchi, costo e unicità dell'effetto; verificare i cataloghi per quantità e ID.
+- [ ] **Dadi Quantici e moduli ricaricabili**: valutare carte speciali e/o status di carica legati alle carte, senza duplicare il modulo fisso. Riferimenti: `src/newCombat/phase16BCombat.js`, `src/newCombat/phase16FModules.js`.
+- [ ] **Numero Bomba**: progettare una carta speciale che trasformi una numerica dell'avversario in una bomba; definire bersaglio, visibilità, durata, disinnesco, contromisure e condizioni di attivazione, separandola dalla vecchia bomba del banco.
+- [ ] **Barra Malus / sabotaggi**: progettare attivazione e ricarica tramite carte speciali, con salvaguardie contro blocchi irreversibili.
+- [ ] **Carta Dorata**: recuperare seme/bonus/scadenza dal vecchio sistema e adattare la trasformazione numerica al duello simultaneo.
+- [ ] **Faglia di Vulnerabilità e altri effetti legacy**: censire il catalogo preesistente, evitare duplicati e distinguere risorse, carte, status e oggetti.
+- [ ] **PNG obbligatori per le illustrazioni create oggi via codice**: mazzi (inclusi i 12 mazzi boss), personaggi (separati dai mazzi), personaggi boss, navicelle, armi, speciali, equipaggiamenti, reliquie, terreni e fondali. La produzione delle immagini avverrà in questa chat; non sostituire con PNG statici la UI interattiva React/CSS.
+- [ ] **Consegna a ChatGPT Work**: completare registro degli asset PNG e istruzioni per collaudo visivo, collegando la checklist in `docs/WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md`. Work dovrà ricevere un incarico esplicito per aprire il repository e verificare il gioco.
+- [ ] **Prossimo sviluppo dopo la raccolta requisiti**: 12 identità/passive boss nel duello simultaneo, preservando le 23 passive dei mazzi numerici e senza confondere l'abilità del boss di campagna con la carta Personaggio Boss sbloccabile.
+
+**Documento di consegna per Work:** [WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md](./WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md). È una bozza che va completata man mano che le regole e i PNG sono approvati.
