@@ -1,4 +1,4 @@
-// Firme native del prototipo tattico: un profilo pubblico e stabile per
+// Firme matematiche del duello simultaneo ufficiale: un profilo pubblico e stabile per
 // ciascuna delle 17 madri. Sono fisse per MODELLO, non estratte a ogni scontro.
 // I pattern Poker di 4/5 carte rimangono fuori finché UI e IA non li gestiscono.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
