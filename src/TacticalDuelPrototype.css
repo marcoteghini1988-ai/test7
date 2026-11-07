@@ -132,3 +132,9 @@
 .tdp-focus{display:flex;align-items:flex-start;flex-direction:column;gap:5px;color:#bcd9ea;font-size:11px}
 .tdp-focus select{width:100%;padding:8px;border-radius:7px;background:#102b44;border:1px solid #4e89aa;color:#e6f6ff;font-size:12px}
 .tdp-focus select:focus-visible{outline:2px solid #78c9f5}
+
+/* Sei carte Oggetto Epico: anteprima esplicita e scelta reale nel ciclo seguente. */
+.tdp-epic-preview,.tdp-epic-choice{display:flex;flex-direction:column;gap:5px;margin-top:8px;color:#e1c5ff;font-size:11px;font-weight:700}
+.tdp-epic-preview select,.tdp-epic-choice select{width:100%;min-width:0;padding:8px 7px;border-radius:7px;border:1px solid #8e6bab;background:#241737;color:#f2e5ff;font-size:11px}
+.tdp-epic-status{margin:9px 0 2px;padding:8px;background:#301e44;border:1px solid #b28be5;border-radius:7px;color:#f7e4ff;font-weight:800;font-size:11px}
+.tdp-epic-peek{padding:7px;border:1px solid #6c547d;border-radius:7px;color:#dccdff;background:#23172f;font-size:11px}
