@@ -119,6 +119,8 @@ test('Corrosione richiede un colpo alla barriera e agisce solo sullo scontro seg
  assert.equal(next.phase,'planning');
  const regular=structuredClone(next);
  regular.sides.B.corroded=false;
+ // The timed engine stores a public combat-clock expiry as well as the flag.
+ regular.sides.B.statusUntil.corroded=0;
  const corroded=resolve(next,idle,idle,8200);
  const uncorroded=resolve(regular,idle,idle,8200);
  assert.ok(corroded.history[1].shieldA>uncorroded.history[1].shieldA);
