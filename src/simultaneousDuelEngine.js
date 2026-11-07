@@ -29,7 +29,8 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalMagmaVitalBonus,rememberTacticalMagmaVitalHit,
  tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit,
  tacticalGeneratorSyncBonus,tacticalResonanceNativeBonus,rememberTacticalResonanceNativeHit,
- tacticalResonanceVitalBonus,rememberTacticalResonanceVitalHit} from './tacticalBossDecks.js';
+ tacticalResonanceVitalBonus,rememberTacticalResonanceVitalHit,
+ tacticalAfroditeRepairAmount} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
@@ -301,10 +302,14 @@ function applyPreparation(sides,orders,log,round){
   if(types.includes('support-shield-repair')){
    const poisoned=exclusiveNeurotoxinActive(side,round);
    const repair=exclusiveNeurotoxinRepairAmount(side,round,20);
-   const fixed=restoreMotherShield(side.defense,repair);
+   const improved=tacticalAfroditeRepairAmount(side,repair);
+   const baseline=improved!==repair?restoreMotherShield(side.defense,repair).repaired:0;
+   const fixed=restoreMotherShield(side.defense,improved);
    side.defense=fixed.defense;
+   const afroditeExtra=improved!==repair?Math.max(0,fixed.repaired-baseline):0;
    log.push(key+': barriera riparata +'+fixed.repaired+
-    (poisoned?' (Neurotossina: −10% riparazione)':''));
+    (poisoned?' (Neurotossina: −10% riparazione)':'')+
+    (improved!==repair?' (Afrodite · Sintesi curativa +'+afroditeExtra+' HP effettivi)':''));
   }
   if(types.includes('support-escort-repair')){
    const escort=side.escorts.find(e=>e.hp>0&&e.hp<e.max);
