@@ -8,6 +8,7 @@ import {createTacticalDuel,validateTacticalLoadout} from './simultaneousDuelEngi
 import {newVessel} from './mathDuelEngine.js';
 import {VITAL_IDS} from './vitalDefense.js';
 import {arenaForBattle} from './battleArenas.js';
+import {tacticalCommanderReady} from './tacticalCommanders.js';
 
 const BATTLE_MODES=new Set(['classic','adventure','campaign','pvp']);
 
@@ -21,7 +22,7 @@ export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
  if(selectedBossDeck&&selectedBossDeck!=='neutral_starter')
   return {enabled:false,reason:'equipped_boss_passives'};
  // Le abilita non basiche dei piloti vengono conservate finche convertite.
- if(selectedPilot&&selectedPilot!=='pilot_com_1')
+ if(selectedPilot&&!tacticalCommanderReady(selectedPilot))
   return {enabled:false,reason:'commander_abilities_pending'};
  const last=Number(bossSectorLevel??((Math.max(1,Number(sectorNumber)||1)-1)%10+1));
  if(['adventure','campaign'].includes(gameMode)&&last===10)
