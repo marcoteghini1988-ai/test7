@@ -110,12 +110,15 @@ test('Calice: il ledger è solo simulato, mai accredito a portafogli o ricompens
 });
 test('Astrolabio: scegli tra due pescate già presenti nel mazzo di 52 carte',()=>{
  const b=duel('epic_item_3');
- const before=b.sides.A.numeric.deck.slice(0,2).map(c=>c.id);
- const r=play(b,{specialIndices:[0],exchangeIndices:[0],epicChoice:1});
+ const first=play(b,{specialIndices:[0]});
+ assert.equal(first.sides.A.epic.peek.length,2);
+ assert.equal(validateTacticalOrder(b,'A',{...idle,specialIndices:[0],epicChoice:1}).reason,'epic_choice_not_ready');
+ const next=advanceTacticalDuel(first,8102);
+ const before=next.sides.A.numeric.deck.slice(0,2).map(c=>c.id);
+ const r=play(next,{exchangeIndices:[0],epicChoice:1},idle,8200);
  assert.equal(r.sides.A.numeric.hand.some(c=>c.id===before[1]),true);
  assert.equal(r.sides.A.numeric.deck.some(c=>c.id===before[0]),true);
  assert.equal(r.sides.A.numeric.hand.length+r.sides.A.numeric.deck.length+r.sides.A.numeric.discard.length,52);
- assert.equal(validateTacticalOrder(b,'A',{...idle,specialIndices:[0]}).reason,'epic_requires_exchange');
 });
 test('Möbius: soltanto sotto il 30% dei vitali; anticipa una carta reale tra le prossime dieci',()=>{
  const b=duel('epic_item_1');
@@ -123,11 +126,13 @@ test('Möbius: soltanto sotto il 30% dei vitali; anticipa una carta reale tra le
  assert.equal(validateTacticalOrder(b,'A',{...idle,specialIndices:[0]}).reason,'epic_not_critical');
  criticallyDamaged(b.sides.A);
  assert.equal(tacticalEpicCritical(b.sides.A),true);
- const selected=b.sides.A.numeric.deck[5].id;
- const r=play(b,{specialIndices:[0],epicChoice:5});
- assert.equal(r.sides.A.numeric.deck[0].id,selected);
+ const r=play(b,{specialIndices:[0]});
  assert.equal(r.sides.A.epic.peek.length,10);
  assert.equal(r.sides.A.epic.active.untilRound,2);
+ const next=advanceTacticalDuel(r,8102);
+ const selected=next.sides.A.numeric.deck[5].id;
+ const chosen=play(next,{epicChoice:5},idle,8200);
+ assert.equal(chosen.sides.A.numeric.deck[0].id,selected);
 });
 test('Matrice: soltanto al 30% dei vitali e con vera arma pesante; non elude firma',()=>{
  const b=duel('epic_item_9',{shipA:'R04'});
