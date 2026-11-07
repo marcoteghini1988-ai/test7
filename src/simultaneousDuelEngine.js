@@ -77,11 +77,17 @@ const positive=n=>Number.isFinite(n)&&n>0?Math.floor(n):0;
 const other=side=>side==='A'?'B':'A';
 const seedRandom=seed=>{let x=seed>>>0||1;return ()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return (x>>>0)/4294967296;}};
 const shuffle=(array,rand)=>{const a=[...array];for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-function numericPile(key,seed){
+function numericPile(key,seed,shuffleOpening=false){
  const start=NUMERIC_STARTS[key];
  const all=CARD_SUITS.flatMap(suit=>Array.from({length:13},(_,i)=>({
    id:key+'-n-'+suit+'-'+(i+1),suit,value:i+1
  })));
+ // Le partite ufficiali pescano realmente 7 carte dal mazzo da 52.
+ // I fixture deterministici storici conservano la loro apertura solo nei test.
+ if(shuffleOpening){
+  const shuffled=shuffle(all,seedRandom(seed));
+  return {hand:shuffled.slice(0,7),deck:shuffled.slice(7),discard:[]};
+ }
  const hand=start.map(([value,suit])=>all.find(c=>c.value===value&&c.suit===suit));
  const ids=new Set(hand.map(c=>c.id));
  return {hand,deck:shuffle(all.filter(c=>!ids.has(c.id)),seedRandom(seed)),discard:[]};
@@ -112,7 +118,7 @@ function nativeWeapons(shipId,level){
  }));
 }
 export function nativeBarrierPacket(side){return tacticalBarrierPower(side).amount;}
-function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null){
+function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null,shuffleOpening=false){
  const ship=SHIPS.find(x=>x.id===shipId);
  if(!ship||!Number.isInteger(level)||level<1||level>5)throw new Error('Navicella o livello non valido');
  if(!Array.isArray(epicEntitlements)||epicEntitlements.some(id=>!isTacticalEpic(id)))
@@ -127,15 +133,15 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
   sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,seen:[],
   epic:{active:null,used:[],entitlements:[...epicEntitlements],peek:[],exchangeCredits:0,
    exchangeUntilRound:0,dustPreview:0},
-  numeric:numericPile(key,seed+3),special:specialPile(key,seed+13,specialDeck,epicOpening)};
+  numeric:numericPile(key,seed+3,shuffleOpening),special:specialPile(key,seed+13,specialDeck,epicOpening)};
 }
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,
- specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null}={}){
+ specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
  return {schemaVersion:1,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
-  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA),
-   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB)},
+  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening),
+   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening)},
   history:[],lastEvents:[]};
 }
 function uniqueIndices(value,max,limit){
