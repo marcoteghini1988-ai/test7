@@ -179,6 +179,8 @@ export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,se
   history:[],lastEvents:bossPlanetB===20?[
    'B: Sovrano del Vuoto · seme dominante '+exclusiveVoidDominantSuit(1)+
    ' (cicli 1–3, rotazione ogni 3 cicli)'
+  ]:bossPlanetB===19?[
+   'B: Nucleo Magmatico · fase CARICA per il ciclo 1 (rotazione ogni 3 cicli)'
   ]:[]};
 }
 function uniqueIndices(value,max,limit){
@@ -740,10 +742,13 @@ export function advanceTacticalDuel(battle,nowMs=0){
   if(battle.winner)return {...battle,phase:'finished'};
   const nextRound=battle.round+1;
   const bossSuit=battle.sides.B.bossExclusive?.id===20?exclusiveVoidDominantSuit(nextRound):null;
+  const bossMagma=exclusiveMagmaPhase(battle.sides.B,nextRound);
   return {...battle,phase:'planning',round:nextRound,orders:{A:null,B:null},
    deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,resolveUntilMs:null,
    lastEvents:bossSuit?[...battle.lastEvents,
     'B: Sovrano del Vuoto · seme dominante '+bossSuit+' per il ciclo '+nextRound
+   ]:bossMagma?[...battle.lastEvents,
+    'B: Nucleo Magmatico · fase '+bossMagma.toUpperCase()+' per il ciclo '+nextRound
    ]:battle.lastEvents};
  }
  if(battle.phase!=='planning')return battle;
