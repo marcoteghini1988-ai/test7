@@ -1,4 +1,7 @@
 # Eclissi Stellare — consolidamento boss e mazzi numerici
+
+**STATO CORRENTE (aggiornamento finale del 7 novembre 2026)**: **12/12 poteri esclusivi e 23/23 passive numeriche implementate e testate** nel nuovo duello simultaneo. Tutti i 12 mazzi ora sono equipaggiabili solo con inventario legittimo; Afrodite usa timer reale 13/11/9s, Sentinella/Generatore durate status reali 12/15s, Risonanza usa munizioni autentiche delle scudiere. Il settore boss di campagna resta sul vecchio motore **per scelta di sicurezza**, fino al collaudo grafico e di parità. **La fonte aggiornata è `docs/SCALLETTA_BOSS_23_PASSIVE_COMPLETE_2026-11-07.md`**. I conteggi 9/23, 15/23 e 19/23 sotto sono esclusivamente cronologia delle fasi precedenti.
+
 Stato: 7 novembre 2026 — repository ufficiale marcoteghini1988-ai/test7, ramo main. Nessuna copia del gioco; nessuna modifica agli asset grafici.
 
 ## 12/12 poteri ESCLUSIVI nel motore simultaneo
