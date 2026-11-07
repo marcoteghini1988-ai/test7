@@ -180,3 +180,16 @@
 - **Idra, L1–L6:** Precisione criogenica con divisione matematica davvero valida (+3/+5/+7%); Teste alternate dopo un colpo autentico su un vitale differente (+4/+6/+8%). Gli stati si aggiornano solo dopo danni reali, il resto centesimale sopravvive ai cicli e non viene consumato se la formula è sbagliata. Test `src/tacticalIdraPassive.test.js`.
 - **Leviatano, L1–L6:** Marea del riciclo (+4/+6/+8%) solo dopo il vero esaurimento e rimescolamento delle 52 numeriche, da spendere su una futura precisione efficace; Profondità tattica (+3/+5/+7%) soltanto con tre carte numeriche e firma valida. Le contromisure e i colpi nulli non consumano il riciclo, nessuna carta viene generata. Test `src/tacticalLeviatanoPassive.test.js`.
 - **Stato passivi numerici:** **9 abilità su 23 convertite**, nei sei mazzi Gaia (1), Tharsis (1), Crono (1), Leviatano (2), Ombre (2), Idra (2). Restano **14 abilità in 6 mazzi**: Afrodite, Sentinella Ionica, Generatore, Risonanza, Nucleo Magmatico e Sovrano. I mazzi incompleti e i piloti avanzati restano nel componente 3D compatibile. Il collaudo visivo end-to-end su Android è ancora da effettuare.
+
+## Aggiornamento di chiusura dei poteri boss e conversione numerica — 7 novembre 2026
+
+**Registro aggiornato e fonte prioritaria:** docs/CONSOLIDAMENTO_BOSS_E_PASSIVE_2026-11-07.md. Le percentuali storiche, i gradi e le abilità compatibili restano senza redesign.
+
+- **12/12 poteri ESCLUSIVI dei boss** scritti e verificati nel motore simultaneo (aggiunti Idra, Caos, Risonanza, Magma, Sovrano ai sette già presenti). Non equivale alla migrazione dei 12 boss nei settori campagna.
+- **15/23 passive NUMERICHE completamente equipaggiabili** in otto mazzi: Gaia, Tharsis, Anelli di Crono, Leviatano, Ombre, Idra, Nucleo Magmatico e Sovrano.
+- **Altre 4 passive codificate ma non equipaggiabili**, perché il loro intero mazzo è ancora incompleto: Sintesi curativa di Afrodite, Accumulo energetico del Generatore, Armi armoniche e Frequenza multipla di Risonanza. Conteggio tecnico **19/23**.
+- **4 passive ancora prive di meccanica nel motore simultaneo:** Ricambio armonico (timer reale), Isolamento ionico e Schermatura instabile (durate status), Sinfonia di flotta (scudiere con reale fuoco offensivo). Non trasformare durate in penalità di danno né inventare tiri delle scudiere.
+- **Routing di sicurezza:** officialSimultaneousEligibility conserva i boss della campagna e i quattro mazzi incompleti su BossBattle3D.jsx. Non rimuoverlo fino alla parità funzionale; le conquiste salvate e i costi reali sono invariati.
+- **Interfaccia e grafica:** arena 9:16 Titanio, navi, motori, carte, 30+8 e montaggi grafici non toccati in questa conversione.
+
+**Prima dei punti aggiuntivi (Personaggi Boss, Terreni PvP, Mutazione Firma, piloti avanzati, reliquie):** completare i quattro blocchi strutturali e testare migrazione campagna. Proseguire dalla specifica di consolidamento, non dalle percentuali obsolete delle sezioni cronologiche precedenti.
