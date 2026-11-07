@@ -39,7 +39,7 @@ function startSession(options){
  }catch(e){return {battle:null,error:e?.message||'Impossibile caricare il duello',shipCollection:null};}
 }
 function Ship3D({
- side,snapshot,hullRef,phase,selectedVital,onSelectVital,
+ side,snapshot,hullRef,escortRefs=null,phase,selectedVital,onSelectVital,
  canTarget=false,knownVitals=[],impactedVitals=[]
 }){
  const player=side==='player';
@@ -62,6 +62,7 @@ function Ship3D({
   </div>
   <div className="official-escorts" aria-label={alive+' scudiere attive'}>
    {snapshot.escorts.map((escort,i)=><div key={escort.id}
+    ref={node=>{if(escortRefs)escortRefs.current[i]=node;}}
     className={'official-escort escort-slot-'+(i+1)+(escort.hp<=0?' destroyed':'')} data-fleet-role="lateral">
     <img src={ASSET_ROOT+'/escorts/'+snapshot.shipId+'_escort_'+(i+1)+'.svg'}
      alt={'Scudiera '+(i+1)} draggable={false}/>
@@ -134,7 +135,8 @@ export default function OfficialBattle3D({
  const [menu,setMenu]=useState('');
  const [busy,setBusy]=useState(false);
  const [roundLog,setRoundLog]=useState(false);
- const hullA=useRef(null),hullB=useRef(null),resultClaimed=useRef(false);
+ const hullA=useRef(null),hullB=useRef(null);
+ const escortA=useRef([]),escortB=useRef([]),resultClaimed=useRef(false);
  useEffect(()=>{
   const tick=setInterval(()=>{
    const at=Date.now();
@@ -280,7 +282,7 @@ export default function OfficialBattle3D({
       <small>SCUDO {displayed.B.defense.shield.hp}/{displayed.B.defense.shield.max} ·
        SCUDIERE {displayed.B.escorts.filter(e=>e.hp>0).length}</small></div>
     </div>
-    <Ship3D side="enemy" snapshot={displayed.B} hullRef={hullB} phase={battle.phase}
+    <Ship3D side="enemy" snapshot={displayed.B} hullRef={hullB} escortRefs={escortB} phase={battle.phase}
      selectedVital={draft.vitalId} canTarget={!locked} knownVitals={player.seen}
      impactedVitals={recentImpacts.B} onSelectVital={id=>setDraft(d=>{
       const part=battle.sides.B.defense.parts[id];
@@ -294,7 +296,7 @@ export default function OfficialBattle3D({
       <em>{battle.phase==='finished'?'✓':nextSeconds+'s'}</em>
      </div>
     </section>
-    <Ship3D side="player" snapshot={displayed.A} hullRef={hullA} phase={battle.phase}
+    <Ship3D side="player" snapshot={displayed.A} hullRef={hullA} escortRefs={escortA} phase={battle.phase}
      impactedVitals={recentImpacts.A}/>
     <div className="deck left deck-special" aria-label="Mazzo delle carte speciali">
      <div className="deck-graphic">✧</div><small>SPECIALI</small><strong>{player.special.deck.length}</strong>
@@ -373,7 +375,7 @@ export default function OfficialBattle3D({
     </div>
     {message&&battle.phase==='planning'&&<div role="status" className="official-notice">{message}</div>}
     {battle.phase==='resolving'&&<TacticalCombatPlayback battle={battle} nowMs={now}
-     hulls={{A:hullA,B:hullB}}/>}
+     hulls={{A:hullA,B:hullB}} escorts={{A:escortA,B:escortB}}/>}
     {roundLog&&<div className="official-log" role="region" aria-label="Registro della battaglia">
      <button type="button" onClick={()=>setRoundLog(false)}>CHIUDI</button>
      {battle.lastEvents.map((event,i)=><p key={i}>{event}</p>)}
