@@ -565,7 +565,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
 // Escort ordnance exists ONLY if a real numeric card was committed and loaded
 // into the catalogued escort weapon. It is a separate shield-only shot, with
 // one real interception pass, never a clone of the mother's native volley.
-function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modifiers,motherDamage){
+function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modifiers,motherDamage,round){
  if(!plan)return 0;
  if(!plan.ready){
   if(plan.reason==='charging')
@@ -798,8 +798,8 @@ function resolveCycle(battle,nowMs){
  const prepared=combatSnapshot(sides);
  const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers,battle.round,before);
  const b=applyBarrierAttack(sides,'B',orders,status,log,impacts,modifiers,battle.round,before);
- const escortA=applyEscortBarrierVolley(sides,'A',escortPlans.A,orders,status,log,impacts,modifiers,a);
- const escortB=applyEscortBarrierVolley(sides,'B',escortPlans.B,orders,status,log,impacts,modifiers,b);
+ const escortA=applyEscortBarrierVolley(sides,'A',escortPlans.A,orders,status,log,impacts,modifiers,a,battle.round);
+ const escortB=applyEscortBarrierVolley(sides,'B',escortPlans.B,orders,status,log,impacts,modifiers,b,battle.round);
  // Urano: only the B boss can siphon. Use the already-computed REAL barrier
  // damage after escort intercept/defense. Sync moved here is pre-reward sync:
  // no stealing the 25/50 sync that players will earn later in this cycle.
