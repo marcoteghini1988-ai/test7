@@ -20,7 +20,7 @@ test('30: starter collection has eleven types, six initially equipped and equips
  assert.equal(coll.schemaVersion,1);
  assert.equal(coll.loadout.length,SPECIAL_DECK_SIZE);
  assert.deepEqual(SPECIAL_TYPES,Object.keys(SPECIAL_CARD_CATALOG));
- assert.equal(SPECIAL_TYPES.length,11);
+ assert.equal(SPECIAL_TYPES.length,23); // 11 precedenti + 12 personaggi sbloccabili
  for(const type of SPECIAL_TYPES){
   assert.equal(coll.owned[type],STARTER_SPECIAL_COUNTS[type]);
   assert.equal(counts[type],STARTER_SPECIAL_COUNTS[type]);
