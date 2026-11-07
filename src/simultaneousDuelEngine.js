@@ -420,6 +420,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const magma=exclusiveMagmaNativeAdjustment(atk,base,round);
  const magmaDeck=tacticalMagmaNativeBonus(atk,t.types,base);
  const resonanceDeck=tacticalResonanceNativeBonus(atk,t.weaponFocusId,base);
+ const characterNative=bossCharacterNativeBonus(atk,def,round,base);
  const supremacy=tacticalSovereignSupremacyBonus(atk,base,round);
  const standardPilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  const advancedPilot=tacticalBossCommanderAttackBonus(atk,def,orders[key],t.types,base,round);
@@ -454,7 +455,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const appliedSupremacyExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithResonance);
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
- let total=Math.max(0,base-magma.penalty+Math.min(cap,bonus)+pilot.extra);
+ let total=Math.max(0,base-magma.penalty+
+  Math.min(cap,bonus+characterNative.extra)+pilot.extra);
  if(res.types.includes('tactic-power-shift'))total+=3;
  const ombre=tacticalBossOutgoingBonus(atk,total,{snapshot:t.bossSnapshot});
  total+=ombre.extra;
@@ -506,10 +508,13 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const bossDefenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const exclusiveDefenseFactor=exclusiveBossShieldFactor(def);
  const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
+ const characterGuard=bossCharacterShieldFactor(def,round);
  const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor*
-  exclusiveDefenseFactor*pilotDefense.factor)*(modifiers?.shieldDamageFactor||1));
+  exclusiveDefenseFactor*pilotDefense.factor*characterGuard)*(modifiers?.shieldDamageFactor||1));
  const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
+ if(bossCharacterRememberHit(def,round,hit.damage))
+  log.push(other(key)+': Personaggio Idra · rigenerazione prevista al prossimo ciclo');
  rememberTacticalBossCommanderImpact(atk,def,orders[key],t.types,hit.damage,round);
  if(pilotDefense.active&&hit.damage>0)
   log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% sul danno reale alla madre');
@@ -554,6 +559,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   log.push(key+': Crono · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
  if(hit.damage>0&&exclusiveDefenseFactor<1)
   log.push(other(key)+': Gaia · Corazza tellurica consumata (−20% primo impatto alla barriera)');
+ if(hit.damage>0&&characterNative.active)
+  log.push(key+': Carta Personaggio '+characterNative.id+' · bonus +'+characterNative.pct+'% alle armi native');
+ if(hit.damage>0&&characterGuard<1)
+  log.push(other(key)+': Carta Personaggio protegge barriera −'+Math.round((1-characterGuard)*100)+'%');
  if(hit.damage>0&&exclusiveNative.active)
   log.push(key+': Tharsis · Assalto progressivo +'+exclusiveNative.percentage+
    '% sulla salva nativa (bonus '+exclusiveNative.extra+', resto '+exclusiveNative.remainder+'/100)');
@@ -589,7 +598,9 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  }
  const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
  const harmony=tacticalResonanceCooperationBonus(atk,plan.packet,motherDamage);
- const packet=Math.min(plan.packet+Math.floor(plan.packet*.45),plan.packet+harmony.extra);
+ const characterExtra=bossCharacterEscortExtra(atk,round,plan.packet,motherDamage);
+ const packet=Math.min(plan.packet+Math.floor(plan.packet*.45),
+  plan.packet+harmony.extra+characterExtra);
  let intercepted=0,suppressed=false;
  const efficiency=escortInterceptionEfficiency(def.defense);
  if(efficiency>0){
@@ -608,7 +619,8 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  const defenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const armor=exclusiveBossShieldFactor(def);
  const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
- const actual=Math.floor(Math.floor(motherPacket*defenseFactor*armor*pilotDefense.factor)*
+ const characterGuard=bossCharacterShieldFactor(def,round);
+ const actual=Math.floor(Math.floor(motherPacket*defenseFactor*armor*pilotDefense.factor*characterGuard)*
   (modifiers?.shieldDamageFactor||1));
  const hit=damageMotherShield(def.defense,actual);
  def.defense=hit.defense;
@@ -618,6 +630,10 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberExclusiveBossDefenseHit(def,hit.damage);
  rememberTacticalResonanceCooperationHit(atk,hit.damage,harmony);
+ if(bossCharacterRememberHit(def,round,hit.damage))
+  log.push(other(key)+': Carta Idra · rigenerazione prevista al prossimo ciclo');
+ if(characterExtra>0&&hit.damage>0)
+  log.push(key+': Carta Cristallo · scudiera +'+characterExtra+' HP potenziali');
  impacts.push({kind:'escort_barrier',by:key,target:other(key),
   packet,intercepted,damage:hit.damage,escortSlot:plan.escortSlot,
   cardId:plan.cardId,escortWeaponId:plan.escortWeaponId,
@@ -654,6 +670,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  if(status[other(key)].newCounter===target){
   if(rememberExclusiveChronoCounter(def,round))
    log.push(other(key)+': Crono · Controtempo caricato da Contromisura programmata effettiva, per i prossimi 2 cicli');
+  const counterSync=bossCharacterCounterSync(def,round,true);
+  const awarded=Math.min(counterSync,Math.max(0,100-def.sync));
+  def.sync+=awarded;
+  if(awarded>0)log.push(other(key)+': Carta Crono · Contromisura efficace +'+awarded+' Sincronia');
   impacts.push({kind:'precision',by:key,target,damage:0,reason:'countered'});
   log.push(key+': attacco a '+target+' respinto da Contromisura programmata');
   return 0;
@@ -683,6 +703,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  damage+=resonanceVital.extra;
  const supremacy=tacticalSovereignSupremacyBonus(atk,damage,round);
  damage+=supremacy.extra;
+ const characterPrecision=bossCharacterPrecisionExtra(atk,round,cards,damage);
+ damage+=characterPrecision;
  const defenseStatus=status[other(key)];
  const escortEfficiency=escortInterceptionEfficiency(def.defense);
  if(escortEfficiency>0){
@@ -711,6 +733,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const hit=hitMotherPart(defense,target,damage,cards);
  const consequence=hit.damage>0?tacticalVitalTransition(defense,hit.defense,target):null;
  def.defense=hit.defense;
+ if(characterPrecision>0&&hit.damage>0)
+  log.push(key+': Carta Sovrano · precisione multi-seme +'+characterPrecision+' HP potenziali');
  rememberTacticalBossCommanderImpact(atk,def,order,status[key].types,hit.damage,round,{vitalId:target});
  if(pilotDefense.active&&hit.damage>0)
   log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% sul vitale '+target);
@@ -792,6 +816,10 @@ function resolveCycle(battle,nowMs){
  const playedSpecials=Object.fromEntries(['A','B'].map(key=>[key,
   orders[key].specialIndices.map(i=>sides[key].special.hand[i].type)]));
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
+ for(const key of ['A','B']){
+  const healed=bossCharacterApplyRegen(sides[key],battle.round);
+  if(healed>0)log.push(key+': Carta Idra · rigenerazione reale +'+healed+' HP alla barriera');
+ }
  const idraRegen=prepareExclusiveIdraRegen(sides.B,battle.round);
  if(idraRegen.repaired>0)
   log.push('B: Idra Criogenica · Rigenerazione +'+idraRegen.repaired+' HP reali alla barriera');
@@ -852,12 +880,15 @@ function resolveCycle(battle,nowMs){
   const earned=25+((key==='A'?hitsA:hitsB)>0?25:0)+
    (validCalculation[key]?modifiers.syncPerCalculation:0);
   const extraEnergy=tacticalGeneratorSyncBonus(side,earned);
+  const characterEnergy=bossCharacterSyncExtra(side,battle.round,validCalculation[key]);
   const normalSync=Math.min(100,side.sync+earned);
-  side.sync=Math.min(100,side.sync+earned+extraEnergy);
+  side.sync=Math.min(100,side.sync+earned+extraEnergy+characterEnergy);
   const effectiveEnergy=side.sync-normalSync;
-  if(effectiveEnergy>0)
-   log.push(key+': Generatore (mazzo numerico) · Accumulo energetico +'+
-    effectiveEnergy+' Sincronia da eventi reali');
+  if(effectiveEnergy>0){
+   if(extraEnergy>0)log.push(key+': Generatore (mazzo numerico) · Accumulo energetico +'+
+    Math.min(effectiveEnergy,extraEnergy)+' Sincronia da eventi reali');
+   if(characterEnergy>0)log.push(key+': Carta Generatore · calcolo valido, Sincronia extra (entro 100)');
+  }
   if(side.epic.exchangeUntilRound===battle.round){
    side.epic.exchangeCredits=0;side.epic.exchangeUntilRound=0;
   }
@@ -867,9 +898,12 @@ function resolveCycle(battle,nowMs){
   const enemyStatus=status[enemyKey];
   const ionHit=enemyShieldDamage>0&&
    (enemyStatus.types.includes('shot-ion')||enemyStatus.tech==='ionico');
-  const corrosionHit=enemyShieldDamage>0&&enemyStatus.types.includes('shot-corrosion');
+  const enemyCharacter=bossCharacterActive(sides[enemyKey],battle.round);
+  const corrosionHit=enemyShieldDamage>0&&(
+   enemyStatus.types.includes('shot-corrosion')||enemyCharacter?.effect==='corrosion');
   if(ionHit){
-   const duration=applyTacticalTimedStatus(side,'ionized',battle.round,modifiers);
+   const duration=applyTacticalTimedStatus(side,'ionized',battle.round,{
+    ...modifiers,characterIonFactor:bossCharacterIonFactor(side,battle.round)});
    log.push(key+': ionizzazione '+duration.durationMs/1000+' s di combattimento (preparazione sospesa)');
   }else side.ionized=(side.statusUntil?.ionized||0)>tacticalCombatClock(battle.round+1);
   if(corrosionHit){
