@@ -3,7 +3,7 @@
 // Gli armamenti sono i 42 del catalogo esistente: i calcoli non alimentano lo scudo.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
-import {tacticalBarrierPower,dominantTacticalTechnology} from './tacticalArmamentBalance.js';
+import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {
   VITAL_IDS,createMotherDefense,damageMotherShield,restoreMotherShield,exposeMotherPart,
   hitMotherPart,remainingExposureSlots,motherDestroyed
@@ -137,6 +137,8 @@ export function validateTacticalOrder(battle,key,order){
  // Two exchanges, or an exchange alongside a precision attack, cost the REAL special.
  if(!types.includes('tactic-numeric-recycle')&&ei.length&&
    (ei.length>1||ni.length>0))return {ok:false,reason:'recycle_requires_card'};
+ if(order.weaponFocusId!=null&&!side.weapons.some(w=>w.id===order.weaponFocusId))
+  return {ok:false,reason:'weapon_focus_invalid'};
  if(ni.some(i=>ei.includes(i)))return {ok:false,reason:'card_double_spend'};
  const fusionTypes=types.filter(type=>type.startsWith('fusion-'));
  if(fusionTypes.length>1)return {ok:false,reason:'fusion_conflict'};
@@ -165,7 +167,8 @@ export function sealTacticalOrder(battle,key,order=EMPTY_ORDER,nowMs=0){
  const normalized={
   specialIndices:[...(order.specialIndices??[])],numericIndices:[...(order.numericIndices??[])],
   vitalId:order.numericIndices?.length?order.vitalId:null,op:order.numericIndices?.length?order.op:null,
-  counterVitalId:order.counterVitalId??null,exchangeIndices:[...(order.exchangeIndices??[])]
+  counterVitalId:order.counterVitalId??null,exchangeIndices:[...(order.exchangeIndices??[])],
+  weaponFocusId:order.weaponFocusId??null
  };
  const next={...battle,orders:{...battle.orders,[key]:normalized}};
  return {ok:true,battle:next};
@@ -192,7 +195,8 @@ function applyPreparation(sides,orders,log){
    fusionAssault:({'fusion-strike':.25,'fusion-triad':.35})[fusion]||0,
    cover:types.includes('tactical-cover'),coverUsed:false,
    piercing:types.includes('shot-piercing'),ionizedDefense:!!side.ionized,
-   tech:dominantTacticalTechnology(side.weapons)};
+   weaponFocusId:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.weaponId??null,
+   tech:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.technology??null};
   if(types.includes('support-shield-repair')){
    const fixed=restoreMotherShield(side.defense,20);
    side.defense=fixed.defense;
@@ -215,6 +219,8 @@ function applyPreparation(sides,orders,log){
    log.push(key+': scansione, firme rivelate: '+next.join(', '));
   }
   if(active.fusion){side.sync-=100;log.push(key+': '+TACTICAL_SPECIALS[active.fusion].name+' con scudiere reali, costo 100 Sincronia');}
+  log.push(key+': fuoco concentrato su '+(side.weapons.find(w=>w.id===active.weaponFocusId)?.name??'nessuna arma')+
+   ' · '+(active.tech??'n/d'));
   status[key]=active;
  }
  return status;
