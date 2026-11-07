@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect,useRef,useState} from 'react';
 import {ShipArtwork} from './ShipPresentation.jsx';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {TACTICAL_SPECIALS,TACTICAL_SIGNATURES,createTacticalDuel,
@@ -21,12 +21,12 @@ function Meter({hp,max,label}){
   <div className="tdp-meter-track"><span style={{width:clamp(hpPct(hp,max))+'%'}}/></div>
  </div>;
 }
-function Vessel({side,title,facing}){
+function Vessel({side,title,facing,hullRef}){
  const {defense,escorts}=side;
  return <article className={'tdp-vessel '+(facing==='enemy'?'tdp-enemy':'')}>
   <div className="tdp-vessel-heading"><strong>{title}</strong><small>{side.name} · L{side.level}</small></div>
   <div className="tdp-hull">
-   <svg viewBox="0 0 1000 1000" role="img" aria-label={side.name}>
+   <svg ref={hullRef} viewBox="0 0 1000 1000" role="img" aria-label={side.name}>
     <ShipArtwork side={facing} vessel={{id:side.shipId,level:side.level}}/>
    </svg>
   </div>
@@ -64,6 +64,7 @@ export default function TacticalDuelPrototype(){
  const [draft,setDraft]=useState(BLANK);
  const [now,setNow]=useState(Date.now());
  const [error,setError]=useState('');
+ const hullA=useRef(null),hullB=useRef(null);
  useEffect(()=>{
   const tick=setInterval(()=>{
    const time=Date.now();
@@ -117,10 +118,10 @@ export default function TacticalDuelPrototype(){
    <div className="tdp-clock"><strong>{seconds}s</strong><small>{planning?'30 s per preparare':'8 s di scontro'}</small></div>
   </section>
   <div className="tdp-arena">
-   <Vessel side={visibleB} title="AVVERSARIO · IA DI PROVA" facing="enemy"/>
+   <Vessel side={visibleB} title="AVVERSARIO · IA DI PROVA" facing="enemy" hullRef={hullB}/>
    <div className="tdp-divider"><span>SCUDI · BRECCE · SISTEMI VITALI</span></div>
-   <Vessel side={visibleA} title="LA TUA NAVE" facing="player"/>
-   <TacticalCombatPlayback battle={battle} nowMs={now}/>
+   <Vessel side={visibleA} title="LA TUA NAVE" facing="player" hullRef={hullA}/>
+   <TacticalCombatPlayback battle={battle} nowMs={now} hulls={{A:hullA,B:hullB}}/>
   </div>
   <section className="tdp-section">
    <h2>Seleziona il sistema vitale nemico</h2>
