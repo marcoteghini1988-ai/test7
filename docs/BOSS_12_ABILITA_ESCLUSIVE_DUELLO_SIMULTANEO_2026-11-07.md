@@ -55,3 +55,17 @@ Le identità e le associazioni pianeta-boss sono recuperate dal codice storico `
 - `npm run verify:logic`, `npm run build`, `npm run preflight` verdi su `main`.
 - Nessuna modifica visuale dell'arena approvata durante questa lavorazione.
 - Nessuna migrazione distruttiva della collezione, nessuna copia del repo, nessun boss considerato completo perché solo elencato in questo file.
+
+## Registro implementazione — 7 novembre 2026, ripresa dopo la pausa grafica
+
+**Codice verificato (primo blocco, senza modifiche alla plancia):**
+- `src/tacticalExclusiveBosses.js`: logica deterministica per **Gaia (ID 1)** e **Tharsis (ID 2)** soltanto. Gaia mitiga una volta il danno *realmente arrivato alla barriera*; Tharsis aggiorna la serie solo su danni autentici consecutivi e usa un resto percentuale intero.
+- `src/simultaneousDuelEngine.js`: le due capacità sono collegate agli impatti nativi e si avvalgono del limite già esistente per i bonus alla salva. Non danno carte, non modificano le firme, non generano attacchi né colpiscono i vitali protetti.
+- `src/tacticalExclusiveBosses.test.js`: verifica condizioni, reset, caso senza danno e confronto con la normale battaglia simultanea.
+- GitHub Actions su `main`: **test logici, build e preflight superati**, workflow `42392385933`.
+
+**Limitazione importante:** `src/officialSimultaneousBridge.js` indirizza ancora i settori boss della campagna a `BossBattle3D.jsx` per preservarne le altre abilità. Gaia e Tharsis sono **funzionanti nel motore simultaneo e testabili via API**, ma **non ancora attivi come poteri boss nella campagna ufficiale**. Non rimuovere tale protezione finché le dodici identità e le 23 passive mancanti non risultano adeguatamente convertite. Non marcare l'intera fase boss come completata.
+
+**Ancora aperto per Gaia:** la contromossa proposta «tre semi differenti rompono la corazza residua» è solo di progettazione e NON è implementata. Al momento la corazza si consuma quando attenua il primo danno effettivo alla barriera.
+
+**Successivo nell'ordine dei boss:** Venere / Matriarca Tossica (status Neurotossina, protezioni e durata deterministica), poi Crono e Sentinella Ionica. Le parti grafiche restano fuori da questa fase.
