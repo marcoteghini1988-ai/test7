@@ -4,7 +4,7 @@
 import {numericBossDeck,activeNumericBossAbilities} from './bossNumericDecks.js';
 import {tacticalSignatureMatches} from './tacticalShipSignatures.js';
 
-export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_3','planet_char_6','planet_char_7','planet_char_8','planet_char_9','planet_char_11','planet_char_14','planet_char_19','planet_char_20']);
+export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_3','planet_char_6','planet_char_7','planet_char_8','planet_char_9','planet_char_11','planet_char_14','planet_char_17','planet_char_19','planet_char_20']);
 export const tacticalBossDeckReady=id=>TACTICAL_READY_BOSS_DECKS.includes(id);
 
 export function equipTacticalBossDeck(side,selection=null){
@@ -20,8 +20,9 @@ export function equipTacticalBossDeck(side,selection=null){
   idraBarrierRemainder:0,idraVitalRemainder:0,
   recyclePending:false,leviatanoRemainder:0,
   magmaShieldHits:0,magmaNativeRemainder:0,magmaVitalRemainder:0,
-  supremacyArmedAfterRound:0};
- if(['planet_char_3','planet_char_6','planet_char_2','planet_char_7','planet_char_8','planet_char_9','planet_char_11','planet_char_14','planet_char_19','planet_char_20'].includes(selection.id))
+  supremacyArmedAfterRound:0,resonanceEscortRemainder:0,
+  lastFocusedWeaponId:null,resonanceNativeRemainder:0,resonanceVitalRemainder:0};
+ if(['planet_char_3','planet_char_6','planet_char_2','planet_char_7','planet_char_8','planet_char_9','planet_char_11','planet_char_14','planet_char_17','planet_char_19','planet_char_20'].includes(selection.id))
   return {...side,bossNumericDeck:state};
  // Gaia: stessa regola del combattimento precedente, floor sullo scudo massimo.
  // Solo HP della barriera; non modifica vitali, scudiere o mazzi.
@@ -293,8 +294,8 @@ export function rememberTacticalSovereignHit(side,round,damage,bonus,{destroyedE
 }
 
 
-// Generatore (14) now has timed resistance plus energy accumulation. Risonanza
-// (17) still needs authentic escort OFFENSE and is kept unavailable until then.
+// Generatore (14) has timed resistance plus energy accumulation; Risonanza
+// (17) uses real escort ammunition and three graded passive abilities.
 //
 // Generatore / Accumulo energetico: extra sync can only follow a true
 // positive end-of-cycle earned amount; cap of the authentic 100 sync.
@@ -385,4 +386,30 @@ export function tacticalAfroditeRecycleCooldownMs(side){
  if(state?.id!=='planet_char_3')return null;
  const ability=activeNumericBossAbilities(state.id,state.level)[0];
  return ability?.unlocked?ability.value*1000:null;
+}
+
+
+// Risonanza / Sinfonia di flotta (third ability, L7-L9): the mother
+// MUST actually damage the enemy barrier and a separate, ammo-loaded
+// escort MUST fire an effective shot during the SAME cycle.
+// Bonus applies only to that escort's real packet, not to invented extra
+// bullets or the unaltered mother shot. Percent fractional carry persists.
+export function tacticalResonanceCooperationBonus(side,escortPacket,motherDamage){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,percentage:0,extra:0,remainder:0};
+ if(state?.id!=='planet_char_17'||!(motherDamage>0)||
+    !Number.isSafeInteger(escortPacket)||escortPacket<=0)return inactive;
+ const ability=activeNumericBossAbilities(state.id,state.level)[2];
+ if(!ability?.unlocked)return inactive;
+ const old=Number.isSafeInteger(state.resonanceEscortRemainder)?
+  state.resonanceEscortRemainder:0;
+ const points=escortPacket*ability.value+old;
+ return {active:true,percentage:ability.value,
+  extra:Math.floor(points/100),remainder:points%100};
+}
+export function rememberTacticalResonanceCooperationHit(side,actualDamage,bonus){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_17'||!(actualDamage>0)||!bonus?.active)return side;
+ side.bossNumericDeck={...state,resonanceEscortRemainder:bonus.remainder};
+ return side;
 }
