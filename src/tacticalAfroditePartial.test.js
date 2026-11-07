@@ -26,11 +26,13 @@ function cycle(b,orderA=EMPTY,at=100){
  assert.equal(x.ok,true,x.reason);
  return advanceTacticalDuel(x.battle,at+1);
 }
-test('Afrodite resta bloccata nel nuovo motore finche non esiste il ricambio a tempo reale',()=>{
- assert.equal(tacticalBossDeckReady('planet_char_3'),false);
+test('Afrodite completa: mazzo equipaggiabile soltanto se realmente sbloccato',()=>{
+ assert.equal(tacticalBossDeckReady('planet_char_3'),true);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_3',
-  bossDeckInventory:{planet_char_3:{unlocked:true,level:6}}}).enabled,false);
+  bossDeckInventory:{planet_char_3:{unlocked:true,level:6}}}).enabled,true);
+ assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
+  selectedBossDeck:'planet_char_3',bossDeckInventory:{}}).enabled,false);
 });
 test('Sintesi curativa usa i gradi originali 5%, 8%, 11%, solo dal livello 4',()=>{
  const a=make().sides.A;
