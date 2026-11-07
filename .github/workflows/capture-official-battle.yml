@@ -105,6 +105,21 @@ jobs:
               return mod.mountDamageFixture();
             });
             await page.waitForTimeout(950);
+            const physicalDamage=await page.evaluate(()=>{
+              const active=[...document.querySelectorAll('.ship-enemy .official-original-motor-targets')]
+                .find(x=>getComputedStyle(x).opacity!=='0');
+              if(!active)return null;
+              return {ko:active.querySelectorAll('[data-state="destroyed"]').length,
+                critical:active.querySelectorAll('[data-state="critical"]').length,
+                damaged:active.querySelectorAll('[data-state="damaged"]').length,
+                smoke:active.querySelectorAll('.vessel-smoke').length,
+                fracture:active.querySelectorAll('.engine-fracture').length};
+            });
+            if(!physicalDamage||physicalDamage.ko!==1||physicalDamage.critical!==1||
+                physicalDamage.damaged!==1||physicalDamage.smoke!==1||
+                physicalDamage.fracture!==4)
+              throw new Error('Effetti originali di distruzione non montati correttamente: '+JSON.stringify(physicalDamage));
+            console.log('STATO DANNI FISICI VERIFICATO: '+JSON.stringify(physicalDamage));
             await page.screenshot({path:'docs/screenshots/plancia-vitali-danneggiati.jpg',
               type:'jpeg',quality:90,fullPage:true,animations:'disabled'});
             console.log('CATTURA DANNI DI PROVA (non partita reale): '+JSON.stringify(demo));
