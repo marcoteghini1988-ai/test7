@@ -15,12 +15,12 @@ const options={mode:'campaign',sectorNumber:1,shipCollection,specialCollection,
 
 test('Gaia convertita: gli altri mazzi non autorizzati restano nel percorso precedente',()=>{
  assert.equal(tacticalBossDeckReady('planet_char_1'),true);
- assert.equal(tacticalBossDeckReady('planet_char_2'),false);
- assert.equal(tacticalBossDeckReady('planet_char_20'),false);
+ assert.equal(tacticalBossDeckReady('planet_char_3'),false);
+ assert.equal(tacticalBossDeckReady('planet_char_30'),false);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_1',bossDeckInventory:{planet_char_1:{unlocked:true,level:2}}}).enabled,true);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
-  selectedBossDeck:'planet_char_2',bossDeckInventory:{planet_char_2:{unlocked:true,level:1}}}).enabled,false);
+  selectedBossDeck:'planet_char_3',bossDeckInventory:{planet_char_3:{unlocked:true,level:1}}}).enabled,false);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,
   selectedBossDeck:'planet_char_1',bossDeckInventory:{}}).enabled,false);
  assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:10,
@@ -54,8 +54,8 @@ test('Gaia bloccata non regala HP e non modifica inventario',()=>{
  assert.throws(()=>officialBattleSetup({...options,selectedBossDeck:'planet_char_1',
   bossDeckInventory:inventory}),/Mazzo boss non sbloccato/);
  assert.deepEqual(inventory,original);
- assert.throws(()=>officialBattleSetup({...options,selectedBossDeck:'planet_char_2',
-  bossDeckInventory:{planet_char_2:{unlocked:true,level:3}}}),/non sbloccato o ancora non convertito/);
+ assert.throws(()=>officialBattleSetup({...options,selectedBossDeck:'planet_char_3',
+  bossDeckInventory:{planet_char_3:{unlocked:true,level:3}}}),/non sbloccato o ancora non convertito/);
 });
 
 test('equipaggiamento Gaia non muta lo stato di partenza del motore',()=>{
