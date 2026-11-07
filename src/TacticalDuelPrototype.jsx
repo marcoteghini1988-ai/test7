@@ -4,6 +4,8 @@ import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {TACTICAL_SPECIALS,TACTICAL_SIGNATURES,createTacticalDuel,
  sealTacticalOrder,advanceTacticalDuel,nativeBarrierPacket} from './simultaneousDuelEngine.js';
 import {planTacticalDemoAi} from './tacticalDuelDemoAi.js';
+import {projectedCombatSides,tacticalPlaybackElapsed} from './tacticalCombatTimeline.js';
+import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import './TacticalDuelPrototype.css';
 
 const BLANK=()=>({specialIndices:[],numericIndices:[],vitalId:null,op:'plus',
@@ -80,7 +82,10 @@ export default function TacticalDuelPrototype(){
   });
  },[battle.round,battle.phase,battle.orders.B]);
  useEffect(()=>{setDraft(BLANK());setError('');},[battle.round]);
+ const combatTime=tacticalPlaybackElapsed(battle,now);
+ const visibleSides=projectedCombatSides(battle,combatTime);
  const a=battle.sides.A,b=battle.sides.B;
+ const visibleA=visibleSides.A,visibleB=visibleSides.B;
  const planning=battle.phase==='planning';
  const locked=!planning||!!battle.orders.A;
  const specials=draft.specialIndices.map(i=>a.special.hand[i]?.type);
@@ -102,7 +107,7 @@ export default function TacticalDuelPrototype(){
  const seconds=planning?Math.ceil(Math.max(0,battle.deadlineMs-now)/1000):Math.ceil(Math.max(0,(battle.resolveUntilMs??now)-now)/1000);
  const status=battle.phase==='finished'?(battle.winner==='draw'?'PAREGGIO':battle.winner==='A'?'HAI VINTO':'VITTORIA IA'):
   battle.phase==='resolving'?'SCONTRO IN CORSO':'PREPARAZIONE';
- return <main className="tdp">
+ return <main className={"tdp"+(battle.phase==='resolving'?" is-resolving":"")}>
   <header className="tdp-top">
    <div><p>ESPERIMENTO · NON MODIFICA I SALVATAGGI</p><h1>DUELLO TATTICO</h1></div>
    <a href={window.location.pathname} className="tdp-exit">Torna al gioco</a>
@@ -112,13 +117,14 @@ export default function TacticalDuelPrototype(){
    <div className="tdp-clock"><strong>{seconds}s</strong><small>{planning?'30 s per preparare':'8 s di scontro'}</small></div>
   </section>
   <div className="tdp-arena">
-   <Vessel side={b} title="AVVERSARIO · IA DI PROVA" facing="enemy"/>
+   <Vessel side={visibleB} title="AVVERSARIO · IA DI PROVA" facing="enemy"/>
    <div className="tdp-divider"><span>SCUDI · BRECCE · SISTEMI VITALI</span></div>
-   <Vessel side={a} title="LA TUA NAVE" facing="player"/>
+   <Vessel side={visibleA} title="LA TUA NAVE" facing="player"/>
+   <TacticalCombatPlayback battle={battle} nowMs={now}/>
   </div>
   <section className="tdp-section">
    <h2>Seleziona il sistema vitale nemico</h2>
-   <CurrentVitals side={b} viewer={a} selected={draft.vitalId}
+   <CurrentVitals side={visibleB} viewer={a} selected={draft.vitalId}
     choose={id=>{if(!locked)setDraft(d=>({...d,vitalId:id}));}}/>
    <p className="tdp-help">Le armi native attaccano sempre la barriera. Il calcolo colpisce un vitale soltanto se esposto e valido.</p>
   </section>
@@ -173,7 +179,7 @@ export default function TacticalDuelPrototype(){
    </button>
   </section>
   {error&&<p className="tdp-error" role="alert">{error}</p>}
-  {(battle.lastEvents.length>0||battle.phase==='finished')&&<section className="tdp-section tdp-log">
+  {(battle.phase!=='resolving'&&(battle.lastEvents.length>0||battle.phase==='finished'))&&<section className="tdp-section tdp-log">
    <h2>Registro dello scontro {battle.round===1?1:battle.phase==='planning'?battle.round-1:battle.round}</h2>
    <ol>{battle.lastEvents.map((event,i)=><li key={i}>{event}</li>)}</ol>
    {battle.phase==='finished'&&<button type="button" className="tdp-restart" onClick={restart}>NUOVA PARTITA</button>}
