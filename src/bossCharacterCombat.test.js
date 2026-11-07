@@ -118,6 +118,9 @@ test('Tharsis, Ombre e Magma: bonus alle armi native solo nelle condizioni effet
  assert.equal(bossCharacterNativeBonus(shadow,enemy,1,40).active,false);
  shadow.defense.shield.hp=18;
  assert.equal(bossCharacterNativeBonus(shadow,enemy,1,40).extra,3);
+ shadow.defense.shield.hp=40; // a genuine preparation repair may restore it
+ assert.equal(bossCharacterNativeBonus(shadow,enemy,1,40,18).extra,3,
+  'The real shield at cycle start is authoritative, not the later repaired value');
  const magma=withCharacter('boss-character-19').sides.A;
  activateBossCharacter(magma,'boss-character-19',1);
  assert.equal(bossCharacterNativeBonus(magma,enemy,1,40).active,false);
