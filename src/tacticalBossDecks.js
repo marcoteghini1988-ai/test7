@@ -2,8 +2,9 @@
 // Non concede mazzi o livelli: il possesso si verifica solo in officialBattleSetup.
 // Le percentuali e il numero dei gradi vengono dal catalogo esistente.
 import {numericBossDeck,activeNumericBossAbilities} from './bossNumericDecks.js';
+import {tacticalSignatureMatches} from './tacticalShipSignatures.js';
 
-export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_9']);
+export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_9','planet_char_11']);
 export const tacticalBossDeckReady=id=>TACTICAL_READY_BOSS_DECKS.includes(id);
 
 export function equipTacticalBossDeck(side,selection=null){
@@ -15,8 +16,9 @@ export function equipTacticalBossDeck(side,selection=null){
  const ability=activeNumericBossAbilities(selection.id,lv)[0];
  if(!ability?.unlocked)throw new Error('Abilita boss non sbloccata');
  const state={id:deck.id,level:lv,ability:ability.name,firstHitUsed:false,shieldBonus:0,
-  lastVital:null,vitalBonusRemainder:0,outgoingBonusRemainder:0};
- if(selection.id==='planet_char_6'||selection.id==='planet_char_2'||selection.id==='planet_char_9')
+  lastVital:null,vitalBonusRemainder:0,outgoingBonusRemainder:0,
+  idraBarrierRemainder:0,idraVitalRemainder:0};
+ if(['planet_char_6','planet_char_2','planet_char_9','planet_char_11'].includes(selection.id))
   return {...side,bossNumericDeck:state};
  // Gaia: stessa regola del combattimento precedente, floor sullo scudo massimo.
  // Solo HP della barriera; non modifica vitali, scudiere o mazzi.
@@ -100,5 +102,47 @@ export function rememberTacticalBossOutgoingHit(side,damage,bonus){
  if(state?.id!=='planet_char_9'||!(damage>0))return side;
  side.bossNumericDeck={...state,
   outgoingBonusRemainder:bonus?.active?bonus.remainder:0};
+ return side;
+}
+
+
+// Idra — Precisione criogenica (divisione valida) / Teste alternate
+// (vitali consecutivi differenti, colpi DAVVERO efficaci).
+// Usa la stessa firma pubblica che il motore applica al colpo e non legge
+// mani segrete avversarie. Due accumulatori tengono distinti i danni alla
+// barriera dalle formule dirette ai vitali.
+export function tacticalIdraBonus(side,enemy,order,baseDamage,{vitalId=null}={}){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,percentage:0,extra:0,remainder:0,abilities:[]};
+ if(state?.id!=='planet_char_11'||!Number.isSafeInteger(baseDamage)||baseDamage<=0)return inactive;
+ const abilities=activeNumericBossAbilities(state.id,state.level);
+ const indices=order?.numericIndices;
+ const part=enemy?.defense?.parts?.[order?.vitalId];
+ const selected=Array.isArray(indices)&&[2,3].includes(indices.length)&&
+   new Set(indices).size===indices.length
+   ?indices.map(i=>side?.numeric?.hand?.[i]):[];
+ const validFormula=!!part&&part.hp>0&&selected.length>=2&&
+  selected.every(Boolean)&&tacticalSignatureMatches(part.signature,order.op,selected);
+ const triggered=[];
+ if(validFormula&&order.op==='divide'&&abilities[0]?.unlocked)
+  triggered.push(abilities[0]);
+ if(vitalId&&validFormula&&state.lastVital&&state.lastVital!==vitalId&&
+    abilities[1]?.unlocked)triggered.push(abilities[1]);
+ if(!triggered.length)return inactive;
+ const percentage=Math.min(30,triggered.reduce((sum,a)=>sum+a.value,0));
+ const key=vitalId?'idraVitalRemainder':'idraBarrierRemainder';
+ const prior=state[key];
+ const remainder=Number.isInteger(prior)&&prior>=0&&prior<100?prior:0;
+ const points=baseDamage*percentage+remainder;
+ return {active:true,percentage,extra:Math.floor(points/100),remainder:points%100,
+  abilities:triggered.map(a=>a.name)};
+}
+export function rememberTacticalIdraHit(side,damage,bonus,{vitalId=null}={}){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_11'||!(damage>0))return side;
+ const key=vitalId?'idraVitalRemainder':'idraBarrierRemainder';
+ side.bossNumericDeck={...state,
+  [key]:bonus?.active?bonus.remainder:0,
+  lastVital:vitalId||state.lastVital};
  return side;
 }
