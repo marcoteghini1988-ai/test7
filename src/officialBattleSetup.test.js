@@ -43,3 +43,19 @@ test('le ricompense si abilitano solo a vittoria conclusa non PvP',()=>{
  assert.equal(officialBattleResult(won,'daily_challenge',1).eligibleForRewards,false);
  assert.equal(officialBattleResult(won,'adventure',1).eligibleForRewards,true);
 });
+
+test('pescata numerica iniziale davvero casuale: 52 carte distinte, 7 in mano',()=>{
+ const start=seed=>officialBattleSetup({mode:'campaign',sectorNumber:1,
+  shipCollection:owned,specialCollection:special,seed,nowMs:100});
+ const a=start(173),b=start(9876);
+ for(const game of [a,b]){
+  for(const side of [game.battle.sides.A,game.battle.sides.B]){
+   const cards=[...side.numeric.hand,...side.numeric.deck,...side.numeric.discard];
+   assert.equal(cards.length,52);
+   assert.equal(new Set(cards.map(c=>c.id)).size,52);
+   assert.equal(side.numeric.hand.length,7);
+  }
+ }
+ assert.notDeepEqual(a.battle.sides.A.numeric.hand.map(c=>c.id),
+  b.battle.sides.A.numeric.hand.map(c=>c.id));
+});
