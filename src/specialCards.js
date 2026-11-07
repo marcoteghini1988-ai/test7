@@ -3,6 +3,7 @@
 import {startFusion,activateTacticalCover} from './fleetManeuvers.js';
 import {armShotEffect,armedShotEffects,SHOT_RULES} from './strategicShots.js';
 import {useSupportCard} from './specialSupport.js';
+import {BOSS_CHARACTER_CATALOG,isBossCharacterCard} from './bossCharacterCards.js';
 
 export const SPECIAL_HAND_SIZE=5;
 export const SPECIAL_CARD_CATALOG=Object.freeze({
@@ -27,8 +28,12 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
  'support-status-purge':Object.freeze({type:'support-status-purge',name:'Pulizia Sistemi',short:'PURIFICAZIONE',
    family:'support',description:'Rimuove Ionizzazione e Corrosione attive dalla propria madre, senza creare HP.'}),
  'support-escort-repair':Object.freeze({type:'support-escort-repair',name:'Riparazione Scudiera',short:'SCUDIERA +',
-   family:'support',description:'Ripara fino a 15 HP dello scudo della scudiera selezionata. Non rianima scudiere distrutte; richiede centralina attiva.'})
+   family:'support',description:'Ripara fino a 15 HP dello scudo della scudiera selezionata. Non rianima scudiere distrutte; richiede centralina attiva.'}),
+ ...Object.fromEntries(Object.values(BOSS_CHARACTER_CATALOG).map(c=>[c.id,
+  Object.freeze({type:c.id,name:c.name,short:c.short,family:'boss-character',
+   description:c.description,durationCycles:c.durationCycles,imagePath:c.imagePath,maxCopies:1})]))
 });
+export const specialCardMaxCopies=type=>isBossCharacterCard(type)?1:SPECIAL_DECK_COPY_LIMIT;
 // Regole confermate il 6 novembre 2026: dimensione mazzo e limite per tipo.
 export const SPECIAL_DECK_SIZE=24;
 export const SPECIAL_DECK_COPY_LIMIT=6;
@@ -41,7 +46,7 @@ export function makeSpecialInstances(typeList=SPECIAL_DEFAULT_TYPES){
  const copies={};
  for(const type of typeList){
   copies[type]=(copies[type]||0)+1;
-  if(copies[type]>SPECIAL_DECK_COPY_LIMIT)throw new Error('Troppe copie di una speciale');
+  if(copies[type]>specialCardMaxCopies(type))throw new Error('Troppe copie di una speciale');
  }
  return typeList.map((type,i)=>({id:'special-'+String(i+1).padStart(2,'0'),type}));
 }
