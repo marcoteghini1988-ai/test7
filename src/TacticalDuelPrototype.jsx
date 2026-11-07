@@ -1,5 +1,5 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {ShipArtwork} from './ShipPresentation.jsx';
+import {ShipArtwork,MountedWeapons} from './ShipPresentation.jsx';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {dominantTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
@@ -31,13 +31,26 @@ function Meter({hp,max,label}){
 }
 function Vessel({side,title,facing,hullRef}){
  const {defense,escorts}=side;
- return <article className={'tdp-vessel '+(facing==='enemy'?'tdp-enemy':'')}>
+ const hardware=side.weapons.map(weapon=>{
+  const catalog=PHASE1_CATALOG.weapons.find(item=>item.id===weapon.id);
+  return {...catalog,id:weapon.id,damage:weapon.damage};
+ });
+ const originalVessel={id:side.shipId,level:side.level,weapons:hardware};
+ return <article className={'tdp-vessel '+(facing==='enemy'?'tdp-enemy':'tdp-player')} data-ship={side.shipId} data-level={side.level}>
   <div className="tdp-vessel-heading"><strong>{title}</strong><small>{side.name} · L{side.level}</small></div>
   <div className="tdp-hull">
    <svg ref={hullRef} viewBox="0 0 1000 1000" role="img" aria-label={side.name}>
-    <ShipArtwork side={facing} vessel={{id:side.shipId,level:side.level}}/>
+    <ShipArtwork side={facing} vessel={originalVessel}/>
    </svg>
+   <MountedWeapons side={facing} vessel={originalVessel} index={0}/>
   </div>
+  {escorts.map((escort,index)=><div key={escort.id}
+    className={'tdp-escort-ship tdp-escort-ship-'+(index+1)+(escort.hp<=0?' is-destroyed':'')}
+    title={'Scudiera '+(index+1)+' · '+escort.hp+'/'+escort.max+' HP'}>
+    <img src={'/assets/escorts/'+side.shipId+'_escort_'+(index+1)+'.svg'}
+      alt={'Scudiera '+(index+1)} loading="eager"/>
+    <small>{escort.hp}/{escort.max}</small>
+   </div>)}
   <Meter label="Barriera" hp={defense.shield.hp} max={defense.shield.max}/>
   <div className="tdp-tech">Armi: {side.weapons.map(w=>w.name).join(' · ')} · Potenza {nativeBarrierPacket(side)} · {dominantTacticalTechnology(side.weapons)}</div>
   <div className="tdp-escort">Scudiere: {escorts.length?escorts.map(e=>e.hp+'/'+e.max+' HP').join(' · '):'nessuna'}</div>
@@ -160,7 +173,8 @@ export default function TacticalDuelPrototype(){
    <div><p>ESPERIMENTO · NON MODIFICA I SALVATAGGI</p><h1>DUELLO TATTICO</h1></div>
    <a href={window.location.pathname} className="tdp-exit">Torna al gioco</a>
   </header>
-  <section className="tdp-setup" aria-label="Configurazione flotta di prova">
+  <details className="tdp-setup" aria-label="Configurazione flotta di prova">
+   <summary>CONFIGURA FLOTTA · NAVI, MAZZO E BOSS</summary>
    <p>PROVA LE 17 NAVICELLE · NESSUN SBLOCCO O SPESA</p>
    <div className="tdp-setup-grid">
     <label>Tua nave
@@ -205,12 +219,13 @@ export default function TacticalDuelPrototype(){
    </label>
    {bossPlanet>0&&<p className="tdp-boss-note">Piano IA: {tacticalBossProfile(bossPlanet).style}. Mazzo boss da 24 carte con scudiere compatibili.</p>}
    <button type="button" onClick={restart}>AVVIA PARTITA CON QUESTE NAVI</button>
-  </section>
+  </details>
   <section className="tdp-cycle">
    <div><small>CICLO {battle.round}</small><strong>{status}</strong></div>
    <div className="tdp-clock"><strong>{seconds}s</strong><small>{planning?'30 s per preparare':'8 s di scontro'}</small></div>
   </section>
-  <div className="tdp-arena">
+  <div className="tdp-arena" aria-label="Piattaforma di Titanio originale, Eclissi Stellare">
+   <div className="tdp-arena-rim" aria-hidden="true"/>
    <Vessel side={visibleB} title={b.bossPlanetId?"BOSS · "+tacticalBossProfile(b.bossPlanetId)?.name:"AVVERSARIO · IA DI PROVA"} facing="enemy" hullRef={hullB}/>
    <div className="tdp-divider"><span>SCUDI · BRECCE · SISTEMI VITALI</span></div>
    <Vessel side={visibleA} title="LA TUA NAVE" facing="player" hullRef={hullA}/>
