@@ -58,7 +58,7 @@ export function officialVisualFleet(side){
   [op,{...engine,hp:Math.max(0,Math.ceil(engine.max*engineVital.hp/engineVital.max))}]));
  const escorts=side.escorts.map((escort,i)=>({
   id:escort.id,name:'Scudiera '+(i+1),parentShipId:side.shipId,
-  weapon:{name:'Armamento integrato',role:'support'},
+  weapon:escort.weapon??{name:'Armamento integrato',role:'support'},
   defense:{shield:{hp:escort.hp,max:escort.max},destroyed:escort.hp<=0,signature:null}
  }));
  return {fleet:[{...vessel,engines,defense:side.defense}],escorts};
