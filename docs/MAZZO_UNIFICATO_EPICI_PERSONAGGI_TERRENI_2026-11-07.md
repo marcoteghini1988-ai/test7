@@ -1,5 +1,7 @@
 # Eclissi Stellare — Mazzo speciale unificato: Oggetti Epici, Personaggi, Terreni
 
+> **Stato aggiornato — 7 novembre 2026:** la sola interfaccia di gioco è la plancia 3D in `src/MathDuelBattle.jsx`; le cinque carte speciali e i due mazzi sono stati portati sulla plancia, senza cambiare navi, armi o arena originale. Le schermate `TacticalDuelPrototype.jsx/.css` e l'accesso `?tacticalPreview=1` sono stati rimossi; i motori tattici non ancora integrati restano conservati come codice da migrare. Le sezioni storiche sotto descrivono test precedenti, NON una seconda modalità disponibile.
+
 **Data:** 7 novembre 2026 · Repository unico `marcoteghini1988-ai/test7` · `main`
 
 ## Decisioni dell'utente (vincolanti)
@@ -41,7 +43,7 @@ Limiti prototipali: **un solo Oggetto Epico attivo** per giocatore; **un utilizz
 
 ### Modalità anteprima
 
-Nel link StackBlitz della sandbox `?tacticalPreview=1` è possibile selezionare uno dei sei Epici **esclusivamente come simulazione**, inserendolo nelle 24 carte e nella mano iniziale: **non viene concesso alla collezione dell'account**. Il motore normale rifiuta un Epico nel loadout se non è presente nella lista esplicita degli oggetti sbloccati.
+La vecchia selezione simulata degli Epici tramite `?tacticalPreview=1` è stata rimossa. I moduli tattici degli Epici rimangono da integrare nel gioco ufficiale 3D; nessun Epico viene concesso all'account entrando nel gioco. Il motore tattico rifiuta gli Epici non presenti fra gli oggetti sbloccati.
 
 ## Da completare nel motore ufficiale (non dichiarare implementato)
 
