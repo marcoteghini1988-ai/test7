@@ -3,7 +3,7 @@
 > **STATO CORRENTE — 7 novembre 2026, `test7/main`.**
 > Il gioco avvia un solo ingresso `App.tsx → MathDuelBattle.jsx`, senza schermate separate di prova. La campagna standard utilizza `OfficialBattle3D.jsx`: **30 secondi di preparazione simultanea e 8 secondi di risoluzione**, 7 carte numeriche pescate dal mazzo di 52 e 5 speciali dal mazzo di 24 carte possedute.
 >
-> **Già integrati:** 17 navicelle, 42 armi e grafica metallica prospettica 9:16; piloti comuni L1–L5; passive **Baluardo terrestre** (Gaia) e **Primo anello** (Crono) ai tre gradi. Le altre 21 passive boss, i piloti avanzati e alcune arene mantengono temporaneamente il combattimento 3D precedente per non perdere poteri o progressione.
+> **Già integrati:** 17 navicelle, 42 armi e grafica metallica prospettica 9:16; piloti comuni L1–L5; passive **Baluardo terrestre** (Gaia), **Pressione marziana** (Tharsis) e **Primo anello** (Crono), ai tre gradi. Le altre 20 passive boss, i piloti avanzati e alcune arene mantengono temporaneamente il combattimento 3D precedente per non perdere poteri o progressione.
 >
 > **Validazione:** GitHub Actions esegue `npm run verify:logic`, `npm run build` e `npm run preflight`; il collaudo visivo su Android resta da fare. Nessuna dichiarazione di gioco completato o di mesh 3D reali.
 
