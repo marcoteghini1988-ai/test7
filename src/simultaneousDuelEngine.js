@@ -14,6 +14,7 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalLeviatanoBonus,rememberTacticalLeviatanoHit,
  rememberTacticalLeviatanoRecycle} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
+import {escortInterceptionEfficiency} from './fleetSystems.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
 import {
@@ -334,11 +335,15 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  // shields nor numeric vital signatures.
  const bypass=(t.piercing?.20:0)+(t.tech==='cinetico'?.10:0);
  const escortPacket=total-Math.floor(total*Math.min(.35,bypass));
- if(def.defense.parts.command.hp>0){
+ // The command module coordinates all escort interception. At <=50% HP,
+ // each real escort absorbs 15% less, including cover and fusion. At KO,
+ // no interception takes place and no escort HP is spent.
+ const escortEfficiency=escortInterceptionEfficiency(def.defense);
+ if(escortEfficiency>0){
   const live=def.escorts.filter(e=>e.hp>0);
-  const maxIntercept=Math.min(escortPacket,Math.floor(total*.75));
+  const maxIntercept=Math.min(escortPacket,Math.floor(total*.75*escortEfficiency));
   if(res.cover&&live.length&&def.defense.shield.hp>0){
-   const take=Math.min(live[0].hp,Math.floor(total*.75),maxIntercept);
+   const take=Math.min(live[0].hp,Math.floor(total*.75*escortEfficiency),maxIntercept);
    live[0].hp-=take;intercepted+=take;res.coverUsed=take>0;
   }
   let suppressed=false;
@@ -350,7 +355,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
      ?res.fusionDefense/Math.max(1,supported):res.fusionDefense)
      :(res.ionizedDefense?.10:.20);
    const nerfed=res.ionizedDefense&&res.fusionDefense?share*.5:share;
-   const take=Math.max(0,Math.min(e.hp,Math.floor(escortPacket*nerfed),maxIntercept-intercepted));
+   const take=Math.max(0,Math.min(e.hp,Math.floor(escortPacket*nerfed*escortEfficiency),maxIntercept-intercepted));
    e.hp-=take;intercepted+=take;
    if(res.fusion==='fusion-barrier'||res.fusion==='fusion-strike')break;
   }
@@ -360,6 +365,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
    splash=Math.min(2,def.escorts[1].hp);def.escorts[1].hp-=splash;
   }
  }
+ if(intercepted>0&&escortEfficiency<1)
+  log.push(other(key)+': Centralina danneggiata, intercettazione scudiere −15%');
  // L'ambiente protegge solo la barriera madre, dopo le scudiere reali.
  const motherPacket=Math.max(0,total-intercepted);
  const bossDefenseFactor=tacticalBossMotherFactor(def);
@@ -434,17 +441,18 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const leviatano=tacticalLeviatanoBonus(atk,def,order,damage);
  damage+=leviatano.extra;
  const defenseStatus=status[other(key)];
- if(def.defense.parts.command.hp>0){
+ const escortEfficiency=escortInterceptionEfficiency(def.defense);
+ if(escortEfficiency>0){
   const protector=def.escorts.find(e=>e.hp>0);
   if(protector&&defenseStatus.cover&&!defenseStatus.coverUsed){
-   const take=Math.min(protector.hp,Math.floor(damage*.75));
+   const take=Math.min(protector.hp,Math.floor(damage*.75*escortEfficiency));
    protector.hp-=take;damage-=take;absorbed+=take;
    defenseStatus.coverUsed=take>0;
    log.push(other(key)+': copertura tattica assorbe '+take+' HP reali');
   }
   if(damage>0&&defenseStatus.fusionDefense&&defenseStatus.fusion){
    const defenders=def.escorts.filter(e=>e.hp>0);
-   const maxTake=Math.floor(damage*defenseStatus.fusionDefense);
+   const maxTake=Math.floor(damage*defenseStatus.fusionDefense*escortEfficiency);
    let remaining=maxTake;
    for(const protector of defenders){
     const take=Math.min(protector.hp,remaining);
