@@ -15,6 +15,7 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  rememberTacticalLeviatanoRecycle} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
+import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
 import {
@@ -465,6 +466,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const bossDefenseFactor=tacticalBossMotherFactor(def);
  damage=Math.floor(damage*bossDefenseFactor);
  const hit=hitMotherPart(defense,target,damage,cards);
+ const consequence=hit.damage>0?tacticalVitalTransition(defense,hit.defense,target):null;
  def.defense=hit.defense;
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberTacticalBossVitalHit(atk,target,hit.damage,tharsis);
@@ -492,6 +494,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(other(key)+': generatore KO, barriera collassata e riparazioni impossibili');
  }
  log.push(key+': '+target+' '+(hit.reason==='hit'?'-'+hit.damage+' HP'+(hit.destroyed?' [KO]':''):'nessun danno: '+hit.reason));
+ if(consequence)log.push(other(key)+': '+consequence.label);
  return hit.damage||0;
 }
 // Only public combat condition snapshots, never hands/deck or hidden orders.
