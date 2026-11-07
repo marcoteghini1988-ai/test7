@@ -491,6 +491,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
  }
  const [game,setGame]=useState(()=>startBattle(collection?collectionBattleOptions(collection):{}));
  const [maneuverMenu,setManeuverMenu]=useState(false);
+ const [showSpecialDetails,setShowSpecialDetails]=useState(false);
  const [specialEscortSlot,setSpecialEscortSlot]=useState(0);
  const [uiClock,setUiClock]=useState(Date.now);
  useEffect(()=>{const timer=setInterval(()=>setUiClock(Date.now()),1000);return()=>clearInterval(timer);},[]);
@@ -1069,13 +1070,28 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
      const readiness=card?specialCardReadiness(game.player,i,specialEscortSlot,uiClock):null;
      return <button key={card?.id||'empty-'+i} type="button"
       className={'special-board-card'+(card?' special-'+card.type:' is-empty')}
+      data-family={definition?.family||'empty'}
       title={definition?.description||'Slot speciale vuoto'}
       disabled={!!intro||game.phase!=='ready'||!readiness?.ready}
       onClick={()=>playTacticalCard(i)}>
-      <small>{'S'+(i+1)}</small>
+      <span className="special-board-glyph" aria-hidden="true">{definition?.family==='fusion'?'◆':
+       definition?.family==='defense'?'⬡':definition?.family==='volley'?'✦':
+       definition?.family==='support'?'✚':'✧'}</span>
       <strong>{definition?.short||'VUOTO'}</strong>
+      <small>{'S'+(i+1)}</small>
      </button>;
     })}
+    <button type="button" className="special-board-info" aria-expanded={showSpecialDetails}
+      aria-label="Informazioni sulle cinque carte speciali"
+      onClick={()=>setShowSpecialDetails(v=>!v)}>{showSpecialDetails?'×':'i'}</button>
+    {showSpecialDetails&&<div className="special-board-explain" role="region" aria-label="Descrizione delle carte speciali">
+     <b>CARTE SPECIALI IN MANO</b>
+     {(game.player.specialHand||[]).map((card,i)=>{
+      const info=specialCardDefinition(card);
+      return <p key={card.id}><strong>{i+1}. {info?.short||card.type}</strong>
+       <span>{info?.description||'Descrizione non disponibile'}</span></p>;
+     })}
+    </div>}
    </div>
    <Hand cards={game.player.hand} selected={game.selected} onSelect={pick} disabled={game.phase!=='ready'||game.actor!=='player'}/>
    <div className="play-controls">{!intro&&<Formula game={game}/>}<button className="es-button attack" onClick={attack} disabled={game.phase!=='ready'}>ATTACCA ➤</button></div>
