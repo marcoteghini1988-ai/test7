@@ -1,3 +1,5 @@
+**AGGIORNAMENTO SUCCESSIVO — 12 BOSS MIGRATI**: nella plancia 3D ufficiale del duello simultaneo sono ora attivati i settori boss riconosciuti, con mazzo numerico nemico storico, 12 piloti e arene esclusive. Il comportamento prima descritto come “campagna boss ancora legacy” è stato superato. I salvataggi incoerenti e i piloti non convertiti continuano sul motore precedente. Le verifiche visive su smartphone restano da fare. Specifica corrente: `docs/MIGRAZIONE_BOSS_E_ANIMAZIONI_SCUDIERE_07_11_2026.md`.
+
 # Eclissi Stellare — scaletta aggiornata, 7 novembre 2026
 
 **Fonte corrente per continuare lo sviluppo**: repository ufficiale `marcoteghini1988-ai/test7`, ramo `main`. Nessuna copia o modalità di prova. Tutti gli aggiornamenti descritti riguardano il motore ufficiale di duello simultaneo **30 secondi preparazione / 8 secondi risoluzione** e i suoi controlli. La grafica 9:16 resta quella originale e **non è stata ridisegnata**.
