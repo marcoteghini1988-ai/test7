@@ -221,6 +221,11 @@ function applyVitalAttack(sides,key,order,status,log){
  }
  const hit=hitMotherPart(defense,target,damage,cards);
  def.defense=hit.defense;
+ if(target==='shieldGenerator'&&hit.destroyed){
+  // La barriera madre collassa quando il suo vero generatore va KO.
+  def.defense=damageMotherShield(def.defense,def.defense.shield.hp).defense;
+  log.push(other(key)+': generatore KO, barriera collassata e riparazioni impossibili');
+ }
  log.push(key+': '+target+' '+(hit.reason==='hit'?'-'+hit.damage+' HP'+(hit.destroyed?' [KO]':''):'nessun danno: '+hit.reason));
  return hit.damage||0;
 }
