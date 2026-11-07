@@ -8,6 +8,7 @@ import {createTacticalDuel,TACTICAL_STARTER_TYPES,validateTacticalLoadout} from 
 import {buildTacticalBossDeck,tacticalBossProfile} from './tacticalSpecialPresets.js';
 import {validateSpecialDeck} from './specialDeckBuilder.js';
 import {arenaForBattle} from './battleArenas.js';
+import {officialBossEncounter} from './officialBossEncounter.js';
 
 export function officialBattleSetup({
  mode='campaign',sectorNumber=1,bossPlanetId=null,bossSectorLevel=null,
@@ -36,35 +37,38 @@ export function officialBattleSetup({
   const level=Math.max(1,Math.min(definition.maxLevel,Math.floor(Number(owned.level)||1)));
   ownedBossDeck={id:selectedBossDeck,level};
  }
- const rival=chooseCampaignMotherRival(equipped.shipId,equipped.level,sectorNumber,bossPlanetId,bossSectorLevel);
- const arena=arenaForBattle(sectorNumber,mode,null,{planetId:bossPlanetId,sectorLevel:bossSectorLevel});
+ const boss=officialBossEncounter({mode,sectorNumber,
+  planetId:bossPlanetId,sectorLevel:bossSectorLevel});
+ const encounterPlanet=boss?.planetId??bossPlanetId;
+ const rival=chooseCampaignMotherRival(equipped.shipId,equipped.level,sectorNumber,encounterPlanet,bossSectorLevel);
+ const arena=arenaForBattle(sectorNumber,mode,null,{planetId:encounterPlanet,
+  sectorLevel:bossSectorLevel});
  // L'ID del giocatore deve essere sbloccato nell'inventario persistente.
  // L'IA usa la scelta ufficiale del comandante avversario, mai carte del giocatore.
  const ownedPilot=commanderFromInventory(selectedPilot,pilotInventory);
  if(ownedPilot&&!tacticalCommanderReady(ownedPilot.id))
   throw new Error('Pilota equipaggiato non ancora convertito: usare il duello 3D compatibile');
  const rivalPilot=chooseCampaignRivalCommander({
-  mode,globalSector:sectorNumber,planetId:bossPlanetId,planetSector:bossSectorLevel,
+  mode,globalSector:sectorNumber,planetId:encounterPlanet,planetSector:bossSectorLevel,
   shipId:rival.shipId,shipLevel:rival.level
  });
  const enemyPilot=tacticalCommanderReady(rivalPilot.id)?
   normalizeFleetCommander(rivalPilot.id,rivalPilot.level):null;
- const local=Number(bossSectorLevel)||((Math.max(1,Number(sectorNumber)||1)-1)%10+1);
- const boss=mode!=='pvp'&&local===10&&tacticalBossProfile(bossPlanetId);
- const opponentDeck=boss?buildTacticalBossDeck(bossPlanetId,rival.level,equipped.level):[...TACTICAL_STARTER_TYPES];
+ const opponentDeck=boss?buildTacticalBossDeck(boss.planetId,rival.level,equipped.level):[...TACTICAL_STARTER_TYPES];
  const options={
   shipA:equipped.shipId,levelA:equipped.level,
   shipB:rival.shipId,levelB:rival.level,
   seed,nowMs,arenaId:arena.id,shuffleNumericOpening:true,
   commanderA:ownedPilot,commanderB:enemyPilot,
   bossNumericDeckA:ownedBossDeck,
+  bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
   specialDeckA:[...specialCollection.loadout],
-  specialDeckB:opponentDeck,bossPlanetB:boss?Number(bossPlanetId):null
+  specialDeckB:opponentDeck,bossPlanetB:boss?.planetId??null
  };
  return {
   battle:createTacticalDuel(options),
   shipA:equipped.shipId,shipB:rival.shipId,
-  bossId:boss?Number(bossPlanetId):null,arena,mode
+  bossId:boss?.planetId??null,bossEncounter:boss,arena,mode
  };
 }
 
