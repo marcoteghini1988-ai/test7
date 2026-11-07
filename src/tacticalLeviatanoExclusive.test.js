@@ -48,7 +48,7 @@ test('Il Leviatano e il sesto potere ESCLUSIVO, distinto dal mazzo boss collezio
  assert.equal(equipped.sides.B.bossExclusive.id,8);
  assert.equal(equipped.sides.A.bossNumericDeck.id,'planet_char_8');
  assert.equal(equipped.sides.A.bossNumericDeck.level,6);
- assert.equal(equipped.sides.B.bossNumericDeck,null);
+ assert.equal(equipped.sides.B.bossNumericDeck??null,null);
 });
 
 test('Pressione degli abissi: soglia esatta del 40% all INIZIO, 41% no; 0 non crea danni',()=>{
