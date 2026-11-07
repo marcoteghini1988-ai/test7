@@ -1,6 +1,6 @@
 # Eclissi Stellare — documento di trasferimento per ChatGPT Work
 
-> **Stato aggiornato — 7 novembre 2026:** l'ingresso unico è `src/MathDuelBattle.jsx`. La campagna standard usa `OfficialBattle3D.jsx` e il motore simultaneo reale 30+8; `BossBattle3D.jsx` preserva temporaneamente i boss, le passive non convertite e la durata degli effetti ionici senza sacrificare salvataggi e progressione. Tutte le viste riutilizzano gli asset 3D del gioco. `TacticalDuelPrototype` e `?tacticalPreview=1` sono rimossi. **Nuovo stato:** già funzionanti nel motore simultaneo 4 piloti comuni (`pilot_com_1`-`4`, L1-L5), il Baluardo di Gaia, Pressione marziana di Tharsis e Primo anello di Crono (3 gradi ciascuna). Le altre 20 passive boss e i piloti avanzati rimangono sul percorso compatibile.
+> **Stato aggiornato — 7 novembre 2026:** l'ingresso unico è `src/MathDuelBattle.jsx`. La campagna standard usa `OfficialBattle3D.jsx` e il motore simultaneo reale 30+8; `BossBattle3D.jsx` preserva temporaneamente i boss, le passive non convertite e la durata degli effetti ionici senza sacrificare salvataggi e progressione. Tutte le viste riutilizzano gli asset 3D del gioco. `TacticalDuelPrototype` e `?tacticalPreview=1` sono rimossi. **Nuovo stato:** già funzionanti nel motore simultaneo 4 piloti comuni (`pilot_com_1`-`4`, L1-L5) e **5 passive boss in 4 mazzi**: Baluardo di Gaia, Pressione marziana di Tharsis, Primo anello di Crono, Potenza disperata e Oscurità terminale di Ombre. Mantengono i tre gradi originali e si attivano solo quando la carta è posseduta. Le altre **18 passive boss** e i piloti avanzati rimangono sul percorso compatibile.
 **Versione:** bozza operativa, 7 novembre 2026. **Repository:** `marcoteghini1988-ai/test7`, ramo `main`.  
 **Stato:** progettazione in corso; NON considerare questa bozza un ordine di eseguire immediatamente tutte le modifiche. Da aggiornare al termine della progettazione e dopo la consegna di ogni asset PNG.
 
@@ -59,3 +59,9 @@ D. **ALLA FINE:** aggiornare questo documento con stato reale, riferimenti preci
 > Apri il repository GitHub `marcoteghini1988-ai/test7`, ramo `main`. Leggi per primo `docs/WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md` e `docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md`. Segui la checklist, usa esclusivamente gli asset PNG approvati, esegui il confronto visivo e i test funzionali sull'app, correggi gli errori direttamente in `test7/main` senza creare copie. Riporta prove, file modificati, test e aspetti da rivedere. Se manca il riferimento artistico richiesto, segnalalo prima di cambiare il layout.
 
 _Questo documento è una bozza controllata. Le voci progettuali non significano codice già implementato o immagini già prodotte._
+
+## Stato implementazione passive e test su main — 7 novembre 2026
+
+- Modulo passivi numerici `src/tacticalBossDecks.js`: Gaia (`planet_char_1`), Tharsis (`planet_char_2`), Crono (`planet_char_6`), Ombre (`planet_char_9`), ciascuno limitato ai gradi sbloccati. Nessuna seconda UI di prova.
+- Verifiche automatiche: `src/tacticalGaiaPassive.test.js`, `src/tacticalTharsisPassive.test.js`, `src/tacticalChronoPassive.test.js`, `src/tacticalOmbrePassive.test.js`. Controllano firma matematica, condizioni, inventario, danni reali e assenza di vantaggio dovuto all'ordine di risoluzione.
+- Le schede delle passive effettivamente attive sono consultabili nella guida della battaglia (`?`) in `src/OfficialBattle3D.jsx`. Mancano ancora 18 abilità negli altri 8 mazzi e il collaudo visivo sul dispositivo Android reale.
