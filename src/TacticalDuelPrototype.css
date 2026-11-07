@@ -68,3 +68,10 @@
 .tdp-restart{margin-top:10px}
 .tdp-foot{text-align:center;font-size:10px;color:#8ba5bd;padding:15px 8px}
 @media(max-width:390px){.tdp{padding-left:7px;padding-right:7px}.tdp-special{min-height:110px}.tdp-special small{font-size:8px}.tdp-vessel{grid-template-columns:105px 1fr}.tdp-hull svg{width:102px;height:102px}.tdp-special strong{font-size:9px}}
+
+/* Ricambio numerico solo su carta speciale effettivamente impegnata. */
+.tdp-exchange{margin-top:10px;padding:8px;background:#10283c;border:1px solid #3f6381;border-radius:8px}
+.tdp-exchange strong{font-size:10px;color:#b9d8ed}
+.tdp-exchange-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.tdp-exchange-list button{background:#182f44;border:1px solid #4e718f;border-radius:6px;padding:5px;font-size:11px}
+.tdp-exchange-list button.on{background:#18517c;border-color:#6fd3ff}
