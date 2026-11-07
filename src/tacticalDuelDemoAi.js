@@ -2,6 +2,7 @@
 // Non legge la mano, gli ordini impegnati o le firme nascoste del giocatore.
 // I dodici boss possiedono piani e priorità derivati dai boss storici.
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
+import {tacticalWeaponTechnology} from './tacticalArmamentBalance.js';
 import {nativeBarrierPacket,validateTacticalOrder} from './simultaneousDuelEngine.js';
 import {tacticalBossProfile} from './tacticalSpecialPresets.js';
 
@@ -54,6 +55,9 @@ export function planTacticalDemoAi(battle,key='B'){
  const ours=battle.sides[key],enemy=battle.sides[key==='B'?'A':'B'];
  const profile=tacticalBossProfile(ours.bossPlanetId);
  const priority=profile?.targets||NORMAL_PRIORITY;
+ const focusPreferred=profile?.style==='ionico'||profile?.style==='interferenza'?'ionico':
+  profile?.style==='eruzione'?'plasma':enemy.escorts.some(e=>e.hp>0)?'cinetico':'laser';
+ const focusWeapon=ours.weapons.find(w=>tacticalWeaponTechnology(w)===focusPreferred)??ours.weapons[0];
  const shot=findPrecision(ours,enemy,priority);
  const threatened=priority.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)
    ??priority.find(id=>ours.defense.parts[id].hp>0)??'shieldGenerator';
@@ -75,13 +79,15 @@ export function planTacticalDemoAi(battle,key='B'){
  }
  const exchanges=shot.numericIndices.length?[]:
   chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?[0,1]:[0];
- let result={specialIndices:chosen,counterVitalId:threatened,exchangeIndices:exchanges,...shot};
+ let result={specialIndices:chosen,counterVitalId:threatened,exchangeIndices:exchanges,
+  weaponFocusId:focusWeapon?.id??null,...shot};
  while(!validateTacticalOrder(battle,key,result).ok&&result.specialIndices.length){
   result={...result,specialIndices:result.specialIndices.slice(0,-1)};
   if(!result.specialIndices.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle'))
    result.exchangeIndices=result.exchangeIndices.slice(0,1);
  }
  if(!validateTacticalOrder(battle,key,result).ok)
-  result={specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,exchangeIndices:[0]};
+  result={specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,
+   weaponFocusId:focusWeapon?.id??null,exchangeIndices:[0]};
  return result;
 }
