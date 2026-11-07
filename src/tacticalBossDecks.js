@@ -3,7 +3,7 @@
 // Le percentuali e il numero dei gradi vengono dal catalogo esistente.
 import {numericBossDeck,activeNumericBossAbilities} from './bossNumericDecks.js';
 
-export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6']);
+export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_9']);
 export const tacticalBossDeckReady=id=>TACTICAL_READY_BOSS_DECKS.includes(id);
 
 export function equipTacticalBossDeck(side,selection=null){
@@ -15,8 +15,8 @@ export function equipTacticalBossDeck(side,selection=null){
  const ability=activeNumericBossAbilities(selection.id,lv)[0];
  if(!ability?.unlocked)throw new Error('Abilita boss non sbloccata');
  const state={id:deck.id,level:lv,ability:ability.name,firstHitUsed:false,shieldBonus:0,
-  lastVital:null,vitalBonusRemainder:0};
- if(selection.id==='planet_char_6'||selection.id==='planet_char_2')
+  lastVital:null,vitalBonusRemainder:0,outgoingBonusRemainder:0};
+ if(selection.id==='planet_char_6'||selection.id==='planet_char_2'||selection.id==='planet_char_9')
   return {...side,bossNumericDeck:state};
  // Gaia: stessa regola del combattimento precedente, floor sullo scudo massimo.
  // Solo HP della barriera; non modifica vitali, scudiere o mazzi.
@@ -62,5 +62,43 @@ export function rememberTacticalBossVitalHit(side,target,damage,bonus){
  if(state?.id!=='planet_char_2'||!target||!(damage>0))return side;
  side.bossNumericDeck={...state,lastVital:target,
   vitalBonusRemainder:bonus?.active?bonus.remainder:0};
+ return side;
+}
+
+
+// Ombre — Potenza disperata / Oscurità terminale. I requisiti vengono
+// fotografati all'inizio di ENTRAMBE le preparazioni: il fuoco simultaneo non
+// può attribuire bonus in base all'ordine interno dei colpi nello stesso ciclo.
+export function tacticalBossConditionSnapshot(side){
+ const shield=side?.defense?.shield;
+ const parts=side?.defense?.parts;
+ return {
+  lowShield:!!shield&&shield.max>0&&shield.hp/shield.max<=.35,
+  destroyedVitals:parts?Object.values(parts).filter(part=>part.hp<=0).length:0
+ };
+}
+export function tacticalBossOutgoingBonus(side,baseDamage,{vitalId=null,snapshot=null}={}){
+ const state=side?.bossNumericDeck;
+ const inactive={active:false,percentage:0,extra:0,remainder:0,abilities:[]};
+ if(state?.id!=='planet_char_9'||!Number.isSafeInteger(baseDamage)||baseDamage<=0)return inactive;
+ const conditions=snapshot||tacticalBossConditionSnapshot(side);
+ const abilities=activeNumericBossAbilities(state.id,state.level);
+ const triggered=[];
+ if(conditions.lowShield&&abilities[0]?.unlocked)triggered.push(abilities[0]);
+ if(vitalId&&conditions.destroyedVitals>=2&&abilities[1]?.unlocked)
+  triggered.push(abilities[1]);
+ if(!triggered.length)return inactive;
+ const percentage=Math.min(30,triggered.reduce((sum,a)=>sum+a.value,0));
+ const saved=state.outgoingBonusRemainder;
+ const remainder=Number.isInteger(saved)&&saved>=0&&saved<100?saved:0;
+ const points=baseDamage*percentage+remainder;
+ return {active:true,percentage,extra:Math.floor(points/100),
+  remainder:points%100,abilities:triggered.map(a=>a.name)};
+}
+export function rememberTacticalBossOutgoingHit(side,damage,bonus){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_9'||!(damage>0))return side;
+ side.bossNumericDeck={...state,
+  outgoingBonusRemainder:bonus?.active?bonus.remainder:0};
  return side;
 }
