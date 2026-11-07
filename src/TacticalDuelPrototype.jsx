@@ -156,6 +156,15 @@ export default function TacticalDuelPrototype(){
       onClick={()=>setDraft(d=>({...d,op}))}>{label}</button>)}
    </div>
    {selectedNumeric.length>0&&<p className="tdp-help">Numeriche scelte: {selectedNumeric.map(c=>c.value+c.suit).join(' · ')} · bersaglio: {VITAL_LABELS[draft.vitalId]||'non scelto'}</p>}
+   {recycler&&<div className="tdp-exchange">
+    <strong>Seleziona fino a 2 numeriche da ricambiare al termine dello scontro:</strong>
+    <div className="tdp-exchange-list">{a.numeric.hand.map((card,i)=><button key={card.id} type="button"
+      disabled={locked||draft.numericIndices.includes(i)} aria-pressed={draft.exchangeIndices.includes(i)}
+      className={draft.exchangeIndices.includes(i)?'on':''}
+      onClick={()=>setDraft(d=>({...d,exchangeIndices:toggle(d.exchangeIndices,i,2)}))}>
+      {card.value}{card.suit} ↻
+     </button>)}</div>
+   </div>}
   </section>
   <section className="tdp-action">
    <div><strong>Sincronia: {a.sync}/100</strong><small>La fusione difensiva richiede una scudiera viva.</small></div>
