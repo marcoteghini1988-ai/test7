@@ -7,6 +7,7 @@ import {SPECIAL_COLLECTION_KEY,createSpecialCollection,normalizeSpecialCollectio
  readSpecialCollection,validateSpecialDeck,equipSpecialDeck,openSpecialPack,
  specialPackReward,SPECIAL_PACK_TYPES} from './specialDeckBuilder.js';
 import {makeSpecialInstances} from './specialCards.js';
+import {officialBattleSetup} from './officialBattleSetup.js';
 const storage=()=>{const data=new Map();return {getItem:key=>data.get(key)??null,
  setItem:(key,value)=>data.set(key,value),data};};
 const victory=(planet,sector,mode='campaign')=>({winner:'player',mode,
@@ -97,4 +98,33 @@ test('Solo un personaggio vinto può entrare nel mazzo da 24; non più di una co
  const double=chosen.map((type,i)=>i===1?id:type);
  assert.equal(validateSpecialDeck({...awarded,owned:{...awarded.owned,[id]:9}},double).reason,'copy_limit');
  assert.throws(()=>makeSpecialInstances(double),/Troppe copie/);
+});
+
+
+test('Dalla vittoria boss al prossimo duello reale: mano 5 e personaggio solo se equipaggiato',()=>{
+ const s=storage();
+ const base=createSpecialCollection();
+ const id='boss-character-1';
+ const ownedShip={cards:[{instanceId:'owned:N00',shipId:'N00',level:3}],
+  loadout:['owned:N00']};
+ const getBattle=collection=>officialBattleSetup({mode:'campaign',sectorNumber:11,
+  bossPlanetId:2,bossSectorLevel:1,shipCollection:ownedShip,
+  specialCollection:collection,nowMs:150,seed:84}).battle;
+ assert.throws(()=>getBattle({...base,loadout:[id,...base.loadout.slice(1)]}),
+  /Mazzo speciale non valido/);
+ const awarded=claimBossCharacterFromVictory(victory(1,10),s).collection;
+ const stored=readSpecialCollection(s);
+ assert.deepEqual(stored.loadout,base.loadout);
+ const notEquipped=getBattle(stored);
+ assert.equal([...notEquipped.sides.A.special.hand,
+  ...notEquipped.sides.A.special.deck].some(c=>c.type===id),false);
+ const equipped=equipSpecialDeck(awarded,[id,...awarded.loadout.slice(1)]);
+ const fight=getBattle(equipped);
+ const real=[...fight.sides.A.special.hand,...fight.sides.A.special.deck,
+  ...fight.sides.A.special.discard];
+ assert.equal(real.length,24);
+ assert.equal(real.filter(c=>c.type===id).length,1);
+ assert.equal(fight.sides.A.special.hand.length,5);
+ assert.equal(fight.sides.A.numeric.hand.length,7);
+ assert.equal(fight.sides.B.bossCharacter,null);
 });
