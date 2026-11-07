@@ -37,6 +37,7 @@ import {escortInterceptionEfficiency} from './fleetSystems.js';
 import {tacticalBossCommanderAttackBonus,tacticalBossCommanderDefenseBonus,rememberTacticalBossCommanderImpact} from './tacticalBossCommanderBridge.js';
 import {createTacticalEscortArmament,selectTacticalEscortForAmmo,prepareTacticalEscortVolley} from './tacticalEscortVolley.js';
 import {tacticalCombatClock,tacticalStatusActive,applyTacticalTimedStatus,clearTacticalTimedStatuses} from './tacticalTimedStatus.js';
+import {BOSS_CHARACTER_CATALOG,isBossCharacterCard,bossCharacterActive,activateBossCharacter,expireBossCharacter,bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterIonFactor,bossCharacterPrecisionExtra,bossCharacterEscortExtra,bossCharacterSyncExtra,bossCharacterCounterSync,bossCharacterRememberHit,bossCharacterApplyRegen} from './bossCharacterCards.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
@@ -66,7 +67,9 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'shot-corrosion':{name:'Corrosione',kind:'control',help:'Se la barriera subisce un colpo, il successivo colpo nativo infligge +25% alla barriera'},
  'support-status-purge':{name:'Pulizia Sistemi',kind:'support',help:'Rimuove Ionico e Corrosione dalla propria madre, non ripara HP'},
  'support-escort-repair':{name:'Riparazione Scudiera',kind:'support',help:'Ripara fino a 15 HP su una scudiera operativa, senza rianimarla'},
- ...Object.fromEntries(Object.values(TACTICAL_EPIC_CARDS).map(epic=>[epic.id,{name:epic.name,kind:'epic',help:epic.help}]))
+ ...Object.fromEntries(Object.values(TACTICAL_EPIC_CARDS).map(epic=>[epic.id,{name:epic.name,kind:'epic',help:epic.help}])),
+ ...Object.fromEntries(Object.values(BOSS_CHARACTER_CATALOG).map(c=>[c.id,
+  {name:c.name,kind:'boss-character',help:c.description,characterId:c.id}]))
 });
 // The twelve-card-family prototype starter is preserved for old tests and
 // existing snapshots; new loadout presets are opt-in and still use 24 cards.
@@ -84,7 +87,7 @@ export function validateTacticalLoadout(types){
  for(const type of types){
   if(!Object.hasOwn(TACTICAL_SPECIALS,type))return false;
   counts[type]=(counts[type]||0)+1;
-  if(counts[type]>TACTICAL_SPECIAL_COPY_LIMIT)return false;
+  if(counts[type]>(isBossCharacterCard(type)?1:TACTICAL_SPECIAL_COPY_LIMIT))return false;
   if(isTacticalEpic(type)){
    epics++;
    if(counts[type]>1||epics>2)return false;
@@ -168,7 +171,7 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
    id:key+'-escort-'+i,hp:20,max:20,slot:i,
    weapon:createTacticalEscortArmament(shipId,weapons,i)
   })),
-  sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,
+  sync:0,ionized:false,corroded:false,heated:false,bossCharacter:null,bossPlanetId,
   neurotoxinUntilRound:0,bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
   commander:commander&&tacticalCommanderReady(commander.id)?{
    id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
@@ -212,6 +215,10 @@ export function validateTacticalOrder(battle,key,order){
  if(!uniqueIndices(ei,side.numeric.hand.length,2))return {ok:false,reason:'exchange_selection'};
  const types=si.map(i=>side.special.hand[i].type);
  if(new Set(types).size!==types.length)return {ok:false,reason:'duplicate_special'};
+ const characters=types.filter(isBossCharacterCard);
+ if(characters.length>1)return {ok:false,reason:'character_conflict'};
+ if(characters.length&&bossCharacterActive(side,battle.round))
+  return {ok:false,reason:'character_already_active'};
  if(ni.length!==0&&![2,3].includes(ni.length))return {ok:false,reason:'numeric_count'};
  if(ni.length>0&&(!VITAL_IDS.includes(order.vitalId)||!['plus','minus','times','divide','pair','trips'].includes(order.op)))return {ok:false,reason:'invalid_precision'};
  // Anti-stall: one free replacement without a precision attack.
@@ -341,6 +348,13 @@ function applyPreparation(sides,orders,log,round){
  const status={};
  for(const key of ['A','B']){
   const side=sides[key],types=specialTypes(side,orders[key]);
+  expireBossCharacter(side,round);
+  const character=types.find(isBossCharacterCard);
+  if(character){
+   const summoned=activateBossCharacter(side,character,round);
+   if(summoned.ok)log.push(key+': Personaggio '+summoned.character.name+
+    ' attivato per '+summoned.character.durationCycles+' cicli reali');
+  }
   expireTacticalEpic(side,round);
   prepareTacticalEpicChoice(side,round,orders[key].epicChoice,log);
   const playedEpic=types.find(isTacticalEpic);
