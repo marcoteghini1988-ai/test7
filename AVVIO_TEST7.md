@@ -18,7 +18,8 @@ Non esiste più l'ingresso `?tacticalPreview=1`, né il menu `Flotta → Prova`:
 - **Piloti comuni convertiti:** `pilot_com_1`–`pilot_com_4`, gradi L1-L5. I bonus delle armi valgono soltanto con calcoli matematici corretti e un pilota effettivamente sbloccato.
 - **Passiva Gaia:** `planet_char_1` (Baluardo terrestre), tre gradi di aumento dello scudo iniziale/massimo.
 - **Passiva Crono:** `planet_char_6` (Primo anello), tre gradi di riduzione del primo colpo efficace alla madre.
-- **Compatibilità preservata:** `src/BossBattle3D.jsx` continua a gestire battaglie boss, piloti avanzati, le 21 passive boss non ancora migrate e gli ambienti con effetti ionici non ancora convertiti. Non è un gioco di prova, ma il percorso 3D preesistente che conserva poteri e salvataggi fino alla migrazione.
+- **Passiva Tharsis:** `planet_char_2` (Pressione marziana), tre gradi di bonus sui vitali colpiti efficacemente in sequenza, senza danni gratuiti su firme sbagliate.
+- **Compatibilità preservata:** `src/BossBattle3D.jsx` continua a gestire battaglie boss, piloti avanzati, le 20 passive boss non ancora migrate e gli ambienti con effetti ionici non ancora convertiti. Non è un gioco di prova, ma il percorso 3D preesistente che conserva poteri e salvataggi fino alla migrazione.
 - **IA locale:** `src/tacticalDuelAi.js` prepara gli ordini dell'avversario senza conoscere la mano o gli ordini nascosti del giocatore. Il PvP online con server autoritativo non è ancora implementato.
 
 ## Controlli automatici
@@ -45,6 +46,6 @@ La rappresentazione è una composizione 3D prospettica realizzata con asset rast
 
 ## Lavoro residuo
 
-Convertire le altre **21 passive dei boss**, i piloti non comuni, gli effetti a durata delle arene ioniche e le nuove **carte Personaggio e Terreno**; realizzare e collaudare le animazioni complete di armi, fusioni e scontri in formato 9:16. Non eliminare `BossBattle3D.jsx` prima della copertura funzionale e dei relativi test.
+Convertire le altre **20 passive dei boss**, i piloti non comuni, gli effetti a durata delle arene ioniche e le nuove **carte Personaggio e Terreno**; realizzare e collaudare le animazioni complete di armi, fusioni e scontri in formato 9:16. Non eliminare `BossBattle3D.jsx` prima della copertura funzionale e dei relativi test.
 
 **Specifiche correnti:** [Roadmap del duello simultaneo](docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md) · [Trasferimento e checklist visiva](docs/WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md). Le vecchie istruzioni dei punti 22–30 restano disponibili nella cartella `docs/` come documentazione storica e non vanno usate per avviare il regolamento simultaneo.
