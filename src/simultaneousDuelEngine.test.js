@@ -163,3 +163,28 @@ test('Generatore distrutto collassa barriera e impedisce riciclo salute; penalit
  assert.equal(x.sides.B.defense.parts.shieldGenerator.hp,0);
  assert.equal(x.sides.B.defense.shield.hp,0);
 });
+
+test('Anti-stallo: lo scarto gratuito sostituisce una sola numerica e conserva 52 carte reali',()=>{
+ const base=createTacticalDuel();
+ const spent=base.sides.A.numeric.hand[0].id;
+ const result=commit(base,order({exchangeIndices:[0]}));
+ assert.equal(result.sides.A.numeric.hand.length,7);
+ assert.equal(result.sides.A.numeric.discard.some(c=>c.id===spent),true);
+ assert.equal(result.sides.A.numeric.hand.some(c=>c.id===spent),false);
+ assert.equal(count(result.sides.A.numeric),52);
+ assert.equal(result.history[0].orders.A.exchangeIndices.length,1);
+ assert.equal(result.history[0].hitsA,0);
+});
+test('Ricambio specializzato: due numeriche richiedono la carta fisica e non creano doppioni',()=>{
+ const base=createTacticalDuel();
+ const side=base.sides.A;
+ const ix=side.special.deck.findIndex(c=>c.type==='tactic-numeric-recycle');
+ assert.ok(ix>=0);
+ [side.special.deck[ix],side.special.hand[0]]=[side.special.hand[0],side.special.deck[ix]];
+ const ids=side.numeric.hand.slice(0,2).map(c=>c.id);
+ const result=commit(base,order({specialIndices:[0],exchangeIndices:[0,1]}));
+ assert.deepEqual(ids.every(id=>result.sides.A.numeric.discard.some(c=>c.id===id)),true);
+ assert.equal(count(result.sides.A.numeric),52);
+ assert.equal(count(result.sides.A.special),24);
+ assert.equal(result.sides.A.special.discard.some(c=>c.type==='tactic-numeric-recycle'),true);
+});
