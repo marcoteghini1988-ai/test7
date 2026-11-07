@@ -6,7 +6,7 @@ import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuild
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder} from './simultaneousDuelEngine.js';
-import {planTacticalDemoAi} from './tacticalDuelDemoAi.js';
+import {planTacticalAi} from './tacticalDuelAi.js';
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 import {tacticalPlaybackElapsed,projectedCombatSides} from './tacticalCombatTimeline.js';
 import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
@@ -137,7 +137,7 @@ export default function OfficialBattle3D({
   if(!battle||battle.phase!=='planning'||battle.orders.B)return;
   setBattle(b=>{
    if(!b||b.phase!=='planning'||b.orders.B)return b;
-   const plan=planTacticalDemoAi(b,'B');
+   const plan=planTacticalAi(b,'B');
    if(!plan)return b;
    const ready=sealTacticalOrder(b,'B',plan,Date.now());
    return ready.ok?ready.battle:b;
