@@ -28,7 +28,7 @@ export function officialBattleSetup({
  const options={
   shipA:equipped.shipId,levelA:equipped.level,
   shipB:rival.shipId,levelB:rival.level,
-  seed,nowMs,arenaId:arena.id,specialDeckA:[...specialCollection.loadout],
+  seed,nowMs,arenaId:arena.id,shuffleNumericOpening:true,specialDeckA:[...specialCollection.loadout],
   specialDeckB:opponentDeck,bossPlanetB:boss?Number(bossPlanetId):null
  };
  return {
