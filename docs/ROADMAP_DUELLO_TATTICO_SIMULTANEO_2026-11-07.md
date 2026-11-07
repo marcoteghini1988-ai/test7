@@ -1,4 +1,6 @@
 # Eclissi Stellare — nuova meccanica approvata: duello tattico simultaneo
+
+> **Stato aggiornato — 7 novembre 2026:** la sola interfaccia di gioco è la plancia 3D in `src/MathDuelBattle.jsx`; le cinque carte speciali e i due mazzi sono stati portati sulla plancia, senza cambiare navi, armi o arena originale. Le schermate `TacticalDuelPrototype.jsx/.css` e l'accesso `?tacticalPreview=1` sono stati rimossi; i motori tattici non ancora integrati restano conservati come codice da migrare. Le sezioni storiche sotto descrivono test precedenti, NON una seconda modalità disponibile.
 **Data:** 7 novembre 2026. **Sorgente:** ultimo esempio di battaglia a sei scontri approvato dall'utente.  
 **Repository unico:** `marcoteghini1988-ai/test7` su `main`; nessuna copia.  
 **IMPORTANTE:** le regole della simulazione sono **valori di prototipo**, non risultati di un test reale, e la simulazione narrativa precedente aveva incongruenze da sanare nel motore. Non assegnare ricompense né sovrascrivere il combattimento attuale prima dei test.
@@ -62,7 +64,7 @@
 - [ ] Collegamento alla modalità di gioco ufficiale e ricompense.
 - [ ] Verifica interattiva su telefono, ribilanciamento e vero PvP online.
 
-**Per provare:** apri l'anteprima del repository già collegato a StackBlitz e aggiungi `?tacticalPreview=1` all'URL della pagina dell'anteprima (non all'URL GitHub del file). Il prototipo è **A contro IA simulata**, non multiplayer online. Le speciali si selezionano per tocco, non ancora con trascinamento.
+**Percorso di prova rimosso il 7/11:** `?tacticalPreview=1` non è più disponibile. La schermata principale è soltanto `MathDuelBattle.jsx` tramite `App.tsx`. La logica del duello simultaneo 30 s + 8 s è conservata nei moduli tattici, ma non è ancora il combattimento ufficiale.
 
 **Non segnare una fase come conclusa fino a commit e CI riusciti.**
 
