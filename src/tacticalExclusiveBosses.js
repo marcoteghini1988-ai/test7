@@ -1,9 +1,9 @@
-import {damageMotherShield} from './vitalDefense.js';
+import {damageMotherShield,restoreMotherShield} from './vitalDefense.js';
 // Capacita ESCLUSIVE dei boss nemici, distinte dalle 23 passive collezionabili.
-// Gaia, Tharsis, Matriarca Tossica, Crono, Sentinella Ionica, Leviatano e Signore delle Ombre sono attivi nel motore simultaneo.
+// Le dodici abilita esclusive dei boss hanno moduli nel motore simultaneo; la campagna boss usa ancora il percorso compatibile.
 // Il numero del pianeta viene dal catalogo boss ufficiale, non dalla carta mazzo.
 // Nessun danno gratuito, nessuna lettura delle mani/ordini avversari.
-export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6,7,8,9]);
+export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3,6,7,8,9,11,14,17,19,20]);
 export const exclusiveBossReady=id=>READY_EXCLUSIVE_BOSS_IDS.includes(Number(id));
 
 export function createExclusiveBossState(planetId){
@@ -205,4 +205,128 @@ export function exclusiveBloodPactNativeBonus(side,base,round){
  // rounded all the way to zero; the global +45% cap still applies.
  return {active:true,percentage:BLOOD_PACT_BONUS_PERCENT,
   extra:Math.ceil(base*BLOOD_PACT_BONUS_PERCENT/100-1e-9)};
+}
+
+
+// IDRA CRIOGENICA — Europa (11): true native barrier hits schedule a
+// single 4-HP barrier regeneration for the NEXT cycle. A valid HEART
+// precision hit on an exposed boss vital counters that pending regeneration.
+// Generator KO or a destroyed shield must never grant a free repair.
+export const IDRA_REGEN_HP=4;
+export const IDRA_REGEN_COOLDOWN=3;
+export function prepareExclusiveIdraRegen(side,round){
+ const state=side?.bossExclusive;
+ if(state?.id!==11||state.regenPendingRound!==round)return {repaired:0,reason:'inactive'};
+ const last=state.regenLastRound??-100;
+ const cleared={...state,regenPendingRound:0};
+ side.bossExclusive=cleared;
+ if(round-last<IDRA_REGEN_COOLDOWN)return {repaired:0,reason:'cooldown'};
+ if(side.defense?.parts?.shieldGenerator?.hp<=0)return {repaired:0,reason:'generator_offline'};
+ if(side.defense.shield.hp>=side.defense.shield.max)return {repaired:0,reason:'shield_full'};
+ const outcome=restoreMotherShield(side.defense,IDRA_REGEN_HP);
+ if(outcome.repaired>0){
+  side.defense=outcome.defense;
+  side.bossExclusive={...cleared,regenLastRound:round};
+ }
+ return {repaired:outcome.repaired,reason:outcome.repaired>0?'regenerated':'no_repair'};
+}
+export function rememberExclusiveIdraBarrierHit(side,damage,round){
+ const state=side?.bossExclusive;
+ if(state?.id!==11||!(damage>0)||!Number.isSafeInteger(round)||
+   side.defense?.parts?.shieldGenerator?.hp<=0||
+   round-(state.regenLastRound??-100)+1<IDRA_REGEN_COOLDOWN)return false;
+ side.bossExclusive={...state,regenPendingRound:round+1};
+ return true;
+}
+export function cancelExclusiveIdraByHeart(side,damage,cards,round){
+ const state=side?.bossExclusive;
+ if(state?.id!==11||!(damage>0)||!Array.isArray(cards)||
+   !cards.some(card=>card?.suit==='♥')||
+   state.regenPendingRound!==round+1)return false;
+ side.bossExclusive={...state,regenPendingRound:0};
+ return true;
+}
+
+// GENERATORE DEL CAOS — Proxima b (14): build up to three charges from
+// TRUE native barrier hits. After the third successful hit, the NEXT
+// successful native volley gets +10%; failed volleys do not consume charge.
+// The third charge itself NEVER deals bonus damage.
+export const CHAOS_MAX_CHARGES=3;
+export function exclusiveChaosNativeBonus(side,base){
+ const state=side?.bossExclusive;
+ const inactive={active:false,percentage:0,extra:0};
+ if(state?.id!==14||!(state.chaosCharges>=CHAOS_MAX_CHARGES)||
+    !Number.isSafeInteger(base)||base<=0)return inactive;
+ return {active:true,percentage:10,extra:Math.ceil(base*.10-1e-9)};
+}
+export function rememberExclusiveChaosNativeHit(side,damage,bonus){
+ const state=side?.bossExclusive;
+ if(state?.id!==14||!(damage>0))return {charges:state?.chaosCharges??0,released:false};
+ const charges=bonus?.active?0:Math.min(CHAOS_MAX_CHARGES,(state.chaosCharges??0)+1);
+ side.bossExclusive={...state,chaosCharges:charges};
+ return {charges,released:!!bonus?.active};
+}
+
+// CRISTALLO DI RISONANZA — Haumea (17): only two or more numeric
+// cards ACTUALLY discarded by the opponent in the previous cycle can
+// arm a future reward. The boss receives up to five REAL Sync, only on
+// an effective native hit in exactly the next cycle. Never reads hidden hand.
+export const RESONANCE_SYNC_REWARD=5;
+export function rememberExclusiveResonanceDiscards(side,opponentSpentCount,round){
+ const state=side?.bossExclusive;
+ if(state?.id!==17||!Number.isSafeInteger(round)||round<1||
+   !Number.isSafeInteger(opponentSpentCount))return false;
+ const active=opponentSpentCount>=2;
+ side.bossExclusive={...state,resonanceReadyRound:active?round+1:0};
+ return active;
+}
+export function collectExclusiveResonanceSync(side,damage,round){
+ const state=side?.bossExclusive;
+ if(state?.id!==17||state.resonanceReadyRound!==round||
+   !(damage>0))return 0;
+ const gained=Math.min(RESONANCE_SYNC_REWARD,Math.max(0,100-side.sync));
+ if(gained>0)side.sync+=gained;
+ side.bossExclusive={...state,resonanceReadyRound:0};
+ return gained;
+}
+
+// NUCLEO MAGMATICO — Io (19): visible 3-cycle phase, fixed by round,
+// NOT by random rolls or the opponent's secret cards.
+export const MAGMA_PHASES=Object.freeze(['carica','eruzione','raffreddamento']);
+export function exclusiveMagmaPhase(side,round){
+ if(side?.bossExclusive?.id!==19||!Number.isSafeInteger(round)||round<1)
+  return null;
+ return MAGMA_PHASES[(round-1)%3];
+}
+export function exclusiveMagmaNativeAdjustment(side,base,round){
+ const phase=exclusiveMagmaPhase(side,round);
+ if(!phase||!Number.isSafeInteger(base)||base<=0)
+  return {phase,extra:0,penalty:0};
+ return {phase,extra:phase==='eruzione'?Math.ceil(base*.10-1e-9):0,
+  penalty:phase==='raffreddamento'?Math.ceil(base*.10-1e-9):0};
+}
+
+// SOVRANO DEL VUOTO — Encelado (20): public dominant suit changes every
+// three cycles in a fixed four-suit sequence. A valid precision on the
+// boss using that suit DISABLES its precision boost the NEXT round only.
+// Boss precision remains subject to normal signature/exposure/escorts.
+export const VOID_SUIT_CYCLE=Object.freeze(['♠','♥','♦','♣']);
+export function exclusiveVoidDominantSuit(round){
+ return Number.isSafeInteger(round)&&round>0?
+  VOID_SUIT_CYCLE[Math.floor((round-1)/3)%VOID_SUIT_CYCLE.length]:null;
+}
+export function exclusiveVoidPrecisionBonus(side,cards,damage,round){
+ const inactive={active:false,extra:0,suit:exclusiveVoidDominantSuit(round)};
+ if(side?.bossExclusive?.id!==20||!inactive.suit||!Array.isArray(cards)||
+   !cards.some(card=>card?.suit===inactive.suit)||
+   side.bossExclusive.voidBlockedRound===round||!(damage>0))
+   return inactive;
+ return {active:true,extra:Math.ceil(damage*.07-1e-9),suit:inactive.suit};
+}
+export function rememberExclusiveVoidCounter(boss,damage,cards,round){
+ if(boss?.bossExclusive?.id!==20||!(damage>0)||
+   !Array.isArray(cards)||!cards.some(card=>card?.suit===exclusiveVoidDominantSuit(round)))
+  return false;
+ boss.bossExclusive={...boss.bossExclusive,voidBlockedRound:round+1};
+ return true;
 }
