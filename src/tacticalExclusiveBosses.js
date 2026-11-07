@@ -1,8 +1,8 @@
 // Capacita ESCLUSIVE dei boss nemici, distinte dalle 23 passive collezionabili.
-// Solo Gaia e Tharsis sono attualmente attive nel duello simultaneo.
+// Gaia, Tharsis e Matriarca Tossica sono attualmente attive nel duello simultaneo.
 // Il numero del pianeta viene dal catalogo boss ufficiale, non dalla carta mazzo.
 // Nessun danno gratuito, nessuna lettura delle mani/ordini avversari.
-export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2]);
+export const READY_EXCLUSIVE_BOSS_IDS=Object.freeze([1,2,3]);
 export const exclusiveBossReady=id=>READY_EXCLUSIVE_BOSS_IDS.includes(Number(id));
 
 export function createExclusiveBossState(planetId){
@@ -44,4 +44,36 @@ export function rememberExclusiveBossNativeHit(attacker,barrierDamage,bonus){
  attacker.bossExclusive={...state,streak:Math.min(3,state.streak+1),
   bonusRemainder:bonus?.active?bonus.remainder:0};
  return attacker;
+}
+
+// Matriarca Tossica (Venere): un colpo di precisione deve FERIRE un vitale
+// esposto con una firma valida. Nessun veleno su colpi bloccati o a danno zero.
+// La penalita vale soltanto per la prima riparazione di barriera nel
+// successivo ciclo di preparazione, e scade comunque al termine del ciclo.
+// L'attacco e la riparazione non si retroagiscono nello scontro simultaneo.
+export const NEUROTOXIN_REPAIR_FACTOR=.90;
+export function rememberExclusiveVenusPrecisionHit(attacker,defender,damage,round){
+ if(attacker?.bossExclusive?.id!==3||!(damage>0)||
+    !Number.isSafeInteger(round)||round<1)return false;
+ defender.neurotoxinUntilRound=round+1;
+ return true;
+}
+export function exclusiveNeurotoxinActive(side,round){
+ return Number.isSafeInteger(round)&&round>0&&side?.neurotoxinUntilRound===round;
+}
+export function exclusiveNeurotoxinRepairAmount(side,round,normal=20){
+ const amount=Number.isFinite(normal)&&normal>0?Math.floor(normal):0;
+ return exclusiveNeurotoxinActive(side,round)?
+  Math.floor(amount*NEUROTOXIN_REPAIR_FACTOR+1e-9):amount;
+}
+export function clearExclusiveNeurotoxin(side,round){
+ if(exclusiveNeurotoxinActive(side,round)){
+  side.neurotoxinUntilRound=0;
+  return true;
+ }
+ return false;
+}
+export function expireExclusiveNeurotoxin(side,round){
+ if((side?.neurotoxinUntilRound||0)<=round)side.neurotoxinUntilRound=0;
+ return side;
 }
