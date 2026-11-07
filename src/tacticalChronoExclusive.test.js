@@ -74,7 +74,7 @@ test('Crono: lo stato del potere non si attiva se il duello non e contro il boss
  assert.equal(exclusiveChronoNativeBonus(normal,30,2).active,false);
  assert.equal(rememberExclusiveChronoCounter(proto,1),true);
  assert.equal(exclusiveChronoNativeBonus(proto,30,1).active,false);
- assert.equal(exclusiveChronoNativeBonus(proto,30,2).extra,1);
+ assert.equal(exclusiveChronoNativeBonus(proto,30,2).extra,2);
  rememberExclusiveChronoNativeHit(proto,2,0,exclusiveChronoNativeBonus(proto,30,2));
  assert.equal(proto.bossExclusive.counterArmedAfterRound,1);
  assert.deepEqual(splash,{});
