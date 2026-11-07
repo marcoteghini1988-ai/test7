@@ -70,7 +70,7 @@ test('Ionico: le armi integrate applicano interferenza per uno scontro, anche se
  const ion=run(next,idle);
  const regular=run(clean,idle);
  assert.ok(impact(ion).intercepted<=impact(regular).intercepted);
- assert.equal(ion.sides.B.ionized,false);
+ assert.equal(ion.sides.B.ionized,true,'una nuova salva ionica reale riapplica lo status');
 });
 test('Esplosivo: distribuisce danno vero alla seconda scudiera, senza danneggiare direttamente un vitale',()=>{
  const gun=PHASE1_CATALOG.weapons.find(w=>tacticalWeaponTechnology({...w,id:w.id,name:w.nome})==='esplosivo');
