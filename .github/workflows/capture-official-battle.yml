@@ -1,0 +1,74 @@
+name: Cattura plancia battaglia ufficiale
+on:
+  push:
+    paths:
+      - .github/workflows/capture-official-battle.yml
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Browser automatizzato, senza schermate di prova nel gioco
+        run: npm install --no-save --package-lock=false playwright-core
+      - name: Avvia la versione reale del gioco
+        run: |
+          npm run dev -- --host 127.0.0.1 > /tmp/vite.log 2>&1 &
+          echo $! >/tmp/vite.pid
+      - name: Cattura la battaglia effettiva e le 7 carte
+        run: |
+          node <<'JS'
+          const fs=require('node:fs');
+          const {execSync}=require('node:child_process');
+          const {chromium}=require('playwright-core');
+          (async()=>{
+            const executablePath=execSync('which google-chrome || which chromium-browser || which chromium',{encoding:'utf8'}).trim();
+            const browser=await chromium.launch({executablePath,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            const context=await browser.newContext({viewport:{width:450,height:800},deviceScaleFactor:2,isMobile:true,hasTouch:true,locale:'it-IT',reducedMotion:'reduce'});
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',err=>errors.push(String(err).slice(0,500)));
+            for(let n=0;n<20;n++){
+              try{const r=await page.goto('http://127.0.0.1:5173/',{waitUntil:'domcontentloaded',timeout:1200});if(r?.ok())break;}catch{}
+              await page.waitForTimeout(800);
+            }
+            await page.waitForTimeout(1800);
+            await page.locator('body').click({position:{x:225,y:400}});
+            try{
+              await page.getByLabel('Le tue sette carte numeriche').waitFor({timeout:25000});
+            }catch(error){
+              fs.writeFileSync('/tmp/eclissi-debug.txt',JSON.stringify({errors,body:(await page.locator('body').innerText()).slice(0,6000)}));
+              await page.screenshot({path:'/tmp/eclissi-mancata-battaglia.png',fullPage:true});
+              throw new Error('Plancia non caricata: '+JSON.stringify({errors,body:(await page.locator('body').innerText()).slice(0,1200)}));
+            }
+            await page.waitForTimeout(1300);
+            const seven=await page.locator('.hand .number-card').count();
+            if(seven!==7)throw new Error('Numero carte non uguale a 7: '+seven);
+            fs.mkdirSync('docs/screenshots',{recursive:true});
+            await page.screenshot({path:'docs/screenshots/plancia-attuale-battaglia.png',fullPage:true,animations:'disabled'});
+            console.log('CATTURA REALE: '+seven+' carte, '+JSON.stringify({errors}));
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: plancia-reale-attuale
+          path: |
+            docs/screenshots/plancia-attuale-battaglia.png
+            /tmp/eclissi-mancata-battaglia.png
+          if-no-files-found: warn
+      - name: Pubblica solo la cattura, senza modificare l'app
+        run: |
+          if [ ! -f docs/screenshots/plancia-attuale-battaglia.png ]; then exit 1; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/screenshots/plancia-attuale-battaglia.png
+          git commit -m 'Salva cattura reale della plancia 3D e sette carte'
+          git push
