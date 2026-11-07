@@ -4,6 +4,7 @@
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
+import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
@@ -119,7 +120,7 @@ function nativeWeapons(shipId,level){
  }));
 }
 export function nativeBarrierPacket(side){return tacticalBarrierPower(side).amount;}
-function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null,shuffleOpening=false){
+function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null,shuffleOpening=false,commander=null){
  const ship=SHIPS.find(x=>x.id===shipId);
  if(!ship||!Number.isInteger(level)||level<1||level>5)throw new Error('Navicella o livello non valido');
  if(!Array.isArray(epicEntitlements)||epicEntitlements.some(id=>!isTacticalEpic(id)))
@@ -132,17 +133,20 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
  return {key,shipId,name:ship.nome,level,weapons:nativeWeapons(shipId,level),defense,
   escorts:Array.from({length:escortCount},(_,i)=>({id:key+'-escort-'+i,hp:20,max:20})),
   sync:0,ionized:false,corroded:false,heated:false,bossPlanetId,seen:[],
+  commander:commander&&tacticalCommanderReady(commander.id)?{
+   id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
+  }:null,
   epic:{active:null,used:[],entitlements:[...epicEntitlements],peek:[],exchangeCredits:0,
    exchangeUntilRound:0,dustPreview:0},
   numeric:numericPile(key,seed+3,shuffleOpening),special:specialPile(key,seed+13,specialDeck,epicOpening)};
 }
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',
- specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false}={}){
+ specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
  return {schemaVersion:1,arenaId,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
-  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening),
-   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening)},
+  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA),
+   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB)},
   history:[],lastEvents:[]};
 }
 function uniqueIndices(value,max,limit){
@@ -288,6 +292,12 @@ function applyPreparation(sides,orders,log,round){
 function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
  const base=nativeBarrierPacket(atk);
+ const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
+ if(pilot.active){
+  atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
+  log.push(key+': '+pilot.pilotId+' · calcolo '+orders[key].op+
+   ' valido, bonus pilota '+pilot.percentage+'% ('+pilot.extra+' HP, resto '+pilot.remainder+'/100)');
+ }
  // Every bonus modifies the REAL native weapon packet; two different special
  // cards never exceed the established +45% offensive cap.
  const bonus=(t.types.includes('tactic-power-shift')?6:0)+
@@ -296,7 +306,9 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
   (t.tech==='laser'&&!def.escorts.some(e=>e.hp>0)?2:0)+
   (def.corroded?Math.floor(base*.25):0)+
   (def.heated?3:0);
- let total=base+Math.min(Math.floor(base*.45),bonus);
+ // Il pilota è un modificatore dell'armamento originale, distinto dal
+ // tetto +45% delle carte speciali: nessuna munizione extra.
+ let total=base+Math.min(Math.floor(base*.45),bonus)+pilot.extra;
  if(res.types.includes('tactic-power-shift'))total+=3;
  const before=total;
  if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
@@ -338,7 +350,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
-  technology:t.tech,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id)});
+  technology:t.tech,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id),
+  pilotBonus:pilot.extra,pilotId:pilot.active?pilot.pilotId:null});
  log.push(key+': armi native '+atk.weapons.map(w=>w.name).join(' + ')+
   ' ('+before+' potenziali, '+intercepted+' intercettati), barriera '+hit.damage);
  return hit.damage;
