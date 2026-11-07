@@ -15,6 +15,8 @@ const bossArena=read('src/BossBattle3D.jsx');
 const css=read('src/MathDuelBattle.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
+const shop=read('src/ShopModal.jsx');
+const legacyPoker=read('src/LegacyPokerBattle.jsx');
 
 verify(app.includes("import App from './App.tsx'")&&app.includes('<App />'),
  'main.tsx deve avviare solo App.tsx');
@@ -23,6 +25,22 @@ verify(!app.includes('TacticalDuelPrototype')&&!app.includes('tacticalPreview'),
 verify(!exists('src/TacticalDuelPrototype.jsx')&&!exists('src/TacticalDuelPrototype.css'),
  'La schermata prototipo separata non deve esistere');
 verify(source.includes('<MathDuelBattle'), 'La campagna deve usare la plancia MathDuelBattle originale');
+
+verify(!source.includes('PROVA FASE 10')&&!source.includes('phase3PreviewOpen')&&
+ !source.includes('NewCombatPhase3Preview'),
+ 'App.tsx non deve avere interfacce di collaudo o ingressi a combattimenti di prova');
+verify(!exists('src/SandboxBattleView.jsx')&&
+ !exists('src/NewCombatPhase3Preview.jsx')&&
+ !exists('src/NewArsenalCatalogPreview.jsx')&&
+ !exists('src/newCombat/phase3Preview.css'),
+ 'I vecchi componenti sandbox e Preview devono essere eliminati dopo la migrazione');
+verify(source.includes("import LegacyPokerBattle from './LegacyPokerBattle'")&&
+ legacyPoker.includes("import './newCombat/legacyPokerBattle.css'"),
+ 'Il motore Poker precedente resta disponibile solo come compatibilita, senza preview');
+verify(shop.includes("import ArsenalCatalog from './ArsenalCatalog'")&&
+ shop.includes('<ArsenalCatalog'),
+ 'Il negozio deve usare il catalogo Arsenale definitivo anziche la Preview');
+
 verify(battleEntry.includes("import OfficialBattle3D from './OfficialBattle3D.jsx'")&&
  battleEntry.includes("officialSimultaneousEligibility(props)")&&
  battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'"),
@@ -90,4 +108,4 @@ if(errors.length){
  for(const error of errors)console.error(' - '+error);
  process.exit(1);
 }
-console.log('Arena 3D ufficiale OK: viste raster non coperte da sagome SVG, sia standard che boss, 17 navi, 42 armi, 34 viste e 34 scudiere.');
+console.log('Arena 3D ufficiale OK: ingresso unico, demo rimosse, Arsenale reale, vecchio Poker compatibile, navi raster 3D, 17 navi e 42 armi.');
