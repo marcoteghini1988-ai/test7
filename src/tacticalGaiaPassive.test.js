@@ -13,7 +13,7 @@ const specialCollection=createSpecialCollection();
 const options={mode:'campaign',sectorNumber:1,shipCollection,specialCollection,
  nowMs:1000,seed:39};
 
-test('solo Gaia convertita: 11 mazzi boss preservati nella battaglia precedente',()=>{
+test('Gaia convertita: gli altri mazzi non autorizzati restano nel percorso precedente',()=>{
  assert.equal(tacticalBossDeckReady('planet_char_1'),true);
  assert.equal(tacticalBossDeckReady('planet_char_2'),false);
  assert.equal(tacticalBossDeckReady('planet_char_20'),false);
