@@ -7,7 +7,8 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
  rememberExclusiveVenusPrecisionHit,exclusiveNeurotoxinActive,
  exclusiveNeurotoxinRepairAmount,clearExclusiveNeurotoxin,expireExclusiveNeurotoxin,
  rememberExclusiveChronoCounter,exclusiveChronoNativeBonus,
- rememberExclusiveChronoNativeHit,transferExclusiveIonicSync} from './tacticalExclusiveBosses.js';
+ rememberExclusiveChronoNativeHit,transferExclusiveIonicSync,
+ exclusiveLeviatanoNativeBonus,rememberExclusiveLeviatanoNativeHit} from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
@@ -313,11 +314,12 @@ function applyPreparation(sides,orders,log,round){
  }
  return status;
 }
-function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round){
+function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,cycleStart){
  const atk=sides[key],def=sides[other(key)],t=status[key],res=status[other(key)];
  const base=nativeBarrierPacket(atk);
  const exclusiveNative=exclusiveBossNativeBonus(atk,base);
  const chronoNative=exclusiveChronoNativeBonus(atk,base,round);
+ const abyss=exclusiveLeviatanoNativeBonus(atk,base,cycleStart[other(key)].defense.shield);
  const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
@@ -331,7 +333,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round)
   Math.floor(base*t.fusionAssault)+
   (t.tech==='laser'&&!def.escorts.some(e=>e.hp>0)?2:0)+
   (def.corroded?Math.floor(base*.25):0)+
-  (def.heated?3:0)+exclusiveNative.extra+chronoNative.extra;
+  (def.heated?3:0)+exclusiveNative.extra+chronoNative.extra+abyss.extra;
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=base+Math.min(Math.floor(base*.45),bonus)+pilot.extra;
@@ -392,6 +394,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round)
  rememberExclusiveBossDefenseHit(def,hit.damage);
  rememberExclusiveBossNativeHit(atk,hit.damage,exclusiveNative);
  rememberExclusiveChronoNativeHit(atk,round,hit.damage,chronoNative);
+ rememberExclusiveLeviatanoNativeHit(atk,hit.damage,abyss);
+ if(abyss.active&&hit.damage>0)
+  log.push(key+': Leviatano Abissale · Pressione degli abissi +8% sulla salva reale ('+
+   'bonus '+abyss.extra+' HP, resto '+abyss.remainder+'/100; barriera nemica <=40% all\'inizio del ciclo)');
  if(chronoNative.active&&chronoNative.extra>0&&hit.damage>0)
   log.push(key+': Crono · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
  if(hit.damage>0&&exclusiveDefenseFactor<1)
@@ -536,8 +542,8 @@ function resolveCycle(battle,nowMs){
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
  const status=applyPreparation(sides,orders,log,battle.round);
  const prepared=combatSnapshot(sides);
- const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers,battle.round);
- const b=applyBarrierAttack(sides,'B',orders,status,log,impacts,modifiers,battle.round);
+ const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers,battle.round,before);
+ const b=applyBarrierAttack(sides,'B',orders,status,log,impacts,modifiers,battle.round,before);
  // Urano: only the B boss can siphon. Use the already-computed REAL barrier
  // damage after escort intercept/defense. Sync moved here is pre-reward sync:
  // no stealing the 25/50 sync that players will earn later in this cycle.
