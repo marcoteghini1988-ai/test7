@@ -64,5 +64,5 @@ test('equipaggiamento Gaia non muta lo stato di partenza del motore',()=>{
  const boosted=equipTacticalBossDeck(init.sides.A,{id:'planet_char_1',level:3});
  assert.equal(boosted.defense.shield.max,original.defense.shield.max+4);
  assert.deepEqual(init.sides.A,original);
- assert.throws(()=>equipTacticalBossDeck(init.sides.A,{id:'planet_char_19',level:1}),/non ancora convertita/);
+ assert.throws(()=>equipTacticalBossDeck(init.sides.A,{id:'planet_char_3',level:1}),/non ancora convertita/);
 });
