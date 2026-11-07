@@ -9,8 +9,23 @@ import {advanceTacticalDuel,sealTacticalOrder,TACTICAL_TIMING} from './simultane
 const memoryStorage=()=>{const data=new Map();return {
  getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};};
 
-test('BOSS: il motore vecchio conserva le passive esistenti',()=>{
+test('BOSS: tutti i dodici settori autentici migrati, salvataggi incoerenti rimangono su 3D legacy',()=>{
+ const ids=[1,2,3,6,7,8,9,11,14,17,19,20];
+ ids.forEach((planet,i)=>{
+  const n=10+i*10;
+  const campaign=officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:n,
+   bossPlanetId:planet,bossSectorLevel:10});
+  assert.equal(campaign.enabled,true,planet);
+  assert.equal(campaign.bossId,planet);
+  assert.equal(campaign.reason,'boss_simultaneous');
+  const adventure=officialSimultaneousEligibility({gameMode:'adventure',sectorNumber:n,
+   bossPlanetId:planet,bossSectorLevel:10});
+  assert.equal(adventure.enabled,true,planet);
+ });
  assert.equal(officialSimultaneousEligibility({gameMode:'adventure',bossSectorLevel:10}).enabled,false);
+ assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:1,bossSectorLevel:10}).enabled,false);
+ assert.equal(officialSimultaneousEligibility({gameMode:'campaign',sectorNumber:20,
+  bossPlanetId:1,bossSectorLevel:10}).enabled,false);
  assert.equal(officialSimultaneousEligibility({gameMode:'adventure',bossSectorLevel:1}).enabled,true);
  assert.equal(officialSimultaneousEligibility({gameMode:'classic',selectedBossDeck:'boss_a',
   bossDeckInventory:{boss_a:{unlocked:true}}}).enabled,false);
