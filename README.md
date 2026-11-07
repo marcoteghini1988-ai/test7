@@ -1,14 +1,15 @@
-# Eclissi Stellare — Duello dei Motori
+# Eclissi Stellare — Gioco ufficiale 3D
 
+> **STATO CORRENTE — 7 novembre 2026, `test7/main`.**
+> Il gioco avvia un solo ingresso `App.tsx → MathDuelBattle.jsx`, senza schermate separate di prova. La campagna standard utilizza `OfficialBattle3D.jsx`: **30 secondi di preparazione simultanea e 8 secondi di risoluzione**, 7 carte numeriche pescate dal mazzo di 52 e 5 speciali dal mazzo di 24 carte possedute.
+>
+> **Già integrati:** 17 navicelle, 42 armi e grafica metallica prospettica 9:16; piloti comuni L1–L5; passive **Baluardo terrestre** (Gaia) e **Primo anello** (Crono) ai tre gradi. Le altre 21 passive boss, i piloti avanzati e alcune arene mantengono temporaneamente il combattimento 3D precedente per non perdere poteri o progressione.
+>
+> **Validazione:** GitHub Actions esegue `npm run verify:logic`, `npm run build` e `npm run preflight`; il collaudo visivo su Android resta da fare. Nessuna dichiarazione di gioco completato o di mesh 3D reali.
 
-> **STATO ATTUALE — 6 novembre 2026**  
-> La sorgente di continuità della scaletta ufficiale di 53 punti è [MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md](docs/MASTER_DECISIONI_ECLISSI_STELLARE_2026-11-06.md).  
-> **Punto 22B:** due mani separate (7 numeriche + 5 speciali), attivazione delle fusioni esclusivamente giocando una speciale. **Punto 23:** collaborazione madre/scudiere verificata; sinergie avanzate ancora da completare. **Punto 24 e successivi:** proseguire sulle meccaniche e rimandare audio/visivo.  
-> Verifica del codice: 295 test automatici riusciti, build React/Vite e preflight riusciti. La prova sul telefono resta da eseguire.  
-> Il progetto ufficiale aggiornato è **test7/main**. Ogni aggiornamento successivo va applicato direttamente alla versione principale, senza nuove copie su GitHub.
+**[Guida di avvio aggiornata](AVVIO_TEST7.md)** · **[Roadmap 30+8](docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md)** · **[Checklist visiva](docs/WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md)**
 
-
-Gioco React/Vite esistente, con Home, Shop, assetto/Hangar e campagna. Il combattimento attivo usa `MathDuelBattle.jsx`: i vecchi moduli Poker rimangono nel progetto per compatibilità, ma non sono il regolamento del duello attivo.
+Le sezioni tecniche successive documentano anche fasi storiche del progetto; quando si discostano dalla guida di avvio, prevale la guida corrente.
 
 ## Versione da proseguire
 
