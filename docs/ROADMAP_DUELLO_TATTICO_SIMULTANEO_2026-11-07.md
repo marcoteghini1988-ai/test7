@@ -93,3 +93,17 @@
 - [ ] **Resta da completare nella modalità ufficiale**: migratore di `phase16CEpics.js` (vecchi passivi) e `specialDeckBuilder.js`, rispetto dei limiti pilota L20/L60, salvataggi/ricompense; nessun bonus doppio passivo+speciale.
 - [ ] **Scelte confermate ma non implementate**: carte Personaggio (anche i 12 boss ottenibili) nel mazzo speciale con durate limitate; carte Terreno PvP che cambiano scena e regole, **vietate contro il boss** il cui ambiente è immutabile; filtro in pesca per evitarne mani morte.
 - [x] Specifica completa: [MAZZO_UNIFICATO_EPICI_PERSONAGGI_TERRENI_2026-11-07.md](./MAZZO_UNIFICATO_EPICI_PERSONAGGI_TERRENI_2026-11-07.md).
+
+
+## Nuova carta da progettare — Mutazione della Firma del Bersaglio
+**Stato: decisione di design aggiunta alla scaletta il 7 novembre 2026. NON implementata.**
+
+- **Idea dell'utente:** quando la barriera di una nave è stata abbattuta quanto basta da esporre uno dei quattro sistemi vitali, l'attaccante può preparare numeriche per un calcolo (+, −, ×, ÷) o una combinazione Poker richiesta dalla firma visibile. Il difensore prepara in segreto una **carta speciale che cambia la firma del proprio vitale esposto**. All'avvio della risoluzione, la vecchia combinazione preparata dall'avversario può non essere più valida e il colpo al vitale viene annullato; la barriera e gli attacchi con armi integrate seguono le proprie regole.
+- **Nome di lavoro:** *Mutazione della Firma* (nome definitivo da scegliere quando si creerà la carta).
+- **Vincoli proposti da verificare prima del codice:** attivazione durante i 30 s di preparazione simultanea (senza conoscere la mano/ordine nascosti del nemico); effetto prima della validazione dei colpi di precisione negli 8 s; coinvolgere **un solo vitale esposto** e **un solo ciclo**; la nuova firma deve essere sempre matematicamente o tramite Poker risolvibile e ricostruibile nel replay; l'ordine delle sottofasi dev'essere indipendente dal client A/B; consumo reale della speciale dal mazzo 24 / mano 5 e rispetto del tetto di 2 speciali preparate. Non permette di riparare un vitale già distrutto. Testare attacchi già preparati, firma originaria o alternativa, contromisure, possibile coincidenza casuale e frequenza della carta prima di definire il bilanciamento.
+- **Da fare successivamente:** catalogo carta, regola esatta di cambio numero/operazione/Poker, durata e limiti, UI dell'effetto (firma visiva che si riconfigura durante il playback), IA e test su tutte le firme delle 17 navicelle.
+
+### Ordine di sviluppo e parcheggio delle nuove idee
+1. **Riprendere la lavorazione interrotta dalla raccolta delle idee:** progettazione delle **12 abilità/passive dei boss nel duello simultaneo**, mantenendo separati i 23 livelli/passive dei mazzi numerici storici e le carte Personaggio Boss sbloccabili; poi procedere ai comandanti/personaggi secondo la scaletta precedente.
+2. **Nuovi requisiti confermati, da realizzare dopo:** carte Personaggio temporanee, comprese quelle ottenute dai boss; carte Terreno attivabili soltanto nel PvP, con arena boss della campagna non sovrascrivibile; conversione definitiva degli Epici da reliquie in carte speciali preservando le fusioni storiche; *Mutazione della Firma*.
+3. **Raccolta ancora aperta:** l'utente ha annunciato altre modifiche da aggiungere alla scaletta. Non anticipare la loro implementazione né cambiare priorità finché non sono state elencate.
