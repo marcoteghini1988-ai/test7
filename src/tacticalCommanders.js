@@ -3,9 +3,11 @@
 // e il livello 1-5 della carta posseduta. Nessun bonus su formule non valide.
 import {commanderAbility} from './commanderAbilities.js';
 import {tacticalSignatureMatches} from './tacticalShipSignatures.js';
+import {TACTICAL_BOSS_COMMANDERS} from './tacticalBossCommanderBridge.js';
 
 export const TACTICAL_READY_COMMANDERS=Object.freeze([
- 'pilot_com_1','pilot_com_2','pilot_com_3','pilot_com_4'
+ 'pilot_com_1','pilot_com_2','pilot_com_3','pilot_com_4',
+ ...TACTICAL_BOSS_COMMANDERS
 ]);
 
 export const tacticalCommanderReady=id=>TACTICAL_READY_COMMANDERS.includes(id);
