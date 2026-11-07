@@ -101,7 +101,10 @@ export function validateTacticalOrder(battle,key,order){
  if(new Set(types).size!==types.length)return {ok:false,reason:'duplicate_special'};
  if(ni.length!==0&&![2,3].includes(ni.length))return {ok:false,reason:'numeric_count'};
  if(ni.length>0&&(!VITAL_IDS.includes(order.vitalId)||!['plus','minus','times','divide','pair','trips'].includes(order.op)))return {ok:false,reason:'invalid_precision'};
- if(!types.includes('tactic-numeric-recycle')&&ei.length)return {ok:false,reason:'recycle_requires_card'};
+ // Anti-stall: with no precise attack, one numerical discard is always possible.
+ // Two exchanges, or an exchange alongside a precision attack, cost the REAL special.
+ if(!types.includes('tactic-numeric-recycle')&&ei.length&&
+   (ei.length>1||ni.length>0))return {ok:false,reason:'recycle_requires_card'};
  if(ni.some(i=>ei.includes(i)))return {ok:false,reason:'card_double_spend'};
  if(types.includes('fusion-barrier')&&(!side.escorts.some(e=>e.hp>0)||side.sync<100||side.defense.parts.command.hp<=0||side.defense.parts.engine.hp<=0))
    return {ok:false,reason:'fusion_unavailable'};
