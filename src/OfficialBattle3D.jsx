@@ -313,7 +313,15 @@ export default function OfficialBattle3D({
       return <button key={card?.id||i} type="button" disabled={locked||!card}
        title={data?.help||'Slot libero'} aria-pressed={draft.specialIndices.includes(i)}
        className={'special-board-card'+(draft.specialIndices.includes(i)?' active':'')}
-       data-family={family} onClick={()=>setDraft(d=>({...d,specialIndices:toggle(d.specialIndices,i,2)}))}>
+       data-family={family} onClick={()=>setDraft(d=>{
+        const chosen=toggle(d.specialIndices,i,2);
+        const defending=chosen.some(index=>{
+         const type=player.special.hand[index]?.type;
+         return type?.startsWith('fusion-')||type==='tactical-cover';
+        });
+        return {...d,specialIndices:chosen,
+         escortAmmoIndex:defending?null:d.escortAmmoIndex};
+       })}>
        <span className="special-board-glyph">✦</span>
        <strong>{data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
       </button>;
@@ -384,7 +392,7 @@ export default function OfficialBattle3D({
       {afroditeReadyIn>0?'Pronto tra '+afroditeReadyIn+' s.':'Pronto ora.'}
      </p>}
      <div className="official-exchange-cards">{player.numeric.hand.map((c,i)=><button key={c.id}
-      disabled={draft.numericIndices.includes(i)}
+      disabled={draft.numericIndices.includes(i)||draft.escortAmmoIndex===i}
       aria-pressed={draft.exchangeIndices.includes(i)}
       onClick={()=>setDraft(d=>({...d,exchangeIndices:toggle(d.exchangeIndices,i,recycle?2:1)}))}>
       {rankLabel(c.value)+c.suit}</button>)}</div>
