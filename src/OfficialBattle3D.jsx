@@ -12,6 +12,7 @@ import {tacticalPlaybackElapsed,projectedCombatSides} from './tacticalCombatTime
 import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {commanderAbility} from './commanderAbilities.js';
+import {activeNumericBossAbilities} from './bossNumericDecks.js';
 import {arenaForBattle} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import {officialBattleSetup,officialBattleResult} from './officialBattleSetup.js';
@@ -379,6 +380,17 @@ export default function OfficialBattle3D({
      <p>Le 7 numeriche attaccano un sistema vitale solo con una firma matematica o Poker valida e se il sistema è esposto. Le 5 speciali provengono dal tuo mazzo da 24 carte e se ne possono impegnare al massimo 2 per ciclo.</p>
      <p>Le armi native della tua nave agiscono sulla barriera; scudiere, fusioni e riparazioni utilizzano HP e carte reali. Dopo lo scontro le mani vengono ripristinate pescando dal mazzo.</p>
      <p>{'Arena: '+arena.name+'. '+arena.description}</p>
+     {player.bossNumericDeck&&<>
+      <h3>PASSIVE DEL MAZZO BOSS EQUIPAGGIATO</h3>
+      {activeNumericBossAbilities(player.bossNumericDeck.id,player.bossNumericDeck.level)
+       .filter(ability=>ability.unlocked).map(ability=>
+       <p key={ability.name}><b>{ability.name+' · Grado '+ability.grade}</b>
+        <span>{ability.description+' · '+ability.value+'%'}</span></p>)}
+     </>}
+     {player.commander&&<p><b>ABILITÀ PILOTA</b>
+      <span>{(commanderAbility(player.commander.id)?.name||'Pilota')+
+       ' · '+(commanderAbility(player.commander.id)?.description||'')+
+       ' · Livello '+player.commander.level}</span></p>}
      <button className="es-button primary" onClick={()=>setMenu('')}>CHIUDI</button>
     </section></div>}
     {menu==='fleet'&&<OfficialFleetPanel collection={session.shipCollection}
