@@ -3,13 +3,16 @@
 // Prices / monetization are NOT defined: packs are granted once for a unique
 // completed campaign sector. Pack sizes / drop rates are still prototype settings;
 // deck size and duplicate limit are confirmed gameplay rules.
-import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT} from './specialCards.js';
+import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,specialCardMaxCopies} from './specialCards.js';
+import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
 export {SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT};
 
 export const SPECIAL_COLLECTION_KEY='eclissi_special_collection_v1';
 export const SPECIAL_COLLECTION_VERSION=1;
 export const SPECIAL_PACK_SIZE=3;
 export const SPECIAL_TYPES=Object.freeze(Object.keys(SPECIAL_CARD_CATALOG));
+// Boss Characters are trophy-only: never silently drop in generic packs.
+export const SPECIAL_PACK_TYPES=Object.freeze(SPECIAL_TYPES.filter(type=>!isBossCharacterCard(type)));
 // Support cards are unlocked via real packs; none are assigned to new players for free.
 const ORIGINAL_STARTER_SPECIALS=new Set([
  'fusion-barrier','fusion-strike','tactical-cover',
@@ -40,7 +43,7 @@ export function validateSpecialDeck(collection,loadout){
  const counts=specialDeckCounts(loadout);
  if(loadout.some(type=>!Object.hasOwn(SPECIAL_CARD_CATALOG,type)))
   return {valid:false,reason:'unknown_card'};
- if(SPECIAL_TYPES.some(type=>counts[type]>SPECIAL_DECK_COPY_LIMIT))
+ if(SPECIAL_TYPES.some(type=>counts[type]>specialCardMaxCopies(type)))
   return {valid:false,reason:'copy_limit'};
  if(SPECIAL_TYPES.some(type=>counts[type]>(collection?.owned?.[type]||0)))
   return {valid:false,reason:'not_owned'};
@@ -57,7 +60,8 @@ export function normalizeSpecialCollection(raw){
   // Saved schema v1 predates this new card; only its missing zero is migrated.
   // Missing existing card types remain an error (never reset a corrupt save).
   const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
-   ['support-escort-repair','fusion-twin','fusion-triad'].includes(type)?0:undefined;
+   (['support-escort-repair','fusion-twin','fusion-triad'].includes(type)||
+    BOSS_CHARACTER_TYPES.includes(type))?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
@@ -83,7 +87,7 @@ export function equipSpecialDeck(collection,loadout){
  if(!check.valid)throw new Error(({
   deck_size:'Il mazzo deve contenere esattamente 24 speciali',
   unknown_card:'Carta speciale non riconosciuta',
-  copy_limit:'Massimo 6 copie della stessa speciale',
+  copy_limit:'Limite copie superato: massimo 1 per ciascun Personaggio Boss, massimo 6 per le altre speciali',
   not_owned:'Non possiedi abbastanza copie della speciale'
  })[check.reason]||'Mazzo speciale non valido');
  return {...collection,loadout:[...loadout]};
@@ -105,7 +109,7 @@ function randIndex(rng,size){
 }
 export function openSpecialPack(collection,rng=Math.random){
  if(!collection.packCredits)return {opened:false,reason:'no_pack',collection};
- const drawn=Array.from({length:SPECIAL_PACK_SIZE},()=>SPECIAL_TYPES[randIndex(rng,SPECIAL_TYPES.length)]);
+ const drawn=Array.from({length:SPECIAL_PACK_SIZE},()=>SPECIAL_PACK_TYPES[randIndex(rng,SPECIAL_PACK_TYPES.length)]);
  const increments=specialDeckCounts(drawn);
  if(SPECIAL_TYPES.some(type=>collection.owned[type]+increments[type]>MAX_OWNED_COPIES))
   return {opened:false,reason:'inventory_full',collection};
