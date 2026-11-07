@@ -380,7 +380,8 @@ export function tacticalAfroditeRepairAmount(side,base){
 // Afrodite — Ricambio armonico: authentic numeric cards may be replaced
 // DURING the 30-second planning phase. Cooldown is wall-clock seconds and is
 // enforced by the deterministic duel engine, never by the UI alone.
-// L1-3: 13s; L4-5: 11s; L6: 9s. No cards are created.
+// Grade 1 (L1): 13s; grade 2 (L2): 11s; grade 3 (L3-L6): 9s.
+// Second ability Sintesi curativa unlocks at L4. No cards are created.
 export function tacticalAfroditeRecycleCooldownMs(side){
  const state=side?.bossNumericDeck;
  if(state?.id!=='planet_char_3')return null;
