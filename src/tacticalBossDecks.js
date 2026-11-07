@@ -361,3 +361,17 @@ export function rememberTacticalResonanceVitalHit(side,damage,bonus){
  side.bossNumericDeck={...state,resonanceVitalRemainder:bonus.remainder};
  return side;
 }
+
+
+// Afrodite / Sintesi curativa (PARTIAL conversion): enhances ONLY an
+// authentic support-shield-repair card. The other passive Ricambio armonico
+// requires real-time numeric-recycle cooldown and is NOT converted: the deck
+// remains gated until both abilities exist in the 30+8 official system.
+export function tacticalAfroditeRepairAmount(side,base){
+ const amount=Number.isSafeInteger(base)&&base>0?base:0;
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_3'||amount<=0)return amount;
+ const ability=activeNumericBossAbilities(state.id,state.level)[1];
+ if(!ability?.unlocked)return amount;
+ return Math.floor(amount*(100+ability.value)/100+1e-9);
+}
