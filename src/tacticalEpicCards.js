@@ -10,7 +10,7 @@ const PROFILES=Object.freeze({
  epic_item_7:{cycles:2,short:'MONOLITE',help:'Per 2 scontri neutralizza il surriscaldamento da plasma delle tue armi.',effect:'anti_heat'},
  epic_item_9:{cycles:1,short:'MATRICE',help:'Con i quattro vitali al 30% totale o meno, +2 al colpo pesante di precisione valido con Coppia/Tris. Non bypassa firme.',effect:'critical_heavy'},
  epic_item_1:{cycles:2,short:'MÖBIUS',help:'Con i vitali al 30% totale o meno, guarda le prossime 10 numeriche e scegline una da anticipare nella pesca.',effect:'future_choice'},
- epic_item_3:{cycles:1,short:'ASTROLABIO',help:'Scegli una delle prime 2 numeriche reali da pescare con il prossimo ricambio di questo scontro.',effect:'dual_draw'}
+ epic_item_3:{cycles:2,short:'ASTROLABIO',help:'Attivalo, scopri le prossime 2 numeriche e nel ciclo successivo scegli quale pescare per prima.',effect:'dual_draw'}
 });
 export const TACTICAL_EPIC_CARDS=Object.freeze(Object.fromEntries(PHASE16A_RIFTS.map(r=>{
  const profile=PROFILES[r.itemId];
