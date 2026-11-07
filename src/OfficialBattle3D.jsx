@@ -43,7 +43,7 @@ function Ship3D({side,snapshot,hullRef,phase}){
  return <div className={'ship-zone ship-'+side+(phase==='resolving'?' ship-in-combat':'')}
   data-fleet-size="1" data-formation="balanced" data-fusion="off">
   <div className="fleet-ships">
-   <div className="fleet-ship-wrap complete-ship focused official-mother" data-ship={visual.id}
+   <div className="fleet-ship-wrap complete-ship focused official-mother" data-fleet-role="mother" data-ship={visual.id}
     data-level={visual.level} style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
     <svg ref={hullRef} className="fleet-ship-img" viewBox="0 0 1000 1000" role="img"
      aria-label={visual.name+' navicella 3D originale, livello '+visual.level}>
@@ -55,7 +55,7 @@ function Ship3D({side,snapshot,hullRef,phase}){
   </div>
   <div className="official-escorts" aria-label={alive+' scudiere attive'}>
    {snapshot.escorts.map((escort,i)=><div key={escort.id}
-    className={'official-escort escort-slot-'+(i+1)+(escort.hp<=0?' destroyed':'')}>
+    className={'official-escort escort-slot-'+(i+1)+(escort.hp<=0?' destroyed':'')} data-fleet-role="lateral">
     <img src={ASSET_ROOT+'/escorts/'+snapshot.shipId+'_escort_'+(i+1)+'.svg'}
      alt={'Scudiera '+(i+1)} draggable={false}/>
     <div className="official-escort-hp"><i style={{width:pct(escort.hp,escort.max)+'%'}}/></div>
