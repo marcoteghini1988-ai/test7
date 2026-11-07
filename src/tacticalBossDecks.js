@@ -4,7 +4,7 @@
 import {numericBossDeck,activeNumericBossAbilities} from './bossNumericDecks.js';
 import {tacticalSignatureMatches} from './tacticalShipSignatures.js';
 
-export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_6','planet_char_7','planet_char_8','planet_char_9','planet_char_11','planet_char_14','planet_char_19','planet_char_20']);
+export const TACTICAL_READY_BOSS_DECKS=Object.freeze(['planet_char_1','planet_char_2','planet_char_3','planet_char_6','planet_char_7','planet_char_8','planet_char_9','planet_char_11','planet_char_14','planet_char_19','planet_char_20']);
 export const tacticalBossDeckReady=id=>TACTICAL_READY_BOSS_DECKS.includes(id);
 
 export function equipTacticalBossDeck(side,selection=null){
@@ -21,7 +21,7 @@ export function equipTacticalBossDeck(side,selection=null){
   recyclePending:false,leviatanoRemainder:0,
   magmaShieldHits:0,magmaNativeRemainder:0,magmaVitalRemainder:0,
   supremacyArmedAfterRound:0};
- if(['planet_char_6','planet_char_2','planet_char_7','planet_char_8','planet_char_9','planet_char_11','planet_char_14','planet_char_19','planet_char_20'].includes(selection.id))
+ if(['planet_char_3','planet_char_6','planet_char_2','planet_char_7','planet_char_8','planet_char_9','planet_char_11','planet_char_14','planet_char_19','planet_char_20'].includes(selection.id))
   return {...side,bossNumericDeck:state};
  // Gaia: stessa regola del combattimento precedente, floor sullo scudo massimo.
  // Solo HP della barriera; non modifica vitali, scudiere o mazzi.
@@ -373,4 +373,16 @@ export function tacticalAfroditeRepairAmount(side,base){
  const ability=activeNumericBossAbilities(state.id,state.level)[1];
  if(!ability?.unlocked)return amount;
  return Math.floor(amount*(100+ability.value)/100+1e-9);
+}
+
+
+// Afrodite — Ricambio armonico: authentic numeric cards may be replaced
+// DURING the 30-second planning phase. Cooldown is wall-clock seconds and is
+// enforced by the deterministic duel engine, never by the UI alone.
+// L1-3: 13s; L4-5: 11s; L6: 9s. No cards are created.
+export function tacticalAfroditeRecycleCooldownMs(side){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_3')return null;
+ const ability=activeNumericBossAbilities(state.id,state.level)[0];
+ return ability?.unlocked?ability.value*1000:null;
 }
