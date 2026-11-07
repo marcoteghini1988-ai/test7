@@ -605,9 +605,7 @@
 .es-math-scope .escort-pod b{font-size:9px}
 
 /* Selettore arma compatibile, distinto dalle sette carte in mano. */
-.es-math-scope .weapon-focus-control{position:absolute;top:538px;left:73px;width:304px;height:30px;display:flex;align-items:center;gap:6px;padding:3px 6px;box-sizing:border-box;border:1px solid #517cab;border-radius:6px;background:#05162bea;color:#b5ebff;z-index:8}
-.es-math-scope .weapon-focus-control span{font-size:9px;font-weight:900;letter-spacing:.5px}
-.es-math-scope .weapon-focus-control select{min-width:0;flex:1;height:24px;border:1px solid #276d9c;border-radius:4px;background:#10263f;color:#e8f8ff;font-size:10px;padding:1px 4px}
+
 .es-math-scope .escort-pod.firing .escort-ship-hull img{animation:escortRecoil .3s ease-out 1;filter:drop-shadow(0 0 8px #8bf7ff)}
 .es-math-scope .ship-enemy .escort-pod.firing .escort-ship-hull img{filter:drop-shadow(0 0 9px #ff9586)}
 @keyframes escortRecoil{0%{transform:translateY(0) scale(1)}35%{transform:translateY(4px) scale(.97)}100%{transform:translateY(0) scale(1)}}
@@ -733,4 +731,66 @@
 }
 .es-math-scope .special-card-hand button.special-fusion-triad{
  background:linear-gradient(165deg,#633f83,#27102f);border-color:#e0b4ff;
+}
+
+/* PLANCIA 3D UFFICIALE — due mazzi effettivi, due mani indipendenti.
+   Conservare intatti asset arena_titanio_9x16, ShipArtwork e MountedWeapons.
+   Le speciali occupano l'area della vecchia selezione arma, senza ridimensionare le navi. */
+.es-math-scope .deck.deck-special{
+ top:514px;left:5px;z-index:7;
+}
+.es-math-scope .deck.deck-special .deck-graphic{
+ width:44px;height:40px;font-size:22px;
+ border-color:#dcaa69;color:#ffdfa8;
+ background:linear-gradient(155deg,#654324,#211529);
+ box-shadow:3px -3px 0 #2b1628,5px -5px 0 #99734777,0 0 10px #c58c5c77;
+}
+.es-math-scope .deck.deck-special small{color:#ffe0b2;font-size:8px}
+.es-math-scope .deck.deck-number small{color:#bfefff}
+.es-math-scope .special-board{
+ position:absolute;top:538px;left:75px;width:300px;height:38px;
+ display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+ gap:3px;z-index:8;pointer-events:auto;
+}
+.es-math-scope .special-board-card{
+ min-width:0;height:38px;padding:3px 2px;
+ display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1px;
+ border:1px solid #cca774;border-radius:5px;
+ background:linear-gradient(150deg,#4b334e,#13283c 65%,#071827);
+ box-shadow:0 2px 5px #0009,inset 0 1px 0 #f5dab766;
+ color:#fff1df;text-align:center;cursor:pointer;
+}
+.es-math-scope .special-board-card small{
+ font-size:8px;line-height:1;color:#f9bf84;font-weight:900;
+}
+.es-math-scope .special-board-card strong{
+ display:block;width:100%;overflow:hidden;text-overflow:ellipsis;
+ white-space:nowrap;font-size:8px;line-height:1.25;
+}
+.es-math-scope .special-board-card.special-fusion-strike{border-color:#ff8e62;background:linear-gradient(135deg,#6e342a,#221c33)}
+.es-math-scope .special-board-card.special-tactical-cover{border-color:#7be3ad;background:linear-gradient(135deg,#235a4c,#111b32)}
+.es-math-scope .special-board-card.special-shot-ion{border-color:#6fd8ff;background:linear-gradient(135deg,#185b7c,#151a38)}
+.es-math-scope .special-board-card.special-shot-corrosion{border-color:#b0dd79;background:linear-gradient(135deg,#3f633a,#1a2631)}
+.es-math-scope .special-board-card:disabled{opacity:.6;filter:saturate(.65)}
+.es-math-scope .special-board-card.is-empty{opacity:.3;border-style:dashed}
+.es-math-scope .special-board-card:not(:disabled):active{transform:translateY(-2px)}
+.es-math-scope .special-board-card:not(:disabled):focus-visible{
+ outline:2px solid #fff1ae;outline-offset:1px;
+}
+.es-math-scope .formula{position:relative;padding-top:10px;box-sizing:border-box}
+.es-math-scope .formula-target{
+ display:block;position:absolute;top:1px;left:8px;
+ font-size:7px;line-height:9px;letter-spacing:.35px;
+ color:#a2e1ff;text-align:left;white-space:nowrap;max-width:180px;
+ overflow:hidden;text-overflow:ellipsis;
+}
+.es-math-scope .maneuver-weapon-focus{
+ display:flex;align-items:center;gap:6px;width:100%;min-height:31px;
+ padding:4px 6px;box-sizing:border-box;
+ border:1px solid #517cab;border-radius:6px;background:#05162bea;color:#b5ebff;
+}
+.es-math-scope .maneuver-weapon-focus span{font-size:9px;font-weight:900}
+.es-math-scope .maneuver-weapon-focus select{
+ flex:1;min-width:0;height:25px;padding:1px 4px;
+ border:1px solid #276d9c;border-radius:4px;background:#10263f;color:#e8f8ff;font-size:9px;
 }
