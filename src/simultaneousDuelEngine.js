@@ -7,7 +7,8 @@ import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSig
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
 import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit,
  tacticalBossVitalBonus,rememberTacticalBossVitalHit,tacticalBossConditionSnapshot,
- tacticalBossOutgoingBonus,rememberTacticalBossOutgoingHit} from './tacticalBossDecks.js';
+ tacticalBossOutgoingBonus,rememberTacticalBossOutgoingHit,
+ tacticalIdraBonus,rememberTacticalIdraHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
@@ -316,6 +317,9 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  if(res.types.includes('tactic-power-shift'))total+=3;
  const ombre=tacticalBossOutgoingBonus(atk,total,{snapshot:t.bossSnapshot});
  total+=ombre.extra;
+ // Precisione criogenica: formula di divisione verificata sul bersaglio.
+ const idra=tacticalIdraBonus(atk,def,orders[key],total);
+ total+=idra.extra;
  const before=total;
  if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
  if(res.types.includes('tactic-impact'))total=Math.floor(total*.8);
@@ -358,6 +362,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers){
  def.defense=hit.defense;
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
+ rememberTacticalIdraHit(atk,hit.damage,idra);
+ if(idra.active&&hit.damage>0)
+  log.push(key+': Idra · '+idra.abilities.join(' + ')+' ('+
+   idra.percentage+'%, +'+idra.extra+' HP, resto '+idra.remainder+'/100)');
  if(ombre.active&&hit.damage>0)
   log.push(key+': Ombre · '+ombre.abilities.join(' + ')+' ('+
    ombre.percentage+'%, +'+ombre.extra+' HP, resto '+ombre.remainder+'/100)');
@@ -405,6 +413,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const ombre=tacticalBossOutgoingBonus(atk,damage,{vitalId:target,
   snapshot:status[key].bossSnapshot});
  damage+=ombre.extra;
+ const idra=tacticalIdraBonus(atk,def,order,damage,{vitalId:target});
+ damage+=idra.extra;
  const defenseStatus=status[other(key)];
  if(def.defense.parts.command.hp>0){
   const protector=def.escorts.find(e=>e.hp>0);
@@ -433,6 +443,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  rememberTacticalBossMotherHit(def,hit.damage);
  rememberTacticalBossVitalHit(atk,target,hit.damage,tharsis);
  rememberTacticalBossOutgoingHit(atk,hit.damage,ombre);
+ rememberTacticalIdraHit(atk,hit.damage,idra,{vitalId:target});
+ if(idra.active&&hit.damage>0)
+  log.push(key+': Idra · '+idra.abilities.join(' + ')+' ('+
+   idra.percentage+'%, +'+idra.extra+' HP, resto '+idra.remainder+'/100)');
  if(ombre.active&&hit.damage>0)
   log.push(key+': Ombre · '+ombre.abilities.join(' + ')+' ('+
    ombre.percentage+'%, +'+ombre.extra+' HP, resto '+ombre.remainder+'/100)');
