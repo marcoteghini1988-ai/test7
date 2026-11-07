@@ -7,7 +7,7 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
  rememberExclusiveVenusPrecisionHit,exclusiveNeurotoxinActive,
  exclusiveNeurotoxinRepairAmount,clearExclusiveNeurotoxin,expireExclusiveNeurotoxin,
  rememberExclusiveChronoCounter,exclusiveChronoNativeBonus,
- rememberExclusiveChronoNativeHit} from './tacticalExclusiveBosses.js';
+ rememberExclusiveChronoNativeHit,transferExclusiveIonicSync} from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
@@ -538,6 +538,14 @@ function resolveCycle(battle,nowMs){
  const prepared=combatSnapshot(sides);
  const a=applyBarrierAttack(sides,'A',orders,status,log,impacts,modifiers,battle.round);
  const b=applyBarrierAttack(sides,'B',orders,status,log,impacts,modifiers,battle.round);
+ // Urano: only the B boss can siphon. Use the already-computed REAL barrier
+ // damage after escort intercept/defense. Sync moved here is pre-reward sync:
+ // no stealing the 25/50 sync that players will earn later in this cycle.
+ // Fusion costs were paid during preparation, so spent sync cannot be stolen.
+ const ionicSiphon=transferExclusiveIonicSync(sides.B,sides.A,b);
+ if(ionicSiphon.transferred>0)
+  log.push('B: Sentinella Ionica · Sifone Quantico trasferisce '+
+   ionicSiphon.transferred+' Sincronia reale da A a B');
  const afterBarrier=combatSnapshot(sides);
  const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts,battle.round,modifiers);
  const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts,battle.round,modifiers);
