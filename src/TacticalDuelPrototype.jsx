@@ -111,6 +111,7 @@ export default function TacticalDuelPrototype(){
  const selectedNumeric=draft.numericIndices.map(i=>a.numeric.hand[i]).filter(Boolean);
  const counterSpecial=specials.includes('tactic-counter');
  const recycler=specials.includes('tactic-numeric-recycle');
+ const canExchange=recycler||draft.numericIndices.length===0;
  function commit(){
   const time=Date.now();
   const result=sealTacticalOrder(battle,'A',draft,time);
@@ -197,7 +198,10 @@ export default function TacticalDuelPrototype(){
     {a.numeric.hand.map((card,i)=><button type="button" key={card.id}
       disabled={locked} aria-pressed={draft.numericIndices.includes(i)}
       className={'tdp-number '+(draft.numericIndices.includes(i)?'on':'')}
-      onClick={()=>setDraft(d=>({...d,numericIndices:toggle(d.numericIndices,i,3)}))}>
+      onClick={()=>setDraft(d=>{
+       const numericIndices=toggle(d.numericIndices,i,3);
+       return {...d,numericIndices,exchangeIndices:recycler||numericIndices.length===0?d.exchangeIndices:[]};
+      })}>
       <strong>{card.value===1?'A':card.value===11?'J':card.value===12?'Q':card.value===13?'K':card.value}</strong>
       <span style={{color:['♥','♦'].includes(card.suit)?'#ff808c':'#c2e4ff'}}>{card.suit}</span>
      </button>)}
@@ -208,12 +212,12 @@ export default function TacticalDuelPrototype(){
       onClick={()=>setDraft(d=>({...d,op}))}>{label}</button>)}
    </div>
    {selectedNumeric.length>0&&<p className="tdp-help">Numeriche scelte: {selectedNumeric.map(c=>c.value+c.suit).join(' · ')} · bersaglio: {VITAL_LABELS[draft.vitalId]||'non scelto'}</p>}
-   {recycler&&<div className="tdp-exchange">
-    <strong>Seleziona fino a 2 numeriche da ricambiare al termine dello scontro:</strong>
+   {canExchange&&<div className="tdp-exchange">
+    <strong>{recycler?'Ricambia fino a 2 numeriche':'Senza attacco di precisione puoi ricambiare 1 numerica per ciclo'}:</strong>
     <div className="tdp-exchange-list">{a.numeric.hand.map((card,i)=><button key={card.id} type="button"
       disabled={locked||draft.numericIndices.includes(i)} aria-pressed={draft.exchangeIndices.includes(i)}
       className={draft.exchangeIndices.includes(i)?'on':''}
-      onClick={()=>setDraft(d=>({...d,exchangeIndices:toggle(d.exchangeIndices,i,2)}))}>
+      onClick={()=>setDraft(d=>({...d,exchangeIndices:toggle(d.exchangeIndices,i,recycler?2:1)}))}>
       {card.value}{card.suit} ↻
      </button>)}</div>
    </div>}
