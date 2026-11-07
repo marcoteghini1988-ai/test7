@@ -75,3 +75,29 @@
 .tdp-exchange-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
 .tdp-exchange-list button{background:#182f44;border:1px solid #4e718f;border-radius:6px;padding:5px;font-size:11px}
 .tdp-exchange-list button.on{background:#18517c;border-color:#6fd3ff}
+
+/* Sequenza visiva degli otto secondi — l'impatto è deciso dal motore, non dal CSS. */
+.tdp-playback{position:absolute;inset:0;z-index:4;overflow:hidden;pointer-events:none;isolation:isolate}
+.tdp-playback-stage{position:absolute;left:19%;right:1%;top:calc(50% - 20px);z-index:5;background:#071b2ae9;border:1px solid #568aa5;border-radius:9px;text-align:center;letter-spacing:.65px;font-size:10px;font-weight:900;color:#e0f7ff;padding:5px 8px 9px;box-shadow:0 0 18px #15a7dc77}
+.tdp-playback-progress{position:absolute;left:10px;right:10px;bottom:3px;height:3px;border-radius:8px;background:#233a51;overflow:hidden}
+.tdp-playback-progress span{display:block;height:100%;background:#65cdf3;transition:width .16s linear}
+.tdp-shot{position:absolute;display:block;z-index:3;border-radius:100px;background:var(--shot-color);width:var(--shot-width);height:var(--shot-height);box-shadow:0 0 11px 3px var(--shot-color),0 0 19px 4px #fff5;transition:left .16s linear,top .16s linear,transform .16s linear}
+.tdp-shot i{position:absolute;inset:15%;border-radius:inherit;background:#fff9;filter:blur(1px)}
+.tdp-shot--laser,.tdp-shot--twin,.tdp-shot--needle,.tdp-shot--dart,.tdp-shot--lance{height:5px!important;border-radius:1px;box-shadow:0 0 11px 3px var(--shot-color)}
+.tdp-shot--arc,.tdp-shot--ion,.tdp-shot--cross-ion{clip-path:polygon(0 20%,28% 35%,40% 0,65% 55%,75% 25%,100% 78%,71% 63%,58% 100%,30% 60%,0 90%);box-shadow:0 0 20px var(--shot-color)}
+.tdp-shot--capsule,.tdp-shot--howitzer,.tdp-shot--titan{border:2px solid #fff4;box-shadow:0 0 9px 3px var(--shot-color),0 0 21px var(--shot-color)}
+.tdp-shot--prism,.tdp-shot--diamond,.tdp-shot--facet{border-radius:0;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.tdp-playback-notice{position:absolute;z-index:5;left:42%;right:3%;border-radius:8px;border:1px solid #6ca7cf;background:#0b263ce5;text-align:center;padding:6px 7px;color:#d9f4ff;font-size:11px;box-shadow:0 0 20px #16b8ff44;animation:tdpNoticeIn .2s ease-out both}
+.tdp-playback-notice strong{display:block;font-size:11px;line-height:1.15}
+.tdp-playback-notice small{display:block;color:#8fe2ff;margin-top:2px;font-size:9px}
+.tdp-notice--enemy{top:19%}
+.tdp-notice--player{bottom:19%;border-color:#e89a8a;box-shadow:0 0 18px #ff795c44}
+.tdp-notice--special{border-color:#d2c18e;color:#fff0bc}
+.tdp-notice--blocked{color:#ffdd91;border-color:#f8cf76}
+.tdp-playback-outcome{position:absolute;z-index:7;top:47%;left:15%;right:3%;padding:13px 8px;text-align:center;border-radius:10px;border:1px solid #a3dbf9;background:#072b42f5;color:#e9faff;font-size:14px;font-weight:950;letter-spacing:1px;box-shadow:0 0 25px #2aa4e27a;animation:tdpNoticeIn .25s ease-out}
+@keyframes tdpNoticeIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.tdp.is-resolving .tdp-section:not(.tdp-log),.tdp.is-resolving .tdp-action{opacity:.57;pointer-events:none}
+@media (prefers-reduced-motion:reduce){
+ .tdp-shot,.tdp-playback-progress span{transition:none}
+ .tdp-playback-notice,.tdp-playback-outcome{animation:none}
+}
