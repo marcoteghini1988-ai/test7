@@ -26,7 +26,8 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalLeviatanoBonus,rememberTacticalLeviatanoHit,
  rememberTacticalLeviatanoRecycle,
  tacticalMagmaNativeBonus,rememberTacticalMagmaBarrierHit,
- tacticalMagmaVitalBonus,rememberTacticalMagmaVitalHit} from './tacticalBossDecks.js';
+ tacticalMagmaVitalBonus,rememberTacticalMagmaVitalHit,
+ tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
@@ -336,6 +337,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const chaos=exclusiveChaosNativeBonus(atk,base);
  const magma=exclusiveMagmaNativeAdjustment(atk,base,round);
  const magmaDeck=tacticalMagmaNativeBonus(atk,t.types,base);
+ const supremacy=tacticalSovereignSupremacyBonus(atk,base,round);
  const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
@@ -359,8 +361,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const appliedChaosExtra=Math.min(cap,bonusWithChaos)-Math.min(cap,bonusWithPact);
  const bonusWithCycle=bonusWithChaos+magma.extra;
  const appliedMagmaExtra=Math.min(cap,bonusWithCycle)-Math.min(cap,bonusWithChaos);
- const bonus=bonusWithCycle+magmaDeck.extra;
- const appliedMagmaDeckExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithCycle);
+ const bonusWithMagmaDeck=bonusWithCycle+magmaDeck.extra;
+ const appliedMagmaDeckExtra=Math.min(cap,bonusWithMagmaDeck)-Math.min(cap,bonusWithCycle);
+ const bonus=bonusWithMagmaDeck+supremacy.extra;
+ const appliedSupremacyExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithMagmaDeck);
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=Math.max(0,base-magma.penalty+Math.min(cap,bonus)+pilot.extra);
@@ -412,7 +416,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   log.push(other(key)+': Centralina danneggiata, intercettazione scudiere −15%');
  // L'ambiente protegge solo la barriera madre, dopo le scudiere reali.
  const motherPacket=Math.max(0,total-intercepted);
- const bossDefenseFactor=tacticalBossMotherFactor(def);
+ const bossDefenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const exclusiveDefenseFactor=exclusiveBossShieldFactor(def);
  const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor*exclusiveDefenseFactor)*(modifiers?.shieldDamageFactor||1));
  const hit=damageMotherShield(def.defense,effectivePacket);
@@ -423,6 +427,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  rememberExclusiveChronoNativeHit(atk,round,hit.damage,chronoNative);
  rememberExclusiveLeviatanoNativeHit(atk,hit.damage,abyss);
  rememberTacticalMagmaBarrierHit(atk,hit.damage,magmaDeck);
+ const sovereignNative=rememberTacticalSovereignHit(atk,round,hit.damage,supremacy);
+ if(sovereignNative.consumed)
+  log.push(key+': Sovrano (mazzo numerico) · Supremazia +'+
+   supremacy.percentage+'% ('+appliedSupremacyExtra+' HP applicati, carica consumata)');
  if(magmaDeck.active&&hit.damage>0)
   log.push(key+': Nucleo Magmatico (mazzo numerico) · '+magmaDeck.abilities.join(' + ')+
    ' +'+magmaDeck.percentage+'% ('+appliedMagmaDeckExtra+' HP effettivi)');
@@ -462,7 +470,9 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   log.push(key+': Ombre · '+ombre.abilities.join(' + ')+' ('+
    ombre.percentage+'%, +'+ombre.extra+' HP, resto '+ombre.remainder+'/100)');
  if(hit.damage>0&&bossDefenseFactor<1)
-  log.push(other(key)+': Primo anello · primo impatto alla madre ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
+  log.push(other(key)+': '+(def.bossNumericDeck?.id==='planet_char_20'?
+   'Sovrano · Ultimo presidio / Vuoto difensivo':'Primo anello')+
+   ' · impatto alla madre ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
   technology:t.tech,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id),
   pilotBonus:pilot.extra,pilotId:pilot.active?pilot.pilotId:null});
@@ -517,6 +527,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  damage+=voidBonus.extra;
  const magmaVital=tacticalMagmaVitalBonus(atk,order,{...def,defense},damage);
  damage+=magmaVital.extra;
+ const supremacy=tacticalSovereignSupremacyBonus(atk,damage,round);
+ damage+=supremacy.extra;
  const defenseStatus=status[other(key)];
  const escortEfficiency=escortInterceptionEfficiency(def.defense);
  if(escortEfficiency>0){
@@ -539,7 +551,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
    if(maxTake-remaining>0)log.push(other(key)+': fusione assorbe '+(maxTake-remaining)+' HP reali');
   }
  }
- const bossDefenseFactor=tacticalBossMotherFactor(def);
+ const bossDefenseFactor=tacticalBossMotherFactor(def,status[other(key)].bossSnapshot);
  damage=Math.floor(damage*bossDefenseFactor);
  const hit=hitMotherPart(defense,target,damage,cards);
  const consequence=hit.damage>0?tacticalVitalTransition(defense,hit.defense,target):null;
@@ -550,6 +562,13 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  rememberTacticalIdraHit(atk,hit.damage,idra,{vitalId:target});
  rememberTacticalLeviatanoHit(atk,hit.damage,leviatano);
  rememberTacticalMagmaVitalHit(atk,hit.damage,magmaVital);
+ const sovereignPrecision=rememberTacticalSovereignHit(atk,round,hit.damage,supremacy,
+  {destroyedEnemyVital:hit.destroyed});
+ if(sovereignPrecision.armed)
+  log.push(key+': Sovrano (mazzo numerico) · Supremazia armata dal KO di un vitale reale (prossimo ciclo)');
+ if(sovereignPrecision.consumed)
+  log.push(key+': Sovrano (mazzo numerico) · Supremazia +'+supremacy.percentage+
+   '% sul colpo valido (+'+supremacy.extra+' HP prima delle difese, carica consumata)');
  if(magmaVital.active&&hit.damage>0)
   log.push(key+': Nucleo Magmatico (mazzo numerico) · Forgia moltiplicatrice +'+
    magmaVital.percentage+'% ('+magmaVital.extra+' HP prima delle difese)');
@@ -577,7 +596,9 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(key+': Pressione marziana '+tharsis.percentage+'%, bonus '+
    tharsis.extra+' HP (resto '+tharsis.remainder+'/100)');
  if(hit.damage>0&&bossDefenseFactor<1)
-  log.push(other(key)+': Primo anello · primo colpo vitale ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
+  log.push(other(key)+': '+(def.bossNumericDeck?.id==='planet_char_20'?
+   'Sovrano · Ultimo presidio / Vuoto difensivo':'Primo anello')+
+   ' · colpo vitale ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'precision',by:key,target,damage:hit.damage||0,absorbed,reason:hit.reason,destroyed:!!hit.destroyed});
  if(target==='shieldGenerator'&&hit.destroyed){
   // La barriera madre collassa quando il suo vero generatore va KO.
