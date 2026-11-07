@@ -11,6 +11,7 @@ import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 import {tacticalPlaybackElapsed,projectedCombatSides} from './tacticalCombatTimeline.js';
 import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
+import {commanderAbility} from './commanderAbilities.js';
 import {arenaForBattle} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import {officialBattleSetup,officialBattleResult} from './officialBattleSetup.js';
@@ -113,7 +114,8 @@ export default function OfficialBattle3D({
  selectedBossDeck,bossDeckInventory,selectedPilot,pilotInventory,commanderDisplayName,
  bossPlanetId=null,bossSectorLevel=null,onEtherConsumed,onResult,onExit
 }){
- const options={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel};
+ const options={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel,
+  selectedPilot,pilotInventory};
  const [session,setSession]=useState(()=>startSession(options));
  const [battle,setBattle]=useState(()=>session.battle);
  const [draft,setDraft]=useState(freshOrder);
@@ -331,7 +333,10 @@ export default function OfficialBattle3D({
     <div className="player-status">
      <b>{nickname||'TU'} · {player.name}</b>
      <span className="my-hp">{'SCUDO '+displayed.A.defense.shield.hp+'/'+displayed.A.defense.shield.max}</span>
-     <small>{'SINCRONIA '+player.sync+'/100'}</small>
+     <small title={player.commander?commanderAbility(player.commander.id)?.description||'':undefined}>
+      {'SINCRONIA '+player.sync+'/100'+(player.commander?' · '+
+        (commanderAbility(player.commander.id)?.name||'PILOTA')+' L'+player.commander.level:'')}
+     </small>
     </div>
     {message&&battle.phase==='planning'&&<div role="status" className="official-notice">{message}</div>}
     {battle.phase==='resolving'&&<TacticalCombatPlayback battle={battle} nowMs={now}
