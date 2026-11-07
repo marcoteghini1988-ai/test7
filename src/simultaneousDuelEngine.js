@@ -27,7 +27,9 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  rememberTacticalLeviatanoRecycle,
  tacticalMagmaNativeBonus,rememberTacticalMagmaBarrierHit,
  tacticalMagmaVitalBonus,rememberTacticalMagmaVitalHit,
- tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit} from './tacticalBossDecks.js';
+ tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit,
+ tacticalGeneratorSyncBonus,tacticalResonanceNativeBonus,rememberTacticalResonanceNativeHit,
+ tacticalResonanceVitalBonus,rememberTacticalResonanceVitalHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
@@ -337,6 +339,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const chaos=exclusiveChaosNativeBonus(atk,base);
  const magma=exclusiveMagmaNativeAdjustment(atk,base,round);
  const magmaDeck=tacticalMagmaNativeBonus(atk,t.types,base);
+ const resonanceDeck=tacticalResonanceNativeBonus(atk,t.weaponFocusId,base);
  const supremacy=tacticalSovereignSupremacyBonus(atk,base,round);
  const pilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
  if(pilot.active){
@@ -363,8 +366,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const appliedMagmaExtra=Math.min(cap,bonusWithCycle)-Math.min(cap,bonusWithChaos);
  const bonusWithMagmaDeck=bonusWithCycle+magmaDeck.extra;
  const appliedMagmaDeckExtra=Math.min(cap,bonusWithMagmaDeck)-Math.min(cap,bonusWithCycle);
- const bonus=bonusWithMagmaDeck+supremacy.extra;
- const appliedSupremacyExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithMagmaDeck);
+ const bonusWithResonance=bonusWithMagmaDeck+resonanceDeck.extra;
+ const appliedResonanceExtra=Math.min(cap,bonusWithResonance)-Math.min(cap,bonusWithMagmaDeck);
+ const bonus=bonusWithResonance+supremacy.extra;
+ const appliedSupremacyExtra=Math.min(cap,bonus)-Math.min(cap,bonusWithResonance);
  // Il pilota è un modificatore dell'armamento originale, distinto dal
  // tetto +45% delle carte speciali: nessuna munizione extra.
  let total=Math.max(0,base-magma.penalty+Math.min(cap,bonus)+pilot.extra);
@@ -427,6 +432,10 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  rememberExclusiveChronoNativeHit(atk,round,hit.damage,chronoNative);
  rememberExclusiveLeviatanoNativeHit(atk,hit.damage,abyss);
  rememberTacticalMagmaBarrierHit(atk,hit.damage,magmaDeck);
+ rememberTacticalResonanceNativeHit(atk,t.weaponFocusId,hit.damage,resonanceDeck);
+ if(resonanceDeck.active&&hit.damage>0)
+  log.push(key+': Risonanza (mazzo numerico) · Armi armoniche +'+
+   resonanceDeck.percentage+'% ('+appliedResonanceExtra+' HP effettivi)');
  const sovereignNative=rememberTacticalSovereignHit(atk,round,hit.damage,supremacy);
  if(sovereignNative.consumed)
   log.push(key+': Sovrano (mazzo numerico) · Supremazia +'+
@@ -527,6 +536,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  damage+=voidBonus.extra;
  const magmaVital=tacticalMagmaVitalBonus(atk,order,{...def,defense},damage);
  damage+=magmaVital.extra;
+ const resonanceVital=tacticalResonanceVitalBonus(atk,{...def,defense},order,damage);
+ damage+=resonanceVital.extra;
  const supremacy=tacticalSovereignSupremacyBonus(atk,damage,round);
  damage+=supremacy.extra;
  const defenseStatus=status[other(key)];
@@ -562,6 +573,10 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  rememberTacticalIdraHit(atk,hit.damage,idra,{vitalId:target});
  rememberTacticalLeviatanoHit(atk,hit.damage,leviatano);
  rememberTacticalMagmaVitalHit(atk,hit.damage,magmaVital);
+ rememberTacticalResonanceVitalHit(atk,hit.damage,resonanceVital);
+ if(resonanceVital.active&&hit.damage>0)
+  log.push(key+': Risonanza (mazzo numerico) · Frequenza multipla +'+
+   resonanceVital.percentage+'% ('+resonanceVital.extra+' HP prima delle difese)');
  const sovereignPrecision=rememberTacticalSovereignHit(atk,round,hit.damage,supremacy,
   {destroyedEnemyVital:hit.destroyed});
  if(sovereignPrecision.armed)
@@ -672,8 +687,15 @@ function resolveCycle(battle,nowMs){
   side.numeric=recyclePile(previousNumerics,spentNumerics,7,random,
    tacticalEpicNumericChoice(side,battle.round));
   rememberTacticalLeviatanoRecycle(side,previousNumerics,spentNumerics.length);
-  side.sync=Math.min(100,side.sync+25+((key==='A'?hitsA:hitsB)>0?25:0)+
-   (validCalculation[key]?modifiers.syncPerCalculation:0));
+  const earned=25+((key==='A'?hitsA:hitsB)>0?25:0)+
+   (validCalculation[key]?modifiers.syncPerCalculation:0);
+  const extraEnergy=tacticalGeneratorSyncBonus(side,earned);
+  const normalSync=Math.min(100,side.sync+earned);
+  side.sync=Math.min(100,side.sync+earned+extraEnergy);
+  const effectiveEnergy=side.sync-normalSync;
+  if(effectiveEnergy>0)
+   log.push(key+': Generatore (mazzo numerico) · Accumulo energetico +'+
+    effectiveEnergy+' Sincronia da eventi reali');
   if(side.epic.exchangeUntilRound===battle.round){
    side.epic.exchangeCredits=0;side.epic.exchangeUntilRound=0;
   }
