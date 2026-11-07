@@ -5,7 +5,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalBarrierPower} from './tacticalArmamentBalance.js';
 import {
-  VITAL_IDS,createMotherDefense,damageMotherShield,exposeMotherPart,
+  VITAL_IDS,createMotherDefense,damageMotherShield,restoreMotherShield,exposeMotherPart,
   hitMotherPart,remainingExposureSlots,motherDestroyed
 } from './vitalDefense.js';
 
@@ -138,8 +138,21 @@ export function validateTacticalOrder(battle,key,order){
  if(!types.includes('tactic-numeric-recycle')&&ei.length&&
    (ei.length>1||ni.length>0))return {ok:false,reason:'recycle_requires_card'};
  if(ni.some(i=>ei.includes(i)))return {ok:false,reason:'card_double_spend'};
- if(types.includes('fusion-barrier')&&(!side.escorts.some(e=>e.hp>0)||side.sync<100||side.defense.parts.command.hp<=0||side.defense.parts.engine.hp<=0))
-   return {ok:false,reason:'fusion_unavailable'};
+ const fusionTypes=types.filter(type=>type.startsWith('fusion-'));
+ if(fusionTypes.length>1)return {ok:false,reason:'fusion_conflict'};
+ if(fusionTypes.length){
+  const requiresTwo=fusionTypes.includes('fusion-twin')||fusionTypes.includes('fusion-triad');
+  const needed=requiresTwo?2:1;
+  if(side.escorts.filter(e=>e.hp>0).length<needed||side.sync<100||
+    side.defense.parts.command.hp<=0||side.defense.parts.engine.hp<=0)
+    return {ok:false,reason:'fusion_unavailable'};
+ }
+ if(types.includes('tactical-cover')&&(!side.escorts.some(e=>e.hp>0)||side.defense.parts.command.hp<=0))
+  return {ok:false,reason:'cover_unavailable'};
+ if(types.includes('support-escort-repair')&&(!side.escorts.some(e=>e.hp>0&&e.hp<e.max)||
+   side.defense.parts.command.hp<=0))return {ok:false,reason:'escort_repair_unavailable'};
+ if(types.includes('support-status-purge')&&
+   !(side.ionized||side.corroded||side.heated))return {ok:false,reason:'purge_unavailable'};
  if(types.includes('tactic-counter')&&!VITAL_IDS.includes(order.counterVitalId))return {ok:false,reason:'counter_target'};
  if(types.includes('support-shield-repair')&&(side.defense.parts.shieldGenerator.hp<=0||side.defense.shield.hp>=side.defense.shield.max))
    return {ok:false,reason:'repair_unavailable'};
@@ -172,21 +185,35 @@ function applyPreparation(sides,orders,log){
  const status={};
  for(const key of ['A','B']){
   const side=sides[key],types=specialTypes(side,orders[key]);
+  const fusion=types.find(type=>type.startsWith('fusion-'))??null;
   const active={types,newCounter:types.includes('tactic-counter')?orders[key].counterVitalId:null,
-   suppressFirstEscort:types.includes('tactic-suppress'),fusion:types.includes('fusion-barrier'),
+   suppressFirstEscort:types.includes('tactic-suppress'),
+   fusion,fusionDefense:({'fusion-barrier':.60,'fusion-twin':.55,'fusion-triad':.40})[fusion]||0,
+   fusionAssault:({'fusion-strike':.25,'fusion-triad':.35})[fusion]||0,
+   cover:types.includes('tactical-cover'),coverUsed:false,
    piercing:types.includes('shot-piercing'),ionizedDefense:!!side.ionized};
   if(types.includes('support-shield-repair')){
-   const shield=side.defense.shield;
-   const fixed=Math.min(20,shield.max-shield.hp);
-   side.defense={...side.defense,shield:{...shield,hp:shield.hp+fixed}};
-   log.push(key+': barriera riparata +'+fixed);
+   const fixed=restoreMotherShield(side.defense,20);
+   side.defense=fixed.defense;
+   log.push(key+': barriera riparata +'+fixed.repaired);
+  }
+  if(types.includes('support-escort-repair')){
+   const escort=side.escorts.find(e=>e.hp>0&&e.hp<e.max);
+   const fixed=escort?Math.min(15,escort.max-escort.hp):0;
+   if(escort)escort.hp+=fixed;
+   log.push(key+': scudiera riparata +'+fixed);
+  }
+  if(types.includes('support-status-purge')){
+   side.ionized=false;side.corroded=false;side.heated=false;
+   active.ionizedDefense=false;
+   log.push(key+': ionizzazione, corrosione e calore rimossi');
   }
   if(types.includes('tactic-scan')){
    const next=VITAL_IDS.filter(id=>!side.seen.includes(id)).slice(0,2);
    side.seen=[...side.seen,...next];
    log.push(key+': scansione, firme rivelate: '+next.join(', '));
   }
-  if(active.fusion){side.sync-=100;log.push(key+': fusione difensiva con scudiera, costo 100 Sincronia');}
+  if(active.fusion){side.sync-=100;log.push(key+': '+TACTICAL_SPECIALS[active.fusion].name+' con scudiere reali, costo 100 Sincronia');}
   status[key]=active;
  }
  return status;
