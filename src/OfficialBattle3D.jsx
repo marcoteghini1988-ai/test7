@@ -47,9 +47,8 @@ function Ship3D({side,snapshot,hullRef,phase}){
     data-level={visual.level} style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
     <svg ref={hullRef} className="fleet-ship-img" viewBox="0 0 1000 1000" role="img"
      aria-label={visual.name+' navicella 3D originale, livello '+visual.level}>
-     <g opacity=".3"><ShipArtwork side={side} vessel={visual}/></g>
-     <image href={ASSET_ROOT+'/ship-shells/'+visual.id+'.svg'} x="0" y="0"
-      width="1000" height="1000" preserveAspectRatio="xMidYMid meet"/>
+     {/* Vista raster originale della navicella: nessuna sagoma SVG sovrapposta. */}
+     <ShipArtwork side={side} vessel={visual}/>
     </svg>
     <MountedWeapons side={side} vessel={visual} index={0} effect={null}/>
    </div>
