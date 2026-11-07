@@ -53,9 +53,14 @@ export function planTacticalDemoAi(battle,key='B'){
  // Defence must target OUR exposed/threatened vital, not the enemy vital we're attacking.
  const counterVitalId=PRIORITY.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)
   ??PRIORITY.find(id=>ours.defense.parts[id].hp>0)??'shieldGenerator';
- let order={specialIndices:indexes,counterVitalId,exchangeIndices:[],...target};
- while(!validateTacticalOrder(battle,key,order).ok&&order.specialIndices.length)
+ const recycleSelected=indexes.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle');
+ const exchangeIndices=target.numericIndices.length===0?(recycleSelected?[0,1]:[0]):[];
+ let order={specialIndices:indexes,counterVitalId,exchangeIndices,...target};
+ while(!validateTacticalOrder(battle,key,order).ok&&order.specialIndices.length){
   order={...order,specialIndices:order.specialIndices.slice(0,-1)};
+  if(!order.specialIndices.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle'))
+   order.exchangeIndices=order.exchangeIndices.slice(0,1);
+ }
  if(!validateTacticalOrder(battle,key,order).ok)
   order={specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,exchangeIndices:[]};
  return order;
