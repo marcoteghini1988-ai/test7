@@ -2,6 +2,7 @@ import React,{useEffect,useRef,useState} from 'react';
 import {ShipArtwork} from './ShipPresentation.jsx';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {dominantTacticalTechnology} from './tacticalArmamentBalance.js';
+import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {TACTICAL_PRESETS,TACTICAL_BOSS_PLANS,tacticalBossProfile,buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {TACTICAL_SPECIALS,createTacticalDuel,
@@ -11,7 +12,7 @@ import {projectedCombatSides,tacticalPlaybackElapsed} from './tacticalCombatTime
 import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import './TacticalDuelPrototype.css';
 
-const BLANK=()=>({specialIndices:[],numericIndices:[],weaponFocusId:null,vitalId:null,op:'plus',
+const BLANK=()=>({specialIndices:[],numericIndices:[],weaponFocusId:null,epicChoice:null,vitalId:null,op:'plus',
  counterVitalId:'shieldGenerator',exchangeIndices:[]});
 const OPS=[['plus','+'],['minus','−'],['times','×'],['divide','÷'],['pair','COPPIA'],['trips','TRIS']];
 const format=sig=>{
@@ -78,7 +79,13 @@ const explainError={
  counter_target:'La contromisura richiede un vitale da proteggere.',
  repair_unavailable:'Riparazione non possibile: barriera piena o generatore KO.',
  recycle_requires_card:'Serve la carta Ricambio Numerico.',card_double_spend:'Non puoi usare la stessa numerica due volte.',
- weapon_focus_invalid:'Scegli un’arma realmente equipaggiata sulla navicella.'
+ weapon_focus_invalid:'Scegli un’arma realmente equipaggiata sulla navicella.',
+ epic_locked:'Oggetto Epico non ancora sbloccato.',epic_already_used:'Oggetto Epico già utilizzato in questa battaglia.',
+ epic_already_active:'Un Oggetto Epico è già attivo.',epic_conflict:'Puoi attivare un solo Oggetto Epico per scontro.',
+ epic_not_critical:'Questo Epico richiede che i vitali siano al 30% o meno.',
+ epic_requires_heavy:'Serve una vera arma pesante integrata.',
+ epic_choice_not_ready:'Le carte future si scelgono nel ciclo dopo l’attivazione.',
+ epic_choice_invalid:'Scelta dell’Oggetto Epico non valida.'
 };
 export default function TacticalDuelPrototype(){
  const [battle,setBattle]=useState(()=>createTacticalDuel({nowMs:Date.now()}));
@@ -90,6 +97,7 @@ export default function TacticalDuelPrototype(){
  const [shipLevelA,setShipLevelA]=useState(3);
  const [shipLevelB,setShipLevelB]=useState(3);
  const [presetA,setPresetA]=useState('starter');
+ const [epicPreview,setEpicPreview]=useState('');
  const [bossPlanet,setBossPlanet]=useState(0);
  const hullA=useRef(null),hullB=useRef(null);
  useEffect(()=>{
@@ -117,6 +125,9 @@ export default function TacticalDuelPrototype(){
  const planning=battle.phase==='planning';
  const locked=!planning||!!battle.orders.A;
  const specials=draft.specialIndices.map(i=>a.special.hand[i]?.type);
+ const activeEpic=a.epic.active?.untilRound>=battle.round?a.epic.active:null;
+ const epicChoiceReady=activeEpic&&activeEpic.startedRound<battle.round&&
+  ['epic_item_1','epic_item_3'].includes(activeEpic.id);
  const selectedNumeric=draft.numericIndices.map(i=>a.numeric.hand[i]).filter(Boolean);
  const counterSpecial=specials.includes('tactic-counter');
  const recycler=specials.includes('tactic-numeric-recycle');
@@ -131,9 +142,13 @@ export default function TacticalDuelPrototype(){
  function restart(){
   const time=Date.now();
   const bossSpecials=bossPlanet?buildTacticalBossDeck(bossPlanet,shipLevelB,shipLevelA):null;
+  const selected=presetA==='starter'?[...TACTICAL_PRESETS.starter.types]:[...TACTICAL_PRESETS[presetA].types];
+  if(epicPreview)selected[0]=epicPreview;
   setBattle(createTacticalDuel({shipA:shipChoiceA,shipB:shipChoiceB,
    levelA:shipLevelA,levelB:shipLevelB,nowMs:time,
-   specialDeckA:presetA==='starter'?null:TACTICAL_PRESETS[presetA].types,
+   specialDeckA:presetA==='starter'&&!epicPreview?null:selected,
+   epicEntitlementsA:epicPreview?[epicPreview]:[],
+   previewEpicOpeningA:epicPreview||null,
    specialDeckB:bossSpecials,bossPlanetB:bossPlanet||null}));
   setDraft(BLANK());setError('');setNow(time);
  }
@@ -182,6 +197,12 @@ export default function TacticalDuelPrototype(){
      </select>
     </label>
    </div>
+   <label className="tdp-epic-preview">Oggetto Epico da provare (solo sandbox, NON sbloccato nell'account)
+    <select value={epicPreview} onChange={e=>setEpicPreview(e.target.value)}>
+     <option value="">Nessun Oggetto Epico</option>
+     {Object.values(TACTICAL_EPIC_CARDS).map(item=><option key={item.id} value={item.id}>{item.name}</option>)}
+    </select>
+   </label>
    {bossPlanet>0&&<p className="tdp-boss-note">Piano IA: {tacticalBossProfile(bossPlanet).style}. Mazzo boss da 24 carte con scudiere compatibili.</p>}
    <button type="button" onClick={restart}>AVVIA PARTITA CON QUESTE NAVI</button>
   </section>
@@ -221,6 +242,15 @@ export default function TacticalDuelPrototype(){
       <small>{TACTICAL_SPECIALS[card.type]?.help}</small>
      </button>)}
    </div>
+   {activeEpic&&<p className="tdp-epic-status">EPICO ATTIVO: {TACTICAL_EPIC_CARDS[activeEpic.id]?.name} · fino al ciclo {activeEpic.untilRound}</p>}
+   {a.epic.peek.length>0&&<p className="tdp-epic-peek">Pescate rivelate dal tuo Epico: {a.epic.peek.map(c=>String(c.value)+c.suit).join(' · ')}</p>}
+   {epicChoiceReady&&<label className="tdp-epic-choice">Scegli la carta futura da anticipare
+    <select disabled={locked} value={draft.epicChoice??''}
+     onChange={e=>setDraft(d=>({...d,epicChoice:e.target.value===''?null:Number(e.target.value)}))}>
+     <option value="">Nessuna scelta</option>
+     {a.epic.peek.map((c,i)=><option key={i} value={i}>{i+1}. {c.value}{c.suit}</option>)}
+    </select>
+   </label>}
    {counterSpecial&&<label className="tdp-option">Difendi con contromisura:
     <select disabled={locked} value={draft.counterVitalId} onChange={e=>setDraft(d=>({...d,counterVitalId:e.target.value}))}>
      {VITAL_IDS.map(id=><option key={id} value={id}>{VITAL_LABELS[id]}</option>)}
