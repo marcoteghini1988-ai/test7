@@ -2,7 +2,8 @@
 // Non legge la mano, gli ordini impegnati o le firme nascoste del giocatore.
 // I dodici boss possiedono piani e priorità derivati dai boss storici.
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
-import {chooseTacticalAiExchangeIndex} from './tacticalAiExchange.js';
+import {chooseTacticalAiExchangeIndices} from './tacticalAiExchange.js';
+import {exclusiveMagmaPhase} from './tacticalExclusiveBosses.js';
 import {tacticalWeaponTechnology} from './tacticalArmamentBalance.js';
 import {nativeBarrierPacket,validateTacticalOrder} from './simultaneousDuelEngine.js';
 import {tacticalBossProfile} from './tacticalSpecialPresets.js';
@@ -89,7 +90,10 @@ function playable(type,ours,enemy,shot,round){
    !enemy.defense.parts[shot.vitalId]?.exposed;
   case 'tactic-counter':return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
   case SIGNATURE_MUTATION_CARD_ID:return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
-  case 'tactic-scan':return ours.seen.length<4;
+  // Scansione non va consumata se i soli bersagli ancora vivi sono
+  // gia' esposti o rilevati: visto != non visto, nessun potere gratis.
+  case 'tactic-scan':return Object.entries(enemy.defense.parts).some(([id,p])=>
+   p.hp>0&&!p.exposed&&!ours.seen.includes(id));
   case 'shot-piercing':case 'tactic-suppress':return enemy.escorts.some(e=>e.hp>0)&&enemy.defense.shield.hp>0;
   case 'shot-corrosion':case 'shot-ion':return enemy.defense.shield.hp>0;
   case 'tactic-numeric-recycle':return shot.numericIndices.length===0;
@@ -126,9 +130,18 @@ export function planTacticalAi(battle,key='B'){
  const modules=ours.special.hand.map(c=>c.type).filter(type=>
   isModuleCard(type)&&!!ours.equipmentLevels?.[type]);
  const bossCharacters=ours.special.hand.map(c=>c.type).filter(isBossCharacterCard);
+ const livingVitals=priority.filter(id=>enemy.defense.parts[id]?.hp>0);
+ // Il ciclo magmatico di Io e' un'informazione PUBBLICA: la difesa
+ // consuma esclusivamente carte speciali gia' pescate ed equipaggiate.
+ const eruption=enemy.bossPlanetId===19&&exclusiveMagmaPhase(enemy,battle.round)==='eruzione';
+ const magmaGuard=eruption?[
+  'support-shield-repair','tactic-reactive','tactic-impact',
+  'tactical-cover','tactic-counter']:[];
+ const finishingRecycle=shot.numericIndices.length===0&&livingVitals.length<=2?
+  ['tactic-numeric-recycle']:[];
  for(const type of [...(shot.numericIndices.length>=2&&
   !enemy.defense.parts[shot.vitalId]?.exposed?[VULNERABILITY_RIFT_CARD_ID]:[]),
-  ...bossCharacters,
+  ...magmaGuard,...finishingRecycle,...bossCharacters,
   ...(ours.legacy?.diceReady?[LEGACY_DICE_CARD]:[]),
   ...((ours.legacy?.malusCharge??0)>=3?[LEGACY_MALUS_CARD]:[]),
   ...(mutationVitalId?[SIGNATURE_MUTATION_CARD_ID]:[]),...(ours.seen.length<4?['tactic-scan']:[]),
@@ -151,12 +164,11 @@ export function planTacticalAi(battle,key='B'){
   .filter(id=>enemy.defense.parts[id]?.hp>0)
   .map(id=>({signature:visibleTacticalSignature(ours,enemy,id),
    hp:enemy.defense.parts[id].hp}));
- const replaceIndex=chooseTacticalAiExchangeIndex(
-  ours.numeric.hand,exposedSignatures,fallbackIndex);
- const nextIndex=handSize?(replaceIndex+1)%handSize:0;
- let exchanges=shot.numericIndices.length?[]:
-  chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?
-   (handSize>1?[replaceIndex,nextIndex]:[replaceIndex]):[replaceIndex];
+ const slotsToExchange=shot.numericIndices.length?0:
+  chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?2:1;
+ const exchangesInitial=chooseTacticalAiExchangeIndices(
+  ours.numeric.hand,exposedSignatures,fallbackIndex,slotsToExchange);
+ let exchanges=exchangesInitial;
  const bombIndex=ours.numeric.hand.findIndex(c=>c.id===ours.legacy?.bomb?.cardId);
  if(bombIndex>=0&&!shot.numericIndices.includes(bombIndex)){
   exchanges=[bombIndex];
