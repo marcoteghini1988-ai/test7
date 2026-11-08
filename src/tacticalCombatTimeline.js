@@ -100,7 +100,7 @@ export function tacticalCombatTimeline(battle){
     label:impact.damage>0?'-'+impact.damage+' BARRIERA':impact.intercepted?'INTERCETTATO':'NESSUN DANNO'});
   }
   if(impact.kind==='legacy-bomb')events.push({id:'bomb-explosion-'+impact.target,
-   type:'barrier',by:impact.by,atMs:5370,durationMs:750,
+   type:'barrier',by:impact.by,atMs:6290,durationMs:750,
    damage:impact.damage,intercepted:0,
    label:'💣 BOMBA · -'+impact.damage+' BARRIERA'});
   if(impact.kind==='precision'){
