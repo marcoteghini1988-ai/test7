@@ -73,3 +73,21 @@ test('Il cooldown sopravvive al passaggio di turno, non crea risorse o carte fuo
  assert.equal(exchangeTacticalNumericDuringPlanning(later,'A',2,26999).ok,false);
  assert.equal(exchangeTacticalNumericDuringPlanning(later,'A',2,27000).ok,true);
 });
+
+test('Afrodite: ricambiare una carta marcata disinnesca Bomba e perde Dorata, senza HP extra',()=>{
+ const b=build(1),marked=b.sides.A.numeric.hand[2];
+ b.sides.A.legacy.bomb={cardId:marked.id,sender:'B',armedRound:1,untilRound:2};
+ b.sides.A.legacy.golden={cardId:marked.id,suit:marked.suit,untilRound:2};
+ const before=b.sides.A.defense.shield.hp;
+ const action=exchangeTacticalNumericDuringPlanning(b,'A',2,14000);
+ assert.equal(action.ok,true);
+ const p=action.battle.sides.A;
+ assert.equal(p.legacy.bomb,null);
+ assert.equal(p.legacy.golden,null);
+ assert.equal(p.defense.shield.hp,before,'disinnesco con ricambio: nessuna esplosione');
+ assert.equal(new Set(ids(p.numeric)).size,52);
+ assert.equal(action.battle.lastEvents.some(s=>s.includes('Bomba disinnescato')),true);
+ assert.equal(action.battle.lastEvents.some(s=>s.includes('Dorata scartata')),true);
+ assert.ok(b.sides.A.legacy.bomb&&b.sides.A.legacy.golden,
+  'il comando non deve mutare la partita sorgente');
+});
