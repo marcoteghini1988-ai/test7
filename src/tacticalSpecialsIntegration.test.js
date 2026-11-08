@@ -36,7 +36,7 @@ const count=p=>p.hand.length+p.deck.length+p.discard.length;
 
 test('Le undici speciali ufficiali hanno un vero tipo consumabile nel sandbox',()=>{
  const official=Object.keys(SPECIAL_CARD_CATALOG);
- assert.equal(official.length,74); // 73 precedenti + Faglia di Vulnerabilità
+ assert.equal(official.length,82); // 74 precedenti + 8 carte tattiche ora in collezione
  for(const id of official){
   assert.ok(Object.hasOwn(TACTICAL_SPECIALS,id),id);
   const game=isTacticalEpic(id)?createTacticalDuel({specialDeckA:deck([id]),epicEntitlementsA:[id]}):
