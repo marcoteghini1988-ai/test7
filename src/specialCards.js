@@ -11,8 +11,30 @@ import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 import {VULNERABILITY_RIFT_CARD_ID,VULNERABILITY_RIFT_PROTECTED_DAMAGE_CAP} from './tacticalVulnerabilityRift.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD} from './tacticalLegacyEvents.js';
 
+// Carte tattiche gia' eseguibili nel motore simultaneo ma assenti
+// dall'inventario storico: da pacchetti, ZERO copie gratis in migrazione.
+export const TACTICAL_ONLY_SPECIAL_TYPES=Object.freeze([
+ 'tactic-power-shift','tactic-scan','tactic-suppress','tactic-counter',
+ 'tactic-reactive','tactic-kinetic','tactic-impact','tactic-numeric-recycle'
+]);
 export const SPECIAL_HAND_SIZE=5;
 export const SPECIAL_CARD_CATALOG=Object.freeze({
+ 'tactic-power-shift':Object.freeze({type:'tactic-power-shift',name:'Deviazione Energia',
+  short:'DEVIAZIONE',family:'offense',description:'Carta tattica: +6 danni al colpo verso la barriera con contraccolpo +3 secondo le regole del motore.'}),
+ 'tactic-scan':Object.freeze({type:'tactic-scan',name:'Scansione Tattica',short:'SCANSIONE',
+  family:'intel',description:'Rivela due firme dei vitali avversari usando una Carta Speciale realmente pescata e consumata.'}),
+ 'tactic-suppress':Object.freeze({type:'tactic-suppress',name:'Soppressione Scorta',
+  short:'SOPPRESSIONE',family:'offense',description:'Disattiva temporaneamente la prima intercettazione della scudiera avversaria secondo le regole tattiche.'}),
+ 'tactic-counter':Object.freeze({type:'tactic-counter',name:'Contromisura Programmata',
+  short:'CONTROMISURA',family:'reaction',description:'Blocca nello scontro corrente un colpo di precisione contro il vitale indicato.'}),
+ 'tactic-reactive':Object.freeze({type:'tactic-reactive',name:'Paratia Reattiva',
+  short:'PARATIA',family:'defense',description:'Protegge la barriera assorbendo fino a 9 HP secondo le regole dello scontro.'}),
+ 'tactic-kinetic':Object.freeze({type:'tactic-kinetic',name:'Carica Cinetica',
+  short:'CINETICA',family:'offense',description:'Aumenta di 6 HP il colpo nativo alla barriera secondo le condizioni del motore.'}),
+ 'tactic-impact':Object.freeze({type:'tactic-impact',name:"Schermo d'Urto",
+  short:'URTO',family:'defense',description:'Riduce del 20% il colpo diretto alla barriera durante lo scontro corrente.'}),
+ 'tactic-numeric-recycle':Object.freeze({type:'tactic-numeric-recycle',name:'Ricambio Numerico',
+  short:'RICAMBIO',family:'support',description:'Permette di scartare e ripescare due numeriche del mazzo autentico, senza generarne altre.'}),
  'fusion-barrier':Object.freeze({type:'fusion-barrier',name:'Fusione Barriera',short:'BARRIERA',
    family:'fusion',mode:'barrier',description:'Aggancia una scudiera per proteggere la madre usando il suo scudo.'}),
  'fusion-strike':Object.freeze({type:'fusion-strike',name:'Fusione Assalto',short:'ASSALTO',
