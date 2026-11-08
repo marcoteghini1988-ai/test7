@@ -18886,7 +18886,7 @@ function App() {
         if(terraModule){
           setAbilities(prev => Object.values(prev).some(item=>item?.unlocked===true)
             ? prev : {...prev,[terraModule]:{unlocked:true,level:1}});
-          setSelectedAbility(terraModule);
+          // Il premio e' posseduto, NON equipaggiato come potere gratuito.
           triggerPopup('Settore Terra 9 completato: Carta Modulo '+terraModule+
             ' sbloccata. Equipaggiala nel mazzo speciale per usarla.');
         }
