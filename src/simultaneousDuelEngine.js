@@ -446,7 +446,7 @@ function applyPreparation(sides,orders,log,round,modifiers){
   }
   if(types.includes('support-escort-repair')){
    const escort=side.escorts.find(e=>e.hp>0&&e.hp<e.max);
-   const fixed=escort?Math.min(15,escort.max-escort.hp):0;
+   const fixed=escort?Math.min(pvpTerrainRepairAmount(15,modifiers?.pvpTerrain),escort.max-escort.hp):0;
    if(escort)escort.hp+=fixed;
    log.push(key+': scudiera riparata +'+fixed);
   }
