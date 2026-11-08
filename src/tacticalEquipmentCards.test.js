@@ -272,3 +272,49 @@ test('Colpo esecutivo usa HP al momento del sigillo e non l’ordine A/B',()=>{
  assert.deepEqual(run('A'),run('B'));
  assert.deepEqual(run('A'),{execution:6,shieldA:17,shieldB:19});
 });
+
+test('Due Moduli giocati nello stesso ciclo: protezione blocca disturbo armi e precisione senza priorità A/B',()=>{
+ const cases=[
+  {hostile:moduleCardType('virgo'),protect:moduleCardType('sagittarius'),field:'lockWeapon'},
+  {hostile:moduleCardType('scorpio'),protect:moduleCardType('planet_char_14'),field:'precisionFactor'},
+  {hostile:moduleCardType('planet_char_18'),protect:moduleCardType('planet_char_6'),field:'lockWeapon'}
+ ];
+ for(const c of cases){
+  for(const key of ['A','B']){
+   const other=key==='A'?'B':'A';
+   const solo=createTacticalDuel();
+   solo.sides[key].equipmentLevels[c.hostile]=3;
+   const attempted=activateTacticalModuleCards(solo.sides,
+    {A:key==='A'?[c.hostile]:[],B:key==='B'?[c.hostile]:[]},[]);
+   assert.ok(attempted.effects[other][c.field],c.hostile+': disturbo reale senza protezione');
+   const guarded=createTacticalDuel();
+   guarded.sides[key].equipmentLevels[c.hostile]=3;
+   guarded.sides[other].equipmentLevels[c.protect]=3;
+   guarded.sides[other].legacy.malusCharge=3;
+   const played={A:key==='A'?[c.hostile]:[c.protect],
+    B:key==='B'?[c.hostile]:[c.protect]};
+   const result=activateTacticalModuleCards(guarded.sides,played,[]);
+   assert.equal(result.activations.length,2);
+   assert.equal(result.effects[other].preventMalus,true);
+   assert.equal(result.effects[other][c.field],undefined,
+    'il Modulo difensivo risolve sul medesimo ciclo, non al turno successivo');
+   assert.equal(guarded.sides[other].legacy.malusCharge,3,
+    'nessuna perdita delle 3 tacche Malus autentiche del difensore');
+  }
+ }
+});
+
+test('Descrizioni Carte Modulo descrivono soltanto effetti veri nel duello 52/7',()=>{
+ for(const type of MODULE_CARD_TYPES){
+  const card=TACTICAL_MODULE_CARDS[type];
+  assert.ok(card.description.includes('Carta Modulo'));
+  assert.ok(card.description.includes('SOLO'));
+  assert.ok(!card.description.includes('mano max 9'),type);
+  assert.ok(!card.description.includes('Mano nemica ridotta'),type);
+  assert.ok(!card.description.includes('Protezione dal prossimo salto preparazione'),type);
+ }
+ assert.match(TACTICAL_MODULE_CARDS[moduleCardType('cancer')].description,/restano sette/);
+ assert.match(TACTICAL_MODULE_CARDS[moduleCardType('planet_char_14')].description,/mantiene la propria carica Malus/);
+ assert.match(TACTICAL_MODULE_CARDS[moduleCardType('planet_char_4')].description,/Carta Dado/);
+});
+
