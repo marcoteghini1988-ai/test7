@@ -15,6 +15,18 @@
 
 ---
 
+## CHECKPOINT — 8 novembre 2026, audit reale prima di tutti i boss
+
+**Verificato in GitHub:** 35 duelli contro **Terra settore 10** con cinque configurazioni ricavate soltanto da vittorie, sblocchi e potenziamenti reali dei settori 1–9. Premi ordinari + partenza: **1000 Polvere Stellare**. Prima del boss ottenibili N00, C01 (3), C02 (6), C03 (9). Con spesa di 580, **C03 L4** è accessibile senza capsule e ha registrato **3 vittorie, 1 sconfitta, 3 pareggi su 7 seed**; con almeno 15 stelle e *prima capsula riscattata*, la Polvere disponibile sale a 1160, acquistare C03 L5 costa 1080 e le simulazioni registrano **6 vittorie su 7**. Nessun personaggio o carta boss futura concessa. È una simulazione IA, non prova di bilanciamento umano o dei settori antecedenti.
+
+**Sblocco e boss 2–12:** introdotto il helper **sola lettura** `src/officialBossProgressionAudit.js` con test automatici che ricostruiscono la flotta teoricamente disponibile **prima** di ogni boss e impediscono l'uso anticipato delle navicelle premio assegnate alla vittoria dello stesso. I 12 boss conservano ID planetari storici, settori canonici 10…120 e curva di livello rivale. Nessun gating inventato sugli inventari già posseduti: l'helper non cambia i salvataggi.
+
+**Punti rimasti aperti:** verificare i primi 9 settori con una nave effettivamente disponibile in ciascuno; verificare i reali acquisti/carte speciali/piloti entro boss 2–12 e la sostenibilità economica; playtest tattico umano, in particolare acquisizione di C03 e apertura capsule. Non abbassare preventivamente le statistiche di Terra.
+
+Rapporto e test: [PROGRESSIONE_12_BOSS_E_TERRA10_2026-11-08.md](PROGRESSIONE_12_BOSS_E_TERRA10_2026-11-08.md), `src/officialFirstBossProgression.test.js`, `src/officialBossProgressionAudit.test.js`. **776 test e 3 verifiche della plancia/build superati**.
+
+---
+
 ## CHECKPOINT — 8 novembre 2026, 108 duelli boss e scelta efficiente delle formule
 
 **Codice verificato:** `src/tacticalDuelAi.js` ora preferisce una formula a **3 numeriche autentiche** quando può concludere un vitale a 7–8 HP (8 danni) invece di una formula da 2 carte (6 danni). Se 2 carte bastano o il vitale è ancora a 10 HP, l'IA non consuma la terza numerica inutilmente. Nessun potere, carta o conoscenza segreta aggiunta. Test mirato e suite completa superati.
