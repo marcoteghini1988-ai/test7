@@ -17,7 +17,7 @@ test('Le 12 carte restano ZERO nello starter e non sono mai assegnate dai pacche
  const base=createSpecialCollection();
  assert.equal(BOSS_CHARACTER_TYPES.length,12);
  assert.equal(base.loadout.length,24);
- assert.equal(SPECIAL_PACK_TYPES.length,15); // 11 originali + Mutazione + Bomba/Malus/Dorata; boss, Terreni ed Epici esclusi
+ assert.equal(SPECIAL_PACK_TYPES.length,16); // 11 originali + Mutazione + Dado/Bomba/Malus/Dorata; Moduli/Boss/Terreni/Epici esclusi
  assert.ok(BOSS_CHARACTER_TYPES.every(id=>base.owned[id]===0));
  assert.ok(SPECIAL_PACK_TYPES.every(type=>!BOSS_CHARACTER_TYPES.includes(type)));
  for(const value of [0,.125,.5,.875,.999999]){
