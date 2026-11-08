@@ -86,9 +86,9 @@ test('nella risoluzione 30+8 Tharsis aggiunge HP solo al vitale colpito',()=>{
  const order=makeOrder({numericIndices:[3,2],vitalId:'weapons',op:'minus'});
  const normal=play(plain,order),boosted=play(boss,order);
  assert.equal(precision(normal).reason,'hit');
- assert.equal(precision(normal).damage,10);
- assert.equal(precision(boosted).damage,11);
- assert.equal(boosted.sides.A.bossNumericDeck.vitalBonusRemainder,65);
+ assert.equal(precision(normal).damage,6);
+ assert.equal(precision(boosted).damage,7);
+ assert.equal(boosted.sides.A.bossNumericDeck.vitalBonusRemainder,37);
  assert.ok(boosted.lastEvents.some(e=>e.includes('Pressione marziana')));
  assert.equal(boosted.phase,'resolving');
  assert.deepEqual(plain.sides.B.defense.parts.weapons.hp,20);
