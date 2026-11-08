@@ -257,3 +257,29 @@ test('nuove fusioni si trovano nei pacchetti e non sono regalate agli inventari 
   assert.equal(cardsOf(player).filter(c=>c.type===type).length,1);
  }
 });
+
+test('Prima vittoria per settore: campagna e avventura condividono la stessa ricompensa',()=>{
+ const s=storage();
+ assert.equal(claimFirstWinSpecialPack('adventure',40,s).granted,true);
+ assert.equal(claimFirstWinSpecialPack('campaign',40,s).granted,false);
+ assert.equal(claimFirstWinSpecialPack('campaign',120,s).granted,true);
+ assert.equal(claimFirstWinSpecialPack('adventure',120,s).granted,false);
+ assert.equal(readSpecialCollection(s).packCredits,2);
+ assert.deepEqual(readSpecialCollection(s).claimedRewards,
+  ['adventure:sector:40','campaign:sector:120']);
+ for(const sector of [121,200,0,-1,1.5]){
+  assert.equal(claimFirstWinSpecialPack('adventure',sector,s).granted,false);
+ }
+ assert.equal(readSpecialCollection(s).packCredits,2);
+});
+test('Pacchetto gia ottenuto in un salvataggio v1 resta riconosciuto nel modo opposto',()=>{
+ const s=storage(),old=createSpecialCollection();
+ old.packCredits=5;
+ old.claimedRewards=['campaign:sector:40','adventure:sector:60'];
+ s.setItem(SPECIAL_COLLECTION_KEY,JSON.stringify(old));
+ const raw=s.getItem(SPECIAL_COLLECTION_KEY);
+ assert.equal(claimFirstWinSpecialPack('adventure',40,s).granted,false);
+ assert.equal(claimFirstWinSpecialPack('campaign',60,s).granted,false);
+ assert.equal(s.getItem(SPECIAL_COLLECTION_KEY),raw,'Nessuna migrazione distruttiva');
+ assert.equal(readSpecialCollection(s).packCredits,5);
+});
