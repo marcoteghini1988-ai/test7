@@ -66,13 +66,12 @@ const addSync=(side,n)=>{
  side.sync=Math.max(0,Math.min(100,before+n));
  return side.sync-before;
 };
-function transferSync(from,to,n){
- const moved=Math.min(n,Math.max(0,from.sync),Math.max(0,100-to.sync));
- from.sync-=moved;to.sync+=moved;return moved;
-}
+const sideSync=(side,delta)=>{side.sync=Math.max(0,Math.min(100,side.sync+delta));};
 export function activateTacticalModuleCards(sides,playedTypes,log){
  const effects={A:{},B:{}};
  const activations=[];
+ const syncAtStart={A:sides.A.sync,B:sides.B.sync};
+ const siphonDelta={A:0,B:0};
  // Calcola entrambi gli ordini su risorse pubbliche nel medesimo snapshot,
  // senza ispezionare le carte nascoste dell'avversario.
  for(const key of ['A','B']){
@@ -96,11 +95,18 @@ export function activateTacticalModuleCards(sides,playedTypes,log){
    case 'shield_and_ether':actual=repair(side,n);addSync(side,4);break;
    case 'ether_gain':actual=addSync(side,Math.min(8,2+2*Math.floor((level-1)/3)));break;
    case 'boost_focus':actual=addSync(side,n+2);break;
-   case 'boost_siphon':actual=transferSync(foe,side,n);break;
+   case 'boost_siphon':{
+    // Due Sifoni simultanei si misurano sugli stessi valori sigillati:
+    // nessun vantaggio al primo elemento della sequenza A/B.
+    actual=Math.min(n,Math.max(0,syncAtStart[other(key)]),
+     Math.max(0,100-syncAtStart[key]));
+    siphonDelta[key]+=actual;siphonDelta[other(key)]-=actual;
+    break;
+   }
    case 'ammo_refill':e.escortBoost=n;break; // soltanto se la scudiera spara davvero
    case 'refill':e.recycle=2;break; // ricambio di 2 numeriche reali, mano 7
    case 'free_swap':e.recycle=1;break;
-   case 'clear_malus':e.preventMalus=true;side.legacy.malusCharge=0;break;
+   case 'clear_malus':e.preventMalus=true;break; // purifica il sabotaggio ricevuto, non la barra positiva
    case 'dice_charge':side.legacy.diceReady=true;side.legacy.dicePatterns=['plus','minus','times'];break;
    case 'burn':e.burn=true;break; // soltanto su pacchetto armi vero
    case 'singularity':actual=damage(foe,n+2);repair(side,Math.ceil(actual/2));addSync(side,3);break;
@@ -111,9 +117,7 @@ export function activateTacticalModuleCards(sides,playedTypes,log){
    (actual?' ('+actual+' effettivi)':''));
  }
  for(const key of ['A','B']){
-  if(effects[key].preventMalus){
-   effects[key].preventMalus=true;
-  }
+  sideSync(sides[key],siphonDelta[key]);
  }
  return {effects,activations};
 }
