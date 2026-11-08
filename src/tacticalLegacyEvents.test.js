@@ -225,3 +225,37 @@ test('Carta Dorata: i quattro semi producono bonus diversi soltanto su numeriche
   if(c.suit==='♠')assert.ok(golden.sides.B.defense.shield.hp<=ordinary.sides.B.defense.shield.hp);
  }
 });
+
+test('I due Dadi Quantici hanno lanci distinti e non risultati sempre identici A/B',()=>{
+ let same=0,different=0;
+ const distributionA=new Set(),distributionB=new Set();
+ for(let seed=0;seed<60;seed++)for(let round=1;round<=6;round++){
+  const a=quantumFace(seed,round,'A'),b=quantumFace(seed,round,'B');
+  distributionA.add(a);distributionB.add(b);
+  if(a===b)same++;else different++;
+  assert.equal(quantumFace(seed,round,'B'),b);
+ }
+ assert.ok(same>0&&different>0,'lanci indipendenti: possono coincidere, non sono vincolati');
+ assert.deepEqual([...distributionA].sort(),[...QUANTUM_FACES].sort());
+ assert.deepEqual([...distributionB].sort(),[...QUANTUM_FACES].sort());
+});
+
+test('Due Carte Dado autentiche nello stesso ciclo consumano due cariche con risultati per lato',()=>{
+ const b=createTacticalDuel({seed:18,specialDeckA:deck(LEGACY_DICE_CARD),
+  specialDeckB:deck(LEGACY_DICE_CARD)});
+ const indexA=inHand(b,'A',LEGACY_DICE_CARD),indexB=inHand(b,'B',LEGACY_DICE_CARD);
+ for(const side of Object.values(b.sides)){
+  side.legacy.diceReady=true;
+  side.legacy.dicePatterns=['plus','minus','pair'];
+ }
+ const out=play(b,{specialIndices:[indexA]},{specialIndices:[indexB]});
+ for(const key of ['A','B']){
+  const side=out.sides[key];
+  assert.equal(side.legacy.lastDice.face,quantumFace(18,1,key));
+  assert.equal(side.legacy.diceReady,false);
+  assert.deepEqual(side.legacy.dicePatterns,[]);
+  assert.equal(side.special.discard.some(c=>c.type===LEGACY_DICE_CARD),true);
+  assert.deepEqual(counts(side),{numeric:52,special:24});
+ }
+ assert.notEqual(out.sides.A.legacy.lastDice.face,out.sides.B.legacy.lastDice.face);
+});
