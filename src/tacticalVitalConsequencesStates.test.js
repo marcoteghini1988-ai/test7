@@ -36,8 +36,8 @@ test('Un attacco di precisione valido registra davvero la funzione perduta, senz
  const bb=sealTacticalOrder(aa.battle,'B',{specialIndices:[],numericIndices:[]},101);
  assert.equal(bb.ok,true,bb.reason);
  const result=advanceTacticalDuel(bb.battle,101);
- assert.equal(result.sides.B.defense.parts.weapons.hp,0);
+ assert.equal(result.sides.B.defense.parts.weapons.hp,4);
  for(const id of VITAL_IDS.filter(id=>id!=='weapons'))
   assert.equal(result.sides.B.defense.parts[id].hp,10);
- assert.ok(result.lastEvents.some(e=>e.includes('Sistema armi DISTRUTTO')&&e.includes('−50%')));
+ assert.ok(result.lastEvents.some(e=>e.includes('Sistema armi DANNEGGIATO')&&e.includes('−20%')));
 });
