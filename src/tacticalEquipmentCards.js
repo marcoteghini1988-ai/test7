@@ -13,7 +13,7 @@ export const TACTICAL_MODULE_CARDS=Object.freeze(Object.fromEntries(
  Object.values(PHASE16F_MODULES).map(module=>[
   moduleCardType(module.id),Object.freeze({
    id:moduleCardType(module.id),moduleId:module.id,name:module.name,
-   short:'MODULO',family:'equipment',effect:module.effect,maxCopies:1,
+   short:module.name.split(' · ')[0].slice(0,16).toUpperCase(),family:'equipment',effect:module.effect,maxCopies:1,
    description:'Carta Modulo · '+(PHASE16F_EFFECT_LABELS[module.effect]??module.effect)+
     '. Si attiva SOLO giocandola dalle cinque speciali; nessun effetto passivo.'
   })
