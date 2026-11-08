@@ -56,7 +56,7 @@ Un secondo difetto riguardava due colpi consecutivi di Venere: se la tossina pre
 - `src/tacticalExclusiveBosses.test.js`: Gaia/Tharsis;
 - `src/tacticalVenusExclusive.test.js`: precisione reale, Contromisura, Pulizia Sistemi, scadenza;
 - `src/tacticalVenusRepairSources.test.js`: **6 nuove prove** su Moduli, Riparazione+Modulo, Dado, Dorata, Personaggio Idra e tossine consecutive;
-- `src/tacticalChronoExclusive.test.js`, `src/tacticalIonicExclusive.test.js` (se presente), `src/tacticalLeviatanoExclusive.test.js`, `src/tacticalBloodPactExclusive.test.js`, `src/tacticalFinalFiveBosses.test.js`: capacità esclusive condizionate;
+- `src/tacticalChronoExclusive.test.js`, `src/tacticalIonicSiphonExclusive.test.js`, `src/tacticalLeviatanoExclusive.test.js`, `src/tacticalBloodPactExclusive.test.js`, `src/tacticalFinalFiveBosses.test.js`: capacità esclusive condizionate;
 - `src/officialBossEncounter.test.js`: **12 boss × campagna/avventura**, arene, piloti, carte autentiche, risultati e ricompense;
 - `src/tacticalFullBossRoadmapIntegration.test.js`: **12 boss × tre categorie di flotte × fino a cinque cicli**, nessun duplicato nelle 52 numeriche / 24 speciali, IA con ordini autentici.
 
