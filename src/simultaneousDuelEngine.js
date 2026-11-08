@@ -19,7 +19,7 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID,prepareSignatureMutation} from './tacticalSignatureMutation.js';
-import {VULNERABILITY_RIFT_CARD_ID,VULNERABILITY_RIFT_PROTECTED_DAMAGE_CAP,validateVulnerabilityRiftOrder,riftProtectedDamage}
+import {VULNERABILITY_RIFT_CARD_ID,validateVulnerabilityRiftOrder,riftProtectedDamage}
  from './tacticalVulnerabilityRift.js';
 import {TACTICAL_MODULE_CARDS,isModuleCard,activateTacticalModuleCards} from './tacticalEquipmentCards.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,initialLegacyTactics,
