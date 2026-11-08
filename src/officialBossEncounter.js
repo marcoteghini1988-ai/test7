@@ -10,7 +10,7 @@ import {exclusiveBossReady} from './tacticalExclusiveBosses.js';
 
 export function officialBossEncounter({mode='campaign',sectorNumber=1,planetId=null,sectorLevel=null}={}){
  if(!['campaign','adventure'].includes(mode))return null;
- const global=Math.floor(Number(sectorNumber));
+ const global=Number(sectorNumber);
  if(!Number.isInteger(global)||global<1)return null;
  const local=sectorLevel==null?((global-1)%10)+1:Number(sectorLevel);
  if(local!==10)return null;
@@ -19,7 +19,10 @@ export function officialBossEncounter({mode='campaign',sectorNumber=1,planetId=n
  if(mode==='campaign'&&((global-1)%10)+1!==10)return null;
  const selected=planetId==null?null:PHASE16A_CAMPAIGN_PLANETS.find(x=>x.id===Number(planetId));
  const fromGlobal=PHASE16A_CAMPAIGN_PLANETS[Math.floor((global-1)/10)]??null;
- if(mode==='adventure'&&!selected)return null;
+ // Anche in Avventura l'ID storico del pianeta deve corrispondere
+ // al settore canonico 10,20,...120: non basta dichiarare livello 10.
+ if(mode==='adventure'&&(!selected||
+    global!==PHASE16A_CAMPAIGN_PLANETS.findIndex(p=>p.id===selected.id)*10+10))return null;
  if(mode==='campaign'&&selected&&selected.id!==fromGlobal?.id)return null;
  const planet=selected??fromGlobal;
  if(!planet)return null;
