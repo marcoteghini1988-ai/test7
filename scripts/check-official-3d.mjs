@@ -44,9 +44,12 @@ verify(shop.includes("import ArsenalCatalog from './ArsenalCatalog'")&&
  'Il negozio deve usare il catalogo Arsenale definitivo anziche la Preview');
 
 verify(battleEntry.includes("import OfficialBattle3D from './OfficialBattle3D.jsx'")&&
- battleEntry.includes("officialSimultaneousEligibility(props)")&&
- battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'"),
- 'Unico accesso 3D: motore simultaneo e compatibilita boss con passive conservate');
+ battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'")&&
+ battleEntry.includes("officialCampaignBattleProps(props)")&&
+ battleEntry.includes("officialSimultaneousEligibility(battleProps)")&&
+ battleEntry.includes("<OfficialBattle3D {...battleProps}")&&
+ battleEntry.includes("<BossBattle3D {...battleProps}"),
+ 'Unico accesso 3D: settori canonici, simultaneo e fallback boss coerenti');
 verify(arena.includes('MathDuelBattle.css')&&arena.includes('arena_titanio_9x16.webp'),
  'La battaglia ufficiale deve usare il CSS e lo sfondo Titanio 9:16');
 verify(arena.includes('<ShipPhysicalVitals')&&
