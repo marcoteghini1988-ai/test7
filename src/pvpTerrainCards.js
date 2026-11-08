@@ -30,6 +30,11 @@ export const neutralPvpTerrainEffects=Object.freeze({
 });
 export const pvpTerrainEffects=(active,round)=>
  pvpTerrainAtRound(active,round)?PVP_TERRAIN_CATALOG[active.id].effects:neutralPvpTerrainEffects;
+// Tutte le Carte Speciali che RIPARANO lo scudo subiscono lo stesso
+// modificatore ambientale; la penalità del Generatore si applica dopo,
+// attraverso restoreMotherShield. Nei boss non viene applicato terreno PvP.
+export const pvpTerrainRepairAmount=(raw,effects=neutralPvpTerrainEffects)=>
+ Math.max(0,Math.floor(Math.max(0,raw)*(effects?.repairFactor??1)));
 // Nessun vantaggio di ordine: se entrambi giocano un Terreno nello stesso
 // ciclo, i due effetti si annullano e le carte sono comunque consumate.
 export function resolvePvpTerrain(previous,orders,round,mode='pvp',bossPlanetB=null){
