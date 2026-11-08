@@ -35,7 +35,7 @@ import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 
 const OPS=[['plus','+'],['minus','−'],['times','×'],['divide','÷'],['pair','COPPIA'],['trips','TRIS']];
-const freshOrder=()=>({numericIndices:[],specialIndices:[],vitalId:null,op:null,
+const freshOrder=()=>({numericIndices:[],specialIndices:[],vitalId:null,exposureTarget:null,op:null,
  counterVitalId:'engine',mutationVitalId:null,exchangeIndices:[],weaponFocusId:null,epicChoice:null,
  quantumRoll:false,malusChoice:null,bombSlot:null,goldenIndex:null,escortAmmoIndex:null});
 const toggle=(indices,i,limit)=>indices.includes(i)?indices.filter(x=>x!==i):
@@ -119,6 +119,7 @@ function niceError(reason){
   duplicate_special:'Non puoi utilizzare due carte speciali identiche nello stesso ciclo',
   numeric_count:'Seleziona esattamente due o tre carte numeriche',
   invalid_precision:'Scegli un vitale e una operazione valida',
+  invalid_exposure_target:'Scegli un vitale ancora integro da esporre alla soglia dello scudo',
   recycle_requires_card:'Per cambiare due numeriche serve Ricambio Numerico',
   card_double_spend:'Una carta numerica non può essere impegnata due volte',
   escort_selection:'Selezione della munizione scudiera non valida',
@@ -330,7 +331,7 @@ export default function OfficialBattle3D({
       const op=suggestedTacticalOperation(player,enemy,id,
        d.numericIndices.map(i=>player.numeric.hand[i]));
       // Al cambio di bersaglio una firma sconosciuta non eredita un suggerimento.
-      return {...d,vitalId:id,op:op??null};
+      return {...d,vitalId:id,exposureTarget:id,op:op??null};
      })}/>
     <section className="official-middle" aria-label="Fase e timer di combattimento">
      <div className="official-cycle">
@@ -410,7 +411,7 @@ export default function OfficialBattle3D({
         'FAGLIA · FORMULA IGNOTA: SCANSIONA O TENTA'):
        selected.length>=2?(suggested?'FIRMA VALIDA: '+suggested:
        draft.op?'OP '+draft.op+' · firma da verificare':'SCEGLI OPERAZIONE'):
-       '2 O 3 NUMERICHE · FINO A 2 SPECIALI'}</small>
+       (draft.exposureTarget?'MIRA SELEZIONATA · ESPOSIZIONE ALLA SOGLIA DELLO SCUDO':'2 O 3 NUMERICHE · FINO A 2 SPECIALI')}</small>
      </div>
      <button className="es-button attack" type="button" disabled={locked} onClick={seal}>
       {battle.orders.A?'PRONTO ✓':'CONFERMA ➤'}
