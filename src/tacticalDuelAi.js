@@ -7,6 +7,7 @@ import {nativeBarrierPacket,validateTacticalOrder} from './simultaneousDuelEngin
 import {tacticalBossProfile} from './tacticalSpecialPresets.js';
 import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import {isPvpTerrain,pvpTerrainAtRound} from './pvpTerrainCards.js';
+import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 
 const NORMAL_PRIORITY=['shieldGenerator','weapons','command','engine'];
 function findPrecision(ours,enemy,priority){
@@ -44,6 +45,7 @@ function playable(type,ours,enemy,shot){
   case 'support-shield-repair':return ours.defense.parts.shieldGenerator.hp>0&&ours.defense.shield.hp<ours.defense.shield.max;
   case 'support-status-purge':return !!(ours.ionized||ours.corroded||ours.heated);
   case 'tactic-counter':return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
+  case SIGNATURE_MUTATION_CARD_ID:return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
   case 'tactic-scan':return ours.seen.length<4;
   case 'shot-piercing':case 'tactic-suppress':return enemy.escorts.some(e=>e.hp>0)&&enemy.defense.shield.hp>0;
   case 'shot-corrosion':case 'shot-ion':return enemy.defense.shield.hp>0;
@@ -63,6 +65,7 @@ export function planTacticalAi(battle,key='B'){
  const shot=findPrecision(ours,enemy,priority);
  const threatened=priority.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)
    ??priority.find(id=>ours.defense.parts[id].hp>0)??'shieldGenerator';
+ const mutationVitalId=priority.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)??null;
  const priorities=profile?.types??[
   'tactic-scan','support-shield-repair','fusion-barrier','tactic-counter',
   'tactic-reactive','tactic-impact','tactic-suppress','shot-piercing',
@@ -73,7 +76,7 @@ export function planTacticalAi(battle,key='B'){
  const chosen=[],types=new Set();
  const terrains=battle.mode==='pvp'&&!pvpTerrainAtRound(battle.activeTerrain,battle.round)?
   ours.special.hand.map(c=>c.type).filter(isPvpTerrain):[];
- for(const type of [...(ours.seen.length<4?['tactic-scan']:[]),...terrains,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
+ for(const type of [...(mutationVitalId?[SIGNATURE_MUTATION_CARD_ID]:[]),...(ours.seen.length<4?['tactic-scan']:[]),...terrains,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
   if(chosen.length>=2)break;
   if(types.has(type)||!playable(type,ours,enemy,shot))continue;
   const index=ours.special.hand.findIndex((c,i)=>c.type===type&&!chosen.includes(i));
@@ -91,7 +94,8 @@ export function planTacticalAi(battle,key='B'){
   .map((card,i)=>({i,card}))
   .filter(({i,card})=>!used.has(i)&&selectTacticalEscortForAmmo(ours,card))
   .sort((a,b)=>b.card.value-a.card.value||a.i-b.i)[0]?.i??null;
- let result={specialIndices:chosen,counterVitalId:threatened,exchangeIndices:exchanges,
+ let result={specialIndices:chosen,counterVitalId:threatened,mutationVitalId,
+  exchangeIndices:exchanges,
   escortAmmoIndex:ammo,weaponFocusId:focusWeapon?.id??null,...shot};
  while(!validateTacticalOrder(battle,key,result).ok&&result.specialIndices.length){
   result={...result,specialIndices:result.specialIndices.slice(0,-1)};
