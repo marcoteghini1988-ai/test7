@@ -4,6 +4,8 @@ import {isBossCharacterCard} from './bossCharacterCards.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {isPvpTerrain} from './pvpTerrainCards.js';
+import {isTacticalEpic} from './tacticalEpicCards.js';
+import {LEGACY_EPIC_KEYS,readLegacyEpicProgress} from './officialEpicOwnership.js';
 import {
  SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,SPECIAL_COLLECTION_KEY,
  readSpecialCollection,updateSpecialCollection,specialDeckCounts,
@@ -13,7 +15,7 @@ import './SpecialDeckPanel.css';
 
 // Reusable Hangar + pre-battle editor. A corrupt save is never overwritten.
 function readSafe(){
- try{return {collection:readSpecialCollection(),error:''};}
+ try{return {collection:readSpecialCollection(),epicSlotLimit:readLegacyEpicProgress().slotLimit,error:''};}
  catch{return {collection:null,error:'Salvataggio del mazzo speciale non leggibile. Nessun dato è stato modificato.'};}
 }
 export default function SpecialDeckPanel({compact=false,onSaved}){
@@ -23,11 +25,14 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
  const [saving,setSaving]=useState(false);
  const collection=snapshot.collection,types=draft??collection?.loadout??[];
  const counts=specialDeckCounts(types),check=collection?validateSpecialDeck(collection,types):{valid:false};
+ const epicSlotLimit=snapshot.epicSlotLimit??0;
+ const epicEquipped=types.filter(isTacticalEpic).length;
+ const epicsValid=epicEquipped<=epicSlotLimit;
  const changed=!!collection&&draft!==null&&
   (types.length!==collection.loadout.length||types.some((t,i)=>t!==collection.loadout[i]));
  const refresh=()=>setSnapshot(readSafe());
  useEffect(()=>{
-  const sync=e=>{if(e.key===SPECIAL_COLLECTION_KEY||e.key===null){refresh();setDraft(null);}};
+  const sync=e=>{if(e.key===SPECIAL_COLLECTION_KEY||e.key===null||Object.values(LEGACY_EPIC_KEYS).includes(e.key)){refresh();setDraft(null);}};
   window.addEventListener('storage',sync);
   return()=>window.removeEventListener('storage',sync);
  },[]);
@@ -35,7 +40,8 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
   if(saving||!collection)return;
   if(amount>0){
    if(types.length>=SPECIAL_DECK_SIZE||
-     counts[type]>=Math.min(specialCardMaxCopies(type),collection.owned[type]))return;
+     counts[type]>=Math.min(specialCardMaxCopies(type),collection.owned[type])||
+     (isTacticalEpic(type)&&epicEquipped>=epicSlotLimit))return;
    setDraft([...types,type]);
   }else{
    const index=types.lastIndexOf(type);
@@ -45,11 +51,11 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
   setStatus('');
  };
  function save(){
-  if(!collection||!changed||!check.valid||saving)return;
+  if(!collection||!changed||!check.valid||!epicsValid||saving)return;
   setSaving(true);
   try{
    const next=updateSpecialCollection(current=>equipSpecialDeck(current,types));
-   setSnapshot({collection:next,error:''});setDraft(null);
+   setSnapshot(readSafe());setDraft(null);
    setStatus('Mazzo speciale salvato. Verrà usato alla prossima battaglia.');
    onSaved?.(next.loadout);
   }catch(error){setStatus(error.message||'Impossibile salvare il mazzo speciale.');refresh();}
@@ -64,20 +70,21 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
     result=openSpecialPack(current);
     return result.collection;
    });
-   setSnapshot({collection:next,error:''});
+   setSnapshot(readSafe());
    if(result?.opened)setStatus('Pacchetto aperto: '+result.drawn.map(t=>SPECIAL_CARD_CATALOG[t].short).join(' + ')+'. Carte aggiunte alla collezione.');
    else setStatus('Nessun pacchetto disponibile.');
   }catch(error){setStatus(error.message||'Apertura non riuscita.');refresh();}
   finally{setSaving(false);}
  }
  const body=<section className="special-deck-editor" aria-label="Costruzione mazzo speciale">
-  <p>Le 7 carte numeriche restano separate. Qui scegli solo le 24 speciali per la prossima battaglia. Massimo 6 copie per tipo ordinario, una per ciascun Personaggio Boss posseduto. Un solo Personaggio attivo alla volta.</p>
+  <p>Le 7 carte numeriche restano separate. Qui scegli le 24 speciali: massimo 6 copie ordinarie, una per Personaggio Boss o Oggetto Epico posseduto. Gli Epici sono carte attivabili, non bonus permanenti nella nuova battaglia.</p>
   {snapshot.error&&<p role="alert">{snapshot.error}</p>}
   {collection&&<>
    <div className="special-deck-summary">
     <strong>{types.length}/{SPECIAL_DECK_SIZE} speciali</strong>
     <span>Pacchetti da aprire: <b>{collection.packCredits}</b></span>
     <span>Pacchetti aperti: {collection.openedPacks}</span>
+    <span>Slot Epici sbloccati: <b>{epicSlotLimit}/2</b> · equipaggiati <b>{epicEquipped}</b></span>
    </div>
    <div className="special-deck-types">
     {SPECIAL_TYPES.map(type=>{
@@ -90,13 +97,14 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
        <small>{isBossCharacterCard(type)?'PERSONAGGIO BOSS · 2 CICLI · ':''}{info.description}</small>
        {isBossCharacterCard(type)&&!owned&&<small>Si sblocca sconfiggendo il boss del pianeta.</small>}
        {isPvpTerrain(type)&&<small>Solo PvP · cambia l'ambiente per 2 cicli. Non si ottiene nei pacchetti correnti.</small>}
+       {isTacticalEpic(type)&&<small>Oggetto Epico · sblocco dal Varco fuso nella Cripta. Una copia per tipo, massimo due nel mazzo; uno slot a L20/primo Varco, due a L60.</small>}
       </div>
       <div className="special-deck-quantity">
        <button type="button" aria-label={'Rimuovi '+info.name} disabled={saving||!n}
         onClick={()=>updateDraft(type,-1)}>−</button>
        <span aria-label={'Equipaggiate '+n+' possedute '+owned}>{n}/{owned}</span>
        <button type="button" aria-label={'Aggiungi '+info.name}
-        disabled={saving||types.length>=SPECIAL_DECK_SIZE||n>=Math.min(owned,specialCardMaxCopies(type))}
+        disabled={saving||types.length>=SPECIAL_DECK_SIZE||n>=Math.min(owned,specialCardMaxCopies(type))||(isTacticalEpic(type)&&epicEquipped>=epicSlotLimit)}
         onClick={()=>updateDraft(type,1)}>+</button>
       </div>
      </div>;
@@ -104,8 +112,9 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
    </div>
    {types.length!==SPECIAL_DECK_SIZE&&<p role="status">Mancano {SPECIAL_DECK_SIZE-types.length} carte per completare il mazzo.</p>}
    {!check.valid&&types.length===SPECIAL_DECK_SIZE&&<p role="status">Il mazzo non rispetta i limiti delle copie possedute.</p>}
+   {!epicsValid&&<p role="status">Slot Epici insufficienti: aumenta il livello pilota oppure stabilizza un Varco nella Cripta.</p>}
    <div className="special-deck-actions">
-    <button type="button" disabled={saving||!changed||!check.valid} onClick={save}>SALVA MAZZO</button>
+    <button type="button" disabled={saving||!changed||!check.valid||!epicsValid} onClick={save}>SALVA MAZZO</button>
     <button type="button" disabled={saving||collection.packCredits<1} onClick={openPack}>
      APRI PACCHETTO · 3 CARTE
     </button>
