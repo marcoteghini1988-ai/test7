@@ -6,7 +6,8 @@ import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuild
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
-import {bossCharacterActive} from './bossCharacterCards.js';
+import {bossCharacterActive,isBossCharacterCard} from './bossCharacterCards.js';
+import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
@@ -324,7 +325,7 @@ export default function OfficialBattle3D({
       const family=data?.kind||'empty';
       return <button key={card?.id||i} type="button" disabled={locked||!card}
        title={data?.help||'Slot libero'} aria-pressed={draft.specialIndices.includes(i)}
-       className={'special-board-card'+(draft.specialIndices.includes(i)?' active':'')}
+       className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(draft.specialIndices.includes(i)?' active':'')}
        data-family={family} onClick={()=>setDraft(d=>{
         const chosen=toggle(d.specialIndices,i,2);
         const defending=chosen.some(index=>{
@@ -334,7 +335,9 @@ export default function OfficialBattle3D({
         return {...d,specialIndices:chosen,
          escortAmmoIndex:defending?null:d.escortAmmoIndex};
        })}>
-       <span className="special-board-glyph">✦</span>
+       {isBossCharacterCard(card?.type)?
+        <BossCharacterPortrait type={card.type} className="special-board-boss-portrait"/>:
+        <span className="special-board-glyph">✦</span>}
        <strong>{data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
       </button>;
      })}
