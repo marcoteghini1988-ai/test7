@@ -26,6 +26,7 @@ import ShipPhysicalVitals,{physicalVitalCondition} from './ShipPhysicalVitals.js
 import {arenaForBattle} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import {officialBattleSetup,officialBattleResult} from './officialBattleSetup.js';
+import {readLegacyEpicProgress} from './officialEpicOwnership.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 
@@ -39,7 +40,9 @@ function startSession(options){
  try{
   const shipCollection=readShipCollection();
   const specialCollection=readSpecialCollection();
+  const oldEpics=readLegacyEpicProgress();
   const setup=officialBattleSetup({...options,shipCollection,specialCollection,
+   pilotLevel:oldEpics.pilotLevel,epicRiftOpened:oldEpics.hasCollapsed,
    seed:Math.floor(Math.random()*0x7fffffff)+1,nowMs:Date.now()});
   return {battle:setup.battle,bossEncounter:setup.bossEncounter,error:'',shipCollection};
  }catch(e){return {battle:null,error:e?.message||'Impossibile caricare il duello',shipCollection:null};}
@@ -337,7 +340,7 @@ export default function OfficialBattle3D({
       const family=data?.kind||'empty';
       return <button key={card?.id||i} type="button" disabled={locked||!card}
        title={data?.help||'Slot libero'} aria-pressed={draft.specialIndices.includes(i)}
-       className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(isPvpTerrain(card?.type)?' terrain-card':'')+(draft.specialIndices.includes(i)?' active':'')}
+       className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(isPvpTerrain(card?.type)?' terrain-card':'')+(card?.type?.startsWith('epic_item_')?' epic-card':'')+(draft.specialIndices.includes(i)?' active':'')}
        data-family={family} onClick={()=>setDraft(d=>{
         const chosen=toggle(d.specialIndices,i,2);
         const defending=chosen.some(index=>{
@@ -353,7 +356,7 @@ export default function OfficialBattle3D({
         <BossCharacterPortrait type={card.type} className="special-board-boss-portrait"/>:
         isPvpTerrain(card?.type)?
         <PvpTerrainPortrait type={card.type} className="special-board-boss-portrait"/>:
-        <span className="special-board-glyph">{card?.type===SIGNATURE_MUTATION_CARD_ID?'⌘':'✦'}</span>}
+        <span className="special-board-glyph">{card?.type===SIGNATURE_MUTATION_CARD_ID?'⌘':card?.type?.startsWith('epic_item_')?'◆':'✦'}</span>}
        <strong>{data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
       </button>;
      })}
