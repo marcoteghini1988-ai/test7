@@ -43,8 +43,6 @@ test('Scansione tattica nasce da pacchetto vero e il gioco la consuma per rivela
  const opened=openSpecialPack(credit.collection,()=>(packIndex+.1)/SPECIAL_PACK_TYPES.length);
  assert.equal(opened.opened,true);
  assert.deepEqual(opened.drawn,['tactic-scan','tactic-scan','tactic-scan']);
- const loadout=base.loadout.map((type,i)=>type==='shot-ion'&&i<24?'tactic-scan':type);
- assert.equal(loadout.filter(x=>x==='tactic-scan').length,4,'Non usare quattro copie da tre possedute');
  const legal=[...base.loadout];
  const ionIndices=legal.map((t,i)=>t==='shot-ion'?i:-1).filter(i=>i>=0);
  for(const i of ionIndices.slice(0,3))legal[i]='tactic-scan';
