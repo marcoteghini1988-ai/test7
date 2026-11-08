@@ -9,6 +9,7 @@ import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {readSpecialCollection,claimFirstWinSpecialPack,specialDeckCounts} from './specialDeckBuilder.js';
+import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVitalSignature} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
 import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
@@ -489,7 +490,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   // Owned special cards are read from their independent persistent collection.
   // Never overwrite an unreadable save or block the battle.
   let specialDeckTypes=null;
-  try{specialDeckTypes=readSpecialCollection().loadout;}catch{}
+  try{specialDeckTypes=combatSpecialLoadout(readSpecialCollection(),'campaign');}catch{}
   const motherOptions=prepareMotherDuelOptions(options,{
    mode:gameMode,globalSector:sectorNumber,planetId:bossPlanetId,
    planetSector:bossSectorLevel,practice});
@@ -994,7 +995,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   setCollection(next);
   const {fleet}=newShip(b.level,false,options);
   let equippedTypes=null;
-  try{equippedTypes=readSpecialCollection().loadout;}catch{}
+  try{equippedTypes=combatSpecialLoadout(readSpecialCollection(),'campaign');}catch{}
   const existingTypes=[...(b.player.specialHand||[]),...(b.player.specialDeck||[]),
    ...(b.player.specialDiscard||[])].map(card=>card.type);
   const counts=specialDeckCounts(existingTypes);
