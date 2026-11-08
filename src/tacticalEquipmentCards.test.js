@@ -14,6 +14,7 @@ import {createTacticalDuel,TACTICAL_SPECIALS,TACTICAL_STARTER_TYPES,
  from './simultaneousDuelEngine.js';
 import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {officialBattleSetup} from './officialBattleSetup.js';
+import {planTacticalAi} from './tacticalDuelAi.js';
 
 const deck=(...types)=>[...types,...TACTICAL_STARTER_TYPES.slice(types.length)];
 const inactive={numericIndices:[],specialIndices:[]};
@@ -169,4 +170,17 @@ test('Il vecchio archivio Moduli JSON corrotto blocca la migrazione senza modifi
  assert.throws(()=>updateSpecialCollection(c=>c,s));
  assert.deepEqual([...s.data],before);
  assert.deepEqual(s.writes,[]);
+});
+
+
+test('IA locale: può attivare il proprio Modulo solo se la carta è in mano e il livello è autentico',()=>{
+ const card=moduleCardType('aries');
+ const game=createTacticalDuel({specialDeckB:deck(card),equipmentLevelsB:{[card]:3}});
+ offer(game,'B',card,0);
+ const plan=planTacticalAi(game,'B');
+ assert.ok(plan.specialIndices.includes(0),'IA sceglie una Carta Modulo posseduta, non un potere gratuito');
+ assert.equal(validateTacticalOrder(game,'B',plan).ok,true);
+ const noCard=createTacticalDuel();
+ const inactive=planTacticalAi(noCard,'B');
+ assert.ok(inactive.specialIndices.every(i=>!isModuleCard(noCard.sides.B.special.hand[i].type)));
 });
