@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createTacticalDuel,sealTacticalOrder,advanceTacticalDuel,validateTacticalOrder} from './simultaneousDuelEngine.js';
+import {createTacticalDuel,sealTacticalOrder,advanceTacticalDuel,validateTacticalOrder,TACTICAL_STARTER_TYPES} from './simultaneousDuelEngine.js';
+import {damageMotherShield,exposeMotherPart,VITAL_IDS} from './vitalDefense.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 
 test('IA locale prepara ordini legali senza leggere mano numerica o ordine segreto avversario',()=>{
@@ -78,4 +79,52 @@ test('IA sceglie 3 numeriche per chiudere 8 HP, ma ne risparmia una a 6 o 10 HP'
   assert.equal(order.numericIndices.length,expected,'HP '+hp);
   assert.equal(validateTacticalOrder(b,'A',order).ok,true);
  }
+});
+
+function placeRealSpecialsInHand(side,types){
+ const pile=side.special;
+ for(let i=0;i<types.length;i++){
+  if(pile.hand[i]?.type===types[i])continue;
+  const handIndex=pile.hand.findIndex((c,j)=>j>i&&c.type===types[i]);
+  if(handIndex>=0)[pile.hand[i],pile.hand[handIndex]]=[pile.hand[handIndex],pile.hand[i]];
+  else{
+   const deckIndex=pile.deck.findIndex(c=>c.type===types[i]);
+   assert.ok(deckIndex>=0,'carta '+types[i]+' esistente nel mazzo di 24');
+   [pile.hand[i],pile.deck[deckIndex]]=[pile.deck[deckIndex],pile.hand[i]];
+  }
+ }
+ assert.equal(pile.hand.length+pile.deck.length+pile.discard.length,24);
+}
+test('Contromisura IA contro Io: protegge la barriera nell eruzione pubblica usando speciali realmente pescate',()=>{
+ const b=createTacticalDuel({shipA:'C03',levelA:3,shipB:'L03',levelB:3,
+  seed:171,nowMs:100,bossPlanetB:19,specialDeckA:[...TACTICAL_STARTER_TYPES]});
+ assert.equal(b.sides.B.bossExclusive?.id,19);
+ b.round=2; // fase eruzione visibile a tutti; non un ordine segreto.
+ b.sides.A.defense.shield.hp=30;
+ placeRealSpecialsInHand(b.sides.A,[
+  'tactic-scan','tactic-reactive','tactic-impact',
+  'support-shield-repair','tactic-numeric-recycle'
+ ]);
+ const order=planTacticalAi(b,'A');
+ const types=order.specialIndices.map(i=>b.sides.A.special.hand[i].type);
+ assert.deepEqual(types,['support-shield-repair','tactic-reactive']);
+ assert.equal(validateTacticalOrder(b,'A',order).ok,true);
+ assert.equal(b.sides.A.special.hand.length+b.sides.A.special.deck.length,24,
+  'nessun effetto gratuito e nessuna carta aggiunta');
+});
+test('IA non consuma Scansione se tutti i vitali ancora vivi sono già visibili',()=>{
+ const b=createTacticalDuel({shipA:'C03',levelA:3,shipB:'E03',levelB:3,
+  seed:171,nowMs:100,specialDeckA:[...TACTICAL_STARTER_TYPES]});
+ placeRealSpecialsInHand(b.sides.A,[
+  'tactic-scan','tactic-numeric-recycle','tactic-reactive',
+  'tactic-impact','support-shield-repair'
+ ]);
+ let defense=damageMotherShield(b.sides.B.defense,60).defense;
+ for(const id of VITAL_IDS)defense=exposeMotherPart(defense,id).defense;
+ assert.equal(VITAL_IDS.every(id=>defense.parts[id].exposed),true);
+ b.sides.B.defense=defense;
+ assert.deepEqual(b.sides.A.seen,[]);
+ const order=planTacticalAi(b,'A');
+ assert.equal(order.specialIndices.some(i=>b.sides.A.special.hand[i].type==='tactic-scan'),false);
+ assert.equal(validateTacticalOrder(b,'A',order).ok,true);
 });
