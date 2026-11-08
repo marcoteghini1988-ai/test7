@@ -44,6 +44,8 @@
 
 **Numerazione originale:** dai registri recuperabili risultano riferimenti a 21 (semi), 22–30 (flotta, calcoli, mazzi), 31 (passive boss), 32–39 (speciali), 40–41 (comandante/personaggi), 42–43 (arene), 50 (carte navicella/personaggio), 51–52 (flotte/vitali) e 53 (mazzi boss); **i testi integrali dei punti intermedi e di 43–53 non sono disponibili in modo completo**, quindi non assegnare nuove descrizioni o percentuali di completamento per numero.
 
+**Avanzamento dopo l'audit (8/11):** aggiunta verifica automatica completa di tutti e 12 i boss, dall'avvio all'esito entro **20 cicli**, con IA sui due lati e controllo a ogni ciclo di arena fissa, boss/mazzo corretto, 52 numeriche senza duplicati, 24 speciali senza duplicati, mani 7/5, vittoria/sconfitta/pareggio e idoneità ai premi **solo per vittoria**. Codice: `src/officialBossEncounter.test.js`, commit `2928ee232678e251fb62b909d49279e94ffeb7e2`. [Actions 42481027062](https://github.com/marcoteghini1988-ai/test7/actions/runs/42481027062): **test logici, build e preflight riusciti**. È un'integrazione simulata, NON un playtest umano né un controllo della persistenza reale dopo riavvio. La prima priorità di seguito resta valida per quest'ultima verifica di salvataggi/premi e per il collaudo manuale.
+
 ### Continuità immediata
 
 Dopo il controllo della Neurotossina Venere, la priorità resta **verificare la chiusura dei dodici percorsi boss e il loro risultato**, poi affrontare il **colpo standard 10/10 ai vitali**, prima di toccare parametri del bilanciamento o la grafica. Le correzioni vanno direttamente su `test7/main`, senza creare una copia del progetto. I valori attuali, soprattutto quelli di bilanciamento, restano provvisori.
