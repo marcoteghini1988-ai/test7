@@ -4,6 +4,7 @@ import {newManeuverState} from './fleetManeuvers.js';
 import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_TYPES,isPvpTerrain} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {SPECIAL_HAND_SIZE,SPECIAL_CARD_CATALOG,initializeSpecialDeck,refillSpecialHand,
  specialCardDefinition,findFusionCardIndex,playSpecialCard} from './specialCards.js';
 
@@ -15,12 +16,14 @@ function ship(level=5){
 }
 const zero=()=>0;
 test('every explicitly designed fusion and support card is registered',()=>{
- assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).filter(x=>!isBossCharacterCard(x)&&!isPvpTerrain(x)&&x!==SIGNATURE_MUTATION_CARD_ID).sort(),['fusion-barrier','fusion-strike','fusion-triad','fusion-twin','shot-corrosion','shot-ion','shot-piercing','support-escort-repair','support-shield-repair','support-status-purge','tactical-cover']);
+ assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).filter(x=>!isBossCharacterCard(x)&&!isPvpTerrain(x)&&!isTacticalEpic(x)&&x!==SIGNATURE_MUTATION_CARD_ID).sort(),['fusion-barrier','fusion-strike','fusion-triad','fusion-twin','shot-corrosion','shot-ion','shot-piercing','support-escort-repair','support-shield-repair','support-status-purge','tactical-cover']);
  assert.equal(BOSS_CHARACTER_TYPES.length,12);
  assert.ok(BOSS_CHARACTER_TYPES.every(x=>SPECIAL_CARD_CATALOG[x]?.family==='boss-character'));
  assert.equal(PVP_TERRAIN_TYPES.length,4);
  assert.ok(PVP_TERRAIN_TYPES.every(x=>SPECIAL_CARD_CATALOG[x]?.family==='terrain'));
  assert.equal(SPECIAL_CARD_CATALOG[SIGNATURE_MUTATION_CARD_ID]?.family,'mutation');
+ assert.equal(Object.keys(TACTICAL_EPIC_CARDS).length,6);
+ assert.ok(Object.keys(TACTICAL_EPIC_CARDS).every(x=>SPECIAL_CARD_CATALOG[x]?.family==='epic'));
 });
 test('initial special hand is separate from numeric cards and has exactly five',()=>{
  const input={...ship(),hand:[{value:8,suit:'♥'}],deck:[{value:13,suit:'♠'}]};
