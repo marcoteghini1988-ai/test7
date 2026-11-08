@@ -40,6 +40,10 @@ export function tacticalCombatTimeline(battle){
  const events=[];
  for(const by of ['A','B']){
   const side=battle.sides[by],order=cycle.orders[by];
+  const dice=side.legacy?.lastDice;
+  if(dice?.round===cycle.round)events.push({id:'quantum-dice-'+by,
+   type:'special',by,atMs:880,durationMs:980,
+   label:'DADO QUANTICO · '+dice.face.toUpperCase(),cardType:'quantum-dice'});
   for(const [slot,index] of (order?.specialIndices??[]).entries()){
    // Resolve the original card type from round history, not the refilled current hand.
    const originalType=cycle.playedSpecials?.[by]?.[slot]??null;
@@ -95,6 +99,10 @@ export function tacticalCombatTimeline(battle){
     pilotBonus:impact.pilotBonus||0,pilotId:impact.pilotId||null,
     label:impact.damage>0?'-'+impact.damage+' BARRIERA':impact.intercepted?'INTERCETTATO':'NESSUN DANNO'});
   }
+  if(impact.kind==='legacy-bomb')events.push({id:'bomb-explosion-'+impact.target,
+   type:'barrier',by:impact.by,atMs:5370,durationMs:750,
+   damage:impact.damage,intercepted:0,
+   label:'💣 BOMBA · -'+impact.damage+' BARRIERA'});
   if(impact.kind==='precision'){
    const reason=impact.reason;
    const label=reason==='hit'?'-'+impact.damage+' '+(VITAL_LABELS[impact.target]??impact.target)+(impact.destroyed?' · KO':''):
