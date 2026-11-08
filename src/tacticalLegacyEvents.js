@@ -3,10 +3,11 @@
 // modificano le barriere e le scudiere autentiche. Test e balance da playtest.
 import {damageMotherShield,restoreMotherShield} from './vitalDefense.js';
 
+export const LEGACY_DICE_CARD='tactic-quantum-dice';
 export const LEGACY_BOMB_CARD='tactic-bomb';
 export const LEGACY_MALUS_CARD='tactic-malus';
 export const LEGACY_GOLD_CARD='tactic-golden';
-export const LEGACY_SPECIAL_TYPES=Object.freeze([LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD]);
+export const LEGACY_SPECIAL_TYPES=Object.freeze([LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD]);
 export const QUANTUM_FACES=Object.freeze(['module','malus','heal','dust','ether','damage']);
 export const MALUS_CHOICES=Object.freeze([
  Object.freeze({id:'lock_weapon',name:'Disturbo armamenti',help:'−15% al fuoco nativo nemico per un ciclo'}),
@@ -34,9 +35,13 @@ export const quantumFace=(seed,round,key)=>QUANTUM_FACES[
  ((seed>>>0)+round*13+(key==='A'?17:41))%QUANTUM_FACES.length];
 export function validateLegacyTactics(battle,key,order,types){
  const side=battle.sides[key],t=side.legacy??initialLegacyTactics();
- if(order.quantumRoll===true&&!t.diceReady)return {ok:false,reason:'dice_not_ready'};
- if(order.quantumRoll!=null&&typeof order.quantumRoll!=='boolean')
+ // Il Dado è una carta fisica: nessun lancio a bottone o con carica soltanto.
+ if(types.includes(LEGACY_DICE_CARD)&&!t.diceReady)
   return {ok:false,reason:'dice_not_ready'};
+ if(order.quantumRoll===true&&!types.includes(LEGACY_DICE_CARD))
+  return {ok:false,reason:'dice_card_required'};
+ if(order.quantumRoll!=null&&typeof order.quantumRoll!=='boolean')
+  return {ok:false,reason:'dice_card_required'};
  if(types.includes(LEGACY_MALUS_CARD)){
   if(t.malusCharge<3||!MALUS_CHOICES.some(x=>x.id===order.malusChoice))
    return {ok:false,reason:'malus_not_ready'};
@@ -58,7 +63,7 @@ export function prepareLegacyTactics(sides,orders,playedTypes,round,seed,log){
  for(const key of ['A','B']){
   const side=sides[key],t=side.legacy??initialLegacyTactics();
   side.legacy=t;
-  if(orders[key].quantumRoll&&t.diceReady){
+  if(playedTypes[key].includes(LEGACY_DICE_CARD)&&t.diceReady){
    const face=quantumFace(seed,round,key);
    t.diceReady=false;t.dicePatterns=[];t.lastDice={face,round};
    if(face==='module')side.sync=Math.min(100,side.sync+10);
