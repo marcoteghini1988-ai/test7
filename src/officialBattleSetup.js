@@ -10,11 +10,13 @@ import {validateSpecialDeck} from './specialDeckBuilder.js';
 import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {arenaForBattle} from './battleArenas.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
+import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 
 export function officialBattleSetup({
  mode='campaign',sectorNumber=1,bossPlanetId=null,bossSectorLevel=null,
  shipCollection,specialCollection,selectedPilot=null,pilotInventory={},
- selectedBossDeck='neutral_starter',bossDeckInventory={},nowMs=0,seed=18
+ selectedBossDeck='neutral_starter',bossDeckInventory={},pilotLevel=1,
+ epicRiftOpened=false,nowMs=0,seed=18
 }={}){
  if(!shipCollection?.cards||!Array.isArray(shipCollection.loadout))
   throw new Error('Collezione navicelle non leggibile: salvataggio conservato');
@@ -28,6 +30,16 @@ export function officialBattleSetup({
  const battleSpecialDeck=combatSpecialLoadout(specialCollection,mode);
  if(!validateTacticalLoadout(battleSpecialDeck))
   throw new Error('Una carta speciale equipaggiata non è ancora compatibile con il nuovo duello');
+ // Gli slot originali sono 0 prima della soglia, 1 a L20 o al primo
+ // Varco fuso e 2 a L60. L'IA non riceve gli Epici del giocatore.
+ const epicSlots=pilotLevel>=60?2:pilotLevel>=20||epicRiftOpened?1:0;
+ const equippedEpics=battleSpecialDeck.filter(isTacticalEpic);
+ if(equippedEpics.length>epicSlots)
+  throw new Error('Slot Epici non ancora sbloccati dal livello pilota o dai Varchi');
+ if(equippedEpics.some(id=>(specialCollection.owned?.[id]??0)<1))
+  throw new Error('Oggetto Epico nel mazzo ma non ancora ottenuto');
+ const epicEntitlements=Object.keys(TACTICAL_EPIC_CARDS).filter(id=>
+  (specialCollection.owned?.[id]??0)>=1);
  // I mazzi numerici boss non fanno parte delle 24 speciali.
  // Attiva soltanto i mazzi le cui passive sono convertite, se posseduti ed equipaggiati.
  let ownedBossDeck=null;
@@ -64,7 +76,7 @@ export function officialBattleSetup({
   commanderA:ownedPilot,commanderB:enemyPilot,
   bossNumericDeckA:ownedBossDeck,
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
-  specialDeckA:battleSpecialDeck,
+  specialDeckA:battleSpecialDeck,epicEntitlementsA:epicEntitlements,
   specialDeckB:opponentDeck,bossPlanetB:boss?.planetId??null
  };
  return {
