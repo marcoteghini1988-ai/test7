@@ -33,3 +33,8 @@
 }
 .special-deck-boss-portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .special-deck-boss-portrait img[hidden]{display:none}
+
+.special-deck-boss-portrait .pvp-terrain-fallback{
+ position:absolute;inset:0;display:grid;place-items:center;
+ font-size:22px;color:#9eeaff;background:linear-gradient(135deg,#215568,#152a47);
+}
