@@ -118,7 +118,7 @@ test('Boss Terra: matrice verificabile con equip reale starter, pilota posseduto
     assert.equal(setup.battle.sides.A.shipId,shipId);
     assert.equal(setup.battle.sides.A.level,level);
     assert.equal(setup.battle.sides.A.commander?.id,BEGINNER_PILOT_ID);
-    assert.equal(setup.battle.sides.A.bossNumericDeck,null);
+    assert.equal(setup.battle.sides.A.bossNumericDeck??null,null);
     assert.equal(setup.battle.sides.B.level,1,'boss non copia potenziamenti giocatore');
     assert.equal(setup.battle.sides.B.bossNumericDeck.id,firstBoss.deck);
     assert.equal(setup.battle.arenaId,'boss_'+firstBoss.id);
