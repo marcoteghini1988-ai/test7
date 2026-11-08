@@ -11,6 +11,8 @@ import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {isPvpTerrain,pvpTerrainAtRound,pvpTerrainDefinition} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
+ from './tacticalLegacyEvents.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
@@ -32,7 +34,8 @@ import './OfficialBattle3D.css';
 
 const OPS=[['plus','+'],['minus','−'],['times','×'],['divide','÷'],['pair','COPPIA'],['trips','TRIS']];
 const freshOrder=()=>({numericIndices:[],specialIndices:[],vitalId:null,op:null,
- counterVitalId:'engine',mutationVitalId:null,exchangeIndices:[],weaponFocusId:null,epicChoice:null,escortAmmoIndex:null});
+ counterVitalId:'engine',mutationVitalId:null,exchangeIndices:[],weaponFocusId:null,epicChoice:null,
+ quantumRoll:false,malusChoice:null,bombSlot:null,goldenIndex:null,escortAmmoIndex:null});
 const toggle=(indices,i,limit)=>indices.includes(i)?indices.filter(x=>x!==i):
  indices.length>=limit?[...indices.slice(1),i]:[...indices,i];
 const pct=(value,max)=>max?Math.round(100*value/max):0;
@@ -129,6 +132,10 @@ function niceError(reason){
   terrain_conflict:'Puoi giocare una sola Carta Terreno per ciclo',
   terrain_pvp_only:'Le Carte Terreno sono utilizzabili soltanto nel PvP',
   mutation_unavailable:'Mutazione disponibile solo su un tuo sistema vitale già esposto e integro',
+  dice_not_ready:'Dado Quantico non ancora caricato da tre formule differenti',
+  malus_not_ready:'Per giocare il Malus servono tre attacchi efficaci ai vitali e un disturbo scelto',
+  bomb_slot_invalid:'Numero Bomba: scegli uno slot numerico avversario da 1 a 7',
+  golden_unavailable:'Carta Dorata: scegli una numerica della tua mano, senza una Dorata già attiva',
   character_conflict:'Un solo Personaggio Boss può essere attivato per ciclo',
   character_already_active:'Attendi che il Personaggio Boss attivo termini i suoi cicli',
   preparation_expired:'Il tempo di preparazione è scaduto'
@@ -244,6 +251,7 @@ export default function OfficialBattle3D({
  const selected=(draft.numericIndices||[]).map(i=>player.numeric.hand[i]).filter(Boolean);
  const specials=(draft.specialIndices||[]).map(i=>player.special.hand[i]?.type);
  const exposedOwnVitals=VITAL_IDS.filter(id=>player.defense.parts[id]?.exposed&&player.defense.parts[id]?.hp>0);
+ const legacy=player.legacy;
  const recycle=specials.includes('tactic-numeric-recycle');
  const afroditeCooldown=tacticalAfroditeRecycleCooldownMs(player);
  const afroditeReadyIn=afroditeCooldown?
@@ -348,7 +356,13 @@ export default function OfficialBattle3D({
          return type?.startsWith('fusion-')||type==='tactical-cover';
         });
         const mutating=chosen.some(index=>player.special.hand[index]?.type===SIGNATURE_MUTATION_CARD_ID);
+        const bomber=chosen.some(index=>player.special.hand[index]?.type===LEGACY_BOMB_CARD);
+        const malus=chosen.some(index=>player.special.hand[index]?.type===LEGACY_MALUS_CARD);
+        const gold=chosen.some(index=>player.special.hand[index]?.type===LEGACY_GOLD_CARD);
         return {...d,specialIndices:chosen,
+         bombSlot:bomber?(d.bombSlot??0):null,
+         malusChoice:malus?(d.malusChoice??MALUS_CHOICES[0].id):null,
+         goldenIndex:gold?(d.goldenIndex??0):null,
          mutationVitalId:mutating?(d.mutationVitalId??exposedOwnVitals[0]??null):null,
          escortAmmoIndex:defending?null:d.escortAmmoIndex};
        })}>
@@ -366,11 +380,13 @@ export default function OfficialBattle3D({
     <div className="hand" aria-label="Le tue sette carte numeriche">
      {player.numeric.hand.map((card,i)=><button type="button" key={card.id}
       disabled={locked} aria-pressed={draft.numericIndices.includes(i)}
-      className={'number-card'+(draft.numericIndices.includes(i)?' active':'')}
+      className={'number-card'+(draft.numericIndices.includes(i)?' active':'')+
+       (legacy?.golden?.cardId===card.id?' is-golden':'')+
+       (legacy?.bomb?.cardId===card.id?' is-bomb':'')}
       onClick={()=>changeNum(i)}
       style={{'--suit':CARD_SUIT_COLORS[card.suit],'--deal-index':i}}>
-      <span className="card-suit">{card.suit}</span>
-      <strong>{rankLabel(card.value)}</strong><span className="card-suit second">{card.suit}</span>
+      <span className="card-suit">{card.suit}{legacy?.bomb?.cardId===card.id?' 💣':''}</span>
+      <strong>{rankLabel(card.value)}{legacy?.golden?.cardId===card.id?' ★':''}</strong><span className="card-suit second">{card.suit}</span>
      </button>)}
     </div>
     <div className="play-controls">
@@ -462,6 +478,25 @@ export default function OfficialBattle3D({
        </button>;
       })}</div>
      </section>}
+     <p><strong>DADO QUANTICO</strong>{' · '+(legacy?.diceReady?'PRONTO':(legacy?.dicePatterns?.length??0)+'/3 combinazioni diverse')+
+      ' · MALUS '+(legacy?.malusCharge??0)+'/3'}</p>
+     {legacy?.diceReady&&<label><input type="checkbox" checked={draft.quantumRoll===true}
+       onChange={e=>setDraft(d=>({...d,quantumRoll:e.target.checked}))}/>
+       Lancia Dado Quantico durante la prossima risoluzione (una carica reale)</label>}
+     {specials.includes(LEGACY_BOMB_CARD)&&<label>Numero Bomba: slot numerico nemico
+      <select value={draft.bombSlot??0} onChange={e=>setDraft(d=>({...d,bombSlot:Number(e.target.value)}))}>
+       {Array.from({length:7},(_,i)=><option key={i} value={i}>{'Slot '+(i+1)}</option>)}
+      </select></label>}
+     {specials.includes(LEGACY_MALUS_CARD)&&<label>Barra Malus: disturbo di un ciclo
+      <select value={draft.malusChoice??MALUS_CHOICES[0].id}
+       onChange={e=>setDraft(d=>({...d,malusChoice:e.target.value}))}>
+       {MALUS_CHOICES.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}
+      </select></label>}
+     {specials.includes(LEGACY_GOLD_CARD)&&<label>Carta Dorata: trasforma una numerica tua
+      <select value={draft.goldenIndex??0}
+       onChange={e=>setDraft(d=>({...d,goldenIndex:Number(e.target.value)}))}>
+       {player.numeric.hand.map((c,i)=><option key={c.id} value={i}>{'Carta '+(i+1)+' · '+rankLabel(c.value)+c.suit}</option>)}
+      </select></label>}
      {specials.includes(SIGNATURE_MUTATION_CARD_ID)&&<label>Mutazione: scegli il TUO vitale già esposto
       <select value={draft.mutationVitalId??''} onChange={e=>setDraft(d=>({...d,mutationVitalId:e.target.value||null}))}>
        <option value="">Scegli un sistema</option>
@@ -480,6 +515,10 @@ export default function OfficialBattle3D({
      <p>Le armi native della tua nave agiscono sulla barriera; scudiere, fusioni e riparazioni utilizzano HP e carte reali. Dopo lo scontro le mani vengono ripristinate pescando dal mazzo.</p>
      <p>Le Carte Terreno modificano l'ambiente per due cicli e hanno pro e contro uguali per entrambe le flotte. Sono giocabili soltanto nel PvP: le arene dei boss non si possono sostituire.</p>
      <p>Mutazione della Firma: una speciale difensiva modifica per un solo ciclo la combinazione richiesta da un tuo vitale già esposto. Il nuovo requisito appare nella risoluzione e poi ritorna quello originale; nessuna riparazione automatica.</p>
+     <p>Dado Quantico: caricalo con tre operatori validi differenti, quindi scegli il lancio nella sezione ARMI. Le sei facce danno solo effetti tattici, mai premi di valuta automatici.</p>
+     <p>Numero Bomba: la speciale marca una vera carta nemica visibile dal ciclo successivo; il nemico può disinnescarla con ricambio o formula valida, oppure subisce 8 danni alla barriera.</p>
+     <p>Barra Malus: tre colpi reali ai vitali abilitano una carta sabotaggio. Durata un ciclo, senza saltare interi turni.</p>
+     <p>Carta Dorata: una speciale trasforma una numerica vera per massimo due cicli; il bonus dipende dal seme ed è valido solo con un calcolo corretto.</p>
      <h3>I QUATTRO COMPONENTI DISTRUGGIBILI</h3>
      <p>I vitali partono con 10 HP: 10–6 integro, 5–1 danneggiato, 0 distrutto. Scegli quale colpire quando la barriera apre un bersaglio. Tutti e quattro distrutti = vittoria.</p>
      {VITAL_IDS.map(id=><p key={id}>
