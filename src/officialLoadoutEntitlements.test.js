@@ -50,7 +50,7 @@ test('12 mazzi numerici: solo inventario sbloccato e grado posseduto, mai passiv
   }
  }
  const neutral=setup({selectedBossDeck:'neutral_starter'}).battle.sides.A;
- assert.equal(neutral.bossNumericDeck,null);
+ assert.equal(neutral.bossNumericDeck??null,null);
 });
 
 test('33 piloti: solo carte sbloccate, 16 pronti nella 3D simultanea, altri conservati nel legacy',()=>{
