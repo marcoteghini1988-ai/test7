@@ -15,6 +15,18 @@
 
 ---
 
+## CHECKPOINT — 8 novembre 2026, 108 duelli boss e scelta efficiente delle formule
+
+**Codice verificato:** `src/tacticalDuelAi.js` ora preferisce una formula a **3 numeriche autentiche** quando può concludere un vitale a 7–8 HP (8 danni) invece di una formula da 2 carte (6 danni). Se 2 carte bastano o il vitale è ancora a 10 HP, l'IA non consuma la terza numerica inutilmente. Nessun potere, carta o conoscenza segreta aggiunta. Test mirato e suite completa superati.
+
+**Benchmark multi-seed:** 12 boss × 3 configurazioni realmente costruite × 3 seed = **108 combattimenti IA**, max 20 cicli. C01 L1 con starter: **0 vinte, 35 perse, 1 pareggio**; R04 L3 con starter: **5 vinte, 22 perse, 9 pareggi**; L04 L5 con starter: **8 vinte, 14 perse, 14 pareggi**. Questi numeri non sono una percentuale di successo umana e non giustificano da soli la modifica indiscriminata delle abilità dei boss.
+
+**Punto ancora aperto:** verificare la reale collezione ottenibile entro Terra settore 10, e poi ai 12 boss, incluse carte numeriche boss, carte speciali acquisite, piloti/personaggi, moduli, Epici e upgrade. Non usare inventari fittizi per proclamare un boss battibile. Il 9:16 metallico e le armi fisiche restano invariati.
+
+Rapporto e prove: [MATRICE_BOSS_12_MULTI_SEED_2026-11-08.md](MATRICE_BOSS_12_MULTI_SEED_2026-11-08.md). Ultimo controllo di riferimento: [Actions 42493597908](https://github.com/marcoteghini1988-ai/test7/actions/runs/42493597908), **772 test, build e preflight superati**.
+
+---
+
 ## CHECKPOINT SUCCESSIVO — 8 novembre 2026, quattro vitali e sistema di esposizione
 
 **Stato codice su `test7/main`:** attacchi di precisione di base a **6 HP con 2 numeriche** o **8 HP con 3 numeriche** contro quattro vitali da 10 HP; primo impatto ordinario crea un'avaria (4/10 o 2/10) invece del KO immediato. Bonus autentici restano attivi; le 42 armi native, l'HP iniziale e i 20 cicli non cambiano. Copertura reale dei **136 casi 17 navi × 4 vitali × 2 livelli** nei test, oltre ai normali boss.
