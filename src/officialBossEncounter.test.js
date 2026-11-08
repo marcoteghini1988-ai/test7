@@ -191,6 +191,55 @@ test('Benchmark comparativo: navicella leggendaria L5 con starter contro 12 boss
  console.log('ECLISSI_LEGENDARY_AI_20_ROUNDS '+JSON.stringify(observed));
 });
 
+test('Matrice multi-seed dei 12 boss: C01/R04/L04 a livelli realistici, nessun premio fittizio',()=>{
+ const seeds=[17,171,2026];
+ const fleets=[{shipId:'C01',level:1},{shipId:'R04',level:3},{shipId:'L04',level:5}];
+ const stats=[];
+ for(const [i,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
+  for(const {shipId,level} of fleets){
+   let wins=0,losses=0,draws=0,cycles=0,precisionA=0,precisionB=0,validFormulaA=0;
+   for(const seed of seeds){
+    const owned={cards:[{instanceId:'owned:'+shipId,shipId,level}],loadout:['owned:'+shipId]};
+    let battle=officialBattleSetup({mode:'campaign',sectorNumber:i*10+10,
+     bossPlanetId:planet.id,bossSectorLevel:10,shipCollection:owned,
+     specialCollection:ownedSpecials,nowMs:100,seed}).battle;
+    let rounds=0;
+    while(battle.phase!=='finished'&&rounds<TACTICAL_TIMING.maxRounds){
+     const at=battle.deadlineMs-TACTICAL_TIMING.prepareMs+1;
+     const planA=planTacticalAi(battle,'A'),planB=planTacticalAi(battle,'B');
+     const a=sealTacticalOrder(battle,'A',planA,at);
+     assert.equal(a.ok,true,planet.name+' '+shipId+' A '+a.reason);
+     const b=sealTacticalOrder(a.battle,'B',planB,at+1);
+     assert.equal(b.ok,true,planet.name+' '+shipId+' B '+b.reason);
+     const resolved=advanceTacticalDuel(b.battle,at+1);
+     assert.equal(resolved.phase,'resolving');
+     const record=resolved.history.at(-1);
+     validFormulaA+=record?.impacts?.filter(x=>x.kind==='precision'&&x.by==='A').length||0;
+     precisionA+=record?.hitsA||0;
+     precisionB+=record?.hitsB||0;
+     battle=advanceTacticalDuel(resolved,resolved.resolveUntilMs);
+     rounds++;
+    }
+    assert.equal(battle.phase,'finished');
+    assert.ok(rounds<=20);
+    cycles+=rounds;
+    if(battle.winner==='A')wins++;
+    else if(battle.winner==='B')losses++;
+    else draws++;
+    const outcome=officialBattleResult(battle,'campaign',i*10+10);
+    assert.equal(outcome.eligibleForRewards,battle.winner==='A');
+    assert.equal(battle.sides.B.bossNumericDeck.id,planet.deck);
+    assert.equal(battle.arenaId,'boss_'+planet.id);
+   }
+   assert.equal(wins+losses+draws,seeds.length);
+   stats.push({planet:planet.name,shipId,level,wins,losses,draws,
+    meanCycles:Number((cycles/seeds.length).toFixed(1)),
+    precisionA,precisionB,validFormulaA});
+  }
+ }
+ console.log('ECLISSI_BOSS_MATRIX '+JSON.stringify(stats));
+});
+
 test('Telemetria della vittoria conserva il vero boss e sblocca la sua reliquia, non quelle degli altri',()=>{
  for(const [i,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
   const b=setup(i).battle;
