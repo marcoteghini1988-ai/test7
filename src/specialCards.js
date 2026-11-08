@@ -5,6 +5,7 @@ import {armShotEffect,armedShotEffects,SHOT_RULES} from './strategicShots.js';
 import {useSupportCard} from './specialSupport.js';
 import {BOSS_CHARACTER_CATALOG,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_CATALOG} from './pvpTerrainCards.js';
+import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 
 export const SPECIAL_HAND_SIZE=5;
 export const SPECIAL_CARD_CATALOG=Object.freeze({
@@ -30,6 +31,9 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
    family:'support',description:'Rimuove Ionizzazione e Corrosione attive dalla propria madre, senza creare HP.'}),
  'support-escort-repair':Object.freeze({type:'support-escort-repair',name:'Riparazione Scudiera',short:'SCUDIERA +',
    family:'support',description:'Ripara fino a 15 HP dello scudo della scudiera selezionata. Non rianima scudiere distrutte; richiede centralina attiva.'}),
+ [SIGNATURE_MUTATION_CARD_ID]:Object.freeze({type:SIGNATURE_MUTATION_CARD_ID,
+   name:'Mutazione della Firma',short:'MUTA FIRMA',family:'mutation',
+   description:'Cambia per un ciclo la formula di un proprio sistema vitale già esposto. La vecchia combinazione nemica non è più valida; non modifica gli HP.'}),
  ...Object.fromEntries(Object.values(BOSS_CHARACTER_CATALOG).map(c=>[c.id,
   Object.freeze({type:c.id,name:c.name,short:c.short,family:'boss-character',
    description:c.description,durationCycles:c.durationCycles,imagePath:c.imagePath,maxCopies:1})])),
