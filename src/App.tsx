@@ -54,6 +54,7 @@ import {getPhase16EDeckTraits,isPhase16EDeck} from './newCombat/phase16EDecks.js
 import {getPhase16HSectorChallenge,getPhase16HBountyProgress} from './newCombat/phase16HProgression.js';
 import ClassicBattleView, { calculateAiTurnClassic, generateClassicObjectives } from './ClassicBattleView';
 import MathDuelBattle from './MathDuelBattle.jsx';
+import {applyVerifiedBossRelic} from './campaignBossRelics.js';
 import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
@@ -18867,6 +18868,23 @@ function App() {
 
 
      if (isPlayerWin) {
+      // Le reliquie si assegnano solo per un boss autentico riconosciuto
+      // dal motore, in Campagna o Avventura. Nessun premio su settori falsi.
+      if ((gameMode === 'adventure' || gameMode === 'campaign') &&
+          battleMeta?.matchStats?.bossPlanetId != null) {
+        const bossInfo = battleMeta.matchStats;
+        const planetId = Number(bossInfo.bossPlanetId);
+        const globalSector = Number(bossInfo.sectorNumber);
+        const localSector = Number(bossInfo.bossSectorLevel);
+        if (Number.isInteger(planetId) && planetId > 0 &&
+            Number.isInteger(globalSector) && Number.isInteger(localSector)) {
+          setUnlockedRelics(prev => applyVerifiedBossRelic(prev, {
+            winner: 'player', mode: gameMode,
+            sectorNumber: globalSector, bossPlanetId: planetId,
+            bossSectorLevel: localSector
+          }).relics);
+        }
+      }
       if (gameMode === 'adventure' && activeAdventure) {
                 const planetNum = activeAdventure.planet;
         const levelNum = activeAdventure.level;
@@ -18907,9 +18925,8 @@ function App() {
         setXp(x => x + reward.xp);
 
         if (isBossFight) {
-          const relicKey = `relic_p${planetNum}`;
-          setUnlockedRelics(prev => ({ ...prev, [relicKey]: true }));
-
+          // La reliquia viene verificata e assegnata con il risultato
+          // ufficiale sopra, non soltanto con il livello del menu.
           // SBLOCCO AUTOMATICO CARTA PILOTA BOSS (COSTO ZERO A GRADO 1)
           const bossPilotId = `pilot_boss_${planetNum}`;
           setPilotInventory(prev => {
