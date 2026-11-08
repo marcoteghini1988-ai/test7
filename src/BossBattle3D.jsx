@@ -1031,9 +1031,10 @@ function LegacyBattleRuntime({nickname,gameMode,sectorNumber=1,displaySector='',
    }
    const h=healthScore(b.player);
    if(b.mode!=='pvp')onResult?.(b.winner,{turnsElapsed:b.round,remainingHpPct:h,
-    starsEarned:[true,h>=.65,h>=.9],
+    starsEarned:[b.winner==='player',b.winner==='player'&&h>=.65,b.winner==='player'&&h>=.9],
     matchStats:{damageDealt:Math.round((1-healthScore(b.enemy))*100),
-     turnsElapsed:b.round,specialPackEarned,shipRewardEarned,bossCharacterEarned,...battlePacingReport(b,Date.now())}});
+     turnsElapsed:b.round,specialPackEarned,shipRewardEarned,bossCharacterEarned,
+     sectorNumber,bossPlanetId,bossSectorLevel,...battlePacingReport(b,Date.now())}});
   }
   onExit?.();
  }
