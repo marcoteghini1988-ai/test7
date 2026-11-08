@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
+import {verifiedBossRelicReward} from './campaignBossRelics.js';
 import {chooseCampaignRivalCommander} from './motherDuelLoadout.js';
 import {officialBattleSetup,officialBattleResult} from './officialBattleSetup.js';
 import {createSpecialCollection} from './specialDeckBuilder.js';
@@ -149,4 +150,28 @@ test('Percorso completo: tutti i 12 boss arrivano a un esito entro 20 cicli, sen
   assert.equal(result.eligibleForRewards,battle.winner==='A',planet.name+' premi solo per vittoria');
   assert.equal(battle.arenaId,'boss_'+planet.id,planet.name+' arena finale');
  }
+});
+
+test('Telemetria della vittoria conserva il vero boss e sblocca la sua reliquia, non quelle degli altri',()=>{
+ for(const [i,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
+  const b=setup(i).battle;
+  const finished={...b,phase:'finished',winner:'A'};
+  const result=officialBattleResult(finished,'adventure',(i+1)*10);
+  const data={winner:result.winner,mode:'adventure',...result.meta.matchStats};
+  assert.equal(data.sectorNumber,(i+1)*10);
+  assert.equal(data.bossPlanetId,planet.id);
+  assert.equal(data.bossSectorLevel,10);
+  assert.equal(verifiedBossRelicReward(data),planet.relic);
+  const lost=officialBattleResult({...finished,winner:'B'},'adventure',(i+1)*10);
+  assert.equal(verifiedBossRelicReward({winner:lost.winner,mode:'adventure',
+   ...lost.meta.matchStats}),null,'Sconfitta non assegna reliquie');
+  assert.equal(verifiedBossRelicReward({...data,mode:'pvp'}),null,'PvP non assegna reliquie');
+ }
+ const normal=officialBattleSetup({mode:'adventure',sectorNumber:9,
+  bossPlanetId:1,bossSectorLevel:9,shipCollection:ownedShip,
+  specialCollection:ownedSpecials,nowMs:100,seed:171});
+ const result=officialBattleResult({...normal.battle,phase:'finished',winner:'A'},'adventure',9);
+ assert.equal(result.meta.matchStats.bossPlanetId,null);
+ assert.equal(verifiedBossRelicReward({winner:result.winner,mode:'adventure',
+  ...result.meta.matchStats}),null,'Nessuna reliquia sul settore normale');
 });
