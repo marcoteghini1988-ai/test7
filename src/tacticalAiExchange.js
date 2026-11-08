@@ -41,6 +41,17 @@ export function chooseTacticalAiExchangeIndices(hand,visibleTargets=[],fallbackI
   ((a.index-fallback+size)%size)-((b.index-fallback+size)%size));
  return choices.slice(0,wanted).map(item=>item.index);
 }
+// Anche una numerica caricata nella scudiera viene scartata e ripescata.
+// Quando il generatore avversario e' KO, questo e' un modo reale di
+// ciclare il mazzo (non un ricambio gratis), ma non bisogna sacrificare
+// una carta con alte chance di completare la firma dell'ultimo vitale.
+export function rankTacticalAiNumericCardsForCycling(hand,visibleTargets=[],fallbackIndex=0){
+ const size=Array.isArray(hand)?hand.length:0;
+ if(!size)return [];
+ const fallback=Number.isInteger(fallbackIndex)?((fallbackIndex%size)+size)%size:0;
+ const all=chooseTacticalAiExchangeIndices(hand,visibleTargets,fallback,size);
+ return all;
+}
 export function chooseTacticalAiExchangeIndex(hand,visibleTargets=[],fallbackIndex=0){
  return chooseTacticalAiExchangeIndices(hand,visibleTargets,fallbackIndex,1)[0]??0;
 }
