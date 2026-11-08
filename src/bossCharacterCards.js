@@ -3,6 +3,7 @@
 // Not the enemy's exclusive power, not a numeric boss-deck passive, not a pilot.
 // One active playable character PER SIDE for two combat cycles maximum.
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
+import {restoreMotherShield} from './vitalDefense.js';
 const defs=[
  [1,'Guardiano di Gaia','Riparo tellurico','armor','Scudo madre: -15% ai colpi reali sulla barriera, per due cicli.'],
  [2,'Colosso di Tharsis','Furia controllata','assault','Armi native +8% sulla barriera, soltanto sui colpi reali.'],
@@ -103,7 +104,11 @@ export function bossCharacterApplyRegen(side,round){
  if(bossCharacterActive(side,round)?.effect!=='regeneration'||
   state.regenDue!==round||state.regenerated||
   side.defense.parts.shieldGenerator.hp<=0)return 0;
- const shield=side.defense.shield,actual=Math.min(4,Math.max(0,shield.max-shield.hp));
- shield.hp+=actual;state.regenerated=true;state.regenDue=0;
- return actual;
+ // Ripara con la stessa fisica delle altre Carte Speciali: il generatore
+ // danneggiato dimezza la cura e il rialzo della barriera richiude i vitali
+ // che non devono più essere esposti. Mai mutare shield.hp direttamente.
+ const repaired=restoreMotherShield(side.defense,4);
+ side.defense=repaired.defense;
+ state.regenerated=true;state.regenDue=0;
+ return repaired.repaired;
 }
