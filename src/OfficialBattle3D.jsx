@@ -29,6 +29,7 @@ import {arenaForBattle} from './battleArenas.js';
 import ArenaEnvironment from './ArenaEnvironment.jsx';
 import {officialBattleSetup,officialBattleResult} from './officialBattleSetup.js';
 import {readLegacyEpicProgress} from './officialEpicOwnership.js';
+import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 
@@ -46,6 +47,7 @@ function startSession(options){
   const oldEpics=readLegacyEpicProgress();
   const setup=officialBattleSetup({...options,shipCollection,specialCollection,
    pilotLevel:oldEpics.pilotLevel,epicRiftOpened:oldEpics.hasCollapsed,
+   moduleLevels:readLegacyModuleLevels(),
    seed:Math.floor(Math.random()*0x7fffffff)+1,nowMs:Date.now()});
   return {battle:setup.battle,bossEncounter:setup.bossEncounter,error:'',shipCollection};
  }catch(e){return {battle:null,error:e?.message||'Impossibile caricare il duello',shipCollection:null};}
