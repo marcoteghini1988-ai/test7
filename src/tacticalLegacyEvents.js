@@ -3,6 +3,8 @@
 // modificano le barriere e le scudiere autentiche. Test e balance da playtest.
 import {damageMotherShield,restoreMotherShield} from './vitalDefense.js';
 import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
+import {exclusiveNeurotoxinRepairAmount,clearExclusiveNeurotoxin,exclusiveNeurotoxinActive}
+ from './tacticalExclusiveBosses.js';
 
 export const LEGACY_DICE_CARD='tactic-quantum-dice';
 export const LEGACY_BOMB_CARD='tactic-bomb';
@@ -82,7 +84,12 @@ export function prepareLegacyTactics(sides,orders,playedTypes,round,seed,log,mod
     const enemy=sides[other(key)];enemy.legacy??=initialLegacyTactics();
     enemy.legacy.malusCharge=Math.max(0,enemy.legacy.malusCharge-1);
    }
-   if(face==='heal')repairShield(side,pvpTerrainRepairAmount(8,modifiers.pvpTerrain));
+   if(face==='heal'){
+    const poisoned=exclusiveNeurotoxinActive(side,round);
+    const adjusted=exclusiveNeurotoxinRepairAmount(side,round,8);
+    const repaired=repairShield(side,pvpTerrainRepairAmount(adjusted,modifiers.pvpTerrain));
+    if(poisoned&&repaired>0)clearExclusiveNeurotoxin(side,round);
+   }
    if(face==='ether')side.sync=Math.min(100,side.sync+8);
    // Dust only: tactical animation, never a pretend wallet credit.
    if(face==='damage')effectShield(sides[other(key)],6);
@@ -140,7 +147,12 @@ export function resolveLegacyTactics(sides,orders,playedTypes,valid,hitCounts,ef
    const used=spent.includes(gold.cardId),gone=swapped.includes(gold.cardId)||escort===gold.cardId;
    if(used&&valid[key]&&!t.usedGoldenIds.includes(gold.cardId)){
     let amount=0;
-    if(gold.suit==='♥')amount=repairShield(side,pvpTerrainRepairAmount(8,modifiers.pvpTerrain));
+    if(gold.suit==='♥'){
+     const poisoned=exclusiveNeurotoxinActive(side,round);
+     const adjusted=exclusiveNeurotoxinRepairAmount(side,round,8);
+     amount=repairShield(side,pvpTerrainRepairAmount(adjusted,modifiers.pvpTerrain));
+     if(poisoned&&amount>0)clearExclusiveNeurotoxin(side,round);
+    }
     else if(gold.suit==='♦') {amount=8;side.sync=clamp(side.sync+8,0,100);}
     else if(gold.suit==='♣'){
      const escort=side.escorts.find(e=>e.hp>0&&e.hp<e.max);
