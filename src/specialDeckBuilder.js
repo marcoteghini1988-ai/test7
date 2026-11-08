@@ -3,7 +3,7 @@
 // Prices / monetization are NOT defined: packs are granted once for a unique
 // completed campaign sector. Pack sizes / drop rates are still prototype settings;
 // deck size and duplicate limit are confirmed gameplay rules.
-import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,specialCardMaxCopies} from './specialCards.js';
+import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,specialCardMaxCopies,TACTICAL_ONLY_SPECIAL_TYPES} from './specialCards.js';
 import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_TYPES,isPvpTerrain} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
@@ -72,7 +72,7 @@ export function normalizeSpecialCollection(raw){
   const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
    (['support-escort-repair','fusion-twin','fusion-triad'].includes(type)||
     BOSS_CHARACTER_TYPES.includes(type)||PVP_TERRAIN_TYPES.includes(type)||
-    type===SIGNATURE_MUTATION_CARD_ID||type===VULNERABILITY_RIFT_CARD_ID||isTacticalEpic(type)||LEGACY_SPECIAL_TYPES.includes(type)||MODULE_CARD_TYPES.includes(type))?0:undefined;
+    type===SIGNATURE_MUTATION_CARD_ID||type===VULNERABILITY_RIFT_CARD_ID||isTacticalEpic(type)||LEGACY_SPECIAL_TYPES.includes(type)||MODULE_CARD_TYPES.includes(type)||TACTICAL_ONLY_SPECIAL_TYPES.includes(type))?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
