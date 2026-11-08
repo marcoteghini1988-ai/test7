@@ -75,3 +75,8 @@ I test `src/tacticalLegacyEvents.test.js` coprono: sei facce, carica 3 categorie
 Verifica di integrazione [GitHub Actions](https://github.com/marcoteghini1988-ai/test7/actions/runs/42458636847): **674 test superati**, `npm run build` e `npm run preflight` superati sul commit `01d8b1e9667712f4a12005cd3126ee4aeac95e06`. Nuovi test o aggiornamenti della presentazione dopo questo commit richiedono ulteriore CI.
 
 **Non verificato:** prova umana completa da smartphone Android in 9:16, chiarezza dei simboli Bomba/Oro a scala effettiva, durate reali dei match, bilanciamento delle percentuali, qualità delle animazioni, regole economiche definitive e validazione server in PvP online. La grafica finale PNG dei personaggi boss e delle nuove speciali rimane una voce distinta.
+
+
+### Collaudo esteso dello stesso giorno
+
+Aggiunti i test di tutti e quattro i semi della Dorata, disinnesco della Bomba mediante formula valida e comportamento del ricambio armonico di Afrodite su una numerica marcata: la Bomba viene rimossa senza esplodere e la Dorata scartata non eroga alcun bonus. Il replay ora annuncia l'uscita del Dado e l'esplosione di una Bomba reale, senza generare un secondo colpo logico. Ultima suite verificata sul commit `0d41ebf7e504fca4539abb93c24929f8ccf78dff`: [GitHub Actions 42459007911](https://github.com/marcoteghini1988-ai/test7/actions/runs/42459007911), **677/677 test**, build Vite e preflight superati. Non è una prova visiva su telefono reale.
