@@ -3,6 +3,7 @@
 // Projectile animation NEVER applies damage or creates additional hits.
 import {weaponEffect} from './mathWeaponEffects.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING} from './simultaneousDuelEngine.js';
+import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 import {VITAL_LABELS} from './vitalDefense.js';
 
 export const TACTICAL_STAGES=Object.freeze({
@@ -42,7 +43,9 @@ export function tacticalCombatTimeline(battle){
    // Resolve the original card type from round history, not the refilled current hand.
    const originalType=cycle.playedSpecials?.[by]?.[slot]??null;
    if(originalType)events.push({id:'special-'+by+'-'+slot,type:'special',by,atMs:350+slot*340,
-    durationMs:850,label:TACTICAL_SPECIALS[originalType]?.name??originalType,cardType:originalType});
+    durationMs:850,label:originalType===SIGNATURE_MUTATION_CARD_ID&&cycle.mutations?.[by]?.vitalId?
+    'FIRMA RISCRITTA · '+(VITAL_LABELS[cycle.mutations[by].vitalId]??cycle.mutations[by].vitalId):
+    (TACTICAL_SPECIALS[originalType]?.name??originalType),cardType:originalType});
   }
   const guns=side.weapons||[];
   for(const [wi,weapon] of guns.entries()){
@@ -90,6 +93,7 @@ export function tacticalCombatTimeline(battle){
    const reason=impact.reason;
    const label=reason==='hit'?'-'+impact.damage+' '+(VITAL_LABELS[impact.target]??impact.target)+(impact.destroyed?' · KO':''):
     reason==='countered'?'CONTROMISURA ATTIVA':
+    reason==='signature_mutated'?'FIRMA CAMBIATA · COLPO ANNULLATO':
     reason==='protected'?'VITALE PROTETTO':
     reason==='invalid_signature'||reason==='invalid_operation'?'COMBINAZIONE NON VALIDA':'NESSUN IMPATTO';
    events.push({id:'precision-'+impact.by,type:'precision',by:impact.by,target:impact.target,
