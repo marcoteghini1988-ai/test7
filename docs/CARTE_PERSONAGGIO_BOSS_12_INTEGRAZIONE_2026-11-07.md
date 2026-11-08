@@ -75,3 +75,14 @@ Indicazioni artistiche coerenti con le identità esistenti: Gaia armatura tellur
 3. **Compatibilità giocabile nel percorso di battaglia storico** per utenti con piloti/abilità non ancora convertiti: il fallback legacy può ricevere lo sblocco della carta, ma attualmente l'esecuzione delle 12 capacità temporanee è collegata al nuovo duello simultaneo. Non dichiarare entrambi i motori equivalenti finché questa limitazione non è rimossa.
 
 **Prossima scaletta:** immagini 12 Personaggi Boss; prova di 12 incontri reali; Carte Terreno PvP (solo PvP, mai sostituire l'arena fissa dei boss), piloti avanzati e ulteriori punti strategici.
+
+
+## Aggiornamento grafico — 8 novembre 2026
+
+Il renderer `src/BossCharacterPortrait.jsx` è stato aggiunto al ramo ufficiale `main`. `src/OfficialBattle3D.jsx` mostra il ritratto dentro lo slot speciale di 38 px preesistente; `src/SpecialDeckPanel.jsx` mostra il ritratto nella scheda dell'Hangar. Nessuna variazione alle posizioni di navi, mano numerica, mano speciale, mazzi o timer.
+
+Il renderer legge gli ID già definiti da `src/bossCharacterCards.js`, attraverso `ASSET_ROOT/boss-characters/boss-character-ID.png`, quindi supporta anche la copia StackBlitz configurata con asset remoti. Se un file è assente, la carta mantiene un simbolo locale senza mostrare un'icona immagine rotta e senza cambiare logica.
+
+**Stato degli asset:** i dodici PNG 384×384 sono stati preparati come **bozze esterne** in un archivio di consegna, ma **non sono ancora caricati nel repository**. Le immagini generate inizialmente come poster contenevano denominazioni e poteri inventati: i testi sono stati scartati e non sono stati introdotti nel gioco. Alcune forme dei soggetti non sono ancora artisticamente fedeli, soprattutto quelle non umanoidi. Non segnare completati i dodici ritratti definitivi. Prima della chiusura servono i PNG approvati nel repository, un controllo dei link 404, build/test e una prova visiva Android 9:16.
+
+**Prossimo punto:** dopo il completamento grafico dei boss, Carte Terreno PvP; contro i boss l'arena resta fissa e non sostituibile dalle carte.
