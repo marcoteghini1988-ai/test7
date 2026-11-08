@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import {SPECIAL_CARD_CATALOG,specialCardMaxCopies} from './specialCards.js';
 import {isBossCharacterCard} from './bossCharacterCards.js';
+import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import {
  SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,SPECIAL_COLLECTION_KEY,
  readSpecialCollection,updateSpecialCollection,specialDeckCounts,
@@ -80,7 +81,9 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
     {SPECIAL_TYPES.map(type=>{
      const info=SPECIAL_CARD_CATALOG[type],n=counts[type],owned=collection.owned[type];
      return <div className="special-deck-entry" key={type}>
-      <div><strong>{info.short}</strong>
+      <div className="special-deck-entry-copy">
+       {isBossCharacterCard(type)&&<BossCharacterPortrait type={type} className="special-deck-boss-portrait"/>}
+       <strong>{info.short}</strong>
        <small>{isBossCharacterCard(type)?'PERSONAGGIO BOSS · 2 CICLI · ':''}{info.description}</small>
        {isBossCharacterCard(type)&&!owned&&<small>Si sblocca sconfiggendo il boss del pianeta.</small>}
       </div>
