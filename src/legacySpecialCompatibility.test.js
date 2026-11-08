@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createSpecialCollection, SPECIAL_COLLECTION_KEY, validateSpecialDeck}
  from './specialDeckBuilder.js';
-import {SPECIAL_DECK_SIZE,specialCardMaxCopies} from './specialCards.js';
+import {SPECIAL_DECK_SIZE,SPECIAL_CARD_CATALOG,specialCardMaxCopies} from './specialCards.js';
+import {legacySupportedSpecialType,combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {moduleCardType,MODULE_CARD_TYPES} from './tacticalEquipmentCards.js';
 import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {LEGACY_SPECIAL_TYPES} from './tacticalLegacyEvents.js';
@@ -92,4 +93,26 @@ test('Conserva il mazzo attrezzato e i salvataggi, filtro solo nel combattimento
  assert.ok(c.loadout.includes(moduleCardType('aries')));
  assert.equal(store.getItem(SPECIAL_COLLECTION_KEY),before);
  assert.deepEqual(store.writes,[]);
+});
+
+test('Tutte le tipologie future del catalogo sono disabilitate in legacy salvo 4 famiglie con runtime',()=>{
+ const supported=['fusion','defense','volley','support'];
+ const entries=Object.entries(SPECIAL_CARD_CATALOG);
+ assert.ok(entries.length>=74);
+ for(const [type,definition] of entries){
+  const playable=supported.includes(definition.family);
+  assert.equal(legacySupportedSpecialType(type),playable,type+':'+definition.family);
+  assert.equal(legacyUnsupportedSpecial(type),!playable,type);
+ }
+ assert.equal(legacySupportedSpecialType('unknown-new-card'),false);
+});
+test('Modalità campagna e PvP non rimuovono le carte nuove, il fallback vecchio invece sì',()=>{
+ const types=[VULNERABILITY_RIFT_CARD_ID,BOSS_CHARACTER_TYPES[0],
+   moduleCardType('aries')];
+ for(const type of types){
+  const c=equipped(type);
+  assert.equal(combatSpecialLoadout(c,'campaign').includes(type),true);
+  assert.equal(combatSpecialLoadout(c,'pvp').includes(type),true);
+  assert.equal(combatSpecialLoadout(c,'legacy').includes(type),false);
+ }
 });
