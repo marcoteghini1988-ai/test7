@@ -107,6 +107,7 @@ test('Boss Terra: matrice verificabile con equip reale starter, pilota posseduto
    assert.equal(earnedDust-dustRemaining,planned);
    assert.equal(collection.loadout[0],collection.cards.find(x=>x.shipId===shipId).instanceId);
    const outcomes={wins:0,losses:0,draws:0,rounds:0,bossVitalKos:0};
+   let rivalShipId=null;
    for(const seed of seeds){
     const setup=officialBattleSetup({
      mode:'adventure',sectorNumber:10,bossPlanetId:firstBoss.id,bossSectorLevel:10,
@@ -120,6 +121,9 @@ test('Boss Terra: matrice verificabile con equip reale starter, pilota posseduto
     assert.equal(setup.battle.sides.A.commander?.id,BEGINNER_PILOT_ID);
     assert.equal(setup.battle.sides.A.bossNumericDeck??null,null);
     assert.equal(setup.battle.sides.B.level,1,'boss non copia potenziamenti giocatore');
+    if(rivalShipId===null)rivalShipId=setup.battle.sides.B.shipId;
+    else assert.equal(setup.battle.sides.B.shipId,rivalShipId,
+     'il modello boss non puo cambiare casualmente fra i seed');
     assert.equal(setup.battle.sides.B.bossNumericDeck.id,firstBoss.deck);
     assert.equal(setup.battle.arenaId,'boss_'+firstBoss.id);
     const {battle,rounds}=playBattle(setup.battle);
@@ -132,12 +136,16 @@ test('Boss Terra: matrice verificabile con equip reale starter, pilota posseduto
     else outcomes.draws++;
    }
    assert.equal(outcomes.wins+outcomes.losses+outcomes.draws,seeds.length);
-   rows.push({shipId,level,dustSpent:planned,
+   rows.push({shipId,level,rivalShipId,dustSpent:planned,
     wins:outcomes.wins,losses:outcomes.losses,draws:outcomes.draws,
     avgRounds:+(outcomes.rounds/seeds.length).toFixed(1),
     avgBossVitalKos:+(outcomes.bossVitalKos/seeds.length).toFixed(1)});
   }
  }
+ // La prima prova di vincibilita resta condizionata all'IA: la C03 L3
+ // deve poter vincere nel campione senza piloti o carte boss futuri.
+ assert.ok(rows.find(row=>row.shipId==='C03'&&row.level===3)?.wins>=2,
+  'Regression: con premi reali il primo boss non ha piu vittorie simulabili');
  // Telemetria IA/IA: non sostituisce la strategia umana e non cambia le regole.
  console.log('ECLISSI_TERRA_LEGAL_PROGRESSION '+JSON.stringify(rows));
 });
