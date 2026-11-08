@@ -72,6 +72,11 @@ export function activateTacticalModuleCards(sides,playedTypes,log){
  const activations=[];
  const syncAtStart={A:sides.A.sync,B:sides.B.sync};
  const siphonDelta={A:0,B:0};
+ // Le carte offensiva e curativa si risolvono in un solo scambio.
+ // Ogni condizione usa gli HP al momento in cui entrambi hanno sigillato.
+ const shieldAtStart={A:sides.A.defense.shield.hp,B:sides.B.defense.shield.hp};
+ const plannedDamage={A:0,B:0},plannedHeal={A:0,B:0};
+ const healingFromHit={A:false,B:false};
  // Calcola entrambi gli ordini su risorse pubbliche nel medesimo snapshot,
  // senza ispezionare le carte nascoste dell'avversario.
  for(const key of ['A','B']){
@@ -84,15 +89,15 @@ export function activateTacticalModuleCards(sides,playedTypes,log){
   const e=effects[key],target=effects[other(key)];
   let actual=0;
   switch(data.effect){
-   case 'pure_hit':actual=damage(foe,n+2);break;
-   case 'healing':actual=repair(side,n+3);break;
-   case 'execution':actual=damage(foe,foe.defense.shield.hp<=foe.defense.shield.max*.4?n*2:n);break;
+   case 'pure_hit':plannedDamage[key]=n+2;break;
+   case 'healing':plannedHeal[key]=n+3;break;
+   case 'execution':plannedDamage[key]=shieldAtStart[other(key)]<=foe.defense.shield.max*.4?n*2:n;break;
    case 'guard':e.guard=(e.guard||0)+n+3;break;
    case 'module_lock':target.lockWeapon=true;break;
-   case 'life_drain':actual=damage(foe,n);repair(side,Math.ceil(actual/2));break;
+   case 'life_drain':plannedDamage[key]=n;healingFromHit[key]=true;break;
    case 'hand_jam':target.precisionFactor=.8;break; // sempre 7 numeriche vere
    case 'prevent_skip':e.preventMalus=true;break; // preparazione mai saltata
-   case 'shield_and_ether':actual=repair(side,n);addSync(side,4);break;
+   case 'shield_and_ether':plannedHeal[key]=n;addSync(side,4);break;
    case 'ether_gain':actual=addSync(side,Math.min(8,2+2*Math.floor((level-1)/3)));break;
    case 'boost_focus':actual=addSync(side,n+2);break;
    case 'boost_siphon':{
@@ -109,15 +114,30 @@ export function activateTacticalModuleCards(sides,playedTypes,log){
    case 'clear_malus':e.preventMalus=true;break; // purifica il sabotaggio ricevuto, non la barra positiva
    case 'dice_charge':side.legacy.diceReady=true;side.legacy.dicePatterns=['plus','minus','times'];break;
    case 'burn':e.burn=true;break; // soltanto su pacchetto armi vero
-   case 'singularity':actual=damage(foe,n+2);repair(side,Math.ceil(actual/2));addSync(side,3);break;
+   case 'singularity':plannedDamage[key]=n+2;healingFromHit[key]=true;addSync(side,3);break;
    default:throw new Error('Modulo non supportato: '+data.effect);
   }
   activations.push({by:key,type,name:data.name,effect:data.effect,level,actual});
-  log.push(key+': CARTA MODULO '+data.name+' L'+level+' · '+data.effect+
-   (actual?' ('+actual+' effettivi)':''));
+ }
+ // Applica prima ENTRAMBI i danni veri, poi ENTRAMBE le cure.
+ // Un colpo e una cura contemporanei hanno la stessa priorità per A e B;
+ // il drenaggio rigenera solo proporzionalmente ai danni realmente inflitti.
+ const actualDamage={A:0,B:0},actualHealing={A:0,B:0};
+ for(const key of ['A','B']){
+  if(plannedDamage[key]>0)
+   actualDamage[key]=damage(sides[other(key)],plannedDamage[key]);
  }
  for(const key of ['A','B']){
+  const heal=plannedHeal[key]+(healingFromHit[key]?Math.ceil(actualDamage[key]/2):0);
+  if(heal>0)actualHealing[key]=repair(sides[key],heal);
   sideSync(sides[key],siphonDelta[key]);
+ }
+ for(const activation of activations){
+  const {by:key,effect}=activation;
+  if(plannedDamage[key])activation.actual=actualDamage[key];
+  else if(plannedHeal[key])activation.actual=actualHealing[key];
+  log.push(key+': CARTA MODULO '+activation.name+' L'+activation.level+' · '+effect+
+   (activation.actual?' ('+activation.actual+' effettivi)':''));
  }
  return {effects,activations};
 }
