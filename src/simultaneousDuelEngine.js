@@ -227,7 +227,7 @@ export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,se
 function uniqueIndices(value,max,limit){
  return Array.isArray(value)&&value.length<=limit&&value.every(x=>Number.isInteger(x)&&x>=0&&x<max)&&new Set(value).size===value.length;
 }
-const EMPTY_ORDER=Object.freeze({specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,exchangeIndices:[],escortAmmoIndex:null});
+const EMPTY_ORDER=Object.freeze({specialIndices:[],numericIndices:[],vitalId:null,exposureTarget:null,op:null,counterVitalId:null,exchangeIndices:[],escortAmmoIndex:null});
 export function validateTacticalOrder(battle,key,order){
  if(battle?.phase!=='planning'||!['A','B'].includes(key)||battle.orders[key])return {ok:false,reason:'already_committed'};
  if(!order||typeof order!=='object')return {ok:false,reason:'invalid_order'};
@@ -254,6 +254,11 @@ export function validateTacticalOrder(battle,key,order){
   return {ok:false,reason:'character_already_active'};
  if(ni.length!==0&&![2,3].includes(ni.length))return {ok:false,reason:'numeric_count'};
  if(ni.length>0&&(!VITAL_IDS.includes(order.vitalId)||!['plus','minus','times','divide','pair','trips'].includes(order.op)))return {ok:false,reason:'invalid_precision'};
+ // Puntare un vitale NON e' un'abilita' gratis: lo espone soltanto quando
+ // la barriera ha gia' aperto uno slot. Le firme restano ignote fino ad allora.
+ if(order.exposureTarget!=null&&(!VITAL_IDS.includes(order.exposureTarget)||
+    battle.sides[other(key)].defense.parts[order.exposureTarget]?.hp<=0))
+  return {ok:false,reason:'invalid_exposure_target'};
  const riftValidation=validateVulnerabilityRiftOrder(battle,key,order,types);
  if(!riftValidation.ok)return riftValidation;
  // Anti-stall: one free replacement without a precision attack.
@@ -325,7 +330,9 @@ export function sealTacticalOrder(battle,key,order=EMPTY_ORDER,nowMs=0){
  if(nowMs>=battle.deadlineMs)return {ok:false,reason:'preparation_expired',battle};
  const normalized={
   specialIndices:[...(order.specialIndices??[])],numericIndices:[...(order.numericIndices??[])],
-  vitalId:order.numericIndices?.length?order.vitalId:null,op:order.numericIndices?.length?order.op:null,
+  vitalId:order.numericIndices?.length?order.vitalId:null,
+  exposureTarget:order.exposureTarget??null,
+  op:order.numericIndices?.length?order.op:null,
   counterVitalId:order.counterVitalId??null,mutationVitalId:order.mutationVitalId??null,
   quantumRoll:order.quantumRoll===true,malusChoice:order.malusChoice??null,
   bombSlot:order.bombSlot??null,goldenIndex:order.goldenIndex??null,
@@ -953,6 +960,21 @@ function resolveCycle(battle,nowMs){
  if(resonance>0)
   log.push('B: Cristallo di Risonanza · Memoria degli scarti +'+resonance+
    ' Sincronia reale (due o più carte numeriche scartate nel ciclo precedente)');
+ // Bersaglio scelto e rivelato DOPO il vero impatto sulla barriera:
+ // ogni lato decide senza conoscere carte o ordini avversari.
+ // Solo uno slot realmente aperto puo' mostrare la firma corrispondente.
+ for(const key of ['A','B']){
+  const target=orders[key].exposureTarget;
+  const defender=sides[other(key)];
+  if(VITAL_IDS.includes(target)&&defender.defense.parts[target]?.hp>0&&
+     !defender.defense.parts[target].exposed&&remainingExposureSlots(defender.defense)>0){
+   const exposed=exposeMotherPart(defender.defense,target);
+   if(exposed.exposed){
+    defender.defense=exposed.defense;
+    log.push(key+': bersaglio '+target+' esposto dopo la soglia reale della barriera; firma ora visibile');
+   }
+  }
+ }
  const afterBarrier=combatSnapshot(sides);
  const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts,battle.round,modifiers);
  const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts,battle.round,modifiers);
