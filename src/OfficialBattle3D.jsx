@@ -10,6 +10,7 @@ import {bossCharacterActive,isBossCharacterCard} from './bossCharacterCards.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {isPvpTerrain,pvpTerrainAtRound,pvpTerrainDefinition} from './pvpTerrainCards.js';
+import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
@@ -30,7 +31,7 @@ import './OfficialBattle3D.css';
 
 const OPS=[['plus','+'],['minus','−'],['times','×'],['divide','÷'],['pair','COPPIA'],['trips','TRIS']];
 const freshOrder=()=>({numericIndices:[],specialIndices:[],vitalId:null,op:null,
- counterVitalId:'engine',exchangeIndices:[],weaponFocusId:null,epicChoice:null,escortAmmoIndex:null});
+ counterVitalId:'engine',mutationVitalId:null,exchangeIndices:[],weaponFocusId:null,epicChoice:null,escortAmmoIndex:null});
 const toggle=(indices,i,limit)=>indices.includes(i)?indices.filter(x=>x!==i):
  indices.length>=limit?[...indices.slice(1),i]:[...indices,i];
 const pct=(value,max)=>max?Math.round(100*value/max):0;
@@ -124,6 +125,7 @@ function niceError(reason){
   epic_locked:'Non possiedi questo Oggetto Epico',
   terrain_conflict:'Puoi giocare una sola Carta Terreno per ciclo',
   terrain_pvp_only:'Le Carte Terreno sono utilizzabili soltanto nel PvP',
+  mutation_unavailable:'Mutazione disponibile solo su un tuo sistema vitale già esposto e integro',
   character_conflict:'Un solo Personaggio Boss può essere attivato per ciclo',
   character_already_active:'Attendi che il Personaggio Boss attivo termini i suoi cicli',
   preparation_expired:'Il tempo di preparazione è scaduto'
@@ -238,6 +240,7 @@ export default function OfficialBattle3D({
  const locked=battle.phase!=='planning'||!!battle.orders.A;
  const selected=(draft.numericIndices||[]).map(i=>player.numeric.hand[i]).filter(Boolean);
  const specials=(draft.specialIndices||[]).map(i=>player.special.hand[i]?.type);
+ const exposedOwnVitals=VITAL_IDS.filter(id=>player.defense.parts[id]?.exposed&&player.defense.parts[id]?.hp>0);
  const recycle=specials.includes('tactic-numeric-recycle');
  const afroditeCooldown=tacticalAfroditeRecycleCooldownMs(player);
  const afroditeReadyIn=afroditeCooldown?
@@ -341,14 +344,16 @@ export default function OfficialBattle3D({
          const type=player.special.hand[index]?.type;
          return type?.startsWith('fusion-')||type==='tactical-cover';
         });
+        const mutating=chosen.some(index=>player.special.hand[index]?.type===SIGNATURE_MUTATION_CARD_ID);
         return {...d,specialIndices:chosen,
+         mutationVitalId:mutating?(d.mutationVitalId??exposedOwnVitals[0]??null):null,
          escortAmmoIndex:defending?null:d.escortAmmoIndex};
        })}>
        {isBossCharacterCard(card?.type)?
         <BossCharacterPortrait type={card.type} className="special-board-boss-portrait"/>:
         isPvpTerrain(card?.type)?
         <PvpTerrainPortrait type={card.type} className="special-board-boss-portrait"/>:
-        <span className="special-board-glyph">✦</span>}
+        <span className="special-board-glyph">{card?.type===SIGNATURE_MUTATION_CARD_ID?'⌘':'✦'}</span>}
        <strong>{data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
       </button>;
      })}
@@ -454,6 +459,11 @@ export default function OfficialBattle3D({
        </button>;
       })}</div>
      </section>}
+     {specials.includes(SIGNATURE_MUTATION_CARD_ID)&&<label>Mutazione: scegli il TUO vitale già esposto
+      <select value={draft.mutationVitalId??''} onChange={e=>setDraft(d=>({...d,mutationVitalId:e.target.value||null}))}>
+       <option value="">Scegli un sistema</option>
+       {exposedOwnVitals.map(id=><option key={id} value={id}>{VITAL_LABELS[id]}</option>)}
+      </select></label>}
      {counter&&<label>Contromisura: difendi
       <select value={draft.counterVitalId} onChange={e=>setDraft(d=>({...d,counterVitalId:e.target.value}))}>
        {VITAL_IDS.map(id=><option key={id} value={id}>{VITAL_LABELS[id]}</option>)}
@@ -466,6 +476,7 @@ export default function OfficialBattle3D({
      <p>Le 7 numeriche attaccano un sistema vitale solo con una firma matematica o Poker valida e se il sistema è esposto. Le 5 speciali provengono dal tuo mazzo da 24 carte e se ne possono impegnare al massimo 2 per ciclo.</p>
      <p>Le armi native della tua nave agiscono sulla barriera; scudiere, fusioni e riparazioni utilizzano HP e carte reali. Dopo lo scontro le mani vengono ripristinate pescando dal mazzo.</p>
      <p>Le Carte Terreno modificano l'ambiente per due cicli e hanno pro e contro uguali per entrambe le flotte. Sono giocabili soltanto nel PvP: le arene dei boss non si possono sostituire.</p>
+     <p>Mutazione della Firma: una speciale difensiva modifica per un solo ciclo la combinazione richiesta da un tuo vitale già esposto. Il nuovo requisito appare nella risoluzione e poi ritorna quello originale; nessuna riparazione automatica.</p>
      <h3>I QUATTRO COMPONENTI DISTRUGGIBILI</h3>
      <p>I vitali partono con 10 HP: 10–6 integro, 5–1 danneggiato, 0 distrutto. Scegli quale colpire quando la barriera apre un bersaglio. Tutti e quattro distrutti = vittoria.</p>
      {VITAL_IDS.map(id=><p key={id}>
