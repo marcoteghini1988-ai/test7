@@ -298,3 +298,21 @@
  position:absolute;inset:0;display:grid;place-items:center;
  font-size:23px;color:#b8f5ff;background:linear-gradient(145deg,#123d55,#0a1935);
 }
+
+/* Eventi numerici 16B: gli stessi sette slot originali, senza spostamenti. */
+.es-math-scope .official-duel-3d .number-card.is-bomb {
+  outline:2px solid #ff634f;outline-offset:-2px;
+  box-shadow:0 0 10px 2px #ff3e5688;
+}
+.es-math-scope .official-duel-3d .number-card.is-golden {
+  background:linear-gradient(150deg,#fff6bb,#f5bd43,#a36816);
+  color:#291704;
+  text-shadow:0 1px 1px #fff8;
+  box-shadow:0 0 9px 2px #f8d75e88;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="sabotage"]{
+  border-color:#ff9871;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="transmute"]{
+  border-color:#e2b84f;
+}
