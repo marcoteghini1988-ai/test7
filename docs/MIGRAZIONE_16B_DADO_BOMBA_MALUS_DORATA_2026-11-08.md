@@ -1,3 +1,5 @@
+**SUPERATO DAL REQUISITO DELL'UTENTE DELL'8/11/2026:** le sezioni sottostanti che descrivono il Dado Quantico come «NON una carta» o un lancio disponibile da pulsante sono storiche e NON PIÙ VALIDE per il nuovo duello. Il Dado ora è la speciale `tactic-quantum-dice`, con copia realmente posseduta, scelta dalla mano di 5, carica di 3 formule diverse e consumo nel mazzo di 24. Barra Malus rimane `tactic-malus` obbligatoria. Le 35 abilità modulo sono anch'esse Carte Speciali: vedere [regola ufficiale aggiornata](./CARTE_DADO_MALUS_EQUIPAGGIAMENTI_2026-11-08.md). La parte Bomba e Dorata rimane invariata.
+
 # Eclissi Stellare — Fase 16B nel duello simultaneo ufficiale
 
 **8 novembre 2026 · ramo unico `marcoteghini1988-ai/test7/main`.**
