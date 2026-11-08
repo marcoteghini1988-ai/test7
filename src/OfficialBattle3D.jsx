@@ -122,6 +122,8 @@ function niceError(reason){
   escort_repair_unavailable:'Nessuna scudiera danneggiata e operativa da riparare',
   purge_unavailable:'Non ci sono effetti negativi da rimuovere',
   epic_locked:'Non possiedi questo Oggetto Epico',
+  terrain_conflict:'Puoi giocare una sola Carta Terreno per ciclo',
+  terrain_pvp_only:'Le Carte Terreno sono utilizzabili soltanto nel PvP',
   character_conflict:'Un solo Personaggio Boss può essere attivato per ciclo',
   character_already_active:'Attendi che il Personaggio Boss attivo termini i suoi cicli',
   preparation_expired:'Il tempo di preparazione è scaduto'
