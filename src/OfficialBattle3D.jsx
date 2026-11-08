@@ -355,8 +355,10 @@ export default function OfficialBattle3D({
       const card=player.special.hand[i];
       const data=card?TACTICAL_SPECIALS[card.type]:null;
       const family=data?.kind||'empty';
-      return <button key={card?.id||i} type="button" disabled={locked||!card}
-       title={data?.help||'Slot libero'} aria-pressed={draft.specialIndices.includes(i)}
+      const spentRift=card?.type===VULNERABILITY_RIFT_CARD_ID&&player.riftUsed;
+      return <button key={card?.id||i} type="button" disabled={locked||!card||spentRift}
+       title={spentRift?'Faglia già utilizzata in questa battaglia':data?.help||'Slot libero'}
+       aria-pressed={draft.specialIndices.includes(i)}
        className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(isPvpTerrain(card?.type)?' terrain-card':'')+(card?.type?.startsWith('epic_item_')?' epic-card':'')+(card?.type===VULNERABILITY_RIFT_CARD_ID?' rift-card':'')+(draft.specialIndices.includes(i)?' active':'')}
        data-family={family} onClick={()=>setDraft(d=>{
         const chosen=toggle(d.specialIndices,i,2);
@@ -380,7 +382,7 @@ export default function OfficialBattle3D({
         isPvpTerrain(card?.type)?
         <PvpTerrainPortrait type={card.type} className="special-board-boss-portrait"/>:
         <span className="special-board-glyph">{card?.type===SIGNATURE_MUTATION_CARD_ID?'⌘':card?.type===VULNERABILITY_RIFT_CARD_ID?'◇':card?.type?.startsWith('epic_item_')?'◆':'✦'}</span>}
-       <strong>{data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
+       <strong>{spentRift?'FAGLIA USATA':data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
       </button>;
      })}
      <button type="button" className="special-board-info" onClick={()=>setMenu('cards')}
