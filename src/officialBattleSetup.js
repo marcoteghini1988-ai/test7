@@ -58,7 +58,11 @@ export function officialBattleSetup({
  const boss=officialBossEncounter({mode,sectorNumber,
   planetId:bossPlanetId,sectorLevel:bossSectorLevel});
  const encounterPlanet=boss?.planetId??bossPlanetId;
- const rival=chooseCampaignMotherRival(equipped.shipId,equipped.level,sectorNumber,encounterPlanet,bossSectorLevel);
+ // Anche il MODELLO rivale non cambia quando viene potenziata
+ // la stessa nave del giocatore: scelta a livello base per il duello ufficiale.
+ // Il modello avversario rimane uno dei 17 render originali.
+ const modelSelectionLevel=['campaign','adventure'].includes(mode)?1:equipped.level;
+ const rival=chooseCampaignMotherRival(equipped.shipId,modelSelectionLevel,sectorNumber,encounterPlanet,bossSectorLevel);
  // La selezione del modello resta compatibile; SOLO il livello tattico
  // avversario dipende dal settore, non dall'upgrade posseduto dal giocatore.
  const rivalLevel=officialCampaignRivalLevel({mode,sectorNumber,playerLevel:equipped.level});
