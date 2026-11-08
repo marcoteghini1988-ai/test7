@@ -26,17 +26,25 @@ function findPrecision(ours,enemy,priority){
   // Una firma sconosciuta non si puo' consultare, nemmeno con Faglia in mano.
   const sig=visibleTacticalSignature(ours,enemy,id);
   if(!sig)continue;
+  // Conserva numeriche quando bastano 6 HP, ma se il vitale ha 7/8 HP
+  // una formula a 3 carte (8 HP) conclude il KO nel ciclo attuale.
+  // Nessuna ricerca su firme nascoste: sig proviene solo dalla visibilita'.
+  let pair=null,triplet=null;
   for(let i=0;i<ours.numeric.hand.length;i++)
    for(let j=i+1;j<ours.numeric.hand.length;j++){
     const op=tacticalSignatureOperation(sig,[ours.numeric.hand[i],ours.numeric.hand[j]]);
-    if(op)return {numericIndices:[i,j],vitalId:id,op};
+    if(op&&!pair)pair={numericIndices:[i,j],vitalId:id,op};
    }
-  for(let i=0;i<ours.numeric.hand.length;i++)
-   for(let j=i+1;j<ours.numeric.hand.length;j++)
-    for(let k=j+1;k<ours.numeric.hand.length;k++){
-     const op=tacticalSignatureOperation(sig,[ours.numeric.hand[i],ours.numeric.hand[j],ours.numeric.hand[k]]);
-     if(op)return {numericIndices:[i,j,k],vitalId:id,op};
-    }
+  if(!pair||part.hp>6&&part.hp<=8)
+   for(let i=0;i<ours.numeric.hand.length;i++)
+    for(let j=i+1;j<ours.numeric.hand.length;j++)
+     for(let k=j+1;k<ours.numeric.hand.length;k++){
+      const op=tacticalSignatureOperation(sig,[ours.numeric.hand[i],ours.numeric.hand[j],ours.numeric.hand[k]]);
+      if(op&&!triplet)triplet={numericIndices:[i,j,k],vitalId:id,op};
+     }
+  if(part.hp>6&&part.hp<=8&&triplet)return triplet;
+  if(pair)return pair;
+  if(triplet)return triplet;
  }
  return {numericIndices:[],vitalId:null,op:null};
 }
