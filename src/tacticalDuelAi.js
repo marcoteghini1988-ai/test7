@@ -8,6 +8,8 @@ import {tacticalBossProfile} from './tacticalSpecialPresets.js';
 import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import {isPvpTerrain,pvpTerrainAtRound} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
+ from './tacticalLegacyEvents.js';
 
 const NORMAL_PRIORITY=['shieldGenerator','weapons','command','engine'];
 function findPrecision(ours,enemy,priority){
@@ -44,6 +46,9 @@ function playable(type,ours,enemy,shot){
   case 'support-escort-repair':return command&&ours.escorts.some(e=>e.hp>0&&e.hp<e.max);
   case 'support-shield-repair':return ours.defense.parts.shieldGenerator.hp>0&&ours.defense.shield.hp<ours.defense.shield.max;
   case 'support-status-purge':return !!(ours.ionized||ours.corroded||ours.heated);
+  case LEGACY_MALUS_CARD:return (ours.legacy?.malusCharge??0)>=3;
+  case LEGACY_GOLD_CARD:return !ours.legacy?.golden&&ours.numeric.hand.length>0;
+  case LEGACY_BOMB_CARD:return enemy.numeric.hand.length>0;
   case 'tactic-counter':return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
   case SIGNATURE_MUTATION_CARD_ID:return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
   case 'tactic-scan':return ours.seen.length<4;
@@ -76,7 +81,9 @@ export function planTacticalAi(battle,key='B'){
  const chosen=[],types=new Set();
  const terrains=battle.mode==='pvp'&&!pvpTerrainAtRound(battle.activeTerrain,battle.round)?
   ours.special.hand.map(c=>c.type).filter(isPvpTerrain):[];
- for(const type of [...(mutationVitalId?[SIGNATURE_MUTATION_CARD_ID]:[]),...(ours.seen.length<4?['tactic-scan']:[]),...terrains,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
+ for(const type of [...((ours.legacy?.malusCharge??0)>=3?[LEGACY_MALUS_CARD]:[]),
+  ...(mutationVitalId?[SIGNATURE_MUTATION_CARD_ID]:[]),...(ours.seen.length<4?['tactic-scan']:[]),
+  ...terrains,LEGACY_BOMB_CARD,LEGACY_GOLD_CARD,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
   if(chosen.length>=2)break;
   if(types.has(type)||!playable(type,ours,enemy,shot))continue;
   const index=ours.special.hand.findIndex((c,i)=>c.type===type&&!chosen.includes(i));
@@ -84,8 +91,12 @@ export function planTacticalAi(battle,key='B'){
   if(type.startsWith('fusion-')&&[...types].some(t=>t.startsWith('fusion-')))continue;
   types.add(type);chosen.push(index);
  }
- const exchanges=shot.numericIndices.length?[]:
+ let exchanges=shot.numericIndices.length?[]:
   chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?[0,1]:[0];
+ const bombIndex=ours.numeric.hand.findIndex(c=>c.id===ours.legacy?.bomb?.cardId);
+ if(bombIndex>=0&&!shot.numericIndices.includes(bombIndex)){
+  exchanges=[bombIndex];
+ }
  // The opponent may load ONE numeric card into its actual escort armory.
  // It chooses only from its OWN visible hand, never the player's hidden cards.
  const used=new Set([...shot.numericIndices,...exchanges]);
@@ -95,15 +106,24 @@ export function planTacticalAi(battle,key='B'){
   .filter(({i,card})=>!used.has(i)&&selectTacticalEscortForAmmo(ours,card))
   .sort((a,b)=>b.card.value-a.card.value||a.i-b.i)[0]?.i??null;
  let result={specialIndices:chosen,counterVitalId:threatened,mutationVitalId,
+  quantumRoll:ours.legacy?.diceReady===true,
+  malusChoice:types.has(LEGACY_MALUS_CARD)?MALUS_CHOICES[0].id:null,
+  bombSlot:types.has(LEGACY_BOMB_CARD)?3:null,
+  goldenIndex:types.has(LEGACY_GOLD_CARD)?(shot.numericIndices[0]??0):null,
   exchangeIndices:exchanges,
   escortAmmoIndex:ammo,weaponFocusId:focusWeapon?.id??null,...shot};
  while(!validateTacticalOrder(battle,key,result).ok&&result.specialIndices.length){
   result={...result,specialIndices:result.specialIndices.slice(0,-1)};
+  const remaining=result.specialIndices.map(i=>ours.special.hand[i].type);
+  if(!remaining.includes(LEGACY_BOMB_CARD))result.bombSlot=null;
+  if(!remaining.includes(LEGACY_MALUS_CARD))result.malusChoice=null;
+  if(!remaining.includes(LEGACY_GOLD_CARD))result.goldenIndex=null;
   if(!result.specialIndices.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle'))
    result.exchangeIndices=result.exchangeIndices.slice(0,1);
  }
  if(!validateTacticalOrder(battle,key,result).ok)
-  result={specialIndices:[],numericIndices:[],vitalId:null,op:null,counterVitalId:null,
+  result={specialIndices:[],numericIndices:[],vitalId:null,op:null,
+   quantumRoll:ours.legacy?.diceReady===true,counterVitalId:null,
    weaponFocusId:focusWeapon?.id??null,exchangeIndices:[0]};
  return result;
 }
