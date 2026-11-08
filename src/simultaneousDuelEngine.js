@@ -18,6 +18,7 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
 } from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
+import {createTacticalBarrierGuard,consumeTacticalBarrierGuard} from './tacticalBarrierGuards.js';
 import {SIGNATURE_MUTATION_CARD_ID,prepareSignatureMutation} from './tacticalSignatureMutation.js';
 import {VULNERABILITY_RIFT_CARD_ID,validateVulnerabilityRiftOrder,riftProtectedDamage}
  from './tacticalVulnerabilityRift.js';
@@ -525,10 +526,9 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  total=Math.max(0,Math.floor(total*(modifiers?.pvpTerrain?.nativeFactor??1)));
  if(t.legacyDebuff==='lock_weapon'||t.moduleFx?.lockWeapon)total=Math.floor(total*.85);
  if(res.legacyDebuff==='weak_shield')total=Math.floor(total*1.10);
- if(res.moduleFx?.guard)total=Math.max(0,total-res.moduleFx.guard);
+ // Il colpo nativo resta invariato fino all'intercettazione. Le carte
+ // difensive si applicano dopo, ai soli HP destinati alla madre.
  const before=total;
- if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
- if(res.types.includes('tactic-impact'))total=Math.floor(total*.8);
  let intercepted=0,splash=0;
  // Kinetic and the real Piercing card bypass ESCORT interception, never mother
  // shields nor numeric vital signatures.
@@ -569,11 +569,13 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   log.push(other(key)+': Centralina danneggiata, intercettazione scudiere −15%');
  // L'ambiente protegge solo la barriera madre, dopo le scudiere reali.
  const motherPacket=Math.max(0,total-intercepted);
+ const barrierGuard=consumeTacticalBarrierGuard(motherPacket,res.barrierGuard);
+ if(barrierGuard.absorbed>0)log.push(other(key)+': difese Carta Speciale assorbono '+barrierGuard.absorbed+' HP sulla barriera madre');
  const bossDefenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const exclusiveDefenseFactor=exclusiveBossShieldFactor(def);
  const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
  const characterGuard=bossCharacterShieldFactor(def,round);
- const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor*
+ const effectivePacket=Math.floor(Math.floor(barrierGuard.packet*bossDefenseFactor*
   exclusiveDefenseFactor*pilotDefense.factor*characterGuard)*(modifiers?.shieldDamageFactor||1)*
   (modifiers?.pvpTerrain?.shieldFactor??1));
  const hit=damageMotherShield(def.defense,effectivePacket);
@@ -644,6 +646,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    'Sovrano · Ultimo presidio / Vuoto difensivo':'Primo anello')+
    ' · impatto alla madre ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
+  guardAbsorbed:barrierGuard.absorbed,
   technology:t.tech,damage:hit.damage,weaponIds:atk.weapons.map(w=>w.id),
   pilotBonus:pilot.extra,pilotId:pilot.active?pilot.pilotId:null});
  log.push(key+': armi native '+atk.weapons.map(w=>w.name).join(' + ')+
@@ -682,11 +685,13 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
   }
  }
  const motherPacket=Math.max(0,packet-intercepted);
+ const barrierGuard=consumeTacticalBarrierGuard(motherPacket,res.barrierGuard);
+ if(barrierGuard.absorbed>0)log.push(other(key)+': difese Carta Speciale assorbono '+barrierGuard.absorbed+' HP dalla scudiera');
  const defenseFactor=tacticalBossMotherFactor(def,res.bossSnapshot);
  const armor=exclusiveBossShieldFactor(def);
  const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
  const characterGuard=bossCharacterShieldFactor(def,round);
- const actual=Math.floor(Math.floor(motherPacket*defenseFactor*armor*pilotDefense.factor*characterGuard)*
+ const actual=Math.floor(Math.floor(barrierGuard.packet*defenseFactor*armor*pilotDefense.factor*characterGuard)*
   (modifiers?.shieldDamageFactor||1)*(modifiers?.pvpTerrain?.shieldFactor??1));
  const hit=damageMotherShield(def.defense,actual);
  def.defense=hit.defense;
@@ -701,7 +706,7 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  if(characterExtra>0&&hit.damage>0)
   log.push(key+': Carta Cristallo · scudiera +'+characterExtra+' HP potenziali');
  impacts.push({kind:'escort_barrier',by:key,target:other(key),
-  packet,intercepted,damage:hit.damage,escortSlot:plan.escortSlot,
+  packet,intercepted,guardAbsorbed:barrierGuard.absorbed,damage:hit.damage,escortSlot:plan.escortSlot,
   cardId:plan.cardId,escortWeaponId:plan.escortWeaponId,
   weaponIds:[plan.weaponId],technology:'scudiera'});
  log.push(key+': scudiera '+(plan.escortSlot+1)+' · '+plan.weaponName+
@@ -918,6 +923,7 @@ function resolveCycle(battle,nowMs){
  for(const key of ['A','B']){
   status[key].moduleFx=moduleResult.effects[key];
   status[key].legacyDebuff=moduleResult.effects[key].preventMalus?null:legacyEffects[key].debuff;
+  status[key].barrierGuard=createTacticalBarrierGuard(status[key]);
  }
  // Queue real escort munitions BEFORE either mother shot. A scudiera that
  // falls during simultaneous exchange retains its already-loaded shot.
