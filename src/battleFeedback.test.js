@@ -80,7 +80,7 @@ test('47: ogni speciale ottiene un segnale SOLO quando la carta è stata giocata
   assert.equal(cue.label,definition.name);
   assert.ok(cue.detail.length>0);
   assert.equal(cue.id,'special:'+id);
-  assert.ok(['fusion','volley','support','defense','boss-character','terrain','mutation','epic','sabotage','transmute'].includes(cue.kind));
+  assert.ok(['fusion','volley','support','defense','boss-character','terrain','mutation','epic','sabotage','transmute','quantum','equipment'].includes(cue.kind));
   assert.equal(specialBattleCue({id,played:false,definition}),null);
  }
  const repaired=specialBattleCue({id:10,played:true,
