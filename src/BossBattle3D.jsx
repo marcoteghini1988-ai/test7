@@ -8,7 +8,7 @@ import {ASSET_ROOT,CARD_SUIT_COLORS,SHIP_GLOW,ShipArtwork,ShipCard,MountedWeapon
 import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
-import {readSpecialCollection,claimFirstWinSpecialPack,specialDeckCounts} from './specialDeckBuilder.js';
+import {claimFirstWinSpecialPack,specialDeckCounts} from './specialDeckBuilder.js';
 import {legacyBattleDeckFromStorage} from './legacySpecialCompatibility.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVitalSignature} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
