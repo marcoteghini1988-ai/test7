@@ -7,6 +7,7 @@ import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,specialCa
 import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_TYPES,isPvpTerrain} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {LEGACY_SPECIAL_TYPES} from './tacticalLegacyEvents.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {readLegacyEpicProgress,mergeLegacyEpicOwnership} from './officialEpicOwnership.js';
 export {SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT};
@@ -68,7 +69,7 @@ export function normalizeSpecialCollection(raw){
   const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
    (['support-escort-repair','fusion-twin','fusion-triad'].includes(type)||
     BOSS_CHARACTER_TYPES.includes(type)||PVP_TERRAIN_TYPES.includes(type)||
-    type===SIGNATURE_MUTATION_CARD_ID||isTacticalEpic(type))?0:undefined;
+    type===SIGNATURE_MUTATION_CARD_ID||isTacticalEpic(type)||LEGACY_SPECIAL_TYPES.includes(type))?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
