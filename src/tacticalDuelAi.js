@@ -8,6 +8,7 @@ import {tacticalBossProfile} from './tacticalSpecialPresets.js';
 import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import {isPvpTerrain,pvpTerrainAtRound} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {isModuleCard} from './tacticalEquipmentCards.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
  from './tacticalLegacyEvents.js';
 
@@ -82,15 +83,18 @@ export function planTacticalAi(battle,key='B'){
  const chosen=[],types=new Set();
  const terrains=battle.mode==='pvp'&&!pvpTerrainAtRound(battle.activeTerrain,battle.round)?
   ours.special.hand.map(c=>c.type).filter(isPvpTerrain):[];
+ const modules=ours.special.hand.map(c=>c.type).filter(type=>
+  isModuleCard(type)&&!!ours.equipmentLevels?.[type]);
  for(const type of [...(ours.legacy?.diceReady?[LEGACY_DICE_CARD]:[]),
   ...((ours.legacy?.malusCharge??0)>=3?[LEGACY_MALUS_CARD]:[]),
   ...(mutationVitalId?[SIGNATURE_MUTATION_CARD_ID]:[]),...(ours.seen.length<4?['tactic-scan']:[]),
-  ...terrains,LEGACY_BOMB_CARD,LEGACY_GOLD_CARD,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
+  ...terrains,...modules,LEGACY_BOMB_CARD,LEGACY_GOLD_CARD,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
   if(chosen.length>=2)break;
   if(types.has(type)||!playable(type,ours,enemy,shot))continue;
   const index=ours.special.hand.findIndex((c,i)=>c.type===type&&!chosen.includes(i));
   if(index<0)continue;
   if(type.startsWith('fusion-')&&[...types].some(t=>t.startsWith('fusion-')))continue;
+  if(isModuleCard(type)&&[...types].some(isModuleCard))continue;
   types.add(type);chosen.push(index);
  }
  let exchanges=shot.numericIndices.length?[]:
