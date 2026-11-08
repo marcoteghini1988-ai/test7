@@ -11,7 +11,7 @@ import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {isPvpTerrain,pvpTerrainAtRound,pvpTerrainDefinition} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
-import {LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
+import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
  from './tacticalLegacyEvents.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
@@ -480,9 +480,9 @@ export default function OfficialBattle3D({
      </section>}
      <p><strong>DADO QUANTICO</strong>{' · '+(legacy?.diceReady?'PRONTO':(legacy?.dicePatterns?.length??0)+'/3 combinazioni diverse')+
       ' · MALUS '+(legacy?.malusCharge??0)+'/3'}</p>
-     {legacy?.diceReady&&<label><input type="checkbox" checked={draft.quantumRoll===true}
-       onChange={e=>setDraft(d=>({...d,quantumRoll:e.target.checked}))}/>
-       Lancia Dado Quantico durante la prossima risoluzione (una carica reale)</label>}
+     {specials.includes(LEGACY_DICE_CARD)&&<p><strong>DADO QUANTICO</strong>
+      {legacy?.diceReady?' · Carta selezionata: lancio nella prossima risoluzione.':
+       ' · Servono tre formule differenti valide prima di giocare questa carta.'}</p>}
      {specials.includes(LEGACY_BOMB_CARD)&&<label>Numero Bomba: slot numerico nemico
       <select value={draft.bombSlot??0} onChange={e=>setDraft(d=>({...d,bombSlot:Number(e.target.value)}))}>
        {Array.from({length:7},(_,i)=><option key={i} value={i}>{'Slot '+(i+1)}</option>)}
@@ -515,7 +515,7 @@ export default function OfficialBattle3D({
      <p>Le armi native della tua nave agiscono sulla barriera; scudiere, fusioni e riparazioni utilizzano HP e carte reali. Dopo lo scontro le mani vengono ripristinate pescando dal mazzo.</p>
      <p>Le Carte Terreno modificano l'ambiente per due cicli e hanno pro e contro uguali per entrambe le flotte. Sono giocabili soltanto nel PvP: le arene dei boss non si possono sostituire.</p>
      <p>Mutazione della Firma: una speciale difensiva modifica per un solo ciclo la combinazione richiesta da un tuo vitale già esposto. Il nuovo requisito appare nella risoluzione e poi ritorna quello originale; nessuna riparazione automatica.</p>
-     <p>Dado Quantico: caricalo con tre operatori validi differenti, quindi scegli il lancio nella sezione ARMI. Le sei facce danno solo effetti tattici, mai premi di valuta automatici.</p>
+     <p>Dado Quantico: dopo tre formule differenti devi giocare e consumare la sua Carta Speciale, pescata tra le cinque. Non esiste lancio gratuito con pulsante né premi di valuta automatici.</p>
      <p>Numero Bomba: la speciale marca una vera carta nemica visibile dal ciclo successivo; il nemico può disinnescarla con ricambio o formula valida, oppure subisce 8 danni alla barriera.</p>
      <p>Barra Malus: tre colpi reali ai vitali abilitano una carta sabotaggio. Durata un ciclo, senza saltare interi turni.</p>
      <p>Carta Dorata: una speciale trasforma una numerica vera per massimo due cicli; il bonus dipende dal seme ed è valido solo con un calcolo corretto.</p>
