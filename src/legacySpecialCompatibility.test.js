@@ -34,15 +34,15 @@ test('Filtro legacy: nessun nuovo Dado/Malus, Modulo, Faglia, Epico o Terreno si
  const unsupported=[
   ...LEGACY_SPECIAL_TYPES,...MODULE_CARD_TYPES,VULNERABILITY_RIFT_CARD_ID,
   SIGNATURE_MUTATION_CARD_ID,...PVP_TERRAIN_TYPES,
-  ...Object.keys(TACTICAL_EPIC_CARDS)
+  ...Object.keys(TACTICAL_EPIC_CARDS),...BOSS_CHARACTER_TYPES
  ];
  assert.ok(unsupported.length>40);
  assert.ok(unsupported.every(legacyUnsupportedSpecial));
- assert.ok(BOSS_CHARACTER_TYPES.every(id=>!legacyUnsupportedSpecial(id)),
-  'gli altri poteri boss devono essere gestiti a parte senza sblocchi impliciti');
+ assert.ok(BOSS_CHARACTER_TYPES.every(legacyUnsupportedSpecial),
+  'le Carte Boss sono attive nel duello simultaneo, non si lasciano morte nel fallback');
  for(const type of [LEGACY_SPECIAL_TYPES[0],LEGACY_SPECIAL_TYPES[1],
   VULNERABILITY_RIFT_CARD_ID,moduleCardType('aries'),PVP_TERRAIN_TYPES[0],
-  Object.keys(TACTICAL_EPIC_CARDS)[0]]){
+  Object.keys(TACTICAL_EPIC_CARDS)[0],BOSS_CHARACTER_TYPES[0]]){
   const c=equipped(type);
   assert.equal(validateSpecialDeck(c,c.loadout).valid,true,type);
   const copy=JSON.stringify(c);
