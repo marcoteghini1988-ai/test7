@@ -3,6 +3,7 @@
 // abilita' acquistata/sbloccata, niente attivazione dal solo equipaggiamento.
 import {PHASE16F_MODULES,PHASE16F_EFFECT_LABELS} from './newCombat/phase16FModules.js';
 import {damageMotherShield,restoreMotherShield} from './vitalDefense.js';
+import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 
 export const MODULE_CARD_PREFIX='module-card-';
 export const MODULE_STORAGE_KEY='eclissi_abilities';
@@ -67,7 +68,7 @@ const addSync=(side,n)=>{
  return side.sync-before;
 };
 const sideSync=(side,delta)=>{side.sync=Math.max(0,Math.min(100,side.sync+delta));};
-export function activateTacticalModuleCards(sides,playedTypes,log){
+export function activateTacticalModuleCards(sides,playedTypes,log,modifiers={}){
  const effects={A:{},B:{}};
  const activations=[];
  const syncAtStart={A:sides.A.sync,B:sides.B.sync};
@@ -129,7 +130,7 @@ export function activateTacticalModuleCards(sides,playedTypes,log){
  }
  for(const key of ['A','B']){
   const heal=plannedHeal[key]+(healingFromHit[key]?Math.ceil(actualDamage[key]/2):0);
-  if(heal>0)actualHealing[key]=repair(sides[key],heal);
+  if(heal>0)actualHealing[key]=repair(sides[key],pvpTerrainRepairAmount(heal,modifiers.pvpTerrain));
   sideSync(sides[key],siphonDelta[key]);
  }
  for(const activation of activations){
