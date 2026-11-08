@@ -18,6 +18,7 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
 } from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects} from './pvpTerrainCards.js';
+import {SIGNATURE_MUTATION_CARD_ID,prepareSignatureMutation} from './tacticalSignatureMutation.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
 import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit,
@@ -61,6 +62,7 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'shot-piercing':{name:'Colpo perforante',kind:'offense',help:'Bypassa intercettazione scudiera sul 20% del pacchetto, non le firme'},
  'shot-ion':{name:'Impulso ionico',kind:'control',help:'Se la barriera nemica subisce danno, l’intercettazione delle scudiere si riduce nello scontro successivo'},
  'tactic-numeric-recycle':{name:'Ricambio numerico',kind:'support',help:'Scarta fino a due carte numeriche a fine scontro e ripescale'},
+ [SIGNATURE_MUTATION_CARD_ID]:{name:'Mutazione della Firma',kind:'mutation',help:'Cambia soltanto per questo ciclo la formula richiesta da un proprio vitale già esposto. Il nemico non conosce la nuova firma durante la preparazione.'},
  'fusion-strike':{name:'Fusione Assalto',kind:'fusion',help:'Una scudiera viva, 100 Sincronia: +25% barriera madre, scudiera agganciata senza fuoco autonomo'},
  'fusion-twin':{name:'Fusione Gemellare',kind:'fusion',help:'Due scudiere vive, 100 Sincronia: intercettazione fino al 55% su HP veri'},
  'fusion-triad':{name:'Fusione Trina',kind:'fusion',help:'Due scudiere vive, 100 Sincronia: +35% barriera e intercettazione fino al 40% su HP veri'},
@@ -217,6 +219,9 @@ export function validateTacticalOrder(battle,key,order){
  if(!uniqueIndices(ni,side.numeric.hand.length,3))return {ok:false,reason:'numeric_selection'};
  if(!uniqueIndices(ei,side.numeric.hand.length,2))return {ok:false,reason:'exchange_selection'};
  const types=si.map(i=>side.special.hand[i].type);
+ if(types.includes(SIGNATURE_MUTATION_CARD_ID)&&
+  !prepareSignatureMutation(side.defense,order.mutationVitalId,battle.round).ok)
+  return {ok:false,reason:'mutation_unavailable'};
  if(new Set(types).size!==types.length)return {ok:false,reason:'duplicate_special'};
  const terrains=types.filter(isPvpTerrain);
  if(terrains.length>1)return {ok:false,reason:'terrain_conflict'};
@@ -298,7 +303,8 @@ export function sealTacticalOrder(battle,key,order=EMPTY_ORDER,nowMs=0){
  const normalized={
   specialIndices:[...(order.specialIndices??[])],numericIndices:[...(order.numericIndices??[])],
   vitalId:order.numericIndices?.length?order.vitalId:null,op:order.numericIndices?.length?order.op:null,
-  counterVitalId:order.counterVitalId??null,exchangeIndices:[...(order.exchangeIndices??[])],
+  counterVitalId:order.counterVitalId??null,mutationVitalId:order.mutationVitalId??null,
+  exchangeIndices:[...(order.exchangeIndices??[])],
   weaponFocusId:order.weaponFocusId??null,epicChoice:order.epicChoice??null,
   escortAmmoIndex:order.escortAmmoIndex??null
  };
@@ -377,6 +383,16 @@ function applyPreparation(sides,orders,log,round,modifiers){
    weaponFocusId:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.weaponId??null,
    tech:focusedTacticalTechnology(side,orders[key].weaponFocusId)?.technology??null,
    epicId:side.epic.active?.id??null};
+  if(types.includes(SIGNATURE_MUTATION_CARD_ID)){
+   const mutation=prepareSignatureMutation(side.defense,orders[key].mutationVitalId,round);
+   if(mutation.ok){
+    side.defense.parts[mutation.vitalId].signature=mutation.newSignature;
+    active.mutation=mutation;
+    log.push(key+': Mutazione della Firma · '+mutation.vitalId+
+     ' richiede '+mutation.newSignature.op+' '+mutation.newSignature.target+
+     ' soltanto nel ciclo '+round);
+   }
+  }
   // With simultaneous orders the cleanse takes priority over the actual
   // repair card when both are present in the same five-card hand.
   if(types.includes('support-status-purge')&&clearExclusiveNeurotoxin(side,round))
@@ -670,8 +686,11 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const signature=defense.parts[target].signature;
  const matches=tacticalSignatureMatches(signature,order.op,cards);
  if(!matches){
-  impacts.push({kind:'precision',by:key,target,damage:0,reason:'invalid_signature'});
-  log.push(key+': combinazione non valida per '+target+' — numeriche consumate');
+  const mutated=status[other(key)].mutation?.vitalId===target;
+  impacts.push({kind:'precision',by:key,target,damage:0,
+   reason:mutated?'signature_mutated':'invalid_signature'});
+  log.push(key+': '+(mutated?'firma mutata: vecchia combinazione annullata per ':'combinazione non valida per ')+
+   target+' — numeriche consumate');
   return 0;
  }
  if(!defense.parts[target].exposed&&remainingExposureSlots(defense)>0)
@@ -885,6 +904,14 @@ function resolveCycle(battle,nowMs){
    tacticalSignatureMatches(def.defense.parts[order.vitalId]?.signature,
     order.op,order.numericIndices.map(i=>atk.numeric.hand[i]));
  }
+ const appliedMutations=Object.fromEntries(['A','B'].map(key=>[key,status[key].mutation??null]));
+ // Concluso il confronto matematico: ripristina le firme canoniche, senza HP gratuiti.
+ // I replay registrano le firme nuove e le istantanee del ciclo prima del ripristino.
+ for(const key of ['A','B']){
+  const mutation=appliedMutations[key];
+  if(mutation&&sides[key].defense.parts[mutation.vitalId])
+   sides[key].defense.parts[mutation.vitalId].signature=mutation.originalSignature;
+ }
  for(const key of ['A','B']){
   const side=sides[key],order=orders[key];
   const random=seedRandom((battle.round*997+ (key==='A'?199:311))>>>0);
@@ -951,7 +978,7 @@ function resolveCycle(battle,nowMs){
   orders,history:[...battle.history,{round:battle.round,orders,events:log,
    shieldA:a+escortA,shieldB:b+escortB,escortA,escortB,hitsA,hitsB,
    snapshots:{before,prepared,afterBarrier,afterPrecision},impacts,playedSpecials,
-   environmentStage,activeTerrain:terrainResolution.active}],lastEvents:log,winner};
+   mutations:appliedMutations,environmentStage,activeTerrain:terrainResolution.active}],lastEvents:log,winner};
 }
 export function advanceTacticalDuel(battle,nowMs=0){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
