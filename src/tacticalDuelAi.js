@@ -8,7 +8,7 @@ import {tacticalBossProfile} from './tacticalSpecialPresets.js';
 import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import {isPvpTerrain,pvpTerrainAtRound} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
-import {LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
+import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
  from './tacticalLegacyEvents.js';
 
 const NORMAL_PRIORITY=['shieldGenerator','weapons','command','engine'];
@@ -46,6 +46,7 @@ function playable(type,ours,enemy,shot){
   case 'support-escort-repair':return command&&ours.escorts.some(e=>e.hp>0&&e.hp<e.max);
   case 'support-shield-repair':return ours.defense.parts.shieldGenerator.hp>0&&ours.defense.shield.hp<ours.defense.shield.max;
   case 'support-status-purge':return !!(ours.ionized||ours.corroded||ours.heated);
+  case LEGACY_DICE_CARD:return ours.legacy?.diceReady===true;
   case LEGACY_MALUS_CARD:return (ours.legacy?.malusCharge??0)>=3;
   case LEGACY_GOLD_CARD:return !ours.legacy?.golden&&ours.numeric.hand.length>0;
   case LEGACY_BOMB_CARD:return enemy.numeric.hand.length>0;
@@ -81,7 +82,8 @@ export function planTacticalAi(battle,key='B'){
  const chosen=[],types=new Set();
  const terrains=battle.mode==='pvp'&&!pvpTerrainAtRound(battle.activeTerrain,battle.round)?
   ours.special.hand.map(c=>c.type).filter(isPvpTerrain):[];
- for(const type of [...((ours.legacy?.malusCharge??0)>=3?[LEGACY_MALUS_CARD]:[]),
+ for(const type of [...(ours.legacy?.diceReady?[LEGACY_DICE_CARD]:[]),
+  ...((ours.legacy?.malusCharge??0)>=3?[LEGACY_MALUS_CARD]:[]),
   ...(mutationVitalId?[SIGNATURE_MUTATION_CARD_ID]:[]),...(ours.seen.length<4?['tactic-scan']:[]),
   ...terrains,LEGACY_BOMB_CARD,LEGACY_GOLD_CARD,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
   if(chosen.length>=2)break;
@@ -106,7 +108,7 @@ export function planTacticalAi(battle,key='B'){
   .filter(({i,card})=>!used.has(i)&&selectTacticalEscortForAmmo(ours,card))
   .sort((a,b)=>b.card.value-a.card.value||a.i-b.i)[0]?.i??null;
  let result={specialIndices:chosen,counterVitalId:threatened,mutationVitalId,
-  quantumRoll:ours.legacy?.diceReady===true,
+  quantumRoll:false,
   malusChoice:types.has(LEGACY_MALUS_CARD)?MALUS_CHOICES[0].id:null,
   bombSlot:types.has(LEGACY_BOMB_CARD)?3:null,
   goldenIndex:types.has(LEGACY_GOLD_CARD)?(shot.numericIndices[0]??0):null,
@@ -123,7 +125,7 @@ export function planTacticalAi(battle,key='B'){
  }
  if(!validateTacticalOrder(battle,key,result).ok)
   result={specialIndices:[],numericIndices:[],vitalId:null,op:null,
-   quantumRoll:ours.legacy?.diceReady===true,counterVitalId:null,
+   quantumRoll:false,counterVitalId:null,
    weaponFocusId:focusWeapon?.id??null,exchangeIndices:[0]};
  return result;
 }
