@@ -3,6 +3,20 @@
 **Documento di continuità per la scaletta generale di 53 punti.**
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
+## CHECKPOINT — 8 novembre 2026: proprieta effettiva di 12 mazzi, 33 piloti, 35 Moduli
+
+**Verifica delle ricompense all'ingresso reale da App, non soltanto delle prove isolate:** `src/App.tsx` assegnava un Modulo gratuito entrando nel settore 9 di Terra, addirittura prima del controllo crediti, e un vecchio mazzo `aries` entrando nel settore 10, prima del KO boss. Quest'ultimo poteva far deviare la nuova battaglia simultanea sul vecchio motore 3D. **Entrambi gli sblocchi anticipati sono stati eliminati.** Ora Terra S9 concede il Modulo scelto in base al pilota **solo dopo VITTORIA reale**, ma non lo equipaggia gratuitamente: va inserito nella collezione di **24 carte speciali** e giocato dalla mano. I mazzi numerici `planet_char_*` richiedono la precedente sconfitta del proprio boss e il normale acquisto nell'Arsenale; i vecchi `aries` già posseduti sono preservati come salvataggi legacy.
+
+**Piloti:** prima un ID solo selezionato e salvato in `eclissi_selected_pilot` veniva considerato sbloccato se mancava il vero `eclissi_pilot_inventory`. Ora, in assenza d'inventario, il solo pilota iniziale è `pilot_com_1`; la registrazione può sempre assegnare uno dei quattro starter, i salvataggi validi restano intatti e viene conservata la migrazione `pilot_starter_1`. Verificati **33 piloti**: **16 realmente convertiti** nel nuovo duello; **17 ancora sul percorso legacy**.
+
+**Collaudi reali sul codice:** `src/officialLoadoutMilestones.test.js` e `src/officialLoadoutEntitlements.test.js` verificano le **12 passive numeriche boss (massimo 1/2/3 passive secondo livello effettivo 1–3/4–6/7–9)**, tutti i 33 piloti e i **35 Moduli come carte speciali acquistate e non bonus passivi gratuiti**. Ricompense simulate con archivi in memoria, senza alterare i salvataggi degli utenti. La plancia metallica 9:16, le navi, i vitali, le armi, i boss e la modalità storico/PvP restano invariati.
+
+**Rimane aperto:** portare i **17 piloti non compatibili** nel duello simultaneo usando le loro condizioni storiche, verificare l'acquisto reale dei mazzi numerici boss dall'Arsenale in un playtest e collaudare la gestione tattile Android. Nessun lavoro completato viene dichiarato per queste parti ancora mancanti.
+
+Documento: [AUDIT_SBLECCO_MAZZI_PILOTI_MODULI_2026-11-08.md](AUDIT_SBLECCO_MAZZI_PILOTI_MODULI_2026-11-08.md). [GitHub Actions 42516035798](https://github.com/marcoteghini1988-ai/test7/actions/runs/42516035798), **806 test/806 superati**, build e preflight.
+
+---
+
 ## CHECKPOINT AGGIORNATO — 8 novembre 2026: quarto vitale Plutone e fase magmatica di Io
 
 **Nuovo comportamento realmente implementato:** `src/tacticalAiExchange.js` e `src/tacticalDuelAi.js` esaminano insieme **due vere numeriche da scartare solo se è stata giocata la Carta Ricambio**; mantengono combinazioni future su firme già scoperte, senza leggere pescate, firme segrete o ordini avversari. `tactic-scan` non viene più giocata quando tutti i vitali ancora vivi sono già esposti/rilevati. **Io**: l'IA considera la sua fase `eruzione` pubblica per dare priorità alle Carte Speciali di riparazione/paratia/urto/copertura/contromisura **già pescate**, senza trasformarle in abilità gratuite.
