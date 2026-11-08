@@ -17,6 +17,20 @@ Rapporto: [TERRA10_MATRICE_80_E_ABBINAMENTO_NAVI_2026-11-08.md](TERRA10_MATRICE_
 
 ---
 
+## CHECKPOINT — 8 novembre 2026: identità stabile di 12 boss e vera campagna Terra 1–10
+
+**Modifica ufficiale implementata:** ciascuno dei **12 boss** ha ora una **madre canonica fissa**, indipendente dalla nave del giocatore: Terra C03, Marte R01, Venere R03, Saturno R04, Urano E01, Nettuno E02, Plutone E03, Europa E04, Proxima b L01, Haumea L02, Io L03, Encelado L04. Sono modelli fisici già presenti fra le 17 navicelle e sbloccabili **prima** del rispettivo boss; non nuovi asset esclusivi. `officialBossEncounter` include `motherShipId`; `officialBattleSetup` utilizza il modello e `OfficialBattle3D` lo cita nel briefing. Modelli, firme e 42 armi originali, arene, piloti, poteri e boss numerici restano quelli autentici. **La 3D legacy e il PvP non sono cambiati.**
+
+**Correzione settori introduttivi 1–9:** prima il nemico usava spesso navi C04/R03 premature e 24 speciali tattiche non possedute dal nuovo giocatore; ora usa N00 settori 1–3, C01 4–6, C02 7–9 e il suo **mazzo starter di 24 speciali**. Il cambio è limitato a Terra 1–9 nelle modalità Campagna/Avventura simultanee; i boss conservano le abilità vere e gli altri settori non sono stati riequilibrati indiscriminatamente.
+
+**Verifica sequenziale concreta:** `officialFirstPlanetRealRun.test.js` simula **tre campagne realmente combattute dal settore 1 al boss 10**, riscattando navi, polvere, carte boss, pacchetti e potenziamenti **solo a vittoria effettiva**. La sconfitta assegna solo telemetria e il pareggio non premia. **30 vittorie, 33 sconfitte, 24 pareggi = 87 duelli**; tutti e tre i percorsi completano Terra con C03 L3 e 7, 12 o 11 tentativi contro il boss. **Nessun pacchetto aperto né reliquia/abilità futura regalata.** Questo verifica la raggiungibilità per l'IA simulata, **non** l'equilibrio umano; il primo boss può ancora richiedere troppi tentativi.
+
+**Prossimi nodi:** collaudare personaggi umani/telefono Android, rendere più vari i primi nove rivali senza anticipare rarità, valutare costo in minuti dei tentativi boss e proseguire su Marte–Encelado con reali ricompense e scelta del mazzo, mai statistiche inventate.
+
+Rapporto: [BOSS_MADRI_FISSE_E_PERCORSO_TERRA_1_10_2026-11-08.md](BOSS_MADRI_FISSE_E_PERCORSO_TERRA_1_10_2026-11-08.md). Verifica codice: [Actions 42503660074](https://github.com/marcoteghini1988-ai/test7/actions/runs/42503660074), **786 test**, build Vite e preflight.
+
+---
+
 ## CHECKPOINT — 8 novembre 2026: matrice boss, acquisizione vere speciali e scala progressiva
 
 **Correzione concreta dopo i 12 boss:** l'inventario ufficiale non conosceva **otto** Carte Speciali già valide nel motore: Scansione, Contromisura, Ricambio Numerico, Deviazione, Soppressione, Paratia, Carica e Schermo d'Urto. Ora catalogo e motore coincidono a **82 famiglie**, 25 tipi sono nei pacchetti (17 precedenti +8) e la migrazione dei vecchi salvataggi mantiene **zero copie nuove** e tutte le copie/prezzi/sblocchi originali. Non sono carte gratis; i pacchetti vanno guadagnati, aperti e poi le carte equipaggiate nel mazzo reale 24.
