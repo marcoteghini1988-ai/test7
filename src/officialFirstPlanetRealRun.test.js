@@ -7,6 +7,7 @@ import {readShipCollection,updateShipCollection,upgradeShipCard,equipShipCards} 
 import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuilder.js';
 import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
+import {bossCharacterTypeForPlanet} from './bossCharacterCards.js';
 import {shipsUnlockableBeforeSector} from './officialBossProgressionAudit.js';
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
 import {phase17CampaignDustAward} from './newCombat/phase17Balance.js';
@@ -117,8 +118,10 @@ test('Terra: tre percorsi 1..10 con combattimenti, sblocchi e acquisti davvero c
   }
   assert.equal(rows.at(-1).sector,10);
   assert.equal(readSpecialCollection(store).packCredits,10);
-  assert.equal(readSpecialCollection(store).owned['boss-character-gaia']??0,
-   readSpecialCollection(store).owned['boss-character-gaia']??0);
+  const trophyType=bossCharacterTypeForPlanet(1);
+  assert.equal(readSpecialCollection(store).owned[trophyType],1);
+  assert.equal(readSpecialCollection(store).loadout.includes(trophyType),false,
+   'Il personaggio boss non e equipaggiato gratis');
   trajectories.push({initialSeed,failures:totalFailures,dustAfter:economy.dust,
    dustSpent:economy.purchases,progress:rows});
  }
