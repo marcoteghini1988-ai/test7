@@ -9,6 +9,7 @@ import {shipsUnlockableBeforeSector} from './officialBossProgressionAudit.js';
 import {OFFICIAL_BOSS_MOTHER_SHIPS,officialBossMotherShip} from './officialBossMotherShips.js';
 import {FIRST_PLANET_RIVAL_SHIPS,officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialBattleSetup} from './officialBattleSetup.js';
+import {officialBossEncounter} from './officialBossEncounter.js';
 import {createSpecialCollection} from './specialDeckBuilder.js';
 import {chooseCampaignMotherRival,prepareMotherDuelOptions} from './motherDuelLoadout.js';
 import {fleetCompatibility} from './mathDuelEngine.js';
@@ -24,6 +25,9 @@ test('Dodici boss: una madre autentica diversa per pianeta e mai la nave in prem
  for(const [index,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
   const sector=(index+1)*10;
   const target=officialBossMotherShip(planet.id);
+  const encounter=officialBossEncounter({mode:'adventure',sectorNumber:sector,
+   planetId:planet.id,sectorLevel:10});
+  assert.equal(encounter.motherShipId,target,'identita dell\'incontro deve dichiarare la nave');
   const available=shipsUnlockableBeforeSector(sector);
   assert.equal(target,available.at(-1),planet.name+' utilizza un modello progressivo');
   assert.ok(PHASE1_CATALOG.ships.some(ship=>ship.id===target),planet.name);
