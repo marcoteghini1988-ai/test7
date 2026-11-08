@@ -104,8 +104,8 @@ test('Un attacco valido preparato viene fermato dalla Mutazione segreta; la barr
  assert.equal(count(mutated.sides.A.numeric),52);
  assert.ok(mutated.lastEvents.some(e=>e.includes('firma mutata')));
  const playback=tacticalCombatTimeline(mutated);
- assert.ok(playback.some(e=>e.label.includes('FIRMA RISCRITTA')));
- assert.ok(playback.some(e=>e.label.includes('COLPO ANNULLATO')));
+ assert.ok(playback.some(e=>e.label?.includes('FIRMA RISCRITTA')));
+ assert.ok(playback.some(e=>e.label?.includes('COLPO ANNULLATO')));
  const next=advanceTacticalDuel(mutated,8101);
  assert.equal(next.round,2);
  assert.deepEqual(next.sides.B.defense.parts.weapons.signature,old);
