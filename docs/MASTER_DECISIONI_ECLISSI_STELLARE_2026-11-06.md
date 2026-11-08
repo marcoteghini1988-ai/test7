@@ -17,6 +17,18 @@ Rapporto: [TERRA10_MATRICE_80_E_ABBINAMENTO_NAVI_2026-11-08.md](TERRA10_MATRICE_
 
 ---
 
+## CHECKPOINT — 8 novembre 2026: 110 duelli boss 2–12, personaggi speciali usati realmente dalla IA
+
+**Audit coerente con le risorse:** `src/officialPostTerraBossBudget.test.js` valuta tutti gli **11 boss successivi a Terra** con l'ultima navicella sbloccabile **prima** del loro settore, a L3 e L5, con acquisti costati esattamente quanto previsto e finanziati da uno scenario di **vittorie pregresse condizionali**. Gli incontri con i boss, invece, vengono combattuti davvero dai motori IA. **110 duelli (5 seed × 22 equipaggiamenti)**. Con starter di 24 speciali, nessun Epico/modulo/mazzo boss bonus: **Plutone 0/10 vittorie e Io 1/10**, Urano 9/10, Europa 5/10. Questi dati non dimostrano la vincibilità economica di tutti i settori precedenti né stimano una probabilità umana.
+
+**Fix reale IA per le Carte Personaggio:** l'IA locale prima ignorava completamente i Personaggi Boss persino se **vinti, equipaggiati e pescati**. Ora li considera come vere **carte speciali**, verifica una condizione d'utilità, non ne attiva due contemporaneamente e rispetta l'effetto a due cicli. Nessuna carta gratuita/passiva aggiunta. Test `src/tacticalBossCharacterAi.test.js`: reward verificato di Gaia, equip manuale, pescata reale, attivazione autentica e una sola copia conservata.
+
+**Controprova tattica Plutone/Io:** `src/officialBossCharacterCounterplay.test.js` equipaggia tre trofei davvero concessi dagli handler **solo su vittorie precedenti ipotizzate**. Su dieci seed ciascuno, Plutone con starter **0 vinte /2 perse /8 pareggi**, con tre Personaggi **0/1/9** (sei carte realmente giocate); Io con starter **4/5/1**, con tre Personaggi **4/4/2** (sei attivate). **Plutone resta il principale punto di stallo:** le carte personaggio non sono una soluzione magica, serve tracciare firme, slot esposti, danni e 20 cicli prima di toccare statistiche o durata. Io va verificato su più configurazioni.
+
+Rapporto [BOSS_2_12_BUDGET_E_PERSONAGGI_2026-11-08.md](BOSS_2_12_BUDGET_E_PERSONAGGI_2026-11-08.md). Ultima prova di riferimento: [GitHub Actions 42504668376](https://github.com/marcoteghini1988-ai/test7/actions/runs/42504668376), **790/790 test**, build e preflight plancia superati. Niente playtest umano/smartphone certificato.
+
+---
+
 ## CHECKPOINT — 8 novembre 2026: identità stabile di 12 boss e vera campagna Terra 1–10
 
 **Modifica ufficiale implementata:** ciascuno dei **12 boss** ha ora una **madre canonica fissa**, indipendente dalla nave del giocatore: Terra C03, Marte R01, Venere R03, Saturno R04, Urano E01, Nettuno E02, Plutone E03, Europa E04, Proxima b L01, Haumea L02, Io L03, Encelado L04. Sono modelli fisici già presenti fra le 17 navicelle e sbloccabili **prima** del rispettivo boss; non nuovi asset esclusivi. `officialBossEncounter` include `motherShipId`; `officialBattleSetup` utilizza il modello e `OfficialBattle3D` lo cita nel briefing. Modelli, firme e 42 armi originali, arene, piloti, poteri e boss numerici restano quelli autentici. **La 3D legacy e il PvP non sono cambiati.**
