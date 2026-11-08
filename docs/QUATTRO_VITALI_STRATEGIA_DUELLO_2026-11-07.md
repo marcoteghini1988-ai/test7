@@ -1,4 +1,6 @@
 # Eclissi Stellare — strategia dei quattro vitali
+> **Aggiornamento del codice — 8 novembre 2026:** il punto storico "10 HP di precisione contro 10 HP del vitale" è **superato nel motore simultaneo ufficiale**. Ora una formula valida a 2 carte causa **6 HP**, una a 3 carte **8 HP**, prima dei bonus condizionati. La scelta del bersaglio da esporre è effettiva dopo il raggiungimento di una soglia della barriera, senza danno o lettura anticipata di firme. Restano protette le carte Scansione/Faglia, le 17 navi e le 42 armi native. Il documento del 7/11 seguente rimane archivio delle regole storiche; il rapporto aggiornato e i limiti ancora aperti sono in [BILANCIAMENTO_QUATTRO_VITALI_2026-11-08.md](./BILANCIAMENTO_QUATTRO_VITALI_2026-11-08.md). Verifica: **762 test su 762**, build e preflight su [Actions 42486214955](https://github.com/marcoteghini1988-ai/test7/actions/runs/42486214955). I benchmark contro i boss con solo starter non provano un equilibrio definitivo.
+
 Stato verificato nel codice ufficiale `test7/main`, 7 novembre 2026. Il motore Poker compatibile conserva le sue logiche; le nuove regole qui si riferiscono al duello simultaneo 30 s + 8 s.
 
 ## Bersagli della nave madre
