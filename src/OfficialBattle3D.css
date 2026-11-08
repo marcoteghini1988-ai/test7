@@ -250,3 +250,29 @@
 .es-math-scope .official-duel-3d .official-mother[data-vital-weapons="destroyed"] .weapon-hardware{
  filter:saturate(.18) brightness(.52);
 }
+
+/* Personaggi Boss: ritratto nel medesimo slot esistente, nessun cambio geometria. */
+.es-math-scope .official-duel-3d .special-board-card.boss-character-card{
+ border-color:#b998ec;
+}
+.es-math-scope .official-duel-3d .special-board-boss-portrait{
+ position:absolute;inset:1px;display:block;overflow:hidden;border-radius:4px;
+ pointer-events:none;
+}
+.es-math-scope .official-duel-3d .special-board-boss-portrait img{
+ position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+}
+.es-math-scope .official-duel-3d .special-board-boss-portrait img[hidden]{display:none}
+.es-math-scope .official-duel-3d .special-board-boss-portrait .boss-character-portrait-fallback{
+ position:absolute;inset:0;display:grid;place-items:center;
+ font-size:24px;color:#dfbfff;background:linear-gradient(145deg,#352254,#0e203a);
+}
+.es-math-scope .official-duel-3d .special-board-card.boss-character-card strong{
+ position:absolute;bottom:0;left:0;right:0;z-index:2;max-width:100%;
+ padding:3px 1px 2px;box-sizing:border-box;
+ background:linear-gradient(transparent,#080b20f5 48%);
+ font-size:7px;line-height:8px;text-shadow:0 1px 3px #000;
+}
+.es-math-scope .official-duel-3d .special-board-card.boss-character-card small{
+ z-index:3;text-shadow:0 1px 3px #000;
+}
