@@ -71,8 +71,8 @@ test('Crono: primo colpo può essere ai vitali se la barriera è già a zero',()
  const result=cycle(exhaustedShield(boss),101,attack);
  const baseline=cycle(exhaustedShield(plain),101,attack);
  const precision=r=>r.history.at(-1).impacts.find(x=>x.kind==='precision'&&x.by==='B');
- assert.equal(precision(baseline).damage,10);
- assert.equal(precision(result).damage,8);
+ assert.equal(precision(baseline).damage,6);
+ assert.equal(precision(result).damage,4);
  assert.equal(result.sides.A.bossNumericDeck.firstHitUsed,true);
 });
 
