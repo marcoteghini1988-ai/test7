@@ -5,6 +5,29 @@ import {PHASE16F_MODULES,PHASE16F_EFFECT_LABELS} from './newCombat/phase16FModul
 import {damageMotherShield,restoreMotherShield} from './vitalDefense.js';
 import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 
+// Descrizioni del NUOVO duello: il catalogo 16F originale e' conservato,
+// ma nel duello 52/7 non esistono mano da nove, Etere spendibile o salti turno.
+const DUEL_MODULE_EFFECT_LABELS=Object.freeze({
+ pure_hit:'Danno alla barriera reale, mai a vitali ancora protetti',
+ healing:'Ripara la barriera reale secondo il generatore e il terreno',
+ free_swap:'Ricambia una numerica dal mazzo autentico, restano sette',
+ refill:'Ricambia due numeriche dal mazzo autentico, restano sette',
+ execution:'Danno alla barriera aumentato solo se il rivale era gia ferito',
+ guard:'Assorbe un solo ammontare complessivo sulla barriera madre dopo le scudiere',
+ module_lock:'Interferisce con il fuoco nativo nemico per un ciclo; contrastabile',
+ life_drain:'Danneggia barriera nemica e ripara la propria solo sul danno effettivo',
+ hand_jam:'Riduce la precisione matematica nemica del 20%; mano ancora da sette',
+ prevent_skip:'Protegge dai disturbi Malus e Modulo del ciclo; il turno non viene saltato',
+ shield_and_ether:'Ripara barriera reale e fornisce Sincronia tattica, non Etere spendibile',
+ ether_gain:'Concede Sincronia tattica, non Etere spendibile',
+ boost_focus:'Concede Sincronia tattica fino a 100',
+ boost_siphon:'Trasferisce Sincronia reale, senza privilegiare il lato A o B',
+ ammo_refill:'Potenziamento scudiera solo con una numerica realmente consumata',
+ clear_malus:'Annulla disturbi ostili Malus e Modulo, mantiene la propria carica Malus',
+ dice_charge:'Carica il Dado, ma il lancio richiede ancora la Carta Dado vera',
+ burn:'Ustione solo se una salva reale supera la barriera',
+ singularity:'Danneggia barriera, cura solo su danno reale e fornisce Sincronia'
+});
 export const MODULE_CARD_PREFIX='module-card-';
 export const MODULE_STORAGE_KEY='eclissi_abilities';
 export const moduleCardType=id=>MODULE_CARD_PREFIX+id;
@@ -15,7 +38,7 @@ export const TACTICAL_MODULE_CARDS=Object.freeze(Object.fromEntries(
   moduleCardType(module.id),Object.freeze({
    id:moduleCardType(module.id),moduleId:module.id,name:module.name,
    short:module.name.split(' · ')[0].slice(0,16).toUpperCase(),family:'equipment',effect:module.effect,maxCopies:1,
-   description:'Carta Modulo · '+(PHASE16F_EFFECT_LABELS[module.effect]??module.effect)+
+   description:'Carta Modulo · '+(DUEL_MODULE_EFFECT_LABELS[module.effect]??PHASE16F_EFFECT_LABELS[module.effect]??module.effect)+
     '. Si attiva SOLO giocandola dalle cinque speciali; nessun effetto passivo.'
   })
  ])
@@ -119,6 +142,14 @@ export function activateTacticalModuleCards(sides,playedTypes,log,modifiers={}){
    default:throw new Error('Modulo non supportato: '+data.effect);
   }
   activations.push({by:key,type,name:data.name,effect:data.effect,level,actual});
+ }
+ // I moduli protettivi e di Purificazione sono contromisure simultanee:
+ // neutralizzano anche il blocco armi e il disturbo di precisione di una
+ // Carta Modulo rivale. Non cancellano le cariche Malus POSITIVE possedute.
+ for(const key of ['A','B']){
+  if(!effects[key].preventMalus)continue;
+  delete effects[key].lockWeapon;
+  delete effects[key].precisionFactor;
  }
  // Applica prima ENTRAMBI i danni veri, poi ENTRAMBE le cure.
  // Un colpo e una cura contemporanei hanno la stessa priorità per A e B;
