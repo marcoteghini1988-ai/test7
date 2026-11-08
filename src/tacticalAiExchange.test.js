@@ -1,7 +1,7 @@
 // Ricambio intelligente senza precognizione del mazzo o firme nascoste.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {chooseTacticalAiExchangeIndex} from './tacticalAiExchange.js';
+import {chooseTacticalAiExchangeIndex,chooseTacticalAiExchangeIndices} from './tacticalAiExchange.js';
 import {tacticalShipSignatures} from './tacticalShipSignatures.js';
 import {createTacticalDuel,validateTacticalOrder} from './simultaneousDuelEngine.js';
 import {damageMotherShield,exposeMotherPart} from './vitalDefense.js';
@@ -41,4 +41,17 @@ test('IA con vera mano da 52 carte non butta una 3 utile sul bersaglio engine E0
  assert.notEqual(order.exchangeIndices[0],0,'il 3 ha una possibile coppia, da non buttare');
  assert.equal(validateTacticalOrder(b,'A',order).ok,true);
  assert.equal([...oldPile.hand,...oldPile.deck].length,52,'nessuna numerica nuova');
+});
+
+test('Ricambio speciale valuta due numeriche realmente diverse: preserva carta con formula futura',()=>{
+ const cards=[3,1,2,5,6,7,8].map((value,i)=>card(value,['♣','♦','♥','♠'][i%4]));
+ const revealed=[{signature:tacticalShipSignatures('E03').engine,hp:4}];
+ assert.deepEqual(chooseTacticalAiExchangeIndices(cards,revealed,2,2),[2,4],
+  'non brucia la carta 5: insieme al 3 puo dare 15 su un engine scoperto');
+ assert.deepEqual(chooseTacticalAiExchangeIndices(cards,[],2,2),[2,3],
+  'senza firme visibili usa solo i due slot a rotazione');
+ assert.equal(chooseTacticalAiExchangeIndices(cards,revealed,2,2).length,2);
+ assert.equal(new Set(chooseTacticalAiExchangeIndices(cards,revealed,2,2)).size,2);
+ assert.deepEqual(chooseTacticalAiExchangeIndices(cards,revealed,2,0),[],
+  'nessun ricambio gratis');
 });
