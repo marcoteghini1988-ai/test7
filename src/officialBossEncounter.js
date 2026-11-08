@@ -7,6 +7,7 @@ import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 import {numericBossDeck} from './bossNumericDecks.js';
 import {battleArena} from './battleArenas.js';
 import {exclusiveBossReady} from './tacticalExclusiveBosses.js';
+import {officialBossMotherShip} from './officialBossMotherShips.js';
 
 export function officialBossEncounter({mode='campaign',sectorNumber=1,planetId=null,sectorLevel=null}={}){
  if(!['campaign','adventure'].includes(mode))return null;
@@ -29,13 +30,14 @@ export function officialBossEncounter({mode='campaign',sectorNumber=1,planetId=n
  const profile=tacticalBossProfile(planet.id);
  const deck=numericBossDeck(planet.deck);
  const arena=battleArena('boss_'+planet.id);
- if(!profile||!deck||!exclusiveBossReady(planet.id)||!tacticalBossDeckReady(planet.deck)||
+ const motherShipId=officialBossMotherShip(planet.id);
+ if(!profile||!deck||!motherShipId||!exclusiveBossReady(planet.id)||!tacticalBossDeckReady(planet.deck)||
    arena.kind!=='boss')return null;
  // Identical historic difficulty grade from BossBattle3D.bossChoices:
  // no direct gift of the level 9 deck even for the last planet.
  const level=Math.min(deck.maxLevel,Math.max(1,1+Math.floor((global-1)/20)));
  return Object.freeze({
-  planetId:planet.id,planetName:planet.name,name:profile.name,
+  planetId:planet.id,planetName:planet.name,name:profile.name,motherShipId,
   exclusiveAbility:profile.ability,numericDeckId:deck.id,
   numericDeckLevel:level,arenaId:arena.id,globalSector:global,
   planetSector:10,profile
