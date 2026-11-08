@@ -3,6 +3,18 @@
 **Documento di continuità per la scaletta generale di 53 punti.**
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
+## CHECKPOINT — 8 novembre 2026, Terra 10: 80 nuove prove e causa del divario di difficoltà
+
+**Nuovo benchmark riproducibile:** `src/firstBossProgression.test.js`, 4 navicelle davvero ottenibili (N00, C01, C02, C03) × livelli L1–L4 **comprati con la Polvere Stellare reale** × cinque seed = **80 duelli aggiuntivi**. Sono presupposte nove vittorie consecutive dei settori 1–9, non simulate né garantite. Budget di base 100 iniziali + 900 vincite = 1000; la comune L4 richiede 580, la L5 richiede 1080 (solo premi base insufficienti); nove crediti pacchetto non vengono aperti automaticamente. Pilota starter `pilot_com_1` posseduto, mazzo speciale starter da 24, zero Epici, boss decks, moduli o personaggi futuri.
+
+**Esiti 80 duelli IA/IA:** 13 vittorie, 58 sconfitte, 9 pareggi. N00 (L1–L4): 0 vittorie su 20; C01: 0/20; C02: 0/20 (4 pareggi); C03: **13/20**, con **4/5 vittorie sia L3 che L4**. Un controllo di regressione conferma che C03 L3 ha almeno due vittorie nel campione fisso, senza regalare carte.
+
+**Causa strutturale individuata:** il selettore `chooseCampaignMotherRival` dà al boss Terra il modello **C03** se il giocatore usa N00/C01/C02, ma **C02** se usa C03; il boss cambia quindi le proprie firme vitali e il corpo nave per il solo cambio madre del giocatore. **Non interpretare il rendimento di C03 come differenza di potenza a parità di avversario**. Il vero prossimo passaggio è un confronto controllato del modello boss fisso per pianeta, **senza alterare il layout o i 42 armamenti e senza cambiare silenziosamente compatibilità della 3D legacy**. Restano necessari playtest dei settori 1–9 e dei 12 boss umani.
+
+Rapporto: [TERRA10_MATRICE_80_E_ABBINAMENTO_NAVI_2026-11-08.md](TERRA10_MATRICE_80_E_ABBINAMENTO_NAVI_2026-11-08.md). Pipeline: [Actions 42501402162](https://github.com/marcoteghini1988-ai/test7/actions/runs/42501402162), **778 test**, build Vite e preflight approvati.
+
+---
+
 ## CHECKPOINT — 8 novembre 2026: matrice boss, acquisizione vere speciali e scala progressiva
 
 **Correzione concreta dopo i 12 boss:** l'inventario ufficiale non conosceva **otto** Carte Speciali già valide nel motore: Scansione, Contromisura, Ricambio Numerico, Deviazione, Soppressione, Paratia, Carica e Schermo d'Urto. Ora catalogo e motore coincidono a **82 famiglie**, 25 tipi sono nei pacchetti (17 precedenti +8) e la migrazione dei vecchi salvataggi mantiene **zero copie nuove** e tutte le copie/prezzi/sblocchi originali. Non sono carte gratis; i pacchetti vanno guadagnati, aperti e poi le carte equipaggiate nel mazzo reale 24.
