@@ -4,7 +4,7 @@ import {SPECIAL_CARD_CATALOG,initializeSpecialDeck,refillSpecialHand,makeSpecial
 import {initialBattle} from './mathDuelEngine.js';
 import {
  SPECIAL_COLLECTION_KEY,SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,
- SPECIAL_PACK_SIZE,STARTER_SPECIAL_COUNTS,createSpecialCollection,
+ SPECIAL_PACK_SIZE,SPECIAL_PACK_TYPES,STARTER_SPECIAL_COUNTS,createSpecialCollection,
  normalizeSpecialCollection,specialDeckCounts,validateSpecialDeck,equipSpecialDeck,
  specialPackReward,openSpecialPack,readSpecialCollection,updateSpecialCollection,
  claimFirstWinSpecialPack
@@ -95,7 +95,10 @@ test('30: opening a pack requires an earned credit; three genuine cards are adde
 });
 test('30: packs only increase ownership; deck must be edited and saved manually',()=>{
  const coll=createSpecialCollection();
- const pack=openSpecialPack(specialPackReward(coll,'campaign:sector:2').collection,()=>.85);
+ const index=SPECIAL_PACK_TYPES.indexOf('support-status-purge');
+ assert.ok(index>=0);
+ const pack=openSpecialPack(specialPackReward(coll,'campaign:sector:2').collection,
+  ()=>(index+.25)/SPECIAL_PACK_TYPES.length);
  const before=pack.collection.loadout;
  const equipped=equipSpecialDeck(pack.collection,
    before.map((t,i)=>i===0?'support-status-purge':t));
@@ -130,7 +133,9 @@ test('39: only packs can grant escort repair and a real owned copy can be equipp
  const denied=base.loadout.map((type,i)=>i===0?'support-escort-repair':type);
  assert.equal(validateSpecialDeck(base,denied).reason,'not_owned');
  const earned=specialPackReward(base,'campaign:sector:17').collection;
- const opened=openSpecialPack(earned,()=>.999999);
+ const index=SPECIAL_PACK_TYPES.indexOf('support-escort-repair');
+ assert.ok(index>=0);
+ const opened=openSpecialPack(earned,()=>(index+.25)/SPECIAL_PACK_TYPES.length);
  assert.equal(opened.opened,true);
  assert.deepEqual(opened.drawn,['support-escort-repair','support-escort-repair','support-escort-repair']);
  const equipped=equipSpecialDeck(opened.collection,denied);
