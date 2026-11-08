@@ -5,8 +5,11 @@ import React from 'react';
 import OfficialBattle3D from './OfficialBattle3D.jsx';
 import BossBattle3D from './BossBattle3D.jsx';
 import {officialSimultaneousEligibility} from './officialSimultaneousBridge.js';
+import {officialCampaignBattleProps} from './officialCampaignRouting.js';
 
 export default function MathDuelBattle(props){
- const eligibility=officialSimultaneousEligibility(props);
- return eligibility.enabled?<OfficialBattle3D {...props}/>:<BossBattle3D {...props}/>;
+ // Mantiene gli ID di pianeta originali ma usa settori 1..120 in entrambi i motori.
+ const battleProps=officialCampaignBattleProps(props);
+ const eligibility=officialSimultaneousEligibility(battleProps);
+ return eligibility.enabled?<OfficialBattle3D {...battleProps}/>:<BossBattle3D {...battleProps}/>;
 }
