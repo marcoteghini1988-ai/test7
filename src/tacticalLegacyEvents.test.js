@@ -176,3 +176,44 @@ test('Compatibilità: il motore Poker storico non riceve Bomba/Malus/Dorata come
   assert.equal(collection.loadout.includes(id),true);
  }
 });
+
+test('Numero Bomba: una formula valida disinnesca la numerica reale senza creare danni extra',()=>{
+ const b=duel(LEGACY_BOMB_CARD,'A');
+ const i=inHand(b,'A',LEGACY_BOMB_CARD);
+ const first=play(b,{specialIndices:[i],bombSlot:0});
+ assert.equal(first.sides.B.numeric.hand[0].value,8);
+ const ready=next(first);
+ const prepared={numericIndices:[0,1],op:'minus',vitalId:'weapons'};
+ assert.equal(validateTacticalOrder(ready,'B',{...idle,...prepared}).ok,true);
+ const resolved=play(ready,idle,prepared,ready.deadlineMs-200);
+ assert.equal(resolved.sides.B.legacy.bomb,null);
+ assert.ok(resolved.lastEvents.some(x=>x.includes('disinnescata con formula valida')));
+ assert.equal(resolved.history.at(-1).impacts.some(x=>x.kind==='legacy-bomb'),false);
+ assert.deepEqual(counts(resolved.sides.B),{numeric:52,special:24});
+});
+
+test('Carta Dorata: i quattro semi producono bonus diversi soltanto su numeriche autentiche',()=>{
+ const cases=[
+  {suit:'♥',index:2,numericIndices:[3,2],op:'minus',vitalId:'weapons'},
+  {suit:'♦',index:3,numericIndices:[3,2],op:'minus',vitalId:'weapons'},
+  {suit:'♣',index:1,numericIndices:[1,2],op:'plus',vitalId:'shieldGenerator'},
+  {suit:'♠',index:4,numericIndices:[4,5],op:'pair',vitalId:'command'}
+ ];
+ for(const c of cases){
+  const b=duel(LEGACY_GOLD_CARD,'A');
+  if(c.suit==='♣')b.sides.A.escorts[0].hp=8;
+  const i=inHand(b,'A',LEGACY_GOLD_CARD);
+  const order={numericIndices:c.numericIndices,op:c.op,vitalId:c.vitalId};
+  assert.equal(validateTacticalOrder(b,'A',{...idle,...order}).ok,true,c.suit+' signature');
+  const ordinary=play(structuredClone(b),order);
+  const golden=play(b,{...order,specialIndices:[i],goldenIndex:c.index});
+  assert.ok(golden.lastEvents.some(x=>x.includes('Carta Dorata '+c.suit+' attivata')),
+   c.suit+' must resolve only after correct formula');
+  assert.equal(golden.sides.A.legacy.usedGoldenIds.length,1);
+  assert.deepEqual(counts(golden.sides.A),{numeric:52,special:24});
+  if(c.suit==='♥')assert.ok(golden.sides.A.defense.shield.hp>=ordinary.sides.A.defense.shield.hp);
+  if(c.suit==='♦')assert.equal(golden.sides.A.sync,ordinary.sides.A.sync+8);
+  if(c.suit==='♣')assert.ok(golden.sides.A.escorts[0].hp>=ordinary.sides.A.escorts[0].hp);
+  if(c.suit==='♠')assert.ok(golden.sides.B.defense.shield.hp<=ordinary.sides.B.defense.shield.hp);
+ }
+});
