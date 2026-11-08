@@ -53,10 +53,10 @@ test('12 mazzi numerici: solo inventario sbloccato e grado posseduto, mai passiv
  assert.equal(neutral.bossNumericDeck??null,null);
 });
 
-test('33 piloti: solo carte sbloccate, 16 pronti nella 3D simultanea, altri conservati nel legacy',()=>{
+test('33 piloti: tutti pronti nella 3D simultanea, solo carte sbloccate',()=>{
  assert.equal(COMMANDER_ABILITY_IDS.length,33);
  const ready=COMMANDER_ABILITY_IDS.filter(tacticalCommanderReady);
- assert.equal(ready.length,16);
+ assert.equal(ready.length,33);
  for(const id of COMMANDER_ABILITY_IDS){
   assert.ok(commanderAbility(id));
   assert.equal(commanderFromInventory(id,{}),null,id);
@@ -66,7 +66,7 @@ test('33 piloti: solo carte sbloccate, 16 pronti nella 3D simultanea, altri cons
   const eligibility=officialSimultaneousEligibility({
    gameMode:'campaign',sectorNumber:1,selectedPilot:id});
   assert.equal(eligibility.enabled,tacticalCommanderReady(id),
-   'nessuna abilita non convertita perde il fallback 3D storico: '+id);
+   'tutti gli ID del catalogo sono convertiti: '+id);
   if(tacticalCommanderReady(id)){
    const active=setup({selectedPilot:id,
     pilotInventory:{[id]:{unlocked:true,level:4}}}).battle.sides.A;
