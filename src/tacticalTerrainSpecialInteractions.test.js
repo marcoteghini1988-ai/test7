@@ -150,3 +150,27 @@ test('Due Terreni PvP simultanei si annullano: la Carta Modulo cura senza penali
   assert.equal(side.numeric.hand.length+side.numeric.deck.length+side.numeric.discard.length,52);
  }
 });
+
+test('Terreno Plasma: la Carta Supporto ripara le scudiere per 13 HP, non 15',()=>{
+ const b=createTacticalDuel({mode:'pvp',seed:71,specialDeckA:deck('terrain-plasma'),
+  specialDeckB:deck('support-escort-repair')});
+ offer(b,'A','terrain-plasma');offer(b,'B','support-escort-repair');
+ b.sides.B.escorts[0].hp=4;
+ const out=commit(b,{specialIndices:[0]},{specialIndices:[0]});
+ assert.ok(out.lastEvents.some(s=>s.includes('B: scudiera riparata +13')));
+ assert.equal(out.activeTerrain.id,'terrain-plasma');
+});
+test('Terreno Plasma: la Dorata di Fiori ripara una scudiera per 7 HP, non 8',()=>{
+ const original=createTacticalDuel(),terrain=structuredClone(original);
+ for(const b of [original,terrain]){
+  b.sides.A.escorts[0].hp=5;
+  b.sides.A.legacy.golden={cardId:b.sides.A.numeric.hand[0].id,suit:'♣',untilRound:1};
+ }
+ const orders={A:{numericIndices:[0],exchangeIndices:[],escortAmmoIndex:null,op:'plus'},
+  B:{numericIndices:[],exchangeIndices:[],escortAmmoIndex:null,op:null}};
+ const types={A:[],B:[]},valid={A:true,B:false},hit={A:0,B:0},effects={A:{},B:{}};
+ resolveLegacyTactics(terrain.sides,orders,types,valid,hit,effects,1,[],[],{pvpTerrain:modifiers});
+ resolveLegacyTactics(original.sides,orders,types,valid,hit,effects,1,[]);
+ assert.equal(terrain.sides.A.escorts[0].hp,12);
+ assert.equal(original.sides.A.escorts[0].hp,13);
+});
