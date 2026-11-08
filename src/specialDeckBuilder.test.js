@@ -20,7 +20,7 @@ test('30: starter collection has eleven types, six initially equipped and equips
  assert.equal(coll.schemaVersion,1);
  assert.equal(coll.loadout.length,SPECIAL_DECK_SIZE);
  assert.deepEqual(SPECIAL_TYPES,Object.keys(SPECIAL_CARD_CATALOG));
- assert.equal(SPECIAL_TYPES.length,34); // 11 originali + 12 Boss + 4 Terreni + Mutazione + 6 Epici
+ assert.equal(SPECIAL_TYPES.length,37); // 11 originali + 12 Boss + 4 Terreni + Mutazione + 6 Epici + 3 legacy 16B
  for(const type of SPECIAL_TYPES){
   assert.equal(coll.owned[type],STARTER_SPECIAL_COUNTS[type]);
   assert.equal(counts[type],STARTER_SPECIAL_COUNTS[type]);
@@ -242,7 +242,9 @@ test('nuove fusioni si trovano nei pacchetti e non sono regalate agli inventari 
  const base=createSpecialCollection();
  assert.equal(base.owned['fusion-twin'],0);
  assert.equal(base.owned['fusion-triad'],0);
- for(const [type,unit] of [['fusion-twin',.20],['fusion-triad',.29]]){
+ for(const type of ['fusion-twin','fusion-triad']){
+  const unit=(SPECIAL_PACK_TYPES.indexOf(type)+.25)/SPECIAL_PACK_TYPES.length;
+  assert.ok(SPECIAL_PACK_TYPES.includes(type));
   const withCredit=specialPackReward(base,'adventure:sector:51').collection;
   const opened=openSpecialPack(withCredit,()=>unit);
   assert.equal(opened.opened,true);
