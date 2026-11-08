@@ -2,6 +2,7 @@
 // Non legge la mano, gli ordini impegnati o le firme nascoste del giocatore.
 // I dodici boss possiedono piani e priorità derivati dai boss storici.
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
+import {chooseTacticalAiExchangeIndex} from './tacticalAiExchange.js';
 import {tacticalWeaponTechnology} from './tacticalArmamentBalance.js';
 import {nativeBarrierPacket,validateTacticalOrder} from './simultaneousDuelEngine.js';
 import {tacticalBossProfile} from './tacticalSpecialPresets.js';
@@ -145,7 +146,13 @@ export function planTacticalAi(battle,key='B'){
  // lo slot 0 lasciando sei numeriche bloccate per tutta la battaglia.
  // Ruota uno slot reale a ogni ciclo; con la Carta Ricambio vera ne ruota due.
  const handSize=ours.numeric.hand.length;
- const replaceIndex=handSize?((battle.round-1)%handSize):0;
+ const fallbackIndex=handSize?((battle.round-1)%handSize):0;
+ const exposedSignatures=priority
+  .filter(id=>enemy.defense.parts[id]?.hp>0)
+  .map(id=>({signature:visibleTacticalSignature(ours,enemy,id),
+   hp:enemy.defense.parts[id].hp}));
+ const replaceIndex=chooseTacticalAiExchangeIndex(
+  ours.numeric.hand,exposedSignatures,fallbackIndex);
  const nextIndex=handSize?(replaceIndex+1)%handSize:0;
  let exchanges=shot.numericIndices.length?[]:
   chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?
