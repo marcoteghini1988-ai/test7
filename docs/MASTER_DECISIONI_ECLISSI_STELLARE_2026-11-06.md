@@ -3,6 +3,24 @@
 **Documento di continuità per la scaletta generale di 53 punti.**
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
+## CHECKPOINT AGGIORNATO — 8 novembre 2026: quarto vitale Plutone e fase magmatica di Io
+
+**Nuovo comportamento realmente implementato:** `src/tacticalAiExchange.js` e `src/tacticalDuelAi.js` esaminano insieme **due vere numeriche da scartare solo se è stata giocata la Carta Ricambio**; mantengono combinazioni future su firme già scoperte, senza leggere pescate, firme segrete o ordini avversari. `tactic-scan` non viene più giocata quando tutti i vitali ancora vivi sono già esposti/rilevati. **Io**: l'IA considera la sua fase `eruzione` pubblica per dare priorità alle Carte Speciali di riparazione/paratia/urto/copertura/contromisura **già pescate**, senza trasformarle in abilità gratuite.
+
+**Regressione identificata e corretta prima della chiusura:** vietare il caricamento delle scudiere quando scudo+generatore avversari erano distrutti aveva peggiorato il primo boss Terra: una munizione scudiera costituisce anche una numerica reale consumata e rimpiazzata, non un bonus di danno. L'IA ora conserva questo ricambio legittimo, ma nelle ultime fasi seleziona le munizioni meno utili alle firme esposte, salvando le carte promettenti per il quarto KO. `src/tacticalDuelAi.test.js` verifica **52 carte uniche prima e dopo lo scontro**, nessun doppio utilizzo. Tutta la suite torna verde.
+
+**A/B Io, 16 seed identici:** con speciali starter, senza pianificazione sulla fase magmatica **4V/9S/3P**, con contromisure tempestive **5V/8S/3P**. Con il mazzo 24 speciali **ottenute e aperte tramite 109 pacchetti** entrambi i criteri raggiungono **11V/4S/1P**: niente miglioramento garantito.
+
+**Progressione reale per Plutone e Io, 5 seed per configurazione:** Plutone con starter **1V/2S/2P**, con mazzo preparato da 69 pacchetti autentici **3V/0S/2P** (precedente checkpoint 2/1/2). Io con starter **0V/5S/0P**, con mazzo da 109 pacchetti **1V/2S/2P** (precedentemente 1/3/1). Le precedenti vittorie che concedono i pacchetti sono **presupposte** nei test della tarda campagna; le aperture e le partite contro i boss sono vere simulazioni deterministiche, non incontri umani.
+
+**Regressione Terra confermata:** C03 L3 e starter resta vincibile nel campione (2V/1S/2P su 5 seed), ma con difficoltà elevata; nulla va dichiarato definitivo prima dei playtest manuali. **Grafica 9:16, dodici madri boss, quattro vitali, due mazzi e 42 armi rimasti invariati.**
+
+Rapporto: [ULTIMO_VITALE_PLUTONE_E_CONTROMISURE_IO_2026-11-08.md](ULTIMO_VITALE_PLUTONE_E_CONTROMISURE_IO_2026-11-08.md). [Actions 42514620721](https://github.com/marcoteghini1988-ai/test7/actions/runs/42514620721), **800 test/800 superati**, build e preflight. I vecchi benchmark più sotto sono **checkpoint storici** relativi a revisioni precedenti, non vanno sommati o confusi con i valori aggiornati.
+
+**Prossimo punto da riprendere:** sistemare gli ulteriori vincoli di vittoria/ricompense e di scelta del mazzo numerico boss (primi 12, passive 3 livelli), Carte Personaggio/piloti/equipaggiamenti posseduti, e organizzare un reale collaudo 9:16; non aggiungere bonus gratuiti come scorciatoia per vincere.
+
+---
+
 ## CHECKPOINT — 8 novembre 2026: Plutone/Io, ricambio intelligente e pacchetti realmente acquisibili
 
 **Diagnosi di 20 incontri** (`src/officialBossStalemateDiagnostic.test.js`): Plutone E03 L5 con starter soffriva soprattutto l'ultimo vitale entro il limite di 20 cicli, **non** riparazioni boss continue (0 vittorie, 2 sconfitte, 8 pareggi nei 10 seed iniziali); Io L03 L5 era invece una corsa contro il KO avversario (4/5/1). L'assenza di Scansioni e Riparazioni nella mano del giocatore dipendeva dal mazzo speciale *starter*, non da una carta non funzionante.
