@@ -112,6 +112,7 @@ test('Premi di campagna e avventura: mai doppio premio, niente premi per PvP, pe
 });
 
 test('Percorso completo: tutti i 12 boss arrivano a un esito entro 20 cicli, senza carte inventate',()=>{
+ const balanceObservations=[];
  for(const [i,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
   let battle=setup(i).battle;
   let resolutions=0;
@@ -149,7 +150,18 @@ test('Percorso completo: tutti i 12 boss arrivano a un esito entro 20 cicli, sen
   const result=officialBattleResult(battle,'campaign',i*10+10);
   assert.equal(result.eligibleForRewards,battle.winner==='A',planet.name+' premi solo per vittoria');
   assert.equal(battle.arenaId,'boss_'+planet.id,planet.name+' arena finale');
+  balanceObservations.push({
+   planet:planet.name,rounds:resolutions,winner:battle.winner,
+   hitsA:battle.history.reduce((sum,round)=>sum+(round.hitsA||0),0),
+   hitsB:battle.history.reduce((sum,round)=>sum+(round.hitsB||0),0),
+   damagedA:Object.values(battle.sides.A.defense.parts).filter(p=>p.hp>0&&p.hp<=p.max/2).length,
+   damagedB:Object.values(battle.sides.B.defense.parts).filter(p=>p.hp>0&&p.hp<=p.max/2).length,
+   destroyedA:Object.values(battle.sides.A.defense.parts).filter(p=>p.hp===0).length,
+   destroyedB:Object.values(battle.sides.B.defense.parts).filter(p=>p.hp===0).length
+  });
  }
+ // Osservatorio deterministico, non e' un playtest umano o prova di equilibrio PvP.
+ console.log('ECLISSI_BOSS_AI_20_ROUNDS '+JSON.stringify(balanceObservations));
 });
 
 test('Telemetria della vittoria conserva il vero boss e sblocca la sua reliquia, non quelle degli altri',()=>{
