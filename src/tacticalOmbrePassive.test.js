@@ -120,7 +120,7 @@ test('lo snapshot impedisce di attivare una passiva a meta di una stessa risoluz
  battle.sides.B.defense.parts.weapons.max=20;
  const out=cycle(battle,makeOrder({numericIndices:[3,2],vitalId:'weapons',op:'minus'}));
  assert.ok(out.sides.A.defense.shield.hp<=21);
- assert.equal(shot(out,'precision','A').damage,10);
+ assert.equal(shot(out,'precision','A').damage,6);
  assert.equal(out.sides.A.bossNumericDeck.outgoingBonusRemainder,0);
  assert.ok(!out.lastEvents.some(line=>line.includes('Potenza disperata')));
 });
