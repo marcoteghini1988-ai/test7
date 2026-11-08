@@ -17,6 +17,7 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
  exclusiveVoidDominantSuit,exclusiveVoidPrecisionBonus,rememberExclusiveVoidCounter
 } from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
+import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects} from './pvpTerrainCards.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
 import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit,
@@ -69,7 +70,9 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'support-escort-repair':{name:'Riparazione Scudiera',kind:'support',help:'Ripara fino a 15 HP su una scudiera operativa, senza rianimarla'},
  ...Object.fromEntries(Object.values(TACTICAL_EPIC_CARDS).map(epic=>[epic.id,{name:epic.name,kind:'epic',help:epic.help}])),
  ...Object.fromEntries(Object.values(BOSS_CHARACTER_CATALOG).map(c=>[c.id,
-  {name:c.name,kind:'boss-character',help:c.description,characterId:c.id}]))
+  {name:c.name,kind:'boss-character',help:c.description,characterId:c.id}])),
+ ...Object.fromEntries(Object.values(PVP_TERRAIN_CATALOG).map(t=>[t.id,
+  {name:t.name,kind:'terrain',help:t.description,durationCycles:t.durationCycles}]))
 });
 // The twelve-card-family prototype starter is preserved for old tests and
 // existing snapshots; new loadout presets are opt-in and still use 24 cards.
@@ -180,10 +183,10 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
    exchangeUntilRound:0,dustPreview:0},
   numeric:numericPile(key,seed+3,shuffleOpening),special:specialPile(key,seed+13,specialDeck,epicOpening)},bossNumericDeck);
 }
-export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',
+export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',mode='classic',
  specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null,bossNumericDeckA=null,bossNumericDeckB=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
- const battle={schemaVersion:1,arenaId,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
+ const battle={schemaVersion:1,arenaId,mode,activeTerrain:null,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB,bossNumericDeckB)},
@@ -215,6 +218,10 @@ export function validateTacticalOrder(battle,key,order){
  if(!uniqueIndices(ei,side.numeric.hand.length,2))return {ok:false,reason:'exchange_selection'};
  const types=si.map(i=>side.special.hand[i].type);
  if(new Set(types).size!==types.length)return {ok:false,reason:'duplicate_special'};
+ const terrains=types.filter(isPvpTerrain);
+ if(terrains.length>1)return {ok:false,reason:'terrain_conflict'};
+ if(terrains.length&&(battle.mode!=='pvp'||battle.sides.B.bossPlanetId!=null))
+  return {ok:false,reason:'terrain_pvp_only'};
  const characters=types.filter(isBossCharacterCard);
  if(characters.length>1)return {ok:false,reason:'character_conflict'};
  if(characters.length&&bossCharacterActive(side,battle.round))
@@ -344,7 +351,7 @@ export function exchangeTacticalNumericDuringPlanning(battle,key,index,nowMs){
 }
 
 function specialTypes(side,order){return order.specialIndices.map(i=>side.special.hand[i].type);}
-function applyPreparation(sides,orders,log,round){
+function applyPreparation(sides,orders,log,round,modifiers){
  const status={};
  for(const key of ['A','B']){
   const side=sides[key],types=specialTypes(side,orders[key]);
@@ -376,7 +383,8 @@ function applyPreparation(sides,orders,log,round){
    log.push(key+': Neurotossina rimossa con Pulizia Sistemi');
   if(types.includes('support-shield-repair')){
    const poisoned=exclusiveNeurotoxinActive(side,round);
-   const repair=exclusiveNeurotoxinRepairAmount(side,round,20);
+   const repair=Math.floor(exclusiveNeurotoxinRepairAmount(side,round,20)*
+    (modifiers?.pvpTerrain?.repairFactor??1));
    const improved=tacticalAfroditeRepairAmount(side,repair);
    const baseline=improved!==repair?restoreMotherShield(side.defense,repair).repaired:0;
    const fixed=restoreMotherShield(side.defense,improved);
@@ -464,6 +472,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  // Precisione criogenica: formula di divisione verificata sul bersaglio.
  const idra=tacticalIdraBonus(atk,def,orders[key],total);
  total+=idra.extra;
+ total=Math.max(0,Math.floor(total*(modifiers?.pvpTerrain?.nativeFactor??1)));
  const before=total;
  if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
  if(res.types.includes('tactic-impact'))total=Math.floor(total*.8);
@@ -475,7 +484,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  // The command module coordinates all escort interception. At <=50% HP,
  // each real escort absorbs 15% less, including cover and fusion. At KO,
  // no interception takes place and no escort HP is spent.
- const escortEfficiency=escortInterceptionEfficiency(def.defense);
+ const escortEfficiency=escortInterceptionEfficiency(def.defense)*
+  (modifiers?.pvpTerrain?.escortFactor??1);
  if(escortEfficiency>0){
   const live=def.escorts.filter(e=>e.hp>0);
   const maxIntercept=Math.min(escortPacket,Math.floor(total*.75*escortEfficiency));
@@ -511,7 +521,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
  const characterGuard=bossCharacterShieldFactor(def,round);
  const effectivePacket=Math.floor(Math.floor(motherPacket*bossDefenseFactor*
-  exclusiveDefenseFactor*pilotDefense.factor*characterGuard)*(modifiers?.shieldDamageFactor||1));
+  exclusiveDefenseFactor*pilotDefense.factor*characterGuard)*(modifiers?.shieldDamageFactor||1)*
+  (modifiers?.pvpTerrain?.shieldFactor??1));
  const hit=damageMotherShield(def.defense,effectivePacket);
  def.defense=hit.defense;
  if(bossCharacterRememberHit(def,round,hit.damage))
@@ -603,7 +614,8 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  const packet=Math.min(plan.packet+Math.floor(plan.packet*.45),
   plan.packet+harmony.extra+characterExtra);
  let intercepted=0,suppressed=false;
- const efficiency=escortInterceptionEfficiency(def.defense);
+ const efficiency=escortInterceptionEfficiency(def.defense)*
+  (modifiers?.pvpTerrain?.escortFactor??1);
  if(efficiency>0){
   for(const escort of def.escorts){
    if(escort.hp<=0)continue;
@@ -622,7 +634,7 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
  const characterGuard=bossCharacterShieldFactor(def,round);
  const actual=Math.floor(Math.floor(motherPacket*defenseFactor*armor*pilotDefense.factor*characterGuard)*
-  (modifiers?.shieldDamageFactor||1));
+  (modifiers?.shieldDamageFactor||1)*(modifiers?.pvpTerrain?.shieldFactor??1));
  const hit=damageMotherShield(def.defense,actual);
  def.defense=hit.defense;
  rememberTacticalBossCommanderImpact(atk,def,orders[key],t.types,hit.damage,round);
@@ -707,7 +719,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const characterPrecision=bossCharacterPrecisionExtra(atk,round,cards,damage);
  damage+=characterPrecision;
  const defenseStatus=status[other(key)];
- const escortEfficiency=escortInterceptionEfficiency(def.defense);
+ const escortEfficiency=escortInterceptionEfficiency(def.defense)*
+  (modifiers?.pvpTerrain?.escortFactor??1);
  if(escortEfficiency>0){
   const protector=def.escorts.find(e=>e.hp>0);
   if(protector&&defenseStatus.cover&&!defenseStatus.coverUsed){
@@ -813,10 +826,16 @@ function resolveCycle(battle,nowMs){
  }
  const before=combatSnapshot(sides),impacts=[];
  const environmentStage=arenaEnvironment(battle.arenaId,battle.arenaValidCalculations+1).stage;
- const modifiers=arenaPhaseModifiers(battle.arenaId,environmentStage);
+ const playedTerrain=Object.fromEntries(['A','B'].map(key=>[key,
+  battle.orders[key].specialIndices.map(i=>sides[key].special.hand[i]?.type).find(isPvpTerrain)??null]));
+ const terrainResolution=resolvePvpTerrain(battle.activeTerrain,playedTerrain,battle.round,
+  battle.mode,battle.sides.B.bossPlanetId);
+ const modifiers={...arenaPhaseModifiers(battle.arenaId,environmentStage),
+  pvpTerrain:pvpTerrainEffects(terrainResolution.active,battle.round)};
  const playedSpecials=Object.fromEntries(['A','B'].map(key=>[key,
   orders[key].specialIndices.map(i=>sides[key].special.hand[i].type)]));
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
+ if(terrainResolution.event)log.push(terrainResolution.event);
  for(const key of ['A','B']){
   const healed=bossCharacterApplyRegen(sides[key],battle.round);
   if(healed>0)log.push(key+': Carta Idra · rigenerazione reale +'+healed+' HP alla barriera');
@@ -832,7 +851,7 @@ function resolveCycle(battle,nowMs){
  if(bloodPact.armed)
   log.push('B: Signore delle Ombre · Patto di sangue: -'+bloodPact.paid+
    ' HP reali alla propria barriera, +8% armato per questo scontro');
- const status=applyPreparation(sides,orders,log,battle.round);
+ const status=applyPreparation(sides,orders,log,battle.round,modifiers);
  // Queue real escort munitions BEFORE either mother shot. A scudiera that
  // falls during simultaneous exchange retains its already-loaded shot.
  const escortPlans=Object.fromEntries(['A','B'].map(key=>[key,
@@ -879,7 +898,7 @@ function resolveCycle(battle,nowMs){
    tacticalEpicNumericChoice(side,battle.round));
   rememberTacticalLeviatanoRecycle(side,previousNumerics,spentNumerics.length);
   const earned=25+((key==='A'?hitsA:hitsB)>0?25:0)+
-   (validCalculation[key]?modifiers.syncPerCalculation:0);
+   (validCalculation[key]?(modifiers.syncPerCalculation+modifiers.pvpTerrain.syncPerCalculation):0);
   const extraEnergy=tacticalGeneratorSyncBonus(side,earned);
   const characterEnergy=bossCharacterSyncExtra(side,battle.round,validCalculation[key]);
   const normalSync=Math.min(100,side.sync+earned);
@@ -927,12 +946,12 @@ function resolveCycle(battle,nowMs){
  if(battle.round>=TACTICAL_TIMING.maxRounds&&!winner)winner='draw';
  log.push('Barriere: A '+sides.A.defense.shield.hp+'/60; B '+sides.B.defense.shield.hp+'/60');
  if(winner)log.push(winner==='draw'?'Pareggio: limite/doppio KO':'Vince '+winner);
- return {...battle,sides,phase:'resolving',resolveUntilMs:nowMs+TACTICAL_TIMING.resolveMs,
+ return {...battle,sides,activeTerrain:terrainResolution.active,phase:'resolving',resolveUntilMs:nowMs+TACTICAL_TIMING.resolveMs,
   arenaValidCalculations:battle.arenaValidCalculations+Number(validCalculation.A)+Number(validCalculation.B),
   orders,history:[...battle.history,{round:battle.round,orders,events:log,
    shieldA:a+escortA,shieldB:b+escortB,escortA,escortB,hitsA,hitsB,
    snapshots:{before,prepared,afterBarrier,afterPrecision},impacts,playedSpecials,
-   environmentStage}],lastEvents:log,winner};
+   environmentStage,activeTerrain:terrainResolution.active}],lastEvents:log,winner};
 }
 export function advanceTacticalDuel(battle,nowMs=0){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
