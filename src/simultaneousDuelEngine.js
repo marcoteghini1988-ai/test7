@@ -43,7 +43,7 @@ import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMothe
  tacticalResonanceCooperationBonus,rememberTacticalResonanceCooperationHit} from './tacticalBossDecks.js';
 import {tacticalBarrierPower,focusedTacticalTechnology} from './tacticalArmamentBalance.js';
 import {escortInterceptionEfficiency} from './fleetSystems.js';
-import {tacticalBossCommanderAttackBonus,tacticalBossCommanderDefenseBonus,rememberTacticalBossCommanderImpact} from './tacticalBossCommanderBridge.js';
+import {tacticalBossCommanderAttackBonus,tacticalBossCommanderDefenseBonus,rememberTacticalBossCommanderImpact,rememberTacticalCommanderEscortHit} from './tacticalBossCommanderBridge.js';
 import {createTacticalEscortArmament,selectTacticalEscortForAmmo,prepareTacticalEscortVolley} from './tacticalEscortVolley.js';
 import {tacticalCombatClock,tacticalStatusActive,applyTacticalTimedStatus,clearTacticalTimedStatuses} from './tacticalTimedStatus.js';
 import {BOSS_CHARACTER_CATALOG,isBossCharacterCard,bossCharacterActive,activateBossCharacter,expireBossCharacter,bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterIonFactor,bossCharacterPrecisionExtra,bossCharacterEscortExtra,bossCharacterSyncExtra,bossCharacterCounterSync,bossCharacterRememberHit,bossCharacterApplyRegen} from './bossCharacterCards.js';
@@ -495,7 +495,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   cycleStart[key].defense.shield.hp);
  const supremacy=tacticalSovereignSupremacyBonus(atk,base,round);
  const standardPilot=tacticalCommanderVolleyBonus(atk,def,orders[key],base);
- const advancedPilot=tacticalBossCommanderAttackBonus(atk,def,orders[key],t.types,base,round);
+ const advancedPilot=tacticalBossCommanderAttackBonus(atk,def,orders[key],t.types,base,round,
+  {suppressFirstEscort:t.suppressFirstEscort,defenderCover:res.cover&&def.defense.shield.hp>0});
  const pilot=advancedPilot.active?advancedPilot:standardPilot;
  if(pilot.active){
   atk.commander={...atk.commander,bonusRemainder:pilot.remainder};
@@ -541,7 +542,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  // Il colpo nativo resta invariato fino all'intercettazione. Le carte
  // difensive si applicano dopo, ai soli HP destinati alla madre.
  const before=total;
- let intercepted=0,splash=0;
+ let intercepted=0,splash=0,firstEscortIndex=null;
  // Kinetic and the real Piercing card bypass ESCORT interception, never mother
  // shields nor numeric vital signatures.
  const bypass=(t.piercing?.20:0)+(t.tech==='cinetico'?.10:0);
@@ -557,6 +558,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   if(res.cover&&live.length&&def.defense.shield.hp>0){
    const take=Math.min(live[0].hp,Math.floor(total*.75*escortEfficiency),maxIntercept);
    live[0].hp-=take;intercepted+=take;res.coverUsed=take>0;
+   if(take>0&&firstEscortIndex===null)firstEscortIndex=def.escorts.indexOf(live[0]);
   }
   let suppressed=false;
   const supported=live.filter(e=>e.hp>0).length;
@@ -569,6 +571,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    const nerfed=res.ionizedDefense&&res.fusionDefense?share*.5:share;
    const take=Math.max(0,Math.min(e.hp,Math.floor(escortPacket*nerfed*escortEfficiency),maxIntercept-intercepted));
    e.hp-=take;intercepted+=take;
+   if(take>0&&firstEscortIndex===null)firstEscortIndex=def.escorts.indexOf(e);
    if(res.fusion==='fusion-barrier'||res.fusion==='fusion-strike')break;
   }
   // Explosive native technology spreads a small real HP impact to a second
@@ -577,6 +580,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    splash=Math.min(2,def.escorts[1].hp);def.escorts[1].hp-=splash;
   }
  }
+ if(firstEscortIndex!==null)rememberTacticalCommanderEscortHit(atk,firstEscortIndex,intercepted);
  if(intercepted>0&&escortEfficiency<1)
   log.push(other(key)+': Centralina danneggiata, intercettazione scudiere −15%');
  // L'ambiente protegge solo la barriera madre, dopo le scudiere reali.

@@ -26,7 +26,7 @@ function resolve(b,order){
  assert.equal(second.ok,true);
  return advanceTacticalDuel(second.battle,102);
 }
-test('quattro piloti comuni e dodici piloti boss storici sono migrati; altri restano nel vecchio combattimento',()=>{
+test('tutti i 33 comandanti catalogati possono entrare nel nuovo duello',()=>{
  for(const [id] of pilotFixture){
   assert.equal(tacticalCommanderReady(id),true);
   assert.equal(officialSimultaneousEligibility({gameMode:'classic',selectedPilot:id}).enabled,true);
@@ -34,9 +34,10 @@ test('quattro piloti comuni e dodici piloti boss storici sono migrati; altri res
  assert.equal(officialSimultaneousEligibility({
   gameMode:'classic',selectedPilot:'pilot_boss_1'}).enabled,true);
  assert.equal(tacticalCommanderReady('pilot_leg_1'),true);
- assert.equal(tacticalCommanderReady('pilot_rare_1'),false);
+ assert.equal(tacticalCommanderReady('pilot_rare_1'),true);
  assert.equal(officialSimultaneousEligibility({
-  gameMode:'classic',selectedPilot:'pilot_rare_1'}).enabled,false);
+  gameMode:'classic',selectedPilot:'pilot_rare_1'}).enabled,true);
+ assert.equal(tacticalCommanderReady('pilot_sconosciuto'),false);
 });
 test('nessun bonus su ordini mancanti, combinazioni invalide o vitali distrutti',()=>{
  const b=plan('R04','pilot_com_1');

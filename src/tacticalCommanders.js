@@ -1,13 +1,13 @@
 // Piloti realmente equipaggiati nel duello simultaneo ufficiale.
-// Prima conversione: i quattro comandanti comuni, conservando le percentuali
-// e il livello 1-5 della carta posseduta. Nessun bonus su formule non valide.
+// I quattro comuni usano il bonus diretto; gli altri 29 il ponte condizionato.
+// Livelli 1-5 reali, nessun bonus su formule non valide.
 import {commanderAbility} from './commanderAbilities.js';
 import {tacticalSignatureMatches} from './tacticalShipSignatures.js';
-import {TACTICAL_BOSS_COMMANDERS} from './tacticalBossCommanderBridge.js';
+import {TACTICAL_ADVANCED_COMMANDERS} from './tacticalBossCommanderBridge.js';
 
 export const TACTICAL_READY_COMMANDERS=Object.freeze([
  'pilot_com_1','pilot_com_2','pilot_com_3','pilot_com_4',
- ...TACTICAL_BOSS_COMMANDERS
+ ...TACTICAL_ADVANCED_COMMANDERS
 ]);
 
 export const tacticalCommanderReady=id=>TACTICAL_READY_COMMANDERS.includes(id);

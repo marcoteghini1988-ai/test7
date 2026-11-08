@@ -23,7 +23,7 @@ test('Tutti e dodici i piloti storici corrispondono al catalogo e ai trigger aut
   assert.ok(commanderAbility(id),id);
   assert.equal(tacticalCommanderReady(id),true,id);
  }
- assert.equal(tacticalCommanderReady('pilot_rare_1'),false);
+ assert.equal(tacticalCommanderReady('pilot_rare_1'),true);
 });
 test('Difesa Gaia, Urano e Nettuno usa solo i propri trigger, prima del danno reale',()=>{
  let b=create('pilot_boss_1','B');
