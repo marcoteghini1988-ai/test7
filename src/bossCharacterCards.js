@@ -5,6 +5,8 @@
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {restoreMotherShield} from './vitalDefense.js';
 import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
+import {exclusiveNeurotoxinRepairAmount,exclusiveNeurotoxinActive,clearExclusiveNeurotoxin}
+ from './tacticalExclusiveBosses.js';
 const defs=[
  [1,'Guardiano di Gaia','Riparo tellurico','armor','Scudo madre: -15% ai colpi reali sulla barriera, per due cicli.'],
  [2,'Colosso di Tharsis','Furia controllata','assault','Armi native +8% sulla barriera, soltanto sui colpi reali.'],
@@ -108,8 +110,11 @@ export function bossCharacterApplyRegen(side,round,terrainEffects=null){
  // Ripara con la stessa fisica delle altre Carte Speciali: il generatore
  // danneggiato dimezza la cura e il rialzo della barriera richiude i vitali
  // che non devono più essere esposti. Mai mutare shield.hp direttamente.
- const repaired=restoreMotherShield(side.defense,pvpTerrainRepairAmount(4,terrainEffects));
+ const poisoned=exclusiveNeurotoxinActive(side,round);
+ const adjusted=exclusiveNeurotoxinRepairAmount(side,round,4);
+ const repaired=restoreMotherShield(side.defense,pvpTerrainRepairAmount(adjusted,terrainEffects));
  side.defense=repaired.defense;
+ if(poisoned&&repaired.repaired>0)clearExclusiveNeurotoxin(side,round);
  state.regenerated=true;state.regenDue=0;
  return repaired.repaired;
 }
