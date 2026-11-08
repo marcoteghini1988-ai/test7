@@ -8,7 +8,7 @@ import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {LEGACY_SPECIAL_TYPES} from './tacticalLegacyEvents.js';
 import {isModuleCard,MODULE_CARD_TYPES} from './tacticalEquipmentCards.js';
-import {SPECIAL_HAND_SIZE,SPECIAL_CARD_CATALOG,initializeSpecialDeck,refillSpecialHand,
+import {SPECIAL_HAND_SIZE,SPECIAL_CARD_CATALOG,TACTICAL_ONLY_SPECIAL_TYPES,initializeSpecialDeck,refillSpecialHand,
  specialCardDefinition,findFusionCardIndex,playSpecialCard} from './specialCards.js';
 
 function ship(level=5){
@@ -19,7 +19,9 @@ function ship(level=5){
 }
 const zero=()=>0;
 test('every explicitly designed fusion and support card is registered',()=>{
- assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).filter(x=>!isBossCharacterCard(x)&&!isPvpTerrain(x)&&!isTacticalEpic(x)&&!LEGACY_SPECIAL_TYPES.includes(x)&&!isModuleCard(x)&&x!==SIGNATURE_MUTATION_CARD_ID&&x!==VULNERABILITY_RIFT_CARD_ID).sort(),['fusion-barrier','fusion-strike','fusion-triad','fusion-twin','shot-corrosion','shot-ion','shot-piercing','support-escort-repair','support-shield-repair','support-status-purge','tactical-cover']);
+ assert.deepEqual(Object.keys(SPECIAL_CARD_CATALOG).filter(x=>!isBossCharacterCard(x)&&!isPvpTerrain(x)&&!isTacticalEpic(x)&&!LEGACY_SPECIAL_TYPES.includes(x)&&!isModuleCard(x)&&x!==SIGNATURE_MUTATION_CARD_ID&&x!==VULNERABILITY_RIFT_CARD_ID&&!TACTICAL_ONLY_SPECIAL_TYPES.includes(x)).sort(),['fusion-barrier','fusion-strike','fusion-triad','fusion-twin','shot-corrosion','shot-ion','shot-piercing','support-escort-repair','support-shield-repair','support-status-purge','tactical-cover']);
+ assert.equal(TACTICAL_ONLY_SPECIAL_TYPES.length,8);
+ assert.ok(TACTICAL_ONLY_SPECIAL_TYPES.every(id=>SPECIAL_CARD_CATALOG[id]?.type===id));
  assert.equal(BOSS_CHARACTER_TYPES.length,12);
  assert.ok(BOSS_CHARACTER_TYPES.every(x=>SPECIAL_CARD_CATALOG[x]?.family==='boss-character'));
  assert.equal(PVP_TERRAIN_TYPES.length,4);
