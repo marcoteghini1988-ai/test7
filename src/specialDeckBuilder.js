@@ -7,6 +7,7 @@ import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,specialCa
 import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_TYPES,isPvpTerrain} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {LEGACY_SPECIAL_TYPES} from './tacticalLegacyEvents.js';
 import {isModuleCard,MODULE_CARD_TYPES,readLegacyModuleLevels,mergeOwnedModuleCards} from './tacticalEquipmentCards.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
@@ -70,7 +71,7 @@ export function normalizeSpecialCollection(raw){
   const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
    (['support-escort-repair','fusion-twin','fusion-triad'].includes(type)||
     BOSS_CHARACTER_TYPES.includes(type)||PVP_TERRAIN_TYPES.includes(type)||
-    type===SIGNATURE_MUTATION_CARD_ID||isTacticalEpic(type)||LEGACY_SPECIAL_TYPES.includes(type)||MODULE_CARD_TYPES.includes(type))?0:undefined;
+    type===SIGNATURE_MUTATION_CARD_ID||type===VULNERABILITY_RIFT_CARD_ID||isTacticalEpic(type)||LEGACY_SPECIAL_TYPES.includes(type)||MODULE_CARD_TYPES.includes(type))?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
@@ -96,7 +97,7 @@ export function equipSpecialDeck(collection,loadout){
  if(!check.valid)throw new Error(({
   deck_size:'Il mazzo deve contenere esattamente 24 speciali',
   unknown_card:'Carta speciale non riconosciuta',
-  copy_limit:'Limite copie superato: massimo 1 per Personaggio Boss, Epico o Modulo, massimo 6 per le altre speciali',
+  copy_limit:'Limite copie superato: massimo 1 per Personaggio Boss, Epico, Modulo o Faglia, massimo 6 per le altre speciali',
   epic_limit:'Al massimo due Oggetti Epici nel mazzo',
   not_owned:'Non possiedi abbastanza copie della speciale'
  })[check.reason]||'Mazzo speciale non valido');
