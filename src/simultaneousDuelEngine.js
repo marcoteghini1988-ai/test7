@@ -360,11 +360,19 @@ export function exchangeTacticalNumericDuringPlanning(battle,key,index,nowMs){
  if(!deck.length)return denied('numeric_deck_empty');
  const incoming=deck.shift();
  side.numeric={hand:pile.hand.map((c,i)=>i===index?incoming:c),deck,discard};
+ // Il ricambio istantaneo consuma davvero la numerica: una Bomba marcata
+ // viene disinnescata e una Dorata non giocata perde il bonus, senza copie.
+ const bombDisarmed=side.legacy?.bomb?.cardId===spent.id;
+ const goldExpired=side.legacy?.golden?.cardId===spent.id;
+ if(bombDisarmed)side.legacy.bomb=null;
+ if(goldExpired)side.legacy.golden=null;
  side.numericInstantExchanges=(side.numericInstantExchanges||0)+1;
  side.numericExchangeReadyAt=nowMs+cooldown;
  return {ok:true,reason:'ok',spent:spent.id,drawn:incoming.id,
   battle:{...battle,sides:{...battle.sides,[key]:side},
-   lastEvents:[...battle.lastEvents,key+': Afrodite · Ricambio armonico: 1 numerica sostituita dal mazzo vero, prossimo ricambio tra '+cooldown/1000+' s']}};
+   lastEvents:[...battle.lastEvents,key+': Afrodite · Ricambio armonico: 1 numerica sostituita dal mazzo vero, prossimo ricambio tra '+cooldown/1000+' s',
+    ...(bombDisarmed?[key+': Numero Bomba disinnescato con ricambio armonico']:[]),
+    ...(goldExpired?[key+': Carta Dorata scartata senza bonus']:[])]}};
 }
 
 function specialTypes(side,order){return order.specialIndices.map(i=>side.special.hand[i].type);}
