@@ -10,6 +10,7 @@ import {validateSpecialDeck} from './specialDeckBuilder.js';
 import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {arenaForBattle} from './battleArenas.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
+import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {isModuleCard} from './tacticalEquipmentCards.js';
 
@@ -58,6 +59,9 @@ export function officialBattleSetup({
   planetId:bossPlanetId,sectorLevel:bossSectorLevel});
  const encounterPlanet=boss?.planetId??bossPlanetId;
  const rival=chooseCampaignMotherRival(equipped.shipId,equipped.level,sectorNumber,encounterPlanet,bossSectorLevel);
+ // La selezione del modello resta compatibile; SOLO il livello tattico
+ // avversario dipende dal settore, non dall'upgrade posseduto dal giocatore.
+ const rivalLevel=officialCampaignRivalLevel({mode,sectorNumber,playerLevel:equipped.level});
  const arena=arenaForBattle(sectorNumber,mode,null,{planetId:encounterPlanet,
   sectorLevel:bossSectorLevel});
  // L'ID del giocatore deve essere sbloccato nell'inventario persistente.
@@ -67,14 +71,14 @@ export function officialBattleSetup({
   throw new Error('Pilota equipaggiato non ancora convertito: usare il duello 3D compatibile');
  const rivalPilot=chooseCampaignRivalCommander({
   mode,globalSector:sectorNumber,planetId:encounterPlanet,planetSector:bossSectorLevel,
-  shipId:rival.shipId,shipLevel:rival.level
+  shipId:rival.shipId,shipLevel:rivalLevel
  });
  const enemyPilot=tacticalCommanderReady(rivalPilot.id)?
   normalizeFleetCommander(rivalPilot.id,rivalPilot.level):null;
- const opponentDeck=boss?buildTacticalBossDeck(boss.planetId,rival.level,equipped.level):[...TACTICAL_STARTER_TYPES];
+ const opponentDeck=boss?buildTacticalBossDeck(boss.planetId,rivalLevel,equipped.level):[...TACTICAL_STARTER_TYPES];
  const options={
   shipA:equipped.shipId,levelA:equipped.level,
-  shipB:rival.shipId,levelB:rival.level,
+  shipB:rival.shipId,levelB:rivalLevel,
   seed,nowMs,mode,arenaId:arena.id,shuffleNumericOpening:true,
   commanderA:ownedPilot,commanderB:enemyPilot,
   bossNumericDeckA:ownedBossDeck,
