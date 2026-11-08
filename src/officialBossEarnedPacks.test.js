@@ -1,4 +1,4 @@
-// Plutone/Io: non trattare l'intera campagna come se il giocatore avesse
+// Nettuno/Plutone/Proxima b/Io: non trattare l'intera campagna come se il giocatore avesse
 // ancora soltanto le sei famiglie speciali di partenza. Questo confronto
 // apre SOLO i pacchetti realmente ottenibili con precedenti prime vittorie
 // (presupposte, NON simulate), tramite il vero RNG del gioco.
@@ -90,11 +90,13 @@ function playEncounter(scenario,specialCollection,seed){
  });
  return fight(b.battle);
 }
-test('Mazzi speciali da pacchetti autentici prima di Plutone e Io: 50 duelli',()=>{
+test('Mazzi speciali da pacchetti autentici prima di 4 boss critici: 100 duelli',()=>{
  const out=[];
  const starters=readSpecialCollection(storage());
  for(const scenario of [
+  {planet:'Nettuno',sector:60,planetId:8,ship:'E02'},
   {planet:'Plutone',sector:70,planetId:9,ship:'E03'},
+  {planet:'Proxima b',sector:90,planetId:14,ship:'L01'},
   {planet:'Io',sector:110,planetId:19,ship:'L03'}
  ]){
   const seeds=[17,171,2026,4096,8127];
@@ -120,8 +122,10 @@ test('Mazzi speciali da pacchetti autentici prima di Plutone e Io: 50 duelli',()
    out.push(stats);
   }
  }
- assert.equal(out.length,10);
+ assert.equal(out.length,20);
  assert.ok(out.every(row=>row.wins+row.losses+row.draws===5));
- assert.ok(out.filter(row=>row.variant==='packs').every(row=>row.drawn===(row.planet==='Plutone'?69:109)*3));
+ const sectors={'Nettuno':60,'Plutone':70,'Proxima b':90,'Io':110};
+ assert.ok(out.filter(row=>row.variant==='packs').every(row=>
+  row.drawn===(sectors[row.planet]-1)*3));
  console.log('ECLISSI_EARNED_SPECIAL_PACKS '+JSON.stringify(out));
 });
