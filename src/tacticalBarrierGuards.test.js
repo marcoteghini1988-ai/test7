@@ -5,6 +5,7 @@ import {REACTIVE_BARRIER_ABSORPTION,createTacticalBarrierGuard,consumeTacticalBa
 import {TACTICAL_STARTER_TYPES,createTacticalDuel,sealTacticalOrder,advanceTacticalDuel}
  from './simultaneousDuelEngine.js';
 import {moduleCardType} from './tacticalEquipmentCards.js';
+import {tacticalCombatTimeline} from './tacticalCombatTimeline.js';
 import {bossCharacterActive,activateBossCharacter,bossCharacterApplyRegen}
  from './bossCharacterCards.js';
 import {pvpTerrainDefinition,pvpTerrainEffects,pvpTerrainRepairAmount}
@@ -162,4 +163,24 @@ test('PvP: Terreno Risonanza + Barra Malus ostile contro Carta Sagittario, nessu
   assert.equal(all(side.numeric).length,52);
   assert.equal(all(side.special).length,24);
  }
+});
+
+test('Replay: mostra esattamente gli HP assorbiti dalla carta difensiva su madre e scudiera',()=>{
+ const b=createTacticalDuel({shipA:'R04',levelA:5,shipB:'R04',levelB:3,
+  specialDeckB:deck('tactic-reactive'),seed:18});
+ reveal(b,'B','tactic-reactive');
+ b.sides.B.defense.shield={hp:300,max:300};
+ const result=play(b,{escortAmmoIndex:3},{specialIndices:[0]});
+ const impacts=result.history.at(-1).impacts.filter(x=>x.by==='A'&&
+  ['barrier','escort_barrier'].includes(x.kind));
+ assert.equal(impacts.length,2);
+ const timeline=tacticalCombatTimeline(result);
+ for(const p of impacts){
+  const event=timeline.find(x=>x.by==='A'&&x.type===p.kind&&
+   (p.kind==='barrier'||x.id==='escort-barrier-A-'+p.escortSlot));
+  assert.ok(event,p.kind+' evento reale nel replay');
+  assert.equal(event.guardAbsorbed,p.guardAbsorbed);
+  if(p.guardAbsorbed>0)assert.ok(event.label.includes('DIFESA '+p.guardAbsorbed));
+ }
+ assert.ok(timeline.every(event=>!event.guardAbsorbed||event.guardAbsorbed>=0));
 });
