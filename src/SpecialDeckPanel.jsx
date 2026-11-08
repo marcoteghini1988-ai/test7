@@ -100,7 +100,7 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
        {isBossCharacterCard(type)&&!owned&&<small>Si sblocca sconfiggendo il boss del pianeta.</small>}
        {isPvpTerrain(type)&&<small>Solo PvP · cambia l'ambiente per 2 cicli. Non si ottiene nei pacchetti correnti.</small>}
        {isTacticalEpic(type)&&<small>Oggetto Epico · sblocco dal Varco fuso nella Cripta. Una copia per tipo, massimo due nel mazzo; uno slot a L20/primo Varco, due a L60.</small>}
-       {isModuleCard(type)&&<small>{owned?'Modulo acquistato · livello '+(snapshot.moduleLevels?.[type]??'?'):'Modulo non posseduto'}+' · Carta abilità: 1 copia, giocabile tra le cinque speciali; non si trova nei pacchetti normali.'</small>}
+       {isModuleCard(type)&&<small>{(owned?'Modulo acquistato · livello '+(snapshot.moduleLevels?.[type]??'?'):'Modulo non posseduto')+' · Carta abilità: 1 copia, giocabile tra le cinque speciali; non si trova nei pacchetti normali.'}</small>}
       </div>
       <div className="special-deck-quantity">
        <button type="button" aria-label={'Rimuovi '+info.name} disabled={saving||!n}
