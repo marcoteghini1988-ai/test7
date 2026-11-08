@@ -5,6 +5,7 @@ import {readShipCollection} from './shipCollection.js';
 import {readSpecialCollection} from './specialDeckBuilder.js';
 import {officialBattleSetup} from './officialBattleSetup.js';
 import {readLegacyEpicProgress} from './officialEpicOwnership.js';
+import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
 import {newVessel} from './mathDuelEngine.js';
 import {VITAL_IDS} from './vitalDefense.js';
 import {tacticalCommanderReady} from './tacticalCommanders.js';
@@ -58,6 +59,7 @@ export function createOfficialSimultaneousDuel(props={},nowMs=Date.now(),storage
   selectedBossDeck:props.selectedBossDeck,bossDeckInventory:props.bossDeckInventory,
   pilotLevel:props.pilotLevel??oldEpics.pilotLevel,
   epicRiftOpened:props.epicRiftOpened??oldEpics.hasCollapsed,
+  moduleLevels:props.moduleLevels??readLegacyModuleLevels(storage??globalThis.localStorage),
   shipCollection,specialCollection,nowMs,seed:props.seed??18
  });
  return {...setup,levelA:setup.battle.sides.A.level,levelB:setup.battle.sides.B.level};
