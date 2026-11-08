@@ -54,6 +54,7 @@ export function createOfficialSimultaneousDuel(props={},nowMs=Date.now(),storage
   bossPlanetId:props.bossPlanetId,bossSectorLevel:props.bossSectorLevel,
   selectedPilot:props.selectedPilot,pilotInventory:props.pilotInventory,
   selectedBossDeck:props.selectedBossDeck,bossDeckInventory:props.bossDeckInventory,
+  pilotLevel:props.pilotLevel,epicRiftOpened:props.epicRiftOpened,
   shipCollection,specialCollection,nowMs,seed:props.seed??18
  });
  return {...setup,levelA:setup.battle.sides.A.level,levelB:setup.battle.sides.B.level};
