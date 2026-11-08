@@ -3,6 +3,7 @@
 import {SPECIAL_TYPES,SPECIAL_DECK_SIZE} from './specialDeckBuilder.js';
 import {specialCardMaxCopies} from './specialCards.js';
 import {isPvpTerrain} from './pvpTerrainCards.js';
+import {isBossCharacterCard} from './bossCharacterCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {isTacticalEpic} from './tacticalEpicCards.js';
@@ -15,7 +16,7 @@ export function combatSpecialLoadout(collection,mode='campaign'){
   throw new Error('Mazzo speciale non valido');
  if(mode==='pvp')return [...original];
  const excluded=type=>isPvpTerrain(type)||(mode==='legacy'&&
-  (type===SIGNATURE_MUTATION_CARD_ID||type===VULNERABILITY_RIFT_CARD_ID||isTacticalEpic(type)||isModuleCard(type)||LEGACY_SPECIAL_TYPES.includes(type)));
+  (type===SIGNATURE_MUTATION_CARD_ID||type===VULNERABILITY_RIFT_CARD_ID||isBossCharacterCard(type)||isTacticalEpic(type)||isModuleCard(type)||LEGACY_SPECIAL_TYPES.includes(type)));
  const safe=original.filter(type=>!excluded(type));
  if(safe.length===SPECIAL_DECK_SIZE)return safe;
  const counts={};
