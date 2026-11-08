@@ -16,7 +16,7 @@ import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MAL
  from './tacticalLegacyEvents.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
-import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
+import {suggestedTacticalOperation} from './tacticalIntelVisibility.js';
 import {tacticalPlaybackElapsed,projectedCombatSides} from './tacticalCombatTimeline.js';
 import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
@@ -281,8 +281,7 @@ export default function OfficialBattle3D({
   battle.phase==='planning'?battle.deadlineMs: battle.resolveUntilMs||now
  )-now)/1000);
  const targetPart=enemy.defense.parts[draft.vitalId];
- const visibleSignature=targetPart&&(targetPart.exposed||player.seen.includes(draft.vitalId));
- const suggested=targetPart&&selected.length>=2?tacticalSignatureOperation(targetPart.signature,selected):null;
+ const suggested=suggestedTacticalOperation(player,enemy,draft.vitalId,selected);
  const counter=specials.includes('tactic-counter');
  const canExchange=recycle||draft.numericIndices.length===0;
  const arena=arenaForBattle(sectorNumber,gameMode,null,{
@@ -293,9 +292,8 @@ export default function OfficialBattle3D({
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  const changeNum=i=>setDraft(d=>{
   const next=toggle(d.numericIndices,i,3);
-  const signature=battle.sides.B.defense.parts[d.vitalId]?.signature;
-  const op=signature&&next.length>=2?tacticalSignatureOperation(
-   signature,next.map(index=>player.numeric.hand[index])):null;
+  const op=suggestedTacticalOperation(player,enemy,d.vitalId,
+   next.map(index=>player.numeric.hand[index]));
   return {...d,numericIndices:next,op:op||d.op,exchangeIndices:[],
    escortAmmoIndex:next.includes(d.escortAmmoIndex)?null:d.escortAmmoIndex};
  });
@@ -327,9 +325,10 @@ export default function OfficialBattle3D({
     <Ship3D side="enemy" snapshot={displayed.B} hullRef={hullB} escortRefs={escortB} phase={battle.phase}
      selectedVital={draft.vitalId} canTarget={!locked} knownVitals={player.seen}
      impactedVitals={recentImpacts.B} onSelectVital={id=>setDraft(d=>{
-      const part=battle.sides.B.defense.parts[id];
-      const op=tacticalSignatureOperation(part.signature,d.numericIndices.map(i=>player.numeric.hand[i]));
-      return {...d,vitalId:id,op:op||d.op};
+      const op=suggestedTacticalOperation(player,enemy,id,
+       d.numericIndices.map(i=>player.numeric.hand[i]));
+      // Al cambio di bersaglio una firma sconosciuta non eredita un suggerimento.
+      return {...d,vitalId:id,op:op??null};
      })}/>
     <section className="official-middle" aria-label="Fase e timer di combattimento">
      <div className="official-cycle">
