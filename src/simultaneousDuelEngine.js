@@ -48,6 +48,7 @@ import {createTacticalEscortArmament,selectTacticalEscortForAmmo,prepareTactical
 import {tacticalCombatClock,tacticalStatusActive,applyTacticalTimedStatus,clearTacticalTimedStatuses} from './tacticalTimedStatus.js';
 import {BOSS_CHARACTER_CATALOG,isBossCharacterCard,bossCharacterActive,activateBossCharacter,expireBossCharacter,bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterIonFactor,bossCharacterPrecisionExtra,bossCharacterEscortExtra,bossCharacterSyncExtra,bossCharacterCounterSync,bossCharacterRememberHit,bossCharacterApplyRegen} from './bossCharacterCards.js';
 import {tacticalVitalTransition} from './tacticalVitalConsequences.js';
+import {tacticalPrecisionBaseDamage} from './tacticalPrecisionBalance.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
 import {
@@ -757,7 +758,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(key+': attacco a '+target+' respinto da Contromisura programmata');
   return 0;
  }
- let damage=10+tacticalEpicMatriceDamage(atk,round,order.op),absorbed=0;
+ let damage=tacticalPrecisionBaseDamage(cards)+tacticalEpicMatriceDamage(atk,round,order.op),absorbed=0;
  // Bonus Plasma esclusivamente su tre numeriche e firma autentica valida.
  if(cards.length===3&&modifiers?.tripleAttackFactor)
   damage=Math.max(1,Math.round(damage*modifiers.tripleAttackFactor));
