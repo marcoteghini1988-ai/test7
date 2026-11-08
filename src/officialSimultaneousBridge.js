@@ -4,6 +4,7 @@
 import {readShipCollection} from './shipCollection.js';
 import {readSpecialCollection} from './specialDeckBuilder.js';
 import {officialBattleSetup} from './officialBattleSetup.js';
+import {readLegacyEpicProgress} from './officialEpicOwnership.js';
 import {newVessel} from './mathDuelEngine.js';
 import {VITAL_IDS} from './vitalDefense.js';
 import {tacticalCommanderReady} from './tacticalCommanders.js';
@@ -49,12 +50,14 @@ export function officialSimultaneousEligibility({gameMode,sectorNumber=1,
 export function createOfficialSimultaneousDuel(props={},nowMs=Date.now(),storage=null){
  const shipCollection=storage?readShipCollection(storage):readShipCollection();
  const specialCollection=storage?readSpecialCollection(storage):readSpecialCollection();
+ const oldEpics=readLegacyEpicProgress(storage??globalThis.localStorage);
  const setup=officialBattleSetup({
   mode:props.gameMode??'campaign',sectorNumber:props.sectorNumber,
   bossPlanetId:props.bossPlanetId,bossSectorLevel:props.bossSectorLevel,
   selectedPilot:props.selectedPilot,pilotInventory:props.pilotInventory,
   selectedBossDeck:props.selectedBossDeck,bossDeckInventory:props.bossDeckInventory,
-  pilotLevel:props.pilotLevel,epicRiftOpened:props.epicRiftOpened,
+  pilotLevel:props.pilotLevel??oldEpics.pilotLevel,
+  epicRiftOpened:props.epicRiftOpened??oldEpics.hasCollapsed,
   shipCollection,specialCollection,nowMs,seed:props.seed??18
  });
  return {...setup,levelA:setup.battle.sides.A.level,levelB:setup.battle.sides.B.level};
