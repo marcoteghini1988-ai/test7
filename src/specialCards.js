@@ -4,6 +4,7 @@ import {startFusion,activateTacticalCover} from './fleetManeuvers.js';
 import {armShotEffect,armedShotEffects,SHOT_RULES} from './strategicShots.js';
 import {useSupportCard} from './specialSupport.js';
 import {BOSS_CHARACTER_CATALOG,isBossCharacterCard} from './bossCharacterCards.js';
+import {PVP_TERRAIN_CATALOG} from './pvpTerrainCards.js';
 
 export const SPECIAL_HAND_SIZE=5;
 export const SPECIAL_CARD_CATALOG=Object.freeze({
@@ -31,7 +32,10 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
    family:'support',description:'Ripara fino a 15 HP dello scudo della scudiera selezionata. Non rianima scudiere distrutte; richiede centralina attiva.'}),
  ...Object.fromEntries(Object.values(BOSS_CHARACTER_CATALOG).map(c=>[c.id,
   Object.freeze({type:c.id,name:c.name,short:c.short,family:'boss-character',
-   description:c.description,durationCycles:c.durationCycles,imagePath:c.imagePath,maxCopies:1})]))
+   description:c.description,durationCycles:c.durationCycles,imagePath:c.imagePath,maxCopies:1})])),
+  ...Object.fromEntries(Object.values(PVP_TERRAIN_CATALOG).map(t=>[t.id,
+   Object.freeze({type:t.id,name:t.name,short:t.short,family:'terrain',
+    description:t.description,durationCycles:t.durationCycles,imagePath:t.imagePath})]))
 });
 export const specialCardMaxCopies=type=>isBossCharacterCard(type)?1:SPECIAL_DECK_COPY_LIMIT;
 // Regole confermate il 6 novembre 2026: dimensione mazzo e limite per tipo.
