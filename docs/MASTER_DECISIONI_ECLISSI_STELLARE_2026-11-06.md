@@ -9,6 +9,8 @@
 
 **Esiti 80 duelli IA/IA:** 13 vittorie, 58 sconfitte, 9 pareggi. N00 (L1–L4): 0 vittorie su 20; C01: 0/20; C02: 0/20 (4 pareggi); C03: **13/20**, con **4/5 vittorie sia L3 che L4**. Un controllo di regressione conferma che C03 L3 ha almeno due vittorie nel campione fisso, senza regalare carte.
 
+**Esperimento controllato sullo stesso boss (40 duelli, `src/terraBossShipControlled.test.js`):** 4 madri a L3, 5 seed, boss Terra L1 sempre C02 o sempre C03, con stato iniziale equivalente al gioco originale quando il modello coincide. C03 L3 ottiene **4/5 vittorie contro C02** e **2/5 contro C03**; C02 L3 passa da 1/5 a 0/5, N00 e C01 restano 0/5 con entrambi. **Non tutto il divario dipende dal modello boss**; nessun algoritmo di selezione è stato modificato. [Actions 42501804052](https://github.com/marcoteghini1988-ai/test7/actions/runs/42501804052), **779/779 test**.
+
 **Causa strutturale individuata:** il selettore `chooseCampaignMotherRival` dà al boss Terra il modello **C03** se il giocatore usa N00/C01/C02, ma **C02** se usa C03; il boss cambia quindi le proprie firme vitali e il corpo nave per il solo cambio madre del giocatore. **Non interpretare il rendimento di C03 come differenza di potenza a parità di avversario**. Il vero prossimo passaggio è un confronto controllato del modello boss fisso per pianeta, **senza alterare il layout o i 42 armamenti e senza cambiare silenziosamente compatibilità della 3D legacy**. Restano necessari playtest dei settori 1–9 e dei 12 boss umani.
 
 Rapporto: [TERRA10_MATRICE_80_E_ABBINAMENTO_NAVI_2026-11-08.md](TERRA10_MATRICE_80_E_ABBINAMENTO_NAVI_2026-11-08.md). Pipeline: [Actions 42501402162](https://github.com/marcoteghini1988-ai/test7/actions/runs/42501402162), **778 test**, build Vite e preflight approvati.
