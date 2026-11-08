@@ -1,3 +1,5 @@
+> **NOVITÀ — 8 novembre 2026.** Aggiunte quattro Carte Terreno PvP nel mazzo speciale da 24 e nel motore simultaneo (due cicli, vantaggi e svantaggi per entrambi i lati, quattro fondali SVG). Le arene dei boss non vengono sostituite e i salvataggi restano invariati. Questi Terreni non sono ancora ottenibili con ricompense/pacchetti perché il sistema di sblocco non è stato definito; non sono stati verificati il collaudo mobile e l'esito completo della CI. Vedi [documentazione Terreni PvP](docs/CARTE_TERRENO_PVP_INTEGRAZIONE_2026-11-08.md). Le righe di stato del 7 novembre e le sezioni storiche sotto sono cronologia, non il riepilogo più recente.
+
 # Eclissi Stellare — Gioco ufficiale 3D
 
 > **STATO CORRENTE — 7 novembre 2026, `test7/main`.**
