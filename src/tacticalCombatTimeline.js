@@ -90,14 +90,18 @@ export function tacticalCombatTimeline(battle){
     type:'escort_barrier',by:impact.by,
     atMs:5040+(impact.by==='B'?75:0),durationMs:650,
     damage:impact.damage,intercepted:impact.intercepted,
-    label:impact.damage>0?'-'+impact.damage+' BARRIERA · SCUDIERA':
-     impact.intercepted?'SCUDIERA INTERCETTATA':'SCUDIERA · NESSUN DANNO'});
+    guardAbsorbed:impact.guardAbsorbed??0,
+    label:(impact.damage>0?'-'+impact.damage+' BARRIERA · SCUDIERA':
+     impact.intercepted?'SCUDIERA INTERCETTATA':'SCUDIERA · NESSUN DANNO')+
+      ((impact.guardAbsorbed??0)>0?' · DIFESA '+impact.guardAbsorbed:'')});
   }
   if(impact.kind==='barrier'){
    events.push({id:'barrier-'+impact.by,type:'barrier',by:impact.by,
     atMs:4610,durationMs:750,damage:impact.damage,intercepted:impact.intercepted,
+    guardAbsorbed:impact.guardAbsorbed??0,
     pilotBonus:impact.pilotBonus||0,pilotId:impact.pilotId||null,
-    label:impact.damage>0?'-'+impact.damage+' BARRIERA':impact.intercepted?'INTERCETTATO':'NESSUN DANNO'});
+    label:(impact.damage>0?'-'+impact.damage+' BARRIERA':impact.intercepted?'INTERCETTATO':'NESSUN DANNO')+
+      ((impact.guardAbsorbed??0)>0?' · DIFESA '+impact.guardAbsorbed:'')});
   }
   if(impact.kind==='legacy-bomb')events.push({id:'bomb-explosion-'+impact.target,
    type:'barrier',by:impact.by,atMs:6290,durationMs:750,
