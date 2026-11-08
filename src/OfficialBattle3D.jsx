@@ -548,6 +548,7 @@ export default function OfficialBattle3D({
       <span>{'Potere esclusivo: '+session.bossEncounter.exclusiveAbility+
        '. Mazzo numerico: '+session.bossEncounter.numericDeckId+
        ' · livello '+session.bossEncounter.numericDeckLevel+
+       '. Nave madre: '+enemy.name+' ('+session.bossEncounter.motherShipId+')'+
        '. Arena esclusiva: '+arena.name+'.'}</span></p>}
      {player.bossNumericDeck&&<>
       <h3>PASSIVE DEL MAZZO BOSS EQUIPAGGIATO</h3>
