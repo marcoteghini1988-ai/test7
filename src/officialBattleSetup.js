@@ -107,7 +107,9 @@ export function officialBattleResult(battle,mode,sectorNumber){
    matchStats:{
     turnsElapsed:battle.round,damageDealt:Math.round(
      (1-battle.sides.B.defense.shield.hp/battle.sides.B.defense.shield.max)*100),
-    simultaneousDuel:true,sectorNumber
+    simultaneousDuel:true,sectorNumber,
+    bossPlanetId:battle.sides.B.bossPlanetId??null,
+    bossSectorLevel:battle.sides.B.bossPlanetId==null?null:10
    }
   }
  };
