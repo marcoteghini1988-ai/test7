@@ -129,3 +129,37 @@ test('Terreno Plasma penalizza davvero la rigenerazione Idra e preserva la penal
  assert.equal(neutral.defense.shield.hp,44);
  assert.equal(bossCharacterApplyRegen(healthy,2,terrain),0);
 });
+
+test('PvP: Terreno Risonanza + Barra Malus ostile contro Carta Sagittario, nessun blocco ingiusto',()=>{
+ const protect=moduleCardType('sagittarius');
+ const b=createTacticalDuel({shipA:'R04',shipB:'R04',levelA:5,levelB:5,
+  mode:'pvp',seed:18,
+  specialDeckA:deck('tactic-malus','terrain-resonance'),
+  specialDeckB:deck(protect),
+  equipmentLevelsB:{[protect]:3}});
+ reveal(b,'A','tactic-malus',0);
+ reveal(b,'A','terrain-resonance',1);
+ reveal(b,'B',protect,0);
+ b.sides.A.legacy.malusCharge=3;
+ b.sides.B.legacy.malusCharge=3;
+ const order={specialIndices:[0,1],malusChoice:'lock_weapon'};
+ const baseline=play(structuredClone(b),order,idle);
+ const defended=play(b,order,{specialIndices:[0]});
+ assert.equal(defended.activeTerrain.id,'terrain-resonance');
+ assert.equal(defended.activeTerrain.untilRound,2);
+ const without=impact(baseline,'barrier','B'),withProtection=impact(defended,'barrier','B');
+ assert.ok(without&&withProtection);
+ assert.ok(withProtection.packet>without.packet,
+  'Sagittario cancella la penalità Malus ma non il terreno condiviso');
+ assert.equal(defended.sides.A.legacy.malusCharge,0,
+  'la Carta Malus nemica è comunque consumata');
+ assert.equal(defended.sides.B.legacy.malusCharge,3,
+  'Sagittario difende senza cancellare il proprio progresso Malus');
+ assert.equal(defended.sides.B.special.discard.filter(c=>c.type===protect).length,1);
+ assert.equal(defended.sides.A.special.discard.filter(c=>c.type==='tactic-malus').length,1);
+ assert.equal(defended.sides.A.special.discard.filter(c=>c.type==='terrain-resonance').length,1);
+ for(const side of Object.values(defended.sides)){
+  assert.equal(all(side.numeric).length,52);
+  assert.equal(all(side.special).length,24);
+ }
+});
