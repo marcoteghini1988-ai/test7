@@ -16,7 +16,7 @@ import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MAL
  from './tacticalLegacyEvents.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
-import {suggestedTacticalOperation} from './tacticalIntelVisibility.js';
+import {visibleTacticalSignature,suggestedTacticalOperation} from './tacticalIntelVisibility.js';
 import {tacticalPlaybackElapsed,projectedCombatSides} from './tacticalCombatTimeline.js';
 import TacticalCombatPlayback from './TacticalCombatPlayback.jsx';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
@@ -282,6 +282,8 @@ export default function OfficialBattle3D({
  )-now)/1000);
  const targetPart=enemy.defense.parts[draft.vitalId];
  const suggested=suggestedTacticalOperation(player,enemy,draft.vitalId,selected);
+ const hiddenRiftTarget=specials.includes(VULNERABILITY_RIFT_CARD_ID)&&
+  !!draft.vitalId&&!visibleTacticalSignature(player,enemy,draft.vitalId);
  const counter=specials.includes('tactic-counter');
  const canExchange=recycle||draft.numericIndices.length===0;
  const arena=arenaForBattle(sectorNumber,gameMode,null,{
@@ -401,7 +403,10 @@ export default function OfficialBattle3D({
       <b className="formula-target">{'BERSAGLIO · '+(VITAL_LABELS[draft.vitalId]||'DA SCEGLIERE')}</b>
       <span>{selected.length?selected.map(c=>rankLabel(c.value)+c.suit).join(' · '):
        'SELEZIONA LE CARTE'}</span>
-      <small>{selected.length>=2?(suggested?'FIRMA VALIDA: '+suggested:
+      <small>{hiddenRiftTarget?
+       (draft.op?'FAGLIA · FORMULA SEGRETA, TENTATIVO '+draft.op:
+        'FAGLIA · FORMULA IGNOTA: SCANSIONA O TENTA'):
+       selected.length>=2?(suggested?'FIRMA VALIDA: '+suggested:
        draft.op?'OP '+draft.op+' · firma da verificare':'SCEGLI OPERAZIONE'):
        '2 O 3 NUMERICHE · FINO A 2 SPECIALI'}</small>
      </div>
