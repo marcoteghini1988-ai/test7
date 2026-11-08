@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES,validateTacticalOrder,
  sealTacticalOrder,advanceTacticalDuel} from './simultaneousDuelEngine.js';
-import {LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,
+import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,
  LEGACY_SPECIAL_TYPES,MALUS_CHOICES,QUANTUM_FACES,quantumFace,
  initialLegacyTactics,resolveLegacyTactics} from './tacticalLegacyEvents.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
@@ -39,14 +39,14 @@ const counts=side=>({
  numeric:side.numeric.hand.length+side.numeric.deck.length+side.numeric.discard.length,
  special:side.special.hand.length+side.special.deck.length+side.special.discard.length
 });
-test('Tre nuove speciali non regalate; Dado e Barra sono cariche, non nuovi mazzi',()=>{
+test('Quattro speciali 16B non regalate; Dado e Barra richiedono una vera carta',()=>{
  const c=createSpecialCollection();
  for(const id of LEGACY_SPECIAL_TYPES){
   assert.equal(c.owned[id],0);
   assert.ok(SPECIAL_PACK_TYPES.includes(id));
   assert.ok(SPECIAL_CARD_CATALOG[id]);
  }
- assert.equal(LEGACY_SPECIAL_TYPES.length,3);
+ assert.equal(LEGACY_SPECIAL_TYPES.length,4);
  assert.equal(MALUS_CHOICES.length,3);
  assert.equal(QUANTUM_FACES.length,6);
  assert.deepEqual(counts(duel().sides.A),{numeric:52,special:24});
@@ -60,13 +60,18 @@ test('Le sei facce del Dado sono deterministiche, senza dipendere da dati segret
  assert.deepEqual([...seen].sort(),[...QUANTUM_FACES].sort());
  assert.equal(quantumFace(18,1,'A'),quantumFace(18,1,'A'));
 });
-test('Dado: rifiutato se non carico, spende carica autentica, non produce carte o valuta',()=>{
- const battle=duel();
+test('Dado: anche carico richiede la sua carta, poi spende carica e carta reale',()=>{
+ const battle=duel(LEGACY_DICE_CARD);
+ const index=inHand(battle,'A',LEGACY_DICE_CARD);
  assert.equal(validateTacticalOrder(battle,'A',{...idle,quantumRoll:true}).reason,
+  'dice_card_required');
+ assert.equal(validateTacticalOrder(battle,'A',{...idle,specialIndices:[index]}).reason,
   'dice_not_ready');
  battle.sides.A.legacy.diceReady=true;
  battle.sides.A.legacy.dicePatterns=['plus','minus','times'];
- const rolled=play(battle,{quantumRoll:true});
+ const ready=validateTacticalOrder(battle,'A',{...idle,specialIndices:[index]});
+ assert.equal(ready.ok,true,ready.reason);
+ const rolled=play(battle,{specialIndices:[index]});
  const simple=play(duel());
  assert.equal(rolled.sides.A.legacy.diceReady,false);
  assert.deepEqual(rolled.sides.A.legacy.dicePatterns,[]);
