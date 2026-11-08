@@ -109,8 +109,15 @@ export function planTacticalAi(battle,key='B'){
   if(isModuleCard(type)&&[...types].some(isModuleCard))continue;
   types.add(type);chosen.push(index);
  }
+ // Anti-stallo: senza formula non continuare a rimpiazzare sempre
+ // lo slot 0 lasciando sei numeriche bloccate per tutta la battaglia.
+ // Ruota uno slot reale a ogni ciclo; con la Carta Ricambio vera ne ruota due.
+ const handSize=ours.numeric.hand.length;
+ const replaceIndex=handSize?((battle.round-1)%handSize):0;
+ const nextIndex=handSize?(replaceIndex+1)%handSize:0;
  let exchanges=shot.numericIndices.length?[]:
-  chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?[0,1]:[0];
+  chosen.some(i=>ours.special.hand[i].type==='tactic-numeric-recycle')?
+   (handSize>1?[replaceIndex,nextIndex]:[replaceIndex]):[replaceIndex];
  const bombIndex=ours.numeric.hand.findIndex(c=>c.id===ours.legacy?.bomb?.cardId);
  if(bombIndex>=0&&!shot.numericIndices.includes(bombIndex)){
   exchanges=[bombIndex];
