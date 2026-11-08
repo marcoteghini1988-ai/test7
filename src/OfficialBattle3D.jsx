@@ -8,6 +8,8 @@ import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
 import {bossCharacterActive,isBossCharacterCard} from './bossCharacterCards.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
+import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
+import {isPvpTerrain,pvpTerrainAtRound,pvpTerrainDefinition} from './pvpTerrainCards.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
@@ -262,6 +264,8 @@ export default function OfficialBattle3D({
  const arena=arenaForBattle(sectorNumber,gameMode,null,{
   planetId:bossPlanetId,sectorLevel:bossSectorLevel
  });
+ const activeTerrain=pvpTerrainAtRound(battle.activeTerrain,battle.round);
+ const terrain=activeTerrain?pvpTerrainDefinition(activeTerrain.id):null;
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  const changeNum=i=>setDraft(d=>{
   const next=toggle(d.numericIndices,i,3);
@@ -278,9 +282,12 @@ export default function OfficialBattle3D({
     style={{transform:'translate(-50%, -50%) scale('+scale+')'}}>
     <div className="space-back metal-arena" aria-hidden="true"
      style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
-    <ArenaEnvironment arenaId={battle.arenaId||arena.id} round={battle.arenaValidCalculations+1}/>
+    {terrain&&<div className="pvp-terrain-scene" data-terrain={terrain.id}
+     style={{backgroundImage:'url('+ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg)'}} aria-hidden="true"/>}
+    <ArenaEnvironment arenaId={terrain?.arenaId||battle.arenaId||arena.id}
+     round={battle.arenaValidCalculations+1}/>
     <div className="top-brand">ECLISSI <b>STELLARE</b><small>
-     {'ARENA · '+(arena.shortLabel||'TITANIO')}</small></div>
+     {'ARENA · '+(terrain?terrain.short+' · '+(activeTerrain.untilRound-battle.round+1)+'C':(arena.shortLabel||'TITANIO'))}</small></div>
     <div className="toolbar">
      <button type="button" onClick={()=>setMenu('rules')} aria-label="Regole di combattimento">?</button>
      <button type="button" onClick={leave} aria-label="Torna al menu">⌂</button>
@@ -325,7 +332,7 @@ export default function OfficialBattle3D({
       const family=data?.kind||'empty';
       return <button key={card?.id||i} type="button" disabled={locked||!card}
        title={data?.help||'Slot libero'} aria-pressed={draft.specialIndices.includes(i)}
-       className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(draft.specialIndices.includes(i)?' active':'')}
+       className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(isPvpTerrain(card?.type)?' terrain-card':'')+(draft.specialIndices.includes(i)?' active':'')}
        data-family={family} onClick={()=>setDraft(d=>{
         const chosen=toggle(d.specialIndices,i,2);
         const defending=chosen.some(index=>{
@@ -337,6 +344,8 @@ export default function OfficialBattle3D({
        })}>
        {isBossCharacterCard(card?.type)?
         <BossCharacterPortrait type={card.type} className="special-board-boss-portrait"/>:
+        isPvpTerrain(card?.type)?
+        <PvpTerrainPortrait type={card.type} className="special-board-boss-portrait"/>:
         <span className="special-board-glyph">✦</span>}
        <strong>{data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
       </button>;
@@ -395,6 +404,8 @@ export default function OfficialBattle3D({
     </div>}
     {menu==='cards'&&<div className="modal-shade"><section className="help-card official-details">
      <h2>CARTE SPECIALI EQUIPAGGIATE</h2>
+     {terrain&&<p><b>{'TERRENO ATTIVO · '+terrain.name}</b>
+      <span>{terrain.description+' · scade dopo il ciclo '+activeTerrain.untilRound}</span></p>}
      {bossCharacterActive(player,battle.round)&&<p>
       <b>{'PERSONAGGIO ATTIVO · '+bossCharacterActive(player,battle.round).name}</b>
       <span>{'Abilità: '+bossCharacterActive(player,battle.round).skill+
@@ -452,6 +463,7 @@ export default function OfficialBattle3D({
      <p>Hai 30 secondi per preparare un ordine. Anche l'avversario prepara il proprio ordine senza leggere le tue carte. Conferma o lascia scadere il tempo: gli ordini si risolvono insieme in 8 secondi.</p>
      <p>Le 7 numeriche attaccano un sistema vitale solo con una firma matematica o Poker valida e se il sistema è esposto. Le 5 speciali provengono dal tuo mazzo da 24 carte e se ne possono impegnare al massimo 2 per ciclo.</p>
      <p>Le armi native della tua nave agiscono sulla barriera; scudiere, fusioni e riparazioni utilizzano HP e carte reali. Dopo lo scontro le mani vengono ripristinate pescando dal mazzo.</p>
+     <p>Le Carte Terreno modificano l'ambiente per due cicli e hanno pro e contro uguali per entrambe le flotte. Sono giocabili soltanto nel PvP: le arene dei boss non si possono sostituire.</p>
      <h3>I QUATTRO COMPONENTI DISTRUGGIBILI</h3>
      <p>I vitali partono con 10 HP: 10–6 integro, 5–1 danneggiato, 0 distrutto. Scegli quale colpire quando la barriera apre un bersaglio. Tutti e quattro distrutti = vittoria.</p>
      {VITAL_IDS.map(id=><p key={id}>
