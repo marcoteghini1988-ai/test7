@@ -11,12 +11,13 @@ import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {arenaForBattle} from './battleArenas.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
+import {isModuleCard} from './tacticalEquipmentCards.js';
 
 export function officialBattleSetup({
  mode='campaign',sectorNumber=1,bossPlanetId=null,bossSectorLevel=null,
  shipCollection,specialCollection,selectedPilot=null,pilotInventory={},
  selectedBossDeck='neutral_starter',bossDeckInventory={},pilotLevel=1,
- epicRiftOpened=false,nowMs=0,seed=18
+ epicRiftOpened=false,moduleLevels={},nowMs=0,seed=18
 }={}){
  if(!shipCollection?.cards||!Array.isArray(shipCollection.loadout))
   throw new Error('Collezione navicelle non leggibile: salvataggio conservato');
@@ -38,6 +39,8 @@ export function officialBattleSetup({
   throw new Error('Slot Epici non ancora sbloccati dal livello pilota o dai Varchi');
  if(equippedEpics.some(id=>(specialCollection.owned?.[id]??0)<1))
   throw new Error('Oggetto Epico nel mazzo ma non ancora ottenuto');
+ if(battleSpecialDeck.some(id=>isModuleCard(id)&&!moduleLevels[id]))
+  throw new Error('Carta Modulo non autorizzata: abilità non ancora acquistata');
  const epicEntitlements=Object.keys(TACTICAL_EPIC_CARDS).filter(id=>
   (specialCollection.owned?.[id]??0)>=1);
  // I mazzi numerici boss non fanno parte delle 24 speciali.
@@ -77,6 +80,7 @@ export function officialBattleSetup({
   bossNumericDeckA:ownedBossDeck,
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
   specialDeckA:battleSpecialDeck,epicEntitlementsA:epicEntitlements,
+  equipmentLevelsA:moduleLevels,
   specialDeckB:opponentDeck,bossPlanetB:boss?.planetId??null
  };
  return {
