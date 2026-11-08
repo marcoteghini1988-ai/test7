@@ -52,3 +52,30 @@ test('IA senza formula ruota il ricambio gratuito sui sette slot veri anziche bl
  assert.equal(base.sides.A.numeric.hand.length,7);
  assert.equal(base.sides.A.numeric.hand.length+base.sides.A.numeric.deck.length+base.sides.A.numeric.discard.length,52);
 });
+
+test('IA sceglie 3 numeriche per chiudere 8 HP, ma ne risparmia una a 6 o 10 HP',()=>{
+ const base=createTacticalDuel({shipA:'C01',shipB:'R04',seed:18});
+ const pile=base.sides.A.numeric;
+ const all=[...pile.hand,...pile.deck];
+ const chosen=[];
+ for(const value of [4,5,2,3,4]){
+  const card=all.find(c=>c.value===value&&!chosen.some(s=>s.id===c.id));
+  assert.ok(card,'carta autentica '+value);
+  chosen.push(card);
+ }
+ const selectedIds=new Set(chosen.map(c=>c.id));
+ const rest=all.filter(c=>!selectedIds.has(c.id));
+ pile.hand=[...chosen,...rest.slice(0,2)];
+ pile.deck=rest.slice(2);
+ assert.equal(pile.hand.length+pile.deck.length,52);
+ base.sides.B.defense.shield.hp=0;
+ base.sides.B.defense.parts.shieldGenerator.exposed=true;
+ for(const [hp,expected] of [[10,2],[8,3],[6,2]]){
+  const b=structuredClone(base);
+  b.sides.B.defense.parts.shieldGenerator.hp=hp;
+  const order=planTacticalAi(b,'A');
+  assert.equal(order.vitalId,'shieldGenerator');
+  assert.equal(order.numericIndices.length,expected,'HP '+hp);
+  assert.equal(validateTacticalOrder(b,'A',order).ok,true);
+ }
+});
