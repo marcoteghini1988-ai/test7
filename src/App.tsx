@@ -54,7 +54,7 @@ import {getPhase16EDeckTraits,isPhase16EDeck} from './newCombat/phase16EDecks.js
 import {getPhase16HSectorChallenge,getPhase16HBountyProgress} from './newCombat/phase16HProgression.js';
 import ClassicBattleView, { calculateAiTurnClassic, generateClassicObjectives } from './ClassicBattleView';
 import MathDuelBattle from './MathDuelBattle.jsx';
-import {applyVerifiedBossRelic} from './campaignBossRelics.js';
+import {applyVerifiedBossRelic,verifiedBossRelicReward} from './campaignBossRelics.js';
 import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
@@ -18908,7 +18908,15 @@ function App() {
         const isReplay = levelNum < maxLvl;
         let reward = typeof getLevelReward === 'function' ? getLevelReward(planetNum, levelNum, isReplay) : { stardust: 50, diamonds: 0, xp: 40 };
 
-        const isBossFight = levelNum === 10;
+        // Pilota boss, avanzamento di pianeta e premio doppio soltanto
+        // se la vittoria e' il vero boss del settore canonico.
+        const bossRelic = verifiedBossRelicReward({
+          winner: 'player', mode: gameMode,
+          sectorNumber: Number(battleMeta?.matchStats?.sectorNumber),
+          bossPlanetId: Number(battleMeta?.matchStats?.bossPlanetId),
+          bossSectorLevel: Number(battleMeta?.matchStats?.bossSectorLevel)
+        });
+        const isBossFight = levelNum === 10 && bossRelic === 'relic_p' + planetNum;
         const isFlawlessBossWin = isBossFight && !battleMeta.usedRevive;
 
         if (isFlawlessBossWin) {
