@@ -164,6 +164,33 @@ test('Percorso completo: tutti i 12 boss arrivano a un esito entro 20 cicli, sen
  console.log('ECLISSI_BOSS_AI_20_ROUNDS '+JSON.stringify(balanceObservations));
 });
 
+test('Benchmark comparativo: navicella leggendaria L5 con starter contro 12 boss reali',()=>{
+ const ownedLegendary={cards:[{instanceId:'owned:L04',shipId:'L04',level:5}],
+  loadout:['owned:L04']};
+ const observed=[];
+ for(const [i,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
+  let battle=officialBattleSetup({mode:'campaign',sectorNumber:i*10+10,bossPlanetId:planet.id,
+   bossSectorLevel:10,shipCollection:ownedLegendary,specialCollection:ownedSpecials,
+   nowMs:100,seed:171}).battle;
+  while(battle.phase!=='finished'){
+   const now=battle.deadlineMs-TACTICAL_TIMING.prepareMs+1;
+   const a=sealTacticalOrder(battle,'A',planTacticalAi(battle,'A'),now);
+   assert.equal(a.ok,true,planet.name+' A: '+a.reason);
+   const b=sealTacticalOrder(a.battle,'B',planTacticalAi(battle,'B'),now+1);
+   assert.equal(b.ok,true,planet.name+' B: '+b.reason);
+   const resolved=advanceTacticalDuel(b.battle,now+1);
+   battle=advanceTacticalDuel(resolved,resolved.resolveUntilMs);
+   assert.ok(battle.round<=TACTICAL_TIMING.maxRounds);
+  }
+  observed.push({planet:planet.name,rounds:battle.round,winner:battle.winner,
+   hitsA:battle.history.reduce((sum,x)=>sum+(x.hitsA||0),0),
+   hitsB:battle.history.reduce((sum,x)=>sum+(x.hitsB||0),0),
+   destroyedB:Object.values(battle.sides.B.defense.parts).filter(p=>p.hp===0).length});
+ }
+ // IA locale contro IA locale con mazzo iniziale; non misura una strategia umana.
+ console.log('ECLISSI_LEGENDARY_AI_20_ROUNDS '+JSON.stringify(observed));
+});
+
 test('Telemetria della vittoria conserva il vero boss e sblocca la sua reliquia, non quelle degli altri',()=>{
  for(const [i,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
   const b=setup(i).battle;
