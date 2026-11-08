@@ -5,6 +5,7 @@ import {readSpecialCollection,validateSpecialDeck} from './specialDeckBuilder.js
 import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {SPECIAL_DECK_SIZE,specialCardMaxCopies} from './specialCards.js';
 import {isPvpTerrain} from './pvpTerrainCards.js';
+import {isBossCharacterCard} from './bossCharacterCards.js';
 import {isTacticalEpic} from './tacticalEpicCards.js';
 import {isModuleCard} from './tacticalEquipmentCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
@@ -12,7 +13,7 @@ import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {LEGACY_SPECIAL_TYPES} from './tacticalLegacyEvents.js';
 
 export const legacyUnsupportedSpecial=type=>
- isPvpTerrain(type)||isTacticalEpic(type)||isModuleCard(type)||
+ isPvpTerrain(type)||isBossCharacterCard(type)||isTacticalEpic(type)||isModuleCard(type)||
  type===SIGNATURE_MUTATION_CARD_ID||type===VULNERABILITY_RIFT_CARD_ID||
  LEGACY_SPECIAL_TYPES.includes(type);
 
