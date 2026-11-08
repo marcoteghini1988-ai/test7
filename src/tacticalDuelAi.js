@@ -9,6 +9,7 @@ import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import {isPvpTerrain,pvpTerrainAtRound} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
+import {visibleTacticalSignature} from './tacticalIntelVisibility.js';
 import {isModuleCard} from './tacticalEquipmentCards.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
  from './tacticalLegacyEvents.js';
@@ -22,9 +23,9 @@ function findPrecision(ours,enemy,priority){
  for(const id of priority){
   const part=enemy.defense.parts[id];
   if(!part||part.hp<=0)continue;
-  // Un'IA non può usare una firma protetta/non ancora scansionata.
-  if(!part.exposed&&!ours.seen.includes(id))continue;
-  const sig=part.signature;
+  // Una firma sconosciuta non si puo' consultare, nemmeno con Faglia in mano.
+  const sig=visibleTacticalSignature(ours,enemy,id);
+  if(!sig)continue;
   for(let i=0;i<ours.numeric.hand.length;i++)
    for(let j=i+1;j<ours.numeric.hand.length;j++){
     const op=tacticalSignatureOperation(sig,[ours.numeric.hand[i],ours.numeric.hand[j]]);
