@@ -35,7 +35,7 @@ const count=p=>p.hand.length+p.deck.length+p.discard.length;
 
 test('Le undici speciali ufficiali hanno un vero tipo consumabile nel sandbox',()=>{
  const official=Object.keys(SPECIAL_CARD_CATALOG);
- assert.equal(official.length,34); // 11 speciali + 12 Boss + 4 Terreni + Mutazione + 6 Epici
+ assert.equal(official.length,37); // 11 speciali + 12 Boss + 4 Terreni + Mutazione + 6 Epici + 3 carte 16B
  for(const id of official){
   assert.ok(Object.hasOwn(TACTICAL_SPECIALS,id),id);
   const game=isTacticalEpic(id)?createTacticalDuel({specialDeckA:deck([id]),epicEntitlementsA:[id]}):setup({a:[id]});
