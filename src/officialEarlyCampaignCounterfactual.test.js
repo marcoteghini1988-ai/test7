@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {officialBattleSetup} from './officialBattleSetup.js';
 import {shipsUnlockableBeforeSector} from './officialBossProgressionAudit.js';
-import {chooseCampaignRivalCommander} from './motherDuelLoadout.js';
+import {chooseCampaignRivalCommander,chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {normalizeFleetCommander} from './fleetCommander.js';
 import {readShipCollection,grantShipCard,equipShipCards} from './shipCollection.js';
 import {createSpecialCollection} from './specialDeckBuilder.js';
@@ -24,7 +24,9 @@ function battle(sector,shipId,seed,variant){
   bossPlanetId:1,bossSectorLevel:sector,shipCollection:shipCollection(shipId,sector),
   specialCollection:specials,selectedPilot:'pilot_com_1',pilotInventory:ownedPilot,
   seed,nowMs:100}).battle;
- const enemyShip=variant==='same'||variant==='same_owned'?official.sides.B.shipId:
+ // Variante 'same' replica il vecchio selettore legacy, senza toccarlo.
+ const previousRival=chooseCampaignMotherRival(shipId,1,sector,1,sector).shipId;
+ const enemyShip=variant==='same'||variant==='same_owned'?previousRival:
   shipsUnlockableBeforeSector(sector).at(-1);
  const enemyDeck=variant==='same'||variant==='accessible'?TACTICAL_STARTER_TYPES:specials.loadout;
  const pilot=chooseCampaignRivalCommander({mode:'adventure',globalSector:sector,
@@ -36,7 +38,8 @@ function battle(sector,shipId,seed,variant){
   specialDeckA:specials.loadout,specialDeckB:enemyDeck,
   equipmentLevelsA:{},epicEntitlementsA:[],
   bossNumericDeckA:null,bossNumericDeckB:null,bossPlanetB:null});
- if(variant==='same')assert.deepEqual(controlled,official,'controllo senza modifica deve equivalere al motore');
+ if(variant==='accessible_owned')assert.deepEqual(controlled,official,
+  'Con apertura corretta il nuovo incontro deve equivalere a nave e starter originali');
  return {controlled,rival:enemyShip};
 }
 function run(current){
