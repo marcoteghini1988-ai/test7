@@ -104,14 +104,14 @@ test('Supremazia: vera vittima KO prepara il PROSSIMO impatto, senza bonus grati
  const deck=fixture(9),normal=fixture(null);
  for(const b of [deck,normal]){
   b.sides.B.defense.shield.hp=40;
-  b.sides.B.defense.parts.shieldGenerator.hp=10;
+  b.sides.B.defense.parts.shieldGenerator.hp=6; // KO autentico da avaria
   b.sides.B.defense.parts.engine.hp=30;
   b.sides.B.defense.parts.engine.max=30;
  }
  const attack={numericIndices:[0,1],vitalId:'shieldGenerator',op:'times'};
  const hitA=play(deck,attack),hitB=play(normal,attack);
- assert.equal(precision(hitA).damage,10);
- assert.equal(precision(hitB).damage,10);
+ assert.equal(precision(hitA).damage,6);
+ assert.equal(precision(hitB).damage,6);
  assert.equal(hitA.sides.A.bossNumericDeck.supremacyArmedAfterRound,1);
  assert.ok(hitA.lastEvents.some(x=>x.includes('Supremazia armata')));
  const a=next(hitA),b=next(hitB);
@@ -120,8 +120,8 @@ test('Supremazia: vera vittima KO prepara il PROSSIMO impatto, senza bonus grati
  const nextAttack={numericIndices:[0,1],vitalId:'engine',op:'plus'};
  const a2=play(a,nextAttack,8200),b2=play(b,nextAttack,8200);
  assert.ok(precision(a2).damage>precision(b2).damage);
- assert.equal(precision(a2).damage,11);
- assert.equal(precision(b2).damage,10);
+ assert.equal(precision(a2).damage,7);
+ assert.equal(precision(b2).damage,6);
  assert.equal(a2.sides.A.bossNumericDeck.supremacyArmedAfterRound,0);
  assert.ok(a2.lastEvents.some(x=>x.includes('Supremazia +8%')));
  assert.ok(a2.sides.A.numeric.discard.some(c=>c.value===4&&c.suit==='♣'));
