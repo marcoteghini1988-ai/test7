@@ -3,6 +3,12 @@
 **Documento di continuità per la scaletta generale di 53 punti.**
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
+## AGGIORNAMENTO DOPO L'AUDIT — 8 novembre 2026, settori e premi boss
+
+È stata corretta nel codice **la numerazione canonica 1–120 dei settori** per i dodici pianeti del catalogo, pur conservando gli ID storici: Saturno/ID 6 → settore 40, Encelado/ID 20 → settore 120. L'ingresso `MathDuelBattle.jsx` normalizza la numerazione prima di scegliere tra il motore simultaneo e il fallback, senza modificare la plancia. Il controllo del boss reale ora rifiuta in entrambe le modalità le coppie settore/pianeta incoerenti. L'App assegna la reliquia storica solo se il risultato contiene un boss autentico vinto; la stessa reliquia non si duplica. I pacchetti primo settore non si duplicano fra Campagna e Avventura e non vengono attribuiti oltre il 120. Salvate le chiavi storiche dei premi senza migrazione distruttiva. **753 test, build e preflight riusciti** su [Actions 42483315300](https://github.com/marcoteghini1988-ai/test7/actions/runs/42483315300). Rapporto dettagliato: [INTEGRAZIONE_SETTORI_RELIQUIE_RICOMPENSE_2026-11-08.md](INTEGRAZIONE_SETTORI_RELIQUIE_RICOMPENSE_2026-11-08.md). Da non considerare chiuso il collaudo Android, il percorso Cripta post-vittoria reale o la migrazione dei claim storici ambigui. **Prossimo blocco operativo: vitali, danni 10/10, scelta strategica dei bersagli e durata dei boss.**
+
+---
+
 ## CHECKPOINT OPERATIVO — 8 novembre 2026: audit incrociato delle scalette
 
 **Questo checkpoint prevale sulle descrizioni di stato più vecchie presenti sotto, senza alterare la numerazione originale dei 53 punti.** Raccolta basata sullo storico progettuale recuperabile, sui documenti in `docs/` e sul codice di `test7/main`. Il testo integrale originale di tutti i 53 punti non è disponibile: NON ricostruire o segnare come conclusi i numeri mancanti per deduzione. I punti 44–47 di una scaletta locale del 6 novembre non sono necessariamente gli stessi della scaletta originale.
