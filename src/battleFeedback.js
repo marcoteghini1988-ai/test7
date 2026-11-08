@@ -62,10 +62,11 @@ export function impactBattleCue({id,side='player',result,effect={}}={}){
 export function specialBattleCue({id,side='player',played=false,definition,amount=0}={}){
  if(!played||!definition||!Number.isInteger(id)||id<1)return null;
  const family=definition.family;
- const kind=['fusion','volley','support','defense','boss-character'].includes(family)?family:'special';
+ const kind=['fusion','volley','support','defense','boss-character','terrain','mutation'].includes(family)?family:'special';
  const label=definition.name||'CARTA SPECIALE';
  const detail=(family==='volley'?'COLPO ARMATO · ':family==='fusion'?'FUSIONE AVVIATA · ':
-  family==='support'?'SUPPORTO ATTIVATO · ':family==='boss-character'?'PERSONAGGIO SCHIERATO · ':'COPERTURA ATTIVATA · ')+
+  family==='support'?'SUPPORTO ATTIVATO · ':family==='boss-character'?'PERSONAGGIO SCHIERATO · ':
+  family==='mutation'?'FIRMA DIFENSIVA MUTATA · ':family==='terrain'?'AMBIENTE ATTIVATO · ':'COPERTURA ATTIVATA · ')+
   (validDamage(amount)?'+'+validDamage(amount)+' HP':'carta consumata');
  return summary(label,detail,kind,side,'special:'+id);
 }
