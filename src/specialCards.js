@@ -8,6 +8,7 @@ import {PVP_TERRAIN_CATALOG} from './pvpTerrainCards.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {TACTICAL_MODULE_CARDS,isModuleCard} from './tacticalEquipmentCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {VULNERABILITY_RIFT_CARD_ID,VULNERABILITY_RIFT_PROTECTED_DAMAGE_CAP} from './tacticalVulnerabilityRift.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD} from './tacticalLegacyEvents.js';
 
 export const SPECIAL_HAND_SIZE=5;
@@ -42,6 +43,9 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
   description:'Richiede tre colpi validi a vitali. Consuma la carica per un disturbo nemico limitato a un ciclo.'}),
  [LEGACY_GOLD_CARD]:Object.freeze({type:LEGACY_GOLD_CARD,name:'Carta Dorata',short:'DORATA',family:'transmute',
   description:'Trasforma una tua numerica esistente per due cicli. Bonus per seme soltanto con una formula valida; nessuna valuta assegnata.'}),
+ [VULNERABILITY_RIFT_CARD_ID]:Object.freeze({type:VULNERABILITY_RIFT_CARD_ID,
+   name:'Faglia di Vulnerabilità',short:'FAGLIA',family:'rift',maxCopies:1,
+   description:'Una formula valida colpisce un vitale anche con barriera attiva; danno massimo '+VULNERABILITY_RIFT_PROTECTED_DAMAGE_CAP+' HP se protetto. Una volta per battaglia. Non rivela la firma e non evita le Contromisure.'}),
  [SIGNATURE_MUTATION_CARD_ID]:Object.freeze({type:SIGNATURE_MUTATION_CARD_ID,
    name:'Mutazione della Firma',short:'MUTA FIRMA',family:'mutation',
    description:'Cambia per un ciclo la formula di un proprio sistema vitale già esposto. La vecchia combinazione nemica non è più valida; non modifica gli HP.'}),
@@ -57,7 +61,7 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
    Object.freeze({type:t.id,name:t.name,short:t.short,family:'terrain',
     description:t.description,durationCycles:t.durationCycles,imagePath:t.imagePath})]))
 });
-export const specialCardMaxCopies=type=>isBossCharacterCard(type)||isTacticalEpic(type)||isModuleCard(type)?1:SPECIAL_DECK_COPY_LIMIT;
+export const specialCardMaxCopies=type=>type===VULNERABILITY_RIFT_CARD_ID||isBossCharacterCard(type)||isTacticalEpic(type)||isModuleCard(type)?1:SPECIAL_DECK_COPY_LIMIT;
 // Regole confermate il 6 novembre 2026: dimensione mazzo e limite per tipo.
 export const SPECIAL_DECK_SIZE=24;
 export const SPECIAL_DECK_COPY_LIMIT=6;
