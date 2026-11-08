@@ -11,6 +11,7 @@ import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {visibleTacticalSignature} from './tacticalIntelVisibility.js';
 import {isModuleCard} from './tacticalEquipmentCards.js';
+import {isBossCharacterCard,bossCharacterDefinition,bossCharacterActive} from './bossCharacterCards.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
  from './tacticalLegacyEvents.js';
 
@@ -48,7 +49,27 @@ function findPrecision(ours,enemy,priority){
  }
  return {numericIndices:[],vitalId:null,op:null};
 }
-function playable(type,ours,enemy,shot){
+function playable(type,ours,enemy,shot,round){
+ if(isBossCharacterCard(type)){
+  if(bossCharacterActive(ours,round))return false;
+  const effect=bossCharacterDefinition(type)?.effect;
+  switch(effect){
+   case 'armor':return ours.defense.shield.hp>0;
+   case 'assault':case 'corrosion':return enemy.defense.shield.hp>0;
+   case 'counter':return ours.defense.parts&&Object.values(ours.defense.parts).some(p=>p.hp>0&&p.exposed)&&ours.special.hand.some(c=>c.type==='tactic-counter');
+   case 'ionGuard':return !!ours.ionized;
+   case 'escortGuard':return ours.escorts.some(e=>e.hp>0)&&ours.defense.shield.hp>0;
+   case 'shadow':return ours.defense.shield.hp>0&&
+    ours.defense.shield.hp*100<=ours.defense.shield.max*35&&enemy.defense.shield.hp>0;
+   case 'regeneration':return ours.defense.parts.shieldGenerator.hp>0&&
+    ours.defense.shield.hp<ours.defense.shield.max;
+   case 'sync':case 'precision':return shot.numericIndices.length>=2;
+   case 'harmonic':return ours.escorts.some(e=>e.hp>0)&&enemy.defense.shield.hp>0;
+   case 'magma':return !!enemy.corroded&&enemy.defense.shield.hp>0;
+   default:return false;
+  }
+ }
+
  const escorts=ours.escorts.filter(e=>e.hp>0).length;
  const command=ours.defense.parts.command.hp>0,engine=ours.defense.parts.engine.hp>0;
  switch(type){
@@ -103,14 +124,17 @@ export function planTacticalAi(battle,key='B'){
   ours.special.hand.map(c=>c.type).filter(isPvpTerrain):[];
  const modules=ours.special.hand.map(c=>c.type).filter(type=>
   isModuleCard(type)&&!!ours.equipmentLevels?.[type]);
+ const bossCharacters=ours.special.hand.map(c=>c.type).filter(isBossCharacterCard);
  for(const type of [...(shot.numericIndices.length>=2&&
   !enemy.defense.parts[shot.vitalId]?.exposed?[VULNERABILITY_RIFT_CARD_ID]:[]),
+  ...bossCharacters,
   ...(ours.legacy?.diceReady?[LEGACY_DICE_CARD]:[]),
   ...((ours.legacy?.malusCharge??0)>=3?[LEGACY_MALUS_CARD]:[]),
   ...(mutationVitalId?[SIGNATURE_MUTATION_CARD_ID]:[]),...(ours.seen.length<4?['tactic-scan']:[]),
   ...terrains,...modules,LEGACY_BOMB_CARD,LEGACY_GOLD_CARD,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
   if(chosen.length>=2)break;
-  if(types.has(type)||!playable(type,ours,enemy,shot))continue;
+  if(types.has(type)||!playable(type,ours,enemy,shot,battle.round))continue;
+  if(isBossCharacterCard(type)&&[...types].some(isBossCharacterCard))continue;
   const index=ours.special.hand.findIndex((c,i)=>c.type===type&&!chosen.includes(i));
   if(index<0)continue;
   if(type.startsWith('fusion-')&&[...types].some(t=>t.startsWith('fusion-')))continue;
