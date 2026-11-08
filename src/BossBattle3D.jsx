@@ -490,7 +490,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   // Owned special cards are read from their independent persistent collection.
   // Never overwrite an unreadable save or block the battle.
   let specialDeckTypes=null;
-  try{specialDeckTypes=combatSpecialLoadout(readSpecialCollection(),'campaign');}catch{}
+  try{specialDeckTypes=combatSpecialLoadout(readSpecialCollection(),'legacy');}catch{}
   const motherOptions=prepareMotherDuelOptions(options,{
    mode:gameMode,globalSector:sectorNumber,planetId:bossPlanetId,
    planetSector:bossSectorLevel,practice});
@@ -995,7 +995,7 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   setCollection(next);
   const {fleet}=newShip(b.level,false,options);
   let equippedTypes=null;
-  try{equippedTypes=combatSpecialLoadout(readSpecialCollection(),'campaign');}catch{}
+  try{equippedTypes=combatSpecialLoadout(readSpecialCollection(),'legacy');}catch{}
   const existingTypes=[...(b.player.specialHand||[]),...(b.player.specialDeck||[]),
    ...(b.player.specialDiscard||[])].map(card=>card.type);
   const counts=specialDeckCounts(existingTypes);
