@@ -193,7 +193,8 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
   })),
   sync:0,ionized:false,corroded:false,heated:false,bossCharacter:null,bossPlanetId,
   legacy:initialLegacyTactics(),equipmentLevels:{...equipmentLevels},riftUsed:false,
-  neurotoxinUntilRound:0,bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
+  neurotoxinUntilRound:0,neurotoxinPendingRound:0,
+  bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
   commander:commander&&tacticalCommanderReady(commander.id)?{
    id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
   }:null,
