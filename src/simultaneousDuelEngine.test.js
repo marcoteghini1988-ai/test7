@@ -32,7 +32,7 @@ test('Ciclo 30s/8s: il motore resta separato, niente vincitore automatico',()=>{
  assert.equal(count(b.sides.A.numeric),52);
  assert.equal(count(b.sides.A.special),24);
  assert.equal(TACTICAL_STARTER_TYPES.length,24);
- assert.equal(Object.keys(TACTICAL_SPECIALS).length,45); // 25 precedenti + 12 Boss + 4 Terreni + Mutazione + 3 sistemi 16B
+ assert.equal(Object.keys(TACTICAL_SPECIALS).length,81); // 45 precedenti + Dado quantico + 35 Carte Modulo
  assert.equal(b.winner,null);
 });
 test('Tutte le 17 navi hanno fuoco nativo dai veri armamenti del catalogo, anche senza calcolo',()=>{
