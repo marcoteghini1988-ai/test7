@@ -37,7 +37,10 @@ const repairShield=(side,amount)=>{
 // la variabile di B dipende anche da ciclo e seed, senza dati privati.
 export const quantumFace=(seed,round,key)=>{
  const base=(seed>>>0)+round*13+17;
- const sideSalt=key==='B'?24+(Math.imul(((seed>>>0)+round)>>>0,7)>>>0):0;
+ // La mescolanza XOR del round evita cicli su sole 3 facce; entrambe le
+ // flotte possono ottenere tutte le 6 facce e talvolta anche la stessa.
+ const mixed=((seed>>>0)^Math.imul(round,0x9e3779b1))>>>0;
+ const sideSalt=key==='B'?24+((mixed^(mixed>>>16))>>>0)%QUANTUM_FACES.length:0;
  return QUANTUM_FACES[(base+sideSalt)%QUANTUM_FACES.length];
 };
 export function validateLegacyTactics(battle,key,order,types){
