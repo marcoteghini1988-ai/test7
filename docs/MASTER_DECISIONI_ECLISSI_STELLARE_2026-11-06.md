@@ -3,6 +3,18 @@
 **Documento di continuità per la scaletta generale di 53 punti.**
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
+## CHECKPOINT — 8 novembre 2026: matrice boss, acquisizione vere speciali e scala progressiva
+
+**Correzione concreta dopo i 12 boss:** l'inventario ufficiale non conosceva **otto** Carte Speciali già valide nel motore: Scansione, Contromisura, Ricambio Numerico, Deviazione, Soppressione, Paratia, Carica e Schermo d'Urto. Ora catalogo e motore coincidono a **82 famiglie**, 25 tipi sono nei pacchetti (17 precedenti +8) e la migrazione dei vecchi salvataggi mantiene **zero copie nuove** e tutte le copie/prezzi/sblocchi originali. Non sono carte gratis; i pacchetti vanno guadagnati, aperti e poi le carte equipaggiate nel mazzo reale 24.
+
+**Progressione corretta:** nel duello 3D ufficiale l'avversario non cresce ogni volta che il giocatore migliora la propria nave. I 120 settori sono ripartiti in cinque livelli del rivale (24 settori per livello); gli asset originali e i modelli non cambiano all'aumento del livello della stessa nave del giocatore. Modalità legacy e PvP escluse. L'IA inoltre non scarta sempre la stessa numerica quando non trova la firma: il ricambio gratuito ruota attraverso gli slot 0–6, senza duplicazioni e senza bypassare Scansione.
+
+**Collaudo:** 213 scontri IA contro IA, tre seed × sei configurazioni (per Gaia 33 incontri dopo la Terra). Il campione mostra N00 L1 0 vittorie/36, N00 L3 2/36, N00 L5 2/36, C01 L3 2/36, L04 L5 11/36, L04 L5 Scansione+Gaia L1 13/33. Terra 1/15 vittorie, Europa 0/18 ed Encelado 0/18 nel campione: restano punti di difficoltà critica, non prova di impossibilità umana. **770 test superati**, build e preflight su [Actions 42489947159](https://github.com/marcoteghini1988-ai/test7/actions/runs/42489947159). Rapporto: [AUDIT_BILANCIAMENTO_12_BOSS_MULTI_CONFIG_2026-11-08.md](AUDIT_BILANCIAMENTO_12_BOSS_MULTI_CONFIG_2026-11-08.md).
+
+**Non chiudere ancora "bilanciamento definitivo":** dopo gli upgrade vanno testati collezioni storiche realmente ottenibili, sblocchi, piloti, mazzi, speciali e boss di Europa/Encelado, con vari seed e una strategia umana; serve ancora prova Android. La grafica e i 42 armamenti restano invariati.
+
+---
+
 ## CHECKPOINT SUCCESSIVO — 8 novembre 2026, quattro vitali e sistema di esposizione
 
 **Stato codice su `test7/main`:** attacchi di precisione di base a **6 HP con 2 numeriche** o **8 HP con 3 numeriche** contro quattro vitali da 10 HP; primo impatto ordinario crea un'avaria (4/10 o 2/10) invece del KO immediato. Bonus autentici restano attivi; le 42 armi native, l'HP iniziale e i 20 cicli non cambiano. Copertura reale dei **136 casi 17 navi × 4 vitali × 2 livelli** nei test, oltre ai normali boss.
