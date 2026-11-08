@@ -67,8 +67,8 @@ test('Ordini simultanei segreti, irrevocabili e nessun vantaggio per chi conferm
  const y=advanceTacticalDuel(two,101);
  assert.deepEqual(x.sides,y.sides);
  assert.deepEqual(x.lastEvents,y.lastEvents);
- assert.equal(x.sides.B.defense.parts.weapons.hp,0);
- assert.equal(x.sides.A.defense.parts.engine.hp,0);
+ assert.equal(x.sides.B.defense.parts.weapons.hp,4);
+ assert.equal(x.sides.A.defense.parts.engine.hp,4);
  assert.equal(advanceTacticalDuel(x,8100).phase,'resolving');
  assert.equal(advanceTacticalDuel(x,8101).phase,'planning');
 });
@@ -89,7 +89,7 @@ test('Combinazione valida colpisce esclusivamente vitale esposto dopo barriera; 
  assert.equal(miss.sides.B.defense.parts.weapons.hp,10);
  assert.ok(miss.lastEvents.some(x=>x.includes('ancora protetto')));
  const exposed=commit(shield(base),order({numericIndices:[3,2],vitalId:'weapons',op:'minus'}));
- assert.equal(exposed.sides.B.defense.parts.weapons.hp,0);
+ assert.equal(exposed.sides.B.defense.parts.weapons.hp,4);
  const invalid=commit(shield(base),order({numericIndices:[0,1],vitalId:'weapons',op:'minus'}));
  assert.equal(invalid.sides.B.defense.parts.weapons.hp,10);
  assert.ok(invalid.lastEvents.some(x=>x.includes('combinazione non valida')));
@@ -145,7 +145,7 @@ test('Doppio KO nello stesso scontro dà pareggio e non vittoria al primo che sp
   const d=b.sides[key].defense;
   d.shield.hp=0;
   for(const id of ['engine','weapons','shieldGenerator'])d.parts[id].hp=0;
-  d.parts.command.hp=10;
+  d.parts.command.hp=6; // Dal sistema gia danneggiato al KO reale nello stesso ciclo
  }
  const x=commit(b,order({numericIndices:[4,5],vitalId:'command',op:'pair'}),
   order({numericIndices:[5,6],vitalId:'command',op:'pair'}));
@@ -159,6 +159,7 @@ test('Generatore distrutto collassa barriera e impedisce riciclo salute; penalit
  const original=nativeBarrierPacket(b.sides.A);
  b.sides.A.defense.parts.weapons.hp=0;
  assert.ok(nativeBarrierPacket(b.sides.A)<original);
+ b.sides.B.defense.parts.shieldGenerator.hp=6; // Seconda precisione da una vera avaria al KO
  const x=commit(b,order({numericIndices:[1,2],vitalId:'shieldGenerator',op:'plus'}));
  assert.equal(x.sides.B.defense.parts.shieldGenerator.hp,0);
  assert.equal(x.sides.B.defense.shield.hp,0);
