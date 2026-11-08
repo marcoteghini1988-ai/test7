@@ -7,6 +7,7 @@ import {numericBossDeck} from './bossNumericDecks.js';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES,validateTacticalLoadout} from './simultaneousDuelEngine.js';
 import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {validateSpecialDeck} from './specialDeckBuilder.js';
+import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {arenaForBattle} from './battleArenas.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 
@@ -24,7 +25,8 @@ export function officialBattleSetup({
   throw new Error('Mazzo speciale non valido: nessun salvataggio modificato');
  // Il mazzo della collezione reale deve essere anche supportato dal motore
  // simultaneo. In presenza di carte non ancora convertite fermarsi, non sostituirle.
- if(!validateTacticalLoadout(specialCollection.loadout))
+ const battleSpecialDeck=combatSpecialLoadout(specialCollection,mode);
+ if(!validateTacticalLoadout(battleSpecialDeck))
   throw new Error('Una carta speciale equipaggiata non è ancora compatibile con il nuovo duello');
  // I mazzi numerici boss non fanno parte delle 24 speciali.
  // Attiva soltanto i mazzi le cui passive sono convertite, se posseduti ed equipaggiati.
@@ -58,11 +60,11 @@ export function officialBattleSetup({
  const options={
   shipA:equipped.shipId,levelA:equipped.level,
   shipB:rival.shipId,levelB:rival.level,
-  seed,nowMs,arenaId:arena.id,shuffleNumericOpening:true,
+  seed,nowMs,mode,arenaId:arena.id,shuffleNumericOpening:true,
   commanderA:ownedPilot,commanderB:enemyPilot,
   bossNumericDeckA:ownedBossDeck,
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
-  specialDeckA:[...specialCollection.loadout],
+  specialDeckA:battleSpecialDeck,
   specialDeckB:opponentDeck,bossPlanetB:boss?.planetId??null
  };
  return {
