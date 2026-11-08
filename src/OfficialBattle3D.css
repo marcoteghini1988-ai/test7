@@ -276,3 +276,25 @@
 .es-math-scope .official-duel-3d .special-board-card.boss-character-card small{
  z-index:3;text-shadow:0 1px 3px #000;
 }
+
+/* Fondale Terreno PvP: illustrazione SVG sopra l'arena originale.
+   Non cambia coordinate/asset/slot delle flotte. */
+.es-math-scope .official-duel-3d .pvp-terrain-scene{
+ position:absolute;inset:0;z-index:0;pointer-events:none;
+ background-position:center;background-repeat:no-repeat;background-size:100% 100%;
+ opacity:.88;transition:opacity .35s ease;
+}
+.es-math-scope .official-duel-3d .special-board-card.terrain-card{
+ border-color:#8fddee;
+}
+.es-math-scope .official-duel-3d .special-board-card.terrain-card strong{
+ position:absolute;bottom:0;left:0;right:0;z-index:2;
+ font-size:7px;line-height:8px;padding:3px 1px 2px;
+ text-shadow:0 1px 3px #000;max-width:100%;
+ background:linear-gradient(transparent,#070d20f0 45%);
+}
+.es-math-scope .official-duel-3d .special-board-card.terrain-card small{z-index:3}
+.es-math-scope .official-duel-3d .special-board-boss-portrait .pvp-terrain-fallback{
+ position:absolute;inset:0;display:grid;place-items:center;
+ font-size:23px;color:#b8f5ff;background:linear-gradient(145deg,#123d55,#0a1935);
+}
