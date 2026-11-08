@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
+import {isTacticalEpic} from './tacticalEpicCards.js';
 import {TACTICAL_SPECIALS,TACTICAL_STARTER_TYPES,createTacticalDuel,validateTacticalOrder,
  sealTacticalOrder,advanceTacticalDuel} from './simultaneousDuelEngine.js';
 
@@ -34,10 +35,10 @@ const count=p=>p.hand.length+p.deck.length+p.discard.length;
 
 test('Le undici speciali ufficiali hanno un vero tipo consumabile nel sandbox',()=>{
  const official=Object.keys(SPECIAL_CARD_CATALOG);
- assert.equal(official.length,28); // 11 ufficiali + 12 Personaggi Boss + 4 Terreni PvP + Mutazione
+ assert.equal(official.length,34); // 11 speciali + 12 Boss + 4 Terreni + Mutazione + 6 Epici
  for(const id of official){
   assert.ok(Object.hasOwn(TACTICAL_SPECIALS,id),id);
-  const game=setup({a:[id]});
+  const game=isTacticalEpic(id)?createTacticalDuel({specialDeckA:deck([id]),epicEntitlementsA:[id]}):setup({a:[id]});
   offer(game,'A',id);
   assert.equal(game.sides.A.special.hand[0].type,id);
   assert.equal(count(game.sides.A.special),24);
