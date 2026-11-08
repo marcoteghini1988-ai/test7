@@ -1,3 +1,5 @@
+> **AGGIORNAMENTO 8 novembre 2026 — Mutazione della Firma.** Inserita la carta difensiva che cambia per un ciclo la formula di un proprio vitale già esposto. La mano e la plancia 9:16 non sono state riposizionate. I test ufficiali hanno raggiunto **656/656** sulla build verificata `4377ec9c` (oltre a build/preflight). Verifica visiva Android ancora necessaria. Dettagli in [Mutazione della Firma](docs/MUTAZIONE_FIRMA_TATTICA_2026-11-08.md).
+
 > **NOVITÀ — 8 novembre 2026.** Aggiunte quattro Carte Terreno PvP nel mazzo speciale da 24 e nel motore simultaneo (due cicli, vantaggi e svantaggi per entrambi i lati, quattro fondali SVG). Le arene dei boss non vengono sostituite e i salvataggi restano invariati. Questi Terreni non sono ancora ottenibili con ricompense/pacchetti perché il sistema di sblocco non è stato definito; non sono stati verificati il collaudo mobile e l'esito completo della CI. Vedi [documentazione Terreni PvP](docs/CARTE_TERRENO_PVP_INTEGRAZIONE_2026-11-08.md). Le righe di stato del 7 novembre e le sezioni storiche sotto sono cronologia, non il riepilogo più recente.
 
 # Eclissi Stellare — Gioco ufficiale 3D
