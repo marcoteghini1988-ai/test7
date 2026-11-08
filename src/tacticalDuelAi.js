@@ -76,6 +76,10 @@ export function planTacticalAi(battle,key='B'){
   profile?.style==='eruzione'?'plasma':enemy.escorts.some(e=>e.hp>0)?'cinetico':'laser';
  const focusWeapon=ours.weapons.find(w=>tacticalWeaponTechnology(w)===focusPreferred)??ours.weapons[0];
  const shot=findPrecision(ours,enemy,priority);
+ // La scelta del bersaglio di esposizione non legge firme nascoste.
+ // La soglia e' verificata dal motore dopo il vero impatto nativo.
+ const exposureTarget=priority.find(id=>enemy.defense.parts[id]?.hp>0&&
+  !enemy.defense.parts[id].exposed)??shot.vitalId??null;
  const threatened=priority.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)
    ??priority.find(id=>ours.defense.parts[id].hp>0)??'shieldGenerator';
  const mutationVitalId=priority.find(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed)??null;
@@ -125,7 +129,7 @@ export function planTacticalAi(battle,key='B'){
   bombSlot:types.has(LEGACY_BOMB_CARD)?3:null,
   goldenIndex:types.has(LEGACY_GOLD_CARD)?(shot.numericIndices[0]??0):null,
   exchangeIndices:exchanges,
-  escortAmmoIndex:ammo,weaponFocusId:focusWeapon?.id??null,...shot};
+  escortAmmoIndex:ammo,weaponFocusId:focusWeapon?.id??null,exposureTarget,...shot};
  while(!validateTacticalOrder(battle,key,result).ok&&result.specialIndices.length){
   result={...result,specialIndices:result.specialIndices.slice(0,-1)};
   const remaining=result.specialIndices.map(i=>ours.special.hand[i].type);
@@ -136,7 +140,7 @@ export function planTacticalAi(battle,key='B'){
    result.exchangeIndices=result.exchangeIndices.slice(0,1);
  }
  if(!validateTacticalOrder(battle,key,result).ok)
-  result={specialIndices:[],numericIndices:[],vitalId:null,op:null,
+  result={specialIndices:[],numericIndices:[],vitalId:null,exposureTarget,op:null,
    quantumRoll:false,counterVitalId:null,
    weaponFocusId:focusWeapon?.id??null,exchangeIndices:[0]};
  return result;
