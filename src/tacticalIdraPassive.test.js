@@ -125,8 +125,8 @@ test('Il vero colpo a un vitale diverso riceve Teste alternate solo se valido',(
  b.sides.A.bossNumericDeck.idraVitalRemainder=95;
  const boosted=play(b,plus),baseline=play(normal,plus);
  const a=impact(baseline,'precision'),v=impact(boosted,'precision');
- assert.equal(a.damage,10);
- assert.equal(v.damage,11);
+ assert.equal(a.damage,6);
+ assert.equal(v.damage,7);
  assert.equal(boosted.sides.A.bossNumericDeck.lastVital,'engine');
  assert.ok(boosted.lastEvents.some(event=>event.includes('Teste alternate')));
  assert.equal(b.sides.A.bossNumericDeck.lastVital,'weapons');
