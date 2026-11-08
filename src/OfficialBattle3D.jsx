@@ -11,6 +11,7 @@ import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {isPvpTerrain,pvpTerrainAtRound,pvpTerrainDefinition} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
  from './tacticalLegacyEvents.js';
 import {TACTICAL_SPECIALS,TACTICAL_TIMING,advanceTacticalDuel,sealTacticalOrder,validateTacticalOrder,exchangeTacticalNumericDuringPlanning} from './simultaneousDuelEngine.js';
@@ -134,6 +135,9 @@ function niceError(reason){
   terrain_conflict:'Puoi giocare una sola Carta Terreno per ciclo',
   terrain_pvp_only:'Le Carte Terreno sono utilizzabili soltanto nel PvP',
   mutation_unavailable:'Mutazione disponibile solo su un tuo sistema vitale già esposto e integro',
+  rift_requires_precision:'Per attivare la Faglia seleziona un vitale e 2–3 numeriche per il calcolo',
+  rift_target_destroyed:'Il bersaglio della Faglia è già distrutto',
+  rift_already_used:'La Carta Faglia è già stata attivata in questa battaglia',
   dice_not_ready:'Carta Dado non ancora pronta: servono tre formule differenti valide',
   dice_card_required:'Devi giocare una Carta Dado Quantico dalle cinque speciali, non basta la carica',
   equipment_conflict:'Puoi attivare un solo Modulo equipaggiamento per ciclo',
@@ -352,7 +356,7 @@ export default function OfficialBattle3D({
       const family=data?.kind||'empty';
       return <button key={card?.id||i} type="button" disabled={locked||!card}
        title={data?.help||'Slot libero'} aria-pressed={draft.specialIndices.includes(i)}
-       className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(isPvpTerrain(card?.type)?' terrain-card':'')+(card?.type?.startsWith('epic_item_')?' epic-card':'')+(draft.specialIndices.includes(i)?' active':'')}
+       className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(isPvpTerrain(card?.type)?' terrain-card':'')+(card?.type?.startsWith('epic_item_')?' epic-card':'')+(card?.type===VULNERABILITY_RIFT_CARD_ID?' rift-card':'')+(draft.specialIndices.includes(i)?' active':'')}
        data-family={family} onClick={()=>setDraft(d=>{
         const chosen=toggle(d.specialIndices,i,2);
         const defending=chosen.some(index=>{
@@ -374,7 +378,7 @@ export default function OfficialBattle3D({
         <BossCharacterPortrait type={card.type} className="special-board-boss-portrait"/>:
         isPvpTerrain(card?.type)?
         <PvpTerrainPortrait type={card.type} className="special-board-boss-portrait"/>:
-        <span className="special-board-glyph">{card?.type===SIGNATURE_MUTATION_CARD_ID?'⌘':card?.type?.startsWith('epic_item_')?'◆':'✦'}</span>}
+        <span className="special-board-glyph">{card?.type===SIGNATURE_MUTATION_CARD_ID?'⌘':card?.type===VULNERABILITY_RIFT_CARD_ID?'◇':card?.type?.startsWith('epic_item_')?'◆':'✦'}</span>}
        <strong>{data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
       </button>;
      })}
@@ -501,6 +505,7 @@ export default function OfficialBattle3D({
        onChange={e=>setDraft(d=>({...d,goldenIndex:Number(e.target.value)}))}>
        {player.numeric.hand.map((c,i)=><option key={c.id} value={i}>{'Carta '+(i+1)+' · '+rankLabel(c.value)+c.suit}</option>)}
       </select></label>}
+     {specials.includes(VULNERABILITY_RIFT_CARD_ID)&&<p><strong>FAGLIA DI VULNERABILITÀ</strong> · Usa la formula selezionata sul vitale nemico anche se lo scudo è ancora chiuso. Fino a 5 HP quando è protetto; non altera lo scudo né rivela la formula. Una volta per partita.</p>}
      {specials.includes(SIGNATURE_MUTATION_CARD_ID)&&<label>Mutazione: scegli il TUO vitale già esposto
       <select value={draft.mutationVitalId??''} onChange={e=>setDraft(d=>({...d,mutationVitalId:e.target.value||null}))}>
        <option value="">Scegli un sistema</option>
@@ -519,6 +524,7 @@ export default function OfficialBattle3D({
      <p>Le armi native della tua nave agiscono sulla barriera; scudiere, fusioni e riparazioni utilizzano HP e carte reali. Dopo lo scontro le mani vengono ripristinate pescando dal mazzo.</p>
      <p>Le Carte Terreno modificano l'ambiente per due cicli e hanno pro e contro uguali per entrambe le flotte. Sono giocabili soltanto nel PvP: le arene dei boss non si possono sostituire.</p>
      <p>Mutazione della Firma: una speciale difensiva modifica per un solo ciclo la combinazione richiesta da un tuo vitale già esposto. Il nuovo requisito appare nella risoluzione e poi ritorna quello originale; nessuna riparazione automatica.</p>
+     <p>Faglia di Vulnerabilità: una Carta Speciale per partita permette di colpire direttamente un vitale protetto senza abbattere o aprire la barriera. Servono sempre 2–3 numeriche e una formula valida; fino a 5 HP su un vitale protetto, Contromisure e Mutazione della Firma possono difendere.</p>
      <p>Dado Quantico: dopo tre formule differenti devi giocare e consumare la sua Carta Speciale, pescata tra le cinque. Non esiste lancio gratuito con pulsante né premi di valuta automatici.</p>
      <p>Numero Bomba: la speciale marca una vera carta nemica visibile dal ciclo successivo; il nemico può disinnescarla con ricambio o formula valida, oppure subisce 8 danni alla barriera.</p>
      <p>Barra Malus: tre colpi reali ai vitali abilitano una carta sabotaggio. Durata un ciclo, senza saltare interi turni.</p>
