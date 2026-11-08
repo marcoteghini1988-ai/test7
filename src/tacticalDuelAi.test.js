@@ -130,7 +130,7 @@ test('IA non consuma Scansione se tutti i vitali ancora vivi sono già visibili'
  assert.equal(validateTacticalOrder(b,'A',order).ok,true);
 });
 
-test('L IA non spreca una numerica scudiera quando barriera e generatore nemici sono entrambi a zero',()=>{
+test('L IA conserva scelta reale di munizione scudiera quando barriera e generatore nemici sono KO',()=>{
  const battle=createTacticalDuel({shipA:'E03',levelA:5,shipB:'E03',levelB:5,
   seed:171,nowMs:100});
  assert.equal(battle.sides.A.escorts.length,2);
@@ -141,8 +141,10 @@ test('L IA non spreca una numerica scudiera quando barriera e generatore nemici 
  battle.sides.B.defense.shield.hp=0;
  battle.sides.B.defense.parts.shieldGenerator.hp=0;
  const order=planTacticalAi(battle,'A');
- assert.equal(order.escortAmmoIndex,null,
-  'barriera collassata e irreparabile: le numeriche si conservano per i vitali');
+ assert.notEqual(order.escortAmmoIndex,null,
+  'la scudiera consuma una numerica vera e la rip pesca: puo ancora riciclare carte per il vitale finale');
+ assert.ok(!order.exchangeIndices.includes(order.escortAmmoIndex),
+  'una numerica non puo essere usata due volte');
  assert.equal(validateTacticalOrder(battle,'A',order).ok,true);
  assert.deepEqual([...battle.sides.A.numeric.hand,...battle.sides.A.numeric.deck].map(c=>c.id),
   beforeIds,'la decisione IA non modifica il mazzo senza sigillare un ordine');
