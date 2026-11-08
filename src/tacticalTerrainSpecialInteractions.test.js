@@ -130,3 +130,23 @@ test('Purificazione blocca la Barra Malus energetica nel ciclo stesso senza canc
  assert.equal(withPurification.sides.A.legacy.malusCharge,2);
  assert.equal(withPurification.sides.B.legacy.malusCharge,0);
 });
+
+test('Due Terreni PvP simultanei si annullano: la Carta Modulo cura senza penalità',()=>{
+ const taurus=moduleCardType('taurus');
+ const b=createTacticalDuel({mode:'pvp',seed:29,
+  specialDeckA:deck('terrain-plasma',taurus),
+  specialDeckB:deck('terrain-ionic'),equipmentLevelsA:{[taurus]:1}});
+ offer(b,'A','terrain-plasma',0);offer(b,'A',taurus,1);
+ offer(b,'B','terrain-ionic',0);
+ b.sides.A.defense.shield.hp=20;
+ const out=commit(b,{specialIndices:[0,1]},{specialIndices:[0]});
+ assert.equal(out.activeTerrain,null);
+ assert.equal(out.history[0].moduleActivations.find(x=>x.effect==='healing').actual,9);
+ assert.ok(out.lastEvents.some(x=>x.includes('Terreni simultanei: interferenza')));
+ assert.equal(out.sides.A.special.discard.filter(c=>c.type==='terrain-plasma').length,1);
+ assert.equal(out.sides.B.special.discard.filter(c=>c.type==='terrain-ionic').length,1);
+ for(const side of Object.values(out.sides)){
+  assert.equal(side.special.hand.length+side.special.deck.length+side.special.discard.length,24);
+  assert.equal(side.numeric.hand.length+side.numeric.deck.length+side.numeric.discard.length,52);
+ }
+});
