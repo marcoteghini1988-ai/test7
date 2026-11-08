@@ -9,6 +9,7 @@ import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {createSpecialCollection,normalizeSpecialCollection,SPECIAL_PACK_TYPES}
  from './specialDeckBuilder.js';
 import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
+import {tacticalCombatTimeline} from './tacticalCombatTimeline.js';
 import {exposeMotherPart} from './vitalDefense.js';
 
 const idle={specialIndices:[],numericIndices:[]};
@@ -73,6 +74,7 @@ test('Dado: rifiutato se non carico, spende carica autentica, non produce carte 
  assert.equal(rolled.sides.A.sync,simple.sides.A.sync+10);
  assert.deepEqual(counts(rolled.sides.A),{numeric:52,special:24});
  assert.equal(Object.hasOwn(rolled,'wallet'),false);
+ assert.ok(tacticalCombatTimeline(rolled).some(e=>e.id==='quantum-dice-A'&&e.label.includes('DADO QUANTICO')));
 });
 test('Dado: 3 formule diverse vere, mai 3 ripetizioni della stessa',()=>{
  const b=duel();
@@ -134,6 +136,7 @@ test('Numero Bomba: scade dopo due cicli e danneggia SOLO la barriera reale',()=
  const control=play(reference,idle,idle,reference.deadlineMs-200);
  assert.equal(after.sides.B.legacy.bomb,null);
  assert.ok(after.lastEvents.some(x=>x.includes('scadenza')));
+ assert.ok(tacticalCombatTimeline(after).some(e=>e.id==='bomb-explosion-B'&&e.label.includes('BOMBA')));
  assert.ok(after.sides.B.defense.shield.hp<=control.sides.B.defense.shield.hp);
  assert.equal(mark.cardId,placedCardFrom(held,'B',mark.cardId)?.id);
  function placedCardFrom(duel,key,id){return duel.sides[key].numeric.hand.find(c=>c.id===id);}
