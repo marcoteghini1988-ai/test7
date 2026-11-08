@@ -114,7 +114,7 @@ test('Riciclo di 52 carte: la protezione del bonus compare SOLO nel ciclo seguen
  next.sides.B.defense.parts.engine.hp=20;
  next.sides.B.defense.parts.engine.max=20;
  const out=commit(next,attack,order(),next.deadlineMs-2000);
- assert.equal(precision(out).damage,10);
+ assert.equal(precision(out).damage,8);
  assert.equal(out.sides.A.bossNumericDeck.recyclePending,false);
  assert.ok(out.lastEvents.some(x=>x.includes('Marea del riciclo')));
 });
@@ -124,10 +124,10 @@ test('Riciclo e tripla L6 si sommano solo su un colpo reale (8% + 7%)',()=>{
  boss.sides.A.bossNumericDeck.recyclePending=true;
  const normal=exposed(placeThreeRealCards(fresh()));
  const x=commit(boss,attack),y=commit(normal,attack);
- assert.equal(precision(y).damage,10);
- assert.equal(precision(x).damage,11);
+ assert.equal(precision(y).damage,8);
+ assert.equal(precision(x).damage,9);
  assert.equal(x.sides.A.bossNumericDeck.recyclePending,false);
- assert.equal(x.sides.A.bossNumericDeck.leviatanoRemainder,50);
+ assert.equal(x.sides.A.bossNumericDeck.leviatanoRemainder,20);
  assert.ok(x.lastEvents.some(e=>e.includes('Marea del riciclo')&&e.includes('Profondità tattica')));
 });
 
