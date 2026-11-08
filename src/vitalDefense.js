@@ -125,11 +125,11 @@ export function exposeMotherPart(defense,id){
  const next=reconcile({...defense,exposureOrder:[...defense.exposureOrder,id]});
  return {defense:next,exposed:next.parts[id].exposed};
 }
-export function hitMotherPart(defense,id,rawDamage,cards,signatureOverride=null){
+export function hitMotherPart(defense,id,rawDamage,cards,signatureOverride=null,bypassProtection=false){
  if(defense?.kind!=='mother'||!validKey(id))return {defense,damage:0,reason:'part_missing'};
  const part=defense.parts[id];
  if(!part||part.hp===0)return {defense,damage:0,reason:'destroyed'};
- if(!part.exposed)return {defense,damage:0,reason:'protected'};
+ if(!part.exposed&&!bypassProtection)return {defense,damage:0,reason:'protected'};
  const signature=part.signature??signatureOverride;
  if(!signature)return {defense,damage:0,reason:'signature_undecided'};
  if(!matchesVitalSignature(signature,cards))return {defense,damage:0,reason:'wrong_combination'};
@@ -137,6 +137,11 @@ export function hitMotherPart(defense,id,rawDamage,cards,signatureOverride=null)
  const nextPart={...part,hp:part.hp-damage};
  const next=reconcile({...defense,parts:{...defense.parts,[id]:nextPart}});
  return {defense:next,damage,destroyed:damage>0&&nextPart.hp===0,reason:damage?'hit':'no_damage'};
+}
+// La Faglia colpisce un SOLO vitale senza esporlo in modo permanente.
+// Condivide le stesse firme matematiche, HP e conseguenze del colpo normale.
+export function hitMotherPartThroughRift(defense,id,rawDamage,cards){
+ return hitMotherPart(defense,id,rawDamage,cards,null,true);
 }
 export function createEscortDefense({shieldMax=60,signature=null}={}){
  const max=positive(shieldMax,'Scudo scudiera');
