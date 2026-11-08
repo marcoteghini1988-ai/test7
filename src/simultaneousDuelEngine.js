@@ -19,6 +19,9 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID,prepareSignatureMutation} from './tacticalSignatureMutation.js';
+import {LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,initialLegacyTactics,
+ validateLegacyTactics,prepareLegacyTactics,resolveLegacyTactics,armLegacyBombs}
+ from './tacticalLegacyEvents.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
 import {tacticalCommanderReady,tacticalCommanderVolleyBonus} from './tacticalCommanders.js';
 import {equipTacticalBossDeck,tacticalBossMotherFactor,rememberTacticalBossMotherHit,
@@ -62,6 +65,9 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'shot-piercing':{name:'Colpo perforante',kind:'offense',help:'Bypassa intercettazione scudiera sul 20% del pacchetto, non le firme'},
  'shot-ion':{name:'Impulso ionico',kind:'control',help:'Se la barriera nemica subisce danno, l’intercettazione delle scudiere si riduce nello scontro successivo'},
  'tactic-numeric-recycle':{name:'Ricambio numerico',kind:'support',help:'Scarta fino a due carte numeriche a fine scontro e ripescale'},
+ [LEGACY_BOMB_CARD]:{name:'Numero Bomba',kind:'sabotage',help:'Marca uno slot avversario: la numerica reale può essere disinnescata o esplode entro due cicli'},
+ [LEGACY_MALUS_CARD]:{name:'Barra Malus',kind:'sabotage',help:'Richiede 3 colpi efficaci ai vitali; sabotaggio per un ciclo'},
+ [LEGACY_GOLD_CARD]:{name:'Carta Dorata',kind:'transmute',help:'Trasforma una numerica reale: bonus del seme su formula valida, durata due cicli'},
  [SIGNATURE_MUTATION_CARD_ID]:{name:'Mutazione della Firma',kind:'mutation',help:'Cambia soltanto per questo ciclo la formula richiesta da un proprio vitale già esposto. Il nemico non conosce la nuova firma durante la preparazione.'},
  'fusion-strike':{name:'Fusione Assalto',kind:'fusion',help:'Una scudiera viva, 100 Sincronia: +25% barriera madre, scudiera agganciata senza fuoco autonomo'},
  'fusion-twin':{name:'Fusione Gemellare',kind:'fusion',help:'Due scudiere vive, 100 Sincronia: intercettazione fino al 55% su HP veri'},
@@ -177,6 +183,7 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
    weapon:createTacticalEscortArmament(shipId,weapons,i)
   })),
   sync:0,ionized:false,corroded:false,heated:false,bossCharacter:null,bossPlanetId,
+  legacy:initialLegacyTactics(),
   neurotoxinUntilRound:0,bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
   commander:commander&&tacticalCommanderReady(commander.id)?{
    id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
@@ -188,7 +195,7 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',mode='classic',
  specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null,bossNumericDeckA=null,bossNumericDeckB=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
- const battle={schemaVersion:1,arenaId,mode,activeTerrain:null,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
+ const battle={schemaVersion:1,arenaId,mode,seed,activeTerrain:null,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB,bossNumericDeckB)},
@@ -219,6 +226,8 @@ export function validateTacticalOrder(battle,key,order){
  if(!uniqueIndices(ni,side.numeric.hand.length,3))return {ok:false,reason:'numeric_selection'};
  if(!uniqueIndices(ei,side.numeric.hand.length,2))return {ok:false,reason:'exchange_selection'};
  const types=si.map(i=>side.special.hand[i].type);
+ const legacyValid=validateLegacyTactics(battle,key,order,types);
+ if(!legacyValid.ok)return legacyValid;
  if(types.includes(SIGNATURE_MUTATION_CARD_ID)&&
   !prepareSignatureMutation(side.defense,order.mutationVitalId,battle.round).ok)
   return {ok:false,reason:'mutation_unavailable'};
@@ -304,6 +313,8 @@ export function sealTacticalOrder(battle,key,order=EMPTY_ORDER,nowMs=0){
   specialIndices:[...(order.specialIndices??[])],numericIndices:[...(order.numericIndices??[])],
   vitalId:order.numericIndices?.length?order.vitalId:null,op:order.numericIndices?.length?order.op:null,
   counterVitalId:order.counterVitalId??null,mutationVitalId:order.mutationVitalId??null,
+  quantumRoll:order.quantumRoll===true,malusChoice:order.malusChoice??null,
+  bombSlot:order.bombSlot??null,goldenIndex:order.goldenIndex??null,
   exchangeIndices:[...(order.exchangeIndices??[])],
   weaponFocusId:order.weaponFocusId??null,epicChoice:order.epicChoice??null,
   escortAmmoIndex:order.escortAmmoIndex??null
@@ -489,6 +500,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const idra=tacticalIdraBonus(atk,def,orders[key],total);
  total+=idra.extra;
  total=Math.max(0,Math.floor(total*(modifiers?.pvpTerrain?.nativeFactor??1)));
+ if(t.legacyDebuff==='lock_weapon')total=Math.floor(total*.85);
+ if(res.legacyDebuff==='weak_shield')total=Math.floor(total*1.10);
  const before=total;
  if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
  if(res.types.includes('tactic-impact'))total=Math.floor(total*.8);
@@ -871,6 +884,8 @@ function resolveCycle(battle,nowMs){
   log.push('B: Signore delle Ombre · Patto di sangue: -'+bloodPact.paid+
    ' HP reali alla propria barriera, +8% armato per questo scontro');
  const status=applyPreparation(sides,orders,log,battle.round,modifiers);
+ const legacyEffects=prepareLegacyTactics(sides,orders,playedSpecials,battle.round,battle.seed??18,log);
+ for(const key of ['A','B'])status[key].legacyDebuff=legacyEffects[key].debuff;
  // Queue real escort munitions BEFORE either mother shot. A scudiera that
  // falls during simultaneous exchange retains its already-loaded shot.
  const escortPlans=Object.fromEntries(['A','B'].map(key=>[key,
@@ -896,7 +911,6 @@ function resolveCycle(battle,nowMs){
  const afterBarrier=combatSnapshot(sides);
  const hitsA=applyVitalAttack(sides,'A',orders.A,status,log,impacts,battle.round,modifiers);
  const hitsB=applyVitalAttack(sides,'B',orders.B,status,log,impacts,battle.round,modifiers);
- const afterPrecision=combatSnapshot(sides);
  const validCalculation={};
  for(const key of ['A','B']){
   const order=orders[key],atk=sides[key],def=sides[key==='A'?'B':'A'];
@@ -904,6 +918,9 @@ function resolveCycle(battle,nowMs){
    tacticalSignatureMatches(def.defense.parts[order.vitalId]?.signature,
     order.op,order.numericIndices.map(i=>atk.numeric.hand[i]));
  }
+ resolveLegacyTactics(sides,orders,playedSpecials,validCalculation,
+  {A:hitsA,B:hitsB},legacyEffects,battle.round,log,impacts);
+ const afterPrecision=combatSnapshot(sides);
  const appliedMutations=Object.fromEntries(['A','B'].map(key=>[key,status[key].mutation??null]));
  // Concluso il confronto matematico: ripristina le firme canoniche, senza HP gratuiti.
  // I replay registrano le firme nuove e le istantanee del ciclo prima del ripristino.
@@ -924,8 +941,9 @@ function resolveCycle(battle,nowMs){
   side.numeric=recyclePile(previousNumerics,spentNumerics,7,random,
    tacticalEpicNumericChoice(side,battle.round));
   rememberTacticalLeviatanoRecycle(side,previousNumerics,spentNumerics.length);
-  const earned=25+((key==='A'?hitsA:hitsB)>0?25:0)+
-   (validCalculation[key]?(modifiers.syncPerCalculation+modifiers.pvpTerrain.syncPerCalculation):0);
+  const earned=Math.max(0,25+((key==='A'?hitsA:hitsB)>0?25:0)+
+   (validCalculation[key]?(modifiers.syncPerCalculation+modifiers.pvpTerrain.syncPerCalculation):0)-
+   (legacyEffects[key].debuff==='boost_jam'?10:0));
   const extraEnergy=tacticalGeneratorSyncBonus(side,earned);
   const characterEnergy=bossCharacterSyncExtra(side,battle.round,validCalculation[key]);
   const normalSync=Math.min(100,side.sync+earned);
@@ -969,6 +987,7 @@ function resolveCycle(battle,nowMs){
     Number(orders.A.escortAmmoIndex!=null),battle.round))
   log.push('B: Cristallo di Risonanza · Memoria degli scarti armata per il prossimo ciclo');
  resolveTacticalEpicAfterCombat(sides,battle.round,impacts,log);
+ armLegacyBombs(sides,legacyEffects,battle.round,log);
  let winner=winState(sides);
  if(battle.round>=TACTICAL_TIMING.maxRounds&&!winner)winner='draw';
  log.push('Barriere: A '+sides.A.defense.shield.hp+'/60; B '+sides.B.defense.shield.hp+'/60');
@@ -978,7 +997,7 @@ function resolveCycle(battle,nowMs){
   orders,history:[...battle.history,{round:battle.round,orders,events:log,
    shieldA:a+escortA,shieldB:b+escortB,escortA,escortB,hitsA,hitsB,
    snapshots:{before,prepared,afterBarrier,afterPrecision},impacts,playedSpecials,
-   mutations:appliedMutations,environmentStage,activeTerrain:terrainResolution.active}],lastEvents:log,winner};
+   mutations:appliedMutations,legacyEffects,environmentStage,activeTerrain:terrainResolution.active}],lastEvents:log,winner};
 }
 export function advanceTacticalDuel(battle,nowMs=0){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
