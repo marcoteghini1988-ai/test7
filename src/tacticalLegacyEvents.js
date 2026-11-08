@@ -2,6 +2,7 @@
 // Nessun wallet, drop o carta numerica viene creato: i soli danni/cure
 // modificano le barriere e le scudiere autentiche. Test e balance da playtest.
 import {damageMotherShield,restoreMotherShield} from './vitalDefense.js';
+import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 
 export const LEGACY_DICE_CARD='tactic-quantum-dice';
 export const LEGACY_BOMB_CARD='tactic-bomb';
@@ -67,7 +68,7 @@ export function validateLegacyTactics(battle,key,order,types){
  }else if(order.goldenIndex!=null)return {ok:false,reason:'golden_unavailable'};
  return {ok:true};
 }
-export function prepareLegacyTactics(sides,orders,playedTypes,round,seed,log){
+export function prepareLegacyTactics(sides,orders,playedTypes,round,seed,log,modifiers={}){
  const effects={A:{debuff:null,bombSlot:null},B:{debuff:null,bombSlot:null}};
  // Simultaneous: no action can read the other player's sealed order or hand.
  for(const key of ['A','B']){
@@ -81,7 +82,7 @@ export function prepareLegacyTactics(sides,orders,playedTypes,round,seed,log){
     const enemy=sides[other(key)];enemy.legacy??=initialLegacyTactics();
     enemy.legacy.malusCharge=Math.max(0,enemy.legacy.malusCharge-1);
    }
-   if(face==='heal')repairShield(side,8);
+   if(face==='heal')repairShield(side,pvpTerrainRepairAmount(8,modifiers.pvpTerrain));
    if(face==='ether')side.sync=Math.min(100,side.sync+8);
    // Dust only: tactical animation, never a pretend wallet credit.
    if(face==='damage')effectShield(sides[other(key)],6);
@@ -104,7 +105,7 @@ export function prepareLegacyTactics(sides,orders,playedTypes,round,seed,log){
  }
  return effects;
 }
-export function resolveLegacyTactics(sides,orders,playedTypes,valid,hitCounts,effects,round,log,impacts=[]){
+export function resolveLegacyTactics(sides,orders,playedTypes,valid,hitCounts,effects,round,log,impacts=[],modifiers={}){
  for(const key of ['A','B']){
   const side=sides[key],t=side.legacy??initialLegacyTactics(),order=orders[key];
   if(valid[key]&&!t.diceReady){
@@ -139,7 +140,7 @@ export function resolveLegacyTactics(sides,orders,playedTypes,valid,hitCounts,ef
    const used=spent.includes(gold.cardId),gone=swapped.includes(gold.cardId)||escort===gold.cardId;
    if(used&&valid[key]&&!t.usedGoldenIds.includes(gold.cardId)){
     let amount=0;
-    if(gold.suit==='♥')amount=repairShield(side,8);
+    if(gold.suit==='♥')amount=repairShield(side,pvpTerrainRepairAmount(8,modifiers.pvpTerrain));
     else if(gold.suit==='♦') {amount=8;side.sync=clamp(side.sync+8,0,100);}
     else if(gold.suit==='♣'){
      const escort=side.escorts.find(e=>e.hp>0&&e.hp<e.max);
