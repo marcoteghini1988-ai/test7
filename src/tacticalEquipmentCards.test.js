@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PHASE16F_MODULES} from './newCombat/phase16FModules.js';
 import {MODULE_CARD_TYPES,MODULE_STORAGE_KEY,TACTICAL_MODULE_CARDS,
- legacyModuleLevels,readLegacyModuleLevels,moduleCardType,isModuleCard}
+ legacyModuleLevels,readLegacyModuleLevels,moduleCardType,isModuleCard,activateTacticalModuleCards}
  from './tacticalEquipmentCards.js';
 import {LEGACY_DICE_CARD,LEGACY_MALUS_CARD} from './tacticalLegacyEvents.js';
 import {SPECIAL_CARD_CATALOG,specialCardMaxCopies} from './specialCards.js';
@@ -183,4 +183,31 @@ test('IA locale: può attivare il proprio Modulo solo se la carta è in mano e i
  const noCard=createTacticalDuel();
  const inactive=planTacticalAi(noCard,'B');
  assert.ok(inactive.specialIndices.every(i=>!isModuleCard(noCard.sides.B.special.hand[i].type)));
+});
+
+test('Simultaneità moduli: doppio sifone Sincronia rispetta simmetria A/B anche vicino a 100',()=>{
+ const type=moduleCardType('planet_char_7');
+ const run=(startA,startB)=>{
+  const duel=createTacticalDuel();
+  duel.sides.A.sync=startA;duel.sides.B.sync=startB;
+  for(const side of Object.values(duel.sides))side.equipmentLevels[type]=5;
+  const output=activateTacticalModuleCards(duel.sides,{A:[type],B:[type]},[]);
+  assert.equal(output.activations.length,2);
+  return {A:duel.sides.A.sync,B:duel.sides.B.sync};
+ };
+ const f=run(95,15),r=run(15,95);
+ assert.deepEqual(f,{A:92,B:18});
+ assert.deepEqual(r,{A:18,B:92});
+ assert.equal(f.A,r.B);
+ assert.equal(f.B,r.A);
+});
+
+test('Purificazione come Carta Modulo rimuove il sabotaggio senza azzerare la propria carica positiva Malus',()=>{
+ const card=moduleCardType('planet_char_14'),duel=createTacticalDuel();
+ duel.sides.A.equipmentLevels[card]=3;
+ duel.sides.A.legacy.malusCharge=3;
+ const effect=activateTacticalModuleCards(duel.sides,{A:[card],B:[]},[]);
+ assert.equal(effect.activations.length,1);
+ assert.equal(effect.effects.A.preventMalus,true);
+ assert.equal(duel.sides.A.legacy.malusCharge,3);
 });
