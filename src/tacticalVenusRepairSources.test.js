@@ -24,7 +24,7 @@ function fight(b,a=EMPTY,z=EMPTY){
  return advanceTacticalDuel(o2.battle,101);
 }
 function poisoned(types=[],levels={},seed=18){
- const b=createTacticalDuel({mode:'campaign',shipA:'C01',shipB:'C02',
+ const b=createTacticalDuel({mode:'campaign',shipA:'C01',shipB:'R04',
   levelA:1,levelB:1,bossPlanetB:3,seed,specialDeckA:deck(...types),
   equipmentLevelsA:levels});
  b.sides.A.defense.shield.hp=15;
@@ -65,6 +65,7 @@ test('Venere: Carta Dorata Cuori non aggira la Neurotossina',()=>{
  const b=poisoned([LEGACY_GOLD_CARD]);
  hand(b,LEGACY_GOLD_CARD,0);
  assert.equal(b.sides.A.numeric.hand[2].suit,'♥');
+ assert.equal(b.sides.B.defense.parts.weapons.signature.op,'minus');
  const res=fight(b,{specialIndices:[0],goldenIndex:2,
   numericIndices:[3,2],vitalId:'weapons',op:'minus'});
  assert.ok(res.lastEvents.some(e=>e.includes('Carta Dorata ♥ attivata')&&e.includes(' · 7 barriera riparata')));
