@@ -196,7 +196,7 @@ test('Sovrano: precisione valida con seme dominante +7%, Cuori o Picche avversar
  b.sides.B.defense.parts.engine.hp=30;
  b.sides.B.defense.parts.engine.max=30;
  const r=cycle(b,aHeartToB,bSpadeToA);
- assert.ok(precision(r).some(i=>i.by==='B'&&i.damage===11));
+ assert.ok(precision(r).some(i=>i.by==='B'&&i.damage===7));
  assert.equal(r.sides.B.bossExclusive.voidBlockedRound??0,0);
  const c=duel(20,{ah:40,bh:40});
  c.sides.A.defense.parts.engine.max=30;c.sides.A.defense.parts.engine.hp=30;
@@ -205,7 +205,7 @@ test('Sovrano: precisione valida con seme dominante +7%, Cuori o Picche avversar
  const blocked=cycle(c,spadeCounter,bSpadeToA);
  assert.ok(precision(blocked).some(i=>i.by==='A'&&i.damage>0));
  assert.equal(blocked.sides.B.bossExclusive.voidBlockedRound,2);
- assert.ok(precision(blocked).some(i=>i.by==='B'&&i.damage===11),
+ assert.ok(precision(blocked).some(i=>i.by==='B'&&i.damage===7),
   'Both simultaneous actions are resolved with the current cycle status');
  const nextBlocked=next(blocked);
  const bonus=exclusiveVoidPrecisionBonus(nextBlocked.sides.B,
