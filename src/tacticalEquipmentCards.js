@@ -4,6 +4,8 @@
 import {PHASE16F_MODULES,PHASE16F_EFFECT_LABELS} from './newCombat/phase16FModules.js';
 import {damageMotherShield,restoreMotherShield} from './vitalDefense.js';
 import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
+import {exclusiveNeurotoxinRepairAmount,clearExclusiveNeurotoxin,exclusiveNeurotoxinActive}
+ from './tacticalExclusiveBosses.js';
 
 // Descrizioni del NUOVO duello: il catalogo 16F originale e' conservato,
 // ma nel duello 52/7 non esistono mano da nove, Etere spendibile o salti turno.
@@ -161,7 +163,13 @@ export function activateTacticalModuleCards(sides,playedTypes,log,modifiers={}){
  }
  for(const key of ['A','B']){
   const heal=plannedHeal[key]+(healingFromHit[key]?Math.ceil(actualDamage[key]/2):0);
-  if(heal>0)actualHealing[key]=repair(sides[key],pvpTerrainRepairAmount(heal,modifiers.pvpTerrain));
+  if(heal>0){
+   const poisoned=exclusiveNeurotoxinActive(sides[key],modifiers.round);
+   const adjusted=exclusiveNeurotoxinRepairAmount(sides[key],modifiers.round,heal);
+   actualHealing[key]=repair(sides[key],pvpTerrainRepairAmount(adjusted,modifiers.pvpTerrain));
+   if(poisoned&&actualHealing[key]>0)
+    clearExclusiveNeurotoxin(sides[key],modifiers.round);
+  }
   sideSync(sides[key],siphonDelta[key]);
  }
  for(const activation of activations){
