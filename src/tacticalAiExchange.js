@@ -11,19 +11,24 @@ const THEORETICAL_NUMERIC_CARDS=Object.freeze(SUITS.flatMap(suit=>
   id:suit+(i+1),suit,value:i+1
  }))));
 
-export function chooseTacticalAiExchangeIndex(hand,visibleTargets=[],fallbackIndex=0){
- if(!Array.isArray(hand)||hand.length===0)return 0;
- const fallback=Number.isInteger(fallbackIndex)?
-  ((fallbackIndex%hand.length)+hand.length)%hand.length:0;
- if(!Array.isArray(visibleTargets)||!visibleTargets.some(t=>t?.signature))return fallback;
+// Se una Carta Ricambio autentica consente DUE scarti, valutiamo entrambi
+// gli indici con la medesima informazione pubblica. Mai eliminare prima una
+// carta promettente scegliendo banalmente lo slot accanto al primo scarto.
+export function chooseTacticalAiExchangeIndices(hand,visibleTargets=[],fallbackIndex=0,count=1){
+ if(!Array.isArray(hand)||hand.length===0)return [];
+ const size=hand.length;
+ const fallback=Number.isInteger(fallbackIndex)?((fallbackIndex%size)+size)%size:0;
+ const wanted=Number.isInteger(count)?Math.min(Math.max(count,0),size):1;
+ if(wanted===0)return [];
+ if(!Array.isArray(visibleTargets)||!visibleTargets.some(t=>t?.signature))
+  return Array.from({length:wanted},(_,i)=>(fallback+i)%size);
  const held=new Set(hand.map(card=>card?.id));
- // Per un singolo ricambio naturale valutiamo quante carte teoriche ancora
- // non in mano potrebbero COMPLETARE una coppia valida con la carta tenuta.
- // Il peso e' solo tattico (KO raggiungibile con un colpo = priorita maggiore).
  const choices=hand.map((card,index)=>{
   let score=0;
   for(const target of visibleTargets){
    if(!target?.signature||!(target.hp>0))continue;
+   // Preferire il completamento di un vitale già lesionato: un colpo
+   // base a 2 carte può chiuderlo solo quando restano 6 HP o meno.
    const weight=target.hp<=6?3:1;
    for(const theoretical of THEORETICAL_NUMERIC_CARDS){
     if(held.has(theoretical.id))continue;
@@ -32,9 +37,10 @@ export function chooseTacticalAiExchangeIndex(hand,visibleTargets=[],fallbackInd
   }
   return {index,score};
  });
- const minimum=Math.min(...choices.map(item=>item.score));
- // A parita' di opportunita' ruota comunque gli slot (mai fisso 0).
- return choices.filter(item=>item.score===minimum)
-  .sort((a,b)=>((a.index-fallback+hand.length)%hand.length)-
-   ((b.index-fallback+hand.length)%hand.length))[0].index;
+ choices.sort((a,b)=>a.score-b.score||
+  ((a.index-fallback+size)%size)-((b.index-fallback+size)%size));
+ return choices.slice(0,wanted).map(item=>item.index);
+}
+export function chooseTacticalAiExchangeIndex(hand,visibleTargets=[],fallbackIndex=0){
+ return chooseTacticalAiExchangeIndices(hand,visibleTargets,fallbackIndex,1)[0]??0;
 }
