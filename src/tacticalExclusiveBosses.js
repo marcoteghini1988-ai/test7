@@ -56,7 +56,12 @@ export const NEUROTOXIN_REPAIR_FACTOR=.90;
 export function rememberExclusiveVenusPrecisionHit(attacker,defender,damage,round){
  if(attacker?.bossExclusive?.id!==3||!(damage>0)||
     !Number.isSafeInteger(round)||round<1)return false;
- defender.neurotoxinUntilRound=round+1;
+ // Se una Neurotossina e' ancora attiva in QUESTO round, una nuova
+ // precisione non deve cancellarla prima delle cure tardive (es. Dorata).
+ // La nuova carica resta separata e matura soltanto nel round successivo.
+ if(defender.neurotoxinUntilRound===round)
+  defender.neurotoxinPendingRound=round+1;
+ else defender.neurotoxinUntilRound=round+1;
  return true;
 }
 export function exclusiveNeurotoxinActive(side,round){
@@ -75,7 +80,15 @@ export function clearExclusiveNeurotoxin(side,round){
  return false;
 }
 export function expireExclusiveNeurotoxin(side,round){
- if((side?.neurotoxinUntilRound||0)<=round)side.neurotoxinUntilRound=0;
+ if(!side)return side;
+ if(side.neurotoxinPendingRound===round+1){
+  // Il nuovo colpo di Venere e' stato reale: promuovilo alla preparazione
+  // seguente, anche se la tossina precedente e' stata curata nel frattempo.
+  side.neurotoxinUntilRound=round+1;
+  side.neurotoxinPendingRound=0;
+ }else if((side.neurotoxinUntilRound||0)<=round){
+  side.neurotoxinUntilRound=0;
+ }
  return side;
 }
 
