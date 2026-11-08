@@ -20,7 +20,7 @@ V = vittorie giocatore; S = sconfitte; P = pareggi. La condizione di vittoria ri
 | C02 | 0/4/1 | 0/4/1 | 0/4/1 | 0/4/1 |
 | **C03** | **3/0/2** | **2/0/3** | **4/1/0** | **4/1/0** |
 
-**Totale 80 duelli**: 13 vittorie, 49 sconfitte, 18 pareggi. La C03 L3 con 280 Polvere di spesa ottiene quattro vittorie su cinque; la C03 L4 con 580 di spesa quattro su cinque. La C03 L3 termina in media dopo **14,8 cicli** (tempo teorico dei cicli 14,8×38 s ≈ 9,4 min, senza conteggiare intro/animazioni aggiuntive).
+**Totale 80 duelli**: 13 vittorie, 58 sconfitte, 9 pareggi. La C03 L3 con 280 Polvere di spesa ottiene quattro vittorie su cinque; la C03 L4 con 580 di spesa quattro su cinque. La C03 L3 termina in media dopo **14,8 cicli** (tempo teorico dei cicli 14,8×38 s ≈ 9,4 min, senza conteggiare intro/animazioni aggiuntive).
 
 ## Criticità tecnica rilevata: il boss cambia modello secondo la nave del giocatore
 Nel motore attuale, `chooseCampaignMotherRival` sceglie un rivale fra i modelli compatibili con la nave del giocatore. Di conseguenza, a Terra 10:
