@@ -316,3 +316,13 @@
 .es-math-scope .official-duel-3d .special-board-card[data-family="transmute"]{
   border-color:#e2b84f;
 }
+
+/* Faglia: evidenzia solo la carta nei cinque slot esistenti, non la geometria della plancia. */
+.es-math-scope .official-duel-3d .special-board-card.rift-card {
+  border-color:#ba90f5;
+  background:linear-gradient(150deg,#26213e,#151b39 54%,#47275b);
+}
+.es-math-scope .official-duel-3d .special-board-card.rift-card .special-board-glyph {
+  color:#e2c8ff;
+  text-shadow:0 0 8px #c978ffbb;
+}
