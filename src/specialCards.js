@@ -7,7 +7,7 @@ import {BOSS_CHARACTER_CATALOG,isBossCharacterCard} from './bossCharacterCards.j
 import {PVP_TERRAIN_CATALOG} from './pvpTerrainCards.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
-import {LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD} from './tacticalLegacyEvents.js';
+import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD} from './tacticalLegacyEvents.js';
 
 export const SPECIAL_HAND_SIZE=5;
 export const SPECIAL_CARD_CATALOG=Object.freeze({
@@ -33,6 +33,8 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
    family:'support',description:'Rimuove Ionizzazione e Corrosione attive dalla propria madre, senza creare HP.'}),
  'support-escort-repair':Object.freeze({type:'support-escort-repair',name:'Riparazione Scudiera',short:'SCUDIERA +',
    family:'support',description:'Ripara fino a 15 HP dello scudo della scudiera selezionata. Non rianima scudiere distrutte; richiede centralina attiva.'}),
+ [LEGACY_DICE_CARD]:Object.freeze({type:LEGACY_DICE_CARD,name:'Dado Quantico',short:'DADO',family:'quantum',
+  description:'Carta attivabile solo dopo tre formule differenti. Consuma una delle 24 speciali e lancia una delle sei facce tattiche.'}),
  [LEGACY_BOMB_CARD]:Object.freeze({type:LEGACY_BOMB_CARD,name:'Numero Bomba',short:'BOMBA',family:'sabotage',
   description:'Marca uno slot numerico nemico dopo il ripescaggio. Disinnesco: ricambio o formula valida; altrimenti −8 barriera entro 2 cicli.'}),
  [LEGACY_MALUS_CARD]:Object.freeze({type:LEGACY_MALUS_CARD,name:'Barra Malus',short:'MALUS',family:'sabotage',
