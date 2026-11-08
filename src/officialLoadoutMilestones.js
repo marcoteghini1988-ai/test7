@@ -16,8 +16,13 @@ export function initialSelectedPilot(savedSelection,rawInventory){
   if(typeof inventory==='string')inventory=JSON.parse(inventory);
  }catch{return 'pilot_com_1';}
  if(!isObject(inventory))return 'pilot_com_1';
+ // La vecchia licenza pilot_starter_1 viene migrata senza inventare
+ // altri personaggi. La scelta salvata, da sola, NON da possesso.
+ if(inventory.pilot_starter_1?.unlocked===true&&!inventory.pilot_com_1)
+  inventory={...inventory,pilot_com_1:inventory.pilot_starter_1};
  if(typeof desired==='string'&&inventory[desired]?.unlocked===true)return desired;
- const first=Object.entries(inventory).find(([,v])=>v?.unlocked===true);
+ const first=Object.entries(inventory).find(([id,v])=>
+  id!=='pilot_starter_1'&&v?.unlocked===true);
  return first?.[0]??'pilot_com_1';
 }
 export function terraNineModuleVictory({winner,mode,planetId,sectorLevel,
