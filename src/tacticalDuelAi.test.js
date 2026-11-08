@@ -37,3 +37,18 @@ test('IA locale può giocare una partita fino al risultato senza carte inventate
  assert.ok(['A','B','draw'].includes(battle.winner));
  assert.ok(battle.history.length>=1&&battle.history.length<=20);
 });
+
+test('IA senza formula ruota il ricambio gratuito sui sette slot veri anziche bloccare la mano',()=>{
+ const base=createTacticalDuel({shipA:'C01',shipB:'R04',seed:18});
+ base.sides.B.defense.shield={hp:300,max:300};
+ for(let round=1;round<=7;round++){
+  const battle=structuredClone(base);
+  battle.round=round;
+  const plan=planTacticalAi(battle,'A');
+  assert.equal(plan.numericIndices.length,0);
+  assert.equal(plan.exchangeIndices[0],round-1,'Il ricambio non resta bloccato allo slot 0');
+  assert.equal(validateTacticalOrder(battle,'A',plan).ok,true);
+ }
+ assert.equal(base.sides.A.numeric.hand.length,7);
+ assert.equal(base.sides.A.numeric.hand.length+base.sides.A.numeric.deck.length+base.sides.A.numeric.discard.length,52);
+});
