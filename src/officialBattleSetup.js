@@ -11,7 +11,6 @@ import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {arenaForBattle} from './battleArenas.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
-import {officialBossMotherShip} from './officialBossMotherShips.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {isModuleCard} from './tacticalEquipmentCards.js';
@@ -69,7 +68,7 @@ export function officialBattleSetup({
  const earlyRivalShip=boss?null:officialEarlyCampaignRivalShip({
   mode,sectorNumber,planetId:encounterPlanet});
  const modelSelectionLevel=['campaign','adventure'].includes(mode)?1:equipped.level;
- const rivalShipId=boss?officialBossMotherShip(boss.planetId):
+ const rivalShipId=boss?boss.motherShipId:
   (earlyRivalShip??chooseCampaignMotherRival(equipped.shipId,modelSelectionLevel,
    sectorNumber,encounterPlanet,bossSectorLevel).shipId);
  if(!rivalShipId)throw new Error('Modello madre boss non riconosciuto');
