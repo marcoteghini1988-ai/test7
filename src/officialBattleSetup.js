@@ -6,13 +6,17 @@ import {tacticalBossDeckReady} from './tacticalBossDecks.js';
 import {numericBossDeck} from './bossNumericDecks.js';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES,validateTacticalLoadout} from './simultaneousDuelEngine.js';
 import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
-import {validateSpecialDeck} from './specialDeckBuilder.js';
+import {validateSpecialDeck,createSpecialCollection} from './specialDeckBuilder.js';
 import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
 import {arenaForBattle} from './battleArenas.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
+import {officialBossMotherShip} from './officialBossMotherShips.js';
+import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {isModuleCard} from './tacticalEquipmentCards.js';
+
+const EARLY_NPC_STARTER_TYPES=Object.freeze([...createSpecialCollection().loadout]);
 
 export function officialBattleSetup({
  mode='campaign',sectorNumber=1,bossPlanetId=null,bossSectorLevel=null,
@@ -58,13 +62,19 @@ export function officialBattleSetup({
  const boss=officialBossEncounter({mode,sectorNumber,
   planetId:bossPlanetId,sectorLevel:bossSectorLevel});
  const encounterPlanet=boss?.planetId??bossPlanetId;
- // Anche il MODELLO rivale non cambia quando viene potenziata
- // la stessa nave del giocatore: scelta a livello base per il duello ufficiale.
- // Il modello avversario rimane uno dei 17 render originali.
+ // I 12 boss hanno UNA madre canonica per pianeta: modello, firme
+ // e armamenti non cambiano quando il giocatore sceglie un'altra nave.
+ // Anche nei primi nove settori di Terra l'IA usa solo navi realmente
+ // disponibili a quella tappa. Il legacy conserva il proprio selettore.
+ const earlyRivalShip=boss?null:officialEarlyCampaignRivalShip({
+  mode,sectorNumber,planetId:encounterPlanet});
  const modelSelectionLevel=['campaign','adventure'].includes(mode)?1:equipped.level;
- const rival=chooseCampaignMotherRival(equipped.shipId,modelSelectionLevel,sectorNumber,encounterPlanet,bossSectorLevel);
- // La selezione del modello resta compatibile; SOLO il livello tattico
- // avversario dipende dal settore, non dall'upgrade posseduto dal giocatore.
+ const rivalShipId=boss?officialBossMotherShip(boss.planetId):
+  (earlyRivalShip??chooseCampaignMotherRival(equipped.shipId,modelSelectionLevel,
+   sectorNumber,encounterPlanet,bossSectorLevel).shipId);
+ if(!rivalShipId)throw new Error('Modello madre boss non riconosciuto');
+ // SOLO il livello tattico avversario dipende dal settore, mai dagli upgrade
+ // della madre giocatore: il modello resta fisso per ciascun boss.
  const rivalLevel=officialCampaignRivalLevel({mode,sectorNumber,playerLevel:equipped.level});
  const arena=arenaForBattle(sectorNumber,mode,null,{planetId:encounterPlanet,
   sectorLevel:bossSectorLevel});
@@ -75,14 +85,15 @@ export function officialBattleSetup({
   throw new Error('Pilota equipaggiato non ancora convertito: usare il duello 3D compatibile');
  const rivalPilot=chooseCampaignRivalCommander({
   mode,globalSector:sectorNumber,planetId:encounterPlanet,planetSector:bossSectorLevel,
-  shipId:rival.shipId,shipLevel:rivalLevel
+  shipId:rivalShipId,shipLevel:rivalLevel
  });
  const enemyPilot=tacticalCommanderReady(rivalPilot.id)?
   normalizeFleetCommander(rivalPilot.id,rivalPilot.level):null;
- const opponentDeck=boss?buildTacticalBossDeck(boss.planetId,rivalLevel,equipped.level):[...TACTICAL_STARTER_TYPES];
+ const opponentDeck=boss?buildTacticalBossDeck(boss.planetId,rivalLevel,equipped.level):
+  earlyRivalShip?[...EARLY_NPC_STARTER_TYPES]:[...TACTICAL_STARTER_TYPES];
  const options={
   shipA:equipped.shipId,levelA:equipped.level,
-  shipB:rival.shipId,levelB:rivalLevel,
+  shipB:rivalShipId,levelB:rivalLevel,
   seed,nowMs,mode,arenaId:arena.id,shuffleNumericOpening:true,
   commanderA:ownedPilot,commanderB:enemyPilot,
   bossNumericDeckA:ownedBossDeck,
@@ -93,7 +104,7 @@ export function officialBattleSetup({
  };
  return {
   battle:createTacticalDuel(options),
-  shipA:equipped.shipId,shipB:rival.shipId,
+  shipA:equipped.shipId,shipB:rivalShipId,
   bossId:boss?.planetId??null,bossEncounter:boss,arena,mode
  };
 }
