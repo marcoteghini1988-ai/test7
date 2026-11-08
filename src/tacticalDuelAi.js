@@ -177,7 +177,14 @@ export function planTacticalAi(battle,key='B'){
  // It chooses only from its OWN visible hand, never the player's hidden cards.
  const used=new Set([...shot.numericIndices,...exchanges]);
  const defensiveAssignment=[...types].some(type=>type.startsWith('fusion-')||type==='tactical-cover');
- const ammo=defensiveAssignment?null:ours.numeric.hand
+ // A barrier at zero with a destroyed generator CANNOT be repaired.
+ // Loading an escort would consume a real numeric card for ZERO shield
+ // damage and can prevent completing the last precision signature.
+ // If the generator is alive, retain the option to counter a real repair
+ // ordered simultaneously by the enemy (which remains hidden).
+ const irrecoverableEnemyBarrier=enemy.defense.shield.hp===0&&
+  enemy.defense.parts.shieldGenerator.hp===0;
+ const ammo=(defensiveAssignment||irrecoverableEnemyBarrier)?null:ours.numeric.hand
   .map((card,i)=>({i,card}))
   .filter(({i,card})=>!used.has(i)&&selectTacticalEscortForAmmo(ours,card))
   .sort((a,b)=>b.card.value-a.card.value||a.i-b.i)[0]?.i??null;
