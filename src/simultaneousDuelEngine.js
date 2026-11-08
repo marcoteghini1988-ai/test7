@@ -17,7 +17,7 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
  exclusiveVoidDominantSuit,exclusiveVoidPrecisionBonus,rememberExclusiveVoidCounter
 } from './tacticalExclusiveBosses.js';
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
-import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects} from './pvpTerrainCards.js';
+import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID,prepareSignatureMutation} from './tacticalSignatureMutation.js';
 import {VULNERABILITY_RIFT_CARD_ID,validateVulnerabilityRiftOrder,riftProtectedDamage}
  from './tacticalVulnerabilityRift.js';
@@ -434,8 +434,7 @@ function applyPreparation(sides,orders,log,round,modifiers){
    log.push(key+': Neurotossina rimossa con Pulizia Sistemi');
   if(types.includes('support-shield-repair')){
    const poisoned=exclusiveNeurotoxinActive(side,round);
-   const repair=Math.floor(exclusiveNeurotoxinRepairAmount(side,round,20)*
-    (modifiers?.pvpTerrain?.repairFactor??1));
+   const repair=pvpTerrainRepairAmount(exclusiveNeurotoxinRepairAmount(side,round,20),modifiers?.pvpTerrain);
    const improved=tacticalAfroditeRepairAmount(side,repair);
    const baseline=improved!==repair?restoreMotherShield(side.defense,repair).repaired:0;
    const fixed=restoreMotherShield(side.defense,improved);
@@ -899,7 +898,7 @@ function resolveCycle(battle,nowMs){
  const log=['Scontro '+battle.round+' — ordini rivelati simultaneamente'];
  if(terrainResolution.event)log.push(terrainResolution.event);
  for(const key of ['A','B']){
-  const healed=bossCharacterApplyRegen(sides[key],battle.round);
+  const healed=bossCharacterApplyRegen(sides[key],battle.round,modifiers.pvpTerrain);
   if(healed>0)log.push(key+': Carta Idra · rigenerazione reale +'+healed+' HP alla barriera');
  }
  const idraRegen=prepareExclusiveIdraRegen(sides.B,battle.round);
@@ -914,8 +913,8 @@ function resolveCycle(battle,nowMs){
   log.push('B: Signore delle Ombre · Patto di sangue: -'+bloodPact.paid+
    ' HP reali alla propria barriera, +8% armato per questo scontro');
  const status=applyPreparation(sides,orders,log,battle.round,modifiers);
- const legacyEffects=prepareLegacyTactics(sides,orders,playedSpecials,battle.round,battle.seed??18,log);
- const moduleResult=activateTacticalModuleCards(sides,playedSpecials,log);
+ const legacyEffects=prepareLegacyTactics(sides,orders,playedSpecials,battle.round,battle.seed??18,log,modifiers);
+ const moduleResult=activateTacticalModuleCards(sides,playedSpecials,log,modifiers);
  for(const key of ['A','B']){
   status[key].moduleFx=moduleResult.effects[key];
   status[key].legacyDebuff=moduleResult.effects[key].preventMalus?null:legacyEffects[key].debuff;
@@ -953,7 +952,7 @@ function resolveCycle(battle,nowMs){
     order.op,order.numericIndices.map(i=>atk.numeric.hand[i]));
  }
  resolveLegacyTactics(sides,orders,playedSpecials,validCalculation,
-  {A:hitsA,B:hitsB},legacyEffects,battle.round,log,impacts);
+  {A:hitsA,B:hitsB},legacyEffects,battle.round,log,impacts,modifiers);
  const afterPrecision=combatSnapshot(sides);
  const appliedMutations=Object.fromEntries(['A','B'].map(key=>[key,status[key].mutation??null]));
  // Concluso il confronto matematico: ripristina le firme canoniche, senza HP gratuiti.
@@ -984,7 +983,7 @@ function resolveCycle(battle,nowMs){
   rememberTacticalLeviatanoRecycle(side,previousNumerics,spentNumerics.length);
   const earned=Math.max(0,25+((key==='A'?hitsA:hitsB)>0?25:0)+
    (validCalculation[key]?(modifiers.syncPerCalculation+modifiers.pvpTerrain.syncPerCalculation):0)-
-   (legacyEffects[key].debuff==='boost_jam'?10:0));
+   (status[key].legacyDebuff==='boost_jam'?10:0));
   const extraEnergy=tacticalGeneratorSyncBonus(side,earned);
   const characterEnergy=bossCharacterSyncExtra(side,battle.round,validCalculation[key]);
   const normalSync=Math.min(100,side.sync+earned);
