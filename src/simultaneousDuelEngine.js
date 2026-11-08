@@ -440,6 +440,9 @@ function applyPreparation(sides,orders,log,round,modifiers){
    const baseline=improved!==repair?restoreMotherShield(side.defense,repair).repaired:0;
    const fixed=restoreMotherShield(side.defense,improved);
    side.defense=fixed.defense;
+   // La Neurotossina di Venere consuma la sua unica penalità solo dopo
+   // una riparazione REALE; altri effetti curativi del ciclo restano liberi.
+   if(poisoned&&fixed.repaired>0)clearExclusiveNeurotoxin(side,round);
    const afroditeExtra=improved!==repair?Math.max(0,fixed.repaired-baseline):0;
    log.push(key+': barriera riparata +'+fixed.repaired+
     (poisoned?' (Neurotossina: −10% riparazione)':'')+
@@ -919,7 +922,8 @@ function resolveCycle(battle,nowMs){
    ' HP reali alla propria barriera, +8% armato per questo scontro');
  const status=applyPreparation(sides,orders,log,battle.round,modifiers);
  const legacyEffects=prepareLegacyTactics(sides,orders,playedSpecials,battle.round,battle.seed??18,log,modifiers);
- const moduleResult=activateTacticalModuleCards(sides,playedSpecials,log,modifiers);
+ const moduleResult=activateTacticalModuleCards(sides,playedSpecials,log,
+  {...modifiers,round:battle.round});
  for(const key of ['A','B']){
   status[key].moduleFx=moduleResult.effects[key];
   status[key].legacyDebuff=moduleResult.effects[key].preventMalus?null:legacyEffects[key].debuff;
