@@ -18884,7 +18884,7 @@ function App() {
           selectedPilot,abilities
         });
         if(terraModule){
-          setAbilities(prev => Object.values(prev).some(item=>item?.unlocked===true)
+          setAbilities(prev => Object.values(prev as Record<string,{unlocked?:boolean}>).some(item=>item?.unlocked===true)
             ? prev : {...prev,[terraModule]:{unlocked:true,level:1}});
           // Il premio e' posseduto, NON equipaggiato come potere gratuito.
           triggerPopup('Settore Terra 9 completato: Carta Modulo '+terraModule+
