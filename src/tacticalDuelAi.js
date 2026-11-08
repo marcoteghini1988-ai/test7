@@ -2,7 +2,7 @@
 // Non legge la mano, gli ordini impegnati o le firme nascoste del giocatore.
 // I dodici boss possiedono piani e priorità derivati dai boss storici.
 import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
-import {chooseTacticalAiExchangeIndices} from './tacticalAiExchange.js';
+import {chooseTacticalAiExchangeIndices,rankTacticalAiNumericCardsForCycling} from './tacticalAiExchange.js';
 import {exclusiveMagmaPhase} from './tacticalExclusiveBosses.js';
 import {tacticalWeaponTechnology} from './tacticalArmamentBalance.js';
 import {nativeBarrierPacket,validateTacticalOrder} from './simultaneousDuelEngine.js';
@@ -177,17 +177,22 @@ export function planTacticalAi(battle,key='B'){
  // It chooses only from its OWN visible hand, never the player's hidden cards.
  const used=new Set([...shot.numericIndices,...exchanges]);
  const defensiveAssignment=[...types].some(type=>type.startsWith('fusion-')||type==='tactical-cover');
- // A barrier at zero with a destroyed generator CANNOT be repaired.
- // Loading an escort would consume a real numeric card for ZERO shield
- // damage and can prevent completing the last precision signature.
- // If the generator is alive, retain the option to counter a real repair
- // ordered simultaneously by the enemy (which remains hidden).
+ // Una scudiera alimentata da una numerica consuma davvero quella carta
+ // e ne pesca una nuova: e' un impiego legale anche con barriera KO,
+ // non un colpo gratuito. MA con scudo e generatore entrambi distrutti
+ // scegliamo fra munizioni compatibili le meno utili alle firme VISIBILI:
+ // non bruciamo un 3×5 potenziale per una salva che non puo' fare danno.
  const irrecoverableEnemyBarrier=enemy.defense.shield.hp===0&&
   enemy.defense.parts.shieldGenerator.hp===0;
- const ammo=(defensiveAssignment||irrecoverableEnemyBarrier)?null:ours.numeric.hand
+ const ammoCandidates=ours.numeric.hand
   .map((card,i)=>({i,card}))
-  .filter(({i,card})=>!used.has(i)&&selectTacticalEscortForAmmo(ours,card))
-  .sort((a,b)=>b.card.value-a.card.value||a.i-b.i)[0]?.i??null;
+  .filter(({i,card})=>!used.has(i)&&selectTacticalEscortForAmmo(ours,card));
+ const cycling=irrecoverableEnemyBarrier&&exposedSignatures.some(t=>t.signature);
+ const rankedAmmo=cycling?
+  rankTacticalAiNumericCardsForCycling(ours.numeric.hand,exposedSignatures,
+   fallbackIndex).find(i=>ammoCandidates.some(candidate=>candidate.i===i)):
+  ammoCandidates.sort((a,b)=>b.card.value-a.card.value||a.i-b.i)[0]?.i;
+ const ammo=defensiveAssignment?null:(rankedAmmo??null);
  let result={specialIndices:chosen,counterVitalId:threatened,mutationVitalId,
   quantumRoll:false,
   malusChoice:types.has(LEGACY_MALUS_CARD)?MALUS_CHOICES[0].id:null,
