@@ -34,7 +34,7 @@ const count=p=>p.hand.length+p.deck.length+p.discard.length;
 
 test('Le undici speciali ufficiali hanno un vero tipo consumabile nel sandbox',()=>{
  const official=Object.keys(SPECIAL_CARD_CATALOG);
- assert.equal(official.length,27); // 11 ufficiali + 12 Personaggi Boss + 4 Terreni PvP
+ assert.equal(official.length,28); // 11 ufficiali + 12 Personaggi Boss + 4 Terreni PvP + Mutazione
  for(const id of official){
   assert.ok(Object.hasOwn(TACTICAL_SPECIALS,id),id);
   const game=setup({a:[id]});
