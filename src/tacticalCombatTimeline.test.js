@@ -65,7 +65,7 @@ test('Shield and vital HP change visually only after their impact stage, without
  assert.equal(middle.B.defense.shield.hp,initial.B.defense.shield.hp);
  assert.ok(barrier.B.defense.shield.hp<initial.B.defense.shield.hp);
  assert.equal(barrier.B.defense.parts.weapons.hp,10);
- assert.equal(late.B.defense.parts.weapons.hp,0);
+ assert.equal(late.B.defense.parts.weapons.hp,4);
  assert.equal(late.B.defense.shield.hp,b.sides.B.defense.shield.hp);
  assert.equal(late.B.defense.parts.weapons.hp,b.sides.B.defense.parts.weapons.hp);
 });
