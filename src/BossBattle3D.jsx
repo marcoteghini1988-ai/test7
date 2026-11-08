@@ -9,7 +9,7 @@ import {ESCORT_ROLE_HELP,attackTargetKind} from './escortTactics.js';
 import {collectionBattleOptions,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import {readSpecialCollection,claimFirstWinSpecialPack,specialDeckCounts} from './specialDeckBuilder.js';
-import {combatSpecialLoadout} from './pvpTerrainLoadout.js';
+import {legacyBattleDeckFromStorage} from './legacySpecialCompatibility.js';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots,exposeMotherPart,matchesVitalSignature} from './vitalDefense.js';
 import {activeArmaments} from './escortArmory.js';
 import {commanderFromInventory,FLEET_COMMANDER_DEFAULT_ID} from './fleetCommander.js';
@@ -458,7 +458,7 @@ function MotherDefenseControls({defense,selected,onChoose,selectedEscort,onChoos
 function readCollection(){
  try{return readShipCollection();}catch{return null;}
 }
-export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,selectedBossDeck='neutral_starter',bossDeckInventory={},selectedPilot='pilot_com_1',pilotInventory={},commanderDisplayName='',bossPlanetId=null,bossSectorLevel=null,onEtherConsumed,onResult,onExit}){
+function LegacyBattleRuntime({nickname,gameMode,sectorNumber=1,displaySector='',ether=0,selectedBossDeck='neutral_starter',bossDeckInventory={},selectedPilot='pilot_com_1',pilotInventory={},commanderDisplayName='',bossPlanetId=null,bossSectorLevel=null,onEtherConsumed,onResult,onExit}){
  const [scale,setScale]=useState(1);
  const [collection,setCollection]=useState(readCollection);
  const [introIndex,setIntroIndex]=useState(0);
@@ -487,10 +487,9 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    enemyCommanderId:rival.id,enemyCommanderLevel:rival.level};
  }
  function startBattle(options,practice=false){
-  // Owned special cards are read from their independent persistent collection.
-  // Never overwrite an unreadable save or block the battle.
-  let specialDeckTypes=null;
-  try{specialDeckTypes=combatSpecialLoadout(readSpecialCollection(),'legacy');}catch{}
+  // La collezione viene validata in lettura. Un mazzo mancante o corrotto
+  // NON diventa mai un mazzo starter gratuito senza consenso del giocatore.
+  const specialDeckTypes=legacyBattleDeckFromStorage();
   const motherOptions=prepareMotherDuelOptions(options,{
    mode:gameMode,globalSector:sectorNumber,planetId:bossPlanetId,
    planetSector:bossSectorLevel,practice});
@@ -987,6 +986,9 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   setCollection(readCollection());setFleetMenu(true);
  }
  async function saveLoadout(loadout){
+  let equippedTypes;
+  try{equippedTypes=legacyBattleDeckFromStorage();}
+  catch(error){notice(error.message||'Mazzo speciale non compatibile');return;}
   const next=await updateShipCollection(current=>equipShipCards(current,loadout));
   const b=gameRef.current;
   const options=prepareMotherDuelOptions(collectionBattleOptions(next),{
@@ -994,8 +996,6 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
    planetSector:bossSectorLevel,practice:!!b.practice});
   setCollection(next);
   const {fleet}=newShip(b.level,false,options);
-  let equippedTypes=null;
-  try{equippedTypes=combatSpecialLoadout(readSpecialCollection(),'legacy');}catch{}
   const existingTypes=[...(b.player.specialHand||[]),...(b.player.specialDeck||[]),
    ...(b.player.specialDiscard||[])].map(card=>card.type);
   const counts=specialDeckCounts(existingTypes);
@@ -1170,3 +1170,27 @@ export default function MathDuelBattle({nickname,gameMode,sectorNumber=1,display
   </div>
  </div>;
 }
+ 
+// Se il motore simultaneo non può avviarsi, il fallback non deve avviare
+// una battaglia con speciali create di default. Il giocatore può modificare
+// soltanto il proprio mazzo oppure tornare al menu. Nessuna ricompensa.
+export default function MathDuelBattle(props){
+ const [attempt,setAttempt]=useState(0);
+ let error=null;
+ try{legacyBattleDeckFromStorage();}
+ catch(e){error=e?.message||'Mazzo speciale non compatibile';}
+ if(error)return <main className="es-math-scope official-start-error"
+  role="region" aria-label="Recupero mazzo speciale">
+   <h2>ECLISSI STELLARE · MAZZO DA VERIFICARE</h2>
+   <p role="alert">{error}</p>
+   <p>Non sono state create carte sostitutive e i salvataggi restano invariati.
+    Il combattimento compatibile può utilizzare solo le speciali che possiedi realmente.</p>
+   <SpecialDeckPanel compact onSaved={()=>setAttempt(value=>value+1)}/>
+   <button type="button" onClick={()=>setAttempt(value=>value+1)}>
+    RIPROVA CARICAMENTO
+   </button>
+   <button type="button" onClick={()=>props.onExit?.()}>TORNA AL MENU</button>
+  </main>;
+ return <LegacyBattleRuntime key={'battle-'+attempt} {...props}/>;
+}
+
