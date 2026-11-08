@@ -19,7 +19,7 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID,prepareSignatureMutation} from './tacticalSignatureMutation.js';
-import {LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,initialLegacyTactics,
+import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,initialLegacyTactics,
  validateLegacyTactics,prepareLegacyTactics,resolveLegacyTactics,armLegacyBombs}
  from './tacticalLegacyEvents.js';
 import {tacticalShipSignatures,tacticalSignatureMatches} from './tacticalShipSignatures.js';
@@ -65,6 +65,7 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'shot-piercing':{name:'Colpo perforante',kind:'offense',help:'Bypassa intercettazione scudiera sul 20% del pacchetto, non le firme'},
  'shot-ion':{name:'Impulso ionico',kind:'control',help:'Se la barriera nemica subisce danno, l’intercettazione delle scudiere si riduce nello scontro successivo'},
  'tactic-numeric-recycle':{name:'Ricambio numerico',kind:'support',help:'Scarta fino a due carte numeriche a fine scontro e ripescale'},
+ [LEGACY_DICE_CARD]:{name:'Dado Quantico',kind:'quantum',help:'Richiede 3 categorie valide differenti e una carta speciale autentica. Consuma carica e carta per il lancio.'},
  [LEGACY_BOMB_CARD]:{name:'Numero Bomba',kind:'sabotage',help:'Marca uno slot avversario: la numerica reale può essere disinnescata o esplode entro due cicli'},
  [LEGACY_MALUS_CARD]:{name:'Barra Malus',kind:'sabotage',help:'Richiede 3 colpi efficaci ai vitali; sabotaggio per un ciclo'},
  [LEGACY_GOLD_CARD]:{name:'Carta Dorata',kind:'transmute',help:'Trasforma una numerica reale: bonus del seme su formula valida, durata due cicli'},
