@@ -82,3 +82,18 @@ test('Venere contro Carta Personaggio Idra: la cura del turno successivo rispett
  assert.equal(side.neurotoxinUntilRound,0);
  assert.equal(bossCharacterApplyRegen(side,2),0);
 });
+
+test('Venere: nuova precisione nello stesso ciclo non cancella il veleno PRIMA della Dorata',()=>{
+ const b=poisoned([LEGACY_GOLD_CARD]);
+ hand(b,LEGACY_GOLD_CARD,0);
+ const orderA={specialIndices:[0],goldenIndex:2,
+  numericIndices:[3,2],vitalId:'weapons',op:'minus'};
+ const orderB={numericIndices:[0,1],vitalId:'weapons',op:'minus'};
+ const out=fight(b,orderA,orderB);
+ assert.ok(out.lastEvents.some(x=>x.includes('Neurotossina inflitta')));
+ assert.ok(out.lastEvents.some(x=>x.includes('Carta Dorata ♥ attivata')&&
+  x.includes(' · 7 barriera riparata')),'il veleno gia attivo non e sostituito prima della cura');
+ assert.equal(out.sides.A.neurotoxinUntilRound,2,
+  'un nuovo colpo reale di Venere mantiene il veleno del ciclo seguente');
+ assert.equal(out.sides.A.neurotoxinPendingRound??0,0);
+});
