@@ -38,6 +38,8 @@ const starter=createSpecialCollection();
 const upgraded=postTerraCollection();
 const scenarios=[
  {name:'N00-L1-starter',ship:'N00',level:1,specials:starter},
+ {name:'N00-L3-starter',ship:'N00',level:3,specials:starter},
+ {name:'N00-L5-starter',ship:'N00',level:5,specials:starter},
  {name:'C01-L3-starter',ship:'C01',level:3,specials:starter},
  {name:'L04-L5-starter',ship:'L04',level:5,specials:starter},
  {name:'L04-L5-scan-Gaia-L1',ship:'L04',level:5,specials:upgraded,bossDeck:'planet_char_1',bossInventory:{planet_char_1:{unlocked:true,level:1}}}
@@ -92,7 +94,7 @@ test('Matrice boss: piu seed, navi e upgrade solo con copie possedute; nessun KO
   if(config.bossDeck&&i===0)continue;
   for(const seed of seeds)records.push(simulate(planet,i,config,seed));
  }
- assert.equal(records.length,141);
+ assert.equal(records.length,213);
  const summary=scenarios.map(config=>{
   const rows=records.filter(r=>r.scenario===config.name);
   const wins=rows.filter(r=>r.winner==='A').length,
