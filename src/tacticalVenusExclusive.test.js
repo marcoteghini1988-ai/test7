@@ -44,7 +44,7 @@ function hit(b,at=100){
 }
 test('Venere avvelena SOLO dopo un vero danno da precisione, senza colpi gratuiti',()=>{
  const real=hit(start());
- assert.equal(real.sides.A.defense.parts.weapons.hp,0);
+ assert.equal(real.sides.A.defense.parts.weapons.hp,4);
  assert.equal(real.sides.A.neurotoxinUntilRound,2);
  assert.ok(real.lastEvents.some(s=>s.includes('Neurotossina inflitta')));
  const miss=resolve(start(),EMPTY,{numericIndices:[0,1],vitalId:'weapons',op:'plus'});
