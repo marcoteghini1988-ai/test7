@@ -6,6 +6,7 @@
 import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,specialCardMaxCopies} from './specialCards.js';
 import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_TYPES,isPvpTerrain} from './pvpTerrainCards.js';
+import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 export {SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT};
 
 export const SPECIAL_COLLECTION_KEY='eclissi_special_collection_v1';
@@ -62,7 +63,8 @@ export function normalizeSpecialCollection(raw){
   // Missing existing card types remain an error (never reset a corrupt save).
   const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
    (['support-escort-repair','fusion-twin','fusion-triad'].includes(type)||
-    BOSS_CHARACTER_TYPES.includes(type)||PVP_TERRAIN_TYPES.includes(type))?0:undefined;
+    BOSS_CHARACTER_TYPES.includes(type)||PVP_TERRAIN_TYPES.includes(type)||
+    type===SIGNATURE_MUTATION_CARD_ID)?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
