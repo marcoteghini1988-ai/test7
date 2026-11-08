@@ -5,6 +5,7 @@ import {armShotEffect,armedShotEffects,SHOT_RULES} from './strategicShots.js';
 import {useSupportCard} from './specialSupport.js';
 import {BOSS_CHARACTER_CATALOG,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_CATALOG} from './pvpTerrainCards.js';
+import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
 
 export const SPECIAL_HAND_SIZE=5;
@@ -37,11 +38,14 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
  ...Object.fromEntries(Object.values(BOSS_CHARACTER_CATALOG).map(c=>[c.id,
   Object.freeze({type:c.id,name:c.name,short:c.short,family:'boss-character',
    description:c.description,durationCycles:c.durationCycles,imagePath:c.imagePath,maxCopies:1})])),
+  ...Object.fromEntries(Object.values(TACTICAL_EPIC_CARDS).map(item=>[item.id,
+   Object.freeze({type:item.id,name:item.name,short:item.short,family:'epic',
+    description:item.help,durationCycles:item.cycles,maxCopies:1})])),
   ...Object.fromEntries(Object.values(PVP_TERRAIN_CATALOG).map(t=>[t.id,
    Object.freeze({type:t.id,name:t.name,short:t.short,family:'terrain',
     description:t.description,durationCycles:t.durationCycles,imagePath:t.imagePath})]))
 });
-export const specialCardMaxCopies=type=>isBossCharacterCard(type)?1:SPECIAL_DECK_COPY_LIMIT;
+export const specialCardMaxCopies=type=>isBossCharacterCard(type)||isTacticalEpic(type)?1:SPECIAL_DECK_COPY_LIMIT;
 // Regole confermate il 6 novembre 2026: dimensione mazzo e limite per tipo.
 export const SPECIAL_DECK_SIZE=24;
 export const SPECIAL_DECK_COPY_LIMIT=6;
