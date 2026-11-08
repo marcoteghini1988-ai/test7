@@ -8,6 +8,7 @@ import {tacticalBossProfile} from './tacticalSpecialPresets.js';
 import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import {isPvpTerrain,pvpTerrainAtRound} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {isModuleCard} from './tacticalEquipmentCards.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,MALUS_CHOICES}
  from './tacticalLegacyEvents.js';
@@ -16,7 +17,8 @@ const NORMAL_PRIORITY=['shieldGenerator','weapons','command','engine'];
 function findPrecision(ours,enemy,priority){
  const shield=enemy.defense.shield.hp;
  const projected=Math.max(0,shield-nativeBarrierPacket(ours));
- if(projected>45)return {numericIndices:[],vitalId:null,op:null};
+ const hasRift=!ours.riftUsed&&ours.special.hand.some(c=>c.type===VULNERABILITY_RIFT_CARD_ID);
+ if(projected>45&&!hasRift)return {numericIndices:[],vitalId:null,op:null};
  for(const id of priority){
   const part=enemy.defense.parts[id];
   if(!part||part.hp<=0)continue;
@@ -51,6 +53,9 @@ function playable(type,ours,enemy,shot){
   case LEGACY_MALUS_CARD:return (ours.legacy?.malusCharge??0)>=3;
   case LEGACY_GOLD_CARD:return !ours.legacy?.golden&&ours.numeric.hand.length>0;
   case LEGACY_BOMB_CARD:return enemy.numeric.hand.length>0;
+  case VULNERABILITY_RIFT_CARD_ID:return !ours.riftUsed&&
+   shot.numericIndices.length>=2&&enemy.defense.parts[shot.vitalId]?.hp>0&&
+   !enemy.defense.parts[shot.vitalId]?.exposed;
   case 'tactic-counter':return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
   case SIGNATURE_MUTATION_CARD_ID:return NORMAL_PRIORITY.some(id=>ours.defense.parts[id].hp>0&&ours.defense.parts[id].exposed);
   case 'tactic-scan':return ours.seen.length<4;
@@ -85,7 +90,9 @@ export function planTacticalAi(battle,key='B'){
   ours.special.hand.map(c=>c.type).filter(isPvpTerrain):[];
  const modules=ours.special.hand.map(c=>c.type).filter(type=>
   isModuleCard(type)&&!!ours.equipmentLevels?.[type]);
- for(const type of [...(ours.legacy?.diceReady?[LEGACY_DICE_CARD]:[]),
+ for(const type of [...(shot.numericIndices.length>=2&&
+  !enemy.defense.parts[shot.vitalId]?.exposed?[VULNERABILITY_RIFT_CARD_ID]:[]),
+  ...(ours.legacy?.diceReady?[LEGACY_DICE_CARD]:[]),
   ...((ours.legacy?.malusCharge??0)>=3?[LEGACY_MALUS_CARD]:[]),
   ...(mutationVitalId?[SIGNATURE_MUTATION_CARD_ID]:[]),...(ours.seen.length<4?['tactic-scan']:[]),
   ...terrains,...modules,LEGACY_BOMB_CARD,LEGACY_GOLD_CARD,...priorities,'tactic-numeric-recycle','tactic-kinetic']){
