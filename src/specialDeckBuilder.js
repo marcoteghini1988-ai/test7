@@ -5,6 +5,7 @@
 // deck size and duplicate limit are confirmed gameplay rules.
 import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,specialCardMaxCopies} from './specialCards.js';
 import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
+import {PVP_TERRAIN_TYPES,isPvpTerrain} from './pvpTerrainCards.js';
 export {SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT};
 
 export const SPECIAL_COLLECTION_KEY='eclissi_special_collection_v1';
@@ -12,7 +13,7 @@ export const SPECIAL_COLLECTION_VERSION=1;
 export const SPECIAL_PACK_SIZE=3;
 export const SPECIAL_TYPES=Object.freeze(Object.keys(SPECIAL_CARD_CATALOG));
 // Boss Characters are trophy-only: never silently drop in generic packs.
-export const SPECIAL_PACK_TYPES=Object.freeze(SPECIAL_TYPES.filter(type=>!isBossCharacterCard(type)));
+export const SPECIAL_PACK_TYPES=Object.freeze(SPECIAL_TYPES.filter(type=>!isBossCharacterCard(type)&&!isPvpTerrain(type)));
 // Support cards are unlocked via real packs; none are assigned to new players for free.
 const ORIGINAL_STARTER_SPECIALS=new Set([
  'fusion-barrier','fusion-strike','tactical-cover',
@@ -61,7 +62,7 @@ export function normalizeSpecialCollection(raw){
   // Missing existing card types remain an error (never reset a corrupt save).
   const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
    (['support-escort-repair','fusion-twin','fusion-triad'].includes(type)||
-    BOSS_CHARACTER_TYPES.includes(type))?0:undefined;
+    BOSS_CHARACTER_TYPES.includes(type)||PVP_TERRAIN_TYPES.includes(type))?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
