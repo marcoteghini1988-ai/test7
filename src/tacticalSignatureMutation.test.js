@@ -134,7 +134,9 @@ test('Salvataggi precedenti preservati, carta assente finché non ottenuta dal p
  const migrated=normalizeSpecialCollection(old);
  assert.equal(migrated.owned[SIGNATURE_MUTATION_CARD_ID],0);
  assert.ok(SPECIAL_PACK_TYPES.includes(SIGNATURE_MUTATION_CARD_ID));
- const awarded=openSpecialPack({...migrated,packCredits:1},()=>.9999999);
+ const index=SPECIAL_PACK_TYPES.indexOf(SIGNATURE_MUTATION_CARD_ID);
+ assert.ok(index>=0);
+ const awarded=openSpecialPack({...migrated,packCredits:1},()=> (index+.25)/SPECIAL_PACK_TYPES.length);
  assert.equal(awarded.opened,true);
  assert.ok(awarded.drawn.every(type=>type===SIGNATURE_MUTATION_CARD_ID));
  const configured={...migrated,owned:{...migrated.owned,[SIGNATURE_MUTATION_CARD_ID]:1},
