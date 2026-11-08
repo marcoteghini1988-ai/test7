@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createTacticalDuel,sealTacticalOrder,advanceTacticalDuel,validateTacticalOrder,TACTICAL_STARTER_TYPES} from './simultaneousDuelEngine.js';
 import {damageMotherShield,exposeMotherPart,VITAL_IDS} from './vitalDefense.js';
+import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import {planTacticalAi} from './tacticalDuelAi.js';
 
 test('IA locale prepara ordini legali senza leggere mano numerica o ordine segreto avversario',()=>{
@@ -127,4 +128,30 @@ test('IA non consuma Scansione se tutti i vitali ancora vivi sono già visibili'
  const order=planTacticalAi(b,'A');
  assert.equal(order.specialIndices.some(i=>b.sides.A.special.hand[i].type==='tactic-scan'),false);
  assert.equal(validateTacticalOrder(b,'A',order).ok,true);
+});
+
+test('L IA non spreca una numerica scudiera quando barriera e generatore nemici sono entrambi a zero',()=>{
+ const battle=createTacticalDuel({shipA:'E03',levelA:5,shipB:'E03',levelB:5,
+  seed:171,nowMs:100});
+ assert.equal(battle.sides.A.escorts.length,2);
+ assert.ok(battle.sides.A.numeric.hand.some(c=>
+  selectTacticalEscortForAmmo(battle.sides.A,c)),
+  'deve esistere davvero una munizione compatibile');
+ const beforeIds=[...battle.sides.A.numeric.hand,...battle.sides.A.numeric.deck].map(c=>c.id);
+ battle.sides.B.defense.shield.hp=0;
+ battle.sides.B.defense.parts.shieldGenerator.hp=0;
+ const order=planTacticalAi(battle,'A');
+ assert.equal(order.escortAmmoIndex,null,
+  'barriera collassata e irreparabile: le numeriche si conservano per i vitali');
+ assert.equal(validateTacticalOrder(battle,'A',order).ok,true);
+ assert.deepEqual([...battle.sides.A.numeric.hand,...battle.sides.A.numeric.deck].map(c=>c.id),
+  beforeIds,'la decisione IA non modifica il mazzo senza sigillare un ordine');
+ const stillRepairable=structuredClone(battle);
+ stillRepairable.sides.B.defense.parts.shieldGenerator.hp=10;
+ stillRepairable.sides.B.defense.shield.hp=20;
+ const validAmmo=planTacticalAi(stillRepairable,'A');
+ assert.equal(validateTacticalOrder(stillRepairable,'A',validAmmo).ok,true,
+  'il comportamento ordinario con barriera attiva rimane valido');
+ assert.notEqual(validAmmo.escortAmmoIndex,null,
+  'le scudiere restano armabili finche esiste una vera barriera avversaria');
 });
