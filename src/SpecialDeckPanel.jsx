@@ -2,6 +2,8 @@ import React,{useState,useEffect} from 'react';
 import {SPECIAL_CARD_CATALOG,specialCardMaxCopies} from './specialCards.js';
 import {isBossCharacterCard} from './bossCharacterCards.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
+import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
+import {isPvpTerrain} from './pvpTerrainCards.js';
 import {
  SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,SPECIAL_COLLECTION_KEY,
  readSpecialCollection,updateSpecialCollection,specialDeckCounts,
@@ -83,9 +85,11 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
      return <div className="special-deck-entry" key={type}>
       <div className="special-deck-entry-copy">
        {isBossCharacterCard(type)&&<BossCharacterPortrait type={type} className="special-deck-boss-portrait"/>}
+       {isPvpTerrain(type)&&<PvpTerrainPortrait type={type} className="special-deck-boss-portrait"/>}
        <strong>{info.short}</strong>
        <small>{isBossCharacterCard(type)?'PERSONAGGIO BOSS · 2 CICLI · ':''}{info.description}</small>
        {isBossCharacterCard(type)&&!owned&&<small>Si sblocca sconfiggendo il boss del pianeta.</small>}
+       {isPvpTerrain(type)&&<small>Solo PvP · cambia l'ambiente per 2 cicli. Non si ottiene nei pacchetti correnti.</small>}
       </div>
       <div className="special-deck-quantity">
        <button type="button" aria-label={'Rimuovi '+info.name} disabled={saving||!n}
