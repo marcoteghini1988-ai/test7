@@ -57,6 +57,7 @@ import MathDuelBattle from './MathDuelBattle.jsx';
 import {applyVerifiedBossRelic,verifiedBossRelicReward} from './campaignBossRelics.js';
 import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
+import {initialSelectedPilot,missingPilotInventory,terraNineModuleVictory} from './officialLoadoutMilestones.js';
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
 import LegacyPokerBattle from './LegacyPokerBattle';
 import { isPhase13CampaignEligible, validatePhase13Settlement, createPhase13OnceGuard, getPhase13EnemyPilotId } from './newCombat/phase13Campaign.js';
@@ -17573,8 +17574,9 @@ function App() {
 
     // STATI DEL SISTEMA PILOTI TATTICI (18 CARTE PILOTA AUTONOME)
   const [selectedPilot, setSelectedPilot] = useState(() => {
-    const saved = localStorage.getItem('eclissi_selected_pilot');
-    return (saved && saved !== 'pilot_starter_1') ? saved : 'pilot_com_1';
+    // La selezione storica non sblocca un pilota in assenza del suo inventario.
+    return initialSelectedPilot(localStorage.getItem('eclissi_selected_pilot'),
+      localStorage.getItem('eclissi_pilot_inventory'));
   });
    const [pilotInventory, setPilotInventory] = useState(() => {
     try {
@@ -17587,8 +17589,9 @@ function App() {
         }
         return parsed;
       }
-      const curSelected = localStorage.getItem('eclissi_selected_pilot') || 'pilot_com_1';
-      return { [curSelected]: { level: 1, unlocked: true } };
+      // Senza salvataggio inventario si possiede solo il pilota iniziale:
+      // un ID precedentemente selezionato NON prova lo sblocco.
+      return missingPilotInventory();
     } catch (_) {
       return { pilot_com_1: { level: 1, unlocked: true } };
     }
@@ -18428,40 +18431,9 @@ function App() {
     const launchSectorBattle = useCallback((planetNum, levelNum) => {
     const cost = (levelNum <= 5 ? 5 : (levelNum <= 9 ? 10 : 15));
 
-    // A Terra S9: sblocco ed equipaggiamento automatico del Modulo Abilità in base al Pilota scelto
-    const hasAnyAbilityUnlocked = Object.keys(abilities).some(k => abilities[k]?.unlocked);
-    if (planetNum === 1 && levelNum === 9 && !hasAnyAbilityUnlocked) {
-      const pilotToModuleMap = {
-        pilot_com_1: 'aries',
-        pilot_com_2: 'taurus',
-        pilot_com_3: 'gemini',
-        pilot_com_4: 'cancer'
-      };
-      const autoModuleId = pilotToModuleMap[selectedPilot] || 'aries';
-      setAbilities(prev => ({ ...prev, [autoModuleId]: { unlocked: true, level: 1 } }));
-      setSelectedAbility(autoModuleId);
-      triggerPopup("⚡ SETTORE 9: Modulo Abilità Ibrido sbloccato ed equipaggiato in plancia!");
-    }
-
-        // A Terra S10: sblocco ed equipaggiamento automatico del primo Mazzo con Passiva allineato al Pilota
-    if (planetNum === 1 && levelNum === 10 && Object.keys(deckInventory).filter(k => deckInventory[k]?.unlocked).length <= 1) {
-      const pilotToDeckMap = {
-        pilot_com_1: 'aries',
-        pilot_com_2: 'taurus',
-        pilot_com_3: 'gemini',
-        pilot_com_4: 'cancer'
-      };
-      const autoDeckId = pilotToDeckMap[selectedPilot] || 'aries';
-      const updatedDeckInv = {
-        ...deckInventory,
-        [autoDeckId]: { level: 1, unlocked: true }
-      };
-      localStorage.setItem('eclissi_deck_inventory', JSON.stringify(updatedDeckInv));
-      setDeckInventory(updatedDeckInv);
-      setSelectedDeck(autoDeckId);
-      triggerPopup(`👑 SCONTRO BOSS: Equipaggiato Mazzo ${autoDeckId.toUpperCase()} con Abilità Passiva!`);
-    }
-
+    // Nessuna Carta Modulo o Mazzo Boss viene concessa entrando nel livello.
+    // Lo sblocco del settore 9 avviene soltanto dopo VITTORIA confermata.
+    // I mazzi numerici dei boss richiedono la vera vittoria e l'acquisto.
 
     if (credits < cost) {
       try { playSound('deselect'); } catch (_) {}
@@ -18904,6 +18876,21 @@ function App() {
         });
 
 
+        // Terra S9: premio Modulo SOLO dopo la vittoria, mai al click
+        // sul settore o dopo una sconfitta. Il Modulo va poi inserito
+        // realmente nel mazzo da 24 speciali per produrre un effetto.
+        const terraModule=terraNineModuleVictory({
+          winner:'player',mode:gameMode,planetId:planetNum,sectorLevel:levelNum,
+          selectedPilot,abilities
+        });
+        if(terraModule){
+          setAbilities(prev => Object.values(prev).some(item=>item?.unlocked===true)
+            ? prev : {...prev,[terraModule]:{unlocked:true,level:1}});
+          setSelectedAbility(terraModule);
+          triggerPopup('Settore Terra 9 completato: Carta Modulo '+terraModule+
+            ' sbloccata. Equipaggiala nel mazzo speciale per usarla.');
+        }
+
         const maxLvl = unlockedLevels?.[planetNum] || 1;
         const isReplay = levelNum < maxLvl;
         let reward = typeof getLevelReward === 'function' ? getLevelReward(planetNum, levelNum, isReplay) : { stardust: 50, diamonds: 0, xp: 40 };
@@ -18994,7 +18981,7 @@ function App() {
       triggerPopup(`Sconfitta Tattica.\nDati di Telemetria: +${telemetry.dustEarned} 🌟 Polvere | +${telemetry.xpEarned} XP Pilota!`);
     }
 
-                  }, [nickname, trophies, pvpWins, pvpLosses, selectedDeck, level, myPlayerId, hasStabilizedRift1, addStardustSafe, addVoidCrystalsSafe, addPrimordialMatterSafe, addBettingDiamondsSafe, gameMode, bettingTier, customBetAmount, activeAdventure, unlockedLevels, walletCap, triggerPopup]);
+                  }, [nickname, trophies, pvpWins, pvpLosses, selectedDeck, selectedPilot, abilities, level, myPlayerId, hasStabilizedRift1, addStardustSafe, addVoidCrystalsSafe, addPrimordialMatterSafe, addBettingDiamondsSafe, gameMode, bettingTier, customBetAmount, activeAdventure, unlockedLevels, walletCap, triggerPopup]);
 
     const phase13SettlementGuard=useRef(createPhase13OnceGuard());
     const dailyPokerResultGuard=useRef(new Set());
