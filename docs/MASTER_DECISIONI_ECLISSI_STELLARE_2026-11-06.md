@@ -3,6 +3,22 @@
 **Documento di continuità per la scaletta generale di 53 punti.**
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
+## CHECKPOINT — 8 novembre 2026: Plutone/Io, ricambio intelligente e pacchetti realmente acquisibili
+
+**Diagnosi di 20 incontri** (`src/officialBossStalemateDiagnostic.test.js`): Plutone E03 L5 con starter soffriva soprattutto l'ultimo vitale entro il limite di 20 cicli, **non** riparazioni boss continue (0 vittorie, 2 sconfitte, 8 pareggi nei 10 seed iniziali); Io L03 L5 era invece una corsa contro il KO avversario (4/5/1). L'assenza di Scansioni e Riparazioni nella mano del giocatore dipendeva dal mazzo speciale *starter*, non da una carta non funzionante.
+
+**Codice realmente aggiornato:** `src/tacticalAiExchange.js` e `src/tacticalDuelAi.js` scelgono l'unica numerica scartabile del ciclo considerando le **coppie che si potrebbero completare con carte future teoriche su firme già visibili**, senza conoscere carte nascoste, pescate e ordini nemici. Quando non ci sono firme note resta la rotazione originaria 0–6. Nessun costo/bonus/numero di ricambi alterato. `src/tacticalAiExchange.test.js` dimostra, con carte vere e vitali E03, che la carta **3** viene conservata perché può combinarsi con **5** per ottenere **15**.
+
+**Controprova A/B con 16 semi per boss:** Plutone con ricambio storico entrambi **1V/2S/13P**, nuovo criterio entrambi **2V/4S/10P**; Io storico **6V/9S/1P**, nuovo criterio entrambi **5V/10S/1P**. Quando si migliora anche l'IA boss, non si garantisce un vantaggio al giocatore: **non dichiarare il bilanciamento concluso**.
+
+**Progressione di Carte Speciali autentiche:** `src/officialBossEarnedPacks.test.js` ipotizza esplicitamente le precedenti vittorie e apre tramite handler reali **69 crediti/207 carte** prima di Plutone e **109 crediti/327 carte** prima di Io; equipaggia volontariamente un mazzo speciale da **24 carte possedute**. Con cinque seed, Plutone passa da **1/2/2 starter** a **2/1/2 con mazzo tattico**; Io da **0/5/0** a **1/3/1**. Scansione, Ricambio Numerico e Riparazione sono state **giocate davvero**, non regalate come poteri. Prova di progressione possibile, non di percentuali di vittoria umane.
+
+**Prossimo controllo:** affinare la strategia sugli ultimi quattro vitali, specialmente il motore di Plutone; studiare il danno reale e le contromisure di Io; poi boss numerici e moduli autenticamente acquistabili. Conservare madre fissa per boss, quattro vitali, 42 armi fisiche, mazzi 52+24, plancia metallica 9:16 e livelli originali.
+
+Rapporto: [DIAGNOSI_PLUTONE_IO_RICAMBIO_PACCHETTI_2026-11-08.md](DIAGNOSI_PLUTONE_IO_RICAMBIO_PACCHETTI_2026-11-08.md). [Actions 42511247122](https://github.com/marcoteghini1988-ai/test7/actions/runs/42511247122): **795 test**, build e preflight superati.
+
+---
+
 ## CHECKPOINT — 8 novembre 2026, Terra 10: 80 nuove prove e causa del divario di difficoltà
 
 **Nuovo benchmark riproducibile:** `src/firstBossProgression.test.js`, 4 navicelle davvero ottenibili (N00, C01, C02, C03) × livelli L1–L4 **comprati con la Polvere Stellare reale** × cinque seed = **80 duelli aggiuntivi**. Sono presupposte nove vittorie consecutive dei settori 1–9, non simulate né garantite. Budget di base 100 iniziali + 900 vincite = 1000; la comune L4 richiede 580, la L5 richiede 1080 (solo premi base insufficienti); nove crediti pacchetto non vengono aperti automaticamente. Pilota starter `pilot_com_1` posseduto, mazzo speciale starter da 24, zero Epici, boss decks, moduli o personaggi futuri.
