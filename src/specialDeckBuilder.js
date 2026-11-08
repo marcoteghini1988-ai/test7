@@ -7,6 +7,8 @@ import {SPECIAL_CARD_CATALOG,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,specialCa
 import {BOSS_CHARACTER_TYPES,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_TYPES,isPvpTerrain} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID} from './tacticalSignatureMutation.js';
+import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
+import {readLegacyEpicProgress,mergeLegacyEpicOwnership} from './officialEpicOwnership.js';
 export {SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT};
 
 export const SPECIAL_COLLECTION_KEY='eclissi_special_collection_v1';
@@ -14,7 +16,7 @@ export const SPECIAL_COLLECTION_VERSION=1;
 export const SPECIAL_PACK_SIZE=3;
 export const SPECIAL_TYPES=Object.freeze(Object.keys(SPECIAL_CARD_CATALOG));
 // Boss Characters are trophy-only: never silently drop in generic packs.
-export const SPECIAL_PACK_TYPES=Object.freeze(SPECIAL_TYPES.filter(type=>!isBossCharacterCard(type)&&!isPvpTerrain(type)));
+export const SPECIAL_PACK_TYPES=Object.freeze(SPECIAL_TYPES.filter(type=>!isBossCharacterCard(type)&&!isPvpTerrain(type)&&!isTacticalEpic(type)));
 // Support cards are unlocked via real packs; none are assigned to new players for free.
 const ORIGINAL_STARTER_SPECIALS=new Set([
  'fusion-barrier','fusion-strike','tactical-cover',
@@ -47,6 +49,8 @@ export function validateSpecialDeck(collection,loadout){
   return {valid:false,reason:'unknown_card'};
  if(SPECIAL_TYPES.some(type=>counts[type]>specialCardMaxCopies(type)))
   return {valid:false,reason:'copy_limit'};
+ if(Object.keys(TACTICAL_EPIC_CARDS).reduce((n,id)=>n+(counts[id]||0),0)>2)
+  return {valid:false,reason:'epic_limit'};
  if(SPECIAL_TYPES.some(type=>counts[type]>(collection?.owned?.[type]||0)))
   return {valid:false,reason:'not_owned'};
  return {valid:true,reason:'ok',counts};
@@ -64,7 +68,7 @@ export function normalizeSpecialCollection(raw){
   const value=Object.hasOwn(raw.owned,type)?raw.owned[type]:
    (['support-escort-repair','fusion-twin','fusion-triad'].includes(type)||
     BOSS_CHARACTER_TYPES.includes(type)||PVP_TERRAIN_TYPES.includes(type)||
-    type===SIGNATURE_MUTATION_CARD_ID)?0:undefined;
+    type===SIGNATURE_MUTATION_CARD_ID||isTacticalEpic(type))?0:undefined;
   if(!cleanNumber(value))throw new Error('Numero di carte speciali non valido');
   owned[type]=Math.max(STARTER_SPECIAL_COUNTS[type],value);
  }
@@ -90,7 +94,8 @@ export function equipSpecialDeck(collection,loadout){
  if(!check.valid)throw new Error(({
   deck_size:'Il mazzo deve contenere esattamente 24 speciali',
   unknown_card:'Carta speciale non riconosciuta',
-  copy_limit:'Limite copie superato: massimo 1 per ciascun Personaggio Boss, massimo 6 per le altre speciali',
+  copy_limit:'Limite copie superato: massimo 1 per Personaggio Boss o Epico, massimo 6 per le altre speciali',
+  epic_limit:'Al massimo due Oggetti Epici nel mazzo',
   not_owned:'Non possiedi abbastanza copie della speciale'
  })[check.reason]||'Mazzo speciale non valido');
  return {...collection,loadout:[...loadout]};
@@ -122,11 +127,11 @@ export function openSpecialPack(collection,rng=Math.random){
 }
 export function readSpecialCollection(storage=globalThis.localStorage){
  const raw=storage.getItem(SPECIAL_COLLECTION_KEY);
- return normalizeSpecialCollection(raw?JSON.parse(raw):null);
+ return mergeLegacyEpicOwnership(normalizeSpecialCollection(raw?JSON.parse(raw):null),readLegacyEpicProgress(storage));
 }
 export function updateSpecialCollection(change,storage=globalThis.localStorage){
  const raw=storage.getItem(SPECIAL_COLLECTION_KEY);
- const before=normalizeSpecialCollection(raw?JSON.parse(raw):null);
+ const before=mergeLegacyEpicOwnership(normalizeSpecialCollection(raw?JSON.parse(raw):null),readLegacyEpicProgress(storage));
  const result=normalizeSpecialCollection(change(before));
  const payload=JSON.stringify(result);
  if(payload!==raw)storage.setItem(SPECIAL_COLLECTION_KEY,payload);
