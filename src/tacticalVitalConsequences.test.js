@@ -81,7 +81,7 @@ test('Centralina: scudiere intercettano il 15% in meno a 5 HP, niente intercetta
   'La madre subisce progressivamente piu danno');
 });
 
-test('Centralina danneggiata influenza anche la fusione difensiva: intercettazione su HP reali',()=>{
+test('Centralina danneggiata limita la fusione: arrotondamento intero non aumenta intercettazione',()=>{
  const base=createTacticalDuel({shipA:'C01',levelA:3,shipB:'R04',levelB:3});
  base.sides.A.sync=100;
  base.sides.A.defense.shield.hp=40;
@@ -97,8 +97,10 @@ test('Centralina danneggiata influenza anche la fusione difensiva: intercettazio
   assert.ok(hit.absorbed>0,'fusione assorbe HP della scudiera');
   absorbed.push(hit.absorbed);
  }
- assert.ok(absorbed[1]<absorbed[0],
-  'La fusione con centralina compromessa deve assorbire meno danni');
+ assert.ok(absorbed[1]<=absorbed[0],
+  'Una centralina compromessa non puo aumentare la protezione arrotondata');
+ assert.equal(escortInterceptionEfficiency({...base.sides.A.defense,
+  parts:{...base.sides.A.defense.parts,command:{...base.sides.A.defense.parts.command,hp:5}}}),.85);
 });
 
 test('KO Motore o Centralina impedisce nuove fusioni, non le normali numeriche',()=>{
