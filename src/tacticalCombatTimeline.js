@@ -105,13 +105,14 @@ export function tacticalCombatTimeline(battle){
    label:'💣 BOMBA · -'+impact.damage+' BARRIERA'});
   if(impact.kind==='precision'){
    const reason=impact.reason;
-   const label=reason==='hit'?'-'+impact.damage+' '+(VITAL_LABELS[impact.target]??impact.target)+(impact.destroyed?' · KO':''):
+   const label=reason==='hit'?(impact.rift?'FAGLIA · ':'')+'-'+impact.damage+' '+(VITAL_LABELS[impact.target]??impact.target)+(impact.destroyed?' · KO':''):
     reason==='countered'?'CONTROMISURA ATTIVA':
     reason==='signature_mutated'?'FIRMA CAMBIATA · COLPO ANNULLATO':
     reason==='protected'?'VITALE PROTETTO':
     reason==='invalid_signature'||reason==='invalid_operation'?'COMBINAZIONE NON VALIDA':'NESSUN IMPATTO';
    events.push({id:'precision-'+impact.by,type:'precision',by:impact.by,target:impact.target,
     atMs:5860+(impact.by==='B'?90:0),durationMs:900,damage:impact.damage,
+    rift:!!impact.rift,
     absorbed:impact.absorbed??0,destroyed:!!impact.destroyed,reason,label});
   }
  }
