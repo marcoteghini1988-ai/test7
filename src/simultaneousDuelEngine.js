@@ -1002,7 +1002,7 @@ function resolveCycle(battle,nowMs){
    const duration=applyTacticalTimedStatus(side,'corroded',battle.round,modifiers);
    log.push(key+': corrosione '+duration.durationMs/1000+' s di combattimento (preparazione sospesa)');
   }else side.corroded=(side.statusUntil?.corroded||0)>tacticalCombatClock(battle.round+1);
-  side.heated=enemyShieldDamage>0&&(enemyStatus.tech==='plasma'||enemyStatus.moduleFx?.burn)&&
+  side.heated=enemyShieldDamage>0&&(enemyStatus.tech==='plasma'||!!enemyStatus.moduleFx?.burn)&&
    !tacticalEpicProtectsFromHeat(side,battle.round);
   // A hit this cycle schedules the next round; previous status expires now.
   expireExclusiveNeurotoxin(side,battle.round);
