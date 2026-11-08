@@ -19,6 +19,7 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID,prepareSignatureMutation} from './tacticalSignatureMutation.js';
+import {TACTICAL_MODULE_CARDS,isModuleCard,activateTacticalModuleCards} from './tacticalEquipmentCards.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,initialLegacyTactics,
  validateLegacyTactics,prepareLegacyTactics,resolveLegacyTactics,armLegacyBombs}
  from './tacticalLegacyEvents.js';
@@ -77,6 +78,7 @@ export const TACTICAL_SPECIALS=Object.freeze({
  'shot-corrosion':{name:'Corrosione',kind:'control',help:'Se la barriera subisce un colpo, il successivo colpo nativo infligge +25% alla barriera'},
  'support-status-purge':{name:'Pulizia Sistemi',kind:'support',help:'Rimuove Ionico e Corrosione dalla propria madre, non ripara HP'},
  'support-escort-repair':{name:'Riparazione Scudiera',kind:'support',help:'Ripara fino a 15 HP su una scudiera operativa, senza rianimarla'},
+ ...Object.fromEntries(Object.values(TACTICAL_MODULE_CARDS).map(card=>[card.id,{name:card.name,kind:'equipment',help:card.description}])),
  ...Object.fromEntries(Object.values(TACTICAL_EPIC_CARDS).map(epic=>[epic.id,{name:epic.name,kind:'epic',help:epic.help}])),
  ...Object.fromEntries(Object.values(BOSS_CHARACTER_CATALOG).map(c=>[c.id,
   {name:c.name,kind:'boss-character',help:c.description,characterId:c.id}])),
@@ -99,7 +101,7 @@ export function validateTacticalLoadout(types){
  for(const type of types){
   if(!Object.hasOwn(TACTICAL_SPECIALS,type))return false;
   counts[type]=(counts[type]||0)+1;
-  if(counts[type]>(isBossCharacterCard(type)?1:TACTICAL_SPECIAL_COPY_LIMIT))return false;
+  if(counts[type]>((isBossCharacterCard(type)||isModuleCard(type))?1:TACTICAL_SPECIAL_COPY_LIMIT))return false;
   if(isTacticalEpic(type)){
    epics++;
    if(counts[type]>1||epics>2)return false;
@@ -167,7 +169,7 @@ function nativeWeapons(shipId,level){
  }));
 }
 export function nativeBarrierPacket(side){return tacticalBarrierPower(side).amount;}
-function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null,shuffleOpening=false,commander=null,bossNumericDeck=null){
+function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epicEntitlements=[],epicOpening=null,shuffleOpening=false,commander=null,bossNumericDeck=null,equipmentLevels={}){
  const ship=SHIPS.find(x=>x.id===shipId);
  if(!ship||!Number.isInteger(level)||level<1||level>5)throw new Error('Navicella o livello non valido');
  if(!Array.isArray(epicEntitlements)||epicEntitlements.some(id=>!isTacticalEpic(id)))
@@ -175,6 +177,8 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
  if(epicOpening&&!epicEntitlements.includes(epicOpening))throw new Error('Anteprima Epica non autorizzata');
  if((specialDeck||[]).some(type=>isTacticalEpic(type)&&!epicEntitlements.includes(type)))
   throw new Error('Oggetto Epico non ancora ottenuto dalla fusione delle reliquie');
+ if((specialDeck||[]).some(type=>isModuleCard(type)&&(!Number.isInteger(equipmentLevels[type])||equipmentLevels[type]<1||equipmentLevels[type]>9)))
+  throw new Error('Carta Modulo non posseduta o livello non valido');
  const defense=createMotherDefense({shipId,shieldMax:60,partHp:10,signatures:tacticalShipSignatures(shipId)});
  const escortCount=level>=5?2:level>=3?1:0;
  const weapons=nativeWeapons(shipId,level);
@@ -184,7 +188,7 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
    weapon:createTacticalEscortArmament(shipId,weapons,i)
   })),
   sync:0,ionized:false,corroded:false,heated:false,bossCharacter:null,bossPlanetId,
-  legacy:initialLegacyTactics(),
+  legacy:initialLegacyTactics(),equipmentLevels:{...equipmentLevels},
   neurotoxinUntilRound:0,bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
   commander:commander&&tacticalCommanderReady(commander.id)?{
    id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
@@ -194,12 +198,12 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
   numeric:numericPile(key,seed+3,shuffleOpening),special:specialPile(key,seed+13,specialDeck,epicOpening)},bossNumericDeck);
 }
 export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,seed=18,nowMs=0,arenaId='titanium',mode='classic',
- specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null,bossNumericDeckA=null,bossNumericDeckB=null}={}){
+ specialDeckA=null,specialDeckB=null,bossPlanetB=null,epicEntitlementsA=[],epicEntitlementsB=[],equipmentLevelsA={},equipmentLevelsB={},previewEpicOpeningA=null,shuffleNumericOpening=false,commanderA=null,commanderB=null,bossNumericDeckA=null,bossNumericDeckB=null}={}){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
  const battle={schemaVersion:1,arenaId,mode,seed,activeTerrain:null,arenaValidCalculations:0,phase:'planning',round:1,deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,
   resolveUntilMs:null,orders:{A:null,B:null},winner:null,
-  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA),
-   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB,bossNumericDeckB)},
+  sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA,equipmentLevelsA),
+   B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB,bossNumericDeckB,equipmentLevelsB)},
   history:[],lastEvents:bossPlanetB===20?[
    'B: Sovrano del Vuoto · seme dominante '+exclusiveVoidDominantSuit(1)+
    ' (cicli 1–3, rotazione ogni 3 cicli)'
@@ -233,6 +237,7 @@ export function validateTacticalOrder(battle,key,order){
   !prepareSignatureMutation(side.defense,order.mutationVitalId,battle.round).ok)
   return {ok:false,reason:'mutation_unavailable'};
  if(new Set(types).size!==types.length)return {ok:false,reason:'duplicate_special'};
+ if(types.filter(isModuleCard).length>1)return {ok:false,reason:'equipment_conflict'};
  const terrains=types.filter(isPvpTerrain);
  if(terrains.length>1)return {ok:false,reason:'terrain_conflict'};
  if(terrains.length&&(battle.mode!=='pvp'||battle.sides.B.bossPlanetId!=null))
@@ -509,8 +514,9 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  const idra=tacticalIdraBonus(atk,def,orders[key],total);
  total+=idra.extra;
  total=Math.max(0,Math.floor(total*(modifiers?.pvpTerrain?.nativeFactor??1)));
- if(t.legacyDebuff==='lock_weapon')total=Math.floor(total*.85);
+ if(t.legacyDebuff==='lock_weapon'||t.moduleFx?.lockWeapon)total=Math.floor(total*.85);
  if(res.legacyDebuff==='weak_shield')total=Math.floor(total*1.10);
+ if(res.moduleFx?.guard)total=Math.max(0,total-res.moduleFx.guard);
  const before=total;
  if(res.types.includes('tactic-reactive'))total=Math.max(0,total-9);
  if(res.types.includes('tactic-impact'))total=Math.floor(total*.8);
@@ -650,7 +656,7 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  const harmony=tacticalResonanceCooperationBonus(atk,plan.packet,motherDamage);
  const characterExtra=bossCharacterEscortExtra(atk,round,plan.packet,motherDamage);
  const packet=Math.min(plan.packet+Math.floor(plan.packet*.45),
-  plan.packet+harmony.extra+characterExtra);
+  plan.packet+harmony.extra+characterExtra+(t.moduleFx?.escortBoost??0));
  let intercepted=0,suppressed=false;
  const efficiency=escortInterceptionEfficiency(def.defense)*
   (modifiers?.pvpTerrain?.escortFactor??1);
@@ -785,6 +791,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const bossDefenseFactor=tacticalBossMotherFactor(def,status[other(key)].bossSnapshot);
  const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
  damage=Math.floor(damage*bossDefenseFactor*pilotDefense.factor);
+ if(status[key].moduleFx?.precisionFactor)damage=Math.max(0,Math.floor(damage*status[key].moduleFx.precisionFactor));
  const hit=hitMotherPart(defense,target,damage,cards);
  const consequence=hit.damage>0?tacticalVitalTransition(defense,hit.defense,target):null;
  def.defense=hit.defense;
@@ -894,7 +901,11 @@ function resolveCycle(battle,nowMs){
    ' HP reali alla propria barriera, +8% armato per questo scontro');
  const status=applyPreparation(sides,orders,log,battle.round,modifiers);
  const legacyEffects=prepareLegacyTactics(sides,orders,playedSpecials,battle.round,battle.seed??18,log);
- for(const key of ['A','B'])status[key].legacyDebuff=legacyEffects[key].debuff;
+ const moduleResult=activateTacticalModuleCards(sides,playedSpecials,log);
+ for(const key of ['A','B']){
+  status[key].moduleFx=moduleResult.effects[key];
+  status[key].legacyDebuff=moduleResult.effects[key].preventMalus?null:legacyEffects[key].debuff;
+ }
  // Queue real escort munitions BEFORE either mother shot. A scudiera that
  // falls during simultaneous exchange retains its already-loaded shot.
  const escortPlans=Object.fromEntries(['A','B'].map(key=>[key,
@@ -949,6 +960,13 @@ function resolveCycle(battle,nowMs){
    side.numericRecyclesTotal=(side.numericRecyclesTotal||0)+order.exchangeIndices.length;
   side.numeric=recyclePile(previousNumerics,spentNumerics,7,random,
    tacticalEpicNumericChoice(side,battle.round));
+  const moduleRecycles=status[key].moduleFx?.recycle??0;
+  if(moduleRecycles){
+   const indices=side.numeric.hand.map((c,i)=>({i,value:c.value}))
+    .sort((a,b)=>a.value-b.value||a.i-b.i).slice(0,moduleRecycles).map(x=>x.i);
+   side.numeric=recyclePile(side.numeric,indices,7,random);
+   log.push(key+': Carta Modulo · '+indices.length+' numeriche ricambiate dal mazzo autentico');
+  }
   rememberTacticalLeviatanoRecycle(side,previousNumerics,spentNumerics.length);
   const earned=Math.max(0,25+((key==='A'?hitsA:hitsB)>0?25:0)+
    (validCalculation[key]?(modifiers.syncPerCalculation+modifiers.pvpTerrain.syncPerCalculation):0)-
@@ -984,7 +1002,7 @@ function resolveCycle(battle,nowMs){
    const duration=applyTacticalTimedStatus(side,'corroded',battle.round,modifiers);
    log.push(key+': corrosione '+duration.durationMs/1000+' s di combattimento (preparazione sospesa)');
   }else side.corroded=(side.statusUntil?.corroded||0)>tacticalCombatClock(battle.round+1);
-  side.heated=enemyShieldDamage>0&&enemyStatus.tech==='plasma'&&
+  side.heated=enemyShieldDamage>0&&(enemyStatus.tech==='plasma'||enemyStatus.moduleFx?.burn)&&
    !tacticalEpicProtectsFromHeat(side,battle.round);
   // A hit this cycle schedules the next round; previous status expires now.
   expireExclusiveNeurotoxin(side,battle.round);
@@ -1006,7 +1024,8 @@ function resolveCycle(battle,nowMs){
   orders,history:[...battle.history,{round:battle.round,orders,events:log,
    shieldA:a+escortA,shieldB:b+escortB,escortA,escortB,hitsA,hitsB,
    snapshots:{before,prepared,afterBarrier,afterPrecision},impacts,playedSpecials,
-   mutations:appliedMutations,legacyEffects,environmentStage,activeTerrain:terrainResolution.active}],lastEvents:log,winner};
+   mutations:appliedMutations,legacyEffects,moduleActivations:moduleResult.activations,
+   environmentStage,activeTerrain:terrainResolution.active}],lastEvents:log,winner};
 }
 export function advanceTacticalDuel(battle,nowMs=0){
  if(!Number.isFinite(nowMs))throw new Error('Orologio non valido');
