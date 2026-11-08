@@ -4,6 +4,7 @@
 // One active playable character PER SIDE for two combat cycles maximum.
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {restoreMotherShield} from './vitalDefense.js';
+import {pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 const defs=[
  [1,'Guardiano di Gaia','Riparo tellurico','armor','Scudo madre: -15% ai colpi reali sulla barriera, per due cicli.'],
  [2,'Colosso di Tharsis','Furia controllata','assault','Armi native +8% sulla barriera, soltanto sui colpi reali.'],
@@ -99,7 +100,7 @@ export function bossCharacterRememberHit(side,round,actualDamage){
  side.bossCharacter.regenDue=round+1;
  return true;
 }
-export function bossCharacterApplyRegen(side,round){
+export function bossCharacterApplyRegen(side,round,terrainEffects=null){
  const state=side?.bossCharacter;
  if(bossCharacterActive(side,round)?.effect!=='regeneration'||
   state.regenDue!==round||state.regenerated||
@@ -107,7 +108,7 @@ export function bossCharacterApplyRegen(side,round){
  // Ripara con la stessa fisica delle altre Carte Speciali: il generatore
  // danneggiato dimezza la cura e il rialzo della barriera richiude i vitali
  // che non devono più essere esposti. Mai mutare shield.hp direttamente.
- const repaired=restoreMotherShield(side.defense,4);
+ const repaired=restoreMotherShield(side.defense,pvpTerrainRepairAmount(4,terrainEffects));
  side.defense=repaired.defense;
  state.regenerated=true;state.regenDue=0;
  return repaired.repaired;
