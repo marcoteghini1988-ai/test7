@@ -33,6 +33,7 @@ export function projectedCombatSides(battle,elapsedMs){
  }]));
 }
 const sideLabel=key=>key==='A'?'TUA NAVE':'AVVERSARIO';
+const MUTATION_OPERATORS=Object.freeze({plus:'+',minus:'−',times:'×',divide:'÷'});
 export function tacticalCombatTimeline(battle){
  const cycle=battle?.history?.at(-1);
  if(!cycle)return [];
@@ -42,10 +43,15 @@ export function tacticalCombatTimeline(battle){
   for(const [slot,index] of (order?.specialIndices??[]).entries()){
    // Resolve the original card type from round history, not the refilled current hand.
    const originalType=cycle.playedSpecials?.[by]?.[slot]??null;
-   if(originalType)events.push({id:'special-'+by+'-'+slot,type:'special',by,atMs:350+slot*340,
-    durationMs:850,label:originalType===SIGNATURE_MUTATION_CARD_ID&&cycle.mutations?.[by]?.vitalId?
-    'FIRMA RISCRITTA · '+(VITAL_LABELS[cycle.mutations[by].vitalId]??cycle.mutations[by].vitalId):
-    (TACTICAL_SPECIALS[originalType]?.name??originalType),cardType:originalType});
+   if(originalType){
+    const mutation=originalType===SIGNATURE_MUTATION_CARD_ID?cycle.mutations?.[by]:null;
+    const label=mutation?.vitalId?
+     'FIRMA RISCRITTA · '+(VITAL_LABELS[mutation.vitalId]??mutation.vitalId)+
+      ' · '+(MUTATION_OPERATORS[mutation.newSignature?.op]??'?')+' '+mutation.newSignature?.target:
+     (TACTICAL_SPECIALS[originalType]?.name??originalType);
+    events.push({id:'special-'+by+'-'+slot,type:'special',by,atMs:350+slot*340,
+     durationMs:850,label,cardType:originalType});
+   }
   }
   const guns=side.weapons||[];
   for(const [wi,weapon] of guns.entries()){
