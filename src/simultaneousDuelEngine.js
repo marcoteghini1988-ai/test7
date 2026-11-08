@@ -19,6 +19,8 @@ import {createExclusiveBossState,exclusiveBossShieldFactor,rememberExclusiveBoss
 import {arenaPhaseModifiers,arenaEnvironment} from './battleArenas.js';
 import {PVP_TERRAIN_CATALOG,isPvpTerrain,resolvePvpTerrain,pvpTerrainEffects} from './pvpTerrainCards.js';
 import {SIGNATURE_MUTATION_CARD_ID,prepareSignatureMutation} from './tacticalSignatureMutation.js';
+import {VULNERABILITY_RIFT_CARD_ID,VULNERABILITY_RIFT_PROTECTED_DAMAGE_CAP,validateVulnerabilityRiftOrder,riftProtectedDamage}
+ from './tacticalVulnerabilityRift.js';
 import {TACTICAL_MODULE_CARDS,isModuleCard,activateTacticalModuleCards} from './tacticalEquipmentCards.js';
 import {LEGACY_DICE_CARD,LEGACY_BOMB_CARD,LEGACY_MALUS_CARD,LEGACY_GOLD_CARD,initialLegacyTactics,
  validateLegacyTactics,prepareLegacyTactics,resolveLegacyTactics,armLegacyBombs}
@@ -49,7 +51,7 @@ import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActi
 import {activateTacticalEpic,expireTacticalEpic,prepareTacticalEpicChoice,tacticalEpicMatriceDamage,tacticalEpicNumericChoice,tacticalEpicProtectsFromHeat,resolveTacticalEpicAfterCombat} from './tacticalEpicRuntime.js';
 import {
   VITAL_IDS,createMotherDefense,damageMotherShield,restoreMotherShield,exposeMotherPart,
-  hitMotherPart,remainingExposureSlots,motherDestroyed
+  hitMotherPart,hitMotherPartThroughRift,remainingExposureSlots,motherDestroyed
 } from './vitalDefense.js';
 
 export const TACTICAL_TIMING=Object.freeze({prepareMs:30000,resolveMs:8000,maxRounds:20});
@@ -70,6 +72,7 @@ export const TACTICAL_SPECIALS=Object.freeze({
  [LEGACY_BOMB_CARD]:{name:'Numero Bomba',kind:'sabotage',help:'Marca uno slot avversario: la numerica reale può essere disinnescata o esplode entro due cicli'},
  [LEGACY_MALUS_CARD]:{name:'Barra Malus',kind:'sabotage',help:'Richiede 3 colpi efficaci ai vitali; sabotaggio per un ciclo'},
  [LEGACY_GOLD_CARD]:{name:'Carta Dorata',kind:'transmute',help:'Trasforma una numerica reale: bonus del seme su formula valida, durata due cicli'},
+ [VULNERABILITY_RIFT_CARD_ID]:{name:'Faglia di Vulnerabilità',kind:'rift',help:'Consuma questa speciale insieme a una formula valida: 1 attacco a un vitale senza aprire la barriera. Se ancora protetto massimo 5 HP. Una volta per battaglia, Contromisure efficaci.'},
  [SIGNATURE_MUTATION_CARD_ID]:{name:'Mutazione della Firma',kind:'mutation',help:'Cambia soltanto per questo ciclo la formula richiesta da un proprio vitale già esposto. Il nemico non conosce la nuova firma durante la preparazione.'},
  'fusion-strike':{name:'Fusione Assalto',kind:'fusion',help:'Una scudiera viva, 100 Sincronia: +25% barriera madre, scudiera agganciata senza fuoco autonomo'},
  'fusion-twin':{name:'Fusione Gemellare',kind:'fusion',help:'Due scudiere vive, 100 Sincronia: intercettazione fino al 55% su HP veri'},
@@ -101,7 +104,7 @@ export function validateTacticalLoadout(types){
  for(const type of types){
   if(!Object.hasOwn(TACTICAL_SPECIALS,type))return false;
   counts[type]=(counts[type]||0)+1;
-  if(counts[type]>((isBossCharacterCard(type)||isModuleCard(type))?1:TACTICAL_SPECIAL_COPY_LIMIT))return false;
+  if(counts[type]>((isBossCharacterCard(type)||isModuleCard(type)||type===VULNERABILITY_RIFT_CARD_ID)?1:TACTICAL_SPECIAL_COPY_LIMIT))return false;
   if(isTacticalEpic(type)){
    epics++;
    if(counts[type]>1||epics>2)return false;
@@ -188,7 +191,7 @@ function createSide(key,shipId,level,seed,specialDeck=null,bossPlanetId=null,epi
    weapon:createTacticalEscortArmament(shipId,weapons,i)
   })),
   sync:0,ionized:false,corroded:false,heated:false,bossCharacter:null,bossPlanetId,
-  legacy:initialLegacyTactics(),equipmentLevels:{...equipmentLevels},
+  legacy:initialLegacyTactics(),equipmentLevels:{...equipmentLevels},riftUsed:false,
   neurotoxinUntilRound:0,bossExclusive:createExclusiveBossState(bossPlanetId),seen:[],
   commander:commander&&tacticalCommanderReady(commander.id)?{
    id:commander.id,level:Math.max(1,Math.min(5,Math.floor(Number(commander.level)||1))),bonusRemainder:0
@@ -248,6 +251,8 @@ export function validateTacticalOrder(battle,key,order){
   return {ok:false,reason:'character_already_active'};
  if(ni.length!==0&&![2,3].includes(ni.length))return {ok:false,reason:'numeric_count'};
  if(ni.length>0&&(!VITAL_IDS.includes(order.vitalId)||!['plus','minus','times','divide','pair','trips'].includes(order.op)))return {ok:false,reason:'invalid_precision'};
+ const riftValidation=validateVulnerabilityRiftOrder(battle,key,order,types);
+ if(!riftValidation.ok)return riftValidation;
  // Anti-stall: one free replacement without a precision attack.
  // Pendulum grants ONE additional replacement on the cycle after real damage.
  const freePendulum=side.epic.exchangeUntilRound===battle.round?side.epic.exchangeCredits:0;
@@ -398,7 +403,12 @@ function applyPreparation(sides,orders,log,round,modifiers){
   const playedEpic=types.find(isTacticalEpic);
   if(playedEpic)activateTacticalEpic(side,playedEpic,round,0,log);
   const fusion=types.find(type=>type.startsWith('fusion-'))??null;
-  const active={types,bossSnapshot:tacticalBossConditionSnapshot(side),
+  const riftActive=types.includes(VULNERABILITY_RIFT_CARD_ID);
+  if(riftActive){side.riftUsed=true;
+   log.push(key+': Faglia di Vulnerabilità · traiettoria verso '+orders[key].vitalId+
+    ' senza aprire la barriera, soggetta alla firma autentica e alle Contromisure');
+  }
+  const active={types,bossSnapshot:tacticalBossConditionSnapshot(side),rift:riftActive,
    newCounter:types.includes('tactic-counter')?orders[key].counterVitalId:null,
    suppressFirstEscort:types.includes('tactic-suppress'),
    fusion,fusionDefense:({'fusion-barrier':.60,'fusion-twin':.55,'fusion-triad':.40})[fusion]||0,
@@ -711,19 +721,20 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const cards=order.numericIndices.map(i=>atk.numeric.hand[i]);
  const target=order.vitalId;
  let defense=def.defense;
+ const riftBypasses=!!status[key].rift&&!defense.parts[target].exposed;
  const signature=defense.parts[target].signature;
  const matches=tacticalSignatureMatches(signature,order.op,cards);
  if(!matches){
   const mutated=status[other(key)].mutation?.vitalId===target;
-  impacts.push({kind:'precision',by:key,target,damage:0,
+  impacts.push({kind:'precision',by:key,target,damage:0,rift:riftBypasses,
    reason:mutated?'signature_mutated':'invalid_signature'});
   log.push(key+': '+(mutated?'firma mutata: vecchia combinazione annullata per ':'combinazione non valida per ')+
    target+' — numeriche consumate');
   return 0;
  }
- if(!defense.parts[target].exposed&&remainingExposureSlots(defense)>0)
+ if(!defense.parts[target].exposed&&!riftBypasses&&remainingExposureSlots(defense)>0)
    defense=exposeMotherPart(defense,target).defense;
- if(!defense.parts[target].exposed){
+ if(!defense.parts[target].exposed&&!riftBypasses){
   impacts.push({kind:'precision',by:key,target,damage:0,reason:'protected'});
   log.push(key+': '+target+' ancora protetto dalla barriera');return 0;
  }
@@ -792,7 +803,9 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const pilotDefense=tacticalBossCommanderDefenseBonus(def,atk,round);
  damage=Math.floor(damage*bossDefenseFactor*pilotDefense.factor);
  if(status[key].moduleFx?.precisionFactor)damage=Math.max(0,Math.floor(damage*status[key].moduleFx.precisionFactor));
- const hit=hitMotherPart(defense,target,damage,cards);
+ if(riftBypasses)damage=riftProtectedDamage(damage,true);
+ const hit=riftBypasses?hitMotherPartThroughRift(defense,target,damage,cards):
+  hitMotherPart(defense,target,damage,cards);
  const consequence=hit.damage>0?tacticalVitalTransition(defense,hit.defense,target):null;
  def.defense=hit.defense;
  if(characterPrecision>0&&hit.damage>0)
@@ -847,7 +860,8 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(other(key)+': '+(def.bossNumericDeck?.id==='planet_char_20'?
    'Sovrano · Ultimo presidio / Vuoto difensivo':'Primo anello')+
    ' · colpo vitale ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
- impacts.push({kind:'precision',by:key,target,damage:hit.damage||0,absorbed,reason:hit.reason,destroyed:!!hit.destroyed});
+ impacts.push({kind:'precision',by:key,target,damage:hit.damage||0,absorbed,reason:hit.reason,
+  destroyed:!!hit.destroyed,rift:riftBypasses});
  if(target==='shieldGenerator'&&hit.destroyed){
   // La barriera madre collassa quando il suo vero generatore va KO.
   def.defense=damageMotherShield(def.defense,def.defense.shield.hp).defense;
