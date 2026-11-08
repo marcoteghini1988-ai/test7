@@ -3,6 +3,20 @@
 **Documento di continuità per la scaletta generale di 53 punti.**
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
+## CHECKPOINT SUCCESSIVO — 8 novembre 2026, quattro vitali e sistema di esposizione
+
+**Stato codice su `test7/main`:** attacchi di precisione di base a **6 HP con 2 numeriche** o **8 HP con 3 numeriche** contro quattro vitali da 10 HP; primo impatto ordinario crea un'avaria (4/10 o 2/10) invece del KO immediato. Bonus autentici restano attivi; le 42 armi native, l'HP iniziale e i 20 cicli non cambiano. Copertura reale dei **136 casi 17 navi × 4 vitali × 2 livelli** nei test, oltre ai normali boss.
+
+**Omissione corretta nella scoperta delle firme:** la scelta del vitale da esporre attraverso i quattro pezzi già presenti della plancia è ora un ordine reale `exposureTarget`, distinto dal colpo numerico. Quando il danno reale alla barriera apre uno slot, il bersaglio selezionato viene esposto e da quel momento la sua firma è visibile; **zero danno, zero bonus/Carte Speciali inventate, zero visibilità prima della soglia**. Chi vuole conoscere prima le firme deve usare una Carta Scansione autentica. L'IA di entrambi i lati segue la stessa regola e non legge mani o firme nascoste. Nessun asset o slot spostato.
+
+**Verifica:** [Actions 42486214955](https://github.com/marcoteghini1988-ai/test7/actions/runs/42486214955), **762/762 test, build e preflight riusciti**.
+
+**Benchmark avversari, non bilanciamento definitivo:** con stessa seed171, 12 boss reali e solo mazzo starter, C01 L5 = 12 sconfitte; L04 L5 = 8 sconfitte e 4 pareggi. L'IA A infligge ora danni ai vitali in 11/12 incontri usando C01 (prima erano 0/12), ma il campione resta sfavorevole. Richiede confronto di più seed, collezioni/sblocchi corretti, 33 personaggi, equipaggiamenti e partite umane; non cambiare silenziosamente bonus boss o ricompense sulla base di una sola serie IA.
+
+**Prossimo blocco:** matrice multi-configurazione di difficoltà dei 12 boss, decisioni razionali su motore/armi/generatore/centralina, tempi reali fino al limite 20, leggibilità della nuova esposizione su smartphone; asset/audio definitivi sempre rinviati. Rapporto: [BILANCIAMENTO_QUATTRO_VITALI_2026-11-08.md](BILANCIAMENTO_QUATTRO_VITALI_2026-11-08.md).
+
+---
+
 ## AGGIORNAMENTO DOPO L'AUDIT — 8 novembre 2026, settori e premi boss
 
 È stata corretta nel codice **la numerazione canonica 1–120 dei settori** per i dodici pianeti del catalogo, pur conservando gli ID storici: Saturno/ID 6 → settore 40, Encelado/ID 20 → settore 120. L'ingresso `MathDuelBattle.jsx` normalizza la numerazione prima di scegliere tra il motore simultaneo e il fallback, senza modificare la plancia. Il controllo del boss reale ora rifiuta in entrambe le modalità le coppie settore/pianeta incoerenti. L'App assegna la reliquia storica solo se il risultato contiene un boss autentico vinto; la stessa reliquia non si duplica. I pacchetti primo settore non si duplicano fra Campagna e Avventura e non vengono attribuiti oltre il 120. Salvate le chiavi storiche dei premi senza migrazione distruttiva. **753 test, build e preflight riusciti** su [Actions 42483315300](https://github.com/marcoteghini1988-ai/test7/actions/runs/42483315300). Rapporto dettagliato: [INTEGRAZIONE_SETTORI_RELIQUIE_RICOMPENSE_2026-11-08.md](INTEGRAZIONE_SETTORI_RELIQUIE_RICOMPENSE_2026-11-08.md). Da non considerare chiuso il collaudo Android, il percorso Cripta post-vittoria reale o la migrazione dei claim storici ambigui. **Prossimo blocco operativo: vitali, danni 10/10, scelta strategica dei bersagli e durata dei boss.**
