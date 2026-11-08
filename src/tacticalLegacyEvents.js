@@ -31,8 +31,15 @@ const repairShield=(side,amount)=>{
  side.defense=r.defense;
  return r.repaired;
 };
-export const quantumFace=(seed,round,key)=>QUANTUM_FACES[
- ((seed>>>0)+round*13+(key==='A'?17:41))%QUANTUM_FACES.length];
+// I due Dadi sono lanci indipendenti (ma riproducibili dal seed della partita).
+// Prima 17 vs 41 differivano di 24, multiplo delle sei facce: A e B
+// ottenevano SEMPRE lo stesso risultato. Conserviamo la sequenza di A;
+// la variabile di B dipende anche da ciclo e seed, senza dati privati.
+export const quantumFace=(seed,round,key)=>{
+ const base=(seed>>>0)+round*13+17;
+ const sideSalt=key==='B'?24+(Math.imul(((seed>>>0)+round)>>>0,7)>>>0):0;
+ return QUANTUM_FACES[(base+sideSalt)%QUANTUM_FACES.length];
+};
 export function validateLegacyTactics(battle,key,order,types){
  const side=battle.sides[key],t=side.legacy??initialLegacyTactics();
  // Il Dado è una carta fisica: nessun lancio a bottone o con carica soltanto.
