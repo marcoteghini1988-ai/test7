@@ -156,4 +156,20 @@ test('L IA conserva scelta reale di munizione scudiera quando barriera e generat
   'il comportamento ordinario con barriera attiva rimane valido');
  assert.notEqual(validAmmo.escortAmmoIndex,null,
   'le scudiere restano armabili finche esiste una vera barriera avversaria');
+ // Caricare anche dopo il collasso del generatore non duplica carte:
+ // l'arma consuma una vera munizione per avere una nuova pescata.
+ const usedAmmoId=battle.sides.A.numeric.hand[order.escortAmmoIndex].id;
+ const sealedA=sealTacticalOrder(battle,'A',order,101);
+ assert.equal(sealedA.ok,true,sealedA.reason);
+ const sealedB=sealTacticalOrder(sealedA.battle,'B',{
+  specialIndices:[],numericIndices:[]
+ },102);
+ assert.equal(sealedB.ok,true,sealedB.reason);
+ const resolved=advanceTacticalDuel(sealedB.battle,102);
+ const numerics=resolved.sides.A.numeric;
+ const ids=[...numerics.hand,...numerics.deck,...numerics.discard].map(card=>card.id);
+ assert.equal(ids.length,52);
+ assert.equal(new Set(ids).size,52);
+ assert.equal(numerics.discard.some(c=>c.id===usedAmmoId),true,
+  'una munizione scudiera non crea una numerica gratuita');
 });
