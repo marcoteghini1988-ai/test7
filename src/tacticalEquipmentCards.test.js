@@ -211,3 +211,64 @@ test('Purificazione come Carta Modulo rimuove il sabotaggio senza azzerare la pr
  assert.equal(effect.effects.A.preventMalus,true);
  assert.equal(duel.sides.A.legacy.malusCharge,3);
 });
+
+test('Due Moduli simultanei offensiva/cura non dipendono dal lato A o B',()=>{
+ const aries=moduleCardType('aries'),taurus=moduleCardType('taurus');
+ const run=(attackSide)=>{
+  const b=createTacticalDuel();
+  for(const side of Object.values(b.sides))side.defense.shield.hp=30;
+  b.sides[attackSide].equipmentLevels[aries]=1;
+  const healingSide=attackSide==='A'?'B':'A';
+  b.sides[healingSide].equipmentLevels[taurus]=1;
+  const types={A:[attackSide==='A'?aries:taurus],
+   B:[attackSide==='B'?aries:taurus]};
+  const logs=[],result=activateTacticalModuleCards(b.sides,types,logs);
+  assert.equal(result.activations.length,2);
+  assert.equal(logs.filter(s=>s.includes('CARTA MODULO')).length,2);
+  return {attack:b.sides[attackSide].defense.shield.hp,
+   healed:b.sides[healingSide].defense.shield.hp,
+   damage:result.activations.find(x=>x.effect==='pure_hit').actual,
+   recovered:result.activations.find(x=>x.effect==='healing').actual};
+ };
+ assert.deepEqual(run('A'),run('B'));
+ assert.deepEqual(run('A'),{attack:30,healed:31,damage:8,recovered:9});
+});
+
+test('Scambio simultaneo: doppio drenaggio ha pari esito e non cura con danno inesistente',()=>{
+ const drain=moduleCardType('libra');
+ const b=createTacticalDuel();
+ for(const side of Object.values(b.sides)){
+  side.equipmentLevels[drain]=1;
+  side.defense.shield.hp=5;
+ }
+ const activated=activateTacticalModuleCards(b.sides,{A:[drain],B:[drain]},[]);
+ assert.deepEqual(activated.activations.map(x=>x.actual),[5,5]);
+ assert.equal(b.sides.A.defense.shield.hp,b.sides.B.defense.shield.hp);
+ assert.equal(b.sides.A.defense.shield.hp,3);
+ const c=createTacticalDuel();
+ c.sides.A.equipmentLevels[drain]=1;
+ c.sides.B.defense.shield.hp=0;
+ c.sides.A.defense.shield.hp=10;
+ const zero=activateTacticalModuleCards(c.sides,{A:[drain],B:[]},[]);
+ assert.equal(zero.activations[0].actual,0);
+ assert.equal(c.sides.A.defense.shield.hp,10,'niente cura gratis se lo scudo rivale è vuoto');
+});
+
+test('Colpo esecutivo usa HP al momento del sigillo e non l’ordine A/B',()=>{
+ const execution=moduleCardType('leo'),strike=moduleCardType('aries');
+ const run=side=>{
+  const b=createTacticalDuel();
+  b.sides.A.defense.shield.hp=25;
+  b.sides.B.defense.shield.hp=25;
+  b.sides[side].equipmentLevels[execution]=1;
+  b.sides[side==='A'?'B':'A'].equipmentLevels[strike]=1;
+  const order=side==='A'?{A:[execution],B:[strike]}:
+   {A:[strike],B:[execution]};
+  const acts=activateTacticalModuleCards(b.sides,order,[]);
+  return {execution:acts.activations.find(x=>x.effect==='execution').actual,
+   shieldA:b.sides[side].defense.shield.hp,
+   shieldB:b.sides[side==='A'?'B':'A'].defense.shield.hp};
+ };
+ assert.deepEqual(run('A'),run('B'));
+ assert.deepEqual(run('A'),{execution:6,shieldA:17,shieldB:19});
+});
