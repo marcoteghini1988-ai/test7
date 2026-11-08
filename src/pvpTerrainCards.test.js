@@ -102,12 +102,19 @@ test('Impossibile attivare Terreno in campagna o due Terreni nello stesso ordine
  assert.equal(validateTacticalOrder(b,'A',{specialIndices:[0],numericIndices:[]}).reason,'terrain_pvp_only');
  const p=createTacticalDuel({mode:'pvp',specialDeckA:[
   'terrain-debris','terrain-plasma',...TACTICAL_STARTER_TYPES.slice(2)]});
- makeVisible(p,'A','terrain-debris');
- const second=p.sides.A.special.deck.findIndex(c=>c.type==='terrain-plasma');
- assert.ok(second>=0);
- const old=p.sides.A.special.hand[1];
- p.sides.A.special.hand[1]=p.sides.A.special.deck[second];
- p.sides.A.special.deck[second]=old;
+ const first=makeVisible(p,'A','terrain-debris');
+ const pile=p.sides.A.special;
+ if(first!==0)[pile.hand[0],pile.hand[first]]=[pile.hand[first],pile.hand[0]];
+ const second=pile.hand.findIndex(c=>c.type==='terrain-plasma');
+ if(second<0){
+  const at=pile.deck.findIndex(c=>c.type==='terrain-plasma');
+  assert.ok(at>=0);
+  [pile.hand[1],pile.deck[at]]=[pile.deck[at],pile.hand[1]];
+ }else if(second!==1){
+  [pile.hand[1],pile.hand[second]]=[pile.hand[second],pile.hand[1]];
+ }
+ assert.equal(pile.hand[0].type,'terrain-debris');
+ assert.equal(pile.hand[1].type,'terrain-plasma');
  assert.equal(validateTacticalOrder(p,'A',{specialIndices:[0,1],numericIndices:[]}).reason,
   'terrain_conflict');
 });
