@@ -32,6 +32,21 @@ Il comandante boss Terra, la sua identità, arena e mazzo numerico rimangono inv
 
 **Conseguenza per il bilanciamento:** non aumentare o diminuire i danni del boss Terra sulla base di questa matrice senza prima decidere se il modello della nave boss deve essere **fisso per pianeta** o può cambiare per compatibilità. Qualunque modifica deve conservare il motore legacy, le 17 navi reali, i 42 armamenti, le firme autentiche, il boss riconoscibile e le arene uniche. Non sostituire grafiche o spostare la plancia.
 
+## Controprova controllata: stesso modello boss per tutte le madri
+
+Per separare forza della nave giocatore e cambio di avversario, il test **`src/terraBossShipControlled.test.js`** ha creato 40 ulteriori duelli diagnostici: quattro madri giocatore al L3, cinque seed ciascuna, con boss Terra L1 dotato sempre di **C02** oppure sempre di **C03**. L'esperimento NON cambia gli abbinamenti della campagna. Un'asserzione forte verifica che, quando il modello imposto coincide con quello scelto dal gioco, **l'intero stato iniziale** (due mazzi, piloti, passiva boss, arena, RNG) sia identico a quello ufficiale.
+
+| Madre giocatore L3 | Boss C02: V/S/P | Boss C03: V/S/P |
+|---|---|---|
+| N00 | 0/5/0 | 0/5/0 |
+| C01 | 0/5/0 | 0/5/0 |
+| C02 | 1/4/0 | 0/4/1 |
+| C03 | **4/1/0** | **2/1/2** |
+
+**Interpretazione:** il cambio di modello boss è un fattore reale (C03 L3 passa da 4 a 2 vittorie su cinque), ma **non spiega tutto**: C03 L3 vince anche contro C03 L1, mentre N00 e C01 L3 perdono nei dieci duelli di ciascuna con entrambi i modelli. Il campione è ridotto e IA contro IA. La richiesta di un avversario visivamente riconoscibile rende opportuno stabilire un modello boss canonico prima di intervenire sui danni; per ora la versione ufficiale rimane immutata.
+
+CI esperimento: [GitHub Actions 42501804052](https://github.com/marcoteghini1988-ai/test7/actions/runs/42501804052) — **779/779 test**, build e preflight superati.
+
 ## Lavoro ancora aperto
 1. Confrontare un medesimo modello rivale per tutte le quattro navi, con esperimento controllato, senza entrare nel codice ufficiale fino a verifica di compatibilità e correttezza del duello.
 2. Collaudare il percorso reale dei **settori 1–9** (non basta assegnare ipoteticamente le vittorie), l'ottenimento e l'apertura dei pacchetti, e un approccio tattico manuale.
