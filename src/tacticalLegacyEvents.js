@@ -144,7 +144,7 @@ export function resolveLegacyTactics(sides,orders,playedTypes,valid,hitCounts,ef
     else if(gold.suit==='♦') {amount=8;side.sync=clamp(side.sync+8,0,100);}
     else if(gold.suit==='♣'){
      const escort=side.escorts.find(e=>e.hp>0&&e.hp<e.max);
-     if(escort&&side.defense.parts.command.hp>0){amount=Math.min(8,escort.max-escort.hp);escort.hp+=amount;}
+     if(escort&&side.defense.parts.command.hp>0){amount=Math.min(pvpTerrainRepairAmount(8,modifiers.pvpTerrain),escort.max-escort.hp);escort.hp+=amount;}
     }else if(gold.suit==='♠')amount=effectShield(sides[other(key)],6);
     t.usedGoldenIds.push(gold.cardId);
     log.push(key+': Carta Dorata '+gold.suit+' attivata da un vero calcolo · '+amount+
