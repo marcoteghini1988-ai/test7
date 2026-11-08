@@ -3,6 +3,53 @@
 **Documento di continuità per la scaletta generale di 53 punti.**
 È un registro delle decisioni concordate e dei risultati REALMENTE collegati al gioco, non una dichiarazione che tutti i 53 punti siano implementati.
 
+## CHECKPOINT OPERATIVO — 8 novembre 2026: audit incrociato delle scalette
+
+**Questo checkpoint prevale sulle descrizioni di stato più vecchie presenti sotto, senza alterare la numerazione originale dei 53 punti.** Raccolta basata sullo storico progettuale recuperabile, sui documenti in `docs/` e sul codice di `test7/main`. Il testo integrale originale di tutti i 53 punti non è disponibile: NON ricostruire o segnare come conclusi i numeri mancanti per deduzione. I punti 44–47 di una scaletta locale del 6 novembre non sono necessariamente gli stessi della scaletta originale.
+
+**Codice controllato:** commit `ecc33110227c61dacb72dbbb2b3920a319b0036d`; workflow [GitHub Actions 42478304288](https://github.com/marcoteghini1988-ai/test7/actions/runs/42478304288) riuscito. L'ultimo audit boss documenta 744 test, build e preflight; la CI NON costituisce collaudo Android né una partita completa.
+
+### Decisioni più recenti, in ordine di prevalenza
+
+- **Duello ufficiale simultaneo**: A e B preparano segretamente per 30 s, risoluzione comune di 8 s; in caso di doppio KO, pareggio. Questa decisione del 7/11 sostituisce l'originaria battaglia continua e i turni alternati. Vecchi motori solo per compatibilità controllata.
+- **Arena originale 9:16 invariata**: madre centrale, fino a due scudiere ai lati (zero a L1–L2; una a L3–L4; due a L5). **17 madri, 42 armi fisiche**, quattro rarità e cinque livelli restano. Un precedente schieramento di 2–3 madri indipendenti NON è ancora operativo nel motore simultaneo e non va confuso con la formazione madre+scudiere.
+- **Due mazzi veri e distinti**: 52 numeriche, 7 in mano; 24 Carte Speciali equipaggiate, massimo 6 copie per tipo e 5 in mano, reintegro reale fino a cinque. Limite attuale: massimo due speciali preparate per ciclo. Calcoli validi con 2/3 numeriche, a volte Poker alternativo, attaccano vitali; le 42 armi native attaccano barriera. I semi delle numeriche servono alla compatibilità/caricamento delle armi, NON attribuiscono cure o attacchi universali.
+- **Quattro vitali fisici** (motore, armi, generatore, centralina) con danni localizzati e conseguenze vere; tutti e quattro a zero = KO della madre. La **Faglia** è una Carta Speciale: permette un colpo mirato con firma valida senza abbattere prima la difesa, una volta per partita e fino a 5 HP ai vitali; non azzera la barriera e ha contromisure. Non creare attivazioni gratuite.
+- **Fusioni, Dado, Numero Bomba, Barra Malus, Dorata, Mutazione Firma, 35 Moduli/equipaggiamenti e ogni abilità ATTIVABILE** si usano soltanto come Carte Speciali autentiche possedute, pescate e consumate. Le armi montate non diventano carte; identità/passive innate dei boss e le passive numeriche sono sistemi distinti, non pulsanti gratuiti.
+- **Dodici boss**, una capacità nemica esclusiva ciascuno; **dodici mazzi numerici boss e 23 passive**, ciascuna con tre gradi (4 mazzi con una abilità, 5 con due, 3 con tre). **Dodici Carte Personaggio Boss** del giocatore, sbloccate dopo vittorie autentiche, sono un'altra categoria: temporanee e max un personaggio attivo. I **33 comandanti/personaggi storici** non devono essere scambiati automaticamente per queste dodici carte temporanee.
+- **12 reliquie → 6 Epici** via fusioni reali, convertiti in Carte Speciali temporanee, senza doppio bonus passivo e senza sblocchi gratis; inventario e slot legacy conservati. **4 Carte Terreno** nel mazzo speciale esclusivamente PvP: 2 cicli, ambiente/effetti simmetrici; due terreni opposti giocati insieme si annullano. Le **arene boss** sono esclusive e invariabili; arene ordinarie planetarie hanno effetti graduati.
+- **Campagna**: 120 settori / 12 boss, mazzi nemici, piloti e ricompense già collegati logicamente al motore simultaneo per i casi riconosciuti. I salvataggi/piloti incompatibili entrano in fallback 3D con sole famiglie speciali eseguibili e carte realmente possedute; non assegnare copie di riserva gratuite. PvP attuale contro IA **non è multiplayer umano online**.
+
+### Cosa risulta eseguito e cosa no
+
+| Blocco | Stato controllato al checkpoint | Da non confondere con |
+| --- | --- | --- |
+| 12 poteri esclusivi + 23 passive boss + 12 incontri e piloti | **Codice e test**; ultima correzione: Neurotossina Venere sulle cure reali e sovrapposizioni | Bilanciamento e percorso umano fino alla vittoria non verificati |
+| Carte Modulo/Dado/Bomba/Malus/Dorata/Faglia/Mutazione | **Logica e test nel simultaneo**, consumo condizionato alla carta | Compatibilità universale del fallback legacy |
+| Carte Personaggio Boss, 6 Epici, 4 Terreni PvP | **Primo collegamento logico**, inventari e vincoli; immagini/valori ancora prototipali | Carte liberamente possedute, PNG finali, PvP online |
+| Navi, scudiere, impatti fisici, cockpit e plancia | **Asset e implementazione iniziali** | Verifica visiva su 17 modelli, accuratezza delle 42 armi, mesh/animazioni finali |
+| Shop, Hangar, collezioni, settori e premi | **Percorsi automatici presenti** | Economia definitiva e percorso end-to-end giocato |
+| GitHub Actions | **Verde** al commit sopra | Test di usabilità, difficoltà, Android e rete |
+
+### Omissioni recuperate dalle scalette: ordine di lavoro senza cambiare grafica
+
+1. **CHIUDERE LA RIPRESA DEI 12 BOSS**: consolidare i percorsi Campagna/Avventura, arene bloccate, requisiti di proprietà delle carte e del mazzo, risultati, reliquie e 12 identità; aggiungere verifiche di fine battaglia e di persistenza dove oggi si testano principalmente pochi cicli IA. Fonti: [audit boss](AUDIT_12_BOSS_ESCLUSIVI_2026-11-08.md), [migrazione boss](MIGRAZIONE_BOSS_E_ANIMAZIONI_SCUDIERE_07_11_2026.md), [scaletta delle passive](SCALLETTA_BOSS_23_PASSIVE_COMPLETE_2026-11-07.md).
+2. **QUATTRO VITALI E DURATA**: precisione standard 10 HP contro vitali standard 10 HP può abbattere un sistema intatto con un colpo. Misurare frequenza e risposte strategiche a danni parziali, riparazioni, Faglia, Mutazione, barriera e scudiere; poi stabilire valori coerenti, senza cambiare numeri tacitamente. Fonte: [strategia vitali](QUATTRO_VITALI_STRATEGIA_DUELLO_2026-11-07.md).
+3. **CARTE PERSONAGGIO, COMANDANTI E PILOTI**: separare comandante passivo di flotta, 33 personaggi storici e nuove carte temporanee attivabili; verificare conversione dei piloti avanzati, sblocchi, livelli e che NESSUNA abilità attivabile rimanga un pulsante gratis. Sono categorie con sovrapposizioni storiche, non da contare come "tutte concluse".
+4. **MAZZI E PROGRESSIONE**: sblocco 1 mazzo numerico iniziale senza passiva + 12 mazzi boss con grafica/abilità associate; gradi 3/6/9, acquisto/miglioramento nello Shop, ricompense autentiche, rarità e pacchetti, Epici da reliquie e 16 navi ottenibili. Verificare reali flussi inventario→equipaggiamento→battaglia→premio→salvataggio, non solo funzioni isolate.
+5. **FIRME E VARIETÀ TATTICA**: 68 firme sulle 17 navi sono in codice ma i valori restano prototipali. Completare firme dei 12 boss e scudiere, alternative Poker senza farne l'unico sistema, colpi native e cadenza delle 42 armi, contromisure, scelta dell'IA e target fino a 20 cicli.
+6. **MODALITÀ E SERVIZI STORICI**: verificare compatibilità Avventura, Campagna, sfida giornaliera e collezione; non riattivare l'antico Poker Battle. Il vero PvP online sincronizzato/server autorevole, eventuali classifiche e ricompense attendono progettazione e test separati.
+7. **CONTROLLO VISIVO FINALE** (post-regole, come richiesto): confronto della plancia vera con screenshot/ZIP, 7+5 carte, mazzi a sinistra e slot bersaglio distinto, danni localizzati ai pezzi REALI, scudiere e 42 colpi per arma. Completare PNG distinti per personaggi/boss, speciali, terreni e fondali, oltre all'audio; non spostare arena o slot come test. Controllo Android 9:16 e prestazioni.
+8. **TEST DI PARTITE COMPLETE**: non fermarsi al conteggio test. Simulare e poi giocare i 120 settori e i boss, verificare ritmo, sblocco premi, ricicli di tutte le carte, parità A/B e 17×L1–L5. Tutorial sospesi fino a regole stabili.
+
+**Numerazione originale:** dai registri recuperabili risultano riferimenti a 21 (semi), 22–30 (flotta, calcoli, mazzi), 31 (passive boss), 32–39 (speciali), 40–41 (comandante/personaggi), 42–43 (arene), 50 (carte navicella/personaggio), 51–52 (flotte/vitali) e 53 (mazzi boss); **i testi integrali dei punti intermedi e di 43–53 non sono disponibili in modo completo**, quindi non assegnare nuove descrizioni o percentuali di completamento per numero.
+
+### Continuità immediata
+
+Dopo il controllo della Neurotossina Venere, la priorità resta **verificare la chiusura dei dodici percorsi boss e il loro risultato**, poi affrontare il **colpo standard 10/10 ai vitali**, prima di toccare parametri del bilanciamento o la grafica. Le correzioni vanno direttamente su `test7/main`, senza creare una copia del progetto. I valori attuali, soprattutto quelli di bilanciamento, restano provvisori.
+
+---
+
 ## Repository di lavoro — vincolo inderogabile
 - Repository unico di sviluppo: `marcoteghini1988-ai/test7`, ramo ufficiale `main`, aggiornato direttamente su richiesta dell'utente.
 - La versione corrente del gioco è su `test7/main`. Nessuna copia/repository `test8` da usare per gli sviluppi futuri.
