@@ -109,3 +109,44 @@ test('Premi di campagna e avventura: mai doppio premio, niente premi per PvP, pe
  assert.equal(officialBattleResult(won,'pvp',10).eligibleForRewards,false);
  assert.equal(officialBattleResult(won,'classic',10).eligibleForRewards,false);
 });
+
+test('Percorso completo: tutti i 12 boss arrivano a un esito entro 20 cicli, senza carte inventate',()=>{
+ for(const [i,planet] of PHASE16A_CAMPAIGN_PLANETS.entries()){
+  let battle=setup(i).battle;
+  let resolutions=0;
+  while(battle.phase!=='finished'&&resolutions<TACTICAL_TIMING.maxRounds){
+   const context=planet.name+' ciclo '+battle.round;
+   assert.equal(battle.phase,'planning',context+' preparazione');
+   assert.equal(battle.arenaId,'boss_'+planet.id,context+' arena fissa');
+   assert.equal(battle.sides.B.bossExclusive.id,planet.id,context+' esclusivo');
+   assert.equal(battle.sides.B.bossNumericDeck.id,planet.deck,context+' mazzo boss');
+   for(const side of Object.values(battle.sides)){
+    const nums=[...side.numeric.hand,...side.numeric.deck,...side.numeric.discard];
+    const specials=[...side.special.hand,...side.special.deck,...side.special.discard];
+    assert.equal(nums.length,52,context+' numeriche reali');
+    assert.equal(new Set(nums.map(c=>c.id)).size,52,context+' numeriche distinte');
+    assert.equal(specials.length,24,context+' speciali reali');
+    assert.equal(new Set(specials.map(c=>c.id)).size,24,context+' speciali distinte');
+    assert.equal(side.numeric.hand.length,7,context+' mano numerica');
+    assert.equal(side.special.hand.length,5,context+' mano speciale');
+   }
+   const at=battle.deadlineMs-TACTICAL_TIMING.prepareMs+1;
+   const firstPlan=planTacticalAi(battle,'A');
+   const secondPlan=planTacticalAi(battle,'B');
+   const first=sealTacticalOrder(battle,'A',firstPlan,at);
+   assert.equal(first.ok,true,context+' piano A: '+first.reason);
+   const second=sealTacticalOrder(first.battle,'B',secondPlan,at+1);
+   assert.equal(second.ok,true,context+' piano B: '+second.reason);
+   const resolving=advanceTacticalDuel(second.battle,at+1);
+   assert.equal(resolving.phase,'resolving',context+' risoluzione');
+   battle=advanceTacticalDuel(resolving,resolving.resolveUntilMs);
+   resolutions++;
+  }
+  assert.equal(battle.phase,'finished',planet.name+' deve terminare entro 20 cicli');
+  assert.ok(['A','B','draw'].includes(battle.winner),planet.name+' esito');
+  assert.ok(resolutions<=TACTICAL_TIMING.maxRounds,planet.name+' limite');
+  const result=officialBattleResult(battle,'campaign',i*10+10);
+  assert.equal(result.eligibleForRewards,battle.winner==='A',planet.name+' premi solo per vittoria');
+  assert.equal(battle.arenaId,'boss_'+planet.id,planet.name+' arena finale');
+ }
+});
