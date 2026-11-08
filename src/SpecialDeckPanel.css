@@ -19,3 +19,17 @@
 .special-deck-actions button:disabled{opacity:.36;cursor:default}
 .special-deck-notice{color:#c5f0d0;font-weight:700}
 @media(max-width:390px){.special-deck-types{grid-template-columns:1fr}}
+
+/* Anteprima Personaggio Boss: solo contenuto delle schede Hangar. */
+.special-deck-entry-copy{display:flow-root;min-width:0}
+.special-deck-boss-portrait{
+ float:left;position:relative;display:block;overflow:hidden;
+ width:46px;height:58px;margin:0 7px 3px 0;
+ border:1px solid #9377cb;border-radius:5px;background:#1c2243;
+}
+.special-deck-boss-portrait .boss-character-portrait-fallback{
+ position:absolute;inset:0;display:grid;place-items:center;
+ font-size:22px;color:#d4adff;background:linear-gradient(135deg,#3c245e,#17233f);
+}
+.special-deck-boss-portrait img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.special-deck-boss-portrait img[hidden]{display:none}
