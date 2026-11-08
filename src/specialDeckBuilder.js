@@ -12,6 +12,7 @@ import {LEGACY_SPECIAL_TYPES} from './tacticalLegacyEvents.js';
 import {isModuleCard,MODULE_CARD_TYPES,readLegacyModuleLevels,mergeOwnedModuleCards} from './tacticalEquipmentCards.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
 import {readLegacyEpicProgress,mergeLegacyEpicOwnership} from './officialEpicOwnership.js';
+import {PHASE16A_TOTAL_SECTORS} from './newCombat/phase16ACatalog.js';
 export {SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT};
 
 export const SPECIAL_COLLECTION_KEY='eclissi_special_collection_v1';
@@ -141,10 +142,18 @@ export function updateSpecialCollection(change,storage=globalThis.localStorage){
  return result;
 }
 export function claimFirstWinSpecialPack(mode,sector,storage=globalThis.localStorage){
- if(!['campaign','adventure'].includes(mode)||!Number.isInteger(sector)||sector<1)
+ if(!['campaign','adventure'].includes(mode)||!Number.isInteger(sector)||
+    sector<1||sector>PHASE16A_TOTAL_SECTORS)
   return {granted:false,reason:'not_campaign',collection:readSpecialCollection(storage)};
  let reward={granted:false};
  const collection=updateSpecialCollection(current=>{
+  // Lo stesso settore e' uno solo, sia in Campagna sia in Avventura.
+  // Si riconoscono entrambe le chiavi storiche senza modificare i salvataggi.
+  const legacyKeys=[`campaign:sector:${sector}`,`adventure:sector:${sector}`];
+  if(legacyKeys.some(key=>current.claimedRewards.includes(key))){
+   reward={granted:false,reason:'already_claimed',collection:current};
+   return current;
+  }
   reward=specialPackReward(current,`${mode}:sector:${sector}`);
   return reward.collection;
  },storage);
