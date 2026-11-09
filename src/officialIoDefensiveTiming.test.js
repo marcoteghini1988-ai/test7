@@ -103,7 +103,7 @@ test('Io: telemetria di Carica/Eruzione/Raffreddamento e guardie vere, con contr
   const phases=Object.fromEntries(['carica','eruzione','raffreddamento'].map(p=>[p,{
    cycles:0,packet:0,deltaPacket:0,damage:0,deltaDamage:0,
    escortAbsorbed:0,guardAbsorbed:0,repairHP:0,defensiveInHand:0,
-   defensivePlayed:0,guardEvents:0,guardCardBreakdown:{},precisionTaken:0,
+   defensivePlayed:0,guardEvents:0,guardCardBreakdown:{},precisionTaken:0,precisionAbsorbed:0,precisionCountered:0,
    vitalKosAtEnd:0,enemyShieldAlreadyZero:0
   }]));
   for(const seed of sampleSeeds){
@@ -168,16 +168,19 @@ test('Io: telemetria di Carica/Eruzione/Raffreddamento e guardie vere, con contr
     stats.guardEvents+=Number(realGuard>0);
     stats.repairHP+=Math.max(0,preRepairA-beforeA);
     stats.precisionTaken+=precision.reduce((sum,i)=>sum+i.damage,0);
+    stats.precisionAbsorbed+=precision.reduce((sum,i)=>sum+(i.absorbed||0),0);
+    stats.precisionCountered+=precision.filter(i=>i.reason==='countered').length;
     stats.vitalKosAtEnd+=Object.values(real.sides.A.defense.parts).filter(p=>p.hp===0).length;
     stats.enemyShieldAlreadyZero+=Number(beforeA===0);
-    if(detail.length<0)detail.push({deck,seed,round,phase});
     if(seed===17)detail.push({deck,seed,round,phase,bossPacket:hit.packet,
      magmaDeltaPacket:deltaPacket,bossDamage:totalDamage,
      magmaDeltaDamage:deltaDamage,escortAbsorbed:hit.intercepted,
      guardAbsorbed:realGuard,repairHP:Math.max(0,preRepairA-beforeA),
      defensiveInHand:available,defensivesPlayed:played,
      shieldBefore:beforeA,shieldAfter:real.sides.A.defense.shield.hp,
-     precisionTaken:precision.reduce((sum,i)=>sum+i.damage,0)});
+     precisionTaken:precision.reduce((sum,i)=>sum+i.damage,0),
+     precisionAbsorbed:precision.reduce((sum,i)=>sum+(i.absorbed||0),0),
+     precisionCountered:precision.filter(i=>i.reason==='countered').length});
     battle=advanceTacticalDuel(real,real.resolveUntilMs);
     cycles++;
    }
@@ -192,4 +195,58 @@ test('Io: telemetria di Carica/Eruzione/Raffreddamento e guardie vere, con contr
   'tutte le fasi del ciclo Io osservate in '+entry.deck);
  console.log('ECLISSI_IO_PHASE_TELEMETRY '+JSON.stringify(summaries));
  console.log('ECLISSI_IO_PHASE_SEED17 '+JSON.stringify(detail));
+});
+
+
+// Controfattuale INTERO incontro: non cambia regole del gioco.
+// Per misurare la responsabilita' del solo bonus innato di Io, si crea
+// un secondo incontro con identico seed, nave e mazzo, togliendo soltanto
+// bossExclusive dalla COPIA di partenza. Tutti gli altri sistemi (mazzo
+// numerico Io, armi native, IA, arena, firme) restano autentici.
+test('Io: risultati comparati con/senza potere esclusivo, 40 duelli controllati',()=>{
+ const seeds=[17,171,2026,4096,8127,919,1337,251,101,517];
+ const output=[];
+ for(const [deck,specialCollection] of [
+  ['starter',createSpecialCollection()],
+  ['pacchetti_109_vinti_ipotetici',realEarnedSpecialDeck()]
+ ]){
+  for(const active of [true,false]){
+   const summary={deck,magmaExclusive:active,w:0,l:0,d:0,
+    cycles:0,barrierHits:0,precisionHits:0,precisionAbsorbed:0};
+   for(const seed of seeds){
+    let battle=officialBattleSetup({mode:'adventure',sectorNumber:110,
+     bossPlanetId:19,bossSectorLevel:10,
+     shipCollection:{cards:[{instanceId:'owned',shipId:'L03',level:5}],
+      loadout:['owned']},specialCollection,
+     selectedPilot:'pilot_com_1',
+     pilotInventory:{pilot_com_1:{unlocked:true,level:1}},
+     seed,nowMs:100}).battle;
+    if(!active)battle.sides.B.bossExclusive=null;
+    let rounds=0;
+    while(battle.phase!=='finished'&&rounds<TACTICAL_TIMING.maxRounds){
+     assert.equal(battle.sides.B.bossPlanetId,19);
+     assert.equal(battle.sides.B.bossNumericDeck?.id,'planet_char_19');
+     const at=battle.deadlineMs-TACTICAL_TIMING.prepareMs+1;
+     const oa=planTacticalAi(battle,'A'),ob=planTacticalAi(battle,'B');
+     const a=sealTacticalOrder(battle,'A',oa,at);
+     assert.equal(a.ok,true,a.reason);
+     const b=sealTacticalOrder(a.battle,'B',ob,at+1);
+     assert.equal(b.ok,true,b.reason);
+     const r=advanceTacticalDuel(b.battle,at+1);
+     const impacts=r.history.at(-1).impacts.filter(i=>i.by==='B');
+     summary.barrierHits+=impacts.filter(i=>i.kind==='barrier'&&i.damage>0).length;
+     summary.precisionHits+=impacts.filter(i=>i.kind==='precision'&&i.damage>0).length;
+     summary.precisionAbsorbed+=impacts.filter(i=>i.kind==='precision')
+      .reduce((sum,i)=>sum+(i.absorbed||0),0);
+     battle=advanceTacticalDuel(r,r.resolveUntilMs);
+     rounds++;
+    }
+    summary.cycles+=rounds;
+    summary[battle.winner==='A'?'w':battle.winner==='B'?'l':'d']++;
+   }
+   assert.equal(summary.w+summary.l+summary.d,10);
+   output.push(summary);
+  }
+ }
+ console.log('ECLISSI_IO_EXCLUSIVE_FULL_AB '+JSON.stringify(output));
 });
