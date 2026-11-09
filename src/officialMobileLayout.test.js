@@ -126,3 +126,24 @@ test('Cinque speciali sono carte 47x81 sopra le sette numeriche e si sollevano',
  assert.match(ui,/player\.special\.hand\[i\]/);
  assert.match(ui,/player\.numeric\.hand\.map/);
 });
+
+test('Le due scudiere restano simmetriche ai lati delle navi madri centrali',()=>{
+ const zone=450,escortWidth=73,escortMargin=27;
+ const left={start:escortMargin,end:escortMargin+escortWidth};
+ const right={start:zone-escortMargin-escortWidth,end:zone-escortMargin};
+ assert.equal((left.start+right.end)/2,zone/2);
+ assert.equal((left.end+right.start)/2,zone/2);
+ assert.equal(px(official,'.es-math-scope .official-duel-3d .official-escort','width'),escortWidth);
+ const leftRule=rule(official,'.es-math-scope .official-duel-3d .official-escort.escort-slot-1');
+ const rightRule=rule(official,'.es-math-scope .official-duel-3d .official-escort.escort-slot-2');
+ assert.match(leftRule,/left:27px/);
+ assert.match(rightRule,/right:27px/);
+ assert.match(ui,/data-fleet-role="mother"/);
+ assert.match(ui,/data-fleet-role="lateral"/);
+});
+test('Con una speciale alzata le altre non rubano tocchi alle sette numeriche',()=>{
+ assert.match(official,/\.special-board:has\(\.special-board-card\.active\)[\s\S]*?\.special-board-card:not\(\.active\)\{\s*clip-path:inset\(0 0 32px 0\)/);
+ assert.match(official,/\.special-board\{[\s\S]*?z-index:5/);
+ assert.match(official,/\.special-board:has\(\.special-board-card\.active\)\{\s*z-index:11/);
+ assert.match(official,/\.hand\{[^}]*z-index:6/);
+});
