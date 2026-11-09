@@ -347,7 +347,8 @@
 .es-math-scope .official-duel-3d .special-board .special-board-info::after {
  content:"";
  position:absolute;
- inset:-8px;
+ /* Lato sinistro quasi invariato: non rubare i tocchi alla quinta carta. */
+ inset:-8px -11px -8px -1px;
 }
 .es-math-scope .official-duel-3d .special-board .special-board-info:focus-visible {
  outline:2px solid #f9edb5;
