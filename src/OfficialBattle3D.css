@@ -361,3 +361,122 @@
  outline:2px solid #f9edb5;
  outline-offset:3px;
 }
+
+/* Carte Speciali nella plancia ufficiale, opzione B confermata:
+   CINQUE carte reali con LO STESSO formato 47x81 delle sette numeriche.
+   Non spostare mai la mano numerica, le navi o i due mazzi. */
+.es-math-scope .official-duel-3d .special-board{
+ top:528px;left:75px;width:300px;height:48px;
+ display:flex;align-items:flex-start;justify-content:center;gap:7px;
+ overflow:visible;pointer-events:none;z-index:5;
+}
+.es-math-scope .official-duel-3d .special-board:has(.special-board-card.active){
+ z-index:11;
+}
+.es-math-scope .official-duel-3d .special-board-card{
+ --special-rim:#8bcaff;--special-glow:#3178ba;
+ flex:0 0 47px;width:47px;min-width:47px;height:81px;
+ position:relative;box-sizing:border-box;padding:0;
+ border:1.5px solid var(--special-rim);border-radius:7px;
+ overflow:hidden;pointer-events:auto;
+ background:
+  radial-gradient(circle at 50% 29%,var(--special-glow),transparent 54%),
+  radial-gradient(circle at 27% 59%,#ffffff33 0 1px,transparent 2px),
+  radial-gradient(circle at 80% 38%,#ffffff38 0 1px,transparent 2px),
+  linear-gradient(155deg,#244566,#091b34 57%,#050c1e);
+ box-shadow:inset 0 0 0 1px #d7ecff50,0 0 8px var(--special-glow),0 4px 8px #000b;
+ color:#f5f8ff;isolation:isolate;
+ transform:perspective(210px) rotateX(5deg);
+ transition:transform .19s ease,box-shadow .19s ease;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="offense"],
+.es-math-scope .official-duel-3d .special-board-card[data-family="volley"]{
+ --special-rim:#ffa37d;--special-glow:#9e4d37;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="fusion"]{
+ --special-rim:#d3a0ff;--special-glow:#6c389a;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="support"]{
+ --special-rim:#78d4ff;--special-glow:#23699c;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="defense"],
+.es-math-scope .official-duel-3d .special-board-card[data-family="reaction"]{
+ --special-rim:#7ef6cc;--special-glow:#186f61;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="control"],
+.es-math-scope .official-duel-3d .special-board-card[data-family="sabotage"]{
+ --special-rim:#f6ad60;--special-glow:#78522a;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="quantum"],
+.es-math-scope .official-duel-3d .special-board-card[data-family="transmute"]{
+ --special-rim:#ffe079;--special-glow:#937032;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="rift"],
+.es-math-scope .official-duel-3d .special-board-card[data-family="mutation"],
+.es-math-scope .official-duel-3d .special-board-card[data-family="epic"]{
+ --special-rim:#bf9bfa;--special-glow:#5d428c;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="equipment"]{
+ --special-rim:#b9d1eb;--special-glow:#536e93;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="boss-character"]{
+ --special-rim:#f9b2f9;--special-glow:#794c96;
+}
+.es-math-scope .official-duel-3d .special-board-card[data-family="terrain"]{
+ --special-rim:#83eaf1;--special-glow:#247d7e;
+}
+.es-math-scope .official-duel-3d .special-board-card:before{
+ inset:1px;border-radius:5px;z-index:0;
+ background:linear-gradient(120deg,#ffffff36,transparent 30%,transparent 74%,#ffffff1d);
+}
+.es-math-scope .official-duel-3d .special-board-card .official-special-category{
+ position:absolute;top:3px;left:3px;right:13px;z-index:3;
+ font-size:6px;line-height:8px;letter-spacing:.12px;font-weight:900;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ color:var(--special-rim);text-align:left;text-shadow:0 1px 2px #000;
+ pointer-events:none;
+}
+.es-math-scope .official-duel-3d .special-board-card .official-special-index{
+ position:absolute;top:3px;right:3px;z-index:4;
+ font-size:6px;line-height:8px;color:#fff5cc;
+ pointer-events:none;
+}
+.es-math-scope .official-duel-3d .special-board-card .official-special-emblem{
+ position:absolute;left:3px;right:3px;top:14px;height:29px;z-index:2;
+ display:grid;place-items:center;font-size:27px;line-height:29px;
+ color:#ffedc0;text-shadow:0 0 9px var(--special-rim),0 1px 2px #000;
+ pointer-events:none;
+}
+.es-math-scope .official-duel-3d .special-board-card .official-special-effect{
+ position:absolute;left:2px;right:2px;top:45px;height:17px;z-index:3;
+ display:grid;place-items:center;font-size:7px;font-weight:900;line-height:8px;
+ text-align:center;overflow:hidden;color:#f9edce;text-shadow:0 1px 2px #000;
+ pointer-events:none;
+}
+.es-math-scope .official-duel-3d .special-board-card .official-special-name{
+ position:absolute;left:1px;right:1px;bottom:1px;z-index:4;
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+ max-height:17px;overflow:hidden;padding:2px 1px 1px;box-sizing:border-box;
+ text-align:center;font-size:7px;font-weight:900;line-height:8px;
+ word-break:break-word;color:#fff;
+ background:linear-gradient(transparent,#060c1cea 43%);
+ text-shadow:0 1px 2px #000;pointer-events:none;
+}
+.es-math-scope .official-duel-3d .special-board-card .special-board-boss-portrait{
+ inset:13px 4px 22px;z-index:2;
+}
+.es-math-scope .official-duel-3d .special-board-card.active{
+ border-color:#fff3c3;outline:2px solid #ffe19a;outline-offset:0;
+ transform:perspective(210px) rotateX(0) translateY(-62px) scale(1.13);
+ box-shadow:0 0 16px #f3d17eb9,inset 0 0 0 1px #fff9c9;
+ z-index:12;
+}
+.es-math-scope .official-duel-3d .special-board-card:focus-visible{
+ outline:2px solid #fff5bd;outline-offset:2px;
+}
+.es-math-scope .official-duel-3d .special-board .special-board-info{
+ pointer-events:auto;top:1px;right:-23px;
+}
+@media (prefers-reduced-motion:reduce){
+ .es-math-scope .official-duel-3d .special-board-card{transition:none}
+}
