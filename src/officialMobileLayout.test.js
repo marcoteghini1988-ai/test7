@@ -9,14 +9,18 @@ const base=readFileSync(new URL('./MathDuelBattle.css',import.meta.url),'utf8');
 const official=readFileSync(new URL('./OfficialBattle3D.css',import.meta.url),'utf8');
 const ui=readFileSync(new URL('./OfficialBattle3D.jsx',import.meta.url),'utf8');
 
-function rule(text,selector){
- const matches=[...text.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
- const found=matches.filter(x=>x[1].trim()===selector).map(x=>x[2]);
- assert.ok(found.length,'Selettore atteso: '+selector);
+function rule(text,selector,required=''){
+ // I commenti possono precedere i selettori; le regole @media possono
+ // duplicarli senza i valori geometrici che stiamo verificando.
+ const clean=text.replace(/\/\*[\s\S]*?\*\//g,'');
+ const matches=[...clean.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+ const found=matches.filter(x=>x[1].trim()===selector&&x[2].includes(required))
+  .map(x=>x[2]);
+ assert.ok(found.length,'Selettore atteso: '+selector+' '+required);
  return found.at(-1);
 }
 function px(text,selector,property){
- const decl=rule(text,selector);
+ const decl=rule(text,selector,property+':');
  const m=decl.match(new RegExp('(?:^|;)\\s*'+property+'\\s*:\\s*([0-9]+)px(?:;|$)'));
  assert.ok(m,'Manca '+property+' di '+selector+': '+decl);
  return Number(m[1]);
@@ -95,7 +99,7 @@ test('Pannelli tattici: dopo PRONTO non si possono cambiare le opzioni neppure l
 });
 
 test('Le due madri restano al centro reale, anche con animazione attiva o ridotta',()=>{
- const mother=rule(official,'.es-math-scope .official-duel-3d .official-mother');
+ const mother=rule(official,'.es-math-scope .official-duel-3d .official-mother','left:50%');
  assert.match(mother,/left:50%/);
  assert.match(mother,/transform:translateX\(-50%\)/);
  assert.match(mother,/animation:officialCenteredFloat/);
@@ -107,7 +111,7 @@ test('Le due madri restano al centro reale, anche con animazione attiva o ridott
 });
 test('Cinque speciali sono carte 47x81 sopra le sette numeriche e si sollevano',()=>{
  const p='.es-math-scope .official-duel-3d .';
- const card=rule(official,p+'special-board-card');
+ const card=rule(official,p+'special-board-card','width:47px');
  assert.equal(px(official,p+'special-board-card','width'),47);
  assert.equal(px(official,p+'special-board-card','height'),81);
  assert.equal(px(base,'.es-math-scope .number-card','width'),47);
