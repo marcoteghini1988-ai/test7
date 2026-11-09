@@ -39,14 +39,14 @@ test('La geometria dei due mazzi, cinque speciali, sette numeriche e comandi non
  const o='.es-math-scope .official-duel-3d .';
  for(const [selector,top] of [
   ['ship-zone.ship-enemy',88],['ship-zone.ship-player',326],
-  ['special-board',535],['hand',572],['official-operations',666],
+  ['special-board',528],['hand',572],['official-operations',666],
   ['play-controls',691],['utility-bar',753]
  ]){
   assert.equal(px(official,o+selector,'top'),top,'Elemento spostato: '+selector);
  }
  assert.equal(px(base,b+'special-board','left'),75);
  assert.equal(px(base,b+'special-board','width'),300);
- assert.equal(px(base,b+'special-board','height'),38);
+ assert.equal(px(official,o+'special-board','height'),48);
  assert.equal(px(official,o+'hand','left'),64);
  assert.equal(px(official,o+'hand','width'),322);
  assert.equal(px(official,o+'hand','height'),90);
@@ -92,4 +92,33 @@ test('Pannelli tattici: dopo PRONTO non si possono cambiare le opzioni neppure l
   assert.ok(ui.includes('<select disabled={locked} value={draft.'+field+'}'),
    'Il controllo '+field+' va bloccato dopo la conferma');
  }
+});
+
+test('Le due madri restano al centro reale, anche con animazione attiva o ridotta',()=>{
+ const mother=rule(official,'.es-math-scope .official-duel-3d .official-mother');
+ assert.match(mother,/left:50%/);
+ assert.match(mother,/transform:translateX\(-50%\)/);
+ assert.match(mother,/animation:officialCenteredFloat/);
+ assert.match(official,/@keyframes officialCenteredFloat\{\s*from\{transform:translateX\(-50%\) translateY\(-2px\)\}\s*to\{transform:translateX\(-50%\) translateY\(2px\)\}/);
+ assert.match(official,/@media \(prefers-reduced-motion: reduce\)\{[^}]*animation:none;transform:translateX\(-50%\);/);
+ assert.match(ui,/style=\{\{left:'50%',top:0,width:316,height:206,zIndex:3\}\}/);
+ const width=450,left=width*.5,shipWidth=316;
+ assert.equal(left-shipWidth/2+shipWidth/2,width/2);
+});
+test('Cinque speciali sono carte 47x81 sopra le sette numeriche e si sollevano',()=>{
+ const p='.es-math-scope .official-duel-3d .';
+ const card=rule(official,p+'special-board-card');
+ assert.equal(px(official,p+'special-board-card','width'),47);
+ assert.equal(px(official,p+'special-board-card','height'),81);
+ assert.equal(px(base,'.es-math-scope .number-card','width'),47);
+ assert.equal(px(base,'.es-math-scope .number-card','height'),81);
+ assert.match(official,/\.special-board:has\(\.special-board-card\.active\)/);
+ assert.match(official,/\.special-board-card\.active\{[^}]*translateY\(-62px\)/);
+ assert.match(ui,/officialSpecialCardIdentity\(card\?\.type,data\)/);
+ assert.match(ui,/official-special-category/);
+ assert.match(ui,/official-special-emblem/);
+ assert.match(ui,/official-special-effect/);
+ assert.match(ui,/official-special-name/);
+ assert.match(ui,/player\.special\.hand\[i\]/);
+ assert.match(ui,/player\.numeric\.hand\.map/);
 });
