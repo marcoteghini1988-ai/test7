@@ -344,8 +344,8 @@ export default function OfficialBattle3D({
      <div className="official-cycle">
       <strong>{'CICLO '+battle.round}</strong>
       <b>{battle.phase==='finished'?'TERMINATO':
-       bossReadout?.urgent?'IO · ERUZIONE +10%':
-       battle.phase==='resolving'?'SCONTRO · 8s':'PREPARAZIONE · 30s'}</b>
+       battle.phase==='resolving'?'SCONTRO · 8s':
+       bossReadout?.urgent?'IO · ERUZIONE +10%':'PREPARAZIONE · 30s'}</b>
       <em>{battle.phase==='finished'?'✓':nextSeconds+'s'}</em>
      </div>
     </section>
