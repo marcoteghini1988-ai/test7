@@ -333,3 +333,23 @@
  display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
  font-size:8px;line-height:1.2;color:#ffdc95;
 }
+
+/* Android 9:16: una riga BREVE, non il dettaglio lungo tagliato nel
+   riquadro originale. Font leggibile a scala mobile, senza spostare nulla. */
+.es-math-scope .official-duel-3d .enemy-status .official-boss-threat {
+ font-size:10px;
+ line-height:1.25;
+ font-weight:800;
+ letter-spacing:.05px;
+}
+/* Amplia solo l'area tattile dell'icona "i", non l'icona ne' gli slot:
+   il pannello Carte rimane accessibile anche col tocco sul telefono. */
+.es-math-scope .official-duel-3d .special-board .special-board-info::after {
+ content:"";
+ position:absolute;
+ inset:-8px;
+}
+.es-math-scope .official-duel-3d .special-board .special-board-info:focus-visible {
+ outline:2px solid #f9edb5;
+ outline-offset:3px;
+}
