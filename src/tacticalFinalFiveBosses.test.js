@@ -170,7 +170,12 @@ test('Nucleo Magmatico: CARICA, ERUZIONE, RAFFREDDAMENTO in successione pubblica
   assert.equal(result.lastEvents.some(e=>e.includes('fase '+labels[round-1].toUpperCase())),true);
   const differential=gunB(result).packet-gunB(normal).packet;
   if(round===1||round===4)assert.equal(differential,0);
-  if(round===2)assert.equal(differential,Math.min(Math.floor(baseline*.45),Math.ceil(baseline*.10-1e-9)));
+  if(round===2){
+   assert.equal(differential,Math.min(Math.floor(baseline*.45),Math.ceil(baseline*.10-1e-9)));
+   assert.ok(result.lastEvents.some(e=>e.includes('Eruzione +10%')&&
+    e.includes('prima di intercettazione e difese; non danno garantito')),
+    'il registro non chiama HP reali il bonus prima delle difese');
+  }
   if(round===3)assert.equal(differential,-Math.ceil(baseline*.10-1e-9));
   if(round<4){
    a=next(result);b=next(normal);
