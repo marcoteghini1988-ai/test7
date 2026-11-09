@@ -328,8 +328,9 @@ export default function OfficialBattle3D({
        SCUDIERE {displayed.B.escorts.filter(e=>e.hp>0).length}</small>
        {bossReadout&&<small className="official-boss-threat"
         title={bossReadout.label+' · '+bossReadout.detail}
-        aria-label={bossReadout.label+' · '+bossReadout.detail}>
-        {bossReadout.detail}</small>}
+        aria-label={bossReadout.label+' · '+bossReadout.detail}
+        aria-live="polite">
+        {bossReadout.compact}</small>}
       </div>
     </div>
     <Ship3D side="enemy" snapshot={displayed.B} hullRef={hullB} escortRefs={escortB} phase={battle.phase}
@@ -345,7 +346,7 @@ export default function OfficialBattle3D({
       <strong>{'CICLO '+battle.round}</strong>
       <b>{battle.phase==='finished'?'TERMINATO':
        battle.phase==='resolving'?'SCONTRO · 8s':
-       bossReadout?.urgent?'IO · ERUZIONE +10%':'PREPARAZIONE · 30s'}</b>
+       bossReadout?.urgent?'PREP · IO ERUZIONE +10%':'PREPARAZIONE · 30s'}</b>
       <em>{battle.phase==='finished'?'✓':nextSeconds+'s'}</em>
      </div>
     </section>
@@ -368,6 +369,8 @@ export default function OfficialBattle3D({
       const spentRift=card?.type===VULNERABILITY_RIFT_CARD_ID&&player.riftUsed;
       return <button key={card?.id||i} type="button" disabled={locked||!card||spentRift}
        title={spentRift?'Faglia già utilizzata in questa battaglia':data?.help||'Slot libero'}
+       aria-label={(data?.name||'Slot libero')+' · carta speciale '+(i+1)+
+        (spentRift?' · già utilizzata':'')}
        aria-pressed={draft.specialIndices.includes(i)}
        className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(isPvpTerrain(card?.type)?' terrain-card':'')+(card?.type?.startsWith('epic_item_')?' epic-card':'')+(card?.type===VULNERABILITY_RIFT_CARD_ID?' rift-card':'')+(draft.specialIndices.includes(i)?' active':'')}
        data-family={family} onClick={()=>setDraft(d=>{
@@ -396,7 +399,7 @@ export default function OfficialBattle3D({
       </button>;
      })}
      <button type="button" className="special-board-info" onClick={()=>setMenu('cards')}
-      aria-label="Dettagli delle speciali">i</button>
+      aria-label="Dettagli delle cinque carte speciali e della minaccia boss">i</button>
     </div>
     <div className="hand" aria-label="Le tue sette carte numeriche">
      {player.numeric.hand.map((card,i)=><button type="button" key={card.id}
@@ -536,7 +539,10 @@ export default function OfficialBattle3D({
      {counter&&bossReadout?.phase==='eruzione'&&<p>Contromisura: protegge una precisione contro il vitale indicato, non il colpo nativo di Eruzione.</p>}
      {counter&&<label>Contromisura: difendi
       <select value={draft.counterVitalId} onChange={e=>setDraft(d=>({...d,counterVitalId:e.target.value}))}>
-       {VITAL_IDS.map(id=><option key={id} value={id}>{VITAL_LABELS[id]}</option>)}
+       {VITAL_IDS.map(id=><option key={id} value={id}>
+        {VITAL_LABELS[id]+' · '+player.defense.parts[id].hp+'/'+player.defense.parts[id].max+
+         ' HP · '+(player.defense.parts[id].hp<=0?'distrutto':
+         player.defense.parts[id].exposed?'esposto':'protetto')}</option>)}
       </select></label>}
      <button className="es-button primary" onClick={()=>setMenu('')}>CHIUDI</button>
     </section></div>}
