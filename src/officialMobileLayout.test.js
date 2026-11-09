@@ -56,7 +56,8 @@ test('La geometria dei due mazzi, cinque speciali, sette numeriche e comandi non
 test('Su schermi mobili il quadrante scalato resta interamente nel viewport',()=>{
  const board={width:450,height:800};
  const boardSlot={left:75,right:75+300};
- const info={left:boardSlot.right+23-21-8,right:boardSlot.right+23+8};
+ const info={left:boardSlot.right+23-21-1,right:boardSlot.right+23+11};
+ assert.ok(info.left>=boardSlot.right,'Info non deve rubare tocchi alla quinta carta');
  for(const [width,height] of [[320,640],[360,780],[393,852],[432,920],[450,800]]){
   const scale=Math.max(.3,Math.min(width/board.width,height/board.height));
   assert.ok(board.width*scale<=width+.001,'board piu largo di '+width);
@@ -76,7 +77,7 @@ test('Avviso Io compatto, timer e dettagli accessibili senza cambiare posizione 
  assert.match(ui,/onClick=\{\(\)=>setMenu\('cards'\)\}/);
  assert.match(ui,/Dettagli delle cinque carte speciali e della minaccia boss/);
  assert.match(ui,/aria-pressed=\{draft\.specialIndices\.includes\(i\)\}/);
- assert.match(official,/\.special-board \.special-board-info::after\s*\{[^}]*inset:-8px;/);
+ assert.match(official,/\.special-board \.special-board-info::after\s*\{[^}]*inset:-8px -11px -8px -1px;/);
  assert.match(official,/\.enemy-status \.official-boss-threat\s*\{[^}]*font-size:10px;/);
  assert.match(ui,/player\.defense\.parts\[id\]\.hp/);
 });
