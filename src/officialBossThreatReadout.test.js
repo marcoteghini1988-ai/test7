@@ -26,6 +26,7 @@ test('Lettura pubblica disponibile sui 12 boss canonici, nessuno sulla partita s
   const b=caseForBoss(i);
   const read=officialBossThreatReadout(b);
   assert.ok(read?.label&&read.detail,b.sides.B.bossPlanetId);
+  assert.ok(read.compact.length<=40,'Avviso troppo lungo su display 9:16: '+read.compact);
   assert.equal(read.urgent,b.sides.B.bossPlanetId===19?false:false);
   assert.ok(!read.detail.includes('undefined'));
  }
@@ -39,6 +40,7 @@ test('Io: la fase visibile precede il turno e ruota Carica Eruzione Raffreddamen
   assert.equal(threat.phase,expected[i]);
   assert.equal(threat.urgent,expected[i]==='eruzione');
   assert.ok(threat.label.includes(expected[i].toUpperCase()));
+  assert.ok(threat.compact.includes(expected[i].toUpperCase()),'La fase deve restare visibile sullo schermo');
  }
 });
 test('Difese suggerite solo da carte realmente in mano e sistemi funzionanti',()=>{
@@ -51,6 +53,8 @@ test('Difese suggerite solo da carte realmente in mano e sistemi funzionanti',()
  const info=officialBossThreatReadout(b);
  assert.ok(info.detail.includes('Riparazione'));
  assert.ok(info.detail.includes('Paratia'));
+ assert.ok(info.compact.includes('4 difese in mano'));
+ assert.ok(info.compact.length<=40);
  assert.ok(!info.detail.includes('Contromisura'),'Una Contromisura non para la raffica nativa');
  own.defense.parts.shieldGenerator.hp=0;
  assert.deepEqual(officialIoAvailableDefenses(own),['Paratia','Schermo','Copertura']);
@@ -87,4 +91,25 @@ test('Gaia e Encelado: condizione iniziale e seme dominante derivati da stato pu
  const second=officialBossThreatReadout(voidBoss);
  assert.ok(first.label.includes('♠'));
  assert.ok(second.label.includes('♥'));
+});
+
+test('Su smartphone il compact non perde i cambi pubblici di carica di Proxima b',()=>{
+ const b=caseForBoss(8);
+ const checks=[];
+ for(const charges of [0,1,2,3]){
+  b.sides.B.bossExclusive.chaosCharges=charges;
+  const read=officialBossThreatReadout(b);
+  assert.ok(read.compact.includes(charges+'/3'));
+  assert.ok(read.compact.length<=40);
+  checks.push(read.compact);
+ }
+ assert.equal(new Set(checks).size,4);
+});
+test('Informazioni accessibili complete ma avviso compatto: nessuna dipendenza dal tooltip mobile',()=>{
+ const b=caseForBoss(10);b.round=2;
+ const info=officialBossThreatReadout(b);
+ assert.ok(info.detail.length>info.compact.length);
+ assert.ok(info.compact.includes('+10%'));
+ assert.equal(info.phase,'eruzione');
+ assert.ok(!info.compact.includes('tactic-'),'Il testo visibile non espone ID tecnici');
 });
