@@ -627,7 +627,8 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
  else if(atk.bossExclusive?.id===14&&hit.damage>0)
   log.push(key+': Generatore del Caos · Reattore carica '+chaosProgress.charges+'/3');
  if(magma.phase==='eruzione'&&hit.damage>0)
-  log.push(key+': Nucleo Magmatico · Eruzione +10% (+'+appliedMagmaExtra+' HP effettivi)');
+  log.push(key+': Nucleo Magmatico · Eruzione +10% (+'+appliedMagmaExtra+
+   ' HP al pacchetto nativo, prima di intercettazione e difese; non danno garantito)');
  if(magma.phase==='raffreddamento')
   log.push(key+': Nucleo Magmatico · Raffreddamento −10% armi native ('+magma.penalty+' HP)');
  if(abyss.active&&hit.damage>0)
