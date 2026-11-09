@@ -17,8 +17,11 @@ const PUBLIC_THREATS=Object.freeze({
  20:['ENCELADO · SEME','Il seme dominante pubblico cambia ogni tre cicli.']
 });
 
-const readout=(label,detail,phase=null,urgent=false)=>Object.freeze({
- label,detail,phase,urgent
+// Il compact resta leggibile nel riquadro 9:16. Il detail e' sempre
+// completo nei pannelli e nel testo accessibile (non affidarsi al tooltip
+// desktop, invisibile al tocco su Android).
+const readout=(label,detail,phase=null,urgent=false,compact=label)=>Object.freeze({
+ label,detail,phase,urgent,compact
 });
 
 // Queste sono opportunita' possibili, NON carte assegnate o mosse eseguite.
@@ -52,11 +55,14 @@ export function officialBossThreatReadout(battle){
    const detail=choices.length?
     'Fuoco nativo +10% · nella tua mano: '+choices.join(', ')+'.':
     'Fuoco nativo +10% · nessuna difesa barriera attualmente utile in mano.';
-   return readout('IO · ERUZIONE',detail,phase,true);
+   return readout('IO · ERUZIONE',detail,phase,true,
+    'ERUZIONE +10% · '+choices.length+' difese in mano');
   }
   return phase==='carica'?
-   readout('IO · CARICA','Nessun bonus magmatico nativo in questo ciclo.',phase):
-   readout('IO · RAFFREDDAMENTO','Fuoco nativo del boss −10% in questo ciclo.',phase);
+   readout('IO · CARICA','Nessun bonus magmatico nativo in questo ciclo.',
+    phase,false,'CARICA · NESSUN BONUS'): 
+   readout('IO · RAFFREDDAMENTO','Fuoco nativo del boss −10% in questo ciclo.',
+    phase,false,'RAFFREDDAMENTO · −10% ARMI');
  }
  const definition=PUBLIC_THREATS[id];
  if(!definition)return null;
@@ -66,9 +72,10 @@ export function officialBossThreatReadout(battle){
    'Seme dominante: '+suit+'. Una precisione valida con questo seme contrasta il bonus successivo.');
  }
  if(id===1&&boss.armorUsed)
-  return readout(definition[0],'Corazza iniziale gia consumata da un colpo reale.');
+  return readout(definition[0],'Corazza iniziale gia consumata da un colpo reale.',null,false,'GAIA · CORAZZA CONSUMATA');
  if(id===14)
   return readout(definition[0],
-   'Cariche pubbliche: '+Math.min(3,Math.max(0,boss.chaosCharges||0))+'/3. '+definition[1]);
+   'Cariche pubbliche: '+Math.min(3,Math.max(0,boss.chaosCharges||0))+'/3. '+definition[1],
+   null,false,'PROXIMA B · REATTORE '+Math.min(3,Math.max(0,boss.chaosCharges||0))+'/3');
  return readout(definition[0],definition[1]);
 }
