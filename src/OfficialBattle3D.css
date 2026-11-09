@@ -326,3 +326,10 @@
   color:#e2c8ff;
   text-shadow:0 0 8px #c978ffbb;
 }
+
+/* Indicatore boss nel HUD nemico preesistente: soltanto contenuto.
+   Non cambia top/left, dimensioni o posizione dei componenti originali. */
+.es-math-scope .official-duel-3d .enemy-status .official-boss-threat{
+ display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ font-size:8px;line-height:1.2;color:#ffdc95;
+}
