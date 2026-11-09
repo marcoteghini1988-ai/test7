@@ -482,7 +482,7 @@ export default function OfficialBattle3D({
       {afroditeReadyIn>0?'Pronto tra '+afroditeReadyIn+' s.':'Pronto ora.'}
      </p>}
      <div className="official-exchange-cards">{player.numeric.hand.map((c,i)=><button key={c.id}
-      disabled={draft.numericIndices.includes(i)||draft.escortAmmoIndex===i}
+      disabled={locked||draft.numericIndices.includes(i)||draft.escortAmmoIndex===i}
       aria-pressed={draft.exchangeIndices.includes(i)}
       onClick={()=>setDraft(d=>({...d,exchangeIndices:toggle(d.exchangeIndices,i,recycle?2:1)}))}>
       {rankLabel(c.value)+c.suit}</button>)}</div>
@@ -495,7 +495,7 @@ export default function OfficialBattle3D({
      <h2>ARMAMENTI E TATTICA</h2>
      <p>Le armi integrate sparano entrambe le barriere durante gli 8 secondi. La scelta indica la tecnologia privilegiata.</p>
      <div className="official-armament-list">{player.weapons.map(w=><button key={w.id}
-      aria-pressed={draft.weaponFocusId===w.id} onClick={()=>setDraft(d=>({...d,weaponFocusId:w.id}))}>
+      disabled={locked} aria-pressed={draft.weaponFocusId===w.id} onClick={()=>setDraft(d=>({...d,weaponFocusId:w.id}))}>
       {w.name}</button>)}</div>
      {!!player.escorts.some(e=>e.hp>0)&&<section aria-label="Munizioni reali delle scudiere">
       <p><strong>FUOCO SCUDIERA · UNA NUMERICA</strong>
@@ -517,28 +517,28 @@ export default function OfficialBattle3D({
       {legacy?.diceReady?' · Carta selezionata: lancio nella prossima risoluzione.':
        ' · Servono tre formule differenti valide prima di giocare questa carta.'}</p>}
      {specials.includes(LEGACY_BOMB_CARD)&&<label>Numero Bomba: slot numerico nemico
-      <select value={draft.bombSlot??0} onChange={e=>setDraft(d=>({...d,bombSlot:Number(e.target.value)}))}>
+      <select disabled={locked} value={draft.bombSlot??0} onChange={e=>setDraft(d=>({...d,bombSlot:Number(e.target.value)}))}>
        {Array.from({length:7},(_,i)=><option key={i} value={i}>{'Slot '+(i+1)}</option>)}
       </select></label>}
      {specials.includes(LEGACY_MALUS_CARD)&&<label>Barra Malus: disturbo di un ciclo
-      <select value={draft.malusChoice??MALUS_CHOICES[0].id}
+      <select disabled={locked} value={draft.malusChoice??MALUS_CHOICES[0].id}
        onChange={e=>setDraft(d=>({...d,malusChoice:e.target.value}))}>
        {MALUS_CHOICES.map(x=><option key={x.id} value={x.id}>{x.name}</option>)}
       </select></label>}
      {specials.includes(LEGACY_GOLD_CARD)&&<label>Carta Dorata: trasforma una numerica tua
-      <select value={draft.goldenIndex??0}
+      <select disabled={locked} value={draft.goldenIndex??0}
        onChange={e=>setDraft(d=>({...d,goldenIndex:Number(e.target.value)}))}>
        {player.numeric.hand.map((c,i)=><option key={c.id} value={i}>{'Carta '+(i+1)+' · '+rankLabel(c.value)+c.suit}</option>)}
       </select></label>}
      {specials.includes(VULNERABILITY_RIFT_CARD_ID)&&<p><strong>FAGLIA DI VULNERABILITÀ</strong> · Usa la formula selezionata sul vitale nemico anche se lo scudo è ancora chiuso. Fino a 5 HP quando è protetto; non altera lo scudo né rivela la formula. Una volta per partita.</p>}
      {specials.includes(SIGNATURE_MUTATION_CARD_ID)&&<label>Mutazione: scegli il TUO vitale già esposto
-      <select value={draft.mutationVitalId??''} onChange={e=>setDraft(d=>({...d,mutationVitalId:e.target.value||null}))}>
+      <select disabled={locked} value={draft.mutationVitalId??''} onChange={e=>setDraft(d=>({...d,mutationVitalId:e.target.value||null}))}>
        <option value="">Scegli un sistema</option>
        {exposedOwnVitals.map(id=><option key={id} value={id}>{VITAL_LABELS[id]}</option>)}
       </select></label>}
      {counter&&bossReadout?.phase==='eruzione'&&<p>Contromisura: protegge una precisione contro il vitale indicato, non il colpo nativo di Eruzione.</p>}
      {counter&&<label>Contromisura: difendi
-      <select value={draft.counterVitalId} onChange={e=>setDraft(d=>({...d,counterVitalId:e.target.value}))}>
+      <select disabled={locked} value={draft.counterVitalId} onChange={e=>setDraft(d=>({...d,counterVitalId:e.target.value}))}>
        {VITAL_IDS.map(id=><option key={id} value={id}>
         {VITAL_LABELS[id]+' · '+player.defense.parts[id].hp+'/'+player.defense.parts[id].max+
          ' HP · '+(player.defense.parts[id].hp<=0?'distrutto':
