@@ -25,6 +25,7 @@ import {commanderAbility} from './commanderAbilities.js';
 import {activeNumericBossAbilities} from './bossNumericDecks.js';
 import {tacticalAfroditeRecycleCooldownMs} from './tacticalBossDecks.js';
 import {officialBossThreatReadout} from './officialBossThreatReadout.js';
+import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
 import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import ShipPhysicalVitals,{physicalVitalCondition} from './ShipPhysicalVitals.jsx';
 import {arenaForBattle} from './battleArenas.js';
@@ -366,10 +367,13 @@ export default function OfficialBattle3D({
       const card=player.special.hand[i];
       const data=card?TACTICAL_SPECIALS[card.type]:null;
       const family=data?.kind||'empty';
+      const face=officialSpecialCardIdentity(card?.type,data);
       const spentRift=card?.type===VULNERABILITY_RIFT_CARD_ID&&player.riftUsed;
       return <button key={card?.id||i} type="button" disabled={locked||!card||spentRift}
-       title={spentRift?'Faglia già utilizzata in questa battaglia':data?.help||'Slot libero'}
-       aria-label={(data?.name||'Slot libero')+' · carta speciale '+(i+1)+
+       title={spentRift?'Faglia già utilizzata in questa battaglia':
+        face.name+' · '+(data?.help||'Slot libero')}
+       aria-label={face.name+' · '+face.category+' · '+face.effect+
+        ' · '+(data?.help||'Slot libero')+' · carta speciale '+(i+1)+
         (spentRift?' · già utilizzata':'')}
        aria-pressed={draft.specialIndices.includes(i)}
        className={'special-board-card'+(isBossCharacterCard(card?.type)?' boss-character-card':'')+(isPvpTerrain(card?.type)?' terrain-card':'')+(card?.type?.startsWith('epic_item_')?' epic-card':'')+(card?.type===VULNERABILITY_RIFT_CARD_ID?' rift-card':'')+(draft.specialIndices.includes(i)?' active':'')}
@@ -390,12 +394,15 @@ export default function OfficialBattle3D({
          mutationVitalId:mutating?(d.mutationVitalId??exposedOwnVitals[0]??null):null,
          escortAmmoIndex:defending?null:d.escortAmmoIndex};
        })}>
+       <span className="official-special-category">{face.category}</span>
        {isBossCharacterCard(card?.type)?
         <BossCharacterPortrait type={card.type} className="special-board-boss-portrait"/>:
         isPvpTerrain(card?.type)?
         <PvpTerrainPortrait type={card.type} className="special-board-boss-portrait"/>:
-        <span className="special-board-glyph">{card?.type===SIGNATURE_MUTATION_CARD_ID?'⌘':card?.type===VULNERABILITY_RIFT_CARD_ID?'◇':card?.type?.startsWith('epic_item_')?'◆':'✦'}</span>}
-       <strong>{spentRift?'FAGLIA USATA':data?.name||'VUOTO'}</strong><small>{'S'+(i+1)}</small>
+        <span className="official-special-emblem" aria-hidden="true">{face.symbol}</span>}
+       <span className="official-special-effect">{face.effect}</span>
+       <span className="official-special-name">{spentRift?'FAGLIA USATA':face.name}</span>
+       <small className="official-special-index">{'S'+(i+1)}</small>
       </button>;
      })}
      <button type="button" className="special-board-info" onClick={()=>setMenu('cards')}
