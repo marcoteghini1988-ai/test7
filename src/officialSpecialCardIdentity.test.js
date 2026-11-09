@@ -10,7 +10,7 @@ test('Tutte le carte speciali ufficiali hanno una propria identita leggibile',()
   assert.equal(face.name,definition.name,type);
   assert.ok(face.category&&face.symbol&&face.effect,type);
   assert.ok(face.effect.length<=21,'Testo eccessivo nel fronte '+type+' '+face.effect);
-  assert.ok(!/undefined|null/i.test(face.effect),type);
+  assert.ok(!['undefined','null'].includes(face.effect.toLowerCase()),type);
   assert.ok(Object.isFrozen(face));
  }
  assert.deepEqual(officialSpecialCardIdentity(null,null),
