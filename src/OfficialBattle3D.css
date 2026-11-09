@@ -480,3 +480,14 @@
 @media (prefers-reduced-motion:reduce){
  .es-math-scope .official-duel-3d .special-board-card{transition:none}
 }
+
+/* La superficie stellare prevale sui fondi piatti delle vecchie etichette.
+   I colori personalizzati restano distinti per famiglia. */
+.es-math-scope .official-duel-3d .special-board-card[data-family]{
+ border-color:var(--special-rim);
+ background:
+  radial-gradient(circle at 50% 29%,var(--special-glow),transparent 54%),
+  radial-gradient(circle at 27% 59%,#ffffff33 0 1px,transparent 2px),
+  radial-gradient(circle at 80% 38%,#ffffff38 0 1px,transparent 2px),
+  linear-gradient(155deg,#244566,#091b34 57%,#050c1e);
+}
