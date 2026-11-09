@@ -81,3 +81,15 @@ test('Avviso Io compatto, timer e dettagli accessibili senza cambiare posizione 
  assert.match(official,/\.enemy-status \.official-boss-threat\s*\{[^}]*font-size:10px;/);
  assert.match(ui,/player\.defense\.parts\[id\]\.hp/);
 });
+
+test('Pannelli tattici: dopo PRONTO non si possono cambiare le opzioni neppure lasciando il menu aperto',()=>{
+ assert.match(ui,/disabled=\{locked\|\|draft\.numericIndices\.includes\(i\)\|\|draft\.escortAmmoIndex===i\}/);
+ assert.match(ui,/player\.weapons\.map\(w=><button key=\{w\.id\}\s*disabled=\{locked\}/);
+ for(const field of [
+  'bombSlot??0','malusChoice??MALUS_CHOICES[0].id',
+  'goldenIndex??0',"mutationVitalId??''",'counterVitalId'
+ ]){
+  assert.ok(ui.includes('<select disabled={locked} value={draft.'+field+'}'),
+   'Il controllo '+field+' va bloccato dopo la conferma');
+ }
+});
