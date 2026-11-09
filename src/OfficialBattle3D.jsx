@@ -24,6 +24,7 @@ import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
 import {commanderAbility} from './commanderAbilities.js';
 import {activeNumericBossAbilities} from './bossNumericDecks.js';
 import {tacticalAfroditeRecycleCooldownMs} from './tacticalBossDecks.js';
+import {officialBossThreatReadout} from './officialBossThreatReadout.js';
 import {selectTacticalEscortForAmmo} from './tacticalEscortVolley.js';
 import ShipPhysicalVitals,{physicalVitalCondition} from './ShipPhysicalVitals.jsx';
 import {arenaForBattle} from './battleArenas.js';
@@ -256,6 +257,7 @@ export default function OfficialBattle3D({
     snap.afterPrecision[key].defense.parts[id].hp):[]
  ]));
  const player=battle.sides.A,enemy=battle.sides.B;
+ const bossReadout=officialBossThreatReadout(battle);
  const locked=battle.phase!=='planning'||!!battle.orders.A;
  const selected=(draft.numericIndices||[]).map(i=>player.numeric.hand[i]).filter(Boolean);
  const specials=(draft.specialIndices||[]).map(i=>player.special.hand[i]?.type);
@@ -323,7 +325,12 @@ export default function OfficialBattle3D({
       session.bossEncounter?'BOSS · '+session.bossEncounter.name:'AVVERSARIO'}
       {displaySector?' · '+displaySector:''}</b>
       <small>SCUDO {displayed.B.defense.shield.hp}/{displayed.B.defense.shield.max} ·
-       SCUDIERE {displayed.B.escorts.filter(e=>e.hp>0).length}</small></div>
+       SCUDIERE {displayed.B.escorts.filter(e=>e.hp>0).length}</small>
+       {bossReadout&&<small className="official-boss-threat"
+        title={bossReadout.label+' · '+bossReadout.detail}
+        aria-label={bossReadout.label+' · '+bossReadout.detail}>
+        {bossReadout.label+' · '+bossReadout.detail}</small>}
+      </div>
     </div>
     <Ship3D side="enemy" snapshot={displayed.B} hullRef={hullB} escortRefs={escortB} phase={battle.phase}
      selectedVital={draft.vitalId} canTarget={!locked} knownVitals={player.seen}
@@ -336,7 +343,9 @@ export default function OfficialBattle3D({
     <section className="official-middle" aria-label="Fase e timer di combattimento">
      <div className="official-cycle">
       <strong>{'CICLO '+battle.round}</strong>
-      <b>{battle.phase==='finished'?'TERMINATO':battle.phase==='resolving'?'SCONTRO · 8s':'PREPARAZIONE · 30s'}</b>
+      <b>{battle.phase==='finished'?'TERMINATO':
+       bossReadout?.urgent?'IO · ERUZIONE +10%':
+       battle.phase==='resolving'?'SCONTRO · 8s':'PREPARAZIONE · 30s'}</b>
       <em>{battle.phase==='finished'?'✓':nextSeconds+'s'}</em>
      </div>
     </section>
@@ -445,6 +454,12 @@ export default function OfficialBattle3D({
     </div>}
     {menu==='cards'&&<div className="modal-shade"><section className="help-card official-details">
      <h2>CARTE SPECIALI EQUIPAGGIATE</h2>
+     {bossReadout&&<p><b>{bossReadout.label}</b>
+      <span>{bossReadout.detail}</span></p>}
+     {bossReadout?.phase==='eruzione'&&<p>
+      <b>DIFESA CONTRO IO</b>
+      <span>Riparazione, Paratia, Schermo e Copertura contrastano le armi native solo se realmente disponibili. La Contromisura protegge invece un vitale esposto: non riduce il bonus magmatico sulla barriera.</span>
+     </p>}
      {terrain&&<p><b>{'TERRENO ATTIVO · '+terrain.name}</b>
       <span>{terrain.description+' · scade dopo il ciclo '+activeTerrain.untilRound}</span></p>}
      {bossCharacterActive(player,battle.round)&&<p>
@@ -518,6 +533,7 @@ export default function OfficialBattle3D({
        <option value="">Scegli un sistema</option>
        {exposedOwnVitals.map(id=><option key={id} value={id}>{VITAL_LABELS[id]}</option>)}
       </select></label>}
+     {counter&&bossReadout?.phase==='eruzione'&&<p>Contromisura: protegge una precisione contro il vitale indicato, non il colpo nativo di Eruzione.</p>}
      {counter&&<label>Contromisura: difendi
       <select value={draft.counterVitalId} onChange={e=>setDraft(d=>({...d,counterVitalId:e.target.value}))}>
        {VITAL_IDS.map(id=><option key={id} value={id}>{VITAL_LABELS[id]}</option>)}
@@ -544,6 +560,8 @@ export default function OfficialBattle3D({
        ' A 0 HP: '+TACTICAL_VITAL_EFFECTS[id].destroyed}</span>
      </p>)}
      <p>{'Arena: '+arena.name+'. '+arena.description}</p>
+     {bossReadout&&<p><b>{'MINACCIA PUBBLICA · '+bossReadout.label}</b>
+      <span>{bossReadout.detail}</span></p>}
      {session.bossEncounter&&<p><b>{'BOSS · '+session.bossEncounter.name}</b>
       <span>{'Potere esclusivo: '+session.bossEncounter.exclusiveAbility+
        '. Mazzo numerico: '+session.bossEncounter.numericDeckId+
