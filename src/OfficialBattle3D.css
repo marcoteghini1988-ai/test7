@@ -491,3 +491,10 @@
   radial-gradient(circle at 80% 38%,#ffffff38 0 1px,transparent 2px),
   linear-gradient(155deg,#244566,#091b34 57%,#050c1e);
 }
+
+/* Mentre una speciale si solleva, le altre restano visibili soltanto nella
+   porzione sopra il ventaglio numerico: non coprono i valori né rubano tocchi. */
+.es-math-scope .official-duel-3d .special-board:has(.special-board-card.active)
+ .special-board-card:not(.active){
+ clip-path:inset(0 0 32px 0);
+}
