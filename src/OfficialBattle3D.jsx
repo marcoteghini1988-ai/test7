@@ -329,7 +329,7 @@ export default function OfficialBattle3D({
        {bossReadout&&<small className="official-boss-threat"
         title={bossReadout.label+' · '+bossReadout.detail}
         aria-label={bossReadout.label+' · '+bossReadout.detail}>
-        {bossReadout.label+' · '+bossReadout.detail}</small>}
+        {bossReadout.detail}</small>}
       </div>
     </div>
     <Ship3D side="enemy" snapshot={displayed.B} hullRef={hullB} escortRefs={escortB} phase={battle.phase}
