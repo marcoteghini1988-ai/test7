@@ -22,7 +22,7 @@ test('IA matematica: partner fisico nel proprio mazzo permette un deposito valid
 test('IA matematica: tratta formule alternative e non altera Poker o firme 3-only',()=>{
  const any=tacticalShipSignatures('E01').command;
  const gate=any.options.find(o=>o.kind==='mathGate');
- const hand=[c(1,'♠'),c(9,'♥'),c(13,'♣')],deck=[c(4,'♦')];
+ const hand=[c(1,'♠'),c(11,'♥'),c(13,'♣')],deck=[c(4,'♦')];
  assert.equal(findOfficialLiveMathProgress(any,[],hand,deck),null,
   'la differenza 5 di E01 non ha partner nel pool');
  assert.equal(findOfficialLiveMathProgress(TIMES,[],[c(3,'♣')],[c(4,'♦')]),0);
