@@ -86,22 +86,32 @@ function canCompletePoker(pattern,stored,pool){
  return false;
 }
 export function findOfficialLiveVitalProgress(signature,stored=[],hand=[],deck=[]){
- if(signature?.kind!=='poker'||!Array.isArray(stored)||
-    !Array.isArray(hand)||!Array.isArray(deck))return null;
- const slots=tacticalSignatureSlotCount(signature);
- if(slots<4||slots>5||stored.length>=slots)return null;
+ if(!signature||!Array.isArray(stored)||!Array.isArray(hand)||
+    !Array.isArray(deck))return null;
+ // Anche le firme ufficiali con alternative Matematica/Poker possono
+ // essere costruite in più turni; quelle brevi restano privilegiate
+ // da findOfficialLiveVitalCompletion prima di chiamare questo helper.
+ const alternatives=signature.kind==='any'?
+  (signature.options||[]).filter(p=>p.kind==='poker'):[signature];
  let best=null,bestScore=-1;
- for(let i=0;i<hand.length;i++){
-  const chosen=[...stored,hand[i]];
-  const rest=hand.filter((_,j)=>i!==j);
-  if(!canCompletePoker(signature.pattern,chosen,[...rest,...deck]))continue;
-  // Favorisce la combinazione che puo' assorbire piu' carte GIA' in mano;
-  // la disponibilita' delle altre nel mazzo non garantisce una pesca precisa.
-  const score=rest.filter((card,j)=>{
-   const remaining=rest.filter((_,k)=>j!==k);
-   return canCompletePoker(signature.pattern,[...chosen,card],[...remaining,...deck]);
-  }).length;
-  if(score>bestScore){best=i;bestScore=score;}
+ for(const pattern of alternatives){
+  if(pattern.kind!=='poker')continue;
+  const slots=tacticalSignatureSlotCount(pattern);
+  if(slots<4||slots>5||stored.length>=slots)continue;
+  for(let i=0;i<hand.length;i++){
+   const chosen=[...stored,hand[i]];
+   const rest=hand.filter((_,j)=>i!==j);
+   if(!canCompletePoker(pattern.pattern,chosen,[...rest,...deck]))continue;
+   // Favorisce i ranghi/semi già posseduti. Sulle firme con alternativa
+   // matematica l'IA avvia il Poker solo se può posare almeno DUE carte
+   // compatibili dalla propria mano, per non fermarsi su una carta isolata.
+   const score=rest.filter((card,j)=>{
+    const remaining=rest.filter((_,k)=>j!==k);
+    return canCompletePoker(pattern.pattern,[...chosen,card],[...remaining,...deck]);
+   }).length;
+   if(signature.kind==='any'&&!stored.length&&score<1)continue;
+   if(score>bestScore){best=i;bestScore=score;}
+  }
  }
  return best;
 }
