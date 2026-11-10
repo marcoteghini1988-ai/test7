@@ -694,9 +694,11 @@ function aiSpecialTargets(type,side){
  }
  return {};
 }
-export function chooseOfficialLiveAiAction(battle){
- if(!battle?.live||battle.phase!=='playing'||battle.activeSide!=='B')return null;
- const me=battle.sides.B,enemy=battle.sides.A;
+export function chooseOfficialLiveAiAction(battle,key='B'){
+ // Il secondo argomento abilita soltanto gli audit simmetrici della campagna.
+ // In partita la UI chiama il pianificatore solo per il nemico B.
+ if(!battle?.live||battle.phase!=='playing'||battle.activeSide!==key)return null;
+ const me=battle.sides[key],enemy=battle.sides[other(key)];
  if(['epic_item_1','epic_item_3'].includes(me.epic?.active?.id)&&
    !me.epic.liveChoiceCommitted&&me.epic.peek?.length)
   return {type:'epic-choice',index:0};
@@ -708,9 +710,9 @@ export function chooseOfficialLiveAiAction(battle){
   for(const id of VITAL_IDS){
    const target=enemy.defense.parts[id];
    if(!target||target.hp<=0||!target.exposed)continue;
-   const stored=battle.vitalBuilds.B[id];
-   const knownSignature=battle.liveLegacy?.mutations.A?.vitalId===id?
-    battle.liveLegacy.mutations.A.originalSignature:target.signature;
+   const stored=battle.vitalBuilds[key][id];
+   const knownSignature=battle.liveLegacy?.mutations[other(key)]?.vitalId===id?
+    battle.liveLegacy.mutations[other(key)].originalSignature:target.signature;
    const plan=findOfficialLiveVitalCompletion(knownSignature,stored,me.numeric.hand);
    if(plan?.length)return {type:'numeric',index:plan[0],target:'vital',vitalId:id};
    if(stored.length>=tacticalSignatureSlotCount(knownSignature))
@@ -722,10 +724,10 @@ export function chooseOfficialLiveAiAction(battle){
   for(const id of VITAL_IDS){
    const target=enemy.defense.parts[id];
    if(!target||target.hp<=0||!target.exposed)continue;
-   const knownSignature=battle.liveLegacy?.mutations.A?.vitalId===id?
-    battle.liveLegacy.mutations.A.originalSignature:target.signature;
+   const knownSignature=battle.liveLegacy?.mutations[other(key)]?.vitalId===id?
+    battle.liveLegacy.mutations[other(key)].originalSignature:target.signature;
    const progress=findOfficialLiveVitalProgress(knownSignature,
-    battle.vitalBuilds.B[id],me.numeric.hand,me.numeric.deck);
+    battle.vitalBuilds[key][id],me.numeric.hand,me.numeric.deck);
    if(progress!=null)
     return {type:'numeric',index:progress,target:'vital',vitalId:id};
   }
@@ -762,12 +764,12 @@ export function chooseOfficialLiveAiAction(battle){
    const type=card.type;
    if(!supportedLiveSpecial(type))continue;
    const slot=isPvpTerrain(type)?'terrain':isBossCharacterCard(type)?'character':
-    Object.hasOwn(TRAP_CARDS,type)?'trap-'+battle.zones.B.traps.findIndex(x=>!x):
-    'open-'+battle.zones.B.open.findIndex(x=>!x);
-   if(/-(-1)$/.test(slot)||slot==='character'&&battle.zones.B.character||
+    Object.hasOwn(TRAP_CARDS,type)?'trap-'+battle.zones[key].traps.findIndex(x=>!x):
+    'open-'+battle.zones[key].open.findIndex(x=>!x);
+   if(/-(-1)$/.test(slot)||slot==='character'&&battle.zones[key].character||
     slot==='terrain'&&battle.mode!=='pvp')continue;
    const action={type:'special',index,slot,...aiSpecialTargets(type,me)};
-   const probe=applyOfficialLiveAction(battle,'B',action,battle.deadlineMs-1);
+   const probe=applyOfficialLiveAction(battle,key,action,battle.deadlineMs-1);
    if(probe.ok)return action;
   }
  }
