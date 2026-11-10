@@ -1,0 +1,144 @@
+/* Arena ufficiale live 9:16: elementi fissati alla plancia approvata.
+   Nessuna carta arma separata: restano solo gli armamenti sul modello nave. */
+.es-math-scope.live-viewport{position:fixed;inset:0;width:100vw;height:100dvh;
+ background:#01040c;overflow:hidden;z-index:100000}
+.es-math-scope .live-root{width:450px;height:800px;overflow:hidden;}
+.es-math-scope .live-root .live-background{z-index:-2}
+.es-math-scope .live-root .live-terrain-scene{position:absolute;inset:0;z-index:0;
+ background-size:100% 100%;opacity:.85;pointer-events:none}
+.es-math-scope .live-root .live-fleet-bar{position:absolute;left:8px;right:8px;height:25px;
+ display:flex;gap:8px;align-items:center;padding:2px 5px;border:1px solid #56d8fc;
+ border-radius:7px;background:linear-gradient(90deg,#031324ee,#081c37f3);
+ box-shadow:0 0 7px #00b7fa8a;z-index:18}
+.es-math-scope .live-root .live-fleet-bar--B{top:3px;border-color:#ff6075;box-shadow:0 0 7px #fe2c4880}
+.es-math-scope .live-root .live-fleet-bar--A{bottom:5px}
+.es-math-scope .live-root .live-fleet-bar strong{width:89px;flex-shrink:0;
+ font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+.es-math-scope .live-root .live-units{flex:1;display:flex;align-items:center;gap:4px;height:100%}
+.es-math-scope .live-root .live-unit{flex:1;height:21px;border:1px solid #376589;
+ border-radius:4px;background:#07121cdb;padding:2px 3px;display:flex;flex-direction:column;
+ justify-content:center;gap:2px;min-width:0}
+.es-math-scope .live-root .live-unit--mother{border-color:#f0cb68;box-shadow:0 0 5px #ffb9506b;flex:1.2}
+.es-math-scope .live-root .live-unit span{font-size:6px;color:#d5eaf6;line-height:7px;font-weight:800}
+.es-math-scope .live-root .live-unit i{height:3px;background:#283448;display:block;overflow:hidden}
+.es-math-scope .live-root .live-unit-health b{display:block;background:#ff5777;height:100%}
+.es-math-scope .live-root .live-unit-shield b{display:block;background:#24d9ff;height:100%}
+.es-math-scope .live-root .live-fighter{position:absolute;left:0;width:450px;
+ height:206px;z-index:5;pointer-events:none}
+.es-math-scope .live-root .live-fighter--enemy{top:55px}
+.es-math-scope .live-root .live-fighter--player{top:395px;cursor:pointer}
+.es-math-scope .live-root .live-fighter--player:focus-visible{outline:2px solid #5df2ff}
+.es-math-scope .live-root .live-fighter .fleet-ship-wrap{position:absolute;
+ transform:translateX(-50%);pointer-events:none}
+.es-math-scope .live-root .live-fighter--player{pointer-events:auto}
+.es-math-scope .live-root .live-fighter--enemy .official-original-motor-targets .vessel-engine{
+ pointer-events:auto}
+.es-math-scope .live-root .live-fighter .official-original-motor-targets{top:0}
+.es-math-scope .live-root .live-escort{position:absolute;top:80px;width:60px;height:65px;
+ filter:drop-shadow(0 0 8px #33caff7a);pointer-events:auto}
+.es-math-scope .live-root .live-escort--0{left:45px}
+.es-math-scope .live-root .live-escort--1{right:45px}
+.es-math-scope .live-root .live-escort--lost{opacity:.2;filter:grayscale(1)}
+.es-math-scope .live-root .live-escort img{width:100%;height:100%;object-fit:contain;pointer-events:none}
+.es-math-scope .live-root .live-fleet-caption{position:absolute;top:175px;left:160px;
+ right:160px;font-size:7px;color:#b8def6;text-align:center;text-shadow:0 2px 4px #000;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.es-math-scope .live-root .live-slot-row{position:absolute;left:49px;right:49px;height:59px;
+ display:flex;align-items:center;justify-content:space-between;z-index:10;
+ perspective:650px}
+.es-math-scope .live-root .live-slot-row--enemy{top:233px}
+.es-math-scope .live-root .live-slot-row--player{top:353px}
+.es-math-scope .live-root .live-slot{width:42px;height:59px;flex:0 0 42px;min-width:0;
+ border:1px solid #986d46;color:#f8b569;background:linear-gradient(160deg,#121a25cc,#10131bbb);
+ border-radius:5px;box-shadow:0 1px 2px #000a,inset 0 1px 4px #bd84411a;
+ display:grid;place-items:center;transform:rotateX(35deg);transform-origin:center bottom;
+ font-size:19px;padding:0}
+.es-math-scope .live-root .live-slot--enemy{border-color:#be694e}
+.es-math-scope .live-root .live-slot--chosen{box-shadow:0 0 8px #52d9ff,inset 0 0 9px #68c9ff50}
+.es-math-scope .live-root .live-slot--occupied{border-color:#72e7ff;background:#14324bcb}
+.es-math-scope .live-root .live-slot span{pointer-events:none}
+.es-math-scope .live-root .live-midline{position:absolute;top:305px;width:100%;
+ display:flex;align-items:center;justify-content:center;z-index:11}
+.es-math-scope .live-root .live-terrain-slot{min-width:98px;height:34px;
+ background:linear-gradient(170deg,#141b26cc,#0a1220e8);
+ border:1px solid #dc9850;border-radius:6px;color:#ffc685;
+ font-size:9px;letter-spacing:.6px;font-weight:800;transform:perspective(400px) rotateX(30deg)}
+.es-math-scope .live-root .live-turn-indicator{position:absolute;left:8px;top:6px;
+ font-size:9px;font-weight:900;background:#07162be8;padding:5px 7px;border-radius:4px;
+ color:#72dbff;border:1px solid #4489bc}
+.es-math-scope .live-root .live-turn-indicator[data-active="B"]{color:#ff8395;border-color:#b84559}
+.es-math-scope .live-root .live-deck{position:absolute;top:518px;width:48px;height:62px;
+ border:2px solid #20c9fc;border-radius:7px;background:linear-gradient(140deg,#17235a,#080f2e);
+ display:grid;place-items:center;z-index:9;box-shadow:3px 4px 0 #09152e,6px 7px 0 #0a2253,0 0 10px #43bffd9c}
+.es-math-scope .live-root .live-deck--numeric{left:21px}
+.es-math-scope .live-root .live-deck--special{right:21px;border-color:#ef93fa;
+ background:linear-gradient(140deg,#4f235c,#1d1037);box-shadow:3px 4px 0 #201031,6px 7px 0 #3a1654,0 0 10px #ce65ff85}
+.es-math-scope .live-root .live-deck span{font-size:34px;color:#6ef0ff;text-shadow:0 0 8px currentColor}
+.es-math-scope .live-root .live-deck--special span{color:#ffab5f}
+.es-math-scope .live-root .live-special-hand{position:absolute;top:598px;left:94px;right:94px;
+ height:88px;display:flex;align-items:flex-start;justify-content:center;gap:1px;z-index:11}
+.es-math-scope .live-root .live-hand-special{width:53px;height:79px;position:relative;
+ flex:0 0 53px;padding:0;border:2px solid #d49c56;border-radius:7px;
+ color:#fff;background:linear-gradient(160deg,#312a63,#140e34);
+ box-shadow:0 0 6px #eea76f66;transform-origin:center bottom;
+ transition:transform .14s ease-out;touch-action:none}
+.es-math-scope .live-root .live-hand-special:nth-child(1){transform:rotate(-9deg) translateY(11px)}
+.es-math-scope .live-root .live-hand-special:nth-child(2){transform:rotate(-5deg)}
+.es-math-scope .live-root .live-hand-special:nth-child(4){transform:rotate(5deg)}
+.es-math-scope .live-root .live-hand-special:nth-child(5){transform:rotate(9deg) translateY(11px)}
+.es-math-scope .live-root .live-hand-special.live-chosen{transform:translateY(-62px) scale(1.1);z-index:50;border-color:#fffa9e}
+.es-math-scope .live-root .live-hand-special .live-special-art{font-size:30px;text-shadow:0 0 9px #ffca77}
+.es-math-scope .live-root .live-hand-special img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.es-math-scope .live-root .live-number-hand{position:absolute;top:648px;left:32px;right:32px;
+ display:flex;align-items:center;justify-content:center;gap:0;height:91px;z-index:12}
+.es-math-scope .live-root .live-number-card{position:relative;flex:0 0 54px;width:54px;height:86px;
+ border:2px solid #38ceff;background:linear-gradient(160deg,#0e2e63,#070e30);
+ border-radius:7px;box-shadow:0 0 8px #11afff99,inset 0 0 5px #226aa6;
+ color:#fff;padding:0;touch-action:none;display:flex;flex-direction:column;
+ align-items:center;justify-content:space-between}
+.es-math-scope .live-root .live-number-card:nth-child(1){transform:rotate(-9deg) translateY(5px)}
+.es-math-scope .live-root .live-number-card:nth-child(2){transform:rotate(-6deg)}
+.es-math-scope .live-root .live-number-card:nth-child(3){transform:rotate(-3deg) translateY(-3px)}
+.es-math-scope .live-root .live-number-card:nth-child(5){transform:rotate(3deg) translateY(-3px)}
+.es-math-scope .live-root .live-number-card:nth-child(6){transform:rotate(6deg)}
+.es-math-scope .live-root .live-number-card:nth-child(7){transform:rotate(9deg) translateY(5px)}
+.es-math-scope .live-root .live-number-card.live-chosen{transform:translateY(-24px) scale(1.06);border-color:#ffe894;z-index:16}
+.es-math-scope .live-root .live-number-card b{font-size:29px;line-height:30px;
+ text-shadow:0 0 7px var(--live-suit)}
+.es-math-scope .live-root .live-number-card small{font-size:13px;line-height:16px;
+ align-self:flex-start;margin:3px 5px;color:var(--live-suit)}
+.es-math-scope .live-root .live-number-card small:last-child{align-self:flex-end}
+.es-math-scope .live-root .live-actions{position:absolute;bottom:38px;left:25px;right:25px;
+ height:25px;display:flex;gap:7px;align-items:center;justify-content:space-between;
+ z-index:19;font-size:8px;color:#caeaff;font-weight:800}
+.es-math-scope .live-root .live-actions button{border:1px solid #60bdf3;background:#082a43ee;
+ color:#eafaff;padding:5px;border-radius:5px;font-size:9px;font-weight:900}
+.es-math-scope .live-root .live-action-notice{position:absolute;top:423px;left:112px;right:112px;
+ z-index:23;text-align:center;background:#071527e8;border:1px solid #288ebc;border-radius:5px;
+ padding:5px;font-size:9px;pointer-events:none;animation:liveMessage .6s ease-out}
+.es-math-scope .live-root .live-validation{position:absolute;top:450px;left:90px;right:90px;
+ z-index:24;text-align:center;background:#420f22f2;border:1px solid #e66b7d;border-radius:5px;
+ padding:7px;color:#fff;font-size:10px}
+.es-math-scope .live-root .live-vital-panel{position:absolute;z-index:28;left:61px;right:61px;top:297px;
+ background:#07162af6;border:1px solid #73c8f2;border-radius:9px;box-shadow:0 0 20px #022e5385;
+ padding:10px;display:flex;flex-direction:column;gap:6px}
+.es-math-scope .live-root .live-vital-panel-head{display:flex;justify-content:space-between;
+ align-items:center;font-size:11px}
+.es-math-scope .live-root .live-vital-panel button{border:1px solid #538bbc;
+ border-radius:4px;background:#08263b;color:#ddf7ff;padding:6px;font-size:12px}
+.es-math-scope .live-root .live-vital-slots{display:flex;gap:4px;justify-content:center}
+.es-math-scope .live-root .live-vital-slots button{width:40px;height:55px;border-color:#9d7ca9;
+ color:#fff;font-weight:800}
+.es-math-scope .live-root .live-vital-panel small{font-size:8px;color:#b5d7ed}
+.es-math-scope .live-root .live-info,.es-math-scope .live-root .live-end{position:absolute;inset:35px 26px;
+ z-index:40;background:#061527f8;border:2px solid #62bdeb;border-radius:12px;
+ padding:16px;color:#d8f4ff;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.es-math-scope .live-root .live-info h3,.es-math-scope .live-root .live-end h2{margin:0;font-size:17px}
+.es-math-scope .live-root .live-info p,.es-math-scope .live-root .live-end p{margin:0;font-size:11px;line-height:1.4}
+.es-math-scope .live-root .live-info button,.es-math-scope .live-root .live-end button{
+ border:1px solid #66d7ff;color:#fff;background:#0a4164;padding:10px;font-weight:800;border-radius:6px}
+@keyframes liveMessage{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+ .es-math-scope .live-root .live-hand-special,.es-math-scope .live-root .live-number-card{transition:none}
+ .es-math-scope .live-root .live-action-notice{animation:none}
+}
