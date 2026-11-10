@@ -56,6 +56,33 @@ Ultima verifica funzionale in questa sessione: **1018 test superati, 0 falliti, 
 - **Correzione IA pubblicata:** `officialLiveMathDeadEnd` considera ora anche il proprio scarto riciclabile prima di dichiarare irrealizzabile una combinazione già depositata. Se il partner è negli scarti reali, la carta nel vitale NON viene cancellata inutilmente. Non crea numeriche, non legge mazzi nemici e non anticipa la pescata. Regressione: il conto delle 52 numeriche include anche i depositi sui vitali. Modifica in `src/officialLiveAiPlanning.js`, `src/officialLiveDuelEngine.js`, `src/officialLiveMathProgress.test.js`.
 - **Prossimo controllo:** misurare su più navicelle e livelli, distinguere i tempi di decisione umani dagli estremi teorici e valutare il blocco degli scarti senza aumentare indiscriminatamente la protezione dei boss. Il PvP rimane locale/simulato.
 
+## Audit multipla flotta 72 incontri (10/11/2026)
+
+**Verifica eseguita:** commit `de2c792999467104ff44cceb3af4b32a302f2aa1`, [GitHub Actions](https://github.com/marcoteghini1988-ai/test7/actions/runs/42882692440): **1.021 test superati, 0 falliti**, build Vite e preflight riusciti. Questo blocco aggiunge una verifica rispetto ai 72 incontri precedenti, senza modificare HP, abilità, ricompense o PvP.
+
+**Campione aggiuntivo:** 12 boss × 3 navi giocatore (C01, E01, L04) × 2 seed = **72 duelli IA vs IA**, al livello canonico del boss per ciascun settore. **34 vittorie A, 38 vittorie boss, zero pareggi**. Le vittorie di A sono C01 **6/24**, E01 **12/24**, L04 **16/24**. La differenza tra classi è visibile ma il campione è piccolo e non rappresenta automaticamente probabilità reali per un essere umano.
+
+| Boss | Vittorie giocatore A su 6 | Lettura preliminare |
+| --- | ---: | --- |
+| Guardiano di Gaia | 1 | alcune sequenze con molti scarti |
+| Colosso di Tharsis | 5 | scontri sovente brevi |
+| Matriarca Tossica | 3 | risultati misti |
+| Crono il Distruttore | 5 | risultati spesso favorevoli ad A |
+| Sentinella Ionica | 2 | variabilità e scarti |
+| Leviatano Abissale | 5 | 7–10 mezzi turni: **troppo rapido** per il target boss |
+| Signore delle Ombre | 0 | 6/6 vittorie del boss, da verificare su più seed |
+| Idra Criogenica | 1 | boss favorito nelle 6 prove |
+| Generatore del Caos | 4 | alcune chiusure a 7–9 mezzi turni |
+| Cristallo di Risonanza | 2 | 7–12 mezzi turni, **molto rapido** |
+| Nucleo Magmatico | 4 | risultati eterogenei |
+| Sovrano del Vuoto | 2 | durata variabile, fino a 29 mezzi turni |
+
+**Interpretazione durata:** ogni mezzo turno ha un limite massimo di 30 s, ma i turni possono chiudersi prima. Non convertire meccanicamente i mezzi turni in minuti effettivi; i valori sono solo limiti superiori teorici. Gli obiettivi iniziali di 10–12 minuti boss NON risultano raggiunti in molte simulazioni. Modificare uniformemente la barriera non è giustificato.
+
+**Regressione fisica riciclo:** in `src/officialLiveMathProgress.test.js` un numero autentico è prima depositato sul vitale; il partner vero si trova negli scarti e il mazzo corrente è vuoto. Il successivo riciclo fisico ripristina il partner nella mano, l'IA completa il vitale e tutti i **52 ID** rimangono unici contando anche i depositi. Il pianificatore **non è stato alterato per avviare** nuove combinazioni speculative basate sui propri scarti.
+
+**Prossimi interventi motivati:** verificare su campioni più ampi i boss con 0/6 o 5/6 risultati, distinguere le cause dei 7 mezzi turni e analizzare quali carte difensive vengono davvero giocate. Le nuove regole, se necessarie, devono restare specifiche per identità boss e passare regressioni con tutte le 17 navi. PvP simulato, 9:16, Shop e Hangar immutati.
+
 ## Cosa manca nel motore
 1. **Epici completati nel LIVE**: tutti i 6/6 oggetti sono ora giocabili con requisiti e carte autentiche. Resta da bilanciarne la resa sul campo, in particolare Matrice con combinazioni lunghe.
 2. **Copertura funzionale boss/piloti implementata, ma parita' e bilanciamento non certificati su telefono**: i 33 piloti, 23 passive dei 12 mazzi e 12 identita' boss nemiche hanno ora adattatori e test LIVE. Con quattro vitali che esplodono subito, varie percentuali originariamente destinate ai colpi di precisione sono state applicate a successivi proiettili reali; queste reinterpretazioni richiedono verifica del ritmo tattico, dei cooldown, della resa in PvP e della campagna.
