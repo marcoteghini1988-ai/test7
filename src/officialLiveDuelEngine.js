@@ -714,6 +714,17 @@ export function chooseOfficialLiveAiAction(battle){
    }
   }
  }
+ // Afrodite avversaria usa la propria passiva solo quando tutte le
+ // numeriche attuali sono incompatibili con madre E scudiere vere. Non
+ // guarda la mano del giocatore e non inventa carte né sorpassa cooldown.
+ const recycleCooldown=liveNumericBossRecycleCooldown(me);
+ if(recycleCooldown>0&&me.numeric.hand.length>=1&&
+   (battle.aiReadyAtMs||0)>=(me.bossNumericDeck.liveNextRecycleAtMs||0)&&
+   !me.numeric.hand.some(c=>weaponForCard(me,c)||
+    (!liveFusionBlocksEscort(me,battle.turn)&&me.escorts.some((e,i)=>weaponForCard(me,c,i))))){
+  const count=Math.min(2,me.numeric.hand.length);
+  return {type:'boss-recycle',recycleIndices:Array.from({length:count},(_,i)=>i)};
+ }
  if(battle.actionUsed.special<LIVE_SPECIAL_LIMIT){
   for(const [index,card] of me.special.hand.entries()){
    const type=card.type;
