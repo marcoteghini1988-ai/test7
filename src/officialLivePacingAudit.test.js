@@ -168,6 +168,19 @@ test('Audit multi-seed: 12 boss canonici, tre pescate ciascuno, nessuna carta in
  assert.equal(wins+losses+draws,results.length);
  assert.ok(sectors.every(s=>s.outcomes.length===offsets.length));
 });
+test('Confronto parita livelli: 12 boss, tre seed per boss',()=>{
+ const records=[];
+ for(let i=0;i<12;i++){
+  const n=(i+1)*10,boss=officialBossEncounter({mode:'campaign',sectorNumber:n});
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:n,playerLevel:4});
+  for(const offset of [0,101,307]){
+   const r=audit({shipA:'R04',levelA:level,levelB:level,boss,seed:100+i*7+offset,log:false});
+   records.push({sector:n,level,boss:boss.name,winner:r.winner,turns:r.turns,seed:r.seed,discardsA:r.actionsBySide.A['numeric-discard']||0,discardsB:r.actionsBySide.B['numeric-discard']||0});
+  }
+ }
+ assert.equal(records.length,36);
+ console.log('LIVE_MATCHED_LEVEL_BOSSES '+JSON.stringify(records));
+});
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
  const experiments=[];
  for(const index of [1,5,6,9]){
