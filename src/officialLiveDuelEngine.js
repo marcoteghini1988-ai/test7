@@ -470,9 +470,31 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
  }
  return reject(battle,'invalid_action');
 }
+function aiSpecialTargets(type,side){
+ if(type==='tactic-bomb')return {bombSlot:0}; // Nessuna lettura mano nemica.
+ if(type==='tactic-golden')return side.numeric.hand.length?{goldenIndex:0}:{};
+ if(type==='tactic-malus')return {malusChoice:'lock_weapon'};
+ if(type==='tactic-signature-mutation'||type==='tactic-counter'){
+  const vitalId=VITAL_IDS.find(id=>side.defense.parts[id].hp>0&&side.defense.parts[id].exposed);
+  return vitalId?{vitalId}:{};
+ }
+ const effect=isModuleCard(type)?TACTICAL_MODULE_CARDS[type].effect:null;
+ if(type==='tactic-numeric-recycle'||effect==='free_swap'||effect==='refill'){
+  const count=effect==='free_swap'?1:2;
+  const ranked=side.numeric.hand.map((card,i)=>({i,usable:!!weaponForCard(side,card),
+   value:card.value})).sort((a,z)=>Number(a.usable)-Number(z.usable)||a.value-z.value);
+  return {recycleIndices:ranked.slice(0,count).map(x=>x.i)};
+ }
+ return {};
+}
 export function chooseOfficialLiveAiAction(battle){
  if(!battle?.live||battle.phase!=='playing'||battle.activeSide!=='B')return null;
  const me=battle.sides.B,enemy=battle.sides.A;
+ if(['epic_item_1','epic_item_3'].includes(me.epic?.active?.id)&&
+   !me.epic.liveChoiceCommitted&&me.epic.peek?.length)
+  return {type:'epic-choice',index:0};
+ if(me.epic?.exchangeCredits>0&&battle.round<=me.epic.exchangeUntilRound&&me.numeric.hand.length)
+  return {type:'epic-recycle',index:0};
  if(battle.actionUsed.numeric<LIVE_NUMERIC_LIMIT){
   for(const id of VITAL_IDS){
    const target=enemy.defense.parts[id];
@@ -503,8 +525,9 @@ export function chooseOfficialLiveAiAction(battle){
     'open-'+battle.zones.B.open.findIndex(x=>!x);
    if(/-(-1)$/.test(slot)||slot==='character'&&battle.zones.B.character||
     slot==='terrain'&&battle.mode!=='pvp')continue;
-   const probe=applyOfficialLiveAction(battle,'B',{type:'special',index,slot},battle.deadlineMs-1);
-   if(probe.ok)return {type:'special',index,slot};
+   const action={type:'special',index,slot,...aiSpecialTargets(type,me)};
+   const probe=applyOfficialLiveAction(battle,'B',action,battle.deadlineMs-1);
+   if(probe.ok)return action;
   }
  }
  return {type:'end'};
