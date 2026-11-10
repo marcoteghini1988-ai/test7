@@ -24,7 +24,7 @@ import {liveBossStartTurn,liveBossIncomingShieldFactor,liveBossOnShieldHit,
  liveBossNativeModifiers,liveBossAfterNativeShot,liveBossOnCounter,
  liveBossOnVitalImpact,liveBossOnNumericCardsSpent,liveBossRepairValue,
  liveBossClearPoisonOnHeal} from './officialLiveBossPowers.js';
-import {isTacticalEpic} from './tacticalEpicCards.js';
+import {isTacticalEpic,tacticalEpicActive} from './tacticalEpicCards.js';
 import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
  liveEpicOnShieldDamage,liveEpicRecycle} from './officialLiveEpics.js';
 import {liveCommanderDefensePacket,liveCommanderRememberShot} from './officialLiveCommanderDefense.js';
@@ -97,6 +97,11 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  if(b.liveModuleEffects[previous].lockUntilTurn&&
     b.turn>=b.liveModuleEffects[previous].lockUntilTurn)
   b.liveModuleEffects[previous].lockUntilTurn=0;
+ if(b.liveModuleEffects[previous].precisionUntilTurn&&
+    b.turn>=b.liveModuleEffects[previous].precisionUntilTurn){
+  b.liveModuleEffects[previous].precisionUntilTurn=0;
+  b.liveModuleEffects[previous].precisionFactor=1;
+ }
  liveBossOnNumericCardsSpent(b,previous,b.actionUsed.numeric,b.round);
  // Una Combo SIMULTANEA deve chiudersi nel turno corrente; le combinazioni
  // a memoria seguono invece i propri cicli W33/W42, le armi Accumulo restano cariche.
@@ -249,6 +254,7 @@ function fireNumeric(b,key,card,shipId){
  packet+=bossCharacter.extra||0;
  if(escortIndex!=null&&attacker.liveMotherHitRound===b.round)
   packet+=bossCharacterEscortExtra(attacker,b.round,packet,1);
+ if(enemy.heated)packet+=3; // Solo il prossimo colpo reale beneficia del calore.
  if(enemy.corroded){packet+=Math.floor(packet*.25);enemy.corroded=false;}
  if(enemy.livePowerShiftDebt){packet+=enemy.livePowerShiftDebt;enemy.livePowerShiftDebt=0;}
  packet=Math.floor(packet*liveLegacyOutgoingFactor(b,key));
@@ -258,6 +264,9 @@ function fireNumeric(b,key,card,shipId){
  packet=bossPower.damage;
  const numericBossPower=liveNumericBossNativeBonus(attacker,packet,w.id,queued,b.round);
  packet=numericBossPower.damage;
+ const precision=b.liveModuleEffects[key];
+ if(precision.precisionUntilTurn>=b.turn&&precision.precisionFactor<1)
+  packet=Math.max(0,Math.floor(packet*precision.precisionFactor));
  let intercepted=0;
  // Perforante bypassa il 20% e NON la totalità delle scudiere.
  // Ionico dimezza solo la successiva intercettazione, non riduce HP fittizi.
@@ -303,6 +312,17 @@ function fireNumeric(b,key,card,shipId){
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
  liveNumericBossAfterShot(attacker,hit.damage,w.id,numericBossPower.bonus,b.round);
  liveEpicOnShieldDamage(b,defenderKey,hit.damage);
+ if(hit.damage>0&&enemy.heated)enemy.heated=false;
+ const liveBurn=b.liveModuleEffects[key];
+ if(hit.damage>0&&liveBurn.burnCharges>0){
+  liveBurn.burnCharges--;
+  if(tacticalEpicActive(enemy,'epic_item_7',b.round))
+   event(b,defenderKey+': Monolite impedisce ustione da '+key,'module_burn_blocked');
+  else {
+   enemy.heated=true;
+   event(b,key+': ustione da Modulo attivata su salva reale','module_burn',{target:defenderKey});
+  }
+ }
  if(hit.damage>0&&queued?.ion){
   enemy.ionized=true;
   enemy.ionizedUntilTurn=b.turn+2;
