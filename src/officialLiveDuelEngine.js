@@ -765,6 +765,27 @@ function liveNativeShotReady(side,card){
  }
  return false;
 }
+// Difesa boss: se un vitale PROPRIO e' gia' esposto e il giocatore ha
+// depositato carte in quel bersaglio, una Contromisura pescata realmente
+// puo' essere preparata prima di sparare. Il boss guarda solo conteggi e
+// componenti visibili, MAI i valori della mano nemica o le carte nel mazzo.
+function liveBossThreatenedCounter(b,key){
+ const own=b.sides[key];
+ if(!own.bossPlanetId||b.actionUsed.special>=LIVE_SPECIAL_LIMIT)return null;
+ const slot=b.zones[key].traps.findIndex(x=>!x);
+ if(slot<0)return null;
+ if(b.zones[key].traps.some(c=>c?.type==='tactic-counter'))return null;
+ const threats=VITAL_IDS.filter(id=>own.defense.parts[id].hp>0&&
+  own.defense.parts[id].exposed&&b.vitalBuilds[other(key)][id]?.length>0)
+  .sort((a,z)=>b.vitalBuilds[other(key)][z].length-
+    b.vitalBuilds[other(key)][a].length);
+ if(!threats.length)return null;
+ const index=own.special.hand.findIndex(c=>c.type==='tactic-counter');
+ if(index<0)return null;
+ const candidate={type:'special',index,slot:'trap-'+slot,vitalId:threats[0]};
+ return applyOfficialLiveAction(b,key,candidate,b.deadlineMs-1).ok?
+  candidate:null;
+}
 function liveBossPreparedAttack(b,key){
  if(!b.sides[key].bossPlanetId||
    b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT||
@@ -800,6 +821,8 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
  // Il boss segue la propria dottrina ufficiale dei bersagli. Non cambia
  // firme, numeriche, carte, danni o durata: soltanto la priorità tattica.
  const targetOrder=TACTICAL_BOSS_PLANS[me.bossPlanetId]?.targets||VITAL_IDS;
+ const counter=liveBossThreatenedCounter(battle,key);
+ if(counter)return counter;
  const prepared=liveBossPreparedAttack(battle,key);
  if(prepared)return prepared;
  if(['epic_item_1','epic_item_3'].includes(me.epic?.active?.id)&&
