@@ -118,7 +118,8 @@ test('IA LIVE: conserva una firma quando il partner resta recuperabile dagli sca
  assert.equal(next.ok,true,next.reason);b=next.battle;
  assert.equal(b.vitalBuilds.B.engine.length,1,
   'il deposito rimane in attesa di pesca fisica futura');
- const allNow=[...b.sides.B.numeric.hand,...b.sides.B.numeric.deck,...b.sides.B.numeric.discard];
+ const allNow=[...b.sides.B.numeric.hand,...b.sides.B.numeric.deck,
+  ...b.sides.B.numeric.discard,...b.vitalBuilds.B.engine];
  assert.equal(allNow.length,52);
  assert.equal(new Set(allNow.map(x=>x.id)).size,52);
 });
