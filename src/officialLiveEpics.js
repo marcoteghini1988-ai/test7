@@ -1,12 +1,14 @@
 // Runtime degli Oggetti Epici sul duello LIVE. Le sei carte derivano
 // dalle reliquie realmente fuse, non sono ricompense generate dalla battaglia.
-// 'Matrice di Probabilita' resta separata: il vecchio colpo di precisione
-// pesante non esiste nella meccanica dei quattro vitali a distruzione diretta.
+// Matrice: Coppia/Tris autentica sul vitale attiva +2 sul successivo
+// proiettile PESANTE Accumulo diretto alla barriera nello stesso ciclo.
+// La combinazione distrugge il vitale come previsto, non riceve danni extra.
 import {TACTICAL_EPIC_CARDS,isTacticalEpic,tacticalEpicCritical,tacticalEpicActive} from './tacticalEpicCards.js';
 import {activateTacticalEpic,expireTacticalEpic} from './tacticalEpicRuntime.js';
 import {replaceLiveModuleNumerics} from './officialLiveModules.js';
 export const LIVE_EPIC_SUPPORTED=Object.freeze([
- 'epic_item_1','epic_item_3','epic_item_6','epic_item_7','epic_item_8'
+ 'epic_item_1','epic_item_3','epic_item_6','epic_item_7','epic_item_8',
+ 'epic_item_9'
 ]);
 export const supportedLiveEpic=type=>LIVE_EPIC_SUPPORTED.includes(type);
 function report(b,key,message,kind='epic',details={}){
@@ -22,6 +24,10 @@ export function playLiveEpic(b,key,type){
   return {ok:false,reason:'epic_already_active'};
  if(type==='epic_item_1'&&!tacticalEpicCritical(side))
   return {ok:false,reason:'mobius_not_critical'};
+ if(type==='epic_item_9'&&!tacticalEpicCritical(side))
+  return {ok:false,reason:'matrice_not_critical'};
+ if(type==='epic_item_9'&&!side.weapons?.some(w=>w.kind==='Accumulo'))
+  return {ok:false,reason:'epic_requires_heavy'};
  if(type==='epic_item_7'&&!side.heated)
   return {ok:false,reason:'monolith_not_needed'};
  const logs=[];
@@ -30,11 +36,41 @@ export function playLiveEpic(b,key,type){
  side.epic.liveChoiceCommitted=false;
  side.epic.liveChoiceApplied=false;
  if(type==='epic_item_6')side.epic.lastPendulumTriggerRound=0;
+ if(type==='epic_item_9'){
+  side.epic.matriceArmed=false;
+  side.epic.matriceSpent=false;
+ }
  report(b,key,rule.name+' attivato dalla carta vera','epic_activated',{type});
  return {ok:true};
 }
 // La scelta viene fatta durante il turno di attivazione e applicata solo
 // alla prossima pesca REALE; nessuna carta viene duplicata o inventata.
+// Solo firme gia' verificate e risolte sul vitale reale: non crea carte,
+// non concede spari e non aumenta i danni diretti al componente.
+export function liveEpicOnVitalFormula(b,key,operation){
+ const side=b.sides[key];
+ if(!tacticalEpicActive(side,'epic_item_9',b.round)||
+    !['pair','trips'].includes(operation)||side.epic.matriceSpent)return false;
+ side.epic.matriceArmed=true;
+ report(b,key,'Matrice pronta: prossimo vero colpo Accumulo +2 alla barriera',
+  'epic_matrice_armed',{operation});
+ return true;
+}
+export function liveEpicMatriceBonus(b,key,weaponKind){
+ const side=b.sides[key];
+ return weaponKind==='Accumulo'&&tacticalEpicActive(side,'epic_item_9',b.round)&&
+   side.epic.matriceArmed&&!side.epic.matriceSpent?2:0;
+}
+export function liveEpicAfterMatriceShot(b,key,damage,bonus){
+ const side=b.sides[key];
+ if(!(damage>0)||bonus!==2||!side.epic.matriceArmed||side.epic.matriceSpent)
+  return false;
+ side.epic.matriceArmed=false;
+ side.epic.matriceSpent=true;
+ report(b,key,'Matrice: +2 al proiettile Accumulo autentico',
+  'epic_matrice_hit',{damage,bonus});
+ return true;
+}
 export function liveEpicChoose(b,key,index){
  const side=b.sides[key],active=side.epic?.active;
  const type=active?.id;
