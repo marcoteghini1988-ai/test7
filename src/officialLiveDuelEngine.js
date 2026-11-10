@@ -75,6 +75,7 @@ export function createOfficialLiveDuel(initial,nowMs=0){
  const battle=copy(initial);
  for(const k of ['A','B'])battle.sides[k].liveWeaponCharges={};
  return {...battle,live:true,phase:'playing',activeSide:'A',turn:1,round:1,
+  startedAtMs:nowMs,finishedAtMs:null,liveFinishReason:null,
   deadlineMs:nowMs+LIVE_TURN_MS,resolveUntilMs:null,
   actionUsed:{numeric:0,special:0},zones:{A:initialZones(),B:initialZones()},
   vitalBuilds:{A:initialBuilds(),B:initialBuilds()},pendingShot:{A:null,B:null},liveLegacy:createLiveLegacy(),liveModuleEffects:initialLiveModuleEffects(),
@@ -104,7 +105,11 @@ function event(b,message,kind='info',payload={}){
 }
 function closeIfWon(b){
  const a=motherDestroyed(b.sides.A.defense),z=motherDestroyed(b.sides.B.defense);
- if(a||z){b.winner=a&&z?'draw':a?'B':'A';b.phase='finished';}
+ if(a||z){
+  b.winner=a&&z?'draw':a?'B':'A';b.phase='finished';
+  b.finishedAtMs=Number.isFinite(b.lastActionAtMs)?b.lastActionAtMs:null;
+  b.liveFinishReason='four_vitals';
+ }
 }
 export function finishOfficialLiveTurn(battle,nowMs=0){
  if(!battle?.live||battle.phase!=='playing')return battle;
@@ -133,7 +138,11 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  b.zones[previous].open=[null,null];
  b.pendingShot[previous]=null;
  b.turn++;
- if(b.turn>LIVE_MAX_TURNS){b.phase='finished';b.winner='draw';event(b,'Limite turni raggiunto: pareggio');return b;}
+ if(b.turn>LIVE_MAX_TURNS){
+  b.phase='finished';b.winner='draw';b.finishedAtMs=nowMs;
+  b.liveFinishReason='turn_cap';
+  event(b,'Limite turni raggiunto: pareggio');return b;
+ }
  b.activeSide=other(previous);
  const previousRound=b.round;
  b.round=Math.ceil(b.turn/2);
@@ -608,6 +617,7 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
  if(!action||typeof action.type!=='string')return reject(battle,'invalid_action');
  if(action.type==='end')return {ok:true,battle:finishOfficialLiveTurn(battle,nowMs)};
  const b=copy(battle),side=b.sides[key];
+ b.lastActionAtMs=nowMs;
  if(action.type==='expose'){
   const enemy=b.sides[other(key)],id=action.vitalId;
   if(!VITAL_IDS.includes(id)||enemy.defense.parts[id].hp<=0)return reject(battle,'vital_unavailable');
