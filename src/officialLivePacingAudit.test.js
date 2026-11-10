@@ -9,6 +9,7 @@ import {createOfficialLiveDuel,applyOfficialLiveAction,
  chooseOfficialLiveAiAction,LIVE_TURN_MS,LIVE_MAX_TURNS,
  LIVE_NUMERIC_LIMIT,LIVE_SPECIAL_LIMIT} from './officialLiveDuelEngine.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
+import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {VITAL_IDS} from './vitalDefense.js';
 
@@ -90,4 +91,32 @@ test('Audit LIVE: ritmi e carte su tre boss canonici (Terra, Crono, Vuoto)',()=>
  });
  assert.equal(results.length,3);
  assert.ok(results.every(r=>r.boss!=null));
+});
+
+test('Audit esteso dei 12 boss ufficiali: tutti raggiungono un esito, 52 numeriche e nessun PvP',()=>{
+ const results=[];
+ for(let i=0;i<12;i++){
+  const sectorNumber=(i+1)*10;
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber});
+  assert.ok(boss,'settore 10–120: boss canonico '+sectorNumber);
+  const levelB=officialCampaignRivalLevel({mode:'campaign',sectorNumber,playerLevel:4});
+  const result=audit({shipA:'R04',levelA:4,levelB,boss,seed:100+i*7});
+  assert.equal(result.boss,boss.planetId);
+  assert.ok(result.actions>0);
+  assert.equal(Object.keys(result.failures).length,0);
+  results.push({...result,sectorNumber,levelB});
+ }
+ const wins=results.filter(r=>r.winner==='A').length;
+ const losses=results.filter(r=>r.winner==='B').length;
+ const draws=results.filter(r=>r.winner==='draw').length;
+ const turns=results.map(r=>r.turns).sort((a,b)=>a-b);
+ const report={sampleSize:results.length,wins,losses,draws,
+  minHalfTurns:turns[0],medianHalfTurns:(turns[5]+turns[6])/2,
+  maxHalfTurns:turns[11],sectors:results.map(r=>({
+   sector:r.sectorNumber,boss:r.boss,winner:r.winner,turns:r.turns,
+   theoreticalMaxMin:r.minutesMax,levelB:r.levelB
+  }))
+ };
+ console.log('LIVE_ALL_BOSSES_AUDIT '+JSON.stringify(report));
+ assert.equal(wins+losses+draws,12);
 });
