@@ -7,7 +7,9 @@ import {VITAL_IDS,damageMotherShield,restoreMotherShield,exposeMotherPart,
 import {tacticalSignatureOperation,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
 import {isPvpTerrain,pvpTerrainDefinition,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
- bossCharacterNativeBonus,bossCharacterShieldFactor} from './bossCharacterCards.js';
+ bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterActive,
+ bossCharacterRememberHit,bossCharacterApplyRegen,bossCharacterCounterSync,
+ bossCharacterSyncExtra,bossCharacterEscortExtra} from './bossCharacterCards.js';
 import {gunEfficiency,escortInterceptionEfficiency} from './fleetSystems.js';
 import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
 import {VULNERABILITY_RIFT_CARD_ID,riftProtectedDamage} from './tacticalVulnerabilityRift.js';
@@ -122,6 +124,10 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  nextDraw(b.sides[b.activeSide].special,5);
  liveLegacyOnTurnStart(b,b.activeSide);
  const bossRegen=liveBossStartTurn(b.sides[b.activeSide],b.round);
+ const playableRegen=bossCharacterApplyRegen(b.sides[b.activeSide],b.round,
+  pvpTerrainEffects(b.activeTerrain,b.round));
+ if(playableRegen>0)
+  event(b,b.activeSide+': carta Idra ripara '+playableRegen+' HP reali','character_regen');
  if(bossRegen?.repaired>0)
   event(b,b.activeSide+': Idra Criogenica rigenera '+bossRegen.repaired+' HP reali','boss_regen');
  expireBossCharacter(b.sides[b.activeSide],b.round);
@@ -176,7 +182,10 @@ function runTraps(b,defenderKey,trigger,damage,vital=null){
    blocked=true;activated=true;
   }
   if(activated){
-   if(type==='tactic-counter')liveBossOnCounter(owner,b.round);
+   if(type==='tactic-counter'){
+    liveBossOnCounter(owner,b.round);
+    owner.sync=Math.min(100,owner.sync+bossCharacterCounterSync(owner,b.round,true));
+   }
    slots[i]=null;owner.special.discard.push(card);
    event(b,defenderKey+': trappola '+TACTICAL_SPECIALS[type].name+' attivata in risposta a '+trigger,
     'trap',{type,trigger});
@@ -238,6 +247,8 @@ function fireNumeric(b,key,card,shipId){
  }
  const bossCharacter=bossCharacterNativeBonus(attacker,enemy,b.round,packet);
  packet+=bossCharacter.extra||0;
+ if(escortIndex!=null&&attacker.liveMotherHitRound===b.round)
+  packet+=bossCharacterEscortExtra(attacker,b.round,packet,1);
  if(enemy.corroded){packet+=Math.floor(packet*.25);enemy.corroded=false;}
  if(enemy.livePowerShiftDebt){packet+=enemy.livePowerShiftDebt;enemy.livePowerShiftDebt=0;}
  packet=Math.floor(packet*liveLegacyOutgoingFactor(b,key));
@@ -286,6 +297,7 @@ function fireNumeric(b,key,card,shipId){
  const hit=damageMotherShield(enemy.defense,motherPacket);
  enemy.defense=hit.defense;
  liveBossOnShieldHit(enemy,hit.damage,b.round);
+ bossCharacterRememberHit(enemy,b.round,hit.damage);
  liveNumericBossRememberShield(enemy,hit.damage);
  liveCommanderRememberShot(attacker,enemy,hit.damage);
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
@@ -296,6 +308,9 @@ function fireNumeric(b,key,card,shipId){
   enemy.ionizedUntilTurn=b.turn+2;
  }
  if(hit.damage>0&&queued?.corrosion)enemy.corroded=true;
+ if(hit.damage>0&&bossCharacterActive(attacker,b.round)?.effect==='corrosion')
+  enemy.corroded=true;
+ if(hit.damage>0&&escortIndex==null)attacker.liveMotherHitRound=b.round;
  b.pendingShot[key]=null;
  event(b,key+': '+profile.weapon.nome+' · carica '+totalValue+' · '+hit.damage+
   ' danni barriera ('+intercepted+' intercettati)','shot',
@@ -338,7 +353,8 @@ function placeVital(b,key,card,vitalId){
  const syncBeforeVital=attacker.sync;
  liveLegacySyncGain(b,key,25);
  attacker.sync=Math.min(100,attacker.sync+
-  liveNumericBossSyncBonus(attacker,attacker.sync-syncBeforeVital));
+  liveNumericBossSyncBonus(attacker,attacker.sync-syncBeforeVital)+
+  bossCharacterSyncExtra(attacker,b.round,true));
  liveLegacyOnVitalFormula(b,key,op,list);
  event(b,key+': combinazione '+op+' completata · '+vitalId.toUpperCase()+
   (impact.destroyed?' DISTRUTTO · esplosione diretta':' colpito per '+impact.damage+' HP'),
