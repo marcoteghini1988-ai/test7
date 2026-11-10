@@ -28,6 +28,7 @@ export function playLiveEpic(b,key,type){
  activateTacticalEpic(side,type,b.round,0,logs);
  side.epic.liveChoice=null;
  side.epic.liveChoiceCommitted=false;
+ side.epic.liveChoiceApplied=false;
  if(type==='epic_item_6')side.epic.lastPendulumTriggerRound=0;
  report(b,key,rule.name+' attivato dalla carta vera','epic_activated',{type});
  return {ok:true};
@@ -38,7 +39,7 @@ export function liveEpicChoose(b,key,index){
  const side=b.sides[key],active=side.epic?.active;
  const type=active?.id;
  if(!['epic_item_1','epic_item_3'].includes(type)||
-  side.epic.liveChoiceCommitted)return {ok:false,reason:'epic_choice_unavailable'};
+  side.epic.liveChoiceCommitted||side.epic.liveChoiceApplied)return {ok:false,reason:'epic_choice_unavailable'};
  const capacity=type==='epic_item_1'?10:2;
  if(!Number.isInteger(index)||index<0||index>=Math.min(capacity,side.numeric.deck.length))
   return {ok:false,reason:'epic_choice_invalid'};
@@ -52,12 +53,12 @@ export function liveEpicBeforeDraw(side,round){
  expireTacticalEpic(side,round);
  const active=side.epic?.active;
  if(!active)return;
- if(side.epic.liveChoiceCommitted&&
+ if(side.epic.liveChoiceCommitted&&!side.epic.liveChoiceApplied&&
   ['epic_item_1','epic_item_3'].includes(active.id)){
   const deck=side.numeric.deck,index=side.epic.liveChoice;
   if(Number.isInteger(index)&&index>0&&index<deck.length)
    deck.unshift(deck.splice(index,1)[0]);
-  side.epic.liveChoiceCommitted=false;
+  side.epic.liveChoiceApplied=true;
   side.epic.liveChoice=null;
  }
 }
