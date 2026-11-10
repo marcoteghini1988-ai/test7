@@ -123,3 +123,51 @@ test('IA LIVE: conserva una firma quando il partner resta recuperabile dagli sca
  assert.equal(allNow.length,52);
  assert.equal(new Set(allNow.map(x=>x.id)).size,52);
 });
+
+
+test('IA: la numerica negli scarti torna davvero nel mazzo e completa il vitale',()=>{
+ let b=createOfficialLiveDuel(createTacticalDuel({
+  shipA:'C01',shipB:'N00',levelA:1,levelB:1,nowMs:0
+ }),0);
+ b.turn=2;b.round=1;b.activeSide='B';
+ b.sides.A.defense.shield.hp=45;
+ const exposed=exposeMotherPart(b.sides.A.defense,'engine');
+ assert.equal(exposed.exposed,true);b.sides.A.defense=exposed.defense;
+ const pile=b.sides.B.numeric,all=[...pile.hand,...pile.deck,...pile.discard];
+ const desired=[c(3,'♣'),c(5,'♥'),c(7,'♠'),c(8,'♣'),
+  c(9,'♦'),c(11,'♥'),c(13,'♣')];
+ const hand=desired.map(v=>{
+  const found=all.find(x=>x.value===v.value&&x.suit===v.suit);
+  assert.ok(found);return found;
+ });
+ const partner=all.find(x=>x.value===4&&x.suit==='♦');
+ assert.ok(partner);
+ const handIds=new Set(hand.map(x=>x.id));
+ pile.hand=hand;pile.deck=[];
+ pile.discard=[partner,...all.filter(x=>!handIds.has(x.id)&&x.id!==partner.id)];
+ assert.equal(pile.discard.length,45);
+ const first=chooseOfficialLiveAiAction(b);
+ assert.equal(first.type,'numeric');
+ assert.equal(first.target,'vital');
+ assert.equal(b.sides.B.numeric.hand[first.index].value,3);
+ const deposited=applyOfficialLiveAction(b,'B',first,1);
+ assert.equal(deposited.ok,true,deposited.reason);b=deposited.battle;
+ assert.equal(b.vitalBuilds.B.engine.length,1);
+ assert.notEqual(chooseOfficialLiveAiAction(b).type,'clearVital');
+ b=finishOfficialLiveTurn(b,2);
+ b=finishOfficialLiveTurn(b,3);
+ assert.equal(b.activeSide,'B');
+ assert.ok((b.sides.B.numeric.recycleEvents||0)>0,'rimescolamento reale, nessuna carta nuova');
+ assert.equal(b.sides.B.numeric.hand.some(x=>x.id===partner.id),true);
+ const last=chooseOfficialLiveAiAction(b);
+ assert.equal(last.target,'vital');
+ assert.equal(last.vitalId,'engine');
+ assert.equal(b.sides.B.numeric.hand[last.index].id,partner.id);
+ const final=applyOfficialLiveAction(b,'B',last,4);
+ assert.equal(final.ok,true,final.reason);
+ assert.equal(final.battle.sides.A.defense.parts.engine.hp,0);
+ const cards=[...final.battle.sides.B.numeric.hand,...final.battle.sides.B.numeric.deck,
+  ...final.battle.sides.B.numeric.discard,...['engine','weapons','shieldGenerator','command'].flatMap(id=>final.battle.vitalBuilds.B[id])];
+ assert.equal(cards.length,52);
+ assert.equal(new Set(cards.map(x=>x.id)).size,52);
+});
