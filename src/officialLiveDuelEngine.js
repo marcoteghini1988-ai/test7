@@ -5,6 +5,7 @@ import {TACTICAL_SPECIALS} from './simultaneousDuelEngine.js';
 import {VITAL_IDS,damageMotherShield,restoreMotherShield,exposeMotherPart,
  hitMotherPart,remainingExposureSlots,motherDestroyed} from './vitalDefense.js';
 import {tacticalSignatureOperation,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
+import {findOfficialLiveVitalCompletion} from './officialLiveAiPlanning.js';
 import {isPvpTerrain,pvpTerrainDefinition,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterActive,
@@ -604,22 +605,24 @@ export function chooseOfficialLiveAiAction(battle){
  if(me.epic?.exchangeCredits>0&&battle.round<=me.epic.exchangeUntilRound&&me.numeric.hand.length)
   return {type:'epic-recycle',index:0};
  if(battle.actionUsed.numeric<LIVE_NUMERIC_LIMIT){
+  // Prima completa un bersaglio GIA' ESPOSTO con una combinazione
+  // verificabile. Non riempie slot vitali a caso, ne' consulta mutazioni segrete.
   for(const id of VITAL_IDS){
    const target=enemy.defense.parts[id];
-   if(!target||target.hp<=0)continue;
-   if(!target.exposed&&remainingExposureSlots(enemy.defense)>0)
+   if(!target||target.hp<=0||!target.exposed)continue;
+   const stored=battle.vitalBuilds.B[id];
+   const knownSignature=battle.liveLegacy?.mutations.A?.vitalId===id?
+    battle.liveLegacy.mutations.A.originalSignature:target.signature;
+   const plan=findOfficialLiveVitalCompletion(knownSignature,stored,me.numeric.hand);
+   if(plan?.length)return {type:'numeric',index:plan[0],target:'vital',vitalId:id};
+   if(stored.length>=tacticalSignatureSlotCount(knownSignature))
+    return {type:'clearVital',vitalId:id};
+  }
+  // Una nuova esposizione non interrompe una combinazione completabile.
+  for(const id of VITAL_IDS){
+   const target=enemy.defense.parts[id];
+   if(target&&target.hp>0&&!target.exposed&&remainingExposureSlots(enemy.defense)>0)
     return {type:'expose',vitalId:id};
-   if(target.exposed){
-    const stored=battle.vitalBuilds.B[id];
-    // La IA non legge la firma segretamente mutata dal difensore umano:
-    // pianifica sulla firma pubblica precedente, poi verifica il risultato reale.
-    const knownSignature=battle.liveLegacy?.mutations.A?.vitalId===id?
-     battle.liveLegacy.mutations.A.originalSignature:target.signature;
-    const matching=me.numeric.hand.findIndex(c=>stored.length<tacticalSignatureSlotCount(knownSignature)&&(
-     tacticalSignatureOperation(knownSignature,[...stored,c])||
-     stored.length<tacticalSignatureSlotCount(knownSignature)-1));
-    if(matching>=0)return {type:'numeric',index:matching,target:'vital',vitalId:id};
-   }
   }
   const found=me.numeric.hand.findIndex(c=>weaponForCard(me,c));
   if(found>=0)return {type:'numeric',index:found,target:'ship',shipId:'mother'};
