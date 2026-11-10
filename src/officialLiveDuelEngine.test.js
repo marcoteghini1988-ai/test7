@@ -123,8 +123,10 @@ test('Faglia speciale: colpisce vitale protetto dopo vera combinazione, senza ap
  assert.equal(b.sides.B.defense.parts.engine.exposed,false);
  b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},2);
  b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},3);
- assert.equal(b.sides.B.defense.parts.engine.hp,0);
+ assert.equal(b.sides.B.defense.parts.engine.hp,5);
+ assert.equal(b.sides.B.defense.parts.engine.exposed,false);
  assert.equal(b.sides.B.defense.shield.hp,60);
+ assert.equal(b.history.at(-1).kind,'vital_hit');
  assert.equal(b.sides.A.liveRift,false);
  assert.equal(b.sides.A.riftUsed,true);
 });
@@ -142,4 +144,42 @@ test('Corrosione e Ionico speciali hanno conseguenze reali solo dopo un colpo da
  b=move(b,'A',{type:'numeric',index:i,target:'ship'},5);
  assert.equal(b.sides.B.corroded,false);
  assert.ok(b.sides.B.defense.shield.hp<before);
+});
+
+test('Accumulo: prima carica non spara, la soglia usa soltanto numeriche vere',()=>{
+ let b=battle('C02','N00');
+ b.sides.A.numeric.hand[0]={...b.sides.A.numeric.hand[0],value:7,suit:'♦'};
+ b.sides.A.numeric.hand[1]={...b.sides.A.numeric.hand[1],value:5,suit:'♦'};
+ b=move(b,'A',{type:'numeric',index:0,target:'ship'},1);
+ assert.equal(b.sides.B.defense.shield.hp,60);
+ assert.equal(b.history.at(-1).kind,'weapon_charge');
+ assert.equal(b.sides.A.liveWeaponCharges.W03.values[0],7);
+ b=move(b,'A',{type:'numeric',index:0,target:'ship'},2);
+ assert.equal(b.sides.A.liveWeaponCharges.W03,undefined);
+ assert.equal(b.sides.B.defense.shield.hp,24); // (7 + 5) x W03 danno 3
+ assert.equal(b.history.at(-1).kind,'shot');
+});
+test('Combo simultanea: seme S carica W11, seme C la completa nello stesso turno',()=>{
+ let b=battle('R02','N00');
+ b=move(b,'A',{type:'numeric',index:4,target:'ship'},1); // 7♠: W11
+ assert.equal(b.sides.B.defense.shield.hp,60);
+ assert.equal(b.sides.A.liveWeaponCharges.W11.suits[0],'S');
+ b=move(b,'A',{type:'numeric',index:0,target:'ship'},2); // 3♣: priorità W11
+ assert.equal(b.history.at(-1).weaponId,'W11');
+ assert.equal(b.sides.A.liveWeaponCharges.W11,undefined);
+ assert.equal(b.sides.B.defense.shield.hp,20); // (7+3) x 4
+});
+test('Combo a memoria: W42 conserva semi tra turni propri e richiede quattro carte',()=>{
+ let b=battle('L04','N00');
+ b=move(b,'A',{type:'numeric',index:4,target:'ship'},1); // 7♠
+ b=move(b,'A',{type:'numeric',index:2,target:'ship'},2); // 5♥
+ b=move(b,'A',{type:'numeric',index:2,target:'ship'},3); // 8♦
+ assert.equal(b.sides.B.defense.shield.hp,60);
+ assert.equal(b.sides.A.liveWeaponCharges.W42.suits.length,3);
+ b=finishOfficialLiveTurn(b,4);
+ b=finishOfficialLiveTurn(b,5);
+ b=move(b,'A',{type:'numeric',index:0,target:'ship'},6); // 3♣
+ assert.equal(b.history.at(-1).weaponId,'W42');
+ assert.equal(b.sides.A.liveWeaponCharges.W42,undefined);
+ assert.equal(b.sides.B.defense.shield.hp,0);
 });
