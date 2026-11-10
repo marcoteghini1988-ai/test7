@@ -12,6 +12,10 @@ import {gunEfficiency,escortInterceptionEfficiency} from './fleetSystems.js';
 import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
 import {VULNERABILITY_RIFT_CARD_ID,riftProtectedDamage} from './tacticalVulnerabilityRift.js';
 import {hitMotherPartThroughRift} from './vitalDefense.js';
+import {LIVE_LEGACY_TYPES,createLiveLegacy,playLiveLegacyCard,liveLegacyOnTurnStart,
+ liveLegacyOnTurnEnd,liveLegacyOnNumericShot,liveLegacyOnNumericDiscard,
+ liveLegacyOnNumericRecycle,liveLegacyOnVitalFormula,liveLegacySyncGain,
+ liveLegacyOutgoingFactor,liveLegacyIncomingFactor} from './officialLiveLegacyCards.js';
 
 export const LIVE_TURN_MS=30000;
 export const LIVE_NUMERIC_LIMIT=3;
@@ -34,7 +38,7 @@ const initialZones=()=>({character:null,traps:[null,null],open:[null,null]});
 const initialBuilds=()=>Object.fromEntries(VITAL_IDS.map(id=>[id,[]]));
 const remaining=(b,k)=>b.sides[k].numeric.hand.length;
 export function supportedLiveSpecial(type){
- return type===VULNERABILITY_RIFT_CARD_ID||!!TRAP_CARDS[type]||DIRECT_SPECIALS.has(type)||isBossCharacterCard(type)||isPvpTerrain(type);
+ return type===VULNERABILITY_RIFT_CARD_ID||LIVE_LEGACY_TYPES.has(type)||!!TRAP_CARDS[type]||DIRECT_SPECIALS.has(type)||isBossCharacterCard(type)||isPvpTerrain(type);
 }
 export function createOfficialLiveDuel(initial,nowMs=0){
  if(!initial?.sides?.A||!initial?.sides?.B)throw new TypeError('Duello ufficiale non valido');
@@ -43,7 +47,7 @@ export function createOfficialLiveDuel(initial,nowMs=0){
  return {...battle,live:true,phase:'playing',activeSide:'A',turn:1,round:1,
   deadlineMs:nowMs+LIVE_TURN_MS,resolveUntilMs:null,
   actionUsed:{numeric:0,special:0},zones:{A:initialZones(),B:initialZones()},
-  vitalBuilds:{A:initialBuilds(),B:initialBuilds()},pendingShot:{A:null,B:null},
+  vitalBuilds:{A:initialBuilds(),B:initialBuilds()},pendingShot:{A:null,B:null},liveLegacy:createLiveLegacy(),
   history:[],winner:null,lastEvents:['Turno 1 · TU · 30 secondi per agire in diretta'],
   orders:{A:null,B:null},aiReadyAtMs:nowMs+650};
 }
@@ -72,6 +76,7 @@ function closeIfWon(b){
 export function finishOfficialLiveTurn(battle,nowMs=0){
  if(!battle?.live||battle.phase!=='playing')return battle;
  const b=copy(battle),previous=b.activeSide;
+ liveLegacyOnTurnEnd(b,previous);
  b.zones[previous].open=[null,null];
  b.pendingShot[previous]=null;
  b.turn++;
@@ -83,6 +88,7 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  b.actionUsed={numeric:0,special:0};
  nextDraw(b.sides[b.activeSide].numeric,7);
  nextDraw(b.sides[b.activeSide].special,5);
+ liveLegacyOnTurnStart(b,b.activeSide);
  expireBossCharacter(b.sides[b.activeSide],b.round);
  if(!b.sides[b.activeSide].bossCharacter)b.zones[b.activeSide].character=null;
  event(b,'Turno '+b.turn+' · '+(b.activeSide==='A'?'TU':'AVVERSARIO')+' · 30 secondi');
@@ -190,6 +196,7 @@ function fireNumeric(b,key,card,shipId){
  packet+=bossCharacter.extra||0;
  if(enemy.corroded){packet+=Math.floor(packet*.25);enemy.corroded=false;}
  if(enemy.livePowerShiftDebt){packet+=enemy.livePowerShiftDebt;enemy.livePowerShiftDebt=0;}
+ packet=Math.floor(packet*liveLegacyOutgoingFactor(b,key));
  const terrain=pvpTerrainEffects(b.activeTerrain,b.round);
  packet=Math.floor(packet*terrain.nativeFactor);
  let intercepted=0;
@@ -203,7 +210,7 @@ function fireNumeric(b,key,card,shipId){
  }
  let motherPacket=Math.max(0,packet-intercepted);
  const traps=runTraps(b,defenderKey,'shield',motherPacket);
- motherPacket=Math.floor(traps.damage*terrain.shieldFactor*bossCharacterShieldFactor(enemy,b.round));
+ motherPacket=Math.floor(traps.damage*terrain.shieldFactor*liveLegacyIncomingFactor(b,defenderKey)*bossCharacterShieldFactor(enemy,b.round));
  const hit=damageMotherShield(enemy.defense,motherPacket);
  enemy.defense=hit.defense;
  if(hit.damage>0&&queued?.ion)enemy.ionized=true;
@@ -212,7 +219,8 @@ function fireNumeric(b,key,card,shipId){
  event(b,key+': '+profile.weapon.nome+' · carica '+totalValue+' · '+hit.damage+
   ' danni barriera ('+intercepted+' intercettati)','shot',
   {card,shipId,weaponId:profile.weapon.id,damage:hit.damage});
- b.sides[key].sync=Math.min(100,b.sides[key].sync+(hit.damage>0?20:5));
+ liveLegacySyncGain(b,key,hit.damage>0?20:5);
+ liveLegacyOnNumericShot(b,key,card);
  return {ok:true,damage:hit.damage,weaponId:profile.weapon.id};
 }
 function placeVital(b,key,card,vitalId){
@@ -240,7 +248,8 @@ function placeVital(b,key,card,vitalId){
  if(rift)attacker.liveRift=false;
  b.sides[key].numeric.discard.push(...list);
  b.vitalBuilds[key][vitalId]=[];
- b.sides[key].sync=Math.min(100,b.sides[key].sync+25);
+ liveLegacySyncGain(b,key,25);
+ liveLegacyOnVitalFormula(b,key,op,list);
  event(b,key+': combinazione '+op+' completata · '+vitalId.toUpperCase()+
   (impact.destroyed?' DISTRUTTO · esplosione diretta':' colpito per '+impact.damage+' HP'),
   impact.destroyed?'vital_destroyed':'vital_hit',{vitalId,op,damage:impact.damage});
@@ -252,7 +261,7 @@ function placeVital(b,key,card,vitalId){
  closeIfWon(b);
  return {ok:true,completed:true,op};
 }
-function playSpecial(b,key,index,slot,target){
+function playSpecial(b,key,index,slot,choice={}){
  const side=b.sides[key],card=side.special.hand[index],type=card.type;
  const opposite=b.sides[other(key)];
  if(!supportedLiveSpecial(type))return {ok:false,reason:'special_pending_migration'};
@@ -280,7 +289,7 @@ function playSpecial(b,key,index,slot,target){
   if(b.zones[key].traps[i])return {ok:false,reason:'trap_slot_busy'};
   if(b.zones[key].traps.some(t=>t?.type===type))return {ok:false,reason:'duplicate_trap_effect'};
   side.special.hand.splice(index,1);
-  b.zones[key].traps[i]={...card,target:type==='tactic-counter'?target??null:null};
+  b.zones[key].traps[i]={...card,target:type==='tactic-counter'?choice.vitalId??null:null};
   event(b,key+': trappola coperta posizionata nello slot '+(i+1),'trap_placed');
   return {ok:true};
  }
@@ -298,13 +307,22 @@ function playSpecial(b,key,index,slot,target){
  }else if(type==='tactic-scan'){
   side.seen=[...new Set([...side.seen,...VITAL_IDS.filter(id=>!side.seen.includes(id)).slice(0,2)])];
  }else if(type==='tactic-numeric-recycle'){
-  if(side.numeric.hand.length===7)return {ok:false,reason:'recycle_unavailable'};
+  const indices=choice.recycleIndices;
+  if(!Array.isArray(indices)||indices.length<1||indices.length>2||
+   new Set(indices).size!==indices.length||
+   indices.some(n=>!Number.isInteger(n)||n<0||n>=side.numeric.hand.length))
+   return {ok:false,reason:'recycle_selection_required'};
+  const removed=[...indices].sort((a,z)=>z-a).map(i=>consume(side.numeric,i));
+  liveLegacyOnNumericRecycle(b,key,removed);
   nextDraw(side.numeric,7);
  }else if(type==='support-status-purge'){
   side.ionized=false;side.corroded=false;side.heated=false;
  }else if(type===VULNERABILITY_RIFT_CARD_ID){
   if(side.riftUsed)return {ok:false,reason:'rift_already_used'};
   side.riftUsed=true;side.liveRift=true;
+ }else if(LIVE_LEGACY_TYPES.has(type)){
+  const result=playLiveLegacyCard(b,key,type,choice);
+  if(!result.ok)return result;
  }else if(type.startsWith('fusion-')){
   const need=type==='fusion-twin'||type==='fusion-triad'?2:1;
   if(side.sync<100||side.escorts.filter(e=>e.hp>0).length<need||
@@ -349,6 +367,7 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
  if(action.type==='clearVital'){
   const id=action.vitalId;
   if(!VITAL_IDS.includes(id)||!b.vitalBuilds[key][id].length)return reject(battle,'vital_empty');
+  liveLegacyOnNumericDiscard(b,key,b.vitalBuilds[key][id]);
   side.numeric.discard.push(...b.vitalBuilds[key][id]);
   b.vitalBuilds[key][id]=[];
   event(b,key+': combinazione di '+id+' annullata, carte agli scarti');
@@ -382,7 +401,7 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
   if(b.actionUsed.special>=LIVE_SPECIAL_LIMIT)return reject(battle,'special_turn_limit');
   const index=action.index;
   if(!Number.isInteger(index)||index<0||index>=side.special.hand.length)return reject(battle,'special_not_in_hand');
-  const played=playSpecial(b,key,index,action.slot,action.vitalId);
+  const played=playSpecial(b,key,index,action.slot,action);
   if(!played.ok)return reject(battle,played.reason);
   b.actionUsed.special++;
   return {ok:true,battle:b};
