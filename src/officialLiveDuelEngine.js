@@ -672,6 +672,21 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
    {count:removed.length,cooldownMs:cooldown});
   return {ok:true,battle:b};
  }
+ // Il cestino non offre un ricambio gratuito. Scartare una numerica
+ // consuma una delle tre azioni consentite, non pesca nel medesimo turno
+ // e conserva i 52 ID fisici tra mano, mazzo e scarti.
+ if(action.type==='numeric-discard'){
+  if(b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT)return reject(battle,'numeric_turn_limit');
+  const index=action.index;
+  if(!Number.isInteger(index)||index<0||index>=side.numeric.hand.length)
+   return reject(battle,'numeric_not_in_hand');
+  const removed=consume(side.numeric,index);
+  liveLegacyOnNumericDiscard(b,key,[removed]);
+  b.actionUsed.numeric++;
+  event(b,key+': '+removed.value+removed.suit+' scartata · nessuno sparo',
+   'numeric_discard',{card:removed});
+  return {ok:true,battle:b};
+ }
  if(action.type==='numeric'){
   if(b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT)return reject(battle,'numeric_turn_limit');
   const index=action.index;
@@ -842,6 +857,13 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
    if(target&&target.hp>0&&!target.exposed&&remainingExposureSlots(enemy.defense)>0)
     return {type:'expose',vitalId:id};
   }
+  // Se lo scudo e' a zero, sparare non avvicina il KO dei vitali:
+  // scarta una numerica con costo di un'azione per preparare la pesca
+  // vera del turno successivo. Le firme valide sono cercate PRIMA.
+  if(enemy.defense.shield.hp<=0&&me.numeric.hand.length){
+   const index=me.numeric.hand.findIndex(c=>!weaponForCard(me,c));
+   return {type:'numeric-discard',index:index>=0?index:0};
+  }
   const found=me.numeric.hand.findIndex(c=>weaponForCard(me,c));
   if(found>=0)return {type:'numeric',index:found,target:'ship',shipId:'mother'};
   // La scudiera possiede propri semi ed armi: l'IA puo usarli come
@@ -877,6 +899,14 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
    const probe=applyOfficialLiveAction(battle,key,action,battle.deadlineMs-1);
    if(probe.ok)return action;
   }
+ }
+ // Ultima risorsa anti-stallo: mani senza colpi compatibili possono
+ // scartare fino a tre numeriche, anziche' passare eternamente.
+ if(battle.actionUsed.numeric<LIVE_NUMERIC_LIMIT&&me.numeric.hand.length){
+  const index=me.numeric.hand.findIndex(c=>!weaponForCard(me,c)&&
+   (liveFusionBlocksEscort(me,battle.turn)||!me.escorts.some((e,i)=>
+    weaponForCard(me,c,i))));
+  return {type:'numeric-discard',index:index>=0?index:0};
  }
  return {type:'end'};
 }
