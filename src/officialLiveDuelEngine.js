@@ -5,7 +5,8 @@ import {TACTICAL_SPECIALS} from './simultaneousDuelEngine.js';
 import {VITAL_IDS,damageMotherShield,restoreMotherShield,exposeMotherPart,
  hitMotherPart,remainingExposureSlots,motherDestroyed} from './vitalDefense.js';
 import {tacticalSignatureOperation,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
-import {findOfficialLiveVitalCompletion,findOfficialLiveVitalProgress} from './officialLiveAiPlanning.js';
+import {findOfficialLiveVitalCompletion,findOfficialLiveVitalProgress,
+ findOfficialLiveMathProgress} from './officialLiveAiPlanning.js';
 import {isPvpTerrain,pvpTerrainDefinition,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterActive,
@@ -737,6 +738,18 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
    if(plan?.length)return {type:'numeric',index:plan[0],target:'vital',vitalId:id};
    if(stored.length>=tacticalSignatureSlotCount(knownSignature))
     return {type:'clearVital',vitalId:id};
+  }
+  // Prima di una lunga mano Poker, una coppia matematica autenticamente
+  // costruibile nel proprio mazzo consente di avanzare sul vitale.
+  // Il deposito iniziale non crea proiettili e non legge carte avversarie.
+  for(const id of VITAL_IDS){
+   const target=enemy.defense.parts[id];
+   if(!target||target.hp<=0||!target.exposed||battle.vitalBuilds[key][id].length)continue;
+   const knownSignature=battle.liveLegacy?.mutations[other(key)]?.vitalId===id?
+    battle.liveLegacy.mutations[other(key)].originalSignature:target.signature;
+   const progress=findOfficialLiveMathProgress(knownSignature,[],
+    me.numeric.hand,me.numeric.deck);
+   if(progress!=null)return {type:'numeric',index:progress,target:'vital',vitalId:id};
   }
   // Per Poker 4/5 carte permette una costruzione su turni diversi anche
   // se tutte le carte non sono ancora state pescate. Usa solo il proprio
