@@ -84,8 +84,8 @@ test('La firma appartenente a un modello diverso non viene accettata dal motore'
 
 test('Progressione Poker lunga: solo Epiche e Leggendarie e sempre una formula matematica più corta',()=>{
  const expected={
-  E01:'twoPair',E02:'fourKind',E03:'fullHouse',E04:'straight',
-  L01:'fullHouse',L02:'fourKind',L03:'flush',L04:'royalFlush'
+  E01:'twoPair',E02:'flush',E03:'fullHouse',E04:'straight',
+  L01:'fullHouse',L02:'fullHouse',L03:'flush',L04:'royalFlush'
  };
  for(const [ship,pattern] of Object.entries(expected)){
   const sign=tacticalShipSignatures(ship).command;
@@ -105,22 +105,34 @@ test('Alternative Poker lunghe: 4/5 numeriche REALI 1–13, firma canonica e sol
  const hand=(ranks,suits)=>ranks.map((value,i)=>({id:'n'+i,value,suit:suits[i]}));
  const examples={
   E01:hand([7,7,3,3],['♥','♠','♦','♣']),
-  E02:hand([4,4,4,4],['♥','♠','♦','♣']),
+  E02:hand([1,4,7,9,12],['♣','♣','♣','♣','♣']),
   E03:hand([7,7,3,3,7],['♥','♠','♦','♣','♣']),
   E04:hand([2,3,4,5,6],['♥','♠','♦','♣','♥']),
   L01:hand([7,7,3,3,7],['♥','♠','♦','♣','♣']),
-  L02:hand([4,4,4,4],['♥','♠','♦','♣']),
+  L02:hand([7,3,7,3,7],['♠','♦','♣','♣','♥']),
   L03:hand([1,4,7,9,12],['♣','♣','♣','♣','♣']),
   L04:hand([1,10,11,12,13],['♠','♠','♠','♠','♠'])
  };
- const patterns={E01:'twoPair',E02:'fourKind',E03:'fullHouse',E04:'straight',
-  L01:'fullHouse',L02:'fourKind',L03:'flush',L04:'royalFlush'};
+ const patterns={E01:'twoPair',E02:'flush',E03:'fullHouse',E04:'straight',
+  L01:'fullHouse',L02:'fullHouse',L03:'flush',L04:'royalFlush'};
  for(const [shipId,example] of Object.entries(examples)){
   const sig=tacticalShipSignatures(shipId).command;
   assert.equal(tacticalSignatureOperation(sig,example),patterns[shipId],shipId);
-  assert.equal(tacticalSignatureOperation(sig,example.slice(0,2)),null,
-   'le prime due carte della prova non devono abbattere il vitale di '+shipId);
+  for(let k=1;k<example.length;k++)
+   assert.equal(tacticalSignatureOperation(sig,example.slice(0,k)),null,
+    'alternativa Poker lunga deve arrivare fino in fondo '+shipId+' / '+k);
   const basic=sig.options.find(o=>o.kind==='mathGate');
   assert.equal(tacticalSignatureOperation(sig,sample(basic.op,basic.target)),basic.op,shipId);
  }
+});
+
+test('Poker da quattro uguali è possibile senza trappole di Coppia/Tris sul sistema armi E02',()=>{
+ const sig=tacticalShipSignatures('E02').weapons;
+ assert.equal(sig.kind,'any');
+ assert.equal(tacticalSignatureSlotCount(sig),4);
+ const four=[1,2,3,4].map((_,i)=>({id:'k'+i,value:4,suit:['♥','♠','♦','♣'][i]}));
+ for(let n=1;n<4;n++)assert.equal(tacticalSignatureOperation(sig,four.slice(0,n)),null);
+ assert.equal(tacticalSignatureOperation(sig,four),'fourKind');
+ const math=sig.options.find(o=>o.kind==='mathGate');
+ assert.equal(tacticalSignatureOperation(sig,sample(math.op,math.target)),math.op);
 });
