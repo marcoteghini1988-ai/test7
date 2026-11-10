@@ -7,7 +7,8 @@ import {VITAL_IDS,damageMotherShield,restoreMotherShield,exposeMotherPart,
  hitMotherPart,remainingExposureSlots,motherDestroyed} from './vitalDefense.js';
 import {tacticalSignatureOperation,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
 import {findOfficialLiveVitalCompletion,findOfficialLiveVitalProgress,
- findOfficialLiveMathProgress,officialLiveMathDeadEnd} from './officialLiveAiPlanning.js';
+ findOfficialLiveMathProgress,findOfficialLiveMathContinuation,
+ officialLiveMathDeadEnd} from './officialLiveAiPlanning.js';
 import {isPvpTerrain,pvpTerrainDefinition,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterActive,
@@ -850,6 +851,21 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
     return {type:'clearVital',vitalId:id};
    if(stored.length>=tacticalSignatureSlotCount(knownSignature))
     return {type:'clearVital',vitalId:id};
+  }
+  // Se il vitale conserva una numerica e la firma ammette tre carte,
+  // prepara una seconda numerica soltanto quando una terza carta fisica
+  // esiste già in mano/mazzo. Le formule completabili hanno precedenza.
+  for(const id of targetOrder){
+   const target=enemy.defense.parts[id];
+   if(!target||target.hp<=0||!target.exposed)continue;
+   const stored=battle.vitalBuilds[key][id];
+   if(stored.length!==1)continue;
+   const knownSignature=battle.liveLegacy?.mutations[other(key)]?.vitalId===id?
+    battle.liveLegacy.mutations[other(key)].originalSignature:target.signature;
+   const progress=findOfficialLiveMathContinuation(knownSignature,stored,
+    me.numeric.hand,me.numeric.deck);
+   if(progress!=null)
+    return {type:'numeric',index:progress,target:'vital',vitalId:id};
   }
   // Prima di una lunga mano Poker, una coppia matematica autenticamente
   // costruibile nel proprio mazzo consente di avanzare sul vitale.
