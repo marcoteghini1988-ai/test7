@@ -36,6 +36,7 @@ import {liveCommanderArmFormula,liveCommanderNativeBonus,
  liveCommanderAfterNativeShot} from './officialLiveCommanderAttack.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
+ liveNumericBossArmFormula,
  liveNumericBossSyncBonus,liveNumericBossRepairAmount,liveNumericBossBeforeDraw,
  liveNumericBossEscortCooperation,
  liveNumericBossRememberEscortCooperation} from './officialLiveNumericBossPassives.js';
@@ -346,7 +347,8 @@ function fireNumeric(b,key,card,shipId){
    ' su proiettile autentico','pilot_bonus',
    {pilotId:attacker.commander.id,trigger:pilotPower.trigger,extra:pilotPower.extra});
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
- liveNumericBossAfterShot(attacker,hit.damage,w.id,numericBossPower.bonus,b.round);
+ liveNumericBossAfterShot(attacker,hit.damage,w.id,numericBossPower.bonus,b.round,
+  numericBossPower.formulaBonus);
  if(escortCooperation)
   liveNumericBossRememberEscortCooperation(attacker,hit.damage,escortCooperation.bonus);
  liveEpicOnShieldDamage(b,defenderKey,hit.damage);
@@ -407,7 +409,8 @@ function placeVital(b,key,card,vitalId){
  liveCommanderArmFormula(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveCommanderRememberVital(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
- liveNumericBossAfterVital(attacker,impact.damage,impact.destroyed,b.round);
+ liveNumericBossArmFormula(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
+ liveNumericBossAfterVital(attacker,impact.damage,impact.destroyed,b.round,vitalId);
  liveEpicOnVitalFormula(b,key,op);
  liveEpicOnShieldDamage(b,other(key),impact.damage);
  if(rift)attacker.liveRift=false;
