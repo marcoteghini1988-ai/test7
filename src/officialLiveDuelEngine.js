@@ -29,7 +29,8 @@ import {liveBossStartTurn,liveBossIncomingShieldFactor,liveBossOnShieldHit,
 import {isTacticalEpic,tacticalEpicActive} from './tacticalEpicCards.js';
 import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
  liveEpicOnShieldDamage,liveEpicRecycle} from './officialLiveEpics.js';
-import {liveCommanderDefensePacket,liveCommanderRememberShot} from './officialLiveCommanderDefense.js';
+import {liveCommanderDefensePacket,liveCommanderRememberShot,
+ liveCommanderRememberVital} from './officialLiveCommanderDefense.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
  liveNumericBossSyncBonus,liveNumericBossRepairAmount,liveNumericBossEscortCooperation,
@@ -386,6 +387,7 @@ function placeVital(b,key,card,vitalId){
   hitMotherPart(defender.defense,vitalId,part.hp,list);
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
+ liveCommanderRememberVital(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
  liveNumericBossAfterVital(attacker,impact.damage,impact.destroyed,b.round);
  liveEpicOnShieldDamage(b,other(key),impact.damage);
