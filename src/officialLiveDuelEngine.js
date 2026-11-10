@@ -844,7 +844,8 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
    // Una firma matematica partita in un turno precedente può diventare
    // irraggiungibile se gli ultimi partner sono stati scartati. Liberare
    // gli slot autentici senza creare numeriche supplementari.
-   if(officialLiveMathDeadEnd(knownSignature,stored,me.numeric.hand,me.numeric.deck))
+   if(officialLiveMathDeadEnd(knownSignature,stored,me.numeric.hand,
+    me.numeric.deck,me.numeric.discard))
     return {type:'clearVital',vitalId:id};
    if(stored.length>=tacticalSignatureSlotCount(knownSignature))
     return {type:'clearVital',vitalId:id};
