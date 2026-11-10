@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {findOfficialLiveMathProgress,findOfficialLiveVitalCompletion,
- officialLiveMathDeadEnd}
+ findOfficialLiveMathContinuation,officialLiveMathDeadEnd}
  from './officialLiveAiPlanning.js';
 import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,chooseOfficialLiveAiAction,
@@ -33,6 +33,68 @@ test('IA matematica: tratta formule alternative e non altera Poker o firme 3-onl
   [],[c(4,'♥')],[c(4,'♣')]),null);
  assert.equal(gate.op,'minus');
 });
+test('IA matematica: da una carta sul vitale sceglie una seconda per il tris di calcolo',()=>{
+ const stored=[c(3,'♣')];
+ const hand=[c(2,'♠'),c(5,'♥'),c(7,'♦')];
+ assert.equal(findOfficialLiveVitalCompletion(TIMES,stored,hand),null);
+ assert.equal(findOfficialLiveMathContinuation(TIMES,stored,hand,[c(2,'♦')]),0,
+  'la terza carta numerica deve appartenere al proprio mazzo');
+ assert.equal(findOfficialLiveMathContinuation(TIMES,stored,hand,[]),null,
+  'non immagina pescate o riciclo dagli scarti non ancora avvenuto');
+ assert.equal(findOfficialLiveMathContinuation(
+  {...TIMES,allowedCardCounts:[2]},stored,hand,[c(2,'♦')]),null,
+  'la costruzione a tre non si attiva per firme solo a due');
+ assert.equal(findOfficialLiveMathContinuation(TIMES,[],hand,[c(2,'♦')]),null,
+  'servono carte già depositate sul vitale');
+});
+
+test('IA LIVE completa 3x2x2 su un vitale in due turni con sole carte fisiche',()=>{
+ let b=createOfficialLiveDuel(createTacticalDuel({
+  shipA:'C01',shipB:'N00',levelA:1,levelB:1,nowMs:0
+ }),0);
+ b.turn=2;b.round=1;b.activeSide='B';
+ b.sides.A.defense.shield.hp=45;
+ const exposure=exposeMotherPart(b.sides.A.defense,'engine');
+ assert.equal(exposure.exposed,true);b.sides.A.defense=exposure.defense;
+ const pile=b.sides.B.numeric,all=[...pile.hand,...pile.deck,...pile.discard];
+ const pick=(value,suit)=>{
+  const card=all.find(x=>x.value===value&&x.suit===suit);
+  assert.ok(card,value+suit);return card;
+ };
+ const stored=pick(3,'♣'),drawNext=pick(2,'♦');
+ const hand=[pick(2,'♠'),pick(5,'♥'),pick(7,'♠'),pick(8,'♣'),
+  pick(9,'♦'),pick(11,'♥'),pick(13,'♣')];
+ const ids=new Set([stored,...hand].map(x=>x.id));
+ b.vitalBuilds.B.engine=[stored];
+ pile.hand=hand;
+ pile.deck=[drawNext,...all.filter(x=>!ids.has(x.id)&&x.id!==drawNext.id)];
+ pile.discard=[];
+ assert.equal(ids.size,8);
+ const choice=chooseOfficialLiveAiAction(b);
+ assert.deepEqual({type:choice.type,target:choice.target,vitalId:choice.vitalId,
+  card:b.sides.B.numeric.hand[choice.index].id},
+  {type:'numeric',target:'vital',vitalId:'engine',card:hand[0].id});
+ const placed=applyOfficialLiveAction(b,'B',choice,1);
+ assert.equal(placed.ok,true,placed.reason);b=placed.battle;
+ assert.equal(b.vitalBuilds.B.engine.length,2);
+ assert.equal(b.sides.A.defense.parts.engine.hp,10);
+ b=finishOfficialLiveTurn(b,2);b=finishOfficialLiveTurn(b,3);
+ assert.equal(b.activeSide,'B');
+ assert.equal(b.sides.B.numeric.hand.some(x=>x.id===drawNext.id),true);
+ const finishing=chooseOfficialLiveAiAction(b);
+ assert.equal(finishing.target,'vital');
+ assert.equal(finishing.vitalId,'engine');
+ assert.equal(b.sides.B.numeric.hand[finishing.index].id,drawNext.id);
+ const result=applyOfficialLiveAction(b,'B',finishing,4);
+ assert.equal(result.ok,true,result.reason);b=result.battle;
+ assert.equal(b.sides.A.defense.parts.engine.hp,0);
+ assert.equal(b.vitalBuilds.B.engine.length,0);
+ const after=[...b.sides.B.numeric.hand,...b.sides.B.numeric.deck,
+  ...b.sides.B.numeric.discard,...Object.values(b.vitalBuilds.B).flat()];
+ assert.equal(after.length,52);
+ assert.equal(new Set(after.map(x=>x.id)).size,52);
+});
+
 test('IA LIVE: da 3♣ in mano e 4♦ realmente pescata completa il motore in due turni',()=>{
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA:'C01',shipB:'N00',levelA:1,levelB:1,nowMs:0
