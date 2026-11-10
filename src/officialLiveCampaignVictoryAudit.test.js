@@ -4,6 +4,8 @@ import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,finishOfficialLiveTurn,
  LIVE_NUMERIC_LIMIT,LIVE_SPECIAL_LIMIT} from './officialLiveDuelEngine.js';
 import {officialBattleResult} from './officialBattleSetup.js';
+import {officialBossEncounter} from './officialBossEncounter.js';
+import {READY_EXCLUSIVE_BOSS_IDS} from './tacticalExclusiveBosses.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {VITAL_IDS,damageMotherShield} from './vitalDefense.js';
 import {tacticalShipSignatures,tacticalSignatureOperation} from './tacticalShipSignatures.js';
@@ -42,10 +44,19 @@ function play(b,key,action,nowMs){
  assert.equal(result.ok,true,JSON.stringify({key,action,reason:result.reason}));
  return result.battle;
 }
-function run(shipId){
+function run(shipId,{bossEncounter=null,sectorNumber=7}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
-  shipA:'C01',shipB:shipId,levelA:1,levelB:1,nowMs:0,mode:'campaign'
+  shipA:'C01',shipB:shipId,levelA:1,levelB:1,nowMs:0,mode:'campaign',
+  bossPlanetB:bossEncounter?.planetId??null,
+  bossNumericDeckB:bossEncounter?{
+   id:bossEncounter.numericDeckId,level:bossEncounter.numericDeckLevel
+  }:null
  }),0);
+ if(bossEncounter){
+  assert.equal(b.sides.B.bossPlanetId,bossEncounter.planetId);
+  assert.equal(b.sides.B.bossExclusive.id,bossEncounter.planetId);
+  assert.equal(b.sides.B.bossNumericDeck.id,bossEncounter.numericDeckId);
+ }
  const pile=b.sides.A.numeric;
  const source=[...pile.hand,...pile.deck,...pile.discard];
  assert.equal(new Set(source.map(c=>c.id)).size,52);
@@ -59,17 +70,18 @@ function run(shipId){
  const shield=b.sides.B.defense.shield;
  b.sides.B.defense=damageMotherShield(b.sides.B.defense,shield.hp).defense;
  assert.equal(b.sides.B.defense.shield.hp,0);
+ let nowMs=1;
  for(let i=0;i<plan.length;i++){
   const {vitalId,card}=plan[i];
   if(i>0&&i%LIVE_NUMERIC_LIMIT===0){
-   b=finishOfficialLiveTurn(b,10+i*10);
-   b=finishOfficialLiveTurn(b,11+i*10);
+   b=finishOfficialLiveTurn(b,nowMs++);
+   b=finishOfficialLiveTurn(b,nowMs++);
   }
   if(!b.sides.B.defense.parts[vitalId].exposed)
-   b=play(b,'A',{type:'expose',vitalId},1+i*10);
+   b=play(b,'A',{type:'expose',vitalId},nowMs++);
   const index=b.sides.A.numeric.hand.findIndex(c=>c.id===card.id);
   assert.ok(index>=0,shipId+'/'+vitalId+': numerica realmente pescata');
-  b=play(b,'A',{type:'numeric',index,target:'vital',vitalId},2+i*10);
+  b=play(b,'A',{type:'numeric',index,target:'vital',vitalId},nowMs++);
   assert.ok(b.actionUsed.numeric<=LIVE_NUMERIC_LIMIT);
   assert.ok(b.actionUsed.special<=LIVE_SPECIAL_LIMIT);
   const all=[...b.sides.A.numeric.hand,...b.sides.A.numeric.deck,
@@ -82,7 +94,7 @@ function run(shipId){
  assert.equal(VITAL_IDS.every(id=>b.sides.B.defense.parts[id].hp===0),true,shipId);
  assert.equal(b.history.filter(e=>e.kind==='vital_destroyed').length,4,shipId);
  assert.equal(b.history.filter(e=>e.kind==='shot').length,0,shipId);
- const report=officialBattleResult(b,'campaign',7);
+ const report=officialBattleResult(b,'campaign',sectorNumber);
  assert.equal(report.eligibleForRewards,true,shipId);
  assert.equal(report.meta.matchStats.enemyVitalsDestroyed,4,shipId);
  assert.equal(report.meta.matchStats.ownVitalsDestroyed,0,shipId);
@@ -100,4 +112,21 @@ test('Le statistiche distinguono danni barriera e distruzione vitale anche a par
  assert.equal(r.meta.matchStats.ownVitalsDestroyed,0);
  const pvp=officialBattleResult(b,'pvp',7);
  assert.equal(pvp.eligibleForRewards,false,'PvP continua solo simulato, nessun premio');
+});
+
+test('Dodici boss canonici LIVE: tutti i quattro vitali restano distruttibili con firme vere',()=>{
+ assert.equal(READY_EXCLUSIVE_BOSS_IDS.length,12);
+ for(const [index,id] of READY_EXCLUSIVE_BOSS_IDS.entries()){
+  const sectorNumber=(index+1)*10;
+  const encounter=officialBossEncounter({
+   mode:'campaign',sectorNumber,planetId:id,sectorLevel:10
+  });
+  assert.ok(encounter,'boss canonico '+id+' al settore '+sectorNumber);
+  const b=run(encounter.motherShipId,{bossEncounter:encounter,sectorNumber});
+  assert.equal(b.winner,'A',encounter.planetName);
+  const result=officialBattleResult(b,'campaign',sectorNumber);
+  assert.equal(result.eligibleForRewards,true);
+  assert.equal(result.meta.matchStats.bossPlanetId,id);
+  assert.equal(result.meta.matchStats.bossSectorLevel,10);
+ }
 });
