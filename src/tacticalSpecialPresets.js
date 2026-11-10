@@ -40,7 +40,8 @@ export const TACTICAL_BOSS_PLANS=Object.freeze({
  14:{style:'rigenerazione',targets:['shieldGenerator','weapons','command','engine'],
   types:['support-shield-repair','support-status-purge','support-escort-repair','tactical-cover','tactic-reactive','tactic-impact']},
  17:{style:'fusione_assalto',targets:['command','shieldGenerator','engine','weapons'],
-  types:['fusion-strike','fusion-triad','tactic-kinetic','tactic-power-shift','shot-corrosion','shot-piercing']},
+  types:['fusion-strike','fusion-triad','tactic-kinetic','tactic-power-shift',
+   'shot-corrosion','tactic-counter','tactic-scan']},
  19:{style:'eruzione',targets:['weapons','shieldGenerator','command','engine'],
   types:['tactic-kinetic','shot-corrosion','shot-piercing','tactic-power-shift','tactic-suppress','tactic-numeric-recycle']},
  20:{style:'difesa_finale',targets:['engine','command','weapons','shieldGenerator'],
@@ -59,7 +60,12 @@ export function buildTacticalBossDeck(planetId,level=5,enemyLevel=3){
  if(!profile)throw new Error('Pianeta boss inesistente');
  const escortCount=level>=5?2:level>=3?1:0;
  const enemyHasEscorts=enemyLevel>=3;
- const choices=profile.types.flatMap(type=>Array(4).fill(type));
+ // Risonanza: soglia vera di 100 Sincronia. Riduciamo le carte Fusione
+ // difficili da attivare da otto a quattro, usando quattro vere
+ // Contromisure per i vitali. Nessuna carta o Sincronia gratuita.
+ const choices=profile.id===17?
+  profile.types.flatMap(type=>Array(type.startsWith('fusion-')?2:4).fill(type)):
+  profile.types.flatMap(type=>Array(4).fill(type));
  // Un boss non può conoscere firme nascoste senza Scansione. Garantiamo
  // quattro carte di ricognizione nei 24 slot reali (non pescate gratuitamente).
  if(!choices.includes('tactic-scan'))choices.splice(choices.length-4,4,
