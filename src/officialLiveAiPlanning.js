@@ -59,6 +59,30 @@ export function findOfficialLiveMathProgress(signature,stored=[],hand=[],deck=[]
  return best;
 }
 
+// Continua un calcolo di TRE carte già iniziato, anche se la terza
+// numerica non è ancora in mano. Una seconda numerica viene depositata
+// solo se esiste un completamento verificabile in mano o nel proprio mazzo
+// pescabile. Gli scarti non sono considerati pescate imminenti.
+// Non accede a informazioni nascoste né altera il numero di azioni.
+export function findOfficialLiveMathContinuation(signature,stored=[],hand=[],deck=[]){
+ if(!signature||!Array.isArray(stored)||stored.length!==1||
+    !Array.isArray(hand)||!Array.isArray(deck)||!hand.length)return null;
+ const options=signature.kind==='any'?signature.options||[]:[signature];
+ const gates=options.filter(o=>o?.kind==='mathGate'&&
+  (o.allowedCardCounts||[2,3]).includes(3));
+ if(!gates.length)return null;
+ let best=null,bestPartners=0;
+ for(let i=0;i<hand.length;i++){
+  const first=hand[i];
+  if(!Number.isInteger(first?.value)||!first?.suit)continue;
+  const future=[...hand.filter((_,j)=>j!==i),...deck];
+  const partners=future.reduce((n,second)=>n+
+   Number(gates.some(g=>tacticalSignatureOperation(g,[...stored,first,second])===g.op)),0);
+  if(partners>bestPartners){best=i;bestPartners=partners;}
+ }
+ return best;
+}
+
 // Un deposito matematico diventa un vicolo cieco quando nel proprio
 // mazzo e mano non esiste più alcuna combinazione 2/3 valida. Non guarda
 // le carte nemiche, non inventa pescate e non scarta gli alloggiamenti
