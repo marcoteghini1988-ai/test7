@@ -4,8 +4,8 @@ import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
  liveNumericBossSyncBonus,liveNumericBossRepairAmount,
- liveNumericBossEscortCooperation,liveNumericBossRememberEscortCooperation}
- from './officialLiveNumericBossPassives.js';
+ liveNumericBossEscortCooperation,liveNumericBossRememberEscortCooperation,
+ liveNumericBossBeforeDraw} from './officialLiveNumericBossPassives.js';
 const game=(id,level=9,shipA='N00')=>
  createTacticalDuel({shipA,shipB:'N00',levelA:1,levelB:1,
   bossNumericDeckA:{id,level},nowMs:0});
@@ -92,4 +92,22 @@ test('Sinfonia di flotta Risonanza: +7% solo dopo impatto efficace della madre e
  low.liveMotherHitRound=1;
  assert.equal(liveNumericBossEscortCooperation(low,50,1).damage,50,
   'Sinfonia non esiste prima di livello 7');
+});
+
+test('Leviatano Marea: solo vero riciclo delle 52 numeriche prepara bonus, colpo nullo non lo consuma',()=>{
+ const untouched=game('planet_char_8',3).sides.A;
+ liveNumericBossBeforeDraw(untouched);
+ assert.equal(untouched.bossNumericDeck.recyclePending,false);
+ const side=game('planet_char_8',3).sides.A,pile=side.numeric;
+ pile.discard.push(...pile.deck.splice(0),pile.hand.pop());
+ assert.equal(pile.hand.length+pile.deck.length+pile.discard.length,52);
+ liveNumericBossBeforeDraw(side);
+ assert.equal(side.bossNumericDeck.recyclePending,true);
+ const boosted=liveNumericBossNativeBonus(side,50,'W01',null,1);
+ assert.equal(boosted.damage,54); // +8% originale, livello 3
+ liveNumericBossAfterShot(side,0,'W01',boosted.bonus,1);
+ assert.equal(side.bossNumericDeck.recyclePending,true,'colpo a danno zero non spende il bonus');
+ liveNumericBossAfterShot(side,9,'W01',boosted.bonus,1);
+ assert.equal(side.bossNumericDeck.recyclePending,false);
+ assert.equal(liveNumericBossNativeBonus(side,50,'W01',null,1).damage,50);
 });
