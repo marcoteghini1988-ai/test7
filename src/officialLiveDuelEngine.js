@@ -25,6 +25,7 @@ import {liveBossStartTurn,liveBossIncomingShieldFactor,liveBossOnShieldHit,
 import {isTacticalEpic} from './tacticalEpicCards.js';
 import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
  liveEpicOnShieldDamage,liveEpicRecycle} from './officialLiveEpics.js';
+import {liveCommanderDefensePacket,liveCommanderRememberShot} from './officialLiveCommanderDefense.js';
 
 export const LIVE_TURN_MS=30000;
 export const LIVE_NUMERIC_LIMIT=3;
@@ -244,9 +245,12 @@ function fireNumeric(b,key,card,shipId){
   liveGuard.guard-=blocked;motherPacket-=blocked;
   event(b,defenderKey+': Modulo difensivo assorbe '+blocked+' danni','module_guard',{damage:blocked});
  }
+ const commanderGuard=liveCommanderDefensePacket(attacker,enemy,motherPacket);
+ motherPacket=commanderGuard.damage;
  const hit=damageMotherShield(enemy.defense,motherPacket);
  enemy.defense=hit.defense;
  liveBossOnShieldHit(enemy,hit.damage,b.round);
+ liveCommanderRememberShot(attacker,enemy,hit.damage);
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
  liveEpicOnShieldDamage(b,defenderKey,hit.damage);
  if(hit.damage>0&&queued?.ion)enemy.ionized=true;
