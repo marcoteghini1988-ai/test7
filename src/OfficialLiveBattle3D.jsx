@@ -281,7 +281,7 @@ export default function OfficialLiveBattle3D({
    <div className="live-special-hand" role="group" aria-label="Cinque carte speciali">
     {player.special.hand.map(card=>{
      const face=officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]);
-     return <button type="button" key={card.id} disabled={cannotAct}
+     return <button type="button" key={card.id} disabled={cannotAct||!supportedLiveSpecial(card.type)}
       className={'live-hand-special'+(chosen?.id===card.id?' live-chosen':'')}
       title={face.name+' · '+face.effect}
       aria-label={face.name+' · '+(supportedLiveSpecial(card.type)?face.effect:'effetto in migrazione')}
