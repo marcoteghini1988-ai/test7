@@ -38,3 +38,6 @@
  position:absolute;inset:0;display:grid;place-items:center;
  font-size:22px;color:#9eeaff;background:linear-gradient(135deg,#215568,#152a47);
 }
+
+/* Artwork ufficiale senza modificare slot o interazioni editor. */
+.special-deck-art{float:left;width:48px;height:72px;object-fit:cover;display:block;margin:0 7px 4px 0;border-radius:5px;border:1px solid #6ebed9;background:#080f20;box-shadow:0 0 8px #5bbce355}
