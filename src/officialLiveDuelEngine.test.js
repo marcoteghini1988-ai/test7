@@ -488,3 +488,54 @@ test('Faglia LIVE contro Contromisura: nessun KO, effetto consumato e nessun sec
  assert.equal(applyOfficialLiveAction(b,'A',
   {type:'special',index:0,slot:'open-1'},8).reason,'rift_already_used');
 });
+
+test('IA e compatibilità: una Combo W19 caricata con ♣ non propone ancora ♣, ma può completarsi con ♦',()=>{
+ let b=battle('E01','N00');
+ assert.equal(liveCompatibleShips(b.sides.A,{suit:'♣',value:3})[0].compatible,true);
+ const first=b.sides.A.numeric.hand.findIndex(c=>c.suit==='♣');
+ b=move(b,'A',{type:'numeric',index:first,target:'ship',shipId:'mother'},1);
+ assert.equal(b.sides.A.liveWeaponCharges.W19.suits.join(','),'C');
+ const same=b.sides.A.numeric.hand.findIndex(c=>c.suit==='♣');
+ assert.ok(same>=0);
+ assert.equal(liveCompatibleShips(b.sides.A,b.sides.A.numeric.hand[same])[0].compatible,false);
+ const no=applyOfficialLiveAction(b,'A',{type:'numeric',index:same,target:'ship',shipId:'mother'},2);
+ assert.equal(no.ok,false);
+ assert.equal(no.reason,'suit_incompatible');
+ assert.equal(no.battle.sides.A.numeric.hand.length,6);
+ const diamond=b.sides.A.numeric.hand.findIndex(c=>c.suit==='♦');
+ assert.ok(diamond>=0);
+ assert.equal(liveCompatibleShips(b.sides.A,b.sides.A.numeric.hand[diamond])[0].compatible,true);
+ b=move(b,'A',{type:'numeric',index:diamond,target:'ship',shipId:'mother'},3);
+ assert.equal(b.sides.A.liveWeaponCharges.W19,undefined);
+ assert.equal(b.history.some(e=>e.kind==='shot'&&e.weaponId==='W19'),true);
+});
+test('Combo a memoria W33 scaduta dopo 3 cicli: carica rimossa da UI e IA prima di altra carta',()=>{
+ let b=battle('L01','N00');
+ const spade=b.sides.A.numeric.hand.findIndex(c=>c.suit==='♠');
+ assert.ok(spade>=0);
+ b=move(b,'A',{type:'numeric',index:spade,target:'ship',shipId:'mother'},1);
+ assert.ok(b.sides.A.liveWeaponCharges.W33);
+ assert.equal(b.sides.A.liveWeaponCharges.W33.startedRound,1);
+ for(let i=0;i<6;i++)b=finishOfficialLiveTurn(b,2+i);
+ assert.equal(b.round,4);
+ assert.equal(b.activeSide,'A');
+ assert.equal(b.sides.A.liveWeaponCharges.W33,undefined);
+ assert.equal(liveCompatibleShips(b.sides.A,{suit:'♠',value:8})[0].compatible,true);
+ assert.equal(b.history.some(e=>e.kind==='weapon_charge_expired'&&e.weaponId==='W33'),true);
+});
+test('IA E01 carica W19 senza ripetere il seme non ammesso',()=>{
+ let b=battle('N00','E01');
+ b=move(b,'A',{type:'end'},1);
+ const first=chooseOfficialLiveAiAction(b);
+ assert.equal(first.target,'ship');
+ const card=b.sides.B.numeric.hand[first.index];
+ assert.equal(card.suit,'♣');
+ b=move(b,'B',first,2);
+ assert.equal(b.sides.B.liveWeaponCharges.W19.suits[0],'C');
+ const after=chooseOfficialLiveAiAction(b);
+ assert.equal(after.type,'numeric');
+ assert.equal(after.target,'ship');
+ assert.notEqual(b.sides.B.numeric.hand[after.index].suit,'♣');
+ b=move(b,'B',after,3);
+ assert.equal(b.history.some(e=>e.kind==='shot'&&e.weaponId==='W19'),true);
+});
