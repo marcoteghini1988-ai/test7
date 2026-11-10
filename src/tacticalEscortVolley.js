@@ -20,8 +20,10 @@ export function selectTacticalEscortForAmmo(side,card){
  return (side?.escorts||[]).find(escort=>
   escort.hp>0&&escort.weapon?.suits.includes(suit))||null;
 }
-export function prepareTacticalEscortVolley(side,card){
- const escort=selectTacticalEscortForAmmo(side,card);
+export function prepareTacticalEscortVolley(side,card,selectedSlot=null){
+ const suit=SEME_BY_CARD[card?.suit];
+ const escort=selectedSlot==null?selectTacticalEscortForAmmo(side,card):
+  (side?.escorts||[]).find(e=>e.slot===selectedSlot&&e.hp>0&&e.weapon?.suits.includes(suit));
  if(!escort)return {ready:false,reason:'no_eligible_escort',cardId:card?.id??null};
  const gun=escort.weapon;
  if(gun.tipo==='Accumulo'){
