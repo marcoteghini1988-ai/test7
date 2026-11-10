@@ -14,7 +14,7 @@ import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
 import {gunEfficiency,escortInterceptionEfficiency} from './fleetSystems.js';
 import {prepareTacticalEscortVolley} from './tacticalEscortVolley.js';
 import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
-import {VULNERABILITY_RIFT_CARD_ID,riftProtectedDamage} from './tacticalVulnerabilityRift.js';
+import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
 import {hitMotherPartThroughRift} from './vitalDefense.js';
 import {LIVE_LEGACY_TYPES,createLiveLegacy,playLiveLegacyCard,liveLegacyOnTurnStart,
  liveLegacyOnTurnEnd,liveLegacyOnNumericShot,liveLegacyOnNumericDiscard,
@@ -431,7 +431,10 @@ function placeVital(b,key,card,vitalId){
   event(b,other(key)+': precisione su '+vitalId+' annullata dalla Contromisura','counter');
   return {ok:true,completed:false,countered:true};
  }
- const impact=rift?hitMotherPartThroughRift(defender.defense,vitalId,riftProtectedDamage(part.hp,true),list):
+ // Nel LIVE una firma autentica distrugge sempre il vitale, anche via Faglia.
+ // La Faglia scavalca soltanto lo scudo; il vecchio tetto 5 HP resta nel
+ // motore simultaneo legacy, senza alterarne gameplay e test.
+ const impact=rift?hitMotherPartThroughRift(defender.defense,vitalId,part.hp,list):
   hitMotherPart(defender.defense,vitalId,part.hp,list);
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
