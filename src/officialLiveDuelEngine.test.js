@@ -113,3 +113,33 @@ test('Due speciali per turno, trappola coperta persistente e nessun effetto fant
  b=move(b,'B',{type:'end'},5);
  assert.equal(b.zones.A.traps.filter(Boolean).length,2);
 });
+
+
+test('Faglia speciale: colpisce vitale protetto dopo vera combinazione, senza aprire la barriera',()=>{
+ let b=battle('N00','C01');
+ b.sides.A.special.hand[0].type='tactic-vulnerability-rift';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ assert.equal(b.sides.A.liveRift,true);
+ assert.equal(b.sides.B.defense.parts.engine.exposed,false);
+ b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},2);
+ b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},3);
+ assert.equal(b.sides.B.defense.parts.engine.hp,0);
+ assert.equal(b.sides.B.defense.shield.hp,60);
+ assert.equal(b.sides.A.liveRift,false);
+ assert.equal(b.sides.A.riftUsed,true);
+});
+test('Corrosione e Ionico speciali hanno conseguenze reali solo dopo un colpo dannoso',()=>{
+ let b=battle('C01','N00');
+ b.sides.A.special.hand[0].type='shot-corrosion';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ b=move(b,'A',{type:'numeric',index:2,target:'ship'},2); // 5♥ = 10 HP
+ assert.equal(b.sides.B.corroded,true);
+ const before=b.sides.B.defense.shield.hp;
+ b=finishOfficialLiveTurn(b,3);
+ b=finishOfficialLiveTurn(b,4);
+ const i=b.sides.A.numeric.hand.findIndex(c=>c.suit==='♥');
+ assert.ok(i>=0);
+ b=move(b,'A',{type:'numeric',index:i,target:'ship'},5);
+ assert.equal(b.sides.B.corroded,false);
+ assert.ok(b.sides.B.defense.shield.hp<before);
+});
