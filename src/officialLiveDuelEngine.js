@@ -81,6 +81,7 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  nextDraw(b.sides[b.activeSide].numeric,7);
  nextDraw(b.sides[b.activeSide].special,5);
  expireBossCharacter(b.sides[b.activeSide],b.round);
+ if(!b.sides[b.activeSide].bossCharacter)b.zones[b.activeSide].character=null;
  event(b,'Turno '+b.turn+' · '+(b.activeSide==='A'?'TU':'AVVERSARIO')+' · 30 secondi');
  return b;
 }
