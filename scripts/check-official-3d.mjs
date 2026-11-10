@@ -11,6 +11,8 @@ const exists=file=>existsSync(resolve(root,file));
 const app=read('src/main.tsx');
 const battleEntry=read('src/MathDuelBattle.jsx');
 const arena=read('src/OfficialBattle3D.jsx');
+const liveArena=read('src/OfficialLiveBattle3D.jsx');
+const liveEngine=read('src/officialLiveDuelEngine.js');
 const bossArena=read('src/BossBattle3D.jsx');
 const physicalHull=exists('src/ShipPhysicalVitals.jsx')?read('src/ShipPhysicalVitals.jsx'):'';
 const vitalAdapter=exists('src/officialVitalMotorAdapter.js')?read('src/officialVitalMotorAdapter.js'):'';
@@ -43,13 +45,21 @@ verify(shop.includes("import ArsenalCatalog from './ArsenalCatalog'")&&
  shop.includes('<ArsenalCatalog'),
  'Il negozio deve usare il catalogo Arsenale definitivo anziche la Preview');
 
-verify(battleEntry.includes("import OfficialBattle3D from './OfficialBattle3D.jsx'")&&
+verify(battleEntry.includes("import OfficialBattle3D from './OfficialLiveBattle3D.jsx'")&&
  battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'")&&
  battleEntry.includes("officialCampaignBattleProps(props)")&&
  battleEntry.includes("officialSimultaneousEligibility(battleProps)")&&
  battleEntry.includes("<OfficialBattle3D {...battleProps}")&&
  battleEntry.includes("<BossBattle3D {...battleProps}"),
- 'Unico accesso 3D: settori canonici, simultaneo e fallback boss coerenti');
+ 'Unico accesso 3D: settori canonici, live alternato e fallback boss coerenti');
+verify(liveArena.includes('createOfficialLiveDuel')&&
+ liveArena.includes('applyOfficialLiveAction')&&
+ liveArena.includes('<ShipPhysicalVitals')&&liveArena.includes('<MountedWeapons')&&
+ liveArena.includes('player.numeric.hand.map')&&
+ liveArena.includes('player.special.hand.map')&&
+ liveEngine.includes('LIVE_TURN_MS=30000')&&
+ liveEngine.includes("action.type==='numeric'"),
+ 'La plancia live deve usare mazzi reali, armi montate, turni 30s e azioni dirette');
 verify(arena.includes('MathDuelBattle.css')&&arena.includes('arena_titanio_9x16.webp'),
  'La battaglia ufficiale deve usare il CSS e lo sfondo Titanio 9:16');
 verify(arena.includes('<ShipPhysicalVitals')&&
