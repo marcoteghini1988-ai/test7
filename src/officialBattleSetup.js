@@ -125,6 +125,14 @@ export function officialBattleResult(battle,mode,sectorNumber){
    matchStats:{
     turnsElapsed:battle.round,damageDealt:Math.round(
      (1-battle.sides.B.defense.shield.hp/battle.sides.B.defense.shield.max)*100),
+    // damageDealt mantiene il significato legacy (% barriera). Il LIVE
+    // distrugge invece i 4 vitali con firme: contarli separatamente,
+    // senza gonfiare danni/crediti o alterare l'algoritmo delle stelle.
+    enemyVitalsDestroyed:Object.values(battle.sides.B.defense.parts)
+     .filter(part=>part.hp<=0).length,
+    ownVitalsDestroyed:parts.filter(part=>part.hp<=0).length,
+    enemyShieldDamagePct:Math.round(
+     (1-battle.sides.B.defense.shield.hp/battle.sides.B.defense.shield.max)*100),
     simultaneousDuel:!battle.live,liveDuel:!!battle.live,sectorNumber,
     bossPlanetId:battle.sides.B.bossPlanetId??null,
     bossSectorLevel:battle.sides.B.bossPlanetId==null?null:10
