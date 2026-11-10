@@ -33,7 +33,8 @@ import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
 import {liveCommanderDefensePacket,liveCommanderRememberShot,
  liveCommanderRememberVital} from './officialLiveCommanderDefense.js';
 import {liveCommanderArmFormula,liveCommanderNativeBonus,
- liveCommanderAfterNativeShot} from './officialLiveCommanderAttack.js';
+ liveCommanderAfterNativeShot,liveCommanderRememberVitalDeposit,
+ liveCommanderRememberEscortImpact} from './officialLiveCommanderAttack.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
  liveNumericBossArmFormula,
@@ -300,7 +301,7 @@ function fireNumeric(b,key,card,shipId){
  const precision=b.liveModuleEffects[key];
  if(precision.precisionUntilTurn>=b.turn&&precision.precisionFactor<1)
   packet=Math.max(0,Math.floor(packet*precision.precisionFactor));
- let intercepted=0;
+ let intercepted=0,pilotEscortFocus=null;
  // Perforante bypassa il 20% e NON la totalità delle scudiere.
  // Ionico dimezza solo la successiva intercettazione, non riduce HP fittizi.
  const bypass=queued?.piercing?Math.ceil(packet*.2):0;
@@ -311,12 +312,13 @@ function fireNumeric(b,key,card,shipId){
  intercepted+=fusionCover.absorbed;
  if(!fusionCover.active&&escortInterceptionEfficiency(enemy.defense)>0){
   let firstSuppressed=false;
-  for(const escort of enemy.escorts){
+  for(const [i,escort] of enemy.escorts.entries()){
    if(escort.hp<=0)continue;
    if(queued?.suppress&&!firstSuppressed){firstSuppressed=true;continue;}
    const taken=Math.min(escort.hp,Math.floor(routedPacket*.2*
     escortInterceptionEfficiency(enemy.defense)*terrain.escortFactor*ionFactor));
    escort.hp-=taken;intercepted+=taken;
+   if(taken>0&&pilotEscortFocus===null)pilotEscortFocus={escortIndex:i,damage:taken};
   }
  }
  if(ionActive&&routedPacket>0){
@@ -346,6 +348,9 @@ function fireNumeric(b,key,card,shipId){
   event(b,key+': pilota '+pilotPower.trigger+' · bonus '+pilotPower.extra+
    ' su proiettile autentico','pilot_bonus',
    {pilotId:attacker.commander.id,trigger:pilotPower.trigger,extra:pilotPower.extra});
+ if(pilotEscortFocus&&liveCommanderRememberEscortImpact(attacker,pilotEscortFocus))
+  event(b,key+': Veggente ha alternato scudiera danneggiata · prossimo vero sparo potenziato',
+   'pilot_escort_prepared',{escortIndex:pilotEscortFocus.escortIndex});
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
  liveNumericBossAfterShot(attacker,hit.damage,w.id,numericBossPower.bonus,b.round,
   numericBossPower.formulaBonus);
@@ -392,6 +397,7 @@ function placeVital(b,key,card,vitalId){
  const list=b.vitalBuilds[key][vitalId];
  if(list.length>=tacticalSignatureSlotCount(part.signature))return {ok:false,reason:'vital_slots_full'};
  list.push(card);
+ liveCommanderRememberVitalDeposit(attacker,{vitalId,turn:b.turn});
  event(b,key+': '+card.value+card.suit+' nello slot '+vitalId+' ('+list.length+'/'+tacticalSignatureSlotCount(part.signature)+')','vital_card');
  const op=tacticalSignatureOperation(part.signature,list);
  if(!op)return {ok:true,completed:false};
@@ -399,6 +405,8 @@ function placeVital(b,key,card,vitalId){
  if(defended.blocked){
   b.sides[key].numeric.discard.push(...list);
   b.vitalBuilds[key][vitalId]=[];
+  if(attacker.commander?.liveVitalDeposit?.vitalId===vitalId)
+   attacker.commander.liveVitalDeposit=null;
   event(b,other(key)+': precisione su '+vitalId+' annullata dalla Contromisura','counter');
   return {ok:true,completed:false,countered:true};
  }
@@ -406,7 +414,9 @@ function placeVital(b,key,card,vitalId){
   hitMotherPart(defender.defense,vitalId,part.hp,list);
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
- liveCommanderArmFormula(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
+ liveCommanderArmFormula(attacker,defender,{vitalId,op,cards:list,damage:impact.damage,turn:b.turn});
+ if(attacker.commander?.liveVitalDeposit?.vitalId===vitalId)
+  attacker.commander.liveVitalDeposit=null;
  liveCommanderRememberVital(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
  const bossFormula=liveNumericBossArmFormula(attacker,defender,
@@ -569,6 +579,8 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
   liveLegacyOnNumericDiscard(b,key,b.vitalBuilds[key][id]);
   side.numeric.discard.push(...b.vitalBuilds[key][id]);
   b.vitalBuilds[key][id]=[];
+  if(side.commander?.liveVitalDeposit?.vitalId===id)
+   side.commander.liveVitalDeposit=null;
   event(b,key+': combinazione di '+id+' annullata, carte agli scarti');
   return {ok:true,battle:b};
  }
