@@ -29,6 +29,8 @@ import {liveCommanderDefensePacket,liveCommanderRememberShot} from './officialLi
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
  liveNumericBossSyncBonus,liveNumericBossRepairAmount} from './officialLiveNumericBossPassives.js';
+import {beginLiveFusion,liveFusionExpires,liveFusionBlocksEscort,
+ interceptWithLiveFusion} from './officialLiveFusion.js';
 
 export const LIVE_TURN_MS=30000;
 export const LIVE_NUMERIC_LIMIT=3;
@@ -115,6 +117,7 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  b.aiReadyAtMs=nowMs+850;
  b.actionUsed={numeric:0,special:0};
  liveEpicBeforeDraw(b.sides[b.activeSide],b.round);
+ liveFusionExpires(b.sides[b.activeSide],b.turn);
  nextDraw(b.sides[b.activeSide].numeric,7);
  nextDraw(b.sides[b.activeSide].special,5);
  liveLegacyOnTurnStart(b,b.activeSide);
@@ -186,6 +189,8 @@ function fireNumeric(b,key,card,shipId){
  const escortMatch=/^escort-(\d+)$/.exec(shipId||'mother');
  const escortIndex=escortMatch?Number(escortMatch[1]):null;
  if(shipId!=='mother'&&escortIndex==null)return {ok:false,reason:'invalid_ship'};
+ if(escortIndex!=null&&liveFusionBlocksEscort(attacker,b.turn))
+  return {ok:false,reason:'escort_fused'};
  const profile=weaponForCard(attacker,card,escortIndex);
  if(!profile)return {ok:false,reason:'suit_incompatible'};
  if(b.liveModuleEffects[key].lockUntilTurn>=b.turn)
@@ -243,7 +248,10 @@ function fireNumeric(b,key,card,shipId){
  const numericBossPower=liveNumericBossNativeBonus(attacker,packet,w.id,queued,b.round);
  packet=numericBossPower.damage;
  let intercepted=0;
- if(!queued?.piercing&&escortInterceptionEfficiency(enemy.defense)>0){
+ const fusionCover=!queued?.piercing?interceptWithLiveFusion(enemy,packet,b.turn):
+  {active:false,absorbed:0};
+ intercepted+=fusionCover.absorbed;
+ if(!fusionCover.active&&!queued?.piercing&&escortInterceptionEfficiency(enemy.defense)>0){
   for(const escort of enemy.escorts){
    if(escort.hp<=0)continue;
    if(queued?.suppress){break;}
@@ -351,6 +359,8 @@ function playSpecial(b,key,index,slot,choice={}){
   return {ok:true};
  }
  if(Object.hasOwn(TRAP_CARDS,type)){
+  if(type==='tactical-cover'&&liveFusionBlocksEscort(side,b.turn))
+   return {ok:false,reason:'cover_conflicts_with_fusion'};
   const match=/^trap-([01])$/.exec(slot||'');
   if(!match)return {ok:false,reason:'trap_slot_required'};
   const i=Number(match[1]);
@@ -404,13 +414,12 @@ function playSpecial(b,key,index,slot,choice={}){
   const result=playLiveEpic(b,key,type);
   if(!result.ok)return result;
  }else if(type.startsWith('fusion-')){
-  const need=type==='fusion-twin'||type==='fusion-triad'?2:1;
-  if(side.sync<100||side.escorts.filter(e=>e.hp>0).length<need||
-   side.defense.parts.command.hp===0||side.defense.parts.engine.hp===0)
-   return {ok:false,reason:'fusion_unavailable'};
-  side.sync-=100;
-  b.pendingShot[key]={...(b.pendingShot[key]||{}),
-   fusion:type==='fusion-triad'?.35:type==='fusion-strike'?.25:0};
+  if(b.zones[key].traps.some(c=>c?.type==='tactical-cover'))
+   return {ok:false,reason:'fusion_conflicts_with_cover'};
+  const fusion=beginLiveFusion(side,type,b.turn);
+  if(!fusion.ok)return fusion;
+  if(fusion.fusion.assault>0)
+   b.pendingShot[key]={...(b.pendingShot[key]||{}),fusion:fusion.fusion.assault};
  }else{
   const p=b.pendingShot[key]||{};
   if(type==='tactic-power-shift'||type==='tactic-kinetic')p.power=(p.power||0)+6;
