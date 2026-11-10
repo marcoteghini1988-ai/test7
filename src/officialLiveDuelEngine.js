@@ -282,11 +282,13 @@ function fireNumeric(b,key,card,shipId){
  packet+=bossCharacter.extra||0;
  if(escortIndex!=null&&attacker.liveMotherHitRound===b.round)
   packet+=bossCharacterEscortExtra(attacker,b.round,packet,1);
+ // Fotografare prima gli stati dell'avversario: la Corrosione si consuma
+ // durante questa stessa salva, ma il pilota deve vedere lo stato reale.
+ const pilotPower=liveCommanderNativeBonus(attacker,enemy,packet,{queued});
+ packet=pilotPower.damage;
  if(enemy.heated)packet+=3; // Solo il prossimo colpo reale beneficia del calore.
  if(enemy.corroded){packet+=Math.floor(packet*.25);enemy.corroded=false;}
  if(enemy.livePowerShiftDebt){packet+=enemy.livePowerShiftDebt;enemy.livePowerShiftDebt=0;}
- const pilotPower=liveCommanderNativeBonus(attacker,enemy,packet,{queued});
- packet=pilotPower.damage;
  packet=Math.floor(packet*liveLegacyOutgoingFactor(b,key));
  const terrain=pvpTerrainEffects(b.activeTerrain,b.round);
  packet=Math.floor(packet*terrain.nativeFactor);
