@@ -32,6 +32,8 @@ import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
  liveEpicMatriceBonus,liveEpicAfterMatriceShot} from './officialLiveEpics.js';
 import {liveCommanderDefensePacket,liveCommanderRememberShot,
  liveCommanderRememberVital} from './officialLiveCommanderDefense.js';
+import {liveCommanderArmFormula,liveCommanderNativeBonus,
+ liveCommanderAfterNativeShot} from './officialLiveCommanderAttack.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
  liveNumericBossSyncBonus,liveNumericBossRepairAmount,liveNumericBossBeforeDraw,
@@ -282,6 +284,8 @@ function fireNumeric(b,key,card,shipId){
  if(enemy.heated)packet+=3; // Solo il prossimo colpo reale beneficia del calore.
  if(enemy.corroded){packet+=Math.floor(packet*.25);enemy.corroded=false;}
  if(enemy.livePowerShiftDebt){packet+=enemy.livePowerShiftDebt;enemy.livePowerShiftDebt=0;}
+ const pilotPower=liveCommanderNativeBonus(attacker,enemy,packet,{queued});
+ packet=pilotPower.damage;
  packet=Math.floor(packet*liveLegacyOutgoingFactor(b,key));
  const terrain=pvpTerrainEffects(b.activeTerrain,b.round);
  packet=Math.floor(packet*terrain.nativeFactor);
@@ -334,6 +338,10 @@ function fireNumeric(b,key,card,shipId){
  bossCharacterRememberHit(enemy,b.round,hit.damage);
  liveNumericBossRememberShield(enemy,hit.damage);
  liveCommanderRememberShot(attacker,enemy,hit.damage);
+ if(liveCommanderAfterNativeShot(attacker,hit.damage,pilotPower))
+  event(b,key+': pilota '+pilotPower.trigger+' · bonus '+pilotPower.extra+
+   ' su proiettile autentico','pilot_bonus',
+   {pilotId:attacker.commander.id,trigger:pilotPower.trigger,extra:pilotPower.extra});
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
  liveNumericBossAfterShot(attacker,hit.damage,w.id,numericBossPower.bonus,b.round);
  if(escortCooperation)
@@ -393,6 +401,7 @@ function placeVital(b,key,card,vitalId){
   hitMotherPart(defender.defense,vitalId,part.hp,list);
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
+ liveCommanderArmFormula(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveCommanderRememberVital(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
  liveNumericBossAfterVital(attacker,impact.damage,impact.destroyed,b.round);
@@ -509,6 +518,7 @@ function playSpecial(b,key,index,slot,choice={}){
   if(type==='tactic-suppress')p.suppress=true;
   if(type==='shot-ion')p.ion=true;
   if(type==='shot-corrosion')p.corrosion=true;
+  p.offensiveTypes=[...(p.offensiveTypes||[]),type];
   b.pendingShot[key]=p;
  }
  side.special.hand.splice(index,1);side.special.discard.push(card);
