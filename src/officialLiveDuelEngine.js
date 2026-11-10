@@ -26,6 +26,9 @@ import {isTacticalEpic} from './tacticalEpicCards.js';
 import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
  liveEpicOnShieldDamage,liveEpicRecycle} from './officialLiveEpics.js';
 import {liveCommanderDefensePacket,liveCommanderRememberShot} from './officialLiveCommanderDefense.js';
+import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
+ liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
+ liveNumericBossSyncBonus,liveNumericBossRepairAmount} from './officialLiveNumericBossPassives.js';
 
 export const LIVE_TURN_MS=30000;
 export const LIVE_NUMERIC_LIMIT=3;
@@ -237,6 +240,8 @@ function fireNumeric(b,key,card,shipId){
  packet=Math.floor(packet*terrain.nativeFactor);
  const bossPower=liveBossNativeModifiers(attacker,enemy,packet,b.round);
  packet=bossPower.damage;
+ const numericBossPower=liveNumericBossNativeBonus(attacker,packet,w.id,queued,b.round);
+ packet=numericBossPower.damage;
  let intercepted=0;
  if(!queued?.piercing&&escortInterceptionEfficiency(enemy.defense)>0){
   for(const escort of enemy.escorts){
@@ -249,7 +254,8 @@ function fireNumeric(b,key,card,shipId){
  let motherPacket=Math.max(0,packet-intercepted);
  const traps=runTraps(b,defenderKey,'shield',motherPacket);
  motherPacket=Math.floor(traps.damage*terrain.shieldFactor*liveLegacyIncomingFactor(b,defenderKey)*
-  bossCharacterShieldFactor(enemy,b.round)*liveBossIncomingShieldFactor(enemy));
+  bossCharacterShieldFactor(enemy,b.round)*liveBossIncomingShieldFactor(enemy)*
+  liveNumericBossShieldFactor(enemy));
  const liveGuard=b.liveModuleEffects[defenderKey];
  const blocked=Math.min(liveGuard.guard,motherPacket);
  if(blocked>0){
@@ -261,8 +267,10 @@ function fireNumeric(b,key,card,shipId){
  const hit=damageMotherShield(enemy.defense,motherPacket);
  enemy.defense=hit.defense;
  liveBossOnShieldHit(enemy,hit.damage,b.round);
+ liveNumericBossRememberShield(enemy,hit.damage);
  liveCommanderRememberShot(attacker,enemy,hit.damage);
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
+ liveNumericBossAfterShot(attacker,hit.damage,w.id,numericBossPower.bonus,b.round);
  liveEpicOnShieldDamage(b,defenderKey,hit.damage);
  if(hit.damage>0&&queued?.ion)enemy.ionized=true;
  if(hit.damage>0&&queued?.corrosion)enemy.corroded=true;
@@ -270,7 +278,10 @@ function fireNumeric(b,key,card,shipId){
  event(b,key+': '+profile.weapon.nome+' · carica '+totalValue+' · '+hit.damage+
   ' danni barriera ('+intercepted+' intercettati)','shot',
   {card,shipId,weaponId:profile.weapon.id,damage:hit.damage});
+ const syncBeforeShot=attacker.sync;
  liveLegacySyncGain(b,key,hit.damage>0?20:5);
+ attacker.sync=Math.min(100,attacker.sync+
+  liveNumericBossSyncBonus(attacker,attacker.sync-syncBeforeShot));
  liveLegacyOnNumericShot(b,key,card);
  return {ok:true,damage:hit.damage,weaponId:profile.weapon.id};
 }
@@ -297,11 +308,15 @@ function placeVital(b,key,card,vitalId){
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
  liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
+ liveNumericBossAfterVital(attacker,impact.damage,impact.destroyed,b.round);
  liveEpicOnShieldDamage(b,other(key),impact.damage);
  if(rift)attacker.liveRift=false;
  b.sides[key].numeric.discard.push(...list);
  b.vitalBuilds[key][vitalId]=[];
+ const syncBeforeVital=attacker.sync;
  liveLegacySyncGain(b,key,25);
+ attacker.sync=Math.min(100,attacker.sync+
+  liveNumericBossSyncBonus(attacker,attacker.sync-syncBeforeVital));
  liveLegacyOnVitalFormula(b,key,op,list);
  event(b,key+': combinazione '+op+' completata · '+vitalId.toUpperCase()+
   (impact.destroyed?' DISTRUTTO · esplosione diretta':' colpito per '+impact.damage+' HP'),
@@ -352,8 +367,8 @@ function playSpecial(b,key,index,slot,choice={}){
  if(type==='support-shield-repair'){
   if(side.defense.parts.shieldGenerator.hp===0||side.defense.shield.hp===side.defense.shield.max)
    return {ok:false,reason:'repair_unavailable'};
-  const value=liveBossRepairValue(side,b.round,
-    pvpTerrainRepairAmount(20,pvpTerrainEffects(b.activeTerrain,b.round)));
+  const value=liveBossRepairValue(side,b.round,liveNumericBossRepairAmount(side,
+    pvpTerrainRepairAmount(20,pvpTerrainEffects(b.activeTerrain,b.round))));
    const healed=restoreMotherShield(side.defense,value);
    side.defense=healed.defense;
    liveBossClearPoisonOnHeal(side,b.round,healed.repaired);
