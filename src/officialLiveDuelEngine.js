@@ -413,6 +413,11 @@ function placeVital(b,key,card,vitalId){
  const attacker=b.sides[key],rift=!!attacker.liveRift&&!part?.exposed;
  if(!part||part.hp<=0)return {ok:false,reason:'vital_unavailable'};
  if(!part.exposed&&!rift)return {ok:false,reason:'vital_protected'};
+ if(rift){
+  if(attacker.liveRiftTarget&&attacker.liveRiftTarget!==vitalId)
+   return {ok:false,reason:'rift_target_locked'};
+  attacker.liveRiftTarget=vitalId;
+ }
  const list=b.vitalBuilds[key][vitalId];
  if(list.length>=tacticalSignatureSlotCount(part.signature))return {ok:false,reason:'vital_slots_full'};
  list.push(card);
@@ -428,6 +433,8 @@ function placeVital(b,key,card,vitalId){
   if(attacker.commander?.liveVitalDeposit?.vitalId===vitalId)
    attacker.commander.liveVitalDeposit=null;
   liveNumericBossClearDeposit(attacker,vitalId);
+  // Una contromisura consuma il singolo tentativo della carta Faglia.
+  if(rift){attacker.liveRift=false;attacker.liveRiftTarget=null;}
   event(b,other(key)+': precisione su '+vitalId+' annullata dalla Contromisura','counter');
   return {ok:true,completed:false,countered:true};
  }
@@ -451,7 +458,7 @@ function placeVital(b,key,card,vitalId){
  liveNumericBossAfterVital(attacker,impact.damage,impact.destroyed,b.round,vitalId);
  liveEpicOnVitalFormula(b,key,op);
  liveEpicOnShieldDamage(b,other(key),impact.damage);
- if(rift)attacker.liveRift=false;
+ if(rift){attacker.liveRift=false;attacker.liveRiftTarget=null;}
  b.sides[key].numeric.discard.push(...list);
  b.vitalBuilds[key][vitalId]=[];
  const syncBeforeVital=attacker.sync;
@@ -536,7 +543,7 @@ function playSpecial(b,key,index,slot,choice={}){
   side.ionized=false;side.corroded=false;side.heated=false;
  }else if(type===VULNERABILITY_RIFT_CARD_ID){
   if(side.riftUsed)return {ok:false,reason:'rift_already_used'};
-  side.riftUsed=true;side.liveRift=true;
+  side.riftUsed=true;side.liveRift=true;side.liveRiftTarget=null;
  }else if(LIVE_LEGACY_TYPES.has(type)){
   const result=playLiveLegacyCard(b,key,type,choice);
   if(!result.ok)return result;
@@ -606,6 +613,7 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
   if(side.commander?.liveVitalDeposit?.vitalId===id)
    side.commander.liveVitalDeposit=null;
   liveNumericBossClearDeposit(side,id);
+  if(side.liveRift&&side.liveRiftTarget===id)side.liveRiftTarget=null;
   event(b,key+': combinazione di '+id+' annullata, carte agli scarti');
   return {ok:true,battle:b};
  }
