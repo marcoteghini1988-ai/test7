@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createTacticalDuel} from './simultaneousDuelEngine.js';
+import {PHASE16F_MODULES} from './newCombat/phase16FModules.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,advanceOfficialLiveDuel,
  finishOfficialLiveTurn,liveCompatibleShips,supportedLiveSpecial} from './officialLiveDuelEngine.js';
 const battle=(a='N00',z='C01',mode='classic')=>
@@ -297,4 +298,78 @@ test('Mutazione di firma difende un proprio vitale esposto per un turno nemico e
  b=move(b,'B',{type:'end'},6);
  assert.deepEqual(b.sides.A.defense.parts.engine.signature,original);
  assert.equal(b.liveLegacy.mutations.A,null);
+});
+
+
+test('30 moduli 16F supportati nel live, 5 effetti non migrati restano bloccati',()=>{
+ const modules=PHASE16F_MODULES;
+ for(const [id,def] of Object.entries(modules)){
+  const expected=!['hand_jam','prevent_skip','burn'].includes(def.effect);
+  assert.equal(supportedLiveSpecial('module-card-'+id),expected,id);
+ }
+});
+
+test('Modulo Ariete infligge 8 danni veri alla barriera senza sbloccare vitali gratis',()=>{
+ let b=battle('N00','N00');
+ b.sides.A.equipmentLevels['module-card-aries']=1;
+ b.sides.A.special.hand[0].type='module-card-aries';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ assert.equal(b.sides.B.defense.shield.hp,52);
+ assert.equal(b.sides.B.defense.parts.engine.hp,10);
+ assert.ok(b.history.some(e=>e.kind==='module'));
+});
+test('Modulo Toro cura barriera soltanto se danneggiata; livelli assenti non consumano carte',()=>{
+ let b=battle();
+ b.sides.A.special.hand[0].type='module-card-taurus';
+ assert.equal(applyOfficialLiveAction(b,'A',{type:'special',index:0,slot:'open-0'},1).reason,'module_unowned');
+ assert.equal(b.sides.A.special.hand.length,5);
+ b.sides.A.equipmentLevels['module-card-taurus']=1;
+ b.sides.A.defense.shield.hp=40;
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},2);
+ assert.equal(b.sides.A.defense.shield.hp,49);
+});
+test('Modulo Capricorno consuma protezione sul colpo reale e non danneggia la barriera',()=>{
+ let b=battle('N00','N00');
+ b.sides.A.equipmentLevels['module-card-capricorn']=1;
+ b.sides.A.special.hand[0].type='module-card-capricorn';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ assert.equal(b.liveModuleEffects.A.guard,9);
+ b=move(b,'A',{type:'end'},2);
+ b=move(b,'B',{type:'numeric',index:0,target:'ship'},3);
+ assert.equal(b.sides.A.defense.shield.hp,60);
+ assert.equal(b.liveModuleEffects.A.guard,1);
+});
+test('Modulo Vergine blocca fuoco nativo soltanto nel prossimo turno avversario',()=>{
+ let b=battle('N00','N00');
+ b.sides.A.equipmentLevels['module-card-virgo']=1;
+ b.sides.A.special.hand[0].type='module-card-virgo';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ b=move(b,'A',{type:'end'},2);
+ const shot=applyOfficialLiveAction(b,'B',{type:'numeric',index:0,target:'ship'},3);
+ assert.equal(shot.reason,'module_weapon_locked');
+ assert.equal(b.sides.B.numeric.hand.length,7);
+ b=move(b,'B',{type:'end'},4);
+ assert.equal(b.liveModuleEffects.B.lockUntilTurn,0);
+});
+test('Modulo Cancro usa 2 numeriche autentiche e non aumenta la mano oltre 7',()=>{
+ let b=battle();
+ b.sides.A.equipmentLevels['module-card-cancer']=1;
+ b.sides.A.special.hand[0].type='module-card-cancer';
+ const old=[b.sides.A.numeric.hand[0].id,b.sides.A.numeric.hand[1].id];
+ b=move(b,'A',{type:'special',index:0,slot:'open-0',recycleIndices:[0,1]},1);
+ assert.equal(b.sides.A.numeric.hand.length,7);
+ assert.equal(old.some(id=>b.sides.A.numeric.hand.some(c=>c.id===id)),false);
+ assert.equal(b.actionUsed.numeric,0);
+});
+test('Modulo Mercurio carica il Dado ma serve ancora la Carta Dado per lanciarlo',()=>{
+ let b=battle();
+ b.sides.A.equipmentLevels['module-card-planet_char_4']=1;
+ b.sides.A.special.hand[0].type='module-card-planet_char_4';
+ b.sides.A.special.hand[1].type='tactic-quantum-dice';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ assert.equal(b.sides.A.legacy.diceReady,true);
+ assert.equal(b.history.some(e=>e.kind==='quantum_dice'),false);
+ b=move(b,'A',{type:'special',index:0,slot:'open-1'},2);
+ assert.equal(b.sides.A.legacy.diceReady,false);
+ assert.equal(b.history.some(e=>e.kind==='quantum_dice'),true);
 });
