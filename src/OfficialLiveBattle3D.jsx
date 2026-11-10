@@ -213,6 +213,8 @@ export default function OfficialLiveBattle3D({
  const canExpose=remainingExposureSlots(enemy.defense)>0;
  const cannotAct=!myTurn||battle.phase==='finished';
  const last=battle.history.at(-1);
+ const visualIndex=battle.history.findLastIndex(e=>e.kind==='shot'||e.kind==='vital_destroyed');
+ const visual=visualIndex>=0?battle.history[visualIndex]:null;
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  return <div className="es-math-scope live-viewport">
   <div className="es-root official-duel-3d live-root"
@@ -237,6 +239,12 @@ export default function OfficialLiveBattle3D({
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
    {terrain&&<div className="live-terrain-scene" data-terrain={terrain.id}
     style={{backgroundImage:'url('+ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg)'}}/>}
+   {visual&&<div key={'combat-'+visualIndex} className="live-combat-fx" aria-hidden="true">
+    {visual.kind==='shot'?
+     <div className={'live-shot-fx live-shot-fx--'+visual.by}
+      style={{'--fx-color':CARD_SUIT_COLORS[visual.card?.suit]||'#75d9ff'}}/>:
+     <div className={'live-vital-fx live-vital-fx--'+visual.by}><i/><i/><i/></div>}
+   </div>}
    <FleetBar keySide="B" side={enemy}/>
    <Fighter side="enemy" snapshot={enemy} onVital={id=>{
     if(!myTurn)return;
