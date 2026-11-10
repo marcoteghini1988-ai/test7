@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createTacticalDuel} from './simultaneousDuelEngine.js';
-import {createOfficialLiveDuel,applyOfficialLiveAction} from './officialLiveDuelEngine.js';
+import {createOfficialLiveDuel,applyOfficialLiveAction,chooseOfficialLiveAiAction} from './officialLiveDuelEngine.js';
 import {liveNumericBossStatusDuration,liveNumericBossExpireStatus,
  liveNumericBossRecycleCooldown,liveNumericBossRememberDeposit,
  liveNumericBossArmFormula} from './officialLiveNumericBossPassives.js';
@@ -139,4 +139,26 @@ test('Afrodite LIVE: 2 carte REALI sostituite, cooldown vincolante, azioni 3+2 i
  const after=[...b.sides.A.numeric.hand,...b.sides.A.numeric.deck,...b.sides.A.numeric.discard].map(c=>c.id);
  assert.equal(new Set(after).size,52);
  assert.deepEqual(after.slice().sort(),all.slice().sort());
+});
+
+test('IA Afrodite: scambia solo vere carte quando non può caricare madre né scudiere',()=>{
+ let b=createOfficialLiveDuel(createTacticalDuel({shipA:'N00',shipB:'C01',
+  levelA:1,levelB:1,nowMs:0,bossNumericDeckB:{id:'planet_char_3',level:3}}),0);
+ b=move(b,'A',{type:'end'},1);
+ const pile=b.sides.B.numeric,all=[...pile.hand,...pile.deck,...pile.discard];
+ const chosen=all.filter(c=>c.suit!=='♥').slice(0,7);
+ assert.equal(chosen.length,7);
+ const ids=new Set(chosen.map(c=>c.id));
+ pile.hand=chosen;pile.deck=all.filter(c=>!ids.has(c.id));pile.discard=[];
+ const intent=chooseOfficialLiveAiAction(b);
+ assert.equal(intent.type,'boss-recycle');
+ assert.deepEqual(intent.recycleIndices,[0,1]);
+ const after=applyOfficialLiveAction(b,'B',intent,b.aiReadyAtMs);
+ assert.equal(after.ok,true);
+ assert.equal(after.battle.sides.B.numeric.recycleEvents,1);
+ assert.equal(after.battle.sides.B.numeric.hand.length,7);
+ assert.equal(after.battle.actionUsed.numeric,0);
+ assert.equal(after.battle.actionUsed.special,0);
+ assert.equal(after.battle.sides.B.bossNumericDeck.liveNextRecycleAtMs,
+  b.aiReadyAtMs+9000);
 });
