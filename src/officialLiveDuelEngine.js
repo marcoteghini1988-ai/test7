@@ -808,10 +808,16 @@ function liveBossPreparedResonanceFusion(b,key){
  if(!firstShot||!liveNativeShotReady(own,firstShot))return null;
  // Se una firma vitale gia' esposta si puo' completare adesso,
  // darle precedenza: la Fusione non deve diventare un buff sprecato.
- if(VITAL_IDS.some(id=>enemy.defense.parts[id]?.exposed&&
-    enemy.defense.parts[id].hp>0&&
-    findOfficialLiveVitalCompletion(enemy.defense.parts[id].signature,
-     b.vitalBuilds[key][id],own.numeric.hand)?.length))return null;
+ if(VITAL_IDS.some(id=>{
+  const part=enemy.defense.parts[id];
+  if(!part?.exposed||part.hp<=0)return false;
+  // Una Mutazione attiva e' segreta: l'IA usa solo la firma pubblica
+  // originale, mai il nuovo requisito scelto dal difensore.
+  const knownSignature=b.liveLegacy?.mutations[other(key)]?.vitalId===id?
+   b.liveLegacy.mutations[other(key)].originalSignature:part.signature;
+  return !!findOfficialLiveVitalCompletion(knownSignature,
+   b.vitalBuilds[key][id],own.numeric.hand)?.length;
+ }))return null;
  const slot=b.zones[key].open.findIndex(x=>!x);
  if(slot<0)return null;
  const types=availableEscorts>=2?
