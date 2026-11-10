@@ -158,8 +158,12 @@ export function playLiveLegacyCard(b,key,type,choice={}){
   if(legacy.malusCharge<3||!MALUS_CHOICES.some(x=>x.id===choice.malusChoice))
    return {ok:false,reason:'malus_not_ready'};
   legacy.malusCharge=0;
-  b.liveLegacy.malus[other(key)]={id:choice.malusChoice,untilTurn:b.turn+1};
-  report(b,key,'Barra Malus attivata: '+choice.malusChoice,'malus',{choice:choice.malusChoice});
+  const defender=other(key);
+  if(b.liveModuleEffects?.[defender]?.debuffShieldUntilTurn>=b.turn)
+   report(b,defender,'Barra Malus neutralizzata dalla carta Modulo anti-disturbo','malus_blocked');
+  else
+   b.liveLegacy.malus[defender]={id:choice.malusChoice,untilTurn:b.turn+1};
+  report(b,key,'Barra Malus giocata: '+choice.malusChoice,'malus',{choice:choice.malusChoice});
   return {ok:true};
  }
  if(type===LEGACY_DICE_CARD){
