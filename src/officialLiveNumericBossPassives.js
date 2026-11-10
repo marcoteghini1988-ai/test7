@@ -6,7 +6,8 @@ import {tacticalBossMotherFactor,rememberTacticalBossMotherHit,
  tacticalMagmaNativeBonus,rememberTacticalMagmaBarrierHit,
  tacticalResonanceNativeBonus,rememberTacticalResonanceNativeHit,
  tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit,
- tacticalGeneratorSyncBonus,tacticalAfroditeRepairAmount
+ tacticalGeneratorSyncBonus,tacticalAfroditeRepairAmount,
+ tacticalResonanceCooperationBonus,rememberTacticalResonanceCooperationHit
 } from './tacticalBossDecks.js';
 export function liveNumericBossShieldFactor(defender){
  return tacticalBossMotherFactor(defender);
@@ -24,6 +25,16 @@ export function liveNumericBossNativeBonus(side,base,weaponId,queued,round){
  else if(id==='planet_char_17')bonus=tacticalResonanceNativeBonus(side,weaponId,base);
  else if(id==='planet_char_20')bonus=tacticalSovereignSupremacyBonus(side,base,round);
  return {damage:base+Math.min(bonus?.extra||0,Math.ceil(base*.30)),bonus};
+}
+// Sinfonia di flotta L7–L9: il secondo colpo deve essere una VERA salva
+// della scudiera nello stesso ciclo di un impatto efficace della madre.
+export function liveNumericBossEscortCooperation(side,packet,round){
+ const bonus=tacticalResonanceCooperationBonus(side,packet,
+  side.liveMotherHitRound===round?1:0);
+ return {damage:packet+Math.min(bonus.extra||0,Math.ceil(packet*.30)),bonus};
+}
+export function liveNumericBossRememberEscortCooperation(side,damage,bonus){
+ rememberTacticalResonanceCooperationHit(side,damage,bonus);
 }
 export function liveNumericBossAfterShot(side,damage,weaponId,bonus,round){
  const type=side.bossNumericDeck?.id;
