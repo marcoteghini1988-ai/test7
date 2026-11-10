@@ -4,7 +4,7 @@ import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction} from './officialLiveDuelEngine.js';
 import {COMMANDER_ABILITIES} from './commanderAbilities.js';
 import {LIVE_FORMULA_PILOT_TRIGGERS,LIVE_NATIVE_PILOT_TRIGGERS,
- liveCommanderArmFormula,liveCommanderNativeBonus,
+ LIVE_ESCORT_PILOT_TRIGGERS,liveCommanderArmFormula,liveCommanderNativeBonus,
  liveCommanderAfterNativeShot} from './officialLiveCommanderAttack.js';
 const scenario=id=>createTacticalDuel({shipA:'C01',shipB:'N00',
  levelA:1,levelB:1,nowMs:0,commanderA:{id,level:5}});
@@ -14,16 +14,18 @@ const play=(b,action,t)=>{
  assert.equal(r.ok,true,JSON.stringify({action,reason:r.reason}));
  return r.battle;
 };
-test('23 condizioni offensive supportate, sette difese distinte, tre offensive ancora da adattare',()=>{
+test('26 condizioni offensive LIVE coperte: 14 formule, 11 nativi, 1 cambio scudiera',()=>{
  const all=Object.values(COMMANDER_ABILITIES);
- const triggers=[...LIVE_FORMULA_PILOT_TRIGGERS,...LIVE_NATIVE_PILOT_TRIGGERS];
+ const triggers=[...LIVE_FORMULA_PILOT_TRIGGERS,...LIVE_NATIVE_PILOT_TRIGGERS,...LIVE_ESCORT_PILOT_TRIGGERS];
+ assert.equal(LIVE_FORMULA_PILOT_TRIGGERS.length,14);
+ assert.equal(LIVE_NATIVE_PILOT_TRIGGERS.length,11);
+ assert.equal(LIVE_ESCORT_PILOT_TRIGGERS.length,1);
  assert.equal(all.length,33);
  assert.equal(all.filter(p=>p.role==='Difesa').length,7);
- assert.equal(triggers.length,23);
- assert.equal(new Set(triggers).size,23);
- assert.equal(all.filter(p=>p.role==='Attacco'&&triggers.includes(p.trigger)).length,23);
- assert.deepEqual(all.filter(p=>p.role==='Attacco'&&!triggers.includes(p.trigger)).map(p=>p.trigger),
- ['repeat_vital','alternate_escort','third_vital']);
+ assert.equal(triggers.length,26);
+ assert.equal(new Set(triggers).size,26);
+ assert.equal(all.filter(p=>p.role==='Attacco'&&triggers.includes(p.trigger)).length,26);
+ assert.deepEqual(all.filter(p=>p.role==='Attacco'&&!triggers.includes(p.trigger)).map(p=>p.trigger),[]);
 });
 test('Una formula matematica vera attiva un bonus su successivo proiettile, non sul vitale',()=>{
  const b=scenario('pilot_com_1'),a=b.sides.A,z=b.sides.B;
