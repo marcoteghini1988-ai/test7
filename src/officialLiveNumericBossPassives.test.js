@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
- liveNumericBossSyncBonus,liveNumericBossRepairAmount} from './officialLiveNumericBossPassives.js';
+ liveNumericBossSyncBonus,liveNumericBossRepairAmount,
+ liveNumericBossEscortCooperation,liveNumericBossRememberEscortCooperation}
+ from './officialLiveNumericBossPassives.js';
 const game=(id,level=9,shipA='N00')=>
  createTacticalDuel({shipA,shipB:'N00',levelA:1,levelB:1,
   bossNumericDeckA:{id,level},nowMs:0});
@@ -68,4 +70,26 @@ test('Generatore ottiene Sincronia bonus da punti autentici e Afrodite migliora 
  const afrodite=game('planet_char_3',6).sides.A;
  assert.equal(liveNumericBossRepairAmount(afrodite,20),22);
  assert.equal(liveNumericBossRepairAmount(afrodite,0),0);
+});
+
+test('Sinfonia di flotta Risonanza: +7% solo dopo impatto efficace della madre e scudiera vera',()=>{
+ const a=game('planet_char_17',9).sides.A;
+ assert.equal(liveNumericBossEscortCooperation(a,50,1).damage,50);
+ a.liveMotherHitRound=1;
+ const first=liveNumericBossEscortCooperation(a,50,1);
+ assert.equal(first.damage,53);
+ assert.equal(first.bonus.remainder,50);
+ liveNumericBossRememberEscortCooperation(a,0,first.bonus);
+ assert.equal(a.bossNumericDeck.resonanceEscortRemainder,0,'colpo senza HP non accumula remainder');
+ liveNumericBossRememberEscortCooperation(a,4,first.bonus);
+ assert.equal(a.bossNumericDeck.resonanceEscortRemainder,50);
+ const second=liveNumericBossEscortCooperation(a,50,1);
+ assert.equal(second.damage,54);
+ assert.equal(second.bonus.remainder,0);
+ assert.equal(liveNumericBossEscortCooperation(a,50,2).damage,50,
+  'la madre del ciclo precedente non vale nel ciclo successivo');
+ const low=game('planet_char_17',6).sides.A;
+ low.liveMotherHitRound=1;
+ assert.equal(liveNumericBossEscortCooperation(low,50,1).damage,50,
+  'Sinfonia non esiste prima di livello 7');
 });
