@@ -7,6 +7,7 @@ import {tacticalBossMotherFactor,rememberTacticalBossMotherHit,
  tacticalResonanceNativeBonus,rememberTacticalResonanceNativeHit,
  tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit,
  tacticalGeneratorSyncBonus,tacticalAfroditeRepairAmount,
+ tacticalAfroditeRecycleCooldownMs,
  tacticalResonanceCooperationBonus,rememberTacticalResonanceCooperationHit,
  rememberTacticalLeviatanoRecycle,rememberTacticalLeviatanoHit
 } from './tacticalBossDecks.js';
@@ -18,6 +19,45 @@ export function liveNumericBossBeforeDraw(side){
  const pile=side?.numeric;
  if(pile?.discard?.length>0)
   rememberTacticalLeviatanoRecycle(side,pile,Math.max(0,7-pile.hand.length));
+}
+// Pressione marziana: in un duello con distruzione immediata dei vitali,
+ // la pressione consecutiva e' data dalle numeriche depositate su uno stesso
+ // sistema in due propri turni adiacenti; poi serve una firma realmente valida.
+export function liveNumericBossRememberDeposit(side,{vitalId,turn}={}){
+ const state=side?.bossNumericDeck;
+ if(state?.id!=='planet_char_2'||!vitalId||!Number.isInteger(turn))return null;
+ const old=state.liveVitalDeposit;
+ const consecutive=old?.vitalId===vitalId&&
+  (turn===old.turn||turn===old.turn+2);
+ state.liveVitalDeposit={vitalId,turn,consecutiveTurns:consecutive?
+  turn===old.turn+2?(old.consecutiveTurns||1)+1:(old.consecutiveTurns||1):1};
+ return state.liveVitalDeposit;
+}
+export function liveNumericBossClearDeposit(side,vitalId){
+ const state=side?.bossNumericDeck;
+ if(state?.id==='planet_char_2'&&state.liveVitalDeposit?.vitalId===vitalId)
+  state.liveVitalDeposit=null;
+}
+// Un turno nel LIVE corrisponde a 30 secondi. Le percentuali ufficiali
+// riducono il tempo utile di Ionico/Corrosione, senza alterare i vitali.
+export function liveNumericBossStatusDuration(side,status,baseTurns=2){
+ const state=side?.bossNumericDeck;
+ let value=0;
+ if(status==='ion'&&state?.id==='planet_char_7')
+  value=activeNumericBossAbilities(state.id,state.level)[0]?.value||0;
+ if(['ion','corrosion'].includes(status)&&state?.id==='planet_char_14')
+  value=activeNumericBossAbilities(state.id,state.level)[0]?.value||0;
+ return baseTurns*(1-value/100);
+}
+export function liveNumericBossExpireStatus(side,turn){
+ if(!Number.isInteger(turn)||!side)return;
+ if(side.ionized&&Number.isFinite(side.ionizedUntilTurn)&&
+   turn>side.ionizedUntilTurn)side.ionized=false;
+ if(side.corroded&&Number.isFinite(side.corrodedUntilTurn)&&
+   turn>side.corrodedUntilTurn)side.corroded=false;
+}
+export function liveNumericBossRecycleCooldown(side){
+ return tacticalAfroditeRecycleCooldownMs(side);
 }
 export function liveNumericBossShieldFactor(defender){
  return tacticalBossMotherFactor(defender);
@@ -37,6 +77,8 @@ export function liveNumericBossArmFormula(side,defender,{vitalId,op,cards,damage
  const abilities=activeNumericBossAbilities(state.id,state.level);
  const chosen=[];
  const add=index=>{if(abilities[index]?.unlocked)chosen.push(abilities[index]);};
+ if(state.id==='planet_char_2'&&state.liveVitalDeposit?.vitalId===vitalId&&
+   state.liveVitalDeposit.consecutiveTurns>=2)add(0); // Pressione marziana
  if(state.id==='planet_char_8'&&cards.length===3)add(1); // Profondità
  if(state.id==='planet_char_17'&&new Set(cards.map(c=>c.suit)).size>=2)add(1); // Frequenza
  if(state.id==='planet_char_19'&&op==='times')add(2); // Forgia
@@ -109,6 +151,7 @@ export function liveNumericBossAfterShot(side,damage,weaponId,bonus,round,formul
  }
 }
 export function liveNumericBossAfterVital(side,damage,destroyed,round,vitalId=null){
+ if(damage>0&&vitalId)liveNumericBossClearDeposit(side,vitalId);
  if(damage>0&&vitalId&&side.bossNumericDeck?.id==='planet_char_11')
   side.bossNumericDeck.lastVital=vitalId;
  if(side.bossNumericDeck?.id==='planet_char_20'&&destroyed)
