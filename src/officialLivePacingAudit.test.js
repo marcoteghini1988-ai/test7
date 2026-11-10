@@ -181,6 +181,52 @@ test('Confronto parita livelli: 12 boss, tre seed per boss',()=>{
  assert.equal(records.length,36);
  console.log('LIVE_MATCHED_LEVEL_BOSSES '+JSON.stringify(records));
 });
+// Audit incrociato non utilizzato per dare carte ai giocatori:
+// tre modelli con firme/armi differenti, livello identico a quello del boss,
+// due distribuzioni fisiche per settore. Le durate sono MASSIMI teorici,
+// non valutazioni di equilibrio statistico con campioni sufficienti.
+test('Audit 12 boss contro tre navicelle a parita di livello e due seed',()=>{
+ const ships=['C01','E01','L04'],offsets=[509,907];
+ const rows=[];
+ for(let i=0;i<12;i++){
+  const sector=(i+1)*10;
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber:sector});
+  assert.ok(boss,'boss mancante nel settore '+sector);
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:sector,playerLevel:4});
+  for(const ship of ships)for(const offset of offsets){
+   const result=audit({shipA:ship,levelA:level,levelB:level,boss,
+    seed:100+i*7+offset,log:false});
+   assert.equal(Object.keys(result.failures).length,0);
+   assert.ok(result.turns<=LIVE_MAX_TURNS+1);
+   rows.push({sector,boss:boss.name,ship,level,seed:result.seed,
+    winner:result.winner,halfTurns:result.turns,
+    theoreticalMaxMinutes:result.minutesMax,
+    discardedA:result.actionsBySide.A['numeric-discard']||0,
+    discardedB:result.actionsBySide.B['numeric-discard']||0,
+    destroyedA:result.destroyedA,destroyedB:result.destroyedB,
+    finishReason:result.finishReason});
+  }
+ }
+ const report={sampleSize:rows.length,ships,seedsPerShipBoss:offsets.length,
+  wins:rows.filter(x=>x.winner==='A').length,
+  losses:rows.filter(x=>x.winner==='B').length,
+  draws:rows.filter(x=>x.winner==='draw').length,
+  note:'IA vs IA a livello uguale, navi di classi differenti. Nessuna modifica al gameplay. Minuti massimi teorici a 30s per mezzo turno, non durate osservate.',
+  byShip:ships.map(ship=>{
+   const results=rows.filter(x=>x.ship===ship);
+   const turns=results.map(x=>x.halfTurns).sort((a,b)=>a-b);
+   return {ship,wins:results.filter(x=>x.winner==='A').length,
+    losses:results.filter(x=>x.winner==='B').length,
+    draws:results.filter(x=>x.winner==='draw').length,
+    medianHalfTurns:(turns[11]+turns[12])/2,
+    minHalfTurns:turns[0],maxHalfTurns:turns[turns.length-1]};
+  }),
+  rows};
+ assert.equal(rows.length,12*ships.length*offsets.length);
+ assert.equal(report.wins+report.losses+report.draws,rows.length);
+ console.log('LIVE_BOSSES_FLEET_VARIANTS '+JSON.stringify(report));
+});
+
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
  const experiments=[];
  for(const index of [1,5,6,9]){
