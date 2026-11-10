@@ -252,6 +252,10 @@ export default function OfficialLiveBattle3D({
  const last=battle.history.at(-1);
  const visualIndex=battle.history.findLastIndex(e=>e.kind==='shot'||e.kind==='vital_destroyed');
  const choiceCard=specialChoice?player.special.hand.find(c=>c.id===specialChoice.cardId):null;
+ const epicChoiceReady=myTurn&&['epic_item_1','epic_item_3'].includes(player.epic?.active?.id)&&
+  !player.epic.liveChoiceCommitted&&player.epic.peek?.length>0;
+ const epicRecycleReady=myTurn&&(player.epic?.exchangeCredits||0)>0&&
+  battle.round<=(player.epic.exchangeUntilRound||0);
  const moduleChoiceEffect=isModuleCard(specialChoice?.type)?
   TACTICAL_MODULE_CARDS[specialChoice.type].effect:null;
  const recycleMax=moduleChoiceEffect==='free_swap'?1:2;
@@ -430,6 +434,36 @@ export default function OfficialLiveBattle3D({
       </>}
       <button type="button" className="live-choice-cancel"
        onClick={()=>setSpecialChoice(null)}>ANNULLA</button>
+     </div>
+    </div>}
+   {(epicChoiceReady||epicRecycleReady)&&!specialChoice&&<div className="live-choice-overlay"
+    role="dialog" aria-modal="true" aria-label="Scelta Oggetto Epico">
+     <div className="live-choice-panel">
+      <div className="live-choice-head">
+       <strong>{epicChoiceReady?'OGGETTO EPICO · SCEGLI LA PESCATA':'PENDOLO · RICAMBIO EXTRA'}</strong>
+      </div>
+      {epicChoiceReady&&<>
+       <p>Una carta vera del tuo mazzo sarà anticipata alla prossima pesca. La mano non riceve numeriche gratuite.</p>
+       <div className="live-choice-grid">
+        {player.epic.peek.map((card,i)=>
+         <button key={i} type="button" onClick={()=>action({type:'epic-choice',index:i})}>
+          {rankLabel(card.value)}{card.suit}
+         </button>)}
+       </div>
+       <button type="button" className="live-choice-cancel"
+        onClick={()=>action({type:'epic-choice',index:0})}>PRIMA CARTA</button>
+      </>}
+      {epicRecycleReady&&!epicChoiceReady&&<>
+       <p>Scarta una numerica e pescane una vera dal mazzo. Il ricambio non conta nel limite delle 3 carte numeriche.</p>
+       <div className="live-choice-grid">
+        {player.numeric.hand.map((card,i)=>
+         <button key={card.id} type="button" onClick={()=>action({type:'epic-recycle',index:i})}>
+          {rankLabel(card.value)}{card.suit}
+         </button>)}
+       </div>
+       <button type="button" className="live-choice-cancel"
+        onClick={()=>setDetails(v=>!v)}>LASCIA PER DOPO</button>
+      </>}
      </div>
     </div>}
    {details&&<div className="live-info">
