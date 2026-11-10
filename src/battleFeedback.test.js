@@ -139,7 +139,7 @@ test('47: livelli grafici non intercettano input; il duello definitivo mostra so
  assert.match(oldCss,/pointer-events:none/);
  assert.match(oldCss,/prefers-reduced-motion:reduce/);
  assert.match(oldUi,/aria-live="polite"/);
- assert.match(entry,/OfficialBattle3D\.jsx/);
+ assert.match(entry,/OfficialLiveBattle3D\.jsx/);
  assert.match(official,/<TacticalCombatPlayback/);
  assert.match(playback,/currentTacticalPlayback\(battle,nowMs\)/);
  assert.match(timeline,/cycle\.impacts/);
