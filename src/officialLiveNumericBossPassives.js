@@ -14,8 +14,9 @@ import {activeNumericBossAbilities} from './bossNumericDecks.js';
 // Il bonus si arma solo quando il mazzo reale non ha abbastanza carte
 // da ripescare ed e' necessario recuperare lo scarto autentico.
 export function liveNumericBossBeforeDraw(side){
- const pile=side.numeric;
- rememberTacticalLeviatanoRecycle(side,pile,Math.max(0,7-pile.hand.length));
+ const pile=side?.numeric;
+ if(pile?.discard?.length>0)
+  rememberTacticalLeviatanoRecycle(side,pile,Math.max(0,7-pile.hand.length));
 }
 export function liveNumericBossShieldFactor(defender){
  return tacticalBossMotherFactor(defender);
