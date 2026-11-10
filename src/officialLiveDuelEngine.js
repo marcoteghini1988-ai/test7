@@ -86,6 +86,7 @@ function nextDraw(pile,size=7){
   if(!pile.deck.length){
    if(!pile.discard.length)break;
    pile.deck=pile.discard.splice(0);
+   pile.recycleEvents=(pile.recycleEvents||0)+1;
   }
   pile.hand.push(pile.deck.shift());
  }
@@ -486,6 +487,7 @@ function playSpecial(b,key,index,slot,choice={}){
    return {ok:false,reason:'recycle_selection_required'};
   const removed=[...indices].sort((a,z)=>z-a).map(i=>consume(side.numeric,i));
   liveLegacyOnNumericRecycle(b,key,removed);
+  side.numeric.recycleEvents=(side.numeric.recycleEvents||0)+1;
   nextDraw(side.numeric,7);
  }else if(type==='support-status-purge'){
   side.ionized=false;side.corroded=false;side.heated=false;
