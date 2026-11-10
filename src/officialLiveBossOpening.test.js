@@ -143,6 +143,18 @@ test('Risonanza usa una Fusione vera solo a 100 Sincronia prima del colpo nativo
  assert.equal(b.sides.B.escorts.filter(e=>e.hp>0).length,2);
  b.sides.B.sync=100; // Solo fixture: in LIVE deve essere guadagnata.
  equipSpecial(b,'fusion-triad');
+ // Confronto del danno: lascia in mano solo carte Fusione,
+ // cosi' nessun bonus offensivo diverso dalla Fusione altera il test.
+ const specials=b.sides.B.special,allCards=[...specials.hand,...specials.deck,...specials.discard];
+ const chosen=[allCards.find(c=>c.type==='fusion-triad'),
+  ...allCards.filter(c=>c.type==='fusion-strike').slice(0,4)];
+ assert.equal(chosen.length,5);
+ assert.ok(chosen.every(Boolean));
+ const selected=new Set(chosen.map(c=>c.id));
+ specials.hand=chosen;
+ specials.deck=allCards.filter(c=>!selected.has(c.id));
+ specials.discard=[];
+ assert.equal(specials.hand.length+specials.deck.length,24);
  const first=chooseOfficialLiveAiAction(b);
  assert.equal(first.type,'special');
  assert.equal(b.sides.B.special.hand[first.index].type,'fusion-triad');
