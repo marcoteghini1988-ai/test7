@@ -203,3 +203,98 @@ test('Poker reale da quattro carte: slot persistenti e completamento in due turn
  assert.equal(b.vitalBuilds.A.engine.length,0);
  assert.equal(b.history.at(-2).kind,'vital_destroyed');
 });
+
+
+test('Le cinque Speciali storiche sono giocabili soltanto con la loro carta',()=>{
+ for(const type of ['tactic-quantum-dice','tactic-bomb','tactic-malus','tactic-golden','tactic-signature-mutation'])
+  assert.equal(supportedLiveSpecial(type),true,type);
+ let b=battle();
+ b.sides.A.special.hand[0].type='tactic-malus';
+ assert.equal(applyOfficialLiveAction(b,'A',{type:'special',index:0,slot:'open-0',malusChoice:'lock_weapon'},1).reason,'malus_not_ready');
+ assert.equal(b.sides.A.special.hand.length,5);
+ assert.equal(b.actionUsed.special,0);
+});
+test('Dorata ♦: trasforma una numerica reale e aggiunge Sincronia solo a firma completata',()=>{
+ let b=battle('N00','C01');
+ b.sides.B.defense.shield.hp=45;
+ b.sides.A.special.hand[0].type='tactic-golden';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0',goldenIndex:3},1); // 8♦
+ assert.equal(b.sides.A.legacy.golden.cardId,b.sides.A.numeric.hand[3].id);
+ b=move(b,'A',{type:'expose',vitalId:'weapons'},2); // C01 firma -3
+ b=move(b,'A',{type:'numeric',index:3,target:'vital',vitalId:'weapons'},3);
+ assert.equal(b.sides.A.sync,0);
+ b=move(b,'A',{type:'numeric',index:2,target:'vital',vitalId:'weapons'},4); // 5♥
+ assert.equal(b.sides.B.defense.parts.weapons.hp,0);
+ assert.equal(b.sides.A.legacy.golden,null);
+ assert.equal(b.sides.A.sync,33); // 25 per vitale + 8 Dorata
+ assert.ok(b.history.some(e=>e.kind==='golden'));
+});
+test('Numero Bomba marca solo la carta nemica dopo la pesca e scoppia se usata per sparare',()=>{
+ let b=battle('N00','N00');
+ b.sides.A.special.hand[0].type='tactic-bomb';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0',bombSlot:0},1);
+ assert.equal(b.sides.B.legacy.bomb,null);
+ b=move(b,'A',{type:'end'},2);
+ const cardId=b.sides.B.numeric.hand[0].id;
+ assert.equal(b.sides.B.legacy.bomb.cardId,cardId);
+ b=move(b,'B',{type:'numeric',index:0,target:'ship'},3);
+ assert.equal(b.sides.B.defense.shield.hp,52);
+ assert.equal(b.sides.B.legacy.bomb,null);
+ assert.ok(b.history.some(e=>e.kind==='bomb_explosion'));
+});
+test('Ricambio Numerico elimina la bomba senza creare numeriche e mantiene sette carte',()=>{
+ let b=battle('N00','N00');
+ b.sides.A.special.hand[0].type='tactic-bomb';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0',bombSlot:0},1);
+ b=move(b,'A',{type:'end'},2);
+ b.sides.B.special.hand[0].type='tactic-numeric-recycle';
+ const marked=b.sides.B.legacy.bomb.cardId;
+ b=move(b,'B',{type:'special',index:0,slot:'open-0',recycleIndices:[0]},3);
+ assert.equal(b.sides.B.legacy.bomb,null);
+ assert.equal(b.sides.B.numeric.hand.length,7);
+ assert.equal(b.sides.B.numeric.hand.some(c=>c.id===marked),false);
+ assert.equal(b.sides.B.defense.shield.hp,60);
+ assert.ok(b.history.some(e=>e.kind==='bomb_disarmed'));
+});
+test('Malus richiede tre colpi validi: -15% soltanto sul turno nativo avversario',()=>{
+ let b=battle('N00','N00');
+ b.sides.A.special.hand[0].type='tactic-malus';
+ b.sides.A.legacy.malusCharge=3; // situazione dopo tre colpi validi
+ b=move(b,'A',{type:'special',index:0,slot:'open-0',malusChoice:'lock_weapon'},1);
+ assert.equal(b.sides.A.legacy.malusCharge,0);
+ b=move(b,'A',{type:'end'},2);
+ b=move(b,'B',{type:'numeric',index:0,target:'ship'},3);
+ assert.equal(b.sides.A.defense.shield.hp,54); // 8♥ x 0.85 -> 6
+ b=move(b,'B',{type:'end'},4);
+ assert.equal(b.liveLegacy.malus.B,null);
+});
+test('Dado Quantico usa il seed e una carta vera; nessun premio fittizio',()=>{
+ let b=battle();
+ b.sides.A.special.hand[0].type='tactic-quantum-dice';
+ assert.equal(applyOfficialLiveAction(b,'A',{type:'special',index:0,slot:'open-0'},1).reason,'dice_not_ready');
+ b.sides.A.legacy.diceReady=true;
+ b.sides.A.legacy.dicePatterns=['plus','minus','pair'];
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},2);
+ assert.equal(b.sides.A.legacy.diceReady,false);
+ assert.equal(b.sides.A.legacy.dicePatterns.length,0);
+ assert.equal(b.sides.A.special.hand.length,4);
+ assert.ok(b.history.some(e=>e.kind==='quantum_dice'));
+ assert.ok(['module','malus','heal','dust','ether','damage'].includes(b.sides.A.legacy.lastDice.face));
+});
+test('Mutazione di firma difende un proprio vitale esposto per un turno nemico e poi si annulla',()=>{
+ let b=battle('N00','C01');
+ b.sides.A.defense.shield.hp=45;
+ b=move(b,'A',{type:'end'},1);
+ b=move(b,'B',{type:'expose',vitalId:'engine'},2);
+ b=move(b,'B',{type:'end'},3);
+ assert.equal(b.sides.A.defense.parts.engine.exposed,true);
+ const original=structuredClone(b.sides.A.defense.parts.engine.signature);
+ b.sides.A.special.hand[0].type='tactic-signature-mutation';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0',vitalId:'engine'},4);
+ assert.notDeepEqual(b.sides.A.defense.parts.engine.signature,original);
+ b=move(b,'A',{type:'end'},5);
+ assert.notDeepEqual(b.sides.A.defense.parts.engine.signature,original);
+ b=move(b,'B',{type:'end'},6);
+ assert.deepEqual(b.sides.A.defense.parts.engine.signature,original);
+ assert.equal(b.liveLegacy.mutations.A,null);
+});
