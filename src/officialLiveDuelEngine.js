@@ -617,6 +617,14 @@ export function chooseOfficialLiveAiAction(battle){
   }
   const found=me.numeric.hand.findIndex(c=>weaponForCard(me,c));
   if(found>=0)return {type:'numeric',index:found,target:'ship',shipId:'mother'};
+  // La scudiera possiede propri semi ed armi: l'IA puo usarli come
+  // alternativa quando la madre non puo sparare, senza carte gratuite.
+  if(!liveFusionBlocksEscort(me,battle.turn)){
+   for(const [index,card] of me.numeric.hand.entries()){
+    const escortIndex=me.escorts.findIndex((e,i)=>weaponForCard(me,card,i));
+    if(escortIndex>=0)return {type:'numeric',index,target:'ship',shipId:'escort-'+escortIndex};
+   }
+  }
  }
  if(battle.actionUsed.special<LIVE_SPECIAL_LIMIT){
   for(const [index,card] of me.special.hand.entries()){
