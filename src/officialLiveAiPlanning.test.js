@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {findOfficialLiveVitalCompletion} from './officialLiveAiPlanning.js';
+import {findOfficialLiveVitalCompletion,findOfficialLiveVitalProgress} from './officialLiveAiPlanning.js';
 import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,chooseOfficialLiveAiAction,
  finishOfficialLiveTurn} from './officialLiveDuelEngine.js';
@@ -88,4 +88,69 @@ test('IA non riempie uno slot senza soluzione: usa un proiettile compatibile',()
  assert.equal(action.target,'ship');
  assert.equal(action.shipId,'mother');
  assert.equal(b.vitalBuilds.B.engine.length,0);
+});
+
+test('IA Poker lungo: solo una carta fisica che può essere completata dal proprio mazzo',()=>{
+ const cards=[{value:4,suit:'♥'},{value:4,suit:'♣'},{value:4,suit:'♠'},
+  {value:7,suit:'♦'},{value:9,suit:'♥'}];
+ const stock=[{value:4,suit:'♦'}];
+ const next=findOfficialLiveVitalProgress(P,[],cards,stock);
+ assert.ok([0,1,2].includes(next));
+ assert.equal(findOfficialLiveVitalProgress(P,[cards[0],cards[1]],cards.slice(2),stock),0);
+ assert.equal(findOfficialLiveVitalProgress(P,[],cards.slice(0,3),[]),null,
+  'non inventa la quarta carta che non esiste nel proprio mazzo');
+ assert.equal(findOfficialLiveVitalProgress({kind:'poker',pattern:'pair'},[],cards,stock),null,
+  'il pianificatore parziale vale soltanto per Poker 4–5');
+});
+test('IA Poker lungo: supporta Full, Doppia Coppia, Scala, Colore e Scala Reale',()=>{
+ const c=(value,suit)=>({value,suit});
+ assert.equal(findOfficialLiveVitalProgress({kind:'poker',pattern:'fullHouse'},
+  [c(7,'♥'),c(7,'♠')],[c(7,'♣'),c(3,'♦')],[c(3,'♥')]),0);
+ assert.equal(findOfficialLiveVitalProgress({kind:'poker',pattern:'twoPair'},
+  [c(7,'♥')],[c(7,'♠'),c(3,'♦')],[c(3,'♥')]),0);
+ assert.equal(findOfficialLiveVitalProgress({kind:'poker',pattern:'straight'},
+  [c(1,'♥'),c(2,'♠'),c(3,'♦')],[c(4,'♣')],[c(5,'♦')]),0);
+ assert.equal(findOfficialLiveVitalProgress({kind:'poker',pattern:'flush'},
+  [c(1,'♥'),c(2,'♥')],[c(7,'♥')],[c(9,'♥'),c(13,'♥')]),0);
+ assert.equal(findOfficialLiveVitalProgress({kind:'poker',pattern:'royalFlush'},
+  [c(1,'♠'),c(10,'♠')],[c(11,'♠')],[c(12,'♠'),c(13,'♠')]),0);
+ assert.equal(findOfficialLiveVitalProgress({kind:'poker',pattern:'straightFlush'},
+  [c(2,'♥'),c(3,'♥')],[c(4,'♥')],[c(5,'♥'),c(6,'♥')]),0);
+});
+test('IA Poker 4 carte: deposita 3 numeriche nei primi 30 secondi, pesca la quarta nel turno seguente',()=>{
+ let b=setup([{value:4,suit:'♥'},{value:4,suit:'♠'},{value:4,suit:'♣'},
+  {value:1,suit:'♣'},{value:7,suit:'♠'},{value:9,suit:'♦'},{value:13,suit:'♣'}]);
+ b.sides.A.defense.parts.engine.signature=P;
+ const pile=b.sides.B.numeric;
+ const missing=pile.deck.find(c=>c.value===4&&c.suit==='♦');
+ assert.ok(missing);
+ pile.deck=[missing,...pile.deck.filter(c=>c.id!==missing.id)];
+ assert.equal(findOfficialLiveVitalCompletion(P,[],pile.hand),null,
+  'la mano non contiene ancora la combinazione completa');
+ for(let i=0;i<3;i++){
+  const action=chooseOfficialLiveAiAction(b);
+  assert.equal(action.type,'numeric');
+  assert.equal(action.target,'vital');
+  assert.equal(action.vitalId,'engine');
+  assert.equal(b.sides.B.numeric.hand[action.index].value,4);
+  const result=applyOfficialLiveAction(b,'B',action,i+1);
+  assert.equal(result.ok,true,result.reason);
+  b=result.battle;
+ }
+ assert.equal(b.vitalBuilds.B.engine.length,3);
+ assert.equal(b.actionUsed.numeric,3);
+ assert.equal(b.sides.A.defense.parts.engine.hp,10);
+ b=finishOfficialLiveTurn(b,4);
+ b=finishOfficialLiveTurn(b,5);
+ assert.equal(b.activeSide,'B');
+ assert.equal(b.sides.B.numeric.hand.some(c=>c.id===missing.id),true);
+ const final=chooseOfficialLiveAiAction(b);
+ assert.equal(final.type,'numeric');
+ assert.equal(final.target,'vital');
+ assert.equal(b.sides.B.numeric.hand[final.index].id,missing.id);
+ const done=applyOfficialLiveAction(b,'B',final,6);
+ assert.equal(done.ok,true,done.reason);
+ assert.equal(done.battle.sides.A.defense.parts.engine.hp,0);
+ assert.equal(done.battle.actionUsed.numeric,1);
+ assert.equal(done.battle.vitalBuilds.B.engine.length,0);
 });
