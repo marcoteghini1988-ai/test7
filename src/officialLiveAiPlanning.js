@@ -71,6 +71,11 @@ export function findOfficialLiveMathContinuation(signature,stored=[],hand=[],dec
  const gates=options.filter(o=>o?.kind==='mathGate'&&
   (o.allowedCardCounts||[2,3]).includes(3));
  if(!gates.length)return null;
+ // Non allungare una firma quando il partner per completarla in DUE
+ // carte è già nella propria mano o nel mazzo attualmente pescabile.
+ // Questo evita progetti da tre numeriche superflui e possibili stalli.
+ if([...hand,...deck].some(c=>tacticalSignatureOperation(signature,[...stored,c])))
+  return null;
  let best=null,bestPartners=0;
  for(let i=0;i<hand.length;i++){
   const first=hand[i];
