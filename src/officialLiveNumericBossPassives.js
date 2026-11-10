@@ -86,7 +86,6 @@ export function liveNumericBossNativeBonus(side,base,weaponId,queued,round){
  const total=Math.min((bonus?.extra||0)+(formulaBonus?.extra||0),Math.ceil(base*.30));
  return {damage:base+total,bonus,formulaBonus};
 }
-}
 // Sinfonia di flotta L7–L9: il secondo colpo deve essere una VERA salva
 // della scudiera nello stesso ciclo di un impatto efficace della madre.
 export function liveNumericBossEscortCooperation(side,packet,round){
