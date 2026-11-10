@@ -146,11 +146,10 @@ test('IA: la numerica negli scarti torna davvero nel mazzo e completa il vitale'
  pile.hand=hand;pile.deck=[];
  pile.discard=[partner,...all.filter(x=>!handIds.has(x.id)&&x.id!==partner.id)];
  assert.equal(pile.discard.length,45);
- const first=chooseOfficialLiveAiAction(b);
- assert.equal(first.type,'numeric');
- assert.equal(first.target,'vital');
- assert.equal(b.sides.B.numeric.hand[first.index].value,3);
- const deposited=applyOfficialLiveAction(b,'B',first,1);
+ // Il giocatore può iniziare una combinazione con una carta vera anche se
+ // il partner è negli scarti; l'IA non deve necessariamente anticiparla.
+ const deposited=applyOfficialLiveAction(b,'B',
+  {type:'numeric',index:0,target:'vital',vitalId:'engine'},1);
  assert.equal(deposited.ok,true,deposited.reason);b=deposited.battle;
  assert.equal(b.vitalBuilds.B.engine.length,1);
  assert.notEqual(chooseOfficialLiveAiAction(b).type,'clearVital');
