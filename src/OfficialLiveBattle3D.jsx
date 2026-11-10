@@ -128,6 +128,11 @@ export default function OfficialLiveBattle3D({
  const claimed=useRef(false);
  const [scale,setScale]=useState(1);
  useEffect(()=>{
+  if(battle?.phase!=='playing'||battle?.activeSide!=='A'){
+   setSpecialChoice(null);setRecycleChoice([]);
+  }
+ },[battle?.activeSide,battle?.phase]);
+ useEffect(()=>{
   const resize=()=>setScale(Math.max(.3,Math.min(innerWidth/450,innerHeight/800)));
   resize();window.addEventListener('resize',resize);
   return ()=>window.removeEventListener('resize',resize);
