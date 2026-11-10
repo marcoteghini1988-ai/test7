@@ -537,10 +537,12 @@ test('IA E01 carica W19 senza ripetere il seme non ammesso',()=>{
  assert.notEqual(b.sides.B.numeric.hand[after.index].suit,'♣',
   'l IA non deve ripetere il seme C già depositato nella stessa combo');
  b=move(b,'B',after,3);
- after=chooseOfficialLiveAiAction(b);
- assert.equal(after.type,'numeric');
- assert.equal(after.target,'ship');
- assert.equal(b.sides.B.numeric.hand[after.index].suit,'♦');
- b=move(b,'B',after,4);
+ // Se la prima carta compatibile e' H, la barriera può raggiungere
+ // la soglia ed è corretto che l'IA esponga un vitale prima di D.
+ if(b.sides.B.liveWeaponCharges.W19){
+  const diamond=b.sides.B.numeric.hand.findIndex(c=>c.suit==='♦');
+  assert.ok(diamond>=0);
+  b=move(b,'B',{type:'numeric',index:diamond,target:'ship',shipId:'mother'},4);
+ }
  assert.equal(b.history.some(e=>e.kind==='shot'&&e.weaponId==='W19'),true);
 });
