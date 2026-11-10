@@ -852,21 +852,6 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
    if(stored.length>=tacticalSignatureSlotCount(knownSignature))
     return {type:'clearVital',vitalId:id};
   }
-  // Se il vitale conserva una numerica e la firma ammette tre carte,
-  // prepara una seconda numerica soltanto quando una terza carta fisica
-  // esiste già in mano/mazzo. Le formule completabili hanno precedenza.
-  for(const id of targetOrder){
-   const target=enemy.defense.parts[id];
-   if(!target||target.hp<=0||!target.exposed)continue;
-   const stored=battle.vitalBuilds[key][id];
-   if(stored.length!==1)continue;
-   const knownSignature=battle.liveLegacy?.mutations[other(key)]?.vitalId===id?
-    battle.liveLegacy.mutations[other(key)].originalSignature:target.signature;
-   const progress=findOfficialLiveMathContinuation(knownSignature,stored,
-    me.numeric.hand,me.numeric.deck);
-   if(progress!=null)
-    return {type:'numeric',index:progress,target:'vital',vitalId:id};
-  }
   // Prima di una lunga mano Poker, una coppia matematica autenticamente
   // costruibile nel proprio mazzo consente di avanzare sul vitale.
   // Il deposito iniziale non crea proiettili e non legge carte avversarie.
@@ -889,6 +874,21 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
     battle.liveLegacy.mutations[other(key)].originalSignature:target.signature;
    const progress=findOfficialLiveVitalProgress(knownSignature,
     battle.vitalBuilds[key][id],me.numeric.hand,me.numeric.deck);
+   if(progress!=null)
+    return {type:'numeric',index:progress,target:'vital',vitalId:id};
+  }
+  // Solo boss campagna: se la firma matematica a 3 carte era gia' iniziata,
+  // continua il progetto con partner fisici. Prima conserva le sequenze
+  // Poker 4/5 avviate: non interrompere una Scala Reale per un calcolo.
+  if(me.bossPlanetId)for(const id of targetOrder){
+   const target=enemy.defense.parts[id];
+   if(!target||target.hp<=0||!target.exposed)continue;
+   const stored=battle.vitalBuilds[key][id];
+   if(stored.length!==1)continue;
+   const knownSignature=battle.liveLegacy?.mutations[other(key)]?.vitalId===id?
+    battle.liveLegacy.mutations[other(key)].originalSignature:target.signature;
+   const progress=findOfficialLiveMathContinuation(knownSignature,stored,
+    me.numeric.hand,me.numeric.deck);
    if(progress!=null)
     return {type:'numeric',index:progress,target:'vital',vitalId:id};
   }
