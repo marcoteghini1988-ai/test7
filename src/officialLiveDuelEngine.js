@@ -28,7 +28,8 @@ import {liveBossStartTurn,liveBossIncomingShieldFactor,liveBossOnShieldHit,
  liveBossClearPoisonOnHeal} from './officialLiveBossPowers.js';
 import {isTacticalEpic,tacticalEpicActive} from './tacticalEpicCards.js';
 import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
- liveEpicOnShieldDamage,liveEpicRecycle} from './officialLiveEpics.js';
+ liveEpicOnShieldDamage,liveEpicRecycle,liveEpicOnVitalFormula,
+ liveEpicMatriceBonus,liveEpicAfterMatriceShot} from './officialLiveEpics.js';
 import {liveCommanderDefensePacket,liveCommanderRememberShot,
  liveCommanderRememberVital} from './officialLiveCommanderDefense.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
@@ -260,6 +261,8 @@ function fireNumeric(b,key,card,shipId){
  }
  let packet=escortVolley?escortVolley.packet:
   Math.max(1,Math.floor(totalValue*profile.damage*gunEfficiency(attacker.defense,'mother')));
+ const matriceBonus=escortIndex==null?liveEpicMatriceBonus(b,key,w.tipo):0;
+ packet+=matriceBonus;
  const escortCooperation=escortIndex==null?null:
   liveNumericBossEscortCooperation(attacker,packet,b.round);
  if(escortCooperation)packet=escortCooperation.damage;
@@ -336,6 +339,7 @@ function fireNumeric(b,key,card,shipId){
  if(escortCooperation)
   liveNumericBossRememberEscortCooperation(attacker,hit.damage,escortCooperation.bonus);
  liveEpicOnShieldDamage(b,defenderKey,hit.damage);
+ liveEpicAfterMatriceShot(b,key,hit.damage,matriceBonus);
  if(hit.damage>0&&enemy.heated)enemy.heated=false;
  const liveBurn=b.liveModuleEffects[key];
  if(hit.damage>0&&liveBurn.burnCharges>0){
@@ -392,6 +396,7 @@ function placeVital(b,key,card,vitalId){
  liveCommanderRememberVital(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
  liveNumericBossAfterVital(attacker,impact.damage,impact.destroyed,b.round);
+ liveEpicOnVitalFormula(b,key,op);
  liveEpicOnShieldDamage(b,other(key),impact.damage);
  if(rift)attacker.liveRift=false;
  b.sides[key].numeric.discard.push(...list);
