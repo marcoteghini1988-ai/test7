@@ -33,7 +33,8 @@ import {liveCommanderDefensePacket,liveCommanderRememberShot,
  liveCommanderRememberVital} from './officialLiveCommanderDefense.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
- liveNumericBossSyncBonus,liveNumericBossRepairAmount,liveNumericBossEscortCooperation,
+ liveNumericBossSyncBonus,liveNumericBossRepairAmount,liveNumericBossBeforeDraw,
+ liveNumericBossEscortCooperation,
  liveNumericBossRememberEscortCooperation} from './officialLiveNumericBossPassives.js';
 import {beginLiveFusion,liveFusionExpires,liveFusionBlocksEscort,
  interceptWithLiveFusion} from './officialLiveFusion.js';
@@ -129,6 +130,7 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  b.actionUsed={numeric:0,special:0};
  liveEpicBeforeDraw(b.sides[b.activeSide],b.round);
  liveFusionExpires(b.sides[b.activeSide],b.turn);
+ liveNumericBossBeforeDraw(b.sides[b.activeSide]);
  nextDraw(b.sides[b.activeSide].numeric,7);
  nextDraw(b.sides[b.activeSide].special,5);
  liveLegacyOnTurnStart(b,b.activeSide);
