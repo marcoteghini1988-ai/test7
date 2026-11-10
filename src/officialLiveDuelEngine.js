@@ -91,6 +91,17 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
     b.turn>=b.liveModuleEffects[previous].lockUntilTurn)
   b.liveModuleEffects[previous].lockUntilTurn=0;
  liveBossOnNumericCardsSpent(b,previous,b.actionUsed.numeric,b.round);
+ // Una Combo SIMULTANEA deve chiudersi nel turno corrente; le combinazioni
+ // a memoria seguono invece i propri cicli W33/W42, le armi Accumulo restano cariche.
+ const charged=b.sides[previous].liveWeaponCharges;
+ for(const weaponId of Object.keys(charged||{})){
+  const gun=PHASE1_CATALOG.weapons.find(w=>w.id===weaponId);
+  if(gun?.tipo==='Combo simultanea'){
+   delete charged[weaponId];
+   event(b,previous+': carica '+gun.nome+' scaduta (combo simultanea non completata)',
+    'weapon_charge_expired',{weaponId});
+  }
+ }
  b.zones[previous].open=[null,null];
  b.pendingShot[previous]=null;
  b.turn++;
