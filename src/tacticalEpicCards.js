@@ -8,7 +8,7 @@ const PROFILES=Object.freeze({
  epic_item_8:{cycles:2,short:'CALICE',help:'Per 2 scontri converte i danni in Sincronia. Polvere Stellare: solo anteprima, mai premi PvP.',effect:'damage_to_dust'},
  epic_item_6:{cycles:2,short:'PENDOLO',help:'Per 2 scontri, quando subisci danno rivela le prossime 6 numeriche e consente 1 ricambio extra nel ciclo seguente.',effect:'future_cards'},
  epic_item_7:{cycles:2,short:'MONOLITE',help:'Per 2 scontri neutralizza il surriscaldamento da plasma delle tue armi.',effect:'anti_heat'},
- epic_item_9:{cycles:1,short:'MATRICE',help:'Con i quattro vitali al 30% totale o meno, +2 al colpo pesante di precisione valido con Coppia/Tris. Non bypassa firme.',effect:'critical_heavy'},
+ epic_item_9:{cycles:1,short:'MATRICE',help:'Con i quattro vitali al 30% totale o meno, una vera Coppia o un Tris valida arma +2 sul prossimo colpo Accumulo reale alla barriera nello stesso ciclo. Non bypassa firme.',effect:'critical_heavy'},
  epic_item_1:{cycles:2,short:'MÖBIUS',help:'Con i vitali al 30% totale o meno, guarda le prossime 10 numeriche e scegline una da anticipare nella pesca.',effect:'future_choice'},
  epic_item_3:{cycles:2,short:'ASTROLABIO',help:'Attivalo, scopri le prossime 2 numeriche e nel ciclo successivo scegli quale pescare per prima.',effect:'dual_draw'}
 });
