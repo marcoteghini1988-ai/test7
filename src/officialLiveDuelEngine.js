@@ -37,7 +37,8 @@ import {liveCommanderArmFormula,liveCommanderNativeBonus,
  liveCommanderRememberEscortImpact} from './officialLiveCommanderAttack.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
- liveNumericBossArmFormula,
+ liveNumericBossArmFormula,liveNumericBossRememberDeposit,liveNumericBossClearDeposit,
+ liveNumericBossStatusDuration,liveNumericBossExpireStatus,liveNumericBossRecycleCooldown,
  liveNumericBossSyncBonus,liveNumericBossRepairAmount,liveNumericBossBeforeDraw,
  liveNumericBossEscortCooperation,
  liveNumericBossRememberEscortCooperation} from './officialLiveNumericBossPassives.js';
@@ -131,6 +132,7 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  if(b.turn>LIVE_MAX_TURNS){b.phase='finished';b.winner='draw';event(b,'Limite turni raggiunto: pareggio');return b;}
  b.activeSide=other(previous);
  b.round=Math.ceil(b.turn/2);
+ liveNumericBossExpireStatus(b.sides[b.activeSide],b.turn);
  b.deadlineMs=nowMs+LIVE_TURN_MS;
  b.aiReadyAtMs=nowMs+850;
  b.actionUsed={numeric:0,special:0};
@@ -226,6 +228,8 @@ function fireNumeric(b,key,card,shipId){
  if(!profile)return {ok:false,reason:'suit_incompatible'};
  if(b.liveModuleEffects[key].lockUntilTurn>=b.turn)
   return {ok:false,reason:'module_weapon_locked'};
+ liveNumericBossExpireStatus(attacker,b.turn);
+ liveNumericBossExpireStatus(enemy,b.turn);
  // Le categorie originali W01–W42 non diventano spari automatici.
  const w=profile.weapon,charges=attacker.liveWeaponCharges||(attacker.liveWeaponCharges={});
  const previous=charges[w.id]||{values:[],suits:[],startedRound:b.round};
@@ -371,11 +375,18 @@ function fireNumeric(b,key,card,shipId){
  }
  if(hit.damage>0&&queued?.ion){
   enemy.ionized=true;
-  enemy.ionizedUntilTurn=b.turn+2;
+  enemy.ionizedUntilTurn=b.turn+liveNumericBossStatusDuration(enemy,'ion',2);
  }
- if(hit.damage>0&&queued?.corrosion)enemy.corroded=true;
- if(hit.damage>0&&bossCharacterActive(attacker,b.round)?.effect==='corrosion')
+ if(hit.damage>0&&queued?.corrosion){
   enemy.corroded=true;
+  if(enemy.bossNumericDeck?.id==='planet_char_14')
+   enemy.corrodedUntilTurn=b.turn+liveNumericBossStatusDuration(enemy,'corrosion',2);
+ }
+ if(hit.damage>0&&bossCharacterActive(attacker,b.round)?.effect==='corrosion'){
+  enemy.corroded=true;
+  if(enemy.bossNumericDeck?.id==='planet_char_14')
+   enemy.corrodedUntilTurn=b.turn+liveNumericBossStatusDuration(enemy,'corrosion',2);
+ }
  if(hit.damage>0&&escortIndex==null)attacker.liveMotherHitRound=b.round;
  b.pendingShot[key]=null;
  event(b,key+': '+profile.weapon.nome+' · carica '+totalValue+' · '+hit.damage+
@@ -398,6 +409,7 @@ function placeVital(b,key,card,vitalId){
  if(list.length>=tacticalSignatureSlotCount(part.signature))return {ok:false,reason:'vital_slots_full'};
  list.push(card);
  liveCommanderRememberVitalDeposit(attacker,{vitalId,turn:b.turn});
+ liveNumericBossRememberDeposit(attacker,{vitalId,turn:b.turn});
  event(b,key+': '+card.value+card.suit+' nello slot '+vitalId+' ('+list.length+'/'+tacticalSignatureSlotCount(part.signature)+')','vital_card');
  const op=tacticalSignatureOperation(part.signature,list);
  if(!op)return {ok:true,completed:false};
@@ -407,6 +419,7 @@ function placeVital(b,key,card,vitalId){
   b.vitalBuilds[key][vitalId]=[];
   if(attacker.commander?.liveVitalDeposit?.vitalId===vitalId)
    attacker.commander.liveVitalDeposit=null;
+  liveNumericBossClearDeposit(attacker,vitalId);
   event(b,other(key)+': precisione su '+vitalId+' annullata dalla Contromisura','counter');
   return {ok:true,completed:false,countered:true};
  }
@@ -581,6 +594,7 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
   b.vitalBuilds[key][id]=[];
   if(side.commander?.liveVitalDeposit?.vitalId===id)
    side.commander.liveVitalDeposit=null;
+  liveNumericBossClearDeposit(side,id);
   event(b,key+': combinazione di '+id+' annullata, carte agli scarti');
   return {ok:true,battle:b};
  }
