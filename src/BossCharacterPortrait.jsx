@@ -9,7 +9,7 @@ export default function BossCharacterPortrait({type,className=''}) {
  if(!character)return null;
  return <span className={'boss-character-portrait '+className} aria-hidden="true">
   <span className="boss-character-portrait-fallback">✦</span>
-  <img src={ASSET_ROOT+'/boss-characters/'+character.id+'.png'} alt=""
+  <img src={character.imagePath} alt=""
    draggable={false}
    onError={event=>{event.currentTarget.hidden=true;}}/>
  </span>;
