@@ -6,17 +6,17 @@ import {createOfficialLiveDuel,applyOfficialLiveAction,finishOfficialLiveTurn,
 import {exposeMotherPart} from './vitalDefense.js';
 import {tacticalShipSignatures,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
 
-function prepare(shipId,ranks,suit){
+function prepare(shipId,combo){
  const b=createOfficialLiveDuel(createTacticalDuel({shipA:'N00',shipB:shipId,
   levelA:1,levelB:1,nowMs:0}),0);
  const pile=b.sides.A.numeric,source=[...pile.hand,...pile.deck,...pile.discard];
- const chosen=ranks.map(value=>{
-  const c=source.find(x=>x.value===value&&x.suit===suit(value));
-  assert.ok(c,'numerica fisica presente '+value+suit(value));
+ const chosen=combo.map(({value,suit})=>{
+  const c=source.find(x=>x.value===value&&x.suit===suit);
+  assert.ok(c,'numerica fisica presente '+value+suit);
   return c;
  });
  const ids=new Set(chosen.map(c=>c.id));
- assert.equal(ids.size,ranks.length);
+ assert.equal(ids.size,combo.length);
  pile.hand=[...chosen,...source.filter(c=>!ids.has(c.id)).slice(0,7-chosen.length)];
  const inHand=new Set(pile.hand.map(c=>c.id));
  pile.deck=source.filter(c=>!inHand.has(c.id));pile.discard=[];
@@ -46,7 +46,7 @@ function nextA(b,nowMs){
 test('Leggendaria L04: Scala Reale alternativa in 5 slot e in 2 turni 3+2',()=>{
  const combo=[{value:1,suit:'♠'},{value:10,suit:'♠'},{value:11,suit:'♠'},
   {value:12,suit:'♠'},{value:13,suit:'♠'}];
- let b=prepare('L04',combo.map(c=>c.value),()=> '♠');
+ let b=prepare('L04',combo);
  assert.equal(tacticalSignatureSlotCount(tacticalShipSignatures('L04').command),5);
  b=insert(b,combo.slice(0,3),1);
  assert.equal(b.actionUsed.numeric,LIVE_NUMERIC_LIMIT);
@@ -69,17 +69,7 @@ test('Leggendaria L04: Scala Reale alternativa in 5 slot e in 2 turni 3+2',()=>{
 test('Epica E01: Doppia Coppia in quattro carte reali e 2 turni',()=>{
  const combo=[{value:7,suit:'♥'},{value:7,suit:'♠'},
   {value:3,suit:'♦'},{value:3,suit:'♣'}];
- let b=prepare('E01',combo.map(c=>c.value),(_,i)=>
-  combo[i].suit);
- // Il helper sceglie il seme dalla prima corrispondenza del valore:
- // ricostruire la mano con gli ID esatti per le due carte da 7 e da 3.
- const pile=b.sides.A.numeric,all=[...pile.hand,...pile.deck,...pile.discard];
- const picked=combo.map(q=>all.find(c=>c.value===q.value&&c.suit===q.suit));
- assert.ok(picked.every(Boolean));
- const used=new Set(picked.map(c=>c.id));
- pile.hand=[...picked,...all.filter(c=>!used.has(c.id)).slice(0,3)];
- const inHand=new Set(pile.hand.map(c=>c.id));
- pile.deck=all.filter(c=>!inHand.has(c.id));pile.discard=[];
+ let b=prepare('E01',combo);
  b=insert(b,combo.slice(0,3),1);
  assert.equal(b.sides.B.defense.parts.command.hp,10);
  b=nextA(b,5);
