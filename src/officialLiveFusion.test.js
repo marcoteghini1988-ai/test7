@@ -33,8 +33,8 @@ test('Fusione Assalto e Trina: potenziano solo tiri caricati, la Trina conserva 
  b.sides.A.special.hand[0].type='fusion-triad';
  b=play(b,'A',{type:'special',index:0,slot:'open-0'},1);
  assert.equal(b.sides.B.defense.shield.hp,60); // attivare la carta non spara
- b=play(b,'A',{type:'numeric',index:0,target:'ship'},2); // 3♣ -> floor(3*1.35)=4
- assert.equal(b.sides.B.defense.shield.hp,56);
+ b=play(b,'A',{type:'numeric',index:0,target:'ship'},2); // Nave L5: W01=2, 3♣ -> floor(6*1.35)=8
+ assert.equal(b.sides.B.defense.shield.hp,52);
  b=finishOfficialLiveTurn(b,3);
  b=play(b,'B',{type:'numeric',index:0,target:'ship'},4); // 8♥, 40% inter
  assert.equal(b.sides.A.defense.shield.hp,55);
