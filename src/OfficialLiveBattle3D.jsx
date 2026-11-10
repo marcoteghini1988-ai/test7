@@ -208,7 +208,7 @@ export default function OfficialLiveBattle3D({
  const seconds=Math.max(0,Math.ceil((battle.deadlineMs-now)/1000));
  const terrain=battle.activeTerrain?pvpTerrainDefinition(battle.activeTerrain.id):null;
  const targeted=vital&&enemy.defense.parts[vital];
- const exposed=targeted?.exposed;
+ const exposed=targeted?.exposed||!!player.liveRift;
  const activeSlots=VITAL_IDS.filter(id=>enemy.defense.parts[id].hp>0&&enemy.defense.parts[id].exposed);
  const canExpose=remainingExposureSlots(enemy.defense)>0;
  const cannotAct=!myTurn||battle.phase==='finished';
@@ -250,7 +250,7 @@ export default function OfficialLiveBattle3D({
     if(!myTurn)return;
     setVital(id);
     const part=enemy.defense.parts[id];
-    if(part.hp>0&&!part.exposed)action({type:'expose',vitalId:id});
+    if(part.hp>0&&!part.exposed&&!player.liveRift)action({type:'expose',vitalId:id});
    }}/>
    <div className="live-slot-row live-slot-row--enemy">
     <Slot side="B" kind="character" card={battle.zones.B.character}/>
@@ -319,7 +319,7 @@ export default function OfficialLiveBattle3D({
    {vital&&targeted&&targeted.hp>0&&<div className="live-vital-panel" role="dialog"
     aria-label={'Combinazione del '+VITAL_LABELS[vital]}>
     <div className="live-vital-panel-head">
-     <b>{VITAL_LABELS[vital]}</b><span>{exposed?'ESPOSTO':'PROTETTO'}</span>
+     <b>{VITAL_LABELS[vital]}</b><span>{targeted.exposed?'ESPOSTO':player.liveRift?'FAGLIA ATTIVA':'PROTETTO'}</span>
      <button type="button" onClick={()=>setVital(null)}>×</button>
     </div>
     <div className="live-vital-slots">
