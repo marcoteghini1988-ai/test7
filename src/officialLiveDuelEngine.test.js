@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {PHASE16F_MODULES} from './newCombat/phase16FModules.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,advanceOfficialLiveDuel,
- finishOfficialLiveTurn,liveCompatibleShips,supportedLiveSpecial} from './officialLiveDuelEngine.js';
+ finishOfficialLiveTurn,liveCompatibleShips,supportedLiveSpecial,chooseOfficialLiveAiAction} from './officialLiveDuelEngine.js';
 const battle=(a='N00',z='C01',mode='classic')=>
  createOfficialLiveDuel(createTacticalDuel({shipA:a,shipB:z,
   levelA:1,levelB:1,nowMs:0,mode}),0);
@@ -401,4 +401,39 @@ test('Saturno Modulo neutralizza il blocco armamenti di Vergine sul turno avvers
  b=move(b,'B',{type:'special',index:0,slot:'open-0'},3);
  assert.equal(b.liveModuleEffects.A.lockUntilTurn,0);
  assert.ok(b.history.some(e=>e.kind==='module_blocked'));
+});
+
+test('IA seleziona un vero slot Bomba senza consultare la mano numerica avversaria',()=>{
+ let b=battle('N00','N00');
+ b=move(b,'A',{type:'end'},1);
+ b.actionUsed.numeric=3;
+ b.sides.B.special.hand[0].type='tactic-bomb';
+ const act=chooseOfficialLiveAiAction(b);
+ assert.deepEqual({type:act.type,bombSlot:act.bombSlot,slot:act.slot},
+  {type:'special',bombSlot:0,slot:'open-0'});
+ const next=applyOfficialLiveAction(b,'B',act,2);
+ assert.equal(next.ok,true);
+ assert.equal(next.battle.liveLegacy.pendingBombs.A.slot,0);
+});
+test('IA usa il proprio Modulo di ricambio indicando numeriche reali e non perde turno',()=>{
+ let b=battle('N00','N00');
+ b=move(b,'A',{type:'end'},1);
+ b.actionUsed.numeric=3;
+ b.sides.B.special.hand[0].type='module-card-cancer';
+ b.sides.B.equipmentLevels['module-card-cancer']=1;
+ const act=chooseOfficialLiveAiAction(b);
+ assert.equal(act.type,'special');
+ assert.deepEqual(act.recycleIndices.length,2);
+ assert.equal(applyOfficialLiveAction(b,'B',act,2).ok,true);
+});
+test('IA riconosce una scelta Epica già attivata senza spendere una terza Speciale',()=>{
+ let b=battle('N00','N00');
+ b=move(b,'A',{type:'end'},1);
+ b.sides.B.epic.active={id:'epic_item_3',startedRound:1,untilRound:2};
+ b.sides.B.epic.peek=b.sides.B.numeric.deck.slice(0,2);
+ b.sides.B.epic.liveChoiceCommitted=false;
+ b.actionUsed.special=2;
+ const act=chooseOfficialLiveAiAction(b);
+ assert.deepEqual(act,{type:'epic-choice',index:0});
+ assert.equal(applyOfficialLiveAction(b,'B',act,2).ok,true);
 });
