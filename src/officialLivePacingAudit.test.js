@@ -64,7 +64,16 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null}={})
   destroyedA:VITAL_IDS.filter(id=>b.sides.A.defense.parts[id].hp<=0).length,
   destroyedB:VITAL_IDS.filter(id=>b.sides.B.defense.parts[id].hp<=0).length,
   shieldA:b.sides.A.defense.shield.hp,shieldB:b.sides.B.defense.shield.hp,
-  actionsBySide,failures
+  actionsBySide,failures,
+  stalled:b.winner==='draw'?Object.fromEntries(['A','B'].map(key=>[key,{
+   aliveVitals:VITAL_IDS.filter(id=>b.sides[key].defense.parts[id].hp>0),
+   builds:Object.fromEntries(VITAL_IDS.filter(id=>b.vitalBuilds[key][id].length)
+    .map(id=>[id,b.vitalBuilds[key][id].map(c=>c.value+c.suit)])),
+   hand:b.sides[key].numeric.hand.map(c=>c.value+c.suit),
+   deckCount:b.sides[key].numeric.deck.length,
+   discardCount:b.sides[key].numeric.discard.length,
+   seen:b.sides[key].seen
+  }])):null
  };
  console.log('LIVE_PACING_AUDIT '+JSON.stringify(result));
  return result;
