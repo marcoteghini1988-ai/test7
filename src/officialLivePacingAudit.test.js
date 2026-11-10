@@ -19,7 +19,8 @@ const ownCards=(b,k)=>[
  ...b.sides[k].numeric.discard,
  ...VITAL_IDS.flatMap(id=>b.vitalBuilds[k][id])
 ];
-function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null}={}){
+function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
+ bossShieldMax=null}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA,shipB:boss?.motherShipId??shipB,levelA,levelB,
   nowMs:0,seed,mode:'campaign',shuffleNumericOpening:true,
@@ -27,6 +28,14 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null}={})
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
   specialDeckB:boss?buildTacticalBossDeck(boss.planetId,levelB,levelA):null
  }),0);
+ // ESPERIMENTO SOLO NEL TEST: nessun valore nel gioco pubblicato cambia.
+ // Mantieni firme, quattro vitali, carte e poteri; confronta livelli
+ // di sola barriera per capire se il bilanciamento e' proporzionale.
+ if(bossShieldMax!=null){
+  assert.ok(boss&&Number.isInteger(bossShieldMax)&&bossShieldMax>=60&&bossShieldMax<=200);
+  b.sides.B.defense.shield.max=bossShieldMax;
+  b.sides.B.defense.shield.hp=bossShieldMax;
+ }
  let clock=1000,actions=0,turnChanges=0;
  const failures={},actionsBySide={A:{},B:{}};
  while(b.phase==='playing'&&actions<400){
@@ -59,6 +68,7 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null}={})
  assert.ok(b.turn<=LIVE_MAX_TURNS+1);
  const result={
   seed,shipA,shipB:boss?.motherShipId??shipB,boss:boss?.planetId??null,
+  bossShieldMax:bossShieldMax??60,
   winner:b.winner,turns:b.turn,minutesMax:+(b.turn*LIVE_TURN_MS/60000).toFixed(1),
   actions,turnChanges,shots:b.history.filter(e=>e.kind==='shot').length,
   destroyedA:VITAL_IDS.filter(id=>b.sides.A.defense.parts[id].hp<=0).length,
@@ -128,4 +138,29 @@ test('Audit esteso dei 12 boss ufficiali: tutti raggiungono un esito, 52 numeric
  };
  console.log('LIVE_ALL_BOSSES_AUDIT '+JSON.stringify(report));
  assert.equal(wins+losses+draws,12);
+});
+
+test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
+ const experiments=[];
+ for(const index of [1,5,6,9]){
+  const sectorNumber=(index+1)*10;
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber});
+  assert.ok(boss);
+  const levelB=officialCampaignRivalLevel({mode:'campaign',sectorNumber,playerLevel:4});
+  const seed=100+index*7;
+  const cases=[60,90,120,150].map(bossShieldMax=>
+   audit({shipA:'R04',levelA:4,levelB,boss,seed,bossShieldMax}));
+  experiments.push({sectorNumber,boss:boss.planetId,
+   outcomes:cases.map(r=>({
+    shield:r.bossShieldMax,winner:r.winner,halfTurns:r.turns,
+    theoreticalMaxMinutes:r.minutesMax,shots:r.shots
+   }))});
+  assert.equal(cases.length,4);
+  assert.ok(cases.every(c=>c.actions>0&&Object.keys(c.failures).length===0));
+ }
+ console.log('LIVE_BOSS_SHIELD_EXPERIMENT '+JSON.stringify({
+  note:'Solo esperimento di test. I valori live rimangono 60 HP base.',
+  experiments
+ }));
+ assert.equal(experiments.length,4);
 });
