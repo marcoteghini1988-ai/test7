@@ -24,11 +24,11 @@ const PUBLIC_SIGNATURES=Object.freeze({
  R03:[M('plus',12),M('minus',7),M('times',24),A('divide',3,'pair')],
  R04:[M('times',18),M('minus',3),M('plus',9),P('pair')],
  E01:[M('times',24),M('plus',13),M('divide',2),A('minus',5,'trips','twoPair')],
- E02:[M('minus',8),M('times',18),M('plus',17),A('divide',3,'pair','fourKind')],
+ E02:[M('minus',8),A('times',18,'fourKind'),M('plus',17),A('divide',3,'pair','flush')],
  E03:[M('times',15),M('minus',6),M('plus',16),A('times',12,'trips','fullHouse')],
  E04:[M('plus',18),M('divide',3),M('times',21),A('minus',7,'pair','straight')],
  L01:[M('times',30),M('plus',19),M('minus',9),A('times',24,'trips','fullHouse')],
- L02:[M('divide',4),M('times',35),M('plus',21),A('minus',8,'trips','fourKind')],
+ L02:[M('divide',4),M('times',35),M('plus',21),A('minus',8,'trips','fullHouse')],
  L03:[M('times',36),M('minus',10),M('divide',3),A('plus',18,'pair','flush')],
  L04:[M('plus',22),M('times',42),M('minus',11),A('divide',4,'trips','royalFlush')]
 });
