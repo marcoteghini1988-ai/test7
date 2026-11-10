@@ -10,7 +10,7 @@ import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterNativeBonus,bossCharacterShieldFactor} from './bossCharacterCards.js';
 import {gunEfficiency,escortInterceptionEfficiency} from './fleetSystems.js';
 import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
-import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
+import {VULNERABILITY_RIFT_CARD_ID,riftProtectedDamage} from './tacticalVulnerabilityRift.js';
 import {hitMotherPartThroughRift} from './vitalDefense.js';
 
 export const LIVE_TURN_MS=30000;
@@ -39,6 +39,7 @@ export function supportedLiveSpecial(type){
 export function createOfficialLiveDuel(initial,nowMs=0){
  if(!initial?.sides?.A||!initial?.sides?.B)throw new TypeError('Duello ufficiale non valido');
  const battle=copy(initial);
+ for(const k of ['A','B'])battle.sides[k].liveWeaponCharges={};
  return {...battle,live:true,phase:'playing',activeSide:'A',turn:1,round:1,
   deadlineMs:nowMs+LIVE_TURN_MS,resolveUntilMs:null,
   actionUsed:{numeric:0,special:0},zones:{A:initialZones(),B:initialZones()},
@@ -93,11 +94,19 @@ export function advanceOfficialLiveDuel(battle,nowMs=0){
 }
 function reject(battle,reason){return {ok:false,reason,battle};}
 function weaponForCard(side,card,escortIndex=null){
- const guns=PHASE1_CATALOG.weapons.filter(w=>w.nave_id===side.shipId);
- const compatible=guns.filter(w=>w.seme_trigger==='*'||w.seme_trigger===SUIT_CODES[card.suit]);
- if(!compatible.length)return null;
  if(escortIndex!=null&&(!side.escorts[escortIndex]||side.escorts[escortIndex].hp<=0))return null;
- const chosen=compatible.slice().sort((a,b)=>b.danno_colpo_L1-a.danno_colpo_L1)[0];
+ const suit=SUIT_CODES[card?.suit];if(!suit)return null;
+ const guns=PHASE1_CATALOG.weapons.filter(w=>w.nave_id===side.shipId);
+ const charges=side.liveWeaponCharges||{};
+ const pending=guns.filter(w=>{
+  const loaded=charges[w.id];
+  if(!loaded?.values?.length||w.tipo==='Immediata'||w.tipo==='Accumulo')return false;
+  const needed=w.combo.split('@')[0].split('+');
+  return needed.includes(suit)&&!loaded.suits.includes(suit);
+ });
+ const possible=pending.length?pending:guns.filter(w=>w.seme_trigger==='*'||w.seme_trigger===suit);
+ if(!possible.length)return null;
+ const chosen=possible.slice().sort((a,b)=>b.danno_colpo_L1-a.danno_colpo_L1)[0];
  const installed=side.weapons.find(w=>w.id===chosen.id);
  return {weapon:chosen,damage:installed?.damage??chosen.danno_colpo_L1};
 }
@@ -140,8 +149,37 @@ function fireNumeric(b,key,card,shipId){
  if(shipId!=='mother'&&escortIndex==null)return {ok:false,reason:'invalid_ship'};
  const profile=weaponForCard(attacker,card,escortIndex);
  if(!profile)return {ok:false,reason:'suit_incompatible'};
- // Valore carta x danno base dell'arma compatibile; Aurora-0 e' universale ma leggera.
- let packet=Math.max(1,Math.floor(card.value*profile.damage*
+ // Le categorie originali W01–W42 non diventano spari automatici.
+ const w=profile.weapon,charges=attacker.liveWeaponCharges||(attacker.liveWeaponCharges={});
+ const previous=charges[w.id]||{values:[],suits:[],startedRound:b.round};
+ const suit=SUIT_CODES[card.suit];
+ let totalValue=card.value;
+ if(w.tipo==='Accumulo'){
+  totalValue=previous.values.reduce((sum,v)=>sum+v,card.value);
+  if(totalValue<w.soglia_munizioni){
+   charges[w.id]={values:[...previous.values,card.value],suits:[],startedRound:b.round};
+   event(b,key+': '+w.nome+' in accumulo · '+totalValue+'/'+w.soglia_munizioni,
+    'weapon_charge',{weaponId:w.id,charge:totalValue,threshold:w.soglia_munizioni});
+   return {ok:true,charging:true,weaponId:w.id};
+  }
+  delete charges[w.id];
+ }else if(w.tipo==='Combo simultanea'||w.tipo==='Combo a memoria'){
+  const needed=w.combo.split('@')[0].split('+');
+  const maxRounds=w.tipo==='Combo a memoria'?Number(w.combo.split('@')[1])||4:1;
+  const stored=b.round-previous.startedRound<maxRounds?previous:
+   {values:[],suits:[],startedRound:b.round};
+  if(stored.suits.includes(suit))return {ok:false,reason:'combo_suit_already_loaded'};
+  const suits=[...stored.suits,suit],values=[...stored.values,card.value];
+  if(!needed.every(x=>suits.includes(x))){
+   charges[w.id]={values,suits,startedRound:stored.startedRound};
+   event(b,key+': '+w.nome+' · '+suits.join('+')+' / '+needed.join('+'),
+    'weapon_charge',{weaponId:w.id,suits,needed});
+   return {ok:true,charging:true,weaponId:w.id};
+  }
+  totalValue=values.reduce((sum,value)=>sum+value,0);
+  delete charges[w.id];
+ }
+ let packet=Math.max(1,Math.floor(totalValue*profile.damage*
   gunEfficiency(attacker.defense,escortIndex==null?'mother':'escort')));
  const queued=b.pendingShot[key];
  if(queued){
@@ -171,7 +209,7 @@ function fireNumeric(b,key,card,shipId){
  if(hit.damage>0&&queued?.ion)enemy.ionized=true;
  if(hit.damage>0&&queued?.corrosion)enemy.corroded=true;
  b.pendingShot[key]=null;
- event(b,key+': '+profile.weapon.nome+' · '+card.value+card.suit+' · '+hit.damage+
+ event(b,key+': '+profile.weapon.nome+' · carica '+totalValue+' · '+hit.damage+
   ' danni barriera ('+intercepted+' intercettati)','shot',
   {card,shipId,weaponId:profile.weapon.id,damage:hit.damage});
  b.sides[key].sync=Math.min(100,b.sides[key].sync+(hit.damage>0?20:5));
@@ -195,7 +233,7 @@ function placeVital(b,key,card,vitalId){
   event(b,other(key)+': precisione su '+vitalId+' annullata dalla Contromisura','counter');
   return {ok:true,completed:false,countered:true};
  }
- const impact=rift?hitMotherPartThroughRift(defender.defense,vitalId,part.hp,list):
+ const impact=rift?hitMotherPartThroughRift(defender.defense,vitalId,riftProtectedDamage(part.hp,true),list):
   hitMotherPart(defender.defense,vitalId,part.hp,list);
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
@@ -204,10 +242,12 @@ function placeVital(b,key,card,vitalId){
  b.vitalBuilds[key][vitalId]=[];
  b.sides[key].sync=Math.min(100,b.sides[key].sync+25);
  event(b,key+': combinazione '+op+' completata · '+vitalId.toUpperCase()+
-  ' DISTRUTTO · esplosione diretta, nessun proiettile','vital_destroyed',{vitalId,op});
- event(b,other(key)+': '+TACTICAL_VITAL_EFFECTS[vitalId].destroyed);
- if(vitalId==='shieldGenerator'){
-  defender.defense=damageMotherShield(defender.defense,defender.defense.shield.hp).defense;
+  (impact.destroyed?' DISTRUTTO · esplosione diretta':' colpito per '+impact.damage+' HP'),
+  impact.destroyed?'vital_destroyed':'vital_hit',{vitalId,op,damage:impact.damage});
+ if(impact.destroyed){
+  event(b,other(key)+': '+TACTICAL_VITAL_EFFECTS[vitalId].destroyed);
+  if(vitalId==='shieldGenerator')
+   defender.defense=damageMotherShield(defender.defense,defender.defense.shield.hp).defense;
  }
  closeIfWon(b);
  return {ok:true,completed:true,op};
