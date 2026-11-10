@@ -902,6 +902,22 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
   // scarta una numerica con costo di un'azione per preparare la pesca
   // vera del turno successivo. Le firme valide sono cercate PRIMA.
   if(enemy.defense.shield.hp<=0&&me.numeric.hand.length){
+   // Boss campagna: quando le firme sono bloccate, usa un Ricambio
+   // realmente pescato PRIMA di consumare le tre azioni numeriche.
+   // Mai duplicare l'effetto nello stesso turno o riciclare le sole
+   // carte appena scartate se non esistono altri numeri nel mazzo/scarto.
+   if(me.bossPlanetId&&battle.actionUsed.special<LIVE_SPECIAL_LIMIT&&
+      me.numeric.deck.length+me.numeric.discard.length>0&&
+      !battle.zones[key].open.some(x=>x?.type==='tactic-numeric-recycle')){
+    const slot=battle.zones[key].open.findIndex(x=>!x);
+    const index=me.special.hand.findIndex(c=>c.type==='tactic-numeric-recycle');
+    if(slot>=0&&index>=0){
+     const action={type:'special',index,slot:'open-'+slot,
+      ...aiSpecialTargets('tactic-numeric-recycle',me)};
+     if(applyOfficialLiveAction(battle,key,action,battle.deadlineMs-1).ok)
+      return action;
+    }
+   }
    const index=me.numeric.hand.findIndex(c=>!weaponForCard(me,c));
    return {type:'numeric-discard',index:index>=0?index:0};
   }
