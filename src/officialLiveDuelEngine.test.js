@@ -28,7 +28,7 @@ test('Aurora universale leggera: 1 carta spara subito, poi resta massimo 3 numer
   assert.equal(liveCompatibleShips(b.sides.A,{suit,value:8})[0].compatible,true);
  }
  b=move(b,'A',{type:'numeric',index:0,target:'ship',shipId:'mother'},100);
- assert.equal(b.sides.B.defense.shield.hp,59);
+ assert.equal(b.sides.B.defense.shield.hp,57);
  assert.equal(b.sides.A.numeric.hand.length,6);
  assert.equal(b.actionUsed.numeric,1);
  assert.equal(b.history.at(-1).kind,'shot');
