@@ -5,7 +5,7 @@ import {TACTICAL_SPECIALS} from './simultaneousDuelEngine.js';
 import {VITAL_IDS,damageMotherShield,restoreMotherShield,exposeMotherPart,
  hitMotherPart,remainingExposureSlots,motherDestroyed} from './vitalDefense.js';
 import {tacticalSignatureOperation,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
-import {findOfficialLiveVitalCompletion} from './officialLiveAiPlanning.js';
+import {findOfficialLiveVitalCompletion,findOfficialLiveVitalProgress} from './officialLiveAiPlanning.js';
 import {isPvpTerrain,pvpTerrainDefinition,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterActive,
@@ -704,6 +704,19 @@ export function chooseOfficialLiveAiAction(battle){
    if(plan?.length)return {type:'numeric',index:plan[0],target:'vital',vitalId:id};
    if(stored.length>=tacticalSignatureSlotCount(knownSignature))
     return {type:'clearVital',vitalId:id};
+  }
+  // Per Poker 4/5 carte permette una costruzione su turni diversi anche
+  // se tutte le carte non sono ancora state pescate. Usa solo il proprio
+  // mazzo, nessuna mano avversaria o mutazione segreta.
+  for(const id of VITAL_IDS){
+   const target=enemy.defense.parts[id];
+   if(!target||target.hp<=0||!target.exposed)continue;
+   const knownSignature=battle.liveLegacy?.mutations.A?.vitalId===id?
+    battle.liveLegacy.mutations.A.originalSignature:target.signature;
+   const progress=findOfficialLiveVitalProgress(knownSignature,
+    battle.vitalBuilds.B[id],me.numeric.hand,me.numeric.deck);
+   if(progress!=null)
+    return {type:'numeric',index:progress,target:'vital',vitalId:id};
   }
   // Una nuova esposizione non interrompe una combinazione completabile.
   for(const id of VITAL_IDS){
