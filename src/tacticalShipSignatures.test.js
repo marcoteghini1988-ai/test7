@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {VITAL_IDS,matchesVitalSignature} from './vitalDefense.js';
 import {TACTICAL_SHIP_SIGNATURES,tacticalShipSignatures,tacticalSignatureMatches,
- tacticalSignatureOperation} from './tacticalShipSignatures.js';
+ tacticalSignatureOperation,POKER_SIGNATURE_COUNTS,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
 import {createTacticalDuel,sealTacticalOrder,advanceTacticalDuel} from './simultaneousDuelEngine.js';
 
 const cards=(a,b,c=null)=>[a,b,...(c==null?[]:[c])].map((value,i)=>({id:'c'+i,value,suit:['♣','♦','♥'][i]}));
@@ -28,7 +28,7 @@ test('I 17 modelli hanno esattamente quattro firme stabili e senza duplicati di 
    const sign=sig[id],options=mathSigOptions(sign);
    assert.ok(options.length>=1,ship.id+'/'+id);
    assert.ok(options.every(o=>['mathGate','poker'].includes(o.kind)));
-   assert.ok(options.every(o=>o.kind==='mathGate'||['pair','trips'].includes(o.pattern)));
+   assert.ok(options.every(o=>o.kind==='mathGate'||Object.hasOwn(POKER_SIGNATURE_COUNTS,o.pattern)));
    const found=options.some(o=>o.kind==='mathGate'?!!sample(o.op,o.target):
     o.pattern==='pair'?matchesVitalSignature(o,cards(7,7)):
     matchesVitalSignature(o,cards(7,7,7)));
@@ -80,4 +80,47 @@ test('La firma appartenente a un modello diverso non viene accettata dal motore'
  // 8 minus 5 = 3 works for R04/C01, not the L04 heavy-gun signature (times 42).
  assert.equal(result.sides.B.defense.parts.weapons.hp,10);
  assert.ok(result.lastEvents.some(m=>m.includes('combinazione non valida')));
+});
+
+test('Progressione Poker lunga: solo Epiche e Leggendarie e sempre una formula matematica più corta',()=>{
+ const expected={
+  E01:'twoPair',E02:'fourKind',E03:'fullHouse',E04:'straight',
+  L01:'fullHouse',L02:'fourKind',L03:'flush',L04:'royalFlush'
+ };
+ for(const [ship,pattern] of Object.entries(expected)){
+  const sign=tacticalShipSignatures(ship).command;
+  assert.equal(sign.kind,'any',ship);
+  assert.equal(sign.options.filter(o=>o.kind==='poker'&&o.pattern===pattern).length,1,ship);
+  assert.equal(sign.options.some(o=>o.kind==='mathGate'&&sample(o.op,o.target)),true,ship);
+  assert.equal(tacticalSignatureSlotCount(sign),POKER_SIGNATURE_COUNTS[pattern],ship);
+ }
+ for(const id of ['N00','C01','C02','C03','C04','R01','R02','R03','R04']){
+  const signatures=tacticalShipSignatures(id);
+  assert.equal(Object.values(signatures).some(s=>
+   mathSigOptions(s).some(o=>o.kind==='poker'&&POKER_SIGNATURE_COUNTS[o.pattern]>=4)),false,
+   'nessuna nuova barriera numerica per modello iniziale '+id);
+ }
+});
+test('Alternative Poker lunghe: 4/5 numeriche REALI 1–13, firma canonica e soluzione base intatta',()=>{
+ const hand=(ranks,suits)=>ranks.map((value,i)=>({id:'n'+i,value,suit:suits[i]}));
+ const examples={
+  E01:hand([7,7,3,3],['♥','♠','♦','♣']),
+  E02:hand([4,4,4,4],['♥','♠','♦','♣']),
+  E03:hand([7,7,3,3,7],['♥','♠','♦','♣','♣']),
+  E04:hand([2,3,4,5,6],['♥','♠','♦','♣','♥']),
+  L01:hand([7,7,3,3,7],['♥','♠','♦','♣','♣']),
+  L02:hand([4,4,4,4],['♥','♠','♦','♣']),
+  L03:hand([1,4,7,9,12],['♣','♣','♣','♣','♣']),
+  L04:hand([1,10,11,12,13],['♠','♠','♠','♠','♠'])
+ };
+ const patterns={E01:'twoPair',E02:'fourKind',E03:'fullHouse',E04:'straight',
+  L01:'fullHouse',L02:'fourKind',L03:'flush',L04:'royalFlush'};
+ for(const [shipId,example] of Object.entries(examples)){
+  const sig=tacticalShipSignatures(shipId).command;
+  assert.equal(tacticalSignatureOperation(sig,example),patterns[shipId],shipId);
+  assert.equal(tacticalSignatureOperation(sig,example.slice(0,2)),null,
+   'le prime due carte della prova non devono abbattere il vitale di '+shipId);
+  const basic=sig.options.find(o=>o.kind==='mathGate');
+  assert.equal(tacticalSignatureOperation(sig,sample(basic.op,basic.target)),basic.op,shipId);
+ }
 });
