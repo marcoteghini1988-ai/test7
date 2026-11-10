@@ -116,6 +116,11 @@ export function officialBattleResult(battle,mode,sectorNumber){
  const current=side.defense.shield.hp+parts.reduce((sum,p)=>sum+p.hp,0);
  const health=max?current/max:0;
  const winner=battle.winner==='A'?'player':battle.winner==='B'?'enemy':'draw';
+ // Durata effettiva misurata dal runtime LIVE: non presumere che tutti
+ // i turni da 30 secondi siano stati utilizzati interamente.
+ const elapsedMs=battle.live&&Number.isFinite(battle.startedAtMs)&&
+  Number.isFinite(battle.finishedAtMs)
+  ?Math.max(0,battle.finishedAtMs-battle.startedAtMs):null;
  return {
   winner,eligibleForRewards:winner==='player'&&['adventure','campaign'].includes(mode),
   meta:{
@@ -134,6 +139,9 @@ export function officialBattleResult(battle,mode,sectorNumber){
     enemyShieldDamagePct:Math.round(
      (1-battle.sides.B.defense.shield.hp/battle.sides.B.defense.shield.max)*100),
     simultaneousDuel:!battle.live,liveDuel:!!battle.live,sectorNumber,
+    elapsedSeconds:elapsedMs===null?null:Math.round(elapsedMs/1000),
+    elapsedMinutes:elapsedMs===null?null:Math.round(elapsedMs/6000)/10,
+    finishReason:battle.live?battle.liveFinishReason??null:null,
     bossPlanetId:battle.sides.B.bossPlanetId??null,
     bossSectorLevel:battle.sides.B.bossPlanetId==null?null:10
    }
