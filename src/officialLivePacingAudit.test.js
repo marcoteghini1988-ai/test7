@@ -37,11 +37,12 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
   b.sides.B.defense.shield.hp=bossShieldMax;
  }
  let clock=1000,actions=0,turnChanges=0;
- const failures={},actionsBySide={A:{},B:{}};
+ const failures={},actionsBySide={A:{},B:{}},specialTypesBySide={A:{},B:{}};
  while(b.phase==='playing'&&actions<400){
   const key=b.activeSide,turn=b.turn;
   const action=chooseOfficialLiveAiAction(b,key);
   assert.ok(action,'nessuna azione calcolabile: '+key+' turno '+turn);
+  const selectedSpecial=action.type==='special'?b.sides[key].special.hand[action.index]?.type:null;
   const at=Math.max(clock,(b.aiReadyAtMs||0)+5);
   assert.ok(at<b.deadlineMs,'azione non simulabile entro 30 secondi');
   const result=applyOfficialLiveAction(b,key,action,at);
@@ -50,6 +51,8 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
    assert.fail(key+' '+JSON.stringify(action)+' -> '+result.reason);
   }
   actionsBySide[key][action.type]=(actionsBySide[key][action.type]||0)+1;
+  if(selectedSpecial)specialTypesBySide[key][selectedSpecial]=
+   (specialTypesBySide[key][selectedSpecial]||0)+1;
   b=result.battle;
   assert.ok(b.actionUsed.numeric<=LIVE_NUMERIC_LIMIT&&b.actionUsed.special<=LIVE_SPECIAL_LIMIT);
   if(actions%11===0){
@@ -74,7 +77,7 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
   destroyedA:VITAL_IDS.filter(id=>b.sides.A.defense.parts[id].hp<=0).length,
   destroyedB:VITAL_IDS.filter(id=>b.sides.B.defense.parts[id].hp<=0).length,
   shieldA:b.sides.A.defense.shield.hp,shieldB:b.sides.B.defense.shield.hp,
-  actionsBySide,failures,
+  actionsBySide,specialTypesBySide,failures,
   stalled:b.winner==='draw'?Object.fromEntries(['A','B'].map(key=>[key,{
    aliveVitals:VITAL_IDS.filter(id=>b.sides[key].defense.parts[id].hp>0),
    builds:Object.fromEntries(VITAL_IDS.filter(id=>b.vitalBuilds[key][id].length)
@@ -225,6 +228,54 @@ test('Audit 12 boss contro tre navicelle a parita di livello e due seed',()=>{
  assert.equal(rows.length,12*ships.length*offsets.length);
  assert.equal(report.wins+report.losses+report.draws,rows.length);
  console.log('LIVE_BOSSES_FLEET_VARIANTS '+JSON.stringify(report));
+});
+
+// Diagnostica delle QUATTRO identita' piu delicate, con carte fisiche e
+// stesso motore usato in partita. Registra i tipi effettivamente giocati:
+// non attribuisce a un boss una speciale che non ha pescato.
+test('Diagnostica 4 boss critici: uso speciale reale su 48 duelli multi-seed',()=>{
+ const cases=[
+  {sector:60,bossId:8,name:'Leviatano Abissale'},
+  {sector:70,bossId:9,name:'Signore delle Ombre'},
+  {sector:80,bossId:11,name:'Idra Criogenica'},
+  {sector:100,bossId:17,name:'Cristallo di Risonanza'}
+ ];
+ const ships=['C01','E01','L04'],offsets=[1301,1531,1777,2017];
+ const results=[];
+ for(const info of cases){
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber:info.sector});
+  assert.ok(boss&&boss.planetId===info.bossId,'identita boss canonica');
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:info.sector,playerLevel:4});
+  for(const ship of ships)for(const offset of offsets){
+   const seed=info.sector+offset;
+   const r=audit({shipA:ship,levelA:level,levelB:level,boss,seed,log:false});
+   results.push({sector:info.sector,name:boss.name,ship,seed,winner:r.winner,
+    halfTurns:r.turns,reason:r.finishReason,shots:r.shots,
+    discardsA:r.actionsBySide.A['numeric-discard']||0,
+    discardsB:r.actionsBySide.B['numeric-discard']||0,
+    playedA:r.specialTypesBySide.A,playedB:r.specialTypesBySide.B,
+    destroyedA:r.destroyedA,destroyedB:r.destroyedB});
+  }
+ }
+ assert.equal(results.length,4*3*4);
+ assert.ok(results.every(r=>['A','B','draw'].includes(r.winner)));
+ const byBoss=cases.map(info=>{
+  const rows=results.filter(r=>r.sector===info.sector);
+  const turns=rows.map(r=>r.halfTurns).sort((a,b)=>a-b);
+  const specials={};
+  for(const row of rows)for(const [type,count]of Object.entries(row.playedB))
+   specials[type]=(specials[type]||0)+count;
+  return {boss:info.name,planetId:info.bossId,
+   winsA:rows.filter(r=>r.winner==='A').length,
+   winsBoss:rows.filter(r=>r.winner==='B').length,
+   draws:rows.filter(r=>r.winner==='draw').length,
+   minHalfTurns:turns[0],medianHalfTurns:(turns[5]+turns[6])/2,
+   maxHalfTurns:turns[11],specials,discardsBoss:rows.reduce((n,r)=>n+r.discardsB,0)};
+ });
+ const report={sampleSize:results.length,ships,seedsPerMatchup:offsets.length,
+  note:'IA vs IA; 30 s per mezzo turno e un limite massimo, NON durata osservata sul telefono. Nessuna modifica ai boss.',
+  byBoss,rows:results};
+ console.log('LIVE_CRITICAL_BOSS_SPECIAL_AUDIT '+JSON.stringify(report));
 });
 
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
