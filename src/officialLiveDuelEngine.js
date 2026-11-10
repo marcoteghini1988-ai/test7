@@ -419,9 +419,13 @@ export function chooseOfficialLiveAiAction(battle){
     return {type:'expose',vitalId:id};
    if(target.exposed){
     const stored=battle.vitalBuilds.B[id];
-    const matching=me.numeric.hand.findIndex(c=>stored.length<tacticalSignatureSlotCount(target.signature)&&(
-     tacticalSignatureOperation(target.signature,[...stored,c])||
-     stored.length<tacticalSignatureSlotCount(target.signature)-1));
+    // La IA non legge la firma segretamente mutata dal difensore umano:
+    // pianifica sulla firma pubblica precedente, poi verifica il risultato reale.
+    const knownSignature=battle.liveLegacy?.mutations.A?.vitalId===id?
+     battle.liveLegacy.mutations.A.originalSignature:target.signature;
+    const matching=me.numeric.hand.findIndex(c=>stored.length<tacticalSignatureSlotCount(knownSignature)&&(
+     tacticalSignatureOperation(knownSignature,[...stored,c])||
+     stored.length<tacticalSignatureSlotCount(knownSignature)-1));
     if(matching>=0)return {type:'numeric',index:matching,target:'vital',vitalId:id};
    }
   }
