@@ -598,6 +598,29 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
   event(b,key+': combinazione di '+id+' annullata, carte agli scarti');
   return {ok:true,battle:b};
  }
+ // Afrodite: la passiva del mazzo boss permette di scambiare carte
+ // ESISTENTI dopo il cooldown reale (13/11/9 secondi per i gradi 1–3).
+ // E' distinta dalla carta speciale Ricambio e non la simula.
+ if(action.type==='boss-recycle'){
+  const cooldown=liveNumericBossRecycleCooldown(side);
+  if(!(cooldown>0))return reject(battle,'boss_recycle_unavailable');
+  if(nowMs<(side.bossNumericDeck.liveNextRecycleAtMs||0))
+   return reject(battle,'boss_recycle_cooldown');
+  const indices=action.recycleIndices;
+  if(!Array.isArray(indices)||indices.length<1||indices.length>2||
+    new Set(indices).size!==indices.length||
+    indices.some(i=>!Number.isInteger(i)||i<0||i>=side.numeric.hand.length))
+   return reject(battle,'recycle_selection_required');
+  const removed=[...indices].sort((a,z)=>z-a).map(i=>consume(side.numeric,i));
+  liveLegacyOnNumericRecycle(b,key,removed);
+  side.numeric.recycleEvents=(side.numeric.recycleEvents||0)+1;
+  nextDraw(side.numeric,7);
+  side.bossNumericDeck.liveNextRecycleAtMs=nowMs+cooldown;
+  event(b,key+': Ricambio armonico Afrodite · '+removed.length+
+   ' numeriche sostituite dal mazzo reale','boss_recycle',
+   {count:removed.length,cooldownMs:cooldown});
+  return {ok:true,battle:b};
+ }
  if(action.type==='numeric'){
   if(b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT)return reject(battle,'numeric_turn_limit');
   const index=action.index;
