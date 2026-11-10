@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,
  chooseOfficialLiveAiAction} from './officialLiveDuelEngine.js';
+import {VITAL_IDS,exposeMotherPart} from './vitalDefense.js';
 
 function ready({ship='C01',boss=2,levelA=1,mode='campaign'}={}){
  const tactical=createTacticalDuel({
@@ -88,4 +89,45 @@ test('PvP finto non riceve il comportamento esclusivo dei boss nemici',()=>{
  assert.equal(choice.type,'numeric');
  assert.equal(choice.target,'ship');
  assert.equal(b.sides.B.bossPlanetId,null);
+});
+
+test('Boss ricicla 2 numeriche vere prima di scartare quando la barriera e a zero',()=>{
+ let b=ready({ship:'C01',boss:2});
+ equipSpecial(b,'tactic-numeric-recycle');
+ b.sides.A.defense.shield.hp=0;
+ for(const id of VITAL_IDS){
+  const result=exposeMotherPart(b.sides.A.defense,id);
+  assert.equal(result.exposed,true);
+  b.sides.A.defense=result.defense;
+  // Fixture senza formule giocabili: isola la scelta di Ricambio.
+  b.sides.A.defense.parts[id].signature={
+   kind:'mathGate',op:'plus',target:99,allowedCardCounts:[2,3]
+  };
+ }
+ const before=[...b.sides.B.numeric.hand,...b.sides.B.numeric.deck,
+  ...b.sides.B.numeric.discard];
+ assert.equal(before.length,52);
+ const expected=new Set(before.map(c=>c.id));
+ const pvp=structuredClone(b);
+ pvp.mode='pvp';pvp.sides.B.bossPlanetId=null;
+ assert.equal(chooseOfficialLiveAiAction(pvp).type,'numeric-discard',
+  'il PvP simulato conserva la propria priorita numerica');
+ const first=chooseOfficialLiveAiAction(b);
+ assert.equal(first.type,'special');
+ assert.equal(b.sides.B.special.hand[first.index].type,'tactic-numeric-recycle');
+ assert.equal(first.slot,'open-0');
+ assert.equal(first.recycleIndices.length,2);
+ b=act(b,first,1);
+ assert.equal(b.actionUsed.numeric,0);
+ assert.equal(b.actionUsed.special,1);
+ assert.equal(b.zones.B.open[0].type,'tactic-numeric-recycle');
+ assert.equal(b.sides.B.numeric.hand.length,7,'mano ripristinata usando il mazzo');
+ const after=[...b.sides.B.numeric.hand,...b.sides.B.numeric.deck,
+  ...b.sides.B.numeric.discard];
+ assert.equal(after.length,52);
+ assert.deepEqual(new Set(after.map(c=>c.id)),expected,
+  'le carte appartengono tutte al mazzo fisico originale');
+ const second=chooseOfficialLiveAiAction(b);
+ assert.equal(second.type,'numeric-discard',
+  'non usa una seconda carta Ricambio nello stesso turno senza motivo');
 });
