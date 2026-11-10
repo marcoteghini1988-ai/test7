@@ -14,16 +14,16 @@ const play=(b,action,t)=>{
  assert.equal(r.ok,true,JSON.stringify({action,reason:r.reason}));
  return r.battle;
 };
-test('22 condizioni offensive supportate, sette difese distinte, quattro offensive ancora da adattare',()=>{
+test('23 condizioni offensive supportate, sette difese distinte, tre offensive ancora da adattare',()=>{
  const all=Object.values(COMMANDER_ABILITIES);
  const triggers=[...LIVE_FORMULA_PILOT_TRIGGERS,...LIVE_NATIVE_PILOT_TRIGGERS];
  assert.equal(all.length,33);
  assert.equal(all.filter(p=>p.role==='Difesa').length,7);
- assert.equal(triggers.length,22);
- assert.equal(new Set(triggers).size,22);
- assert.equal(all.filter(p=>p.role==='Attacco'&&triggers.includes(p.trigger)).length,22);
+ assert.equal(triggers.length,23);
+ assert.equal(new Set(triggers).size,23);
+ assert.equal(all.filter(p=>p.role==='Attacco'&&triggers.includes(p.trigger)).length,23);
  assert.deepEqual(all.filter(p=>p.role==='Attacco'&&!triggers.includes(p.trigger)).map(p=>p.trigger),
- ['repeat_vital','recycled_shot','alternate_escort','third_vital']);
+ ['repeat_vital','alternate_escort','third_vital']);
 });
 test('Una formula matematica vera attiva un bonus su successivo proiettile, non sul vitale',()=>{
  const b=scenario('pilot_com_1'),a=b.sides.A,z=b.sides.B;
