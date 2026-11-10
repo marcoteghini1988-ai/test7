@@ -25,7 +25,7 @@ import {supportedLiveModule,initialLiveModuleEffects,playOfficialLiveModule} fro
 import {liveBossStartTurn,liveBossIncomingShieldFactor,liveBossOnShieldHit,
  liveBossNativeModifiers,liveBossAfterNativeShot,liveBossOnCounter,
  liveBossOnVitalImpact,liveBossOnNumericCardsSpent,liveBossRepairValue,
- liveBossClearPoisonOnHeal} from './officialLiveBossPowers.js';
+ liveBossClearPoisonOnHeal,liveBossDominantSuit} from './officialLiveBossPowers.js';
 import {isTacticalEpic,tacticalEpicActive} from './tacticalEpicCards.js';
 import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
  liveEpicOnShieldDamage,liveEpicRecycle,liveEpicOnVitalFormula,
@@ -76,7 +76,9 @@ export function createOfficialLiveDuel(initial,nowMs=0){
   deadlineMs:nowMs+LIVE_TURN_MS,resolveUntilMs:null,
   actionUsed:{numeric:0,special:0},zones:{A:initialZones(),B:initialZones()},
   vitalBuilds:{A:initialBuilds(),B:initialBuilds()},pendingShot:{A:null,B:null},liveLegacy:createLiveLegacy(),liveModuleEffects:initialLiveModuleEffects(),
-  history:[],winner:null,lastEvents:['Turno 1 · TU · 30 secondi per agire in diretta'],
+  history:[],winner:null,lastEvents:[...(liveBossDominantSuit(battle.sides.B,1)?
+   ['Sovrano del Vuoto · seme dominante del ciclo 1: '+liveBossDominantSuit(battle.sides.B,1)]:[]),
+   'Turno 1 · TU · 30 secondi per agire in diretta'],
   orders:{A:null,B:null},aiReadyAtMs:nowMs+650};
 }
 function consume(pile,index){
@@ -131,7 +133,13 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  b.turn++;
  if(b.turn>LIVE_MAX_TURNS){b.phase='finished';b.winner='draw';event(b,'Limite turni raggiunto: pareggio');return b;}
  b.activeSide=other(previous);
+ const previousRound=b.round;
  b.round=Math.ceil(b.turn/2);
+ if(b.round!==previousRound){
+  const suit=liveBossDominantSuit(b.sides.B,b.round);
+  if(suit)event(b,'Sovrano del Vuoto · seme dominante ciclo '+b.round+': '+suit,
+   'boss_void_suit',{suit});
+ }
  liveNumericBossExpireStatus(b.sides[b.activeSide],b.turn);
  b.deadlineMs=nowMs+LIVE_TURN_MS;
  b.aiReadyAtMs=nowMs+850;
