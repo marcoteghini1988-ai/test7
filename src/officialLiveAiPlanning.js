@@ -63,14 +63,17 @@ export function findOfficialLiveMathProgress(signature,stored=[],hand=[],deck=[]
 // mazzo e mano non esiste più alcuna combinazione 2/3 valida. Non guarda
 // le carte nemiche, non inventa pescate e non scarta gli alloggiamenti
 // Poker alternativi, che hanno proprie regole di completamento.
-export function officialLiveMathDeadEnd(signature,stored=[],hand=[],deck=[]){
+export function officialLiveMathDeadEnd(signature,stored=[],hand=[],deck=[],discard=[]){
  if(!signature||!Array.isArray(stored)||!stored.length||
-  !Array.isArray(hand)||!Array.isArray(deck))return false;
+  !Array.isArray(hand)||!Array.isArray(deck)||!Array.isArray(discard))return false;
  const options=signature.kind==='any'?signature.options||[]:[signature];
  if(options.some(x=>x?.kind==='poker'))return false;
  const gates=options.filter(x=>x?.kind==='mathGate');
  if(!gates.length)return false;
- const pool=[...hand,...deck],cards=[...stored];
+ // Gli scarti appartengono al giocatore e possono tornare nel mazzo
+ // quando il mazzo corrente si esaurisce: non cancellare un progetto
+ // ancora possibile con un riciclo REALE, senza creare carte nuove.
+ const pool=[...hand,...deck,...discard],cards=[...stored];
  for(const gate of gates){
   const counts=gate.allowedCardCounts||[2,3];
   if(counts.includes(cards.length)&&
