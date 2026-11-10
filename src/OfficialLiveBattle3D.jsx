@@ -22,10 +22,13 @@ import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
+import {MALUS_CHOICES} from './tacticalLegacyEvents.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 import './OfficialLiveBattle3D.css';
 
+const TARGETED_SPECIALS=new Set(['tactic-bomb','tactic-golden','tactic-malus',
+ 'tactic-signature-mutation','tactic-numeric-recycle','tactic-counter']);
 const pct=(a,b)=>b>0?Math.max(0,Math.min(100,Math.round(a/b*100))):0;
 const other=k=>k==='A'?'B':'A';
 function startSession(options){
@@ -90,8 +93,12 @@ function Slot({kind,index,side,card,onActivate,selected}){
   title={visible?TACTICAL_SPECIALS[card?.type]?.name||label:label}
   aria-label={label+(card?' · '+(visible?TACTICAL_SPECIALS[card.type]?.name:'coperta'):' · vuoto')}
   onClick={onActivate}>
-  {visible&&officialSpecialArtPath(card?.type)?
-    <img className="live-slot-art" src={officialSpecialArtPath(card.type)} alt="" draggable={false}/>:
+  {visible&&(officialSpecialArtPath(card?.type)||
+    (isBossCharacterCard(card?.type)?bossCharacterDefinition(card.type)?.imagePath:null)||
+    (isPvpTerrain(card?.type)?pvpTerrainDefinition(card.type)?.imagePath:null))?
+    <img className="live-slot-art" src={officialSpecialArtPath(card?.type)||
+     (isBossCharacterCard(card?.type)?bossCharacterDefinition(card.type)?.imagePath:
+      pvpTerrainDefinition(card.type)?.imagePath)} alt="" draggable={false}/>:
     <span>{visible?(card?officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]).symbol:symbol):
     card?'?':symbol}</span>}
  </button>;
@@ -114,6 +121,8 @@ export default function OfficialLiveBattle3D({
  const [battle,setBattle]=useState(session.battle);
  const [now,setNow]=useState(Date.now);
  const [chosen,setChosen]=useState(null),[vital,setVital]=useState(null);
+ const [specialChoice,setSpecialChoice]=useState(null);
+ const [recycleChoice,setRecycleChoice]=useState([]);
  const [message,setMessage]=useState(''),[details,setDetails]=useState(false);
  const [busy,setBusy]=useState(false);
  const claimed=useRef(false);
@@ -145,7 +154,7 @@ export default function OfficialLiveBattle3D({
  function restart(){
   const next=startSession(options);
   claimed.current=false;setSession(next);setBattle(next.battle);
-  setChosen(null);setVital(null);setMessage('');setDetails(false);
+  setChosen(null);setVital(null);setSpecialChoice(null);setRecycleChoice([]);setMessage('');setDetails(false);
  }
  function action(intent){
   if(!battle)return;
@@ -156,6 +165,23 @@ export default function OfficialLiveBattle3D({
   return true;
  }
  function selectCard(kind,id){setChosen(old=>old?.kind===kind&&old?.id===id?null:{kind,id});}
+ function playSpecialAt(index,slot){
+  const card=battle?.sides.A.special.hand[index];
+  if(!card)return;
+  if(TARGETED_SPECIALS.has(card.type)){
+   setSpecialChoice({type:card.type,cardId:card.id,slot});
+   setRecycleChoice([]);setMessage('');
+   return;
+  }
+  action({type:'special',index,slot});
+ }
+ function completeSpecialChoice(choice){
+  if(!specialChoice||!battle)return;
+  const index=battle.sides.A.special.hand.findIndex(c=>c.id===specialChoice.cardId);
+  if(index<0){setSpecialChoice(null);return;}
+  const ok=action({type:'special',index,slot:specialChoice.slot,...choice});
+  if(ok){setSpecialChoice(null);setRecycleChoice([]);}
+ }
  function useSelected(target,extra={}){
   if(!chosen||!battle||battle.activeSide!=='A')return;
   const me=battle.sides.A;
@@ -168,7 +194,7 @@ export default function OfficialLiveBattle3D({
    else if(target==='vital'&&vital)
     action({type:'numeric',index,target:'vital',vitalId:vital});
   }else{
-   action({type:'special',index,slot:target,...extra});
+   playSpecialAt(index,target);
   }
  }
  function touchRelease(e,kind,id){
@@ -183,7 +209,7 @@ export default function OfficialLiveBattle3D({
    if(target==='ship'||target.startsWith('escort-'))
     action({type:'numeric',index,target:'ship',shipId:target==='ship'?'mother':target});
    else if(target==='vital'&&vital)action({type:'numeric',index,target:'vital',vitalId:vital});
-  }else action({type:'special',index,slot:target});
+  }else playSpecialAt(index,target);
  }
  async function leave(){
   if(busy)return;
@@ -219,6 +245,7 @@ export default function OfficialLiveBattle3D({
  const cannotAct=!myTurn||battle.phase==='finished';
  const last=battle.history.at(-1);
  const visualIndex=battle.history.findLastIndex(e=>e.kind==='shot'||e.kind==='vital_destroyed');
+ const choiceCard=specialChoice?player.special.hand.find(c=>c.id===specialChoice.cardId):null;
  const visual=visualIndex>=0?battle.history[visualIndex]:null;
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  return <div className="es-math-scope live-viewport">
@@ -237,7 +264,7 @@ export default function OfficialLiveBattle3D({
      action({type:'numeric',index,target:'ship',shipId:slot==='ship'?'mother':slot});
     else if(kind==='numeric'&&slot==='vital'&&vital)
      action({type:'numeric',index,target:'vital',vitalId:vital});
-    else if(kind==='special')action({type:'special',index,slot});
+    else if(kind==='special')playSpecialAt(index,slot);
    }}
    style={{transform:'translate(-50%,-50%) scale('+scale+')'}}>
    <div className="space-back metal-arena live-background" aria-hidden="true"
