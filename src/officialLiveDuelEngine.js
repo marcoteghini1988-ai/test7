@@ -18,6 +18,10 @@ import {LIVE_LEGACY_TYPES,createLiveLegacy,playLiveLegacyCard,liveLegacyOnTurnSt
  liveLegacyOutgoingFactor,liveLegacyIncomingFactor} from './officialLiveLegacyCards.js';
 import {isModuleCard,TACTICAL_MODULE_CARDS} from './tacticalEquipmentCards.js';
 import {supportedLiveModule,initialLiveModuleEffects,playOfficialLiveModule} from './officialLiveModules.js';
+import {liveBossStartTurn,liveBossIncomingShieldFactor,liveBossOnShieldHit,
+ liveBossNativeModifiers,liveBossAfterNativeShot,liveBossOnCounter,
+ liveBossOnVitalImpact,liveBossOnNumericCardsSpent,liveBossRepairValue,
+ liveBossClearPoisonOnHeal} from './officialLiveBossPowers.js';
 
 export const LIVE_TURN_MS=30000;
 export const LIVE_NUMERIC_LIMIT=3;
@@ -82,6 +86,7 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  if(b.liveModuleEffects[previous].lockUntilTurn&&
     b.turn>=b.liveModuleEffects[previous].lockUntilTurn)
   b.liveModuleEffects[previous].lockUntilTurn=0;
+ liveBossOnNumericCardsSpent(b,previous,b.actionUsed.numeric,b.round);
  b.zones[previous].open=[null,null];
  b.pendingShot[previous]=null;
  b.turn++;
@@ -94,6 +99,9 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  nextDraw(b.sides[b.activeSide].numeric,7);
  nextDraw(b.sides[b.activeSide].special,5);
  liveLegacyOnTurnStart(b,b.activeSide);
+ const bossRegen=liveBossStartTurn(b.sides[b.activeSide],b.round);
+ if(bossRegen?.repaired>0)
+  event(b,b.activeSide+': Idra Criogenica rigenera '+bossRegen.repaired+' HP reali','boss_regen');
  expireBossCharacter(b.sides[b.activeSide],b.round);
  if(!b.sides[b.activeSide].bossCharacter)b.zones[b.activeSide].character=null;
  event(b,'Turno '+b.turn+' · '+(b.activeSide==='A'?'TU':'AVVERSARIO')+' · 30 secondi');
@@ -146,6 +154,7 @@ function runTraps(b,defenderKey,trigger,damage,vital=null){
    blocked=true;activated=true;
   }
   if(activated){
+   if(type==='tactic-counter')liveBossOnCounter(owner,b.round);
    slots[i]=null;owner.special.discard.push(card);
    event(b,defenderKey+': trappola '+TACTICAL_SPECIALS[type].name+' attivata in risposta a '+trigger,
     'trap',{type,trigger});
@@ -210,6 +219,8 @@ function fireNumeric(b,key,card,shipId){
  packet=Math.floor(packet*liveLegacyOutgoingFactor(b,key));
  const terrain=pvpTerrainEffects(b.activeTerrain,b.round);
  packet=Math.floor(packet*terrain.nativeFactor);
+ const bossPower=liveBossNativeModifiers(attacker,enemy,packet,b.round);
+ packet=bossPower.damage;
  let intercepted=0;
  if(!queued?.piercing&&escortInterceptionEfficiency(enemy.defense)>0){
   for(const escort of enemy.escorts){
@@ -221,7 +232,8 @@ function fireNumeric(b,key,card,shipId){
  }
  let motherPacket=Math.max(0,packet-intercepted);
  const traps=runTraps(b,defenderKey,'shield',motherPacket);
- motherPacket=Math.floor(traps.damage*terrain.shieldFactor*liveLegacyIncomingFactor(b,defenderKey)*bossCharacterShieldFactor(enemy,b.round));
+ motherPacket=Math.floor(traps.damage*terrain.shieldFactor*liveLegacyIncomingFactor(b,defenderKey)*
+  bossCharacterShieldFactor(enemy,b.round)*liveBossIncomingShieldFactor(enemy));
  const liveGuard=b.liveModuleEffects[defenderKey];
  const blocked=Math.min(liveGuard.guard,motherPacket);
  if(blocked>0){
@@ -230,6 +242,8 @@ function fireNumeric(b,key,card,shipId){
  }
  const hit=damageMotherShield(enemy.defense,motherPacket);
  enemy.defense=hit.defense;
+ liveBossOnShieldHit(enemy,hit.damage,b.round);
+ liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
  if(hit.damage>0&&queued?.ion)enemy.ionized=true;
  if(hit.damage>0&&queued?.corrosion)enemy.corroded=true;
  b.pendingShot[key]=null;
@@ -262,6 +276,7 @@ function placeVital(b,key,card,vitalId){
   hitMotherPart(defender.defense,vitalId,part.hp,list);
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
+ liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
  if(rift)attacker.liveRift=false;
  b.sides[key].numeric.discard.push(...list);
  b.vitalBuilds[key][vitalId]=[];
@@ -316,7 +331,11 @@ function playSpecial(b,key,index,slot,choice={}){
  if(type==='support-shield-repair'){
   if(side.defense.parts.shieldGenerator.hp===0||side.defense.shield.hp===side.defense.shield.max)
    return {ok:false,reason:'repair_unavailable'};
-  side.defense=restoreMotherShield(side.defense,pvpTerrainRepairAmount(20,pvpTerrainEffects(b.activeTerrain,b.round))).defense;
+  const value=liveBossRepairValue(side,b.round,
+    pvpTerrainRepairAmount(20,pvpTerrainEffects(b.activeTerrain,b.round)));
+   const healed=restoreMotherShield(side.defense,value);
+   side.defense=healed.defense;
+   liveBossClearPoisonOnHeal(side,b.round,healed.repaired);
  }else if(type==='support-escort-repair'){
   const escort=side.escorts.find(e=>e.hp>0&&e.hp<e.max);
   if(!escort)return {ok:false,reason:'escort_repair_unavailable'};
