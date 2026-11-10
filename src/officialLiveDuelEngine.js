@@ -409,7 +409,11 @@ function placeVital(b,key,card,vitalId){
  liveCommanderArmFormula(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveCommanderRememberVital(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
  liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
- liveNumericBossArmFormula(attacker,defender,{vitalId,op,cards:list,damage:impact.damage});
+ const bossFormula=liveNumericBossArmFormula(attacker,defender,
+  {vitalId,op,cards:list,damage:impact.damage});
+ if(bossFormula)event(b,key+': mazzo boss · '+bossFormula.abilities.join(' + ')+
+   ' · prossimo proiettile +'+bossFormula.percentage+'%',
+   'boss_numeric_formula',{vitalId,percentage:bossFormula.percentage});
  liveNumericBossAfterVital(attacker,impact.damage,impact.destroyed,b.round,vitalId);
  liveEpicOnVitalFormula(b,key,op);
  liveEpicOnShieldDamage(b,other(key),impact.damage);
