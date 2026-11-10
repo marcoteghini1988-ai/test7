@@ -35,3 +35,73 @@ export function findOfficialLiveVitalCompletion(signature,stored=[],hand=[]){
  }
  return null;
 }
+
+// Pianificazione prudente per firme Poker LUNGHE (4–5 numeriche).
+// La previsione usa soltanto il contenuto del proprio mazzo rimasto e le
+// carte gia' depositate: non legge le mani avversarie e non anticipa
+// l'ordine di pesca. Tutte le condizioni sono necessarie, non garanzie.
+const SUITS=['♠','♥','♦','♣'];
+const ROYAL=[1,10,11,12,13];
+const straightTemplates=()=>{
+ const sequences=Array.from({length:9},(_,i)=>Array.from({length:5},(_,j)=>i+j+1));
+ sequences.push(ROYAL);
+ return sequences;
+};
+function coversRanks(stored,pool,requirements){
+ const target=new Map(requirements.map(([v,n])=>[v,n]));
+ if(stored.some(c=>!target.has(c?.value)))return false;
+ return [...target.entries()].every(([value,needed])=>{
+  const have=stored.filter(c=>c.value===value).length;
+  return have<=needed&&have+pool.filter(c=>c.value===value).length>=needed;
+ });
+}
+function coversStraight(stored,pool,values,suit=null){
+ if(stored.some(c=>!values.includes(c?.value)||(suit&&c.suit!==suit)))return false;
+ if(new Set(stored.map(c=>c.value)).size!==stored.length)return false;
+ return values.every(value=>
+  stored.some(c=>c.value===value)||
+  pool.some(c=>c?.value===value&&(!suit||c.suit===suit)));
+}
+function canCompletePoker(pattern,stored,pool){
+ if(!stored.length||stored.some(c=>!Number.isInteger(c?.value)||!c.suit))return false;
+ const ranks=Array.from({length:13},(_,i)=>i+1);
+ if(pattern==='fourKind')
+  return ranks.some(value=>coversRanks(stored,pool,[[value,4]]));
+ if(pattern==='twoPair')
+  return ranks.some((a,i)=>ranks.slice(i+1).some(b=>
+   coversRanks(stored,pool,[[a,2],[b,2]])));
+ if(pattern==='fullHouse')
+  return ranks.some(a=>ranks.some(b=>a!==b&&
+   coversRanks(stored,pool,[[a,3],[b,2]])));
+ if(pattern==='flush')
+  return SUITS.some(suit=>stored.every(c=>c.suit===suit)&&
+   stored.length+pool.filter(c=>c.suit===suit).length>=5);
+ if(pattern==='straight')
+  return straightTemplates().some(values=>coversStraight(stored,pool,values));
+ if(pattern==='straightFlush')
+  return SUITS.some(suit=>straightTemplates().some(values=>
+   coversStraight(stored,pool,values,suit)));
+ if(pattern==='royalFlush')
+  return SUITS.some(suit=>coversStraight(stored,pool,ROYAL,suit));
+ return false;
+}
+export function findOfficialLiveVitalProgress(signature,stored=[],hand=[],deck=[]){
+ if(signature?.kind!=='poker'||!Array.isArray(stored)||
+    !Array.isArray(hand)||!Array.isArray(deck))return null;
+ const slots=tacticalSignatureSlotCount(signature);
+ if(slots<4||slots>5||stored.length>=slots)return null;
+ let best=null,bestScore=-1;
+ for(let i=0;i<hand.length;i++){
+  const chosen=[...stored,hand[i]];
+  const rest=hand.filter((_,j)=>i!==j);
+  if(!canCompletePoker(signature.pattern,chosen,[...rest,...deck]))continue;
+  // Favorisce la combinazione che puo' assorbire piu' carte GIA' in mano;
+  // la disponibilita' delle altre nel mazzo non garantisce una pesca precisa.
+  const score=rest.filter((card,j)=>{
+   const remaining=rest.filter((_,k)=>j!==k);
+   return canCompletePoker(signature.pattern,[...chosen,card],[...remaining,...deck]);
+  }).length;
+  if(score>bestScore){best=i;bestScore=score;}
+ }
+ return best;
+}
