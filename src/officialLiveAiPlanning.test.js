@@ -171,7 +171,7 @@ test('IA riconosce un Poker lungo come alternativa ufficiale a una formula matem
  assert.equal(findOfficialLiveVitalProgress(sig,[],[cards[0],...cards.slice(2)],future),null,
   'una sola carta propria compatibile non basta per impegnarsi nel Poker lungo');
 });
-test('IA completa la Scala Reale opzionale della L04 dopo una nuova pescata reale',()=>{
+test('IA completa la Scala Reale L04 in tre turni con sole pescate reali (2+2+1)',()=>{
  const cards=[
   {value:1,suit:'♠'},{value:10,suit:'♠'},{value:3,suit:'♣'},
   {value:5,suit:'♦'},{value:7,suit:'♣'},{value:9,suit:'♦'},{value:11,suit:'♥'}
@@ -196,15 +196,31 @@ test('IA completa la Scala Reale opzionale della L04 dopo una nuova pescata real
  b=finishOfficialLiveTurn(b,4);
  b=finishOfficialLiveTurn(b,5);
  assert.equal(b.activeSide,'B');
- for(let i=0;i<3;i++){
+ // Con 7 carte in mano, dopo 2 depositi la pescata successiva e'
+ // ESATTAMENTE 2 numeriche, non 3: K♠ rimane nel mazzo al ciclo 2.
+ assert.equal(b.sides.B.numeric.hand.some(c=>c.value===13&&c.suit==='♠'),false);
+ for(let i=0;i<2;i++){
   const action=chooseOfficialLiveAiAction(b);
   assert.equal(action.target,'vital');
   assert.equal(action.vitalId,'engine');
   const res=applyOfficialLiveAction(b,'B',action,6+i);
   assert.equal(res.ok,true,res.reason);b=res.battle;
  }
+ assert.equal(b.vitalBuilds.B.engine.length,4);
+ assert.equal(b.sides.A.defense.parts.engine.hp,10);
+ b=finishOfficialLiveTurn(b,8);
+ b=finishOfficialLiveTurn(b,9);
+ assert.equal(b.activeSide,'B');
+ const last=chooseOfficialLiveAiAction(b);
+ assert.equal(last.target,'vital');
+ assert.equal(last.vitalId,'engine');
+ assert.equal(b.sides.B.numeric.hand[last.index].value,13);
+ assert.equal(b.sides.B.numeric.hand[last.index].suit,'♠');
+ const finished=applyOfficialLiveAction(b,'B',last,10);
+ assert.equal(finished.ok,true,finished.reason);
+ b=finished.battle;
  assert.equal(b.sides.A.defense.parts.engine.hp,0);
  assert.equal(b.vitalBuilds.B.engine.length,0);
  assert.equal(b.history.some(e=>e.kind==='vital_destroyed'&&e.op==='royalFlush'),true);
- assert.equal(b.actionUsed.numeric,3);
+ assert.equal(b.actionUsed.numeric,1);
 });
