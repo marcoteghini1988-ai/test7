@@ -11,6 +11,7 @@ import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterRememberHit,bossCharacterApplyRegen,bossCharacterCounterSync,
  bossCharacterSyncExtra,bossCharacterEscortExtra} from './bossCharacterCards.js';
 import {gunEfficiency,escortInterceptionEfficiency} from './fleetSystems.js';
+import {prepareTacticalEscortVolley} from './tacticalEscortVolley.js';
 import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
 import {VULNERABILITY_RIFT_CARD_ID,riftProtectedDamage} from './tacticalVulnerabilityRift.js';
 import {hitMotherPartThroughRift} from './vitalDefense.js';
@@ -146,8 +147,13 @@ export function advanceOfficialLiveDuel(battle,nowMs=0){
 }
 function reject(battle,reason){return {ok:false,reason,battle};}
 function weaponForCard(side,card,escortIndex=null){
- if(escortIndex!=null&&(!side.escorts[escortIndex]||side.escorts[escortIndex].hp<=0))return null;
  const suit=SUIT_CODES[card?.suit];if(!suit)return null;
+ if(escortIndex!=null){
+  const escort=side.escorts?.[escortIndex];
+  if(!escort||escort.hp<=0||!escort.weapon?.suits?.includes(suit))return null;
+  return {weapon:{id:escort.weapon.id,nome:escort.weapon.name,tipo:escort.weapon.tipo,
+   sourceWeaponId:escort.weapon.sourceWeaponId},damage:escort.weapon.damage};
+ }
  const guns=PHASE1_CATALOG.weapons.filter(w=>w.nave_id===side.shipId);
  const charges=side.liveWeaponCharges||{};
  const pending=guns.filter(w=>{
@@ -214,7 +220,15 @@ function fireNumeric(b,key,card,shipId){
  const previous=charges[w.id]||{values:[],suits:[],startedRound:b.round};
  const suit=SUIT_CODES[card.suit];
  let totalValue=card.value;
- if(w.tipo==='Accumulo'){
+ const escortVolley=escortIndex==null?null:prepareTacticalEscortVolley(attacker,card,escortIndex);
+ if(escortVolley&&!escortVolley.ready){
+  if(escortVolley.reason!=='charging')return {ok:false,reason:escortVolley.reason};
+  event(b,key+': '+w.nome+' in accumulo · '+escortVolley.charge+'/'+escortVolley.threshold,
+   'weapon_charge',{weaponId:w.sourceWeaponId,escortWeaponId:w.id,
+    charge:escortVolley.charge,threshold:escortVolley.threshold});
+  return {ok:true,charging:true,weaponId:w.sourceWeaponId};
+ }
+ if(!escortVolley&&w.tipo==='Accumulo'){
   totalValue=previous.values.reduce((sum,v)=>sum+v,card.value);
   if(totalValue<w.soglia_munizioni){
    charges[w.id]={values:[...previous.values,card.value],suits:[],startedRound:b.round};
@@ -223,7 +237,7 @@ function fireNumeric(b,key,card,shipId){
    return {ok:true,charging:true,weaponId:w.id};
   }
   delete charges[w.id];
- }else if(w.tipo==='Combo simultanea'||w.tipo==='Combo a memoria'){
+ }else if(!escortVolley&&(w.tipo==='Combo simultanea'||w.tipo==='Combo a memoria')){
   const needed=w.combo.split('@')[0].split('+');
   const maxRounds=w.tipo==='Combo a memoria'?Number(w.combo.split('@')[1])||4:1;
   const stored=b.round-previous.startedRound<maxRounds?previous:
@@ -239,8 +253,8 @@ function fireNumeric(b,key,card,shipId){
   totalValue=values.reduce((sum,value)=>sum+value,0);
   delete charges[w.id];
  }
- let packet=Math.max(1,Math.floor(totalValue*profile.damage*
-  gunEfficiency(attacker.defense,escortIndex==null?'mother':'escort')));
+ let packet=escortVolley?escortVolley.packet:
+  Math.max(1,Math.floor(totalValue*profile.damage*gunEfficiency(attacker.defense,'mother')));
  if(escortIndex!=null&&b.liveModuleEffects[key].escortBoost>0){
   packet+=b.liveModuleEffects[key].escortBoost;
   b.liveModuleEffects[key].escortBoost=0;
@@ -334,13 +348,14 @@ function fireNumeric(b,key,card,shipId){
  b.pendingShot[key]=null;
  event(b,key+': '+profile.weapon.nome+' · carica '+totalValue+' · '+hit.damage+
   ' danni barriera ('+intercepted+' intercettati)','shot',
-  {card,shipId,weaponId:profile.weapon.id,damage:hit.damage});
+  {card,shipId,weaponId:escortVolley?.weaponId??w.id,
+    escortWeaponId:escortVolley?.escortWeaponId??null,damage:hit.damage});
  const syncBeforeShot=attacker.sync;
  liveLegacySyncGain(b,key,hit.damage>0?20:5);
  attacker.sync=Math.min(100,attacker.sync+
   liveNumericBossSyncBonus(attacker,attacker.sync-syncBeforeShot));
  liveLegacyOnNumericShot(b,key,card);
- return {ok:true,damage:hit.damage,weaponId:profile.weapon.id};
+ return {ok:true,damage:hit.damage,weaponId:escortVolley?.weaponId??w.id};
 }
 function placeVital(b,key,card,vitalId){
  const defender=b.sides[other(key)],part=defender.defense.parts[vitalId];
@@ -350,7 +365,7 @@ function placeVital(b,key,card,vitalId){
  const list=b.vitalBuilds[key][vitalId];
  if(list.length>=tacticalSignatureSlotCount(part.signature))return {ok:false,reason:'vital_slots_full'};
  list.push(card);
- event(b,key+': '+card.value+card.suit+' nello slot '+vitalId+' ('+list.length+'/5)','vital_card');
+ event(b,key+': '+card.value+card.suit+' nello slot '+vitalId+' ('+list.length+'/'+tacticalSignatureSlotCount(part.signature)+')','vital_card');
  const op=tacticalSignatureOperation(part.signature,list);
  if(!op)return {ok:true,completed:false};
  const defended=runTraps(b,other(key),'vital',0,vitalId);
