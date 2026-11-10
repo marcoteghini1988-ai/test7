@@ -10,6 +10,8 @@ import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterNativeBonus,bossCharacterShieldFactor} from './bossCharacterCards.js';
 import {gunEfficiency,escortInterceptionEfficiency} from './fleetSystems.js';
 import {TACTICAL_VITAL_EFFECTS} from './tacticalVitalConsequences.js';
+import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
+import {hitMotherPartThroughRift} from './vitalDefense.js';
 
 export const LIVE_TURN_MS=30000;
 export const LIVE_NUMERIC_LIMIT=3;
@@ -32,7 +34,7 @@ const initialZones=()=>({character:null,traps:[null,null],open:[null,null]});
 const initialBuilds=()=>Object.fromEntries(VITAL_IDS.map(id=>[id,[]]));
 const remaining=(b,k)=>b.sides[k].numeric.hand.length;
 export function supportedLiveSpecial(type){
- return !!TRAP_CARDS[type]||DIRECT_SPECIALS.has(type)||isBossCharacterCard(type)||isPvpTerrain(type);
+ return type===VULNERABILITY_RIFT_CARD_ID||!!TRAP_CARDS[type]||DIRECT_SPECIALS.has(type)||isBossCharacterCard(type)||isPvpTerrain(type);
 }
 export function createOfficialLiveDuel(initial,nowMs=0){
  if(!initial?.sides?.A||!initial?.sides?.B)throw new TypeError('Duello ufficiale non valido');
@@ -149,6 +151,8 @@ function fireNumeric(b,key,card,shipId){
  }
  const bossCharacter=bossCharacterNativeBonus(attacker,enemy,b.round,packet);
  packet+=bossCharacter.extra||0;
+ if(enemy.corroded){packet+=Math.floor(packet*.25);enemy.corroded=false;}
+ if(enemy.livePowerShiftDebt){packet+=enemy.livePowerShiftDebt;enemy.livePowerShiftDebt=0;}
  const terrain=pvpTerrainEffects(b.activeTerrain,b.round);
  packet=Math.floor(packet*terrain.nativeFactor);
  let intercepted=0;
@@ -165,6 +169,8 @@ function fireNumeric(b,key,card,shipId){
  motherPacket=Math.floor(traps.damage*terrain.shieldFactor*bossCharacterShieldFactor(enemy,b.round));
  const hit=damageMotherShield(enemy.defense,motherPacket);
  enemy.defense=hit.defense;
+ if(hit.damage>0&&queued?.ion)enemy.ionized=true;
+ if(hit.damage>0&&queued?.corrosion)enemy.corroded=true;
  b.pendingShot[key]=null;
  event(b,key+': '+profile.weapon.nome+' · '+card.value+card.suit+' · '+hit.damage+
   ' danni barriera ('+intercepted+' intercettati)','shot',
@@ -174,8 +180,9 @@ function fireNumeric(b,key,card,shipId){
 }
 function placeVital(b,key,card,vitalId){
  const defender=b.sides[other(key)],part=defender.defense.parts[vitalId];
+ const attacker=b.sides[key],rift=!!attacker.liveRift&&!part?.exposed;
  if(!part||part.hp<=0)return {ok:false,reason:'vital_unavailable'};
- if(!part.exposed)return {ok:false,reason:'vital_protected'};
+ if(!part.exposed&&!rift)return {ok:false,reason:'vital_protected'};
  const list=b.vitalBuilds[key][vitalId];
  if(list.length>=5)return {ok:false,reason:'vital_slots_full'};
  list.push(card);
@@ -189,9 +196,11 @@ function placeVital(b,key,card,vitalId){
   event(b,other(key)+': precisione su '+vitalId+' annullata dalla Contromisura','counter');
   return {ok:true,completed:false,countered:true};
  }
- const impact=hitMotherPart(defender.defense,vitalId,part.hp,list);
+ const impact=rift?hitMotherPartThroughRift(defender.defense,vitalId,part.hp,list):
+  hitMotherPart(defender.defense,vitalId,part.hp,list);
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
+ if(rift)attacker.liveRift=false;
  b.sides[key].numeric.discard.push(...list);
  b.vitalBuilds[key][vitalId]=[];
  b.sides[key].sync=Math.min(100,b.sides[key].sync+25);
@@ -250,9 +259,13 @@ function playSpecial(b,key,index,slot,target){
  }else if(type==='tactic-scan'){
   side.seen=[...new Set([...side.seen,...VITAL_IDS.filter(id=>!side.seen.includes(id)).slice(0,2)])];
  }else if(type==='tactic-numeric-recycle'){
+  if(side.numeric.hand.length===7)return {ok:false,reason:'recycle_unavailable'};
   nextDraw(side.numeric,7);
  }else if(type==='support-status-purge'){
   side.ionized=false;side.corroded=false;side.heated=false;
+ }else if(type===VULNERABILITY_RIFT_CARD_ID){
+  if(side.riftUsed)return {ok:false,reason:'rift_already_used'};
+  side.riftUsed=true;side.liveRift=true;
  }else if(type.startsWith('fusion-')){
   const need=type==='fusion-twin'||type==='fusion-triad'?2:1;
   if(side.sync<100||side.escorts.filter(e=>e.hp>0).length<need||
@@ -264,6 +277,7 @@ function playSpecial(b,key,index,slot,target){
  }else{
   const p=b.pendingShot[key]||{};
   if(type==='tactic-power-shift'||type==='tactic-kinetic')p.power=(p.power||0)+6;
+  if(type==='tactic-power-shift')side.livePowerShiftDebt=(side.livePowerShiftDebt||0)+3;
   if(type==='shot-piercing')p.piercing=true;
   if(type==='tactic-suppress')p.suppress=true;
   if(type==='shot-ion')p.ion=true;
@@ -316,7 +330,8 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
    consume(side.numeric,index);
   }else if(action.target==='vital'){
    if(!VITAL_IDS.includes(action.vitalId))return reject(battle,'vital_unavailable');
-   if(!b.sides[other(key)].defense.parts[action.vitalId].exposed)return reject(battle,'vital_protected');
+   if(!b.sides[other(key)].defense.parts[action.vitalId].exposed&&!side.liveRift)
+    return reject(battle,'vital_protected');
    side.numeric.hand.splice(index,1);
    const placed=placeVital(b,key,card,action.vitalId);
    if(!placed.ok)return reject(battle,placed.reason);
