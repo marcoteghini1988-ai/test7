@@ -117,7 +117,7 @@ test('Due speciali per turno, trappola coperta persistente e nessun effetto fant
 });
 
 
-test('Faglia speciale: colpisce vitale protetto dopo vera combinazione, senza aprire la barriera',()=>{
+test('Faglia LIVE: formula autentica distrugge vitale protetto, senza colpire la barriera',()=>{
  let b=battle('N00','C01');
  b.sides.A.special.hand[0].type='tactic-vulnerability-rift';
  b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
@@ -125,10 +125,10 @@ test('Faglia speciale: colpisce vitale protetto dopo vera combinazione, senza ap
  assert.equal(b.sides.B.defense.parts.engine.exposed,false);
  b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},2);
  b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},3);
- assert.equal(b.sides.B.defense.parts.engine.hp,5);
+ assert.equal(b.sides.B.defense.parts.engine.hp,0);
  assert.equal(b.sides.B.defense.parts.engine.exposed,false);
  assert.equal(b.sides.B.defense.shield.hp,60);
- assert.equal(b.history.at(-1).kind,'vital_hit');
+ assert.equal(b.history.some(e=>e.kind==='vital_destroyed'&&e.vitalId==='engine'),true);
  assert.equal(b.sides.A.liveRift,false);
  assert.equal(b.sides.A.riftUsed,true);
 });
@@ -444,4 +444,47 @@ test('Combo simultanea W11 scade a fine turno, mentre il vital Poker resta depos
  b=finishOfficialLiveTurn(b,2);
  assert.equal(b.sides.A.liveWeaponCharges.W11,undefined);
  assert.ok(b.history.some(e=>e.kind==='weapon_charge_expired'));
+});
+
+test('Faglia LIVE vincola un solo bersaglio protetto fino al completamento o allo scarto',()=>{
+ let b=battle('N00','C01');
+ b.sides.A.special.hand[0].type='tactic-vulnerability-rift';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},2);
+ assert.equal(b.sides.A.liveRiftTarget,'engine');
+ const invalid=applyOfficialLiveAction(b,'A',
+  {type:'numeric',index:0,target:'vital',vitalId:'weapons'},3);
+ assert.equal(invalid.reason,'rift_target_locked');
+ assert.equal(invalid.battle.sides.A.numeric.hand.length,6);
+ assert.equal(invalid.battle.vitalBuilds.A.weapons.length,0);
+ b=move(b,'A',{type:'clearVital',vitalId:'engine'},4);
+ assert.equal(b.sides.A.liveRift,true,'scartare la firma non rigioca la carta');
+ assert.equal(b.sides.A.liveRiftTarget,null,'può scegliere di nuovo prima del colpo');
+ b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'weapons'},5);
+ assert.equal(b.sides.A.liveRiftTarget,'weapons');
+ assert.equal(b.vitalBuilds.A.weapons.length,1);
+ assert.equal(b.sides.B.defense.shield.hp,60);
+});
+test('Faglia LIVE contro Contromisura: nessun KO, effetto consumato e nessun secondo tentativo gratis',()=>{
+ let b=battle('N00','C01');
+ b=move(b,'A',{type:'end'},1);
+ b.sides.B.special.hand[0].type='tactic-counter';
+ b=move(b,'B',{type:'special',index:0,slot:'trap-0',vitalId:'engine'},2);
+ b=move(b,'B',{type:'end'},3);
+ b.sides.A.special.hand[0].type='tactic-vulnerability-rift';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},4);
+ b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},5);
+ b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},6);
+ assert.equal(b.sides.B.defense.parts.engine.hp,10,'contromisura blocca il KO');
+ assert.equal(b.sides.B.defense.shield.hp,60);
+ assert.equal(b.vitalBuilds.A.engine.length,0);
+ assert.equal(b.sides.A.liveRift,false,'nessun aggiramento successivo gratis');
+ assert.equal(b.sides.A.liveRiftTarget,null);
+ assert.equal(b.sides.A.riftUsed,true);
+ assert.equal(b.history.some(e=>e.kind==='counter'),true);
+ assert.equal(applyOfficialLiveAction(b,'A',
+  {type:'numeric',index:0,target:'vital',vitalId:'engine'},7).reason,'vital_protected');
+ b.sides.A.special.hand[0].type='tactic-vulnerability-rift';
+ assert.equal(applyOfficialLiveAction(b,'A',
+  {type:'special',index:0,slot:'open-1'},8).reason,'rift_already_used');
 });
