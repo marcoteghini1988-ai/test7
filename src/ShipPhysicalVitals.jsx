@@ -13,7 +13,7 @@ export const physicalVitalCondition=part=>engineVisualState(part);
 
 export default function ShipPhysicalVitals({
  side,vessel,defense,hullRef,selectedVital,onSelectVital,canTarget=false,
- knownVitals=[],impactedVitals=[]
+ knownVitals=[],impactedVitals=[],registerVitalRef
 }){
  const physical=vesselWithPhysicalVitalDamage(vessel,defense);
  // These are EXACTLY the four motor coordinates in the source ZIP/code.
@@ -33,6 +33,7 @@ export default function ShipPhysicalVitals({
      target={null} selected={side==='enemy'&&selectedVital===vital}
      onSelect={()=>selectable&&onSelectVital?.(vital)}
      enabled={selectable} available={true}
+     engineRef={node=>registerVitalRef?.(vital,node)}
      hit={impactedVitals.includes(vital)}
      formation={originalFormation}
      vitalLabel={VITAL_MOTOR_SHORT_NAMES[vital]}

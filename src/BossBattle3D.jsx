@@ -200,7 +200,7 @@ function Ship({side,ship,targets,focused,onSelectShip,selectedTarget,onTarget,ph
 }
 function Pips({ship}){return <div className="pips">{ship.fleet.map((v,i)=><span key={i} className={vesselDestroyed(v)?'broken':'good'}/>)}</div>}
 function rootCoords(root,node){return root&&node?boardPoint(root.getBoundingClientRect(),node.getBoundingClientRect()):null;}
-function RoundGlyph({profile,index}){
+export function RoundGlyph({profile,index}){
  return <svg viewBox="-24 -16 48 32" preserveAspectRatio="none" className="round-glyph" aria-hidden="true">
   {profile==='pulse'&&<><path d="M-23 0H-9M-17-4H-9M-17 4H-9" className="round-tail"/><circle r="8" className="round-fill"/><circle r="11" className="round-line"/><circle r="3" fill="#fff"/></>}
   {profile==='laser'&&<><path d="M-23 0H22" className="round-line" strokeWidth="7"/><path d="M-21 0H20" stroke="#fff1f4" strokeWidth="2"/><path d="M-22-5H-12M-22 5H-12" className="round-tail"/></>}
@@ -246,7 +246,7 @@ function RoundGlyph({profile,index}){
   {profile==='void-ark'&&<><ellipse cx="4" rx="13" ry="12" fill="#0c0918" stroke="currentColor" strokeWidth="3"/><path d="M4-15V-8M4 8V15M-15 0H-6M14 0H23" stroke="#e5daff" strokeWidth="3"/><ellipse cx="4" rx="7" ry="6" className="round-line"/></>}
  </svg>;
 }
-function ImpactGlyph({profile}){
+export function ImpactGlyph({profile}){
  return <svg viewBox="-40 -40 80 80" aria-hidden="true">
   {profile==='pulse'&&<><circle r="16"/><circle r="27" strokeWidth="1"/><path d="M-33 0H-23M23 0H33M0-33V-23M0 23V33M-20-20-14-14M20 20 14 14"/></>}
   {profile==='laser'&&<><path d="M-7-25 3-5-3 6 7 25" strokeWidth="6"/><path d="M-8-23 2-5-4 6 6 23" stroke="#fff4dc" strokeWidth="2"/><path d="M-23-17-13-8M18 13 28 23M-24 6-14 3M16-8 25-16"/></>}

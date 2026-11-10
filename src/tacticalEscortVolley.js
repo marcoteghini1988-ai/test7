@@ -45,6 +45,7 @@ export function prepareTacticalEscortVolley(side,card,selectedSlot=null){
   {parentShipId:side.shipId},side.defense);
  return {ready:true,reason:'ready',escortSlot:escort.slot,cardId:card.id,
   escortWeaponId:gun.id,weaponId:gun.sourceWeaponId,weaponName:gun.name,
+  bullets:card.value,
   packet:Math.min(TACTICAL_ESCORT_PACKET_CAP,tactical.damage),
   rawDamage:gun.damage*card.value,charge:gun.charge||0};
 }

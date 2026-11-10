@@ -279,7 +279,7 @@ function fireNumeric(b,key,card,shipId){
   if(escortVolley.reason!=='charging')return {ok:false,reason:escortVolley.reason};
   event(b,key+': '+w.nome+' in accumulo · '+escortVolley.charge+'/'+escortVolley.threshold,
    'weapon_charge',{weaponId:w.sourceWeaponId,escortWeaponId:w.id,
-    charge:escortVolley.charge,threshold:escortVolley.threshold});
+    charge:escortVolley.charge,threshold:escortVolley.threshold,card,shipId});
   return {ok:true,charging:true,weaponId:w.sourceWeaponId};
  }
  if(!escortVolley&&w.tipo==='Accumulo'){
@@ -287,7 +287,7 @@ function fireNumeric(b,key,card,shipId){
   if(totalValue<w.soglia_munizioni){
    charges[w.id]={values:[...previous.values,card.value],suits:[],startedRound:b.round};
    event(b,key+': '+w.nome+' in accumulo · '+totalValue+'/'+w.soglia_munizioni,
-    'weapon_charge',{weaponId:w.id,charge:totalValue,threshold:w.soglia_munizioni});
+    'weapon_charge',{weaponId:w.id,charge:totalValue,threshold:w.soglia_munizioni,card,shipId});
    return {ok:true,charging:true,weaponId:w.id};
   }
   delete charges[w.id];
@@ -301,7 +301,7 @@ function fireNumeric(b,key,card,shipId){
   if(!needed.every(x=>suits.includes(x))){
    charges[w.id]={values,suits,startedRound:stored.startedRound};
    event(b,key+': '+w.nome+' · '+suits.join('+')+' / '+needed.join('+'),
-    'weapon_charge',{weaponId:w.id,suits,needed});
+    'weapon_charge',{weaponId:w.id,suits,needed,card,shipId});
    return {ok:true,charging:true,weaponId:w.id};
   }
   totalValue=values.reduce((sum,value)=>sum+value,0);
@@ -431,7 +431,8 @@ function fireNumeric(b,key,card,shipId){
  event(b,key+': '+profile.weapon.nome+' · carica '+totalValue+' · '+hit.damage+
   ' danni barriera ('+intercepted+' intercettati)','shot',
   {card,shipId,weaponId:escortVolley?.weaponId??w.id,
-    escortWeaponId:escortVolley?.escortWeaponId??null,damage:hit.damage});
+    escortWeaponId:escortVolley?.escortWeaponId??null,
+    bullets:escortVolley?.bullets??totalValue,damage:hit.damage});
  const syncBeforeShot=attacker.sync;
  liveLegacySyncGain(b,key,hit.damage>0?20:5);
  attacker.sync=Math.min(100,attacker.sync+
