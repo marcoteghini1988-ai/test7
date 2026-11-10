@@ -8,7 +8,7 @@ import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 
 export const LIVE_FORMULA_PILOT_TRIGGERS=Object.freeze([
  'plus','minus','times','divide','three_vital','alternate_vital',
- 'mixed_triple','new_vital','alternate_operation','complex_triple',
+ 'repeat_vital','third_vital','mixed_triple','new_vital','alternate_operation','complex_triple',
  'red_pair','black_pair'
 ]);
 export const LIVE_NATIVE_PILOT_TRIGGERS=Object.freeze([
@@ -16,8 +16,10 @@ export const LIVE_NATIVE_PILOT_TRIGGERS=Object.freeze([
  'strained_shield','special_attack','double_special','double_status',
  'third_mother_hit','enemy_last_vital'
 ]);
+export const LIVE_ESCORT_PILOT_TRIGGERS=Object.freeze(['alternate_escort']);
 const formulaTriggers=new Set(LIVE_FORMULA_PILOT_TRIGGERS);
 const nativeTriggers=new Set(LIVE_NATIVE_PILOT_TRIGGERS);
+const armedTriggers=new Set([...formulaTriggers,...LIVE_ESCORT_PILOT_TRIGGERS]);
 const ratio=def=>def?.shield?.max>0?def.shield.hp/def.shield.max:1;
 const ko=def=>Object.values(def?.parts||{}).filter(p=>p.hp<=0).length;
 const damaged=def=>Object.values(def?.parts||{}).some(p=>p.hp<p.max);
@@ -26,16 +28,58 @@ const asLegacy=side=>({...side,fleet:[{defense:side.defense}],
  strategicStatuses:{ionizedUntil:side.ionized?1:0,
   corrodedUntil:side.corroded?1:0}});
 
+// Contabilizza soltanto carte numeriche REALMENTE depositate. Le due abilita'
+ // che richiedevano 2/3 colpi efficaci sul medesimo vitale vengono adattate
+ // alla costruzione del bersaglio, poiche' la firma distrugge al primo impatto.
+ // Colosso: numeriche sullo stesso vitale in due turni PROPRI consecutivi.
+ // Fissatore: almeno tre numeriche consecutive sullo stesso vitale.
+export function liveCommanderRememberVitalDeposit(side,{vitalId,turn}={}){
+ const a=commanderAbilityStatus(side);
+ if(!a||!['repeat_vital','third_vital'].includes(a.trigger)||
+    !vitalId||!Number.isInteger(turn)||turn<1)return null;
+ const last=side.commander.liveVitalDeposit;
+ const same=last?.vitalId===vitalId;
+ const adjacent=same&&(turn===last.turn||turn===last.turn+2);
+ const count=adjacent?(last.count||0)+1:1;
+ const consecutiveTurns=adjacent?
+   turn===last.turn+2?(last.consecutiveTurns||1)+1:(last.consecutiveTurns||1):1;
+ side.commander.liveVitalDeposit={vitalId,turn,count,
+  consecutiveTurns};
+ return side.commander.liveVitalDeposit;
+}
+// Registra la scudiera realmente danneggiata, UNA SOLA per proiettile.
+// Il Veggente prepara il bonus solo dopo due salve efficaci che abbiano
+// intercettato su scudiere DIFFERENTI; nessuna selezione fittizia.
+export function liveCommanderRememberEscortImpact(attacker,{escortIndex,damage}={}){
+ const a=commanderAbilityStatus(attacker);
+ if(a?.trigger!=='alternate_escort'||!Number.isInteger(escortIndex)||
+    escortIndex<0||!(damage>0))return false;
+ const previous=attacker.commander.lastEscortIndex;
+ attacker.commander.lastEscortIndex=escortIndex;
+ if(!Number.isInteger(previous)||previous===escortIndex)return false;
+ attacker.commander.liveFormulaBonus={
+  percentage:a.value,trigger:a.trigger,escortIndex};
+ return true;
+}
 // Da richiamare soltanto DOPO un impatto vitale realmente validato ma PRIMA
 // dell'aggiornamento della memoria dell'ultimo vitale/operazione.
-export function liveCommanderArmFormula(attacker,defender,{vitalId,op,cards,damage}={}){
+export function liveCommanderArmFormula(attacker,defender,{vitalId,op,cards,damage,turn}={}){
  const ability=commanderAbilityStatus(attacker);
  if(!(damage>0)||!ability||ability.role!=='Attacco'||
    !formulaTriggers.has(ability.trigger)||!vitalId||
    tacticalSignatureOperation(defender?.defense?.parts?.[vitalId]?.signature,cards)!==op)
   return false;
- const factor=commanderAttackFactor(asLegacy(attacker),asLegacy(defender),
-  {cards,op,vitalId,nowMs:0});
+ const deposit=attacker.commander.liveVitalDeposit;
+ const tacticalCondition=ability.trigger==='repeat_vital'?
+  deposit?.vitalId===vitalId&&deposit.consecutiveTurns>=2&&
+   (!Number.isInteger(turn)||deposit.turn===turn):
+  ability.trigger==='third_vital'?
+   deposit?.vitalId===vitalId&&deposit.count>=3&&
+    (!Number.isInteger(turn)||deposit.turn===turn):null;
+ const factor=tacticalCondition===null?
+  commanderAttackFactor(asLegacy(attacker),asLegacy(defender),
+   {cards,op,vitalId,nowMs:0}):
+  tacticalCondition?1+ability.value/100:1;
  if(!(factor>1))return false;
  attacker.commander.liveFormulaBonus={
   percentage:Math.round((factor-1)*100),trigger:ability.trigger,vitalId};
@@ -71,7 +115,7 @@ export function liveCommanderNativeBonus(attacker,defender,packet,shot={}){
  if(!ability||ability.role!=='Attacco'||!Number.isSafeInteger(packet)||
    packet<=0)return inactive;
  const prepared=attacker.commander.liveFormulaBonus;
- const fromFormula=formulaTriggers.has(ability.trigger)&&
+ const fromFormula=armedTriggers.has(ability.trigger)&&
   prepared?.trigger===ability.trigger&&prepared.percentage>0;
  const fromNative=nativeTriggers.has(ability.trigger)&&
   nativeCondition(ability,attacker,defender,shot);
