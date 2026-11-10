@@ -248,16 +248,27 @@ function fireNumeric(b,key,card,shipId){
  const numericBossPower=liveNumericBossNativeBonus(attacker,packet,w.id,queued,b.round);
  packet=numericBossPower.damage;
  let intercepted=0;
- const fusionCover=!queued?.piercing?interceptWithLiveFusion(enemy,packet,b.turn):
-  {active:false,absorbed:0};
+ // Perforante bypassa il 20% e NON la totalità delle scudiere.
+ // Ionico dimezza solo la successiva intercettazione, non riduce HP fittizi.
+ const bypass=queued?.piercing?Math.ceil(packet*.2):0;
+ const routedPacket=Math.max(0,packet-bypass);
+ const ionActive=enemy.ionized&&b.turn<=(enemy.ionizedUntilTurn??b.turn);
+ const ionFactor=ionActive?.5:1;
+ const fusionCover=interceptWithLiveFusion(enemy,Math.floor(routedPacket*ionFactor),b.turn);
  intercepted+=fusionCover.absorbed;
- if(!fusionCover.active&&!queued?.piercing&&escortInterceptionEfficiency(enemy.defense)>0){
+ if(!fusionCover.active&&escortInterceptionEfficiency(enemy.defense)>0){
+  let firstSuppressed=false;
   for(const escort of enemy.escorts){
    if(escort.hp<=0)continue;
-   if(queued?.suppress){break;}
-   const taken=Math.min(escort.hp,Math.floor(packet*.2*escortInterceptionEfficiency(enemy.defense)*terrain.escortFactor));
+   if(queued?.suppress&&!firstSuppressed){firstSuppressed=true;continue;}
+   const taken=Math.min(escort.hp,Math.floor(routedPacket*.2*
+    escortInterceptionEfficiency(enemy.defense)*terrain.escortFactor*ionFactor));
    escort.hp-=taken;intercepted+=taken;
   }
+ }
+ if(ionActive&&routedPacket>0){
+  enemy.ionized=false;
+  enemy.ionizedUntilTurn=0;
  }
  let motherPacket=Math.max(0,packet-intercepted);
  const traps=runTraps(b,defenderKey,'shield',motherPacket);
@@ -280,7 +291,10 @@ function fireNumeric(b,key,card,shipId){
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
  liveNumericBossAfterShot(attacker,hit.damage,w.id,numericBossPower.bonus,b.round);
  liveEpicOnShieldDamage(b,defenderKey,hit.damage);
- if(hit.damage>0&&queued?.ion)enemy.ionized=true;
+ if(hit.damage>0&&queued?.ion){
+  enemy.ionized=true;
+  enemy.ionizedUntilTurn=b.turn+2;
+ }
  if(hit.damage>0&&queued?.corrosion)enemy.corroded=true;
  b.pendingShot[key]=null;
  event(b,key+': '+profile.weapon.nome+' · carica '+totalValue+' · '+hit.damage+
