@@ -38,12 +38,19 @@ test('Personaggio Generatore: +5 Sincronia soltanto dopo una firma vitale vera',
 test('Personaggio Risonanza: scudiera potenziata solo dopo colpo reale della madre',()=>{
  let b=game(3);
  b.sides.A.special.hand[0].type='boss-character-17';
- b.sides.A.numeric.hand[1]={...b.sides.A.numeric.hand[1],value:13};
+ b.sides.A.numeric.hand[1]={...b.sides.A.numeric.hand[1],value:13,suit:'♥'};
  b=move(b,'A',{type:'special',index:0,slot:'character'},1);
  b=move(b,'A',{type:'numeric',index:0,target:'ship',shipId:'mother'},2);
  const before=b.sides.B.defense.shield.hp;
+ const withoutCharacter=structuredClone(b);
+ withoutCharacter.sides.A.bossCharacter=null;
+ const baseline=move(withoutCharacter,'A',
+  {type:'numeric',index:0,target:'ship',shipId:'escort-0'},3);
  b=move(b,'A',{type:'numeric',index:0,target:'ship',shipId:'escort-0'},3);
- assert.equal(before-b.sides.B.defense.shield.hp,14);
+ const baselineDamage=before-baseline.sides.B.defense.shield.hp;
+ const boostedDamage=before-b.sides.B.defense.shield.hp;
+ assert.ok(baselineDamage>0,'Scudiera deve sparare davvero');
+ assert.equal(boostedDamage,baselineDamage+1,'Bonus reale anche su salve piccole');
 });
 test('Personaggio Crono: la carta Contromisura deve davvero bloccare un vitale',()=>{
  let b=game(1,'C01');b.sides.B.defense.shield.hp=45;
