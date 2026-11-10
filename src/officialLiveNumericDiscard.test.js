@@ -68,7 +68,7 @@ test('IA Gaia: settima mano bloccata, un vitale mancante e partner nel deck -> s
  const stored=all.find(c=>c.value===5&&c.suit==='♠');
  assert.ok(stored);
  const hand=all.filter(c=>c.id!==stored.id&&
-  (c.suit==='♥'||c.suit==='♠')&&c.value!==4).slice(0,7);
+  (c.suit==='♥'||c.suit==='♠')&&c.value>=5).slice(0,7);
  assert.equal(hand.length,7);
  const ids=new Set([stored.id,...hand.map(c=>c.id)]);
  pile.hand=hand;pile.deck=all.filter(c=>!ids.has(c.id));pile.discard=[];
