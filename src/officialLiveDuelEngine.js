@@ -788,6 +788,42 @@ function liveBossThreatenedCounter(b,key){
  return applyOfficialLiveAction(b,key,candidate,b.deadlineMs-1).ok?
   candidate:null;
 }
+// Risonanza conserva la propria identita' Fusione: usa soltanto una carta
+// realmente in mano e 100 Sincronia GIA' accumulata. Prima di un colpo
+// nativo valido la Fusione puo' potenziare una salva effettiva; mai gratis.
+function liveBossPreparedResonanceFusion(b,key){
+ const own=b.sides[key],enemy=b.sides[other(key)];
+ if(own.bossPlanetId!==17||own.sync<100||
+    b.actionUsed.special>=LIVE_SPECIAL_LIMIT||
+    b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT||
+    enemy.defense.shield.hp<=0||
+    own.defense.parts.engine.hp<=0||own.defense.parts.command.hp<=0||
+    own.liveFusion?.untilTurn>=b.turn||
+    b.pendingShot[key]?.fusion)return null;
+ const availableEscorts=own.escorts.filter(e=>e.hp>0).length;
+ if(availableEscorts<1)return null;
+ // Evita di preparare la Fusione quando il prossimo numero scelto
+ // automaticamente non puo' ancora scaricare una salva nativa.
+ const firstShot=own.numeric.hand.find(card=>weaponForCard(own,card));
+ if(!firstShot||!liveNativeShotReady(own,firstShot))return null;
+ // Se una firma vitale gia' esposta si puo' completare adesso,
+ // darle precedenza: la Fusione non deve diventare un buff sprecato.
+ if(VITAL_IDS.some(id=>enemy.defense.parts[id]?.exposed&&
+    enemy.defense.parts[id].hp>0&&
+    findOfficialLiveVitalCompletion(enemy.defense.parts[id].signature,
+     b.vitalBuilds[key][id],own.numeric.hand)?.length))return null;
+ const slot=b.zones[key].open.findIndex(x=>!x);
+ if(slot<0)return null;
+ const types=availableEscorts>=2?
+  ['fusion-triad','fusion-strike']:['fusion-strike'];
+ for(const type of types){
+  const index=own.special.hand.findIndex(card=>card.type===type);
+  if(index<0)continue;
+  const proposal={type:'special',index,slot:'open-'+slot};
+  if(applyOfficialLiveAction(b,key,proposal,b.deadlineMs-1).ok)return proposal;
+ }
+ return null;
+}
 function liveBossPreparedAttack(b,key){
  if(!b.sides[key].bossPlanetId||
    b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT||
@@ -825,6 +861,8 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
  const targetOrder=TACTICAL_BOSS_PLANS[me.bossPlanetId]?.targets||VITAL_IDS;
  const counter=liveBossThreatenedCounter(battle,key);
  if(counter)return counter;
+ const fusion=liveBossPreparedResonanceFusion(battle,key);
+ if(fusion)return fusion;
  const prepared=liveBossPreparedAttack(battle,key);
  if(prepared)return prepared;
  if(['epic_item_1','epic_item_3'].includes(me.epic?.active?.id)&&
