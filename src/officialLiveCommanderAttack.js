@@ -12,7 +12,7 @@ export const LIVE_FORMULA_PILOT_TRIGGERS=Object.freeze([
  'red_pair','black_pair'
 ]);
 export const LIVE_NATIVE_PILOT_TRIGGERS=Object.freeze([
- 'corroded_enemy','ion_shot','critical_shield','damaged_vital',
+ 'corroded_enemy','ion_shot','recycled_shot','critical_shield','damaged_vital',
  'strained_shield','special_attack','double_special','double_status',
  'third_mother_hit','enemy_last_vital'
 ]);
@@ -48,6 +48,7 @@ function nativeCondition(ability,attacker,defender,shot={}){
  switch(ability.trigger){
   case 'corroded_enemy':return defender.corroded===true;
   case 'ion_shot':return queue.ion===true&&codes.has('shot-ion');
+  case 'recycled_shot':return (attacker.numeric?.recycleEvents||0)>(c.seenRecycle||0);
   case 'critical_shield':return ratio(attacker.defense)<=.35;
   case 'damaged_vital':return damaged(attacker.defense);
   case 'strained_shield':return ratio(attacker.defense)<=.60;
@@ -87,5 +88,7 @@ export function liveCommanderAfterNativeShot(attacker,damage,bonus){
  if(!(damage>0)||!bonus?.active)return false;
  attacker.commander.bonusRemainder=bonus.remainder;
  if(bonus.fromFormula)attacker.commander.liveFormulaBonus=null;
+ if(bonus.trigger==='recycled_shot')
+  attacker.commander.seenRecycle=attacker.numeric?.recycleEvents||0;
  return true;
 }
