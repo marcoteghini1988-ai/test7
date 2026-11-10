@@ -43,6 +43,23 @@ test('I 12 boss storici hanno identita e mazzi 24/5/6 distinti e compatibili L1,
  }
  assert.equal(identities.size,12);
 });
+test('Risonanza L5 conserva Fusioni autentiche, 4 Contromisure e 24 carte totali',()=>{
+ const deck=buildTacticalBossDeck(17,5,5);
+ assert.equal(deck.length,24);
+ assert.equal(deck.filter(t=>t==='fusion-strike').length,2);
+ assert.equal(deck.filter(t=>t==='fusion-triad').length,2);
+ assert.equal(deck.filter(t=>t==='tactic-counter').length,4);
+ assert.equal(deck.filter(t=>t==='tactic-scan').length,4);
+ assert.ok(validateTacticalLoadout(deck));
+ const b=createTacticalDuel({shipA:'C01',levelA:5,
+  shipB:'L03',levelB:5,bossPlanetB:17,specialDeckB:deck});
+ const all=[...b.sides.B.special.hand,...b.sides.B.special.deck];
+ assert.equal(all.length,24);
+ assert.equal(new Set(all.map(x=>x.id)).size,24);
+ assert.deepEqual(all.map(x=>x.type).sort(),[...deck].sort(),
+  'le 24 carte devono essere pescabili come oggetti fisici');
+});
+
 test('Il boss senza scansione non legge le firme dei vitali ancora protetti',()=>{
  const b=createTacticalDuel({shipA:'C01',shipB:'L03',levelB:5,
   specialDeckB:buildTacticalBossDeck(2,5,3),bossPlanetB:2});
