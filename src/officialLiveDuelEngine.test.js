@@ -183,3 +183,23 @@ test('Combo a memoria: W42 conserva semi tra turni propri e richiede quattro car
  assert.equal(b.sides.A.liveWeaponCharges.W42,undefined);
  assert.equal(b.sides.B.defense.shield.hp,0);
 });
+
+test('Poker reale da quattro carte: slot persistenti e completamento in due turni',()=>{
+ let b=battle('N00','C01');
+ b.sides.B.defense.shield.hp=45;
+ b.sides.B.defense.parts.engine.signature={kind:'poker',pattern:'fourKind'};
+ b=move(b,'A',{type:'expose',vitalId:'engine'},1);
+ for(const suit of ['♣','♦','♥']){
+  b.sides.A.numeric.hand[0]={...b.sides.A.numeric.hand[0],value:9,suit};
+  b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},2);
+ }
+ assert.equal(b.vitalBuilds.A.engine.length,3);
+ assert.equal(b.sides.B.defense.parts.engine.hp,10);
+ b=finishOfficialLiveTurn(b,10);
+ b=finishOfficialLiveTurn(b,20);
+ b.sides.A.numeric.hand[0]={...b.sides.A.numeric.hand[0],value:9,suit:'♠'};
+ b=move(b,'A',{type:'numeric',index:0,target:'vital',vitalId:'engine'},30);
+ assert.equal(b.sides.B.defense.parts.engine.hp,0);
+ assert.equal(b.vitalBuilds.A.engine.length,0);
+ assert.equal(b.history.at(-2).kind,'vital_destroyed');
+});
