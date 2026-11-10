@@ -302,10 +302,10 @@ test('Mutazione di firma difende un proprio vitale esposto per un turno nemico e
 });
 
 
-test('30 moduli 16F supportati nel live, 5 effetti non migrati restano bloccati',()=>{
+test('32 moduli 16F supportati nel live, 3 effetti non migrati restano bloccati',()=>{
  const modules=PHASE16F_MODULES;
  for(const [id,def] of Object.entries(modules)){
-  const expected=!['hand_jam','prevent_skip','burn'].includes(def.effect);
+  const expected=!['hand_jam','burn'].includes(def.effect);
   assert.equal(supportedLiveSpecial('module-card-'+id),expected,id);
  }
 });
@@ -373,4 +373,32 @@ test('Modulo Mercurio carica il Dado ma serve ancora la Carta Dado per lanciarlo
  b=move(b,'A',{type:'special',index:0,slot:'open-1'},2);
  assert.equal(b.sides.A.legacy.diceReady,false);
  assert.equal(b.history.some(e=>e.kind==='quantum_dice'),true);
+});
+
+test('Sagittario protegge dai Malus autentici nel turno nemico senza saltare 30 secondi',()=>{
+ let b=battle('N00','N00');
+ b.sides.A.equipmentLevels['module-card-sagittarius']=1;
+ b.sides.A.special.hand[0].type='module-card-sagittarius';
+ b.sides.B.special.hand[0].type='tactic-malus';
+ b.sides.B.legacy.malusCharge=3;
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ assert.equal(b.liveModuleEffects.A.debuffShieldUntilTurn,2);
+ b=move(b,'A',{type:'end'},2);
+ b=move(b,'B',{type:'special',index:0,slot:'open-0',malusChoice:'lock_weapon'},3);
+ assert.equal(b.liveLegacy.malus.A,null);
+ assert.equal(b.sides.B.legacy.malusCharge,0);
+ assert.ok(b.history.some(e=>e.kind==='malus_blocked'));
+ assert.equal(b.phase,'playing');
+});
+test('Saturno Modulo neutralizza il blocco armamenti di Vergine sul turno avversario',()=>{
+ let b=battle('N00','N00');
+ b.sides.A.equipmentLevels['module-card-planet_char_6']=1;
+ b.sides.A.special.hand[0].type='module-card-planet_char_6';
+ b.sides.B.equipmentLevels['module-card-virgo']=1;
+ b.sides.B.special.hand[0].type='module-card-virgo';
+ b=move(b,'A',{type:'special',index:0,slot:'open-0'},1);
+ b=move(b,'A',{type:'end'},2);
+ b=move(b,'B',{type:'special',index:0,slot:'open-0'},3);
+ assert.equal(b.liveModuleEffects.A.lockUntilTurn,0);
+ assert.ok(b.history.some(e=>e.kind==='module_blocked'));
 });
