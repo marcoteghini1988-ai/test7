@@ -6,15 +6,16 @@ import {liveLegacyOnNumericRecycle} from './officialLiveLegacyCards.js';
 const DIRECT=new Set([
  'pure_hit','healing','free_swap','refill','execution','module_lock',
  'life_drain','guard','ether_gain','boost_focus','dice_charge',
- 'ammo_refill','boost_siphon','shield_and_ether','clear_malus','singularity'
+ 'ammo_refill','boost_siphon','shield_and_ether','clear_malus','singularity','prevent_skip'
 ]);
-// hand_jam, prevent_skip e burn richiedono ancora il nuovo modello di
-// precisione/turni e rimangono NON attivabili, senza consumare la carta.
+// hand_jam e burn richiedono ancora il modello di precisione/ustione del
+// duello LIVE, e restano NON attivabili, senza consumare la carta.
+// prevent_skip neutralizza invece i veri disturbi Malus/Modulo del prossimo turno.
 export function supportedLiveModule(type){
  return isModuleCard(type)&&DIRECT.has(TACTICAL_MODULE_CARDS[type].effect);
 }
-export const initialLiveModuleEffects=()=>({A:{guard:0,escortBoost:0,lockUntilTurn:0},
- B:{guard:0,escortBoost:0,lockUntilTurn:0}});
+export const initialLiveModuleEffects=()=>({A:{guard:0,escortBoost:0,lockUntilTurn:0,debuffShieldUntilTurn:0},
+ B:{guard:0,escortBoost:0,lockUntilTurn:0,debuffShieldUntilTurn:0}});
 function report(b,key,message,kind='module',info={}){
  b.lastEvents=[...b.lastEvents.slice(-24),key+': '+message];
  b.history.push({turn:b.turn,by:key,kind,message:key+': '+message,...info});
@@ -65,9 +66,14 @@ export function playOfficialLiveModule(b,key,type,choice={}){
  const effect=result.effects[key],otherEffect=result.effects[key==='A'?'B':'A'];
  if(effect.guard)own.guard+=effect.guard;
  if(effect.escortBoost)own.escortBoost+=effect.escortBoost;
- if(otherEffect.lockWeapon)foe.lockUntilTurn=b.turn+1;
+ if(otherEffect.lockWeapon){
+  if(foe.debuffShieldUntilTurn>=b.turn)
+   report(b,key,'Disturbo armamenti neutralizzato dal Modulo di protezione','module_blocked');
+  else foe.lockUntilTurn=b.turn+1;
+ }
  if(effect.preventMalus){
   b.liveLegacy.malus[key]=null;own.lockUntilTurn=0;
+  if(rule.effect==='prevent_skip')own.debuffShieldUntilTurn=b.turn+1;
  }
  if(limit)replaceLiveModuleNumerics(b,key,choice.recycleIndices);
  report(b,key,'Carta Modulo '+rule.name+' L'+level+' · '+rule.effect+
