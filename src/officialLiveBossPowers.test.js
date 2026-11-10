@@ -4,7 +4,7 @@ import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction} from './officialLiveDuelEngine.js';
 import {liveBossIncomingShieldFactor,liveBossOnShieldHit,liveBossNativeModifiers,
  liveBossAfterNativeShot,liveBossOnCounter,liveBossOnVitalImpact,
- liveBossStartTurn,liveBossOnNumericCardsSpent} from './officialLiveBossPowers.js';
+ liveBossStartTurn,liveBossOnNumericCardsSpent,liveBossDominantSuit} from './officialLiveBossPowers.js';
 
 const game=(id,shipA='N00',shipB='N00')=>
  createOfficialLiveDuel(createTacticalDuel({shipA,shipB,levelA:1,levelB:1,
@@ -106,4 +106,79 @@ test('Venere: una vera formula vitale applica Neurotossina, non uno sparo nullo'
  assert.equal(z.neurotoxinUntilRound,0);
  liveBossOnVitalImpact(a,z,10,[{suit:'♥'}],1);
  assert.equal(z.neurotoxinUntilRound,2);
+});
+
+test('Sovrano del Vuoto LIVE: seme dominante pubblico ruota a blocchi di 3 cicli',()=>{
+ const b=game(20);
+ assert.equal(liveBossDominantSuit(b.sides.B,1),'♠');
+ assert.equal(liveBossDominantSuit(b.sides.B,3),'♠');
+ assert.equal(liveBossDominantSuit(b.sides.B,4),'♥');
+ assert.equal(liveBossDominantSuit(b.sides.B,7),'♦');
+ assert.equal(liveBossDominantSuit(b.sides.B,10),'♣');
+ assert.ok(b.lastEvents.some(x=>x.includes('seme dominante')&&x.includes('♠')));
+ assert.equal(liveBossDominantSuit(b.sides.A,1),null);
+});
+test('Sovrano: solo vera formula vitale con seme dominante arma +7% su sparo successivo',()=>{
+ const b=game(20),a=b.sides.B,z=b.sides.A;
+ const dominated=[{value:4,suit:'♠'},{value:5,suit:'♥'}];
+ liveBossOnVitalImpact(a,z,0,dominated,1);
+ assert.equal(a.bossExclusive.voidLiveArmedUntilRound,undefined);
+ liveBossOnVitalImpact(a,z,10,[{value:4,suit:'♦'},{value:5,suit:'♥'}],1);
+ assert.equal(a.bossExclusive.voidLiveArmedUntilRound,undefined);
+ liveBossOnVitalImpact(a,z,10,dominated,1);
+ assert.equal(a.bossExclusive.voidLiveArmedUntilRound,2);
+ const power=liveBossNativeModifiers(a,z,40,1);
+ assert.equal(power.damage,43);
+ assert.equal(power.voidBonus.active,true);
+ liveBossAfterNativeShot(a,z,1,0,power);
+ assert.equal(a.bossExclusive.voidLiveArmedUntilRound,2);
+ liveBossAfterNativeShot(a,z,1,8,power);
+ assert.equal(a.bossExclusive.voidLiveArmedUntilRound,0);
+ assert.equal(liveBossNativeModifiers(a,z,40,1).damage,40);
+});
+test('Sovrano: formula avversaria con dominante neutralizza solo il ciclo successivo',()=>{
+ const b=game(20),a=b.sides.A,z=b.sides.B;
+ const valid=[{value:4,suit:'♠'},{value:5,suit:'♥'}];
+ liveBossOnVitalImpact(a,z,10,valid,1);
+ assert.equal(z.bossExclusive.voidBlockedRound,2);
+ liveBossOnVitalImpact(z,a,10,valid,2);
+ assert.equal(z.bossExclusive.voidLiveArmedUntilRound,undefined);
+ z.bossExclusive.voidLiveArmedUntilRound=3;
+ assert.equal(liveBossNativeModifiers(z,a,50,2).damage,50);
+ assert.equal(liveBossNativeModifiers(z,a,50,3).damage,54);
+});
+test('Sovrano LIVE end-to-end: 2 numeriche vere distruggono il vitale, terza arma riceve +7%',()=>{
+ let b=game(20);
+ b.sides.A.defense.shield.hp=45;
+ // Stato di battaglia reale successivo a pressione sulla barriera: il
+ // bersaglio è già stato esposto dalla soglia, senza riprogettare le arene.
+ const part=b.sides.A.defense.parts.engine;
+ part.exposed=true;
+ b.sides.A.defense.exposureOrder=['engine'];
+ const pile=b.sides.B.numeric,all=[...pile.hand,...pile.deck,...pile.discard];
+ const chosen=[{value:4,suit:'♠'},{value:5,suit:'♥'},{value:13,suit:'♠'}]
+  .map(x=>all.find(c=>c.value===x.value&&c.suit===x.suit));
+ assert.ok(chosen.every(Boolean));
+ const ids=new Set(chosen.map(c=>c.id));
+ pile.hand=[...chosen,...all.filter(c=>!ids.has(c.id)).slice(0,4)];
+ const inHand=new Set(pile.hand.map(c=>c.id));
+ pile.deck=all.filter(c=>!inHand.has(c.id));pile.discard=[];
+ const end=applyOfficialLiveAction(b,'A',{type:'end'},1);
+ assert.equal(end.ok,true);
+ b=end.battle;
+ const put=(index,target,time)=>{
+  const r=applyOfficialLiveAction(b,'B',
+   {type:'numeric',index,target,vitalId:'engine',shipId:'mother'},time);
+  assert.equal(r.ok,true,r.reason);b=r.battle;
+ };
+ put(0,'vital',2);
+ put(0,'vital',3);
+ assert.equal(b.sides.A.defense.parts.engine.hp,0);
+ assert.equal(b.sides.A.defense.shield.hp,45);
+ assert.equal(b.sides.B.bossExclusive.voidLiveArmedUntilRound,2);
+ put(0,'ship',4);
+ assert.equal(b.history.findLast(e=>e.kind==='shot')?.damage,14);
+ assert.equal(b.sides.B.bossExclusive.voidLiveArmedUntilRound,0);
+ assert.equal(b.actionUsed.numeric,3);
+ assert.equal(b.sides.B.numeric.hand.length,4);
 });
