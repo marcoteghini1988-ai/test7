@@ -39,6 +39,8 @@ test('IA matematica: da una carta sul vitale sceglie una seconda per il tris di 
  assert.equal(findOfficialLiveVitalCompletion(TIMES,stored,hand),null);
  assert.equal(findOfficialLiveMathContinuation(TIMES,stored,hand,[c(2,'♦')]),0,
   'la terza carta numerica deve appartenere al proprio mazzo');
+ assert.equal(findOfficialLiveMathContinuation(TIMES,stored,hand,[c(2,'♦'),c(4,'♣')]),null,
+  'un partner per la formula piu corta evita la costruzione a tre');
  assert.equal(findOfficialLiveMathContinuation(TIMES,stored,hand,[]),null,
   'non immagina pescate o riciclo dagli scarti non ancora avvenuto');
  assert.equal(findOfficialLiveMathContinuation(
@@ -68,8 +70,10 @@ test('IA LIVE completa 3x2x2 su un vitale in due turni con sole carte fisiche',(
  const ids=new Set([stored,...hand].map(x=>x.id));
  b.vitalBuilds.B.engine=[stored];
  pile.hand=hand;
- pile.deck=[drawNext,...all.filter(x=>!ids.has(x.id)&&x.id!==drawNext.id)];
- pile.discard=[];
+ // I quattro 4 sono negli scarti: la soluzione a due non e' ora pescabile.
+ // La continuazione a tre deve usare 2♠ presente + 2♦ nel mazzo reale.
+ pile.deck=[drawNext,...all.filter(x=>!ids.has(x.id)&&x.id!==drawNext.id&&x.value!==4)];
+ pile.discard=all.filter(x=>!ids.has(x.id)&&x.value===4);
  assert.equal(ids.size,8);
  const choice=chooseOfficialLiveAiAction(b);
  assert.deepEqual({type:choice.type,target:choice.target,vitalId:choice.vitalId,
