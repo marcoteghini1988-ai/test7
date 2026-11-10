@@ -16,6 +16,8 @@ import {LIVE_LEGACY_TYPES,createLiveLegacy,playLiveLegacyCard,liveLegacyOnTurnSt
  liveLegacyOnTurnEnd,liveLegacyOnNumericShot,liveLegacyOnNumericDiscard,
  liveLegacyOnNumericRecycle,liveLegacyOnVitalFormula,liveLegacySyncGain,
  liveLegacyOutgoingFactor,liveLegacyIncomingFactor} from './officialLiveLegacyCards.js';
+import {isModuleCard,TACTICAL_MODULE_CARDS} from './tacticalEquipmentCards.js';
+import {supportedLiveModule,initialLiveModuleEffects,playOfficialLiveModule} from './officialLiveModules.js';
 
 export const LIVE_TURN_MS=30000;
 export const LIVE_NUMERIC_LIMIT=3;
@@ -38,7 +40,7 @@ const initialZones=()=>({character:null,traps:[null,null],open:[null,null]});
 const initialBuilds=()=>Object.fromEntries(VITAL_IDS.map(id=>[id,[]]));
 const remaining=(b,k)=>b.sides[k].numeric.hand.length;
 export function supportedLiveSpecial(type){
- return type===VULNERABILITY_RIFT_CARD_ID||LIVE_LEGACY_TYPES.has(type)||!!TRAP_CARDS[type]||DIRECT_SPECIALS.has(type)||isBossCharacterCard(type)||isPvpTerrain(type);
+ return type===VULNERABILITY_RIFT_CARD_ID||LIVE_LEGACY_TYPES.has(type)||supportedLiveModule(type)||!!TRAP_CARDS[type]||DIRECT_SPECIALS.has(type)||isBossCharacterCard(type)||isPvpTerrain(type);
 }
 export function createOfficialLiveDuel(initial,nowMs=0){
  if(!initial?.sides?.A||!initial?.sides?.B)throw new TypeError('Duello ufficiale non valido');
@@ -47,7 +49,7 @@ export function createOfficialLiveDuel(initial,nowMs=0){
  return {...battle,live:true,phase:'playing',activeSide:'A',turn:1,round:1,
   deadlineMs:nowMs+LIVE_TURN_MS,resolveUntilMs:null,
   actionUsed:{numeric:0,special:0},zones:{A:initialZones(),B:initialZones()},
-  vitalBuilds:{A:initialBuilds(),B:initialBuilds()},pendingShot:{A:null,B:null},liveLegacy:createLiveLegacy(),
+  vitalBuilds:{A:initialBuilds(),B:initialBuilds()},pendingShot:{A:null,B:null},liveLegacy:createLiveLegacy(),liveModuleEffects:initialLiveModuleEffects(),
   history:[],winner:null,lastEvents:['Turno 1 · TU · 30 secondi per agire in diretta'],
   orders:{A:null,B:null},aiReadyAtMs:nowMs+650};
 }
@@ -77,6 +79,9 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  if(!battle?.live||battle.phase!=='playing')return battle;
  const b=copy(battle),previous=b.activeSide;
  liveLegacyOnTurnEnd(b,previous);
+ if(b.liveModuleEffects[previous].lockUntilTurn&&
+    b.turn>=b.liveModuleEffects[previous].lockUntilTurn)
+  b.liveModuleEffects[previous].lockUntilTurn=0;
  b.zones[previous].open=[null,null];
  b.pendingShot[previous]=null;
  b.turn++;
@@ -155,6 +160,8 @@ function fireNumeric(b,key,card,shipId){
  if(shipId!=='mother'&&escortIndex==null)return {ok:false,reason:'invalid_ship'};
  const profile=weaponForCard(attacker,card,escortIndex);
  if(!profile)return {ok:false,reason:'suit_incompatible'};
+ if(b.liveModuleEffects[key].lockUntilTurn>=b.turn)
+  return {ok:false,reason:'module_weapon_locked'};
  // Le categorie originali W01–W42 non diventano spari automatici.
  const w=profile.weapon,charges=attacker.liveWeaponCharges||(attacker.liveWeaponCharges={});
  const previous=charges[w.id]||{values:[],suits:[],startedRound:b.round};
@@ -187,6 +194,10 @@ function fireNumeric(b,key,card,shipId){
  }
  let packet=Math.max(1,Math.floor(totalValue*profile.damage*
   gunEfficiency(attacker.defense,escortIndex==null?'mother':'escort')));
+ if(escortIndex!=null&&b.liveModuleEffects[key].escortBoost>0){
+  packet+=b.liveModuleEffects[key].escortBoost;
+  b.liveModuleEffects[key].escortBoost=0;
+ }
  const queued=b.pendingShot[key];
  if(queued){
   if(queued.power)packet+=queued.power;
@@ -211,6 +222,12 @@ function fireNumeric(b,key,card,shipId){
  let motherPacket=Math.max(0,packet-intercepted);
  const traps=runTraps(b,defenderKey,'shield',motherPacket);
  motherPacket=Math.floor(traps.damage*terrain.shieldFactor*liveLegacyIncomingFactor(b,defenderKey)*bossCharacterShieldFactor(enemy,b.round));
+ const liveGuard=b.liveModuleEffects[defenderKey];
+ const blocked=Math.min(liveGuard.guard,motherPacket);
+ if(blocked>0){
+  liveGuard.guard-=blocked;motherPacket-=blocked;
+  event(b,defenderKey+': Modulo difensivo assorbe '+blocked+' danni','module_guard',{damage:blocked});
+ }
  const hit=damageMotherShield(enemy.defense,motherPacket);
  enemy.defense=hit.defense;
  if(hit.damage>0&&queued?.ion)enemy.ionized=true;
@@ -322,6 +339,9 @@ function playSpecial(b,key,index,slot,choice={}){
   side.riftUsed=true;side.liveRift=true;
  }else if(LIVE_LEGACY_TYPES.has(type)){
   const result=playLiveLegacyCard(b,key,type,choice);
+  if(!result.ok)return result;
+ }else if(isModuleCard(type)){
+  const result=playOfficialLiveModule(b,key,type,choice);
   if(!result.ok)return result;
  }else if(type.startsWith('fusion-')){
   const need=type==='fusion-twin'||type==='fusion-triad'?2:1;
