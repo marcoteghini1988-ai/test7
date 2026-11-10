@@ -19,7 +19,7 @@ Repository unico: `marcoteghini1988-ai/test7`, ramo `main`. Non creare copie, br
 3. **Shop**: mantenere sezioni, prezzi, inventari e acquisti; migliorare qualità di schede, immagini e UI senza cambiare logica.
 4. **Hangar / Assetto pre-battaglia / Flotte**: mantenere la sequenza di configurazione e tutti gli slot funzionali; usare i 17 modelli veri e le immagini reali delle scudiere, mantenere l'accesso ai mazzi, piloti e moduli.
 5. **Personaggi, 24 Carte Speciali equipaggiabili, boss, epici, moduli**: integrare e rifinire gli asset originali in tutte le schede, mantenendo rettangoli proporzionati e le rarità del catalogo. Il mazzo contiene 24 carte equipaggiate, NON 24 tipi totali.
-6. **Campagna / PvP / profilo e risultati**: uniformare lo stile grafico, senza riscrivere progressione e abilità.
+6. **Campagna / PvP / profilo e risultati**: uniformare lo stile grafico, senza riscrivere progressione e abilità. **DECISIONE UTENTE 10/11/2026: il PvP deve restare SIMULATO/LOCALE per il momento.** Non introdurre server, matchmaking, account online, Firebase, API key, websocket, costi o connessioni reali; non trasformare il PvP in una funzione online durante il restyling.
 
 ## Vincoli di verifica
 - Prima di fare il restyling, recuperare l'ultimo riferimento visivo approvato nella chat del progetto. Le immagini di mockup storici o non approvati NON lo sostituiscono.
