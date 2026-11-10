@@ -526,16 +526,21 @@ test('Combo a memoria W33 scaduta dopo 3 cicli: carica rimossa da UI e IA prima 
 test('IA E01 carica W19 senza ripetere il seme non ammesso',()=>{
  let b=battle('N00','E01');
  b=move(b,'A',{type:'end'},1);
- const first=chooseOfficialLiveAiAction(b);
- assert.equal(first.target,'ship');
- const card=b.sides.B.numeric.hand[first.index];
- assert.equal(card.suit,'♣');
- b=move(b,'B',first,2);
+ const initialC=b.sides.B.numeric.hand.findIndex(c=>c.suit==='♣');
+ assert.ok(initialC>=0);
+ // La prima carica è autentica; da qui è l'IA che decide il prossimo colpo.
+ b=move(b,'B',{type:'numeric',index:initialC,target:'ship',shipId:'mother'},2);
  assert.equal(b.sides.B.liveWeaponCharges.W19.suits[0],'C');
- const after=chooseOfficialLiveAiAction(b);
+ let after=chooseOfficialLiveAiAction(b);
  assert.equal(after.type,'numeric');
  assert.equal(after.target,'ship');
- assert.notEqual(b.sides.B.numeric.hand[after.index].suit,'♣');
+ assert.notEqual(b.sides.B.numeric.hand[after.index].suit,'♣',
+  'l IA non deve ripetere il seme C già depositato nella stessa combo');
  b=move(b,'B',after,3);
+ after=chooseOfficialLiveAiAction(b);
+ assert.equal(after.type,'numeric');
+ assert.equal(after.target,'ship');
+ assert.equal(b.sides.B.numeric.hand[after.index].suit,'♦');
+ b=move(b,'B',after,4);
  assert.equal(b.history.some(e=>e.kind==='shot'&&e.weaponId==='W19'),true);
 });
