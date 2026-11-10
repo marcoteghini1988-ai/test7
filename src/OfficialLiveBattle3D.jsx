@@ -15,7 +15,7 @@ import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuild
 import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
 import {readLegacyEpicProgress} from './officialEpicOwnership.js';
-import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
+import {readLegacyModuleLevels,TACTICAL_MODULE_CARDS,isModuleCard} from './tacticalEquipmentCards.js';
 import {bossCharacterDefinition,isBossCharacterCard} from './bossCharacterCards.js';
 import {pvpTerrainDefinition,isPvpTerrain} from './pvpTerrainCards.js';
 import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
@@ -173,7 +173,8 @@ export default function OfficialLiveBattle3D({
  function playSpecialAt(index,slot){
   const card=battle?.sides.A.special.hand[index];
   if(!card)return;
-  if(TARGETED_SPECIALS.has(card.type)){
+  const moduleEffect=isModuleCard(card.type)?TACTICAL_MODULE_CARDS[card.type].effect:null;
+  if(TARGETED_SPECIALS.has(card.type)||moduleEffect==='free_swap'||moduleEffect==='refill'){
    setSpecialChoice({type:card.type,cardId:card.id,slot});
    setRecycleChoice([]);setMessage('');
    return;
@@ -251,6 +252,9 @@ export default function OfficialLiveBattle3D({
  const last=battle.history.at(-1);
  const visualIndex=battle.history.findLastIndex(e=>e.kind==='shot'||e.kind==='vital_destroyed');
  const choiceCard=specialChoice?player.special.hand.find(c=>c.id===specialChoice.cardId):null;
+ const moduleChoiceEffect=isModuleCard(specialChoice?.type)?
+  TACTICAL_MODULE_CARDS[specialChoice.type].effect:null;
+ const recycleMax=moduleChoiceEffect==='free_swap'?1:2;
  const hiddenMutation=vital&&battle.liveLegacy?.mutations?.B?.vitalId===vital;
  const visual=visualIndex>=0?battle.history[visualIndex]:null;
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
@@ -413,16 +417,16 @@ export default function OfficialLiveBattle3D({
           (specialChoice.type==='tactic-signature-mutation'&&!player.defense.parts[id].exposed)}
          onClick={()=>completeSpecialChoice({vitalId:id})}>{VITAL_LABELS[id]}</button>)}</div>
       </>}
-      {specialChoice.type==='tactic-numeric-recycle'&&<>
+      {(specialChoice.type==='tactic-numeric-recycle'||moduleChoiceEffect==='free_swap'||moduleChoiceEffect==='refill')&&<>
        <p>Seleziona una o due numeriche da scartare e ripescare dal mazzo autentico. Disinnesca le Bombe su quelle carte.</p>
        <div className="live-choice-grid">{player.numeric.hand.map((card,i)=>
         <button type="button" key={card.id}
          className={recycleChoice.includes(i)?'live-choice-selected':''}
          onClick={()=>setRecycleChoice(old=>old.includes(i)?old.filter(n=>n!==i):
-          old.length<2?[...old,i]:old)}>{rankLabel(card.value)}{card.suit}</button>)}</div>
+          old.length<recycleMax?[...old,i]:old)}>{rankLabel(card.value)}{card.suit}</button>)}</div>
        <button type="button" className="live-choice-confirm" disabled={!recycleChoice.length}
         onClick={()=>completeSpecialChoice({recycleIndices:recycleChoice})}>
-        CONFERMA RICAMBIO ({recycleChoice.length}/2)</button>
+        CONFERMA RICAMBIO ({recycleChoice.length}/{recycleMax})</button>
       </>}
       <button type="button" className="live-choice-cancel"
        onClick={()=>setSpecialChoice(null)}>ANNULLA</button>
