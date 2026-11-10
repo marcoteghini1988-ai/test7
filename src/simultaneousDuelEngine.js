@@ -74,7 +74,7 @@ export const TACTICAL_SPECIALS=Object.freeze({
  [LEGACY_BOMB_CARD]:{name:'Numero Bomba',kind:'sabotage',help:'Marca uno slot avversario: la numerica reale può essere disinnescata o esplode entro due cicli'},
  [LEGACY_MALUS_CARD]:{name:'Barra Malus',kind:'sabotage',help:'Richiede 3 colpi efficaci ai vitali; sabotaggio per un ciclo'},
  [LEGACY_GOLD_CARD]:{name:'Carta Dorata',kind:'transmute',help:'Trasforma una numerica reale: bonus del seme su formula valida, durata due cicli'},
- [VULNERABILITY_RIFT_CARD_ID]:{name:'Faglia di Vulnerabilità',kind:'rift',help:'Consuma questa speciale insieme a una formula valida: 1 attacco a un vitale senza aprire la barriera. Se ancora protetto massimo 5 HP. Una volta per battaglia, Contromisure efficaci.'},
+ [VULNERABILITY_RIFT_CARD_ID]:{name:'Faglia di Vulnerabilità',kind:'rift',help:'Consuma questa speciale con una firma valida per attaccare 1 vitale protetto senza abbattere la barriera. Nel LIVE lo distrugge; nel vecchio duello simultaneo infligge massimo 5 HP. Una volta per battaglia, Contromisure efficaci.'},
  [SIGNATURE_MUTATION_CARD_ID]:{name:'Mutazione della Firma',kind:'mutation',help:'Cambia soltanto per questo ciclo la formula richiesta da un proprio vitale già esposto. Il nemico non conosce la nuova firma durante la preparazione.'},
  'fusion-strike':{name:'Fusione Assalto',kind:'fusion',help:'Una scudiera viva, 100 Sincronia: +25% barriera madre, scudiera agganciata senza fuoco autonomo'},
  'fusion-twin':{name:'Fusione Gemellare',kind:'fusion',help:'Due scudiere vive, 100 Sincronia: intercettazione fino al 55% su HP veri'},
