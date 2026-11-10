@@ -21,7 +21,7 @@
 ## Verifiche
 GitHub Actions per commit `c88d4a1230d64a75f8a56c6b8e34569c40b549be`: **867 test superati (0 errori), compilazione Vite e preflight riusciti**.
 Consultare la cronologia CI: https://github.com/marcoteghini1988-ai/test7/actions
-Ultima verifica funzionale in questa sessione: **931 test superati, 0 falliti; compilazione Vite e preflight riusciti** al commit `9d0fb5a51b59e07c3a712cefae48de9a6471a445` (https://github.com/marcoteghini1988-ai/test7/actions/runs/42835451951). I test comprendono la terza passiva Risonanza, le combinazioni reali IA da 2/4 carte su più turni e la memoria dei piloti validata da colpi effettivi. Test automatici e build NON equivalgono a collaudo browser/mobile completo: la resa sullo smartphone rimane da verificare.
+Ultima verifica funzionale del motore in questa sessione: **932 test superati, 0 falliti; compilazione Vite e preflight riusciti** al commit `b42ed19e7886f121b162c5d4d00b7f44da3a60df` (https://github.com/marcoteghini1988-ai/test7/actions/runs/42836037030). I test comprendono le passive Risonanza e Leviatano, le combinazioni reali IA da 2/4 carte su piu' turni e la memoria dei piloti validata da colpi effettivi. Test automatici e build NON equivalgono a collaudo browser/mobile completo: la resa sullo smartphone rimane da verificare.
 
 ## Cosa manca nel motore
 1. **Un Epico ancora non migrato**: `epic_item_9` Matrice; adattarne il significato senza trasformare i vitali a distruzione diretta in bersagli a HP arbitrari e senza regalare un colpo.
