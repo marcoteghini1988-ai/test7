@@ -6,16 +6,18 @@ import {liveLegacyOnNumericRecycle} from './officialLiveLegacyCards.js';
 const DIRECT=new Set([
  'pure_hit','healing','free_swap','refill','execution','module_lock',
  'life_drain','guard','ether_gain','boost_focus','dice_charge',
- 'ammo_refill','boost_siphon','shield_and_ether','clear_malus','singularity','prevent_skip'
+ 'ammo_refill','boost_siphon','shield_and_ether','clear_malus','singularity','prevent_skip',
+ 'hand_jam','burn'
 ]);
-// hand_jam e burn richiedono ancora il modello di precisione/ustione del
-// duello LIVE, e restano NON attivabili, senza consumare la carta.
-// prevent_skip neutralizza invece i veri disturbi Malus/Modulo del prossimo turno.
+// Scorpione applica -20% ai colpi numerici NATIVI del prossimo turno,
+// senza rompere le firme dei vitali (distruzione diretta). Io/Ophiuchus
+// armano la prossima salva reale: il calore rende +3 il colpo seguente.
+// prevent_skip neutralizza i disturbi Malus/Modulo del prossimo turno.
 export function supportedLiveModule(type){
  return isModuleCard(type)&&DIRECT.has(TACTICAL_MODULE_CARDS[type].effect);
 }
-export const initialLiveModuleEffects=()=>({A:{guard:0,escortBoost:0,lockUntilTurn:0,debuffShieldUntilTurn:0},
- B:{guard:0,escortBoost:0,lockUntilTurn:0,debuffShieldUntilTurn:0}});
+export const initialLiveModuleEffects=()=>({A:{guard:0,escortBoost:0,lockUntilTurn:0,debuffShieldUntilTurn:0,precisionUntilTurn:0,precisionFactor:1,burnCharges:0},
+ B:{guard:0,escortBoost:0,lockUntilTurn:0,debuffShieldUntilTurn:0,precisionUntilTurn:0,precisionFactor:1,burnCharges:0}});
 function report(b,key,message,kind='module',info={}){
  b.lastEvents=[...b.lastEvents.slice(-24),key+': '+message];
  b.history.push({turn:b.turn,by:key,kind,message:key+': '+message,...info});
@@ -71,8 +73,15 @@ export function playOfficialLiveModule(b,key,type,choice={}){
    report(b,key,'Disturbo armamenti neutralizzato dal Modulo di protezione','module_blocked');
   else foe.lockUntilTurn=b.turn+1;
  }
+ if(otherEffect.precisionFactor){
+  if(foe.debuffShieldUntilTurn>=b.turn)
+   report(b,key,'Disturbo precisione neutralizzato dal Modulo di protezione','module_blocked');
+  else {foe.precisionFactor=otherEffect.precisionFactor;foe.precisionUntilTurn=b.turn+1;}
+ }
+ if(effect.burn)own.burnCharges+=1;
  if(effect.preventMalus){
   b.liveLegacy.malus[key]=null;own.lockUntilTurn=0;
+  own.precisionUntilTurn=0;own.precisionFactor=1;
   if(rule.effect==='prevent_skip')own.debuffShieldUntilTurn=b.turn+1;
  }
  if(limit)replaceLiveModuleNumerics(b,key,choice.recycleIndices);
