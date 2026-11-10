@@ -542,6 +542,8 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
   const card=side.numeric.hand[index];
   if(action.target==='ship'){
    const shipId=action.shipId||'mother';
+   if(/^escort-[01]$/.test(shipId)&&liveFusionBlocksEscort(side,b.turn))
+    return reject(battle,'escort_fused');
    if(!weaponForCard(side,card,shipId==='mother'?null:
      /^escort-[01]$/.test(shipId)?Number(shipId.at(-1)):-1))
     return reject(battle,'suit_incompatible');
