@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createTacticalDuel} from './simultaneousDuelEngine.js';
-import {createOfficialLiveDuel,applyOfficialLiveAction,liveCompatibleShips}
+import {createOfficialLiveDuel,applyOfficialLiveAction,liveCompatibleShips,chooseOfficialLiveAiAction}
  from './officialLiveDuelEngine.js';
 const game=(ship='N00',level=3)=>createOfficialLiveDuel(createTacticalDuel({
  shipA:ship,shipB:'N00',levelA:level,levelB:1,nowMs:0}),0);
@@ -37,6 +37,17 @@ test('Scudiera distrutta non può sparare e una carta non viene consumata',()=>{
  const r=applyOfficialLiveAction(b,'A',{type:'numeric',index:0,target:'ship',shipId:'escort-0'},1);
  assert.equal(r.ok,false);
  assert.equal(b.sides.A.numeric.hand.length,7);
+});
+test('IA usa vera scudiera quando la madre non ha un seme compatibile',()=>{
+ const b=createOfficialLiveDuel(createTacticalDuel({
+  shipA:'N00',shipB:'C01',levelA:1,levelB:3,nowMs:0}),0);
+ b.activeSide='B';
+ b.sides.B.numeric.hand=b.sides.B.numeric.hand.map(card=>({...card,suit:'♠'}));
+ const action=chooseOfficialLiveAiAction(b);
+ assert.deepEqual(action,{type:'numeric',index:0,target:'ship',shipId:'escort-0'});
+ const result=applyOfficialLiveAction(b,'B',action,1);
+ assert.equal(result.ok,true,result.reason);
+ assert.equal(result.battle.actionUsed.numeric,1);
 });
 test('Scudiera con arma ad accumulo conserva carica e non spara prima della soglia',()=>{
  const b=game('C02',5);
