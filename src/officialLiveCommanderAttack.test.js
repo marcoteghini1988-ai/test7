@@ -98,3 +98,32 @@ test('Duello reale: combinazione autentica dà +6% alla successiva arma C01',()=
  assert.equal(b.sides.A.commander.liveFormulaBonus,null);
  assert.equal(b.history.some(e=>e.kind==='pilot_bonus'),true);
 });
+
+test('Crono pilota: un vero ricambio arma solo il primo colpo efficace',()=>{
+ const b=scenario('pilot_boss_6'),a=b.sides.A,z=b.sides.B;
+ assert.equal(liveCommanderNativeBonus(a,z,50).active,false);
+ a.numeric.recycleEvents=1;
+ const active=liveCommanderNativeBonus(a,z,50);
+ assert.equal(active.active,true);
+ assert.equal(active.percentage,7);
+ assert.equal(active.damage,53);
+ assert.equal(liveCommanderAfterNativeShot(a,0,active),false);
+ assert.equal(liveCommanderNativeBonus(a,z,50).active,true);
+ assert.equal(liveCommanderAfterNativeShot(a,12,active),true);
+ assert.equal(a.commander.seenRecycle,1);
+ assert.equal(liveCommanderNativeBonus(a,z,50).active,false);
+ a.numeric.recycleEvents=2;
+ assert.equal(liveCommanderNativeBonus(a,z,50).active,true);
+});
+test('LIVE: la vera carta speciale Ricambio concede Crono solo dopo sostituzione autentica',()=>{
+ let b=createOfficialLiveDuel(scenario('pilot_boss_6'),0);
+ b.sides.A.special.hand[0].type='tactic-numeric-recycle';
+ assert.equal(b.sides.A.numeric.recycleEvents||0,0);
+ b=play(b,{type:'special',index:0,slot:'open-0',recycleIndices:[0]},1);
+ assert.equal(b.sides.A.numeric.recycleEvents,1);
+ const i=b.sides.A.numeric.hand.findIndex(c=>c.suit==='♥');
+ assert.ok(i>=0,'La C01 deve avere una vera numerica compatibile in mano');
+ b=play(b,{type:'numeric',index:i,target:'ship',shipId:'mother'},2);
+ assert.equal(b.sides.A.commander.seenRecycle,1);
+ assert.equal(b.history.filter(e=>e.kind==='pilot_bonus').length,1);
+});
