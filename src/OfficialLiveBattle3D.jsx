@@ -18,6 +18,7 @@ import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
 import {bossCharacterDefinition,isBossCharacterCard} from './bossCharacterCards.js';
 import {pvpTerrainDefinition,isPvpTerrain} from './pvpTerrainCards.js';
 import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
+import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import './MathDuelBattle.css';
@@ -88,14 +89,17 @@ function Slot({kind,index,side,card,onActivate,selected}){
   title={visible?TACTICAL_SPECIALS[card?.type]?.name||label:label}
   aria-label={label+(card?' · '+(visible?TACTICAL_SPECIALS[card.type]?.name:'coperta'):' · vuoto')}
   onClick={onActivate}>
-  <span>{visible?(card?officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]).symbol:symbol):
-   card?'?':symbol}</span>
+  {visible&&officialSpecialArtPath(card?.type)?
+    <img className="live-slot-art" src={officialSpecialArtPath(card.type)} alt="" draggable={false}/>:
+    <span>{visible?(card?officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]).symbol:symbol):
+    card?'?':symbol}</span>}
  </button>;
 }
 function LiveSpecialArt({card}){
  const identity=officialSpecialCardIdentity(card?.type,TACTICAL_SPECIALS[card?.type]);
  return <>{isBossCharacterCard(card?.type)?<BossCharacterPortrait type={card.type}/>:
   isPvpTerrain(card?.type)?<PvpTerrainPortrait type={card.type}/>:
+  officialSpecialArtPath(card?.type)?<img src={officialSpecialArtPath(card.type)} alt="" draggable={false}/>:
   <span className="live-special-art">{identity.symbol}</span>}</>;
 }
 export default function OfficialLiveBattle3D({
