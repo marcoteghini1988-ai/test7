@@ -22,6 +22,9 @@ import {liveBossStartTurn,liveBossIncomingShieldFactor,liveBossOnShieldHit,
  liveBossNativeModifiers,liveBossAfterNativeShot,liveBossOnCounter,
  liveBossOnVitalImpact,liveBossOnNumericCardsSpent,liveBossRepairValue,
  liveBossClearPoisonOnHeal} from './officialLiveBossPowers.js';
+import {isTacticalEpic} from './tacticalEpicCards.js';
+import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
+ liveEpicOnShieldDamage,liveEpicRecycle} from './officialLiveEpics.js';
 
 export const LIVE_TURN_MS=30000;
 export const LIVE_NUMERIC_LIMIT=3;
@@ -44,7 +47,7 @@ const initialZones=()=>({character:null,traps:[null,null],open:[null,null]});
 const initialBuilds=()=>Object.fromEntries(VITAL_IDS.map(id=>[id,[]]));
 const remaining=(b,k)=>b.sides[k].numeric.hand.length;
 export function supportedLiveSpecial(type){
- return type===VULNERABILITY_RIFT_CARD_ID||LIVE_LEGACY_TYPES.has(type)||supportedLiveModule(type)||!!TRAP_CARDS[type]||DIRECT_SPECIALS.has(type)||isBossCharacterCard(type)||isPvpTerrain(type);
+ return type===VULNERABILITY_RIFT_CARD_ID||LIVE_LEGACY_TYPES.has(type)||supportedLiveModule(type)||supportedLiveEpic(type)||!!TRAP_CARDS[type]||DIRECT_SPECIALS.has(type)||isBossCharacterCard(type)||isPvpTerrain(type);
 }
 export function createOfficialLiveDuel(initial,nowMs=0){
  if(!initial?.sides?.A||!initial?.sides?.B)throw new TypeError('Duello ufficiale non valido');
@@ -96,6 +99,7 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  b.deadlineMs=nowMs+LIVE_TURN_MS;
  b.aiReadyAtMs=nowMs+850;
  b.actionUsed={numeric:0,special:0};
+ liveEpicBeforeDraw(b.sides[b.activeSide],b.round);
  nextDraw(b.sides[b.activeSide].numeric,7);
  nextDraw(b.sides[b.activeSide].special,5);
  liveLegacyOnTurnStart(b,b.activeSide);
@@ -244,6 +248,7 @@ function fireNumeric(b,key,card,shipId){
  enemy.defense=hit.defense;
  liveBossOnShieldHit(enemy,hit.damage,b.round);
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
+ liveEpicOnShieldDamage(b,defenderKey,hit.damage);
  if(hit.damage>0&&queued?.ion)enemy.ionized=true;
  if(hit.damage>0&&queued?.corrosion)enemy.corroded=true;
  b.pendingShot[key]=null;
@@ -277,6 +282,7 @@ function placeVital(b,key,card,vitalId){
  if(!impact.damage)return {ok:false,reason:impact.reason};
  defender.defense=impact.defense;
  liveBossOnVitalImpact(attacker,defender,impact.damage,list,b.round);
+ liveEpicOnShieldDamage(b,other(key),impact.damage);
  if(rift)attacker.liveRift=false;
  b.sides[key].numeric.discard.push(...list);
  b.vitalBuilds[key][vitalId]=[];
@@ -362,6 +368,11 @@ function playSpecial(b,key,index,slot,choice={}){
  }else if(isModuleCard(type)){
   const result=playOfficialLiveModule(b,key,type,choice);
   if(!result.ok)return result;
+  if(['pure_hit','execution','life_drain','singularity'].includes(result.effect))
+   liveEpicOnShieldDamage(b,other(key),result.actual);
+ }else if(isTacticalEpic(type)){
+  const result=playLiveEpic(b,key,type);
+  if(!result.ok)return result;
  }else if(type.startsWith('fusion-')){
   const need=type==='fusion-twin'||type==='fusion-triad'?2:1;
   if(side.sync<100||side.escorts.filter(e=>e.hp>0).length<need||
@@ -402,6 +413,14 @@ export function applyOfficialLiveAction(battle,key,action,nowMs=0){
   enemy.defense=revealed.defense;
   event(b,key+': bersaglio '+id+' esposto alla soglia barriera','vital_exposed',{vitalId:id});
   return {ok:true,battle:b};
+ }
+ if(action.type==='epic-choice'){
+  const result=liveEpicChoose(b,key,action.index);
+  return result.ok?{ok:true,battle:b}:reject(battle,result.reason);
+ }
+ if(action.type==='epic-recycle'){
+  const result=liveEpicRecycle(b,key,action.index);
+  return result.ok?{ok:true,battle:b}:reject(battle,result.reason);
  }
  if(action.type==='clearVital'){
   const id=action.vitalId;
