@@ -82,9 +82,15 @@ test('IA completa combinazione a quattro carte in due turni da 30s, senza sforar
  assert.equal(final.battle.actionUsed.numeric,1);
  assert.equal(final.battle.vitalBuilds.B.engine.length,0);
 });
-test('IA non riempie uno slot senza soluzione: usa un proiettile compatibile',()=>{
+test('IA non riempie uno slot se manca ogni partner matematico nella mano e nel mazzo',()=>{
  const b=setup([{value:1,suit:'♣'}, {value:5,suit:'♥'}, {value:7,suit:'♠'},
   {value:8,suit:'♣'}, {value:9,suit:'♦'}, {value:11,suit:'♥'}, {value:13,suit:'♣'}]);
+ // Per times=12 le sole coppie sono 1*12,2*6,3*4: tutti i
+ // possibili partner restano in scarti fisici, non nel mazzo pescabile.
+ const pile=b.sides.B.numeric,blocked=new Set([2,3,4,6,12]);
+ pile.discard=pile.deck.filter(c=>blocked.has(c.value));
+ pile.deck=pile.deck.filter(c=>!blocked.has(c.value));
+ assert.equal(pile.hand.length+pile.deck.length+pile.discard.length,52);
  const action=chooseOfficialLiveAiAction(b);
  assert.equal(action.target,'ship');
  assert.equal(action.shipId,'mother');
