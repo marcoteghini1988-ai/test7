@@ -20,7 +20,7 @@ const ownCards=(b,k)=>[
  ...VITAL_IDS.flatMap(id=>b.vitalBuilds[k][id])
 ];
 function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
- bossShieldMax=null}={}){
+ bossShieldMax=null,log=true}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA,shipB:boss?.motherShipId??shipB,levelA,levelB,
   nowMs:0,seed,mode:'campaign',shuffleNumericOpening:true,
@@ -69,7 +69,7 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
  const result={
   seed,shipA,shipB:boss?.motherShipId??shipB,boss:boss?.planetId??null,
   bossShieldMax:bossShieldMax??60,
-  winner:b.winner,turns:b.turn,minutesMax:+(b.turn*LIVE_TURN_MS/60000).toFixed(1),
+  winner:b.winner,finishReason:b.liveFinishReason,turns:b.turn,minutesMax:+(b.turn*LIVE_TURN_MS/60000).toFixed(1),
   actions,turnChanges,shots:b.history.filter(e=>e.kind==='shot').length,
   destroyedA:VITAL_IDS.filter(id=>b.sides.A.defense.parts[id].hp<=0).length,
   destroyedB:VITAL_IDS.filter(id=>b.sides.B.defense.parts[id].hp<=0).length,
@@ -85,7 +85,7 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
    seen:b.sides[key].seen
   }])):null
  };
- console.log('LIVE_PACING_AUDIT '+JSON.stringify(result));
+ if(log)console.log('LIVE_PACING_AUDIT '+JSON.stringify(result));
  return result;
 }
 test('Audit LIVE: sei seed e 3 modelli in campagna senza PvP e senza carte gratis',()=>{
@@ -112,34 +112,62 @@ test('Audit LIVE: ritmi e carte su tre boss canonici (Terra, Crono, Vuoto)',()=>
  assert.ok(results.every(r=>r.boss!=null));
 });
 
-test('Audit esteso dei 12 boss ufficiali: tutti raggiungono un esito, 52 numeriche e nessun PvP',()=>{
+// Un'unica seed non basta per stimare il comportamento di un boss.
+// Le tre distribuzioni sono deterministiche e diverse per settore; ogni
+// partita utilizza esclusivamente il mazzo reale e le due IA locali.
+// Il campione e' ancora esplorativo: non equivale a tempo giocato da persone.
+test('Audit multi-seed: 12 boss canonici, tre pescate ciascuno, nessuna carta inventata',()=>{
+ const offsets=[0,101,307];
  const results=[];
+ const sectors=[];
  for(let i=0;i<12;i++){
   const sectorNumber=(i+1)*10;
   const boss=officialBossEncounter({mode:'campaign',sectorNumber});
-  assert.ok(boss,'settore 10–120: boss canonico '+sectorNumber);
+  assert.ok(boss,'boss canonico settore '+sectorNumber);
   const levelB=officialCampaignRivalLevel({mode:'campaign',sectorNumber,playerLevel:4});
-  const result=audit({shipA:'R04',levelA:4,levelB,boss,seed:100+i*7});
-  assert.equal(result.boss,boss.planetId);
-  assert.ok(result.actions>0);
-  assert.equal(Object.keys(result.failures).length,0);
-  results.push({...result,sectorNumber,levelB});
+  const cases=offsets.map(offset=>{
+   const seed=100+i*7+offset;
+   const result=audit({shipA:'R04',levelA:4,levelB,boss,seed,log:false});
+   assert.equal(result.boss,boss.planetId);
+   assert.ok(result.actions>0);
+   assert.equal(Object.keys(result.failures).length,0);
+   assert.ok(result.turns<=LIVE_MAX_TURNS+1);
+   return {...result,sectorNumber,levelB};
+  });
+  assert.equal(new Set(cases.map(r=>r.seed)).size,offsets.length);
+  const turns=cases.map(r=>r.turns).sort((a,b)=>a-b);
+  sectors.push({
+   sector:sectorNumber,boss:boss.planetId,name:boss.name,levelB,
+   wins:cases.filter(r=>r.winner==='A').length,
+   losses:cases.filter(r=>r.winner==='B').length,
+   draws:cases.filter(r=>r.winner==='draw').length,
+   minHalfTurns:turns[0],medianHalfTurns:turns[1],maxHalfTurns:turns[2],
+   outcomes:cases.map(r=>({
+    seed:r.seed,winner:r.winner,halfTurns:r.turns,
+    theoreticalMaxMinutes:r.minutesMax,reason:r.finishReason||null,
+    destroyedA:r.destroyedA,destroyedB:r.destroyedB,
+    shots:r.shots,discardsA:r.actionsBySide.A['numeric-discard']||0,
+    discardsB:r.actionsBySide.B['numeric-discard']||0
+   }))
+  });
+  results.push(...cases);
  }
  const wins=results.filter(r=>r.winner==='A').length;
  const losses=results.filter(r=>r.winner==='B').length;
  const draws=results.filter(r=>r.winner==='draw').length;
  const turns=results.map(r=>r.turns).sort((a,b)=>a-b);
- const report={sampleSize:results.length,wins,losses,draws,
-  minHalfTurns:turns[0],medianHalfTurns:(turns[5]+turns[6])/2,
-  maxHalfTurns:turns[11],sectors:results.map(r=>({
-   sector:r.sectorNumber,boss:r.boss,winner:r.winner,turns:r.turns,
-   theoreticalMaxMin:r.minutesMax,levelB:r.levelB
-  }))
+ const report={
+  sampleSize:results.length,seedsPerBoss:offsets.length,wins,losses,draws,
+  minHalfTurns:turns[0],medianHalfTurns:(turns[17]+turns[18])/2,
+  maxHalfTurns:turns[turns.length-1],
+  note:'IA vs IA, un mezzo turno dura al MASSIMO 30 s; non sono minuti reali. Nessun parametro LIVE modificato.',
+  sectors
  };
- console.log('LIVE_ALL_BOSSES_AUDIT '+JSON.stringify(report));
- assert.equal(wins+losses+draws,12);
+ console.log('LIVE_ALL_BOSSES_MULTI_SEED '+JSON.stringify(report));
+ assert.equal(results.length,12*offsets.length);
+ assert.equal(wins+losses+draws,results.length);
+ assert.ok(sectors.every(s=>s.outcomes.length===offsets.length));
 });
-
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
  const experiments=[];
  for(const index of [1,5,6,9]){
