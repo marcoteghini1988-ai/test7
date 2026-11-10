@@ -80,6 +80,10 @@ test('IA: quando il mazzo non contiene più i partner, scarta la vecchia firma; 
  const stored=[c(3,'♣')],hand=[c(5,'♥'),c(7,'♠'),c(9,'♦')];
  assert.equal(officialLiveMathDeadEnd(TIMES,stored,hand,[]),true);
  assert.equal(officialLiveMathDeadEnd(TIMES,stored,hand,[c(4,'♦')]),false);
+ assert.equal(officialLiveMathDeadEnd(TIMES,stored,hand,[],[c(4,'♦')]),false,
+  'partner già scartato resta ottenibile dopo rimescolamento autentico');
+ assert.equal(officialLiveMathDeadEnd(TIMES,stored,hand,[],[c(8,'♦')]),true,
+  'senza alcun partner nemmeno negli scarti il progetto è irrealizzabile');
  assert.equal(officialLiveMathDeadEnd(TIMES,stored,hand,[c(2,'♦'),c(2,'♠')]),false,
   'tre carte 3x2x2 sono una soluzione reale valida');
  assert.equal(officialLiveMathDeadEnd(TIMES,[],hand,[]),false);
@@ -87,7 +91,7 @@ test('IA: quando il mazzo non contiene più i partner, scarta la vecchia firma; 
  assert.equal(officialLiveMathDeadEnd(any,stored,hand,[]),false,
   'non si elimina una costruzione Poker opzionale come fosse un calcolo');
 });
-test('IA LIVE: annulla una firma matematicamente impossibile e conserva 52 numeriche vere',()=>{
+test('IA LIVE: conserva una firma quando il partner resta recuperabile dagli scarti',()=>{
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA:'C01',shipB:'N00',levelA:1,levelB:1,nowMs:0
  }),0);
@@ -108,12 +112,12 @@ test('IA LIVE: annulla una firma matematicamente impossibile e conserva 52 numer
  assert.equal(placed.ok,true);b=placed.battle;
  assert.equal(b.vitalBuilds.B.engine.length,1);
  const intent=chooseOfficialLiveAiAction(b);
- assert.equal(intent.type,'clearVital');
- assert.equal(intent.vitalId,'engine');
- const clear=applyOfficialLiveAction(b,'B',intent,2);
- assert.equal(clear.ok,true);b=clear.battle;
- assert.equal(b.vitalBuilds.B.engine.length,0);
- assert.equal(b.actionUsed.numeric,1,'lo scarto non consuma un proiettile extra');
+ assert.notEqual(intent.type,'clearVital',
+  'le numeriche partner nei veri scarti possono essere ripescate');
+ const next=applyOfficialLiveAction(b,'B',intent,2);
+ assert.equal(next.ok,true,next.reason);b=next.battle;
+ assert.equal(b.vitalBuilds.B.engine.length,1,
+  'il deposito rimane in attesa di pesca fisica futura');
  const allNow=[...b.sides.B.numeric.hand,...b.sides.B.numeric.deck,...b.sides.B.numeric.discard];
  assert.equal(allNow.length,52);
  assert.equal(new Set(allNow.map(x=>x.id)).size,52);
