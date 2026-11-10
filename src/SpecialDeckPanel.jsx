@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from 'react';
 import {SPECIAL_CARD_CATALOG,specialCardMaxCopies} from './specialCards.js';
+import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {isBossCharacterCard} from './bossCharacterCards.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
@@ -95,10 +96,11 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
       <div className="special-deck-entry-copy">
        {isBossCharacterCard(type)&&<BossCharacterPortrait type={type} className="special-deck-boss-portrait"/>}
        {isPvpTerrain(type)&&<PvpTerrainPortrait type={type} className="special-deck-boss-portrait"/>}
+       {officialSpecialArtPath(type)&&<img className="special-deck-art" src={officialSpecialArtPath(type)} alt={info.name} loading="lazy"/>}
        <strong>{info.short}</strong>
        <small>{isBossCharacterCard(type)?'PERSONAGGIO BOSS · 2 CICLI · ':''}{info.description}</small>
        {isBossCharacterCard(type)&&!owned&&<small>Si sblocca sconfiggendo il boss del pianeta.</small>}
-       {isPvpTerrain(type)&&<small>Solo PvP · cambia l'ambiente per 2 cicli. Non si ottiene nei pacchetti correnti.</small>}
+       {isPvpTerrain(type)&&<small>Solo PvP · rimane fino a sostituzione. Non si ottiene nei pacchetti correnti.</small>}
        {isTacticalEpic(type)&&<small>Oggetto Epico · sblocco dal Varco fuso nella Cripta. Una copia per tipo, massimo due nel mazzo; uno slot a L20/primo Varco, due a L60.</small>}
        {isModuleCard(type)&&<small>{(owned?'Modulo acquistato · livello '+(snapshot.moduleLevels?.[type]??'?'):'Modulo non posseduto')+' · Carta abilità: 1 copia, giocabile tra le cinque speciali; non si trova nei pacchetti normali.'}</small>}
       </div>
