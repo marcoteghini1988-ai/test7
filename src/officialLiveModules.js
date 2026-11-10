@@ -73,5 +73,5 @@ export function playOfficialLiveModule(b,key,type,choice={}){
  report(b,key,'Carta Modulo '+rule.name+' L'+level+' · '+rule.effect+
   (current.actual?' · '+current.actual+' effettivi':''),
   'module',{type,effect:rule.effect,level,actual:current.actual});
- return {ok:true};
+ return {ok:true,actual:current.actual,effect:rule.effect};
 }
