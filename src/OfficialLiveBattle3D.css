@@ -142,3 +142,28 @@
  .es-math-scope .live-root .live-hand-special,.es-math-scope .live-root .live-number-card{transition:none}
  .es-math-scope .live-root .live-action-notice{animation:none}
 }
+
+/* Il proiettile parte solo dopo una numerica; il vitale esplode senza proiettile. */
+.es-math-scope .live-root .live-combat-fx{position:absolute;inset:0;pointer-events:none;z-index:22;overflow:hidden}
+.es-math-scope .live-root .live-shot-fx{position:absolute;left:calc(50% - 5px);
+ width:10px;height:260px;background:linear-gradient(0deg,transparent,var(--fx-color),#fff,var(--fx-color),transparent);
+ filter:drop-shadow(0 0 11px var(--fx-color));border-radius:20px;opacity:0;
+ animation:liveBeam .72s ease-in-out forwards}
+.es-math-scope .live-root .live-shot-fx--A{top:185px;transform-origin:bottom center}
+.es-math-scope .live-root .live-shot-fx--B{top:215px;transform-origin:top center}
+.es-math-scope .live-root .live-vital-fx{position:absolute;left:calc(50% - 38px);
+ width:76px;height:76px;display:grid;place-items:center;opacity:0;animation:liveBlast .9s ease-out forwards}
+.es-math-scope .live-root .live-vital-fx--A{top:129px}
+.es-math-scope .live-root .live-vital-fx--B{top:465px}
+.es-math-scope .live-root .live-vital-fx i{position:absolute;width:72px;height:72px;border-radius:50%;
+ background:radial-gradient(circle,#fff3c5 0%,#ffc34b 21%,#fb4d46 43%,transparent 72%);
+ box-shadow:0 0 25px #ff7d3a;opacity:.9}
+.es-math-scope .live-root .live-vital-fx i:nth-child(2){transform:scale(.55);background:#fff3}
+.es-math-scope .live-root .live-vital-fx i:nth-child(3){background:transparent;border:3px solid #ffd88a;transform:scale(1.4)}
+@keyframes liveBeam{0%{opacity:0;clip-path:inset(0 0 100% 0)}
+ 20%{opacity:1}65%{opacity:1;clip-path:inset(0 0 0 0)}100%{opacity:0;clip-path:inset(0 0 0 0)}}
+@keyframes liveBlast{0%{opacity:0;transform:scale(.2)}25%{opacity:1;transform:scale(.8)}
+ 60%{opacity:1;transform:scale(1.3)}100%{opacity:0;transform:scale(1.9)}}
+@media (prefers-reduced-motion:reduce){
+ .es-math-scope .live-root .live-shot-fx,.es-math-scope .live-root .live-vital-fx{animation:none;opacity:.75}
+}
