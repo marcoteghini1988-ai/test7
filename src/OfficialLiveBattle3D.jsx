@@ -200,7 +200,8 @@ export default function OfficialLiveBattle3D({
   const index=cards.findIndex(c=>c.id===chosen.id);
   if(index<0)return setChosen(null);
   if(chosen.kind==='numeric'){
-   if(target==='ship'||target.startsWith('escort-'))
+   if(target==='discard')action({type:'numeric-discard',index});
+   else if(target==='ship'||target.startsWith('escort-'))
     action({type:'numeric',index,target:'ship',shipId:target==='ship'?'mother':target});
    else if(target==='vital'&&vital)
     action({type:'numeric',index,target:'vital',vitalId:vital});
@@ -217,7 +218,8 @@ export default function OfficialLiveBattle3D({
   const index=hand?.findIndex(c=>c.id===id);
   if(index==null||index<0)return;
   if(kind==='numeric'){
-   if(target==='ship'||target.startsWith('escort-'))
+   if(target==='discard')action({type:'numeric-discard',index});
+   else if(target==='ship'||target.startsWith('escort-'))
     action({type:'numeric',index,target:'ship',shipId:target==='ship'?'mother':target});
    else if(target==='vital'&&vital)action({type:'numeric',index,target:'vital',vitalId:vital});
   }else playSpecialAt(index,target);
@@ -280,7 +282,9 @@ export default function OfficialLiveBattle3D({
      kind==='special'?battle.sides.A.special.hand:[];
     const index=pile.findIndex(c=>c.id===id);
     if(index<0)return;
-    if(kind==='numeric'&&(slot==='ship'||slot.startsWith('escort-')))
+    if(kind==='numeric'&&slot==='discard')
+     action({type:'numeric-discard',index});
+    else if(kind==='numeric'&&(slot==='ship'||slot.startsWith('escort-')))
      action({type:'numeric',index,target:'ship',shipId:slot==='ship'?'mother':slot});
     else if(kind==='numeric'&&slot==='vital'&&vital)
      action({type:'numeric',index,target:'vital',vitalId:vital});
@@ -373,6 +377,11 @@ export default function OfficialLiveBattle3D({
        'RICAMBIO '+Math.ceil((player.bossNumericDeck.liveNextRecycleAtMs-now)/1000)+'s':
        'RICAMBIO ARMONICO'}
      </button>}
+     <button type="button" data-live-drop="discard"
+      disabled={cannotAct||chosen?.kind!=='numeric'||battle.actionUsed.numeric>=LIVE_NUMERIC_LIMIT}
+      title="Cestino: scarta la numerica selezionata; usa 1 delle 3 azioni, senza pesca immediata."
+      aria-label="Cestino: scarta la carta numerica selezionata"
+      onClick={()=>useSelected('discard')}>CESTINO</button>
      <button type="button" disabled={cannotAct} onClick={()=>action({type:'end'})}>PASSA TURNO</button>
     <button type="button" onClick={()=>setDetails(v=>!v)} aria-label="Regole e registro">?</button>
    </div>
@@ -484,7 +493,7 @@ export default function OfficialLiveBattle3D({
    {details&&<div className="live-info">
     <h3>DUELLO LIVE · REGOLE</h3>
     <p>Turni alternati da 30s. Le armi sparano solo caricando numeriche del seme compatibile.
-     Massimo tre numeriche e due speciali per turno. Le azioni sono immediate.</p>
+     Massimo tre numeriche e due speciali per turno. Lo scarto dal cestino usa una delle tre azioni numeriche: la mano si reintegra solo al prossimo turno. Le azioni sono immediate.</p>
     <p>Clicca un vitale esposto, inserisci le numeriche nei suoi slot. Le carte restano
      fra i turni: completando la combinazione valida il componente esplode.</p>
     <p>Le trappole coperte reagiscono durante il turno nemico se serve; due effetti
