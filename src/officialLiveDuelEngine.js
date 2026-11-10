@@ -2,6 +2,7 @@
 // simultanee restano isolate per compatibilita' dei salvataggi/test storici.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {TACTICAL_SPECIALS} from './simultaneousDuelEngine.js';
+import {TACTICAL_BOSS_PLANS} from './tacticalSpecialPresets.js';
 import {VITAL_IDS,damageMotherShield,restoreMotherShield,exposeMotherPart,
  hitMotherPart,remainingExposureSlots,motherDestroyed} from './vitalDefense.js';
 import {tacticalSignatureOperation,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
@@ -720,6 +721,9 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
  // In partita la UI chiama il pianificatore solo per il nemico B.
  if(!battle?.live||battle.phase!=='playing'||battle.activeSide!==key)return null;
  const me=battle.sides[key],enemy=battle.sides[other(key)];
+ // Il boss segue la propria dottrina ufficiale dei bersagli. Non cambia
+ // firme, numeriche, carte, danni o durata: soltanto la priorità tattica.
+ const targetOrder=TACTICAL_BOSS_PLANS[me.bossPlanetId]?.targets||VITAL_IDS;
  if(['epic_item_1','epic_item_3'].includes(me.epic?.active?.id)&&
    !me.epic.liveChoiceCommitted&&me.epic.peek?.length)
   return {type:'epic-choice',index:0};
@@ -728,7 +732,7 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
  if(battle.actionUsed.numeric<LIVE_NUMERIC_LIMIT){
   // Prima completa un bersaglio GIA' ESPOSTO con una combinazione
   // verificabile. Non riempie slot vitali a caso, ne' consulta mutazioni segrete.
-  for(const id of VITAL_IDS){
+  for(const id of targetOrder){
    const target=enemy.defense.parts[id];
    if(!target||target.hp<=0||!target.exposed)continue;
    const stored=battle.vitalBuilds[key][id];
@@ -747,7 +751,7 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
   // Prima di una lunga mano Poker, una coppia matematica autenticamente
   // costruibile nel proprio mazzo consente di avanzare sul vitale.
   // Il deposito iniziale non crea proiettili e non legge carte avversarie.
-  for(const id of VITAL_IDS){
+  for(const id of targetOrder){
    const target=enemy.defense.parts[id];
    if(!target||target.hp<=0||!target.exposed||battle.vitalBuilds[key][id].length)continue;
    const knownSignature=battle.liveLegacy?.mutations[other(key)]?.vitalId===id?
@@ -759,7 +763,7 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
   // Per Poker 4/5 carte permette una costruzione su turni diversi anche
   // se tutte le carte non sono ancora state pescate. Usa solo il proprio
   // mazzo, nessuna mano avversaria o mutazione segreta.
-  for(const id of VITAL_IDS){
+  for(const id of targetOrder){
    const target=enemy.defense.parts[id];
    if(!target||target.hp<=0||!target.exposed)continue;
    const knownSignature=battle.liveLegacy?.mutations[other(key)]?.vitalId===id?
@@ -770,7 +774,7 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
     return {type:'numeric',index:progress,target:'vital',vitalId:id};
   }
   // Una nuova esposizione non interrompe una combinazione completabile.
-  for(const id of VITAL_IDS){
+  for(const id of targetOrder){
    const target=enemy.defense.parts[id];
    if(target&&target.hp>0&&!target.exposed&&remainingExposureSlots(enemy.defense)>0)
     return {type:'expose',vitalId:id};
