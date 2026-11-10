@@ -50,7 +50,8 @@ test('IA matematica: da una carta sul vitale sceglie una seconda per il tris di 
 
 test('IA LIVE completa 3x2x2 su un vitale in due turni con sole carte fisiche',()=>{
  let b=createOfficialLiveDuel(createTacticalDuel({
-  shipA:'C01',shipB:'N00',levelA:1,levelB:1,nowMs:0
+  shipA:'C01',shipB:'N00',levelA:1,levelB:1,nowMs:0,
+  mode:'campaign',bossPlanetB:2
  }),0);
  b.turn=2;b.round=1;b.activeSide='B';
  b.sides.A.defense.shield.hp=45;
