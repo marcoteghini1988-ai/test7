@@ -127,3 +127,23 @@ test('LIVE: la vera carta speciale Ricambio concede Crono solo dopo sostituzione
  assert.equal(b.sides.A.commander.seenRecycle,1);
  assert.equal(b.history.filter(e=>e.kind==='pilot_bonus').length,1);
 });
+
+test('LIVE Matriarca Tossica: il pilota vede corrosione prima che il colpo la consumi',()=>{
+ let b=createOfficialLiveDuel(scenario('pilot_boss_3'),0);
+ b.sides.B.corroded=true;
+ const index=b.sides.A.numeric.hand.findIndex(c=>c.suit==='♥');
+ b=play(b,{type:'numeric',index,target:'ship',shipId:'mother'},1);
+ assert.equal(b.history.some(e=>e.kind==='pilot_bonus'&&e.trigger==='corroded_enemy'),true);
+ assert.equal(b.sides.B.corroded,false,'lo stato viene consumato una volta');
+});
+test('LIVE Discordia: richiede due stati contemporanei prima del loro consumo',()=>{
+ let b=createOfficialLiveDuel(scenario('pilot_boss_18'),0);
+ b.sides.B.ionized=true;
+ b.sides.B.corroded=true;
+ const index=b.sides.A.numeric.hand.findIndex(c=>c.suit==='♥');
+ b=play(b,{type:'numeric',index,target:'ship',shipId:'mother'},1);
+ assert.equal(b.history.some(e=>e.kind==='pilot_bonus'&&e.trigger==='double_status'),true);
+ const c=createOfficialLiveDuel(scenario('pilot_boss_18'),0);
+ c.sides.B.ionized=true;
+ assert.equal(liveCommanderNativeBonus(c.sides.A,c.sides.B,50).active,false);
+});
