@@ -246,6 +246,7 @@ export default function OfficialLiveBattle3D({
  const last=battle.history.at(-1);
  const visualIndex=battle.history.findLastIndex(e=>e.kind==='shot'||e.kind==='vital_destroyed');
  const choiceCard=specialChoice?player.special.hand.find(c=>c.id===specialChoice.cardId):null;
+ const hiddenMutation=vital&&battle.liveLegacy?.mutations?.B?.vitalId===vital;
  const visual=visualIndex>=0?battle.history[visualIndex]:null;
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  return <div className="es-math-scope live-viewport">
@@ -328,7 +329,9 @@ export default function OfficialLiveBattle3D({
    </div>
    <div className="live-number-hand" role="group" aria-label="Sette carte numeriche">
     {player.numeric.hand.map(card=><button key={card.id} type="button" disabled={cannotAct}
-     className={'live-number-card'+(chosen?.id===card.id?' live-chosen':'')}
+     className={'live-number-card'+(chosen?.id===card.id?' live-chosen':'')+
+      (player.legacy?.golden?.cardId===card.id?' live-number-golden':'')+
+      (player.legacy?.bomb?.cardId===card.id?' live-number-bomb':'')}
      style={{'--live-suit':CARD_SUIT_COLORS[card.suit]}}
      aria-pressed={chosen?.id===card.id} aria-label={rankLabel(card.value)+card.suit}
      onClick={()=>selectCard('numeric',card.id)}
@@ -336,6 +339,8 @@ export default function OfficialLiveBattle3D({
      draggable={!cannotAct}
      onDragStart={e=>e.dataTransfer.setData('text/plain','numeric:'+card.id)}>
      <small>{card.suit}</small><b>{rankLabel(card.value)}</b><small>{card.suit}</small>
+     {player.legacy?.bomb?.cardId===card.id&&<span className="live-number-mark live-number-mark--bomb">BOMBA</span>}
+     {player.legacy?.golden?.cardId===card.id&&<span className="live-number-mark live-number-mark--gold">DORATA</span>}
     </button>)}
    </div>
    <div className="live-actions">
@@ -363,7 +368,7 @@ export default function OfficialLiveBattle3D({
       </button>;
      })}
     </div>
-    <small>{visibleTacticalSignature(player,enemy,vital)?
+    <small>{hiddenMutation?'FIRMA MUTATA · nuovo requisito nascosto':visibleTacticalSignature(player,enemy,vital)?
      tacticalSignatureLabel(targeted.signature)+' · '+tacticalSignatureSlotCount(targeted.signature)+' slot massimi. Le carte restano tra i turni.':
      'Firma non ancora scoperta'}</small>
     <button type="button" disabled={!myTurn||!battle.vitalBuilds.A[vital].length}
