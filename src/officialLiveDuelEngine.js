@@ -6,7 +6,7 @@ import {VITAL_IDS,damageMotherShield,restoreMotherShield,exposeMotherPart,
  hitMotherPart,remainingExposureSlots,motherDestroyed} from './vitalDefense.js';
 import {tacticalSignatureOperation,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
 import {findOfficialLiveVitalCompletion,findOfficialLiveVitalProgress,
- findOfficialLiveMathProgress} from './officialLiveAiPlanning.js';
+ findOfficialLiveMathProgress,officialLiveMathDeadEnd} from './officialLiveAiPlanning.js';
 import {isPvpTerrain,pvpTerrainDefinition,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterNativeBonus,bossCharacterShieldFactor,bossCharacterActive,
@@ -736,6 +736,11 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
     battle.liveLegacy.mutations[other(key)].originalSignature:target.signature;
    const plan=findOfficialLiveVitalCompletion(knownSignature,stored,me.numeric.hand);
    if(plan?.length)return {type:'numeric',index:plan[0],target:'vital',vitalId:id};
+   // Una firma matematica partita in un turno precedente può diventare
+   // irraggiungibile se gli ultimi partner sono stati scartati. Liberare
+   // gli slot autentici senza creare numeriche supplementari.
+   if(officialLiveMathDeadEnd(knownSignature,stored,me.numeric.hand,me.numeric.deck))
+    return {type:'clearVital',vitalId:id};
    if(stored.length>=tacticalSignatureSlotCount(knownSignature))
     return {type:'clearVital',vitalId:id};
   }
