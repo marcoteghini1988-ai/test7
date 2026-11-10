@@ -27,7 +27,10 @@ test('Möbius richiede vitali critici e usa una numerica realmente presente nel 
  b=finishOfficialLiveTurn(b,5);
  b=finishOfficialLiveTurn(b,6);
  assert.equal(b.sides.A.numeric.hand.at(-1).id,desired);
- assert.equal(b.sides.A.epic.liveChoiceCommitted,false);
+ assert.equal(b.sides.A.epic.liveChoiceCommitted,true);
+ assert.equal(b.sides.A.epic.liveChoiceApplied,true);
+ assert.equal(applyOfficialLiveAction(b,'A',{type:'epic-choice',index:0},7).reason,
+  'epic_choice_unavailable');
 });
 test('Astrolabio: sceglie una delle prossime due numeriche senza duplicazioni',()=>{
  let b=equip(game(),'epic_item_3');
