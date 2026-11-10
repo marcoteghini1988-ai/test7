@@ -31,7 +31,8 @@ import {supportedLiveEpic,playLiveEpic,liveEpicBeforeDraw,liveEpicChoose,
 import {liveCommanderDefensePacket,liveCommanderRememberShot} from './officialLiveCommanderDefense.js';
 import {liveNumericBossShieldFactor,liveNumericBossRememberShield,
  liveNumericBossNativeBonus,liveNumericBossAfterShot,liveNumericBossAfterVital,
- liveNumericBossSyncBonus,liveNumericBossRepairAmount} from './officialLiveNumericBossPassives.js';
+ liveNumericBossSyncBonus,liveNumericBossRepairAmount,liveNumericBossEscortCooperation,
+ liveNumericBossRememberEscortCooperation} from './officialLiveNumericBossPassives.js';
 import {beginLiveFusion,liveFusionExpires,liveFusionBlocksEscort,
  interceptWithLiveFusion} from './officialLiveFusion.js';
 
@@ -255,6 +256,9 @@ function fireNumeric(b,key,card,shipId){
  }
  let packet=escortVolley?escortVolley.packet:
   Math.max(1,Math.floor(totalValue*profile.damage*gunEfficiency(attacker.defense,'mother')));
+ const escortCooperation=escortIndex==null?null:
+  liveNumericBossEscortCooperation(attacker,packet,b.round);
+ if(escortCooperation)packet=escortCooperation.damage;
  if(escortIndex!=null&&b.liveModuleEffects[key].escortBoost>0){
   packet+=b.liveModuleEffects[key].escortBoost;
   b.liveModuleEffects[key].escortBoost=0;
@@ -325,6 +329,8 @@ function fireNumeric(b,key,card,shipId){
  liveCommanderRememberShot(attacker,enemy,hit.damage);
  liveBossAfterNativeShot(attacker,enemy,b.round,hit.damage,bossPower);
  liveNumericBossAfterShot(attacker,hit.damage,w.id,numericBossPower.bonus,b.round);
+ if(escortCooperation)
+  liveNumericBossRememberEscortCooperation(attacker,hit.damage,escortCooperation.bonus);
  liveEpicOnShieldDamage(b,defenderKey,hit.damage);
  if(hit.damage>0&&enemy.heated)enemy.heated=false;
  const liveBurn=b.liveModuleEffects[key];
