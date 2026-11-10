@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createTacticalDuel,TACTICAL_STARTER_TYPES} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,
  chooseOfficialLiveAiAction} from './officialLiveDuelEngine.js';
+import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {VITAL_IDS,exposeMotherPart} from './vitalDefense.js';
 
 function ready({ship='C01',boss=2,levelA=1,mode='campaign'}={}){
@@ -130,4 +131,47 @@ test('Boss ricicla 2 numeriche vere prima di scartare quando la barriera e a zer
  const second=chooseOfficialLiveAiAction(b);
  assert.equal(second.type,'numeric-discard',
   'non usa una seconda carta Ricambio nello stesso turno senza motivo');
+});
+
+
+test('Risonanza usa una Fusione vera solo a 100 Sincronia prima del colpo nativo',()=>{
+ let b=createOfficialLiveDuel(createTacticalDuel({
+  shipA:'N00',shipB:'C01',levelA:4,levelB:5,nowMs:0,
+  mode:'campaign',bossPlanetB:17,specialDeckB:buildTacticalBossDeck(17,5,4)
+ }),0);
+ b.turn=2;b.round=1;b.activeSide='B';
+ assert.equal(b.sides.B.escorts.filter(e=>e.hp>0).length,2);
+ b.sides.B.sync=100; // Solo fixture: in LIVE deve essere guadagnata.
+ equipSpecial(b,'fusion-triad');
+ const first=chooseOfficialLiveAiAction(b);
+ assert.equal(first.type,'special');
+ assert.equal(b.sides.B.special.hand[first.index].type,'fusion-triad');
+ assert.equal(first.slot,'open-0');
+ const original=structuredClone(b);
+ b=act(b,first,1);
+ assert.equal(b.sides.B.sync,0,'la carta consuma 100 Sincronia vera');
+ assert.equal(b.actionUsed.special,1);
+ assert.equal(b.actionUsed.numeric,0);
+ assert.equal(b.pendingShot.B.fusion,.35);
+ const next=chooseOfficialLiveAiAction(b);
+ assert.equal(next.type,'numeric');
+ assert.equal(next.target,'ship');
+ assert.equal(next.shipId,'mother');
+ const card=b.sides.B.numeric.hand[next.index];
+ assert.equal(card.suit,'♥','C01 può sparare subito con un ♥ reale');
+ b=act(b,next,2);
+ assert.equal(b.history.filter(e=>e.kind==='shot'&&e.by==='B').length,1);
+ const plain=act(original,{type:'numeric',index:next.index,target:'ship',
+  shipId:'mother'},2);
+ assert.ok(b.sides.A.defense.shield.hp<plain.sides.A.defense.shield.hp,
+  'la Fusione deve aumentare solo un colpo che avviene realmente');
+ assert.equal(b.pendingShot.B,null);
+ const lowSync=structuredClone(original);
+ lowSync.sides.B.sync=99;
+ const noFusion=chooseOfficialLiveAiAction(lowSync);
+ assert.notEqual(noFusion.type,'special','mai fusione senza 100 Sincronia');
+ const pvp=structuredClone(original);
+ pvp.mode='pvp';pvp.sides.B.bossPlanetId=null;
+ assert.equal(chooseOfficialLiveAiAction(pvp).type,'numeric',
+  'il PvP simulato non riceve la tattica specifica di Risonanza');
 });
