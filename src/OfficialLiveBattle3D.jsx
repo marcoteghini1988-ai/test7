@@ -369,6 +369,55 @@ export default function OfficialLiveBattle3D({
     <button type="button" disabled={!myTurn||!battle.vitalBuilds.A[vital].length}
      onClick={()=>action({type:'clearVital',vitalId:vital})}>SCARTA COMBINAZIONE</button>
    </div>}
+   {specialChoice&&choiceCard&&<div className="live-choice-overlay" role="dialog"
+     aria-modal="true" aria-label={'Scegli bersaglio '+(TACTICAL_SPECIALS[choiceCard.type]?.name||'')}>
+     <div className="live-choice-panel">
+      <div className="live-choice-head">
+       <strong>{TACTICAL_SPECIALS[choiceCard.type]?.name||'CARTA SPECIALE'}</strong>
+       <button type="button" onClick={()=>setSpecialChoice(null)} aria-label="Annulla scelta">×</button>
+      </div>
+      {specialChoice.type==='tactic-bomb'&&<>
+       <p>Seleziona uno slot avversario: la Bomba si lega alla carta reale dopo la prossima pesca, senza rivelare la mano.</p>
+       <div className="live-choice-grid">{Array.from({length:7},(_,i)=>
+        <button type="button" key={i} onClick={()=>completeSpecialChoice({bombSlot:i})}>SLOT {i+1}</button>)}</div>
+      </>}
+      {specialChoice.type==='tactic-golden'&&<>
+       <p>Scegli una tua numerica. Il bonus si attiva soltanto completando una vera combinazione su un vitale.</p>
+       <div className="live-choice-grid">{player.numeric.hand.map((card,i)=>
+        <button type="button" key={card.id} onClick={()=>completeSpecialChoice({goldenIndex:i})}>
+         {rankLabel(card.value)}{card.suit}</button>)}</div>
+      </>}
+      {specialChoice.type==='tactic-malus'&&<>
+       <p>Carica: {player.legacy?.malusCharge||0}/3 colpi validi ai vitali.</p>
+       <div className="live-choice-grid">{MALUS_CHOICES.map(c=>
+        <button type="button" key={c.id} disabled={(player.legacy?.malusCharge||0)<3}
+         title={c.help} onClick={()=>completeSpecialChoice({malusChoice:c.id})}>{c.name}</button>)}</div>
+      </>}
+      {(specialChoice.type==='tactic-signature-mutation'||specialChoice.type==='tactic-counter')&&<>
+       <p>{specialChoice.type==='tactic-signature-mutation'?
+        'Scegli un tuo componente già esposto per cambiarne temporaneamente la firma.':
+        'Scegli quale tuo componente sarà protetto dalla Contromisura.'}</p>
+       <div className="live-choice-grid">{VITAL_IDS.map(id=>
+        <button type="button" key={id}
+         disabled={player.defense.parts[id].hp<=0||
+          (specialChoice.type==='tactic-signature-mutation'&&!player.defense.parts[id].exposed)}
+         onClick={()=>completeSpecialChoice({vitalId:id})}>{VITAL_LABELS[id]}</button>)}</div>
+      </>}
+      {specialChoice.type==='tactic-numeric-recycle'&&<>
+       <p>Seleziona una o due numeriche da scartare e ripescare dal mazzo autentico. Disinnesca le Bombe su quelle carte.</p>
+       <div className="live-choice-grid">{player.numeric.hand.map((card,i)=>
+        <button type="button" key={card.id}
+         className={recycleChoice.includes(i)?'live-choice-selected':''}
+         onClick={()=>setRecycleChoice(old=>old.includes(i)?old.filter(n=>n!==i):
+          old.length<2?[...old,i]:old)}>{rankLabel(card.value)}{card.suit}</button>)}</div>
+       <button type="button" className="live-choice-confirm" disabled={!recycleChoice.length}
+        onClick={()=>completeSpecialChoice({recycleIndices:recycleChoice})}>
+        CONFERMA RICAMBIO ({recycleChoice.length}/2)</button>
+      </>}
+      <button type="button" className="live-choice-cancel"
+       onClick={()=>setSpecialChoice(null)}>ANNULLA</button>
+     </div>
+    </div>}
    {details&&<div className="live-info">
     <h3>DUELLO LIVE · REGOLE</h3>
     <p>Turni alternati da 30s. Le armi sparano solo caricando numeriche del seme compatibile.
