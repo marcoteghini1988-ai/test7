@@ -726,6 +726,57 @@ function aiSpecialTargets(type,side){
  }
  return {};
 }
+// Preparazione boss: un potenziamento offensivo deve precedere una salva
+// nativa CHE PUO' ESSERE COMPLETATA realmente nel turno corrente.
+// Non inferisce la mano avversaria, non aggiunge munizioni e non legge il
+// futuro del mazzo. Le Combo non ancora complete e gli Accumuli sotto
+// soglia non consumano carte speciali inutilmente.
+const LIVE_BOSS_SHOT_SPECIALS=new Set([
+ 'tactic-kinetic','tactic-power-shift','shot-corrosion','shot-ion',
+ 'shot-piercing','tactic-suppress'
+]);
+function liveNativeShotReady(side,card){
+ const profile=weaponForCard(side,card);
+ if(!profile)return false;
+ const weapon=profile.weapon;
+ if(weapon.tipo==='Immediata')return true;
+ if(weapon.tipo==='Accumulo')
+  return card.value+(side.liveWeaponCharges?.[weapon.id]?.values||[])
+   .reduce((n,v)=>n+v,0)>=weapon.soglia_munizioni;
+ if(['Combo simultanea','Combo a memoria'].includes(weapon.tipo)){
+  const charge=side.liveWeaponCharges?.[weapon.id];
+  const suits=new Set([...(charge?.suits||[]),SUIT_CODES[card.suit]]);
+  return weapon.combo.split('@')[0].split('+').every(x=>suits.has(x));
+ }
+ return false;
+}
+function liveBossPreparedAttack(b,key){
+ if(!b.sides[key].bossPlanetId||
+   b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT||
+   b.actionUsed.special>=LIVE_SPECIAL_LIMIT)return null;
+ const own=b.sides[key],enemy=b.sides[other(key)];
+ // Il bonus e' prioritario nella fase di assedio della barriera, prima
+ // che si aprano i primi vitali. Dopo, la IA torna a preferire le firme.
+ if(enemy.defense.shield.hp<=enemy.defense.shield.max*.75||
+   own.defense.parts.weapons.hp<=0)return null;
+ if(b.pendingShot[key]?.offensiveTypes?.length)return null;
+ if(!own.numeric.hand.some(card=>liveNativeShotReady(own,card)))return null;
+ const slot=b.zones[key].open.findIndex(x=>!x);
+ if(slot<0)return null;
+ const escorts=enemy.escorts?.some(e=>e.hp>0);
+ for(const [index,card] of own.special.hand.entries()){
+  const type=card.type;
+  if(!LIVE_BOSS_SHOT_SPECIALS.has(type))continue;
+  if((type==='shot-piercing'||type==='tactic-suppress')&&!escorts)continue;
+  if(type==='shot-ion'&&enemy.ionized)continue;
+  if(type==='shot-corrosion'&&enemy.corroded)continue;
+  const proposal={type:'special',index,slot:'open-'+slot};
+  const probe=applyOfficialLiveAction(b,key,proposal,b.deadlineMs-1);
+  if(probe.ok)return proposal;
+ }
+ return null;
+}
+
 export function chooseOfficialLiveAiAction(battle,key='B'){
  // Il secondo argomento abilita soltanto gli audit simmetrici della campagna.
  // In partita la UI chiama il pianificatore solo per il nemico B.
@@ -734,6 +785,8 @@ export function chooseOfficialLiveAiAction(battle,key='B'){
  // Il boss segue la propria dottrina ufficiale dei bersagli. Non cambia
  // firme, numeriche, carte, danni o durata: soltanto la priorità tattica.
  const targetOrder=TACTICAL_BOSS_PLANS[me.bossPlanetId]?.targets||VITAL_IDS;
+ const prepared=liveBossPreparedAttack(battle,key);
+ if(prepared)return prepared;
  if(['epic_item_1','epic_item_3'].includes(me.epic?.active?.id)&&
    !me.epic.liveChoiceCommitted&&me.epic.peek?.length)
   return {type:'epic-choice',index:0};
