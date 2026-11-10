@@ -142,8 +142,7 @@ function fireNumeric(b,key,card,shipId){
  if(!profile)return {ok:false,reason:'suit_incompatible'};
  // Valore carta x danno base dell'arma compatibile; Aurora-0 e' universale ma leggera.
  let packet=Math.max(1,Math.floor(card.value*profile.damage*
-  (attacker.shipId==='N00'?.5:1)*gunEfficiency(attacker.defense,
-  escortIndex==null?'mother':'escort')));
+  gunEfficiency(attacker.defense,escortIndex==null?'mother':'escort')));
  const queued=b.pendingShot[key];
  if(queued){
   if(queued.power)packet+=queued.power;
