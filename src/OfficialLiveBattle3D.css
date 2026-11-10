@@ -167,3 +167,7 @@
 @media (prefers-reduced-motion:reduce){
  .es-math-scope .live-root .live-shot-fx,.es-math-scope .live-root .live-vital-fx{animation:none;opacity:.75}
 }
+
+/* Asset delle Carte Speciali: occupano lo slot esistente, non cambiano la plancia. */
+.es-math-scope .live-root .live-slot{overflow:hidden}
+.es-math-scope .live-root .live-slot-art{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
