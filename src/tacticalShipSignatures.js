@@ -60,3 +60,29 @@ export function tacticalSignatureOperation(signature,cards){
  }
  return null;
 }
+
+// Numero di alloggiamenti REALI da mostrare nel pannello del bersaglio.
+// Per 'any' si mostrano anche le alternative Poker lunghe, senza inventare carte.
+export const POKER_SIGNATURE_COUNTS=Object.freeze({
+ pair:2,trips:3,twoPair:4,fourKind:4,straight:5,flush:5,
+ fullHouse:5,straightFlush:5,royalFlush:5
+});
+export function tacticalSignatureSlotCount(signature){
+ if(!signature)return 3;
+ if(signature.kind==='any')return Math.max(2,...signature.options.map(tacticalSignatureSlotCount));
+ if(signature.kind==='poker')return POKER_SIGNATURE_COUNTS[signature.pattern]??3;
+ if(signature.kind==='mathGate')return Math.max(2,...(signature.allowedCardCounts||[2,3]));
+ if(signature.kind==='math')return (signature.ops||[]).length+1;
+ return 3;
+}
+const POKER_NAMES=Object.freeze({pair:'COPPIA',trips:'TRIS',twoPair:'DOPPIA COPPIA',
+ fourKind:'POKER',straight:'SCALA',flush:'COLORE',fullHouse:'FULL',
+ straightFlush:'SCALA COLORE',royalFlush:'SCALA REALE'});
+const MATH_NAMES=Object.freeze({plus:'SOMMA',minus:'DIFFERENZA',times:'PRODOTTO',divide:'DIVISIONE'});
+export function tacticalSignatureLabel(signature){
+ if(!signature)return 'FIRMA SCONOSCIUTA';
+ if(signature.kind==='any')return signature.options.map(tacticalSignatureLabel).join(' O ');
+ if(signature.kind==='poker')return POKER_NAMES[signature.pattern]||'COMBINAZIONE POKER';
+ if(signature.kind==='mathGate')return (MATH_NAMES[signature.op]||'CALCOLO')+' = '+signature.target;
+ return 'FIRMA MATEMATICA';
+}
