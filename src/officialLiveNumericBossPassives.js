@@ -7,8 +7,16 @@ import {tacticalBossMotherFactor,rememberTacticalBossMotherHit,
  tacticalResonanceNativeBonus,rememberTacticalResonanceNativeHit,
  tacticalSovereignSupremacyBonus,rememberTacticalSovereignHit,
  tacticalGeneratorSyncBonus,tacticalAfroditeRepairAmount,
- tacticalResonanceCooperationBonus,rememberTacticalResonanceCooperationHit
+ tacticalResonanceCooperationBonus,rememberTacticalResonanceCooperationHit,
+ rememberTacticalLeviatanoRecycle,rememberTacticalLeviatanoHit
 } from './tacticalBossDecks.js';
+import {activeNumericBossAbilities} from './bossNumericDecks.js';
+// Il bonus si arma solo quando il mazzo reale non ha abbastanza carte
+// da ripescare ed e' necessario recuperare lo scarto autentico.
+export function liveNumericBossBeforeDraw(side){
+ const pile=side.numeric;
+ rememberTacticalLeviatanoRecycle(side,pile,Math.max(0,7-pile.hand.length));
+}
 export function liveNumericBossShieldFactor(defender){
  return tacticalBossMotherFactor(defender);
 }
@@ -19,7 +27,17 @@ export function liveNumericBossNativeBonus(side,base,weaponId,queued,round){
  const id=side.bossNumericDeck?.id;
  if(!(base>0))return {damage:base,bonus:null};
  let bonus=null;
- if(id==='planet_char_9')bonus=tacticalBossOutgoingBonus(side,base);
+ if(id==='planet_char_8'&&side.bossNumericDeck?.recyclePending){
+  const state=side.bossNumericDeck;
+  const ability=activeNumericBossAbilities(state.id,state.level)[0];
+  if(ability?.unlocked){
+   const remainder=Number.isInteger(state.leviatanoRemainder)?state.leviatanoRemainder:0;
+   const points=base*ability.value+remainder;
+   bonus={active:true,extra:Math.floor(points/100),remainder:points%100,
+    percentage:ability.value,spendsRecycle:true};
+  }
+ }
+ else if(id==='planet_char_9')bonus=tacticalBossOutgoingBonus(side,base);
  else if(id==='planet_char_19')bonus=tacticalMagmaNativeBonus(side,
   queued?.corrosion?['shot-corrosion']:[],base);
  else if(id==='planet_char_17')bonus=tacticalResonanceNativeBonus(side,weaponId,base);
@@ -38,6 +56,7 @@ export function liveNumericBossRememberEscortCooperation(side,damage,bonus){
 }
 export function liveNumericBossAfterShot(side,damage,weaponId,bonus,round){
  const type=side.bossNumericDeck?.id;
+ if(type==='planet_char_8')rememberTacticalLeviatanoHit(side,damage,bonus);
  if(type==='planet_char_9')rememberTacticalBossOutgoingHit(side,damage,bonus);
  if(type==='planet_char_19')rememberTacticalMagmaBarrierHit(side,damage,bonus);
  if(type==='planet_char_17')rememberTacticalResonanceNativeHit(side,weaponId,damage,bonus);
