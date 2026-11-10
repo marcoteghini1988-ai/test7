@@ -4,6 +4,7 @@ import {newVessel,rankLabel} from './mathDuelEngine.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots} from './vitalDefense.js';
 import {visibleTacticalSignature} from './tacticalIntelVisibility.js';
+import {tacticalSignatureSlotCount,tacticalSignatureLabel} from './tacticalShipSignatures.js';
 import {TACTICAL_SPECIALS} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,advanceOfficialLiveDuel,
  chooseOfficialLiveAiAction,supportedLiveSpecial,liveCompatibleShips,
@@ -327,7 +328,7 @@ export default function OfficialLiveBattle3D({
      <button type="button" onClick={()=>setVital(null)}>×</button>
     </div>
     <div className="live-vital-slots">
-     {Array.from({length:Math.max(3,battle.vitalBuilds.A[vital].length+1)},(_,i)=>{
+     {Array.from({length:tacticalSignatureSlotCount(targeted.signature)},(_,i)=>{
       const c=battle.vitalBuilds.A[vital][i];
       return <button key={i} type="button" disabled={!myTurn||!exposed}
        data-live-drop="vital" onClick={()=>useSelected('vital')}>
@@ -336,7 +337,7 @@ export default function OfficialLiveBattle3D({
      })}
     </div>
     <small>{visibleTacticalSignature(player,enemy,vital)?
-     'Deposita le numeriche: la combinazione valida distrugge il pezzo immediatamente':
+     tacticalSignatureLabel(targeted.signature)+' · '+tacticalSignatureSlotCount(targeted.signature)+' slot massimi. Le carte restano tra i turni.':
      'Firma non ancora scoperta'}</small>
     <button type="button" disabled={!myTurn||!battle.vitalBuilds.A[vital].length}
      onClick={()=>action({type:'clearVital',vitalId:vital})}>SCARTA COMBINAZIONE</button>
