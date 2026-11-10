@@ -103,7 +103,7 @@ test('Due speciali per turno, trappola coperta persistente e nessun effetto fant
  let b=battle();
  assert.equal(supportedLiveSpecial('tactic-reactive'),true);
  assert.equal(supportedLiveSpecial('epic_item_7'),true);
- assert.equal(supportedLiveSpecial('epic_item_9'),false);
+ assert.equal(supportedLiveSpecial('epic_item_9'),true);
  b.sides.A.special.hand[0].type='tactic-reactive';
  b.sides.A.special.hand[1].type='tactic-impact';
  b.sides.A.special.hand[2].type='tactic-counter';
