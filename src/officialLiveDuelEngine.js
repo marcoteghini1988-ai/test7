@@ -4,7 +4,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {TACTICAL_SPECIALS} from './simultaneousDuelEngine.js';
 import {VITAL_IDS,damageMotherShield,restoreMotherShield,exposeMotherPart,
  hitMotherPart,remainingExposureSlots,motherDestroyed} from './vitalDefense.js';
-import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
+import {tacticalSignatureOperation,tacticalSignatureSlotCount} from './tacticalShipSignatures.js';
 import {isPvpTerrain,pvpTerrainDefinition,pvpTerrainEffects,pvpTerrainRepairAmount} from './pvpTerrainCards.js';
 import {isBossCharacterCard,activateBossCharacter,expireBossCharacter,
  bossCharacterNativeBonus,bossCharacterShieldFactor} from './bossCharacterCards.js';
@@ -221,7 +221,7 @@ function placeVital(b,key,card,vitalId){
  if(!part||part.hp<=0)return {ok:false,reason:'vital_unavailable'};
  if(!part.exposed&&!rift)return {ok:false,reason:'vital_protected'};
  const list=b.vitalBuilds[key][vitalId];
- if(list.length>=5)return {ok:false,reason:'vital_slots_full'};
+ if(list.length>=tacticalSignatureSlotCount(part.signature))return {ok:false,reason:'vital_slots_full'};
  list.push(card);
  event(b,key+': '+card.value+card.suit+' nello slot '+vitalId+' ('+list.length+'/5)','vital_card');
  const op=tacticalSignatureOperation(part.signature,list);
@@ -400,9 +400,9 @@ export function chooseOfficialLiveAiAction(battle){
     return {type:'expose',vitalId:id};
    if(target.exposed){
     const stored=battle.vitalBuilds.B[id];
-    const matching=me.numeric.hand.findIndex(c=>stored.length<5&&(
+    const matching=me.numeric.hand.findIndex(c=>stored.length<tacticalSignatureSlotCount(target.signature)&&(
      tacticalSignatureOperation(target.signature,[...stored,c])||
-     stored.length<3));
+     stored.length<tacticalSignatureSlotCount(target.signature)-1));
     if(matching>=0)return {type:'numeric',index:matching,target:'vital',vitalId:id};
    }
   }
