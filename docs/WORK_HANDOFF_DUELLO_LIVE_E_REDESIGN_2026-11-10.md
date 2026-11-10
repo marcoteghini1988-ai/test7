@@ -1,3 +1,5 @@
+> **AGGIORNAMENTO PRIORITARIO 10/11**: le meccaniche e le immagini sono gestite nella chat principale; per Work seguire **[INCARICO SOLO GRAFICA](WORK_INCARICO_SOLO_GRAFICA_2026-11-10.md)**. Questo documento storico conserva le decisioni tecniche, ma NON è un incarico per riprogettare il motore.
+
 # ECLISSI STELLARE — HANDOFF UFFICIALE A CHATGPT WORK (10/11/2026)
 
 **Leggere PRIMA di modificare il codice.** Repository UNICO: marcoteghini1988-ai/test7, ramo main, StackBlitz collegato. NON creare fork, copie, branch di prova o un nuovo gioco. Tutto deve proseguire direttamente sulla versione ufficiale. I salvataggi e gli asset reali devono restare intatti.
