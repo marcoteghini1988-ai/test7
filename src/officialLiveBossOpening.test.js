@@ -147,7 +147,8 @@ test('Risonanza usa una Fusione vera solo a 100 Sincronia prima del colpo nativo
  // cosi' nessun bonus offensivo diverso dalla Fusione altera il test.
  const specials=b.sides.B.special,allCards=[...specials.hand,...specials.deck,...specials.discard];
  const chosen=[allCards.find(c=>c.type==='fusion-triad'),
-  ...allCards.filter(c=>c.type==='fusion-strike').slice(0,4)];
+  ...allCards.filter(c=>c.type==='fusion-strike').slice(0,2),
+  ...allCards.filter(c=>c.type==='tactic-scan').slice(0,2)];
  assert.equal(chosen.length,5);
  assert.ok(chosen.every(Boolean));
  const selected=new Set(chosen.map(c=>c.id));
