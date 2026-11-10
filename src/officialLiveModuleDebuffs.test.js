@@ -23,8 +23,14 @@ test('Scorpione -20% sui colpi numerici del solo prossimo turno, non riduce la m
  assert.equal(b.liveModuleEffects.B.precisionUntilTurn,2);
  b=finishOfficialLiveTurn(b,2);
  assert.equal(b.sides.B.numeric.hand.length,7);
+ const clean=structuredClone(b);
+ clean.liveModuleEffects.B.precisionFactor=1;
+ clean.liveModuleEffects.B.precisionUntilTurn=0;
+ const baseline=move(clean,'B',{type:'numeric',index:0,target:'ship'},3);
  b=move(b,'B',{type:'numeric',index:0,target:'ship'},3);
- assert.equal(b.sides.A.defense.shield.hp,58); // N00: 3 ridotti al 80% -> 2.
+ const rawDamage=60-baseline.sides.A.defense.shield.hp;
+ const debuffedDamage=60-b.sides.A.defense.shield.hp;
+ assert.equal(debuffedDamage,Math.floor(rawDamage*.8));
  b=finishOfficialLiveTurn(b,4);
  assert.equal(b.liveModuleEffects.B.precisionFactor,1);
  assert.equal(b.liveModuleEffects.B.precisionUntilTurn,0);
@@ -51,9 +57,14 @@ test('Ustione Io usa solo la prossima salva reale e il calore dà +3 una sola vo
  assert.equal(b.liveModuleEffects.A.burnCharges,0);
  b=finishOfficialLiveTurn(b,3);
  b=finishOfficialLiveTurn(b,4);
+ const before=b.sides.B.defense.shield.hp;
+ const noHeat=structuredClone(b);
+ noHeat.sides.B.heated=false;
+ const baseline=move(noHeat,'A',{type:'numeric',index:0,target:'ship'},5);
  b=move(b,'A',{type:'numeric',index:0,target:'ship'},5);
  assert.equal(b.sides.B.heated,false);
- assert.equal(b.sides.B.defense.shield.hp,51); // 3 base + 3 calore.
+ assert.equal(before-b.sides.B.defense.shield.hp,
+  before-baseline.sides.B.defense.shield.hp+3);
 });
 test('Monolite attivo impedisce ustione Ophiuchus dopo un colpo valido',()=>{
  let b=game();
