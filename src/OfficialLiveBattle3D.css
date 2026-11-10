@@ -196,3 +196,12 @@
  border-color:#9bfbd9}
 .es-math-scope .live-root .live-choice-panel button.live-choice-cancel{background:#301927;
  border-color:#98546c}
+
+/* La marca è sulla carta VERA in mano: non compare sulle carte avversarie coperte. */
+.es-math-scope .live-root .live-number-card.live-number-bomb{border-color:#ff697d;box-shadow:0 0 14px #f53b6fa8}
+.es-math-scope .live-root .live-number-card.live-number-golden{border-color:#ffd65a;box-shadow:0 0 14px #ffd75ab5}
+.es-math-scope .live-root .live-number-mark{position:absolute;bottom:24px;left:1px;right:1px;
+ font-size:8px;text-align:center;font-weight:900;letter-spacing:.4px;
+ padding:2px 0;border-radius:3px;color:#fff;pointer-events:none}
+.es-math-scope .live-root .live-number-mark--bomb{background:#831c36ee}
+.es-math-scope .live-root .live-number-mark--gold{background:#80600bee;color:#fff8c0}
