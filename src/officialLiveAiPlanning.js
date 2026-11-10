@@ -36,6 +36,29 @@ export function findOfficialLiveVitalCompletion(signature,stored=[],hand=[]){
  return null;
 }
 
+// Una firma matematica 2/3 si puo' iniziare anche senza tutte le carte
+// nella mano attuale, purché esista almeno una SECONDA numerica fisica
+// nel proprio mazzo o nella mano. Per non avviare un calcolo cieco,
+// privilegiare il candidato con PIU' partner disponibili (senza consultare
+// l'ordine delle pescate o informazioni del nemico).
+export function findOfficialLiveMathProgress(signature,stored=[],hand=[],deck=[]){
+ if(!signature||!Array.isArray(stored)||!Array.isArray(hand)||
+  !Array.isArray(deck)||stored.length!==0)return null;
+ const options=signature.kind==='any'?signature.options||[]:[signature];
+ const gates=options.filter(o=>o?.kind==='mathGate'&&
+  (o.allowedCardCounts||[2,3]).includes(2));
+ if(!gates.length)return null;
+ let best=null,bestPartners=0;
+ for(let i=0;i<hand.length;i++){
+  const first=hand[i],future=[...hand.filter((_,j)=>j!==i),...deck];
+  if(!first||!Number.isInteger(first.value)||!first.suit)continue;
+  const partners=future.reduce((count,second)=>
+   count+Number(gates.some(g=>tacticalSignatureOperation(g,[first,second])===g.op)),0);
+  if(partners>bestPartners){best=i;bestPartners=partners;}
+ }
+ return best;
+}
+
 // Pianificazione prudente per firme Poker LUNGHE (4–5 numeriche).
 // La previsione usa soltanto il contenuto del proprio mazzo rimasto e le
 // carte gia' depositate: non legge le mani avversarie e non anticipa
