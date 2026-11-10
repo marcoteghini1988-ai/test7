@@ -5,6 +5,7 @@ import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,chooseOfficialLiveAiAction,
  finishOfficialLiveTurn} from './officialLiveDuelEngine.js';
 import {exposeMotherPart} from './vitalDefense.js';
+import {tacticalShipSignatures} from './tacticalShipSignatures.js';
 
 const M={kind:'mathGate',op:'times',target:12,allowedCardCounts:[2,3]};
 const P={kind:'poker',pattern:'fourKind'};
@@ -153,4 +154,57 @@ test('IA Poker 4 carte: deposita 3 numeriche nei primi 30 secondi, pesca la quar
  assert.equal(done.battle.sides.A.defense.parts.engine.hp,0);
  assert.equal(done.battle.actionUsed.numeric,1);
  assert.equal(done.battle.vitalBuilds.B.engine.length,0);
+});
+
+test('IA riconosce un Poker lungo come alternativa ufficiale a una formula matematica',()=>{
+ const sig=tacticalShipSignatures('L04').command;
+ const cards=[
+  {value:1,suit:'♠'},{value:10,suit:'♠'},{value:3,suit:'♣'},
+  {value:5,suit:'♦'},{value:7,suit:'♣'},{value:9,suit:'♦'},{value:11,suit:'♥'}
+ ];
+ const future=[{value:11,suit:'♠'},{value:12,suit:'♠'},{value:13,suit:'♠'}];
+ assert.equal(findOfficialLiveVitalCompletion(sig,[],cards),null);
+ assert.ok([0,1].includes(findOfficialLiveVitalProgress(sig,[],cards,future)),
+  'due carte del Poker sono già in mano e il resto deve esistere nel proprio mazzo');
+ assert.equal(findOfficialLiveVitalProgress(sig,[],cards,[]),null,
+  'senza il resto della Scala Reale la IA non deve iniziare il progetto');
+ assert.equal(findOfficialLiveVitalProgress(sig,[],[cards[0],...cards.slice(2)],future),null,
+  'una sola carta propria compatibile non basta per impegnarsi nel Poker lungo');
+});
+test('IA completa la Scala Reale opzionale della L04 dopo una nuova pescata reale',()=>{
+ const cards=[
+  {value:1,suit:'♠'},{value:10,suit:'♠'},{value:3,suit:'♣'},
+  {value:5,suit:'♦'},{value:7,suit:'♣'},{value:9,suit:'♦'},{value:11,suit:'♥'}
+ ];
+ let b=setup(cards);
+ b.sides.A.defense.parts.engine.signature=tacticalShipSignatures('L04').command;
+ const pile=b.sides.B.numeric,deck=[...pile.deck];
+ const wanted=[11,12,13].map(value=>deck.find(c=>c.value===value&&c.suit==='♠'));
+ assert.ok(wanted.every(Boolean));
+ const used=new Set(wanted.map(c=>c.id));
+ pile.deck=[...wanted,...deck.filter(c=>!used.has(c.id))];
+ for(let i=0;i<2;i++){
+  const action=chooseOfficialLiveAiAction(b);
+  assert.equal(action.target,'vital');
+  assert.equal(action.vitalId,'engine');
+  assert.ok(['1♠','10♠'].includes(
+   b.sides.B.numeric.hand[action.index].value+b.sides.B.numeric.hand[action.index].suit));
+  const res=applyOfficialLiveAction(b,'B',action,i+1);
+  assert.equal(res.ok,true,res.reason);b=res.battle;
+ }
+ assert.equal(b.vitalBuilds.B.engine.length,2);
+ b=finishOfficialLiveTurn(b,4);
+ b=finishOfficialLiveTurn(b,5);
+ assert.equal(b.activeSide,'B');
+ for(let i=0;i<3;i++){
+  const action=chooseOfficialLiveAiAction(b);
+  assert.equal(action.target,'vital');
+  assert.equal(action.vitalId,'engine');
+  const res=applyOfficialLiveAction(b,'B',action,6+i);
+  assert.equal(res.ok,true,res.reason);b=res.battle;
+ }
+ assert.equal(b.sides.A.defense.parts.engine.hp,0);
+ assert.equal(b.vitalBuilds.B.engine.length,0);
+ assert.equal(b.history.some(e=>e.kind==='vital_destroyed'&&e.op==='royalFlush'),true);
+ assert.equal(b.actionUsed.numeric,3);
 });
