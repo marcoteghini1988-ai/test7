@@ -33,6 +33,7 @@ export function replaceLiveModuleNumerics(b,key,indices){
  const pile=b.sides[key].numeric;
  const removed=[...indices].sort((a,c)=>c-a).map(index=>pile.hand.splice(index,1)[0]);
  pile.discard.push(...removed);
+ if(removed.length)pile.recycleEvents=(pile.recycleEvents||0)+1;
  liveLegacyOnNumericRecycle(b,key,removed);
  while(pile.hand.length<7){
   if(!pile.deck.length){
