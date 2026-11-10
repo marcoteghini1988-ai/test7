@@ -59,6 +59,36 @@ export function findOfficialLiveMathProgress(signature,stored=[],hand=[],deck=[]
  return best;
 }
 
+// Un deposito matematico diventa un vicolo cieco quando nel proprio
+// mazzo e mano non esiste più alcuna combinazione 2/3 valida. Non guarda
+// le carte nemiche, non inventa pescate e non scarta gli alloggiamenti
+// Poker alternativi, che hanno proprie regole di completamento.
+export function officialLiveMathDeadEnd(signature,stored=[],hand=[],deck=[]){
+ if(!signature||!Array.isArray(stored)||!stored.length||
+  !Array.isArray(hand)||!Array.isArray(deck))return false;
+ const options=signature.kind==='any'?signature.options||[]:[signature];
+ if(options.some(x=>x?.kind==='poker'))return false;
+ const gates=options.filter(x=>x?.kind==='mathGate');
+ if(!gates.length)return false;
+ const pool=[...hand,...deck],cards=[...stored];
+ for(const gate of gates){
+  const counts=gate.allowedCardCounts||[2,3];
+  if(counts.includes(cards.length)&&
+    tacticalSignatureOperation(gate,cards))return false;
+  if(counts.includes(cards.length+1)&&
+    pool.some(c=>tacticalSignatureOperation(gate,[...cards,c])))return false;
+  if(counts.includes(cards.length+2)&&cards.length+2<=3){
+   for(let i=0;i<pool.length;i++){
+    for(let j=i+1;j<pool.length;j++){
+     if(tacticalSignatureOperation(gate,[...cards,pool[i],pool[j]]))
+      return false;
+    }
+   }
+  }
+ }
+ return true;
+}
+
 // Pianificazione prudente per firme Poker LUNGHE (4–5 numeriche).
 // La previsione usa soltanto il contenuto del proprio mazzo rimasto e le
 // carte gia' depositate: non legge le mani avversarie e non anticipa
