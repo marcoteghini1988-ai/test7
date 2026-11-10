@@ -183,6 +183,11 @@ export default function OfficialLiveBattle3D({
  }
  function completeSpecialChoice(choice){
   if(!specialChoice||!battle)return;
+  if(specialChoice.type==='boss-recycle'){
+   const ok=action({type:'boss-recycle',...choice});
+   if(ok){setSpecialChoice(null);setRecycleChoice([]);}
+   return;
+  }
   const index=battle.sides.A.special.hand.findIndex(c=>c.id===specialChoice.cardId);
   if(index<0){setSpecialChoice(null);return;}
   const ok=action({type:'special',index,slot:specialChoice.slot,...choice});
@@ -251,7 +256,8 @@ export default function OfficialLiveBattle3D({
  const cannotAct=!myTurn||battle.phase==='finished';
  const last=battle.history.at(-1);
  const visualIndex=battle.history.findLastIndex(e=>e.kind==='shot'||e.kind==='vital_destroyed');
- const choiceCard=specialChoice?player.special.hand.find(c=>c.id===specialChoice.cardId):null;
+ const choiceCard=specialChoice?.type==='boss-recycle'?{type:'boss-recycle'}:
+  specialChoice?player.special.hand.find(c=>c.id===specialChoice.cardId):null;
  const epicChoiceReady=myTurn&&['epic_item_1','epic_item_3'].includes(player.epic?.active?.id)&&
   !player.epic.liveChoiceCommitted&&player.epic.peek?.length>0;
  const epicRecycleReady=myTurn&&(player.epic?.exchangeCredits||0)>0&&
@@ -359,7 +365,15 @@ export default function OfficialLiveBattle3D({
    <div className="live-actions">
     <span>{'NUMERICHE '+battle.actionUsed.numeric+'/'+LIVE_NUMERIC_LIMIT+
      ' · SPECIALI '+battle.actionUsed.special+'/'+LIVE_SPECIAL_LIMIT}</span>
-    <button type="button" disabled={cannotAct} onClick={()=>action({type:'end'})}>PASSA TURNO</button>
+    {player.bossNumericDeck?.id==='planet_char_3'&&<button type="button"
+      disabled={cannotAct||now<(player.bossNumericDeck.liveNextRecycleAtMs||0)}
+      title="Ricambio armonico: sostituisci fino a 2 carte vere; ricarica 13/11/9 secondi"
+      onClick={()=>{setRecycleChoice([]);setSpecialChoice({type:'boss-recycle'});}}>
+      {now<(player.bossNumericDeck.liveNextRecycleAtMs||0)?
+       'RICAMBIO '+Math.ceil((player.bossNumericDeck.liveNextRecycleAtMs-now)/1000)+'s':
+       'RICAMBIO ARMONICO'}
+     </button>}
+     <button type="button" disabled={cannotAct} onClick={()=>action({type:'end'})}>PASSA TURNO</button>
     <button type="button" onClick={()=>setDetails(v=>!v)} aria-label="Regole e registro">?</button>
    </div>
    <FleetBar keySide="A" side={player} nickname={nickname}/>
@@ -391,7 +405,8 @@ export default function OfficialLiveBattle3D({
      aria-modal="true" aria-label={'Scegli bersaglio '+(TACTICAL_SPECIALS[choiceCard.type]?.name||'')}>
      <div className="live-choice-panel">
       <div className="live-choice-head">
-       <strong>{TACTICAL_SPECIALS[choiceCard.type]?.name||'CARTA SPECIALE'}</strong>
+       <strong>{choiceCard.type==='boss-recycle'?'RICAMBIO ARMONICO · AFRODITE':
+          TACTICAL_SPECIALS[choiceCard.type]?.name||'CARTA SPECIALE'}</strong>
        <button type="button" onClick={()=>setSpecialChoice(null)} aria-label="Annulla scelta">×</button>
       </div>
       {specialChoice.type==='tactic-bomb'&&<>
@@ -421,7 +436,7 @@ export default function OfficialLiveBattle3D({
           (specialChoice.type==='tactic-signature-mutation'&&!player.defense.parts[id].exposed)}
          onClick={()=>completeSpecialChoice({vitalId:id})}>{VITAL_LABELS[id]}</button>)}</div>
       </>}
-      {(specialChoice.type==='tactic-numeric-recycle'||moduleChoiceEffect==='free_swap'||moduleChoiceEffect==='refill')&&<>
+      {(specialChoice.type==='boss-recycle'||specialChoice.type==='tactic-numeric-recycle'||moduleChoiceEffect==='free_swap'||moduleChoiceEffect==='refill')&&<>
        <p>Seleziona una o due numeriche da scartare e ripescare dal mazzo autentico. Disinnesca le Bombe su quelle carte.</p>
        <div className="live-choice-grid">{player.numeric.hand.map((card,i)=>
         <button type="button" key={card.id}
