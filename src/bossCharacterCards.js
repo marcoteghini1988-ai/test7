@@ -87,7 +87,7 @@ export function bossCharacterPrecisionExtra(side,round,cards,damage){
 export function bossCharacterEscortExtra(side,round,packet,motherDamage){
  if(bossCharacterActive(side,round)?.effect!=='harmonic'||
     !(motherDamage>0)||!(packet>0))return 0;
- return Math.floor(packet*.10);
+ return Math.max(1,Math.floor(packet*.10));
 }
 export function bossCharacterSyncExtra(side,round,validCalculation){
  return bossCharacterActive(side,round)?.effect==='sync'&&validCalculation?5:0;
