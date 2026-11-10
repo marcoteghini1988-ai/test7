@@ -302,12 +302,11 @@ test('Mutazione di firma difende un proprio vitale esposto per un turno nemico e
 });
 
 
-test('32 moduli 16F supportati nel live, 3 effetti non migrati restano bloccati',()=>{
+test('Tutti i 35 Moduli 16F sono carte LIVE supportate',()=>{
  const modules=PHASE16F_MODULES;
- for(const [id,def] of Object.entries(modules)){
-  const expected=!['hand_jam','burn'].includes(def.effect);
-  assert.equal(supportedLiveSpecial('module-card-'+id),expected,id);
- }
+ assert.equal(Object.keys(modules).length,35);
+ for(const id of Object.keys(modules))
+  assert.equal(supportedLiveSpecial('module-card-'+id),true,id);
 });
 
 test('Modulo Ariete infligge 8 danni veri alla barriera senza sbloccare vitali gratis',()=>{
