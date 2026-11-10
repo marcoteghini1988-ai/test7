@@ -437,3 +437,12 @@ test('IA riconosce una scelta Epica già attivata senza spendere una terza Speci
  assert.deepEqual(act,{type:'epic-choice',index:0});
  assert.equal(applyOfficialLiveAction(b,'B',act,2).ok,true);
 });
+
+test('Combo simultanea W11 scade a fine turno, mentre il vital Poker resta depositato',()=>{
+ let b=battle('R02','N00');
+ b=move(b,'A',{type:'numeric',index:4,target:'ship'},1); // 7♠ nella W11
+ assert.equal(b.sides.A.liveWeaponCharges.W11.suits.length,1);
+ b=finishOfficialLiveTurn(b,2);
+ assert.equal(b.sides.A.liveWeaponCharges.W11,undefined);
+ assert.ok(b.history.some(e=>e.kind==='weapon_charge_expired'));
+});
