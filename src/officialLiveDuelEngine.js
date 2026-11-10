@@ -135,6 +135,21 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  b.activeSide=other(previous);
  const previousRound=b.round;
  b.round=Math.ceil(b.turn/2);
+ // Le Combo a memoria scadono dopo i loro cicli reali: rimuovere
+ // lo stato anche dal selettore (prima di IA e carte giocatore).
+ for(const k of keys){
+  const charges=b.sides[k].liveWeaponCharges||{};
+  for(const [weaponId,charge] of Object.entries(charges)){
+   const weapon=PHASE1_CATALOG.weapons.find(w=>w.id===weaponId);
+   if(weapon?.tipo!=='Combo a memoria')continue;
+   const maxRounds=Number(weapon.combo?.split('@')[1])||4;
+   if(b.round-charge.startedRound>=maxRounds){
+    delete charges[weaponId];
+    event(b,k+': '+weapon.nome+' combo a memoria scaduta dopo '+
+     maxRounds+' cicli','weapon_charge_expired',{weaponId});
+   }
+  }
+ }
  if(b.round!==previousRound){
   const suit=liveBossDominantSuit(b.sides.B,b.round);
   if(suit)event(b,'Sovrano del Vuoto · seme dominante ciclo '+b.round+': '+suit,
@@ -183,7 +198,12 @@ function weaponForCard(side,card,escortIndex=null){
   const needed=w.combo.split('@')[0].split('+');
   return needed.includes(suit)&&!loaded.suits.includes(suit);
  });
- const possible=pending.length?pending:guns.filter(w=>w.seme_trigger==='*'||w.seme_trigger===suit);
+ const possible=pending.length?pending:guns.filter(w=>
+  (w.seme_trigger==='*'||w.seme_trigger===suit)&&
+  // Il seme di una Combo gia' caricata non puo' essere riciclato
+  // nella stessa salva: non proporre l'azione nemmeno all'IA.
+  (!['Combo simultanea','Combo a memoria'].includes(w.tipo)||
+   !charges[w.id]?.suits?.includes(suit)));
  if(!possible.length)return null;
  const chosen=possible.slice().sort((a,b)=>b.danno_colpo_L1-a.danno_colpo_L1)[0];
  const installed=side.weapons.find(w=>w.id===chosen.id);
