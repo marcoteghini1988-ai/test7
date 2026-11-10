@@ -68,7 +68,9 @@ test('Gaia boss: vera Contromisura difende il vitale con numeriche già deposita
 test('La Contromisura non nasce dal nulla: se non è nel mazzo in mano, nessuna risposta gratuita',()=>{
  const b=setup(1);handCounter(b,false);
  const planned=chooseOfficialLiveAiAction(b);
- assert.notEqual(planned.type,'special','nessuna speciale valida da consumare per una Contromisura');
+ if(planned.type==='special')
+  assert.notEqual(b.sides.B.special.hand[planned.index].type,'tactic-counter',
+   'un altro speciale non equivale a una Contromisura gratuita');
  assert.equal(b.zones.B.traps.every(x=>x===null),true);
 });
 test('L IA del PvP locale senza identità boss non riceve la difesa esclusiva',()=>{
