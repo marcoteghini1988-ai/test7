@@ -3,6 +3,7 @@
 // si applicano soltanto a pacchetti REALI sulla barriera madre.
 import {commanderAbilityStatus,commanderDefenseFactor,
  rememberCommanderImpact} from './commanderAbilities.js';
+import {tacticalSignatureOperation} from './tacticalShipSignatures.js';
 const DEFENSE_TRIGGERS=new Set(['first_mother_hit','ionized_self','high_shield',
  'escort_lost','last_vital','two_damaged_vitals','no_shield']);
 function liveView(side){
@@ -35,5 +36,21 @@ export function liveCommanderRememberShot(attacker,defender,damage){
   {nowMs:0},{damage,motherDamage:damage});
  if(attacker.commander)attacker.commander=snapshot.attacker.commander;
  if(defender.commander)defender.commander=snapshot.defender.commander;
+}
+// Memoria delle condizioni offensive: solo un impatto vitale VALIDATO dalle
+// stesse firme numeriche del motore. Non assegna danni aggiuntivi ai vitali
+// gia' distrutti: la migrazione dei bonus offensivi rimane separata.
+export function liveCommanderRememberVital(attacker,defender,details={}){
+ const {vitalId,op,cards,damage}=details;
+ const signature=defender?.defense?.parts?.[vitalId]?.signature;
+ if(!(damage>0)||!signature||!Array.isArray(cards)||
+    tacticalSignatureOperation(signature,cards)!==op)return false;
+ const stored=rememberCommanderImpact(liveView(attacker),liveView(defender),
+  {op,vitalId,cards,nowMs:0,
+   reshufflesAtLaunch:attacker.numericRecyclesTotal||0},
+  {damage,motherDamage:damage});
+ if(attacker.commander)attacker.commander=stored.attacker.commander;
+ if(defender.commander)defender.commander=stored.defender.commander;
+ return true;
 }
 export const LIVE_DEFENSIVE_PILOT_TRIGGERS=Object.freeze([...DEFENSE_TRIGGERS]);
