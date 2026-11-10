@@ -216,6 +216,22 @@ export default function OfficialLiveBattle3D({
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  return <div className="es-math-scope live-viewport">
   <div className="es-root official-duel-3d live-root"
+   onDragOver={e=>{if(e.target.closest('[data-live-drop]'))e.preventDefault();}}
+   onDrop={e=>{
+    const slot=e.target.closest('[data-live-drop]')?.getAttribute('data-live-drop');
+    if(!slot)return;
+    e.preventDefault();
+    const [kind,id]=e.dataTransfer.getData('text/plain').split(':');
+    const pile=kind==='numeric'?battle.sides.A.numeric.hand:
+     kind==='special'?battle.sides.A.special.hand:[];
+    const index=pile.findIndex(c=>c.id===id);
+    if(index<0)return;
+    if(kind==='numeric'&&(slot==='ship'||slot.startsWith('escort-')))
+     action({type:'numeric',index,target:'ship',shipId:slot==='ship'?'mother':slot});
+    else if(kind==='numeric'&&slot==='vital'&&vital)
+     action({type:'numeric',index,target:'vital',vitalId:vital});
+    else if(kind==='special')action({type:'special',index,slot});
+   }}
    style={{transform:'translate(-50%,-50%) scale('+scale+')'}}>
    <div className="space-back metal-arena live-background" aria-hidden="true"
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
