@@ -57,6 +57,7 @@ import MathDuelBattle from './MathDuelBattle.jsx';
 import {applyVerifiedBossRelic,verifiedBossRelicReward} from './campaignBossRelics.js';
 import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
+import {officialModulePurchaseStage} from './officialModulePurchaseStage.js';
 import {initialSelectedPilot,missingPilotInventory,terraNineModuleVictory} from './officialLoadoutMilestones.js';
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
 import LegacyPokerBattle from './LegacyPokerBattle';
@@ -17558,6 +17559,11 @@ function App() {
     } catch (_) { return {}; }
   });
 
+  // Blocca doppi click di acquisto fino al prossimo aggiornamento React.
+  // Senza questo blocco due eventi immediati vedrebbero lo stesso saldo.
+  const modulePurchaseLocks=useRef(new Set());
+  useEffect(()=>{modulePurchaseLocks.current.clear();},[abilities,forgeQueue]);
+
   // SLOT UNICO IBRIDO (stringa ID singolo, null prima del Settore 9)
   const [selectedAbility, setSelectedAbility] = useState(() => {
     const legacy = localStorage.getItem('eclissi_selected_abilities');
@@ -18466,7 +18472,12 @@ function App() {
 
   const unlockAbilityWithDust = useCallback((id) => {
     const ab = typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES.find(a => a.id === id) : null;
-    if (!ab) return;
+    if (!ab) return false;
+    if(modulePurchaseLocks.current.has(id)||
+       officialModulePurchaseStage(abilities[id],'unlock',ab.maxLevel||3)!=='ok'){
+      triggerPopup('Modulo già posseduto o acquisto in corso: nessun addebito.');
+      return false;
+    }
     const cost = ab.unlockCostDust || 150;
 
     if (ab.type === 'planet_char') {
@@ -18474,41 +18485,51 @@ function App() {
       if (!isBossBeaten) {
         try { playSound('deselect'); } catch (_) {}
         triggerPopup(`Devi prima sconfiggere il Boss al Settore 10 per abilitare questo modulo!`);
-        return;
+        return false;
       }
     }
 
     if (stardust < cost) {
       try { playSound('deselect'); } catch (_) {}
       triggerPopup(`Polvere Stellare insufficiente! Servono ${cost} Polvere 🌟.`);
-      return;
+      return false;
     }
 
+    modulePurchaseLocks.current.add(id);
     try { playSound('ability'); } catch (_) {}
     setStardust(s => s - cost);
     setAbilities(prev => ({ ...prev, [id]: { unlocked: true, level: 1 } }));
     triggerPopup(`Modulo ${ab.name} sbloccato a Livello 1 ed equipaggiabile! (-${cost} 🌟)`);
-  }, [unlockedLevels, maxUnlockedPlanet, stardust, triggerPopup]);
+    return true;
+  }, [abilities, unlockedLevels, maxUnlockedPlanet, stardust, triggerPopup]);
 
   // POTENZIAMENTO MODULO ABILITÃ€ IBRIDO CON GATING PILOTA SUI 3 SCAGLIONI (1â€“9)
   const upgradeAbilityWithDust = useCallback((id) => {
     const ab = typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES.find(a => a.id === id) : null;
-    if (!ab) return;
+    if (!ab) return false;
     const current = abilities[id] || { level: 1, unlocked: false };
     const maxAbLevel = ab.maxLevel || 3;
+    const gate=officialModulePurchaseStage(current,'upgrade',maxAbLevel);
+    if(gate!=='ok'||modulePurchaseLocks.current.has(id)){
+      triggerPopup(gate==='not_owned'?
+       'Devi prima sbloccare questo Modulo nel Bazar.':
+       gate==='max_level'?'Modulo già al livello massimo.':
+       'Potenziamento non consentito o già in lavorazione.');
+      return false;
+    }
     const nextLvl = current.level + 1;
 
     if (current.level >= maxAbLevel) {
       try { playSound('deselect'); } catch (_) {}
       triggerPopup(`Livello massimo raggiunto per questo Modulo (${maxAbLevel})!`);
-      return;
+      return false;
     }
 
     const reqPilotLvl = getRequiredPilotLevelForUpgrade(nextLvl);
     if ((level || 1) < reqPilotLvl) {
       try { playSound('deselect'); } catch (_) {}
       triggerPopup(`ðŸ”’ Richiede Pilota Livello ${reqPilotLvl} (Fascia ${nextLvl >= 7 ? '3' : nextLvl >= 4 ? '2' : '1'})!`);
-      return;
+      return false;
     }
 
     const costConfig = UNIFIED_UPGRADE_COSTS[nextLvl] || { dust: nextLvl * 400, voidCrystals: 0, primordialMatter: 0 };
@@ -18519,31 +18540,32 @@ function App() {
     if (stardust < costDust) {
       try { playSound('deselect'); } catch (_) {}
       triggerPopup(`Polvere Stellare insufficiente. Servono ${costDust} 🌟.`);
-      return;
+      return false;
     }
     if (voidCrystals < costVoid) {
       try { playSound('deselect'); } catch (_) {}
       triggerPopup(`Cristalli di Vuoto insufficienti. Servono ${costVoid} ðŸ’ .`);
-      return;
+      return false;
     }
     if (primordialMatter < costPrim) {
       try { playSound('deselect'); } catch (_) {}
       triggerPopup(`Materia Primordiale insufficiente. Servono ${costPrim} 🟣.`);
-      return;
+      return false;
     }
 
       if (forgeQueue.length >= 2) {
       try { playSound('deselect'); } catch (_) {}
       triggerPopup("Entrambi i 2 Slot del Cantiere sono occupati!");
-      return;
+      return false;
     }
     if (forgeQueue.some(item => item.id === id && item.type === 'ability')) {
       try { playSound('deselect'); } catch (_) {}
       triggerPopup("Questo modulo   gi  in lavorazione nel Cantiere!");
-      return;
+      return false;
     }
 
     const forgeParams = getForgeParams('ability', nextLvl);
+    modulePurchaseLocks.current.add(id);
 
     try { playSound('ability'); } catch (_) {}
     setStardust(s => s - costDust);
@@ -18560,6 +18582,7 @@ function App() {
     }]);
 
     triggerPopup(` FORGIATURA AVVIATA!\nModulo ${ab.name.split(' ')[0]} in sintesi (Slot ${forgeQueue.length + 1}/2). Pronto tra ${forgeParams.label}.`);
+    return true;
 
   }, [abilities, level, stardust, voidCrystals, primordialMatter, forgeQueue, triggerPopup]);
 
