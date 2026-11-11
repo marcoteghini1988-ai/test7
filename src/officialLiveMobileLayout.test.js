@@ -45,7 +45,7 @@ test('madre centrale e due scudiere laterali restano agganciate alla stessa nave
  assert.match(ui,/<ShipPhysicalVitals side=\{side\}/);
  assert.match(ui,/<MountedWeapons side=\{side\}/);
  assert.match(ui,/ASSET_ROOT\+'\/escorts\/'\+snapshot\.shipId/);
- assert.equal(45+60,450-(45+60));
+ assert.equal((45+60/2)+(450-45-60/2),450,'le scudiere sono simmetriche rispetto alla madre');
 });
 
 test('campo LIVE: cinque slot per ciascun lato con ruoli reali e terreno centrale',()=>{
