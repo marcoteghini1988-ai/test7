@@ -6,6 +6,7 @@ import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {BOSS_CHARACTER_CATALOG,isBossCharacterCard} from './bossCharacterCards.js';
 import {PVP_TERRAIN_CATALOG,isPvpTerrain} from './pvpTerrainCards.js';
 import {OFFICIAL_SPECIAL_ART_TYPES,officialSpecialArtPath} from './officialSpecialCardArt.js';
+import {officialSpecialVisualMeta} from './officialSpecialVisualMeta.js';
 
 test('Ogni Carta Speciale collezionabile ha un file immagine effettivo sul disco',()=>{
  const all=Object.keys(SPECIAL_CARD_CATALOG);
@@ -40,4 +41,27 @@ test('82 carte ufficiali: PNG 512x768 autentici e SVG originali conservati',()=>
   assert.ok(existsSync(resolve('public',original.slice(1))),
     'Il PNG non deve distruggere l SVG ufficiale: '+original);
  }
+});
+
+test('Le 78 illustrazioni con cartiglio riportano nomi e ruoli reali, non FUSIONE BARRIERA per ogni carta',()=>{
+ const normalized=text=>text.replaceAll('&amp;','&').replaceAll('&lt;','<')
+  .replaceAll('&gt;','>').replaceAll('&quot;','"');
+ let checked=0;
+ for(const [type,entry] of Object.entries(SPECIAL_CARD_CATALOG)){
+  if(isPvpTerrain(type))continue; // le quattro immagini ambiente non hanno cartiglio
+  const path=isBossCharacterCard(type)?BOSS_CHARACTER_CATALOG[type].imagePath:
+   officialSpecialArtPath(type);
+  const svg=readFileSync(resolve('public',path.slice(1).replace(/\.png$/,'.svg')),'utf8');
+  const name=svg.match(/<text\b[^>]*\by="619"[^>]*>([^<]*)<\/text>/);
+  const role=svg.match(/<text\b[^>]*\by="666"[^>]*>([^<]*)<\/text>/);
+  assert.ok(name&&role,'cartiglio SVG mancante: '+type);
+  assert.equal(normalized(name[1]),(isBossCharacterCard(type)?entry.name:
+   entry.short||entry.name).toLocaleUpperCase('it-IT'),type);
+  const expectedRole=isBossCharacterCard(type)?'PERSONAGGIO BOSS':
+   type.startsWith('epic_item_')?'OGGETTO EPICO':
+   officialSpecialVisualMeta(type).role;
+  assert.equal(normalized(role[1]),expectedRole,type);
+  checked++;
+ }
+ assert.equal(checked,78);
 });
