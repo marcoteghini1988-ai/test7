@@ -52,7 +52,6 @@ import DeepSpaceUniverseCanvas from './DeepSpaceUniverseCanvas';
 import { PHASE16A_CAMPAIGN_PLANETS, PHASE16A_RIFTS, PHASE16A_EPIC_IDS, PHASE16A_MAX_STARS, PHASE16A_STAR_MILESTONES, getCampaignPlanetIndex, getVisibleCampaignPlanet, getNextCampaignPlanet, getGlobalCampaignSector, getCampaignStarsTotal, migrateCampaignCapsuleClaims } from './newCombat/phase16ACatalog.js';
 import {getPhase16EDeckTraits,isPhase16EDeck} from './newCombat/phase16EDecks.js';
 import {getPhase16HSectorChallenge,getPhase16HBountyProgress} from './newCombat/phase16HProgression.js';
-import ClassicBattleView, { calculateAiTurnClassic, generateClassicObjectives } from './ClassicBattleView';
 import MathDuelBattle from './MathDuelBattle.jsx';
 import {applyVerifiedBossRelic,verifiedBossRelicReward} from './campaignBossRelics.js';
 import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
