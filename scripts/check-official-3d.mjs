@@ -56,11 +56,15 @@ for(const orphan of [
  'src/LegacyPokerBattle.jsx','src/ClassicPokerFieldBridge.jsx','src/ClassicBattleView.jsx',
  'src/newCombat/legacyPokerBattle.css',
  'src/OfficialBattle3D.jsx','src/officialMobileLayout.test.js',
+ 'src/TacticalCombatPlayback.jsx',
  'src/tactical/TacticalStellarApp.jsx','src/tactical/engine.js',
  'src/assets/react.svg','src/assets/vite.svg','src/assets/hero.png'
 ]){
  verify(!exists(orphan),'File obsoleto ancora presente: '+orphan);
 }
+
+verify(exists('src/officialLiveMobileLayout.test.js'),
+ 'Manca la copertura strutturale della plancia mobile LIVE');
 
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');

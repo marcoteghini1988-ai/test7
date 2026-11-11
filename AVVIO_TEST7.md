@@ -24,7 +24,7 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.
-- **Duello ufficiale attuale:** `src/MathDuelBattle.jsx` seleziona `src/OfficialLiveBattle3D.jsx` e, dove necessario, il fallback `src/BossBattle3D.jsx`. Il motore LIVE è `src/officialLiveDuelEngine.js`. La vecchia plancia simultanea `src/OfficialBattle3D.jsx` è mantenuta come riferimento tecnico, non è l'ingresso principale. Restano l'arena Titanio 9:16, 17 navicelle e 42 armi integrate.
+- **Duello ufficiale attuale:** `src/MathDuelBattle.jsx` seleziona `src/OfficialLiveBattle3D.jsx` e, dove necessario, il fallback `src/BossBattle3D.jsx`. Il motore LIVE è `src/officialLiveDuelEngine.js`. La vecchia plancia simultanea `src/OfficialBattle3D.jsx` e il componente dismesso `TacticalCombatPlayback.jsx` sono stati eliminati: i relativi test di geometria e gli effetti sono ora verificati sulla LIVE. Il CSS condiviso `OfficialBattle3D.css` resta necessario alla plancia attuale. Restano l'arena Titanio 9:16, 17 navicelle e 42 armi integrate.
 - **Piloti comuni convertiti:** `pilot_com_1`–`pilot_com_4`, gradi L1-L5. I bonus delle armi valgono soltanto con calcoli matematici corretti e un pilota effettivamente sbloccato.
 - **Passiva Gaia:** `planet_char_1` (Baluardo terrestre), tre gradi di aumento dello scudo iniziale/massimo.
 - **Passiva Crono:** `planet_char_6` (Primo anello), tre gradi di riduzione del primo colpo efficace alla madre.
@@ -59,7 +59,7 @@ La rappresentazione è una composizione 3D prospettica realizzata con asset rast
 
 ## Ripristino dei quattro vitali fisici — 7 novembre 2026
 
-La versione standard simultanea **non disegna più quattro caselle nel centro della plancia**. Usa gli stessi componenti grafici che esistevano nella versione di recupero:
+La versione LIVE ufficiale **non disegna quattro caselle separate al centro della plancia**. Usa gli stessi componenti grafici che esistevano nella versione di recupero:
 
 - `src/BossBattle3D.jsx` espone `ShipSkin` e `Engine`: maschera della scocca raster originale, scolorimento localizzato, fratture, fumo persistente sul componente KO e animazione d'impatto. Le battaglie compatibili mantengono esattamente lo stesso comportamento grafico di prima.
 - `src/ShipPhysicalVitals.jsx` è ora un semplice adattatore a questi due componenti, **non** un renderer alternativo. I veri HP del duello determinano quale pezzo è integro, danneggiato, critico o KO; i bersagli si selezionano direttamente sui loro punti fisici.
@@ -74,4 +74,4 @@ La versione standard simultanea **non disegna più quattro caselle nel centro de
 
 Le **12 Carte Personaggio Boss**, le **4 Carte Terreno PvP**, le **35 Carte Modulo** e le altre speciali hanno già il catalogo e gli asset PNG nella versione corrente. Rimangono da verificare sul dispositivo mobile le animazioni, la leggibilità della plancia 9:16 e le differenze funzionali del fallback boss, senza rimettere in funzione il vecchio Poker. Non eliminare `BossBattle3D.jsx` prima della piena copertura funzionale e dei relativi test.
 
-**Specifiche correnti:** [Roadmap del duello simultaneo](docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md) · [Trasferimento e checklist visiva](docs/WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md). Le vecchie istruzioni dei punti 22–30 restano disponibili nella cartella `docs/` come documentazione storica e non vanno usate per avviare il regolamento simultaneo.
+**Specifiche correnti:** [Handoff del duello LIVE](docs/WORK_HANDOFF_DUELLO_LIVE_E_REDESIGN_2026-11-10.md) · [Checklist visiva](docs/WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md). Le vecchie istruzioni del regolamento simultaneo rimangono nella cartella `docs/` soltanto come archivio storico.
