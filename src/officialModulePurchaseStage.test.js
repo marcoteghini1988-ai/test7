@@ -75,7 +75,7 @@ test('Il Bazar chiama il controllo antiripetizione e non celebra un upgrade rifi
  assert.match(app,/officialModulePurchaseStage\(current,'upgrade'/);
  assert.match(app,/modulePurchaseLocks\.current\.add\(id\)/);
  assert.match(app,/modulePurchaseLocks\.current\.clear\(\)/);
- assert.match(app,/modulePurchaseLocks\\.current\\.size>0/,
+ assert.match(app,/modulePurchaseLocks\.current\.size>0/,
   'blocca transazioni di Moduli diversi prima di aggiornare il saldo');
  assert.match(shop,/onUpgradeAbility\(id\) === true/);
  assert.match(shop,/if \(started\) triggerDopamineCelebration/);
