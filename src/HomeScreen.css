@@ -1,0 +1,213 @@
+.eclissi-home .home-waypoint {
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px #62e7ff30, 0 3px 12px #0008;
+}
+
+.eclissi-home .fan-ace-card {
+  isolation: isolate;
+  font-variant-emoji: text;
+}
+
+.eclissi-home .fan-ace-card::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  z-index: -1;
+  border-radius: 3px;
+  background: var(--home-card-art) center / 100% 100% no-repeat;
+  opacity: 0.24;
+}
+
+.eclissi-home .trophy-pedestal-container {
+  isolation: isolate;
+}
+
+.eclissi-home .trophy-beam {
+  top: -12px;
+  width: min(290px, 90%);
+  height: 88%;
+  background: radial-gradient(ellipse at 50% 68%, #2dd4ff29, #38bdf811 44%, transparent 71%);
+  animation: none;
+}
+
+.eclissi-home .trophy-beam::before {
+  content: '';
+  position: absolute;
+  inset: 1% 25% 22%;
+  background: linear-gradient(0deg, #67e8f939, #38bdf817 35%, transparent 90%);
+  clip-path: polygon(0 0, 100% 0, 77% 100%, 23% 100%);
+  mask-image: radial-gradient(ellipse at 50% 90%, #000 16%, transparent 73%);
+}
+
+.eclissi-home .home-deck-preview {
+  position: relative;
+  display: grid;
+  isolation: isolate;
+}
+
+.eclissi-home .home-deck-preview::before,
+.eclissi-home .home-deck-preview::after {
+  content: '';
+  position: absolute;
+  inset: 1px 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--home-card-art) center / 100% 100% no-repeat;
+  opacity: 0.75;
+  filter: drop-shadow(0 3px 5px #020617);
+}
+
+.eclissi-home .home-deck-preview::before {
+  transform: translate(-8px, 5px) rotate(-10deg) scale(0.94);
+}
+
+.eclissi-home .home-deck-preview::after {
+  transform: translate(8px, 5px) rotate(9deg) scale(0.94);
+}
+
+.eclissi-home .home-vortex-foot {
+  position: relative;
+  margin-top: -34px;
+  pointer-events: none;
+}
+
+.eclissi-home .home-vortex-foot::before {
+  content: '';
+  position: absolute;
+  inset: -28% -43%;
+  background: var(--home-pedestal-art) center / contain no-repeat;
+  transform: translateY(6px) perspective(300px) rotateX(62deg);
+  mask-image: radial-gradient(ellipse, transparent 21%, #000 37%);
+  filter: saturate(0.82) brightness(0.88) drop-shadow(0 5px 12px #000b);
+}
+
+.eclissi-home .home-vortex-foot .trophy-base-platform {
+  margin-top: 0;
+  animation: home-vortex-glow 4s ease-in-out infinite;
+}
+
+@keyframes home-vortex-glow {
+  0%, 100% {
+    transform: scale(0.87, 0.25);
+    box-shadow: 0 0 12px #00f2fe80, inset 0 0 9px #00f2fe59;
+  }
+
+  50% {
+    transform: scale(1.03, 0.31);
+    box-shadow: 0 0 18px #00f2febe, inset 0 0 16px #00f2fe9c;
+  }
+}
+
+.eclissi-home .home-carousel-caption {
+  position: relative;
+  text-shadow: 0 2px 4px #020617, 0 0 10px #facc1542;
+}
+
+.eclissi-home .home-carousel-caption::before {
+  content: '';
+  position: absolute;
+  inset: -3px -13px;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent, #040b1be8 14%, #040b1be8 86%, transparent);
+  pointer-events: none;
+}
+
+.eclissi-home .home-dock-action {
+  --home-action-fill: #1e293b;
+  --home-action-glow: #8798b6;
+  --home-action-art-size: 69px;
+  --home-dock-padding: clamp(6px, 1.4vmin, 10px);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 95px;
+  /* Mantiene l'altezza della barra con le nuove icone su una sola riga. */
+  min-height: calc(2lh + 0.8em + 2 * var(--home-dock-padding) + 5px);
+  padding: var(--home-dock-padding) 4px;
+  font-size: clamp(0.65rem, 1.5vmin, 0.78rem);
+  font-weight: 900;
+  background: linear-gradient(160deg, var(--home-action-fill), color-mix(in srgb, var(--home-action-fill) 54%, #050b19) 53%, #050b19);
+  box-shadow: inset 0 1px 0 #ffffff49, inset 0 -2px 0 #0009, 0 0 10px color-mix(in srgb, var(--home-action-glow) 33%, transparent);
+  text-shadow: 0 1px 3px #020617, 0 0 5px #020617;
+}
+
+.eclissi-home .home-dock-action.cyber-btn-primary {
+  --home-action-fill: #0877ac;
+  --home-action-glow: #00f2fe;
+}
+
+.eclissi-home .home-dock-action.cyber-btn-warning {
+  --home-action-fill: #bc6b12;
+  --home-action-glow: #facc15;
+}
+
+.eclissi-home .home-dock-action.cyber-btn-ether {
+  --home-action-fill: #8f34d2;
+  --home-action-glow: #e879f9;
+}
+
+.eclissi-home .home-dock-debug {
+  min-width: 75px;
+}
+
+.eclissi-home .home-dock-action::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--home-action-art, none) calc(100% + 3px) -8px / var(--home-action-art-size) auto no-repeat;
+  mask-image: linear-gradient(144deg, transparent 22%, #000 43%, #0009 64%, transparent 86%);
+  opacity: 0.64;
+}
+
+.eclissi-home .home-dock-cards::before {
+  --home-action-art-size: 44px;
+  inset: -9px 0 -5px;
+  transform: rotate(16deg) translate(3px, 1px);
+}
+
+.eclissi-home .home-dock-action::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(0deg, #0206179e, transparent 18%, #02061777 46%, transparent 77%);
+}
+
+.eclissi-home .home-dock-action:focus-visible {
+  outline: 1px solid #ecfeff;
+  outline-offset: -3px;
+}
+
+.eclissi-home .home-dock-arrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  margin: 4px;
+  border: solid #b2f8ff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(-45deg);
+  filter: drop-shadow(0 0 3px #00f2fe);
+}
+
+.eclissi-home .home-dock-arrow-left::before {
+  transform: rotate(135deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eclissi-home .hero-card-anim,
+  .eclissi-home .home-vortex-foot .trophy-base-platform,
+  .eclissi-home .trophy-base-ring,
+  .eclissi-home .trophy-base-core {
+    animation: none;
+  }
+
+  .eclissi-home .home-vortex-foot .trophy-base-platform {
+    transform: scale(0.95, 0.28);
+  }
+}

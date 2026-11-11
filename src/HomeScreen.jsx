@@ -2,12 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { SciFiIcon, TacticalVisual, ModuleIcon, TerrainVisual } from './visualAssets';
 import { PILOTS_DATABASE } from './pilotsSystem';
 import { playSound } from './audio';
+import { SUIT_SIGNS } from './mathDuelEngine.js';
+import { ASSET_ROOT } from './ShipPresentation';
+import './HomeScreen.css';
+
+const homePng = (path) => `url("${ASSET_ROOT}/${path}.png")`;
+const cardArt = homePng('mathduel/card_number');
+const pedestalArt = homePng('mathfleet/motor_plus_intact');
 
 const SUITS = Object.freeze([
-  { id: 'hearts', name: 'Cuori', symbol: '', color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.85)', sound: 'biotherapy', synergy: '+8% HP Max Cura (+12% Toro)' },
-  { id: 'diamonds', name: 'Quadri', symbol: '', color: '#00f2fe', glow: 'rgba(0, 242, 254, 0.85)', sound: 'dust_extract', synergy: '+2 Polvere ' },
-  { id: 'spades', name: 'Picche', symbol: '', color: '#c084fc', glow: 'rgba(192, 132, 252, 0.85)', sound: 'suit_spades', synergy: '+3 HP Danno Diretto' },
-  { id: 'clubs', name: 'Fiori', symbol: '', color: '#10b981', glow: 'rgba(16, 185, 129, 0.85)', sound: 'suit_clubs', synergy: '+5s Serbatoio Tempo' }
+  { id: 'hearts', name: 'Cuori', symbol: SUIT_SIGNS.H, color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.85)', sound: 'biotherapy', synergy: '+8% HP Max Cura (+12% Toro)' },
+  { id: 'diamonds', name: 'Quadri', symbol: SUIT_SIGNS.D, color: '#00f2fe', glow: 'rgba(0, 242, 254, 0.85)', sound: 'dust_extract', synergy: '+2 Polvere' },
+  { id: 'spades', name: 'Picche', symbol: SUIT_SIGNS.S, color: '#c084fc', glow: 'rgba(192, 132, 252, 0.85)', sound: 'suit_spades', synergy: '+3 HP Danno Diretto' },
+  { id: 'clubs', name: 'Fiori', symbol: SUIT_SIGNS.C, color: '#10b981', glow: 'rgba(16, 185, 129, 0.85)', sound: 'suit_clubs', synergy: '+5s Serbatoio Tempo' }
 ]);
 
 function CornerAceFan({ suitId, selectedDeck, currentDeckObj, corner = 'nw', onClick }) {
@@ -66,7 +73,7 @@ function CornerAceFan({ suitId, selectedDeck, currentDeckObj, corner = 'nw', onC
           background: 'linear-gradient(145deg, rgba(15, 23, 42, 0.98) 0%, rgba(2, 6, 23, 1) 100%)',
           borderRadius: '5px',
           border: `1.5px solid ${suitInfo.color}`,
-          boxShadow: `0 0 12px ${suitInfo.glow}, inset 0 0 6px ${suitInfo.color}44`,
+          boxShadow: `0 3px 7px #000a, 0 0 8px ${suitInfo.glow}, inset 0 0 6px ${suitInfo.color}44`,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
@@ -226,7 +233,7 @@ export default function HomeScreen({
   const pilotColor = curPilot.rarityColor || curPilot.color || '#10b981';
 
   return (
-    <div style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, gap: 'clamp(4px, 1vmin, 10px)', position: 'relative', zIndex: 5, width: '100%', boxSizing: 'border-box' }}>
+    <div className="eclissi-home" style={{ '--home-card-art': cardArt, '--home-pedestal-art': pedestalArt, flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, gap: 'clamp(4px, 1vmin, 10px)', position: 'relative', zIndex: 5, width: '100%', boxSizing: 'border-box' }}>
       
       {localHint && (
         <div className="cyber-panel" style={{ position: 'absolute', top: '6px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(2, 6, 23, 0.95)', border: '1.5px solid #00f2fe', padding: '4px 12px', borderRadius: '6px', zIndex: 40, fontSize: 'clamp(0.65rem, 1.6vmin, 0.78rem)', color: '#fff', fontWeight: 900, whiteSpace: 'nowrap', boxShadow: '0 0 16px rgba(0, 242, 254, 0.5)' }}>
@@ -269,6 +276,7 @@ export default function HomeScreen({
         {/* WAYPOINT OLOGRAFICO FLUTTUANTE */}
         <div style={{ margin: '0 auto', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <div
+            className="home-waypoint"
             onClick={hasCompletedSector1 ? handleQuickResumeRadar : onOpenAdventure}
             style={{
               display: 'inline-flex',
@@ -314,7 +322,7 @@ export default function HomeScreen({
               fontWeight: 900,
               textShadow: '0 0 8px #00f2fe'
             }}>
-              
+              ›
             </span>
             <span style={{ color: '#00f2fe', fontWeight: 300, fontSize: 'clamp(0.8rem, 2vmin, 1rem)', opacity: 0.7 }}> </span>
           </div>
@@ -340,15 +348,17 @@ export default function HomeScreen({
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <span style={{ fontSize: '0.75rem' }}></span>
+              <SciFiIcon name="trophy" size={12} color="#fde047" />
               <div style={{ textAlign: 'left', lineHeight: 1 }}>
                 <div style={{ fontSize: 'clamp(0.5rem, 1.3vmin, 0.6rem)', fontWeight: 900, color: '#fde047' }}>SFIDA DEL GIORNO</div>
                 <div style={{ fontSize: 'clamp(0.45rem, 1.1vmin, 0.52rem)', color: '#cbd5e1' }}>
-                  {dailyData?.hasAttemptedToday ? (dailyData.todayResult?.victory ? ' COMPLETATA' : ' CONSUMATO') : `SCADE: ${dailyCountdown}`}
+                  {dailyData?.hasAttemptedToday ? (dailyData.todayResult?.victory ? 'COMPLETATA' : 'CONSUMATO') : `SCADE: ${dailyCountdown}`}
                 </div>
               </div>
             </div>
-            <div style={{ fontSize: 'clamp(0.55rem, 1.3vmin, 0.65rem)', fontWeight: 900, color: '#f97316' }}> {dailyData?.streak || 0}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: 'clamp(0.55rem, 1.3vmin, 0.65rem)', fontWeight: 900, color: '#f97316' }}>
+              <SciFiIcon name="credit" size={10} color="#f97316" /> {dailyData?.streak || 0}
+            </div>
           </div>
         )}
 
@@ -384,14 +394,16 @@ export default function HomeScreen({
               
               {/* 1. Mazzo Tattico */}
               {carouselSlide === 0 && (
-                <TacticalVisual
-                  id={selectedDeck}
-                  type="card_back"
-                  color={currentDeckObj?.color || '#38bdf8'}
-                  glowColor={currentDeckObj?.glow || 'rgba(56, 189, 248, 0.6)'}
-                  width={78}
-                  height={116}
-                />
+                <div className="home-deck-preview">
+                  <TacticalVisual
+                    id={selectedDeck}
+                    type="card_back"
+                    color={currentDeckObj?.color || '#38bdf8'}
+                    glowColor={currentDeckObj?.glow || 'rgba(56, 189, 248, 0.6)'}
+                    width={78}
+                    height={116}
+                  />
+                </div>
               )}
 
               {/* 2. Pilota */}
@@ -421,7 +433,7 @@ export default function HomeScreen({
                   <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                     <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle at 50% 50%, ${pilotColor}33 0%, transparent 70%)` }} />
                     <span style={{ fontSize: '2.4rem', filter: `drop-shadow(0 0 10px ${pilotColor})`, lineHeight: 1 }}>
-                      {curPilot.avatar || curPilot.icon || curPilot.emoji || ''}
+                      {curPilot.avatar || curPilot.icon || curPilot.emoji || <SciFiIcon name="shield" size={38} color={pilotColor} />}
                     </span>
                   </div>
 
@@ -433,7 +445,7 @@ export default function HomeScreen({
                 </div>
               )}
 
-              {/* 3. Modulo Abilit  */}
+              {/* 3. Modulo Abilità */}
               {carouselSlide === 2 && (() => {
                 const abColor = isAbilityModuleUnlocked ? '#00f2fe' : '#ef4444';
                 return (
@@ -466,7 +478,7 @@ export default function HomeScreen({
                       {isAbilityModuleUnlocked ? (
                         <ModuleIcon id={selectedAbility || 'taurus'} size={52} color="#00f2fe" />
                       ) : (
-                        <span style={{ fontSize: '2rem', filter: 'drop-shadow(0 0 8px #ef4444)' }}></span>
+                        <SciFiIcon name="shield" size={34} color="#ef4444" />
                       )}
                     </div>
 
@@ -557,7 +569,7 @@ export default function HomeScreen({
                     </div>
 
                     <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontSize: '1.8rem', color: '#64748b' }}></span>
+                      <SciFiIcon name="environments" size={29} color="#64748b" />
                     </div>
 
                     <div style={{ width: '100%', background: 'rgba(2, 6, 23, 0.9)', borderTop: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '0 0 4px 4px', padding: '2px 0', textAlign: 'center', lineHeight: 1 }}>
@@ -570,19 +582,21 @@ export default function HomeScreen({
             </div>
 
             {/* VORTICE A 3 STRATI */}
-            <div className="trophy-base-platform">
-              <div className="trophy-base-ring">
-                <div className="trophy-base-core" />
+            <div className="home-vortex-foot" aria-hidden="true">
+              <div className="trophy-base-platform">
+                <div className="trophy-base-ring">
+                  <div className="trophy-base-core" />
+                </div>
               </div>
             </div>
 
-            <div style={{ textAlign: 'center', marginTop: 3, zIndex: 2 }}>
+            <div className="home-carousel-caption" style={{ textAlign: 'center', marginTop: 3, zIndex: 2 }}>
               <div style={{ fontSize: 'clamp(0.6rem, 1.5vmin, 0.72rem)', fontWeight: 900, color: '#facc15' }}>
-                {carouselSlide === 0 && ` Mazzo: ${currentDeckObj?.name || 'Cadetto'}`}
-                {carouselSlide === 1 && ` Pilota: ${curPilot.name || 'Pilota'}`}
-                {carouselSlide === 2 && ` Modulo: ${isAbilityModuleUnlocked ? (selectedAbility?.toUpperCase() || 'Nessuno') : 'Bloccato'}`}
-                {carouselSlide === 3 && ` Manufatto [${subEpicIdx + 1}/2]: ${equippedEpicItems[subEpicIdx] ? (epicItemsDatabase.find(e => e.id === equippedEpicItems[subEpicIdx])?.name?.split(' ')[0] || 'Epico') : 'Vuoto'}`}
-                {carouselSlide === 4 && ` Trappola [${subTerrainIdx + 1}/4]: ${equippedTerrainSlots[subTerrainIdx] ? (terrainCardsDatabase.find(c => c.id === equippedTerrainSlots[subTerrainIdx])?.name?.split(' ')[0] || 'Armata') : 'Libera'}`}
+                {carouselSlide === 0 && `Mazzo: ${currentDeckObj?.name || 'Cadetto'}`}
+                {carouselSlide === 1 && `Pilota: ${curPilot.name || 'Pilota'}`}
+                {carouselSlide === 2 && `Modulo: ${isAbilityModuleUnlocked ? (selectedAbility?.toUpperCase() || 'Nessuno') : 'Bloccato'}`}
+                {carouselSlide === 3 && `Manufatto [${subEpicIdx + 1}/2]: ${equippedEpicItems[subEpicIdx] ? (epicItemsDatabase.find(e => e.id === equippedEpicItems[subEpicIdx])?.name?.split(' ')[0] || 'Epico') : 'Vuoto'}`}
+                {carouselSlide === 4 && `Trappola [${subTerrainIdx + 1}/4]: ${equippedTerrainSlots[subTerrainIdx] ? (terrainCardsDatabase.find(c => c.id === equippedTerrainSlots[subTerrainIdx])?.name?.split(' ')[0] || 'Armata') : 'Libera'}`}
               </div>
             </div>
           </div>
@@ -595,7 +609,8 @@ export default function HomeScreen({
         
         {/* Freccia sinistra */}
         {canScrollLeft && (
-          <div 
+          <div
+            className="home-dock-arrow home-dock-arrow-left"
             onClick={() => {
               if (bottomScrollRef.current) bottomScrollRef.current.scrollBy({ left: -140, behavior: 'smooth' });
             }}
@@ -624,7 +639,8 @@ export default function HomeScreen({
 
         {/* Freccia destra */}
         {canScrollRight && (
-          <div 
+          <div
+            className="home-dock-arrow home-dock-arrow-right"
             onClick={() => {
               if (bottomScrollRef.current) bottomScrollRef.current.scrollBy({ left: 140, behavior: 'smooth' });
             }}
@@ -668,8 +684,8 @@ export default function HomeScreen({
           {/* 1. Campagna */}
           <button
             onClick={() => { try { playSound('click'); } catch (_) {} onOpenAdventure(); }}
-            className="cyber-btn cyber-btn-primary"
-            style={{ flexShrink: 0, minWidth: '95px', padding: 'clamp(6px, 1.4vmin, 10px) 4px', fontSize: 'clamp(0.65rem, 1.5vmin, 0.78rem)', fontWeight: 900, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}
+            className="cyber-btn cyber-btn-primary home-dock-action"
+            style={{ '--home-action-art': homePng('mathfleet/N00_player') }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
               <SciFiIcon name="campaign" size={13} color="#fff" /> Campagna
@@ -680,8 +696,8 @@ export default function HomeScreen({
           {/* 2. Scommesse */}
           <button
             onClick={() => { try { playSound('click'); } catch (_) {} onOpenBetting(); }}
-            className="cyber-btn cyber-btn-warning"
-            style={{ flexShrink: 0, minWidth: '95px', padding: 'clamp(6px, 1.4vmin, 10px) 4px', fontSize: 'clamp(0.65rem, 1.5vmin, 0.78rem)', fontWeight: 900, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}
+            className="cyber-btn cyber-btn-warning home-dock-action home-dock-cards"
+            style={{ '--home-action-art': cardArt }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
               <SciFiIcon name="hazard" size={13} color="#fff" /> Scommesse
@@ -692,8 +708,8 @@ export default function HomeScreen({
           {/* 3. Duello 1v1 */}
           <button
             onClick={() => { try { playSound('click'); } catch (_) {} onOpenPvP(); }}
-            className="cyber-btn cyber-btn-ether"
-            style={{ flexShrink: 0, minWidth: '95px', padding: 'clamp(6px, 1.4vmin, 10px) 4px', fontSize: 'clamp(0.65rem, 1.5vmin, 0.78rem)', fontWeight: 900, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px' }}
+            className="cyber-btn cyber-btn-ether home-dock-action"
+            style={{ '--home-action-art': homePng('mathfleet/C04_player') }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
               <SciFiIcon name="hazard" size={13} color="#fff" /> Duello 1v1
@@ -704,11 +720,11 @@ export default function HomeScreen({
           {/* 4. Assetto Nave */}
           <button
             onClick={() => { try { playSound('click'); } catch (_) {} onOpenLoadout(); }}
-            className="cyber-btn"
-            style={{ flexShrink: 0, minWidth: '95px', padding: 'clamp(6px, 1.4vmin, 10px) 4px', fontSize: 'clamp(0.65rem, 1.5vmin, 0.78rem)', fontWeight: 900, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px', borderColor: '#00f2fe' }}
+            className="cyber-btn home-dock-action"
+            style={{ '--home-action-art': pedestalArt, '--home-action-glow': '#00f2fe', borderColor: '#00f2fe' }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#00f2fe' }}>
-              <span style={{ fontSize: '0.82rem', lineHeight: 1 }}></span> Assetto
+              <SciFiIcon name="settings" size={13} color="#00f2fe" /> Assetto
             </span>
             <span style={{ fontSize: '0.5rem', color: '#cbd5e1', fontWeight: 'normal' }}>Armamenti</span>
           </button>
@@ -716,8 +732,8 @@ export default function HomeScreen({
           {/* 5. Shop */}
           <button
             onClick={() => { try { playSound('click'); } catch (_) {} onOpenShop(); }}
-            className="cyber-btn"
-            style={{ flexShrink: 0, minWidth: '95px', padding: 'clamp(6px, 1.4vmin, 10px) 4px', fontSize: 'clamp(0.65rem, 1.5vmin, 0.78rem)', fontWeight: 900, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px', borderColor: '#38bdf8' }}
+            className="cyber-btn home-dock-action home-dock-cards"
+            style={{ '--home-action-art': homePng('cards/es_common_medium_01_card'), '--home-action-glow': '#38bdf8', borderColor: '#38bdf8' }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#38bdf8' }}>
               <SciFiIcon name="shop_cart" size={13} color="#38bdf8" /> Shop
@@ -728,8 +744,8 @@ export default function HomeScreen({
           {/* 6. Missioni */}
           <button
             onClick={() => { try { playSound('click'); } catch (_) {} onOpenBounties(); }}
-            className="cyber-btn"
-            style={{ flexShrink: 0, minWidth: '95px', padding: 'clamp(6px, 1.4vmin, 10px) 4px', fontSize: 'clamp(0.65rem, 1.5vmin, 0.78rem)', fontWeight: 900, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px', borderColor: claimableBounties > 0 ? '#10b981' : 'rgba(255,255,255,0.2)', position: 'relative' }}
+            className="cyber-btn home-dock-action"
+            style={{ borderColor: claimableBounties > 0 ? '#10b981' : 'rgba(255,255,255,0.2)' }}
           >
             {claimableBounties > 0 && (
               <div style={{ position: 'absolute', top: '2px', right: '4px', background: '#10b981', color: '#fff', fontSize: '0.45rem', fontWeight: 900, borderRadius: '50%', width: '12px', height: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -745,11 +761,11 @@ export default function HomeScreen({
           {/* 7. TEST (Debug) */}
           <button
             onClick={() => { try { playSound('click'); } catch (_) {} onOpenDebug(); }}
-            className="cyber-btn"
-            style={{ flexShrink: 0, minWidth: '75px', padding: 'clamp(6px, 1.4vmin, 10px) 4px', fontSize: 'clamp(0.65rem, 1.5vmin, 0.78rem)', fontWeight: 900, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1px', borderColor: '#ef4444', color: '#fca5a5', background: 'rgba(239, 68, 68, 0.15)' }}
+            className="cyber-btn home-dock-action home-dock-debug"
+            style={{ borderColor: '#ef4444', color: '#fca5a5', background: 'rgba(239, 68, 68, 0.15)' }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-               TEST
+              <SciFiIcon name="tactical_slot" size={13} color="#fca5a5" /> TEST
             </span>
             <span style={{ fontSize: '0.5rem', color: '#f87171', fontWeight: 'normal' }}>Debug</span>
           </button>
