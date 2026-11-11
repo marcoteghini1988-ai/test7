@@ -19,8 +19,56 @@ const ownCards=(b,k)=>[
  ...b.sides[k].numeric.discard,
  ...VITAL_IDS.flatMap(id=>b.vitalBuilds[k][id])
 ];
+// Audit con un giocatore simulated piu' attento: le numeriche sono
+// decise dal pianificatore ufficiale, ma puo' piazzare vere difese
+// o sostituire vere carte PRIMA di attaccare. E' SOLO un confronto
+// tra politiche di IA, non una nuova regola del gioco o del PvP.
+function preparedTestPlayerAction(b){
+ if(b.activeSide!=='A'||b.actionUsed.special>=LIVE_SPECIAL_LIMIT)return null;
+ const own=b.sides.A,enemy=b.sides.B;
+ const available=(type,slot,extra={})=>{
+  const index=own.special.hand.findIndex(c=>c.type===type);
+  if(index<0)return null;
+  const action={type:'special',index,slot,...extra};
+  return applyOfficialLiveAction(b,'A',action,b.deadlineMs-1).ok?action:null;
+ };
+ const threatened=VITAL_IDS.filter(id=>own.defense.parts[id].hp>0&&
+  own.defense.parts[id].exposed&&b.vitalBuilds.B[id]?.length>0)
+  .sort((a,z)=>b.vitalBuilds.B[z].length-b.vitalBuilds.B[a].length);
+ const trapSlot=b.zones.A.traps.findIndex(x=>!x);
+ if(threatened.length&&trapSlot>=0&&
+  !b.zones.A.traps.some(c=>c?.type==='tactic-counter')){
+  const response=available('tactic-counter','trap-'+trapSlot,{vitalId:threatened[0]});
+  if(response)return response;
+ }
+ const openSlot=b.zones.A.open.findIndex(x=>!x);
+ if(openSlot>=0&&own.defense.parts.shieldGenerator.hp>0&&
+    own.defense.shield.hp>0&&own.defense.shield.max-own.defense.shield.hp>=20){
+  const repair=available('support-shield-repair','open-'+openSlot);
+  if(repair)return repair;
+ }
+ if(trapSlot>=0&&own.defense.shield.hp>0&&
+    enemy.defense.parts.weapons.hp>0){
+  for(const type of ['tactic-reactive','tactic-impact']){
+   if(b.zones.A.traps.some(x=>x?.type===type))continue;
+   const defense=available(type,'trap-'+trapSlot);
+   if(defense)return defense;
+  }
+ }
+ if(openSlot>=0&&enemy.defense.shield.hp<=0&&own.numeric.hand.length&&
+  own.numeric.deck.length+own.numeric.discard.length>0&&
+  !b.zones.A.open.some(x=>x?.type==='tactic-numeric-recycle')){
+  const ranked=own.numeric.hand.map((card,i)=>({i,value:card.value}))
+   .sort((a,z)=>a.value-z.value);
+  const recycle=available('tactic-numeric-recycle','open-'+openSlot,
+   {recycleIndices:ranked.slice(0,2).map(x=>x.i)});
+  if(recycle)return recycle;
+ }
+ return null;
+}
+
 function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
- bossShieldMax=null,playerSpecialDeck=null,bossSpecialDeck=null,log=true}={}){
+ bossShieldMax=null,playerSpecialDeck=null,bossSpecialDeck=null,playerPolicy='basic',log=true}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA,shipB:boss?.motherShipId??shipB,levelA,levelB,
   nowMs:0,seed,mode:'campaign',shuffleNumericOpening:true,
@@ -41,7 +89,8 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
  const failures={},actionsBySide={A:{},B:{}},specialTypesBySide={A:{},B:{}};
  while(b.phase==='playing'&&actions<400){
   const key=b.activeSide,turn=b.turn;
-  const action=chooseOfficialLiveAiAction(b,key);
+  const action=(key==='A'&&playerPolicy==='prepared-defense'?
+   preparedTestPlayerAction(b):null)??chooseOfficialLiveAiAction(b,key);
   assert.ok(action,'nessuna azione calcolabile: '+key+' turno '+turn);
   const selectedSpecial=action.type==='special'?b.sides[key].special.hand[action.index]?.type:null;
   const at=Math.max(clock,(b.aiReadyAtMs||0)+5);
@@ -373,6 +422,48 @@ test('Confronto boss Ombre e Idra: due varianti di 24 carte senza buff gratuiti'
  console.log('LIVE_CRITICAL_BOSS_DECK_EXPERIMENT '+JSON.stringify({
   sampleSize:rows.length,byBoss,
   note:'Solo fixture di test. I mazzi ufficiali di Ombre e Idra NON vengono cambiati in questo commit. 30s a mezzo turno = massimo teorico.',rows}));
+});
+
+test('Audit Ombre e Idra contro difese preparate con carte vere del giocatore',()=>{
+ const sectors=[70,80],ships=['C01','E01','L04'];
+ const offsets=[229,463,719,947],policies=['basic','prepared-defense'];
+ const rows=[];
+ for(const sector of sectors){
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber:sector});
+  assert.ok(boss&&[9,11].includes(boss.planetId));
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:sector,playerLevel:4});
+  for(const ship of ships)for(const offset of offsets)for(const policy of policies){
+   const seed=sector+offset;
+   const result=audit({shipA:ship,levelA:level,levelB:level,boss,seed,
+    playerPolicy:policy,log:false});
+   assert.equal(Object.keys(result.failures).length,0);
+   rows.push({sector,boss:boss.name,ship,seed,policy,
+    winner:result.winner,halfTurns:result.turns,reason:result.finishReason,
+    playerSpecials:result.specialTypesBySide.A,
+    bossSpecials:result.specialTypesBySide.B,
+    destroyedA:result.destroyedA,destroyedB:result.destroyedB});
+  }
+ }
+ assert.equal(rows.length,2*3*4*2);
+ const byBoss=sectors.map(sector=>({
+  sector,name:rows.find(r=>r.sector===sector).boss,
+  byPolicy:policies.map(policy=>{
+   const cases=rows.filter(r=>r.sector===sector&&r.policy===policy);
+   const turns=cases.map(r=>r.halfTurns).sort((a,b)=>a-b);
+   const specials={};
+   for(const r of cases)for(const [type,count]of Object.entries(r.playerSpecials))
+    specials[type]=(specials[type]||0)+count;
+   return {policy,winsPlayer:cases.filter(x=>x.winner==='A').length,
+    winsBoss:cases.filter(x=>x.winner==='B').length,
+    draws:cases.filter(x=>x.winner==='draw').length,
+    minHalfTurns:turns[0],medianHalfTurns:(turns[5]+turns[6])/2,
+    maxHalfTurns:turns[11],playedSpecialsA:specials};
+  })
+ }));
+ console.log('LIVE_PREPARED_PLAYER_POLICY_AUDIT '+JSON.stringify({
+  sampleSize:rows.length,byBoss,
+  note:'Politica di test che usa soltanto carte realmente in mano, nessuna anticipazione; PvP e boss LIVE invariati. Tempo massimo 30 secondi per mezzo turno.',
+  rows}));
 });
 
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
