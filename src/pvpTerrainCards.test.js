@@ -36,7 +36,7 @@ test('Catalogo quattro Carte Terreno: effetti simmetrici non neutri e durata di 
  for(const [id,terrain] of Object.entries(PVP_TERRAIN_CATALOG)){
   assert.equal(isPvpTerrain(id),true);
   assert.equal(terrain.durationCycles,2);
-  assert.ok(terrain.imagePath.endsWith(id+'.svg'));
+  assert.ok(terrain.imagePath.endsWith(id+'.png'));
   assert.equal(terrain.effects.nativeFactor!==1||terrain.effects.syncPerCalculation>0,true);
   assert.equal(terrain.effects.nativeFactor<1||terrain.effects.shieldFactor>1||
    terrain.effects.escortFactor<1||terrain.effects.repairFactor<1,true);
