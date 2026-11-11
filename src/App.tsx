@@ -59,6 +59,7 @@ import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCol
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
 import {officialModulePurchaseStage} from './officialModulePurchaseStage.js';
 import {recoverOfficialCampaignCredits} from './officialCampaignCreditRegen.js';
+import {normalizeOfficialForgeQueue,applyOfficialForgeCompletion,isOfficialForgeJobInQueue} from './officialForgeProgress.js';
 import {initialSelectedPilot,missingPilotInventory,terraNineModuleVictory} from './officialLoadoutMilestones.js';
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
 import LegacyPokerBattle from './LegacyPokerBattle';
@@ -17466,9 +17467,14 @@ function App() {
 
   const [forgeQueue, setForgeQueue] = useState(() => {
     try {
-      return JSON.parse(localStorage.getItem('eclissi_forge_queue') || '[]');
+      return normalizeOfficialForgeQueue(
+        JSON.parse(localStorage.getItem('eclissi_forge_queue') || '[]'));
     } catch (_) { return []; }
   });
+  // L'inventario corrente e' quello della coda, non quello catturato da
+  // un vecchio timer o da due click ravvicinati sul pulsante Etere.
+  const forgeQueueRef=useRef(forgeQueue);
+  forgeQueueRef.current=forgeQueue;
 
   useEffect(() => {
     localStorage.setItem('eclissi_daily_bounties', JSON.stringify(dailyBountiesState));
@@ -17998,62 +18004,78 @@ function App() {
   }, [stardust, diamonds, triggerPopup]);
 
 
-    // TICKER AUTOMATICO CANTIERE CON CONTROLLO IMMEDIATO AL BOOT
+  // Una sola finalizzazione protegge tutti e quattro gli inventari da
+  // regressioni: un progetto vecchio non riduce un livello gia' superiore.
+  const finishOfficialForgeJob=useCallback((item)=>{
+    const apply=prev=>applyOfficialForgeCompletion(prev,item);
+    if(item.type==='deck')setDeckInventory(apply);
+    else if(item.type==='ability')setAbilities(apply);
+    else if(item.type==='terrain')setUnlockedTerrainCards(apply);
+    else if(item.type==='epic')setEpicItemsInventory(apply);
+  },[]);
+
+  // TICKER AUTOMATICO CANTIERE CON CONTROLLO IMMEDIATO AL BOOT
   useEffect(() => {
-    if (forgeQueue.length === 0) return;
-
-    const processCompleted = () => {
-      const now = Date.now();
-      const completed = forgeQueue.filter(item => now >= item.finishTime);
-      if (completed.length > 0) {
-        completed.forEach(item => {
-          if (item.type === 'deck') {
-            setDeckInventory(prev => ({ ...prev, [item.id]: { level: item.targetLevel, unlocked: true } }));
-          } else if (item.type === 'ability') {
-            setAbilities(prev => ({ ...prev, [item.id]: { ...(prev[item.id] || {}), level: item.targetLevel, unlocked: true } }));
-          } else if (item.type === 'terrain') {
-            setUnlockedTerrainCards(prev => ({ ...prev, [item.id]: { level: item.targetLevel, unlocked: true } }));
-          } else if (item.type === 'epic') {
-            setEpicItemsInventory(prev => ({ ...prev, [item.id]: { ...(prev[item.id] || { unlocked: true }), level: item.targetLevel } }));
-          }
-          try { playSound('epic_item_trigger'); } catch (_) {}
-          triggerPopup(`⚙️ CANTIERE COMPLETATO:\n${item.name} potenziato a Livello ${item.targetLevel}!`);
-        });
-        setForgeQueue(prev => prev.filter(item => now < item.finishTime));
-      }
+    if(forgeQueue.length===0)return;
+    const processCompleted=()=>{
+      const now=Date.now(),current=forgeQueueRef.current;
+      const completed=current.filter(item=>item.finishTime<=now);
+      if(completed.length===0)return;
+      // Prenota sincronicamente la rimozione: un intervallo ripetuto
+      // (o React StrictMode) non puo' completare due volte lo stesso job.
+      forgeQueueRef.current=current.filter(item=>item.finishTime>now);
+      setForgeQueue(prev=>prev.filter(item=>
+        !isOfficialForgeJobInQueue(completed,item)));
+      completed.forEach(item=>{
+        finishOfficialForgeJob(item);
+        try{playSound('epic_item_trigger');}catch(_){}
+        triggerPopup(`⚙️ CANTIERE COMPLETATO:\n${item.name} potenziato a Livello ${item.targetLevel}!`);
+      });
     };
-
-    // Esegui immediatamente al montaggio per sbloccare progetti già scaduti offline
     processCompleted();
-    const interval = setInterval(processCompleted, 3000);
-    return () => clearInterval(interval);
-  }, [forgeQueue, triggerPopup]);
+    const interval=setInterval(processCompleted,3000);
+    return ()=>clearInterval(interval);
+  },[forgeQueue,finishOfficialForgeJob,triggerPopup]);
 
-
-  // ACCELERAZIONE ISTANTANEA TRAMITE ETERE COSMICO
-  const handleRushForge = useCallback((item) => {
-    if (!item) return;
-    if (ether < item.etherRush) {
-      try { playSound('deselect'); } catch (_) {}
-      triggerPopup(`Etere insufficiente! Servono ${item.etherRush} 🔮 (Disponibile: ${ether}).`);
-      return;
+  // ACCELERAZIONE TRAMITE ETERE: un vecchio pulsante o un doppio click
+  // non puo' applicare due volte lo stesso progetto ne' spendere due volte.
+  const forgeEtherRef=useRef(ether);
+  forgeEtherRef.current=ether;
+  const handleRushForge=useCallback(item=>{
+    if(!isOfficialForgeJobInQueue(forgeQueueRef.current,item)){
+      triggerPopup('Lavorazione non più disponibile: Cantiere già aggiornato.');
+      return false;
     }
-    try { playSound('epic_item_trigger'); } catch (_) {}
-    setEther(e => e - item.etherRush);
-
-    if (item.type === 'deck') {
-      setDeckInventory(prev => ({ ...prev, [item.id]: { level: item.targetLevel, unlocked: true } }));
-    } else if (item.type === 'ability') {
-      setAbilities(prev => ({ ...prev, [item.id]: { ...(prev[item.id] || {}), level: item.targetLevel, unlocked: true } }));
-    } else if (item.type === 'terrain') {
-      setUnlockedTerrainCards(prev => ({ ...prev, [item.id]: { level: item.targetLevel, unlocked: true } }));
-    } else if (item.type === 'epic') {
-      setEpicItemsInventory(prev => ({ ...prev, [item.id]: { ...(prev[item.id] || { unlocked: true }), level: item.targetLevel } }));
+    const cost=item.etherRush;
+    if(!Number.isSafeInteger(cost)||cost<0){
+      triggerPopup('Costo Etere della lavorazione non valido.');
+      return false;
     }
-
-    setForgeQueue(prev => prev.filter(q => !(q.id === item.id && q.type === item.type)));
-    triggerPopup(`⚡ ACCELERAZIONE COMPLETATA!\n${item.name} potenziato immediatamente a Livello ${item.targetLevel}!`);
-  }, [ether, triggerPopup]);
+    const finished=item.finishTime<=Date.now();
+    if(!finished&&forgeEtherRef.current<cost){
+      try{playSound('deselect');}catch(_){}
+      triggerPopup(`Etere insufficiente! Servono ${cost} 🔮 (Disponibile: ${forgeEtherRef.current}).`);
+      return false;
+    }
+    // Rimuove subito l'identita' completa del job, prima di qualsiasi
+    // aggiornamento asincrono React.
+    forgeQueueRef.current=forgeQueueRef.current.filter(q=>
+      !(q.type===item.type&&q.id===item.id&&
+        q.targetLevel===item.targetLevel&&q.finishTime===item.finishTime));
+    setForgeQueue(prev=>prev.filter(q=>
+      !(q.type===item.type&&q.id===item.id&&
+        q.targetLevel===item.targetLevel&&q.finishTime===item.finishTime)));
+    if(!finished){
+      forgeEtherRef.current-=cost;
+      setEther(prev=>Math.max(0,prev-cost));
+    }
+    finishOfficialForgeJob(item);
+    try{playSound('epic_item_trigger');}catch(_){}
+    triggerPopup(finished?
+      `⚙️ CANTIERE COMPLETATO:\n${item.name} potenziato a Livello ${item.targetLevel}!`:
+      `⚡ ACCELERAZIONE COMPLETATA!\n${item.name} potenziato immediatamente a Livello ${item.targetLevel}!`);
+    return true;
+  },[finishOfficialForgeJob,triggerPopup]);
 
 
   const triggerAppDiscoveryTutorial = useCallback((tutorialKey) => {
