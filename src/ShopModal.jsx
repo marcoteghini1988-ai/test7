@@ -269,8 +269,11 @@ export default function ShopModal({
       if (typeof onUpgradeDeck === 'function') onUpgradeDeck(id);
       triggerDopamineCelebration(title, `INVIATO AL CANTIERE (LIV. ${nextLvl})!`);
     } else if (type === 'ability') {
-      if (typeof onUpgradeAbility === 'function') onUpgradeAbility(id);
-      triggerDopamineCelebration(title, `INVIATO AL CANTIERE (LIV. ${nextLvl})!`);
+      // Un callback rifiutato (risorse, livello, cantiere pieno) non
+      // deve mostrare una falsa conferma di acquisto.
+      const started = typeof onUpgradeAbility === 'function' && onUpgradeAbility(id) === true;
+      if (started) triggerDopamineCelebration(title, `INVIATO AL CANTIERE (LIV. ${nextLvl})!`);
+      else showHint('Potenziamento non avviato: verifica requisiti e risorse.');
     } else if (type === 'terrain') {
       if (typeof onUpgradeTerrainCard === 'function') onUpgradeTerrainCard(id, nextLvl, cost);
       triggerDopamineCelebration(title, `INVIATA AL CANTIERE (LIV. ${nextLvl})!`);
