@@ -4,6 +4,8 @@ import {resolve} from 'node:path';
 import {PHASE1_CATALOG} from '../src/phase1FleetCatalog.js';
 import {MODULE_CARD_TYPES} from '../src/tacticalEquipmentCards.js';
 import {supportedLiveSpecial} from '../src/officialLiveDuelEngine.js';
+import {LIVE_FX_SPRITES} from '../src/officialLiveCombatVisuals.js';
+import {OFFICIAL_NUMERIC_BACK_IDS} from '../src/officialDeckBackArt.js';
 
 const root=resolve(import.meta.dirname,'..');
 const read=file=>readFileSync(resolve(root,file),'utf8');
@@ -165,6 +167,17 @@ verify(exists('public/assets/mathduel/arena_titanio_9x16.webp'),
 
 // Niente PNG duplicati alla radice: la plancia usa esclusivamente le prospettive
 // canoniche e la Home usa i propri sprite nella cartella mathfleet.
+verify(!exists('public/assets/portal_sequences'),
+ 'Eliminare le vecchie sequenze WEBP dei portali Poker, non usate dalla LIVE');
+for(const fx of LIVE_FX_SPRITES){
+ verify(exists(`public/assets/battle-fx/${fx}.png`),
+  'Effetto grafico LIVE mancante: '+fx);
+}
+for(const deckId of OFFICIAL_NUMERIC_BACK_IDS){
+ verify(exists(`public/assets/deck-backs/${deckId}.png`),
+  'Dorso del mazzo numerico ufficiale mancante: '+deckId);
+}
+
 const rootAssetPngs=readdirSync(resolve(root,'public/assets')).filter(name=>/\.png$/i.test(name));
 verify(rootAssetPngs.length===0,
  'Immagini duplicate alla radice degli asset: '+rootAssetPngs.join(', '));
