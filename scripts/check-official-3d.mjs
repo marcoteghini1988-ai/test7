@@ -20,8 +20,8 @@ const css=read('src/MathDuelBattle.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
 const shop=read('src/ShopModal.jsx');
+const home=read('src/HomeScreen.jsx');
 const loadout=read('src/PersonalLoadoutModal.jsx');
-const legacyPoker=read('src/LegacyPokerBattle.jsx');
 
 verify(app.includes("import App from './App.tsx'")&&app.includes('<App />'),
  'main.tsx deve avviare solo App.tsx');
@@ -39,13 +39,19 @@ verify(!exists('src/SandboxBattleView.jsx')&&
  !exists('src/NewArsenalCatalogPreview.jsx')&&
  !exists('src/newCombat/phase3Preview.css'),
  'I vecchi componenti sandbox e Preview devono essere eliminati dopo la migrazione');
-verify(source.includes("import LegacyPokerBattle from './LegacyPokerBattle'")&&
- legacyPoker.includes("import './newCombat/legacyPokerBattle.css'"),
- 'Il motore Poker precedente resta disponibile solo come compatibilita, senza preview');
+verify(!source.includes("import LegacyPokerBattle from './LegacyPokerBattle'")&&
+ !source.includes('function GameScreen(')&&
+ !source.includes('TERRAIN_CARDS_DATABASE')&&
+ !source.includes('equippedTerrainSlots')&&
+ !source.includes('unlockedTerrainCards')&&
+ !source.includes('!MATH_DUEL_REPLACES_POKER_BATTLES'),
+ 'Il vecchio motore Poker e il Banco Terreno coperto non devono rientrare nel gioco ufficiale');
 
 verify(!shop.includes("id: 'characters'")&&
- !loadout.includes("onOpenShopTab('characters')"),
- 'La scheda Comandanti legacy non deve ricomparire nello Shop');
+ !loadout.includes("onOpenShopTab('characters')")&&
+ !home.includes('onOpenDebug')&&
+ !source.includes('showDebugModal'),
+ 'Lo Shop legacy e il pulsante DEBUG di prova non devono ricomparire');
 for(const orphan of [
  'src/TrisBattleView.jsx','src/DoubleStageBattleView.jsx','src/VectorBattleView.jsx',
  'src/tactical/TacticalStellarApp.jsx','src/tactical/engine.js',
