@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createTacticalDuel} from './simultaneousDuelEngine.js';
 import {PHASE16F_MODULES} from './newCombat/phase16FModules.js';
+import {planWeaponSalvos} from './mathWeaponEffects.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,advanceOfficialLiveDuel,
  finishOfficialLiveTurn,liveCompatibleShips,supportedLiveSpecial,chooseOfficialLiveAiAction} from './officialLiveDuelEngine.js';
 const battle=(a='N00',z='C01',mode='classic')=>
@@ -35,6 +36,7 @@ test('Aurora universale leggera: 1 carta spara subito, poi resta massimo 3 numer
  assert.equal(b.history.at(-1).kind,'shot');
  b=move(b,'A',{type:'numeric',index:0,target:'ship',shipId:'mother'},200);
  b=move(b,'A',{type:'numeric',index:0,target:'ship',shipId:'mother'},300);
+ assert.deepEqual(b.history.filter(e=>e.kind==='shot').map(e=>e.atMs),[100,200,300]);
  assert.equal(applyOfficialLiveAction(b,'A',{type:'numeric',index:0,target:'ship'},400).reason,'numeric_turn_limit');
  assert.equal(b.sides.A.numeric.hand.length,4);
  const turnB=finishOfficialLiveTurn(b,500),turnA=finishOfficialLiveTurn(turnB,600);
@@ -75,12 +77,15 @@ test('Trappole diverse: entrambe reagiscono allo stesso attacco, nessuna azione 
  b=move(b,'B',{type:'special',index:3,slot:'trap-1'},3);
  assert.equal(b.zones.B.traps[0].type,'tactic-reactive');
  assert.equal(b.zones.B.traps[1].type,'tactic-impact');
+ assert.deepEqual(b.history.filter(h=>h.kind==='trap_placed').map(h=>[h.slot,h.type]),
+  [['trap-0',undefined],['trap-1',undefined]]);
  const invalid=applyOfficialLiveAction(b,'A',{type:'numeric',index:2,target:'ship'},4);
  assert.equal(invalid.reason,'not_your_turn');
  b=move(b,'B',{type:'end'},5);
  b=move(b,'A',{type:'numeric',index:2,target:'ship'},6);
  assert.equal(b.zones.B.traps.every(t=>t===null),true);
- assert.equal(b.history.filter(h=>h.kind==='trap').length,2);
+ assert.deepEqual(b.history.filter(h=>h.kind==='trap').map(h=>[h.owner,h.slot,h.type,h.atMs]),
+  [['B','trap-0','tactic-reactive',6],['B','trap-1','tactic-impact',6]]);
  assert.equal(b.sides.B.defense.shield.hp,60);
 });
 test('Terreno PvP immediato, persistente e sostituibile; boss protetto',()=>{
@@ -173,15 +178,20 @@ test('Combo simultanea: seme S carica W11, seme C la completa nello stesso turno
 });
 test('Combo a memoria: W42 conserva semi tra turni propri e richiede quattro carte',()=>{
  let b=battle('L04','N00');
- b=move(b,'A',{type:'numeric',index:4,target:'ship'},1); // 7♠
- b=move(b,'A',{type:'numeric',index:2,target:'ship'},2); // 5♥
- b=move(b,'A',{type:'numeric',index:2,target:'ship'},3); // 8♦
+ for(const [index,value] of [[4,13],[2,12],[3,11],[0,10]])
+  b.sides.A.numeric.hand[index]={...b.sides.A.numeric.hand[index],value};
+ b=move(b,'A',{type:'numeric',index:4,target:'ship'},1); // K♠
+ b=move(b,'A',{type:'numeric',index:2,target:'ship'},2); // Q♥
+ b=move(b,'A',{type:'numeric',index:2,target:'ship'},3); // J♦
  assert.equal(b.sides.B.defense.shield.hp,60);
  assert.equal(b.sides.A.liveWeaponCharges.W42.suits.length,3);
  b=finishOfficialLiveTurn(b,4);
  b=finishOfficialLiveTurn(b,5);
- b=move(b,'A',{type:'numeric',index:0,target:'ship'},6); // 3♣
- assert.equal(b.history.at(-1).weaponId,'W42');
+ b=move(b,'A',{type:'numeric',index:0,target:'ship'},6); // 10♣
+ const shot=b.history.at(-1);
+ assert.equal(shot.weaponId,'W42');
+ assert.equal(shot.bullets,46);
+ assert.equal(planWeaponSalvos([shot])[0].rounds.length,46);
  assert.equal(b.sides.A.liveWeaponCharges.W42,undefined);
  assert.equal(b.sides.B.defense.shield.hp,0);
 });

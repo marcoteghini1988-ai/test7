@@ -30,6 +30,9 @@ import './OfficialLiveBattle3D.css';
 
 const TARGETED_SPECIALS=new Set(['tactic-bomb','tactic-golden','tactic-malus',
  'tactic-signature-mutation','tactic-numeric-recycle','tactic-counter']);
+const COMBAT_CUES=new Set(['shot','vital_destroyed','vital_hit','weapon_charge',
+ 'special','terrain','character','trap','trap_placed']);
+const COMBAT_CUE_MS=2400;
 const pct=(a,b)=>b>0?Math.max(0,Math.min(100,Math.round(a/b*100))):0;
 const other=k=>k==='A'?'B':'A';
 function startSession(options){
@@ -50,9 +53,14 @@ function Fighter({side,snapshot,onVital,onShip,anchors}){
  const active=snapshot.escorts.filter(e=>e.hp>0);
  const visual={...vessel,defense:snapshot.defense};
  return <div className={'live-fighter live-fighter--'+side} data-live-drop={player?'ship':''}
-  onClick={player?onShip:undefined} role={player?'button':undefined}
+  onClick={player?e=>onShip?.(e.target.closest('[data-live-drop]')?.dataset.liveDrop??'ship'):undefined}
+  role={player?'button':undefined}
   tabIndex={player?0:undefined} aria-label={player?'Carica la navicella selezionata':undefined}
-  onKeyDown={player?e=>{if(e.key==='Enter'||e.key===' ')onShip?.();}:undefined}>
+  onKeyDown={player?e=>{
+   if(e.target===e.currentTarget&&(e.key==='Enter'||e.key===' ')){
+    e.preventDefault();onShip?.('ship');
+   }
+  }:undefined}>
   <div className="fleet-ship-wrap complete-ship focused official-mother"
    data-vital-weapons={snapshot.defense.parts.weapons.hp<=0?'destroyed':'healthy'}
    style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
@@ -107,11 +115,15 @@ function Slot({kind,index,side,card,onActivate,selected}){
  const visible=!!card&&(side==='A'||!isTrap);
  const symbol=kind==='character'?'♙':kind==='trap'?'◇':'✧';
  const label=kind==='character'?'Personaggio':isTrap?'Trappola':'Speciale';
+ const slot=kind==='character'?'character':kind+'-'+index;
+ const face=visible?officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]):null;
  return <button type="button" className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
-   (card?' live-slot--occupied':'')+(selected?' live-slot--chosen':'')}
-  data-live-drop={side==='A'?(kind==='character'?'character':kind+'-'+index):undefined}
-  title={visible?TACTICAL_SPECIALS[card?.type]?.name||label:label}
-  aria-label={label+(card?' · '+(visible?TACTICAL_SPECIALS[card.type]?.name:'coperta'):' · vuoto')}
+   (card?' live-slot--occupied':'')+(card&&!visible?' live-slot--covered':'')+
+   (selected?' live-slot--chosen':'')}
+  data-live-slot={side+'-'+slot} data-live-drop={side==='A'?slot:undefined}
+  data-family={face?.category}
+  title={face?face.name+' · '+face.effect:label}
+  aria-label={label+(card?' · '+(face?.name??'coperta'):' · vuoto')}
   onClick={onActivate}>
   {visible&&(officialSpecialArtPath(card?.type)||
     (isBossCharacterCard(card?.type)?bossCharacterDefinition(card.type)?.imagePath:null)||
@@ -119,8 +131,8 @@ function Slot({kind,index,side,card,onActivate,selected}){
     <img className="live-slot-art" src={officialSpecialArtPath(card?.type)||
      (isBossCharacterCard(card?.type)?bossCharacterDefinition(card.type)?.imagePath:
       pvpTerrainDefinition(card.type)?.imagePath)} alt="" draggable={false}/>:
-    <span>{visible?(card?officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]).symbol:symbol):
-    card?'?':symbol}</span>}
+    <span>{face?.symbol??(card?'?':symbol)}</span>}
+  {face&&<small className="live-slot-caption" aria-hidden="true">{face.symbol} {face.category}</small>}
  </button>;
 }
 function LiveSpecialArt({card}){
@@ -140,7 +152,7 @@ export default function OfficialLiveBattle3D({
  const [session,setSession]=useState(()=>startSession(options));
  const [battle,setBattle]=useState(session.battle);
  const [now,setNow]=useState(Date.now);
- const [chosen,setChosen]=useState(null),[vital,setVital]=useState(null);
+ const [selection,setSelection]=useState(null),[vital,setVital]=useState(null);
  const [specialChoice,setSpecialChoice]=useState(null);
  const [recycleChoice,setRecycleChoice]=useState([]);
  const [message,setMessage]=useState(''),[details,setDetails]=useState(false);
@@ -152,6 +164,8 @@ export default function OfficialLiveBattle3D({
  });
  const claimed=useRef(false);
  const [scale,setScale]=useState(1);
+ const myTurn=battle?.phase==='playing'&&battle.activeSide==='A';
+ const chosen=myTurn&&selection?.turn===battle.turn?selection:null;
  useEffect(()=>{
   if(battle?.phase!=='playing'||battle?.activeSide!=='A'){
    setSpecialChoice(null);setRecycleChoice([]);
@@ -184,20 +198,24 @@ export default function OfficialLiveBattle3D({
  function restart(){
   const next=startSession(options);
   claimed.current=false;setSession(next);setBattle(next.battle);
-  setChosen(null);setVital(null);setSpecialChoice(null);setRecycleChoice([]);setMessage('');setDetails(false);
+  setSelection(null);setVital(null);setSpecialChoice(null);setRecycleChoice([]);setMessage('');setDetails(false);
  }
  function action(intent){
   if(!battle)return;
   const result=applyOfficialLiveAction(battle,'A',intent,Date.now());
   if(!result.ok){setMessage('Azione non valida: '+result.reason.replaceAll('_',' '));return false;}
   setBattle(result.battle);setMessage('');
-  setChosen(null);
+  setSelection(null);
   return true;
  }
- function selectCard(kind,id){setChosen(old=>old?.kind===kind&&old?.id===id?null:{kind,id});}
+ function selectCard(kind,id,canPlay=true){
+  const turn=canPlay?battle.turn:null;
+  setSelection(old=>old?.kind===kind&&old.id===id&&old.turn===turn?null:{kind,id,turn});
+ }
  function playSpecialAt(index,slot){
+  if(!myTurn||battle.actionUsed.special>=LIVE_SPECIAL_LIMIT)return;
   const card=battle?.sides.A.special.hand[index];
-  if(!card)return;
+  if(!card||!supportedLiveSpecial(card.type))return;
   const moduleEffect=isModuleCard(card.type)?TACTICAL_MODULE_CARDS[card.type].effect:null;
   if(TARGETED_SPECIALS.has(card.type)||moduleEffect==='free_swap'||moduleEffect==='refill'){
    setSpecialChoice({type:card.type,cardId:card.id,slot});
@@ -223,7 +241,7 @@ export default function OfficialLiveBattle3D({
   const me=battle.sides.A;
   const cards=chosen.kind==='numeric'?me.numeric.hand:me.special.hand;
   const index=cards.findIndex(c=>c.id===chosen.id);
-  if(index<0)return setChosen(null);
+  if(index<0)return setSelection(null);
   if(chosen.kind==='numeric'){
    if(target==='discard')action({type:'numeric-discard',index});
    else if(target==='ship'||target.startsWith('escort-'))
@@ -273,7 +291,6 @@ export default function OfficialLiveBattle3D({
   <button onClick={restart}>RIPROVA</button><button onClick={()=>onExit?.()}>TORNA AL MENU</button>
  </main>;
  const player=battle.sides.A,enemy=battle.sides.B;
- const myTurn=battle.phase==='playing'&&battle.activeSide==='A';
  const seconds=Math.max(0,Math.ceil((battle.deadlineMs-now)/1000));
  const terrain=battle.activeTerrain?pvpTerrainDefinition(battle.activeTerrain.id):null;
  const targeted=vital&&enemy.defense.parts[vital];
@@ -282,8 +299,8 @@ export default function OfficialLiveBattle3D({
  const canExpose=remainingExposureSlots(enemy.defense)>0;
  const cannotAct=!myTurn||battle.phase==='finished';
  const last=battle.history.at(-1);
- const visualIndex=battle.history.findLastIndex(e=>
-  ['shot','vital_destroyed','vital_hit','weapon_charge'].includes(e.kind));
+ const visualEvents=battle.history.flatMap((event,index)=>
+  COMBAT_CUES.has(event.kind)&&now-event.atMs<COMBAT_CUE_MS?[{event,index}]:[]);
  const choiceCard=specialChoice?.type==='boss-recycle'?{type:'boss-recycle'}:
   specialChoice?player.special.hand.find(c=>c.id===specialChoice.cardId):null;
  const epicChoiceReady=myTurn&&['epic_item_1','epic_item_3'].includes(player.epic?.active?.id)&&
@@ -294,12 +311,17 @@ export default function OfficialLiveBattle3D({
   TACTICAL_MODULE_CARDS[specialChoice.type].effect:null;
  const recycleMax=moduleChoiceEffect==='free_swap'?1:2;
  const hiddenMutation=vital&&battle.liveLegacy?.mutations?.B?.vitalId===vital;
- const visual=visualIndex>=0?battle.history[visualIndex]:null;
- const selectedSpecial=chosen?.kind==='special'?
-  player.special.hand.find(card=>card.id===chosen.id):null;
+ const selectedSpecial=selection?.kind==='special'?
+  player.special.hand.find(card=>card.id===selection.id):null;
  const selectedSpecialFace=selectedSpecial?
   officialSpecialCardIdentity(selectedSpecial.type,TACTICAL_SPECIALS[selectedSpecial.type]):null;
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
+ const finalImpactVisible=result&&visualEvents.some(({event})=>
+  event.kind==='vital_destroyed'&&now-event.atMs<1050);
+ const specialPreviewNote=selectedSpecial&&!supportedLiveSpecial(selectedSpecial.type)?
+  'Questa carta non è ancora giocabile nel duello LIVE.':!myTurn?
+  'Puoi giocarla al tuo turno.':battle.actionUsed.special>=LIVE_SPECIAL_LIMIT?
+  'Hai già usato le speciali di questo turno.':null;
  return <div className="es-math-scope live-viewport">
   <div ref={rootRef} className="es-root official-duel-3d live-root"
    onDragOver={e=>{if(e.target.closest('[data-live-drop]'))e.preventDefault();}}
@@ -325,8 +347,6 @@ export default function OfficialLiveBattle3D({
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
    {terrain&&<div className="live-terrain-scene" data-terrain={terrain.id}
     style={{backgroundImage:'url('+ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg)'}}/>}
-   {visual&&<OfficialLiveCombatFx key={'combat-'+visualIndex}
-    event={visual} rootRef={rootRef} anchors={anchors}/>}
    <FleetBar keySide="B" side={enemy}/>
    <Fighter side="enemy" snapshot={enemy} anchors={anchors} onVital={id=>{
     if(!myTurn)return;
@@ -344,7 +364,7 @@ export default function OfficialLiveBattle3D({
      {battle.phase==='finished'?'FINE PARTITA':battle.activeSide==='A'?'TUO TURNO':'TURNO AVVERSARIO'} · {seconds}s
     </span>
     <button className="live-terrain-slot" type="button" disabled={cannotAct}
-     data-live-drop="terrain" onClick={()=>useSelected('terrain')}
+     data-live-slot="terrain" data-live-drop="terrain" onClick={()=>useSelected('terrain')}
      aria-label={'Terreno centrale'+(terrain?' · '+terrain.name:' · neutro')}>
      {terrain?terrain.short:'TERRENO'}
     </button>
@@ -357,7 +377,7 @@ export default function OfficialLiveBattle3D({
     {battle.zones.A.open.map((c,i)=><Slot key={i} side="A" kind="open" index={i}
      card={c} onActivate={()=>useSelected('open-'+i)}/>)}
    </div>
-   <Fighter side="player" snapshot={player} anchors={anchors} onShip={()=>useSelected('ship')}/>
+   <Fighter side="player" snapshot={player} anchors={anchors} onShip={useSelected}/>
    <div className="live-deck live-deck--numeric" aria-label={'Mazzo numerico · '+player.numeric.deck.length+' carte'}>
     <i/><i/><i/><span><b>ϟ</b><small>NUMERICHE</small></span><em>{player.numeric.deck.length}</em>
    </div>
@@ -367,17 +387,20 @@ export default function OfficialLiveBattle3D({
    <div className="live-special-hand" role="group" aria-label="Cinque carte speciali">
     {player.special.hand.map(card=>{
      const face=officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]);
-     return <button type="button" key={card.id} disabled={cannotAct||!supportedLiveSpecial(card.type)}
-      className={'live-hand-special'+(chosen?.id===card.id?' live-chosen':'')}
+     const canPlay=myTurn&&battle.actionUsed.special<LIVE_SPECIAL_LIMIT&&supportedLiveSpecial(card.type);
+     const inspected=selectedSpecial?.id===card.id;
+     return <button type="button" key={card.id} disabled={!!result}
+      className={'live-hand-special'+(inspected?' live-chosen':'')}
       data-family={face.category}
       title={face.name+' · '+face.effect}
-      aria-label={face.name+' · '+(supportedLiveSpecial(card.type)?face.effect:'effetto in migrazione')}
-      aria-pressed={chosen?.id===card.id}
-      onClick={()=>selectCard('special',card.id)}
-      onTouchEnd={e=>touchRelease(e,'special',card.id)}
-      draggable={!cannotAct}
+      aria-label={face.name+' · '+face.effect}
+      aria-pressed={inspected}
+      onClick={()=>selectCard('special',card.id,canPlay)}
+      onTouchEnd={canPlay?e=>touchRelease(e,'special',card.id):undefined}
+      draggable={canPlay}
       onDragStart={e=>e.dataTransfer.setData('text/plain','special:'+card.id)}>
       <LiveSpecialArt card={card}/>
+      <span className="live-card-emblem" aria-hidden="true">{face.symbol}</span>
       <span className="live-card-caption"><b>{face.name}</b><small>{face.effect}</small></span>
      </button>;
     })}
@@ -398,11 +421,12 @@ export default function OfficialLiveBattle3D({
      {player.legacy?.golden?.cardId===card.id&&<span className="live-number-mark live-number-mark--gold">DORATA</span>}
     </button>)}
    </div>
-   {selectedSpecialFace&&<div className="live-card-inspector" data-family={selectedSpecialFace.category}
+   {selectedSpecialFace&&!result&&<div className="live-card-inspector" data-family={selectedSpecialFace.category}
     role="status" aria-live="polite">
     <b><span>{selectedSpecialFace.symbol}</span>{selectedSpecialFace.name}</b>
     <strong>{selectedSpecialFace.category}</strong>
-    <small>{TACTICAL_SPECIALS[selectedSpecial.type]?.help||selectedSpecialFace.effect}</small>
+    <p>{TACTICAL_SPECIALS[selectedSpecial.type]?.help||selectedSpecialFace.effect}</p>
+    {specialPreviewNote&&<small>{specialPreviewNote}</small>}
    </div>}
    <div className="live-actions">
     <span>{'NUMERICHE '+battle.actionUsed.numeric+'/'+LIVE_NUMERIC_LIMIT+
@@ -425,10 +449,12 @@ export default function OfficialLiveBattle3D({
    </div>
    {!result&&<button type="button" className="live-abandon" disabled={busy}
     onClick={leave} aria-label="Abbandona la battaglia">
-    <span aria-hidden="true">⏏</span> ABBANDONA
+    <span aria-hidden="true">←</span> ABBANDONA
    </button>}
    <FleetBar keySide="A" side={player} nickname={nickname}/>
-   {last&&<div className="live-action-notice" key={battle.history.length}
+   {visualEvents.map(({event,index})=><OfficialLiveCombatFx key={'combat-'+index}
+    event={event} rootRef={rootRef} anchors={anchors}/>)}
+   {last&&last.kind!=='turn_start'&&now-last.atMs<3300&&<div className="live-action-notice" key={battle.history.length}
     role="status" data-event={last.kind}>{last.message}</div>}
    {message&&<div className="live-validation" role="alert">{message}</div>}
    {vital&&targeted&&targeted.hp>0&&<div className="live-vital-panel" role="dialog"
@@ -547,7 +573,7 @@ export default function OfficialLiveBattle3D({
     {battle.lastEvents.slice(-12).map((l,i)=><p key={i}>{l}</p>)}
     <button type="button" onClick={()=>setDetails(false)}>CHIUDI</button>
    </div>}
-   {result&&<div className="live-end">
+   {result&&!finalImpactVisible&&<div className="live-end">
     <h2>{result.winner==='player'?'VITTORIA':result.winner==='enemy'?'SCONFITTA':'PAREGGIO'}</h2>
     <p>{'Turni '+battle.turn+' · '+(session.bossEncounter?.name||displaySector||'Duello')}</p>
     <button type="button" disabled={busy} onClick={leave}>CONFERMA E TORNA</button>

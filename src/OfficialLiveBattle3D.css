@@ -2,7 +2,24 @@
    Nessuna carta arma separata: restano solo gli armamenti sul modello nave. */
 .es-math-scope.live-viewport{position:fixed;inset:0;width:100vw;height:100dvh;
  background:#01040c;overflow:hidden;z-index:100000}
-.es-math-scope .live-root{width:450px;height:800px;overflow:hidden;}
+.es-math-scope .live-root{--family:#90dbff;width:450px;height:800px;overflow:hidden}
+.es-math-scope .live-root [data-family="ATTACCO"]{--family:#ff7a69}
+.es-math-scope .live-root [data-family="DIFESA"]{--family:#75dfff}
+.es-math-scope .live-root [data-family="SUPPORTO"]{--family:#87f0a5}
+.es-math-scope .live-root [data-family="FUSIONE"]{--family:#d99aff}
+.es-math-scope .live-root [data-family="REAZIONE"]{--family:#ffd77b}
+.es-math-scope .live-root [data-family="SCANSIONE"]{--family:#62f2ff}
+.es-math-scope .live-root [data-family="CONTROLLO"]{--family:#9db8ff}
+.es-math-scope .live-root [data-family="DADO"]{--family:#63f5d0}
+.es-math-scope .live-root [data-family="MALUS"]{--family:#ff6c91}
+.es-math-scope .live-root [data-family="DORATA"]{--family:#ffe36a}
+.es-math-scope .live-root [data-family="FAGLIA"]{--family:#ad82ff}
+.es-math-scope .live-root [data-family="MUTAZIONE"]{--family:#ff82ef}
+.es-math-scope .live-root [data-family="RAFFICA"]{--family:#ffad63}
+.es-math-scope .live-root [data-family="EPICO"]{--family:#fff19a}
+.es-math-scope .live-root [data-family="MODULO"]{--family:#a9bdd4}
+.es-math-scope .live-root [data-family="PERSONAGGIO"]{--family:#eba1ff}
+.es-math-scope .live-root [data-family="TERRENO"]{--family:#bdea79}
 .es-math-scope .live-root .live-background{z-index:-2}
 .es-math-scope .live-root .live-terrain-scene{position:absolute;inset:0;z-index:0;
  background-size:100% 100%;opacity:.85;pointer-events:none}
@@ -25,7 +42,7 @@
 .es-math-scope .live-root .live-unit-shield b{display:block;background:#24d9ff;height:100%}
 .es-math-scope .live-root .live-status-strip{position:absolute;right:0;display:flex;gap:3px;
  align-items:center;z-index:3;pointer-events:none}
-.es-math-scope .live-root .live-status-strip--B{top:27px}
+.es-math-scope .live-root .live-status-strip--B{top:29px;left:0;right:auto}
 .es-math-scope .live-root .live-status-strip--A{bottom:27px}
 .es-math-scope .live-root .live-status-strip span{display:flex;align-items:center;gap:2px;
  min-height:15px;padding:2px 4px;border:1px solid #5cc8ef;border-radius:4px;
@@ -49,6 +66,8 @@
 .es-math-scope .live-root .live-fighter--player{pointer-events:auto}
 .es-math-scope .live-root .live-fighter--enemy .official-original-motor-targets .vessel-engine{
  pointer-events:auto}
+.es-math-scope .live-root .live-fighter--player .official-original-motor-targets .vessel-engine{
+ pointer-events:none}
 .es-math-scope .live-root .live-fighter .official-original-motor-targets{top:0}
 .es-math-scope .live-root .live-escort{position:absolute;top:80px;width:60px;height:65px;
  filter:drop-shadow(0 0 8px #33caff7a);pointer-events:auto}
@@ -71,7 +90,12 @@
  font-size:19px;padding:0}
 .es-math-scope .live-root .live-slot--enemy{border-color:#be694e}
 .es-math-scope .live-root .live-slot--chosen{box-shadow:0 0 8px #52d9ff,inset 0 0 9px #68c9ff50}
-.es-math-scope .live-root .live-slot--occupied{border-color:#72e7ff;background:#14324bcb}
+.es-math-scope .live-root .live-slot--occupied{border-color:var(--family);background:#14324bcb}
+.es-math-scope .live-root .live-slot--covered{border-color:#d3a8ee;color:#f2c6ff;
+ background:repeating-linear-gradient(135deg,#261637 0 7px,#170e26 7px 14px)}
+.es-math-scope .live-root .live-slot-caption{position:absolute;bottom:0;left:0;right:0;
+ padding:2px 0;background:#040a14f0;color:var(--family);font-size:6.5px;
+ line-height:1.1;font-weight:850;pointer-events:none}
 .es-math-scope .live-root .live-slot span{pointer-events:none}
 .es-math-scope .live-root .live-midline{position:absolute;top:305px;width:100%;
  display:flex;align-items:center;justify-content:center;z-index:11}
@@ -85,10 +109,12 @@
 .es-math-scope .live-root .live-turn-indicator[data-active="B"]{color:#ff8395;border-color:#b84559}
 .es-math-scope .live-root .live-deck{--deck-edge:#35dfff;--deck-glow:#24bfff;
  position:absolute;top:510px;width:58px;height:78px;z-index:9;transform-style:preserve-3d;
- perspective:340px;filter:drop-shadow(0 9px 7px #000a)}
-.es-math-scope .live-root .live-deck--numeric{left:15px;transform:rotateY(14deg) rotateZ(-2deg)}
+ perspective:340px}
+.es-math-scope .live-root .live-deck::before{content:'';position:absolute;inset:9px -4px -6px 2px;
+ border-radius:9px;background:#000c;filter:blur(6px);transform:translateZ(-16px);pointer-events:none}
+.es-math-scope .live-root .live-deck--numeric{left:15px;transform:perspective(380px) rotateY(17deg) rotateZ(-2deg)}
 .es-math-scope .live-root .live-deck--special{right:15px;--deck-edge:#f276ff;--deck-glow:#d252ff;
- transform:rotateY(-14deg) rotateZ(2deg)}
+ transform:perspective(380px) rotateY(-17deg) rotateZ(2deg)}
 .es-math-scope .live-root .live-deck>i,.es-math-scope .live-root .live-deck>span{
  position:absolute;inset:0;border:1px solid var(--deck-edge);border-radius:7px;
  background:linear-gradient(145deg,#152b57 0%,#09152f 55%,#030a1a 100%);
@@ -112,55 +138,43 @@
 .es-math-scope .live-root .live-deck>em{position:absolute;right:-4px;top:-5px;z-index:4;
  min-width:18px;height:18px;padding:0 3px;display:grid;place-items:center;border-radius:9px;
  border:1px solid #d9fbff;background:#06223b;color:#fff;font-size:9px;font-style:normal;font-weight:950;
- box-shadow:0 0 8px var(--deck-glow)}
+ box-shadow:0 0 8px var(--deck-glow);transform:translateZ(8px)}
 @keyframes liveDeckHover{from{transform:translateZ(0)}to{transform:translate3d(0,-2px,4px)}}
-.es-math-scope .live-root .live-special-hand{position:absolute;top:598px;left:94px;right:94px;
- height:88px;display:flex;align-items:flex-start;justify-content:center;gap:1px;z-index:11}
-.es-math-scope .live-root .live-hand-special{width:53px;height:79px;position:relative;
- flex:0 0 53px;padding:0;border:2px solid #d49c56;border-radius:7px;
+.es-math-scope .live-root .live-special-hand{position:absolute;top:582px;left:76px;right:76px;
+ height:64px;display:flex;align-items:flex-start;justify-content:center;gap:4px;z-index:11}
+.es-math-scope .live-root .live-hand-special{width:55px;height:63px;position:relative;
+ flex:0 0 55px;padding:0;border:1.5px solid var(--family);border-radius:6px;
  color:#fff;background:linear-gradient(160deg,#312a63,#140e34);
- box-shadow:0 0 8px color-mix(in srgb,var(--family,#d49c56) 58%,transparent);
+ box-shadow:0 0 7px color-mix(in srgb,var(--family) 48%,transparent);
  transform-origin:center bottom;overflow:hidden;
  transition:transform .16s ease-out,filter .16s ease-out,box-shadow .16s ease-out;
- touch-action:none;animation:liveCardMaterialize .32s ease-out both}
-.es-math-scope .live-root .live-hand-special:nth-child(1){transform:rotate(-9deg) translateY(11px)}
-.es-math-scope .live-root .live-hand-special:nth-child(2){transform:rotate(-5deg)}
-.es-math-scope .live-root .live-hand-special:nth-child(4){transform:rotate(5deg)}
-.es-math-scope .live-root .live-hand-special:nth-child(5){transform:rotate(9deg) translateY(11px)}
-.es-math-scope .live-root .live-hand-special.live-chosen{transform:translateY(-28px) scale(1.09);z-index:50;
- border-color:#fff0a3;box-shadow:0 0 16px #ffe46da6,0 8px 13px #000a}
-.es-math-scope .live-root .live-hand-special .live-special-art{font-size:30px;text-shadow:0 0 9px #ffca77}
+ touch-action:none;animation:liveCardMaterialize .22s ease-out}
+.es-math-scope .live-root .live-hand-special:nth-child(1){transform:rotate(-3deg)}
+.es-math-scope .live-root .live-hand-special:nth-child(2){transform:rotate(-1.5deg)}
+.es-math-scope .live-root .live-hand-special:nth-child(4){transform:rotate(1.5deg)}
+.es-math-scope .live-root .live-hand-special:nth-child(5){transform:rotate(3deg)}
+.es-math-scope .live-root .live-hand-special.live-chosen{transform:translateY(-9px) scale(1.04);z-index:2;
+ outline:1px solid #fff3ac;outline-offset:1px;box-shadow:0 0 13px var(--family),0 5px 9px #000a}
+.es-math-scope .live-root .live-hand-special:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.es-math-scope .live-root .live-hand-special .live-special-art{position:absolute;top:0;left:0;right:0;
+ font-size:26px;line-height:1.22;color:var(--family);text-shadow:0 0 9px var(--family)}
 .es-math-scope .live-root .live-hand-special img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
- filter:saturate(1.1) contrast(1.04);transition:filter .16s ease-out,transform .16s ease-out}
+ object-position:50% 43%;filter:saturate(1.1) contrast(1.04);transition:filter .16s ease-out,transform .16s ease-out}
 .es-math-scope .live-root .live-hand-special:hover:not(:disabled) img,
 .es-math-scope .live-root .live-hand-special:focus-visible img{filter:saturate(1.35) brightness(1.12);transform:scale(1.04)}
-.es-math-scope .live-root .live-hand-special:disabled{opacity:.72;filter:saturate(.78)}
-.es-math-scope .live-root .live-hand-special[data-family="ATTACCO"]{border-color:#ff7a69;--family:#ff6c5e}
-.es-math-scope .live-root .live-hand-special[data-family="DIFESA"]{border-color:#75dfff;--family:#4dcfff}
-.es-math-scope .live-root .live-hand-special[data-family="SUPPORTO"]{border-color:#87f0a5;--family:#65df8c}
-.es-math-scope .live-root .live-hand-special[data-family="FUSIONE"]{border-color:#d99aff;--family:#c170f6}
-.es-math-scope .live-root .live-hand-special[data-family="REAZIONE"]{border-color:#ffd77b;--family:#f3b945}
-.es-math-scope .live-root .live-hand-special[data-family="SCANSIONE"]{border-color:#62f2ff;--family:#36dbe9}
-.es-math-scope .live-root .live-hand-special[data-family="CONTROLLO"]{border-color:#9db8ff;--family:#7899ed}
-.es-math-scope .live-root .live-hand-special[data-family="DADO"]{border-color:#63f5d0;--family:#39d6b1}
-.es-math-scope .live-root .live-hand-special[data-family="MALUS"]{border-color:#ff6c91;--family:#ec426f}
-.es-math-scope .live-root .live-hand-special[data-family="DORATA"]{border-color:#ffe36a;--family:#eec438}
-.es-math-scope .live-root .live-hand-special[data-family="FAGLIA"]{border-color:#ad82ff;--family:#8758e5}
-.es-math-scope .live-root .live-hand-special[data-family="MUTAZIONE"]{border-color:#ff82ef;--family:#dc55cf}
-.es-math-scope .live-root .live-hand-special[data-family="RAFFICA"]{border-color:#ffad63;--family:#e77e34}
-.es-math-scope .live-root .live-hand-special[data-family="EPICO"]{border-color:#fff19a;--family:#efca54}
-.es-math-scope .live-root .live-hand-special[data-family="MODULO"]{border-color:#a9bdd4;--family:#8fb1ce}
-.es-math-scope .live-root .live-hand-special[data-family="PERSONAGGIO"]{border-color:#eba1ff;--family:#c66de0}
-.es-math-scope .live-root .live-hand-special[data-family="TERRENO"]{border-color:#bdea79;--family:#8fc752}
-.es-math-scope .live-root .live-card-caption{position:absolute;left:2px;right:2px;bottom:2px;z-index:3;
- min-height:24px;padding:2px 2px 1px;border-top:1px solid var(--family,#d49c56);
- border-radius:2px 2px 4px 4px;background:linear-gradient(180deg,#07101dcc,#050914f2);
- display:flex;flex-direction:column;justify-content:center;gap:1px;pointer-events:none;text-shadow:0 1px 2px #000}
-.es-math-scope .live-root .live-card-caption b{font-size:6.5px;line-height:7px;color:#fff;
- overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-transform:uppercase}
-.es-math-scope .live-root .live-card-caption small{font-size:5.5px;line-height:6px;color:#dbedfa;
- overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:800}
-@keyframes liveCardMaterialize{from{opacity:0;filter:brightness(2) blur(1.5px)}to{opacity:1;filter:none}}
+.es-math-scope .live-root .live-card-emblem{position:absolute;top:2px;left:2px;z-index:2;
+ width:15px;height:15px;display:grid;place-items:center;border:1px solid var(--family);
+ border-radius:4px;background:#071322e8;color:var(--family);font-size:10px;line-height:1;pointer-events:none}
+.es-math-scope .live-root .live-card-caption{position:absolute;left:0;right:0;bottom:0;z-index:3;
+ min-height:28px;padding:2px 2px 3px;border-top:1px solid var(--family);
+ background:linear-gradient(180deg,#07101df0,#050914);display:flex;flex-direction:column;
+ justify-content:center;gap:1px;pointer-events:none;text-shadow:0 1px 2px #000}
+.es-math-scope .live-root .live-card-caption b{font-size:8px;line-height:9px;color:#fff;
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.es-math-scope .live-root .live-card-caption small{font-size:6.5px;line-height:7px;color:var(--family);
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+ overflow:hidden;overflow-wrap:anywhere;font-weight:800}
+@keyframes liveCardMaterialize{from{opacity:.45}to{opacity:1}}
 .es-math-scope .live-root .live-number-hand{position:absolute;top:648px;left:32px;right:32px;
  display:flex;align-items:center;justify-content:center;gap:0;height:91px;z-index:12}
 .es-math-scope .live-root .live-number-card{position:relative;flex:0 0 54px;width:54px;height:86px;
@@ -168,7 +182,7 @@
  border-radius:7px;box-shadow:0 0 8px #11afff99,inset 0 0 5px #226aa6;
  color:#fff;padding:0;touch-action:none;display:flex;flex-direction:column;
  align-items:center;justify-content:space-between;transition:transform .15s ease-out,box-shadow .15s ease-out;
- animation:liveCardMaterialize .28s ease-out both}
+ animation:liveCardMaterialize .22s ease-out}
 .es-math-scope .live-root .live-number-card:nth-child(1){transform:rotate(-9deg) translateY(5px)}
 .es-math-scope .live-root .live-number-card:nth-child(2){transform:rotate(-6deg)}
 .es-math-scope .live-root .live-number-card:nth-child(3){transform:rotate(-3deg) translateY(-3px)}
@@ -188,47 +202,33 @@
 .es-math-scope .live-root .live-actions button{border:1px solid #60bdf3;background:#082a43ee;
  color:#eafaff;padding:5px;border-radius:5px;font-size:9px;font-weight:900}
 .es-math-scope .live-root .live-abandon{position:absolute;right:9px;top:34px;z-index:21;
- height:25px;padding:0 9px;border:1px solid #ff8291;border-radius:5px;
+ min-height:34px;padding:0 10px;border:1px solid #ff8291;border-radius:6px;
+ display:flex;align-items:center;justify-content:center;gap:5px;
  background:linear-gradient(180deg,#641a2cee,#310914f2);color:#ffe9ec;
- font-size:8px;font-weight:950;letter-spacing:.65px;box-shadow:0 0 10px #ff405466,inset 0 1px #ffd3da33}
-.es-math-scope .live-root .live-abandon span{font-size:11px;margin-right:3px;color:#ffacb7}
+ font-size:9px;font-weight:900;letter-spacing:.55px;box-shadow:0 0 10px #ff405466,inset 0 1px #ffd3da33}
+.es-math-scope .live-root .live-abandon::after{content:'';position:absolute;inset:-4px -3px -9px}
+.es-math-scope .live-root .live-abandon span{font-size:14px;color:#ffacb7}
 .es-math-scope .live-root .live-abandon:hover:not(:disabled),
 .es-math-scope .live-root .live-abandon:focus-visible{background:linear-gradient(180deg,#8f2940,#470c1d);
  box-shadow:0 0 15px #ff536e99,inset 0 1px #fff3}
-.es-math-scope .live-root .live-card-inspector{--inspect:#75dfff;position:absolute;top:488px;
- left:81px;right:81px;z-index:25;min-height:48px;padding:6px 8px;border:1px solid var(--inspect);
- border-radius:8px;background:linear-gradient(135deg,#071729f6,#0b2036f1);
- color:#eefaff;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 7px;
- box-shadow:0 8px 18px #000b,0 0 13px color-mix(in srgb,var(--inspect) 45%,transparent);
+.es-math-scope .live-root .live-card-inspector{position:absolute;bottom:232px;
+ left:84px;right:84px;z-index:25;padding:8px 10px;border:1px solid var(--family);
+ border-radius:8px;background:linear-gradient(135deg,#071729fa,#0b2036f8);text-align:left;
+ color:#eefaff;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 7px;
+ box-shadow:0 8px 18px #000b,0 0 13px color-mix(in srgb,var(--family) 45%,transparent);
  animation:liveInspectorIn .16s ease-out both;pointer-events:none}
-.es-math-scope .live-root .live-card-inspector[data-family="ATTACCO"]{--inspect:#ff7568}
-.es-math-scope .live-root .live-card-inspector[data-family="DIFESA"]{--inspect:#62dcff}
-.es-math-scope .live-root .live-card-inspector[data-family="SUPPORTO"]{--inspect:#70e896}
-.es-math-scope .live-root .live-card-inspector[data-family="FUSIONE"]{--inspect:#d68aff}
-.es-math-scope .live-root .live-card-inspector[data-family="REAZIONE"]{--inspect:#ffd16b}
-.es-math-scope .live-root .live-card-inspector[data-family="SCANSIONE"]{--inspect:#55eaf7}
-.es-math-scope .live-root .live-card-inspector[data-family="CONTROLLO"]{--inspect:#91adff}
-.es-math-scope .live-root .live-card-inspector[data-family="DADO"]{--inspect:#55ebc7}
-.es-math-scope .live-root .live-card-inspector[data-family="MALUS"]{--inspect:#ff6489}
-.es-math-scope .live-root .live-card-inspector[data-family="DORATA"]{--inspect:#ffdb54}
-.es-math-scope .live-root .live-card-inspector[data-family="FAGLIA"]{--inspect:#a97cff}
-.es-math-scope .live-root .live-card-inspector[data-family="MUTAZIONE"]{--inspect:#f475e6}
-.es-math-scope .live-root .live-card-inspector[data-family="RAFFICA"]{--inspect:#ff9f51}
-.es-math-scope .live-root .live-card-inspector[data-family="EPICO"]{--inspect:#fff08a}
-.es-math-scope .live-root .live-card-inspector[data-family="MODULO"]{--inspect:#a8bfd4}
-.es-math-scope .live-root .live-card-inspector[data-family="PERSONAGGIO"]{--inspect:#e79cff}
-.es-math-scope .live-root .live-card-inspector[data-family="TERRENO"]{--inspect:#afe36c}
-.es-math-scope .live-root .live-card-inspector>b{font-size:9px;white-space:nowrap;overflow:hidden;
- text-overflow:ellipsis;color:#fff}
-.es-math-scope .live-root .live-card-inspector>b span{font-size:13px;margin-right:5px;color:var(--inspect)}
-.es-math-scope .live-root .live-card-inspector>strong{align-self:center;font-size:6px;
- letter-spacing:.7px;padding:3px 4px;border:1px solid var(--inspect);border-radius:3px;color:var(--inspect)}
-.es-math-scope .live-root .live-card-inspector>small{grid-column:1/-1;font-size:7px;line-height:9px;
- max-height:18px;overflow:hidden;color:#cce5f4}
+.es-math-scope .live-root .live-card-inspector>b{font-size:13px;line-height:1.16;color:#fff}
+.es-math-scope .live-root .live-card-inspector>b span{font-size:15px;margin-right:5px;color:var(--family)}
+.es-math-scope .live-root .live-card-inspector>strong{align-self:start;font-size:7.5px;
+ letter-spacing:.45px;padding:3px 4px;border:1px solid var(--family);border-radius:3px;color:var(--family)}
+.es-math-scope .live-root .live-card-inspector>p{grid-column:1/-1;margin:0;
+ font-size:11.5px;line-height:1.3;color:#e1efff;overflow-wrap:anywhere}
+.es-math-scope .live-root .live-card-inspector>small{grid-column:1/-1;
+ font-size:9px;line-height:1.2;color:#a8c7dc}
 @keyframes liveInspectorIn{from{opacity:0;transform:translateY(5px) scale(.97)}to{opacity:1;transform:none}}
-.es-math-scope .live-root .live-action-notice{position:absolute;top:423px;left:112px;right:112px;
+.es-math-scope .live-root .live-action-notice{position:absolute;top:408px;left:100px;right:100px;
  z-index:23;text-align:center;background:#071527e8;border:1px solid #288ebc;border-radius:5px;
- padding:5px;font-size:9px;pointer-events:none;animation:liveMessage .6s ease-out}
+ padding:5px 7px;font-size:9px;line-height:1.25;pointer-events:none;animation:liveMessage .2s ease-out}
 .es-math-scope .live-root .live-action-notice[data-event="weapon_charge"]{border-color:#78dfff;color:#d8fbff;box-shadow:0 0 12px #2dcfff55}
 .es-math-scope .live-root .live-action-notice[data-event="shot"]{border-color:#ffd16d;color:#fff0c3;box-shadow:0 0 12px #ffac3d55}
 .es-math-scope .live-root .live-action-notice[data-event="vital_destroyed"],
@@ -260,12 +260,22 @@
  border:1px solid #66d7ff;color:#fff;background:#0a4164;padding:10px;font-weight:800;border-radius:6px}
 @keyframes liveMessage{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){
- .es-math-scope .live-root .live-hand-special,.es-math-scope .live-root .live-number-card{transition:none}
- .es-math-scope .live-root .live-action-notice{animation:none}
+ .es-math-scope .live-root .live-hand-special,.es-math-scope .live-root .live-number-card{transition:none;animation:none}
+ .es-math-scope .live-root .live-action-notice,.es-math-scope .live-root .live-card-inspector,
+ .es-math-scope .live-root .live-deck>span{animation:none}
 }
 
 /* Il proiettile parte solo dopo una numerica; il vitale esplode senza proiettile. */
 .es-math-scope .live-root .live-combat-fx{position:absolute;inset:0;pointer-events:none;z-index:22;overflow:hidden}
+.es-math-scope .live-root .live-special-cue{position:absolute;width:46px;height:46px;
+ display:grid;place-items:center;border:1px solid var(--family);border-radius:9px;
+ color:var(--family);background:#091222d9;font-size:26px;line-height:1;
+ box-shadow:0 0 14px var(--family),inset 0 0 10px var(--family);
+ text-shadow:0 0 7px currentColor;animation:liveSlotCue .9s ease-out both}
+.es-math-scope .live-root .live-special-cue[data-event="trap_placed"]{box-shadow:0 0 8px var(--family)}
+@keyframes liveSlotCue{0%{opacity:0;transform:translate(-50%,-50%) scale(.84)}
+ 20%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+ 100%{opacity:0;transform:translate(-50%,-50%) scale(1.38)}}
 .es-math-scope .live-root .live-vital-fx{position:absolute;left:calc(50% - 38px);
  width:76px;height:76px;display:grid;place-items:center;opacity:0;animation:liveBlast .9s ease-out forwards}
 .es-math-scope .live-root .live-vital-fx i{position:absolute;width:72px;height:72px;border-radius:50%;
@@ -275,7 +285,7 @@
 .es-math-scope .live-root .live-vital-fx i:nth-child(3){background:transparent;border:3px solid #ffd88a;transform:scale(1.4)}
 .es-math-scope .live-root .live-vital-fx--partial i{background:radial-gradient(circle,#e8fbff 0%,#68dcff 24%,#3874ff 44%,transparent 72%);
  box-shadow:0 0 22px #3ec9ff}
-.es-math-scope .live-root .live-vital-fx strong{position:absolute;top:67px;left:-22px;width:120px;
+.es-math-scope .live-root .live-vital-fx strong{position:absolute;top:63px;left:50%;width:120px;
  text-align:center;color:#fff4cf;font-size:10px;font-weight:950;letter-spacing:.7px;
  text-shadow:0 0 5px #ff5e31,0 2px 3px #000;animation:liveDamageFloat .95s ease-out both}
 .es-math-scope .live-root .live-ammo-charge{position:absolute;z-index:24;min-width:42px;
@@ -298,9 +308,13 @@
  25%,65%{opacity:1;transform:translate(-50%,0) scale(1)}
  100%{opacity:0;transform:translate(-50%,-30px) scale(1.08)}}
 @media (prefers-reduced-motion:reduce){
- .es-math-scope .live-root .live-vital-fx{animation:none;opacity:.75}
+ .es-math-scope .live-root .live-vital-fx,.es-math-scope .live-root .live-special-cue{
+  animation:liveCueFade .8s linear both}
+ .es-math-scope .live-root .live-special-cue{transform:translate(-50%,-50%)}
+ .es-math-scope .live-root .live-vital-fx strong{animation:none;transform:translateX(-50%)}
  .es-math-scope .live-root .live-ammo-charge,.es-math-scope .live-root .live-fx-damage{animation:none;display:none}
 }
+@keyframes liveCueFade{0%,55%{opacity:.8}100%{opacity:0}}
 
 /* Asset delle Carte Speciali: occupano lo slot esistente, non cambiano la plancia. */
 .es-math-scope .live-root .live-slot{overflow:hidden}

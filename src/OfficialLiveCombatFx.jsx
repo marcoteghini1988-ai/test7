@@ -1,41 +1,52 @@
 import React,{useLayoutEffect,useState} from 'react';
 import {RoundGlyph,ImpactGlyph} from './BossBattle3D.jsx';
 import {boardPoint} from './mathFleetGeometry.js';
+import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
+import {TACTICAL_SPECIALS} from './simultaneousDuelEngine.js';
 import {
  planWeaponSalvos,projectileFrame,projectileWidth,projectileSourceIndex
 } from './mathWeaponEffects.js';
 
 // Riproduzione esclusivamente visiva: danni, scarti e ricompense sono gia'
 // stati risolti dal reducer LIVE. Nessun callback grafico modifica la partita.
-export default function OfficialLiveCombatFx({event,rootRef,anchors}){
+export default function OfficialLiveCombatFx({event:resolvedEvent,rootRef,anchors}){
+ // Il motore clona il registro a ogni azione. Ogni effetto conserva l'evento
+ // e le coordinate del proprio lancio finché resta montato.
+ const [event]=useState(()=>resolvedEvent);
  const [geometry,setGeometry]=useState(null);
  useLayoutEffect(()=>{
   const root=rootRef.current,foe=event.by==='A'?'B':'A';
   if(!root)return;
   const rootBox=root.getBoundingClientRect();
   const coords=node=>node?boardPoint(rootBox,node.getBoundingClientRect()):null;
+  if(event.slot){
+   const key=event.slot==='terrain'?'terrain':(event.owner??event.by)+'-'+event.slot;
+   const slot=root.querySelector('[data-live-slot="'+key+'"]');
+   setGeometry({target:coords(slot)});
+   return;
+  }
   if(event.kind==='vital_destroyed'||event.kind==='vital_hit'){
-   const fallback=foe==='B'?[225,145]:[225,500];
-   setGeometry({target:coords(anchors.current[foe].vitals[event.vitalId])||fallback,shots:[]});
+   setGeometry({target:coords(anchors.current[foe].vitals[event.vitalId])});
    return;
   }
   const match=/^escort-(\d+)$/.exec(event.shipId||'');
   const escort=match?Number(match[1]):null;
   const sideAnchors=anchors.current[event.by];
   const source=escort==null?sideAnchors.guns[event.weaponId]:sideAnchors.escorts[escort];
-  const fallbackStart=event.by==='A'?[225,475]:[225,180];
-  const start=coords(source)||fallbackStart;
+  const start=coords(source);
+  if(!start)return;
   if(event.kind==='weapon_charge'){
    setGeometry({start,target:null,shots:[]});
    return;
   }
   const hull=anchors.current[foe].hull;
   const box=hull?.getBoundingClientRect();
-  const target=box?boardPoint(rootBox,{...box,left:box.left,width:box.width,
-   top:box.top+box.height*(foe==='B'?.76:.24),height:0}):
-   (foe==='B'?[225,150]:[225,500]);
+  if(!box)return;
+  const target=boardPoint(rootBox,{left:box.left,width:box.width,
+   top:box.top+box.height*(foe==='B'?.76:.24),height:0});
+  if(!target)return;
   const salvos=planWeaponSalvos([{
-   weaponId:event.weaponId,bullets:Math.max(1,Math.min(26,event.bullets||event.card?.value||1)),
+   weaponId:event.weaponId,bullets:event.bullets??event.card?.value,
    escortSlot:escort
   }]).map(salvo=>({...salvo,rounds:salvo.rounds.map(round=>{
    const second=projectileSourceIndex(salvo.shot,round)===1;
@@ -54,6 +65,14 @@ export default function OfficialLiveCombatFx({event,rootRef,anchors}){
  </div>;
  if(!geometry.target)return null;
  const [tx,ty]=geometry.target;
+ if(event.slot){
+  const face=event.kind==='trap_placed'?{category:'REAZIONE',symbol:'◇'}:
+   officialSpecialCardIdentity(event.type,TACTICAL_SPECIALS[event.type]);
+  return <div className="live-combat-fx" aria-hidden="true">
+   <span className="live-special-cue" data-family={face.category} data-event={event.kind}
+    style={{left:tx,top:ty}}>{face.symbol}</span>
+  </div>;
+ }
  return <div className="live-combat-fx" aria-hidden="true">
   {event.kind==='vital_destroyed'||event.kind==='vital_hit'?
    <div className={'live-vital-fx'+(event.kind==='vital_hit'?' live-vital-fx--partial':'')}

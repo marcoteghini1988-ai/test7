@@ -102,7 +102,7 @@ function nextDraw(pile,size=7){
 }
 function event(b,message,kind='info',payload={}){
  b.lastEvents=[...b.lastEvents.slice(-24),message];
- b.history.push({turn:b.turn,by:b.activeSide,kind,message,...payload});
+ b.history.push({turn:b.turn,by:b.activeSide,kind,message,atMs:b.lastActionAtMs??b.startedAtMs,...payload});
 }
 function closeIfWon(b){
  const a=motherDestroyed(b.sides.A.defense),z=motherDestroyed(b.sides.B.defense);
@@ -186,7 +186,8 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
   event(b,b.activeSide+': Idra Criogenica rigenera '+bossRegen.repaired+' HP reali','boss_regen');
  expireBossCharacter(b.sides[b.activeSide],b.round);
  if(!b.sides[b.activeSide].bossCharacter)b.zones[b.activeSide].character=null;
- event(b,'Turno '+b.turn+' · '+(b.activeSide==='A'?'TU':'AVVERSARIO')+' · 30 secondi');
+ event(b,'Turno '+b.turn+' · '+(b.activeSide==='A'?'TU':'AVVERSARIO')+' · 30 secondi',
+  'turn_start',{atMs:nowMs});
  return b;
 }
 export function advanceOfficialLiveDuel(battle,nowMs=0){
@@ -252,7 +253,7 @@ function runTraps(b,defenderKey,trigger,damage,vital=null){
    }
    slots[i]=null;owner.special.discard.push(card);
    event(b,defenderKey+': trappola '+TACTICAL_SPECIALS[type].name+' attivata in risposta a '+trigger,
-    'trap',{type,trigger});
+    'trap',{type,trigger,owner:defenderKey,slot:'trap-'+i});
   }
  }
  return {damage:value,blocked};
@@ -520,7 +521,7 @@ function playSpecial(b,key,index,slot,choice={}){
   const terrain=pvpTerrainDefinition(type);
   b.activeTerrain={id:type,startedRound:b.round,untilRound:999999};
   side.special.hand.splice(index,1);side.special.discard.push(card);
-  event(b,key+': terreno '+terrain.name+' attivo immediatamente, finche non viene sostituito','terrain',{type});
+  event(b,key+': terreno '+terrain.name+' attivo immediatamente, finche non viene sostituito','terrain',{type,slot});
   return {ok:true};
  }
  if(isBossCharacterCard(type)){
@@ -529,7 +530,7 @@ function playSpecial(b,key,index,slot,choice={}){
   if(!result.ok)return result;
   side.special.hand.splice(index,1);side.special.discard.push(card);
   b.zones[key].character={type,untilRound:side.bossCharacter.untilRound};
-  event(b,key+': personaggio '+result.character.name+' attivato','character',{type});
+  event(b,key+': personaggio '+result.character.name+' attivato','character',{type,slot});
   return {ok:true};
  }
  if(Object.hasOwn(TRAP_CARDS,type)){
@@ -542,7 +543,7 @@ function playSpecial(b,key,index,slot,choice={}){
   if(b.zones[key].traps.some(t=>t?.type===type))return {ok:false,reason:'duplicate_trap_effect'};
   side.special.hand.splice(index,1);
   b.zones[key].traps[i]={...card,target:type==='tactic-counter'?choice.vitalId??null:null};
-  event(b,key+': trappola coperta posizionata nello slot '+(i+1),'trap_placed');
+  event(b,key+': trappola coperta posizionata nello slot '+(i+1),'trap_placed',{slot});
   return {ok:true};
  }
  if(!/^open-[01]$/.test(slot||''))return {ok:false,reason:'open_slot_required'};
@@ -608,7 +609,7 @@ function playSpecial(b,key,index,slot,choice={}){
  }
  side.special.hand.splice(index,1);side.special.discard.push(card);
  b.zones[key].open[i]={type};
- event(b,key+': '+TACTICAL_SPECIALS[type].name+' attivata in diretta','special',{type});
+ event(b,key+': '+TACTICAL_SPECIALS[type].name+' attivata in diretta','special',{type,slot});
  return {ok:true};
 }
 export function applyOfficialLiveAction(battle,key,action,nowMs=0){
