@@ -355,3 +355,23 @@
 .es-math-scope .live-root .live-slot[data-slot-role="personaggio"] .live-slot-role{color:#f0c8ff}
 .es-math-scope .live-root .live-slot[data-slot-role="difesa"] .live-slot-role{color:#baf4ff}
 .es-math-scope .live-root .live-slot[data-slot-role="attacco-supporto"] .live-slot-role{color:#ffbba5}
+
+
+/* Indicatore rarita' SOLO se la rarita' esiste nel catalogo: gli
+   Oggetti Epici sono ufficialmente EPICI; BOSS indica invece origine
+   della carta, non una rarita' inventata. */
+.es-math-scope .live-root .live-card-rarity{
+ position:absolute;top:2px;right:2px;z-index:4;
+ max-width:34px;padding:2px 1px;border:1px solid #fee9a1;
+ border-radius:3px;background:linear-gradient(160deg,#583309f0,#20111be8);
+ color:#fff1b6;font-size:5.3px;line-height:7px;letter-spacing:.2px;
+ font-weight:1000;text-align:center;pointer-events:none;
+ box-shadow:0 0 5px #ffca5680;
+}
+.es-math-scope .live-root .live-card-rarity--boss{
+ border-color:#dcb1ff;background:#301c49eb;color:#eed7ff;
+ box-shadow:0 0 5px #a85cf483;
+}
+.es-math-scope .live-root .live-hand-special[data-rarity="EPICA"]{
+ border-color:#e9b1ff;box-shadow:0 0 10px #bd6bf677;
+}
