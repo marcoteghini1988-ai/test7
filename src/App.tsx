@@ -58,6 +58,7 @@ import {applyVerifiedBossRelic,verifiedBossRelicReward} from './campaignBossReli
 import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
 import {officialModulePurchaseStage} from './officialModulePurchaseStage.js';
+import {recoverOfficialCampaignCredits} from './officialCampaignCreditRegen.js';
 import {initialSelectedPilot,missingPilotInventory,terraNineModuleVictory} from './officialLoadoutMilestones.js';
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
 import LegacyPokerBattle from './LegacyPokerBattle';
@@ -17717,56 +17718,46 @@ function App() {
   }, [lives, level]);
 
   const [credits, setCredits] = useState(() => {
-    const saved = parseInt(localStorage.getItem('eclissi_credits') || (typeof INITIAL_PLAYER_CREDITS !== 'undefined' ? INITIAL_PLAYER_CREDITS.toString() : '200'), 10);
-    const maxCredits = typeof INITIAL_PLAYER_CREDITS !== 'undefined' ? INITIAL_PLAYER_CREDITS : 200;
-    if (saved >= maxCredits) return saved;
-
-    const lastTime = parseInt(localStorage.getItem('eclissi_last_credit_time') || Date.now().toString(), 10);
-    const elapsed = Date.now() - lastTime;
-    const recovered = Math.floor(elapsed / 180000); // 1 credito ogni 3 minuti (180.000 ms)
-
-    if (recovered > 0) {
-      const updated = Math.min(maxCredits, saved + recovered);
-      localStorage.setItem('eclissi_last_credit_time', (Date.now() - (elapsed % 180000)).toString());
-      return updated;
-    }
-    return saved;
+    const now=Date.now();
+    const maxCredits=typeof INITIAL_PLAYER_CREDITS!=='undefined'?INITIAL_PLAYER_CREDITS:200;
+    const rawCredits=localStorage.getItem('eclissi_credits');
+    const rawTime=localStorage.getItem('eclissi_last_credit_time');
+    const outcome=recoverOfficialCampaignCredits({
+      credits:rawCredits===null?maxCredits:Number(rawCredits),
+      lastMs:rawTime===null?now:Number(rawTime),nowMs:now,maxCredits
+    });
+    localStorage.setItem('eclissi_last_credit_time',String(outcome.lastMs));
+    return outcome.credits;
   });
   const [creditTimerText, setCreditTimerText] = useState('MAX');
 
-  // Loop di ricarica crediti passiva (+1âš¡ ogni 3 min) e aggiornamento timer HUD
+  // Ricarica crediti 1 ogni 3 minuti. Tutto il calcolo offline e online
+  // usa la stessa funzione, senza saltare tick o generare saldi NaN.
   useEffect(() => {
-    const maxCredits = typeof INITIAL_PLAYER_CREDITS !== 'undefined' ? INITIAL_PLAYER_CREDITS : 200;
-    
-    const interval = setInterval(() => {
-      if (credits >= maxCredits) {
-        setCreditTimerText('MAX');
-        localStorage.setItem('eclissi_last_credit_time', Date.now().toString());
-        return;
-      }
-
-      const lastTime = parseInt(localStorage.getItem('eclissi_last_credit_time') || Date.now().toString(), 10);
-      const elapsed = Date.now() - lastTime;
-      const remainingMs = Math.max(0, 180000 - (elapsed % 180000));
-      const secTotal = Math.ceil(remainingMs / 1000);
-      const m = Math.floor(secTotal / 60);
-      const s = secTotal % 60;
-      setCreditTimerText(`${m}:${s < 10 ? '0' : ''}${s}`);
-
-      if (elapsed >= 180000) {
-        const units = Math.floor(elapsed / 180000);
-        setCredits(prev => {
-          const next = Math.min(maxCredits, prev + units);
-          localStorage.setItem('eclissi_last_credit_time', (Date.now() - (elapsed % 180000)).toString());
-          return next;
-        });
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
+    const maxCredits=typeof INITIAL_PLAYER_CREDITS!=='undefined'?INITIAL_PLAYER_CREDITS:200;
+    const tick=()=>{
+      const now=Date.now();
+      const rawTime=localStorage.getItem('eclissi_last_credit_time');
+      const result=recoverOfficialCampaignCredits({
+        credits,lastMs:rawTime===null?now:Number(rawTime),
+        nowMs:now,maxCredits
+      });
+      if(rawTime===null||Number(rawTime)!==result.lastMs)
+        localStorage.setItem('eclissi_last_credit_time',String(result.lastMs));
+      if(result.recovered>0)
+        setCredits(prev=>prev>=maxCredits?prev:
+          Math.min(maxCredits,prev+result.recovered));
+      if(result.full){setCreditTimerText('MAX');return;}
+      const secTotal=Math.ceil(result.remainingMs/1000);
+      const m=Math.floor(secTotal/60),s=secTotal%60;
+      setCreditTimerText(`${m}:${s<10?'0':''}${s}`);
+    };
+    tick();
+    const interval=setInterval(tick,1000);
+    return ()=>clearInterval(interval);
   }, [credits]);
 
-  
+
   const [dailyBettingDiamondsEarned, setDailyBettingDiamondsEarned] = useState(() => {
     const savedDate = localStorage.getItem('eclissi_betting_diamond_date');
     const todayStr = new Date().toDateString();
