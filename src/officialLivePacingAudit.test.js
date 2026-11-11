@@ -4,7 +4,7 @@
 // Misura il caso limite con 30 secondi a turno e 40 turni massimi.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createTacticalDuel} from './simultaneousDuelEngine.js';
+import {createTacticalDuel,validateTacticalLoadout} from './simultaneousDuelEngine.js';
 import {createOfficialLiveDuel,applyOfficialLiveAction,
  chooseOfficialLiveAiAction,LIVE_TURN_MS,LIVE_MAX_TURNS,
  LIVE_NUMERIC_LIMIT,LIVE_SPECIAL_LIMIT} from './officialLiveDuelEngine.js';
@@ -20,14 +20,14 @@ const ownCards=(b,k)=>[
  ...VITAL_IDS.flatMap(id=>b.vitalBuilds[k][id])
 ];
 function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
- bossShieldMax=null,playerSpecialDeck=null,log=true}={}){
+ bossShieldMax=null,playerSpecialDeck=null,bossSpecialDeck=null,log=true}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA,shipB:boss?.motherShipId??shipB,levelA,levelB,
   nowMs:0,seed,mode:'campaign',shuffleNumericOpening:true,
   specialDeckA:playerSpecialDeck,
   bossPlanetB:boss?.planetId??null,
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
-  specialDeckB:boss?buildTacticalBossDeck(boss.planetId,levelB,levelA):null
+  specialDeckB:boss?(bossSpecialDeck??buildTacticalBossDeck(boss.planetId,levelB,levelA)):null
  }),0);
  // ESPERIMENTO SOLO NEL TEST: nessun valore nel gioco pubblicato cambia.
  // Mantieni firme, quattro vitali, carte e poteri; confronta livelli
@@ -322,6 +322,57 @@ test('Audit Ombre e Idra: starter, assedio e difesa reali del giocatore',()=>{
   sampleSize:rows.length,byBoss,
   note:'IA vs IA, 3 mazzi del giocatore realmente costruibili da 24 carte; 30 secondi per mezzo turno e solo un tetto teorico. Gameplay invariato.',
   rows}));
+});
+
+// PROVA SOLO TEST: varianti contenute dei mazzi reali di Ombre e Idra.
+// Ogni variante sostituisce quattro carte identiche con quattro carte
+// difensive/supporto gia' esistenti, senza cambiare abilita, danni o HP.
+// I tre mazzi usano le STESSE distribuzioni numeriche per confronto.
+test('Confronto boss Ombre e Idra: due varianti di 24 carte senza buff gratuiti',()=>{
+ const bosses=[70,80],ships=['C01','E01','L04'],offsets=[229,463,719,947];
+ const choices={
+  70:[{id:'standard'},{id:'meno-perforanti',remove:'shot-piercing',add:'tactic-impact'},
+      {id:'meno-deviazione',remove:'tactic-power-shift',add:'tactic-reactive'}],
+  80:[{id:'standard'},{id:'cura-invece-potenza',remove:'tactic-power-shift',add:'support-shield-repair'},
+      {id:'difesa-invece-corrosione',remove:'shot-corrosion',add:'tactic-reactive'}]
+ };
+ const rows=[];
+ for(const sector of bosses){
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber:sector});
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:sector,playerLevel:4});
+  const standard=buildTacticalBossDeck(boss.planetId,level,level);
+  for(const choice of choices[sector]){
+   const deck=choice.remove?standard.map(x=>x===choice.remove?choice.add:x):standard;
+   assert.equal(deck.length,24);
+   assert.ok(validateTacticalLoadout(deck),sector+':'+choice.id);
+   if(choice.remove)assert.equal(standard.filter(x=>x===choice.remove).length,4);
+   for(const ship of ships)for(const offset of offsets){
+    const seed=sector+offset;
+    const a=audit({shipA:ship,levelA:level,levelB:level,boss,
+     seed,bossSpecialDeck:deck,log:false});
+    rows.push({sector,boss:boss.name,variant:choice.id,ship,seed,
+     winner:a.winner,halfTurns:a.turns,reason:a.finishReason,
+     discardsBoss:a.actionsBySide.B['numeric-discard']||0,
+     specialsBoss:a.specialTypesBySide.B});
+   }
+  }
+ }
+ assert.equal(rows.length,2*3*3*4);
+ const byBoss=bosses.map(sector=>{
+  const outcomes=choices[sector].map(choice=>{
+   const cases=rows.filter(x=>x.sector===sector&&x.variant===choice.id);
+   const turns=cases.map(x=>x.halfTurns).sort((a,b)=>a-b);
+   return {variant:choice.id,playerWins:cases.filter(x=>x.winner==='A').length,
+    bossWins:cases.filter(x=>x.winner==='B').length,
+    draws:cases.filter(x=>x.winner==='draw').length,
+    minHalfTurns:turns[0],medianHalfTurns:(turns[5]+turns[6])/2,
+    maxHalfTurns:turns[11]};
+  });
+  return {sector,name:rows.find(x=>x.sector===sector).boss,outcomes};
+ });
+ console.log('LIVE_CRITICAL_BOSS_DECK_EXPERIMENT '+JSON.stringify({
+  sampleSize:rows.length,byBoss,
+  note:'Solo fixture di test. I mazzi ufficiali di Ombre e Idra NON vengono cambiati in questo commit. 30s a mezzo turno = massimo teorico.',rows}));
 });
 
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
