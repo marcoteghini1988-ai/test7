@@ -42,6 +42,18 @@ verify(!exists('src/SandboxBattleView.jsx')&&
 verify(source.includes("import LegacyPokerBattle from './LegacyPokerBattle'")&&
  legacyPoker.includes("import './newCombat/legacyPokerBattle.css'"),
  'Il motore Poker precedente resta disponibile solo come compatibilita, senza preview');
+
+verify(!shop.includes("id: 'characters'")&&
+ !loadout.includes("onOpenShopTab('characters')"),
+ 'La scheda Comandanti legacy non deve ricomparire nello Shop');
+for(const orphan of [
+ 'src/TrisBattleView.jsx','src/DoubleStageBattleView.jsx','src/VectorBattleView.jsx',
+ 'src/tactical/TacticalStellarApp.jsx','src/tactical/engine.js',
+ 'src/assets/react.svg','src/assets/vite.svg','src/assets/hero.png'
+]){
+ verify(!exists(orphan),'File obsoleto ancora presente: '+orphan);
+}
+
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
 verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')&&

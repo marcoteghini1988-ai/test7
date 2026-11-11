@@ -12,8 +12,6 @@
     "verify:logic": "node --test src/*.test.js src/newCombat/*.test.js",
     "preflight": "node scripts/check-structure.mjs && node scripts/check-official-3d.mjs",
     "check:structure": "node scripts/check-structure.mjs",
-    "cleanup:shadows": "node scripts/cleanup-legacy-shadows.mjs --apply",
-    "cleanup:r2": "node scripts/cleanup-r2-legacy.mjs --apply",
     "check:official-3d": "node scripts/check-official-3d.mjs"
   },
   "dependencies": {
