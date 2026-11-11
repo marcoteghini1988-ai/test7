@@ -127,13 +127,16 @@ function Slot({kind,index,side,card,onActivate,selected}){
  const slotBadge=kind==='character'?'PERSONAGGIO':isTrap?'DIFESA':'ATT./SUP.';
  const slot=kind==='character'?'character':kind+'-'+index;
  const face=visible?officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]):null;
+ const visual=visible?officialSpecialVisualMeta(card.type):null;
  return <button type="button" className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
    (card?' live-slot--occupied':'')+(card&&!visible?' live-slot--covered':'')+
    (selected?' live-slot--chosen':'')}
   data-live-slot={side+'-'+slot} data-live-drop={side==='A'?slot:undefined}
   data-slot-role={kind==='character'?'personaggio':isTrap?'difesa':'attacco-supporto'}
-  data-family={face?.category}
-  title={face?face.name+' · '+face.effect:label}
+  data-family={visual?.role??face?.category}
+  data-rarity={visual?.rarity??undefined}
+  title={face?face.name+' · '+(visual?.role??face.category)+
+   (visual?.rarity?' · '+visual.rarity:'')+' · '+face.effect:label}
   aria-label={label+(card?' · '+(face?.name??'coperta'):' · vuoto')}
   onClick={onActivate}>
   {visible&&(officialSpecialArtPath(card?.type)||
@@ -144,7 +147,8 @@ function Slot({kind,index,side,card,onActivate,selected}){
       pvpTerrainDefinition(card.type)?.imagePath)} alt="" draggable={false}/>:
     <span>{face?.symbol??(card?'?':symbol)}</span>}
   {!card&&<small className="live-slot-role" aria-hidden="true">{slotBadge}</small>}
-  {face&&<small className="live-slot-caption" aria-hidden="true">{face.symbol} {face.category}</small>}
+  {face&&<small className="live-slot-caption" aria-hidden="true">{visual?.role??face.category}</small>}
+  {face&&visual?.rarity&&<small className="live-slot-tier" aria-hidden="true">{visual.rarity}</small>}
  </button>;
 }
 function LiveSpecialArt({card}){
@@ -353,6 +357,7 @@ export default function OfficialLiveBattle3D({
   player.special.hand.find(card=>card.id===selection.id):null;
  const selectedSpecialFace=selectedSpecial?
   officialSpecialCardIdentity(selectedSpecial.type,TACTICAL_SPECIALS[selectedSpecial.type]):null;
+ const selectedSpecialVisual=selectedSpecial?officialSpecialVisualMeta(selectedSpecial.type):null;
  // E' l'ID DAVVERO equipaggiato e validato dal setup: nessun mazzo finto.
  const numericBackId=player.bossNumericDeck?.id??'neutral_starter';
  const numericBackPath=officialNumericDeckBackPath(numericBackId);
@@ -390,7 +395,7 @@ export default function OfficialLiveBattle3D({
    <div className="space-back metal-arena live-background" aria-hidden="true"
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
    {terrain&&<div key={terrain.id} className="live-terrain-scene" data-terrain={terrain.id}
-    aria-hidden="true" style={{backgroundImage:'url('+ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg)'}}/>}
+    aria-hidden="true" style={{backgroundImage:'url('+terrain.imagePath+')'}}/>}
    <FleetBar keySide="B" side={enemy}/>
    <Fighter side="enemy" snapshot={enemy} anchors={anchors}
     weaponEffect={liveMountedWeaponEffect(visualEvents,'B')} onVital={id=>{
@@ -410,7 +415,7 @@ export default function OfficialLiveBattle3D({
     </span>
     <button className="live-terrain-slot" type="button" disabled={cannotAct}
      data-live-slot="terrain" data-live-drop="terrain" data-terrain={terrain?.id} onClick={()=>useSelected('terrain')}
-     style={terrain?{'--live-terrain-art':'url('+ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg)'}:undefined}
+     style={terrain?{'--live-terrain-art':'url('+terrain.imagePath+')'}:undefined}
      aria-label={'Terreno centrale'+(terrain?' · '+terrain.name:' · neutro')}>
      {terrain?terrain.short:'TERRENO'}
     </button>
@@ -445,7 +450,7 @@ export default function OfficialLiveBattle3D({
      const inspected=selectedSpecial?.id===card.id;
      return <button type="button" key={card.id} disabled={!!result}
       className={'live-hand-special'+(inspected?' live-chosen':'')}
-      data-family={face.category} data-rarity={visual?.rarity??undefined}
+      data-family={visual?.role??face.category} data-rarity={visual?.rarity??undefined}
       title={face.name+' · '+face.category+
        (visual?.rarity?' · '+visual.rarity:'')+' · '+face.effect}
       aria-label={face.name+' · '+face.effect}
@@ -483,7 +488,8 @@ export default function OfficialLiveBattle3D({
    {selectedSpecialFace&&!result&&<div className="live-card-inspector" data-family={selectedSpecialFace.category}
     role="status" aria-live="polite">
     <b><span>{selectedSpecialFace.symbol}</span>{selectedSpecialFace.name}</b>
-    <strong>{selectedSpecialFace.category}</strong>
+    <strong>{selectedSpecialVisual?.role??selectedSpecialFace.category}
+      {selectedSpecialVisual?.rarity?' · '+selectedSpecialVisual.rarity:''}</strong>
     <p>{TACTICAL_SPECIALS[selectedSpecial.type]?.help||selectedSpecialFace.effect}</p>
     {specialPreviewNote&&<small>{specialPreviewNote}</small>}
    </div>}
