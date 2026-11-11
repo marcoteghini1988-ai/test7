@@ -11,9 +11,8 @@ import {createOfficialLiveDuel,applyOfficialLiveAction,advanceOfficialLiveDuel,
  LIVE_NUMERIC_LIMIT,LIVE_SPECIAL_LIMIT} from './officialLiveDuelEngine.js';
 import {officialBattleSetup,officialBattleResult} from './officialBattleSetup.js';
 import {readShipCollection} from './shipCollection.js';
-import {readSpecialCollection,claimFirstWinSpecialPack} from './specialDeckBuilder.js';
-import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
-import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
+import {readSpecialCollection} from './specialDeckBuilder.js';
+import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {readLegacyEpicProgress} from './officialEpicOwnership.js';
 import {readLegacyModuleLevels,TACTICAL_MODULE_CARDS,isModuleCard} from './tacticalEquipmentCards.js';
 import {bossCharacterDefinition,isBossCharacterCard} from './bossCharacterCards.js';
@@ -277,10 +276,20 @@ export default function OfficialLiveBattle3D({
   try{
    const result=officialBattleResult(battle,gameMode,sectorNumber);
    if(result.eligibleForRewards){
-    try{claimFirstWinSpecialPack(gameMode,sectorNumber);}catch{}
-    try{await claimCampaignShipUnlock(gameMode,sectorNumber);}catch{}
-    try{claimBossCharacterFromVictory({winner:result.winner,mode:gameMode,
-     sectorNumber,bossPlanetId,bossSectorLevel});}catch{}
+    try{
+     await claimOfficialLiveVictoryRewards({
+      winner:result.winner,mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel
+     });
+    }catch(error){
+     // Non abbandonare la battaglia dichiarando un premio salvato quando
+     // il dispositivo ha rifiutato una scrittura. Premi gia' registrati
+     // non saranno duplicati: il pulsante consente di riprovare.
+     claimed.current=false;
+     setMessage('Premi non salvati completamente: '+
+      (error?.message||'errore del dispositivo')+
+      '. Controlla lo spazio disponibile e riprova con il pulsante di uscita.');
+     return;
+    }
    }
    if(gameMode!=='pvp')onResult?.(result.winner,result.meta);
    onExit?.();
