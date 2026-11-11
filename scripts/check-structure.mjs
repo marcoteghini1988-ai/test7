@@ -1,7 +1,7 @@
 import {existsSync,readFileSync,readdirSync,statSync} from 'node:fs';
 import path from 'node:path';
 const root=path.resolve(import.meta.dirname,'..');
-const critical=['index.html','package.json','src/main.tsx','src/App.tsx','src/ClassicBattleView.jsx','src/mathCombatEngine.js'];
+const critical=['index.html','package.json','src/main.tsx','src/App.tsx','src/MathDuelBattle.jsx','src/OfficialLiveBattle3D.jsx','src/mathCombatEngine.js'];
 const missing=critical.filter(f=>!existsSync(path.join(root,f)));
 if(missing.length){console.error('Mancano file necessari:',missing.join(', '));process.exit(1);}
 const refs=[];
