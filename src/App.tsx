@@ -189,7 +189,6 @@ const getSectorScannerMode = (globalSector = 1, gameMode = 'adventure', bettingT
 const GOLDEN_CARD_UNLOCK_SECTOR = 6;          // Sblocco Carta Dorata al Settore 6 (Terra S6)
 const BOMB_UNLOCK_ADVENTURE_SECTOR = 7;       // Sblocco Nucleo Instabile al Settore 7 (Terra S7)
 const TERRAIN_CARDS_UNLOCK_SECTOR = 8;        // Sblocco Banco Terreno a 4 Slot al Settore 8 (Terra S8)
-const MAX_TERRAIN_SLOTS = 4;                  // 4 slot coperti orizzontali in plancia
 
 const TIME_TANK_MAX_CAP = 30;                 // Riserva tempo accumulabile (+30s max)
 const INITIAL_PLAYER_CREDITS = 200;           // Dotazione iniziale per i primi settori
@@ -234,12 +233,6 @@ const PILOT_LEVEL_GATING = Object.freeze({
     9: 95   // Fascia 3 (Apoteosi Finale)
   }),
 
-  // Requisiti minimi di Livello Pilota per il potenziamento delle Carte Terreno (1â€“3)
-  TERRAIN_PILOT_REQS: Object.freeze({
-    1: 1,   // Fascia 1: Effetto salvavita base mono-uso
-    2: 31,  // Fascia 2: Abilitazione riarmo tramite Etere Cosmico
-    3: 66   // Fascia 3: Forma Suprema con scudi, cure o danni puri extra
-  })
 });
 
 // Helper unificato: Requisito Livello Pilota per Mazzo / Modulo AbilitÃ 
@@ -272,12 +265,6 @@ const UNIFIED_UPGRADE_COSTS = Object.freeze({
   7: { dust: 7500, voidCrystals: 8, primordialMatter: 2 },
   8: { dust: 10500, voidCrystals: 10, primordialMatter: 3 },
   9: { dust: 15000, voidCrystals: 12, primordialMatter: 5 }
-});
-
-// Costi Carte Terreno (Liv. 1 Base / Liv. 2 Riarmo Etere / Liv. 3 Suprema)
-const TERRAIN_UPGRADE_COSTS = Object.freeze({
-  2: { dust: 500, voidCrystals: 2, primordialMatter: 0 },
-  3: { dust: 1400, voidCrystals: 4, primordialMatter: 2 }
 });
 
 // ============================================================================
@@ -5908,7 +5895,7 @@ function SpotlightHomeTour({ onComplete }) {
       targetId: 'tour-target-left',
       title: "2. Ala Sinistra: Bazar Galattico",
       subtitle: "SHOP DEI COLLEZIONABILI",
-      desc: "Accesso rapido al Bazar galattico: recluta Piloti, sblocca Mazzi, equipaggia Moduli, acquista Trappole Terreno e cambia Sfondi 3D.\n(Per convertire i Diamanti in risorse, tocca direttamente il contatore dei Diamanti in alto a destra).",
+      desc: "Accesso rapido al Bazar galattico: consulta le Navi, scegli i Mazzi, sblocca le Carte Modulo e gestisci le Risorse.\n(Per convertire i Diamanti in risorse, tocca direttamente il contatore dei Diamanti in alto a destra).",
       icon: "shop_cart",
       color: "#00f2fe"
     },
@@ -18181,53 +18168,6 @@ function App() {
   // =========================================================================
   // GESTORE POTENZIAMENTO MAZZI (3, 6 E 9 LIVELLI CON GATING PILOTA)
   // =========================================================================
-    // GESTIONE SBLOCCO & UPGRADE PILOTI TATTICI
-    const handleUnlockPilot = useCallback((pilotId, cost) => {
-    const diaCost = cost.diamonds ?? cost.dia ?? 0;
-    const voidCost = cost.voidCrystals ?? cost.voidC ?? 0;
-    const primCost = cost.primordialMatter ?? cost.prim ?? 0;
-
-    if (stardust < (cost.dust || 0) || diamonds < diaCost || voidCrystals < voidCost || primordialMatter < primCost) {
-      triggerPopup("Risorse insufficienti per reclutare questo pilota!");
-      return;
-    }
-    try { playSound('ability'); } catch (_) {}
-    if (cost.dust > 0) setStardust(s => s - cost.dust);
-    if (diaCost > 0) setDiamonds(d => d - diaCost);
-    if (voidCost > 0) setVoidCrystals(v => v - voidCost);
-    if (primCost > 0) setPrimordialMatter(p => p - primCost);
-
-    setPilotInventory(prev => ({
-      ...prev,
-      [pilotId]: { level: 1, unlocked: true }
-    }));
-    triggerPopup("Nuovo Pilota Tattico reclutato nell'Hangar!");
-  }, [stardust, diamonds, voidCrystals, primordialMatter, triggerPopup]);
-
-
-    const handleUpgradePilot = useCallback((pilotId, targetLevel, cost) => {
-    const diaCost = cost.dia ?? cost.diamonds ?? 0;
-    const voidCost = cost.voidC ?? cost.voidCrystals ?? 0;
-    const primCost = cost.prim ?? cost.primordialMatter ?? 0;
-
-    if (stardust < (cost.dust || 0) || diamonds < diaCost || voidCrystals < voidCost || primordialMatter < primCost) {
-      triggerPopup("Risorse insufficienti per il potenziamento di grado!");
-      return;
-    }
-    try { playSound('epic_item_trigger'); } catch (_) {}
-    if (cost.dust > 0) setStardust(s => s - cost.dust);
-    if (diaCost > 0) setDiamonds(d => d - diaCost);
-    if (voidCost > 0) setVoidCrystals(v => v - voidCost);
-    if (primCost > 0) setPrimordialMatter(p => p - primCost);
-
-    setPilotInventory(prev => ({
-      ...prev,
-      [pilotId]: { ...(prev[pilotId] || { unlocked: true }), level: targetLevel }
-    }));
-    triggerPopup(`Pilota potenziato al Grado ${targetLevel}/5!`);
-  }, [stardust, diamonds, voidCrystals, primordialMatter, triggerPopup]);
-
-
     // (handleEquipEntireSet rimosso: non referenziato)
 
 
@@ -21212,7 +21152,7 @@ function App() {
         />
       )}
 
-                                    {/* MODALE BAZAR GALATTICO UNIFICATO (6 TABS) */}
+                                    {/* MODALE BAZAR GALATTICO UNIFICATO (4 TABS) */}
       {showUnifiedShop && (
         <ShopModal
           onUpgradeShip={async (instanceId, targetLevel, shownCost) => {
@@ -21238,13 +21178,8 @@ function App() {
             }
           }}
           initialTab={unifiedShopDefaultTab}
-          selectedPilot={selectedPilot}
 
 
-          pilotInventory={pilotInventory}
-          onSelectPilot={(id) => setSelectedPilot(id)}
-          onUnlockPilot={handleUnlockPilot}
-          onUpgradePilot={handleUpgradePilot}
           selectedDeck={selectedDeck}
           deckInventory={deckInventory}
           allDecks={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
