@@ -1,5 +1,5 @@
 // Guardrail tecnico: un solo gioco 3D ufficiale. Non genera UI o file di prova.
-import {existsSync,readFileSync} from 'node:fs';
+import {existsSync,readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {PHASE1_CATALOG} from '../src/phase1FleetCatalog.js';
 
@@ -129,6 +129,19 @@ verify(exists('src/OfficialBattle3D.css')&&arena.includes('officialBattleSetup')
  'La plancia deve usare il motore simultaneo reale e gli asset ufficiali');
 verify(exists('public/assets/mathduel/arena_titanio_9x16.webp'),
  'Manca il render originale 9:16');
+
+// Niente PNG duplicati alla radice: la plancia usa esclusivamente le prospettive
+// canoniche e la Home usa i propri sprite nella cartella mathfleet.
+const rootAssetPngs=readdirSync(resolve(root,'public/assets')).filter(name=>/\.png$/i.test(name));
+verify(rootAssetPngs.length===0,
+ 'Immagini duplicate alla radice degli asset: '+rootAssetPngs.join(', '));
+for(const file of [
+ 'public/assets/mathfleet/N00_player.png',
+ 'public/assets/mathfleet/C04_player.png',
+ 'public/assets/mathfleet/motor_plus_intact.png',
+ 'public/assets/deck-backs/neutral_starter.png',
+ 'public/assets/deck-backs/special_fixed.png'
+])verify(exists(file),'Asset in uso mancante: '+file);
 
 const catalog=PHASE1_CATALOG.ships;
 verify(catalog.length===17,'Il catalogo ufficiale deve contenere 17 navi');
