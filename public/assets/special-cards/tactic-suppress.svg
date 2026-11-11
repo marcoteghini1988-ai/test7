@@ -10,7 +10,7 @@
  <g><circle cx="256" cy="352" r="121" fill="url(#metal)" stroke="#ff8686" stroke-width="11" filter="url(#glow)"/><circle cx="256" cy="352" r="58" fill="none" stroke="#ff8686" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/><path d="M256 181V299M256 405V523M86 352H204M308 352H426" fill="none" stroke="#ff8686" stroke-width="15" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/></g>
  <path d="M35 566L100 596H412L477 566L477 697L412 729H100L35 697Z" fill="#06101fec" stroke="#ff8686" stroke-opacity=".75" stroke-width="2"/>
  <text x="256" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="22" fill="#cee9f8" letter-spacing="4">ECLISSI STELLARE</text>
- <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="23" fill="#ffffff" letter-spacing="1">SOPPRESSIONE SCORTA</text>
- <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#ff8686" letter-spacing="5">OFFENSE</text>
+ <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="20" fill="#ffffff" letter-spacing="1">SOPPRESSIONE</text>
+ <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#ff8686" letter-spacing="5">ATTACCO</text>
  <text x="256" y="717" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#9db7c9" letter-spacing="2">TATTICA  •  20</text>
  </svg>

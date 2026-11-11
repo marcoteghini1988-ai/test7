@@ -10,7 +10,7 @@
  <g><path d="M256 205L365 249L355 387Q336 463 256 511Q176 463 157 387L147 249Z" fill="url(#metal)" stroke="#63e5ff" stroke-width="11" filter="url(#glow)"/><path d="M256 232L330 267L321 377Q309 424 256 464Q203 424 191 377L182 267Z" fill="url(#core)" stroke="#63e5ff" stroke-width="5"/><path d="M187 330L326 330 M256 245L256 468" stroke="#ffffff" stroke-width="3" opacity=".6"/></g>
  <path d="M35 566L100 596H412L477 566L477 697L412 729H100L35 697Z" fill="#06101fec" stroke="#63e5ff" stroke-opacity=".75" stroke-width="2"/>
  <text x="256" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="22" fill="#cee9f8" letter-spacing="4">ECLISSI STELLARE</text>
- <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="23" fill="#ffffff" letter-spacing="1">FUSIONE BARRIERA</text>
- <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#63e5ff" letter-spacing="5">FUSION</text>
+ <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="20" fill="#ffffff" letter-spacing="1">BARRIERA</text>
+ <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#63e5ff" letter-spacing="5">FUSIONE</text>
  <text x="256" y="717" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#9db7c9" letter-spacing="2">TATTICA  •  01</text>
  </svg>

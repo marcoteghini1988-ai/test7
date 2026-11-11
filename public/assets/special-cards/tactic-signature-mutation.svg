@@ -10,7 +10,7 @@
  <g><path d="M156 260L256 206L354 270L324 387L217 470L142 386Z" fill="url(#metal)" stroke="#e29bff" stroke-width="11" filter="url(#glow)"/><path d="M175 357Q251 253 338 350Q257 447 175 357Z" fill="url(#core)" stroke="#fff" stroke-width="7"/><circle cx="258" cy="348" r="38" fill="url(#metal)" stroke="#e29bff" stroke-width="11" filter="url(#glow)"/></g>
  <path d="M35 566L100 596H412L477 566L477 697L412 729H100L35 697Z" fill="#06101fec" stroke="#e29bff" stroke-opacity=".75" stroke-width="2"/>
  <text x="256" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="22" fill="#cee9f8" letter-spacing="4">ECLISSI STELLARE</text>
- <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="19" fill="#ffffff" letter-spacing="1">MUTAZIONE DELLA FIRMA</text>
- <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#e29bff" letter-spacing="5">MUTATION</text>
+ <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="20" fill="#ffffff" letter-spacing="1">MUTA FIRMA</text>
+ <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#e29bff" letter-spacing="5">MUTAZIONE</text>
  <text x="256" y="717" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#9db7c9" letter-spacing="2">TATTICA  •  17</text>
  </svg>

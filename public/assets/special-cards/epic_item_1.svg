@@ -10,7 +10,7 @@
  <g><circle cx="256" cy="348" r="138" fill="none" stroke="#6ee4d6" stroke-width="9" filter="url(#glow)"/><circle cx="256" cy="355" r="99" fill="none" stroke="#6ee4d6" stroke-width="32" transform="rotate(35 256 355)"/><path d="M159 357Q255 207 352 356Q256 504 159 357" fill="none" stroke="#fff" stroke-width="10"/></g>
  <path d="M35 566L100 596H412L477 566L477 697L412 729H100L35 697Z" fill="#06101fec" stroke="#6ee4d6" stroke-opacity=".75" stroke-width="2"/>
  <text x="256" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="22" fill="#cee9f8" letter-spacing="4">ECLISSI STELLARE</text>
- <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="17" fill="#ffffff" letter-spacing="1">FUSIONE BARRIERA</text>
+ <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="20" fill="#ffffff" letter-spacing="1">MÖBIUS</text>
  <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#6ee4d6" letter-spacing="5">OGGETTO EPICO</text>
  <text x="256" y="717" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#9db7c9" letter-spacing="2">TATTICA  •  01</text>
  </svg>

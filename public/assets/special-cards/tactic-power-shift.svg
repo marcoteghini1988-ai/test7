@@ -10,7 +10,7 @@
  <g><path d="M300 190L161 377L243 377L200 526L385 314L291 314Z" fill="url(#metal)" stroke="#ffc77a" stroke-width="11" filter="url(#glow)"/><path d="M300 190L243 377M243 377L385 314" stroke="#fff" stroke-width="9" opacity=".8"/></g>
  <path d="M35 566L100 596H412L477 566L477 697L412 729H100L35 697Z" fill="#06101fec" stroke="#ffc77a" stroke-opacity=".75" stroke-width="2"/>
  <text x="256" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="22" fill="#cee9f8" letter-spacing="4">ECLISSI STELLARE</text>
- <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="23" fill="#ffffff" letter-spacing="1">DEVIAZIONE ENERGIA</text>
- <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#ffc77a" letter-spacing="5">OFFENSE</text>
+ <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="20" fill="#ffffff" letter-spacing="1">DEVIAZIONE</text>
+ <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#ffc77a" letter-spacing="5">ATTACCO</text>
  <text x="256" y="717" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#9db7c9" letter-spacing="2">TATTICA  •  18</text>
  </svg>

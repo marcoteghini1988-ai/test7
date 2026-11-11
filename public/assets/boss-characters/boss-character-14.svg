@@ -16,7 +16,7 @@
  <circle cx="256" cy="462" r="35" fill="url(#core)" stroke="#ffc27e" stroke-width="7"/></g>
  <path d="M35 566L100 596H412L477 566L477 697L412 729H100L35 697Z" fill="#06101fec" stroke="#ffc27e" stroke-opacity=".75" stroke-width="2"/>
  <text x="256" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="22" fill="#cee9f8" letter-spacing="4">ECLISSI STELLARE</text>
- <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="20" fill="#ffffff" letter-spacing="1">FUSIONE BARRIERA</text>
+ <text x="256" y="619" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="20" fill="#ffffff" letter-spacing="1">GENERATORE DEL CAOS</text>
  <text x="256" y="666" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#ffc27e" letter-spacing="5">PERSONAGGIO BOSS</text>
  <text x="256" y="717" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" fill="#9db7c9" letter-spacing="2">TATTICA  •  09</text>
  </svg>
