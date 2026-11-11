@@ -130,8 +130,7 @@ export default function HomeScreen({
   onOpenPvP = () => {},
   trophies = 0,
   dailyBountiesState = null,
-  triggerPopup = null,
-  onOpenDebug = () => {}
+  triggerPopup = null
 }) {
   const [carouselSlide, setCarouselSlide] = useState(0);
   const [localHint, setLocalHint] = useState(null);
@@ -599,17 +598,6 @@ export default function HomeScreen({
             <span style={{ fontSize: '0.5rem', color: '#cbd5e1', fontWeight: 'normal' }}>Contratti</span>
           </button>
 
-          {/* 7. TEST (Debug) */}
-          <button
-            onClick={() => { try { playSound('click'); } catch (_) {} onOpenDebug(); }}
-            className="cyber-btn home-dock-action home-dock-debug"
-            style={{ borderColor: '#ef4444', color: '#fca5a5', background: 'rgba(239, 68, 68, 0.15)' }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-              <SciFiIcon name="tactical_slot" size={13} color="#fca5a5" /> TEST
-            </span>
-            <span style={{ fontSize: '0.5rem', color: '#f87171', fontWeight: 'normal' }}>Debug</span>
-          </button>
 
         </div>
       </div>
