@@ -149,10 +149,6 @@
   --home-action-glow: #e879f9;
 }
 
-.eclissi-home .home-dock-debug {
-  min-width: 75px;
-}
-
 .eclissi-home .home-dock-action::before {
   content: '';
   position: absolute;
