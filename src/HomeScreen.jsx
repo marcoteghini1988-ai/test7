@@ -4,6 +4,7 @@ import { PILOTS_DATABASE } from './pilotsSystem';
 import { playSound } from './audio';
 import { SUIT_SIGNS } from './mathDuelEngine.js';
 import { ASSET_ROOT } from './ShipPresentation';
+import {officialNumericDeckBackPath,officialNumericDeckBackName,OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import './HomeScreen.css';
 
 const homePng = (path) => `url("${ASSET_ROOT}/${path}.png")`;
@@ -233,7 +234,7 @@ export default function HomeScreen({
   const pilotColor = curPilot.rarityColor || curPilot.color || '#10b981';
 
   return (
-    <div className="eclissi-home" style={{ '--home-card-art': cardArt, '--home-pedestal-art': pedestalArt, flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, gap: 'clamp(4px, 1vmin, 10px)', position: 'relative', zIndex: 5, width: '100%', boxSizing: 'border-box' }}>
+    <div className="eclissi-home" style={{ '--home-card-art':`url("${officialNumericDeckBackPath(selectedDeck)}")`, '--home-pedestal-art': pedestalArt, flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0, gap: 'clamp(4px, 1vmin, 10px)', position: 'relative', zIndex: 5, width: '100%', boxSizing: 'border-box' }}>
       
       {localHint && (
         <div className="cyber-panel" style={{ position: 'absolute', top: '6px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(2, 6, 23, 0.95)', border: '1.5px solid #00f2fe', padding: '4px 12px', borderRadius: '6px', zIndex: 40, fontSize: 'clamp(0.65rem, 1.6vmin, 0.78rem)', color: '#fff', fontWeight: 900, whiteSpace: 'nowrap', boxShadow: '0 0 16px rgba(0, 242, 254, 0.5)' }}>
@@ -394,15 +395,13 @@ export default function HomeScreen({
               
               {/* 1. Mazzo Tattico */}
               {carouselSlide === 0 && (
-                <div className="home-deck-preview">
-                  <TacticalVisual
-                    id={selectedDeck}
-                    type="card_back"
-                    color={currentDeckObj?.color || '#38bdf8'}
-                    glowColor={currentDeckObj?.glow || 'rgba(56, 189, 248, 0.6)'}
-                    width={78}
-                    height={116}
-                  />
+                <div className="home-deck-preview" data-equipped-deck={selectedDeck}
+                  style={{'--home-numeric-back':`url("${officialNumericDeckBackPath(selectedDeck)}")`}}
+                  title={'Mazzo numerico equipaggiato: '+officialNumericDeckBackName(selectedDeck)}>
+                  <img className="home-deck-hd"
+                    src={officialNumericDeckBackPath(selectedDeck)}
+                    alt={'Dorso del '+officialNumericDeckBackName(selectedDeck)}
+                    width={78} height={116} draggable={false}/>
                 </div>
               )}
 
@@ -733,7 +732,7 @@ export default function HomeScreen({
           <button
             onClick={() => { try { playSound('click'); } catch (_) {} onOpenShop(); }}
             className="cyber-btn home-dock-action home-dock-cards"
-            style={{ '--home-action-art': homePng('cards/es_common_medium_01_card'), '--home-action-glow': '#38bdf8', borderColor: '#38bdf8' }}
+            style={{ '--home-action-art':`url("${OFFICIAL_SPECIAL_FIXED_BACK}")`, '--home-action-glow': '#38bdf8', borderColor: '#38bdf8' }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#38bdf8' }}>
               <SciFiIcon name="shop_cart" size={13} color="#38bdf8" /> Shop
