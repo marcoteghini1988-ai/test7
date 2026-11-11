@@ -51,7 +51,7 @@ export const SPECIAL_CARD_CATALOG=Object.freeze({
   description:'Trasforma una tua numerica esistente per due cicli. Bonus per seme soltanto con una formula valida; nessuna valuta assegnata.'}),
  [VULNERABILITY_RIFT_CARD_ID]:Object.freeze({type:VULNERABILITY_RIFT_CARD_ID,
    name:'Faglia di Vulnerabilità',short:'FAGLIA',family:'rift',maxCopies:1,
-   description:'Una formula valida colpisce un vitale anche con barriera attiva; danno massimo '+VULNERABILITY_RIFT_PROTECTED_DAMAGE_CAP+' HP se protetto. Una volta per battaglia. Non rivela la firma e non evita le Contromisure.'}),
+   description:'Duello LIVE: una combinazione numerica valida distrugge direttamente un vitale anche con barriera attiva. Modalità storica: danno massimo '+VULNERABILITY_RIFT_PROTECTED_DAMAGE_CAP+' HP sul vitale protetto. Una volta per battaglia; non rivela la firma e non supera le Contromisure.'}),
  [SIGNATURE_MUTATION_CARD_ID]:Object.freeze({type:SIGNATURE_MUTATION_CARD_ID,
    name:'Mutazione della Firma',short:'MUTA FIRMA',family:'mutation',
    description:'Cambia per un ciclo la formula di un proprio sistema vitale già esposto. La vecchia combinazione nemica non è più valida; non modifica gli HP.'}),
