@@ -61,6 +61,10 @@ test('Schermata LIVE e Home mostrano l equipaggiamento senza inventare slot',()=
  assert.match(live,/officialNumericDeckBackPath\(numericBackId\)/);
  assert.match(live,/OFFICIAL_SPECIAL_FIXED_BACK/);
  assert.match(live,/data-special-back="fixed"/);
+ assert.match(live,/--live-special-back/);
+ assert.match(css,/\.live-slot--covered\{/);
+ assert.match(css,/background-image:var\(--live-special-back\)/,
+  'le carte speciali nascoste devono condividere il dorso unico');
  for(const [kind,tag] of [['character','personaggio'],['difesa','difesa'],['attacco','attacco-supporto']]){
   assert.ok(live.includes(tag),kind);
   assert.ok(css.includes('data-slot-role="'+tag+'"'),kind);
