@@ -63,7 +63,7 @@ function WeaponMount({side,vessel,weapon,registerGunRef,index,effect,muzzleIndex
  const accumulating=weapon.tipo==='Accumulo',charge=accumulating?Math.min(1,(event?.charge??weapon.charge??0)/weapon.soglia_munizioni):0;
  const color=WEAPON_COLORS[weapon.seme_trigger]||'#e8ffff';
  const armor=shipEvolution(vessel.id,vessel.level)&&vessel.level>=3?vessel.level===5?2:1:0;
- return <span className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}${rounds.length?' firing':''}${event?.charging?' charge-received':''}`} data-weapon={weapon.id} data-muzzle-index={muzzleIndex} data-charge={Math.round(charge*100)} data-armor={armor||undefined}
+ return <span key={event?.animationKey} className={`weapon-mount integrated-mount mount-${mount.profile}${accumulating?' charging':''}${rounds.length?' firing':''}${event?.charging?' charge-received':''}`} data-weapon={weapon.id} data-muzzle-index={muzzleIndex} data-charge={Math.round(charge*100)} data-armor={armor||undefined}
   style={{left:`${mount.point[0]*100}%`,top:`${mount.point[1]*100}%`,width:`${mount.width*(1+armor*.12)*100}%`,height:`${mount.length*(1+armor*.08)*100}%`,'--gun':color,
    ...(rounds.length?{'--recoil-delay':`${rounds[0].launchMs}ms`,'--recoil-duration':`${Math.max(24,(rounds.at(-1).launchMs-rounds[0].launchMs)/Math.max(1,rounds.length-1))}ms`,'--recoil-count':rounds.length}:{})}}
   title={`${weapon.nome}: ${WEAPON_SIGNS[weapon.seme_trigger]||'◎'} · ${weapon.tipo} · ${weapon.damage} danni/proiettile${accumulating?` · Carica ${event?.charge??weapon.charge??0}/${weapon.soglia_munizioni}`:''}${weapon.combo?` · ${comboLabel(weapon)}`:''}`}>

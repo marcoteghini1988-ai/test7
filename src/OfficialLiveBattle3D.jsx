@@ -1,6 +1,7 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {ASSET_ROOT,CARD_SUIT_COLORS,MountedWeapons} from './ShipPresentation.jsx';
 import {newVessel,rankLabel} from './mathDuelEngine.js';
+import {boardPoint} from './mathFleetGeometry.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
 import {VITAL_IDS,VITAL_LABELS,remainingExposureSlots} from './vitalDefense.js';
 import {visibleTacticalSignature} from './tacticalIntelVisibility.js';
@@ -23,15 +24,14 @@ import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {MALUS_CHOICES} from './tacticalLegacyEvents.js';
 import OfficialLiveCombatFx from './OfficialLiveCombatFx.jsx';
+import {LIVE_AMMO_FEED_MS,LIVE_FX_SPRITES,LIVE_VITAL_BLAST_MS,liveCombatCues,
+ liveMountedWeaponEffect} from './officialLiveCombatVisuals.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 import './OfficialLiveBattle3D.css';
 
 const TARGETED_SPECIALS=new Set(['tactic-bomb','tactic-golden','tactic-malus',
  'tactic-signature-mutation','tactic-numeric-recycle','tactic-counter']);
-const COMBAT_CUES=new Set(['shot','vital_destroyed','vital_hit','weapon_charge',
- 'special','terrain','character','trap','trap_placed']);
-const COMBAT_CUE_MS=2400;
 const pct=(a,b)=>b>0?Math.max(0,Math.min(100,Math.round(a/b*100))):0;
 const other=k=>k==='A'?'B':'A';
 function startSession(options){
@@ -44,13 +44,16 @@ function startSession(options){
   return {battle:createOfficialLiveDuel(setup.battle,Date.now()),bossEncounter:setup.bossEncounter,error:''};
  }catch(e){return {battle:null,bossEncounter:null,error:e?.message||'Duello non disponibile'};}
 }
-function Fighter({side,snapshot,onVital,onShip,anchors}){
+function Fighter({side,snapshot,onVital,onShip,anchors,weaponEffect}){
  const player=side==='player';
  const key=player?'A':'B';
  const anchorSide=()=>anchors?.current?.[key];
  const vessel=useMemo(()=>newVessel(snapshot.shipId,snapshot.level),[snapshot.shipId,snapshot.level]);
  const active=snapshot.escorts.filter(e=>e.hp>0);
- const visual={...vessel,defense:snapshot.defense};
+ const visual={...vessel,defense:snapshot.defense,weapons:vessel.weapons.map(weapon=>{
+  const stored=snapshot.liveWeaponCharges?.[weapon.id]?.values;
+  return stored?{...weapon,charge:stored.reduce((sum,value)=>sum+value,0)}:weapon;
+ })};
  return <div className={'live-fighter live-fighter--'+side} data-live-drop={player?'ship':''}
   onClick={player?e=>onShip?.(e.target.closest('[data-live-drop]')?.dataset.liveDrop??'ship'):undefined}
   role={player?'button':undefined}
@@ -68,13 +71,15 @@ function Fighter({side,snapshot,onVital,onShip,anchors}){
     hullRef={node=>{const refs=anchorSide();if(refs)refs.hull=node;}}
     registerVitalRef={(id,node)=>{const refs=anchorSide()?.vitals;if(!refs)return;
      if(node)refs[id]=node;else delete refs[id];}}/>
-   <MountedWeapons side={side} vessel={visual} index={0} effect={null}
+   <MountedWeapons side={side} vessel={visual} index={0} effect={weaponEffect}
     registerGunRef={(_,__,id,node)=>{const refs=anchorSide()?.guns;if(!refs)return;
      if(node)refs[id]=node;else delete refs[id];}}/>
   </div>
   {snapshot.escorts.map((escort,i)=><div key={escort.id}
    className={'live-escort live-escort--'+i+(escort.hp===0?' live-escort--lost':'')}
    data-live-drop={player?'escort-'+i:undefined}
+   ref={node=>{const refs=anchorSide()?.escortBodies;if(!refs)return;
+    if(node)refs[i]=node;else delete refs[i];}}
    aria-label={'Scudiera '+(i+1)+' · '+escort.hp+' HP'}>
    <i className={'live-escort-muzzle live-escort-muzzle--'+side}
     ref={node=>{const refs=anchorSide()?.escorts;if(!refs)return;
@@ -157,9 +162,10 @@ export default function OfficialLiveBattle3D({
  const [message,setMessage]=useState(''),[details,setDetails]=useState(false);
  const [busy,setBusy]=useState(false);
  const rootRef=useRef(null);
+ const numericCards=useRef(new Map()),numericOrigins=useRef(new Map());
  const anchors=useRef({
-  A:{hull:null,guns:{},vitals:{},escorts:{}},
-  B:{hull:null,guns:{},vitals:{},escorts:{}}
+  A:{hull:null,guns:{},vitals:{},escorts:{},escortBodies:{}},
+  B:{hull:null,guns:{},vitals:{},escorts:{},escortBodies:{}}
  });
  const claimed=useRef(false);
  const [scale,setScale]=useState(1);
@@ -174,6 +180,9 @@ export default function OfficialLiveBattle3D({
   const resize=()=>setScale(Math.max(.3,Math.min(innerWidth/450,innerHeight/800)));
   resize();window.addEventListener('resize',resize);
   return ()=>window.removeEventListener('resize',resize);
+ },[]);
+ useEffect(()=>{
+  for(const sprite of LIVE_FX_SPRITES)new Image().src=ASSET_ROOT+'/battle-fx/'+sprite+'.png';
  },[]);
  useEffect(()=>{
   const t=setInterval(()=>{
@@ -196,6 +205,7 @@ export default function OfficialLiveBattle3D({
  },[]);
  function restart(){
   const next=startSession(options);
+  numericOrigins.current.clear();
   claimed.current=false;setSession(next);setBattle(next.battle);
   setSelection(null);setVital(null);setSpecialChoice(null);setRecycleChoice([]);setMessage('');setDetails(false);
  }
@@ -203,6 +213,18 @@ export default function OfficialLiveBattle3D({
   if(!battle)return;
   const result=applyOfficialLiveAction(battle,'A',intent,Date.now());
   if(!result.ok){setMessage('Azione non valida: '+result.reason.replaceAll('_',' '));return false;}
+  if((intent.type==='numeric'&&intent.target==='ship')||intent.type==='numeric-discard'){
+   const card=battle.sides.A.numeric.hand[intent.index];
+   const node=numericCards.current.get(card?.id);
+   const index=result.battle.history.findLastIndex(event=>event.card?.id===card?.id&&
+    ['shot','weapon_charge','numeric_discard'].includes(event.kind));
+   if(node&&rootRef.current&&index>=battle.history.length){
+    const origin=boardPoint(rootRef.current.getBoundingClientRect(),node.getBoundingClientRect());
+    numericOrigins.current.set(index,origin);
+    if(numericOrigins.current.size>16)
+     numericOrigins.current.delete(numericOrigins.current.keys().next().value);
+   }
+  }
   setBattle(result.battle);setMessage('');
   setSelection(null);
   return true;
@@ -308,8 +330,7 @@ export default function OfficialLiveBattle3D({
  const canExpose=remainingExposureSlots(enemy.defense)>0;
  const cannotAct=!myTurn||battle.phase==='finished';
  const last=battle.history.at(-1);
- const visualEvents=battle.history.flatMap((event,index)=>
-  COMBAT_CUES.has(event.kind)&&now-event.atMs<COMBAT_CUE_MS?[{event,index}]:[]);
+ const visualEvents=liveCombatCues(battle.history,now);
  const choiceCard=specialChoice?.type==='boss-recycle'?{type:'boss-recycle'}:
   specialChoice?player.special.hand.find(c=>c.id===specialChoice.cardId):null;
  const epicChoiceReady=myTurn&&['epic_item_1','epic_item_3'].includes(player.epic?.active?.id)&&
@@ -326,7 +347,7 @@ export default function OfficialLiveBattle3D({
   officialSpecialCardIdentity(selectedSpecial.type,TACTICAL_SPECIALS[selectedSpecial.type]):null;
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  const finalImpactVisible=result&&visualEvents.some(({event})=>
-  event.kind==='vital_destroyed'&&now-event.atMs<1050);
+  event.kind==='vital_destroyed'&&now-event.atMs<LIVE_VITAL_BLAST_MS+50);
  const specialPreviewNote=selectedSpecial&&!supportedLiveSpecial(selectedSpecial.type)?
   'Questa carta non è ancora giocabile nel duello LIVE.':!myTurn?
   'Puoi giocarla al tuo turno.':battle.actionUsed.special>=LIVE_SPECIAL_LIMIT?
@@ -351,13 +372,14 @@ export default function OfficialLiveBattle3D({
      action({type:'numeric',index,target:'vital',vitalId:vital});
     else if(kind==='special')playSpecialAt(index,slot);
    }}
-   style={{transform:'translate(-50%,-50%) scale('+scale+')'}}>
+   style={{transform:'translate(-50%,-50%) scale('+scale+')','--live-feed-delay':LIVE_AMMO_FEED_MS+'ms'}}>
    <div className="space-back metal-arena live-background" aria-hidden="true"
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
-   {terrain&&<div className="live-terrain-scene" data-terrain={terrain.id}
-    style={{backgroundImage:'url('+ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg)'}}/>}
+   {terrain&&<div key={terrain.id} className="live-terrain-scene" data-terrain={terrain.id}
+    aria-hidden="true" style={{backgroundImage:'url('+ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg)'}}/>}
    <FleetBar keySide="B" side={enemy}/>
-   <Fighter side="enemy" snapshot={enemy} anchors={anchors} onVital={id=>{
+   <Fighter side="enemy" snapshot={enemy} anchors={anchors}
+    weaponEffect={liveMountedWeaponEffect(visualEvents,'B')} onVital={id=>{
     if(!myTurn)return;
     setVital(id);
     const part=enemy.defense.parts[id];
@@ -373,7 +395,8 @@ export default function OfficialLiveBattle3D({
      {battle.phase==='finished'?'FINE PARTITA':battle.activeSide==='A'?'TUO TURNO':'TURNO AVVERSARIO'} · {seconds}s
     </span>
     <button className="live-terrain-slot" type="button" disabled={cannotAct}
-     data-live-slot="terrain" data-live-drop="terrain" onClick={()=>useSelected('terrain')}
+     data-live-slot="terrain" data-live-drop="terrain" data-terrain={terrain?.id} onClick={()=>useSelected('terrain')}
+     style={terrain?{'--live-terrain-art':'url('+ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg)'}:undefined}
      aria-label={'Terreno centrale'+(terrain?' · '+terrain.name:' · neutro')}>
      {terrain?terrain.short:'TERRENO'}
     </button>
@@ -386,7 +409,8 @@ export default function OfficialLiveBattle3D({
     {battle.zones.A.open.map((c,i)=><Slot key={i} side="A" kind="open" index={i}
      card={c} onActivate={()=>useSelected('open-'+i)}/>)}
    </div>
-   <Fighter side="player" snapshot={player} anchors={anchors} onShip={useSelected}/>
+   <Fighter side="player" snapshot={player} anchors={anchors} onShip={useSelected}
+    weaponEffect={liveMountedWeaponEffect(visualEvents,'A')}/>
    <div className="live-deck live-deck--numeric" aria-label={'Mazzo numerico · '+player.numeric.deck.length+' carte'}>
     <i/><i/><i/><span><b>ϟ</b><small>NUMERICHE</small></span><em>{player.numeric.deck.length}</em>
    </div>
@@ -416,6 +440,7 @@ export default function OfficialLiveBattle3D({
    </div>
    <div className="live-number-hand" role="group" aria-label="Sette carte numeriche">
     {player.numeric.hand.map(card=><button key={card.id} type="button" disabled={cannotAct}
+     ref={node=>{if(node)numericCards.current.set(card.id,node);else numericCards.current.delete(card.id);}}
      className={'live-number-card'+(chosen?.id===card.id?' live-chosen':'')+
       (player.legacy?.golden?.cardId===card.id?' live-number-golden':'')+
       (player.legacy?.bomb?.cardId===card.id?' live-number-bomb':'')}
@@ -461,8 +486,9 @@ export default function OfficialLiveBattle3D({
     <span aria-hidden="true">←</span> ABBANDONA
    </button>}
    <FleetBar keySide="A" side={player} nickname={nickname}/>
-   {visualEvents.map(({event,index})=><OfficialLiveCombatFx key={'combat-'+index}
-    event={event} rootRef={rootRef} anchors={anchors}/>)}
+   {visualEvents.map(({event,index,delay})=><OfficialLiveCombatFx key={'combat-'+index}
+    event={event} delay={delay} origin={numericOrigins.current.get(index)}
+    rootRef={rootRef} anchors={anchors}/>)}
    {last&&last.kind!=='turn_start'&&now-last.atMs<3300&&<div className="live-action-notice" key={battle.history.length}
     role="status" data-event={last.kind}>{last.message}</div>}
    {message&&<div className="live-validation" role="alert">{message}</div>}

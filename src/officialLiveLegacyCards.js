@@ -21,13 +21,14 @@ function shieldDamage(b,key,amount){
  b.sides[key].defense=r.defense;
  return r.damage;
 }
-function detonate(b,key,why){
+function detonate(b,key,why,atMs=b.lastActionAtMs??b.startedAtMs){
  const side=b.sides[key];
  if(!side.legacy?.bomb)return false;
  side.legacy.bomb=null;
+ const shieldBefore=side.defense.shield.hp;
  const damage=shieldDamage(b,key,8);
  report(b,key,'Numero Bomba esploso ('+why+') · '+damage+' danni barriera',
-  'bomb_explosion',{damage});
+  'bomb_explosion',{atMs,damage,shieldBefore,shieldAfter:side.defense.shield.hp});
  return true;
 }
 function disarm(b,key,why){
@@ -37,9 +38,9 @@ function disarm(b,key,why){
  report(b,key,'Numero Bomba disinnescato ('+why+')','bomb_disarmed');
  return true;
 }
-export function liveLegacyOnTurnEnd(b,key){
+export function liveLegacyOnTurnEnd(b,key,nowMs){
  const bomb=b.sides[key].legacy?.bomb;
- if(bomb&&b.turn>=bomb.untilTurn)detonate(b,key,'scadenza dopo due turni del bersaglio');
+ if(bomb&&b.turn>=bomb.untilTurn)detonate(b,key,'scadenza dopo due turni del bersaglio',nowMs);
  if(b.liveLegacy.malus[key]&&b.turn>=b.liveLegacy.malus[key].untilTurn)
   b.liveLegacy.malus[key]=null;
 }

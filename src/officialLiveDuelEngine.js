@@ -104,6 +104,15 @@ function event(b,message,kind='info',payload={}){
  b.lastEvents=[...b.lastEvents.slice(-24),message];
  b.history.push({turn:b.turn,by:b.activeSide,kind,message,atMs:b.lastActionAtMs??b.startedAtMs,...payload});
 }
+// Fotografa solo gli HP visibili. Il renderer usa le differenze reali anche
+// quando una scudiera intercetta tramite una Fusione o una trappola.
+function defenseHp(side){
+ return [side.defense.shield.hp,...side.escorts.map(escort=>escort.hp)];
+}
+function defenseChanges(side,before,owner){
+ return defenseHp(side).flatMap((after,i)=>after!==before[i]?
+  [{owner,escortIndex:i===0?null:i-1,before:before[i],after}]:[]);
+}
 function closeIfWon(b){
  const a=motherDestroyed(b.sides.A.defense),z=motherDestroyed(b.sides.B.defense);
  if(a||z){
@@ -115,7 +124,7 @@ function closeIfWon(b){
 export function finishOfficialLiveTurn(battle,nowMs=0){
  if(!battle?.live||battle.phase!=='playing')return battle;
  const b=copy(battle),previous=b.activeSide;
- liveLegacyOnTurnEnd(b,previous);
+ liveLegacyOnTurnEnd(b,previous,nowMs);
  if(b.liveModuleEffects[previous].lockUntilTurn&&
     b.turn>=b.liveModuleEffects[previous].lockUntilTurn)
   b.liveModuleEffects[previous].lockUntilTurn=0;
@@ -177,13 +186,18 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  nextDraw(b.sides[b.activeSide].numeric,7);
  nextDraw(b.sides[b.activeSide].special,5);
  liveLegacyOnTurnStart(b,b.activeSide);
- const bossRegen=liveBossStartTurn(b.sides[b.activeSide],b.round);
- const playableRegen=bossCharacterApplyRegen(b.sides[b.activeSide],b.round,
+ const entering=b.sides[b.activeSide],beforeRegen=defenseHp(entering);
+ const bossRegen=liveBossStartTurn(entering,b.round);
+ const bossRegenChanges=bossRegen?.repaired>0?defenseChanges(entering,beforeRegen,b.activeSide):[];
+ const beforeCharacterRegen=defenseHp(entering);
+ const playableRegen=bossCharacterApplyRegen(entering,b.round,
   pvpTerrainEffects(b.activeTerrain,b.round));
  if(playableRegen>0)
-  event(b,b.activeSide+': carta Idra ripara '+playableRegen+' HP reali','character_regen');
+  event(b,b.activeSide+': carta Idra ripara '+playableRegen+' HP reali','character_regen',
+   {atMs:nowMs,defenseChanges:defenseChanges(entering,beforeCharacterRegen,b.activeSide)});
  if(bossRegen?.repaired>0)
-  event(b,b.activeSide+': Idra Criogenica rigenera '+bossRegen.repaired+' HP reali','boss_regen');
+  event(b,b.activeSide+': Idra Criogenica rigenera '+bossRegen.repaired+' HP reali','boss_regen',
+   {atMs:nowMs,defenseChanges:bossRegenChanges});
  expireBossCharacter(b.sides[b.activeSide],b.round);
  if(!b.sides[b.activeSide].bossCharacter)b.zones[b.activeSide].character=null;
  event(b,'Turno '+b.turn+' · '+(b.activeSide==='A'?'TU':'AVVERSARIO')+' · 30 secondi',
@@ -346,6 +360,7 @@ function fireNumeric(b,key,card,shipId){
  const precision=b.liveModuleEffects[key];
  if(precision.precisionUntilTurn>=b.turn&&precision.precisionFactor<1)
   packet=Math.max(0,Math.floor(packet*precision.precisionFactor));
+ const defenseBefore=defenseHp(enemy),[shieldBefore]=defenseBefore;
  let intercepted=0,pilotEscortFocus=null;
  // Perforante bypassa il 20% e NON la totalità delle scudiere.
  // Ionico dimezza solo la successiva intercettazione, non riduce HP fittizi.
@@ -434,7 +449,9 @@ function fireNumeric(b,key,card,shipId){
   ' danni barriera ('+intercepted+' intercettati)','shot',
   {card,shipId,weaponId:escortVolley?.weaponId??w.id,
     escortWeaponId:escortVolley?.escortWeaponId??null,
-    bullets:escortVolley?.bullets??totalValue,damage:hit.damage});
+    bullets:escortVolley?.bullets??totalValue,damage:hit.damage,
+    shieldBefore,shieldAfter:hit.defense.shield.hp,
+    defenseChanges:defenseChanges(enemy,defenseBefore,defenderKey)});
  const syncBeforeShot=attacker.sync;
  liveLegacySyncGain(b,key,hit.damage>0?20:5);
  attacker.sync=Math.min(100,attacker.sync+
@@ -457,8 +474,10 @@ function placeVital(b,key,card,vitalId){
  list.push(card);
  liveCommanderRememberVitalDeposit(attacker,{vitalId,turn:b.turn});
  liveNumericBossRememberDeposit(attacker,{vitalId,turn:b.turn});
- event(b,key+': '+card.value+card.suit+' nello slot '+vitalId+' ('+list.length+'/'+tacticalSignatureSlotCount(part.signature)+')','vital_card');
  const op=tacticalSignatureOperation(part.signature,list);
+ const slotCount=tacticalSignatureSlotCount(part.signature);
+ event(b,key+': '+card.value+card.suit+' nello slot '+vitalId+' ('+list.length+'/'+slotCount+')',
+  'vital_card',{vitalId,card,count:list.length,slotCount,completed:!!op});
  if(!op)return {ok:true,completed:false};
  const defended=runTraps(b,other(key),'vital',0,vitalId);
  if(defended.blocked){
@@ -500,10 +519,14 @@ function placeVital(b,key,card,vitalId){
  attacker.sync=Math.min(100,attacker.sync+
   liveNumericBossSyncBonus(attacker,attacker.sync-syncBeforeVital)+
   bossCharacterSyncExtra(attacker,b.round,true));
+ const attackerBefore=defenseHp(attacker),defenderBefore=defenseHp(defender);
  liveLegacyOnVitalFormula(b,key,op,list);
  event(b,key+': combinazione '+op+' completata · '+vitalId.toUpperCase()+
   (impact.destroyed?' DISTRUTTO · esplosione diretta':' colpito per '+impact.damage+' HP'),
-  impact.destroyed?'vital_destroyed':'vital_hit',{vitalId,op,damage:impact.damage});
+  impact.destroyed?'vital_destroyed':'vital_hit',{vitalId,op,damage:impact.damage,
+   defenseChanges:[...defenseChanges(attacker,attackerBefore,key),
+    ...defenseChanges(defender,defenderBefore,other(key))],
+   shieldCollapsed:impact.destroyed&&vitalId==='shieldGenerator'&&defender.defense.shield.hp>0});
  if(impact.destroyed){
   event(b,other(key)+': '+TACTICAL_VITAL_EFFECTS[vitalId].destroyed);
   if(vitalId==='shieldGenerator')
@@ -549,6 +572,7 @@ function playSpecial(b,key,index,slot,choice={}){
  if(!/^open-[01]$/.test(slot||''))return {ok:false,reason:'open_slot_required'};
  const i=Number(slot.slice(-1));
  if(b.zones[key].open[i])return {ok:false,reason:'open_slot_busy'};
+ const sideBefore=defenseHp(side),oppositeBefore=defenseHp(opposite);
  if(type==='support-shield-repair'){
   if(side.defense.parts.shieldGenerator.hp===0||side.defense.shield.hp===side.defense.shield.max)
    return {ok:false,reason:'repair_unavailable'};
@@ -609,7 +633,8 @@ function playSpecial(b,key,index,slot,choice={}){
  }
  side.special.hand.splice(index,1);side.special.discard.push(card);
  b.zones[key].open[i]={type};
- event(b,key+': '+TACTICAL_SPECIALS[type].name+' attivata in diretta','special',{type,slot});
+ event(b,key+': '+TACTICAL_SPECIALS[type].name+' attivata in diretta','special',{type,slot,
+  defenseChanges:[...defenseChanges(side,sideBefore,key),...defenseChanges(opposite,oppositeBefore,other(key))]});
  return {ok:true};
 }
 export function applyOfficialLiveAction(battle,key,action,nowMs=0){
