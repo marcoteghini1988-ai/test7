@@ -10,7 +10,7 @@ import {createOfficialLiveDuel,applyOfficialLiveAction,
  LIVE_NUMERIC_LIMIT,LIVE_SPECIAL_LIMIT} from './officialLiveDuelEngine.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
-import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
+import {buildTacticalBossDeck,TACTICAL_PRESETS} from './tacticalSpecialPresets.js';
 import {VITAL_IDS} from './vitalDefense.js';
 
 const ownCards=(b,k)=>[
@@ -20,10 +20,11 @@ const ownCards=(b,k)=>[
  ...VITAL_IDS.flatMap(id=>b.vitalBuilds[k][id])
 ];
 function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
- bossShieldMax=null,log=true}={}){
+ bossShieldMax=null,playerSpecialDeck=null,log=true}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA,shipB:boss?.motherShipId??shipB,levelA,levelB,
   nowMs:0,seed,mode:'campaign',shuffleNumericOpening:true,
+  specialDeckA:playerSpecialDeck,
   bossPlanetB:boss?.planetId??null,
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
   specialDeckB:boss?buildTacticalBossDeck(boss.planetId,levelB,levelA):null
@@ -276,6 +277,51 @@ test('Diagnostica 4 boss critici: uso speciale reale su 48 duelli multi-seed',()
   note:'IA vs IA; 30 s per mezzo turno e un limite massimo, NON durata osservata sul telefono. Nessuna modifica ai boss.',
   byBoss,rows:results};
  console.log('LIVE_CRITICAL_BOSS_SPECIAL_AUDIT '+JSON.stringify(report));
+});
+
+// Ombre e Idra sembrano molto forti con lo starter del giocatore.
+// Testa vere configurazioni equipaggiabili da 24 speciali a parita' di
+// pescata e livello, per non indebolire un boss solo perche' il test
+// usa sistematicamente il mazzo starter. Nessun premio/carta inventato.
+test('Audit Ombre e Idra: starter, assedio e difesa reali del giocatore',()=>{
+ const sectors=[70,80],ships=['C01','E01','L04'];
+ const presets=['starter','assault','defense'],offsets=[229,463,719,947];
+ const rows=[];
+ for(const sector of sectors){
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber:sector});
+  assert.ok(boss&&[9,11].includes(boss.planetId));
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:sector,playerLevel:4});
+  for(const ship of ships)for(const preset of presets)for(const offset of offsets){
+   const seed=sector+offset;
+   const r=audit({shipA:ship,levelA:level,levelB:level,
+    boss,seed,playerSpecialDeck:TACTICAL_PRESETS[preset].types,log:false});
+   assert.equal(Object.keys(r.failures).length,0);
+   rows.push({sector,boss:boss.name,ship,preset,seed,
+    winner:r.winner,turns:r.turns,reason:r.finishReason,
+    actions:r.actions,discardsA:r.actionsBySide.A['numeric-discard']||0,
+    discardsB:r.actionsBySide.B['numeric-discard']||0,
+    playedA:r.specialTypesBySide.A,playedB:r.specialTypesBySide.B,
+    destroyedA:r.destroyedA,destroyedB:r.destroyedB});
+  }
+ }
+ assert.equal(rows.length,2*3*3*4);
+ const byBoss=sectors.map(sector=>{
+  const data=rows.filter(r=>r.sector===sector);
+  const results=presets.map(preset=>{
+   const games=data.filter(r=>r.preset===preset);
+   const turns=games.map(r=>r.turns).sort((a,b)=>a-b);
+   return {preset,winsPlayer:games.filter(r=>r.winner==='A').length,
+    winsBoss:games.filter(r=>r.winner==='B').length,
+    draws:games.filter(r=>r.winner==='draw').length,
+    minHalfTurns:turns[0],medianHalfTurns:(turns[5]+turns[6])/2,
+    maxHalfTurns:turns[11]};
+  });
+  return {sector,boss:data[0].boss,byPreset:results};
+ });
+ console.log('LIVE_BOSS_PRESET_COMPARISON '+JSON.stringify({
+  sampleSize:rows.length,byBoss,
+  note:'IA vs IA, 3 mazzi del giocatore realmente costruibili da 24 carte; 30 secondi per mezzo turno e solo un tetto teorico. Gameplay invariato.',
+  rows}));
 });
 
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
