@@ -2,6 +2,8 @@
 import {existsSync,readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {PHASE1_CATALOG} from '../src/phase1FleetCatalog.js';
+import {MODULE_CARD_TYPES} from '../src/tacticalEquipmentCards.js';
+import {supportedLiveSpecial} from '../src/officialLiveDuelEngine.js';
 
 const root=resolve(import.meta.dirname,'..');
 const read=file=>readFileSync(resolve(root,file),'utf8');
@@ -22,6 +24,7 @@ const source=read('src/App.tsx');
 const shop=read('src/ShopModal.jsx');
 const home=read('src/HomeScreen.jsx');
 const loadout=read('src/PersonalLoadoutModal.jsx');
+const specialEditor=read('src/SpecialDeckPanel.jsx');
 
 verify(app.includes("import App from './App.tsx'")&&app.includes('<App />'),
  'main.tsx deve avviare solo App.tsx');
@@ -53,6 +56,7 @@ verify(!shop.includes("id: 'characters'")&&
  !source.includes('showDebugModal'),
  'Lo Shop legacy e il pulsante DEBUG di prova non devono ricomparire');
 for(const orphan of [
+ 'src/legacyTutorialConfig.js',
  'src/TrisBattleView.jsx','src/DoubleStageBattleView.jsx','src/VectorBattleView.jsx',
  'src/LegacyPokerBattle.jsx','src/ClassicPokerFieldBridge.jsx','src/ClassicBattleView.jsx',
  'src/newCombat/legacyPokerBattle.css',
@@ -71,6 +75,13 @@ verify(exists('src/officialLiveMobileLayout.test.js'),
 
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
+verify(MODULE_CARD_TYPES.length===35&&MODULE_CARD_TYPES.every(supportedLiveSpecial)&&
+ shop.includes('TACTICAL_MODULE_CARDS[moduleCardType(a.id)]')&&
+ shop.includes('officialSpecialArtPath(moduleCard.id)')&&
+ specialEditor.includes('readSpecialCollection()')&&
+ specialEditor.includes('readLegacyModuleLevels()')&&
+ specialEditor.includes('isModuleCard(type)'),
+ 'I 35 Moduli del Bazar devono essere vere Carte Speciali giocabili nel LIVE, acquistate e gestite nell Hangar');
 verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')&&
  !/\bid:\s*['"](?:weapons|terrain|environments)['"]/.test(shop)&&
  !/onOpenShopTab\(['"](?:weapons|terrain|environments)['"]\)/.test(loadout)&&
