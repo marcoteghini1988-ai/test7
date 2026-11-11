@@ -13,7 +13,7 @@ import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {TACTICAL_EPIC_CARDS,isTacticalEpic} from './tacticalEpicCards.js';
-import {isModuleCard} from './tacticalEquipmentCards.js';
+import {officialSpecialLoadoutAccess} from './officialSpecialLoadoutAccess.js';
 
 const EARLY_NPC_STARTER_TYPES=Object.freeze([...createSpecialCollection().loadout]);
 
@@ -38,13 +38,16 @@ export function officialBattleSetup({
  // Gli slot originali sono 0 prima della soglia, 1 a L20 o al primo
  // Varco fuso e 2 a L60. L'IA non riceve gli Epici del giocatore.
  const epicSlots=pilotLevel>=60?2:pilotLevel>=20||epicRiftOpened?1:0;
- const equippedEpics=battleSpecialDeck.filter(isTacticalEpic);
- if(equippedEpics.length>epicSlots)
+ const access=officialSpecialLoadoutAccess(battleSpecialDeck,{
+  epicSlotLimit:epicSlots,moduleLevels});
+ if(access.reason==='epic_slots')
   throw new Error('Slot Epici non ancora sbloccati dal livello pilota o dai Varchi');
+ if(access.reason==='module_not_unlocked')
+  throw new Error('Carta Modulo non autorizzata: abilità non ancora acquistata');
+ if(!access.valid)throw new Error('Mazzo speciale non compatibile con il duello');
+ const equippedEpics=battleSpecialDeck.filter(isTacticalEpic);
  if(equippedEpics.some(id=>(specialCollection.owned?.[id]??0)<1))
   throw new Error('Oggetto Epico nel mazzo ma non ancora ottenuto');
- if(battleSpecialDeck.some(id=>isModuleCard(id)&&!moduleLevels[id]))
-  throw new Error('Carta Modulo non autorizzata: abilità non ancora acquistata');
  const epicEntitlements=Object.keys(TACTICAL_EPIC_CARDS).filter(id=>
   (specialCollection.owned?.[id]??0)>=1);
  // I mazzi numerici boss non fanno parte delle 24 speciali.
