@@ -69,9 +69,10 @@ function preparedTestPlayerAction(b){
 
 function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
  bossShieldMax=null,playerSpecialDeck=null,bossSpecialDeck=null,
- playerPolicy='basic',disableBossExclusive=false,disableNumericPassive=false,log=true}={}){
+ bossShipOverride=null,playerPolicy='basic',
+ disableBossExclusive=false,disableNumericPassive=false,log=true}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
-  shipA,shipB:boss?.motherShipId??shipB,levelA,levelB,
+  shipA,shipB:bossShipOverride??boss?.motherShipId??shipB,levelA,levelB,
   nowMs:0,seed,mode:'campaign',shuffleNumericOpening:true,
   specialDeckA:playerSpecialDeck,
   bossPlanetB:boss?.planetId??null,
@@ -125,7 +126,7 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
  assert.ok(['A','B','draw'].includes(b.winner),'vincitore codificato e valido');
  assert.ok(b.turn<=LIVE_MAX_TURNS+1);
  const result={
-  seed,shipA,shipB:boss?.motherShipId??shipB,boss:boss?.planetId??null,
+  seed,shipA,shipB:bossShipOverride??boss?.motherShipId??shipB,boss:boss?.planetId??null,
   bossShieldMax:bossShieldMax??60,
   winner:b.winner,finishReason:b.liveFinishReason,turns:b.turn,minutesMax:+(b.turn*LIVE_TURN_MS/60000).toFixed(1),
   actions,turnChanges,shots:b.history.filter(e=>e.kind==='shot').length,
@@ -511,6 +512,50 @@ test('Isolamento difficolta Ombre e Idra: esclusiva vs passiva numerica',()=>{
   sampleSize:rows.length,byBoss,
   note:'Solo esperimento di test! Entrambe le abilita LIVE restano ATTIVE nelle partite ufficiali. Confronto con le stesse 52 numeriche, stessi mazzi speciali e stessi seed.',
   rows}));
+});
+
+// Diagnostica di equipaggiamento, esclusivamente nel test: la nave madre
+// ufficiale non va sostituita nel gioco, ma un confronto a nave speculare
+// indica quanto dipende dalle armi/firme del modello e quanto dalle carte.
+test('Ombre e Idra: isola forza della madre e del mazzo speciale in 96 duelli',()=>{
+ const sectors=[70,80],ships=['C01','E01','L04'],seeds=[229,463,719,947];
+ const rows=[];
+ for(const sector of sectors){
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber:sector});
+  assert.ok(boss&&[9,11].includes(boss.planetId));
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:sector,playerLevel:4});
+  for(const ship of ships)for(const offset of seeds)
+   for(const specialDeck of ['boss','starter'])
+    for(const mother of ['official','mirrored']){
+     const playerShip=ship;
+     const bossShipOverride=mother==='mirrored'?ship:null;
+     const deck=specialDeck==='starter'?TACTICAL_PRESETS.starter.types:null;
+     const result=audit({shipA:playerShip,levelA:level,levelB:level,
+      boss,bossShipOverride,bossSpecialDeck:deck,seed:sector+offset,log:false});
+     rows.push({sector,boss:boss.name,playerShip,bossShip:result.shipB,
+      seed:result.seed,specialDeck,mother,winner:result.winner,
+      turns:result.turns,reason:result.finishReason});
+    }
+ }
+ assert.equal(rows.length,96);
+ const byBoss=sectors.map(sector=>{
+  const cases=rows.filter(r=>r.sector===sector);
+  return {boss:cases[0].boss,officialShip:cases.find(r=>r.mother==='official').bossShip,
+   groups:['boss','starter'].flatMap(specialDeck=>
+    ['official','mirrored'].map(mother=>{
+     const data=cases.filter(r=>r.specialDeck===specialDeck&&r.mother===mother);
+     const t=data.map(r=>r.turns).sort((a,b)=>a-b);
+     return {specialDeck,mother,
+      winsPlayer:data.filter(r=>r.winner==='A').length,
+      winsBoss:data.filter(r=>r.winner==='B').length,
+      draws:data.filter(r=>r.winner==='draw').length,
+      medianHalfTurns:(t[5]+t[6])/2,minHalfTurns:t[0],maxHalfTurns:t[11]};
+    }))
+  };
+ });
+ console.log('LIVE_BOSS_EQUIPMENT_ISOLATION '+JSON.stringify({
+  sampleSize:rows.length,byBoss,
+  note:'Nessuna nave o mazzo del gioco ufficiale cambiati: solo impostazioni temporanee del fixture per confrontare le stesse 52 numeriche e gli stessi seed.',rows}));
 });
 
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
