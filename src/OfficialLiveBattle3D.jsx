@@ -19,6 +19,7 @@ import {readLegacyModuleLevels,TACTICAL_MODULE_CARDS,isModuleCard} from './tacti
 import {bossCharacterDefinition,isBossCharacterCard} from './bossCharacterCards.js';
 import {pvpTerrainDefinition,isPvpTerrain} from './pvpTerrainCards.js';
 import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
+import {officialSpecialVisualMeta} from './officialSpecialVisualMeta.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {officialNumericDeckBackPath,officialNumericDeckBackName,OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
@@ -437,12 +438,14 @@ export default function OfficialLiveBattle3D({
    <div className="live-special-hand" role="group" aria-label="Cinque carte speciali">
     {player.special.hand.map(card=>{
      const face=officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]);
+     const visual=officialSpecialVisualMeta(card.type);
      const canPlay=myTurn&&battle.actionUsed.special<LIVE_SPECIAL_LIMIT&&supportedLiveSpecial(card.type);
      const inspected=selectedSpecial?.id===card.id;
      return <button type="button" key={card.id} disabled={!!result}
       className={'live-hand-special'+(inspected?' live-chosen':'')}
-      data-family={face.category}
-      title={face.name+' · '+face.effect}
+      data-family={face.category} data-rarity={visual?.rarity??undefined}
+      title={face.name+' · '+face.category+
+       (visual?.rarity?' · '+visual.rarity:'')+' · '+face.effect}
       aria-label={face.name+' · '+face.effect}
       aria-pressed={inspected}
       onClick={()=>selectCard('special',card.id,canPlay)}
@@ -451,6 +454,9 @@ export default function OfficialLiveBattle3D({
       onDragStart={e=>e.dataTransfer.setData('text/plain','special:'+card.id)}>
       <LiveSpecialArt card={card}/>
       <span className="live-card-emblem" aria-hidden="true">{face.symbol}</span>
+      {visual?.rarity&&<span className="live-card-rarity" aria-hidden="true">{visual.rarity}</span>}
+      {!visual?.rarity&&visual?.limited==='BOSS'&&
+       <span className="live-card-rarity live-card-rarity--boss" aria-hidden="true">BOSS</span>}
       <span className="live-card-caption"><b>{face.name}</b><small>{face.effect}</small></span>
      </button>;
     })}
