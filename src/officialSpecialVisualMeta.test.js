@@ -44,3 +44,18 @@ test('Arte e indicatori PNG integrati nelle 5 carte e nella schermata Mazzi',asy
  assert.match(deck,/officialSpecialVisualMeta\(type\)/);
  assert.match(deck,/special-deck-visual-tags/);
 });
+
+
+test('La battaglia LIVE mostra il ruolo reale e la rarita solo negli slot scoperti',async()=>{
+ const {readFileSync}=await import('node:fs');
+ const live=readFileSync(new URL('./OfficialLiveBattle3D.jsx',import.meta.url),'utf8');
+ const css=readFileSync(new URL('./OfficialLiveBattle3D.css',import.meta.url),'utf8');
+ assert.ok(live.includes("const visible=!!card&&(side==='A'||!isTrap)"));
+ assert.ok(live.includes('const visual=visible?officialSpecialVisualMeta(card.type):null;'));
+ assert.ok(live.includes('data-family={visual?.role??face?.category}'));
+ assert.ok(live.includes('data-rarity={visual?.rarity??undefined}'));
+ assert.ok(live.includes('face&&visual?.rarity&&<small className="live-slot-tier"'));
+ assert.ok(live.includes('data-family={visual?.role??face.category} data-rarity={visual?.rarity??undefined}'));
+ assert.ok(css.includes('.live-slot--occupied[data-rarity="EPICA"]'));
+ assert.ok(css.includes('.live-slot-tier{'));
+});
