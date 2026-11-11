@@ -1,3 +1,5 @@
+> **PULIZIA DEL CODICE — 11/11/2026.** L'unico ingresso operativo della battaglia è `App.tsx → MathDuelBattle.jsx → OfficialLiveBattle3D.jsx` (turni alternati da 30 secondi), con `BossBattle3D.jsx` come fallback per gli incontri non ancora compatibili. Eliminati i vecchi componenti `GameScreen`, `LegacyPokerBattle`, `ClassicBattleView`, `ClassicPokerFieldBridge`, il vecchio Banco automatico Terreno/Trappole, i pulsanti TEST e le sezioni Comandanti/Trappole/Scenari dello Shop. Eliminati inoltre 21 PNG duplicati alla radice di `public/assets/`. **Non eliminare** gli SVG originali delle 82 carte speciali: lo script di esportazione li utilizza per generare i PNG HD. Navi, vitali 3D, mazzi e salvataggi attuali restano conservati. Test, build e preflight verificano ogni commit; il collaudo Android reale resta distinto. La guida aggiornata è [AVVIO_TEST7.md](AVVIO_TEST7.md).
+
 > **WORK: SOLO RIFINITURA VISIVA** — leggere [questo documento di incarico aggiornato](docs/WORK_INCARICO_SOLO_GRAFICA_2026-11-10.md). Non riaprire la progettazione di carte, boss e meccaniche.
 
 > **NUOVO DUELLO LIVE — 10/11/2026.** Nel percorso ufficiale il combattimento usa turni alternati da 30 secondi e mosse con effetto immediato, senza fuoco automatico delle armi. La plancia live, il motore, i test e la UI touch sono stati integrati. Le abilità speciali e boss non ancora migrate sono elencate nel documento, senza dichiararle complete. **Per ChatGPT Work leggere prima [HANDOFF DEL DUELLO LIVE E REDESIGN](docs/WORK_HANDOFF_DUELLO_LIVE_E_REDESIGN_2026-11-10.md)**: contiene le regole definitive, lo stato reale, gli obiettivi Home/Shop/Personaggi e la checklist di collaudo. Le note precedenti sulla simultaneità restano storia del progetto, non più regole live.
@@ -28,7 +30,7 @@
 
 # Eclissi Stellare — Gioco ufficiale 3D
 
-> **STATO CORRENTE — 7 novembre 2026, `test7/main`.**
+> **ARCHIVIO STORICO — 7 novembre 2026, `test7/main` (superato dagli aggiornamenti dell'11 novembre).**
 > Il gioco avvia un solo ingresso `App.tsx → MathDuelBattle.jsx`, senza schermate separate di prova. La campagna standard utilizza `OfficialBattle3D.jsx`: **30 secondi di preparazione simultanea e 8 secondi di risoluzione**, 7 carte numeriche pescate dal mazzo di 52 e 5 speciali dal mazzo di 24 carte possedute.
 >
 > **Già integrati:** 17 navicelle e 42 armi della grafica prospettica originale 9:16; 4 piloti comuni L1–L5; **9 passive boss in 6 mazzi**, sempre con i livelli sbloccati: Gaia 1, Tharsis 1, Crono 1, Leviatano 2, Ombre 2, Idra 2. Le altre **14 passive boss**, i piloti avanzati e alcune arene rimangono temporaneamente nel combattimento 3D preesistente per non perdere poteri o progressione.
