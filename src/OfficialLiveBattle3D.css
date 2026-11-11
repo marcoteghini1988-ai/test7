@@ -311,3 +311,47 @@
  padding:2px 0;border-radius:3px;color:#fff;pointer-events:none}
 .es-math-scope .live-root .live-number-mark--bomb{background:#831c36ee}
 .es-math-scope .live-root .live-number-mark--gold{background:#80600bee;color:#fff8c0}
+
+
+/* Dorsi PNG reali dal mazzo equipaggiato. Nessuno spostamento dei due
+   mazzi o dei 7+5 alloggiamenti nell'arena 450x800 approvata. */
+.es-math-scope .live-root .live-deck>i,
+.es-math-scope .live-root .live-deck>span,
+.es-math-scope .live-root .live-deck--special>i,
+.es-math-scope .live-root .live-deck--special>span{
+ background-image:var(--live-deck-art);
+ background-position:center;
+ background-size:cover;
+ background-repeat:no-repeat;
+ border-color:var(--deck-edge);
+}
+.es-math-scope .live-root .live-deck>span::before,
+.es-math-scope .live-root .live-deck>span::after{opacity:.13}
+.es-math-scope .live-root .live-deck>span>b{display:none}
+.es-math-scope .live-root .live-deck>span small{
+ position:absolute;bottom:3px;left:2px;right:2px;
+ padding:3px 1px 2px;line-height:1.15;
+ background:#030918db;color:#fff;border-radius:3px;
+ text-align:center;letter-spacing:.25px;font-size:6px;
+ text-shadow:0 1px 3px #000;
+}
+
+/* I ruoli sono INDICAZIONI sugli slot esistenti, non divieti di gioco.
+   Una carta SUPPORTO puo' sempre essere giocata nel proprio slot Aperto. */
+.es-math-scope .live-root .live-slot:not(.live-slot--occupied)[data-slot-role="personaggio"]{
+ border-color:#cf92e7;background:linear-gradient(160deg,#2c1d41d9,#100f22c9)}
+.es-math-scope .live-root .live-slot:not(.live-slot--occupied)[data-slot-role="difesa"]{
+ border-color:#6eceec;background:linear-gradient(160deg,#15364bd9,#0b1b29c9)}
+.es-math-scope .live-root .live-slot:not(.live-slot--occupied)[data-slot-role="attacco-supporto"]{
+ border-color:#ef8f70;background:linear-gradient(160deg,#42251dd9,#22121ac9)}
+.es-math-scope .live-root .live-slot-role{
+ position:absolute;top:1px;left:0;right:0;z-index:3;
+ display:block;padding:1px 0;color:#e9f8ff;
+ font-size:5.3px;line-height:6px;font-weight:950;letter-spacing:.1px;
+ text-align:center;text-shadow:0 1px 2px #000a;
+ background:linear-gradient(90deg,transparent,#0008,transparent);
+ pointer-events:none;
+}
+.es-math-scope .live-root .live-slot[data-slot-role="personaggio"] .live-slot-role{color:#f0c8ff}
+.es-math-scope .live-root .live-slot[data-slot-role="difesa"] .live-slot-role{color:#baf4ff}
+.es-math-scope .live-root .live-slot[data-slot-role="attacco-supporto"] .live-slot-role{color:#ffbba5}
