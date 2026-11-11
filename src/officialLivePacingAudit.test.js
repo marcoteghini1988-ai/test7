@@ -79,6 +79,9 @@ function advancedOwnedPlayerAction(b){
  if(b.activeSide!=='A'||b.actionUsed.special>=LIVE_SPECIAL_LIMIT&&
    b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT)return null;
  const own=b.sides.A,enemy=b.sides.B,open=b.zones.A.open.findIndex(x=>!x);
+ // La composizione del PROPRIO mazzo e' nota, non il futuro delle pescate.
+ const hasRiftCard=[...own.special.hand,...own.special.deck,...own.special.discard]
+  .some(card=>card.type===VULNERABILITY_RIFT_CARD_ID);
  const canSpecial=()=>open>=0&&b.actionUsed.special<LIVE_SPECIAL_LIMIT;
  const play=(type,extra={})=>{
   if(!canSpecial())return null;
@@ -101,7 +104,7 @@ function advancedOwnedPlayerAction(b){
  // Può calare fino a tre numeriche che si trovano GIA' nella mano.
  if(own.liveRift&&complete&&b.actionUsed.numeric<LIVE_NUMERIC_LIMIT)
   return {type:'numeric',index:complete.plan[0],target:'vital',vitalId:complete.id};
- if(!own.riftUsed&&enemy.defense.shield.hp>0){
+ if(hasRiftCard&&!own.riftUsed&&enemy.defense.shield.hp>0){
   if(complete){
    const rift=play(VULNERABILITY_RIFT_CARD_ID);
    if(rift)return rift;
@@ -730,6 +733,58 @@ test('Ombre: Faglia Moduli Epico in mazzi da 24 solo se posseduti',()=>{
  console.log('LIVE_OMBRA_ADVANCED_OWNED_AUDIT '+JSON.stringify({
   sampleSize:rows.length,byLoadout,
   note:'Solo possesso autorizzato nel fixture! NON dice che Faglia, Moduli o Epici siano gia sbloccati al settore 70. Politica di test, nessuna modifica al PvP o ai premi. Tre numeriche e due speciali per turno.',rows}));
+});
+
+test('Ablazione Ombre: stessa IA e stessi Moduli, una Faglia contro una Riparazione',()=>{
+ const hit=Object.values(TACTICAL_MODULE_CARDS).find(x=>x.effect==='pure_hit')?.id;
+ const guard=Object.values(TACTICAL_MODULE_CARDS).find(x=>x.effect==='guard')?.id;
+ assert.ok(hit&&guard);
+ const core=['tactic-scan','tactic-counter','tactic-reactive',
+  'tactic-numeric-recycle','tactic-kinetic'].flatMap(id=>Array(4).fill(id));
+ const withRift=[VULNERABILITY_RIFT_CARD_ID,hit,guard,
+  ...core,'support-shield-repair'];
+ const withoutRift=['support-shield-repair',hit,guard,
+  ...core,'support-shield-repair'];
+ const options=[{name:'faglia',types:withRift},{name:'riparazione',types:withoutRift}];
+ const base=createSpecialCollection();
+ for(const option of options){
+  assert.equal(option.types.length,24);
+  assert.equal(validateTacticalLoadout(option.types),true);
+  const owned={...base.owned};
+  for(const type of option.types)
+   owned[type]=Math.max(owned[type]||0,option.types.filter(t=>t===type).length);
+  assert.equal(validateSpecialDeck({...base,owned},option.types).valid,true);
+ }
+ const boss=officialBossEncounter({mode:'campaign',sectorNumber:70});
+ const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:70,playerLevel:4});
+ const rows=[];
+ for(const ship of ['C01','E02','E03','L04'])
+  for(const offset of [1109,1429,1709,1961,2213,2417])
+   for(const option of options){
+    const r=audit({shipA:ship,levelA:level,levelB:level,boss,
+     seed:70+offset,playerSpecialDeck:option.types,
+     equipmentLevelsA:{[hit]:1,[guard]:1},playerPolicy:'advanced-owned',log:false});
+    rows.push({ship,seed:r.seed,variant:option.name,winner:r.winner,
+     halfTurns:r.turns,reason:r.finishReason,
+     specialActions:r.specialTypesBySide.A,
+     vitalDestroyCount:r.destroyedB});
+   }
+ assert.equal(rows.length,48);
+ const groups=options.map(option=>{
+  const rs=rows.filter(r=>r.variant===option.name);
+  const sorted=rs.map(r=>r.halfTurns).sort((a,b)=>a-b);
+  return {variant:option.name,winsPlayer:rs.filter(r=>r.winner==='A').length,
+   winsBoss:rs.filter(r=>r.winner==='B').length,
+   draws:rs.filter(r=>r.winner==='draw').length,
+   medianHalfTurns:(sorted[11]+sorted[12])/2,
+   riftsActivated:rs.reduce((n,r)=>n+(r.specialActions[VULNERABILITY_RIFT_CARD_ID]||0),0),
+   modulesActivated:rs.reduce((n,r)=>n+(r.specialActions[hit]||0)+(r.specialActions[guard]||0),0)
+  };
+ });
+ console.log('LIVE_OMBRE_RIFT_ABLATION '+JSON.stringify({
+  sampleSize:rows.length,groups,
+  note:'24 carte condizionatamente possedute, stessi seed/navi/IA/moduli. Sostituita soltanto una Faglia con una Riparazione vera. Non altera il boss ne i premi.',
+  rows}));
 });
 
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
