@@ -20,6 +20,7 @@ import {bossCharacterDefinition,isBossCharacterCard} from './bossCharacterCards.
 import {pvpTerrainDefinition,isPvpTerrain} from './pvpTerrainCards.js';
 import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
+import {officialNumericDeckBackPath,officialNumericDeckBackName,OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {MALUS_CHOICES} from './tacticalLegacyEvents.js';
@@ -118,13 +119,18 @@ function Slot({kind,index,side,card,onActivate,selected}){
  const isTrap=kind==='trap';
  const visible=!!card&&(side==='A'||!isTrap);
  const symbol=kind==='character'?'♙':kind==='trap'?'◇':'✧';
- const label=kind==='character'?'Personaggio':isTrap?'Trappola':'Speciale';
+ // Sono gli slot EFFETTIVI del motore, non quattro nuovi slot fissi:
+ // la Trappola ospita reazioni/difese, l'Aperto anche supporti e attacchi.
+ const label=kind==='character'?'Personaggio':
+  isTrap?'Difesa / Reazione (Trappola)':'Attacco / Supporto (Speciale aperta)';
+ const slotBadge=kind==='character'?'PERSONAGGIO':isTrap?'DIFESA':'ATT./SUP.';
  const slot=kind==='character'?'character':kind+'-'+index;
  const face=visible?officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]):null;
  return <button type="button" className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
    (card?' live-slot--occupied':'')+(card&&!visible?' live-slot--covered':'')+
    (selected?' live-slot--chosen':'')}
   data-live-slot={side+'-'+slot} data-live-drop={side==='A'?slot:undefined}
+  data-slot-role={kind==='character'?'personaggio':isTrap?'difesa':'attacco-supporto'}
   data-family={face?.category}
   title={face?face.name+' · '+face.effect:label}
   aria-label={label+(card?' · '+(face?.name??'coperta'):' · vuoto')}
@@ -136,6 +142,7 @@ function Slot({kind,index,side,card,onActivate,selected}){
      (isBossCharacterCard(card?.type)?bossCharacterDefinition(card.type)?.imagePath:
       pvpTerrainDefinition(card.type)?.imagePath)} alt="" draggable={false}/>:
     <span>{face?.symbol??(card?'?':symbol)}</span>}
+  {!card&&<small className="live-slot-role" aria-hidden="true">{slotBadge}</small>}
   {face&&<small className="live-slot-caption" aria-hidden="true">{face.symbol} {face.category}</small>}
  </button>;
 }
@@ -345,6 +352,10 @@ export default function OfficialLiveBattle3D({
   player.special.hand.find(card=>card.id===selection.id):null;
  const selectedSpecialFace=selectedSpecial?
   officialSpecialCardIdentity(selectedSpecial.type,TACTICAL_SPECIALS[selectedSpecial.type]):null;
+ // E' l'ID DAVVERO equipaggiato e validato dal setup: nessun mazzo finto.
+ const numericBackId=player.bossNumericDeck?.id??'neutral_starter';
+ const numericBackPath=officialNumericDeckBackPath(numericBackId);
+ const numericBackName=officialNumericDeckBackName(numericBackId);
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  const finalImpactVisible=result&&visualEvents.some(({event})=>
   event.kind==='vital_destroyed'&&now-event.atMs<LIVE_VITAL_BLAST_MS+50);
@@ -411,11 +422,17 @@ export default function OfficialLiveBattle3D({
    </div>
    <Fighter side="player" snapshot={player} anchors={anchors} onShip={useSelected}
     weaponEffect={liveMountedWeaponEffect(visualEvents,'A')}/>
-   <div className="live-deck live-deck--numeric" aria-label={'Mazzo numerico · '+player.numeric.deck.length+' carte'}>
-    <i/><i/><i/><span><b>ϟ</b><small>NUMERICHE</small></span><em>{player.numeric.deck.length}</em>
+   <div className="live-deck live-deck--numeric" data-equipped-deck={numericBackId}
+    title={'Dorso numerico equipaggiato · '+numericBackName}
+    style={{'--live-deck-art':`url("${numericBackPath}")`}}
+    aria-label={'Mazzo numerico '+numericBackName+' · '+player.numeric.deck.length+' carte'}>
+    <i/><i/><i/><span><b aria-hidden="true">ϟ</b><small>NUMERICHE</small></span><em>{player.numeric.deck.length}</em>
    </div>
-   <div className="live-deck live-deck--special" aria-label={'Mazzo speciale · '+player.special.deck.length+' carte'}>
-    <i/><i/><i/><span><b>✧</b><small>SPECIALI</small></span><em>{player.special.deck.length}</em>
+   <div className="live-deck live-deck--special" data-special-back="fixed"
+    title="Dorso speciale unico, invariabile"
+    style={{'--live-deck-art':`url("${OFFICIAL_SPECIAL_FIXED_BACK}")`}}
+    aria-label={'Mazzo speciale, dorso unico · '+player.special.deck.length+' carte'}>
+    <i/><i/><i/><span><b aria-hidden="true">✧</b><small>SPECIALI</small></span><em>{player.special.deck.length}</em>
    </div>
    <div className="live-special-hand" role="group" aria-label="Cinque carte speciali">
     {player.special.hand.map(card=>{
