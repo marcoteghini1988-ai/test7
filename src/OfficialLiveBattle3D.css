@@ -148,10 +148,13 @@
  border:1px solid #d9fbff;background:#06223b;color:#fff;font-size:9px;font-style:normal;font-weight:950;
  box-shadow:0 0 8px var(--deck-glow);transform:translateZ(8px)}
 @keyframes liveDeckHover{from{transform:translateZ(0)}to{transform:translate3d(0,-2px,4px)}}
-.es-math-scope .live-root .live-special-hand{position:absolute;top:582px;left:76px;right:76px;
- height:64px;display:flex;align-items:flex-start;justify-content:center;gap:4px;z-index:11}
-.es-math-scope .live-root .live-hand-special{width:55px;height:63px;position:relative;
- flex:0 0 55px;padding:0;border:1.5px solid var(--family);border-radius:6px;
+.es-math-scope .live-root .live-hand-special,
+.es-math-scope .live-root .live-number-card{
+ box-sizing:border-box;flex:none;aspect-ratio:54 / 86}
+.es-math-scope .live-root .live-special-hand{position:absolute;top:565px;left:76px;right:76px;
+ display:flex;align-items:flex-start;justify-content:center;gap:9px;z-index:11}
+.es-math-scope .live-root .live-hand-special{width:50px;position:relative;
+ padding:0;border:1.5px solid var(--family);border-radius:6px;
  color:#fff;background:linear-gradient(160deg,#312a63,#140e34);
  box-shadow:0 0 7px color-mix(in srgb,var(--family) 48%,transparent);
  transform-origin:center bottom;overflow:hidden;
@@ -178,14 +181,15 @@
  background:linear-gradient(180deg,#07101df0,#050914);display:flex;flex-direction:column;
  justify-content:center;gap:1px;pointer-events:none;text-shadow:0 1px 2px #000}
 .es-math-scope .live-root .live-card-caption b{font-size:8px;line-height:9px;color:#fff;
- display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+ overflow:hidden;overflow-wrap:anywhere}
 .es-math-scope .live-root .live-card-caption small{font-size:6.5px;line-height:7px;color:var(--family);
  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
  overflow:hidden;overflow-wrap:anywhere;font-weight:800}
 @keyframes liveCardMaterialize{from{opacity:.45}to{opacity:1}}
 .es-math-scope .live-root .live-number-hand{position:absolute;top:648px;left:32px;right:32px;
  display:flex;align-items:center;justify-content:center;gap:0;height:91px;z-index:12}
-.es-math-scope .live-root .live-number-card{position:relative;flex:0 0 54px;width:54px;height:86px;
+.es-math-scope .live-root .live-number-card{position:relative;width:54px;
  border:2px solid #38ceff;background:linear-gradient(160deg,#0e2e63,#070e30);
  border-radius:7px;box-shadow:0 0 8px #11afff99,inset 0 0 5px #226aa6;
  color:#fff;padding:0;touch-action:none;display:flex;flex-direction:column;

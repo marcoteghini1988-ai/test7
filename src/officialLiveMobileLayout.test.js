@@ -64,18 +64,19 @@ test('campo LIVE: cinque slot per ciascun lato con ruoli reali e terreno central
  assert.equal(1+2+2,5);
 });
 
-test('sette numeriche e cinque speciali non si sovrappongono nell area di mano',()=>{
+test('cinque speciali e sette numeriche hanno le stesse proporzioni in due file distinte',()=>{
  assert.match(ui,/aria-label="Cinque carte speciali"/);
  assert.match(ui,/aria-label="Sette carte numeriche"/);
  assert.match(ui,/player\.special\.hand\.map\(card=>/);
  assert.match(ui,/player\.numeric\.hand\.map\(card=>/);
- assert.match(css,/\.live-special-hand\{position:absolute;top:582px;left:76px;right:76px;/);
+ assert.match(css,/\.live-special-hand\{position:absolute;top:565px;left:76px;right:76px;[^}]*gap:9px;/);
  assert.match(css,/\.live-number-hand\{position:absolute;top:648px;left:32px;right:32px;/);
- assert.match(css,/\.live-hand-special\{width:55px;height:63px;/);
- assert.match(css,/\.live-number-card\{position:relative;flex:0 0 54px;width:54px;height:86px;/);
- assert.ok(5*55+4*4<=450-2*76,'le cinque speciali entrano nella mano');
+ assert.match(css,/\.live-hand-special,\s*\.es-math-scope \.live-root \.live-number-card\{[^}]*aspect-ratio:54 \/ 86/);
+ assert.match(css,/\.live-hand-special\{width:50px;/);
+ assert.match(css,/\.live-number-card\{position:relative;width:54px;/);
+ assert.ok(5*50+4*9<=450-2*76,'le cinque speciali entrano nella mano');
  assert.ok(7*54<=450-2*32,'le sette numeriche entrano nella mano');
- assert.ok(582+64<=648,'mano speciale sopra la numerica senza sovrapposizione dei contenitori');
+ assert.ok(565+50*86/54<=648,'la mano speciale entra sopra quella numerica');
 });
 
 test('dorsi PNG: numerico equipaggiato e speciale unico e fisso',()=>{
