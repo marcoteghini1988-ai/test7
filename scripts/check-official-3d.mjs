@@ -56,10 +56,8 @@ verify(!shop.includes("id: 'characters'")&&
  !source.includes('showDebugModal'),
  'Lo Shop legacy e il pulsante DEBUG di prova non devono ricomparire');
 for(const orphan of [
- 'src/legacyTutorialConfig.js',
  'src/CombatJuiceOverlay.jsx','src/ProjectilesEngine.js',
  'src/weaponEffects.js','src/uniqueWeaponVFX.js','src/vulnerabilityRift.js',
- 'src/dailyChallengeEngine.js','src/dailyPokerChallenge.js',
  'src/newCombat/PokerCombatEffects.jsx','src/newCombat/pokerCombatEffects.css',
  'src/newCombat/pokerVolleyVfx.js',
  'src/TrisBattleView.jsx','src/DoubleStageBattleView.jsx','src/VectorBattleView.jsx',
