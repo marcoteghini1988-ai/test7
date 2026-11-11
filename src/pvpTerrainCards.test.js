@@ -150,3 +150,23 @@ test('Due Terreni opposti, stessa fase: nessuna priorità del primo ordine confe
  assert.ok(out.sides.A.special.discard.some(c=>c.type==='terrain-debris'));
  assert.ok(out.sides.B.special.discard.some(c=>c.type==='terrain-plasma'));
 });
+
+
+test('I quattro Terreni renderizzano i PNG HD ufficiali in tutte le viste, senza varianti finte',async()=>{
+ const {readFileSync}=await import('node:fs');
+ const portrait=readFileSync(new URL('./PvpTerrainPortrait.jsx',import.meta.url),'utf8');
+ const live=readFileSync(new URL('./OfficialLiveBattle3D.jsx',import.meta.url),'utf8');
+ const deck=readFileSync(new URL('./SpecialDeckPanel.jsx',import.meta.url),'utf8');
+ for(const terrain of Object.values(PVP_TERRAIN_CATALOG)){
+  assert.match(terrain.imagePath,/\.png$/);
+  const bytes=readFileSync(new URL('../public'+terrain.imagePath,import.meta.url));
+  assert.equal(bytes.readUInt32BE(16),512,terrain.id);
+  assert.equal(bytes.readUInt32BE(20),768,terrain.id);
+ }
+ assert.ok(portrait.includes('src={terrain.imagePath}'));
+ assert.ok(!portrait.includes("terrain.id+'.svg'"));
+ assert.ok(live.includes("backgroundImage:'url('+terrain.imagePath+')'"));
+ assert.ok(live.includes("'--live-terrain-art':'url('+terrain.imagePath+')'"));
+ assert.ok(live.includes('<PvpTerrainPortrait type={card.type}/>'));
+ assert.ok(deck.includes('<PvpTerrainPortrait type={type}'));
+});
