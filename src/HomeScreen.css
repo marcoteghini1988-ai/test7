@@ -211,3 +211,25 @@
     transform: scale(0.95, 0.28);
   }
 }
+
+
+/* Il dorso numerico segue la scelta reale in Assetto.
+   I 78×116 della Home non si spostano e i precedenti effetti restano. */
+.eclissi-home .home-deck-preview{
+ width:78px;height:116px;align-items:center;justify-items:center;
+ filter:drop-shadow(0 0 6px #5dbce588);
+}
+.eclissi-home .home-deck-preview .home-deck-hd{
+ width:78px;height:116px;object-fit:fill;display:block;
+ border-radius:6px;border:1px solid #b3e8ff88;
+ box-shadow:inset 0 0 5px #fff4,0 0 10px #48bdfc66;
+}
+.eclissi-home .home-deck-preview::before,
+.eclissi-home .home-deck-preview::after{
+ background-image:var(--home-numeric-back);
+ opacity:.65;
+}
+.eclissi-home .home-dock-action{
+ background-image:linear-gradient(150deg,#ffffff0f,transparent 45%,#01061559 87%);
+ border-image-slice:1;
+}
