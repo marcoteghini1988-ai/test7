@@ -68,7 +68,8 @@ function preparedTestPlayerAction(b){
 }
 
 function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
- bossShieldMax=null,playerSpecialDeck=null,bossSpecialDeck=null,playerPolicy='basic',log=true}={}){
+ bossShieldMax=null,playerSpecialDeck=null,bossSpecialDeck=null,
+ playerPolicy='basic',disableBossExclusive=false,disableNumericPassive=false,log=true}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA,shipB:boss?.motherShipId??shipB,levelA,levelB,
   nowMs:0,seed,mode:'campaign',shuffleNumericOpening:true,
@@ -77,6 +78,10 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
   specialDeckB:boss?(bossSpecialDeck??buildTacticalBossDeck(boss.planetId,levelB,levelA)):null
  }),0);
+ // Solo per isolare contributi: il boss conserva le proprie navi,
+ // armamenti, mazzo di 24 speciali e le 52 numeriche reali.
+ if(disableBossExclusive)b.sides.B.bossExclusive=null;
+ if(disableNumericPassive)b.sides.B.bossNumericDeck=null;
  // ESPERIMENTO SOLO NEL TEST: nessun valore nel gioco pubblicato cambia.
  // Mantieni firme, quattro vitali, carte e poteri; confronta livelli
  // di sola barriera per capire se il bilanciamento e' proporzionale.
@@ -463,6 +468,48 @@ test('Audit Ombre e Idra contro difese preparate con carte vere del giocatore',(
  console.log('LIVE_PREPARED_PLAYER_POLICY_AUDIT '+JSON.stringify({
   sampleSize:rows.length,byBoss,
   note:'Politica di test che usa soltanto carte realmente in mano, nessuna anticipazione; PvP e boss LIVE invariati. Tempo massimo 30 secondi per mezzo turno.',
+  rows}));
+});
+
+test('Isolamento difficolta Ombre e Idra: esclusiva vs passiva numerica',()=>{
+ const sectors=[70,80],ships=['C01','E01','L04'];
+ const offsets=[229,463,719,947];
+ const conditions=[
+  {name:'completo',disableBossExclusive:false,disableNumericPassive:false},
+  {name:'senza-esclusiva',disableBossExclusive:true,disableNumericPassive:false},
+  {name:'senza-passiva-numerica',disableBossExclusive:false,disableNumericPassive:true}
+ ];
+ const rows=[];
+ for(const sector of sectors){
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber:sector});
+  assert.ok(boss&&[9,11].includes(boss.planetId));
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:sector,playerLevel:4});
+  for(const condition of conditions)for(const ship of ships)for(const offset of offsets){
+   const r=audit({shipA:ship,levelA:level,levelB:level,boss,seed:sector+offset,
+    disableBossExclusive:condition.disableBossExclusive,
+    disableNumericPassive:condition.disableNumericPassive,log:false});
+   assert.equal(Object.keys(r.failures).length,0);
+   rows.push({boss:boss.name,sector,ship,seed:r.seed,condition:condition.name,
+    winner:r.winner,halfTurns:r.turns,reason:r.finishReason,
+    destroyedA:r.destroyedA,destroyedB:r.destroyedB});
+  }
+ }
+ assert.equal(rows.length,2*3*3*4);
+ const byBoss=sectors.map(sector=>({
+  sector,boss:rows.find(x=>x.sector===sector).boss,
+  outcomes:conditions.map(({name})=>{
+   const cases=rows.filter(r=>r.sector===sector&&r.condition===name);
+   const turns=cases.map(r=>r.halfTurns).sort((a,b)=>a-b);
+   return {condition:name,winsPlayer:cases.filter(r=>r.winner==='A').length,
+    winsBoss:cases.filter(r=>r.winner==='B').length,
+    draws:cases.filter(r=>r.winner==='draw').length,
+    minHalfTurns:turns[0],medianHalfTurns:(turns[5]+turns[6])/2,
+    maxHalfTurns:turns[11]};
+  })
+ }));
+ console.log('LIVE_BOSS_POWER_ISOLATION '+JSON.stringify({
+  sampleSize:rows.length,byBoss,
+  note:'Solo esperimento di test! Entrambe le abilita LIVE restano ATTIVE nelle partite ufficiali. Confronto con le stesse 52 numeriche, stessi mazzi speciali e stessi seed.',
   rows}));
 });
 
