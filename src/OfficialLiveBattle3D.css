@@ -375,3 +375,16 @@
 .es-math-scope .live-root .live-hand-special[data-rarity="EPICA"]{
  border-color:#e9b1ff;box-shadow:0 0 10px #bd6bf677;
 }
+
+
+/* La copertura delle speciali (trappole avversarie) usa SEMPRE il
+   medesimo dorso del mazzo speciale. Non svela tipo o carta nascosta. */
+.es-math-scope .live-root .live-slot--covered{
+ background-image:var(--live-special-back);
+ background-size:cover;background-position:center;
+ background-repeat:no-repeat;border-color:#d6a7f9;
+ box-shadow:0 0 8px #9b4cd977,inset 0 0 5px #d6aaff55;
+}
+.es-math-scope .live-root .live-slot--covered>span{
+ opacity:0;
+}
