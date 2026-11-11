@@ -1963,10 +1963,10 @@ const LANGUAGES = Object.freeze({
 
 // 1.9 SEMI BALISTICI & SINERGIE TEMPORALI / ECONOMICHE / CURE PERCENTUALI
 const SUITS = Object.freeze([
-  { id: 'hearts', name: 'Cuori', symbol: 'â™¥', color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.85)', synergy: '+8% HP Max Cura (+12% Toro) | Dorato: +16% (+24%)' },
-  { id: 'diamonds', name: 'Quadri', symbol: 'â™¦', color: '#00f2fe', glow: 'rgba(0, 242, 254, 0.85)', synergy: '+2 Polvere 🌟 | Dorato: +20 🌟 e 10% 💎' },
-  { id: 'spades', name: 'Picche', symbol: 'â™ ', color: '#c084fc', glow: 'rgba(192, 132, 252, 0.85)', synergy: '+3 HP Danno Diretto | Dorato: +8 HP Puro' },
-  { id: 'clubs', name: 'Fiori', symbol: 'â™£', color: '#10b981', glow: 'rgba(16, 185, 129, 0.85)', synergy: '+5s Serbatoio Tempo | Dorato: +15s e +1🔮' }
+  { id: 'hearts', name: 'Cuori', symbol: '♥', color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.85)', synergy: '+8% HP Max Cura (+12% Toro) | Dorato: +16% (+24%)' },
+  { id: 'diamonds', name: 'Quadri', symbol: '♦', color: '#00f2fe', glow: 'rgba(0, 242, 254, 0.85)', synergy: '+2 Polvere 🌟 | Dorato: +20 🌟 e 10% 💎' },
+  { id: 'spades', name: 'Picche', symbol: '♠', color: '#c084fc', glow: 'rgba(192, 132, 252, 0.85)', synergy: '+3 HP Danno Diretto | Dorato: +8 HP Puro' },
+  { id: 'clubs', name: 'Fiori', symbol: '♣', color: '#10b981', glow: 'rgba(16, 185, 129, 0.85)', synergy: '+5s Serbatoio Tempo | Dorato: +15s e +1🔮' }
 ]);
 
 // 1.10 FACCE DADI QUANTICI 2D (DISPLAY B)
@@ -20977,20 +20977,20 @@ function App() {
       )}
 
 
-            {/* MODALE SELEZIONE CANALE PVP & 4 MODALITÀ FARMING */}
+            {/* Selezione del circuito PvP simulato */}
       {showPvPChannelModal && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 4, 12, 0.96)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 15000, padding: '1rem' }}>
           <div className="cyber-panel" style={{ padding: '1.25rem', maxWidth: '460px', width: '100%', maxHeight: '90vh', overflowY: 'auto', border: '2px solid #00f2fe', boxShadow: '0 0 45px rgba(0, 242, 254, 0.5)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.12)', paddingBottom: '0.4rem', marginBottom: '0.85rem' }}>
               <h3 style={{ color: '#00f2fe', margin: 0, fontWeight: '900', fontSize: '1.1rem', textShadow: '0 0 8px rgba(0, 242, 254, 0.6)' }}>
-                Seleziona Circuito PvP
+                Seleziona Circuito PvP Simulato
               </h3>
               <button className="cyber-btn" onClick={() => setShowPvPChannelModal(false)} style={{ background: '#ef4444', borderColor: '#f87171', padding: '0.2rem 0.5rem' }}>X</button>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               
-              {/* CANALE A: ADDESTRAMENTO & FARMING CON LE 4 MODALITÀ SBLOCCABILI */}
+              {/* Canale Addestramento */}
               {(() => {
                 const isTrainingUnlocked = currentGlobalAdventureSector >= pvpTrainingUnlockThreshold;
                 return (
@@ -21004,11 +21004,11 @@ function App() {
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '0.9rem', fontWeight: '900', color: '#38bdf8' }}>Canale Addestramento (Farming)</span>
+                      <span style={{ fontSize: '0.9rem', fontWeight: '900', color: '#38bdf8' }}>Canale Addestramento</span>
                       <span style={{ fontSize: '0.62rem', background: '#0284c7', padding: '2px 6px', borderRadius: '4px', color: '#fff', fontWeight: 'bold' }}>{trainingEntryCost} Crediti ⚡</span>
                     </div>
                                         <p style={{ fontSize: '0.68rem', color: '#cbd5e1', margin: '0 0 0.5rem 0' }}>
-                      Nessun rischio Trofei. Scegli la modalità di combattimento per allenarti:
+                      Allenati contro un pilota IA sulla plancia ufficiale.
                     </p>
 
                                         <button
@@ -21063,11 +21063,8 @@ function App() {
                       <span style={{ fontSize: '0.9rem', fontWeight: '900', color: '#fde047' }}>Lega Élite Simulata</span>
                       <span className="pvp-ticket-counter">Gioca ({remainingEliteMatches}/10)</span>
                     </div>
-                    <div style={{ fontSize: '0.68rem', color: '#38bdf8', fontWeight: 'bold', margin: '2px 0' }}>
-                      Modalità di oggi: {dailyMode.title}
-                    </div>
                     <p style={{ fontSize: '0.68rem', color: '#cbd5e1', margin: 0, lineHeight: '1.3' }}>
-                      Valutazione a 3 Stelle e classifica locale contro 500 piloti IA. Nessun podio mondiale reale.
+                      Affronta piloti IA. Hai 10 duelli Élite al giorno.
                     </p>
                     <div style={{ fontSize: '0.62rem', color: isEliteUnlocked ? '#facc15' : '#f87171', fontWeight: 'bold', marginTop: '2px' }}>
                       {isEliteUnlocked ? (remainingEliteMatches > 0 ? `✓ Sbloccato (Costo 0⚡ | ${remainingEliteMatches} partite rimaste)` : '⚠️ Partite Giornaliere Esaurite') : `🔒 Richiede Settore ${pvpEliteUnlockThreshold} Avventura`}
@@ -21087,13 +21084,6 @@ function App() {
         const isElite = pendingPvPConfirmation.channel === 'elite';
         const costCredits = isElite ? 0 : trainingEntryCost;
         const canAfford = credits >= costCredits;
-        const dailyMode = getDailyPvPMode();
-                const modeLabels = {
-          classic: 'Classica (4 Operazioni)',
-          vector: 'Vettore Geometrico',
-          double_stage: 'Convergenza (Banco 2+2)',
-          tris: 'Tris Stellare'
-        };
 
         return (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 4, 12, 0.98)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 32000, padding: '1rem' }}>
@@ -21101,65 +21091,18 @@ function App() {
             <div className="cyber-panel" style={{ padding: '1.25rem', maxWidth: '440px', width: '100%', maxHeight: '90vh', overflowY: 'auto', textAlign: 'center', border: `2px solid ${isElite ? '#facc15' : '#00f2fe'}`, boxShadow: `0 0 45px ${isElite ? 'rgba(250, 204, 21, 0.6)' : 'rgba(0, 242, 254, 0.6)'}` }}>
               
               <div style={{ fontSize: '0.65rem', color: '#facc15', fontWeight: '900', letterSpacing: '1px' }}>
-                {isElite ? 'BRIEFING TATTICO ÉLITE' : 'CONFERMA ADDESTRAMENTO'}
+                DUELLO SIMULATO
               </div>
               <h3 style={{ color: isElite ? '#fde047' : '#00f2fe', margin: '0.2rem 0 0.5rem 0', fontWeight: '900', fontSize: '1.15rem' }}>
-                {isElite ? `Lega Élite — ${dailyMode.title}` : `Addestramento — ${modeLabels[pendingPvPConfirmation.mode]}`}
+                {isElite ? 'Lega Élite Simulata' : 'Addestramento'}
               </h3>
 
-              {/* Riquadro Dettagliato a 3 Stelle Esclusivo per l'Élite */}
-              {isElite ? (
-                <div style={{ background: 'rgba(15, 23, 42, 0.9)', padding: '0.75rem', borderRadius: '8px', border: '1.5px solid rgba(250, 204, 21, 0.4)', marginBottom: '0.85rem', textAlign: 'left' }}>
-                  <div style={{ fontSize: '0.65rem', color: '#facc15', fontWeight: '900', textTransform: 'uppercase', marginBottom: '0.4rem', textAlign: 'center' }}>
-                    🎯 OBIETTIVI 3 STELLE & SCAGLIONI TROFEI
-                  </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.68rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(2, 6, 23, 0.7)', padding: '4px 6px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                      <div>
-                        <span style={{ color: '#facc15', fontWeight: '900' }}>⭐ 1ª Stella:</span> <span>Vittoria Base</span>
-                      </div>
-                      <strong style={{ color: '#38bdf8' }}>+15 🏆 (50%)</strong>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(2, 6, 23, 0.7)', padding: '4px 6px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                      <div>
-                        <span style={{ color: '#facc15', fontWeight: '900' }}>⭐⭐ 2ª Stella:</span> <span>HP Residui ≥ 50%</span>
-                      </div>
-                      <strong style={{ color: '#38bdf8' }}>+22 🏆 (75%)</strong>
-                    </div>
-
-                    <div style={{ background: 'rgba(234, 179, 8, 0.15)', padding: '5px 6px', borderRadius: '4px', border: '1px solid #facc15' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ color: '#fde047', fontWeight: '900' }}>⭐⭐⭐ 3ª Stella (Oggi):</span>
-                        <strong style={{ color: '#facc15' }}>+30 🏆 + 1 💎 (100%)</strong>
-                      </div>
-                      <div style={{ color: '#fff', fontWeight: 'bold', marginTop: '2px' }}>
-                        « {dailyMode.star3Challenge.title} »
-                      </div>
-                      <div style={{ color: '#cbd5e1', fontSize: '0.62rem', lineHeight: '1.2' }}>
-                        {dailyMode.star3Challenge.desc}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: '6px', fontSize: '0.62rem', color: '#fca5a5', borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '4px' }}>
-                    * Penalità sconfitta: <strong>-10 🏆</strong> (attiva solo sopra i 100 Trofei).
-                  </div>
-                </div>
-              ) : (
-                <div style={{ background: 'rgba(15, 23, 42, 0.85)', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.3)', marginBottom: '0.85rem', textAlign: 'left' }}>
-                  <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginBottom: '3px' }}>
-                    • Costo d'Ingresso: <strong style={{ color: canAfford ? '#00f2fe' : '#ef4444' }}>{trainingEntryCost} Crediti ⚡</strong>
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginBottom: '3px' }}>
-                    • Impatto Trofei: <strong style={{ color: '#10b981' }}>Nessuno (0 🏆 persi/vinti)</strong>
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#cbd5e1' }}>
-                    • Ricompense Vittoria: <strong style={{ color: '#fde047' }}>+45 🌟 Polvere | +80 XP | +20 ⚡ Crediti</strong>
-                  </div>
-                </div>
-              )}
+              <div style={{ background: 'rgba(15, 23, 42, 0.85)', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.3)', marginBottom: '0.85rem', textAlign: 'left', fontSize: '0.72rem', color: '#cbd5e1' }}>
+                <p style={{ margin: '0 0 3px' }}>
+                  Ingresso <strong style={{ color: canAfford ? '#00f2fe' : '#ef4444' }}>{isElite ? 'gratuito' : `${costCredits} Crediti ⚡`}</strong>
+                </p>
+                <p style={{ margin: 0 }}>Duello contro l’IA, senza ricompense o variazioni dei trofei.</p>
+              </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
                 <button
@@ -21177,7 +21120,7 @@ function App() {
                   className={`cyber-btn ${isElite ? 'cyber-btn-warning' : 'cyber-btn-primary'}`}
                   style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', fontWeight: '900' }}
                 >
-                  {canAfford ? "AVVIA MATCHMAKING ➔" : `Crediti Insufficienti (${costCredits}⚡)`}
+                  {canAfford ? 'AVVIA DUELLO SIMULATO ➔' : `Crediti Insufficienti (${costCredits}⚡)`}
                 </button>
                 <button className="cyber-btn" onClick={() => setPendingPvPConfirmation(null)} style={{ width: '100%', padding: '0.4rem', fontSize: '0.75rem' }}>
                   Annulla

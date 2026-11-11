@@ -713,7 +713,7 @@ export default function HomeScreen({
             <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
               <SciFiIcon name="hazard" size={13} color="#fff" /> Duello 1v1
             </span>
-            <span style={{ fontSize: '0.5rem', color: '#f5d0fe', fontWeight: 'normal' }}>Online</span>
+            <span style={{ fontSize: '0.5rem', color: '#f5d0fe', fontWeight: 'normal' }}>Simulato</span>
           </button>
 
           {/* 4. Assetto Nave */}
