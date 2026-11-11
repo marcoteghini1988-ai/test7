@@ -8,6 +8,7 @@ import {isPvpTerrain} from './pvpTerrainCards.js';
 import {isTacticalEpic} from './tacticalEpicCards.js';
 import {isModuleCard,readLegacyModuleLevels,MODULE_STORAGE_KEY} from './tacticalEquipmentCards.js';
 import {LEGACY_EPIC_KEYS,readLegacyEpicProgress} from './officialEpicOwnership.js';
+import {officialSpecialLoadoutAccess} from './officialSpecialLoadoutAccess.js';
 import {
  SPECIAL_TYPES,SPECIAL_DECK_SIZE,SPECIAL_DECK_COPY_LIMIT,SPECIAL_COLLECTION_KEY,
  readSpecialCollection,updateSpecialCollection,specialDeckCounts,
@@ -31,6 +32,9 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
  const epicSlotLimit=snapshot.epicSlotLimit??0;
  const epicEquipped=types.filter(isTacticalEpic).length;
  const epicsValid=epicEquipped<=epicSlotLimit;
+ const access=officialSpecialLoadoutAccess(types,{
+  epicSlotLimit,moduleLevels:snapshot.moduleLevels});
+ const accessValid=access.valid;
  const changed=!!collection&&draft!==null&&
   (types.length!==collection.loadout.length||types.some((t,i)=>t!==collection.loadout[i]));
  const refresh=()=>setSnapshot(readSafe());
@@ -44,7 +48,9 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
   if(amount>0){
    if(types.length>=SPECIAL_DECK_SIZE||
      counts[type]>=Math.min(specialCardMaxCopies(type),collection.owned[type])||
-     (isTacticalEpic(type)&&epicEquipped>=epicSlotLimit))return;
+     (isTacticalEpic(type)&&epicEquipped>=epicSlotLimit)||
+     (isModuleCard(type)&&(!Number.isInteger(snapshot.moduleLevels?.[type])||
+      snapshot.moduleLevels[type]<1||snapshot.moduleLevels[type]>9)))return;
    setDraft([...types,type]);
   }else{
    const index=types.lastIndexOf(type);
@@ -54,9 +60,17 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
   setStatus('');
  };
  function save(){
-  if(!collection||!changed||!check.valid||!epicsValid||saving)return;
+  if(!collection||!changed||!check.valid||!accessValid||saving)return;
   setSaving(true);
   try{
+   // I salvataggi di acquisto/fusione possono essere cambiati anche
+   // mentre il pannello e' aperto: ricontrollarli prima della scrittura.
+   const fresh=officialSpecialLoadoutAccess(types,{
+    epicSlotLimit:readLegacyEpicProgress().slotLimit,
+    moduleLevels:readLegacyModuleLevels()});
+   if(!fresh.valid)throw new Error(fresh.reason==='epic_slots'?
+    'Slot Epici non ancora sbloccati. Aggiorna l’inventario.':
+    'Modulo non acquistato o livello non valido. Aggiorna l’inventario.');
    const next=updateSpecialCollection(current=>equipSpecialDeck(current,types));
    setSnapshot(readSafe());setDraft(null);
    setStatus('Mazzo speciale salvato. Verrà usato alla prossima battaglia.');
@@ -109,7 +123,7 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
         onClick={()=>updateDraft(type,-1)}>−</button>
        <span aria-label={'Equipaggiate '+n+' possedute '+owned}>{n}/{owned}</span>
        <button type="button" aria-label={'Aggiungi '+info.name}
-        disabled={saving||types.length>=SPECIAL_DECK_SIZE||n>=Math.min(owned,specialCardMaxCopies(type))||(isTacticalEpic(type)&&epicEquipped>=epicSlotLimit)}
+        disabled={saving||types.length>=SPECIAL_DECK_SIZE||n>=Math.min(owned,specialCardMaxCopies(type))||(isTacticalEpic(type)&&epicEquipped>=epicSlotLimit)||(isModuleCard(type)&&(!Number.isInteger(snapshot.moduleLevels?.[type])||snapshot.moduleLevels[type]<1||snapshot.moduleLevels[type]>9))}
         onClick={()=>updateDraft(type,1)}>+</button>
       </div>
      </div>;
@@ -118,8 +132,9 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
    {types.length!==SPECIAL_DECK_SIZE&&<p role="status">Mancano {SPECIAL_DECK_SIZE-types.length} carte per completare il mazzo.</p>}
    {!check.valid&&types.length===SPECIAL_DECK_SIZE&&<p role="status">Il mazzo non rispetta i limiti delle copie possedute.</p>}
    {!epicsValid&&<p role="status">Slot Epici insufficienti: aumenta il livello pilota oppure stabilizza un Varco nella Cripta.</p>}
+   {access.reason==='module_not_unlocked'&&<p role="status">Modulo non acquistato o livello non valido: verifica lo sblocco nell'Hangar prima di salvarlo nel mazzo.</p>}
    <div className="special-deck-actions">
-    <button type="button" disabled={saving||!changed||!check.valid||!epicsValid} onClick={save}>SALVA MAZZO</button>
+    <button type="button" disabled={saving||!changed||!check.valid||!accessValid} onClick={save}>SALVA MAZZO</button>
     <button type="button" disabled={saving||collection.packCredits<1} onClick={openPack}>
      APRI PACCHETTO · 3 CARTE
     </button>
