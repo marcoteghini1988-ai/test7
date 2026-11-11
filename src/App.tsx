@@ -17753,23 +17753,6 @@ function App() {
   });
   const [expandedPlanet, setExpandedPlanet] = useState(null);
 
-  // STATO E FUNZIONE DEBUG PER TEST DIRETTO MODALITÀ
-  const [showDebugModal, setShowDebugModal] = useState(false);
-
-    const launchDirectTest = (planetNum, levelNum) => {
-    // Campo Neutro forzato nei test: garantisce che il cambio carte e i comandi siano sempre attivi e testabili
-    const modifier = { id: 'standard', name: 'Campo Neutro e Stabile', desc: 'Nessun effetto speciale attivo.' };
-    const aiPower = typeof getAdventureAiPower === 'function' ? getAdventureAiPower(planetNum, levelNum) : 0.65;
-    setGameMode('adventure');
-    setPvpMeta(null);
-    setActiveAdventure({ planet: planetNum, level: levelNum, modifier, aiPower });
-    if (typeof playBGM === 'function') playBGM(levelNum === 10 ? 'boss' : 'battle');
-    setBattleSessionId(s => s + 1);
-    setStep('game');
-    setShowDebugModal(false);
-  };
-
-
   // =========================================================================
   // CALCOLI DERIVATI & MEMO GLOBALI
   // =========================================================================
@@ -19970,7 +19953,6 @@ function App() {
                     trophies={trophies}
           dailyBountiesState={dailyBountiesState}
           triggerPopup={triggerPopup}
-          onOpenDebug={() => setShowDebugModal(true)}
         />
       )}
 
@@ -21219,60 +21201,7 @@ function App() {
 
 
 
-      {/* MODALE DI TEST RAPIDO MODALITÀ (DEBUG) */}
 
-      {showDebugModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 4, 12, 0.95)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 40000, padding: '1rem' }}>
-          <div className="cyber-panel" style={{ padding: '1.25rem', maxWidth: '360px', width: '100%', textAlign: 'center', border: '2px solid #ef4444', boxShadow: '0 0 35px rgba(239, 68, 68, 0.5)' }}>
-            <div style={{ fontSize: '0.65rem', color: '#fca5a5', fontWeight: 900, letterSpacing: '1px' }}>PANNELLO DI COLLAUDO</div>
-            <h3 style={{ color: '#fff', margin: '0.2rem 0 0.8rem 0', fontWeight: 900, fontSize: '1.1rem' }}>Scegli Modalità da Testare</h3>
-            
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-              <button 
-                className="cyber-btn cyber-btn-primary" 
-                style={{ padding: '0.65rem', fontSize: '0.78rem' }}
-                onClick={() => launchDirectTest(1, 1)}
-              >
-                ⚔️ Terra Settore 1 (Avvio Standard)
-              </button>
-
-              <button 
-                className="cyber-btn cyber-btn-warning" 
-                style={{ padding: '0.65rem', fontSize: '0.78rem' }}
-                onClick={() => launchDirectTest(1, 10)}
-              >
-                👑 Boss Gaia (Terra Settore 10)
-              </button>
-
-              <button 
-                className="cyber-btn cyber-btn-primary" 
-                style={{ padding: '0.65rem', fontSize: '0.78rem', borderColor: '#00f2fe' }}
-                onClick={() => launchDirectTest(2, 1)}
-              >
-                🪐 Marte Settore 1 (Pianeta 2)
-              </button>
-
-              <button 
-                className="cyber-btn cyber-btn-ether" 
-                style={{ padding: '0.65rem', fontSize: '0.78rem' }}
-                onClick={() => launchDirectTest(20, 10)}
-              >
-                👑 Boss Finale Encelado (P20 S.10)
-              </button>
-            </div>
-
-
-
-            <button 
-              className="cyber-btn"
-              onClick={() => setShowDebugModal(false)}
-              style={{ width: '100%', padding: '0.45rem', fontSize: '0.75rem' }}
-            >
-              Chiudi
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
