@@ -16,7 +16,7 @@ export const PVP_TERRAIN_CATALOG=Object.freeze(Object.fromEntries(definitions.ma
  ([id,name,short,arenaId,description,effects])=>[id,Object.freeze({
   id,name,short,arenaId,description,
   durationCycles:PVP_TERRAIN_DURATION_CYCLES,
-  imagePath:'/assets/terrain-pvp/'+id+'.svg',
+  imagePath:'/assets/terrain-pvp/'+id+'.png',
   effects:Object.freeze(effects)
  })]
 )));
