@@ -178,6 +178,17 @@ for(const deckId of OFFICIAL_NUMERIC_BACK_IDS){
   'Dorso del mazzo numerico ufficiale mancante: '+deckId);
 }
 
+// Radice Mathfleet: conserva solo gli art effettivamente usati dalla Home
+// e i motori storici utili a rappresentare i componenti distruttibili.
+for(const filename of ["C01.png","C01_player.png","C02.png","C02_player.png","C03.png","C03_player.png","C04.png","N00.png"]){
+ verify(!exists('public/assets/mathfleet/'+filename),
+  'Doppione nave precedente ancora alla radice di mathfleet: '+filename);
+}
+verify(home.includes("homePng('mathfleet/N00_player')")&&
+ home.includes("homePng('mathfleet/C04_player')")&&
+ home.includes("homePng('mathfleet/motor_plus_intact')"),
+ 'La Home deve conservare i propri tre asset grafici originali');
+
 const rootAssetPngs=readdirSync(resolve(root,'public/assets')).filter(name=>/\.png$/i.test(name));
 verify(rootAssetPngs.length===0,
  'Immagini duplicate alla radice degli asset: '+rootAssetPngs.join(', '));
