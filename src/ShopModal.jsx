@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { PILOTS_DATABASE } from './pilotsSystem';
-import { commanderAbility } from './commanderAbilities.js';
-import { tacticalCommanderReady } from './tacticalCommanders.js';
 import { OFFICIAL_NUMERIC_BACK_IDS, officialNumericDeckBackName, officialNumericDeckBackPath } from './officialDeckBackArt.js';
 import { TACTICAL_MODULE_CARDS, moduleCardType } from './tacticalEquipmentCards.js';
 import { officialSpecialArtPath } from './officialSpecialCardArt.js';
@@ -39,20 +36,13 @@ const UPGRADE_PILOT_REQS = Object.freeze({
 
 const SHOP_TABS = [
   { id: 'ships', label: 'Navi', icon: '🛸' },
-  { id: 'characters', label: 'Comandanti', icon: '👤' },
   { id: 'decks', label: 'Mazzi', icon: '🃏' },
   { id: 'abilities', label: 'Moduli', icon: '⚡' },
   { id: 'resources', label: 'Risorse', icon: '💎' }
 ];
 
 export default function ShopModal({
-  initialTab = 'characters',
-  // Piloti
-  selectedPilot,
-  pilotInventory = {},
-  onSelectPilot,
-  onUnlockPilot,
-  onUpgradePilot,
+  initialTab = 'ships',
   // Mazzi
   selectedDeck,
   deckInventory = {},
@@ -78,7 +68,7 @@ export default function ShopModal({
   onBackToLoadout,
   onCloseToHome
 }) {
-  const requestedTab = initialTab || 'characters';
+  const requestedTab = initialTab || 'ships';
   const openingTab = SHOP_TABS.some(tab => tab.id === requestedTab) ? requestedTab : 'ships';
   const [activeTab, setActiveTab] = useState(openingTab);
   useEffect(() => {
@@ -86,7 +76,6 @@ export default function ShopModal({
   }, [openingTab]);
 
   // FILTRI DI RARITÀ
-  const [pilotRarityFilter, setPilotRarityFilter] = useState('all');
   const [deckRarityFilter, setDeckRarityFilter] = useState('all');
   const [abilityRarityFilter, setAbilityRarityFilter] = useState('all');
 
@@ -155,10 +144,7 @@ export default function ShopModal({
     if (!upgradeConfirm) return;
     const { type, id, nextLvl, cost, title } = upgradeConfirm;
 
-    if (type === 'pilot') {
-      if (typeof onUpgradePilot === 'function') onUpgradePilot(id, nextLvl, cost);
-      triggerDopamineCelebration(title, `POTENZIATO AL GRADO ${nextLvl}!`);
-    } else if (type === 'deck') {
+    if (type === 'deck') {
       if (typeof onUpgradeDeck === 'function') onUpgradeDeck(id);
       triggerDopamineCelebration(title, `INVIATO AL CANTIERE (LIV. ${nextLvl})!`);
     } else if (type === 'ability') {
@@ -171,7 +157,6 @@ export default function ShopModal({
     setUpgradeConfirm(null);
   };
 
-  const commanders = PILOTS_DATABASE.filter(pilot => !pilot.isNpcOnly && tacticalCommanderReady(pilot.id));
   const inspectedModule = inspectedItem?.type === 'ability'
     ? TACTICAL_MODULE_CARDS[moduleCardType(inspectedItem.data.id)]
     : null;
@@ -251,126 +236,7 @@ export default function ShopModal({
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', paddingRight: '2px', position: 'relative', zIndex: 5 }}>
           {activeTab === 'ships' && <ShipShopPanel stardust={stardust} onUpgradeShip={onUpgradeShip}/>}
           
-          {/* TAB 1: PILOTI */}
-          {activeTab === 'characters' && (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {renderRarityFilter(pilotRarityFilter, setPilotRarityFilter)}
-              <p style={{ margin: '0.25rem 0.5rem 0.55rem', fontSize: '0.65rem', color: '#b6cbdc' }}>
-                Le Carte Personaggio Boss si gestiscono nel Mazzo Speciale dell’Hangar.
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.65rem' }}>
-                {commanders.filter(pilot => pilotRarityFilter === 'all' || normalizeRarity(pilot.rarity) === pilotRarityFilter).map(pilot => {
-                  const ability = commanderAbility(pilot.id);
-                  const inv = pilotInventory?.[pilot.id];
-                  const isUnlocked = Boolean(inv?.unlocked);
-                  const curLvl = inv?.level || 1;
-                  const isEquipped = selectedPilot === pilot.id;
-                  const nextUpgrade = pilot.upgradeTable?.[curLvl + 1] || null;
-
-                  return (
-                    <div 
-                      key={pilot.id} 
-                      className="cyber-panel" 
-                      style={{ 
-                        padding: '0.65rem', 
-                        border: isEquipped ? '2px solid #00f2fe' : (isUnlocked ? `1.5px solid ${pilot.rarityColor || pilot.color}` : '1px dashed rgba(255,255,255,0.2)'), 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        justifyContent: 'space-between',
-                        background: isUnlocked ? 'rgba(15, 23, 42, 0.9)' : 'rgba(2, 6, 23, 0.8)'
-                      }}
-                    >
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                          <span style={{ fontSize: '0.55rem', background: pilot.rarityColor || pilot.color, color: '#020617', padding: '1px 5px', borderRadius: '3px', fontWeight: 900, textTransform: 'uppercase' }}>
-                            {pilot.rarity}
-                          </span>
-                          {isUnlocked && (
-                            <span style={{ fontSize: '0.58rem', color: '#10b981', fontWeight: 900, background: 'rgba(16, 185, 129, 0.15)', padding: '1px 5px', borderRadius: '3px', border: '1px solid #10b981' }}>
-                              GRADO {curLvl}/5
-                            </span>
-                          )}
-                        </div>
-
-                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: pilot.rarityColor || pilot.color, textAlign: 'center', margin: '2px 0' }}>
-                          {pilot.name}
-                        </div>
-                        <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
-                          <div style={{ color: '#00f2fe', fontWeight: 900, marginBottom: '2px' }}>ABILITÀ DEL COMANDANTE</div>
-                          <div style={{ color: '#cbd5e1' }}>{ability.role} · {ability.description}</div>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: '0.4rem', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                        {isUnlocked ? (
-                          <>
-                            <button
-                              onClick={() => {
-                                try { playSound('click'); } catch (_) {}
-                                if (typeof onSelectPilot === 'function') onSelectPilot(pilot.id);
-                                showHint(`✓ Pilota ${pilot.name} assegnato alla plancia!`);
-                              }}
-                              className={`cyber-btn ${isEquipped ? '' : 'cyber-btn-primary'}`}
-                              style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
-                            >
-                              {isEquipped ? '✓ IN PLANCIA' : 'EQUIPAGGIA'}
-                            </button>
-
-                            {curLvl < 5 && nextUpgrade && (
-                              <button
-                                onClick={() => {
-                                  try { playSound('click'); } catch (_) {}
-                                  setUpgradeConfirm({
-                                    type: 'pilot',
-                                    id: pilot.id,
-                                    title: pilot.name,
-                                    curLvl,
-                                    nextLvl: curLvl + 1,
-                                    reqLevel: nextUpgrade.reqLevel || nextUpgrade.reqXP || 1,
-                                    cost: {
-                                      dust: nextUpgrade.dust || 0,
-                                      diamonds: nextUpgrade.dia || nextUpgrade.diamonds || 0,
-                                      voidCrystals: nextUpgrade.voidC || nextUpgrade.voidCrystals || 0,
-                                      primordialMatter: nextUpgrade.prim || nextUpgrade.primordialMatter || 0
-                                    },
-                                    currentBonus: `Grado ${curLvl}`,
-                                    nextBonus: `Grado ${curLvl + 1}`
-                                  });
-                                }}
-                                className="cyber-btn cyber-btn-warning"
-                                style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
-                              >
-                                ⚡ MIGLIORA A GRADO {curLvl + 1} ➔
-                              </button>
-                            )}
-                          </>
-                        ) : pilot.isBossReward ? (
-                          <div style={{ background: 'rgba(234, 179, 8, 0.15)', border: '1px solid #facc15', borderRadius: '4px', padding: '4px 6px', textAlign: 'center' }}>
-                            <span style={{ fontSize: '0.6rem', color: '#fde047', fontWeight: 900 }}>
-                              🔒 SBLOCCO DA SETTORE 10 (BOSS P{pilot.unlockBossPlanet})
-                            </span>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              try { playSound('click'); } catch (_) {}
-                              if (typeof onUnlockPilot === 'function') onUnlockPilot(pilot.id, pilot.unlockCost || { dust: 200, diamonds: 0 });
-                            }}
-                            className="cyber-btn cyber-btn-primary"
-                            style={{ padding: '0.45rem', fontSize: '0.68rem', fontWeight: 900 }}
-                          >
-                            Sblocca ({pilot.unlockCost?.diamonds > 0 ? `${pilot.unlockCost.diamonds} 💎` : `${pilot.unlockCost?.dust || 200} 🌟`})
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* TAB 3: MAZZI */}
+          {/* TAB: MAZZI */}
           {activeTab === 'decks' && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {renderRarityFilter(deckRarityFilter, setDeckRarityFilter)}
