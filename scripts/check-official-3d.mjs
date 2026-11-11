@@ -54,6 +54,8 @@ verify(!shop.includes("id: 'characters'")&&
  'Lo Shop legacy e il pulsante DEBUG di prova non devono ricomparire');
 for(const orphan of [
  'src/TrisBattleView.jsx','src/DoubleStageBattleView.jsx','src/VectorBattleView.jsx',
+ 'src/LegacyPokerBattle.jsx','src/ClassicPokerFieldBridge.jsx','src/ClassicBattleView.jsx',
+ 'src/newCombat/legacyPokerBattle.css',
  'src/tactical/TacticalStellarApp.jsx','src/tactical/engine.js',
  'src/assets/react.svg','src/assets/vite.svg','src/assets/hero.png'
 ]){
