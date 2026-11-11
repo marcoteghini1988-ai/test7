@@ -45,8 +45,10 @@ verify(source.includes("import LegacyPokerBattle from './LegacyPokerBattle'")&&
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
 verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')&&
- !/\bid:\s*['"]weapons['"]/.test(shop)&&!loadout.includes("onOpenShopTab('weapons')"),
- 'Negozio e Area Personale devono escludere le vecchie Carte Arma');
+ !/\bid:\s*['"](?:weapons|terrain|environments)['"]/.test(shop)&&
+ !/onOpenShopTab\(['"](?:weapons|terrain|environments)['"]\)/.test(loadout)&&
+ !shop.includes('onSelectAbility')&&!loadout.includes('equippedTerrainSlots'),
+ 'Bazar e Area Giocatore devono usare l’assetto LIVE e il Mazzo Speciale');
 
 verify(battleEntry.includes("import OfficialBattle3D from './OfficialLiveBattle3D.jsx'")&&
  battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'")&&

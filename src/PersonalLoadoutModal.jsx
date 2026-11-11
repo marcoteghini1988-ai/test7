@@ -1,7 +1,7 @@
 import React from 'react';
-import { TacticalVisual, ModuleIcon, TerrainVisual } from './visualAssets';
-import { PILOTS_DATABASE, PilotCard } from './pilotsSystem';
-import {describePhase16HTerrain} from './newCombat/phase16HProgression.js';
+import {getPilotById} from './pilotsSystem';
+import {commanderAbility} from './commanderAbilities.js';
+import {OFFICIAL_NUMERIC_BACK_IDS,officialNumericDeckBackName,officialNumericDeckBackPath} from './officialDeckBackArt.js';
 import {ShipHangarPanel} from './ShipCollectionPanels.jsx';
 
 export default function PersonalLoadoutModal({
@@ -9,7 +9,6 @@ export default function PersonalLoadoutModal({
   level = 1,
   xp = 0,
   xpThreshold = 100,
-  maxPlayerHp = 50,
   // Le 8 Risorse
   credits = 0,
   lives = 3,
@@ -30,29 +29,23 @@ export default function PersonalLoadoutModal({
   nextExtractorConfig,
   onHarvestEther,
   onUpgradeExtractor,
-  // Assetto Operativo Pilota, Mazzo & Modulo
+  // Comandante e mazzo numerico
   selectedPilot = 'pilot_com_1',
   pilotInventory = {},
   selectedDeck = 'neutral_starter',
   currentDeckObj,
   deckInventory = {},
-  selectedAbility = null,
-  abilities = {},
-  isAbilityModuleUnlocked = false,
-  // Manufatti Epici & Terreni
-  equippedEpicItems = [],
-  epicItemsDatabase = [],
-  equippedTerrainSlots = [],
-  terrainCardsDatabase = [],
   // Navigazione Shop & Chiusura
   onOpenShopTab,
   onClose
 }) {
-  const pilotsList = Array.isArray(PILOTS_DATABASE) ? PILOTS_DATABASE : Object.values(PILOTS_DATABASE || {});
-  const currentPilotObj = pilotsList.find(p => p.id === selectedPilot) || pilotsList[0] || {};
+  const currentPilotObj = getPilotById(selectedPilot) || {};
+  const commander = commanderAbility(selectedPilot);
   const pilotLvl = pilotInventory?.[selectedPilot]?.level || 1;
+  const deckReady = selectedDeck === 'neutral_starter' ||
+    (OFFICIAL_NUMERIC_BACK_IDS.includes(selectedDeck) && deckInventory?.[selectedDeck]?.unlocked === true);
+  const deckColor = deckReady ? currentDeckObj?.color || '#38bdf8' : '#38bdf8';
   const deckLvl = deckInventory?.[selectedDeck]?.level || 1;
-  const abilityLvl = abilities?.[selectedAbility]?.level || 1;
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 4, 12, 0.97)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 31000, padding: 'clamp(4px, 1.5vmin, 12px)' }}>
@@ -116,10 +109,6 @@ export default function PersonalLoadoutModal({
                 XP: <strong>{xp} / {xpThreshold}</strong> | Fascia {level >= 66 ? '3' : level >= 31 ? '2' : '1'}
               </div>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.95rem', fontWeight: 900, color: '#10b981' }}>{maxPlayerHp} HP</div>
-              <div style={{ fontSize: '0.52rem', color: '#94a3b8' }}>Curva Vitale</div>
-            </div>
           </div>
 
           {/* 3. REATTORE ESTRATTORE ETERE */}
@@ -163,11 +152,10 @@ export default function PersonalLoadoutModal({
             {/* Pilota */}
             <div className="cyber-panel" style={{ padding: '0.45rem 0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${currentPilotObj.color || '#00f2fe'}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <PilotCard pilot={currentPilotObj || selectedPilot} compact={true} isEquipped={true} />
                 <div>
-                  <div style={{ fontSize: '0.52rem', color: '#facc15', fontWeight: 800 }}>PILOTA IN PLANCIA</div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 900, color: currentPilotObj.color || '#00f2fe' }}>{currentPilotObj.name || 'Pilota Assegnato'}</div>
-                  <div style={{ fontSize: '0.58rem', color: '#cbd5e1' }}>Grado {pilotLvl}/5 • {currentPilotObj.archetype || currentPilotObj.role || 'Operativo'}</div>
+                  <div style={{ fontSize: '0.52rem', color: '#facc15', fontWeight: 800 }}>COMANDANTE</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 900, color: currentPilotObj.color || '#00f2fe' }}>{commander?.name || 'Scegli un comandante'}</div>
+                  <div style={{ fontSize: '0.58rem', color: '#cbd5e1' }}>Grado {pilotLvl}/5 • {commander?.role || 'Flotta'}</div>
                 </div>
               </div>
               <button onClick={() => onOpenShopTab('characters')} className="cyber-btn cyber-btn-primary" style={{ padding: '0.3rem 0.55rem', fontSize: '0.62rem', fontWeight: 900 }}>
@@ -176,124 +164,18 @@ export default function PersonalLoadoutModal({
             </div>
 
             {/* Mazzo Tattico */}
-            <div className="cyber-panel" style={{ padding: '0.45rem 0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${currentDeckObj?.color || '#38bdf8'}` }}>
+            <div className="cyber-panel" style={{ padding: '0.45rem 0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${deckColor}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <TacticalVisual id={selectedDeck} type="card_back" color={currentDeckObj?.color || '#38bdf8'} width={28} height={42} />
+                {deckReady && <img src={officialNumericDeckBackPath(selectedDeck)} alt="" width={28} height={42} />}
                 <div>
-                  <div style={{ fontSize: '0.52rem', color: '#facc15', fontWeight: 800 }}>MAZZO TATTICO</div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 900, color: currentDeckObj?.color || '#fff' }}>{currentDeckObj?.name || 'Mazzo Base'}</div>
-                  <div style={{ fontSize: '0.58rem', color: '#cbd5e1' }}>Livello {deckLvl} / {currentDeckObj?.maxLevel || 3}</div>
+                  <div style={{ fontSize: '0.52rem', color: '#facc15', fontWeight: 800 }}>MAZZO NUMERICO</div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 900, color: currentDeckObj?.color || '#fff' }}>{deckReady ? officialNumericDeckBackName(selectedDeck) : 'Scegli un mazzo numerico'}</div>
+                  {deckReady && <div style={{ fontSize: '0.58rem', color: '#cbd5e1' }}>Livello {deckLvl}</div>}
                 </div>
               </div>
               <button onClick={() => onOpenShopTab('decks')} className="cyber-btn cyber-btn-warning" style={{ padding: '0.3rem 0.55rem', fontSize: '0.62rem', fontWeight: 900 }}>
                 GESTISCI ➔
               </button>
-            </div>
-
-            {/* Modulo Abilità */}
-            <div className="cyber-panel" style={{ padding: '0.45rem 0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid #c084fc' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <ModuleIcon id={selectedAbility || 'taurus'} size={24} color="#c084fc" />
-                <div>
-                  <div style={{ fontSize: '0.52rem', color: '#c084fc', fontWeight: 800 }}>MODULO ABILITÀ IBRIDO</div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 900, color: '#fff' }}>
-                    {isAbilityModuleUnlocked ? (selectedAbility ? `${selectedAbility.toUpperCase()} (L.${abilityLvl})` : 'Nessuno') : '🔒 Sblocco Settore 9'}
-                  </div>
-                </div>
-              </div>
-              <button onClick={() => onOpenShopTab('abilities')} className="cyber-btn cyber-btn-ether" style={{ padding: '0.3rem 0.55rem', fontSize: '0.62rem', fontWeight: 900 }}>
-                GESTISCI ➔
-              </button>
-            </div>
-
-            {/* Manufatti Epici (2 Slot) */}
-            <div className="cyber-panel" style={{ padding: '0.5rem', border: '1px solid #facc15' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.55rem', color: '#facc15', fontWeight: 900 }}>MANUFATTI EPICI (2 SLOT)</span>
-                <span style={{ fontSize: '0.52rem', color: '#cbd5e1' }}>*Cripta in Campagna</span>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '4px' }}>
-                {[0, 1].map(idx => {
-                  const itemId = (equippedEpicItems || [])[idx];
-                  const itemObj = itemId ? (epicItemsDatabase || []).find(e => e.id === itemId) : null;
-                  return (
-                    <div 
-                      key={idx}
-                      title={itemObj ? (itemObj.desc || itemObj.description || itemObj.name) : `Slot ${idx+1} libero`}
-                      style={{ 
-                        background: 'rgba(2, 6, 23, 0.75)', 
-                        border: itemObj ? `1px solid ${itemObj.color || '#facc15'}` : '1px dashed rgba(255,255,255,0.15)', 
-                        borderRadius: '6px', 
-                        padding: '4px 6px', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '6px' 
-                      }}
-                    >
-                      {itemObj ? (
-                        <>
-                          <TacticalVisual id={itemObj.id} type="epic_item" color={itemObj.color || '#facc15'} width={24} height={24} />
-                          <div style={{ textAlign: 'left', minWidth: 0, lineHeight: 1.1 }}>
-                            <div style={{ fontSize: '0.46rem', color: '#94a3b8' }}>Slot {idx + 1}</div>
-                            <div style={{ fontSize: '0.65rem', color: itemObj.color || '#facc15', fontWeight: 900, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                              {(itemObj.name || '').split(' ')[0]}
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        <div style={{ width: '100%', textAlign: 'center', fontSize: '0.58rem', color: '#64748b' }}>
-                          Slot {idx + 1}: Vuoto
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Banco Terreno (4 Slot) */}
-            <div className="cyber-panel" style={{ padding: '0.5rem', border: '1px solid #10b981' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <span style={{ fontSize: '0.55rem', color: '#10b981', fontWeight: 900 }}>BANCO TERRENO (4 SLOT COPERTI)</span>
-                <button onClick={() => onOpenShopTab('terrain')} className="cyber-btn" style={{ padding: '2px 6px', fontSize: '0.52rem', fontWeight: 900 }}>
-                  MODIFICA ➔
-                </button>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '4px' }}>
-                {[0, 1, 2, 3].map(idx => {
-                  const tId = (equippedTerrainSlots || [])[idx];
-                  const card = tId ? (terrainCardsDatabase || []).find(c => c.id === tId) : null;
-                  return (
-                    <div 
-                      key={idx} 
-                      style={{ 
-                        background: 'rgba(2, 6, 23, 0.75)', 
-                        border: card ? `1px solid ${card.color || '#10b981'}` : '1px dashed rgba(255,255,255,0.15)', 
-                        borderRadius: '6px', 
-                        padding: '4px 2px', 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        minHeight: '68px',
-                        boxSizing: 'border-box'
-                      }}
-                    >
-                      <div style={{ fontSize: '0.46rem', color: '#94a3b8', marginBottom: '2px' }}>Slot {idx + 1}</div>
-                      {card ? (
-                        <>
-                          <TerrainVisual cardId={card.id} color={card.color || '#10b981'} width={28} height={42} isBack={false} />
-                          <div style={{ fontSize: '0.52rem', color: card.color || '#10b981', fontWeight: 900, marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', width: '100%', textAlign: 'center' }}>
-                            {(card.name || '').split(' ')[0]}
-                          </div>
-                        </>
-                      ) : (
-                        <div style={{ fontSize: '0.55rem', color: '#475569', fontWeight: 900, margin: 'auto 0' }}>Libero</div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
             </div>
 
           </div>

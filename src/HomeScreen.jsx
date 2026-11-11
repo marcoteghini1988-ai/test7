@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { SciFiIcon, TacticalVisual, ModuleIcon, TerrainVisual } from './visualAssets';
+import { SciFiIcon, TacticalVisual } from './visualAssets';
 import { PILOTS_DATABASE } from './pilotsSystem';
 import { playSound } from './audio';
 import { SUIT_SIGNS } from './mathDuelEngine.js';
@@ -110,12 +110,6 @@ export default function HomeScreen({
   selectedDeck = 'neutral_starter',
   currentDeckObj = {},
   selectedPilot = 'pilot_com_1',
-  selectedAbility = '',
-  isAbilityModuleUnlocked = false,
-  equippedEpicItems = [],
-  epicItemsDatabase = [],
-  equippedTerrainSlots = [],
-  terrainCardsDatabase = [],
   maxUnlockedPlanet = 1,
   currentPlanetLevel = 1,
   currentPlanetName = 'Terra',
@@ -140,8 +134,6 @@ export default function HomeScreen({
   onOpenDebug = () => {}
 }) {
   const [carouselSlide, setCarouselSlide] = useState(0);
-  const [subEpicIdx, setSubEpicIdx] = useState(0);
-  const [subTerrainIdx, setSubTerrainIdx] = useState(0);
   const [localHint, setLocalHint] = useState(null);
 
   // Gesture Swipe Carosello
@@ -185,16 +177,6 @@ export default function HomeScreen({
     }
   };
 
-  useEffect(() => {
-    if (carouselSlide === 3) {
-      const timer = setInterval(() => setSubEpicIdx(prev => (prev === 0 ? 1 : 0)), 3000);
-      return () => clearInterval(timer);
-    } else if (carouselSlide === 4) {
-      const timer = setInterval(() => setSubTerrainIdx(prev => (prev + 1) % 4), 3000);
-      return () => clearInterval(timer);
-    }
-  }, [carouselSlide]);
-
   const claimableBounties = (dailyBountiesState?.bounties || []).filter(b => b && b.completed && !b.claimed).length;
 
   const handleTouchStart = (e) => {
@@ -215,12 +197,9 @@ export default function HomeScreen({
     const distance = touchStartXRef.current - touchEndXRef.current;
     const minSwipeDistance = 35;
 
-    if (distance > minSwipeDistance) {
+    if (Math.abs(distance) > minSwipeDistance) {
       try { playSound('card_slide'); } catch (_) {}
-      setCarouselSlide(prev => (prev === 4 ? 0 : prev + 1));
-    } else if (distance < -minSwipeDistance) {
-      try { playSound('card_slide'); } catch (_) {}
-      setCarouselSlide(prev => (prev === 0 ? 4 : prev - 1));
+      setCarouselSlide(prev => 1 - prev);
     }
 
     touchStartXRef.current = null;
@@ -425,7 +404,7 @@ export default function HomeScreen({
                   }}
                 >
                   <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.48rem', fontWeight: 900, color: pilotColor, lineHeight: 1 }}>
-                    <span>PILOTA</span>
+                    <span>COMANDANTE</span>
                     <span>L.{level}</span>
                   </div>
 
@@ -444,140 +423,6 @@ export default function HomeScreen({
                 </div>
               )}
 
-              {/* 3. Modulo Abilità */}
-              {carouselSlide === 2 && (() => {
-                const abColor = isAbilityModuleUnlocked ? '#00f2fe' : '#ef4444';
-                return (
-                  <div
-                    style={{
-                      width: 78,
-                      height: 116,
-                      background: isAbilityModuleUnlocked
-                        ? 'linear-gradient(180deg, rgba(8, 145, 178, 0.35) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(2, 6, 23, 1) 100%)'
-                        : 'linear-gradient(180deg, rgba(127, 29, 29, 0.35) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(2, 6, 23, 1) 100%)',
-                      border: isAbilityModuleUnlocked ? '1.5px solid #00f2fe' : '1.5px dashed #ef4444',
-                      borderRadius: 6,
-                      boxShadow: isAbilityModuleUnlocked ? '0 0 14px rgba(0, 242, 254, 0.5)' : 'none',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      padding: '4px 3px',
-                      boxSizing: 'border-box',
-                      overflow: 'hidden'
-                    }}
-                  >
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.48rem', fontWeight: 900, color: abColor, lineHeight: 1 }}>
-                      <span>MODULO</span>
-                      <span>{isAbilityModuleUnlocked ? 'ATTIVO' : 'BLOCCATO'}</span>
-                    </div>
-
-                    <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                      <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle at 50% 50%, ${abColor}33 0%, transparent 70%)` }} />
-                      {isAbilityModuleUnlocked ? (
-                        <ModuleIcon id={selectedAbility || 'taurus'} size={52} color="#00f2fe" />
-                      ) : (
-                        <SciFiIcon name="shield" size={34} color="#ef4444" />
-                      )}
-                    </div>
-
-                    <div style={{ width: '100%', background: 'rgba(2, 6, 23, 0.9)', borderTop: `1px solid ${abColor}55`, borderRadius: '0 0 4px 4px', padding: '2px 0', textAlign: 'center', lineHeight: 1 }}>
-                      <div style={{ fontSize: '0.56rem', fontWeight: 900, color: isAbilityModuleUnlocked ? '#ffffff' : '#f87171', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {isAbilityModuleUnlocked ? (selectedAbility ? selectedAbility.toUpperCase() : 'Libero') : 'Settore 9'}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* 4. Manufatto Epico */}
-              {carouselSlide === 3 && (() => {
-                const itemId = equippedEpicItems[subEpicIdx];
-                const itemObj = itemId ? epicItemsDatabase.find(e => e.id === itemId) : null;
-                const epicColor = itemObj ? itemObj.color : '#facc15';
-                return (
-                  <div
-                    style={{
-                      width: 78,
-                      height: 116,
-                      background: itemObj
-                        ? `linear-gradient(180deg, ${epicColor}30 0%, rgba(15, 23, 42, 0.95) 50%, rgba(2, 6, 23, 1) 100%)`
-                        : 'linear-gradient(180deg, rgba(234, 179, 8, 0.15) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(2, 6, 23, 1) 100%)',
-                      border: itemObj ? `1.5px solid ${epicColor}` : '1.5px dashed #facc15',
-                      borderRadius: 6,
-                      boxShadow: itemObj ? `0 0 14px ${epicColor}66` : 'none',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      padding: '4px 3px',
-                      boxSizing: 'border-box',
-                      overflow: 'hidden'
-                    }}
-                  >
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.48rem', fontWeight: 900, color: epicColor, lineHeight: 1 }}>
-                      <span>MANUFATTO</span>
-                      <span>{subEpicIdx + 1}/2</span>
-                    </div>
-
-                    <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                      <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(circle at 50% 50%, ${epicColor}33 0%, transparent 70%)` }} />
-                      {itemObj ? (
-                        <TacticalVisual id={itemObj.id} type="epic_item" color={itemObj.color} width={58} height={58} />
-                      ) : (
-                        <SciFiIcon name="epic_item" size={44} color="#facc15" />
-                      )}
-                    </div>
-
-                    <div style={{ width: '100%', background: 'rgba(2, 6, 23, 0.9)', borderTop: `1px solid ${epicColor}55`, borderRadius: '0 0 4px 4px', padding: '2px 0', textAlign: 'center', lineHeight: 1 }}>
-                      <div style={{ fontSize: '0.56rem', fontWeight: 900, color: itemObj ? '#ffffff' : '#fde047', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {itemObj ? (itemObj.name || '').split(' ')[0] : 'Slot Libero'}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
-              {/* 5. Trappola Terreno */}
-              {carouselSlide === 4 && (() => {
-                const tId = equippedTerrainSlots[subTerrainIdx];
-                const card = tId ? terrainCardsDatabase.find(c => c.id === tId) : null;
-                if (card) {
-                  return <TerrainVisual cardId={card.id} color={card.color} width={78} height={116} />;
-                }
-                return (
-                  <div
-                    style={{
-                      width: 78,
-                      height: 116,
-                      background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(2, 6, 23, 1) 100%)',
-                      border: '1.5px dashed #10b981',
-                      borderRadius: 6,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      padding: '4px 3px',
-                      boxSizing: 'border-box',
-                      overflow: 'hidden'
-                    }}
-                  >
-                    <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.48rem', fontWeight: 900, color: '#10b981', lineHeight: 1 }}>
-                      <span>TRAPPOLA</span>
-                      <span>{subTerrainIdx + 1}/4</span>
-                    </div>
-
-                    <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <SciFiIcon name="environments" size={29} color="#64748b" />
-                    </div>
-
-                    <div style={{ width: '100%', background: 'rgba(2, 6, 23, 0.9)', borderTop: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '0 0 4px 4px', padding: '2px 0', textAlign: 'center', lineHeight: 1 }}>
-                      <div style={{ fontSize: '0.56rem', fontWeight: 900, color: '#6ee7b7' }}>Slot Libero</div>
-                    </div>
-                  </div>
-                );
-              })()}
-
             </div>
 
             {/* VORTICE A 3 STRATI */}
@@ -591,11 +436,8 @@ export default function HomeScreen({
 
             <div className="home-carousel-caption" style={{ textAlign: 'center', marginTop: 3, zIndex: 2 }}>
               <div style={{ fontSize: 'clamp(0.6rem, 1.5vmin, 0.72rem)', fontWeight: 900, color: '#facc15' }}>
-                {carouselSlide === 0 && `Mazzo: ${currentDeckObj?.name || 'Cadetto'}`}
-                {carouselSlide === 1 && `Pilota: ${curPilot.name || 'Pilota'}`}
-                {carouselSlide === 2 && `Modulo: ${isAbilityModuleUnlocked ? (selectedAbility?.toUpperCase() || 'Nessuno') : 'Bloccato'}`}
-                {carouselSlide === 3 && `Manufatto [${subEpicIdx + 1}/2]: ${equippedEpicItems[subEpicIdx] ? (epicItemsDatabase.find(e => e.id === equippedEpicItems[subEpicIdx])?.name?.split(' ')[0] || 'Epico') : 'Vuoto'}`}
-                {carouselSlide === 4 && `Trappola [${subTerrainIdx + 1}/4]: ${equippedTerrainSlots[subTerrainIdx] ? (terrainCardsDatabase.find(c => c.id === equippedTerrainSlots[subTerrainIdx])?.name?.split(' ')[0] || 'Armata') : 'Libera'}`}
+                {carouselSlide === 0 && officialNumericDeckBackName(selectedDeck)}
+                {carouselSlide === 1 && curPilot.name}
               </div>
             </div>
           </div>

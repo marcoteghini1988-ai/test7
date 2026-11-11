@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 // ============================================================================
-// 2.5b COMPONENTE TERRAINVISUAL (IMMAGINE PNG REALE CON FALLBACK VETTORIALE)
+// 2.5b COMPONENTE TERRAINVISUAL PER LE PLANCE STORICHE
 // ============================================================================
 function TerrainVisual({ 
   cardId, 
@@ -11,41 +11,9 @@ function TerrainVisual({
   className = '', 
   isBack = false 
 }) {
-  const [imgError, setImgError] = useState(false);
   const w = width;
   const h = height;
 
-  const imageSrc = isBack
-    ? '/assets/terrain/terrain_back.png'
-    : (cardId ? `/assets/terrain/${cardId}.png` : null);
-
-  // Reset dello stato di errore quando cambia la sorgente (es. girando la carta tra fronte e retro)
-  useEffect(() => {
-    setImgError(false);
-  }, [imageSrc]);
-
-  // 1. Tenta di caricare l'immagine PNG reale (Fronte o Dorso)
-  if (!imgError && imageSrc) {
-    return (
-      <img
-        src={imageSrc}
-        alt={isBack ? 'terrain_back' : (cardId || 'terrain_card')}
-        onError={() => setImgError(true)}
-        className={className}
-        style={{
-          width: typeof w === 'number' ? `${w}px` : w,
-          height: typeof h === 'number' ? `${h}px` : h,
-          objectFit: 'cover',
-          borderRadius: '6px',
-          display: 'block',
-          boxShadow: `0 4px 14px ${color}55`,
-          flexShrink: 0
-        }}
-      />
-    );
-  }
-
-  // 2. Disegni vettoriali SVG per il fallback
   const renderTerrainArtwork = (id, c) => {
     switch (id) {
       // ----------------------------------------------------------------------

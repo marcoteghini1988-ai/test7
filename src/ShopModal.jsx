@@ -1,15 +1,15 @@
-import {getPhase16GPilotDescription,PHASE16G_PILOTS} from './newCombat/phase16GPilots.js';
 import React, { useState, useEffect } from 'react';
-import { TacticalVisual, ModuleIcon, TerrainVisual } from './visualAssets';
-import { PILOTS_DATABASE, PilotCard } from './pilotsSystem';
-import DeepSpaceUniverseCanvas from './DeepSpaceUniverseCanvas';
+import { PILOTS_DATABASE } from './pilotsSystem';
+import { commanderAbility } from './commanderAbilities.js';
+import { tacticalCommanderReady } from './tacticalCommanders.js';
+import { OFFICIAL_NUMERIC_BACK_IDS, officialNumericDeckBackName, officialNumericDeckBackPath } from './officialDeckBackArt.js';
+import { TACTICAL_MODULE_CARDS, moduleCardType } from './tacticalEquipmentCards.js';
+import { officialSpecialArtPath } from './officialSpecialCardArt.js';
 import { playSound } from './audio';
-import {describePhase16EDeck} from './newCombat/phase16EDecks.js';
 import {activeNumericBossAbilities,numericBossDeck} from './bossNumericDecks.js';
-const currentDeckPassives=(id,level)=>numericBossDeck(id)?activeNumericBossAbilities(id,level).map(x=>x.unlocked?x.name+' · Grado '+x.grade+'/3 · '+x.description.replace('%',x.value+'%').replace('in secondi',': '+x.value+' secondi'):x.name+' · sblocco L'+x.unlockAt).join(' | '):null;
-import {describePhase16FModule} from './newCombat/phase16FModules.js';
-import {getPhase16HTerrainOffers,describePhase16HTerrain} from './newCombat/phase16HProgression.js';
 import {ShipShopPanel} from './ShipCollectionPanels.jsx';
+
+const currentDeckPassives=(id,level)=>numericBossDeck(id)?activeNumericBossAbilities(id,level).map(x=>x.unlocked?x.name+' · Grado '+x.grade+'/3 · '+x.description.replace('%',x.value+'%').replace('in secondi',': '+x.value+' secondi'):x.name+' · sblocco L'+x.unlockAt).join(' | '):null;
 
 const normalizeRarity = (r) => {
   if (!r) return 'Comune';
@@ -37,24 +37,11 @@ const UPGRADE_PILOT_REQS = Object.freeze({
   1: 1, 2: 12, 3: 25, 4: 35, 5: 48, 6: 60, 7: 70, 8: 82, 9: 95
 });
 
-const TERRAIN_UPGRADE_COSTS = Object.freeze({
-  2: { dust: 500, voidCrystals: 2, primordialMatter: 0 },
-  3: { dust: 1400, voidCrystals: 4, primordialMatter: 2 }
-});
-
-const TERRAIN_PILOT_REQS = Object.freeze({
-  1: 1,
-  2: 31,
-  3: 66
-});
-
 const SHOP_TABS = [
   { id: 'ships', label: 'Navi', icon: '🛸' },
-  { id: 'characters', label: 'Piloti', icon: '👤' },
+  { id: 'characters', label: 'Comandanti', icon: '👤' },
   { id: 'decks', label: 'Mazzi', icon: '🃏' },
   { id: 'abilities', label: 'Moduli', icon: '⚡' },
-  { id: 'terrain', label: 'Terreni', icon: '🛡️' },
-  { id: 'environments', label: 'Sfondi', icon: '🪐' },
   { id: 'resources', label: 'Risorse', icon: '💎' }
 ];
 
@@ -73,27 +60,10 @@ export default function ShopModal({
   onSelectDeck,
   onUpgradeDeck,
   // Moduli
-  selectedAbility,
   abilities = {},
   allAbilities = [],
-  onSelectAbility,
   onUnlockAbility,
   onUpgradeAbility,
-  // Terreni
-  unlockedTerrainCards = {},
-  equippedTerrainSlots = [],
-  terrainCardsDatabase = [],
-  onEquipTerrainSlot,
-  onUnequipTerrainSlot,
-  onUpgradeTerrainCard,
-  onBuyTerrainCard,
-  // Sfondi
-  equippedEnvironment,
-  unlockedEnvironments = {},
-  specialBackgrounds = [],
-  planetEnvironments = [],
-  onUnlockOrEquipEnvironment,
-  onPreviewEnvironment,
   // Risorse & Store Packages
   onUpgradeShip,
   stardust = 0,
@@ -117,15 +87,11 @@ export default function ShopModal({
 
   // FILTRI DI RARITÀ
   const [pilotRarityFilter, setPilotRarityFilter] = useState('all');
-  const [showHistoricalPilots, setShowHistoricalPilots] = useState(false);
   const [deckRarityFilter, setDeckRarityFilter] = useState('all');
   const [abilityRarityFilter, setAbilityRarityFilter] = useState('all');
-  const [terrainRarityFilter, setTerrainRarityFilter] = useState('all');
 
   // STATI DI ISPEZIONE E FEEDBACK
   const [inspectedItem, setInspectedItem] = useState(null);
-  const [inspectFlipped, setInspectFlipped] = useState(false);
-  const [previewingEnv, setPreviewingEnv] = useState(null);
   const [upgradeConfirm, setUpgradeConfirm] = useState(null);
   const [dopamineBurst, setDopamineBurst] = useState(null);
   const [localHint, setLocalHint] = useState(null);
@@ -201,21 +167,14 @@ export default function ShopModal({
       const started = typeof onUpgradeAbility === 'function' && onUpgradeAbility(id) === true;
       if (started) triggerDopamineCelebration(title, `INVIATO AL CANTIERE (LIV. ${nextLvl})!`);
       else showHint('Potenziamento non avviato: verifica requisiti e risorse.');
-    } else if (type === 'terrain') {
-      if (typeof onUpgradeTerrainCard === 'function') onUpgradeTerrainCard(id, nextLvl, cost);
-      triggerDopamineCelebration(title, `INVIATA AL CANTIERE (LIV. ${nextLvl})!`);
     }
     setUpgradeConfirm(null);
   };
 
-  const pilotsList = Array.isArray(PILOTS_DATABASE)
-    ? PILOTS_DATABASE
-    : (PILOTS_DATABASE && typeof PILOTS_DATABASE === 'object' ? Object.values(PILOTS_DATABASE) : []);
-
-  const safeBackgroundsList = [
-    ...(Array.isArray(specialBackgrounds) ? specialBackgrounds : Object.values(specialBackgrounds || {})),
-    ...(Array.isArray(planetEnvironments) ? planetEnvironments : Object.values(planetEnvironments || {}))
-  ];
+  const commanders = PILOTS_DATABASE.filter(pilot => !pilot.isNpcOnly && tacticalCommanderReady(pilot.id));
+  const inspectedModule = inspectedItem?.type === 'ability'
+    ? TACTICAL_MODULE_CARDS[moduleCardType(inspectedItem.data.id)]
+    : null;
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 4, 12, 0.98)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 35000, padding: 'clamp(4px, 1vh, 8px)', boxSizing: 'border-box' }}>
@@ -296,14 +255,12 @@ export default function ShopModal({
           {activeTab === 'characters' && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {renderRarityFilter(pilotRarityFilter, setPilotRarityFilter)}
-              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'10px',padding:'0.3rem 0.5rem',fontSize:'0.65rem',color:'#b6cbdc'}}>
-                <span>16 piloti principali · Gli altri piloti già posseduti restano accessibili</span>
-                <button type="button" className="cyber-btn" style={{padding:'0.32rem 0.5rem',fontSize:'0.6rem'}} onClick={()=>setShowHistoricalPilots(x=>!x)}>
-                  {showHistoricalPilots?'Nascondi altri piloti':'Mostra altri piloti'}
-                </button>
-              </div>
+              <p style={{ margin: '0.25rem 0.5rem 0.55rem', fontSize: '0.65rem', color: '#b6cbdc' }}>
+                Le Carte Personaggio Boss si gestiscono nel Mazzo Speciale dell’Hangar.
+              </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.65rem' }}>
-                {pilotsList.filter(p => p && !p.isNpcOnly).filter(p=>showHistoricalPilots||Boolean(PHASE16G_PILOTS[p.id])||Boolean(pilotInventory?.[p.id]?.unlocked)||selectedPilot===p.id).filter(p => pilotRarityFilter === 'all' || normalizeRarity(p.rarity) === pilotRarityFilter).map(pilot => {
+                {commanders.filter(pilot => pilotRarityFilter === 'all' || normalizeRarity(pilot.rarity) === pilotRarityFilter).map(pilot => {
+                  const ability = commanderAbility(pilot.id);
                   const inv = pilotInventory?.[pilot.id];
                   const isUnlocked = Boolean(inv?.unlocked);
                   const curLvl = inv?.level || 1;
@@ -335,23 +292,12 @@ export default function ShopModal({
                           )}
                         </div>
 
-                        <div 
-                          onClick={() => setInspectedItem({ type: 'pilot', data: pilot, curLvl, isUnlocked, isEquipped })}
-                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '3px 0' }}
-                          title="Tocca per ingrandire"
-                        >
-                          <PilotCard pilot={pilot} compact={true} />
-                          <span style={{ fontSize: '0.52rem', color: '#38bdf8', marginTop: '2px', textDecoration: 'underline' }}>
-                            🔍 Ingrandisci
-                          </span>
-                        </div>
-
                         <div style={{ fontSize: '0.85rem', fontWeight: 900, color: pilot.rarityColor || pilot.color, textAlign: 'center', margin: '2px 0' }}>
                           {pilot.name}
                         </div>
                         <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
-                          <div style={{ color: '#00f2fe', fontWeight: 900, marginBottom: '2px' }}>CARATTERISTICA:</div>
-                          <div style={{ color: '#cbd5e1' }}>{getPhase16GPilotDescription(pilot.id) ? `POKER · ${getPhase16GPilotDescription(pilot.id)}` : (pilot.desc || pilot.trait)}</div>
+                          <div style={{ color: '#00f2fe', fontWeight: 900, marginBottom: '2px' }}>ABILITÀ DEL COMANDANTE</div>
+                          <div style={{ color: '#cbd5e1' }}>{ability.role} · {ability.description}</div>
                         </div>
                       </div>
 
@@ -430,13 +376,13 @@ export default function ShopModal({
               {renderRarityFilter(deckRarityFilter, setDeckRarityFilter)}
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '0.65rem' }}>
-                {(Array.isArray(allDecks) ? allDecks : []).filter(d => d && (deckRarityFilter === 'all' || normalizeRarity(d.rarity) === deckRarityFilter)).map(deck => {
+                {(Array.isArray(allDecks) ? allDecks : []).filter(d => OFFICIAL_NUMERIC_BACK_IDS.includes(d?.id) && (deckRarityFilter === 'all' || normalizeRarity(d.rarity) === deckRarityFilter)).map(deck => {
                   const isStarter = deck.id === 'neutral_starter';
                   const deckData = deckInventory?.[deck.id] || { level: 1, unlocked: isStarter };
                   const isOwned = Boolean(deckData.unlocked);
                   const curLvl = deckData.level || 1;
                   const isEquipped = selectedDeck === deck.id;
-                  const maxLvl = deck.maxLevel || 3;
+                  const maxLvl = numericBossDeck(deck.id)?.maxLevel ?? 1;
                   const nextCostConfig = UNIFIED_UPGRADE_COSTS[curLvl + 1] || null;
                   const reqPilotLvl = UPGRADE_PILOT_REQS[curLvl + 1] || 1;
 
@@ -455,16 +401,16 @@ export default function ShopModal({
                           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '3px 0' }}
                           title="Tocca per ingrandire"
                         >
-                          <TacticalVisual id={deck.id} type="card_back" color={deck.color} width={50} height={75} />
+                          <img src={officialNumericDeckBackPath(deck.id)} alt={officialNumericDeckBackName(deck.id)} width={50} height={75} loading="lazy" decoding="async" />
                           <span style={{ fontSize: '0.52rem', color: '#38bdf8', marginTop: '2px', textDecoration: 'underline' }}>
                             🔍 Ingrandisci
                           </span>
                         </div>
 
-                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: deck.color, textAlign: 'center' }}>{deck.name}</div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: deck.color, textAlign: 'center' }}>{officialNumericDeckBackName(deck.id)}</div>
                         <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
                           <div style={{ color: '#facc15', fontWeight: 900 }}>PASSIVA:</div>
-                          <div style={{ color: '#6ee7b7' }}>{currentDeckPassives(deck.id,curLvl) || describePhase16EDeck(deck.id,curLvl) || deck.levels?.[curLvl]?.desc || deck.desc}</div>
+                          <div style={{ color: '#6ee7b7' }}>{currentDeckPassives(deck.id,curLvl) || '52 carte numeriche'}</div>
                         </div>
                       </div>
 
@@ -472,7 +418,7 @@ export default function ShopModal({
                         <button 
                           onClick={() => {
                             if (typeof onSelectDeck === 'function') onSelectDeck(deck.id);
-                            if (isOwned) showHint(`✓ Mazzo ${deck.name} equipaggiato!`);
+                            if (isOwned) showHint(`✓ Mazzo ${officialNumericDeckBackName(deck.id)} equipaggiato!`);
                           }} 
                           className={`cyber-btn ${isEquipped ? '' : (isOwned ? 'cyber-btn-primary' : 'cyber-btn-warning')}`} 
                           style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
@@ -487,7 +433,7 @@ export default function ShopModal({
                               setUpgradeConfirm({
                                 type: 'deck',
                                 id: deck.id,
-                                title: deck.name,
+                                title: officialNumericDeckBackName(deck.id),
                                 curLvl,
                                 nextLvl: curLvl + 1,
                                 reqLevel: reqPilotLvl,
@@ -497,8 +443,8 @@ export default function ShopModal({
                                   voidCrystals: nextCostConfig.voidCrystals || 0,
                                   primordialMatter: nextCostConfig.primordialMatter || 0
                                 },
-                                currentBonus: currentDeckPassives(deck.id,curLvl) || describePhase16EDeck(deck.id,curLvl) || deck.levels?.[curLvl]?.desc || 'Passiva base',
-                                nextBonus: currentDeckPassives(deck.id,curLvl + 1) || describePhase16EDeck(deck.id,curLvl + 1) || deck.levels?.[curLvl + 1]?.desc || 'Nuova abilità passiva'
+                                currentBonus: currentDeckPassives(deck.id,curLvl) || '52 carte numeriche',
+                                nextBonus: currentDeckPassives(deck.id,curLvl + 1)
                               });
                             }} 
                             className="cyber-btn cyber-btn-warning" 
@@ -519,11 +465,14 @@ export default function ShopModal({
           {activeTab === 'abilities' && (
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {renderRarityFilter(abilityRarityFilter, setAbilityRarityFilter)}
+              <p style={{ margin: '0.25rem 0.5rem 0.55rem', fontSize: '0.65rem', color: '#b6cbdc' }}>
+                Dopo lo sblocco, inserisci le Carte Modulo nel Mazzo Speciale dall’Hangar.
+              </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '0.65rem' }}>
-                {(Array.isArray(allAbilities) ? allAbilities : []).filter(a => a && a.id !== 'neutral_starter').filter(a => !['ophiuchus','supreme_eclipse'].includes(a.id) || Boolean(abilities?.[a.id]?.unlocked)).filter(a => abilityRarityFilter === 'all' || normalizeRarity(a.rarity) === abilityRarityFilter).map(ab => {
+                {(Array.isArray(allAbilities) ? allAbilities : []).filter(a => a && TACTICAL_MODULE_CARDS[moduleCardType(a.id)]).filter(a => !['ophiuchus','supreme_eclipse'].includes(a.id) || Boolean(abilities?.[a.id]?.unlocked)).filter(a => abilityRarityFilter === 'all' || normalizeRarity(a.rarity) === abilityRarityFilter).map(ab => {
                   const abData = abilities?.[ab.id] || { level: 1, unlocked: false };
-                  const isEquipped = selectedAbility === ab.id;
+                  const moduleCard = TACTICAL_MODULE_CARDS[moduleCardType(ab.id)];
                   const isOwned = Boolean(abData.unlocked);
                   const curLvl = abData.level || 1;
                   const maxLvl = ab.maxLevel || 3;
@@ -531,7 +480,7 @@ export default function ShopModal({
                   const reqPilotLvl = UPGRADE_PILOT_REQS[curLvl + 1] || 1;
 
                   return (
-                    <div key={ab.id} className="cyber-panel" style={{ padding: '0.65rem', border: isEquipped ? '2px solid #00f2fe' : (isOwned ? `1.5px solid ${ab.color}` : '1px dashed rgba(255,255,255,0.2)'), display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div key={ab.id} className="cyber-panel" style={{ padding: '0.65rem', border: isOwned ? `1.5px solid ${ab.color}` : '1px dashed rgba(255,255,255,0.2)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                       <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
                           <span style={{ fontSize: '0.55rem', background: ab.color, color: '#020617', padding: '1px 5px', borderRadius: '3px', fontWeight: 900, textTransform: 'uppercase' }}>
@@ -541,36 +490,26 @@ export default function ShopModal({
                         </div>
 
                         <div 
-                          onClick={() => setInspectedItem({ type: 'ability', data: ab, curLvl, isUnlocked: isOwned, isEquipped })}
+                          onClick={() => setInspectedItem({ type: 'ability', data: ab, curLvl })}
                           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '3px 0' }}
                           title="Tocca per ingrandire"
                         >
-                          <ModuleIcon id={ab.id} size={38} color={ab.color} />
+                          <img src={officialSpecialArtPath(moduleCard.id)} alt={moduleCard.name} width={50} height={75} loading="lazy" decoding="async" />
                           <span style={{ fontSize: '0.52rem', color: '#38bdf8', marginTop: '2px', textDecoration: 'underline' }}>
                             🔍 Ingrandisci
                           </span>
                         </div>
 
-                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: ab.color, textAlign: 'center' }}>{ab.name}</div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: ab.color, textAlign: 'center' }}>{moduleCard.name}</div>
                         <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
-                          <div style={{ color: '#c084fc', fontWeight: 900 }}>POTERE ATTIVO:</div>
-                          <div style={{ color: '#cbd5e1' }}>{describePhase16FModule(ab.id,curLvl) || ab.levels?.[curLvl]?.activeDesc || ab.desc}</div>
+                          <div style={{ color: '#c084fc', fontWeight: 900 }}>EFFETTO DELLA CARTA</div>
+                          <div style={{ color: '#cbd5e1' }}>{moduleCard.description}</div>
                         </div>
                       </div>
 
                       <div style={{ marginTop: '0.35rem', display: 'flex', flexDirection: 'column', gap: '3px' }}>
                         {isOwned ? (
                           <>
-                            <button 
-                              onClick={() => {
-                                if (typeof onSelectAbility === 'function') onSelectAbility(ab.id);
-                                showHint(`✓ Modulo ${ab.name} equipaggiato!`);
-                              }} 
-                              className={`cyber-btn ${isEquipped ? '' : 'cyber-btn-primary'}`} 
-                              style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
-                            >
-                              {isEquipped ? '✓ IN USO' : 'EQUIPAGGIA'}
-                            </button>
                             {curLvl < maxLvl && nextCostConfig && (
                               <button 
                                 onClick={() => {
@@ -578,7 +517,7 @@ export default function ShopModal({
                                   setUpgradeConfirm({
                                     type: 'ability',
                                     id: ab.id,
-                                    title: ab.name,
+                                    title: moduleCard.name,
                                     curLvl,
                                     nextLvl: curLvl + 1,
                                     reqLevel: reqPilotLvl,
@@ -588,8 +527,8 @@ export default function ShopModal({
                                       voidCrystals: nextCostConfig.voidCrystals || 0,
                                       primordialMatter: nextCostConfig.primordialMatter || 0
                                     },
-                                    currentBonus: describePhase16FModule(ab.id,curLvl) || ab.levels?.[curLvl]?.activeDesc || 'Potere corrente',
-                                    nextBonus: describePhase16FModule(ab.id,curLvl+1) || ab.levels?.[curLvl + 1]?.activeDesc || 'Potere amplificato'
+                                    currentBonus: 'Carta Modulo al livello ' + curLvl,
+                                    nextBonus: 'Carta Modulo al livello ' + (curLvl + 1)
                                   });
                                 }} 
                                 className="cyber-btn cyber-btn-warning" 
@@ -615,172 +554,6 @@ export default function ShopModal({
                   );
                 })}
               </div>
-            </div>
-          )}
-
-          {/* TAB 5: TERRENI */}
-          {activeTab === 'terrain' && (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <p style={{fontSize:'0.7rem',color:'#9edaff',margin:'4px 0 10px'}}>8 Terreni principali nella campagna Poker. Le carte storiche già possedute restano disponibili; ogni Terreno si attiva una volta per battaglia, con eventuale riarmo ai livelli superiori.</p>
-              {renderRarityFilter(terrainRarityFilter, setTerrainRarityFilter)}
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '0.65rem' }}>
-                {getPhase16HTerrainOffers(terrainCardsDatabase,unlockedTerrainCards,equippedTerrainSlots).filter(c => terrainRarityFilter === 'all' || normalizeRarity(c.rarity) === terrainRarityFilter).map(card => {
-                  const cardData = unlockedTerrainCards?.[card.id];
-                  const isOwned = Boolean(cardData?.unlocked);
-                  const curLvl = cardData?.level || 1;
-                  const activeSlots = (Array.isArray(equippedTerrainSlots) ? equippedTerrainSlots : []).slice(0, 4);
-                  const isEquipped = activeSlots.includes(card.id);
-                  const nextCost = TERRAIN_UPGRADE_COSTS[curLvl + 1] || null;
-                  const nextReqPilot = TERRAIN_PILOT_REQS[curLvl + 1] || 1;
-
-                  return (
-                    <div key={card.id} className="cyber-panel" style={{ padding: '0.65rem', border: isEquipped ? '2px solid #00f2fe' : (isOwned ? `1.5px solid ${card.color}` : '1px dashed rgba(255,255,255,0.2)'), display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                          <span style={{ fontSize: '0.55rem', background: card.color, color: '#020617', padding: '1px 5px', borderRadius: '3px', fontWeight: 900, textTransform: 'uppercase' }}>
-                            {card.rarity}
-                          </span>
-                          {isOwned && <span style={{ fontSize: '0.58rem', color: '#10b981', fontWeight: 900 }}>Liv. {curLvl}/3</span>}
-                        </div>
-
-                        <div 
-                          onClick={() => {
-                            setInspectFlipped(false);
-                            setInspectedItem({ type: 'terrain', data: card, curLvl, isUnlocked: isOwned, isEquipped });
-                          }}
-                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '4px 0' }}
-                          title="Tocca per ingrandire e girare"
-                        >
-                          <TerrainVisual cardId={card.id} color={card.color} width={50} height={75} isBack={false} />
-                          <span style={{ fontSize: '0.52rem', color: '#38bdf8', marginTop: '3px', textDecoration: 'underline' }}>
-                            🔍 Ingrandisci
-                          </span>
-                        </div>
-
-                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: card.color, textAlign: 'center' }}>{card.name}</div>
-                        <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
-                          <div style={{ color: '#10b981', fontWeight: 900 }}>EFFETTO TRAPPOLA:</div>
-                          <div style={{ color: '#cbd5e1' }}>{describePhase16HTerrain(card.id,curLvl) || card.levels?.[curLvl]?.desc || card.desc}</div>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: '0.35rem', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                        {isOwned ? (
-                          <>
-                            <button
-                              onClick={() => {
-                                if (isEquipped) {
-                                  try { playSound('click'); } catch (_) {}
-                                  const idx = activeSlots.indexOf(card.id);
-                                  if (idx !== -1 && typeof onUnequipTerrainSlot === 'function') {
-                                    onUnequipTerrainSlot(idx);
-                                    showHint(`✕ ${card.name} rimossa dalla plancia.`);
-                                  }
-                                } else {
-                                  let emptyIdx = activeSlots.findIndex(s => s === null);
-                                  if (emptyIdx === -1 && activeSlots.length < 4) {
-                                    emptyIdx = activeSlots.length;
-                                  }
-                                  if (emptyIdx !== -1 && emptyIdx < 4 && typeof onEquipTerrainSlot === 'function') {
-                                    try { playSound('click'); } catch (_) {}
-                                    onEquipTerrainSlot(emptyIdx, card.id);
-                                    showHint(`✓ ${card.name} equipaggiata nello Slot ${emptyIdx + 1}!`);
-                                  } else {
-                                    try { playSound('deselect'); } catch (_) {}
-                                    showHint("Tutti i 4 Slot Terreno sono occupati! Rimuovine uno prima.");
-                                  }
-                                }
-                              }}
-                              className={`cyber-btn ${isEquipped ? '' : 'cyber-btn-primary'}`}
-                              style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
-                            >
-                              {isEquipped ? 'RIMUOVI DA PLANCIA' : 'EQUIPAGGIA IN SLOT'}
-                            </button>
-
-                            {curLvl < 3 && nextCost && (
-                              <button 
-                                onClick={() => {
-                                  try { playSound('click'); } catch (_) {}
-                                  setUpgradeConfirm({
-                                    type: 'terrain',
-                                    id: card.id,
-                                    title: card.name,
-                                    curLvl,
-                                    nextLvl: curLvl + 1,
-                                    reqLevel: nextReqPilot,
-                                    cost: nextCost,
-                                    currentBonus: describePhase16HTerrain(card.id,curLvl) || card.levels?.[curLvl]?.desc || 'Effetto base',
-                                    nextBonus: describePhase16HTerrain(card.id,curLvl+1) || card.levels?.[curLvl + 1]?.desc || 'Effetto potenziato con riarmo Etere'
-                                  });
-                                }} 
-                                className="cyber-btn cyber-btn-warning" 
-                                style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
-                              >
-                                ⚡ MIGLIORA A LIV. {curLvl + 1} ➔
-                              </button>
-                            )}
-                          </>
-                        ) : (
-                          <button 
-                            onClick={() => {
-                              if (typeof onBuyTerrainCard === 'function') onBuyTerrainCard(card.id, card.cost);
-                            }} 
-                            className="cyber-btn cyber-btn-primary" 
-                            style={{ padding: '0.4rem', fontSize: '0.68rem', fontWeight: 900 }}
-                          >
-                            Acquista ({card.cost?.diamonds > 0 ? `${card.cost.diamonds} 💎` : `${card.cost?.dust || 200} 🌟`})
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* TAB 6: SFONDI */}
-          {activeTab === 'environments' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '0.65rem' }}>
-              {safeBackgroundsList.map(env => {
-                if (!env) return null;
-                const isOwned = Boolean(unlockedEnvironments?.[env.id]);
-                const isEquipped = equippedEnvironment === env.id;
-
-                return (
-                  <div key={env.id} className="cyber-panel" style={{ padding: '0.65rem', border: isEquipped ? '2px solid #00f2fe' : '1px solid rgba(255,255,255,0.15)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                    <div>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 900, color: '#00f2fe' }}>{env.name}</div>
-                      <div style={{ fontSize: '0.62rem', color: '#cbd5e1', margin: '3px 0' }}>{env.desc}</div>
-                    </div>
-                    <div style={{ display: 'flex', gap: '4px', marginTop: '5px' }}>
-                      <button 
-                        onClick={() => {
-                          try { playSound('click'); } catch (_) {}
-                          setPreviewingEnv(env);
-                        }} 
-                        className="cyber-btn" 
-                        style={{ padding: '0.3rem 0.6rem', fontSize: '0.65rem', fontWeight: 900 }}
-                      >
-                        🔍 Ingrandisci 3D
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (typeof onUnlockOrEquipEnvironment === 'function') {
-                            onUnlockOrEquipEnvironment(env.id, env.cost, Boolean(env.planetNum), env.planetNum);
-                          }
-                          if (isOwned) showHint(`✓ Sfondo ${env.name} equipaggiato!`);
-                        }}
-                        className={`cyber-btn ${isEquipped ? '' : (isOwned ? 'cyber-btn-primary' : 'cyber-btn-warning')}`}
-                        style={{ flex: 1, padding: '0.3rem', fontSize: '0.65rem', fontWeight: 900 }}
-                      >
-                        {isEquipped ? '✓ IN USO' : isOwned ? 'EQUIPAGGIA' : `Sblocca (${env.cost} 💎)`}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
             </div>
           )}
 
@@ -869,65 +642,6 @@ export default function ShopModal({
         </div>
       </div>
 
-      {/* ANTEPRIMA SFONDO 3D A SCHERMO INTERO */}
-      {previewingEnv && (() => {
-        const env = previewingEnv;
-        const isPlanet = Boolean(env.planetNum);
-        const pNum = env.planetNum || null;
-        const isOwned = Boolean(unlockedEnvironments?.[env.id]);
-        const isEquipped = equippedEnvironment === env.id;
-
-        return (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 60000, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 'clamp(10px, 2vh, 20px)' }}>
-            <DeepSpaceUniverseCanvas currentEnvironmentId={env.id} planetNumber={pNum} />
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
-              <div className="cyber-panel" style={{ padding: '0.4rem 0.8rem', background: 'rgba(2, 6, 23, 0.85)', border: '1.5px solid #00f2fe' }}>
-                <span style={{ fontSize: '0.75rem', color: '#facc15', fontWeight: 900 }}>ANTEPRIMA SPAZIALE 3D</span>
-              </div>
-              <button
-                onClick={() => setPreviewingEnv(null)}
-                className="cyber-btn"
-                style={{ background: '#ef4444', borderColor: '#f87171', padding: '0.4rem 0.85rem', fontWeight: 900, zIndex: 10 }}
-              >
-                ✕ Chiudi
-              </button>
-            </div>
-
-            <div className="cyber-panel" style={{ padding: '1rem', background: 'rgba(2, 6, 23, 0.92)', border: '1.5px solid #00f2fe', zIndex: 10, maxWidth: '480px', margin: '0 auto', width: '100%', textAlign: 'center' }}>
-              <h3 style={{ color: '#00f2fe', margin: '0 0 4px 0', fontWeight: 900, fontSize: '1.2rem' }}>
-                {env.name}
-              </h3>
-              <p style={{ color: '#cbd5e1', fontSize: '0.75rem', margin: '0 0 12px 0' }}>
-                {env.desc}
-              </p>
-
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  onClick={() => {
-                    if (typeof onUnlockOrEquipEnvironment === 'function') {
-                      onUnlockOrEquipEnvironment(env.id, env.cost || 0, isPlanet, pNum);
-                    }
-                    setPreviewingEnv(null);
-                  }}
-                  className={`cyber-btn ${isEquipped ? '' : (isOwned ? 'cyber-btn-primary' : 'cyber-btn-warning')}`}
-                  style={{ flex: 1.5, padding: '0.65rem', fontSize: '0.85rem', fontWeight: 900 }}
-                >
-                  {isEquipped ? '✓ GIÀ IN USO' : isOwned ? 'EQUIPAGGIA ORA' : `SBLOCCA (${env.cost || 0} 💎)`}
-                </button>
-                <button
-                  onClick={() => setPreviewingEnv(null)}
-                  className="cyber-btn"
-                  style={{ flex: 1, padding: '0.65rem' }}
-                >
-                  Indietro
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
-
       {/* OVERLAY ISPEZIONE A SCHERMO INTERO */}
       {inspectedItem && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(1, 4, 12, 0.98)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 40000, padding: '1rem' }}>
@@ -935,7 +649,6 @@ export default function ShopModal({
             <button 
               onClick={() => {
                 setInspectedItem(null);
-                setInspectFlipped(false);
               }} 
               className="cyber-btn" 
               style={{ position: 'absolute', top: 12, right: 12, background: '#ef4444', borderColor: '#f87171', padding: '0.3rem 0.7rem', fontWeight: 900 }}
@@ -943,98 +656,40 @@ export default function ShopModal({
               ✕ Chiudi
             </button>
 
-            {/* ISPEZIONE PILOTA */}
-            {inspectedItem.type === 'pilot' && (
-              <>
-                <div style={{ fontSize: '0.7rem', color: inspectedItem.data?.rarityColor || inspectedItem.data?.color, fontWeight: 900, textTransform: 'uppercase', marginBottom: '4px' }}>
-                  SCHEDA PILOTA • {inspectedItem.data?.rarity}
-                </div>
-                <h2 style={{ color: '#fff', margin: '0 0 12px 0', fontSize: '1.4rem', fontWeight: 900 }}>
-                  {inspectedItem.data?.name}
-                </h2>
-                <div style={{ margin: '8px 0 16px 0' }}>
-                  <PilotCard pilot={inspectedItem.data} compact={false} isEquipped={inspectedItem.isEquipped} />
-                </div>
-                <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(15, 23, 42, 0.85)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                  <div style={{ fontSize: '0.8rem', color: '#00f2fe', fontWeight: 900 }}>CARATTERISTICA TATTICA:</div>
-                  <div style={{ fontSize: '0.75rem', color: '#cbd5e1', lineHeight: 1.4 }}>{inspectedItem.data?.desc || inspectedItem.data?.trait}</div>
-                  {inspectedItem.data?.role && (
-                    <div style={{ fontSize: '0.72rem', color: '#facc15', lineHeight: 1.4, borderTop: '1px dashed rgba(255, 255, 255, 0.1)', paddingTop: '6px' }}>
-                      <strong>RUOLO:</strong> {inspectedItem.data.role}
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-
             {/* ISPEZIONE MAZZO */}
             {inspectedItem.type === 'deck' && (
               <>
                 <div style={{ fontSize: '0.7rem', color: inspectedItem.data?.color, fontWeight: 900, textTransform: 'uppercase', marginBottom: '4px' }}>
-                  MAZZO TATTICO • {inspectedItem.data?.rarity || 'COMUNE'}
+                  MAZZO NUMERICO • {inspectedItem.data?.rarity || 'COMUNE'}
                 </div>
                 <h2 style={{ color: inspectedItem.data?.color, margin: '0 0 12px 0', fontSize: '1.4rem', fontWeight: 900 }}>
-                  {inspectedItem.data?.name}
+                  {officialNumericDeckBackName(inspectedItem.data.id)}
                 </h2>
                 <div style={{ margin: '8px 0 16px 0' }}>
-                  <TacticalVisual id={inspectedItem.data?.id} type="card_back" color={inspectedItem.data?.color} width={100} height={150} />
+                  <img src={officialNumericDeckBackPath(inspectedItem.data.id)} alt={officialNumericDeckBackName(inspectedItem.data.id)} width={100} height={150} />
                 </div>
                 <div style={{ width: '100%', background: 'rgba(15, 23, 42, 0.85)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem', color: '#cbd5e1', lineHeight: 1.4 }}>
                   <div style={{ color: '#facc15', fontWeight: 900, marginBottom: '4px' }}>EFFETTO PASSIVO:</div>
-                  {currentDeckPassives(inspectedItem.data?.id,inspectedItem.curLvl) || describePhase16EDeck(inspectedItem.data?.id,inspectedItem.curLvl) || inspectedItem.data?.levels?.[inspectedItem.curLvl]?.desc || inspectedItem.data?.desc}
+                  {currentDeckPassives(inspectedItem.data.id,inspectedItem.curLvl) || '52 carte numeriche'}
                 </div>
               </>
             )}
 
             {/* ISPEZIONE MODULO */}
-            {inspectedItem.type === 'ability' && (
+            {inspectedModule && (
               <>
                 <div style={{ fontSize: '0.7rem', color: inspectedItem.data?.color, fontWeight: 900, textTransform: 'uppercase', marginBottom: '4px' }}>
-                  MODULO ABILITÀ IBRIDO
+                  CARTA MODULO
                 </div>
                 <h2 style={{ color: inspectedItem.data?.color, margin: '0 0 12px 0', fontSize: '1.4rem', fontWeight: 900 }}>
-                  {inspectedItem.data?.name}
+                  {inspectedModule.name}
                 </h2>
                 <div style={{ margin: '12px 0 16px 0' }}>
-                  <ModuleIcon id={inspectedItem.data?.id} size={90} color={inspectedItem.data?.color} />
+                  <img src={officialSpecialArtPath(inspectedModule.id)} alt={inspectedModule.name} width={100} height={150} />
                 </div>
                 <div style={{ width: '100%', background: 'rgba(15, 23, 42, 0.85)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem', color: '#cbd5e1', lineHeight: 1.4 }}>
-                  <div style={{ color: '#00f2fe', fontWeight: 900, marginBottom: '4px' }}>POTERE ATTIVO AL 100% DI CARICA:</div>
-                  {describePhase16FModule(inspectedItem.data?.id,inspectedItem.curLvl) || inspectedItem.data?.levels?.[inspectedItem.curLvl]?.activeDesc || inspectedItem.data?.desc}
-                </div>
-              </>
-            )}
-
-            {/* ISPEZIONE TERRENO */}
-            {inspectedItem.type === 'terrain' && (
-              <>
-                <div style={{ fontSize: '0.7rem', color: inspectedItem.data?.color, fontWeight: 900, textTransform: 'uppercase', marginBottom: '4px' }}>
-                  TRAPPOLA BANCO TERRENO • {inspectedItem.data?.rarity}
-                </div>
-                <h2 style={{ color: inspectedItem.data?.color, margin: '0 0 8px 0', fontSize: '1.4rem', fontWeight: 900 }}>
-                  {inspectedItem.data?.name}
-                </h2>
-
-                <div 
-                  onClick={() => setInspectFlipped(!inspectFlipped)}
-                  style={{ margin: '10px 0 12px 0', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-                  title="Tocca per girare la carta"
-                >
-                  <TerrainVisual 
-                    cardId={inspectedItem.data?.id} 
-                    color={inspectedItem.data?.color} 
-                    width={100} 
-                    height={150} 
-                    isBack={inspectFlipped} 
-                  />
-                  <span style={{ fontSize: '0.62rem', color: '#38bdf8', marginTop: '6px', fontWeight: 900, background: 'rgba(2, 6, 23, 0.8)', padding: '2px 8px', borderRadius: '4px', border: '1px solid rgba(0, 242, 254, 0.4)' }}>
-                    🔄 Tocca per vedere il {inspectFlipped ? 'FRONTE' : 'DORSO'}
-                  </span>
-                </div>
-
-                <div style={{ width: '100%', background: 'rgba(15, 23, 42, 0.85)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem', color: '#cbd5e1', lineHeight: 1.4 }}>
-                  <div style={{ color: '#10b981', fontWeight: 900, marginBottom: '4px' }}>INNESCO AUTOMATICO COPERTO:</div>
-                  {describePhase16HTerrain(inspectedItem.data?.id,inspectedItem.curLvl) || inspectedItem.data?.levels?.[inspectedItem.curLvl]?.desc || inspectedItem.data?.desc}
+                  <div style={{ color: '#00f2fe', fontWeight: 900, marginBottom: '4px' }}>EFFETTO IN BATTAGLIA</div>
+                  {inspectedModule.description}
                 </div>
               </>
             )}

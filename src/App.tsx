@@ -48,7 +48,7 @@ import {
   toggleMuteSFX,
 } from './audio';
 import { SciFiIcon, TacticalVisual, RelicVisual } from './visualAssets';
-import DeepSpaceUniverseCanvas, { SPECIAL_BACKGROUNDS, PLANET_ENVIRONMENTS } from './DeepSpaceUniverseCanvas';
+import DeepSpaceUniverseCanvas from './DeepSpaceUniverseCanvas';
 import { PHASE16A_CAMPAIGN_PLANETS, PHASE16A_RIFTS, PHASE16A_EPIC_IDS, PHASE16A_MAX_STARS, PHASE16A_STAR_MILESTONES, getCampaignPlanetIndex, getVisibleCampaignPlanet, getNextCampaignPlanet, getGlobalCampaignSector, getCampaignStarsTotal, migrateCampaignCapsuleClaims } from './newCombat/phase16ACatalog.js';
 import {getPhase16EDeckTraits,isPhase16EDeck} from './newCombat/phase16EDecks.js';
 import {getPhase16HSectorChallenge,getPhase16HBountyProgress} from './newCombat/phase16HProgression.js';
@@ -248,10 +248,6 @@ const getRequiredPilotLevelForUpgrade = (targetLevel) => {
 };
 
 // Helper unificato: Requisito Livello Pilota per Carte Terreno
-const getRequiredPilotLevelForTerrain = (targetLevel) => {
-  return PILOT_LEVEL_GATING.TERRAIN_PILOT_REQS[targetLevel] || 1;
-};
-
 // Helper: Massimo livello sbloccabile in base al livello attuale del Pilota
 const getMaxAllowedLevelForPilot = (pilotLevel, maxItemCap = 9) => {
   const pLvl = Number(pilotLevel) || 1;
@@ -304,20 +300,14 @@ const getStarCapsuleReward = (milestone) => {
   let primordialMatter = (idx >= 30 && idx % 5 === 0) ? 1 : 0;
   let unlockItem = null;
 
-  // I 4 Sblocchi Esclusivi della Rotta Stellare
-  if (m === 90) {
-    unlockItem = { type: 'terrain', id: 'entropic_refraction', name: 'Scudo a Rifrazione Entropica' };
-  } else if (m === 180) {
+  if (m === 180) {
     unlockItem = { type: 'ability', id: 'singularity_core', name: 'Modulo SingolaritÃ  (Buco Nero)' };
-  } else if (m === 270) {
-    unlockItem = { type: 'deck', id: 'ophiuchus', name: 'Mazzo Ophiuchus (Il Serpentario)' };
   } else if (m === 360) {
     dust = 3000;
     diamonds = 30;
     ether = 15;
     voidCrystals = 5;
     primordialMatter = 3;
-    unlockItem = { type: 'deck', id: 'supreme_eclipse', name: 'Mazzo Eclissi Suprema (Leggendario)' };
   }
 
   return { milestone: m, dust, diamonds, ether, voidCrystals, primordialMatter, unlockItem };
@@ -1111,7 +1101,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'cryo_stasis', name: 'Criostasi di Emergenza', category: 'cryo', categoryName: 'Crio & Stasi',
     rarity: 'Comune', rarityTier: 1, color: '#38bdf8', cost: { dust: 200, diamonds: 0 },
-    image: '/assets/terrain/cryo_stasis.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'bomb_timeout', desc: 'Se il timer della Bomba tocca 0T, la congela evitando la detonazione.',
     levels: {
       1: { effectValue: 2, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Congela la Bomba per +2 Turni extra (Uso singolo).' },
@@ -1122,7 +1111,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'sub_zero_seal', name: 'Sigillo Sub-Zero', category: 'cryo', categoryName: 'Crio & Stasi',
     rarity: 'Rara', rarityTier: 2, color: '#0284c7', cost: { dust: 250, diamonds: 0 },
-    image: '/assets/terrain/sub_zero_seal.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'bomb_critical', desc: 'Se la Bomba scende a 1T, dimezza il valore target richiesto per il disinnesco.',
     levels: {
       1: { effectValue: 0.5, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Dimezza il target della Bomba a 1T (Uso singolo).' },
@@ -1133,7 +1121,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'cryo_absorber', name: 'Assorbitore Criogenico', category: 'cryo', categoryName: 'Crio & Stasi',
     rarity: 'Super Rara', rarityTier: 3, color: '#67e8f9', cost: { dust: 300, diamonds: 5 },
-    image: '/assets/terrain/cryo_absorber.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'bomb_fail', desc: 'All\'esplosione di una Bomba, annulla la penalità e la converte in cura HP.',
     levels: {
       1: { effectValue: 15, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Annulla la detonazione e rigenera +15 HP (Uso singolo).' },
@@ -1144,7 +1131,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'frost_bite', name: 'Morsa del Gelo', category: 'cryo', categoryName: 'Crio & Stasi',
     rarity: 'Leggendaria', rarityTier: 4, color: '#06b6d4', cost: { dust: 350, diamonds: 5 },
-    image: '/assets/terrain/frost_bite.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'enemy_crit', desc: 'Se subisci un colpo critico dal nemico, ne congela il timer al turno successivo.',
     levels: {
       1: { effectValue: 15, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Sottrae 15s al prossimo timer nemico (Uso singolo).' },
@@ -1157,7 +1143,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'magnetic_valve', name: 'Valvola di Sfogo', category: 'gravity', categoryName: 'Gravità',
     rarity: 'Comune', rarityTier: 1, color: '#f59e0b', cost: { dust: 200, diamonds: 0 },
-    image: '/assets/terrain/magnetic_valve.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'malus_full', desc: 'Quando la Barra Malus raggiunge il massimo, scarica le tacche senza contraccolpo.',
     levels: {
       1: { effectValue: 6, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Azzera 6 tacche Malus bloccando il contraccolpo (Uso singolo).' },
@@ -1168,7 +1153,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'charge_splitter', name: 'Ripartitore di Carica', category: 'gravity', categoryName: 'Gravità',
     rarity: 'Rara', rarityTier: 2, color: '#facc15', cost: { dust: 250, diamonds: 0 },
-    image: '/assets/terrain/charge_splitter.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'enemy_hit', desc: 'Converte le tacche Malus accumulate in barriera difensiva a ogni colpo subito.',
     levels: {
       1: { effectValue: 3, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Assorbe fino a 3 HP di danno per ogni tacca Malus (Uso singolo).' },
@@ -1179,7 +1163,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'gravimetric_anchor', name: 'Ancora Gravimetrica', category: 'gravity', categoryName: 'Gravità',
     rarity: 'Super Rara', rarityTier: 3, color: '#ea580c', cost: { dust: 300, diamonds: 5 },
-    image: '/assets/terrain/gravimetric_anchor.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'heavy_damage', desc: 'Se subisci un attacco superiore a 18 HP, ne dimezza immediatamente l\'impatto.',
     levels: {
       1: { effectValue: 0.5, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Dimezza (-50%) i danni nemici >18 HP (Uso singolo).' },
@@ -1190,7 +1173,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'rebound_condenser', name: 'Condensatore di Rimbalzo', category: 'gravity', categoryName: 'Gravità',
     rarity: 'Leggendaria', rarityTier: 4, color: '#d97706', cost: { dust: 350, diamonds: 5 },
-    image: '/assets/terrain/rebound_condenser.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'malus_backfire', desc: 'Quando scatta un Malus, devia l\'effetto negativo direttamente contro l\'avversario.',
     levels: {
       1: { effectValue: 1, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Riflette il malus scattato contro il nemico (Uso singolo).' },
@@ -1203,7 +1185,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'frequency_reserve', name: 'Riserva di Frequenza', category: 'tachyon', categoryName: 'Spazio-Tempo',
     rarity: 'Comune', rarityTier: 1, color: '#10b981', cost: { dust: 200, diamonds: 0 },
-    image: '/assets/terrain/frequency_reserve.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'timer_depleted', desc: 'Se il timer tocca 0s, concede secondi extra evitando il timeout.',
     levels: {
       1: { effectValue: 20, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Concede +20s di emergenza evitando il timeout (Uso singolo).' },
@@ -1214,7 +1195,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'tachyon_siphon', name: 'Sifone Tachionico', category: 'tachyon', categoryName: 'Spazio-Tempo',
     rarity: 'Rara', rarityTier: 2, color: '#059669', cost: { dust: 250, diamonds: 0 },
-    image: '/assets/terrain/tachyon_siphon.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'pass_turn', desc: 'Se passi il turno senza attaccare, sintetizza Etere Cosmico e ricarica il Time Tank.',
     levels: {
       1: { effectValue: 2, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Passare conferisce +2🔮 Etere e +10s al Time Tank (Uso singolo).' },
@@ -1225,7 +1205,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'temporal_singularity', name: 'Singolarità Temporale', category: 'tachyon', categoryName: 'Spazio-Tempo',
     rarity: 'Super Rara', rarityTier: 3, color: '#047857', cost: { dust: 300, diamonds: 5 },
-    image: '/assets/terrain/temporal_singularity.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'enemy_fast_turn', desc: 'Se il nemico sferra un attacco rapido (<12s), taglia tempo dal suo turno successivo.',
     levels: {
       1: { effectValue: 15, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Taglia 15s dal turno successivo dell\'avversario (Uso singolo).' },
@@ -1236,7 +1215,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'entropic_filter', name: 'Filtro Entropico', category: 'tachyon', categoryName: 'Spazio-Tempo',
     rarity: 'Leggendaria', rarityTier: 4, color: '#34d399', cost: { dust: 350, diamonds: 5 },
-    image: '/assets/terrain/entropic_filter.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'player_timeout', desc: 'Se subisci un timeout, azzera i danni da penalità e rimescola subito la mano.',
     levels: {
       1: { effectValue: 0, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Annulla i danni da timeout e ripristina la mano a 7 carte.' },
@@ -1249,7 +1227,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'resonance_lock', name: 'Fissatore di Risonanza', category: 'optical', categoryName: 'Matrice Ottica',
     rarity: 'Comune', rarityTier: 1, color: '#e879f9', cost: { dust: 200, diamonds: 0 },
-    image: '/assets/terrain/resonance_lock.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'golden_expire', desc: 'Se la Carta Dorata sta per scadere (1T), ne estende la durata di turni extra.',
     levels: {
       1: { effectValue: 2, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Estende la Carta Dorata di +2 Turni aggiuntivi (Uso singolo).' },
@@ -1260,7 +1237,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'suit_catalyst', name: 'Catalizzatore di Semi', category: 'optical', categoryName: 'Matrice Ottica',
     rarity: 'Rara', rarityTier: 2, color: '#d946ef', cost: { dust: 250, diamonds: 0 },
-    image: '/assets/terrain/suit_catalyst.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'three_suits_hand', desc: 'Se hai carte di 3 semi diversi, converte la carta restante nel 4° seme mancante.',
     levels: {
       1: { effectValue: 1, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Converte 1 carta nel seme mancante per la Combo 4 Semi.' },
@@ -1271,7 +1247,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'holographic_prism', name: 'Prisma Olografico', category: 'optical', categoryName: 'Matrice Ottica',
     rarity: 'Super Rara', rarityTier: 3, color: '#c084fc', cost: { dust: 300, diamonds: 5 },
-    image: '/assets/terrain/holographic_prism.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'hand_stagnation', desc: 'Se non attacchi per 1 turno, transmuta le 2 carte più basse nei semi ideali.',
     levels: {
       1: { effectValue: 2, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Trasmuta le 2 carte più basse nei semi ideali (Uso singolo).' },
@@ -1282,7 +1257,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'spectral_multiplier', name: 'Moltiplicatore Spettrale', category: 'optical', categoryName: 'Matrice Ottica',
     rarity: 'Leggendaria', rarityTier: 4, color: '#a855f7', cost: { dust: 350, diamonds: 5 },
-    image: '/assets/terrain/spectral_multiplier.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'golden_played', desc: 'Quando giochi una Carta Dorata, ne amplifica l\'effetto specifico.',
     levels: {
       1: { effectValue: 1.5, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Amplifica del +50% il bonus della Carta Dorata (Uso singolo).' },
@@ -1295,7 +1269,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'sign_inverter', name: 'Invertitore di Segno', category: 'prism', categoryName: 'Prisma',
     rarity: 'Comune', rarityTier: 1, color: '#f43f5e', cost: { dust: 200, diamonds: 0 },
-    image: '/assets/terrain/sign_inverter.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'all_complex_ops', desc: 'Se tutti i bersagli sono [*] o [/], ne converte uno in Addizione [+].',
     levels: {
       1: { effectValue: 1, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Converte 1 bersaglio complesso in [+] Addizione (Uso singolo).' },
@@ -1306,7 +1279,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'quantum_polarizer', name: 'Polarizzatore Quantico', category: 'prism', categoryName: 'Prisma',
     rarity: 'Rara', rarityTier: 2, color: '#ef4444', cost: { dust: 250, diamonds: 0 },
-    image: '/assets/terrain/quantum_polarizer.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'high_target_lock', desc: 'Se un bersaglio supera il valore 45, ne arrotonda la cifra a un multiplo di 5.',
     levels: {
       1: { effectValue: 5, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Ricalibra bersagli >45 su multipli esatti di 5 (Uso singolo).' },
@@ -1317,7 +1289,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'algebraic_refraction', name: 'Rifrazione Algebrica', category: 'prism', categoryName: 'Prisma',
     rarity: 'Super Rara', rarityTier: 3, color: '#fb7185', cost: { dust: 300, diamonds: 5 },
-    image: '/assets/terrain/algebraic_refraction.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'no_solvable_targets', desc: 'Se nessun bersaglio è risolvibile, riduce tutti i valori target del 25%.',
     levels: {
       1: { effectValue: 0.25, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: Riduce del 25% i target non risolvibili (Uso singolo).' },
@@ -1328,7 +1299,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
   {
     id: 'harmonic_matrix', name: 'Matrice Armonica', category: 'prism', categoryName: 'Prisma',
     rarity: 'Leggendaria', rarityTier: 4, color: '#fda4af', cost: { dust: 350, diamonds: 5 },
-    image: '/assets/terrain/harmonic_matrix.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'division_hit', desc: 'Quando chiudi un attacco con la Divisione [/], infligge danni puri bonus e azzera il Malus.',
     levels: {
       1: { effectValue: 10, etherRearmCost: 0, reqPilotLevel: 1, desc: 'Fascia 1: +10 HP Danno Puro su attacchi con [/] (Uso singolo).' },
@@ -1348,7 +1318,6 @@ const TERRAIN_CARDS_DATABASE = Object.freeze([
     color: '#a855f7',
     exclusiveStarMilestone: 90,
     cost: { dust: 0, diamonds: 0 },
-    image: '/assets/terrain/entropic_refraction.png', backImage: '/assets/terrain/terrain_back.png',
     triggerCondition: 'malus_backfire',
     desc: 'Trappola Esclusiva (90⭐): quando scatta un Malus, ne converte la forza distruttiva in scudo energetico e ritorsione.',
     levels: {
@@ -17364,18 +17333,18 @@ function App() {
   const [unlockedTerrainCards, setUnlockedTerrainCards] = useState(() => {
     try {
       const saved = localStorage.getItem('eclissi_unlocked_terrain_cards');
-      return saved ? JSON.parse(saved) : { cryo_stasis: { level: 1, unlocked: true } };
+      return saved ? JSON.parse(saved) : {};
     } catch (_) {
-      return { cryo_stasis: { level: 1, unlocked: true } };
+      return {};
     }
   });
 
-        const [equippedTerrainSlots, setEquippedTerrainSlots] = useState(() => {
+        const [equippedTerrainSlots] = useState(() => {
     try {
       const saved = localStorage.getItem('eclissi_equipped_terrain_slots');
-      return saved ? JSON.parse(saved).slice(0, 4) : ['cryo_stasis', null, null, null];
+      return saved ? JSON.parse(saved).slice(0, 4) : [null, null, null, null];
     } catch (_) {
-      return ['cryo_stasis', null, null, null];
+      return [null, null, null, null];
     }
   });
 
@@ -17531,7 +17500,7 @@ function App() {
   useEffect(()=>{modulePurchaseLocks.current.clear();},[abilities,forgeQueue]);
 
   // SLOT UNICO IBRIDO (stringa ID singolo, null prima del Settore 9)
-  const [selectedAbility, setSelectedAbility] = useState(() => {
+  const [selectedAbility] = useState(() => {
     const legacy = localStorage.getItem('eclissi_selected_abilities');
     if (legacy) {
       try {
@@ -17608,13 +17577,7 @@ function App() {
     }
   });
 
-  const [equippedEnvironment, setEquippedEnvironment] = useState(() => localStorage.getItem('eclissi_env') || 'deep_space');
-  const [unlockedEnvironments, setUnlockedEnvironments] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('eclissi_unlocked_envs') || '{"deep_space":true}');
-    } catch (_) { return { deep_space: true }; }
-  });
-  const [previewEnvironment, setPreviewEnvironment] = useState(null);
+  const [equippedEnvironment] = useState(() => localStorage.getItem('eclissi_env') || 'deep_space');
 
   // 6. RISORSE ED ECONOMIA
   const [stardust, setStardust] = useState(() => parseInt(localStorage.getItem('eclissi_stardust') || '100', 10));
@@ -17841,9 +17804,6 @@ function App() {
   }, [maxUnlockedPlanet, unlockedLevels]);
 
   // Slot Modulo Ibrido sbloccato rigorosamente al raggiungimento del Settore 9 di Terra
-  const isAbilityModuleUnlocked = useMemo(() => {
-    return currentGlobalAdventureSector >= moduleUnlockThreshold;
-  }, [currentGlobalAdventureSector, moduleUnlockThreshold]);
 
 
   const isEtherUnlocked = useMemo(() => {
@@ -18555,38 +18515,6 @@ function App() {
     triggerPopup(`Mazzo ${deckObj.name} sbloccato a Livello 1 ed equipaggiato! (-${diamondCost} 💎)`);
   }, [deckInventory, unlockedLevels, maxUnlockedPlanet, diamonds, triggerPopup]);
 
-  const handleUnlockOrEquipEnvironment = useCallback((envId, cost = 0, isPlanetEnv = false, planetNum = 1) => {
-    if (unlockedEnvironments[envId]) {
-      try { playSound('click'); } catch (_) {}
-      setEquippedEnvironment(envId);
-      triggerPopup(`Sfondo selezionato con successo!`);
-      if (previewEnvironment) setPreviewEnvironment(prev => ({ ...prev, isEquipped: true, isUnlocked: true }));
-      return;
-    }
-
-    if (isPlanetEnv) {
-      const isBossDefeated = typeof isPlanetBossDefeated === 'function' ? isPlanetBossDefeated(planetNum, unlockedLevels, maxUnlockedPlanet) : true;
-      if (!isBossDefeated) {
-        try { playSound('deselect'); } catch (_) {}
-        triggerPopup(`Devi prima sconfiggere il Boss del Settore 10 per abilitare l'acquisto!`);
-        return;
-      }
-    }
-
-    if (diamonds < cost) {
-      try { playSound('deselect'); } catch (_) {}
-      triggerPopup(`Diamanti insufficienti! Servono ${cost} Diamanti 💎.`);
-      return;
-    }
-
-    try { playSound('ability'); } catch (_) {}
-    setDiamonds(d => d - cost);
-    setUnlockedEnvironments(prev => ({ ...prev, [envId]: true }));
-    setEquippedEnvironment(envId);
-    triggerPopup(`Nuovo Sfondo sbloccato ed equipaggiato! (-${cost} 💎)`);
-    if (previewEnvironment) setPreviewEnvironment(prev => ({ ...prev, isEquipped: true, isUnlocked: true }));
-  }, [unlockedEnvironments, unlockedLevels, maxUnlockedPlanet, diamonds, previewEnvironment, triggerPopup]);
-
   const handleBuyStorePackage = useCallback((pkg) => {
     const { type, amount, cost } = pkg;
     if (diamonds < cost) {
@@ -19033,16 +18961,9 @@ function App() {
     if (reward.voidCrystals > 0) addVoidCrystalsSafe(reward.voidCrystals);
     if (reward.primordialMatter > 0) addPrimordialMatterSafe(reward.primordialMatter);
 
-    // Sblocco oggetto esclusivo se presente
     if (reward.unlockItem) {
-      const item = reward.unlockItem;
-      if (item.type === 'terrain') {
-        setUnlockedTerrainCards(prev => ({ ...prev, [item.id]: { level: 1, unlocked: true } }));
-      } else if (item.type === 'ability') {
-        setAbilities(prev => ({ ...prev, [item.id]: { level: 1, unlocked: true } }));
-      } else if (item.type === 'deck') {
-        setDeckInventory(prev => ({ ...prev, [item.id]: { level: 1, unlocked: true } }));
-      }
+      const { id } = reward.unlockItem;
+      setAbilities(prev => prev[id]?.unlocked === true ? prev : { ...prev, [id]: { level: 1, unlocked: true } });
     }
 
     setClaimedStarCapsules(prev => {
@@ -19151,13 +19072,6 @@ function App() {
   useEffect(() => { localStorage.setItem('eclissi_pvp_losses', pvpLosses.toString()); }, [pvpLosses]);
   useEffect(() => { localStorage.setItem('eclissi_elite_matches_played', eliteMatchesPlayedToday.toString()); }, [eliteMatchesPlayedToday]);
   useEffect(() => { localStorage.setItem('eclissi_abilities', JSON.stringify(abilities)); }, [abilities]);
-    useEffect(() => {
-    if (selectedAbility) {
-      localStorage.setItem('eclissi_selected_ability', selectedAbility);
-    } else {
-      localStorage.removeItem('eclissi_selected_ability');
-    }
-  }, [selectedAbility]);
 
   useEffect(() => { localStorage.setItem('eclissi_selected_deck', selectedDeck); }, [selectedDeck]);
   useEffect(() => { localStorage.setItem('eclissi_deck_inventory', JSON.stringify(deckInventory)); }, [deckInventory]);
@@ -19174,8 +19088,6 @@ function App() {
   useEffect(() => { localStorage.setItem('eclissi_extractor_level', extractorLevel.toString()); }, [extractorLevel]);
   useEffect(() => { localStorage.setItem('eclissi_extractor_stored', extractorStored.toString()); }, [extractorStored]);
   useEffect(() => { localStorage.setItem('eclissi_extractor_last_time', extractorLastTime.toString()); }, [extractorLastTime]);
-  useEffect(() => { localStorage.setItem('eclissi_env', equippedEnvironment); }, [equippedEnvironment]);
-  useEffect(() => { localStorage.setItem('eclissi_unlocked_envs', JSON.stringify(unlockedEnvironments)); }, [unlockedEnvironments]);
   useEffect(() => { localStorage.setItem('eclissi_max_planet', maxUnlockedPlanet.toString()); }, [maxUnlockedPlanet]);
   useEffect(() => { localStorage.setItem('eclissi_unlocked_levels', JSON.stringify(unlockedLevels)); }, [unlockedLevels]);
   useEffect(() => { localStorage.setItem('eclissi_muted_bgm', bgmMutedState.toString()); }, [bgmMutedState]);
@@ -19188,7 +19100,6 @@ function App() {
   useEffect(() => { localStorage.setItem('eclissi_primordial_matter', primordialMatter.toString()); }, [primordialMatter]);
   useEffect(() => { localStorage.setItem('eclissi_tank_level', tankLevel.toString()); }, [tankLevel]);
   useEffect(() => { localStorage.setItem('eclissi_unlocked_terrain_cards', JSON.stringify(unlockedTerrainCards)); }, [unlockedTerrainCards]);
-  useEffect(() => { localStorage.setItem('eclissi_equipped_terrain_slots', JSON.stringify(equippedTerrainSlots)); }, [equippedTerrainSlots]);
 
     const extractorConfig = typeof EXTRACTOR_LEVELS !== 'undefined' && EXTRACTOR_LEVELS[extractorLevel] ? EXTRACTOR_LEVELS[extractorLevel] : { level: 1, name: 'Estrattore', maxStore: 4 };
   const nextExtractorConfig = typeof EXTRACTOR_LEVELS !== 'undefined' ? EXTRACTOR_LEVELS[extractorLevel + 1] : null;
@@ -20094,15 +20005,6 @@ function App() {
           selectedDeck={selectedDeck}
           currentDeckObj={currentDeckObj}
           selectedPilot={selectedPilot}
-
-
-
-          selectedAbility={selectedAbility}
-          isAbilityModuleUnlocked={isAbilityModuleUnlocked}
-          equippedEpicItems={equippedEpicItems}
-          epicItemsDatabase={typeof EPIC_ITEMS_DATABASE !== 'undefined' ? EPIC_ITEMS_DATABASE : []}
-          equippedTerrainSlots={equippedTerrainSlots}
-          terrainCardsDatabase={typeof TERRAIN_CARDS_DATABASE !== 'undefined' ? TERRAIN_CARDS_DATABASE : []}
           maxUnlockedPlanet={maxUnlockedPlanet}
           currentPlanetLevel={currentPlanetLevel}
           currentPlanetName={currentPlanetName}
@@ -21227,67 +21129,6 @@ function App() {
         </div>
       )}
 
-      {/* MODALE INGRANDIMENTO & ANTEPRIMA SFONDO PROCEDURALE */}
-      {previewEnvironment && (() => {
-        const isPlanet = previewEnvironment.isPlanet;
-        const pNum = previewEnvironment.planetNum;
-        const envId = previewEnvironment.envId;
-        const cost = previewEnvironment.cost || 0;
-        const isPurchased = Boolean(unlockedEnvironments[envId]);
-        const isEquipped = equippedEnvironment === envId;
-        const isBossDefeated = !isPlanet || (typeof isPlanetBossDefeated === 'function' && isPlanetBossDefeated(pNum, unlockedLevels, maxUnlockedPlanet));
-
-        return (
-          <div style={{ position: 'fixed', inset: 0, zIndex: 35000, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '1.25rem' }}>
-            <DeepSpaceUniverseCanvas currentEnvironmentId={envId} planetNumber={isPlanet ? pNum : null} />
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
-              <div className="cyber-panel" style={{ padding: '0.4rem 0.8rem', background: 'rgba(2, 6, 23, 0.85)' }}>
-                <span style={{ fontSize: '0.75rem', color: '#facc15', fontWeight: 'bold' }}>ANTEPRIMA SFONDO 3D</span>
-              </div>
-              <button
-                className="cyber-btn"
-                onClick={() => setPreviewEnvironment(null)}
-                style={{ background: '#ef4444', borderColor: '#f87171', padding: '0.4rem 0.8rem', zIndex: 10 }}
-              >
-                âœ• Chiudi
-              </button>
-            </div>
-
-            <div className="cyber-panel" style={{ padding: '1rem 1.25rem', background: 'rgba(2, 6, 23, 0.92)', border: '1.5px solid #00f2fe', zIndex: 10, maxWidth: '460px', margin: '0 auto', width: '100%', textAlign: 'center' }}>
-              <h3 style={{ color: '#00f2fe', margin: '0 0 0.2rem 0', fontWeight: '900', fontSize: '1.1rem' }}>
-                {previewEnvironment.name}
-              </h3>
-              <p style={{ color: '#cbd5e1', fontSize: '0.75rem', margin: '0 0 0.85rem 0' }}>
-                {previewEnvironment.desc}
-              </p>
-
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button
-                  disabled={!isBossDefeated && !isPurchased}
-                  onClick={() => {
-                    handleUnlockOrEquipEnvironment(envId, cost, isPlanet, pNum);
-                    setPreviewEnvironment(null);
-                  }}
-                  className={`cyber-btn ${isEquipped ? '' : (isPurchased ? 'cyber-btn-primary' : (isBossDefeated ? 'cyber-btn-warning' : ''))}`}
-                  style={{ flex: 1, padding: '0.65rem', fontSize: '0.85rem', fontWeight: '900' }}
-                >
-                  {isEquipped ? "GiÃ  in Uso" : (isPurchased ? "Equipaggia Ora" : (isBossDefeated ? `Acquista & Equipaggia (${cost} 💎)` : `ðŸ”’ Richiede Boss P${pNum}`))}
-                </button>
-                <button
-                  className="cyber-btn"
-                  onClick={() => setPreviewEnvironment(null)}
-                  style={{ padding: '0.65rem 1rem' }}
-                >
-                  Indietro
-                </button>
-              </div>
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* MODALE CODEX & BANCO TERRENO */}
          {/* MODALE MAPPA A NODI ROTTA STELLARE (360 STELLE / 24 CAPSULE) */}
       {showStarCapsulesModal && (
         <StarRouteMapModal
@@ -21324,7 +21165,6 @@ function App() {
           level={level}
           xp={xp}
           xpThreshold={typeof getXpThresholdForLevel === 'function' ? getXpThresholdForLevel(level) : 120 + level * 50}
-          maxPlayerHp={maxPlayerHp}
           credits={credits}
           lives={lives}
           maxLives={typeof getMaxLivesForLevel === 'function' ? getMaxLivesForLevel(level) : 3}
@@ -21357,77 +21197,9 @@ function App() {
           }}
           selectedPilot={selectedPilot}
           pilotInventory={pilotInventory}
-          onSelectPilot={(id) => setSelectedPilot(id)}
-          onUpgradePilot={handleUpgradePilot}
           selectedDeck={selectedDeck}
           currentDeckObj={currentDeckObj}
           deckInventory={deckInventory}
-          onSelectDeck={(id) => setSelectedDeck(id)}
-          onUpgradeDeck={(id) => handleUpgradeDeck(id)}
-          selectedAbility={selectedAbility}
-          abilities={abilities}
-          isAbilityModuleUnlocked={isAbilityModuleUnlocked}
-          onSelectAbility={(id) => setSelectedAbility(id)}
-          onUpgradeAbility={(id) => upgradeAbilityWithDust(id)}
-                              allDecks={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
-                    allAbilities={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
-          equippedEpicItems={equippedEpicItems}
-          epicItemsDatabase={typeof EPIC_ITEMS_DATABASE !== 'undefined' ? EPIC_ITEMS_DATABASE : []}
-
-
-                    equippedTerrainSlots={equippedTerrainSlots}
-          terrainCardsDatabase={typeof TERRAIN_CARDS_DATABASE !== 'undefined' ? TERRAIN_CARDS_DATABASE : []}
-          onEquipTerrainSlot={(slotIdx, cardId) => {
-            setEquippedTerrainSlots(prev => {
-              const next = [...prev];
-              next[slotIdx] = cardId;
-              return next;
-            });
-          }}
-                    onUnequipTerrainSlot={(slotIdx) => {
-            setEquippedTerrainSlots(prev => {
-              const next = [...prev];
-              next[slotIdx] = null;
-              return next;
-            });
-          }}
-          onUpgradeTerrainCard={(id, targetLvl, cost) => {
-            const reqPilot = typeof getRequiredPilotLevelForTerrain === 'function' ? getRequiredPilotLevelForTerrain(targetLvl) : 1;
-            if ((level || 1) < reqPilot) {
-              try { playSound('deselect'); } catch (_) {}
-              triggerPopup(`Richiede Pilota Livello ${reqPilot}!`);
-              return;
-            }
-            if (forgeQueue.length >= 2) {
-              try { playSound('deselect'); } catch (_) {}
-              triggerPopup("Entrambi i 2 Slot del Cantiere sono occupati!");
-              return;
-            }
-            if (forgeQueue.some(item => item.id === id && item.type === 'terrain')) {
-              try { playSound('deselect'); } catch (_) {}
-              triggerPopup("Questa carta terreno è già in lavorazione nel Cantiere!");
-              return;
-            }
-            if (stardust < (cost.dust || 0) || voidCrystals < (cost.voidCrystals || 0) || primordialMatter < (cost.primordialMatter || 0)) {
-              triggerPopup("Risorse insufficienti per il potenziamento!");
-              return;
-            }
-            const cardObj = typeof TERRAIN_CARDS_DATABASE !== 'undefined' ? TERRAIN_CARDS_DATABASE.find(c => c.id === id) : null;
-            const forgeParams = getForgeParams('terrain', targetLvl);
-            try { playSound('ability'); } catch (_) {}
-            setStardust(s => s - (cost.dust || 0));
-            if (cost.voidCrystals > 0) setVoidCrystals(v => v - cost.voidCrystals);
-            if (cost.primordialMatter > 0) setPrimordialMatter(p => p - cost.primordialMatter);
-            setForgeQueue(prev => [...prev, {
-              type: 'terrain',
-              id: id,
-              name: cardObj?.name?.split(' ')[0] || 'Terreno',
-              targetLevel: targetLvl,
-              finishTime: Date.now() + forgeParams.durationMs,
-              etherRush: forgeParams.etherRush
-            }]);
-            triggerPopup(`⚙️ FORGIATURA AVVIATA!\nTrappola ${cardObj?.name?.split(' ')[0] || ''} in sintesi. Pronta tra ${forgeParams.label}.`);
-          }}
           onOpenShopTab={(tabName) => {
 
 
@@ -21478,97 +21250,11 @@ function App() {
           allDecks={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
           onSelectDeck={(id) => unlockDeck(id)}
           onUpgradeDeck={(id) => handleUpgradeDeck(id)}
-          selectedAbility={selectedAbility}
           abilities={abilities}
           allAbilities={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
-          onSelectAbility={(id) => setSelectedAbility(id)}
           onUnlockAbility={(id) => unlockAbilityWithDust(id)}
           onUpgradeAbility={(id) => upgradeAbilityWithDust(id)}
 
-          unlockedTerrainCards={unlockedTerrainCards}
-
-          equippedTerrainSlots={equippedTerrainSlots}
-          terrainCardsDatabase={typeof TERRAIN_CARDS_DATABASE !== 'undefined' ? TERRAIN_CARDS_DATABASE : []}
-          onEquipTerrainSlot={(slotIdx, cardId) => {
-            setEquippedTerrainSlots(prev => {
-              const next = [...prev];
-              next[slotIdx] = cardId;
-              return next;
-            });
-          }}
-          onUnequipTerrainSlot={(slotIdx) => {
-            setEquippedTerrainSlots(prev => {
-              const next = [...prev];
-              next[slotIdx] = null;
-              return next;
-            });
-          }}
-                              onUpgradeTerrainCard={(id, targetLvl, cost) => {
-            const reqPilot = typeof getRequiredPilotLevelForTerrain === 'function' ? getRequiredPilotLevelForTerrain(targetLvl) : 1;
-            if ((level || 1) < reqPilot) {
-              try { playSound('deselect'); } catch (_) {}
-              triggerPopup(`Richiede Pilota Livello ${reqPilot}!`);
-              return;
-            }
-            if (forgeQueue.length >= 2) {
-              try { playSound('deselect'); } catch (_) {}
-              triggerPopup("Entrambi i 2 Slot del Cantiere sono occupati!");
-              return;
-            }
-
-            if (forgeQueue.some(item => item.id === id && item.type === 'terrain')) {
-              try { playSound('deselect'); } catch (_) {}
-              triggerPopup("Questa carta terreno   gi  in lavorazione nel Cantiere!");
-              return;
-            }
-            if (stardust < (cost.dust || 0) || voidCrystals < (cost.voidCrystals || 0) || primordialMatter < (cost.primordialMatter || 0)) {
-              triggerPopup("Risorse insufficienti per il potenziamento!");
-              return;
-            }
-
-            const cardObj = typeof TERRAIN_CARDS_DATABASE !== 'undefined' ? TERRAIN_CARDS_DATABASE.find(c => c.id === id) : null;
-            const forgeParams = getForgeParams('terrain', targetLvl);
-
-            try { playSound('ability'); } catch (_) {}
-            setStardust(s => s - (cost.dust || 0));
-            if (cost.voidCrystals > 0) setVoidCrystals(v => v - cost.voidCrystals);
-            if (cost.primordialMatter > 0) setPrimordialMatter(p => p - cost.primordialMatter);
-
-            setForgeQueue(prev => [...prev, {
-              type: 'terrain',
-              id: id,
-              name: cardObj?.name?.split(' ')[0] || 'Terreno',
-              targetLevel: targetLvl,
-              finishTime: Date.now() + forgeParams.durationMs,
-              etherRush: forgeParams.etherRush
-            }]);
-
-            triggerPopup(` FORGIATURA AVVIATA!\nTrappola ${cardObj?.name?.split(' ')[0] || ''} in sintesi (Slot ${forgeQueue.length + 1}/2). Pronto tra ${forgeParams.label}.`);
-          }}
-
-                    onBuyTerrainCard={(id, cost) => {
-            const reqDust = cost.dust || 0;
-            const reqDia = cost.diamonds || 0;
-
-            if (stardust < reqDust || diamonds < reqDia) {
-              try { playSound('deselect'); } catch (_) {}
-              triggerPopup(`Risorse insufficienti! Servono ${reqDust > 0 ? `${reqDust} 🌟 ` : ''}${reqDia > 0 ? `${reqDia} 💎` : ''}`);
-              return;
-            }
-
-            try { playSound('ability'); } catch (_) {}
-            if (reqDust > 0) setStardust(s => s - reqDust);
-            if (reqDia > 0) setDiamonds(d => d - reqDia);
-            setUnlockedTerrainCards(prev => ({ ...prev, [id]: { level: 1, unlocked: true } }));
-            triggerPopup("Carta Terreno sbloccata!");
-          }}
-
-          equippedEnvironment={equippedEnvironment}
-          unlockedEnvironments={unlockedEnvironments}
-          specialBackgrounds={typeof SPECIAL_BACKGROUNDS !== 'undefined' ? SPECIAL_BACKGROUNDS : []}
-          planetEnvironments={typeof PLANET_ENVIRONMENTS !== 'undefined' ? Object.values(PLANET_ENVIRONMENTS) : []}
-          onUnlockOrEquipEnvironment={handleUnlockOrEquipEnvironment}
-          onPreviewEnvironment={(env) => setPreviewEnvironment(env)}
           stardust={stardust}
           diamonds={diamonds}
           voidCrystals={voidCrystals}
