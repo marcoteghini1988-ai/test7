@@ -64,19 +64,23 @@ test('campo LIVE: cinque slot per ciascun lato con ruoli reali e terreno central
  assert.equal(1+2+2,5);
 });
 
-test('cinque speciali e sette numeriche hanno le stesse proporzioni in due file distinte',()=>{
+test('le speciali hanno la misura delle numeriche e si alzano dalla fila coperta a metà',()=>{
  assert.match(ui,/aria-label="Cinque carte speciali"/);
  assert.match(ui,/aria-label="Sette carte numeriche"/);
  assert.match(ui,/player\.special\.hand\.map\(card=>/);
  assert.match(ui,/player\.numeric\.hand\.map\(card=>/);
- assert.match(css,/\.live-special-hand\{position:absolute;top:565px;left:76px;right:76px;[^}]*gap:9px;/);
- assert.match(css,/\.live-number-hand\{position:absolute;top:648px;left:32px;right:32px;/);
- assert.match(css,/\.live-hand-special,\s*\.es-math-scope \.live-root \.live-number-card\{[^}]*aspect-ratio:54 \/ 86/);
- assert.match(css,/\.live-hand-special\{width:50px;/);
- assert.match(css,/\.live-number-card\{position:relative;width:54px;/);
- assert.ok(5*50+4*9<=450-2*76,'le cinque speciali entrano nella mano');
+ assert.match(css,/\.live-special-hand\{position:absolute;top:608px;left:76px;right:76px;[^}]*gap:5px;z-index:11/);
+ assert.match(css,/\.live-number-hand\{position:absolute;top:648px;left:32px;right:32px;[^}]*height:91px;z-index:12/);
+ assert.match(css,/\.live-hand-special,\s*\.es-math-scope \.live-root \.live-number-card\{\s*width:54px;[^}]*aspect-ratio:54 \/ 86/);
+ assert.match(css,/\.live-hand-special\.live-chosen\{transform:translateY\(-50px\);/);
+ assert.match(css,/\.live-card-inspector\{position:absolute;bottom:250px;/);
+ assert.match(css,/\.live-card-caption b\{bottom:calc\(50% \+ 4px\);/);
+ assert.ok(5*54+4*5<=450-2*76,'le cinque speciali entrano nella mano');
  assert.ok(7*54<=450-2*32,'le sette numeriche entrano nella mano');
- assert.ok(565+50*86/54<=648,'la mano speciale entra sopra quella numerica');
+ const numericTop=648+(91-86)/2;
+ assert.ok(Math.abs(numericTop-608-86/2)<1,'le numeriche coprono circa metà delle speciali');
+ assert.ok(608-50+86<648,'la carta alzata si vede per intero');
+ assert.ok(800-250<608-50,'il pannello di dettaglio lascia visibile la carta alzata');
 });
 
 test('dorsi PNG: numerico equipaggiato e speciale unico e fisso',()=>{
