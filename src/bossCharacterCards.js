@@ -27,7 +27,7 @@ export const BOSS_CHARACTER_CATALOG=Object.freeze(Object.fromEntries(defs.map(
   const id='boss-character-'+planetId;
   return [id,Object.freeze({id,planetId,name,skill,effect,description,
    family:'boss-character',short:skill.toUpperCase(),durationCycles:BOSS_CHARACTER_DURATION_CYCLES,
-   imagePath:'/assets/boss-characters/'+id+'.svg',maxCopies:1})];
+   imagePath:'/assets/boss-characters/'+id+'.png',maxCopies:1})];
  })));
 export const BOSS_CHARACTER_TYPES=Object.freeze(Object.keys(BOSS_CHARACTER_CATALOG));
 if(defs.length!==12||new Set(defs.map(row=>row[0])).size!==12||
