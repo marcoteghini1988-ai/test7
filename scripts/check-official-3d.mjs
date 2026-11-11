@@ -70,11 +70,11 @@ verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')
  !shop.includes('onSelectAbility')&&!loadout.includes('equippedTerrainSlots'),
  'Bazar e Area Giocatore devono usare l’assetto LIVE e il Mazzo Speciale');
 
-verify(battleEntry.includes("import OfficialBattle3D from './OfficialLiveBattle3D.jsx'")&&
+verify(battleEntry.includes("import OfficialLiveBattle3D from './OfficialLiveBattle3D.jsx'")&&
  battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'")&&
  battleEntry.includes("officialCampaignBattleProps(props)")&&
  battleEntry.includes("officialSimultaneousEligibility(battleProps)")&&
- battleEntry.includes("<OfficialBattle3D {...battleProps}")&&
+ battleEntry.includes("<OfficialLiveBattle3D {...battleProps}")&&
  battleEntry.includes("<BossBattle3D {...battleProps}"),
  'Unico accesso 3D: settori canonici, live alternato e fallback boss coerenti');
 verify(liveArena.includes('createOfficialLiveDuel')&&

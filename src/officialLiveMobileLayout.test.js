@@ -18,7 +18,7 @@ test('ingresso ufficiale: plancia LIVE oppure fallback Boss, mai vecchio simulta
  assert.match(entry,/from '\.\/BossBattle3D\.jsx'/);
  assert.doesNotMatch(entry,/from '\.\/OfficialBattle3D\.jsx'/);
  assert.match(entry,/officialSimultaneousEligibility\(battleProps\)/);
- assert.match(entry,/<OfficialBattle3D \{\.\.\.battleProps\}\/>/);
+ assert.match(entry,/<OfficialLiveBattle3D \{\.\.\.battleProps\}\/>/);
 });
 
 test('arena LIVE 450×800: la scala conserva il 9:16 su telefoni',()=>{
