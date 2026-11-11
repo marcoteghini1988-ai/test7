@@ -1,5 +1,4 @@
 import React from 'react';
-import {ASSET_ROOT} from './ShipPresentation.jsx';
 import {pvpTerrainDefinition} from './pvpTerrainCards.js';
 
 // Illustrazione del Terreno nella carta vera, mai in una plancia alternativa.
@@ -8,7 +7,7 @@ export default function PvpTerrainPortrait({type,className=''}) {
  if(!terrain)return null;
  return <span className={'pvp-terrain-portrait '+className} aria-hidden="true">
   <span className="pvp-terrain-fallback">✧</span>
-  <img src={ASSET_ROOT+'/terrain-pvp/'+terrain.id+'.svg'} alt="" draggable={false}
+  <img src={terrain.imagePath} alt="" draggable={false}
    onError={event=>{event.currentTarget.hidden=true;}}/>
  </span>;
 }
