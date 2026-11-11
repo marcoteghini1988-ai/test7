@@ -97,7 +97,8 @@
 .es-math-scope .live-root .live-slot--covered{border-color:#d3a8ee;color:#f2c6ff;
  background:repeating-linear-gradient(135deg,#261637 0 7px,#170e26 7px 14px)}
 .es-math-scope .live-root .live-slot-caption{position:absolute;bottom:0;left:0;right:0;
- padding:2px 0;background:#040a14f0;color:var(--family);font-size:6.5px;
+ padding:2px 0;background:#040a14f0;color:var(--family);font-size:6.2px;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
  line-height:1.1;font-weight:850;pointer-events:none}
 .es-math-scope .live-root .live-slot span{pointer-events:none}
 .es-math-scope .live-root .live-midline{position:absolute;top:305px;width:100%;
@@ -347,7 +348,7 @@
 .es-math-scope .live-root .live-slot-role{
  position:absolute;top:1px;left:0;right:0;z-index:3;
  display:block;padding:1px 0;color:#e9f8ff;
- font-size:5.3px;line-height:6px;font-weight:950;letter-spacing:.1px;
+ font-size:6.1px;line-height:7px;font-weight:950;letter-spacing:0;
  text-align:center;text-shadow:0 1px 2px #000a;
  background:linear-gradient(90deg,transparent,#0008,transparent);
  pointer-events:none;
@@ -376,6 +377,18 @@
  border-color:#e9b1ff;box-shadow:0 0 10px #bd6bf677;
 }
 
+
+/* La rarità viene resa soltanto quando è codificata nel catalogo
+   e soltanto su carte scoperte; il dorso nemico non porta alcun metadato. */
+.es-math-scope .live-root .live-slot--occupied[data-rarity="EPICA"]{
+ border-color:#f3d6ff;box-shadow:0 0 10px #d58af599,inset 0 0 7px #d58af55c;
+}
+.es-math-scope .live-root .live-slot-tier{
+ position:absolute;top:1px;right:1px;z-index:4;max-width:37px;
+ padding:1px 2px;background:#37103fee;color:#ffe5ff;border-radius:2px;
+ font-size:5.5px;line-height:7px;letter-spacing:.1px;font-weight:900;
+ box-shadow:0 0 4px #d78bff88;pointer-events:none;
+}
 
 /* La copertura delle speciali (trappole avversarie) usa SEMPRE il
    medesimo dorso del mazzo speciale. Non svela tipo o carta nascosta. */
