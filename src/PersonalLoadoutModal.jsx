@@ -158,9 +158,7 @@ export default function PersonalLoadoutModal({
                   <div style={{ fontSize: '0.58rem', color: '#cbd5e1' }}>Grado {pilotLvl}/5 • {commander?.role || 'Flotta'}</div>
                 </div>
               </div>
-              <button onClick={() => onOpenShopTab('characters')} className="cyber-btn cyber-btn-primary" style={{ padding: '0.3rem 0.55rem', fontSize: '0.62rem', fontWeight: 900 }}>
-                GESTISCI ➔
-              </button>
+
             </div>
 
             {/* Mazzo Tattico */}
