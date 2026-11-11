@@ -21,36 +21,14 @@ type BattleResultMeta = {
   starsEarned?: boolean[];
   usedRevive?: boolean;
 };
-import { ref, onValue, update, onDisconnect } from './offlineLegacyNetwork.js';
-import {
-  db,
-  PVP_TRAINING_ENTRY_CREDITS,
-  PVP_ELITE_DAILY_MATCHES_CAP,
-  PVP_LOSS_TROPHIES,
-  PVP_WIN_CREDITS,
-  PVP_WIN_STARDUST,
-  PVP_LOSS_STARDUST,
-  PVP_WIN_XP,
-  PVP_LOSS_XP,
-  PVP_ELITE_STAR_REWARDS,
-  getDailyPvPMode,
-  getWeeklyLeaderboardKey,
-  MatchmakingLobby,
-  WeeklyLeaderboardModal
-} from './pvpManager';
+import { ref, update } from './offlineLegacyNetwork.js';
+import { db, PVP_TRAINING_ENTRY_CREDITS, PVP_ELITE_DAILY_MATCHES_CAP, PVP_LOSS_TROPHIES, PVP_WIN_CREDITS, PVP_WIN_STARDUST, PVP_LOSS_STARDUST, PVP_WIN_XP, PVP_LOSS_XP, getDailyPvPMode, getWeeklyLeaderboardKey, MatchmakingLobby, WeeklyLeaderboardModal } from './pvpManager';
 
-import {
-  initAudio,
-  playBGM,
-  playSound,
-  playAbilitySFX,
-  toggleMuteBGM,
-  toggleMuteSFX,
-} from './audio';
+import { playBGM, playSound, toggleMuteBGM, toggleMuteSFX } from './audio';
 import { SciFiIcon, TacticalVisual, RelicVisual } from './visualAssets';
 import DeepSpaceUniverseCanvas from './DeepSpaceUniverseCanvas';
 import { PHASE16A_CAMPAIGN_PLANETS, PHASE16A_RIFTS, PHASE16A_EPIC_IDS, PHASE16A_MAX_STARS, PHASE16A_STAR_MILESTONES, getCampaignPlanetIndex, getVisibleCampaignPlanet, getNextCampaignPlanet, getGlobalCampaignSector, getCampaignStarsTotal, migrateCampaignCapsuleClaims } from './newCombat/phase16ACatalog.js';
-import {getPhase16EDeckTraits,isPhase16EDeck} from './newCombat/phase16EDecks.js';
+import { getPhase16EDeckTraits } from './newCombat/phase16EDecks.js';
 import {getPhase16HSectorChallenge,getPhase16HBountyProgress} from './newCombat/phase16HProgression.js';
 import MathDuelBattle from './MathDuelBattle.jsx';
 import {applyVerifiedBossRelic,verifiedBossRelicReward} from './campaignBossRelics.js';
@@ -60,21 +38,14 @@ import {officialModulePurchaseStage} from './officialModulePurchaseStage.js';
 import {recoverOfficialCampaignCredits} from './officialCampaignCreditRegen.js';
 import {normalizeOfficialForgeQueue,applyOfficialForgeCompletion,isOfficialForgeJobInQueue} from './officialForgeProgress.js';
 import {initialSelectedPilot,missingPilotInventory,terraNineModuleVictory} from './officialLoadoutMilestones.js';
-import { isPhase13CampaignEligible, validatePhase13Settlement, createPhase13OnceGuard, getPhase13EnemyPilotId } from './newCombat/phase13Campaign.js';
+import { validatePhase13Settlement, createPhase13OnceGuard } from './newCombat/phase13Campaign.js';
 import { ARMORY_V2_STORAGE_KEY, createPhase7Armory, normalizePhase7Armory } from './newCombat/phase7Armory.js';
-import {phase17GlobalSector,phase17ExpectedPilotLevel,phase17PilotHp,phase17EnemyHp,phase17CampaignXpAward,phase17CampaignDustAward,phase17EnemyLoadout,phase17EnemyWeaponLevels,phase17PlayerBattleLoadout,phase17PlayerWeaponLevels,phase17StartingAmmo,phase17Features,F17_UNLOCKS} from './newCombat/phase17Balance.js';
-import { WEAPONS_DATABASE } from './weaponsSystem';
-import { fireWeaponCombatVFX } from './weaponEffects';
+import { phase17PilotHp, phase17CampaignXpAward, phase17CampaignDustAward } from './newCombat/phase17Balance.js';
 
 
 
-import CombatJuiceOverlay, { playSynthesizedOperatorSound, getOperatorMicroShakeClass } from './CombatJuiceOverlay';
+import CombatJuiceOverlay from './CombatJuiceOverlay';
 
-import { 
-  findVulnerabilityRiftOpportunity, 
-  selectWeightedBenefit, 
-  verifyRiftSatisfied 
-} from './vulnerabilityRift';
 import {
   getRomeDateString,
   getMsUntilRomeMidnight,
@@ -86,31 +57,9 @@ import {
   checkDailyResetAndReport,
   consumePendingDailyReward
 } from './dailyChallengeEngine';
-import { createDailyPokerDeck, createDailyPokerArmory, buildDailyPokerResult } from './dailyPokerChallenge.js';
-import {createPvpPokerBotSetup,buildPvpPokerBotResult} from './pvpBootstrap.js';
+import { buildDailyPokerResult } from './dailyPokerChallenge.js';
 
-import {
-  PILOTS_DATABASE,
-  PilotCard,
-  getPilotDamageMultiplier,
-  evaluatePilotDominance,
-  getPilotById,
-  getSectorEncounterPilot,
-  ELEMENT_ICONS,
-  ELEMENT_COLORS
-} from './pilotsSystem';
-
-
-import {
-  onBossAttack,
-  onPlayerAttack,
-  onPlayerDiscardOrPass,
-  onQuantumDiceRoll as onBossQuantumDiceRoll,
-  onRoundOrTurnEnd as onBossRoundOrTurnEnd,
-  onBombDetonation,
-  isTerrainDisabledForBoss,
-  onBossStallOrPass
-} from './bossMechanicsEngine';
+import { PilotCard, evaluatePilotDominance, getPilotById, getSectorEncounterPilot } from './pilotsSystem';
 
 
 
@@ -118,16 +67,9 @@ import {
 
 
 
-import {
-  initDailyBounties,
-  DAILY_BOUNTIES_ALL_COMPLETED_REWARD,
-  getForgeParams,
-  calculateStardustOverflow,
-  calculateTelemetryOnDefeat,
-  getPlanetStarsStats,
-  getSectorStars,
-  calculateNearestMilestone
-} from './progressionEngine';
+
+
+import { initDailyBounties, getForgeParams, calculateStardustOverflow, calculateTelemetryOnDefeat, getPlanetStarsStats, getSectorStars } from './progressionEngine';
 
 
 import HomeScreen from './HomeScreen';
@@ -8857,7 +8799,7 @@ function App() {
     // Modali Pre-Partita Onboarding Liv. 9 e Liv. 10 rimossi: sblocco integrato in launchSectorBattle
 
 
-  // 5. MODULO ABILITÀ IBRIDO UNICO (selectedAbility) & INVENTARIO MAZZI A 3/6/9 LIVELLI
+  // 5. Inventari mazzi e progressione delle Carte Modulo giocate dal mazzo speciale
   const [abilities, setAbilities] = useState(() => {
     try {
       const saved = localStorage.getItem('eclissi_abilities');
@@ -8869,20 +8811,6 @@ function App() {
   // Senza questo blocco due eventi immediati vedrebbero lo stesso saldo.
   const modulePurchaseLocks=useRef(new Set());
   useEffect(()=>{modulePurchaseLocks.current.clear();},[abilities,forgeQueue]);
-
-  // SLOT UNICO IBRIDO (stringa ID singolo, null prima del Settore 9)
-  const [selectedAbility] = useState(() => {
-    const legacy = localStorage.getItem('eclissi_selected_abilities');
-    if (legacy) {
-      try {
-        const arr = JSON.parse(legacy);
-        if (Array.isArray(arr) && arr[0]) return arr[0];
-      } catch (_) {}
-    }
-    const saved = localStorage.getItem('eclissi_selected_ability');
-    return (saved && saved !== 'null') ? saved : null;
-  });
-
 
     // STATI DEL SISTEMA PILOTI TATTICI (18 CARTE PILOTA AUTONOME)
   const [selectedPilot, setSelectedPilot] = useState(() => {
@@ -8919,9 +8847,6 @@ function App() {
     localStorage.setItem('eclissi_pilot_inventory', JSON.stringify(pilotInventory));
   }, [pilotInventory]);
 
-
-  // RetrocompatibilitÃ  per GameScreen e vecchie referenze
-  const selectedAbilities = useMemo(() => [selectedAbility, null, null], [selectedAbility]);
 
   const [selectedDeck, setSelectedDeck] = useState(() => {
     return localStorage.getItem('eclissi_selected_deck') || 'neutral_starter';
