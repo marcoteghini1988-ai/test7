@@ -18473,7 +18473,7 @@ function App() {
   const unlockAbilityWithDust = useCallback((id) => {
     const ab = typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES.find(a => a.id === id) : null;
     if (!ab) return false;
-    if(modulePurchaseLocks.current.has(id)||
+    if(modulePurchaseLocks.current.size>0||
        officialModulePurchaseStage(abilities[id],'unlock',ab.maxLevel||3)!=='ok'){
       triggerPopup('Modulo già posseduto o acquisto in corso: nessun addebito.');
       return false;
@@ -18510,7 +18510,7 @@ function App() {
     const current = abilities[id] || { level: 1, unlocked: false };
     const maxAbLevel = ab.maxLevel || 3;
     const gate=officialModulePurchaseStage(current,'upgrade',maxAbLevel);
-    if(gate!=='ok'||modulePurchaseLocks.current.has(id)){
+    if(gate!=='ok'||modulePurchaseLocks.current.size>0){
       triggerPopup(gate==='not_owned'?
        'Devi prima sbloccare questo Modulo nel Bazar.':
        gate==='max_level'?'Modulo già al livello massimo.':
