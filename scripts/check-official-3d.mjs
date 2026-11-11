@@ -16,6 +16,7 @@ const bossArena=read('src/BossBattle3D.jsx');
 const physicalHull=exists('src/ShipPhysicalVitals.jsx')?read('src/ShipPhysicalVitals.jsx'):'';
 const vitalAdapter=exists('src/officialVitalMotorAdapter.js')?read('src/officialVitalMotorAdapter.js'):'';
 const css=read('src/OfficialLiveBattle3D.css');
+const sharedCss=read('src/OfficialBattle3D.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
 const shop=read('src/ShopModal.jsx');
@@ -63,6 +64,8 @@ for(const orphan of [
  verify(!exists(orphan),'File obsoleto ancora presente: '+orphan);
 }
 
+verify(!sharedCss.includes('.tdp-'),
+ 'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
 verify(exists('src/officialLiveMobileLayout.test.js'),
  'Manca la copertura strutturale della plancia mobile LIVE');
 
