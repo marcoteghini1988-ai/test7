@@ -12,6 +12,7 @@ import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {buildTacticalBossDeck,TACTICAL_PRESETS} from './tacticalSpecialPresets.js';
 import {VITAL_IDS} from './vitalDefense.js';
+import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 
 const ownCards=(b,k)=>[
  ...b.sides[k].numeric.hand,
@@ -556,6 +557,52 @@ test('Ombre e Idra: isola forza della madre e del mazzo speciale in 96 duelli',(
  console.log('LIVE_BOSS_EQUIPMENT_ISOLATION '+JSON.stringify({
   sampleSize:rows.length,byBoss,
   note:'Nessuna nave o mazzo del gioco ufficiale cambiati: solo impostazioni temporanee del fixture per confrontare le stesse 52 numeriche e gli stessi seed.',rows}));
+});
+
+// I tre modelli dell'audit iniziale non rappresentano la selezione
+// ottenibile a quel settore. La progressione reale assegna E03 prima di
+// Ombre (settore 70) ed E04 prima di Idra (settore 80). Questo controllo
+// usa SOLO navi gia' sbloccabili PRIMA del boss, senza modificarne i premi.
+test('Ombre e Idra: 100 duelli con sole navi sbloccabili prima del boss',()=>{
+ const sectors=[70,80],offsets=[1109,1429,1709,1961],groups=[];
+ let samples=0;
+ for(const sector of sectors){
+  const boss=officialBossEncounter({mode:'campaign',sectorNumber:sector});
+  assert.ok(boss&&[9,11].includes(boss.planetId));
+  const unlocked=['N00',...SHIP_CAMPAIGN_UNLOCKS.filter(row=>row.sector<sector)
+   .map(row=>row.shipId)];
+  assert.equal(new Set(unlocked).size,unlocked.length);
+  assert.ok(unlocked.includes(boss.motherShipId),
+   'il modello madre boss era gia ottenibile PRIMA del settore');
+  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:sector,playerLevel:4});
+  const results=[];
+  for(const ship of unlocked)for(const offset of offsets){
+   const duel=audit({shipA:ship,levelA:level,levelB:level,
+    boss,seed:sector+offset,log:false});
+   assert.equal(duel.boss,boss.planetId);
+   assert.equal(duel.bossShieldMax,60);
+   results.push({ship,seed:duel.seed,winner:duel.winner,halfTurns:duel.turns,
+    reason:duel.finishReason,discardsPlayer:duel.actionsBySide.A['numeric-discard']||0,
+    destroyedB:duel.destroyedB});
+  }
+  samples+=results.length;
+  const byShip=unlocked.map(ship=>{
+   const rounds=results.filter(r=>r.ship===ship);
+   const turns=rounds.map(r=>r.halfTurns).sort((a,b)=>a-b);
+   return {ship,winsPlayer:rounds.filter(r=>r.winner==='A').length,
+    winsBoss:rounds.filter(r=>r.winner==='B').length,
+    draws:rounds.filter(r=>r.winner==='draw').length,
+    medianHalfTurns:(turns[1]+turns[2])/2,
+    minHalfTurns:turns[0],maxHalfTurns:turns[3]};
+  });
+  groups.push({sector,boss:boss.name,bossShip:boss.motherShipId,
+   availableShips:unlocked.length,byShip});
+ }
+ assert.equal(samples,100);
+ console.log('LIVE_UNLOCKED_SHIP_BOSS_AUDIT '+JSON.stringify({
+  sampleSize:samples,seedsPerShip:offsets.length,groups,
+  note:'Solo navi effettivamente sbloccabili prima dei settori 70 e 80; nessuna modifica a poteri, mazzi, premi e navicelle. IA vs IA e tempo massimo teorico per mezzo turno.'
+ }));
 });
 
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
