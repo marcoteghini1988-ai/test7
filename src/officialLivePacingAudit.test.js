@@ -13,6 +13,10 @@ import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {buildTacticalBossDeck,TACTICAL_PRESETS} from './tacticalSpecialPresets.js';
 import {VITAL_IDS} from './vitalDefense.js';
 import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
+import {createSpecialCollection,validateSpecialDeck} from './specialDeckBuilder.js';
+import {TACTICAL_MODULE_CARDS} from './tacticalEquipmentCards.js';
+import {VULNERABILITY_RIFT_CARD_ID} from './tacticalVulnerabilityRift.js';
+import {findOfficialLiveVitalCompletion} from './officialLiveAiPlanning.js';
 
 const ownCards=(b,k)=>[
  ...b.sides[k].numeric.hand,
@@ -68,14 +72,73 @@ function preparedTestPlayerAction(b){
  return null;
 }
 
+// Solo per audit di equipaggiamenti IPOTETICAMENTE posseduti: nessun
+// vantaggio gratuito, non legge carte avversarie, il possesso e' esplicito.
+// Scansione rivela prima la firma: Faglia NON conosce i vitali segreti.
+function advancedOwnedPlayerAction(b){
+ if(b.activeSide!=='A'||b.actionUsed.special>=LIVE_SPECIAL_LIMIT&&
+   b.actionUsed.numeric>=LIVE_NUMERIC_LIMIT)return null;
+ const own=b.sides.A,enemy=b.sides.B,open=b.zones.A.open.findIndex(x=>!x);
+ const canSpecial=()=>open>=0&&b.actionUsed.special<LIVE_SPECIAL_LIMIT;
+ const play=(type,extra={})=>{
+  if(!canSpecial())return null;
+  const index=own.special.hand.findIndex(card=>card.type===type);
+  if(index<0)return null;
+  const candidate={type:'special',index,slot:'open-'+open,...extra};
+  return applyOfficialLiveAction(b,'A',candidate,b.deadlineMs-1).ok?
+   candidate:null;
+ };
+ const protectedTargets=VITAL_IDS.filter(id=>{
+  const part=enemy.defense.parts[id];
+  return part.hp>0&&!part.exposed&&own.seen.includes(id);
+ });
+ const complete=protectedTargets.map(id=>({
+  id,plan:findOfficialLiveVitalCompletion(enemy.defense.parts[id].signature,
+   b.vitalBuilds.A[id],own.numeric.hand)
+ })).find(x=>x.plan?.length&&x.plan.length<=
+  LIVE_NUMERIC_LIMIT-b.actionUsed.numeric);
+ // Faglia: il giocatore conosce la firma da una scansione VERA.
+ // Può calare fino a tre numeriche che si trovano GIA' nella mano.
+ if(own.liveRift&&complete&&b.actionUsed.numeric<LIVE_NUMERIC_LIMIT)
+  return {type:'numeric',index:complete.plan[0],target:'vital',vitalId:complete.id};
+ if(!own.riftUsed&&enemy.defense.shield.hp>0){
+  if(complete){
+   const rift=play(VULNERABILITY_RIFT_CARD_ID);
+   if(rift)return rift;
+  }
+  if(own.seen.length<4&&!own.liveRift){
+   const scan=play('tactic-scan');
+   if(scan)return scan;
+  }
+ }
+ // Il modulo di difesa protegge esclusivamente la barriera reale.
+ const guard=Object.values(TACTICAL_MODULE_CARDS).find(x=>x.effect==='guard')?.id;
+ if(guard&&own.defense.shield.hp>0&&own.defense.shield.hp<=40&&
+  !b.liveModuleEffects.A.guard){
+  const defense=play(guard);if(defense)return defense;
+ }
+ const pure=Object.values(TACTICAL_MODULE_CARDS).find(x=>x.effect==='pure_hit')?.id;
+ if(pure&&enemy.defense.shield.hp>0){
+  const module=play(pure);if(module)return module;
+ }
+ if(own.epic?.entitlements.includes('epic_item_6')&&
+  !own.epic.used.includes('epic_item_6')&&!own.epic.active){
+  const pendulum=play('epic_item_6');
+  if(pendulum)return pendulum;
+ }
+ return null;
+}
+
 function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
  bossShieldMax=null,playerSpecialDeck=null,bossSpecialDeck=null,
  bossShipOverride=null,playerPolicy='basic',
+ epicEntitlementsA=[],equipmentLevelsA={},
  disableBossExclusive=false,disableNumericPassive=false,log=true}={}){
  let b=createOfficialLiveDuel(createTacticalDuel({
   shipA,shipB:bossShipOverride??boss?.motherShipId??shipB,levelA,levelB,
   nowMs:0,seed,mode:'campaign',shuffleNumericOpening:true,
   specialDeckA:playerSpecialDeck,
+  epicEntitlementsA,equipmentLevelsA,
   bossPlanetB:boss?.planetId??null,
   bossNumericDeckB:boss?{id:boss.numericDeckId,level:boss.numericDeckLevel}:null,
   specialDeckB:boss?(bossSpecialDeck??buildTacticalBossDeck(boss.planetId,levelB,levelA)):null
@@ -96,7 +159,9 @@ function audit({shipA='C01',shipB='N00',levelA=1,levelB=1,seed=18,boss=null,
  const failures={},actionsBySide={A:{},B:{}},specialTypesBySide={A:{},B:{}};
  while(b.phase==='playing'&&actions<400){
   const key=b.activeSide,turn=b.turn;
-  const action=(key==='A'&&playerPolicy==='prepared-defense'?
+  const action=(key==='A'&&playerPolicy==='advanced-owned'?
+   (advancedOwnedPlayerAction(b)??preparedTestPlayerAction(b)):
+   key==='A'&&playerPolicy==='prepared-defense'?
    preparedTestPlayerAction(b):null)??chooseOfficialLiveAiAction(b,key);
   assert.ok(action,'nessuna azione calcolabile: '+key+' turno '+turn);
   const selectedSpecial=action.type==='special'?b.sides[key].special.hand[action.index]?.type:null;
@@ -603,6 +668,68 @@ test('Ombre e Idra: 100 duelli con sole navi sbloccabili prima del boss',()=>{
   sampleSize:samples,seedsPerShip:offsets.length,groups,
   note:'Solo navi effettivamente sbloccabili prima dei settori 70 e 80; nessuna modifica a poteri, mazzi, premi e navicelle. IA vs IA e tempo massimo teorico per mezzo turno.'
  }));
+});
+
+test('Ombre: Faglia Moduli Epico in mazzi da 24 solo se posseduti',()=>{
+ const hit=Object.values(TACTICAL_MODULE_CARDS).find(x=>x.effect==='pure_hit')?.id;
+ const guard=Object.values(TACTICAL_MODULE_CARDS).find(x=>x.effect==='guard')?.id;
+ assert.ok(hit&&guard&&hit!==guard);
+ const four=['tactic-scan','tactic-counter','tactic-reactive',
+  'tactic-numeric-recycle','tactic-kinetic'].flatMap(id=>Array(4).fill(id));
+ const deckModules=[VULNERABILITY_RIFT_CARD_ID,hit,guard,
+  ...four,'support-shield-repair'];
+ const deckEpic=[VULNERABILITY_RIFT_CARD_ID,hit,guard,'epic_item_6',...four];
+ const groups=[
+  {id:'starter',types:TACTICAL_PRESETS.starter.types,
+   policy:'basic',entitlements:[],modules:{}},
+  {id:'faglia-moduli',types:deckModules,
+   policy:'advanced-owned',entitlements:[],modules:{[hit]:1,[guard]:1}},
+  {id:'faglia-moduli-epico',types:deckEpic,
+   policy:'advanced-owned',entitlements:['epic_item_6'],
+   modules:{[hit]:1,[guard]:1}}
+ ];
+ const ownedFixture=createSpecialCollection();
+ for(const config of groups){
+  assert.equal(config.types.length,24);
+  assert.ok(validateTacticalLoadout(config.types));
+  const owned={...ownedFixture.owned};
+  for(const type of config.types)
+   owned[type]=Math.max(owned[type]||0,config.types.filter(x=>x===type).length);
+  const validation=validateSpecialDeck({...ownedFixture,owned},config.types);
+  assert.equal(validation.valid,true,config.id+':'+validation.reason);
+ }
+ const boss=officialBossEncounter({mode:'campaign',sectorNumber:70});
+ assert.equal(boss.planetId,9);
+ const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:70,playerLevel:4});
+ const rows=[];
+ for(const ship of ['C01','E02','E03','L04'])
+  for(const seedOffset of [1109,1429,1709,1961,2213,2417])
+   for(const config of groups){
+    const r=audit({shipA:ship,levelA:level,levelB:level,boss,
+     seed:70+seedOffset,playerSpecialDeck:config.types,
+     epicEntitlementsA:config.entitlements,equipmentLevelsA:config.modules,
+     playerPolicy:config.policy,log:false});
+    assert.equal(Object.keys(r.failures).length,0);
+    rows.push({ship,seed:r.seed,loadout:config.id,winner:r.winner,
+     turns:r.turns,reason:r.finishReason,playedA:r.specialTypesBySide.A,
+     destroyedB:r.destroyedB});
+   }
+ assert.equal(rows.length,72);
+ const byLoadout=groups.map(config=>{
+  const results=rows.filter(x=>x.loadout===config.id);
+  const sorted=results.map(r=>r.turns).sort((a,b)=>a-b);
+  const usage={};
+  for(const r of results)for(const [type,count]of Object.entries(r.playedA))
+   usage[type]=(usage[type]||0)+count;
+  return {loadout:config.id,winsPlayer:results.filter(r=>r.winner==='A').length,
+   winsBoss:results.filter(r=>r.winner==='B').length,
+   draws:results.filter(r=>r.winner==='draw').length,
+   medianHalfTurns:(sorted[11]+sorted[12])/2,minHalfTurns:sorted[0],
+   maxHalfTurns:sorted[23],playedSpecials:usage};
+ });
+ console.log('LIVE_OMBRA_ADVANCED_OWNED_AUDIT '+JSON.stringify({
+  sampleSize:rows.length,byLoadout,
+  note:'Solo possesso autorizzato nel fixture! NON dice che Faglia, Moduli o Epici siano gia sbloccati al settore 70. Politica di test, nessuna modifica al PvP o ai premi. Tre numeriche e due speciali per turno.',rows}));
 });
 
 test('Esperimento SOLO TEST: quattro boss troppo rapidi con barriera 60/90/120/150',()=>{
