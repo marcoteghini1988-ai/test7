@@ -7,23 +7,24 @@
 1. Apri `test7` in StackBlitz oppure scarica il repository GitHub completo.
 2. Esegui `npm ci` e poi `npm run dev` (StackBlitz può eseguire questi comandi nel terminale).
 3. Entra nel gioco normalmente dalla Home: `src/main.tsx` avvia soltanto `App.tsx`, e `src/MathDuelBattle.jsx` sceglie il combattimento **3D ufficiale**.
-4. Nel duello simultaneo seleziona **2 o 3 carte numeriche**, un **sistema vitale** e l'operazione richiesta. Puoi aggiungere **fino a 2 carte speciali** dalla mano di cinque. Usa **CONFERMA** per sigillare l'ordine; il tempo massimo è 30 secondi. La risoluzione di entrambi gli ordini dura **8 secondi**.
+4. Nel duello **LIVE** i lati agiscono a turni alternati da **30 secondi**: puoi giocare al massimo **3 numeriche** e **2 carte speciali** nel tuo turno. Le carte numeriche compongono le combinazioni per i vitali; le armi integrate indeboliscono la barriera. I cinque slot speciali e il mazzo da 24 carte restano distinti dalla mano numerica da sette.
 5. I pulsanti **RICAMBIO**, **ARMI**, **HANGAR** e **REGISTRO** appartengono alla stessa schermata 3D. In Hangar puoi schierare le navicelle che possiedi e configurare il mazzo speciale da 24 carte. Le 7 numeriche vengono pescate dal mazzo reale di 52 carte.
 
-Non esiste più l'ingresso `?tacticalPreview=1`, né il menu `Flotta → Prova`: non seguirne le vecchie istruzioni.
+Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` né il vecchio pulsante **TEST/Debug** della Home.
 
-## Pulizia delle schermate di prova — 7 novembre 2026
+## Pulizia delle schermate obsolete — aggiornata all'11 novembre 2026
 
 - Eliminato il pulsante **PROVA FASE 10 · COLLAUDO COMPLETO** dall'app, la finestra temporanea associata e i blocchi di pausa dei timer che dipendevano dalla sua apertura.
 - Rimossi i vecchi file di presentazione inutilizzati `src/SandboxBattleView.jsx`, `src/NewCombatPhase3Preview.jsx`, `src/NewArsenalCatalogPreview.jsx` e `src/newCombat/phase3Preview.css`.
-- Il precedente combattimento Poker NON è stato eliminato: è conservato in `src/LegacyPokerBattle.jsx` e `src/newCombat/legacyPokerBattle.css` per compatibilità con le modalità e il codice storico. **Non è un secondo gioco di prova**; la battaglia corrente parte solo da `MathDuelBattle.jsx`.
-- Non eliminare `BossBattle3D.jsx`, i motori delle sfide storiche, i test `*.test.js` o gli script di verifica: rimangono necessari per preservare le funzioni non ancora migrate.
+- Il vecchio combattimento Poker/Classic (`LegacyPokerBattle.jsx`, `ClassicBattleView.jsx`, `ClassicPokerFieldBridge.jsx` e il relativo CSS) **è stato eliminato**, insieme alla `GameScreen` e al vecchio banco automatico Trappole/Terreno dentro `App.tsx`.
+- Rimossi inoltre 21 PNG duplicati dalla radice `public/assets/`; le immagini corrette restano in `mathfleet/`, `mathfleet/views/`, `escorts/` e nelle cartelle delle carte speciali.
+- **Conservare** `BossBattle3D.jsx` (fallback 3D ancora raggiungibile), la logica boss necessaria, i test `*.test.js`, le immagini delle 17 navi in due prospettive e gli **SVG sorgente** delle 82 carte ufficiali; gli SVG servono per rigenerare i PNG HD.
 - `npm run preflight` blocca il ritorno dei vecchi nomi, del pulsante di prova e degli ingressi sperimentali. Il collaudo grafico su smartphone resta un controllo separato.
 
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.
-- **Duelli standard compatibili:** `src/OfficialBattle3D.jsx`, `src/simultaneousDuelEngine.js`, `src/officialBattleSetup.js`. Usano la plancia metallica Titanio 9:16, le 17 navicelle, le 42 armi montate e gli asset originali delle scudiere.
+- **Duello ufficiale attuale:** `src/MathDuelBattle.jsx` seleziona `src/OfficialLiveBattle3D.jsx` e, dove necessario, il fallback `src/BossBattle3D.jsx`. Il motore LIVE è `src/officialLiveDuelEngine.js`. La vecchia plancia simultanea `src/OfficialBattle3D.jsx` è mantenuta come riferimento tecnico, non è l'ingresso principale. Restano l'arena Titanio 9:16, 17 navicelle e 42 armi integrate.
 - **Piloti comuni convertiti:** `pilot_com_1`–`pilot_com_4`, gradi L1-L5. I bonus delle armi valgono soltanto con calcoli matematici corretti e un pilota effettivamente sbloccato.
 - **Passiva Gaia:** `planet_char_1` (Baluardo terrestre), tre gradi di aumento dello scudo iniziale/massimo.
 - **Passiva Crono:** `planet_char_6` (Primo anello), tre gradi di riduzione del primo colpo efficace alla madre.
@@ -50,7 +51,7 @@ GitHub Actions esegue test logici, compilazione e preflight su `main`. `scripts/
 
 - Arena base: `public/assets/mathduel/arena_titanio_9x16.webp`.
 - Navi in due prospettive: `public/assets/mathfleet/views/`.
-- Scafi sovrapposti: `public/assets/ship-shells/`.
+- Gli SVG di sagome sovrapposte `public/assets/ship-shells/` sono stati eliminati: la plancia usa le immagini raster ufficiali delle navi.
 - Scudiere originali: `public/assets/escorts/`.
 - Montaggi originali delle armi: `ShipPresentation.jsx` e `mathFleetGeometry.js`.
 
@@ -71,6 +72,6 @@ La versione standard simultanea **non disegna più quattro caselle nel centro de
 
 ## Lavoro residuo
 
-Convertire le altre **14 passive dei boss**, i piloti non comuni, gli effetti a durata delle arene ioniche e le nuove **carte Personaggio e Terreno**; realizzare e collaudare le animazioni complete di armi, fusioni e scontri in formato 9:16. Non eliminare `BossBattle3D.jsx` prima della copertura funzionale e dei relativi test.
+Le **12 Carte Personaggio Boss**, le **4 Carte Terreno PvP**, le **35 Carte Modulo** e le altre speciali hanno già il catalogo e gli asset PNG nella versione corrente. Rimangono da verificare sul dispositivo mobile le animazioni, la leggibilità della plancia 9:16 e le differenze funzionali del fallback boss, senza rimettere in funzione il vecchio Poker. Non eliminare `BossBattle3D.jsx` prima della piena copertura funzionale e dei relativi test.
 
 **Specifiche correnti:** [Roadmap del duello simultaneo](docs/ROADMAP_DUELLO_TATTICO_SIMULTANEO_2026-11-07.md) · [Trasferimento e checklist visiva](docs/WORK_HANDOFF_CONTROLLO_VISIVO_ECLISSI_STELLARE.md). Le vecchie istruzioni dei punti 22–30 restano disponibili nella cartella `docs/` come documentazione storica e non vanno usate per avviare il regolamento simultaneo.
