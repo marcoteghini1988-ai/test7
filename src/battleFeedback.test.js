@@ -127,23 +127,16 @@ test('47: lancio e impatto veri mantengono identico il risultato con o senza cue
  assert.deepEqual(battle,original);
 });
 
-test('47: livelli grafici non intercettano input; il duello definitivo mostra solo eventi risolti',()=>{
- const oldUi=readFileSync(new URL('./BattleCombatFeedback.jsx',import.meta.url),'utf8');
- const oldCss=readFileSync(new URL('./BattleCombatFeedback.css',import.meta.url),'utf8');
- const official=readFileSync(new URL('./OfficialBattle3D.jsx',import.meta.url),'utf8');
- const playback=readFileSync(new URL('./TacticalCombatPlayback.jsx',import.meta.url),'utf8');
- const css=readFileSync(new URL('./OfficialBattle3D.css',import.meta.url),'utf8');
- const timeline=readFileSync(new URL('./tacticalCombatTimeline.js',import.meta.url),'utf8');
+test('47: effetti LIVE non intercettano input e mostrano solo eventi verificati',()=>{
+ const live=readFileSync(new URL('./OfficialLiveBattle3D.jsx',import.meta.url),'utf8');
+ const fx=readFileSync(new URL('./OfficialLiveCombatFx.jsx',import.meta.url),'utf8');
+ const css=readFileSync(new URL('./OfficialLiveCombatFx.css',import.meta.url),'utf8');
  const entry=readFileSync(new URL('./MathDuelBattle.jsx',import.meta.url),'utf8');
- assert.doesNotMatch(oldUi,/\bonClick\s*=/);
- assert.match(oldCss,/pointer-events:none/);
- assert.match(oldCss,/prefers-reduced-motion:reduce/);
- assert.match(oldUi,/aria-live="polite"/);
  assert.match(entry,/OfficialLiveBattle3D\.jsx/);
- assert.match(official,/<TacticalCombatPlayback/);
- assert.match(playback,/currentTacticalPlayback\(battle,nowMs\)/);
- assert.match(timeline,/cycle\.impacts/);
- assert.match(css,/\.tdp-playback[^{]*\{[^}]*pointer-events:none/);
- assert.match(css,/prefers-reduced-motion:\s*reduce/);
- assert.doesNotMatch(playback,/\bdealHit\s*\(|\bdamageMotherShield\s*\(/);
+ assert.match(live,/liveCombatCues\(battle\.history,now\)/);
+ assert.match(live,/visualEvents\.map\(\(\{event,index,delay\}\)=><OfficialLiveCombatFx/);
+ assert.match(fx,/boardPoint\(rootBox,node\.getBoundingClientRect\(\)\)/);
+ assert.match(css,/\.live-combat-fx\s*\{[^}]*pointer-events:none/);
+ assert.match(css,/@media \(prefers-reduced-motion:reduce\)/);
+ assert.doesNotMatch(fx,/\bdealHit\s*\(|\bdamageMotherShield\s*\(/);
 });

@@ -10,13 +10,12 @@ const verify=(condition,message)=>{if(!condition)errors.push(message);};
 const exists=file=>existsSync(resolve(root,file));
 const app=read('src/main.tsx');
 const battleEntry=read('src/MathDuelBattle.jsx');
-const arena=read('src/OfficialBattle3D.jsx');
-const liveArena=read('src/OfficialLiveBattle3D.jsx');
+const arena=read('src/OfficialLiveBattle3D.jsx');
 const liveEngine=read('src/officialLiveDuelEngine.js');
 const bossArena=read('src/BossBattle3D.jsx');
 const physicalHull=exists('src/ShipPhysicalVitals.jsx')?read('src/ShipPhysicalVitals.jsx'):'';
 const vitalAdapter=exists('src/officialVitalMotorAdapter.js')?read('src/officialVitalMotorAdapter.js'):'';
-const css=read('src/MathDuelBattle.css');
+const css=read('src/OfficialLiveBattle3D.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
 const shop=read('src/ShopModal.jsx');
@@ -56,6 +55,7 @@ for(const orphan of [
  'src/TrisBattleView.jsx','src/DoubleStageBattleView.jsx','src/VectorBattleView.jsx',
  'src/LegacyPokerBattle.jsx','src/ClassicPokerFieldBridge.jsx','src/ClassicBattleView.jsx',
  'src/newCombat/legacyPokerBattle.css',
+ 'src/OfficialBattle3D.jsx','src/officialMobileLayout.test.js',
  'src/tactical/TacticalStellarApp.jsx','src/tactical/engine.js',
  'src/assets/react.svg','src/assets/vite.svg','src/assets/hero.png'
 ]){
@@ -77,11 +77,11 @@ verify(battleEntry.includes("import OfficialLiveBattle3D from './OfficialLiveBat
  battleEntry.includes("<OfficialLiveBattle3D {...battleProps}")&&
  battleEntry.includes("<BossBattle3D {...battleProps}"),
  'Unico accesso 3D: settori canonici, live alternato e fallback boss coerenti');
-verify(liveArena.includes('createOfficialLiveDuel')&&
- liveArena.includes('applyOfficialLiveAction')&&
- liveArena.includes('<ShipPhysicalVitals')&&liveArena.includes('<MountedWeapons')&&
- liveArena.includes('player.numeric.hand.map')&&
- liveArena.includes('player.special.hand.map')&&
+verify(arena.includes('createOfficialLiveDuel')&&
+ arena.includes('applyOfficialLiveAction')&&
+ arena.includes('<ShipPhysicalVitals')&&arena.includes('<MountedWeapons')&&
+ arena.includes('player.numeric.hand.map')&&
+ arena.includes('player.special.hand.map')&&
  liveEngine.includes('LIVE_TURN_MS=30000')&&
  liveEngine.includes("action.type==='numeric'"),
  'La plancia live deve usare mazzi reali, armi montate, turni 30s e azioni dirette');
@@ -91,7 +91,7 @@ verify(arena.includes('<ShipPhysicalVitals')&&
  physicalHull.includes('<ShipSkin')&&physicalHull.includes('<Engine')&&
  bossArena.includes('export function ShipSkin(')&&bossArena.includes('export function Engine(')&&
  arena.includes('<MountedWeapons'),
- 'La battaglia simultanea deve riusare la carrozzeria e i motori originali, senza ricostruirli');
+ 'La battaglia LIVE deve riusare la carrozzeria e i motori originali, senza ricostruirli');
 verify(!arena.includes('/ship-shells/')&&!bossArena.includes('/ship-shells/'),
  'La plancia non deve piu sovrapporre disegni SVG delle navi ai render raster originali');
 verify(!/<g\s+opacity=["']\.30?["']>\s*<ShipArtwork/.test(arena)&&
@@ -108,25 +108,34 @@ verify(!arena.includes('className="official-targets"')&&
  'I vecchi riquadri centrali e le coordinate fisiche inventate devono restare rimossi');
 verify(ships.includes('/mathfleet/views/')&&ships.includes('weaponMount('),
  'Le prospettive nave e le bocche di fuoco devono restare collegate agli asset');
-verify(arena.includes('className="deck left deck-number"')&&
- arena.includes('className="deck left deck-special"'),
- 'Servono i due mazzi distinti: numerico e speciale');
-verify(arena.includes('className="special-board"')&&
- arena.includes('player.special.hand[i]')&&
- (arena.includes('specialIndices:toggle(d.specialIndices,i,2)')||
- (arena.includes('const chosen=toggle(d.specialIndices,i,2)')&&arena.includes('specialIndices:chosen'))),
- 'Le cinque carte speciali reali devono essere accessibili sulla plancia');
-verify(arena.includes('[0,1,2,3,4].map(')&&
- arena.includes('player.numeric.hand.map(')&&
- arena.includes('className="formula-target"'),
- 'Devono restare 5 speciali, 7 numeriche e il bersaglio separato');
+verify(arena.includes('className="live-deck live-deck--numeric"')&&
+ arena.includes('className="live-deck live-deck--special"')&&
+ arena.includes('data-equipped-deck={numericBackId}')&&
+ arena.includes('data-special-back="fixed"'),
+ 'I mazzi della plancia LIVE devono essere distinti: numerico equipaggiato e speciale con dorso fisso');
+verify(arena.includes('className="live-slot-row live-slot-row--player"')&&
+ arena.includes('battle.zones.A.traps.map')&&
+ arena.includes('battle.zones.A.open.map')&&
+ arena.includes('player.special.hand.map(card=>'),
+ 'I cinque slot LIVE (1 personaggio, 2 difese, 2 attacchi/supporti) devono restare giocabili');
+verify(arena.includes('aria-label="Cinque carte speciali"')&&
+ arena.includes('aria-label="Sette carte numeriche"')&&
+ arena.includes('className="live-vital-panel"')&&
+ liveEngine.includes('const initialZones=()=>({character:null,traps:[null,null],open:[null,null]})'),
+ 'La LIVE deve avere cinque speciali, sette numeriche e il pannello numerico vitale');
 verify(!arena.includes('className="special-card-hand"')&&
  !arena.includes('FLOTTA DI PROVA'),
  'Le interfacce duplicate o la flotta di prova devono essere rimosse');
-verify(css.includes('.es-math-scope .special-board')&&css.includes('.deck.deck-special'),
- 'La plancia deve posizionare i nuovi comandi senza sovrapporre un secondo gioco');
-verify(exists('src/OfficialBattle3D.css')&&arena.includes('officialBattleSetup')&&arena.includes('sealTacticalOrder'),
- 'La plancia deve usare il motore simultaneo reale e gli asset ufficiali');
+verify(css.includes('.es-math-scope .live-root .live-special-hand')&&
+ css.includes('.es-math-scope .live-root .live-number-hand')&&
+ css.includes('.es-math-scope .live-root .live-deck--special')&&
+ css.includes('width:450px;height:800px'),
+ 'La plancia LIVE deve conservare geometrie, mani e mazzi nel formato 9:16');
+verify(exists('src/OfficialLiveBattle3D.css')&&
+ exists('src/OfficialBattle3D.css')&&
+ arena.includes('officialBattleSetup')&&arena.includes('applyOfficialLiveAction'),
+ 'La LIVE deve usare CSS in comune col fallback e il motore di azioni immediate');
+
 verify(exists('public/assets/mathduel/arena_titanio_9x16.webp'),
  'Manca il render originale 9:16');
 

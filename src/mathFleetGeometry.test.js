@@ -163,13 +163,13 @@ test('la plancia boss usa gli stessi centri per scafi, armi e selezione slot',()
  assert.match(source,/data-fleet-role=/);
 });
 
-test('nel duello 30+8 la madre resta centrata, le due scudiere sono laterali',()=>{
- const code=readFileSync(new URL('./OfficialBattle3D.jsx',import.meta.url),'utf8');
- const css=readFileSync(new URL('./OfficialBattle3D.css',import.meta.url),'utf8');
- assert.match(code,/className="fleet-ship-wrap complete-ship focused official-mother" data-fleet-role="mother"/);
+test('nel duello LIVE la madre resta centrata e le due scudiere sono laterali',()=>{
+ const code=readFileSync(new URL('./OfficialLiveBattle3D.jsx',import.meta.url),'utf8');
+ const css=readFileSync(new URL('./OfficialLiveBattle3D.css',import.meta.url),'utf8');
+ assert.match(code,/className="fleet-ship-wrap complete-ship focused official-mother"/);
  assert.match(code,/left:'50%',top:0,width:316/);
- assert.match(css,/\.official-duel-3d \.official-mother\{\s*position:absolute;\s*left:50%;\s*transform:translateX\(-50%\)/);
- assert.match(code,/data-fleet-role="lateral"/);
- assert.match(css,/\.official-escort\.escort-slot-1\{left:27px\}/);
- assert.match(css,/\.official-escort\.escort-slot-2\{right:27px\}/);
+ assert.match(css,/\.live-fighter \.fleet-ship-wrap\{[^}]*transform:translateX\(-50%\)/);
+ assert.match(code,/snapshot\.escorts\.map\(\(escort,i\)=>/);
+ assert.match(css,/\.live-escort--0\{left:45px\}/);
+ assert.match(css,/\.live-escort--1\{right:45px\}/);
 });
