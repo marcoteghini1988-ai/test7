@@ -384,7 +384,9 @@ export default function OfficialLiveBattle3D({
      action({type:'numeric',index,target:'vital',vitalId:vital});
     else if(kind==='special')playSpecialAt(index,slot);
    }}
-   style={{transform:'translate(-50%,-50%) scale('+scale+')','--live-feed-delay':LIVE_AMMO_FEED_MS+'ms'}}>
+   style={{transform:'translate(-50%,-50%) scale('+scale+')',
+    '--live-feed-delay':LIVE_AMMO_FEED_MS+'ms',
+    '--live-special-back':`url("${OFFICIAL_SPECIAL_FIXED_BACK}")`}}>
    <div className="space-back metal-arena live-background" aria-hidden="true"
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
    {terrain&&<div key={terrain.id} className="live-terrain-scene" data-terrain={terrain.id}
