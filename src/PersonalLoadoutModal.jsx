@@ -4,7 +4,6 @@ import { PILOTS_DATABASE, PilotCard } from './pilotsSystem';
 import { WEAPONS_DATABASE as DEFAULT_WEAPONS } from './HardpointBattleView';
 import { getWeaponDefinition } from './newCombat/weaponCatalog.js';
 import { normalizePhase7Armory } from './newCombat/phase7Armory.js';
-import { WeaponCardArt } from './newCombat/WeaponVisuals.jsx';
 import {describePhase16HTerrain} from './newCombat/phase16HProgression.js';
 import {ShipHangarPanel} from './ShipCollectionPanels.jsx';
 
@@ -228,7 +227,7 @@ export default function PersonalLoadoutModal({
                   const w=getWeaponDefinition(newArmory.equipped[cls]);
                   return <div key={cls} style={{padding:'6px 3px',background:'#0f172a',border:`1px solid ${w?.rarityColor || '#334155'}`,borderRadius:6,textAlign:'center'}}>
                     <div style={{fontSize:'.55rem',fontWeight:800,color:'#93c5fd'}}>{cls==='light'?'LEGGERA':cls==='medium'?'MEDIA':'PESANTE'}</div>
-                    {w && <WeaponCardArt weapon={w} className="phase8-equipped-thumb"/>}<div style={{fontSize:'.6rem',fontWeight:800,color:w?.rarityColor||'#fff'}}>{w?.name || 'Vuoto'}</div>
+                    <div style={{fontSize:'.6rem',fontWeight:800,color:w?.rarityColor||'#fff'}}>{w?.name || 'Vuoto'}</div>
                     <small style={{fontSize:'.52rem'}}>{w?.ammoSymbol || ''} · {w?.rarity || ''}</small>
                   </div>;
                 })}
@@ -287,16 +286,8 @@ export default function PersonalLoadoutModal({
 
                       {wpObj ? (
                         <>
-                          <div style={{ width: '100%', height: '34px', borderRadius: '4px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.5)', margin: '2px 0' }}>
-                            <img
-                              src={wpObj.id === 'wp_gatling' ? `/assets/weapons/gatling_cinetica_lv${Math.min(4, Math.max(1, Number(wpLvl) || 1))}.png` : wpObj.imgUrl}
-                              alt={wpObj.name}
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.parentNode.innerText = isPoker ? '🃏' : '⚡';
-                              }}
-                              style={{ width: '100%', height: '100%', objectFit: wpObj.id === 'wp_gatling' ? 'fill' : 'cover' }}
-                            />
+                          <div aria-hidden="true" style={{ width: '100%', height: '34px', borderRadius: '4px', display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.5)', margin: '2px 0' }}>
+                            {wpObj.icon || (isPoker ? '🃏' : '⚡')}
                           </div>
                           <div style={{ fontSize: '0.52rem', color: wpObj.color || '#fff', fontWeight: 900, textAlign: 'center', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {wpObj.name.split(' ')[0]}

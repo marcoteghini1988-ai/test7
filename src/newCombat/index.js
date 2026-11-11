@@ -17,8 +17,6 @@ export * from './phase4Engine.js';
 // Preparazione strategica, penalità di scambio, Etere e AI (Fase 6).
 export * from './phase6Engine.js';
 
-export * from './weaponArt.js';
-
 // Fase 9: tattica AI e contratti di integrazione delle modalità.
 export * from './phase9AI.js';
 export * from './phase10Audit.js';

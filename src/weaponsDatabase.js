@@ -35,7 +35,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['one_pair', 'two_pair'],
     reqDescription: 'COPPIA',
     fxType: 'gatling',
-    imgUrl: '/assets/weapons/gatling_cinetica.png',
     levels: {
       1: { damage: 14, shots: 4, desc: 'Raffica rapida da 4 dardi traccianti' },
       2: { damage: 20, shots: 8, desc: 'Raffica potenziata da 8 dardi' },
@@ -54,7 +53,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['one_pair'],
     reqDescription: 'COPPIA (♦ o ♠)',
     fxType: 'fuse_bolts',
-    imgUrl: '/assets/weapons/balestra_dardi_fusi.png',
     levels: {
       1: { damage: 16, shots: 2, desc: '2 arpioni fusi incandescenti' },
       2: { damage: 22, shots: 2, desc: '2 arpioni con scia termica' },
@@ -73,7 +71,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['two_pair'],
     reqDescription: 'DOPPIA COPPIA',
     fxType: 'disc_blades',
-    imgUrl: '/assets/weapons/lame_rotanti.png',
     levels: {
       1: { damage: 18, shots: 2, desc: '2 carte rotanti a disco' },
       2: { damage: 25, shots: 4, desc: '4 dischi di luce tagliente' },
@@ -96,7 +93,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['three_of_a_kind', 'straight', 'flush'],
     reqDescription: 'TRIS / COLORE',
     fxType: 'arrow_barrage',
-    imgUrl: '/assets/weapons/arco_x_balistico.png',
     levels: {
       1: { damage: 24, shots: 8, desc: 'Pioggia continua di 8 frecce balistiche' },
       2: { damage: 34, shots: 12, desc: 'Pioggia rapida di 12 frecce balistiche' },
@@ -115,7 +111,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['three_of_a_kind'],
     reqDescription: 'TRIS',
     fxType: 'heavy_cannon',
-    imgUrl: '/assets/weapons/cannone_assedio.png',
     levels: {
       1: { damage: 22, shots: 1, desc: 'Colpo pesante ad alta inerzia dal basso' },
       2: { damage: 32, shots: 1, desc: 'Colpo sferico con onda d\'urto conica' },
@@ -134,7 +129,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['flush'],
     reqDescription: '3+ CUORI ♥',
     fxType: 'blood_siphon',
-    imgUrl: '/assets/weapons/sifone_sangue.png',
     levels: {
       1: { damage: 18, heal: 10, shots: 3, desc: 'Dardi cremisi in salita e cura +10 HP' },
       2: { damage: 26, heal: 16, shots: 3, desc: 'Dardi con scia vitale e cura +16 HP' },
@@ -153,7 +147,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['full_house'],
     reqDescription: 'FULL',
     fxType: 'flak_burst',
-    imgUrl: '/assets/weapons/flak_grappolo.png',
     levels: {
       1: { damage: 28, shots: 6, desc: 'Testata che si apre a mezz\'aria in 6 ogive' },
       2: { damage: 40, shots: 8, desc: 'Frammentazione in 8 ogive a ventaglio' },
@@ -172,7 +165,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['straight'],
     reqDescription: 'SCALA (5 CARTE)',
     fxType: 'kinetic_drill',
-    imgUrl: '/assets/weapons/trivella_torsione.png',
     levels: {
       1: { damage: 26, ticks: 4, desc: 'Fuso conico che trapana la barra per 1s' },
       2: { damage: 38, ticks: 6, desc: 'Trivella ad alta velocità con vortice' },
@@ -191,7 +183,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['four_of_a_kind'],
     reqDescription: 'POKER',
     fxType: 'micro_missiles',
-    imgUrl: '/assets/weapons/sciame_microrazzi.png',
     levels: {
       1: { damage: 35, shots: 4, desc: '4 missili a traiettoria curva sui lati' },
       2: { damage: 50, shots: 6, desc: '6 missili con convergenza a sciame' },
@@ -210,7 +201,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['royal_flush'],
     reqDescription: 'SCALA REALE',
     fxType: 'apocalypse_torpedo',
-    imgUrl: '/assets/weapons/siluro_apocalisse.png',
     levels: {
       1: { damage: 45, shots: 1, desc: 'Testata colossale e flash bianco sullo schermo' },
       2: { damage: 65, shots: 1, desc: 'Detonazione nucleare a onde d\'urto' },
@@ -233,7 +223,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#00f2fe',
     reqDescription: 'SOMMA [A + B] = TARGET',
     fxType: 'lightning_strike',
-    imgUrl: '/assets/weapons/fulmine_ciel_sereno.png',
     levels: {
       1: { damage: 18, bolts: 1, desc: '1 fulmine secco verticale dal cielo' },
       2: { damage: 26, bolts: 2, desc: '2 fulmini ramificati simultanei' },
@@ -252,7 +241,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#00f2fe',
     reqDescription: 'DIFFERENZA [A - B] = TARGET',
     fxType: 'railgun_beam',
-    imgUrl: '/assets/weapons/railgun_ionico.png',
     levels: {
       1: { damage: 20, desc: 'Fascio istantaneo ciano che taglia la barra' },
       2: { damage: 28, desc: 'Raggio potenziato con anelli magnetici' },
@@ -272,7 +260,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#00f2fe',
     reqDescription: 'DIFFERENZA 3 CARTE [A - B - C]',
     fxType: 'seismic_wave',
-    imgUrl: '/assets/weapons/lama_sismica.png',
     levels: {
       1: { damage: 22, desc: 'Mezzaluna di luce che sale dal basso' },
       2: { damage: 30, desc: 'Doppia onda sismica orizzontale concentrica' },
@@ -292,7 +279,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#a855f7',
     reqDescription: 'SOMMA PARI [A + B] (PARI)',
     fxType: 'tesla_arc',
-    imgUrl: '/assets/weapons/torre_tesla.png',
     levels: {
       1: { damage: 22, desc: 'Scariche ramificate che friggono la barra' },
       2: { damage: 32, desc: 'Arco voltaico continuo per 700ms' },
@@ -311,7 +297,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#a855f7',
     reqDescription: 'DIVISIONE ESATTA [A / B] = TARGET',
     fxType: 'cross_laser',
-    imgUrl: '/assets/weapons/taglio_frazionato.png',
     levels: {
       1: { damage: 24, desc: '2 lame laser dagli angoli inferiori a X' },
       2: { damage: 34, desc: 'Taglio a X con riverbero energetico' },
@@ -334,7 +319,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#a855f7',
     reqDescription: 'MOLTIPLICAZIONE [A * B] = TARGET',
     fxType: 'orbital_pillar',
-    imgUrl: '/assets/weapons/raggio_orbitale.png',
     levels: {
       1: { damage: 26, ticks: 3, desc: 'Colonna di luce continua dal cielo' },
       2: { damage: 38, ticks: 5, desc: 'Colonna larga con scansione orizzontale' },
@@ -354,7 +338,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#f59e0b',
     reqDescription: 'SOMMA A 3 CARTE [A + B + C] = TARGET',
     fxType: 'meteor_drop',
-    imgUrl: '/assets/weapons/meteora_45.png',
     levels: {
       1: { damage: 26, desc: 'Masso infuocato dall\'alto a destra con fumo' },
       2: { damage: 38, desc: 'Meteora pesante con impatto a onda d\'urto' },
@@ -373,7 +356,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#f59e0b',
     reqDescription: 'DIVISIONE CON RESTO [A / B + C] = TARGET',
     fxType: 'cryo_fracture',
-    imgUrl: '/assets/weapons/frattura_criogenica.png',
     levels: {
       1: { damage: 28, desc: 'La barra nemica si congela e si frantuma' },
       2: { damage: 40, desc: 'Gelo profondo con stalattiti di ghiaccio' },
@@ -393,7 +375,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#facc15',
     reqDescription: 'COMPOSITA [A * B - C] = TARGET',
     fxType: 'black_hole',
-    imgUrl: '/assets/weapons/micro_buco_nero.png',
     levels: {
       1: { damage: 32, desc: 'Sfera gravitazionale viola che risucchia gli HP' },
       2: { damage: 48, desc: 'Singolarità con disco di accrescimento rotante' },
@@ -412,7 +393,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#facc15',
     reqDescription: 'DISINNESCO TARGET ENTRO 3 TURNI',
     fxType: 'reactor_bomb',
-    imgUrl: '/assets/weapons/nucleo_instabile.png',
     levels: {
       1: { damage: 35, turns: 3, desc: 'Testata a reattore che detona sulla barra' },
       2: { damage: 52, turns: 3, desc: 'Bomba termonucleare con fungo al plasma' },

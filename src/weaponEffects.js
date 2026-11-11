@@ -4,7 +4,6 @@ import { fireUniqueWeaponVFX } from './uniqueWeaponVFX';
 // ============================================================================
 
 import { playSound } from './audio';
-import { projectGatlingHologram } from './gatlingHologram';
 
 // Helper per ottenere layer e barra HP bersaglio (giocatore o avversario)
 function getCombatElements(targetDockId = 'classicEnemyHpDock') {
@@ -781,15 +780,6 @@ export function fireWeaponCombatVFX(weapon, level = 1, { currentHp, maxHp, damag
   const midPointX = (startEdgeX + targetEdgeX) / 2;
 
   const fx = weapon?.fxType || 'gatling';
-
-  // La Gatling proietta la sagoma della propria carta, dal proprio slot.
-  // Se lo slot non esiste, mantiene l'effetto originale: nessun ologramma arbitrario.
-  if (weapon?.id === 'wp_gatling') {
-    const projected = projectGatlingHologram(weapon, level, {
-      targetDockId, targetX: midPointX, targetY, isEnemyAttacking, onComplete
-    });
-    if (projected) return;
-  }
 
   // 1. LASER A INCISIONE RADIALE SVG
   if (fx === 'railgun_beam') {

@@ -25,29 +25,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Mitragliatrice rotante di metallo scuro, nastri di dardi cinetici, scie color turchese.",
-      "hologramStyle": "light_raffica_modulata",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {
-        "1": "/assets/weapons/gatling_cinetica_lv1.png",
-        "2": "/assets/weapons/gatling_cinetica_lv2.png",
-        "3": "/assets/weapons/gatling_cinetica_lv3.png",
-        "4": "/assets/weapons/gatling_cinetica_lv4.png"
-      },
-      "hologramUpByLevel": {
-        "1": "/assets/weapons/gatling_holo_up_lv1.png",
-        "2": "/assets/weapons/gatling_holo_up_lv2.png",
-        "3": "/assets/weapons/gatling_holo_up_lv3.png",
-        "4": "/assets/weapons/gatling_holo_up_lv4.png"
-      },
-      "hologramDownByLevel": {
-        "1": "/assets/weapons/gatling_holo_down_lv1.png",
-        "2": "/assets/weapons/gatling_holo_down_lv2.png",
-        "3": "/assets/weapons/gatling_holo_down_lv3.png",
-        "4": "/assets/weapons/gatling_holo_down_lv4.png"
-      }
+      "hologramStyle": "light_raffica_modulata"
     },
     "legacyId": "wp_gatling",
     "balance": null,
@@ -75,14 +53,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Microcarabina a tre ugelli, fascio luminoso sottile, condensatori azzurri.",
-      "hologramStyle": "light_marchio_luminoso",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_light_02_card.png", "2": "/assets/weapons/es_common_light_02_card.png", "3": "/assets/weapons/es_common_light_02_card.png", "4": "/assets/weapons/es_common_light_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_light_02_holo_up.png", "2": "/assets/weapons/es_common_light_02_holo_up.png", "3": "/assets/weapons/es_common_light_02_holo_up.png", "4": "/assets/weapons/es_common_light_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_light_02_holo_down.png", "2": "/assets/weapons/es_common_light_02_holo_down.png", "3": "/assets/weapons/es_common_light_02_holo_down.png", "4": "/assets/weapons/es_common_light_02_holo_down.png"}
+      "hologramStyle": "light_marchio_luminoso"
     },
     "legacyId": null,
     "balance": null,
@@ -110,14 +81,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Due dischi a falce su braccio magnetico, metallizzazione rame, traiettoria arcuata.",
-      "hologramStyle": "light_colpo_ritorno",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_light_03_card.png", "2": "/assets/weapons/es_common_light_03_card.png", "3": "/assets/weapons/es_common_light_03_card.png", "4": "/assets/weapons/es_common_light_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_light_03_holo_up.png", "2": "/assets/weapons/es_common_light_03_holo_up.png", "3": "/assets/weapons/es_common_light_03_holo_up.png", "4": "/assets/weapons/es_common_light_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_light_03_holo_down.png", "2": "/assets/weapons/es_common_light_03_holo_down.png", "3": "/assets/weapons/es_common_light_03_holo_down.png", "4": "/assets/weapons/es_common_light_03_holo_down.png"}
+      "hologramStyle": "light_colpo_ritorno"
     },
     "legacyId": null,
     "balance": null,
@@ -145,14 +109,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Fucile a spillo con singola lunga canna, lente viola e scarica sottile.",
-      "hologramStyle": "light_puntura_critica",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_light_04_card.png", "2": "/assets/weapons/es_common_light_04_card.png", "3": "/assets/weapons/es_common_light_04_card.png", "4": "/assets/weapons/es_common_light_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_light_04_holo_up.png", "2": "/assets/weapons/es_common_light_04_holo_up.png", "3": "/assets/weapons/es_common_light_04_holo_up.png", "4": "/assets/weapons/es_common_light_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_light_04_holo_down.png", "2": "/assets/weapons/es_common_light_04_holo_down.png", "3": "/assets/weapons/es_common_light_04_holo_down.png", "4": "/assets/weapons/es_common_light_04_holo_down.png"}
+      "hologramStyle": "light_puntura_critica"
     },
     "legacyId": null,
     "balance": null,
@@ -180,14 +137,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Due elettrodi a ferro di cavallo, archi elettrici bianchi.",
-      "hologramStyle": "medium_catena_conduttiva",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_medium_01_card.png", "2": "/assets/weapons/es_common_medium_01_card.png", "3": "/assets/weapons/es_common_medium_01_card.png", "4": "/assets/weapons/es_common_medium_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_medium_01_holo_up.png", "2": "/assets/weapons/es_common_medium_01_holo_up.png", "3": "/assets/weapons/es_common_medium_01_holo_up.png", "4": "/assets/weapons/es_common_medium_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_medium_01_holo_down.png", "2": "/assets/weapons/es_common_medium_01_holo_down.png", "3": "/assets/weapons/es_common_medium_01_holo_down.png", "4": "/assets/weapons/es_common_medium_01_holo_down.png"}
+      "hologramStyle": "medium_catena_conduttiva"
     },
     "legacyId": null,
     "balance": null,
@@ -215,14 +165,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Canone esagonale traslucido, cristallo centrale, raggi prismatici.",
-      "hologramStyle": "medium_rifrazione",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_medium_02_card.png", "2": "/assets/weapons/es_common_medium_02_card.png", "3": "/assets/weapons/es_common_medium_02_card.png", "4": "/assets/weapons/es_common_medium_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_medium_02_holo_up.png", "2": "/assets/weapons/es_common_medium_02_holo_up.png", "3": "/assets/weapons/es_common_medium_02_holo_up.png", "4": "/assets/weapons/es_common_medium_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_medium_02_holo_down.png", "2": "/assets/weapons/es_common_medium_02_holo_down.png", "3": "/assets/weapons/es_common_medium_02_holo_down.png", "4": "/assets/weapons/es_common_medium_02_holo_down.png"}
+      "hologramStyle": "medium_rifrazione"
     },
     "legacyId": null,
     "balance": null,
@@ -250,14 +193,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Turbina di anelli concentrici, rotore brillante arancione.",
-      "hologramStyle": "medium_sovraccarico_progressivo",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_medium_03_card.png", "2": "/assets/weapons/es_common_medium_03_card.png", "3": "/assets/weapons/es_common_medium_03_card.png", "4": "/assets/weapons/es_common_medium_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_medium_03_holo_up.png", "2": "/assets/weapons/es_common_medium_03_holo_up.png", "3": "/assets/weapons/es_common_medium_03_holo_up.png", "4": "/assets/weapons/es_common_medium_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_medium_03_holo_down.png", "2": "/assets/weapons/es_common_medium_03_holo_down.png", "3": "/assets/weapons/es_common_medium_03_holo_down.png", "4": "/assets/weapons/es_common_medium_03_holo_down.png"}
+      "hologramStyle": "medium_sovraccarico_progressivo"
     },
     "legacyId": null,
     "balance": null,
@@ -285,14 +221,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Arpione elettrico e campo frontale semicircolare.",
-      "hologramStyle": "medium_penetrazione_schermata",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_medium_04_card.png", "2": "/assets/weapons/es_common_medium_04_card.png", "3": "/assets/weapons/es_common_medium_04_card.png", "4": "/assets/weapons/es_common_medium_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_medium_04_holo_up.png", "2": "/assets/weapons/es_common_medium_04_holo_up.png", "3": "/assets/weapons/es_common_medium_04_holo_up.png", "4": "/assets/weapons/es_common_medium_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_medium_04_holo_down.png", "2": "/assets/weapons/es_common_medium_04_holo_down.png", "3": "/assets/weapons/es_common_medium_04_holo_down.png", "4": "/assets/weapons/es_common_medium_04_holo_down.png"}
+      "hologramStyle": "medium_penetrazione_schermata"
     },
     "legacyId": null,
     "balance": null,
@@ -322,14 +251,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Obice compatto enorme con bocca stellata, detonazione circolare.",
-      "hologramStyle": "heavy_onda_urto",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_heavy_01_card.png", "2": "/assets/weapons/es_common_heavy_01_card.png", "3": "/assets/weapons/es_common_heavy_01_card.png", "4": "/assets/weapons/es_common_heavy_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_heavy_01_holo_up.png", "2": "/assets/weapons/es_common_heavy_01_holo_up.png", "3": "/assets/weapons/es_common_heavy_01_holo_up.png", "4": "/assets/weapons/es_common_heavy_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_heavy_01_holo_down.png", "2": "/assets/weapons/es_common_heavy_01_holo_down.png", "3": "/assets/weapons/es_common_heavy_01_holo_down.png", "4": "/assets/weapons/es_common_heavy_01_holo_down.png"}
+      "hologramStyle": "heavy_onda_urto"
     },
     "legacyId": null,
     "balance": null,
@@ -359,14 +281,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Lanciatori gemelli, missile con pinne blu, scia di plasma.",
-      "hologramStyle": "heavy_ritardo_impatto",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_heavy_02_card.png", "2": "/assets/weapons/es_common_heavy_02_card.png", "3": "/assets/weapons/es_common_heavy_02_card.png", "4": "/assets/weapons/es_common_heavy_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_heavy_02_holo_up.png", "2": "/assets/weapons/es_common_heavy_02_holo_up.png", "3": "/assets/weapons/es_common_heavy_02_holo_up.png", "4": "/assets/weapons/es_common_heavy_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_heavy_02_holo_down.png", "2": "/assets/weapons/es_common_heavy_02_holo_down.png", "3": "/assets/weapons/es_common_heavy_02_holo_down.png", "4": "/assets/weapons/es_common_heavy_02_holo_down.png"}
+      "hologramStyle": "heavy_ritardo_impatto"
     },
     "legacyId": null,
     "balance": null,
@@ -396,14 +311,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Mortaio sferico corazzato, vortice verde opaco.",
-      "hologramStyle": "heavy_campo_gravita",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_heavy_03_card.png", "2": "/assets/weapons/es_common_heavy_03_card.png", "3": "/assets/weapons/es_common_heavy_03_card.png", "4": "/assets/weapons/es_common_heavy_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_heavy_03_holo_up.png", "2": "/assets/weapons/es_common_heavy_03_holo_up.png", "3": "/assets/weapons/es_common_heavy_03_holo_up.png", "4": "/assets/weapons/es_common_heavy_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_heavy_03_holo_down.png", "2": "/assets/weapons/es_common_heavy_03_holo_down.png", "3": "/assets/weapons/es_common_heavy_03_holo_down.png", "4": "/assets/weapons/es_common_heavy_03_holo_down.png"}
+      "hologramStyle": "heavy_campo_gravita"
     },
     "legacyId": null,
     "balance": null,
@@ -433,14 +341,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Cannone fusorio con mantello metallico e fiamme azzurre.",
-      "hologramStyle": "heavy_residuo_termico",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_common_heavy_04_card.png", "2": "/assets/weapons/es_common_heavy_04_card.png", "3": "/assets/weapons/es_common_heavy_04_card.png", "4": "/assets/weapons/es_common_heavy_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_common_heavy_04_holo_up.png", "2": "/assets/weapons/es_common_heavy_04_holo_up.png", "3": "/assets/weapons/es_common_heavy_04_holo_up.png", "4": "/assets/weapons/es_common_heavy_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_common_heavy_04_holo_down.png", "2": "/assets/weapons/es_common_heavy_04_holo_down.png", "3": "/assets/weapons/es_common_heavy_04_holo_down.png", "4": "/assets/weapons/es_common_heavy_04_holo_down.png"}
+      "hologramStyle": "heavy_residuo_termico"
     },
     "legacyId": null,
     "balance": null,
@@ -468,14 +369,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Droni-vespa luminosi attorno a una pistola orbitante.",
-      "hologramStyle": "light_scatto_evasivo",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_light_01_card.png", "2": "/assets/weapons/es_rare_light_01_card.png", "3": "/assets/weapons/es_rare_light_01_card.png", "4": "/assets/weapons/es_rare_light_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_light_01_holo_up.png", "2": "/assets/weapons/es_rare_light_01_holo_up.png", "3": "/assets/weapons/es_rare_light_01_holo_up.png", "4": "/assets/weapons/es_rare_light_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_light_01_holo_down.png", "2": "/assets/weapons/es_rare_light_01_holo_down.png", "3": "/assets/weapons/es_rare_light_01_holo_down.png", "4": "/assets/weapons/es_rare_light_01_holo_down.png"}
+      "hologramStyle": "light_scatto_evasivo"
     },
     "legacyId": null,
     "balance": null,
@@ -503,14 +397,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Due proiettori speculari, miraggi ciano e lilla.",
-      "hologramStyle": "light_eco_olografica",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_light_02_card.png", "2": "/assets/weapons/es_rare_light_02_card.png", "3": "/assets/weapons/es_rare_light_02_card.png", "4": "/assets/weapons/es_rare_light_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_light_02_holo_up.png", "2": "/assets/weapons/es_rare_light_02_holo_up.png", "3": "/assets/weapons/es_rare_light_02_holo_up.png", "4": "/assets/weapons/es_rare_light_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_light_02_holo_down.png", "2": "/assets/weapons/es_rare_light_02_holo_down.png", "3": "/assets/weapons/es_rare_light_02_holo_down.png", "4": "/assets/weapons/es_rare_light_02_holo_down.png"}
+      "hologramStyle": "light_eco_olografica"
     },
     "legacyId": null,
     "balance": null,
@@ -538,14 +425,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Una lancia di luce con fibra prismatica e base artica.",
-      "hologramStyle": "light_taglio_cromatico",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_light_03_card.png", "2": "/assets/weapons/es_rare_light_03_card.png", "3": "/assets/weapons/es_rare_light_03_card.png", "4": "/assets/weapons/es_rare_light_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_light_03_holo_up.png", "2": "/assets/weapons/es_rare_light_03_holo_up.png", "3": "/assets/weapons/es_rare_light_03_holo_up.png", "4": "/assets/weapons/es_rare_light_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_light_03_holo_down.png", "2": "/assets/weapons/es_rare_light_03_holo_down.png", "3": "/assets/weapons/es_rare_light_03_holo_down.png", "4": "/assets/weapons/es_rare_light_03_holo_down.png"}
+      "hologramStyle": "light_taglio_cromatico"
     },
     "legacyId": null,
     "balance": null,
@@ -573,14 +453,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Pistola monoblocco nera con scariche rosse filamentose.",
-      "hologramStyle": "light_interferenza",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_light_04_card.png", "2": "/assets/weapons/es_rare_light_04_card.png", "3": "/assets/weapons/es_rare_light_04_card.png", "4": "/assets/weapons/es_rare_light_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_light_04_holo_up.png", "2": "/assets/weapons/es_rare_light_04_holo_up.png", "3": "/assets/weapons/es_rare_light_04_holo_up.png", "4": "/assets/weapons/es_rare_light_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_light_04_holo_down.png", "2": "/assets/weapons/es_rare_light_04_holo_down.png", "3": "/assets/weapons/es_rare_light_04_holo_down.png", "4": "/assets/weapons/es_rare_light_04_holo_down.png"}
+      "hologramStyle": "light_interferenza"
     },
     "legacyId": null,
     "balance": null,
@@ -608,14 +481,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Cannone a ferri di cavallo fluttuanti, flusso magnetico.",
-      "hologramStyle": "medium_sottrazione_magnetica",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_medium_01_card.png", "2": "/assets/weapons/es_rare_medium_01_card.png", "3": "/assets/weapons/es_rare_medium_01_card.png", "4": "/assets/weapons/es_rare_medium_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_medium_01_holo_up.png", "2": "/assets/weapons/es_rare_medium_01_holo_up.png", "3": "/assets/weapons/es_rare_medium_01_holo_up.png", "4": "/assets/weapons/es_rare_medium_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_medium_01_holo_down.png", "2": "/assets/weapons/es_rare_medium_01_holo_down.png", "3": "/assets/weapons/es_rare_medium_01_holo_down.png", "4": "/assets/weapons/es_rare_medium_01_holo_down.png"}
+      "hologramStyle": "medium_sottrazione_magnetica"
     },
     "legacyId": null,
     "balance": null,
@@ -643,14 +509,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Cannone telescopico a tripla lente viola.",
-      "hologramStyle": "medium_mira_anticipata",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_medium_02_card.png", "2": "/assets/weapons/es_rare_medium_02_card.png", "3": "/assets/weapons/es_rare_medium_02_card.png", "4": "/assets/weapons/es_rare_medium_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_medium_02_holo_up.png", "2": "/assets/weapons/es_rare_medium_02_holo_up.png", "3": "/assets/weapons/es_rare_medium_02_holo_up.png", "4": "/assets/weapons/es_rare_medium_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_medium_02_holo_down.png", "2": "/assets/weapons/es_rare_medium_02_holo_down.png", "3": "/assets/weapons/es_rare_medium_02_holo_down.png", "4": "/assets/weapons/es_rare_medium_02_holo_down.png"}
+      "hologramStyle": "medium_mira_anticipata"
     },
     "legacyId": null,
     "balance": null,
@@ -678,14 +537,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Doppia canna asimmetrica, raggio giallo e blu.",
-      "hologramStyle": "medium_scelta_frequenza",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_medium_03_card.png", "2": "/assets/weapons/es_rare_medium_03_card.png", "3": "/assets/weapons/es_rare_medium_03_card.png", "4": "/assets/weapons/es_rare_medium_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_medium_03_holo_up.png", "2": "/assets/weapons/es_rare_medium_03_holo_up.png", "3": "/assets/weapons/es_rare_medium_03_holo_up.png", "4": "/assets/weapons/es_rare_medium_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_medium_03_holo_down.png", "2": "/assets/weapons/es_rare_medium_03_holo_down.png", "3": "/assets/weapons/es_rare_medium_03_holo_down.png", "4": "/assets/weapons/es_rare_medium_03_holo_down.png"}
+      "hologramStyle": "medium_scelta_frequenza"
     },
     "legacyId": null,
     "balance": null,
@@ -713,14 +565,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Trivella elettromagnetica, piccole celle incandescenti.",
-      "hologramStyle": "medium_recupero_carica",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_medium_04_card.png", "2": "/assets/weapons/es_rare_medium_04_card.png", "3": "/assets/weapons/es_rare_medium_04_card.png", "4": "/assets/weapons/es_rare_medium_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_medium_04_holo_up.png", "2": "/assets/weapons/es_rare_medium_04_holo_up.png", "3": "/assets/weapons/es_rare_medium_04_holo_up.png", "4": "/assets/weapons/es_rare_medium_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_medium_04_holo_down.png", "2": "/assets/weapons/es_rare_medium_04_holo_down.png", "3": "/assets/weapons/es_rare_medium_04_holo_down.png", "4": "/assets/weapons/es_rare_medium_04_holo_down.png"}
+      "hologramStyle": "medium_recupero_carica"
     },
     "legacyId": null,
     "balance": null,
@@ -750,14 +595,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Maglio cosmico sospeso, stella in miniatura alla testa.",
-      "hologramStyle": "heavy_stordimento_reattore",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_heavy_01_card.png", "2": "/assets/weapons/es_rare_heavy_01_card.png", "3": "/assets/weapons/es_rare_heavy_01_card.png", "4": "/assets/weapons/es_rare_heavy_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_heavy_01_holo_up.png", "2": "/assets/weapons/es_rare_heavy_01_holo_up.png", "3": "/assets/weapons/es_rare_heavy_01_holo_up.png", "4": "/assets/weapons/es_rare_heavy_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_heavy_01_holo_down.png", "2": "/assets/weapons/es_rare_heavy_01_holo_down.png", "3": "/assets/weapons/es_rare_heavy_01_holo_down.png", "4": "/assets/weapons/es_rare_heavy_01_holo_down.png"}
+      "hologramStyle": "heavy_stordimento_reattore"
     },
     "legacyId": null,
     "balance": null,
@@ -787,14 +625,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Batteria navale circolare, missili piccoli luminosi.",
-      "hologramStyle": "heavy_sciame_guidato",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_heavy_02_card.png", "2": "/assets/weapons/es_rare_heavy_02_card.png", "3": "/assets/weapons/es_rare_heavy_02_card.png", "4": "/assets/weapons/es_rare_heavy_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_heavy_02_holo_up.png", "2": "/assets/weapons/es_rare_heavy_02_holo_up.png", "3": "/assets/weapons/es_rare_heavy_02_holo_up.png", "4": "/assets/weapons/es_rare_heavy_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_heavy_02_holo_down.png", "2": "/assets/weapons/es_rare_heavy_02_holo_down.png", "3": "/assets/weapons/es_rare_heavy_02_holo_down.png", "4": "/assets/weapons/es_rare_heavy_02_holo_down.png"}
+      "hologramStyle": "heavy_sciame_guidato"
     },
     "legacyId": null,
     "balance": null,
@@ -824,14 +655,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Artiglieria glaciale con cristalli fratturati.",
-      "hologramStyle": "heavy_frattura_criogenica",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_heavy_03_card.png", "2": "/assets/weapons/es_rare_heavy_03_card.png", "3": "/assets/weapons/es_rare_heavy_03_card.png", "4": "/assets/weapons/es_rare_heavy_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_heavy_03_holo_up.png", "2": "/assets/weapons/es_rare_heavy_03_holo_up.png", "3": "/assets/weapons/es_rare_heavy_03_holo_up.png", "4": "/assets/weapons/es_rare_heavy_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_heavy_03_holo_down.png", "2": "/assets/weapons/es_rare_heavy_03_holo_down.png", "3": "/assets/weapons/es_rare_heavy_03_holo_down.png", "4": "/assets/weapons/es_rare_heavy_03_holo_down.png"}
+      "hologramStyle": "heavy_frattura_criogenica"
     },
     "legacyId": null,
     "balance": null,
@@ -861,14 +685,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Torre-cannone con lente su vortice nero.",
-      "hologramStyle": "heavy_richiamo_astrale",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_rare_heavy_04_card.png", "2": "/assets/weapons/es_rare_heavy_04_card.png", "3": "/assets/weapons/es_rare_heavy_04_card.png", "4": "/assets/weapons/es_rare_heavy_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_rare_heavy_04_holo_up.png", "2": "/assets/weapons/es_rare_heavy_04_holo_up.png", "3": "/assets/weapons/es_rare_heavy_04_holo_up.png", "4": "/assets/weapons/es_rare_heavy_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_rare_heavy_04_holo_down.png", "2": "/assets/weapons/es_rare_heavy_04_holo_down.png", "3": "/assets/weapons/es_rare_heavy_04_holo_down.png", "4": "/assets/weapons/es_rare_heavy_04_holo_down.png"}
+      "hologramStyle": "heavy_richiamo_astrale"
     },
     "legacyId": null,
     "balance": null,
@@ -896,14 +713,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Carabina sottile con ali meccaniche e scintille color oro.",
-      "hologramStyle": "light_colpo_fuori_fase",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_light_01_card.png", "2": "/assets/weapons/es_epic_light_01_card.png", "3": "/assets/weapons/es_epic_light_01_card.png", "4": "/assets/weapons/es_epic_light_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_light_01_holo_up.png", "2": "/assets/weapons/es_epic_light_01_holo_up.png", "3": "/assets/weapons/es_epic_light_01_holo_up.png", "4": "/assets/weapons/es_epic_light_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_light_01_holo_down.png", "2": "/assets/weapons/es_epic_light_01_holo_down.png", "3": "/assets/weapons/es_epic_light_01_holo_down.png", "4": "/assets/weapons/es_epic_light_01_holo_down.png"}
+      "hologramStyle": "light_colpo_fuori_fase"
     },
     "legacyId": null,
     "balance": null,
@@ -931,14 +741,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Sette lamelle flottanti intorno a una canna di luce.",
-      "hologramStyle": "light_finta_multipla",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_light_02_card.png", "2": "/assets/weapons/es_epic_light_02_card.png", "3": "/assets/weapons/es_epic_light_02_card.png", "4": "/assets/weapons/es_epic_light_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_light_02_holo_up.png", "2": "/assets/weapons/es_epic_light_02_holo_up.png", "3": "/assets/weapons/es_epic_light_02_holo_up.png", "4": "/assets/weapons/es_epic_light_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_light_02_holo_down.png", "2": "/assets/weapons/es_epic_light_02_holo_down.png", "3": "/assets/weapons/es_epic_light_02_holo_down.png", "4": "/assets/weapons/es_epic_light_02_holo_down.png"}
+      "hologramStyle": "light_finta_multipla"
     },
     "legacyId": null,
     "balance": null,
@@ -966,14 +769,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Lama a serpente di plasma verde e viola.",
-      "hologramStyle": "light_curva_inseguitrice",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_light_03_card.png", "2": "/assets/weapons/es_epic_light_03_card.png", "3": "/assets/weapons/es_epic_light_03_card.png", "4": "/assets/weapons/es_epic_light_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_light_03_holo_up.png", "2": "/assets/weapons/es_epic_light_03_holo_up.png", "3": "/assets/weapons/es_epic_light_03_holo_up.png", "4": "/assets/weapons/es_epic_light_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_light_03_holo_down.png", "2": "/assets/weapons/es_epic_light_03_holo_down.png", "3": "/assets/weapons/es_epic_light_03_holo_down.png", "4": "/assets/weapons/es_epic_light_03_holo_down.png"}
+      "hologramStyle": "light_curva_inseguitrice"
     },
     "legacyId": null,
     "balance": null,
@@ -1001,14 +797,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Dispositivo a forma di chiave con geometrie impossibili.",
-      "hologramStyle": "light_inversione_rotta",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_light_04_card.png", "2": "/assets/weapons/es_epic_light_04_card.png", "3": "/assets/weapons/es_epic_light_04_card.png", "4": "/assets/weapons/es_epic_light_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_light_04_holo_up.png", "2": "/assets/weapons/es_epic_light_04_holo_up.png", "3": "/assets/weapons/es_epic_light_04_holo_up.png", "4": "/assets/weapons/es_epic_light_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_light_04_holo_down.png", "2": "/assets/weapons/es_epic_light_04_holo_down.png", "3": "/assets/weapons/es_epic_light_04_holo_down.png", "4": "/assets/weapons/es_epic_light_04_holo_down.png"}
+      "hologramStyle": "light_inversione_rotta"
     },
     "legacyId": null,
     "balance": null,
@@ -1036,14 +825,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Matrice triangolare solare con nuclei arancio.",
-      "hologramStyle": "medium_risonanza_impulsi",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_medium_01_card.png", "2": "/assets/weapons/es_epic_medium_01_card.png", "3": "/assets/weapons/es_epic_medium_01_card.png", "4": "/assets/weapons/es_epic_medium_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_medium_01_holo_up.png", "2": "/assets/weapons/es_epic_medium_01_holo_up.png", "3": "/assets/weapons/es_epic_medium_01_holo_up.png", "4": "/assets/weapons/es_epic_medium_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_medium_01_holo_down.png", "2": "/assets/weapons/es_epic_medium_01_holo_down.png", "3": "/assets/weapons/es_epic_medium_01_holo_down.png", "4": "/assets/weapons/es_epic_medium_01_holo_down.png"}
+      "hologramStyle": "medium_risonanza_impulsi"
     },
     "legacyId": null,
     "balance": null,
@@ -1071,14 +853,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Tre teste di serpente metalliche con occhi al neon.",
-      "hologramStyle": "medium_tre_traiettorie",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_medium_02_card.png", "2": "/assets/weapons/es_epic_medium_02_card.png", "3": "/assets/weapons/es_epic_medium_02_card.png", "4": "/assets/weapons/es_epic_medium_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_medium_02_holo_up.png", "2": "/assets/weapons/es_epic_medium_02_holo_up.png", "3": "/assets/weapons/es_epic_medium_02_holo_up.png", "4": "/assets/weapons/es_epic_medium_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_medium_02_holo_down.png", "2": "/assets/weapons/es_epic_medium_02_holo_down.png", "3": "/assets/weapons/es_epic_medium_02_holo_down.png", "4": "/assets/weapons/es_epic_medium_02_holo_down.png"}
+      "hologramStyle": "medium_tre_traiettorie"
     },
     "legacyId": null,
     "balance": null,
@@ -1106,14 +881,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Artiglieria a lama di luce blu orizzontale.",
-      "hologramStyle": "medium_taglio_persistente",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_medium_03_card.png", "2": "/assets/weapons/es_epic_medium_03_card.png", "3": "/assets/weapons/es_epic_medium_03_card.png", "4": "/assets/weapons/es_epic_medium_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_medium_03_holo_up.png", "2": "/assets/weapons/es_epic_medium_03_holo_up.png", "3": "/assets/weapons/es_epic_medium_03_holo_up.png", "4": "/assets/weapons/es_epic_medium_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_medium_03_holo_down.png", "2": "/assets/weapons/es_epic_medium_03_holo_down.png", "3": "/assets/weapons/es_epic_medium_03_holo_down.png", "4": "/assets/weapons/es_epic_medium_03_holo_down.png"}
+      "hologramStyle": "medium_taglio_persistente"
     },
     "legacyId": null,
     "balance": null,
@@ -1141,14 +909,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Cannone corvino con piume metalliche e fumo cosmico.",
-      "hologramStyle": "medium_erosione",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_medium_04_card.png", "2": "/assets/weapons/es_epic_medium_04_card.png", "3": "/assets/weapons/es_epic_medium_04_card.png", "4": "/assets/weapons/es_epic_medium_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_medium_04_holo_up.png", "2": "/assets/weapons/es_epic_medium_04_holo_up.png", "3": "/assets/weapons/es_epic_medium_04_holo_up.png", "4": "/assets/weapons/es_epic_medium_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_medium_04_holo_down.png", "2": "/assets/weapons/es_epic_medium_04_holo_down.png", "3": "/assets/weapons/es_epic_medium_04_holo_down.png", "4": "/assets/weapons/es_epic_medium_04_holo_down.png"}
+      "hologramStyle": "medium_erosione"
     },
     "legacyId": null,
     "balance": null,
@@ -1178,14 +939,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Cannone a telescopio con costellazione Orione.",
-      "hologramStyle": "heavy_colpo_orbitale",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_heavy_01_card.png", "2": "/assets/weapons/es_epic_heavy_01_card.png", "3": "/assets/weapons/es_epic_heavy_01_card.png", "4": "/assets/weapons/es_epic_heavy_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_heavy_01_holo_up.png", "2": "/assets/weapons/es_epic_heavy_01_holo_up.png", "3": "/assets/weapons/es_epic_heavy_01_holo_up.png", "4": "/assets/weapons/es_epic_heavy_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_heavy_01_holo_down.png", "2": "/assets/weapons/es_epic_heavy_01_holo_down.png", "3": "/assets/weapons/es_epic_heavy_01_holo_down.png", "4": "/assets/weapons/es_epic_heavy_01_holo_down.png"}
+      "hologramStyle": "heavy_colpo_orbitale"
     },
     "legacyId": null,
     "balance": null,
@@ -1215,14 +969,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Arma sarcofago d’oro nero con nucleo stellare.",
-      "hologramStyle": "heavy_accumulo_solare",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_heavy_02_card.png", "2": "/assets/weapons/es_epic_heavy_02_card.png", "3": "/assets/weapons/es_epic_heavy_02_card.png", "4": "/assets/weapons/es_epic_heavy_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_heavy_02_holo_up.png", "2": "/assets/weapons/es_epic_heavy_02_holo_up.png", "3": "/assets/weapons/es_epic_heavy_02_holo_up.png", "4": "/assets/weapons/es_epic_heavy_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_heavy_02_holo_down.png", "2": "/assets/weapons/es_epic_heavy_02_holo_down.png", "3": "/assets/weapons/es_epic_heavy_02_holo_down.png", "4": "/assets/weapons/es_epic_heavy_02_holo_down.png"}
+      "hologramStyle": "heavy_accumulo_solare"
     },
     "legacyId": null,
     "balance": null,
@@ -1252,14 +999,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Anello gigante ruotante sopra il cannone.",
-      "hologramStyle": "heavy_onda_gravitazionale",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_heavy_03_card.png", "2": "/assets/weapons/es_epic_heavy_03_card.png", "3": "/assets/weapons/es_epic_heavy_03_card.png", "4": "/assets/weapons/es_epic_heavy_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_heavy_03_holo_up.png", "2": "/assets/weapons/es_epic_heavy_03_holo_up.png", "3": "/assets/weapons/es_epic_heavy_03_holo_up.png", "4": "/assets/weapons/es_epic_heavy_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_heavy_03_holo_down.png", "2": "/assets/weapons/es_epic_heavy_03_holo_down.png", "3": "/assets/weapons/es_epic_heavy_03_holo_down.png", "4": "/assets/weapons/es_epic_heavy_03_holo_down.png"}
+      "hologramStyle": "heavy_onda_gravitazionale"
     },
     "legacyId": null,
     "balance": null,
@@ -1289,14 +1029,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Cannone gotico con guglie luminose rosse.",
-      "hologramStyle": "heavy_fuoco_corale",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_epic_heavy_04_card.png", "2": "/assets/weapons/es_epic_heavy_04_card.png", "3": "/assets/weapons/es_epic_heavy_04_card.png", "4": "/assets/weapons/es_epic_heavy_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_epic_heavy_04_holo_up.png", "2": "/assets/weapons/es_epic_heavy_04_holo_up.png", "3": "/assets/weapons/es_epic_heavy_04_holo_up.png", "4": "/assets/weapons/es_epic_heavy_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_epic_heavy_04_holo_down.png", "2": "/assets/weapons/es_epic_heavy_04_holo_down.png", "3": "/assets/weapons/es_epic_heavy_04_holo_down.png", "4": "/assets/weapons/es_epic_heavy_04_holo_down.png"}
+      "hologramStyle": "heavy_fuoco_corale"
     },
     "legacyId": null,
     "balance": null,
@@ -1324,14 +1057,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Sottile fucile d’argento con filamento infinito.",
-      "hologramStyle": "light_traccia_immortale",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_light_01_card.png", "2": "/assets/weapons/es_legendary_light_01_card.png", "3": "/assets/weapons/es_legendary_light_01_card.png", "4": "/assets/weapons/es_legendary_light_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_light_01_holo_up.png", "2": "/assets/weapons/es_legendary_light_01_holo_up.png", "3": "/assets/weapons/es_legendary_light_01_holo_up.png", "4": "/assets/weapons/es_legendary_light_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_light_01_holo_down.png", "2": "/assets/weapons/es_legendary_light_01_holo_down.png", "3": "/assets/weapons/es_legendary_light_01_holo_down.png", "4": "/assets/weapons/es_legendary_light_01_holo_down.png"}
+      "hologramStyle": "light_traccia_immortale"
     },
     "legacyId": null,
     "balance": null,
@@ -1359,14 +1085,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Arma trasparente sospesa con bagliori azzurri.",
-      "hologramStyle": "light_sparo_invisibile",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_light_02_card.png", "2": "/assets/weapons/es_legendary_light_02_card.png", "3": "/assets/weapons/es_legendary_light_02_card.png", "4": "/assets/weapons/es_legendary_light_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_light_02_holo_up.png", "2": "/assets/weapons/es_legendary_light_02_holo_up.png", "3": "/assets/weapons/es_legendary_light_02_holo_up.png", "4": "/assets/weapons/es_legendary_light_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_light_02_holo_down.png", "2": "/assets/weapons/es_legendary_light_02_holo_down.png", "3": "/assets/weapons/es_legendary_light_02_holo_down.png", "4": "/assets/weapons/es_legendary_light_02_holo_down.png"}
+      "hologramStyle": "light_sparo_invisibile"
     },
     "legacyId": null,
     "balance": null,
@@ -1394,14 +1113,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Artiglio cromato su quadrante di orologio astrale.",
-      "hologramStyle": "light_battito_differito",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_light_03_card.png", "2": "/assets/weapons/es_legendary_light_03_card.png", "3": "/assets/weapons/es_legendary_light_03_card.png", "4": "/assets/weapons/es_legendary_light_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_light_03_holo_up.png", "2": "/assets/weapons/es_legendary_light_03_holo_up.png", "3": "/assets/weapons/es_legendary_light_03_holo_up.png", "4": "/assets/weapons/es_legendary_light_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_light_03_holo_down.png", "2": "/assets/weapons/es_legendary_light_03_holo_down.png", "3": "/assets/weapons/es_legendary_light_03_holo_down.png", "4": "/assets/weapons/es_legendary_light_03_holo_down.png"}
+      "hologramStyle": "light_battito_differito"
     },
     "legacyId": null,
     "balance": null,
@@ -1429,14 +1141,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "⚡",
-      "artDirection": "Penna laser regale con piume metalliche d’oro.",
-      "hologramStyle": "light_segno_prescelto",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_light_04_card.png", "2": "/assets/weapons/es_legendary_light_04_card.png", "3": "/assets/weapons/es_legendary_light_04_card.png", "4": "/assets/weapons/es_legendary_light_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_light_04_holo_up.png", "2": "/assets/weapons/es_legendary_light_04_holo_up.png", "3": "/assets/weapons/es_legendary_light_04_holo_up.png", "4": "/assets/weapons/es_legendary_light_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_light_04_holo_down.png", "2": "/assets/weapons/es_legendary_light_04_holo_down.png", "3": "/assets/weapons/es_legendary_light_04_holo_down.png", "4": "/assets/weapons/es_legendary_light_04_holo_down.png"}
+      "hologramStyle": "light_segno_prescelto"
     },
     "legacyId": null,
     "balance": null,
@@ -1464,14 +1169,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Cannone bussola a quattro punte, galassia centrale.",
-      "hologramStyle": "medium_bersaglio_stellare",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_medium_01_card.png", "2": "/assets/weapons/es_legendary_medium_01_card.png", "3": "/assets/weapons/es_legendary_medium_01_card.png", "4": "/assets/weapons/es_legendary_medium_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_medium_01_holo_up.png", "2": "/assets/weapons/es_legendary_medium_01_holo_up.png", "3": "/assets/weapons/es_legendary_medium_01_holo_up.png", "4": "/assets/weapons/es_legendary_medium_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_medium_01_holo_down.png", "2": "/assets/weapons/es_legendary_medium_01_holo_down.png", "3": "/assets/weapons/es_legendary_medium_01_holo_down.png", "4": "/assets/weapons/es_legendary_medium_01_holo_down.png"}
+      "hologramStyle": "medium_bersaglio_stellare"
     },
     "legacyId": null,
     "balance": null,
@@ -1499,14 +1197,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Cerchio eclissato di oro e nero intorno alla canna.",
-      "hologramStyle": "medium_intermittenza_solare",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_medium_02_card.png", "2": "/assets/weapons/es_legendary_medium_02_card.png", "3": "/assets/weapons/es_legendary_medium_02_card.png", "4": "/assets/weapons/es_legendary_medium_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_medium_02_holo_up.png", "2": "/assets/weapons/es_legendary_medium_02_holo_up.png", "3": "/assets/weapons/es_legendary_medium_02_holo_up.png", "4": "/assets/weapons/es_legendary_medium_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_medium_02_holo_down.png", "2": "/assets/weapons/es_legendary_medium_02_holo_down.png", "3": "/assets/weapons/es_legendary_medium_02_holo_down.png", "4": "/assets/weapons/es_legendary_medium_02_holo_down.png"}
+      "hologramStyle": "medium_intermittenza_solare"
     },
     "legacyId": null,
     "balance": null,
@@ -1534,14 +1225,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Pannelli runici fluttuanti attorno a un emettitore.",
-      "hologramStyle": "medium_archivio_tattico",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_medium_03_card.png", "2": "/assets/weapons/es_legendary_medium_03_card.png", "3": "/assets/weapons/es_legendary_medium_03_card.png", "4": "/assets/weapons/es_legendary_medium_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_medium_03_holo_up.png", "2": "/assets/weapons/es_legendary_medium_03_holo_up.png", "3": "/assets/weapons/es_legendary_medium_03_holo_up.png", "4": "/assets/weapons/es_legendary_medium_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_medium_03_holo_down.png", "2": "/assets/weapons/es_legendary_medium_03_holo_down.png", "3": "/assets/weapons/es_legendary_medium_03_holo_down.png", "4": "/assets/weapons/es_legendary_medium_03_holo_down.png"}
+      "hologramStyle": "medium_archivio_tattico"
     },
     "legacyId": null,
     "balance": null,
@@ -1569,14 +1253,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "◎",
-      "artDirection": "Motore cilindrico a doppio nucleo azzurro e rosso.",
-      "hologramStyle": "medium_doppio_impulso",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_medium_04_card.png", "2": "/assets/weapons/es_legendary_medium_04_card.png", "3": "/assets/weapons/es_legendary_medium_04_card.png", "4": "/assets/weapons/es_legendary_medium_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_medium_04_holo_up.png", "2": "/assets/weapons/es_legendary_medium_04_holo_up.png", "3": "/assets/weapons/es_legendary_medium_04_holo_up.png", "4": "/assets/weapons/es_legendary_medium_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_medium_04_holo_down.png", "2": "/assets/weapons/es_legendary_medium_04_holo_down.png", "3": "/assets/weapons/es_legendary_medium_04_holo_down.png", "4": "/assets/weapons/es_legendary_medium_04_holo_down.png"}
+      "hologramStyle": "medium_doppio_impulso"
     },
     "legacyId": null,
     "balance": null,
@@ -1606,14 +1283,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Cannone-trono nero con disco di accrescimento.",
-      "hologramStyle": "heavy_micro_singolarita",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_heavy_01_card.png", "2": "/assets/weapons/es_legendary_heavy_01_card.png", "3": "/assets/weapons/es_legendary_heavy_01_card.png", "4": "/assets/weapons/es_legendary_heavy_01_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_heavy_01_holo_up.png", "2": "/assets/weapons/es_legendary_heavy_01_holo_up.png", "3": "/assets/weapons/es_legendary_heavy_01_holo_up.png", "4": "/assets/weapons/es_legendary_heavy_01_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_heavy_01_holo_down.png", "2": "/assets/weapons/es_legendary_heavy_01_holo_down.png", "3": "/assets/weapons/es_legendary_heavy_01_holo_down.png", "4": "/assets/weapons/es_legendary_heavy_01_holo_down.png"}
+      "hologramStyle": "heavy_micro_singolarita"
     },
     "legacyId": null,
     "balance": null,
@@ -1643,14 +1313,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Lanciatore stellare con sfera bianca pronta a esplodere.",
-      "hologramStyle": "heavy_esplosione_stadi",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_heavy_02_card.png", "2": "/assets/weapons/es_legendary_heavy_02_card.png", "3": "/assets/weapons/es_legendary_heavy_02_card.png", "4": "/assets/weapons/es_legendary_heavy_02_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_heavy_02_holo_up.png", "2": "/assets/weapons/es_legendary_heavy_02_holo_up.png", "3": "/assets/weapons/es_legendary_heavy_02_holo_up.png", "4": "/assets/weapons/es_legendary_heavy_02_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_heavy_02_holo_down.png", "2": "/assets/weapons/es_legendary_heavy_02_holo_down.png", "3": "/assets/weapons/es_legendary_heavy_02_holo_down.png", "4": "/assets/weapons/es_legendary_heavy_02_holo_down.png"}
+      "hologramStyle": "heavy_esplosione_stadi"
     },
     "legacyId": null,
     "balance": null,
@@ -1680,14 +1343,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Cannone a due portali esagonali viola e oro.",
-      "hologramStyle": "heavy_traiettoria_portale",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_heavy_03_card.png", "2": "/assets/weapons/es_legendary_heavy_03_card.png", "3": "/assets/weapons/es_legendary_heavy_03_card.png", "4": "/assets/weapons/es_legendary_heavy_03_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_heavy_03_holo_up.png", "2": "/assets/weapons/es_legendary_heavy_03_holo_up.png", "3": "/assets/weapons/es_legendary_heavy_03_holo_up.png", "4": "/assets/weapons/es_legendary_heavy_03_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_heavy_03_holo_down.png", "2": "/assets/weapons/es_legendary_heavy_03_holo_down.png", "3": "/assets/weapons/es_legendary_heavy_03_holo_down.png", "4": "/assets/weapons/es_legendary_heavy_03_holo_down.png"}
+      "hologramStyle": "heavy_traiettoria_portale"
     },
     "legacyId": null,
     "balance": null,
@@ -1717,14 +1373,7 @@ export const ARSENAL_48 = Object.freeze([
     },
     "visual": {
       "icon": "☄",
-      "artDirection": "Cannone monumentale inciso con glifi stellari.",
-      "hologramStyle": "heavy_sigillo_finale",
-      "cardAspect": "original_weapon_card"
-    },
-    "assets": {
-      "cardImageByLevel": {"1": "/assets/weapons/es_legendary_heavy_04_card.png", "2": "/assets/weapons/es_legendary_heavy_04_card.png", "3": "/assets/weapons/es_legendary_heavy_04_card.png", "4": "/assets/weapons/es_legendary_heavy_04_card.png"},
-      "hologramUpByLevel": {"1": "/assets/weapons/es_legendary_heavy_04_holo_up.png", "2": "/assets/weapons/es_legendary_heavy_04_holo_up.png", "3": "/assets/weapons/es_legendary_heavy_04_holo_up.png", "4": "/assets/weapons/es_legendary_heavy_04_holo_up.png"},
-      "hologramDownByLevel": {"1": "/assets/weapons/es_legendary_heavy_04_holo_down.png", "2": "/assets/weapons/es_legendary_heavy_04_holo_down.png", "3": "/assets/weapons/es_legendary_heavy_04_holo_down.png", "4": "/assets/weapons/es_legendary_heavy_04_holo_down.png"}
+      "hologramStyle": "heavy_sigillo_finale"
     },
     "legacyId": null,
     "balance": null,

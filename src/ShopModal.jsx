@@ -515,7 +515,6 @@ export default function ShopModal({
                   const isPoker = wp.type === 'poker';
                   const curLvl = Math.min(3, Math.max(1, currentWeaponsLevels[wp.id] || 1));
                   const stats = wp.levels?.[curLvl] || wp.levels?.[1] || { damage: 15 };
-                  const currentImgSrc = stats.image || wp.levels?.[1]?.image || wp.image;
                   const nextCost = WEAPON_UPGRADE_COSTS[curLvl + 1] || null;
                   const eqSlotIndex = currentEquippedWeapons.indexOf(wp.id);
 
@@ -568,26 +567,19 @@ export default function ShopModal({
                           </span>
                         </div>
 
-                        <div
+                        <button
+                          type="button"
                           onClick={() => setInspectedItem({ type: 'weapon', data: wp, curLvl, eqSlotIndex })}
-                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '4px 0' }}
-                          title="Tocca per ingrandire"
+                          aria-label={`Dettagli ${wp.name}`}
+                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '4px auto', background: 'transparent', border: 0, color: '#e2e8f0' }}
                         >
-                          <div style={{ width: '64px', height: '48px', borderRadius: '6px', overflow: 'hidden', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <img
-                              src={currentImgSrc}
-                              alt={wp.name}
-                              onError={(e) => {
-                                e.target.style.display = 'none';
-                                e.target.parentNode.innerText = wp.icon || (isPoker ? '🃏' : '⚡');
-                              }}
-                              style={{ width: '100%', height: '100%', objectFit: wp.id === 'wp_gatling' ? 'fill' : 'cover' }}
-                            />
-                          </div>
-                          <span style={{ fontSize: '0.52rem', color: '#38bdf8', marginTop: '3px', textDecoration: 'underline' }}>
-                            🔍 Ingrandisci
+                          <span aria-hidden="true" style={{ width: '64px', height: '48px', borderRadius: '6px', background: 'rgba(0,0,0,0.5)', display: 'grid', placeItems: 'center' }}>
+                            {wp.icon || (isPoker ? '🃏' : '⚡')}
                           </span>
-                        </div>
+                          <span style={{ fontSize: '0.52rem', color: '#38bdf8', marginTop: '3px', textDecoration: 'underline' }}>
+                            Dettagli
+                          </span>
+                        </button>
 
                         <div style={{ fontSize: '0.85rem', fontWeight: 900, color: wp.rarityColor || wp.color || '#fff', textAlign: 'center' }}>
                           {wp.name}
@@ -1270,7 +1262,6 @@ export default function ShopModal({
               if (!wp) return null;
               const isPoker = wp.type === 'poker';
               const curLvl = inspectedItem.curLvl || 1;
-              const currentImgSrc = wp.levels?.[curLvl]?.image || wp.levels?.[1]?.image || wp.image;
 
               const slotDesc = wp.slotAllowed?.includes(0) ? 'SLOT 1: POKER RAPIDO (LEGGERA)' :
                 wp.slotAllowed?.includes(1) ? 'SLOT 2: POKER AVANZATO (PESANTE)' :
@@ -1286,18 +1277,6 @@ export default function ShopModal({
                   <h2 style={{ color: wp.rarityColor || wp.color || '#fff', margin: '0 0 12px 0', fontSize: '1.4rem', fontWeight: 900 }}>
                     {wp.name}
                   </h2>
-
-                  <div style={{ width: wp.id === 'wp_gatling' ? '190px' : '100px', height: wp.id === 'wp_gatling' ? '412px' : '70px', borderRadius: '8px', overflow: 'hidden', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '4px auto 12px auto' }}>
-                    <img
-                      src={currentImgSrc}
-                      alt={wp.name}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.parentNode.innerText = wp.icon || (isPoker ? '🃏' : '⚡');
-                      }}
-                      style={{ width: '100%', height: '100%', objectFit: wp.id === 'wp_gatling' ? 'contain' : 'cover' }}
-                    />
-                  </div>
 
                   <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(15, 23, 42, 0.85)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#fde047', fontWeight: 900 }}>

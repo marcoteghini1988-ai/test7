@@ -6,7 +6,6 @@ import { TURN_PHASES, MAX_PLACED_CARDS_PER_ACTION, BOOST_LEVELS, PHASE_MAX_SECON
 import { applyBoardPlacements, requiredBoardPlacements } from './newCombat/combatBasics.js';
 import { findBestPokerCombination } from './newCombat/pokerRules.js';
 import { ARSENAL_48, getWeaponDefinition } from './newCombat/weaponCatalog.js';
-import { WeaponCardArt } from './newCombat/WeaponVisuals.jsx';
 import { normalizePhase7Armory } from './newCombat/phase7Armory.js';
 import { getPhase4MoveOptions, setPhase4EquippedWeapon } from './newCombat/phase4Engine.js';
 import { commitPhase5Move, getBoostCalculationSuggestions } from './newCombat/phase5Engine.js';
@@ -479,7 +478,7 @@ export default function LegacyPokerBattle({ onClose, playerHand, playerDeck, aiH
           const w=getWeaponDefinition(game.arsenal.enemy[cls]);
           const firing=game.phase===TURN_PHASES.ANIMATE && result?.volleys?.enemy?.weaponId===w?.id && (result?.volleys?.enemy?.shots||0)>0;
           return <div className={`phase8-enemy-weapon-tile ${firing?'phase8-firing-origin':''}`} key={cls} style={{borderColor:w?.rarityColor||'#2d7890'}}>
-            <WeaponCardArt weapon={w}/><span>{CLASS_LABELS[cls]} · {w?.name||'Slot non equipaggiato'}</span>
+            <span>{CLASS_LABELS[cls]} · {w?.name||'Slot non equipaggiato'}</span>
 
           </div>;
         })}</div>
@@ -489,7 +488,6 @@ export default function LegacyPokerBattle({ onClose, playerHand, playerDeck, aiH
 
         const firing=game.phase===TURN_PHASES.ANIMATE && result?.volleys?.player?.weaponId===w?.id && (result?.volleys?.player?.shots||0)>0;
         return <div className={`phase4-weapon-tile ${firing?'phase8-firing-origin':''}`} key={cls} style={{borderColor:w?.rarityColor||'#2d7890'}}>
-          <WeaponCardArt weapon={w}/>
           <div><small>{CLASS_LABELS[cls]} · {w?.rarity||'Da sbloccare'}{isPhase17WeaponFrozen(game,'player',cls)?' · ❄️ CONGELATA':''}</small><b>{w?.name||'SLOT VUOTO'}</b><span>{w?`${w.ammoSymbol} · ${w.effect.name} · LV ${game.weaponLevels?.player?.[cls]||1}`:'Disponibile dopo lo sblocco e l’acquisto'}</span></div>
         </div>;
       })}<div className="phase4-weapon-tile phase5-boost-active"><span className="phase4-weapon-icon">⚡</span><div>
@@ -509,7 +507,7 @@ export default function LegacyPokerBattle({ onClose, playerHand, playerDeck, aiH
             className={`${chosenWeapon?.weaponId===o.weaponId?'phase4-picked':''}`}
             title={o.weapon.effect.description}
             disabled={!o.canFire} onClick={()=>setSelectedWeaponId(o.weaponId)}>
-            <WeaponCardArt weapon={o.weapon} className="phase8-choice-thumb"/> {o.weapon.name} · {o.weapon.effect.name} · {o.score.label}{o.activationMode==='secondary'?' (salva alternativa ridotta)':''} · {o.weapon.ammoSymbol} {o.availableAmmo} · {o.previewShots ?? o.fullShots} colpi / {o.potentialDamage} danni
+            {o.weapon.name} · {o.weapon.effect.name} · {o.score.label}{o.activationMode==='secondary'?' (salva alternativa ridotta)':''} · {o.weapon.ammoSymbol} {o.availableAmmo} · {o.previewShots ?? o.fullShots} colpi / {o.potentialDamage} danni
             {o.canFire && o.weaponId===recommendedWeapon?.weaponId?' ★ CONSIGLIATA':''}
             {o.adaptedByEpic?' · ⚡ ADATTAMENTO MATRICE':''}{!o.canFire?(o.frozenByAnomaly?' · ❄️ CONGELATA':o.heatBlocked?' · 🌡 SURRISCALDATA':' · MUNIZIONI INSUFFICIENTI'):''}
           </button>)}

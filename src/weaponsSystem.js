@@ -45,9 +45,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 3,
     cooldownDuration: 1,
     levels: {
-      1: { damage: 2, shots: 4, image: '/gatling_cinetica_lv1.png', desc: 'Raffica rapida da 4 dardi traccianti' },
-      2: { damage: 3, shots: 8, image: '/gatling_cinetica_lv2.png', desc: 'Raffica potenziata da 8 dardi' },
-      3: { damage: 5, shots: 12, image: '/gatling_cinetica_lv3.png', desc: 'Scarica a nastro da 12 dardi cinetici' }
+      1: { damage: 2, shots: 4, desc: 'Raffica rapida da 4 dardi traccianti' },
+      2: { damage: 3, shots: 8, desc: 'Raffica potenziata da 8 dardi' },
+      3: { damage: 5, shots: 12, desc: 'Scarica a nastro da 12 dardi cinetici' }
     }
   },
   {
@@ -73,9 +73,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 1,
     levels: {
-      1: { damage: 3, shots: 2, image: '/balestra_dardi_fusi_lv1.png', desc: '2 arpioni fusi incandescenti' },
-      2: { damage: 4, shots: 3, image: '/balestra_dardi_fusi_lv2.png', desc: '3 arpioni a ventaglio termico' },
-      3: { damage: 6, shots: 4, image: '/balestra_dardi_fusi_lv3.png', desc: '4 arpioni pesanti perforanti' }
+      1: { damage: 3, shots: 2, desc: '2 arpioni fusi incandescenti' },
+      2: { damage: 4, shots: 3, desc: '3 arpioni a ventaglio termico' },
+      3: { damage: 6, shots: 4, desc: '4 arpioni pesanti perforanti' }
     }
   },
   {
@@ -101,9 +101,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 3,
     cooldownDuration: 1,
     levels: {
-      1: { damage: 3, shots: 2, image: '/lame_rotanti_lv1.png', desc: '2 carte rotanti a disco' },
-      2: { damage: 4, shots: 4, image: '/lame_rotanti_lv2.png', desc: '4 dischi di luce tagliente' },
-      3: { damage: 6, shots: 6, image: '/lame_rotanti_lv3.png', desc: '6 dischi con taglio orizzontale' }
+      1: { damage: 3, shots: 2, desc: '2 carte rotanti a disco' },
+      2: { damage: 4, shots: 4, desc: '4 dischi di luce tagliente' },
+      3: { damage: 6, shots: 6, desc: '6 dischi con taglio orizzontale' }
     }
   },
 
@@ -132,9 +132,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 3,
     cooldownDuration: 1,
     levels: {
-      1: { damage: 3, bolts: 1, image: '/fulmine_ciel_sereno_lv1.png', desc: '1 fulmine secco verticale' },
-      2: { damage: 4, bolts: 2, image: '/fulmine_ciel_sereno_lv2.png', desc: '2 fulmini ramificati simultanei' },
-      3: { damage: 6, bolts: 3, image: '/fulmine_ciel_sereno_lv3.png', desc: '3 fulmini con scarica continua' }
+      1: { damage: 3, bolts: 1, desc: '1 fulmine secco verticale' },
+      2: { damage: 4, bolts: 2, desc: '2 fulmini ramificati simultanei' },
+      3: { damage: 6, bolts: 3, desc: '3 fulmini con scarica continua' }
     }
   },
   {
@@ -161,9 +161,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 1,
     levels: {
-      1: { damage: 6, image: '/railgun_ionico_lv1.png', desc: 'Fascio istantaneo che taglia la barra' },
-      2: { damage: 9, image: '/railgun_ionico_lv2.png', desc: 'Raggio potenziato con anelli magnetici' },
-      3: { damage: 13, image: '/railgun_ionico_lv3.png', desc: 'Fascio ultra-denso con scintille ioniche' }
+      1: { damage: 6, desc: 'Fascio istantaneo che taglia la barra' },
+      2: { damage: 9, desc: 'Raggio potenziato con anelli magnetici' },
+      3: { damage: 13, desc: 'Fascio ultra-denso con scintille ioniche' }
     }
   },
   {
@@ -190,9 +190,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 1,
     levels: {
-      1: { damage: 5, image: '/lama_sismica_lv1.png', desc: 'Mezzaluna di luce che sale dal basso' },
-      2: { damage: 8, image: '/lama_sismica_lv2.png', desc: 'Doppia onda sismica concentrica' },
-      3: { damage: 12, image: '/lama_sismica_lv3.png', desc: 'Lama densa con distorsione sismica' }
+      1: { damage: 5, desc: 'Mezzaluna di luce che sale dal basso' },
+      2: { damage: 8, desc: 'Doppia onda sismica concentrica' },
+      3: { damage: 12, desc: 'Lama densa con distorsione sismica' }
     }
   },
 
@@ -224,9 +224,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 4, shots: 8, image: '/arco_x_balistico_lv1.png', desc: 'Pioggia continua di 8 frecce balistiche' },
-      2: { damage: 6, shots: 12, image: '/arco_x_balistico_lv2.png', desc: 'Pioggia rapida di 12 frecce balistiche' },
-      3: { damage: 9, shots: 16, image: '/arco_x_balistico_lv3.png', desc: 'Tempesta di 16 frecce al plasma ciano' }
+      1: { damage: 4, shots: 8, desc: 'Pioggia continua di 8 frecce balistiche' },
+      2: { damage: 6, shots: 12, desc: 'Pioggia rapida di 12 frecce balistiche' },
+      3: { damage: 9, shots: 16, desc: 'Tempesta di 16 frecce al plasma ciano' }
     }
   },
   {
@@ -253,9 +253,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 1,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 18, shots: 1, image: '/cannone_assedio_lv1.png', desc: 'Colpo pesante ad alta inerzia dal basso' },
-      2: { damage: 26, shots: 1, image: '/cannone_assedio_lv2.png', desc: "Colpo sferico con onda d'urto conica" },
-      3: { damage: 38, shots: 1, image: '/cannone_assedio_lv3.png', desc: 'Colpo incendiario con scuotimento' }
+      1: { damage: 18, shots: 1, desc: 'Colpo pesante ad alta inerzia dal basso' },
+      2: { damage: 26, shots: 1, desc: "Colpo sferico con onda d'urto conica" },
+      3: { damage: 38, shots: 1, desc: 'Colpo incendiario con scuotimento' }
     }
   },
   {
@@ -281,9 +281,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 4, heal: 8, shots: 3, image: '/sifone_sangue_lv1.png', desc: 'Dardi cremisi e cura +8 HP' },
-      2: { damage: 6, heal: 14, shots: 3, image: '/sifone_sangue_lv2.png', desc: 'Dardi a scia vitale e cura +14 HP' },
-      3: { damage: 9, heal: 22, shots: 4, image: '/sifone_sangue_lv3.png', desc: 'Assorbimento denso e cura +22 HP' }
+      1: { damage: 4, heal: 8, shots: 3, desc: 'Dardi cremisi e cura +8 HP' },
+      2: { damage: 6, heal: 14, shots: 3, desc: 'Dardi a scia vitale e cura +14 HP' },
+      3: { damage: 9, heal: 22, shots: 4, desc: 'Assorbimento denso e cura +22 HP' }
     }
   },
 
@@ -313,9 +313,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 1,
     levels: {
-      1: { damage: 5, image: '/torre_tesla_lv1.png', desc: 'Scariche ramificate che friggono la barra' },
-      2: { damage: 8, image: '/torre_tesla_lv2.png', desc: 'Arco voltaico continuo ad alta frequenza' },
-      3: { damage: 12, image: '/torre_tesla_lv3.png', desc: 'Tempesta di scariche orizzontali' }
+      1: { damage: 5, desc: 'Scariche ramificate che friggono la barra' },
+      2: { damage: 8, desc: 'Arco voltaico continuo ad alta frequenza' },
+      3: { damage: 12, desc: 'Tempesta di scariche orizzontali' }
     }
   },
 
@@ -344,9 +344,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 8, bolts: 1, image: '/raggio_orbitale_lv1.png', desc: 'Colonna di luce continua dal cielo' },
-      2: { damage: 12, bolts: 1, image: '/raggio_orbitale_lv2.png', desc: 'Colonna larga con scansione orizzontale' },
-      3: { damage: 18, bolts: 2, image: '/raggio_orbitale_lv3.png', desc: 'Fascio ionico orbitale denso' }
+      1: { damage: 8, bolts: 1, desc: 'Colonna di luce continua dal cielo' },
+      2: { damage: 12, bolts: 1, desc: 'Colonna larga con scansione orizzontale' },
+      3: { damage: 18, bolts: 2, desc: 'Fascio ionico orbitale denso' }
     }
   },
   {
@@ -373,9 +373,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 7, image: '/taglio_frazionato_lv1.png', desc: '2 lame laser dagli angoli inferiori a X' },
-      2: { damage: 11, image: '/taglio_frazionato_lv2.png', desc: 'Taglio a X con riverbero energetico' },
-      3: { damage: 16, image: '/taglio_frazionato_lv3.png', desc: 'Triplo taglio geometrico sincronizzato' }
+      1: { damage: 7, desc: '2 lame laser dagli angoli inferiori a X' },
+      2: { damage: 11, desc: 'Taglio a X con riverbero energetico' },
+      3: { damage: 16, desc: 'Triplo taglio geometrico sincronizzato' }
     }
   },
 
@@ -407,9 +407,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 6, shots: 6, image: '/flak_grappolo_lv1.png', desc: 'Testata che si apre in 6 ogive' },
-      2: { damage: 9, shots: 8, image: '/flak_grappolo_lv2.png', desc: 'Frammentazione in 8 ogive a ventaglio' },
-      3: { damage: 13, shots: 10, image: '/flak_grappolo_lv3.png', desc: 'Frammentazione a 10 ogive con scintille' }
+      1: { damage: 6, shots: 6, desc: 'Testata che si apre in 6 ogive' },
+      2: { damage: 9, shots: 8, desc: 'Frammentazione in 8 ogive a ventaglio' },
+      3: { damage: 13, shots: 10, desc: 'Frammentazione a 10 ogive con scintille' }
     }
   },
   {
@@ -435,9 +435,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 5, ticks: 4, image: '/trivella_torsione_lv1.png', desc: 'Fuso conico che trapana la barra per 1s' },
-      2: { damage: 7, ticks: 6, image: '/trivella_torsione_lv2.png', desc: 'Trivella ad alta velocità con vortice' },
-      3: { damage: 11, ticks: 8, image: '/trivella_torsione_lv3.png', desc: 'Perforatore rotante al plasma continuo' }
+      1: { damage: 5, ticks: 4, desc: 'Fuso conico che trapana la barra per 1s' },
+      2: { damage: 7, ticks: 6, desc: 'Trivella ad alta velocità con vortice' },
+      3: { damage: 11, ticks: 8, desc: 'Perforatore rotante al plasma continuo' }
     }
   },
 
@@ -467,9 +467,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 1,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 11, image: '/meteora_45_lv1.png', desc: "Masso infuocato dall'alto con fumo" },
-      2: { damage: 16, image: '/meteora_45_lv2.png', desc: "Meteora pesante con onda d'urto" },
-      3: { damage: 23, image: '/meteora_45_lv3.png', desc: 'Asteroide vulcanico con schegge' }
+      1: { damage: 11, desc: "Masso infuocato dall'alto con fumo" },
+      2: { damage: 16, desc: "Meteora pesante con onda d'urto" },
+      3: { damage: 23, desc: 'Asteroide vulcanico con schegge' }
     }
   },
   {
@@ -496,9 +496,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 2,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 12, image: '/frattura_criogenica_lv1.png', desc: 'La barra nemica si congela e si frantuma' },
-      2: { damage: 17, image: '/frattura_criogenica_lv2.png', desc: 'Gelo profondo con stalattiti di ghiaccio' },
-      3: { damage: 24, image: '/frattura_criogenica_lv3.png', desc: 'Frattura criogenica a schegge vitree' }
+      1: { damage: 12, desc: 'La barra nemica si congela e si frantuma' },
+      2: { damage: 17, desc: 'Gelo profondo con stalattiti di ghiaccio' },
+      3: { damage: 24, desc: 'Frattura criogenica a schegge vitree' }
     }
   },
 
@@ -530,9 +530,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 1,
     cooldownDuration: 2,
     levels: {
-      1: { damage: 5, shots: 4, image: '/sciame_microrazzi_lv1.png', desc: '4 missili a traiettoria curva' },
-      2: { damage: 8, shots: 6, image: '/sciame_microrazzi_lv2.png', desc: '6 missili con convergenza a sciame' },
-      3: { damage: 12, shots: 8, image: '/sciame_microrazzi_lv3.png', desc: '8 missili guidati con scia densa' }
+      1: { damage: 5, shots: 4, desc: '4 missili a traiettoria curva' },
+      2: { damage: 8, shots: 6, desc: '6 missili con convergenza a sciame' },
+      3: { damage: 12, shots: 8, desc: '8 missili guidati con scia densa' }
     }
   },
   {
@@ -558,9 +558,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 1,
     cooldownDuration: 3,
     levels: {
-      1: { damage: 38, shots: 1, image: '/siluro_apocalisse_lv1.png', desc: 'Testata colossale e flash bianco sullo schermo' },
-      2: { damage: 56, shots: 1, image: '/siluro_apocalisse_lv2.png', desc: "Detonazione nucleare a onde d'urto" },
-      3: { damage: 80, shots: 1, image: '/siluro_apocalisse_lv3.png', desc: 'Esplosione accecante con terremoto totale' }
+      1: { damage: 38, shots: 1, desc: 'Testata colossale e flash bianco sullo schermo' },
+      2: { damage: 56, shots: 1, desc: "Detonazione nucleare a onde d'urto" },
+      3: { damage: 80, shots: 1, desc: 'Esplosione accecante con terremoto totale' }
     }
   },
 
@@ -590,9 +590,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 1,
     cooldownDuration: 3,
     levels: {
-      1: { damage: 30, image: '/micro_buco_nero_lv1.png', desc: 'Sfera gravitazionale che risucchia gli HP' },
-      2: { damage: 45, image: '/micro_buco_nero_lv2.png', desc: 'Singolarità con disco di accrescimento rotante' },
-      3: { damage: 65, image: '/micro_buco_nero_lv3.png', desc: 'Buco nero ultra-denso con distorsione' }
+      1: { damage: 30, desc: 'Sfera gravitazionale che risucchia gli HP' },
+      2: { damage: 45, desc: 'Singolarità con disco di accrescimento rotante' },
+      3: { damage: 65, desc: 'Buco nero ultra-denso con distorsione' }
     }
   },
   {
@@ -620,9 +620,9 @@ export const WEAPONS_DATABASE = Object.freeze([
     maxShots: 1,
     cooldownDuration: 3,
     levels: {
-      1: { damage: 14, turns: 3, image: '/nucleo_instabile_lv1.png', desc: 'Testata a reattore che detona sulla barra' },
-      2: { damage: 20, turns: 3, image: '/nucleo_instabile_lv2.png', desc: 'Bomba termonucleare con fungo al plasma' },
-      3: { damage: 30, turns: 3, image: '/nucleo_instabile_lv3.png', desc: 'Detonazione a reazione di fusione' }
+      1: { damage: 14, turns: 3, desc: 'Testata a reattore che detona sulla barra' },
+      2: { damage: 20, turns: 3, desc: 'Bomba termonucleare con fungo al plasma' },
+      3: { damage: 30, turns: 3, desc: 'Detonazione a reazione di fusione' }
     }
   }
 ]);

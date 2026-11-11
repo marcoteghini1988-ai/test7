@@ -23,6 +23,7 @@
 .phase4-weapon-choices{margin:8px 0;padding:9px;border:1px solid #1b607a;border-radius:10px;background:#061c2c}.phase4-weapon-choices>strong{display:block;color:#9fe8ff;font-size:.73rem;margin-bottom:8px}.phase4-weapon-choices>p{font-size:.72rem;color:#e6b4ba}
 .phase4-weapon-choices button{display:block;width:100%;text-align:left;padding:9px;margin:5px 0;border-radius:7px;color:#cbeaff;background:#0c2e47;border:1px solid #2b6885;font-size:.72rem}
 .phase4-weapon-choices button.phase4-picked{border-color:#e6cc79;background:#143c4e;box-shadow:inset 0 0 0 1px #d7c786}
+.phase8-firing-origin{outline:1px solid #a8f4ff;outline-offset:2px;filter:drop-shadow(0 0 6px rgba(72,223,255,.4))}
 .phase4-volley-row{margin-top:7px;display:flex;justify-content:space-around;gap:6px;flex-wrap:wrap;font-size:.7rem;font-weight:normal}
 @media(max-width:540px){.phase4-loadout-controls{grid-template-columns:1fr}.phase4-armed-slots{grid-template-columns:1fr 1fr}.phase4-health-row{grid-template-columns:1fr}.phase4-weapon-tile img{width:35px;height:49px}}
 

@@ -36,9 +36,7 @@ export default function ClassicPokerFieldBridge({
     const def=id?getWeaponDefinition(id):null;
     const level=klass ? weaponLevels?.[side]?.[klass]||1 : 1;
     const ammoCount=klass?(ammo?.[side]?.[def?.ammoSuit]||0):0;
-    const asset=def?.assets?.cardImageByLevel?.[level]||def?.assets?.cardImageByLevel?.[1];
     return {id:def?.id||`empty_poker_slot_${i}`,name:def?.name||(klass?'NESSUNA ARMA':'BOOST'),
-      newPokerImage:asset||null,
       icon:klass?(def?.visual?.icon || '◈'):'⚡',
       suit:physicalSuits[i], ammoSuit:def?.ammoSuit,
       ammo:ammoCount, themeColor:def?.rarityColor||colors[i],

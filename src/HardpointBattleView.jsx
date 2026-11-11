@@ -18,7 +18,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['one_pair', 'two_pair'],
     reqDescription: 'COPPIA',
     fxType: 'gatling',
-    imgUrl: '/assets/weapons/gatling_cinetica.png',
     levels: {
       1: { damage: 14, shots: 4 },
       2: { damage: 20, shots: 8 },
@@ -36,7 +35,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['one_pair'],
     reqDescription: 'COPPIA (♦ / ♠)',
     fxType: 'fuse_bolts',
-    imgUrl: '/assets/weapons/balestra_dardi_fusi.png',
     levels: {
       1: { damage: 16, shots: 2 },
       2: { damage: 22, shots: 2 },
@@ -54,7 +52,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['two_pair'],
     reqDescription: 'DOPPIA COPPIA',
     fxType: 'disc_blades',
-    imgUrl: '/assets/weapons/lame_rotanti.png',
     levels: {
       1: { damage: 18, shots: 2 },
       2: { damage: 25, shots: 4 },
@@ -72,7 +69,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['three_of_a_kind', 'straight', 'flush'],
     reqDescription: 'TRIS / COLORE',
     fxType: 'arrow_barrage',
-    imgUrl: '/assets/weapons/arco_x_balistico.png',
     levels: {
       1: { damage: 24, shots: 8 },
       2: { damage: 34, shots: 12 },
@@ -90,7 +86,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['three_of_a_kind'],
     reqDescription: 'TRIS',
     fxType: 'heavy_cannon',
-    imgUrl: '/assets/weapons/cannone_assedio.png',
     levels: {
       1: { damage: 22, shots: 1 },
       2: { damage: 32, shots: 1 },
@@ -108,7 +103,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['flush'],
     reqDescription: '3+ CUORI ♥',
     fxType: 'blood_siphon',
-    imgUrl: '/assets/weapons/sifone_sangue.png',
     levels: {
       1: { damage: 18, heal: 10, shots: 3 },
       2: { damage: 26, heal: 16, shots: 3 },
@@ -126,7 +120,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['full_house'],
     reqDescription: 'FULL',
     fxType: 'heavy_cannon',
-    imgUrl: '/assets/weapons/flak_grappolo.png',
     levels: {
       1: { damage: 28, shots: 6 },
       2: { damage: 40, shots: 8 },
@@ -144,7 +137,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     allowedPatterns: ['four_of_a_kind'],
     reqDescription: 'POKER',
     fxType: 'gatling',
-    imgUrl: '/assets/weapons/sciame_microrazzi.png',
     levels: {
       1: { damage: 35, shots: 4 },
       2: { damage: 50, shots: 6 },
@@ -164,7 +156,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#00f2fe',
     reqDescription: 'SOMMA [+]',
     fxType: 'lightning_strike',
-    imgUrl: '/assets/weapons/fulmine_ciel_sereno.png',
     levels: {
       1: { damage: 18, bolts: 1 },
       2: { damage: 26, bolts: 2 },
@@ -182,7 +173,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#00f2fe',
     reqDescription: 'DIFFERENZA [-]',
     fxType: 'railgun_beam',
-    imgUrl: '/assets/weapons/railgun_ionico.png',
     levels: {
       1: { damage: 20 },
       2: { damage: 28 },
@@ -200,7 +190,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#a855f7',
     reqDescription: 'MOLTIPLICA [*]',
     fxType: 'orbital_pillar',
-    imgUrl: '/assets/weapons/raggio_orbitale.png',
     levels: {
       1: { damage: 26, bolts: 1 },
       2: { damage: 38, bolts: 1 },
@@ -218,7 +207,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#f59e0b',
     reqDescription: 'DIVISIONE [/]',
     fxType: 'railgun_beam',
-    imgUrl: '/assets/weapons/taglio_frazionato.png',
     levels: {
       1: { damage: 28 },
       2: { damage: 40 },
@@ -236,7 +224,6 @@ export const WEAPONS_DATABASE = Object.freeze([
     color: '#ff007f',
     reqDescription: 'DISINNESCO 3T',
     fxType: 'heavy_cannon',
-    imgUrl: '/assets/weapons/nucleo_instabile.png',
     levels: {
       1: { damage: 35 },
       2: { damage: 52 },
@@ -2031,7 +2018,7 @@ export default function HardpointBattleView({
                       </span>
                     </div>
 
-                    {/* CARTA ARMA */}
+                    {/* Indicatore dell'arma */}
                     <div style={{
                       width: '100%',
                       height: '64px',
@@ -2050,8 +2037,7 @@ export default function HardpointBattleView({
                       overflow: 'hidden',
                       boxSizing: 'border-box'
                     }}>
-                      {/* Illustrazione centrale */}
-                      <div style={{
+                      <div aria-hidden="true" style={{
                         width: '100%',
                         height: '38px',
                         borderRadius: '4px',
@@ -2059,17 +2045,9 @@ export default function HardpointBattleView({
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                                                background: 'rgba(0,0,0,0.5)'
+                        background: 'rgba(0,0,0,0.5)'
                       }}>
-                        <img
-                          src={hp.id === 'wp_gatling' ? `/assets/weapons/gatling_cinetica_lv${Math.min(4, Math.max(1, Number(hp.level) || 1))}.png` : hp.imgUrl}
-                          alt={hp.name}
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.parentNode.innerText = isPattern ? '🃏' : '⚡';
-                          }}
-                          style={{ width: '100%', height: '100%', objectFit: hp.id === 'wp_gatling' ? 'fill' : 'cover' }}
-                        />
+                        {hp.icon || (isPattern ? '🃏' : '⚡')}
                       </div>
 
                       {/* Requisito Poker o Target Matematico */}
