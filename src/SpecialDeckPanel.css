@@ -41,3 +41,25 @@
 
 /* Artwork ufficiale senza modificare slot o interazioni editor. */
 .special-deck-art{float:left;width:48px;height:72px;object-fit:cover;display:block;margin:0 7px 4px 0;border-radius:5px;border:1px solid #6ebed9;background:#080f20;box-shadow:0 0 8px #5bbce355}
+
+
+/* Rifinitura HD sulle voci REALI della collezione: i PNG sono quelli
+   generati dagli 82 SVG esistenti. Le categorie non cambiano le regole. */
+.special-deck-visual-tags{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0 5px}
+.special-deck-visual-tags span{display:inline-block;border:1px solid #70c7ea;
+ background:linear-gradient(125deg,#15385f,#081927);border-radius:4px;
+ padding:2px 5px;color:#d3f3ff;font-size:9px;line-height:1.25;
+ font-weight:900;letter-spacing:.35px}
+.special-deck-visual-tags .special-deck-tier{color:#ffe7b4;
+ border-color:#c8a568;background:linear-gradient(125deg,#493017,#211622)}
+.special-deck-entry[data-role="PERSONAGGIO"]{border-color:#caa5f0;box-shadow:inset 0 0 10px #b983e313}
+.special-deck-entry[data-role="ATTACCO"],
+.special-deck-entry[data-role="RAFFICA"]{border-color:#ef9c7b}
+.special-deck-entry[data-role="DIFESA"],
+.special-deck-entry[data-role="REAZIONE"]{border-color:#77c6e9}
+.special-deck-entry[data-role="TERRENO"]{border-color:#a6d58f}
+.special-deck-entry[data-rarity="EPICA"]{box-shadow:inset 0 0 12px #b978ea22,0 0 10px #a367bd22}
+.special-deck-art,.special-deck-boss-portrait{
+ image-rendering:auto;filter:saturate(1.08) contrast(1.05);
+ box-shadow:0 0 10px #66bce550,0 3px 9px #020817bc;
+}
