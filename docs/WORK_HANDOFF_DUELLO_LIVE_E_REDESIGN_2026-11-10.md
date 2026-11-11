@@ -38,7 +38,7 @@ Tutte le carte collezionabili (navicelle, Personaggi, Speciali) dovranno usare l
 - src/OfficialLiveBattle3D.jsx e src/OfficialLiveBattle3D.css: nuova schermata ufficiale 9:16 con navi REALI montate, 5 slot per lato e Terreno orizzontale, 5 carte speciali dietro 7 numeriche, mazzi ai lati, barra 3 navi, timer, registro, touch/tap e drag/drop, pannello bersagli vitali e IA locale.
 - src/MathDuelBattle.jsx usa la nuova schermata per tutti gli scontri abilitati. Gli incontri di salvataggi incompatibili mantengono fallback in src/BossBattle3D.jsx per evitare perdita di progressione.
 - src/officialBattleSetup.js, src/officialBattleResult.js e le collezioni originali restano sorgenti di verita' per navi, mazzi, boss e premi genuini. Nuovo test src/officialLiveDuelEngine.test.js. Aggiornati i controlli in scripts/check-official-3d.mjs.
-- src/simultaneousDuelEngine.js e src/OfficialBattle3D.jsx sono il **vecchio runtime** per test/regole precedenti e riferimenti: non sono piu il percorso di gioco ufficiale. NON cancellarli finche non si sono migrati i poteri boss e le Carte Speciali ancora usati.
+- **Aggiornamento 11/11:** `src/OfficialBattle3D.jsx` e `src/TacticalCombatPlayback.jsx` sono stati eliminati dopo il trasferimento alla LIVE dei controlli strutturali. `src/simultaneousDuelEngine.js` e' invece ANCORA NECESSARIO: `officialBattleSetup.js` lo usa per creare lo stato iniziale e il fallback conserva meccaniche storiche. Non eliminare il motore condiviso o le regole boss ancora dipendenti da esso.
 
 **Importante:** il primo motore live e' un'integrazione funzionante ma ancora con capacita mancanti. Non dire a utente che tutto il gioco e' stato completato.
 
@@ -58,7 +58,7 @@ Tutte le carte collezionabili (navicelle, Personaggi, Speciali) dovranno usare l
 L'utente vuole un piano completo, ma **la grafica della Home la fara preparare da solo** e va applicata solo quando consegnera il riferimento definitivo.
 
 - HOME e navigazione: `src/HomeScreen.jsx` e `src/App.tsx` — campagna, PvP, Hangar e Bazar.
-- BAZAR: `src/ShopModal.jsx` e `src/ShipCollectionPanels.jsx` — navi, comandanti LIVE, mazzi numerici, Carte Modulo e risorse. L’Hangar ospita il Mazzo Speciale con Personaggi Boss, Terreni PvP, trappole, Moduli ed Epici.
+- BAZAR: `src/ShopModal.jsx` e `src/ShipCollectionPanels.jsx` — soltanto **Navi, Mazzi, Moduli, Risorse**. La vecchia scheda Comandanti e le vecchie Carte Arma non esistono piu. I 35 Moduli visualizzati sono Carte Speciali REALI: acquisto in Bazar, possesso nel mazzo speciale, utilizzo manuale nella LIVE. L'Hangar ospita il mazzo con Personaggi Boss, Terreni PvP, trappole, Moduli ed Epici.
 - HANGAR, FLOTTA e collezionabili: src/ShipCollectionPanels.jsx, src/ShipPresentation.jsx, src/shipCollection.js — 17 navicelle, 42 armi integrate, rarita reali, 5 livelli, fino a tre navi, fusioni tramite Carte Speciali. Ogni nave deve essere riconoscibile e distruttibile nei componenti.
 - PILOTI, PERSONAGGI e profilo giocatore: src/pilotsSystem.jsx, src/commanderAbilities.js, src/bossCharacterCards.js, src/BossCharacterPortrait.jsx — PNG autentici, nome, abilita e rarita esistente.
 - MAZZI, SPECIALI, TERRENI ed EPICI: src/SpecialDeckPanel.jsx, src/specialDeckBuilder.js, src/pvpTerrainCards.js — inventari veri, equipaggiamento reale e nessun drop gratuito non autorizzato.
@@ -81,3 +81,5 @@ Apri il GitHub marcoteghini1988-ai/test7, ramo main. Leggi INTEGRALMENTE docs/WO
 ## 7. Rimozione delle immagini delle vecchie Carte Arma (11/11)
 
 Rimossi i fronti PNG delle vecchie Carte Arma, le proiezioni Gatling dei loro slot e due PNG delle torrette inutilizzate. Eliminati il tab Armi dal Bazar e i pannelli Arsenale 2.0 e Hardpoint dall’Area Personale. `OfficialLiveBattle3D.jsx` usa gli armamenti montati sulle navi del catalogo W01–W42.
+
+**Pulizia successiva (11/11/2026):** eliminati inoltre `LegacyPokerBattle.jsx`, `ClassicBattleView.jsx`, `ClassicPokerFieldBridge.jsx`, le schermate alternative, il Banco automatico Terreno/Trappole di `App.tsx`, `OfficialBattle3D.jsx`, `TacticalCombatPlayback.jsx`, i PNG duplicati alla radice e l'interruttore inutilizzato `legacyTutorialConfig.js`. `scripts/check-official-3d.mjs` vieta il ritorno di questi percorsi e verifica la corrispondenza dei 35 Moduli tra Bazar, carte equipaggiabili e supporto LIVE. Restano intenzionalmente il motore simultaneo condiviso, il fallback `BossBattle3D.jsx`, le 82 illustrazioni SVG originali, i PNG HD, i salvataggi e tutti gli asset 3D ufficiali.
