@@ -58,7 +58,7 @@ Tutte le carte collezionabili (navicelle, Personaggi, Speciali) dovranno usare l
 L'utente vuole un piano completo, ma **la grafica della Home la fara preparare da solo** e va applicata solo quando consegnera il riferimento definitivo.
 
 - HOME e navigazione: src/HomeScreen.jsx, src/App.tsx, src/MathDuelApp.jsx — predisporre riorganizzazione visiva con accesso Campagna, PvP, Hangar, Shop, Personaggi, Mazzi e Boss. Salvare l'anteprima senza sovrascrivere l'artwork Home approvato.
-- SHOP e ARSENALE: src/ShopModal.jsx, src/ArsenalCatalog.jsx — mantenere acquisti e valuta reali, oggetti del catalogo, livelli, rarita e nessuna carta arma separata in plancia. Non inventare prezzi.
+- SHOP: `src/ShopModal.jsx` e `src/ShipCollectionPanels.jsx` — navi, piloti, mazzi, moduli, terreni, sfondi e risorse. I potenziamenti delle navicelle usano livelli, rarità e prezzi del catalogo.
 - HANGAR, FLOTTA e collezionabili: src/ShipCollectionPanels.jsx, src/ShipPresentation.jsx, src/shipCollection.js — 17 navicelle, 42 armi integrate, rarita reali, 5 livelli, fino a tre navi, fusioni tramite Carte Speciali. Ogni nave deve essere riconoscibile e distruttibile nei componenti.
 - PILOTI, PERSONAGGI e profilo giocatore: src/pilotsSystem.jsx, src/commanderAbilities.js, src/bossCharacterCards.js, src/BossCharacterPortrait.jsx — PNG autentici, nome, abilita e rarita esistente.
 - MAZZI, SPECIALI, TERRENI ed EPICI: src/SpecialDeckPanel.jsx, src/specialDeckBuilder.js, src/pvpTerrainCards.js — inventari veri, equipaggiamento reale e nessun drop gratuito non autorizzato.
@@ -80,4 +80,4 @@ Apri il GitHub marcoteghini1988-ai/test7, ramo main. Leggi INTEGRALMENTE docs/WO
 
 ## 7. Rimozione delle immagini delle vecchie Carte Arma (11/11)
 
-Rimossi i fronti PNG delle vecchie Carte Arma, le proiezioni Gatling dei loro slot e i caricamenti in Negozio, Assetto e battaglie precedenti. Le schermate precedenti mostrano nomi, simboli e dati di gioco. `OfficialLiveBattle3D.jsx` usa gli armamenti montati sulle navi del catalogo W01–W42.
+Rimossi i fronti PNG delle vecchie Carte Arma, le proiezioni Gatling dei loro slot e due PNG delle torrette inutilizzate. Eliminati il tab Armi dal Bazar e i pannelli Arsenale 2.0 e Hardpoint dall’Area Personale. `OfficialLiveBattle3D.jsx` usa gli armamenti montati sulle navi del catalogo W01–W42.

@@ -64,7 +64,7 @@ import {initialSelectedPilot,missingPilotInventory,terraNineModuleVictory} from 
 const MATH_DUEL_REPLACES_POKER_BATTLES = true;
 import LegacyPokerBattle from './LegacyPokerBattle';
 import { isPhase13CampaignEligible, validatePhase13Settlement, createPhase13OnceGuard, getPhase13EnemyPilotId } from './newCombat/phase13Campaign.js';
-import { ARMORY_V2_STORAGE_KEY, createPhase7Armory, normalizePhase7Armory, buyPhase7Weapon, equipPhase7Weapon, upgradePhase7Weapon } from './newCombat/phase7Armory.js';
+import { ARMORY_V2_STORAGE_KEY, createPhase7Armory, normalizePhase7Armory } from './newCombat/phase7Armory.js';
 import {phase17GlobalSector,phase17ExpectedPilotLevel,phase17PilotHp,phase17EnemyHp,phase17CampaignXpAward,phase17CampaignDustAward,phase17EnemyLoadout,phase17EnemyWeaponLevels,phase17PlayerBattleLoadout,phase17PlayerWeaponLevels,phase17StartingAmmo,phase17Features,F17_UNLOCKS} from './newCombat/phase17Balance.js';
 import { WEAPONS_DATABASE } from './weaponsSystem';
 import { fireWeaponCombatVFX } from './weaponEffects';
@@ -16904,11 +16904,6 @@ function DailyChallengeModal({
             <span style={{ color: '#cbd5e1' }}>Rapporto HP: <strong style={{ color: '#10b981' }}>{config.playerHp} HP</strong> vs <strong style={{ color: '#ef4444' }}>{config.aiHp} HP Nemesi</strong></span>
             <span style={{ color: '#cbd5e1' }}>Scanner: <strong style={{ color: '#ef4444' }}>BLOCCATO 🔒</strong></span>
           </div>
-          {config.mode === 'poker' && <div style={{color:'#bde9fa',fontSize:'0.68rem',padding:'4px 0'}}>
-            Equipaggiamento comune a tutti: Leggera {config.assignedWeapons.light},
-            Media {config.assignedWeapons.medium}, Pesante {config.assignedWeapons.heavy}.
-            Livello armi {config.weaponLevel}. Nessun vantaggio dagli acquisti personali.
-          </div>}
           <div style={{ color: '#fde047', fontSize: '0.62rem', borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '3px', marginTop: '3px' }}>
             Regole: 1 solo tentativo ogni 24h solari. Nessun costo crediti. Chiusura alle 23:59:59 (Tempo rimasto: <strong>{countdownText}</strong>).
           </div>
@@ -17384,34 +17379,13 @@ function App() {
     }
   });
 
-    // STATI ARMI SBLOCCATE, LOADOUT 4 HARDPOINT E LIVELLI
-  // FASE 7 — Arsenale 2.0 con salvataggio indipendente dal legacy a quattro hardpoint.
-  const [armoryV2, setArmoryV2] = useState(() => {
+  // Dati dei combattimenti precedenti letti dai salvataggi storici.
+  const [armoryV2] = useState(() => {
     try { return normalizePhase7Armory(JSON.parse(localStorage.getItem(ARMORY_V2_STORAGE_KEY) || 'null')); }
     catch (_) { return createPhase7Armory(); }
   });
-  useEffect(() => { localStorage.setItem(ARMORY_V2_STORAGE_KEY, JSON.stringify(armoryV2)); }, [armoryV2]);
 
-  const [unlockedWeapons, setUnlockedWeapons] = useState(() => {
-    try {
-      const saved = localStorage.getItem('eclissi_unlocked_weapons');
-      return saved ? JSON.parse(saved) : {
-        wp_gatling: true,
-        wp_xbow: true,
-        wp_thunderstrike: true,
-        wp_orbital_cannon: true
-      };
-    } catch (_) {
-      return {
-        wp_gatling: true,
-        wp_xbow: true,
-        wp_thunderstrike: true,
-        wp_orbital_cannon: true
-      };
-    }
-  });
-
-  const [equippedWeapons, setEquippedWeapons] = useState(() => {
+  const [equippedWeapons] = useState(() => {
     try {
       const saved = localStorage.getItem('eclissi_equipped_weapons');
       return saved ? JSON.parse(saved) : ['wp_gatling', 'wp_xbow', 'wp_thunderstrike', 'wp_orbital_cannon'];
@@ -17420,7 +17394,7 @@ function App() {
     }
   });
 
-  const [weaponsLevels, setWeaponsLevels] = useState(() => {
+  const [weaponsLevels] = useState(() => {
     try {
       const saved = localStorage.getItem('eclissi_weapons_levels');
       return saved ? JSON.parse(saved) : { wp_gatling: 1, wp_xbow: 1, wp_thunderstrike: 1, wp_orbital_cannon: 1 };
@@ -17429,22 +17403,7 @@ function App() {
     }
   });
 
-    useEffect(() => {
-    localStorage.setItem('eclissi_unlocked_weapons', JSON.stringify(unlockedWeapons));
-  }, [unlockedWeapons]);
 
-  useEffect(() => {
-    localStorage.setItem('eclissi_equipped_weapons', JSON.stringify(equippedWeapons));
-  }, [equippedWeapons]);
-
-  useEffect(() => {
-    localStorage.setItem('eclissi_weapons_levels', JSON.stringify(weaponsLevels));
-  }, [weaponsLevels]);
-
-
-
-  
-  
   // STATI MODALI ASSETTO & SHOP UNIFICATO
   const [showPersonalLoadout, setShowPersonalLoadout] = useState(false);
   const [showUnifiedShop, setShowUnifiedShop] = useState(false);
@@ -17860,18 +17819,6 @@ function App() {
     setShowDebugModal(false);
   };
 
-  const launchHardpointTest = () => {
-    const modifier = { id: 'standard', name: 'Collaudo 4 Hardpoint', desc: 'Test 2 Poker + 2 Calcolo' };
-    setGameMode('hardpoint_test');
-    setPvpMeta(null);
-    setActiveAdventure({ planet: 1, level: 1, modifier, aiPower: 0.70 });
-    if (typeof playBGM === 'function') playBGM('battle');
-    setBattleSessionId(s => s + 1);
-    setStep('game');
-    setShowDebugModal(false);
-  };
-
-
 
   // =========================================================================
   // CALCOLI DERIVATI & MEMO GLOBALI
@@ -17967,42 +17914,6 @@ function App() {
     setPopupMsg(msg);
     setTimeout(() => setPopupMsg(null), 2500);
   }, []);
-
-  // Prezzi della Fase 7 provvisori: acquisto con valuta realmente disponibile.
-  // Questo non modifica né l'inventario né il loadout della campagna precedente.
-  const handleBuyArmoryV2 = (weaponId) => {
-    const tx = buyPhase7Weapon(armoryV2, weaponId, stardust,level);
-    if (!tx.ok) { triggerPopup(tx.reason); return; }
-    setStardust(s => Math.max(0, s - tx.cost));
-    setArmoryV2(tx.state);
-    triggerPopup('Nuova arma acquisita: disponibile nell’arsenale 2.0!');
-  };
-  const handleUpgradeArmoryV2 = (weaponId) => {
-    const tx=upgradePhase7Weapon(armoryV2,weaponId,level,stardust);
-    if(!tx.ok){triggerPopup(tx.reason);return;}
-    setStardust(v=>Math.max(0,v-tx.cost));setArmoryV2(tx.state);triggerPopup(tx.reason);
-  };
-  const handleEquipArmoryV2 = (weaponId) => {
-    const tx = equipPhase7Weapon(armoryV2, weaponId);
-    if (!tx.ok) { triggerPopup(tx.reason); return; }
-    setArmoryV2(tx.state);
-    triggerPopup('Arma equipaggiata nel suo slot di classe.');
-  };
-
-  const handleUnlockWeapon = useCallback((weaponId, cost: { dust?: number; diamonds?: number } = {}) => {
-    const dustCost = cost.dust || 0;
-    const diaCost = cost.diamonds || 0;
-    if (stardust < dustCost || diamonds < diaCost) {
-      triggerPopup("Risorse insufficienti per sbloccare quest'arma!");
-      return;
-    }
-    try { playSound('ability'); } catch (_) {}
-    if (dustCost > 0) setStardust(s => s - dustCost);
-    if (diaCost > 0) setDiamonds(d => d - diaCost);
-    setUnlockedWeapons(prev => ({ ...prev, [weaponId]: true }));
-    triggerPopup("Nuova Arma sbloccata ed equipaggiabile!");
-  }, [stardust, diamonds, triggerPopup]);
-
 
   // Una sola finalizzazione protegge tutti e quattro gli inventari da
   // regressioni: un progetto vecchio non riduce un livello gia' superiore.
@@ -21409,7 +21320,6 @@ function App() {
             {/* MODALE AREA PERSONALE (HUB DI PLANCIA CON ISPEZIONE & CAMBIO DIRETTO) */}
       {showPersonalLoadout && (
         <PersonalLoadoutModal
-          armoryV2={armoryV2}
           nickname={nickname}
           level={level}
           xp={xp}
@@ -21461,29 +21371,6 @@ function App() {
           onUpgradeAbility={(id) => upgradeAbilityWithDust(id)}
                               allDecks={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
                     allAbilities={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
-          weaponsDatabase={typeof WEAPONS_DATABASE !== 'undefined' ? WEAPONS_DATABASE : []}
-          unlockedWeapons={unlockedWeapons}
-          onUnlockWeapon={handleUnlockWeapon}
-          equippedWeapons={equippedWeapons}
-          weaponsLevels={weaponsLevels}
-          onEquipWeapon={(slotIdx, weaponId) => {
-            setEquippedWeapons(prev => {
-              const next = [...prev];
-              next[slotIdx] = weaponId;
-              return next;
-            });
-          }}
-          onUpgradeWeapon={(weaponId, targetLvl, cost) => {
-
-            if (stardust < (cost.dust || 0) || voidCrystals < (cost.voidCrystals || 0) || primordialMatter < (cost.primordialMatter || 0)) {
-              triggerPopup("Risorse insufficienti per potenziare l'arma!");
-              return;
-            }
-            setStardust(s => s - (cost.dust || 0));
-            if (cost.voidCrystals > 0) setVoidCrystals(v => v - cost.voidCrystals);
-            if (cost.primordialMatter > 0) setPrimordialMatter(p => p - cost.primordialMatter);
-            setWeaponsLevels(prev => ({ ...prev, [weaponId]: targetLvl }));
-          }}
           equippedEpicItems={equippedEpicItems}
           epicItemsDatabase={typeof EPIC_ITEMS_DATABASE !== 'undefined' ? EPIC_ITEMS_DATABASE : []}
 
@@ -21578,9 +21465,6 @@ function App() {
               return false;
             }
           }}
-          armoryV2={armoryV2}
-          onBuyArmoryV2={handleBuyArmoryV2} onUpgradeArmoryV2={handleUpgradeArmoryV2}
-          onEquipArmoryV2={handleEquipArmoryV2}
           initialTab={unifiedShopDefaultTab}
           selectedPilot={selectedPilot}
 
@@ -21600,29 +21484,6 @@ function App() {
           onSelectAbility={(id) => setSelectedAbility(id)}
           onUnlockAbility={(id) => unlockAbilityWithDust(id)}
           onUpgradeAbility={(id) => upgradeAbilityWithDust(id)}
-          weaponsDatabase={typeof WEAPONS_DATABASE !== 'undefined' ? WEAPONS_DATABASE : []}
-          unlockedWeapons={unlockedWeapons}
-          onUnlockWeapon={handleUnlockWeapon}
-          equippedWeapons={equippedWeapons}
-          weaponsLevels={weaponsLevels}
-          onEquipWeapon={(slotIdx, weaponId) => {
-            setEquippedWeapons(prev => {
-              const next = [...prev];
-              next[slotIdx] = weaponId;
-              return next;
-            });
-          }}
-                    onUpgradeWeapon={(weaponId, targetLvl, cost) => {
-
-            if (stardust < (cost.dust || 0) || voidCrystals < (cost.voidCrystals || 0) || primordialMatter < (cost.primordialMatter || 0)) {
-              triggerPopup("Risorse insufficienti per potenziare l'arma!");
-              return;
-            }
-            setStardust(s => s - (cost.dust || 0));
-            if (cost.voidCrystals > 0) setVoidCrystals(v => v - cost.voidCrystals);
-            if (cost.primordialMatter > 0) setPrimordialMatter(p => p - cost.primordialMatter);
-            setWeaponsLevels(prev => ({ ...prev, [weaponId]: targetLvl }));
-          }}
 
           unlockedTerrainCards={unlockedTerrainCards}
 

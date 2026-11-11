@@ -20,6 +20,7 @@ const css=read('src/MathDuelBattle.css');
 const ships=read('src/ShipPresentation.jsx');
 const source=read('src/App.tsx');
 const shop=read('src/ShopModal.jsx');
+const loadout=read('src/PersonalLoadoutModal.jsx');
 const legacyPoker=read('src/LegacyPokerBattle.jsx');
 
 verify(app.includes("import App from './App.tsx'")&&app.includes('<App />'),
@@ -41,9 +42,11 @@ verify(!exists('src/SandboxBattleView.jsx')&&
 verify(source.includes("import LegacyPokerBattle from './LegacyPokerBattle'")&&
  legacyPoker.includes("import './newCombat/legacyPokerBattle.css'"),
  'Il motore Poker precedente resta disponibile solo come compatibilita, senza preview');
-verify(shop.includes("import ArsenalCatalog from './ArsenalCatalog'")&&
- shop.includes('<ArsenalCatalog'),
- 'Il negozio deve usare il catalogo Arsenale definitivo anziche la Preview');
+verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
+ 'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
+verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')&&
+ !/\bid:\s*['"]weapons['"]/.test(shop)&&!loadout.includes("onOpenShopTab('weapons')"),
+ 'Negozio e Area Personale devono escludere le vecchie Carte Arma');
 
 verify(battleEntry.includes("import OfficialBattle3D from './OfficialLiveBattle3D.jsx'")&&
  battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'")&&
@@ -132,4 +135,4 @@ if(errors.length){
  for(const error of errors)console.error(' - '+error);
  process.exit(1);
 }
-console.log('Arena 3D ufficiale OK: ingresso unico, demo rimosse, Arsenale reale, vecchio Poker compatibile, navi raster 3D, 17 navi e 42 armi.');
+console.log('Arena 3D ufficiale OK: ingresso unico, catalogo navi, hangar, 17 navi raster e 42 armi integrate.');

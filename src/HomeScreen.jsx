@@ -725,7 +725,7 @@ export default function HomeScreen({
             <span style={{ display: 'flex', alignItems: 'center', gap: '3px', color: '#00f2fe' }}>
               <SciFiIcon name="settings" size={13} color="#00f2fe" /> Assetto
             </span>
-            <span style={{ fontSize: '0.5rem', color: '#cbd5e1', fontWeight: 'normal' }}>Armamenti</span>
+            <span style={{ fontSize: '0.5rem', color: '#cbd5e1', fontWeight: 'normal' }}>Flotta</span>
           </button>
 
           {/* 5. Shop */}

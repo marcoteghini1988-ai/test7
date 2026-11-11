@@ -1,9 +1,6 @@
 import React from 'react';
 import { TacticalVisual, ModuleIcon, TerrainVisual } from './visualAssets';
 import { PILOTS_DATABASE, PilotCard } from './pilotsSystem';
-import { WEAPONS_DATABASE as DEFAULT_WEAPONS } from './HardpointBattleView';
-import { getWeaponDefinition } from './newCombat/weaponCatalog.js';
-import { normalizePhase7Armory } from './newCombat/phase7Armory.js';
 import {describePhase16HTerrain} from './newCombat/phase16HProgression.js';
 import {ShipHangarPanel} from './ShipCollectionPanels.jsx';
 
@@ -42,11 +39,6 @@ export default function PersonalLoadoutModal({
   selectedAbility = null,
   abilities = {},
   isAbilityModuleUnlocked = false,
-  // Arsenale 4 Hardpoint (2 Poker + 2 Calcolo)
-  equippedWeapons = ['wp_gatling', 'wp_xbow', 'wp_thunderstrike', 'wp_orbital_cannon'],
-  weaponsLevels = { wp_gatling: 1, wp_xbow: 1, wp_thunderstrike: 1, wp_orbital_cannon: 1 },
-  weaponsDatabase = null,
-  armoryV2 = null,
   // Manufatti Epici & Terreni
   equippedEpicItems = [],
   epicItemsDatabase = [],
@@ -61,8 +53,6 @@ export default function PersonalLoadoutModal({
   const pilotLvl = pilotInventory?.[selectedPilot]?.level || 1;
   const deckLvl = deckInventory?.[selectedDeck]?.level || 1;
   const abilityLvl = abilities?.[selectedAbility]?.level || 1;
-  const weaponsDb = weaponsDatabase || DEFAULT_WEAPONS || [];
-  const newArmory = normalizePhase7Armory(armoryV2);
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 4, 12, 0.97)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 31000, padding: 'clamp(4px, 1.5vmin, 12px)' }}>
@@ -216,96 +206,6 @@ export default function PersonalLoadoutModal({
               </button>
             </div>
 
-            {/* FASE 7: assetto del nuovo duello; non sostituisce i salvataggi legacy. */}
-            <div className="cyber-panel" style={{padding:'0.55rem',border:'1.5px solid #38bdf8'}}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:6}}>
-                <strong style={{fontSize:'.63rem',color:'#7dd3fc'}}>ARSENALE 2.0 · LEGGERA / MEDIA / PESANTE / BOOST</strong>
-                <button onClick={()=>onOpenShopTab('weapons')} className="cyber-btn" style={{padding:'3px 6px',fontSize:'.55rem'}}>GESTISCI ➔</button>
-              </div>
-              <div style={{display:'grid',gridTemplateColumns:'repeat(3,minmax(0,1fr))',gap:5}}>
-                {['light','medium','heavy'].map(cls=>{
-                  const w=getWeaponDefinition(newArmory.equipped[cls]);
-                  return <div key={cls} style={{padding:'6px 3px',background:'#0f172a',border:`1px solid ${w?.rarityColor || '#334155'}`,borderRadius:6,textAlign:'center'}}>
-                    <div style={{fontSize:'.55rem',fontWeight:800,color:'#93c5fd'}}>{cls==='light'?'LEGGERA':cls==='medium'?'MEDIA':'PESANTE'}</div>
-                    <div style={{fontSize:'.6rem',fontWeight:800,color:w?.rarityColor||'#fff'}}>{w?.name || 'Vuoto'}</div>
-                    <small style={{fontSize:'.52rem'}}>{w?.ammoSymbol || ''} · {w?.rarity || ''}</small>
-                  </div>;
-                })}
-              </div>
-              <small style={{fontSize:'.55rem',color:'#94a3b8'}}>Usato nell’arena di prova Fase 7. La campagna usa ancora gli Hardpoint originali.</small>
-            </div>
-
-            {/* Arsenale Hardpoint (4 Armi: 2 Poker + 2 Calcolo) */}
-            <div className="cyber-panel" style={{ padding: '0.5rem', border: '1.5px solid #00f2fe' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '0.55rem', color: '#00f2fe', fontWeight: 900, textTransform: 'uppercase' }}>
-                    ARSENALE HARDPOINT (4 SLOT)
-                  </span>
-                  <span style={{ fontSize: '0.48rem', color: '#94a3b8' }}>
-                    2 Poker + 2 Calcolo
-                  </span>
-                </div>
-                <button 
-                  onClick={() => onOpenShopTab('weapons')} 
-                  className="cyber-btn" 
-                  style={{ padding: '2px 6px', fontSize: '0.52rem', fontWeight: 900, borderColor: '#00f2fe', color: '#00f2fe' }}
-                >
-                  MODIFICA ➔
-                </button>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '4px' }}>
-                {[0, 1, 2, 3].map(slotIdx => {
-                  const wpId = equippedWeapons[slotIdx];
-                  const wpObj = weaponsDb.find(w => w.id === wpId);
-                  const wpLvl = weaponsLevels?.[wpId] || 1;
-                  const stats = wpObj?.levels?.[wpLvl] || wpObj?.levels?.[1] || { damage: 15 };
-                  const isPoker = slotIdx < 2;
-
-                  return (
-                    <div
-                      key={slotIdx}
-                      style={{
-                        background: 'rgba(2, 6, 23, 0.75)',
-                        border: wpObj ? `1px solid ${wpObj.color || (isPoker ? '#facc15' : '#00f2fe')}` : '1px dashed rgba(255,255,255,0.15)',
-                        borderRadius: '6px',
-                        padding: '4px 3px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        minHeight: '82px',
-                        boxSizing: 'border-box'
-                      }}
-                    >
-                      <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', fontSize: '0.46rem', color: '#94a3b8' }}>
-                        <span>H{slotIdx + 1}</span>
-                        <span style={{ color: isPoker ? '#fde047' : '#38bdf8' }}>{isPoker ? 'POKER' : 'MATH'}</span>
-                      </div>
-
-                      {wpObj ? (
-                        <>
-                          <div aria-hidden="true" style={{ width: '100%', height: '34px', borderRadius: '4px', display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.5)', margin: '2px 0' }}>
-                            {wpObj.icon || (isPoker ? '🃏' : '⚡')}
-                          </div>
-                          <div style={{ fontSize: '0.52rem', color: wpObj.color || '#fff', fontWeight: 900, textAlign: 'center', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {wpObj.name.split(' ')[0]}
-                          </div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', fontSize: '0.48rem', marginTop: '2px' }}>
-                            <span style={{ color: '#f87171', fontWeight: 900 }}>⚔️️ -{stats.damage}</span>
-                            <span style={{ color: '#fde047', fontWeight: 900 }}>L.{wpLvl}</span>
-                          </div>
-                        </>
-                      ) : (
-                        <div style={{ fontSize: '0.52rem', color: '#475569', fontWeight: 900, margin: 'auto 0' }}>Libero</div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
             {/* Manufatti Epici (2 Slot) */}
             <div className="cyber-panel" style={{ padding: '0.5rem', border: '1px solid #facc15' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
@@ -400,13 +300,6 @@ export default function PersonalLoadoutModal({
 
           {/* 5. ACCESSO RAPIDO SHOP & RIFORNIMENTI */}
           <div style={{ display: 'flex', gap: '6px', marginTop: '0.2rem' }}>
-            <button
-              onClick={() => onOpenShopTab('weapons')}
-              className="cyber-btn cyber-btn-primary"
-              style={{ flex: 1.5, padding: '0.6rem', fontSize: '0.78rem', fontWeight: 900 }}
-            >
-              🚀 ARMERIA & BAZAR ➔
-            </button>
             <button
               onClick={() => onOpenShopTab('resources')}
               className="cyber-btn cyber-btn-warning"

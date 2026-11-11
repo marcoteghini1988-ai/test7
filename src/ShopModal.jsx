@@ -4,22 +4,12 @@ import { TacticalVisual, ModuleIcon, TerrainVisual } from './visualAssets';
 import { PILOTS_DATABASE, PilotCard } from './pilotsSystem';
 import DeepSpaceUniverseCanvas from './DeepSpaceUniverseCanvas';
 import { playSound } from './audio';
-import { WEAPONS_DATABASE as DEFAULT_WEAPONS_DB } from './weaponsSystem';
-import ArsenalCatalog from './ArsenalCatalog';
 import {describePhase16EDeck} from './newCombat/phase16EDecks.js';
 import {activeNumericBossAbilities,numericBossDeck} from './bossNumericDecks.js';
 const currentDeckPassives=(id,level)=>numericBossDeck(id)?activeNumericBossAbilities(id,level).map(x=>x.unlocked?x.name+' · Grado '+x.grade+'/3 · '+x.description.replace('%',x.value+'%').replace('in secondi',': '+x.value+' secondi'):x.name+' · sblocco L'+x.unlockAt).join(' | '):null;
 import {describePhase16FModule} from './newCombat/phase16FModules.js';
 import {getPhase16HTerrainOffers,describePhase16HTerrain} from './newCombat/phase16HProgression.js';
 import {ShipShopPanel} from './ShipCollectionPanels.jsx';
-
-// ============================================================================
-// MATRICE COSTI POTENZIAMENTO ARMI (3 LIVELLI TOTALI: 1 -> 2 -> 3)
-// ============================================================================
-const WEAPON_UPGRADE_COSTS = Object.freeze({
-  2: { dust: 600, voidCrystals: 0, primordialMatter: 0, reqPilotLevel: 12 },
-  3: { dust: 1800, voidCrystals: 2, primordialMatter: 0, reqPilotLevel: 35 }
-});
 
 const normalizeRarity = (r) => {
   if (!r) return 'Comune';
@@ -58,6 +48,16 @@ const TERRAIN_PILOT_REQS = Object.freeze({
   3: 66
 });
 
+const SHOP_TABS = [
+  { id: 'ships', label: 'Navi', icon: '🛸' },
+  { id: 'characters', label: 'Piloti', icon: '👤' },
+  { id: 'decks', label: 'Mazzi', icon: '🃏' },
+  { id: 'abilities', label: 'Moduli', icon: '⚡' },
+  { id: 'terrain', label: 'Terreni', icon: '🛡️' },
+  { id: 'environments', label: 'Sfondi', icon: '🪐' },
+  { id: 'resources', label: 'Risorse', icon: '💎' }
+];
+
 export default function ShopModal({
   initialTab = 'characters',
   // Piloti
@@ -79,12 +79,6 @@ export default function ShopModal({
   onSelectAbility,
   onUnlockAbility,
   onUpgradeAbility,
-  // Arsenale Hardpoint
-  equippedWeapons: propEquippedWeapons,
-  weaponsLevels: propWeaponsLevels,
-  weaponsDatabase = null,
-  onEquipWeapon,
-  onUpgradeWeapon,
   // Terreni
   unlockedTerrainCards = {},
   equippedTerrainSlots = [],
@@ -109,79 +103,23 @@ export default function ShopModal({
   ether = 0,
   level = 1,
   onBuyStorePackage,
-  armoryV2,
-  onBuyArmoryV2,
-  onUpgradeArmoryV2,
-  onEquipArmoryV2,
   // Navigazione
   fromLoadout = false,
   onBackToLoadout,
   onCloseToHome
 }) {
-  const [activeTab, setActiveTab] = useState(initialTab || 'characters');
-  const [showArsenalCatalog, setShowArsenalCatalog] = useState(true);
-
+  const requestedTab = initialTab || 'characters';
+  const openingTab = SHOP_TABS.some(tab => tab.id === requestedTab) ? requestedTab : 'ships';
+  const [activeTab, setActiveTab] = useState(openingTab);
   useEffect(() => {
-    if (initialTab) setActiveTab(initialTab);
-  }, [initialTab]);
-
-  const [localEquippedWeapons, setLocalEquippedWeapons] = useState(() => {
-    try {
-      const saved = localStorage.getItem('eclissi_equipped_weapons');
-      const parsed = saved ? JSON.parse(saved) : null;
-      return Array.isArray(parsed) ? parsed : ['wp_gatling', 'wp_xbow', 'wp_thunderstrike', 'wp_orbital_cannon'];
-    } catch (_) {
-      return ['wp_gatling', 'wp_xbow', 'wp_thunderstrike', 'wp_orbital_cannon'];
-    }
-  });
-
-  const [localWeaponsLevels, setLocalWeaponsLevels] = useState(() => {
-    try {
-      const saved = localStorage.getItem('eclissi_weapons_levels');
-      const parsed = saved ? JSON.parse(saved) : null;
-      return (parsed && typeof parsed === 'object') ? parsed : { wp_gatling: 1, wp_xbow: 1, wp_thunderstrike: 1, wp_orbital_cannon: 1 };
-    } catch (_) {
-      return { wp_gatling: 1, wp_xbow: 1, wp_thunderstrike: 1, wp_orbital_cannon: 1 };
-    }
-  });
-
-  const currentEquippedWeapons = Array.isArray(propEquippedWeapons)
-    ? propEquippedWeapons
-    : (Array.isArray(localEquippedWeapons) ? localEquippedWeapons : ['wp_gatling', 'wp_xbow', 'wp_thunderstrike', 'wp_orbital_cannon']);
-
-  const currentWeaponsLevels = (propWeaponsLevels && typeof propWeaponsLevels === 'object')
-    ? propWeaponsLevels
-    : ((localWeaponsLevels && typeof localWeaponsLevels === 'object') ? localWeaponsLevels : {});
-
-  const weaponsDb = (Array.isArray(weaponsDatabase) && weaponsDatabase.length > 0)
-    ? weaponsDatabase
-    : (Array.isArray(DEFAULT_WEAPONS_DB) ? DEFAULT_WEAPONS_DB : []);
-
-  const handleEquipWeaponInternal = (slotIdx, weaponId) => {
-    const next = [...currentEquippedWeapons];
-    next[slotIdx] = weaponId;
-    setLocalEquippedWeapons(next);
-    localStorage.setItem('eclissi_equipped_weapons', JSON.stringify(next));
-    if (typeof onEquipWeapon === 'function') {
-      onEquipWeapon(slotIdx, weaponId);
-    }
-  };
-
-  const handleUpgradeWeaponInternal = (weaponId, targetLvl, cost) => {
-    const next = { ...currentWeaponsLevels, [weaponId]: targetLvl };
-    setLocalWeaponsLevels(next);
-    localStorage.setItem('eclissi_weapons_levels', JSON.stringify(next));
-    if (typeof onUpgradeWeapon === 'function') {
-      onUpgradeWeapon(weaponId, targetLvl, cost);
-    }
-  };
+    setActiveTab(openingTab);
+  }, [openingTab]);
 
   // FILTRI DI RARITÀ
   const [pilotRarityFilter, setPilotRarityFilter] = useState('all');
   const [showHistoricalPilots, setShowHistoricalPilots] = useState(false);
   const [deckRarityFilter, setDeckRarityFilter] = useState('all');
   const [abilityRarityFilter, setAbilityRarityFilter] = useState('all');
-  const [weaponRarityFilter, setWeaponRarityFilter] = useState('all');
   const [terrainRarityFilter, setTerrainRarityFilter] = useState('all');
 
   // STATI DI ISPEZIONE E FEEDBACK
@@ -196,17 +134,6 @@ export default function ShopModal({
     setLocalHint(msg);
     setTimeout(() => setLocalHint(null), 2400);
   };
-
-  const mainTabs = [
-    { id: 'ships', label: 'Navi', icon: '🛸' },
-    { id: 'characters', label: 'Piloti', icon: '👤' },
-    { id: 'weapons', label: 'Armi', icon: '🚀' },
-    { id: 'decks', label: 'Mazzi', icon: '🃏' },
-    { id: 'abilities', label: 'Moduli', icon: '⚡' },
-    { id: 'terrain', label: 'Terreni', icon: '🛡️' },
-    { id: 'environments', label: 'Sfondi', icon: '🪐' },
-    { id: 'resources', label: 'Risorse', icon: '💎' }
-  ];
 
   const rarityFilterBar = [
     { id: 'all', name: 'Tutti', color: '#00f2fe' },
@@ -277,9 +204,6 @@ export default function ShopModal({
     } else if (type === 'terrain') {
       if (typeof onUpgradeTerrainCard === 'function') onUpgradeTerrainCard(id, nextLvl, cost);
       triggerDopamineCelebration(title, `INVIATA AL CANTIERE (LIV. ${nextLvl})!`);
-    } else if (type === 'weapon') {
-      handleUpgradeWeaponInternal(id, nextLvl, cost);
-      triggerDopamineCelebration(title, `POTENZIATA AL LIVELLO ${nextLvl}!`);
     }
     setUpgradeConfirm(null);
   };
@@ -332,8 +256,8 @@ export default function ShopModal({
         </div>
 
         {/* TAB PRINCIPALI */}
-        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${mainTabs.length}, minmax(0, 1fr))`, gap: '2px', width: '100%', marginBottom: '4px', flexShrink: 0, zIndex: 11, position: 'relative', boxSizing: 'border-box' }}>
-          {mainTabs.map(t => {
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${SHOP_TABS.length}, minmax(0, 1fr))`, gap: '2px', width: '100%', marginBottom: '4px', flexShrink: 0, zIndex: 11, position: 'relative', boxSizing: 'border-box' }}>
+          {SHOP_TABS.map(t => {
             const isTabActive = activeTab === t.id;
             return (
               <button
@@ -490,219 +414,6 @@ export default function ShopModal({
                             style={{ padding: '0.45rem', fontSize: '0.68rem', fontWeight: 900 }}
                           >
                             Sblocca ({pilot.unlockCost?.diamonds > 0 ? `${pilot.unlockCost.diamonds} 💎` : `${pilot.unlockCost?.dust || 200} 🌟`})
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: ARMI HARDPOINT (DIREZIONAMENTO DETERMINISTICO SUGLI SLOT 1, 2, 3, 4) */}
-          {activeTab === 'weapons' && (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <button type="button" onClick={() => setShowArsenalCatalog(v => !v)} className="cyber-btn" style={{ padding: '0.6rem', marginBottom: '0.55rem', borderColor: '#38bdf8', color: '#7dd3fc', fontWeight: 900 }}>
-                {showArsenalCatalog ? '▾ CHIUDI ARSENALE 2.0' : '▸ APRI ARSENALE 2.0 · 48 ARMI'}
-              </button>
-              {showArsenalCatalog && <div style={{marginBottom:'0.7rem'}}><ArsenalCatalog armoryV2={armoryV2} stardust={stardust} pilotLevel={level} onBuy={onBuyArmoryV2} onUpgrade={onUpgradeArmoryV2} onEquip={onEquipArmoryV2} /></div>}
-              <div style={{fontSize:'.63rem',fontWeight:900,color:'#94a3b8',margin:'0.55rem 0 0.35rem'}}>HARDPOINT ORIGINALI DELLA CAMPAGNA · SISTEMA PRECEDENTE</div>
-              {renderRarityFilter(weaponRarityFilter, setWeaponRarityFilter)}
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.65rem' }}>
-                {weaponsDb.filter(w => w && (weaponRarityFilter === 'all' || normalizeRarity(w.rarity) === weaponRarityFilter)).map(wp => {
-                  const isPoker = wp.type === 'poker';
-                  const curLvl = Math.min(3, Math.max(1, currentWeaponsLevels[wp.id] || 1));
-                  const stats = wp.levels?.[curLvl] || wp.levels?.[1] || { damage: 15 };
-                  const nextCost = WEAPON_UPGRADE_COSTS[curLvl + 1] || null;
-                  const eqSlotIndex = currentEquippedWeapons.indexOf(wp.id);
-
-                  // Categoria e ruolo deterministico per lo slot
-                  const isSlot1 = wp.slotAllowed?.includes(0);
-                  const isSlot2 = wp.slotAllowed?.includes(1);
-                  const isSlot3 = wp.slotAllowed?.includes(2);
-                  const isSlot4 = wp.slotAllowed?.includes(3);
-
-                  let slotCategoryBadge = isPoker ? 'POKER (SLOT 1-2)' : 'CALCOLO (SLOT 3-4)';
-                  let categoryColor = isPoker ? '#facc15' : '#38bdf8';
-
-                  if (isSlot1) {
-                    slotCategoryBadge = 'SLOT 1: POKER RAPIDO (LEGGERA)';
-                    categoryColor = '#facc15';
-                  } else if (isSlot2) {
-                    slotCategoryBadge = 'SLOT 2: POKER AVANZATO (PESANTE)';
-                    categoryColor = '#f97316';
-                  } else if (isSlot3) {
-                    slotCategoryBadge = 'SLOT 3: CALCOLO TATTICO (LEGGERA)';
-                    categoryColor = '#38bdf8';
-                  } else if (isSlot4) {
-                    slotCategoryBadge = 'SLOT 4: CALCOLO PESANTE';
-                    categoryColor = '#c084fc';
-                  }
-
-                  return (
-                    <div
-                      key={wp.id}
-                      className="cyber-panel"
-                      style={{
-                        padding: '0.65rem',
-                        border: eqSlotIndex !== -1 ? '2px solid #00f2fe' : `1.5px solid ${wp.rarityColor || wp.color || '#38bdf8'}`,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        background: 'rgba(15, 23, 42, 0.9)'
-                      }}
-                    >
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                          <span style={{ fontSize: '0.55rem', background: wp.rarityColor || wp.color || '#38bdf8', color: '#020617', padding: '1px 5px', borderRadius: '3px', fontWeight: 900, textTransform: 'uppercase' }}>
-                            {normalizeRarity(wp.rarity)}
-                          </span>
-                          <span style={{ fontSize: '0.55rem', color: categoryColor, fontWeight: 900, whiteSpace: 'nowrap' }}>
-                            {slotCategoryBadge}
-                          </span>
-                          <span style={{ fontSize: '0.58rem', color: '#10b981', fontWeight: 900 }}>
-                            Liv. {curLvl}/3
-                          </span>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => setInspectedItem({ type: 'weapon', data: wp, curLvl, eqSlotIndex })}
-                          aria-label={`Dettagli ${wp.name}`}
-                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '4px auto', background: 'transparent', border: 0, color: '#e2e8f0' }}
-                        >
-                          <span aria-hidden="true" style={{ width: '64px', height: '48px', borderRadius: '6px', background: 'rgba(0,0,0,0.5)', display: 'grid', placeItems: 'center' }}>
-                            {wp.icon || (isPoker ? '🃏' : '⚡')}
-                          </span>
-                          <span style={{ fontSize: '0.52rem', color: '#38bdf8', marginTop: '3px', textDecoration: 'underline' }}>
-                            Dettagli
-                          </span>
-                        </button>
-
-                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: wp.rarityColor || wp.color || '#fff', textAlign: 'center' }}>
-                          {wp.name}
-                        </div>
-
-                        <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#facc15', fontWeight: 900 }}>
-                            <span>{wp.suitSymbol || ''} {wp.reqDescription}</span>
-                            <span style={{ color: '#f87171' }}>⚔ -{stats.damage} HP</span>
-                          </div>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#38bdf8', marginTop: '2px', fontSize: '0.58rem' }}>
-                            <span>📦 Tank: {wp.maxCapacity || 10}</span>
-                            <span>❄️ Stop: {wp.maxShots || 2} colpi ({wp.cooldownDuration || 1}T)</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: '0.35rem', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                        
-                        {/* ASSEGNAZIONE GUIDATA DEGLI SLOT BASATA SU slotAllowed */}
-                        {wp.slotAllowed && wp.slotAllowed.length > 0 ? (
-                          <div style={{ display: 'flex', gap: '3px' }}>
-                            {wp.slotAllowed.map(slotIdx => {
-                              const isEquippedInSlot = currentEquippedWeapons[slotIdx] === wp.id;
-                              const slotLabels = {
-                                0: { short: 'SLOT 1', desc: 'RAPIDO' },
-                                1: { short: 'SLOT 2', desc: 'PESANTE' },
-                                2: { short: 'SLOT 3', desc: 'TATTICO' },
-                                3: { short: 'SLOT 4', desc: 'PESANTE' }
-                              };
-                              const label = slotLabels[slotIdx] || { short: `SLOT ${slotIdx + 1}`, desc: '' };
-
-                              return (
-                                <button
-                                  key={slotIdx}
-                                  onClick={() => {
-                                    try { playSound('click'); } catch (_) {}
-                                    handleEquipWeaponInternal(slotIdx, wp.id);
-                                    showHint(`✓ ${wp.name} equipaggiata nello ${label.short}!`);
-                                  }}
-                                  className={`cyber-btn ${isEquippedInSlot ? 'cyber-btn-primary' : ''}`}
-                                  style={{ flex: 1, padding: '0.35rem 2px', fontSize: '0.62rem', fontWeight: 900 }}
-                                >
-                                  {isEquippedInSlot ? `✓ IN ${label.short}` : `EQUIPAGGIA IN ${label.short}`}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        ) : isPoker ? (
-                          /* Fallback legacy se slotAllowed non è dichiarato */
-                          <div style={{ display: 'flex', gap: '3px' }}>
-                            <button
-                              onClick={() => {
-                                try { playSound('click'); } catch (_) {}
-                                handleEquipWeaponInternal(0, wp.id);
-                                showHint(`✓ ${wp.name} equipaggiata nello Slot 1!`);
-                              }}
-                              className={`cyber-btn ${currentEquippedWeapons[0] === wp.id ? 'cyber-btn-primary' : ''}`}
-                              style={{ flex: 1, padding: '0.35rem 2px', fontSize: '0.62rem', fontWeight: 900 }}
-                            >
-                              {currentEquippedWeapons[0] === wp.id ? '✓ SLOT 1' : 'IN SLOT 1'}
-                            </button>
-                            <button
-                              onClick={() => {
-                                try { playSound('click'); } catch (_) {}
-                                handleEquipWeaponInternal(1, wp.id);
-                                showHint(`✓ ${wp.name} equipaggiata nello Slot 2!`);
-                              }}
-                              className={`cyber-btn ${currentEquippedWeapons[1] === wp.id ? 'cyber-btn-primary' : ''}`}
-                              style={{ flex: 1, padding: '0.35rem 2px', fontSize: '0.62rem', fontWeight: 900 }}
-                            >
-                              {currentEquippedWeapons[1] === wp.id ? '✓ SLOT 2' : 'IN SLOT 2'}
-                            </button>
-                          </div>
-                        ) : (
-                          /* Fallback legacy calcolo */
-                          <div style={{ display: 'flex', gap: '3px' }}>
-                            <button
-                              onClick={() => {
-                                try { playSound('click'); } catch (_) {}
-                                handleEquipWeaponInternal(2, wp.id);
-                                showHint(`✓ ${wp.name} equipaggiata nello Slot 3!`);
-                              }}
-                              className={`cyber-btn ${currentEquippedWeapons[2] === wp.id ? 'cyber-btn-primary' : ''}`}
-                              style={{ flex: 1, padding: '0.35rem 2px', fontSize: '0.62rem', fontWeight: 900 }}
-                            >
-                              {currentEquippedWeapons[2] === wp.id ? '✓ SLOT 3' : 'IN SLOT 3'}
-                            </button>
-                            <button
-                              onClick={() => {
-                                try { playSound('click'); } catch (_) {}
-                                handleEquipWeaponInternal(3, wp.id);
-                                showHint(`✓ ${wp.name} equipaggiata nello Slot 4!`);
-                              }}
-                              className={`cyber-btn ${currentEquippedWeapons[3] === wp.id ? 'cyber-btn-primary' : ''}`}
-                              style={{ flex: 1, padding: '0.35rem 2px', fontSize: '0.62rem', fontWeight: 900 }}
-                            >
-                              {currentEquippedWeapons[3] === wp.id ? '✓ SLOT 4' : 'IN SLOT 4'}
-                            </button>
-                          </div>
-                        )}
-
-                        {curLvl < 3 && nextCost && (
-                          <button
-                            onClick={() => {
-                              try { playSound('click'); } catch (_) {}
-                              const nextStats = wp.levels?.[curLvl + 1] || { damage: stats.damage + 4 };
-                              setUpgradeConfirm({
-                                type: 'weapon',
-                                id: wp.id,
-                                title: wp.name,
-                                curLvl,
-                                nextLvl: curLvl + 1,
-                                reqLevel: nextCost.reqPilotLevel,
-                                cost: nextCost,
-                                currentBonus: `Danno per colpo: -${stats.damage} HP`,
-                                nextBonus: `Danno per colpo potenziato: -${nextStats.damage} HP`
-                              });
-                            }}
-                            className="cyber-btn cyber-btn-warning"
-                            style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
-                          >
-                            ⚡ MIGLIORA A LIV. {curLvl + 1} ➔
                           </button>
                         )}
                       </div>
@@ -1255,81 +966,6 @@ export default function ShopModal({
                 </div>
               </>
             )}
-
-            {/* ISPEZIONE ARMA */}
-            {inspectedItem.type === 'weapon' && (() => {
-              const wp = inspectedItem.data;
-              if (!wp) return null;
-              const isPoker = wp.type === 'poker';
-              const curLvl = inspectedItem.curLvl || 1;
-
-              const slotDesc = wp.slotAllowed?.includes(0) ? 'SLOT 1: POKER RAPIDO (LEGGERA)' :
-                wp.slotAllowed?.includes(1) ? 'SLOT 2: POKER AVANZATO (PESANTE)' :
-                wp.slotAllowed?.includes(2) ? 'SLOT 3: CALCOLO TATTICO (LEGGERA)' :
-                wp.slotAllowed?.includes(3) ? 'SLOT 4: CALCOLO PESANTE' :
-                (isPoker ? 'SLOT 1 & 2 (POKER)' : 'SLOT 3 & 4 (CALCOLO)');
-
-              return (
-                <>
-                  <div style={{ fontSize: '0.7rem', color: wp.rarityColor || wp.color || '#38bdf8', fontWeight: 900, textTransform: 'uppercase', marginBottom: '4px' }}>
-                    ARMA HARDPOINT • {normalizeRarity(wp.rarity)} • {slotDesc}
-                  </div>
-                  <h2 style={{ color: wp.rarityColor || wp.color || '#fff', margin: '0 0 12px 0', fontSize: '1.4rem', fontWeight: 900 }}>
-                    {wp.name}
-                  </h2>
-
-                  <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(15, 23, 42, 0.85)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#fde047', fontWeight: 900 }}>
-                      <span>{wp.suitSymbol || ''} REQUISITO: {wp.reqDescription}</span>
-                      <span style={{ color: '#f87171' }}>LIVELLO ATTUALE: {curLvl}/3</span>
-                    </div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', background: 'rgba(2, 6, 23, 0.75)', padding: '6px', borderRadius: '6px' }}>
-                      <div style={{ color: '#38bdf8', fontSize: '0.7rem' }}>
-                        📦 <strong>Serbatoio:</strong> Capienza {wp.maxCapacity || 10} (Salva: {wp.maxSalvo || 4})
-                      </div>
-                      <div style={{ color: '#38bdf8', fontSize: '0.7rem' }}>
-                        ❄️ <strong>Raffreddamento:</strong> {wp.maxShots || 2} colpi prima dello stop ({wp.cooldownDuration || 1}T di fermo)
-                      </div>
-                    </div>
-
-                    <div style={{ color: '#cbd5e1', lineHeight: 1.4 }}>
-                      {isPoker 
-                        ? `Figura valida: ${(wp.allowedPatterns || []).join(', ')}. Spara una salva proporzionale alle munizioni del serbatoio.`
-                        : `Operazione associata: [${wp.mathOp || '+'}]. Risolvi un bersaglio matematico conforme per fare fuoco.`}
-                    </div>
-
-                    <div style={{ marginTop: '6px', borderTop: '1px dashed rgba(255,255,255,0.15)', paddingTop: '6px' }}>
-                      <div style={{ fontSize: '0.7rem', color: '#00f2fe', fontWeight: 900, marginBottom: '4px' }}>PROGRESSIONE DEI 3 LIVELLI:</div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', textAlign: 'center' }}>
-                        {[1, 2, 3].map(lvlIdx => {
-                          const lvlStats = wp.levels?.[lvlIdx] || {};
-                          const isCurrent = curLvl === lvlIdx;
-                          return (
-                            <div 
-                              key={lvlIdx}
-                              style={{ 
-                                background: isCurrent ? 'rgba(0, 242, 254, 0.2)' : 'rgba(2, 6, 23, 0.8)',
-                                border: isCurrent ? '1.5px solid #00f2fe' : '1px solid rgba(255,255,255,0.1)',
-                                borderRadius: '4px',
-                                padding: '4px'
-                              }}
-                            >
-                              <div style={{ fontSize: '0.62rem', fontWeight: 900, color: isCurrent ? '#fde047' : '#94a3b8' }}>
-                                L.{lvlIdx} {isCurrent ? '★' : ''}
-                              </div>
-                              <div style={{ fontSize: '0.72rem', fontWeight: 900, color: '#f87171' }}>
-                                -{lvlStats.damage || 15} HP / colpo
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </>
-              );
-            })()}
 
             {/* ISPEZIONE MAZZO */}
             {inspectedItem.type === 'deck' && (
