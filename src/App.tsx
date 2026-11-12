@@ -506,16 +506,6 @@ const RULES_DATABASE = Object.freeze([
 
 
 // 1.4 DANNI FISSI SIMMETRICI MODALITÃ€ CLASSICA PER OPERATORE (IDENTICI PER PLAYER E IA)
-const getClassicOpDamage = (op) => {
-  switch (op) {
-    case '/': return 20;
-    case '*': return 16;
-    case '-': return 12;
-    case '+': default: return 10;
-  }
-};
-
-// 1.5 DANNI FISSI MODALITÃ€ VETTORE PER NUMERO DI CARTE IMPIEGATE
 const getCardSuit = (card) => {
   if (!card) return null;
   if (card.isJoker) return 'joker';
@@ -527,16 +517,6 @@ const getCardSuit = (card) => {
     if (card.id.startsWith('clubs') || card.id === 'clubs') return 'clubs';
   }
   return 'hearts';
-};
-
-const getCardEffectiveValue = (card, activeAnomaly = null) => {
-  if (!card) return 0;
-  const baseVal = Number(card.value) || 0;
-  const suit = getCardSuit(card);
-  if (activeAnomaly?.id === 'hearts_res' && suit === 'hearts') {
-    return baseVal * 2;
-  }
-  return baseVal;
 };
 
 const evaluate5CardPokerHand = (cards) => {
@@ -599,9 +579,6 @@ const evaluate5CardPokerHand = (cards) => {
 };
 
 // Alias per compatibilità con Tris Stellare
-const evaluateTrisStellareCombination = evaluate5CardPokerHand;
-
-// 1.6b RISOLUZIONE MODALITÀ CONVERGENZA: PROSSIMITÀ (DELTA) & POKER A 5 CARTE
 const CLASSIC_POKER_PATTERNS = Object.freeze([
   { id: 'one_pair', name: 'COPPIA', cardsCount: 2, damage: 10, desc: '2 carte dello stesso valore (-10 HP)' },
   { id: 'two_pair', name: 'DOPPIA COPPIA', cardsCount: 4, damage: 12, desc: '2 coppie distinte (-12 HP)' },
@@ -614,80 +591,6 @@ const CLASSIC_POKER_PATTERNS = Object.freeze([
 ]);
 
 
-
-const validateClassicPokerPattern = (cards, patternId) => {
-  if (!cards || !patternId) return false;
-  const validCards = cards.filter(Boolean);
-  const targetDef = CLASSIC_POKER_PATTERNS.find(p => p.id === patternId);
-  if (!targetDef) return false;
-  if (validCards.length !== targetDef.cardsCount) return false;
-
-  const jokers = validCards.filter(c => c.isJoker || c.suit === 'joker').length;
-  const nonJokers = validCards.filter(c => !c.isJoker && c.suit !== 'joker');
-  const nonJokerVals: number[] = nonJokers.map(c => Number(c.value) || 0).sort((a, b) => a - b);
-  const nonJokerSuits = nonJokers.map(c => getCardSuit(c));
-
-  const counts: Record<number, number> = {};
-  nonJokerVals.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
-  const freq = Object.values(counts).sort((a, b) => b - a);
-
-  switch (patternId) {
-    case 'one_pair': {
-      if (jokers >= 1) return true;
-      return (freq[0] || 0) >= 2;
-    }
-    case 'two_pair': {
-      if (jokers >= 2) return true;
-      if (jokers === 1) return (freq[0] || 0) >= 2;
-      return (freq[0] || 0) >= 2 && (freq[1] || 0) >= 2;
-    }
-    case 'three_of_a_kind': {
-      return ((freq[0] || 0) + jokers) >= 3;
-    }
-    case 'straight': {
-      const uniqueVals = [...new Set(nonJokerVals)];
-      if (uniqueVals.length + jokers < 5) return false;
-      const checkSpan = (vals) => {
-        if (vals.length === 0) return true;
-        return (vals[vals.length - 1] - vals[0] <= 4);
-      };
-      if (checkSpan(uniqueVals)) return true;
-      const broadwayVals = uniqueVals.map(v => v === 1 ? 14 : v).sort((a, b) => a - b);
-      return checkSpan(broadwayVals);
-    }
-    case 'flush': {
-      const suitSet = new Set(nonJokerSuits);
-      return suitSet.size <= 1;
-    }
-    case 'full_house': {
-      if (jokers >= 2) return true;
-      if (jokers === 1) return ((freq[0] || 0) >= 2 && (freq[1] || 0) >= 2) || ((freq[0] || 0) >= 3);
-      return (freq[0] || 0) >= 3 && (freq[1] || 0) >= 2;
-    }
-    case 'four_of_a_kind': {
-      return ((freq[0] || 0) + jokers) >= 4;
-    }
-    case 'royal_flush': {
-      const suitSet = new Set(nonJokerSuits);
-      if (suitSet.size > 1) return false;
-      const uniqueVals = [...new Set(nonJokerVals)];
-      if (uniqueVals.length + jokers < 5) return false;
-      const checkSpan = (vals) => {
-        if (vals.length === 0) return true;
-        return (vals[vals.length - 1] - vals[0] <= 4);
-      };
-      if (checkSpan(uniqueVals)) return true;
-      const broadwayVals = uniqueVals.map(v => v === 1 ? 14 : v).sort((a, b) => a - b);
-      return checkSpan(broadwayVals);
-    }
-    default:
-      return false;
-  }
-};
-
-// ============================================================================
-// 1.6c REGISTRO DEI 12 ARCHETIPI NUCLEO INSTABILE (BERSAGLIO BOMBA)
-// ============================================================================
 
 const BOMB_ARCHETYPES = Object.freeze([
   // AREA 1: BALISTICA & DIFESA
@@ -4811,84 +4714,6 @@ const getDeckActiveTraits = (deckId = 'neutral_starter', deckLevel = 1) => {
   return [];
 };
 
-const createRandomCard = (forceJoker = false) => {
-  if (forceJoker || Math.random() < 0.05) {
-    return {
-      id: `joker_${Math.random().toString(36).substring(2, 7)}`,
-      suit: 'joker',
-      name: 'Jolly Quantico',
-      symbol: 'â˜…',
-      color: '#e879f9',
-      glow: 'rgba(232, 121, 249, 0.75)',
-      value: 0,
-      displayVal: 'â˜…',
-      isJoker: true,
-      isCourt: false,
-      isGolden: false
-    };
-  }
-  const suit = SUITS[Math.floor(Math.random() * SUITS.length)];
-  const rawVal = Math.floor(Math.random() * 13) + 1;
-  let displayVal = rawVal.toString();
-  if (rawVal === 1) displayVal = 'A';
-  else if (rawVal === 11) displayVal = 'J';
-  else if (rawVal === 12) displayVal = 'Q';
-  else if (rawVal === 13) displayVal = 'K';
-
-  return {
-    id: `${suit.id}_${rawVal}_${Math.random().toString(36).substring(2, 7)}`,
-    value: rawVal,
-    displayVal,
-    suit: suit.id,
-    symbol: suit.symbol,
-    color: suit.color,
-    glow: suit.glow,
-    isCourt: rawVal >= 11,
-    isJoker: false,
-    isGolden: false
-  };
-};
-
-const generateBombTarget = (currentGlobalSector = 6) => {
-  const availableArchetypes = typeof BOMB_ARCHETYPES !== 'undefined' 
-    ? BOMB_ARCHETYPES.filter(b => currentGlobalSector >= (b.minSector || 6))
-    : [];
-  const archetype = availableArchetypes[Math.floor(Math.random() * availableArchetypes.length)] || {
-    id: 'fracture',
-    title: 'Bomba a Frattura',
-    icon: '💥',
-    color: '#ef4444',
-    successDesc: '+30 HP danno al nemico',
-    failDesc: 'Il nemico cura +25 HP'
-  };
-
-  const ops = ['+', '-', '*', '/'];
-  const op = ops[Math.floor(Math.random() * ops.length)];
-  let target = 20;
-
-  if (op === '+') target = Math.floor(Math.random() * 25) + 10;
-  else if (op === '-') target = Math.floor(Math.random() * 12) + 2;
-  else if (op === '*') {
-    const factors = [12, 16, 18, 20, 24, 30, 36, 40, 48];
-    target = factors[Math.floor(Math.random() * factors.length)];
-  } else if (op === '/') {
-    const quotients = [2, 3, 4, 5, 6];
-    target = quotients[Math.floor(Math.random() * quotients.length)];
-  }
-
-    return {
-    ...archetype,
-    op,
-    target,
-    turnsRemaining: 3,
-    isBomb: true,
-    type: archetype.id
-  };
-};
-
-
-
-// Generatore dedicato al bersaglio Bomba per Vettore (Target somma a 2 carte: range 4 - 24)
 const getSectorGameType = (_planet?: number, _level?: number, _bossPhase?: number) => {
   return 'classic';
 };
@@ -4933,22 +4758,6 @@ const getAdventureAiPower = (planet, level) => {
 };
 
 // HELPER ASSEGNAZIONE MODULO ABILITÃ€ UNICO PER L'AVVERSARIO
-const getComputerAbilityForPlanet = (planet) => {
-  const p = Number(planet) || 1;
-  if (p <= 2) return 'taurus';
-  if (p <= 4) return 'aries';
-  if (p <= 6) return 'gemini';
-  if (p <= 8) return 'leo';
-  if (p <= 10) return 'virgo';
-  if (p <= 12) return 'libra';
-  if (p <= 14) return 'planet_char_14'; // Proxima b
-  if (p <= 16) return 'planet_char_16'; // Gliese 581g
-  if (p <= 18) return 'planet_char_18'; // Eris
-  if (p <= 19) return 'planet_char_19'; // Io
-  return 'planet_char_20';              // Encelado
-};
-
-// RetrocompatibilitÃ  per chiamate che si aspettano un array
 const getLevelUpRewards = (lvl) => ({
   stardust: 80 + lvl * 10,
   diamonds: lvl % 5 === 0 ? 5 : 1,
