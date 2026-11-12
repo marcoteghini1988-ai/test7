@@ -66,7 +66,7 @@ for(const file of sources.filter(p=>p.startsWith('src/newCombat/')&&p.endsWith('
   for(const imported of matched[1].split(',')){
    const local=imported.trim().split(/\s+as\s+/).at(-1);
    if(!/^[A-Za-z_$][\w$]*$/.test(local))continue;
-   const escaped=local.replace(/[.*+?^${}()|[\]\\]/g,'\\if(noIncoming.length){');
+   const escaped=local.replace(/[^A-Za-z0-9_]/g,'\\$&');
    const mentions=(code.match(new RegExp('\\b'+escaped+'\\b','g'))||[]).length;
    if(mentions===1)unusedNamedImports.push(file+': '+local);
   }
