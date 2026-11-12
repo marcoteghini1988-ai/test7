@@ -29,7 +29,7 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Audit sorgenti 12/11:** rimossi quattro moduli senza riferimenti nel percorso dell'app, nei test e negli script: `bossMechanicsEngine.js` (motore boss della versione precedente), `weaponsSystem.js` (vecchio database Hardpoint/carte arma), `pvpConnectivity.js` (coda Poker online), `eliteServices.js` (servizi classifica online non integrati). Restano i motori boss LIVE, il fallback, le armi integrate, lo Shop con i Moduli reali, il PvP simulato e i dati salvati. Il preflight blocca la ricomparsa dei moduli eliminati.
 
-- **Pulizia del 12/11:** rimossi da `App.tsx` il registro delle 31 guide tutorial 3D della versione precedente, le finestre `FeatureDiscoveryModal` e `SpotlightHomeTour`, i relativi stati e le scritture obsolete in localStorage. Eliminato `src/legacyTutorialConfig.js` e aggiunta protezione preflight. Le guide future saranno progettate sul regolamento LIVE; non vengono modificati salvataggi, mazzi, Shop o logica della campagna.
+- **Pulizia del 12/11:** rimossi da `App.tsx` il registro delle 31 guide tutorial 3D della versione precedente, le finestre `FeatureDiscoveryModal` e `SpotlightHomeTour`, i relativi stati e le scritture obsolete in localStorage. Eliminato `src/legacyTutorialConfig.js` e rimossi anche 10,6 KB di CSS delle sole modali tutorial (`spotlight`, `discovery`, `tactile`). Aggiunta protezione preflight. Le guide future saranno progettate sul regolamento LIVE; non vengono modificati salvataggi, mazzi, Shop o logica della campagna.
 
 ## Motore e compatibilità
 
