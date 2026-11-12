@@ -41,11 +41,12 @@ function getAssets(){
   return {ships,specials,selected:valid.length?valid:fallback,maxSeen,error:''};
  }catch(error){return {ships:null,specials:null,selected:[],error:error?.message||'Inventario non leggibile'};}
 }
-function ShotShip({ship,enemy=false,selected=false,onClick,compact=false}){
+function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotIndex=0}){
  const sunk=fleetShipDestroyed(ship),element=FLEET_ELEMENTS[ship.element];
  const format=raritiesWithWebp.has(ship.rarity)?'webp':'png';
+ const slotClass=slotIndex===0?'fc-slot-mother':slotIndex===1?'fc-slot-left':'fc-slot-right';
  const image=SHIP_IMG_ROOT+(enemy?'enemy_to_player/':'player_to_enemy/')+ship.id+'_complete.'+format;
- return <button type="button" className={'fc-ship '+(selected?'fc-selected ':'')+(sunk?'fc-sunk ':'')+
+ return <button type="button" className={'fc-ship '+slotClass+' '+(selected?'fc-selected ':'')+(sunk?'fc-sunk ':'')+
   (compact?'fc-compact ':'')+(enemy?'fc-hostile':'fc-friendly')}
   onClick={onClick} disabled={!onClick||sunk}
   title={ship.name+' · '+ship.role+' · '+element.name}>
@@ -267,7 +268,7 @@ export default function FleetCardBattle({
      <small>{bossBrief.status}</small>
     </div>}
     <div className="fc-ship-row">{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
-      ship={ship} enemy selected={targetIndex===i&&!finished}
+      ship={ship} slotIndex={i} enemy selected={targetIndex===i&&!finished}
       onClick={!finished?()=>{setEnemySelection(i);setPartSelection(
        ship.parts.find(p=>!p.destroyed)?.id||'command');}:null}/>)}</div>
    </section>
@@ -296,7 +297,8 @@ export default function FleetCardBattle({
    </section>
    <section className="fc-fleet fc-player-rack">
     <div className="fc-rack-head"><strong>LA TUA FLOTTA</strong><span>{fleetSurvivors(player)}/{player.ships.length} operative</span></div>
-    <div className="fc-ship-row">{player.ships.map(ship=><ShotShip key={ship.id} ship={ship}/>)}</div>
+    <div className="fc-ship-row">{player.ships.map((ship,i)=><ShotShip key={ship.id}
+     ship={ship} slotIndex={i}/>)}</div>
    </section>
   </div>
   <section className="fc-command">
