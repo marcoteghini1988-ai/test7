@@ -13,6 +13,7 @@ import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {fleetBossBrief} from './fleetBossPassives.js';
+import {fleetVolleyVisuals,fleetImpactVisual} from './fleetBattleVisuals.js';
 import {
  createFleetCardBattle,resolveFleetCardRound,selectFleetAiOrder,fleetSlotCount,
  FLEET_PARTS,FLEET_ELEMENTS,fleetCardEffect,fleetShipDestroyed,fleetSurvivors
@@ -43,11 +44,12 @@ function getAssets(){
   return {ships,specials,selected:valid.length?valid:fallback,maxSeen,moduleLevels,error:''};
  }catch(error){return {ships:null,specials:null,selected:[],error:error?.message||'Inventario non leggibile'};}
 }
-function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotIndex=0}){
+function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotIndex=0,impactEvent=null,impactNonce=0}){
  const sunk=fleetShipDestroyed(ship),element=FLEET_ELEMENTS[ship.element];
  const format=raritiesWithWebp.has(ship.rarity)?'webp':'png';
  const slotClass=slotIndex===0?'fc-slot-mother':slotIndex===1?'fc-slot-left':'fc-slot-right';
  const image=SHIP_IMG_ROOT+(enemy?'enemy_to_player/':'player_to_enemy/')+ship.id+'_complete.'+format;
+ const impact=impactEvent?.shipIndex===slotIndex?fleetImpactVisual(impactEvent):null;
  return <button type="button" className={'fc-ship '+slotClass+' '+(selected?'fc-selected ':'')+(sunk?'fc-sunk ':'')+
   (compact?'fc-compact ':'')+(enemy?'fc-hostile':'fc-friendly')}
   onClick={onClick} disabled={!onClick||sunk}
@@ -64,6 +66,11 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotInd
       {glyphs[p.id]}</span>)}
    </div>
    <div className="fc-shields"><span>SCUDO</span><strong>{ship.shield}/{ship.maxShield}</strong></div>
+   {impact&&<span key={impactNonce} className={'fc-ship-impact fc-impact-'+impact.kind}
+     aria-label={impact.label}>
+     <img src={impact.image} alt="" draggable={false}/>
+     <span>{impact.label}</span>
+    </span>}
    {sunk&&<div className="fc-destroyed-mark">DISTRUTTA</div>}
   </button>;
 }
@@ -161,7 +168,15 @@ export default function FleetCardBattle({
   },ai,Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   const next=result.battle;
-  setBattle(next);setChosenCards([]);setLastFx({partId,nonce:Date.now()});
+  setBattle(next);setChosenCards([]);
+  setLastFx({
+   round:battle.round,nonce:Date.now(),
+   events:result.events,
+   volleys:{
+    A:fleetVolleyVisuals(battle.sides.A.ships,result.events[0],battle.round),
+    B:fleetVolleyVisuals(battle.sides.B.ships,result.events[1],battle.round)
+   }
+  });
   setMessage(result.events.map(e=>e.text).join(' · '));
   const nextEnemyIndex=next.sides.B.ships.findIndex(s=>!fleetShipDestroyed(s));
   if(nextEnemyIndex>=0&&fleetShipDestroyed(next.sides.B.ships[index])){
@@ -288,13 +303,20 @@ export default function FleetCardBattle({
     </div>}
     <div className="fc-ship-row">{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
       ship={ship} slotIndex={i} enemy selected={targetIndex===i&&!finished}
+      impactEvent={lastFx?.events?.[0]} impactNonce={lastFx?.nonce}
       onClick={!finished?()=>{setEnemySelection(i);setPartSelection(
        ship.parts.find(p=>!p.destroyed)?.id||'command');}:null}/>)}</div>
    </section>
    <section className="fc-target-panel" aria-label="Bersagli vitali">
-    {lastFx&&<div key={lastFx.nonce} className="fc-combat-flash" aria-hidden="true">
-     <img src="/assets/battle-fx/charge.png" alt="" className="fc-burst-charge"/>
-     <img src={'/assets/battle-fx/vital-'+lastFx.partId+'.png'} alt="" className="fc-burst-vital"/>
+    {lastFx&&<div key={lastFx.nonce} className="fc-volley-stage" aria-hidden="true">
+     {lastFx.volleys.A.map((shot,i)=><span key={'a-'+shot.id}
+      className={'fc-weapon-trace fc-trace-'+shot.style+' fc-trace-up'}
+      style={{'--fc-trace-color':shot.color,left:(18+shot.shipIndex*32)+'%',
+       animationDelay:(i*.11)+'s'}} title={shot.name}><i/></span>)}
+     {lastFx.volleys.B.map((shot,i)=><span key={'b-'+shot.id}
+      className={'fc-weapon-trace fc-trace-'+shot.style+' fc-trace-down'}
+      style={{'--fc-trace-color':shot.color,left:(18+shot.shipIndex*32)+'%',
+       animationDelay:(.18+i*.11)+'s'}} title={shot.name}><i/></span>)}
     </div>}
     <div className="fc-target-title"><span>BERSAGLIO</span>
      <strong>{chosenEnemy?.name||'Flotta eliminata'}</strong></div>
@@ -317,10 +339,15 @@ export default function FleetCardBattle({
    <section className="fc-fleet fc-player-rack">
     <div className="fc-rack-head"><strong>LA TUA FLOTTA</strong><span>{fleetSurvivors(player)}/{player.ships.length} operative</span></div>
     <div className="fc-ship-row">{player.ships.map((ship,i)=><ShotShip key={ship.id}
-     ship={ship} slotIndex={i}/>)}</div>
+     ship={ship} slotIndex={i} impactEvent={lastFx?.events?.[1]}
+     impactNonce={lastFx?.nonce}/>)}</div>
    </section>
   </div>
   <section className="fc-command">
+   {lastFx?.volleys?.A?.length>0&&<div className="fc-weapons-fired" role="status">
+     <strong>ARMI ATTIVATE</strong>
+     <span>{lastFx.volleys.A.map(x=>x.shipName+' · '+x.name).join(' / ')}</span>
+    </div>}
    <div className="fc-hand-header">
     <strong>CARTE SPECIALI</strong>
     <small>Seleziona fino a 2 · {chosenCards.length}/2</small>
