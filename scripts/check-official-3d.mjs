@@ -128,6 +128,13 @@ verify(!source.includes('ARMORY_V2_STORAGE_KEY')&&
  !source.includes("from './newCombat/phase7Armory.js'"),
  'Il giocatore LIVE non deve leggere la vecchia armeria di carte arma/hardpoint');
 
+verify(!source.includes('const calculateExpressionResult =')&&
+ !source.includes('const evaluateTrisStellare =')&&
+ !source.includes('const shuffleArray =')&&
+ !source.includes('const generateTrisStellareObjectives =')&&
+ !source.includes('const calculateAiTurnConvergence ='),
+ 'I calcolatori isolati del gioco precedente non devono ricomparire in App.tsx');
+
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
 verify(exists('src/officialLiveMobileLayout.test.js'),
