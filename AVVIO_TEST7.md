@@ -39,6 +39,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Armeria legacy 12/11:** eliminati da `App.tsx` gli stati inutilizzati `armoryV2`, `equippedWeapons`, `weaponsLevels` e l'import del vecchio modulo `phase7Armory.js`. Erano soltanto letture dei salvataggi Poker/Hardpoint, senza rendering o effetti. **Non cancellati i salvataggi browser**; il modulo di simulazione rimane disponibile ai test. Le 42 armi integrate delle 17 navicelle LIVE non cambiano.
 
+- **Ultimo audit helper 12/11:** rimosse altre 8 funzioni matematiche/IA scollegate da `App.tsx`, per circa 13,1 KB: vecchio calcolatore espressioni, Tris Stellare, funzione di mescolamento non usata, Poker a parità, obiettivi Tris, configurazione armi/livelli avversario e IA di Convergenza. Il sistema attuale del duello, i valutatori ancora richiamati e il modulo di test rimangono intatti. Preflight esteso.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.
