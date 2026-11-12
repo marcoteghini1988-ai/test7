@@ -135,6 +135,13 @@ verify(!source.includes('const calculateExpressionResult =')&&
  !source.includes('const calculateAiTurnConvergence ='),
  'I calcolatori isolati del gioco precedente non devono ricomparire in App.tsx');
 
+verify(!source.includes('const getClassicOpDamage =')&&
+ !source.includes('const validateClassicPokerPattern =')&&
+ !source.includes('const createRandomCard =')&&
+ !source.includes('const generateBombTarget =')&&
+ !source.includes('const getComputerAbilityForPlanet ='),
+ 'Il motore LIVE non deve reintegrare helper orfani delle vecchie carte arma/Poker');
+
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
 verify(exists('src/officialLiveMobileLayout.test.js'),
