@@ -91,7 +91,11 @@ test('Modulo di fuoco, interferenza e riparazione non producono tutti lo stesso 
  const a=play(blaze),b=play(jam),c=play(repair);
  assert.equal(a.sides.B.ships[0].shield,0,'Ariete aumenta il fuoco');
  assert.equal(b.sides.A.ships[0].shield,2,'Vergine disturba il nemico');
- assert.equal(c.sides.A.ships[0].shield,2,'Toro ripara uno scudo');
+ const without=match();
+ without.sides.A.ships[0].shield=1;
+ const noRepair=play(without,[],[]);
+ assert.equal(c.sides.A.ships[0].shield,noRepair.sides.A.ships[0].shield+1,
+  'Toro recupera un punto scudo prima del colpo nemico simultaneo');
 });
 test('Modulo Ricambio: usa solo carte reali, non aumenta il totale 24',()=>{
  const b=match();insert(b.sides.A,'module-card-cancer');
