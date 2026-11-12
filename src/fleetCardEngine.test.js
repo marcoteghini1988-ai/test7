@@ -105,11 +105,29 @@ test('Distruzione simultanea delle due flotte = pareggio, nessun vantaggio primo
  const r=step(b,order(0,'command'),order(0,'command'));
  assert.equal(r.phase,'finished');assert.equal(r.winner,'draw');
 });
-test('Carta terreno non sovrascrive il terreno obbligatorio dei boss',()=>{
+test('Carta terreno del giocatore bloccata contro boss, senza consumo',()=>{
  const b=fleet(['C01'],['R04'],{bossLockedTerrain:true});
  b.sides.A.hand[0]='terrain-plasma';
- const r=step(b,order(0,'command',[0]));
+ const result=resolveFleetCardRound(b,order(0,'command',[0]),order());
+ assert.equal(result.ok,false);
+ assert.equal(b.sides.A.hand[0],'terrain-plasma');
+ assert.equal(b.sides.A.discard.length,0);
+});
+test('Due terreni attivati nello stesso round si annullano',()=>{
+ const b=fleet(['C01'],['R04'],{mode:'pvp'});
+ b.sides.A.hand[0]='terrain-plasma';
+ b.sides.B.hand[0]='terrain-ionic';
+ const r=step(b,order(0,'command',[0]),order(0,'command',[0]));
  assert.equal(r.terrain,null);
+});
+test('Ricambio Numerico convertito in un vero ricambio tattico delle speciali',()=>{
+ const b=fleet();
+ b.sides.A.hand[0]='tactic-numeric-recycle';
+ const r=step(b,order(0,'command',[0]));
+ assert.equal(r.sides.A.hand.length,5);
+ assert.equal(r.sides.A.discard.length,2,'carta usata piu una cambiata');
+ assert.equal(r.sides.A.deck.length,17);
+ assert.equal(r.sides.A.hand.length+r.sides.A.deck.length+r.sides.A.discard.length,24);
 });
 test('IA: bersaglio vitale legale e carta dalla mano reale',()=>{
  const b=fleet(['C01','C02'],['R02','R03']);
