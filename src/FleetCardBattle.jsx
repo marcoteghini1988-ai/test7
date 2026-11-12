@@ -3,6 +3,7 @@ import {readShipCollection} from './shipCollection.js';
 import {readSpecialCollection,createSpecialCollection,validateSpecialDeck} from './specialDeckBuilder.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
@@ -38,7 +39,8 @@ function getAssets(){
   const fallback=ships.loadout.map(id=>ships.cards.find(c=>c.instanceId===id)?.shipId)
    .filter(Boolean);
   const maxSeen=Math.max(1,Math.floor(Number(localStorage.getItem(SLOT_PROGRESS_KEY))||1));
-  return {ships,specials,selected:valid.length?valid:fallback,maxSeen,error:''};
+  const moduleLevels=readLegacyModuleLevels();
+  return {ships,specials,selected:valid.length?valid:fallback,maxSeen,moduleLevels,error:''};
  }catch(error){return {ships:null,specials:null,selected:[],error:error?.message||'Inventario non leggibile'};}
 }
 function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotIndex=0}){
@@ -134,7 +136,7 @@ export default function FleetCardBattle({
     shipsA:selected.map(c=>({shipId:c.shipId,level:c.level})),shipsB:enemy.ships,
     deckA:assets.specials.loadout,deckB,mode:gameMode,
     bossName:enemy.boss?.name??null,bossId:enemy.boss?.planetId??null,
-    bossLockedTerrain:!!enemy.boss,
+    bossLockedTerrain:!!enemy.boss,moduleLevelsA:assets.moduleLevels||{},moduleLevelsB:{},
     seed:Math.floor(Math.random()*1e8)+1,nowMs:Date.now()
    });
    localStorage.setItem(LOADOUT_KEY,JSON.stringify(selectedIds));
