@@ -67,7 +67,7 @@ test('Tharsis: la pressione cresce solo dopo un colpo efficace',()=>{
  assert.ok(second.events[1].strength>=first.events[1].strength);
 });
 test('Matriarca Tossica: la neurotossina consuma uno scudo al round successivo',()=>{
- const b=match(3,'N00','R04');
+ const b=match(3,'C02','R04');
  const first=round(b);
  assert.equal(first.battle.bossState.poisonTarget,0);
  const before=first.battle.sides.A.ships[0].shield;
@@ -130,7 +130,8 @@ test('Nucleo Magmatico: alterna carica, eruzione e raffreddamento',()=>{
  const first=round(b);assert.equal(first.battle.bossState.cycle,'carica');
  const second=round(first.battle);assert.equal(second.battle.bossState.cycle,'eruzione');
  assert.ok(second.battle.log.some(x=>x.text.includes('Eruzione magmatica')));
- const third=round(second.battle);assert.equal(third.battle.bossState.cycle,'raffreddamento');
+ const third=round(second.battle,target(),target('generator'));
+ assert.equal(third.battle.bossState.cycle,'raffreddamento');
 });
 test('Sovrano del Vuoto: il dominante cambia e la nave corretta puo neutralizzarlo',()=>{
  const b=match(20,'N00','R04');
