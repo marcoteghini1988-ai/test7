@@ -334,8 +334,8 @@ export default function FleetCardBattle({
     const reason=specialBlockReason(type,i);
     return <SpecialCard key={battle.round+'-'+i+'-'+type} type={type} index={i}
      selected={chosenCards.includes(i)} disabled={!!reason} disabledReason={reason}
-     onClick={!reason?()=>setChosenCards(old=>old.includes(i)?
-      old.filter(n=>n!==i):old.length<2?[...old,i]:old):undefined}:undefined}/>;
+     onClick={reason?undefined:()=>setChosenCards(old=>old.includes(i)?
+      old.filter(n=>n!==i):old.length<2?[...old,i]:old)}/>;
    }):<p className="fc-empty">Mazzo esaurito: la flotta può ancora attaccare.</p>}</div>
    <div className="fc-hand-description">{chosenCards.length?
     chosenCards.map(i=>fleetCardEffect(player.hand[i]).description).join(' + '):
