@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { OFFICIAL_NUMERIC_BACK_IDS, officialNumericDeckBackName, officialNumericDeckBackPath } from './officialDeckBackArt.js';
 import { TACTICAL_MODULE_CARDS, moduleCardType } from './tacticalEquipmentCards.js';
+import { fleetAdvancedCardProfile } from './fleetSpecialProfiles.js';
 import { officialSpecialArtPath } from './officialSpecialCardArt.js';
 import { playSound } from './audio';
 import {activeNumericBossAbilities,numericBossDeck} from './bossNumericDecks.js';
@@ -369,7 +370,7 @@ export default function ShopModal({
                         <div style={{ fontSize: '0.85rem', fontWeight: 900, color: ab.color, textAlign: 'center' }}>{moduleCard.name}</div>
                         <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
                           <div style={{ color: '#c084fc', fontWeight: 900 }}>EFFETTO DELLA CARTA</div>
-                          <div style={{ color: '#cbd5e1' }}>{moduleCard.description}</div>
+                          <div style={{ color: '#cbd5e1' }}>{fleetAdvancedCardProfile(moduleCard.id)?.description||moduleCard.description}</div>
                         </div>
                       </div>
 
@@ -555,7 +556,7 @@ export default function ShopModal({
                 </div>
                 <div style={{ width: '100%', background: 'rgba(15, 23, 42, 0.85)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.75rem', color: '#cbd5e1', lineHeight: 1.4 }}>
                   <div style={{ color: '#00f2fe', fontWeight: 900, marginBottom: '4px' }}>EFFETTO IN BATTAGLIA</div>
-                  {inspectedModule.description}
+                  {fleetAdvancedCardProfile(inspectedModule.id)?.description||inspectedModule.description}
                 </div>
               </>
             )}
