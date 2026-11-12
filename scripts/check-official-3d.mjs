@@ -5,7 +5,7 @@ import {PHASE1_CATALOG} from '../src/phase1FleetCatalog.js';
 import {MODULE_CARD_TYPES} from '../src/tacticalEquipmentCards.js';
 import {supportedLiveSpecial} from '../src/officialLiveDuelEngine.js';
 import {LIVE_FX_SPRITES} from '../src/officialLiveCombatVisuals.js';
-import {OFFICIAL_NUMERIC_BACK_IDS} from '../src/officialDeckBackArt.js';
+import {OFFICIAL_NUMERIC_BACK_IDS,officialNumericDeckStackPath} from '../src/officialDeckBackArt.js';
 
 const root=resolve(import.meta.dirname,'..');
 const read=file=>readFileSync(resolve(root,file),'utf8');
@@ -142,6 +142,7 @@ verify(ships.includes('/mathfleet/views/')&&ships.includes('weaponMount('),
 verify(arena.includes('className="live-deck live-deck--numeric"')&&
  arena.includes('className="live-deck live-deck--special"')&&
  arena.includes('data-equipped-deck={numericBackId}')&&
+ arena.includes('officialNumericDeckStackPath(numericBackId)')&&
  arena.includes('data-special-back="fixed"'),
  'I mazzi della plancia LIVE devono essere distinti: numerico equipaggiato e speciale con dorso fisso');
 verify(arena.includes('className="live-slot-row live-slot-row--player"')&&
@@ -181,6 +182,8 @@ for(const fx of LIVE_FX_SPRITES){
 for(const deckId of OFFICIAL_NUMERIC_BACK_IDS){
  verify(exists(`public/assets/deck-backs/${deckId}.png`),
   'Dorso del mazzo numerico ufficiale mancante: '+deckId);
+ verify(exists('public'+officialNumericDeckStackPath(deckId)),
+  'Pila 3D del mazzo numerico ufficiale mancante: '+deckId);
 }
 
 // Radice Mathfleet: conserva solo gli art effettivamente usati dalla Home

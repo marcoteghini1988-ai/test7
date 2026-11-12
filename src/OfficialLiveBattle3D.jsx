@@ -21,7 +21,7 @@ import {pvpTerrainDefinition,isPvpTerrain} from './pvpTerrainCards.js';
 import {officialSpecialCardIdentity} from './officialSpecialCardIdentity.js';
 import {officialSpecialVisualMeta} from './officialSpecialVisualMeta.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
-import {officialNumericDeckBackPath,officialNumericDeckBackName,OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
+import {officialNumericDeckStackPath,officialNumericDeckBackName,OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {MALUS_CHOICES} from './tacticalLegacyEvents.js';
@@ -360,7 +360,7 @@ export default function OfficialLiveBattle3D({
  const selectedSpecialVisual=selectedSpecial?officialSpecialVisualMeta(selectedSpecial.type):null;
  // E' l'ID DAVVERO equipaggiato e validato dal setup: nessun mazzo finto.
  const numericBackId=player.bossNumericDeck?.id??'neutral_starter';
- const numericBackPath=officialNumericDeckBackPath(numericBackId);
+ const numericStackPath=officialNumericDeckStackPath(numericBackId);
  const numericBackName=officialNumericDeckBackName(numericBackId);
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  const finalImpactVisible=result&&visualEvents.some(({event})=>
@@ -431,10 +431,12 @@ export default function OfficialLiveBattle3D({
    <Fighter side="player" snapshot={player} anchors={anchors} onShip={useSelected}
     weaponEffect={liveMountedWeaponEffect(visualEvents,'A')}/>
    <div className="live-deck live-deck--numeric" data-equipped-deck={numericBackId}
-    title={'Dorso numerico equipaggiato · '+numericBackName}
-    style={{'--live-deck-art':`url("${numericBackPath}")`}}
+    role="img" title={'Mazzo numerico equipaggiato · '+numericBackName}
     aria-label={'Mazzo numerico '+numericBackName+' · '+player.numeric.deck.length+' carte'}>
-    <i/><i/><i/><span><b aria-hidden="true">ϟ</b><small>NUMERICHE</small></span><em>{player.numeric.deck.length}</em>
+    <img className="live-deck-stack deck-stack-art" src={numericStackPath} width={768} height={1024}
+     alt="" draggable={false}/>
+    <small className="live-deck-label" aria-hidden="true">NUMERICHE</small>
+    <em>{player.numeric.deck.length}</em>
    </div>
    <div className="live-deck live-deck--special" data-special-back="fixed"
     title="Dorso speciale unico, invariabile"

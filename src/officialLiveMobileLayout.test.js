@@ -83,8 +83,9 @@ test('le speciali hanno la misura delle numeriche e si alzano dalla fila coperta
  assert.ok(800-250<608-50,'il pannello di dettaglio lascia visibile la carta alzata');
 });
 
-test('dorsi PNG: numerico equipaggiato e speciale unico e fisso',()=>{
- assert.match(ui,/officialNumericDeckBackPath/);
+test('pile PNG: render numerico equipaggiato e dorso speciale fisso',()=>{
+ assert.match(ui,/officialNumericDeckStackPath\(numericBackId\)/);
+ assert.match(ui,/className="live-deck-stack deck-stack-art" src=\{numericStackPath\}/);
  assert.match(ui,/OFFICIAL_SPECIAL_FIXED_BACK/);
  assert.match(ui,/data-equipped-deck=\{numericBackId\}/);
  assert.match(ui,/data-special-back="fixed"/);

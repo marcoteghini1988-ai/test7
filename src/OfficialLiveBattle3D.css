@@ -118,9 +118,14 @@
 .es-math-scope .live-root .live-deck{--deck-edge:#35dfff;--deck-glow:#24bfff;
  position:absolute;top:510px;width:58px;height:78px;z-index:9;transform-style:preserve-3d;
  perspective:340px}
-.es-math-scope .live-root .live-deck::before{content:'';position:absolute;inset:9px -4px -6px 2px;
+.es-math-scope .live-root .live-deck--special::before{content:'';position:absolute;inset:9px -4px -6px 2px;
  border-radius:9px;background:#000c;filter:blur(6px);transform:translateZ(-16px);pointer-events:none}
-.es-math-scope .live-root .live-deck--numeric{left:15px;transform:perspective(380px) rotateY(17deg) rotateZ(-2deg)}
+.es-math-scope .live-root .live-deck--numeric{left:15px;width:66px;height:88px}
+.es-math-scope .live-root .live-deck-stack{width:100%;height:100%}
+.es-math-scope .live-root .live-deck-label{position:absolute;left:50%;bottom:-7px;
+ transform:translateX(-50%);padding:2px 4px;border-radius:3px;background:#030918e6;
+ color:#f0f9ff;font-size:6.5px;font-weight:900;letter-spacing:.25px;line-height:1.15;
+ white-space:nowrap;pointer-events:none}
 .es-math-scope .live-root .live-deck--special{right:15px;--deck-edge:#f276ff;--deck-glow:#d252ff;
  transform:perspective(380px) rotateY(-17deg) rotateZ(2deg)}
 .es-math-scope .live-root .live-deck>i,.es-math-scope .live-root .live-deck>span{
@@ -321,8 +326,7 @@
 .es-math-scope .live-root .live-number-mark--gold{background:#80600bee;color:#fff8c0}
 
 
-/* Dorsi PNG reali dal mazzo equipaggiato. Nessuno spostamento dei due
-   mazzi o dei 7+5 alloggiamenti nell'arena 450x800 approvata. */
+/* Dorso fisso sulle superfici del mazzo speciale. */
 .es-math-scope .live-root .live-deck>i,
 .es-math-scope .live-root .live-deck>span,
 .es-math-scope .live-root .live-deck--special>i,

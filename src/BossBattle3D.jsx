@@ -31,6 +31,7 @@ import {playSpecialCard,findFusionCardIndex,findCoverCardIndex,findVolleyCardInd
 import {armedShotEffects,strategicStatus,STRATEGIC_EFFECT_LABELS,shotCombinationName} from './strategicShots.js';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
 import {numericBossDeck,activeNumericBossAbilities,applyBossNumericSync} from './bossNumericDecks.js';
+import {officialNumericDeckBackName,officialNumericDeckStackPath} from './officialDeckBackArt.js';
 import './MathDuelBattle.css';
 import './MathDuelIntro.css';
 const ARENA_BACKGROUND=`${ASSET_ROOT}/mathduel/arena_titanio_9x16.webp`;
@@ -541,6 +542,7 @@ function LegacyBattleRuntime({nickname,gameMode,sectorNumber=1,displaySector='',
   }
  },[help,fleetMenu]);
  const intro=game.phase==='intro'?INTRO_STAGES[introIndex]:null;
+ const numericDeckId=game.player.bossNumericDeck?.id??'neutral_starter';
  function finishIntro(){
   const b=gameRef.current;
   if(b.phase==='intro'){
@@ -1076,8 +1078,11 @@ function LegacyBattleRuntime({nickname,gameMode,sectorNumber=1,displaySector='',
    <div className="deck left deck-special" aria-label="Mazzo delle carte speciali">
     <div className="deck-graphic">✧</div><small>SPECIALI</small><strong>{game.player.specialDeck?.length||0}</strong>
    </div>
-   <div className="deck left deck-number" aria-label="Mazzo delle carte numeriche">
-    <div className="deck-graphic">✦</div><small>NUMERI</small><strong>{game.player.deck.length}</strong>
+   <div className="deck left deck-number" role="img" data-equipped-deck={numericDeckId}
+    aria-label={'Mazzo numerico '+officialNumericDeckBackName(numericDeckId)+' · '+game.player.deck.length+' carte'}>
+    <img className="deck-stack-art" src={officialNumericDeckStackPath(numericDeckId)} width={768} height={1024}
+     alt="" draggable={false}/>
+    <small>NUMERI</small><strong>{game.player.deck.length}</strong>
    </div>
    <div className="deck right" aria-label="Scarti delle carte numeriche">
     <div className="deck-graphic trash">▤</div><small>SCARTI</small><strong>{game.player.discard.length}</strong>
