@@ -14,7 +14,6 @@ export default function PersonalLoadoutModal({
   lives = 3,
   maxLives = 3,
   stardust = 0,
-  walletCap = 1500,
   diamonds = 0,
   ether = 0,
   voidCrystals = 0,
