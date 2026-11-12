@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react';
 import {SPECIAL_CARD_CATALOG,specialCardMaxCopies} from './specialCards.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {officialSpecialVisualMeta} from './officialSpecialVisualMeta.js';
+import {fleetCardEffect} from './fleetCardEngine.js';
 import {isBossCharacterCard} from './bossCharacterCards.js';
 import BossCharacterPortrait from './BossCharacterPortrait.jsx';
 import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
@@ -95,7 +96,7 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
   finally{setSaving(false);}
  }
  const body=<section className="special-deck-editor" aria-label="Costruzione mazzo speciale">
-  <p>Le 7 carte numeriche restano separate. Qui scegli le 24 speciali: massimo 6 copie ordinarie, una per Personaggio Boss, Oggetto Epico o Modulo acquistato. Il Dado e la Barra Malus sono carte speciali, non pulsanti gratuiti; nel nuovo duello gli equipaggiamenti agiscono solo quando giochi la loro carta.</p>
+  <p>Nel nuovo duello di flotta esiste un solo mazzo da 24 carte speciali: niente numeriche, Poker o formule. Schieri da 1 a 3 navicelle possedute e giochi fino a 2 speciali a round. Puoi equipaggiare fino a 6 copie ordinarie e una per Personaggio Boss, Oggetto Epico o Modulo acquistato. Personaggi e reliquie conservano la loro durata; i moduli si attivano solo quando li giochi.</p>
   {snapshot.error&&<p role="alert">{snapshot.error}</p>}
   {collection&&<>
    <div className="special-deck-summary">
@@ -114,15 +115,15 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
        {isBossCharacterCard(type)&&<BossCharacterPortrait type={type} className="special-deck-boss-portrait"/>}
        {isPvpTerrain(type)&&<PvpTerrainPortrait type={type} className="special-deck-boss-portrait"/>}
        {officialSpecialArtPath(type)&&<img className="special-deck-art" src={officialSpecialArtPath(type)} alt={info.name} loading="lazy"/>}
-       <strong>{info.short}</strong>
+       <strong>{type==='tactic-numeric-recycle'?'RICAMBIO TATTICO':type==='tactic-bomb'?'BOMBA EMP':info.short}</strong>
        <div className="special-deck-visual-tags">
         <span>{visual?.role??'SPECIALE'}</span>
         {visual?.rarity&&<span className="special-deck-tier">{visual.rarity}</span>}
         {visual?.limited==='BOSS'&&<span className="special-deck-tier">BOSS</span>}
        </div>
-       <small>{isBossCharacterCard(type)?'PERSONAGGIO BOSS · 2 CICLI · ':''}{info.description}</small>
+       <small>{isBossCharacterCard(type)?'PERSONAGGIO BOSS · 2 ROUND · ':''}{fleetCardEffect(type).description}</small>
        {isBossCharacterCard(type)&&!owned&&<small>Si sblocca sconfiggendo il boss del pianeta.</small>}
-       {isPvpTerrain(type)&&<small>Solo PvP · rimane fino a sostituzione. Non si ottiene nei pacchetti correnti.</small>}
+       {isPvpTerrain(type)&&<small>Terreno attivo per 2 round · il boss impone il proprio scenario. Non si ottiene nei pacchetti correnti.</small>}
        {isTacticalEpic(type)&&<small>Oggetto Epico · sblocco dal Varco fuso nella Cripta. Una copia per tipo, massimo due nel mazzo; uno slot a L20/primo Varco, due a L60.</small>}
        {isModuleCard(type)&&<small>{(owned?'Modulo acquistato · livello '+(snapshot.moduleLevels?.[type]??'?'):'Modulo non posseduto')+' · Carta abilità: 1 copia, giocabile tra le cinque speciali; non si trova nei pacchetti normali.'}</small>}
       </div>
