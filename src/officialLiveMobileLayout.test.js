@@ -1,6 +1,5 @@
-// Verifiche strutturali della plancia LIVE effettivamente montata da MathDuelBattle.
-// Non sostituiscono un test browser/mobile: impediscono regressioni delle geometrie
-// e dei controlli nel renderer che i giocatori aprono realmente.
+// Verifiche dello storico renderer LIVE 9:16 (archiviato) e del nuovo ingresso a carte.
+// I controlli del renderer precedente restano per non perdere gli asset 3D.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -13,12 +12,12 @@ const css=read('./OfficialLiveBattle3D.css');
 const base=read('./MathDuelBattle.css');
 const entry=read('./MathDuelBattle.jsx');
 
-test('ingresso ufficiale: plancia LIVE oppure fallback Boss, mai vecchio simultaneo',()=>{
- assert.match(entry,/from '\.\/OfficialLiveBattle3D\.jsx'/);
- assert.match(entry,/from '\.\/BossBattle3D\.jsx'/);
- assert.doesNotMatch(entry,/from '\.\/OfficialBattle3D\.jsx'/);
- assert.match(entry,/officialSimultaneousEligibility\(battleProps\)/);
- assert.match(entry,/<OfficialLiveBattle3D \{\.\.\.battleProps\}\/>/);
+test('ingresso ufficiale: nuovo duello carte con 120 settori, senza fallback vecchio',()=>{
+ assert.match(entry,/from '\\.\\/FleetCardBattle\\.jsx'/);
+ assert.match(entry,/officialCampaignBattleProps\\(props\\)/);
+ assert.match(entry,/<FleetCardBattle/);
+ assert.doesNotMatch(entry,/from '\\.\\/OfficialLiveBattle3D\\.jsx'/);
+ assert.doesNotMatch(entry,/from '\\.\\/BossBattle3D\\.jsx'/);
 });
 
 test('arena LIVE 450×800: la scala conserva il 9:16 su telefoni',()=>{
