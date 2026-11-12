@@ -94,7 +94,7 @@ test('Distruggere due componenti elimina la carta nave, nessuna riserva',()=>{
  assert.equal(second.phase,'finished');assert.equal(second.winner,'A');
 });
 test('Distruzione simultanea delle due flotte = pareggio, nessun vantaggio primo giocatore',()=>{
- const b=fleet(['C01'],['R04']);
+ const b=fleet(['C01'],['C01']);
  for(const key of ['A','B']){
   const ship=b.sides[key].ships[0];
   ship.shield=0;
