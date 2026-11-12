@@ -39,7 +39,7 @@ const WEAPONS_BY_SHIP=new Map(PHASE1_CATALOG.ships.map(ship=>[
  ship.id,PHASE1_CATALOG.weapons.filter(w=>w.nave_id===ship.id)
 ]));
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
-const alive=s=>s.parts.filter(p=>!p.destroyed).length<2;
+const alive=s=>s.parts.filter(p=>p.destroyed).length<2;
 const aliveFleet=side=>side.ships.filter(alive);
 const canFire=s=>alive(s)&&s.parts.find(p=>p.id==='weapons').damage<2;
 const part=(ship,id)=>ship.parts.find(p=>p.id===id);
