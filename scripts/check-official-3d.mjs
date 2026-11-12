@@ -168,13 +168,24 @@ verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')
  !shop.includes('onSelectAbility')&&!loadout.includes('equippedTerrainSlots'),
  'Bazar e Area Giocatore devono usare l’assetto LIVE e il Mazzo Speciale');
 
-verify(battleEntry.includes("import OfficialLiveBattle3D from './OfficialLiveBattle3D.jsx'")&&
- battleEntry.includes("import BossBattle3D from './BossBattle3D.jsx'")&&
+verify(battleEntry.includes("import FleetCardBattle from './FleetCardBattle.jsx'")&&
  battleEntry.includes("officialCampaignBattleProps(props)")&&
- battleEntry.includes("officialSimultaneousEligibility(battleProps)")&&
- battleEntry.includes("<OfficialLiveBattle3D {...battleProps}")&&
- battleEntry.includes("<BossBattle3D {...battleProps}"),
- 'Unico accesso 3D: settori canonici, live alternato e fallback boss coerenti');
+ battleEntry.includes("<FleetCardBattle {...officialCampaignBattleProps(props)}"),
+ 'Unico ingresso ufficiale: carte navicella, speciali ed elementi, con i 120 settori storici');
+const fleetView=read('src/FleetCardBattle.jsx');
+const fleetEngine=read('src/fleetCardEngine.js');
+const fleetCss=read('src/FleetCardBattle.css');
+verify(fleetView.includes("readShipCollection")&&fleetView.includes("readSpecialCollection")&&
+ fleetView.includes("claimOfficialLiveVictoryRewards")&&
+ fleetView.includes("resolveFleetCardRound")&&fleetView.includes("fc-parts"),
+ 'La nuova plancia deve usare inventari reali, ricompense e quattro bersagli');
+verify(fleetEngine.includes("FLEET_ELEMENTS")&&fleetEngine.includes("FLEET_PARTS")&&
+ fleetEngine.includes("selectFleetAiOrder")&&fleetEngine.includes("resolveFleetCardRound"),
+ 'La partita ufficiale deve usare elementi, vitali e IA senza numeriche');
+verify(fleetCss.includes("arena_titanio_9x16.webp")&&
+ fleetView.includes("SHOT")===false,
+ 'La plancia carte deve conservare la base artistica 9:16 originale');
+
 verify(arena.includes('createOfficialLiveDuel')&&
  arena.includes('applyOfficialLiveAction')&&
  arena.includes('<ShipPhysicalVitals')&&arena.includes('<MountedWeapons')&&
