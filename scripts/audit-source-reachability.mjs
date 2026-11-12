@@ -49,7 +49,11 @@ function reachable(roots){
 const app=reachable(['src/main.tsx']);
 const tests=reachable(sources.filter(p=>/\.test\.(?:js|jsx|ts|tsx)$/.test(p)));
 const candidates=sources.filter(p=>!app.has(p)&&!/\.test\./.test(p)).sort();
-const noIncoming=candidates.filter(p=>!incoming.has(p));
+// I due renderer precedenti restano conservati solo come materiale di migrazione;
+// non sono piu' ingressi di gioco. L'eliminazione fisica avverra' dopo il
+// completamento della conversione di tutte le abilita e dei boss.
+const archivedBattleRenderers=new Set(['src/OfficialLiveBattle3D.jsx','src/BossBattle3D.jsx']);
+const noIncoming=candidates.filter(p=>!incoming.has(p)&&!archivedBattleRenderers.has(p));
 console.log('Audit moduli: '+sources.length+' sorgenti; '+app.size+
  ' raggiunti dalla app; '+tests.size+' raggiunti dai test.');
 console.log('Candidati fuori dal percorso app ('+candidates.length+'):');
