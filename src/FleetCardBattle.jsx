@@ -65,13 +65,13 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotInd
    {sunk&&<div className="fc-destroyed-mark">DISTRUTTA</div>}
   </button>;
 }
-function SpecialCard({type,selected,onClick,index,disabled=false}){
+function SpecialCard({type,selected,onClick,index,disabled=false,disabledReason=''}){
  const def=SPECIAL_CARD_CATALOG[type];
- const art=officialSpecialArtPath(type);
+ const art=officialSpecialArtPath(type)||def?.imagePath||null;
  const effect=fleetCardEffect(type);
  return <button type="button" className={'fc-special '+(selected?'fc-special-active':'')}
   onClick={onClick} disabled={disabled}
-  title={(disabled?'Il boss impone il suo terreno · ':'')+effect.description}
+  title={(disabledReason?disabledReason+' · ':'')+effect.description}
   aria-pressed={selected}>
    <span className="fc-special-index">{index+1}</span>
    <div className="fc-art">{art?<img src={art} alt="" draggable={false}/>:<span className="fc-fallback-symbol">✧</span>}</div>
@@ -239,6 +239,22 @@ export default function FleetCardBattle({
  }
  const enemy=battle.sides.B,player=battle.sides.A;
  const bossBrief=fleetBossBrief(battle);
+ const characterActive=!!player.commander&&player.commander.until>=battle.round;
+ const ongoingCards=[
+  ...(characterActive?[{type:player.commander.type,remaining:player.commander.until-battle.round+1}]:[]),
+  ...player.buffs.filter(x=>x.until>=battle.round).map(x=>({type:x.type,remaining:x.until-battle.round+1}))
+ ];
+ function specialBlockReason(type,index){
+  const kind=fleetCardEffect(type).kind;
+  if(finished)return 'Battaglia conclusa';
+  if(battle.bossLockedTerrain&&kind==='terrain')return 'Il boss impone il suo terreno';
+  if(kind==='character'&&!chosenCards.includes(index)){
+   if(characterActive)return 'Un personaggio e gia attivo';
+   if(chosenCards.some(i=>fleetCardEffect(player.hand[i]).kind==='character'))
+    return 'Massimo un personaggio alla volta';
+  }
+  return '';
+ }
  const chosenEnemy=enemy.ships[enemySelection]&&!fleetShipDestroyed(enemy.ships[enemySelection])?
   enemy.ships[enemySelection]:enemy.ships.find(s=>!fleetShipDestroyed(s));
  const targetIndex=chosenEnemy?enemy.ships.indexOf(chosenEnemy):-1;
@@ -307,13 +323,18 @@ export default function FleetCardBattle({
     <strong>CARTE SPECIALI</strong>
     <small>Seleziona fino a 2 · {chosenCards.length}/2</small>
    </div>
-   <div className="fc-hand">{player.hand.length?player.hand.map((type,i)=><SpecialCard
-    key={battle.round+'-'+i+'-'+type} type={type} index={i}
-    selected={chosenCards.includes(i)}
-    disabled={finished||(battle.bossLockedTerrain&&fleetCardEffect(type).kind==='terrain')}
-    onClick={!finished&&!(battle.bossLockedTerrain&&fleetCardEffect(type).kind==='terrain')?
-     ()=>setChosenCards(old=>old.includes(i)?
-     old.filter(n=>n!==i):old.length<2?[...old,i]:old):undefined}/>):<p className="fc-empty">Mazzo esaurito: la flotta può ancora attaccare.</p>}</div>
+   {ongoingCards.length>0&&<div className="fc-ongoing" aria-live="polite">
+     <b>EFFETTI ATTIVI</b>
+     {ongoingCards.map(x=><span key={x.type}>{SPECIAL_CARD_CATALOG[x.type]?.short||x.type}
+      {' · '+x.remaining+' '+(x.remaining===1?'round':'round')}</span>)}
+    </div>}
+   <div className="fc-hand">{player.hand.length?player.hand.map((type,i)=>{
+    const reason=specialBlockReason(type,i);
+    return <SpecialCard key={battle.round+'-'+i+'-'+type} type={type} index={i}
+     selected={chosenCards.includes(i)} disabled={!!reason} disabledReason={reason}
+     onClick={!reason?()=>setChosenCards(old=>old.includes(i)?
+      old.filter(n=>n!==i):old.length<2?[...old,i]:old):undefined}:undefined}/>;
+   }):<p className="fc-empty">Mazzo esaurito: la flotta può ancora attaccare.</p>}</div>
    <div className="fc-hand-description">{chosenCards.length?
     chosenCards.map(i=>fleetCardEffect(player.hand[i]).description).join(' + '):
     'Le armi di ogni navicella funzionano anche senza carte speciali.'}</div>
