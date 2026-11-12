@@ -57,6 +57,26 @@ for(const p of candidates)
  console.log(' - '+p+(tests.has(p)?' [usato nei test]':'')+
   (incoming.has(p)?' [dipendenze interne: '+incoming.get(p)+']':' [nessun riferimento statico]'));
 console.log('Senza riferimenti statici ('+noIncoming.length+'): '+noIncoming.join(', '));
+// Nelle simulazioni newCombat un import nominato inutilizzato va eliminato.
+// Conta i riferimenti locali (import incluso); non cambia i moduli di gioco.
+const unusedNamedImports=[];
+for(const file of sources.filter(p=>p.startsWith('src/newCombat/')&&p.endsWith('.js'))){
+ const code=readFileSync(path.join(root,file),'utf8');
+ for(const matched of code.matchAll(/\bimport\s*\{([^}]+)\}\s*from\s*['"][^'"]+['"]/g)){
+  for(const imported of matched[1].split(',')){
+   const local=imported.trim().split(/\s+as\s+/).at(-1);
+   if(!/^[A-Za-z_$][\w$]*$/.test(local))continue;
+   const escaped=local.replace(/[.*+?^${}()|[\]\\]/g,'\\if(noIncoming.length){');
+   const mentions=(code.match(new RegExp('\\b'+escaped+'\\b','g'))||[]).length;
+   if(mentions===1)unusedNamedImports.push(file+': '+local);
+  }
+ }
+}
+if(unusedNamedImports.length){
+ console.error('Import nominati non utilizzati in newCombat: '+unusedNamedImports.join(', '));
+ process.exitCode=1;
+}
+
 if(noIncoming.length){
  console.error('Preflight fallito: sorgenti isolati senza riferimenti, verificare e integrare o rimuovere:');
  for(const file of noIncoming)console.error(' - '+file);

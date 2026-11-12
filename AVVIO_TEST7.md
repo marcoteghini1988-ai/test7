@@ -50,6 +50,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Audit degli helper privati `newCombat` (12/11):** rimossi cinque helper senza chiamate né esportazioni (`OPPOSITE`, `availableCardIds`, due funzioni `clamp`/`cap`, `other`) da `phase16CEpics.js`, `phase17Anomalies.js`, `phase15LegacyPassives.js` e `phase16BCombat.js`. Nessuna API pubblica, schema di salvataggio, azione LIVE, IA, carta o risorsa modificata. Preflight esteso contro la reintroduzione dei cinque identificatori locali. Le funzioni storiche ancora utilizzate dai test restano al loro posto.
 
+- **Import residui `newCombat` (12/11):** rimosso da `phase13Campaign.js` l'import inutilizzato `createPhase14Memory`, mantenendo `resolvePhase14WeaponEffects` e tutte le chiamate del motore. L'audit `scripts/audit-source-reachability.mjs` verifica ora anche gli import nominati senza riferimenti dei 27 moduli `newCombat`.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.

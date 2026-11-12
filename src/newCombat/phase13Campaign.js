@@ -9,7 +9,7 @@ import { finishPhase6Animation, exchangePhase6Cards, extractPhase6WithEther, mar
 import { planPhase9Preparation } from './phase9AI.js';
 import { resolvePhase12CampaignExchange } from './phase12CampaignAbilities.js';
 import { commitPhase5Move } from './phase5Engine.js';
-import { createPhase14Memory, resolvePhase14WeaponEffects } from './phase14WeaponEffects.js';
+import { resolvePhase14WeaponEffects } from './phase14WeaponEffects.js';
 import { resolvePhase15Passives, exchangePhase15Cards } from './phase15LegacyPassives.js';
 import {resolvePhase16EExchange,applyPhase16EExchange} from './phase16EDecks.js';
 import { getCampaignPlanetIndex } from './phase16ACatalog.js';
