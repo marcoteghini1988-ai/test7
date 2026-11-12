@@ -11,6 +11,7 @@ import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
+import {fleetBossBrief} from './fleetBossPassives.js';
 import {
  createFleetCardBattle,resolveFleetCardRound,selectFleetAiOrder,fleetSlotCount,
  FLEET_PARTS,FLEET_ELEMENTS,fleetCardEffect,fleetShipDestroyed,fleetSurvivors
@@ -130,7 +131,8 @@ export default function FleetCardBattle({
    const next=createFleetCardBattle({
     shipsA:selected.map(c=>({shipId:c.shipId,level:c.level})),shipsB:enemy.ships,
     deckA:assets.specials.loadout,deckB,mode:gameMode,
-    bossName:enemy.boss?.name??null,bossLockedTerrain:!!enemy.boss,
+    bossName:enemy.boss?.name??null,bossId:enemy.boss?.planetId??null,
+    bossLockedTerrain:!!enemy.boss,
     seed:Math.floor(Math.random()*1e8)+1,nowMs:Date.now()
    });
    localStorage.setItem(LOADOUT_KEY,JSON.stringify(selectedIds));
@@ -234,6 +236,7 @@ export default function FleetCardBattle({
   </div>;
  }
  const enemy=battle.sides.B,player=battle.sides.A;
+ const bossBrief=fleetBossBrief(battle);
  const chosenEnemy=enemy.ships[enemySelection]&&!fleetShipDestroyed(enemy.ships[enemySelection])?
   enemy.ships[enemySelection]:enemy.ships.find(s=>!fleetShipDestroyed(s));
  const targetIndex=chosenEnemy?enemy.ships.indexOf(chosenEnemy):-1;
@@ -257,6 +260,12 @@ export default function FleetCardBattle({
   <div className="fc-board">
    <section className="fc-fleet fc-enemy-rack">
     <div className="fc-rack-head"><strong>FLOTTA NEMICA</strong><span>{fleetSurvivors(enemy)}/{enemy.ships.length} operative</span></div>
+    {bossBrief&&<div className="fc-boss-ability" role="status">
+     <div className="fc-boss-ability-title"><strong>{bossBrief.name}</strong><span>PASSIVA DEL BOSS</span></div>
+     <div className="fc-boss-ability-name">{bossBrief.ability}</div>
+     <p>{bossBrief.description}</p>
+     <small>{bossBrief.status}</small>
+    </div>}
     <div className="fc-ship-row">{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
       ship={ship} enemy selected={targetIndex===i&&!finished}
       onClick={!finished?()=>{setEnemySelection(i);setPartSelection(
@@ -269,6 +278,7 @@ export default function FleetCardBattle({
     </div>}
     <div className="fc-target-title"><span>BERSAGLIO</span>
      <strong>{chosenEnemy?.name||'Flotta eliminata'}</strong></div>
+    <div className="fc-collapse-note">Due componenti distrutti = navicella eliminata.</div>
     <div className="fc-parts">{FLEET_PARTS.map(p=>{
      const vital=chosenEnemy?.parts.find(v=>v.id===p.id);
      return <button key={p.id} disabled={!vital||vital.destroyed||finished}
