@@ -506,19 +506,6 @@ const RULES_DATABASE = Object.freeze([
 
 
 // 1.4 DANNI FISSI SIMMETRICI MODALITÃ€ CLASSICA PER OPERATORE (IDENTICI PER PLAYER E IA)
-const getCardSuit = (card) => {
-  if (!card) return null;
-  if (card.isJoker) return 'joker';
-  if (card.suit) return card.suit;
-  if (typeof card.id === 'string') {
-    if (card.id.startsWith('hearts') || card.id === 'hearts') return 'hearts';
-    if (card.id.startsWith('diamonds') || card.id === 'diamonds') return 'diamonds';
-    if (card.id.startsWith('spades') || card.id === 'spades') return 'spades';
-    if (card.id.startsWith('clubs') || card.id === 'clubs') return 'clubs';
-  }
-  return 'hearts';
-};
-
 const LANGUAGES = Object.freeze({
   it: {
     welcome: "Benvenuto a Bordo",
