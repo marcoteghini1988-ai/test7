@@ -221,7 +221,12 @@ function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
     shieldsHit=Math.min(1,shieldBefore);
     target.shield-=shieldsHit;
    }
-   damage=Math.min(2-vital.damage,Math.max(1,strength-1));
+   // Danno normale: una frattura. Elemento favorevole o vera combinazione:
+   // distruzione in un colpo. Il numero di navi aiuta a superare gli scudi,
+   // non trasforma automaticamente ogni turno in un KO.
+   const resonance=profile.advantage||eff.corrosion||
+    eff.power>=2||(eff.power>=1&&eff.ion);
+   damage=Math.min(2-vital.damage,resonance?2:1);
    vital.damage+=damage;
    vital.destroyed=vital.damage>=2;
    if(vital.destroyed&&vital.id==='generator')target.shield=0;
