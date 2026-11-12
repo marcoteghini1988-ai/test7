@@ -27,6 +27,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 - **Conservare** `BossBattle3D.jsx` (fallback 3D ancora raggiungibile), la logica boss necessaria, i test `*.test.js`, le immagini delle 17 navi in due prospettive e gli **SVG sorgente** delle 82 carte ufficiali; gli SVG servono per rigenerare i PNG HD.
 - `npm run preflight` blocca il ritorno dei vecchi nomi, del pulsante di prova e degli ingressi sperimentali. Il collaudo grafico su smartphone resta un controllo separato.
 
+- **Audit sorgenti 12/11:** rimossi quattro moduli senza riferimenti nel percorso dell'app, nei test e negli script: `bossMechanicsEngine.js` (motore boss della versione precedente), `weaponsSystem.js` (vecchio database Hardpoint/carte arma), `pvpConnectivity.js` (coda Poker online), `eliteServices.js` (servizi classifica online non integrati). Restano i motori boss LIVE, il fallback, le armi integrate, lo Shop con i Moduli reali, il PvP simulato e i dati salvati. Il preflight blocca la ricomparsa dei moduli eliminati.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.

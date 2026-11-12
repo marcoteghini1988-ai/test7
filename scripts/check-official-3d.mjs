@@ -58,6 +58,10 @@ verify(!shop.includes("id: 'characters'")&&
  !source.includes('showDebugModal'),
  'Lo Shop legacy e il pulsante DEBUG di prova non devono ricomparire');
 for(const orphan of [
+ 'src/bossMechanicsEngine.js',
+ 'src/eliteServices.js',
+ 'src/pvpConnectivity.js',
+ 'src/weaponsSystem.js',
  'src/App.css', // stile residuo del boilerplate Vite; non importato da React
  'src/CombatJuiceOverlay.jsx','src/ProjectilesEngine.js',
  'src/weaponEffects.js','src/uniqueWeaponVFX.js','src/vulnerabilityRift.js',
