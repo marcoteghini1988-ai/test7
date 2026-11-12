@@ -191,3 +191,13 @@
 .fc-boss-ability p{font-size:10px;color:#d8d3c2;line-height:1.42;margin:2px 0}
 .fc-boss-ability small{display:block;font-size:10px;color:#fff0bd;margin-top:3px}
 .fc-collapse-note{font-size:10px;font-weight:700;letter-spacing:.01em;color:#eabf91;margin-top:5px}
+
+/* Nave madre sempre centrale; seconda e terza occupano i due slot laterali. */
+.fc-ship-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ justify-items:center;align-items:stretch}
+.fc-ship-row .fc-ship{width:100%;max-width:200px;grid-row:1;min-height:146px}
+.fc-ship-row .fc-slot-mother{grid-column:2}
+.fc-ship-row .fc-slot-left{grid-column:1}
+.fc-ship-row .fc-slot-right{grid-column:3}
+.fc-ship-row .fc-slot-mother:not(.fc-sunk){box-shadow:inset 0 0 0 2px #284765,0 7px 21px #1a5a8780}
+.fc-ship-row .fc-slot-mother.fc-selected{box-shadow:0 0 0 2px #efc57244,0 0 25px #efad4c66}
