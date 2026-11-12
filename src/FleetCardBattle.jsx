@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 import {readShipCollection} from './shipCollection.js';
 import {readSpecialCollection,createSpecialCollection,validateSpecialDeck} from './specialDeckBuilder.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
+import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
@@ -19,7 +20,7 @@ import './FleetCardBattle.css';
 const LOADOUT_KEY='eclissi_card_fleet_v1';
 const SHIP_IMG_ROOT='/assets/mathfleet/views/';
 const raritiesWithWebp=new Set(['Rara','Epica','Leggendaria']);
-const labels={engine:'MOT',weapons:'ARM',generator:'GEN',command:'CPU'};
+const SHIP_NAMES=new Map(PHASE1_CATALOG.ships.map(ship=>[ship.id,ship.nome]));
 const glyphs={engine:'◉',weapons:'✦',generator:'⬡',command:'⌘'};
 const textName=id=>FLEET_PARTS.find(p=>p.id===id)?.name||id;
 function getAssets(){
@@ -59,15 +60,18 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false}){
    {sunk&&<div className="fc-destroyed-mark">DISTRUTTA</div>}
   </button>;
 }
-function SpecialCard({type,selected,onClick,index}){
+function SpecialCard({type,selected,onClick,index,disabled=false}){
  const def=SPECIAL_CARD_CATALOG[type];
  const art=officialSpecialArtPath(type);
  const effect=fleetCardEffect(type);
  return <button type="button" className={'fc-special '+(selected?'fc-special-active':'')}
-  onClick={onClick} title={(def?.name||type)+' — '+effect.description} aria-pressed={selected}>
+  onClick={onClick} disabled={disabled}
+  title={(disabled?'Il boss impone il suo terreno · ':'')+effect.description}
+  aria-pressed={selected}>
    <span className="fc-special-index">{index+1}</span>
    <div className="fc-art">{art?<img src={art} alt="" draggable={false}/>:<span className="fc-fallback-symbol">✧</span>}</div>
-   <span className="fc-special-name">{def?.short||def?.name||type}</span>
+   <span className="fc-special-name">{type==='tactic-numeric-recycle'?'RICAMBIO':
+     type==='tactic-bomb'?'BOMBA EMP':def?.short||def?.name||type}</span>
    <span className="fc-special-kind">{effect.kind.toUpperCase()}</span>
   </button>;
 }
@@ -103,6 +107,7 @@ export default function FleetCardBattle({
  const [submitting,setSubmitting]=useState(false);
  const [historyOpen,setHistoryOpen]=useState(false);
  const [rewardDone,setRewardDone]=useState(false);
+ const [lastFx,setLastFx]=useState(null);
  const isPvP=gameMode==='pvp';
  function toggleShip(id){
   setMessage('');
@@ -127,7 +132,7 @@ export default function FleetCardBattle({
     seed:Math.floor(Math.random()*1e8)+1,nowMs:Date.now()
    });
    localStorage.setItem(LOADOUT_KEY,JSON.stringify(selectedIds));
-   setBattle(next);setEnemySelection(0);setPartSelection('command');
+   setBattle(next);setEnemySelection(0);setPartSelection('command');setLastFx(null);
    setChosenCards([]);setRewardDone(false);setMessage('');
   }catch(error){setMessage(error?.message||'Impossibile schierare la flotta');}
  }
@@ -146,7 +151,7 @@ export default function FleetCardBattle({
   },ai,Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   const next=result.battle;
-  setBattle(next);setChosenCards([]);
+  setBattle(next);setChosenCards([]);setLastFx({partId,nonce:Date.now()});
   setMessage(result.events.map(e=>e.text).join(' · '));
   const nextEnemyIndex=next.sides.B.ships.findIndex(s=>!fleetShipDestroyed(s));
   if(nextEnemyIndex>=0&&fleetShipDestroyed(next.sides.B.ships[index])){
@@ -210,7 +215,7 @@ export default function FleetCardBattle({
         (raritiesWithWebp.has(['R','E','L'].includes(card.shipId[0])?
          (card.shipId[0]==='R'?'Rara':card.shipId[0]==='E'?'Epica':'Leggendaria'):'Comune')?'webp':'png')}
         alt={'Carta '+card.shipId} draggable={false}/>
-       <div><strong>{card.shipId}</strong><small>Livello {def.level}</small></div>
+       <div><strong>{SHIP_NAMES.get(card.shipId)||card.shipId}</strong><small>Lv {def.level}</small></div>
        <button disabled={!active&&selectedIds.length>=allowed}
         onClick={()=>toggleShip(card.shipId)}>{active?'✓ SCHIERATA':'SCHIERA'}</button>
       </div>;
@@ -252,6 +257,10 @@ export default function FleetCardBattle({
        ship.parts.find(p=>!p.destroyed)?.id||'command');}:null}/>)}</div>
    </section>
    <section className="fc-target-panel" aria-label="Bersagli vitali">
+    {lastFx&&<div key={lastFx.nonce} className="fc-combat-flash" aria-hidden="true">
+     <img src="/assets/battle-fx/charge.png" alt="" className="fc-burst-charge"/>
+     <img src={'/assets/battle-fx/vital-'+lastFx.partId+'.png'} alt="" className="fc-burst-vital"/>
+    </div>}
     <div className="fc-target-title"><span>BERSAGLIO</span>
      <strong>{chosenEnemy?.name||'Flotta eliminata'}</strong></div>
     <div className="fc-parts">{FLEET_PARTS.map(p=>{
@@ -281,7 +290,9 @@ export default function FleetCardBattle({
    <div className="fc-hand">{player.hand.length?player.hand.map((type,i)=><SpecialCard
     key={battle.round+'-'+i+'-'+type} type={type} index={i}
     selected={chosenCards.includes(i)}
-    onClick={!finished?()=>setChosenCards(old=>old.includes(i)?
+    disabled={finished||(battle.bossLockedTerrain&&fleetCardEffect(type).kind==='terrain')}
+    onClick={!finished&&!(battle.bossLockedTerrain&&fleetCardEffect(type).kind==='terrain')?
+     ()=>setChosenCards(old=>old.includes(i)?
      old.filter(n=>n!==i):old.length<2?[...old,i]:old):undefined}/>):<p className="fc-empty">Mazzo esaurito: la flotta può ancora attaccare.</p>}</div>
    <div className="fc-hand-description">{chosenCards.length?
     chosenCards.map(i=>fleetCardEffect(player.hand[i]).description).join(' + '):
