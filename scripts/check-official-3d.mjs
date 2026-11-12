@@ -87,8 +87,12 @@ verify(!source.includes('LEGACY_TUTORIALS_ENABLED')&&
  !source.includes('SpotlightHomeTour')&&
  !source.includes('FeatureDiscoveryModal')&&
  !source.includes('eclissi_seen_tutorials')&&
- !source.includes('eclissi_tour_completed'),
- 'Le guide della vecchia versione devono restare fuori dalla Home ufficiale');
+ !source.includes('eclissi_tour_completed')&&
+ !source.includes('.spotlight-tour-overlay')&&
+ !source.includes('.discovery-modal-overlay')&&
+ !source.includes('.tactile-chassis')&&
+ !source.includes('.modal-backdrop-3d'),
+ 'Le guide e gli stili della vecchia versione devono restare fuori dalla Home ufficiale');
 
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
