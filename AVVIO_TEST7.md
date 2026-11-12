@@ -43,6 +43,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Chiusura dipendenze legacy 12/11:** dopo la rimozione dei vecchi calcolatori sono diventate isolate altre 7 funzioni (danni a operazione, valore carta con anomalie, alias Tris, validatore Poker precedente, creatore casuale carte, generatore numero bomba e assegnazione moduli vecchia IA). Eliminati altri 6,4 KB di `App.tsx` senza modificare le meccaniche LIVE; preflight esteso.
 
+- **Ultimi registri Poker inutilizzati 12/11:** rimossi da `App.tsx` i dati non più letti `evaluate5CardPokerHand`, `CLASSIC_POKER_PATTERNS`, `BOMB_ARCHETYPES` e `getCardSuit`; ulteriori 7 KB circa. L'audit dei dichiarativi top-level non rileva più identificatori con una sola occorrenza nel file. Non sono stati alterati né il motore `officialLiveDuelEngine.js`, né l'algoritmo di combinazione numerica per i vitali.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.
