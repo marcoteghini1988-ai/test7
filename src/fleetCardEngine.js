@@ -3,6 +3,7 @@
 // Tutte le navi equipaggiate sparano insieme; una nave cade con DUE vitali distrutti.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
+import {fleetAdvancedCardProfile} from './fleetSpecialProfiles.js';
 import {createFleetBossState,applyFleetBossBeforeRound,applyFleetBossAfterRound} from './fleetBossPassives.js';
 
 export const FLEET_PARTS=Object.freeze([
@@ -82,7 +83,7 @@ function buildSide(ships,types,seed){
   throw new Error('Il mazzo speciale deve contenere 24 carte reali');
  const ordered=seededShuffle(types,seed);
  return {ships:ships.map(buildShip),deck:ordered.slice(5),hand:ordered.slice(0,5),
-  discard:[],buffs:[],status:null};
+  discard:[],buffs:[],commander:null,status:null};
 }
 export function createFleetCardBattle({shipsA,shipsB,deckA,deckB,mode='campaign',
  seed=1988,nowMs=0,bossName=null,bossId=null,bossLockedTerrain=false}={}){
@@ -123,6 +124,8 @@ export const FLEET_SPECIAL_EFFECTS=Object.freeze({
  'tactic-numeric-recycle':['draw','Ricambio tattico di carte']
 });
 export function fleetCardEffect(type){
+ const advanced=fleetAdvancedCardProfile(type);
+ if(advanced)return advanced;
  if(FLEET_SPECIAL_EFFECTS[type])return {kind:FLEET_SPECIAL_EFFECTS[type][0],
   description:FLEET_SPECIAL_EFFECTS[type][1]};
  if(type.startsWith('terrain-'))return {kind:'terrain',description:'Modifica la risonanza del campo'};
@@ -145,6 +148,10 @@ function validateOrder(b,who,order){
   return 'Puoi usare fino a due carte presenti nella tua mano';
  if(b.bossLockedTerrain&&indices.some(i=>fleetCardEffect(side.hand[i]).kind==='terrain'))
   return 'Il boss impone il suo terreno: questa carta non e disponibile';
+ const playedCommanders=indices.filter(i=>fleetCardEffect(side.hand[i]).kind==='character');
+ if(playedCommanders.length>1)return 'Puoi attivare un solo personaggio alla volta';
+ if(playedCommanders.length&&side.commander&&side.commander.until>=b.round)
+  return 'Hai gia un personaggio attivo: attendi la fine della sua durata';
  return null;
 }
 function removeCards(side,indices){
@@ -162,14 +169,113 @@ function strongestElementAttack(side,defender,forcedIon){
    elements.length>0&&elements.every(e=>FLEET_ELEMENTS[defender.element].beats===e),
   attackers:attacks};
 }
-function prepareEffects(b,who,order){
- const side=b.sides[who],played=removeCards(side,order.cards);
+function healOneShield(side){
+ const candidates=aliveFleet(side).filter(s=>part(s,'generator').damage<2&&s.shield<s.maxShield);
+ candidates.sort((a,z)=>a.shield-z.shield);
+ if(!candidates.length)return false;
+ candidates[0].shield++;
+ return true;
+}
+function upgradeFleetAdvanced(side,enemy,order,round,type,effects){
+ const profile=fleetAdvancedCardProfile(type);
+ if(!profile)return false;
+ const target=enemy.ships[order.shipIndex];
+ if(profile.kind==='character'){
+  side.commander={type,until:round+profile.duration-1};
+  return true;
+ }
+ if(profile.kind==='epic'){
+  // Una carta epica resta attiva esattamente per il numero di round del
+  // suo catalogo. Non si inventano reliquie, livelli o ricompense.
+  side.buffs=side.buffs.filter(buff=>buff.type!==type);
+  side.buffs.push({type,until:round+profile.duration-1});
+  return true;
+ }
+ const active=aliveFleet(side);
+ switch(profile.action){
+  case 'impulse':effects.power++;break;
+  case 'repair':effects.repair++;break;
+  case 'swap1':effects.draw++;break;
+  case 'swap2':effects.draw+=2;break;
+  case 'execute':
+   if(target&&(target.shield<=1||target.parts.some(p=>p.damage>0)))effects.power++;
+   break;
+  case 'guard':effects.guard++;break;
+  case 'jam':effects.jam=true;break;
+  case 'drain':effects.power++;effects.healOnHit=true;break;
+  case 'interfere':effects.jam=true;effects.jamDraw=true;break;
+  case 'cleanse':effects.antiJam=true;break;
+  case 'fortify':effects.guard++;effects.repair++;break;
+  case 'formation':if(active.length>=2)effects.power++;break;
+  case 'focus':effects.power++;break;
+  case 'siphon':effects.power++;effects.jam=true;break;
+  case 'escort':if(active.length>=2)effects.power++;break;
+  case 'purge':effects.antiJam=true;effects.guard++;break;
+  case 'quantum':effects.power++;effects.ion=true;break;
+  case 'burn':effects.corrosion=true;break;
+  case 'singularity':effects.power++;effects.ion=true;effects.healOnHit=true;break;
+  default:throw Error('Modulo avanzato senza regola di flotta: '+type);
+ }
+ return true;
+}
+function ongoingFleetAdvanced(side,enemy,enemyOrder,battle,effects){
+ const commander=side.commander;
+ if(commander?.until<battle.round)side.commander=null;
+ const active=aliveFleet(side);
+ const opposing=aliveFleet(enemy);
+ if(side.commander){
+  const {action}=fleetAdvancedCardProfile(side.commander.type);
+  switch(action){
+   case 'armor':effects.guard++;break;
+   case 'assault':effects.power++;break;
+   case 'corrosion':effects.corrosion=true;break;
+   case 'counter':
+    effects.guard++;if((enemyOrder.cards??[]).length)effects.power++;
+    break;
+   case 'ionGuard':if(opposing.some(s=>s.element==='ionic'))effects.guard++;break;
+   case 'escortGuard':if(active.length>=2)effects.guard++;break;
+   case 'shadow':if(active.some(s=>s.shield<=1))effects.power++;break;
+   case 'regeneration':effects.repair++;break;
+   case 'sync':
+    if(active.length>=2&&alive(side.ships[0])&&
+      part(side.ships[0],'command').damage<2)effects.power++;
+    break;
+   case 'harmonic':if(active.length>=2)effects.power++;break;
+   case 'magma':
+    if(battle.terrain?.element==='plasma'||
+      enemy.ships[enemyOrder.shipIndex]?.shield===0)effects.power++;
+    break;
+   case 'precision':effects.pierce=true;break;
+   default:throw Error('Personaggio senza abilita di flotta: '+action);
+  }
+ }
+ side.buffs=side.buffs.filter(buff=>buff.until>=battle.round);
+ for(const buff of side.buffs){
+  const {action}=fleetAdvancedCardProfile(buff.type);
+  switch(action){
+   case 'calice':effects.power++;effects.healOnHit=true;break;
+   case 'pendolo':effects.draw++;break;
+   case 'monolite':
+    if(opposing.some(s=>s.element==='plasma'))effects.guard++;
+    break;
+   case 'matrice':
+    if(active.some(s=>s.shield===0&&s.parts.some(p=>p.damage>0)))
+     effects.power+=2;
+    break;
+   case 'mobius':effects.jam=true;break;
+   case 'astrolabio':effects.draw+=2;break;
+   default:throw Error('Carta epica senza abilita di flotta: '+action);
+  }
+ }
+}
+function prepareEffects(b,who,order,opposingOrder){
+ const side=b.sides[who],enemy=b.sides[who==='A'?'B':'A'];
+ const played=removeCards(side,order.cards);
  const effects={power:0,guard:0,pierce:false,ion:false,corrosion:false,
-  jam:false,repair:0,draw:0,aura:0,cards:played};
- // Gli effetti persistenti hanno durata limitata: non si accumulano senza fine.
- side.buffs=side.buffs.filter(a=>a.until>=b.round);
- if(side.buffs.length)effects.power+=1;
+  jam:false,repair:0,draw:0,aura:0,healOnHit:false,antiJam:false,
+  jamDraw:false,cards:played};
  for(const type of played){
+  if(upgradeFleetAdvanced(side,enemy,order,b.round,type,effects))continue;
   const kind=fleetCardEffect(type).kind;
   switch(kind){
    case 'power': effects.power++;break;
@@ -191,6 +297,7 @@ function prepareEffects(b,who,order){
    default:break;
   }
  }
+ ongoingFleetAdvanced(side,enemy,opposingOrder,b,effects);
  if(played.length===2){
   const kinds=played.map(t=>fleetCardEffect(t).kind);
   if(kinds.includes('power')&&kinds.includes('ion'))effects.power++;
@@ -226,7 +333,7 @@ function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
  const terrainBonus=activeTerrain&&profile.attackers.some(s=>s.element===activeTerrain)?1:0;
  const effectBoost=eff.power+(eff.corrosion?1:0)+eff.aura+terrainBonus;
  const advantageBonus=profile.advantage?1:0;
- const blocked=defEff.guard+(defEff.jam?1:0)+(profile.resisted?1:0);
+ const blocked=defEff.guard+(defEff.jam&&!eff.antiJam?1:0)+(profile.resisted?1:0);
  const strength=clamp(base+effectBoost+advantageBonus-blocked,0,5);
  const shieldBefore=target.shield;
  let damage=0,shieldsHit=0;
@@ -270,7 +377,7 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  const a=validateOrder(battle,'A',orderA),c=validateOrder(battle,'B',orderB);
  if(a||c)return {ok:false,reason:a||c,battle};
  const b=copy(battle);
- const effA=prepareEffects(b,'A',orderA),effB=prepareEffects(b,'B',orderB);
+ const effA=prepareEffects(b,'A',orderA,orderB),effB=prepareEffects(b,'B',orderB,orderA);
  // Le carte Terreno modificano il campo per due round; boss bloccati.
  const terrainClash=!!effA.terrain&&!!effB.terrain;
  const terrainChoice=terrainClash?null:effA.terrain||effB.terrain;
@@ -284,6 +391,10 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  const hitA=resolveAttack(snapA,b.sides.B,orderA,effA,effB,b.terrain?.element,b.round);
  const hitB=resolveAttack(snapB,b.sides.A,orderB,effB,effA,b.terrain?.element,b.round);
  const bossPost=applyFleetBossAfterRound(b,hitA,hitB);
+ // Il sifone e il Calice riparano soltanto in risposta a un colpo reale.
+ // Il generatore deve essere operativo: nessuna guarigione di una nave distrutta.
+ if(effA.healOnHit&&(hitA.damage>0||hitA.shieldsHit>0))healOneShield(b.sides.A);
+ if(effB.healOnHit&&(hitB.damage>0||hitB.shieldsHit>0))healOneShield(b.sides.B);
  const events=[
   {round:b.round,text:'Giocatore: '+hitA.text,who:'A',...hitA},
   {round:b.round,text:'Avversario: '+hitB.text,who:'B',...hitB}
@@ -297,8 +408,9 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
   b.finishedAtMs=nowMs;
  }else{
   b.round++;
-  refillOne(b.sides.A);refillOne(b.sides.B);
-  for(const e of [effA,effB])if(e.draw){
+  if(!effB.jamDraw||effA.antiJam)refillOne(b.sides.A);
+  if(!effA.jamDraw||effB.antiJam)refillOne(b.sides.B);
+  for(const e of [effA,effB])if(e.draw&&!(e===effA?effB.jamDraw&&!effA.antiJam:effA.jamDraw&&!effB.antiJam)){
    const side=e===effA?b.sides.A:b.sides.B;
    // Il ricambio non crea copie: sostituisce una carta rimasta in mano
    // con la prossima carta del mazzo, dopo la pesca normale.
@@ -324,7 +436,8 @@ export function selectFleetAiOrder(battle){
  const target=targets[0],parts=['command','weapons','generator','engine'];
  const preferred=parts.find(p=>!part(target.ship,p).destroyed);
  const useful=side.hand.map((t,i)=>({i,kind:fleetCardEffect(t).kind}))
-  .filter(x=>['power','ion','pierce','corrosion','guard','repair','jam','aura'].includes(x.kind));
+  .filter(x=>['power','ion','pierce','corrosion','guard','repair','jam','aura','module','character','epic'].includes(x.kind))
+  .filter(x=>x.kind!=='character'||!side.commander||side.commander.until<battle.round);
  const indexes=useful.slice(0,battle.round%3===0?2:1).map(x=>x.i);
  return {shipIndex:target.i,partId:preferred,cards:indexes};
 }
