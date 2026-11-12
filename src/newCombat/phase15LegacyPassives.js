@@ -8,7 +8,6 @@
 import { TURN_PHASES } from './config.js';
 import { exchangePhase6Cards, extractPhase6WithEther, markPhase6Ready, PHASE6_ETHER_COST } from './phase6Engine.js';
 
-const other=side=>side==='player'?'enemy':'player';
 const clamp=(n,lo,hi)=>Math.max(lo,Math.min(hi,Math.floor(Number(n)||0)));
 const SIDES=['player','enemy'];
 const SUITS=new Set(['hearts','diamonds','clubs','spades']);

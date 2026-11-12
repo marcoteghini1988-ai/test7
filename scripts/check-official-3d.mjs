@@ -282,6 +282,20 @@ for(const asset of shipRepairManifest.assets||[]){
  verify(exists(asset.output), 'Vista completa navicella mancante: '+asset.output);
 }
 
+// Non reintrodurre helper locali della vecchia simulazione che non avevano
+// riferimenti. L'audit conserva invece gli export consumati da test e fallback.
+for(const [file,names] of [
+ ['src/newCombat/phase16CEpics.js',['OPPOSITE','availableCardIds']],
+ ['src/newCombat/phase17Anomalies.js',['clamp']],
+ ['src/newCombat/phase15LegacyPassives.js',['other']],
+ ['src/newCombat/phase16BCombat.js',['cap']]
+]){
+ const contents=read(file);
+ for(const name of names)
+  verify(!new RegExp('\\bconst\\s+'+name+'\\s*=').test(contents),
+   'Helper privato obsoleto nuovamente presente: '+file+' '+name);
+}
+
 // Radice Mathfleet: conserva solo gli art effettivamente usati dalla Home
 // e i motori storici utili a rappresentare i componenti distruttibili.
 for(const filename of ["C01.png","C01_player.png","C02.png","C02_player.png","C03.png","C03_player.png","C04.png","N00.png"]){

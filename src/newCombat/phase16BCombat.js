@@ -34,7 +34,6 @@ export const MALUS_EFFECTS=Object.freeze([
   {id:'reveal_weapon',name:'Arma scoperta'}
 ]);
 const log=(state,message)=>({...state,history:[...state.history,message].slice(-LIMIT)});
-const cap=(n,max)=>Math.max(0,Math.min(max,Math.floor(Number(n)||0)));
 const newSide=()=>({dicePatterns:[],diceReady:false,malusCharge:0,malusChoices:[],usedMalus:[],skipNextPreparation:false,skipProtection:false,handLimit:0,boostBlocked:0,lockedWeapon:null,attackWeakened:0,weakShield:0,spying:null,weaponRevealed:false,preparationSkips:0,moduleCharge:0});
 const groupPattern=pattern=>String(pattern||'').replace(/_[45]$/,'');
 const nextOptions=(used,offset)=>{

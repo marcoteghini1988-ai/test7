@@ -20,7 +20,6 @@ export const PHASE17_ANOMALY_CATALOG=Object.freeze({
 });
 const classOf=weaponId=>getWeaponDefinition(weaponId)?.weaponClass||null;
 const suits=cards=>new Set((cards||[]).map(card=>({H:'hearts',D:'diamonds',C:'clubs',S:'spades','♥':'hearts','♦':'diamonds','♣':'clubs','♠':'spades'})[card?.suit]||card?.suit).filter(s=>['hearts','diamonds','clubs','spades'].includes(s)));
-const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 
 export function createPhase17Anomalies(planet,sector){
  return {planet,sector,plan:sector===10?(BOSS_PLANS[planet]||[]):[],triggered:0,active:null,events:[]};

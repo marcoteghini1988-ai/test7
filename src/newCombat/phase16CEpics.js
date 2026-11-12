@@ -18,7 +18,6 @@ export const PHASE16C_EPICS=Object.freeze({
 });
 const ITEMS=Object.keys(PHASE16C_EPICS);
 const CLASSES=['light','medium','heavy'];
-const OPPOSITE=s=>s==='player'?'enemy':'player';
 const append=(state,text)=>({...state,history:[...state.history,text].slice(-20)});
 export const hasPhase16CEpic=(s,id)=>Boolean(s.phase16C?.equipped?.includes(id));
 const hpLow=state=>state.hp.player<=state.initialHp.player*0.30;
@@ -27,7 +26,6 @@ export const PHASE16C_HEAT_LIMIT=100;
 export const PHASE16C_HEAT_PER_SHOT=Object.freeze({light:40,medium:50,heavy:65});
 const normalizeRank=card=>normalizePokerRank(card)||0;
 const rankDescending=(a,b)=>((normalizeRank(b)===1?14:normalizeRank(b))-(normalizeRank(a)===1?14:normalizeRank(a)));
-const availableCardIds=cards=>new Set(cards.map(c=>c.id));
 const SUITS=['hearts','diamonds','clubs','spades'];
 
 /** Produce candidati strategici reali, senza enumerare milioni di combinazioni. */
