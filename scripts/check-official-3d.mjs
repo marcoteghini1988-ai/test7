@@ -253,6 +253,21 @@ for(const deckId of OFFICIAL_NUMERIC_BACK_IDS){
   'Pila 3D del mazzo numerico ufficiale mancante: '+deckId);
 }
 
+// Le due viste N00 senza suffisso erano anteprime non caricate da ShipArtwork.
+for(const side of ['enemy_to_player','player_to_enemy']){
+ verify(!exists('public/assets/mathfleet/views/'+side+'/N00.png'),
+  'Anteprima N00 non usata ancora presente in '+side);
+}
+// Le immagini preliminari C01-C04 sono invece gli input dichiarati del
+// piano di riparazione: non cancellarle finché il piano le richiede.
+const shipRepairManifest=JSON.parse(read('docs/ship-asset-repair.json'));
+verify(Array.isArray(shipRepairManifest.assets)&&shipRepairManifest.assets.length===8,
+ 'Piano di riparazione delle otto viste C01-C04 assente o incompleto');
+for(const asset of shipRepairManifest.assets||[]){
+ verify(exists(asset.input), 'Sorgente di ripristino navicella mancante: '+asset.input);
+ verify(exists(asset.output), 'Vista completa navicella mancante: '+asset.output);
+}
+
 // Radice Mathfleet: conserva solo gli art effettivamente usati dalla Home
 // e i motori storici utili a rappresentare i componenti distruttibili.
 for(const filename of ["C01.png","C01_player.png","C02.png","C02_player.png","C03.png","C03_player.png","C04.png","N00.png"]){
