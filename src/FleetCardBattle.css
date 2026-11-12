@@ -163,23 +163,6 @@
  .fc-selection{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 
-/* Esplosioni e carica sulle quattro parti: FX ufficiali già presenti nel gioco.
-   La resa non intercetta input e non modifica il danno deciso dal motore. */
-.fc-target-panel{position:relative;isolation:isolate}
-.fc-combat-flash{position:absolute;z-index:5;inset:0;pointer-events:none;overflow:hidden;
- display:flex;align-items:center;justify-content:center;animation:fc-flash-exit 1.8s ease-out forwards}
-.fc-combat-flash img{position:absolute;max-width:72%;max-height:100%;object-fit:contain;
- filter:drop-shadow(0 0 10px #9edfff)}
-.fc-burst-charge{animation:fc-fx-charge .55s ease-out both}
-.fc-burst-vital{animation:fc-fx-impact 1.2s .2s ease-out both}
-@keyframes fc-fx-charge{0%{transform:translateY(110px) scale(.25);opacity:0}
- 30%{opacity:.95}100%{transform:translateY(0) scale(.95);opacity:.6}}
-@keyframes fc-fx-impact{0%{transform:scale(.35);opacity:0}
- 30%{transform:scale(1.12);opacity:1}100%{transform:scale(1.4);opacity:0}}
-@keyframes fc-flash-exit{0%,80%{opacity:1}100%{opacity:0}}
-@media(prefers-reduced-motion:reduce){.fc-combat-flash,
- .fc-burst-charge,.fc-burst-vital{animation:none;opacity:0}}
-
 /* Un'unica passiva boss pubblica e leggibile, senza finestre da aprire. */
 .fc-boss-ability{margin:0 0 9px;padding:7px 9px;border:1px solid #a18042;
  border-radius:9px;background:linear-gradient(110deg,#302513e8,#141d32e8);
@@ -209,3 +192,77 @@
 .fc-ongoing b{font-size:9px;letter-spacing:.1em;color:#acd5f5;margin-right:4px}
 .fc-ongoing span{font-size:9px;font-weight:700;color:#fce9b8;
  padding:4px 6px;border:1px solid #877349;border-radius:6px;background:#332b20}
+
+/* ATTACCHI REALI: traiettorie per gli armamenti esistenti, senza PNG di prova.
+   Ogni proiettile e' scelto dal nome e dalla descrizione dell'arma ufficiale.
+   Lo scudo riceve un FX differente da un vitale, e solo se colpito davvero. */
+.fc-target-panel{position:relative;isolation:isolate}
+.fc-volley-stage{position:absolute;inset:0;z-index:4;overflow:hidden;
+ border-radius:inherit;pointer-events:none;contain:paint}
+.fc-weapon-trace{--fc-trace-color:#9fefff;position:absolute;z-index:1;
+ display:block;width:12px;height:64px;opacity:0;pointer-events:none;
+ filter:drop-shadow(0 0 7px var(--fc-trace-color))}
+.fc-weapon-trace i{position:absolute;display:block;background:var(--fc-trace-color);
+ width:5px;height:55px;border-radius:8px;left:3px;top:0;
+ box-shadow:0 0 12px var(--fc-trace-color),0 0 4px #fff}
+.fc-trace-up{top:95%;animation:fc-shot-up 1.15s ease-in-out forwards}
+.fc-trace-down{top:-30%;animation:fc-shot-down 1.15s ease-in-out forwards}
+.fc-trace-beam i{width:4px;height:86px;left:4px;
+ background:linear-gradient(to bottom,transparent,var(--fc-trace-color) 20%,#fff 60%,transparent)}
+.fc-trace-arc i{width:11px;height:64px;left:0;background:transparent;
+ border-left:3px dashed var(--fc-trace-color);border-radius:45%;
+ transform:skewX(15deg);box-shadow:none;filter:drop-shadow(0 0 7px var(--fc-trace-color))}
+.fc-trace-prism i{width:14px;height:27px;left:0;top:10px;
+ clip-path:polygon(50% 0,100% 40%,65% 100%,0 60%);
+ background:linear-gradient(110deg,#fff,var(--fc-trace-color));box-shadow:none}
+.fc-trace-plasma i{width:19px;height:29px;left:-4px;top:14px;border-radius:50%;
+ background:radial-gradient(circle,#fff 12%,var(--fc-trace-color) 44%,transparent 90%);
+ box-shadow:0 0 13px var(--fc-trace-color)}
+.fc-trace-missile i{width:7px;height:27px;left:2px;top:5px;border-radius:50% 50% 10% 10%;
+ background:linear-gradient(#fff,var(--fc-trace-color),transparent)}
+.fc-trace-wave i{width:27px;height:22px;left:-8px;top:18px;border:3px solid var(--fc-trace-color);
+ background:transparent;border-radius:50%;box-shadow:0 0 8px var(--fc-trace-color)}
+.fc-trace-rift i{width:24px;height:46px;left:-6px;top:4px;border:3px solid var(--fc-trace-color);
+ background:#190d32d9;border-radius:50%;box-shadow:0 0 15px var(--fc-trace-color)}
+.fc-trace-pulse i{width:12px;height:30px;left:0;top:11px;border-radius:30%;
+ background:radial-gradient(#fff,var(--fc-trace-color),transparent)}
+@keyframes fc-shot-up{
+ 0%{transform:translateY(0) scale(.55);opacity:0}
+ 17%{opacity:1}76%{opacity:.95}
+ 100%{transform:translateY(-220px) scale(1.1);opacity:0}
+}
+@keyframes fc-shot-down{
+ 0%{transform:translateY(0) scale(.55);opacity:0}
+ 17%{opacity:1}76%{opacity:.95}
+ 100%{transform:translateY(220px) scale(1.1);opacity:0}
+}
+.fc-ship-impact{position:absolute;inset:24% 2% 15%;z-index:4;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:2px;pointer-events:none;opacity:0;animation:fc-ship-impact 1.6s ease-out forwards}
+.fc-ship-impact img{height:82%;width:100%;object-fit:contain;
+ filter:drop-shadow(0 0 9px #ffc37a)}
+.fc-ship-impact>span{display:block;background:#06101ff0;border:1px solid #7d9abb;
+ border-radius:5px;padding:2px 4px;text-align:center;font-size:9px;font-weight:800;
+ color:#fff1d0;text-shadow:0 1px 2px #000;white-space:normal}
+.fc-impact-shield-contact>span,.fc-impact-shield-fracture>span{color:#abedff}
+.fc-impact-destroyed>span{color:#ffbd9e;background:#3c1823ef;border-color:#e78280}
+@keyframes fc-ship-impact{
+ 0%{transform:scale(.5);opacity:0}
+ 20%{transform:scale(1);opacity:1}
+ 67%{transform:scale(1.15);opacity:1}
+ 100%{transform:scale(1.18);opacity:0}
+}
+.fc-weapons-fired{display:flex;gap:7px;align-items:center;padding:5px 7px;
+ margin:0 0 8px;border:1px solid #27596b;border-radius:7px;background:#0a2333d6;
+ font-size:10px;line-height:1.3}
+.fc-weapons-fired strong{color:#8ee8fd;flex-shrink:0;font-size:9px}
+.fc-weapons-fired span{color:#dcecff;overflow-wrap:anywhere}
+@media(max-width:520px){
+ .fc-ship-impact>span{font-size:8px;max-width:96%}
+ .fc-weapons-fired{font-size:9px}
+ .fc-trace-beam i{height:72px}
+ .fc-ship-impact{inset:25% 0 13%}
+}
+@media(prefers-reduced-motion:reduce){
+ .fc-weapon-trace,.fc-ship-impact{animation:none;opacity:0}
+}
