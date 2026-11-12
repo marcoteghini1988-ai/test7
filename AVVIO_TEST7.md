@@ -33,6 +33,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Componenti inattivi 12/11:** rimosse da `App.tsx` cinque vecchie schermate mai richiamate (banner risoluzione, ponte Möbius, fusione neutronica, astrolabio e celebrazione vittoria): circa 30 KB di codice inutilizzato. Conservati il varco gravitazionale, la Cripta, il briefing e tutti i componenti richiamati dall'app. Blocco di regressione aggiunto al preflight.
 
+- **Costanti inutilizzate 12/11:** eliminati da `App.tsx` 17 registri e parametri della vecchia battaglia non referenziati (dadi B, pool malus, anomalie, archetipo IA, vecchi timer/bonus, soglie di sblocco e simboli dei 20 pianeti); lasciati intatti `SUITS`, modificatori campagna realmente letti, scanner attivo, salvataggi e carte LIVE. Verifica contro regressioni aggiornata.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.

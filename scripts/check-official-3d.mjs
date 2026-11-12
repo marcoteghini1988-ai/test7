@@ -103,6 +103,14 @@ verify(!source.includes('ResolutionGradeBanner')&&
  source.includes('function EpicItemsHubScreen'),
  'Non reintrodurre componenti della vecchia battaglia disattivati o eliminare il varco/cripta attivi');
 
+verify(!source.includes('QUANTUM_DICE_B_FACES')&&
+ !source.includes('MALUS_POOL')&&
+ !source.includes('FIELD_ANOMALIES')&&
+ !source.includes('AI_ARCHETYPES')&&
+ !source.includes('DEFAULT_TURN_TIME')&&
+ !source.includes('PVP_WIN_TROPHIES'),
+ 'Costanti della vecchia battaglia mai utilizzate non devono riapparire in App.tsx');
+
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
 verify(exists('src/officialLiveMobileLayout.test.js'),

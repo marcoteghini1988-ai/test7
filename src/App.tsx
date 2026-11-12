@@ -81,21 +81,14 @@ import ShopModal from './ShopModal';
 
 // 1.1 PARAMETRI DI BILANCIAMENTO, COSTANTI & CAP ECONOMICI
 const MAX_PLAYER_LEVEL = 100;
-const STANDARD_MALUS_CAP = 20;         // 20 Punti per riempire la Barra Malus (1-10 pt a colpo)
-const MALUS_REFERENCE_TIME = 60;       // Tempo base (60s) da cui calcolare i secondi risparmiati a colpo
 
-const HITS_TO_CHARGE_ABILITY = 3;      // 3 colpi a segno per il 100% del Modulo Abilità (4 tacche su 12 a colpo)
 const DAILY_BETTING_DIAMOND_CAP = 10;
-const PASSIVE_STARDUST_SILO_CAP = 120;
-const DEFAULT_TURN_TIME = 60; // 60 secondi base
 
 
 
 // Parametri Scanner Tattico e Colpo Lampo
 const SCANNER_TANK_MAX = 60;                    // Capienza massima serbatoio (60 secondi)
 const SCANNER_REFILL_INTERVAL_MS = 86400000;     // Ricarica totale gratuita ogni 24 ore (ms)
-const SCANNER_MERIT_REFILL_SECONDS = 3;         // Recupero serbatoio su colpo lampo (+3s)
-const SCANNER_MERIT_WINDOW_SECONDS = 15;        // Finestra colpo lampo (primi 15s)
 const SCANNER_DIAMOND_REFILL_RATE = 10;         // 1 Diamante = +10s di ricarica
 
 // Calcola la durata del turno per pianeta (da 60s a 45s)
@@ -123,10 +116,7 @@ const getSectorScannerMode = (globalSector = 1, gameMode = 'adventure', bettingT
   return 'TANK_PAID';
 };
 
-const GOLDEN_CARD_UNLOCK_SECTOR = 6;          // Sblocco Carta Dorata al Settore 6 (Terra S6)
-const BOMB_UNLOCK_ADVENTURE_SECTOR = 7;       // Sblocco Nucleo Instabile al Settore 7 (Terra S7)
 
-const TIME_TANK_MAX_CAP = 30;                 // Riserva tempo accumulabile (+30s max)
 const INITIAL_PLAYER_CREDITS = 200;           // Dotazione iniziale per i primi settori
 
 // SBLOCCHI BASATI SUL PROGRESSO NEI SETTORI DELL'AVVENTURA (1-200)
@@ -134,7 +124,6 @@ const INITIAL_PLAYER_CREDITS = 200;           // Dotazione iniziale per i primi 
 const BETTING_UNLOCK_ADVENTURE_SECTOR = 11;       // P2 Marte Settore 1 (Settore 11 - Tier 1 & Classica)
 const PVP_TRAINING_UNLOCK_SECTOR = 11;            // P2 Marte Settore 1 (Settore 11 - Sblocco Addestramento)
 const ETHER_UNLOCK_SECTOR = 15;                   // P2 Marte Settore 5 (Settore 15 - Sblocco Etere & Estrattore)
-const VECTOR_BETTING_UNLOCK_SECTOR = 21;          // P3 Venere Settore 1 (Settore 21 - Tier 2 & Vettore)
 const DUEL_BETTING_UNLOCK_SECTOR = 41;            // P5 Giove Settore 1 (Settore 41 - Tier 3 & Duello)
 const TRIS_BETTING_UNLOCK_SECTOR = 61;            // P7 Urano Settore 1 (Settore 61 - Tier 4 & Tris Stellare)
 const PVP_ELITE_UNLOCK_SECTOR = 81;               // P8 Nettuno completato (Settore 81+)
@@ -237,7 +226,6 @@ const getStarCapsuleReward = (milestone) => {
 };
 
 // Costante di fallback provvisoria per trofei
-const PVP_WIN_TROPHIES = 25;
 
 
 // Formula Curva Vitale Universale del Giocatore (HP Pilota 50â€“400)
@@ -1203,22 +1191,8 @@ const SUITS = Object.freeze([
 ]);
 
 // 1.10 FACCE DADI QUANTICI 2D (DISPLAY B)
-const QUANTUM_DICE_B_FACES = Object.freeze([
-  { id: 'black', symbol: 'âš¡', name: 'Carica Modulo', color: '#facc15', border: '#fde047' },
-  { id: 'red', symbol: '🛡️', name: 'Scarica Malus', color: '#38bdf8', border: '#7dd3fc' },
-  { id: 'hearts', symbol: 'â™¥', name: 'Cura HP %', color: '#f43f5e', border: '#fca5a5' },
-  { id: 'diamonds', symbol: 'â™¦', name: 'Polvere Stellare', color: '#f59e0b', border: '#fde68a' },
-  { id: 'spades', symbol: 'â™ ', name: 'Colpo Diretto', color: '#c084fc', border: '#f5d0fe' },
-  { id: 'clubs', symbol: 'â™£', name: 'Tempo di Riserva', color: '#10b981', border: '#6ee7b7' }
-]);
 
 // 1.11 POOL DEI 4 MALUS TATTICI
-const MALUS_POOL = Object.freeze([
-  { id: 'hp_drain', title: '1. Perdita HP Immediata', desc: 'Infligge 10 HP di danno diretto.', icon: 'hazard', color: '#ef4444' },
-  { id: 'module_lock', title: '2. Blocco Modulo Abilità', desc: 'Disattiva il Modulo Abilità per 2 turni.', icon: 'tactical_slot', color: '#f59e0b' },
-  { id: 'hand_reduction', title: '3. Mano Ridotta', desc: 'La mano del prossimo turno avrà solo 5 carte.', icon: 'deck_stack', color: '#8b5cf6' },
-  { id: 'skip_turn', title: '4. Salto Turno', desc: 'Il turno termina subito e l\'iniziativa passa all\'avversario.', icon: 'hazard', color: '#ec4899' }
-]);
 
 
 // 1.12 MODIFICATORI AMBIENTALI & ANOMALIE DI CAMPO
@@ -1229,16 +1203,7 @@ const ADVENTURE_MODIFIERS = Object.freeze([
   { id: 'boss_combined', name: 'Sfida Boss', desc: 'Timer ridotto e attacchi nemici rinforzati.' }
 ]);
 
-const FIELD_ANOMALIES = Object.freeze([
-  { id: 'normal', name: 'Campo Neutro', desc: 'Nessun vincolo particolare.', blockedOp: null },
-  { id: 'hearts_res', name: 'Risonanza Cuori', desc: 'Il valore di tutte le carte Cuori Ã¨ raddoppiato.', blockedOp: null },
-  { id: 'op_lock_add', name: 'Addizione Bloccata [+]', desc: 'Impossibile usare l\'addizione in questo turno.', blockedOp: '+' },
-  { id: 'op_lock_mul', name: 'Moltiplicazione Bloccata [*]', desc: 'Impossibile usare la moltiplicazione in questo turno.', blockedOp: '*' },
-  { id: 'op_lock_sub', name: 'Sottrazione Bloccata [-]', desc: 'Impossibile usare la sottrazione in questo turno.', blockedOp: '-' },
-  { id: 'op_lock_div', name: 'Divisione Bloccata [/]', desc: 'Impossibile usare la divisione in questo turno.', blockedOp: '/' }
-]);
 
-const AI_ARCHETYPES = Object.freeze(['calculator', 'rusher', 'controller', 'disruptor']);
 
 // 1.13 LIVELLI ESTRATTORE ETERE COSMICO
 const EXTRACTOR_LEVELS = Object.freeze({
@@ -2805,9 +2770,6 @@ const realPlanetNames = Object.freeze([
   "Europa", "Ganimede", "Kepler-186f", "Proxima b", "TRAPPIST-1e", "Gliese 581g", "Haumea", "Eris", "Io", "Encelado"
 ]);
 
-const planetSymbols = Object.freeze([
-  'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8', 'P9', 'P10', 'P11', 'P12', 'P13', 'P14', 'P15', 'P16', 'P17', 'P18', 'P19', 'P20'
-]);
 
 const PLANET_ZONE_NAMES = Object.freeze([
   ["Valle di Cristallo", "Cratere Boreale", "Avamposto Alpha", "Piana dei Venti", "Barriera Ovest", "Tempio Sommerso", "Gola Silenziosa", "Polo Magnetico", "Faglia Profonda", "Guardiano di Gaia"],
