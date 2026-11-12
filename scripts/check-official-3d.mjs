@@ -111,6 +111,14 @@ verify(!source.includes('QUANTUM_DICE_B_FACES')&&
  !source.includes('PVP_WIN_TROPHIES'),
  'Costanti della vecchia battaglia mai utilizzate non devono riapparire in App.tsx');
 
+verify(!source.includes('createStandardDeck')&&
+ !source.includes('scanVectorSolution')&&
+ !source.includes('calculateAiTurnVector')&&
+ !source.includes('calculateAiTurnTrisStellare')&&
+ !source.includes('generateHumanPacing')&&
+ !source.includes('resolveConvergenceDuel'),
+ 'Non reintrodurre i calcolatori isolati della vecchia battaglia in App.tsx');
+
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
 verify(exists('src/officialLiveMobileLayout.test.js'),

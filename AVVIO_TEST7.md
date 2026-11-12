@@ -35,6 +35,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Costanti inutilizzate 12/11:** eliminati da `App.tsx` 17 registri e parametri della vecchia battaglia non referenziati (dadi B, pool malus, anomalie, archetipo IA, vecchi timer/bonus, soglie di sblocco e simboli dei 20 pianeti); lasciati intatti `SUITS`, modificatori campagna realmente letti, scanner attivo, salvataggi e carte LIVE. Verifica contro regressioni aggiornata.
 
+- **Funzioni legacy inutilizzate 12/11:** rimosse 17 funzioni e alias locali di `App.tsx`, non richiamati, dei vecchi calcoli/puzzle/IA (calcolo vettoriale, Tris Stellare, vecchia convergenza, bonus semi, mazzo originale e timer). Restano le funzioni effettivamente utilizzate e il motore `officialLiveDuelEngine.js`; preflight aggiornato per bloccare il ritorno dei vecchi calcolatori.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.
