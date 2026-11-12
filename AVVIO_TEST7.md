@@ -31,6 +31,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Pulizia del 12/11:** rimossi da `App.tsx` il registro delle 31 guide tutorial 3D della versione precedente, le finestre `FeatureDiscoveryModal` e `SpotlightHomeTour`, i relativi stati e le scritture obsolete in localStorage. Eliminato `src/legacyTutorialConfig.js` e rimossi anche 10,6 KB di CSS delle sole modali tutorial (`spotlight`, `discovery`, `tactile`). Aggiunta protezione preflight. Le guide future saranno progettate sul regolamento LIVE; non vengono modificati salvataggi, mazzi, Shop o logica della campagna.
 
+- **Componenti inattivi 12/11:** rimosse da `App.tsx` cinque vecchie schermate mai richiamate (banner risoluzione, ponte Möbius, fusione neutronica, astrolabio e celebrazione vittoria): circa 30 KB di codice inutilizzato. Conservati il varco gravitazionale, la Cripta, il briefing e tutti i componenti richiamati dall'app. Blocco di regressione aggiunto al preflight.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.

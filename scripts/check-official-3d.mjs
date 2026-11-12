@@ -94,6 +94,15 @@ verify(!source.includes('LEGACY_TUTORIALS_ENABLED')&&
  !source.includes('.modal-backdrop-3d'),
  'Le guide e gli stili della vecchia versione devono restare fuori dalla Home ufficiale');
 
+verify(!source.includes('ResolutionGradeBanner')&&
+ !source.includes('MobiusBridgeModal')&&
+ !source.includes('NeutonicFusionModal')&&
+ !source.includes('RewriteTargetModal')&&
+ !source.includes('CosmicVictoryModal')&&
+ source.includes('function RiftCollapseModal')&&
+ source.includes('function EpicItemsHubScreen'),
+ 'Non reintrodurre componenti della vecchia battaglia disattivati o eliminare il varco/cripta attivi');
+
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
 verify(exists('src/officialLiveMobileLayout.test.js'),
