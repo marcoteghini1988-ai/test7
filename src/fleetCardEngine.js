@@ -132,6 +132,8 @@ function validateOrder(b,who,order){
  if(!Array.isArray(indices)||indices.length>2||new Set(indices).size!==indices.length||
    indices.some(i=>!Number.isInteger(i)||i<0||i>=side.hand.length))
   return 'Puoi usare fino a due carte presenti nella tua mano';
+ if(b.bossLockedTerrain&&indices.some(i=>fleetCardEffect(side.hand[i]).kind==='terrain'))
+  return 'Il boss impone il suo terreno: questa carta non e disponibile';
  return null;
 }
 function removeCards(side,indices){
@@ -254,8 +256,10 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  const b=copy(battle);
  const effA=prepareEffects(b,'A',orderA),effB=prepareEffects(b,'B',orderB);
  // Le carte Terreno modificano il campo per due round; boss bloccati.
- const terrainChoice=effA.terrain&&effB.terrain?null:effA.terrain||effB.terrain;
- if(terrainChoice)b.terrain={element:terrainChoice,until:b.round+1};
+ const terrainClash=!!effA.terrain&&!!effB.terrain;
+ const terrainChoice=terrainClash?null:effA.terrain||effB.terrain;
+ if(terrainClash)b.terrain=null;
+ else if(terrainChoice)b.terrain={element:terrainChoice,until:b.round+1};
  if(b.terrain&&b.terrain.until<b.round)b.terrain=null;
  // Si fotografa la flotta prima dei danni: gli ordini sono simultanei.
  const snapA=copy(b.sides.A),snapB=copy(b.sides.B);
@@ -275,8 +279,16 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  }else{
   b.round++;
   refillOne(b.sides.A);refillOne(b.sides.B);
-  for(const e of [effA,effB])if(e.draw){for(let i=0;i<e.draw;i++)
-    refillOne(e===effA?b.sides.A:b.sides.B);}
+  for(const e of [effA,effB])if(e.draw){
+   const side=e===effA?b.sides.A:b.sides.B;
+   // Il ricambio non crea copie: sostituisce una carta rimasta in mano
+   // con la prossima carta del mazzo, dopo la pesca normale.
+   for(let i=0;i<e.draw;i++){
+    if(!side.deck.length||!side.hand.length)break;
+    side.discard.push(side.hand.shift());
+    refillOne(side);
+   }
+  }
  }
  return {ok:true,battle:b,events};
 }
