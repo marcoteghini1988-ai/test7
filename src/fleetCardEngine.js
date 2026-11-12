@@ -3,6 +3,7 @@
 // Tutte le navi equipaggiate sparano insieme; una nave cade con DUE vitali distrutti.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
+import {createFleetBossState,applyFleetBossBeforeRound,applyFleetBossAfterRound} from './fleetBossPassives.js';
 
 export const FLEET_PARTS=Object.freeze([
  {id:'engine',name:'Motori',effect:'Mobilita: perde evasione elementale'},
@@ -77,9 +78,12 @@ function buildSide(ships,types,seed){
   discard:[],buffs:[],status:null};
 }
 export function createFleetCardBattle({shipsA,shipsB,deckA,deckB,mode='campaign',
- seed=1988,nowMs=0,bossName=null,bossLockedTerrain=false}={}){
+ seed=1988,nowMs=0,bossName=null,bossId=null,bossLockedTerrain=false}={}){
+ const bossState=createFleetBossState(bossId);
  return {version:1,phase:'playing',winner:null,round:1,mode,
-  bossName,bossLockedTerrain,terrain:null,
+  bossName:bossState?.name||bossName,bossState,
+  bossLockedTerrain:bossLockedTerrain||!!bossState,
+  terrain:bossState?{element:bossState.terrainElement,until:null,source:'boss'}:null,
   sides:{A:buildSide(shipsA,deckA,seed),B:buildSide(shipsB,deckB,seed+77)},
   log:[{round:0,text:'Le flotte sono schierate. Seleziona un nemico e uno dei quattro sistemi.'}],
   startedAtMs:nowMs,finishedAtMs:null};
@@ -203,7 +207,11 @@ function prepareEffects(b,who,order){
 function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
  const target=defender.ships[order.shipIndex],vital=part(target,order.partId);
  const profile=strongestElementAttack(attacker,target,eff.ion);
+ // La centralina della PRIMA navicella comanda la formazione:
+ // distruggerla disattiva la sincronizzazione delle due laterali.
+ const mother=attacker.ships[0];
  const sync=aliveFleet(attacker).filter(canFire).length>=2 &&
+  mother&&alive(mother)&&part(mother,'command').damage<2 &&
   aliveFleet(attacker).every(s=>part(s,'command').damage<2);
  const fireCount=profile.attackers.length;
  const base=fireCount>0?1+(fireCount>=2?1:0)+(sync?1:0):0;
@@ -260,17 +268,20 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  const terrainChoice=terrainClash?null:effA.terrain||effB.terrain;
  if(terrainClash)b.terrain=null;
  else if(terrainChoice)b.terrain={element:terrainChoice,until:b.round+1};
- if(b.terrain&&b.terrain.until<b.round)b.terrain=null;
+ if(b.terrain&&b.terrain.until!=null&&b.terrain.until<b.round)b.terrain=null;
+ const bossPre=applyFleetBossBeforeRound(b,{A:effA,B:effB},{A:orderA,B:orderB});
  // Si fotografa la flotta prima dei danni: gli ordini sono simultanei.
  const snapA=copy(b.sides.A),snapB=copy(b.sides.B);
  // Ai bersagli si applicano gli effetti nello stesso ciclo, senza vantaggio di iniziativa.
  const hitA=resolveAttack(snapA,b.sides.B,orderA,effA,effB,b.terrain?.element,b.round);
  const hitB=resolveAttack(snapB,b.sides.A,orderB,effB,effA,b.terrain?.element,b.round);
+ const bossPost=applyFleetBossAfterRound(b,hitA,hitB);
  const events=[
   {round:b.round,text:'Giocatore: '+hitA.text,who:'A',...hitA},
   {round:b.round,text:'Avversario: '+hitB.text,who:'B',...hitB}
  ];
- b.log=[...b.log,...events].slice(-36);
+ b.log=[...b.log,...bossPre.map(text=>({round:b.round,text})),...events,
+  ...bossPost.map(text=>({round:b.round,text}))].slice(-36);
  const finishedA=b.sides.A.ships.every(s=>!alive(s));
  const finishedB=b.sides.B.ships.every(s=>!alive(s));
  if(finishedA||finishedB){
