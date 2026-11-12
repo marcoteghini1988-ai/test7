@@ -445,7 +445,16 @@ export function selectFleetAiOrder(battle){
  const useful=side.hand.map((t,i)=>({i,kind:fleetCardEffect(t).kind}))
   .filter(x=>['power','ion','pierce','corrosion','guard','repair','jam','aura','module','character','epic'].includes(x.kind))
   .filter(x=>x.kind!=='character'||!side.commander||side.commander.until<battle.round);
- const indexes=useful.slice(0,battle.round%3===0?2:1).map(x=>x.i);
+ const cap=battle.round%3===0?2:1;
+ const indexes=[];let chosenCharacter=false;
+ for(const x of useful){
+  if(indexes.length>=cap)break;
+  if(x.kind==='character'){
+   if(chosenCharacter)continue;
+   chosenCharacter=true;
+  }
+  indexes.push(x.i);
+ }
  return {shipIndex:target.i,partId:preferred,cards:indexes};
 }
 export function fleetSurvivors(side){return aliveFleet(side).length;}
