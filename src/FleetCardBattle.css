@@ -162,3 +162,20 @@
  .fc-opening{padding:15px 9px}
  .fc-selection{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+/* Esplosioni e carica sulle quattro parti: FX ufficiali già presenti nel gioco.
+   La resa non intercetta input e non modifica il danno deciso dal motore. */
+.fc-target-panel{position:relative;isolation:isolate}
+.fc-combat-flash{position:absolute;z-index:5;inset:0;pointer-events:none;overflow:hidden;
+ display:flex;align-items:center;justify-content:center;animation:fc-flash-exit 1.8s ease-out forwards}
+.fc-combat-flash img{position:absolute;max-width:72%;max-height:100%;object-fit:contain;
+ filter:drop-shadow(0 0 10px #9edfff)}
+.fc-burst-charge{animation:fc-fx-charge .55s ease-out both}
+.fc-burst-vital{animation:fc-fx-impact 1.2s .2s ease-out both}
+@keyframes fc-fx-charge{0%{transform:translateY(110px) scale(.25);opacity:0}
+ 30%{opacity:.95}100%{transform:translateY(0) scale(.95);opacity:.6}}
+@keyframes fc-fx-impact{0%{transform:scale(.35);opacity:0}
+ 30%{transform:scale(1.12);opacity:1}100%{transform:scale(1.4);opacity:0}}
+@keyframes fc-flash-exit{0%,80%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.fc-combat-flash,
+ .fc-burst-charge,.fc-burst-vital{animation:none;opacity:0}}
