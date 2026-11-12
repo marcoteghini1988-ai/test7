@@ -8924,7 +8924,6 @@ function App() {
           lives={lives}
           maxLives={typeof getMaxLivesForLevel === 'function' ? getMaxLivesForLevel(level) : 3}
           stardust={stardust}
-          walletCap={walletCap}
           diamonds={diamonds}
           ether={ether}
           voidCrystals={voidCrystals}
