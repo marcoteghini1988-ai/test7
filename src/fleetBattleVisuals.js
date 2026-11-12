@@ -3,13 +3,13 @@
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 
 const styles=Object.freeze([
+ {key:'rift',pattern:/portale|raggio nero|gravità|gravita|vuoto|spirali/i},
  {key:'arc',pattern:/saett|lampo|arco elettric|fulmine|scintill|impulso ionico/i},
  {key:'beam',pattern:/laser|raggio|fotoni|quattro raggi/i},
  {key:'prism',pattern:/cristall|prismatic|geometric|esagon|frammenti|schegge/i},
  {key:'plasma',pattern:/plasma|fuoco|ardente|incandescente|bolide|esplosiv/i},
  {key:'missile',pattern:/proiettil|dardi|lanc|obice|capsul|lame|aghi|shuriken|frecc/i},
  {key:'wave',pattern:/onde|onda|shockwave|orbita|vortice|gravita|turbine/i},
- {key:'rift',pattern:/portale|nero|ombra|vuoto|spirali/i}
 ]);
 const colors=Object.freeze({
  red:'#ff6f75',green:'#62f1a0',violet:'#ca8bff',
