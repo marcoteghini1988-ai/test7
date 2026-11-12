@@ -134,3 +134,19 @@ test('L Astrolabio ricambia due carte, durata unica',()=>{
  assert.equal(result.sides.A.hand.length+result.sides.A.deck.length+
   result.sides.A.discard.length,24);
 });
+
+test('I moduli potenziati al livello 9 hanno effetto maggiore del livello 1',()=>{
+ function setup(lvl){
+  const b=createFleetCardBattle({
+   shipsA:[{shipId:'C01',level:1}],shipsB:[{shipId:'C01',level:1}],
+   deckA:deck(),deckB:deck(),moduleLevelsA:{'module-card-aries':lvl},seed:129
+  });
+  insert(b.sides.A,'module-card-aries');
+  return b;
+ }
+ const novice=resolveFleetCardRound(setup(1),order([0]),order(),100);
+ const veteran=resolveFleetCardRound(setup(9),order([0]),order(),100);
+ assert.equal(novice.ok,true);assert.equal(veteran.ok,true);
+ assert.ok(veteran.events[0].strength>novice.events[0].strength);
+ assert.equal(veteran.battle.sides.A.equipmentLevels['module-card-aries'],9);
+});
