@@ -74,7 +74,7 @@ function buildShip(ship){
   weapons:installed.map(w=>w.nome),
   parts:FLEET_PARTS.map(p=>({id:p.id,damage:0,destroyed:false}))};
 }
-function buildSide(ships,types,seed){
+function buildSide(ships,types,seed,moduleLevels={}){
  if(!Array.isArray(ships)||ships.length<1||ships.length>3)
   throw new Error('La flotta deve contenere da una a tre navicelle');
  if(new Set(ships.map(s=>s.shipId??s.id)).size!==ships.length)
@@ -83,16 +83,18 @@ function buildSide(ships,types,seed){
   throw new Error('Il mazzo speciale deve contenere 24 carte reali');
  const ordered=seededShuffle(types,seed);
  return {ships:ships.map(buildShip),deck:ordered.slice(5),hand:ordered.slice(0,5),
-  discard:[],buffs:[],commander:null,status:null};
+  discard:[],buffs:[],commander:null,status:null,equipmentLevels:{...moduleLevels}};
 }
 export function createFleetCardBattle({shipsA,shipsB,deckA,deckB,mode='campaign',
- seed=1988,nowMs=0,bossName=null,bossId=null,bossLockedTerrain=false}={}){
+ seed=1988,nowMs=0,bossName=null,bossId=null,bossLockedTerrain=false,
+ moduleLevelsA={},moduleLevelsB={}}={}){
  const bossState=createFleetBossState(bossId);
  return {version:1,phase:'playing',winner:null,round:1,mode,
   bossName:bossState?.name||bossName,bossState,
   bossLockedTerrain:bossLockedTerrain||!!bossState,
   terrain:bossState?{element:bossState.terrainElement,until:null,source:'boss'}:null,
-  sides:{A:buildSide(shipsA,deckA,seed),B:buildSide(shipsB,deckB,seed+77)},
+  sides:{A:buildSide(shipsA,deckA,seed,moduleLevelsA),
+   B:buildSide(shipsB,deckB,seed+77,moduleLevelsB)},
   log:[{round:0,text:'Le flotte sono schierate. Seleziona un nemico e uno dei quattro sistemi.'}],
   startedAtMs:nowMs,finishedAtMs:null};
 }
@@ -192,28 +194,31 @@ function upgradeFleetAdvanced(side,enemy,order,round,type,effects){
   return true;
  }
  const active=aliveFleet(side);
+ const moduleLevel=clamp(Number(side.equipmentLevels?.[type])||1,1,9);
+ const moduleTier=1+Math.floor((moduleLevel-1)/3);
+ const tuned=moduleTier===3?2:1;
  switch(profile.action){
-  case 'impulse':effects.power++;break;
-  case 'repair':effects.repair++;break;
+  case 'impulse':effects.power+=tuned;break;
+  case 'repair':effects.repair+=tuned;break;
   case 'swap1':effects.draw++;break;
   case 'swap2':effects.draw+=2;break;
   case 'execute':
    if(target&&(target.shield<=1||target.parts.some(p=>p.damage>0)))effects.power++;
    break;
-  case 'guard':effects.guard++;break;
+  case 'guard':effects.guard+=tuned;break;
   case 'jam':effects.jam=true;break;
-  case 'drain':effects.power++;effects.healOnHit=true;break;
+  case 'drain':effects.power++;effects.healOnHit=tuned;break;
   case 'interfere':effects.jam=true;effects.jamDraw=true;break;
   case 'cleanse':effects.antiJam=true;break;
-  case 'fortify':effects.guard++;effects.repair++;break;
-  case 'formation':if(active.length>=2)effects.power++;break;
-  case 'focus':effects.power++;break;
+  case 'fortify':effects.guard++;effects.repair+=tuned;break;
+  case 'formation':if(active.length>=2)effects.power+=tuned;break;
+  case 'focus':effects.power+=tuned;break;
   case 'siphon':effects.power++;effects.jam=true;break;
-  case 'escort':if(active.length>=2)effects.power++;break;
+  case 'escort':if(active.length>=2)effects.power+=tuned;break;
   case 'purge':effects.antiJam=true;effects.guard++;break;
   case 'quantum':effects.power++;effects.ion=true;break;
   case 'burn':effects.corrosion=true;break;
-  case 'singularity':effects.power++;effects.ion=true;effects.healOnHit=true;break;
+  case 'singularity':effects.power+=tuned;effects.ion=true;effects.healOnHit=tuned;break;
   default:throw Error('Modulo avanzato senza regola di flotta: '+type);
  }
  return true;
@@ -253,7 +258,7 @@ function ongoingFleetAdvanced(side,enemy,enemyOrder,battle,effects){
  for(const buff of side.buffs){
   const {action}=fleetAdvancedCardProfile(buff.type);
   switch(action){
-   case 'calice':effects.power++;effects.healOnHit=true;break;
+   case 'calice':effects.power++;effects.healOnHit=Math.max(1,effects.healOnHit);break;
    case 'pendolo':effects.draw++;break;
    case 'monolite':
     if(opposing.some(s=>s.element==='plasma'))effects.guard++;
@@ -272,7 +277,7 @@ function prepareEffects(b,who,order,opposingOrder){
  const side=b.sides[who],enemy=b.sides[who==='A'?'B':'A'];
  const played=removeCards(side,order.cards);
  const effects={power:0,guard:0,pierce:false,ion:false,corrosion:false,
-  jam:false,repair:0,draw:0,aura:0,healOnHit:false,antiJam:false,
+  jam:false,repair:0,draw:0,aura:0,healOnHit:0,antiJam:false,
   jamDraw:false,cards:played};
  for(const type of played){
   if(upgradeFleetAdvanced(side,enemy,order,b.round,type,effects))continue;
@@ -393,8 +398,10 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  const bossPost=applyFleetBossAfterRound(b,hitA,hitB);
  // Il sifone e il Calice riparano soltanto in risposta a un colpo reale.
  // Il generatore deve essere operativo: nessuna guarigione di una nave distrutta.
- if(effA.healOnHit&&(hitA.damage>0||hitA.shieldsHit>0))healOneShield(b.sides.A);
- if(effB.healOnHit&&(hitB.damage>0||hitB.shieldsHit>0))healOneShield(b.sides.B);
+ if(effA.healOnHit&&(hitA.damage>0||hitA.shieldsHit>0))
+  for(let i=0;i<effA.healOnHit;i++)healOneShield(b.sides.A);
+ if(effB.healOnHit&&(hitB.damage>0||hitB.shieldsHit>0))
+  for(let i=0;i<effB.healOnHit;i++)healOneShield(b.sides.B);
  const events=[
   {round:b.round,text:'Giocatore: '+hitA.text,who:'A',...hitA},
   {round:b.round,text:'Avversario: '+hitB.text,who:'B',...hitB}
