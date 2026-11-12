@@ -67,14 +67,26 @@ ed economia. Gli effetti del duello a carte sono risolti in
 - Terreni PvP modificano il campo per due round; arena boss bloccata;
 - Personaggi e moduli producono un bonus limitato a due round.
 
-I nomi/illustrazioni storici dei PNG che citano numeri o formule richiedono una
-successiva conversione artistica. Le vecchie passive dei dodici boss richiedono
-una conversione specifica: la prima versione mantiene nave madre e mazzo boss,
-ma NON dichiara convertiti i loro effetti originali.
+Le 12 passive dei boss sono ora operative nel sistema a carte, conservando
+nome, pianeta e identità: corazza, assalto crescente, veleno, controtempo,
+sifone, pressione, patto di sangue, rigenerazione, reattore, memoria degli
+scarti, eruzione e dominio elementale. Ognuna ha un terreno boss permanente
+e uno stato leggibile in battaglia. La conversione viene gestita da
+`src/fleetBossPassives.js` e verificata da `src/fleetBossPassives.test.js`.
+
+I livelli delle navicelle da 1 a 5 aumentano gli scudi e la forza delle armi
+integrate: i valori derivano dal catalogo ufficiale delle 42 armi, non da
+equipaggiamenti inventati. La madre è visualizzata al centro, le altre
+due navicelle equipaggiate ai lati.
+
+I nomi/illustrazioni storici dei PNG che citano numeri o formule e le
+descrizioni storiche dello Shop richiedono ancora conversione editoriale.
+La grafica effettiva su smartphone richiede una prova visiva manuale.
 
 ## Componenti del codice
 
 - `src/fleetCardEngine.js`: regole pure, prova deterministica, IA nemica.
+- `src/fleetBossPassives.js`: passive e terreni dei dodici boss.
 - `src/FleetCardBattle.jsx`: plancia e controllo inventari/ricompense.
 - `src/FleetCardBattle.css`: grafica usando le immagini 3D ufficiali.
 - `src/fleetCardEngine.test.js`: regressioni su mazzi, elementi, fratture,
@@ -89,5 +101,5 @@ la migrazione completa senza cancellare accidentalmente ricompense o asset.
 1. Compilazione del progetto e test automatici su GitHub Actions.
 2. Prova visiva effettiva su smartphone 9:16 e in StackBlitz.
 3. Bilanciamento su più seed IA e livelli nave 1–5.
-4. Conversione delle passive boss, descrizioni dello Shop e delle immagini
-   delle carte ancora legate alle numeriche.
+4. Descrizioni dello Shop e immagini delle carte ancora legate alle numeriche.
+5. Collaudo manuale dei 12 boss e della progressione negli slot e livelli.
