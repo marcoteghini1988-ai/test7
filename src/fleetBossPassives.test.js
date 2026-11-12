@@ -152,7 +152,7 @@ test('Centralina della nave madre distrutta: le due laterali non sincronizzano p
   }
   return b;
  };
- const intact=round(setup(false)).events[0].strength;
- const broken=round(setup(true)).events[0].strength;
+ const intact=round(setup(false),target(),target('engine')).events[0].strength;
+ const broken=round(setup(true),target(),target('engine')).events[0].strength;
  assert.ok(intact>broken,'Distruggendo la centralina si perde il bonus di formazione');
 });
