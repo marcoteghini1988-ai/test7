@@ -13,11 +13,11 @@ const base=read('./MathDuelBattle.css');
 const entry=read('./MathDuelBattle.jsx');
 
 test('ingresso ufficiale: nuovo duello carte con 120 settori, senza fallback vecchio',()=>{
- assert.match(entry,/from '\\.\\/FleetCardBattle\\.jsx'/);
- assert.match(entry,/officialCampaignBattleProps\\(props\\)/);
+ assert.match(entry,/from '\.\/FleetCardBattle\.jsx'/);
+ assert.match(entry,/officialCampaignBattleProps\(props\)/);
  assert.match(entry,/<FleetCardBattle/);
- assert.doesNotMatch(entry,/from '\\.\\/OfficialLiveBattle3D\\.jsx'/);
- assert.doesNotMatch(entry,/from '\\.\\/BossBattle3D\\.jsx'/);
+ assert.doesNotMatch(entry,/from '\.\/OfficialLiveBattle3D\.jsx'/);
+ assert.doesNotMatch(entry,/from '\.\/BossBattle3D\.jsx'/);
 });
 
 test('arena LIVE 450×800: la scala conserva il 9:16 su telefoni',()=>{
