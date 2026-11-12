@@ -50,7 +50,8 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotInd
   (compact?'fc-compact ':'')+(enemy?'fc-hostile':'fc-friendly')}
   onClick={onClick} disabled={!onClick||sunk}
   title={ship.name+' · '+ship.role+' · '+element.name}>
-   <div className="fc-ship-top"><span className="fc-tier">{ship.rarity}</span><b>{ship.name}</b></div>
+   <div className="fc-ship-top"><span className="fc-tier">{ship.rarity} · LV {ship.level}</span>
+    <b>{ship.name}</b><small>ARMI {ship.weapons.length} · POTENZA {ship.weaponRating}</small></div>
    <div className="fc-ship-picture">
     <img src={image} alt={'Navicella '+ship.name} draggable={false}/>
     <span className="fc-element" style={{color:element.color}}>{element.symbol} {element.name}</span>
