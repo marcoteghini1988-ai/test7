@@ -142,3 +142,23 @@ test('Tutte le carte del catalogo hanno una conversione elementale giocabile',()
   assert.ok(result.kind&&result.description,type);
  }
 });
+
+test('Livelli ufficiali: upgrade L1-L5 migliora scudi e armamenti reali',()=>{
+ const setup=(shipId,level)=>createFleetCardBattle({
+  shipsA:[{shipId,level}],shipsB:[{shipId:'N00',level:1}],
+  deckA:deck(),deckB:deck(),seed:41
+ });
+ const starter=setup('L02',1).sides.A.ships[0];
+ const upgraded=setup('L02',5).sides.A.ships[0];
+ assert.equal(starter.maxShield,2);
+ assert.equal(upgraded.maxShield,4);
+ assert.ok(upgraded.weaponRating>=starter.weaponRating);
+ assert.equal(starter.weapons.length,3,'Singolarita mantiene le proprie armi originali');
+ const common=setup('C01',1);
+ const legendary=setup('L02',1);
+ const first=resolveFleetCardRound(common,order(),order());
+ const second=resolveFleetCardRound(legendary,order(),order());
+ assert.equal(first.ok,true);assert.equal(second.ok,true);
+ assert.ok(second.events[0].strength>first.events[0].strength,
+  'La potenza delle armi del catalogo modifica davvero il colpo');
+});
