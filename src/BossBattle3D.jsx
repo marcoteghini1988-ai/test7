@@ -1080,7 +1080,7 @@ function LegacyBattleRuntime({nickname,gameMode,sectorNumber=1,displaySector='',
    </div>
    <div className="deck left deck-number" role="img" data-equipped-deck={numericDeckId}
     aria-label={'Mazzo numerico '+officialNumericDeckBackName(numericDeckId)+' · '+game.player.deck.length+' carte'}>
-    <img className="deck-stack-art" src={officialNumericDeckStackPath(numericDeckId)} width={768} height={1024}
+    <img className="deck-stack-art" src={officialNumericDeckStackPath(numericDeckId,ASSET_ROOT)} width={768} height={768}
      alt="" draggable={false}/>
     <small>NUMERI</small><strong>{game.player.deck.length}</strong>
    </div>

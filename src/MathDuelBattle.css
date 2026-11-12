@@ -62,7 +62,7 @@
 .es-math-scope .deck small{display:block;font-size:8px;font-weight:900;margin-top:3px}
 .es-math-scope .deck strong{font-size:11px}
 .es-math-scope .deck-stack-art{display:block;object-fit:contain;pointer-events:none;
- filter:brightness(1.35) saturate(1.2) drop-shadow(2px 5px 3px #000c) drop-shadow(0 0 2px #37cfff55)}
+ filter:drop-shadow(3px 5px 2px #000d) drop-shadow(0 0 1px #56ceff38)}
 .es-math-scope .deck-number .deck-stack-art{width:44px;height:60px}
 .es-math-scope .hand{position:absolute;top:578px;left:60px;width:330px;display:flex;align-items:center;justify-content:center;gap:1px;z-index:5;height:99px}
 .es-math-scope .number-card{border:0;position:relative;min-width:0;width:47px;height:81px;flex:none;filter:drop-shadow(0 0 4px #06baffaf);padding:0;color:#fff;transition:transform .15s,filter .15s}

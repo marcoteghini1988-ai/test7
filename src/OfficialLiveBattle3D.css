@@ -120,12 +120,8 @@
  perspective:340px}
 .es-math-scope .live-root .live-deck--special::before{content:'';position:absolute;inset:9px -4px -6px 2px;
  border-radius:9px;background:#000c;filter:blur(6px);transform:translateZ(-16px);pointer-events:none}
-.es-math-scope .live-root .live-deck--numeric{left:15px;width:66px;height:88px}
+.es-math-scope .live-root .live-deck--numeric{left:15px;top:518px;width:72px;height:72px}
 .es-math-scope .live-root .live-deck-stack{width:100%;height:100%}
-.es-math-scope .live-root .live-deck-label{position:absolute;left:50%;bottom:-7px;
- transform:translateX(-50%);padding:2px 4px;border-radius:3px;background:#030918e6;
- color:#f0f9ff;font-size:6.5px;font-weight:900;letter-spacing:.25px;line-height:1.15;
- white-space:nowrap;pointer-events:none}
 .es-math-scope .live-root .live-deck--special{right:15px;--deck-edge:#f276ff;--deck-glow:#d252ff;
  transform:perspective(380px) rotateY(-17deg) rotateZ(2deg)}
 .es-math-scope .live-root .live-deck>i,.es-math-scope .live-root .live-deck>span{
@@ -152,25 +148,23 @@
  min-width:18px;height:18px;padding:0 3px;display:grid;place-items:center;border-radius:9px;
  border:1px solid #d9fbff;background:#06223b;color:#fff;font-size:9px;font-style:normal;font-weight:950;
  box-shadow:0 0 8px var(--deck-glow);transform:translateZ(8px)}
+.es-math-scope .live-root .live-deck--numeric>em{top:1px;right:0}
 @keyframes liveDeckHover{from{transform:translateZ(0)}to{transform:translate3d(0,-2px,4px)}}
 .es-math-scope .live-root .live-hand-special,
 .es-math-scope .live-root .live-number-card{
  width:54px;box-sizing:border-box;flex:none;aspect-ratio:54 / 86}
 /* La fila numerica copre la metà inferiore delle speciali a riposo. */
-.es-math-scope .live-root .live-special-hand{position:absolute;top:608px;left:76px;right:76px;
+.es-math-scope .live-root .live-special-hand{position:absolute;top:603px;left:76px;right:76px;
  display:flex;align-items:flex-start;justify-content:center;gap:5px;z-index:11}
 .es-math-scope .live-root .live-hand-special{position:relative;
  padding:0;border:1.5px solid var(--family);border-radius:6px;
  color:#fff;background:linear-gradient(160deg,#312a63,#140e34);
  box-shadow:0 0 7px color-mix(in srgb,var(--family) 48%,transparent);
  transform-origin:center bottom;overflow:hidden;
+ transform:translateY(var(--special-drop)) rotate(var(--special-angle));
  transition:transform .22s ease-out,filter .16s ease-out,box-shadow .16s ease-out;
  touch-action:none;animation:liveCardMaterialize .22s ease-out}
-.es-math-scope .live-root .live-hand-special:nth-child(1){transform:rotate(-3deg)}
-.es-math-scope .live-root .live-hand-special:nth-child(2){transform:rotate(-1.5deg)}
-.es-math-scope .live-root .live-hand-special:nth-child(4){transform:rotate(1.5deg)}
-.es-math-scope .live-root .live-hand-special:nth-child(5){transform:rotate(3deg)}
-.es-math-scope .live-root .live-hand-special.live-chosen{transform:translateY(-50px);z-index:2;
+.es-math-scope .live-root .live-hand-special.live-chosen{transform:translateY(-45px);z-index:2;
  outline:1px solid #fff3ac;outline-offset:1px;box-shadow:0 0 13px var(--family),0 5px 9px #000a}
 .es-math-scope .live-root .live-hand-special:focus-visible{outline:2px solid #fff;outline-offset:2px}
 .es-math-scope .live-root .live-hand-special .live-special-art{position:absolute;top:0;left:0;right:0;
@@ -188,7 +182,7 @@
  position:absolute;left:0;right:0;padding:2px;
  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
  overflow:hidden;overflow-wrap:anywhere}
-.es-math-scope .live-root .live-card-caption b{bottom:calc(50% + 4px);
+.es-math-scope .live-root .live-card-caption b{bottom:calc(50% + 6px);
  background:linear-gradient(180deg,#07101dbb,#050914ee);font-size:8.5px;line-height:9px;color:#fff}
 .es-math-scope .live-root .live-card-caption small{bottom:0;border-top:1px solid var(--family);
  background:linear-gradient(180deg,#07101df0,#050914);font-size:6.5px;line-height:7px;

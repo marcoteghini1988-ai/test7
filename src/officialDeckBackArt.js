@@ -11,8 +11,8 @@ function numericBackId(id){
 export function officialNumericDeckBackPath(id){
  return '/assets/deck-backs/'+numericBackId(id)+'.png';
 }
-export function officialNumericDeckStackPath(id){
- return '/assets/deck-stacks/numeric/'+numericBackId(id)+'.png';
+export function officialNumericDeckStackPath(id,assetRoot='/assets'){
+ return assetRoot+'/deck-stacks/numeric/'+numericBackId(id)+'.png';
 }
 export function officialNumericDeckBackName(id='neutral_starter'){
  if(id==='neutral_starter'||!BACK_IDS.has(id))return 'Mazzo neutro';

@@ -360,7 +360,7 @@ export default function OfficialLiveBattle3D({
  const selectedSpecialVisual=selectedSpecial?officialSpecialVisualMeta(selectedSpecial.type):null;
  // E' l'ID DAVVERO equipaggiato e validato dal setup: nessun mazzo finto.
  const numericBackId=player.bossNumericDeck?.id??'neutral_starter';
- const numericStackPath=officialNumericDeckStackPath(numericBackId);
+ const numericStackPath=officialNumericDeckStackPath(numericBackId,ASSET_ROOT);
  const numericBackName=officialNumericDeckBackName(numericBackId);
  const result=battle.phase==='finished'?officialBattleResult(battle,gameMode,sectorNumber):null;
  const finalImpactVisible=result&&visualEvents.some(({event})=>
@@ -433,9 +433,8 @@ export default function OfficialLiveBattle3D({
    <div className="live-deck live-deck--numeric" data-equipped-deck={numericBackId}
     role="img" title={'Mazzo numerico equipaggiato · '+numericBackName}
     aria-label={'Mazzo numerico '+numericBackName+' · '+player.numeric.deck.length+' carte'}>
-    <img className="live-deck-stack deck-stack-art" src={numericStackPath} width={768} height={1024}
+    <img className="live-deck-stack deck-stack-art" src={numericStackPath} width={768} height={768}
      alt="" draggable={false}/>
-    <small className="live-deck-label" aria-hidden="true">NUMERICHE</small>
     <em>{player.numeric.deck.length}</em>
    </div>
    <div className="live-deck live-deck--special" data-special-back="fixed"
@@ -445,13 +444,15 @@ export default function OfficialLiveBattle3D({
     <i/><i/><i/><span><b aria-hidden="true">✧</b><small>SPECIALI</small></span><em>{player.special.deck.length}</em>
    </div>
    <div className="live-special-hand" role="group" aria-label="Cinque carte speciali">
-    {player.special.hand.map(card=>{
+    {player.special.hand.map((card,index,hand)=>{
      const face=officialSpecialCardIdentity(card.type,TACTICAL_SPECIALS[card.type]);
      const visual=officialSpecialVisualMeta(card.type);
      const canPlay=myTurn&&battle.actionUsed.special<LIVE_SPECIAL_LIMIT&&supportedLiveSpecial(card.type);
      const inspected=selectedSpecial?.id===card.id;
+     const offset=index-(hand.length-1)/2;
      return <button type="button" key={card.id} disabled={!!result}
       className={'live-hand-special'+(inspected?' live-chosen':'')}
+      style={{'--special-angle':offset*5+'deg','--special-drop':offset**2*2.5+'px'}}
       data-family={visual?.role??face.category} data-rarity={visual?.rarity??undefined}
       title={face.name+' · '+face.category+
        (visual?.rarity?' · '+visual.rarity:'')+' · '+face.effect}

@@ -15,7 +15,7 @@ function checkedPng(path,{stack=false}={}){
  const bytes=readFileSync(disk),sig=[137,80,78,71,13,10,26,10];
  assert.deepEqual([...bytes.subarray(0,8)],sig,'firma PNG: '+path);
  const width=bytes.readUInt32BE(16),height=bytes.readUInt32BE(20);
- if(stack)assert.deepEqual([width,height],[768,1024],'Risoluzione della pila: '+path);
+ if(stack)assert.deepEqual([width,height],[768,768],'Risoluzione della pila: '+path);
  else assert.ok(width>=320&&height>=480,'Dorso troppo piccolo: '+path);
  assert.equal(bytes[24],8,'Palette 8bit');
  assert.equal(bytes[25],3,'Tipo PNG indicizzato');
@@ -60,6 +60,9 @@ test('Pile 3D in alta risoluzione per tutti i mazzi numerici ufficiali',()=>{
  }
  assert.equal(officialNumericDeckStackPath('non-posseduto'),
   officialNumericDeckStackPath('neutral_starter'));
+ const remoteAssets='https://raw.githubusercontent.com/marcoteghini1988-ai/test7/main/public/assets';
+ assert.equal(officialNumericDeckStackPath('planet_char_1',remoteAssets),
+  remoteAssets+'/deck-stacks/numeric/planet_char_1.png');
 });
 test('Mazzo speciale: uno ed un solo dorso PNG fisso',()=>{
  checkedPng(OFFICIAL_SPECIAL_FIXED_BACK);
@@ -72,10 +75,10 @@ test('Le plance e la Home mostrano il mazzo equipaggiato',()=>{
  const home=readFileSync(resolve('src/HomeScreen.jsx'),'utf8');
  const css=readFileSync(resolve('src/OfficialLiveBattle3D.css'),'utf8');
  assert.match(live,/player\.bossNumericDeck\?\.id/);
- assert.match(live,/officialNumericDeckStackPath\(numericBackId\)/);
+ assert.match(live,/officialNumericDeckStackPath\(numericBackId,ASSET_ROOT\)/);
  assert.match(live,/className="live-deck-stack deck-stack-art" src=\{numericStackPath\}/);
  assert.match(fallback,/game\.player\.bossNumericDeck\?\.id/);
- assert.match(fallback,/className="deck-stack-art" src=\{officialNumericDeckStackPath\(numericDeckId\)\}/);
+ assert.match(fallback,/className="deck-stack-art" src=\{officialNumericDeckStackPath\(numericDeckId,ASSET_ROOT\)\}/);
  assert.match(live,/OFFICIAL_SPECIAL_FIXED_BACK/);
  assert.match(live,/data-special-back="fixed"/);
  assert.match(live,/--live-special-back/);

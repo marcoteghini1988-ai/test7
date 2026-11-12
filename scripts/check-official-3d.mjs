@@ -209,13 +209,13 @@ verify(ships.includes('/mathfleet/views/')&&ships.includes('weaponMount('),
 verify(arena.includes('className="live-deck live-deck--numeric"')&&
  arena.includes('className="live-deck live-deck--special"')&&
  arena.includes('data-equipped-deck={numericBackId}')&&
- arena.includes('officialNumericDeckStackPath(numericBackId)')&&
+ arena.includes('officialNumericDeckStackPath(numericBackId,ASSET_ROOT)')&&
  arena.includes('data-special-back="fixed"'),
  'I mazzi della plancia LIVE devono essere distinti: numerico equipaggiato e speciale con dorso fisso');
 verify(arena.includes('className="live-slot-row live-slot-row--player"')&&
  arena.includes('battle.zones.A.traps.map')&&
  arena.includes('battle.zones.A.open.map')&&
- arena.includes('player.special.hand.map(card=>'),
+ arena.includes('player.special.hand.map('),
  'I cinque slot LIVE (1 personaggio, 2 difese, 2 attacchi/supporti) devono restare giocabili');
 verify(arena.includes('aria-label="Cinque carte speciali"')&&
  arena.includes('aria-label="Sette carte numeriche"')&&
