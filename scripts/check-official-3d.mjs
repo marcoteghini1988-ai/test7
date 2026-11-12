@@ -246,6 +246,20 @@ for(const fx of LIVE_FX_SPRITES){
  verify(exists(`public/assets/battle-fx/${fx}.png`),
   'Effetto grafico LIVE mancante: '+fx);
 }
+// Ogni illustrazione ufficiale deve avere il PNG mostrato nel gioco e
+// il sorgente SVG da cui rigenerarlo: 66 speciali + 12 boss + 4 terreni.
+for(const directory of ['special-cards','boss-characters','terrain-pvp']){
+ const files=readdirSync(resolve(root,'public/assets',directory));
+ const pngs=new Set(files.filter(f=>f.endsWith('.png')).map(f=>f.slice(0,-4)));
+ const svgs=new Set(files.filter(f=>f.endsWith('.svg')).map(f=>f.slice(0,-4)));
+ verify(pngs.size>0&&svgs.size>0,
+  'Catalogo grafico vuoto o incompleto: '+directory);
+ for(const base of pngs)
+  verify(svgs.has(base), 'PNG ufficiale privo del suo sorgente SVG: '+directory+'/'+base);
+ for(const base of svgs)
+  verify(pngs.has(base), 'Sorgente SVG senza PNG di gioco: '+directory+'/'+base);
+}
+
 for(const deckId of OFFICIAL_NUMERIC_BACK_IDS){
  verify(exists(`public/assets/deck-backs/${deckId}.png`),
   'Dorso del mazzo numerico ufficiale mancante: '+deckId);
