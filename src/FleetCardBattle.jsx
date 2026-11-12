@@ -1,0 +1,310 @@
+import React,{useState} from 'react';
+import {readShipCollection} from './shipCollection.js';
+import {readSpecialCollection,createSpecialCollection,validateSpecialDeck} from './specialDeckBuilder.js';
+import {SPECIAL_CARD_CATALOG} from './specialCards.js';
+import {officialSpecialArtPath} from './officialSpecialCardArt.js';
+import {officialBossEncounter} from './officialBossEncounter.js';
+import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
+import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
+import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
+import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
+import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
+import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
+import {
+ createFleetCardBattle,resolveFleetCardRound,selectFleetAiOrder,fleetSlotCount,
+ FLEET_PARTS,FLEET_ELEMENTS,fleetCardEffect,fleetShipDestroyed,fleetSurvivors
+} from './fleetCardEngine.js';
+import './FleetCardBattle.css';
+
+const LOADOUT_KEY='eclissi_card_fleet_v1';
+const SHIP_IMG_ROOT='/assets/mathfleet/views/';
+const raritiesWithWebp=new Set(['Rara','Epica','Leggendaria']);
+const labels={engine:'MOT',weapons:'ARM',generator:'GEN',command:'CPU'};
+const glyphs={engine:'◉',weapons:'✦',generator:'⬡',command:'⌘'};
+const textName=id=>FLEET_PARTS.find(p=>p.id===id)?.name||id;
+function getAssets(){
+ try{
+  const ships=readShipCollection();
+  const specials=readSpecialCollection();
+  if(!validateSpecialDeck(specials,specials.loadout).valid)
+   throw new Error('Configura prima un mazzo speciale valido da 24 carte.');
+  let saved=[];
+  try{saved=JSON.parse(localStorage.getItem(LOADOUT_KEY)||'[]');}catch{saved=[];}
+  const available=ships.cards.map(c=>c.shipId);
+  const valid=Array.isArray(saved)?[...new Set(saved.filter(id=>available.includes(id)))]:[];
+  const fallback=ships.loadout.map(id=>ships.cards.find(c=>c.instanceId===id)?.shipId)
+   .filter(Boolean);
+  return {ships,specials,selected:valid.length?valid:fallback,error:''};
+ }catch(error){return {ships:null,specials:null,selected:[],error:error?.message||'Inventario non leggibile'};}
+}
+function ShotShip({ship,enemy=false,selected=false,onClick,compact=false}){
+ const sunk=fleetShipDestroyed(ship),element=FLEET_ELEMENTS[ship.element];
+ const format=raritiesWithWebp.has(ship.rarity)?'webp':'png';
+ const image=SHIP_IMG_ROOT+(enemy?'enemy_to_player/':'player_to_enemy/')+ship.id+'_complete.'+format;
+ return <button type="button" className={'fc-ship '+(selected?'fc-selected ':'')+(sunk?'fc-sunk ':'')+
+  (compact?'fc-compact ':'')+(enemy?'fc-hostile':'fc-friendly')}
+  onClick={onClick} disabled={!onClick||sunk}
+  title={ship.name+' · '+ship.role+' · '+element.name}>
+   <div className="fc-ship-top"><span className="fc-tier">{ship.rarity}</span><b>{ship.name}</b></div>
+   <div className="fc-ship-picture">
+    <img src={image} alt={'Navicella '+ship.name} draggable={false}/>
+    <span className="fc-element" style={{color:element.color}}>{element.symbol} {element.name}</span>
+   </div>
+   <div className="fc-ship-vitals">
+    {ship.parts.map(p=><span key={p.id} className={'fc-vital-tiny '+(p.damage===2?'dead':p.damage===1?'wound':'')}
+      title={textName(p.id)+': '+(p.destroyed?'distrutto':p.damage?'fratturato':'integro')}>
+      {glyphs[p.id]}</span>)}
+   </div>
+   <div className="fc-shields"><span>SCUDO</span><strong>{ship.shield}/{ship.maxShield}</strong></div>
+   {sunk&&<div className="fc-destroyed-mark">DISTRUTTA</div>}
+  </button>;
+}
+function SpecialCard({type,selected,onClick,index}){
+ const def=SPECIAL_CARD_CATALOG[type];
+ const art=officialSpecialArtPath(type);
+ const effect=fleetCardEffect(type);
+ return <button type="button" className={'fc-special '+(selected?'fc-special-active':'')}
+  onClick={onClick} title={(def?.name||type)+' — '+effect.description} aria-pressed={selected}>
+   <span className="fc-special-index">{index+1}</span>
+   <div className="fc-art">{art?<img src={art} alt="" draggable={false}/>:<span className="fc-fallback-symbol">✧</span>}</div>
+   <span className="fc-special-name">{def?.short||def?.name||type}</span>
+   <span className="fc-special-kind">{effect.kind.toUpperCase()}</span>
+  </button>;
+}
+function assembleEnemyShips({selected,mode,sectorNumber,bossPlanetId,bossSectorLevel}){
+ const first=selected[0];
+ const boss=officialBossEncounter({mode,sectorNumber,planetId:bossPlanetId,sectorLevel:bossSectorLevel});
+ const early=officialEarlyCampaignRivalShip({mode,sectorNumber,planetId:bossPlanetId});
+ const mother=boss?.motherShipId||early||
+  chooseCampaignMotherRival(first.shipId,first.level,sectorNumber,bossPlanetId,bossSectorLevel).shipId;
+ const level=officialCampaignRivalLevel({mode,sectorNumber,playerLevel:first.level});
+ const eligible=['N00',...SHIP_CAMPAIGN_UNLOCKS.filter(s=>s.sector<=Math.max(5,sectorNumber)).map(s=>s.shipId)];
+ const pool=[...new Set([mother,...eligible])];
+ const ids=[mother];
+ let cursor=(Math.floor(Number(sectorNumber)||1)*3)%pool.length;
+ while(ids.length<selected.length&&ids.length<pool.length){
+  const candidate=pool[cursor%pool.length];cursor++;
+  if(!ids.includes(candidate))ids.push(candidate);
+ }
+ return {ships:ids.map(shipId=>({shipId,level})),boss};
+}
+export default function FleetCardBattle({
+ nickname='Comandante',gameMode='campaign',sectorNumber=1,displaySector='',
+ bossPlanetId=null,bossSectorLevel=null,onResult,onExit
+}){
+ const [assets]=useState(getAssets);
+ const allowed=fleetSlotCount(sectorNumber,gameMode);
+ const [selectedIds,setSelectedIds]=useState(()=>assets.selected.slice(0,allowed));
+ const [battle,setBattle]=useState(null);
+ const [enemySelection,setEnemySelection]=useState(0);
+ const [partSelection,setPartSelection]=useState('command');
+ const [chosenCards,setChosenCards]=useState([]);
+ const [message,setMessage]=useState('');
+ const [submitting,setSubmitting]=useState(false);
+ const [historyOpen,setHistoryOpen]=useState(false);
+ const [rewardDone,setRewardDone]=useState(false);
+ const isPvP=gameMode==='pvp';
+ function toggleShip(id){
+  setMessage('');
+  setSelectedIds(old=>old.includes(id)?old.length>1?old.filter(x=>x!==id):old:
+   old.length<allowed?[...old,id]:old);
+ }
+ function begin(){
+  try{
+   if(!assets.ships||!assets.specials)throw new Error(assets.error||'Inventario mancante');
+   const selected=selectedIds.map(id=>assets.ships.cards.find(c=>c.shipId===id));
+   if(selected.some(c=>!c)||!selected.length||selected.length>allowed)
+    throw new Error('Seleziona soltanto navicelle possedute, nei tuoi slot disponibili');
+   const enemy=assembleEnemyShips({selected,mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel});
+   const bossDeck=enemy.boss?buildTacticalBossDeck(enemy.boss.planetId,enemy.ships[0].level,selected[0].level):null;
+   const fallback=createSpecialCollection().loadout;
+   const deckB=Array.isArray(bossDeck)&&bossDeck.length===24&&
+    bossDeck.every(t=>SPECIAL_CARD_CATALOG[t])?bossDeck:fallback;
+   const next=createFleetCardBattle({
+    shipsA:selected.map(c=>({shipId:c.shipId,level:c.level})),shipsB:enemy.ships,
+    deckA:assets.specials.loadout,deckB,mode:gameMode,
+    bossName:enemy.boss?.name??null,bossLockedTerrain:!!enemy.boss,
+    seed:Math.floor(Math.random()*1e8)+1,nowMs:Date.now()
+   });
+   localStorage.setItem(LOADOUT_KEY,JSON.stringify(selectedIds));
+   setBattle(next);setEnemySelection(0);setPartSelection('command');
+   setChosenCards([]);setRewardDone(false);setMessage('');
+  }catch(error){setMessage(error?.message||'Impossibile schierare la flotta');}
+ }
+ function resolve(){
+  if(!battle||battle.phase!=='playing')return;
+  const enemy=battle.sides.B.ships;
+  let index=enemySelection;
+  if(fleetShipDestroyed(enemy[index]))index=enemy.findIndex(s=>!fleetShipDestroyed(s));
+  const target=enemy[index];
+  if(!target)return;
+  const partId=target.parts.find(p=>p.id===partSelection&&!p.destroyed)?
+   partSelection:target.parts.find(p=>!p.destroyed)?.id;
+  const ai=selectFleetAiOrder(battle);
+  const result=resolveFleetCardRound(battle,{
+   shipIndex:index,partId,cards:chosenCards
+  },ai,Date.now());
+  if(!result.ok){setMessage(result.reason);return;}
+  const next=result.battle;
+  setBattle(next);setChosenCards([]);
+  setMessage(result.events.map(e=>e.text).join(' · '));
+  const nextEnemyIndex=next.sides.B.ships.findIndex(s=>!fleetShipDestroyed(s));
+  if(nextEnemyIndex>=0&&fleetShipDestroyed(next.sides.B.ships[index])){
+   setEnemySelection(nextEnemyIndex);setPartSelection('command');
+  }else if(!next.sides.B.ships[index].parts.find(p=>p.id===partId&&!p.destroyed)){
+   const remaining=next.sides.B.ships[index].parts.find(p=>!p.destroyed);
+   if(remaining)setPartSelection(remaining.id);
+  }
+ }
+ async function finishBattle(){
+  if(submitting||!battle||battle.phase!=='finished'||rewardDone)return;
+  setSubmitting(true);
+  try{
+   const won=battle.winner==='A',result=won?'player':battle.winner==='B'?'enemy':'draw';
+   if(won&&!isPvP){
+    await claimOfficialLiveVictoryRewards({
+     winner:'player',mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel
+    });
+   }
+   const player=battle.sides.A,enemy=battle.sides.B;
+   const max=player.ships.length*10;
+   const hp=player.ships.reduce((sum,s)=>sum+s.shield+
+    s.parts.reduce((a,p)=>a+(2-p.damage),0),0);
+   const health=Math.max(0,Math.min(1,hp/Math.max(1,max)));
+   const meta={
+    turnsElapsed:battle.round,activeTimeElapsedMs:Math.max(0,Date.now()-battle.startedAtMs),
+    remainingHpPct:health,isPvP,
+    starsEarned:[won,won&&health>=.65,won&&health>=.9],
+    matchStats:{
+     turnsElapsed:battle.round,sectorNumber,damageDealt:
+      enemy.ships.reduce((sum,s)=>sum+s.parts.reduce((a,p)=>a+p.damage,0),0),
+     enemyVitalsDestroyed:enemy.ships.reduce((sum,s)=>sum+s.parts.filter(p=>p.destroyed).length,0),
+     bossPlanetId:bossPlanetId??null,bossSectorLevel:bossSectorLevel??null
+    }
+   };
+   setRewardDone(true);
+   if(!isPvP)onResult?.(result,meta);
+   onExit?.();
+  }catch(e){setMessage('Ricompense non salvate: '+(e?.message||'Riprova')); }
+  finally{setSubmitting(false);}
+ }
+ if(assets.error)return <main className="fc-error"><h2>Eclissi Stellare</h2>
+  <p role="alert">{assets.error}</p><button onClick={()=>onExit?.()}>TORNA AL MENU</button></main>;
+ if(!battle){
+  return <div className="fc-screen fc-prepare">
+   <header className="fc-header"><span>ECLISSI STELLARE</span><button onClick={()=>onExit?.()}>ESCI</button></header>
+   <div className="fc-opening">
+    <div className="fc-eyebrow">NUOVO DUELLO · CARTE DI FLOTTA</div>
+    <h1>Schiera la tua flotta</h1>
+    <p>Seleziona da una a {allowed} navicell{allowed===1?'a':'e'} possedut{allowed===1?'a':'e'}.
+     Tutte combatteranno insieme. Non sono previste sostituzioni.</p>
+    <div className="fc-slot-status">{[0,1,2].map(i=><span key={i} className={
+     i<allowed?'fc-unlocked':'fc-locked'}>{i<allowed?'SLOT '+(i+1):'SLOT '+(i+1)+' · BLOCCATO'}</span>)}</div>
+    <div className="fc-selection">
+     {assets.ships.cards.map(card=>{
+      const active=selectedIds.includes(card.shipId);
+      const def={shipId:card.shipId,level:card.level};
+      // Preview ottenuta dal catalogo effettivo, non una nave gratuita.
+      return <div key={card.instanceId} className={'fc-picker '+(active?'chosen':'')}>
+       <img src={SHIP_IMG_ROOT+'player_to_enemy/'+card.shipId+'_complete.'+
+        (raritiesWithWebp.has(['R','E','L'].includes(card.shipId[0])?
+         (card.shipId[0]==='R'?'Rara':card.shipId[0]==='E'?'Epica':'Leggendaria'):'Comune')?'webp':'png')}
+        alt={'Carta '+card.shipId} draggable={false}/>
+       <div><strong>{card.shipId}</strong><small>Livello {def.level}</small></div>
+       <button disabled={!active&&selectedIds.length>=allowed}
+        onClick={()=>toggleShip(card.shipId)}>{active?'✓ SCHIERATA':'SCHIERA'}</button>
+      </div>;
+     })}
+    </div>
+    <p className="fc-small-note">Le altre navicelle si sbloccano giocando la campagna.
+     Secondo slot dal settore 11, terzo dal settore 31. Solo carte già possedute.</p>
+    {message&&<p role="alert" className="fc-message">{message}</p>}
+    <button className="fc-primary" onClick={begin} disabled={!selectedIds.length}>INIZIA BATTAGLIA</button>
+    <button className="fc-text-action" onClick={()=>onExit?.()}>Torna al menu</button>
+   </div>
+  </div>;
+ }
+ const enemy=battle.sides.B,player=battle.sides.A;
+ const chosenEnemy=enemy.ships[enemySelection]&&!fleetShipDestroyed(enemy.ships[enemySelection])?
+  enemy.ships[enemySelection]:enemy.ships.find(s=>!fleetShipDestroyed(s));
+ const targetIndex=chosenEnemy?enemy.ships.indexOf(chosenEnemy):-1;
+ const targetPart=chosenEnemy?.parts.find(p=>p.id===partSelection&&!p.destroyed)?.id||
+  chosenEnemy?.parts.find(p=>!p.destroyed)?.id;
+ const finished=battle.phase==='finished';
+ return <main className="fc-screen fc-battle" style={{
+  '--fc-terrain-tint':battle.terrain?
+   FLEET_ELEMENTS[battle.terrain.element]?.color:'transparent'
+ }}>
+  <header className="fc-header">
+   <div><b>ECLISSI STELLARE</b><small>{battle.bossName||'DUELLO DI FLOTTA'}
+    {displaySector?' · '+displaySector:''}</small></div>
+   <div className="fc-round"><span>ROUND {battle.round}</span>
+    <button onClick={()=>setHistoryOpen(o=>!o)}>{historyOpen?'CHIUDI':'STORICO'}</button></div>
+  </header>
+  {historyOpen&&<div className="fc-log" aria-live="polite">{battle.log.slice(-12).map((entry,i)=>
+   <p key={i}>{entry.text}</p>)}</div>}
+  <div className="fc-board">
+   <section className="fc-fleet fc-enemy-rack">
+    <div className="fc-rack-head"><strong>FLOTTA NEMICA</strong><span>{fleetSurvivors(enemy)}/{enemy.ships.length} operative</span></div>
+    <div className="fc-ship-row">{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
+      ship={ship} enemy selected={targetIndex===i&&!finished}
+      onClick={!finished?()=>{setEnemySelection(i);setPartSelection(
+       ship.parts.find(p=>!p.destroyed)?.id||'command');}:null}/>)}</div>
+   </section>
+   <section className="fc-target-panel" aria-label="Bersagli vitali">
+    <div className="fc-target-title"><span>BERSAGLIO</span>
+     <strong>{chosenEnemy?.name||'Flotta eliminata'}</strong></div>
+    <div className="fc-parts">{FLEET_PARTS.map(p=>{
+     const vital=chosenEnemy?.parts.find(v=>v.id===p.id);
+     return <button key={p.id} disabled={!vital||vital.destroyed||finished}
+      className={'fc-part '+(targetPart===p.id?'is-target ':'')+
+       (vital?.destroyed?'is-destroyed':'')}
+      onClick={()=>setPartSelection(p.id)} aria-pressed={targetPart===p.id}>
+      <span>{glyphs[p.id]}</span><b>{p.name}</b>
+      <small>{vital?.destroyed?'DISTRUTTO':vital?.damage===1?'FRATTURATO':'INTEGRO'}</small>
+     </button>;
+    })}</div>
+    <div className="fc-mechanic-note">
+     {FLEET_PARTS.find(p=>p.id===targetPart)?.effect||'Scegli un sistema vitale'}
+    </div>
+   </section>
+   <section className="fc-fleet fc-player-rack">
+    <div className="fc-rack-head"><strong>LA TUA FLOTTA</strong><span>{fleetSurvivors(player)}/{player.ships.length} operative</span></div>
+    <div className="fc-ship-row">{player.ships.map(ship=><ShotShip key={ship.id} ship={ship}/>)}</div>
+   </section>
+  </div>
+  <section className="fc-command">
+   <div className="fc-hand-header">
+    <strong>CARTE SPECIALI</strong>
+    <small>Seleziona fino a 2 · {chosenCards.length}/2</small>
+   </div>
+   <div className="fc-hand">{player.hand.length?player.hand.map((type,i)=><SpecialCard
+    key={battle.round+'-'+i+'-'+type} type={type} index={i}
+    selected={chosenCards.includes(i)}
+    onClick={!finished?()=>setChosenCards(old=>old.includes(i)?
+     old.filter(n=>n!==i):old.length<2?[...old,i]:old):undefined}/>):<p className="fc-empty">Mazzo esaurito: la flotta può ancora attaccare.</p>}</div>
+   <div className="fc-hand-description">{chosenCards.length?
+    chosenCards.map(i=>fleetCardEffect(player.hand[i]).description).join(' + '):
+    'Le armi di ogni navicella funzionano anche senza carte speciali.'}</div>
+   {message&&<p role="status" className="fc-message">{message}</p>}
+   {finished?<div className="fc-finish">
+     <h2>{battle.winner==='A'?'VITTORIA':battle.winner==='B'?'SCONFITTA':'PAREGGIO'}</h2>
+     <p>{battle.winner==='A'?'Flotta nemica eliminata.':
+      battle.winner==='B'?'La tua flotta è stata eliminata.':'Entrambe le flotte sono state distrutte.'}</p>
+     <button className="fc-primary" onClick={finishBattle} disabled={submitting||rewardDone}>
+      {submitting?'SALVATAGGIO...':'CONCLUDI E TORNA AL MENU'}</button>
+     <button className="fc-text-action" onClick={()=>{setBattle(null);setMessage('');}}>
+      Rigioca con la tua flotta</button>
+    </div>:<button className="fc-primary fc-fire-button" onClick={resolve}
+     disabled={!chosenEnemy||!targetPart}>
+     <span>⚡</span> ATTACCO DI FLOTTA <small>CONFERMA ROUND</small>
+    </button>}
+   <div className="fc-footerline">
+    <span>{battle.terrain?'Risonanza ambientale: '+FLEET_ELEMENTS[battle.terrain.element]?.name:
+     '4 ELEMENTI · 4 SISTEMI VITALI'}</span>
+    <button onClick={()=>{if(window.confirm('Abbandonare la battaglia senza ricompense?'))
+     onExit?.();}}>ESCI</button>
+   </div>
+  </section>
+ </main>;
+}
