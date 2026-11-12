@@ -119,6 +119,15 @@ verify(!source.includes('createStandardDeck')&&
  !source.includes('resolveConvergenceDuel'),
  'Non reintrodurre i calcolatori isolati della vecchia battaglia in App.tsx');
 
+verify(!source.includes('ARMORY_V2_STORAGE_KEY')&&
+ !source.includes('armoryV2')&&
+ !source.includes('equippedWeapons')&&
+ !source.includes('weaponsLevels')&&
+ !source.includes('eclissi_equipped_weapons')&&
+ !source.includes('eclissi_weapons_levels')&&
+ !source.includes("from './newCombat/phase7Armory.js'"),
+ 'Il giocatore LIVE non deve leggere la vecchia armeria di carte arma/hardpoint');
+
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
 verify(exists('src/officialLiveMobileLayout.test.js'),

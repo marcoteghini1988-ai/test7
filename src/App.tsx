@@ -38,7 +38,6 @@ import {recoverOfficialCampaignCredits} from './officialCampaignCreditRegen.js';
 import {normalizeOfficialForgeQueue,applyOfficialForgeCompletion,isOfficialForgeJobInQueue} from './officialForgeProgress.js';
 import {initialSelectedPilot,missingPilotInventory,terraNineModuleVictory} from './officialLoadoutMilestones.js';
 import { validatePhase13Settlement, createPhase13OnceGuard } from './newCombat/phase13Campaign.js';
-import { ARMORY_V2_STORAGE_KEY, createPhase7Armory, normalizePhase7Armory } from './newCombat/phase7Armory.js';
 import { phase17PilotHp, phase17CampaignXpAward, phase17CampaignDustAward } from './newCombat/phase17Balance.js';
 
 
@@ -6176,31 +6175,6 @@ function App() {
   const [primordialMatter, setPrimordialMatter] = useState(() => parseInt(localStorage.getItem('eclissi_primordial_matter') || '0', 10));
     const [tankLevel, setTankLevel] = useState(() => parseInt(localStorage.getItem('eclissi_tank_level') || '1', 10));
   const [socketingRelic, setSocketingRelic] = useState(null);
-
-
-  // Dati dei combattimenti precedenti letti dai salvataggi storici.
-  const [armoryV2] = useState(() => {
-    try { return normalizePhase7Armory(JSON.parse(localStorage.getItem(ARMORY_V2_STORAGE_KEY) || 'null')); }
-    catch (_) { return createPhase7Armory(); }
-  });
-
-  const [equippedWeapons] = useState(() => {
-    try {
-      const saved = localStorage.getItem('eclissi_equipped_weapons');
-      return saved ? JSON.parse(saved) : ['wp_gatling', 'wp_xbow', 'wp_thunderstrike', 'wp_orbital_cannon'];
-    } catch (_) {
-      return ['wp_gatling', 'wp_xbow', 'wp_thunderstrike', 'wp_orbital_cannon'];
-    }
-  });
-
-  const [weaponsLevels] = useState(() => {
-    try {
-      const saved = localStorage.getItem('eclissi_weapons_levels');
-      return saved ? JSON.parse(saved) : { wp_gatling: 1, wp_xbow: 1, wp_thunderstrike: 1, wp_orbital_cannon: 1 };
-    } catch (_) {
-      return { wp_gatling: 1, wp_xbow: 1, wp_thunderstrike: 1, wp_orbital_cannon: 1 };
-    }
-  });
 
 
   // STATI MODALI ASSETTO & SHOP UNIFICATO

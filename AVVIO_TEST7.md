@@ -37,6 +37,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Funzioni legacy inutilizzate 12/11:** rimosse 17 funzioni e alias locali di `App.tsx`, non richiamati, dei vecchi calcoli/puzzle/IA (calcolo vettoriale, Tris Stellare, vecchia convergenza, bonus semi, mazzo originale e timer). Restano le funzioni effettivamente utilizzate e il motore `officialLiveDuelEngine.js`; preflight aggiornato per bloccare il ritorno dei vecchi calcolatori.
 
+- **Armeria legacy 12/11:** eliminati da `App.tsx` gli stati inutilizzati `armoryV2`, `equippedWeapons`, `weaponsLevels` e l'import del vecchio modulo `phase7Armory.js`. Erano soltanto letture dei salvataggi Poker/Hardpoint, senza rendering o effetti. **Non cancellati i salvataggi browser**; il modulo di simulazione rimane disponibile ai test. Le 42 armi integrate delle 17 navicelle LIVE non cambiano.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.
