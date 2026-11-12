@@ -61,9 +61,16 @@ function buildShip(ship){
  const def=SHIPS.get(ship?.shipId??ship?.id);
  if(!def)throw new Error('Navicella non presente nel catalogo ufficiale');
  const level=clamp(Math.floor(Number(ship?.level)||1),1,5);
+ const installed=WEAPONS_BY_SHIP.get(def.id)||[];
+ const rawFire=installed.reduce((sum,w)=>sum+Math.round(
+  Number(w.danno_colpo_L1)+(Number(w.danno_colpo_L5)-Number(w.danno_colpo_L1))*(level-1)/4),0);
+ const weaponRating=1+(rawFire>=8?1:0)+(rawFire>=18?1:0);
+ // Gli upgrade ufficiali L1-L5 aumentano resistenza e qualita delle armi,
+ // senza cambiare i quattro stati fisici dei componenti vitali.
+ const maxShield=2+(level>=3?1:0)+(level>=5?1:0);
  return {id:def.id,name:def.nome,level,rarity:def.rarita,role:ROLE_BY_SHIP[def.id],
-  element:ELEMENT_BY_SHIP[def.id],shield:2,maxShield:2,
-  weapons:(WEAPONS_BY_SHIP.get(def.id)||[]).map(w=>w.nome),
+  element:ELEMENT_BY_SHIP[def.id],shield:maxShield,maxShield,weaponRating,
+  weapons:installed.map(w=>w.nome),
   parts:FLEET_PARTS.map(p=>({id:p.id,damage:0,destroyed:false}))};
 }
 function buildSide(ships,types,seed){
@@ -214,7 +221,8 @@ function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
   mother&&alive(mother)&&part(mother,'command').damage<2 &&
   aliveFleet(attacker).every(s=>part(s,'command').damage<2);
  const fireCount=profile.attackers.length;
- const base=fireCount>0?1+(fireCount>=2?1:0)+(sync?1:0):0;
+ const weaponBonus=fireCount>0?Math.min(2,Math.max(...profile.attackers.map(s=>s.weaponRating||1))-1):0;
+ const base=fireCount>0?1+(fireCount>=2?1:0)+(sync?1:0)+weaponBonus:0;
  const terrainBonus=activeTerrain&&profile.attackers.some(s=>s.element===activeTerrain)?1:0;
  const effectBoost=eff.power+(eff.corrosion?1:0)+eff.aura+terrainBonus;
  const advantageBonus=profile.advantage?1:0;
