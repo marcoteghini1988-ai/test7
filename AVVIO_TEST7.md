@@ -45,6 +45,9 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Ultimi registri Poker inutilizzati 12/11:** rimossi da `App.tsx` i dati non più letti `evaluate5CardPokerHand`, `CLASSIC_POKER_PATTERNS`, `BOMB_ARCHETYPES` e `getCardSuit`; ulteriori 7 KB circa. L'audit dei dichiarativi top-level non rileva più identificatori con una sola occorrenza nel file. Non sono stati alterati né il motore `officialLiveDuelEngine.js`, né l'algoritmo di combinazione numerica per i vitali.
 
+- **Asset navicelle 12/11 (audit delle immagini):** eliminate le due vecchie anteprime `views/enemy_to_player/N00.png` e `views/player_to_enemy/N00.png`, non richieste né dalla plancia LIVE né dal fallback, per circa 423 KB. Conservate `N00_complete.png` in entrambe le viste, `N00_player.png` della Home e tutte le 34 viste complete ufficiali. Le otto anteprime `C01`–`C04` sono invece **sorgenti** esplicite di `docs/ship-asset-repair.json`: non eliminarle prima di migrare il piano di ripristino. `scripts/check-official-3d.mjs` ora difende entrambe le condizioni.
+- **Verifica dei moduli ancora fuori dal percorso app (12/11):** l'audit di GitHub Actions conta 319 file sorgente, 151 raggiunti dalla Home e 8 moduli di supporto accessibili soltanto dai test. Non sono file isolati: partecipano al collaudo delle regole e non vengono rimossi senza migrare i rispettivi test.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.
