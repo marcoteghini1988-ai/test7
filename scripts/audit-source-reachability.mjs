@@ -57,3 +57,9 @@ for(const p of candidates)
  console.log(' - '+p+(tests.has(p)?' [usato nei test]':'')+
   (incoming.has(p)?' [dipendenze interne: '+incoming.get(p)+']':' [nessun riferimento statico]'));
 console.log('Senza riferimenti statici ('+noIncoming.length+'): '+noIncoming.join(', '));
+if(noIncoming.length){
+ console.error('Preflight fallito: sorgenti isolati senza riferimenti, verificare e integrare o rimuovere:');
+ for(const file of noIncoming)console.error(' - '+file);
+ process.exitCode=1;
+}
+
