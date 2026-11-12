@@ -142,6 +142,12 @@ verify(!source.includes('const getClassicOpDamage =')&&
  !source.includes('const getComputerAbilityForPlanet ='),
  'Il motore LIVE non deve reintegrare helper orfani delle vecchie carte arma/Poker');
 
+verify(!source.includes('const evaluate5CardPokerHand =')&&
+ !source.includes('const CLASSIC_POKER_PATTERNS =')&&
+ !source.includes('const BOMB_ARCHETYPES =')&&
+ !source.includes('const getCardSuit ='),
+ 'App.tsx non deve contenere i vecchi registri Poker/numero bomba scollegati');
+
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
 verify(exists('src/officialLiveMobileLayout.test.js'),
