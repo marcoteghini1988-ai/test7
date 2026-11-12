@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { OFFICIAL_NUMERIC_BACK_IDS, officialNumericDeckBackName, officialNumericDeckBackPath } from './officialDeckBackArt.js';
 import { TACTICAL_MODULE_CARDS, moduleCardType } from './tacticalEquipmentCards.js';
 import { fleetAdvancedCardProfile } from './fleetSpecialProfiles.js';
+import SpecialDeckPanel from './SpecialDeckPanel.jsx';
 import { officialSpecialArtPath } from './officialSpecialCardArt.js';
 import { playSound } from './audio';
 import {activeNumericBossAbilities,numericBossDeck} from './bossNumericDecks.js';
@@ -37,7 +38,7 @@ const UPGRADE_PILOT_REQS = Object.freeze({
 
 const SHOP_TABS = [
   { id: 'ships', label: 'Navi', icon: '🛸' },
-  { id: 'decks', label: 'Mazzi', icon: '🃏' },
+  { id: 'decks', label: 'Mazzo speciale', icon: '🃏' },
   { id: 'abilities', label: 'Moduli', icon: '⚡' },
   { id: 'resources', label: 'Risorse', icon: '💎' }
 ];
@@ -237,94 +238,18 @@ export default function ShopModal({
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', paddingRight: '2px', position: 'relative', zIndex: 5 }}>
           {activeTab === 'ships' && <ShipShopPanel stardust={stardust} onUpgradeShip={onUpgradeShip}/>}
           
-          {/* TAB: MAZZI */}
+          {/* TAB: MAZZO SPECIALE IN USO NELLA NUOVA BATTAGLIA */}
           {activeTab === 'decks' && (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {renderRarityFilter(deckRarityFilter, setDeckRarityFilter)}
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '0.65rem' }}>
-                {(Array.isArray(allDecks) ? allDecks : []).filter(d => OFFICIAL_NUMERIC_BACK_IDS.includes(d?.id) && (deckRarityFilter === 'all' || normalizeRarity(d.rarity) === deckRarityFilter)).map(deck => {
-                  const isStarter = deck.id === 'neutral_starter';
-                  const deckData = deckInventory?.[deck.id] || { level: 1, unlocked: isStarter };
-                  const isOwned = Boolean(deckData.unlocked);
-                  const curLvl = deckData.level || 1;
-                  const isEquipped = selectedDeck === deck.id;
-                  const maxLvl = numericBossDeck(deck.id)?.maxLevel ?? 1;
-                  const nextCostConfig = UNIFIED_UPGRADE_COSTS[curLvl + 1] || null;
-                  const reqPilotLvl = UPGRADE_PILOT_REQS[curLvl + 1] || 1;
-
-                  return (
-                    <div key={deck.id} className="cyber-panel" style={{ padding: '0.65rem', border: isEquipped ? '2px solid #00f2fe' : (isOwned ? `1.5px solid ${deck.color}` : '1px dashed rgba(255,255,255,0.2)'), display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                          <span style={{ fontSize: '0.55rem', background: deck.color || '#94a3b8', color: '#020617', padding: '1px 5px', borderRadius: '3px', fontWeight: 900, textTransform: 'uppercase' }}>
-                            {deck.rarity || 'Comune'}
-                          </span>
-                          {isOwned && <span style={{ fontSize: '0.58rem', color: '#10b981', fontWeight: 900 }}>Liv. {curLvl}/{maxLvl}</span>}
-                        </div>
-
-                        <div 
-                          onClick={() => setInspectedItem({ type: 'deck', data: deck, curLvl, isUnlocked: isOwned, isEquipped })}
-                          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', margin: '3px 0' }}
-                          title="Tocca per ingrandire"
-                        >
-                          <img src={officialNumericDeckBackPath(deck.id)} alt={officialNumericDeckBackName(deck.id)} width={50} height={75} loading="lazy" decoding="async" />
-                          <span style={{ fontSize: '0.52rem', color: '#38bdf8', marginTop: '2px', textDecoration: 'underline' }}>
-                            🔍 Ingrandisci
-                          </span>
-                        </div>
-
-                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: deck.color, textAlign: 'center' }}>{officialNumericDeckBackName(deck.id)}</div>
-                        <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.4rem', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)', margin: '3px 0', fontSize: '0.62rem', lineHeight: 1.3 }}>
-                          <div style={{ color: '#facc15', fontWeight: 900 }}>PASSIVA:</div>
-                          <div style={{ color: '#6ee7b7' }}>{currentDeckPassives(deck.id,curLvl) || '52 carte numeriche'}</div>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: '0.35rem', display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                        <button 
-                          onClick={() => {
-                            if (typeof onSelectDeck === 'function') onSelectDeck(deck.id);
-                            if (isOwned) showHint(`✓ Mazzo ${officialNumericDeckBackName(deck.id)} equipaggiato!`);
-                          }} 
-                          className={`cyber-btn ${isEquipped ? '' : (isOwned ? 'cyber-btn-primary' : 'cyber-btn-warning')}`} 
-                          style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
-                        >
-                          {isEquipped ? '✓ IN USO' : isOwned ? 'EQUIPAGGIA' : `Sblocca (${deck.unlockCostDiamonds || 10} 💎)`}
-                        </button>
-
-                        {isOwned && !isStarter && curLvl < maxLvl && nextCostConfig && (
-                          <button 
-                            onClick={() => {
-                              try { playSound('click'); } catch (_) {}
-                              setUpgradeConfirm({
-                                type: 'deck',
-                                id: deck.id,
-                                title: officialNumericDeckBackName(deck.id),
-                                curLvl,
-                                nextLvl: curLvl + 1,
-                                reqLevel: reqPilotLvl,
-                                cost: {
-                                  dust: nextCostConfig.dust,
-                                  diamonds: 0,
-                                  voidCrystals: nextCostConfig.voidCrystals || 0,
-                                  primordialMatter: nextCostConfig.primordialMatter || 0
-                                },
-                                currentBonus: currentDeckPassives(deck.id,curLvl) || '52 carte numeriche',
-                                nextBonus: currentDeckPassives(deck.id,curLvl + 1)
-                              });
-                            }} 
-                            className="cyber-btn cyber-btn-warning" 
-                            style={{ padding: '0.35rem', fontSize: '0.65rem', fontWeight: 900 }}
-                          >
-                            ⚡ MIGLIORA A LIV. {curLvl + 1} ➔
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+              <p style={{fontSize:'0.72rem',color:'#c9e4fa',lineHeight:1.45,
+                padding:'10px',border:'1px solid #41678b',borderRadius:'8px',
+                background:'rgba(5,18,38,0.75)'}}>
+                Il nuovo combattimento utilizza soltanto 24 carte speciali.
+                Qui puoi costruire il mazzo e aprire i pacchetti ottenuti in campagna.
+                I vecchi mazzi numerici rimangono nei salvataggi storici,
+                ma non vengono piu venduti o equipaggiati per questa modalita.
+              </p>
+              <SpecialDeckPanel />
             </div>
           )}
 
