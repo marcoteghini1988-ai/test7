@@ -5,7 +5,7 @@ import {TACTICAL_EPIC_CARDS} from './tacticalEpicCards.js';
 import {BOSS_CHARACTER_CATALOG} from './bossCharacterCards.js';
 import {fleetAdvancedCardProfile,FLEET_CHARACTER_ACTIONS,FLEET_EPIC_ACTIONS,FLEET_MODULE_ACTIONS}
  from './fleetSpecialProfiles.js';
-import {createFleetCardBattle,resolveFleetCardRound,fleetCardEffect} from './fleetCardEngine.js';
+import {createFleetCardBattle,resolveFleetCardRound,fleetCardEffect,selectFleetAiOrder} from './fleetCardEngine.js';
 import {createSpecialCollection} from './specialDeckBuilder.js';
 
 const deck=()=>[...createSpecialCollection().loadout];
@@ -149,4 +149,15 @@ test('I moduli potenziati al livello 9 hanno effetto maggiore del livello 1',()=
  assert.equal(novice.ok,true);assert.equal(veteran.ok,true);
  assert.ok(veteran.events[0].strength>novice.events[0].strength);
  assert.equal(veteran.battle.sides.A.equipmentLevels['module-card-aries'],9);
+});
+
+test('L IA non sceglie due comandanti contemporaneamente, nemmeno nei round con 2 speciali',()=>{
+ const b=match();
+ b.round=3;
+ b.sides.B.hand[0]='boss-character-1';
+ b.sides.B.hand[1]='boss-character-2';
+ const ai=selectFleetAiOrder(b);
+ assert.ok(ai.cards.filter(i=>b.sides.B.hand[i].startsWith('boss-character-')).length<=1);
+ const r=resolveFleetCardRound(b,order([]),ai);
+ assert.equal(r.ok,true,r.reason);
 });
