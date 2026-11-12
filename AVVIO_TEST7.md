@@ -41,6 +41,8 @@ Non esistono più l'ingresso `?tacticalPreview=1`, il menu `Flotta → Prova` n�
 
 - **Ultimo audit helper 12/11:** rimosse altre 8 funzioni matematiche/IA scollegate da `App.tsx`, per circa 13,1 KB: vecchio calcolatore espressioni, Tris Stellare, funzione di mescolamento non usata, Poker a parità, obiettivi Tris, configurazione armi/livelli avversario e IA di Convergenza. Il sistema attuale del duello, i valutatori ancora richiamati e il modulo di test rimangono intatti. Preflight esteso.
 
+- **Chiusura dipendenze legacy 12/11:** dopo la rimozione dei vecchi calcolatori sono diventate isolate altre 7 funzioni (danni a operazione, valore carta con anomalie, alias Tris, validatore Poker precedente, creatore casuale carte, generatore numero bomba e assegnazione moduli vecchia IA). Eliminati altri 6,4 KB di `App.tsx` senza modificare le meccaniche LIVE; preflight esteso.
+
 ## Motore e compatibilità
 
 - **Carte Arma della versione precedente** — Rimossi dal Bazar il tab Armi, l’Arsenale 2.0 e gli Hardpoint acquistabili. In Area Personale si gestiscono la flotta e le carte tramite l’Hangar e le relative sezioni del Bazar.
