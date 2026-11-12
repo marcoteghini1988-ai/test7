@@ -79,14 +79,30 @@ integrate: i valori derivano dal catalogo ufficiale delle 42 armi, non da
 equipaggiamenti inventati. La madre è visualizzata al centro, le altre
 due navicelle equipaggiate ai lati.
 
-I nomi/illustrazioni storici dei PNG che citano numeri o formule e le
-descrizioni storiche dello Shop richiedono ancora conversione editoriale.
-La grafica effettiva su smartphone richiede una prova visiva manuale.
+Sono stati convertiti gli effetti nel NUOVO duello anche per tutti i **35 Moduli**,
+i **12 Personaggi Boss** e i **6 Oggetti Epici**, senza rinominare gli ID
+salvati e senza regalare carte. Le abilita distinte sono dichiarate in
+`src/fleetSpecialProfiles.js`; i test di ciascuna famiglia sono in
+`src/fleetSpecialProfiles.test.js`. Si puo attivare un solo Personaggio
+per volta; dura due round. Le reliquie mantengono le durate 1-2 round.
+Alcuni miglioramenti dei Moduli hanno efficacia aumentata ai livelli
+7-9, leggendo i livelli realmente acquistati.
+
+Le descrizioni della nuova battaglia e dell'editor Mazzo Speciale e le
+descrizioni Carte Modulo dello Shop riflettono le nuove regole. Nello Shop
+la vecchia vendita dei mazzi numerici e stata sostituita dall'editor
+del mazzo speciale; l'inventario dei vecchi acquisti rimane conservato.
+
+**Ancora da fare:** aggiornare i PNG che citano numeri o formule,
+rifinire le animazioni di tutte le armi e fare una prova visiva della
+plancia su smartphone. Il codice storico e le descrizioni legacy restano
+conservati per la migrazione, ma non sono la regola del duello attivo.
 
 ## Componenti del codice
 
 - `src/fleetCardEngine.js`: regole pure, prova deterministica, IA nemica.
 - `src/fleetBossPassives.js`: passive e terreni dei dodici boss.
+- `src/fleetSpecialProfiles.js`: effetti distinti per 35 moduli, 12 personaggi e 6 epici.
 - `src/FleetCardBattle.jsx`: plancia e controllo inventari/ricompense.
 - `src/FleetCardBattle.css`: grafica usando le immagini 3D ufficiali.
 - `src/fleetCardEngine.test.js`: regressioni su mazzi, elementi, fratture,
@@ -101,5 +117,5 @@ la migrazione completa senza cancellare accidentalmente ricompense o asset.
 1. Compilazione del progetto e test automatici su GitHub Actions.
 2. Prova visiva effettiva su smartphone 9:16 e in StackBlitz.
 3. Bilanciamento su più seed IA e livelli nave 1–5.
-4. Descrizioni dello Shop e immagini delle carte ancora legate alle numeriche.
-5. Collaudo manuale dei 12 boss e della progressione negli slot e livelli.
+4. Sostituzione dei PNG storici che riportano numeri/formule senza alterare gli ID delle carte.
+5. Collaudo manuale di Shop, boss, animazioni HD e progressione su smartphone.
