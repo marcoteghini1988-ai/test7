@@ -58,6 +58,7 @@ verify(!shop.includes("id: 'characters'")&&
  !source.includes('showDebugModal'),
  'Lo Shop legacy e il pulsante DEBUG di prova non devono ricomparire');
 for(const orphan of [
+ 'src/legacyTutorialConfig.js',
  'src/bossMechanicsEngine.js',
  'src/eliteServices.js',
  'src/pvpConnectivity.js',
@@ -80,6 +81,14 @@ for(const orphan of [
 ]){
  verify(!exists(orphan),'File obsoleto ancora presente: '+orphan);
 }
+
+verify(!source.includes('LEGACY_TUTORIALS_ENABLED')&&
+ !source.includes('DISCOVERY_TUTORIALS')&&
+ !source.includes('SpotlightHomeTour')&&
+ !source.includes('FeatureDiscoveryModal')&&
+ !source.includes('eclissi_seen_tutorials')&&
+ !source.includes('eclissi_tour_completed'),
+ 'Le guide della vecchia versione devono restare fuori dalla Home ufficiale');
 
 verify(!sharedCss.includes('.tdp-'),
  'I CSS del riproduttore di battaglie simultanee non devono tornare nella LIVE');
