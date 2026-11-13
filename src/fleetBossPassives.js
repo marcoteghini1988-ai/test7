@@ -3,6 +3,7 @@
 // Regole piccole e pubbliche: ogni passiva modifica un evento reale del round,
 // senza creare carte, vita extra permanente o requisiti matematici.
 import {PHASE16D_BOSS_PROFILES} from './newCombat/phase16DBosses.js';
+import {escortAlive,repairFleetUnit} from './fleetEscortSupports.js';
 
 export const BOSS_ARENA_ELEMENTS=Object.freeze({
  1:'mineral',2:'plasma',3:'ionic',6:'ionic',7:'ionic',8:'refrigerant',
@@ -11,12 +12,12 @@ export const BOSS_ARENA_ELEMENTS=Object.freeze({
 export const BOSS_PASSIVE_DESCRIPTIONS=Object.freeze({
  1:'Corazza tellurica: il primo attacco contro il boss perde 1 potenza.',
  2:'Assalto progressivo: i colpi efficaci consecutivi aumentano l attacco nemico, fino a +2.',
- 3:'Neurotossina: dopo un colpo efficace, la nave colpita perde uno scudo al round successivo.',
+ 3:'Neurotossina: dopo un colpo efficace, danneggia una scudiera oppure frattura i Motori della madre.' ,
  6:'Controtempo: due speciali nello stesso round danno al boss +1 difesa e +1 attacco.',
  7:'Sifone quantico: il primo Impulso Ionico avversario viene convertito in +1 attacco boss.',
- 8:'Pressione degli abissi: la flotta boss guadagna +1 attacco se il suo bersaglio ha al massimo uno scudo.',
- 9:'Patto di sangue: ogni due round il boss sacrifica uno scudo per +1 attacco.',
- 11:'Rigenerazione criogenica: recupera uno scudo dopo aver subito un colpo, salvo se affronta Plasma.',
+ 8:'Pressione degli abissi: +1 attacco se una parte della madre avversaria e gia fratturata.',
+ 9:'Patto di sangue: sacrifica la resistenza di una scudiera per +1 attacco, ogni 2 round.',
+ 11:'Rigenerazione criogenica: ripara una frattura o una scudiera dopo un colpo, salvo contro Plasma.',
  14:'Reattore crescente: ogni terzo round la flotta boss ottiene +2 attacco.',
  17:'Memoria degli scarti: le tue carte consumate alimentano progressivamente la potenza nemica.',
  19:'Ciclo magmatico: carica, eruzione (+2 attacco), raffreddamento (attacco indebolito).',
@@ -73,9 +74,15 @@ export function applyFleetBossBeforeRound(battle,effects,orders){
    break;
   case 3:
    if(m.poisonTarget!=null){
-    const ship=battle.sides.A.ships[m.poisonTarget];
-    if(ship&&player.includes(ship)&&ship.shield>0){
-     ship.shield--;note('Neurotossina: -1 scudo a '+ship.name);
+    const escort=battle.sides.A.escorts.find(escortAlive);
+    if(escort){
+     escort.hp=Math.max(0,escort.hp-1);
+     escort.destroyed=escort.hp===0;
+     note('Neurotossina: -1 resistenza a '+escort.name);
+    }else{
+     const ship=battle.sides.A.ships[0];
+     const motor=ship?.parts?.find(p=>p.id==='engine');
+     if(motor&&motor.damage===0){motor.damage=1;note('Neurotossina: Motori fratturati');}
     }
     m.poisonTarget=null;
    }
@@ -90,21 +97,23 @@ export function applyFleetBossBeforeRound(battle,effects,orders){
    }
    break;
   case 8:
-   if(playerTarget&&playerTarget.shield<=1){b.power++;note('Pressione degli abissi sul bersaglio esposto');}
+   if(playerTarget&&playerTarget.parts.some(p=>p.damage>0)){b.power++;note('Pressione degli abissi sul sistema esposto');}
    break;
   case 9:
-   if(battle.round%2===0&&mother&&mother.shield>0&&hasGenerator(mother)){
-    mother.shield--;b.power++;
-    note('Patto di sangue: -1 scudo boss, +1 attacco');
+   if(battle.round%2===0&&mother&&hasGenerator(mother)){
+    const offering=battle.sides.B.escorts.find(escortAlive);
+    if(offering){
+     offering.hp=Math.max(0,offering.hp-1);offering.destroyed=offering.hp===0;
+     b.power++;note('Patto di sangue: sacrificata resistenza della scudiera');
+    }
    }
    break;
   case 11:
    if(m.regenPending){
-    if(player.some(s=>s.element==='plasma'))note('Rigenerazione bloccata dall elemento Plasma');
+    if(player.some(s=>s.element==='plasma'))note('Rigenerazione bloccata dal Plasma');
     else{
-     const eligible=enemy.filter(hasGenerator).sort((a,z)=>a.shield-z.shield);
-     const ship=eligible.find(s=>s.shield<s.maxShield);
-     if(ship){ship.shield++;note('Rigenerazione criogenica: +1 scudo a '+ship.name);}
+     const repaired=repairFleetUnit(battle.sides.B);
+     if(repaired)note('Rigenerazione criogenica: '+repaired);
     }
     m.regenPending=false;
    }
