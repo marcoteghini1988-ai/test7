@@ -111,6 +111,7 @@ export function applyFleetBossBeforeRound(battle,effects,orders){
   case 11:
    if(m.regenPending){
     if(player.some(s=>s.element==='plasma'))note('Rigenerazione bloccata dal Plasma');
+    else if(!mother||!hasGenerator(mother))note('Rigenerazione bloccata: Generatore distrutto');
     else{
      const repaired=repairFleetUnit(battle.sides.B);
      if(repaired)note('Rigenerazione criogenica: '+repaired);
