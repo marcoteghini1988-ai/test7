@@ -152,8 +152,8 @@ export function applyFleetBossBeforeRound(battle,effects,orders){
 export function applyFleetBossAfterRound(battle,hitPlayer,hitBoss){
  const m=battle.bossState;
  if(!m||battle.sides.B.ships.every(s=>s.parts.filter(p=>p.destroyed).length>=2))return [];
- const bossHit=hitPlayer.shieldsHit>0||hitPlayer.damage>0;
- const enemyHit=hitBoss.shieldsHit>0||hitBoss.damage>0;
+ const bossHit=hitPlayer.escortDamage>0||hitPlayer.damage>0;
+ const enemyHit=hitBoss.escortDamage>0||hitBoss.damage>0;
  const events=[];
  if(m.id===1&&!m.armorSpent&&hitPlayer.fireCount>0){
   m.armorSpent=true;events.push('Corazza tellurica consumata');
