@@ -11,9 +11,9 @@ import {createFleetBossState,applyFleetBossBeforeRound,applyFleetBossAfterRound}
 
 export const FLEET_PARTS=Object.freeze([
  {id:'engine',name:'Motori',effect:'Mobilita: perde evasione elementale'},
- {id:'weapons',name:'Armi',effect:'Fuoco: la nave non contribuisce all attacco'},
- {id:'generator',name:'Generatore',effect:'Difesa: scudi e riparazioni disabilitati'},
- {id:'command',name:'Centralina',effect:'Sincronia: la flotta perde il bonus combinato'}
+ {id:'weapons',name:'Armi',effect:'Fuoco: la madre non puo piu attaccare'},
+ {id:'generator',name:'Generatore',effect:'Energia: disattiva riparazioni e supporti collegati'},
+ {id:'command',name:'Centralina',effect:'Sincronia: disattiva i supporti collegati e la Formazione triplice'}
 ]);
 export const FLEET_ELEMENTS=Object.freeze({
  refrigerant:{name:'Refrigerante',symbol:'❄',beats:'plasma',color:'#58c5ff'},
