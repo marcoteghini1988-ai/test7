@@ -90,7 +90,7 @@ export function repairFleetUnit(side){
  return null;
 }
 export function mendFleetEscort(side){
- const target=[...(side?.escorts||[])].filter(escortAlive&&Boolean)
+ const target=[...(side?.escorts||[])].filter(escortAlive)
   .filter(e=>e.hp<e.maxHp).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];
  if(!target)return null;
  target.hp++;return target.name;
