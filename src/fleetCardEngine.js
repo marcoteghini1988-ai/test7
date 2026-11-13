@@ -5,7 +5,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {fleetAdvancedCardProfile} from './fleetSpecialProfiles.js';
 import {fleetShipPassive,applyFleetShipPassives} from './fleetShipPassives.js';
-import {buildFleetEscorts,escortAlive,motherWounded,readyFleetEscorts,repairFleetUnit,absorbFleetAttack} from './fleetEscortSupports.js';
+import {buildFleetEscorts,escortAlive,motherWounded,readyFleetEscorts,repairFleetUnit,mendFleetEscort,absorbFleetAttack} from './fleetEscortSupports.js';
 import {createFleetBossState,applyFleetBossBeforeRound,applyFleetBossAfterRound} from './fleetBossPassives.js';
 
 export const FLEET_PARTS=Object.freeze([
@@ -151,6 +151,9 @@ function validateOrder(b,who,order){
   return 'Puoi usare fino a due carte presenti nella tua mano';
  if(b.bossLockedTerrain&&indices.some(i=>fleetCardEffect(side.hand[i]).kind==='terrain'))
   return 'Il boss impone il suo terreno: questa carta non e disponibile';
+ if(indices.some(i=>['fusion-twin','fusion-triad'].includes(side.hand[i]))&&
+   readyFleetEscorts(side).length<2)
+  return 'Fusione Gemellare e Trina richiedono due scudiere collegate (livello 5)';
  const playedCommanders=indices.filter(i=>fleetCardEffect(side.hand[i]).kind==='character');
  if(playedCommanders.length>1)return 'Puoi attivare un solo personaggio alla volta';
  if(playedCommanders.length&&side.commander&&side.commander.until>=b.round)
@@ -274,7 +277,7 @@ function prepareEffects(b,who,order,opposingOrder){
  const played=removeCards(side,order.cards);
  const effects={power:0,guard:0,pierce:false,ion:false,corrosion:false,
   jam:false,repair:0,draw:0,aura:0,healOnHit:0,antiJam:false,
-  jamDraw:false,cards:played};
+  jamDraw:false,repairEscort:0,cards:played};
  for(const type of played){
   if(upgradeFleetAdvanced(side,enemy,order,b.round,type,effects))continue;
   const kind=fleetCardEffect(type).kind;
@@ -285,7 +288,10 @@ function prepareEffects(b,who,order,opposingOrder){
    case 'ion': effects.ion=true;break;
    case 'corrosion': effects.corrosion=true;break;
    case 'jam': effects.jam=true;break;
-   case 'repair':effects.repair++;break;
+   case 'repair':
+    if(type==='support-escort-repair')effects.repairEscort++;
+    else effects.repair++;
+    break;
    case 'draw':effects.draw++;break;
    case 'aura':side.buffs=[{until:b.round+1,type}];effects.aura++;break;
    case 'terrain':
@@ -297,6 +303,13 @@ function prepareEffects(b,who,order,opposingOrder){
     break;
    default:break;
   }
+  if(type==='fusion-strike'&&readyFleetEscorts(side).length)effects.power++;
+  if(type==='fusion-triad'&&readyFleetEscorts(side).length===2)effects.power++;
+  if(type==='fusion-twin'&&readyFleetEscorts(side).length===2)effects.guard++;
+  if(['tactical-cover','fusion-barrier','fusion-twin'].includes(type)&&readyFleetEscorts(side).length){
+   const scudiere=[...readyFleetEscorts(side)].sort((a,z)=>z.hp-a.hp);
+   effects.coverEscortSlot=scudiere[0].slot;
+  }
  }
  ongoingFleetAdvanced(side,enemy,opposingOrder,b,effects);
  if(played.length===2){
@@ -306,6 +319,7 @@ function prepareEffects(b,who,order,opposingOrder){
  }
  // Carte di riparazione: una frattura sulla madre oppure HP su scudiera viva.
  for(let r=0;r<effects.repair;r++)repairFleetUnit(side);
+ for(let r=0;r<effects.repairEscort;r++)mendFleetEscort(side);
  return effects;
 }
 function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
