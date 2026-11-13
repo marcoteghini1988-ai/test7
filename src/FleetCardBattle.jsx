@@ -288,6 +288,8 @@ export default function FleetCardBattle({
   const kind=fleetCardEffect(type).kind;
   if(finished)return 'Battaglia conclusa';
   if(battle.bossLockedTerrain&&kind==='terrain')return 'Il boss impone il suo terreno';
+  if(kind==='repair'&&player.ships[0].parts.some(p=>p.id==='generator'&&p.damage>=2))
+   return 'Generatore distrutto: riparazione non disponibile';
   if(['fusion-twin','fusion-triad'].includes(type)&&
     player.escorts.filter(e=>e.hp>0&&!e.destroyed&&e.skill.requires.every(id=>
       player.ships[0].parts.some(p=>p.id===id&&p.damage<2))).length<2)
