@@ -1,3 +1,5 @@
+> **Documento storico — meccanica superata il 13/11/2026.** Il sistema ufficiale mantiene UNA sola nave madre e le sue scudiere derivate, sbloccate ai livelli L3/L5, non tre madri indipendenti. Consultare [Sistema Madre + Evoluzioni](SCHEMA_COMBINAZIONI_FLOTTA_2026-11-13.md) e il codice `src/fleetEscortSupports.js`.
+
 # Eclissi Stellare — Regolamento ufficiale Carte di Flotta v1
 
 Data: 12 novembre 2026. Repository ufficiale: `marcoteghini1988-ai/test7`, ramo `main`.
