@@ -12,12 +12,18 @@ const css=read('./OfficialLiveBattle3D.css');
 const base=read('./MathDuelBattle.css');
 const entry=read('./MathDuelBattle.jsx');
 
-test('ingresso ufficiale: nuovo duello carte con 120 settori, senza fallback vecchio',()=>{
- assert.match(entry,/from '\.\/FleetCardBattle\.jsx'/);
+test('ingresso ufficiale: plancia 3D originale con nuovo motore e 120 settori',()=>{
+ assert.match(entry,/from '\.\/OfficialFleetBattle3D\.jsx'/);
  assert.match(entry,/officialCampaignBattleProps\(props\)/);
- assert.match(entry,/<FleetCardBattle/);
- assert.doesNotMatch(entry,/from '\.\/OfficialLiveBattle3D\.jsx'/);
+ assert.match(entry,/<OfficialFleetBattle3D/);
+ assert.doesNotMatch(entry,/from '\.\/FleetCardBattle\.jsx'/);
  assert.doesNotMatch(entry,/from '\.\/BossBattle3D\.jsx'/);
+ const bridge=read('./OfficialFleetBattle3D.jsx');
+ assert.match(bridge,/<ShipPhysicalVitals/);
+ assert.match(bridge,/<MountedWeapons/);
+ assert.match(bridge,/arena_titanio_9x16\.webp/);
+ assert.match(bridge,/OfficialLiveBattle3D\.css/);
+ assert.match(bridge,/resolveFleetCardRound/);
 });
 
 test('arena LIVE 450×800: la scala conserva il 9:16 su telefoni',()=>{
