@@ -20,7 +20,8 @@ function insert(side,type,index=0){
  else side.hand[index]=type; // fixture: prova una carta possedibile non inclusa nello starter
 }
 const order=(side,cards=[])=>({shipIndex:0,
- partId:side.ships[0].parts.find(p=>!p.destroyed)?.id||'command',cards});
+ partId:side.ships[0].parts.find(p=>p.id==='command'&&!p.destroyed)?.id||
+  side.ships[0].parts.find(p=>!p.destroyed)?.id||'command',cards});
 function round(b,cardsA=[],cardsB=[]){
  const r=resolveFleetCardRound(b,order(b.sides.B,cardsA),order(b.sides.A,cardsB),b.round*100);
  assert.equal(r.ok,true,r.reason);return r;
