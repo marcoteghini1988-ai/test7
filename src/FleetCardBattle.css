@@ -274,3 +274,42 @@
  padding:5px 7px;border:1px solid #4d6d70;border-radius:7px;
  background:rgba(10,30,36,.8);font-size:10px;line-height:1.2;color:#c3eadb}
 .fc-synergies b{color:#ffe3a2;font-size:9px;letter-spacing:.04em}
+
+
+/* Le scudiere L3/L5 sono evoluzioni fisiche della madre: non carte madri. */
+.fc-escort{position:relative;grid-row:1;min-width:0;max-width:200px;width:100%;
+ display:flex;flex-direction:column;gap:3px;padding:5px;
+ border-radius:10px;border:1px solid #618f9b;color:#e5f6ff;
+ background:linear-gradient(145deg,#274458,#0b1d31 55%,#0a1425);
+ box-shadow:inset 0 0 0 1px #284154,0 8px 18px #020811aa;}
+.fc-escort.fc-slot-left{grid-column:1}
+.fc-escort.fc-slot-right{grid-column:3}
+.fc-escort-hostile{border-color:#a96d7b;background:linear-gradient(145deg,#492d43,#1c101e 65%,#0a1124)}
+.fc-escort-heading{min-height:34px;display:flex;flex-direction:column;gap:2px}
+.fc-escort-heading b{font-size:clamp(8px,1.6vw,11px);overflow-wrap:anywhere;line-height:1.12}
+.fc-escort-heading span{font-size:8px;color:#a9c9d4}
+.fc-escort-image{position:relative;flex:1;display:flex;align-items:center;justify-content:center;
+ min-height:80px;border-radius:6px;background:radial-gradient(ellipse,#35618188,transparent 70%),#091624}
+.fc-escort-image img{display:block;width:100%;height:100%;max-height:128px;object-fit:contain}
+.fc-escort-ability{font-size:clamp(7px,1.4vw,9px);line-height:1.16;color:#ffdc99;
+ min-height:19px;overflow-wrap:anywhere}
+.fc-escort-health{display:flex;justify-content:space-between;gap:3px;font-size:8px;color:#bcead9}
+.fc-escort-meter{height:5px;border:1px solid #446c72;background:#111e2d;border-radius:4px;overflow:hidden}
+.fc-escort-meter i{height:100%;display:block;background:#80d6bf;transition:width .2s}
+.fc-escort-status{position:absolute;z-index:4;inset:43% 3% auto;
+ padding:4px 2px;color:#ffd2d2;font-size:9px;font-weight:900;text-align:center;
+ background:#441a28dd;border-radius:5px;border:1px solid #db8c9e;transform:rotate(-5deg)}
+.fc-escort.fc-sunk{opacity:.6;filter:grayscale(.9)}
+.fc-escort-offline:not(.fc-sunk){border-color:#a97669}
+.fc-escort-hit{position:absolute;bottom:5%;right:2%;left:2%;text-align:center;
+ font-size:9px;color:#ffefc5;text-shadow:0 1px 3px #000;background:#5e2b28cc;
+ padding:3px 2px;border-radius:4px}
+@media(max-width:480px){
+ .fc-escort{padding:3px;border-radius:7px;gap:2px}
+ .fc-escort-heading{min-height:29px}
+ .fc-escort-heading b{font-size:8px}
+ .fc-escort-heading span{font-size:7px}
+ .fc-escort-image{min-height:66px}
+ .fc-escort-health{font-size:7px}
+ .fc-escort-ability{min-height:22px}
+}
