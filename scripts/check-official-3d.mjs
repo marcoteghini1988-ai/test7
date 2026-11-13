@@ -168,23 +168,27 @@ verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')
  !shop.includes('onSelectAbility')&&!loadout.includes('equippedTerrainSlots'),
  'Bazar e Area Giocatore devono usare l’assetto LIVE e il Mazzo Speciale');
 
-verify(battleEntry.includes("import FleetCardBattle from './FleetCardBattle.jsx'")&&
+verify(battleEntry.includes("import OfficialFleetBattle3D from './OfficialFleetBattle3D.jsx'")&&
  battleEntry.includes("officialCampaignBattleProps(props)")&&
- battleEntry.includes("<FleetCardBattle {...officialCampaignBattleProps(props)}"),
- 'Unico ingresso ufficiale: carte navicella, speciali ed elementi, con i 120 settori storici');
-const fleetView=read('src/FleetCardBattle.jsx');
+ battleEntry.includes("<OfficialFleetBattle3D {...officialCampaignBattleProps(props)}"),
+ 'La battaglia ufficiale DEVE riutilizzare la plancia 3D LIVE originale');
+const fleetView=read('src/OfficialFleetBattle3D.jsx');
 const fleetEngine=read('src/fleetCardEngine.js');
-const fleetCss=read('src/FleetCardBattle.css');
+const fleetCss=read('src/OfficialFleetBattle3D.css');
 verify(fleetView.includes("readShipCollection")&&fleetView.includes("readSpecialCollection")&&
  fleetView.includes("claimOfficialLiveVictoryRewards")&&
- fleetView.includes("resolveFleetCardRound")&&fleetView.includes("fc-parts"),
- 'La nuova plancia deve usare inventari reali, ricompense e quattro bersagli');
+ fleetView.includes("resolveFleetCardRound")&&
+ fleetView.includes("<ShipPhysicalVitals")&&fleetView.includes("<MountedWeapons")&&
+ fleetView.includes("OfficialLiveBattle3D.css"),
+ 'Nuove meccaniche: obbligatorio mantenere le navicelle 3D e i vitali fisici originali');
 verify(fleetEngine.includes("FLEET_ELEMENTS")&&fleetEngine.includes("FLEET_PARTS")&&
  fleetEngine.includes("selectFleetAiOrder")&&fleetEngine.includes("resolveFleetCardRound"),
- 'La partita ufficiale deve usare elementi, vitali e IA senza numeriche');
-verify(fleetCss.includes("arena_titanio_9x16.webp")&&
- fleetView.includes("SHOT")===false,
- 'La plancia carte deve conservare la base artistica 9:16 originale');
+ 'Il nuovo motore deve conservare elementi, vitali e IA senza numeriche');
+verify(fleetView.includes("arena_titanio_9x16.webp")&&
+ fleetView.includes("className=\"fleet-ship-wrap complete-ship focused official-mother\"")&&
+ !fleetView.includes("FleetCardBattle.css")&&
+ fleetCss.includes("OfficialLiveBattle3D.css"),
+ 'Il renderer della nuova partita deve essere quello 3D originario');
 
 verify(arena.includes('createOfficialLiveDuel')&&
  arena.includes('applyOfficialLiveAction')&&
