@@ -56,6 +56,35 @@ export const FLEET_ESCORT_TRAITS=Object.freeze(Object.fromEntries(
    targetPart:t[3]||null,interval:t[4],model:ESCORT_ARMORY[id][slot].name,
    role:ESCORT_ARMORY[id][slot].role})))])
 ));
+export const FLEET_ESCORT_ACTIONS=Object.freeze({
+ phase:'Intercetta l intera salva sulla madre quando la fase e attiva',
+ cover:'Intercetta ogni salva diretta alla madre, fino alla propria distruzione',
+ bulwark:'Corazza rinforzata: intercetta ogni salva diretta alla madre',
+ partCover:'Intercetta i colpi diretti al componente indicato',
+ guard:'Riduce di 1 la potenza della salva nemica',
+ jam:'Disturba il fuoco della madre avversaria',
+ ion:'Potenzia l attacco della madre con risonanza ionica',
+ draw:'Ricambia una carta speciale dalla mano',
+ repair:'Ripara una frattura della madre o 1 HP di una scudiera viva',
+ mend:'Ripristina 1 HP a una scudiera danneggiata',
+ focus:'Potenzia il tiro della madre contro il componente indicato',
+ siege:'Potenzia l assedio della madre contro il componente indicato',
+ pierce:'Potenzia un tiro critico contro il componente indicato',
+ precision:'Potenzia il colpo di precisione della madre',
+ strike:'Aumenta la potenza dell attacco della madre',
+ revenge:'Aumenta l attacco quando una scudiera alleata e ferita',
+ surge:'Aumenta l attacco se un vitale della madre e fratturato',
+ corrode:'Aggiunge corrosione al colpo della madre'
+});
+const PART_NAMES=Object.freeze({engine:'Motori',weapons:'Armi',
+ generator:'Generatore',command:'Centralina'});
+export function fleetEscortSkillDescription(escort){
+ const skill=escort.skill;
+ return FLEET_ESCORT_ACTIONS[skill.action]+
+  (skill.targetPart?' · '+PART_NAMES[skill.targetPart]:'')+
+  '. Richiede: '+skill.requires.map(id=>PART_NAMES[id]).join(' e ')+
+  '. Frequenza: '+(skill.interval===1?'ogni round':'ogni '+skill.interval+' round')+'.';
+}
 const linked=(mother,requires)=>requires.every(id=>mother?.parts?.find(p=>p.id===id)?.damage<2);
 export const escortAlive=e=>!!e&&!e.destroyed&&e.hp>0;
 export const motherAlive=m=>!!m&&m.parts.filter(p=>p.damage>=2).length<2;
