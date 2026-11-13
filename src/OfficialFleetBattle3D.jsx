@@ -8,7 +8,6 @@ import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
 import {readShipCollection} from './shipCollection.js';
 import {readSpecialCollection,createSpecialCollection,validateSpecialDeck} from './specialDeckBuilder.js';
 import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
-import {readLegacyEpicProgress} from './officialEpicOwnership.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {officialSpecialVisualMeta} from './officialSpecialVisualMeta.js';
@@ -20,7 +19,7 @@ import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {fleetEscortSkillDescription,readyFleetEscorts} from './fleetEscortSupports.js';
-import {fleetCardEffect,fleetShipDestroyed,FLEET_ELEMENTS,
+import {fleetCardEffect,FLEET_ELEMENTS,
  createFleetCardBattle,resolveFleetCardRound,selectFleetAiOrder} from './fleetCardEngine.js';
 import {fleetBossBrief} from './fleetBossPassives.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
@@ -91,8 +90,9 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,impact,insp
    data-vital-weapons={mother.parts.find(p=>p.id==='weapons')?.destroyed?'destroyed':'healthy'}
    style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
    <ShipPhysicalVitals side={side} vessel={{...vessel,defense}} defense={defense}
-    selectedVital={selectedVital} canTarget={!player}
-    onSelectVital={onSelectVital} knownVitals={PART_IDS}/>
+    selectedVital={selectedVital==='generator'?'shieldGenerator':selectedVital}
+    canTarget={!player} onSelectVital={id=>onSelectVital?.(id==='shieldGenerator'?'generator':id)}
+    knownVitals={['engine','weapons','shieldGenerator','command']}/>
    <MountedWeapons side={side} vessel={vessel} index={0}/>
    {currentImpact&&<img key={(impact?.round||0)+currentImpact.kind}
     className="f3d-impact f3d-impact--mother" src={currentImpact.image}
