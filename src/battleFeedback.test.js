@@ -132,8 +132,15 @@ test('47: effetti LIVE non intercettano input e mostrano solo eventi verificati'
  const fx=readFileSync(new URL('./OfficialLiveCombatFx.jsx',import.meta.url),'utf8');
  const css=readFileSync(new URL('./OfficialLiveCombatFx.css',import.meta.url),'utf8');
  const entry=readFileSync(new URL('./MathDuelBattle.jsx',import.meta.url),'utf8');
- assert.match(entry,/FleetCardBattle\.jsx/);
- assert.doesNotMatch(entry,/import OfficialLiveBattle3D/);
+ assert.match(entry,/OfficialFleetBattle3D\.jsx/);
+ assert.doesNotMatch(entry,/import FleetCardBattle/);
+ const adapter=readFileSync(new URL('./OfficialFleetBattle3D.jsx',import.meta.url),'utf8');
+ const adapterCss=readFileSync(new URL('./OfficialFleetBattle3D.css',import.meta.url),'utf8');
+ assert.match(adapter,/<ShipPhysicalVitals/);
+ assert.match(adapter,/<MountedWeapons/);
+ assert.match(adapter,/fleetImpactVisual\(impact\)/);
+ assert.match(adapter,/OfficialLiveBattle3D\.css/);
+ assert.match(adapterCss,/pointer-events:none/);
  assert.match(live,/liveCombatCues\(battle\.history,now\)/);
  assert.match(live,/visualEvents\.map\(\(\{event,index,delay\}\)=><OfficialLiveCombatFx/);
  assert.match(fx,/boardPoint\(rootBox,node\.getBoundingClientRect\(\)\)/);
