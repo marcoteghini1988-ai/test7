@@ -246,7 +246,7 @@ function ongoingFleetAdvanced(side,enemy,enemyOrder,battle,effects){
     if(battle.terrain?.element==='plasma'||
       motherWounded(enemy.ships[0]))effects.power++;
     break;
-   case 'precision':effects.pierce=true;break;
+   case 'precision':effects.pierce=true;effects.power++;break;
    default:throw Error('Personaggio senza abilita di flotta: '+action);
   }
  }
@@ -281,7 +281,7 @@ function prepareEffects(b,who,order,opposingOrder){
   switch(kind){
    case 'power': effects.power++;break;
    case 'guard': effects.guard++;break;
-   case 'pierce': effects.pierce=true;break;
+   case 'pierce': effects.pierce=true;effects.power++;break;
    case 'ion': effects.ion=true;break;
    case 'corrosion': effects.corrosion=true;break;
    case 'jam': effects.jam=true;break;
