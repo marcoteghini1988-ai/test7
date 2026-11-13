@@ -16,8 +16,8 @@ function insert(side,type,index=0){
  const idx=side.hand.indexOf(type);
  if(idx>=0){[side.hand[idx],side.hand[index]]=[side.hand[index],side.hand[idx]];return;}
  const i=side.deck.indexOf(type);
- assert.ok(i>=0,type+' deve esistere nel mazzo');
- [side.hand[index],side.deck[i]]=[side.deck[i],side.hand[index]];
+ if(i>=0)[side.hand[index],side.deck[i]]=[side.deck[i],side.hand[index]];
+ else side.hand[index]=type; // fixture: prova una carta possedibile non inclusa nello starter
 }
 const order=(side,cards=[])=>({shipIndex:0,
  partId:side.ships[0].parts.find(p=>!p.destroyed)?.id||'command',cards});
