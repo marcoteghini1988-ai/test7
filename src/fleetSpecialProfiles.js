@@ -28,7 +28,7 @@ export const FLEET_MODULE_ACTIONS=Object.freeze({
  singularity:['singularity','Singolarità: +1 potenza, Ionico e riparazione di madre o scudiera dopo un colpo.']
 });
 export const FLEET_CHARACTER_ACTIONS=Object.freeze({
- 1:['armor','Riparo tellurico: riduce l'attacco avversario per 2 round.'],
+ 1:['armor','Riparo tellurico: riduce il fuoco avversario per 2 round.'],
  2:['assault','Furia controllata: +1 potenza per 2 round.'],
  3:['corrosion','Spora corrosiva: rafforza le fratture causate per 2 round.'],
  6:['counter','Controtempo: +1 difesa, e +1 attacco se il nemico usa speciali.'],
