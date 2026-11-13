@@ -1,6 +1,7 @@
 // Eclissi Stellare - combattimento carte di flotta 2026.
 // Motore puro: nessuna modifica all'inventario, nessuna carta o nave regalata.
-// Tutte le navi equipaggiate sparano insieme; una nave cade con DUE vitali distrutti.
+// Solo la madre spara con le proprie armi. Evoluzioni passive ai livelli 3 e 5.
+// Due sistemi vitali distrutti eliminano la madre, anche se le scudiere sopravvivono.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {fleetAdvancedCardProfile} from './fleetSpecialProfiles.js';
@@ -103,7 +104,7 @@ export const FLEET_SPECIAL_EFFECTS=Object.freeze({
  'fusion-barrier':['guard','Manovra difensiva di flotta'],
  'fusion-strike':['power','Potenzia il fuoco coordinato'],
  'fusion-twin':['guard','Difesa gemellare delle scudiere'],
- 'fusion-triad':['power','Assalto delle tre navicelle'],
+ 'fusion-triad':['power','Fuoco della madre coordinato da entrambe le scudiere'],
  'tactical-cover':['guard','Copertura tattica'],
  'shot-piercing':['pierce','Potenzia un colpo mirato sui vitali'],
  'shot-ion':['ion','Impulso ionico: risonanza e sabotaggio'],
