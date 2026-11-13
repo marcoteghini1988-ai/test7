@@ -177,7 +177,8 @@ function strongestElementAttack(side,defender,forcedIon){
    elements.length>0&&elements.every(e=>FLEET_ELEMENTS[defender.element].beats===e),
   attackers:attacks};
 }
-function healOneShield(side){return !!repairFleetUnit(side);}
+function generatorActive(side){return part(side.ships[0],'generator').damage<2;}
+function healOneShield(side){return generatorActive(side)&&!!repairFleetUnit(side);}
 function upgradeFleetAdvanced(side,enemy,order,round,type,effects){
  const profile=fleetAdvancedCardProfile(type);
  if(!profile)return false;
@@ -199,7 +200,7 @@ function upgradeFleetAdvanced(side,enemy,order,round,type,effects){
  const tuned=moduleTier===3?2:1;
  switch(profile.action){
   case 'impulse':effects.power+=tuned;break;
-  case 'repair':effects.repair+=tuned;break;
+  case 'repair':if(generatorActive(side))effects.repair+=tuned;break;
   case 'swap1':effects.draw++;break;
   case 'swap2':effects.draw+=2;break;
   case 'execute':
@@ -210,7 +211,7 @@ function upgradeFleetAdvanced(side,enemy,order,round,type,effects){
   case 'drain':effects.power++;effects.healOnHit=tuned;break;
   case 'interfere':effects.jam=true;effects.jamDraw=true;break;
   case 'cleanse':effects.antiJam=true;break;
-  case 'fortify':effects.guard++;effects.repair+=tuned;break;
+  case 'fortify':effects.guard++;if(generatorActive(side))effects.repair+=tuned;break;
   case 'formation':if(readyFleetEscorts(side).length>=1)effects.power+=tuned;break;
   case 'focus':effects.power+=tuned;break;
   case 'siphon':effects.power++;effects.jam=true;break;
@@ -240,7 +241,7 @@ function ongoingFleetAdvanced(side,enemy,enemyOrder,battle,effects){
    case 'ionGuard':if(opposing.some(s=>s.element==='ionic'))effects.guard++;break;
    case 'escortGuard':if(readyFleetEscorts(side).length>=1)effects.guard++;break;
    case 'shadow':if(motherWounded(active[0]))effects.power++;break;
-   case 'regeneration':effects.repair++;break;
+   case 'regeneration':if(generatorActive(side))effects.repair++;break;
    case 'sync':
     if(readyFleetEscorts(side).length>=1&&alive(side.ships[0])&&
       part(side.ships[0],'command').damage<2)effects.power++;
@@ -290,8 +291,10 @@ function prepareEffects(b,who,order,opposingOrder){
    case 'corrosion': effects.corrosion=true;break;
    case 'jam': effects.jam=true;break;
    case 'repair':
-    if(type==='support-escort-repair')effects.repairEscort++;
-    else effects.repair++;
+    if(generatorActive(side)){
+     if(type==='support-escort-repair')effects.repairEscort++;
+     else effects.repair++;
+    }
     break;
    case 'draw':effects.draw++;break;
    case 'aura':side.buffs=[{until:b.round+1,type}];effects.aura++;break;
@@ -386,9 +389,9 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  const bossPost=applyFleetBossAfterRound(b,hitA,hitB);
  // Il sifone e il Calice riparano soltanto in risposta a un colpo reale.
  // Il generatore deve essere operativo: nessuna guarigione di una nave distrutta.
- if(effA.healOnHit&&(hitA.damage>0||hitA.shieldsHit>0))
+ if(effA.healOnHit&&(hitA.damage>0||hitA.escortDamage>0))
   for(let i=0;i<effA.healOnHit;i++)healOneShield(b.sides.A);
- if(effB.healOnHit&&(hitB.damage>0||hitB.shieldsHit>0))
+ if(effB.healOnHit&&(hitB.damage>0||hitB.escortDamage>0))
   for(let i=0;i<effB.healOnHit;i++)healOneShield(b.sides.B);
  const events=[
   {round:b.round,text:'Giocatore: '+hitA.text,who:'A',...hitA},
@@ -403,6 +406,10 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  if(finishedA||finishedB){
   b.phase='finished';b.winner=finishedA&&finishedB?'draw':finishedB?'A':'B';
   b.finishedAtMs=nowMs;
+ }else if(!canFire(b.sides.A.ships[0])&&!canFire(b.sides.B.ships[0])){
+  // Le Armi completamente distrutte non si riparano: evita un duello infinito.
+  b.phase='finished';b.winner='draw';b.finishedAtMs=nowMs;
+  b.log.push({round:b.round,text:'Entrambe le madri senza armamenti: pareggio tecnico.'});
  }else{
   b.round++;
   if(!effB.jamDraw||effA.antiJam)refillOne(b.sides.A);
@@ -422,30 +429,49 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
 }
 export function selectFleetAiOrder(battle){
  const side=battle.sides.B,enemy=battle.sides.A;
- const targets=enemy.ships.map((ship,i)=>({ship,i})).filter(o=>alive(o.ship));
- targets.sort((a,b)=>{
-  const sa=a.ship.parts.filter(p=>p.destroyed).length*10+
-   a.ship.parts.reduce((n,p)=>n+p.damage,0)*2-a.ship.shield;
-  const sb=b.ship.parts.filter(p=>p.destroyed).length*10+
-   b.ship.parts.reduce((n,p)=>n+p.damage,0)*2-b.ship.shield;
-  return sb-sa||a.i-b.i;
- });
- const target=targets[0],parts=['command','weapons','generator','engine'];
- const preferred=parts.find(p=>!part(target.ship,p).destroyed);
- const useful=side.hand.map((t,i)=>({i,kind:fleetCardEffect(t).kind}))
-  .filter(x=>['power','ion','pierce','corrosion','guard','repair','jam','aura','module','character','epic'].includes(x.kind))
-  .filter(x=>x.kind!=='character'||!side.commander||side.commander.until<battle.round);
+ const target=enemy.ships[0],mother=side.ships[0];
+ // La madre non attacca a caso: mira ai vitali che rompono una difesa reale.
+ const targetPart=(()=> {
+  const available=['command','generator','weapons','engine'].filter(id=>part(target,id).damage<2);
+  if(!available.length)return 'command';
+  const defending=readyFleetEscorts(enemy);
+  const candidates=available.map(id=>{
+   let score=part(target,id).damage*3;
+   if(id==='weapons'&&canFire(target))score+=4;
+   if(id==='generator'&&defending.some(e=>e.skill.requires.includes('generator')))score+=5;
+   if(id==='command'&&defending.some(e=>e.skill.requires.includes('command')))score+=5;
+   if(id==='engine'&&defending.some(e=>e.skill.requires.includes('engine')))score+=5;
+   if(defending.some(e=>e.skill.targetPart===id))score+=1;
+   return {id,score};
+  });
+  candidates.sort((a,b)=>b.score-a.score);
+  return candidates[0].id;
+ })();
+ const cards=[];
  const cap=battle.round%3===0?2:1;
- const indexes=[];let chosenCharacter=false;
- for(const x of useful){
-  if(indexes.length>=cap)break;
-  if(x.kind==='character'){
-   if(chosenCharacter)continue;
-   chosenCharacter=true;
-  }
-  indexes.push(x.i);
+ const candidates=side.hand.map((type,index)=>{
+  const fx=fleetCardEffect(type);
+  const id=type;
+  let score=0;
+  if(['power','pierce','ion','corrosion'].includes(fx.kind))score=5;
+  if(['guard','repair','jam'].includes(fx.kind))score=3;
+  if(['character','epic','module'].includes(fx.kind))score=4;
+  if(fx.kind==='terrain')score=battle.bossLockedTerrain?-1:1;
+  if(fx.kind==='draw')score=1;
+  if(fx.kind==='repair'&&!generatorActive(side))score=0;
+  if(fx.kind==='repair'&&!motherWounded(mother)&&
+    !(side.escorts||[]).some(e=>escortAlive(e)&&e.hp<e.maxHp))score=0;
+  if(['fusion-twin','fusion-triad'].includes(id)&&readyFleetEscorts(side).length<2)score=-1;
+  if(fx.kind==='character'&&side.commander?.until>=battle.round)score=-1;
+  if(id==='support-escort-repair'&&!side.escorts.some(e=>escortAlive(e)&&e.hp<e.maxHp))score=-1;
+  return {index,score,type:id,kind:fx.kind};
+ }).filter(item=>item.score>0).sort((a,b)=>b.score-a.score||a.index-b.index);
+ for(const card of candidates){
+  if(cards.length>=cap)break;
+  if(card.kind==='character'&&cards.some(i=>fleetCardEffect(side.hand[i]).kind==='character'))continue;
+  cards.push(card.index);
  }
- return {shipIndex:target.i,partId:preferred,cards:indexes};
+ return {shipIndex:0,partId:targetPart,cards};
 }
 export function fleetSurvivors(side){return aliveFleet(side).length;}
 export function fleetShipDestroyed(ship){return !alive(ship);}
