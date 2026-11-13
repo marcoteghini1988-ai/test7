@@ -75,7 +75,7 @@ test('Il modulo Sifone ripara anche dopo un colpo che intercetta una scudiera',(
  assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='engine').damage,0);
 });
 test('Una scudiera di riparazione usa la copertura tattica solo grazie alla carta',()=>{
- const b=mk('R03','C01',3,1);
+ const b=mk('R03','R04',3,1);
  expose(b,'A','tactical-cover');
  const r=round(b,order('generator',[0]),order('command'));
  assert.ok(r.events[1].escortDamage>0);
