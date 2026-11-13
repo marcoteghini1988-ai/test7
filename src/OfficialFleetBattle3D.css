@@ -1,0 +1,122 @@
+/* ADATTATORE VISIVO, non una nuova plancia.
+   Conserva integralmente le coordinate, il renderer e gli asset
+   di OfficialLiveBattle3D.css e OfficialBattle3D.css. */
+.es-math-scope .f3d-original-arena .live-special-hand{
+ top:627px;z-index:12;pointer-events:auto;
+}
+.es-math-scope .f3d-original-arena .live-hand-special{
+ z-index:1;touch-action:manipulation;
+}
+.es-math-scope .f3d-original-arena .live-hand-special.live-chosen{z-index:15}
+.es-math-scope .f3d-original-arena .live-slot{position:relative;overflow:hidden}
+.es-math-scope .f3d-original-arena .live-slot .f3d-slot-art{
+ position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;
+}
+.es-math-scope .f3d-original-arena .live-slot-role{
+ position:absolute;bottom:0;left:0;right:0;
+ background:#061226bd;font-weight:800;color:#cfddfc;font-size:6px;text-align:center;
+}
+.es-math-scope .f3d-original-arena .f3d-discard{
+ width:58px;height:78px;top:510px;left:15px;
+ transform:perspective(380px) rotateY(17deg) rotateZ(-2deg);
+}
+.es-math-scope .f3d-original-arena .f3d-discard>span{
+ background:linear-gradient(160deg,#224664,#0d213c 70%,#071024);
+}
+.es-math-scope .f3d-original-arena .f3d-discard>span:after{
+ background:var(--live-deck-art) center/contain no-repeat;
+ position:absolute;inset:9px;content:'';opacity:.45;transform:none;
+}
+.es-math-scope .f3d-original-arena .f3d-discard>span b,
+.es-math-scope .f3d-original-arena .f3d-discard>span small{position:relative;z-index:2}
+.es-math-scope .f3d-original-arena .f3d-escort-health{
+ position:absolute;left:0;right:0;bottom:2px;height:5px;
+ border:1px solid #72bfd1;background:#041322d9;border-radius:4px;overflow:hidden;
+}
+.es-math-scope .f3d-original-arena .f3d-escort-health i{
+ display:block;height:100%;background:linear-gradient(90deg,#258eb1,#98ffe4);
+}
+.es-math-scope .f3d-original-arena .f3d-escort-info{
+ position:absolute;top:-7px;right:-5px;z-index:15;
+ width:20px;height:20px;padding:0;
+ border:1px solid #8ee4ef;border-radius:50%;
+ background:#0c2745ef;color:white;font-weight:900;font-size:11px;
+ pointer-events:auto;
+}
+.es-math-scope .f3d-original-arena .f3d-impact{
+ position:absolute;z-index:14;pointer-events:none;
+ width:82px;height:82px;object-fit:contain;opacity:0;
+ animation:f3d-original-hit 1.5s ease-out forwards;
+}
+.es-math-scope .f3d-original-arena .f3d-impact--mother{
+ left:calc(50% - 41px);top:calc(50% - 41px);
+}
+.es-math-scope .f3d-original-arena .f3d-impact--escort{
+ left:-11px;top:-5px;
+}
+@keyframes f3d-original-hit{
+ 0%{opacity:0;transform:scale(.6)}
+ 18%{opacity:1;transform:scale(1)}
+ 62%{opacity:.95;transform:scale(1.12)}
+ 100%{opacity:0;transform:scale(1.25)}
+}
+.es-math-scope .f3d-original-arena .f3d-target-status{
+ position:absolute;left:84px;right:84px;top:330px;z-index:9;
+ font-size:8px;font-weight:800;color:#d9eaff;letter-spacing:.3px;
+ text-align:center;text-shadow:0 1px 3px black;pointer-events:none;
+}
+.es-math-scope .f3d-original-arena .f3d-actions{
+ display:flex;gap:6px;justify-content:center;
+}
+.es-math-scope .f3d-original-arena .f3d-actions span{flex:1;white-space:nowrap}
+.es-math-scope .f3d-original-arena .f3d-actions button:nth-of-type(1){
+ background:linear-gradient(#155783,#0d3358);
+ border-color:#ffdb85;color:#fff4cd;
+ flex:2;font-size:10px;min-height:24px;
+}
+.es-math-scope .f3d-original-arena .f3d-actions button:nth-of-type(2){
+ flex:1;font-size:9px;
+}
+.es-math-scope .f3d-original-arena .f3d-notice{
+ top:422px;left:90px;right:90px;z-index:29;
+ max-height:48px;overflow:hidden;
+}
+.es-math-scope .f3d-original-arena .f3d-boss-label{
+ position:absolute;left:107px;right:107px;top:29px;z-index:19;
+ padding:3px 5px;border:1px solid #c98e67;border-radius:5px;
+ background:#250c22e5;text-align:center;color:#ffd8ac;font-size:8px;
+ font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.es-math-scope .f3d-original-arena .f3d-escort-overlay{
+ position:absolute;left:55px;right:55px;top:285px;
+ z-index:50;max-height:260px;overflow-y:auto;
+ background:linear-gradient(150deg,#0a2946fa,#071328fc);
+ border:1px solid #88d7f3;border-radius:10px;
+ padding:16px;color:#e5f7ff;font-size:12px;
+ box-shadow:0 12px 28px #000b;
+}
+.es-math-scope .f3d-original-arena .f3d-escort-overlay>button{
+ position:absolute;right:8px;top:6px;
+ border:1px solid #86bdd9;border-radius:5px;
+ background:#174160;color:#fff;
+ width:25px;height:25px;
+}
+.es-math-scope .f3d-original-arena .f3d-escort-overlay strong,
+.es-math-scope .f3d-original-arena .f3d-escort-overlay small{
+ display:block;margin-bottom:6px;
+}
+.es-math-scope .f3d-original-arena .f3d-escort-overlay p{line-height:1.48}
+.es-math-scope .f3d-original-arena .f3d-log{
+ position:absolute;top:355px;left:43px;right:43px;
+ z-index:44;max-height:260px;overflow-y:auto;
+ border:1px solid #6ebce9;border-radius:9px;
+ background:#071a30fa;color:#d3eaff;
+ padding:12px;font-size:11px;box-shadow:0 9px 28px #000c;
+}
+.es-math-scope .f3d-original-arena .f3d-log button{
+ float:right;background:#1a4360;border:1px solid #8dd4f6;color:white;
+}
+.es-math-scope .f3d-original-arena .f3d-log p{margin:7px 0}
+@media(prefers-reduced-motion:reduce){
+ .es-math-scope .f3d-original-arena .f3d-impact{animation:none;opacity:0}
+}
