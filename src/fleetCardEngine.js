@@ -4,6 +4,7 @@
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {fleetAdvancedCardProfile} from './fleetSpecialProfiles.js';
+import {fleetShipPassive,applyFleetShipPassives} from './fleetShipPassives.js';
 import {createFleetBossState,applyFleetBossBeforeRound,applyFleetBossAfterRound} from './fleetBossPassives.js';
 
 export const FLEET_PARTS=Object.freeze([
@@ -70,6 +71,7 @@ function buildShip(ship){
  // senza cambiare i quattro stati fisici dei componenti vitali.
  const maxShield=2+(level>=3?1:0)+(level>=5?1:0);
  return {id:def.id,name:def.nome,level,rarity:def.rarita,role:ROLE_BY_SHIP[def.id],
+  passive:fleetShipPassive(def.id),
   element:ELEMENT_BY_SHIP[def.id],shield:maxShield,maxShield,weaponRating,
   weapons:installed.map(w=>w.nome),
   parts:FLEET_PARTS.map(p=>({id:p.id,damage:0,destroyed:false}))};
@@ -163,8 +165,8 @@ function removeCards(side,indices){
  side.discard.push(...cards);
  return cards;
 }
-function strongestElementAttack(side,defender,forcedIon){
- const attacks=aliveFleet(side).filter(canFire);
+function strongestElementAttack(side,defender,forcedIon,skipIds=[]){
+ const attacks=aliveFleet(side).filter(s=>canFire(s)&&!skipIds.includes(s.id));
  const elements=forcedIon?['ionic',...attacks.map(s=>s.element)]:attacks.map(s=>s.element);
  return {advantage:elements.some(e=>FLEET_ELEMENTS[e].beats===defender.element),
   resisted:part(defender,'engine').damage<2&&
@@ -325,11 +327,11 @@ function prepareEffects(b,who,order,opposingOrder){
 }
 function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
  const target=defender.ships[order.shipIndex],vital=part(target,order.partId);
- const profile=strongestElementAttack(attacker,target,eff.ion);
+ const profile=strongestElementAttack(attacker,target,eff.ion,eff.coverEscortIds||[]);
  // La centralina della PRIMA navicella comanda la formazione:
  // distruggerla disattiva la sincronizzazione delle due laterali.
  const mother=attacker.ships[0];
- const sync=aliveFleet(attacker).filter(canFire).length>=2 &&
+ const sync=profile.attackers.length>=2 &&
   mother&&alive(mother)&&part(mother,'command').damage<2 &&
   aliveFleet(attacker).every(s=>part(s,'command').damage<2);
  const fireCount=profile.attackers.length;
@@ -357,6 +359,8 @@ function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
    const resonance=profile.advantage||eff.corrosion||
     eff.power>=2||(eff.power>=1&&eff.ion);
    damage=Math.min(2-vital.damage,resonance?2:1);
+   // La scorta riduce solo il danno aggiuntivo: la madre rimane colpibile.
+   if(defEff.coverMother&&order.shipIndex===0&&damage>1)damage=1;
    vital.damage+=damage;
    vital.destroyed=vital.damage>=2;
    if(vital.destroyed&&vital.id==='generator')target.shield=0;
@@ -390,6 +394,8 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  else if(terrainChoice)b.terrain={element:terrainChoice,until:b.round+1};
  if(b.terrain&&b.terrain.until!=null&&b.terrain.until<b.round)b.terrain=null;
  const bossPre=applyFleetBossBeforeRound(b,{A:effA,B:effB},{A:orderA,B:orderB});
+  const passiveA=applyFleetShipPassives(b.sides.A,b.sides.B,orderA,orderB,b.round,effA);
+  const passiveB=applyFleetShipPassives(b.sides.B,b.sides.A,orderB,orderA,b.round,effB);
  // Si fotografa la flotta prima dei danni: gli ordini sono simultanei.
  const snapA=copy(b.sides.A),snapB=copy(b.sides.B);
  // Ai bersagli si applicano gli effetti nello stesso ciclo, senza vantaggio di iniziativa.
@@ -406,7 +412,9 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
   {round:b.round,text:'Giocatore: '+hitA.text,who:'A',...hitA},
   {round:b.round,text:'Avversario: '+hitB.text,who:'B',...hitB}
  ];
- b.log=[...b.log,...bossPre.map(text=>({round:b.round,text})),...events,
+ b.log=[...b.log,...bossPre.map(text=>({round:b.round,text})),
+   ...passiveA.map(text=>({round:b.round,text:'Giocatore · '+text})),
+   ...passiveB.map(text=>({round:b.round,text:'Avversario · '+text})),...events,
   ...bossPost.map(text=>({round:b.round,text}))].slice(-36);
  const finishedA=b.sides.A.ships.every(s=>!alive(s));
  const finishedB=b.sides.B.ships.every(s=>!alive(s));
