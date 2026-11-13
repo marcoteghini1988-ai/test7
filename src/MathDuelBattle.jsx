@@ -1,11 +1,10 @@
-// Ingresso ufficiale UNICO del combattimento: carte di flotta ed elementi.
-// Home, Hangar, ricompense della campagna e inventari rimangono invariati.
-// Le battaglie precedenti rimangono nel repository per migrazione dei dati,
-// ma non vengono piu' avviate dalla campagna o dal PvP simulato.
+// Ingresso ufficiale: la PLANCIA 3D LIVE originale non si sostituisce.
+// L'adattatore conserva navicelle, hardpoint fisici, arena, mazzi e 5 slot 3D;
+// cambia soltanto le regole nel motore carte di flotta.
 import React from 'react';
-import FleetCardBattle from './FleetCardBattle.jsx';
+import OfficialFleetBattle3D from './OfficialFleetBattle3D.jsx';
 import {officialCampaignBattleProps} from './officialCampaignRouting.js';
 
 export default function MathDuelBattle(props){
- return <FleetCardBattle {...officialCampaignBattleProps(props)}/>;
+ return <OfficialFleetBattle3D {...officialCampaignBattleProps(props)}/>;
 }
