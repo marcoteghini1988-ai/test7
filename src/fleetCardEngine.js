@@ -5,6 +5,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {fleetAdvancedCardProfile} from './fleetSpecialProfiles.js';
 import {fleetShipPassive,applyFleetShipPassives} from './fleetShipPassives.js';
+import {buildFleetEscorts,escortAlive,motherWounded,readyFleetEscorts,repairFleetUnit,absorbFleetAttack} from './fleetEscortSupports.js';
 import {createFleetBossState,applyFleetBossBeforeRound,applyFleetBossAfterRound} from './fleetBossPassives.js';
 
 export const FLEET_PARTS=Object.freeze([
@@ -19,11 +20,10 @@ export const FLEET_ELEMENTS=Object.freeze({
  mineral:{name:'Minerale',symbol:'⬡',beats:'ionic',color:'#d6bb8a'},
  ionic:{name:'Ionico',symbol:'ϟ',beats:'refrigerant',color:'#a58aff'}
 });
-export const FLEET_SLOTS=Object.freeze({second:11,third:31});
-export function fleetSlotCount(sectorNumber=1,mode='campaign'){
- if(mode==='pvp')return 3;
- const n=Math.max(1,Math.floor(Number(sectorNumber)||1));
- return n>=FLEET_SLOTS.third?3:n>=FLEET_SLOTS.second?2:1;
+export const FLEET_SLOTS=Object.freeze({second:3,third:5});
+export function fleetSlotCount(motherLevel=1){
+ const n=Math.max(1,Math.min(5,Math.floor(Number(motherLevel)||1)));
+ return n>=5?3:n>=3?2:1; // madre inclusa, evoluzioni automatiche
 }
 const ELEMENT_BY_SHIP=Object.freeze({
  N00:'ionic',C01:'plasma',C02:'refrigerant',C03:'ionic',C04:'plasma',
@@ -47,7 +47,6 @@ const aliveFleet=side=>side.ships.filter(alive);
 const canFire=s=>alive(s)&&s.parts.find(p=>p.id==='weapons').damage<2;
 const part=(ship,id)=>ship.parts.find(p=>p.id===id);
 const copy=o=>JSON.parse(JSON.stringify(o));
-const validElement=e=>Object.hasOwn(FLEET_ELEMENTS,e);
 const knownCard=t=>Object.hasOwn(SPECIAL_CARD_CATALOG,t);
 function seededShuffle(items,seed){
  let x=(Number(seed)||1818)>>>0;
@@ -69,7 +68,8 @@ function buildShip(ship){
  const weaponRating=1+(rawFire>=8?1:0)+(rawFire>=18?1:0);
  // Gli upgrade ufficiali L1-L5 aumentano resistenza e qualita delle armi,
  // senza cambiare i quattro stati fisici dei componenti vitali.
- const maxShield=2+(level>=3?1:0)+(level>=5?1:0);
+ // Non esiste piu' una barriera obbligatoria prima dei quattro vitali.
+ const maxShield=0;
  return {id:def.id,name:def.nome,level,rarity:def.rarita,role:ROLE_BY_SHIP[def.id],
   passive:fleetShipPassive(def.id),
   element:ELEMENT_BY_SHIP[def.id],shield:maxShield,maxShield,weaponRating,
@@ -77,14 +77,13 @@ function buildShip(ship){
   parts:FLEET_PARTS.map(p=>({id:p.id,damage:0,destroyed:false}))};
 }
 function buildSide(ships,types,seed,moduleLevels={}){
- if(!Array.isArray(ships)||ships.length<1||ships.length>3)
-  throw new Error('La flotta deve contenere da una a tre navicelle');
- if(new Set(ships.map(s=>s.shipId??s.id)).size!==ships.length)
-  throw new Error('Non puoi schierare due copie della stessa navicella');
+ if(!Array.isArray(ships)||ships.length!==1)
+  throw new Error('La flotta usa una sola carta madre: le scudiere sono evoluzioni automatiche');
  if(!Array.isArray(types)||types.length!==24||types.some(t=>!knownCard(t)))
   throw new Error('Il mazzo speciale deve contenere 24 carte reali');
  const ordered=seededShuffle(types,seed);
- return {ships:ships.map(buildShip),deck:ordered.slice(5),hand:ordered.slice(0,5),
+ const mother=buildShip(ships[0]);
+ return {ships:[mother],escorts:buildFleetEscorts(mother),deck:ordered.slice(5),hand:ordered.slice(0,5),
   discard:[],buffs:[],commander:null,status:null,equipmentLevels:{...moduleLevels}};
 }
 export function createFleetCardBattle({shipsA,shipsB,deckA,deckB,mode='campaign',
@@ -142,8 +141,8 @@ export function fleetCardEffect(type){
 function validateOrder(b,who,order){
  const side=b.sides[who],enemy=b.sides[who==='A'?'B':'A'];
  if(!side||!enemy||!order||b.phase!=='playing')return 'Partita non in corso';
- if(!Number.isInteger(order.shipIndex)||!enemy.ships[order.shipIndex]||
-    !alive(enemy.ships[order.shipIndex]))return 'Scegli una navicella avversaria ancora attiva';
+ if(order.shipIndex!==0||!enemy.ships[0]||!alive(enemy.ships[0]))
+  return 'Il bersaglio e la nave madre avversaria';
  if(!FLEET_PARTS.some(p=>p.id===order.partId)||
    part(enemy.ships[order.shipIndex],order.partId).destroyed)return 'Scegli un componente non distrutto';
  const indices=order.cards??[];
@@ -165,21 +164,16 @@ function removeCards(side,indices){
  side.discard.push(...cards);
  return cards;
 }
-function strongestElementAttack(side,defender,forcedIon,skipIds=[]){
- const attacks=aliveFleet(side).filter(s=>canFire(s)&&!skipIds.includes(s.id));
+function strongestElementAttack(side,defender,forcedIon){
+ const mother=side.ships[0];
+ const attacks=canFire(mother)?[mother]:[];
  const elements=forcedIon?['ionic',...attacks.map(s=>s.element)]:attacks.map(s=>s.element);
  return {advantage:elements.some(e=>FLEET_ELEMENTS[e].beats===defender.element),
   resisted:part(defender,'engine').damage<2&&
    elements.length>0&&elements.every(e=>FLEET_ELEMENTS[defender.element].beats===e),
   attackers:attacks};
 }
-function healOneShield(side){
- const candidates=aliveFleet(side).filter(s=>part(s,'generator').damage<2&&s.shield<s.maxShield);
- candidates.sort((a,z)=>a.shield-z.shield);
- if(!candidates.length)return false;
- candidates[0].shield++;
- return true;
-}
+function healOneShield(side){return !!repairFleetUnit(side);}
 function upgradeFleetAdvanced(side,enemy,order,round,type,effects){
  const profile=fleetAdvancedCardProfile(type);
  if(!profile)return false;
@@ -205,7 +199,7 @@ function upgradeFleetAdvanced(side,enemy,order,round,type,effects){
   case 'swap1':effects.draw++;break;
   case 'swap2':effects.draw+=2;break;
   case 'execute':
-   if(target&&(target.shield<=1||target.parts.some(p=>p.damage>0)))effects.power++;
+   if(target&&(target.parts.some(p=>p.damage>0)||enemy.escorts.some(e=>escortAlive(e)&&e.hp<e.maxHp)))effects.power++;
    break;
   case 'guard':effects.guard+=tuned;break;
   case 'jam':effects.jam=true;break;
@@ -213,10 +207,10 @@ function upgradeFleetAdvanced(side,enemy,order,round,type,effects){
   case 'interfere':effects.jam=true;effects.jamDraw=true;break;
   case 'cleanse':effects.antiJam=true;break;
   case 'fortify':effects.guard++;effects.repair+=tuned;break;
-  case 'formation':if(active.length>=2)effects.power+=tuned;break;
+  case 'formation':if(readyFleetEscorts(side).length>=1)effects.power+=tuned;break;
   case 'focus':effects.power+=tuned;break;
   case 'siphon':effects.power++;effects.jam=true;break;
-  case 'escort':if(active.length>=2)effects.power+=tuned;break;
+  case 'escort':if(readyFleetEscorts(side).length>=1)effects.power+=tuned;break;
   case 'purge':effects.antiJam=true;effects.guard++;break;
   case 'quantum':effects.power++;effects.ion=true;break;
   case 'burn':effects.corrosion=true;break;
@@ -240,17 +234,17 @@ function ongoingFleetAdvanced(side,enemy,enemyOrder,battle,effects){
     effects.guard++;if((enemyOrder.cards??[]).length)effects.power++;
     break;
    case 'ionGuard':if(opposing.some(s=>s.element==='ionic'))effects.guard++;break;
-   case 'escortGuard':if(active.length>=2)effects.guard++;break;
-   case 'shadow':if(active.some(s=>s.shield<=1))effects.power++;break;
+   case 'escortGuard':if(readyFleetEscorts(side).length>=1)effects.guard++;break;
+   case 'shadow':if(motherWounded(active[0]))effects.power++;break;
    case 'regeneration':effects.repair++;break;
    case 'sync':
-    if(active.length>=2&&alive(side.ships[0])&&
+    if(readyFleetEscorts(side).length>=1&&alive(side.ships[0])&&
       part(side.ships[0],'command').damage<2)effects.power++;
     break;
-   case 'harmonic':if(active.length>=2)effects.power++;break;
+   case 'harmonic':if(readyFleetEscorts(side).length>=1)effects.power++;break;
    case 'magma':
     if(battle.terrain?.element==='plasma'||
-      enemy.ships[enemyOrder.shipIndex]?.shield===0)effects.power++;
+      motherWounded(enemy.ships[0]))effects.power++;
     break;
    case 'precision':effects.pierce=true;break;
    default:throw Error('Personaggio senza abilita di flotta: '+action);
@@ -266,7 +260,7 @@ function ongoingFleetAdvanced(side,enemy,enemyOrder,battle,effects){
     if(opposing.some(s=>s.element==='plasma'))effects.guard++;
     break;
    case 'matrice':
-    if(active.some(s=>s.shield===0&&s.parts.some(p=>p.damage>0)))
+    if(motherWounded(active[0]))
      effects.power+=2;
     break;
    case 'mobius':effects.jam=true;break;
@@ -310,74 +304,47 @@ function prepareEffects(b,who,order,opposingOrder){
   if(kinds.includes('power')&&kinds.includes('ion'))effects.power++;
   if(kinds.includes('guard')&&kinds.includes('repair'))effects.guard++;
  }
- // Le riparazioni si attivano prima degli attacchi simultanei.
- for(let r=0;r<effects.repair;r++){
-  const damaged=aliveFleet(side).filter(s=>part(s,'generator').damage<2);
-  damaged.sort((a,z)=>a.shield-z.shield);
-  const target=damaged[0];
-  if(target){
-   if(target.shield<target.maxShield)target.shield++;
-   else{
-    const injured=target.parts.find(p=>p.damage===1);
-    if(injured)injured.damage=0;
-   }
-  }
- }
+ // Carte di riparazione: una frattura sulla madre oppure HP su scudiera viva.
+ for(let r=0;r<effects.repair;r++)repairFleetUnit(side);
  return effects;
 }
 function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
- const target=defender.ships[order.shipIndex],vital=part(target,order.partId);
- const profile=strongestElementAttack(attacker,target,eff.ion,eff.coverEscortIds||[]);
- // La centralina della PRIMA navicella comanda la formazione:
- // distruggerla disattiva la sincronizzazione delle due laterali.
- const mother=attacker.ships[0];
- const sync=profile.attackers.length>=2 &&
-  mother&&alive(mother)&&part(mother,'command').damage<2 &&
-  aliveFleet(attacker).every(s=>part(s,'command').damage<2);
- const fireCount=profile.attackers.length;
- const weaponBonus=fireCount>0?Math.min(2,Math.max(...profile.attackers.map(s=>s.weaponRating||1))-1):0;
- const base=fireCount>0?1+(fireCount>=2?1:0)+(sync?1:0)+weaponBonus:0;
- const terrainBonus=activeTerrain&&profile.attackers.some(s=>s.element===activeTerrain)?1:0;
+ const target=defender.ships[0],vital=part(target,order.partId);
+ const profile=strongestElementAttack(attacker,target,eff.ion);
+ const fireCount=profile.attackers.length; // SOLO la nave madre spara
+ const weaponBonus=fireCount?Math.max(0,attacker.ships[0].weaponRating-1):0;
+ const base=fireCount?1+weaponBonus:0;
+ const terrainBonus=activeTerrain&&fireCount&&attacker.ships[0].element===activeTerrain?1:0;
  const effectBoost=eff.power+(eff.corrosion?1:0)+eff.aura+terrainBonus;
- const advantageBonus=profile.advantage?1:0;
  const blocked=defEff.guard+(defEff.jam&&!eff.antiJam?1:0)+(profile.resisted?1:0);
- const strength=clamp(base+effectBoost+advantageBonus-blocked,0,5);
- const shieldBefore=target.shield;
- let damage=0,shieldsHit=0;
+ const strength=fireCount?clamp(base+effectBoost+(profile.advantage?1:0)-blocked,0,5):0;
+ let damage=0,escortDamage=0,escortSlot=null,escortName=null,escortDestroyed=false;
+ let cover=null;
  if(strength>0){
-  if(shieldBefore>0&&!eff.pierce){
-   shieldsHit=Math.min(shieldBefore,strength);
-   target.shield-=shieldsHit;
+  cover=absorbFleetAttack(defender,defEff,strength);
+  if(cover){
+   ({escortDamage,escortSlot,escortName,escortDestroyed}=cover);
   }else{
-   if(shieldBefore>0&&eff.pierce){
-    shieldsHit=Math.min(1,shieldBefore);
-    target.shield-=shieldsHit;
-   }
-   // Danno normale: una frattura. Elemento favorevole o vera combinazione:
-   // distruzione in un colpo. Il numero di navi aiuta a superare gli scudi,
-   // non trasforma automaticamente ogni turno in un KO.
    const resonance=profile.advantage||eff.corrosion||
-    eff.power>=2||(eff.power>=1&&eff.ion);
+    eff.power>=2||(eff.power>=1&&eff.ion)||(eff.pierce&&eff.power>=1);
    damage=Math.min(2-vital.damage,resonance?2:1);
-   // La scorta riduce solo il danno aggiuntivo: la madre rimane colpibile.
-   if(defEff.coverMother&&order.shipIndex===0&&damage>1)damage=1;
    vital.damage+=damage;
    vital.destroyed=vital.damage>=2;
-   if(vital.destroyed&&vital.id==='generator')target.shield=0;
   }
  }
- const destroyedCount=target.parts.filter(p=>p.destroyed).length;
- const sunk=destroyedCount>=2;
- return {round,from:attacker===defender?'?':null,shipIndex:order.shipIndex,
-  shipName:target.name,partId:order.partId,partName:FLEET_PARTS.find(p=>p.id===order.partId).name,
-  fireCount,strength,shieldsHit,damage,advantage:profile.advantage,resisted:profile.resisted,
+ const sunk=target.parts.filter(p=>p.destroyed).length>=2;
+ const name=FLEET_PARTS.find(p=>p.id===order.partId).name;
+ return {round,shipIndex:0,shipName:target.name,partId:order.partId,
+  partName:name,fireCount,strength,shieldsHit:0,damage,
+  escortDamage,escortSlot,escortName,escortDestroyed,
+  advantage:profile.advantage,resisted:profile.resisted,
   destroyed:vital.destroyed,sunk,played:eff.cards,terrainBonus,
-  text:fireCount===0?'Le armi della flotta non possono sparare':
-   strength===0?'Attacco annullato dalle difese':
-   shieldsHit&&!damage?target.name+': barriera -'+shieldsHit:
+  text:fireCount===0?'La madre non puo sparare: Armi distrutte':
+   strength===0?'Attacco della madre neutralizzato':
+   cover?escortName+': intercetta '+escortDamage+' danni'+
+    (escortDestroyed?' · SCUDIERA DISTRUTTA':''):
    target.name+': '+(vital.destroyed?'SISTEMA DISTRUTTO: ':'Frattura: ')+
-   FLEET_PARTS.find(p=>p.id===order.partId).name+(sunk?' · NAVICELLA DISTRUTTA':'')
- };
+    name+(sunk?' · NAVE MADRE DISTRUTTA':'')};
 }
 function refillOne(side){
  if(side.deck.length&&side.hand.length<5)side.hand.push(side.deck.shift());
@@ -394,8 +361,8 @@ export function resolveFleetCardRound(battle,orderA,orderB,nowMs=0){
  else if(terrainChoice)b.terrain={element:terrainChoice,until:b.round+1};
  if(b.terrain&&b.terrain.until!=null&&b.terrain.until<b.round)b.terrain=null;
  const bossPre=applyFleetBossBeforeRound(b,{A:effA,B:effB},{A:orderA,B:orderB});
-  const passiveA=applyFleetShipPassives(b.sides.A,b.sides.B,orderA,orderB,b.round,effA);
-  const passiveB=applyFleetShipPassives(b.sides.B,b.sides.A,orderB,orderA,b.round,effB);
+ const passiveA=applyFleetShipPassives(b.sides.A,b.sides.B,orderA,orderB,b.round,effA);
+ const passiveB=applyFleetShipPassives(b.sides.B,b.sides.A,orderB,orderA,b.round,effB);
  // Si fotografa la flotta prima dei danni: gli ordini sono simultanei.
  const snapA=copy(b.sides.A),snapB=copy(b.sides.B);
  // Ai bersagli si applicano gli effetti nello stesso ciclo, senza vantaggio di iniziativa.
