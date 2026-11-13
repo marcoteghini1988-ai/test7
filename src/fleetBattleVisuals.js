@@ -1,4 +1,4 @@
-// Profili puramente VISIVI degli armamenti ufficiali: non cambiano il
+// Profili puramente VISIVI delle armi della SOLA madre: non cambiano il
 // danno, i colpi o i salvataggi. Ogni nome e' letto dal catalogo 42 armi.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 
@@ -48,13 +48,18 @@ export function fleetVolleyVisuals(ships,hit,round){
     ship.parts.find(p=>p.id==='weapons')?.damage>=2)return [];
   const weapon=fleetWeaponOfRound(ship.id,round);
   if(!weapon)return [];
-  // L'engine ha gia' deciso chi puo' sparare: qui mostriamo solo quel colpo,
+  // Il motore ha gia' deciso che solo la madre puo' sparare,
   // alternando le armi autentiche che la navicella ha integrate.
   return [{shipIndex:i,shipName:ship.name,...weapon}];
  });
 }
 export function fleetImpactVisual(hit){
  if(!hit||hit.fireCount<=0||hit.strength<=0)return null;
+ if(hit.escortDamage>0)return Object.freeze({
+  kind:hit.escortDestroyed?'escort-destroyed':'escort-hit',
+  image:'/assets/battle-fx/shield-contact.png',
+  label:hit.escortName+': '+(hit.escortDestroyed?'scudiera distrutta':'intercettazione')
+ });
  if(hit.damage>0){
   const known=['engine','weapons','generator','command'];
   if(!known.includes(hit.partId))return null;
