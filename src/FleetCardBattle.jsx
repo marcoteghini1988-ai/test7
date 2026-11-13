@@ -13,6 +13,7 @@ import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {fleetBossBrief} from './fleetBossPassives.js';
 import {fleetShipPassive,activeFleetSynergies} from './fleetShipPassives.js';
+import {fleetEscortSkillDescription} from './fleetEscortSupports.js';
 import {fleetVolleyVisuals,fleetImpactVisual} from './fleetBattleVisuals.js';
 import {
  createFleetCardBattle,resolveFleetCardRound,selectFleetAiOrder,fleetSlotCount,
@@ -73,22 +74,34 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotInd
   </button>;
 }
 // Le scudiere sono evoluzioni della madre, non altre carte-navicella.
-function SupportShip({escort,mother,enemy=false,impactEvent=null}){
+function SupportShip({escort,mother,enemy=false,impactEvent=null,round=1}){
+ const [showInfo,setShowInfo]=useState(false);
  const linked=escort.skill.requires.every(id=>mother.parts.some(p=>p.id===id&&p.damage<2));
  const active=!escort.destroyed&&escort.hp>0;
  const hit=impactEvent?.escortSlot===escort.slot&&impactEvent?.escortDamage>0;
  return <div className={'fc-escort '+(escort.slot===0?'fc-slot-left':'fc-slot-right')+
   (active?'':' fc-sunk')+(linked?'':' fc-escort-offline')+
   (enemy?' fc-escort-hostile':'')} title={escort.name+' · '+escort.skill.name}>
-  <div className="fc-escort-heading"><b>{escort.name}</b><span>{escort.role}</span></div>
+  <div className="fc-escort-heading"><b>{escort.name}</b><span>{escort.role}</span>
+  <button className="fc-escort-help" type="button" aria-label={'Spiega '+escort.name}
+   aria-expanded={showInfo} onClick={()=>setShowInfo(v=>!v)}>ⓘ</button></div>
   <div className="fc-escort-image"><img src={escort.visual} alt={'Scudiera evoluta '+escort.name} draggable={false}/>
     {hit&&<strong className="fc-escort-hit">{impactEvent.escortDestroyed?'DISTRUTTA':'COLPITA'}</strong>}
   </div>
   <small className="fc-escort-ability">{escort.skill.name}</small>
+  <small className="fc-escort-cycle">{active&&linked?
+   (round%escort.skill.interval===0?'● FASE ATTIVA':'◌ IN RICARICA'):
+   (active?'◌ COLLEGAMENTO PERSO':'● FUORI COMBATTIMENTO')}</small>
   <div className="fc-escort-health"><span>RESISTENZA</span><b>{escort.hp}/{escort.maxHp}</b></div>
   <div className="fc-escort-meter"><i style={{width:(escort.maxHp?100*escort.hp/escort.maxHp:0)+'%'}}/></div>
   {!active&&<div className="fc-escort-status">DISTRUTTA</div>}
   {active&&!linked&&<div className="fc-escort-status">LINK INTERROTTO</div>}
+  {showInfo&&<div className="fc-escort-details" role="note">
+   <strong>{escort.name} · {escort.role}</strong>
+   <p>{fleetEscortSkillDescription(escort)}</p>
+   <small>{active?'Resistenza '+escort.hp+'/'+escort.maxHp:'Scudiera distrutta'}.
+    {linked?' Collegamento operativo.':' Collegamento interrotto.'}</small>
+  </div>}
  </div>;
 }
 function SpecialCard({type,selected,onClick,index,disabled=false,disabledReason=''}){
@@ -319,7 +332,7 @@ export default function FleetCardBattle({
       <b>SINERGIE NEMICHE</b> {activeFleetSynergies(enemy).map(x=>x.name).join(' · ')}
      </div>}
      <div className="fc-ship-row">{enemy.escorts.map(e=><SupportShip key={e.id} escort={e} mother={enemy.ships[0]}
-      enemy impactEvent={lastFx?.events?.[0]}/>)}{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
+      enemy impactEvent={lastFx?.events?.[0]} round={battle.round}/>)}{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
       ship={ship} slotIndex={i} enemy selected={targetIndex===i&&!finished}
       impactEvent={lastFx?.events?.[0]} impactNonce={lastFx?.nonce}
       onClick={!finished?()=>{setEnemySelection(i);setPartSelection(
@@ -361,7 +374,7 @@ export default function FleetCardBattle({
       <b>SINERGIE ATTIVE</b> {activeFleetSynergies(player).map(x=>x.name).join(' · ')}
      </div>}
      <div className="fc-ship-row">{player.escorts.map(e=><SupportShip key={e.id} escort={e} mother={player.ships[0]}
-      impactEvent={lastFx?.events?.[1]}/>)}{player.ships.map((ship,i)=><ShotShip key={ship.id}
+      impactEvent={lastFx?.events?.[1]} round={battle.round}/>)}{player.ships.map((ship,i)=><ShotShip key={ship.id}
      ship={ship} slotIndex={i} impactEvent={lastFx?.events?.[1]}
      impactNonce={lastFx?.nonce}/>)}</div>
    </section>
@@ -389,19 +402,20 @@ export default function FleetCardBattle({
    }):<p className="fc-empty">Mazzo esaurito: la flotta può ancora attaccare.</p>}</div>
    <div className="fc-hand-description">{chosenCards.length?
     chosenCards.map(i=>fleetCardEffect(player.hand[i]).description).join(' + '):
-    'Le armi di ogni navicella funzionano anche senza carte speciali.'}</div>
+    'La nave madre attacca anche senza carte speciali; le scudiere forniscono supporto passivo.'}</div>
    {message&&<p role="status" className="fc-message">{message}</p>}
    {finished?<div className="fc-finish">
      <h2>{battle.winner==='A'?'VITTORIA':battle.winner==='B'?'SCONFITTA':'PAREGGIO'}</h2>
-     <p>{battle.winner==='A'?'Flotta nemica eliminata.':
-      battle.winner==='B'?'La tua flotta è stata eliminata.':'Entrambe le flotte sono state distrutte.'}</p>
+     <p>{battle.winner==='A'?'Nave madre nemica distrutta.':
+      battle.winner==='B'?'La tua nave madre è stata distrutta.':
+        'Pareggio: entrambe le madri distrutte o impossibilitate ad attaccare.'}</p>
      <button className="fc-primary" onClick={finishBattle} disabled={submitting||rewardDone}>
       {submitting?'SALVATAGGIO...':'CONCLUDI E TORNA AL MENU'}</button>
      <button className="fc-text-action" onClick={()=>{setBattle(null);setMessage('');}}>
       Rigioca con la tua flotta</button>
     </div>:<button className="fc-primary fc-fire-button" onClick={resolve}
      disabled={!chosenEnemy||!targetPart}>
-     <span>⚡</span> ATTACCO DI FLOTTA <small>CONFERMA ROUND</small>
+     <span>⚡</span> ATTACCO DELLA MADRE <small>CONFERMA ROUND</small>
     </button>}
    <div className="fc-footerline">
     <span>{battle.terrain?'Risonanza ambientale: '+FLEET_ELEMENTS[battle.terrain.element]?.name:
