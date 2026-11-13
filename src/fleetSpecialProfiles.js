@@ -8,44 +8,44 @@ import {TACTICAL_EPIC_CARDS} from './tacticalEpicCards.js';
 
 export const FLEET_MODULE_ACTIONS=Object.freeze({
  pure_hit:['impulse','Impulso diretto: +1 potenza al prossimo attacco di flotta.'],
- healing:['repair','Ripara 1 scudo di una navicella danneggiata.'],
+ healing:['repair','Ripara una frattura della madre o 1 HP di una scudiera viva.'],
  free_swap:['swap1','Ricambia 1 carta speciale rimasta in mano.'],
  refill:['swap2','Ricambia fino a 2 carte speciali rimaste in mano.'],
- execution:['execute','Assedio: +1 potenza se il bersaglio ha scudo basso o un vitale fratturato.'],
- guard:['guard','Barriera tattica: +1 difesa a tutta la flotta per questo round.'],
+ execution:['execute','Assedio: +1 potenza contro la madre già ferita o una scudiera danneggiata.'],
+ guard:['guard','Manovra difensiva: riduce di 1 la potenza della salva nemica.'],
  module_lock:['jam','Blocca 1 punto di potenza di fuoco della flotta avversaria.'],
- life_drain:['drain','Sifone: +1 potenza; se colpisci, recuperi 1 scudo.'],
+ life_drain:['drain','Sifone: +1 potenza; dopo il colpo ripara madre o scudiera.'],
  hand_jam:['interfere','Interferenza: -1 potenza nemica e ostacola la pesca avversaria.'],
  prevent_skip:['cleanse','Purificazione: annulla 1 sabotaggio contro la tua flotta.'],
- shield_and_ether:['fortify','Scudo energetico: +1 difesa e ripara 1 scudo.'],
- ether_gain:['formation','Energia di formazione: +1 potenza con almeno 2 navi operative.'],
+ shield_and_ether:['fortify','Campo tattico: +1 difesa e ripara una frattura o un supporto.'],
+ ether_gain:['formation','Energia di formazione: +1 potenza se almeno una scudiera è collegata.'],
  boost_focus:['focus','Concentrazione: +1 potenza al prossimo attacco.'],
  boost_siphon:['siphon','Sifone ionico: +1 potenza e -1 potenza alla flotta nemica.'],
- ammo_refill:['escort','Ricarica scudiere: +1 potenza se hai almeno due navi attive.'],
+ ammo_refill:['escort','Ricarica scudiere: +1 potenza se almeno una scudiera è collegata.'],
  clear_malus:['purge','Annulla gli effetti di sabotaggio sul fuoco della flotta.'],
  dice_charge:['quantum','Sovraccarico quantico: +1 potenza e attacco di tipo Ionico.'],
  burn:['burn','Plasma instabile: provoca una frattura rinforzata sul vitale colpito.'],
- singularity:['singularity','Singolarita: +1 potenza, Ionico e recupero scudo dopo un colpo.']
+ singularity:['singularity','Singolarità: +1 potenza, Ionico e riparazione di madre o scudiera dopo un colpo.']
 });
 export const FLEET_CHARACTER_ACTIONS=Object.freeze({
- 1:['armor','Riparo tellurico: +1 difesa per 2 round.'],
+ 1:['armor','Riparo tellurico: riduce l'attacco avversario per 2 round.'],
  2:['assault','Furia controllata: +1 potenza per 2 round.'],
  3:['corrosion','Spora corrosiva: rafforza le fratture causate per 2 round.'],
  6:['counter','Controtempo: +1 difesa, e +1 attacco se il nemico usa speciali.'],
- 7:['ionGuard','Gabbia dielettrica: +1 difesa contro flotta Ionica.'],
- 8:['escortGuard','Guardia degli abissi: +1 difesa se hai almeno 2 navi operative.'],
- 9:['shadow','Lama delle ombre: +1 potenza se almeno una tua nave ha scudo basso.'],
- 11:['regeneration','Riserva criogenica: ripara 1 scudo ogni round per 2 round.'],
+ 7:['ionGuard','Gabbia dielettrica: +1 difesa contro madre Ionica.'],
+ 8:['escortGuard','Guardia degli abissi: +1 difesa con almeno una scudiera collegata.'],
+ 9:['shadow','Lama delle ombre: +1 potenza se un vitale della madre è fratturato.'],
+ 11:['regeneration','Riserva criogenica: ripara madre o scudiera ogni round per 2 round.'],
  14:['sync','Convertitore di flusso: +1 potenza se la nave madre sincronizza le scudiere.'],
- 17:['harmonic','Coro delle scudiere: +1 potenza con due o piu navi operative.'],
- 19:['magma','Forgia instabile: +1 potenza sotto terreno Plasma o contro scudi abbattuti.'],
- 20:['precision','Frattura del vuoto: aggira gli scudi con un colpo mirato.']
+ 17:['harmonic','Coro delle scudiere: +1 potenza quando una evoluzione è collegata alla madre.'],
+ 19:['magma','Forgia instabile: +1 potenza su terreno Plasma o contro madre fratturata.'],
+ 20:['precision','Frattura del vuoto: potenzia il colpo mirato contro i vitali.']
 });
 export const FLEET_EPIC_ACTIONS=Object.freeze({
- epic_item_8:['calice','Calice stellare: potenza +1 e ripara 1 scudo dopo un colpo, per 2 round.'],
+ epic_item_8:['calice','Calice stellare: +1 potenza e ripara madre o scudiera dopo un colpo, per 2 round.'],
  epic_item_6:['pendolo','Pendolo temporale: ricambia 1 carta ogni round, per 2 round.'],
- epic_item_7:['monolite','Monolite: +1 difesa contro navicelle Plasma, per 2 round.'],
- epic_item_9:['matrice','Matrice critica: +2 potenza quando una tua nave e fratturata.'],
+ epic_item_7:['monolite','Monolite: +1 difesa contro madre Plasma, per 2 round.'],
+ epic_item_9:['matrice','Matrice critica: +2 potenza quando la madre è fratturata.'],
  epic_item_1:['mobius','Nastro di Moebius: disturba gli attacchi avversari per 2 round.'],
  epic_item_3:['astrolabio','Astrolabio: ricambia subito fino a 2 carte speciali.']
 });
