@@ -1,64 +1,83 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {ESCORT_ARMORY} from './escortArmory.js';
 import {createFleetCardBattle,resolveFleetCardRound} from './fleetCardEngine.js';
 import {createSpecialCollection} from './specialDeckBuilder.js';
-import {fleetShipPassive,activeFleetSynergies,FLEET_SHIP_PASSIVES,FLEET_SHIP_SYNERGIES}
- from './fleetShipPassives.js';
+import {fleetShipPassive,activeFleetSynergies,FLEET_SHIP_PASSIVES} from './fleetShipPassives.js';
+import {FLEET_ESCORT_TRAITS,readyFleetEscorts} from './fleetEscortSupports.js';
 
 const deck=()=>[...createSpecialCollection().loadout];
-const make=(idsA,idsB)=>createFleetCardBattle({
- shipsA:idsA.map(shipId=>({shipId,level:1})),
- shipsB:idsB.map(shipId=>({shipId,level:1})),deckA:deck(),deckB:deck(),seed:48
-});
-const order=(shipIndex=0,partId='command')=>({shipIndex,partId,cards:[]});
-test('Tutte le 17 navicelle del catalogo ufficiale hanno una passiva propria',()=>{
+const make=(motherA='C01',motherB='R04',levelA=5,levelB=1)=>
+ createFleetCardBattle({shipsA:[{shipId:motherA,level:levelA}],
+  shipsB:[{shipId:motherB,level:levelB}],deckA:deck(),deckB:deck(),seed:48});
+const order=(partId='command')=>({shipIndex:0,partId,cards:[]});
+test('17 madri e 34 evoluzioni: identita, nomi e abilita propri',()=>{
  assert.equal(PHASE1_CATALOG.ships.length,17);
  assert.equal(Object.keys(FLEET_SHIP_PASSIVES).length,17);
- for(const ship of PHASE1_CATALOG.ships){
-  assert.ok(fleetShipPassive(ship.id)?.name,ship.id);
-  assert.ok(fleetShipPassive(ship.id)?.description,ship.id);
+ const all=[];
+ for(const model of PHASE1_CATALOG.ships){
+  assert.ok(fleetShipPassive(model.id)?.name);
+  const pair=FLEET_ESCORT_TRAITS[model.id];
+  assert.equal(pair.length,2);
+  for(const [i,skill] of pair.entries()){
+   assert.equal(skill.model,ESCORT_ARMORY[model.id][i].name);
+   assert.equal(skill.role,ESCORT_ARMORY[model.id][i].role);
+   assert.ok(skill.requires.length>=2);
+   all.push(skill.name);
+  }
  }
- assert.ok(FLEET_SHIP_SYNERGIES.length>=6);
+ assert.equal(new Set(all).size,34,'Ogni evoluzione ha un nome passiva distinto');
 });
-test('Sinergia: usa due navi vive con componenti richiesti, non la sola centralina',()=>{
- const b=make(['C02','C01'],['R04']);
- assert.ok(activeFleetSynergies(b.sides.A).some(x=>x.name==='Shock termico'));
- b.sides.A.ships[0].parts.find(p=>p.id==='generator').damage=2;
- b.sides.A.ships[0].parts.find(p=>p.id==='generator').destroyed=true;
- assert.equal(activeFleetSynergies(b.sides.A).some(x=>x.name==='Shock termico'),false,
-  'Generatore criogenico distrutto interrompe la combinazione');
+test('Gli HP scudiere variano per nave e ruolo; un baluardo puo resistere piu della madre',()=>{
+ const tank=make('L03','C01').sides.A.escorts[0];
+ const scout=make('N00','C01').sides.A.escorts[0];
+ assert.ok(tank.maxHp>scout.maxHp);
+ assert.ok(tank.maxHp>4,'Una madre cade dopo due vitali da due punti');
+ assert.equal(tank.skill.action,'bulwark');
 });
-test('Supporto difensivo: protegge solo il danno EXTRA, rinunciando al proprio attacco',()=>{
- const b=make(['R04','C04'],['C01']);
- b.sides.A.ships[0].shield=0;
- const defended=resolveFleetCardRound(b,order(0,'command'),order(0,'command'));
- assert.equal(defended.ok,true);
- assert.equal(defended.events[1].damage,1,'la madre subisce comunque una frattura');
- assert.equal(defended.events[0].fireCount,1,'la scorta rinuncia alla propria salva');
- const unguarded=make(['R04','C04'],['C01']);
- unguarded.sides.A.ships[0].shield=0;
- unguarded.sides.A.ships[1].parts.find(p=>p.id==='generator').damage=2;
- unguarded.sides.A.ships[1].parts.find(p=>p.id==='generator').destroyed=true;
- const open=resolveFleetCardRound(unguarded,order(0,'command'),order(0,'command'));
- assert.equal(open.ok,true);
- assert.equal(open.events[1].damage,2,'senza scorta il Plasma prevale sul Minerale');
- assert.equal(open.events[0].fireCount,2,'la nave non impegnata in difesa torna a sparare');
+test('Le sinergie non richiedono sempre la centralina: dipendono dalla parte specifica',()=>{
+ const b=make('C01');
+ assert.equal(activeFleetSynergies(b.sides.A).length,3);
+ const command=b.sides.A.ships[0].parts.find(p=>p.id==='command');
+ command.damage=2;command.destroyed=true;
+ assert.equal(activeFleetSynergies(b.sides.A).length,2,
+  'Si interrompe la formazione triplice, non tutti i supporti');
+ const gen=b.sides.A.ships[0].parts.find(p=>p.id==='generator');
+ gen.damage=2;gen.destroyed=true;
+ assert.equal(readyFleetEscorts(b.sides.A).length,0);
 });
-test('Passiva riparazione: ripara una sola frattura, mai una parte distrutta',()=>{
- const b=make(['C01','R03'],['R04']);
+test('R03 L3 ripara una frattura della madre senza mai resuscitare componenti',()=>{
+ const b=make('R03','C01',3,1);
  b.round=2;
- const p=b.sides.A.ships[0].parts.find(p=>p.id==='generator');
- p.damage=1;
- const healed=resolveFleetCardRound(b,order(0,'command'),order(0,'command'));
- assert.equal(healed.ok,true);
- assert.equal(healed.battle.sides.A.ships[0].parts.find(p=>p.id==='generator').damage,0);
- assert.ok(healed.battle.log.some(x=>x.text.includes('Riparazione orbitale')));
-});
-test('Shock termico scatta quando entrambe le navi sono disponibili e componenti intatti',()=>{
- const b=make(['C02','C01'],['C01']);
- b.round=3;
- const r=resolveFleetCardRound(b,order(0,'command'),order(0,'command'));
+ b.sides.A.ships[0].parts.find(p=>p.id==='engine').damage=1;
+ const r=resolveFleetCardRound(b,order('command'),order('command'));
  assert.equal(r.ok,true);
- assert.ok(r.battle.log.some(x=>x.text.includes('Shock termico')));
+ assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='engine').damage,0);
+ assert.ok(r.battle.log.some(x=>x.text.includes('Luce di recupero')));
+});
+test('R04 L3 difende la madre assorbendo interamente una salva diretta',()=>{
+ const b=make('C01','R04',1,3);
+ const r=resolveFleetCardRound(b,order(),order());
+ assert.equal(r.ok,true);
+ assert.ok(r.events[0].escortDamage>=1);
+ assert.equal(r.events[0].damage,0);
+ assert.equal(r.events[0].escortName,'Scudo del Vuoto');
+});
+test('C03 L5 supporta con risonanza, ma non diventa un cannone indipendente',()=>{
+ const b=make('C03','N00',5,1);b.round=3;
+ const r=resolveFleetCardRound(b,order(),order());
+ assert.equal(r.ok,true);
+ assert.equal(r.events[0].fireCount,1);
+ assert.ok(r.battle.log.some(x=>x.text.includes('Scarica coordinata')));
+});
+test('Supporto di fase N00 intercetta solo nei round previsti',()=>{
+ const b=make('C01','N00',1,3);
+ const first=resolveFleetCardRound(b,order(),order());
+ assert.equal(first.ok,true);
+ assert.equal(first.events[0].escortDamage,0);
+ b.round=2;
+ const second=resolveFleetCardRound(b,order(),order());
+ assert.equal(second.ok,true);
+ assert.ok(second.events[0].escortDamage>0);
 });
