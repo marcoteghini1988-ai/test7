@@ -100,30 +100,30 @@ export function createFleetCardBattle({shipsA,shipsB,deckA,deckB,mode='campaign'
   startedAtMs:nowMs,finishedAtMs:null};
 }
 export const FLEET_SPECIAL_EFFECTS=Object.freeze({
- 'fusion-barrier':['guard','Copertura con scudi di flotta'],
+ 'fusion-barrier':['guard','Manovra difensiva di flotta'],
  'fusion-strike':['power','Potenzia il fuoco coordinato'],
- 'fusion-twin':['guard','Difesa gemellare'],
+ 'fusion-twin':['guard','Difesa gemellare delle scudiere'],
  'fusion-triad':['power','Assalto delle tre navicelle'],
  'tactical-cover':['guard','Copertura tattica'],
- 'shot-piercing':['pierce','Perfora gli scudi'],
+ 'shot-piercing':['pierce','Potenzia un colpo mirato sui vitali'],
  'shot-ion':['ion','Impulso ionico: risonanza e sabotaggio'],
  'shot-corrosion':['corrosion','Corrosione sul bersaglio'],
- 'support-shield-repair':['repair','Ripristina uno scudo'],
+ 'support-shield-repair':['repair','Ripara una frattura o un supporto'],
  'support-status-purge':['repair','Ripristina sistemi'],
- 'support-escort-repair':['repair','Ripara una navicella'],
+ 'support-escort-repair':['repair','Ripara la madre o una scudiera viva'],
  'tactic-quantum-dice':['power','Dado quantico: sovraccarico'],
  'tactic-bomb':['jam','Bomba elettromagnetica'],
  'tactic-malus':['jam','Disturbo ai sistemi di tiro'],
  'tactic-golden':['power','Carta dorata: risonanza potenziata'],
- 'tactic-vulnerability-rift':['pierce','Faglia: aggira gli scudi'],
+ 'tactic-vulnerability-rift':['pierce','Faglia: colpo di precisione ai vitali'],
  'tactic-signature-mutation':['ion','Mutazione della firma elementale'],
  'tactic-power-shift':['repair','Deviazione energetica'],
  'tactic-scan':['pierce','Scansione dei punti deboli'],
  'tactic-suppress':['jam','Soppressione della flotta'],
  'tactic-counter':['guard','Contromisura programmata'],
- 'tactic-reactive':['guard','Paratia reattiva'],
+ 'tactic-reactive':['guard','Paratia reattiva anti-salva'],
  'tactic-kinetic':['power','Carica cinetica'],
- 'tactic-impact':['guard','Schermo di impatto'],
+ 'tactic-impact':['guard','Schermo di impatto anti-salva'],
  'tactic-numeric-recycle':['draw','Ricambio tattico di carte']
 });
 export function fleetCardEffect(type){
@@ -325,8 +325,8 @@ function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
   if(cover){
    ({escortDamage,escortSlot,escortName,escortDestroyed}=cover);
   }else{
-   const resonance=profile.advantage||eff.corrosion||
-    eff.power>=2||(eff.power>=1&&eff.ion)||(eff.pierce&&eff.power>=1);
+   const resonance=strength>=2&&(profile.advantage||eff.corrosion||
+    eff.power>=2||(eff.power>=1&&eff.ion)||(eff.pierce&&eff.power>=1));
    damage=Math.min(2-vital.damage,resonance?2:1);
    vital.damage+=damage;
    vital.destroyed=vital.damage>=2;
