@@ -45,7 +45,8 @@ test('Le sinergie non richiedono sempre la centralina: dipendono dalla parte spe
   'Si interrompe la formazione triplice, non tutti i supporti');
  const gen=b.sides.A.ships[0].parts.find(p=>p.id==='generator');
  gen.damage=2;gen.destroyed=true;
- assert.equal(readyFleetEscorts(b.sides.A).length,0);
+ assert.equal(readyFleetEscorts(b.sides.A).length,1,
+  'Un altra scudiera resta collegata attraverso Armi e Motori');
 });
 test('R03 L3 ripara una frattura della madre senza mai resuscitare componenti',()=>{
  const b=make('R03','C01',3,1);
