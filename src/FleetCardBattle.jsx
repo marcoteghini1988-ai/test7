@@ -9,7 +9,6 @@ import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
-import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {fleetBossBrief} from './fleetBossPassives.js';
@@ -17,7 +16,7 @@ import {fleetShipPassive,activeFleetSynergies} from './fleetShipPassives.js';
 import {fleetVolleyVisuals,fleetImpactVisual} from './fleetBattleVisuals.js';
 import {
  createFleetCardBattle,resolveFleetCardRound,selectFleetAiOrder,fleetSlotCount,
- FLEET_PARTS,FLEET_ELEMENTS,fleetCardEffect,fleetShipDestroyed,fleetSurvivors
+ FLEET_PARTS,FLEET_ELEMENTS,fleetCardEffect,fleetShipDestroyed
 } from './fleetCardEngine.js';
 import './FleetCardBattle.css';
 
@@ -42,7 +41,7 @@ function getAssets(){
    .filter(Boolean);
   const maxSeen=Math.max(1,Math.floor(Number(localStorage.getItem(SLOT_PROGRESS_KEY))||1));
   const moduleLevels=readLegacyModuleLevels();
-  return {ships,specials,selected:valid.length?valid:fallback,maxSeen,moduleLevels,error:''};
+  return {ships,specials,selected:[valid[0]||fallback[0]||'N00'],maxSeen,moduleLevels,error:''};
  }catch(error){return {ships:null,specials:null,selected:[],error:error?.message||'Inventario non leggibile'};}
 }
 function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotIndex=0,impactEvent=null,impactNonce=0}){
@@ -50,7 +49,7 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotInd
  const format=raritiesWithWebp.has(ship.rarity)?'webp':'png';
  const slotClass=slotIndex===0?'fc-slot-mother':slotIndex===1?'fc-slot-left':'fc-slot-right';
  const image=SHIP_IMG_ROOT+(enemy?'enemy_to_player/':'player_to_enemy/')+ship.id+'_complete.'+format;
- const impact=impactEvent?.shipIndex===slotIndex?fleetImpactVisual(impactEvent):null;
+ const impact=impactEvent?.shipIndex===slotIndex&&!impactEvent?.escortDamage?fleetImpactVisual(impactEvent):null;
  return <button type="button" className={'fc-ship '+slotClass+' '+(selected?'fc-selected ':'')+(sunk?'fc-sunk ':'')+
   (compact?'fc-compact ':'')+(enemy?'fc-hostile':'fc-friendly')}
   onClick={onClick} disabled={!onClick||sunk}
@@ -67,7 +66,6 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotInd
       title={textName(p.id)+': '+(p.destroyed?'distrutto':p.damage?'fratturato':'integro')}>
       {glyphs[p.id]}</span>)}
    </div>
-   <div className="fc-shields"><span>SCUDO</span><strong>{ship.shield}/{ship.maxShield}</strong></div>
    {impact&&<span key={impactNonce} className={'fc-ship-impact fc-impact-'+impact.kind}
      aria-label={impact.label}>
      <img src={impact.image} alt="" draggable={false}/>
@@ -75,6 +73,25 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotInd
     </span>}
    {sunk&&<div className="fc-destroyed-mark">DISTRUTTA</div>}
   </button>;
+}
+// Le scudiere sono evoluzioni della madre, non altre carte-navicella.
+function SupportShip({escort,mother,enemy=false,impactEvent=null}){
+ const linked=escort.skill.requires.every(id=>mother.parts.some(p=>p.id===id&&p.damage<2));
+ const active=!escort.destroyed&&escort.hp>0;
+ const hit=impactEvent?.escortSlot===escort.slot&&impactEvent?.escortDamage>0;
+ return <div className={'fc-escort '+(escort.slot===0?'fc-slot-left':'fc-slot-right')+
+  (active?'':' fc-sunk')+(linked?'':' fc-escort-offline')+
+  (enemy?' fc-escort-hostile':'')} title={escort.name+' · '+escort.skill.name}>
+  <div className="fc-escort-heading"><b>{escort.name}</b><span>{escort.role}</span></div>
+  <div className="fc-escort-image"><img src={escort.visual} alt={'Scudiera evoluta '+escort.name} draggable={false}/>
+    {hit&&<strong className="fc-escort-hit">{impactEvent.escortDestroyed?'DISTRUTTA':'COLPITA'}</strong>}
+  </div>
+  <small className="fc-escort-ability">{escort.skill.name}</small>
+  <div className="fc-escort-health"><span>RESISTENZA</span><b>{escort.hp}/{escort.maxHp}</b></div>
+  <div className="fc-escort-meter"><i style={{width:(escort.maxHp?100*escort.hp/escort.maxHp:0)+'%'}}/></div>
+  {!active&&<div className="fc-escort-status">DISTRUTTA</div>}
+  {active&&!linked&&<div className="fc-escort-status">LINK INTERROTTO</div>}
+ </div>;
 }
 function SpecialCard({type,selected,onClick,index,disabled=false,disabledReason=''}){
  const def=SPECIAL_CARD_CATALOG[type];
@@ -98,23 +115,17 @@ function assembleEnemyShips({selected,mode,sectorNumber,bossPlanetId,bossSectorL
  const mother=boss?.motherShipId||early||
   chooseCampaignMotherRival(first.shipId,first.level,sectorNumber,bossPlanetId,bossSectorLevel).shipId;
  const level=officialCampaignRivalLevel({mode,sectorNumber,playerLevel:first.level});
- const eligible=['N00',...SHIP_CAMPAIGN_UNLOCKS.filter(s=>s.sector<=Math.max(5,sectorNumber)).map(s=>s.shipId)];
- const pool=[...new Set([mother,...eligible])];
- const ids=[mother];
- let cursor=(Math.floor(Number(sectorNumber)||1)*3)%pool.length;
- while(ids.length<selected.length&&ids.length<pool.length){
-  const candidate=pool[cursor%pool.length];cursor++;
-  if(!ids.includes(candidate))ids.push(candidate);
- }
- return {ships:ids.map(shipId=>({shipId,level})),boss};
+ // Una sola madre avversaria; le sue scudiere nascono automaticamente a L3/L5.
+ return {ships:[{shipId:mother,level}],boss};
 }
 export default function FleetCardBattle({
  nickname='Comandante',gameMode='campaign',sectorNumber=1,displaySector='',
  bossPlanetId=null,bossSectorLevel=null,onResult,onExit
 }){
  const [assets]=useState(getAssets);
- const allowed=fleetSlotCount(Math.max(Number(sectorNumber)||1,assets.maxSeen||1),gameMode);
- const [selectedIds,setSelectedIds]=useState(()=>assets.selected.slice(0,allowed));
+ const [selectedIds,setSelectedIds]=useState(()=>assets.selected.slice(0,1));
+ const motherCard=assets.ships?.cards?.find(c=>c.shipId===selectedIds[0]);
+ const allowed=fleetSlotCount(motherCard?.level||1);
  const [battle,setBattle]=useState(null);
  const [enemySelection,setEnemySelection]=useState(0);
  const [partSelection,setPartSelection]=useState('command');
@@ -127,15 +138,14 @@ export default function FleetCardBattle({
  const isPvP=gameMode==='pvp';
  function toggleShip(id){
   setMessage('');
-  setSelectedIds(old=>old.includes(id)?old.length>1?old.filter(x=>x!==id):old:
-   old.length<allowed?[...old,id]:old);
+  setSelectedIds([id]);
  }
  function begin(){
   try{
    if(!assets.ships||!assets.specials)throw new Error(assets.error||'Inventario mancante');
    const selected=selectedIds.map(id=>assets.ships.cards.find(c=>c.shipId===id));
-   if(selected.some(c=>!c)||!selected.length||selected.length>allowed)
-    throw new Error('Seleziona soltanto navicelle possedute, nei tuoi slot disponibili');
+   if(selected.length!==1||!selected[0])
+    throw new Error('Seleziona una sola madre fra le navicelle possedute');
    const enemy=assembleEnemyShips({selected,mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel});
    const bossDeck=enemy.boss?buildTacticalBossDeck(enemy.boss.planetId,enemy.ships[0].level,selected[0].level):null;
    const fallback=createSpecialCollection().loadout;
@@ -199,9 +209,9 @@ export default function FleetCardBattle({
     });
    }
    const player=battle.sides.A,enemy=battle.sides.B;
-   const max=player.ships.length*10;
-   const hp=player.ships.reduce((sum,s)=>sum+s.shield+
-    s.parts.reduce((a,p)=>a+(2-p.damage),0),0);
+   const max=8+player.escorts.reduce((sum,e)=>sum+e.maxHp,0);
+   const hp=player.ships[0].parts.reduce((a,p)=>a+(2-p.damage),0)+
+    player.escorts.reduce((sum,e)=>sum+e.hp,0);
    const health=Math.max(0,Math.min(1,hp/Math.max(1,max)));
    const meta={
     turnsElapsed:battle.round,activeTimeElapsedMs:Math.max(0,Date.now()-battle.startedAtMs),
@@ -228,10 +238,12 @@ export default function FleetCardBattle({
    <div className="fc-opening">
     <div className="fc-eyebrow">NUOVO DUELLO · CARTE DI FLOTTA</div>
     <h1>Schiera la tua flotta</h1>
-    <p>Seleziona da una a {allowed} navicell{allowed===1?'a':'e'} possedut{allowed===1?'a':'e'}.
-     Tutte combatteranno insieme. Non sono previste sostituzioni.</p>
+    <p>Seleziona una navicella madre posseduta: solo lei attacca.
+     Le scudiere sono evoluzioni automatiche del modello, sbloccate ai livelli 3 e 5.
+     Ogni scudiera ha un effetto di supporto diverso.</p>
     <div className="fc-slot-status">{[0,1,2].map(i=><span key={i} className={
-     i<allowed?'fc-unlocked':'fc-locked'}>{i<allowed?'SLOT '+(i+1):'SLOT '+(i+1)+' · BLOCCATO'}</span>)}</div>
+     i<allowed?'fc-unlocked':'fc-locked'}>{['MADRE','SCUDIERA L3','SCUDIERA L5'][i]+
+      (i<allowed?' · ATTIVA':' · BLOCCATA')}</span>)}</div>
     <div className="fc-selection">
      {assets.ships.cards.map(card=>{
       const active=selectedIds.includes(card.shipId);
@@ -243,13 +255,12 @@ export default function FleetCardBattle({
          (card.shipId[0]==='R'?'Rara':card.shipId[0]==='E'?'Epica':'Leggendaria'):'Comune')?'webp':'png')}
         alt={'Carta '+card.shipId} draggable={false}/>
        <div><strong>{SHIP_NAMES.get(card.shipId)||card.shipId}</strong><small>Lv {def.level} · {fleetShipPassive(card.shipId)?.name}</small></div>
-       <button disabled={!active&&selectedIds.length>=allowed}
-        onClick={()=>toggleShip(card.shipId)}>{active?'✓ SCHIERATA':'SCHIERA'}</button>
+       <button onClick={()=>toggleShip(card.shipId)}>{active?'✓ NAVE MADRE':'SCEGLI MADRE'}</button>
       </div>;
      })}
     </div>
-    <p className="fc-small-note">Le altre navicelle si sbloccano giocando la campagna.
-     Secondo slot dal settore 11, terzo dal settore 31. Solo carte già possedute.</p>
+    <p className="fc-small-note">Le due scudiere non sono altre madri né nuove carte da possedere.
+     Si sbloccano al livello 3 e al livello 5 della madre scelta.</p>
     {message&&<p role="alert" className="fc-message">{message}</p>}
     <button className="fc-primary" onClick={begin} disabled={!selectedIds.length}>INIZIA BATTAGLIA</button>
     <button className="fc-text-action" onClick={()=>onExit?.()}>Torna al menu</button>
@@ -296,7 +307,7 @@ export default function FleetCardBattle({
    <p key={i}>{entry.text}</p>)}</div>}
   <div className="fc-board">
    <section className="fc-fleet fc-enemy-rack">
-    <div className="fc-rack-head"><strong>FLOTTA NEMICA</strong><span>{fleetSurvivors(enemy)}/{enemy.ships.length} operative</span></div>
+    <div className="fc-rack-head"><strong>FLOTTA NEMICA</strong><span>{enemy.escorts.filter(e=>!e.destroyed).length}/{enemy.escorts.length} scudiere attive</span></div>
     {bossBrief&&<div className="fc-boss-ability" role="status">
      <div className="fc-boss-ability-title"><strong>{bossBrief.name}</strong><span>PASSIVA DEL BOSS</span></div>
      <div className="fc-boss-ability-name">{bossBrief.ability}</div>
@@ -306,7 +317,8 @@ export default function FleetCardBattle({
     {activeFleetSynergies(enemy).length>0&&<div className="fc-synergies">
       <b>SINERGIE NEMICHE</b> {activeFleetSynergies(enemy).map(x=>x.name).join(' · ')}
      </div>}
-     <div className="fc-ship-row">{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
+     <div className="fc-ship-row">{enemy.escorts.map(e=><SupportShip key={e.id} escort={e} mother={enemy.ships[0]}
+      enemy impactEvent={lastFx?.events?.[0]}/>)}{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
       ship={ship} slotIndex={i} enemy selected={targetIndex===i&&!finished}
       impactEvent={lastFx?.events?.[0]} impactNonce={lastFx?.nonce}
       onClick={!finished?()=>{setEnemySelection(i);setPartSelection(
@@ -325,7 +337,8 @@ export default function FleetCardBattle({
     </div>}
     <div className="fc-target-title"><span>BERSAGLIO</span>
      <strong>{chosenEnemy?.name||'Flotta eliminata'}</strong></div>
-    <div className="fc-collapse-note">Due componenti distrutti = navicella eliminata.</div>
+    <div className="fc-collapse-note">Madre sempre attaccabile · 2 vitali distrutti = sconfitta.
+    Le scudiere difensive intercettano i colpi finché resistono.</div>
     <div className="fc-parts">{FLEET_PARTS.map(p=>{
      const vital=chosenEnemy?.parts.find(v=>v.id===p.id);
      return <button key={p.id} disabled={!vital||vital.destroyed||finished}
@@ -342,11 +355,12 @@ export default function FleetCardBattle({
     </div>
    </section>
    <section className="fc-fleet fc-player-rack">
-    <div className="fc-rack-head"><strong>LA TUA FLOTTA</strong><span>{fleetSurvivors(player)}/{player.ships.length} operative</span></div>
+    <div className="fc-rack-head"><strong>LA TUA FLOTTA</strong><span>{player.escorts.filter(e=>!e.destroyed).length}/{player.escorts.length} scudiere attive</span></div>
     {activeFleetSynergies(player).length>0&&<div className="fc-synergies">
       <b>SINERGIE ATTIVE</b> {activeFleetSynergies(player).map(x=>x.name).join(' · ')}
      </div>}
-     <div className="fc-ship-row">{player.ships.map((ship,i)=><ShotShip key={ship.id}
+     <div className="fc-ship-row">{player.escorts.map(e=><SupportShip key={e.id} escort={e} mother={player.ships[0]}
+      impactEvent={lastFx?.events?.[1]}/>)}{player.ships.map((ship,i)=><ShotShip key={ship.id}
      ship={ship} slotIndex={i} impactEvent={lastFx?.events?.[1]}
      impactNonce={lastFx?.nonce}/>)}</div>
    </section>
