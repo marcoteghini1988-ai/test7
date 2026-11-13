@@ -43,6 +43,7 @@ test('Le sinergie non richiedono sempre la centralina: dipendono dalla parte spe
  command.damage=2;command.destroyed=true;
  assert.equal(activeFleetSynergies(b.sides.A).length,2,
   'Si interrompe la formazione triplice, non tutti i supporti');
+ command.damage=0;command.destroyed=false; // test indipendente: madre ancora viva
  const gen=b.sides.A.ships[0].parts.find(p=>p.id==='generator');
  gen.damage=2;gen.destroyed=true;
  assert.equal(readyFleetEscorts(b.sides.A).length,1,
