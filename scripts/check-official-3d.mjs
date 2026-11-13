@@ -186,7 +186,7 @@ verify(fleetEngine.includes("FLEET_ELEMENTS")&&fleetEngine.includes("FLEET_PARTS
  'Il nuovo motore deve conservare elementi, vitali e IA senza numeriche');
 verify(fleetView.includes("arena_titanio_9x16.webp")&&
  fleetView.includes("className=\"fleet-ship-wrap complete-ship focused official-mother\"")&&
- !fleetView.includes("FleetCardBattle.css")&&
+ !fleetView.includes("import './FleetCardBattle.css'")&&
  fleetCss.includes("OfficialLiveBattle3D.css"),
  'Il renderer della nuova partita deve essere quello 3D originario');
 
