@@ -21,7 +21,6 @@ import {
 import './FleetCardBattle.css';
 
 const LOADOUT_KEY='eclissi_card_fleet_v1';
-const SLOT_PROGRESS_KEY='eclissi_card_fleet_max_sector_v1';
 const SHIP_IMG_ROOT='/assets/mathfleet/views/';
 const raritiesWithWebp=new Set(['Rara','Epica','Leggendaria']);
 const SHIP_NAMES=new Map(PHASE1_CATALOG.ships.map(ship=>[ship.id,ship.nome]));
@@ -39,9 +38,8 @@ function getAssets(){
   const valid=Array.isArray(saved)?[...new Set(saved.filter(id=>available.includes(id)))]:[];
   const fallback=ships.loadout.map(id=>ships.cards.find(c=>c.instanceId===id)?.shipId)
    .filter(Boolean);
-  const maxSeen=Math.max(1,Math.floor(Number(localStorage.getItem(SLOT_PROGRESS_KEY))||1));
   const moduleLevels=readLegacyModuleLevels();
-  return {ships,specials,selected:[valid[0]||fallback[0]||'N00'],maxSeen,moduleLevels,error:''};
+  return {ships,specials,selected:[valid[0]||fallback[0]||'N00'],moduleLevels,error:''};
  }catch(error){return {ships:null,specials:null,selected:[],error:error?.message||'Inventario non leggibile'};}
 }
 function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotIndex=0,impactEvent=null,impactNonce=0}){
@@ -159,8 +157,7 @@ export default function FleetCardBattle({
     seed:Math.floor(Math.random()*1e8)+1,nowMs:Date.now()
    });
    localStorage.setItem(LOADOUT_KEY,JSON.stringify(selectedIds));
-   // Lo sblocco slot e permanente anche quando si rigioca un settore precedente.
-   localStorage.setItem(SLOT_PROGRESS_KEY,String(Math.max(assets.maxSeen||1,Number(sectorNumber)||1)));
+   // La madre conserva il suo livello reale L1-L5: nessuna nuova progressione per settore.
    setBattle(next);setEnemySelection(0);setPartSelection('command');setLastFx(null);
    setChosenCards([]);setRewardDone(false);setMessage('');
   }catch(error){setMessage(error?.message||'Impossibile schierare la flotta');}
@@ -278,6 +275,10 @@ export default function FleetCardBattle({
   const kind=fleetCardEffect(type).kind;
   if(finished)return 'Battaglia conclusa';
   if(battle.bossLockedTerrain&&kind==='terrain')return 'Il boss impone il suo terreno';
+  if(['fusion-twin','fusion-triad'].includes(type)&&
+    player.escorts.filter(e=>e.hp>0&&!e.destroyed&&e.skill.requires.every(id=>
+      player.ships[0].parts.some(p=>p.id===id&&p.damage<2))).length<2)
+   return 'Richiede entrambe le scudiere attive e collegate (livello 5)';
   if(kind==='character'&&!chosenCards.includes(index)){
    if(characterActive)return 'Un personaggio e gia attivo';
    if(chosenCards.some(i=>fleetCardEffect(player.hand[i]).kind==='character'))
