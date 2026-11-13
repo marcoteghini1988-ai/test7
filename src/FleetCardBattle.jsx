@@ -13,6 +13,7 @@ import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {fleetBossBrief} from './fleetBossPassives.js';
+import {fleetShipPassive,activeFleetSynergies} from './fleetShipPassives.js';
 import {fleetVolleyVisuals,fleetImpactVisual} from './fleetBattleVisuals.js';
 import {
  createFleetCardBattle,resolveFleetCardRound,selectFleetAiOrder,fleetSlotCount,
@@ -53,9 +54,10 @@ function ShotShip({ship,enemy=false,selected=false,onClick,compact=false,slotInd
  return <button type="button" className={'fc-ship '+slotClass+' '+(selected?'fc-selected ':'')+(sunk?'fc-sunk ':'')+
   (compact?'fc-compact ':'')+(enemy?'fc-hostile':'fc-friendly')}
   onClick={onClick} disabled={!onClick||sunk}
-  title={ship.name+' · '+ship.role+' · '+element.name}>
+  title={ship.name+' · '+ship.role+' · '+element.name+' · '+(ship.passive?.description||'')}>
    <div className="fc-ship-top"><span className="fc-tier">{ship.rarity} · LV {ship.level}</span>
-    <b>{ship.name}</b><small>ARMI {ship.weapons.length} · POTENZA {ship.weaponRating}</small></div>
+    <b>{ship.name}</b><small>ARMI {ship.weapons.length} · POTENZA {ship.weaponRating}</small>
+     <small className="fc-passive-label">✦ {ship.passive?.name||'Nessuna passiva'}</small></div>
    <div className="fc-ship-picture">
     <img src={image} alt={'Navicella '+ship.name} draggable={false}/>
     <span className="fc-element" style={{color:element.color}}>{element.symbol} {element.name}</span>
@@ -240,7 +242,7 @@ export default function FleetCardBattle({
         (raritiesWithWebp.has(['R','E','L'].includes(card.shipId[0])?
          (card.shipId[0]==='R'?'Rara':card.shipId[0]==='E'?'Epica':'Leggendaria'):'Comune')?'webp':'png')}
         alt={'Carta '+card.shipId} draggable={false}/>
-       <div><strong>{SHIP_NAMES.get(card.shipId)||card.shipId}</strong><small>Lv {def.level}</small></div>
+       <div><strong>{SHIP_NAMES.get(card.shipId)||card.shipId}</strong><small>Lv {def.level} · {fleetShipPassive(card.shipId)?.name}</small></div>
        <button disabled={!active&&selectedIds.length>=allowed}
         onClick={()=>toggleShip(card.shipId)}>{active?'✓ SCHIERATA':'SCHIERA'}</button>
       </div>;
@@ -301,7 +303,10 @@ export default function FleetCardBattle({
      <p>{bossBrief.description}</p>
      <small>{bossBrief.status}</small>
     </div>}
-    <div className="fc-ship-row">{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
+    {activeFleetSynergies(enemy).length>0&&<div className="fc-synergies">
+      <b>SINERGIE NEMICHE</b> {activeFleetSynergies(enemy).map(x=>x.name).join(' · ')}
+     </div>}
+     <div className="fc-ship-row">{enemy.ships.map((ship,i)=><ShotShip key={ship.id}
       ship={ship} slotIndex={i} enemy selected={targetIndex===i&&!finished}
       impactEvent={lastFx?.events?.[0]} impactNonce={lastFx?.nonce}
       onClick={!finished?()=>{setEnemySelection(i);setPartSelection(
@@ -338,7 +343,10 @@ export default function FleetCardBattle({
    </section>
    <section className="fc-fleet fc-player-rack">
     <div className="fc-rack-head"><strong>LA TUA FLOTTA</strong><span>{fleetSurvivors(player)}/{player.ships.length} operative</span></div>
-    <div className="fc-ship-row">{player.ships.map((ship,i)=><ShotShip key={ship.id}
+    {activeFleetSynergies(player).length>0&&<div className="fc-synergies">
+      <b>SINERGIE ATTIVE</b> {activeFleetSynergies(player).map(x=>x.name).join(' · ')}
+     </div>}
+     <div className="fc-ship-row">{player.ships.map((ship,i)=><ShotShip key={ship.id}
      ship={ship} slotIndex={i} impactEvent={lastFx?.events?.[1]}
      impactNonce={lastFx?.nonce}/>)}</div>
    </section>
