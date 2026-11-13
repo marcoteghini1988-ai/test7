@@ -316,3 +316,27 @@
 
 /* Le evoluzioni nemiche puntano verso la flotta del giocatore. */
 .fc-escort-hostile .fc-escort-image img{transform:rotate(180deg)}
+
+/* Dettagli tappabili delle scudiere: nessuna altra azione richiesta per attivarle. */
+.fc-escort-heading{position:relative;padding-right:20px}
+.fc-escort-help{position:absolute;top:0;right:0;z-index:8;
+ display:flex;align-items:center;justify-content:center;
+ width:21px;height:21px;padding:0;
+ border:1px solid #7fa5b6;border-radius:50%;
+ background:#132d41e8;color:#c5efff!important;font-size:12px!important}
+.fc-escort-help:focus-visible{outline:2px solid #fce5a5;outline-offset:2px}
+.fc-escort-cycle{font-size:7px;letter-spacing:.02em;color:#9fd4cf;line-height:1.18}
+.fc-escort-details{position:absolute;z-index:35;top:2px;left:0;
+ width:min(238px,82vw);padding:9px 10px;border:1px solid #8ccde0;
+ border-radius:9px;background:#071a2df9;box-shadow:0 10px 25px #000c;
+ color:#e5f7ff;text-align:left;font-size:11px;line-height:1.4}
+.fc-slot-right .fc-escort-details{left:auto;right:0}
+.fc-escort-details strong{font-size:11px;color:#fff0c3}
+.fc-escort-details p{margin:6px 0;color:#dbebfd}
+.fc-escort-details small{font-size:9px;color:#9ddacf}
+@media(max-width:480px){
+ .fc-escort-heading{padding-right:17px}
+ .fc-escort-help{width:18px;height:18px;font-size:11px!important}
+ .fc-escort-cycle{font-size:6px;letter-spacing:0}
+ .fc-escort-details{max-width:78vw;font-size:10px}
+}
