@@ -53,4 +53,15 @@ Le identità e le immagini sono quelle originali di `src/escortArmory.js`. La ta
 ## Stato della verifica
 Aggiornati `src/fleetCardEngine.js`, `src/fleetEscortSupports.js`, `src/fleetShipPassives.js`, `src/fleetBossPassives.js`, `src/fleetSpecialProfiles.js`, `src/FleetCardBattle.jsx`, `src/FleetCardBattle.css`, `src/fleetBattleVisuals.js` e i test dedicati.
 
-Controllata la logica con 85 configurazioni di modello/livello e 51 test eseguiti in un harness JavaScript isolato che carica il catalogo del gioco; ciò **non** sostituisce la compilazione Vite e i test completi del progetto su Node. Da verificare inoltre il bilanciamento in partita e la resa 9:16 in un browser reale.
+Controllata la logica con **63 test superati su 63** in un harness JavaScript isolato che carica il catalogo ufficiale e **85 combattimenti simulati** (17 madri × 5 livelli), senza ordini illegali e tutti conclusi entro 35 round. I test del filesystem nel harness usano mock; i 34 percorsi SVG sono stati verificati separatamente nel repository.
+
+### Correzioni di robustezza 13/11
+- L'IA non seleziona più Fusioni Gemellare/Trina se mancano le due scudiere **operative e collegate**; mira anche ai vitali che disattivano i supporti.
+- Un Generatore distrutto interrompe la riparazione di carte, moduli e Idra boss. Le carte di riparazione diventano indisponibili in battaglia.
+- Se entrambe le madri hanno le Armi distrutte, la partita termina con pareggio tecnico, invece di proseguire indefinitamente.
+- Il Sifone può riparare anche dopo un colpo reale intercettato da una scudiera; un colpo senza impatto non attiva la cura.
+- Il vantaggio elementale aumenta la potenza del colpo contro madre/supporto, **ma non basta da solo a distruggere in un attacco un vitale intatto**. Per il colpo critico serve una carta o una combinazione con passiva.
+- Ogni scudiera visualizza ruolo, HP e frequenza della propria abilità; il pulsante informazioni su smartphone apre descrizione e vitali necessari.
+- Il routing ufficiale è stato controllato: `src/MathDuelBattle.jsx` usa `FleetCardBattle.jsx` per campagna e PvP simulato.
+
+**Limitazioni ancora aperte:** non è stata eseguita una vera build Vite/TypeScript o l'intera suite Node/GitHub Actions; su questo commit non risultano verifiche CI. Restano inoltre il collaudo visivo reale 9:16, la taratura della durata delle partite e il bilanciamento delle abilità boss/speciali.
