@@ -313,3 +313,6 @@
  .fc-escort-health{font-size:7px}
  .fc-escort-ability{min-height:22px}
 }
+
+/* Le evoluzioni nemiche puntano verso la flotta del giocatore. */
+.fc-escort-hostile .fc-escort-image img{transform:rotate(180deg)}
