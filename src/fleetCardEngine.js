@@ -343,7 +343,9 @@ function resolveAttack(attacker,defender,order,eff,defEff,activeTerrain,round){
   if(cover){
    ({escortDamage,escortSlot,escortName,escortDestroyed}=cover);
   }else{
-   const resonance=strength>=2&&(profile.advantage||eff.corrosion||
+   // Il vantaggio elementale aumenta la potenza, ma non distrugge da solo un vitale
+   // con un singolo colpo: serve una combinazione passiva/carta speciale.
+   const resonance=strength>=2&&(eff.corrosion||
     eff.power>=2||(eff.power>=1&&eff.ion)||(eff.pierce&&eff.power>=1));
    damage=Math.min(2-vital.damage,resonance?2:1);
    vital.damage+=damage;
