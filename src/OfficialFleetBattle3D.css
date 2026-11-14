@@ -120,3 +120,17 @@
 @media(prefers-reduced-motion:reduce){
  .es-math-scope .f3d-original-arena .f3d-impact{animation:none;opacity:0}
 }
+
+/* Sei slot e sette carte: conserva l'arena 450x800 e le coordinate della plancia. */
+.es-math-scope .f3d-original-arena .live-slot-row{left:44px;right:44px;gap:9px}
+.es-math-scope .f3d-original-arena .live-slot{width:42px;flex:0 0 42px}
+.es-math-scope .f3d-original-arena .live-special-hand{
+ left:27px;right:27px;gap:3px;top:627px
+}
+.es-math-scope .f3d-original-arena .live-hand-special{width:54px;flex:0 0 54px}
+.es-math-scope .f3d-original-arena .f3d-actions{left:22px;right:22px;gap:4px}
+.es-math-scope .f3d-original-arena .f3d-actions button:nth-of-type(2),
+.es-math-scope .f3d-original-arena .f3d-actions button:nth-of-type(3){
+ flex:0 0 auto;font-size:8px;min-height:24px
+}
+.es-math-scope .f3d-original-arena .live-card-rarity{font-size:7px}
