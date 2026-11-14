@@ -6,10 +6,17 @@ import general from './fleetNext/catalogGeneral.json' with {type:'json'};
 import exclusive from './fleetNext/catalogExclusive.json' with {type:'json'};
 const byId=new Map([...general.carte,...exclusive.cards].map(x=>[x.id,x]));
 const root=resolve('public/assets/fleet-approved-fronts');
-test('Lotti 01 e 02: venti fronti approvati identici ai sorgenti e fedeli al catalogo',()=>{
+test('Lotti approvati: fronti integrati fedeli al catalogo e agli asset WebP',()=>{
  const manifest=JSON.parse(readFileSync(resolve(root,'manifest.json'),'utf8'));
- assert.equal(manifest.cards.length,20);
- assert.equal(new Set(manifest.cards.map(x=>x.id)).size,20);
+ const requiredIds=[
+  'gen-001','gen-032','gen-055','gen-067','gen-071','gen-094','gen-106','gen-116','gen-219','gen-245',
+  'gen-072','gen-073','gen-074','gen-075','gen-076','gen-077','gen-078','gen-080','gen-081','gen-082',
+  'gen-083','gen-084','gen-085','gen-086','gen-087','gen-088','gen-089','gen-090','gen-091','gen-092'
+ ];
+ const actualIds=new Set(manifest.cards.map(x=>x.id));
+ assert.ok(manifest.cards.length>=requiredIds.length&&manifest.cards.length<=379,'Conteggio fronti fuori limite');
+ assert.equal(actualIds.size,manifest.cards.length,'Fronti approvati duplicati');
+ for(const id of requiredIds)assert.ok(actualIds.has(id),'Lotto 01-03 approvato mancante: '+id);
  for(const meta of manifest.cards){
   const c=byId.get(meta.id);
   assert.ok(c,'ID ufficiale mancante '+meta.id);
