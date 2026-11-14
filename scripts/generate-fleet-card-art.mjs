@@ -303,7 +303,7 @@ function makeSvg(c){
  <path d="M61 39H450" stroke="${fam.soft}" stroke-width="${highlightWidth}" opacity="${shineOpacity}"/>
  <path d="M32 85V51L52 29H135 M376 29H458L482 52V122 M32 648V715L50 735H128 M382 735H460L481 713V647" fill="none" stroke="#f7fcff" stroke-width="${rar.level===4?4:rar.level===3?2:1}" opacity="${rar.level===4?.83:rar.level===3?.26:rar.level===2?.09:0}"/>
  <path d="M61 43H450" stroke="#fff" stroke-width="${rar.level===4?2.5:1}" opacity="${rar.level===4?.94:rar.level===3?.35:0}"/>
- <text x="256" y="53" text-anchor="middle" fill="#e9f5ff" font-size="18" font-family="Arial, sans-serif" font-weight="700" letter-spacing="4">ECLISSI STELLARE</text>
+ 
  <path d="M39 65H474V186H39Z" fill="url(#titlePanel)" stroke="#506a82" stroke-width="2"/>
  <path d="M45 73H96L108 85V147L96 158H45Z" fill="${fam.base}" fill-opacity=".13" stroke="${fam.base}" stroke-width="3"/>
  <text x="77" y="128" text-anchor="middle" fill="${fam.soft}" font-family="Arial, sans-serif" font-size="40" font-weight="bold">${fam.glyph}</text>

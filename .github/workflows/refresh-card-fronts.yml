@@ -1,0 +1,48 @@
+name: Aggiorna fronti carte senza marchio
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/generate-fleet-card-art.mjs'
+      - '.github/workflows/refresh-card-fronts.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rigenera i 379 fronti rettangolari senza scritte di marchio
+        run: node scripts/generate-fleet-card-art.mjs
+      - name: Assicurati che il marchio non compaia su alcuna carta
+        run: |
+          node --input-type=module <<'NODE'
+          import {readdirSync,readFileSync} from 'node:fs';
+          const dir='public/assets/fleet-next-cards';
+          const list=readdirSync(dir).filter(p=>p.endsWith('.svg'));
+          if(list.length!==379)throw Error('Attesi 379 fronti, trovati '+list.length);
+          for(const filename of list){
+            const svg=readFileSync(dir+'/'+filename,'utf8');
+            if(svg.includes('ECLISSI STELLARE'))throw Error('Marchio sulla carta: '+filename);
+            if(!svg.includes('width="512" height="768"'))throw Error('Formato non 2:3: '+filename);
+          }
+          console.log('379 carte verticali 2:3 senza il marchio del gioco');
+          NODE
+      - name: Salva sul repository i fronti aggiornati
+        run: |
+          git config user.name "eclissi-asset-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/assets/fleet-next-cards/*.svg public/assets/fleet-terrain-scenes/*.svg
+          if git diff --cached --quiet; then
+            echo "379 fronti gia' conformi"
+          else
+            git commit -m "Carte: rimuovi marchio Eclissi Stellare dai 379 fronti"
+            git push origin HEAD:main
+          fi
