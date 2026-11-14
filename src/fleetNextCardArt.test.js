@@ -102,10 +102,10 @@ test('Il generatore accetta illustrazioni HD per tutte le funzioni',()=>{
  assert.ok(script.includes('const rand=rng(seed^0x894ec321)'),'Fallback vettoriale ancora disponibile');
 });
 
-test('119 Attacchi: 6 dipinti HD e 113 fronti vettoriali, formato 2:3',()=>{
+test('119 Attacchi: fronti HD e vettoriali verificati dinamicamente, formato 2:3',()=>{
  const cards=[...generalData.carte.filter(c=>c.categoria==='Attacco'),...exclusiveData.cards.filter(c=>c.category==='Attacco'||/Combo|Fusione/.test(c.category)||c.category==='Reazione')];
  assert.equal(cards.length,119);
- const hd=new Set(['gen-001','gen-004','gen-012','gen-032','gen-037','gen-046']);
+ const hd=new Set(cards.filter(c=>existsSync(resolve('public/assets/fleet-card-illustrations',c.id+'.webp'))).map(c=>c.id));
  const motifs=new Set(),signatures=new Set();
  for(const card of cards){
   const svg=readFileSync(resolve('public/assets/fleet-next-cards',card.id+'.svg'),'utf8');
@@ -124,7 +124,7 @@ test('119 Attacchi: 6 dipinti HD e 113 fronti vettoriali, formato 2:3',()=>{
    motifs.add(motif[1]);signatures.add(sign[1]);
   }
  }
- assert.equal(signatures.size,113,'Illustrazioni vettoriali duplicate');
+ assert.equal(signatures.size,cards.length-hd.size,'Illustrazioni vettoriali duplicate');
  assert.ok(motifs.size>=9,'Motivi insufficienti');
 });
 
@@ -142,5 +142,24 @@ test('Quattro difese reali hanno illustrazioni HD sincronizzate con la sorgente'
   assert.ok(svg.includes('data-hd-art="'+id+'"'));
   assert.ok(svg.includes('width="512" height="768"'));
   assert.ok(svg.includes('stroke="#37ceff"'),'Colore ruolo non blu '+id);
+ }
+});
+test('Le nuove carte illustrate sono sempre 2:3, con testo e colore della funzione',()=>{
+ const ids=['gen-072','gen-073','gen-074','gen-075','gen-076','gen-077','gen-078','gen-080','gen-081','gen-003','gen-015','gen-017'];
+ for(const id of ids){
+  const card=generalData.carte.find(c=>c.id===id);
+  assert.ok(card,id);
+  const svg=readFileSync(resolve('public/assets/fleet-next-cards',id+'.svg'),'utf8');
+  const img=readFileSync(resolve('public/assets/fleet-card-illustrations',id+'.webp'));
+  const key='href="data:image/webp;base64,';
+  const start=svg.indexOf(key);
+  assert.ok(start>0,id);
+  const end=svg.indexOf('"',start+key.length);
+  const b64=svg.slice(start+key.length,end);
+  assert.ok(Buffer.from(b64,'base64').equals(img),id+' immagine differente');
+  assert.ok(svg.includes('data-hd-art="'+id+'"'),id);
+  assert.ok(svg.includes('width="512" height="768"'),id);
+  const expected=card.sottotipo==='Difesa'?'#37ceff':'#ff594c';
+  assert.ok(svg.includes(expected),'Colore funzione mancante '+id);
  }
 });

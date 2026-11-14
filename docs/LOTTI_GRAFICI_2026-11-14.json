@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-14",
+  "artworkDimensions": {
+    "width": 876,
+    "height": 620
+  },
+  "cardsDimensions": {
+    "width": 512,
+    "height": 768
+  },
+  "images": [
+    {
+      "id": "gen-072",
+      "role": "defense",
+      "origin": "six-scene-grid-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-073",
+      "role": "defense",
+      "origin": "six-scene-grid-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-074",
+      "role": "defense",
+      "origin": "six-scene-grid-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-075",
+      "role": "defense",
+      "origin": "six-scene-grid-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-076",
+      "role": "defense",
+      "origin": "six-scene-grid-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-077",
+      "role": "defense",
+      "origin": "six-scene-grid-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-078",
+      "role": "defense",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-080",
+      "role": "defense",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-081",
+      "role": "defense",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-003",
+      "role": "attack",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-015",
+      "role": "attack",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-017",
+      "role": "attack",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    }
+  ]
+}
