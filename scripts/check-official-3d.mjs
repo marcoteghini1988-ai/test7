@@ -175,9 +175,9 @@ verify(battleEntry.includes("import OfficialFleetBattle3D from './OfficialFleetB
 const fleetView=read('src/OfficialFleetBattle3D.jsx');
 const fleetEngine=read('src/fleetCardEngine.js');
 const fleetCss=read('src/OfficialFleetBattle3D.css');
-verify(fleetView.includes("readShipCollection")&&fleetView.includes("readSpecialCollection")&&
+verify(fleetView.includes("readShipCollection")&&fleetView.includes("readFleetInventory")&&
  fleetView.includes("claimOfficialLiveVictoryRewards")&&
- fleetView.includes("resolveFleetCardRound")&&
+ fleetView.includes("resolveFleetNextTurn")&&
  fleetView.includes("<ShipPhysicalVitals")&&fleetView.includes("<MountedWeapons")&&
  fleetView.includes("OfficialLiveBattle3D.css"),
  'Nuove meccaniche: obbligatorio mantenere le navicelle 3D e i vitali fisici originali');
