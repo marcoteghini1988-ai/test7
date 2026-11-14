@@ -2,6 +2,7 @@
 // Nessuna animazione o audio qui: gli eventi sono emessi per il renderer ufficiale.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
+import {ESCORT_ARMORY} from '../escortArmory.js';
 import {
  GENERAL_CARDS,EXCLUSIVE_CARDS,GENERAL_COUNT,card,cardRole,shipConfig,
  unlockedParts,requiredEscortCount,effectiveDeck,exclusiveOperational,
@@ -47,9 +48,18 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const config=shipConfig(shipId);
  // Riutilizziamo esattamente i modelli e le passive delle scudiere ufficiali.
  const allEscorts=buildFleetEscorts({...mother,level:5}).slice(0,requiredEscortCount(shipId,level));
- const escorts=allEscorts.map((e,i)=>({...e,
-  unlockLevel:i===0?config.escort1UnlockLevel:config.escort2UnlockLevel,
-  linked:true}));
+ const model=SHIPS.get(shipId);
+ const base=model.hp_motore_L1+(model.hp_motore_L5-model.hp_motore_L1)*
+  (clamp(level,1,5)-1)/4;
+ const escorts=allEscorts.map((e,i)=>{
+  const tough=['cover','bulwark','partCover','phase'].includes(e.skill.action);
+  const arm=ESCORT_ARMORY[shipId][i];
+  const hp=Math.max(2,Math.min(12,Math.round(2+base/65+
+   (e.skill.action==='bulwark'?4:tough?2:0)+arm.shield*3)));
+  return {...e,hp,maxHp:hp,
+   unlockLevel:i===0?config.escort1UnlockLevel:config.escort2UnlockLevel,
+   linked:true};
+ });
  const rng={rng:seed>>>0};
  const fullDeck=effectiveDeck(baseDeck,shipId,level);
  const shuffledDeck=shuffled(fullDeck,rng);
@@ -208,7 +218,7 @@ function applyCard(b,side,opponent,id,ctx,events){
   ctx.extraDraw=clamp(ctx.extraDraw+1,0,2);at('Ricambio carta preparato');
  }else if(families.includes('disturbo')||families.includes('ionizzazione')||families.includes('blocco')){
   opponent.fireDisabledUntil=Math.max(opponent.fireDisabledUntil,
-   b.ply+(families.includes('blocco')?1:0));
+   b.ply+(families.includes('blocco')?2:0));
   opponent.buffs.push({kind:'jam',untilPly:b.ply+2,power:1});
   at('Disturbo elettronico su avversario');
  }else if(families.includes('spionaggio')){
@@ -268,7 +278,8 @@ function opponentProtection(b,defender,attackerCtx,strength,events){
  let shield=guards.reduce((n,x)=>n+x.guard,0);
  if(defender.commander?.untilPly>b.ply&&/protezione|guardia|scudo|resistenza/.test(defender.commander.kind))
   shield+=1;
- const jam=defender.buffs.filter(x=>x.kind==='jam'&&x.untilPly>b.ply).reduce((n,x)=>n+x.power,0);
+ const attacker=b.sides[attackerCtx.who];
+ const jam=attacker.buffs.filter(x=>x.kind==='jam'&&x.untilPly>b.ply).reduce((n,x)=>n+x.power,0);
  let power=clamp(strength-shield-jam+(attackerCtx.pierce?Math.min(shield,attackerCtx.pierce):0),0,7);
  if(power<=0)return {power:0,escort:null};
  const intercept=defender.escorts.find(e=>e.linked&&
