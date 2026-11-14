@@ -93,3 +93,11 @@ test('Dieci scenari grafici Terreno in arena 9:16 senza spostamenti',()=>{
  assert.ok(css.includes('mix-blend-mode:screen;opacity:.18'));
  assert.ok(css.includes('pointer-events:none'));
 });
+
+test('Il generatore accetta illustrazioni HD per tutte le funzioni',()=>{
+ const script=readFileSync(resolve('scripts/generate-fleet-card-art.mjs'),'utf8');
+ assert.ok(script.includes("const source=resolve(ROOT,'public/assets/fleet-card-illustrations',c.id+'.webp')"));
+ assert.ok(script.includes('if(existsSync(source))'));
+ assert.ok(script.includes('function artScene(c,seed)'));
+ assert.ok(script.includes('const rand=rng(seed^0x894ec321)'),'Fallback vettoriale ancora disponibile');
+});
