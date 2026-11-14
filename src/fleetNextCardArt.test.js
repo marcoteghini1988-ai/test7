@@ -172,7 +172,7 @@ test('Quattro nuovi fronti HD con nome ufficiale, rarita e colori separati',()=>
   assert.ok(card&&['Attacco','Difesa'].includes(card.sottotipo),id);
   const svg=readFileSync(resolve('public/assets/fleet-next-cards',id+'.svg'),'utf8');
   const src=readFileSync(resolve('public/assets/fleet-card-illustrations',id+'.webp'));
-  const encoded=svg.match(/href="data:image\\/webp;base64,([A-Za-z0-9+/=]+)"/);
+  const encoded=svg.match(/href="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/);
   assert.ok(encoded&&Buffer.from(encoded[1],'base64').equals(src),'Art HD non sincronizzata '+id);
   assert.ok(svg.includes('data-hd-art="'+id+'"'));
   assert.ok(!svg.includes('ECLISSI STELLARE'),'Marchio vietato '+id);
