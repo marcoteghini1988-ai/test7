@@ -193,7 +193,7 @@ export default function OfficialFleetBattle3D({
  const opts={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel};
  const [session,setSession]=useState(()=>startSession(opts));
  const [battle,setBattle]=useState(session.battle);
- const [selectedVital,setSelectedVital]=useState('command');
+ const [selectedVital,setSelectedVital]=useState('engine');
  const [chosenCards,setChosenCards]=useState([]);
  const [scale,setScale]=useState(1);
  const [message,setMessage]=useState('');
@@ -202,33 +202,58 @@ export default function OfficialFleetBattle3D({
  const [busy,setBusy]=useState(false);
  const [showLog,setShowLog]=useState(false);
  const [rewardDone,setRewardDone]=useState(false);
+ const [now,setNow]=useState(()=>Date.now());
  const submitting=useRef(false);
  useEffect(()=>{
   const resize=()=>setScale(Math.max(.3,Math.min(innerWidth/450,innerHeight/800)));
   resize();window.addEventListener('resize',resize);
   return ()=>window.removeEventListener('resize',resize);
  },[]);
+ useEffect(()=>{
+  const id=window.setInterval(()=>setNow(Date.now()),250);
+  return ()=>window.clearInterval(id);
+ },[]);
+ // Anche il nemico segue l'alternanza dei turni. Nel PvP attuale resta IA simulata.
+ useEffect(()=>{
+  if(!battle||battle.phase!=='playing'||battle.turn!=='B')return;
+  const id=window.setTimeout(()=>{
+   const ai=autoFleetTurn(battle,'B');
+   const result=resolveFleetNextTurn(battle,'B',ai,Date.now());
+   if(result.ok){
+    setBattle(result.battle);
+    setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
+    setMessage(result.events.slice(-2).map(e=>e.text).join(' · '));
+   }else setMessage(result.reason);
+  },680);
+  return ()=>window.clearTimeout(id);
+ },[battle?.ply,battle?.turn,battle?.phase]);
+ useEffect(()=>{
+  if(!battle||battle.phase!=='playing')return;
+  const id=window.setTimeout(()=>{
+   const result=timeoutFleetTurn(battle,Date.now());
+   if(result.ok){
+    setBattle(result.battle);setChosenCards([]);
+    setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
+    setMessage('Tempo scaduto: turno passato');
+   }
+  },Math.max(50,battle.deadlineMs-Date.now()+60));
+  return ()=>window.clearTimeout(id);
+ },[battle?.ply,battle?.deadlineMs,battle?.phase]);
  function restart(){
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
-  setSelectedVital('command');setChosenCards([]);setMessage('');
+  setSelectedVital('engine');setChosenCards([]);setMessage('');
   setLastFx(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
  function unavailable(type,index){
-  if(battle?.phase!=='playing')return 'Partita terminata';
-  const effect=fleetCardEffect(type).kind;
+  if(!battle||battle.phase!=='playing')return 'Partita terminata';
+  if(battle.turn!=='A')return 'Attendi il turno avversario';
   const player=battle.sides.A;
-  if(battle.bossLockedTerrain&&effect==='terrain')return 'Terreno imposto dal boss';
-  const generatorDestroyed=player.ships[0].parts.some(p=>p.id==='generator'&&p.destroyed);
-  if(effect==='repair'&&generatorDestroyed)return 'Generatore distrutto';
-  if(['fusion-twin','fusion-triad'].includes(type)&&readyFleetEscorts(player).length<2)
-   return 'Servono entrambe le scudiere collegate (livello 5)';
-  if(effect==='character'&&!chosenCards.includes(index)){
-   if(player.commander?.until>=battle.round)return 'Personaggio già attivo';
-   if(chosenCards.some(i=>fleetCardEffect(player.hand[i]).kind==='character'))
-    return 'Un solo personaggio alla volta';
-  }
+  if(!type||!card(type))return 'Carta non riconosciuta';
+  const role=cardRole(type);
+  if(role==='character'&&!chosenCards.includes(index)&&
+   player.commander?.untilPly>battle.ply)return 'Personaggio già attivo';
   return '';
  }
  function chooseCard(index){
@@ -237,25 +262,31 @@ export default function OfficialFleetBattle3D({
   if(reason){setMessage(reason);return;}
   setMessage('');
   setChosenCards(old=>old.includes(index)?old.filter(i=>i!==index):
-   old.length<2?[...old,index]:old);
+   old.length<3?[...old,index]:old);
  }
  function fire(){
-  if(!battle||battle.phase!=='playing')return;
+  if(!battle||battle.phase!=='playing'||battle.turn!=='A')return;
   const target=battle.sides.B.ships[0];
   const partId=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?
    selectedVital:target.parts.find(p=>!p.destroyed)?.id;
   if(!partId){setMessage('Nessun componente disponibile');return;}
-  const enemyOrder=selectFleetAiOrder(battle);
-  const result=resolveFleetCardRound(battle,
-   {shipIndex:0,partId,cards:chosenCards},enemyOrder,Date.now());
+  const result=resolveFleetNextTurn(battle,'A',
+   {partId,cards:chosenCards},Date.now());
   if(!result.ok){setMessage(result.reason);return;}
-  setBattle(result.battle);
-  setChosenCards([]);
+  setBattle(result.battle);setChosenCards([]);
   setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
-  setMessage(result.events.map(e=>e.text).join(' · '));
+  setMessage(result.events.slice(-2).map(e=>e.text).join(' · '));
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
-  if(!result.battle.sides.B.ships[0].parts.find(p=>p.id===partId&&!p.destroyed))
+  if(!result.battle.sides.B.ships[0].parts.some(p=>p.id===partId&&!p.destroyed))
    if(nextTarget)setSelectedVital(nextTarget.id);
+ }
+ function passTurn(){
+  if(!battle||battle.phase!=='playing'||battle.turn!=='A')return;
+  const result=resolveFleetNextTurn(battle,'A',
+   {cards:[],partId:null,pass:true},Date.now());
+  if(!result.ok){setMessage(result.reason);return;}
+  setBattle(result.battle);setChosenCards([]);
+  setMessage('Turno concluso');
  }
  async function leave(){
   if(busy||submitting.current)return;
