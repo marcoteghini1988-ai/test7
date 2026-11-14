@@ -80,6 +80,43 @@
       "role": "attack",
       "origin": "individual-painting-crop",
       "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-083",
+      "role": "defense",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-082",
+      "role": "defense",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-084",
+      "role": "defense",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-018",
+      "role": "attack",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-006",
+      "role": "attack",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
+    },
+    {
+      "id": "gen-052",
+      "role": "attack",
+      "origin": "individual-painting-crop",
+      "textAndBordersFromOfficialSvg": true
     }
-  ]
+  ],
+  "generatedArtwork": 18
 }
