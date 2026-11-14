@@ -23,7 +23,7 @@ test('ingresso ufficiale: plancia 3D originale con nuovo motore e 120 settori',(
  assert.match(bridge,/<MountedWeapons/);
  assert.match(bridge,/arena_titanio_9x16\.webp/);
  assert.match(bridge,/OfficialLiveBattle3D\.css/);
- assert.match(bridge,/resolveFleetCardRound/);
+ assert.match(bridge,/resolveFleetNextTurn/);
 });
 
 test('arena LIVE 450×800: la scala conserva il 9:16 su telefoni',()=>{
