@@ -127,3 +127,20 @@ test('119 Attacchi: 6 dipinti HD e 113 fronti vettoriali, formato 2:3',()=>{
  assert.equal(signatures.size,113,'Illustrazioni vettoriali duplicate');
  assert.ok(motifs.size>=9,'Motivi insufficienti');
 });
+
+
+test('Quattro difese reali hanno illustrazioni HD sincronizzate con la sorgente',()=>{
+ const ids=['gen-071','gen-092','gen-106','gen-116'];
+ for(const id of ids){
+  const card=generalData.carte.find(c=>c.id===id);
+  assert.equal(card?.sottotipo,'Difesa',id);
+  const svg=readFileSync(resolve('public/assets/fleet-next-cards',id+'.svg'),'utf8');
+  const webp=readFileSync(resolve('public/assets/fleet-card-illustrations',id+'.webp'));
+  const encoded=svg.match(/href="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/);
+  assert.ok(encoded,'Illustrazione non incorporata '+id);
+  assert.ok(Buffer.from(encoded[1],'base64').equals(webp),'Immagine non aggiornata '+id);
+  assert.ok(svg.includes('data-hd-art="'+id+'"'));
+  assert.ok(svg.includes('width="512" height="768"'));
+  assert.ok(svg.includes('stroke="#37ceff"'),'Colore ruolo non blu '+id);
+ }
+});
