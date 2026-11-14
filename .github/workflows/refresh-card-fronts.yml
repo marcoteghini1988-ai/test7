@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/generate-fleet-card-art.mjs'
+      - 'public/assets/fleet-card-illustrations/**'
       - '.github/workflows/refresh-card-fronts.yml'
   workflow_dispatch:
 permissions:

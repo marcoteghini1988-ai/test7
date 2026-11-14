@@ -31,3 +31,6 @@ Altre 3 carte Difesa: gen-083, gen-082, gen-084. Altre 3 carte Attacco: gen-018,
 
 ## Regola grafica confermata — niente nome del gioco sulle carte
 Nessuna delle **379 carte** contiene la scritta «Eclissi Stellare» nel fronte SVG. Il marchio va in Home e nelle altre schermate del gioco, non sulle carte. Le carte mostrano solo nome, illustrazione, funzione, effetto e rarità. Formato invariato 512×768 verticale (2:3). Il generatore e il controllo del catalogo impediscono il ritorno della scritta.
+
+## Aggiornamento illustrativo — 14 novembre 2026
+**Stato verificabile dopo questo lotto: 42/379 carte con illustrazioni WebP**, 337 ancora vettoriali. Aggiunte e integrate **gen-055 Crinale di Plasma (Attacco, Epica), gen-067 Lancia degli Eoni (Attacco, Leggendaria), gen-079 Finta Difensiva (Difesa, Comune), gen-117 Specchio dell’Abisso (Difesa, Leggendaria)**. Per ogni carta sono stati inseriti il WebP originale e il fronte SVG 512×768 con il disegno incorporato. Le illustrazioni includono soltanto la scena ritagliata, senza titolo/effetto inventati né marchio del gioco; la cornice ufficiale conserva il colore funzione e la finitura rarità. Proseguire dai file mancanti segnalati da `npm run check:card-art`.
