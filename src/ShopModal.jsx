@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { OFFICIAL_NUMERIC_BACK_IDS, officialNumericDeckBackName, officialNumericDeckBackPath } from './officialDeckBackArt.js';
 import { TACTICAL_MODULE_CARDS, moduleCardType } from './tacticalEquipmentCards.js';
 import { fleetAdvancedCardProfile } from './fleetSpecialProfiles.js';
-import SpecialDeckPanel from './SpecialDeckPanel.jsx';
+import FleetCollectionWorkshop from './FleetCollectionWorkshop.jsx';
 import { officialSpecialArtPath } from './officialSpecialCardArt.js';
 import { playSound } from './audio';
 import {activeNumericBossAbilities,numericBossDeck} from './bossNumericDecks.js';
@@ -38,7 +38,7 @@ const UPGRADE_PILOT_REQS = Object.freeze({
 
 const SHOP_TABS = [
   { id: 'ships', label: 'Navi', icon: '🛸' },
-  { id: 'decks', label: 'Mazzo speciale', icon: '🃏' },
+  { id: 'decks', label: 'Carte e mazzi', icon: '🃏' },
   { id: 'abilities', label: 'Moduli', icon: '⚡' },
   { id: 'resources', label: 'Risorse', icon: '💎' }
 ];
@@ -238,20 +238,8 @@ export default function ShopModal({
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'hidden', paddingRight: '2px', position: 'relative', zIndex: 5 }}>
           {activeTab === 'ships' && <ShipShopPanel stardust={stardust} onUpgradeShip={onUpgradeShip}/>}
           
-          {/* TAB: MAZZO SPECIALE IN USO NELLA NUOVA BATTAGLIA */}
-          {activeTab === 'decks' && (
-            <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
-              <p style={{fontSize:'0.72rem',color:'#c9e4fa',lineHeight:1.45,
-                padding:'10px',border:'1px solid #41678b',borderRadius:'8px',
-                background:'rgba(5,18,38,0.75)'}}>
-                Il nuovo combattimento utilizza soltanto 24 carte speciali.
-                Qui puoi costruire il mazzo e aprire i pacchetti ottenuti in campagna.
-                I vecchi mazzi numerici rimangono nei salvataggi storici,
-                ma non vengono piu venduti o equipaggiati per questa modalita.
-              </p>
-              <SpecialDeckPanel />
-            </div>
-          )}
+          {/* CARTE DELLA NUOVA FLOTTA — usa la stessa collezione del duello 3D. */}
+          {activeTab === 'decks' && <FleetCollectionWorkshop/>}
 
           {/* TAB 4: MODULI */}
           {activeTab === 'abilities' && (
