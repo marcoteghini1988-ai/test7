@@ -28,3 +28,6 @@ Aggiornate 9 carte **Difesa**: gen-072, gen-073, gen-074, gen-075, gen-076, gen-
 
 ## Secondo lotto aggiuntivo — 6 artwork pittorici
 Altre 3 carte Difesa: gen-083, gen-082, gen-084. Altre 3 carte Attacco: gen-018, gen-006, gen-052. Immagini WebP 876×620 incorporate in SVG verticali 512×768. Nessuna modifica alle regole. Stato aggiornato e verificabile con `npm run check:card-art`: **38 HD / 379 totali; 341 ancora vettoriali**.
+
+## Regola grafica confermata — niente nome del gioco sulle carte
+Nessuna delle **379 carte** contiene la scritta «Eclissi Stellare» nel fronte SVG. Il marchio va in Home e nelle altre schermate del gioco, non sulle carte. Le carte mostrano solo nome, illustrazione, funzione, effetto e rarità. Formato invariato 512×768 verticale (2:3). Il generatore e il controllo del catalogo impediscono il ritorno della scritta.

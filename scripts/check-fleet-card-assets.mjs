@@ -27,6 +27,7 @@ const perFunction={},hdIds=[],missing=[];
 for(const c of cards){
  const id=c.id,svg=readFileSync(resolve(faces,id+'.svg'),'utf8'),type=kind(c);
  if(!svg.includes('width="512" height="768"')||!svg.includes('viewBox="0 0 512 768"'))fail('Formato non 2:3 '+id);
+ if(svg.includes('ECLISSI STELLARE'))fail('Marchio non consentito sulla carta '+id);
  const file=resolve(illustrations,id+'.webp'),hd=existsSync(file);
  const role=perFunction[type]??{total:0,hd:0,pending:0};
  role.total++;

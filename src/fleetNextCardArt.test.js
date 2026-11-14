@@ -32,6 +32,7 @@ test('I 379 fronti nuovi esistono, distinti e di dimensioni coerenti',()=>{
   assert.ok(svg.startsWith('<svg xmlns="http://www.w3.org/2000/svg"'));
   assert.ok(svg.trimEnd().endsWith('</svg>'),c.id);
   assert.match(svg,/width="512" height="768"/,c.id);
+  assert.ok(!svg.includes('ECLISSI STELLARE'),'Il marchio non deve apparire nella carta: '+c.id);
   const rarity=c.rarita||c.rarityDraft;
   assert.ok(svg.includes('opacity="'+rarityGlow[rarity]+'" filter="url(#rimGlow)"'),'Rarità senza livello luminoso: '+c.id);
   assert.ok(!svg.includes('#ffc447')&&!svg.includes('#bb60ff'),'Colori rarità non ammessi: '+c.id);
