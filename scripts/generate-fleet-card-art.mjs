@@ -335,7 +335,7 @@ function approvedOverlay(card){
  const meta=approvedCards.get(card.id);
  const full=resolve(ROOT,'public/assets/fleet-approved-fronts',card.id+'.webp');
  if(!meta){if(existsSync(full))throw Error('Artwork approvato privo di manifest '+card.id);return '';}
- if(meta.name!==card.name||meta.role!==C[card.kind].name||meta.rarity!==card.rarity||meta.effect!==card.effect)
+ if(meta.name!==card.name||meta.role.toUpperCase()!==C[card.kind].name||meta.rarity!==card.rarity||meta.effect!==card.effect)
   throw Error('Catalogo modificato dopo approvazione: ricontrollare '+card.id);
  if(!existsSync(full))throw Error('Fronte approvato mancante '+card.id);
  return '<image data-approved-front="'+esc(card.id)+'" x="0" y="0" width="512" height="768" preserveAspectRatio="none" href="data:image/webp;base64,'+
