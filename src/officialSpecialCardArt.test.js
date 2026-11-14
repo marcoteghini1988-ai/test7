@@ -65,3 +65,17 @@ test('Le 78 illustrazioni con cartiglio riportano nomi e ruoli reali, non FUSION
  }
  assert.equal(checked,78);
 });
+
+test('Le 12 carte Personaggio e i 4 Terreni hanno un fronte reale anche nella battaglia 3D',()=>{
+ for(const type of Object.keys(BOSS_CHARACTER_CATALOG)){
+  const path=officialSpecialArtPath(type);
+  assert.equal(path,BOSS_CHARACTER_CATALOG[type].imagePath);
+  assert.ok(existsSync(resolve('public',path.slice(1))),type);
+ }
+ for(const type of Object.keys(PVP_TERRAIN_CATALOG)){
+  const path=officialSpecialArtPath(type);
+  assert.equal(path,PVP_TERRAIN_CATALOG[type].imagePath);
+  assert.ok(existsSync(resolve('public',path.slice(1))),type);
+ }
+ assert.equal(officialSpecialArtPath('id-inesistente'),null);
+});
