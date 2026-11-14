@@ -165,7 +165,7 @@ function applyCard(b,side,opponent,id,ctx,events){
  const c=card(id),role=cardRole(id),mother=side.ships[0];
  if(!c)return;
  const families=fams(c),power=effectStrength(c,side);
- const at=txt=>events.push(emit(b,ctx.who,'card',c.nome||c.name+' · '+txt,{cardId:id}));
+ const at=txt=>events.push(emit(b,ctx.who,'card',(c.nome||c.name)+' · '+txt,{cardId:id}));
  if(role==='terrain'){
   const active=activateTerrain(b.terrain,id,b.ply,ctx.who,{boss:!!b.bossId,bossOverride:true});
   if(active.ok){b.terrain=active.terrain;ctx.terrainChanged=true;at('Terreno attivato: '+b.terrain.id);}
