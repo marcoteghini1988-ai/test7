@@ -179,3 +179,18 @@
 @media (prefers-reduced-motion:reduce){
  .es-math-scope .f3d-original-arena .live-hand-special:after{animation:none}
 }
+
+/* Anche il distintivo visibile sulle carte piccole usa la rarita' vera.
+   In nessun caso l'ambra del Supporto viene scambiata per rarita' leggendaria. */
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Comune"] .live-card-rarity{
+ border-color:#ccd8e4;color:#f5f9ff;background:linear-gradient(135deg,#35465d,#101a27);
+ box-shadow:0 0 4px #dbe9fa77}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Rara"] .live-card-rarity{
+ border-color:#56e9ff;color:#deffff;background:linear-gradient(135deg,#136b8a,#071c36);
+ box-shadow:0 0 5px #32dfff99}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"] .live-card-rarity{
+ border-color:#dba1ff;color:#f6e0ff;background:linear-gradient(135deg,#633293,#170c39);
+ box-shadow:0 0 6px #c76bffaa}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"] .live-card-rarity{
+ border-color:#ffdb79;color:#fff5ca;background:linear-gradient(135deg,#8a5b11,#281b07);
+ box-shadow:0 0 8px #ffd36bb0}
