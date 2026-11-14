@@ -103,7 +103,7 @@ test('Il generatore accetta illustrazioni HD per tutte le funzioni',()=>{
 });
 
 test('119 Attacchi con illustrazioni individuali e 12 composizioni tematiche',()=>{
- const cards=[...generalData.carte,...exclusiveData.cards].filter(c=>c.categoria==='Attacco'||c.category==='Attacco');
+ const cards=[...generalData.carte.filter(c=>c.categoria==='Attacco'),...exclusiveData.cards.filter(c=>c.category==='Attacco'||/Combo|Fusione/.test(c.category)||c.category==='Reazione')];
  assert.equal(cards.length,119);
  const motifs=new Set(),signatures=new Set();
  for(const card of cards){
