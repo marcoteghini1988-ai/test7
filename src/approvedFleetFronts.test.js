@@ -6,10 +6,10 @@ import general from './fleetNext/catalogGeneral.json' with {type:'json'};
 import exclusive from './fleetNext/catalogExclusive.json' with {type:'json'};
 const byId=new Map([...general.carte,...exclusive.cards].map(x=>[x.id,x]));
 const root=resolve('public/assets/fleet-approved-fronts');
-test('Lotto 01: dieci fronti approvati identici ai sorgenti e fedeli al catalogo',()=>{
+test('Lotti 01 e 02: venti fronti approvati identici ai sorgenti e fedeli al catalogo',()=>{
  const manifest=JSON.parse(readFileSync(resolve(root,'manifest.json'),'utf8'));
- assert.equal(manifest.cards.length,10);
- assert.equal(new Set(manifest.cards.map(x=>x.id)).size,10);
+ assert.equal(manifest.cards.length,20);
+ assert.equal(new Set(manifest.cards.map(x=>x.id)).size,20);
  for(const meta of manifest.cards){
   const c=byId.get(meta.id);
   assert.ok(c,'ID ufficiale mancante '+meta.id);

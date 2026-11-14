@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "src/fleetNext/catalogGeneral.json + src/fleetNext/catalogExclusive.json",
-  "approval": "10 fronti approvati dall'utente il 14 novembre 2026",
+  "approval": "Lotto 01: 10 fronti confermati il 14 novembre 2026; Lotto 02: ulteriori 10 Difesa Comune confermati nella conversazione successiva.",
   "format": "1024x1536 WebP (2:3)",
   "cards": [
     {
@@ -93,6 +93,96 @@
       "effect": "La prima intercettazione di attacco multiplo infligge +1 resistenza alla scudiera, senza trapassare il colpo.",
       "designStatus": "proposta_da_bilanciare_non_implementata",
       "asset": "public/assets/fleet-approved-fronts/gen-245.webp"
+    },
+    {
+      "id": "gen-072",
+      "name": "Schivata d'Emergenza",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Con Motori operativi, tenta di spostare sul primo vitale non scelto il prossimo colpo singolo; fallisce contro una mira indeviabile.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-072.webp"
+    },
+    {
+      "id": "gen-073",
+      "name": "Scorta in Allerta",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Se possiedi una scudiera collegata, il suo prossimo intercetto consuma 1 resistenza in meno, minimo 1; altrimenti proteggi una tua marca di mira.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-073.webp"
+    },
+    {
+      "id": "gen-074",
+      "name": "Piastre di Riserva",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "La prima riparazione successiva su un vitale fratturato concede una parata leggera fino al prossimo round.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-074.webp"
+    },
+    {
+      "id": "gen-075",
+      "name": "Velo di Poppa",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Quando il nemico sceglie Motori come bersaglio, puoi ridurre la priorità di mira di un livello prima del tiro.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-075.webp"
+    },
+    {
+      "id": "gen-076",
+      "name": "Protocollo di Guardia",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Il prossimo colpo diretto a una scudiera subisce una riduzione leggera se la sua madre mantiene il Generatore funzionante.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-076.webp"
+    },
+    {
+      "id": "gen-077",
+      "name": "Ancora di Campo",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Una deviazione forzata non può spostare il tuo prossimo colpo o la tua prossima difesa per un solo round.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-077.webp"
+    },
+    {
+      "id": "gen-078",
+      "name": "Scudo di Emergenza",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Se non hai scudiere in campo, evita una volta una marca avversaria contro un vitale integro; non elimina il colpo fisico in arrivo.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-078.webp"
+    },
+    {
+      "id": "gen-080",
+      "name": "Paraurti di Scafo",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Quando subisci un colpo reale su una scudiera, puoi consumare una carica difensiva per ridurne di 1 il danno in resistenza.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-080.webp"
+    },
+    {
+      "id": "gen-081",
+      "name": "Doppio Rinforzo",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Una protezione normale può essere spostata dal Generatore ai Motori prima della risoluzione; dura soltanto un attacco.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-081.webp"
+    },
+    {
+      "id": "gen-082",
+      "name": "Barriera Locale",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Protegge un singolo vitale indicato con una parata, senza creare uno scudo generale della nave.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-082.webp"
     }
   ]
 }
