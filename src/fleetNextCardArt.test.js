@@ -101,3 +101,20 @@ test('Il generatore accetta illustrazioni HD per tutte le funzioni',()=>{
  assert.ok(script.includes('function artScene(c,seed)'));
  assert.ok(script.includes('const rand=rng(seed^0x894ec321)'),'Fallback vettoriale ancora disponibile');
 });
+
+test('119 Attacchi con illustrazioni individuali e 12 composizioni tematiche',()=>{
+ const cards=[...generalData.carte,...exclusiveData.cards].filter(c=>c.categoria==='Attacco'||c.category==='Attacco');
+ assert.equal(cards.length,119);
+ const motifs=new Set(),signatures=new Set();
+ for(const card of cards){
+  const svg=readFileSync(resolve('public/assets/fleet-next-cards',card.id+'.svg'),'utf8');
+  assert.ok(svg.includes('data-attack-id="'+card.id+'"'),card.id);
+  assert.ok(svg.includes('width="512" height="768"'),card.id);
+  assert.ok(svg.includes('stroke="#ff594c"'),card.id);
+  const motif=svg.match(/data-attack-scene="([^"]+)"/),sign=svg.match(/data-attack-signature="([^"]+)"/);
+  assert.ok(motif&&sign,card.id);
+  motifs.add(motif[1]);signatures.add(sign[1]);
+ }
+ assert.equal(signatures.size,119,'Duplicati in Attacco');
+ assert.ok(motifs.size>=9,'Temi insufficienti');
+});

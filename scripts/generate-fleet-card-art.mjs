@@ -113,6 +113,59 @@ function terrainScene(c,seed){
  }
  return `<g data-terrain="${id}" data-illustration="unique-scene">${s}</g>`;
 }
+function attackArtScene(c,seed){
+ const r=rng(seed^0x78b3c99a),nm=(c.name||"").toLowerCase();
+ const specials={
+ "gen-001":"precision","gen-004":"heat","gen-012":"plasma",
+ "gen-032":"ricochet","gen-037":"vortex","gen-046":"torpedo",
+ "gen-051":"siege","gen-056":"quartz","gen-063":"phase",
+ "gen-065":"absolute","gen-067":"eon","gen-070":"comet"
+ };
+ let style=specials[c.id]||
+ (/corrosi|abrasiv|frattura|traccia termica|incisione/.test(nm)?"heat":
+ /plasma|fiamma|fornace/.test(nm)?"plasma":
+ /laser|mirino|ottica|mira|calibrat|tracciante/.test(nm)?"precision":
+ /silur|torpedo|granata|capsula|proiettile/.test(nm)?"torpedo":
+ /rimbalzo|biforcat|triangolat|gemelli|doppio|ritorno/.test(nm)?"ricochet":
+ /spirale|impulso|ion|rifrazione/.test(nm)?"vortex":
+ /quarzo|lancia|perfor|martello/.test(nm)?"quartz":
+ /fase|fantasma|finta|nebbia|occult/.test(nm)?"phase":
+ /assedio|cannone|artiglieria|batteria|salva|raffica/.test(nm)?"siege":
+ /orbita|spinta|rotta|motore|veloc/.test(nm)?"comet":
+ ["precision","heat","plasma","ricochet","vortex","torpedo","siege","quartz","phase","absolute","eon","comet"][seed%12]);
+ const hull=(x,y,sc=1,rot=0)=>`<g transform="translate(${x} ${y}) rotate(${rot}) scale(${sc})">
+  <path d="M-117 16L-82 -32L-42 -30L-17 -57L24 -53L62 -22L109 -11L122 12L75 28L18 24L-17 55L-48 24L-100 28Z" fill="url(#atkSteel)" stroke="#bed0de" stroke-width="3"/>
+  <path d="M-97 8L-44 -5L21 -45L67 1L105 12L16 15L-17 43L-40 17Z" fill="#4e6681" stroke="#8faac6" stroke-width="2"/>
+  <path d="M-98 6L-30 7L51 10" stroke="#ff6545" stroke-width="6" fill="none"/>
+  <path d="M-114 1L-151 -8L-139 6L-151 22L-109 19Z" fill="#ff6748" filter="url(#beamGlow)"/>
+  <path d="M-27 -19L-18 -38L13 -37L35 -15Z" fill="#a8bbcb"/>
+ </g>`;
+ const ring=(cx,cy,rad,color="#ff7a54")=>`<g fill="none" stroke="${color}"><circle cx="${cx}" cy="${cy}" r="${rad}" stroke-width="3" stroke-dasharray="22 9 5 9"/><circle cx="${cx}" cy="${cy}" r="${rad*.6}" stroke-width="2"/><path d="M${cx-rad-18} ${cy}H${cx+rad+18}M${cx} ${cy-rad-18}V${cy+rad+18}" stroke-width="1.8"/></g>`;
+ const beam=(x,y,xx,yy,color="#ff5e3a",w=7)=>`<path d="M${x} ${y}L${xx} ${yy}" stroke="${color}" stroke-width="${w*2}" opacity=".75" filter="url(#beamGlow)"/><path d="M${x} ${y}L${xx} ${yy}" stroke="${color}" stroke-width="${w}"/><path d="M${x} ${y}L${xx} ${yy}" stroke="#fff0c8" stroke-width="2"/>`;
+ const blast=(x,y)=>`<circle cx="${x}" cy="${y}" r="47" fill="#f85230" opacity=".36" filter="url(#beamGlow)"/><circle cx="${x}" cy="${y}" r="12" fill="#fff4cc"/><path d="M${x-50} ${y}H${x+50}M${x} ${y-50}V${y+50}M${x-35} ${y-35}L${x+35} ${y+35}M${x-35} ${y+35}L${x+35} ${y-35}" stroke="#ff9b5e" stroke-width="3"/>`;
+ const debris=Array.from({length:22},(_,i)=>{const x=48+r()*412,y=236+r()*268,a=2+r()*9;return `<path d="M${x} ${y}l${a} -${a*.6}l${a*.6} ${a}l-${a*.9} ${a*.6}Z" fill="${i%3?"#9bacc3":"#f47857"}" opacity="${.2+r()*.63}"/>`}).join("");
+ let effect="";
+ const px=375+(seed%31)-15,py=320+(seed%61)-30;
+ const left=136+(seed%43)-21,ly=400+(seed%39)-20;
+ switch(style){
+ case "precision":effect=`${hull(left,ly,.73,-12)}${hull(px+9,py,.34,27)}${ring(px,py,53)}${beam(left+54,ly-13,px,py,"#ff6b43",7)}`;break;
+ case "heat":effect=`${hull(259,346,1.09,-17)}<path d="M70 449Q227 412 337 297T468 257" stroke="#ff3b19" stroke-width="24" fill="none" filter="url(#beamGlow)"/><path d="M70 449Q227 412 337 297T468 257" stroke="#fff2b8" stroke-width="5" fill="none"/>${blast(343,300)}`;break;
+ case "plasma":effect=`${hull(left,ly,.74,7)}${hull(px+30,py,.31,35)}${[0,1,2].map(i=>`<path d="M${left+45} ${ly+i*11-24}Q${235+i*22} ${274+i*40} ${px} ${py}" stroke="${i%2?"#f347bf":"#ff683c"}" stroke-width="${12-i*3}" fill="none" filter="url(#beamGlow)"/>`).join("")}${blast(px,py)}`;break;
+ case "ricochet":effect=`${hull(left,ly,.74,-15)}${hull(px+22,py-41,.36,30)}<path d="M213 391L284 321L${px} ${py-41}" stroke="#ff6f42" stroke-width="10" fill="none" filter="url(#beamGlow)"/><path d="M238 312Q282 269 323 314L327 364Q284 392 241 350Z" fill="#3fafff" opacity=".24" stroke="#79ecff" stroke-width="5"/>${ring(284,326,36,"#72dcff")}`;break;
+ case "vortex":effect=`${hull(left,ly,.72,10)}${hull(px+28,py,.3,-10)}${[0,1,2,3,4].map(i=>`<ellipse cx="${238+i*25}" cy="${373-i*14}" rx="${27+i*10}" ry="${11+i*12}" transform="rotate(-22 ${238+i*25} ${373-i*14})" fill="none" stroke="${i%2?"#ff885c":"#ea426d"}" stroke-width="${3+i*.8}" opacity=".84"/>`).join("")}${beam(184,397,px,py)}`;break;
+ case "torpedo":effect=`${hull(left,ly,.7,5)}${hull(px+40,py-31,.32,28)}<path d="M100 473Q226 450 326 330" stroke="#ff6b30" stroke-width="28" fill="none" filter="url(#beamGlow)"/><path d="M117 459Q242 436 331 322" stroke="#fff3ce" stroke-width="4" fill="none"/><g transform="translate(344 318) rotate(-38)"><path d="M-46 16L20 -12L55 0L18 12Z" fill="url(#atkSteel)" stroke="#ffb07e" stroke-width="3"/><path d="M-45 0L-89 -15L-76 5L-92 17Z" fill="#ff5728"/></g>${blast(px+32,py-31)}`;break;
+ case "siege":effect=`${hull(122,432,.76,-8)}${hull(284,418,.48,8)}${hull(px+29,py-22,.34,20)}${beam(175,420,px+24,py-18)}${beam(312,406,px+23,py-18)}${beam(89,415,px+23,py-18,"#ffab62",6)}${blast(px+24,py-18)}`;break;
+ case "quartz":effect=`${hull(left,ly,.78,-11)}${hull(px+15,py-17,.35,13)}${beam(182,380,px,py,"#ff763e",8)}${Array.from({length:16},(_,i)=>{let xx=249+r()*200,yy=248+r()*164,z=7+r()*18;return `<path d="M${xx} ${yy-z}L${xx+z/2} ${yy}L${xx} ${yy+z}L${xx-z/2} ${yy}Z" fill="${i%2?"#83e8ff":"#e1c5ff"}" opacity=".7" stroke="#fff" stroke-width="1.2"/>`}).join("")}${blast(px,py)}`;break;
+ case "phase":effect=`${[0,1,2].map(i=>`<g opacity="${.3+i*.25}" transform="translate(${i*14} ${-i*10})">${hull(left,ly,.7,-20)}</g>`).join("")}${hull(px+30,py-13,.3,20)}${[0,1,2].map(i=>`<path d="M${left+40} ${ly-i*11}Q${268+i*17} ${260-i*9} ${px+10} ${py+i*3}" fill="none" stroke="${i%2?"#9b80ff":"#ff6389"}" stroke-width="6" filter="url(#beamGlow)"/>`).join("")}${ring(px,py,32,"#bfb3ff")}`;break;
+ case "absolute":effect=`${hull(left,ly,.76,-15)}${hull(px+27,py-16,.28,27)}${ring(300,331,111)}${ring(300,331,78)}${ring(300,331,40,"#ffdfbe")}${Array.from({length:8},(_,i)=>{let a=i*Math.PI/4,xx=300+Math.cos(a)*111,yy=331+Math.sin(a)*74;return `<circle cx="${xx}" cy="${yy}" r="5" fill="#ffa676"/>`}).join("")}${beam(184,395,px+16,py-16,"#ff6342",5)}`;break;
+ case "eon":effect=`${hull(left,ly,.78,-8)}${hull(px+26,py-29,.33,23)}<path d="M160 411L${px+26} ${py-29}" stroke="#ff633f" stroke-width="36" filter="url(#beamGlow)"/><path d="M160 411L${px+26} ${py-29}" stroke="#fff4cb" stroke-width="6"/><path d="M${px-5} ${py-24}L${px+58} ${py-62}L${px+32} ${py+7}Z" fill="#ffead1" stroke="#ff7043" stroke-width="4"/>${blast(px+27,py-28)}`;break;
+ case "comet":effect=`<path d="M44 470Q136 281 363 294Q414 274 463 242" stroke="#ff542b" stroke-width="34" fill="none" filter="url(#beamGlow)"/><path d="M44 470Q136 281 363 294Q414 274 463 242" stroke="#fff2ce" stroke-width="5" fill="none"/>${hull(361,293,.71,-38)}${hull(457,247,.24,20)}${blast(448,249)}`;break;
+ }
+ return `<g data-attack-scene="${style}" data-attack-id="${esc(c.id)}" data-attack-signature="${seed.toString(16)}">
+ <defs><linearGradient id="atkSteel" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#829db3"/><stop offset=".25" stop-color="#19283c"/><stop offset=".65" stop-color="#607a93"/><stop offset="1" stop-color="#0c1b2c"/></linearGradient></defs>
+ <path d="M40 518L151 456L263 475L475 379V529H40Z" fill="#1a1d37" opacity=".26"/>
+ ${debris}${effect}</g>`;
+}
 function artScene(c,seed){
  // Il sorgente HD e' opzionale per qualsiasi categoria. Colore funzione,
  // rarita', nome ed effetto restano sempre generati dai cataloghi ufficiali.
@@ -147,11 +200,7 @@ function artScene(c,seed){
   <path d="M${x-rad-19} ${y}H${x+rad+19} M${x} ${y-rad-19}V${y+rad+19}" stroke-width="1" opacity=".5"/>
  </g>`;
  if(c.kind==="attack"){
-  const y=335+(seed%70);
-  details=`${ship(185,y,.72,angle)}
-  <g filter="url(#beamGlow)"><path d="M190 ${y+1} L442 ${y-110} M180 ${y+18} L455 ${y+56}" stroke="${f.base}" stroke-width="9" stroke-linecap="round"/><path d="M190 ${y+1} L442 ${y-110} M180 ${y+18} L455 ${y+56}" stroke="#fff3c2" stroke-width="2.4"/></g>
-  ${rings(395,y-28,75)}<circle cx="404" cy="${y-23}" r="26" fill="${f.base}" opacity=".21"/>
-  <path d="M382 ${y-23}l23 -34l-6 27l35 7l-32 4l12 35z" fill="#ffcf74" opacity=".85"/>`;
+  details=attackArtScene(c,seed);
  }else if(c.kind==="defense"){
   details=`${ship(cx,cy,.71,angle)}<ellipse cx="${cx}" cy="${cy}" rx="159" ry="127" fill="${f.base}" opacity=".12" stroke="${f.soft}" stroke-width="6"/>
   <ellipse cx="${cx}" cy="${cy}" rx="174" ry="140" fill="none" stroke="${f.base}" stroke-width="8" opacity=".3" filter="url(#beamGlow)"/>
