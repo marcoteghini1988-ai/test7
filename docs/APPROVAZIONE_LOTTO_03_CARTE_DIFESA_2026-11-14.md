@@ -1,49 +1,46 @@
-# Eclissi Stellare — Lotto 03 di carte Difesa approvato
+# Eclissi Stellare — Lotto 03: dieci carte Difesa confermate
 
-**Conferma utente:** 14 novembre 2026, nella conversazione successiva alla proposta del Lotto 03.
-**Repository ufficiale:** `marcoteghini1988-ai/test7`, ramo `main`.
-**Decisione:** le 10 carte mostrate nell'anteprima del Lotto 03 sono approvate per l'integrazione. Non occorrono ulteriori approvazioni di design per queste versioni.
+**Data conferma:** 14 novembre 2026. **Riferimento visivo definitivo:** l'immagine caricata `Eclissi_Lotto03_10_Carte_MOBILE.jpg` (montaggio di 10 fronti approvati).
 
-## Identità delle 10 carte approvate
+## Identità corrette — lette direttamente dall'immagine e confrontate con il catalogo
 
-| ID | Nome | Funzione | Rarità |
-|---|---|---|---|
-| gen-081 | Doppio Rinforzo | Difesa | Comune |
-| gen-082 | Barriera Locale | Difesa | Comune |
-| gen-083 | Rotta di Copertura | Difesa | Comune |
-| gen-084 | Vedetta di Scorta | Difesa | Comune |
-| gen-085 | Scafo Rinforzato | Difesa | Comune |
-| gen-087 | Riflesso Breve | Difesa | Comune |
-| gen-089 | Pattuglia Laterale | Difesa | Comune |
-| gen-090 | Serratura Tattica | Difesa | Comune |
-| gen-091 | Reazione di Bordo | Difesa | Comune |
-| gen-092 | Bastione a Settori | Difesa | Rara |
+| Posizione nell'immagine | ID catalogo | Nome esatto | Tipo | Rarità |
+|---|---|---|---|---|
+| 1 sinistra | gen-083 | Rotta di Copertura | Difesa | Comune |
+| 1 destra | gen-084 | Vedetta di Scorta | Difesa | Comune |
+| 2 sinistra | gen-085 | Scafo Rinforzato | Difesa | Comune |
+| 2 destra | gen-086 | Guardia degli Ugelli | Difesa | Comune |
+| 3 sinistra | gen-087 | Riflesso Breve | Difesa | Comune |
+| 3 destra | gen-088 | Diaframma di Piastre | Difesa | Comune |
+| 4 sinistra | gen-089 | Pattuglia Laterale | Difesa | Comune |
+| 4 destra | gen-090 | Serratura Tattica | Difesa | Comune |
+| 5 sinistra | gen-091 | Reazione di Bordo | Difesa | Comune |
+| 5 destra | gen-092 | Bastione a Settori | Difesa | Rara |
 
-Nomi, ruoli, rarità e testi degli effetti si prendono **esattamente** dal catalogo `src/fleetNext/catalogGeneral.json`. L'approvazione grafica non è approvazione di nuove meccaniche o di modifiche al bilanciamento.
+**Correzione del registro precedente:** `gen-081` (Doppio Rinforzo) e `gen-082` (Barriera Locale) NON sono nel Lotto 03 mostrato: appartengono già al Lotto 02. La lista corretta comprende `gen-086` e `gen-088`.
 
-## Specifiche grafiche obbligatorie
+Fonte di verità per testo, nomi, ID, effetto, ruolo e rarità: `src/fleetNext/catalogGeneral.json`. Gli effetti sono ancora marcati `proposta_da_bilanciare_non_implementata` nel catalogo; l'approvazione grafica non modifica lo stato delle meccaniche.
 
-- Formato di ogni fronte: **1024 × 1536** (rapporto **2:3**, rettangolare verticale).
-- Il **colore identifica la funzione**: tutte queste carte devono essere riconoscibili come Difesa.
-- I **riflessi/la finitura** identificano la rarità; `gen-092` deve distinguersi come **Rara**, non come Leggendaria.
-- Nessuna scritta **Eclissi Stellare** sul fronte.
-- Illustrazione diversa e specifica per ogni carta; nessuna immagine casuale.
-- Conservare la plancia 3D, la logica di combattimento e la grafica delle 20 carte precedentemente approvate.
-- Non rigenerare né sovrascrivere i fronti già approvati senza una sorgente **identica** o una nuova indicazione dell'utente.
+## Vincoli artistici da conservare
 
-## Stato verificato all'atto della conferma
+- Carte verticali rettangolari 2:3, fronti finali 1024×1536.
+- Design esattamente nello stile visibile nella panoramica approvata, non immagini casuali.
+- Difesa identificata dal colore blu/ciano; rarità distinta dai riflessi e dalla finitura. Solo `gen-092` reca `RARA`; le altre sono `COMUNE`.
+- Niente marchio `Eclissi Stellare` sui fronti.
+- Tutti i 20 fronti approvati in precedenza sono intoccabili; non modificare Home, arena 3D, navicelle o regole combat.
 
-Sul ramo `main`, il manifest `public/assets/fleet-approved-fronts/manifest.json` contiene **20 fronti approvati** (Lotti 01 e 02). I file `gen-081.webp` e `gen-082.webp` risultano già presenti e protetti nel manifest (parte del Lotto 02). Gli **altri 8 fronti del Lotto 03 non sono ancora nel manifest**. Le illustrazioni di base `public/assets/fleet-card-illustrations/gen-083.webp` ... `gen-092.webp` esistono, ma non vanno confuse con i **fronti completi approvati**.
+## Disponibilità degli asset e qualità
 
-L'anteprima approvata nel dialogo precedente era accompagnata dai file `Eclissi_Lotto03_10_Carte_PANORAMICA.jpg`, `Eclissi_Lotto03_10_Carte_MOBILE.jpg`, `Eclissi_Lotto03_10_Carte_CORRETTE_DA_APPROVARE.zip`. Tali file non risultavano disponibili nella sessione operativa di questa conferma. **Non dichiarare completata l'integrazione finché non sono stati recuperati i fronti esatti**.
+La sola panoramica caricata ha **416×1536 pixel in totale**. Ogni carta occupa circa **201×300 pixel**, quindi è una **anteprima mobile**, non un PNG/WebP HD sorgente. I dieci ritagli ottenibili sono fedeli al montaggio ma non sostituiscono i fronti finali HD di qualità paragonabile ai lotti precedenti. Ingrandirli a 1024×1536 non ripristina i dettagli o il testo originale.
 
-## Integrazione operativa da completare dopo il recupero dei fronti
+Al controllo, nel repository `public/assets/fleet-approved-fronts/manifest.json` risultavano **20 carte approvate** dei Lotti 01 e 02. I 10 ID `gen-083` ... `gen-092` **non risultavano registrati** come fronti completi approvati, benché esistano illustrazioni di base sotto `public/assets/fleet-card-illustrations/` e fronti generati ordinari sotto `public/assets/fleet-next-cards/`.
 
-1. Aprire lo ZIP approvato e verificare per tutti i 10 fronti identità, dimensioni 2:3, qualità, testo, rarità e funzione.
-2. Confrontare `gen-081` e `gen-082` con i due fronti già approvati: conservarli se identici, altrimenti gestire l'eventuale differenza senza sostituzioni automatiche.
-3. Caricare gli 8 fronti mancanti (più eventuali sostituzioni effettivamente concordate) sotto `public/assets/fleet-approved-fronts/<ID>.webp`.
-4. Integrare nel manifest i record precisi ricavati dal catalogo, senza alterare i 20 record preesistenti.
-5. Rigenerare le carte mantenendo gli overlay approvati e verificare `npm run check:card-art`, `npm run preflight`, `npm run build`.
-6. Solo dopo esito positivo indicare il conteggio effettivo e il commit di integrazione.
+## Procedura di integrazione ancora aperta
 
-**Attenzione:** Questo file registra l'approvazione e l'inventario, **non** costituisce prova che gli 8 nuovi fronti siano stati inseriti.
+1. Recuperare gli originali separati ad alta risoluzione del Lotto 03 (archivio della precedente chat `Eclissi_Lotto03_10_Carte_CORRETTE_DA_APPROVARE.zip` o esportazioni equivalenti) e confrontarli con questa panoramica.
+2. Controllare per ciascuna carta dimensioni, testi, colore funzione, finitura rarità, identità e artwork.
+3. Inserire i 10 fronti completi in `public/assets/fleet-approved-fronts/<ID>.webp` e aggiungere i 10 record nel manifest, copiando effetto e rarità dal catalogo.
+4. Eseguire il generatore conservando gli overlay approvati, e superare `npm run check:card-art`, `npm run preflight`, `npm run build`.
+5. Solo allora riportare **30/379** fronti HD integrati, citando il commit verificato.
+
+**Stato di questo documento:** conferma corretta e tracciata, **non** certificazione dell'inserimento HD.
