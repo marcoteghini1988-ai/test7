@@ -13,6 +13,15 @@ const btn={background:'#17496b',color:'white',border:'1px solid #79a9c9',
  borderRadius:'6px',padding:'7px 9px',fontSize:'11px',fontWeight:700};
 const small={fontSize:'11px',color:'#a4c7dd'};
 const locale=n=>Number(n||0).toLocaleString('it-IT');
+// Fronte ufficiale del catalogo, identico in Shop, mazzi ed arena.
+function FleetCardArt({id,name,large=false}){
+ const width=large?114:38;
+ return <img src={'/assets/fleet-next-cards/'+id+'.svg'}
+  width={width} height={width*1.5} loading="lazy" decoding="async"
+  alt={'Carta '+name} style={{width,aspectRatio:'2 / 3',height:'auto',display:'block',
+   objectFit:'contain',flexShrink:0,margin:large?'0 auto 7px':undefined}}/>;
+}
+
 export default function FleetCollectionWorkshop(){
  const [inventory,setInventory]=useState(()=>readFleetInventory());
  const [draft,setDraft]=useState(()=>readFleetInventory().deck);
@@ -99,7 +108,8 @@ export default function FleetCollectionWorkshop(){
    <div style={small}>{filtered.length} carte trovate · mostrate fino a 70 per volta</div>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(155px,1fr))',gap:'6px'}}>
     {filtered.slice(0,70).map(c=><div key={c.id} style={box}>
-     <strong>{c.nome}</strong><div style={small}>{c.rarita} · {c.sottotipo}</div>
+     <FleetCardArt id={c.id} name={c.nome} large/>
+      <strong>{c.nome}</strong><div style={small}>{c.rarita} · {c.sottotipo}</div>
      <p style={{...small,minHeight:42,lineHeight:1.3}}>{c.effetto}</p>
      <div style={small}>Possedute: {inventory.owned[c.id]||0} · Limite nel mazzo: {cardCopyLimit(c.id)}</div>
      <div style={{display:'flex',gap:4,marginTop:7}}>
@@ -121,7 +131,8 @@ export default function FleetCollectionWorkshop(){
     <div style={box}>
      <strong>Carte nel mazzo</strong>
      {Object.entries(baseCounts).map(([id,n])=><div key={id} style={{display:'flex',gap:6,alignItems:'center',marginTop:5}}>
-      <span style={{flex:1}}>{GENERAL_CARDS[id]?.nome} ×{n}</span>
+      <FleetCardArt id={id} name={GENERAL_CARDS[id]?.nome||id}/>
+       <span style={{flex:1}}>{GENERAL_CARDS[id]?.nome} ×{n}</span>
       <button style={btn} onClick={()=>remove(id)} aria-label={'Rimuovi '+id}>−</button>
      </div>)}
     </div>
@@ -129,7 +140,8 @@ export default function FleetCollectionWorkshop(){
      <strong>Carte possedute da aggiungere</strong>
      {Object.entries(inventory.owned).filter(([id,n])=>n>0&&GENERAL_CARDS[id]).map(([id,n])=>
       <div key={id} style={{display:'flex',gap:6,alignItems:'center',marginTop:5}}>
-       <span style={{flex:1}}>{GENERAL_CARDS[id].nome} ({baseCounts[id]||0}/{Math.min(n,cardCopyLimit(id))})</span>
+       <FleetCardArt id={id} name={GENERAL_CARDS[id].nome}/>
+        <span style={{flex:1}}>{GENERAL_CARDS[id].nome} ({baseCounts[id]||0}/{Math.min(n,cardCopyLimit(id))})</span>
        <button style={btn} onClick={()=>add(id)} disabled={draft.length>=40||
         (baseCounts[id]||0)>=Math.min(n,cardCopyLimit(id))}>+</button>
       </div>)}
@@ -153,7 +165,12 @@ export default function FleetCollectionWorkshop(){
    <p style={small}>Probabilità per singola carta: Comune 65%, Rara 25%, Epica 8%, Leggendaria 2%.
     Sono escluse le carte esclusive delle navicelle e i Personaggi Boss.</p>
    <button style={btn} onClick={buyPack}>APRI · {PACK_PRICE} Crediti</button>
-   {packResults.length>0&&<p>Estratte: {packResults.map(id=>GENERAL_CARDS[id]?.nome).join(' · ')}</p>}
+   {packResults.length>0&&<div role="status" style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:8}}>
+     {packResults.map((id,i)=><div key={id+'-'+i} style={{maxWidth:125,textAlign:'center'}}>
+      <FleetCardArt id={id} name={GENERAL_CARDS[id]?.nome||id} large/>
+      <span style={small}>{GENERAL_CARDS[id]?.nome}</span>
+     </div>)}
+    </div>}
   </div>}
   {tab==='exclusive'&&<div style={{display:'flex',flexDirection:'column',gap:7}}>
    <label style={small}>Navicella posseduta:
@@ -169,7 +186,8 @@ export default function FleetCollectionWorkshop(){
      const grade=inventory.exclusiveUpgrades[c.id]||1;
      const cost=exclusiveUpgradeCost(grade+1);
      return <div key={c.id} style={box}>
-      <strong>{c.name}</strong><div style={small}>Grado {grade}/3 · {c.category}</div>
+      <FleetCardArt id={c.id} name={c.name} large/>
+       <strong>{c.name}</strong><div style={small}>Grado {grade}/3 · {c.category}</div>
       <p style={small}>{c.effectProposed}</p>
       {grade<3&&<button style={btn} onClick={()=>upgrade(c.id)}>
        POTENZIA · {locale(cost)} Crediti</button>}
