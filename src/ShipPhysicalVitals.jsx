@@ -23,7 +23,7 @@ export default function ShipPhysicalVitals({
  return <>
   <ShipSkin side={side} vessel={physical} imageRef={hullRef}/>
   <div className="official-original-motor-targets" aria-label="Quattro parti distruggibili della nave">
-   {VITAL_IDS.map(vital=>{
+   {VITAL_IDS.filter(vital=>defense.parts[VITAL_TO_ORIGINAL_MOTOR[vital]==='times'?'shieldGenerator':vital]?.unlocked!==false).map(vital=>{
     const part=defense.parts[vital];
     const op=VITAL_TO_ORIGINAL_MOTOR[vital];
     const selectable=side==='enemy'&&canTarget&&part.hp>0;
