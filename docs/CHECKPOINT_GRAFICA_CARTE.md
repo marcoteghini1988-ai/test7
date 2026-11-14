@@ -37,3 +37,6 @@ Nessuna delle **379 carte** contiene la scritta «Eclissi Stellare» nel fronte 
 
 ## Ulteriore lotto di sei Difesa — 14 novembre 2026
 Inserite le illustrazioni pittoriche WebP, tutte con fronte 512×768 e identità azzurra: **gen-085 Scafo Rinforzato; gen-087 Riflesso Breve; gen-089 Pattuglia Laterale; gen-093 Manovra di Nebbia; gen-099 Anello di Intercetto; gen-118 Rotta Intoccabile**. Il dato ufficiale di nome, effetto e rarità rimane nel catalogo JSON. Non è presente la scritta «Eclissi Stellare». **Stato attuale 48/379 HD, 331 ancora vettoriali**. La fase successiva prosegue soltanto dagli ID mancanti rilevati automaticamente da `npm run check:card-art`.
+
+## Nuovo lotto Difesa — 14 novembre 2026, 6 illustrazioni originali
+Aggiunte in `test7/main` sei illustrazioni WebP generate appositamente per: **gen-086 Guardia degli Ugelli**, **gen-088 Diaframma di Piastre**, **gen-090 Serratura Tattica**, **gen-091 Reazione di Bordo**, **gen-094 Scorta Sacrificale**, **gen-095 Sentinella Ritorsiva**. Le scene sono incorporate nei fronti SVG ufficiali 512×768, senza marchio. Nessuna regola di combattimento, plancia o funzione modificata. **Stato: 54/379 con WebP pittorico, 325 vettoriali in attesa.**
