@@ -153,11 +153,14 @@ function OriginalSpecialSlots({side,contents}){
  return <div className={'live-slot-row live-slot-row--'+(side==='A'?'player':'enemy')}>
   {contents.map((type,i)=>{
    const face=type?card(type):null;
-   const art=type&&!GENERAL_CARDS[type]&&!EXCLUSIVE_CARDS[type]?officialSpecialArtPath(type):null;
+   const art=!type?null:(GENERAL_CARDS[type]||EXCLUSIVE_CARDS[type])?
+     '/assets/fleet-next-cards/'+type+'.svg':officialSpecialArtPath(type);
    return <div key={i} className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
     (type?' live-slot--occupied':'')}
     title={face?(face.nome||face.name||type):labels[i]}
-    data-slot-role={i===0?'personaggio':i<=2?'difesa':'attacco'}>
+    data-slot-role={i===0?'personaggio':i<=2?'difesa':'attacco'}
+     data-family={type?cardRole(type):undefined}
+     data-rarity={face?.rarita||face?.rarityDraft||undefined}>
     {art?<img className="f3d-slot-art" src={art} alt="" draggable={false}/>:
      <span>{type?'✧':['♙','◇','◇','✧','✧','✧'][i]}</span>}
     {!type&&<small className="live-slot-role">{labels[i]}</small>}
@@ -170,7 +173,8 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset}){
  const rarity=def?.rarita||def?.rarityDraft||'Comune';
  const description=def?.effetto||def?.effectProposed||'Carta tattica';
  const name=def?.nome||def?.name||type;
- const art=!GENERAL_CARDS[type]&&!EXCLUSIVE_CARDS[type]?officialSpecialArtPath(type):null;
+ const art=!type?null:(GENERAL_CARDS[type]||EXCLUSIVE_CARDS[type])?
+     '/assets/fleet-next-cards/'+type+'.svg':officialSpecialArtPath(type);
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
   style={{'--special-angle':offset*3+'deg','--special-drop':offset**2*1.4+'px'}}
