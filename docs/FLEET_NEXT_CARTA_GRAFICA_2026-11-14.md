@@ -27,3 +27,6 @@ Ogni terreno (`gen-219`, `gen-220`, `gen-221`, `gen-229`, `gen-230`, `gen-231`, 
 
 ## Terreno nel campo 3D
 Oltre ai 10 fronti di carta, sono generati 10 ambienti verticali SVG `public/assets/fleet-terrain-scenes/T01.svg`–`T10.svg`. Il renderer li sovrappone con opacità leggera e `pointer-events:none` all'arena Titanio esistente, **senza sostituire plancia, navicelle, vitali o slot**. L'effetto è visivo; non modifica la logica dei Terreni.
+
+## Illustrazioni pittoriche HD inserite nei 10 Terreni (14/11/2026)
+I 10 ritagli WEBP in `public/assets/fleet-card-illustrations/` provengono dalle illustrazioni generate e sono stati ripuliti dalle intestazioni, cornici e descrizioni di esempio (alcune sbagliate). I fronti ufficiali rimangono tutti SVG verticali **512×768, identici a tutte le altre carte**. Ogni SVG Terreno contiene la propria illustrazione HD incorporata come WEBP inline, così funziona anche in `<img>` e non richiede CSS speciale. I nomi, gli effetti e la rarità sono scritti dal generatore usando i cataloghi JSON: nessuna regola derivata dai concept viene usata nel gioco. `node scripts/generate-fleet-card-art.mjs` rigenera i fronti dal materiale presente nel repository.

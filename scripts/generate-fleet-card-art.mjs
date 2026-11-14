@@ -1,6 +1,6 @@
 // Generatore deterministico, basato esclusivamente sui cataloghi ufficiali (250+129).
 // npm: node scripts/generate-fleet-card-art.mjs
-import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {readFileSync,existsSync,mkdirSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
@@ -114,6 +114,15 @@ function terrainScene(c,seed){
  return `<g data-terrain="${id}" data-illustration="unique-scene">${s}</g>`;
 }
 function artScene(c,seed){
+ // Le immagini HD sono ritagli senza testi. Le regole e i titoli sono dal catalogo JSON.
+ // Incorporazione nel SVG: funziona anche quando la carta viene mostrata con <img src>.
+ if(c.kind==='terrain'){
+  const file=resolve(ROOT,'public/assets/fleet-card-illustrations',c.id+'.webp');
+  if(!existsSync(file))throw new Error('Illustrazione HD mancante: '+c.id);
+  const data=readFileSync(file).toString('base64');
+  return `<g clip-path="url(#artClip)" data-hd-art="${c.id}"><image x="37" y="217" width="438" height="310" preserveAspectRatio="xMidYMid slice" href="data:image/webp;base64,${data}"/></g>`;
+ }
+
  const rand=rng(seed^0x894ec321);
  const f=C[c.kind]||C.support;
  let sky="",details="";

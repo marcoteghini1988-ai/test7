@@ -55,21 +55,29 @@ test('Mano, slot e Shop: rapporto 2:3 e rarita cromata, non dorata',()=>{
  assert.ok(!css.includes('--tier:#ffd36b'));
  assert.ok(shop.includes("aspectRatio:'2 / 3'"));
 });
-test('Dieci Terreni con scene ambientali dedicate, nessun fronte riciclato',()=>{
+test('Dieci Terreni con illustrazioni HD diverse e tutte le regole del catalogo',()=>{
  const terrains=generalData.carte.filter(c=>c.sottotipo==='Terreno');
  assert.equal(terrains.length,10);
- const illustrations=[];
+ const unique=new Set();
  for(const c of terrains){
+  const source=resolve('public/assets/fleet-card-illustrations',c.id+'.webp');
+  assert.ok(existsSync(source),'Arte HD mancante: '+c.id);
+  const binary=readFileSync(source);
+  assert.ok(binary.length>50000,'WEBP troppo piccolo: '+c.id);
+  assert.equal(binary.toString('ascii',0,4),'RIFF',c.id);
+  assert.equal(binary.toString('ascii',8,12),'WEBP',c.id);
   const svg=readFileSync(resolve('public/assets/fleet-next-cards',c.id+'.svg'),'utf8');
-  assert.ok(svg.includes('data-terrain="'+c.id+'"'),'Scenario mancante '+c.id);
-  assert.ok(svg.includes('data-illustration="unique-scene"'),c.id);
-  const group=svg.match(/<g data-terrain="[^"]+" data-illustration="unique-scene">([\s\S]*?)<\/g>/);
-  assert.ok(group,'Ambiente non renderizzato: '+c.id);
-  illustrations.push(group[1]);
-  assert.ok(svg.includes('width="512" height="768"'));
+  assert.ok(svg.includes('width="512" height="768"'),c.id);
+  assert.ok(svg.includes('data-hd-art="'+c.id+'"'),c.id);
+  assert.ok(svg.includes(c.nome),'Titolo ufficiale mancante: '+c.id);
+  const m=svg.match(/href="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/);
+  assert.ok(m,'Immagine non incorporata: '+c.id);
+  assert.ok(Buffer.from(m[1],'base64').equals(binary),'Fonte HD differente: '+c.id);
+  unique.add(m[1].slice(0,400));
  }
- assert.equal(new Set(illustrations).size,10);
+ assert.equal(unique.size,10,'Scene duplicate');
 });
+
 
 test('Dieci scenari grafici Terreno in arena 9:16 senza spostamenti',()=>{
  const bridge=readFileSync(resolve('src/OfficialFleetBattle3D.jsx'),'utf8');
