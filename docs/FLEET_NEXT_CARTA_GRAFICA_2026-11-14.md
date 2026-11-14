@@ -1,3 +1,5 @@
+> **STANDARD OPERATIVO DEFINITIVO (14/11/2026):** leggere prima [`STILE_UFFICIALE_CARTE_APPROVATO.md`](STILE_UFFICIALE_CARTE_APPROVATO.md). **Precisazione su rarità Leggendaria:** il colore della **FUNZIONE** non diventa oro, ma la **cornice esterna e la targa** sono effettivamente **oro cromato** nelle immagini già approvate (`gen-116`, `gen-067`, `gen-245`). Questo rettifica l'affermazione storica «Le Leggendarie NON diventano dorate» qui sotto senza modificare i 30 fronti approvati.
+
 # Eclissi Stellare — sistema definitivo FUNZIONE × RARITÀ
 
 ## Regola
