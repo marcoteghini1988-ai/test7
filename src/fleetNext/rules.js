@@ -6,12 +6,13 @@ import exclusiveData from './catalogExclusive.json';
 
 export const GENERAL_CARDS = Object.freeze(Object.fromEntries(generalData.carte.map(card =>
  [card.id, Object.freeze({...card,kind:card.sottotipo==='Terreno'?'terrain':
-  card.categoria==='Personaggio'?'character':card.categoria==='Difesa'?'defense':
+  card.sottotipo==='Personaggio'?'character':card.sottotipo==='Difesa'?'defense':
   card.categoria==='Attacco'?'attack':card.categoria==='Controllo'?'control':'support'})]
 )));
 export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(exclusiveData.cards.map(card =>
- [card.id,Object.freeze({...card,kind:card.category==='Personaggio'?'character':
-  card.category==='Difesa'?'defense':card.category==='Scudiera 1'||card.category==='Scudiera 2'?'escort':
+ [card.id,Object.freeze({...card,kind:/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
+  /Scudiera|Supporto|Tattica/i.test(card.category)?'support':
+  /Controllo/i.test(card.category)?'control':
   /combo|fusione/i.test(card.category)?'combo':'attack'})]
 )));
 export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(s=>[s.id,Object.freeze(s)])));
