@@ -1,8 +1,8 @@
 // Eclissi Stellare — cataloghi e regole ufficiali del nuovo sistema di flotte.
 // Nessuna dipendenza grafica: i componenti di battaglia e Shop usano gli stessi dati.
 // I contenuti progettati sono importati, ma i loro effetti devono essere validati nel motore.
-import generalData from './catalogGeneral.json';
-import exclusiveData from './catalogExclusive.json';
+import generalData from './catalogGeneral.json' with {type:'json'};
+import exclusiveData from './catalogExclusive.json' with {type:'json'};
 
 export const GENERAL_CARDS = Object.freeze(Object.fromEntries(generalData.carte.map(card =>
  [card.id, Object.freeze({...card,kind:card.sottotipo==='Terreno'?'terrain':
