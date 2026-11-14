@@ -165,8 +165,8 @@ test('Le nuove carte illustrate sono sempre 2:3, con testo e colore della funzio
  }
 });
 
-test('Quattro nuovi fronti HD con nome ufficiale, rarita e colori separati',()=>{
- const ids=['gen-055','gen-067','gen-079','gen-117'];
+test('Dieci nuovi fronti HD con nome ufficiale, rarita e colori separati',()=>{
+ const ids=['gen-055','gen-067','gen-079','gen-117','gen-085','gen-087','gen-089','gen-093','gen-099','gen-118'];
  for(const id of ids){
   const card=generalData.carte.find(c=>c.id===id);
   assert.ok(card&&['Attacco','Difesa'].includes(card.sottotipo),id);
