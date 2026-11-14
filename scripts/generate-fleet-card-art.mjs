@@ -328,7 +328,24 @@ const b=JSON.parse(readFileSync(resolve(ROOT,'src/fleetNext/catalogExclusive.jso
 const cards=[...a.map(c=>normalizeCard(c,'general')),...b.map(c=>normalizeCard(c,'exclusive'))];
 if(cards.length!==379||new Set(cards.map(c=>c.id)).size!==379)throw Error('Catalogo diverso da 379');
 const dest=resolve(ROOT,'public/assets/fleet-next-cards');mkdirSync(dest,{recursive:true});
-for(const card of cards)writeFileSync(resolve(dest,card.id+'.svg'),makeSvg(card));
+
+const approvedManifest=JSON.parse(readFileSync(resolve(ROOT,'public/assets/fleet-approved-fronts/manifest.json'),'utf8'));
+const approvedCards=new Map(approvedManifest.cards.map(c=>[c.id,c]));
+function approvedOverlay(card){
+ const meta=approvedCards.get(card.id);
+ const full=resolve(ROOT,'public/assets/fleet-approved-fronts',card.id+'.webp');
+ if(!meta){if(existsSync(full))throw Error('Artwork approvato privo di manifest '+card.id);return '';}
+ if(meta.name!==card.name||meta.role!==C[card.kind].name||meta.rarity!==card.rarity||meta.effect!==card.effect)
+  throw Error('Catalogo modificato dopo approvazione: ricontrollare '+card.id);
+ if(!existsSync(full))throw Error('Fronte approvato mancante '+card.id);
+ return '<image data-approved-front="'+esc(card.id)+'" x="0" y="0" width="512" height="768" preserveAspectRatio="none" href="data:image/webp;base64,'+
+  readFileSync(full).toString('base64')+'"/>';
+}
+for(const card of cards){
+ const svg=makeSvg(card);
+ writeFileSync(resolve(dest,card.id+'.svg'),svg.replace(/<\/svg>\s*$/,approvedOverlay(card)+'</svg>'));
+}
+
 const terrainOut=resolve(ROOT,'public/assets/fleet-terrain-scenes');
 mkdirSync(terrainOut,{recursive:true});
 for(const [code,id] of Object.entries(TERRAIN_IDS)){

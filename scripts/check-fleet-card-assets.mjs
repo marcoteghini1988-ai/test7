@@ -10,6 +10,13 @@ const cards=[
 const faces=resolve(ROOT,'public/assets/fleet-next-cards');
 const illustrations=resolve(ROOT,'public/assets/fleet-card-illustrations');
 const fail=m=>{throw new Error('[CARTE] '+m)};
+const approvedRoot=resolve(ROOT,'public/assets/fleet-approved-fronts');
+const approvedManifest=JSON.parse(readFileSync(resolve(approvedRoot,'manifest.json'),'utf8'));
+const approvedMap=new Map(approvedManifest.cards.map(item=>[item.id,item]));
+const approvedFiles=readdirSync(approvedRoot).filter(f=>f.endsWith('.webp'));
+if(approvedMap.size!==approvedManifest.cards.length||approvedFiles.length!==approvedMap.size)
+ fail('Fronti approvati duplicati o mancanti');
+
 function kind(c){
  const cat=c.categoria||c.category||'',sub=c.sottotipo||'';
  return sub==='Terreno'?'terrain':sub==='Personaggio'||/Personaggio/i.test(cat)?'character':
@@ -41,11 +48,30 @@ for(const c of cards){
   missing.push({id,name:c.nome||c.name,rarity:c.rarita||c.rarityDraft,kind:type});
   role.pending++;
  }
+
+ const approved=approvedMap.get(id);
+ if(approved){
+  if(approved.name!==(c.nome||c.name)||approved.role!==(c.sottotipo||c.category)||
+   approved.rarity!==(c.rarita||c.rarityDraft)||approved.effect!==(c.effetto||c.effectProposed))
+   fail('Specifiche cambiate dopo approvazione '+id);
+  const full=resolve(approvedRoot,id+'.webp');
+  if(!existsSync(full))fail('WEBP approvato mancante '+id);
+  const content=readFileSync(full);
+  if(content.toString('ascii',0,4)!=='RIFF'||content.toString('ascii',8,12)!=='WEBP')
+   fail('Formato WEBP non valido '+id);
+  const anchor=svg.indexOf('data-approved-front="'+id+'"');
+  if(anchor<0)fail('Fronte approvato non visibile nel gioco '+id);
+  const match=svg.slice(anchor).match(/href="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/);
+  if(!match||!Buffer.from(match[1],'base64').equals(content))
+   fail('Fronte approvato non sincronizzato '+id);
+ }else if(svg.includes('data-approved-front='))fail('Fronte approvato senza manifest '+id);
  perFunction[type]=role;
 }
 if(assets.some(f=>!src.has(f.slice(0,-5))))fail('WebP orfana');
 if(hdIds.length!==assets.length)fail('Conteggio HD divergente');
-const state={total:cards.length,hd:hdIds.length,pending:missing.length,perFunction,
+if(approvedFiles.some(x=>!src.has(x.slice(0,-5))||!approvedMap.has(x.slice(0,-5))))
+ fail('Fronte approvato orfano');
+const state={total:cards.length,hd:hdIds.length,approved:approvedMap.size,pending:missing.length,perFunction,
  next:missing.slice(0,15),updatedFrom:'repository'};
 if(process.argv.includes('--json'))console.log(JSON.stringify(state,null,2));
 else console.log('CARTE: '+state.hd+'/'+state.total+' HD, '+state.pending+' ancora vettoriali; '+Object.entries(perFunction).map(([k,v])=>k+':'+v.hd+'/'+v.total).join(' | '));

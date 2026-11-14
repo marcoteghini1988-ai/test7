@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "source": "src/fleetNext/catalogGeneral.json + src/fleetNext/catalogExclusive.json",
+  "approval": "10 fronti approvati dall'utente il 14 novembre 2026",
+  "format": "1024x1536 WebP (2:3)",
+  "cards": [
+    {
+      "id": "gen-001",
+      "name": "Colpo Calibrato",
+      "role": "Attacco",
+      "rarity": "Comune",
+      "effect": "Il prossimo colpo reale della madre contro un vitale integro ottiene mira stabile: se il bersaglio resta valido non può essere deviato da una manovra di mobilità ordinaria.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-001.webp"
+    },
+    {
+      "id": "gen-032",
+      "name": "Cannone a Rimbalzo",
+      "role": "Attacco",
+      "rarity": "Rara",
+      "effect": "Se una scudiera assorbe la salva, la madre ottiene una carica per il prossimo tiro contro una diversa scudiera viva; nessun danno passa alla madre nemica.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-032.webp"
+    },
+    {
+      "id": "gen-055",
+      "name": "Crinale di Plasma",
+      "role": "Attacco",
+      "rarity": "Epica",
+      "effect": "Contro un componente già corroso, il prossimo colpo reale può trasformare una difesa di riduzione in una marca di energia consumata; rispetta i baluardi.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-055.webp"
+    },
+    {
+      "id": "gen-067",
+      "name": "Lancia degli Eoni",
+      "role": "Attacco",
+      "rarity": "Leggendaria",
+      "effect": "Dopo tre round di carica senza subire la distruzione delle Armi, un unico colpo materno ignora una parata e una deviazione ordinarie, poi scarica tutto.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-067.webp"
+    },
+    {
+      "id": "gen-071",
+      "name": "Paratia Frontale",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Riduce di 1 livello il primo danno di un attacco singolo diretto a un vitale ancora integro, una sola volta; non annulla una salva multipla.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-071.webp"
+    },
+    {
+      "id": "gen-094",
+      "name": "Scorta Sacrificale",
+      "role": "Difesa",
+      "rarity": "Rara",
+      "effect": "Una scudiera viva può assorbire una salva diretta alla madre spendendo fino a 2 resistenze addizionali; non funziona con supporti non abilitati all'intercetto.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-094.webp"
+    },
+    {
+      "id": "gen-106",
+      "name": "Trincea Orbitale",
+      "role": "Difesa",
+      "rarity": "Epica",
+      "effect": "Per due round, il primo vitale bersagliato da un attacco singolo ottiene una parata locale; le salve multiple consumano la protezione una sola volta.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-106.webp"
+    },
+    {
+      "id": "gen-116",
+      "name": "Aegis delle Costellazioni",
+      "role": "Difesa",
+      "rarity": "Leggendaria",
+      "effect": "Una volta per partita proteggi due vitali distinti con una parata ciascuno, scegliendoli prima del turno nemico; non equivale a uno scudo madre globale.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-116.webp"
+    },
+    {
+      "id": "gen-219",
+      "name": "Distesa Gelida",
+      "role": "Terreno",
+      "rarity": "Comune",
+      "effect": "La prima manovra di mobilità del turno perde 1 efficacia, minimo zero.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-219.webp"
+    },
+    {
+      "id": "gen-245",
+      "name": "Trono di Antimateria",
+      "role": "Terreno",
+      "rarity": "Leggendaria",
+      "effect": "La prima intercettazione di attacco multiplo infligge +1 resistenza alla scudiera, senza trapassare il colpo.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-245.webp"
+    }
+  ]
+}

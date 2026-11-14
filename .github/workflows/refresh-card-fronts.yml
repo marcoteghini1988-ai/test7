@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/generate-fleet-card-art.mjs'
       - 'public/assets/fleet-card-illustrations/**'
+      - 'public/assets/fleet-approved-fronts/**'
       - '.github/workflows/refresh-card-fronts.yml'
   workflow_dispatch:
 permissions:
