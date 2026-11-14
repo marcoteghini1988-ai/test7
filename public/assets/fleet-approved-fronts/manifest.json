@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "src/fleetNext/catalogGeneral.json + src/fleetNext/catalogExclusive.json",
-  "approval": "Lotto 01: 10 fronti confermati il 14 novembre 2026; Lotto 02: ulteriori 10 Difesa Comune confermati nella conversazione successiva.",
+  "approval": "Lotto 01 e 02: 20 fronti approvati; Lotto 03: altri 10 fronti Difesa approvati e integrati dal PNG originale 1024x1536 il 14 novembre 2026.",
   "format": "1024x1536 WebP (2:3)",
   "cards": [
     {
@@ -183,6 +183,96 @@
       "effect": "Protegge un singolo vitale indicato con una parata, senza creare uno scudo generale della nave.",
       "designStatus": "proposta_da_bilanciare_non_implementata",
       "asset": "public/assets/fleet-approved-fronts/gen-082.webp"
+    },
+    {
+      "id": "gen-083",
+      "name": "Rotta di Copertura",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Dopo una schivata riuscita, conserva un indicatore di difesa sui Motori per un round, senza annullare un secondo colpo.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-083.webp"
+    },
+    {
+      "id": "gen-084",
+      "name": "Vedetta di Scorta",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Se la prima scudiera è viva, rende noto quale salvo la sta bersagliando prima di spendere la difesa.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-084.webp"
+    },
+    {
+      "id": "gen-085",
+      "name": "Scafo Rinforzato",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Se il vitale selezionato è già fratturato, la prima riparazione nel turno successivo non può essere ritardata da un disturbo lieve.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-085.webp"
+    },
+    {
+      "id": "gen-086",
+      "name": "Guardia degli Ugelli",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Difende i Motori da un singolo effetto di raffreddamento, ma non dal danno del colpo reale.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-086.webp"
+    },
+    {
+      "id": "gen-087",
+      "name": "Riflesso Breve",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Dopo che l'avversario cambia bersaglio, la tua difesa si può riallineare una sola volta allo stesso turno.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-087.webp"
+    },
+    {
+      "id": "gen-088",
+      "name": "Diaframma di Piastre",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Il prossimo colpo diretto al Generatore incontra una riduzione lieve se il Generatore è ancora integro.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-088.webp"
+    },
+    {
+      "id": "gen-089",
+      "name": "Pattuglia Laterale",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "La prossima scudiera che intercetta può scegliere di non attivare una propria passiva nel round successivo per assorbire 1 resistenza aggiuntiva.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-089.webp"
+    },
+    {
+      "id": "gen-090",
+      "name": "Serratura Tattica",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Impedisce che la carta difensiva scelta venga spostata da una semplice carta di distrazione avversaria.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-090.webp"
+    },
+    {
+      "id": "gen-091",
+      "name": "Reazione di Bordo",
+      "role": "Difesa",
+      "rarity": "Comune",
+      "effect": "Dopo una tua scudiera realmente colpita, la prossima carta Difesa che giochi può essere preparata per due round anziché uno.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-091.webp"
+    },
+    {
+      "id": "gen-092",
+      "name": "Bastione a Settori",
+      "role": "Difesa",
+      "rarity": "Rara",
+      "effect": "Scegli un vitale; la prima salva che lo bersaglia è ridotta, ma se il nemico cambia bersaglio la protezione non lo segue.",
+      "designStatus": "proposta_da_bilanciare_non_implementata",
+      "asset": "public/assets/fleet-approved-fronts/gen-092.webp"
     }
   ]
 }
