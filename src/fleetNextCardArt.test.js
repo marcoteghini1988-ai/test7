@@ -55,3 +55,18 @@ test('Mano, slot e Shop: rapporto 2:3 e rarita cromata, non dorata',()=>{
  assert.ok(!css.includes('--tier:#ffd36b'));
  assert.ok(shop.includes("aspectRatio:'2 / 3'"));
 });
+test('Dieci Terreni con scene ambientali dedicate, nessun fronte riciclato',()=>{
+ const terrains=generalData.carte.filter(c=>c.sottotipo==='Terreno');
+ assert.equal(terrains.length,10);
+ const illustrations=[];
+ for(const c of terrains){
+  const svg=readFileSync(resolve('public/assets/fleet-next-cards',c.id+'.svg'),'utf8');
+  assert.ok(svg.includes('data-terrain="'+c.id+'"'),'Scenario mancante '+c.id);
+  assert.ok(svg.includes('data-illustration="unique-scene"'),c.id);
+  const group=svg.match(/<g data-terrain="[^"]+" data-illustration="unique-scene">([\s\S]*?)<\/g>/);
+  assert.ok(group,'Ambiente non renderizzato: '+c.id);
+  illustrations.push(group[1]);
+  assert.ok(svg.includes('width="512" height="768"'));
+ }
+ assert.equal(new Set(illustrations).size,10);
+});

@@ -20,6 +20,99 @@ function normalizeCard(o,source){
   effect:o.effetto||o.effectProposed||"",family:o.famiglia||o.families?.[0]||"",
   ship:o.shipId||"",source};
 }
+function terrainScene(c,seed){
+ const random=rng(seed^0x72399a81);
+ const id=c.id;
+ const paths=(amount,fn)=>Array.from({length:amount},(_,i)=>fn(i,random())).join("");
+ const rock=(x,y,scale=1,col="#223e53")=>`<g transform="translate(${x} ${y}) scale(${scale})"><path d="M-37 14L-28 -16L-8 -29L27 -19L40 4L19 30L-17 26Z" fill="${col}" stroke="#8bb3c4" stroke-opacity=".45" stroke-width="2"/><path d="M-28 -15L-8 -29L8 -4L-8 5L-37 14Z" fill="#778ca5" opacity=".25"/></g>`;
+ const crystal=(x,y,scale=1,tone="#63e6d0")=>`<g transform="translate(${x} ${y}) scale(${scale})"><path d="M-30 24L-17 -35L6 -86L29 -31L35 26Z" fill="${tone}" fill-opacity=".67" stroke="#cbf7ff" stroke-width="2.5"/><path d="M6 -86V23L-16 -31Z" fill="#e6fcff" opacity=".32"/><path d="M6 -86L29 -31L35 26L6 23Z" fill="#062c49" opacity=".65"/></g>`;
+ const bolt=(x,y,sc=1,tone="#a5f7ff")=>`<path d="M${x} ${y}l${17*sc} ${45*sc}l${-19*sc} ${18*sc}l${33*sc} ${62*sc}l${-10*sc} ${-54*sc}l${21*sc} ${-31*sc}l${-22*sc} ${-40*sc}" fill="none" stroke="${tone}" stroke-width="${3*sc}" stroke-linejoin="round" filter="url(#beamGlow)"/>`;
+ const ground=(color)=>`<path d="M37 453Q96 425 166 458T298 450T475 451V530H37Z" fill="${color}" stroke="#79f2ff" stroke-opacity=".20" stroke-width="3"/>`;
+ let s="";
+ switch(id){
+ case "gen-219": // Distesa Gelida
+  s=`<path d="M37 380L86 334L111 355L187 267L236 356L273 315L309 350L375 275L456 365L475 382V525H37Z" fill="#365b89" stroke="#a8daff" stroke-width="3"/>
+   <path d="M37 403L110 343L140 373L188 267L239 355L274 314L310 355L375 275L432 337L475 381L456 389L374 317L311 387L272 342L239 399L186 304L139 413L91 377L37 431Z" fill="#b6e7ff" opacity=".90"/>
+   <path d="M37 446Q168 403 230 441T475 420V526H37Z" fill="#9bc9e9" stroke="#e8fdff" stroke-width="3"/>
+   ${paths(13,(i,r)=>{let x=60+i*29,y=438+(i%4)*13;return `<path d="M${x} ${y}l${13+r*23} ${-9-r*19}l${20+r*9} 8" fill="none" stroke="#edffff" stroke-width="1.5" opacity=".65"/>`})}
+   ${crystal(82,447,.63,"#54d9ff")}${crystal(406,440,.95,"#89ddff")}
+   <path d="M40 290Q173 250 285 277T475 255" stroke="#3bffee" stroke-width="15" fill="none" opacity=".22"/>`;
+  break;
+ case "gen-220": // Deserto Magnetico
+  s=`<path d="M37 420Q96 364 188 393T342 364T475 375V527H37Z" fill="#ad553a" stroke="#ffcb80" stroke-width="2"/>
+   <path d="M37 465Q125 420 201 460T355 425T475 452V527H37Z" fill="#f18b43"/>
+   ${paths(5,(i,r)=>`<path d="M${68+i*82} ${443+(i%2)*35}l${22+r*20} -${20+r*25}l${19+r*10} ${24+r*6}" stroke="#7b342c" stroke-width="2" fill="#4a2839"/>`)}
+   <g fill="none" stroke="#c375ff" stroke-width="10" stroke-linecap="round" opacity=".9"><path d="M118 378A97 122 0 0 1 150 260"/><path d="M153 310A128 90 0 0 1 393 331"/><path d="M342 363A78 130 0 0 1 427 268"/></g>
+   <g fill="none" stroke="#d9b5ff" stroke-width="2"><ellipse cx="250" cy="346" rx="166" ry="45" transform="rotate(-19 250 346)"/><ellipse cx="257" cy="346" rx="133" ry="38" transform="rotate(20 257 346)"/></g>
+   ${bolt(258,244,.75,"#d5b2ff")}${rock(414,404,.7,"#502d42")}`;
+  break;
+ case "gen-221": // Nebbia di Elio
+  s=`<path d="M37 444L92 374L149 413L231 336L293 380L374 310L475 399V528H37Z" fill="#33305c" stroke="#868cc9" stroke-width="3"/>
+   ${paths(10,(i,r)=>`<ellipse cx="${44+i*43}" cy="${364+(i%4)*33}" rx="${55+r*26}" ry="${23+r*16}" fill="${i%2?'#9182e9':'#81d8fa'}" opacity=".19" filter="url(#beamGlow)"/>`)}
+   ${paths(8,(i,r)=>`<circle cx="${82+i*48}" cy="${255+(i%5)*38}" r="${8+r*24}" fill="#b7aaf8" fill-opacity=".09" stroke="#e5d6ff" stroke-width="${1.1+r*1.5}" opacity=".7"/>`)}
+   <path d="M37 440Q125 385 225 445T475 426V529H37Z" fill="#7776b8" opacity=".56"/>
+   <path d="M37 487Q134 449 247 487T475 475" stroke="#f5e5ff" stroke-width="18" opacity=".35" fill="none"/>
+   <circle cx="405" cy="262" r="47" fill="#debaff" opacity=".18" stroke="#edd4ff" stroke-width="2"/>`;
+  break;
+ case "gen-229": // Palude di Silicio
+  s=`${ground("#102c38")}
+   ${paths(9,(i,r)=>`<path d="M${49+i*54} 490l${-13+r*28} -${42+r*48}l${19+r*12} -${9+r*19}" stroke="#284d53" stroke-width="${3+r*5}" fill="none"/>`)}
+   ${paths(7,(i,r)=>crystal(70+i*62,465-(i%3)*12,.28+r*.45,i%2?"#2dfdbf":"#44baff"))}
+   <path d="M37 475Q135 443 235 470T475 464V527H37Z" fill="#1d7d75" opacity=".75"/>
+   ${paths(9,(i,r)=>`<ellipse cx="${55+i*49}" cy="${480+r*43}" rx="${15+r*21}" ry="${2+r*4}" fill="none" stroke="#aaffef" stroke-width="1.2" opacity=".48"/>`)}
+   <path d="M66 452L115 405L162 412L199 390" stroke="#456e69" stroke-width="9" fill="none"/>
+   ${rock(383,439,.5,"#1a5b57")}`;
+  break;
+ case "gen-230": // Foresta Ionizzata
+  s=`${ground("#123c43")}
+   ${paths(8,(i,r)=>{const x=60+i*56,y=476;return `<path d="M${x} ${y}Q${x+17} ${y-89} ${x+(r-.5)*32} ${y-153}M${x+8} ${y-70}L${x+43} ${y-113}M${x+5} ${y-105}L${x-31} ${y-138}" fill="none" stroke="#1a5562" stroke-width="${5+r*5}"/><path d="M${x} ${y-118}l-15 -19l27 -12l20 20Z" fill="#12caa9" opacity=".4"/>`})}
+   <path d="M37 498Q152 464 256 503T475 495V527H37Z" fill="#115b55"/>
+   ${bolt(122,247,.63,"#78eaff")}${bolt(367,230,.7,"#beffff")}
+   ${paths(17,(i,r)=>`<circle cx="${52+i*25}" cy="${283+(i%6)*34}" r="${2+r*5}" fill="#6fffe8" opacity=".55"/>`)}`;
+  break;
+ case "gen-231": // Cintura di Detriti
+  s=`<path d="M37 477L147 421L230 472L318 407L475 448V528H37Z" fill="#273040" stroke="#747c8a" stroke-width="2"/>
+   <ellipse cx="265" cy="341" rx="188" ry="56" fill="none" stroke="#bcced7" stroke-width="8" stroke-dasharray="38 25" transform="rotate(-18 265 341)" opacity=".44"/>
+   ${paths(16,(i,r)=>rock(58+(i*67)%422,270+(i*41)%218,.19+r*.58,i%3?"#354453":"#4e5163"))}
+   <path d="M37 490Q150 443 250 490T475 470V525H37Z" fill="#1b2737"/>
+   ${paths(5,(i,r)=>`<path d="M${95+i*83} ${392+i%2*32}l${22+r*16} -${7+r*22}l${30+r*11} ${21+r*8}" stroke="#a5b0bf" stroke-width="3" fill="#465064"/>`)}`;
+  break;
+ case "gen-237": // Mare di Quarzo
+  s=`<path d="M37 425Q140 397 260 426T475 411V528H37Z" fill="#196ba2" opacity=".8"/>
+   ${paths(6,(i,r)=>crystal(65+i*76,402+(i%3)*8,.54+r*.63,i%2?"#dcaeff":"#6ceaff"))}
+   <path d="M37 446Q135 430 245 459T475 438V528H37Z" fill="#2c83ac" opacity=".57"/>
+   ${paths(13,(i,r)=>`<path d="M${50+i*33} ${453+(i%4)*17}q${14+r*7} -9 ${28+r*4} 1" fill="none" stroke="${i%3?'#c6f5ff':'#ffcdff'}" stroke-width="${1.2+r*2}" opacity=".72"/>`)}
+   <circle cx="375" cy="298" r="71" fill="#a3ffff" opacity=".13" stroke="#9dcdff" stroke-width="3"/>`;
+  break;
+ case "gen-238": // Faglia di Plasma
+  s=`<path d="M37 379L123 405L172 337L236 395L310 330L396 400L475 368V528H37Z" fill="#412536" stroke="#d88759" stroke-width="3"/>
+   <path d="M37 486L152 429L217 455L281 394L345 446L475 412V528H37Z" fill="#642b28"/>
+   <path d="M37 485L145 465L190 480L253 426L286 454L343 463L397 439L475 468" stroke="#ff4c24" stroke-width="22" fill="none" filter="url(#beamGlow)"/>
+   <path d="M37 485L145 465L190 480L253 426L286 454L343 463L397 439L475 468" stroke="#ffe199" stroke-width="5" fill="none"/>
+   ${paths(17,(i,r)=>`<circle cx="${60+(i*43)%410}" cy="${243+(i*49)%230}" r="${2+r*5}" fill="#ffac65" opacity=".72"/>`)}
+   ${paths(4,(i,r)=>`<path d="M${102+i*95} 443l${17+r*18} -${52+r*62}" stroke="#fb6b36" stroke-width="4" filter="url(#beamGlow)"/>`)}`;
+  break;
+ case "gen-239": // Tempesta Ionica
+  s=`${paths(8,(i,r)=>`<ellipse cx="${25+i*71}" cy="${328+i%4*17}" rx="${76+r*26}" ry="${35+r*16}" fill="${i%2?'#553aa7':'#234f9f'}" opacity=".52"/>`)}
+   <path d="M37 427Q110 390 193 425T335 401T475 430V525H37Z" fill="#252953"/>
+   <path d="M37 458Q141 411 253 466T475 455" stroke="#7351ce" stroke-width="18" fill="none" opacity=".6"/>
+   ${bolt(116,257,.95,"#b7d6ff")}${bolt(253,226,.86,"#f3c2ff")}${bolt(373,257,.82,"#b1ffff")}
+   <ellipse cx="266" cy="327" rx="163" ry="92" fill="none" stroke="#c49aff" stroke-width="5" stroke-dasharray="16 13" opacity=".37"/>`;
+  break;
+ case "gen-245": // Trono di Antimateria
+  s=`<circle cx="267" cy="340" r="114" fill="#070710" stroke="#bffeff" stroke-width="12" opacity=".9"/>
+   <circle cx="267" cy="340" r="81" fill="#090f21" stroke="#ccf7ff" stroke-width="3"/>
+   <circle cx="267" cy="340" r="53" fill="#000" stroke="#9f73ff" stroke-width="8" filter="url(#beamGlow)"/>
+   <path d="M37 486L116 443L154 469L188 387L222 453L267 402L310 451L348 388L398 470L475 450V525H37Z" fill="#111a2d" stroke="#86c3dc" stroke-width="3"/>
+   <path d="M178 449V353L215 378L265 283L320 379L353 353V451L314 433L267 402L223 434Z" fill="#15263b" stroke="#89e8ff" stroke-width="3"/>
+   <path d="M267 292V422" stroke="#e8fcff" stroke-width="8" filter="url(#beamGlow)"/>
+   <ellipse cx="267" cy="338" rx="165" ry="50" transform="rotate(-22 267 338)" fill="none" stroke="#b0dcff" stroke-width="5" opacity=".76"/>
+   ${paths(11,(i,r)=>`<path d="M${75+i*33} ${450-(i%3)*33}l${r*16-8} -${17+r*32}" stroke="#c3daff" stroke-width="2" opacity=".65"/>`)}`;
+  break;
+ default:throw new Error("Terreno senza scena dedicata "+id);
+ }
+ return `<g data-terrain="${id}" data-illustration="unique-scene">${s}</g>`;
+}
 function artScene(c,seed){
  const rand=rng(seed^0x894ec321);
  const f=C[c.kind]||C.support;
@@ -67,13 +160,8 @@ function artScene(c,seed){
    <path d="M-81 -9L-112 17L-79 53L-56 6Z M76 -10L105 17L74 53L46 5Z" fill="${f.base}" opacity=".35"/>
   </g><path d="M75 488L75 268L121 268 M387 245H435V487" stroke="${f.base}" stroke-width="3" fill="none" opacity=".4"/>`;
  }else if(c.kind==="terrain"){
-  const heights=Array.from({length:9},()=>45+Math.round(rand()*140));
-  let x=35;
-  const peaks=heights.map((h,i)=>{let d=`M${x-25} 516L${x+24} ${516-h}L${x+75} 516Z`;x+=50;return `<path d="${d}" fill="${i%2?'#1a4b55':'#29566b'}" stroke="${f.base}" stroke-width="2" opacity=".8"/>`}).join("");
-  details=`<circle cx="${cx+93}" cy="315" r="${55+seed%26}" fill="${f.base}" opacity=".14" stroke="${f.soft}" stroke-width="5"/>
-  <circle cx="${cx+96}" cy="310" r="${69+seed%30}" fill="none" stroke="${f.base}" stroke-width="2" opacity=".5"/>
-  ${peaks}<path d="M35 494Q130 450 228 499T476 492V529H35Z" fill="${f.base}" opacity=".17"/>
-  ${Array.from({length:5},(_,i)=>`<path d="M${85+70*i} 512l${10+(seed+i)%16} -${39+i*9}l${10+i*3} ${39+i*9}" stroke="${f.soft}" stroke-width="3" fill="${f.base}" opacity=".65"/>`).join("")}`;
+  // Nome e identità ambientale: una scena dedicata per ogni Terreno reale.
+  details=terrainScene(c,seed);
  }else if(c.kind==="control"){
   details=`${rings(cx,cy,124)}${rings(cx+32,cy-33,70)}
    <path d="M113 460L165 404L210 438L279 290L369 346L428 259" fill="none" stroke="${f.soft}" stroke-width="8" filter="url(#beamGlow)"/>

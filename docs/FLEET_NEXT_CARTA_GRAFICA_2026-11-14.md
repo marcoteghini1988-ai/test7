@@ -21,3 +21,6 @@
 379 fronti SVG 512×768, formato verticale 2:3. Mano 54×81; slot 40×60; Shop e mazzi rispettano 2:3. Non esistono carte quadrate nel catalogo. Le tavole illustrative prodotte in chat non sono asset di gioco.
 
 Il generatore ufficiale è `scripts/generate-fleet-card-art.mjs`. I 379 fronti sono vettoriali procedurali, **non** artwork pittorici HD definitivi. Non cambiano costi, personaggi, turni o meccaniche. Gli asset legacy rimangono.
+
+## Prime 10 illustrazioni Terreno differenziate
+Ogni terreno (`gen-219`, `gen-220`, `gen-221`, `gen-229`, `gen-230`, `gen-231`, `gen-237`, `gen-238`, `gen-239`, `gen-245`) dispone ora di una scena vettoriale specifica per nome e ambiente, non più le stesse montagne generiche. Le scene sono codificate in `terrainScene` nel generatore; la rigenerazione è riproducibile. Restano illustrazioni SVG vettoriali e non sostituiscono artwork illustrati AI ad alta definizione.
