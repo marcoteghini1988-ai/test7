@@ -1,0 +1,3906 @@
+{
+  "title": "Eclissi Stellare — catalogo di progettazione esclusive v0.3",
+  "date": "2026-11-14",
+  "status": "catalogo importato; effetti da integrare",
+  "source": "17 madri ufficiali, 129 nomi esclusivi v0.2 rivisti v0.3",
+  "disclaimer": "Durata potenziamenti e parametri numerici non confermati: NO import automatico in test7.",
+  "shipConfigurations": [
+    {
+      "id": "N00",
+      "name": "Aurora-0",
+      "rarity": "Comune",
+      "l1Escorts": 0,
+      "escort1UnlockLevel": 3,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "command": 3,
+        "generator": 5
+      },
+      "cardCountProposed": 5
+    },
+    {
+      "id": "C01",
+      "name": "Lince Solare",
+      "rarity": "Comune",
+      "l1Escorts": 0,
+      "escort1UnlockLevel": 3,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "command": 3,
+        "generator": 5
+      },
+      "cardCountProposed": 6
+    },
+    {
+      "id": "C02",
+      "name": "Vespa di Vetro",
+      "rarity": "Comune",
+      "l1Escorts": 0,
+      "escort1UnlockLevel": 3,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 3,
+        "command": 5
+      },
+      "cardCountProposed": 6
+    },
+    {
+      "id": "C03",
+      "name": "Corvo a Impulsi",
+      "rarity": "Comune",
+      "l1Escorts": 0,
+      "escort1UnlockLevel": 3,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 3
+      },
+      "cardCountProposed": 6
+    },
+    {
+      "id": "C04",
+      "name": "Dardo Cremisi",
+      "rarity": "Comune",
+      "l1Escorts": 0,
+      "escort1UnlockLevel": 3,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 3,
+        "command": 5
+      },
+      "cardCountProposed": 6
+    },
+    {
+      "id": "R01",
+      "name": "Falco Binario",
+      "rarity": "Rara",
+      "l1Escorts": 0,
+      "escort1UnlockLevel": 3,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 3
+      },
+      "cardCountProposed": 7
+    },
+    {
+      "id": "R02",
+      "name": "Manta Ionica",
+      "rarity": "Rara",
+      "l1Escorts": 1,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 3
+      },
+      "cardCountProposed": 7
+    },
+    {
+      "id": "R03",
+      "name": "Iride",
+      "rarity": "Rara",
+      "l1Escorts": 0,
+      "escort1UnlockLevel": 3,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "command": 1,
+        "generator": 3
+      },
+      "cardCountProposed": 7
+    },
+    {
+      "id": "R04",
+      "name": "Squalo del Vuoto",
+      "rarity": "Rara",
+      "l1Escorts": 1,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 3,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 1
+      },
+      "cardCountProposed": 7
+    },
+    {
+      "id": "E01",
+      "name": "Nebulosa",
+      "rarity": "Epica",
+      "l1Escorts": 1,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 3,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 1
+      },
+      "cardCountProposed": 8
+    },
+    {
+      "id": "E02",
+      "name": "Tempesta",
+      "rarity": "Epica",
+      "l1Escorts": 1,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 3
+      },
+      "cardCountProposed": 8
+    },
+    {
+      "id": "E03",
+      "name": "Fenice",
+      "rarity": "Epica",
+      "l1Escorts": 0,
+      "escort1UnlockLevel": 3,
+      "escort2UnlockLevel": 5,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 3
+      },
+      "cardCountProposed": 8
+    },
+    {
+      "id": "E04",
+      "name": "Orizzonte",
+      "rarity": "Epica",
+      "l1Escorts": 1,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 3,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 1
+      },
+      "cardCountProposed": 8
+    },
+    {
+      "id": "L01",
+      "name": "Eclisse Reale",
+      "rarity": "Leggendaria",
+      "l1Escorts": 2,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 1,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 1
+      },
+      "cardCountProposed": 10
+    },
+    {
+      "id": "L02",
+      "name": "Singolarità",
+      "rarity": "Leggendaria",
+      "l1Escorts": 1,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 3,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 1
+      },
+      "cardCountProposed": 10
+    },
+    {
+      "id": "L03",
+      "name": "Titano Ossidiana",
+      "rarity": "Leggendaria",
+      "l1Escorts": 2,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 1,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 1
+      },
+      "cardCountProposed": 10
+    },
+    {
+      "id": "L04",
+      "name": "Arca Astrale",
+      "rarity": "Leggendaria",
+      "l1Escorts": 2,
+      "escort1UnlockLevel": 1,
+      "escort2UnlockLevel": 1,
+      "partUnlockLevels": {
+        "engine": 1,
+        "weapons": 1,
+        "generator": 1,
+        "command": 1
+      },
+      "cardCountProposed": 10
+    }
+  ],
+  "cards": [
+    {
+      "id": "ex-n00-01",
+      "shipId": "N00",
+      "shipName": "Aurora-0",
+      "rarityDraft": "Comune",
+      "name": "Cartografo Aurora",
+      "category": "Personaggio",
+      "families": [
+        "adattamento",
+        "mobilità",
+        "personaggio"
+      ],
+      "effectProposed": "Osserva le prime 2 carte generali del mazzo e scegli quale pescare al prossimo ricambio.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-n00-02",
+      "shipId": "N00",
+      "shipName": "Aurora-0",
+      "rarityDraft": "Comune",
+      "name": "Impulso Adattivo",
+      "category": "Attacco",
+      "families": [
+        "adattamento",
+        "mobilità",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Un colpo del Cannone adattivo può cambiare componente bersaglio prima della conferma.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-n00-03",
+      "shipId": "N00",
+      "shipName": "Aurora-0",
+      "rarityDraft": "Comune",
+      "name": "Rotta di Fuga",
+      "category": "Difesa",
+      "families": [
+        "adattamento",
+        "mobilità",
+        "protezione"
+      ],
+      "effectProposed": "Se i Motori sono operativi e la carta è pronta, una volta per battaglia devia un colpo singolo diretto a un vitale ancora integro; non annulla salve da baluardo e consuma la carta.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "engine"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-n00-04",
+      "shipId": "N00",
+      "shipName": "Aurora-0",
+      "rarityDraft": "Comune",
+      "name": "Velo di Salvataggio",
+      "category": "Scudiera 1",
+      "families": [
+        "adattamento",
+        "mobilità",
+        "protezione"
+      ],
+      "effectProposed": "Il Velo Aurora intercetta una salva quando la sua passiva ciclica è disponibile.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-n00-05",
+      "shipId": "N00",
+      "shipName": "Aurora-0",
+      "rarityDraft": "Comune",
+      "name": "Sequenza Zero",
+      "category": "Combo L5",
+      "families": [
+        "adattamento",
+        "mobilità",
+        "combo"
+      ],
+      "effectProposed": "Con entrambe le scudiere operative, due carte diverse marcano due componenti, uno per colpo nel prossimo round.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "engine",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Sequenza Zero",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c01-01",
+      "shipId": "C01",
+      "shipName": "Lince Solare",
+      "rarityDraft": "Comune",
+      "name": "Pilota Helios",
+      "category": "Personaggio",
+      "families": [
+        "mobilità",
+        "pressione",
+        "personaggio"
+      ],
+      "effectProposed": "La prossima carta di movimento prepara un secondo tiro leggero nel round seguente.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c01-02",
+      "shipId": "C01",
+      "shipName": "Lince Solare",
+      "rarityDraft": "Comune",
+      "name": "Sorpasso Solare",
+      "category": "Attacco",
+      "families": [
+        "mobilità",
+        "pressione",
+        "interferenza"
+      ],
+      "effectProposed": "Se i Motori sono operativi, marca i Motori avversari e abilita un colpo madre su quel componente nel normale ordine di risoluzione; non anticipa automaticamente cure o contrattacchi.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "engine",
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c01-03",
+      "shipId": "C01",
+      "shipName": "Lince Solare",
+      "rarityDraft": "Comune",
+      "name": "Passaggio Radente",
+      "category": "Tattica",
+      "families": [
+        "mobilità",
+        "pressione",
+        "precisione"
+      ],
+      "effectProposed": "Cambia bersaglio tra due componenti e impedisce una singola risposta automatica di precisione.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno",
+      "vfxIntent": "target-lock",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c01-04",
+      "shipId": "C01",
+      "shipName": "Lince Solare",
+      "rarityDraft": "Comune",
+      "name": "Sentinella in Linea",
+      "category": "Difesa scudiera 1",
+      "families": [
+        "mobilità",
+        "pressione",
+        "sincronia"
+      ],
+      "effectProposed": "La Sentinella Solare assorbe una salva e rinuncia al proprio bonus di mobilità per questo round.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c01-05",
+      "shipId": "C01",
+      "shipName": "Lince Solare",
+      "rarityDraft": "Comune",
+      "name": "Lama sul Propulsore",
+      "category": "Scudiera 2",
+      "families": [
+        "mobilità",
+        "pressione",
+        "sincronia"
+      ],
+      "effectProposed": "Lama Rubino amplifica il prossimo tiro ai Motori, solo se il collegamento funziona.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c01-06",
+      "shipId": "C01",
+      "shipName": "Lince Solare",
+      "rarityDraft": "Comune",
+      "name": "Tenaglia Cremisi",
+      "category": "Combo",
+      "families": [
+        "mobilità",
+        "pressione",
+        "combo"
+      ],
+      "effectProposed": "Pilota Helios + Passaggio Radente: due colpi separati su Motori e Armi, non duplicabili sullo stesso pezzo.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [
+        "command",
+        "engine",
+        "weapons"
+      ],
+      "requiredEscortCount": 1,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Tenaglia Cremisi",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c02-01",
+      "shipId": "C02",
+      "shipName": "Vespa di Vetro",
+      "rarityDraft": "Comune",
+      "name": "Artigiana Prisma",
+      "category": "Personaggio",
+      "families": [
+        "precisione",
+        "protezione",
+        "personaggio"
+      ],
+      "effectProposed": "Sceglie un componente bersaglio e lo segnala: il prossimo impatto ignora una protezione mirata.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c02-02",
+      "shipId": "C02",
+      "shipName": "Vespa di Vetro",
+      "rarityDraft": "Comune",
+      "name": "Scheggia Riflessa",
+      "category": "Attacco",
+      "families": [
+        "precisione",
+        "protezione",
+        "interferenza"
+      ],
+      "effectProposed": "Un colpo al Generatore avversario riflette un piccolo disturbo alla carta difensiva attiva.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c02-03",
+      "shipId": "C02",
+      "shipName": "Vespa di Vetro",
+      "rarityDraft": "Comune",
+      "name": "Angolo di Frattura",
+      "category": "Tattica",
+      "families": [
+        "precisione",
+        "protezione"
+      ],
+      "effectProposed": "Fa cambiare al bersaglio la parte protetta dalla sua scudiera, se non è una copertura totale.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c02-04",
+      "shipId": "C02",
+      "shipName": "Vespa di Vetro",
+      "rarityDraft": "Comune",
+      "name": "Custodia Prismatica",
+      "category": "Difesa scudiera 1",
+      "families": [
+        "precisione",
+        "protezione"
+      ],
+      "effectProposed": "Prisma Custode protegge soltanto il componente selezionato prima dello scontro.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c02-05",
+      "shipId": "C02",
+      "shipName": "Vespa di Vetro",
+      "rarityDraft": "Comune",
+      "name": "Trapano Vetrificato",
+      "category": "Scudiera 2",
+      "families": [
+        "precisione",
+        "protezione",
+        "sincronia"
+      ],
+      "effectProposed": "Accumula una carica ogni round senza attacco di precisione; a due cariche abilita perforazione.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c02-06",
+      "shipId": "C02",
+      "shipName": "Vespa di Vetro",
+      "rarityDraft": "Comune",
+      "name": "Rosa di Cristallo",
+      "category": "Combo",
+      "families": [
+        "precisione",
+        "protezione",
+        "combo"
+      ],
+      "effectProposed": "Artigiana Prisma + Trapano Vetrificato: dopo carica effettiva, una salva della madre colpisce due vitali diversi; le intercettazioni totali continuano a funzionare.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Rosa di Cristallo",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c03-01",
+      "shipId": "C03",
+      "shipName": "Corvo a Impulsi",
+      "rarityDraft": "Comune",
+      "name": "Comandante Risonante",
+      "category": "Personaggio",
+      "families": [
+        "interferenza",
+        "sincronia",
+        "personaggio"
+      ],
+      "effectProposed": "Alla prima ionizzazione, sposta il disturbo su una seconda scudiera compatibile.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c03-02",
+      "shipId": "C03",
+      "shipName": "Corvo a Impulsi",
+      "rarityDraft": "Comune",
+      "name": "Dardo Intermittente",
+      "category": "Attacco",
+      "families": [
+        "interferenza",
+        "sincronia"
+      ],
+      "effectProposed": "Spara un impulso che ritarda la prossima attivazione di una passiva nemica.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c03-03",
+      "shipId": "C03",
+      "shipName": "Corvo a Impulsi",
+      "rarityDraft": "Comune",
+      "name": "Richiamo Inverso",
+      "category": "Controllo scudiera 1",
+      "families": [
+        "interferenza",
+        "sincronia",
+        "protezione"
+      ],
+      "effectProposed": "Corvo Scudo interrompe una sinergia di collegamento per un round, non le armi materne.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c03-04",
+      "shipId": "C03",
+      "shipName": "Corvo a Impulsi",
+      "rarityDraft": "Comune",
+      "name": "Doppio Canale",
+      "category": "Attacco",
+      "families": [
+        "interferenza",
+        "sincronia"
+      ],
+      "effectProposed": "Il colpo viene duplicato su due bersagli soltanto se il nemico è già ionizzato.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c03-05",
+      "shipId": "C03",
+      "shipName": "Corvo a Impulsi",
+      "rarityDraft": "Comune",
+      "name": "Artiglio Risonante",
+      "category": "Scudiera 2",
+      "families": [
+        "interferenza",
+        "sincronia"
+      ],
+      "effectProposed": "La seconda scudiera converte una ionizzazione attiva in un bonus al colpo materno.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c03-06",
+      "shipId": "C03",
+      "shipName": "Corvo a Impulsi",
+      "rarityDraft": "Comune",
+      "name": "Costellazione Pulsata",
+      "category": "Combo",
+      "families": [
+        "interferenza",
+        "sincronia",
+        "combo"
+      ],
+      "effectProposed": "Comandante Risonante + Doppio Canale: tre impulsi distribuiti, con danno ridotto per bersaglio.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Costellazione Pulsata",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c04-01",
+      "shipId": "C04",
+      "shipName": "Dardo Cremisi",
+      "rarityDraft": "Comune",
+      "name": "Cacciatrice Cremisi",
+      "category": "Personaggio",
+      "families": [
+        "mobilità",
+        "pressione",
+        "personaggio"
+      ],
+      "effectProposed": "Una volta per attivazione trasforma un contrattacco in un dardo che lascia una marca.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c04-02",
+      "shipId": "C04",
+      "shipName": "Dardo Cremisi",
+      "rarityDraft": "Comune",
+      "name": "Pungiglione Persistente",
+      "category": "Attacco",
+      "families": [
+        "mobilità",
+        "pressione",
+        "interferenza"
+      ],
+      "effectProposed": "Marca un vitale colpito da una salva reale. Nel round seguente un secondo tiro valido sullo stesso bersaglio può applicare una frattura; la marca da sola non infligge danno.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c04-03",
+      "shipId": "C04",
+      "shipName": "Dardo Cremisi",
+      "rarityDraft": "Comune",
+      "name": "Falsa Traccia",
+      "category": "Controllo",
+      "families": [
+        "mobilità",
+        "pressione",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Nasconde per un round quale dei due componenti è stato preparato come obiettivo.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c04-04",
+      "shipId": "C04",
+      "shipName": "Dardo Cremisi",
+      "rarityDraft": "Comune",
+      "name": "Velo di Disturbo",
+      "category": "Difesa scudiera 1",
+      "families": [
+        "mobilità",
+        "pressione",
+        "protezione"
+      ],
+      "effectProposed": "Velo Cremisi devia una salva leggera se il Generatore è operativo.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [
+        "generator"
+      ],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c04-05",
+      "shipId": "C04",
+      "shipName": "Dardo Cremisi",
+      "rarityDraft": "Comune",
+      "name": "Risposta d’Ombra",
+      "category": "Scudiera 2",
+      "families": [
+        "mobilità",
+        "pressione",
+        "sincronia"
+      ],
+      "effectProposed": "Dardo d’Ombra carica una ritorsione dopo un danno subito dalla madre.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-c04-06",
+      "shipId": "C04",
+      "shipName": "Dardo Cremisi",
+      "rarityDraft": "Comune",
+      "name": "Sciame Scarlatto",
+      "category": "Combo",
+      "families": [
+        "mobilità",
+        "pressione",
+        "combo"
+      ],
+      "effectProposed": "Pungiglione Persistente + Risposta d’Ombra: dardi su due componenti diversi con una sola marca ritardata.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "engine",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Sciame Scarlatto",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r01-01",
+      "shipId": "R01",
+      "shipName": "Falco Binario",
+      "rarityDraft": "Rara",
+      "name": "Artigliere Binario",
+      "category": "Personaggio",
+      "families": [
+        "carica",
+        "protezione",
+        "personaggio"
+      ],
+      "effectProposed": "Conserva una carica di un’arma quando il round termina senza sparare.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r01-02",
+      "shipId": "R01",
+      "shipName": "Falco Binario",
+      "rarityDraft": "Rara",
+      "name": "Batteria Gemella",
+      "category": "Attacco",
+      "families": [
+        "carica",
+        "protezione",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Protocollo per la Batteria Gemella integrata: due proiettili nello stesso tiro sul medesimo vitale; la seconda esplosione è visiva, una sola frattura massima.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r01-03",
+      "shipId": "R01",
+      "shipName": "Falco Binario",
+      "rarityDraft": "Rara",
+      "name": "Ricarica Asimmetrica",
+      "category": "Tattica",
+      "families": [
+        "carica",
+        "protezione",
+        "carica_artiglieria"
+      ],
+      "effectProposed": "Trasferisce una carica da una batteria integrata a un’altra.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
+      "vfxIntent": "charge-weapon",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r01-04",
+      "shipId": "R01",
+      "shipName": "Falco Binario",
+      "rarityDraft": "Rara",
+      "name": "Falco Guardiano",
+      "category": "Difesa scudiera 1",
+      "families": [
+        "carica",
+        "protezione"
+      ],
+      "effectProposed": "La Sentinella intercetta una salva durante un round di carica.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r01-05",
+      "shipId": "R01",
+      "shipName": "Falco Binario",
+      "rarityDraft": "Rara",
+      "name": "Accelerazione Binaria",
+      "category": "Scudiera 2",
+      "families": [
+        "carica",
+        "protezione",
+        "sincronia"
+      ],
+      "effectProposed": "Riduce di un round la preparazione del tiro pesante, senza crearne uno gratis.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r01-06",
+      "shipId": "R01",
+      "shipName": "Falco Binario",
+      "rarityDraft": "Rara",
+      "name": "Fuoco di Calibrazione",
+      "category": "Controllo",
+      "families": [
+        "carica",
+        "protezione",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Un colpo leggero prepara il Generatore nemico come bersaglio privilegiato.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r01-07",
+      "shipId": "R01",
+      "shipName": "Falco Binario",
+      "rarityDraft": "Rara",
+      "name": "Triangolazione Falco",
+      "category": "Combo",
+      "families": [
+        "carica",
+        "protezione",
+        "combo"
+      ],
+      "effectProposed": "Artigliere Binario + Fuoco di Calibrazione + carica: distribuisce tre colpi su componenti differenti.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Triangolazione Falco",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r02-01",
+      "shipId": "R02",
+      "shipName": "Manta Ionica",
+      "rarityDraft": "Rara",
+      "name": "Navigatrice Manta",
+      "category": "Personaggio",
+      "families": [
+        "interferenza",
+        "protezione",
+        "personaggio"
+      ],
+      "effectProposed": "Prolunga di un round una ionizzazione applicata dalla propria madre.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r02-02",
+      "shipId": "R02",
+      "shipName": "Manta Ionica",
+      "rarityDraft": "Rara",
+      "name": "Arco Ionico",
+      "category": "Attacco",
+      "families": [
+        "interferenza",
+        "protezione",
+        "precisione"
+      ],
+      "effectProposed": "Protocollo per Arco Ionico integrato: un tiro reale alle Armi nemiche applica per un round un malus di precisione, solo se il bersaglio è effettivamente colpito.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno",
+      "vfxIntent": "target-lock",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r02-03",
+      "shipId": "R02",
+      "shipName": "Manta Ionica",
+      "rarityDraft": "Rara",
+      "name": "Campo Manta",
+      "category": "Difesa scudiera 1",
+      "families": [
+        "interferenza",
+        "protezione",
+        "sincronia"
+      ],
+      "effectProposed": "Abbassa la potenza di una salva, senza impedire la scelta dei componenti.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r02-04",
+      "shipId": "R02",
+      "shipName": "Manta Ionica",
+      "rarityDraft": "Rara",
+      "name": "Doppia Polarità",
+      "category": "Controllo",
+      "families": [
+        "interferenza",
+        "protezione"
+      ],
+      "effectProposed": "Sposta una ionizzazione dalla madre avversaria alla sua prima scudiera attiva.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r02-05",
+      "shipId": "R02",
+      "shipName": "Manta Ionica",
+      "rarityDraft": "Rara",
+      "name": "Sting di Risonanza",
+      "category": "Scudiera 2",
+      "families": [
+        "interferenza",
+        "protezione"
+      ],
+      "effectProposed": "Trasforma un disturbo su un nemico in una carica offensiva extra.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r02-06",
+      "shipId": "R02",
+      "shipName": "Manta Ionica",
+      "rarityDraft": "Rara",
+      "name": "Incrocio Fulminante",
+      "category": "Attacco",
+      "families": [
+        "interferenza",
+        "protezione",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Due archi simultanei su Motori e Generatore se entrambi sono disponibili.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r02-07",
+      "shipId": "R02",
+      "shipName": "Manta Ionica",
+      "rarityDraft": "Rara",
+      "name": "Nodo di Marea",
+      "category": "Combo",
+      "families": [
+        "interferenza",
+        "protezione",
+        "combo"
+      ],
+      "effectProposed": "Navigatrice Manta + Sting di Risonanza: colpisce due sistemi e spegne una passiva difensiva per un round.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Nodo di Marea",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r03-01",
+      "shipId": "R03",
+      "shipName": "Iride",
+      "rarityDraft": "Rara",
+      "name": "Custode dello Spettro",
+      "category": "Personaggio",
+      "families": [
+        "precisione",
+        "riparazione",
+        "personaggio"
+      ],
+      "effectProposed": "Sceglie una parte fratturata: la prossima cura la preferisce se ancora riparabile.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r03-02",
+      "shipId": "R03",
+      "shipName": "Iride",
+      "rarityDraft": "Rara",
+      "name": "Raggio Vitale",
+      "category": "Supporto",
+      "families": [
+        "precisione",
+        "riparazione"
+      ],
+      "effectProposed": "Ripara una frattura non distrutta, con limite una volta per ciclo di cura.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [
+        "generator"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r03-03",
+      "shipId": "R03",
+      "shipName": "Iride",
+      "rarityDraft": "Rara",
+      "name": "Rifrazione",
+      "category": "Difesa",
+      "families": [
+        "precisione",
+        "riparazione",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Sposta un tiro a una parte vicina senza distruggere automaticamente il componente.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r03-04",
+      "shipId": "R03",
+      "shipName": "Iride",
+      "rarityDraft": "Rara",
+      "name": "Luce di Recupero",
+      "category": "Scudiera 1",
+      "families": [
+        "precisione",
+        "riparazione",
+        "protezione"
+      ],
+      "effectProposed": "Iride Scudo ricuce un punto di resistenza o una frattura quando la ricarica è pronta.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r03-05",
+      "shipId": "R03",
+      "shipName": "Iride",
+      "rarityDraft": "Rara",
+      "name": "Prisma Inverso",
+      "category": "Scudiera 2",
+      "families": [
+        "precisione",
+        "riparazione",
+        "sincronia"
+      ],
+      "effectProposed": "Prepara un tiro preciso alla Centralina soltanto dopo una scansione.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r03-06",
+      "shipId": "R03",
+      "shipName": "Iride",
+      "rarityDraft": "Rara",
+      "name": "Analisi Spettrale",
+      "category": "Controllo",
+      "families": [
+        "precisione",
+        "riparazione",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Mostra quale passiva nemica perderà efficacia danneggiando il componente indicato.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r03-07",
+      "shipId": "R03",
+      "shipName": "Iride",
+      "rarityDraft": "Rara",
+      "name": "Arcobaleno Chirurgico",
+      "category": "Combo",
+      "families": [
+        "precisione",
+        "riparazione",
+        "combo"
+      ],
+      "effectProposed": "Analisi Spettrale + Prisma Inverso: un colpo di precisione e una cura selettiva, non due danni pieni.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Arcobaleno Chirurgico",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r04-01",
+      "shipId": "R04",
+      "shipName": "Squalo del Vuoto",
+      "rarityDraft": "Rara",
+      "name": "Ammiraglio Abissale",
+      "category": "Personaggio",
+      "families": [
+        "protezione",
+        "contrattacco",
+        "personaggio"
+      ],
+      "effectProposed": "Dopo due salve intercettate, abilita un contrattacco di assedio.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r04-02",
+      "shipId": "R04",
+      "shipName": "Squalo del Vuoto",
+      "rarityDraft": "Rara",
+      "name": "Morso del Vuoto",
+      "category": "Attacco",
+      "families": [
+        "protezione",
+        "contrattacco",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Un colpo al Generatore prende potenza dalle cariche del baluardo.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r04-03",
+      "shipId": "R04",
+      "shipName": "Squalo del Vuoto",
+      "rarityDraft": "Rara",
+      "name": "Scudo Totale",
+      "category": "Difesa scudiera 1",
+      "families": [
+        "protezione",
+        "contrattacco"
+      ],
+      "effectProposed": "Lo Scudo del Vuoto intercetta il colpo diretto alla madre e consuma resistenza propria.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r04-04",
+      "shipId": "R04",
+      "shipName": "Squalo del Vuoto",
+      "rarityDraft": "Rara",
+      "name": "Sacca Abissale",
+      "category": "Supporto",
+      "families": [
+        "protezione",
+        "contrattacco",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Restituisce una piccola resistenza alla scudiera, ma solo se non è stata distrutta.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r04-05",
+      "shipId": "R04",
+      "shipName": "Squalo del Vuoto",
+      "rarityDraft": "Rara",
+      "name": "Siluro di Ritorsione",
+      "category": "Scudiera 2",
+      "families": [
+        "protezione",
+        "contrattacco"
+      ],
+      "effectProposed": "Squalo Siluro marca il componente che ha originato un colpo intercettato.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r04-06",
+      "shipId": "R04",
+      "shipName": "Squalo del Vuoto",
+      "rarityDraft": "Rara",
+      "name": "Finta Predatoria",
+      "category": "Controllo",
+      "families": [
+        "protezione",
+        "contrattacco"
+      ],
+      "effectProposed": "Induce l’avversario a usare una copertura mirata prima dell’attacco vero.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-r04-07",
+      "shipId": "R04",
+      "shipName": "Squalo del Vuoto",
+      "rarityDraft": "Rara",
+      "name": "Caccia del Predatore",
+      "category": "Combo",
+      "families": [
+        "protezione",
+        "contrattacco",
+        "combo"
+      ],
+      "effectProposed": "Ammiraglio Abissale + Siluro di Ritorsione: un colpo concentrato su parte marcata con bonus condizionale.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Caccia del Predatore",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e01-01",
+      "shipId": "E01",
+      "shipName": "Nebulosa",
+      "rarityDraft": "Epica",
+      "name": "Arconte della Bruma",
+      "category": "Personaggio",
+      "families": [
+        "interferenza",
+        "protezione",
+        "personaggio"
+      ],
+      "effectProposed": "Ogni primo congelamento rivela il componente che mantiene attiva la scudiera avversaria.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e01-02",
+      "shipId": "E01",
+      "shipName": "Nebulosa",
+      "rarityDraft": "Epica",
+      "name": "Nebbia Polare",
+      "category": "Controllo",
+      "families": [
+        "interferenza",
+        "protezione"
+      ],
+      "effectProposed": "Congela un componente integro per un round: niente effetti da quel componente.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e01-03",
+      "shipId": "E01",
+      "shipName": "Nebulosa",
+      "rarityDraft": "Epica",
+      "name": "Corona di Plasma",
+      "category": "Attacco",
+      "families": [
+        "interferenza",
+        "protezione",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Un ventaglio di colpi deboli colpisce un solo componente scelto.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e01-04",
+      "shipId": "E01",
+      "shipName": "Nebulosa",
+      "rarityDraft": "Epica",
+      "name": "Gelo di Ritorno",
+      "category": "Difesa",
+      "families": [
+        "interferenza",
+        "protezione",
+        "carica_artiglieria"
+      ],
+      "effectProposed": "Il prossimo avversario che colpisce una scudiera ottiene un rallentamento di carica.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
+      "vfxIntent": "charge-weapon",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e01-05",
+      "shipId": "E01",
+      "shipName": "Nebulosa",
+      "rarityDraft": "Epica",
+      "name": "Baluardo Nebulosa",
+      "category": "Scudiera 1",
+      "families": [
+        "interferenza",
+        "protezione",
+        "riparazione"
+      ],
+      "effectProposed": "La scudiera assorbe l’intera salva se collegata e viva; il danno eccedente non raggiunge la madre nello stesso round. Consuma la propria resistenza.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e01-06",
+      "shipId": "E01",
+      "shipName": "Nebulosa",
+      "rarityDraft": "Epica",
+      "name": "Pulsar di Soppressione",
+      "category": "Scudiera 2",
+      "families": [
+        "interferenza",
+        "protezione",
+        "sincronia"
+      ],
+      "effectProposed": "Disattiva per un round una passiva avversaria scelta tra quelle attive.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e01-07",
+      "shipId": "E01",
+      "shipName": "Nebulosa",
+      "rarityDraft": "Epica",
+      "name": "Cristalli di Bruma",
+      "category": "Supporto",
+      "families": [
+        "interferenza",
+        "protezione"
+      ],
+      "effectProposed": "Prolunga una copertura mirata già attiva, senza crearne una nuova.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e01-08",
+      "shipId": "E01",
+      "shipName": "Nebulosa",
+      "rarityDraft": "Epica",
+      "name": "Notte Criogenica",
+      "category": "Combo",
+      "families": [
+        "interferenza",
+        "protezione",
+        "combo"
+      ],
+      "effectProposed": "Arconte + Nebbia Polare + Pulsar: congela due funzioni per un round, senza danno diretto aggiuntivo.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Notte Criogenica",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e02-01",
+      "shipId": "E02",
+      "shipName": "Tempesta",
+      "rarityDraft": "Epica",
+      "name": "Capitano della Tempesta",
+      "category": "Personaggio",
+      "families": [
+        "mobilità",
+        "interferenza",
+        "personaggio"
+      ],
+      "effectProposed": "Una volta per round consente di spostare il secondo impulso su un bersaglio distinto.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e02-02",
+      "shipId": "E02",
+      "shipName": "Tempesta",
+      "rarityDraft": "Epica",
+      "name": "Pioggia Scura",
+      "category": "Attacco",
+      "families": [
+        "mobilità",
+        "interferenza",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Tre piccoli proiettili su un singolo pezzo, con un solo danno vitale complessivo.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e02-03",
+      "shipId": "E02",
+      "shipName": "Tempesta",
+      "rarityDraft": "Epica",
+      "name": "Onda a Pettine",
+      "category": "Attacco",
+      "families": [
+        "mobilità",
+        "interferenza"
+      ],
+      "effectProposed": "Marca due componenti e sottrae difesa alla seconda salva valida.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e02-04",
+      "shipId": "E02",
+      "shipName": "Tempesta",
+      "rarityDraft": "Epica",
+      "name": "Fronte di Tempesta",
+      "category": "Scudiera 1",
+      "families": [
+        "mobilità",
+        "interferenza",
+        "protezione"
+      ],
+      "effectProposed": "Fronte Tempesta intercetta i colpi sulle Armi materne.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e02-05",
+      "shipId": "E02",
+      "shipName": "Tempesta",
+      "rarityDraft": "Epica",
+      "name": "Sovraccarico",
+      "category": "Controllo",
+      "families": [
+        "mobilità",
+        "interferenza"
+      ],
+      "effectProposed": "Dopo una ionizzazione ritarda una ricarica nemica di un round.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e02-06",
+      "shipId": "E02",
+      "shipName": "Tempesta",
+      "rarityDraft": "Epica",
+      "name": "Tuono Risonante",
+      "category": "Scudiera 2",
+      "families": [
+        "mobilità",
+        "interferenza",
+        "sincronia"
+      ],
+      "effectProposed": "Tuono Doppio converte la seconda raffica riuscita in bonus ionico.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e02-07",
+      "shipId": "E02",
+      "shipName": "Tempesta",
+      "rarityDraft": "Epica",
+      "name": "Fulmine di Rimbalzo",
+      "category": "Tattica",
+      "families": [
+        "mobilità",
+        "interferenza",
+        "protezione"
+      ],
+      "effectProposed": "Una raffica può deviare dal componente colpito a un secondo integro, con potenza ridotta.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e02-08",
+      "shipId": "E02",
+      "shipName": "Tempesta",
+      "rarityDraft": "Epica",
+      "name": "Quadrante di Tempesta",
+      "category": "Combo",
+      "families": [
+        "mobilità",
+        "interferenza",
+        "combo"
+      ],
+      "effectProposed": "Capitano + Onda a Pettine + Tuono: dopo preparazione, quattro impulsi su quattro vitali diversi disponibili, massimo una frattura ciascuno, senza duplicare sui pezzi assenti.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Quadrante di Tempesta",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e03-01",
+      "shipId": "E03",
+      "shipName": "Fenice",
+      "rarityDraft": "Epica",
+      "name": "Guardiana delle Ceneri",
+      "category": "Personaggio",
+      "families": [
+        "riparazione",
+        "pressione",
+        "personaggio"
+      ],
+      "effectProposed": "La prima frattura della madre durante l’attivazione genera una carica di rinascita.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e03-02",
+      "shipId": "E03",
+      "shipName": "Fenice",
+      "rarityDraft": "Epica",
+      "name": "Artiglio Ardente",
+      "category": "Attacco",
+      "families": [
+        "riparazione",
+        "pressione",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Colpo di fuoco amplificato se la madre ha un componente fratturato.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e03-03",
+      "shipId": "E03",
+      "shipName": "Fenice",
+      "rarityDraft": "Epica",
+      "name": "Semi di Rinascita",
+      "category": "Supporto",
+      "families": [
+        "riparazione",
+        "pressione"
+      ],
+      "effectProposed": "Prepara una riparazione al prossimo round, impedita se il componente viene distrutto prima.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "generator"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e03-04",
+      "shipId": "E03",
+      "shipName": "Fenice",
+      "rarityDraft": "Epica",
+      "name": "Scudo Fenice",
+      "category": "Scudiera 1",
+      "families": [
+        "riparazione",
+        "pressione"
+      ],
+      "effectProposed": "Ripara una frattura recuperabile ogni volta che raggiunge la ricarica prevista.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e03-05",
+      "shipId": "E03",
+      "shipName": "Fenice",
+      "rarityDraft": "Epica",
+      "name": "Fiamma Residua",
+      "category": "Controllo",
+      "families": [
+        "riparazione",
+        "pressione"
+      ],
+      "effectProposed": "Un bersaglio colpito da fuoco subisce riduzione di riparazione per un round.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e03-06",
+      "shipId": "E03",
+      "shipName": "Fenice",
+      "rarityDraft": "Epica",
+      "name": "Rinascita Plasma",
+      "category": "Scudiera 2",
+      "families": [
+        "riparazione",
+        "pressione",
+        "sincronia"
+      ],
+      "effectProposed": "Converte una carica di rinascita in potenza per una singola salva.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e03-07",
+      "shipId": "E03",
+      "shipName": "Fenice",
+      "rarityDraft": "Epica",
+      "name": "Fusione della Fenice",
+      "category": "Fusione L5",
+      "families": [
+        "riparazione",
+        "pressione",
+        "sincronia_fusione"
+      ],
+      "effectProposed": "Unisce le due scudiere attive per una riparazione e un contrattacco, con costo di ricarica.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti",
+      "vfxIntent": "fusion-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e03-08",
+      "shipId": "E03",
+      "shipName": "Fenice",
+      "rarityDraft": "Epica",
+      "name": "Cenere d’Assedio",
+      "category": "Combo",
+      "families": [
+        "riparazione",
+        "pressione",
+        "combo"
+      ],
+      "effectProposed": "Guardiana + Fiamma Residua: due colpi su parti diverse; il secondo non supera un baluardo totale.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 1,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Cenere d’Assedio",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e04-01",
+      "shipId": "E04",
+      "shipName": "Orizzonte",
+      "rarityDraft": "Epica",
+      "name": "Veggente Orbitale",
+      "category": "Personaggio",
+      "families": [
+        "precisione",
+        "protezione",
+        "personaggio"
+      ],
+      "effectProposed": "Prima del tiro visualizza le due difese avversarie più rilevanti per il bersaglio.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e04-02",
+      "shipId": "E04",
+      "shipName": "Orizzonte",
+      "rarityDraft": "Epica",
+      "name": "Lancia Bipolare",
+      "category": "Attacco",
+      "families": [
+        "precisione",
+        "protezione"
+      ],
+      "effectProposed": "Perfora una difesa parziale, ma non un baluardo completo attivo.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno",
+      "vfxIntent": "target-lock",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e04-03",
+      "shipId": "E04",
+      "shipName": "Orizzonte",
+      "rarityDraft": "Epica",
+      "name": "Coordinate Estreme",
+      "category": "Tattica",
+      "families": [
+        "precisione",
+        "protezione"
+      ],
+      "effectProposed": "Memorizza un bersaglio: il colpo successivo su quel pezzo ottiene precisione.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno",
+      "vfxIntent": "target-lock",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e04-04",
+      "shipId": "E04",
+      "shipName": "Orizzonte",
+      "rarityDraft": "Epica",
+      "name": "Aegis Orbitale",
+      "category": "Scudiera 1",
+      "families": [
+        "precisione",
+        "protezione"
+      ],
+      "effectProposed": "La scudiera corazzata intercetta una salva e consuma resistenza propria.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e04-05",
+      "shipId": "E04",
+      "shipName": "Orizzonte",
+      "rarityDraft": "Epica",
+      "name": "Vettore Incrociato",
+      "category": "Attacco",
+      "families": [
+        "precisione",
+        "protezione",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Due raggi su due parti differenti purché la mira sia stata preparata.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e04-06",
+      "shipId": "E04",
+      "shipName": "Orizzonte",
+      "rarityDraft": "Epica",
+      "name": "Orizzonte Lance",
+      "category": "Scudiera 2",
+      "families": [
+        "precisione",
+        "protezione",
+        "sincronia"
+      ],
+      "effectProposed": "La seconda scudiera guida un colpo al componente marcato.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e04-07",
+      "shipId": "E04",
+      "shipName": "Orizzonte",
+      "rarityDraft": "Epica",
+      "name": "Osservatorio Tattico",
+      "category": "Controllo",
+      "families": [
+        "precisione",
+        "protezione",
+        "interferenza"
+      ],
+      "effectProposed": "Annulla il camuffamento di un singolo bersaglio nemico.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-e04-08",
+      "shipId": "E04",
+      "shipName": "Orizzonte",
+      "rarityDraft": "Epica",
+      "name": "Convergenza dei Quattro",
+      "category": "Combo",
+      "families": [
+        "precisione",
+        "protezione",
+        "combo"
+      ],
+      "effectProposed": "Veggente + Coordinate Estreme + Lance: quattro colpi distribuiti, ma solo con due scudiere e dopo preparazione.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Convergenza dei Quattro",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-01",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Sovrano dell’Eclisse",
+      "category": "Personaggio",
+      "families": [
+        "protezione",
+        "pressione",
+        "personaggio"
+      ],
+      "effectProposed": "Marca il primo componente nemico colpito come bersaglio della prossima sentenza.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-02",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Corona Reale",
+      "category": "Scudiera 1",
+      "families": [
+        "protezione",
+        "pressione"
+      ],
+      "effectProposed": "La scudiera intercetta le salve finché ha resistenza.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-03",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Pioggia Reale",
+      "category": "Attacco",
+      "families": [
+        "protezione",
+        "pressione",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Distribuisce proiettili fotonici su due componenti differenti.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-04",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Verdetto Corrosivo",
+      "category": "Scudiera 2",
+      "families": [
+        "protezione",
+        "pressione",
+        "sincronia"
+      ],
+      "effectProposed": "La seconda scudiera aggiunge corrosione a un colpo già riuscito.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-05",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Decreto d’Ombra",
+      "category": "Controllo",
+      "families": [
+        "protezione",
+        "pressione",
+        "riparazione"
+      ],
+      "effectProposed": "Blocca per un round una riparazione sul componente marcato.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-06",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Frattura dei Diamanti",
+      "category": "Attacco",
+      "families": [
+        "protezione",
+        "pressione",
+        "carica_artiglieria"
+      ],
+      "effectProposed": "Colpo caricato ad alta precisione contro un sistema già scoperto.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
+      "vfxIntent": "charge-weapon",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-07",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Giudizio Eclissi",
+      "category": "Combo",
+      "families": [
+        "protezione",
+        "pressione",
+        "combo"
+      ],
+      "effectProposed": "Tre carte esclusive preparano tre spirali che colpiscono fino a tre vitali differenti.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Giudizio Eclissi",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-08",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Bastione Reale",
+      "category": "Difesa",
+      "families": [
+        "protezione",
+        "pressione",
+        "carica_artiglieria"
+      ],
+      "effectProposed": "Consuma una carica della Corona per coprire una parte dichiarata.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
+      "vfxIntent": "charge-weapon",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-09",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Trono Infranto",
+      "category": "Reazione",
+      "families": [
+        "protezione",
+        "pressione",
+        "carica_artiglieria"
+      ],
+      "effectProposed": "Se una scudiera è distrutta, converte una corrosione attiva in carica offensiva.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
+      "vfxIntent": "charge-weapon",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l01-10",
+      "shipId": "L01",
+      "shipName": "Eclisse Reale",
+      "rarityDraft": "Leggendaria",
+      "name": "Eclisse Totale",
+      "category": "Combo L5",
+      "families": [
+        "protezione",
+        "pressione",
+        "combo"
+      ],
+      "effectProposed": "Sovrano + Verdetto + Giudizio: quattro impatti su quattro componenti, con preparazione e contromisure possibili.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Eclisse Totale",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-01",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Architetto del Vuoto",
+      "category": "Personaggio",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "personaggio"
+      ],
+      "effectProposed": "Sposta una marca gravitazionale da un componente a un altro prima della salva.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-02",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Pozzo Gravitazionale",
+      "category": "Controllo",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "riparazione"
+      ],
+      "effectProposed": "Un componente marcato non può essere cambiato come bersaglio di riparazione nel prossimo round.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-03",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Lame Singolari",
+      "category": "Attacco",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Due fendenti visibili contro il medesimo vitale con un solo impatto meccanico per salva, senza attraversare una protezione attiva.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-04",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Sentinella Eclisse",
+      "category": "Scudiera 1",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "sincronia"
+      ],
+      "effectProposed": "Riduce una salva nemica di una unità e accumula compressione.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-05",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Fulcro Ionico",
+      "category": "Attacco",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Consuma compressione per potenziare un raggio su un vitale.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "generator"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-06",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Ascia del Vuoto",
+      "category": "Scudiera 2",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "sincronia"
+      ],
+      "effectProposed": "Converte la compressione residua in un colpo aggiuntivo ridotto.",
+      "minShipLevelDraft": 3,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-07",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Curvatura del Bersaglio",
+      "category": "Tattica",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Sposta un impatto secondario da un pezzo integro a un altro, mai sullo stesso.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-08",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Orizzonte degli Eventi",
+      "category": "Difesa",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "protezione"
+      ],
+      "effectProposed": "Protegge per un round una scudiera danneggiata assorbendo il prossimo danno lieve.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-09",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Fusione di Singolarità",
+      "category": "Fusione L5",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "sincronia_fusione"
+      ],
+      "effectProposed": "Unisce le due scudiere per una scarica compressa, disattivandone temporaneamente le passive.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti",
+      "vfxIntent": "fusion-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l02-10",
+      "shipId": "L02",
+      "shipName": "Singolarità",
+      "rarityDraft": "Leggendaria",
+      "name": "Collasso Gemello",
+      "category": "Combo",
+      "families": [
+        "interferenza",
+        "deviazione",
+        "combo"
+      ],
+      "effectProposed": "Architetto + Fulcro + Fusione: fino a tre componenti colpiti, con un colpo maggiorato sul bersaglio marcato.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Collasso Gemello",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-01",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Magistro Ossidiana",
+      "category": "Personaggio",
+      "families": [
+        "carica",
+        "protezione",
+        "personaggio"
+      ],
+      "effectProposed": "Conserva la mira acquisita su una parte mentre il Cannone Titano si carica.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-02",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Obice Nero",
+      "category": "Attacco",
+      "families": [
+        "carica",
+        "protezione",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Colpo pesante su un pezzo dichiarato, lento e interrompibile.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-03",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Ala del Giudizio",
+      "category": "Scudiera 1",
+      "families": [
+        "carica",
+        "protezione"
+      ],
+      "effectProposed": "La scudiera corazzata intercetta i colpi finché la sua resistenza non termina.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-04",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Trincea Astrale",
+      "category": "Difesa",
+      "families": [
+        "carica",
+        "protezione",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Prepara la prima scudiera a ricevere una salva e ne riduce il primo danno.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-05",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Cannone Titano",
+      "category": "Attacco",
+      "families": [
+        "carica",
+        "protezione",
+        "carica_artiglieria"
+      ],
+      "effectProposed": "Con carica completa causa un impatto critico su un solo componente.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
+      "vfxIntent": "charge-weapon",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-06",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Lancia dell’Alba",
+      "category": "Scudiera 2",
+      "families": [
+        "carica",
+        "protezione",
+        "sincronia"
+      ],
+      "effectProposed": "La seconda scudiera guida l’attacco ai sistemi Armi avversari.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
+      "vfxIntent": "escort-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-07",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Scansione da Assedio",
+      "category": "Tattica",
+      "families": [
+        "carica",
+        "protezione",
+        "pressione_attacco"
+      ],
+      "effectProposed": "Identifica due vitali, preparando un colpo a ventaglio nel turno successivo.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "vfxIntent": "mother-weapon-fire",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-08",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Doppia Gittata",
+      "category": "Attacco",
+      "families": [
+        "carica",
+        "protezione",
+        "carica_artiglieria"
+      ],
+      "effectProposed": "Divide una carica in due colpi leggeri a componenti diversi.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
+      "vfxIntent": "charge-weapon",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-09",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Fusione Ossidiana",
+      "category": "Fusione L5",
+      "families": [
+        "carica",
+        "protezione",
+        "sincronia_fusione"
+      ],
+      "effectProposed": "Accoppia le scudiere in una formazione di assedio che riduce la protezione ma consuma carica.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti",
+      "vfxIntent": "fusion-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l03-10",
+      "shipId": "L03",
+      "shipName": "Titano Ossidiana",
+      "rarityDraft": "Leggendaria",
+      "name": "Sentenza Quadrante",
+      "category": "Combo",
+      "families": [
+        "carica",
+        "protezione",
+        "combo"
+      ],
+      "effectProposed": "Magistro + Scansione + Fusione: quattro colpi diversi, uno per parte; non attivabile con scudiere scollegate.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Sentenza Quadrante",
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-01",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Custode Astrale",
+      "category": "Personaggio",
+      "families": [
+        "riparazione",
+        "sincronia",
+        "personaggio"
+      ],
+      "effectProposed": "Una riparazione riuscita genera un segnalino di armonia per la prossima combo.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "vfxIntent": "character-activate",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-02",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Arca Eterna",
+      "category": "Scudiera 1",
+      "families": [
+        "riparazione",
+        "sincronia"
+      ],
+      "effectProposed": "La prima scudiera ripara una frattura recuperabile quando la sua carica è pronta.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 1,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-03",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Stella Cremisi",
+      "category": "Attacco",
+      "families": [
+        "riparazione",
+        "sincronia",
+        "interferenza"
+      ],
+      "effectProposed": "Un bolide marca il componente colpito per un successivo raggio stellare.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-04",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Luce di Quadri",
+      "category": "Attacco",
+      "families": [
+        "riparazione",
+        "sincronia",
+        "interferenza"
+      ],
+      "effectProposed": "Raggio prismatico più efficace contro sistemi già marcati.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "vfxIntent": "electromagnetic-jam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-05",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Sovrana del Crepuscolo",
+      "category": "Scudiera 2",
+      "families": [
+        "riparazione",
+        "sincronia"
+      ],
+      "effectProposed": "La seconda scudiera ripristina resistenza a una compagna ferita, mai distrutta.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "vfxIntent": "repair-beam",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-06",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Stasi del Nucleo",
+      "category": "Difesa",
+      "families": [
+        "riparazione",
+        "sincronia",
+        "protezione"
+      ],
+      "effectProposed": "Protegge una scudiera da un singolo effetto di corrosione.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "vfxIntent": "escort-shield",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-07",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Coro di Risonanza",
+      "category": "Supporto",
+      "families": [
+        "riparazione",
+        "sincronia",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Consuma armonia per riattivare una passiva di supporto nel turno seguente.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-08",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Arca del Vuoto",
+      "category": "Attacco",
+      "families": [
+        "riparazione",
+        "sincronia",
+        "controllo_supporto"
+      ],
+      "effectProposed": "Un portale converte armonia in raggi separati, senza ripetere lo stesso bersaglio.",
+      "minShipLevelDraft": 1,
+      "requiredOwnParts": [
+        "weapons"
+      ],
+      "requiredEscortCount": 0,
+      "counterplay": "Scadenza stato o purificazione secondo categoria",
+      "vfxIntent": "card-activation",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-09",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Fusione dell’Arca",
+      "category": "Fusione L5",
+      "families": [
+        "riparazione",
+        "sincronia",
+        "sincronia_fusione"
+      ],
+      "effectProposed": "Unisce le due scudiere per riparazione e risonanza, con un turno di ricarica.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [],
+      "requiredEscortCount": 2,
+      "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti",
+      "vfxIntent": "fusion-link",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": null,
+      "status": "non_implementata_da_approvare"
+    },
+    {
+      "id": "ex-l04-10",
+      "shipId": "L04",
+      "shipName": "Arca Astrale",
+      "rarityDraft": "Leggendaria",
+      "name": "Quattro Costellazioni",
+      "category": "Combo",
+      "families": [
+        "riparazione",
+        "sincronia",
+        "combo"
+      ],
+      "effectProposed": "Custode + Arca del Vuoto + Fusione: dopo una riparazione reale e preparazione, fino a quattro raggi sui vitali distinti realmente presenti, massimo una frattura ciascuno.",
+      "minShipLevelDraft": 5,
+      "requiredOwnParts": [
+        "command",
+        "generator",
+        "weapons"
+      ],
+      "requiredEscortCount": 2,
+      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
+      "vfxIntent": "combo-windup",
+      "maxCopiesInAutoPackageDraft": 1,
+      "upgradeType": "manual_only_ship_exclusive",
+      "comboRecipeId": "Quattro Costellazioni",
+      "status": "non_implementata_da_approvare"
+    }
+  ],
+  "comboRecipes": [
+    {
+      "ricetta": "Sequenza Zero",
+      "navicella": "N00",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 2,
+      "carte_effettive_da_giocare": [
+        "Cartografo Aurora",
+        "Impulso Adattivo",
+        "Sequenza Zero"
+      ],
+      "vitali_madre_richiesti": [
+        "engine",
+        "weapons",
+        "command",
+        "generator"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Due marche / due colpi in round diversi; nessuna vittoria automatica",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Tenaglia Cremisi",
+      "navicella": "C01",
+      "livello_minimo": 3,
+      "scudiere_richieste": 1,
+      "bersagli_massimi": 2,
+      "carte_effettive_da_giocare": [
+        "Pilota Helios",
+        "Passaggio Radente",
+        "Tenaglia Cremisi"
+      ],
+      "vitali_madre_richiesti": [
+        "engine",
+        "weapons",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Motori e Armi, una sola frattura per bersaglio",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Rosa di Cristallo",
+      "navicella": "C02",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 2,
+      "carte_effettive_da_giocare": [
+        "Artigiana Prisma",
+        "Trapano Vetrificato",
+        "Rosa di Cristallo"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "command",
+        "generator"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Due precisioni da armi madre; difesa totale resta valida",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Costellazione Pulsata",
+      "navicella": "C03",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 3,
+      "carte_effettive_da_giocare": [
+        "Comandante Risonante",
+        "Doppio Canale",
+        "Costellazione Pulsata"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Tre impulsi ridotti su bersagli diversi, richiede disturbo ionico già applicato",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Sciame Scarlatto",
+      "navicella": "C04",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 2,
+      "carte_effettive_da_giocare": [
+        "Pungiglione Persistente",
+        "Risposta d’Ombra",
+        "Sciame Scarlatto"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "engine",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Due bersagli distinti; solo uno riceve marca persistente",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Triangolazione Falco",
+      "navicella": "R01",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 3,
+      "carte_effettive_da_giocare": [
+        "Artigliere Binario",
+        "Fuoco di Calibrazione",
+        "Triangolazione Falco"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Consuma una carica già accumulata; se assente, solo tiro standard",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Nodo di Marea",
+      "navicella": "R02",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 2,
+      "carte_effettive_da_giocare": [
+        "Navigatrice Manta",
+        "Sting di Risonanza",
+        "Nodo di Marea"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Due bersagli e una sola passiva difensiva temporaneamente disturbata",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Arcobaleno Chirurgico",
+      "navicella": "R03",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 1,
+      "carte_effettive_da_giocare": [
+        "Analisi Spettrale",
+        "Prisma Inverso",
+        "Arcobaleno Chirurgico"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "command",
+        "generator"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Un solo impatto reale e una riparazione di parte fratturata recuperabile",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Caccia del Predatore",
+      "navicella": "R04",
+      "livello_minimo": 3,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 1,
+      "carte_effettive_da_giocare": [
+        "Ammiraglio Abissale",
+        "Siluro di Ritorsione",
+        "Caccia del Predatore"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Richiede salvo realmente assorbito dalla scudiera; nessun colpo gratis",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Notte Criogenica",
+      "navicella": "E01",
+      "livello_minimo": 3,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 0,
+      "carte_effettive_da_giocare": [
+        "Arconte della Bruma",
+        "Nebbia Polare",
+        "Pulsar di Soppressione",
+        "Notte Criogenica"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Due funzioni disturbate per un round, zero danno diretto aggiuntivo",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": true
+    },
+    {
+      "ricetta": "Quadrante di Tempesta",
+      "navicella": "E02",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 4,
+      "carte_effettive_da_giocare": [
+        "Capitano della Tempesta",
+        "Onda a Pettine",
+        "Tuono Risonante",
+        "Quadrante di Tempesta"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Quattro vitali differenti solo se realmente presenti; massimo una frattura ciascuno",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": true
+    },
+    {
+      "ricetta": "Cenere d’Assedio",
+      "navicella": "E03",
+      "livello_minimo": 3,
+      "scudiere_richieste": 1,
+      "bersagli_massimi": 2,
+      "carte_effettive_da_giocare": [
+        "Guardiana delle Ceneri",
+        "Fiamma Residua",
+        "Cenere d’Assedio"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Due colpi condizionati dalla ferita propria; secondo non elude un baluardo",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Convergenza dei Quattro",
+      "navicella": "E04",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 4,
+      "carte_effettive_da_giocare": [
+        "Veggente Orbitale",
+        "Coordinate Estreme",
+        "Orizzonte Lance",
+        "Convergenza dei Quattro"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "command",
+        "generator"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Scansione/mira precedente e due scudiere connesse; 4 bersagli diversi",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": true
+    },
+    {
+      "ricetta": "Giudizio Eclissi",
+      "navicella": "L01",
+      "livello_minimo": 3,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 3,
+      "carte_effettive_da_giocare": [
+        "Sovrano dell’Eclisse",
+        "Frattura dei Diamanti",
+        "Giudizio Eclissi"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "command",
+        "generator"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Tre spirali distribuite dopo preparazione e carica effettiva",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": false
+    },
+    {
+      "ricetta": "Eclisse Totale",
+      "navicella": "L01",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 4,
+      "carte_effettive_da_giocare": [
+        "Sovrano dell’Eclisse",
+        "Verdetto Corrosivo",
+        "Giudizio Eclissi",
+        "Eclisse Totale"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "command",
+        "generator"
+      ],
+      "round_di_preparazione": 2,
+      "effetto_e_limite": "Quattro bersagli, preparazione in due round e corrosione attiva",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": true
+    },
+    {
+      "ricetta": "Collasso Gemello",
+      "navicella": "L02",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 3,
+      "carte_effettive_da_giocare": [
+        "Architetto del Vuoto",
+        "Fulcro Ionico",
+        "Fusione di Singolarità",
+        "Collasso Gemello"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Consuma compressione; due bersagli leggeri e uno più intenso entro limiti KO",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": true
+    },
+    {
+      "ricetta": "Sentenza Quadrante",
+      "navicella": "L03",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 4,
+      "carte_effettive_da_giocare": [
+        "Magistro Ossidiana",
+        "Scansione da Assedio",
+        "Fusione Ossidiana",
+        "Sentenza Quadrante"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Richiede carica pesante + mira; quattro bersagli; il baluardo intercetta salva intera",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": true
+    },
+    {
+      "ricetta": "Quattro Costellazioni",
+      "navicella": "L04",
+      "livello_minimo": 5,
+      "scudiere_richieste": 2,
+      "bersagli_massimi": 4,
+      "carte_effettive_da_giocare": [
+        "Custode Astrale",
+        "Arca del Vuoto",
+        "Fusione dell’Arca",
+        "Quattro Costellazioni"
+      ],
+      "vitali_madre_richiesti": [
+        "weapons",
+        "generator",
+        "command"
+      ],
+      "round_di_preparazione": 1,
+      "effetto_e_limite": "Consuma armonia da vera riparazione; un danno per ciascuno dei quattro bersagli",
+      "limite_carte_per_round": 3,
+      "interruzioni": [
+        "parte madre richiesta distrutta",
+        "scudiera necessaria scollegata o distrutta",
+        "manca una carta o scade preparazione",
+        "baluardo attivo per le salve offensive"
+      ],
+      "stato": "proposta da simulare",
+      "richiede_preparazione_multiturno": true
+    }
+  ],
+  "sharedFusionsDraft": [
+    {
+      "existingId": "fusion-barrier",
+      "allowedShips": [
+        "R04",
+        "E01",
+        "E04",
+        "L01",
+        "L03"
+      ]
+    },
+    {
+      "existingId": "fusion-strike",
+      "allowedShips": [
+        "C01",
+        "C04",
+        "R01",
+        "E02",
+        "E03",
+        "L03"
+      ]
+    },
+    {
+      "existingId": "fusion-twin",
+      "allowedShips": [
+        "C03",
+        "R02",
+        "E02",
+        "L02"
+      ]
+    },
+    {
+      "existingId": "fusion-triad",
+      "allowedShips": [
+        "R02",
+        "E02",
+        "E04",
+        "L01",
+        "L03",
+        "L04"
+      ]
+    }
+  ],
+  "validation": {
+    "shipCount": 17,
+    "uniqueCardCount": 129,
+    "recipeCount": 18,
+    "issues": []
+  }
+}
