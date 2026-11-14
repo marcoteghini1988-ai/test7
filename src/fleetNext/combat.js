@@ -171,6 +171,44 @@ function effectStrength(c,side,oneShot=true){
  return clamp((rarity==='Leggendaria'?2:rarity==='Epica'?1:1)+Math.max(0,upgrade-1),1,3);
 }
 const fams=c=>(c.families||[c.famiglia||'']).join(' ').toLowerCase();
+function characterOnPlay(b,side,id,ctx,events){
+ const who=ctx.who;
+ const note=text=>events.push(emit(b,who,'character',text,{cardId:id}));
+ switch(id){
+  case 'gen-216':{
+   const repaired=heal(side,1);
+   if(repaired)note('Meccanico di Bordo: ripara '+repaired.name);
+   break;
+  }
+  case 'gen-217':{
+   if(side.deck.length>1){
+    const moved=side.deck.splice(1,1)[0];side.deck.push(moved);
+    note('Ricognitrice Orbitale: una carta osservata spostata in fondo al mazzo');
+   }
+   break;
+  }
+  case 'gen-218':{
+   const repaired=heal(side,1,true);
+   if(repaired)note('Tecnico di Scorta: ripara '+repaired.name);
+   else {side.pendingRepair++;note('Tecnico di Scorta: marca di riparazione conservata');}
+   break;
+  }
+  case 'gen-243':{
+   const index=side.discard.findIndex(x=>GENERAL_CARDS[x]?.categoria==='Strategia'&&
+    GENERAL_CARDS[x]?.sottotipo!=='Terreno');
+   if(index>=0){
+    const recovered=side.discard.splice(index,1)[0];
+    side.deck.unshift(recovered);
+    note("Cronista dell'Eclisse: recuperata "+GENERAL_CARDS[recovered].nome);
+   }
+   break;
+  }
+  default:break;
+ }
+}
+function activeCharacter(side,ply){
+ return side.commander?.untilPly>ply?side.commander:null;
+}
 function applyCard(b,side,opponent,id,ctx,events){
  const c=card(id),role=cardRole(id),mother=side.ships[0];
  if(!c)return;
@@ -178,18 +216,24 @@ function applyCard(b,side,opponent,id,ctx,events){
  const at=txt=>events.push(emit(b,ctx.who,'card',(c.nome||c.name)+' · '+txt,{cardId:id}));
  if(role==='terrain'){
   const active=activateTerrain(b.terrain,id,b.ply,ctx.who,{boss:!!b.bossId,bossOverride:true});
-  if(active.ok){b.terrain=active.terrain;ctx.terrainChanged=true;at('Terreno attivato: '+b.terrain.id);}
+  if(active.ok){
+   b.terrain=active.terrain;ctx.terrainChanged=true;at('Terreno attivato: '+b.terrain.id);
+   if(activeCharacter(side,b.ply)?.id==='gen-228'&&side.deck.length){
+    const peek=side.deck.find(x=>GENERAL_CARDS[x]?.categoria==='Strategia');
+    if(peek)events.push(emit(b,ctx.who,'scan','Cartografa dei Varchi: prossima strategia '+GENERAL_CARDS[peek].nome));
+   }
+  }
   return;
  }
  if(role==='character'){
-  const duration=2*2;
+  const duration=id==='gen-216'?2:4;
   side.commander={id,untilPly:b.ply+duration,power,kind:families};
-  side.attackSlots=side.attackSlots.map(x=>x);
-  ctx.character=id;at('Personaggio attivo per due turni propri');
+  ctx.character=id;at('Personaggio attivo');
+  characterOnPlay(b,side,id,ctx,events);
   return;
  }
  if(role==='defense'){
-  const guard=1+(rarityToShield(c)>=2?1:0);
+  const guard=clamp(1+(rarityToShield(c)>=2?1:0)+(c.shipId?Math.max(0,power-1):0),1,3);
   side.defenses=[...side.defenses,{id,untilPly:b.ply+4,guard,used:false}].slice(-2);
   side.defenseSlots=side.defenses.map(e=>e.id).slice(-2);
   ctx.guard+=guard;at('Difesa pronta: '+guard+' protezione');
@@ -201,7 +245,10 @@ function applyCard(b,side,opponent,id,ctx,events){
   if(families.includes('precisione'))ctx.pierce=Math.max(ctx.pierce,1);
   if(families.includes('pressione')||families.includes('assalto'))ctx.power+=1;
   if(families.includes('corrosione'))ctx.corrosion=true;
-  if(families.includes('mobilita')&&operational(mother,'engine'))ctx.evasion=true;
+  if(families.includes('mobilita')&&operational(mother,'engine')){
+   ctx.evasion=true;
+   if(b.terrain?.id==='T01'){ctx.evasion=false;ctx.power=Math.max(0,ctx.power-1);}
+  }
   if(families.includes('combo')||role==='combo')ctx.comboCards.push(id);
   at('Attacco predisposto dalla madre');
   return;
@@ -219,10 +266,19 @@ function applyCard(b,side,opponent,id,ctx,events){
  }else if(families.includes('disturbo')||families.includes('ionizzazione')||families.includes('blocco')){
   opponent.fireDisabledUntil=Math.max(opponent.fireDisabledUntil,
    b.ply+(families.includes('blocco')?2:0));
-  opponent.buffs.push({kind:'jam',untilPly:b.ply+2,power:1});
-  at('Disturbo elettronico su avversario');
+  const guard=activeCharacter(opponent,b.ply);
+  if(guard?.id==='gen-236'&&!guard.prevented){
+   guard.prevented=true;at('Custode del Nucleo intercetta il sabotaggio');
+  }else{
+   const character=activeCharacter(side,b.ply);
+   const duration=character?.id==='gen-226'&&families.includes('ionizzazione')?4:2;
+   opponent.buffs.push({kind:'jam',untilPly:b.ply+duration,power:1});
+   at('Disturbo elettronico su avversario');
+  }
  }else if(families.includes('spionaggio')){
-  ctx.scan=true;at('Scansione: prepara il prossimo bersaglio');
+  ctx.scan=b.terrain?.id!=='T06';
+  if(ctx.scan)ctx.pierce=Math.max(1,ctx.pierce);
+  at('Scansione: '+(ctx.scan?'prepara il prossimo bersaglio':'ostacolata dalla Nebbia di Elio'));
  }else if(families.includes('energia')||families.includes('sincronia')||families.includes('preparazione')){
   ctx.power+=1;at('Energia trasferita alla madre');
  }else if(families.includes('intercetto')||families.includes('guardia')){
@@ -285,8 +341,11 @@ function opponentProtection(b,defender,attackerCtx,strength,events){
  const intercept=defender.escorts.find(e=>e.linked&&
   ['cover','bulwark','partCover','phase'].includes(e.skill.action));
  if(intercept){
-  const damaged=Math.min(intercept.hp,clamp(power,1,5)+
-   (b.terrain?.id==='T04'?1:0)+(b.terrain?.id==='T10'&&attackerCtx.multiTargets>1?1:0));
+  const commander=activeCharacter(defender,b.ply);
+  const saved=commander?.id==='gen-227'&&!commander.saved?1:0;
+  if(saved)commander.saved=true;
+  const damaged=Math.min(intercept.hp,Math.max(1,clamp(power,1,5)+
+   (b.terrain?.id==='T04'?1:0)+(b.terrain?.id==='T10'&&attackerCtx.multiTargets>1?1:0)-saved));
   intercept.hp-=damaged;intercept.destroyed=intercept.hp<=0;
   refreshEscortLinks(defender);
   events.push(emit(b,attackerCtx.who,'impact',
@@ -315,7 +374,12 @@ function resolveSalvo(b,ctx,events,order){
   events.push(emit(b,ctx.who,'no-shot','Armi indisponibili o bersaglio non valido'));
   return {damage:0};
  }
- const base=1+mother.weaponRating+ctx.power+Math.min(1,ctx.attackCards);
+ const commander=activeCharacter(side,b.ply);
+ const characterBonus=commander&&
+  (/pressione|precisione|assalto|carica|sincronia|personaggio/.test(commander.kind))?
+  (commander.id==='gen-216'||commander.id==='gen-217'||commander.id==='gen-218'?0:
+   Math.min(2,commander.power)):0;
+ const base=1+mother.weaponRating+ctx.power+characterBonus+Math.min(1,ctx.attackCards);
  const terrain=terrainSalvoModifier(b.terrain,mother.id);
  const elemental=(mother.element==='plasma'&&target.element==='mineral')||
   (mother.element==='mineral'&&target.element==='ionic')||
@@ -344,6 +408,14 @@ function resolveSalvo(b,ctx,events,order){
   {shipIndex:0,shipName:target.name,partId:mainPart.id,damage:total,
    destroyed:mainPart.destroyed,played:ctx.cards,targets:hits,terrainBonus:terrain.value}));
  side.lastDamage=total;
+ const character=activeCharacter(side,b.ply);
+ if(total>0&&character?.id==='gen-234'&&!character.marked){
+  character.marked=true;side.buffs.push({kind:'aim',untilPly:b.ply+4,power:1});
+ }
+ if(total>0&&b.terrain?.id==='T07'&&mother.element==='ionic'){
+  const escort=defender.escorts.find(x=>x.linked);
+  if(escort){escort.jammedUntilPly=b.ply+2;escort.linked=false;}
+ }
  return {damage:total,partId:mainPart.id,played:ctx.cards,targets:hits,destroyed:mainPart.destroyed};
 }
 function finishTurn(b,ctx,events){
@@ -352,14 +424,17 @@ function finishTurn(b,ctx,events){
  // I bonus e le riparazioni differite sono risolti al proprio turno seguente.
  if(ctx.extraDraw){
   const extra=Math.min(ctx.extraDraw,2);
-  for(let i=0;i<extra&&side.deck.length;i++)side.hand.push(side.deck.shift());
-  while(side.hand.length>FLEET_HAND_SIZE)side.discard.push(side.hand.pop());
+  for(let i=0;i<extra&&side.hand.length;i++)side.discard.push(side.hand.shift());
  }
  if(ctx.cards.length&&side.drawBlockedUntil<=b.ply)refill(b,side);
  side.buffs=side.buffs.filter(x=>x.untilPly>b.ply);
+ const expiredDefenses=side.defenses.filter(x=>x.untilPly<=b.ply);
+ side.discard.push(...expiredDefenses.map(x=>x.id));
  side.defenses=side.defenses.filter(x=>x.untilPly>b.ply);
  side.defenseSlots=side.defenses.map(x=>x.id).slice(-2);
- if(side.commander?.untilPly<=b.ply)side.commander=null;
+ if(side.commander?.untilPly<=b.ply){
+  side.discard.push(side.commander.id);side.commander=null;
+ }
  side.lastPlayed=[...ctx.cards];
  b.ply++;
  b.round=1+Math.floor(b.ply/2);
@@ -386,15 +461,18 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  if(error)return {ok:false,reason:error,battle,events:[]};
  const b=clone(battle),events=[],side=b.sides[who],enemy=b.sides[who==='A'?'B':'A'];
  const cards=takeCards(side,order.cards||[]);
+ if(side.commander?.untilPly<=b.ply){
+  side.discard.push(side.commander.id);side.commander=null;
+ }
  const ctx={who,nowMs,cards,power:0,guard:0,pierce:0,
   attackCards:0,comboCards:[],multiTargets:1,extraDraw:0,
   terrainChanged:false,repairDelayed:false,scan:false};
- for(const id of cards)applyCard(b,side,enemy,id,ctx,events);
  if(side.pendingRepair&&side.turnCount>0){
   const h=heal(side,side.pendingRepair);
   if(h)events.push(emit(b,who,'repair','Riparazione differita: '+h.name));
   side.pendingRepair=0;
  }
+ for(const id of cards)applyCard(b,side,enemy,id,ctx,events);
  applyBossPassive(b,ctx,events);
  escortPassive(b,side,ctx,events);
  const combo=resolveCombo(b,ctx,side.ships[0],side,cards,events);
