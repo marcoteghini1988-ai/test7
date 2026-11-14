@@ -1,5 +1,8 @@
 # Eclissi Stellare — Lotto 04: 20 carte Difesa da illustrare e approvare
 
+> **AGGIORNAMENTO VINCOLANTE — 14/11/2026, dopo revisione dell'utente:** il pacchetto `Eclissi_Lotto04_10_Difesa_STILE_UFFICIALE_DA_APPROVARE.zip` è **RESPINTO** perché usa una nuova cornice/struttura grafica, diversa dai primi 30 fronti approvati. Nessuna delle sue 10 immagini è approvata o va integrata. **Non creare una nuova cornice con generazione AI, nemmeno se somiglia alle originali.** Per rifare il lotto 04 occorre usare **materialmente la grafica originale di `public/assets/fleet-approved-fronts/gen-092.webp` come base/maschera**, conservandone disposizione, misure, ornamenti, testata, pannello effetto e targhetta rarità; sostituire solo l'illustrazione (in area centrale), titolo e testo dal catalogo. Dove l'immagine approvata non consente separazione dei livelli, ricostruire una maschera **derivata pixel-per-pixel dall'originale**, non generare un nuovo modello. Confrontare ogni carta fianco a fianco con `gen-092.webp` prima dell'anteprima. Rispettare sempre un lotto di almeno 10 carte. Vedi `docs/STILE_UFFICIALE_CARTE_APPROVATO.md`.
+
+
 Data: 14 novembre 2026. Repository ufficiale: `marcoteghini1988-ai/test7`, ramo `main`.
 
 **Questo è un brief preparatorio, NON un lotto approvato e NON la prova di avere creato 20 immagini.** Gli ID, i nomi, le rarità e gli effetti sono copiati dal catalogo ufficiale `src/fleetNext/catalogGeneral.json`. Nessuna nuova carta o nuova regola viene introdotta.
