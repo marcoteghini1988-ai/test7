@@ -102,19 +102,28 @@ test('Il generatore accetta illustrazioni HD per tutte le funzioni',()=>{
  assert.ok(script.includes('const rand=rng(seed^0x894ec321)'),'Fallback vettoriale ancora disponibile');
 });
 
-test('119 Attacchi con illustrazioni individuali e 12 composizioni tematiche',()=>{
+test('119 Attacchi: 6 dipinti HD e 113 fronti vettoriali, formato 2:3',()=>{
  const cards=[...generalData.carte.filter(c=>c.categoria==='Attacco'),...exclusiveData.cards.filter(c=>c.category==='Attacco'||/Combo|Fusione/.test(c.category)||c.category==='Reazione')];
  assert.equal(cards.length,119);
+ const hd=new Set(['gen-001','gen-004','gen-012','gen-032','gen-037','gen-046']);
  const motifs=new Set(),signatures=new Set();
  for(const card of cards){
   const svg=readFileSync(resolve('public/assets/fleet-next-cards',card.id+'.svg'),'utf8');
-  assert.ok(svg.includes('data-attack-id="'+card.id+'"'),card.id);
   assert.ok(svg.includes('width="512" height="768"'),card.id);
-  assert.ok(svg.includes('stroke="#ff594c"'),card.id);
-  const motif=svg.match(/data-attack-scene="([^"]+)"/),sign=svg.match(/data-attack-signature="([^"]+)"/);
-  assert.ok(motif&&sign,card.id);
-  motifs.add(motif[1]);signatures.add(sign[1]);
+  assert.ok(svg.includes('stroke="#ff594c"'),'Colore Attacco non rosso: '+card.id);
+  if(hd.has(card.id)){
+   const asset=readFileSync(resolve('public/assets/fleet-card-illustrations',card.id+'.webp'));
+   assert.ok(svg.includes('data-hd-art="'+card.id+'"'),'Opera HD non collegata: '+card.id);
+   const match=svg.match(/href="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/);
+   assert.ok(match,'WebP non incorporata: '+card.id);
+   assert.ok(Buffer.from(match[1],'base64').equals(asset),'Opera HD differente dalla sorgente: '+card.id);
+  }else{
+   assert.ok(svg.includes('data-attack-id="'+card.id+'"'),'Manca scena Attacco: '+card.id);
+   const motif=svg.match(/data-attack-scene="([^"]+)"/),sign=svg.match(/data-attack-signature="([^"]+)"/);
+   assert.ok(motif&&sign,card.id);
+   motifs.add(motif[1]);signatures.add(sign[1]);
+  }
  }
- assert.equal(signatures.size,119,'Duplicati in Attacco');
- assert.ok(motifs.size>=9,'Temi insufficienti');
+ assert.equal(signatures.size,113,'Illustrazioni vettoriali duplicate');
+ assert.ok(motifs.size>=9,'Motivi insufficienti');
 });
