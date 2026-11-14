@@ -168,5 +168,6 @@ test('I quattro Terreni renderizzano i PNG HD ufficiali in tutte le viste, senza
  assert.ok(live.includes("backgroundImage:'url('+terrain.imagePath+')'"));
  assert.ok(live.includes("'--live-terrain-art':'url('+terrain.imagePath+')'"));
  assert.ok(live.includes('<PvpTerrainPortrait type={card.type}/>'));
- assert.ok(deck.includes('<PvpTerrainPortrait type={type}'));
+ // Nel gestore mazzo il fronte viene mostrato tramite lo stesso catalogo PNG.
+ assert.ok(deck.includes('officialSpecialArtPath(type)'));
 });
