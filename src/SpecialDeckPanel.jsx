@@ -4,8 +4,6 @@ import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {officialSpecialVisualMeta} from './officialSpecialVisualMeta.js';
 import {fleetCardEffect} from './fleetCardEngine.js';
 import {isBossCharacterCard} from './bossCharacterCards.js';
-import BossCharacterPortrait from './BossCharacterPortrait.jsx';
-import PvpTerrainPortrait from './PvpTerrainPortrait.jsx';
 import {isPvpTerrain} from './pvpTerrainCards.js';
 import {isTacticalEpic} from './tacticalEpicCards.js';
 import {isModuleCard,readLegacyModuleLevels,MODULE_STORAGE_KEY} from './tacticalEquipmentCards.js';
@@ -112,8 +110,6 @@ export default function SpecialDeckPanel({compact=false,onSaved}){
      return <div className="special-deck-entry" key={type}
       data-role={visual?.role} data-rarity={visual?.rarity??undefined}>
       <div className="special-deck-entry-copy">
-       {isBossCharacterCard(type)&&<BossCharacterPortrait type={type} className="special-deck-boss-portrait"/>}
-       {isPvpTerrain(type)&&<PvpTerrainPortrait type={type} className="special-deck-boss-portrait"/>}
        {officialSpecialArtPath(type)&&<img className="special-deck-art" src={officialSpecialArtPath(type)} alt={info.name} loading="lazy"/>}
        <strong>{type==='tactic-numeric-recycle'?'RICAMBIO TATTICO':type==='tactic-bomb'?'BOMBA EMP':info.short}</strong>
        <div className="special-deck-visual-tags">
