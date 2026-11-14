@@ -180,6 +180,37 @@ function artScene(c,seed){
  <path d="M44 246V232H87 M424 232h42v39 M44 477v39h40 M428 515h38v-40" stroke="${f.soft}" stroke-width="3" fill="none" opacity=".67"/>
  </g>`;
 }
+// Dieci sfondi ambiente: solo presentazione, nessuna modifica ai turni.
+const TERRAIN_IDS={T01:'gen-219',T02:'gen-238',T03:'gen-239',T04:'gen-220',T05:'gen-231',
+ T06:'gen-221',T07:'gen-230',T08:'gen-229',T09:'gen-237',T10:'gen-245'};
+const TERRAIN_ATMOSPHERE={
+ T01:'#64cfff',T02:'#ff6338',T03:'#aaa1ff',T04:'#ed9c4b',T05:'#a2aabd',
+ T06:'#b79dff',T07:'#42ebba',T08:'#34cfa3',T09:'#73bfff',T10:'#bbc0ff'
+};
+function terrainBackdropSvg(code,card){
+ const hue=TERRAIN_ATMOSPHERE[code];
+ if(!hue||card.id!==TERRAIN_IDS[code])throw Error('Scenario Terreno invalido: '+code);
+ const seed=hash(card.id),random=rng(seed^0x871b1a12);
+ const stars=Array.from({length:57},()=>'<circle cx="'+(25+Math.floor(random()*460))+
+ '" cy="'+(14+Math.floor(random()*390))+'" r="'+(.4+random()*1.8)+
+ '" fill="#fff" opacity="'+(.13+random()*.4)+'"/>').join('');
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1600" viewBox="0 0 512 768"
+  role="img" aria-label="Scenario ${esc(card.name)}">
+ <defs>
+ <linearGradient id="back" x1="0" y1="0" x2=".9" y2="1">
+ <stop stop-color="#070b1a"/><stop offset=".6" stop-color="#132038"/>
+ <stop offset="1" stop-color="${hue}" stop-opacity=".4"/>
+ </linearGradient>
+ <filter id="beamGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5"/></filter>
+ </defs>
+ <rect width="512" height="768" fill="url(#back)"/>
+ ${stars}
+ <circle cx="400" cy="256" r="91" fill="#111b34" stroke="${hue}" stroke-width="4" opacity=".66"/>
+ <g opacity=".88" transform="translate(0,70) scale(1,1.28)">${terrainScene(card,seed)}</g>
+ <path d="M0 727Q155 657 277 718T512 686V768H0Z" fill="${hue}" opacity=".13"/>
+ </svg>`;
+}
+
 function makeSvg(c){
  const fam=C[c.kind]||C.support,rar=R[c.rarity]||R.Comune,seed=hash(c.id);
  const metalLight=['','#263446','#526b80','#9fb5c8','#f4fbff'][rar.level];
@@ -240,4 +271,11 @@ const cards=[...a.map(c=>normalizeCard(c,'general')),...b.map(c=>normalizeCard(c
 if(cards.length!==379||new Set(cards.map(c=>c.id)).size!==379)throw Error('Catalogo diverso da 379');
 const dest=resolve(ROOT,'public/assets/fleet-next-cards');mkdirSync(dest,{recursive:true});
 for(const card of cards)writeFileSync(resolve(dest,card.id+'.svg'),makeSvg(card));
+const terrainOut=resolve(ROOT,'public/assets/fleet-terrain-scenes');
+mkdirSync(terrainOut,{recursive:true});
+for(const [code,id] of Object.entries(TERRAIN_IDS)){
+ const terrain=cards.find(c=>c.id===id);
+ if(!terrain||terrain.kind!=='terrain')throw Error('Manca scenario '+id);
+ writeFileSync(resolve(terrainOut,code+'.svg'),terrainBackdropSvg(code,terrain));
+}
 console.log('Generate '+cards.length+' fronti verticali: ruolo = tinta; rarita = riflessi e finitura cromata');

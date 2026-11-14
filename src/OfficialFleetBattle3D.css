@@ -205,3 +205,14 @@
 @media(prefers-reduced-motion:reduce){
  .es-math-scope .f3d-original-arena .live-hand-special::after{animation:none}
 }
+
+/* Ambiente attivo, dietro navi/slot e sopra lo sfondo esistente 9:16. */
+.es-math-scope .f3d-original-arena .f3d-terrain-environment{
+ position:absolute;inset:0;z-index:0;pointer-events:none;
+ background:var(--f3d-terrain-image) center/100% 100% no-repeat;
+ mix-blend-mode:screen;opacity:.18;animation:f3d-terrain-reveal .6s ease-out both;
+}
+@keyframes f3d-terrain-reveal{from{opacity:0}to{opacity:.18}}
+@media(prefers-reduced-motion:reduce){
+ .es-math-scope .f3d-original-arena .f3d-terrain-environment{animation:none}
+}

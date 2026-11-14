@@ -366,6 +366,9 @@ export default function OfficialFleetBattle3D({
     '--live-special-back':'url("'+OFFICIAL_SPECIAL_FIXED_BACK+'")'}}>
    <div className="space-back metal-arena live-background" aria-hidden="true"
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
+   {terrain&&TERRAIN_CATALOG[terrain]&&<div className="f3d-terrain-environment"
+    key={'terrain-'+terrain} data-terrain={terrain} aria-hidden="true"
+    style={{'--f3d-terrain-image':'url("/assets/fleet-terrain-scenes/'+terrain+'.svg")'}}/>}
    <OriginalFleetBar side="B" unit={enemy}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualVital}
     onSelectVital={id=>{if(!ended){setSelectedVital(id);setMessage('');}}}

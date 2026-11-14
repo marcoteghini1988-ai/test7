@@ -70,3 +70,18 @@ test('Dieci Terreni con scene ambientali dedicate, nessun fronte riciclato',()=>
  }
  assert.equal(new Set(illustrations).size,10);
 });
+
+test('Dieci scenari grafici Terreno in arena 9:16 senza spostamenti',()=>{
+ const bridge=readFileSync(resolve('src/OfficialFleetBattle3D.jsx'),'utf8');
+ const css=readFileSync(resolve('src/OfficialFleetBattle3D.css'),'utf8');
+ for(let i=1;i<=10;i++){
+  const code='T'+String(i).padStart(2,'0');
+  const filename=resolve('public/assets/fleet-terrain-scenes',code+'.svg');
+  assert.ok(existsSync(filename),'Scenario mancante: '+code);
+  assert.ok(readFileSync(filename,'utf8').includes('viewBox="0 0 512 768"'));
+ }
+ assert.ok(bridge.includes('className="f3d-terrain-environment"'));
+ assert.ok(bridge.includes('arena_titanio_9x16.webp'));
+ assert.ok(css.includes('mix-blend-mode:screen;opacity:.18'));
+ assert.ok(css.includes('pointer-events:none'));
+});

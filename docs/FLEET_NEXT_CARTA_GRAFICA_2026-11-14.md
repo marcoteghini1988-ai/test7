@@ -24,3 +24,6 @@ Il generatore ufficiale è `scripts/generate-fleet-card-art.mjs`. I 379 fronti s
 
 ## Prime 10 illustrazioni Terreno differenziate
 Ogni terreno (`gen-219`, `gen-220`, `gen-221`, `gen-229`, `gen-230`, `gen-231`, `gen-237`, `gen-238`, `gen-239`, `gen-245`) dispone ora di una scena vettoriale specifica per nome e ambiente, non più le stesse montagne generiche. Le scene sono codificate in `terrainScene` nel generatore; la rigenerazione è riproducibile. Restano illustrazioni SVG vettoriali e non sostituiscono artwork illustrati AI ad alta definizione.
+
+## Terreno nel campo 3D
+Oltre ai 10 fronti di carta, sono generati 10 ambienti verticali SVG `public/assets/fleet-terrain-scenes/T01.svg`–`T10.svg`. Il renderer li sovrappone con opacità leggera e `pointer-events:none` all'arena Titanio esistente, **senza sostituire plancia, navicelle, vitali o slot**. L'effetto è visivo; non modifica la logica dei Terreni.
