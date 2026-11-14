@@ -1,20 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768" role="img" aria-label="Sovrano dell’Eclisse · PERSONAGGIO · LEGGENDARIA">
  <defs>
-  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111827"/><stop offset=".24" stop-color="#66768a"/><stop offset=".42" stop-color="#142136"/><stop offset=".77" stop-color="#080e1c"/><stop offset="1" stop-color="#66798e"/></linearGradient>
-  <linearGradient id="rim" x1=".15" y1="0" x2=".87" y2="1"><stop stop-color="#fff0ad"/><stop offset=".2" stop-color="#ffc447"/><stop offset=".52" stop-color="#19283c"/><stop offset=".78" stop-color="#ffc447"/><stop offset="1" stop-color="#fff0ad"/></linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101824"/><stop offset=".13" stop-color="#f4fbff"/><stop offset=".29" stop-color="#142033"/><stop offset=".53" stop-color="#ffffff"/><stop offset=".76" stop-color="#0b1627"/><stop offset="1" stop-color="#f4fbff"/></linearGradient>
+  <linearGradient id="rim" x1=".15" y1="0" x2=".87" y2="1"><stop stop-color="#ffd0fb"/><stop offset=".2" stop-color="#eb64e1"/><stop offset=".52" stop-color="#19283c"/><stop offset=".78" stop-color="#eb64e1"/><stop offset="1" stop-color="#ffd0fb"/></linearGradient>
   <linearGradient id="spaceSky" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#080d22"/><stop offset=".49" stop-color="#142846"/><stop offset=".82" stop-color="#091222"/><stop offset="1" stop-color="#070d18"/></linearGradient>
   <radialGradient id="planet"><stop stop-color="#eb64e1" stop-opacity=".65"/><stop offset=".52" stop-color="#194761" stop-opacity=".42"/><stop offset="1" stop-color="#0a1529" stop-opacity=".05"/></radialGradient>
   <linearGradient id="titlePanel" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#0a1426"/><stop offset="1" stop-color="#202c43"/></linearGradient>
-  <linearGradient id="rarityShine" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#070d19"/><stop offset=".48" stop-color="#ffc447" stop-opacity=".30"/><stop offset="1" stop-color="#070d19"/></linearGradient>
-  <filter id="rimGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5.3"/></filter>
+  <linearGradient id="rarityShine" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#070d19"/><stop offset=".48" stop-color="#eb64e1" stop-opacity="0.94"/><stop offset="1" stop-color="#070d19"/></linearGradient>
+  <filter id="rimGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6.8"/></filter>
   <filter id="beamGlow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="4"/></filter>
   <clipPath id="artClip"><rect x="37" y="217" width="438" height="310" rx="8"/></clipPath>
  </defs>
- <path d="M37 7H473L505 39V724L474 760H38L8 730V39Z" fill="#030712" stroke="#ffc447" stroke-width="10" filter="url(#rimGlow)"/>
- <path d="M37 7H473L505 39V724L474 760H38L8 730V39Z" fill="url(#metal)" stroke="#ffc447" stroke-width="5"/>
+ <path d="M37 7H473L505 39V724L474 760H38L8 730V39Z" fill="#030712" stroke="#eb64e1" stroke-width="11.2" opacity="0.98" filter="url(#rimGlow)"/>
+ <path d="M37 7H473L505 39V724L474 760H38L8 730V39Z" fill="url(#metal)" stroke="#eb64e1" stroke-width="4.6"/>
  <path d="M43 19H468L492 43V718L467 747H43L21 723V47Z" fill="#050c1b" stroke="url(#rim)" stroke-width="5.1"/>
- <path d="M43 19H468L492 43V718L467 747H43L21 723V47Z" fill="none" stroke="#fff0ad" stroke-width="1.8" opacity=".75"/>
- <path d="M61 39H450" stroke="#fff0ad" stroke-width="2" opacity=".82"/>
+ <path d="M43 19H468L492 43V718L467 747H43L21 723V47Z" fill="none" stroke="#ffd0fb" stroke-width="2.4" opacity="0.94"/>
+ <path d="M61 39H450" stroke="#ffd0fb" stroke-width="4.1" opacity="0.94"/>
+ <path d="M32 85V51L52 29H135 M376 29H458L482 52V122 M32 648V715L50 735H128 M382 735H460L481 713V647" fill="none" stroke="#f7fcff" stroke-width="4" opacity="0.83"/>
+ <path d="M61 43H450" stroke="#fff" stroke-width="2.5" opacity="0.94"/>
  <text x="256" y="53" text-anchor="middle" fill="#e9f5ff" font-size="18" font-family="Arial, sans-serif" font-weight="700" letter-spacing="4">ECLISSI STELLARE</text>
  <path d="M39 65H474V186H39Z" fill="url(#titlePanel)" stroke="#506a82" stroke-width="2"/>
  <path d="M45 73H96L108 85V147L96 158H45Z" fill="#eb64e1" fill-opacity=".13" stroke="#eb64e1" stroke-width="3"/>
@@ -36,14 +38,14 @@
   </g><path d="M75 488L75 268L121 268 M387 245H435V487" stroke="#eb64e1" stroke-width="3" fill="none" opacity=".4"/>
  <path d="M44 246V232H87 M424 232h42v39 M44 477v39h40 M428 515h38v-40" stroke="#ffd0fb" stroke-width="3" fill="none" opacity=".67"/>
  </g>
- <rect x="36" y="216" width="440" height="312" rx="7" fill="none" stroke="#ffc447" stroke-width="3"/>
+ <rect x="36" y="216" width="440" height="312" rx="7" fill="none" stroke="#eb64e1" stroke-width="3"/>
  <path d="M40 531H473V564H40Z" fill="#051524" stroke="#eb64e1" stroke-width="2"/>
  <text x="54" y="553" fill="#ffd0fb" font-family="Arial,sans-serif" font-size="15" font-weight="bold" letter-spacing="1">ESCLUSIVA L01</text>
  <text x="460" y="553" text-anchor="end" fill="#e4f0ff" font-family="Arial,sans-serif" font-size="12" font-weight="bold">protezione</text>
  <rect x="39" y="570" width="434" height="133" rx="6" fill="#081427" stroke="#426076" stroke-width="2"/>
  <text x="55" y="591" fill="#e6effb" font-size="19" font-family="Arial,sans-serif">Marca il primo componente nemico colpito</text><text x="55" y="614" fill="#e6effb" font-size="19" font-family="Arial,sans-serif">come bersaglio della prossima sentenza.</text>
- <rect x="58" y="711" width="395" height="37" rx="6" fill="url(#rarityShine)" stroke="#ffc447" stroke-width="2.5"/>
- <path d="M75 727l11 -10l11 10l-11 14Z" fill="#fff0ad" stroke="#ffc447" stroke-width="2"/>
- <text x="256" y="738" fill="#fff0ad" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="900" letter-spacing="2">LEGGENDARIA</text>
+ <rect x="58" y="711" width="395" height="37" rx="6" fill="url(#rarityShine)" stroke="#eb64e1" stroke-width="2.5"/>
+ <path d="M75 727l11 -10l11 10l-11 14Z" fill="#ffd0fb" stroke="#eb64e1" stroke-width="2"/>
+ <text x="256" y="738" fill="#ffd0fb" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="900" letter-spacing="2">LEGGENDARIA</text>
  <text x="454" y="747" fill="#afbac9" font-family="Arial,sans-serif" font-size="9" text-anchor="end" opacity=".9">ex-l01-01</text>
  </svg>

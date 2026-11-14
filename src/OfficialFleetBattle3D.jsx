@@ -172,19 +172,21 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset}){
  const def=card(type);
  const rarity=def?.rarita||def?.rarityDraft||'Comune';
  const description=def?.effetto||def?.effectProposed||'Carta tattica';
+  const role=cardRole(type)||'support';
+  const familyGlyph={attack:'⚔',defense:'⬡',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
  const name=def?.nome||def?.name||type;
  const art=!type?null:(GENERAL_CARDS[type]||EXCLUSIVE_CARDS[type])?
      '/assets/fleet-next-cards/'+type+'.svg':officialSpecialArtPath(type);
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
   style={{'--special-angle':offset*3+'deg','--special-drop':offset**2*1.4+'px'}}
-  data-family={cardRole(type)||'support'} data-rarity={rarity}
+  data-family={role} data-rarity={rarity}
   title={name+' · '+description}
   aria-label={name+' · '+description}
   aria-pressed={selected} onClick={onClick}>
   {art?<img src={art} alt="" draggable={false}/>:
    <span className="live-special-art">✧</span>}
-  <span className="live-card-emblem">✧</span>
+  <span className="live-card-emblem">{familyGlyph}</span>
   <span className="live-card-rarity">{rarity}</span>
   <span className="live-card-caption"><b>{name}</b>
    <small>{description}</small></span>

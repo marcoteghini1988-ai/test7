@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const C={"attack":{"base":"#ff594c","soft":"#ffb054","name":"ATTACCO","glyph":"⟡"},"defense":{"base":"#37ceff","soft":"#b1f2ff","name":"DIFESA","glyph":"⬡"},"character":{"base":"#eb64e1","soft":"#ffd0fb","name":"PERSONAGGIO","glyph":"♛"},"terrain":{"base":"#2be3a2","soft":"#afffe4","name":"TERRENO","glyph":"◈"},"support":{"base":"#ffb24d","soft":"#ffe2a4","name":"SUPPORTO","glyph":"✚"},"control":{"base":"#9e8fff","soft":"#ded4ff","name":"CONTROLLO","glyph":"◎"}};
-const R={"Comune":{"base":"#a9b9cc","bright":"#f1f8ff","name":"COMUNE","level":1},"Rara":{"base":"#24cfff","bright":"#d2fbff","name":"RARA","level":2},"Epica":{"base":"#bb60ff","bright":"#f5caff","name":"EPICA","level":3},"Leggendaria":{"base":"#ffc447","bright":"#fff0ad","name":"LEGGENDARIA","level":4}};
+const R={"Comune":{"name":"COMUNE","level":1},"Rara":{"name":"RARA","level":2},"Epica":{"name":"EPICA","level":3},"Leggendaria":{"name":"LEGGENDARIA","level":4}};
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return h>>>0}
 function rng(seed){let x=seed||1;return ()=>((x=(Math.imul(1664525,x)+1013904223)>>>0)/4294967296)}
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;")}
@@ -94,6 +94,11 @@ function artScene(c,seed){
 }
 function makeSvg(c){
  const fam=C[c.kind]||C.support,rar=R[c.rarity]||R.Comune,seed=hash(c.id);
+ const metalLight=['','#263446','#526b80','#9fb5c8','#f4fbff'][rar.level];
+ const metalWhite=['','#354458','#718da6','#ceddeb','#ffffff'][rar.level];
+ const rimOpacity=[0,.12,.36,.66,.98][rar.level];
+ const shineOpacity=[0,.1,.22,.52,.94][rar.level];
+ const highlightWidth=[0,.5,1.4,2.5,4.1][rar.level];
  const titleLines=lineBreak(c.name,23,3),effectLines=lineBreak(c.effect,43,5);
  const titleSize=titleLines.length===1?34:titleLines.length===2?30:26;
  const titleStart=titleLines.length===1?113:titleLines.length===2?99:88;
@@ -104,21 +109,23 @@ function makeSvg(c){
  const familyName=esc(c.family||fam.name);
  return `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768" role="img" aria-label="${esc(c.name)} · ${esc(fam.name)} · ${esc(rar.name)}">
  <defs>
-  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#111827"/><stop offset=".24" stop-color="#66768a"/><stop offset=".42" stop-color="#142136"/><stop offset=".77" stop-color="#080e1c"/><stop offset="1" stop-color="#66798e"/></linearGradient>
-  <linearGradient id="rim" x1=".15" y1="0" x2=".87" y2="1"><stop stop-color="${rar.bright}"/><stop offset=".2" stop-color="${rar.base}"/><stop offset=".52" stop-color="#19283c"/><stop offset=".78" stop-color="${rar.base}"/><stop offset="1" stop-color="${rar.bright}"/></linearGradient>
+  <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101824"/><stop offset=".13" stop-color="${metalLight}"/><stop offset=".29" stop-color="#142033"/><stop offset=".53" stop-color="${metalWhite}"/><stop offset=".76" stop-color="#0b1627"/><stop offset="1" stop-color="${metalLight}"/></linearGradient>
+  <linearGradient id="rim" x1=".15" y1="0" x2=".87" y2="1"><stop stop-color="${fam.soft}"/><stop offset=".2" stop-color="${fam.base}"/><stop offset=".52" stop-color="#19283c"/><stop offset=".78" stop-color="${fam.base}"/><stop offset="1" stop-color="${fam.soft}"/></linearGradient>
   <linearGradient id="spaceSky" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#080d22"/><stop offset=".49" stop-color="#142846"/><stop offset=".82" stop-color="#091222"/><stop offset="1" stop-color="#070d18"/></linearGradient>
   <radialGradient id="planet"><stop stop-color="${fam.base}" stop-opacity=".65"/><stop offset=".52" stop-color="#194761" stop-opacity=".42"/><stop offset="1" stop-color="#0a1529" stop-opacity=".05"/></radialGradient>
   <linearGradient id="titlePanel" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#0a1426"/><stop offset="1" stop-color="#202c43"/></linearGradient>
-  <linearGradient id="rarityShine" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#070d19"/><stop offset=".48" stop-color="${rar.base}" stop-opacity=".30"/><stop offset="1" stop-color="#070d19"/></linearGradient>
-  <filter id="rimGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${rar.level+1.3}"/></filter>
+  <linearGradient id="rarityShine" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#070d19"/><stop offset=".48" stop-color="${fam.base}" stop-opacity="${shineOpacity}"/><stop offset="1" stop-color="#070d19"/></linearGradient>
+  <filter id="rimGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${1+rar.level*1.45}"/></filter>
   <filter id="beamGlow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="4"/></filter>
   <clipPath id="artClip"><rect x="37" y="217" width="438" height="310" rx="8"/></clipPath>
  </defs>
- <path d="M37 7H473L505 39V724L474 760H38L8 730V39Z" fill="#030712" stroke="${rar.base}" stroke-width="10" filter="url(#rimGlow)"/>
- <path d="M37 7H473L505 39V724L474 760H38L8 730V39Z" fill="url(#metal)" stroke="${rar.base}" stroke-width="5"/>
+ <path d="M37 7H473L505 39V724L474 760H38L8 730V39Z" fill="#030712" stroke="${fam.base}" stroke-width="${rar.level*2.8}" opacity="${rimOpacity}" filter="url(#rimGlow)"/>
+ <path d="M37 7H473L505 39V724L474 760H38L8 730V39Z" fill="url(#metal)" stroke="${fam.base}" stroke-width="${1.8+rar.level*.7}"/>
  <path d="M43 19H468L492 43V718L467 747H43L21 723V47Z" fill="#050c1b" stroke="url(#rim)" stroke-width="${rar.level+1.1}"/>
- <path d="M43 19H468L492 43V718L467 747H43L21 723V47Z" fill="none" stroke="${rar.bright}" stroke-width="1.8" opacity=".75"/>
- <path d="M61 39H450" stroke="${rar.bright}" stroke-width="2" opacity=".82"/>
+ <path d="M43 19H468L492 43V718L467 747H43L21 723V47Z" fill="none" stroke="${fam.soft}" stroke-width="${1+rar.level*.35}" opacity="${shineOpacity}"/>
+ <path d="M61 39H450" stroke="${fam.soft}" stroke-width="${highlightWidth}" opacity="${shineOpacity}"/>
+ <path d="M32 85V51L52 29H135 M376 29H458L482 52V122 M32 648V715L50 735H128 M382 735H460L481 713V647" fill="none" stroke="#f7fcff" stroke-width="${rar.level===4?4:rar.level===3?2:1}" opacity="${rar.level===4?.83:rar.level===3?.26:rar.level===2?.09:0}"/>
+ <path d="M61 43H450" stroke="#fff" stroke-width="${rar.level===4?2.5:1}" opacity="${rar.level===4?.94:rar.level===3?.35:0}"/>
  <text x="256" y="53" text-anchor="middle" fill="#e9f5ff" font-size="18" font-family="Arial, sans-serif" font-weight="700" letter-spacing="4">ECLISSI STELLARE</text>
  <path d="M39 65H474V186H39Z" fill="url(#titlePanel)" stroke="#506a82" stroke-width="2"/>
  <path d="M45 73H96L108 85V147L96 158H45Z" fill="${fam.base}" fill-opacity=".13" stroke="${fam.base}" stroke-width="3"/>
@@ -127,15 +134,15 @@ function makeSvg(c){
  <path d="M42 190H470L455 213H58Z" fill="${fam.base}" fill-opacity=".20" stroke="${fam.base}" stroke-width="2.7"/>
  <text x="256" y="208" text-anchor="middle" fill="${fam.soft}" font-family="Arial,sans-serif" font-size="18" font-weight="900" letter-spacing="2">${fam.name}</text>
  ${artScene(c,seed)}
- <rect x="36" y="216" width="440" height="312" rx="7" fill="none" stroke="${rar.base}" stroke-width="3"/>
+ <rect x="36" y="216" width="440" height="312" rx="7" fill="none" stroke="${fam.base}" stroke-width="3"/>
  <path d="M40 531H473V564H40Z" fill="#051524" stroke="${fam.base}" stroke-width="2"/>
  <text x="54" y="553" fill="${fam.soft}" font-family="Arial,sans-serif" font-size="15" font-weight="bold" letter-spacing="1">${esc(brand)}</text>
  <text x="460" y="553" text-anchor="end" fill="#e4f0ff" font-family="Arial,sans-serif" font-size="12" font-weight="bold">${familyName.slice(0,26)}</text>
  <rect x="39" y="570" width="434" height="133" rx="6" fill="#081427" stroke="#426076" stroke-width="2"/>
  ${effectLines.map((t,i)=>`<text x="55" y="${effectY+i*23}" fill="#e6effb" font-size="${effectSize}" font-family="Arial,sans-serif">${esc(t)}</text>`).join("")}
- <rect x="58" y="711" width="395" height="37" rx="6" fill="url(#rarityShine)" stroke="${rar.base}" stroke-width="2.5"/>
- <path d="M75 727l11 -10l11 10l-11 14Z" fill="${rar.bright}" stroke="${rar.base}" stroke-width="2"/>
- <text x="256" y="738" fill="${rar.bright}" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="900" letter-spacing="2">${rar.name}</text>
+ <rect x="58" y="711" width="395" height="37" rx="6" fill="url(#rarityShine)" stroke="${fam.base}" stroke-width="2.5"/>
+ <path d="M75 727l11 -10l11 10l-11 14Z" fill="${fam.soft}" stroke="${fam.base}" stroke-width="2"/>
+ <text x="256" y="738" fill="${fam.soft}" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="900" letter-spacing="2">${rar.name}</text>
  <text x="454" y="747" fill="#afbac9" font-family="Arial,sans-serif" font-size="9" text-anchor="end" opacity=".9">${safeId}</text>
  </svg>`;
 }
@@ -145,4 +152,4 @@ const cards=[...a.map(c=>normalizeCard(c,'general')),...b.map(c=>normalizeCard(c
 if(cards.length!==379||new Set(cards.map(c=>c.id)).size!==379)throw Error('Catalogo diverso da 379');
 const dest=resolve(ROOT,'public/assets/fleet-next-cards');mkdirSync(dest,{recursive:true});
 for(const card of cards)writeFileSync(resolve(dest,card.id+'.svg'),makeSvg(card));
-console.log('Generate '+cards.length+' carte SVG ufficiali, con funzione e rarità');
+console.log('Generate '+cards.length+' fronti verticali: ruolo = tinta; rarita = riflessi e finitura cromata');

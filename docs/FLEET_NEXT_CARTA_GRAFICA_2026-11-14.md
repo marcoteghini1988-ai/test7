@@ -1,17 +1,23 @@
-# Carte flotta — funzione e rarità (14/11/2026)
+# Eclissi Stellare — sistema definitivo FUNZIONE × RARITÀ
 
-Il nuovo catalogo contiene 250 carte generali e 129 esclusive. I 379 fronti SVG in `public/assets/fleet-next-cards/` sono generati deterministicamente dai due JSON ufficiali con `node scripts/generate-fleet-card-art.mjs`.
+## Regola
+**Il colore indica sempre la funzione; la luminosità e il trattamento del metallo indicano la rarità.** Le Leggendarie NON diventano dorate: Difesa Leggendaria = azzurro cromato molto luminoso.
 
-## Identità separata
-- ATTACCO: rosso corallo.
-- DIFESA: azzurro.
-- PERSONAGGIO: magenta.
-- TERRENO: verde smeraldo.
-- SUPPORTO: ambra.
-- CONTROLLO: indaco.
+## Colori delle funzioni
+- ATTACCO: rosso #ff594c
+- DIFESA: azzurro #37ceff
+- PERSONAGGIO: magenta #eb64e1
+- TERRENO: verde #2be3a2
+- SUPPORTO: arancione #ffb24d
+- CONTROLLO: indaco #9e8fff
 
-Il colore funzione rimane visibile nel cartiglio e nell'illustrazione vettoriale; la rarità controlla la cornice metallizzata fluorescente: COMUNE argento, RARA ciano, EPICA viola, LEGGENDARIA oro.
+## Rarità
+- COMUNE: quasi opaca, riflessi minimi
+- RARA: luminosa, finitura appena lucida
+- EPICA: bagliore marcato, riflesso fluorescente
+- LEGGENDARIA: cromatura speculare quasi bianca, superfici metallizzate e bagliore massimo nel colore della funzione
 
-I nomi, le rarità, gli ID e le descrizioni derivano dai cataloghi, non sono esempi inventati. Le illustrazioni sono **vettoriali procedurali** individualizzate per ID e famiglia, non artwork cinematografici finali. Nessun costo o effetto è stato introdotto o modificato. Le carte del catalogo con effetto ancora proposto rimangono tali: questo intervento è solo grafico. I PNG di 82 carte della precedente modalità non vengono eliminati.
+## Geometria e uso
+379 fronti SVG 512×768, formato verticale 2:3. Mano 54×81; slot 40×60; Shop e mazzi rispettano 2:3. Non esistono carte quadrate nel catalogo. Le tavole illustrative prodotte in chat non sono asset di gioco.
 
-Gli SVG possono essere esportati in PNG da Work in una successiva passata illustrativa individuale. Il renderer resta ancorato alla plancia 3D originale.
+Il generatore ufficiale è `scripts/generate-fleet-card-art.mjs`. I 379 fronti sono vettoriali procedurali, **non** artwork pittorici HD definitivi. Non cambiano costi, personaggi, turni o meccaniche. Gli asset legacy rimangono.

@@ -135,62 +135,73 @@
 }
 .es-math-scope .f3d-original-arena .live-card-rarity{font-size:7px}
 
-/* Nuovo catalogo flotta: il colore funzione resta indipendente dalla rarita'.
-   Le 379 facce SVG hanno le due stratificazioni anche a risoluzione piena. */
-.es-math-scope .f3d-original-arena .live-hand-special[data-family="attack"],
-.es-math-scope .f3d-original-arena .live-slot[data-family="attack"]{--family:#ff6657}
-.es-math-scope .f3d-original-arena .live-hand-special[data-family="defense"],
-.es-math-scope .f3d-original-arena .live-slot[data-family="defense"]{--family:#42dcff}
-.es-math-scope .f3d-original-arena .live-hand-special[data-family="character"],
-.es-math-scope .f3d-original-arena .live-slot[data-family="character"]{--family:#e778ef}
-.es-math-scope .f3d-original-arena .live-hand-special[data-family="terrain"],
-.es-math-scope .f3d-original-arena .live-slot[data-family="terrain"]{--family:#36ecad}
-.es-math-scope .f3d-original-arena .live-hand-special[data-family="support"],
-.es-math-scope .f3d-original-arena .live-slot[data-family="support"]{--family:#ffb95d}
-.es-math-scope .f3d-original-arena .live-hand-special[data-family="control"],
-.es-math-scope .f3d-original-arena .live-slot[data-family="control"]{--family:#aaa0ff}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Comune"],
-.es-math-scope .f3d-original-arena .live-slot[data-rarity="Comune"]{--tier:#c7d6e7}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Rara"],
-.es-math-scope .f3d-original-arena .live-slot[data-rarity="Rara"]{--tier:#3ce2ff}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"],
-.es-math-scope .f3d-original-arena .live-slot[data-rarity="Epica"]{--tier:#db8bff}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"],
-.es-math-scope .f3d-original-arena .live-slot[data-rarity="Leggendaria"]{--tier:#ffd36b}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity]{
-  border-color:var(--tier);box-shadow:0 0 8px var(--tier),inset 0 0 3px var(--family);
-}
-.es-math-scope .f3d-original-arena .live-slot--occupied[data-rarity]{
-  border-color:var(--tier);box-shadow:0 0 7px var(--tier);
-}
-.es-math-scope .f3d-original-arena .live-hand-special img[src*="/fleet-next-cards/"]{
-  object-fit:fill;object-position:center;filter:none;
-}
-.es-math-scope .f3d-original-arena .live-slot img[src*="/fleet-next-cards/"]{
-  object-fit:fill;object-position:center;
-}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"]:after,
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"]:after{
-  content:'';position:absolute;inset:-25% -45%;z-index:1;pointer-events:none;
-  background:linear-gradient(115deg,transparent 35%,#ffffff29 49%,transparent 60%);
-  transform:translateX(-100%);animation:f3d-card-sheen 3.5s ease-in-out infinite;
-}
-@keyframes f3d-card-sheen{0%,20%{transform:translateX(-110%)}70%,100%{transform:translateX(110%)}}
-@media (prefers-reduced-motion:reduce){
- .es-math-scope .f3d-original-arena .live-hand-special:after{animation:none}
-}
 
-/* Anche il distintivo visibile sulle carte piccole usa la rarita' vera.
-   In nessun caso l'ambra del Supporto viene scambiata per rarita' leggendaria. */
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Comune"] .live-card-rarity{
- border-color:#ccd8e4;color:#f5f9ff;background:linear-gradient(135deg,#35465d,#101a27);
- box-shadow:0 0 4px #dbe9fa77}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Rara"] .live-card-rarity{
- border-color:#56e9ff;color:#deffff;background:linear-gradient(135deg,#136b8a,#071c36);
- box-shadow:0 0 5px #32dfff99}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"] .live-card-rarity{
- border-color:#dba1ff;color:#f6e0ff;background:linear-gradient(135deg,#633293,#170c39);
- box-shadow:0 0 6px #c76bffaa}
-.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"] .live-card-rarity{
- border-color:#ffdb79;color:#fff5ca;background:linear-gradient(135deg,#8a5b11,#281b07);
- box-shadow:0 0 8px #ffd36bb0}
+/* SISTEMA UFFICIALE: ruolo determina la tinta, rarita solo finitura. */
+.es-math-scope .f3d-original-arena .live-hand-special{
+ width:54px;flex:0 0 54px;height:81px;aspect-ratio:2/3;border-radius:5px;
+}
+.es-math-scope .f3d-original-arena .live-slot{
+ width:40px;flex:0 0 40px;height:60px;aspect-ratio:2/3;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="attack"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="attack"]{--family:#ff594c}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="defense"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="defense"]{--family:#37ceff}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="character"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="character"]{--family:#eb64e1}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="terrain"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="terrain"]{--family:#2be3a2}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="support"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="support"]{--family:#ffb24d}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="control"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="control"]{--family:#9e8fff}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Comune"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Comune"]{
+ --finish-glow:2px;--finish-opacity:15%;--chrome-light:#475567;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Rara"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Rara"]{
+ --finish-glow:5px;--finish-opacity:36%;--chrome-light:#839aae;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Epica"]{
+ --finish-glow:9px;--finish-opacity:62%;--chrome-light:#c5d6e7;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Leggendaria"]{
+ --finish-glow:15px;--finish-opacity:95%;--chrome-light:#f4fbff;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity],
+.es-math-scope .f3d-original-arena .live-slot--occupied[data-rarity]{
+ border-color:var(--family);
+ box-shadow:0 0 var(--finish-glow) color-mix(in srgb,var(--family) var(--finish-opacity),transparent),
+ inset 0 0 2px var(--chrome-light);
+}
+.es-math-scope .f3d-original-arena .live-hand-special img[src*="/fleet-next-cards/"],
+.es-math-scope .f3d-original-arena .live-slot img[src*="/fleet-next-cards/"]{
+ width:100%;height:100%;object-fit:contain;object-position:center;filter:none;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity] .live-card-rarity{
+ border-color:var(--family);color:var(--chrome-light);
+ background:linear-gradient(130deg,#0c1527,var(--family) 190%);
+ box-shadow:0 0 var(--finish-glow) color-mix(in srgb,var(--family) var(--finish-opacity),transparent);
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"]::after,
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"]::after{
+ content:'';position:absolute;inset:-25% -50%;z-index:1;pointer-events:none;
+ background:linear-gradient(112deg,transparent 34%,#ffffff36 48%,transparent 59%);
+ transform:translateX(-110%);animation:f3d-card-chrome 3.8s ease-in-out infinite;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"]::after{
+ opacity:.28;animation-duration:5.4s;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"]::after{
+ opacity:.82;
+}
+@keyframes f3d-card-chrome{
+ 0%,22%{transform:translateX(-110%)}
+ 68%,100%{transform:translateX(110%)}
+}
+@media(prefers-reduced-motion:reduce){
+ .es-math-scope .f3d-original-arena .live-hand-special::after{animation:none}
+}

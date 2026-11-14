@@ -10,9 +10,7 @@ const color={
  attack:'#ff594c',defense:'#37ceff',character:'#eb64e1',
  terrain:'#2be3a2',support:'#ffb24d',control:'#9e8fff'
 };
-const rarityColor={
- Comune:'#a9b9cc',Rara:'#24cfff',Epica:'#bb60ff',Leggendaria:'#ffc447'
-};
+const rarityGlow={Comune:'0.12',Rara:'0.36',Epica:'0.66',Leggendaria:'0.98'};
 function kind(card){
  const subtype=card.sottotipo||'';
  const category=card.categoria||card.category||'';
@@ -35,7 +33,8 @@ test('I 379 fronti nuovi esistono, distinti e di dimensioni coerenti',()=>{
   assert.ok(svg.trimEnd().endsWith('</svg>'),c.id);
   assert.match(svg,/width="512" height="768"/,c.id);
   const rarity=c.rarita||c.rarityDraft;
-  assert.ok(svg.includes(rarityColor[rarity]),'Rarità senza bordo: '+c.id);
+  assert.ok(svg.includes('opacity="'+rarityGlow[rarity]+'" filter="url(#rimGlow)"'),'Rarità senza livello luminoso: '+c.id);
+  assert.ok(!svg.includes('#ffc447')&&!svg.includes('#bb60ff'),'Colori rarità non ammessi: '+c.id);
   assert.ok(svg.includes(color[kind(c)]),'Funzione senza tinta: '+c.id);
   assert.ok(svg.includes(c.id+'</text>'),'ID incoerente: '+c.id);
  }
@@ -45,4 +44,14 @@ test('Il generatore resta riproducibile e non tocca le immagini precedenti',()=>
  assert.ok(script.includes('catalogGeneral.json'));
  assert.ok(script.includes('catalogExclusive.json'));
  assert.ok(existsSync(resolve('public/assets/special-cards/fusion-barrier.png')));
+});
+
+test('Mano, slot e Shop: rapporto 2:3 e rarita cromata, non dorata',()=>{
+ const css=readFileSync(resolve('src/OfficialFleetBattle3D.css'),'utf8');
+ const shop=readFileSync(resolve('src/FleetCollectionWorkshop.jsx'),'utf8');
+ assert.ok(css.includes('height:81px;aspect-ratio:2/3'));
+ assert.ok(css.includes('height:60px;aspect-ratio:2/3'));
+ assert.ok(css.includes('--chrome-light:#f4fbff'));
+ assert.ok(!css.includes('--tier:#ffd36b'));
+ assert.ok(shop.includes("aspectRatio:'2 / 3'"));
 });
