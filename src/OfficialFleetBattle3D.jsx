@@ -6,22 +6,19 @@ import {ASSET_ROOT,MountedWeapons} from './ShipPresentation.jsx';
 import {newVessel} from './mathDuelEngine.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
 import {readShipCollection} from './shipCollection.js';
-import {readSpecialCollection,createSpecialCollection,validateSpecialDeck} from './specialDeckBuilder.js';
 import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
-import {SPECIAL_CARD_CATALOG} from './specialCards.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
-import {officialSpecialVisualMeta} from './officialSpecialVisualMeta.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
 import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
-import {buildTacticalBossDeck} from './tacticalSpecialPresets.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
-import {fleetEscortSkillDescription,readyFleetEscorts} from './fleetEscortSupports.js';
-import {fleetCardEffect,FLEET_ELEMENTS,
- createFleetCardBattle,resolveFleetCardRound,selectFleetAiOrder} from './fleetCardEngine.js';
-import {fleetBossBrief} from './fleetBossPassives.js';
+import {fleetEscortSkillDescription} from './fleetEscortSupports.js';
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,STARTER_DECK,card,cardRole,deckFromCounts} from './fleetNext/rules.js';
+import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
+import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn} from './fleetNext/combat.js';
+import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
@@ -36,8 +33,9 @@ function activeEscort(e){return e.hp>0&&!e.destroyed;}
 function projectDefense(mother){
  const parts=Object.fromEntries(PART_IDS.map(id=>{
   const key=id==='generator'?'shieldGenerator':id;
-  const hp=Math.max(0,2-(mother.parts.find(p=>p.id===id)?.damage||0));
-  return [key,{hp,max:2,exposed:true,signature:null}];
+  const part=mother.parts.find(p=>p.id===id);
+  const hp=part?Math.max(0,Math.ceil(2*part.hp/part.maxHp)):2;
+  return [key,{hp,max:2,unlocked:!!part,exposed:!!part,signature:null}];
  }));
  return {kind:'mother',shipId:mother.id,parts,shield:{hp:0,max:1},exposureOrder:[]};
 }
@@ -51,9 +49,7 @@ function findMother(ships){
 }
 function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
  try{
-  const ships=readShipCollection(),specials=readSpecialCollection();
-  if(!validateSpecialDeck(specials,specials.loadout).valid)
-   throw new Error('Il mazzo speciale deve contenere 24 carte reali.');
+  const ships=readShipCollection(),inventory=readFleetInventory();
   const owned=findMother(ships);
   if(!owned)throw new Error('Nessuna nave madre posseduta.');
   const boss=officialBossEncounter({mode,sectorNumber,planetId:bossPlanetId,
@@ -62,17 +58,14 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
   const motherEnemy=boss?.motherShipId||early||
    chooseCampaignMotherRival(owned.shipId,owned.level,sectorNumber,bossPlanetId,bossSectorLevel).shipId;
   const levelEnemy=officialCampaignRivalLevel({mode,sectorNumber,playerLevel:owned.level});
-  const bossDeck=boss?buildTacticalBossDeck(boss.planetId,levelEnemy,owned.level):null;
-  const fallback=createSpecialCollection().loadout;
-  const enemyDeck=Array.isArray(bossDeck)&&bossDeck.length===24&&
-   bossDeck.every(t=>SPECIAL_CARD_CATALOG[t])?bossDeck:fallback;
-  return {battle:createFleetCardBattle({
-   shipsA:[{shipId:owned.shipId,level:owned.level}],
-   shipsB:[{shipId:motherEnemy,level:levelEnemy}],
-   deckA:specials.loadout,deckB:enemyDeck,mode,bossName:boss?.name||null,
-   bossId:boss?.planetId??null,bossLockedTerrain:!!boss,
-   moduleLevelsA:readLegacyModuleLevels(),moduleLevelsB:{},
-   seed:Math.floor(Math.random()*0x7fffffff)+1,nowMs:Date.now()
+  return {battle:createFleetNextBattle({
+   shipA:owned.shipId,levelA:owned.level,
+   shipB:motherEnemy,levelB:levelEnemy,
+   deckA:inventory.deck,deckB:deckFromCounts(STARTER_DECK.carteGenerali),
+   upgradesA:inventory.exclusiveUpgrades,
+   mode,bossName:boss?.name||null,bossId:boss?.planetId??null,
+   sectorNumber,seed:Math.floor(Math.random()*0x7fffffff)+1,
+   nowMs:Date.now()
   }),error:''};
  }catch(e){return {battle:null,error:e?.message||'Battaglia non disponibile'};}
 }
@@ -123,72 +116,74 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,impact,insp
 }
 function OriginalFleetBar({side,unit,nickname}){
  const mother=unit.ships[0];
- const damage=mother.parts.reduce((sum,p)=>sum+p.damage,0);
- const units=[...unit.escorts.slice(0,1).map(e=>({kind:'escort',hp:e.hp,max:e.max,link:
-  e.skill.requires.every(id=>mother.parts.some(p=>p.id===id&&p.damage<2))})),
-  {kind:'mother',hp:8-damage,max:8,link:mother.parts.filter(p=>p.damage<2).length/4},
-  ...unit.escorts.slice(1,2).map(e=>({kind:'escort',hp:e.hp,max:e.max,link:
-   e.skill.requires.every(id=>mother.parts.some(p=>p.id===id&&p.damage<2))}))];
+ const max=mother.parts.reduce((n,p)=>n+p.maxHp,0);
+ const hp=mother.parts.reduce((n,p)=>n+p.hp,0);
+ const units=[...unit.escorts.slice(0,1).map(e=>({kind:'escort',hp:e.hp,max:e.maxHp,link:e.linked})),
+  {kind:'mother',hp,max,link:mother.parts.filter(p=>!p.destroyed).length/mother.parts.length},
+  ...unit.escorts.slice(1,2).map(e=>({kind:'escort',hp:e.hp,max:e.maxHp,link:e.linked}))];
  return <div className={'live-fleet-bar live-fleet-bar--'+side}>
   <strong>{side==='A'?(nickname||'TU'):'AVVERSARIO'}</strong>
   <div className="live-units">{units.map((u,i)=><div key={i}
-    className={'live-unit'+(u.kind==='mother'?' live-unit--mother':'')}
-    title={u.kind==='mother'?'Integrità dei quattro sistemi vitali':'Resistenza scudiera e collegamento madre'}>
-    <span>{u.kind==='mother'?'MADRE':'SCUDIERA'}</span>
-    <i className="live-unit-health"><b style={{width:pct(u.hp,u.max)+'%'}}/></i>
-    <i className="live-unit-shield"><b style={{
-     width:(typeof u.link==='number'?u.link*100:u.link?100:0)+'%'}}/></i>
-   </div>)}</div>
+   className={'live-unit'+(u.kind==='mother'?' live-unit--mother':'')}
+   title={u.kind==='mother'?'Integrità dei componenti vitali':'Resistenza scudiera e collegamento'}>
+   <span>{u.kind==='mother'?'MADRE':'SCUDIERA'}</span>
+   <i className="live-unit-health"><b style={{width:pct(u.hp,u.max)+'%'}}/></i>
+   <i className="live-unit-shield"><b style={{
+    width:(typeof u.link==='number'?u.link*100:u.link?100:0)+'%'}}/></i>
+  </div>)}</div>
  </div>;
 }
-function slotCards(side,lastCards,chosenCards=[]){
- const commander=side.commander?.type;
- const slots=[commander||null,null,null,null,null];
- const types=[...lastCards,...chosenCards].filter(Boolean);
- for(const type of types){
-  const kind=fleetCardEffect(type).kind;
-  if(kind==='character'){slots[0]=type;continue;}
-  const targets=['guard','jam','repair'].includes(kind)?[1,2]:[3,4];
-  const i=targets.find(index=>!slots[index]);
+function slotCards(side,chosenCards=[]){
+ const slots=[side.commander?.id||null,
+  ...(side.defenseSlots||[]).slice(0,2),
+  ...(side.attackSlots||[]).slice(0,3)];
+ while(slots.length<6)slots.push(null);
+ for(const type of chosenCards){
+  const role=cardRole(type),family=GENERAL_CARDS[type]?.famiglia||'';
+  const target=role==='character'?[0]:role==='terrain'?[]:
+   role==='defense'||(role==='support'&&/riparazione|guardia|recupero|scudiera/.test(family))?[1,2]:[3,4,5];
+  if(target.length===1){slots[0]=type;continue;}
+  const i=target.find(index=>!slots[index]);
   if(i!=null)slots[i]=type;
  }
- return slots;
+ return slots.slice(0,6);
 }
 function OriginalSpecialSlots({side,contents}){
+ const labels=['PERS.','DIF.','DIF.','ATT.','ATT.','ATT.'];
  return <div className={'live-slot-row live-slot-row--'+(side==='A'?'player':'enemy')}>
   {contents.map((type,i)=>{
-   const face=type?SPECIAL_CARD_CATALOG[type]:null;
-   const art=type?officialSpecialArtPath(type):null;
+   const face=type?card(type):null;
+   const art=type&&!GENERAL_CARDS[type]&&!EXCLUSIVE_CARDS[type]?officialSpecialArtPath(type):null;
    return <div key={i} className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
     (type?' live-slot--occupied':'')}
-    title={face?(face.name||face.short||type):['Personaggio','Difesa','Difesa','Attacco','Attacco'][i]}
-    data-slot-role={i===0?'personaggio':i<=2?'difesa':'attacco-supporto'}>
+    title={face?(face.nome||face.name||type):labels[i]}
+    data-slot-role={i===0?'personaggio':i<=2?'difesa':'attacco'}>
     {art?<img className="f3d-slot-art" src={art} alt="" draggable={false}/>:
-     <span>{type?'✧':['♙','◇','◇','✧','✧'][i]}</span>}
-    {!type&&<small className="live-slot-role">
-     {['PERS.','DIF.','DIF.','ATT.','ATT.'][i]}</small>}
+     <span>{type?'✧':['♙','◇','◇','✧','✧','✧'][i]}</span>}
+    {!type&&<small className="live-slot-role">{labels[i]}</small>}
    </div>;
   })}
  </div>;
 }
 function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset}){
- const def=SPECIAL_CARD_CATALOG[type];
- const visual=officialSpecialVisualMeta(type);
- const art=officialSpecialArtPath(type);
+ const def=card(type);
+ const rarity=def?.rarita||def?.rarityDraft||'Comune';
+ const description=def?.effetto||def?.effectProposed||'Carta tattica';
+ const name=def?.nome||def?.name||type;
+ const art=!GENERAL_CARDS[type]&&!EXCLUSIVE_CARDS[type]?officialSpecialArtPath(type):null;
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
-  style={{'--special-angle':offset*5+'deg','--special-drop':offset**2*2.5+'px'}}
-  data-family={visual?.role||fleetCardEffect(type).kind}
-  data-rarity={visual?.rarity||undefined}
-  title={(def?.name||type)+' · '+fleetCardEffect(type).description}
-  aria-label={(def?.name||type)+' · '+fleetCardEffect(type).description}
+  style={{'--special-angle':offset*3+'deg','--special-drop':offset**2*1.4+'px'}}
+  data-family={cardRole(type)||'support'} data-rarity={rarity}
+  title={name+' · '+description}
+  aria-label={name+' · '+description}
   aria-pressed={selected} onClick={onClick}>
   {art?<img src={art} alt="" draggable={false}/>:
    <span className="live-special-art">✧</span>}
   <span className="live-card-emblem">✧</span>
-  {visual?.rarity&&<span className="live-card-rarity">{visual.rarity}</span>}
-  <span className="live-card-caption"><b>{def?.name||def?.short||type}</b>
-   <small>{fleetCardEffect(type).description}</small></span>
+  <span className="live-card-rarity">{rarity}</span>
+  <span className="live-card-caption"><b>{name}</b>
+   <small>{description}</small></span>
  </button>;
 }
 export default function OfficialFleetBattle3D({
