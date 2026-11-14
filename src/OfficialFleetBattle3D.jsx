@@ -300,10 +300,17 @@ export default function OfficialFleetBattle3D({
    if(won&&gameMode!=='pvp'){
     await claimOfficialLiveVictoryRewards({
      winner:'player',mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel});
+    const inventory=readFleetInventory();
+    const key='sector:'+gameMode+':'+sectorNumber+':'+(bossPlanetId||'none');
+    const reward=claimFleetReward(inventory,key,fleetRewardForBattle({
+     winner:'A',mode:gameMode,sector:sectorNumber,boss:!!bossPlanetId
+    }));
+    if(reward.ok)writeFleetInventory(reward.inventory);
    }
    const me=battle.sides.A,op=battle.sides.B;
-   const max=8+me.escorts.reduce((sum,e)=>sum+e.maxHp,0);
-   const hp=me.ships[0].parts.reduce((sum,p)=>sum+2-p.damage,0)+
+   const max=me.ships[0].parts.reduce((sum,p)=>sum+p.maxHp,0)+
+    me.escorts.reduce((sum,e)=>sum+e.maxHp,0);
+   const hp=me.ships[0].parts.reduce((sum,p)=>sum+p.hp,0)+
     me.escorts.reduce((sum,e)=>sum+e.hp,0);
    const health=Math.max(0,Math.min(1,hp/Math.max(1,max)));
    const result=won?'player':battle.winner==='B'?'enemy':'draw';
@@ -314,7 +321,7 @@ export default function OfficialFleetBattle3D({
     starsEarned:[won,won&&health>=.65,won&&health>=.9],
     matchStats:{
      turnsElapsed:battle.round,sectorNumber,
-     damageDealt:op.ships[0].parts.reduce((sum,p)=>sum+p.damage,0),
+     damageDealt:op.ships[0].parts.reduce((sum,p)=>sum+p.maxHp-p.hp,0),
      enemyVitalsDestroyed:op.ships[0].parts.filter(p=>p.destroyed).length,
      bossPlanetId:bossPlanetId??null,bossSectorLevel:bossSectorLevel??null
     }
@@ -335,16 +342,18 @@ export default function OfficialFleetBattle3D({
  const target=enemy.ships[0];
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
   target.parts.find(p=>!p.destroyed)?.id;
- const lastPlayer=lastFx?.events?.[0]?.played||[];
- const lastEnemy=lastFx?.events?.[1]?.played||[];
  const chosenTypes=chosenCards.map(i=>player.hand[i]).filter(Boolean);
- const playerSlots=slotCards(player,lastPlayer,chosenTypes);
- const enemySlots=slotCards(enemy,lastEnemy);
- const lastNote=chosenCards.map(i=>fleetCardEffect(player.hand[i]).description).join(' + ');
+ const playerSlots=slotCards(player,chosenTypes);
+ const enemySlots=slotCards(enemy);
+ const lastNote=chosenCards.map(i=>card(player.hand[i])?.effetto||
+  card(player.hand[i])?.effectProposed||'').join(' + ');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
- const terrain=battle.terrain?.element;
- const boss=fleetBossBrief(battle);
- const readableTerrain=terrain?FLEET_ELEMENTS[terrain]?.name:'NEUTRO';
+ const terrain=battle.terrain?.id;
+ const boss=battle.bossId?{name:battle.bossName||'BOSS',ability:'Terreno esclusivo',
+  description:'Abilità passiva del boss e ambiente planetario'}:null;
+ const readableTerrain=terrain?TERRAIN_CATALOG[terrain]?.name||'TERRENO':'NEUTRO';
+ const secondsLeft=Math.max(0,Math.ceil((battle.deadlineMs-now)/1000));
+ const myTurn=battle.turn==='A';
  return <div className="es-math-scope live-viewport">
   <div className="es-root official-duel-3d live-root f3d-original-arena"
    style={{transform:'translate(-50%,-50%) scale('+scale+')',
@@ -358,11 +367,12 @@ export default function OfficialFleetBattle3D({
     inspectEscort={setHelp}/>
    <OriginalSpecialSlots side="B" contents={enemySlots}/>
    <div className="live-midline">
-    <span className="live-turn-indicator" data-active="A">
-     {ended?'FINE PARTITA':'ROUND '+battle.round} · {VITAL_LABELS[actualVital]||'VITALI'}
+    <span className="live-turn-indicator" data-active={battle.turn}>
+     {ended?'FINE PARTITA':(myTurn?'TU':'AVVERSARIO')+' · '+secondsLeft+'s'} ·
+     {' '}{VITAL_LABELS[actualVital]||'VITALI'}
     </span>
     <button className="live-terrain-slot" type="button"
-     title={'Risonanza del terreno: '+readableTerrain}
+     title={'Terreno attivo: '+readableTerrain}
      data-terrain={terrain||undefined} disabled>
      {readableTerrain}
     </button>
@@ -383,23 +393,24 @@ export default function OfficialFleetBattle3D({
     <i/><i/><i/><span><b aria-hidden="true">✧</b><small>SPECIALI</small></span>
     <em>{player.deck.length}</em>
    </div>
-   <div className="live-special-hand" role="group" aria-label="Cinque carte speciali">
+   <div className="live-special-hand" role="group" aria-label="Sette carte del mazzo">
     {player.hand.map((type,index,hand)=><OriginalSpecialHandCard
      key={battle.round+'-'+index+'-'+type} type={type} index={index}
      offset={index-(hand.length-1)/2}
-     selected={chosenCards.includes(index)} disabled={ended}
+     selected={chosenCards.includes(index)} disabled={ended||!myTurn}
      onClick={()=>chooseCard(index)}/>)}
    </div>
    {!ended&&<div className="f3d-target-status" role="status">
     BERSAGLIO: {VITAL_LABELS[actualVital]||'—'} · {target.name}
    </div>}
    {selectedType&&!ended&&<div className="live-card-inspector" role="status">
-    <b>{SPECIAL_CARD_CATALOG[selectedType]?.name||selectedType}</b>
+    <b>{card(selectedType)?.nome||card(selectedType)?.name||selectedType}</b>
     <p>{lastNote}</p>
    </div>}
    <div className="live-actions f3d-actions">
-    <span>SPECIALI {chosenCards.length}/2</span>
-    <button type="button" disabled={ended} onClick={fire}>ATTACCO MADRE · CONFERMA</button>
+    <span>CARTE {chosenCards.length}/3</span>
+    <button type="button" disabled={ended||!myTurn} onClick={fire}>ATTACCA · CONFERMA</button>
+    <button type="button" disabled={ended||!myTurn} onClick={passTurn}>PASSA</button>
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
    </div>
    {!ended&&<button type="button" className="live-abandon" onClick={leave}
@@ -423,7 +434,7 @@ export default function OfficialFleetBattle3D({
    </div>}
    {ended&&<div className="live-end">
     <h2>{battle.winner==='A'?'VITTORIA':battle.winner==='B'?'SCONFITTA':'PAREGGIO'}</h2>
-    <p>Round {battle.round} · {battle.bossName||displaySector||'Duello'}</p>
+    <p>Turni {battle.ply} · {battle.bossName||displaySector||'Duello'}</p>
     <button type="button" disabled={busy||rewardDone} onClick={leave}>
      {busy?'SALVATAGGIO...':'CONFERMA E TORNA'}</button>
     <button type="button" onClick={restart}>RIGIOCA</button>
