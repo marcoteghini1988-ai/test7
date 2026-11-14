@@ -134,3 +134,48 @@
  flex:0 0 auto;font-size:8px;min-height:24px
 }
 .es-math-scope .f3d-original-arena .live-card-rarity{font-size:7px}
+
+/* Nuovo catalogo flotta: il colore funzione resta indipendente dalla rarita'.
+   Le 379 facce SVG hanno le due stratificazioni anche a risoluzione piena. */
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="attack"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="attack"]{--family:#ff6657}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="defense"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="defense"]{--family:#42dcff}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="character"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="character"]{--family:#e778ef}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="terrain"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="terrain"]{--family:#36ecad}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="support"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="support"]{--family:#ffb95d}
+.es-math-scope .f3d-original-arena .live-hand-special[data-family="control"],
+.es-math-scope .f3d-original-arena .live-slot[data-family="control"]{--family:#aaa0ff}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Comune"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Comune"]{--tier:#c7d6e7}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Rara"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Rara"]{--tier:#3ce2ff}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Epica"]{--tier:#db8bff}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Leggendaria"]{--tier:#ffd36b}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity]{
+  border-color:var(--tier);box-shadow:0 0 8px var(--tier),inset 0 0 3px var(--family);
+}
+.es-math-scope .f3d-original-arena .live-slot--occupied[data-rarity]{
+  border-color:var(--tier);box-shadow:0 0 7px var(--tier);
+}
+.es-math-scope .f3d-original-arena .live-hand-special img[src*="/fleet-next-cards/"]{
+  object-fit:fill;object-position:center;filter:none;
+}
+.es-math-scope .f3d-original-arena .live-slot img[src*="/fleet-next-cards/"]{
+  object-fit:fill;object-position:center;
+}
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"]:after,
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"]:after{
+  content:'';position:absolute;inset:-25% -45%;z-index:1;pointer-events:none;
+  background:linear-gradient(115deg,transparent 35%,#ffffff29 49%,transparent 60%);
+  transform:translateX(-100%);animation:f3d-card-sheen 3.5s ease-in-out infinite;
+}
+@keyframes f3d-card-sheen{0%,20%{transform:translateX(-110%)}70%,100%{transform:translateX(110%)}}
+@media (prefers-reduced-motion:reduce){
+ .es-math-scope .f3d-original-arena .live-hand-special:after{animation:none}
+}
