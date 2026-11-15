@@ -3,7 +3,7 @@ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,cardRole} from '../src/fleetNext/rules.js';
-import {describeEffect,SIMPLE_RULES} from '../src/fleetNext/simpleEffects.js';
+import {describeEffect,SIMPLE_RULES,EFFECT_TYPES} from '../src/fleetNext/simpleEffects.js';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const destination=process.argv[2];
@@ -20,7 +20,7 @@ const cards=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),.
  after:describeEffect(c),grades:[1,2,3].map(level=>describeEffect(c,level))
 }));
 const words=s=>s.trim().split(/\s+/).length;
-const stats={cards:cards.length,beforeWords:cards.reduce((s,c)=>s+words(c.before),0),
+const stats={cards:cards.length,effectTypes:EFFECT_TYPES.length,beforeWords:cards.reduce((s,c)=>s+words(c.before),0),
  afterWords:cards.reduce((s,c)=>s+words(c.after),0),maxWords:Math.max(...cards.map(c=>words(c.after)))};
 if(cards.length!==391||cards.some(c=>!c.before||!c.after))throw new Error('Catalogo incompleto');
 stats.reductionPercent=Math.round(100*(1-stats.afterWords/stats.beforeWords));
@@ -37,7 +37,7 @@ const html=String.raw`<!doctype html>
 </style></head><body><main>
 <header><div class="eyebrow">ECLISSI STELLARE · REVISIONE DELLE CARTE</div><h1>Effetti brevi, bersagli chiari.</h1>
 <p>Tutte le 391 carte: 250 generali, 129 esclusive delle navicelle e 12 Personaggi Boss. Ogni testo corrisponde a un effetto eseguito dal gioco. Le carte mantengono nomi, identità e rarità; due fusioni di cura sono ora classificate come Supporto.</p>
-<div class="stats"><div class="stat"><b>391 / 391</b><span>CARTE INCLUSE</span></div><div class="stat"><b id="reduction"></b><span>PAROLE IN MENO</span></div><div class="stat"><b id="maximum"></b><span>PAROLE NEL TESTO PIÙ LUNGO</span></div><div class="stat"><b>15 azioni</b><span>REGOLE COMUNI</span></div></div></header>
+<div class="stats"><div class="stat"><b>391 / 391</b><span>CARTE INCLUSE</span></div><div class="stat"><b id="reduction"></b><span>PAROLE IN MENO</span></div><div class="stat"><b id="maximum"></b><span>PAROLE NEL TESTO PIÙ LUNGO</span></div><div class="stat"><b id="actions"></b><span>REGOLE COMUNI</span></div></div></header>
 <details class="rules"><summary>Le regole comuni, in poche frasi</summary><ul id="rules"></ul></details>
 <section aria-label="Filtri del catalogo"><div class="filters">
 <label>Cerca per nome, ID o effetto<input id="query" type="search" placeholder="Es. protegge, ripara, Fenice…"></label>
@@ -49,9 +49,10 @@ const html=String.raw`<!doctype html>
 <footer>Revisione del 15 novembre 2026. I Personaggi Boss restano premi delle rispettive vittorie; le esclusive mantengono i requisiti della navicella. Le 39 nuove illustrazioni Difesa restano in attesa di approvazione. <a id="source" target="_blank" rel="noopener">Codice del progetto</a>.</footer>
 </main><script type="application/json" id="data">__DATA__</script><script>
 const data=JSON.parse(document.getElementById('data').textContent),$=id=>document.getElementById(id);
-const labels={power:'Potenzia l’attacco',pierce:'Ignora protezioni',multishot:'Più bersagli',protect:'Protegge',dodge:'Evita un colpo',repair:'Ripara',regenerate:'Rigenera',counter:'Contrattacca',weaken:'Indebolisce',disarm:'Blocca un attacco',cleanse:'Rimuove disturbi',exchange:'Cambia carte',recover:'Recupera una carta',charge:'Prepara un attacco',terrain:'Cambia il terreno'};
+const labels={power:'Potenzia l’attacco',pierce:'Ignora protezioni',multishot:'Più bersagli',protect:'Protegge',dodge:'Evita un colpo',repair:'Ripara',regenerate:'Rigenera',counter:'Contrattacca',weaken:'Indebolisce',disarm:'Blocca un attacco',cleanse:'Rimuove disturbi',exchange:'Cambia carte',recover:'Recupera una carta',charge:'Prepara un attacco',terrain:'Cambia il terreno',trap:'Trappola coperta'};
 const roles={attack:'Attacco',defense:'Difesa',support:'Supporto / Controllo',character:'Personaggio',terrain:'Terreno'},colors={attack:'#ff8278',defense:'#65d9ff',support:'#ffd089',character:'#efa4e8',terrain:'#70edb4'};
 $('reduction').textContent='−'+data.stats.reductionPercent+'%';$('maximum').textContent=data.stats.maxWords;
+$('actions').textContent=data.stats.effectTypes+' azioni';
 $('source').href='https://github.com/marcoteghini1988-ai/test7/tree/'+data.commit;
 for(const text of data.rules){const li=document.createElement('li');li.textContent=text;$('rules').append(li);}
 for(const ship of [...new Set(data.cards.map(c=>c.ship).filter(Boolean))].sort()){const option=document.createElement('option');option.value=ship;option.textContent=ship;$('ship').append(option);}

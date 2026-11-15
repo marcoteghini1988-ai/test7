@@ -1,5 +1,5 @@
 {
-  "revision": "simple-effects-v1",
+  "revision": "simple-effects-v2-traps",
   "date": "2026-11-15",
   "total": 250,
   "policy": "Un effetto per carta; una frase breve con bersaglio e durata. Nomi, ID, rarità e composizioni dei mazzi preservati.",
@@ -1159,12 +1159,11 @@
       "rarity": "Comune",
       "role": "Difesa",
       "before": "Una deviazione forzata non può spostare il tuo prossimo colpo o la tua prossima difesa per un solo round.",
-      "after": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario.",
+      "after": "Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.",
       "effectSpec": {
-        "type": "protect",
-        "target": "command",
-        "amount": 1,
-        "turns": 1
+        "type": "trap",
+        "trigger": "terrain",
+        "action": "cancel"
       },
       "previousStatus": "proposta_da_bilanciare_non_implementata",
       "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
@@ -3696,23 +3695,29 @@
     "maximumEffectCharacters": 126,
     "meanBeforeCharacters": 123.8,
     "meanAfterCharacters": 62.2,
-    "distinctEffects": 68,
+    "distinctEffects": 67,
     "countsByEffect": {
-      "pierce": 32,
       "power": 24,
+      "pierce": 32,
       "multishot": 10,
-      "charge": 18,
+      "protect": 32,
+      "dodge": 10,
+      "repair": 17,
+      "regenerate": 11,
       "counter": 10,
       "weaken": 31,
-      "regenerate": 11,
-      "cleanse": 11,
-      "protect": 33,
-      "dodge": 10,
-      "exchange": 13,
       "disarm": 11,
+      "cleanse": 11,
+      "exchange": 13,
       "recover": 9,
-      "repair": 17,
-      "terrain": 10
+      "charge": 18,
+      "terrain": 10,
+      "trap": 1
     }
+  },
+  "trapUpdate": {
+    "cardId": "gen-077",
+    "previousEffect": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario.",
+    "reason": "Le Difese comprendono anche Trappole coperte; Ancora di Campo annulla un Terreno avversario prima dell’attivazione."
   }
 }

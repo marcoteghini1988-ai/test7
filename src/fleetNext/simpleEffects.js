@@ -1,9 +1,10 @@
 // Regole leggibili e dati eseguibili condividono la stessa definizione.
 // Questo modulo non interpreta nomi, famiglie o descrizioni delle carte.
 import exclusiveData from './catalogExclusive.json' with {type:'json'};
+export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
- 'weaken','disarm','cleanse','exchange','recover','charge','terrain'
+ 'weaken','disarm','cleanse','exchange','recover','charge','terrain','trap'
 ]);
 const PARTS=['engine','weapons','command','generator'];
 const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore'};
@@ -27,11 +28,17 @@ export const SIMPLE_RULES=Object.freeze([
  'Un turno avversario termina quando inizia il tuo prossimo turno. Un round comprende un turno per giocatore.',
  'Le riparazioni non superano i punti massimi e non ricostruiscono componenti o scudiere distrutti.',
  'I personaggi applicano il proprio effetto quando entrano e al tuo turno successivo. Poi lasciano il campo.',
- 'Il Terreno scelto entra prima delle altre carte del turno.',
+ 'Il Terreno scelto si risolve prima delle altre carte del turno. Se viene annullato, non entra in campo.',
  'Le reazioni si attivano solo con i danni degli attacchi normali. Costi delle abilità e contrattacchi non attivano altre reazioni.',
- 'Dopo 50 round la partita termina in pareggio. Anche due navi con le Armi distrutte pareggiano.'
+ 'Dopo 50 round la partita termina in pareggio. Anche due navi con le Armi distrutte pareggiano.',
+ 'Le Trappole sono carte Difesa: si preparano coperte nel proprio turno e si rivelano solo quando scattano. Altrimenti restano in campo.',
+ 'Puoi avere al massimo 2 Difese in campo. Preparare una Trappola conta nelle 3 carte e nelle 2 Difese del turno; farla scattare non consuma altre giocate.',
+ 'Una Trappola contro i Terreni annulla il prossimo Terreno avversario prima che si attivi. Il Terreno precedente resta; entrambe le carte usate vanno negli scarti.',
+ 'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
+ 'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.'
 ]);
 export const isCharacterCard=card=>card?.kind==='character'||card?.sottotipo==='Personaggio'||/Personaggio/i.test(card?.category||'');
+export const isTrapCard=card=>card?.effectSpec?.type==='trap';
 const integer=(value,min,max)=>Number.isInteger(value)&&value>=min&&value<=max;
 export function validateEffectSpec(spec){
  if(!spec||typeof spec!=='object'||Array.isArray(spec))return 'Effetto mancante';
@@ -47,6 +54,7 @@ export function validateEffectSpec(spec){
  if(spec.type==='regenerate'&&!['hit','hurt'].includes(spec.trigger))return 'Evento di rigenerazione non valido';
  if(spec.type==='recover'&&!['attack','defense','support','any'].includes(spec.role))return 'Tipo di recupero non valido';
  if(spec.type==='terrain'&&!Object.hasOwn(TERRAIN_EFFECT_TEXT,spec.code))return 'Terreno non valido';
+ if(spec.type==='trap'&&(spec.trigger!=='terrain'||spec.action!=='cancel'))return 'Trappola non supportata';
  return null;
 }
 const UPGRADE_CAPS=Object.freeze({power:5,pierce:3,protect:3,dodge:3,repair:3,
@@ -129,6 +137,7 @@ export function describeEffect(card,level=1){
   }
   case 'charge':return repeat+'Prepara +'+s.amount+' potenza per il tuo attacco del turno successivo.';
   case 'terrain':return TERRAIN_EFFECT_TEXT[s.code]+' Vale per entrambi i giocatori per 3 round.';
+  case 'trap':return 'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
   default:throw new Error('Effetto privo di descrizione: '+s.type);
  }
 }

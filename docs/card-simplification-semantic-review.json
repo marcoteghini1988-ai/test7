@@ -1,5 +1,5 @@
 {
-  "revision": "simple-effects-v1",
+  "revision": "simple-effects-v2-traps",
   "date": "2026-11-15",
   "status": "completed",
   "scope": {
@@ -13,7 +13,7 @@
   "sourceSnapshots": [
     {
       "file": "src/fleetNext/catalogGeneral.json",
-      "sha256": "005ea68c558c849cd6757f1a9c6e02c0abc286abe7fe4db712e6cf5eef4e8911"
+      "sha256": "a2cb21268d9608956d0ee78821cd5a5bda15e1813bd12f4ea0035886e66fa0f8"
     },
     {
       "file": "src/fleetNext/catalogExclusive.json",
@@ -29,11 +29,11 @@
     },
     {
       "file": "src/fleetNext/simpleEffects.js",
-      "sha256": "be734300b7a832bbf0e250ea8097b13f222f97005344e94be691c5216bf94b5c"
+      "sha256": "70c5f8199febc95f5803ae01a73298c6b91edfeabb29e280598adb0556bbb844"
     },
     {
       "file": "src/fleetNext/combat.js",
-      "sha256": "c07f91095a858620f999d8e21b31ad92a2ebd036958601e20c2b159c7d353f15"
+      "sha256": "cd3dacbed3e4c942d75246d375f5235e01c0626dc35d6b582e5351b0f07b43b3"
     },
     {
       "file": "src/fleetNext/terrains.js",
@@ -42,17 +42,25 @@
     {
       "file": "src/fleetNext/collection.js",
       "sha256": "4e47dcda1d5954758bb425c05ac35ff57af406053bbd6488ab0d419551d9ee89"
+    },
+    {
+      "file": "src/fleetNext/battlePresentation.js",
+      "sha256": "f87d2ad4f14f20d528ed9786c0074ffbcf0ea6ef5afdc4e20fd575e84d9d3a6c"
+    },
+    {
+      "file": "src/OfficialFleetBattle3D.jsx",
+      "sha256": "2d9342611f19129f8e28c20027f7199f164c9499730b702babe5a858a772af49"
     }
   ],
   "summary": {
     "canonicalDescriptions": 391,
     "validSpecs": 391,
-    "implementedEffectTypes": 15,
+    "implementedEffectTypes": 16,
     "typeCounts": {
       "power": 46,
       "pierce": 51,
       "multishot": 37,
-      "protect": 52,
+      "protect": 51,
       "dodge": 13,
       "repair": 28,
       "regenerate": 14,
@@ -63,7 +71,8 @@
       "exchange": 16,
       "recover": 10,
       "charge": 23,
-      "terrain": 10
+      "terrain": 10,
+      "trap": 1
     },
     "roleCounts": {
       "attack": 117,
@@ -72,7 +81,7 @@
       "character": 41,
       "terrain": 10
     },
-    "counterplayCorrections": 51,
+    "counterplayCorrections": 52,
     "approvedDurationCorrections": 7,
     "exclusiveUpgradeTransitionsChecked": 387,
     "successfulUpgradeChecks": 183,
@@ -85,7 +94,8 @@
     "duration": "Un turno avversario termina all’inizio del prossimo turno proprio. Una durata di due turni avversari copre due turni del nemico. Le protezioni consumate vengono rimosse prima della scadenza.",
     "targeting": "Le carte mirate usano ownPartId; in assenza di scelta il motore usa il componente operativo più danneggiato. Le scudiere vengono scelte automaticamente fra quelle vive.",
     "reactions": "Solo il danno di un attacco normale attiva rigenerazione o contrattacco. Costi in punti e contrattacchi non generano reazioni ricorsive.",
-    "finish": "Vittoria dopo la distruzione di tutti i componenti avversari; pareggio se entrambe le madri perdono tutti i componenti, entrambe perdono le Armi o si completano 50 round."
+    "finish": "Vittoria dopo la distruzione di tutti i componenti avversari; pareggio se entrambe le madri perdono tutti i componenti, entrambe perdono le Armi o si completano 50 round.",
+    "traps": "Le Trappole sono Difese preparate coperte nel proprio turno. Persistono fino al loro innesco e usano i due spazi Difesa condivisi, senza sostituire carte già attive. Un solo annullamento consuma una sola Trappola. Il Terreno avversario viene annullato prima dell’attivazione e quello precedente conserva effetto e scadenza. La selezione non consulta le Trappole avversarie; schivate o riparazioni rese impossibili dal Terreno rimasto tornano in mano."
   },
   "runtimeFindings": [
     {
@@ -138,6 +148,16 @@
       "status": "resolved",
       "finding": "Un lavoro storico per un equipaggiamento inattivo poteva ancora richiedere Etere per essere accelerato.",
       "resolution": "Il pulsante è nascosto e il gestore rifiuta il pagamento per lavori ability,epic,deck,terrain. La coda e il completamento automatico restano conservati."
+    },
+    {
+      "id": "covered-terrain-traps",
+      "status": "resolved",
+      "finding": "Le Difese venivano applicate subito e non potevano restare coperte per annullare una Carta Terreno prima dell’attivazione.",
+      "resolution": "Ancora di Campo prepara una Trappola persistente. Un solo annullamento consuma una sola carta, senza svelare quelle coperte nei controlli, nell’IA o nella presentazione. Gli spazi pieni impediscono sostituzioni e le carte rese inutilizzabili dal Terreno rimasto tornano in mano.",
+      "affectedTypes": [
+        "trap",
+        "terrain"
+      ]
     }
   ],
   "verificationEvidence": {
@@ -148,7 +168,29 @@
       "savedGradesPreservedChecks": 387
     },
     "focusedUiAndForgeTests": "src/fleetNextLegacyUi.test.js e src/officialForgeProgress.test.js:10 test superati durante questa revisione.",
-    "engineTestsReportedByEngineAuthor": "src/fleetNextSimpleEffects.test.js:34 test superati, compresi limiti di miglioramento, contrattacchi, terreni dei dodici pianeti, bersagli, scadenze e termine partita."
+    "engineTestsReportedByEngineAuthor": "src/fleetNextSimpleEffects.test.js:34 test superati, compresi limiti di miglioramento, contrattacchi, terreni dei dodici pianeti, bersagli, scadenze e termine partita.",
+    "trapRevision": {
+      "fullSuite": {
+        "tests": 1221,
+        "passed": 1221,
+        "failed": 0
+      },
+      "finalFocused": {
+        "tests": 76,
+        "passed": 76,
+        "failed": 0
+      },
+      "trapEngineTests": 17,
+      "trapPresentationTests": 6,
+      "independentRuntimeScenarios": 8,
+      "terrainTypesChecked": 10,
+      "reactDomScenarios": 7,
+      "reactConsoleErrors": 0,
+      "build": "passed",
+      "preflight": "passed",
+      "approvedWebpPreserved": true,
+      "pending39ImagesStillNotInserted": true
+    }
   },
   "mechanics": [
     {
@@ -209,7 +251,11 @@
     },
     {
       "type": "terrain",
-      "behavior": "Il terreno scelto entra prima degli altri effetti del turno e vale per entrambi per sei turni alternati. Sostituisce quello precedente; contro un boss ripristina il terreno del boss alla scadenza."
+      "behavior": "Il Terreno scelto si risolve prima degli altri effetti del turno. Se una Trappola ne annulla l’attivazione, va negli scarti e non sostituisce il precedente. Altrimenti vale per entrambi per sei turni alternati; contro un boss ripristina il Terreno del boss alla scadenza."
+    },
+    {
+      "type": "trap",
+      "behavior": "Le Trappole sono Difese preparate coperte nel proprio turno. Persistono fino al loro innesco e usano i due spazi Difesa condivisi, senza sostituire carte già attive. Un solo annullamento consuma una sola Trappola. Il Terreno avversario viene annullato prima dell’attivazione e quello precedente conserva effetto e scadenza. La selezione non consulta le Trappole avversarie; schivate o riparazioni rese impossibili dal Terreno rimasto tornano in mano."
     }
   ],
   "counterplayChanges": [
@@ -620,6 +666,13 @@
       "before": "Attacca un altro componente o consuma la protezione con un colpo.",
       "after": "Attacca un altro componente o attendi la scadenza.",
       "reason": "Un solo colpo non esaurisce una protezione che ne blocca due."
+    },
+    {
+      "id": "gen-077",
+      "name": "Ancora di Campo",
+      "before": "Attacca un altro componente o consuma la protezione con un colpo.",
+      "after": "Ogni Trappola annulla un solo Terreno; una seconda carta Terreno può sostituire quello rimasto.",
+      "reason": "La carta ora annulla una Carta Terreno anziché proteggere la Centralina."
     }
   ],
   "effectChanges": [
@@ -783,6 +836,28 @@
         "effect": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari."
       },
       "reason": "Su Motori, Generatore o una scudiera può arrivare al massimo un colpo per turno. Due turni rendono utilizzabili entrambe le protezioni."
+    },
+    {
+      "id": "gen-077",
+      "name": "Ancora di Campo",
+      "before": {
+        "effectSpec": {
+          "type": "protect",
+          "target": "command",
+          "amount": 1,
+          "turns": 1
+        },
+        "effect": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario."
+      },
+      "after": {
+        "effectSpec": {
+          "type": "trap",
+          "trigger": "terrain",
+          "action": "cancel"
+        },
+        "effect": "Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario."
+      },
+      "reason": "Richiesta dell’utente: le Difese comprendono Trappole coperte che possono annullare l’attivazione di un Terreno avversario."
     }
   ],
   "cards": [
@@ -2253,19 +2328,18 @@
       "name": "Ancora di Campo",
       "role": "defense",
       "effectSpec": {
-        "type": "protect",
-        "target": "command",
-        "amount": 1,
-        "turns": 1
+        "type": "trap",
+        "trigger": "terrain",
+        "action": "cancel"
       },
-      "effect": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario.",
-      "counterplay": "Attacca un altro componente o consuma la protezione con un colpo.",
+      "effect": "Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.",
+      "counterplay": "Ogni Trappola annulla un solo Terreno; una seconda carta Terreno può sostituire quello rimasto.",
       "requirements": null,
       "schemaValid": true,
       "descriptionMatchesRuntimeDefinition": true,
       "effectTypeImplemented": true,
       "counterplayReviewed": true,
-      "counterplayCorrected": false,
+      "counterplayCorrected": true,
       "durationCorrected": false
     },
     {

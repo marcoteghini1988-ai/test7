@@ -361,10 +361,13 @@ const RULES_DATABASE = Object.freeze([
     ]
   },
   {
-    id: 'rule_5', num: '05', title: 'Protezioni e schivate', tag: 'DIFESA', color: '#22d3ee',
-    summary: 'Proteggi il bersaglio indicato per il numero di colpi e turni scritto sulla carta.',
+    id: 'rule_5', num: '05', title: 'Difese e Trappole', tag: 'DIFESA', color: '#22d3ee',
+    summary: 'Le Difese possono proteggere un bersaglio oppure preparare una Trappola coperta.',
     details: [
       SIMPLE_RULES[2],
+      SIMPLE_RULES[9],
+      SIMPLE_RULES[10],
+      SIMPLE_RULES[12],
       'Una protezione scade alla fine della durata indicata anche se non è stata usata.',
       'Le schivate richiedono Motori funzionanti.',
       'Ignorare una protezione sui componenti non impedisce alle scudiere di intercettare.'
@@ -406,7 +409,9 @@ const RULES_DATABASE = Object.freeze([
     details: [
       SIMPLE_RULES[6],
       'Un round comprende un turno per giocatore.',
-      'Un nuovo terreno sostituisce quello precedente. Contro un boss, al termine torna il suo terreno.',
+      'Un nuovo terreno non annullato sostituisce quello precedente. Contro un boss, al termine torna il suo terreno.',
+      SIMPLE_RULES[11],
+      SIMPLE_RULES[13],
       'Il terreno attivo mostra la regola in vigore: può cambiare potenza, protezioni o riparazioni.',
       'Controlla il terreno prima di scegliere le carte.'
     ]

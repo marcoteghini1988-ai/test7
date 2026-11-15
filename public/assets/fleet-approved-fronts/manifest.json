@@ -13,7 +13,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-001.webp",
       "originalApprovedEffect": "Il prossimo colpo reale della madre contro un vitale integro ottiene mira stabile: se il bersaglio resta valido non può essere deviato da una manovra di mobilità ordinaria.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         92,
         998,
@@ -31,7 +31,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-032.webp",
       "originalApprovedEffect": "Se una scudiera assorbe la salva, la madre ottiene una carica per il prossimo tiro contro una diversa scudiera viva; nessun danno passa alla madre nemica.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         88,
         986,
@@ -49,7 +49,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-055.webp",
       "originalApprovedEffect": "Contro un componente già corroso, il prossimo colpo reale può trasformare una difesa di riduzione in una marca di energia consumata; rispetta i baluardi.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         90,
         980,
@@ -67,7 +67,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-067.webp",
       "originalApprovedEffect": "Dopo tre round di carica senza subire la distruzione delle Armi, un unico colpo materno ignora una parata e una deviazione ordinarie, poi scarica tutto.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         88,
         982,
@@ -85,7 +85,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-071.webp",
       "originalApprovedEffect": "Riduce di 1 livello il primo danno di un attacco singolo diretto a un vitale ancora integro, una sola volta; non annulla una salva multipla.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -103,7 +103,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-094.webp",
       "originalApprovedEffect": "Una scudiera viva può assorbire una salva diretta alla madre spendendo fino a 2 resistenze addizionali; non funziona con supporti non abilitati all'intercetto.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         84,
         1010,
@@ -121,7 +121,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-106.webp",
       "originalApprovedEffect": "Per due round, il primo vitale bersagliato da un attacco singolo ottiene una parata locale; le salve multiple consumano la protezione una sola volta.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         90,
         1005,
@@ -139,7 +139,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-116.webp",
       "originalApprovedEffect": "Una volta per partita proteggi due vitali distinti con una parata ciascuno, scegliendoli prima del turno nemico; non equivale a uno scudo madre globale.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1007,
@@ -157,7 +157,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-219.webp",
       "originalApprovedEffect": "La prima manovra di mobilità del turno perde 1 efficacia, minimo zero.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1003,
@@ -175,7 +175,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-245.webp",
       "originalApprovedEffect": "La prima intercettazione di attacco multiplo infligge +1 resistenza alla scudiera, senza trapassare il colpo.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         84,
         1044,
@@ -193,7 +193,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-072.webp",
       "originalApprovedEffect": "Con Motori operativi, tenta di spostare sul primo vitale non scelto il prossimo colpo singolo; fallisce contro una mira indeviabile.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -211,7 +211,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-073.webp",
       "originalApprovedEffect": "Se possiedi una scudiera collegata, il suo prossimo intercetto consuma 1 resistenza in meno, minimo 1; altrimenti proteggi una tua marca di mira.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -229,7 +229,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-074.webp",
       "originalApprovedEffect": "La prima riparazione successiva su un vitale fratturato concede una parata leggera fino al prossimo round.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -247,7 +247,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-075.webp",
       "originalApprovedEffect": "Quando il nemico sceglie Motori come bersaglio, puoi ridurre la priorità di mira di un livello prima del tiro.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -265,7 +265,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-076.webp",
       "originalApprovedEffect": "Il prossimo colpo diretto a una scudiera subisce una riduzione leggera se la sua madre mantiene il Generatore funzionante.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -279,11 +279,11 @@
       "name": "Ancora di Campo",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario.",
-      "designStatus": "effetto_semplice_implementato_v1",
+      "effect": "Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.",
+      "designStatus": "effetto_semplice_implementato_v2",
       "asset": "public/assets/fleet-approved-fronts/gen-077.webp",
       "originalApprovedEffect": "Una deviazione forzata non può spostare il tuo prossimo colpo o la tua prossima difesa per un solo round.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -301,7 +301,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-078.webp",
       "originalApprovedEffect": "Se non hai scudiere in campo, evita una volta una marca avversaria contro un vitale integro; non elimina il colpo fisico in arrivo.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -319,7 +319,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-080.webp",
       "originalApprovedEffect": "Quando subisci un colpo reale su una scudiera, puoi consumare una carica difensiva per ridurne di 1 il danno in resistenza.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -337,7 +337,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-081.webp",
       "originalApprovedEffect": "Una protezione normale può essere spostata dal Generatore ai Motori prima della risoluzione; dura soltanto un attacco.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -355,7 +355,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-082.webp",
       "originalApprovedEffect": "Protegge un singolo vitale indicato con una parata, senza creare uno scudo generale della nave.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -373,7 +373,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-083.webp",
       "originalApprovedEffect": "Dopo una schivata riuscita, conserva un indicatore di difesa sui Motori per un round, senza annullare un secondo colpo.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -391,7 +391,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-084.webp",
       "originalApprovedEffect": "Se la prima scudiera è viva, rende noto quale salvo la sta bersagliando prima di spendere la difesa.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -409,7 +409,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-085.webp",
       "originalApprovedEffect": "Se il vitale selezionato è già fratturato, la prima riparazione nel turno successivo non può essere ritardata da un disturbo lieve.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -427,7 +427,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-086.webp",
       "originalApprovedEffect": "Difende i Motori da un singolo effetto di raffreddamento, ma non dal danno del colpo reale.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -445,7 +445,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-087.webp",
       "originalApprovedEffect": "Dopo che l'avversario cambia bersaglio, la tua difesa si può riallineare una sola volta allo stesso turno.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -463,7 +463,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-088.webp",
       "originalApprovedEffect": "Il prossimo colpo diretto al Generatore incontra una riduzione lieve se il Generatore è ancora integro.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -481,7 +481,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-089.webp",
       "originalApprovedEffect": "La prossima scudiera che intercetta può scegliere di non attivare una propria passiva nel round successivo per assorbire 1 resistenza aggiuntiva.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -499,7 +499,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-090.webp",
       "originalApprovedEffect": "Impedisce che la carta difensiva scelta venga spostata da una semplice carta di distrazione avversaria.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -517,7 +517,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-091.webp",
       "originalApprovedEffect": "Dopo una tua scudiera realmente colpita, la prossima carta Difesa che giochi può essere preparata per due round anziché uno.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1008,
@@ -535,7 +535,7 @@
       "designStatus": "effetto_semplice_implementato_v1",
       "asset": "public/assets/fleet-approved-fronts/gen-092.webp",
       "originalApprovedEffect": "Scegli un vitale; la prima salva che lo bersaglia è ridotta, ma se il nemico cambia bersaglio la protezione non lo segue.",
-      "rulesRevision": "simple-effects-v1",
+      "rulesRevision": "simple-effects-v2-traps",
       "rulesPanel": [
         85,
         1020,
@@ -545,7 +545,7 @@
       "originalApprovedAssetSha256": "d2c6b11007081bd91efa942f1849ce63a0f4f609cb8b7a4553f9baf638e976be"
     }
   ],
-  "rulesRevision": "simple-effects-v1",
+  "rulesRevision": "simple-effects-v2-traps",
   "rulesUpdated": "2026-11-15",
-  "rulesApprovalNote": "Le illustrazioni e i fronti originali restano quelli approvati. Il testo delle regole è stato semplificato su richiesta del 15 novembre 2026 e viene sovrapposto nel solo pannello effetto. originalApprovedEffect conserva il testo presente nel WebP approvato."
+  "rulesApprovalNote": "Le illustrazioni e i fronti originali restano quelli approvati. Il testo delle regole è aggiornato su richiesta del 15 novembre 2026 nel solo pannello effetto. La revisione include le Difese Trappola coperte. originalApprovedEffect conserva il testo presente nel WebP approvato."
 }

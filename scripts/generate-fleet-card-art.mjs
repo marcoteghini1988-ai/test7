@@ -3,7 +3,7 @@
 import {readFileSync,existsSync,mkdirSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
-import {describeEffect} from '../src/fleetNext/simpleEffects.js';
+import {describeEffect,SIMPLE_RULES_REVISION} from '../src/fleetNext/simpleEffects.js';
 import {BOSS_CARDS} from '../src/fleetNext/bossCards.js';
 const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const C={"attack":{"base":"#ff594c","soft":"#ffb054","name":"ATTACCO","glyph":"⟡"},"defense":{"base":"#37ceff","soft":"#b1f2ff","name":"DIFESA","glyph":"⬡"},"character":{"base":"#eb64e1","soft":"#ffd0fb","name":"PERSONAGGIO","glyph":"♛"},"terrain":{"base":"#2be3a2","soft":"#afffe4","name":"TERRENO","glyph":"◈"},"support":{"base":"#ffb24d","soft":"#ffe2a4","name":"SUPPORTO","glyph":"✚"},"control":{"base":"#9e8fff","soft":"#ded4ff","name":"CONTROLLO","glyph":"◎"}};
@@ -383,7 +383,7 @@ function approvedOverlay(card){
  if(!meta){if(existsSync(full))throw Error('Artwork approvato privo di manifest '+card.id);return '';}
  if(meta.name!==card.name||meta.role.toUpperCase()!==C[card.kind].name||meta.rarity!==card.rarity)
   throw Error('Identità della carta approvata cambiata: '+card.id);
- if(meta.effect!==card.effect||meta.rulesRevision!=='simple-effects-v1'||!meta.originalApprovedEffect)
+ if(meta.effect!==card.effect||meta.rulesRevision!==SIMPLE_RULES_REVISION||!meta.originalApprovedEffect)
   throw Error('Manifest delle regole da sincronizzare: '+card.id);
  if(!existsSync(full))throw Error('Fronte approvato mancante '+card.id);
  if(!Array.isArray(meta.rulesPanel)||meta.rulesPanel.length!==4)throw Error('Pannello regole non verificato: '+card.id);

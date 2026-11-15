@@ -3,7 +3,7 @@ import {readFileSync,readdirSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
-import {describeEffect} from '../src/fleetNext/simpleEffects.js';
+import {describeEffect,SIMPLE_RULES_REVISION} from '../src/fleetNext/simpleEffects.js';
 import {BOSS_CARDS} from '../src/fleetNext/bossCards.js';
 const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const cards=[
@@ -69,7 +69,7 @@ for(const c of cards){
   if(approved.name!==(c.nome||c.name)||approved.role!==(c.sottotipo||c.category)||
    approved.rarity!==(c.rarita||c.rarityDraft)||approved.effect!==(c.effetto||c.effectProposed))
    fail('Identità o regole correnti non sincronizzate '+id);
-  if(approved.rulesRevision!=='simple-effects-v1'||!approved.originalApprovedEffect)
+  if(approved.rulesRevision!==SIMPLE_RULES_REVISION||!approved.originalApprovedEffect)
    fail('Provenienza approvazione o revisione regole assente '+id);
   const full=resolve(approvedRoot,id+'.webp');
   if(!existsSync(full))fail('WEBP approvato mancante '+id);

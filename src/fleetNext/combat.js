@@ -117,6 +117,16 @@ const activePart=(side,id)=>side.ships[0].parts.find(p=>p.id===id&&!p.destroyed)
 const livingEscorts=side=>side.escorts.filter(e=>e.hp>0&&!e.destroyed);
 const weakest=items=>[...items].sort((a,z)=>a.hp/a.maxHp-z.hp/z.maxHp)[0]||null;
 const weakestPart=side=>weakest(side.ships[0].parts.filter(p=>!p.destroyed));
+const visiblePlayed=ids=>ids.filter(id=>card(id)?.effectSpec?.type!=='trap');
+export function defenseSlotsAvailable(side,ply=0){
+ const occupied=(side?.defenses||[]).filter(d=>d.untilPly==null||d.untilPly>ply).length;
+ return Math.max(0,2-occupied);
+}
+export function defenseCapacityReason(side,newDefenseCount=1,ply=0){
+ const available=defenseSlotsAvailable(side,ply);
+ if(newDefenseCount<=available)return '';
+ return available===0?'I due spazi Difesa sono occupati':'Hai spazio per una sola nuova carta Difesa';
+}
 function normalizeSide(side){
  for(const key of ['protections','reactions','charges','buffs','defenses','discard'])side[key]??=[];
  side.fireBlocked??=false;side.lastDisarmedPly??=null;
@@ -137,6 +147,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  const s=effectiveEffectSpec(def,side.exclusiveUpgrades?.[def.id]||1);
  const character=isCharacterCard(def);
  const terrain=terrainCode===undefined?battle?.terrain?.id:terrainCode;
+ if(cardRole(def.id)==='defense'){
+  const capacity=defenseCapacityReason(side,1,battle?.ply??0);
+  if(capacity)return capacity;
+ }
  if(character&&side.commander&&side.commander.untilPly>(battle?.ply??0))return 'È già attivo un Personaggio';
  if(def.shipId&&!exclusiveOperational(def.id,side.ships[0],side.escorts))return 'Nave o componenti richiesti non disponibili';
  if(VITAL_KEYS.includes(s.target)&&!activePart(side,s.target))return VITAL_LABELS[s.target]+' non disponibili';
@@ -169,6 +183,8 @@ export function validateFleetTurn(b,who,order){
  if(count('character')>1)return 'Massimo un Personaggio per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
  if(count('terrain')>1)return 'Massimo una Carta Terreno per turno';
+ const defenseCapacity=defenseCapacityReason(side,count('defense'),b.ply);
+ if(defenseCapacity)return defenseCapacity;
  const terrainCode=chosen.find(c=>c.effectSpec?.type==='terrain')?.effectSpec.code??b.terrain?.id;
  for(const c of chosen){
   const reason=effectUnavailableReason(c,side,b,{ownPartId:order?.ownPartId,terrainCode});
@@ -198,7 +214,7 @@ function discardDefense(side,token){
 }
 function expireSide(side,ply){
  normalizeSide(side);
- for(const entry of [...side.defenses])if(entry.untilPly<=ply)discardDefense(side,entry.source);
+ for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
  side.protections=side.protections.filter(s=>s.untilPly>ply&&s.remaining>0);
  side.reactions=side.reactions.filter(s=>s.untilPly>ply);
  side.buffs=side.buffs.filter(s=>s.untilPly==null||s.untilPly>ply);
@@ -237,6 +253,21 @@ function exchangeCards(b,side,amount){
 }
 function addWeaken(b,enemy,amount,source){
  enemy.buffs.push({kind:'jam',power:amount+(b.terrain?.id==='T03'?1:0),source});
+}
+function cancelTerrainWithTrap(b,who,terrainCard,ctx,events){
+ const defenderWho=other(who),defender=b.sides[defenderWho];
+ const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='terrain'&&d.action==='cancel'&&
+  (d.armedAtPly??-1)<b.ply);
+ if(!trap)return false;
+ const name=card(trap.id)?.nome||card(trap.id)?.name||'Trappola';
+ const terrainName=card(terrainCard)?.nome||card(terrainCard)?.name||'Terreno';
+ discardDefense(defender,trap.source);
+ events.push(emit(b,defenderWho,'trap-reveal',name+' si rivela e annulla '+terrainName+'.',
+  {cardId:trap.id,blockedCardId:terrainCard}));
+ events.push(emit(b,who,'terrain-cancelled',terrainName+' non si attiva. Il Terreno attuale resta invariato.',
+  {cardId:terrainCard,terrainCardId:terrainCard}));
+ ctx.terrainCancelled=true;
+ return true;
 }
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
@@ -282,10 +313,15 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId}={}){
    else at('Nessuna carta adatta negli scarti');break;
   }
   case 'charge':side.charges.push({amount:s.amount,atPly:b.ply+2,source:token});at('+'+s.amount+' potenza al prossimo turno');break;
+  case 'trap':
+   events.push(emit(b,who,'trap-set','Una trappola è stata preparata coperta.'));
+   break;
   case 'terrain':{
    const terrainCard=TERRAIN_CATALOG[s.code]?.cardId;
    const result=activateTerrain(b.terrain,terrainCard,b.ply,who,{boss:!!b.bossId,bossOverride:true});
-   if(result.ok){b.terrain=result.terrain;at(TERRAIN_CATALOG[s.code].description+' Vale per 3 round.');}
+   if(result.ok&&!cancelTerrainWithTrap(b,who,terrainCard,ctx,events)){
+    b.terrain=result.terrain;at(TERRAIN_CATALOG[s.code].description+' Vale per 3 round.');
+   }
    break;
   }
   default:throw new Error('Effetto non implementato: '+s.type);
@@ -296,16 +332,27 @@ function applyCard(b,who,id,ctx,events,order){
  const spec=effectiveEffectSpec(def,side.exclusiveUpgrades?.[id]||1);
  const source=id+'@'+b.ply+'-'+ctx.effectSerial++;
  const ownPartId=order.ownPartId||weakestPart(side)?.id;
+ // La selezione non consulta le trappole nascoste. Se il Terreno viene
+ // annullato, le carte che il Terreno rimasto impedisce tornano in mano.
+ if(ctx.terrainCancelled&&(spec.type==='dodge'&&b.terrain?.id==='T01'||
+  spec.type==='repair'&&b.terrain?.id==='T08')){
+  side.hand.push(id);
+  events.push(emit(b,who,'card-returned',(def.nome||def.name)+' resta in mano: il Terreno attuale ne impedisce l’effetto.',
+   {cardId:id}));
+  return false;
+ }
  if(role==='character'){
   side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
-  while(side.defenses.length>=2)discardDefense(side,side.defenses[0].source);
-  side.defenses.push({id,source,untilPly:b.ply+2*(spec.turns||1)});
+  side.defenses.push(spec.type==='trap'?
+   {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:spec.trigger,action:spec.action}:
+   {id,source,untilPly:b.ply+2*(spec.turns||1)});
   side.defenseSlots=side.defenses.map(d=>d.id);
  }
  applyEffect(b,who,def,spec,ctx,events,{source,ownPartId});
+ return true;
 }
 function applyCharacterRepeat(b,who,ctx,events){
  const side=b.sides[who],c=side.commander;
@@ -418,7 +465,7 @@ function resolveSalvo(b,ctx,events,order){
  const guard=defender.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply)).reduce((sum,x)=>sum+(x.power||0),0);
  const terrain=terrainSalvoModifier(b.terrain,mother.id);
  const power=Math.max(0,1+mother.weaponRating+ctx.power+terrain.value-jam-guard);
- if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: l’attacco fallisce'));return {damage:0,partId:order.partId,played:ctx.cards,power};}
+ if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: l’attacco fallisce'));return {damage:0,partId:order.partId,played:visiblePlayed(ctx.cards),power};}
  const count=Math.min(4,ctx.multiTargets+(b.terrain?.id==='T10'?1:0));
  const targets=[mainPart,...target.parts.filter(p=>!p.destroyed&&p.id!==mainPart.id).slice(0,count-1)];
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
@@ -427,14 +474,14 @@ function resolveSalvo(b,ctx,events,order){
   escort.lastInterceptPly=b.ply;
   if(blockHit(b,defender,'escort',escort,ctx,events)){
    events.push(emit(b,ctx.who,'impact','Scudiera protetta: nessun danno',{escortSlot:escort.slot,escortDamage:0,damage:0}));
-   return {damage:0,escortDamage:0,escortSlot:escort.slot,partId:order.partId,played:ctx.cards,power};
+   return {damage:0,escortDamage:0,escortSlot:escort.slot,partId:order.partId,played:visiblePlayed(ctx.cards),power};
   }
   const damage=Math.min(escort.hp,power+(b.terrain?.id==='T04'?1:0));
   escort.hp-=damage;escort.destroyed=escort.hp<=0;refreshEscortLinks(defender,b.ply);
   events.push(emit(b,ctx.who,'impact','Scudiera '+escort.name+' intercetta: −'+damage+' punti',
    {escortSlot:escort.slot,escortName:escort.name,escortDamage:damage,escortDestroyed:escort.destroyed,damage:0}));
   triggerReactions(b,ctx.who,damage,events);
-  return {damage:0,escortDamage:damage,escortSlot:escort.slot,partId:order.partId,played:ctx.cards,power};
+  return {damage:0,escortDamage:damage,escortSlot:escort.slot,partId:order.partId,played:visiblePlayed(ctx.cards),power};
  }
  const hits=[];
  for(const p of targets){
@@ -444,13 +491,13 @@ function resolveSalvo(b,ctx,events,order){
  refreshEscortLinks(defender,b.ply);
  const damage=hits.reduce((sum,h)=>sum+h.damage,0);
  events.push(emit(b,ctx.who,'impact',damage?'Attacco: '+hits.map(h=>VITAL_LABELS[h.id]).join(', '):'Tutti i colpi sono stati bloccati',
-  {shipIndex:0,shipName:target.name,partId:mainPart.id,damage,destroyed:mainPart.destroyed,played:ctx.cards,targets:hits,terrainBonus:terrain.value}));
+  {shipIndex:0,shipName:target.name,partId:mainPart.id,damage,destroyed:mainPart.destroyed,played:visiblePlayed(ctx.cards),targets:hits,terrainBonus:terrain.value}));
  triggerReactions(b,ctx.who,damage,events);
- return {damage,partId:order.partId,played:ctx.cards,targets:hits,destroyed:mainPart.destroyed,power};
+ return {damage,partId:order.partId,played:visiblePlayed(ctx.cards),targets:hits,destroyed:mainPart.destroyed,power};
 }
 function finishTurn(b,ctx,events){
  const side=b.sides[ctx.who];side.turnCount++;refill(b,side);
- side.lastPlayed=[...ctx.cards];b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
+ side.lastPlayed=visiblePlayed(ctx.cards);b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const s of Object.values(b.sides))expireSide(s,b.ply);
  const deadA=allVitalsDestroyed(b.sides.A.ships[0]),deadB=allVitalsDestroyed(b.sides.B.ships[0]);
@@ -475,18 +522,20 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const s of Object.values(b.sides))expireSide(s,b.ply);
  const cards=takeCards(side,order.cards||[]);
- const ctx={who,nowMs,cards,power:0,pierce:0,multiTargets:1,pierceLeft:0,effectSerial:0};
+ const ctx={who,nowMs,cards:[],power:0,pierce:0,multiTargets:1,pierceLeft:0,effectSerial:0};
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
  // Il terreno scelto entra prima delle altre carte e degli effetti del turno.
- for(const id of cards.filter(id=>cardRole(id)==='terrain'))applyCard(b,who,id,ctx,events,order);
+ for(const id of cards.filter(id=>cardRole(id)==='terrain'))
+  if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  applyCharacterRepeat(b,who,ctx,events);
- for(const id of cards.filter(id=>cardRole(id)!=='terrain'))applyCard(b,who,id,ctx,events,order);
+ for(const id of cards.filter(id=>cardRole(id)!=='terrain'))
+  if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
- side.stagedComboCards=[];side.attackSlots=cards.filter(id=>cardRole(id)==='attack').slice(0,3);
- const shot=order.pass?{damage:0,played:cards}:resolveSalvo(b,ctx,events,order);
+ side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
+ const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:resolveSalvo(b,ctx,events,order);
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0);
- side.discard.push(...cards.filter(id=>!['character','defense'].includes(cardRole(id))));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }

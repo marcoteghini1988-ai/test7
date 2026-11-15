@@ -16,7 +16,8 @@ import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,STARTER_DECK,card,cardRole,cardFacePath,deckFromCounts} from './fleetNext/rules.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
-import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason} from './fleetNext/combat.js';
+import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason} from './fleetNext/combat.js';
+import {projectFleetSlots,fleetEventText,fleetTurnNotice} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
@@ -131,39 +132,42 @@ function OriginalFleetBar({side,unit,nickname}){
   </div>)}</div>
  </div>;
 }
-function slotCards(side,chosenCards=[]){
- const slots=[side.commander?.id||null,
-  ...(side.defenseSlots||[]).slice(0,2),
-  ...(side.attackSlots||[]).slice(0,3)];
- while(slots.length<6)slots.push(null);
- for(const type of chosenCards){
-  const role=cardRole(type);
-  const target=role==='character'?[0]:role==='terrain'?[]:
-   role==='defense'?[1,2]:[3,4,5];
-  if(target.length===1){slots[0]=type;continue;}
-  const i=target.find(index=>!slots[index]);
-  if(i!=null)slots[i]=type;
- }
- return slots.slice(0,6);
-}
-function OriginalSpecialSlots({side,contents,upgrades={}}){
+function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap}){
  const labels=['PERS.','DIF.','DIF.','ATT.','ATT.','ATT.'];
  return <div className={'live-slot-row live-slot-row--'+(side==='A'?'player':'enemy')}>
-  {contents.map((type,i)=>{
-   const face=type?card(type):null;
-   const art=!type?null:card(type)?
+  {contents.map((entry,i)=>{
+   const type=entry?.id,covered=!!entry?.hidden;
+   const face=!covered&&type?card(type):null;
+   const art=covered?OFFICIAL_SPECIAL_FIXED_BACK:!type?null:card(type)?
      cardFacePath(type,upgrades[type]||1):officialSpecialArtPath(type);
+   const title=covered?(side==='A'?'La tua trappola coperta · Tocca per consultarla':'Trappola avversaria coperta'):
+    face?(face.nome||face.name||type)+' · '+describeEffect(face,upgrades[type]||1):labels[i];
    return <div key={i} className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
-    (type?' live-slot--occupied':'')}
-    title={face?(face.nome||face.name||type)+' · '+describeEffect(face,upgrades[type]||1):labels[i]}
+    (entry?' live-slot--occupied':'')+(covered?' live-slot--covered':'')}
+    title={title}
     data-slot-role={i===0?'personaggio':i<=2?'difesa':'attacco'}
-     data-family={type?cardRole(type):undefined}
+     data-family={covered?'defense':type?cardRole(type):undefined}
      data-rarity={face?.rarita||face?.rarityDraft||undefined}>
     {art?<img className="f3d-slot-art" src={art} alt="" draggable={false}/>:
      <span>{type?'✧':['♙','◇','◇','✧','✧','✧'][i]}</span>}
-    {!type&&<small className="live-slot-role">{labels[i]}</small>}
+    {covered?<>
+     <small className="live-slot-role">{entry.pending?'DA POSARE':'COPERTA'}</small>
+     {side==='A'&&type&&<button type="button" className="f3d-trap-inspect"
+      aria-label="Consulta la tua trappola coperta"
+      onClick={()=>inspectTrap?.({trapId:type,pending:entry.pending})}/>}
+    </>:!type&&<small className="live-slot-role">{labels[i]}</small>}
    </div>;
   })}
+ </div>;
+}
+function TrapReveal({event}){
+ const trap=card(event?.cardId),blocked=card(event?.blockedCardId);
+ if(event?.kind!=='trap-reveal'||!trap)return null;
+ return <div className="f3d-trap-reveal" role="status" aria-live="polite">
+  <img src={cardFacePath(trap.id)} alt={trap.nome||trap.name}/>
+  <div><strong>TRAPPOLA ATTIVATA</strong><b>{trap.nome||trap.name}</b>
+   <span>{blocked?.nome||blocked?.name||'Terreno avversario'}: attivazione annullata.</span>
+  </div>
  </div>;
 }
 function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,unavailableReason=''}){
@@ -205,6 +209,7 @@ export default function OfficialFleetBattle3D({
  const [message,setMessage]=useState('');
  const [help,setHelp]=useState(null);
  const [lastFx,setLastFx]=useState(null);
+ const [trapReveal,setTrapReveal]=useState(null);
  const [busy,setBusy]=useState(false);
  const [showLog,setShowLog]=useState(false);
  const [rewardDone,setRewardDone]=useState(false);
@@ -219,6 +224,18 @@ export default function OfficialFleetBattle3D({
   const id=window.setInterval(()=>setNow(Date.now()),250);
   return ()=>window.clearInterval(id);
  },[]);
+ useEffect(()=>{
+  if(!trapReveal)return;
+  const id=window.setTimeout(()=>setTrapReveal(null),4200);
+  return ()=>window.clearTimeout(id);
+ },[trapReveal]);
+ function showResult(result){
+  setBattle(result.battle);
+  setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
+  setMessage(fleetTurnNotice(result.events));
+  const revealed=result.events.find(event=>event.kind==='trap-reveal');
+  if(revealed)setTrapReveal({...revealed,nonce:Date.now()});
+ }
  // Anche il nemico segue l'alternanza dei turni. Nel PvP attuale resta IA simulata.
  useEffect(()=>{
   if(!battle||battle.phase!=='playing'||battle.turn!=='B')return;
@@ -226,9 +243,7 @@ export default function OfficialFleetBattle3D({
    const ai=autoFleetTurn(battle,'B');
    const result=resolveFleetNextTurn(battle,'B',ai,Date.now());
    if(result.ok){
-    setBattle(result.battle);
-    setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
-    setMessage(result.events.slice(-2).map(e=>e.text).join(' · '));
+    showResult(result);
    }else setMessage(result.reason);
   },680);
   return ()=>window.clearTimeout(id);
@@ -249,7 +264,7 @@ export default function OfficialFleetBattle3D({
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
   setSelectedVital('engine');setSelectedOwnVital('');setChosenCards([]);setMessage('');
-  setLastFx(null);setRewardDone(false);setHelp(null);
+  setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
  function unavailable(type,index){
@@ -267,6 +282,10 @@ export default function OfficialFleetBattle3D({
    const roles=chosenCards.map(i=>cardRole(player.hand[i]));
    if(chosenCards.length>=3)return 'Puoi giocare al massimo 3 carte per turno';
    if(role==='defense'&&roles.filter(x=>x==='defense').length>=2)return 'Puoi giocare al massimo 2 Difese per turno';
+   if(role==='defense'){
+    const capacity=defenseCapacityReason(player,roles.filter(x=>x==='defense').length+1,battle.ply);
+    if(capacity)return capacity;
+   }
    if((role==='character'||role==='terrain')&&roles.includes(role))
     return role==='character'?'Puoi giocare 1 Personaggio per turno':'Puoi giocare 1 Terreno per turno';
   }
@@ -294,9 +313,7 @@ export default function OfficialFleetBattle3D({
   const result=resolveFleetNextTurn(battle,'A',
    {partId,ownPartId:actualOwnVital,cards:chosenCards},Date.now());
   if(!result.ok){setMessage(result.reason);return;}
-  setBattle(result.battle);setChosenCards([]);
-  setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
-  setMessage(result.events.slice(-2).map(e=>e.text).join(' · '));
+  showResult(result);setChosenCards([]);
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
   if(!result.battle.sides.B.ships[0].parts.some(p=>p.id===partId&&!p.destroyed))
    if(nextTarget)setSelectedVital(nextTarget.id);
@@ -368,8 +385,8 @@ export default function OfficialFleetBattle3D({
  const actualOwnVital=ownTargets.find(p=>p.id===selectedOwnVital)?.id||
   [...ownTargets].sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]?.id;
  const needsOwnTarget=chosenTypes.some(type=>effectNeedsOwnTarget(card(type)));
- const playerSlots=slotCards(player,chosenTypes);
- const enemySlots=slotCards(enemy);
+ const playerSlots=projectFleetSlots(player,chosenTypes,'A');
+ const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const terrain=battle.terrain?.id;
  const boss=battle.bossId?{name:battle.bossName||'BOSS',ability:'ABILITÀ',
@@ -403,7 +420,7 @@ export default function OfficialFleetBattle3D({
      {readableTerrain}
     </button>
    </div>
-   <OriginalSpecialSlots side="A" contents={playerSlots} upgrades={player.exclusiveUpgrades}/>
+   <OriginalSpecialSlots side="A" contents={playerSlots} upgrades={player.exclusiveUpgrades} inspectTrap={setHelp}/>
    <OriginalFleetFighter side="player" unit={player}
     selectedVital={needsOwnTarget?actualOwnVital:null} canSelectOwn={needsOwnTarget&&myTurn&&!ended}
     onSelectVital={id=>{if(ownTargets.some(p=>p.id===id)){setSelectedOwnVital(id);setMessage('');}}}
@@ -455,19 +472,24 @@ export default function OfficialFleetBattle3D({
    <OriginalFleetBar side="A" unit={player} nickname={nickname}/>
    {message&&<div className="live-action-notice f3d-notice" role="status"
     key={lastFx?.nonce||message}>{message}</div>}
+   {trapReveal&&<TrapReveal key={'trap-'+trapReveal.nonce} event={trapReveal}/>}
    {boss&&<button type="button" className="f3d-boss-label" title={boss.description} onClick={()=>setHelp({boss:true})}>
     {boss.name+' · '+boss.ability}
    </button>}
    {showLog&&<div className="official-log f3d-log" role="dialog" aria-label="Registro battaglia">
     <button type="button" onClick={()=>setShowLog(false)}>CHIUDI</button>
-    {battle.log.slice(-12).map((e,i)=><p key={i}>{e.text}</p>)}
+    {battle.log.slice(-12).map((e,i)=><p key={i}>{fleetEventText(e)}</p>)}
    </div>}
-   {help&&<div className="f3d-escort-overlay" role="dialog" aria-label={help.rules?'Regole delle carte':help.boss?'Abilità del boss':'Abilità scudiera'}>
+   {help&&<div className="f3d-escort-overlay" role="dialog" aria-label={help.rules?'Regole delle carte':help.boss?'Abilità del boss':help.trapId?'La tua trappola coperta':'Abilità scudiera'}>
     <button type="button" onClick={()=>setHelp(null)} aria-label="Chiudi">×</button>
     {help.rules?<>
      <strong>Regole delle carte</strong>
      {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description||TERRAIN_CATALOG[terrain]?.effectText}</p>}
      {SIMPLE_RULES.map(rule=><p key={rule}>{rule}</p>)}
+    </>:help.trapId?<>
+     <strong>{card(help.trapId)?.nome||card(help.trapId)?.name}</strong>
+     <p>{describeEffect(card(help.trapId),player.exclusiveUpgrades?.[help.trapId]||1)}</p>
+     <small>{help.pending?'Conferma il turno per prepararla coperta.':'Resta coperta fino all’attivazione. L’avversario non vede questa carta.'}</small>
     </>:help.boss?<>
      <strong>{boss?.name}</strong><p>{boss?.description}</p>
      {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description}</p>}

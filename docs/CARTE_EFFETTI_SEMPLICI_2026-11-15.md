@@ -4,17 +4,27 @@
 
 La revisione copre **391 carte**: 250 generali, 129 esclusive delle 17 navicelle e 12 Personaggi Boss già previsti come trofei della campagna. Ogni carta esegue un effetto esplicito e il testo viene prodotto dalla stessa definizione usata dal combattimento.
 
-I testi al grado base passano da **6.722 a 4.027 parole complessive**, il **40% in meno**. Il testo più lungo contiene **22 parole**. Queste misure includono anche le durate e i requisiti dichiarati. Alcune carte condividono un effetto semplice; non vengono aggiunte condizioni soltanto per renderne diversa la descrizione.
+I testi al grado base passano da **6.722 a 4.025 parole complessive**, il **40% in meno**. Il testo più lungo contiene **22 parole**. Queste misure includono anche le durate e i requisiti dichiarati. Alcune carte condividono un effetto semplice; non vengono aggiunte condizioni soltanto per renderne diversa la descrizione.
 
 I due audit JSON accanto a questo documento conservano ogni testo precedente e nuovo delle 379 carte generali/esclusive. `src/fleetNext/bossCards.js` conserva la precedente descrizione dei dodici Boss insieme alla nuova regola. Il rapporto semantico separato registra le correzioni delle contromosse e i problemi individuati durante la verifica indipendente.
 
 ## Regole applicate
 
-Il lessico comune contiene 15 azioni: potenziare un attacco, ignorare protezioni, colpire più componenti, proteggere, schivare, riparare, rigenerare, contrattaccare, indebolire, bloccare un attacco, rimuovere disturbi, cambiare carte, recuperare una carta, preparare potenza e cambiare Terreno.
+Il lessico comune contiene 16 azioni: potenziare un attacco, ignorare protezioni, colpire più componenti, proteggere, schivare, riparare, rigenerare, contrattaccare, indebolire, bloccare un attacco, rimuovere disturbi, cambiare carte, recuperare una carta, preparare potenza, cambiare Terreno e preparare una Trappola coperta.
 
 La protezione indica bersaglio, numero di colpi e durata; si consuma realmente. Le riparazioni non ricostruiscono componenti o scudiere distrutti. Le reazioni richiedono un danno da un attacco normale: non partono su un colpo bloccato, sui costi delle abilità o sui contrattacchi. Un blocco delle Armi non può fermare due turni avversari consecutivi.
 
-I Personaggi applicano un solo effetto quando entrano e al successivo turno del proprietario. I Terreni giocati durano tre round e hanno una regola pubblica valida per entrambe le flotte. Un Terreno selezionato entra prima delle altre carte del turno. Le affinità ambientali nascoste sono state rimosse. Gli scenari della campagna vengono scelti dal pianeta corretto anche quando non si affronta un boss.
+I Personaggi applicano un solo effetto quando entrano e al successivo turno del proprietario. I Terreni giocati durano tre round e hanno una regola pubblica valida per entrambe le flotte. Un Terreno selezionato si risolve prima delle altre carte del turno e può essere annullato prima di entrare. Le affinità ambientali nascoste sono state rimosse. Gli scenari della campagna vengono scelti dal pianeta corretto anche quando non si affronta un boss.
+
+### Difese e Trappole coperte
+
+Su precisazione dell’utente, le Difese comprendono anche Trappole da preparare coperte nel proprio turno. **Ancora di Campo (`gen-077`)** ora dice: «Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.» Il nome, la rarità e l’illustrazione sono quelli della carta esistente.
+
+La Trappola occupa uno dei due spazi Difesa e conta nelle tre carte e nelle due Difese del turno. Resta coperta finché scatta, senza scadenza automatica. Quando l’avversario gioca un Terreno, una sola Trappola si rivela: quel Terreno non entra e nessuno dei suoi effetti viene applicato. La Trappola e il Terreno annullato vanno negli scarti; il Terreno precedente conserva effetto e scadenza. Un secondo annullamento preparato rimane coperto. I Terreni propri, quello iniziale della campagna e le scadenze automatiche non la attivano.
+
+Due spazi Difesa occupati impediscono di preparare un’altra Difesa, senza scartare le carte già in campo. L’avversario vede il dorso comune; nome, effetto e rarità restano nascosti anche nei tooltip e nel registro. Il proprietario può consultare la propria carta senza rivelarla. All’innesco, una notifica mostra la Trappola e il Terreno annullato.
+
+La selezione delle carte e l’IA non consultano le identità delle Trappole avversarie. Se l’annullamento lascia un Terreno che impedisce una riparazione o una schivata selezionata nello stesso turno, quella carta torna in mano invece di essere consumata.
 
 Gli effetti potenziabili aumentano soltanto la quantità o il numero di bersagli. Il testo e il fronte della carta mostrano il grado effettivo; un miglioramento senza beneficio non può consumare crediti. Il negozio mostra anche l'effetto del grado successivo.
 
@@ -40,16 +50,20 @@ Le **39 nuove illustrazioni Difesa non sono inserite nel gioco**: attendono l'ap
 
 ## Verifica e limiti
 
-La suite completa `npm run verify:logic` ha superato **1.192 test**, senza fallimenti. Dopo gli ultimi interventi sul Terreno della campagna e sui miglioramenti sono stati rieseguiti 62 controlli mirati, tutti superati, sul motore, sul catalogo, sugli sblocchi, sull’interfaccia e sugli asset. La suite del motore attivo comprende 34 test, la risoluzione individuale di tutte le 391 carte e partite automatiche con tutte le 17 flotte.
+La suite completa `npm run verify:logic` ha superato **1.221 test**, senza fallimenti. Dopo le ultime correzioni dell’interfaccia sono stati rieseguiti 76 controlli mirati, tutti superati, insieme a build e preflight. La suite degli effetti del motore attivo comprende 34 test, la risoluzione individuale di tutte le 391 carte e partite automatiche con tutte le 17 flotte.
+
+La revisione delle Trappole aggiunge 17 test del motore e 6 della presentazione, compreso il rendering React reale. Un audit indipendente ha superato altri 8 scenari con tutti i dieci Terreni, conservazione delle carte, persistenza per dodici turni senza innesco, restituzioni in mano, limiti degli spazi e riservatezza delle informazioni.
 
 Sono verificati bersagli, consumo/scadenza delle protezioni, perforazione e scudiere, tutti i dieci Terreni, danni reali, rigenerazione, contrattacchi senza ricorsione, blocchi, potenziamenti, durata dei Personaggi, proprietà dei Boss e assenza di addebiti senza beneficio. Build e preflight sono inclusi nella verifica conclusiva.
 
-Dieci scenari interattivi con i componenti React reali sono stati provati in jsdom: mano, bersaglio proprio, limite Difese, regole, conferma/IA, catalogo completo, miglioramento esclusiva, Boss nel mazzo, Hangar e area personale. I fronti sono stati renderizzati e ispezionati visivamente. La geometria della plancia non è stata verificata con screenshot di un browser: Chromium locale è bloccato dall'ambiente. Queste verifiche dimostrano la coerenza di regole, testi, proprietà e azioni; non costituiscono un bilanciamento competitivo completo delle combinazioni di mazzo.
+Nella revisione iniziale, dieci scenari interattivi con i componenti React reali sono stati provati in jsdom: mano, bersaglio proprio, limite Difese, regole, conferma/IA, catalogo completo, miglioramento esclusiva, Boss nel mazzo, Hangar e area personale. Per le Trappole sono stati verificati altri sette scenari interattivi: selezione/deselezione, preparazione e persistenza, consultazione del proprietario, rifiuto della terza Difesa, dorso e registro avversari anonimi, annullamento del Terreno e rivelazione persistente dopo l’aggiornamento dell’IA. Nessun errore nella console.
+
+I fronti sono stati renderizzati e ispezionati visivamente. La geometria della plancia non è stata verificata con screenshot di un browser: Chromium locale è bloccato dall'ambiente. Queste verifiche dimostrano la coerenza di regole, testi, proprietà e azioni; non costituiscono un bilanciamento competitivo completo delle combinazioni di mazzo.
 
 ## Riproduzione
 
 ```sh
-node --test src/fleetNextSimpleEffects.test.js src/fleetNextCatalogConsistency.test.js src/fleetNextLegacyUi.test.js
+node --test src/fleetNextSimpleEffects.test.js src/fleetNextCatalogConsistency.test.js src/fleetNextLegacyUi.test.js src/fleetNextTraps.test.js src/fleetNextTrapUi.test.js
 node scripts/generate-fleet-card-art.mjs
 npm run check:card-art
 npm run build

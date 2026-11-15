@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {createHash} from 'node:crypto';
-import {describeEffect} from './fleetNext/simpleEffects.js';
+import {describeEffect,SIMPLE_RULES_REVISION} from './fleetNext/simpleEffects.js';
 import general from './fleetNext/catalogGeneral.json' with {type:'json'};
 import exclusive from './fleetNext/catalogExclusive.json' with {type:'json'};
 const byId=new Map([...general.carte,...exclusive.cards].map(x=>[x.id,x]));
@@ -28,7 +28,7 @@ test('Lotti approvati: fronti integrati fedeli al catalogo e agli asset WebP',()
   assert.equal(meta.effect,c.effetto||c.effectProposed);
   assert.equal(meta.effect,describeEffect(c));
   assert.ok(meta.originalApprovedEffect,'Testo approvato originale non conservato '+meta.id);
-  assert.equal(meta.rulesRevision,'simple-effects-v1');
+  assert.equal(meta.rulesRevision,SIMPLE_RULES_REVISION);
   assert.ok(meta.rulesPanel[1]>=950&&meta.rulesPanel[1]+meta.rulesPanel[3]<=1250,'Sovrapposizione fuori dal pannello effetto '+meta.id);
   const art=resolve(root,meta.id+'.webp');
   assert.ok(existsSync(art),'Sorgente frontale assente '+meta.id);
