@@ -1,7 +1,7 @@
 {
   "version": 2,
   "source": "src/fleetNext/catalogGeneral.json + src/fleetNext/catalogExclusive.json",
-  "approval": "Lotto 01 e 02: 20 fronti approvati; Lotto 03: altri 10 fronti Difesa approvati e integrati dal PNG originale 1024x1536 il 14 novembre 2026.",
+  "approval": "Lotto 01 e 02: 20 fronti approvati; Lotto 03: altri 10 fronti Difesa approvati e integrati dal PNG originale 1024x1536 il 14 novembre 2026. Lotto 15 Difese approvato il 15 novembre 2026: ulteriori 15 fronti integrati dai PNG originali 1024x1536.",
   "format": "1024x1536 WebP (2:3)",
   "cards": [
     {
@@ -543,6 +543,276 @@
         215
       ],
       "originalApprovedAssetSha256": "d2c6b11007081bd91efa942f1849ce63a0f4f609cb8b7a4553f9baf638e976be"
+    },
+    {
+      "id": "gen-079",
+      "name": "Finta Difensiva",
+      "rarity": "Comune",
+      "effect": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-079.webp",
+      "originalApprovedEffect": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "11212198eeca0567a35f9d0bf1b7d2cb0cedf6d678b5f1fa52d860be9fb5db21"
+    },
+    {
+      "id": "gen-093",
+      "name": "Manovra di Nebbia",
+      "rarity": "Rara",
+      "effect": "Evita 1 colpo per 2 turni avversari contro il componente scelto, se i Motori funzionano.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-093.webp",
+      "originalApprovedEffect": "Evita 1 colpo per 2 turni avversari contro il componente scelto, se i Motori funzionano.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "69ab5036088f161d03d6f71a8a40888cfa97e5b1d70ad2c5437192b5de822fe2"
+    },
+    {
+      "id": "gen-095",
+      "name": "Sentinella Ritorsiva",
+      "rarity": "Rara",
+      "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-095.webp",
+      "originalApprovedEffect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "54507b7505d29659a888ec2d94ece6a2c151d192f5cf5b966e4901ba5c7e430a"
+    },
+    {
+      "id": "gen-096",
+      "name": "Parete Mobile",
+      "rarity": "Rara",
+      "effect": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-096.webp",
+      "originalApprovedEffect": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "60ff57f77001d4246415a7063b7a5ce529248d3412f054273156e8c3efbf6ebc"
+    },
+    {
+      "id": "gen-097",
+      "name": "Scudo Termico",
+      "rarity": "Rara",
+      "effect": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-097.webp",
+      "originalApprovedEffect": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "254894cb29714fdfa290c5d7ee4258eced3172906794ed8ee3bc8dd7450c3149"
+    },
+    {
+      "id": "gen-098",
+      "name": "Vortice di Evasione",
+      "rarity": "Rara",
+      "effect": "Evita 2 colpi per 2 turni avversari contro i Motori, se i Motori funzionano.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-098.webp",
+      "originalApprovedEffect": "Evita 2 colpi per 2 turni avversari contro i Motori, se i Motori funzionano.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "147e4a14abe6b78b4973d8f4781f3072bb67edec0d9b12cd15ecb6ee82f4fe6a"
+    },
+    {
+      "id": "gen-099",
+      "name": "Anello di Intercetto",
+      "rarity": "Rara",
+      "effect": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-099.webp",
+      "originalApprovedEffect": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "64590b532b859c04d054d4035cab3cc87b79563dc671f1152f90610e182dedce"
+    },
+    {
+      "id": "gen-100",
+      "name": "Guardia del Nucleo",
+      "rarity": "Rara",
+      "effect": "Blocca 2 colpi contro il Generatore. Dura 2 turni avversari.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-100.webp",
+      "originalApprovedEffect": "Blocca 2 colpi contro il Generatore. Dura 2 turni avversari.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "678b93ad246a2cfefc0f2ad7cbef471506296b2e37814c744098a108364dd27d"
+    },
+    {
+      "id": "gen-101",
+      "name": "Punto di Contrattacco",
+      "rarity": "Rara",
+      "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-101.webp",
+      "originalApprovedEffect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "9e87aa7346b61340a2195c622016eb9f504b01c73e6ae89df29ead568b0c59ae"
+    },
+    {
+      "id": "gen-102",
+      "name": "Scudo Riflettente",
+      "rarity": "Rara",
+      "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-102.webp",
+      "originalApprovedEffect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "8c3cf8bdf51212a5a676bc0993282b4a29be628fb24cc6e3bf37f3200323e151"
+    },
+    {
+      "id": "gen-103",
+      "name": "Cortina Polaris",
+      "rarity": "Rara",
+      "effect": "Blocca 1 colpo contro il componente scelto. Dura 2 turni avversari.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-103.webp",
+      "originalApprovedEffect": "Blocca 1 colpo contro il componente scelto. Dura 2 turni avversari.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "3d089aa3707cee5e40993054dc5ba56b452b2e61beb47ddce3cb2ff70d9f4b30"
+    },
+    {
+      "id": "gen-104",
+      "name": "Baluardo Ausiliario",
+      "rarity": "Rara",
+      "effect": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-104.webp",
+      "originalApprovedEffect": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "191552bc79dcac998d8b5590401b4add399ace2bac9819880672b736c455f3a8"
+    },
+    {
+      "id": "gen-105",
+      "name": "Patto di Ferro",
+      "rarity": "Rara",
+      "effect": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 1 turno avversario.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-105.webp",
+      "originalApprovedEffect": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 1 turno avversario.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "f8b6c054b11a754ce569da0cc8e067f2f134085428964fbd4fa0f021dd943445"
+    },
+    {
+      "id": "gen-107",
+      "name": "Scudo di Ripercussione",
+      "rarity": "Epica",
+      "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-107.webp",
+      "originalApprovedEffect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "64142cd49e8b6ce57764c5d5bbe9c396ca2f5651e879fd59dd1c58d16bca01aa"
+    },
+    {
+      "id": "gen-108",
+      "name": "Danza degli Intercettori",
+      "rarity": "Epica",
+      "effect": "Evita 2 colpi per 2 turni avversari contro il componente scelto, se i Motori funzionano.",
+      "role": "Difesa",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-108.webp",
+      "originalApprovedEffect": "Evita 2 colpi per 2 turni avversari contro il componente scelto, se i Motori funzionano.",
+      "rulesRevision": "simple-effects-v2-traps",
+      "rulesPanel": [
+        78,
+        1000,
+        868,
+        252
+      ],
+      "originalApprovedAssetSha256": "89c5b3397f6f8498266eedeed781079c3f72cd1ac9e9c62360f28d7965b4d863"
     }
   ],
   "rulesRevision": "simple-effects-v2-traps",
