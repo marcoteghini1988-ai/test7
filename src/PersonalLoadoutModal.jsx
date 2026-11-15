@@ -1,7 +1,4 @@
 import React from 'react';
-import {getPilotById} from './pilotsSystem';
-import {commanderAbility} from './commanderAbilities.js';
-import {OFFICIAL_NUMERIC_BACK_IDS,officialNumericDeckBackName,officialNumericDeckBackPath} from './officialDeckBackArt.js';
 import {ShipHangarPanel} from './ShipCollectionPanels.jsx';
 
 export default function PersonalLoadoutModal({
@@ -38,13 +35,6 @@ export default function PersonalLoadoutModal({
   onOpenShopTab,
   onClose
 }) {
-  const currentPilotObj = getPilotById(selectedPilot) || {};
-  const commander = commanderAbility(selectedPilot);
-  const pilotLvl = pilotInventory?.[selectedPilot]?.level || 1;
-  const deckReady = selectedDeck === 'neutral_starter' ||
-    (OFFICIAL_NUMERIC_BACK_IDS.includes(selectedDeck) && deckInventory?.[selectedDeck]?.unlocked === true);
-  const deckColor = deckReady ? currentDeckObj?.color || '#38bdf8' : '#38bdf8';
-  const deckLvl = deckInventory?.[selectedDeck]?.level || 1;
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 4, 12, 0.97)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 31000, padding: 'clamp(4px, 1.5vmin, 12px)' }}>
@@ -141,41 +131,6 @@ export default function PersonalLoadoutModal({
               </div>
             </div>
           )}
-
-          {/* 4. ASSETTO OPERATIVO PLANCIA */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
-            <div style={{ fontSize: '0.55rem', color: '#facc15', fontWeight: 900, textTransform: 'uppercase' }}>
-              ASSETTO OPERATIVO PLANCIA
-            </div>
-
-            {/* Pilota */}
-            <div className="cyber-panel" style={{ padding: '0.45rem 0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${currentPilotObj.color || '#00f2fe'}` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div>
-                  <div style={{ fontSize: '0.52rem', color: '#facc15', fontWeight: 800 }}>COMANDANTE</div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 900, color: currentPilotObj.color || '#00f2fe' }}>{commander?.name || 'Scegli un comandante'}</div>
-                  <div style={{ fontSize: '0.58rem', color: '#cbd5e1' }}>Grado {pilotLvl}/5 • {commander?.role || 'Flotta'}</div>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Mazzo Tattico */}
-            <div className="cyber-panel" style={{ padding: '0.45rem 0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: `1px solid ${deckColor}` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {deckReady && <img src={officialNumericDeckBackPath(selectedDeck)} alt="" width={28} height={42} />}
-                <div>
-                  <div style={{ fontSize: '0.52rem', color: '#facc15', fontWeight: 800 }}>MAZZO NUMERICO</div>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 900, color: currentDeckObj?.color || '#fff' }}>{deckReady ? officialNumericDeckBackName(selectedDeck) : 'Scegli un mazzo numerico'}</div>
-                  {deckReady && <div style={{ fontSize: '0.58rem', color: '#cbd5e1' }}>Livello {deckLvl}</div>}
-                </div>
-              </div>
-              <button onClick={() => onOpenShopTab('decks')} className="cyber-btn cyber-btn-warning" style={{ padding: '0.3rem 0.55rem', fontSize: '0.62rem', fontWeight: 900 }}>
-                GESTISCI ➔
-              </button>
-            </div>
-
-          </div>
 
           {/* 5. ACCESSO RAPIDO SHOP & RIFORNIMENTI */}
           <div style={{ display: 'flex', gap: '6px', marginTop: '0.2rem' }}>

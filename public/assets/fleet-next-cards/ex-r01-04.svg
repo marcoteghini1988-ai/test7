@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768" role="img" aria-label="Falco Guardiano · DIFESA · RARA">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768" role="img" aria-label="Falco Guardiano · DIFESA · RARA · Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.">
  <defs>
   <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101824"/><stop offset=".13" stop-color="#526b80"/><stop offset=".29" stop-color="#142033"/><stop offset=".53" stop-color="#718da6"/><stop offset=".76" stop-color="#0b1627"/><stop offset="1" stop-color="#526b80"/></linearGradient>
   <linearGradient id="rim" x1=".15" y1="0" x2=".87" y2="1"><stop stop-color="#b1f2ff"/><stop offset=".2" stop-color="#37ceff"/><stop offset=".52" stop-color="#19283c"/><stop offset=".78" stop-color="#37ceff"/><stop offset="1" stop-color="#b1f2ff"/></linearGradient>
@@ -45,7 +45,7 @@
  <text x="54" y="553" fill="#b1f2ff" font-family="Arial,sans-serif" font-size="15" font-weight="bold" letter-spacing="1">ESCLUSIVA R01</text>
  <text x="460" y="553" text-anchor="end" fill="#e4f0ff" font-family="Arial,sans-serif" font-size="12" font-weight="bold">carica</text>
  <rect x="39" y="570" width="434" height="133" rx="6" fill="#081427" stroke="#426076" stroke-width="2"/>
- <text x="55" y="591" fill="#e6effb" font-size="19" font-family="Arial,sans-serif">La Sentinella intercetta una salva durante</text><text x="55" y="614" fill="#e6effb" font-size="19" font-family="Arial,sans-serif">un round di carica.</text>
+ <defs><clipPath id="rules-ex-r01-04-g1"><rect x="47" y="577" width="418" height="119" rx="8"/></clipPath></defs><g data-current-effect="ex-r01-04" data-effect-grade="1" data-effect-text="Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario." data-effect-panel="47,577,418,119" data-font-size="23" clip-path="url(#rules-ex-r01-04-g1)"><text x="256" y="617.41" text-anchor="middle" fill="#f2f6ff" font-family="DejaVu Sans,Arial,sans-serif" font-size="23">Blocca 1 colpo contro il</text><text x="256" y="645.4699999999999" text-anchor="middle" fill="#f2f6ff" font-family="DejaVu Sans,Arial,sans-serif" font-size="23">componente scelto. Dura 1 turno</text><text x="256" y="673.53" text-anchor="middle" fill="#f2f6ff" font-family="DejaVu Sans,Arial,sans-serif" font-size="23">avversario.</text></g>
  <rect x="58" y="711" width="395" height="37" rx="6" fill="url(#rarityShine)" stroke="#37ceff" stroke-width="2.5"/>
  <path d="M75 727l11 -10l11 10l-11 14Z" fill="#b1f2ff" stroke="#37ceff" stroke-width="2"/>
  <text x="256" y="738" fill="#b1f2ff" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="900" letter-spacing="2">RARA</text>

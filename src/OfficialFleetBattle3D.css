@@ -8,6 +8,12 @@
  z-index:1;touch-action:manipulation;
 }
 .es-math-scope .f3d-original-arena .live-hand-special.live-chosen{z-index:15}
+.es-math-scope .f3d-original-arena .live-hand-special[aria-disabled="true"]{filter:saturate(.35);opacity:.65}
+.es-math-scope .f3d-original-arena .live-card-inspector{pointer-events:auto;bottom:192px;max-height:190px;left:82px;right:82px}
+.es-math-scope .f3d-original-arena .f3d-selected-effects{grid-column:1/-1;max-height:120px;overflow-y:auto;font-size:10px;line-height:1.35}
+.es-math-scope .f3d-original-arena .f3d-selected-effects p{margin:0 0 6px}
+.es-math-scope .f3d-original-arena .f3d-own-target{grid-column:1/-1;display:flex;align-items:center;gap:6px;font-size:9px}
+.es-math-scope .f3d-original-arena .f3d-own-target select{flex:1;min-width:0;padding:4px;background:#071a30;color:#e4f4ff;border:1px solid #6aa9c8;border-radius:4px;font-size:10px}
 .es-math-scope .f3d-original-arena .live-slot{position:relative;overflow:hidden}
 .es-math-scope .f3d-original-arena .live-slot .f3d-slot-art{
  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;
@@ -133,6 +139,7 @@
 .es-math-scope .f3d-original-arena .f3d-actions button:nth-of-type(3){
  flex:0 0 auto;font-size:8px;min-height:24px
 }
+.es-math-scope .f3d-original-arena .f3d-actions button:nth-of-type(4){flex:0 0 auto;font-size:8px;min-height:24px}
 .es-math-scope .f3d-original-arena .live-card-rarity{font-size:7px}
 
 
@@ -164,7 +171,9 @@
  --finish-glow:5px;--finish-opacity:36%;--chrome-light:#839aae;
 }
 .es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Epica"],
-.es-math-scope .f3d-original-arena .live-slot[data-rarity="Epica"]{
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Epica"],
+.es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Boss"],
+.es-math-scope .f3d-original-arena .live-slot[data-rarity="Boss"]{
  --finish-glow:9px;--finish-opacity:62%;--chrome-light:#c5d6e7;
 }
 .es-math-scope .f3d-original-arena .live-hand-special[data-rarity="Leggendaria"],
@@ -177,8 +186,8 @@
  box-shadow:0 0 var(--finish-glow) color-mix(in srgb,var(--family) var(--finish-opacity),transparent),
  inset 0 0 2px var(--chrome-light);
 }
-.es-math-scope .f3d-original-arena .live-hand-special img[src*="/fleet-next-cards/"],
-.es-math-scope .f3d-original-arena .live-slot img[src*="/fleet-next-cards/"]{
+.es-math-scope .f3d-original-arena .live-hand-special img[src*="/fleet-next-"],
+.es-math-scope .f3d-original-arena .live-slot img[src*="/fleet-next-"]{
  width:100%;height:100%;object-fit:contain;object-position:center;filter:none;
 }
 .es-math-scope .f3d-original-arena .live-hand-special[data-rarity] .live-card-rarity{

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "source": "src/fleetNext/catalogGeneral.json + src/fleetNext/catalogExclusive.json",
   "approval": "Lotto 01 e 02: 20 fronti approvati; Lotto 03: altri 10 fronti Difesa approvati e integrati dal PNG originale 1024x1536 il 14 novembre 2026.",
   "format": "1024x1536 WebP (2:3)",
@@ -9,270 +9,543 @@
       "name": "Colpo Calibrato",
       "role": "Attacco",
       "rarity": "Comune",
-      "effect": "Il prossimo colpo reale della madre contro un vitale integro ottiene mira stabile: se il bersaglio resta valido non può essere deviato da una manovra di mobilità ordinaria.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-001.webp"
+      "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-001.webp",
+      "originalApprovedEffect": "Il prossimo colpo reale della madre contro un vitale integro ottiene mira stabile: se il bersaglio resta valido non può essere deviato da una manovra di mobilità ordinaria.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        92,
+        998,
+        840,
+        232
+      ],
+      "originalApprovedAssetSha256": "3d88b6b9b0b079398c9209a98e4a530fc3de7a1c2dc677348d3c34d5473afc2b"
     },
     {
       "id": "gen-032",
       "name": "Cannone a Rimbalzo",
       "role": "Attacco",
       "rarity": "Rara",
-      "effect": "Se una scudiera assorbe la salva, la madre ottiene una carica per il prossimo tiro contro una diversa scudiera viva; nessun danno passa alla madre nemica.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-032.webp"
+      "effect": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-032.webp",
+      "originalApprovedEffect": "Se una scudiera assorbe la salva, la madre ottiene una carica per il prossimo tiro contro una diversa scudiera viva; nessun danno passa alla madre nemica.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        88,
+        986,
+        848,
+        236
+      ],
+      "originalApprovedAssetSha256": "1b92a3a4dffac1ae12701e3099c02c13eea0803d0c8ac68fa955e9e539ca607d"
     },
     {
       "id": "gen-055",
       "name": "Crinale di Plasma",
       "role": "Attacco",
       "rarity": "Epica",
-      "effect": "Contro un componente già corroso, il prossimo colpo reale può trasformare una difesa di riduzione in una marca di energia consumata; rispetta i baluardi.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-055.webp"
+      "effect": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-055.webp",
+      "originalApprovedEffect": "Contro un componente già corroso, il prossimo colpo reale può trasformare una difesa di riduzione in una marca di energia consumata; rispetta i baluardi.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        90,
+        980,
+        844,
+        235
+      ],
+      "originalApprovedAssetSha256": "c238b99c2500cd096f9308b66d5df8ea362d6c6465c60c2a55040fb80df71027"
     },
     {
       "id": "gen-067",
       "name": "Lancia degli Eoni",
       "role": "Attacco",
       "rarity": "Leggendaria",
-      "effect": "Dopo tre round di carica senza subire la distruzione delle Armi, un unico colpo materno ignora una parata e una deviazione ordinarie, poi scarica tutto.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-067.webp"
+      "effect": "Aggiunge 3 potenza al tuo attacco.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-067.webp",
+      "originalApprovedEffect": "Dopo tre round di carica senza subire la distruzione delle Armi, un unico colpo materno ignora una parata e una deviazione ordinarie, poi scarica tutto.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        88,
+        982,
+        848,
+        226
+      ],
+      "originalApprovedAssetSha256": "512eb528e80c7956fe9214f698f06f580091566ca8d7a43f7f596dc4c8a05adb"
     },
     {
       "id": "gen-071",
       "name": "Paratia Frontale",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Riduce di 1 livello il primo danno di un attacco singolo diretto a un vitale ancora integro, una sola volta; non annulla una salva multipla.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-071.webp"
+      "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-071.webp",
+      "originalApprovedEffect": "Riduce di 1 livello il primo danno di un attacco singolo diretto a un vitale ancora integro, una sola volta; non annulla una salva multipla.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "424b9555bbc48799ff02eb6b6e110a462cc6631fbfa89b73b522ac0b2c91077c"
     },
     {
       "id": "gen-094",
       "name": "Scorta Sacrificale",
       "role": "Difesa",
       "rarity": "Rara",
-      "effect": "Una scudiera viva può assorbire una salva diretta alla madre spendendo fino a 2 resistenze addizionali; non funziona con supporti non abilitati all'intercetto.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-094.webp"
+      "effect": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-094.webp",
+      "originalApprovedEffect": "Una scudiera viva può assorbire una salva diretta alla madre spendendo fino a 2 resistenze addizionali; non funziona con supporti non abilitati all'intercetto.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        84,
+        1010,
+        856,
+        222
+      ],
+      "originalApprovedAssetSha256": "7552e026e610a2eb769c8417428becd6c4500e0cc6b776273fa8a7614cd655ff"
     },
     {
       "id": "gen-106",
       "name": "Trincea Orbitale",
       "role": "Difesa",
       "rarity": "Epica",
-      "effect": "Per due round, il primo vitale bersagliato da un attacco singolo ottiene una parata locale; le salve multiple consumano la protezione una sola volta.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-106.webp"
+      "effect": "Blocca 2 colpi contro il componente scelto. Dura 2 turni avversari.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-106.webp",
+      "originalApprovedEffect": "Per due round, il primo vitale bersagliato da un attacco singolo ottiene una parata locale; le salve multiple consumano la protezione una sola volta.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        90,
+        1005,
+        844,
+        227
+      ],
+      "originalApprovedAssetSha256": "fccd5b1607ce4e7cc08f48e7083c73a41d96f77635af377448f84255da6f688f"
     },
     {
       "id": "gen-116",
       "name": "Aegis delle Costellazioni",
       "role": "Difesa",
       "rarity": "Leggendaria",
-      "effect": "Una volta per partita proteggi due vitali distinti con una parata ciascuno, scegliendoli prima del turno nemico; non equivale a uno scudo madre globale.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-116.webp"
+      "effect": "Blocca 2 colpi contro il componente scelto. Dura 2 turni avversari.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-116.webp",
+      "originalApprovedEffect": "Una volta per partita proteggi due vitali distinti con una parata ciascuno, scegliendoli prima del turno nemico; non equivale a uno scudo madre globale.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1007,
+        854,
+        211
+      ],
+      "originalApprovedAssetSha256": "ed0ef72761c67331a717352249eebf5feb57e9f7ffae5cecb8ba97c51f012aad"
     },
     {
       "id": "gen-219",
       "name": "Distesa Gelida",
       "role": "Terreno",
       "rarity": "Comune",
-      "effect": "La prima manovra di mobilità del turno perde 1 efficacia, minimo zero.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-219.webp"
+      "effect": "Le schivate non funzionano. Vale per entrambi i giocatori per 3 round.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-219.webp",
+      "originalApprovedEffect": "La prima manovra di mobilità del turno perde 1 efficacia, minimo zero.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1003,
+        854,
+        234
+      ],
+      "originalApprovedAssetSha256": "6a0286908a9a80bb6c7b12f6e2789b3b16c825ae44c86a546469380d3936b4ca"
     },
     {
       "id": "gen-245",
       "name": "Trono di Antimateria",
       "role": "Terreno",
       "rarity": "Leggendaria",
-      "effect": "La prima intercettazione di attacco multiplo infligge +1 resistenza alla scudiera, senza trapassare il colpo.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-245.webp"
+      "effect": "Ogni attacco colpisce un componente in più, fino a 4. Vale per entrambi i giocatori per 3 round.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-245.webp",
+      "originalApprovedEffect": "La prima intercettazione di attacco multiplo infligge +1 resistenza alla scudiera, senza trapassare il colpo.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        84,
+        1044,
+        856,
+        182
+      ],
+      "originalApprovedAssetSha256": "2b6d353cd5844f890d228c6be02a796b28f872193e8e17e14a4744efbe7f2cfe"
     },
     {
       "id": "gen-072",
       "name": "Schivata d'Emergenza",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Con Motori operativi, tenta di spostare sul primo vitale non scelto il prossimo colpo singolo; fallisce contro una mira indeviabile.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-072.webp"
+      "effect": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-072.webp",
+      "originalApprovedEffect": "Con Motori operativi, tenta di spostare sul primo vitale non scelto il prossimo colpo singolo; fallisce contro una mira indeviabile.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "b979e37dcb2f51c05c0b4ddde0f10a5c1f53e33ca62ac936eb911b1806d7e2e8"
     },
     {
       "id": "gen-073",
       "name": "Scorta in Allerta",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Se possiedi una scudiera collegata, il suo prossimo intercetto consuma 1 resistenza in meno, minimo 1; altrimenti proteggi una tua marca di mira.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-073.webp"
+      "effect": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-073.webp",
+      "originalApprovedEffect": "Se possiedi una scudiera collegata, il suo prossimo intercetto consuma 1 resistenza in meno, minimo 1; altrimenti proteggi una tua marca di mira.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "4aa1253bd84a112b709962841f801a69cef40b11fa5e8669a6160101aa49a17c"
     },
     {
       "id": "gen-074",
       "name": "Piastre di Riserva",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "La prima riparazione successiva su un vitale fratturato concede una parata leggera fino al prossimo round.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-074.webp"
+      "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-074.webp",
+      "originalApprovedEffect": "La prima riparazione successiva su un vitale fratturato concede una parata leggera fino al prossimo round.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "857fa03d7dbbb15f7a791bf6ecc24bab496aa92e600e1923a0eec5998f117fa7"
     },
     {
       "id": "gen-075",
       "name": "Velo di Poppa",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Quando il nemico sceglie Motori come bersaglio, puoi ridurre la priorità di mira di un livello prima del tiro.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-075.webp"
+      "effect": "Evita 1 colpo per 1 turno avversario contro i Motori, se i Motori funzionano.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-075.webp",
+      "originalApprovedEffect": "Quando il nemico sceglie Motori come bersaglio, puoi ridurre la priorità di mira di un livello prima del tiro.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "7327d5d113c2b68002b733e4b971688a6c104e2f4f9eba00ef9122ce839ea232"
     },
     {
       "id": "gen-076",
       "name": "Protocollo di Guardia",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Il prossimo colpo diretto a una scudiera subisce una riduzione leggera se la sua madre mantiene il Generatore funzionante.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-076.webp"
+      "effect": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-076.webp",
+      "originalApprovedEffect": "Il prossimo colpo diretto a una scudiera subisce una riduzione leggera se la sua madre mantiene il Generatore funzionante.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "deb68d899f9284d6f847a5b06c9f9823c0a96442797ea1401a03be76071314f5"
     },
     {
       "id": "gen-077",
       "name": "Ancora di Campo",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Una deviazione forzata non può spostare il tuo prossimo colpo o la tua prossima difesa per un solo round.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-077.webp"
+      "effect": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-077.webp",
+      "originalApprovedEffect": "Una deviazione forzata non può spostare il tuo prossimo colpo o la tua prossima difesa per un solo round.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "d46c5bbb67bf7206b18c0feaa2919d69ed9df6af54155f2b1692a0933773cef2"
     },
     {
       "id": "gen-078",
       "name": "Scudo di Emergenza",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Se non hai scudiere in campo, evita una volta una marca avversaria contro un vitale integro; non elimina il colpo fisico in arrivo.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-078.webp"
+      "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-078.webp",
+      "originalApprovedEffect": "Se non hai scudiere in campo, evita una volta una marca avversaria contro un vitale integro; non elimina il colpo fisico in arrivo.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "625148fe68ba4b960a7dc4a6d1e8597bd338343a79c61913835ae58620adb489"
     },
     {
       "id": "gen-080",
       "name": "Paraurti di Scafo",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Quando subisci un colpo reale su una scudiera, puoi consumare una carica difensiva per ridurne di 1 il danno in resistenza.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-080.webp"
+      "effect": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-080.webp",
+      "originalApprovedEffect": "Quando subisci un colpo reale su una scudiera, puoi consumare una carica difensiva per ridurne di 1 il danno in resistenza.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "c11a92053d8723727639067ede2129ace8e04db219ddabda9e4b5eb358ed54c1"
     },
     {
       "id": "gen-081",
       "name": "Doppio Rinforzo",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Una protezione normale può essere spostata dal Generatore ai Motori prima della risoluzione; dura soltanto un attacco.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-081.webp"
+      "effect": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-081.webp",
+      "originalApprovedEffect": "Una protezione normale può essere spostata dal Generatore ai Motori prima della risoluzione; dura soltanto un attacco.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "16fbb3f891e4ecc6c83198d3353b583591731d9b57b589f46aaa24b12a730c64"
     },
     {
       "id": "gen-082",
       "name": "Barriera Locale",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Protegge un singolo vitale indicato con una parata, senza creare uno scudo generale della nave.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-082.webp"
+      "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-082.webp",
+      "originalApprovedEffect": "Protegge un singolo vitale indicato con una parata, senza creare uno scudo generale della nave.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "95bf95590c935af0d5333d1cabff752ed5bed2b532c0409bcc7e2a421c8c7aef"
     },
     {
       "id": "gen-083",
       "name": "Rotta di Copertura",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Dopo una schivata riuscita, conserva un indicatore di difesa sui Motori per un round, senza annullare un secondo colpo.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-083.webp"
+      "effect": "Evita 1 colpo per 1 turno avversario contro i Motori, se i Motori funzionano.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-083.webp",
+      "originalApprovedEffect": "Dopo una schivata riuscita, conserva un indicatore di difesa sui Motori per un round, senza annullare un secondo colpo.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "f2b6ceb1c004733451be9528c6d44571c82c19947a3bb7c501a5b37b0d288ec1"
     },
     {
       "id": "gen-084",
       "name": "Vedetta di Scorta",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Se la prima scudiera è viva, rende noto quale salvo la sta bersagliando prima di spendere la difesa.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-084.webp"
+      "effect": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-084.webp",
+      "originalApprovedEffect": "Se la prima scudiera è viva, rende noto quale salvo la sta bersagliando prima di spendere la difesa.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "c7358f6403598d181cddc30cc54ed947935d4cb5267cb79a93ec28eabf293ef0"
     },
     {
       "id": "gen-085",
       "name": "Scafo Rinforzato",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Se il vitale selezionato è già fratturato, la prima riparazione nel turno successivo non può essere ritardata da un disturbo lieve.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-085.webp"
+      "effect": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-085.webp",
+      "originalApprovedEffect": "Se il vitale selezionato è già fratturato, la prima riparazione nel turno successivo non può essere ritardata da un disturbo lieve.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "2c25f88f75ef175241ebe2969eb2cce68dbf8f24bc6dee8007348f7b70091a99"
     },
     {
       "id": "gen-086",
       "name": "Guardia degli Ugelli",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Difende i Motori da un singolo effetto di raffreddamento, ma non dal danno del colpo reale.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-086.webp"
+      "effect": "Blocca 1 colpo contro i Motori. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-086.webp",
+      "originalApprovedEffect": "Difende i Motori da un singolo effetto di raffreddamento, ma non dal danno del colpo reale.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "2c79a8bd6c907eb4bf4fd7eb8956bcd827530cd1b0612007ce6b883b0d942040"
     },
     {
       "id": "gen-087",
       "name": "Riflesso Breve",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Dopo che l'avversario cambia bersaglio, la tua difesa si può riallineare una sola volta allo stesso turno.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-087.webp"
+      "effect": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-087.webp",
+      "originalApprovedEffect": "Dopo che l'avversario cambia bersaglio, la tua difesa si può riallineare una sola volta allo stesso turno.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "d067c7bcbd936966e2421084b75d323666e745f366d5e1ab4e2c66bb04e5ba1f"
     },
     {
       "id": "gen-088",
       "name": "Diaframma di Piastre",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Il prossimo colpo diretto al Generatore incontra una riduzione lieve se il Generatore è ancora integro.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-088.webp"
+      "effect": "Blocca 1 colpo contro il Generatore. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-088.webp",
+      "originalApprovedEffect": "Il prossimo colpo diretto al Generatore incontra una riduzione lieve se il Generatore è ancora integro.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "89c1c540b96371ac237fd1a1073caabd4111570ea4e1f98e71d2ca51b3946cdf"
     },
     {
       "id": "gen-089",
       "name": "Pattuglia Laterale",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "La prossima scudiera che intercetta può scegliere di non attivare una propria passiva nel round successivo per assorbire 1 resistenza aggiuntiva.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-089.webp"
+      "effect": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-089.webp",
+      "originalApprovedEffect": "La prossima scudiera che intercetta può scegliere di non attivare una propria passiva nel round successivo per assorbire 1 resistenza aggiuntiva.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "f0348b34e9ff588a3e95a5c8ecc8755e688de3f6685ab7c0fd1277cea9ba2085"
     },
     {
       "id": "gen-090",
       "name": "Serratura Tattica",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Impedisce che la carta difensiva scelta venga spostata da una semplice carta di distrazione avversaria.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-090.webp"
+      "effect": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-090.webp",
+      "originalApprovedEffect": "Impedisce che la carta difensiva scelta venga spostata da una semplice carta di distrazione avversaria.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "bf343e85c7f3b09b53b32619e823381f98d1323e3f0b1e90f3a35140fb4d2b07"
     },
     {
       "id": "gen-091",
       "name": "Reazione di Bordo",
       "role": "Difesa",
       "rarity": "Comune",
-      "effect": "Dopo una tua scudiera realmente colpita, la prossima carta Difesa che giochi può essere preparata per due round anziché uno.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-091.webp"
+      "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-091.webp",
+      "originalApprovedEffect": "Dopo una tua scudiera realmente colpita, la prossima carta Difesa che giochi può essere preparata per due round anziché uno.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1008,
+        854,
+        232
+      ],
+      "originalApprovedAssetSha256": "c7ae50148348e27f51739cc85aeed0a744a08d0b73f166c2e037ee8e59eff405"
     },
     {
       "id": "gen-092",
       "name": "Bastione a Settori",
       "role": "Difesa",
       "rarity": "Rara",
-      "effect": "Scegli un vitale; la prima salva che lo bersaglia è ridotta, ma se il nemico cambia bersaglio la protezione non lo segue.",
-      "designStatus": "proposta_da_bilanciare_non_implementata",
-      "asset": "public/assets/fleet-approved-fronts/gen-092.webp"
+      "effect": "Blocca 1 colpo contro il componente scelto. Dura 2 turni avversari.",
+      "designStatus": "effetto_semplice_implementato_v1",
+      "asset": "public/assets/fleet-approved-fronts/gen-092.webp",
+      "originalApprovedEffect": "Scegli un vitale; la prima salva che lo bersaglia è ridotta, ma se il nemico cambia bersaglio la protezione non lo segue.",
+      "rulesRevision": "simple-effects-v1",
+      "rulesPanel": [
+        85,
+        1020,
+        854,
+        215
+      ],
+      "originalApprovedAssetSha256": "d2c6b11007081bd91efa942f1849ce63a0f4f609cb8b7a4553f9baf638e976be"
     }
-  ]
+  ],
+  "rulesRevision": "simple-effects-v1",
+  "rulesUpdated": "2026-11-15",
+  "rulesApprovalNote": "Le illustrazioni e i fronti originali restano quelli approvati. Il testo delle regole è stato semplificato su richiesta del 15 novembre 2026 e viene sovrapposto nel solo pannello effetto. originalApprovedEffect conserva il testo presente nel WebP approvato."
 }

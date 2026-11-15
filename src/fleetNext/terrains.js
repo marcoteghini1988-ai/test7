@@ -1,17 +1,19 @@
-// Eclissi Stellare — dieci Terreni PvP, sei turni individuali e affinità delle 17 madri.
+// Dieci regole pubbliche: valgono per entrambe le flotte, per tre round.
 import {GENERAL_CARDS} from './rules.js';
+import {TERRAIN_EFFECT_TEXT} from './simpleEffects.js';
+import {PHASE16A_CAMPAIGN_PLANET_IDS} from '../newCombat/phase16ACatalog.js';
 
 const rows=[
- ['T01','gen-219','Distesa Gelida','gelo','mobility',-1],
+ ['T01','gen-219','Distesa Gelida','gelo','dodge-disabled',1],
  ['T02','gen-238','Faglia di Plasma','plasma','salvo',1],
  ['T03','gen-239','Tempesta Ionica','ionico','jam',1],
  ['T04','gen-220','Deserto Magnetico','magnetico','intercept',1],
  ['T05','gen-231','Cintura di Detriti','detriti','salvo',-1],
- ['T06','gen-221','Nebbia di Elio','elio','scan',-1],
- ['T07','gen-230','Foresta Ionizzata','ionizzato','ionic-hit',1],
- ['T08','gen-229','Palude di Silicio','silicio','heal-delay',1],
+ ['T06','gen-221','Nebbia di Elio','elio','pierce-disabled',1],
+ ['T07','gen-230','Foresta Ionizzata','ionizzato','hit-repair',1],
+ ['T08','gen-229','Palude di Silicio','silicio','repair-disabled',1],
  ['T09','gen-237','Mare di Quarzo','quarzo','escort-heal',1],
- ['T10','gen-245','Trono di Antimateria','antimateria','multi-intercept',1]
+ ['T10','gen-245','Trono di Antimateria','antimateria','extra-target',1]
 ];
 const affinity=[
  ['N00','T03,T06','T04,T10'],['C01','T02,T10','T01,T08'],
@@ -28,21 +30,20 @@ export const TERRAIN_AFFINITY=Object.freeze(Object.fromEntries(affinity.map(([id
  [id,{favored:favored.split(','),weakened:weakened.split(',')}]
 )));
 export const TERRAIN_CATALOG=Object.freeze(Object.fromEntries(rows.map(([code,cardId,name,theme,trigger,amount])=>
- [code,{code,cardId,name,theme,trigger,amount,durationTurns:6}]
+ [code,{code,cardId,name,theme,trigger,amount,durationTurns:6,description:TERRAIN_EFFECT_TEXT[code]}]
 )));
 export const TERRAIN_BY_CARD=Object.freeze(Object.fromEntries(rows.map(x=>[x[1],TERRAIN_CATALOG[x[0]]])));
 if(rows.length!==10||affinity.length!==17||rows.some(x=>!GENERAL_CARDS[x[1]]))
  throw Error('Catalogo dei terreni non coerente');
 export function terrainAffinity(shipId,terrainCode){
- const a=TERRAIN_AFFINITY[shipId];
- if(!a)return 0;
- return a.favored.includes(terrainCode)?1:a.weakened.includes(terrainCode)?-1:0;
+ // La tabella storica resta esportata per i salvataggi, senza bonus nascosti.
+ return 0;
 }
 export function terrainForCard(cardId){return TERRAIN_BY_CARD[cardId]||null;}
 export function newTerrain(cardId,ply,owner,boss=false,underlying=null){
  const d=terrainForCard(cardId);
  if(!d)return null;
- return {id:d.code,cardId,owner,startedPly:ply,expiresPly:ply+(boss?4:6),
+ return {id:d.code,cardId,owner,startedPly:ply,expiresPly:ply+6,
   underlying:underlying||null,source:boss?'boss_override':'player'};
 }
 export function terrainExpired(terrain,ply){
@@ -51,7 +52,7 @@ export function terrainExpired(terrain,ply){
 export function neutralTerrain(){return {id:null,cardId:null,source:'neutral',expiresPly:null};}
 export function activeTerrain(terrain,ply){
  if(!terrain||!terrain.id)return neutralTerrain();
- if(terrainExpired(terrain,ply))return terrain.underlying||neutralTerrain();
+ if(terrainExpired(terrain,ply))return terrain.underlying?activeTerrain(terrain.underlying,ply):neutralTerrain();
  return terrain;
 }
 export function activateTerrain(terrain,cardId,ply,owner,{boss=false,bossOverride=true}={}){
@@ -62,15 +63,13 @@ export function activateTerrain(terrain,cardId,ply,owner,{boss=false,bossOverrid
  return {ok:true,terrain:newTerrain(cardId,ply,owner,boss,original)};
 }
 // Valido solo per una vera salva, dopo controllo armi e difese.
-// L'affinità è locale alla madre. Il terreno pubblico vale per entrambe le parti.
+// Nessuna affinità nascosta: il terreno pubblico vale per entrambe le parti.
 export function terrainSalvoModifier(terrain,shipId,{realShot=true,firstSalvo=true}={}){
  if(!realShot||!terrain?.id||!firstSalvo)return {value:0,description:''};
  const d=TERRAIN_CATALOG[terrain.id];
  if(!d)return {value:0,description:''};
- const affinity=terrainAffinity(shipId,terrain.id);
  const environment=d.trigger==='salvo'?d.amount:0;
- return {value:environment+affinity,environment,affinity,
-  description:d.name+' · '+(affinity>0?'affinità favorevole':affinity<0?'affinità sfavorevole':'neutrale')};
+ return {value:environment,environment,affinity:0,description:d.description};
 }
 export function terrainTriggerModifier(terrain,trigger,shipId){
  if(!terrain?.id)return 0;
@@ -85,13 +84,15 @@ export function bossTerrain(planetId){
  const code=BOSS_TERRAIN_CODES[Number(planetId)];
  if(!code)return neutralTerrain();
  return {id:code,cardId:TERRAIN_CATALOG[code].cardId,
-  source:'boss',owner:'B',expiresPly:null,bossId:Number(planetId)};
+  source:'boss',owner:'B',expiresPly:null,bossId:Number(planetId),planetId:Number(planetId)};
 }
-export function campaignTerrain(sector,planetId){
- if(sector%10===1||sector%10===2)return neutralTerrain();
- const planet=Number(planetId);
+export function campaignTerrain(sector,planetId=null){
+ const globalSector=Math.max(1,Math.floor(Number(sector)||1));
+ const planetIndex=Math.min(PHASE16A_CAMPAIGN_PLANET_IDS.length-1,Math.floor((globalSector-1)/10));
+ const requestedPlanet=Number(planetId);
+ const planet=PHASE16A_CAMPAIGN_PLANET_IDS.includes(requestedPlanet)?requestedPlanet:PHASE16A_CAMPAIGN_PLANET_IDS[planetIndex];
+ if((globalSector-1)%10<2)return {...neutralTerrain(),planetId:planet};
  const assigned=['T05','T02','T08','T10','T03','T01','T06','T01','T07','T09','T02','T10'];
- const index=[1,2,3,6,7,8,9,11,14,17,19,20].indexOf(planet);
- const code=index>=0?assigned[index]:'T05';
- return {id:code,cardId:TERRAIN_CATALOG[code].cardId,source:'campaign',owner:null,expiresPly:null};
+ const code=assigned[PHASE16A_CAMPAIGN_PLANET_IDS.indexOf(planet)];
+ return {id:code,cardId:TERRAIN_CATALOG[code].cardId,source:'campaign',owner:null,expiresPly:null,planetId:planet};
 }

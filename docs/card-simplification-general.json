@@ -1,0 +1,3718 @@
+{
+  "revision": "simple-effects-v1",
+  "date": "2026-11-15",
+  "total": 250,
+  "policy": "Un effetto per carta; una frase breve con bersaglio e durata. Nomi, ID, rarità e composizioni dei mazzi preservati.",
+  "originalMetadata": {
+    "titolo": "Eclissi Stellare — 250 carte generali v0.4",
+    "data": "2026-11-14",
+    "stato": "catalogo importato nel repository; effetti da integrare nel motore",
+    "sorgente": "spec master v0.3 + 129 esclusive JSON (restano separati)",
+    "nota": "Tutti gli effetti e limiti di copie sono proposte da simulare. Nessun codice di test7 modificato.",
+    "regoleComuni": {
+      "naveSpecificita": "Tutte le 250 sono generali; nessuna fusione esclusiva è conteggiata qui.",
+      "esclusiveTotali": 129,
+      "bossCharactersSeparati": 12,
+      "mazzoBaseProposto": 40,
+      "mazzoAttivo": "40 carte generali + esclusive sbloccate automaticamente per nave/livello",
+      "doppioni": "ammessi nel mazzo sino al limite per rarità; nessuna conversione automatica",
+      "limiteProposto": {
+        "Comune": 5,
+        "Rara": 5,
+        "Epica": 5,
+        "Leggendaria": 2
+      },
+      "personaggi": "12 carte generali (3 per rarità), alcuni accessibili all’inizio; boss 12 separati",
+      "terreni": "12 carte generali, effetti simmetrici per entrambi i giocatori",
+      "danni": "nessuna carta generale genera danno di vitali fuori da eventi di colpo della madre. Le combo multi-bersaglio richiedono esclusive compatibili.",
+      "manoEFrequenza": "ancora da decidere con simulazione; attuale codice usa 5 in mano e 2 carte per round",
+      "note": "Si sbloccano carte giocabili in base a bersagli/parti e scudiere presenti; evitare carte morte a livello iniziale."
+    },
+    "validazione": {
+      "carteGenerali": 250,
+      "carteEsclusiveRiferimento": 129,
+      "carteBossSeparate": 12,
+      "tipiComplessiviProposti": 391,
+      "personeGenerali": 12,
+      "terreniGenerali": 12,
+      "mazziDa40": 10,
+      "perCategoria": {
+        "Attacco": 70,
+        "Difesa": 50,
+        "Controllo": 50,
+        "Supporto": 45,
+        "Strategia": 35
+      },
+      "perRarita": {
+        "Comune": 100,
+        "Rara": 70,
+        "Epica": 50,
+        "Leggendaria": 30
+      },
+      "idUnici": true,
+      "nomiUnici": true,
+      "effettiTestualiUnici": true
+    },
+    "regoleV08": {
+      "dimensioneBase": 40,
+      "mano": 7,
+      "giocatePerTurno": 3,
+      "slot": {
+        "attacco": 3,
+        "difesa": 2,
+        "personaggio": 1
+      },
+      "turnoSecondi": 30,
+      "doppioni": {
+        "Comune": 5,
+        "Rara": 4,
+        "Epica": 3,
+        "Leggendaria": 2
+      }
+    }
+  },
+  "cards": [
+    {
+      "id": "gen-001",
+      "name": "Colpo Calibrato",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Il prossimo colpo reale della madre contro un vitale integro ottiene mira stabile: se il bersaglio resta valido non può essere deviato da una manovra di mobilità ordinaria.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-002",
+      "name": "Scarica di Prova",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Dopo una salva realmente intercettata, la prossima salva della madre può scegliere un componente diverso senza perdere la marcatura di mira.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-003",
+      "name": "Raffica Corta",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se due carte Attacco sono state giocate in round consecutivi, il prossimo colpo singolo ottiene priorità contro una difesa di parata leggera.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-004",
+      "name": "Traccia Termica",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Una salva andata a segno lascia sul vitale colpito una marca termica utilizzabile da un successivo colpo, che scade dopo il prossimo proprio turno.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-005",
+      "name": "Motore in Spinta",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se i Motori sono operativi, il prossimo colpo della madre può cambiare bersaglio dopo che l'avversario ha mostrato una difesa mirata.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-006",
+      "name": "Salva Biforcata",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Dopo un colpo intercettato, al turno successivo puoi tentare il secondo componente ancora integro; non produce due danni nello stesso attacco.",
+      "after": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-007",
+      "name": "Sonda Perforante",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Il prossimo colpo diretto alle Armi nemiche segnala se la scudiera mirata possiede ancora un'intercettazione disponibile, prima della conferma.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-008",
+      "name": "Canna Raffreddata",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se nel round precedente non hai attaccato, il colpo successivo può essere caricato senza perdere la carta di preparazione.",
+      "after": "Prepara +1 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-009",
+      "name": "Incisione di Scafo",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Un colpo riuscito su un vitale già fratturato applica un segnale di corrosione, spendibile soltanto dal prossimo attacco reale.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-010",
+      "name": "Tiro in Sospensione",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se il nemico cambia bersaglio durante il round, la tua prossima mira preparata non decade per quel solo cambio.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-011",
+      "name": "Scia Incandescente",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Dopo una salva valida, riveli per un round il componente che ha assorbito davvero il colpo, anche se è stato deviato.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-012",
+      "name": "Filo di Plasma",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Contro una scudiera che ha appena intercettato un colpo, la prossima salva effettiva della madre le infligge 1 resistenza aggiuntiva, se ancora viva.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-013",
+      "name": "Punto di Rottura",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Un attacco singolo diretto al Generatore già fratturato può ignorare una sola riduzione temporanea non legata a scudiera.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-014",
+      "name": "Velocità di Ingresso",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Dopo una manovra evasiva realmente eseguita, il prossimo attacco cambia gratuitamente la scelta del vitale prima della conferma.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-015",
+      "name": "Cannone a Intervallo",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Una carta Attacco preparata e non utilizzata nel turno precedente conserva la sua carica per un solo round aggiuntivo.",
+      "after": "Prepara +1 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-016",
+      "name": "Doppio Innesco",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se una carta di Supporto è stata giocata in questo round, prepara una marca d'attacco per il prossimo turno: non spara immediatamente.",
+      "after": "Prepara +1 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-017",
+      "name": "Proiettile Tracciante",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Il prossimo colpo reale rivela il vitale effettivamente colpito anche attraverso un'abilità di occultamento ordinaria.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-018",
+      "name": "Salva A Ritmo",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Quando due tue salve consecutive sono state bloccate, la terza mira sullo stesso vitale ottiene priorità contro una parata semplice.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-019",
+      "name": "Spinta di Poppa",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se i Motori sono integri, una salva verso Armi può essere reindirizzata a Motori prima della risoluzione, una volta per attivazione.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-020",
+      "name": "Capsula Corrosiva",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Dopo una vera frattura inflitta, il bersaglio subisce corrosione per un round, riducendo soltanto la sua prima riparazione successiva.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-021",
+      "name": "Raggio Contrapposto",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se l'avversario ha bersagliato i tuoi Motori nell'ultimo round, il prossimo colpo materno contro i suoi Motori riceve un bonus di precisione.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-022",
+      "name": "Mira Secondaria",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se il vitale scelto viene distrutto prima del colpo, seleziona un altro vitale disponibile; non aggiunge danno.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-023",
+      "name": "Batteria Rapida",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Dopo aver scartato una carta Attacco senza giocarla, la prossima carta Attacco pescata conserva una preparazione di un round.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-024",
+      "name": "Sparo di Disturbo",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Una salva reale che non supera la difesa può comunque consumare una carica di contromisura non corazzata già attivata.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-025",
+      "name": "Ritorno di Energia",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Se il colpo è intercettato e il Generatore esiste e funziona, recuperi una carica di preparazione, non una nuova carta.",
+      "after": "Il primo colpo riuscito per turno ripara 1 punto al tuo componente più danneggiato. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hit",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-026",
+      "name": "Taglio Laterale",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Il prossimo colpo diretto a un vitale non protetto guadagna priorità se hai cambiato bersaglio durante questo turno.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-027",
+      "name": "Munizione Temperata",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Il primo attacco successivo a una riparazione nemica annulla il bonus temporaneo di riparazione, ma non il recupero già applicato.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-028",
+      "name": "Microscarica",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Dopo una tua salva con danno nullo, marchi il vitale selezionato per un solo attacco successivo; nessuna frattura automatica.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-029",
+      "name": "Risonanza Minima",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Quando il colpo reale sfrutta un effetto ionico già attivo, ne aumenta la precisione senza prolungarne la durata.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-030",
+      "name": "Serraggio del Cannone",
+      "rarity": "Comune",
+      "role": "Attacco",
+      "before": "Dopo aver mantenuto lo stesso bersaglio per due turni, il prossimo colpo resiste a un singolo cambio bersaglio forzato.",
+      "after": "Aggiunge 1 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-031",
+      "name": "Lama a Due Tempi",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Un attacco reale contro un bersaglio marcato genera una seconda marcatura su un altro vitale, senza infliggergli danno finché non viene colpito.",
+      "after": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-032",
+      "name": "Cannone a Rimbalzo",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Se una scudiera assorbe la salva, la madre ottiene una carica per il prossimo tiro contro una diversa scudiera viva; nessun danno passa alla madre nemica.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-033",
+      "name": "Ottica di Assedio",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Dopo due turni con lo stesso bersaglio preparato, il prossimo colpo ignora una deviazione ordinaria, non un baluardo.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-034",
+      "name": "Fiamma Residua",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Quando una frattura reale colpisce un vitale corroso, il bersaglio perde la prima riparazione differita nel turno successivo.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-035",
+      "name": "Finta di Attacco",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Prima della conferma, mostra una falsa marca su un vitale e scegli il bersaglio reale soltanto dopo la scelta della difesa nemica.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-036",
+      "name": "Tiro Triangolato",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Se una tua marca è stata applicata nel round precedente, puoi trasferirla su un altro vitale integro senza consumare una carta aggiuntiva.",
+      "after": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-037",
+      "name": "Spirale d'Impulso",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Dopo aver inflitto ionizzazione con una salva reale, il tuo attacco seguente non perde priorità per una interferenza leggera.",
+      "after": "Aggiunge 2 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-038",
+      "name": "Martello Sequenziale",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Due salve vere dirette allo stesso componente in turni diversi accumulano una carica; la terza può rompere una parata temporanea.",
+      "after": "Aggiunge 2 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-039",
+      "name": "Lancia Abrasiva",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Se il prossimo tiro ferisce una scudiera viva, ne riduce temporaneamente la capacità di ripararsi, senza distruggerla automaticamente.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-040",
+      "name": "Orbita di Aggiramento",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Dopo avere evitato un colpo grazie ai Motori, il successivo attacco può scegliere una scudiera o un vitale prima della conferma.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-041",
+      "name": "Matrice di Fuoco",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Se due componenti nemici sono già marcati, il successivo colpo reale può scegliere quale marca consumare dopo la reazione avversaria.",
+      "after": "Aggiunge 2 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-042",
+      "name": "Cannone a Impulsi Gemelli",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Se l'ultimo tuo colpo ha distrutto una scudiera, il prossimo tiro conserva una marcatura già presente per una seconda occasione.",
+      "after": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-043",
+      "name": "Scarica a Singola Faglia",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Un attacco su un vitale fratturato può consumare una tua marca di scansione per ignorare una parata semplice, mai una scudiera corazzata.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-044",
+      "name": "Vortice di Schegge",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Dopo un tiro su una scudiera, se resta viva puoi marcarla per il prossimo colpo; se viene distrutta la marca scompare.",
+      "after": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-045",
+      "name": "Frattura Localizzata",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Se il prossimo attacco reale colpisce un Generatore nemico già ionizzato, ne ritarda di un round la prossima ricarica, non le abilità già usate.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-046",
+      "name": "Torpedo a Caduta",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Un colpo preparato per due round può essere diretto alla scudiera che sta intercettando, consumando tutta la carica in un'unica salva.",
+      "after": "Aggiunge 2 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-047",
+      "name": "Laser di Contromira",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Se il tuo bersaglio viene spostato da una carta Controllo, scegli un nuovo bersaglio ancora disponibile e conservi un bonus di mira.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-048",
+      "name": "Schegge di Nebbia",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Una salva che attraversa un terreno di nebbia rivela il suo bersaglio solo al momento dell'impatto; resta intercettabile dalle difese automatiche.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-049",
+      "name": "Iniezione di Corrosione",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Dopo una frattura reale puoi scegliere se impedire una riparazione semplice oppure ridurre una carica difensiva del bersaglio al prossimo round.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-050",
+      "name": "Ritorno Binario",
+      "rarity": "Rara",
+      "role": "Attacco",
+      "before": "Se la tua scudiera ha appena intercettato, il prossimo attacco materno può trasferire la mira al vitale che il nemico aveva scelto.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-051",
+      "name": "Assedio a Tre Passaggi",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Prepara una carica per round, massimo tre; un solo colpo reale consuma tutto e ignora fino a due parate temporanee, ma non oltrepassa un baluardo vivo.",
+      "after": "Aggiunge 3 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-052",
+      "name": "Spirale Corrosiva",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Quando il tuo colpo reale frattura un vitale, trasferisce una sola marca di corrosione a un secondo vitale; il secondo non subisce danno automatico.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-053",
+      "name": "Batteria Fantasma",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Dopo un colpo intercettato da una scudiera, conserva il bersaglio per due turni anche se subisci una manovra di occultamento.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-054",
+      "name": "Fuoco di Ritorno",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Se nello stesso turno un tuo vitale viene fratturato, il successivo attacco reale ottiene un contrattacco preparato, non uno sparo extra immediato.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-055",
+      "name": "Crinale di Plasma",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Contro un componente già corroso, il prossimo colpo reale può trasformare una difesa di riduzione in una marca di energia consumata; rispetta i baluardi.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-056",
+      "name": "Martello di Quarzo",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Dopo due attacchi materni distinti realmente risolti, il successivo sceglie tra una mira indeviabile o una priorità contro scorta non corazzata.",
+      "after": "Aggiunge 3 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-057",
+      "name": "Rotta di Intercettazione",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Una manovra dei Motori riuscita converte la prossima marca di attacco in scelta ritardata del bersaglio, fino a un turno.",
+      "after": "Aggiunge 3 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-058",
+      "name": "Mirino a Cascata",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Quando il nemico usa una carta Difesa, puoi spostare su un vitale ancora sano una marca di mira senza crearne di nuove.",
+      "after": "Il tuo attacco colpisce fino a 3 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-059",
+      "name": "Catalizzatore di Salva",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Dopo una tua riparazione effettiva, la prossima salva contro una scudiera viva riduce di 1 la sua cura successiva; non recupera carte.",
+      "after": "Il primo colpo riuscito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hit",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-060",
+      "name": "Impulso Speculare",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Se subisci una ionizzazione che viene poi rimossa, il prossimo attacco può utilizzare quella frequenza per ignorare un disturbo leggero.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-061",
+      "name": "Tattica di Perforazione",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Su un vitale che hai colpito realmente nel turno precedente, un'altra salva può ignorare una contromisura mirata consumandone la marca.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-062",
+      "name": "Granata di Orbita",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Una salva reale contro una scudiera danneggiata può impedire la sua passiva al prossimo round, a condizione che la scudiera sopravviva.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-063",
+      "name": "Artiglieria a Fasi",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Accumula energia con due carte giocate in round differenti; il prossimo colpo reale può cambiare bersaglio dopo la rivelazione delle contromisure, poi azzera la carica.",
+      "after": "Il tuo attacco colpisce fino a 3 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-064",
+      "name": "Assalto a Nucleo Freddo",
+      "rarity": "Epica",
+      "role": "Attacco",
+      "before": "Un colpo reale contro un Generatore congelato può consumare il gelo per disattivarne una sola ricarica; non colpisce altri vitali.",
+      "after": "Aggiunge 3 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-065",
+      "name": "Rosa di Mira Assoluta",
+      "rarity": "Leggendaria",
+      "role": "Attacco",
+      "before": "Una volta per battaglia, dopo aver marcato due vitali in round differenti, scegli quale colpire dopo la difesa dichiarata; la salva resta una sola e può essere intercettata da baluardo.",
+      "after": "Il tuo attacco colpisce fino a 4 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 4
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-066",
+      "name": "Fornace del Vuoto",
+      "rarity": "Leggendaria",
+      "role": "Attacco",
+      "before": "Una salva reale contro un bersaglio corroso consuma la corrosione per rimuovere fino a due protezioni temporanee; non supera una scudiera corazzata collegata.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-067",
+      "name": "Lancia degli Eoni",
+      "rarity": "Leggendaria",
+      "role": "Attacco",
+      "before": "Dopo tre round di carica senza subire la distruzione delle Armi, un unico colpo materno ignora una parata e una deviazione ordinarie, poi scarica tutto.",
+      "after": "Aggiunge 3 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-068",
+      "name": "Giuramento del Cacciatore",
+      "rarity": "Leggendaria",
+      "role": "Attacco",
+      "before": "Se nel duello hai distrutto almeno una scudiera, una volta puoi trasferire al suo vitale collegato la mira del prossimo colpo, senza infliggere danno extra.",
+      "after": "Aggiunge 3 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-069",
+      "name": "Rifrazione delle Stelle",
+      "rarity": "Leggendaria",
+      "role": "Attacco",
+      "before": "Quando due tue marche di precisione sono attive, puoi scambiarne i bersagli una volta e consumarle nel normale attacco reale, senza colpi gratuiti.",
+      "after": "Il tuo attacco colpisce fino a 4 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 4
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-070",
+      "name": "Cometa dell'Ultima Rotta",
+      "rarity": "Leggendaria",
+      "role": "Attacco",
+      "before": "Dopo due schivate reali con Motori ancora operativi, il prossimo colpo della madre può essere confermato dopo la contromossa nemica; poi perdi tutte le cariche evasive.",
+      "after": "Aggiunge 3 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Distruggere o disturbare le Armi dell’attaccante; intercettare la salva; annullare la preparazione indicata."
+    },
+    {
+      "id": "gen-071",
+      "name": "Paratia Frontale",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Riduce di 1 livello il primo danno di un attacco singolo diretto a un vitale ancora integro, una sola volta; non annulla una salva multipla.",
+      "after": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-072",
+      "name": "Schivata d'Emergenza",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Con Motori operativi, tenta di spostare sul primo vitale non scelto il prossimo colpo singolo; fallisce contro una mira indeviabile.",
+      "after": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-073",
+      "name": "Scorta in Allerta",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Se possiedi una scudiera collegata, il suo prossimo intercetto consuma 1 resistenza in meno, minimo 1; altrimenti proteggi una tua marca di mira.",
+      "after": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-074",
+      "name": "Piastre di Riserva",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "La prima riparazione successiva su un vitale fratturato concede una parata leggera fino al prossimo round.",
+      "after": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-075",
+      "name": "Velo di Poppa",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Quando il nemico sceglie Motori come bersaglio, puoi ridurre la priorità di mira di un livello prima del tiro.",
+      "after": "Evita 1 colpo per 1 turno avversario contro i Motori, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "engine",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-076",
+      "name": "Protocollo di Guardia",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Il prossimo colpo diretto a una scudiera subisce una riduzione leggera se la sua madre mantiene il Generatore funzionante.",
+      "after": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-077",
+      "name": "Ancora di Campo",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Una deviazione forzata non può spostare il tuo prossimo colpo o la tua prossima difesa per un solo round.",
+      "after": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "command",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-078",
+      "name": "Scudo di Emergenza",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Se non hai scudiere in campo, evita una volta una marca avversaria contro un vitale integro; non elimina il colpo fisico in arrivo.",
+      "after": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-079",
+      "name": "Finta Difensiva",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "La prima difesa mirata che giochi resta nascosta fino alla conferma dell'attacco nemico; non aggiunge punti difesa.",
+      "after": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-080",
+      "name": "Paraurti di Scafo",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Quando subisci un colpo reale su una scudiera, puoi consumare una carica difensiva per ridurne di 1 il danno in resistenza.",
+      "after": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-081",
+      "name": "Doppio Rinforzo",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Una protezione normale può essere spostata dal Generatore ai Motori prima della risoluzione; dura soltanto un attacco.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-082",
+      "name": "Barriera Locale",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Protegge un singolo vitale indicato con una parata, senza creare uno scudo generale della nave.",
+      "after": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-083",
+      "name": "Rotta di Copertura",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Dopo una schivata riuscita, conserva un indicatore di difesa sui Motori per un round, senza annullare un secondo colpo.",
+      "after": "Evita 1 colpo per 1 turno avversario contro i Motori, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "engine",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-084",
+      "name": "Vedetta di Scorta",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Se la prima scudiera è viva, rende noto quale salvo la sta bersagliando prima di spendere la difesa.",
+      "after": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-085",
+      "name": "Scafo Rinforzato",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Se il vitale selezionato è già fratturato, la prima riparazione nel turno successivo non può essere ritardata da un disturbo lieve.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-086",
+      "name": "Guardia degli Ugelli",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Difende i Motori da un singolo effetto di raffreddamento, ma non dal danno del colpo reale.",
+      "after": "Blocca 1 colpo contro i Motori. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "engine",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-087",
+      "name": "Riflesso Breve",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Dopo che l'avversario cambia bersaglio, la tua difesa si può riallineare una sola volta allo stesso turno.",
+      "after": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-088",
+      "name": "Diaframma di Piastre",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Il prossimo colpo diretto al Generatore incontra una riduzione lieve se il Generatore è ancora integro.",
+      "after": "Blocca 1 colpo contro il Generatore. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "generator",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-089",
+      "name": "Pattuglia Laterale",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "La prossima scudiera che intercetta può scegliere di non attivare una propria passiva nel round successivo per assorbire 1 resistenza aggiuntiva.",
+      "after": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-090",
+      "name": "Serratura Tattica",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Impedisce che la carta difensiva scelta venga spostata da una semplice carta di distrazione avversaria.",
+      "after": "Blocca 1 colpo contro la Centralina. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "command",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-091",
+      "name": "Reazione di Bordo",
+      "rarity": "Comune",
+      "role": "Difesa",
+      "before": "Dopo una tua scudiera realmente colpita, la prossima carta Difesa che giochi può essere preparata per due round anziché uno.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-092",
+      "name": "Bastione a Settori",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Scegli un vitale; la prima salva che lo bersaglia è ridotta, ma se il nemico cambia bersaglio la protezione non lo segue.",
+      "after": "Blocca 1 colpo contro il componente scelto. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-093",
+      "name": "Manovra di Nebbia",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Se un terreno di nebbia è attivo, puoi spostare una mira avversaria da un vitale integro a un altro, una volta.",
+      "after": "Evita 1 colpo per 2 turni avversari contro il componente scelto, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-094",
+      "name": "Scorta Sacrificale",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Una scudiera viva può assorbire una salva diretta alla madre spendendo fino a 2 resistenze addizionali; non funziona con supporti non abilitati all'intercetto.",
+      "after": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza.",
+      "semanticReviewNote": "Su Motori, Generatore o una scudiera può arrivare al massimo un colpo per turno. Due turni rendono utilizzabili entrambe le protezioni."
+    },
+    {
+      "id": "gen-095",
+      "name": "Sentinella Ritorsiva",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Dopo aver realmente parato un colpo, lascia una marca sul vitale avversario che ha originato la mira; non provoca danni.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-096",
+      "name": "Parete Mobile",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "La tua difesa mirata può spostarsi una volta verso il secondo vitale selezionato dal nemico, se esiste.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-097",
+      "name": "Scudo Termico",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Riduce il primo danno reale aggravato da corrosione e rimuove soltanto l'aggravamento, non la frattura normale.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-098",
+      "name": "Vortice di Evasione",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Dopo una schivata riuscita, diminuisce la precisione del prossimo attacco nemico contro Motori, poi scade.",
+      "after": "Evita 2 colpi per 2 turni avversari contro i Motori, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "engine",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza.",
+      "semanticReviewNote": "Su Motori, Generatore o una scudiera può arrivare al massimo un colpo per turno. Due turni rendono utilizzabili entrambe le protezioni."
+    },
+    {
+      "id": "gen-099",
+      "name": "Anello di Intercetto",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Una scudiera già danneggiata può attivare una volta la propria intercettazione prima di una carta di disturbo, se il collegamento è ancora attivo.",
+      "after": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-100",
+      "name": "Guardia del Nucleo",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Il primo attacco contro Generatore fratturato non può sfruttare una marca avversaria di corrosione; consuma la protezione.",
+      "after": "Blocca 2 colpi contro il Generatore. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "generator",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza.",
+      "semanticReviewNote": "Su Motori, Generatore o una scudiera può arrivare al massimo un colpo per turno. Due turni rendono utilizzabili entrambe le protezioni."
+    },
+    {
+      "id": "gen-101",
+      "name": "Punto di Contrattacco",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Quando una difesa temporanea si esaurisce per un colpo reale, prepara una tua mira al medesimo componente dell'attaccante per il turno dopo.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-102",
+      "name": "Scudo Riflettente",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Una parata riuscita restituisce all'avversario un indicatore di disturbo della mira, non danno diretto; una volta per turno.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-103",
+      "name": "Cortina Polaris",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Rende invisibile per un round quale vitale integro hai protetto, ma non impedisce scansioni avanzate.",
+      "after": "Blocca 1 colpo contro il componente scelto. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-104",
+      "name": "Baluardo Ausiliario",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Con una scudiera corazzata operativa, il suo prossimo intercetto resiste a un singolo effetto che ne avrebbe annullato la passiva.",
+      "after": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza.",
+      "semanticReviewNote": "Su Motori, Generatore o una scudiera può arrivare al massimo un colpo per turno. Due turni rendono utilizzabili entrambe le protezioni."
+    },
+    {
+      "id": "gen-105",
+      "name": "Patto di Ferro",
+      "rarity": "Rara",
+      "role": "Difesa",
+      "before": "Quando una riparazione reale rimuove una frattura, assegna una parata locale a quel vitale per un solo round.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-106",
+      "name": "Trincea Orbitale",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Per due round, il primo vitale bersagliato da un attacco singolo ottiene una parata locale; le salve multiple consumano la protezione una sola volta.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-107",
+      "name": "Scudo di Ripercussione",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Se una scudiera corazzata assorbe tutta la salva, prepara un tuo contrattacco con marca valida; nessun danno immediato.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-108",
+      "name": "Danza degli Intercettori",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Una volta per partita, dopo aver visto la mira, scambia due vitali disponibili come bersaglio con Motori funzionanti.",
+      "after": "Evita 2 colpi per 2 turni avversari contro il componente scelto, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-109",
+      "name": "Piastre a Memoria",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Dopo aver protetto realmente Motori, estendi la prossima parata a un diverso vitale fratturato; la protezione non si duplica.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-110",
+      "name": "Luce di Contenimento",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Quando una riparazione salva un vitale da seconda frattura, il prossimo attacco su di esso non può sfruttare un bonus di corrosione.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-111",
+      "name": "Intercetto Gemello",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Con due scudiere di tipo difensivo vive, scegli quale assorbe il colpo dopo la dichiarazione della mira; solo una scudiera riceve la salva.",
+      "after": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-112",
+      "name": "Difesa Invertita",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Se il nemico attacca un vitale che non è quello protetto, conserva la parata e ottieni una marca di contrattacco per il round seguente.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-113",
+      "name": "Ciclo di Schivata",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Dopo due cambi bersaglio reali indotti dal nemico, proteggi la prossima rotta della nave da una deviazione ulteriore.",
+      "after": "Evita 2 colpi per 2 turni avversari contro il componente scelto, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-114",
+      "name": "Custodia del Reattore",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Se il Generatore esiste ed è funzionante, conserva una sola parata locale non utilizzata per un turno extra; altrimenti riduci il primo disturbo ricevuto.",
+      "after": "Blocca 2 colpi contro il Generatore. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "generator",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-115",
+      "name": "Rotta del Redentore",
+      "rarity": "Epica",
+      "role": "Difesa",
+      "before": "Dopo un intercetto che ha distrutto una scudiera, proteggi per un attacco il vitale collegato che quella scudiera difendeva; non la resuscita.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-116",
+      "name": "Aegis delle Costellazioni",
+      "rarity": "Leggendaria",
+      "role": "Difesa",
+      "before": "Una volta per partita proteggi due vitali distinti con una parata ciascuno, scegliendoli prima del turno nemico; non equivale a uno scudo madre globale.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-117",
+      "name": "Specchio dell'Abisso",
+      "rarity": "Leggendaria",
+      "role": "Difesa",
+      "before": "Quando un baluardo vivo assorbe integralmente una salva, annulla un solo disturbo associato a quella salva e prepara una marca di risposta.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-118",
+      "name": "Rotta Intoccabile",
+      "rarity": "Leggendaria",
+      "role": "Difesa",
+      "before": "Dopo due schivate valide, una volta proteggi la madre da un singolo attacco ordinario senza ripetere la manovra; fallisce se i Motori sono distrutti.",
+      "after": "Evita 2 colpi per 2 turni avversari contro il componente scelto, se i Motori funzionano.",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-119",
+      "name": "Sentinella dell'Ultimo Volo",
+      "rarity": "Leggendaria",
+      "role": "Difesa",
+      "before": "Quando una scudiera corazzata sta per essere distrutta, può assorbire fino alla propria resistenza residua e lasciare una parata locale al vitale collegato.",
+      "after": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-120",
+      "name": "Giuramento del Bastione",
+      "rarity": "Leggendaria",
+      "role": "Difesa",
+      "before": "Una volta per duello, se due vitali sono fratturati, assegna una difesa a uno e prepara una riparazione dell'altro, senza curare direttamente.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Esaurire la protezione, colpire su un bersaglio diverso oppure aspettare la scadenza."
+    },
+    {
+      "id": "gen-121",
+      "name": "Interferenza Breve",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Il prossimo colpo reale della madre può ionizzare il vitale bersagliato per un round; se intercettato non applica ionizzazione al vitale.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-122",
+      "name": "Rumore di Frequenza",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Per un round l'avversario non vede la tua prossima marca di mira fino alla conferma, ma può usare difese automatiche.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-123",
+      "name": "Ritardo di Ricarica",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Se il Generatore nemico esiste, ritarda di un round la sua prossima carica preparata; non annulla un effetto già risolto.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-124",
+      "name": "Sonda di Ascolto",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Guarda la categoria della prossima carta generale del mazzo nemico senza conoscerne il nome.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-125",
+      "name": "Falsa Telemetria",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Sposta una marca di scansione avversaria da un vitale a un altro ancora disponibile, se la scansione non è protetta.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-126",
+      "name": "Impulso di Sospensione",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Disattiva per un turno un bonus di precisione temporaneo su Armi nemiche; non spegne le armi né il loro attacco ordinario.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-127",
+      "name": "Traccia Radar",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Rivela quale scudiera avversaria è collegata alla madre e quale vitale alimenta quel collegamento.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-128",
+      "name": "Nube Elettrica",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Dopo un colpo reale su Motori, riduci per un round la capacità di cambio bersaglio del nemico, se il componente resta operativo.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-129",
+      "name": "Faglia di Segnale",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Il prossimo disturbo su una scudiera dura un round in meno se la madre nemica ripara il componente che la alimenta.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-130",
+      "name": "Spettro Falso",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Nasconde una tua carta di Controllo preparata fino alla prima reazione del nemico, ma non ne estende la durata.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-131",
+      "name": "Jammer Laterale",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Blocca un solo bonus di copertura mirata di una scudiera non corazzata per il prossimo turno; la sua resistenza rimane intatta.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-132",
+      "name": "Campo Viscoso",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Il prossimo cambio bersaglio nemico costa la perdita di una marca di precisione, se ne possiede una.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-133",
+      "name": "Disturbo della Canna",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Un attacco reale contro Armi nemiche può ridurre per un round una carica di assedio, ma non il danno base.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-134",
+      "name": "Esploratore Elettrico",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Guarda la prima carta scoperta del campo nemico e scopri per quanto tempo rimane attiva.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-135",
+      "name": "Eco di Comando",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Se l'avversario gioca un Personaggio, ne rivela subito il tempo residuo di attività, senza disattivarlo.",
+      "after": "Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-136",
+      "name": "Interruzione Minore",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Quando il nemico prepara una combo, togli un round alla durata della sua marca preparatoria non protetta.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-137",
+      "name": "Blocco del Mirino",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Impedisce che una sola marca avversaria venga duplicata da una carta di ricambio; la marca originale resta.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-138",
+      "name": "Frequenza Dispersa",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Il prossimo status di ionizzazione nemico si applica a una sola carica, non a due eventuali cariche collegate.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-139",
+      "name": "Pulviscolo Quantico",
+      "rarity": "Comune",
+      "role": "Controllo",
+      "before": "Finché dura un round, le informazioni del prossimo bersaglio scansionato non mostrano lo stato della scudiera associata.",
+      "after": "Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-140",
+      "name": "Rete di Saturazione",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Un colpo reale su un vitale ionizzato può ridurre la successiva ricarica di una scudiera collegata, senza infliggerle danno.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-141",
+      "name": "Sabotaggio di Aggancio",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Quando il nemico prepara un attacco multiplo, disattiva una marca necessaria per un turno; non distrugge la carta già usata.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-142",
+      "name": "Eco Intercettata",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Dopo una scudiera nemica che ha intercettato, scopri la categoria di una carta preparata del suo proprietario.",
+      "after": "Rimette in cima al mazzo l’ultima carta Supporto o Controllo scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "support"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-143",
+      "name": "Cortina di Trasmissione",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Nasconde per un round le tue carte preparatorie non ancora attivate; non impedisce contromisure automatiche.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-144",
+      "name": "Rallentatore Orbitale",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "A una scudiera viva riduce di un round il prossimo ciclo di attivazione automatica, ossia ritarda di un turno la passiva.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-145",
+      "name": "Sonda di Vulnerabilità",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Rivela lo stato di un vitale nemico e di un secondo componente collegato, se esistente.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-146",
+      "name": "Scarica Dissociativa",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Dopo una frattura reale a Generatore, interrompi per un turno una sinergia energetica, non tutte le abilità della madre.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-147",
+      "name": "Interdizione del Supporto",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Una scudiera di tipo supporto non può usare la propria riparazione nel prossimo round, ma continua a intercettare se prevista.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-148",
+      "name": "Falso Bersaglio",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Quando il nemico mostra una marca su Armi, puoi presentare un'esca su Motori che consuma un suo cambio bersaglio.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-149",
+      "name": "Criptaggio di Campo",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Protegge una tua preparazione da una sola scansione nemica, ma non da un'azione di sabotaggio vera.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-150",
+      "name": "Ritardo della Spira",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Una carica di attacco accumulata dal nemico non può essere consumata nel turno successivo; non viene eliminata.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-151",
+      "name": "Caccia ai Collegamenti",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Scopri quale vitale mantiene attiva una scudiera nemica e marchialo per la prossima scansione alleata.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-152",
+      "name": "Contagio Ionico",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Un colpo reale che ionizza Motori può rallentare per un turno il cambio bersaglio della scudiera collegata; non la danneggia.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-153",
+      "name": "Serratura di Protocollo",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Disabilita per un round il bonus di una carta Controllo nemica ancora preparata; non blocca una carta generale diversa.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-154",
+      "name": "Trasmissione Inversa",
+      "rarity": "Rara",
+      "role": "Controllo",
+      "before": "Se subisci una scansione, riveli una carta generale preparata nemica e nascondi una tua marca fino al turno successivo.",
+      "after": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-155",
+      "name": "Gabbia di Fase",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Dopo una ionizzazione realmente applicata, trattieni per un turno una sola carica energetica avversaria; il resto del sistema continua a funzionare.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-156",
+      "name": "Faglia nei Protocolli",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Quando il nemico avvia una fusione, disabilita un requisito non protetto per un round; se i requisiti restano validi, la fusione procede.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-157",
+      "name": "Nebbia dei Dati",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Per due round le scansioni ordinarie possono mostrare soltanto un vitale alla volta; le scansioni avanzate conservano la propria regola.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-158",
+      "name": "Risonanza Inversa",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Quando un Generatore avversario fratturato tenta una ricarica, ritardane una e lascia intatto il Generatore.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-159",
+      "name": "Occhio Astrale",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Rivela due carte preparate e la durata residua di un Personaggio avversario; non guarda la mano nascosta.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-160",
+      "name": "Sincope Elettrica",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Dopo un vero colpo sulla Centralina, sospende per un turno la prossima marca di combo nemica se non protetta.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-161",
+      "name": "Frattura delle Rotte",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Una volta per round puoi obbligare il nemico a confermare la prossima mira senza una seconda scelta, salvo contromisure.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-162",
+      "name": "Specchio di Frequenza",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Il primo disturbo leggero ricevuto nel round viene trasferito a una tua carta di preparazione come costo, mantenendo la fonte nemica attiva.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-163",
+      "name": "Allarme Ritardato",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Un bonus di guardia della scudiera avversaria diventa disponibile solo dopo la sua prossima attivazione passiva, non subito.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-164",
+      "name": "Codice di Inseguimento",
+      "rarity": "Epica",
+      "role": "Controllo",
+      "before": "Dopo due scansioni reali del medesimo vitale, la tua prossima carta Controllo su quel vitale non può essere nascosta dall'avversario.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-165",
+      "name": "Eclisse delle Frequenze",
+      "rarity": "Leggendaria",
+      "role": "Controllo",
+      "before": "Una volta per partita disattiva per un round due bonus di collegamento scudiera diversi, se entrambe le scudiere esistono; non riduce HP né annulla i baluardi fisici già attivi.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-166",
+      "name": "Oracolo di Telemetria",
+      "rarity": "Leggendaria",
+      "role": "Controllo",
+      "before": "Guarda le prossime tre carte generali del mazzo nemico e la sua categoria di carta preparata, poi rinuncia a una tua pesca tattica.",
+      "after": "Scarta 2 carte casuali dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-167",
+      "name": "Prigione di Risonanza",
+      "rarity": "Leggendaria",
+      "role": "Controllo",
+      "before": "Dopo due ionizzazioni realmente applicate in round differenti, puoi congelare una sola ricarica nemica per un turno, consumando entrambe le marche.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-168",
+      "name": "Censura delle Stelle",
+      "rarity": "Leggendaria",
+      "role": "Controllo",
+      "before": "Una volta per partita, una combo nemica appena preparata perde una marca necessaria prima dell'attacco; non cancella le carte già consumate né il fuoco normale.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-169",
+      "name": "Nebulosa delle False Coordinate",
+      "rarity": "Leggendaria",
+      "role": "Controllo",
+      "before": "Per due turni il nemico deve dichiarare il primo bersaglio prima di conoscere le tue difese mirate; conserva contromisure automatiche.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-170",
+      "name": "Orologio del Vuoto",
+      "rarity": "Leggendaria",
+      "role": "Controllo",
+      "before": "Una volta per duello prolunga di un round un ritardo già inflitto a una sola carica o passiva, ma non a tutte le abilità nemiche.",
+      "after": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+      "effectSpec": {
+        "type": "disarm"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Pulizia Sistemi, carta di contromisura, scadenza naturale o perdita della sorgente."
+    },
+    {
+      "id": "gen-171",
+      "name": "Kit di Riparazione",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Ripara una sola frattura di un vitale esistente e non distrutto; una carta non ricostruisce un pezzo esploso.",
+      "after": "Ripara 1 punto al componente scelto.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "selected",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-172",
+      "name": "Batteria Portatile",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Aggiunge una carica alla prossima carta Attacco che richiede preparazione; si perde dopo due round.",
+      "after": "Prepara +1 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-173",
+      "name": "Ricambio Semplice",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Scarta una carta generale dalla mano e pesca la prima del mazzo generale, senza cercare nel pacchetto esclusivo.",
+      "after": "Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-174",
+      "name": "Cura di Scorta",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Se possiedi una scudiera viva, restituiscile 1 resistenza; altrimenti conserva una marca di riparazione per la madre.",
+      "after": "Ripara 1 punto alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-175",
+      "name": "Calibrazione di Bordo",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Rimuove un lieve disturbo di precisione dalla madre oppure prepara una mira per il prossimo turno.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-176",
+      "name": "Microgeneratore",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Se il Generatore esiste e funziona, ripristina una carica energetica; altrimenti conserva una preparazione di carta comune.",
+      "after": "Prepara +1 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-177",
+      "name": "Manutenzione dei Motori",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Rimuove una penalità di mobilità non strutturale, senza eliminare le fratture del motore.",
+      "after": "Ripara 1 punto ai Motori.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "engine",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-178",
+      "name": "Sonda di Inventario",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Guarda le prime due carte generali e rimettile nell'ordine che preferisci, senza pescarne altre.",
+      "after": "Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-179",
+      "name": "Officina di Emergenza",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Dopo una scudiera danneggiata, prepara una riparazione di 1 resistenza da eseguire al round successivo.",
+      "after": "Ripara 1 punto alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-180",
+      "name": "Riserva d'Aria",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Riduce per un round l'effetto di una ionizzazione già subita, senza togliere l'eventuale danno originale.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-181",
+      "name": "Nucleo di Ricarica",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Quando il prossimo colpo materno è realmente intercettato, recuperi una carica preparatoria non utilizzata.",
+      "after": "Prepara +1 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-182",
+      "name": "Diagnosi Rapida",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Rivela quale tuo vitale è più vicino alla distruzione e consente di spostare una riparazione ancora non confermata.",
+      "after": "Ripara 1 punto al tuo componente più danneggiato.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "weakest",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-183",
+      "name": "Doppio Ricambio",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Scarta fino a due carte generali dalla mano e ripescane altrettante dal mazzo generale; non tocca le esclusive automaticamente aggiunte.",
+      "after": "Scarta 2 carte casuali dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-184",
+      "name": "Rete di Ritorno",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Una scudiera che ha perso esattamente 1 resistenza nell'ultimo turno ne può recuperare 1, se resta collegata.",
+      "after": "Ripara 1 punto alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-185",
+      "name": "Cella di Contenimento",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Evita che una preparazione generale si perda per la sola fine di un round, una volta per attivazione.",
+      "after": "Prepara +1 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-186",
+      "name": "Banco dei Pezzi",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Dopo aver giocato una carta Difesa, la prossima cura su una scudiera viva non può essere ritardata da un disturbo lieve.",
+      "after": "Ripara 1 punto alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-187",
+      "name": "Guasto Isolato",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Rimuove un solo stato di corrosione da un proprio vitale; non ripara danni già subiti.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-188",
+      "name": "Segnalatore di Scorta",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Mostra al giocatore la scudiera meno resistente e consente di indirizzarle una carta Supporto preparata.",
+      "after": "Ripara 1 punto alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-189",
+      "name": "Inventario Ordinato",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Dopo aver pescato una carta generale, metti una carta generale dalla mano in fondo al mazzo e pesca una sostitutiva.",
+      "after": "Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-190",
+      "name": "Protocollo di Stabilità",
+      "rarity": "Comune",
+      "role": "Supporto",
+      "before": "Se non hai una scudiera disponibile, conserva una carica difensiva per il prossimo turno; con una scudiera, riduci la perdita della sua prossima carica.",
+      "after": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-191",
+      "name": "Laboratorio Mobile",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Dopo una vera riparazione, lascia sul vitale curato una protezione contro una sola nuova corrosione entro il prossimo turno.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-192",
+      "name": "Accumulatore Doppio",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Trasferisce fino a due cariche da una preparazione non usata a un'altra carta generale, senza superare il massimo previsto.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-193",
+      "name": "Mazzo in Rotazione",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Guarda tre carte generali, mettine una in cima, una in fondo e lascia la terza nella posizione originale.",
+      "after": "Scarta 2 carte casuali dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-194",
+      "name": "Squadra Recupero",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Una scudiera viva e collegata può essere riparata di 2 resistenze, ma la sua prossima passiva viene rinviata di un round.",
+      "after": "Ripara 2 punti alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-195",
+      "name": "Ripristino di Segnale",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Rimuove un singolo sabotaggio di collegamento temporaneo dalla scudiera, se i vitali richiesti sono ancora integri o fratturati.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-196",
+      "name": "Inversione Energetica",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Con un Generatore operativo, consuma una carica d'assedio propria per proteggere la prossima ricarica della madre.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-197",
+      "name": "Riparazione Differita",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Marca un tuo vitale fratturato: al prossimo round, se resta vivo, rimuove una frattura e consuma la marca.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-198",
+      "name": "Banca degli Scarti",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Riprendi una carta generale Comune dagli scarti mettendola in fondo al mazzo, mai direttamente in mano.",
+      "after": "Rimette in cima al mazzo l’ultima carta scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "any"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-199",
+      "name": "Sostegno Coordinato",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Se una scudiera protegge la madre, sposta 1 resistenza recuperata dall'altra scudiera sulla prima; non supera i massimi.",
+      "after": "Ripara 2 punti alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-200",
+      "name": "Protocollo di Sollievo",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Rimuove nello stesso turno un disturbo ionico e una penalità temporanea di mira dalla madre, senza riparare vitali.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-201",
+      "name": "Trasformatore di Carica",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Una carta Difesa preparata e inutilizzata può alimentare di una carica una carta Supporto al round successivo.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-202",
+      "name": "Aggancio di Riparazione",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Se una scudiera è stata colpita nel round precedente, la successiva cura può essere diretta alla madre fratturata invece che alla scudiera.",
+      "after": "Ripara 2 punti al componente scelto.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "selected",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-203",
+      "name": "Ordine di Prelievo",
+      "rarity": "Rara",
+      "role": "Supporto",
+      "before": "Quando la tua mano contiene solo carte non giocabili, scarta una carta generale e pesca due generali, rimettendone una in fondo al mazzo.",
+      "after": "Scarta 2 carte casuali dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-204",
+      "name": "Cantiere di Frontiera",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "In due round distinti, ripara due fratture su due vitali differenti, una per round; nessun componente distrutto ritorna in gioco.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-205",
+      "name": "Nucleo Gemello",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "Duplica una singola carica di preparazione già accumulata su una carta generale, fino al suo limite, poi si esaurisce.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-206",
+      "name": "Archivio delle Orbite",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "Recupera dal mazzo fino a una carta generale della categoria scelta e mettila in fondo, dopo aver scartato una carta in mano.",
+      "after": "Rimette in cima al mazzo l’ultima carta Supporto o Controllo scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "support"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-207",
+      "name": "Squadriglia di Riparatori",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "Ripara 1 resistenza a entrambe le scudiere vive e collegate; se ne rimane una, ripara soltanto quella.",
+      "after": "Ripara 2 punti alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-208",
+      "name": "Rinforzo Transitorio",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "Quando una tua riparazione reale salva un vitale fratturato, conferisce una sola parata locale nel prossimo turno.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-209",
+      "name": "Reattore Reversibile",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "Una volta per battaglia converte una carica d'attacco in due cariche di difesa, oppure viceversa, entro i limiti di preparazione.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-210",
+      "name": "Manovra di Ricostruzione",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "Rimuove una frattura da un vitale e cancella una marca avversaria su quel vitale; richiede che il pezzo non sia distrutto.",
+      "after": "Ripara 2 punti al componente scelto.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "selected",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-211",
+      "name": "Sonda delle Possibilità",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "Guarda le prossime quattro carte generali, pesca la prima giocabile e rimetti le altre nell'ordine scelto; massimo una pesca.",
+      "after": "Scarta 2 carte casuali dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-212",
+      "name": "Richiamo della Scudiera",
+      "rarity": "Epica",
+      "role": "Supporto",
+      "before": "Una scudiera viva ma temporaneamente scollegata può essere riattivata per un solo round se il collegamento è disturbato ma nessun vitale richiesto è distrutto.",
+      "after": "Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-213",
+      "name": "Officina dell'Aurora Eterna",
+      "rarity": "Leggendaria",
+      "role": "Supporto",
+      "before": "Una volta per partita, in due round diversi puoi riparare una frattura per round su due vitali ancora esistenti; interrompere la preparazione fa perdere il secondo recupero.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-214",
+      "name": "Motore di Riserva Astrale",
+      "rarity": "Leggendaria",
+      "role": "Supporto",
+      "before": "Una volta per partita, converte fino a due preparazioni inutilizzate in una sola ricarica istantanea di carta generale, non in una nuova salva.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-215",
+      "name": "Archivista delle Cento Rotte",
+      "rarity": "Leggendaria",
+      "role": "Supporto",
+      "before": "Una volta per partita recupera una carta generale non leggendaria dagli scarti in cima al mazzo, rivelandola all'avversario.",
+      "after": "Rimette in cima al mazzo l’ultima carta scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "any"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Impedire la riparazione col disturbo; distruggere il componente richiesto; nessuna resurrezione."
+    },
+    {
+      "id": "gen-216",
+      "name": "Meccanico di Bordo",
+      "rarity": "Comune",
+      "role": "Personaggio",
+      "before": "Quando entra in campo, ripara una frattura di un vitale presente e non distrutto, una sola volta per attivazione; resta attivo un round.",
+      "after": "Ripara 1 punto al tuo componente più danneggiato, ora e al tuo prossimo turno.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "weakest",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-217",
+      "name": "Ricognitrice Orbitale",
+      "rarity": "Comune",
+      "role": "Personaggio",
+      "before": "Alla prima attivazione osserva le due prossime carte generali e ne mette una in fondo al mazzo; resta attiva due round.",
+      "after": "Per 2 tuoi turni: Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-218",
+      "name": "Tecnico di Scorta",
+      "rarity": "Comune",
+      "role": "Personaggio",
+      "before": "Quando entra, restituisce 1 resistenza a una scudiera viva e collegata; senza scudiere conserva una marca di riparazione.",
+      "after": "Ripara 1 punto alla tua scudiera più danneggiata, ora e al tuo prossimo turno.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-219",
+      "name": "Distesa Gelida",
+      "rarity": "Comune",
+      "role": "Terreno",
+      "before": "La prima manovra di mobilità del turno perde 1 efficacia, minimo zero.",
+      "after": "Le schivate non funzionano. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T01"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-220",
+      "name": "Deserto Magnetico",
+      "rarity": "Comune",
+      "role": "Terreno",
+      "before": "La prima scudiera che intercetta una salva subisce 1 resistenza aggiuntiva.",
+      "after": "Le scudiere subiscono 1 danno in più. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T04"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-221",
+      "name": "Nebbia di Elio",
+      "rarity": "Comune",
+      "role": "Terreno",
+      "before": "La prima scansione del turno perde efficacia contro le carte avversarie.",
+      "after": "Gli attacchi non possono ignorare le protezioni. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T06"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-222",
+      "name": "Schema a Due Rotte",
+      "rarity": "Comune",
+      "role": "Strategia",
+      "before": "Dopo una carta di mobilità giocata, scegli quale delle due prossime carte generali mantenere in cima al mazzo.",
+      "after": "Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-223",
+      "name": "Mappa di Campo",
+      "rarity": "Comune",
+      "role": "Strategia",
+      "before": "Prima del turno osserva lo stato dei vitali nemici scoperti e sposta una marca di mira ancora non confermata.",
+      "after": "Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-224",
+      "name": "Registro di Manovra",
+      "rarity": "Comune",
+      "role": "Strategia",
+      "before": "Se un tentativo di deviazione fallisce, conserva una carta generale preparatoria per un round invece di scartarla.",
+      "after": "Rimette in cima al mazzo l’ultima carta Difesa scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "defense"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-225",
+      "name": "Scelta di Riserva",
+      "rarity": "Comune",
+      "role": "Strategia",
+      "before": "Quando una carta generale che stai per giocare non ha un bersaglio valido, scartala e pesca un'altra generale; una volta per round.",
+      "after": "Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-226",
+      "name": "Cacciatore di Segnali",
+      "rarity": "Rara",
+      "role": "Personaggio",
+      "before": "Durante due round, il primo disturbo ionico realmente inflitto dal giocatore dura un round in più, poi il personaggio esaurisce la capacità.",
+      "after": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-227",
+      "name": "Scudiera Veterana",
+      "rarity": "Rara",
+      "role": "Personaggio",
+      "before": "Per due round riduce di 1 la prima perdita di resistenza realmente intercettata da una scudiera alleata, minimo 1.",
+      "after": "Per 2 turni avversari, blocca 1 colpo per turno contro la scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-228",
+      "name": "Cartografa dei Varchi",
+      "rarity": "Rara",
+      "role": "Personaggio",
+      "before": "Per due round, quando giochi un Terreno, guarda la prossima carta Strategia del tuo mazzo senza aggiungerla alla mano.",
+      "after": "Per 2 tuoi turni: Rimette in cima al mazzo l’ultima carta Supporto o Controllo scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "support"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-229",
+      "name": "Palude di Silicio",
+      "rarity": "Rara",
+      "role": "Terreno",
+      "before": "La prima riparazione valida del turno viene differita al proprio turno successivo.",
+      "after": "Le riparazioni non funzionano. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T08"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-230",
+      "name": "Foresta Ionizzata",
+      "rarity": "Rara",
+      "role": "Terreno",
+      "before": "Il primo impatto ionico riuscito può disturbare per un turno un collegamento di scudiera.",
+      "after": "Il primo colpo riuscito per turno ripara 1 punto al tuo componente più danneggiato. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T07"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-231",
+      "name": "Cintura di Detriti",
+      "rarity": "Rara",
+      "role": "Terreno",
+      "before": "La prima salva reale del turno ha -1 potenza, minimo zero.",
+      "after": "Gli attacchi hanno −1 potenza. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T05"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-232",
+      "name": "Diagramma di Sincronia",
+      "rarity": "Rara",
+      "role": "Strategia",
+      "before": "Dopo due carte generali di categorie diverse giocate in round consecutivi, conserva una sola marca di preparazione per una combo esclusiva compatibile.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-233",
+      "name": "Richiamo di Mano",
+      "rarity": "Rara",
+      "role": "Strategia",
+      "before": "Una volta per partita puoi rimettere in fondo al mazzo generale una carta generale e pescare una sostitutiva senza toccare le esclusive.",
+      "after": "Scarta 2 carte casuali dalla mano e ne pesca altrettante.",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-234",
+      "name": "Stratega del Crepuscolo",
+      "rarity": "Epica",
+      "role": "Personaggio",
+      "before": "Per due round il primo colpo materno realmente riuscito genera una marca di mira per il turno successivo, senza sparo automatico.",
+      "after": "Per 2 tuoi turni: Aggiunge 2 potenza al tuo attacco.",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-235",
+      "name": "Arcanista Stellare",
+      "rarity": "Epica",
+      "role": "Personaggio",
+      "before": "Per due round una sola riparazione differita già preparata può essere prorogata di un turno se il bersaglio è ancora riparabile.",
+      "after": "Ripara 1 punto al tuo componente più danneggiato, ora e al tuo prossimo turno.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "weakest",
+        "amount": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-236",
+      "name": "Custode del Nucleo",
+      "rarity": "Epica",
+      "role": "Personaggio",
+      "before": "Per due round impedisce che il primo sabotaggio semplice interrompa una passiva di scudiera ancora collegata.",
+      "after": "Per 2 tuoi turni: Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.",
+      "effectSpec": {
+        "type": "cleanse"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-237",
+      "name": "Mare di Quarzo",
+      "rarity": "Epica",
+      "role": "Terreno",
+      "before": "La prima riparazione effettiva di scudiera guadagna +1 resistenza.",
+      "after": "Le riparazioni delle scudiere recuperano 1 punto in più. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T09"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-238",
+      "name": "Faglia di Plasma",
+      "rarity": "Epica",
+      "role": "Terreno",
+      "before": "La prima salva reale del turno ottiene +1 potenza, senza danno automatico.",
+      "after": "Gli attacchi hanno +1 potenza. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T02"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-239",
+      "name": "Tempesta Ionica",
+      "rarity": "Epica",
+      "role": "Terreno",
+      "before": "Il primo disturbo ionico effettivo del turno dura un turno proprio aggiuntivo.",
+      "after": "I disturbi tolgono 1 potenza in più. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T03"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-240",
+      "name": "Catalogo delle Contromosse",
+      "rarity": "Epica",
+      "role": "Strategia",
+      "before": "Una volta per partita guarda una carta generale avversaria preparata e scegli se conservare una tua difesa non ancora usata fino al round successivo.",
+      "after": "Rimette in cima al mazzo l’ultima carta Difesa scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "defense"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-241",
+      "name": "Maresciallo delle Orbite",
+      "rarity": "Leggendaria",
+      "role": "Personaggio",
+      "before": "Una volta per partita e mentre è attivo per due round, redistribuisce la mira di un colpo multiplo tra due vitali diversi senza aggiungere impatti.",
+      "after": "Per 2 tuoi turni: Il tuo attacco colpisce fino a 2 componenti diversi.",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-242",
+      "name": "Alchimista dei Soli",
+      "rarity": "Leggendaria",
+      "role": "Personaggio",
+      "before": "Per due round, una sola corrosione realmente subita viene consumata per creare una carica di riparazione, senza annullare fratture già subite.",
+      "after": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 1
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-243",
+      "name": "Cronista dell'Eclisse",
+      "rarity": "Leggendaria",
+      "role": "Personaggio",
+      "before": "Una volta per partita recupera una carta Strategia non esclusiva dagli scarti e la rimette in cima al mazzo, rivelandola.",
+      "after": "Per 2 tuoi turni: Rimette in cima al mazzo l’ultima carta scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "any"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-244",
+      "name": "Giardino delle Comete",
+      "rarity": "Leggendaria",
+      "role": "Tattica",
+      "before": "Per due round le carte Supporto che riparano scudiere possono spostare 1 resistenza tra scudiere vive, senza superare i massimi.",
+      "after": "Ripara 2 punti alla tua scudiera più danneggiata.",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-245",
+      "name": "Trono di Antimateria",
+      "rarity": "Leggendaria",
+      "role": "Terreno",
+      "before": "La prima intercettazione di attacco multiplo infligge +1 resistenza alla scudiera, senza trapassare il colpo.",
+      "after": "Ogni attacco colpisce un componente in più, fino a 4. Vale per entrambi i giocatori per 3 round.",
+      "effectSpec": {
+        "type": "terrain",
+        "code": "T10"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-246",
+      "name": "Orizzonte di Eventi",
+      "rarity": "Leggendaria",
+      "role": "Tattica",
+      "before": "Per due round una preparazione di combo può essere ritardata di un turno, ma ogni carta di preparazione impiega un turno in più, per entrambi.",
+      "after": "Il prossimo attacco avversario ha 2 potenza in meno.",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-247",
+      "name": "Cattedrale delle Rotte",
+      "rarity": "Leggendaria",
+      "role": "Strategia",
+      "before": "Una volta per partita prolunga di un round una sola carta generale preparata senza crearne copie aggiuntive.",
+      "after": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-248",
+      "name": "Biblioteca delle Nebulose",
+      "rarity": "Leggendaria",
+      "role": "Strategia",
+      "before": "Una volta per duello, osserva cinque carte generali, scegline una da mettere in cima e rimetti le altre nell'ordine originale.",
+      "after": "Rimette in cima al mazzo l’ultima carta scartata.",
+      "effectSpec": {
+        "type": "recover",
+        "role": "any"
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-249",
+      "name": "Paradosso delle Orbite",
+      "rarity": "Leggendaria",
+      "role": "Strategia",
+      "before": "Una volta per partita scambia il bersaglio di una tua marca di precisione con quello di una tua parata, se entrambi i vitali esistono.",
+      "after": "Il tuo attacco ignora 2 protezioni sui componenti.",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    },
+    {
+      "id": "gen-250",
+      "name": "Mappa della Convergenza",
+      "rarity": "Leggendaria",
+      "role": "Strategia",
+      "before": "Una volta per partita, quando due preparazioni alleate di famiglie diverse sono attive, proteggine una da una singola contromisura e consuma l'altra.",
+      "after": "Blocca 2 colpi contro il componente scelto. Dura 2 turni avversari.",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 2
+      },
+      "previousStatus": "proposta_da_bilanciare_non_implementata",
+      "previousCounterplay": "Neutralizzare o sostituire il terreno; fermare il personaggio; far scadere la preparazione."
+    }
+  ],
+  "validation": {
+    "cards": 250,
+    "effectSpecsValid": 250,
+    "maximumEffectCharacters": 126,
+    "meanBeforeCharacters": 123.8,
+    "meanAfterCharacters": 62.2,
+    "distinctEffects": 68,
+    "countsByEffect": {
+      "pierce": 32,
+      "power": 24,
+      "multishot": 10,
+      "charge": 18,
+      "counter": 10,
+      "weaken": 31,
+      "regenerate": 11,
+      "cleanse": 11,
+      "protect": 33,
+      "dodge": 10,
+      "exchange": 13,
+      "disarm": 11,
+      "recover": 9,
+      "repair": 17,
+      "terrain": 10
+    }
+  }
+}

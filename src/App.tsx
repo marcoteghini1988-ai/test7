@@ -30,6 +30,7 @@ import { PHASE16A_CAMPAIGN_PLANETS, PHASE16A_RIFTS, PHASE16A_EPIC_IDS, PHASE16A_
 import { getPhase16EDeckTraits } from './newCombat/phase16EDecks.js';
 import {getPhase16HSectorChallenge,getPhase16HBountyProgress} from './newCombat/phase16HProgression.js';
 import MathDuelBattle from './MathDuelBattle.jsx';
+import {SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {applyVerifiedBossRelic,verifiedBossRelicReward} from './campaignBossRelics.js';
 import {readShipCollection,updateShipCollection,upgradeShipCard} from './shipCollection.js';
 import {validateShipUpgradePurchase} from './shipUpgrades.js';
@@ -319,186 +320,125 @@ const EPIC_ITEM_UPGRADE_COSTS = {
 // ============================================================================
 const RULES_DATABASE = Object.freeze([
   {
-    id: 'rule_1',
-    num: '01',
-    title: 'Calcolo & Minimo 2 Carte',
-    tag: 'FONDAMENTA',
-    color: '#00f2fe',
-    summary: 'Per eseguire un attacco servono obbligatoriamente da 2 a 4 carte. Formule a carta singola sono bloccate.',
+    id: 'rule_1', num: '01', title: 'Il tuo turno', tag: 'TURNO E CARTE', color: '#00f2fe',
+    summary: 'Hai 30 secondi per scegliere le carte e il bersaglio.',
     details: [
-      'Seleziona un bersaglio numerico attivo sulla plancia centrale tra quelli proposti.',
-      'Scegli da 2 a 4 carte dalla tua mano la cui combinazione con l\'operatore richiesto raggiunge esattamente il valore target.',
-      'Danni Base Fissi Simmetrici (Giocatore e Nemico): [+] 10 HP | [-] 12 HP | [*] 16 HP | [/] 20 HP.',
-      'Toggle Aiuti di Calcolo: se impostato su OFF, radar e plancia nascondono ogni calcolo automatico o suggerimento (A + B = ?).'
+      'Puoi giocare fino a 3 carte per turno e poi confermare l’attacco.',
+      'Nello stesso turno puoi giocare al massimo 2 Difese, 1 Personaggio e 1 Terreno.',
+      'Puoi confermare anche senza carte. Allo scadere del tempo si risolve il turno.',
+      SIMPLE_RULES[3]
     ]
   },
   {
-    id: 'rule_2',
-    num: '02',
-    title: 'I 4 Semi & Sinergie con Carta Dorata',
-    tag: 'EFFETTI SEMI',
-    color: '#f43f5e',
-    summary: 'Ogni seme attiva un effetto immediato. La Carta Dorata raddoppia e potenzia la risonanza del proprio seme.',
+    id: 'rule_2', num: '02', title: 'Mazzo e mano', tag: 'PREPARAZIONE', color: '#38bdf8',
+    summary: 'Il mazzo base contiene 40 carte generali o Boss già ottenute. La mano contiene 7 carte.',
     details: [
-      'â™¥ Cuori (Cura HP): +8% HP Massimi (+12% con Mazzo Toro). Carta Dorata: +16% HP Massimi (+24% Toro).',
-      'â™¦ Quadri (Polvere): +2 Polvere Stellare 🌟. Carta Dorata: +20 Polvere Stellare 🌟 e 10% probabilitÃ  +1 Diamante 💎.',
-      'â™£ Fiori (Tempo Extra): +5s nel Serbatoio (Cap +30s). Carta Dorata: +15s nel Serbatoio e +1 Etere Cosmico 🔮.',
-      'â™  Picche (Danno Extra): +3 HP danno aggiuntivo. Carta Dorata: +8 HP Danno Puro Extra (ignora difese).',
-      'Combo 4 Semi: combinare Cuori, Quadri, Fiori e Picche in una formula attiva Critico x2.0 (+30🌟, +1💎, +10% HP). Con Carta Dorata sale a Critico x3.0 (+50🌟, +2💎).'
-    ]
-  },
-    {
-    id: 'rule_3',
-    num: '03',
-    title: 'Modalità Tris Stellare a 5 Carte',
-    tag: 'FORMULA AD INCASTRO',
-    color: '#a855f7',
-    summary: 'Risolvi la formula (Tavolo [Op1] C2) + C3 + C4 + C5 = Target (o PARI/DISPARI) liberando la Doppia Esplosione.',
-    details: [
-      'Formula a 5 Carte: 1 carta fissa al tavolo + 4 carte scelte liberamente dalla tua mano.',
-      'Struttura del Calcolo: il primo blocco usa l\'operatore libero scelto (+, -, *, /), le restanti carte vengono obbligatoriamente sommate.',
-      'Bersagli Multipli: Bersaglio 1 (Numero esatto), Bersaglio 2 (Filtro PARI o DISPARI), Bersaglio 3 (Nucleo Bomba a 3 turni).',
-      'Doppia Esplosione: a t=0ms impatto dell\'operatore math ([+] 10, [-] 12, [*] 16, [/] 20 HP); a t=350ms detonazione della combinazione Poker.',
-      'Valori Poker a 5 Carte: Carta Alta 8 HP, Coppia 10 HP, Doppia Coppia 12 HP, Tris 14 HP, Scala 16 HP, Colore 17 HP, Full 18 HP, Poker 19 HP, Scala Reale 20 HP.',
-      'Fase di Scarica Finale: dopo l\'attacco, tocca 1 delle 3 carte rimaste in mano per sacrificare il suo seme e attivare i poteri di risonanza.'
-    ]
-  },
-
-  {
-    id: 'rule_4',
-    num: '04',
-    title: 'Modulo Abilità Ibrido (3 Colpi a Segno)',
-    tag: 'SLOT UNICO IBRIDO',
-    color: '#10b981',
-    summary: '1 solo slot attivo in plancia. Ogni colpo a segno ricarica 1 tacca su 3: a 3 colpi premi ATTIVA per rilasciare tutti i poteri sbloccati.',
-    details: [
-      'Slot Unico Ibrido: sbloccato ed equipaggiato in plancia al Settore 9 dell\'Avventura (Terra).',
-      'Ricarica a 3 Colpi: ogni attacco andato a segno carica 1/3 del Modulo (100% in 3 turni).',
-      'Attivazione Simultanea: al 100% il pulsante pulsa ed eroga insieme tutti gli effetti sbloccati (Fascia 1, 2 e 3).',
-      'Faccia Nera Dadi: estrarre la Faccia Nera carica istantaneamente il modulo al 100%.'
-    ]
-  },
-    {
-    id: 'rule_5',
-    num: '05',
-    title: 'Barra Malus (Sabotaggio Rapido a 20 Pt)',
-    tag: 'SISTEMA TATTICO',
-    color: '#fb923c',
-    summary: 'Premia la velocità di calcolo: ogni colpo a segno converte il tempo residuo in carica (da 1 a 10 punti) per sabotare il nemico.',
-    details: [
-      'Carica a Tempo: ogni colpo assegna da 1 a 10 punti (massimo 10pt per risposte rapide entro 8s, minimo 1pt al limite).',
-      'Soglia 20 Punti: raggiunti i 20 punti la barra esplode sabotando l\'avversario con carry-over dei punti eccedenti.',
-      'Passa Turno / Timeout: non assegnano alcun punto alla barra (si carica solo colpendo a segno).',
-      'I 4 Sabotaggi: Perdita 10 HP diretti, Blocco Modulo nemico per 2 turni, Mano ridotta a 5 carte o Salto Turno.'
-    ]
-  },
-
-
-
-  {
-    id: 'rule_6',
-    num: '06',
-    title: 'Dadi Quantici Digitali 2D',
-    tag: 'REQUISITO ALGEBRICO',
-    color: '#c084fc',
-    summary: 'Risolvi calcoli con tutti e 4 gli operatori (+, -, *, /) per caricare e lanciare i Dadi.',
-    details: [
-      'Ogni operatore completato accende una tacca sui dadi.',
-      'Completati tutti e 4 gli operatori, puoi lanciare il dado ed estrarre moltiplicatori ed effetti speciali (Faccia Nera = Carica AbilitÃ  100%, Faccia Rossa = Scarica Malus).',
-      'Facce Semi: erogano massicci bonus di HP percentuali, Polvere Stellare, Tempo o Danno Diretto.'
+      'Le carte esclusive sbloccate della tua nave si aggiungono automaticamente al mazzo base.',
+      'Per ogni carta generale puoi usare fino a 5 copie Comuni, 4 Rare, 3 Epiche o 2 Leggendarie.',
+      'Ogni Boss sconfitto sblocca la sua carta Personaggio: puoi inserire una copia nel mazzo base.',
+      'A fine turno le carte giocate vengono sostituite per riportare la mano a 7.',
+      'Il testo di una carta indica cosa fa, chi colpisce o protegge e quanto dura.'
     ]
   },
   {
-    id: 'rule_7',
-    num: '07',
-    title: 'ModalitÃ  Vettore Geometrico',
-    tag: 'RADAR BALISTICO',
-    color: '#06b6d4',
-    summary: 'Manovra il radar coordinando gli impulsi cardinali verso il valore target (10-55).',
+    id: 'rule_3', num: '03', title: 'Bersagli e potenza', tag: 'ATTACCO', color: '#f43f5e',
+    summary: 'Scegli un componente nemico come bersaglio dell’attacco.',
     details: [
-      'Destra: impulso di Addizione [+].',
-      'Alto: impulso di Sottrazione [-].',
-      'Sinistra: impulso di Moltiplicazione [*].',
-      'Basso: impulso di Divisione [/].',
-      'Scala Danni in base alle carte usate: 2 Carte = 20 HP, 3 Carte = 15 HP, 4 Carte = 10 HP, 5+ = 5 HP.'
-    ]
-  },
-    {
-    id: 'rule_8',
-    num: '08',
-    title: 'Duello di Convergenza',
-    tag: 'BANCO COMUNE 2+2',
-    color: '#eab308',
-    summary: 'Sfida su Banco Comune: centra il Target condiviso in 2 turni concatenati (2+2 carte) e domina con la figura Poker.',
-    details: [
-      'Banco Comune: 1 Carta Base, 1 Numero Target condiviso e 1 Nucleo Bomba a 3 turni.',
-      'Turno 1 (Apertura): gioca 2 carte dalla mano per concatenare (Base [Op1] C1) [Op2] C2 e fissare il tuo Parziale T1.',
-      'Turno 2 (Chiusura): mano ripristinata a 7 carte; gioca altre 2 carte su (Parziale T1 [Op3] C3) [Op4] C4 per chiudere la traiettoria.',
-      'Verdetto & Danni: vince chi ha il Delta (distanza) minore dal Target; in parità di Delta spareggia il rango Poker delle 5 carte (Base + 4 giocate). Danni: 8-20 HP da figura Poker (+3 HP perforanti se Bullseye Delta 0).'
-    ]
-  },
-
-  {
-    id: 'rule_9',
-    num: '09',
-    title: 'Boss Multi-Fase & Reset Mazzo a 54 Carte',
-    tag: 'CAMPAGNA 120 SETTORI',
-    color: '#ec4899',
-    summary: 'I Boss scalano da 1 a 4 fasi sequenziali con cambio dinamico di plancia e ricarica integrale mazzo.',
-    details: [
-      'Pianeti 1-10: 1 Fase (Boss Gaia Terra 75 HP, Boss Marte 100 HP con Anello di Möbius).',
-      'Pianeti 11-13: 2 Fasi (Boss Europa P11 260 HP -> Classica 130 HP + Vettore 130 HP).',
-      'Pianeti 14-16: 2 Fasi (Boss Proxima b P14 320 HP -> Vettore 160 HP + Convergenza 160 HP).',
-      'Pianeti 17-19: 3 Fasi (Boss Haumea P17 420 HP -> Classica 140 HP + Vettore 140 HP + Convergenza 140 HP).',
-      'Boss Finale Encelado (P20): quattro fasi e abilità boss proprie. Nessun Oggetto Epico equipaggiato dall\'IA.',
-      'Reset Mazzo a 54 Carte: ad ogni passaggio di fase, mazzo e scarti di entrambi i contendenti vengono resettati, ricaricati e rimescolati a 54 carte con pesca di una nuova mano.'
+      SIMPLE_RULES[1],
+      'Un attacco multiplo colpisce componenti diversi, senza ripetere lo stesso bersaglio.',
+      'Per una carta di protezione o riparazione mirata, scegli anche il tuo componente da aiutare.',
+      'Un componente distrutto perde la propria funzione.'
     ]
   },
   {
-    id: 'rule_10',
-    num: '10',
-    title: 'PvP a Doppio Canale (Addestramento & Élite)',
-    tag: 'DUELLI ONLINE',
-    color: '#3b82f6',
-    summary: 'Circuito separato per farming senza rischio e competizione simulata offline a 10 partite giornaliere.',
+    id: 'rule_4', num: '04', title: 'Le scudiere', tag: 'SCORTA', color: '#818cf8',
+    summary: 'Le scudiere collegate proteggono o aiutano la nave madre.',
     details: [
-      'Canale A - Addestramento & Farming (Sblocco Settore 11 Avventura): Costa 5 Crediti ⚡, nessun impatto sui Trofei, ideale per farming XP e Polvere.',
-      'Canale B - Lega Élite Simulata (Sblocco Settore 81 Avventura / Post-Nettuno): 10 Partite Giornaliere a costo 0 Crediti visualizzate sul pulsante "Gioca (10/10)", +25 Trofei per vittoria / -10 per sconfitta.',
-      'Rotazione Giornaliera Élite: Lun/Gio Classica, Mar/Ven Vettore, Mer/Sab Convergenza, Domenica Tris Stellare.',
-      'Podio simulato: nessun premio mondiale reale; restano le ricompense locali dei duelli.'
-    ]
-  },
-
-  {
-    id: 'rule_11',
-    num: '11',
-    title: 'Cripta delle SingolaritÃ  & 10 Oggetti Epici',
-    tag: 'MANUFATTI DIMENSIONALI',
-    color: '#6366f1',
-    summary: 'Collassa i 10 Varchi Gravitazionali fondendo le 20 Reliquie Boss per forgiare Manufatti Epici.',
-    details: [
-      'Equipaggia fino a 2 Oggetti Epici in plancia (1Â° Slot sbloccato a Liv. 20, 2Â° Slot a Liv. 60).',
-      'Costo 0, utilizzabili 1 volta per scontro, max 1 per turno.',
-      'Include: Anello di MÃ¶bius, Forcella Neutonica, Astrolabio, Stele d\'Ombra, Pistone Gravimetrico, Pendolo Entropico, Monolite Dielettrico, Calice a Vortice, Matrice Poliedrica, Nucleo SingolaritÃ .',
-      'Migliorabili fino al Livello 3 usando Cristalli di Vuoto ðŸ’  e Materia Primordiale 🟣 immagazzinati nel Silo.'
+      'La scheda di ogni scudiera indica la sua capacità e i componenti necessari al collegamento.',
+      'Una scudiera che intercetta riceve l’attacco al posto della nave madre.',
+      'Il danno in eccesso di quell’attacco non passa alla nave madre.',
+      'Una scudiera distrutta o scollegata non può usare la propria capacità.'
     ]
   },
   {
-    id: 'rule_12',
-    num: '12',
-    title: 'Curva Vitale Universale & I 3 Scaglioni Pilota',
-    tag: 'PROGRESSIONE GLOBALE',
-    color: '#14b8a6',
-    summary: 'HP pilota unificati (50â€“400 HP), sblocco slot unico al Settore 9 e progressione rigida su 3 fasce di livello.',
+    id: 'rule_5', num: '05', title: 'Protezioni e schivate', tag: 'DIFESA', color: '#22d3ee',
+    summary: 'Proteggi il bersaglio indicato per il numero di colpi e turni scritto sulla carta.',
     details: [
-      'Formula HP Universale: HP = min(400, 50 + floor(Livello / 5) * 17.5).',
-      '1 Solo Slot Modulo AbilitÃ : sbloccato al Settore 9 dell\'Avventura (nessun alloggiamento aggiuntivo a Liv. 30 o 61).',
-      'Fascia 1 (Liv. 1â€“30): Max Liv. 3 per Mazzi e Moduli AbilitÃ ; Liv. 1 per Carte Terreno.',
-      'Fascia 2 (Liv. 31â€“65): Max Liv. 6 per Mazzi e Moduli AbilitÃ  (2Âª abilitÃ  attiva/passiva); Liv. 2 per Carte Terreno (con riarmo tramite Etere).',
-      'Fascia 3 (Liv. 66â€“100): Max Liv. 9 per Mazzi e Moduli AbilitÃ  (3Âª abilitÃ  / Apoteosi); Liv. 3 per Carte Terreno.',
-      'Slot Epici: 1Â° Slot a Liv. 20, 2Â° Slot a Liv. 60.',
-         'Cap Portafoglio Polvere : 1.500 (Liv. 1-14) -> 2.500 (Liv. 15-30) -> 5.000 (Liv. 31-49) -> 7.500 (Liv. 50-65) -> 12.500 (Liv. 66-84) -> 20.000 (Liv. 85+).'
-
+      SIMPLE_RULES[2],
+      'Una protezione scade alla fine della durata indicata anche se non è stata usata.',
+      'Le schivate richiedono Motori funzionanti.',
+      'Ignorare una protezione sui componenti non impedisce alle scudiere di intercettare.'
+    ]
+  },
+  {
+    id: 'rule_6', num: '06', title: 'Riparazioni e reazioni', tag: 'SUPPORTO', color: '#34d399',
+    summary: 'Le riparazioni recuperano punti. Le reazioni si attivano quando accade l’evento indicato.',
+    details: [
+      SIMPLE_RULES[4],
+      SIMPLE_RULES[0],
+      SIMPLE_RULES[7],
+      'La rigenerazione ripara dopo il primo colpo riuscito o il primo danno subito nel turno, come indicato sulla carta.',
+      'Il contrattacco reagisce al primo danno subito e colpisce le Armi avversarie.'
+    ]
+  },
+  {
+    id: 'rule_7', num: '07', title: 'Disturbi e blocchi', tag: 'CONTROLLO', color: '#c084fc',
+    summary: 'Un disturbo riduce la potenza. Un blocco impedisce il prossimo attacco.',
+    details: [
+      'La carta indica quanta potenza perde il prossimo attacco avversario.',
+      'Non puoi bloccare gli attacchi nemici per due turni avversari consecutivi.',
+      'Le carte che rimuovono disturbi e blocchi liberano le tue Armi e scudiere.',
+      'Un bonus preparato per il turno successivo vale soltanto in quel turno.'
+    ]
+  },
+  {
+    id: 'rule_8', num: '08', title: 'I personaggi', tag: 'EQUIPAGGIO', color: '#fbbf24',
+    summary: 'Ogni personaggio ripete un solo effetto per due tuoi turni.',
+    details: [
+      SIMPLE_RULES[5],
+      'Puoi avere un solo personaggio attivo. Aspetta che lasci il campo prima di giocarne un altro.',
+      'La descrizione mostra l’effetto e la sua durata.'
+    ]
+  },
+  {
+    id: 'rule_9', num: '09', title: 'I terreni', tag: 'CAMPO DI BATTAGLIA', color: '#fb923c',
+    summary: 'Una carta Terreno modifica una regola per entrambi i giocatori per 3 round.',
+    details: [
+      SIMPLE_RULES[6],
+      'Un round comprende un turno per giocatore.',
+      'Un nuovo terreno sostituisce quello precedente. Contro un boss, al termine torna il suo terreno.',
+      'Il terreno attivo mostra la regola in vigore: può cambiare potenza, protezioni o riparazioni.',
+      'Controlla il terreno prima di scegliere le carte.'
+    ]
+  },
+  {
+    id: 'rule_10', num: '10', title: 'Esclusive e miglioramenti', tag: 'CARTE DELLA NAVE', color: '#facc15',
+    summary: 'Ogni nave sblocca le proprie esclusive salendo di livello.',
+    details: [
+      'La scheda indica livello, componenti e scudiere necessari per usare la carta.',
+      'Le carte Combo e Fusione applicano direttamente il proprio effetto: non richiedono una sequenza di altre carte.',
+      'Prima di migliorare un’esclusiva, confronta il testo attuale con quello del grado successivo.',
+      'Un miglioramento aumenta la quantità indicata, senza aggiungere effetti nascosti. Il massimo è il grado 3.'
+    ]
+  },
+  {
+    id: 'rule_11', num: '11', title: 'Cripta e manufatti', tag: 'COLLEZIONE', color: '#6366f1',
+    summary: 'Raccogli le reliquie dei 12 boss per aprire i 6 Varchi Gravitazionali.',
+    details: [
+      'Ogni varco richiede le due reliquie indicate nella sua scheda.',
+      'Aprendo un varco ottieni un manufatto da conservare nella collezione della Cripta.',
+      'Il primo varco sblocca il serbatoio dei minerali rari.',
+      'Il serbatoio mostra capienza, costo e requisiti del suo prossimo miglioramento.'
+    ]
+  },
+  {
+    id: 'rule_12', num: '12', title: 'Campagna e vittoria', tag: 'OBIETTIVO', color: '#14b8a6',
+    summary: 'Vinci distruggendo tutti i componenti della nave madre avversaria.',
+    details: [
+      'Nella campagna affronti flotte e boss con le capacità mostrate in battaglia.',
+      'I duelli di addestramento e di lega sono contro avversari controllati dall’IA.',
+      'Se entrambe le navi perdono le Armi, la battaglia termina in pareggio.',
+      'La battaglia termina in pareggio anche dopo 50 round senza un vincitore.'
     ]
   }
 ]);
@@ -521,7 +461,7 @@ const LANGUAGES = Object.freeze({
     leaderboard: "Classifica Simulata",
     decks: "Collezione Mazzi",
     abilitiesMenu: "Modulo AbilitÃ  Ibrido",
-    epicItemsMenu: "Varchi & Epici",
+    epicItemsMenu: "Varchi e Manufatti",
     environments: "Sfondi e Pianeti",
     back: "Indietro",
     playSelected: "Attacca",
@@ -2086,7 +2026,9 @@ const PLANET_BOSS_RELICS = Object.freeze({
 // ============================================================================
 // 1.20 REGISTRO DEI 10 VARCHI GRAVITAZIONALI
 // ============================================================================
-const GRAVITATIONAL_RIFTS = PHASE16A_RIFTS;
+const GRAVITATIONAL_RIFTS = Object.freeze(PHASE16A_RIFTS.map(rift => Object.freeze({
+  ...rift, desc:'Varco stabilizzato. Il suo manufatto è nella collezione della Cripta.'
+})));
 
 // ============================================================================
 // 1.21 DATABASE DEI 10 MANUFATTI EPICI DIMENSIONALI
@@ -2248,20 +2190,20 @@ const LEGACY_EPIC_ITEMS_DATABASE = Object.freeze([
 // FASE 16C — catalogo attivo della Cripta. I 10 record legacy restano disponibili
 // per la migrazione dei salvataggi, ma solo questi 6 sono oggetti dei nuovi varchi.
 const EPIC_16C_DESCRIPTIONS = Object.freeze({
-  epic_item_1: ['Anello Bifasico di Möbius','Sotto il 30% HP: analizza mano e mazzo e prepara la migliore figura utilizzabile nelle prossime 10 pescate (una volta per battaglia).'],
-  epic_item_6: ['Pendolo d’Entropia','Dopo danni subiti: per 10 secondi rivela le prossime sei carte e rende gratuiti i due cambi nella preparazione successiva.'],
-  epic_item_7: ['Monolite Dielettrico','Le tre armi equipaggiate non vanno mai in surriscaldamento. Munizioni e combinazioni rimangono necessarie.'],
-  epic_item_8: ['Calice di Drenaggio','Converte danni inflitti e ricevuti in Polvere Stellare aggiuntiva, accreditata a fine battaglia.'],
-  epic_item_9: ['Matrice di Probabilità','Sotto il 30% HP: puoi sparare una sola volta con un’arma Pesante usando Coppia o Tris.'],
-  epic_item_3: ['Astrolabio a Coordinate Libere','Quando il Dado Quantico è pronto, mostra due risultati casuali: il giocatore ne sceglie uno.'],
+  epic_item_1: 'Anello Bifasico di Möbius',
+  epic_item_6: 'Pendolo d’Entropia',
+  epic_item_7: 'Monolite Dielettrico',
+  epic_item_8: 'Calice di Drenaggio',
+  epic_item_9: 'Matrice di Probabilità',
+  epic_item_3: 'Astrolabio a Coordinate Libere',
 });
 const EPIC_ITEMS_DATABASE = Object.freeze(PHASE16A_EPIC_IDS.map((id,index)=>{
   const original=LEGACY_EPIC_ITEMS_DATABASE.find(item=>item.id===id);
-  const [name,desc]=EPIC_16C_DESCRIPTIONS[id];
-  const levels=Object.fromEntries([1,2,3].map(level=>[level,{
-    ...original.levels[level],label:`Livello ${level} · ${desc}`
-  }]));
-  return Object.freeze({...original,riftNumber:index+1,name,desc,levels});
+  return Object.freeze({
+    id, name:EPIC_16C_DESCRIPTIONS[id], color:original.color, codeName:original.codeName,
+    riftNumber:index+1, collectible:true,
+    desc:`Manufatto da collezione ottenuto aprendo il Varco ${index+1}.`
+  });
 }));
 
 
@@ -3552,8 +3494,8 @@ function RiftCollapseModal({ rift, relic1, relic2, epicItem, onComplete }) {
 
                         <div style={{ background: 'rgba(15, 23, 42, 0.85)', border: '1.5px solid #00f2fe', borderRadius: '8px', padding: '0.65rem 0.85rem', margin: '0 0 1.1rem 0', textAlign: 'left' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.62rem', fontWeight: 900, color: '#facc15', marginBottom: '4px' }}>
-                <span>⚡ COSTO: 0 RISORSE</span>
-                <span>⏱️ USO: 1 VOLTA A MATCH</span>
+                <span>RICOMPENSA DEL VARCO</span>
+                <span>MANUFATTO DA COLLEZIONE</span>
               </div>
               <p style={{ fontSize: '0.74rem', color: '#ffffff', lineHeight: '1.35', margin: 0, fontWeight: 700 }}>
                 {epicItem.desc}
@@ -3561,7 +3503,7 @@ function RiftCollapseModal({ rift, relic1, relic2, epicItem, onComplete }) {
             </div>
 
             <button onClick={onComplete} className="cyber-btn cyber-btn-primary" style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', fontWeight: '900' }}>
-              Equipaggia in Plancia ➔
+              Raccogli il manufatto ➔
             </button>
 
 
@@ -3590,52 +3532,25 @@ function CampaignLevelBriefingModal({
   diamonds = 0,
   onBuyScannerRefill
 }) {
-  const specialChallenge = typeof getSectorSpecialChallenge === 'function' 
-    ? getSectorSpecialChallenge(planetNum, levelNum) 
-    : { name: 'Sfida Tattica', desc: 'Obiettivo speciale del settore' };
-
   const isBoss = levelNum === 10;
 
   const enemyPilot = typeof getSectorEncounterPilot === 'function'
     ? getSectorEncounterPilot(planetNum, levelNum)
     : null;
   const enemyPilotId = enemyPilot?.id || (isBoss ? `pilot_boss_${planetNum}` : 'pilot_com_1');
-  const dominance = typeof evaluatePilotDominance === 'function'
-    ? evaluatePilotDominance(playerPilotId, enemyPilotId)
-    : null;
   const playerPilotObj = typeof getPilotById === 'function' ? getPilotById(playerPilotId) : null;
   const enemyPilotObj = enemyPilot || (typeof getPilotById === 'function' ? getPilotById(enemyPilotId) : null);
 
   const planetName = realPlanetNames?.[planetNum - 1] || `Pianeta ${planetNum}`;
   const zoneName = (PLANET_ZONE_NAMES?.[planetNum - 1] || [])[levelNum - 1] || `Settore ${levelNum}`;
-  const modeOfSector = getSectorGameType(planetNum, levelNum);
   const cost = (levelNum <= 5 ? 5 : (levelNum <= 9 ? 10 : 15));
-  const modifier = getPlanetLevelModifier(planetNum, levelNum);
   const reward = getLevelReward(planetNum, levelNum, isReplay);
   const relic = isBoss ? PLANET_BOSS_RELICS[planetNum] : null;
 
-  let estimatedEnemyHp = 35;
-  if (isBoss) {
-    if (planetNum === 1) estimatedEnemyHp = 75;
-    else if (planetNum === 2) estimatedEnemyHp = 100;
-    else if (planetNum === 11) estimatedEnemyHp = 260;
-    else if (planetNum === 14) estimatedEnemyHp = 320;
-    else if (planetNum === 17) estimatedEnemyHp = 420;
-    else if (planetNum === 20) estimatedEnemyHp = 800;
-    else estimatedEnemyHp = Math.floor(75 + planetNum * 15);
-  } else {
-    estimatedEnemyHp = Math.floor(35 + (planetNum - 1) * 12 + levelNum * 2.5);
-  }
+  const bossRift = isBoss ? GRAVITATIONAL_RIFTS.find(rift => rift.bossPlanets.includes(planetNum)) : null;
+  const nextPlanetId = isBoss ? getNextCampaignPlanet(planetNum) : null;
+  const nextPlanetName = PHASE16A_CAMPAIGN_PLANETS.find(planet => planet.id === nextPlanetId)?.name;
 
-    const modeLabels = {
-    classic: { name: 'Classica (4 Operazioni)', color: '#00f2fe' },
-    vector: { name: 'Vettore Geometrico', color: '#38bdf8' },
-    double_stage: { name: 'Convergenza (Banco 2+2)', color: '#f59e0b' },
-    tris: { name: 'Tris Stellare', color: '#a855f7' }
-  };
-
-
-  const currentModeInfo = modeLabels[modeOfSector] || modeLabels.classic;
   const canAfford = credits >= cost;
 
   return (
@@ -3708,32 +3623,14 @@ function CampaignLevelBriefingModal({
         {/* Pilota Giocatore */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
           <div style={{ filter: 'drop-shadow(0 0 16px rgba(0, 242, 254, 0.6))' }}>
-            <PilotCard pilot={playerPilotId} compact={true} isEquipped={true} />
+            <PilotCard pilot={playerPilotId} compact={true} isEquipped={false} />
           </div>
           <span style={{ fontSize: '0.68rem', fontWeight: 900, color: '#00f2fe' }}>
             {playerPilotObj?.name || 'Tuo Pilota'}
           </span>
         </div>
 
-        {/* Separatore VS con Verdetto Dominanza */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-          <span style={{
-            fontSize: '1.1rem',
-            fontWeight: 900,
-            color: dominance?.status === 'PLAYER_DOMINANT' ? '#34d399' : (dominance?.status === 'ENEMY_DOMINANT' ? '#f87171' : '#facc15'),
-            textShadow: '0 0 10px currentColor'
-          }}>
-            VS
-          </span>
-          <span style={{
-            fontSize: '0.52rem',
-            fontWeight: 900,
-            color: dominance?.status === 'PLAYER_DOMINANT' ? '#34d399' : (dominance?.status === 'ENEMY_DOMINANT' ? '#fca5a5' : '#fde047'),
-            letterSpacing: '0.5px'
-          }}>
-            {dominance?.status === 'PLAYER_DOMINANT' ? '+15% DANNO' : (dominance?.status === 'ENEMY_DOMINANT' ? '-15% DANNO' : '1.0x PARI')}
-          </span>
-        </div>
+        <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#facc15', textShadow: '0 0 10px currentColor' }}>VS</span>
 
         {/* Pilota Nemico */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
@@ -3756,22 +3653,15 @@ function CampaignLevelBriefingModal({
         zIndex: 10,
         margin: 'auto 0'
       }}>
-        <div style={{ fontSize: 'clamp(0.72rem, 1.8vmin, 0.88rem)', fontWeight: 900, color: currentModeInfo.color }}>
-          {currentModeInfo.name} • Nemico: <span style={{ color: '#ef4444' }}>{estimatedEnemyHp} HP</span>
+        <div style={{ fontSize: 'clamp(0.72rem, 1.8vmin, 0.88rem)', fontWeight: 900, color: '#00f2fe' }}>
+          Battaglia di flotte · Distruggi tutti i componenti della nave avversaria.
         </div>
-
-        {modifier && modifier.id !== 'standard' && (
-          <div style={{ fontSize: '0.65rem', color: '#c084fc', fontWeight: 700 }}>
-            Anomalia: {modifier.name} ({modifier.desc})
-          </div>
-        )}
-
-        <div style={{ fontSize: '0.62rem', color: '#94a3b8', marginTop: '2px' }}>
-          Sfida 3ª Stella: <strong style={{ color: '#fde047' }}>{specialChallenge.name}</strong> ({specialChallenge.desc})
+        <div style={{ fontSize: '0.65rem', color: '#94a3b8', marginTop: '2px' }}>
+          2ª stella: vinci con almeno il 65% dei punti della flotta. 3ª stella: almeno il 90%.
         </div>
       </div>
 
-      {/* SBLOCCHI DEL BOSS (SE LIVELLO 10: RELIQUIA + PILOTA + PIANETA SUCCESSIVO) */}
+      {/* SBLOCCHI DEL BOSS (SE LIVELLO 10: RELIQUIA + CARTA BOSS + PIANETA SUCCESSIVO) */}
       {isBoss && (
         <div style={{
           display: 'flex',
@@ -3798,7 +3688,7 @@ function CampaignLevelBriefingModal({
                 </div>
                 <div style={{ textAlign: 'left', lineHeight: 1.1 }}>
                   <div style={{ fontSize: '0.65rem', color: '#fde047', fontWeight: 900 }}>{relic.name}</div>
-                  <div style={{ fontSize: '0.52rem', color: '#94a3b8' }}>1/2 per il Varco I</div>
+                  <div style={{ fontSize: '0.52rem', color: '#94a3b8' }}>{bossRift ? `${bossRift.bossPlanets.indexOf(planetNum)+1}/2 per il Varco ${bossRift.roman}` : 'Reliquia del boss'}</div>
                 </div>
               </div>
             )}
@@ -3806,14 +3696,14 @@ function CampaignLevelBriefingModal({
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '1.4rem', filter: 'drop-shadow(0 0 8px #00f2fe)' }}>👤</span>
               <div style={{ textAlign: 'left', lineHeight: 1.1 }}>
-                <div style={{ fontSize: '0.65rem', color: '#00f2fe', fontWeight: 900 }}>Pilota {enemyPilotObj?.name || 'Gaia'}</div>
-                <div style={{ fontSize: '0.52rem', color: '#94a3b8' }}>Sbloccato Gratis</div>
+                <div style={{ fontSize: '0.65rem', color: '#00f2fe', fontWeight: 900 }}>Carta Boss {enemyPilotObj?.name || 'Gaia'}</div>
+                <div style={{ fontSize: '0.52rem', color: '#94a3b8' }}>Personaggio da aggiungere al mazzo</div>
               </div>
             </div>
           </div>
 
           <div style={{ fontSize: '0.58rem', color: '#38bdf8', fontWeight: 800, letterSpacing: '0.5px' }}>
-            ✦ SBLOCCHI: MARTE (P2) • SCOMMESSE DEL BANCO • DUELLI PVP ✦
+            {nextPlanetName ? `Prossimo pianeta: ${nextPlanetName}` : 'Ultimo boss della campagna'}
           </div>
         </div>
       )}
@@ -3854,12 +3744,11 @@ function CampaignLevelBriefingModal({
 
 
 // ============================================================================
-// 3.11 HUB CRIPTA DELLE SINGOLARITÃ€ (10 VARCHI, PLANCIA CON MISTERO & SERBATOIO)
+// 3.11 HUB CRIPTA: 6 VARCHI, COLLEZIONE DEI MANUFATTI E SERBATOIO
 function EpicItemsHubScreen({
   unlockedRelics = {},
   unlockedRifts = {},
   epicItemsInventory = {},
-  equippedEpicItems = [null, null],
   voidCrystals = 0,
   primordialMatter = 0,
   tankLevel = 1,
@@ -3869,8 +3758,6 @@ function EpicItemsHubScreen({
   socketingRelic = null,
   onClearSocketingRelic = () => {},
   onGoToNextPlanet = () => {},
-  onEquipItem,
-  onUpgradeItem,
   onCollapseRift,
   onUpgradeTank,
   onBack,
@@ -3878,7 +3765,6 @@ function EpicItemsHubScreen({
 }) {
   const [activeTab, setActiveTab] = useState('rifts');
   const [selectedRiftForCollapse, setSelectedRiftForCollapse] = useState(null);
-  const [selectedItemForUpgrade, setSelectedItemForUpgrade] = useState(null);
   const [socketStep, setSocketStep] = useState(1);
 
   // Cinematica Reliquia che scende nell'alloggio
@@ -4048,7 +3934,7 @@ function EpicItemsHubScreen({
 
         <div>
           <h2 style={{ color: '#facc15', margin: 0, fontWeight: '900', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.15rem', textShadow: '0 0 10px rgba(250, 204, 21, 0.6)' }}>
-            <SciFiIcon name="epic_item" size={22} color="#facc15" /> Cripta delle SingolaritÃ  &amp; Oggetti Epici
+            <SciFiIcon name="epic_item" size={22} color="#facc15" /> Cripta delle Singolarità e Manufatti
           </h2>
           <div style={{ margin: '2px 0 0 0', fontSize: '0.72rem', color: '#cbd5e1' }}>
             {hasStabilizedRift1 ? (
@@ -4074,7 +3960,7 @@ function EpicItemsHubScreen({
           className="cyber-btn"
           style={{ flex: 1, padding: '0.65rem', background: activeTab === 'inventory' ? 'linear-gradient(180deg, #0284c7 0%, #03527e 100%)' : 'rgba(15, 23, 42, 0.75)', borderColor: activeTab === 'inventory' ? '#00f2fe' : 'rgba(255,255,255,0.15)', fontWeight: 'bold', fontSize: '0.8rem' }}
         >
-          🛡️ Oggetti Equipaggiati ({equippedEpicItems.filter(Boolean).length}/2)
+          ✨ Manufatti ({EPIC_ITEMS_DATABASE.filter(item => epicItemsInventory[item.id]?.unlocked).length}/6)
         </button>
         {hasStabilizedRift1 && (
           <button
@@ -4168,182 +4054,31 @@ function EpicItemsHubScreen({
         <div>
           <div className="cyber-panel" style={{ padding: '1rem', marginBottom: '1.25rem', border: '1.5px solid #00f2fe' }}>
             <h3 style={{ color: '#00f2fe', margin: '0 0 0.5rem 0', fontSize: '0.92rem', fontWeight: '900' }}>
-              Slot Plancia di Battaglia (Max 2 Oggetti Epici)
+              I manufatti della Cripta
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
-                       {[0, 1].map(slotIdx => {
-                const isSlotLocked = (slotIdx === 0 && (level || 1) < EPIC_SLOT_1_UNLOCK_LEVEL && !hasStabilizedRift1) ||
-                                     (slotIdx === 1 && (level || 1) < EPIC_SLOT_2_UNLOCK_LEVEL);
-                const itemId = equippedEpicItems[slotIdx];
-
-                const item = EPIC_ITEMS_DATABASE.find(e => e.id === itemId);
-                const itemData = epicItemsInventory[itemId] || { level: 1 };
-
-                return (
-                  <div key={slotIdx} className="cyber-panel" style={{ padding: '0.75rem', textAlign: 'center', background: 'rgba(15, 23, 42, 0.85)', border: isSlotLocked ? '1px dashed rgba(239, 68, 68, 0.4)' : (item ? `1.5px solid ${item.color}` : '1px dashed rgba(255,255,255,0.2)'), display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100px' }}>
-                    <div>
-                      <div style={{ fontSize: '0.65rem', color: isSlotLocked ? '#f87171' : '#94a3b8', fontWeight: 'bold' }}>
-                        SLOT {slotIdx + 1} {isSlotLocked && `(Sblocco Liv. ${slotIdx === 0 ? EPIC_SLOT_1_UNLOCK_LEVEL : EPIC_SLOT_2_UNLOCK_LEVEL})`}
-                      </div>
-                      {isSlotLocked ? (
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', margin: '1.2rem 0' }}>ðŸ”’ Bloccato</div>
-                      ) : item ? (
-                        <>
-                          <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0' }}>
-                            <TacticalVisual id={item.id} type="epic_item" color={item.color} width={42} height={42} />
-                          </div>
-                          <div style={{ fontSize: '0.82rem', color: item.color, fontWeight: '900' }}>{item.name}</div>
-                          <div style={{ fontSize: '0.65rem', color: '#facc15' }}>Liv. {itemData.level} ({item.codeName})</div>
-                        </>
-                      ) : (
-                        <div style={{ fontSize: '0.78rem', color: '#64748b', margin: '1.2rem 0' }}>Slot Vuoto</div>
-                      )}
-                    </div>
-
-                    {!isSlotLocked && item && (
-                      <button
-                        onClick={() => {
-                          try { playSound('click'); } catch (_) {}
-                          const next = [...equippedEpicItems];
-                          next[slotIdx] = null;
-                          onEquipItem(next);
-                        }}
-                        className="cyber-btn"
-                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.65rem', borderColor: '#ef4444', color: '#fca5a5', marginTop: '0.4rem' }}
-                      >
-                        Rimuovi
-                      </button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <p style={{ margin: 0, fontSize: '0.75rem', color: '#cbd5e1', lineHeight: 1.4 }}>
+              Apri i sei varchi e completa la collezione delle loro ricompense.
+            </p>
           </div>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
             {EPIC_ITEMS_DATABASE.map(item => {
-              const itemData = epicItemsInventory[item.id];
-              const isUnlocked = Boolean(itemData && itemData.unlocked);
-              const curLevel = itemData?.level || 1;
-              const isEquipped = equippedEpicItems.includes(item.id);
-              const isMax = curLevel >= 3;
-              const nextUpgradeCost = EPIC_ITEM_UPGRADE_COSTS[curLevel + 1] || null;
-
-              if (!isUnlocked) {
-                return (
-                  <div
-                    key={item.id}
-                    className="cyber-panel"
-                    style={{
-                      padding: '1.25rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      textAlign: 'center',
-                      background: 'linear-gradient(145deg, rgba(8, 12, 28, 0.95), rgba(2, 4, 12, 0.98))',
-                      border: '1px dashed rgba(250, 204, 21, 0.35)',
-                      boxShadow: 'inset 0 0 20px rgba(0, 0, 0, 0.9)',
-                      minHeight: '220px'
-                    }}
-                  >
-                    <div style={{ margin: '0 auto 0.5rem auto', display: 'flex', justifyContent: 'center', filter: 'drop-shadow(0 0 10px rgba(250, 204, 21, 0.4))' }}>
-                      <SciFiIcon name="epic_item" size={40} color="#facc15" />
-                    </div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: '900', color: '#fde047', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                      OGGETTO EPICO {item.riftNumber}
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: '#f87171', fontWeight: 'bold', margin: '4px 0 8px 0' }}>
-                      [MANUFATTO SEGRETO]
-                    </div>
-                    <p style={{ fontSize: '0.72rem', color: '#94a3b8', lineHeight: '1.4', margin: 0 }}>
-                      Apri il <strong>Varco {item.riftNumber}</strong> nella Cripta per svelare e ottenere questo artefatto speciale.
-                    </p>
-                  </div>
-                );
-              }
-
+              const isUnlocked = Boolean(epicItemsInventory[item.id]?.unlocked);
               return (
-                <div
-                  key={item.id}
-                  className="cyber-panel"
-                  style={{
-                    padding: '1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    border: isEquipped ? '2px solid #00f2fe' : `1.5px solid ${item.color}`,
-                    boxShadow: isEquipped ? '0 0 20px rgba(0, 242, 254, 0.5)' : 'none'
-                  }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                      <span style={{ fontSize: '0.65rem', background: curLevel === 3 ? '#d97706' : '#0284c7', padding: '2px 6px', borderRadius: '4px', color: '#fff', fontWeight: 'bold' }}>
-                        {curLevel === 3 ? 'LIV. 3 (MAX)' : `LIV. ${curLevel}/3`}
-                      </span>
-                    </div>
-
-                    <div style={{ display: 'flex', justifyContent: 'center', margin: '0.4rem 0' }}>
-                      <TacticalVisual id={item.id} type="epic_item" color={item.color} width={64} height={64} />
-                    </div>
-
-                    <h3 style={{ color: item.color, fontSize: '0.92rem', margin: '0 0 0.2rem 0', fontWeight: '900', textAlign: 'center' }}>
-                      {item.name}
-                    </h3>
-                    <div style={{ fontSize: '0.65rem', color: '#facc15', fontWeight: 'bold', marginBottom: '0.4rem', textAlign: 'center' }}>
-                      {item.codeName}
-                    </div>
-
-                    <p style={{ fontSize: '0.72rem', color: '#cbd5e1', lineHeight: '1.35', margin: '0 0 0.65rem 0' }}>
-                      {item.desc}
-                    </p>
-
-                    <div style={{ background: 'rgba(2, 6, 23, 0.75)', padding: '0.45rem', borderRadius: '6px', fontSize: '0.68rem', color: '#6ee7b7', border: '1px solid rgba(16, 185, 129, 0.25)', marginBottom: '0.75rem' }}>
-                      Potere nuovo: <strong>{item.levels[curLevel]?.label}</strong>
-                    </div>
+                <div key={item.id} className="cyber-panel" style={{ padding: '1.25rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem', border: isUnlocked ? `1.5px solid ${item.color}` : '1px dashed rgba(250, 204, 21, 0.35)', minHeight: '220px' }}>
+                  <div style={{ fontSize: '0.65rem', color: isUnlocked ? '#6ee7b7' : '#94a3b8', fontWeight: 900 }}>
+                    VARCO {item.riftNumber} · {isUnlocked ? 'COLLEZIONATO' : 'DA SCOPRIRE'}
                   </div>
-
-                  <div style={{ display: 'flex', gap: '0.4rem', flexDirection: 'column' }}>
-                    <button
-                                            onClick={() => {
-                        try { playSound('click'); } catch (_) {}
-                        const slot1Open = (level || 1) >= EPIC_SLOT_1_UNLOCK_LEVEL || hasStabilizedRift1;
-                        const slot2Open = (level || 1) >= EPIC_SLOT_2_UNLOCK_LEVEL;
-
-
-                        if (!slot1Open && !slot2Open) {
-                          triggerPopup(`Gli Slot per Oggetti Epici si sbloccano a Livello ${EPIC_SLOT_1_UNLOCK_LEVEL}!`);
-                          return;
-                        }
-
-                        if (isEquipped) {
-                          const next = equippedEpicItems.map(id => id === item.id ? null : id);
-                          onEquipItem(next);
-                        } else {
-                          if (equippedEpicItems[0] === null && slot1Open) onEquipItem([item.id, equippedEpicItems[1]]);
-                          else if (equippedEpicItems[1] === null && slot2Open) onEquipItem([equippedEpicItems[0], item.id]);
-                          else if (slot1Open) onEquipItem([item.id, equippedEpicItems[1]]);
-                        }
-                      }}
-                      className={`cyber-btn ${isEquipped ? '' : 'cyber-btn-primary'}`}
-                      style={{ padding: '0.45rem', fontSize: '0.75rem', fontWeight: 'bold' }}
-                    >
-                      {isEquipped ? "Rimuovi da Plancia" : "Equipaggia in Plancia"}
-                    </button>
-
-                    {!isMax && (
-                      <button
-                        onClick={() => {
-                          try { playSound('click'); } catch (_) {}
-                          setSelectedItemForUpgrade({ item, curLevel, nextCost: nextUpgradeCost });
-                        }}
-                        className="cyber-btn cyber-btn-warning"
-                        style={{ padding: '0.45rem', fontSize: '0.72rem', fontWeight: 'bold' }}
-                      >
-                        Potenzia a Liv. {curLevel + 1} âž”
-                      </button>
-                    )}
-                  </div>
+                  {isUnlocked ? (
+                    <TacticalVisual id={item.id} type="epic_item" color={item.color} width={90} height={90} />
+                  ) : (
+                    <SciFiIcon name="epic_item" size={70} color="#64748b" />
+                  )}
+                  <h3 style={{ color: isUnlocked ? item.color : '#fde047', fontSize: '0.95rem', margin: 0, fontWeight: 900 }}>
+                    {isUnlocked ? item.name : 'Manufatto segreto'}
+                  </h3>
+                  <p style={{ fontSize: '0.75rem', color: '#cbd5e1', lineHeight: 1.4, margin: 0 }}>
+                    {isUnlocked ? item.desc : `Apri il Varco ${item.riftNumber} con le due reliquie richieste per ottenere questo manufatto.`}
+                  </p>
                 </div>
               );
             })}
@@ -4410,55 +4145,6 @@ function EpicItemsHubScreen({
               Potenzia Serbatoio ({nextTankConfig.costDust} 🌟)
             </button>
           )}
-        </div>
-      )}
-
-      {selectedItemForUpgrade && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 4, 12, 0.96)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 28000, padding: '1rem' }}>
-          <div className="cyber-panel" style={{ padding: '1.5rem', maxWidth: '420px', width: '100%', textAlign: 'center', border: '2px solid #facc15', boxShadow: '0 0 45px rgba(250, 204, 21, 0.55)' }}>
-            <h3 style={{ color: '#fde047', margin: '0 0 0.35rem 0', fontWeight: '900' }}>
-              Potenzia {selectedItemForUpgrade.item.name}
-            </h3>
-            <div style={{ fontSize: '0.72rem', color: '#cbd5e1', marginBottom: '0.85rem' }}>
-              Passaggio a <strong>Livello {selectedItemForUpgrade.curLevel + 1}</strong>
-            </div>
-
-            <div style={{ background: 'rgba(2, 6, 23, 0.85)', padding: '0.85rem', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)', textAlign: 'left', marginBottom: '1rem' }}>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginBottom: '0.3rem' }}>COSTI RICHIESTI:</div>
-              <div style={{ fontSize: '0.8rem', color: '#facc15', fontWeight: 'bold' }}>â€¢ Polvere Stellare: {selectedItemForUpgrade.nextCost.dust} 🌟 (Hai: {stardust})</div>
-              {selectedItemForUpgrade.nextCost.voidCrystals > 0 && (
-                <div style={{ fontSize: '0.8rem', color: '#00f2fe', fontWeight: 'bold' }}>â€¢ Cristalli di Vuoto: {selectedItemForUpgrade.nextCost.voidCrystals} ðŸ’  (Hai: {voidCrystals})</div>
-              )}
-              {selectedItemForUpgrade.nextCost.primordialMatter > 0 && (
-                <div style={{ fontSize: '0.8rem', color: '#d946ef', fontWeight: 'bold' }}>â€¢ Materia Primordiale: {selectedItemForUpgrade.nextCost.primordialMatter} 🟣 (Hai: {primordialMatter})</div>
-              )}
-            </div>
-
-            {(() => {
-              const canAfford = stardust >= selectedItemForUpgrade.nextCost.dust &&
-                voidCrystals >= selectedItemForUpgrade.nextCost.voidCrystals &&
-                primordialMatter >= selectedItemForUpgrade.nextCost.primordialMatter;
-
-              return (
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button className="cyber-btn" onClick={() => setSelectedItemForUpgrade(null)} style={{ flex: 1, padding: '0.55rem' }}>Annulla</button>
-                  <button
-                    disabled={!canAfford}
-                    onClick={() => {
-                      if (!canAfford) return;
-                      try { playSound('epic_item_trigger'); } catch (_) {}
-                      onUpgradeItem(selectedItemForUpgrade.item.id, selectedItemForUpgrade.curLevel + 1, selectedItemForUpgrade.nextCost);
-                      setSelectedItemForUpgrade(null);
-                    }}
-                    className={`cyber-btn ${canAfford ? 'cyber-btn-warning' : ''}`}
-                    style={{ flex: 1.5, padding: '0.55rem', fontWeight: '900' }}
-                  >
-                    Conferma Potenziamento âž”
-                  </button>
-                </div>
-              );
-            })()}
-          </div>
         </div>
       )}
 
@@ -5096,7 +4782,8 @@ function ActiveForgeWidget({ queue = [], onRush, ether = 0 }) {
       }}
     >
       {queue.slice(0, 2).map((item) => {
-        const canRush = ether >= item.etherRush;
+        const inactiveJob = ['ability', 'epic', 'deck', 'terrain'].includes(item.type);
+        const canRush = !inactiveJob && ether >= item.etherRush;
 
         return (
           <div
@@ -5115,14 +4802,14 @@ function ActiveForgeWidget({ queue = [], onRush, ether = 0 }) {
           >
             <div style={{ textAlign: 'left', lineHeight: 1.1, minWidth: 0, flex: 1 }}>
               <div style={{ fontSize: '0.52rem', color: '#f0abfc', fontWeight: 900, textTransform: 'uppercase', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                 {item.name}  L.{item.targetLevel}
+                {inactiveJob ? 'Completamento in corso' : `${item.name} · L.${item.targetLevel}`}
               </div>
               <div style={{ fontSize: '0.62rem', color: '#facc15', fontWeight: 'bold' }}>
                 {formatRemaining(item.finishTime)}
               </div>
             </div>
 
-            <button
+            {!inactiveJob && <button
               disabled={!canRush}
               onClick={() => onRush(item)}
               className="cyber-btn cyber-btn-ether"
@@ -5136,7 +4823,7 @@ function ActiveForgeWidget({ queue = [], onRush, ether = 0 }) {
               title={`Salta tempo (${item.etherRush} Etere)`}
             >
                {item.etherRush} 
-            </button>
+            </button>}
           </div>
         );
       })}
@@ -5329,7 +5016,7 @@ function App() {
   const [showPvPChannelModal, setShowPvPChannelModal] = useState(false);
   const [pendingPvPConfirmation, setPendingPvPConfirmation] = useState(null);
 
-  // 3. STATI RELIQUIE, VARCHI & OGGETTI EPICI (2 SLOT A LIV. 20 E LIV. 60)
+  // 3. Reliquie, varchi e manufatti. I dati degli equipaggiamenti precedenti restano conservati.
   const [unlockedRelics, setUnlockedRelics] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('eclissi_unlocked_relics') || '{}');
@@ -5348,7 +5035,7 @@ function App() {
     } catch (_) { return {}; }
   });
 
-  const [equippedEpicItems, setEquippedEpicItems] = useState(() => {
+  const [equippedEpicItems] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('eclissi_equipped_epic_items') || '[null, null]');
     } catch (_) { return [null, null]; }
@@ -5858,6 +5545,10 @@ function App() {
   const forgeEtherRef=useRef(ether);
   forgeEtherRef.current=ether;
   const handleRushForge=useCallback(item=>{
+    if(['ability','epic','deck','terrain'].includes(item?.type)){
+      triggerPopup('La lavorazione prosegue fino al completamento.');
+      return false;
+    }
     if(!isOfficialForgeJobInQueue(forgeQueueRef.current,item)){
       triggerPopup('Lavorazione non più disponibile: Cantiere già aggiornato.');
       return false;
@@ -5970,52 +5661,10 @@ function App() {
     setUnlockedRifts(prev => ({ ...prev, [riftId]: true }));
     setEpicItemsInventory(prev => ({
       ...prev,
-      [itemId]: { level: 1, unlocked: true }
+      [itemId]: { ...prev[itemId], level: prev[itemId]?.level || 1, unlocked: true }
     }));
-    // Auto-equipaggia nello Slot 1 se vuoto, oppure nello Slot 2
-    setEquippedEpicItems(prev => {
-      if (!prev[0]) return [itemId, prev[1]];
-      if (!prev[1] && prev[0] !== itemId) return [prev[0], itemId];
-      return prev;
-    });
-    triggerPopup(`🌌 VARCO STABILIZZATO!\nManufatto Epico forgiato ed equipaggiato in Plancia!`);
+    triggerPopup(`🌌 VARCO STABILIZZATO!\nManufatto aggiunto alla collezione della Cripta.`);
   }, [triggerPopup]);
-
-
-    const handleUpgradeEpicItem = useCallback((itemId, targetLevel, cost) => {
-        if (forgeQueue.length >= 2) {
-      try { playSound('deselect'); } catch (_) {}
-      triggerPopup("Entrambi i 2 Slot del Cantiere sono occupati!");
-      return;
-    }
-    if (forgeQueue.some(item => item.id === itemId && item.type === 'epic')) {
-      try { playSound('deselect'); } catch (_) {}
-      triggerPopup("Questo manufatto   gi  in lavorazione nel Cantiere!");
-      return;
-    }
-    if (stardust < cost.dust || voidCrystals < cost.voidCrystals || primordialMatter < cost.primordialMatter) {
-      triggerPopup("Risorse o minerali insufficienti per il potenziamento!");
-      return;
-    }
-    const itemObj = typeof EPIC_ITEMS_DATABASE !== 'undefined' ? EPIC_ITEMS_DATABASE.find(e => e.id === itemId) : null;
-    const forgeParams = getForgeParams('epic', targetLevel);
-
-    try { playSound('ability'); } catch (_) {}
-    setStardust(s => s - cost.dust);
-    if (cost.voidCrystals > 0) setVoidCrystals(v => v - cost.voidCrystals);
-    if (cost.primordialMatter > 0) setPrimordialMatter(p => p - cost.primordialMatter);
-
-    setForgeQueue(prev => [...prev, {
-      type: 'epic',
-      id: itemId,
-      name: itemObj?.name?.split(' ')[0] || 'Manufatto',
-      targetLevel,
-      finishTime: Date.now() + forgeParams.durationMs,
-      etherRush: forgeParams.etherRush
-    }]);
-    triggerPopup(` FORGIATURA AVVIATA!\nManufatto ${itemObj?.name?.split(' ')[0] || ''} in sintesi (Slot ${forgeQueue.length + 1}/2). Pronto tra ${forgeParams.label}.`);
-
-  }, [stardust, voidCrystals, primordialMatter, forgeQueue, triggerPopup]);
 
 
   const handleUpgradeSubspaceTank = useCallback((costDust, nextLevel) => {
@@ -6637,9 +6286,8 @@ function App() {
         });
 
 
-        // Terra S9: premio Modulo SOLO dopo la vittoria, mai al click
-        // sul settore o dopo una sconfitta. Il Modulo va poi inserito
-        // realmente nel mazzo da 24 speciali per produrre un effetto.
+        // Conserva il riconoscimento storico di Terra S9 senza proporre
+        // equipaggiamenti estranei al mazzo di flotta attivo.
         const terraModule=terraNineModuleVictory({
           winner:'player',mode:gameMode,planetId:planetNum,sectorLevel:levelNum,
           selectedPilot,abilities
@@ -6648,8 +6296,7 @@ function App() {
           setAbilities(prev => Object.values(prev as Record<string,{unlocked?:boolean}>).some(item=>item?.unlocked===true)
             ? prev : {...prev,[terraModule]:{unlocked:true,level:1}});
           // Il premio e' posseduto, NON equipaggiato come potere gratuito.
-          triggerPopup('Settore Terra 9 completato: Carta Modulo '+terraModule+
-            ' sbloccata. Equipaggiala nel mazzo speciale per usarla.');
+          triggerPopup('Settore Terra 9 completato. Prosegui verso il boss di Terra.');
         }
 
         const maxLvl = unlockedLevels?.[planetNum] || 1;
@@ -6693,7 +6340,7 @@ function App() {
             };
           });
 
-          triggerPopup(` BOSS PIANETA ${planetNum} SCONFITTO!\nReliquia acquisita e Carta Pilota sbloccata nell'Hangar!`);
+          triggerPopup(` BOSS PIANETA ${planetNum} SCONFITTO!\nReliquia acquisita e carta Personaggio Boss ottenuta. Aggiungila al tuo mazzo!`);
 
           const nextP = getNextCampaignPlanet(planetNum);
           if (nextP !== null) setMaxUnlockedPlanet(p => Math.max(p, nextP));
@@ -7740,7 +7387,6 @@ function App() {
           unlockedRelics={unlockedRelics}
           unlockedRifts={unlockedRifts}
           epicItemsInventory={epicItemsInventory}
-          equippedEpicItems={equippedEpicItems}
           voidCrystals={voidCrystals}
           primordialMatter={primordialMatter}
           tankLevel={tankLevel}
@@ -7758,8 +7404,6 @@ function App() {
             setStep('adv');
           }}
 
-          onEquipItem={(newEquipped) => setEquippedEpicItems(newEquipped)}
-          onUpgradeItem={handleUpgradeEpicItem}
           onCollapseRift={handleCollapseRift}
           onUpgradeTank={handleUpgradeSubspaceTank}
           onBack={() => setStep('home')}
@@ -7909,17 +7553,13 @@ function App() {
                 const hpOfLevel = typeof calculateUniversalPlayerHp === 'function' ? calculateUniversalPlayerHp(lvlNum) : 50;
 
                 let milestoneText = null;
-                if (lvlNum === 9) milestoneText = "ðŸ”“ Sblocco Modulo AbilitÃ  Ibrido";
-                else if (lvlNum === 15) milestoneText = "ðŸ’” +1 Vita Massima";
-                else if (lvlNum === epic1LvlThreshold) milestoneText = "â­ 1Â° Slot Manufatti Epici";
+                if (lvlNum === 15) milestoneText = "ðŸ’” +1 Vita Massima";
                 else if (lvlNum === 30) milestoneText = "ðŸ’” +1 Vita Massima Permanente";
-                else if (lvlNum === 31) milestoneText = "âš¡ Ingresso Fascia 2 (Sblocco Liv. 4-6 Mazzi/Moduli & Liv. 2 Terreni)";
+                else if (lvlNum === 31) milestoneText = "âš¡ Ingresso Fascia 2";
                 else if (lvlNum === 50) milestoneText = "ðŸ’” +1 Vita Massima";
-                else if (lvlNum === epic2LvlThreshold) milestoneText = "â­ 2Â° Slot Manufatti Epici";
                 else if (lvlNum === 61) milestoneText = "💎 +25 Diamanti + Titolo Pilota Veterano";
-                else if (lvlNum === 66) milestoneText = "ðŸ”¥ Ingresso Fascia 3 (Sblocco Liv. 7-9 Mazzi/Moduli & Liv. 3 Terreni)";
+                else if (lvlNum === 66) milestoneText = "ðŸ”¥ Ingresso Fascia 3";
                 else if (lvlNum === 75) milestoneText = "ðŸ’” +1 Vita Massima";
-                else if (lvlNum === 95) milestoneText = "🌟 Sblocco Apoteosi Suprema (Livello 9)";
 
                 return (
                   <div
@@ -8966,7 +8606,7 @@ function App() {
         />
       )}
 
-                                    {/* MODALE BAZAR GALATTICO UNIFICATO (4 TABS) */}
+                                    {/* MODALE BAZAR GALATTICO: NAVI, CARTE E RISORSE */}
       {showUnifiedShop && (
         <ShopModal
           onUpgradeShip={async (instanceId, targetLevel, shownCost) => {
@@ -8999,10 +8639,6 @@ function App() {
           allDecks={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
           onSelectDeck={(id) => unlockDeck(id)}
           onUpgradeDeck={(id) => handleUpgradeDeck(id)}
-          abilities={abilities}
-          allAbilities={typeof ALL_ABILITIES !== 'undefined' ? ALL_ABILITIES : []}
-          onUnlockAbility={(id) => unlockAbilityWithDust(id)}
-          onUpgradeAbility={(id) => upgradeAbilityWithDust(id)}
 
           stardust={stardust}
           diamonds={diamonds}

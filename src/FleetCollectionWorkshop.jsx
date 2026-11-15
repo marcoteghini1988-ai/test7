@@ -1,7 +1,8 @@
 import React,{useMemo,useState} from 'react';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,PREMADE_DECKS,CARD_PRICES,PACK_PRICE,
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PREMADE_DECKS,CARD_PRICES,PACK_PRICE,
  FLEET_BASE_DECK_SIZE,SHIP_CONFIGS,cardCopyLimit,countDeck,
- deckFromCounts,validateBaseDeck,eligibleExclusives} from './fleetNext/rules.js';
+ deckFromCounts,validateBaseDeck,eligibleExclusives,cardFacePath} from './fleetNext/rules.js';
+import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readShipCollection} from './shipCollection.js';
 import {readFleetInventory,writeFleetInventory,equipFleetBaseDeck,
  buyGeneralCard,buyPrebuiltDeck,buyFleetPack,
@@ -13,22 +14,24 @@ const btn={background:'#17496b',color:'white',border:'1px solid #79a9c9',
  borderRadius:'6px',padding:'7px 9px',fontSize:'11px',fontWeight:700};
 const small={fontSize:'11px',color:'#a4c7dd'};
 const locale=n=>Number(n||0).toLocaleString('it-IT');
+const BASE_CARDS={...GENERAL_CARDS,...BOSS_CARDS};
 // Fronte ufficiale del catalogo, identico in Shop, mazzi ed arena.
-function FleetCardArt({id,name,large=false}){
+function FleetCardArt({id,name,grade=1,large=false}){
  const width=large?114:38;
- return <img src={'/assets/fleet-next-cards/'+id+'.svg'}
+ return <img src={cardFacePath(id,grade)}
   width={width} height={width*1.5} loading="lazy" decoding="async"
   alt={'Carta '+name} style={{width,aspectRatio:'2 / 3',height:'auto',display:'block',
    objectFit:'contain',flexShrink:0,margin:large?'0 auto 7px':undefined}}/>;
 }
 
-export default function FleetCollectionWorkshop(){
+export default function FleetCollectionWorkshop({initialTab='shop'}){
  const [inventory,setInventory]=useState(()=>readFleetInventory());
  const [draft,setDraft]=useState(()=>readFleetInventory().deck);
- const [tab,setTab]=useState('shop');
+ const [tab,setTab]=useState(initialTab);
  const [rarity,setRarity]=useState('Tutte');
  const [category,setCategory]=useState('Tutte');
  const [query,setQuery]=useState('');
+ const [shown,setShown]=useState(70);
  const [selected,setSelected]=useState(null);
  const [notice,setNotice]=useState('');
  const [packResults,setPackResults]=useState([]);
@@ -87,27 +90,31 @@ export default function FleetCollectionWorkshop(){
   minHeight:'310px',fontSize:'12px'}}>
   <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'7px',flexWrap:'wrap'}}>
    <div><strong style={{fontSize:'14px'}}>CARTE E MAZZI DI FLOTTA</strong>
-    <div style={small}>250 carte generali · 129 esclusive · 10 mazzi pronti</div></div>
+    <div style={small}>250 carte generali · 129 esclusive · 12 Personaggi Boss</div></div>
    <strong style={{color:'#ffe394'}}>✦ {locale(inventory.credits)} Crediti Stellari</strong>
   </div>
+  <details style={small}>
+   <summary style={{cursor:'pointer',color:'#d5ecff'}}>Come si leggono gli effetti</summary>
+   <ul style={{paddingLeft:18,lineHeight:1.45}}>{SIMPLE_RULES.map(rule=><li key={rule}>{rule}</li>)}</ul>
+  </details>
   <div style={{display:'flex',gap:'5px',flexWrap:'wrap'}}>
-   {[['shop','Carte singole'],['decks','Il mio mazzo'],['ready','Mazzi pronti'],['packs','Pacchetti'],['exclusive','Esclusive']].map(([id,label])=>
+   {[['shop','Carte singole'],['decks','Il mio mazzo'],['ready','Mazzi pronti'],['packs','Pacchetti'],['exclusive','Esclusive'],['boss','Personaggi Boss']].map(([id,label])=>
     <button key={id} style={{...btn,background:tab===id?'#236d9a':'#122e4a'}} onClick={()=>setTab(id)}>
      {label}</button>)}
   </div>
   {notice&&<div role="status" style={{...small,color:'#ffe1a7'}}>{notice}</div>}
   {tab==='shop'&&<div style={{display:'flex',flexDirection:'column',gap:'7px'}}>
    <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
-    <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cerca carta o effetto"
+    <input value={query} onChange={e=>{setQuery(e.target.value);setShown(70);}} placeholder="Cerca carta o effetto"
      style={{...box,flex:'2 1 120px',minWidth:0}}/>
-    <select value={rarity} onChange={e=>setRarity(e.target.value)} style={{...box,flex:1,minWidth:90}}>
+    <select value={rarity} onChange={e=>{setRarity(e.target.value);setShown(70);}} style={{...box,flex:1,minWidth:90}}>
      {['Tutte','Comune','Rara','Epica','Leggendaria'].map(x=><option key={x}>{x}</option>)}</select>
-    <select value={category} onChange={e=>setCategory(e.target.value)} style={{...box,flex:1,minWidth:90}}>
+    <select value={category} onChange={e=>{setCategory(e.target.value);setShown(70);}} style={{...box,flex:1,minWidth:90}}>
      {categories.map(x=><option key={x}>{x}</option>)}</select>
    </div>
-   <div style={small}>{filtered.length} carte trovate · mostrate fino a 70 per volta</div>
+   <div style={small}>{filtered.length} carte trovate · {Math.min(shown,filtered.length)} mostrate</div>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(155px,1fr))',gap:'6px'}}>
-    {filtered.slice(0,70).map(c=><div key={c.id} style={box}>
+    {filtered.slice(0,shown).map(c=><div key={c.id} style={box}>
      <FleetCardArt id={c.id} name={c.nome} large/>
       <strong>{c.nome}</strong><div style={small}>{c.rarita} · {c.sottotipo}</div>
      <p style={{...small,minHeight:42,lineHeight:1.3}}>{c.effetto}</p>
@@ -119,9 +126,11 @@ export default function FleetCollectionWorkshop(){
      {selected===c.id&&<p style={small}>Contromossa: {c.controgioco}</p>}
     </div>)}
    </div>
+   {shown<filtered.length&&<button style={btn} onClick={()=>setShown(n=>n+70)}>MOSTRA ALTRE CARTE</button>}
   </div>}
   {tab==='decks'&&<>
-   <div style={small}>Mazzo base: {draft.length}/40 · Le esclusive della madre si aggiungono automaticamente.
+   <div style={small}>Mazzo base: {draft.length}/40 · Carte generali e Personaggi Boss ottenuti.
+    Le esclusive della madre si aggiungono automaticamente.
     Puoi usare doppioni entro il limite della rarità.</div>
    <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
     <button style={btn} onClick={saveDeck} disabled={draft.length!==40}>SALVA ED EQUIPAGGIA</button>
@@ -131,17 +140,17 @@ export default function FleetCollectionWorkshop(){
     <div style={box}>
      <strong>Carte nel mazzo</strong>
      {Object.entries(baseCounts).map(([id,n])=><div key={id} style={{display:'flex',gap:6,alignItems:'center',marginTop:5}}>
-      <FleetCardArt id={id} name={GENERAL_CARDS[id]?.nome||id}/>
-       <span style={{flex:1}}>{GENERAL_CARDS[id]?.nome} ×{n}</span>
+      <FleetCardArt id={id} name={BASE_CARDS[id]?.nome||id}/>
+       <span style={{flex:1}}>{BASE_CARDS[id]?.nome} ×{n}</span>
       <button style={btn} onClick={()=>remove(id)} aria-label={'Rimuovi '+id}>−</button>
      </div>)}
     </div>
     <div style={box}>
      <strong>Carte possedute da aggiungere</strong>
-     {Object.entries(inventory.owned).filter(([id,n])=>n>0&&GENERAL_CARDS[id]).map(([id,n])=>
+     {Object.entries(inventory.owned).filter(([id,n])=>n>0&&BASE_CARDS[id]).map(([id,n])=>
       <div key={id} style={{display:'flex',gap:6,alignItems:'center',marginTop:5}}>
-       <FleetCardArt id={id} name={GENERAL_CARDS[id].nome}/>
-        <span style={{flex:1}}>{GENERAL_CARDS[id].nome} ({baseCounts[id]||0}/{Math.min(n,cardCopyLimit(id))})</span>
+       <FleetCardArt id={id} name={BASE_CARDS[id].nome}/>
+        <span style={{flex:1}}>{BASE_CARDS[id].nome} ({baseCounts[id]||0}/{Math.min(n,cardCopyLimit(id))})</span>
        <button style={btn} onClick={()=>add(id)} disabled={draft.length>=40||
         (baseCounts[id]||0)>=Math.min(n,cardCopyLimit(id))}>+</button>
       </div>)}
@@ -185,15 +194,31 @@ export default function FleetCollectionWorkshop(){
     {eligibleExclusives(motherId,motherLevel).map(c=>{
      const grade=inventory.exclusiveUpgrades[c.id]||1;
      const cost=exclusiveUpgradeCost(grade+1);
+     const upgradeable=canUpgradeEffect(c,grade);
+     const requiredLevel=grade===1?3:5;
      return <div key={c.id} style={box}>
-      <FleetCardArt id={c.id} name={c.name} large/>
+      <FleetCardArt id={c.id} name={c.name} grade={grade} large/>
        <strong>{c.name}</strong><div style={small}>Grado {grade}/3 · {c.category}</div>
-      <p style={small}>{c.effectProposed}</p>
-      {grade<3&&<button style={btn} onClick={()=>upgrade(c.id)}>
-       POTENZIA · {locale(cost)} Crediti</button>}
+      <p style={small}>{describeEffect(c,grade)}</p>
+      {upgradeable?<>
+       <p style={small}>Grado {grade+1}: {describeEffect(c,grade+1)}</p>
+       <button style={btn} onClick={()=>upgrade(c.id)} disabled={motherLevel<requiredLevel}>
+        {motherLevel<requiredLevel?'NAVICELLA LIVELLO '+requiredLevel:'POTENZIA · '+locale(cost)+' Crediti'}</button>
+      </>:<small style={small}>Effetto al massimo</small>}
      </div>;
     })}
    </div>
   </div>}
+  {tab==='boss'&&<>
+   <p style={small}>Sconfiggi il rispettivo boss per ottenere la sua carta. Puoi inserirne una copia nel mazzo da 40; i Personaggi restano attivi per 2 tuoi turni.</p>
+   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
+    {Object.values(BOSS_CARDS).map(c=><div key={c.id} style={box}>
+     <FleetCardArt id={c.id} name={c.nome} large/>
+     <strong>{c.nome}</strong><p style={small}>{c.effetto}</p>
+     <small style={small}>{inventory.owned[c.id]?'Ottenuto · 1 copia massima':'Sconfiggi '+c.nome+' per ottenerlo.'}</small>
+     {!!inventory.owned[c.id]&&<button style={{...btn,marginTop:7}} onClick={()=>{setTab('decks');setNotice('Togli una carta dal mazzo, poi aggiungi '+c.nome+' dalle carte possedute.');}}>GESTISCI NEL MAZZO</button>}
+    </div>)}
+   </div>
+  </>}
  </div>;
 }

@@ -6,7 +6,6 @@ import {ASSET_ROOT,MountedWeapons} from './ShipPresentation.jsx';
 import {newVessel} from './mathDuelEngine.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
 import {readShipCollection} from './shipCollection.js';
-import {readLegacyModuleLevels} from './tacticalEquipmentCards.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
@@ -14,10 +13,10 @@ import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
-import {fleetEscortSkillDescription} from './fleetEscortSupports.js';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,STARTER_DECK,card,cardRole,deckFromCounts} from './fleetNext/rules.js';
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,STARTER_DECK,card,cardRole,cardFacePath,deckFromCounts} from './fleetNext/rules.js';
+import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
-import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn} from './fleetNext/combat.js';
+import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason} from './fleetNext/combat.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
@@ -45,7 +44,7 @@ function findMother(ships){
  try{selected=JSON.parse(localStorage.getItem(LOADOUT_KEY)||'[]');}catch{selected=[];}
  const selectedId=Array.isArray(selected)?selected.find(id=>available.has(id)):null;
  const equipped=ships.loadout.map(id=>ships.cards.find(c=>c.instanceId===id)).find(Boolean);
- return available.get(selectedId)||equipped||ships.cards[0]||null;
+ return equipped||available.get(selectedId)||ships.cards[0]||null;
 }
 function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
  try{
@@ -63,7 +62,7 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
    shipB:motherEnemy,levelB:levelEnemy,
    deckA:inventory.deck,deckB:deckFromCounts(STARTER_DECK.carteGenerali),
    upgradesA:inventory.exclusiveUpgrades,
-   mode,bossName:boss?.name||null,bossId:boss?.planetId??null,
+   mode,bossName:boss?.name||null,bossId:boss?.planetId??null,planetId:bossPlanetId,
    sectorNumber,seed:Math.floor(Math.random()*0x7fffffff)+1,
    nowMs:Date.now()
   }),error:''};
@@ -72,7 +71,7 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
 // Questa è esattamente la formazione spaziale 3D precedente:
 // nave centrale 316×206 con ShipPhysicalVitals/MountedWeapons,
 // scudiere nelle posizioni originali left:45/right:45, stessa arena.
-function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,impact,inspectEscort}){
+function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOwn=false,impact,inspectEscort}){
  const player=side==='player';
  const mother=unit.ships[0];
  const vessel=useMemo(()=>newVessel(mother.id,mother.level),[mother.id,mother.level]);
@@ -84,7 +83,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,impact,insp
    style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
    <ShipPhysicalVitals side={side} vessel={{...vessel,defense}} defense={defense}
     selectedVital={selectedVital==='generator'?'shieldGenerator':selectedVital}
-    canTarget={!player} onSelectVital={id=>onSelectVital?.(id==='shieldGenerator'?'generator':id)}
+    canTarget={!player||canSelectOwn} onSelectVital={id=>onSelectVital?.(id==='shieldGenerator'?'generator':id)}
     knownVitals={['engine','weapons','shieldGenerator','command']}/>
    <MountedWeapons side={side} vessel={vessel} index={0}/>
    {currentImpact&&<img key={(impact?.round||0)+currentImpact.kind}
@@ -93,11 +92,10 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,impact,insp
   </div>
   {unit.escorts.map((escort,i)=>{
    const tookHit=impact?.escortSlot===i&&impact?.escortDamage>0;
-   const linked=escort.skill.requires.every(id=>
-    mother.parts.some(p=>p.id===id&&p.damage<2));
+   const linked=escort.linked!==false;
    return <div key={escort.id} className={'live-escort live-escort--'+i+
     (escort.hp===0?' live-escort--lost':'')}
-    title={escort.name+' · '+fleetEscortSkillDescription(escort)}>
+    title={escort.name+' · '+describeEscortEffect(escort)}>
     <img src={ASSET_ROOT+'/escorts/'+mother.id+'_escort_'+(i+1)+'.svg'}
      alt={escort.name} draggable={false}/>
     <span className="f3d-escort-health" aria-label={'Resistenza '+escort.hp+' di '+escort.maxHp}>
@@ -139,25 +137,25 @@ function slotCards(side,chosenCards=[]){
   ...(side.attackSlots||[]).slice(0,3)];
  while(slots.length<6)slots.push(null);
  for(const type of chosenCards){
-  const role=cardRole(type),family=GENERAL_CARDS[type]?.famiglia||'';
+  const role=cardRole(type);
   const target=role==='character'?[0]:role==='terrain'?[]:
-   role==='defense'||(role==='support'&&/riparazione|guardia|recupero|scudiera/.test(family))?[1,2]:[3,4,5];
+   role==='defense'?[1,2]:[3,4,5];
   if(target.length===1){slots[0]=type;continue;}
   const i=target.find(index=>!slots[index]);
   if(i!=null)slots[i]=type;
  }
  return slots.slice(0,6);
 }
-function OriginalSpecialSlots({side,contents}){
+function OriginalSpecialSlots({side,contents,upgrades={}}){
  const labels=['PERS.','DIF.','DIF.','ATT.','ATT.','ATT.'];
  return <div className={'live-slot-row live-slot-row--'+(side==='A'?'player':'enemy')}>
   {contents.map((type,i)=>{
    const face=type?card(type):null;
-   const art=!type?null:(GENERAL_CARDS[type]||EXCLUSIVE_CARDS[type])?
-     '/assets/fleet-next-cards/'+type+'.svg':officialSpecialArtPath(type);
+   const art=!type?null:card(type)?
+     cardFacePath(type,upgrades[type]||1):officialSpecialArtPath(type);
    return <div key={i} className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
     (type?' live-slot--occupied':'')}
-    title={face?(face.nome||face.name||type):labels[i]}
+    title={face?(face.nome||face.name||type)+' · '+describeEffect(face,upgrades[type]||1):labels[i]}
     data-slot-role={i===0?'personaggio':i<=2?'difesa':'attacco'}
      data-family={type?cardRole(type):undefined}
      data-rarity={face?.rarita||face?.rarityDraft||undefined}>
@@ -168,21 +166,22 @@ function OriginalSpecialSlots({side,contents}){
   })}
  </div>;
 }
-function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset}){
+function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,unavailableReason=''}){
  const def=card(type);
  const rarity=def?.rarita||def?.rarityDraft||'Comune';
- const description=def?.effetto||def?.effectProposed||'Carta tattica';
+ const description=def?describeEffect(def,grade):'Carta tattica';
   const role=cardRole(type)||'support';
   const familyGlyph={attack:'⚔',defense:'⬡',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
  const name=def?.nome||def?.name||type;
- const art=!type?null:(GENERAL_CARDS[type]||EXCLUSIVE_CARDS[type])?
-     '/assets/fleet-next-cards/'+type+'.svg':officialSpecialArtPath(type);
+ const art=!type?null:card(type)?
+     cardFacePath(type,grade):officialSpecialArtPath(type);
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
   style={{'--special-angle':offset*3+'deg','--special-drop':offset**2*1.4+'px'}}
   data-family={role} data-rarity={rarity}
-  title={name+' · '+description}
-  aria-label={name+' · '+description}
+  title={name+' · '+description+(unavailableReason?' · '+unavailableReason:'')}
+  aria-label={name+' · '+description+(unavailableReason?' · '+unavailableReason:'')}
+  aria-disabled={!!unavailableReason||disabled}
   aria-pressed={selected} onClick={onClick}>
   {art?<img src={art} alt="" draggable={false}/>:
    <span className="live-special-art">✧</span>}
@@ -200,6 +199,7 @@ export default function OfficialFleetBattle3D({
  const [session,setSession]=useState(()=>startSession(opts));
  const [battle,setBattle]=useState(session.battle);
  const [selectedVital,setSelectedVital]=useState('engine');
+ const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
  const [scale,setScale]=useState(1);
  const [message,setMessage]=useState('');
@@ -248,7 +248,7 @@ export default function OfficialFleetBattle3D({
  function restart(){
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
-  setSelectedVital('engine');setChosenCards([]);setMessage('');
+  setSelectedVital('engine');setSelectedOwnVital('');setChosenCards([]);setMessage('');
   setLastFx(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -260,13 +260,28 @@ export default function OfficialFleetBattle3D({
   const role=cardRole(type);
   if(role==='character'&&!chosenCards.includes(index)&&
    player.commander?.untilPly>battle.ply)return 'Personaggio già attivo';
+  const terrainCode=chosenCards.map(i=>card(player.hand[i])?.effectSpec).find(s=>s?.type==='terrain')?.code;
+  const effectReason=effectUnavailableReason(card(type),player,battle,{terrainCode});
+  if(effectReason)return effectReason;
+  if(!chosenCards.includes(index)){
+   const roles=chosenCards.map(i=>cardRole(player.hand[i]));
+   if(chosenCards.length>=3)return 'Puoi giocare al massimo 3 carte per turno';
+   if(role==='defense'&&roles.filter(x=>x==='defense').length>=2)return 'Puoi giocare al massimo 2 Difese per turno';
+   if((role==='character'||role==='terrain')&&roles.includes(role))
+    return role==='character'?'Puoi giocare 1 Personaggio per turno':'Puoi giocare 1 Terreno per turno';
+  }
   return '';
  }
  function chooseCard(index){
+  if(chosenCards.includes(index)){setChosenCards(old=>old.filter(i=>i!==index));setMessage('');return;}
   const type=battle.sides.A.hand[index];
   const reason=unavailable(type,index);
   if(reason){setMessage(reason);return;}
   setMessage('');
+  if(!chosenCards.includes(index)&&card(type)?.effectSpec?.type==='repair'&&effectNeedsOwnTarget(card(type))){
+   const parts=battle.sides.A.ships[0].parts.filter(p=>!p.destroyed&&p.hp>0&&p.hp<p.maxHp);
+   if(!parts.some(p=>p.id===selectedOwnVital))setSelectedOwnVital([...parts].sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]?.id||'');
+  }
   setChosenCards(old=>old.includes(index)?old.filter(i=>i!==index):
    old.length<3?[...old,index]:old);
  }
@@ -277,7 +292,7 @@ export default function OfficialFleetBattle3D({
    selectedVital:target.parts.find(p=>!p.destroyed)?.id;
   if(!partId){setMessage('Nessun componente disponibile');return;}
   const result=resolveFleetNextTurn(battle,'A',
-   {partId,cards:chosenCards},Date.now());
+   {partId,ownPartId:actualOwnVital,cards:chosenCards},Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   setBattle(result.battle);setChosenCards([]);
   setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
@@ -349,14 +364,16 @@ export default function OfficialFleetBattle3D({
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
   target.parts.find(p=>!p.destroyed)?.id;
  const chosenTypes=chosenCards.map(i=>player.hand[i]).filter(Boolean);
+ const ownTargets=player.ships[0].parts.filter(p=>!p.destroyed&&p.hp>0);
+ const actualOwnVital=ownTargets.find(p=>p.id===selectedOwnVital)?.id||
+  [...ownTargets].sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]?.id;
+ const needsOwnTarget=chosenTypes.some(type=>effectNeedsOwnTarget(card(type)));
  const playerSlots=slotCards(player,chosenTypes);
  const enemySlots=slotCards(enemy);
- const lastNote=chosenCards.map(i=>card(player.hand[i])?.effetto||
-  card(player.hand[i])?.effectProposed||'').join(' + ');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const terrain=battle.terrain?.id;
- const boss=battle.bossId?{name:battle.bossName||'BOSS',ability:'Terreno esclusivo',
-  description:'Abilità passiva del boss e ambiente planetario'}:null;
+ const boss=battle.bossId?{name:battle.bossName||'BOSS',ability:'ABILITÀ',
+  description:describeBossPassive(battle.bossId)}:null;
  const readableTerrain=terrain?TERRAIN_CATALOG[terrain]?.name||'TERRENO':'NEUTRO';
  const secondsLeft=Math.max(0,Math.ceil((battle.deadlineMs-now)/1000));
  const myTurn=battle.turn==='A';
@@ -374,20 +391,22 @@ export default function OfficialFleetBattle3D({
     onSelectVital={id=>{if(!ended){setSelectedVital(id);setMessage('');}}}
     impact={lastFx?.events?.[0]&&{...lastFx.events[0],round:lastFx.nonce}}
     inspectEscort={setHelp}/>
-   <OriginalSpecialSlots side="B" contents={enemySlots}/>
+   <OriginalSpecialSlots side="B" contents={enemySlots} upgrades={enemy.exclusiveUpgrades}/>
    <div className="live-midline">
     <span className="live-turn-indicator" data-active={battle.turn}>
      {ended?'FINE PARTITA':(myTurn?'TU':'AVVERSARIO')+' · '+secondsLeft+'s'} ·
      {' '}{VITAL_LABELS[actualVital]||'VITALI'}
     </span>
     <button className="live-terrain-slot" type="button"
-     title={'Terreno attivo: '+readableTerrain}
-     data-terrain={terrain||undefined} disabled>
+     title={'Terreno attivo: '+readableTerrain+' · Tocca per leggere le regole'}
+     data-terrain={terrain||undefined} onClick={()=>setHelp({rules:true,terrain})}>
      {readableTerrain}
     </button>
    </div>
-   <OriginalSpecialSlots side="A" contents={playerSlots}/>
+   <OriginalSpecialSlots side="A" contents={playerSlots} upgrades={player.exclusiveUpgrades}/>
    <OriginalFleetFighter side="player" unit={player}
+    selectedVital={needsOwnTarget?actualOwnVital:null} canSelectOwn={needsOwnTarget&&myTurn&&!ended}
+    onSelectVital={id=>{if(ownTargets.some(p=>p.id===id)){setSelectedOwnVital(id);setMessage('');}}}
     impact={lastFx?.events?.[1]&&{...lastFx.events[1],round:lastFx.nonce}}
     inspectEscort={setHelp}/>
    <div className="live-deck live-deck--numeric f3d-discard"
@@ -407,43 +426,62 @@ export default function OfficialFleetBattle3D({
      key={battle.round+'-'+index+'-'+type} type={type} index={index}
      offset={index-(hand.length-1)/2}
      selected={chosenCards.includes(index)} disabled={ended||!myTurn}
+     grade={player.exclusiveUpgrades?.[type]||1} unavailableReason={unavailable(type,index)}
      onClick={()=>chooseCard(index)}/>)}
    </div>
    {!ended&&<div className="f3d-target-status" role="status">
     BERSAGLIO: {VITAL_LABELS[actualVital]||'—'} · {target.name}
    </div>}
    {selectedType&&!ended&&<div className="live-card-inspector" role="status">
-    <b>{card(selectedType)?.nome||card(selectedType)?.name||selectedType}</b>
-    <p>{lastNote}</p>
+    <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
+     <b>{card(type)?.nome||card(type)?.name||type}</b>
+     {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
+    </p>)}</div>
+    {needsOwnTarget&&<label className="f3d-own-target">Tuo componente:
+     <select value={actualOwnVital||''} onChange={e=>setSelectedOwnVital(e.target.value)} aria-label="Componente da proteggere o riparare">
+      {ownTargets.map(p=><option key={p.id} value={p.id}>{VITAL_LABELS[p.id]} · {p.hp}/{p.maxHp}</option>)}
+     </select>
+    </label>}
    </div>}
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
     <button type="button" disabled={ended||!myTurn} onClick={fire}>ATTACCA · CONFERMA</button>
     <button type="button" disabled={ended||!myTurn} onClick={passTurn}>PASSA</button>
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
+    <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
    {!ended&&<button type="button" className="live-abandon" onClick={leave}
     aria-label="Abbandona la battaglia"><span aria-hidden="true">←</span> ABBANDONA</button>}
    <OriginalFleetBar side="A" unit={player} nickname={nickname}/>
    {message&&<div className="live-action-notice f3d-notice" role="status"
     key={lastFx?.nonce||message}>{message}</div>}
-   {boss&&<div className="f3d-boss-label" title={boss.description}>
+   {boss&&<button type="button" className="f3d-boss-label" title={boss.description} onClick={()=>setHelp({boss:true})}>
     {boss.name+' · '+boss.ability}
-   </div>}
+   </button>}
    {showLog&&<div className="official-log f3d-log" role="dialog" aria-label="Registro battaglia">
     <button type="button" onClick={()=>setShowLog(false)}>CHIUDI</button>
     {battle.log.slice(-12).map((e,i)=><p key={i}>{e.text}</p>)}
    </div>}
-   {help&&<div className="f3d-escort-overlay" role="dialog" aria-label="Abilità scudiera">
+   {help&&<div className="f3d-escort-overlay" role="dialog" aria-label={help.rules?'Regole delle carte':help.boss?'Abilità del boss':'Abilità scudiera'}>
     <button type="button" onClick={()=>setHelp(null)} aria-label="Chiudi">×</button>
-    <strong>{help.escort.name}</strong><small>{help.escort.role}</small>
-    <p>{fleetEscortSkillDescription(help.escort)}</p>
-    <small>{help.linked?'COLLEGAMENTO ATTIVO':'COLLEGAMENTO INTERROTTO'}
-     {' · '+help.escort.hp+'/'+help.escort.maxHp+' HP'}</small>
+    {help.rules?<>
+     <strong>Regole delle carte</strong>
+     {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description||TERRAIN_CATALOG[terrain]?.effectText}</p>}
+     {SIMPLE_RULES.map(rule=><p key={rule}>{rule}</p>)}
+    </>:help.boss?<>
+     <strong>{boss?.name}</strong><p>{boss?.description}</p>
+     {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description}</p>}
+    </>:<>
+     <strong>{help.escort.name}</strong><small>{help.escort.role}</small>
+     <p>{describeEscortEffect(help.escort)}</p>
+     <small>{help.linked?'COLLEGAMENTO ATTIVO':'COLLEGAMENTO INTERROTTO'}
+      {' · '+help.escort.hp+'/'+help.escort.maxHp+' punti'}</small>
+    </>}
    </div>}
    {ended&&<div className="live-end">
     <h2>{battle.winner==='A'?'VITTORIA':battle.winner==='B'?'SCONFITTA':'PAREGGIO'}</h2>
     <p>Turni {battle.ply} · {battle.bossName||displaySector||'Duello'}</p>
+    {battle.finishReason&&<p>{battle.finishReason}</p>}
     <button type="button" disabled={busy||rewardDone} onClick={leave}>
      {busy?'SALVATAGGIO...':'CONFERMA E TORNA'}</button>
     <button type="button" onClick={restart}>RIGIOCA</button>

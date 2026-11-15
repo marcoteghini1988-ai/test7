@@ -2,11 +2,12 @@
 // Salvataggio indipendente dai vecchi 24 speciali: mai eliminare o sovrascrivere
 // la collezione legacy, prima di una migrazione verificata.
 import {
- GENERAL_CARDS,EXCLUSIVE_CARDS,STARTER_DECK,PREMADE_DECKS,CARD_PRICES,
+ GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,bossCard,STARTER_DECK,PREMADE_DECKS,CARD_PRICES,
  RARITY_COPY_LIMIT,PACK_PRICE,PACK_SIZE,FLEET_BASE_DECK_SIZE,
  MAX_EXCLUSIVE_UPGRADE,deckFromCounts,countDeck,validateBaseDeck,
- eligibleExclusives,exclusiveCard,shipConfig,generalCard
+ eligibleExclusives,exclusiveCard,exclusiveUnlocked,shipConfig,generalCard
 } from './rules.js';
+import {canUpgradeEffect} from './simpleEffects.js';
 
 export const FLEET_INVENTORY_KEY='eclissi_fleet_collection_v2';
 export const FLEET_INVENTORY_SCHEMA=2;
@@ -25,7 +26,8 @@ export function normalizeFleetInventory(value){
  if(!value||value.schema!==FLEET_INVENTORY_SCHEMA)return starter;
  const owned={...starter.owned};
  for(const [id,n] of Object.entries(value.owned||{})){
-  if(generalCard(id)&&Number.isInteger(n)&&n>=0&&n<=999)owned[id]=Math.max(owned[id]||0,n);
+  if((generalCard(id)||bossCard(id))&&Number.isInteger(n)&&n>=0&&n<=999)
+   owned[id]=bossCard(id)?Math.min(1,n):Math.max(owned[id]||0,n);
  }
  const candidate={...starter,owned};
  const raw=Array.isArray(value.deck)?value.deck:starter.deck;
@@ -42,8 +44,17 @@ export function normalizeFleetInventory(value){
  return candidate;
 }
 export function readFleetInventory(storage=globalThis.localStorage){
- try{return normalizeFleetInventory(JSON.parse(storage.getItem(FLEET_INVENTORY_KEY)||'null'));}
- catch{return createFleetInventory();}
+ let inventory;
+ try{inventory=normalizeFleetInventory(JSON.parse(storage.getItem(FLEET_INVENTORY_KEY)||'null'));}
+ catch{inventory=createFleetInventory();}
+ // Importazione in sola lettura dei trofei ottenuti con vittorie precedenti.
+ // Non modifica la collezione storica e non sblocca carte non possedute.
+ try{
+  const legacy=JSON.parse(storage.getItem('eclissi_special_collection_v1')||'null');
+  if(legacy?.schemaVersion===1)for(const id of Object.keys(BOSS_CARDS))
+   if(Number.isInteger(legacy.owned?.[id])&&legacy.owned[id]>0)inventory.owned[id]=1;
+ }catch{/* Un archivio non leggibile non cancella i trofei già migrati. */}
+ return inventory;
 }
 export function writeFleetInventory(inventory,storage=globalThis.localStorage){
  const safe=normalizeFleetInventory(inventory);
@@ -127,6 +138,10 @@ export function upgradeFleetExclusive(inventory,cardId,shipId,shipLevel){
  if(!c||c.shipId!==shipId)return {ok:false,reason:'Carta esclusiva non compatibile',inventory};
  const current=inventory.exclusiveUpgrades[cardId]||1;
  if(current>=MAX_EXCLUSIVE_UPGRADE)return {ok:false,reason:'Già al grado massimo',inventory};
+ if(!exclusiveUnlocked(cardId,shipId,shipLevel))
+  return {ok:false,reason:'Carta non ancora sbloccata dalla navicella',inventory};
+ if(!canUpgradeEffect(c,current))
+  return {ok:false,reason:'Questo effetto è già al massimo: nessun costo applicato',inventory};
  const nextGrade=current+1;
  if(shipLevel<(nextGrade===2?3:5))
   return {ok:false,reason:'Livello navicella insufficiente',inventory};

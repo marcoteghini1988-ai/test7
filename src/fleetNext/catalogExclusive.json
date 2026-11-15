@@ -1,9 +1,9 @@
 {
-  "title": "Eclissi Stellare — catalogo di progettazione esclusive v0.3",
-  "date": "2026-11-14",
-  "status": "catalogo importato; effetti da integrare",
+  "title": "Eclissi Stellare — catalogo esclusive con effetti semplici v1",
+  "date": "2026-11-15",
+  "status": "129 carte con effetti espliciti condivisi con il motore di battaglia",
   "source": "17 madri ufficiali, 129 nomi esclusivi v0.2 rivisti v0.3",
-  "disclaimer": "Durata potenziamenti e parametri numerici non confermati: NO import automatico in test7.",
+  "disclaimer": "Ogni carta applica un solo effetto. Il testo viene generato dalla stessa definizione usata in battaglia. Le vecchie ricette sono conservate come archivio e non sono richieste per giocare le carte.",
   "shipConfigurations": [
     {
       "id": "N00",
@@ -274,16 +274,20 @@
         "mobilità",
         "personaggio"
       ],
-      "effectProposed": "Osserva le prime 2 carte generali del mazzo e scegli quale pescare al prossimo ricambio.",
+      "effectProposed": "Per 2 tuoi turni: Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Le carte da scartare sono casuali.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 1
+      }
     },
     {
       "id": "ex-n00-02",
@@ -297,18 +301,22 @@
         "mobilità",
         "pressione_attacco"
       ],
-      "effectProposed": "Un colpo del Cannone adattivo può cambiare componente bersaglio prima della conferma.",
+      "effectProposed": "Aggiunge 1 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      }
     },
     {
       "id": "ex-n00-03",
@@ -322,18 +330,24 @@
         "mobilità",
         "protezione"
       ],
-      "effectProposed": "Se i Motori sono operativi e la carta è pronta, una volta per battaglia devia un colpo singolo diretto a un vitale ancora integro; non annulla salve da baluardo e consuma la carta.",
+      "effectProposed": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "engine"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
-      "vfxIntent": "escort-shield",
+      "counterplay": "Richiede Motori operativi.",
+      "vfxIntent": "evasion",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-n00-04",
@@ -347,16 +361,22 @@
         "mobilità",
         "protezione"
       ],
-      "effectProposed": "Il Velo Aurora intercetta una salva quando la sua passiva ciclica è disponibile.",
+      "effectProposed": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-n00-05",
@@ -370,7 +390,7 @@
         "mobilità",
         "combo"
       ],
-      "effectProposed": "Con entrambe le scudiere operative, due carte diverse marcano due componenti, uno per colpo nel prossimo round.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -379,12 +399,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Sequenza Zero",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-c01-01",
@@ -398,16 +422,22 @@
         "pressione",
         "personaggio"
       ],
-      "effectProposed": "La prossima carta di movimento prepara un secondo tiro leggero nel round seguente.",
+      "effectProposed": "Per 2 turni avversari, evita 1 colpo per turno contro i Motori, se i Motori funzionano.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Richiede Motori operativi.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "engine",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-c01-02",
@@ -421,19 +451,23 @@
         "pressione",
         "interferenza"
       ],
-      "effectProposed": "Se i Motori sono operativi, marca i Motori avversari e abilita un colpo madre su quel componente nel normale ordine di risoluzione; non anticipa automaticamente cure o contrattacchi.",
+      "effectProposed": "Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "engine",
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-c01-03",
@@ -447,16 +481,22 @@
         "pressione",
         "precisione"
       ],
-      "effectProposed": "Cambia bersaglio tra due componenti e impedisce una singola risposta automatica di precisione.",
+      "effectProposed": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno",
-      "vfxIntent": "target-lock",
+      "counterplay": "Richiede Motori operativi.",
+      "vfxIntent": "evasion",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "dodge",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-c01-04",
@@ -470,16 +510,22 @@
         "pressione",
         "sincronia"
       ],
-      "effectProposed": "La Sentinella Solare assorbe una salva e rinuncia al proprio bonus di mobilità per questo round.",
+      "effectProposed": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
+      "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-c01-05",
@@ -493,16 +539,20 @@
         "pressione",
         "sincronia"
       ],
-      "effectProposed": "Lama Rubino amplifica il prossimo tiro ai Motori, solo se il collegamento funziona.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-c01-06",
@@ -516,7 +566,7 @@
         "pressione",
         "combo"
       ],
-      "effectProposed": "Pilota Helios + Passaggio Radente: due colpi separati su Motori e Armi, non duplicabili sullo stesso pezzo.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [
         "command",
@@ -524,12 +574,16 @@
         "weapons"
       ],
       "requiredEscortCount": 1,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Tenaglia Cremisi",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-c02-01",
@@ -543,16 +597,20 @@
         "protezione",
         "personaggio"
       ],
-      "effectProposed": "Sceglie un componente bersaglio e lo segnala: il prossimo impatto ignora una protezione mirata.",
+      "effectProposed": "Per 2 tuoi turni: Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-c02-02",
@@ -566,18 +624,22 @@
         "protezione",
         "interferenza"
       ],
-      "effectProposed": "Un colpo al Generatore avversario riflette un piccolo disturbo alla carta difensiva attiva.",
+      "effectProposed": "Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
       "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-c02-03",
@@ -590,16 +652,20 @@
         "precisione",
         "protezione"
       ],
-      "effectProposed": "Fa cambiare al bersaglio la parte protetta dalla sua scudiera, se non è una copertura totale.",
+      "effectProposed": "Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
-      "vfxIntent": "escort-shield",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-c02-04",
@@ -612,16 +678,22 @@
         "precisione",
         "protezione"
       ],
-      "effectProposed": "Prisma Custode protegge soltanto il componente selezionato prima dello scontro.",
+      "effectProposed": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-c02-05",
@@ -635,16 +707,20 @@
         "protezione",
         "sincronia"
       ],
-      "effectProposed": "Accumula una carica ogni round senza attacco di precisione; a due cariche abilita perforazione.",
+      "effectProposed": "Il tuo attacco ignora 2 protezioni sui componenti.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      }
     },
     {
       "id": "ex-c02-06",
@@ -658,7 +734,7 @@
         "protezione",
         "combo"
       ],
-      "effectProposed": "Artigiana Prisma + Trapano Vetrificato: dopo carica effettiva, una salva della madre colpisce due vitali diversi; le intercettazioni totali continuano a funzionare.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -666,12 +742,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Rosa di Cristallo",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-c03-01",
@@ -685,16 +765,20 @@
         "sincronia",
         "personaggio"
       ],
-      "effectProposed": "Alla prima ionizzazione, sposta il disturbo su una seconda scudiera compatibile.",
+      "effectProposed": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-c03-02",
@@ -707,18 +791,22 @@
         "interferenza",
         "sincronia"
       ],
-      "effectProposed": "Spara un impulso che ritarda la prossima attivazione di una passiva nemica.",
+      "effectProposed": "Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
       "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-c03-03",
@@ -732,16 +820,20 @@
         "sincronia",
         "protezione"
       ],
-      "effectProposed": "Corvo Scudo interrompe una sinergia di collegamento per un round, non le armi materne.",
+      "effectProposed": "Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
-      "vfxIntent": "escort-shield",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-c03-04",
@@ -754,18 +846,22 @@
         "interferenza",
         "sincronia"
       ],
-      "effectProposed": "Il colpo viene duplicato su due bersagli soltanto se il nemico è già ionizzato.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-c03-05",
@@ -778,16 +874,20 @@
         "interferenza",
         "sincronia"
       ],
-      "effectProposed": "La seconda scudiera converte una ionizzazione attiva in un bonus al colpo materno.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-c03-06",
@@ -801,7 +901,7 @@
         "sincronia",
         "combo"
       ],
-      "effectProposed": "Comandante Risonante + Doppio Canale: tre impulsi distribuiti, con danno ridotto per bersaglio.",
+      "effectProposed": "Il tuo attacco colpisce fino a 3 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -809,12 +909,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Costellazione Pulsata",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 3
+      }
     },
     {
       "id": "ex-c04-01",
@@ -828,16 +932,21 @@
         "pressione",
         "personaggio"
       ],
-      "effectProposed": "Una volta per attivazione trasforma un contrattacco in un dardo che lascia una marca.",
+      "effectProposed": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 2 turni avversari.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Si attiva solo quando subisci danni.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-c04-02",
@@ -851,18 +960,22 @@
         "pressione",
         "interferenza"
       ],
-      "effectProposed": "Marca un vitale colpito da una salva reale. Nel round seguente un secondo tiro valido sullo stesso bersaglio può applicare una frattura; la marca da sola non infligge danno.",
+      "effectProposed": "Prepara +2 potenza per il tuo attacco del turno successivo.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+      "vfxIntent": "charge-weapon",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      }
     },
     {
       "id": "ex-c04-03",
@@ -876,16 +989,20 @@
         "pressione",
         "controllo_supporto"
       ],
-      "effectProposed": "Nasconde per un round quale dei due componenti è stato preparato come obiettivo.",
+      "effectProposed": "Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-c04-04",
@@ -899,18 +1016,24 @@
         "pressione",
         "protezione"
       ],
-      "effectProposed": "Velo Cremisi devia una salva leggera se il Generatore è operativo.",
+      "effectProposed": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [
         "generator"
       ],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-c04-05",
@@ -924,16 +1047,21 @@
         "pressione",
         "sincronia"
       ],
-      "effectProposed": "Dardo d’Ombra carica una ritorsione dopo un danno subito dalla madre.",
+      "effectProposed": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Si attiva solo quando subisci danni.",
+      "vfxIntent": "counter-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-c04-06",
@@ -947,7 +1075,7 @@
         "pressione",
         "combo"
       ],
-      "effectProposed": "Pungiglione Persistente + Risposta d’Ombra: dardi su due componenti diversi con una sola marca ritardata.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -956,12 +1084,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Sciame Scarlatto",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-r01-01",
@@ -975,16 +1107,20 @@
         "protezione",
         "personaggio"
       ],
-      "effectProposed": "Conserva una carica di un’arma quando il round termina senza sparare.",
+      "effectProposed": "Per 2 tuoi turni: Aggiunge 1 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      }
     },
     {
       "id": "ex-r01-02",
@@ -998,18 +1134,22 @@
         "protezione",
         "pressione_attacco"
       ],
-      "effectProposed": "Protocollo per la Batteria Gemella integrata: due proiettili nello stesso tiro sul medesimo vitale; la seconda esplosione è visiva, una sola frattura massima.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r01-03",
@@ -1023,16 +1163,20 @@
         "protezione",
         "carica_artiglieria"
       ],
-      "effectProposed": "Trasferisce una carica da una batteria integrata a un’altra.",
+      "effectProposed": "Prepara +2 potenza per il tuo attacco del turno successivo.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
+      "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
       "vfxIntent": "charge-weapon",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r01-04",
@@ -1045,16 +1189,22 @@
         "carica",
         "protezione"
       ],
-      "effectProposed": "La Sentinella intercetta una salva durante un round di carica.",
+      "effectProposed": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-r01-05",
@@ -1068,16 +1218,20 @@
         "protezione",
         "sincronia"
       ],
-      "effectProposed": "Riduce di un round la preparazione del tiro pesante, senza crearne uno gratis.",
+      "effectProposed": "Aggiunge 1 potenza al tuo attacco.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 1
+      }
     },
     {
       "id": "ex-r01-06",
@@ -1091,16 +1245,20 @@
         "protezione",
         "pressione_attacco"
       ],
-      "effectProposed": "Un colpo leggero prepara il Generatore nemico come bersaglio privilegiato.",
+      "effectProposed": "Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
-      "vfxIntent": "mother-weapon-fire",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-r01-07",
@@ -1114,7 +1272,7 @@
         "protezione",
         "combo"
       ],
-      "effectProposed": "Artigliere Binario + Fuoco di Calibrazione + carica: distribuisce tre colpi su componenti differenti.",
+      "effectProposed": "Il tuo attacco colpisce fino a 3 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -1122,12 +1280,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Triangolazione Falco",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 3
+      }
     },
     {
       "id": "ex-r02-01",
@@ -1141,16 +1303,20 @@
         "protezione",
         "personaggio"
       ],
-      "effectProposed": "Prolunga di un round una ionizzazione applicata dalla propria madre.",
+      "effectProposed": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-r02-02",
@@ -1164,18 +1330,22 @@
         "protezione",
         "precisione"
       ],
-      "effectProposed": "Protocollo per Arco Ionico integrato: un tiro reale alle Armi nemiche applica per un round un malus di precisione, solo se il bersaglio è effettivamente colpito.",
+      "effectProposed": "Il prossimo attacco avversario ha 2 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno",
-      "vfxIntent": "target-lock",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r02-03",
@@ -1189,16 +1359,20 @@
         "protezione",
         "sincronia"
       ],
-      "effectProposed": "Abbassa la potenza di una salva, senza impedire la scelta dei componenti.",
+      "effectProposed": "Il prossimo attacco avversario ha 2 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r02-04",
@@ -1211,16 +1385,20 @@
         "interferenza",
         "protezione"
       ],
-      "effectProposed": "Sposta una ionizzazione dalla madre avversaria alla sua prima scudiera attiva.",
+      "effectProposed": "Il prossimo attacco avversario ha 2 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
       "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r02-05",
@@ -1233,16 +1411,20 @@
         "interferenza",
         "protezione"
       ],
-      "effectProposed": "Trasforma un disturbo su un nemico in una carica offensiva extra.",
+      "effectProposed": "Prepara +2 potenza per il tuo attacco del turno successivo.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+      "vfxIntent": "charge-weapon",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r02-06",
@@ -1256,18 +1438,22 @@
         "protezione",
         "controllo_supporto"
       ],
-      "effectProposed": "Due archi simultanei su Motori e Generatore se entrambi sono disponibili.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-r02-07",
@@ -1281,7 +1467,7 @@
         "protezione",
         "combo"
       ],
-      "effectProposed": "Navigatrice Manta + Sting di Risonanza: colpisce due sistemi e spegne una passiva difensiva per un round.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -1289,12 +1475,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Nodo di Marea",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-r03-01",
@@ -1308,16 +1498,21 @@
         "riparazione",
         "personaggio"
       ],
-      "effectProposed": "Sceglie una parte fratturata: la prossima cura la preferisce se ancora riparabile.",
+      "effectProposed": "Ripara 1 punto al tuo componente più danneggiato, ora e al tuo prossimo turno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "weakest",
+        "amount": 1
+      }
     },
     {
       "id": "ex-r03-02",
@@ -1330,18 +1525,23 @@
         "precisione",
         "riparazione"
       ],
-      "effectProposed": "Ripara una frattura non distrutta, con limite una volta per ciclo di cura.",
+      "effectProposed": "Ripara 1 punto al componente scelto.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [
         "generator"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
       "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "selected",
+        "amount": 1
+      }
     },
     {
       "id": "ex-r03-03",
@@ -1355,16 +1555,22 @@
         "riparazione",
         "controllo_supporto"
       ],
-      "effectProposed": "Sposta un tiro a una parte vicina senza distruggere automaticamente il componente.",
+      "effectProposed": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
+      "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-r03-04",
@@ -1378,16 +1584,21 @@
         "riparazione",
         "protezione"
       ],
-      "effectProposed": "Iride Scudo ricuce un punto di resistenza o una frattura quando la ricarica è pronta.",
+      "effectProposed": "Ripara 2 punti alla tua scudiera più danneggiata.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
-      "vfxIntent": "escort-shield",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
+      "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r03-05",
@@ -1401,16 +1612,20 @@
         "riparazione",
         "sincronia"
       ],
-      "effectProposed": "Prepara un tiro preciso alla Centralina soltanto dopo una scansione.",
+      "effectProposed": "Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-r03-06",
@@ -1424,16 +1639,20 @@
         "riparazione",
         "controllo_supporto"
       ],
-      "effectProposed": "Mostra quale passiva nemica perderà efficacia danneggiando il componente indicato.",
+      "effectProposed": "Scarta 2 carte casuali dalla mano e ne pesca altrettante.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Le carte da scartare sono casuali.",
+      "vfxIntent": "card-draw",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "exchange",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r03-07",
@@ -1447,7 +1666,7 @@
         "riparazione",
         "combo"
       ],
-      "effectProposed": "Analisi Spettrale + Prisma Inverso: un colpo di precisione e una cura selettiva, non due danni pieni.",
+      "effectProposed": "Il tuo attacco ignora 2 protezioni sui componenti.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -1455,12 +1674,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Arcobaleno Chirurgico",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r04-01",
@@ -1474,16 +1697,21 @@
         "contrattacco",
         "personaggio"
       ],
-      "effectProposed": "Dopo due salve intercettate, abilita un contrattacco di assedio.",
+      "effectProposed": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 2 turni avversari.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Si attiva solo quando subisci danni.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-r04-02",
@@ -1497,18 +1725,22 @@
         "contrattacco",
         "pressione_attacco"
       ],
-      "effectProposed": "Un colpo al Generatore prende potenza dalle cariche del baluardo.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r04-03",
@@ -1521,16 +1753,22 @@
         "protezione",
         "contrattacco"
       ],
-      "effectProposed": "Lo Scudo del Vuoto intercetta il colpo diretto alla madre e consuma resistenza propria.",
+      "effectProposed": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "all",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-r04-04",
@@ -1544,16 +1782,21 @@
         "contrattacco",
         "controllo_supporto"
       ],
-      "effectProposed": "Restituisce una piccola resistenza alla scudiera, ma solo se non è stata distrutta.",
+      "effectProposed": "Ripara 2 punti alla tua scudiera più danneggiata.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
+      "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 2
+      }
     },
     {
       "id": "ex-r04-05",
@@ -1566,16 +1809,21 @@
         "protezione",
         "contrattacco"
       ],
-      "effectProposed": "Squalo Siluro marca il componente che ha originato un colpo intercettato.",
+      "effectProposed": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
-      "vfxIntent": "escort-shield",
+      "counterplay": "Si attiva solo quando subisci danni.",
+      "vfxIntent": "counter-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-r04-06",
@@ -1588,16 +1836,20 @@
         "protezione",
         "contrattacco"
       ],
-      "effectProposed": "Induce l’avversario a usare una copertura mirata prima dell’attacco vero.",
+      "effectProposed": "Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
-      "vfxIntent": "escort-shield",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-r04-07",
@@ -1611,7 +1863,7 @@
         "contrattacco",
         "combo"
       ],
-      "effectProposed": "Ammiraglio Abissale + Siluro di Ritorsione: un colpo concentrato su parte marcata con bonus condizionale.",
+      "effectProposed": "Aggiunge 3 potenza al tuo attacco.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [
         "command",
@@ -1619,12 +1871,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Caccia del Predatore",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      }
     },
     {
       "id": "ex-e01-01",
@@ -1638,16 +1894,20 @@
         "protezione",
         "personaggio"
       ],
-      "effectProposed": "Ogni primo congelamento rivela il componente che mantiene attiva la scudiera avversaria.",
+      "effectProposed": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-e01-02",
@@ -1660,16 +1920,19 @@
         "interferenza",
         "protezione"
       ],
-      "effectProposed": "Congela un componente integro per un round: niente effetti da quel componente.",
+      "effectProposed": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "counterplay": "Non può bloccare due turni avversari consecutivi.",
       "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "disarm"
+      }
     },
     {
       "id": "ex-e01-03",
@@ -1683,18 +1946,22 @@
         "protezione",
         "controllo_supporto"
       ],
-      "effectProposed": "Un ventaglio di colpi deboli colpisce un solo componente scelto.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e01-04",
@@ -1708,16 +1975,20 @@
         "protezione",
         "carica_artiglieria"
       ],
-      "effectProposed": "Il prossimo avversario che colpisce una scudiera ottiene un rallentamento di carica.",
+      "effectProposed": "Il prossimo attacco avversario ha 2 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
-      "vfxIntent": "charge-weapon",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e01-05",
@@ -1731,16 +2002,22 @@
         "protezione",
         "riparazione"
       ],
-      "effectProposed": "La scudiera assorbe l’intera salva se collegata e viva; il danno eccedente non raggiunge la madre nello stesso round. Consuma la propria resistenza.",
+      "effectProposed": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
-      "vfxIntent": "repair-beam",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
+      "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "all",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-e01-06",
@@ -1754,16 +2031,19 @@
         "protezione",
         "sincronia"
       ],
-      "effectProposed": "Disattiva per un round una passiva avversaria scelta tra quelle attive.",
+      "effectProposed": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Non può bloccare due turni avversari consecutivi.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "disarm"
+      }
     },
     {
       "id": "ex-e01-07",
@@ -1776,16 +2056,22 @@
         "interferenza",
         "protezione"
       ],
-      "effectProposed": "Prolunga una copertura mirata già attiva, senza crearne una nuova.",
+      "effectProposed": "Blocca 1 colpo contro il componente scelto. Dura 2 turni avversari.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 1,
+        "turns": 2
+      }
     },
     {
       "id": "ex-e01-08",
@@ -1799,7 +2085,7 @@
         "protezione",
         "combo"
       ],
-      "effectProposed": "Arconte + Nebbia Polare + Pulsar: congela due funzioni per un round, senza danno diretto aggiuntivo.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [
         "command",
@@ -1807,12 +2093,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Notte Criogenica",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-e02-01",
@@ -1826,16 +2116,20 @@
         "interferenza",
         "personaggio"
       ],
-      "effectProposed": "Una volta per round consente di spostare il secondo impulso su un bersaglio distinto.",
+      "effectProposed": "Per 2 tuoi turni: Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-e02-02",
@@ -1849,18 +2143,22 @@
         "interferenza",
         "pressione_attacco"
       ],
-      "effectProposed": "Tre piccoli proiettili su un singolo pezzo, con un solo danno vitale complessivo.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e02-03",
@@ -1873,18 +2171,22 @@
         "mobilità",
         "interferenza"
       ],
-      "effectProposed": "Marca due componenti e sottrae difesa alla seconda salva valida.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-e02-04",
@@ -1898,16 +2200,22 @@
         "interferenza",
         "protezione"
       ],
-      "effectProposed": "Fronte Tempesta intercetta i colpi sulle Armi materne.",
+      "effectProposed": "Blocca 1 colpo contro le Armi. Dura 2 turni avversari.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "weapons",
+        "amount": 1,
+        "turns": 2
+      }
     },
     {
       "id": "ex-e02-05",
@@ -1920,16 +2228,19 @@
         "mobilità",
         "interferenza"
       ],
-      "effectProposed": "Dopo una ionizzazione ritarda una ricarica nemica di un round.",
+      "effectProposed": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
+      "counterplay": "Non può bloccare due turni avversari consecutivi.",
       "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "disarm"
+      }
     },
     {
       "id": "ex-e02-06",
@@ -1943,16 +2254,20 @@
         "interferenza",
         "sincronia"
       ],
-      "effectProposed": "Tuono Doppio converte la seconda raffica riuscita in bonus ionico.",
+      "effectProposed": "Il prossimo attacco avversario ha 2 potenza in meno.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e02-07",
@@ -1966,16 +2281,20 @@
         "interferenza",
         "protezione"
       ],
-      "effectProposed": "Una raffica può deviare dal componente colpito a un secondo integro, con potenza ridotta.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
-      "vfxIntent": "escort-shield",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-e02-08",
@@ -1989,7 +2308,7 @@
         "interferenza",
         "combo"
       ],
-      "effectProposed": "Capitano + Onda a Pettine + Tuono: dopo preparazione, quattro impulsi su quattro vitali diversi disponibili, massimo una frattura ciascuno, senza duplicare sui pezzi assenti.",
+      "effectProposed": "Il tuo attacco colpisce fino a 4 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -1997,12 +2316,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Quadrante di Tempesta",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 4
+      }
     },
     {
       "id": "ex-e03-01",
@@ -2016,16 +2339,22 @@
         "pressione",
         "personaggio"
       ],
-      "effectProposed": "La prima frattura della madre durante l’attivazione genera una carica di rinascita.",
+      "effectProposed": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Si attiva solo quando un colpo infligge danno.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hurt",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-e03-02",
@@ -2039,18 +2368,22 @@
         "pressione",
         "pressione_attacco"
       ],
-      "effectProposed": "Colpo di fuoco amplificato se la madre ha un componente fratturato.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e03-03",
@@ -2063,18 +2396,23 @@
         "riparazione",
         "pressione"
       ],
-      "effectProposed": "Prepara una riparazione al prossimo round, impedita se il componente viene distrutto prima.",
+      "effectProposed": "Ripara 1 punto al componente scelto.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "generator"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
       "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "selected",
+        "amount": 1
+      }
     },
     {
       "id": "ex-e03-04",
@@ -2087,16 +2425,21 @@
         "riparazione",
         "pressione"
       ],
-      "effectProposed": "Ripara una frattura recuperabile ogni volta che raggiunge la ricarica prevista.",
+      "effectProposed": "Ripara 1 punto al tuo componente più danneggiato.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
       "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "weakest",
+        "amount": 1
+      }
     },
     {
       "id": "ex-e03-05",
@@ -2109,16 +2452,20 @@
         "riparazione",
         "pressione"
       ],
-      "effectProposed": "Un bersaglio colpito da fuoco subisce riduzione di riparazione per un round.",
+      "effectProposed": "Il prossimo attacco avversario ha 2 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
-      "vfxIntent": "repair-beam",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e03-06",
@@ -2132,16 +2479,20 @@
         "pressione",
         "sincronia"
       ],
-      "effectProposed": "Converte una carica di rinascita in potenza per una singola salva.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e03-07",
@@ -2149,22 +2500,28 @@
       "shipName": "Fenice",
       "rarityDraft": "Epica",
       "name": "Fusione della Fenice",
-      "category": "Fusione L5",
+      "category": "Supporto",
       "families": [
         "riparazione",
         "pressione",
         "sincronia_fusione"
       ],
-      "effectProposed": "Unisce le due scudiere attive per una riparazione e un contrattacco, con costo di ricarica.",
+      "effectProposed": "Il primo colpo riuscito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti",
-      "vfxIntent": "fusion-link",
+      "counterplay": "Si attiva solo quando un colpo infligge danno.",
+      "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "regenerate",
+        "trigger": "hit",
+        "amount": 1,
+        "turns": 2
+      }
     },
     {
       "id": "ex-e03-08",
@@ -2178,7 +2535,7 @@
         "pressione",
         "combo"
       ],
-      "effectProposed": "Guardiana + Fiamma Residua: due colpi su parti diverse; il secondo non supera un baluardo totale.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [
         "command",
@@ -2186,12 +2543,16 @@
         "weapons"
       ],
       "requiredEscortCount": 1,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Cenere d’Assedio",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-e04-01",
@@ -2205,16 +2566,20 @@
         "protezione",
         "personaggio"
       ],
-      "effectProposed": "Prima del tiro visualizza le due difese avversarie più rilevanti per il bersaglio.",
+      "effectProposed": "Per 2 tuoi turni: Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-e04-02",
@@ -2227,18 +2592,22 @@
         "precisione",
         "protezione"
       ],
-      "effectProposed": "Perfora una difesa parziale, ma non un baluardo completo attivo.",
+      "effectProposed": "Il tuo attacco ignora 2 protezioni sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
       "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e04-03",
@@ -2251,16 +2620,20 @@
         "precisione",
         "protezione"
       ],
-      "effectProposed": "Memorizza un bersaglio: il colpo successivo su quel pezzo ottiene precisione.",
+      "effectProposed": "Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
       "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-e04-04",
@@ -2273,16 +2646,22 @@
         "precisione",
         "protezione"
       ],
-      "effectProposed": "La scudiera corazzata intercetta una salva e consuma resistenza propria.",
+      "effectProposed": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "all",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-e04-05",
@@ -2296,18 +2675,22 @@
         "protezione",
         "controllo_supporto"
       ],
-      "effectProposed": "Due raggi su due parti differenti purché la mira sia stata preparata.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-e04-06",
@@ -2321,16 +2704,20 @@
         "protezione",
         "sincronia"
       ],
-      "effectProposed": "La seconda scudiera guida un colpo al componente marcato.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-e04-07",
@@ -2344,16 +2731,20 @@
         "protezione",
         "interferenza"
       ],
-      "effectProposed": "Annulla il camuffamento di un singolo bersaglio nemico.",
+      "effectProposed": "Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-e04-08",
@@ -2367,7 +2758,7 @@
         "protezione",
         "combo"
       ],
-      "effectProposed": "Veggente + Coordinate Estreme + Lance: quattro colpi distribuiti, ma solo con due scudiere e dopo preparazione.",
+      "effectProposed": "Il tuo attacco colpisce fino a 4 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -2375,12 +2766,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Convergenza dei Quattro",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 4
+      }
     },
     {
       "id": "ex-l01-01",
@@ -2394,16 +2789,20 @@
         "pressione",
         "personaggio"
       ],
-      "effectProposed": "Marca il primo componente nemico colpito come bersaglio della prossima sentenza.",
+      "effectProposed": "Per 2 tuoi turni: Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l01-02",
@@ -2416,16 +2815,22 @@
         "protezione",
         "pressione"
       ],
-      "effectProposed": "La scudiera intercetta le salve finché ha resistenza.",
+      "effectProposed": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "all",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-l01-03",
@@ -2439,18 +2844,22 @@
         "pressione",
         "pressione_attacco"
       ],
-      "effectProposed": "Distribuisce proiettili fotonici su due componenti differenti.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
       "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-l01-04",
@@ -2464,16 +2873,20 @@
         "pressione",
         "sincronia"
       ],
-      "effectProposed": "La seconda scudiera aggiunge corrosione a un colpo già riuscito.",
+      "effectProposed": "Il tuo attacco ignora 2 protezioni sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l01-05",
@@ -2487,16 +2900,20 @@
         "pressione",
         "riparazione"
       ],
-      "effectProposed": "Blocca per un round una riparazione sul componente marcato.",
+      "effectProposed": "Il prossimo attacco avversario ha 2 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
-      "vfxIntent": "repair-beam",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l01-06",
@@ -2510,18 +2927,22 @@
         "pressione",
         "carica_artiglieria"
       ],
-      "effectProposed": "Colpo caricato ad alta precisione contro un sistema già scoperto.",
+      "effectProposed": "Il tuo attacco ignora 2 protezioni sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
-      "vfxIntent": "charge-weapon",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l01-07",
@@ -2535,7 +2956,7 @@
         "pressione",
         "combo"
       ],
-      "effectProposed": "Tre carte esclusive preparano tre spirali che colpiscono fino a tre vitali differenti.",
+      "effectProposed": "Il tuo attacco colpisce fino a 3 componenti diversi.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [
         "command",
@@ -2543,12 +2964,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Giudizio Eclissi",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 3
+      }
     },
     {
       "id": "ex-l01-08",
@@ -2562,16 +2987,22 @@
         "pressione",
         "carica_artiglieria"
       ],
-      "effectProposed": "Consuma una carica della Corona per coprire una parte dichiarata.",
+      "effectProposed": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
-      "vfxIntent": "charge-weapon",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
+      "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "selected",
+        "amount": 2,
+        "turns": 1
+      }
     },
     {
       "id": "ex-l01-09",
@@ -2585,16 +3016,21 @@
         "pressione",
         "carica_artiglieria"
       ],
-      "effectProposed": "Se una scudiera è distrutta, converte una corrosione attiva in carica offensiva.",
+      "effectProposed": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
-      "vfxIntent": "charge-weapon",
+      "counterplay": "Si attiva solo quando subisci danni.",
+      "vfxIntent": "counter-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "counter",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-l01-10",
@@ -2608,7 +3044,7 @@
         "pressione",
         "combo"
       ],
-      "effectProposed": "Sovrano + Verdetto + Giudizio: quattro impatti su quattro componenti, con preparazione e contromisure possibili.",
+      "effectProposed": "Il tuo attacco colpisce fino a 4 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -2616,12 +3052,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Eclisse Totale",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 4
+      }
     },
     {
       "id": "ex-l02-01",
@@ -2635,16 +3075,20 @@
         "deviazione",
         "personaggio"
       ],
-      "effectProposed": "Sposta una marca gravitazionale da un componente a un altro prima della salva.",
+      "effectProposed": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-l02-02",
@@ -2658,16 +3102,20 @@
         "deviazione",
         "riparazione"
       ],
-      "effectProposed": "Un componente marcato non può essere cambiato come bersaglio di riparazione nel prossimo round.",
+      "effectProposed": "Il prossimo attacco avversario ha 2 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
-      "vfxIntent": "repair-beam",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l02-03",
@@ -2681,18 +3129,22 @@
         "deviazione",
         "controllo_supporto"
       ],
-      "effectProposed": "Due fendenti visibili contro il medesimo vitale con un solo impatto meccanico per salva, senza attraversare una protezione attiva.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l02-04",
@@ -2706,16 +3158,20 @@
         "deviazione",
         "sincronia"
       ],
-      "effectProposed": "Riduce una salva nemica di una unità e accumula compressione.",
+      "effectProposed": "Il prossimo attacco avversario ha 1 potenza in meno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+      "vfxIntent": "electromagnetic-jam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "weaken",
+        "amount": 1
+      }
     },
     {
       "id": "ex-l02-05",
@@ -2729,18 +3185,22 @@
         "deviazione",
         "pressione_attacco"
       ],
-      "effectProposed": "Consuma compressione per potenziare un raggio su un vitale.",
+      "effectProposed": "Aggiunge 3 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "generator"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      }
     },
     {
       "id": "ex-l02-06",
@@ -2754,16 +3214,20 @@
         "deviazione",
         "sincronia"
       ],
-      "effectProposed": "Converte la compressione residua in un colpo aggiuntivo ridotto.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 3,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l02-07",
@@ -2777,16 +3241,20 @@
         "deviazione",
         "controllo_supporto"
       ],
-      "effectProposed": "Sposta un impatto secondario da un pezzo integro a un altro, mai sullo stesso.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-l02-08",
@@ -2800,16 +3268,22 @@
         "deviazione",
         "protezione"
       ],
-      "effectProposed": "Protegge per un round una scudiera danneggiata assorbendo il prossimo danno lieve.",
+      "effectProposed": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 2,
+        "turns": 2
+      }
     },
     {
       "id": "ex-l02-09",
@@ -2823,16 +3297,20 @@
         "deviazione",
         "sincronia_fusione"
       ],
-      "effectProposed": "Unisce le due scudiere per una scarica compressa, disattivandone temporaneamente le passive.",
+      "effectProposed": "Aggiunge 3 potenza al tuo attacco.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti",
-      "vfxIntent": "fusion-link",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      }
     },
     {
       "id": "ex-l02-10",
@@ -2846,7 +3324,7 @@
         "deviazione",
         "combo"
       ],
-      "effectProposed": "Architetto + Fulcro + Fusione: fino a tre componenti colpiti, con un colpo maggiorato sul bersaglio marcato.",
+      "effectProposed": "Il tuo attacco colpisce fino a 3 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -2854,12 +3332,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Collasso Gemello",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 3
+      }
     },
     {
       "id": "ex-l03-01",
@@ -2873,16 +3355,20 @@
         "protezione",
         "personaggio"
       ],
-      "effectProposed": "Conserva la mira acquisita su una parte mentre il Cannone Titano si carica.",
+      "effectProposed": "Per 2 tuoi turni: Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-l03-02",
@@ -2896,18 +3382,22 @@
         "protezione",
         "pressione_attacco"
       ],
-      "effectProposed": "Colpo pesante su un pezzo dichiarato, lento e interrompibile.",
+      "effectProposed": "Aggiunge 2 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
       "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l03-03",
@@ -2920,16 +3410,22 @@
         "carica",
         "protezione"
       ],
-      "effectProposed": "La scudiera corazzata intercetta i colpi finché la sua resistenza non termina.",
+      "effectProposed": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "all",
+        "amount": 1,
+        "turns": 1
+      }
     },
     {
       "id": "ex-l03-04",
@@ -2943,16 +3439,22 @@
         "protezione",
         "pressione_attacco"
       ],
-      "effectProposed": "Prepara la prima scudiera a ricevere una salva e ne riduce il primo danno.",
+      "effectProposed": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
-      "vfxIntent": "mother-weapon-fire",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
+      "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 2,
+        "turns": 2
+      }
     },
     {
       "id": "ex-l03-05",
@@ -2966,18 +3468,22 @@
         "protezione",
         "carica_artiglieria"
       ],
-      "effectProposed": "Con carica completa causa un impatto critico su un solo componente.",
+      "effectProposed": "Aggiunge 3 potenza al tuo attacco.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
-      "vfxIntent": "charge-weapon",
+      "counterplay": "Le scudiere possono intercettare l’attacco.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "power",
+        "amount": 3
+      }
     },
     {
       "id": "ex-l03-06",
@@ -2991,16 +3497,20 @@
         "protezione",
         "sincronia"
       ],
-      "effectProposed": "La seconda scudiera guida l’attacco ai sistemi Armi avversari.",
+      "effectProposed": "Il tuo attacco ignora 1 protezione sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto",
-      "vfxIntent": "escort-link",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 1
+      }
     },
     {
       "id": "ex-l03-07",
@@ -3014,16 +3524,20 @@
         "protezione",
         "pressione_attacco"
       ],
-      "effectProposed": "Identifica due vitali, preparando un colpo a ventaglio nel turno successivo.",
+      "effectProposed": "Prepara +2 potenza per il tuo attacco del turno successivo.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva",
-      "vfxIntent": "mother-weapon-fire",
+      "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+      "vfxIntent": "charge-weapon",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l03-08",
@@ -3037,18 +3551,22 @@
         "protezione",
         "carica_artiglieria"
       ],
-      "effectProposed": "Divide una carica in due colpi leggeri a componenti diversi.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista",
-      "vfxIntent": "charge-weapon",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-l03-09",
@@ -3062,16 +3580,20 @@
         "protezione",
         "sincronia_fusione"
       ],
-      "effectProposed": "Accoppia le scudiere in una formazione di assedio che riduce la protezione ma consuma carica.",
+      "effectProposed": "Il tuo attacco ignora 2 protezioni sui componenti.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti",
-      "vfxIntent": "fusion-link",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l03-10",
@@ -3085,7 +3607,7 @@
         "protezione",
         "combo"
       ],
-      "effectProposed": "Magistro + Scansione + Fusione: quattro colpi diversi, uno per parte; non attivabile con scudiere scollegate.",
+      "effectProposed": "Il tuo attacco colpisce fino a 4 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -3093,12 +3615,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Sentenza Quadrante",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 4
+      }
     },
     {
       "id": "ex-l04-01",
@@ -3112,16 +3638,21 @@
         "sincronia",
         "personaggio"
       ],
-      "effectProposed": "Una riparazione riuscita genera un segnalino di armonia per la prossima combo.",
+      "effectProposed": "Ripara 1 punto al tuo componente più danneggiato, ora e al tuo prossimo turno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
       "vfxIntent": "character-activate",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "weakest",
+        "amount": 1
+      }
     },
     {
       "id": "ex-l04-02",
@@ -3134,16 +3665,21 @@
         "riparazione",
         "sincronia"
       ],
-      "effectProposed": "La prima scudiera ripara una frattura recuperabile quando la sua carica è pronta.",
+      "effectProposed": "Ripara 1 punto al componente scelto.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 1,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
       "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "selected",
+        "amount": 1
+      }
     },
     {
       "id": "ex-l04-03",
@@ -3157,18 +3693,22 @@
         "sincronia",
         "interferenza"
       ],
-      "effectProposed": "Un bolide marca il componente colpito per un successivo raggio stellare.",
+      "effectProposed": "Prepara +2 potenza per il tuo attacco del turno successivo.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+      "vfxIntent": "charge-weapon",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "charge",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l04-04",
@@ -3182,18 +3722,22 @@
         "sincronia",
         "interferenza"
       ],
-      "effectProposed": "Raggio prismatico più efficace contro sistemi già marcati.",
+      "effectProposed": "Il tuo attacco ignora 2 protezioni sui componenti.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne",
-      "vfxIntent": "electromagnetic-jam",
+      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+      "vfxIntent": "target-lock",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "pierce",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l04-05",
@@ -3206,16 +3750,21 @@
         "riparazione",
         "sincronia"
       ],
-      "effectProposed": "La seconda scudiera ripristina resistenza a una compagna ferita, mai distrutta.",
+      "effectProposed": "Ripara 2 punti alla tua scudiera più danneggiata.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
       "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "escort",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l04-06",
@@ -3229,16 +3778,22 @@
         "sincronia",
         "protezione"
       ],
-      "effectProposed": "Protegge una scudiera da un singolo effetto di corrosione.",
+      "effectProposed": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento",
+      "counterplay": "Ogni colpo bloccato consuma una protezione.",
       "vfxIntent": "escort-shield",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "protect",
+        "target": "escort",
+        "amount": 2,
+        "turns": 2
+      }
     },
     {
       "id": "ex-l04-07",
@@ -3252,16 +3807,20 @@
         "sincronia",
         "controllo_supporto"
       ],
-      "effectProposed": "Consuma armonia per riattivare una passiva di supporto nel turno seguente.",
+      "effectProposed": "Rimette in cima al mazzo l’ultima carta Supporto o Controllo scartata.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Richiede una carta adatta negli scarti.",
+      "vfxIntent": "card-recover",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "recover",
+        "role": "support"
+      }
     },
     {
       "id": "ex-l04-08",
@@ -3275,18 +3834,22 @@
         "sincronia",
         "controllo_supporto"
       ],
-      "effectProposed": "Un portale converte armonia in raggi separati, senza ripetere lo stesso bersaglio.",
+      "effectProposed": "Il tuo attacco colpisce fino a 2 componenti diversi.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [
         "weapons"
       ],
       "requiredEscortCount": 0,
-      "counterplay": "Scadenza stato o purificazione secondo categoria",
-      "vfxIntent": "card-activation",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 2
+      }
     },
     {
       "id": "ex-l04-09",
@@ -3294,22 +3857,27 @@
       "shipName": "Arca Astrale",
       "rarityDraft": "Leggendaria",
       "name": "Fusione dell’Arca",
-      "category": "Fusione L5",
+      "category": "Supporto",
       "families": [
         "riparazione",
         "sincronia",
         "sincronia_fusione"
       ],
-      "effectProposed": "Unisce le due scudiere per riparazione e risonanza, con un turno di ricarica.",
+      "effectProposed": "Ripara 2 punti al tuo componente più danneggiato.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [],
       "requiredEscortCount": 2,
-      "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti",
-      "vfxIntent": "fusion-link",
+      "counterplay": "Non ripara componenti o scudiere distrutti.",
+      "vfxIntent": "repair-beam",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
       "comboRecipeId": null,
-      "status": "non_implementata_da_approvare"
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "repair",
+        "target": "weakest",
+        "amount": 2
+      }
     },
     {
       "id": "ex-l04-10",
@@ -3323,7 +3891,7 @@
         "sincronia",
         "combo"
       ],
-      "effectProposed": "Custode + Arca del Vuoto + Fusione: dopo una riparazione reale e preparazione, fino a quattro raggi sui vitali distinti realmente presenti, massimo una frattura ciascuno.",
+      "effectProposed": "Il tuo attacco colpisce fino a 4 componenti diversi.",
       "minShipLevelDraft": 5,
       "requiredOwnParts": [
         "command",
@@ -3331,12 +3899,16 @@
         "weapons"
       ],
       "requiredEscortCount": 2,
-      "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo",
-      "vfxIntent": "combo-windup",
+      "counterplay": "Ogni componente può essere colpito una sola volta.",
+      "vfxIntent": "mother-weapon-fire",
       "maxCopiesInAutoPackageDraft": 1,
       "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": "Quattro Costellazioni",
-      "status": "non_implementata_da_approvare"
+      "comboRecipeId": null,
+      "status": "semplificata_implementata",
+      "effectSpec": {
+        "type": "multishot",
+        "targets": 4
+      }
     }
   ],
   "comboRecipes": [
@@ -3366,8 +3938,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Tenaglia Cremisi",
@@ -3394,8 +3968,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Rosa di Cristallo",
@@ -3422,8 +3998,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Costellazione Pulsata",
@@ -3450,8 +4028,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Sciame Scarlatto",
@@ -3479,8 +4059,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Triangolazione Falco",
@@ -3507,8 +4089,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Nodo di Marea",
@@ -3535,8 +4119,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Arcobaleno Chirurgico",
@@ -3563,8 +4149,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Caccia del Predatore",
@@ -3591,8 +4179,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Notte Criogenica",
@@ -3620,8 +4210,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": true
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": true,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Quadrante di Tempesta",
@@ -3649,8 +4241,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": true
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": true,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Cenere d’Assedio",
@@ -3677,8 +4271,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Convergenza dei Quattro",
@@ -3706,8 +4302,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": true
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": true,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Giudizio Eclissi",
@@ -3734,8 +4332,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": false
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": false,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Eclisse Totale",
@@ -3763,8 +4363,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": true
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": true,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Collasso Gemello",
@@ -3792,8 +4394,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": true
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": true,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Sentenza Quadrante",
@@ -3821,8 +4425,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": true
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": true,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     },
     {
       "ricetta": "Quattro Costellazioni",
@@ -3850,8 +4456,10 @@
         "manca una carta o scade preparazione",
         "baluardo attivo per le salve offensive"
       ],
-      "stato": "proposta da simulare",
-      "richiede_preparazione_multiturno": true
+      "stato": "archivio_non_attiva",
+      "richiede_preparazione_multiturno": true,
+      "active": false,
+      "archiveNote": "Ricetta precedente conservata per riferimento. Nessuna sequenza richiesta nella revisione simple-effects-v1."
     }
   ],
   "sharedFusionsDraft": [
@@ -3863,7 +4471,9 @@
         "E04",
         "L01",
         "L03"
-      ]
+      ],
+      "status": "archivio_non_attivo",
+      "active": false
     },
     {
       "existingId": "fusion-strike",
@@ -3874,7 +4484,9 @@
         "E02",
         "E03",
         "L03"
-      ]
+      ],
+      "status": "archivio_non_attivo",
+      "active": false
     },
     {
       "existingId": "fusion-twin",
@@ -3883,7 +4495,9 @@
         "R02",
         "E02",
         "L02"
-      ]
+      ],
+      "status": "archivio_non_attivo",
+      "active": false
     },
     {
       "existingId": "fusion-triad",
@@ -3894,13 +4508,27 @@
         "L01",
         "L03",
         "L04"
-      ]
+      ],
+      "status": "archivio_non_attivo",
+      "active": false
     }
   ],
   "validation": {
     "shipCount": 17,
     "uniqueCardCount": 129,
     "recipeCount": 18,
+    "activeRecipeCount": 0,
+    "explicitEffectCount": 129,
+    "rulesRevision": "simple-effects-v1",
     "issues": []
-  }
+  },
+  "rulesRevision": "simple-effects-v1",
+  "sharedRules": [
+    "Il livello della nave, i componenti richiesti e le scudiere necessarie restano indicati nella scheda della carta.",
+    "Le carte Combo e Fusione applicano direttamente il proprio effetto: non richiedono una sequenza di altre carte.",
+    "Un personaggio applica il proprio effetto quando viene giocato e al tuo turno successivo.",
+    "Una protezione blocca il numero di colpi indicato e poi si consuma.",
+    "Le riparazioni non ricostruiscono componenti o scudiere distrutti.",
+    "I miglioramenti aumentano solo la quantità indicata nel testo. Le carte senza un aumento utile non sono migliorabili."
+  ]
 }

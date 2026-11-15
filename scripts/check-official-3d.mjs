@@ -2,8 +2,7 @@
 import {existsSync,readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {PHASE1_CATALOG} from '../src/phase1FleetCatalog.js';
-import {MODULE_CARD_TYPES} from '../src/tacticalEquipmentCards.js';
-import {supportedLiveSpecial} from '../src/officialLiveDuelEngine.js';
+import {GENERAL_COUNT,EXCLUSIVE_COUNT,BOSS_COUNT,TOTAL_CARD_COUNT} from '../src/fleetNext/rules.js';
 import {LIVE_FX_SPRITES} from '../src/officialLiveCombatVisuals.js';
 import {OFFICIAL_NUMERIC_BACK_IDS,officialNumericDeckStackPath} from '../src/officialDeckBackArt.js';
 
@@ -26,7 +25,8 @@ const source=read('src/App.tsx');
 const shop=read('src/ShopModal.jsx');
 const home=read('src/HomeScreen.jsx');
 const loadout=read('src/PersonalLoadoutModal.jsx');
-const specialEditor=read('src/SpecialDeckPanel.jsx');
+const fleetEditor=read('src/FleetCollectionWorkshop.jsx');
+const hangar=read('src/ShipCollectionPanels.jsx');
 
 verify(app.includes("import App from './App.tsx'")&&app.includes('<App />'),
  'main.tsx deve avviare solo App.tsx');
@@ -155,13 +155,11 @@ verify(exists('src/officialLiveMobileLayout.test.js'),
 
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
-verify(MODULE_CARD_TYPES.length===35&&MODULE_CARD_TYPES.every(supportedLiveSpecial)&&
- shop.includes('TACTICAL_MODULE_CARDS[moduleCardType(a.id)]')&&
- shop.includes('officialSpecialArtPath(moduleCard.id)')&&
- specialEditor.includes('readSpecialCollection()')&&
- specialEditor.includes('readLegacyModuleLevels()')&&
- specialEditor.includes('isModuleCard(type)'),
- 'I 35 Moduli del Bazar devono essere vere Carte Speciali giocabili nel LIVE, acquistate e gestite nell Hangar');
+verify(GENERAL_COUNT===250&&EXCLUSIVE_COUNT===129&&BOSS_COUNT===12&&TOTAL_CARD_COUNT===391&&
+ shop.includes('<FleetCollectionWorkshop')&&hangar.includes('<FleetCollectionWorkshop initialTab="decks"')&&
+ !shop.includes("id: 'abilities'")&&!hangar.includes('<SpecialDeckPanel')&&
+ fleetEditor.includes('readFleetInventory')&&fleetEditor.includes('BOSS_CARDS'),
+ 'Bazar, Hangar e battaglia devono condividere le 391 carte; nessun acquisto di moduli fuori dal mazzo attivo');
 verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')&&
  !/\bid:\s*['"](?:weapons|terrain|environments)['"]/.test(shop)&&
  !/onOpenShopTab\(['"](?:weapons|terrain|environments)['"]\)/.test(loadout)&&
@@ -173,7 +171,7 @@ verify(battleEntry.includes("import OfficialFleetBattle3D from './OfficialFleetB
  battleEntry.includes("<OfficialFleetBattle3D {...officialCampaignBattleProps(props)}"),
  'La battaglia ufficiale DEVE riutilizzare la plancia 3D LIVE originale');
 const fleetView=read('src/OfficialFleetBattle3D.jsx');
-const fleetEngine=read('src/fleetCardEngine.js');
+const fleetEngine=read('src/fleetNext/combat.js');
 const fleetCss=read('src/OfficialFleetBattle3D.css');
 verify(fleetView.includes("readShipCollection")&&fleetView.includes("readFleetInventory")&&
  fleetView.includes("claimOfficialLiveVictoryRewards")&&
@@ -181,9 +179,10 @@ verify(fleetView.includes("readShipCollection")&&fleetView.includes("readFleetIn
  fleetView.includes("<ShipPhysicalVitals")&&fleetView.includes("<MountedWeapons")&&
  fleetView.includes("OfficialLiveBattle3D.css"),
  'Nuove meccaniche: obbligatorio mantenere le navicelle 3D e i vitali fisici originali');
-verify(fleetEngine.includes("FLEET_ELEMENTS")&&fleetEngine.includes("FLEET_PARTS")&&
- fleetEngine.includes("selectFleetAiOrder")&&fleetEngine.includes("resolveFleetCardRound"),
- 'Il nuovo motore deve conservare elementi, vitali e IA senza numeriche');
+verify(fleetEngine.includes('effectiveEffectSpec')&&fleetEngine.includes('validateFleetTurn')&&
+ fleetEngine.includes('autoFleetTurn')&&fleetEngine.includes('resolveFleetNextTurn')&&
+ fleetEditor.includes('describeEffect(c,grade)')&&fleetView.includes('ownPartId:actualOwnVital'),
+ 'Il motore attivo deve eseguire le regole esplicite, con bersaglio proprio e testi del grado corretto');
 verify(fleetView.includes("arena_titanio_9x16.webp")&&
  fleetView.includes("className=\"fleet-ship-wrap complete-ship focused official-mother\"")&&
  !fleetView.includes("import './FleetCardBattle.css'")&&

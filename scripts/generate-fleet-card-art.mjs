@@ -3,21 +3,23 @@
 import {readFileSync,existsSync,mkdirSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
+import {describeEffect} from '../src/fleetNext/simpleEffects.js';
+import {BOSS_CARDS} from '../src/fleetNext/bossCards.js';
 const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const C={"attack":{"base":"#ff594c","soft":"#ffb054","name":"ATTACCO","glyph":"⟡"},"defense":{"base":"#37ceff","soft":"#b1f2ff","name":"DIFESA","glyph":"⬡"},"character":{"base":"#eb64e1","soft":"#ffd0fb","name":"PERSONAGGIO","glyph":"♛"},"terrain":{"base":"#2be3a2","soft":"#afffe4","name":"TERRENO","glyph":"◈"},"support":{"base":"#ffb24d","soft":"#ffe2a4","name":"SUPPORTO","glyph":"✚"},"control":{"base":"#9e8fff","soft":"#ded4ff","name":"CONTROLLO","glyph":"◎"}};
-const R={"Comune":{"name":"COMUNE","level":1},"Rara":{"name":"RARA","level":2},"Epica":{"name":"EPICA","level":3},"Leggendaria":{"name":"LEGGENDARIA","level":4}};
+const R={"Comune":{"name":"COMUNE","level":1},"Rara":{"name":"RARA","level":2},"Epica":{"name":"EPICA","level":3},"Leggendaria":{"name":"LEGGENDARIA","level":4},"Boss":{"name":"BOSS","level":3}};
 function hash(s){let h=2166136261;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return h>>>0}
 function rng(seed){let x=seed||1;return ()=>((x=(Math.imul(1664525,x)+1013904223)>>>0)/4294967296)}
 function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;")}
 function lineBreak(s,length=30,limit=4){let words=String(s||"").replace(/\s+/g," ").trim().split(" "),out=[],line="";for(let word of words){if((line+" "+word).trim().length>length&&line){out.push(line);line=word}else line+=(line?" ":"")+word}if(line)out.push(line);if(out.length>limit){out=out.slice(0,limit);out[limit-1]=out[limit-1].replace(/[ .,:;]+$/,"")+"…"}return out}
-function normalizeCard(o,source){
+function normalizeCard(o,source,grade=1){
  const cat=source==="general"?o.categoria:o.category,sub=source==="general"?o.sottotipo:"";
- const kind=sub==="Terreno"?"terrain":sub==="Personaggio"||/Personaggio/i.test(cat)?"character":
+ const kind=source==="boss"?"character":sub==="Terreno"?"terrain":sub==="Personaggio"||/Personaggio/i.test(cat)?"character":
   sub==="Difesa"||/Difesa/i.test(cat)?"defense":
   cat==="Attacco"||/Combo|Fusione/i.test(cat)?"attack":
   /Controllo/i.test(cat)?"control":/Supporto|Scudiera|Tattica|Strategia/i.test(cat)?"support":"attack";
  return {id:o.id,name:o.nome||o.name||o.id,kind,rarity:o.rarita||o.rarityDraft||"Comune",
-  effect:o.effetto||o.effectProposed||"",family:o.famiglia||o.families?.[0]||"",
+  effect:describeEffect(o,grade),grade,family:o.famiglia||o.families?.[0]||"",
   ship:o.shipId||"",source};
 }
 function terrainScene(c,seed){
@@ -167,6 +169,18 @@ function attackArtScene(c,seed){
  ${debris}${effect}</g>`;
 }
 function artScene(c,seed){
+ if(c.source==='boss'){
+  const source=resolve(ROOT,'public/assets/boss-characters',c.id+'.svg');
+  if(!existsSync(source))throw Error('Ritratto Boss originale mancante: '+c.id);
+  // Keep the existing portrait; exclude the old logo, title and description.
+  const portrait=readFileSync(source,'utf8').replace(/<svg\b[^>]*>/,
+   '<svg xmlns="http://www.w3.org/2000/svg" width="442" height="435" viewBox="35 127 442 435">');
+  return '<g clip-path="url(#artClip)" data-boss-portrait="'+esc(c.id)+'">'+
+   '<rect x="37" y="217" width="438" height="310" fill="#071122"/>'+
+   '<image x="37" y="217" width="438" height="310" preserveAspectRatio="xMidYMid meet" href="data:image/svg+xml;base64,'+
+   Buffer.from(portrait).toString('base64')+'"/></g>';
+ }
+
  // Il sorgente HD e' opzionale per qualsiasi categoria. Colore funzione,
  // rarita', nome ed effetto restano sempre generati dai cataloghi ufficiali.
  // WEBP inline, perche' gli SVG in <img> non caricano risorse esterne.
@@ -269,6 +283,40 @@ function terrainBackdropSvg(code,card){
  </svg>`;
 }
 
+
+// Widths of the regular DejaVu Sans face at 1000 units; no extra build dependency.
+// Wrapping keeps every word and rejects a layout that cannot fit its panel.
+const RULE_GLYPH_WIDTHS={"0":636,"1":636,"2":636,"3":636,"4":636,"5":636,"6":636,"7":636,"8":636,"9":636," ":318,"!":401,"\"":460,"#":838,"$":636,"%":950,"&":780,"'":275,"(":390,")":390,"*":500,"+":838,",":318,"-":361,".":318,"/":337,":":337,";":337,"<":838,"=":838,">":838,"?":531,"@":1000,"A":684,"B":686,"C":698,"D":770,"E":632,"F":575,"G":775,"H":752,"I":295,"J":295,"K":656,"L":557,"M":863,"N":748,"O":787,"P":603,"Q":787,"R":695,"S":635,"T":611,"U":732,"V":684,"W":989,"X":685,"Y":611,"Z":685,"[":390,"\\":337,"]":390,"^":838,"_":500,"`":500,"a":613,"b":635,"c":550,"d":635,"e":615,"f":352,"g":635,"h":634,"i":278,"j":278,"k":579,"l":278,"m":974,"n":634,"o":612,"p":635,"q":635,"r":411,"s":521,"t":392,"u":634,"v":592,"w":818,"x":592,"y":592,"z":525,"{":636,"|":337,"}":636,"~":838,"à":613,"è":615,"é":615,"ì":278,"ò":612,"ù":634,"À":684,"È":632,"É":632,"Ì":295,"Ò":787,"Ù":732,"’":318,"−":838,"–":500};
+const ruleTextWidth=(text,size)=>[...text].reduce((sum,ch)=>sum+(RULE_GLYPH_WIDTHS[ch]??1000),0)*size/1000;
+function fitRuleText(text,rect,maxSize=23,minSize=15){
+ const [x,y,width,height]=rect,availableWidth=width-16,availableHeight=height-12;
+ const words=String(text).trim().split(/\s+/);
+ for(let size=maxSize;size>=minSize;size-=.5){
+  const lines=[];let line='';
+  for(const word of words){
+   if(ruleTextWidth(word,size)>availableWidth)throw Error('Parola troppo lunga nel testo carta: '+word);
+   const next=line?line+' '+word:word;
+   if(line&&ruleTextWidth(next,size)>availableWidth){lines.push(line);line=word;}else line=next;
+  }
+  if(line)lines.push(line);
+  const lineHeight=size*1.22;
+  if(lines.length*lineHeight<=availableHeight){
+   const baseline=y+(height-lines.length*lineHeight)/2+size;
+   return {lines,size,lineHeight,baseline,x:x+width/2};
+  }
+ }
+ throw Error('Testo completo troppo lungo per il pannello: '+text);
+}
+function ruleTextSvg(card,rect,{background='',approved=false}={}){
+ const layout=fitRuleText(card.effect,rect),clip='rules-'+card.id+'-g'+card.grade+(approved?'-approved':'');
+ const [x,y,width,height]=rect;
+ const layer=card.underApproved&&!approved?'underlay':'current';
+ return '<defs><clipPath id="'+clip+'"><rect x="'+x+'" y="'+y+'" width="'+width+'" height="'+height+'" rx="8"/></clipPath></defs>'+
+  '<g data-'+layer+'-effect="'+esc(card.id)+'" data-effect-grade="'+card.grade+'" data-effect-text="'+esc(card.effect)+'" data-effect-panel="'+rect.join(',')+'" data-font-size="'+layout.size+'" clip-path="url(#'+clip+')">'+
+  (background?'<rect x="'+x+'" y="'+y+'" width="'+width+'" height="'+height+'" fill="'+background+'"/>':'')+
+  layout.lines.map((line,i)=>'<text x="'+layout.x+'" y="'+(layout.baseline+i*layout.lineHeight)+'" text-anchor="middle" fill="#f2f6ff" font-family="DejaVu Sans,Arial,sans-serif" font-size="'+layout.size+'">'+esc(line)+'</text>').join('')+'</g>';
+}
+
 function makeSvg(c){
  const fam=C[c.kind]||C.support,rar=R[c.rarity]||R.Comune,seed=hash(c.id);
  const metalLight=['','#263446','#526b80','#9fb5c8','#f4fbff'][rar.level];
@@ -276,15 +324,13 @@ function makeSvg(c){
  const rimOpacity=[0,.12,.36,.66,.98][rar.level];
  const shineOpacity=[0,.1,.22,.52,.94][rar.level];
  const highlightWidth=[0,.5,1.4,2.5,4.1][rar.level];
- const titleLines=lineBreak(c.name,23,3),effectLines=lineBreak(c.effect,43,5);
+ const titleLines=lineBreak(c.name,23,3);
  const titleSize=titleLines.length===1?34:titleLines.length===2?30:26;
  const titleStart=titleLines.length===1?113:titleLines.length===2?99:88;
- const effectSize=effectLines.length>=5?17.4:19;
- const effectY=591;
- const brand=c.ship?`ESCLUSIVA ${c.ship}`:c.source==="general"?"GENERALE":"ESCLUSIVA";
+ const brand=c.ship?`ESCLUSIVA ${c.ship}${c.grade>1?' · GRADO '+c.grade:''}`:c.source==="boss"?"RICOMPENSA BOSS":c.source==="general"?"GENERALE":"ESCLUSIVA";
  const safeId=esc(c.id);
  const familyName=esc(c.family||fam.name);
- return `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768" role="img" aria-label="${esc(c.name)} · ${esc(fam.name)} · ${esc(rar.name)}">
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="768" viewBox="0 0 512 768" role="img" aria-label="${esc(c.name)} · ${esc(fam.name)} · ${esc(rar.name)} · ${esc(c.effect)}">
  <defs>
   <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101824"/><stop offset=".13" stop-color="${metalLight}"/><stop offset=".29" stop-color="#142033"/><stop offset=".53" stop-color="${metalWhite}"/><stop offset=".76" stop-color="#0b1627"/><stop offset="1" stop-color="${metalLight}"/></linearGradient>
   <linearGradient id="rim" x1=".15" y1="0" x2=".87" y2="1"><stop stop-color="${fam.soft}"/><stop offset=".2" stop-color="${fam.base}"/><stop offset=".52" stop-color="#19283c"/><stop offset=".78" stop-color="${fam.base}"/><stop offset="1" stop-color="${fam.soft}"/></linearGradient>
@@ -316,7 +362,7 @@ function makeSvg(c){
  <text x="54" y="553" fill="${fam.soft}" font-family="Arial,sans-serif" font-size="15" font-weight="bold" letter-spacing="1">${esc(brand)}</text>
  <text x="460" y="553" text-anchor="end" fill="#e4f0ff" font-family="Arial,sans-serif" font-size="12" font-weight="bold">${familyName.slice(0,26)}</text>
  <rect x="39" y="570" width="434" height="133" rx="6" fill="#081427" stroke="#426076" stroke-width="2"/>
- ${effectLines.map((t,i)=>`<text x="55" y="${effectY+i*23}" fill="#e6effb" font-size="${effectSize}" font-family="Arial,sans-serif">${esc(t)}</text>`).join("")}
+ ${ruleTextSvg(c,[47,577,418,119])}
  <rect x="58" y="711" width="395" height="37" rx="6" fill="url(#rarityShine)" stroke="${fam.base}" stroke-width="2.5"/>
  <path d="M75 727l11 -10l11 10l-11 14Z" fill="${fam.soft}" stroke="${fam.base}" stroke-width="2"/>
  <text x="256" y="738" fill="${fam.soft}" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="900" letter-spacing="2">${rar.name}</text>
@@ -335,16 +381,35 @@ function approvedOverlay(card){
  const meta=approvedCards.get(card.id);
  const full=resolve(ROOT,'public/assets/fleet-approved-fronts',card.id+'.webp');
  if(!meta){if(existsSync(full))throw Error('Artwork approvato privo di manifest '+card.id);return '';}
- if(meta.name!==card.name||meta.role.toUpperCase()!==C[card.kind].name||meta.rarity!==card.rarity||meta.effect!==card.effect)
-  throw Error('Catalogo modificato dopo approvazione: ricontrollare '+card.id);
+ if(meta.name!==card.name||meta.role.toUpperCase()!==C[card.kind].name||meta.rarity!==card.rarity)
+  throw Error('Identità della carta approvata cambiata: '+card.id);
+ if(meta.effect!==card.effect||meta.rulesRevision!=='simple-effects-v1'||!meta.originalApprovedEffect)
+  throw Error('Manifest delle regole da sincronizzare: '+card.id);
  if(!existsSync(full))throw Error('Fronte approvato mancante '+card.id);
+ if(!Array.isArray(meta.rulesPanel)||meta.rulesPanel.length!==4)throw Error('Pannello regole non verificato: '+card.id);
+ const panel=meta.rulesPanel.map(n=>n/2);
+ const background=card.kind==='attack'?'#11040a':card.kind==='terrain'?'#031d0a':'#031326';
+ // The original approved WebP stays byte-for-byte intact. Only its old rule
+ // lettering is covered inside the measured panel by the current SVG text.
  return '<image data-approved-front="'+esc(card.id)+'" x="0" y="0" width="512" height="768" preserveAspectRatio="none" href="data:image/webp;base64,'+
-  readFileSync(full).toString('base64')+'"/>';
+  readFileSync(full).toString('base64')+'"/>'+ruleTextSvg(card,panel,{background,approved:true});
 }
-for(const card of cards){
- const svg=makeSvg(card);
- writeFileSync(resolve(dest,card.id+'.svg'),svg.replace(/<\/svg>\s*$/,approvedOverlay(card)+'</svg>'));
+function renderCard(card){
+ const front={...card,underApproved:approvedCards.has(card.id)};
+ return makeSvg(front).replace(/<\/svg>\s*$/,approvedOverlay(front)+'</svg>');
 }
+for(const card of cards)writeFileSync(resolve(dest,card.id+'.svg'),renderCard(card));
+
+const upgradeOut=resolve(ROOT,'public/assets/fleet-next-card-upgrades');mkdirSync(upgradeOut,{recursive:true});
+for(const raw of b)for(const grade of [2,3]){
+ const card=normalizeCard(raw,'exclusive',grade);
+ writeFileSync(resolve(upgradeOut,card.id+'-g'+grade+'.svg'),renderCard(card));
+}
+
+const bossOut=resolve(ROOT,'public/assets/fleet-next-boss-cards');mkdirSync(bossOut,{recursive:true});
+const bosses=Object.values(BOSS_CARDS).map(card=>normalizeCard(card,'boss'));
+if(bosses.length!==12)throw Error('Catalogo Boss diverso da 12');
+for(const card of bosses)writeFileSync(resolve(bossOut,card.id+'.svg'),renderCard(card));
 
 const terrainOut=resolve(ROOT,'public/assets/fleet-terrain-scenes');
 mkdirSync(terrainOut,{recursive:true});
@@ -353,4 +418,4 @@ for(const [code,id] of Object.entries(TERRAIN_IDS)){
  if(!terrain||terrain.kind!=='terrain')throw Error('Manca scenario '+id);
  writeFileSync(resolve(terrainOut,code+'.svg'),terrainBackdropSvg(code,terrain));
 }
-console.log('Generate '+cards.length+' fronti verticali: ruolo = tinta; rarita = riflessi e finitura cromata');
+console.log('Generati '+cards.length+' fronti e '+(b.length*2)+' varianti di grado e '+bosses.length+' Boss con regole complete; '+approvedCards.size+' illustrazioni approvate conservate.');

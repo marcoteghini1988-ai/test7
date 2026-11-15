@@ -31,10 +31,9 @@ test('Un livello di acquisto storico corrotto non apre potenziamenti',()=>{
  assert.equal(officialModulePurchaseStage({unlocked:true,level:1},'unknown',9),'invalid_action');
 });
 
-test('Prezzi già approvati: il Bazar e il simulatore economico coincidono a tutti i livelli',()=>{
+test('Prezzi storici conservati: App e simulatore economico coincidono a tutti i livelli',()=>{
  const app=readFileSync(new URL('./App.tsx',import.meta.url),'utf8');
- const shop=readFileSync(new URL('./ShopModal.jsx',import.meta.url),'utf8');
- const sources=[{name:'App',src:app},{name:'Bazar',src:shop}];
+ const sources=[{name:'App',src:app}];
  for(const {name,src} of sources){
   const costBlock=src.match(/const UNIFIED_UPGRADE_COSTS\s*=\s*Object\.freeze\(\{([\s\S]*?)\}\);/);
   assert.ok(costBlock,name+' deve usare la matrice esistente');
@@ -68,7 +67,7 @@ test('Acquisto L2→L9: risorse e soglie pilota esistenti, senza debito o scorci
  assert.ok(wallet.dust<150000);
 });
 
-test('Il Bazar chiama il controllo antiripetizione e non celebra un upgrade rifiutato',()=>{
+test('Le protezioni degli acquisti storici restano; il Bazar non offre nuovi Moduli inattivi',()=>{
  const app=readFileSync(new URL('./App.tsx',import.meta.url),'utf8');
  const shop=readFileSync(new URL('./ShopModal.jsx',import.meta.url),'utf8');
  assert.match(app,/officialModulePurchaseStage\(abilities\[id\],'unlock'/);
@@ -77,6 +76,6 @@ test('Il Bazar chiama il controllo antiripetizione e non celebra un upgrade rifi
  assert.match(app,/modulePurchaseLocks\.current\.clear\(\)/);
  assert.match(app,/modulePurchaseLocks\.current\.size>0/,
   'blocca transazioni di Moduli diversi prima di aggiornare il saldo');
- assert.match(shop,/onUpgradeAbility\(id\) === true/);
- assert.match(shop,/if \(started\) triggerDopamineCelebration/);
+ assert.doesNotMatch(shop,/onUpgradeAbility|onUnlockAbility/);
+ assert.doesNotMatch(app,/<ShopModal[\s\S]*?on(?:Upgrade|Unlock)Ability=/);
 });

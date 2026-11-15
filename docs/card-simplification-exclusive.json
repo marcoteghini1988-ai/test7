@@ -1,0 +1,2818 @@
+{
+  "revision": "simple-effects-v1",
+  "date": "2026-11-15",
+  "scope": "Tutte le 129 carte esclusive delle 17 navi",
+  "summary": "Ogni carta ha un effetto esplicito e una descrizione generata dal medesimo schema del motore. Nessuna catena, marca o risorsa implicita. Le 18 vecchie ricette sono archiviate.",
+  "preserved": [
+    "id",
+    "name",
+    "rarityDraft",
+    "shipId",
+    "shipName",
+    "minShipLevelDraft",
+    "requiredOwnParts",
+    "requiredEscortCount",
+    "maxCopiesInAutoPackageDraft",
+    "shipConfigurations"
+  ],
+  "intentionalCategoryChanges": [
+    {
+      "id": "ex-e03-07",
+      "before": "Fusione L5",
+      "after": "Supporto",
+      "reason": "La fusione ripara o rigenera: categoria Supporto coerente con l’effetto."
+    },
+    {
+      "id": "ex-l04-09",
+      "before": "Fusione L5",
+      "after": "Supporto",
+      "reason": "La fusione ripara o rigenera: categoria Supporto coerente con l’effetto."
+    }
+  ],
+  "statistics": {
+    "cards": 129,
+    "beforeWords": 1689,
+    "afterWords": 1250,
+    "maxBeforeWords": 33,
+    "maxAfterWords": 18
+  },
+  "cards": [
+    {
+      "id": "ex-n00-01",
+      "name": "Cartografo Aurora",
+      "shipId": "N00",
+      "before": {
+        "effect": "Osserva le prime 2 carte generali del mazzo e scegli quale pescare al prossimo ricambio.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Le carte da scartare sono casuali.",
+        "effectSpec": {
+          "type": "exchange",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-n00-02",
+      "name": "Impulso Adattivo",
+      "shipId": "N00",
+      "before": {
+        "effect": "Un colpo del Cannone adattivo può cambiare componente bersaglio prima della conferma.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Aggiunge 1 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-n00-03",
+      "name": "Rotta di Fuga",
+      "shipId": "N00",
+      "before": {
+        "effect": "Se i Motori sono operativi e la carta è pronta, una volta per battaglia devia un colpo singolo diretto a un vitale ancora integro; non annulla salve da baluardo e consuma la carta.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Richiede Motori operativi.",
+        "effectSpec": {
+          "type": "dodge",
+          "target": "selected",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-n00-04",
+      "name": "Velo di Salvataggio",
+      "shipId": "N00",
+      "before": {
+        "effect": "Il Velo Aurora intercetta una salva quando la sua passiva ciclica è disponibile.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "selected",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-n00-05",
+      "name": "Sequenza Zero",
+      "shipId": "N00",
+      "before": {
+        "effect": "Con entrambe le scudiere operative, due carte diverse marcano due componenti, uno per colpo nel prossimo round.",
+        "category": "Combo L5",
+        "comboRecipeId": "Sequenza Zero",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Combo L5",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-c01-01",
+      "name": "Pilota Helios",
+      "shipId": "C01",
+      "before": {
+        "effect": "La prossima carta di movimento prepara un secondo tiro leggero nel round seguente.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 turni avversari, evita 1 colpo per turno contro i Motori, se i Motori funzionano.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Richiede Motori operativi.",
+        "effectSpec": {
+          "type": "dodge",
+          "target": "engine",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c01-02",
+      "name": "Sorpasso Solare",
+      "shipId": "C01",
+      "before": {
+        "effect": "Se i Motori sono operativi, marca i Motori avversari e abilita un colpo madre su quel componente nel normale ordine di risoluzione; non anticipa automaticamente cure o contrattacchi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c01-03",
+      "name": "Passaggio Radente",
+      "shipId": "C01",
+      "before": {
+        "effect": "Cambia bersaglio tra due componenti e impedisce una singola risposta automatica di precisione.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno"
+      },
+      "after": {
+        "effect": "Evita 1 colpo per 1 turno avversario contro il componente scelto, se i Motori funzionano.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Richiede Motori operativi.",
+        "effectSpec": {
+          "type": "dodge",
+          "target": "selected",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c01-04",
+      "name": "Sentinella in Linea",
+      "shipId": "C01",
+      "before": {
+        "effect": "La Sentinella Solare assorbe una salva e rinuncia al proprio bonus di mobilità per questo round.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro la scudiera più danneggiata. Dura 1 turno avversario.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "escort",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c01-05",
+      "name": "Lama sul Propulsore",
+      "shipId": "C01",
+      "before": {
+        "effect": "Lama Rubino amplifica il prossimo tiro ai Motori, solo se il collegamento funziona.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-c01-06",
+      "name": "Tenaglia Cremisi",
+      "shipId": "C01",
+      "before": {
+        "effect": "Pilota Helios + Passaggio Radente: due colpi separati su Motori e Armi, non duplicabili sullo stesso pezzo.",
+        "category": "Combo",
+        "comboRecipeId": "Tenaglia Cremisi",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-c02-01",
+      "name": "Artigiana Prisma",
+      "shipId": "C02",
+      "before": {
+        "effect": "Sceglie un componente bersaglio e lo segnala: il prossimo impatto ignora una protezione mirata.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c02-02",
+      "name": "Scheggia Riflessa",
+      "shipId": "C02",
+      "before": {
+        "effect": "Un colpo al Generatore avversario riflette un piccolo disturbo alla carta difensiva attiva.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c02-03",
+      "name": "Angolo di Frattura",
+      "shipId": "C02",
+      "before": {
+        "effect": "Fa cambiare al bersaglio la parte protetta dalla sua scudiera, se non è una copertura totale.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c02-04",
+      "name": "Custodia Prismatica",
+      "shipId": "C02",
+      "before": {
+        "effect": "Prisma Custode protegge soltanto il componente selezionato prima dello scontro.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "selected",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c02-05",
+      "name": "Trapano Vetrificato",
+      "shipId": "C02",
+      "before": {
+        "effect": "Accumula una carica ogni round senza attacco di precisione; a due cariche abilita perforazione.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 2 protezioni sui componenti.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-c02-06",
+      "name": "Rosa di Cristallo",
+      "shipId": "C02",
+      "before": {
+        "effect": "Artigiana Prisma + Trapano Vetrificato: dopo carica effettiva, una salva della madre colpisce due vitali diversi; le intercettazioni totali continuano a funzionare.",
+        "category": "Combo",
+        "comboRecipeId": "Rosa di Cristallo",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-c03-01",
+      "name": "Comandante Risonante",
+      "shipId": "C03",
+      "before": {
+        "effect": "Alla prima ionizzazione, sposta il disturbo su una seconda scudiera compatibile.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c03-02",
+      "name": "Dardo Intermittente",
+      "shipId": "C03",
+      "before": {
+        "effect": "Spara un impulso che ritarda la prossima attivazione di una passiva nemica.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c03-03",
+      "name": "Richiamo Inverso",
+      "shipId": "C03",
+      "before": {
+        "effect": "Corvo Scudo interrompe una sinergia di collegamento per un round, non le armi materne.",
+        "category": "Controllo scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Controllo scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c03-04",
+      "name": "Doppio Canale",
+      "shipId": "C03",
+      "before": {
+        "effect": "Il colpo viene duplicato su due bersagli soltanto se il nemico è già ionizzato.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-c03-05",
+      "name": "Artiglio Risonante",
+      "shipId": "C03",
+      "before": {
+        "effect": "La seconda scudiera converte una ionizzazione attiva in un bonus al colpo materno.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-c03-06",
+      "name": "Costellazione Pulsata",
+      "shipId": "C03",
+      "before": {
+        "effect": "Comandante Risonante + Doppio Canale: tre impulsi distribuiti, con danno ridotto per bersaglio.",
+        "category": "Combo",
+        "comboRecipeId": "Costellazione Pulsata",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 3 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 3
+        }
+      }
+    },
+    {
+      "id": "ex-c04-01",
+      "name": "Cacciatrice Cremisi",
+      "shipId": "C04",
+      "before": {
+        "effect": "Una volta per attivazione trasforma un contrattacco in un dardo che lascia una marca.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 2 turni avversari.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Si attiva solo quando subisci danni.",
+        "effectSpec": {
+          "type": "counter",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c04-02",
+      "name": "Pungiglione Persistente",
+      "shipId": "C04",
+      "before": {
+        "effect": "Marca un vitale colpito da una salva reale. Nel round seguente un secondo tiro valido sullo stesso bersaglio può applicare una frattura; la marca da sola non infligge danno.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+        "effectSpec": {
+          "type": "charge",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-c04-03",
+      "name": "Falsa Traccia",
+      "shipId": "C04",
+      "before": {
+        "effect": "Nasconde per un round quale dei due componenti è stato preparato come obiettivo.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c04-04",
+      "name": "Velo di Disturbo",
+      "shipId": "C04",
+      "before": {
+        "effect": "Velo Cremisi devia una salva leggera se il Generatore è operativo.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "selected",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c04-05",
+      "name": "Risposta d’Ombra",
+      "shipId": "C04",
+      "before": {
+        "effect": "Dardo d’Ombra carica una ritorsione dopo un danno subito dalla madre.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Si attiva solo quando subisci danni.",
+        "effectSpec": {
+          "type": "counter",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-c04-06",
+      "name": "Sciame Scarlatto",
+      "shipId": "C04",
+      "before": {
+        "effect": "Pungiglione Persistente + Risposta d’Ombra: dardi su due componenti diversi con una sola marca ritardata.",
+        "category": "Combo",
+        "comboRecipeId": "Sciame Scarlatto",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r01-01",
+      "name": "Artigliere Binario",
+      "shipId": "R01",
+      "before": {
+        "effect": "Conserva una carica di un’arma quando il round termina senza sparare.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Aggiunge 1 potenza al tuo attacco.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r01-02",
+      "name": "Batteria Gemella",
+      "shipId": "R01",
+      "before": {
+        "effect": "Protocollo per la Batteria Gemella integrata: due proiettili nello stesso tiro sul medesimo vitale; la seconda esplosione è visiva, una sola frattura massima.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r01-03",
+      "name": "Ricarica Asimmetrica",
+      "shipId": "R01",
+      "before": {
+        "effect": "Trasferisce una carica da una batteria integrata a un’altra.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista"
+      },
+      "after": {
+        "effect": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+        "effectSpec": {
+          "type": "charge",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r01-04",
+      "name": "Falco Guardiano",
+      "shipId": "R01",
+      "before": {
+        "effect": "La Sentinella intercetta una salva durante un round di carica.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "selected",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r01-05",
+      "name": "Accelerazione Binaria",
+      "shipId": "R01",
+      "before": {
+        "effect": "Riduce di un round la preparazione del tiro pesante, senza crearne uno gratis.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Aggiunge 1 potenza al tuo attacco.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r01-06",
+      "name": "Fuoco di Calibrazione",
+      "shipId": "R01",
+      "before": {
+        "effect": "Un colpo leggero prepara il Generatore nemico come bersaglio privilegiato.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r01-07",
+      "name": "Triangolazione Falco",
+      "shipId": "R01",
+      "before": {
+        "effect": "Artigliere Binario + Fuoco di Calibrazione + carica: distribuisce tre colpi su componenti differenti.",
+        "category": "Combo",
+        "comboRecipeId": "Triangolazione Falco",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 3 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 3
+        }
+      }
+    },
+    {
+      "id": "ex-r02-01",
+      "name": "Navigatrice Manta",
+      "shipId": "R02",
+      "before": {
+        "effect": "Prolunga di un round una ionizzazione applicata dalla propria madre.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r02-02",
+      "name": "Arco Ionico",
+      "shipId": "R02",
+      "before": {
+        "effect": "Protocollo per Arco Ionico integrato: un tiro reale alle Armi nemiche applica per un round un malus di precisione, solo se il bersaglio è effettivamente colpito.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 2 potenza in meno.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r02-03",
+      "name": "Campo Manta",
+      "shipId": "R02",
+      "before": {
+        "effect": "Abbassa la potenza di una salva, senza impedire la scelta dei componenti.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 2 potenza in meno.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r02-04",
+      "name": "Doppia Polarità",
+      "shipId": "R02",
+      "before": {
+        "effect": "Sposta una ionizzazione dalla madre avversaria alla sua prima scudiera attiva.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 2 potenza in meno.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r02-05",
+      "name": "Sting di Risonanza",
+      "shipId": "R02",
+      "before": {
+        "effect": "Trasforma un disturbo su un nemico in una carica offensiva extra.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+        "effectSpec": {
+          "type": "charge",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r02-06",
+      "name": "Incrocio Fulminante",
+      "shipId": "R02",
+      "before": {
+        "effect": "Due archi simultanei su Motori e Generatore se entrambi sono disponibili.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r02-07",
+      "name": "Nodo di Marea",
+      "shipId": "R02",
+      "before": {
+        "effect": "Navigatrice Manta + Sting di Risonanza: colpisce due sistemi e spegne una passiva difensiva per un round.",
+        "category": "Combo",
+        "comboRecipeId": "Nodo di Marea",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r03-01",
+      "name": "Custode dello Spettro",
+      "shipId": "R03",
+      "before": {
+        "effect": "Sceglie una parte fratturata: la prossima cura la preferisce se ancora riparabile.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Ripara 1 punto al tuo componente più danneggiato, ora e al tuo prossimo turno.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "weakest",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r03-02",
+      "name": "Raggio Vitale",
+      "shipId": "R03",
+      "before": {
+        "effect": "Ripara una frattura non distrutta, con limite una volta per ciclo di cura.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Ripara 1 punto al componente scelto.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "selected",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r03-03",
+      "name": "Rifrazione",
+      "shipId": "R03",
+      "before": {
+        "effect": "Sposta un tiro a una parte vicina senza distruggere automaticamente il componente.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro il componente scelto. Dura 1 turno avversario.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "selected",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r03-04",
+      "name": "Luce di Recupero",
+      "shipId": "R03",
+      "before": {
+        "effect": "Iride Scudo ricuce un punto di resistenza o una frattura quando la ricarica è pronta.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Ripara 2 punti alla tua scudiera più danneggiata.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "escort",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r03-05",
+      "name": "Prisma Inverso",
+      "shipId": "R03",
+      "before": {
+        "effect": "Prepara un tiro preciso alla Centralina soltanto dopo una scansione.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r03-06",
+      "name": "Analisi Spettrale",
+      "shipId": "R03",
+      "before": {
+        "effect": "Mostra quale passiva nemica perderà efficacia danneggiando il componente indicato.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Scarta 2 carte casuali dalla mano e ne pesca altrettante.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Le carte da scartare sono casuali.",
+        "effectSpec": {
+          "type": "exchange",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r03-07",
+      "name": "Arcobaleno Chirurgico",
+      "shipId": "R03",
+      "before": {
+        "effect": "Analisi Spettrale + Prisma Inverso: un colpo di precisione e una cura selettiva, non due danni pieni.",
+        "category": "Combo",
+        "comboRecipeId": "Arcobaleno Chirurgico",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 2 protezioni sui componenti.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r04-01",
+      "name": "Ammiraglio Abissale",
+      "shipId": "R04",
+      "before": {
+        "effect": "Dopo due salve intercettate, abilita un contrattacco di assedio.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 2 turni avversari.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Si attiva solo quando subisci danni.",
+        "effectSpec": {
+          "type": "counter",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r04-02",
+      "name": "Morso del Vuoto",
+      "shipId": "R04",
+      "before": {
+        "effect": "Un colpo al Generatore prende potenza dalle cariche del baluardo.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r04-03",
+      "name": "Scudo Totale",
+      "shipId": "R04",
+      "before": {
+        "effect": "Lo Scudo del Vuoto intercetta il colpo diretto alla madre e consuma resistenza propria.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
+        "category": "Difesa scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "all",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r04-04",
+      "name": "Sacca Abissale",
+      "shipId": "R04",
+      "before": {
+        "effect": "Restituisce una piccola resistenza alla scudiera, ma solo se non è stata distrutta.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Ripara 2 punti alla tua scudiera più danneggiata.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "escort",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-r04-05",
+      "name": "Siluro di Ritorsione",
+      "shipId": "R04",
+      "before": {
+        "effect": "Squalo Siluro marca il componente che ha originato un colpo intercettato.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Si attiva solo quando subisci danni.",
+        "effectSpec": {
+          "type": "counter",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r04-06",
+      "name": "Finta Predatoria",
+      "shipId": "R04",
+      "before": {
+        "effect": "Induce l’avversario a usare una copertura mirata prima dell’attacco vero.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-r04-07",
+      "name": "Caccia del Predatore",
+      "shipId": "R04",
+      "before": {
+        "effect": "Ammiraglio Abissale + Siluro di Ritorsione: un colpo concentrato su parte marcata con bonus condizionale.",
+        "category": "Combo",
+        "comboRecipeId": "Caccia del Predatore",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Aggiunge 3 potenza al tuo attacco.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 3
+        }
+      }
+    },
+    {
+      "id": "ex-e01-01",
+      "name": "Arconte della Bruma",
+      "shipId": "E01",
+      "before": {
+        "effect": "Ogni primo congelamento rivela il componente che mantiene attiva la scudiera avversaria.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e01-02",
+      "name": "Nebbia Polare",
+      "shipId": "E01",
+      "before": {
+        "effect": "Congela un componente integro per un round: niente effetti da quel componente.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Non può bloccare due turni avversari consecutivi.",
+        "effectSpec": {
+          "type": "disarm"
+        }
+      }
+    },
+    {
+      "id": "ex-e01-03",
+      "name": "Corona di Plasma",
+      "shipId": "E01",
+      "before": {
+        "effect": "Un ventaglio di colpi deboli colpisce un solo componente scelto.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e01-04",
+      "name": "Gelo di Ritorno",
+      "shipId": "E01",
+      "before": {
+        "effect": "Il prossimo avversario che colpisce una scudiera ottiene un rallentamento di carica.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 2 potenza in meno.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e01-05",
+      "name": "Baluardo Nebulosa",
+      "shipId": "E01",
+      "before": {
+        "effect": "La scudiera assorbe l’intera salva se collegata e viva; il danno eccedente non raggiunge la madre nello stesso round. Consuma la propria resistenza.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "all",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e01-06",
+      "name": "Pulsar di Soppressione",
+      "shipId": "E01",
+      "before": {
+        "effect": "Disattiva per un round una passiva avversaria scelta tra quelle attive.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Non può bloccare due turni avversari consecutivi.",
+        "effectSpec": {
+          "type": "disarm"
+        }
+      }
+    },
+    {
+      "id": "ex-e01-07",
+      "name": "Cristalli di Bruma",
+      "shipId": "E01",
+      "before": {
+        "effect": "Prolunga una copertura mirata già attiva, senza crearne una nuova.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro il componente scelto. Dura 2 turni avversari.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "selected",
+          "amount": 1,
+          "turns": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e01-08",
+      "name": "Notte Criogenica",
+      "shipId": "E01",
+      "before": {
+        "effect": "Arconte + Nebbia Polare + Pulsar: congela due funzioni per un round, senza danno diretto aggiuntivo.",
+        "category": "Combo",
+        "comboRecipeId": "Notte Criogenica",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e02-01",
+      "name": "Capitano della Tempesta",
+      "shipId": "E02",
+      "before": {
+        "effect": "Una volta per round consente di spostare il secondo impulso su un bersaglio distinto.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e02-02",
+      "name": "Pioggia Scura",
+      "shipId": "E02",
+      "before": {
+        "effect": "Tre piccoli proiettili su un singolo pezzo, con un solo danno vitale complessivo.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e02-03",
+      "name": "Onda a Pettine",
+      "shipId": "E02",
+      "before": {
+        "effect": "Marca due componenti e sottrae difesa alla seconda salva valida.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e02-04",
+      "name": "Fronte di Tempesta",
+      "shipId": "E02",
+      "before": {
+        "effect": "Fronte Tempesta intercetta i colpi sulle Armi materne.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro le Armi. Dura 2 turni avversari.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "weapons",
+          "amount": 1,
+          "turns": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e02-05",
+      "name": "Sovraccarico",
+      "shipId": "E02",
+      "before": {
+        "effect": "Dopo una ionizzazione ritarda una ricarica nemica di un round.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Blocca il prossimo attacco avversario. Non può bloccare due turni avversari consecutivi.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Non può bloccare due turni avversari consecutivi.",
+        "effectSpec": {
+          "type": "disarm"
+        }
+      }
+    },
+    {
+      "id": "ex-e02-06",
+      "name": "Tuono Risonante",
+      "shipId": "E02",
+      "before": {
+        "effect": "Tuono Doppio converte la seconda raffica riuscita in bonus ionico.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 2 potenza in meno.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e02-07",
+      "name": "Fulmine di Rimbalzo",
+      "shipId": "E02",
+      "before": {
+        "effect": "Una raffica può deviare dal componente colpito a un secondo integro, con potenza ridotta.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e02-08",
+      "name": "Quadrante di Tempesta",
+      "shipId": "E02",
+      "before": {
+        "effect": "Capitano + Onda a Pettine + Tuono: dopo preparazione, quattro impulsi su quattro vitali diversi disponibili, massimo una frattura ciascuno, senza duplicare sui pezzi assenti.",
+        "category": "Combo",
+        "comboRecipeId": "Quadrante di Tempesta",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 4 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 4
+        }
+      }
+    },
+    {
+      "id": "ex-e03-01",
+      "name": "Guardiana delle Ceneri",
+      "shipId": "E03",
+      "before": {
+        "effect": "La prima frattura della madre durante l’attivazione genera una carica di rinascita.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Si attiva solo quando un colpo infligge danno.",
+        "effectSpec": {
+          "type": "regenerate",
+          "trigger": "hurt",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e03-02",
+      "name": "Artiglio Ardente",
+      "shipId": "E03",
+      "before": {
+        "effect": "Colpo di fuoco amplificato se la madre ha un componente fratturato.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e03-03",
+      "name": "Semi di Rinascita",
+      "shipId": "E03",
+      "before": {
+        "effect": "Prepara una riparazione al prossimo round, impedita se il componente viene distrutto prima.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Ripara 1 punto al componente scelto.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "selected",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e03-04",
+      "name": "Scudo Fenice",
+      "shipId": "E03",
+      "before": {
+        "effect": "Ripara una frattura recuperabile ogni volta che raggiunge la ricarica prevista.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Ripara 1 punto al tuo componente più danneggiato.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "weakest",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e03-05",
+      "name": "Fiamma Residua",
+      "shipId": "E03",
+      "before": {
+        "effect": "Un bersaglio colpito da fuoco subisce riduzione di riparazione per un round.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 2 potenza in meno.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e03-06",
+      "name": "Rinascita Plasma",
+      "shipId": "E03",
+      "before": {
+        "effect": "Converte una carica di rinascita in potenza per una singola salva.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e03-07",
+      "name": "Fusione della Fenice",
+      "shipId": "E03",
+      "before": {
+        "effect": "Unisce le due scudiere attive per una riparazione e un contrattacco, con costo di ricarica.",
+        "category": "Fusione L5",
+        "comboRecipeId": null,
+        "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti"
+      },
+      "after": {
+        "effect": "Il primo colpo riuscito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Si attiva solo quando un colpo infligge danno.",
+        "effectSpec": {
+          "type": "regenerate",
+          "trigger": "hit",
+          "amount": 1,
+          "turns": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e03-08",
+      "name": "Cenere d’Assedio",
+      "shipId": "E03",
+      "before": {
+        "effect": "Guardiana + Fiamma Residua: due colpi su parti diverse; il secondo non supera un baluardo totale.",
+        "category": "Combo",
+        "comboRecipeId": "Cenere d’Assedio",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e04-01",
+      "name": "Veggente Orbitale",
+      "shipId": "E04",
+      "before": {
+        "effect": "Prima del tiro visualizza le due difese avversarie più rilevanti per il bersaglio.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e04-02",
+      "name": "Lancia Bipolare",
+      "shipId": "E04",
+      "before": {
+        "effect": "Perfora una difesa parziale, ma non un baluardo completo attivo.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 2 protezioni sui componenti.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e04-03",
+      "name": "Coordinate Estreme",
+      "shipId": "E04",
+      "before": {
+        "effect": "Memorizza un bersaglio: il colpo successivo su quel pezzo ottiene precisione.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Contromisura mirata o baluardo totale; senza colpo madre reale non applica danno"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e04-04",
+      "name": "Aegis Orbitale",
+      "shipId": "E04",
+      "before": {
+        "effect": "La scudiera corazzata intercetta una salva e consuma resistenza propria.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "all",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e04-05",
+      "name": "Vettore Incrociato",
+      "shipId": "E04",
+      "before": {
+        "effect": "Due raggi su due parti differenti purché la mira sia stata preparata.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e04-06",
+      "name": "Orizzonte Lance",
+      "shipId": "E04",
+      "before": {
+        "effect": "La seconda scudiera guida un colpo al componente marcato.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-e04-07",
+      "name": "Osservatorio Tattico",
+      "shipId": "E04",
+      "before": {
+        "effect": "Annulla il camuffamento di un singolo bersaglio nemico.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-e04-08",
+      "name": "Convergenza dei Quattro",
+      "shipId": "E04",
+      "before": {
+        "effect": "Veggente + Coordinate Estreme + Lance: quattro colpi distribuiti, ma solo con due scudiere e dopo preparazione.",
+        "category": "Combo",
+        "comboRecipeId": "Convergenza dei Quattro",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 4 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 4
+        }
+      }
+    },
+    {
+      "id": "ex-l01-01",
+      "name": "Sovrano dell’Eclisse",
+      "shipId": "L01",
+      "before": {
+        "effect": "Marca il primo componente nemico colpito come bersaglio della prossima sentenza.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Aggiunge 2 potenza al tuo attacco.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l01-02",
+      "name": "Corona Reale",
+      "shipId": "L01",
+      "before": {
+        "effect": "La scudiera intercetta le salve finché ha resistenza.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "all",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l01-03",
+      "name": "Pioggia Reale",
+      "shipId": "L01",
+      "before": {
+        "effect": "Distribuisce proiettili fotonici su due componenti differenti.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l01-04",
+      "name": "Verdetto Corrosivo",
+      "shipId": "L01",
+      "before": {
+        "effect": "La seconda scudiera aggiunge corrosione a un colpo già riuscito.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 2 protezioni sui componenti.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l01-05",
+      "name": "Decreto d’Ombra",
+      "shipId": "L01",
+      "before": {
+        "effect": "Blocca per un round una riparazione sul componente marcato.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 2 potenza in meno.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l01-06",
+      "name": "Frattura dei Diamanti",
+      "shipId": "L01",
+      "before": {
+        "effect": "Colpo caricato ad alta precisione contro un sistema già scoperto.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 2 protezioni sui componenti.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l01-07",
+      "name": "Giudizio Eclissi",
+      "shipId": "L01",
+      "before": {
+        "effect": "Tre carte esclusive preparano tre spirali che colpiscono fino a tre vitali differenti.",
+        "category": "Combo",
+        "comboRecipeId": "Giudizio Eclissi",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 3 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 3
+        }
+      }
+    },
+    {
+      "id": "ex-l01-08",
+      "name": "Bastione Reale",
+      "shipId": "L01",
+      "before": {
+        "effect": "Consuma una carica della Corona per coprire una parte dichiarata.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista"
+      },
+      "after": {
+        "effect": "Blocca 2 colpi contro il componente scelto. Dura 1 turno avversario.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "selected",
+          "amount": 2,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l01-09",
+      "name": "Trono Infranto",
+      "shipId": "L01",
+      "before": {
+        "effect": "Se una scudiera è distrutta, converte una corrosione attiva in carica offensiva.",
+        "category": "Reazione",
+        "comboRecipeId": null,
+        "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista"
+      },
+      "after": {
+        "effect": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+        "category": "Reazione",
+        "comboRecipeId": null,
+        "counterplay": "Si attiva solo quando subisci danni.",
+        "effectSpec": {
+          "type": "counter",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l01-10",
+      "name": "Eclisse Totale",
+      "shipId": "L01",
+      "before": {
+        "effect": "Sovrano + Verdetto + Giudizio: quattro impatti su quattro componenti, con preparazione e contromisure possibili.",
+        "category": "Combo L5",
+        "comboRecipeId": "Eclisse Totale",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 4 componenti diversi.",
+        "category": "Combo L5",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 4
+        }
+      }
+    },
+    {
+      "id": "ex-l02-01",
+      "name": "Architetto del Vuoto",
+      "shipId": "L02",
+      "before": {
+        "effect": "Sposta una marca gravitazionale da un componente a un altro prima della salva.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l02-02",
+      "name": "Pozzo Gravitazionale",
+      "shipId": "L02",
+      "before": {
+        "effect": "Un componente marcato non può essere cambiato come bersaglio di riparazione nel prossimo round.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 2 potenza in meno.",
+        "category": "Controllo",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l02-03",
+      "name": "Lame Singolari",
+      "shipId": "L02",
+      "before": {
+        "effect": "Due fendenti visibili contro il medesimo vitale con un solo impatto meccanico per salva, senza attraversare una protezione attiva.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l02-04",
+      "name": "Sentinella Eclisse",
+      "shipId": "L02",
+      "before": {
+        "effect": "Riduce una salva nemica di una unità e accumula compressione.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Il prossimo attacco avversario ha 1 potenza in meno.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
+        "effectSpec": {
+          "type": "weaken",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l02-05",
+      "name": "Fulcro Ionico",
+      "shipId": "L02",
+      "before": {
+        "effect": "Consuma compressione per potenziare un raggio su un vitale.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Aggiunge 3 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 3
+        }
+      }
+    },
+    {
+      "id": "ex-l02-06",
+      "name": "Ascia del Vuoto",
+      "shipId": "L02",
+      "before": {
+        "effect": "Converte la compressione residua in un colpo aggiuntivo ridotto.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l02-07",
+      "name": "Curvatura del Bersaglio",
+      "shipId": "L02",
+      "before": {
+        "effect": "Sposta un impatto secondario da un pezzo integro a un altro, mai sullo stesso.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l02-08",
+      "name": "Orizzonte degli Eventi",
+      "shipId": "L02",
+      "before": {
+        "effect": "Protegge per un round una scudiera danneggiata assorbendo il prossimo danno lieve.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "escort",
+          "amount": 2,
+          "turns": 2
+        }
+      },
+      "semanticReviewNote": "Su Motori, Generatore o una scudiera può arrivare al massimo un colpo per turno. Due turni rendono utilizzabili entrambe le protezioni."
+    },
+    {
+      "id": "ex-l02-09",
+      "name": "Fusione di Singolarità",
+      "shipId": "L02",
+      "before": {
+        "effect": "Unisce le due scudiere per una scarica compressa, disattivandone temporaneamente le passive.",
+        "category": "Fusione L5",
+        "comboRecipeId": null,
+        "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti"
+      },
+      "after": {
+        "effect": "Aggiunge 3 potenza al tuo attacco.",
+        "category": "Fusione L5",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 3
+        }
+      }
+    },
+    {
+      "id": "ex-l02-10",
+      "name": "Collasso Gemello",
+      "shipId": "L02",
+      "before": {
+        "effect": "Architetto + Fulcro + Fusione: fino a tre componenti colpiti, con un colpo maggiorato sul bersaglio marcato.",
+        "category": "Combo",
+        "comboRecipeId": "Collasso Gemello",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 3 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 3
+        }
+      }
+    },
+    {
+      "id": "ex-l03-01",
+      "name": "Magistro Ossidiana",
+      "shipId": "L03",
+      "before": {
+        "effect": "Conserva la mira acquisita su una parte mentre il Cannone Titano si carica.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Per 2 tuoi turni: Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l03-02",
+      "name": "Obice Nero",
+      "shipId": "L03",
+      "before": {
+        "effect": "Colpo pesante su un pezzo dichiarato, lento e interrompibile.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Aggiunge 2 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l03-03",
+      "name": "Ala del Giudizio",
+      "shipId": "L03",
+      "before": {
+        "effect": "La scudiera corazzata intercetta i colpi finché la sua resistenza non termina.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 1 colpo contro i tuoi componenti. Dura 1 turno avversario.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "all",
+          "amount": 1,
+          "turns": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l03-04",
+      "name": "Trincea Astrale",
+      "shipId": "L03",
+      "before": {
+        "effect": "Prepara la prima scudiera a ricevere una salva e ne riduce il primo danno.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "escort",
+          "amount": 2,
+          "turns": 2
+        }
+      },
+      "semanticReviewNote": "Su Motori, Generatore o una scudiera può arrivare al massimo un colpo per turno. Due turni rendono utilizzabili entrambe le protezioni."
+    },
+    {
+      "id": "ex-l03-05",
+      "name": "Cannone Titano",
+      "shipId": "L03",
+      "before": {
+        "effect": "Con carica completa causa un impatto critico su un solo componente.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista"
+      },
+      "after": {
+        "effect": "Aggiunge 3 potenza al tuo attacco.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono intercettare l’attacco.",
+        "effectSpec": {
+          "type": "power",
+          "amount": 3
+        }
+      }
+    },
+    {
+      "id": "ex-l03-06",
+      "name": "Lancia dell’Alba",
+      "shipId": "L03",
+      "before": {
+        "effect": "La seconda scudiera guida l’attacco ai sistemi Armi avversari.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Collegamento scudiera interrotto o componente necessario distrutto"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 1 protezione sui componenti.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l03-07",
+      "name": "Scansione da Assedio",
+      "shipId": "L03",
+      "before": {
+        "effect": "Identifica due vitali, preparando un colpo a ventaglio nel turno successivo.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Baluardo/intercettazione o Armi distrutte; limite di una frattura per vitalità in una salva"
+      },
+      "after": {
+        "effect": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+        "category": "Tattica",
+        "comboRecipeId": null,
+        "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+        "effectSpec": {
+          "type": "charge",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l03-08",
+      "name": "Doppia Gittata",
+      "shipId": "L03",
+      "before": {
+        "effect": "Divide una carica in due colpi leggeri a componenti diversi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Interruzione della preparazione; distruzione Armi; perdita carica per una manovra prevista"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l03-09",
+      "name": "Fusione Ossidiana",
+      "shipId": "L03",
+      "before": {
+        "effect": "Accoppia le scudiere in una formazione di assedio che riduce la protezione ma consuma carica.",
+        "category": "Fusione L5",
+        "comboRecipeId": null,
+        "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 2 protezioni sui componenti.",
+        "category": "Fusione L5",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l03-10",
+      "name": "Sentenza Quadrante",
+      "shipId": "L03",
+      "before": {
+        "effect": "Magistro + Scansione + Fusione: quattro colpi diversi, uno per parte; non attivabile con scudiere scollegate.",
+        "category": "Combo",
+        "comboRecipeId": "Sentenza Quadrante",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 4 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 4
+        }
+      }
+    },
+    {
+      "id": "ex-l04-01",
+      "name": "Custode Astrale",
+      "shipId": "L04",
+      "before": {
+        "effect": "Una riparazione riuscita genera un segnalino di armonia per la prossima combo.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Disattivazione del personaggio / scadenza della durata; eventuale bonus richiede evento reale"
+      },
+      "after": {
+        "effect": "Ripara 1 punto al tuo componente più danneggiato, ora e al tuo prossimo turno.",
+        "category": "Personaggio",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "weakest",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l04-02",
+      "name": "Arca Eterna",
+      "shipId": "L04",
+      "before": {
+        "effect": "La prima scudiera ripara una frattura recuperabile quando la sua carica è pronta.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Ripara 1 punto al componente scelto.",
+        "category": "Scudiera 1",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "selected",
+          "amount": 1
+        }
+      }
+    },
+    {
+      "id": "ex-l04-03",
+      "name": "Stella Cremisi",
+      "shipId": "L04",
+      "before": {
+        "effect": "Un bolide marca il componente colpito per un successivo raggio stellare.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Prepara +2 potenza per il tuo attacco del turno successivo.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Il bonus vale solo nel tuo prossimo turno.",
+        "effectSpec": {
+          "type": "charge",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l04-04",
+      "name": "Luce di Quadri",
+      "shipId": "L04",
+      "before": {
+        "effect": "Raggio prismatico più efficace contro sistemi già marcati.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Purificazione o controcarta pertinente; durata limitata; non annulla automaticamente armi materne"
+      },
+      "after": {
+        "effect": "Il tuo attacco ignora 2 protezioni sui componenti.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
+        "effectSpec": {
+          "type": "pierce",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l04-05",
+      "name": "Sovrana del Crepuscolo",
+      "shipId": "L04",
+      "before": {
+        "effect": "La seconda scudiera ripristina resistenza a una compagna ferita, mai distrutta.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Vitalità completamente distrutta non riparabile; Generatore assente/KO se richiesto; consumo risorsa"
+      },
+      "after": {
+        "effect": "Ripara 2 punti alla tua scudiera più danneggiata.",
+        "category": "Scudiera 2",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "escort",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l04-06",
+      "name": "Stasi del Nucleo",
+      "shipId": "L04",
+      "before": {
+        "effect": "Protegge una scudiera da un singolo effetto di corrosione.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
+      },
+      "after": {
+        "effect": "Blocca 2 colpi contro la scudiera più danneggiata. Dura 2 turni avversari.",
+        "category": "Difesa",
+        "comboRecipeId": null,
+        "counterplay": "Ogni colpo bloccato consuma una protezione.",
+        "effectSpec": {
+          "type": "protect",
+          "target": "escort",
+          "amount": 2,
+          "turns": 2
+        }
+      },
+      "semanticReviewNote": "Su Motori, Generatore o una scudiera può arrivare al massimo un colpo per turno. Due turni rendono utilizzabili entrambe le protezioni."
+    },
+    {
+      "id": "ex-l04-07",
+      "name": "Coro di Risonanza",
+      "shipId": "L04",
+      "before": {
+        "effect": "Consuma armonia per riattivare una passiva di supporto nel turno seguente.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Rimette in cima al mazzo l’ultima carta Supporto o Controllo scartata.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Richiede una carta adatta negli scarti.",
+        "effectSpec": {
+          "type": "recover",
+          "role": "support"
+        }
+      }
+    },
+    {
+      "id": "ex-l04-08",
+      "name": "Arca del Vuoto",
+      "shipId": "L04",
+      "before": {
+        "effect": "Un portale converte armonia in raggi separati, senza ripetere lo stesso bersaglio.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Scadenza stato o purificazione secondo categoria"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 2 componenti diversi.",
+        "category": "Attacco",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l04-09",
+      "name": "Fusione dell’Arca",
+      "shipId": "L04",
+      "before": {
+        "effect": "Unisce le due scudiere per riparazione e risonanza, con un turno di ricarica.",
+        "category": "Fusione L5",
+        "comboRecipeId": null,
+        "counterplay": "Distruzione o scollegamento della scudiera necessaria; rottura di Centralina/Generatore richiesti"
+      },
+      "after": {
+        "effect": "Ripara 2 punti al tuo componente più danneggiato.",
+        "category": "Supporto",
+        "comboRecipeId": null,
+        "counterplay": "Non ripara componenti o scudiere distrutti.",
+        "effectSpec": {
+          "type": "repair",
+          "target": "weakest",
+          "amount": 2
+        }
+      }
+    },
+    {
+      "id": "ex-l04-10",
+      "name": "Quattro Costellazioni",
+      "shipId": "L04",
+      "before": {
+        "effect": "Custode + Arca del Vuoto + Fusione: dopo una riparazione reale e preparazione, fino a quattro raggi sui vitali distinti realmente presenti, massimo una frattura ciascuno.",
+        "category": "Combo",
+        "comboRecipeId": "Quattro Costellazioni",
+        "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
+      },
+      "after": {
+        "effect": "Il tuo attacco colpisce fino a 4 componenti diversi.",
+        "category": "Combo",
+        "comboRecipeId": null,
+        "counterplay": "Ogni componente può essere colpito una sola volta.",
+        "effectSpec": {
+          "type": "multishot",
+          "targets": 4
+        }
+      }
+    }
+  ],
+  "decisions": [
+    "Cariche, marche e risorse intermedie sono sostituite da un bonus di potenza, una protezione ignorata o un bonus per il turno successivo.",
+    "Le combinazioni offensive colpiscono direttamente il numero dichiarato di componenti diversi; nessuna sequenza di carte è richiesta.",
+    "Coperture e schivate dichiarano il bersaglio, il numero di colpi e la durata.",
+    "Le carte di cura riparano punti; le carte di rigenerazione dichiarano il danno o il colpo che attiva la cura.",
+    "Le carte Personaggio applicano un singolo effetto per due turni, senza effetti aggiuntivi nascosti.",
+    "Le Fusioni della Fenice e dell’Arca sono Supporti perché rigenerano o riparano; le altre categorie sono conservate.",
+    "Livelli di sblocco, componenti richiesti e numero di scudiere necessario restano quelli originali."
+  ]
+}

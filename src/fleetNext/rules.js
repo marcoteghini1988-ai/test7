@@ -1,19 +1,32 @@
 // Eclissi Stellare — cataloghi e regole ufficiali del nuovo sistema di flotte.
 // Nessuna dipendenza grafica: i componenti di battaglia e Shop usano gli stessi dati.
-// I contenuti progettati sono importati, ma i loro effetti devono essere validati nel motore.
+// Ogni effetto è esplicito: catalogo, testo e combattimento condividono la stessa regola.
 import generalData from './catalogGeneral.json' with {type:'json'};
 import exclusiveData from './catalogExclusive.json' with {type:'json'};
+import {describeEffect,validateEffectSpec} from './simpleEffects.js';
+import {BOSS_CARDS,bossCard} from './bossCards.js';
+export {BOSS_CARDS,bossCard} from './bossCards.js';
+
+function definedCard(card,kind,source){
+ const error=validateEffectSpec(card.effectSpec);
+ if(error)throw new Error(card.id+': '+error);
+ const normalized={...card,kind,effectSpec:Object.freeze({...card.effectSpec})};
+ const effect=describeEffect(normalized);
+ if(effect!==(source==='general'?card.effetto:card.effectProposed))
+  throw new Error(card.id+': testo della carta diverso dalla regola eseguibile');
+ return Object.freeze(normalized);
+}
 
 export const GENERAL_CARDS = Object.freeze(Object.fromEntries(generalData.carte.map(card =>
- [card.id, Object.freeze({...card,kind:card.sottotipo==='Terreno'?'terrain':
+ [card.id, definedCard(card,card.sottotipo==='Terreno'?'terrain':
   card.sottotipo==='Personaggio'?'character':card.sottotipo==='Difesa'?'defense':
-  card.categoria==='Attacco'?'attack':card.categoria==='Controllo'?'control':'support'})]
+  card.categoria==='Attacco'?'attack':card.categoria==='Controllo'?'control':'support','general')]
 )));
 export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(exclusiveData.cards.map(card =>
- [card.id,Object.freeze({...card,kind:/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
+ [card.id,definedCard(card,/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
   /Scudiera|Supporto|Tattica/i.test(card.category)?'support':
   /Controllo/i.test(card.category)?'control':
-  /combo|fusione/i.test(card.category)?'combo':'attack'})]
+  /combo|fusione/i.test(card.category)?'combo':'attack','exclusive')]
 )));
 export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(s=>[s.id,Object.freeze(s)])));
 export const COMBO_RECIPES = Object.freeze(exclusiveData.comboRecipes.map(c=>Object.freeze(c)));
@@ -21,6 +34,8 @@ export const PREMADE_DECKS = Object.freeze(generalData.mazziPreconfigurati);
 export const STARTER_DECK = Object.freeze(generalData.mazzoIniziale);
 export const GENERAL_COUNT = Object.keys(GENERAL_CARDS).length;
 export const EXCLUSIVE_COUNT = Object.keys(EXCLUSIVE_CARDS).length;
+export const BOSS_COUNT = Object.keys(BOSS_CARDS).length;
+export const TOTAL_CARD_COUNT = GENERAL_COUNT+EXCLUSIVE_COUNT+BOSS_COUNT;
 export const FLEET_TURN_SECONDS = 30;
 export const FLEET_HAND_SIZE = 7;
 export const FLEET_MAX_PLAYED = 3;
@@ -34,16 +49,24 @@ export const PACK_PRICE = 280;
 export const PACK_SIZE = 3;
 export const MAX_EXCLUSIVE_UPGRADE = 3;
 
-if(GENERAL_COUNT!==250||EXCLUSIVE_COUNT!==129||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==18)
- throw new Error('Catalogo flotta incompleto: le regole devono corrispondere ai 250+129 contenuti ufficiali');
+if(GENERAL_COUNT!==250||EXCLUSIVE_COUNT!==129||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==18)
+ throw new Error('Catalogo flotta incompleto: servono 250 generali, 129 esclusive e 12 Personaggi Boss');
 
 export const generalCard = id => GENERAL_CARDS[id]||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||null;
-export const card = id => generalCard(id)||exclusiveCard(id);
+export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
+export function cardFacePath(id,level=1){
+ if(bossCard(id))return '/assets/fleet-next-boss-cards/'+id+'.svg';
+ const grade=Math.max(1,Math.min(3,Math.floor(Number(level)||1)));
+ return exclusiveCard(id)&&grade>1?
+  '/assets/fleet-next-card-upgrades/'+id+'-g'+grade+'.svg':
+  '/assets/fleet-next-cards/'+id+'.svg';
+}
 export const shipConfig = id => SHIP_CONFIGS[id]||null;
 export function cardCopyLimit(id){
  const c=card(id);
  if(!c)return 0;
+ if(bossCard(id))return 1;
  return exclusiveCard(id)?1:(RARITY_COPY_LIMIT[c.rarita]||0);
 }
 export function cardRole(id){
@@ -94,8 +117,8 @@ export function validateBaseDeck(deck,collection=null){
   return {valid:false,reason:'Il mazzo base deve contenere esattamente 40 carte.'};
  const counts=countDeck(deck);
  for(const [id,amount] of Object.entries(counts)){
-  const def=generalCard(id);
-  if(!def)return {valid:false,reason:'Carta non generale nel mazzo: '+id};
+  const def=generalCard(id)||bossCard(id);
+  if(!def)return {valid:false,reason:'Carta non ammessa nel mazzo base: '+id};
   if(amount>cardCopyLimit(id))return {valid:false,reason:'Troppe copie di '+def.nome};
   if(collection&&amount>(collection.owned[id]||0))
    return {valid:false,reason:'Copie non possedute: '+def.nome};
@@ -109,13 +132,14 @@ export function getPrebuilt(id){
  return PREMADE_DECKS.find(p=>p.id===id)||null;
 }
 export function comboForShip(shipId){
- return COMBO_RECIPES.filter(c=>c.navicella===shipId);
+ return COMBO_RECIPES.filter(c=>c.active===true&&c.navicella===shipId);
 }
 export function comboCardIds(recipe){
  const defs=Object.values(EXCLUSIVE_CARDS).filter(c=>c.shipId===recipe.navicella);
  return (recipe.carte_effettive_da_giocare||[]).map(name=>defs.find(d=>d.name===name)?.id).filter(Boolean);
 }
 export function isComboReady(recipe,mother,escorts,playedIds,previousIds=[]){
+ if(recipe.active!==true)return false;
  if(recipe.navicella!==mother.id||mother.level<recipe.livello_minimo)return false;
  if(escorts.filter(e=>e.hp>0&&!e.destroyed&&e.linked!==false).length<recipe.scudiere_richieste)return false;
  if(!recipe.vitali_madre_richiesti.every(id=>mother.parts.some(p=>p.id===id&&!p.destroyed)))return false;
@@ -132,5 +156,6 @@ export function generalCatalogStats(){
   rarity[c.rarita]=(rarity[c.rarita]||0)+1;
   category[c.categoria]=(category[c.categoria]||0)+1;
  }
- return {count:GENERAL_COUNT,rarity,category,exclusive:EXCLUSIVE_COUNT,ships:17,recipes:COMBO_RECIPES.length};
+ return {count:GENERAL_COUNT,rarity,category,exclusive:EXCLUSIVE_COUNT,boss:BOSS_COUNT,
+  total:TOTAL_CARD_COUNT,ships:17,recipes:COMBO_RECIPES.filter(c=>c.active===true).length,archivedRecipes:COMBO_RECIPES.length};
 }

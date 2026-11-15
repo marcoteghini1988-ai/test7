@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
+import {describeEffect} from './fleetNext/simpleEffects.js';
+import {BOSS_CARDS} from './fleetNext/bossCards.js';
 import generalData from './fleetNext/catalogGeneral.json' with {type:'json'};
 import exclusiveData from './fleetNext/catalogExclusive.json' with {type:'json'};
 
@@ -103,9 +105,9 @@ test('Il generatore accetta illustrazioni HD per tutte le funzioni',()=>{
  assert.ok(script.includes('const rand=rng(seed^0x894ec321)'),'Fallback vettoriale ancora disponibile');
 });
 
-test('119 Attacchi: fronti HD e vettoriali verificati dinamicamente, formato 2:3',()=>{
+test('117 Attacchi: fronti HD e vettoriali verificati dinamicamente, formato 2:3',()=>{
  const cards=[...generalData.carte.filter(c=>c.categoria==='Attacco'),...exclusiveData.cards.filter(c=>c.category==='Attacco'||/Combo|Fusione/.test(c.category)||c.category==='Reazione')];
- assert.equal(cards.length,119);
+ assert.equal(cards.length,117);
  const hd=new Set(cards.filter(c=>existsSync(resolve('public/assets/fleet-card-illustrations',c.id+'.webp'))).map(c=>c.id));
  const motifs=new Set(),signatures=new Set();
  for(const card of cards){
@@ -178,5 +180,55 @@ test('Dieci nuovi fronti HD con nome ufficiale, rarita e colori separati',()=>{
   assert.ok(!svg.includes('ECLISSI STELLARE'),'Marchio vietato '+id);
   assert.ok(svg.includes('width="512" height="768"'),'Formato non verticale '+id);
   assert.ok(svg.includes(card.sottotipo==='Difesa'?'stroke="#37ceff"':'stroke="#ff594c"'),id);
+ }
+});
+
+
+const decodeRuleText=s=>s.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;/g,'&');
+function visibleRule(svg,id){
+ const group=svg.match(new RegExp('<g data-current-effect="'+id+'"[^>]*>([\\s\\S]*?)<\\/g>'));
+ assert.ok(group,'Pannello regole visibile assente: '+id);
+ return {group:group[0],text:[...group[1].matchAll(/<text\b[^>]*>(.*?)<\/text>/g)].map(m=>decodeRuleText(m[1])).join(' ')};
+}
+test('Tutte le 379 carte mostrano il testo completo del motore senza troncamenti',()=>{
+ for(const card of entries){
+  const svg=readFileSync(resolve('public/assets/fleet-next-cards',card.id+'.svg'),'utf8');
+  const visible=visibleRule(svg,card.id);
+  assert.equal(visible.text,describeEffect(card),card.id);
+  assert.equal(visible.text,card.effetto||card.effectProposed,card.id);
+  assert.ok(visible.group.includes('data-effect-grade="1"'),card.id);
+  assert.ok(!visible.text.includes('…'),'Effetto troncato: '+card.id);
+ }
+});
+test('Le 258 varianti esclusive mostrano gli effetti effettivi dei gradi 2 e 3',()=>{
+ for(const card of exclusiveData.cards)for(const grade of [2,3]){
+  const path=resolve('public/assets/fleet-next-card-upgrades',card.id+'-g'+grade+'.svg');
+  assert.ok(existsSync(path),'Variante mancante: '+card.id+' grado '+grade);
+  const svg=readFileSync(path,'utf8'),visible=visibleRule(svg,card.id);
+  assert.equal(visible.text,describeEffect(card,grade),card.id+' grado '+grade);
+  assert.ok(visible.group.includes('data-effect-grade="'+grade+'"'));
+  assert.ok(svg.includes('GRADO '+grade),'Grado non visibile: '+card.id);
+  assert.ok(svg.includes('width="512" height="768"'));
+  const base=readFileSync(resolve('public/assets/fleet-next-cards',card.id+'.svg'),'utf8');
+  const embedded=svg.match(/data-hd-art="[^"]+"[\s\S]*?href="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/);
+  if(embedded)assert.ok(base.includes(embedded[1]),'Illustrazione cambiata con il grado '+card.id);
+ }
+});
+
+test('I 12 Personaggi Boss conservano il ritratto originale e mostrano le regole correnti',()=>{
+ const cards=Object.values(BOSS_CARDS);assert.equal(cards.length,12);
+ for(const card of cards){
+  const svg=readFileSync(resolve('public/assets/fleet-next-boss-cards',card.id+'.svg'),'utf8');
+  assert.equal(visibleRule(svg,card.id).text,describeEffect(card),card.id);
+  assert.ok(svg.includes('>PERSONAGGIO</text>'));
+  assert.ok(svg.includes('>BOSS</text>'));
+  assert.ok(svg.includes('stroke="#eb64e1"'),'Tinta Personaggio mancante '+card.id);
+  assert.ok(!svg.includes('ECLISSI STELLARE'),'Marchio non consentito '+card.id);
+  const embedded=svg.match(/href="data:image\/svg\+xml;base64,([A-Za-z0-9+/=]+)"/);
+  assert.ok(embedded,'Ritratto vettoriale originale non incorporato '+card.id);
+  const source=readFileSync(resolve('public/assets/boss-characters',card.id+'.svg'),'utf8');
+  const portrait=Buffer.from(embedded[1],'base64').toString('utf8');
+  assert.ok(portrait.includes('viewBox="35 127 442 435"'),'Ritaglio ritratto sbagliato '+card.id);
+  assert.equal(portrait.replace(/<svg\b[^>]*>/,''),source.replace(/<svg\b[^>]*>/,''),'Ritratto originale modificato '+card.id);
  }
 });
