@@ -542,7 +542,7 @@ export default function OfficialFleetBattle3D({
      </option>)}
     </select>
    </label>}
-   {selectedType&&!ended&&<div className="live-card-inspector" role="status">
+   {(selectedType||forkActive)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
