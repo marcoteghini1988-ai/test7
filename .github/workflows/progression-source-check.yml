@@ -1,0 +1,31 @@
+name: Progressione - sorgenti per verifica
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Prepara sorgenti e dipendenze per i test
+        run: |
+          python3 - <<'PY'
+          import os, tarfile, subprocess
+          names=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          with tarfile.open('/tmp/eclissi-progression-source.tar.gz','w:gz') as out:
+              for name in names:
+                  if name and os.path.isfile(name) and not name.startswith('public/') and not name.startswith('docs/screenshots/') and os.path.getsize(name)<4000000:
+                      out.add(name,arcname=name)
+              out.add('node_modules',arcname='node_modules')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eclissi-progression-source
+          path: /tmp/eclissi-progression-source.tar.gz
+          retention-days: 1
