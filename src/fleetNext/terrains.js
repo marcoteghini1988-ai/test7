@@ -1,19 +1,18 @@
 // Dieci regole pubbliche: valgono per entrambe le flotte, per tre round.
-import {GENERAL_CARDS} from './rules.js';
 import {TERRAIN_EFFECT_TEXT} from './simpleEffects.js';
 import {PHASE16A_CAMPAIGN_PLANET_IDS} from '../newCombat/phase16ACatalog.js';
 
 const rows=[
- ['T01','gen-219','Distesa Gelida','gelo','dodge-disabled',1],
- ['T02','gen-238','Faglia di Plasma','plasma','salvo',1],
- ['T03','gen-239','Tempesta Ionica','ionico','jam',1],
- ['T04','gen-220','Deserto Magnetico','magnetico','intercept',1],
- ['T05','gen-231','Cintura di Detriti','detriti','salvo',-1],
- ['T06','gen-221','Nebbia di Elio','elio','pierce-disabled',1],
- ['T07','gen-230','Foresta Ionizzata','ionizzato','hit-repair',1],
- ['T08','gen-229','Palude di Silicio','silicio','repair-disabled',1],
- ['T09','gen-237','Mare di Quarzo','quarzo','escort-heal',1],
- ['T10','gen-245','Trono di Antimateria','antimateria','extra-target',1]
+ ['T01',null,'Distesa Gelida','gelo','dodge-disabled',1],
+ ['T02',null,'Faglia di Plasma','plasma','salvo',1],
+ ['T03',null,'Tempesta Ionica','ionico','jam',1],
+ ['T04',null,'Deserto Magnetico','magnetico','intercept',1],
+ ['T05',null,'Cintura di Detriti','detriti','salvo',-1],
+ ['T06',null,'Nebbia di Elio','elio','pierce-disabled',1],
+ ['T07',null,'Foresta Ionizzata','ionizzato','hit-repair',1],
+ ['T08',null,'Palude di Silicio','silicio','repair-disabled',1],
+ ['T09',null,'Mare di Quarzo','quarzo','escort-heal',1],
+ ['T10',null,'Trono di Antimateria','antimateria','extra-target',1]
 ];
 const affinity=[
  ['N00','T03,T06','T04,T10'],['C01','T02,T10','T01,T08'],
@@ -32,8 +31,8 @@ export const TERRAIN_AFFINITY=Object.freeze(Object.fromEntries(affinity.map(([id
 export const TERRAIN_CATALOG=Object.freeze(Object.fromEntries(rows.map(([code,cardId,name,theme,trigger,amount])=>
  [code,{code,cardId,name,theme,trigger,amount,durationTurns:6,description:TERRAIN_EFFECT_TEXT[code]}]
 )));
-export const TERRAIN_BY_CARD=Object.freeze(Object.fromEntries(rows.map(x=>[x[1],TERRAIN_CATALOG[x[0]]])));
-if(rows.length!==10||affinity.length!==17||rows.some(x=>!GENERAL_CARDS[x[1]]))
+export const TERRAIN_BY_CARD=Object.freeze(Object.fromEntries(rows.filter(x=>x[1]).map(x=>[x[1],TERRAIN_CATALOG[x[0]]])));
+if(rows.length!==10||affinity.length!==17)
  throw Error('Catalogo dei terreni non coerente');
 export function terrainAffinity(shipId,terrainCode){
  // La tabella storica resta esportata per i salvataggi, senza bonus nascosti.

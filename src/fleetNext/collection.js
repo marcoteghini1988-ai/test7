@@ -8,46 +8,49 @@ import {
  eligibleExclusives,exclusiveCard,exclusiveUnlocked,shipConfig,generalCard
 } from './rules.js';
 import {canUpgradeEffect} from './simpleEffects.js';
-import generalData from './catalogGeneral.json' with {type:'json'};
-import {PROGRESSION_GENERAL_CARDS} from './progressionCards.js';
 
-export const FLEET_INVENTORY_KEY='eclissi_fleet_collection_v2';
-export const FLEET_INVENTORY_SCHEMA=2;
+export const FLEET_INVENTORY_KEY='eclissi_fleet_collection_v2'; // NON azzerare i salvataggi
+export const FLEET_INVENTORY_SCHEMA=3;
 const copy=value=>JSON.parse(JSON.stringify(value));
 const starterCards=()=>deckFromCounts(STARTER_DECK.carteGenerali);
-const legacyStarterCounts=generalData.mazzoIniziale.carteGenerali;
-const isUnchangedLegacyStarter=deck=>{
- if(!Array.isArray(deck)||deck.length!==FLEET_BASE_DECK_SIZE)return false;
- const counts=countDeck(deck),keys=Object.keys(legacyStarterCounts);
- return Object.keys(counts).length===keys.length&&keys.every(id=>counts[id]===legacyStarterCounts[id]);
-};
 const clampInt=(n,min,max)=>Math.max(min,Math.min(max,Math.floor(Number(n)||0)));
 export function createFleetInventory(){
  const deck=starterCards();
- if(deck.length!==FLEET_BASE_DECK_SIZE)throw Error('Mazzo iniziale incompleto');
- return {schema:FLEET_INVENTORY_SCHEMA,owned:countDeck(deck),deck,
-  credits:0,packsOpened:0,equippedMother:'N00',
-  exclusiveUpgrades:{},claimedRewards:[],collectionHistory:[]};
+ if(deck.length!==FLEET_BASE_DECK_SIZE||!validateBaseDeck(deck).valid)throw Error('Mazzo transitorio non valido');
+ return {schema:FLEET_INVENTORY_SCHEMA,owned:countDeck(deck),deck,credits:0,packsOpened:0,
+  equippedMother:'N00',exclusiveUpgrades:{},claimedRewards:[],collectionHistory:[],
+  retiredOwned:{},retiredDeck:null,retiredExclusiveUpgrades:{}};
 }
 export function normalizeFleetInventory(value){
  const starter=createFleetInventory();
- if(!value||value.schema!==FLEET_INVENTORY_SCHEMA)return starter;
- const owned={...starter.owned};
+ if(!value||![2,3].includes(value.schema))return starter;
+ const owned={...starter.owned},retiredOwned={};
+ const store=(id,n)=>{if(typeof id==='string'&&id.length<120&&Number.isInteger(n)&&n>=0&&n<=999)
+  retiredOwned[id]=Math.max(retiredOwned[id]||0,n);};
+ for(const [id,n] of Object.entries(value.retiredOwned||{}))store(id,n);
  for(const [id,n] of Object.entries(value.owned||{})){
   if((generalCard(id)||bossCard(id))&&Number.isInteger(n)&&n>=0&&n<=999)
    owned[id]=bossCard(id)?Math.min(1,n):Math.max(owned[id]||0,n);
+  else store(id,n);
  }
- const candidate={...starter,owned};
+ const candidate={...starter,owned,retiredOwned};
  const raw=Array.isArray(value.deck)?value.deck:starter.deck;
- // Solo lo starter non personalizzato riceve le nuove tre carte al posto
- // delle copie base. Mazzi personalizzati, crediti e carte possedute restano.
- candidate.deck=isUnchangedLegacyStarter(raw)?starter.deck:
-  validateBaseDeck(raw,{owned}).valid?[...raw]:starter.deck;
+ const valid=validateBaseDeck(raw,{owned}).valid;
+ candidate.deck=valid?[...raw]:[...starter.deck];
+ candidate.retiredDeck=Array.isArray(value.retiredDeck)?[...value.retiredDeck]:
+  Array.isArray(value.deck)&&!valid?[...raw]:null;
  candidate.credits=clampInt(value.credits,0,1e9);
  candidate.packsOpened=clampInt(value.packsOpened,0,1e7);
  candidate.equippedMother=shipConfig(value.equippedMother)?value.equippedMother:'N00';
- candidate.exclusiveUpgrades=Object.fromEntries(Object.entries(value.exclusiveUpgrades||{})
-  .filter(([id,n])=>exclusiveCard(id)&&Number.isInteger(n)&&n>=1&&n<=MAX_EXCLUSIVE_UPGRADE));
+ const oldUpgrades={},upgrades={};
+ const keep=(id,n)=>{if(typeof id==='string'&&id.length<120&&Number.isInteger(n)&&n>=1&&n<=MAX_EXCLUSIVE_UPGRADE)oldUpgrades[id]=n;};
+ for(const [id,n] of Object.entries(value.retiredExclusiveUpgrades||{}))keep(id,n);
+ for(const [id,n] of Object.entries(value.exclusiveUpgrades||{})){
+  if(!Number.isInteger(n)||n<1||n>MAX_EXCLUSIVE_UPGRADE)continue;
+  if(exclusiveCard(id))upgrades[id]=n;else keep(id,n);
+ }
+ candidate.exclusiveUpgrades=upgrades;
+ candidate.retiredExclusiveUpgrades=oldUpgrades;
  candidate.claimedRewards=Array.isArray(value.claimedRewards)?
   [...new Set(value.claimedRewards.filter(x=>typeof x==='string'&&x.length<120))].slice(-4000):[];
  candidate.collectionHistory=Array.isArray(value.collectionHistory)?
@@ -124,23 +127,8 @@ export function buyPrebuiltDeck(inventory,premadeId){
  if(!valid.valid)return {ok:false,reason:valid.reason,inventory};
  return {ok:true,inventory:next,spent:cost,received:delta};
 }
-function secureRandom(rng){return Math.max(0,Math.min(0.999999999,Number(rng())||0));}
-function drawRarity(rng){
- const n=secureRandom(rng);
- return n<.65?'Comune':n<.90?'Rara':n<.98?'Epica':'Leggendaria';
-}
-const PACK_POOL=Object.freeze(Object.groupBy(Object.values({...GENERAL_CARDS,...PROGRESSION_GENERAL_CARDS}),c=>c.rarita));
-export function buyFleetPack(inventory,rng=Math.random){
- if(inventory.credits<PACK_PRICE)return {ok:false,reason:'Crediti insufficienti',inventory};
- const cards=Array.from({length:PACK_SIZE},()=>{
-  const rarity=drawRarity(rng),pool=PACK_POOL[rarity];
-  return pool[Math.floor(secureRandom(rng)*pool.length)].id;
- });
- const next=record(inventory,'pack','Busta da '+PACK_SIZE+' carte');
- next.credits-=PACK_PRICE;next.packsOpened++;
- for(const id of cards)next.owned[id]=(next.owned[id]||0)+1;
- return {ok:true,inventory:next,spent:PACK_PRICE,cards};
-}
+// Temporaneamente sospeso: nessun credito speso su carte che saranno sostituite.
+export function buyFleetPack(inventory){return {ok:false,reason:'Pacchetti sospesi durante il rifacimento delle carte.',inventory};}
 export function exclusiveUpgradeCost(nextGrade){
  return [0,0,160,420][nextGrade]||Infinity;
 }

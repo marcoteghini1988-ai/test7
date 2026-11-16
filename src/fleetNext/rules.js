@@ -36,14 +36,7 @@ export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(exclusiveData.ca
 export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(s=>[s.id,Object.freeze(s)])));
 export const COMBO_RECIPES = Object.freeze(exclusiveData.comboRecipes.map(c=>Object.freeze(c)));
 export const PREMADE_DECKS = Object.freeze(generalData.mazziPreconfigurati);
-const starterCounts={...generalData.mazzoIniziale.carteGenerali};
-for(const [oldId,newId] of [['gen-001','prog-machine-striker'],['gen-002','prog-machine-guard'],['gen-003','prog-bypass']]){
- if(!(starterCounts[oldId]>0))throw new Error('Mazzo iniziale: carta da sostituire mancante '+oldId);
- if(--starterCounts[oldId]===0)delete starterCounts[oldId];
- starterCounts[newId]=(starterCounts[newId]||0)+1;
-}
-export const STARTER_DECK = Object.freeze({...generalData.mazzoIniziale,
- carteGenerali:Object.freeze(starterCounts)});
+export const STARTER_DECK=Object.freeze({...generalData.mazzoIniziale,carteGenerali:Object.freeze({...generalData.mazzoIniziale.carteGenerali})});
 export const GENERAL_COUNT = Object.keys(GENERAL_CARDS).length;
 export const EXCLUSIVE_COUNT = Object.keys(EXCLUSIVE_CARDS).length;
 export const BOSS_COUNT = Object.keys(BOSS_CARDS).length;
@@ -64,15 +57,15 @@ export const PACK_PRICE = 280;
 export const PACK_SIZE = 3;
 export const MAX_EXCLUSIVE_UPGRADE = 3;
 
-if(GENERAL_COUNT!==250||EXCLUSIVE_COUNT!==129||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==18)
- throw new Error('Catalogo flotta incompleto: servono 250 generali, 129 esclusive e 12 Personaggi Boss');
+if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==17||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==0)
+ throw new Error('Cutover incompleto: servono 12 Personaggi generali, 17 esclusive e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
 export const generalCard = id => GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
- if(isProgressionCard(id))return null;
+ if(!card(id)||isProgressionCard(id))return null;
  if(bossCard(id))return '/assets/fleet-next-boss-cards/'+id+'.svg';
  const grade=Math.max(1,Math.min(3,Math.floor(Number(level)||1)));
  return exclusiveCard(id)&&grade>1?
