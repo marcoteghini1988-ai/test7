@@ -14,6 +14,7 @@ import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {STARTER_DECK,card,cardRole,cardFacePath,deckFromCounts} from './fleetNext/rules.js';
+import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
@@ -115,6 +116,16 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      aria-label={'Abilità della scudiera '+escort.name}>i</button>
    </div>;
   })}
+  <div className="f3d-mounted-modules" aria-label={player?'Moduli montati':'Moduli avversari'}>
+   {liveModules(unit).map(module=><button type="button" key={module.id}
+    className={'f3d-mounted-module'+(selectedTarget?.kind==='module'&&selectedTarget.id===module.id?' f3d-unit--selected':'')}
+    disabled={!player&&!canTarget}
+    title={module.name+' · Integrità '+module.hp+'/'+module.maxHp}
+    aria-label={(player?'Consulta ':'Attacca ')+module.name+' · '+module.hp+'/'+module.maxHp}
+    onClick={()=>player?inspectEscort?.({module}):onSelectTarget?.({kind:'module',id:module.id,slot:module.slot})}>
+     <span>{module.slot==='weapon'?'ARMA':'UTILITÀ'}</span><b>{module.name}</b><small>{module.hp}/{module.maxHp}</small>
+    </button>)}
+  </div>
   <div className="f3d-machine-berths" aria-label={player?'Le tue due macchine d’assalto':'Le due macchine d’assalto avversarie'}>
    {berths.map((machine,slot)=>{
     const enabled=machine&&!machine.pending;
@@ -236,6 +247,11 @@ export default function OfficialFleetBattle3D({
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
+ const [auroraOptions,setAuroraOptions]=useState({
+  deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',
+  cartographerPickId:'',reconfigureSelection:'',secondarySelection:''
+ });
+ const setAuroraOption=(name,value)=>setAuroraOptions(prev=>({...prev,[name]:value}));
  const [scale,setScale]=useState(1);
  const [message,setMessage]=useState('');
  const [help,setHelp]=useState(null);
@@ -295,6 +311,7 @@ export default function OfficialFleetBattle3D({
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
   setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setMessage('');
+  setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
