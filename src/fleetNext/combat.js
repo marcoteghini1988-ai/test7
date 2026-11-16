@@ -413,12 +413,83 @@ function cancelTerrainWithTrap(b,who,terrainCard,ctx,events){
  ctx.terrainCancelled=true;
  return true;
 }
-function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId}={}){
+
+// Ogni azione Aurora è eseguita sulla battaglia reale. Gli effetti che richiedono
+// una scelta accettano il valore selezionato nella plancia, senza alterare i testi.
+function activateAuroraCard(b,who,def,ctx,events,order={},ownPartId=null,source=null){
+ const side=b.sides[who],action=def.effectSpec.action;
+ const note=(message,extra={})=>events.push(emit(b,who,'card',(def.name||def.nome)+' · '+message,{cardId:def.id,...extra}));
+ if(isAuroraModule(def.id)){
+  const first=side.lastModuleMountPly!==b.ply;
+  const result=mountModule(side,def,ownPartId);
+  if(!result.ok)throw Error(result.reason);
+  side.lastModuleMountPly=b.ply;
+  note((result.replaced?'Sostituito':'Montato')+' modulo '+result.entry.name+' (2/2)',
+   {moduleId:result.entry.id,moduleSlot:result.entry.slot});
+  if(first&&installedModule(side,'utility')?.cardId==='nx-n00-01'&&side.deck.length>1){
+   if(order.deckTopFlip)[side.deck[0],side.deck[1]]=[side.deck[1],side.deck[0]];
+   note('Ottica: osservate e ordinate due carte in cima al mazzo');
+  }
+  return;
+ }
+ if(action==='burst'||action==='dismantle'){
+  ctx.auroraAttacks.push({id:def.id,action});
+  note(action==='burst'?'Due colpi leggeri':'Tiro di smontaggio');
+  return;
+ }
+ if(action==='sacrificial-veil'){
+  const module=installedModule(side,order.sacrificeSlot)||liveModules(side)[0];
+  const part=motherPart(side.ships[0],ownPartId);
+  if(!module||!unitAlive(part))throw Error('Il Velo richiede un modulo e un vitale operativo');
+  side.auroraVeil={id:def.id,source,moduleId:module.id,partId:part.id,untilPly:b.ply+2};
+  note('Velo pronto su '+(VITAL_LABELS[part.id]||part.id)+' con '+module.name);
+  return;
+ }
+ if(action==='adapt'){
+  const possible=side.hand.filter(id=>card(id)?.shipId==='N00');
+  const sacrificed=possible.includes(order.exchangeCardId)?order.exchangeCardId:possible[0];
+  if(!sacrificed)throw Error('Adattamento: nessuna esclusiva in mano');
+  side.hand.splice(side.hand.indexOf(sacrificed),1);
+  side.deck.push(sacrificed);
+  const top=side.deck.splice(0,3);
+  const picked=top.includes(order.peekPickId)?order.peekPickId:top[0];
+  if(picked){side.hand.push(picked);top.splice(top.indexOf(picked),1);}
+  side.deck.push(...top);
+  note('Una esclusiva scambiata: scelta una carta fra le prime tre');
+  return;
+ }
+ if(action==='cartographer'){
+  const top=side.deck.splice(0,4),options=top.filter(id=>isAuroraModule(id));
+  const picked=options.includes(order.cartographerPickId)?order.cartographerPickId:options[0];
+  if(picked){side.hand.push(picked);top.splice(top.indexOf(picked),1);}
+  side.deck.push(...top);
+  note(picked?'Un modulo scelto fra quattro carte':'Nessun modulo fra le quattro carte');
+  return;
+ }
+ if(action==='reconfigure'){
+  const options=reconfigurationOptions(side,card,side.ships[0].level);
+  const choice=options.find(c=>c.slot===order.reconfigureSlot&&c.cardId===order.reconfigureCardId)||options[0];
+  if(!choice)throw Error('Nessun modulo alternativo da montare');
+  const index=side.deck.indexOf(choice.cardId);
+  if(index<0)throw Error('Il modulo scelto non è nel mazzo');
+  side.deck.splice(index,1);
+  const old=installedModule(side,choice.slot),partId=old?.attachedPartId;
+  const result=mountModule(side,card(choice.cardId),partId||ownPartId);
+  if(!result.ok)throw Error(result.reason);
+  side.deck=shuffled(side.deck,b);
+  note('Riconfigurazione: '+old.name+' sostituito con '+result.entry.name);
+  return;
+ }
+ throw Error('Effetto Aurora mancante: '+action);
+}
+
+function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
  const at=text=>events.push(emit(b,who,'card',(def.nome||def.name||'Effetto')+' · '+text,{cardId:def.id}));
  const expiry=b.ply+2*(s.turns||1);
  switch(s.type){
+  case 'aurora':activateAuroraCard(b,who,def,ctx,events,order,ownPartId,token);break;
   case 'bypass':ctx.bypass=true;at('Questo attacco può raggiungere direttamente la madre');break;
   case 'fusion':{
    const result=fuseFleetSupports(side,b.ply);
@@ -505,7 +576,7 @@ function applyCard(b,who,id,ctx,events,order){
   return false;
  }
  if(role==='character'){
-  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:1,
+  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:spec.type==='aurora'?0:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
@@ -514,7 +585,7 @@ function applyCard(b,who,id,ctx,events,order){
    {id,source,untilPly:b.ply+2*(spec.turns||1)});
   side.defenseSlots=side.defenses.map(d=>d.id);
  }
- applyEffect(b,who,def,spec,ctx,events,{source,ownPartId});
+ applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order});
  return true;
 }
 function applyCharacterRepeat(b,who,ctx,events){
@@ -696,7 +767,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const s of Object.values(b.sides))expireSide(s,b.ply);
  const cards=takeCards(side,order.cards||[]);
- const ctx={who,nowMs,cards:[],power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
+ const ctx={who,nowMs,cards:[],auroraAttacks:[],power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
  // Il terreno scelto entra prima delle altre carte e degli effetti del turno.
