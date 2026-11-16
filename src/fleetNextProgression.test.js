@@ -35,7 +35,7 @@ test('Aurora ha sempre soltanto Arsenale e Generatore, senza supporti o fusioni'
   assert.equal(row.fusionLimit,0);
  }
  assert.equal(eligibleExclusives('N00',5).length,10,'Aurora ha 10 esclusive, di cui 9 nuove schede');
- assert.equal(eligibleExclusives('N00',5).filter(c=>c.playable!==false).length,1);
+ assert.equal(eligibleExclusives('N00',5).filter(c=>c.playable!==false).length,10);
  assert.ok(exclusiveUnlocked('ex-n00-01','N00',1));
  assert.equal(exclusiveUnlocked('ex-n00-04','N00',3),false);
 });
