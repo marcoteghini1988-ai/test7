@@ -2,7 +2,7 @@
 import {existsSync,readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {PHASE1_CATALOG} from '../src/phase1FleetCatalog.js';
-import {GENERAL_COUNT,EXCLUSIVE_COUNT,BOSS_COUNT,TOTAL_CARD_COUNT} from '../src/fleetNext/rules.js';
+import {GENERAL_COUNT,EXCLUSIVE_COUNT,BOSS_COUNT,BASE_CATALOG_COUNT,PROGRESSION_CARD_COUNT,TOTAL_CARD_COUNT} from '../src/fleetNext/rules.js';
 import {LIVE_FX_SPRITES} from '../src/officialLiveCombatVisuals.js';
 import {OFFICIAL_NUMERIC_BACK_IDS,officialNumericDeckStackPath} from '../src/officialDeckBackArt.js';
 
@@ -155,11 +155,12 @@ verify(exists('src/officialLiveMobileLayout.test.js'),
 
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
-verify(GENERAL_COUNT===250&&EXCLUSIVE_COUNT===129&&BOSS_COUNT===12&&TOTAL_CARD_COUNT===391&&
+verify(GENERAL_COUNT===250&&EXCLUSIVE_COUNT===129&&BOSS_COUNT===12&&BASE_CATALOG_COUNT===391&&
+ PROGRESSION_CARD_COUNT===6&&TOTAL_CARD_COUNT===397&&
  shop.includes('<FleetCollectionWorkshop')&&hangar.includes('<FleetCollectionWorkshop initialTab="decks"')&&
  !shop.includes("id: 'abilities'")&&!hangar.includes('<SpecialDeckPanel')&&
- fleetEditor.includes('readFleetInventory')&&fleetEditor.includes('BOSS_CARDS'),
- 'Bazar, Hangar e battaglia devono condividere le 391 carte; nessun acquisto di moduli fuori dal mazzo attivo');
+ fleetEditor.includes('readFleetInventory')&&fleetEditor.includes('BOSS_CARDS')&&fleetEditor.includes('PROGRESSION_GENERAL_CARDS'),
+ 'Bazar, Hangar e battaglia devono condividere le 391 carte esistenti e le 6 carte di flotta; nessun acquisto di moduli fuori dal mazzo attivo');
 verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')&&
  !/\bid:\s*['"](?:weapons|terrain|environments)['"]/.test(shop)&&
  !/onOpenShopTab\(['"](?:weapons|terrain|environments)['"]\)/.test(loadout)&&
