@@ -37,3 +37,38 @@ test('I 12 Personaggi delle nuove esclusive riutilizzano le identità già esist
   assert.ok(match,character.id+' deve rimanere lo stesso Personaggio del catalogo esistente');
  }
 });
+
+test('Il catalogo in codice associa esattamente 10 esclusive a ciascuna delle 12 navicelle principali',()=>{
+ const group=Object.groupBy(Object.values(EXCLUSIVE_CARDS),c=>c.shipId);
+ for(const shipId of ships){
+  const set=group[shipId]||[];
+  assert.equal(set.length,10,shipId);
+  assert.equal(set.filter(c=>c.kind==='character').length,1,shipId);
+  assert.equal(set.filter(c=>c.playable===false).length,9,shipId);
+  assert.equal(set.filter(c=>c.playable!==false).length,1,shipId);
+  const levels=set.map(c=>c.minShipLevelDraft);
+  assert.equal(levels.filter(n=>n===1).length,6,shipId+' sei definizioni L1');
+  for(const level of [2,3,4,5])assert.equal(levels.filter(n=>n===level).length,1,shipId+' L'+level);
+ }
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>!ships.includes(c.shipId)).length,5);
+});
+
+test('Una carta esclusiva non può essere utilizzata da una navicella diversa e le nuove schede non vengono inserite nel mazzo',async()=>{
+ const {exclusiveUnlocked,effectiveDeck,cardFacePath,card,eligibleExclusives,STARTER_DECK,deckFromCounts}=await import('./fleetNext/rules.js');
+ const {effectUnavailableReason,createFleetNextBattle}=await import('./fleetNext/combat.js');
+ const sample=design.cards.find(c=>c.type==='Attacco');
+ assert.ok(sample);
+ const def=card(sample.id);
+ assert.ok(def&&def.shipId===sample.shipId);
+ assert.equal(def.effectProposed,sample.effectText);
+ assert.equal(def.playable,false);
+ assert.equal(cardFacePath(sample.id),null);
+ assert.equal(exclusiveUnlocked(sample.id,'L04',5),false);
+ const correct=eligibleExclusives(sample.shipId,5).some(c=>c.id===sample.id);
+ assert.equal(correct,true);
+ const deck=deckFromCounts(STARTER_DECK.carteGenerali);
+ const ids=effectiveDeck(deck,sample.shipId,5);
+ assert.equal(ids.includes(sample.id),false,'Nessuna carta priva di effetto deve essere pescata');
+ const battle=createFleetNextBattle({shipA:sample.shipId,shipB:'N00',deckA:deck,deckB:deck});
+ assert.match(effectUnavailableReason(def,battle.sides.A,battle),/ancora da implementare/);
+});

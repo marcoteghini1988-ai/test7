@@ -34,7 +34,8 @@ test('Aurora ha sempre soltanto Arsenale e Generatore, senza supporti o fusioni'
   assert.equal(requiredReserveCount('N00',level),0);
   assert.equal(row.fusionLimit,0);
  }
- assert.equal(eligibleExclusives('N00',5).length,1,'Resta soltanto il Personaggio esclusivo Aurora');
+ assert.equal(eligibleExclusives('N00',5).length,10,'Aurora ha 10 esclusive, di cui 9 nuove schede');
+ assert.equal(eligibleExclusives('N00',5).filter(c=>c.playable!==false).length,1);
  assert.ok(exclusiveUnlocked('ex-n00-01','N00',1));
  assert.equal(exclusiveUnlocked('ex-n00-04','N00',3),false);
 });
@@ -147,9 +148,9 @@ test('Tutti gli slot esistono da subito; le nuove carte entrano nello starter se
  assert.equal(cardRole('prog-bypass'),'attack');
  assert.equal(cardRole('prog-machine-guard'),'support');
  assert.equal(cardCopyLimit('prog-fusion-l04'),2);
- assert.equal(BASE_CATALOG_COUNT,41);
+ assert.equal(BASE_CATALOG_COUNT,149);
  assert.equal(PROGRESSION_CARD_COUNT,6);
- assert.equal(TOTAL_CARD_COUNT,47);
+ assert.equal(TOTAL_CARD_COUNT,155);
 });
 
 test('Le letture sono immutabili e i livelli fuori intervallo non sbloccano supporti extra',()=>{

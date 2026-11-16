@@ -8,13 +8,13 @@ import retired from './fleetNext/retiredCardIds.json' with {type:'json'};
 function storage(){const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)};}
 test('350 vecchie carte rimosse, Personaggi Boss e sei carte tecniche conservati',()=>{
  assert.equal(Object.keys(GENERAL_CARDS).length,12);
- assert.equal(Object.keys(EXCLUSIVE_CARDS).length,17);
+ assert.equal(Object.keys(EXCLUSIVE_CARDS).length,125);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.keys(PROGRESSION_CARDS).length,6);
- assert.equal(BASE_CATALOG_COUNT,41);assert.equal(TOTAL_CARD_COUNT,47);
+ assert.equal(BASE_CATALOG_COUNT,149);assert.equal(TOTAL_CARD_COUNT,155);
  assert.equal(retired.generalIds.length,238);assert.equal(retired.exclusiveIds.length,112);
  const entries=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS)];
- assert.equal(new Set(entries.map(c=>c.id)).size,47);
+ assert.equal(new Set(entries.map(c=>c.id)).size,155);
  for(const c of entries){assert.equal(card(c.id),c);assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(c.effetto||c.effectProposed,describeEffect(c),c.id);}
  for(const id of [...retired.generalIds,...retired.exclusiveIds]){assert.equal(card(id),null,id);assert.equal(cardFacePath(id),null,id);}

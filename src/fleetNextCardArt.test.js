@@ -3,9 +3,11 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,cardFacePath} from './fleetNext/rules.js';
-const active=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS)];
-test('I 29 fronti Personaggio restano 2:3 e invariati',()=>{
- assert.equal(active.length,29);
+const active=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS).filter(c=>c.playable!==false)];
+const pending=Object.values(EXCLUSIVE_CARDS).filter(c=>c.playable===false);
+test('I 29 fronti Personaggio restano 2:3 e invariati; 108 progetti non cercano arte inesistente',()=>{
+ assert.equal(active.length,29);assert.equal(pending.length,108);
+ for(const c of pending)assert.equal(cardFacePath(c.id),null,c.id);
  for(const c of active){
   const f=resolve('public'+cardFacePath(c.id));assert.ok(existsSync(f),c.id);
   const svg=readFileSync(f,'utf8');
