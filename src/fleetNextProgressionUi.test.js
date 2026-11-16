@@ -5,6 +5,7 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import ts from 'typescript';
 import {card,cardRole,cardFacePath,STARTER_DECK,deckFromCounts} from './fleetNext/rules.js';
+import {liveModules} from './fleetNext/auroraEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {projectFleetSlots,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId,fleetTurnNotice} from './fleetNext/battlePresentation.js';
 import {CAMPAIGN_SHIP_ORDER,getShipProgression,getShipProgressionLevels,shipProgressionProfile} from './fleetNext/progression.js';
@@ -42,7 +43,7 @@ const Fighter=extract('./OfficialFleetBattle3D.jsx','OriginalFleetFighter',{
  useMemo:fn=>fn(),newVessel,projectFleetDefense,projectMachineBerths,
  fleetImpactVisual:()=>null,ShipPhysicalVitals:()=>null,MountedWeapons:()=>null,
  FLEET_PHYSICAL_VITALS,PHYSICAL_LABELS:Labels,PHYSICAL_SHORT_LABELS:Shorts,
- ASSET_ROOT:'/assets',describeEscortEffect,pct:(n,d)=>Math.round(100*n/d),
+ ASSET_ROOT:'/assets',describeEscortEffect,liveModules,pct:(n,d)=>Math.round(100*n/d),
  activeEscort:e=>e.hp>0&&!e.destroyed
 });
 const Physical=extract('./ShipPhysicalVitals.jsx','ShipPhysicalVitals',{
