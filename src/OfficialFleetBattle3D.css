@@ -287,3 +287,28 @@
 
 /* La selezione di una propria parte si abilita soltanto per la carta scelta. */
 .es-math-scope .f3d-original-arena .live-fighter--player[data-own-target="true"] .official-original-motor-targets .vessel-engine{pointer-events:auto}
+
+/* Moduli della madre: due alloggiamenti senza alterare la plancia 3D approvata. */
+.es-math-scope .f3d-original-arena .f3d-mounted-modules{
+ position:absolute;top:109px;left:78px;right:78px;display:flex;justify-content:center;
+ gap:8px;z-index:8;pointer-events:none
+}
+.es-math-scope .f3d-original-arena .f3d-mounted-module{
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+ max-width:112px;min-width:79px;min-height:32px;padding:3px 5px;
+ background:linear-gradient(135deg,#0a1b2bf0,#233d50eb);border:1px solid #80b4d3;
+ border-radius:5px;color:#edf8ff;font-size:8px;line-height:1.15;cursor:pointer;pointer-events:auto;
+ box-shadow:0 2px 7px #0009
+}
+.es-math-scope .f3d-original-arena .f3d-mounted-module>span{font-size:6px;letter-spacing:.04em;color:#91d8ee}
+.es-math-scope .f3d-original-arena .f3d-mounted-module>b{font-size:8px;text-align:center}
+.es-math-scope .f3d-original-arena .f3d-mounted-module>small{font-size:7px}
+.es-math-scope .f3d-original-arena .f3d-mounted-module:disabled{opacity:.75;cursor:default}
+.es-math-scope .f3d-original-arena .live-card-inspector{overflow-y:auto;align-content:start}
+.es-math-scope .f3d-original-arena .live-card-inspector>label{
+ display:flex;flex-direction:column;gap:3px;min-width:0;font-size:9px;color:#d0edff
+}
+.es-math-scope .f3d-original-arena .live-card-inspector>label select{
+ background:#071a30;color:#e4f4ff;border:1px solid #6aa9c8;border-radius:4px;
+ font-size:9px;padding:4px;max-width:100%;min-width:0
+}
