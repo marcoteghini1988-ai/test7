@@ -295,6 +295,10 @@ export function validateFleetTurn(b,who,order){
  const defenseCapacity=defenseCapacityReason(side,chosen.filter(c=>cardRole(c.id)==='defense'),b.ply);
  if(defenseCapacity)return defenseCapacity;
  const terrainCode=chosen.find(c=>c.effectSpec?.type==='terrain')?.effectSpec.code??b.terrain?.id;
+ // Le esclusiva scelta per Adattamento deve restare in mano dopo le giocate.
+ if(chosen.some(c=>c.effectSpec.type==='aurora'&&c.effectSpec.action==='adapt')&&
+  !side.hand.some((id,i)=>!indices.includes(i)&&card(id)?.shipId==='N00'))
+  return 'Adattamento richiede un’altra esclusiva non giocata nello stesso turno';
  for(const c of chosen){
   const reason=effectUnavailableReason(c,side,b,{ownPartId:order?.ownPartId,terrainCode});
   if(reason)return (c.nome||c.name)+': '+reason;

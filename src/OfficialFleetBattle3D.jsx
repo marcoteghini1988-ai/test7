@@ -360,7 +360,7 @@ export default function OfficialFleetBattle3D({
    selectedVital:target.parts.find(p=>!p.destroyed)?.id;
   if(!partId){setMessage('Nessun componente disponibile');return;}
   const reconfig=reconfigChoices.find(c=>c.slot+':'+c.cardId===auroraOptions.reconfigureSelection);
-  const secondary=targetChoices.find(t=>t.kind+':'+t.id===auroraOptions.secondarySelection);
+  const secondary=forkActive?targetChoices.find(t=>t.kind+':'+t.id===auroraOptions.secondarySelection):null;
   const result=resolveFleetNextTurn(battle,'A',
    {partId,targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
     escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
