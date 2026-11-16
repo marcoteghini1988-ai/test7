@@ -214,9 +214,9 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
      const requiredLevel=grade===1?3:5;
      return <div key={c.id} style={box}>
       <FleetCardArt id={c.id} name={c.name} grade={grade} large/>
-       <strong>{c.name}</strong><div style={small}>{PROGRESSION_CARDS[c.id]?'Carta di flotta':'Grado '+grade+'/3'} · {c.category}</div>
+       <strong>{c.name}</strong><div style={small}>{c.playable===false?'Scheda esclusiva registrata':PROGRESSION_CARDS[c.id]?'Carta di flotta':'Grado '+grade+'/3'} · {c.category}</div>
       <p style={small}>{describeEffect(c,grade)}</p>
-      {upgradeable?<>
+      {c.playable===false?<small style={small}>Effetto da implementare nel motore. Non ancora schierabile; immagine da creare.</small>:upgradeable?<>
        <p style={small}>Grado {grade+1}: {describeEffect(c,grade+1)}</p>
        <button style={btn} onClick={()=>upgrade(c.id)} disabled={motherLevel<requiredLevel}>
         {motherLevel<requiredLevel?'NAVICELLA LIVELLO '+requiredLevel:'POTENZIA · '+locale(cost)+' Crediti'}</button>

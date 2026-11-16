@@ -134,7 +134,7 @@ export function exclusiveUpgradeCost(nextGrade){
 }
 export function upgradeFleetExclusive(inventory,cardId,shipId,shipLevel){
  const c=EXCLUSIVE_CARDS[cardId];
- if(!c||c.shipId!==shipId)return {ok:false,reason:'Carta esclusiva non compatibile',inventory};
+ if(!c||c.shipId!==shipId||c.playable===false)return {ok:false,reason:'Carta esclusiva non ancora utilizzabile',inventory};
  const current=inventory.exclusiveUpgrades[cardId]||1;
  if(current>=MAX_EXCLUSIVE_UPGRADE)return {ok:false,reason:'Già al grado massimo',inventory};
  if(!exclusiveUnlocked(cardId,shipId,shipLevel))

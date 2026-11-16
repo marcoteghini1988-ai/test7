@@ -234,6 +234,7 @@ function selectedOwnPart(side,target,ownPartId){
 }
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
+ if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
  const invalid=validateEffectSpec(def.effectSpec);
  if(invalid)return invalid;
  const s=effectiveEffectSpec(def,side.exclusiveUpgrades?.[def.id]||1);

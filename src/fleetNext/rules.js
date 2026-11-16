@@ -7,6 +7,8 @@ import {describeEffect,validateEffectSpec} from './simpleEffects.js';
 import {BOSS_CARDS,bossCard} from './bossCards.js';
 import {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
 import {getShipProgression} from './progression.js';
+import {EXCLUSIVE_DESIGNS_120,NEW_EXCLUSIVE_BLUEPRINTS,EXCLUSIVE_SHIP_IDS} from './exclusive120.js';
+export {EXCLUSIVE_DESIGNS_120,EXCLUSIVE_SHIP_IDS} from './exclusive120.js';
 export {BOSS_CARDS,bossCard} from './bossCards.js';
 export {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
 export {CAMPAIGN_SHIP_ORDER,SHIP_PROGRESSION_IDS,getShipProgression,
@@ -27,11 +29,11 @@ export const GENERAL_CARDS = Object.freeze(Object.fromEntries(generalData.carte.
   card.sottotipo==='Personaggio'?'character':card.sottotipo==='Difesa'?'defense':
   card.categoria==='Attacco'?'attack':card.categoria==='Controllo'?'control':'support','general')]
 )));
-export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(exclusiveData.cards.map(card =>
- [card.id,definedCard(card,/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
+export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...exclusiveData.cards,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS)].map(card =>
+ [card.id,definedCard(card,card.kind||(/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
   /Scudiera|Supporto|Tattica/i.test(card.category)?'support':
   /Controllo/i.test(card.category)?'control':
-  /combo|fusione/i.test(card.category)?'combo':'attack','exclusive')]
+  /combo|fusione/i.test(card.category)?'combo':'attack'),'exclusive')]
 )));
 export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(s=>[s.id,Object.freeze(s)])));
 export const COMBO_RECIPES = Object.freeze(exclusiveData.comboRecipes.map(c=>Object.freeze(c)));
@@ -57,15 +59,16 @@ export const PACK_PRICE = 280;
 export const PACK_SIZE = 3;
 export const MAX_EXCLUSIVE_UPGRADE = 3;
 
-if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==17||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==0)
- throw new Error('Cutover incompleto: servono 12 Personaggi generali, 17 esclusive e 12 Boss');
+if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==125||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==0)
+ throw new Error('Catalogo esclusivo incompleto: 120 schede nuove (12 Personaggi già conservati), 5 Personaggi varianti e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
 export const generalCard = id => GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
- if(!card(id)||isProgressionCard(id))return null;
+ const definition=card(id);
+ if(!definition||definition.playable===false||definition.nativeFace||isProgressionCard(id))return null;
  if(bossCard(id))return '/assets/fleet-next-boss-cards/'+id+'.svg';
  const grade=Math.max(1,Math.min(3,Math.floor(Number(level)||1)));
  return exclusiveCard(id)&&grade>1?
@@ -111,6 +114,7 @@ export function exclusiveUnlocked(id,shipId,level){
 }
 export function exclusiveOperational(id,mother,escorts=[]){
  if(!exclusiveUnlocked(id,mother.id,mother.level))return false;
+ if(exclusiveCard(id)?.playable===false)return false;
  const def=exclusiveCard(id);
  return def.requiredOwnParts.every(id=>mother.parts.some(p=>p.id===id&&!p.destroyed))&&
   escorts.filter(e=>e.hp>0&&!e.destroyed&&e.linked!==false).length>=def.requiredEscortCount;
@@ -121,7 +125,8 @@ export function eligibleExclusives(shipId,level){
 }
 export function effectiveDeck(baseDeck,shipId,level){
  const base=Array.isArray(baseDeck)?baseDeck:[];
- const ex=eligibleExclusives(shipId,level).flatMap(c=>Array(c.maxCopiesInAutoPackageDraft||1).fill(c.id));
+ // Il mazzo non pesca effetti nuovi che non esistono ancora nel motore.
+ const ex=eligibleExclusives(shipId,level).filter(c=>c.playable!==false).flatMap(c=>Array(c.maxCopiesInAutoPackageDraft||1).fill(c.id));
  return [...base,...ex];
 }
 export function countDeck(deck){
