@@ -120,6 +120,25 @@ test('Cannone biforcato: un tiro base diventa due colpi leggeri su unità differ
  assert.equal(r.battle.sides.B.escorts[0].hp,before[0]-1);
  assert.equal(r.battle.sides.B.escorts[1].hp,before[1]-1);
 });
+test('Canna perforante supera una sola protezione, senza concedere Aggiramento',()=>{
+ const b=make(),enemy=b.sides.B;install(b.sides.A,'nx-n00-07');
+ const hp=mother(enemy).hp;
+ enemy.defenses=[{id:'gen-227',source:'scudo-prova',untilPly:10}];
+ enemy.protections=[{id:'gen-227',source:'scudo-prova',kind:'protect',
+  target:'part',partId:'weapons',remaining:1,untilPly:10}];
+ const r=play(b,'A',[],{targetKind:'part',targetId:'weapons',pass:false});
+ assert.equal(mother(r.battle.sides.B).hp,hp-1);
+ assert.equal(r.battle.sides.A.modules.weapon.activatedPly,0);
+ assert.equal(r.battle.sides.B.protections.length,0);
+});
+test('Adattamento non consuma carte se tutte le altre esclusive sono già in gioco',()=>{
+ const b=make();b.sides.A.hand=['nx-n00-05','nx-n00-07'];
+ const before=JSON.stringify(b);
+ const r=resolveFleetNextTurn(b,'A',{cards:[0,1],pass:true},1000);
+ assert.equal(r.ok,false);
+ assert.match(r.reason,/Adattamento/);
+ assert.equal(JSON.stringify(b),before);
+});
 test('Esclusive non ancora pronte restano non giocabili anche se nel catalogo',()=>{
  const b=make({shipA:'C01'});
  const def=card('nx-c01-02');
