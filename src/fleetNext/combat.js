@@ -717,6 +717,67 @@ function triggerReactions(b,attackerWho,damage,events){
   if(h)events.push(emit(b,attackerWho,'repair','Foresta Ionizzata: '+h.name+' +'+h.amount));
  }
 }
+
+// I nuovi attacchi sono comandi autonomi, non potenziamenti della salva gratuita.
+function auroraHit(b,ctx,events,target,amount,sourceCard){
+ const defender=b.sides[other(ctx.who)];
+ if(!target||!unitAlive(target.unit))return 0;
+ if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
+ ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
+ if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
+ const actual=damageFleetUnit(defender,target.kind,target.unit,amount,b.ply);
+ if(actual){
+  const name=target.unit.name||VITAL_LABELS[target.unit.id]||'Bersaglio';
+  events.push(emit(b,ctx.who,'impact',name+' −'+actual,{
+   cardId:sourceCard,targetKind:target.kind,targetId:target.unit.id,damage:target.kind==='part'?actual:0,
+   escortDamage:target.kind==='escort'?actual:0,machineDamage:target.kind==='machine'?actual:0,
+   moduleDamage:target.kind==='module'?actual:0,partId:target.kind==='part'?target.unit.id:null,
+   escortSlot:target.kind==='escort'?target.unit.slot:null,
+   machineSlot:target.kind==='machine'?target.unit.slot:null,
+   destroyed:target.unit.destroyed,
+   targets:[{kind:target.kind,id:target.unit.id,damage:actual,destroyed:target.unit.destroyed}]
+  }));
+  triggerReactions(b,ctx.who,actual,events);
+ }
+ return actual;
+}
+function resolveAuroraShots(b,ctx,events,order,commands=null){
+ const enemy=b.sides[other(ctx.who)],mother=b.sides[ctx.who].ships[0];
+ const first=selectedEnemyTarget(enemy,order,b.ply);
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targetKind:first?.kind,targetId:first?.unit?.id,played:visiblePlayed(ctx.cards),targets:[]};
+ const record=(target,amount,cardId)=>{
+  if(!target||!unitAlive(target.unit))return;
+  const dealt=auroraHit(b,ctx,events,target,amount,cardId);
+  const field={part:'damage',escort:'escortDamage',machine:'machineDamage',module:'moduleDamage'}[target.kind];
+  if(field)shot[field]+=dealt;
+  if(dealt)shot.targets.push({kind:target.kind,id:target.unit.id,damage:dealt,destroyed:target.unit.destroyed});
+ };
+ const power=Math.max(1,(mother.attackPower||1)-(enemy.ships[0].defensePower||0)+ctx.power);
+ if(commands){
+  for(const command of commands){
+   if(command.action==='burst'){
+    if(first&&['escort','machine'].includes(first.kind)){
+     record(first,1,command.id);
+     record(first,1,command.id); // il secondo colpo si perde se il primo ha distrutto l'unità
+    }
+   }else if(command.action==='dismantle'){
+    if(first)record(first,first.kind==='module'?2:first.kind==='part'?1:power,command.id);
+   }
+  }
+  return shot;
+ }
+ const module=installedModule(b.sides[ctx.who],'weapon');
+ const second=order.secondaryTargetId?
+  selectedEnemyTarget(enemy,{targetKind:order.secondaryTargetKind,targetId:order.secondaryTargetId},b.ply):null;
+ if(module?.cardId!=='nx-n00-09'||module.activatedPly===b.ply||
+  !first||!second||first.unit.id===second.unit.id)return null;
+ module.activatedPly=b.ply;
+ record(first,1,'nx-n00-09');
+ record(second,1,'nx-n00-09');
+ return shot;
+}
+
 function resolveSalvo(b,ctx,events,order){
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
  let selected=selectedEnemyTarget(defender,order,b.ply);
@@ -805,9 +866,11 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
- const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:resolveSalvo(b,ctx,events,order);
- side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'));
+ const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
+  ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
+  resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
+ side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
