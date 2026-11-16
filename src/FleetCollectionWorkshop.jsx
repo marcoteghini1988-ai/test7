@@ -1,5 +1,5 @@
 import React,{useMemo,useState} from 'react';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PREMADE_DECKS,CARD_PRICES,PACK_PRICE,
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PREMADE_DECKS,CARD_PRICES,
  FLEET_BASE_DECK_SIZE,SHIP_CONFIGS,cardCopyLimit,countDeck,
  deckFromCounts,validateBaseDeck,eligibleExclusives,cardFacePath,card} from './fleetNext/rules.js';
 import {PROGRESSION_GENERAL_CARDS,PROGRESSION_CARDS} from './fleetNext/progressionCards.js';
@@ -61,7 +61,7 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
  const allCards=Object.values(AVAILABLE_GENERAL_CARDS);
  const filtered=useMemo(()=>allCards.filter(c=>
   (rarity==='Tutte'||c.rarita===rarity)&&
-  (category==='Tutte'||c.categoria===category)&&
+  (category==='Tutte'||c.categoria===category||c.sottotipo===category)&&
   (!query||(c.nome+' '+c.effetto+' '+c.famiglia).toLowerCase().includes(query.toLowerCase()))
  ),[rarity,category,query]);
  function apply(result,success){
@@ -101,12 +101,12 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
   const result=upgradeFleetExclusive(inventory,id,motherId,motherLevel);
   apply(result,result.ok?'Carta esclusiva potenziata al grado '+result.grade:'');
  }
- const categories=['Tutte','Attacco','Difesa','Controllo','Supporto','Strategia'];
+ const categories=['Tutte','Personaggio','Attacco','Supporto'];
  return <div style={{...box,display:'flex',flexDirection:'column',gap:'9px',
   minHeight:'310px',fontSize:'12px'}}>
   <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'7px',flexWrap:'wrap'}}>
    <div><strong style={{fontSize:'14px'}}>CARTE E MAZZI DI FLOTTA</strong>
-    <div style={small}>253 carte generali · 132 esclusive · 12 Personaggi Boss</div></div>
+    <div style={small}>{Object.keys(GENERAL_CARDS).length} Personaggi generali · {Object.keys(EXCLUSIVE_CARDS).length} Personaggi esclusivi · {Object.keys(BOSS_CARDS).length} Boss</div></div>
    <strong style={{color:'#ffe394'}}>✦ {locale(inventory.credits)} Crediti Stellari</strong>
   </div>
   <details style={small}>
@@ -174,6 +174,7 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
    </div>
   </>}
   {tab==='ready'&&<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(190px,1fr))',gap:7}}>
+   {!PREMADE_DECKS.length&&<p style={small}>Mazzi pronti sospesi durante il rifacimento del catalogo.</p>}
    {PREMADE_DECKS.map(deck=>{
     const missing=Object.entries(deck.carteGenerali).reduce((sum,[id,n])=>
      sum+Math.max(0,n-(inventory.owned[id]||0))*CARD_PRICES[GENERAL_CARDS[id].rarita],0);
@@ -186,10 +187,9 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
    })}
   </div>}
   {tab==='packs'&&<div style={box}>
-   <strong>Pacchetto casuale · 3 carte</strong>
-   <p style={small}>Probabilità per singola carta: Comune 65%, Rara 25%, Epica 8%, Leggendaria 2%.
-    Sono escluse le carte esclusive delle navicelle e i Personaggi Boss.</p>
-   <button style={btn} onClick={buyPack}>APRI · {PACK_PRICE} Crediti</button>
+   <strong>Pacchetti sospesi</strong>
+   <p style={small}>Le vecchie carte sono state ritirate. Nessun credito viene speso finché le nuove carte non saranno funzionanti.</p>
+   <button style={btn} onClick={buyPack} disabled>NON ACQUISTABILE</button>
    {packResults.length>0&&<div role="status" style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:8}}>
      {packResults.map((id,i)=><div key={id+'-'+i} style={{maxWidth:125,textAlign:'center'}}>
       <FleetCardArt id={id} name={AVAILABLE_GENERAL_CARDS[id]?.nome||id} large/>
