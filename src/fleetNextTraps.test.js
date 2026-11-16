@@ -26,7 +26,7 @@ function play(b,ids=[],order={}){
 }
 const pass=b=>play(b).battle;
 const setTrap=(b=make())=>play(b,[TRAP]).battle;
-const engine=(b,who)=>b.sides[who].ships[0].parts.find(p=>p.id==='engine');
+const engine=(b,who)=>b.sides[who].ships[0].parts.find(p=>p.id==='generator');
 const countCard=(side,id)=>[...side.hand,...side.deck,...side.discard,
  ...side.defenses.map(d=>d.id),...(side.commander?[side.commander.id]:[])].filter(x=>x===id).length;
 const cardTotal=side=>side.hand.length+side.deck.length+side.discard.length+
@@ -91,19 +91,15 @@ test('La trappola annulla ciascuno dei dieci Terreni senza applicarne la regola'
  }
 });
 
-test('Due trappole identiche consumano soltanto quella necessaria',()=>{
- let b=play(make(),[TRAP,TRAP]).battle;
- const sources=b.sides.A.defenses.map(d=>d.source);
- let result=play(b,[PLASMA]);b=result.battle;
- assert.equal(result.events.filter(e=>e.kind==='trap-reveal').length,1);
- assert.equal(b.sides.A.defenses.length,1);
- assert.equal(b.sides.A.defenses[0].source,sources[1]);
- assert.equal(b.sides.A.defenses[0].hidden,true);
- assert.equal(b.sides.A.discard.filter(id=>id===TRAP).length,1);
- b=pass(b);result=play(b,['gen-245']);b=result.battle;
- assert.equal(b.sides.A.defenses.length,0);
- assert.equal(b.sides.A.discard.filter(id=>id===TRAP).length,2);
- assert.equal(b.terrain.id,null);
+test('Due trappole identiche non entrano nello stesso slot e nessuna carta è consumata',()=>{
+ const initial=hand(make(),[TRAP,TRAP]),before=copy(initial);
+ const result=resolveFleetNextTurn(initial,'A',{cards:[0,1],pass:true});
+ assert.equal(result.ok,false);assert.match(result.reason,/Trappola/);
+ assert.deepEqual(result.battle,before);assert.deepEqual(initial,before);
+ let b=setTrap();b=pass(b);hand(b,[TRAP]);
+ const occupied=copy(b),second=resolveFleetNextTurn(b,'A',{cards:[0],pass:true});
+ assert.equal(second.ok,false);assert.match(second.reason,/Trappola/);
+ assert.deepEqual(second.battle,occupied);
 });
 
 test('Terreni propri, attacchi, carte diverse e scadenze non consumano la trappola',()=>{
@@ -131,21 +127,21 @@ test('La trappola funziona anche dalla parte B e sui Terreni giocati dai boss',(
 });
 
 test('Due Difese occupate impediscono una terza senza scartare carte nascoste',()=>{
- let b=play(make(),[TRAP,TRAP]).battle;b=pass(b);hand(b,['gen-071']);
+ let b=play(make(),['gen-092',TRAP]).battle;b=pass(b);hand(b,['gen-071']);
  const before=copy(b);
  assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),0);
- assert.match(defenseCapacityReason(b.sides.A,1,b.ply),/occupati/);
- assert.match(effectUnavailableReason(card('gen-071'),b.sides.A,b),/occupati/);
+ assert.match(defenseCapacityReason(b.sides.A,1,b.ply),/occupat[oi]/);
+ assert.match(effectUnavailableReason(card('gen-071'),b.sides.A,b),/occupat[oi]/);
  const result=resolveFleetNextTurn(b,'A',{cards:[0],pass:true});
- assert.equal(result.ok,false);assert.match(result.reason,/occupati/);
+ assert.equal(result.ok,false);assert.match(result.reason,/occupat[oi]/);
  assert.deepEqual(result.battle,before);
  assert.deepEqual(b,before);
 });
 
-test('Le Difese normali occupano gli stessi due spazi e la scadenza li libera',()=>{
+test('Difesa e Trappola hanno spazi distinti e la scadenza libera soltanto la Difesa',()=>{
  let b=play(make(),['gen-092',TRAP]).battle;b=pass(b);hand(b,['gen-071']);
  assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),0);
- assert.match(validateFleetTurn(b,'A',{cards:[0],pass:true}),/occupati/);
+ assert.match(validateFleetTurn(b,'A',{cards:[0],pass:true}),/occupat[oi]/);
  b=pass(b);b=pass(b);
  assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),1);
  b=play(b,['gen-071']).battle;
@@ -159,8 +155,9 @@ test('Preparare trappole rispetta i limiti del turno e gli spazi già occupati',
  assert.match(validateFleetTurn(initial,'A',{cards:[0,1,2,3],pass:true}),/tre carte/);
  let b=setTrap();b=pass(b);hand(b,[TRAP,'gen-071']);
  assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),1);
- assert.match(validateFleetTurn(b,'A',{cards:[0,1],pass:true}),/una sola/);
- assert.equal(validateFleetTurn(b,'A',{cards:[0],pass:true}),null);
+ assert.match(validateFleetTurn(b,'A',{cards:[0,1],pass:true}),/Trappola/);
+ assert.match(validateFleetTurn(b,'A',{cards:[0],pass:true}),/Trappola/);
+ assert.equal(validateFleetTurn(b,'A',{cards:[1],pass:true}),null);
 });
 
 test('Preparazione e annullamento conservano il numero reale delle carte',()=>{
@@ -193,7 +190,7 @@ test('L’IA prepara le proprie trappole e rispetta gli spazi occupati',()=>{
  const order=autoFleetTurn(b,'A');assert.deepEqual(order.cards,[0]);
  const result=resolveFleetNextTurn(b,'A',order);assert.equal(result.ok,true,result.reason);
  assert.equal(result.battle.sides.A.defenses[0].hidden,true);
- let full=play(make(),[TRAP,TRAP]).battle;full=pass(full);full.sides.A.hand=[TRAP];
+ let full=setTrap();full=pass(full);full.sides.A.hand=[TRAP];
  assert.deepEqual(autoFleetTurn(full,'A').cards,[]);
 });
 

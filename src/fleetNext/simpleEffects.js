@@ -1,14 +1,16 @@
 // Regole leggibili e dati eseguibili condividono la stessa definizione.
 // Questo modulo non interpreta nomi, famiglie o descrizioni delle carte.
-import exclusiveData from './catalogExclusive.json' with {type:'json'};
+import {getShipProgression} from './progression.js';
+// Revisione dei testi dei fronti approvati; la progressione ha dati separati.
 export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
- 'weaken','disarm','cleanse','exchange','recover','charge','terrain','trap'
+ 'weaken','disarm','cleanse','exchange','recover','charge','terrain','trap',
+ 'bypass','deployMachine','fusion'
 ]);
-const PARTS=['engine','weapons','command','generator'];
-const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore'};
-const PLAIN_LABELS={engine:'Motori',weapons:'Armi',command:'Centralina',generator:'Generatore'};
+const PARTS=['engine','weapons','command','generator','bridge'];
+const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore',bridge:'la Plancia'};
+const PLAIN_LABELS={engine:'Generatore',weapons:'Arsenale',command:'Centralina',generator:'Generatore',bridge:'Plancia'};
 export const TERRAIN_EFFECT_TEXT=Object.freeze({
  T01:'Le schivate non funzionano.',
  T02:'Gli attacchi hanno +1 potenza.',
@@ -24,18 +26,23 @@ export const TERRAIN_EFFECT_TEXT=Object.freeze({
 export const SIMPLE_RULES=Object.freeze([
  'Un colpo riuscito toglie punti a un componente o a una scudiera. Un colpo bloccato non attiva gli effetti.',
  'La potenza determina i danni alle scudiere e viene ridotta dai disturbi. A potenza zero l’attacco fallisce. Un attacco normale toglie 1 punto a ogni componente raggiunto; i contrattacchi infliggono il valore scritto.',
- 'Una protezione blocca un colpo sul bersaglio indicato e si consuma. Solo le scudiere con una capacità di intercettazione possono fermare gli attacchi.',
+ 'Ogni supporto e macchina d’assalto operativi proteggono la madre. Con un attacco ordinario scegli prima una di queste unità; danneggiarla non basta a superarla.',
+ 'Attacco diretto aggira le unità protettrici per un attacco. Perforazione supera soltanto le protezioni indicate; Difese e Trappole continuano a funzionare.',
  'Un turno avversario termina quando inizia il tuo prossimo turno. Un round comprende un turno per giocatore.',
  'Le riparazioni non superano i punti massimi e non ricostruiscono componenti o scudiere distrutti.',
  'I personaggi applicano il proprio effetto quando entrano e al tuo turno successivo. Poi lasciano il campo.',
  'Il Terreno scelto si risolve prima delle altre carte del turno. Se viene annullato, non entra in campo.',
  'Le reazioni si attivano solo con i danni degli attacchi normali. Costi delle abilità e contrattacchi non attivano altre reazioni.',
- 'Dopo 50 round la partita termina in pareggio. Anche due navi con le Armi distrutte pareggiano.',
+ 'Dopo 50 round la partita termina in pareggio. Con l’Arsenale distrutto resta un tiro di emergenza da 1 potenza.',
  'Le Trappole sono carte Difesa: si preparano coperte nel proprio turno e si rivelano solo quando scattano. Altrimenti restano in campo.',
- 'Puoi avere al massimo 2 Difese in campo. Preparare una Trappola conta nelle 3 carte e nelle 2 Difese del turno; farla scattare non consuma altre giocate.',
+ 'Dal livello 1 hai 3 Attacco, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 posti per macchine d’assalto. Preparare una carta conta nelle 3 giocate del turno.',
  'Una Trappola contro i Terreni annulla il prossimo Terreno avversario prima che si attivi. Il Terreno precedente resta; entrambe le carte usate vanno negli scarti.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
- 'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.'
+ 'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
+ 'Aurora ha Arsenale e Generatore, senza supporti. La Plancia separa il Personaggio dal Generatore; la Centralina abilita i supporti. I Motori delle carte precedenti fanno parte del Generatore.',
+ 'Distruggere il Generatore spegne Difesa e Trappola; senza una Plancia separata spegne anche il Personaggio. Distruggere la Centralina disattiva i supporti.',
+ 'Fusione unisce due supporti operativi. La prima può far entrare la terza unità sbloccata; la seconda unisce terza e quarta. Rimangono al massimo due supporti attivi.',
+ 'La fusione conserva i danni in proporzione, consuma i supporti usati e non ricostruisce vitali distrutti. Le macchine d’assalto hanno due posti separati.'
 ]);
 export const isCharacterCard=card=>card?.kind==='character'||card?.sottotipo==='Personaggio'||/Personaggio/i.test(card?.category||'');
 export const isTrapCard=card=>card?.effectSpec?.type==='trap';
@@ -55,11 +62,11 @@ export function validateEffectSpec(spec){
  if(spec.type==='recover'&&!['attack','defense','support','any'].includes(spec.role))return 'Tipo di recupero non valido';
  if(spec.type==='terrain'&&!Object.hasOwn(TERRAIN_EFFECT_TEXT,spec.code))return 'Terreno non valido';
  if(spec.type==='trap'&&(spec.trigger!=='terrain'||spec.action!=='cancel'))return 'Trappola non supportata';
+ if(spec.type==='deployMachine'&&(!integer(spec.hp,1,12)||!integer(spec.power,0,3)))return 'Macchina d’assalto non valida';
  return null;
 }
 const UPGRADE_CAPS=Object.freeze({power:5,pierce:3,protect:3,dodge:3,repair:3,
  regenerate:2,counter:2,weaken:3,exchange:3,charge:4});
-const SHIP_CONFIGS=Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(c=>[c.id,c])));
 export function effectiveEffectSpec(card,level=1){
  const error=validateEffectSpec(card?.effectSpec);
  if(error)throw new Error((card?.id||'Carta')+': '+error);
@@ -80,10 +87,12 @@ export function canUpgradeEffect(card,currentLevel=1){
   // I gradi 2/3 richiedono una madre L3/L5: un punto oltre la capacità
   // dei componenti non è un miglioramento acquistabile. I gradi già
   // salvati conservano comunque il loro valore e la loro descrizione.
-  const shipLevel=grade===1?3:5,config=SHIP_CONFIGS[card.shipId];
-  if(!config)return false;
-  const parts=PARTS.filter(id=>shipLevel>=(config.partUnlockLevels[id]||99)).length;
-  const capacity=parts<=2?3:parts===3?2:1;
+  const shipLevel=grade===1?3:5,profile=getShipProgression(card.shipId,shipLevel);
+  if(!profile)return false;
+  const target=current.target==='engine'?'generator':current.target;
+  const maxima=target&&profile.integrityByPart[target]?[profile.integrityByPart[target]]:
+   Object.values(profile.integrityByPart);
+  const capacity=Math.max(...maxima)-1;
   if(Math.min(current.amount,capacity)===Math.min(next.amount,capacity))return false;
  }
  if(['protect','dodge'].includes(current.type)&&['engine','command','generator','escort'].includes(current.target)){
@@ -109,7 +118,7 @@ function repairTarget(target){
  if(target==='selected')return 'al componente scelto';
  if(target==='weakest')return 'al tuo componente più danneggiato';
  if(target==='escort')return 'alla tua scudiera più danneggiata';
- return {engine:'ai Motori',weapons:'alle Armi',command:'alla Centralina',generator:'al Generatore'}[target];
+ return {engine:'ai Motori',weapons:'alle Armi',command:'alla Centralina',generator:'al Generatore',bridge:'alla Plancia'}[target];
 }
 export function describeEffect(card,level=1){
  const s=effectiveEffectSpec(card,level),character=isCharacterCard(card);
@@ -138,36 +147,42 @@ export function describeEffect(card,level=1){
   case 'charge':return repeat+'Prepara +'+s.amount+' potenza per il tuo attacco del turno successivo.';
   case 'terrain':return TERRAIN_EFFECT_TEXT[s.code]+' Vale per entrambi i giocatori per 3 round.';
   case 'trap':return 'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
+  case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
+  case 'deployMachine':return 'Schiera una macchina con '+s.hp+' punti: protegge la madre'+
+   (s.power?' e aggiunge '+s.power+' potenza al tuo attacco.':'.');
+  case 'fusion':return 'Fonde due supporti operativi. Richiama la riserva sbloccata; la seconda fusione unisce terzo e quarto supporto. Massimo due unità in campo.';
   default:throw new Error('Effetto privo di descrizione: '+s.type);
  }
 }
 export function describeEscortEffect(escort){
- const s=escort?.skill;
- if(!s)return 'Scudiera non disponibile.';
- const every=s.interval===1?'Ogni tuo turno':'Ogni '+s.interval+' tuoi turni';
- const part=PLAIN_LABELS[s.targetPart]||'componente';
- const descriptions={
-  cover:'Intercetta gli attacchi diretti alla nave madre.',
-  bulwark:'Intercetta gli attacchi diretti alla nave madre.',
-  partCover:'Intercetta gli attacchi che colpiscono '+part+'.',
-  phase:'Intercetta un attacco ogni '+s.interval+' turni avversari.',
-  guard:every+', riduce di 1 la potenza nel prossimo turno avversario.',
-  jam:every+', toglie 1 potenza al prossimo attacco avversario.',
-  ion:every+', aggiunge 1 potenza al tuo attacco.',
-  draw:every+', scarta una carta casuale e ne pesca una.',
-  repair:every+', ripara 1 punto al tuo componente più danneggiato.',
-  mend:every+', ripara 1 punto alla tua scudiera più danneggiata.',
-  focus:every+', aggiunge 1 potenza se attacchi '+part+'.',
-  siege:every+', aggiunge 1 potenza se attacchi '+part+'.',
-  pierce:every+', ignora 1 protezione se attacchi '+part+'.',
-  precision:every+', ignora 1 protezione sui componenti.',
-  strike:every+', aggiunge 1 potenza al tuo attacco.',
-  revenge:every+', aggiunge 1 potenza se una tua scudiera è danneggiata.',
-  surge:every+', aggiunge 1 potenza se un tuo componente è danneggiato.',
-  corrode:every+', aggiunge 1 potenza al tuo attacco.'
+ const skill=escort?.skill;
+ if(!skill)return 'Supporto non disponibile.';
+ const amount=Math.max(1,escort.grade||1);
+ const describe=s=>{
+  const every=s.interval===1?'Ogni tuo turno':'Ogni '+s.interval+' tuoi turni';
+  const part=PLAIN_LABELS[s.targetPart]||'componente';
+  const effects={
+   cover:'',bulwark:'',partCover:'',phase:'',
+   guard:every+', riduce di '+amount+' la potenza nel prossimo turno avversario.',
+   jam:every+', toglie '+amount+' potenza al prossimo attacco avversario.',
+   ion:every+', aggiunge '+amount+' potenza al tuo attacco.',
+   draw:every+', ricambia '+amount+' carte casuali.',
+   repair:every+', ripara '+points(amount)+' al tuo componente più danneggiato.',
+   mend:every+', ripara '+points(amount)+' al tuo supporto più danneggiato.',
+   focus:every+', aggiunge '+amount+' potenza se attacchi '+part+'.',
+   siege:every+', aggiunge '+amount+' potenza se attacchi '+part+'.',
+   pierce:every+', ignora '+amount+' protezioni se attacchi '+part+'.',
+   precision:every+', ignora '+amount+' protezioni sui componenti.',
+   strike:every+', aggiunge '+amount+' potenza al tuo attacco.',
+   revenge:every+', aggiunge '+amount+' potenza se un tuo supporto è danneggiato.',
+   surge:every+', aggiunge '+amount+' potenza se un tuo componente è danneggiato.',
+   corrode:every+', aggiunge '+amount+' potenza al tuo attacco.'
+  };
+  return effects[s.action]||'';
  };
- return (descriptions[s.action]||'Nessuna capacità attiva.')+' Richiede '+
-  (s.requires||[]).map(id=>PLAIN_LABELS[id]).join(' e ')+'.';
+ const effects=(escort.fusionSkills||[skill]).map(describe).filter(Boolean).join(' ');
+ return 'Protegge la madre finché è operativo. '+(effects?effects+' ':'')+'Richiede '+
+  (skill.requires||[]).map(id=>PLAIN_LABELS[id]).join(' e ')+'.';
 }
 export function describeBossPassive(id){
  return ({

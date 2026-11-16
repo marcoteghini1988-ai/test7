@@ -256,3 +256,34 @@
 @media(prefers-reduced-motion:reduce){
  .es-math-scope .f3d-original-arena .f3d-terrain-environment{animation:none}
 }
+
+
+/* Bersagli reali, nei punti esistenti dell'arena. */
+.es-math-scope .f3d-original-arena .f3d-unit-target{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:transparent;cursor:crosshair;pointer-events:auto;z-index:6}
+.es-math-scope .f3d-original-arena .f3d-unit-target:disabled{cursor:default}
+.es-math-scope .f3d-original-arena .f3d-unit--selected{outline:2px solid #fff0a5;outline-offset:3px;box-shadow:0 0 12px #f8d37c70}
+.es-math-scope .f3d-original-arena .f3d-escort-grade{position:absolute;left:0;right:0;bottom:-11px;color:#d1eeff;text-align:center;font-size:7px;font-weight:800;white-space:nowrap}
+.es-math-scope .f3d-original-arena .f3d-escort--fused>img:first-child{filter:drop-shadow(0 0 5px #b9dfff);transform:scale(1.12)}
+.es-math-scope .f3d-original-arena .live-fleet-caption{top:167px;left:76px;right:76px;width:auto;text-align:center;font-size:7px}
+.es-math-scope .f3d-original-arena .f3d-machine-berth{position:absolute;top:14px;width:49px;height:57px;z-index:7;padding:2px 3px 11px;border:1px solid #6c8b9e;border-radius:5px;background:linear-gradient(145deg,#1f3546e8,#07131de8);color:#d6eaf6;pointer-events:auto;box-shadow:inset 0 1px 2px #9bb9ca38,0 3px 5px #0008;cursor:pointer}
+.es-math-scope .f3d-original-arena .f3d-machine-berth--0{left:9px}
+.es-math-scope .f3d-original-arena .f3d-machine-berth--1{right:9px}
+.es-math-scope .f3d-original-arena .f3d-machine-berth:disabled{opacity:.55;cursor:default}
+.es-math-scope .f3d-original-arena .f3d-machine-berth svg{display:block;width:100%;height:34px}
+.es-math-scope .f3d-original-arena .f3d-machine-berth>b{font-size:22px;color:#7094a9}
+.es-math-scope .f3d-original-arena .f3d-machine-berth>span{display:block;position:absolute;bottom:11px;left:1px;right:1px;font-size:7px;background:#07131dcc}
+.es-math-scope .f3d-original-arena .f3d-machine-berth>small{position:absolute;bottom:2px;left:0;right:0;font-size:6px;white-space:nowrap}
+.es-math-scope .f3d-original-arena .f3d-target-status{top:322px;left:75px;right:75px;display:flex;align-items:center;gap:4px;pointer-events:auto;z-index:15;font-size:7px}
+.es-math-scope .f3d-original-arena .f3d-target-status span{white-space:nowrap}
+.es-math-scope .f3d-original-arena .f3d-target-status select{flex:1;min-width:0;max-width:100%;color:#e4f6ff;background:#0b2235;border:1px solid #668ba1;border-radius:4px;font-size:9px;padding:4px}
+.es-math-scope .f3d-original-arena .f3d-card-fallback{display:block;padding:4px 2px;color:#e5f6ff;font-size:7px;text-align:center;line-height:1.15}
+.es-math-scope .f3d-original-arena .live-special-art.f3d-mechanic-art{display:grid;place-items:center;background:radial-gradient(ellipse at center,#386078,#07162a 72%);color:var(--family);font-size:25px}
+.es-math-scope .f3d-original-arena .live-slot:not(.live-slot--occupied)[data-slot-role="trappola"]{border-color:#82c8e6;background:#092537}
+
+.es-math-scope .f3d-original-arena .live-slot--offline{filter:grayscale(1);opacity:.45}
+.es-math-scope .f3d-original-arena .f3d-machine--hit{animation:f3d-machine-hit .6s ease-out}
+@keyframes f3d-machine-hit{0%,35%{box-shadow:0 0 18px #ffb877,inset 0 0 12px #fff0d5}100%{box-shadow:0 3px 5px #0008}}
+@media(prefers-reduced-motion:reduce){.es-math-scope .f3d-original-arena .f3d-machine--hit{animation:none}}
+
+/* La selezione di una propria parte si abilita soltanto per la carta scelta. */
+.es-math-scope .f3d-original-arena .live-fighter--player[data-own-target="true"] .official-original-motor-targets .vessel-engine{pointer-events:auto}

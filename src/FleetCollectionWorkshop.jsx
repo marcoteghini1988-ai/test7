@@ -1,7 +1,8 @@
 import React,{useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PREMADE_DECKS,CARD_PRICES,PACK_PRICE,
  FLEET_BASE_DECK_SIZE,SHIP_CONFIGS,cardCopyLimit,countDeck,
- deckFromCounts,validateBaseDeck,eligibleExclusives,cardFacePath} from './fleetNext/rules.js';
+ deckFromCounts,validateBaseDeck,eligibleExclusives,cardFacePath,card} from './fleetNext/rules.js';
+import {PROGRESSION_GENERAL_CARDS,PROGRESSION_CARDS} from './fleetNext/progressionCards.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readShipCollection} from './shipCollection.js';
 import {readFleetInventory,writeFleetInventory,equipFleetBaseDeck,
@@ -14,10 +15,25 @@ const btn={background:'#17496b',color:'white',border:'1px solid #79a9c9',
  borderRadius:'6px',padding:'7px 9px',fontSize:'11px',fontWeight:700};
 const small={fontSize:'11px',color:'#a4c7dd'};
 const locale=n=>Number(n||0).toLocaleString('it-IT');
-const BASE_CARDS={...GENERAL_CARDS,...BOSS_CARDS};
+const AVAILABLE_GENERAL_CARDS={...GENERAL_CARDS,...PROGRESSION_GENERAL_CARDS};
+const BASE_CARDS={...AVAILABLE_GENERAL_CARDS,...BOSS_CARDS};
 // Fronte ufficiale del catalogo, identico in Shop, mazzi ed arena.
 function FleetCardArt({id,name,grade=1,large=false}){
  const width=large?114:38;
+ if(!cardFacePath(id,grade)){
+  const definition=card(id),text=definition?describeEffect(definition,grade):name;
+  return <div role="img" aria-label={'Carta '+name+' · '+text}
+   style={{width,minHeight:width*1.5,aspectRatio:'2 / 3',flexShrink:0,boxSizing:'border-box',
+    padding:large?9:3,border:'2px solid '+(definition?.kind==='attack'?'#ff594c':'#ffb24d'),
+    borderRadius:6,background:'linear-gradient(145deg,#19354c,#08121f)',
+    color:'#f3f9ff',display:'flex',flexDirection:'column',justifyContent:'space-between',
+    margin:large?'0 auto 7px':undefined,overflow:'hidden'}}>
+    <strong style={{fontSize:large?12:7,lineHeight:1.2}}>{name}</strong>
+    <span aria-hidden="true" style={{fontSize:large?28:17,textAlign:'center'}}>
+     {definition?.effectSpec?.type==='fusion'?'⟐':definition?.effectSpec?.type==='bypass'?'➶':'⬡'}</span>
+    {large&&<span style={{fontSize:9,lineHeight:1.3}}>{text}</span>}
+   </div>;
+ }
  return <img src={cardFacePath(id,grade)}
   width={width} height={width*1.5} loading="lazy" decoding="async"
   alt={'Carta '+name} style={{width,aspectRatio:'2 / 3',height:'auto',display:'block',
@@ -42,7 +58,7 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
  },[]);
  const motherOwned=ownedShips.find(s=>s.shipId===motherId);
  const motherLevel=motherOwned?.level||1;
- const allCards=Object.values(GENERAL_CARDS);
+ const allCards=Object.values(AVAILABLE_GENERAL_CARDS);
  const filtered=useMemo(()=>allCards.filter(c=>
   (rarity==='Tutte'||c.rarita===rarity)&&
   (category==='Tutte'||c.categoria===category)&&
@@ -56,7 +72,7 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
    setNotice(success||'Operazione completata');
   }catch(e){setNotice('Salvataggio non riuscito: '+e.message);}
  }
- function buy(id){apply(buyGeneralCard(inventory,id,1),'Carta acquistata: '+GENERAL_CARDS[id]?.nome);}
+ function buy(id){apply(buyGeneralCard(inventory,id,1),'Carta acquistata: '+AVAILABLE_GENERAL_CARDS[id]?.nome);}
  function add(id){
   if(draft.length>=FLEET_BASE_DECK_SIZE){setNotice('Mazzo pieno: togli una carta prima di aggiungerne');return;}
   if((baseCounts[id]||0)>=cardCopyLimit(id)){setNotice('Limite copie raggiunto');return;}
@@ -90,7 +106,7 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
   minHeight:'310px',fontSize:'12px'}}>
   <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'7px',flexWrap:'wrap'}}>
    <div><strong style={{fontSize:'14px'}}>CARTE E MAZZI DI FLOTTA</strong>
-    <div style={small}>250 carte generali · 129 esclusive · 12 Personaggi Boss</div></div>
+    <div style={small}>253 carte generali · 132 esclusive · 12 Personaggi Boss</div></div>
    <strong style={{color:'#ffe394'}}>✦ {locale(inventory.credits)} Crediti Stellari</strong>
   </div>
   <details style={small}>
@@ -176,8 +192,8 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
    <button style={btn} onClick={buyPack}>APRI · {PACK_PRICE} Crediti</button>
    {packResults.length>0&&<div role="status" style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:8}}>
      {packResults.map((id,i)=><div key={id+'-'+i} style={{maxWidth:125,textAlign:'center'}}>
-      <FleetCardArt id={id} name={GENERAL_CARDS[id]?.nome||id} large/>
-      <span style={small}>{GENERAL_CARDS[id]?.nome}</span>
+      <FleetCardArt id={id} name={AVAILABLE_GENERAL_CARDS[id]?.nome||id} large/>
+      <span style={small}>{AVAILABLE_GENERAL_CARDS[id]?.nome}</span>
      </div>)}
     </div>}
   </div>}
@@ -198,7 +214,7 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
      const requiredLevel=grade===1?3:5;
      return <div key={c.id} style={box}>
       <FleetCardArt id={c.id} name={c.name} grade={grade} large/>
-       <strong>{c.name}</strong><div style={small}>Grado {grade}/3 · {c.category}</div>
+       <strong>{c.name}</strong><div style={small}>{PROGRESSION_CARDS[c.id]?'Carta di flotta':'Grado '+grade+'/3'} · {c.category}</div>
       <p style={small}>{describeEffect(c,grade)}</p>
       {upgradeable?<>
        <p style={small}>Grado {grade+1}: {describeEffect(c,grade+1)}</p>

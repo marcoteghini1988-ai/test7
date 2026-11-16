@@ -5,7 +5,12 @@ import generalData from './catalogGeneral.json' with {type:'json'};
 import exclusiveData from './catalogExclusive.json' with {type:'json'};
 import {describeEffect,validateEffectSpec} from './simpleEffects.js';
 import {BOSS_CARDS,bossCard} from './bossCards.js';
+import {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
+import {getShipProgression} from './progression.js';
 export {BOSS_CARDS,bossCard} from './bossCards.js';
+export {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
+export {CAMPAIGN_SHIP_ORDER,SHIP_PROGRESSION_IDS,getShipProgression,
+ getShipProgressionLevels,shipProgressionProfile} from './progression.js';
 
 function definedCard(card,kind,source){
  const error=validateEffectSpec(card.effectSpec);
@@ -31,18 +36,28 @@ export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(exclusiveData.ca
 export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(s=>[s.id,Object.freeze(s)])));
 export const COMBO_RECIPES = Object.freeze(exclusiveData.comboRecipes.map(c=>Object.freeze(c)));
 export const PREMADE_DECKS = Object.freeze(generalData.mazziPreconfigurati);
-export const STARTER_DECK = Object.freeze(generalData.mazzoIniziale);
+const starterCounts={...generalData.mazzoIniziale.carteGenerali};
+for(const [oldId,newId] of [['gen-001','prog-machine-striker'],['gen-002','prog-machine-guard'],['gen-003','prog-bypass']]){
+ if(!(starterCounts[oldId]>0))throw new Error('Mazzo iniziale: carta da sostituire mancante '+oldId);
+ if(--starterCounts[oldId]===0)delete starterCounts[oldId];
+ starterCounts[newId]=(starterCounts[newId]||0)+1;
+}
+export const STARTER_DECK = Object.freeze({...generalData.mazzoIniziale,
+ carteGenerali:Object.freeze(starterCounts)});
 export const GENERAL_COUNT = Object.keys(GENERAL_CARDS).length;
 export const EXCLUSIVE_COUNT = Object.keys(EXCLUSIVE_CARDS).length;
 export const BOSS_COUNT = Object.keys(BOSS_CARDS).length;
-export const TOTAL_CARD_COUNT = GENERAL_COUNT+EXCLUSIVE_COUNT+BOSS_COUNT;
+export const BASE_CATALOG_COUNT = GENERAL_COUNT+EXCLUSIVE_COUNT+BOSS_COUNT;
+export const PROGRESSION_CARD_COUNT = Object.keys(PROGRESSION_CARDS).length;
+export const TOTAL_CARD_COUNT = BASE_CATALOG_COUNT+PROGRESSION_CARD_COUNT;
 export const FLEET_TURN_SECONDS = 30;
 export const FLEET_HAND_SIZE = 7;
 export const FLEET_MAX_PLAYED = 3;
 export const FLEET_BASE_DECK_SIZE = 40;
-export const FLEET_SLOTS = Object.freeze({attack:3,defense:2,character:1});
-export const VITAL_KEYS = Object.freeze(['engine','weapons','command','generator']);
-export const VITAL_LABELS = Object.freeze({engine:'Motori',weapons:'Armi',command:'Centralina',generator:'Generatore'});
+export const FLEET_SLOTS = Object.freeze({attack:3,defense:2,defenseVisible:1,trap:1,character:1,machine:2});
+// engine rimane riconosciuto per gli effetti storici, ma non è un vitale delle nuove madri.
+export const VITAL_KEYS = Object.freeze(['weapons','generator','bridge','command','engine']);
+export const VITAL_LABELS = Object.freeze({engine:'Motori',weapons:'Arsenale',command:'Centralina',generator:'Generatore',bridge:'Plancia'});
 export const CARD_PRICES = Object.freeze({Comune:80,Rara:220,Epica:550,Leggendaria:1200});
 export const RARITY_COPY_LIMIT = Object.freeze({Comune:5,Rara:4,Epica:3,Leggendaria:2});
 export const PACK_PRICE = 280;
@@ -52,10 +67,12 @@ export const MAX_EXCLUSIVE_UPGRADE = 3;
 if(GENERAL_COUNT!==250||EXCLUSIVE_COUNT!==129||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==18)
  throw new Error('Catalogo flotta incompleto: servono 250 generali, 129 esclusive e 12 Personaggi Boss');
 
-export const generalCard = id => GENERAL_CARDS[id]||null;
-export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||null;
+export const progressionCard = id => PROGRESSION_CARDS[id]||null;
+export const generalCard = id => GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
+export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
+ if(isProgressionCard(id))return null;
  if(bossCard(id))return '/assets/fleet-next-boss-cards/'+id+'.svg';
  const grade=Math.max(1,Math.min(3,Math.floor(Number(level)||1)));
  return exclusiveCard(id)&&grade>1?
@@ -67,6 +84,7 @@ export function cardCopyLimit(id){
  const c=card(id);
  if(!c)return 0;
  if(bossCard(id))return 1;
+ if(isProgressionCard(id))return c.shipId?c.maxCopiesInAutoPackageDraft:RARITY_COPY_LIMIT[c.rarita]||0;
  return exclusiveCard(id)?1:(RARITY_COPY_LIMIT[c.rarita]||0);
 }
 export function cardRole(id){
@@ -79,21 +97,24 @@ export function cardRole(id){
  return 'attack';
 }
 export function unlockedParts(shipId,level){
- const profile=shipConfig(shipId);
- if(!profile)return [];
- return VITAL_KEYS.filter(id=>level>=(profile.partUnlockLevels[id]||99));
+ return [...(getShipProgression(shipId,level)?.vitalIds||[])];
 }
 export function requiredEscortCount(shipId,level){
- const profile=shipConfig(shipId);
- if(!profile)return 0;
- return (level>=profile.escort1UnlockLevel?1:0)+(level>=profile.escort2UnlockLevel?1:0);
+ return getShipProgression(shipId,level)?.escortCount||0;
+}
+export function requiredReserveCount(shipId,level){
+ return getShipProgression(shipId,level)?.reserveCount||0;
+}
+export function supportGrade(shipId,level,index=0){
+ const profile=getShipProgression(shipId,level);
+ return profile?[...profile.escortGrades,...profile.reserveGrades][index]||0:0;
 }
 export function exclusiveUnlocked(id,shipId,level){
- const def=exclusiveCard(id), profile=shipConfig(shipId);
- if(!def||!profile||def.shipId!==shipId||level<def.minShipLevelDraft)return false;
- const parts=unlockedParts(shipId,level);
+ const def=exclusiveCard(id),profile=getShipProgression(shipId,level);
+ if(!def||!profile||def.shipId!==shipId||profile.level<def.minShipLevelDraft)return false;
+ const parts=profile.vitalIds;
  return def.requiredOwnParts.every(part=>parts.includes(part))&&
-  requiredEscortCount(shipId,level)>=def.requiredEscortCount;
+  profile.escortCount>=def.requiredEscortCount;
 }
 export function exclusiveOperational(id,mother,escorts=[]){
  if(!exclusiveUnlocked(id,mother.id,mother.level))return false;
@@ -102,7 +123,8 @@ export function exclusiveOperational(id,mother,escorts=[]){
   escorts.filter(e=>e.hp>0&&!e.destroyed&&e.linked!==false).length>=def.requiredEscortCount;
 }
 export function eligibleExclusives(shipId,level){
- return Object.values(EXCLUSIVE_CARDS).filter(def=>exclusiveUnlocked(def.id,shipId,level));
+ return [...Object.values(EXCLUSIVE_CARDS),...Object.values(PROGRESSION_CARDS).filter(c=>c.shipId)]
+  .filter(def=>exclusiveUnlocked(def.id,shipId,level));
 }
 export function effectiveDeck(baseDeck,shipId,level){
  const base=Array.isArray(baseDeck)?baseDeck:[];
@@ -157,5 +179,6 @@ export function generalCatalogStats(){
   category[c.categoria]=(category[c.categoria]||0)+1;
  }
  return {count:GENERAL_COUNT,rarity,category,exclusive:EXCLUSIVE_COUNT,boss:BOSS_COUNT,
+  baseCatalog:BASE_CATALOG_COUNT,progression:PROGRESSION_CARD_COUNT,
   total:TOTAL_CARD_COUNT,ships:17,recipes:COMBO_RECIPES.filter(c=>c.active===true).length,archivedRecipes:COMBO_RECIPES.length};
 }

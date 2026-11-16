@@ -1,30 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,STARTER_DECK,deckFromCounts,card,cardRole} from './fleetNext/rules.js';
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,STARTER_DECK,deckFromCounts,card,cardRole} from './fleetNext/rules.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,validateFleetTurn,
  effectUnavailableReason,refreshEscortLinks,MAX_FLEET_ROUNDS} from './fleetNext/combat.js';
 import {describeEffect,effectiveEffectSpec,validateEffectSpec,canUpgradeEffect} from './fleetNext/simpleEffects.js';
 import {neutralTerrain,campaignTerrain} from './fleetNext/terrains.js';
 import {PHASE16A_CAMPAIGN_PLANET_IDS} from './newCombat/phase16ACatalog.js';
 import {createFleetInventory,upgradeFleetExclusive} from './fleetNext/collection.js';
-const allCards=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS)];
+const allCards=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS)];
 const base=deckFromCounts(STARTER_DECK.carteGenerali);
-const make=(options={})=>createFleetNextBattle({shipA:'C01',shipB:'C01',levelA:1,levelB:1,
+const make=(options={})=>createFleetNextBattle({shipA:'N00',shipB:'N00',levelA:1,levelB:1,
  deckA:base,deckB:base,mode:'pvp',seed:25,...options});
-const part=(b,who,id='engine')=>b.sides[who].ships[0].parts.find(p=>p.id===id);
+const part=(b,who,id='generator')=>b.sides[who].ships[0].parts.find(p=>p.id===id);
 function damageOwn(b,who,id,amount=1){const p=part(b,who,id);p.hp=Math.max(0,p.hp-amount);p.destroyed=p.hp===0;p.damage=p.destroyed?2:1;}
 function turn(b,ids=[],extra={}){
  const who=b.turn;
  if(ids.length)b.sides[who].hand=[...ids,...Array(7-ids.length).fill('gen-002')];
- const target=b.sides[who==='A'?'B':'A'].ships[0].parts.find(p=>!p.destroyed);
+ const targets=b.sides[who==='A'?'B':'A'].ships[0].parts;
+ const target=targets.find(p=>p.id==='generator'&&!p.destroyed)||targets.find(p=>!p.destroyed);
  const result=resolveFleetNextTurn(b,who,{cards:ids.map((_,i)=>i),partId:target?.id,...extra},b.ply*1000+1);
  assert.equal(result.ok,true,result.reason);return result;
 }
 const pass=b=>turn(b,[],{pass:true,partId:null}).battle;
 const bareFive=()=>{const b=make({levelA:5,levelB:5});b.sides.A.escorts=[];b.sides.B.escorts=[];return b;};
 
-test('Tutte le 391 carte hanno un effetto esplicito e una descrizione condivisa',()=>{
- assert.equal(allCards.length,391);
+test('Tutte le 397 carte hanno un effetto esplicito e una descrizione condivisa',()=>{
+ assert.equal(allCards.length,397);
  for(const c of allCards){
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(typeof describeEffect(c),'string',c.id);
@@ -34,18 +35,18 @@ test('Tutte le 391 carte hanno un effetto esplicito e una descrizione condivisa'
 });
 
 test('La protezione riguarda solo il componente scelto e non si consuma su un altro',()=>{
- let b=turn(make(),['gen-092'],{ownPartId:'engine',pass:true}).battle;
+ let b=turn(make(),['gen-092'],{ownPartId:'generator',pass:true}).battle;
  const weapons=part(b,'A','weapons').hp;
  b=turn(b,[],{partId:'weapons'}).battle;
  assert.equal(part(b,'A','weapons').hp,weapons-1);
  assert.equal(b.sides.A.protections[0].remaining,1);
- const engine=part(b,'A').hp;b=pass(b);b=turn(b,[],{partId:'engine'}).battle;
+ const engine=part(b,'A').hp;b=pass(b);b=turn(b,[],{partId:'generator'}).battle;
  assert.equal(part(b,'A').hp,engine);
  assert.equal(b.sides.A.protections.length,0);
 });
 
 test('Una protezione da due colpi si consuma su due attacchi e poi lascia passare',()=>{
- let b=turn(make(),['gen-106'],{ownPartId:'engine',pass:true}).battle;
+ let b=turn(make(),['gen-106'],{ownPartId:'generator',pass:true}).battle;
  const hp=part(b,'A').hp;
  b=turn(b).battle;assert.equal(part(b,'A').hp,hp);assert.equal(b.sides.A.protections[0].remaining,1);
  b=pass(b);b=turn(b).battle;assert.equal(part(b,'A').hp,hp);assert.equal(b.sides.A.protections.length,0);
@@ -53,7 +54,7 @@ test('Una protezione da due colpi si consuma su due attacchi e poi lascia passar
 });
 
 test('La protezione non usata scade all’inizio del prossimo turno del proprietario',()=>{
- let b=turn(make(),['gen-071'],{ownPartId:'engine',pass:true}).battle;
+ let b=turn(make(),['gen-071'],{ownPartId:'generator',pass:true}).battle;
  assert.equal(b.sides.A.protections.length,1);
  b=pass(b);assert.equal(b.ply,2);assert.equal(b.sides.A.protections.length,0);
  assert.ok(b.sides.A.discard.includes('gen-071'));
@@ -61,14 +62,14 @@ test('La protezione non usata scade all’inizio del prossimo turno del propriet
 });
 
 test('La perforazione supera una protezione sul componente',()=>{
- let b=turn(make(),['gen-071'],{ownPartId:'engine',pass:true}).battle;
+ let b=turn(make(),['gen-071'],{ownPartId:'generator',pass:true}).battle;
  const hp=part(b,'A').hp;b=turn(b,['gen-001']).battle;
  assert.equal(part(b,'A').hp,hp-1);
  assert.ok(b.lastEvents.some(e=>e.kind==='pierce'));
 });
 
 test('Le scudiere intercettano ancora i colpi perforanti e la protezione scudiera li blocca',()=>{
- let b=make({levelA:5});
+ let b=make({shipA:'C02',levelA:5});
  const mother=part(b,'A').hp,escort=b.sides.A.escorts[0].hp;
  b=turn(b,['gen-073'],{pass:true}).battle;
  const r=turn(b,['gen-001']);b=r.battle;
@@ -78,39 +79,39 @@ test('Le scudiere intercettano ancora i colpi perforanti e la protezione scudier
  assert.equal(r2.shot.damage,0);assert.ok(r2.shot.escortDamage>0);
 });
 
-test('Schivata richiede Motori attivi ed è annullata da Distesa Gelida',()=>{
- const broken=make();damageOwn(broken,'A','engine',99);
- assert.match(effectUnavailableReason(card('gen-072'),broken.sides.A,broken),/Motori/);
- let b=turn(make(),['gen-072'],{ownPartId:'engine',pass:true}).battle;
+test('Schivata richiede il Generatore attivo ed è annullata da Distesa Gelida',()=>{
+ const broken=make();damageOwn(broken,'A','generator',99);
+ assert.match(effectUnavailableReason(card('gen-072'),broken.sides.A,broken),/Generatore/);
+ let b=turn(make(),['gen-072'],{ownPartId:'generator',pass:true}).battle;
  const hp=part(b,'A').hp;b=turn(b,['gen-219']).battle;
  assert.equal(part(b,'A').hp,hp-1);
 });
 
 test('Riparazione: bersaglio scelto, limite massimo, nessuna ricostruzione',()=>{
- let b=make();damageOwn(b,'A','engine',2);damageOwn(b,'A','weapons',1);
+ let b=make();damageOwn(b,'A','generator',2);damageOwn(b,'A','weapons',1);
  const engine=part(b,'A').hp,weapons=part(b,'A','weapons').hp;
  b=turn(b,['gen-171'],{ownPartId:'weapons',pass:true}).battle;
  assert.equal(part(b,'A').hp,engine);assert.equal(part(b,'A','weapons').hp,weapons+1);
  assert.match(effectUnavailableReason(card('gen-171'),b.sides.A,b,{ownPartId:'weapons'}),/Nessun danno/);
- const destroyed=make();damageOwn(destroyed,'A','engine',99);
- assert.match(effectUnavailableReason(card('gen-177'),destroyed.sides.A,destroyed),/Motori/);
+ const destroyed=make();damageOwn(destroyed,'A','generator',99);
+ assert.match(effectUnavailableReason(card('gen-177'),destroyed.sides.A,destroyed),/Motori|Generatore/);
 });
 
 test('Bersagli fissi e scudiere assenti vengono rifiutati prima di consumare la carta',()=>{
  const b=make();
- for(const id of ['gen-088','gen-073']){
+ for(const id of ['gen-090','gen-073']){
   b.sides.A.hand[0]=id;
-  assert.ok(validateFleetTurn(b,'A',{cards:[0],partId:'engine',ownPartId:'engine'}));
+  assert.ok(validateFleetTurn(b,'A',{cards:[0],partId:'generator',ownPartId:'generator'}));
  }
- assert.match(effectUnavailableReason(card('gen-088'),b.sides.A,b),/Generatore/);
+ assert.match(effectUnavailableReason(card('gen-090'),b.sides.A,b),/Centralina/);
 });
 
 test('Rigenerazione su colpo: scatta su danno reale, anche intercettato, e non su colpo bloccato',()=>{
- let b=make({levelB:5});damageOwn(b,'A','engine',2);
+ let b=make({shipB:'C03',levelB:5});damageOwn(b,'A','generator',2);
  const hp=part(b,'A').hp;const r=turn(b,['gen-025']);
  assert.ok(r.shot.escortDamage>0);assert.equal(part(r.battle,'A').hp,hp+1);
- b=turn(make(),['gen-071'],{ownPartId:'engine',pass:true}).battle;
- damageOwn(b,'B','engine',2);const before=part(b,'B').hp;
+ b=turn(make(),['gen-071'],{ownPartId:'generator',pass:true}).battle;
+ damageOwn(b,'B','generator',2);const before=part(b,'B').hp;
  const blocked=turn(b,['gen-025']);assert.equal(blocked.shot.damage,0);assert.equal(part(blocked.battle,'B').hp,before);
 });
 
@@ -143,7 +144,7 @@ test('Il blocco delle Armi non può impedire due turni consecutivi ed è rimovib
 test('Disturbi si consumano sul prossimo attacco; pulizia libera anche le scudiere bloccate',()=>{
  let b=turn(make(),['gen-121'],{pass:true}).battle;
  const first=turn(b);assert.equal(first.shot.power,1);assert.equal(first.battle.sides.B.buffs.filter(x=>x.kind==='jam').length,0);
- b=make({levelA:5});const escort=b.sides.A.escorts[0];escort.jammedUntilPly=8;
+ b=make({shipA:'C03',levelA:5});const escort=b.sides.A.escorts[0];escort.jammedUntilPly=8;
  refreshEscortLinks(b.sides.A,0);assert.equal(escort.linked,false);
  b=turn(b,['gen-175'],{pass:true}).battle;assert.equal(b.sides.A.escorts[0].linked,true);
 });
@@ -156,7 +157,7 @@ test('La carica vale al prossimo proprio turno, non in quello corrente o success
 });
 
 test('Personaggio applica esattamente ora e al prossimo proprio turno, poi scade',()=>{
- let b=make();damageOwn(b,'A','engine',3);
+ let b=make({levelA:3});damageOwn(b,'A','generator',3);
  b=turn(b,['gen-216'],{pass:true}).battle;assert.equal(part(b,'A').hp,2);
  b=pass(b);assert.equal(part(b,'A').hp,2);
  b=pass(b);assert.equal(part(b,'A').hp,3);b=pass(b);
@@ -166,24 +167,33 @@ test('Personaggio applica esattamente ora e al prossimo proprio turno, poi scade
 });
 
 test('I gradi già salvati conservano quantità e descrizione anche quando non sono più acquistabili',()=>{
- const c=card('ex-r03-01');assert.equal(canUpgradeEffect(c,1),false);
- const b=make({shipA:'R03',upgradesA:{[c.id]:3}});const own=part(b,'A');damageOwn(b,'A',own.id,own.maxHp-1);
+ const c=card('ex-l04-09');assert.equal(canUpgradeEffect(c,2),false);
+ const b=make({shipA:'L04',levelA:5,upgradesA:{[c.id]:3}});
+ const own=part(b,'A');damageOwn(b,'A',own.id,own.maxHp-1);
  const amount=effectiveEffectSpec(c,3).amount;assert.match(describeEffect(c,3),new RegExp(amount+' punti'));
  const r=turn(b,[c.id],{pass:true});assert.equal(part(r.battle,'A').hp,Math.min(own.maxHp,1+amount));
  const nonUpgradable=Object.values(EXCLUSIVE_CARDS).find(c=>c.effectSpec.type==='cleanse');
  assert.equal(canUpgradeEffect(nonUpgradable,1),false);
 });
 
-test('Nessun pagamento per riparazioni o rigenerazioni oltre la capacità reale della madre',()=>{
+test('Riparazioni migliorabili con i nuovi vitali; nessun pagamento oltre il beneficio reale',()=>{
  const motherHeals=Object.values(EXCLUSIVE_CARDS).filter(c=>c.effectSpec.type==='regenerate'||
   c.effectSpec.type==='repair'&&c.effectSpec.target!=='escort');
  assert.equal(motherHeals.length,9);
  for(const c of motherHeals){
-  assert.equal(canUpgradeEffect(c,1),false,c.id);assert.equal(canUpgradeEffect(c,2),false,c.id);
+  assert.equal(canUpgradeEffect(c,1),true,c.id+' può riparare una madre più resistente');
+  const secondUseful=!['ex-e03-01','ex-e03-07','ex-l04-09'].includes(c.id);
+  assert.equal(canUpgradeEffect(c,2),secondUseful,c.id);
   const inventory=createFleetInventory();inventory.credits=1000;
   const result=upgradeFleetExclusive(inventory,c.id,c.shipId,5);
-  assert.equal(result.ok,false,c.id);assert.equal(result.inventory.credits,1000,c.id);
-  assert.deepEqual(result.inventory.exclusiveUpgrades,{},c.id);
+  assert.equal(result.ok,true,c.id);assert.equal(result.inventory.credits,840,c.id);
+  assert.equal(result.inventory.exclusiveUpgrades[c.id],2,c.id);
+  if(!secondUseful){
+   const rejected=upgradeFleetExclusive(result.inventory,c.id,c.shipId,5);
+   assert.equal(rejected.ok,false,c.id);
+   assert.equal(rejected.inventory.credits,840,c.id);
+   assert.equal(rejected.inventory.exclusiveUpgrades[c.id],2,c.id);
+  }
  }
  const escortRepair=card('ex-r03-04');
  assert.equal(canUpgradeEffect(escortRepair,1),true);
@@ -195,8 +205,9 @@ test('Nessun pagamento per riparazioni o rigenerazioni oltre la capacità reale 
 
 test('Protezioni fisse: nessun grado inutile, ma due turni consentono due colpi',()=>{
  assert.equal(canUpgradeEffect(card('ex-c01-01'),1),false,'Il personaggio rinnova una schivata per turno');
- assert.equal(canUpgradeEffect(card('ex-c01-04'),1),false,'Una scudiera riceve al massimo un attacco per turno');
- const twoTurns={...card('ex-c01-04'),effectSpec:{type:'protect',target:'escort',amount:1,turns:2}};
+ const oneTurn={...card('ex-l03-04'),effectSpec:{type:'protect',target:'escort',amount:1,turns:1}};
+ assert.equal(canUpgradeEffect(oneTurn,1),false,'Una scudiera riceve al massimo un attacco per turno');
+ const twoTurns={...oneTurn,effectSpec:{type:'protect',target:'escort',amount:1,turns:2}};
  assert.equal(canUpgradeEffect(twoTurns,1),true);assert.equal(canUpgradeEffect(twoTurns,2),false);
  for(const id of ['ex-l02-08','ex-l03-04','ex-l04-06'])assert.equal(canUpgradeEffect(card(id),1),false,id);
  for(const id of ['ex-n00-03','ex-e02-04','ex-r04-03']){
@@ -207,9 +218,9 @@ test('Protezioni fisse: nessun grado inutile, ma due turni consentono due colpi'
 test('Una protezione scelta migliorata blocca davvero più contrattacchi e il successivo attacco',()=>{
  let b=make({shipA:'N00',levelA:5,levelB:5,upgradesA:{'ex-n00-03':3}});
  b.sides.A.escorts=[];b.sides.B.escorts=[];
- b=pass(b);b=turn(b,['gen-091','gen-091'],{pass:true}).battle;
+ b=pass(b);b=turn(b,['gen-091','gen-021'],{pass:true}).battle;
  const hp=part(b,'A','weapons').hp;
- b=turn(b,['ex-n00-03'],{ownPartId:'weapons',partId:'engine'}).battle;
+ b=turn(b,['ex-n00-03'],{ownPartId:'weapons',partId:'generator'}).battle;
  assert.equal(part(b,'A','weapons').hp,hp);assert.equal(b.sides.A.protections[0].remaining,1);
  b=turn(b,[],{partId:'weapons'}).battle;
  assert.equal(part(b,'A','weapons').hp,hp);assert.equal(b.sides.A.protections.length,0);
@@ -255,56 +266,57 @@ test('Campagna: ogni pianeta usa il proprio terreno anche senza un boss, con fal
 test('I danni del contrattacco non attivano rigenerazione su danno o altre reazioni',()=>{
  let b=turn(bareFive(),['gen-091'],{pass:true}).battle;
  const hp=part(b,'B','weapons').hp;
- const r=turn(b,['gen-085'],{partId:'engine'});
+ const r=turn(b,['gen-085'],{partId:'generator'});
  assert.equal(part(r.battle,'B','weapons').hp,hp-1);
  assert.equal(r.events.filter(e=>e.kind==='repair'&&e.cardId==='gen-085').length,0);
 });
 
 test('Nebbia ferma la perforazione; Trono aggiunge un bersaglio; Palude impedisce riparazioni inutili',()=>{
- let b=turn(make(),['gen-071'],{pass:true,ownPartId:'engine'}).battle;
+ let b=turn(make(),['gen-071'],{pass:true,ownPartId:'generator'}).battle;
  let r=turn(b,['gen-221','gen-001']);assert.equal(r.shot.damage,0);
  r=turn(bareFive(),['gen-245']);assert.equal(r.shot.targets.length,2);
- b=make();b.terrain={id:'T08',expiresPly:null};damageOwn(b,'A','engine',2);const hp=part(b,'A').hp;
+ b=make();b.terrain={id:'T08',expiresPly:null};damageOwn(b,'A','generator',2);const hp=part(b,'A').hp;
  assert.match(effectUnavailableReason(card('gen-171'),b.sides.A,b),/Palude/);
  b.sides.A.hand[0]='gen-171';
- const blocked=resolveFleetNextTurn(b,'A',{cards:[0],ownPartId:'engine',pass:true});
+ const blocked=resolveFleetNextTurn(b,'A',{cards:[0],ownPartId:'generator',pass:true});
  assert.equal(blocked.ok,false);assert.equal(blocked.battle.sides.A.hand[0],'gen-171');
  // Il terreno entra prima, anche quando è stata selezionata prima la riparazione.
- r=turn(b,['gen-171','gen-238'],{ownPartId:'engine',pass:true});assert.equal(part(r.battle,'A').hp,hp+1);
+ r=turn(b,['gen-171','gen-238'],{ownPartId:'generator',pass:true});assert.equal(part(r.battle,'A').hp,hp+1);
  assert.equal(r.battle.terrain.id,'T02');
 });
 
 test('Tempesta aumenta i disturbi, Deserto i danni scudiera e Detriti riduce la potenza',()=>{
  let b=turn(make(),['gen-239','gen-121'],{pass:true}).battle;
  let r=turn(b);assert.equal(r.shot.power,0);assert.equal(r.shot.damage,0);
- b=make({levelB:5});r=turn(b,['gen-220']);
+ b=make({shipB:'C03',levelB:5});r=turn(b,['gen-220']);
  assert.equal(r.shot.escortDamage,r.shot.power+1);
  b=make();const normal=1+b.sides.A.ships[0].weaponRating;
  r=turn(b,['gen-231']);assert.equal(r.shot.power,normal-1);
  r=turn(r.battle);assert.equal(r.shot.power,normal-1);
 });
 
-test('Scudiera locale protegge solo il suo componente; fase rispetta il turno di pausa',()=>{
+test('Tutti i supporti operativi proteggono ogni vitale, anche durante la pausa della passiva',()=>{
  let b=make({shipB:'C02',levelB:5});
- let r=turn(b,[],{partId:'engine'});assert.equal(r.shot.damage,1);assert.equal(r.shot.escortDamage,undefined);
+ let r=turn(b,[],{partId:'weapons'});assert.equal(r.shot.damage,0);assert.ok(r.shot.escortDamage>0);
  b=pass(r.battle);r=turn(b,[],{partId:'generator'});assert.equal(r.shot.damage,0);assert.ok(r.shot.escortDamage>0);
- b=make({shipB:'N00',levelB:5});
- r=turn(b);assert.ok(r.shot.escortDamage>0);
- b=pass(r.battle);r=turn(b);assert.equal(r.shot.damage,1);
- b=pass(r.battle);r=turn(b);assert.ok(r.shot.escortDamage>0);assert.equal(r.shot.damage,0);
+ b=make({shipB:'C04',levelB:5});
+ for(let i=0;i<3;i++){
+  r=turn(b);assert.ok(r.shot.escortDamage>0);assert.equal(r.shot.damage,0);
+  b=pass(r.battle);
+ }
 });
 
 test('Guardia della scudiera riduce realmente la potenza ogni due propri turni',()=>{
- let b=make({shipB:'R02',levelB:5});
- let r=turn(b,[],{partId:'engine'});const normal=r.shot.power;
+ let b=make({shipB:'R02',levelB:1});
+ let r=turn(b,[],{partId:'generator'});const normal=r.shot.power;
  b=pass(r.battle);r=turn(b,[],{partId:'weapons'});assert.equal(r.shot.power,normal);
  b=pass(r.battle);r=turn(b,[],{partId:'command'});assert.equal(r.shot.power,normal-1);
 });
 
 test('Foresta rigenera il componente più danneggiato; Quarzo aiuta solo la riparazione scudiera',()=>{
- let b=make();damageOwn(b,'A','engine',2);const hp=part(b,'A').hp;
+ let b=make();damageOwn(b,'A','generator',2);const hp=part(b,'A').hp;
  const r=turn(b,['gen-230']);assert.equal(part(r.battle,'A').hp,hp+1);
- b=make({levelA:5});b.terrain={id:'T09',expiresPly:null};b.sides.A.escorts[0].hp-=3;
+ b=make({shipA:'C03',levelA:5});b.terrain={id:'T09',expiresPly:null};b.sides.A.escorts[0].hp-=3;
  const escortHp=b.sides.A.escorts[0].hp;const repaired=turn(b,['gen-174'],{pass:true});
  assert.equal(repaired.battle.sides.A.escorts[0].hp,escortHp+2);
 });
@@ -320,13 +332,13 @@ test('IA rispetta i limiti di ruolo e non gioca riparazioni o bersagli inutilizz
  const o=autoFleetTurn(b,'A'),roles=o.cards.map(i=>cardRole(b.sides.A.hand[i]));
  assert.ok(roles.filter(x=>x==='defense').length<=2);assert.ok(roles.filter(x=>x==='character').length<=1);
  assert.ok(roles.filter(x=>x==='terrain').length<=1);assert.equal(validateFleetTurn(b,'A',o),null);
- b.sides.A.hand=['gen-171','gen-088','gen-073','gen-002','gen-002','gen-002','gen-002'];
+ b.sides.A.hand=['gen-171','gen-090','gen-073','gen-002','gen-002','gen-002','gen-002'];
  assert.ok(autoFleetTurn(b,'A').cards.every(i=>i>=3));
 });
 
 test('Ogni carta del catalogo può risolversi nel contesto compatibile senza eccezioni',()=>{
  for(const c of allCards){
-  let b=make({shipA:c.shipId||'C01',levelA:5,levelB:5});
+  let b=make({shipA:c.shipId||'C03',shipB:'C03',levelA:5,levelB:5});
   for(const side of Object.values(b.sides)){
    for(const p of side.ships[0].parts){p.hp=Math.max(1,p.maxHp-1);p.damage=1;}
    for(const e of side.escorts)e.hp=Math.max(1,e.maxHp-2);

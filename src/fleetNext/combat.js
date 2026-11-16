@@ -1,11 +1,12 @@
-// Eclissi Stellare — combattimento alternato di flotte, regole v0.8.
+// Eclissi Stellare — progressione strutturale e combattimento delle flotte.
 // Nessuna animazione o audio qui: gli eventi sono emessi per il renderer ufficiale.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
+import {getShipProgression} from './progression.js';
 import {
  card,cardRole,shipConfig,
- unlockedParts,requiredEscortCount,effectiveDeck,exclusiveOperational,
+ effectiveDeck,exclusiveOperational,
  FLEET_HAND_SIZE,
  FLEET_MAX_PLAYED,FLEET_TURN_SECONDS,VITAL_KEYS,VITAL_LABELS
 } from './rules.js';
@@ -25,58 +26,123 @@ const roll=(state,n)=>{
 const shuffled=(cards,state)=>{
  const a=[...cards];for(let i=a.length-1;i>0;i--){const j=roll(state,i+1);[a[i],a[j]]=[a[j],a[i]];}return a;
 };
-const initIntegrity=n=>n<=2?[4,4]:n===3?[3,3,2]:[2,2,2,2];
 export function createFleetMother(id,level=1){
  const config=shipConfig(id),model=SHIPS.get(id);
  if(!config||!model)throw new Error('Madre inesistente '+id);
- const n=clamp(Math.floor(level),1,5),ids=unlockedParts(id,n);
- const values=initIntegrity(ids.length);
- const parts=ids.map((id,i)=>({id,hp:values[i],maxHp:values[i],damage:0,destroyed:false}));
- const weapons=PHASE1_CATALOG.weapons.filter(w=>w.nave_id===model.id);
+ const n=clamp(Math.floor(Number(level)||1),1,5),progression=getShipProgression(id,n);
+ const parts=progression.vitalIds.map(id=>({id,hp:progression.integrityByPart[id],
+  maxHp:progression.integrityByPart[id],damage:0,destroyed:false}));
  return {id:model.id,name:model.nome,level:n,rarity:model.rarita,
-  role:config.rarity,parts,element:({N00:'ionic',C01:'plasma',C02:'refrigerant',
+  role:progression.role,parts,element:({N00:'ionic',C01:'plasma',C02:'refrigerant',
   C03:'ionic',C04:'plasma',R01:'plasma',R02:'ionic',R03:'refrigerant',
   R04:'mineral',E01:'refrigerant',E02:'ionic',E03:'plasma',E04:'mineral',
   L01:'plasma',L02:'ionic',L03:'mineral',L04:'refrigerant'})[model.id],
-  weaponRating:clamp(1+Math.floor((weapons.length+Math.max(0,n-1))/3),1,3)};
+  attackPower:progression.attackPower,defensePower:progression.defensePower,
+  weaponRating:Math.max(0,progression.attackPower-1)};
 }
-export const shipAlive=ship=>ship.parts.some(p=>!p.destroyed);
-export const allVitalsDestroyed=ship=>ship.parts.every(p=>p.destroyed);
-const motherPart=(mother,id)=>mother.parts.find(x=>x.id===id);
-const operational=(mother,id)=>!!motherPart(mother,id)&&!motherPart(mother,id).destroyed;
+export const shipAlive=ship=>ship.parts.some(p=>!p.destroyed&&p.hp>0);
+export const allVitalsDestroyed=ship=>ship.parts.every(p=>p.destroyed||p.hp<=0);
+// Compatibilità delle carte già possedute: i vecchi Motori sono alimentati
+// dal Generatore. Non si inventa un terzo vitale su Aurora.
+const resolvedPartId=(mother,id)=>id==='engine'&&!mother.parts.some(p=>p.id==='engine')?'generator':id;
+const motherPart=(mother,id)=>mother.parts.find(x=>x.id===resolvedPartId(mother,id));
+const operational=(mother,id)=>{const p=motherPart(mother,id);return !!p&&!p.destroyed&&p.hp>0;};
+const unitAlive=unit=>!!unit&&unit.hp>0&&!unit.destroyed;
+const unitEnabled=(unit,ply)=>unitAlive(unit)&&(unit.disabledUntilPly||0)<=ply&&(unit.jammedUntilPly||0)<=ply;
+const escortEnabled=(side,escort,ply)=>unitEnabled(escort,ply)&&
+ (escort.skill?.requires||['command']).every(id=>operational(side.ships[0],id));
+const characterSystem=side=>side.ships[0].parts.some(p=>p.id==='bridge')?'bridge':'generator';
 export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
- const mother=createFleetMother(shipId,level);
- const config=shipConfig(shipId);
- // Riutilizziamo esattamente i modelli e le passive delle scudiere ufficiali.
- const allEscorts=buildFleetEscorts({...mother,level:5}).slice(0,requiredEscortCount(shipId,level));
+ const mother=createFleetMother(shipId,level),n=mother.level;
+ const config=shipConfig(shipId),progression=getShipProgression(shipId,n);
+ // I modelli ufficiali restano gli stessi; quantità, gradi e riserve sono
+ // specifici della madre. La terza e quarta unità non partono in campo.
+ const prototypes=buildFleetEscorts({...mother,level:5});
  const model=SHIPS.get(shipId);
- const base=model.hp_motore_L1+(model.hp_motore_L5-model.hp_motore_L1)*
-  (clamp(level,1,5)-1)/4;
- const escorts=allEscorts.map((e,i)=>{
-  const tough=['cover','bulwark','partCover','phase'].includes(e.skill.action);
-  const arm=ESCORT_ARMORY[shipId][i];
+ const base=model.hp_motore_L1+(model.hp_motore_L5-model.hp_motore_L1)*(n-1)/4;
+ const build=(index,grade,reserve=false)=>{
+  const original=prototypes[index%2],arm=ESCORT_ARMORY[shipId][index%2];
+  const tough=['cover','bulwark','partCover','phase'].includes(original.skill.action);
   const hp=Math.max(2,Math.min(12,Math.round(2+base/65+
-   (e.skill.action==='bulwark'?4:tough?2:0)+arm.shield*3)));
-  return {...e,hp,maxHp:hp,
-   unlockLevel:i===0?config.escort1UnlockLevel:config.escort2UnlockLevel,
-   linked:true};
- });
- const rng={rng:seed>>>0};
- const fullDeck=effectiveDeck(baseDeck,shipId,level);
- const shuffledDeck=shuffled(fullDeck,rng);
- return {ships:[mother],escorts,deck:shuffledDeck.slice(FLEET_HAND_SIZE),
-  hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
+   (original.skill.action==='bulwark'?4:tough?2:0)+arm.shield*3)))+2*(grade-1);
+  const requires=[...new Set(['command',...original.skill.requires.map(id=>resolvedPartId(mother,id))])];
+  const skill={...original.skill,requires,targetPart:resolvedPartId(mother,original.skill.targetPart)};
+  return {...original,id:shipId+':escort:'+(index+1),name:original.name+(reserve?' · Riserva '+(index+1):''),
+   slot:index,sourceIndices:[index],grade,skill,hp,maxHp:hp,reserve,
+   unlockLevel:progression.escortUnlockLevels?.[index]??(index===0?config.escort1UnlockLevel:config.escort2UnlockLevel),
+   linked:true,fused:false};
+ };
+ const escorts=Array.from({length:progression.escortCount},(_,i)=>build(i,progression.escortGrades[i]||1));
+ const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
+ const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
+ const side={ships:[mother],escorts,reserveEscorts,machines:[],fusionsUsed:0,fusionLimit:progression.fusionLimit,
+  deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
   lastPlayed:[],attackSlots:[null,null,null],defenseSlots:[null,null],
   turnCount:0,fireDisabledUntil:0,fireBlocked:false,lastDisarmedPly:null,
   protections:[],reactions:[],charges:[],pendingRepair:0,drawBlockedUntil:0,usedCardEvents:[]};
+ refreshEscortLinks(side);return side;
 }
 export function refreshEscortLinks(side,ply=0){
- const mother=side.ships[0];
- for(const e of side.escorts){
-  e.linked=e.hp>0&&!e.destroyed&&(e.jammedUntilPly||0)<=ply&&
-   e.skill.requires.every(id=>operational(mother,id));
+ for(const e of side.escorts||[])e.linked=escortEnabled(side,e,ply);
+}
+export function protectingFleetUnits(side,ply=0){
+ const escortRows=(side.escorts||[]).filter(e=>escortEnabled(side,e,ply)).map(unit=>({kind:'escort',unit}));
+ const machineRows=(side.machines||[]).filter(e=>unitEnabled(e,ply)).map(unit=>({kind:'machine',unit}));
+ return [...escortRows,...machineRows].map(({kind,unit})=>({kind,id:unit.id,slot:unit.slot,
+  name:unit.name,hp:unit.hp,maxHp:unit.maxHp,unit}));
+}
+export function availableFleetTargets(side,ply=0){
+ const guards=protectingFleetUnits(side,ply);
+ const units=[...(side.escorts||[]).filter(unitAlive).map(unit=>({kind:'escort',unit})),
+  ...(side.machines||[]).filter(unitAlive).map(unit=>({kind:'machine',unit}))];
+ return [...units.map(({kind,unit})=>({kind,id:unit.id,slot:unit.slot,name:unit.name,
+  hp:unit.hp,maxHp:unit.maxHp,unit,blocked:false})),
+  ...side.ships[0].parts.filter(unitAlive).map(unit=>({kind:'part',id:unit.id,name:VITAL_LABELS[unit.id],
+   hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0}))];
+}
+export function fusionUnavailableReason(side,ply=0){
+ const used=side.fusionsUsed||0;
+ if(!side.fusionLimit||used>=side.fusionLimit)return 'Le fusioni disponibili sono già state usate';
+ if(!operational(side.ships[0],'command'))return 'La Fusione richiede la Centralina attiva';
+ if(used===0){
+  const first=side.escorts.find(e=>!e.fused&&e.sourceIndices?.includes(0));
+  const second=side.escorts.find(e=>!e.fused&&e.sourceIndices?.includes(1));
+  if(!first||!second||!escortEnabled(side,first,ply)||!escortEnabled(side,second,ply))
+   return 'Servono i primi due supporti ancora operativi';
+ }else{
+  const third=side.escorts.find(e=>!e.fused&&e.sourceIndices?.includes(2));
+  const fourth=(side.reserveEscorts||[]).find(e=>e.sourceIndices?.includes(3));
+  if(!third||!fourth||!escortEnabled(side,third,ply)||!escortEnabled(side,fourth,ply))
+   return 'Servono il terzo supporto operativo e il quarto sbloccato in riserva';
  }
+ return '';
+}
+export function fuseFleetSupports(side,ply=0){
+ const reason=fusionUnavailableReason(side,ply);
+ if(reason)return {ok:false,reason};
+ const stage=side.fusionsUsed||0;
+ const first=side.escorts.find(e=>!e.fused&&e.sourceIndices.includes(stage===0?0:2));
+ const second=stage===0?side.escorts.find(e=>!e.fused&&e.sourceIndices.includes(1)):
+  side.reserveEscorts.find(e=>e.sourceIndices.includes(3));
+ const maxHp=first.maxHp+second.maxHp+2;
+ const hp=Math.max(1,Math.floor(maxHp*(first.hp+second.hp)/(first.maxHp+second.maxHp)));
+ const requires=[...new Set([...first.skill.requires,...second.skill.requires])];
+ const fused={...first,id:side.ships[0].id+':fusion:'+(stage+1),slot:stage,
+  name:'Fusione '+(stage===0?'I':'II')+' · '+side.ships[0].name,hp,maxHp,fused:true,reserve:false,
+  grade:Math.max(first.grade||1,second.grade||1)+1,sourceIndices:[...first.sourceIndices,...second.sourceIndices],
+  skill:{...first.skill,requires},fusionSkills:[{...first.skill},{...second.skill}],linked:true};
+ side.escorts=side.escorts.filter(e=>e!==first&&e!==second);
+ side.reserveEscorts=(side.reserveEscorts||[]).filter(e=>e!==second);
+ side.escorts.push(fused);
+ let deployed=null;
+ if(stage===0){
+  const third=side.reserveEscorts.find(e=>e.sourceIndices.includes(2));
+  if(third){side.reserveEscorts=side.reserveEscorts.filter(e=>e!==third);third.slot=1;third.reserve=false;side.escorts.push(third);deployed=third;}
+ }
+ side.escorts.sort((a,z)=>a.slot-z.slot);side.fusionsUsed=stage+1;
+ refreshEscortLinks(side,ply);
+ return {ok:true,fused,deployed,stage:stage+1};
 }
 function emit(b,who,kind,text,rest={}){
  const event={round:b.round,ply:b.ply,who,kind,text,...rest};
@@ -98,7 +164,7 @@ export function createFleetNextBattle({
  seed=1988,nowMs=0,bossName=null
 }={}){
  const terrain=bossId?bossTerrain(bossId):mode==='pvp'?neutralTerrain():campaignTerrain(sectorNumber,planetId);
- const b={version:3,phase:'playing',winner:null,round:1,ply:0,turn:'A',
+ const b={version:4,phase:'playing',winner:null,round:1,ply:0,turn:'A',
   deadlineMs:nowMs+FLEET_TURN_SECONDS*1000,mode,
   bossName,bossId:bossId||null,planetId:terrain.planetId??planetId??null,
   bossLockedTerrain:false,seed,rng:seed>>>0,startedAtMs:nowMs,finishedAtMs:null,
@@ -113,23 +179,49 @@ export function createFleetNextBattle({
 export const MAX_FLEET_ROUNDS=50;
 export const FLEET_MAX_ROUNDS=MAX_FLEET_ROUNDS;
 const other=who=>who==='A'?'B':'A';
-const activePart=(side,id)=>side.ships[0].parts.find(p=>p.id===id&&!p.destroyed);
-const livingEscorts=side=>side.escorts.filter(e=>e.hp>0&&!e.destroyed);
+const activePart=(side,id)=>{const p=motherPart(side.ships[0],id);return p&&!p.destroyed&&p.hp>0?p:null;};
+const livingEscorts=side=>(side.escorts||[]).filter(unitAlive);
 const weakest=items=>[...items].sort((a,z)=>a.hp/a.maxHp-z.hp/z.maxHp)[0]||null;
 const weakestPart=side=>weakest(side.ships[0].parts.filter(p=>!p.destroyed));
 const visiblePlayed=ids=>ids.filter(id=>card(id)?.effectSpec?.type!=='trap');
-export function defenseSlotsAvailable(side,ply=0){
- const occupied=(side?.defenses||[]).filter(d=>d.untilPly==null||d.untilPly>ply).length;
- return Math.max(0,2-occupied);
+const defenseKind=definition=>definition?.effectSpec?.type==='trap'?'trap':'defense';
+const activeDefenses=(side,ply)=>(side?.defenses||[]).filter(d=>d.untilPly==null||d.untilPly>ply);
+export function defenseSlotsAvailable(side,ply=0,kind=null){
+ if(!operational(side.ships[0],'generator'))return 0;
+ const occupied=activeDefenses(side,ply);
+ if(kind)return Math.max(0,1-occupied.filter(d=>(d.hidden?'trap':'defense')===kind).length);
+ return Math.max(0,2-occupied.length);
 }
-export function defenseCapacityReason(side,newDefenseCount=1,ply=0){
- const available=defenseSlotsAvailable(side,ply);
+export function defenseCapacityReason(side,newDefenseCount=1,ply=0,kind=null){
+ if(Array.isArray(newDefenseCount)){
+  const counts={defense:0,trap:0};
+  for(const item of newDefenseCount){const def=typeof item==='string'?card(item):item;if(def)counts[defenseKind(def)]++;}
+  for(const key of ['defense','trap']){
+   const error=defenseCapacityReason(side,counts[key],ply,key);if(error)return error;
+  }
+  return '';
+ }
+ if(newDefenseCount<=0)return '';
+ if(!operational(side.ships[0],'generator'))return 'Il Generatore distrutto disattiva Difesa e Trappola';
+ const available=defenseSlotsAvailable(side,ply,kind);
  if(newDefenseCount<=available)return '';
- return available===0?'I due spazi Difesa sono occupati':'Hai spazio per una sola nuova carta Difesa';
+ if(kind==='trap')return 'Lo spazio Trappola è occupato: massimo una Trappola coperta';
+ if(kind==='defense')return 'Lo spazio Difesa è occupato: massimo una Difesa scoperta';
+ return available===0?'Gli spazi Difesa e Trappola sono occupati':'Hai spazio per una sola nuova carta Difesa o Trappola';
 }
 function normalizeSide(side){
- for(const key of ['protections','reactions','charges','buffs','defenses','discard'])side[key]??=[];
- side.fireBlocked??=false;side.lastDisarmedPly??=null;
+ for(const key of ['protections','reactions','charges','buffs','defenses','discard','machines','reserveEscorts'])side[key]??=[];
+ side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
+ side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
+}
+function enforceDestroyedSystems(side,ply=0){
+ if(!operational(side.ships[0],'generator')){
+  for(const entry of [...side.defenses])discardDefense(side,entry.source);
+ }
+ if(!operational(side.ships[0],characterSystem(side))&&side.commander){
+  side.discard.push(side.commander.id);removeSource(side,side.commander.source);side.commander=null;
+ }
+ refreshEscortLinks(side,ply);
 }
 function uniqueIndexList(list,hand){
  return Array.isArray(list)&&list.length<=FLEET_MAX_PLAYED&&
@@ -148,17 +240,23 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  const character=isCharacterCard(def);
  const terrain=terrainCode===undefined?battle?.terrain?.id:terrainCode;
  if(cardRole(def.id)==='defense'){
-  const capacity=defenseCapacityReason(side,1,battle?.ply??0);
+  const capacity=defenseCapacityReason(side,1,battle?.ply??0,defenseKind(def));
   if(capacity)return capacity;
  }
+ if(character&&!operational(side.ships[0],characterSystem(side)))return 'Il sistema del Personaggio è distrutto';
  if(character&&side.commander&&side.commander.untilPly>(battle?.ply??0))return 'È già attivo un Personaggio';
- if(def.shipId&&!exclusiveOperational(def.id,side.ships[0],side.escorts))return 'Nave o componenti richiesti non disponibili';
+ if(def.shipId&&s.type!=='fusion'&&!exclusiveOperational(def.id,side.ships[0],side.escorts))return 'Nave o componenti richiesti non disponibili';
  if(VITAL_KEYS.includes(s.target)&&!activePart(side,s.target))return VITAL_LABELS[s.target]+' non disponibili';
  if(s.target==='escort'&&!livingEscorts(side).length)return 'Nessuna scudiera disponibile';
- if(s.type==='dodge'&&!activePart(side,'engine'))return 'La schivata richiede i Motori attivi';
+ if(s.type==='dodge'&&!activePart(side,'generator'))return 'La schivata richiede il Generatore attivo';
  if(s.type==='dodge'&&terrain==='T01')return 'La Distesa Gelida blocca le schivate';
  if(s.type==='repair'&&terrain==='T08')return 'La Palude di Silicio blocca le riparazioni';
- if(['power','pierce','multishot','charge'].includes(s.type)&&!activePart(side,'weapons'))return 'Le Armi sono distrutte';
+ if(['power','pierce','multishot','charge','bypass'].includes(s.type)&&!activePart(side,'weapons'))return 'L’Arsenale è distrutto: resta il tiro di emergenza';
+ if(s.type==='fusion'){
+  if(def.shipId&&def.shipId!==side.ships[0].id)return 'La Fusione appartiene a un’altra nave';
+  const reason=fusionUnavailableReason(side,battle?.ply??0);if(reason)return reason;
+ }
+ if(s.type==='deployMachine'&&(side.machines||[]).filter(unitAlive).length>=2)return 'I due alloggiamenti delle macchine d’assalto sono occupati';
  if(s.type==='repair'&&!character){
   const unit=s.target==='escort'?weakest(livingEscorts(side)):selectedOwnPart(side,s.target,ownPartId);
   if(!unit||unit.hp>=unit.maxHp)return s.target==='escort'?'Nessuna scudiera da riparare':'Nessun danno da riparare sul componente';
@@ -183,7 +281,7 @@ export function validateFleetTurn(b,who,order){
  if(count('character')>1)return 'Massimo un Personaggio per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
  if(count('terrain')>1)return 'Massimo una Carta Terreno per turno';
- const defenseCapacity=defenseCapacityReason(side,count('defense'),b.ply);
+ const defenseCapacity=defenseCapacityReason(side,chosen.filter(c=>cardRole(c.id)==='defense'),b.ply);
  if(defenseCapacity)return defenseCapacity;
  const terrainCode=chosen.find(c=>c.effectSpec?.type==='terrain')?.effectSpec.code??b.terrain?.id;
  for(const c of chosen){
@@ -192,10 +290,33 @@ export function validateFleetTurn(b,who,order){
  }
  if(chosen.some(effectNeedsOwnTarget)&&order?.ownPartId&&!activePart(side,order.ownPartId))
   return 'Scegli un tuo componente ancora operativo';
- const enemy=b.sides[other(who)].ships[0],target=order?.partId;
- if(!order?.pass&&(!target||!motherPart(enemy,target)||motherPart(enemy,target).destroyed))
-  return 'Seleziona un componente avversario ancora operativo';
+ const machineCount=chosen.filter(c=>c.effectSpec.type==='deployMachine').length;
+ if(machineCount+(side.machines||[]).filter(unitAlive).length>2)return 'Servono alloggiamenti liberi per le macchine scelte';
+ const fusions=chosen.filter(c=>c.effectSpec.type==='fusion').length;
+ if(fusions){
+  const preview=clone(side);normalizeSide(preview);
+  for(let i=0;i<fusions;i++){const result=fuseFleetSupports(preview,b.ply);if(!result.ok)return result.reason;}
+ }
+ if(!order?.pass){
+  const enemy=b.sides[other(who)],selected=selectedEnemyTarget(enemy,order,b.ply);
+  if(!selected)return 'Seleziona un bersaglio avversario ancora operativo';
+  const bypass=chosen.some(c=>c.effectSpec.type==='bypass');
+  if(order.targetKind==='part'&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
+   return 'Prima colpisci i supporti o le macchine operative, oppure gioca Aggiramento';
+ }
  return null;
+}
+function selectedEnemyTarget(side,order={},ply=0){
+ const kind=order.targetKind||(order.escortSlot!=null?'escort':order.machineSlot!=null?'machine':'part');
+ if(kind==='escort'||kind==='machine'){
+  const list=kind==='escort'?side.escorts:side.machines||[];
+  const slot=kind==='escort'?order.escortSlot:order.machineSlot;
+  const unit=list.find(e=>order.targetId?e.id===order.targetId:e.slot===slot);
+  return unitAlive(unit)?{kind,unit}:null;
+ }
+ if(kind!=='part')return null;
+ const unit=motherPart(side.ships[0],order.targetId||order.partId);
+ return unitAlive(unit)?{kind:'part',unit}:null;
 }
 function takeCards(side,indices){
  const selected=indices.map(i=>side.hand[i]);
@@ -222,7 +343,7 @@ function expireSide(side,ply){
  if(side.commander?.untilPly<=ply){
   side.discard.push(side.commander.id);removeSource(side,side.commander.source);side.commander=null;
  }
- refreshEscortLinks(side,ply);
+ enforceDestroyedSystems(side,ply);
 }
 function heal(b,side,amount,target='weakest',ownPartId=null){
  if(b.terrain?.id==='T08')return null;
@@ -275,6 +396,25 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId}={}){
  const at=text=>events.push(emit(b,who,'card',(def.nome||def.name||'Effetto')+' · '+text,{cardId:def.id}));
  const expiry=b.ply+2*(s.turns||1);
  switch(s.type){
+  case 'bypass':ctx.bypass=true;at('Questo attacco può raggiungere direttamente la madre');break;
+  case 'fusion':{
+   const result=fuseFleetSupports(side,b.ply);
+   if(!result.ok)throw new Error(result.reason);
+   events.push(emit(b,who,'fusion',result.fused.name+' formata'+(result.deployed?'; entra '+result.deployed.name:''),
+    {cardId:def.id,escortSlot:result.fused.slot,stage:result.stage,deployed:result.deployed?.id||null}));
+   break;
+  }
+  case 'deployMachine':{
+   const slot=[0,1].find(i=>!side.machines.some(m=>unitAlive(m)&&m.slot===i));
+   if(slot==null)throw new Error('Alloggiamenti macchine occupati');
+   side.machines=side.machines.filter(m=>m.slot!==slot);
+   const machine={id:'machine:'+who+':'+token,slot,name:def.nome||def.name,sourceCardId:def.id,source:token,
+    hp:s.hp,maxHp:s.hp,power:s.power||0,destroyed:false,disabledUntilPly:0};
+   side.machines.push(machine);
+   events.push(emit(b,who,'machine-deploy',machine.name+' schierata: protegge la madre',
+    {cardId:def.id,machineSlot:slot,machineId:machine.id}));
+   break;
+  }
   case 'power':ctx.power+=s.amount;at('+'+s.amount+' potenza');break;
   case 'pierce':ctx.pierce+=s.amount;at('Ignora '+s.amount+' protezioni sui componenti');break;
   case 'multishot':ctx.multiTargets=Math.max(ctx.multiTargets,s.targets);at('Fino a '+s.targets+' componenti');break;
@@ -282,7 +422,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId}={}){
    const escort=s.target==='escort'?weakest(livingEscorts(side)):null;
    const part=s.target==='all'||escort?null:selectedOwnPart(side,s.target,ownPartId);
    if(s.target!=='all'&&!escort&&!part){at('Bersaglio non disponibile');break;}
-   if(s.type==='dodge'&&!operational(side.ships[0],'engine')){at('Motori non disponibili');break;}
+   if(s.type==='dodge'&&!operational(side.ships[0],'generator')){at('Generatore non disponibile');break;}
    side.protections=side.protections.filter(p=>p.source!==token);
    side.protections.push({source:token,id:def.id,kind:s.type,remaining:s.amount,
     target:s.target==='all'?'all':escort?'escort':'part',partId:part?.id||null,
@@ -303,7 +443,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId}={}){
    enemy.fireBlocked=true;at('Prossimo attacco avversario bloccato');break;
   case 'cleanse':
    side.buffs=side.buffs.filter(x=>x.kind!=='jam');side.fireBlocked=false;side.fireDisabledUntil=0;
-   for(const e of side.escorts)e.jammedUntilPly=0;
+   for(const e of [...side.escorts,...side.machines]){e.jammedUntilPly=0;e.disabledUntilPly=0;}
    refreshEscortLinks(side,b.ply);at('Disturbi e blocchi rimossi');break;
   case 'exchange':at('Ricambiate '+exchangeCards(b,side,s.amount)+' carte');break;
   case 'recover':{
@@ -356,7 +496,7 @@ function applyCard(b,who,id,ctx,events,order){
 }
 function applyCharacterRepeat(b,who,ctx,events){
  const side=b.sides[who],c=side.commander;
- if(c&&c.repeatsRemaining>0&&c.repeatAtPly<=b.ply){
+ if(c&&operational(side.ships[0],characterSystem(side))&&c.repeatsRemaining>0&&c.repeatAtPly<=b.ply){
   c.repeatsRemaining--;
   applyEffect(b,who,card(c.id),c.effectSpec,ctx,events,{source:c.source,ownPartId:c.ownPartId});
  }
@@ -382,26 +522,35 @@ function applyBossPassive(b,ctx,events){
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  for(const e of side.escorts.filter(x=>x.linked)){
-  const s=e.skill;if((side.turnCount+1)%Math.max(1,s.interval)!==0)continue;
-  const note=text=>events.push(emit(b,ctx.who,'escort',e.name+' · '+text));
-  if(['ion','strike','corrode'].includes(s.action)){ctx.power++;note('+1 potenza');}
-  else if(['focus','siege'].includes(s.action)&&s.targetPart===order.partId){ctx.power++;note('+1 potenza sul componente scelto');}
-  else if(s.action==='revenge'&&livingEscorts(side).some(x=>x.hp<x.maxHp)){ctx.power++;note('+1 potenza');}
-  else if(s.action==='surge'&&side.ships[0].parts.some(p=>!p.destroyed&&p.hp<p.maxHp)){ctx.power++;note('+1 potenza');}
-  else if(s.action==='precision'||s.action==='pierce'&&s.targetPart===order.partId){ctx.pierce++;note('Ignora 1 protezione');}
-  else if(['repair','mend'].includes(s.action)){const h=heal(b,side,1,s.action==='mend'?'escort':'weakest');if(h)note('Ripara '+h.name+' +'+h.amount);}
-  else if(s.action==='draw')note('Ricambia '+exchangeCards(b,side,1)+' carta');
-  else if(s.action==='jam'){addWeaken(b,b.sides[other(ctx.who)],1,e.id);note('Prossimo attacco avversario −1 potenza');}
-  else if(s.action==='guard'){addTemporaryGuard(side,b.ply);note('Prossimo turno avversario −1 potenza');}
+  const amount=Math.max(1,e.grade||1);
+  for(const s of e.fusionSkills||[e.skill]){
+   if((side.turnCount+1)%Math.max(1,s.interval)!==0)continue;
+   const note=text=>events.push(emit(b,ctx.who,'escort',e.name+' · '+text));
+   const part=resolvedPartId(b.sides[other(ctx.who)].ships[0],order.partId||order.targetId);
+   if(['ion','strike','corrode'].includes(s.action)){ctx.power+=amount;note('+'+amount+' potenza');}
+   else if(['focus','siege'].includes(s.action)&&s.targetPart===part){ctx.power+=amount;note('+'+amount+' potenza sul componente scelto');}
+   else if(s.action==='revenge'&&livingEscorts(side).some(x=>x.hp<x.maxHp)){ctx.power+=amount;note('+'+amount+' potenza');}
+   else if(s.action==='surge'&&side.ships[0].parts.some(p=>!p.destroyed&&p.hp<p.maxHp)){ctx.power+=amount;note('+'+amount+' potenza');}
+   else if(s.action==='precision'||s.action==='pierce'&&s.targetPart===part){ctx.pierce+=amount;note('Ignora '+amount+' protezioni');}
+   else if(['repair','mend'].includes(s.action)){const h=heal(b,side,amount,s.action==='mend'?'escort':'weakest');if(h)note('Ripara '+h.name+' +'+h.amount);}
+   else if(s.action==='draw')note('Ricambia '+exchangeCards(b,side,amount)+' carte');
+   else if(s.action==='jam'){addWeaken(b,b.sides[other(ctx.who)],amount,e.id);note('Prossimo attacco avversario −'+amount+' potenza');}
+   else if(s.action==='guard'){addTemporaryGuard(side,b.ply,amount);note('Prossimo turno avversario −'+amount+' potenza');}
+  }
+ }
+ for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply))){
+  if(machine.power){ctx.power+=machine.power;events.push(emit(b,ctx.who,'machine',machine.name+' · +'+machine.power+' potenza',
+   {machineId:machine.id,machineSlot:machine.slot}));}
  }
 }
 function blockHit(b,defender,targetKind,target,ctx,events){
  for(const p of [...defender.protections]){
   if(p.untilPly<=b.ply||p.remaining<=0)continue;
   const matches=targetKind==='escort'?p.target==='escort'&&p.escortSlot===target.slot:
+   targetKind==='machine'?p.target==='machine'&&p.machineSlot===target.slot:
    p.target==='all'||p.target==='part'&&p.partId===target.id;
   if(!matches)continue;
-  if(p.kind==='dodge'&&(!activePart(defender,'engine')||b.terrain?.id==='T01'))continue;
+  if(p.kind==='dodge'&&(!activePart(defender,'generator')||b.terrain?.id==='T01'))continue;
   p.remaining--;
   const bypass=targetKind==='part'&&ctx.pierceLeft>0;
   if(bypass)ctx.pierceLeft--;
@@ -412,32 +561,34 @@ function blockHit(b,defender,targetKind,target,ctx,events){
  }
  return false;
 }
-function readyInterceptor(b,defender,targets){
- refreshEscortLinks(defender,b.ply);
- return defender.escorts.find(e=>{
-  if(!e.linked)return false;
-  const s=e.skill;
-  if(s.action==='cover'||s.action==='bulwark')return true;
-  if(s.action==='partCover')return targets.some(p=>p.id===s.targetPart);
-  return s.action==='phase'&&(e.lastInterceptPly==null||b.ply-e.lastInterceptPly>=2*s.interval);
- })||null;
+function damageFleetUnit(side,kind,unit,amount,ply){
+ const damage=applyDamage(unit,amount);
+ if(kind==='machine'&&unit.destroyed&&!unit.cardDiscarded){
+  if(unit.sourceCardId)side.discard.push(unit.sourceCardId);
+  unit.cardDiscarded=true;
+ }
+ enforceDestroyedSystems(side,ply);return damage;
 }
 function triggerReactions(b,attackerWho,damage,events){
  if(damage<=0)return;
  const attacker=b.sides[attackerWho],defender=b.sides[other(attackerWho)];
  for(const [side,who,trigger] of [[attacker,attackerWho,'hit'],[defender,other(attackerWho),'hurt']]){
-  for(const reaction of side.reactions){
-   if(reaction.untilPly<=b.ply||reaction.trigger!==trigger||reaction.lastTriggeredPly===b.ply)continue;
+  for(const reaction of [...side.reactions]){
+   // Un effetto precedente può aver distrutto il sistema o consumato la
+   // carta che alimentava questa reazione: una copia dell'elenco non la riattiva.
+   if(!side.reactions.includes(reaction)||reaction.untilPly<=b.ply||reaction.trigger!==trigger||reaction.lastTriggeredPly===b.ply)continue;
    reaction.lastTriggeredPly=b.ply;
    if(reaction.type==='regenerate'){
     const h=heal(b,side,reaction.amount);
     if(h)events.push(emit(b,who,'repair','Rigenerazione: '+h.name+' +'+h.amount,{cardId:reaction.id}));
    }else if(reaction.type==='counter'){
-    const target=activePart(attacker,'weapons');
-    const blocked=target&&blockHit(b,attacker,'part',target,{who,pierceLeft:0},events);
-    const actual=blocked?0:applyDamage(target,reaction.amount);
-    if(actual){refreshEscortLinks(attacker,b.ply);events.push(emit(b,who,'counter','Contrattacco: Armi avversarie −'+actual,
-     {cardId:reaction.id,partId:'weapons',damage:actual,destroyed:target.destroyed,noRecursion:true}));}
+    const guard=protectingFleetUnits(attacker,b.ply)[0];
+    const target=guard?.unit||activePart(attacker,'weapons'),kind=guard?.kind||'part';
+    const blocked=target&&blockHit(b,attacker,kind,target,{who,pierceLeft:0},events);
+    const actual=!target||blocked?0:damageFleetUnit(attacker,kind,target,reaction.amount,b.ply);
+    if(actual)events.push(emit(b,who,'counter','Contrattacco: '+(guard?.name||'Arsenale avversario')+' −'+actual,
+     {cardId:reaction.id,partId:kind==='part'?target.id:null,escortSlot:kind==='escort'?target.slot:null,
+      machineSlot:kind==='machine'?target.slot:null,targetKind:kind,damage:actual,destroyed:target.destroyed,noRecursion:true}));
    }
   }
  }
@@ -448,11 +599,9 @@ function triggerReactions(b,attackerWho,damage,events){
  }
 }
 function resolveSalvo(b,ctx,events,order){
- const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],target=defender.ships[0];
- const mainPart=motherPart(target,order.partId);
- if(!mainPart||mainPart.destroyed||!operational(mother,'weapons')){
-  events.push(emit(b,ctx.who,'no-shot','Armi indisponibili o bersaglio non valido'));return {damage:0};
- }
+ const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
+ let selected=selectedEnemyTarget(defender,order,b.ply);
+ if(!selected){events.push(emit(b,ctx.who,'no-shot','Bersaglio non valido'));return {damage:0};}
  if(side.fireBlocked||side.fireDisabledUntil>b.ply){
   side.fireBlocked=false;side.fireDisabledUntil=0;
   if(side.lastDisarmedPly!==b.ply-2){
@@ -462,38 +611,43 @@ function resolveSalvo(b,ctx,events,order){
  }
  const jam=side.buffs.filter(x=>x.kind==='jam').reduce((sum,x)=>sum+(x.power||0),0);
  side.buffs=side.buffs.filter(x=>x.kind!=='jam');
- const guard=defender.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply)).reduce((sum,x)=>sum+(x.power||0),0);
- const terrain=terrainSalvoModifier(b.terrain,mother.id);
- const power=Math.max(0,1+mother.weaponRating+ctx.power+terrain.value-jam-guard);
+ const guardPower=defender.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply)).reduce((sum,x)=>sum+(x.power||0),0);
+ const terrain=terrainSalvoModifier(b.terrain,mother.id),emergency=!operational(mother,'weapons');
+ // La corazza riduce la potenza, ma non rende una nave invulnerabile.
+ // Il tiro di emergenza conserva almeno 1 potenza prima degli effetti temporanei.
+ const basePower=Math.max(1,(emergency?1:mother.attackPower??1+mother.weaponRating)-(enemy.defensePower||0));
+ const power=Math.max(0,basePower+ctx.power+terrain.value-jam-guardPower);
  if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: l’attacco fallisce'));return {damage:0,partId:order.partId,played:visiblePlayed(ctx.cards),power};}
- const count=Math.min(4,ctx.multiTargets+(b.terrain?.id==='T10'?1:0));
- const targets=[mainPart,...target.parts.filter(p=>!p.destroyed&&p.id!==mainPart.id).slice(0,count-1)];
+ if(emergency)events.push(emit(b,ctx.who,'emergency-shot','Tiro di emergenza: l’Arsenale è distrutto'));
+ const guards=protectingFleetUnits(defender,b.ply);
+ if(selected.kind==='part'&&guards.length&&!ctx.bypass)selected={kind:guards[0].kind,unit:guards[0].unit};
+ // Aggiramento abilita un solo componente dietro le unità: multicolpo non
+ // moltiplica un'eccezione di accesso in un attacco all'intera madre.
+ const count=guards.length&&selected.kind==='part'&&ctx.bypass?1:
+  Math.min(4,(emergency?1:ctx.multiTargets)+(b.terrain?.id==='T10'?1:0));
+ const targets=selected.kind==='part'?
+  [selected,...enemy.parts.filter(p=>unitAlive(p)&&p!==selected.unit).slice(0,count-1).map(unit=>({kind:'part',unit}))]:
+  [selected,...guards.filter(g=>g.unit!==selected.unit).slice(0,count-1).map(g=>({kind:g.kind,unit:g.unit}))];
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
- const escort=readyInterceptor(b,defender,targets);
- if(escort){
-  escort.lastInterceptPly=b.ply;
-  if(blockHit(b,defender,'escort',escort,ctx,events)){
-   events.push(emit(b,ctx.who,'impact','Scudiera protetta: nessun danno',{escortSlot:escort.slot,escortDamage:0,damage:0}));
-   return {damage:0,escortDamage:0,escortSlot:escort.slot,partId:order.partId,played:visiblePlayed(ctx.cards),power};
-  }
-  const damage=Math.min(escort.hp,power+(b.terrain?.id==='T04'?1:0));
-  escort.hp-=damage;escort.destroyed=escort.hp<=0;refreshEscortLinks(defender,b.ply);
-  events.push(emit(b,ctx.who,'impact','Scudiera '+escort.name+' intercetta: −'+damage+' punti',
-   {escortSlot:escort.slot,escortName:escort.name,escortDamage:damage,escortDestroyed:escort.destroyed,damage:0}));
-  triggerReactions(b,ctx.who,damage,events);
-  return {damage:0,escortDamage:damage,escortSlot:escort.slot,partId:order.partId,played:visiblePlayed(ctx.cards),power};
- }
  const hits=[];
- for(const p of targets){
-  if(blockHit(b,defender,'part',p,ctx,events))continue;
-  const damage=applyDamage(p,1);if(damage)hits.push({id:p.id,damage,destroyed:p.destroyed});
+ for(const {kind,unit} of targets){
+  if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
+  const amount=kind==='part'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
+  const damage=damageFleetUnit(defender,kind,unit,amount,b.ply);
+  if(damage)hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
  }
- refreshEscortLinks(defender,b.ply);
- const damage=hits.reduce((sum,h)=>sum+h.damage,0);
- events.push(emit(b,ctx.who,'impact',damage?'Attacco: '+hits.map(h=>VITAL_LABELS[h.id]).join(', '):'Tutti i colpi sono stati bloccati',
-  {shipIndex:0,shipName:target.name,partId:mainPart.id,damage,destroyed:mainPart.destroyed,played:visiblePlayed(ctx.cards),targets:hits,terrainBonus:terrain.value}));
- triggerReactions(b,ctx.who,damage,events);
- return {damage,partId:order.partId,played:visiblePlayed(ctx.cards),targets:hits,destroyed:mainPart.destroyed,power};
+ const damage=hits.filter(h=>h.kind==='part').reduce((sum,h)=>sum+h.damage,0);
+ const escortDamage=hits.filter(h=>h.kind==='escort').reduce((sum,h)=>sum+h.damage,0);
+ const machineDamage=hits.filter(h=>h.kind==='machine').reduce((sum,h)=>sum+h.damage,0);
+ const main=selected.unit,targetKind=selected.kind;
+ const data={shipIndex:0,shipName:enemy.name,partId:targetKind==='part'?main.id:order.partId||null,
+  targetKind,targetId:main.id,damage,escortDamage,machineDamage,destroyed:main.destroyed,
+  escortSlot:targetKind==='escort'?main.slot:null,machineSlot:targetKind==='machine'?main.slot:null,
+  escortName:targetKind==='escort'?main.name:null,escortDestroyed:targetKind==='escort'&&main.destroyed,
+  played:visiblePlayed(ctx.cards),targets:hits,terrainBonus:terrain.value,power,emergency};
+ events.push(emit(b,ctx.who,'impact',hits.length?'Attacco: '+hits.map(h=>h.name+' −'+h.damage).join(', '):'Tutti i colpi sono stati bloccati',data));
+ triggerReactions(b,ctx.who,damage+escortDamage+machineDamage,events);
+ return data;
 }
 function finishTurn(b,ctx,events){
  const side=b.sides[ctx.who];side.turnCount++;refill(b,side);
@@ -503,10 +657,7 @@ function finishTurn(b,ctx,events){
  const deadA=allVitalsDestroyed(b.sides.A.ships[0]),deadB=allVitalsDestroyed(b.sides.B.ships[0]);
  if(deadA||deadB){b.phase='finished';b.winner=deadA&&deadB?'draw':deadA?'B':'A';
   b.finishReason=deadA&&deadB?'Entrambe le navi hanno perso tutti i componenti.':'Una nave ha perso tutti i suoi componenti.';}
- else if(!activePart(b.sides.A,'weapons')&&!activePart(b.sides.B,'weapons')){
-  b.phase='finished';b.winner='draw';b.finishReason='Entrambe le navi hanno le Armi distrutte.';
-  events.push(emit(b,'system','finish','Pareggio: entrambe le Armi sono distrutte'));
- }else if(b.ply>=2*FLEET_MAX_ROUNDS){
+ else if(b.ply>=2*FLEET_MAX_ROUNDS){
   b.phase='finished';b.winner='draw';b.finishReason='Pareggio: raggiunto il limite di '+MAX_FLEET_ROUNDS+' round.';
   events.push(emit(b,'system','finish','Pareggio dopo '+FLEET_MAX_ROUNDS+' round'));
  }
@@ -522,7 +673,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const s of Object.values(b.sides))expireSide(s,b.ply);
  const cards=takeCards(side,order.cards||[]);
- const ctx={who,nowMs,cards:[],power:0,pierce:0,multiTargets:1,pierceLeft:0,effectSerial:0};
+ const ctx={who,nowMs,cards:[],power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
  // Il terreno scelto entra prima delle altre carte e degli effetti del turno.
@@ -534,26 +685,33 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
  const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:resolveSalvo(b,ctx,events,order);
- side.lastDamage=(shot.damage||0)+(shot.escortDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))));
+ side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0);
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
 export function autoFleetTurn(b,who=b.turn){
  const side=b.sides[who],enemy=b.sides[other(who)],ownPartId=weakestPart(side)?.id;
- const target=enemy.ships[0].parts.filter(p=>!p.destroyed).sort((a,z)=>a.hp-z.hp)[0];
+ const part=enemy.ships[0].parts.filter(unitAlive).sort((a,z)=>a.hp-z.hp)[0];
+ const guard=protectingFleetUnits(enemy,b.ply).sort((a,z)=>a.hp-z.hp)[0];
+ const defaultOrder=guard?{targetKind:guard.kind,targetId:guard.id,partId:part?.id,
+  ...(guard.kind==='escort'?{escortSlot:guard.slot}:{machineSlot:guard.slot})}:
+  {targetKind:'part',targetId:part?.id,partId:part?.id};
  const candidates=side.hand.map((id,i)=>({id,i,role:cardRole(id),def:card(id)}))
   .filter(x=>!effectUnavailableReason(x.def,side,b,{ownPartId}));
- const score=x=>x.def.effectSpec.type==='repair'?6:x.role==='attack'?5:x.role==='character'?4:x.role==='defense'?3:x.role==='terrain'?1:2;
+ const score=x=>x.def.effectSpec.type==='fusion'?10:x.def.effectSpec.type==='deployMachine'?8:
+  x.def.effectSpec.type==='bypass'&&guard?7:x.def.effectSpec.type==='repair'?6:
+  x.role==='attack'?5:x.role==='character'?4:x.role==='defense'?3:x.role==='terrain'?1:2;
  candidates.sort((a,z)=>score(z)-score(a)||a.i-z.i);
- const counts={character:0,defense:0,terrain:0},limits={character:1,defense:2,terrain:1},cards=[];
+ const cards=[];
  for(const c of candidates){
   if(cards.length>=FLEET_MAX_PLAYED)break;
-  if(c.role in limits&&counts[c.role]>=limits[c.role])continue;
-  if(validateFleetTurn(b,who,{partId:target?.id||null,ownPartId,cards:[...cards,c.i],pass:!target}))continue;
-  cards.push(c.i);if(c.role in counts)counts[c.role]++;
+  if(validateFleetTurn(b,who,{...defaultOrder,ownPartId,cards:[...cards,c.i],pass:!part}))continue;
+  cards.push(c.i);
  }
- return {partId:target?.id||null,ownPartId,cards,pass:!target};
+ const bypass=cards.some(i=>card(side.hand[i]).effectSpec.type==='bypass');
+ const target=bypass&&part?{targetKind:'part',targetId:part.id,partId:part.id}:defaultOrder;
+ return {...target,ownPartId,cards,pass:!part};
 }
 export function timeoutFleetTurn(battle,nowMs){
  if(battle.phase!=='playing'||nowMs<battle.deadlineMs)return {ok:false,battle,events:[]};

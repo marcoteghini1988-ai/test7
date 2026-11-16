@@ -94,3 +94,13 @@
 .ship-collection-panel .ship-upgrade-button:not(:disabled):active{
  background:#205c76;
 }
+
+
+.ship-collection-panel .ship-progression{font-size:.65rem;line-height:1.4;color:#bad5e8}
+.ship-collection-panel .ship-progression p{margin:.2rem 0}
+.ship-collection-panel .ship-progression summary{cursor:pointer;color:#9fe5f7;padding:.25rem 0}
+.ship-collection-panel .ship-progression ol{margin:.25rem 0;padding-left:1.15rem}
+.ship-collection-panel .ship-progression li{padding:.25rem 0}
+.ship-collection-panel .ship-progression li b,.ship-collection-panel .ship-progression li span{display:block}
+.ship-collection-panel .ship-progression li[aria-current="step"]{color:#fff6d2}
+.ship-collection-panel .ship-card-operations b[data-card-vital]{font-size:.6rem;padding:.1rem}

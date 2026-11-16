@@ -2,6 +2,7 @@ import React,{useId} from 'react';
 import {META,PHASE1_SHIPS,SUIT_SIGNS,getShipDefinition,newVessel,shipSuits} from './mathDuelEngine.js';
 import {engineSurface,weaponMount,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {shipEvolution} from './shipEvolution.js';
+import {getShipProgression,shipProgressionProfile} from './fleetNext/progression.js';
 
 export const ASSET_ROOT=(import.meta.env.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 export const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',C04:'#d261ff',R01:'#ffb269',R02:'#63ffce',R03:'#d4c3ff',R04:'#9dffd4',E01:'#b097ff',E02:'#8cff83',E03:'#ffb75b',E04:'#68ffb5',L01:'#ffca63',L02:'#c394ff',L03:'#ff914e',L04:'#9df4ff'};
@@ -117,11 +118,13 @@ function ShipCardModel({vessel,engines}){
  </span>;
 }
 
-export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,onSelect,status,disabled,compact=false}){
+export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,onSelect,status,disabled,compact=false,fleetProgression=false}){
  const Tag=onSelect?'button':'article';
  const interactive=onSelect?{type:'button','aria-pressed':selected,onClick:onSelect,disabled}:{};
  const engines=Object.keys(vessel.engines);
- const totalHp=Object.values(vessel.engines).reduce((hp,engine)=>hp+engine.max,0);
+ const progression=fleetProgression?getShipProgression(vessel.id,vessel.level):null;
+ const totalHp=progression?Object.values(progression.integrityByPart).reduce((hp,n)=>hp+n,0):
+  Object.values(vessel.engines).reduce((hp,engine)=>hp+engine.max,0);
  const suits=shipSuits(vessel.id);
  const cardSuits=suits.length?suits:Object.keys(SUIT_SIGNS);
  const combos=vessel.weapons.filter(weapon=>weapon.combo);
@@ -134,19 +137,21 @@ export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,o
     <b className="ship-card-level">L{vessel.level}</b>
    </span>
    <span className="ship-card-name">{vessel.name}</span>
-   <span className="ship-card-role">{getShipDefinition(vessel.id).ruolo}</span>
+   <span className="ship-card-role">{progression?shipProgressionProfile(vessel.id).role:getShipDefinition(vessel.id).ruolo}</span>
    <span className="ship-card-stats">
     <span><b>{totalHp}</b> HP</span>
-    <span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>
+    {progression?<span><b>{progression.attackPower}</b> potenza</span>:<span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>}
    </span>
-   <span className="ship-card-operations" aria-label={`Motori ${engines.map(op=>META[op].name).join(', ')}`}>
+   {progression?<span className="ship-card-operations" aria-label={progression.vitalIds.length+' componenti vitali'}>
+    {progression.vitalIds.map(id=><b key={id} data-card-vital={id}>{({weapons:'ARS',generator:'GEN',bridge:'PLA',command:'CEN'})[id]}</b>)}
+   </span>:<span className="ship-card-operations" aria-label={`Motori ${engines.map(op=>META[op].name).join(', ')}`}>
     {engines.map(op=><b key={op} data-card-engine={op}>{META[op].sign}</b>)}
-   </span>
+   </span>}
    <span className="ship-card-meta"><span>{vessel.rarity}</span><span>{vessel.id}</span></span>
   </span>
   {onSelect&&<span className="ship-card-selection" aria-hidden="true">{selected?'✓':'+'}</span>}
   {!compact&&<ShipCardModel vessel={vessel} engines={engines}/>}
-  {!compact&&combos.length>0&&<span className="ship-card-combo">{combos.map(comboLabel).join(' · ')}</span>}
+  {!compact&&!progression&&combos.length>0&&<span className="ship-card-combo">{combos.map(comboLabel).join(' · ')}</span>}
   {status&&<span className="ship-card-status">{status}</span>}
  </Tag>;
 }

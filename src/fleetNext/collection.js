@@ -8,11 +8,19 @@ import {
  eligibleExclusives,exclusiveCard,exclusiveUnlocked,shipConfig,generalCard
 } from './rules.js';
 import {canUpgradeEffect} from './simpleEffects.js';
+import generalData from './catalogGeneral.json' with {type:'json'};
+import {PROGRESSION_GENERAL_CARDS} from './progressionCards.js';
 
 export const FLEET_INVENTORY_KEY='eclissi_fleet_collection_v2';
 export const FLEET_INVENTORY_SCHEMA=2;
 const copy=value=>JSON.parse(JSON.stringify(value));
 const starterCards=()=>deckFromCounts(STARTER_DECK.carteGenerali);
+const legacyStarterCounts=generalData.mazzoIniziale.carteGenerali;
+const isUnchangedLegacyStarter=deck=>{
+ if(!Array.isArray(deck)||deck.length!==FLEET_BASE_DECK_SIZE)return false;
+ const counts=countDeck(deck),keys=Object.keys(legacyStarterCounts);
+ return Object.keys(counts).length===keys.length&&keys.every(id=>counts[id]===legacyStarterCounts[id]);
+};
 const clampInt=(n,min,max)=>Math.max(min,Math.min(max,Math.floor(Number(n)||0)));
 export function createFleetInventory(){
  const deck=starterCards();
@@ -31,7 +39,10 @@ export function normalizeFleetInventory(value){
  }
  const candidate={...starter,owned};
  const raw=Array.isArray(value.deck)?value.deck:starter.deck;
- candidate.deck=validateBaseDeck(raw,{owned}).valid?[...raw]:starter.deck;
+ // Solo lo starter non personalizzato riceve le nuove tre carte al posto
+ // delle copie base. Mazzi personalizzati, crediti e carte possedute restano.
+ candidate.deck=isUnchangedLegacyStarter(raw)?starter.deck:
+  validateBaseDeck(raw,{owned}).valid?[...raw]:starter.deck;
  candidate.credits=clampInt(value.credits,0,1e9);
  candidate.packsOpened=clampInt(value.packsOpened,0,1e7);
  candidate.equippedMother=shipConfig(value.equippedMother)?value.equippedMother:'N00';
@@ -118,7 +129,7 @@ function drawRarity(rng){
  const n=secureRandom(rng);
  return n<.65?'Comune':n<.90?'Rara':n<.98?'Epica':'Leggendaria';
 }
-const PACK_POOL=Object.freeze(Object.groupBy(Object.values(GENERAL_CARDS),c=>c.rarita));
+const PACK_POOL=Object.freeze(Object.groupBy(Object.values({...GENERAL_CARDS,...PROGRESSION_GENERAL_CARDS}),c=>c.rarita));
 export function buyFleetPack(inventory,rng=Math.random){
  if(inventory.credits<PACK_PRICE)return {ok:false,reason:'Crediti insufficienti',inventory};
  const cards=Array.from({length:PACK_SIZE},()=>{

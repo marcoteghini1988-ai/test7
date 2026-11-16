@@ -1,21 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,TOTAL_CARD_COUNT,card,
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,PROGRESSION_CARDS,card,
  cardCopyLimit,cardRole,cardFacePath,validateBaseDeck,effectiveDeck} from './fleetNext/rules.js';
 import {describeEffect,validateEffectSpec,canUpgradeEffect} from './fleetNext/simpleEffects.js';
-import {createFleetInventory,readFleetInventory,writeFleetInventory,
+import {createFleetInventory,normalizeFleetInventory,readFleetInventory,writeFleetInventory,
  equipFleetBaseDeck,upgradeFleetExclusive,buyGeneralCard,buyFleetPack} from './fleetNext/collection.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
+import generalData from './fleetNext/catalogGeneral.json' with {type:'json'};
 
-const all=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS)];
+const all=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS)];
 function storage(){
  const data=new Map();
  return {getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,String(value)),removeItem:key=>data.delete(key)};
 }
 
-test('391 carte complete: un solo effetto esplicito, testo breve e ruolo riconosciuto',()=>{
- assert.equal(TOTAL_CARD_COUNT,391);
- assert.equal(new Set(all.map(c=>c.id)).size,391);
+test('391 carte esistenti e 6 carte di flotta: effetto esplicito e ruolo riconosciuto',()=>{
+ assert.equal(BASE_CATALOG_COUNT,391);
+ assert.equal(TOTAL_CARD_COUNT,397);
+ assert.equal(new Set(all.map(c=>c.id)).size,397);
  for(const c of all){
   assert.equal(card(c.id),c);
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
@@ -36,7 +38,7 @@ test('I dodici Boss non si comprano e non vengono estratti dai pacchetti',()=>{
  }
  for(const rng of [()=>0,()=>.7,()=>.95,()=>.99999]){
   const result=buyFleetPack(inv,rng);
-  assert.ok(result.ok);assert.ok(result.cards.every(id=>GENERAL_CARDS[id]));
+  assert.ok(result.ok);assert.ok(result.cards.every(id=>GENERAL_CARDS[id]||PROGRESSION_CARDS[id]&&!PROGRESSION_CARDS[id].shipId));
  }
 });
 
@@ -93,4 +95,35 @@ test('Un potenziamento senza beneficio non scala crediti né cambia il salvatagg
  assert.equal(cardFacePath(useful.id,2),'/assets/fleet-next-card-upgrades/'+useful.id+'-g2.svg');
  const locked=Object.values(EXCLUSIVE_CARDS).find(c=>c.minShipLevelDraft>1);
  assert.equal(upgradeFleetExclusive(inv,locked.id,locked.shipId,1).ok,false);
+});
+
+test('La migrazione dello starter aggiunge le nuove carte senza perdere proprietà o crediti',()=>{
+ const oldCounts=generalData.mazzoIniziale.carteGenerali;
+ const oldDeck=Object.entries(oldCounts).flatMap(([id,n])=>Array(n).fill(id));
+ const old={...createFleetInventory(),deck:oldDeck,owned:{...oldCounts,'boss-character-1':1},
+  credits:725,packsOpened:4,exclusiveUpgrades:{'ex-n00-02':2},
+  claimedRewards:['vittoria-confermata'],equippedMother:'L04'};
+ const untouched=JSON.stringify(old),migrated=normalizeFleetInventory(old);
+ assert.equal(JSON.stringify(old),untouched);
+ assert.equal(migrated.deck.length,40);
+ for(const id of ['prog-bypass','prog-machine-striker','prog-machine-guard']){
+  assert.ok(migrated.owned[id]>=1);assert.equal(migrated.deck.filter(c=>c===id).length,1);
+ }
+ for(const [id,n] of Object.entries(old.owned))assert.ok(migrated.owned[id]>=n,id);
+ assert.equal(migrated.credits,725);assert.equal(migrated.packsOpened,4);
+ assert.deepEqual(migrated.claimedRewards,old.claimedRewards);
+ assert.deepEqual(migrated.exclusiveUpgrades,old.exclusiveUpgrades);
+ assert.equal(migrated.equippedMother,'L04');
+ assert.deepEqual(normalizeFleetInventory(migrated),migrated,'Migrazione idempotente');
+});
+
+test('La migrazione conserva il mazzo personalizzato e rende opzionali le nuove macchine',()=>{
+ const oldCounts=generalData.mazzoIniziale.carteGenerali;
+ const deck=Object.entries(oldCounts).flatMap(([id,n])=>Array(n).fill(id));
+ deck[0]='boss-character-1';
+ const old={...createFleetInventory(),deck,owned:{...oldCounts,'boss-character-1':1}};
+ const migrated=normalizeFleetInventory(old);
+ assert.deepEqual(migrated.deck,deck);
+ for(const id of ['prog-bypass','prog-machine-striker','prog-machine-guard'])assert.ok(migrated.owned[id]>=1);
+ assert.equal(validateBaseDeck(migrated.deck,migrated).valid,true);
 });

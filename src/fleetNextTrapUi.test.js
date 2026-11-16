@@ -30,18 +30,18 @@ test('La proiezione degli slot conserva le sei posizioni anche con una sola Dife
  const slots=projectFleetSlots(side,[],'A');
  assert.equal(slots.length,6);
  assert.equal(slots[0],null);
- assert.equal(slots[1].id,'gen-077');
- assert.equal(slots[2],null);
+ assert.equal(slots[1],null);
+ assert.equal(slots[2].id,'gen-077');
  assert.equal(slots[3].id,'gen-001');
  const selected=projectFleetSlots(side,['gen-071'],'A');
- assert.equal(selected[2].id,'gen-071');
+ assert.equal(selected[1].id,'gen-071');
  assert.equal(selected[3].id,'gen-001');
 });
 
 test('La proiezione avversaria non contiene identità, origine o rarità della trappola',()=>{
  const original=JSON.stringify(side);
  const slots=projectFleetSlots(side,[],'B');
- assert.deepEqual(slots[1],{hidden:true,pending:false});
+ assert.deepEqual(slots[2],{hidden:true,pending:false});
  assert.doesNotMatch(JSON.stringify(slots),/gen-077|Ancora|Comune|source/);
  assert.equal(JSON.stringify(side),original);
  const alternate={...side,defenses:[{...side.defenses[0],id:'gen-120'}]};
@@ -68,8 +68,8 @@ test('Il proprietario consulta la propria carta senza rivelare il fronte nello s
  inspect.props.onClick();
  assert.deepEqual(inspected,{trapId:'gen-077',pending:false});
  const pending=projectFleetSlots({defenses:[],defenseSlots:[null,null],attackSlots:[null,null,null]},['gen-077']);
- assert.equal(pending[1].pending,true);
- assert.equal(pending[1].hidden,true);
+ assert.equal(pending[2].pending,true);
+ assert.equal(pending[2].hidden,true);
 });
 
 test('La rivelazione mostra il fronte e il Terreno annullato soltanto dopo l’evento',()=>{
