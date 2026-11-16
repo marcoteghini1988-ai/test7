@@ -204,8 +204,8 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
       {SHIP_CONFIGS[c.shipId]?.name||c.shipId} · L{c.level}</option>)}
     </select>
    </label>
-   <p style={small}>Le carte esclusive sbloccate vengono inserite automaticamente nel mazzo.
-    I miglioramenti manuali restano salvati passando da una nave all'altra.</p>
+   <p style={small}>Solo le esclusive già funzionanti vengono inserite automaticamente nel mazzo.
+    Le nuove schede sono collegate alla propria nave e al livello, ma attendono il motore degli effetti.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {eligibleExclusives(motherId,motherLevel).map(c=>{
      const grade=inventory.exclusiveUpgrades[c.id]||1;

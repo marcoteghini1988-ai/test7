@@ -167,7 +167,8 @@ export function fleetRewardForBattle({winner,mode='campaign',sector=1,boss=false
  return 45+Math.min(75,Math.floor(tier/4))+(boss?60:0)+(mode==='pvp'?20:0);
 }
 export function usableFleetExclusives(inventory,shipId,level){
- return eligibleExclusives(shipId,level).map(def=>({...def,grade:inventory.exclusiveUpgrades[def.id]||1}));
+ return eligibleExclusives(shipId,level).filter(def=>def.playable!==false)
+  .map(def=>({...def,grade:inventory.exclusiveUpgrades[def.id]||1}));
 }
 export function inventorySummary(inv){
  return {cards:Object.keys(inv.owned).length,copies:Object.values(inv.owned).reduce((s,x)=>s+x,0),
