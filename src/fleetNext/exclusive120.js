@@ -31,7 +31,9 @@ export const EXCLUSIVE_DESIGNS_120=Object.freeze(definition.cards.map(raw=>Objec
  shipName:shipNames.get(raw.shipId),
  rarityDraft:shipRarity.get(raw.shipId),
  isPreservedCharacter:raw.type==='Personaggio',
- executable:raw.type==='Personaggio'
+ // La versione del Personaggio già esistente resta giocabile, non ancora il suo effetto riprogettato.
+ currentCharacterPlayable:raw.type==='Personaggio',
+ executable:false
 })));
 export const EXCLUSIVE_DESIGN_BY_ID=Object.freeze(
  Object.fromEntries(EXCLUSIVE_DESIGNS_120.map(c=>[c.id,c]))
