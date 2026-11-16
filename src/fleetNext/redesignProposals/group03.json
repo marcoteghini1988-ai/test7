@@ -1,0 +1,302 @@
+[
+  {
+    "id": "nx-r04-01",
+    "shipId": "R04",
+    "minShipLevel": 1,
+    "category": "Modulo utilità",
+    "name": "Corazza dentata",
+    "effectText": "Al primo danno nemico subito da una tua unità ogni turno, infliggi un colpo leggero a un’unità nemica scelta alla posa.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-02",
+    "shipId": "R04",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Morso del Vuoto",
+    "effectText": "Colpisci un’unità. Se un tuo supporto è danneggiato, ignora una protezione scoperta di quel bersaglio.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-03",
+    "shipId": "R04",
+    "minShipLevel": 1,
+    "category": "Difesa",
+    "name": "Esca abissale",
+    "effectText": "Scegli una tua unità operativa: il prossimo attacco ordinario a un’altra tua unità deve colpire quella scelta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-04",
+    "shipId": "R04",
+    "minShipLevel": 1,
+    "category": "Trappola",
+    "name": "Denti di ritorno",
+    "effectText": "Quando un attacco distrugge una tua macchina, esegui un colpo leggero contro due unità nemiche diverse.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-05",
+    "shipId": "R04",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Ammiraglio Abissale",
+    "effectText": "Dopo il primo danno nemico a una tua unità ogni turno, puoi scartare una carta per riparare quell’unità di un punto.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-06",
+    "shipId": "R04",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Siluro di ritorsione",
+    "effectText": "Sacrifica una tua macchina danneggiata: infliggi un colpo pesante a un’unità nemica.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-07",
+    "shipId": "R04",
+    "minShipLevel": 2,
+    "category": "Modulo d’arma",
+    "name": "Arpione predatorio",
+    "effectText": "Le unità danneggiate da un tuo colpo non possono essere ritirate o sostituite fino alla fine del prossimo turno avversario.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-08",
+    "shipId": "R04",
+    "minShipLevel": 3,
+    "category": "Difesa",
+    "name": "Scudo del predatore",
+    "effectText": "Il prossimo colpo contro un tuo supporto ferito infligge al massimo un danno. Poi la difesa si consuma.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-09",
+    "shipId": "R04",
+    "minShipLevel": 4,
+    "category": "Attacco",
+    "name": "Risposta spietata",
+    "effectText": "Se un attacco avversario ha distrutto una tua unità nel suo ultimo turno, aggira le unità e colpisci un vitale.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r04-10",
+    "shipId": "R04",
+    "minShipLevel": 5,
+    "category": "Tattica",
+    "name": "Ultimo morso",
+    "effectText": "Sacrifica un supporto ferito: ripara due punti all’altro supporto e pesca una carta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-01",
+    "shipId": "E01",
+    "minShipLevel": 1,
+    "category": "Modulo utilità",
+    "name": "Proiettore di bruma",
+    "effectText": "Una volta per tuo turno puoi occultare un tuo supporto fino al prossimo tuo turno. Non agisce né protegge.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-02",
+    "shipId": "E01",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Ago nella nebbia",
+    "effectText": "Colpisci un’unità. Se nel tuo campo c’è un supporto occultato, il colpo ignora una protezione scoperta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-03",
+    "shipId": "E01",
+    "minShipLevel": 1,
+    "category": "Difesa",
+    "name": "Velo criogenico",
+    "effectText": "Scegli una tua unità. Se una raffica la colpisce più volte, soltanto il primo colpo può infliggere danno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-04",
+    "shipId": "E01",
+    "minShipLevel": 1,
+    "category": "Trappola",
+    "name": "Falso bersaglio",
+    "effectText": "Quando l’avversario rilascia un colpo preparato, annullalo. Gli altri attacchi restano disponibili.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-05",
+    "shipId": "E01",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Arconte della Bruma",
+    "effectText": "Quando giochi un Terreno, puoi mettere una carta dalla mano sotto il mazzo e pescarne una.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-06",
+    "shipId": "E01",
+    "minShipLevel": 1,
+    "category": "Tattica",
+    "name": "Dissipazione",
+    "effectText": "Rimuovi il Terreno attivo. Torna quello permanente della battaglia, oppure il campo neutro.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-07",
+    "shipId": "E01",
+    "minShipLevel": 2,
+    "category": "Attacco",
+    "name": "Nebbia polare",
+    "effectText": "Infliggi un colpo leggero a un’unità. Se subisce danno, non può ricevere protezioni nel prossimo turno avversario.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-08",
+    "shipId": "E01",
+    "minShipLevel": 3,
+    "category": "Tattica",
+    "name": "Bruma itinerante",
+    "effectText": "Rivela il tuo supporto occultato e occultane un altro fino al prossimo tuo turno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-09",
+    "shipId": "E01",
+    "minShipLevel": 4,
+    "category": "Modulo d’arma",
+    "name": "Cannone velato",
+    "effectText": "Il primo Attacco che giochi ogni tuo turno non può essere deviato su un bersaglio diverso.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e01-10",
+    "shipId": "E01",
+    "minShipLevel": 5,
+    "category": "Difesa",
+    "name": "Notte criogenica",
+    "effectText": "Nel prossimo turno avversario, ogni attacco può scegliere un solo bersaglio. Le raffiche sullo stesso bersaglio restano valide.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-01",
+    "shipId": "E02",
+    "minShipLevel": 1,
+    "category": "Modulo d’arma",
+    "name": "Bobina a catena",
+    "effectText": "Una volta per tuo turno, un colpo che danneggia un’unità genera un colpo leggero su un’altra unità.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-02",
+    "shipId": "E02",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Onda a pettine",
+    "effectText": "Infliggi un colpo leggero a ciascuna unità nemica operativa, fino a quattro. Non colpisce la madre.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-03",
+    "shipId": "E02",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Fulmine di rimbalzo",
+    "effectText": "Spara un colpo leggero a un’unità. Se la distrugge, esegui un colpo normale su un’altra unità.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-04",
+    "shipId": "E02",
+    "minShipLevel": 1,
+    "category": "Difesa",
+    "name": "Fronte di Tempesta",
+    "effectText": "Scegli un tuo supporto operativo: può ricevere al posto di una macchina alleata il prossimo colpo diretto a quella macchina.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-05",
+    "shipId": "E02",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Capitano della Tempesta",
+    "effectText": "Quando un tuo attacco danneggia almeno due unità diverse, scarta una carta e pescane una. Una volta per tuo turno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-06",
+    "shipId": "E02",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Ripresa del tuono",
+    "effectText": "Infliggi tre danni a un’unità che hai danneggiato nel turno precedente. Altrimenti infliggi un colpo leggero.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-07",
+    "shipId": "E02",
+    "minShipLevel": 2,
+    "category": "Attacco",
+    "name": "Scarica selettiva",
+    "effectText": "Distribuisci tre colpi leggeri fra due unità: due alla prima e uno alla seconda, ignorando una protezione sul colpo singolo.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-08",
+    "shipId": "E02",
+    "minShipLevel": 3,
+    "category": "Trappola",
+    "name": "Rete parafulmine",
+    "effectText": "Quando un attacco danneggia entrambi i tuoi supporti, annulla il danno al secondo supporto e scarta la trappola.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-09",
+    "shipId": "E02",
+    "minShipLevel": 4,
+    "category": "Modulo utilità",
+    "name": "Condensatore di Tempesta",
+    "effectText": "Dopo aver danneggiato tre unità diverse nello stesso turno, conserva una carica: il prossimo tuo colpo contro un’unità è pesante.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-e02-10",
+    "shipId": "E02",
+    "minShipLevel": 5,
+    "category": "Attacco",
+    "name": "Quadrante di Tempesta",
+    "effectText": "Con due supporti operativi, infliggi due colpi leggeri a ciascuna di due unità diverse.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  }
+]
