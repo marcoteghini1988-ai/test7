@@ -27,7 +27,7 @@ I moduli hanno due alloggiamenti indipendenti (arma e utilità), sono attaccabil
 - **Immagini delle nuove carte**: non create. Le carte Aurora con effetti modificati vengono mostrate in forma testuale per non attribuire al nuovo effetto il vecchio fronte illustrato.
 
 ## Verifiche
-In `src/fleetNextAuroraEffects.test.js` sono stati aggiunti 13 test mirati (moduli, attacchi, protezioni, Cartografo, Adattamento, Riconfigurazione, Cannone biforcato, esclusività). Nella sessione sono state inoltre eseguite **9 verifiche dinamiche del motore reale con dipendenze simulate**, tutte superate: montaggio, Ottica, raffica, tiro di smontaggio, corazza, Velo, Cartografo, riconfigurazione e biforcazione.
+In `src/fleetNextAuroraEffects.test.js` sono stati aggiunti 15 test mirati (moduli, attacchi, protezioni, Cartografo, Adattamento, Riconfigurazione, Cannone biforcato, esclusività). Nella sessione sono state inoltre eseguite **9 verifiche dinamiche del motore reale con dipendenze simulate**, tutte superate: montaggio, Ottica, raffica, tiro di smontaggio, corazza, Velo, Cartografo, riconfigurazione e biforcazione.
 
 **Non equivalgono a una build completa:** `npm run preflight`, `npm run verify:logic`, `npm run build` e il test visivo su telefono/browser restano da eseguire.
 
