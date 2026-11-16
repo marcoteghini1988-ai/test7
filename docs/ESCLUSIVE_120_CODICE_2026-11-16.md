@@ -1,25 +1,35 @@
-# Eclissi Stellare — integrazione nel codice delle 120 esclusive
+# Eclissi Stellare — avanzamento delle 120 carte esclusive (16 novembre 2026)
 
-## Catalogo delle dodici navicelle principali
-I 120 progetti della specifica `docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json` sono registrati in `src/fleetNext/exclusive120.js` e collegati a `src/fleetNext/rules.js`.
+## Catalogo
+Le 120 esclusive sono collegate in `src/fleetNext/exclusive120.js`: **10 diverse per ciascuna delle 12 madri principali**, con sei definizioni al livello 1 e una a ciascun livello dal 2 al 5. I cinque modelli variante mantengono i loro Personaggi precedenti. Il catalogo globale contiene 155 definizioni fra esclusive, Personaggi, Boss e carte tecniche.
 
-Ogni navicella principale dispone di **10 definizioni univoche**: sei dal livello 1, una ciascuna ai livelli 2, 3, 4 e 5. Gli ID di nave sono `N00, C01, C02, C03, R01, R02, R04, E01, E02, L01, L03, L04`. L'identità esclusiva impedisce l'uso con madri diverse.
+## Aurora-0: primo pacchetto eseguibile completo (10/120)
+L'implementazione del motore riguarda nove azioni nuove più il Personaggio **Cartografo Aurora** con effetto aggiornato. Gli ID dei Personaggi restano invariati, così non compaiono copie doppie.
 
-## Personaggi e Boss preservati
-Le dodici definizioni Personaggio già presenti nei 120 progetti condividono i loro ID esistenti `ex-...-01` (salvo la posizione della proposta in `L04`). Non vengono clonate. I loro **effetti attualmente eseguibili restano quelli precedenti**: i nuovi effetti descritti nel progetto sono registrati come specifica per la futura implementazione. Restano inoltre i cinque Personaggi delle varianti storiche, i dodici Personaggi generici e i dodici Boss.
+- **Ottica di ricognizione (L1):** modulo utilità da 2 integrità, permette di vedere e ordinare le prime due carte dopo il primo montaggio del turno.
+- **Raffica di prova (L1):** due colpi leggeri separati sulla medesima macchina o supporto, senza un tiro base aggiuntivo.
+- **Tiro di smontaggio (L1):** colpo normale con due danni contro un modulo montato raggiungibile.
+- **Velo di salvataggio (L1):** Difesa associata a un vitale e a un modulo; al prossimo colpo il modulo viene sacrificato.
+- **Adattamento immediato (L1):** mette sotto il mazzo una esclusiva dalla mano, poi permette di scegliere tra le prime tre carte.
+- **Cartografo Aurora (L1):** guarda quattro carte, prende un modulo tra esse e sposta le altre sotto il mazzo; effetto di ingresso una sola volta.
+- **Canna perforante (L2):** modulo d'arma che oltrepassa una protezione della Difesa per turno, senza aggirare i guardiani.
+- **Corazza modulare (L3):** modulo utilità da 2 integrità; assorbe il primo colpo sul vitale assegnato e viene distrutta.
+- **Cannone biforcato (L4):** modulo d'arma che permette di sostituire un tiro normale con due colpi leggeri verso bersagli differenti scelti.
+- **Riconfigurazione Aurora (L5):** sostituisce un modulo montato con uno diverso del medesimo alloggiamento presente nel mazzo, rimescolando.
 
-## Stato tecnico verificato
-- `EXCLUSIVE_DESIGNS_120`: 120 progetti esattamente, 10 per madre.
-- `EXCLUSIVE_CARDS`: 125 registrazioni (120 del gruppo principale, includendo i 12 Personaggi già esistenti; più 5 Personaggi varianti).
-- `GENERAL_CARDS`: 12 Personaggi.
-- `BOSS_CARDS`: 12; `PROGRESSION_CARDS`: 6.
-- Totale nel registro `card(id)`: **155**.
-- **108 nuove schede** importate con nome, categoria, testo dell'effetto, contragioco, requisiti, livello e brief grafico. La lettura del catalogo e l'interfaccia Shop le espongono correttamente.
-- Le 108 schede hanno `playable:false`: prima di avere gli effetti di combattimento corrispondenti, il validatore blocca il loro utilizzo, il mazzo non le pesca e non possono essere potenziate o acquistate. Non viene applicato un bonus inventato al posto della regola.
-- Nessuna illustrazione nuova: le 108 schede usano il fronte testuale provvisorio. I Personaggi e Boss conservano le proprie immagini originali.
+I moduli hanno due alloggiamenti indipendenti (arma e utilità), sono attaccabili se la madre è raggiungibile, e non aumentano il numero di vitali. Le carte modulo restano in campo fino a sostituzione o distruzione; non vengono scartate subito. Il gioco consente ancora fino a tre carte per turno e due macchine autonome.
 
-## Lavoro di meccanica ancora da implementare
-I 120 testi descrivono nuove azioni reali non contenute nel vecchio motore: moduli d'arma e utilità montati e distruttibili, attacchi distinti dalla salva base, energia, colpi preparati, occultamenti, silenzi, ridirezioni, trappole condizionali e personaggi ad attivazione evento. Richiedono un motore dedicato con convalida dei bersagli e test delle interazioni. **Non si deve considerare la mera registrazione nel catalogo come la completa implementazione di queste azioni.**
+## Disponibilità reale
+- **10/120 esclusive Aurora**: `playable:true`, assegnate esclusivamente ad Aurora e sbloccate al livello corrispondente.
+- **11 Personaggi delle altre madri**: restano utilizzabili con i loro **vecchi effetti**, in attesa della riprogettazione.
+- **99 nuove azioni delle altre madri**: schede registrate ma `playable:false`, non pescabili e non attivabili.
+- **Boss e altri Personaggi**: conservati.
+- **Immagini delle nuove carte**: non create. Le carte Aurora con effetti modificati vengono mostrate in forma testuale per non attribuire al nuovo effetto il vecchio fronte illustrato.
 
-## Verifica
-I controlli sulle cardinalità, gli ID e i riferimenti sono stati aggiornati; la sintassi JavaScript dei moduli principali è stata verificata. Build Vite, test Node end-to-end e prova grafica in browser **non eseguiti in questa sessione**.
+## Verifiche
+In `src/fleetNextAuroraEffects.test.js` sono stati aggiunti 13 test mirati (moduli, attacchi, protezioni, Cartografo, Adattamento, Riconfigurazione, Cannone biforcato, esclusività). Nella sessione sono state inoltre eseguite **9 verifiche dinamiche del motore reale con dipendenze simulate**, tutte superate: montaggio, Ottica, raffica, tiro di smontaggio, corazza, Velo, Cartografo, riconfigurazione e biforcazione.
+
+**Non equivalgono a una build completa:** `npm run preflight`, `npm run verify:logic`, `npm run build` e il test visivo su telefono/browser restano da eseguire.
+
+## Punto di ripresa
+Implementare la seconda navicella, **Lince Solare (C01)**, con nove azioni nuove e il Personaggio Pilota Helios riprogettato, rispettandone l'identità. In seguito procedere con Vespa, Corvo e le restanti flotte. Non cambiare la grafica 3D approvata. La condizione di vittoria legata ai vitali della madre non è stata modificata in questo passaggio; la futura revisione dell'obiettivo verso le macchine va implementata separatamente.
