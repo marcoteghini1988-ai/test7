@@ -392,15 +392,15 @@
     "boss-character-1",
     "boss-character-2",
     "boss-character-3",
-    "boss-character-4",
-    "boss-character-5",
     "boss-character-6",
     "boss-character-7",
     "boss-character-8",
     "boss-character-9",
-    "boss-character-10",
     "boss-character-11",
-    "boss-character-12"
+    "boss-character-14",
+    "boss-character-17",
+    "boss-character-19",
+    "boss-character-20"
   ],
   "note": "Le carte Boss e Personaggio restano. I 350 vecchi ID di altre categorie devono essere ritirati dal gioco solo con migrazione verificata."
 }
