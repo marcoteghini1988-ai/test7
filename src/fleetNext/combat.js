@@ -312,9 +312,20 @@ export function validateFleetTurn(b,who,order){
   const enemy=b.sides[other(who)],selected=selectedEnemyTarget(enemy,order,b.ply);
   if(!selected)return 'Seleziona un bersaglio avversario ancora operativo';
   const bypass=chosen.some(c=>c.effectSpec.type==='bypass');
-  if(order.targetKind==='part'&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
+  if(['part','module'].includes(selected.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
    return 'Prima colpisci i supporti o le macchine operative, oppure gioca Aggiramento';
+  if(chosen.some(c=>c.effectSpec.type==='aurora'&&c.effectSpec.action==='burst')&&!['escort','machine'].includes(selected.kind))
+   return 'Raffica di prova richiede una macchina o un supporto';
+  if(order.secondaryTargetId){
+   const secondary=selectedEnemyTarget(enemy,{targetKind:order.secondaryTargetKind,targetId:order.secondaryTargetId},b.ply);
+   if(!secondary||secondary.unit.id===selected.unit.id)return 'Secondo bersaglio assente o identico al primo';
+   if(['part','module'].includes(secondary.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
+    return 'Il secondo bersaglio è protetto dalle unità';
+   if(installedModule(side,'weapon')?.cardId!=='nx-n00-09')return 'Cannone biforcato non montato';
+  }
  }
+ if(order?.pass&&chosen.some(c=>c.effectSpec.type==='aurora'&&['burst','dismantle'].includes(c.effectSpec.action)))
+  return 'Un comando offensivo non può essere passato';
  return null;
 }
 function selectedEnemyTarget(side,order={},ply=0){
