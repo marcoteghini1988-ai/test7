@@ -552,6 +552,50 @@ export default function OfficialFleetBattle3D({
       {ownTargets.map(p=><option key={p.id} value={p.id}>{VITAL_LABELS[p.id]} · {p.hp}/{p.maxHp}</option>)}
      </select>
     </label>}
+    {selectedActions.includes('sacrificial-veil')&&<label>Modulo da sacrificare:
+     <select value={auroraOptions.sacrificeSlot} onChange={e=>setAuroraOption('sacrificeSlot',e.target.value)}>
+      <option value="">Primo modulo operativo</option>
+      {sacrificeOptions.map(m=><option key={m.id} value={m.slot}>{m.name} · {m.hp}/2</option>)}
+     </select>
+    </label>}
+    {opticsActive&&player.deck.length>1&&<label>Ottica — ordina le prime due carte:
+     <select value={auroraOptions.deckTopFlip?'reverse':'keep'} onChange={e=>setAuroraOption('deckTopFlip',e.target.value==='reverse')}>
+      <option value="keep">{player.deck.slice(0,2).map(id=>card(id)?.name||card(id)?.nome||id).join(' → ')}</option>
+      <option value="reverse">{player.deck.slice(0,2).reverse().map(id=>card(id)?.name||card(id)?.nome||id).join(' → ')}</option>
+     </select>
+    </label>}
+    {selectedActions.includes('adapt')&&<>
+     <label>Esclusiva da mettere sotto il mazzo:
+      <select value={auroraOptions.exchangeCardId} onChange={e=>setAuroraOption('exchangeCardId',e.target.value)}>
+       <option value="">Prima esclusiva disponibile</option>
+       {adaptationOptions.map((id,i)=><option key={id+i} value={id}>{card(id)?.name||card(id)?.nome||id}</option>)}
+      </select>
+     </label>
+     <label>Scegli fra le prime tre:
+      <select value={auroraOptions.peekPickId} onChange={e=>setAuroraOption('peekPickId',e.target.value)}>
+       <option value="">Prima carta disponibile</option>
+       {topThree.map((id,i)=><option key={id+i} value={id}>{card(id)?.name||card(id)?.nome||id}</option>)}
+      </select>
+     </label>
+    </>}
+    {selectedActions.includes('cartographer')&&<label>Cartografo — cerca tra quattro carte:
+     <select value={auroraOptions.cartographerPickId} onChange={e=>setAuroraOption('cartographerPickId',e.target.value)}>
+      <option value="">Primo modulo individuato</option>
+      {cartographerOptions.map((id,i)=><option key={id+i} value={id}>{card(id)?.name||card(id)?.nome||id}</option>)}
+     </select>
+    </label>}
+    {selectedActions.includes('reconfigure')&&<label>Riconfigurazione — modulo sostitutivo:
+     <select value={auroraOptions.reconfigureSelection} onChange={e=>setAuroraOption('reconfigureSelection',e.target.value)}>
+      <option value="">Primo modulo compatibile</option>
+      {reconfigChoices.map(c=><option key={c.slot+c.cardId} value={c.slot+':'+c.cardId}>{c.name} · {c.slot}</option>)}
+     </select>
+    </label>}
+    {forkActive&&forkChoices.length>0&&<label>Cannone biforcato — secondo bersaglio:
+     <select value={auroraOptions.secondarySelection} onChange={e=>setAuroraOption('secondarySelection',e.target.value)}>
+      <option value="">Non dividere il colpo</option>
+      {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select>
+    </label>}
    </div>}
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
