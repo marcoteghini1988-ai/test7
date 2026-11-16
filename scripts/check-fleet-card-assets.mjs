@@ -10,6 +10,7 @@ const cards=[
  ...JSON.parse(readFileSync(resolve(ROOT,'src/fleetNext/catalogGeneral.json'),'utf8')).carte,
  ...JSON.parse(readFileSync(resolve(ROOT,'src/fleetNext/catalogExclusive.json'),'utf8')).cards
 ];
+const activeIds=new Set(cards.map(c=>c.id));
 const faces=resolve(ROOT,'public/assets/fleet-next-cards');
 const illustrations=resolve(ROOT,'public/assets/fleet-card-illustrations');
 const fail=m=>{throw new Error('[CARTE] '+m)};
@@ -26,8 +27,8 @@ function checkEffect(svg,card,grade=1){
 }
 const approvedRoot=resolve(ROOT,'public/assets/fleet-approved-fronts');
 const approvedManifest=JSON.parse(readFileSync(resolve(approvedRoot,'manifest.json'),'utf8'));
-const approvedMap=new Map(approvedManifest.cards.map(item=>[item.id,item]));
-const approvedFiles=readdirSync(approvedRoot).filter(f=>f.endsWith('.webp'));
+const approvedMap=new Map(approvedManifest.cards.filter(item=>activeIds.has(item.id)).map(item=>[item.id,item]));
+const approvedFiles=readdirSync(approvedRoot).filter(f=>f.endsWith('.webp')&&activeIds.has(f.slice(0,-5)));
 if(approvedMap.size!==approvedManifest.cards.length||approvedFiles.length!==approvedMap.size)
  fail('Fronti approvati duplicati o mancanti');
 
@@ -40,10 +41,10 @@ function kind(c){
   /Supporto|Scudiera|Tattica|Strategia/i.test(cat)?'support':'attack';
 }
 const src=new Set(cards.map(c=>c.id));
-if(cards.length!==379||src.size!==379)fail('Catalogo fuori sincronizzazione');
-const faceIds=readdirSync(faces).filter(x=>x.endsWith('.svg')).map(x=>x.slice(0,-4));
-if(faceIds.length!==379||faceIds.some(x=>!src.has(x)))fail('Fronte SVG extra o mancante');
-const assets=readdirSync(illustrations).filter(x=>x.endsWith('.webp'));
+if(cards.length!==29||src.size!==29)fail('Catalogo Personaggi fuori sincronizzazione');
+const faceIds=readdirSync(faces).filter(x=>x.endsWith('.svg')&&activeIds.has(x.slice(0,-4))).map(x=>x.slice(0,-4));
+if(faceIds.length!==29||faceIds.some(x=>!src.has(x)))fail('Fronte SVG attivo mancante');
+const assets=readdirSync(illustrations).filter(x=>x.endsWith('.webp')&&activeIds.has(x.slice(0,-5)));
 const perFunction={},hdIds=[],missing=[];
 for(const c of cards){
  const id=c.id,svg=readFileSync(resolve(faces,id+'.svg'),'utf8'),type=kind(c);
@@ -89,7 +90,7 @@ for(const c of cards){
 }
 const upgrades=resolve(ROOT,'public/assets/fleet-next-card-upgrades');
 const exclusive=cards.filter(c=>c.shipId);
-const upgradeFiles=readdirSync(upgrades).filter(f=>f.endsWith('.svg'));
+const upgradeFiles=readdirSync(upgrades).filter(f=>f.endsWith('.svg')&&activeIds.has(f.replace(/-g[23]\.svg$/,'')));
 if(upgradeFiles.length!==exclusive.length*2)fail('Varianti di grado mancanti o extra');
 for(const card of exclusive)for(const grade of [2,3]){
  const filename=resolve(upgrades,card.id+'-g'+grade+'.svg');
