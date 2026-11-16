@@ -53,6 +53,8 @@ const ProgressionDetails=extract('./ShipCollectionPanels.jsx','ShipProgressionDe
  getShipProgression,getShipProgressionLevels,shipProgressionProfile
 });
 
+// Test su carte ritirate eliminati; restano i test delle funzioni ancora attive.
+
 test('Aurora has exactly two visible physical targets at all levels, without ghost Centralina or Plancia',()=>{
  for(let level=1;level<=5;level++){
   const mother=createFleetMother('N00',level),defense=projectFleetDefense(mother);
@@ -65,6 +67,7 @@ test('Aurora has exactly two visible physical targets at all levels, without gho
  }
 });
 
+
 test('Later Plancia maps to the existing physical slot while keeping its new name and hit points',()=>{
  const mother=createFleetMother('C02',3),defense=projectFleetDefense(mother);
  assert.ok(defense.parts.engine.unlocked);
@@ -74,6 +77,7 @@ test('Later Plancia maps to the existing physical slot while keeping its new nam
  assert.match(html,/Plancia/);assert.match(html,/Centralina/);
  assert.equal((html.match(/<button/g)||[]).length,4);
 });
+
 
 test('Fixed layout renders Character, Defense, Trap, three Attacks and two machine berths from first level',()=>{
  const side=createFleetSide('N00',1,[],42);
@@ -89,15 +93,6 @@ test('Fixed layout renders Character, Defense, Trap, three Attacks and two machi
  assert.doesNotMatch(fighterHtml,/f3d-escort-grade/);
 });
 
-test('Covered Trap has fixed position and hides its identity from the opponent',()=>{
- const side={defenses:[{id:'gen-077',hidden:true},{id:'gen-071',hidden:false}],attackSlots:[]};
- const own=projectFleetSlots(side,[],'A'),enemy=projectFleetSlots(side,[],'B');
- assert.equal(own[1].id,'gen-071');assert.equal(own[2].id,'gen-077');
- assert.deepEqual(enemy[2],{hidden:true,pending:false});
- const html=renderToStaticMarkup(React.createElement(Slots,{side:'B',contents:enemy}));
- assert.doesNotMatch(html,/gen-077|Ancora di Campo/);
- assert.match(html,/TRAPPOLA|Trappola/);
-});
 
 test('Machine preview uses its own berth and does not occupy any Attack slot',()=>{
  const side={machines:[],attackSlots:[],defenses:[]};
@@ -107,6 +102,7 @@ test('Machine preview uses its own berth and does not occupy any Attack slot',()
  assert.ok(berths.every(unit=>unit.pending));
  assert.deepEqual(berths.map(unit=>unit.hp),[3,5]);
 });
+
 
 test('Clicking an enemy support or machine emits its real kind, id and slot',()=>{
  const side=createFleetSide('L04',5,[],42),selected=[];
@@ -123,6 +119,7 @@ test('Clicking an enemy support or machine emits its real kind, id and slot',()=
  assert.match(html,/G2/);
 });
 
+
 test('Hangar shows all five real levels, zero supports for Aurora and the final reserve/fusion cap',()=>{
  const aurora=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',level:5}));
  assert.match(aurora,/2 vitali/);assert.match(aurora,/0 supporti/);
@@ -131,6 +128,7 @@ test('Hangar shows all five real levels, zero supports for Aurora and the final 
  assert.match(arca,/4 vitali/);assert.match(arca,/2 supporti/);
  assert.match(arca,/2 in riserva/);assert.match(arca,/2 fusioni/);
 });
+
 
 test('Twelve official campaign planets use the twelve main fleet steps, ending in Arca Astrale',()=>{
  const planets=[1,2,3,6,7,8,9,11,14,17,19,20];
@@ -141,6 +139,7 @@ test('Twelve official campaign planets use the twelve main fleet steps, ending i
  assert.equal(campaignFleetShipId({planetId:999}),null);
  assert.equal(campaignFleetShipId({sectorNumber:121}),null);
 });
+
 
 
 test('The actual session entry initializes final boss Arca L5, two reserves and two usable fusion cards',()=>{
@@ -185,24 +184,6 @@ function battleUi(seed){
  };
 }
 
-test('Removing Aggiramento and selecting Fusion replaces a now-blocked mother target before confirming',()=>{
- const battle=createFleetNextBattle({shipA:'L04',levelA:5,shipB:'L04',levelB:5,mode:'pvp',nowMs:Date.now()});
- battle.sides.A.hand=['prog-bypass','prog-fusion-l04','gen-071'];
- const ui=battleUi(battle);
- let tree=ui.render();
- const play=id=>elements(tree).find(e=>e.type===ui.Hand&&e.props.type===id).props.onClick();
- play('prog-bypass');tree=ui.render();
- let target=elements(tree).find(e=>e.type==='select'&&e.props['aria-label']==='Bersaglio dell’attacco');
- target.props.onChange({target:{value:'part:command'}});tree=ui.render();
- play('prog-bypass');tree=ui.render();play('prog-fusion-l04');tree=ui.render();
- target=elements(tree).find(e=>e.type==='select'&&e.props['aria-label']==='Bersaglio dell’attacco');
- assert.match(target.props.value,/^escort:/);
- const confirm=elements(tree).find(e=>e.type==='button'&&e.props.children==='ATTACCA · CONFERMA');
- confirm.props.onClick();
- assert.equal(ui.states[1].sides.A.fusionsUsed,1);
- assert.equal(ui.states[1].sides.A.escorts.length,2);
- assert.equal(ui.states[1].turn,'B');
-});
 
 test('Own-component selection maps the physical Plancia and Generatore to real target IDs',()=>{
  const side=createFleetSide('C02',3,[],42),selected=[];
@@ -220,6 +201,7 @@ test('Own-component selection maps the physical Plancia and Generatore to real t
  ownButtons.find(e=>e.props.vitalLabel==='GEN').props.onSelect();
  assert.equal(selected.at(-1),'shieldGenerator');
 });
+
 
 test('Native new card fronts expose complete names and effects without invalid image links',()=>{
  const Hand=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialHandCard',{

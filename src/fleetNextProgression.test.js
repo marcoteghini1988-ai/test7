@@ -34,9 +34,9 @@ test('Aurora ha sempre soltanto Arsenale e Generatore, senza supporti o fusioni'
   assert.equal(requiredReserveCount('N00',level),0);
   assert.equal(row.fusionLimit,0);
  }
- assert.equal(eligibleExclusives('N00',5).length,5,'Le vecchie esclusive non devono richiedere supporti impossibili');
- assert.ok(exclusiveUnlocked('ex-n00-04','N00',3));
- assert.ok(exclusiveUnlocked('ex-n00-05','N00',5));
+ assert.equal(eligibleExclusives('N00',5).length,1,'Resta soltanto il Personaggio esclusivo Aurora');
+ assert.ok(exclusiveUnlocked('ex-n00-01','N00',1));
+ assert.equal(exclusiveUnlocked('ex-n00-04','N00',3),false);
 });
 
 test('I vitali passano da due a tre e a quattro solo insieme alle funzioni necessarie',()=>{
@@ -138,7 +138,7 @@ test('Tutti gli slot esistono da subito; le nuove carte entrano nello starter se
  assert.equal(deck.length,40);
  assert.equal(validateBaseDeck(deck).valid,true);
  for(const id of ['prog-machine-striker','prog-machine-guard','prog-bypass']){
-  assert.equal(deck.filter(x=>x===id).length,1);
+  assert.equal(deck.filter(x=>x===id).length,5);
   assert.equal(generalCard(id),card(id));
   assert.equal(exclusiveCard(id),null);
   assert.equal(cardCopyLimit(id),5);
@@ -147,9 +147,9 @@ test('Tutti gli slot esistono da subito; le nuove carte entrano nello starter se
  assert.equal(cardRole('prog-bypass'),'attack');
  assert.equal(cardRole('prog-machine-guard'),'support');
  assert.equal(cardCopyLimit('prog-fusion-l04'),2);
- assert.equal(BASE_CATALOG_COUNT,391);
+ assert.equal(BASE_CATALOG_COUNT,41);
  assert.equal(PROGRESSION_CARD_COUNT,6);
- assert.equal(TOTAL_CARD_COUNT,397);
+ assert.equal(TOTAL_CARD_COUNT,47);
 });
 
 test('Le letture sono immutabili e i livelli fuori intervallo non sbloccano supporti extra',()=>{
