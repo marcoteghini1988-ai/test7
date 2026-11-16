@@ -359,11 +359,19 @@ export default function OfficialFleetBattle3D({
   const partId=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?
    selectedVital:target.parts.find(p=>!p.destroyed)?.id;
   if(!partId){setMessage('Nessun componente disponibile');return;}
+  const reconfig=reconfigChoices.find(c=>c.slot+':'+c.cardId===auroraOptions.reconfigureSelection);
+  const secondary=targetChoices.find(t=>t.kind+':'+t.id===auroraOptions.secondarySelection);
   const result=resolveFleetNextTurn(battle,'A',
    {partId,targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
     escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
     machineSlot:actualTarget?.kind==='machine'?actualTarget.slot:undefined,
-    ownPartId:actualOwnVital,cards:chosenCards},Date.now());
+    moduleSlot:actualTarget?.kind==='module'?actualTarget.slot:undefined,
+    ownPartId:actualOwnVital,cards:chosenCards,
+    deckTopFlip:auroraOptions.deckTopFlip,sacrificeSlot:auroraOptions.sacrificeSlot,
+    exchangeCardId:auroraOptions.exchangeCardId,peekPickId:auroraOptions.peekPickId,
+    cartographerPickId:auroraOptions.cartographerPickId,
+    reconfigureSlot:reconfig?.slot,reconfigureCardId:reconfig?.cardId,
+    secondaryTargetKind:secondary?.kind,secondaryTargetId:secondary?.id},Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
@@ -450,6 +458,17 @@ export default function OfficialFleetBattle3D({
  const playerSlots=projectFleetSlots(player,chosenTypes,'A');
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
+ const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const reconfigChoices=reconfigurationOptions(player,card,player.ships[0].level);
+ const sacrificeOptions=liveModules(player);
+ const adaptationOptions=player.hand.filter((id,i)=>!chosenCards.includes(i)&&card(id)?.shipId==='N00');
+ const topThree=player.deck.slice(0,3);
+ const cartographerOptions=player.deck.slice(0,4).filter(id=>isAuroraModule(id));
+ const opticsActive=selectedActions.some(a=>['optics','piercing-barrel','modular-armor','forked-cannon'].includes(a))&&
+  (selectedActions.includes('optics')||installedModule(player,'utility')?.cardId==='nx-n00-01');
+ const forkChoices=targetChoices.filter(t=>actualTarget&&t.id!==actualTarget.id);
+ const forkActive=installedModule(player,'weapon')?.cardId==='nx-n00-09'&&
+  !selectedActions.some(a=>['burst','dismantle'].includes(a));
  const terrain=battle.terrain?.id;
  const boss=battle.bossId?{name:battle.bossName||'BOSS',ability:'ABILITÀ',
   description:describeBossPassive(battle.bossId)}:null;
@@ -479,7 +498,7 @@ export default function OfficialFleetBattle3D({
    <div className="live-midline">
     <span className="live-turn-indicator" data-active={battle.turn}>
      {ended?'FINE PARTITA':(myTurn?'TU':'AVVERSARIO')+' · '+secondsLeft+'s'} ·
-     {' '}{actualTarget?.kind==='part'?(VITAL_LABELS[actualTarget.id]||'VITALI'):actualTarget?.kind==='machine'?'MACCHINA':'SUPPORTO'}
+     {' '}{actualTarget?.kind==='part'?(VITAL_LABELS[actualTarget.id]||'VITALI'):actualTarget?.kind==='machine'?'MACCHINA':actualTarget?.kind==='module'?'MODULO':'SUPPORTO'}
     </span>
     <button className="live-terrain-slot" type="button"
      title={'Terreno attivo: '+readableTerrain+' · Tocca per leggere le regole'}
@@ -519,7 +538,7 @@ export default function OfficialFleetBattle3D({
     <select aria-label="Bersaglio dell’attacco" value={actualTarget?actualTarget.kind+':'+actualTarget.id:''}
      disabled={!myTurn} onChange={event=>selectTarget(event.target.value)}>
      {targetChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
-      {t.kind==='part'?'Madre · '+VITAL_LABELS[t.id]:t.name} · {t.hp}/{t.maxHp}
+      {t.kind==='part'?'Madre · '+VITAL_LABELS[t.id]:t.kind==='module'?'Modulo · '+t.name:t.name} · {t.hp}/{t.maxHp}
      </option>)}
     </select>
    </label>}
