@@ -19,13 +19,16 @@ jobs:
       - name: Prepara sorgenti e dipendenze per i test
         run: |
           python3 - <<'PY'
-          import os, tarfile, subprocess
+          import os, tarfile, subprocess, json
           names=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+          with open('/tmp/eclissi-source-manifest.json','w') as manifest:
+              json.dump({'commit':subprocess.check_output(['git','rev-parse','HEAD']).decode().strip(),'files':[n for n in names if n]},manifest)
           with tarfile.open('/tmp/eclissi-progression-source.tar.gz','w:gz') as out:
               for name in names:
                   if name and os.path.isfile(name) and not name.startswith('public/') and not name.startswith('docs/screenshots/') and os.path.getsize(name)<4000000:
                       out.add(name,arcname=name)
               out.add('node_modules',arcname='node_modules')
+              out.add('/tmp/eclissi-source-manifest.json',arcname='source-manifest.json')
           PY
       - uses: actions/upload-artifact@v4
         with:
