@@ -4,6 +4,7 @@ import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression} from './progression.js';
+import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
@@ -75,7 +76,8 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const escorts=Array.from({length:progression.escortCount},(_,i)=>build(i,progression.escortGrades[i]||1));
  const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
- const side={ships:[mother],escorts,reserveEscorts,machines:[],fusionsUsed:0,fusionLimit:progression.fusionLimit,
+ const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
+  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,fusionsUsed:0,fusionLimit:progression.fusionLimit,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
   lastPlayed:[],attackSlots:[null,null,null],defenseSlots:[null,null],
@@ -98,6 +100,8 @@ export function availableFleetTargets(side,ply=0){
   ...(side.machines||[]).filter(unitAlive).map(unit=>({kind:'machine',unit}))];
  return [...units.map(({kind,unit})=>({kind,id:unit.id,slot:unit.slot,name:unit.name,
   hp:unit.hp,maxHp:unit.maxHp,unit,blocked:false})),
+  ...liveModules(side).map(unit=>({kind:'module',id:unit.id,slot:unit.slot,name:unit.name,
+   hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0})),
   ...side.ships[0].parts.filter(unitAlive).map(unit=>({kind:'part',id:unit.id,name:VITAL_LABELS[unit.id],
    hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0}))];
 }
@@ -213,6 +217,8 @@ function normalizeSide(side){
  for(const key of ['protections','reactions','charges','buffs','defenses','discard','machines','reserveEscorts'])side[key]??=[];
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
+ side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
+ side.auroraVeil??=null;
 }
 function enforceDestroyedSystems(side,ply=0){
  if(!operational(side.ships[0],'generator')){
@@ -235,6 +241,10 @@ function selectedOwnPart(side,target,ownPartId){
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
  if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
+ if(def.effectSpec.type==='aurora'){
+  const reason=auroraPrecondition(def,side,card,side.ships[0].level);
+  if(reason)return reason;
+ }
  const invalid=validateEffectSpec(def.effectSpec);
  if(invalid)return invalid;
  const s=effectiveEffectSpec(def,side.exclusiveUpgrades?.[def.id]||1);
@@ -309,9 +319,9 @@ export function validateFleetTurn(b,who,order){
 }
 function selectedEnemyTarget(side,order={},ply=0){
  const kind=order.targetKind||(order.escortSlot!=null?'escort':order.machineSlot!=null?'machine':'part');
- if(kind==='escort'||kind==='machine'){
-  const list=kind==='escort'?side.escorts:side.machines||[];
-  const slot=kind==='escort'?order.escortSlot:order.machineSlot;
+ if(kind==='escort'||kind==='machine'||kind==='module'){
+  const list=kind==='escort'?side.escorts:kind==='machine'?side.machines||[]:liveModules(side);
+  const slot=kind==='escort'?order.escortSlot:kind==='machine'?order.machineSlot:order.moduleSlot;
   const unit=list.find(e=>order.targetId?e.id===order.targetId:e.slot===slot);
   return unitAlive(unit)?{kind,unit}:null;
  }
@@ -337,6 +347,7 @@ function discardDefense(side,token){
 function expireSide(side,ply){
  normalizeSide(side);
  for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
+ if(side.auroraVeil&&side.auroraVeil.untilPly<=ply)side.auroraVeil=null;
  side.protections=side.protections.filter(s=>s.untilPly>ply&&s.remaining>0);
  side.reactions=side.reactions.filter(s=>s.untilPly>ply);
  side.buffs=side.buffs.filter(s=>s.untilPly==null||s.untilPly>ply);
