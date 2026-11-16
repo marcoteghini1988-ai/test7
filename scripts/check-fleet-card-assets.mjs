@@ -29,7 +29,7 @@ const approvedRoot=resolve(ROOT,'public/assets/fleet-approved-fronts');
 const approvedManifest=JSON.parse(readFileSync(resolve(approvedRoot,'manifest.json'),'utf8'));
 const approvedMap=new Map(approvedManifest.cards.filter(item=>activeIds.has(item.id)).map(item=>[item.id,item]));
 const approvedFiles=readdirSync(approvedRoot).filter(f=>f.endsWith('.webp')&&activeIds.has(f.slice(0,-5)));
-if(approvedMap.size!==approvedManifest.cards.length||approvedFiles.length!==approvedMap.size)
+if(approvedMap.size!==approvedManifest.cards.filter(item=>activeIds.has(item.id)).length||approvedFiles.length!==approvedMap.size)
  fail('Fronti approvati duplicati o mancanti');
 
 function kind(c){
