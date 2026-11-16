@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import design from '../docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json' with {type:'json'};
+import {EXCLUSIVE_CARDS} from './fleetNext/rules.js';
 
 const ships=['N00','C01','C02','C03','R01','R02','R04','E01','E02','L01','L03','L04'];
 const types=['Modulo utilità','Modulo d’arma','Attacco','Difesa','Trappola','Tattica','Personaggio','Fusione'];
@@ -26,4 +27,13 @@ test('Catalogo di sostituzione: 120 carte ragionate, dieci per madre',()=>{
  }
  assert.equal(design.cards.filter(c=>c.type==='Personaggio').length,12);
  assert.equal(design.cards.filter(c=>c.type==='Fusione').length,3);
+});
+
+test('I 12 Personaggi delle nuove esclusive riutilizzano le identità già esistenti',()=>{
+ const existing=Object.values(EXCLUSIVE_CARDS).filter(c=>/Personaggio/i.test(c.category));
+ const next=design.cards.filter(c=>c.type==='Personaggio');
+ for(const character of next){
+  const match=existing.find(c=>c.shipId===character.shipId&&c.name.toLocaleLowerCase('it')===character.name.toLocaleLowerCase('it'));
+  assert.ok(match,character.id+' deve rimanere lo stesso Personaggio del catalogo esistente');
+ }
 });
