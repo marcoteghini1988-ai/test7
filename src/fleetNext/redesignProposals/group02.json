@@ -1,0 +1,302 @@
+[
+  {
+    "id": "nx-c03-01",
+    "shipId": "C03",
+    "minShipLevel": 1,
+    "category": "Modulo d’arma",
+    "name": "Antenna di disturbo",
+    "effectText": "Il primo colpo che danneggia un’unità ogni tuo turno ne silenzia la passiva fino alla fine del prossimo turno avversario.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-02",
+    "shipId": "C03",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Dardo intermittente",
+    "effectText": "Infliggi un colpo leggero a un’unità e silenziane la passiva per il prossimo turno avversario.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-03",
+    "shipId": "C03",
+    "minShipLevel": 1,
+    "category": "Difesa",
+    "name": "Canale di riserva",
+    "effectText": "Il prossimo blocco temporaneo contro un tuo supporto viene annullato. Non ripara la Centralina.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-04",
+    "shipId": "C03",
+    "minShipLevel": 1,
+    "category": "Trappola",
+    "name": "Eco di ritorno",
+    "effectText": "Quando una carta avversaria ti applica un disturbo, annulla quel disturbo e scarta la trappola.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-05",
+    "shipId": "C03",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Comandante Risonante",
+    "effectText": "Quando un tuo effetto silenzia una passiva, guarda la prima carta del mazzo: lasciala oppure mettila sotto. Una volta per turno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-06",
+    "shipId": "C03",
+    "minShipLevel": 1,
+    "category": "Tattica",
+    "name": "Analisi di frequenza",
+    "effectText": "Guarda una Trappola avversaria senza attivarla né rimuoverla. Poi scarta una carta dalla mano e pescane una.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-07",
+    "shipId": "C03",
+    "minShipLevel": 2,
+    "category": "Attacco",
+    "name": "Cortocircuito mirato",
+    "effectText": "Infliggi un colpo leggero a una macchina. Se la danneggi, disattivala fino alla fine del prossimo turno avversario.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-08",
+    "shipId": "C03",
+    "minShipLevel": 3,
+    "category": "Tattica",
+    "name": "Richiamo inverso",
+    "effectText": "Anticipa una sola attivazione della passiva del primo supporto; salta la sua prossima attivazione ordinaria.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-09",
+    "shipId": "C03",
+    "minShipLevel": 4,
+    "category": "Modulo utilità",
+    "name": "Interruttore di sicurezza",
+    "effectText": "Se il tuo Generatore è bloccato temporaneamente, puoi distruggere questo modulo per rimuovere quel blocco.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c03-10",
+    "shipId": "C03",
+    "minShipLevel": 5,
+    "category": "Tattica",
+    "name": "Blackout selettivo",
+    "effectText": "Scegli un modulo d’arma nemico: disattivalo nel prossimo turno avversario. Le altre armi restano operative.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-01",
+    "shipId": "R01",
+    "minShipLevel": 1,
+    "category": "Modulo d’arma",
+    "name": "Capacitore binario",
+    "effectText": "Puoi conservare un solo colpo preparato per un tuo turno aggiuntivo. Distruggere questo modulo cancella il colpo conservato.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-02",
+    "shipId": "R01",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Tiro d’assedio",
+    "effectText": "Prepara un colpo pesante contro un’unità. Lo eseguirai all’inizio del prossimo tuo turno, se l’Arsenale funziona.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-03",
+    "shipId": "R01",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Salva di taratura",
+    "effectText": "Spara un colpo leggero. Se danneggia un’unità, il tuo colpo preparato contro quella stessa unità infligge due danni aggiuntivi.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-04",
+    "shipId": "R01",
+    "minShipLevel": 1,
+    "category": "Difesa",
+    "name": "Camera blindata",
+    "effectText": "Proteggi il tuo modulo che conserva una carica: il prossimo colpo contro quel modulo viene annullato.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-05",
+    "shipId": "R01",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Artigliere Binario",
+    "effectText": "Quando prepari un colpo, guarda tre carte: puoi prendere una Difesa e mettere le altre sotto. Una volta per tuo turno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-06",
+    "shipId": "R01",
+    "minShipLevel": 1,
+    "category": "Tattica",
+    "name": "Correzione balistica",
+    "effectText": "Cambia il bersaglio di un tuo colpo preparato scegliendo un’altra unità. La data di rilascio non cambia.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-07",
+    "shipId": "R01",
+    "minShipLevel": 2,
+    "category": "Attacco",
+    "name": "Doppia camera",
+    "effectText": "Prepara due colpi leggeri contro la stessa unità, da eseguire all’inizio del prossimo tuo turno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-08",
+    "shipId": "R01",
+    "minShipLevel": 3,
+    "category": "Difesa",
+    "name": "Falco guardiano",
+    "effectText": "Il primo supporto intercetta il prossimo colpo diretto al Generatore, anche con Aggiramento.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-09",
+    "shipId": "R01",
+    "minShipLevel": 4,
+    "category": "Tattica",
+    "name": "Caricatore d’emergenza",
+    "effectText": "Annulla un tuo colpo preparato e metti la sua carta sotto il mazzo. Poi pesca una carta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r01-10",
+    "shipId": "R01",
+    "minShipLevel": 5,
+    "category": "Attacco",
+    "name": "Triangolazione Falco",
+    "effectText": "Con entrambi i supporti operativi, prepara un colpo pesante su un’unità e un colpo leggero su un’altra.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-01",
+    "shipId": "R02",
+    "minShipLevel": 1,
+    "category": "Modulo utilità",
+    "name": "Capacitore Manta",
+    "effectText": "Al primo danno nemico subito ogni turno, conserva un’energia. Massimo due; distruggendo il modulo perdi l’energia.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-02",
+    "shipId": "R02",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Arco di scarica",
+    "effectText": "Colpisci un’unità. Puoi spendere un’energia per silenziarne la passiva nel prossimo turno avversario, se subisce danno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-03",
+    "shipId": "R02",
+    "minShipLevel": 1,
+    "category": "Difesa",
+    "name": "Schermo di assorbimento",
+    "effectText": "Blocca un colpo contro un tuo supporto. Se il Capacitore è montato, quel blocco carica un’energia.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-04",
+    "shipId": "R02",
+    "minShipLevel": 1,
+    "category": "Trappola",
+    "name": "Messa a terra",
+    "effectText": "Quando un attacco colpisce più bersagli, spendi un’energia per annullare tutti i suoi colpi secondari.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-05",
+    "shipId": "R02",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Navigatrice Manta",
+    "effectText": "Alla fine di ogni tuo turno, puoi trasferire un’energia dal Capacitore a un supporto: riparalo di un punto.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-06",
+    "shipId": "R02",
+    "minShipLevel": 1,
+    "category": "Tattica",
+    "name": "Polarità inversa",
+    "effectText": "Sposta una protezione scoperta da un tuo supporto a un altro supporto. Se era danneggiato, rimuovi anche il suo disturbo temporaneo.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-07",
+    "shipId": "R02",
+    "minShipLevel": 2,
+    "category": "Modulo d’arma",
+    "name": "Forcella ionica",
+    "effectText": "Spendendo un’energia, un tuo colpo normale può diventare due colpi leggeri su due unità diverse. Una volta per tuo turno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-08",
+    "shipId": "R02",
+    "minShipLevel": 3,
+    "category": "Difesa",
+    "name": "Campo Manta",
+    "effectText": "Spendi un’energia: nel prossimo turno avversario, il primo colpo contro il tuo primo supporto infligge al massimo un danno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-09",
+    "shipId": "R02",
+    "minShipLevel": 4,
+    "category": "Attacco",
+    "name": "Scarica totale",
+    "effectText": "Spendi due energie: infliggi tre danni a una macchina e, se sopravvive, disattivala per il prossimo turno avversario.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-r02-10",
+    "shipId": "R02",
+    "minShipLevel": 5,
+    "category": "Tattica",
+    "name": "Riserva dielettrica",
+    "effectText": "Scarta una tua protezione scoperta ancora carica: trasferisci fino a due delle sue cariche nel Capacitore come energia.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  }
+]
