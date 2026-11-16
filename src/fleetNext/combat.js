@@ -642,21 +642,46 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   if(p.untilPly<=b.ply||p.remaining<=0)continue;
   const matches=targetKind==='escort'?p.target==='escort'&&p.escortSlot===target.slot:
    targetKind==='machine'?p.target==='machine'&&p.machineSlot===target.slot:
+   targetKind==='module'?p.target==='module'&&p.moduleSlot===target.slot:
    p.target==='all'||p.target==='part'&&p.partId===target.id;
   if(!matches)continue;
   if(p.kind==='dodge'&&(!activePart(defender,'generator')||b.terrain?.id==='T01'))continue;
   p.remaining--;
-  const bypass=targetKind==='part'&&ctx.pierceLeft>0;
-  if(bypass)ctx.pierceLeft--;
+  const barrel=installedModule(b.sides[ctx.who],'weapon');
+  const canBarrel=targetKind==='part'&&barrel?.cardId==='nx-n00-07'&&
+   barrel.activatedPly!==b.ply&&operational(b.sides[ctx.who].ships[0],'weapons');
+  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel);
+  if(bypass){if(ctx.pierceLeft>0)ctx.pierceLeft--;else barrel.activatedPly=b.ply;}
   events.push(emit(b,ctx.who,bypass?'pierce':'block',bypass?'Il colpo ignora una protezione':'La protezione blocca il colpo',
    {cardId:p.id,partId:targetKind==='part'?target.id:null,escortSlot:targetKind==='escort'?target.slot:null}));
   if(p.remaining<=0)discardDefense(defender,p.source);
   if(!bypass)return true;
  }
+ if(targetKind==='part'){
+  const veil=defender.auroraVeil;
+  const sacrificed=liveModules(defender).find(m=>m.id===veil?.moduleId);
+  if(veil&&sacrificed&&veil.partId===target.id&&veil.untilPly>b.ply){
+   removeModule(defender,sacrificed.slot);
+   discardDefense(defender,veil.source);
+   defender.auroraVeil=null;
+   events.push(emit(b,ctx.who,'block','Velo di Salvataggio: '+sacrificed.name+' si sacrifica',
+    {cardId:veil.id,partId:target.id}));
+   return true;
+  }
+  const armor=installedModule(defender,'utility');
+  if(armor?.cardId==='nx-n00-08'&&armor.attachedPartId===target.id){
+   removeModule(defender,'utility');
+   events.push(emit(b,ctx.who,'block','Corazza modulare distrutta al posto del vitale',
+    {cardId:'nx-n00-08',partId:target.id}));
+   return true;
+  }
+ }
  return false;
 }
 function damageFleetUnit(side,kind,unit,amount,ply){
  const damage=applyDamage(unit,amount);
+ if(kind==='module'&&unit.destroyed&&installedModule(side,unit.slot)?.id===unit.id)
+  removeModule(side,unit.slot);
  if(kind==='machine'&&unit.destroyed&&!unit.cardDiscarded){
   if(unit.sourceCardId)side.discard.push(unit.sourceCardId);
   unit.cardDiscarded=true;
@@ -714,33 +739,35 @@ function resolveSalvo(b,ctx,events,order){
  if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: l’attacco fallisce'));return {damage:0,partId:order.partId,played:visiblePlayed(ctx.cards),power};}
  if(emergency)events.push(emit(b,ctx.who,'emergency-shot','Tiro di emergenza: l’Arsenale è distrutto'));
  const guards=protectingFleetUnits(defender,b.ply);
- if(selected.kind==='part'&&guards.length&&!ctx.bypass)selected={kind:guards[0].kind,unit:guards[0].unit};
+ if(['part','module'].includes(selected.kind)&&guards.length&&!ctx.bypass)selected={kind:guards[0].kind,unit:guards[0].unit};
  // Aggiramento abilita un solo componente dietro le unità: multicolpo non
  // moltiplica un'eccezione di accesso in un attacco all'intera madre.
  const count=guards.length&&selected.kind==='part'&&ctx.bypass?1:
   Math.min(4,(emergency?1:ctx.multiTargets)+(b.terrain?.id==='T10'?1:0));
  const targets=selected.kind==='part'?
   [selected,...enemy.parts.filter(p=>unitAlive(p)&&p!==selected.unit).slice(0,count-1).map(unit=>({kind:'part',unit}))]:
-  [selected,...guards.filter(g=>g.unit!==selected.unit).slice(0,count-1).map(g=>({kind:g.kind,unit:g.unit}))];
+  selected.kind==='module'?[selected]:
+   [selected,...guards.filter(g=>g.unit!==selected.unit).slice(0,count-1).map(g=>({kind:g.kind,unit:g.unit}))];
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  const hits=[];
  for(const {kind,unit} of targets){
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
-  const amount=kind==='part'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
+  const amount=kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
   const damage=damageFleetUnit(defender,kind,unit,amount,b.ply);
   if(damage)hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
  }
  const damage=hits.filter(h=>h.kind==='part').reduce((sum,h)=>sum+h.damage,0);
  const escortDamage=hits.filter(h=>h.kind==='escort').reduce((sum,h)=>sum+h.damage,0);
  const machineDamage=hits.filter(h=>h.kind==='machine').reduce((sum,h)=>sum+h.damage,0);
+ const moduleDamage=hits.filter(h=>h.kind==='module').reduce((sum,h)=>sum+h.damage,0);
  const main=selected.unit,targetKind=selected.kind;
  const data={shipIndex:0,shipName:enemy.name,partId:targetKind==='part'?main.id:order.partId||null,
-  targetKind,targetId:main.id,damage,escortDamage,machineDamage,destroyed:main.destroyed,
+  targetKind,targetId:main.id,damage,escortDamage,machineDamage,moduleDamage,destroyed:main.destroyed,
   escortSlot:targetKind==='escort'?main.slot:null,machineSlot:targetKind==='machine'?main.slot:null,
   escortName:targetKind==='escort'?main.name:null,escortDestroyed:targetKind==='escort'&&main.destroyed,
   played:visiblePlayed(ctx.cards),targets:hits,terrainBonus:terrain.value,power,emergency};
  events.push(emit(b,ctx.who,'impact',hits.length?'Attacco: '+hits.map(h=>h.name+' −'+h.damage).join(', '):'Tutti i colpi sono stati bloccati',data));
- triggerReactions(b,ctx.who,damage+escortDamage+machineDamage,events);
+ triggerReactions(b,ctx.who,damage+escortDamage+machineDamage+moduleDamage,events);
  return data;
 }
 function finishTurn(b,ctx,events){
