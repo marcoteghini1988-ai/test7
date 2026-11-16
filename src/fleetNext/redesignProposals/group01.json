@@ -1,0 +1,302 @@
+[
+  {
+    "id": "nx-n00-01",
+    "shipId": "N00",
+    "minShipLevel": 1,
+    "category": "Modulo utilità",
+    "name": "Ottica di ricognizione",
+    "effectText": "Dopo il primo montaggio di ogni tuo turno, guarda le prime due carte del mazzo e rimettile nell’ordine scelto.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-02",
+    "shipId": "N00",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Raffica di prova",
+    "effectText": "Spara due colpi leggeri contro la stessa unità. Ogni colpo incontra separatamente le sue protezioni.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-03",
+    "shipId": "N00",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Tiro di smontaggio",
+    "effectText": "Colpisci normalmente. Se scegli un modulo aggiunto della madre, infliggi due danni invece di uno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-04",
+    "shipId": "N00",
+    "minShipLevel": 1,
+    "category": "Difesa",
+    "name": "Velo di salvataggio",
+    "effectText": "Scegli un vitale e un tuo modulo. Il prossimo colpo diretto a quel vitale distrugge il modulo senza danneggiare il vitale.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-05",
+    "shipId": "N00",
+    "minShipLevel": 1,
+    "category": "Tattica",
+    "name": "Adattamento immediato",
+    "effectText": "Metti sotto il mazzo un’esclusiva di Aurora dalla mano. Guarda tre carte: prendine una e rimetti le altre sotto.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-06",
+    "shipId": "N00",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Cartografo Aurora",
+    "effectText": "Quando entra, guarda quattro carte: prendi un modulo di Aurora e metti le altre sotto il mazzo.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-07",
+    "shipId": "N00",
+    "minShipLevel": 2,
+    "category": "Modulo d’arma",
+    "name": "Canna perforante",
+    "effectText": "Una volta per tuo turno, un tuo colpo ignora una protezione della Difesa scoperta. Non aggira le unità.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-08",
+    "shipId": "N00",
+    "minShipLevel": 3,
+    "category": "Modulo utilità",
+    "name": "Corazza modulare",
+    "effectText": "Associala a un vitale. Assorbe il prossimo colpo che lo raggiunge, poi viene distrutta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-09",
+    "shipId": "N00",
+    "minShipLevel": 4,
+    "category": "Modulo d’arma",
+    "name": "Cannone biforcato",
+    "effectText": "Una volta per tuo turno, trasforma un colpo normale in due colpi leggeri contro due bersagli diversi e raggiungibili.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-n00-10",
+    "shipId": "N00",
+    "minShipLevel": 5,
+    "category": "Tattica",
+    "name": "Riconfigurazione Aurora",
+    "effectText": "Scarta un modulo montato. Cerca nel mazzo un diverso modulo di Aurora dello stesso alloggiamento, montalo e rimescola.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-01",
+    "shipId": "C01",
+    "minShipLevel": 1,
+    "category": "Modulo utilità",
+    "name": "Propulsori radenti",
+    "effectText": "Dopo il tuo primo Aggiramento riuscito, riprendi in mano una tua macchina d’assalto. Conserva i danni.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-02",
+    "shipId": "C01",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Sorpasso solare",
+    "effectText": "Aggira le unità e infliggi un colpo leggero a un vitale. Non può ricevere Perforazione.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-03",
+    "shipId": "C01",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Artiglio di coda",
+    "effectText": "Infliggi tre danni a un’unità già danneggiata, oppure un colpo leggero a un’altra unità.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-04",
+    "shipId": "C01",
+    "minShipLevel": 1,
+    "category": "Trappola",
+    "name": "Falsa scia",
+    "effectText": "Quando un colpo raggiunge la madre, devialo su un altro tuo vitale vivo scelto alla posa.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-05",
+    "shipId": "C01",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Pilota Helios",
+    "effectText": "Una volta per tuo turno, dopo aver giocato un Aggiramento, scarta una carta e pescane una.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-06",
+    "shipId": "C01",
+    "minShipLevel": 1,
+    "category": "Tattica",
+    "name": "Rotta marcata",
+    "effectText": "Segna un vitale nemico. Nel prossimo tuo turno, il primo colpo leggero verso quel vitale può aggirare le unità.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-07",
+    "shipId": "C01",
+    "minShipLevel": 2,
+    "category": "Modulo d’arma",
+    "name": "Lama di prua",
+    "effectText": "Una volta per tuo turno, se un tuo colpo danneggia un’unità, rimuovi una protezione residua da quell’unità.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-08",
+    "shipId": "C01",
+    "minShipLevel": 3,
+    "category": "Difesa",
+    "name": "Passaggio scoperto",
+    "effectText": "Se nel tuo ultimo turno hai aggirato le unità, annulla il prossimo Aggiramento avversario. La sua carta viene scartata.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-09",
+    "shipId": "C01",
+    "minShipLevel": 4,
+    "category": "Attacco",
+    "name": "Disimpegno armato",
+    "effectText": "Colpisci normalmente un’unità; poi puoi riprendere in mano il tuo modulo d’arma, conservandone i danni.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c01-10",
+    "shipId": "C01",
+    "minShipLevel": 5,
+    "category": "Attacco",
+    "name": "Incursione cremisi",
+    "effectText": "Scarta un tuo modulo operativo: colpisci un vitale con Aggiramento e ignora una protezione scoperta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-01",
+    "shipId": "C02",
+    "minShipLevel": 1,
+    "category": "Modulo d’arma",
+    "name": "Lente prismatica",
+    "effectText": "Una volta per tuo turno, un colpo bloccato lascia una scheggia: il prossimo colpo su quel bersaglio ignora una protezione scoperta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-02",
+    "shipId": "C02",
+    "minShipLevel": 1,
+    "category": "Attacco",
+    "name": "Scheggia riflessa",
+    "effectText": "Colpisci un’unità. Se il colpo è bloccato, infliggi un colpo leggero a un’altra unità scelta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-03",
+    "shipId": "C02",
+    "minShipLevel": 1,
+    "category": "Difesa",
+    "name": "Prisma di deviazione",
+    "effectText": "Scegli una tua macchina operativa. Il prossimo colpo diretto a un’altra tua macchina viene deviato su quella scelta.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-04",
+    "shipId": "C02",
+    "minShipLevel": 1,
+    "category": "Trappola",
+    "name": "Riflesso falso",
+    "effectText": "Quando un attacco sceglie più bersagli, annulla un suo colpo secondario. Il colpo principale resta valido.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-05",
+    "shipId": "C02",
+    "minShipLevel": 1,
+    "category": "Personaggio",
+    "name": "Artigiana Prisma",
+    "effectText": "Quando una tua protezione blocca un colpo, sposta una sua carica residua su un altro bersaglio valido. Una volta per turno.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-06",
+    "shipId": "C02",
+    "minShipLevel": 1,
+    "category": "Tattica",
+    "name": "Taglio della lente",
+    "effectText": "Rimuovi una protezione da un’unità nemica. Quell’unità resta operativa e continua a proteggere la madre.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-07",
+    "shipId": "C02",
+    "minShipLevel": 2,
+    "category": "Attacco",
+    "name": "Geometria spezzata",
+    "effectText": "Spara tre colpi leggeri: assegnane due a un’unità e uno a una seconda unità.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-08",
+    "shipId": "C02",
+    "minShipLevel": 3,
+    "category": "Tattica",
+    "name": "Custodia del Prisma",
+    "effectText": "Sposta una tua protezione scoperta dal Generatore al primo supporto. Conserva cariche e scadenza.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-09",
+    "shipId": "C02",
+    "minShipLevel": 4,
+    "category": "Modulo utilità",
+    "name": "Specchio segmentato",
+    "effectText": "La prima volta per turno che riceve danno, perde al massimo un punto di integrità.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  },
+  {
+    "id": "nx-c02-10",
+    "shipId": "C02",
+    "minShipLevel": 5,
+    "category": "Attacco",
+    "name": "Rosa di cristallo",
+    "effectText": "Con entrambi i supporti operativi, spara tre colpi leggeri su bersagli distinti e raggiungibili.",
+    "status": "design_requires_logic",
+    "imageReady": false
+  }
+]
