@@ -1,5 +1,8 @@
 name: Progressione - sorgenti per verifica
 on:
+  push:
+    paths:
+      - .github/workflows/progression-source-check.yml
   workflow_dispatch:
 permissions:
   contents: read
