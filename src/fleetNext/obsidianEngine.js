@@ -54,6 +54,14 @@ export function obsidianModuleActive(side,id,ply=0){
   powered(side,slot==='weapon'?'weapons':'generator');
 }
 export const obsidianPending=(side)=>side?.obsidian?.pending||null;
+// Paratia: esattamente il secondo colpo verso lo stesso vitale e nello stesso ply.
+export function obsidianBulkheadTryHit(defense,ply,partId){
+ if(!defense||defense.obsidianPartId!==partId||defense.untilPly<=ply)return false;
+ if(defense.obsidianSeenPly!==ply){defense.obsidianSeenPly=ply;return false;}
+ if(defense.obsidianBlockedPly===ply)return false;
+ defense.obsidianBlockedPly=ply;
+ return true;
+}
 export function obsidianSealed(side,ply=0){
  return side?.ships?.[0]?.id==='L03'&&
   !!side.defenses?.some(d=>d.id==='nx-l03-09'&&!d.hidden&&d.untilPly>ply);
