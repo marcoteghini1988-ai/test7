@@ -14,7 +14,7 @@ export const NEXT_CARD_COSTS=Object.freeze({
 
 export function nextExclusiveCount(shipId,level){
  return eligibleExclusives(shipId,level).filter(c=>c.playable!==false&&
-  !(shipId==='L04'&&c.id==='prog-fusion-l04'))
+  !c.id.startsWith('prog-fusion-'))
   .reduce((n,c)=>n+(c.maxCopiesInAutoPackageDraft||1),0);
 }
 export function nextGenericCapacity(shipId,level){
