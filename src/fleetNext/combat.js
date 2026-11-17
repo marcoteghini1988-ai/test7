@@ -3408,6 +3408,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  const shot=mergeFalcoShots(releasedShot,ownShot);
+ if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
  side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)));
  finishTurn(b,ctx,events);
@@ -3422,7 +3423,8 @@ export function autoFleetTurn(b,who=b.turn){
   {targetKind:'part',targetId:part?.id,partId:part?.id};
  const candidates=side.hand.map((id,i)=>({id,i,role:cardRole(id),def:card(id)}))
   .filter(x=>!effectUnavailableReason(x.def,side,b,{ownPartId}));
- const score=x=>x.def.effectSpec.type==='fusion'?10:x.def.effectSpec.type==='deployMachine'?8:
+ const score=x=>x.def.effectSpec.type==='royal'&&
+  x.def.effectSpec.action==='crown-fusion'?12:x.def.effectSpec.type==='fusion'?10:x.def.effectSpec.type==='deployMachine'?8:
   x.def.effectSpec.type==='bypass'&&guard?7:x.def.effectSpec.type==='repair'?6:
   x.role==='attack'?5:x.role==='character'?4:x.role==='defense'?3:x.role==='terrain'?1:2;
  candidates.sort((a,z)=>score(z)-score(a)||a.i-z.i);
@@ -3443,7 +3445,13 @@ export function autoFleetTurn(b,who=b.turn){
    card(side.hand[i]).effectSpec?.type==='shark'&&
    card(side.hand[i]).effectSpec?.action==='ruthless-response');
   const preview=alreadyDirect&&part?{targetKind:'part',targetId:part.id,partId:part.id}:target;
-  if(validateFleetTurn(b,who,{...preview,ownPartId,cards:[...cards,c.i],pass:!part}))continue;
+  const royalRelayNeeded=side.ships[0].id==='L01'&&!royalPart(side,'weapons')&&
+   royalCapableModule(side,'nx-l01-01',b.ply)&&
+   royalSupports(side,b.ply).length>0&&
+   [...cards,c.i].some(i=>ROYAL_ATTACK_ACTIONS.includes(card(side.hand[i])?.effectSpec?.action));
+  if(validateFleetTurn(b,who,{...preview,ownPartId,cards:[...cards,c.i],pass:!part,
+   royalRelay:royalRelayNeeded,
+   royalRelayEscortId:royalRelayNeeded?royalSupports(side,b.ply)[0].id:null}))continue;
   cards.push(c.i);
  }
  const bypass=cards.some(i=>card(side.hand[i]).effectSpec.type==='bypass'||
@@ -3466,7 +3474,17 @@ export function autoFleetTurn(b,who=b.turn){
   !cards.some(i=>card(side.hand[i])?.effectSpec?.action==='wandering-mist')&&
   !nebulaHideReason(side,b.ply);
  const nebulaAiEscort=nebulaAiHide?nebulaVisibleSupports(side,b.ply)[0]:null;
+ const royalAiRelay=side.ships[0].id==='L01'&&!royalPart(side,'weapons')&&
+  royalCapableModule(side,'nx-l01-01',b.ply)&&royalSupports(side,b.ply).length>0&&
+  cards.some(i=>ROYAL_ATTACK_ACTIONS.includes(card(side.hand[i])?.effectSpec?.action));
+ const royalSpare=side.hand.filter((id,i)=>!cards.includes(i));
+ const royalAiSovereign=side.ships[0].id==='L01'&&royalSupports(side,b.ply).length>=2&&
+  !!royalSpare.length&&(side.commander?.id==='ex-l01-01'&&side.commander.untilPly>b.ply||
+  cards.some(i=>side.hand[i]==='ex-l01-01'));
  return {...target,ownPartId,cards,pass:!part,
+  royalRelay:royalAiRelay,royalRelayEscortId:royalAiRelay?royalSupports(side,b.ply)[0].id:null,
+  royalSovereignTrade:royalAiSovereign,royalDiscardId:royalSpare[0]||null,
+  royalPickId:side.deck[0]||null,
   nebulaHide:!!nebulaAiEscort,nebulaHideEscortId:nebulaAiEscort?.id,
   heliosTrade:helm&&bypass&&side.hand.length>cards.length,
   radentRecall:bypass&&installedModule(side,'utility')?.cardId==='nx-c01-01'&&machines.length>0,
