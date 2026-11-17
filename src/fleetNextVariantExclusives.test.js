@@ -5,7 +5,7 @@ import {VARIANT_EXCLUSIVE_CARDS,VARIANT_EXCLUSIVE_IDS} from './fleetNext/variant
 import {EXCLUSIVE_CARDS,exclusiveUnlocked,effectiveDeck,card} from './fleetNext/rules.js';
 import {validateEffectSpec,describeEffect} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
-import {createFleetSide} from './fleetNext/combat.js';
+import {createFleetSide,createFleetNextBattle,resolveFleetNextTurn} from './fleetNext/combat.js';
 
 test('170 esclusive reali: 10 per ognuna delle 17 famiglie, comprese cinque varianti complete',()=>{
  assert.equal(SHIP_PROGRESSION_IDS.length,17);
@@ -52,5 +52,20 @@ test('La rarità evolve automaticamente in quattro stadi fino al massimo di ogni
   const seen=new Set(Array.from({length:max},(_,i)=>exclusiveRarityAtLevel(c,i+1)));
   assert.deepEqual([...seen],['Comune','Rara','Epica','Leggendaria'],shipId);
   assert.equal(exclusiveRarityAtLevel(c,max+100),'Leggendaria',shipId);
+ }
+});
+
+test('Le cinque varianti possono giocare realmente una loro carta nel motore di battaglia',()=>{
+ for(const shipId of VARIANT_EXCLUSIVE_IDS){
+  const id='nx-'+shipId.toLowerCase()+'-02',level=shipMaxLevel(shipId);
+  const battle=createFleetNextBattle({shipA:shipId,levelA:level,shipB:'N00',levelB:20,
+   deckA:[],deckB:[],seed:59,mode:'pvp'});
+  battle.sides.A.hand=[id];
+  const target=battle.sides.B.escorts[0];
+  const result=resolveFleetNextTurn(battle,'A',{
+   cards:[0],targetKind:'escort',targetId:target.id,partId:'weapons',pass:true
+  },1000);
+  assert.equal(result.ok,true,shipId+': '+result.reason);
+  assert.ok(result.battle.sides.A.discard.includes(id),shipId+' non ha giocato la carta');
  }
 });
