@@ -64,7 +64,8 @@ test('Eclisse Reale ha dieci esclusive eseguibili, 6 L1 / 10 L5 e una Fusione st
   assert.equal(exclusiveUnlocked(id,'E02',5),false);
  }
  assert.equal(effectiveDeck([],'L01',shipMaxLevel('L01')).filter(id=>IDS.includes(id)).length,10);
- assert.ok(effectiveDeck([],'L01',5).includes('prog-fusion-l01'));
+ assert.equal(effectiveDeck([],'L01',5).includes('prog-fusion-l01'),false);
+ assert.ok(effectiveDeck([],'L01',5).includes('nx-l01-10'));
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(x=>x.kind==='character').length,12);
  assert.equal(Object.values(EXCLUSIVE_CARDS).filter(x=>x.kind==='character').length,17);
