@@ -139,9 +139,9 @@ test('Adattamento non consuma carte se tutte le altre esclusive sono già in gio
  assert.match(r.reason,/Adattamento/);
  assert.equal(JSON.stringify(b),before);
 });
-test('Esclusive non ancora pronte restano non giocabili anche se nel catalogo',()=>{
- const b=make({shipA:'L04'});
+test('Tutte le esclusive sono eseguibili, ma restano vincolate alla propria nave',()=>{
+ const b=make({shipA:'N00'});
  const def=card('nx-l04-02');
- assert.equal(def.playable,false);
- assert.match(effectUnavailableReason(def,b.sides.A,b),/ancora da implementare/);
+ assert.notEqual(def.playable,false);
+ assert.match(effectUnavailableReason(def,b.sides.A,b),/solo con Arca Astrale/);
 });
