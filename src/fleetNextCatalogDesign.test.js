@@ -63,7 +63,7 @@ test('Una carta esclusiva non può essere utilizzata da una navicella diversa e 
  assert.equal(def.effectProposed,sample.effectText);
  assert.equal(def.playable,false);
  assert.equal(cardFacePath(sample.id),null);
- assert.equal(exclusiveUnlocked(sample.id,'L04',5),false);
+ assert.equal(exclusiveUnlocked(sample.id,'L03',5),false);
  const correct=eligibleExclusives(sample.shipId,5).some(c=>c.id===sample.id);
  assert.equal(correct,true);
  const deck=deckFromCounts(STARTER_DECK.carteGenerali);
