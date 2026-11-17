@@ -12,7 +12,7 @@ test('Nessuna delle 350 vecchie carte e raggiungibile dal catalogo di gioco',()=
  assert.equal(new Set(ids).size,350);
  for(const id of ids)assert.equal(card(id),null,id+' ritirata');
  assert.equal(Object.keys(GENERAL_CARDS).length,12);
- assert.equal(Object.keys(EXCLUSIVE_CARDS).length,125);
+ assert.equal(Object.keys(EXCLUSIVE_CARDS).length,170);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
 });
 test('I vecchi fronti approvati non restano nel repository operativo',()=>{
