@@ -2037,6 +2037,201 @@ function royalSovereignTurn(b,ctx,events){
    viewedCount:top.length+1,bottomCount:top.length,netCards:0}));
 }
 
+
+// Titano Ossidiana: attacchi differiti, difese a consumo e fusione senza riserve.
+function obsidianChosenTarget(enemy,kind,id){
+ const units=obsidianEnemyUnits(enemy);
+ return units.find(t=>t.kind===kind&&t.unit.id===id)||null;
+}
+function obsidianOnPreparation(b,who,releasePly,events,cardId){
+ const defender=b.sides[other(who)],attacker=b.sides[who];
+ const d=defender.defenses.find(d=>d.id==='nx-l03-07'&&d.hidden&&
+  d.trigger==='obsidian-preparing'&&d.armedAtPly<b.ply);
+ if(!d)return;
+ const machine=attacker.machines?.find(m=>unitAlive(m)&&m.id===d.obsidianMachineId);
+ if(!machine)return;
+ machine.obsidianChainUntilPly=releasePly;
+ discardDefense(defender,d.source);
+ events.push(emit(b,other(who),'trap-reveal',
+  'Catene di posizione: '+machine.name+' bloccata fino al rilascio della preparazione',{
+   cardId:d.id,machineId:machine.id,releasePly,preparedCardId:cardId}));
+}
+function activateObsidianCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],enemy=b.sides[other(who)],action=def.effectSpec.action;
+ const state=ensureObsidianState(side);
+ const note=(text,extra={})=>events.push(emit(b,who,'card',
+  (def.nome||def.name)+' · '+text,{cardId:def.id,...extra}));
+ if(isObsidianModule(def.id)){
+  const result=mountModule(side,def);
+  if(!result.ok)throw Error(result.reason);
+  note('Montato '+result.entry.name,{
+   moduleId:result.entry.id,moduleSlot:result.entry.slot});
+  return;
+ }
+ if(OBSIDIAN_ATTACK_ACTIONS.includes(action)){
+  if(action==='siege-fracture'){
+   const target=obsidianChosenTarget(enemy,order.targetKind,order.targetId);
+   if(!target)throw Error('Frattura richiede una unità nemica viva');
+   const visible=enemy.protections.some(p=>p.remaining>0&&p.untilPly>b.ply&&
+    enemy.defenses.some(d=>d.source===p.source&&!d.hidden&&d.untilPly>b.ply)&&
+    (target.kind==='escort'&&p.target==='escort'&&p.escortSlot===target.unit.slot||
+     target.kind==='machine'&&p.target==='machine'&&p.machineSlot===target.unit.slot||
+     p.target==='all'));
+   ctx.obsidianFractureDeclared=visible?
+    {kind:target.kind,id:target.unit.id}:null;
+   ctx.obsidianAttacks.push({id:def.id,action});
+   note(visible?'Corazza esterna marcata, difese ancora valide':'Frattura ordinaria');
+   return;
+  }
+  if(state.pending)throw Error('Hai già un colpo preparato');
+  const target=obsidianChosenTarget(enemy,order.targetKind,order.targetId);
+  if(!target||action==='black-howitzer'&&target.kind!=='machine')
+   throw Error('Bersaglio di preparazione Ossidiana non disponibile');
+  const fused=action==='titan-verdict'?obsidianFusedEscort(side,b.ply):null;
+  if(action==='titan-verdict'&&!fused)
+   throw Error('Sentenza richiede Bastione d’Assedio fuso e operativo');
+  const q={cardId:def.id,action,kind:target.kind,id:target.unit.id,
+   createdPly:b.ply,releasePly:b.ply+2,
+   shots:action==='titan-verdict'?2:1,fusedId:fused?.id||null,
+   serial:++state.serial};
+  state.pending=q;
+  ctx.obsidianPrepared=true;
+  events.push(emit(b,who,'obsidian-prepare','Titano Ossidiana prepara '+
+   (def.nome||def.name)+' verso '+target.unit.name,{
+    cardId:def.id,targetKind:target.kind,targetId:target.unit.id,
+    releasePly:q.releasePly,shotCount:q.shots}));
+  obsidianOnPreparation(b,who,q.releasePly,events,def.id);
+  return;
+ }
+ if(action==='obsidian-bulkhead'){
+  const part=side.ships[0].parts.find(p=>p.id===(order.obsidianPartId||order.ownPartId)&&unitAlive(p))||
+   side.ships[0].parts.find(unitAlive);
+  const d=side.defenses.find(d=>d.source===source);
+  if(!part||!d)throw Error('Paratia richiede un vitale valido');
+  d.obsidianPartId=part.id;d.obsidianSeenPly=-999;d.obsidianBlockedPly=-999;
+  note('Secondo colpo contro '+VITAL_LABELS[part.id]+' annullato nel prossimo turno nemico',{
+   partId:part.id});
+  return;
+ }
+ if(action==='obsidian-magister'){
+  state.magisterSwap=order.obsidianMagisterSwap===true;
+  note('Dopo una Difesa che blocca: osserva e'+
+   (state.magisterSwap?' scambia':' conserva')+' le prime due carte, senza pescare');
+  return;
+ }
+ if(action==='position-chains'){
+  const machine=enemy.machines?.find(m=>m.id===order.obsidianChainMachineId&&unitAlive(m))||
+   enemy.machines?.find(unitAlive);
+  const d=side.defenses.find(d=>d.source===source);
+  if(!machine||!d)throw Error('Catene richiede una macchina avversaria viva');
+  d.obsidianMachineId=machine.id;
+  events.push(emit(b,who,'trap-set','Catene di posizione posate su una macchina avversaria',
+   {cardId:def.id,targetKind:'machine',targetId:machine.id,privateTo:who}));
+  return;
+ }
+ if(action==='obsidian-fusion'){
+  const result=fuseFleetSupports(side,b.ply);
+  if(!result.ok)throw Error(result.reason);
+  const fused=result.fused;
+  fused.name='Bastione d’Assedio · Titano Ossidiana';
+  fused.obsidianBastion=true;
+  fused.obsidianGuardUntilPly=0;
+  fused.obsidianGuardUsedPly=-999;
+  events.push(emit(b,who,'fusion','Fusione Ossidiana: Bastione d’Assedio formato',{
+   cardId:def.id,fusedId:fused.id,stage:result.stage,
+   escortCount:side.escorts.length,reserveCount:side.reserveEscorts.length,
+   passives:fused.fusionSkills.length}));
+  return;
+ }
+ if(action==='sealed-hatches'){
+  const d=side.defenses.find(d=>d.source===source);
+  if(!d)throw Error('Portelli sigillati non schierati');
+  d.obsidianSealed=true;
+  note('Nel prossimo turno nemico i moduli non sono bersagliabili direttamente');
+  return;
+ }
+ throw Error('Azione Titano Ossidiana non riconosciuta: '+action);
+}
+function obsidianUseBastionGuard(b,ctx,events,order={}){
+ if(!order.obsidianGuard)return;
+ const side=b.sides[ctx.who],fused=obsidianFusedEscort(side,b.ply);
+ if(!fused)throw Error('Bastione fuso assente o disabilitato');
+ const state=ensureObsidianState(side);
+ if(state.lastBastionGuardPly===b.ply)throw Error('Bastione già pronto');
+ state.lastBastionGuardPly=b.ply;
+ fused.obsidianGuardUntilPly=b.ply+2;
+ fused.obsidianGuardUsedPly=-999;
+ ctx.obsidianGuardArmed=true;
+ events.push(emit(b,ctx.who,'obsidian-guard',
+  'Bastione d’Assedio rinuncia alle passive offensive; primo danno nemico limitato a 1',{
+   cardId:'nx-l03-08',fusedId:fused.id,
+   untilPly:fused.obsidianGuardUntilPly}));
+}
+function obsidianMagisterOnBlock(b,defender,events,defenseId){
+ if(defender.ships[0].id!=='L03'||defender.commander?.id!=='ex-l03-01'||
+  defender.commander.untilPly<=b.ply||
+  !operational(defender.ships[0],characterSystem(defender)))return;
+ const state=ensureObsidianState(defender);
+ if(state.magisterUsedPly===b.ply)return;
+ state.magisterUsedPly=b.ply;
+ const seen=defender.deck.slice(0,2),swapped=state.magisterSwap&&seen.length===2;
+ if(swapped)[defender.deck[0],defender.deck[1]]=
+  [defender.deck[1],defender.deck[0]];
+ const who=b.sides.A===defender?'A':'B';
+ events.push(emit(b,who,'obsidian-magister',
+  'Magistro Ossidiana osserva '+seen.length+
+  ' carte e '+(swapped?'ne inverte l’ordine':'conserva l’ordine'),{
+   cardId:'ex-l03-01',triggerDefenseId:defenseId,seenCount:seen.length,
+   flipped:swapped,privateTo:who,drawn:0}));
+}
+function obsidianBulkheadBlock(b,ctx,events,defender,kind,unit){
+ if(kind!=='part'||defender.ships[0].id!=='L03')return false;
+ const d=defender.defenses.find(d=>d.id==='nx-l03-04'&&!d.hidden&&
+  d.untilPly>b.ply&&d.obsidianPartId===unit.id);
+ if(!d)return false;
+ if(d.obsidianSeenPly!==b.ply){d.obsidianSeenPly=b.ply;return false;}
+ if(d.obsidianBlockedPly===b.ply)return false;
+ d.obsidianBlockedPly=b.ply;
+ discardDefense(defender,d.source);
+ const who=other(ctx.who);
+ events.push(emit(b,who,'block','Paratia d’ossidiana ferma il secondo colpo su '+
+  (VITAL_LABELS[unit.id]||unit.id),{
+   cardId:d.id,partId:unit.id,secondHitBlocked:true}));
+ obsidianMagisterOnBlock(b,defender,events,d.id);
+ return true;
+}
+function obsidianTransformDamage(b,ctx,events,target,amount){
+ if(!target||amount<=0||!unitAlive(target.unit))return amount;
+ const attacker=b.sides[ctx.who],defender=b.sides[other(ctx.who)];
+ if(attacker.ships[0].id==='L03'&&target.kind==='machine'){
+  const state=ensureObsidianState(attacker);
+  const fracture=ctx.obsidianFractureDeclared;
+  const hitFracture=!!fracture&&fracture.id===target.unit.id&&fracture.kind===target.kind;
+  const ramp=obsidianModuleActive(attacker,'nx-l03-06',b.ply)&&state.rampUsedPly!==b.ply;
+  if(hitFracture||ramp){
+   const armor=Math.max(0,defender.ships[0].defensePower||0);
+   if(ramp)state.rampUsedPly=b.ply;
+   if(armor)events.push(emit(b,ctx.who,'obsidian-armor',
+    'Titano ignora '+armor+' punti di riduzione della corazza di una macchina',{
+     cardId:hitFracture?'nx-l03-03':'nx-l03-06',targetId:target.unit.id,
+     armorIgnored:armor}));
+   amount+=armor;
+  }
+ }
+ if(defender.ships[0].id==='L03'&&target.kind==='escort'&&
+  target.unit.fused&&target.unit.obsidianBastion&&
+  obsidianReadyEscort(defender,target.unit,b.ply)&&
+  (target.unit.obsidianGuardUntilPly||0)>b.ply&&
+  target.unit.obsidianGuardUsedPly!==b.ply){
+  target.unit.obsidianGuardUsedPly=b.ply;
+  amount=Math.min(1,amount);
+  events.push(emit(b,other(ctx.who),'obsidian-guard',
+   'Bastione d’Assedio limita il primo danno nemico a 1',{
+    cardId:'nx-l03-08',targetId:target.unit.id,limit:1}));
+ }
+ return amount;
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
