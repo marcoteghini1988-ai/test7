@@ -1962,7 +1962,7 @@ function onLinceDamage(b,ctx,events,hit,order={},didBypass=false){
    const machines=(side.machines||[]).filter(e=>unitAlive(e)&&e.sourceCardId);
    const selected=machines.find(e=>e.id===order.radentMachineId)||machines[0];
    if(selected){
-    const recovered=recallLinceMachine(side,selected);
+    const recovered=recallLinceMachine(side,selected,b.ply);
     if(recovered){
      state.radentUsedPly=b.ply;
      events.push(emit(b,ctx.who,'card','Propulsori radenti: '+recovered.name+' torna in mano senza riparazioni',
