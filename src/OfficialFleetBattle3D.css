@@ -396,3 +396,21 @@
 .es-math-scope .f3d-original-arena .f3d-escort--veiled .f3d-escort-grade{
  color:#91a9ca
 }
+
+
+/* Tempesta: indicatore di carica con la stessa plancia metallica 3D 9:16. */
+.es-math-scope .f3d-original-arena .f3d-storm-status{
+ position:absolute;top:146px;left:84px;right:84px;z-index:8;
+ display:flex;gap:4px;align-items:center;justify-content:center;
+ padding:3px 5px;border-radius:5px;border:1px solid #a0c6ab;
+ background:linear-gradient(100deg,#122826ee,#315348ee,#122826ee);
+ color:#d9f9df;font-size:7px;box-shadow:0 0 8px #a6edb255;
+ pointer-events:none;white-space:nowrap;overflow:hidden
+}
+.es-math-scope .f3d-original-arena .f3d-storm-status>b{font-size:7px}
+.es-math-scope .f3d-original-arena .f3d-storm-status>small{
+ font-size:6px;overflow:hidden;text-overflow:ellipsis
+}
+.es-math-scope .f3d-original-arena .f3d-storm-readout{
+ margin:0 0 5px;color:#dcf7e2;font-size:9px;line-height:1.35
+}
