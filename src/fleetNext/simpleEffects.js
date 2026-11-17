@@ -18,7 +18,7 @@ export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
  'weaken','disarm','cleanse','exchange','recover','charge','terrain','trap',
- 'bypass','deployMachine','fusion','blueprint','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
+ 'bypass','deployMachine','fusion','blueprint','systemModifier','fieldReset','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
 const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore',bridge:'la Plancia'};
@@ -72,6 +72,8 @@ const integer=(value,min,max)=>Number.isInteger(value)&&value>=min&&value<=max;
 export function validateEffectSpec(spec){
  if(!spec||typeof spec!=='object'||Array.isArray(spec))return 'Effetto mancante';
  if(!EFFECT_TYPES.includes(spec.type))return 'Effetto non supportato: '+spec.type;
+ if(spec.type==='systemModifier'&&(!['command','weapons','generator','bridge'].includes(spec.system)||!['disable','amplify'].includes(spec.operation)||!integer(spec.tier,1,4)||!integer(spec.turns,1,3)))return 'Effetto sistemi non valido';
+ if(spec.type==='fieldReset'&&(spec.scope!=='both'||spec.discardFieldCards!==true))return 'Reset campo non valido';
  if(spec.type==='blueprint'&&!/^nx-[a-z0-9]+-[0-9]{2}$/.test(spec.code||''))return 'Codice di scheda esclusiva non valido';
  if(spec.type==='aurora'&&!Object.values(AURORA_ACTIONS).includes(spec.action))return 'Azione Aurora non valida';
  if(spec.type==='lince'&&!Object.values(LINCE_ACTIONS).includes(spec.action))return 'Azione Lince non valida';
@@ -200,6 +202,7 @@ case 'obsidian':return card.effectProposed;
 case 'ark':return card.effectProposed;
   case 'aurora':return card.effectProposed;
   case 'blueprint':return card.effectProposed;
+  case 'systemModifier':case 'fieldReset':return card.effectProposed;
   case 'fusion':return 'Fonde due supporti operativi. Richiama la riserva sbloccata; la seconda fusione unisce terzo e quarto supporto. Massimo due unità in campo.';
   default:throw new Error('Effetto privo di descrizione: '+s.type);
  }
