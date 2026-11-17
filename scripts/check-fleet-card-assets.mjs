@@ -41,9 +41,9 @@ function kind(c){
   /Supporto|Scudiera|Tattica|Strategia/i.test(cat)?'support':'attack';
 }
 const src=new Set(cards.map(c=>c.id));
-if(cards.length!==19||src.size!==19)fail('Fronti illustrati dei Personaggi fuori sincronizzazione');
+if(cards.length!==18||src.size!==18)fail('Fronti illustrati dei Personaggi fuori sincronizzazione');
 const faceIds=readdirSync(faces).filter(x=>x.endsWith('.svg')&&activeIds.has(x.slice(0,-4))).map(x=>x.slice(0,-4));
-if(faceIds.length!==19||faceIds.some(x=>!src.has(x)))fail('Fronte SVG attivo mancante');
+if(faceIds.length!==18||faceIds.some(x=>!src.has(x)))fail('Fronte SVG attivo mancante');
 const assets=readdirSync(illustrations).filter(x=>x.endsWith('.webp')&&activeIds.has(x.slice(0,-5)));
 const perFunction={},hdIds=[],missing=[];
 for(const c of cards){
