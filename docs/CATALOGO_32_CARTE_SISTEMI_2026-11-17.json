@@ -24,7 +24,8 @@
     "I componenti non ricevono danni diretti con queste carte; l'obiettivo di vittoria è la nave madre a zero HP.",
     "I valori indicati sono parametri di progettazione provvisori: bilanciamento finale solo dopo le meccaniche. Nessuna immagine prodotta ora.",
     "Questa bozza non è parte del catalogo runtime delle 120 esclusive e non ne cambia le meccaniche.",
-    "Buco Nero resta carta distinta, controllo leggendaria: azzera tutte le carte sul campo compresi due slot Arma, ma non elimina le navi o i sistemi interni."
+    "Buco Nero resta carta distinta, controllo leggendaria: azzera tutte le carte sul campo compresi due slot Arma, ma non elimina le navi o i sistemi interni.",
+    "Nella nuova modalità, i colpi riducono gli HP della nave madre o delle navicelle di supporto. I componenti interni non sono bersagli, ma sistemi che le carte possono sabotare o potenziare. Le sei schede Plancia ancora riferite alla precisione sui vitali vanno riprogettate prima dell'integrazione."
   ],
   "cards": [
     {
@@ -420,12 +421,13 @@
       "rarity": "Comune",
       "tier": 1,
       "magnitude": 1,
-      "unit": "punti su bonus di precisione/puntamento",
+      "unit": "primo attacco multi-bersaglio limitato",
       "durationTurns": 1,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−1 al primo bonus di precisione o puntamento tattico usato dall'avversario nel turno colpito.",
-      "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 1 turno avversario, il primo attacco a due o più bersagli viene limitato a una sola navicella bersaglio. I colpi aggiuntivi non si riassegnano; non riduce il danno del colpo rimasto.",
+      "counterplay": "Scadenza dopo il turno colpito, rimozione del sabotaggio o contromisura Plancia; le difese già presenti continuano a funzionare.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
+      "previousDraftEffect": "−1 al primo bonus di precisione o puntamento tattico usato dall'avversario nel turno colpito."
     },
     {
       "designId": "draft-sys-bridge-minus-r",
@@ -441,7 +443,7 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "−1 al primo bonus di precisione o puntamento tattico in ciascun turno colpito.",
       "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
     },
     {
       "designId": "draft-sys-bridge-minus-e",
@@ -457,7 +459,7 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "−2 al primo bonus di precisione o puntamento tattico in ciascun turno colpito; nel primo turno −1 danno a un bersaglio secondario già previsto.",
       "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
     },
     {
       "designId": "draft-sys-bridge-minus-l",
@@ -473,7 +475,7 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "−2 al primo bonus di precisione o puntamento tattico in ciascun turno colpito; −1 danno al primo bersaglio secondario già previsto in ogni turno.",
       "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
     },
     {
       "designId": "draft-sys-bridge-plus-c",
@@ -484,12 +486,13 @@
       "rarity": "Comune",
       "tier": 1,
       "magnitude": 1,
-      "unit": "punti su bonus di precisione/puntamento",
+      "unit": "distribuzione del primo attacco",
       "durationTurns": 1,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+1 al primo bonus di precisione o puntamento tattico usato nel tuo turno.",
-      "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 1 tuo turno, puoi ripartire il danno complessivo del primo attacco della nave madre tra due navicelle di supporto nemiche operative, se presenti. Esempio: 8 danni possono diventare 5+3. Non aggiunge danni e non permette di aggirare i supporti per colpire la madre.",
+      "counterplay": "Richiede due supporti nemici bersagliabili; resta soggetta alle Difese e Trappole applicabili e non modifica gli HP dei componenti interni.",
+      "stage": "NUOVA PROPOSTA — non ancora approvata né implementata",
+      "previousDraftEffect": "+1 al primo bonus di precisione o puntamento tattico usato nel tuo turno."
     },
     {
       "designId": "draft-sys-bridge-plus-r",
@@ -505,7 +508,7 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "+1 al primo bonus di precisione o puntamento tattico in ciascuno dei tuoi due turni.",
       "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
     },
     {
       "designId": "draft-sys-bridge-plus-e",
@@ -521,7 +524,7 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "+2 al primo bonus di precisione o puntamento tattico per turno; nel primo turno +1 danno a un bersaglio secondario già previsto.",
       "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
     },
     {
       "designId": "draft-sys-bridge-plus-l",
@@ -537,7 +540,7 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "+2 al primo bonus di precisione o puntamento tattico per turno; +1 danno al primo bersaglio secondario già previsto in ogni turno.",
       "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
     }
   ]
 }
