@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,exclusiveUnlocked,eligibleExclusives,effectiveDeck,cardFacePath} from './fleetNext/rules.js';
@@ -33,19 +35,19 @@ function mount(side,id,ownPartId=null){
  return result.entry;
 }
 
-test('Dieci carte univoche di Lince, sbloccate 6+1+1+1+1 e mai da un’altra madre',()=>{
+test('Dieci carte univoche di Lince, quattro iniziali e sei sbloccate nella progressione e mai da un’altra madre',()=>{
  assert.equal(new Set(IDS).size,10);
  for(const id of IDS){
   assert.equal(card(id).shipId,'C01',id);
   assert.notEqual(card(id).playable,false,id);
-  assert.ok(exclusiveUnlocked(id,'C01',5),id);
+  assert.ok(exclusiveUnlocked(id,'C01',shipMaxLevel('C01')),id);
   assert.equal(exclusiveUnlocked(id,'N00',5),false,id);
  }
- for(let level=1;level<=5;level++){
-  assert.equal(IDS.filter(id=>exclusiveUnlocked(id,'C01',level)).length,5+level);
-  assert.equal(eligibleExclusives('C01',level).filter(c=>c.shipId==='C01').length,5+level);
+ for(let level=1;level<=shipMaxLevel('C01');level++){
+  assert.equal(IDS.filter(id=>exclusiveUnlocked(id,'C01',level)).length,4+EXCLUSIVE_UNLOCK_MILESTONES['C01'].filter(n=>n<=level).length);
+  assert.equal(eligibleExclusives('C01',level).filter(c=>c.shipId==='C01').length,4+EXCLUSIVE_UNLOCK_MILESTONES['C01'].filter(n=>n<=level).length);
  }
- assert.equal(IDS.filter(id=>effectiveDeck([],'C01',5).includes(id)).length,10);
+ assert.equal(IDS.filter(id=>effectiveDeck([],'C01',shipMaxLevel('C01')).includes(id)).length,10);
  for(const id of IDS)assert.equal(cardFacePath(id),null,'Non usare un vecchio fronte '+id);
 });
 
