@@ -2537,6 +2537,14 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   }
   case 'fieldReset':{
    const cleared=resetFieldWithBlackHole(b);
+   // Gli attacchi e i bonus preparati nello stesso turno non possono
+   // riapparire dopo l'azzeramento del tavolo.
+   for(const key of ['auroraAttacks','linceAttacks','prismaAttacks','corvoAttacks',
+    'falcoAttacks','mantaAttacks','sharkAttacks','nebulaAttacks','stormAttacks',
+    'royalAttacks','obsidianAttacks','arkAttacks'])if(Array.isArray(ctx[key]))ctx[key]=[];
+   ctx.power=0;ctx.pierce=0;ctx.bypass=false;ctx.multiTargets=1;
+   ctx.falcoPrepared=false;ctx.obsidianPrepared=false;
+   ctx.fieldReset=true;
    at('Buco Nero: tutte le carte attive dei due campi sono state scartate');
    events.push(emit(b,who,'field-reset','Buco Nero ha ripulito entrambi i campi',
     {cardId:def.id,removed:cleared}));
@@ -2817,6 +2825,22 @@ function redirectFleetHit(b,ctx,events,target){
 function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
  if(!target||!primary||!target.unit||target.unit.id===primary.unit?.id)return false;
  const defender=b.sides[other(ctx.who)];
+ // Vale anche per i comandi esclusivi che producono colpi secondari,
+ // non soltanto per la salva ordinaria. Il limite si consuma una volta
+ // per attacco multibersaglio, non una volta per singolo colpo aggiuntivo.
+ if(b.ruleset===HP_SYNC_RULESET){
+  const volley=ctx.nebulaVolleySerial??0;
+  if(ctx.planciaCheckedVolley!==volley){
+   ctx.planciaCheckedVolley=volley;
+   ctx.planciaBlocksVolley=consumePlanciaRestriction(defender,b.ply);
+  }
+  if(ctx.planciaBlocksVolley){
+   events.push(emit(b,other(ctx.who),'block',
+    'Sabotaggio Plancia: colpo su bersaglio secondario annullato',
+    {targetKind:target.kind,targetId:target.unit.id}));
+   return true;
+  }
+ }
  const night=defender.defenses.find(d=>d.nebulaNight&&!d.hidden&&d.untilPly>b.ply);
  if(night){
   events.push(emit(b,other(ctx.who),'block',
@@ -3983,7 +4007,6 @@ function resolveSalvo(b,ctx,events,order){
   selected.kind==='module'?[selected]:
    [selected,...guards.filter(g=>g.unit!==selected.unit).slice(0,count-1).map(g=>({kind:g.kind,unit:g.unit}))];
  if(side.ruleset===HP_SYNC_RULESET){
-  if(targets.length>1&&consumePlanciaRestriction(defender,b.ply))targets=[targets[0]];
   const second=defender.escorts.find(e=>unitEnabled(e,b.ply)&&e.id!==selected.unit.id&&
    (!order.planciaSecondTargetId||e.id===order.planciaSecondTargetId));
   if(selected.kind==='escort'&&second&&power>1&&planciaSplitCount(side,b.ply)>0&&
@@ -3991,6 +4014,9 @@ function resolveSalvo(b,ctx,events,order){
    const primary=Math.max(1,Math.min(power-1,Number.isInteger(order.planciaSplitAmount)?order.planciaSplitAmount:Math.ceil(power/2)));
    targets=[{...selected,splitAmount:primary},{kind:'escort',unit:second,splitAmount:power-primary}];
   }
+  // Il sabotaggio si applica anche ai due bersagli creati
+  // dall'amplificazione, altrimenti quella aggirerebbe il blocco.
+  if(targets.length>1&&consumePlanciaRestriction(defender,b.ply))targets=[targets[0]];
  }
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  const hits=[];
@@ -4128,7 +4154,8 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  nebulaRevealOnOwnTurn(b,ctx,events);
  processHelios(b,who,ctx,events,order);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
- side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
+ side.stagedComboCards=[];side.attackSlots=ctx.fieldReset?[]:
+  ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
  const ownShot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):
   ctx.falcoPrepared||ctx.falcoReleased||ctx.obsidianPrepared||ctx.obsidianReleased?
