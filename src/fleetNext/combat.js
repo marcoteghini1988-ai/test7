@@ -2642,8 +2642,8 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
 }
 function applyCard(b,who,id,ctx,events,order){
  const side=b.sides[who],def=card(id),role=cardRole(id);
- if(role==='attack'&&ctx.nebulaUnredirectableCardId==null&&
-  nebulaModuleActive(side,'nx-e01-09',b.ply)){
+ if(role==='attack'&&!['systemModifier','fieldReset'].includes(def.effectSpec?.type)&&
+  ctx.nebulaUnredirectableCardId==null&&nebulaModuleActive(side,'nx-e01-09',b.ply)){
   ctx.nebulaUnredirectableCardId=id;
   events.push(emit(b,who,'card','Cannone velato: primo Attacco non deviabile',
    {cardId:'nx-e01-09',attackCardId:id}));
