@@ -5,6 +5,9 @@ import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression} from './progression.js';
 import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
+import {LINCE_ACTIONS,LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
+ ensureLinceState,linceMarkedRouteReady,lincePrecondition,recallLinceModule,
+ recallLinceMachine,recoveredMachineForDeploy} from './linceEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
@@ -77,7 +80,8 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
-  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,fusionsUsed:0,fusionLimit:progression.fusionLimit,
+  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,recalledModules:[],recalledMachines:[],
+  fusionsUsed:0,fusionLimit:progression.fusionLimit,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
   lastPlayed:[],attackSlots:[null,null,null],defenseSlots:[null,null],
@@ -188,7 +192,8 @@ const livingEscorts=side=>(side.escorts||[]).filter(unitAlive);
 const weakest=items=>[...items].sort((a,z)=>a.hp/a.maxHp-z.hp/z.maxHp)[0]||null;
 const weakestPart=side=>weakest(side.ships[0].parts.filter(p=>!p.destroyed));
 const visiblePlayed=ids=>ids.filter(id=>card(id)?.effectSpec?.type!=='trap');
-const defenseKind=definition=>definition?.effectSpec?.type==='trap'?'trap':'defense';
+const defenseKind=definition=>definition?.effectSpec?.type==='trap'||
+ definition?.effectSpec?.type==='lince'&&definition.effectSpec.action==='false-trail'?'trap':'defense';
 const activeDefenses=(side,ply)=>(side?.defenses||[]).filter(d=>d.untilPly==null||d.untilPly>ply);
 export function defenseSlotsAvailable(side,ply=0,kind=null){
  if(!operational(side.ships[0],'generator'))return 0;
@@ -218,7 +223,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
- side.auroraVeil??=null;
+ side.auroraVeil??=null;ensureLinceState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
  if(!operational(side.ships[0],'generator')){
@@ -243,6 +248,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
  if(def.effectSpec.type==='aurora'){
   const reason=auroraPrecondition(def,side,card,side.ships[0].level);
+  if(reason)return reason;
+ }
+ if(def.effectSpec.type==='lince'){
+  const reason=lincePrecondition(def,side,battle);
   if(reason)return reason;
  }
  const invalid=validateEffectSpec(def.effectSpec);
@@ -494,7 +503,11 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const expiry=b.ply+2*(s.turns||1);
  switch(s.type){
   case 'aurora':activateAuroraCard(b,who,def,ctx,events,order,ownPartId,token);break;
-  case 'bypass':ctx.bypass=true;at('Questo attacco può raggiungere direttamente la madre');break;
+  case 'bypass':{
+   ctx.bypassPlayed=true;
+   if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
+   ctx.bypass=true;at('Questo attacco può raggiungere direttamente la madre');break;
+  }
   case 'fusion':{
    const result=fuseFleetSupports(side,b.ply);
    if(!result.ok)throw new Error(result.reason);
@@ -506,8 +519,11 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    const slot=[0,1].find(i=>!side.machines.some(m=>unitAlive(m)&&m.slot===i));
    if(slot==null)throw new Error('Alloggiamenti macchine occupati');
    side.machines=side.machines.filter(m=>m.slot!==slot);
-   const machine={id:'machine:'+who+':'+token,slot,name:def.nome||def.name,sourceCardId:def.id,source:token,
-    hp:s.hp,maxHp:s.hp,power:s.power||0,destroyed:false,disabledUntilPly:0};
+   const saved=recoveredMachineForDeploy(side,def.id);
+   const machine={id:saved?.id||'machine:'+who+':'+token,slot,name:def.nome||def.name,
+    sourceCardId:def.id,source:token,hp:saved?.hp??s.hp,
+    maxHp:saved?.maxHp??s.hp,power:s.power||0,destroyed:false,
+    disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
    events.push(emit(b,who,'machine-deploy',machine.name+' schierata: protegge la madre',
     {cardId:def.id,machineSlot:slot,machineId:machine.id}));
@@ -580,11 +596,15 @@ function applyCard(b,who,id,ctx,events,order){
   return false;
  }
  if(role==='character'){
-  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:spec.type==='aurora'?0:1,
+  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince'].includes(spec.type)?0:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
-  side.defenses.push(spec.type==='trap'?
+  const falseTrail=spec.type==='lince'&&spec.action==='false-trail';
+  side.defenses.push(falseTrail?
+   {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:'mother-part-hit',
+    redirectPartId:ownPartId}:
+   spec.type==='trap'?
    {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:spec.trigger,action:spec.action}:
    {id,source,untilPly:b.ply+2*(spec.turns||1)});
   side.defenseSlots=side.defenses.map(d=>d.id);
@@ -859,7 +879,8 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const s of Object.values(b.sides))expireSide(s,b.ply);
  const cards=takeCards(side,order.cards||[]);
- const ctx={who,nowMs,cards:[],auroraAttacks:[],power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
+ const ctx={who,nowMs,cards:[],auroraAttacks:[],linceAttacks:[],bypassPlayed:false,
+  power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
  // Il terreno scelto entra prima delle altre carte e degli effetti del turno.
@@ -874,7 +895,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
