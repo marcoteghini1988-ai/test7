@@ -308,6 +308,9 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  if(def.shipId&&s.type!=='fusion'&&!exclusiveOperational(def.id,side.ships[0],side.escorts))return 'Nave o componenti richiesti non disponibili';
  if(VITAL_KEYS.includes(s.target)&&!activePart(side,s.target))return VITAL_LABELS[s.target]+' non disponibili';
  if(s.target==='escort'&&!livingEscorts(side).length)return 'Nessuna scudiera disponibile';
+ if(['protect','dodge'].includes(s.type)&&s.target==='escort'&&
+  !livingEscorts(side).some(e=>!nebulaProtectionForbidden(e,battle?.ply??0)))
+  return 'Nebbia polare: nessun supporto puo ricevere nuove protezioni';
  if(s.type==='dodge'&&!activePart(side,'generator'))return 'La schivata richiede il Generatore attivo';
  if(s.type==='dodge'&&terrain==='T01')return 'La Distesa Gelida blocca le schivate';
  if(s.type==='repair'&&terrain==='T08')return 'La Palude di Silicio blocca le riparazioni';
@@ -359,6 +362,17 @@ export function validateFleetTurn(b,who,order){
  if(nebulaCommands.length>1)return 'Scegli un solo attacco Nebulosa per turno';
  const nebulaChoice=nebulaChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
  if(nebulaChoice)return nebulaChoice;
+ if(chosen.some(c=>c.id==='nx-r02-03')){
+  const eligible=mantaActiveSupports(side,b.ply);
+  const target=eligible.find(e=>e.id===order.mantaScreenEscortId)||eligible[0];
+  if(target&&nebulaProtectionForbidden(target,b.ply))
+   return 'Nebbia polare impedisce lo Schermo sul supporto scelto';
+ }
+ if(chosen.some(c=>c.id==='nx-c02-08')){
+  const first=side.escorts.find(e=>e.slot===0&&escortEnabled(side,e,b.ply));
+  if(first&&nebulaProtectionForbidden(first,b.ply))
+   return 'Nebbia polare impedisce la Custodia sul primo supporto';
+ }
  if(mantaCommands.some(c=>c.effectSpec.action==='arc-discharge')&&order?.mantaSilence&&
   (!mantaCapacitorActive(side,b.ply)||mantaEnergy(side)<1))
   return 'Arco di scarica: serve una energia per il Silenzio';
@@ -1193,6 +1207,8 @@ function activateMantaCard(b,who,def,ctx,events,order={},source=null){
   const destination=supports.find(e=>e.id===order.mantaToEscortId&&e.slot!==chosen.escortSlot)||
    supports.find(e=>e.slot!==chosen.escortSlot);
   if(!destination)throw Error('Polarità: manca il supporto ricevente');
+  if(nebulaProtectionForbidden(destination,b.ply))
+   throw Error('Nebbia polare: impossibile trasferire lo scudo al supporto');
   chosen.escortSlot=destination.slot;
   if(destination.hp<destination.maxHp){
    if((destination.disabledUntilPly||0)>b.ply)destination.disabledUntilPly=0;
@@ -1471,7 +1487,8 @@ function activateNebulaCard(b,who,def,ctx,events,order={},source=null){
   return;
  }
  if(NEBULA_ATTACK_ACTIONS.includes(action)){
-  if(action==='mist-needle'&&nebulaHiddenSupport(side,b.ply))
+  if(action==='mist-needle'&&nebulaHiddenSupport(side,b.ply)&&
+   b.terrain?.id!=='T06'
    ctx.nebulaPierceLeft=1;
   ctx.nebulaAttacks.push({id:def.id,action});
   note(action==='mist-needle'?'Ago pronto'+
