@@ -17,6 +17,7 @@ import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
+import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
@@ -149,10 +150,12 @@ test('The actual session entry initializes final boss Arca L5, two reserves and 
  const start=extract('./OfficialFleetBattle3D.jsx','startSession',{
   readShipCollection:()=>({cards:[owned],loadout:[]}),readFleetInventory:()=>({owned:{'gen-216':1},exclusiveUpgrades:{}}),
   findMother:()=>owned,officialBossEncounter,officialEarlyCampaignRivalShip,officialCampaignRivalLevel,
-  chooseCampaignMotherRival,campaignFleetShipId,createFleetNextBattle
+  chooseCampaignMotherRival,campaignFleetShipId,createFleetNextBattle,
+  readNextDeckSelection:()=>null,buildNextBaseDeck,HP_SYNC_RULESET
  });
  const session=start({mode:'campaign',sectorNumber:120,bossPlanetId:20,bossSectorLevel:10});
  assert.equal(session.error,'');
+ assert.equal(session.battle.ruleset,HP_SYNC_RULESET);
  const boss=session.battle.sides.B;
  assert.equal(boss.ships[0].id,'L04');assert.equal(boss.ships[0].level,5);
  assert.equal(boss.escorts.length,2);assert.equal(boss.reserveEscorts.length,2);
