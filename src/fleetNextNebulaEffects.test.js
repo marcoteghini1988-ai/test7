@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -70,8 +72,8 @@ test('IA Nebulosa usa il Proiettore disponibile senza carta inventata',()=>{
 });
 test('Nebulosa E01: dieci esclusive eseguibili solo con questa nave e livelli 6/7/8/9/10',()=>{
  assert.equal(new Set(IDS).size,10);
- for(let level=1;level<=5;level++){
-  assert.equal(eligibleExclusives('E01',level).filter(c=>IDS.includes(c.id)).length,5+level);
+ for(let level=1;level<=shipMaxLevel('E01');level++){
+  assert.equal(eligibleExclusives('E01',level).filter(c=>IDS.includes(c.id)).length,4+EXCLUSIVE_UNLOCK_MILESTONES['E01'].filter(n=>n<=level).length);
  }
  for(const id of IDS){
   const c=card(id);assert.ok(c,id);
@@ -79,10 +81,10 @@ test('Nebulosa E01: dieci esclusive eseguibili solo con questa nave e livelli 6/
   assert.equal(c.effectSpec.type,'nebula');
   assert.equal(c.playable===false,false);
   assert.equal(cardFacePath(id),null);
-  assert.equal(exclusiveUnlocked(id,'E01',5),true);
+  assert.equal(exclusiveUnlocked(id,'E01',shipMaxLevel('E01')),true);
   assert.equal(exclusiveUnlocked(id,'R04',5),false);
  }
- assert.equal(effectiveDeck([],'E01',5).filter(id=>IDS.includes(id)).length,10);
+ assert.equal(effectiveDeck([],'E01',shipMaxLevel('E01')).filter(id=>IDS.includes(id)).length,10);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
 });
 test('Proiettore: senza modulo non puo occultare; ordine invalido non modifica la partita',()=>{
