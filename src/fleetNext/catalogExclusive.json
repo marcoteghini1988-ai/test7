@@ -908,6 +908,7 @@
     },
     {
       "id": "ex-c03-01",
+      "nativeFace": true,
       "shipId": "C03",
       "shipName": "Corvo a Impulsi",
       "rarityDraft": "Comune",
