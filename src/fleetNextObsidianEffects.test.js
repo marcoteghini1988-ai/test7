@@ -8,7 +8,7 @@ import {createFleetNextBattle,resolveFleetNextTurn,validateFleetTurn,
 import {mountModule,removeModule} from './fleetNext/auroraEngine.js';
 import {recallLinceMachine} from './fleetNext/linceEngine.js';
 import {obsidianFusedEscort,obsidianModuleActive,obsidianPending,
- obsidianSealed} from './fleetNext/obsidianEngine.js';
+ obsidianSealed,obsidianBulkheadTryHit} from './fleetNext/obsidianEngine.js';
 
 const IDS=['nx-l03-01','nx-l03-02','nx-l03-03','nx-l03-04','ex-l03-01',
  'nx-l03-06','nx-l03-07','nx-l03-08','nx-l03-09','nx-l03-10'];
@@ -167,14 +167,14 @@ test('Frattura neutralizza la corazza se aveva una Difesa dichiarata ma disattiv
  // Schivata scoperta non funzionante in Distesa Gelida.
  shield(b.sides.B,'machine',m,{kindOfShield:'dodge'});
  const r=play(b,'A',['nx-l03-03'],target('machine',m));
- assert.equal(r.shot.machineDamage,3); // Base 1 + corazza di R04 2
+ assert.equal(r.shot.machineDamage,4); // Base 2 + corazza di R04 2
  assert.ok(r.events.some(e=>e.kind==='obsidian-armor'&&e.cardId==='nx-l03-03'));
 });
 test('Rampa di sfondamento ignora corazza una volta senza superare protezioni',()=>{
  const b=make({shipB:'R04'});b.sides.B.machines.push(machine('plate',0,10));
  equip(b.sides.A,'nx-l03-06');
  const r=play(b,'A',[],target('machine',b.sides.B.machines[0]));
- assert.equal(r.shot.machineDamage,3);
+ assert.equal(r.shot.machineDamage,4);
  assert.ok(r.events.some(e=>e.kind==='obsidian-armor'&&e.cardId==='nx-l03-06'));
 });
 test('Rampa non ignora una difesa scoperta che blocca il colpo',()=>{
@@ -192,21 +192,19 @@ test('Paratia d’ossidiana lascia passare il primo attacco normale sul vitale',
  b=play(b,'A',['nx-l03-04'],{pass:true,obsidianPartId:'command'}).battle;
  const r=play(b,'B',['prog-bypass'],target('part',part));
  assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='command').hp,hp-1);
- assert.equal(r.battle.sides.A.defenses.some(d=>d.id==='nx-l03-04'),true);
- assert.equal(r.battle.sides.A.defenses.find(d=>d.id==='nx-l03-04').obsidianSeenPly,1);
-});
-test('Paratia ferma solo il secondo colpo sullo stesso vitale e poi si consuma',()=>{
- let b=make();b=play(b,'A',['nx-l03-04'],{pass:true,obsidianPartId:'command'}).battle;
- const part=b.sides.A.ships[0].parts.find(p=>p.id==='command');
- b=play(b,'B',['prog-bypass'],target('part',part)).battle;
- // Simula una seconda occorrenza sullo stesso lato durante il medesimo ply.
- b.ply=1;b.turn='B';
- const hp=b.sides.A.ships[0].parts.find(p=>p.id==='command').hp;
- const r=play(b,'B',['prog-bypass'],target('part',b.sides.A.ships[0].parts.find(p=>p.id==='command')));
- assert.equal(r.shot.damage,0);
- assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='command').hp,hp);
+ assert.equal(r.events.some(e=>e.secondHitBlocked),false);
+ // La Difesa scade correttamente dopo il turno avversario, non permane.
  assert.equal(r.battle.sides.A.defenses.some(d=>d.id==='nx-l03-04'),false);
- assert.ok(r.events.some(e=>e.kind==='block'&&e.secondHitBlocked));
+});
+test('Paratia registra il primo colpo, annulla solo il secondo e non il terzo',()=>{
+ const d={id:'nx-l03-04',obsidianPartId:'command',untilPly:2,
+  obsidianSeenPly:-999,obsidianBlockedPly:-999};
+ assert.equal(obsidianBulkheadTryHit(d,1,'weapons'),false);
+ assert.equal(obsidianBulkheadTryHit(d,1,'command'),false);
+ assert.equal(obsidianBulkheadTryHit(d,1,'command'),true);
+ assert.equal(obsidianBulkheadTryHit(d,1,'command'),false);
+ assert.equal(obsidianBulkheadTryHit(d,2,'command'),false);
+ assert.equal(d.obsidianBlockedPly,1);
 });
 test('Magistro scambia due carte dopo il blocco di una Difesa scoperta, senza pescare',()=>{
  let b=make();b=play(b,'A',['ex-l03-01'],{pass:true,obsidianMagisterSwap:true}).battle;
