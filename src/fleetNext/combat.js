@@ -1488,7 +1488,7 @@ function activateNebulaCard(b,who,def,ctx,events,order={},source=null){
  }
  if(NEBULA_ATTACK_ACTIONS.includes(action)){
   if(action==='mist-needle'&&nebulaHiddenSupport(side,b.ply)&&
-   b.terrain?.id!=='T06'
+   b.terrain?.id!=='T06')
    ctx.nebulaPierceLeft=1;
   ctx.nebulaAttacks.push({id:def.id,action});
   note(action==='mist-needle'?'Ago pronto'+
