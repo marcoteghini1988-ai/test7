@@ -487,7 +487,8 @@ export default function OfficialFleetBattle3D({
     sharkAdmiralEnabled:sharkOptions.admiralEnabled,
     sharkAdmiralDiscardId:sharkOptions.admiralDiscard,
     sharkSacrificeEscortId:sharkOptions.donor,sharkRecipientEscortId:sharkOptions.receiver,
-    nebulaHide:nebulaOptions.hide,nebulaHideEscortId:nebulaOptions.hideEscort,
+    nebulaHide:nebulaOptions.hide&&!selectedActions.includes('wandering-mist'),
+    nebulaHideEscortId:nebulaOptions.hideEscort,
     nebulaVeilTargetKind:nebulaVeilChoice?.kind,nebulaVeilTargetId:nebulaVeilChoice?.id,
     nebulaSwapTargetId:nebulaOptions.swap,nebulaTerrainTrade:nebulaOptions.terrainTrade,
     nebulaTradeCardId:nebulaOptions.tradeCard
@@ -614,7 +615,8 @@ export default function OfficialFleetBattle3D({
  const nebulaArchonActive=(player.commander?.id==='ex-e01-01'&&
   player.commander.untilPly>battle.ply)||selectedActions.includes('mist-archon');
  const nebulaTradeChoices=player.hand.filter((id,i)=>!chosenCards.includes(i));
- const nebulaCanHide=nebulaActive&&!nebulaHideReason(player,battle.ply);
+ const nebulaCanHide=nebulaActive&&!selectedActions.includes('wandering-mist')&&
+  !nebulaHideReason(player,battle.ply);
  const sharkActive=player.ships[0].id==='R04';
  const sharkEnemyChoices=sharkUnits(enemy).map(({kind,unit})=>({
   kind,id:unit.id,key:kind+':'+unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
