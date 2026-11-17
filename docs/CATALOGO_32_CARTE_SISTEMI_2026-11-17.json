@@ -428,7 +428,8 @@
       "effect": "Per 1 turno avversario, il primo attacco a due o più bersagli viene limitato a una sola navicella bersaglio. I colpi aggiuntivi non si riassegnano; non riduce il danno del colpo rimasto.",
       "counterplay": "Scadenza dopo il turno colpito, rimozione del sabotaggio o contromisura Plancia; le difese già presenti continuano a funzionare.",
       "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
-      "previousDraftEffect": "−1 al primo bonus di precisione o puntamento tattico usato dall'avversario nel turno colpito."
+      "previousDraftEffect": "−1 al primo bonus di precisione o puntamento tattico usato dall'avversario nel turno colpito.",
+      "designApprovalDate": "2026-11-17"
     },
     {
       "designId": "draft-sys-bridge-minus-r",
@@ -444,7 +445,8 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "Per i prossimi 2 turni dell'avversario, il primo attacco a più bersagli di ciascun turno può colpire una sola navicella, quella inizialmente scelta. Gli altri colpi vanno persi; il colpo rimasto conserva il suo danno.",
       "counterplay": "La carta non modifica gli attacchi a bersaglio singolo. La contromisura Plancia o la scadenza rimuovono la restrizione.",
-      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
+      "designApprovalDate": "2026-11-17"
     },
     {
       "designId": "draft-sys-bridge-minus-e",
@@ -460,7 +462,8 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "Per 2 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno vengono limitati a una sola navicella per attacco. Gli altri colpi si perdono; il danno dei colpi rimasti non cambia.",
       "counterplay": "La carta non modifica gli attacchi a bersaglio singolo. La contromisura Plancia o la scadenza rimuovono la restrizione.",
-      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
+      "designApprovalDate": "2026-11-17"
     },
     {
       "designId": "draft-sys-bridge-minus-l",
@@ -476,7 +479,8 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "Per 3 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno colpiscono una sola navicella per attacco. I colpi aggiuntivi si perdono, senza riassegnarli e senza ridurre il colpo rimasto.",
       "counterplay": "La carta non modifica gli attacchi a bersaglio singolo. La contromisura Plancia o la scadenza rimuovono la restrizione.",
-      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
+      "designApprovalDate": "2026-11-17"
     },
     {
       "designId": "draft-sys-bridge-plus-c",
@@ -493,7 +497,8 @@
       "effect": "Per 1 tuo turno, puoi ripartire il danno complessivo del primo attacco della nave madre tra due navicelle di supporto nemiche operative, se presenti. Esempio: 8 danni possono diventare 5+3. Non aggiunge danni e non permette di aggirare i supporti per colpire la madre.",
       "counterplay": "Richiede due supporti nemici bersagliabili; resta soggetta alle Difese e Trappole applicabili e non modifica gli HP dei componenti interni.",
       "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
-      "previousDraftEffect": "+1 al primo bonus di precisione o puntamento tattico usato nel tuo turno."
+      "previousDraftEffect": "+1 al primo bonus di precisione o puntamento tattico usato nel tuo turno.",
+      "designApprovalDate": "2026-11-17"
     },
     {
       "designId": "draft-sys-bridge-plus-r",
@@ -509,7 +514,8 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "Per 2 tuoi turni, il primo attacco della nave madre di ogni turno può dividere il proprio danno fra 2 navicelle di supporto avversarie operative. Danno totale invariato; protezioni applicate a ciascuna quota.",
       "counterplay": "Occorrono due supporti avversari ancora operativi; in loro assenza la ripartizione non si attiva. Scudi e difese restano efficaci per ogni quota.",
-      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
+      "designApprovalDate": "2026-11-17"
     },
     {
       "designId": "draft-sys-bridge-plus-e",
@@ -525,7 +531,8 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "Per 2 tuoi turni, i primi 2 attacchi della nave madre per turno possono ciascuno distribuire il proprio danno fra 2 navicelle di supporto nemiche operative. Nessun colpo extra, nessun danno aggiuntivo, nessun aggiramento della madre.",
       "counterplay": "Occorrono due supporti avversari ancora operativi; in loro assenza la ripartizione non si attiva. Scudi e difese restano efficaci per ogni quota.",
-      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
+      "designApprovalDate": "2026-11-17"
     },
     {
       "designId": "draft-sys-bridge-plus-l",
@@ -541,7 +548,11 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "Per 3 tuoi turni, i primi 2 attacchi della nave madre di ciascun turno possono suddividere i danni fra 2 navicelle di supporto nemiche operative. Nessun nuovo colpo o danno, e le difese si applicano a ciascuna quota.",
       "counterplay": "Occorrono due supporti avversari ancora operativi; in loro assenza la ripartizione non si attiva. Scudi e difese restano efficaci per ogni quota.",
-      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
+      "designApprovalDate": "2026-11-17"
     }
+  ],
+  "approvedGroups": [
+    "Plancia"
   ]
 }
