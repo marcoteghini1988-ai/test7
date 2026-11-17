@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
@@ -51,17 +53,17 @@ function revealedShield(side,escort,source='royal:test:shield',charges=1){
 }
 test('Eclisse Reale ha dieci esclusive eseguibili, 6 L1 / 10 L5 e una Fusione storica distinta',()=>{
  assert.equal(new Set(IDS).size,10);
- for(let level=1;level<=5;level++){
-  assert.equal(eligibleExclusives('L01',level).filter(c=>IDS.includes(c.id)).length,level+5);
+ for(let level=1;level<=shipMaxLevel('L01');level++){
+  assert.equal(eligibleExclusives('L01',level).filter(c=>IDS.includes(c.id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['L01'].filter(n=>n<=level).length));
  }
  for(const id of IDS){
   const c=card(id);assert.ok(c,id);assert.equal(c.shipId,'L01');
   assert.equal(c.effectSpec.type,'royal');assert.equal(c.playable!==false,true);
   assert.equal(cardFacePath(id),null);
-  assert.equal(exclusiveUnlocked(id,'L01',5),true);
+  assert.equal(exclusiveUnlocked(id,'L01',shipMaxLevel('L01')),true);
   assert.equal(exclusiveUnlocked(id,'E02',5),false);
  }
- assert.equal(effectiveDeck([],'L01',5).filter(id=>IDS.includes(id)).length,10);
+ assert.equal(effectiveDeck([],'L01',shipMaxLevel('L01')).filter(id=>IDS.includes(id)).length,10);
  assert.ok(effectiveDeck([],'L01',5).includes('prog-fusion-l01'));
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(x=>x.kind==='character').length,12);
