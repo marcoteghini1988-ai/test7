@@ -52,6 +52,8 @@ const preservedCharacters=exclusiveData.cards.map(c=>{
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  if(c.id==='ex-l03-01')return {...c,effectSpec:{type:'obsidian',action:'obsidian-magister'},
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
+ if(c.id==='ex-l04-01')return {...c,effectSpec:{type:'ark',action:'astral-keeper'},
+  effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  return c;
 });
 export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS)].map(card =>
@@ -106,7 +108,7 @@ export function cardCopyLimit(id){
  if(!c)return 0;
  if(bossCard(id))return 1;
  if(isProgressionCard(id))return c.shipId?c.maxCopiesInAutoPackageDraft:RARITY_COPY_LIMIT[c.rarita]||0;
- return exclusiveCard(id)?1:(RARITY_COPY_LIMIT[c.rarita]||0);
+ return exclusiveCard(id)?(c.maxCopiesInAutoPackageDraft||1):(RARITY_COPY_LIMIT[c.rarita]||0);
 }
 export function cardRole(id){
  const def=card(id);
@@ -151,7 +153,8 @@ export function eligibleExclusives(shipId,level){
 export function effectiveDeck(baseDeck,shipId,level){
  const base=Array.isArray(baseDeck)?baseDeck:[];
  // Il mazzo non pesca effetti nuovi che non esistono ancora nel motore.
- const ex=eligibleExclusives(shipId,level).filter(c=>c.playable!==false).flatMap(c=>Array(c.maxCopiesInAutoPackageDraft||1).fill(c.id));
+ const ex=eligibleExclusives(shipId,level).filter(c=>c.playable!==false&&
+  !(shipId==='L04'&&c.id==='prog-fusion-l04')).flatMap(c=>Array(c.maxCopiesInAutoPackageDraft||1).fill(c.id));
  return [...base,...ex];
 }
 export function countDeck(deck){
