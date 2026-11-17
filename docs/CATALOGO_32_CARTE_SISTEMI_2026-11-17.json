@@ -25,7 +25,8 @@
     "I valori indicati sono parametri di progettazione provvisori: bilanciamento finale solo dopo le meccaniche. Nessuna immagine prodotta ora.",
     "Questa bozza non è parte del catalogo runtime delle 120 esclusive e non ne cambia le meccaniche.",
     "Buco Nero resta carta distinta, controllo leggendaria: azzera tutte le carte sul campo compresi due slot Arma, ma non elimina le navi o i sistemi interni.",
-    "Nella nuova modalità, i colpi riducono gli HP della nave madre o delle navicelle di supporto. I componenti interni non sono bersagli, ma sistemi che le carte possono sabotare o potenziare. Le sei schede Plancia ancora riferite alla precisione sui vitali vanno riprogettate prima dell'integrazione."
+    "Nella nuova modalità, i colpi riducono gli HP della nave madre o delle navicelle di supporto. I componenti interni non sono bersagli, ma sistemi che le carte possono sabotare o potenziare. Le sei schede Plancia ancora riferite alla precisione sui vitali vanno riprogettate prima dell'integrazione.",
+    "Sulle carte Plancia approvate o proposte, gli unici bersagli di attacco sono madre e navicelle di supporto: mai i componenti. Le interferenze Plancia possono limitare il numero di bersagli, mentre le amplificazioni consentono di ripartire un pacchetto di danno fra due supporti senza aggiungere danno né aggirare il blocco verso la madre. Serve una futura integrazione esplicita nel motore."
   ],
   "cards": [
     {
@@ -438,12 +439,12 @@
       "rarity": "Rara",
       "tier": 2,
       "magnitude": 1,
-      "unit": "punti su bonus di precisione/puntamento",
+      "unit": "attacco multibersaglio limitato ogni turno",
       "durationTurns": 2,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−1 al primo bonus di precisione o puntamento tattico in ciascun turno colpito.",
-      "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
+      "effect": "Per i prossimi 2 turni dell'avversario, il primo attacco a più bersagli di ciascun turno può colpire una sola navicella, quella inizialmente scelta. Gli altri colpi vanno persi; il colpo rimasto conserva il suo danno.",
+      "counterplay": "La carta non modifica gli attacchi a bersaglio singolo. La contromisura Plancia o la scadenza rimuovono la restrizione.",
+      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
     },
     {
       "designId": "draft-sys-bridge-minus-e",
@@ -454,12 +455,12 @@
       "rarity": "Epica",
       "tier": 3,
       "magnitude": 2,
-      "unit": "punti su bonus di precisione/puntamento",
+      "unit": "attacchi multibersaglio limitati ogni turno",
       "durationTurns": 2,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−2 al primo bonus di precisione o puntamento tattico in ciascun turno colpito; nel primo turno −1 danno a un bersaglio secondario già previsto.",
-      "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
+      "effect": "Per 2 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno vengono limitati a una sola navicella per attacco. Gli altri colpi si perdono; il danno dei colpi rimasti non cambia.",
+      "counterplay": "La carta non modifica gli attacchi a bersaglio singolo. La contromisura Plancia o la scadenza rimuovono la restrizione.",
+      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
     },
     {
       "designId": "draft-sys-bridge-minus-l",
@@ -470,12 +471,12 @@
       "rarity": "Leggendaria",
       "tier": 4,
       "magnitude": 2,
-      "unit": "punti su bonus di precisione/puntamento",
+      "unit": "attacchi multibersaglio limitati ogni turno",
       "durationTurns": 3,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−2 al primo bonus di precisione o puntamento tattico in ciascun turno colpito; −1 danno al primo bersaglio secondario già previsto in ogni turno.",
-      "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
+      "effect": "Per 3 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno colpiscono una sola navicella per attacco. I colpi aggiuntivi si perdono, senza riassegnarli e senza ridurre il colpo rimasto.",
+      "counterplay": "La carta non modifica gli attacchi a bersaglio singolo. La contromisura Plancia o la scadenza rimuovono la restrizione.",
+      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
     },
     {
       "designId": "draft-sys-bridge-plus-c",
@@ -491,7 +492,7 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "Per 1 tuo turno, puoi ripartire il danno complessivo del primo attacco della nave madre tra due navicelle di supporto nemiche operative, se presenti. Esempio: 8 danni possono diventare 5+3. Non aggiunge danni e non permette di aggirare i supporti per colpire la madre.",
       "counterplay": "Richiede due supporti nemici bersagliabili; resta soggetta alle Difese e Trappole applicabili e non modifica gli HP dei componenti interni.",
-      "stage": "NUOVA PROPOSTA — non ancora approvata né implementata",
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato",
       "previousDraftEffect": "+1 al primo bonus di precisione o puntamento tattico usato nel tuo turno."
     },
     {
@@ -503,12 +504,12 @@
       "rarity": "Rara",
       "tier": 2,
       "magnitude": 1,
-      "unit": "punti su bonus di precisione/puntamento",
+      "unit": "attacco ripartibile per turno",
       "durationTurns": 2,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+1 al primo bonus di precisione o puntamento tattico in ciascuno dei tuoi due turni.",
-      "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
+      "effect": "Per 2 tuoi turni, il primo attacco della nave madre di ogni turno può dividere il proprio danno fra 2 navicelle di supporto avversarie operative. Danno totale invariato; protezioni applicate a ciascuna quota.",
+      "counterplay": "Occorrono due supporti avversari ancora operativi; in loro assenza la ripartizione non si attiva. Scudi e difese restano efficaci per ogni quota.",
+      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
     },
     {
       "designId": "draft-sys-bridge-plus-e",
@@ -519,12 +520,12 @@
       "rarity": "Epica",
       "tier": 3,
       "magnitude": 2,
-      "unit": "punti su bonus di precisione/puntamento",
+      "unit": "attacchi ripartibili per turno",
       "durationTurns": 2,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+2 al primo bonus di precisione o puntamento tattico per turno; nel primo turno +1 danno a un bersaglio secondario già previsto.",
-      "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
+      "effect": "Per 2 tuoi turni, i primi 2 attacchi della nave madre per turno possono ciascuno distribuire il proprio danno fra 2 navicelle di supporto nemiche operative. Nessun colpo extra, nessun danno aggiuntivo, nessun aggiramento della madre.",
+      "counterplay": "Occorrono due supporti avversari ancora operativi; in loro assenza la ripartizione non si attiva. Scudi e difese restano efficaci per ogni quota.",
+      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
     },
     {
       "designId": "draft-sys-bridge-plus-l",
@@ -535,12 +536,12 @@
       "rarity": "Leggendaria",
       "tier": 4,
       "magnitude": 2,
-      "unit": "punti su bonus di precisione/puntamento",
+      "unit": "attacchi ripartibili per turno",
       "durationTurns": 3,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+2 al primo bonus di precisione o puntamento tattico per turno; +1 danno al primo bersaglio secondario già previsto in ogni turno.",
-      "counterplay": "Amplificazione opposta, rimozione sabotaggio o scadenza; nessuna modifica alla selezione dei bersagli di base.",
-      "stage": "DA RIVEDERE — contiene una vecchia proposta di bonus precisione, non approvata"
+      "effect": "Per 3 tuoi turni, i primi 2 attacchi della nave madre di ciascun turno possono suddividere i danni fra 2 navicelle di supporto nemiche operative. Nessun nuovo colpo o danno, e le difese si applicano a ciascuna quota.",
+      "counterplay": "Occorrono due supporti avversari ancora operativi; in loro assenza la ripartizione non si attiva. Scudi e difese restano efficaci per ogni quota.",
+      "stage": "PROPOSTA DI DESIGN COMPLETATA — da approvare; non implementata"
     }
   ]
 }
