@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,cardCopyLimit,cardFacePath,effectiveDeck,eligibleExclusives,
@@ -60,7 +62,7 @@ test('Tutte le 120 esclusive sono giocabili: Arca completa, 12 madri, Boss e Per
   assert.equal(c.shipId,'L04');assert.equal(c.effectSpec.type,'ark');
   assert.equal(c.playable!==false,true);
   assert.equal(cardFacePath(id),null);
-  assert.equal(exclusiveUnlocked(id,'L04',5),true);
+  assert.equal(exclusiveUnlocked(id,'L04',shipMaxLevel('L04')),true);
   assert.equal(exclusiveUnlocked(id,'L03',5),false);
  }
  assert.equal(Object.keys(BOSS_CARDS).length,12);
@@ -68,12 +70,12 @@ test('Tutte le 120 esclusive sono giocabili: Arca completa, 12 madri, Boss e Per
  assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
 });
 test('Arca sblocca esattamente 6,7,8,9,10 definizioni e 2 copie reali della Fusione',()=>{
- for(let level=1;level<=5;level++){
-  assert.equal(eligibleExclusives('L04',level).filter(c=>IDS.includes(c.id)).length,5+level);
+ for(let level=1;level<=shipMaxLevel('L04');level++){
+  assert.equal(eligibleExclusives('L04',level).filter(c=>IDS.includes(c.id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['L04'].filter(n=>n<=level).length));
   const physical=effectiveDeck([],'L04',level);
   assert.equal(physical.filter(id=>id==='nx-l04-05').length,2);
   assert.equal(physical.includes('prog-fusion-l04'),false);
-  assert.equal(physical.filter(id=>IDS.includes(id)).length,6+level);
+  assert.equal(physical.filter(id=>IDS.includes(id)).length,(5+EXCLUSIVE_UNLOCK_MILESTONES['L04'].filter(n=>n<=level).length));
  }
  assert.equal(cardCopyLimit('nx-l04-05'),2);
  assert.equal(cardCopyLimit('nx-l04-06'),1);
