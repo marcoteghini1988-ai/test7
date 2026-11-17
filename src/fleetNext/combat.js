@@ -52,7 +52,7 @@ import {
 } from './terrains.js';
 import {HP_SYNC_RULESET,motherIntegrityFromSystems,splitSynchronizedDamage} from './hpSynchronization.js';
 import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
- commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,activeSystemCard,
+ commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,commandPassiveSuspensions,
  consumePlanciaRestriction,consumePlanciaSplit,planciaSplitCount,
  resetFieldWithBlackHole,TEMP_WEAPON_DURATION} from './newCardEffects.js';
 
@@ -2733,13 +2733,9 @@ function applyBossPassive(b,ctx,events){
 }
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
- // Centralina Epica ferma una passiva sincronizzata, la Leggendaria
- // le due passive dei supporti attivi nel primo turno influenzato.
- const sabotage=side.ruleset===HP_SYNC_RULESET?activeSystemCard(side,'command','disable',b.ply):null;
- const recovery=side.ruleset===HP_SYNC_RULESET?activeSystemCard(side,'command','amplify',b.ply):null;
- let suspended=sabotage&&sabotage.tier>=3&&b.ply===sabotage.appliedPly+1&&
-  (!recovery||recovery.tier<sabotage.tier)?sabotage.tier===4?2:1:0;
- if(suspended&&recovery?.tier===4)suspended=Math.max(0,suspended-1);
+ // Le passive si sospendono soltanto durante il primo turno colpito;
+ // la Centralina Leggendaria alleata può salvare una delle attivazioni.
+ let suspended=side.ruleset===HP_SYNC_RULESET?commandPassiveSuspensions(side,b.ply):0;
  for(const e of side.escorts.filter(x=>x.linked)){
   if(unitSilenced(e,b.ply))continue;
   const due=(e.fusionSkills||[e.skill]).some(skill=>
