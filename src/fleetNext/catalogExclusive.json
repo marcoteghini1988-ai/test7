@@ -1213,7 +1213,8 @@
       "effectSpec": {
         "type": "power",
         "amount": 2
-      }
+      },
+      "nativeFace": true
     },
     {
       "id": "ex-l02-01",
