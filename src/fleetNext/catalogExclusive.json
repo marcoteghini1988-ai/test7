@@ -890,7 +890,7 @@
         "protezione",
         "personaggio"
       ],
-      "effectProposed": "Per 2 tuoi turni: Il tuo attacco ignora 1 protezione sui componenti.",
+      "effectProposed": "Quando una tua protezione blocca un colpo, sposta una sua carica residua su un altro bersaglio valido. Una volta per turno.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
@@ -901,9 +901,10 @@
       "comboRecipeId": null,
       "status": "semplificata_implementata",
       "effectSpec": {
-        "type": "pierce",
-        "amount": 1
-      }
+        "type": "prisma",
+        "action": "prisma-artisan"
+      },
+      "nativeFace": true
     },
     {
       "id": "ex-c03-01",
