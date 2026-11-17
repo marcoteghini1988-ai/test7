@@ -140,8 +140,8 @@ test('Adattamento non consuma carte se tutte le altre esclusive sono già in gio
  assert.equal(JSON.stringify(b),before);
 });
 test('Esclusive non ancora pronte restano non giocabili anche se nel catalogo',()=>{
- const b=make({shipA:'R02'});
- const def=card('nx-r02-02');
+ const b=make({shipA:'R04'});
+ const def=card('nx-r04-02');
  assert.equal(def.playable,false);
  assert.match(effectUnavailableReason(def,b.sides.A,b),/ancora da implementare/);
 });
