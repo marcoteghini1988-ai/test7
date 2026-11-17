@@ -13,6 +13,7 @@ import {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
 import {getShipProgression} from './progression.js';
 import {EXCLUSIVE_DESIGNS_120,NEW_EXCLUSIVE_BLUEPRINTS,EXCLUSIVE_SHIP_IDS,EXCLUSIVE_DESIGN_BY_ID} from './exclusive120.js';
 import {VARIANT_EXCLUSIVE_CARDS} from './variantExclusives.js';
+import {buildExclusiveUnlockLevels} from './exclusiveUnlocks.js';
 export {EXCLUSIVE_DESIGNS_120,EXCLUSIVE_SHIP_IDS} from './exclusive120.js';
 export {BOSS_CARDS,bossCard} from './bossCards.js';
 export {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
@@ -62,12 +63,17 @@ const preservedCharacters=exclusiveData.cards.map(c=>{
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  return c;
 });
-export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS),...Object.values(VARIANT_EXCLUSIVE_CARDS)].map(card =>
+const EXCLUSIVE_SOURCES=[...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS),...Object.values(VARIANT_EXCLUSIVE_CARDS)];
+export const EXCLUSIVE_UNLOCK_LEVELS=buildExclusiveUnlockLevels(EXCLUSIVE_SOURCES);
+export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(EXCLUSIVE_SOURCES.map(raw => {
+ const card={...raw,legacyMinShipLevelDraft:raw.minShipLevelDraft,
+  minShipLevelDraft:EXCLUSIVE_UNLOCK_LEVELS[raw.id]};
+ return
  [card.id,definedCard(card,card.kind||(/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
   /Scudiera|Supporto|Tattica/i.test(card.category)?'support':
   /Controllo/i.test(card.category)?'control':
-  /combo|fusione/i.test(card.category)?'combo':'attack'),'exclusive')]
-)));
+  /combo|fusione/i.test(card.category)?'combo':'attack'),'exclusive')];
+})));
 export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(s=>[s.id,Object.freeze(s)])));
 export const COMBO_RECIPES = Object.freeze(exclusiveData.comboRecipes.map(c=>Object.freeze(c)));
 export const GENERAL_COUNT = Object.keys(GENERAL_CARDS).length;
@@ -133,6 +139,7 @@ export function supportGrade(shipId,level,index=0){
  const profile=getShipProgression(shipId,level);
  return profile?[...profile.escortGrades,...profile.reserveGrades][index]||0:0;
 }
+export const exclusiveUnlockLevel=id=>EXCLUSIVE_CARDS[id]?.minShipLevelDraft??PROGRESSION_CARDS[id]?.minShipLevelDraft??null;
 export function exclusiveUnlocked(id,shipId,level){
  const def=exclusiveCard(id),profile=getShipProgression(shipId,level);
  if(!def||!profile||def.shipId!==shipId||profile.level<def.minShipLevelDraft)return false;
