@@ -2302,6 +2302,44 @@ function mergeFalcoShots(a,b){
 
 
 // Gli attacchi ionici hanno un colpo proprio, senza duplicare la salva ordinaria.
+// Ogni comando Squalo sostituisce la salva ordinaria: mai due attacchi gratis.
+function resolveSharkShots(b,ctx,events,order){
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const command=ctx.sharkAttacks[0],selected=selectedEnemyTarget(enemy,order,b.ply);
+ const result={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  played:visiblePlayed(ctx.cards),targetKind:selected?.kind,
+  targetId:selected?.unit?.id,targets:[]};
+ if(!selected||!command)return result;
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  events.push(emit(b,ctx.who,'no-shot','Attacco Squalo bloccato: eventuali costi restano pagati'));
+  return result;
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((n,x)=>n+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=enemy.buffs.filter(x=>x.kind==='guard'&&x.untilPly>b.ply)
+  .reduce((n,x)=>n+(x.power||0),0);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-
+  enemy.ships[0].defensePower)+ctx.power+
+  terrainSalvoModifier(b.terrain,side.ships[0].id).value-jam-guard);
+ if(power<=0){
+  events.push(emit(b,ctx.who,'block','Attacco Squalo fermato dai disturbi'));
+  return result;
+ }
+ const action=command.action,bypass=action==='ruthless-response';
+ if(bypass&&selected.kind!=='part')return result;
+ if(!bypass&&!['escort','machine'].includes(selected.kind))return result;
+ const amount=bypass?1:action==='retaliation-torpedo'?3:power;
+ const hit=linceHit(b,ctx,events,selected,amount,command.id,order,bypass,0);
+ if(hit.damage){
+  const field={part:'damage',escort:'escortDamage',machine:'machineDamage'}[hit.target.kind];
+  if(field)result[field]=hit.damage;
+  result.targets.push({kind:hit.target.kind,id:hit.target.unit.id,
+   damage:hit.damage,destroyed:hit.target.unit.destroyed});
+ }
+ return result;
+}
+
 function resolveMantaShots(b,ctx,events,order){
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const target=selectedEnemyTarget(enemy,order,b.ply),command=ctx.mantaAttacks[0];
