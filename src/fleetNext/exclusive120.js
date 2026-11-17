@@ -10,6 +10,7 @@ import {PRISMA_ACTIONS} from './prismaEngine.js';
 import {CORVO_ACTIONS} from './corvoEngine.js';
 import {FALCO_ACTIONS} from './falcoEngine.js';
 import {MANTA_ACTIONS} from './mantaEngine.js';
+import {SHARK_ACTIONS} from './sharkEngine.js';
 
 export const EXCLUSIVE_SHIP_IDS=Object.freeze(["N00","C01","C02","C03","R01","R02","R04","E01","E02","L01","L03","L04"]);
 const characterIds=Object.freeze({
@@ -40,7 +41,7 @@ export const EXCLUSIVE_DESIGNS_120=Object.freeze(definition.cards.map(raw=>Objec
  // La versione del Personaggio già esistente resta giocabile, non ancora il suo effetto riprogettato.
  currentCharacterPlayable:raw.type==='Personaggio',
  executable:!!(AURORA_ACTIONS[characterIds[raw.id]||raw.id]||LINCE_ACTIONS[characterIds[raw.id]||raw.id]||
-  PRISMA_ACTIONS[characterIds[raw.id]||raw.id]||CORVO_ACTIONS[characterIds[raw.id]||raw.id]||FALCO_ACTIONS[characterIds[raw.id]||raw.id]||MANTA_ACTIONS[characterIds[raw.id]||raw.id])
+  PRISMA_ACTIONS[characterIds[raw.id]||raw.id]||CORVO_ACTIONS[characterIds[raw.id]||raw.id]||FALCO_ACTIONS[characterIds[raw.id]||raw.id]||MANTA_ACTIONS[characterIds[raw.id]||raw.id]||SHARK_ACTIONS[characterIds[raw.id]||raw.id])
 })));
 export const EXCLUSIVE_DESIGN_BY_ID=Object.freeze(
  Object.fromEntries(EXCLUSIVE_DESIGNS_120.map(c=>[c.id,c]))
@@ -56,7 +57,8 @@ export const NEW_EXCLUSIVE_BLUEPRINTS=Object.freeze(Object.fromEntries(
    PRISMA_ACTIONS[c.id]?{type:'prisma',action:PRISMA_ACTIONS[c.id]}:
    CORVO_ACTIONS[c.id]?{type:'corvo',action:CORVO_ACTIONS[c.id]}:
    FALCO_ACTIONS[c.id]?{type:'falco',action:FALCO_ACTIONS[c.id]}:
-   MANTA_ACTIONS[c.id]?{type:'manta',action:MANTA_ACTIONS[c.id]}:{type:'blueprint',code:c.designId}),
+   MANTA_ACTIONS[c.id]?{type:'manta',action:MANTA_ACTIONS[c.id]}:
+   SHARK_ACTIONS[c.id]?{type:'shark',action:SHARK_ACTIONS[c.id]}:{type:'blueprint',code:c.designId}),
   minShipLevelDraft:c.minShipLevel,
   requiredOwnParts:Object.freeze([]),requiredEscortCount:0,
   maxCopiesInAutoPackageDraft:1,
@@ -64,13 +66,14 @@ export const NEW_EXCLUSIVE_BLUEPRINTS=Object.freeze(Object.fromEntries(
   counterplay:c.counterplay,
   designRules:c.rules,designRequirements:c.requirements,
   visualBrief:c.visualBrief,
-  nativeFace:true,playable:!!(AURORA_ACTIONS[c.id]||LINCE_ACTIONS[c.id]||PRISMA_ACTIONS[c.id]||CORVO_ACTIONS[c.id]||FALCO_ACTIONS[c.id]||MANTA_ACTIONS[c.id]),exclusiveToShip:true,
+  nativeFace:true,playable:!!(AURORA_ACTIONS[c.id]||LINCE_ACTIONS[c.id]||PRISMA_ACTIONS[c.id]||CORVO_ACTIONS[c.id]||FALCO_ACTIONS[c.id]||MANTA_ACTIONS[c.id]||SHARK_ACTIONS[c.id]),exclusiveToShip:true,
   status:AURORA_ACTIONS[c.id]?'aurora-executable-v1':
    LINCE_ACTIONS[c.id]?'lince-executable-v1':
    PRISMA_ACTIONS[c.id]?'prisma-executable-v1':
    CORVO_ACTIONS[c.id]?'corvo-executable-v1':
    FALCO_ACTIONS[c.id]?'falco-executable-v1':
-   MANTA_ACTIONS[c.id]?'manta-executable-v1':'awaiting-executable-combat-action'
+   MANTA_ACTIONS[c.id]?'manta-executable-v1':
+   SHARK_ACTIONS[c.id]?'shark-executable-v1':'awaiting-executable-combat-action'
  })
  ])
 ));
