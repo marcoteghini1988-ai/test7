@@ -4062,7 +4062,8 @@ export function autoFleetTurn(b,who=b.turn){
   {targetKind:'part',targetId:part?.id,partId:part?.id};
  const candidates=side.hand.map((id,i)=>({id,i,role:cardRole(id),def:card(id)}))
   .filter(x=>!effectUnavailableReason(x.def,side,b,{ownPartId}));
- const score=x=>x.def.effectSpec.type==='royal'&&
+ const score=x=>x.def.effectSpec.type==='ark'&&x.def.effectSpec.action==='ark-fusion'?12:
+  x.def.effectSpec.type==='royal'&&
   x.def.effectSpec.action==='crown-fusion'?12:x.def.effectSpec.type==='fusion'?10:x.def.effectSpec.type==='deployMachine'?8:
   x.def.effectSpec.type==='bypass'&&guard?7:x.def.effectSpec.type==='repair'?6:
   x.role==='attack'?5:x.role==='character'?4:x.role==='defense'?3:x.role==='terrain'?1:2;
@@ -4119,6 +4120,13 @@ export function autoFleetTurn(b,who=b.turn){
   royalCapableModule(side,'nx-l01-01',b.ply)&&royalSupports(side,b.ply).length>0&&
   cards.some(i=>ROYAL_ATTACK_ACTIONS.includes(card(side.hand[i])?.effectSpec?.action));
  const royalSpare=side.hand.filter((id,i)=>!cards.includes(i));
+ const arkArchiveAi=side.ships[0].id==='L04'&&
+  arkModuleActive(side,'nx-l04-01',b.ply)&&arkModulesInDiscard(side).length>0&&
+  royalSpare.length>0&&(side.ark?.archiveUsedPly??-999)!==b.ply;
+ const arkKeeperAi=side.ships[0].id==='L04'&&
+  (side.commander?.id==='ex-l04-01'&&side.commander.untilPly>b.ply||
+   cards.some(i=>side.hand[i]==='ex-l04-01'))&&
+  royalSpare.length>(arkArchiveAi?1:0);
  const obsidianAiGuard=side.ships[0].id==='L03'&&
   !!obsidianFusedEscort(side,b.ply)&&
   !cards.some(i=>side.hand[i]==='nx-l03-08');
@@ -4126,6 +4134,10 @@ export function autoFleetTurn(b,who=b.turn){
   !!royalSpare.length&&(side.commander?.id==='ex-l01-01'&&side.commander.untilPly>b.ply||
   cards.some(i=>side.hand[i]==='ex-l01-01'));
  return {...target,ownPartId,cards,pass:!part,
+  arkArchive:arkArchiveAi,arkArchiveDiscardId:arkArchiveAi?royalSpare[0]:null,
+  arkRecoverModuleId:arkArchiveAi?arkModulesInDiscard(side)[0]:null,
+  arkCustodianSwap:arkKeeperAi,
+  arkCustodianBottomId:arkKeeperAi?royalSpare[arkArchiveAi?1:0]:null,
   obsidianGuard:obsidianAiGuard,
   royalRelay:royalAiRelay,royalRelayEscortId:royalAiRelay?royalSupports(side,b.ply)[0].id:null,
   royalSovereignTrade:royalAiSovereign,royalDiscardId:royalSpare[0]||null,
