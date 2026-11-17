@@ -838,6 +838,53 @@ export default function OfficialFleetBattle3D({
       {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
      </select>
     </label>}
+    {stormActive&&<p className="f3d-storm-readout">
+     <b>Tempesta</b>
+     {' · '+(player.storm?.charge&&stormModuleActive(player,'nx-e02-09',battle.ply)?
+      'Condensatore carico: prossimo colpo pesante':
+      'Colpisci unità differenti per caricare il Condensatore')}
+     {player.storm?.lastHitsPly===battle.ply-2&&
+      ' · '+(player.storm.lastHits?.length||0)+' unità danneggiate nel turno precedente'}
+    </p>}
+    {stormMultiple&&stormSecondChoices.length>0&&
+     <label>Tempesta — seconda unità distinta:
+      <select value={stormOptions.second} onChange={e=>setStormOption('second',e.target.value)}>
+       <option value="">Prima unità diversa disponibile</option>
+       {stormSecondChoices.map(t=><option key={t.key} value={t.key}>
+        {t.name} · {t.hp}/{t.maxHp}</option>)}
+      </select>
+     </label>}
+    {stormActive&&stormModuleActive(player,'nx-e02-01',battle.ply)&&
+     stormSecondChoices.length>0&&<label>
+      Bobina a catena — bersaglio del secondo colpo dichiarato:
+      <select value={stormOptions.chain} onChange={e=>setStormOption('chain',e.target.value)}>
+       <option value="">Prima altra unità disponibile</option>
+       {stormSecondChoices.map(t=><option key={t.key} value={t.key}>
+        {t.name} · {t.hp}/{t.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('storm-front')&&stormOwnSupports.length>0&&
+     <label>Fronte di Tempesta — supporto che intercetterà per la macchina:
+      <select value={stormOptions.front} onChange={e=>setStormOption('front',e.target.value)}>
+       <option value="">Primo supporto operativo</option>
+       {stormOwnSupports.map(e=><option key={e.id} value={e.id}>
+        {e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {stormActive&&stormCaptainActive&&stormSpare.length>0&&<>
+     <label><input type="checkbox" checked={stormOptions.captainSwap}
+       onChange={e=>setStormOption('captainSwap',e.target.checked)}/>
+      Capitano: dopo danni a due unità, scarta una carta e pescane una
+     </label>
+     {stormOptions.captainSwap&&<label>Carta da scartare:
+      <select value={stormOptions.captainTrade}
+       onChange={e=>setStormOption('captainTrade',e.target.value)}>
+       <option value="">Prima carta non giocata</option>
+       {stormSpare.map((id,i)=><option key={id+':'+i} value={id}>
+        {card(id)?.nome||card(id)?.name||id}</option>)}
+      </select>
+     </label>}
+    </>}
     {nebulaActive&&<p className="f3d-nebula-readout">
      <b>Nebulosa</b>
      {' · '+(nebulaFog?'Occultato: '+nebulaFog.name:
