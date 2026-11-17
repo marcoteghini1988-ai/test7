@@ -65,13 +65,15 @@ Non si aumenta necessariamente percentuale **e** durata insieme: la progressione
 
 ### Plancia — 8 carte
 
+**Aggiornamento:** nella modalità HP la Plancia non determina quali componenti vitali colpire; questi non sono più bersagli. Il sabotaggio Comune è stato approvato; l'amplificazione Comune è una nuova proposta. Le altre sei descrizioni sulla precisione sono bozze **da riprogettare**, non regole valide del nuovo combattimento.
+
 | Rarità | Funzione | Carta | Intensità di progetto | Turni | Effetto |
 |---|---|---|---|---:|---|
-| Comune | Sabotaggio | Coordinate falsate | −1 punti su bonus di precisione/puntamento | 1 | −1 al primo bonus di precisione o puntamento tattico usato dall'avversario nel turno colpito. |
+| Comune | Sabotaggio | Coordinate falsate | Limita il primo attacco multi-bersaglio | 1 | **APPROVATA:** il primo attacco avversario a più bersagli colpisce una sola navicella; gli altri colpi si perdono. |
 | Rara | Sabotaggio | Confusione della rotta | −1 punti su bonus di precisione/puntamento | 2 | −1 al primo bonus di precisione o puntamento tattico in ciascun turno colpito. |
 | Epica | Sabotaggio | Rotta fantasma | −2 punti su bonus di precisione/puntamento | 2 | −2 al primo bonus di precisione o puntamento tattico in ciascun turno colpito; nel primo turno −1 danno a un bersaglio secondario già previsto. |
 | Leggendaria | Sabotaggio | Cortocircuito tattico | −2 punti su bonus di precisione/puntamento | 3 | −2 al primo bonus di precisione o puntamento tattico in ciascun turno colpito; −1 danno al primo bersaglio secondario già previsto in ogni turno. |
-| Comune | Amplificazione | Calcolo di tiro | +1 punti su bonus di precisione/puntamento | 1 | +1 al primo bonus di precisione o puntamento tattico usato nel tuo turno. |
+| Comune | Amplificazione | Calcolo di tiro | Ripartizione del primo attacco | 1 | **PROPOSTA, NON APPROVATA:** puoi dividere il danno totale del primo attacco fra due supporti avversari operativi, senza aumentarlo né aggirare la protezione della madre. |
 | Rara | Amplificazione | Navigazione assistita | +1 punti su bonus di precisione/puntamento | 2 | +1 al primo bonus di precisione o puntamento tattico in ciascuno dei tuoi due turni. |
 | Epica | Amplificazione | Analisi predittiva | +2 punti su bonus di precisione/puntamento | 2 | +2 al primo bonus di precisione o puntamento tattico per turno; nel primo turno +1 danno a un bersaglio secondario già previsto. |
 | Leggendaria | Amplificazione | Strategia a fuoco | +2 punti su bonus di precisione/puntamento | 3 | +2 al primo bonus di precisione o puntamento tattico per turno; +1 danno al primo bersaglio secondario già previsto in ogni turno. |
