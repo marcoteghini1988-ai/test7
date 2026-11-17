@@ -1810,6 +1810,207 @@ function stormEndOwnTurn(b,ctx,events){
  state.lastHits=ids;state.lastHitsPly=b.ply;
 }
 
+
+// Eclisse Reale: ordini autentici, scudi trasferiti e unica Fusione della Corona.
+function activateRoyalCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],action=def.effectSpec.action;
+ const supports=royalSupports(side,b.ply);
+ const note=(message,extra={})=>events.push(emit(b,who,'card',
+  (def.nome||def.name)+' · '+message,{cardId:def.id,...extra}));
+ if(isRoyalModule(def.id)){
+  const result=mountModule(side,def);
+  if(!result.ok)throw Error(result.reason);
+  note('Modulo installato: '+result.entry.name,
+   {moduleId:result.entry.id,moduleSlot:result.entry.slot});
+  return;
+ }
+ if(ROYAL_ATTACK_ACTIONS.includes(action)){
+  if(order.royalRelay){
+   const relay=supports.find(e=>e.id===order.royalRelayEscortId)||supports[0];
+   if(!relay||!royalCapableModule(side,'nx-l01-01',b.ply))
+    throw Error('Relè della Corona richiede un supporto e alimentazione');
+   ensureRoyalState(side).lastRelayPly=b.ply;
+   ctx.royalRelay=true;ctx.royalRelayEscortId=relay.id;
+   ctx.royalSupportCommand=true;
+   note('Relè: '+relay.name+' esegue il comando al posto dell’Arsenale',{
+    relayEscortId:relay.id,fromSupport:true});
+  }
+  if(action==='coordinated-judgment'){
+   const p=royalVisibleProtections(side,b.ply).find(p=>p.source===order.royalSourceToken)||
+    royalVisibleProtections(side,b.ply)[0];
+   const performer=supports.find(e=>e.slot===p?.escortSlot);
+   if(!p||!performer)throw Error('Giudizio richiede protezione reale su supporto operativo');
+   discardDefense(side,p.source); // Costo prima dell'impatto, mai rimborsato.
+   ctx.royalSupportCommand=true;ctx.royalJudgmentEscortId=performer.id;
+   note('Sacrificata una Difesa scoperta di '+performer.name+' per il colpo pesante',
+    {sacrificedDefenseId:p.id,performerId:performer.id});
+  }
+  ctx.royalAttacks.push({id:def.id,action});
+  return;
+ }
+ if(action==='protective-crown'){
+  const defender=supports.find(e=>e.id===order.royalGuardEscortId)||supports[0];
+  const d=side.defenses.find(e=>e.source===source);
+  if(!defender||!d)throw Error('Corona protettiva: supporto non operativo');
+  d.royalGuardEscortId=defender.id;
+  note('Il primo colpo sulla Centralina sarà intercettato da '+defender.name,
+   {escortId:defender.id});
+  return;
+ }
+ if(action==='interdiction-decree'){
+  events.push(emit(b,who,'trap-set','Decreto di interdizione preparato coperto',
+   {cardId:def.id}));
+  return;
+ }
+ if(action==='eclipse-sovereign'){
+  note('Con due supporti operativi, scegli una fra tre carte cambiandola con una carta in mano');
+  return;
+ }
+ if(action==='cross-order'){
+  const p=royalVisibleProtections(side,b.ply).find(p=>p.source===order.royalSourceToken)||
+   royalVisibleProtections(side,b.ply)[0];
+  const sourceEscort=supports.find(e=>e.slot===p?.escortSlot);
+  const destination=supports.find(e=>e.id===order.royalDestinationEscortId&&e.id!==sourceEscort?.id)||
+   supports.find(e=>e.id!==sourceEscort?.id);
+  if(!p||!sourceEscort||!destination)throw Error('Ordine incrociato: protezione o supporti assenti');
+  p.escortSlot=destination.slot;
+  let switched=false;
+  const a=sourceEscort.skill.targetPart,bid=destination.skill.targetPart;
+  if(a&&bid&&royalPart(side,a)&&royalPart(side,bid)){
+   sourceEscort.skill={...sourceEscort.skill,targetPart:bid};
+   destination.skill={...destination.skill,targetPart:a};
+   switched=true;
+  }
+  ctx.royalSupportCommand=true;
+  note('Protezione su '+destination.name+
+   (switched?' · bersagli compatibili delle abilità scambiati':' · abilità inalterate'),{
+    sourceEscortId:sourceEscort.id,destinationEscortId:destination.id,
+    sourceDefenseId:p.id,abilityTargetsSwapped:switched});
+  return;
+ }
+ if(action==='royal-bastion'){
+  const defender=supports.find(e=>e.id===order.royalBastionEscortId)||supports[0];
+  const d=side.defenses.find(e=>e.source===source);
+  if(!defender||!d||supports.length<2)
+   throw Error('Bastione reale richiede due supporti e una Difesa scoperta');
+  d.royalBastionEscortId=defender.id;
+  note('Un colpo contro '+defender.name+' verrà diviso con l’altro supporto',
+   {escortId:defender.id});
+  return;
+ }
+ if(action==='crown-fusion'){
+  const result=fuseFleetSupports(side,b.ply);
+  if(!result.ok)throw Error(result.reason);
+  result.fused.name='Corona Unita · Eclisse Reale';
+  result.fused.royalCrown=true;
+  result.fused.royalCrownUsedPly=-999;
+  events.push(emit(b,who,'fusion','Fusione della Corona: due guardiani in Corona Unita',{
+   cardId:def.id,fusedId:result.fused.id,stage:result.stage,
+   escortCount:side.escorts.length,passives:result.fused.fusionSkills.length,
+   royalCrown:true}));
+  return;
+ }
+ throw Error('Azione regale non implementata: '+action);
+}
+// Il Relè e la Lancia non producono colpi aggiuntivi: agiscono sugli attacchi reali.
+function royalOwnShotPierce(b,ctx,events,sourceCard){
+ const side=b.sides[ctx.who];
+ if(side.ships[0].id!=='L01'||!ctx.royalMotherShot||!ctx.royalSupportCommand||
+  !royalCapableModule(side,'nx-l01-07',b.ply)||ctx.royalLanceUsed||
+  !royalPart(side,'weapons')||b.terrain?.id==='T06')return;
+ ctx.royalLanceAvailable=true;
+}
+function royalGuardCommand(b,ctx,events,target){
+ if(target?.kind!=='part'||target.unit.id!=='command')return target;
+ const defender=b.sides[other(ctx.who)];
+ if(defender.ships[0].id!=='L01')return target;
+ const d=defender.defenses.find(d=>d.id==='nx-l01-03'&&!d.hidden&&
+  d.untilPly>b.ply&&d.royalGuardEscortId);
+ const protector=d&&royalSupports(defender,b.ply).find(e=>e.id===d.royalGuardEscortId);
+ if(protector){
+  discardDefense(defender,d.source);
+  events.push(emit(b,other(ctx.who),'royal-intercept',
+   'Corona protettiva: '+protector.name+' intercetta la Centralina',{
+    cardId:d.id,fromPartId:'command',targetKind:'escort',targetId:protector.id}));
+  return {kind:'escort',unit:protector,redirected:true,royalSameDamage:true};
+ }
+ const state=ensureRoyalState(defender);
+ const crowned=royalSupports(defender,b.ply).find(e=>e.royalCrown&&e.fused);
+ if(!crowned||state.lastCrownGuardPly===b.ply)return target;
+ state.lastCrownGuardPly=b.ply;
+ events.push(emit(b,other(ctx.who),'royal-intercept',
+  'Corona Unita devia su di sé il primo colpo alla Centralina',{
+   cardId:'nx-l01-10',fromPartId:'command',targetKind:'escort',targetId:crowned.id,
+   fusion:true}));
+ return {kind:'escort',unit:crowned,redirected:true,royalSameDamage:true};
+}
+// Il Decreto agisce sul ritiro, mai sulla Fusione o su sacrifici volontari.
+function royalCancelWithdrawal(b,actor,events,unit,targetKind){
+ const defender=b.sides[other(actor)];
+ const decree=defender.defenses.find(d=>d.id==='nx-l01-04'&&d.hidden&&
+  d.trigger==='unit-withdrawal'&&d.armedAtPly<b.ply);
+ if(!decree)return false;
+ discardDefense(defender,decree.source);
+ events.push(emit(b,other(actor),'trap-reveal',
+  'Decreto di interdizione blocca il ritiro di '+unit.name,{
+   cardId:decree.id,targetKind,targetId:unit.id,withdrawalCancelled:true}));
+ return true;
+}
+// L'impatto iniziale ha già superato le Difese; il Bastione non ricontrolla né devia.
+function royalDistributeDamage(b,ctx,events,defender,kind,unit,amount){
+ if(kind!=='escort'||amount<=0||defender.ships[0].id!=='L01')
+  return damageFleetUnit(defender,kind,unit,amount,b.ply);
+ const d=defender.defenses.find(d=>d.id==='nx-l01-08'&&!d.hidden&&
+  d.untilPly>b.ply&&d.royalBastionEscortId===unit.id);
+ const supports=royalSupports(defender,b.ply);
+ const second=d&&supports.find(e=>e.id!==unit.id);
+ if(!second||!supports.some(e=>e.id===unit.id))
+  return damageFleetUnit(defender,kind,unit,amount,b.ply);
+ discardDefense(defender,d.source);
+ const firstAmount=Math.ceil(amount/2),secondAmount=Math.floor(amount/2);
+ const first=damageFleetUnit(defender,kind,unit,firstAmount,b.ply);
+ const extra=secondAmount?damageFleetUnit(defender,'escort',second,secondAmount,b.ply):0;
+ ctx.royalSplitExtra=(ctx.royalSplitExtra||0)+extra;
+ events.push(emit(b,other(ctx.who),'royal-split',
+  'Bastione reale: '+unit.name+' −'+first+', '+second.name+' −'+extra,{
+   cardId:d.id,originalId:unit.id,secondId:second.id,
+   originalDamage:first,secondDamage:extra,damage:first+extra}));
+ if(extra){
+  // Questo è danno del medesimo attacco, non un nuovo colpo o un contrattacco.
+  onSharkAttackHit(b,ctx,events,{kind:'escort',unit:second,damage:extra});
+  stormOnHit(b,ctx,events,{kind:'escort',unit:second,damage:extra});
+  chargeMantaOnDamage(b,ctx.who,extra,events);
+  triggerReactions(b,ctx.who,extra,events);
+ }
+ return first;
+}
+function royalSovereignTurn(b,ctx,events){
+ const side=b.sides[ctx.who],state=ensureRoyalState(side);
+ if(!ctx.order?.royalSovereignTrade||side.ships[0].id!=='L01'||
+  side.commander?.id!=='ex-l01-01'||side.commander.untilPly<=b.ply||
+  !royalPart(side,'command')||royalSupports(side,b.ply).length<2||
+  state.lastSovereignPly===b.ply||!side.hand.length)return;
+ const index=side.hand.indexOf(ctx.order.royalDiscardId);
+ const discarded=side.hand.splice(index>=0?index:0,1)[0];
+ if(!discarded)return;
+ side.discard.push(discarded);
+ if(!side.deck.length&&side.discard.length){
+  side.deck=shuffled(side.discard,b);side.discard=[];
+ }
+ const top=side.deck.splice(0,3);
+ if(!top.length){
+  side.deck.push(discarded);side.discard.pop();side.hand.push(discarded);
+  return;
+ }
+ const chosenIndex=top.indexOf(ctx.order.royalPickId),pick=top.splice(chosenIndex>=0?chosenIndex:0,1)[0];
+ side.hand.push(pick);side.deck.push(...top);
+ state.lastSovereignPly=b.ply;
+ events.push(emit(b,ctx.who,'royal-sovereign',
+  'Sovrano dell’Eclisse: carta scartata; una scelta tra tre, altre sotto il mazzo',{
+   cardId:'ex-l01-01',discardedCardId:discarded,drawnCardId:pick,
+   viewedCount:top.length+1,bottomCount:top.length,netCards:0}));
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
