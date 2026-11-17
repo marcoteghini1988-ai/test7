@@ -1519,7 +1519,7 @@ function activateNebulaCard(b,who,def,ctx,events,order={},source=null){
   const selected=candidates.find(e=>e.id===order.nebulaSwapTargetId)||candidates[0];
   if(!hidden||!selected)throw Error('Bruma itinerante richiede due supporti validi');
   hidden.nebulaHiddenUntilPly=0;
-  selected.nebulaHiddenUntilPly=b.ply+2;
+  selected.nebulaHiddenUntilPly=b.ply+3;
   refreshEscortLinks(side,b.ply);
   note(hidden.name+' riappare; '+selected.name+' si occulta fino al prossimo tuo turno',
    {revealedId:hidden.id,hiddenId:selected.id});
@@ -1541,7 +1541,7 @@ function nebulaHideForTurn(b,ctx,events,order={}){
  const visible=nebulaVisibleSupports(side,b.ply);
  const selected=visible.find(e=>e.id===order.nebulaHideEscortId)||visible[0];
  if(!selected)throw Error('Nessun supporto occultabile');
- selected.nebulaHiddenUntilPly=b.ply+2;
+ selected.nebulaHiddenUntilPly=b.ply+3;
  ensureNebulaState(side).lastHidePly=b.ply;
  refreshEscortLinks(side,b.ply);
  events.push(emit(b,ctx.who,'nebula-hide',
