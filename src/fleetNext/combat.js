@@ -1464,7 +1464,17 @@ function redirectFleetHit(b,ctx,events,target){
 }
 function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
  if(!target||!primary||!target.unit||target.unit.id===primary.unit?.id)return false;
+ if(ctx.mantaGrounded)return true;
  const defender=b.sides[other(ctx.who)];
+ const grounding=defender.defenses.find(d=>d.hidden&&d.trigger==='manta-secondary'&&
+  d.armedAtPly<b.ply);
+ if(grounding&&mantaCapacitorActive(defender,b.ply)&&spendMantaEnergy(defender,b.ply,1)){
+  ctx.mantaGrounded=true;discardDefense(defender,grounding.source);
+  events.push(emit(b,other(ctx.who),'trap-reveal',
+   'Messa a terra annulla tutti i colpi su bersagli secondari',
+   {cardId:grounding.id,secondaryCancelled:true}));
+  return true;
+ }
  const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='multi-secondary'&&
   d.armedAtPly<b.ply&&d.protectedKind===target.kind&&
   d.protectedId===target.unit.id);
@@ -1533,6 +1543,12 @@ function blockHit(b,defender,targetKind,target,ctx,events){
    shard.kind===targetKind&&shard.targetId===target.id;
   const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard;
   p.remaining--;
+  if(!bypass&&p.id==='nx-r02-03'){
+   const energy=gainMantaEnergy(defender,b.ply,1);
+   if(energy)events.push(emit(b,other(ctx.who),'manta-energy',
+    'Schermo di assorbimento converte il colpo bloccato in energia',
+    {cardId:p.id,energy:mantaEnergy(defender)}));
+  }
   if(bypass){
    if(canShard)attacker.prisma.shard=null;
    else if(targetKind==='part'&&ctx.pierceLeft>0)ctx.pierceLeft--;
@@ -1633,7 +1649,8 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  target=redirectFleetHit(b,ctx,events,target);
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
- const actual=damageFleetUnit(defender,target.kind,target.unit,amount,b.ply);
+ const actual=damageFleetUnit(defender,target.kind,target.unit,
+  mantaCapDamage(b,defender,target.kind,target.unit,amount,events),b.ply);
  if(actual){
   const name=target.unit.name||VITAL_LABELS[target.unit.id]||'Bersaglio';
   events.push(emit(b,ctx.who,'impact',name+' −'+actual,{
@@ -1646,6 +1663,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
    targets:[{kind:target.kind,id:target.unit.id,damage:actual,destroyed:target.unit.destroyed}]
   }));
   onCorvoDamage(b,ctx,events,{kind:target.kind,unit:target.unit,damage:actual},sourceCard);
+  chargeMantaOnDamage(b,ctx.who,actual,events);
   triggerReactions(b,ctx.who,actual,events);
  }
  return actual;
@@ -1736,7 +1754,8 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  ctx.pierceLeft=pierce;
  if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
   return {damage:0,target:finalTarget,blocked:true};
- const actual=damageFleetUnit(enemy,finalTarget.kind,finalTarget.unit,amount,b.ply);
+ const actual=damageFleetUnit(enemy,finalTarget.kind,finalTarget.unit,
+  mantaCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,amount,events),b.ply);
  if(actual){
   events.push(emit(b,ctx.who,'impact',(finalTarget.unit.name||VITAL_LABELS[finalTarget.unit.id]||'Bersaglio')+' −'+actual,{
    cardId,targetKind:finalTarget.kind,targetId:finalTarget.unit.id,
@@ -1753,6 +1772,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
   }));
   onLinceDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},order,bypass);
   onCorvoDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},cardId);
+  chargeMantaOnDamage(b,ctx.who,actual,events);
   triggerReactions(b,ctx.who,actual,events);
  }
  return {damage:actual,target:finalTarget};
@@ -1962,6 +1982,11 @@ function falcoReleaseAtTurnStart(b,who,ctx,events,order){
   {cardId:q.cardId,shotCount:q.shots.length,held:q.held}));
  const supports=(side.escorts||[]).filter(e=>falcoEscortReady(side,e,b.ply));
  for(const [index,shot] of q.shots.entries()){
+  if(index>0&&shot.id!==q.shots[0]?.id){
+   const second=falcoUnits(enemy).find(t=>t.kind===shot.kind&&t.unit.id===shot.id);
+   const first=falcoUnits(enemy).find(t=>t.kind===q.shots[0].kind&&t.unit.id===q.shots[0].id);
+   if(second&&first&&cancelPrismaSecondaryHit(b,ctx,events,second,first))continue;
+  }
   if(shot.requiresEscorts&&(supports.length<2||
    supports.some(e=>(e.grade||1)<2)||!operational(side.ships[0],'command'))){
    events.push(emit(b,who,'falco-lost','Triangolazione: colpo leggero perso, manca un supporto operativo',
@@ -2075,12 +2100,14 @@ function resolveSalvo(b,ctx,events,order){
   const {kind,unit}=redirected;
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   const amount=kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
-  const damage=damageFleetUnit(defender,kind,unit,amount,b.ply);
+  const damage=damageFleetUnit(defender,kind,unit,
+   mantaCapDamage(b,defender,kind,unit,amount,events),b.ply);
   if(damage){
    hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,
     name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
    onLinceDamage(b,ctx,events,{kind,unit,damage},order,kind==='part'&&ctx.bypass);
    onCorvoDamage(b,ctx,events,{kind,unit,damage},null);
+   chargeMantaOnDamage(b,ctx.who,damage,events);
   }
  }
  const damage=hits.filter(h=>h.kind==='part').reduce((sum,h)=>sum+h.damage,0);
@@ -2098,6 +2125,7 @@ function resolveSalvo(b,ctx,events,order){
  return data;
 }
 function finishTurn(b,ctx,events){
+ mantaNavigatorTurn(b,ctx,events);
  const side=b.sides[ctx.who];side.turnCount++;refill(b,side);
  side.lastPlayed=visiblePlayed(ctx.cards);b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
  b.terrain=activeTerrain(b.terrain,b.ply);
