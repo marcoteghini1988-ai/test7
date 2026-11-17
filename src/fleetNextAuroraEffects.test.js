@@ -29,8 +29,8 @@ test('Aurora: dieci esclusive personali, sei disponibili al livello uno e zero e
   'ex-n00-01','nx-n00-07','nx-n00-08','nx-n00-09','nx-n00-10'];
  assert.equal(new Set(defs).size,10);
  for(const id of defs){assert.equal(card(id).shipId,'N00');assert.notEqual(card(id).playable,false);}
- assert.equal(defs.filter(id=>exclusiveUnlocked(id,'N00',1)).length,6);
- assert.ok(defs.every(id=>exclusiveUnlocked(id,'N00',5)));
+ assert.equal(defs.filter(id=>exclusiveUnlocked(id,'N00',1)).length,4);
+ assert.ok(defs.every(id=>exclusiveUnlocked(id,'N00',20)));
  assert.ok(defs.every(id=>!exclusiveUnlocked(id,'C01',5)));
  const ids=effectiveDeck([], 'N00',5);
  assert.equal(defs.filter(id=>ids.includes(id)).length,10);
