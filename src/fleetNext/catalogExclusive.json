@@ -1297,7 +1297,8 @@
         "type": "repair",
         "target": "weakest",
         "amount": 1
-      }
+      },
+      "nativeFace": true
     }
   ],
   "comboRecipes": [],
