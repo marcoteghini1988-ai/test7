@@ -3043,6 +3043,74 @@ function resolvePrismaShots(b,ctx,events,order){
 
 // Salva eseguibile del Falco. Le carte preparate sono una zona fisica separata
 // e non possono mai essere eseguite due volte, neppure se il bersaglio scompare.
+// Il colpo differito Titano occupa una zona vera fino al rilascio; se perso,
+// la carta va negli scarti. Il bersaglio non viene mai rimpiazzato.
+function obsidianReleaseAtTurnStart(b,who,ctx,events,order={}){
+ const side=b.sides[who],q=obsidianPending(side);
+ if(!q||q.releasePly>b.ply)return null;
+ side.obsidian.pending=null;
+ side.discard.push(q.cardId);
+ ctx.obsidianReleased=true;
+ const empty={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  played:[q.cardId],targets:[],preparedCardId:q.cardId};
+ const lose=message=>{
+  events.push(emit(b,who,'obsidian-lost',message,{cardId:q.cardId,
+   targetKind:q.kind,targetId:q.id}));
+  return empty;
+ };
+ const enemy=b.sides[other(who)];
+ const fake=enemy.defenses.find(d=>d.id==='nx-e01-04'&&d.hidden&&
+  d.trigger==='prepared-release'&&d.armedAtPly<b.ply);
+ if(fake){
+  discardDefense(enemy,fake.source);
+  events.push(emit(b,other(who),'trap-reveal',
+   'Falso bersaglio annulla la preparazione Titano',{
+    cardId:fake.id,blockedCardId:q.cardId}));
+  return lose('Colpo Titano annullato da Falso bersaglio');
+ }
+ if(!operational(side.ships[0],'weapons'))
+  return lose('Colpo preparato perso: Arsenale distrutto');
+ if(q.action==='titan-verdict'){
+  if(!operational(side.ships[0],'command')||
+   !obsidianFusedEscort(side,b.ply)||
+   obsidianFusedEscort(side,b.ply).id!==q.fusedId)
+   return lose('Sentenza del Titano annullata: Bastione fuso non più operativo');
+ }
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  return lose('Preparazione Titano bloccata dal Disarmo');
+ }
+ const declared=obsidianChosenTarget(enemy,q.kind,q.id);
+ if(!declared)return lose('Bersaglio della preparazione distrutto o rimosso');
+ ctx.obsidianNoRedirect=obsidianModuleActive(side,'nx-l03-01',b.ply);
+ ctx.obsidianPierceLeft=q.action==='black-howitzer'&&b.terrain?.id!=='T06'?1:0;
+ ctx.obsidianPierceTargetId=q.id;
+ startNebulaVolley(ctx);
+ const result={...empty,targets:[]};
+ events.push(emit(b,who,'obsidian-release',
+  (card(q.cardId)?.name||q.cardId)+': '+q.shots+
+  (q.shots===1?' colpo pesante':' colpi pesanti')+' sul bersaglio dichiarato',{
+   cardId:q.cardId,targetKind:q.kind,targetId:q.id,shots:q.shots,
+   anchored:ctx.obsidianNoRedirect}));
+ for(let i=0;i<q.shots;i++){
+  const target=obsidianChosenTarget(enemy,q.kind,q.id);
+  if(!target){
+   events.push(emit(b,who,'obsidian-lost','Colpo successivo perso: bersaglio eliminato',
+    {cardId:q.cardId,shotIndex:i}));
+   break;
+  }
+  const hit=linceHit(b,ctx,events,target,3,q.cardId,order,false,0);
+  if(hit.damage){
+   const field=hit.target.kind==='machine'?'machineDamage':'escortDamage';
+   result[field]+=hit.damage;
+   result.targets.push({kind:hit.target.kind,id:hit.target.unit.id,
+    damage:hit.damage,destroyed:hit.target.unit.destroyed});
+  }
+ }
+ ctx.obsidianPierceLeft=0;ctx.obsidianNoRedirect=false;
+ return result;
+}
+
 function falcoReleaseAtTurnStart(b,who,ctx,events,order){
  const side=b.sides[who],q=ensureFalcoState(side).pending;
  if(!q||q.releasePly>b.ply)return null;
