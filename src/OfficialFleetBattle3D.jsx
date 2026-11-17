@@ -965,6 +965,122 @@ export default function OfficialFleetBattle3D({
       {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
      </select>
     </label>}
+    {arkActive&&<p className="f3d-ark-readout">
+     <b>Arca Astrale</b>{' · '+player.fusionsUsed+'/'+player.fusionLimit+
+      ' fusioni · '+player.reserveEscorts.length+' supporti in riserva'}
+     {arkFused.length>0&&' · '+arkFused.length+' fusioni operative'}
+    </p>}
+    {arkActive&&selectedActions.includes('ark-fusion')&&<p className="f3d-ark-readout">
+     Fusione dell’Arca: la prima unisce i supporti 1 e 2 e, dal livello 3,
+     schiera il terzo. La seconda, al livello 5, fonde il terzo e il quarto
+     dalla riserva. Nessun supporto gratuito
+    </p>}
+    {arkArchiveActive&&arkRecoverChoices.length>0&&arkHandSpare.length>0&&<>
+     <label><input type="checkbox" checked={arkOptions.archive}
+       onChange={e=>setArkOption('archive',e.target.checked)}/>
+      Archivio stellare: scarta una carta per recuperare un vero modulo con 1 integrità
+     </label>
+     {arkOptions.archive&&<>
+      <label>Carta da scartare:
+       <select value={arkOptions.archiveDiscard}
+        onChange={e=>setArkOption('archiveDiscard',e.target.value)}>
+        <option value="">Prima carta non giocata</option>
+        {arkHandSpare.map((id,i)=><option key={id+':'+i} value={id}>
+         {card(id)?.nome||card(id)?.name||id}</option>)}
+       </select>
+      </label>
+      <label>Modulo da recuperare (non montato):
+       <select value={arkOptions.recoverModule}
+        onChange={e=>setArkOption('recoverModule',e.target.value)}>
+        <option value="">Primo modulo Arca negli scarti</option>
+        {arkRecoverChoices.map((id,i)=><option key={id+':'+i} value={id}>
+         {card(id)?.nome||card(id)?.name||id}</option>)}
+       </select>
+      </label>
+     </>}
+    </>}
+    {selectedActions.includes('conserving-ray')&&arkLiving.length>0&&
+     <label>Raggio conservativo — supporto da riparare dopo un colpo riuscito:
+      <select value={arkOptions.rayEscort}
+       onChange={e=>setArkOption('rayEscort',e.target.value)}>
+       <option value="">Primo supporto vivo ferito disponibile</option>
+       {arkLiving.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('reserve-custody')&&arkUnfused.length>0&&
+     <label>Custodia delle riserve — supporto non fuso protetto:
+      <select value={arkOptions.custodyEscort}
+       onChange={e=>setArkOption('custodyEscort',e.target.value)}>
+       <option value="">Primo supporto non fuso</option>
+       {arkUnfused.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('repair-chorus')&&arkDamaged.length>0&&<>
+     <label>Coro di riparazione — distribuisci due punti:
+      <select value={arkOptions.chorusMode}
+       onChange={e=>setArkOptions(o=>({...o,chorusMode:e.target.value,chorusSecond:''}))}>
+       <option value="focus">Due punti a un supporto</option>
+       <option value="split">Un punto a ciascuno di due supporti</option>
+      </select>
+     </label>
+     <label>Primo supporto da riparare:
+      <select value={arkOptions.chorusFirst}
+       onChange={e=>setArkOptions(o=>({...o,chorusFirst:e.target.value,chorusSecond:''}))}>
+       <option value="">Primo supporto ferito</option>
+       {arkDamaged.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>
+     {arkOptions.chorusMode==='split'&&arkChorusOthers.length>0&&
+      <label>Secondo supporto da riparare:
+       <select value={arkOptions.chorusSecond}
+        onChange={e=>setArkOption('chorusSecond',e.target.value)}>
+        <option value="">Primo altro supporto ferito</option>
+        {arkChorusOthers.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+       </select>
+      </label>}
+    </>}
+    {arkCustodianActive&&arkHandSpare.length>0&&<>
+     <label><input type="checkbox" checked={arkOptions.custodian}
+       onChange={e=>setArkOption('custodian',e.target.checked)}/>
+      Custode Astrale: scambia una carta soltanto dopo una riparazione reale di almeno 2 HP
+     </label>
+     {arkOptions.custodian&&<label>Carta da mettere sotto il mazzo:
+      <select value={arkOptions.custodianBottom}
+       onChange={e=>setArkOption('custodianBottom',e.target.value)}>
+       <option value="">Prima carta non giocata</option>
+       {arkHandSpare.map((id,i)=><option key={id+':'+i} value={id}>
+        {card(id)?.nome||card(id)?.name||id}</option>)}
+      </select>
+     </label>}
+    </>}
+    {selectedActions.includes('fleet-resonance')&&arkFused.length>0&&arkUnfused.length>0&&<>
+     <label>Risonanza della flotta — fusione da difendere:
+      <select value={arkOptions.fused} onChange={e=>setArkOption('fused',e.target.value)}>
+       <option value="">Prima fusione operativa</option>
+       {arkFused.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>
+     <label>Supporto non fuso che riceverà il blocco temporaneo:
+      <select value={arkOptions.resonanceEscort}
+       onChange={e=>setArkOption('resonanceEscort',e.target.value)}>
+       <option value="">Primo supporto non fuso operativo</option>
+       {arkUnfused.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>
+    </>}
+    {selectedActions.includes('astral-convergence')&&arkOtherTargets.length>0&&
+     <label>Convergenza astrale — secondo bersaglio nemico distinto:
+      <select value={arkOptions.second} onChange={e=>setArkOption('second',e.target.value)}>
+       <option value="">Prima altra unità nemica disponibile</option>
+       {arkOtherTargets.map(t=><option key={t.key} value={t.key}>
+        {t.name} · {t.hp}/{t.maxHp}</option>)}
+      </select>
+     </label>}
+    {arkActive&&arkModuleActive(player,'nx-l04-07',battle.ply)&&
+     <p className="f3d-ark-readout">
+      Lanciatore di stelle {player.ark?.repairedPly===battle.ply?
+       'pronto dopo una vera riparazione':'richiede una riparazione reale in questo turno'}
+     </p>}
     {obsidianActive&&<p className="f3d-obsidian-readout">
      <b>Titano Ossidiana</b>{' · '+
       (obsidianPendingShot?
