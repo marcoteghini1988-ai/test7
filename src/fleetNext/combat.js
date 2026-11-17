@@ -359,6 +359,8 @@ export function validateFleetTurn(b,who,order){
  if(!['A','B'].includes(who)||b.turn!==who)return 'Non è il tuo turno';
  const side=b.sides[who],indices=order?.cards||[];
  if(!uniqueIndexList(indices,side.hand))return 'Puoi usare fino a tre carte presenti nella mano';
+ if(obsidianPending(side)?.releasePly<=b.ply&&indices.length>=FLEET_MAX_PLAYED)
+  return 'Colpo Titano prenotato: resta spazio per due altre carte in questo turno';
  const chosen=indices.map(i=>card(side.hand[i]));
  if(chosen.some(c=>!c))return 'Carta non riconosciuta';
  const linceCommands=chosen.filter(c=>c.effectSpec?.type==='lince'&&
@@ -3756,14 +3758,15 @@ export function autoFleetTurn(b,who=b.turn){
  candidates.sort((a,z)=>score(z)-score(a)||a.i-z.i);
  const cards=[];
  for(const c of candidates){
-  if(cards.length>=FLEET_MAX_PLAYED)break;
+  if(cards.length>=FLEET_MAX_PLAYED-(obsidianPending(side)?.releasePly<=b.ply?1:0))break;
   const attack=c.def.effectSpec;
   const direct=attack?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(attack.action)||
    attack?.type==='shark'&&attack.action==='ruthless-response';
   const short=attack?.type==='corvo'&&attack.action==='targeted-short'||
    attack?.type==='manta'&&attack.action==='total-discharge';
   const machine=enemy.machines?.find(u=>unitAlive(u));
-  const target=short&&machine?{targetKind:'machine',targetId:machine.id,
+  const obsidianMachine=attack?.type==='obsidian'&&attack.action==='black-howitzer'&&machine;
+  const target=(short||obsidianMachine)&&machine?{targetKind:'machine',targetId:machine.id,
    machineSlot:machine.slot,partId:part?.id}:direct&&part?
    {targetKind:'part',targetId:part.id,partId:part.id}:defaultOrder;
   const alreadyDirect=cards.some(i=>card(side.hand[i]).effectSpec?.type==='lince'&&
@@ -3804,10 +3807,14 @@ export function autoFleetTurn(b,who=b.turn){
   royalCapableModule(side,'nx-l01-01',b.ply)&&royalSupports(side,b.ply).length>0&&
   cards.some(i=>ROYAL_ATTACK_ACTIONS.includes(card(side.hand[i])?.effectSpec?.action));
  const royalSpare=side.hand.filter((id,i)=>!cards.includes(i));
+ const obsidianAiGuard=side.ships[0].id==='L03'&&
+  !!obsidianFusedEscort(side,b.ply)&&
+  !cards.some(i=>side.hand[i]==='nx-l03-08');
  const royalAiSovereign=side.ships[0].id==='L01'&&royalSupports(side,b.ply).length>=2&&
   !!royalSpare.length&&(side.commander?.id==='ex-l01-01'&&side.commander.untilPly>b.ply||
   cards.some(i=>side.hand[i]==='ex-l01-01'));
  return {...target,ownPartId,cards,pass:!part,
+  obsidianGuard:obsidianAiGuard,
   royalRelay:royalAiRelay,royalRelayEscortId:royalAiRelay?royalSupports(side,b.ply)[0].id:null,
   royalSovereignTrade:royalAiSovereign,royalDiscardId:royalSpare[0]||null,
   royalPickId:side.deck[0]||null,
