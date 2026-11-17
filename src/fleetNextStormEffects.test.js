@@ -245,7 +245,7 @@ test('Capitano ricambia una sola carta autentica se almeno due unità ricevono d
  const x=play(b,'A',['ex-e02-01','nx-e02-02','gen-227'],{...target('escort',h),
   stormCaptainSwap:true,stormCaptainTradeId:'gen-227'},[0,1]);
  assert.equal(x.events.filter(e=>e.kind==='storm-captain').length,1);
- assert.equal(x.battle.sides.A.discard.includes('gen-227'),true);
+ assert.equal(x.events.find(e=>e.kind==='storm-captain')?.discardedCardId,'gen-227');
  assert.ok(x.battle.sides.A.hand.includes('gen-218'));
  assert.equal(x.battle.sides.A.storm.captainUsedPly,0);
 });
