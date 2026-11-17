@@ -5,7 +5,7 @@ import {ShipShopPanel} from './ShipCollectionPanels.jsx';
 
 const SHOP_TABS = [
   { id: 'ships', label: 'Navi', icon: '🛸' },
-  { id: 'decks', label: 'Carte e mazzi', icon: '🃏' },
+  { id: 'decks', label: 'Carte di flotta', icon: '🃏' },
   { id: 'resources', label: 'Risorse', icon: '💎' }
 ];
 

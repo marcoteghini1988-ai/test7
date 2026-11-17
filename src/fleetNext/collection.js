@@ -1,29 +1,22 @@
-// Eclissi Stellare — collezione generalista e mazzi personalizzati.
-// Salvataggio indipendente dai vecchi 24 speciali: mai eliminare o sovrascrivere
-// la collezione legacy, prima di una migrazione verificata.
-import {
- GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,bossCard,STARTER_DECK,PREMADE_DECKS,CARD_PRICES,
- RARITY_COPY_LIMIT,PACK_PRICE,PACK_SIZE,FLEET_BASE_DECK_SIZE,
- MAX_EXCLUSIVE_UPGRADE,deckFromCounts,countDeck,validateBaseDeck,
- eligibleExclusives,exclusiveCard,exclusiveUnlocked,shipConfig,generalCard
-} from './rules.js';
+// Eclissi Stellare — inventario ufficiale: esclusive automatiche e Personaggi.
+// I mazzi manuali sono dismessi; i vecchi dati restano nell'archivio di migrazione.
+import {EXCLUSIVE_CARDS,BOSS_CARDS,bossCard,MAX_EXCLUSIVE_UPGRADE,
+ eligibleExclusives,exclusiveCard,exclusiveUnlocked,shipConfig,generalCard} from './rules.js';
 import {canUpgradeEffect} from './simpleEffects.js';
 
 export const FLEET_INVENTORY_KEY='eclissi_fleet_collection_v2'; // NON azzerare i salvataggi
-export const FLEET_INVENTORY_SCHEMA=3;
+export const FLEET_INVENTORY_SCHEMA=4;
 const copy=value=>JSON.parse(JSON.stringify(value));
-const starterCards=()=>deckFromCounts(STARTER_DECK.carteGenerali);
 const clampInt=(n,min,max)=>Math.max(min,Math.min(max,Math.floor(Number(n)||0)));
 export function createFleetInventory(){
- const deck=starterCards();
- if(deck.length!==FLEET_BASE_DECK_SIZE||!validateBaseDeck(deck).valid)throw Error('Mazzo transitorio non valido');
- return {schema:FLEET_INVENTORY_SCHEMA,owned:countDeck(deck),deck,credits:0,packsOpened:0,
+ // Personaggio di base: settima carta per Aurora al livello 1 (sei esclusive).
+ return {schema:FLEET_INVENTORY_SCHEMA,owned:{'gen-216':1},deck:[],credits:0,packsOpened:0,
   equippedMother:'N00',exclusiveUpgrades:{},claimedRewards:[],collectionHistory:[],
   retiredOwned:{},retiredDeck:null,retiredExclusiveUpgrades:{}};
 }
 export function normalizeFleetInventory(value){
  const starter=createFleetInventory();
- if(!value||![2,3].includes(value.schema))return starter;
+ if(!value||![2,3,4].includes(value.schema))return starter;
  const owned={...starter.owned},retiredOwned={};
  const store=(id,n)=>{if(typeof id==='string'&&id.length<120&&Number.isInteger(n)&&n>=0&&n<=999)
   retiredOwned[id]=Math.max(retiredOwned[id]||0,n);};
@@ -34,11 +27,10 @@ export function normalizeFleetInventory(value){
   else store(id,n);
  }
  const candidate={...starter,owned,retiredOwned};
- const raw=Array.isArray(value.deck)?value.deck:starter.deck;
- const valid=validateBaseDeck(raw,{owned}).valid;
- candidate.deck=valid?[...raw]:[...starter.deck];
+ const oldDeck=Array.isArray(value.deck)?value.deck:[];
+ candidate.deck=[]; // il mazzo manuale non è usato dalle partite nuove
  candidate.retiredDeck=Array.isArray(value.retiredDeck)?[...value.retiredDeck]:
-  Array.isArray(value.deck)&&!valid?[...raw]:null;
+  oldDeck.length?[...oldDeck]:null;
  candidate.credits=clampInt(value.credits,0,1e9);
  candidate.packsOpened=clampInt(value.packsOpened,0,1e7);
  candidate.equippedMother=shipConfig(value.equippedMother)?value.equippedMother:'N00';
@@ -80,12 +72,9 @@ const record=(inventory,action,note)=>{
  result.collectionHistory=[...(result.collectionHistory||[]),{action,note}].slice(-40);
  return result;
 };
-export function equipFleetBaseDeck(inventory,deck){
- const valid=validateBaseDeck(deck,inventory);
- if(!valid.valid)return {ok:false,reason:valid.reason,inventory};
- const next=record(inventory,'equip','Mazzo personalizzato');
- next.deck=[...deck];
- return {ok:true,inventory:next};
+// Entrate storiche disabilitate; non spendono crediti.
+export function equipFleetBaseDeck(inventory){
+ return {ok:false,reason:'I mazzi manuali sono stati ritirati.',inventory};
 }
 export function selectFleetMother(inventory,shipId,ownedShips=[]){
  if(!shipConfig(shipId))return {ok:false,reason:'Navicella inesistente',inventory};
@@ -95,37 +84,11 @@ export function selectFleetMother(inventory,shipId,ownedShips=[]){
  next.equippedMother=shipId;
  return {ok:true,inventory:next};
 }
-export function buyGeneralCard(inventory,id,amount=1){
- const c=generalCard(id);
- if(!c||!Number.isInteger(amount)||amount<1||amount>50)
-  return {ok:false,reason:'Carta o quantità non valida',inventory};
- const price=CARD_PRICES[c.rarita]*amount;
- if(inventory.credits<price)return {ok:false,reason:'Crediti insufficienti',inventory};
- if((inventory.owned[id]||0)+amount>999)
-  return {ok:false,reason:'Limite inventario raggiunto',inventory};
- const next=record(inventory,'buy',c.nome+' x'+amount);
- next.credits-=price;
- next.owned[id]=(next.owned[id]||0)+amount;
- return {ok:true,inventory:next,spent:price,received:{[id]:amount}};
+export function buyGeneralCard(inventory){
+ return {ok:false,reason:'Le vecchie carte non sono più in vendita.',inventory};
 }
-export function buyPrebuiltDeck(inventory,premadeId){
- const preset=PREMADE_DECKS.find(x=>x.id===premadeId);
- if(!preset)return {ok:false,reason:'Mazzo preconfigurato inesistente',inventory};
- const delta={};let cost=0;
- for(const [id,count] of Object.entries(preset.carteGenerali)){
-  const card=generalCard(id);
-  if(!card)return {ok:false,reason:'Carta inesistente in '+preset.nome,inventory};
-  const missing=Math.max(0,count-(inventory.owned[id]||0));
-  if(missing){delta[id]=missing;cost+=CARD_PRICES[card.rarita]*missing;}
- }
- if(inventory.credits<cost)return {ok:false,reason:'Crediti insufficienti: servono '+cost,inventory};
- const next=record(inventory,'premade',preset.nome);
- next.credits-=cost;
- for(const [id,n] of Object.entries(delta))next.owned[id]=(next.owned[id]||0)+n;
- next.deck=deckFromCounts(preset.carteGenerali);
- const valid=validateBaseDeck(next.deck,next);
- if(!valid.valid)return {ok:false,reason:valid.reason,inventory};
- return {ok:true,inventory:next,spent:cost,received:delta};
+export function buyPrebuiltDeck(inventory){
+ return {ok:false,reason:'I mazzi preconfezionati sono stati ritirati.',inventory};
 }
 // Temporaneamente sospeso: nessun credito speso su carte che saranno sostituite.
 export function buyFleetPack(inventory){return {ok:false,reason:'Pacchetti sospesi durante il rifacimento delle carte.',inventory};}

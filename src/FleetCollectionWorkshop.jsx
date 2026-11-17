@@ -1,22 +1,15 @@
 import React,{useMemo,useState} from 'react';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PREMADE_DECKS,CARD_PRICES,
- FLEET_BASE_DECK_SIZE,SHIP_CONFIGS,cardCopyLimit,countDeck,
- deckFromCounts,validateBaseDeck,eligibleExclusives,cardFacePath,card} from './fleetNext/rules.js';
-import {PROGRESSION_GENERAL_CARDS,PROGRESSION_CARDS} from './fleetNext/progressionCards.js';
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,
+ eligibleExclusives,cardFacePath,card} from './fleetNext/rules.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readShipCollection} from './shipCollection.js';
-import {readFleetInventory,writeFleetInventory,equipFleetBaseDeck,
- buyGeneralCard,buyPrebuiltDeck,buyFleetPack,
+import {readFleetInventory,writeFleetInventory,
  upgradeFleetExclusive,exclusiveUpgradeCost} from './fleetNext/collection.js';
-
-const box={padding:'9px',background:'#071a2de9',border:'1px solid #36678c',
- borderRadius:'8px',color:'#e3f2ff'};
-const btn={background:'#17496b',color:'white',border:'1px solid #79a9c9',
- borderRadius:'6px',padding:'7px 9px',fontSize:'11px',fontWeight:700};
+const box={padding:'9px',background:'#071a2de9',border:'1px solid #36678c',borderRadius:'8px',color:'#e3f2ff'};
+const btn={background:'#17496b',color:'white',border:'1px solid #79a9c9',borderRadius:'6px',padding:'7px 9px',fontSize:'11px',fontWeight:700};
 const small={fontSize:'11px',color:'#a4c7dd'};
 const locale=n=>Number(n||0).toLocaleString('it-IT');
-const AVAILABLE_GENERAL_CARDS={...GENERAL_CARDS,...PROGRESSION_GENERAL_CARDS};
-const BASE_CARDS={...AVAILABLE_GENERAL_CARDS,...BOSS_CARDS};
+// La plancia e lo stile grafico delle carte non cambiano.
 // Fronte ufficiale del catalogo, identico in Shop, mazzi ed arena.
 function FleetCardArt({id,name,grade=1,large=false}){
  const width=large?114:38;
@@ -40,183 +33,57 @@ function FleetCardArt({id,name,grade=1,large=false}){
    objectFit:'contain',flexShrink:0,margin:large?'0 auto 7px':undefined}}/>;
 }
 
-export default function FleetCollectionWorkshop({initialTab='shop'}){
+
+export default function FleetCollectionWorkshop({initialTab='exclusive'}){
+ const allowed=['exclusive','characters','boss'];
  const [inventory,setInventory]=useState(()=>readFleetInventory());
- const [draft,setDraft]=useState(()=>readFleetInventory().deck);
- const [tab,setTab]=useState(initialTab);
- const [rarity,setRarity]=useState('Tutte');
- const [category,setCategory]=useState('Tutte');
- const [query,setQuery]=useState('');
- const [shown,setShown]=useState(70);
- const [selected,setSelected]=useState(null);
+ const [tab,setTab]=useState(allowed.includes(initialTab)?initialTab:'exclusive');
  const [notice,setNotice]=useState('');
- const [packResults,setPackResults]=useState([]);
  const [motherId,setMotherId]=useState(()=>readFleetInventory().equippedMother);
- const baseCounts=useMemo(()=>countDeck(draft),[draft]);
- const ownedShips=useMemo(()=>{
-  try{return readShipCollection().cards||[];}catch{return [];}
- },[]);
- const motherOwned=ownedShips.find(s=>s.shipId===motherId);
- const motherLevel=motherOwned?.level||1;
- const allCards=Object.values(AVAILABLE_GENERAL_CARDS);
- const filtered=useMemo(()=>allCards.filter(c=>
-  (rarity==='Tutte'||c.rarita===rarity)&&
-  (category==='Tutte'||c.categoria===category||c.sottotipo===category)&&
-  (!query||(c.nome+' '+c.effetto+' '+c.famiglia).toLowerCase().includes(query.toLowerCase()))
- ),[rarity,category,query]);
- function apply(result,success){
-  if(!result.ok){setNotice(result.reason||'Operazione non riuscita');return;}
-  try{
-   const safe=writeFleetInventory(result.inventory);
-   setInventory(safe);setDraft([...safe.deck]);
-   setNotice(success||'Operazione completata');
-  }catch(e){setNotice('Salvataggio non riuscito: '+e.message);}
- }
- function buy(id){apply(buyGeneralCard(inventory,id,1),'Carta acquistata: '+AVAILABLE_GENERAL_CARDS[id]?.nome);}
- function add(id){
-  if(draft.length>=FLEET_BASE_DECK_SIZE){setNotice('Mazzo pieno: togli una carta prima di aggiungerne');return;}
-  if((baseCounts[id]||0)>=cardCopyLimit(id)){setNotice('Limite copie raggiunto');return;}
-  if((baseCounts[id]||0)>=(inventory.owned[id]||0)){setNotice('Non possiedi altre copie');return;}
-  setDraft(d=>[...d,id]);setNotice('');
- }
- function remove(id){
-  const i=draft.indexOf(id);
-  if(i<0)return;setDraft(d=>d.filter((_,index)=>index!==i));setNotice('');
- }
- function saveDeck(){
-  const check=validateBaseDeck(draft,inventory);
-  if(!check.valid){setNotice(check.reason);return;}
-  apply(equipFleetBaseDeck(inventory,draft),'Mazzo da 40 carte equipaggiato');
- }
- function buyPack(){
-  const result=buyFleetPack(inventory);
-  if(!result.ok){setNotice(result.reason);return;}
-  setPackResults(result.cards);apply(result,'Pacchetto aperto: 3 carte aggiunte');
- }
- function buyDeck(id){
-  const result=buyPrebuiltDeck(inventory,id);
-  apply(result,result.ok?'Mazzo acquistato ed equipaggiato':'');
- }
+ const ownedShips=useMemo(()=>{try{return readShipCollection().cards||[];}catch{return [];}},[]);
+ const shipOptions=ownedShips.length?ownedShips:[{shipId:motherId,level:1}];
+ const motherOwned=shipOptions.find(s=>s.shipId===motherId)||shipOptions[0];
+ const activeMother=motherOwned.shipId,motherLevel=motherOwned.level||1;
+ const exclusives=eligibleExclusives(activeMother,motherLevel).filter(c=>
+  Object.hasOwn(EXCLUSIVE_CARDS,c.id)&&!c.id.startsWith('prog-'));
  function upgrade(id){
-  const result=upgradeFleetExclusive(inventory,id,motherId,motherLevel);
-  apply(result,result.ok?'Carta esclusiva potenziata al grado '+result.grade:'');
+  const result=upgradeFleetExclusive(inventory,id,activeMother,motherLevel);
+  if(!result.ok){setNotice(result.reason||'Potenziamento non disponibile');return;}
+  try{setInventory(writeFleetInventory(result.inventory));setNotice('Carta esclusiva potenziata al grado '+result.grade);}
+  catch(e){setNotice('Salvataggio non riuscito: '+e.message);}
  }
- const categories=['Tutte','Personaggio','Attacco','Supporto'];
- return <div style={{...box,display:'flex',flexDirection:'column',gap:'9px',
-  minHeight:'310px',fontSize:'12px'}}>
-  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'7px',flexWrap:'wrap'}}>
-   <div><strong style={{fontSize:'14px'}}>CARTE E MAZZI DI FLOTTA</strong>
-    <div style={small}>{Object.keys(GENERAL_CARDS).length} Personaggi generali · {Object.keys(EXCLUSIVE_CARDS).length} Personaggi esclusivi · {Object.keys(BOSS_CARDS).length} Boss</div></div>
+ return <div style={{...box,display:'flex',flexDirection:'column',gap:'9px',minHeight:'310px',fontSize:'12px'}}>
+  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:7,flexWrap:'wrap'}}>
+   <div><strong style={{fontSize:14}}>CARTE DELLA FLOTTA</strong>
+    <div style={small}>10 esclusive per madre · {Object.keys(GENERAL_CARDS).length} Personaggi generali · {Object.keys(BOSS_CARDS).length} Boss</div></div>
    <strong style={{color:'#ffe394'}}>✦ {locale(inventory.credits)} Crediti Stellari</strong>
   </div>
-  <details style={small}>
-   <summary style={{cursor:'pointer',color:'#d5ecff'}}>Come si leggono gli effetti</summary>
-   <ul style={{paddingLeft:18,lineHeight:1.45}}>{SIMPLE_RULES.map(rule=><li key={rule}>{rule}</li>)}</ul>
-  </details>
-  <div style={{display:'flex',gap:'5px',flexWrap:'wrap'}}>
-   {[['shop','Carte singole'],['decks','Il mio mazzo'],['ready','Mazzi pronti'],['packs','Pacchetti'],['exclusive','Esclusive'],['boss','Personaggi Boss']].map(([id,label])=>
-    <button key={id} style={{...btn,background:tab===id?'#236d9a':'#122e4a'}} onClick={()=>setTab(id)}>
-     {label}</button>)}
+  <p style={small}>Le esclusive della madre e i Personaggi posseduti entrano automaticamente nella partita. Non serve acquistare o preparare un mazzo da 40 carte.</p>
+  <details style={small}><summary style={{cursor:'pointer',color:'#d5ecff'}}>Come si leggono gli effetti</summary>
+   <ul style={{paddingLeft:18,lineHeight:1.45}}>{SIMPLE_RULES.map(rule=><li key={rule}>{rule}</li>)}</ul></details>
+  <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
+   {[['exclusive','Esclusive'],['characters','Personaggi'],['boss','Personaggi Boss']].map(([id,label])=>
+    <button key={id} style={{...btn,background:tab===id?'#236d9a':'#122e4a'}}
+     onClick={()=>{setTab(id);setNotice('');}}>{label}</button>)}
   </div>
   {notice&&<div role="status" style={{...small,color:'#ffe1a7'}}>{notice}</div>}
-  {tab==='shop'&&<div style={{display:'flex',flexDirection:'column',gap:'7px'}}>
-   <div style={{display:'flex',gap:'6px',flexWrap:'wrap'}}>
-    <input value={query} onChange={e=>{setQuery(e.target.value);setShown(70);}} placeholder="Cerca carta o effetto"
-     style={{...box,flex:'2 1 120px',minWidth:0}}/>
-    <select value={rarity} onChange={e=>{setRarity(e.target.value);setShown(70);}} style={{...box,flex:1,minWidth:90}}>
-     {['Tutte','Comune','Rara','Epica','Leggendaria'].map(x=><option key={x}>{x}</option>)}</select>
-    <select value={category} onChange={e=>{setCategory(e.target.value);setShown(70);}} style={{...box,flex:1,minWidth:90}}>
-     {categories.map(x=><option key={x}>{x}</option>)}</select>
-   </div>
-   <div style={small}>{filtered.length} carte trovate · {Math.min(shown,filtered.length)} mostrate</div>
-   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(155px,1fr))',gap:'6px'}}>
-    {filtered.slice(0,shown).map(c=><div key={c.id} style={box}>
-     <FleetCardArt id={c.id} name={c.nome} large/>
-      <strong>{c.nome}</strong><div style={small}>{c.rarita} · {c.sottotipo}</div>
-     <p style={{...small,minHeight:42,lineHeight:1.3}}>{c.effetto}</p>
-     <div style={small}>Possedute: {inventory.owned[c.id]||0} · Limite nel mazzo: {cardCopyLimit(c.id)}</div>
-     <div style={{display:'flex',gap:4,marginTop:7}}>
-      <button style={btn} onClick={()=>buy(c.id)}>Compra {locale(CARD_PRICES[c.rarita])}</button>
-      <button style={btn} onClick={()=>setSelected(selected===c.id?null:c.id)}>Info</button>
-     </div>
-     {selected===c.id&&<p style={small}>Contromossa: {c.controgioco}</p>}
-    </div>)}
-   </div>
-   {shown<filtered.length&&<button style={btn} onClick={()=>setShown(n=>n+70)}>MOSTRA ALTRE CARTE</button>}
-  </div>}
-  {tab==='decks'&&<>
-   <div style={small}>Mazzo base: {draft.length}/40 · Carte generali e Personaggi Boss ottenuti.
-    Le esclusive della madre si aggiungono automaticamente.
-    Puoi usare doppioni entro il limite della rarità.</div>
-   <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
-    <button style={btn} onClick={saveDeck} disabled={draft.length!==40}>SALVA ED EQUIPAGGIA</button>
-    <button style={btn} onClick={()=>setDraft([...inventory.deck])}>ANNULLA MODIFICHE</button>
-   </div>
-   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:6}}>
-    <div style={box}>
-     <strong>Carte nel mazzo</strong>
-     {Object.entries(baseCounts).map(([id,n])=><div key={id} style={{display:'flex',gap:6,alignItems:'center',marginTop:5}}>
-      <FleetCardArt id={id} name={BASE_CARDS[id]?.nome||id}/>
-       <span style={{flex:1}}>{BASE_CARDS[id]?.nome} ×{n}</span>
-      <button style={btn} onClick={()=>remove(id)} aria-label={'Rimuovi '+id}>−</button>
-     </div>)}
-    </div>
-    <div style={box}>
-     <strong>Carte possedute da aggiungere</strong>
-     {Object.entries(inventory.owned).filter(([id,n])=>n>0&&BASE_CARDS[id]).map(([id,n])=>
-      <div key={id} style={{display:'flex',gap:6,alignItems:'center',marginTop:5}}>
-       <FleetCardArt id={id} name={BASE_CARDS[id].nome}/>
-        <span style={{flex:1}}>{BASE_CARDS[id].nome} ({baseCounts[id]||0}/{Math.min(n,cardCopyLimit(id))})</span>
-       <button style={btn} onClick={()=>add(id)} disabled={draft.length>=40||
-        (baseCounts[id]||0)>=Math.min(n,cardCopyLimit(id))}>+</button>
-      </div>)}
-    </div>
-   </div>
-  </>}
-  {tab==='ready'&&<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(190px,1fr))',gap:7}}>
-   {!PREMADE_DECKS.length&&<p style={small}>Mazzi pronti sospesi durante il rifacimento del catalogo.</p>}
-   {PREMADE_DECKS.map(deck=>{
-    const missing=Object.entries(deck.carteGenerali).reduce((sum,[id,n])=>
-     sum+Math.max(0,n-(inventory.owned[id]||0))*CARD_PRICES[GENERAL_CARDS[id].rarita],0);
-    return <div key={deck.id} style={box}>
-     <strong>{deck.nome}</strong><div style={small}>{deck.categoria} · 40 carte · {deck.strategia}</div>
-     <p style={small}>Prezzo delle sole carte mancanti: {locale(missing)} Crediti</p>
-     <button style={btn} onClick={()=>buyDeck(deck.id)}>
-      {missing?'ACQUISTA ED EQUIPAGGIA':'EQUIPAGGIA'} </button>
-    </div>;
-   })}
-  </div>}
-  {tab==='packs'&&<div style={box}>
-   <strong>Pacchetti sospesi</strong>
-   <p style={small}>Le vecchie carte sono state ritirate. Nessun credito viene speso finché le nuove carte non saranno funzionanti.</p>
-   <button style={btn} onClick={buyPack} disabled>NON ACQUISTABILE</button>
-   {packResults.length>0&&<div role="status" style={{display:'flex',gap:8,flexWrap:'wrap',marginTop:8}}>
-     {packResults.map((id,i)=><div key={id+'-'+i} style={{maxWidth:125,textAlign:'center'}}>
-      <FleetCardArt id={id} name={AVAILABLE_GENERAL_CARDS[id]?.nome||id} large/>
-      <span style={small}>{AVAILABLE_GENERAL_CARDS[id]?.nome}</span>
-     </div>)}
-    </div>}
-  </div>}
   {tab==='exclusive'&&<div style={{display:'flex',flexDirection:'column',gap:7}}>
    <label style={small}>Navicella posseduta:
-    <select style={{...box,marginLeft:6}} value={motherId} onChange={e=>setMotherId(e.target.value)}>
-     {ownedShips.map(c=><option key={c.shipId} value={c.shipId}>
-      {SHIP_CONFIGS[c.shipId]?.name||c.shipId} · L{c.level}</option>)}
+    <select style={{...box,marginLeft:6}} value={activeMother} onChange={e=>setMotherId(e.target.value)}>
+     {shipOptions.map(s=><option key={s.shipId} value={s.shipId}>{SHIP_CONFIGS[s.shipId]?.name||s.shipId} · L{s.level||1}</option>)}
     </select>
    </label>
-   <p style={small}>Solo le esclusive già funzionanti vengono inserite automaticamente nel mazzo.
-    Le nuove schede sono collegate alla propria nave e al livello, ma attendono il motore degli effetti.</p>
+   <p style={small}>Esclusive sbloccate: {exclusives.length}. Le restanti si sbloccano con i livelli della madre. Le immagini definitive saranno progettate successivamente.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
-    {eligibleExclusives(motherId,motherLevel).map(c=>{
-     const grade=inventory.exclusiveUpgrades[c.id]||1;
-     const cost=exclusiveUpgradeCost(grade+1);
-     const upgradeable=canUpgradeEffect(c,grade);
-     const requiredLevel=grade===1?3:5;
+    {exclusives.map(c=>{
+     const grade=inventory.exclusiveUpgrades[c.id]||1,cost=exclusiveUpgradeCost(grade+1);
+     const upgradeable=canUpgradeEffect(c,grade),requiredLevel=grade===1?3:5;
      return <div key={c.id} style={box}>
-      <FleetCardArt id={c.id} name={c.name} grade={grade} large/>
-       <strong>{c.name}</strong><div style={small}>{c.playable===false?'Scheda esclusiva registrata':PROGRESSION_CARDS[c.id]?'Carta di flotta':'Grado '+grade+'/3'} · {c.category}</div>
+      <FleetCardArt id={c.id} name={c.name||c.nome} grade={grade} large/>
+      <strong>{c.name||c.nome}</strong>
+      <div style={small}>Grado {grade}/3 · {c.category||c.categoria}</div>
       <p style={small}>{describeEffect(c,grade)}</p>
-      {c.playable===false?<small style={small}>Effetto da implementare nel motore. Non ancora schierabile; immagine da creare.</small>:upgradeable?<>
+      {upgradeable?<>
        <p style={small}>Grado {grade+1}: {describeEffect(c,grade+1)}</p>
        <button style={btn} onClick={()=>upgrade(c.id)} disabled={motherLevel<requiredLevel}>
         {motherLevel<requiredLevel?'NAVICELLA LIVELLO '+requiredLevel:'POTENZIA · '+locale(cost)+' Crediti'}</button>
@@ -225,14 +92,20 @@ export default function FleetCollectionWorkshop({initialTab='shop'}){
     })}
    </div>
   </div>}
+  {tab==='characters'&&<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
+   {Object.values(GENERAL_CARDS).map(c=><div key={c.id} style={box}>
+    <FleetCardArt id={c.id} name={c.nome} large/><strong>{c.nome}</strong>
+    <p style={small}>{c.effetto}</p>
+    <small style={small}>{inventory.owned[c.id]?'Posseduto · incluso automaticamente':'Non posseduto'}</small>
+   </div>)}
+  </div>}
   {tab==='boss'&&<>
-   <p style={small}>Sconfiggi il rispettivo boss per ottenere la sua carta. Puoi inserirne una copia nel mazzo da 40; i Personaggi restano attivi per 2 tuoi turni.</p>
+   <p style={small}>I Personaggi Boss si ottengono solo sconfiggendo il Boss corrispondente, poi entrano automaticamente tra le carte disponibili.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {Object.values(BOSS_CARDS).map(c=><div key={c.id} style={box}>
-     <FleetCardArt id={c.id} name={c.nome} large/>
-     <strong>{c.nome}</strong><p style={small}>{c.effetto}</p>
-     <small style={small}>{inventory.owned[c.id]?'Ottenuto · 1 copia massima':'Sconfiggi '+c.nome+' per ottenerlo.'}</small>
-     {!!inventory.owned[c.id]&&<button style={{...btn,marginTop:7}} onClick={()=>{setTab('decks');setNotice('Togli una carta dal mazzo, poi aggiungi '+c.nome+' dalle carte possedute.');}}>GESTISCI NEL MAZZO</button>}
+     <FleetCardArt id={c.id} name={c.nome} large/><strong>{c.nome}</strong>
+     <p style={small}>{c.effetto}</p>
+     <small style={small}>{inventory.owned[c.id]?'Ottenuto · incluso automaticamente':'Da ottenere sconfiggendo il Boss'}</small>
     </div>)}
    </div>
   </>}

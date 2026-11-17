@@ -157,7 +157,7 @@ export function ShipHangarPanel({onOpenCatalog}) {
       </div>
     </> : <p role="status">Il salvataggio della collezione è illeggibile.</p>}
     {message && <p role="status">{message}</p>}
-    <FleetCollectionWorkshop initialTab="decks"/>
+    <FleetCollectionWorkshop initialTab="exclusive"/>
     <div className="ship-collection-actions">
       <button type="button" className="cyber-btn" onClick={onOpenCatalog} disabled={saving}>Catalogo navi</button>
       <button type="button" className="cyber-btn cyber-btn-primary" onClick={save}

@@ -13,7 +13,7 @@ import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
-import {STARTER_DECK,card,cardRole,cardFacePath,deckFromCounts} from './fleetNext/rules.js';
+import {card,cardRole,cardFacePath} from './fleetNext/rules.js';
 import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
 import {LINCE_BYPASS_ACTIONS,linceMarkedRouteReady} from './fleetNext/linceEngine.js';
 import {PRISMA_ATTACK_ACTIONS,livePrismaUnits} from './fleetNext/prismaEngine.js';
@@ -69,10 +69,14 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
   const motherEnemy=campaignMother||boss?.motherShipId||early||
    chooseCampaignMotherRival(owned.shipId,owned.level,sectorNumber,bossPlanetId,bossSectorLevel).shipId;
   const levelEnemy=boss?.planetId===20?5:officialCampaignRivalLevel({mode,sectorNumber,playerLevel:owned.level});
+  // Esclusive aggiunte dal motore: qui solo Personaggi e Boss posseduti.
+  const ownedCharacters=Object.entries(inventory.owned||{})
+   .filter(([id,amount])=>amount>0&&(id.startsWith('gen-')||id.startsWith('boss-character-')))
+   .map(([id])=>id);
   return {battle:createFleetNextBattle({
    shipA:owned.shipId,levelA:owned.level,
    shipB:motherEnemy,levelB:levelEnemy,
-   deckA:inventory.deck,deckB:deckFromCounts(STARTER_DECK.carteGenerali),
+   deckA:ownedCharacters,deckB:['gen-216'],
    upgradesA:inventory.exclusiveUpgrades,
    mode,bossName:boss?.name||null,bossId:boss?.planetId??null,planetId:bossPlanetId,
    sectorNumber,seed:Math.floor(Math.random()*0x7fffffff)+1,

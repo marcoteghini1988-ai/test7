@@ -19,7 +19,9 @@ test('350 vecchie carte rimosse, Personaggi Boss e sei carte tecniche conservati
   assert.equal(c.effetto||c.effectProposed,describeEffect(c),c.id);}
  for(const id of [...retired.generalIds,...retired.exclusiveIds]){assert.equal(card(id),null,id);assert.equal(cardFacePath(id),null,id);}
 });
-test('Mazzo transitorio legale: nessuna carta ritirata è equipaggiabile',()=>{
+test('Mazzo storico disponibile solo per regressione, non per le nuove partite',()=>{
+ assert.deepEqual(createFleetInventory().deck,[]);
+ assert.equal(createFleetInventory().owned['gen-216'],1);
  const deck=deckFromCounts(STARTER_DECK.carteGenerali);
  assert.equal(deck.length,40);assert.equal(validateBaseDeck(deck).valid,true);
  const old=[...deck];old[0]=retired.generalIds[0];
@@ -39,14 +41,14 @@ test('Migrazione schema 2 conserva vecchie proprietà in deposito, crediti, prem
   owned:{'gen-001':3,'gen-002':7,'gen-216':2,'boss-character-1':1},
   exclusiveUpgrades:{'ex-n00-02':2,'ex-n00-01':2}};
  const copy=JSON.stringify(prev),next=normalizeFleetInventory(prev);
- assert.equal(JSON.stringify(prev),copy);assert.equal(next.schema,3);
+ assert.equal(JSON.stringify(prev),copy);assert.equal(next.schema,4);
  assert.equal(next.credits,725);assert.equal(next.packsOpened,4);assert.equal(next.equippedMother,'L04');
  assert.deepEqual(next.claimedRewards,['victory']);
  assert.equal(next.retiredOwned['gen-001'],3);assert.equal(next.retiredOwned['gen-002'],7);
  assert.equal(next.owned['boss-character-1'],1);assert.ok(next.owned['gen-216']>=2);
  assert.equal(next.retiredExclusiveUpgrades['ex-n00-02'],2);assert.equal(next.exclusiveUpgrades['ex-n00-01'],2);
  assert.deepEqual(next.retiredDeck,prev.deck);
- assert.equal(validateBaseDeck(next.deck,{owned:next.owned}).valid,true);
+ assert.deepEqual(next.deck,[],'Il mazzo storico non torna giocabile');
  assert.deepEqual(normalizeFleetInventory(next),next,'La migrazione deve essere idempotente');
 });
 test('Il trofeo Boss si ottiene una sola volta e resta salvato',()=>{
