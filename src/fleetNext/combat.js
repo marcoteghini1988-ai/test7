@@ -2742,7 +2742,11 @@ function escortPassive(b,side,ctx,events,order){
  if(suspended&&recovery?.tier===4)suspended=Math.max(0,suspended-1);
  for(const e of side.escorts.filter(x=>x.linked)){
   if(unitSilenced(e,b.ply))continue;
-  if(suspended>0&&(e.skill?.requires||[]).includes('command')){
+  const due=(e.fusionSkills||[e.skill]).some(skill=>
+   skill&&['ion','strike','corrode','focus','siege','revenge','surge','precision',
+    'pierce','repair','mend','draw','jam','guard'].includes(skill.action)&&
+   (side.turnCount+1)%Math.max(1,skill.interval)===0);
+  if(suspended>0&&due&&(e.skill?.requires||[]).includes('command')){
    suspended--;
    events.push(emit(b,ctx.who,'escort',
     e.name+' · passiva sincronizzata sospesa dal sabotaggio Centralina'));
