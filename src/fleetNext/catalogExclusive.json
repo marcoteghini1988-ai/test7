@@ -1129,7 +1129,8 @@
       "effectSpec": {
         "type": "multishot",
         "targets": 2
-      }
+      },
+      "nativeFace": true
     },
     {
       "id": "ex-e03-01",
