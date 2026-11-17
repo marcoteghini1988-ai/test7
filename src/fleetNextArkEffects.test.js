@@ -301,11 +301,20 @@ test('Dopo due Fusioni, né la stessa carta né quella storica creano altre unit
  assert.equal(r.ok,false);assert.match(r.reason,/fusioni/i);
  assert.equal(JSON.stringify(b),before);
 });
-test('Due copie Fusione nel medesimo turno sono rifiutate prima di consumarle',()=>{
+test('Due copie Fusione al L5 possono risolversi nello stesso turno, senza unità extra',()=>{
  const b=make();b.sides.A.hand=['nx-l04-05','nx-l04-05'];
+ const r=resolveFleetNextTurn(b,'A',{cards:[0,1],pass:true},1000);
+ assert.equal(r.ok,true,r.reason);
+ assert.equal(r.battle.sides.A.fusionsUsed,2);
+ assert.equal(r.battle.sides.A.escorts.length,2);
+ assert.equal(r.battle.sides.A.reserveEscorts.length,0);
+ assert.ok(r.battle.sides.A.escorts.every(e=>e.fused));
+});
+test('Due Fusioni nello stesso turno al L3 restano vietate senza quarta riserva',()=>{
+ const b=make({levelA:3});b.sides.A.hand=['nx-l04-05','nx-l04-05'];
  const before=JSON.stringify(b);
  const r=resolveFleetNextTurn(b,'A',{cards:[0,1],pass:true},1000);
- assert.equal(r.ok,false);assert.match(r.reason,/Una sola Fusione/);
+ assert.equal(r.ok,false);assert.match(r.reason,/riserve|quarta/i);
  assert.equal(JSON.stringify(b),before);
 });
 test('Ingresso protetto scatta solo sul terzo supporto appena uscito dalla prima Fusione',()=>{
