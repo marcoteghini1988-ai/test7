@@ -1572,20 +1572,23 @@ function nebulaArchonTerrainTrade(b,ctx,events,order={}){
 function startNebulaVolley(ctx){
  ctx.nebulaVolleySerial=(ctx.nebulaVolleySerial||0)+1;
  ctx.nebulaSeen=new Map();
+ ctx.nebulaBlockedTargets=new Set();
 }
 function blockNebulaRepeat(b,ctx,events,target){
+ const key=target.kind+':'+target.unit.id;
+ if(ctx.nebulaBlockedTargets?.has(key))return true;
  const defender=b.sides[other(ctx.who)];
  const defense=defender.defenses.find(d=>d.id==='nx-e01-03'&&!d.hidden&&
   d.untilPly>b.ply&&d.nebulaVeilTargetKind===target.kind&&
   d.nebulaVeilTargetId===target.unit.id);
  if(!defense)return false;
- const key=target.kind+':'+target.unit.id;
  if(!ctx.nebulaSeen)ctx.nebulaSeen=new Map();
  if(!ctx.nebulaSeen.has(key)){
   ctx.nebulaSeen.set(key,true);
   return false; // Il primo colpo puo ferire; le difese normali restano valide.
  }
  discardDefense(defender,defense.source);
+ ctx.nebulaBlockedTargets??=new Set();ctx.nebulaBlockedTargets.add(key);
  events.push(emit(b,other(ctx.who),'block',
   'Velo criogenico annulla i colpi successivi della stessa raffica',{
    cardId:defense.id,targetKind:target.kind,targetId:target.unit.id}));
