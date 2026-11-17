@@ -24,6 +24,7 @@ import {sharkOperationalUnits,sharkUnits,sharkWoundedSupports,
  sharkWoundedMachines} from './fleetNext/sharkEngine.js';
 import {nebulaHiddenSupport,nebulaVisibleSupports,nebulaTargets,
  nebulaModuleActive,nebulaHideReason} from './fleetNext/nebulaEngine.js';
+import {stormUnits,stormSupports,stormModuleActive} from './fleetNext/stormEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
@@ -137,6 +138,11 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      <span>{module.slot==='weapon'?'ARMA':'UTILITÀ'}</span><b>{module.name}</b><small>{module.hp}/{module.maxHp}</small>
     </button>)}
   </div>
+  {unit.ships?.[0]?.id==='E02'&&<div className="f3d-storm-status" role="status">
+   <span aria-hidden="true">⚡</span><b>TEMPESTA</b>
+   <small>{unit.storm?.charge&&unit.modules?.utility?.cardId==='nx-e02-09'?
+    'COLPO PESANTE CARICO':'FULMINI A CATENA'}</small>
+  </div>}
   {unit.ships?.[0]?.id==='E01'&&<div className="f3d-nebula-status" role="status">
    <span aria-hidden="true">◈</span><b>NEBULOSA</b>
    <small>{unit.escorts?.some(e=>e.hp>0&&!e.destroyed&&(e.nebulaHiddenUntilPly||0)>ply)?
@@ -299,6 +305,9 @@ export default function OfficialFleetBattle3D({
  const [nebulaOptions,setNebulaOptions]=useState({hide:false,hideEscort:'',veil:'',swap:'',
   terrainTrade:false,tradeCard:''});
  const setNebulaOption=(name,value)=>setNebulaOptions(old=>({...old,[name]:value}));
+ const [stormOptions,setStormOptions]=useState({second:'',chain:'',front:'',
+  captainSwap:false,captainTrade:''});
+ const setStormOption=(name,value)=>setStormOptions(old=>({...old,[name]:value}));
  const [linceOptions,setLinceOptions]=useState({
   routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
   linceRecallWeapon:false,radentRecall:false,radentMachineId:''
@@ -380,6 +389,7 @@ export default function OfficialFleetBattle3D({
   setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
    admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
   setNebulaOptions({hide:false,hideEscort:'',veil:'',swap:'',terrainTrade:false,tradeCard:''});
+  setStormOptions({second:'',chain:'',front:'',captainSwap:false,captainTrade:''});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -447,6 +457,8 @@ export default function OfficialFleetBattle3D({
   const sharkTeethFirstChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethFirst);
   const sharkTeethSecondChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethSecond);
   const nebulaVeilChoice=nebulaTargetChoices.find(t=>t.key===nebulaOptions.veil);
+  const stormSecondChoice=stormSecondChoices.find(t=>t.key===stormOptions.second);
+  const stormChainChoice=stormSecondChoices.find(t=>t.key===stormOptions.chain);
   const result=resolveFleetNextTurn(battle,'A',
    {partId,targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
     escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
@@ -491,7 +503,11 @@ export default function OfficialFleetBattle3D({
     nebulaHideEscortId:nebulaOptions.hideEscort,
     nebulaVeilTargetKind:nebulaVeilChoice?.kind,nebulaVeilTargetId:nebulaVeilChoice?.id,
     nebulaSwapTargetId:nebulaOptions.swap,nebulaTerrainTrade:nebulaOptions.terrainTrade,
-    nebulaTradeCardId:nebulaOptions.tradeCard
+    nebulaTradeCardId:nebulaOptions.tradeCard,
+    stormSecondKind:stormSecondChoice?.kind,stormSecondId:stormSecondChoice?.id,
+    stormChainTargetKind:stormChainChoice?.kind,stormChainTargetId:stormChainChoice?.id,
+    stormFrontEscortId:stormOptions.front,stormCaptainSwap:stormOptions.captainSwap,
+    stormCaptainTradeId:stormOptions.captainTrade
    },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
@@ -502,6 +518,7 @@ export default function OfficialFleetBattle3D({
   setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
    admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
   setNebulaOptions({hide:false,hideEscort:'',veil:'',swap:'',terrainTrade:false,tradeCard:''});
+  setStormOptions({second:'',chain:'',front:'',captainSwap:false,captainTrade:''});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
@@ -521,6 +538,7 @@ export default function OfficialFleetBattle3D({
   setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
    admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
   setNebulaOptions({hide:false,hideEscort:'',veil:'',swap:'',terrainTrade:false,tradeCard:''});
+  setStormOptions({second:'',chain:'',front:'',captainSwap:false,captainTrade:''});
   setMessage(fleetTurnNotice(result.events)||'Turno concluso');
  }
  async function leave(){
@@ -605,6 +623,16 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const stormActive=player.ships[0].id==='E02';
+ const stormEnemyChoices=stormUnits(enemy,battle.ply).map(({kind,unit})=>({
+  kind,id:unit.id,key:kind+':'+unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
+ }));
+ const stormSecondChoices=stormEnemyChoices.filter(t=>t.id!==actualTarget?.id);
+ const stormOwnSupports=stormSupports(player,battle.ply);
+ const stormCaptainActive=player.commander?.id==='ex-e02-01'&&
+  player.commander.untilPly>battle.ply||selectedActions.includes('storm-captain');
+ const stormSpare=player.hand.filter((id,i)=>!chosenCards.includes(i));
+ const stormMultiple=selectedActions.some(x=>['rebound-lightning','selective-discharge','storm-quadrant'].includes(x));
  const nebulaActive=player.ships[0].id==='E01';
  const nebulaFog=nebulaHiddenSupport(player,battle.ply);
  const nebulaVisible=nebulaVisibleSupports(player,battle.ply);
@@ -756,7 +784,7 @@ export default function OfficialFleetBattle3D({
      </option>)}
     </select>
    </label>}
-   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive)&&!ended&&<div className="live-card-inspector" role="status">
+   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
