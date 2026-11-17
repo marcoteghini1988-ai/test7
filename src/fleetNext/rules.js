@@ -161,8 +161,10 @@ export function eligibleExclusives(shipId,level){
 export function effectiveDeck(baseDeck,shipId,level){
  const base=Array.isArray(baseDeck)?baseDeck:[];
  // Il mazzo non pesca effetti nuovi che non esistono ancora nel motore.
+ // Le tre fusioni legacy restano nel registro per salvataggi storici, ma non
+ // duplicano le carte Fusione native delle 10 esclusive della nave.
  const ex=eligibleExclusives(shipId,level).filter(c=>c.playable!==false&&
-  !(shipId==='L04'&&c.id==='prog-fusion-l04')).flatMap(c=>Array(c.maxCopiesInAutoPackageDraft||1).fill(c.id));
+  !c.id.startsWith('prog-fusion-')).flatMap(c=>Array(c.maxCopiesInAutoPackageDraft||1).fill(c.id));
  return [...base,...ex];
 }
 export function countDeck(deck){
