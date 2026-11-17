@@ -882,6 +882,106 @@ export default function OfficialFleetBattle3D({
       {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
      </select>
     </label>}
+    {royalActive&&<p className="f3d-royal-readout">
+     <b>Eclisse Reale</b>{' · '+
+      (player.escorts.some(e=>e.royalCrown&&e.hp>0&&!e.destroyed)?
+       'Corona Unita operativa':'Due supporti e ordini coordinati')}
+     {player.fusionLimit>0&&' · Fusione '+player.fusionsUsed+'/'+player.fusionLimit}
+    </p>}
+    {selectedActions.includes('royal-rain')&&<>
+     <label>Pioggia reale — modalità dichiarata:
+      <select value={royalOptions.rainMode}
+       onChange={e=>setRoyalOption('rainMode',e.target.value)}>
+       <option value="heavy">Un colpo pesante · 3 danni</option>
+       <option value="split">Due colpi leggeri su unità distinte</option>
+      </select>
+     </label>
+     {royalOptions.rainMode==='split'&&royalOtherTargets.length>0&&
+      <label>Seconda unità del comando:
+       <select value={royalOptions.second} onChange={e=>setRoyalOption('second',e.target.value)}>
+        <option value="">Prima unità diversa disponibile</option>
+        {royalOtherTargets.map(t=><option key={t.key} value={t.key}>{t.name} · {t.hp}/{t.maxHp}</option>)}
+       </select>
+      </label>}
+    </>}
+    {royalRelayAvailable&&<label>
+     <input type="checkbox" checked={royalRelayEnabled}
+      disabled={!royalPart(player,'weapons')}
+      onChange={e=>setRoyalOption('relay',e.target.checked)}/>
+     Relè della Corona: lancia il comando da un supporto, senza attacco aggiuntivo
+    </label>}
+    {royalRelayAvailable&&royalRelayEnabled&&<label>Supporto che esegue il comando:
+     <select value={royalOptions.relayEscort}
+      onChange={e=>setRoyalOption('relayEscort',e.target.value)}>
+      <option value="">Primo supporto operativo</option>
+      {royalSupportsAlive.map(e=><option key={e.id} value={e.id}>
+       {e.name} · {e.hp}/{e.maxHp}</option>)}
+     </select>
+    </label>}
+    {selectedActions.includes('protective-crown')&&royalSupportsAlive.length>0&&
+     <label>Corona protettiva — intercettore della Centralina:
+      <select value={royalOptions.guard} onChange={e=>setRoyalOption('guard',e.target.value)}>
+       <option value="">Primo supporto operativo</option>
+       {royalSupportsAlive.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('royal-bastion')&&royalSupportsAlive.length>1&&
+     <label>Bastione reale — supporto su cui dividere un colpo:
+      <select value={royalOptions.bastion}
+       onChange={e=>setRoyalOption('bastion',e.target.value)}>
+       <option value="">Primo supporto operativo</option>
+       {royalSupportsAlive.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.some(a=>['cross-order','coordinated-judgment'].includes(a))&&
+     royalProtections.length>0&&<>
+     <label>{selectedActions.includes('cross-order')?
+       'Ordine incrociato — Difesa scoperta da trasferire:':
+       'Giudizio coordinato — Difesa scoperta da consumare:'}
+      <select value={royalOptions.source}
+       onChange={e=>setRoyalOptions(o=>({...o,source:e.target.value,destination:''}))}>
+       <option value="">Prima Difesa valida</option>
+       {royalProtections.map(p=><option key={p.source} value={p.source}>
+        {(card(p.id)?.name||'Protezione')+' · '+p.remaining+' cariche · '+
+         (royalSupportsAlive.find(e=>e.slot===p.escortSlot)?.name||'Supporto')}
+       </option>)}
+      </select>
+     </label>
+     {selectedActions.includes('cross-order')&&royalDestinationChoices.length>0&&
+      <label>Ordine incrociato — supporto che riceve la Difesa:
+       <select value={royalOptions.destination}
+        onChange={e=>setRoyalOption('destination',e.target.value)}>
+        <option value="">Primo altro supporto operativo</option>
+        {royalDestinationChoices.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+       </select>
+      </label>}
+    </>}
+    {royalSovereignActive&&royalDiscardChoices.length>0&&<>
+     <label><input type="checkbox" checked={royalOptions.sovereign}
+      onChange={e=>setRoyalOption('sovereign',e.target.checked)}/>
+      Sovrano: scarta una carta per sceglierne una tra le prime tre del mazzo
+     </label>
+     {royalOptions.sovereign&&<>
+      <label>Carta reale da scartare:
+       <select value={royalOptions.discard} onChange={e=>setRoyalOption('discard',e.target.value)}>
+        <option value="">Prima carta non giocata</option>
+        {royalDiscardChoices.map((id,i)=><option key={id+':'+i} value={id}>
+         {card(id)?.nome||card(id)?.name||id}</option>)}
+       </select>
+      </label>
+      {royalTopThree.length>0&&<label>Carta da prendere tra le tre osservate:
+       <select value={royalOptions.pick} onChange={e=>setRoyalOption('pick',e.target.value)}>
+        <option value="">Prima carta tra le tre</option>
+        {royalTopThree.map((id,i)=><option key={id+':'+i} value={id}>
+         {(i+1)+'. '+(card(id)?.nome||card(id)?.name||id)}</option>)}
+       </select>
+      </label>}
+     </>}
+    </>}
+    {royalActive&&selectedActions.includes('crown-fusion')&&<p className="f3d-royal-readout">
+     Fusione della Corona: i due supporti originali diventano Corona Unita;
+     non entra alcuna riserva, le passive restano attive
+    </p>}
     {stormActive&&<p className="f3d-storm-readout">
      <b>Tempesta</b>
      {' · '+(player.storm?.charge&&stormModuleActive(player,'nx-e02-09',battle.ply)?
