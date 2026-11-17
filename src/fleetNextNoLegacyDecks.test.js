@@ -22,9 +22,10 @@ test('Migrazione conserva il mazzo solo come archivio',()=>{
  assert.deepEqual(next.deck,[]);assert.deepEqual(next.retiredDeck,legacy.deck);
  assert.deepEqual(normalizeFleetInventory(next),next);
 });
-test('La partita ufficiale non legge un mazzo da 40; l’interfaccia non propone vecchie sezioni',()=>{
+test('La partita ufficiale usa solo il nuovo mazzo da 40, non l'archivio delle carte ritirate',()=>{
  const view=src('./OfficialFleetBattle3D.jsx'),shop=src('./FleetCollectionWorkshop.jsx');
- assert.match(view,/deckA:ownedCharacters,deckB:\['gen-216'\]/);
+ assert.match(view,/deckA:playerDeck\\.baseDeck,deckB:\\['gen-216'\\]/);
+ assert.match(view,/ruleset:HP_SYNC_RULESET/);
  assert.doesNotMatch(view,/deckA:inventory\.deck|STARTER_DECK/);
  assert.doesNotMatch(shop,/Il mio mazzo|Mazzi pronti|buyGeneralCard|equipFleetBaseDeck|buyPrebuiltDeck/);
  assert.match(shop,/eligibleExclusives/);assert.match(shop,/BOSS_CARDS/);
