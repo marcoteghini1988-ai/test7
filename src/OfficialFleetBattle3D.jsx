@@ -800,6 +800,92 @@ export default function OfficialFleetBattle3D({
         {t.name} · {t.hp}/{t.maxHp}</option>)}
       </select></label>}
     </>}
+    {sharkActive&&<p className="f3d-shark-readout">
+     <b>Squalo del Vuoto</b>
+     {' · '+(player.shark?.lastEnemyLossPly===battle.ply-1?
+      'Risposta spietata pronta':'Reazioni e difese in attesa')}
+    </p>}
+    {selectedActions.includes('toothed-armor')&&sharkEnemyChoices.length>0&&
+     <label>Corazza dentata — bersaglio pubblico del contrattacco:
+      <select value={sharkOptions.armor} onChange={e=>setSharkOption('armor',e.target.value)}>
+       <option value="">Prima unità nemica disponibile</option>
+       {sharkEnemyChoices.map(t=><option key={t.key} value={t.key}>
+        {t.name} · {t.hp}/{t.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('abyssal-decoy')&&sharkOwnChoices.length>1&&
+     <label>Esca abissale — unità che attirerà il colpo principale:
+      <select value={sharkOptions.decoy} onChange={e=>setSharkOption('decoy',e.target.value)}>
+       <option value="">Prima unità propria operativa</option>
+       {sharkOwnChoices.map(t=><option key={t.key} value={t.key}>
+        {t.name} · {t.hp}/{t.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('returning-teeth')&&sharkEnemyChoices.length>1&&<>
+     <label>Denti di ritorno — primo bersaglio dell’arpione:
+      <select value={sharkOptions.teethFirst}
+       onChange={e=>setSharkOptions(old=>({...old,teethFirst:e.target.value,teethSecond:''}))}>
+       <option value="">Prima unità nemica disponibile</option>
+       {sharkEnemyChoices.map(t=><option key={t.key} value={t.key}>{t.name}</option>)}
+      </select>
+     </label>
+     <label>Denti di ritorno — secondo bersaglio diverso:
+      <select value={sharkOptions.teethSecond}
+       onChange={e=>setSharkOption('teethSecond',e.target.value)}>
+       <option value="">Prima altra unità disponibile</option>
+       {sharkTeethRemaining.map(t=><option key={t.key} value={t.key}>{t.name}</option>)}
+      </select>
+     </label>
+    </>}
+    {selectedActions.includes('retaliation-torpedo')&&sharkDamagedMachines.length>0&&
+     <label>Siluro di ritorsione — macchina ferita da sacrificare:
+      <select value={sharkOptions.torpedo} onChange={e=>setSharkOption('torpedo',e.target.value)}>
+       <option value="">Prima macchina danneggiata</option>
+       {sharkDamagedMachines.map(m=><option key={m.id} value={m.id}>
+        {m.name} · {m.hp}/{m.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('predator-shield')&&sharkWounded.length>0&&
+     <label>Scudo del predatore — supporto ferito:
+      <select value={sharkOptions.shield} onChange={e=>setSharkOption('shield',e.target.value)}>
+       <option value="">Primo supporto danneggiato</option>
+       {sharkWounded.map(e=><option key={e.id} value={e.id}>
+        {e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('abyssal-admiral')&&<>
+     <label><input type="checkbox" checked={sharkOptions.admiralEnabled}
+      onChange={e=>setSharkOption('admiralEnabled',e.target.checked)}/>
+      Ammiraglio: autorizza lo scarto di una carta per riparare il primo alleato ferito
+     </label>
+     {sharkOptions.admiralEnabled&&sharkDiscardChoices.length>0&&
+      <label>Preferenza di scarto (alla prima ferita del turno nemico):
+       <select value={sharkOptions.admiralDiscard}
+        onChange={e=>setSharkOption('admiralDiscard',e.target.value)}>
+        <option value="">Prima carta ancora in mano</option>
+        {sharkDiscardChoices.map((id,i)=><option key={id+':'+i} value={id}>
+         {card(id)?.nome||card(id)?.name||id}</option>)}
+       </select>
+      </label>}
+    </>}
+    {selectedActions.includes('last-bite')&&sharkDonors.length>1&&<>
+     <label>Ultimo morso — supporto ferito da sacrificare:
+      <select value={sharkOptions.donor}
+       onChange={e=>setSharkOptions(old=>({...old,donor:e.target.value,receiver:''}))}>
+       <option value="">Primo supporto ferito</option>
+       {sharkDonors.map(e=><option key={e.id} value={e.id}>
+        {e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>
+     <label>Ultimo morso — altro supporto da riparare:
+      <select value={sharkOptions.receiver}
+       onChange={e=>setSharkOption('receiver',e.target.value)}>
+       <option value="">Primo supporto diverso ferito</option>
+       {sharkReceivers.map(e=><option key={e.id} value={e.id}>
+        {e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>
+    </>}
     {selectedActions.includes('absorption-screen')&&mantaSupports.length>0&&
      <label>Schermo di assorbimento — supporto protetto:
       <select value={mantaOptions.screen} onChange={e=>setMantaOption('screen',e.target.value)}>
