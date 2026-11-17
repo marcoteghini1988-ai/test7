@@ -2790,9 +2790,9 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  const after=cards.filter(id=>cardRole(id)!=='terrain'&&!priority(id)&&
   id!=='ex-r01-01');
+ nebulaHideForTurn(b,ctx,events,order); // Occultamento precede eventuale Ago nello stesso turno
  after.sort((x,y)=>Number(isFalcoPreparation(y))-Number(isFalcoPreparation(x)));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
- nebulaHideForTurn(b,ctx,events,order);
  nebulaArchonTerrainTrade(b,ctx,events,order);
  nebulaRevealOnOwnTurn(b,ctx,events);
  processHelios(b,who,ctx,events,order);
@@ -2864,7 +2864,12 @@ export function autoFleetTurn(b,who=b.turn){
   {targetKind:'part',targetId:(marked||part).id,partId:(marked||part).id}:defaultOrder;
  const helm=side.commander?.id==='ex-c01-01'||cards.some(i=>side.hand[i]==='ex-c01-01');
  const machines=(side.machines||[]).filter(unitAlive);
+ const nebulaAiHide=side.ships[0].id==='E01'&&
+  !cards.some(i=>card(side.hand[i])?.effectSpec?.action==='wandering-mist')&&
+  !nebulaHideReason(side,b.ply);
+ const nebulaAiEscort=nebulaAiHide?nebulaVisibleSupports(side,b.ply)[0]:null;
  return {...target,ownPartId,cards,pass:!part,
+  nebulaHide:!!nebulaAiEscort,nebulaHideEscortId:nebulaAiEscort?.id,
   heliosTrade:helm&&bypass&&side.hand.length>cards.length,
   radentRecall:bypass&&installedModule(side,'utility')?.cardId==='nx-c01-01'&&machines.length>0,
   radentMachineId:machines[0]?.id,
