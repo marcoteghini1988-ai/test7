@@ -17,6 +17,7 @@ import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
+import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,vesselWithPhysicalVitalDamage} from './officialVitalMotorAdapter.js';
@@ -43,7 +44,7 @@ const Fighter=extract('./OfficialFleetBattle3D.jsx','OriginalFleetFighter',{
  useMemo:fn=>fn(),newVessel,projectFleetDefense,projectMachineBerths,
  fleetImpactVisual:()=>null,ShipPhysicalVitals:()=>null,MountedWeapons:()=>null,
  FLEET_PHYSICAL_VITALS,PHYSICAL_LABELS:Labels,PHYSICAL_SHORT_LABELS:Shorts,
- ASSET_ROOT:'/assets',describeEscortEffect,liveModules,pct:(n,d)=>Math.round(100*n/d),
+ ASSET_ROOT:'/assets',HP_SYNC_RULESET,describeEscortEffect,liveModules,pct:(n,d)=>Math.round(100*n/d),
  activeEscort:e=>e.hp>0&&!e.destroyed
 });
 const Physical=extract('./ShipPhysicalVitals.jsx','ShipPhysicalVitals',{
@@ -176,7 +177,7 @@ function battleUi(seed){
   projectFleetSlots,fleetTurnNotice,TERRAIN_CATALOG,SIMPLE_RULES,
   OriginalFleetBar:()=>null,OriginalFleetFighter:FighterStub,OriginalSpecialSlots:()=>null,
   OriginalSpecialHandCard:Hand,TrapReveal:()=>null,
-  OFFICIAL_SPECIAL_FIXED_BACK,ASSET_ROOT:'/assets',
+  OFFICIAL_SPECIAL_FIXED_BACK,ASSET_ROOT:'/assets',HP_SYNC_RULESET,
   VITAL_LABELS:{weapons:'Arsenale',generator:'Generatore',bridge:'Plancia',command:'Centralina'}
  });
  return {
