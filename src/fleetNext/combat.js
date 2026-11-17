@@ -1170,7 +1170,7 @@ function activateMantaCard(b,who,def,ctx,events,order={},source=null){
   const target=supports.find(e=>e.id===order.mantaScreenEscortId)||supports[0];
   if(!target)throw Error('Schermo: supporto non operativo');
   side.protections.push({source,id:def.id,kind:'protect',remaining:1,
-   target:'escort',escortSlot:target.slot,untilPly:b.ply+2});
+   target:'escort',escortSlot:target.slot,untilPly:b.ply+2,placedPly:b.ply});
   note('Il prossimo colpo su '+target.name+' sarà bloccato');
   return;
  }
@@ -1636,14 +1636,15 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'pierce':ctx.pierce+=s.amount;at('Ignora '+s.amount+' protezioni sui componenti');break;
   case 'multishot':ctx.multiTargets=Math.max(ctx.multiTargets,s.targets);at('Fino a '+s.targets+' componenti');break;
   case 'protect':case 'dodge':{
-   const escort=s.target==='escort'?weakest(livingEscorts(side)):null;
+   const escort=s.target==='escort'?weakest(livingEscorts(side).filter(e=>
+   !nebulaProtectionForbidden(e,b.ply))):null;
    const part=s.target==='all'||escort?null:selectedOwnPart(side,s.target,ownPartId);
    if(s.target!=='all'&&!escort&&!part){at('Bersaglio non disponibile');break;}
    if(s.type==='dodge'&&!operational(side.ships[0],'generator')){at('Generatore non disponibile');break;}
    side.protections=side.protections.filter(p=>p.source!==token);
    side.protections.push({source:token,id:def.id,kind:s.type,remaining:s.amount,
     target:s.target==='all'?'all':escort?'escort':'part',partId:part?.id||null,
-    escortSlot:escort?.slot??null,untilPly:expiry});
+    escortSlot:escort?.slot??null,untilPly:expiry,placedPly:b.ply});
    at((s.type==='dodge'?'Schivata':'Protezione')+' pronta: '+s.amount+' colpi');break;
   }
   case 'repair':{
@@ -1850,13 +1851,22 @@ function redirectSharkDecoy(b,ctx,events,target){
  return {kind:lure.kind,unit:lure.unit,redirected:true};
 }
 function redirectFleetHit(b,ctx,events,target){
+ // Cannone velato ferma i cambi bersaglio senza aggirare la flotta.
+ if(ctx.nebulaUnredirectableCardId)return target;
  return redirectPrismaMachineHit(b,ctx,events,redirectLinceHit(b,ctx,events,
   redirectFalcoGenerator(b,ctx,events,redirectSharkDecoy(b,ctx,events,target))));
 }
 function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
  if(!target||!primary||!target.unit||target.unit.id===primary.unit?.id)return false;
- if(ctx.mantaGrounded)return true;
  const defender=b.sides[other(ctx.who)];
+ const night=defender.defenses.find(d=>d.nebulaNight&&!d.hidden&&d.untilPly>b.ply);
+ if(night){
+  events.push(emit(b,other(ctx.who),'block',
+   'Notte criogenica vieta un secondo bersaglio nello stesso attacco',
+   {cardId:night.id,targetKind:target.kind,targetId:target.unit.id}));
+  return true;
+ }
+ if(ctx.mantaGrounded)return true;
  const grounding=defender.defenses.find(d=>d.hidden&&d.trigger==='manta-secondary'&&
   d.armedAtPly<b.ply);
  if(grounding&&mantaCapacitorActive(defender,b.ply)&&spendMantaEnergy(defender,b.ply,1)){
@@ -1894,7 +1904,8 @@ function transferPrismaProtection(b,defender,p,ctx,events){
   (category==='escort'?p.escortSlot:p.machineSlot));
  const alternatives=candidates.filter(c=>c.unit.id!==from?.unit.id);
  const pref=state.artisanPreference;
- const chosen=alternatives.find(c=>c.kind===pref?.kind&&c.unit.id===pref?.id)||alternatives[0];
+ const allowed=alternatives.filter(c=>!nebulaProtectionForbidden(c.unit,b.ply));
+ const chosen=allowed.find(c=>c.kind===pref?.kind&&c.unit.id===pref?.id)||allowed[0];
  if(!chosen)return;
  if(category==='part')p.partId=chosen.unit.id;
  else if(category==='escort')p.escortSlot=chosen.unit.slot;
@@ -1923,6 +1934,8 @@ function blockHit(b,defender,targetKind,target,ctx,events){
    targetKind==='module'?p.target==='module'&&p.moduleSlot===target.slot:
    p.target==='all'||p.target==='part'&&p.partId===target.id;
   if(!matches)continue;
+  if(nebulaProtectionForbidden(target,b.ply)&&p.placedPly!=null&&
+   p.placedPly>=(target.nebulaNoProtectionAppliedPly??Infinity))continue;
   if(p.kind==='dodge'&&(!activePart(defender,'generator')||b.terrain?.id==='T01'))continue;
   const attacker=b.sides[ctx.who];
   const visible=defender.defenses.some(d=>d.source===p.source&&!d.hidden);
@@ -1935,7 +1948,9 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   const sharkPierce=visible&&['escort','machine'].includes(targetKind)&&
    ctx.sharkPierceLeft>0&&ctx.sharkPrimary?.id===target.id&&
    ctx.sharkPrimary?.kind===targetKind;
-  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce;
+  const nebulaPierce=visible&&['escort','machine'].includes(targetKind)&&
+   ctx.nebulaPierceLeft>0;
+  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce||nebulaPierce;
   p.remaining--;
   if(!bypass&&p.id==='nx-r02-03'){
    const energy=gainMantaEnergy(defender,b.ply,1);
@@ -1945,6 +1960,7 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   }
   if(bypass){
    if(sharkPierce)ctx.sharkPierceLeft--;
+   else if(nebulaPierce)ctx.nebulaPierceLeft--;
    else if(canShard)attacker.prisma.shard=null;
    else if(targetKind==='part'&&ctx.pierceLeft>0)ctx.pierceLeft--;
    else if(canBarrel)barrel.activatedPly=b.ply;
@@ -2360,6 +2376,17 @@ function falcoReleaseAtTurnStart(b,who,ctx,events,order){
   events.push(emit(b,who,'falco-lost',message,{cardId:q.cardId}));
   return result;
  };
+ const defender=b.sides[other(who)];
+ const falseTarget=defender.defenses.find(d=>d.id==='nx-e01-04'&&d.hidden&&
+  d.armedAtPly<b.ply&&d.trigger==='prepared-release');
+ if(falseTarget){
+  discardDefense(defender,falseTarget.source);
+  events.push(emit(b,other(who),'trap-reveal',
+   'Falso bersaglio annulla tutta la preparazione nemica',
+   {cardId:falseTarget.id,blockedCardId:q.cardId}));
+  return lose('Colpo preparato annullato da Falso bersaglio');
+ }
+ startNebulaVolley(ctx);
  if(!operational(side.ships[0],'weapons'))
   return lose('Colpo preparato perso: Arsenale distrutto');
  if(q.held&&!falcoCapacitorActive(side,b.ply))
