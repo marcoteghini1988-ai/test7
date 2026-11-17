@@ -50,6 +50,8 @@ const preservedCharacters=exclusiveData.cards.map(c=>{
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  if(c.id==='ex-l01-01')return {...c,effectSpec:{type:'royal',action:'eclipse-sovereign'},
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
+ if(c.id==='ex-l03-01')return {...c,effectSpec:{type:'obsidian',action:'obsidian-magister'},
+  effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  return c;
 });
 export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS)].map(card =>
