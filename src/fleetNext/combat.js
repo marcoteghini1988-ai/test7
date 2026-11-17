@@ -2284,8 +2284,10 @@ function redirectSharkDecoy(b,ctx,events,target){
  return {kind:lure.kind,unit:lure.unit,redirected:true};
 }
 function redirectFleetHit(b,ctx,events,target){
- // Cannone velato ferma i cambi bersaglio senza aggirare la flotta.
+ // Cannone velato impedisce ogni deviazione, anche quella regale.
  if(ctx.nebulaUnredirectableCardId)return target;
+ const crown=royalGuardCommand(b,ctx,events,target);
+ if(crown!==target)return crown;
  return redirectPrismaMachineHit(b,ctx,events,redirectLinceHit(b,ctx,events,
   redirectFalcoGenerator(b,ctx,events,redirectSharkDecoy(b,ctx,events,
    stormRedirectFront(b,ctx,events,target)))));
@@ -2351,6 +2353,7 @@ function transferPrismaProtection(b,defender,p,ctx,events){
 }
 
 function blockHit(b,defender,targetKind,target,ctx,events){
+ royalOwnShotPierce(b,ctx,events);
  const chamber=targetKind==='module'&&defender.defenses.find(d=>
   d.id==='nx-r01-04'&&!d.hidden&&d.untilPly>b.ply&&
   d.falcoProtectedModuleId===target.id);
@@ -2382,11 +2385,13 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   const sharkPierce=visible&&['escort','machine'].includes(targetKind)&&
    ctx.sharkPierceLeft>0&&ctx.sharkPrimary?.id===target.id&&
    ctx.sharkPrimary?.kind===targetKind;
+  const royalPierce=visible&&ctx.royalLanceAvailable&&!ctx.royalLanceUsed&&
+   ['escort','machine'].includes(targetKind);
   const stormPierce=visible&&b.terrain?.id!=='T06'&&ctx.stormSinglePierceLeft>0&&
    ctx.stormSingleTargetKind===targetKind&&ctx.stormSingleTargetId===target.id;
   const nebulaPierce=visible&&['escort','machine'].includes(targetKind)&&
    ctx.nebulaPierceLeft>0;
-  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce||nebulaPierce||stormPierce;
+  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce||nebulaPierce||stormPierce||royalPierce;
   p.remaining--;
   if(!bypass&&p.id==='nx-r02-03'){
    const energy=gainMantaEnergy(defender,b.ply,1);
@@ -2395,7 +2400,13 @@ function blockHit(b,defender,targetKind,target,ctx,events){
     {cardId:p.id,energy:mantaEnergy(defender)}));
   }
   if(bypass){
-   if(stormPierce)ctx.stormSinglePierceLeft--;
+   if(royalPierce){
+    ctx.royalLanceUsed=true;ctx.royalLanceAvailable=false;
+    ensureRoyalState(attacker).lastLancePly=b.ply;
+    events.push(emit(b,ctx.who,'royal-lance',
+     'Lancia regale: una Difesa scoperta ignorata dal primo colpo della madre',{
+      cardId:'nx-l01-07',targetKind,targetId:target.id}));
+   }else if(stormPierce)ctx.stormSinglePierceLeft--;
    else if(sharkPierce)ctx.sharkPierceLeft--;
    else if(nebulaPierce)ctx.nebulaPierceLeft--;
    else if(canShard)attacker.prisma.shard=null;
@@ -2500,9 +2511,9 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  if(blockNebulaRepeat(b,ctx,events,target))return 0;
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
  if(stormNetStops(b,ctx,events,target))return 0;
- const actual=damageFleetUnit(defender,target.kind,target.unit,
+ const actual=royalDistributeDamage(b,ctx,events,defender,target.kind,target.unit,
   sharkCapDamage(b,defender,target.kind,target.unit,
-   mantaCapDamage(b,defender,target.kind,target.unit,amount,events),events),b.ply);
+   mantaCapDamage(b,defender,target.kind,target.unit,amount,events),events));
  if(actual){
   const name=target.unit.name||VITAL_LABELS[target.unit.id]||'Bersaglio';
   events.push(emit(b,ctx.who,'impact',name+' −'+actual,{
@@ -2612,9 +2623,9 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
   return {damage:0,target:finalTarget,blocked:true};
  if(stormNetStops(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
- const actual=damageFleetUnit(enemy,finalTarget.kind,finalTarget.unit,
+ const actual=royalDistributeDamage(b,ctx,events,enemy,finalTarget.kind,finalTarget.unit,
   sharkCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,
-   mantaCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,amount,events),events),b.ply);
+   mantaCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,amount,events),events));
  if(actual){
   events.push(emit(b,ctx.who,'impact',(finalTarget.unit.name||VITAL_LABELS[finalTarget.unit.id]||'Bersaglio')+' −'+actual,{
    cardId,targetKind:finalTarget.kind,targetId:finalTarget.unit.id,
@@ -3138,6 +3149,7 @@ function resolveMantaShots(b,ctx,events,order){
 function resolveSalvo(b,ctx,events,order){
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
+ ctx.royalMotherShot=true;
  let selected=selectedEnemyTarget(defender,order,b.ply);
  if(!selected){events.push(emit(b,ctx.who,'no-shot','Bersaglio non valido'));return {damage:0};}
  if(side.fireBlocked||side.fireDisabledUntil>b.ply){
@@ -3189,6 +3201,7 @@ function resolveSalvo(b,ctx,events,order){
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  const hits=[];
  for(const [hitIndex,planned] of targets.entries()){
+  ctx.royalFirstShot=hitIndex===0;
   if(hitIndex>0&&cancelPrismaSecondaryHit(b,ctx,events,planned,selected))continue;
   const redirected=redirectFleetHit(b,ctx,events,planned);
   const {kind,unit}=redirected;
@@ -3196,11 +3209,11 @@ function resolveSalvo(b,ctx,events,order){
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   if(stormNetStops(b,ctx,events,redirected))continue;
   const amount=stormConsumeHeavy(b,ctx,events,redirected,
-   mantaFork?1:kind==='part'||kind==='module'?1:
+   mantaFork?1:planned.kind==='part'||planned.kind==='module'||redirected.royalSameDamage?1:
    power+(kind==='escort'&&redirected.stormOriginKind!=='machine'&&b.terrain?.id==='T04'?1:0));
-  const damage=damageFleetUnit(defender,kind,unit,
+  const damage=royalDistributeDamage(b,ctx,events,defender,kind,unit,
    sharkCapDamage(b,defender,kind,unit,
-   mantaCapDamage(b,defender,kind,unit,amount,events),events),b.ply);
+   mantaCapDamage(b,defender,kind,unit,amount,events),events));
   if(damage){
    hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,
     name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
