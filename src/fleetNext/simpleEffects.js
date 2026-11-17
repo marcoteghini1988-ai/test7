@@ -18,7 +18,7 @@ export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
  'weaken','disarm','cleanse','exchange','recover','charge','terrain','trap',
- 'bypass','deployMachine','fusion','blueprint','systemModifier','fieldReset','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
+ 'bypass','deployMachine','fusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
 const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore',bridge:'la Plancia'};
@@ -53,6 +53,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
  'Aurora ha Arsenale e Generatore, senza supporti. La Plancia separa il Personaggio dal Generatore; la Centralina abilita i supporti. I Motori delle carte precedenti fanno parte del Generatore.',
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
+ 'Smontaggio Forzato è una carta Attacco: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
  'Fusione unisce due supporti operativi. La prima può far entrare la terza unità sbloccata; la seconda unisce terza e quarta. Rimangono al massimo due supporti attivi.',
  'La fusione conserva i danni in proporzione, consuma i supporti usati e non ricostruisce navicelle distrutte. Gli alloggiamenti Arma sono separati dai supporti.'
 ]);
@@ -73,6 +74,9 @@ export function validateEffectSpec(spec){
  if(!spec||typeof spec!=='object'||Array.isArray(spec))return 'Effetto mancante';
  if(!EFFECT_TYPES.includes(spec.type))return 'Effetto non supportato: '+spec.type;
  if(spec.type==='systemModifier'&&(!['command','weapons','generator','bridge'].includes(spec.system)||!['disable','amplify'].includes(spec.operation)||!integer(spec.tier,1,4)||!integer(spec.turns,1,3)))return 'Effetto sistemi non valido';
+ if(spec.type==='dismantle'&&(!integer(spec.turns,1,2)||
+   ![1,2,99].includes(spec.count)||!['components','base'].includes(spec.mode)||
+   (spec.mode==='base')!==(spec.count===99)))return 'Smontaggio non valido';
  if(spec.type==='fieldReset'&&(spec.scope!=='both'||spec.discardFieldCards!==true))return 'Reset campo non valido';
  if(spec.type==='blueprint'&&!/^nx-[a-z0-9]+-[0-9]{2}$/.test(spec.code||''))return 'Codice di scheda esclusiva non valido';
  if(spec.type==='aurora'&&!Object.values(AURORA_ACTIONS).includes(spec.action))return 'Azione Aurora non valida';
@@ -201,7 +205,7 @@ case 'obsidian':return card.effectProposed;
 case 'ark':return card.effectProposed;
   case 'aurora':return card.effectProposed;
   case 'blueprint':return card.effectProposed;
-  case 'systemModifier':case 'fieldReset':return card.effectProposed;
+  case 'systemModifier':case 'fieldReset':case 'dismantle':return card.effectProposed;
   case 'fusion':return 'Fonde due supporti operativi. Richiama la riserva sbloccata; la seconda fusione unisce terzo e quarto supporto. Massimo due unità in campo.';
   default:throw new Error('Effetto privo di descrizione: '+s.type);
  }

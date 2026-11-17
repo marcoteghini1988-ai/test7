@@ -51,7 +51,8 @@ export function projectFleetDefense(mother){
  const parts=Object.fromEntries(Object.entries(FLEET_PHYSICAL_VITALS).map(([physical,id])=>{
   const part=mother.parts.find(p=>p.id===id);
   const hp=part?Math.max(0,Math.ceil(2*part.hp/part.maxHp)):2;
-  return [physical,{hp,max:2,unlocked:!!part,exposed:!!part,signature:null}];
+  return [physical,{hp,max:2,unlocked:!!part&&!part.dismantled,
+   exposed:!!part&&!part.dismantled,signature:null}];
  }));
  return {kind:'mother',shipId:mother.id,parts,shield:{hp:0,max:1},exposureOrder:[]};
 }

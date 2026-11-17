@@ -1,5 +1,5 @@
 import React,{useMemo,useState} from 'react';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,
  eligibleExclusives,cardFacePath,card,cardCopyLimit} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
@@ -72,7 +72,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  function genericCardTile(c){
   const owned=inventory.owned[c.id]||0,equipped=deckInfo.baseDeck.filter(id=>id===c.id).length;
   const copies=Math.min(owned,cardCopyLimit(c.id));
-  const price=NEXT_COMMON_CARDS.some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
+  const price=[...NEXT_COMMON_CARDS,...DISMANTLE_CARDS].some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
    <strong>{c.nome||c.name}</strong>
@@ -143,6 +143,10 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <h3 style={{fontSize:13}}>33 nuove carte dei sistemi e Buco Nero</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {NEXT_COMMON_CARDS.map(genericCardTile)}
+   </div>
+   <h3 style={{fontSize:13}}>4 carte Attacco · Smontaggio Forzato</h3>
+   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
+    {DISMANTLE_CARDS.map(genericCardTile)}
    </div>
    <h3 style={{fontSize:13}}>Armi temporanee, Personaggi e Boss posseduti</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>

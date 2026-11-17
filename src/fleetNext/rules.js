@@ -3,6 +3,8 @@
 // Ogni effetto è esplicito: catalogo, testo e combattimento condividono la stessa regola.
 import generalData from './catalogGeneral.json' with {type:'json'};
 import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
+import {DISMANTLE_BY_ID,DISMANTLE_CARDS} from './dismantleCards.js';
+export {DISMANTLE_CARDS,DISMANTLE_BY_ID} from './dismantleCards.js';
 export {NEXT_COMMON_CARDS,NEXT_COMMON_CARD_BY_ID} from './newCardRegistry.js';
 import exclusiveData from './catalogExclusive.json' with {type:'json'};
 import {describeEffect,validateEffectSpec} from './simpleEffects.js';
@@ -86,7 +88,7 @@ if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==125||BOSS_COUNT!==12||Object.keys(SHIP_
  throw new Error('Catalogo esclusivo incompleto: 120 schede nuove (12 Personaggi già conservati), 5 Personaggi varianti e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
-export const generalCard = id => NEXT_COMMON_CARD_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
+export const generalCard = id => NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
@@ -103,7 +105,7 @@ export function cardCopyLimit(id){
  const c=card(id);
  if(!c)return 0;
  if(bossCard(id))return 1;
- if(NEXT_COMMON_CARD_BY_ID[id])return c.maxCopiesPerDeck||RARITY_COPY_LIMIT[c.rarita]||0;
+ if(NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id])return c.maxCopiesPerDeck||RARITY_COPY_LIMIT[c.rarita]||0;
  if(isProgressionCard(id))return c.shipId?c.maxCopiesInAutoPackageDraft:RARITY_COPY_LIMIT[c.rarita]||0;
  return exclusiveCard(id)?(c.maxCopiesInAutoPackageDraft||1):(RARITY_COPY_LIMIT[c.rarita]||0);
 }
@@ -140,7 +142,8 @@ export function exclusiveOperational(id,mother,escorts=[]){
  if(!exclusiveUnlocked(id,mother.id,mother.level))return false;
  if(exclusiveCard(id)?.playable===false)return false;
  const def=exclusiveCard(id);
- return def.requiredOwnParts.every(id=>mother.parts.some(p=>p.id===id&&!p.destroyed))&&
+ return exclusiveUnlocked(id,mother.id,mother.operationalLevel||mother.level)&&
+  def.requiredOwnParts.every(id=>mother.parts.some(p=>p.id===id&&!p.destroyed&&!p.dismantled))&&
   escorts.filter(e=>e.hp>0&&!e.destroyed&&e.linked!==false).length>=def.requiredEscortCount;
 }
 export function eligibleExclusives(shipId,level){

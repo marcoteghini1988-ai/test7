@@ -31,6 +31,10 @@ export const isAuroraAction=id=>Object.hasOwn(AURORA_ACTIONS,id);
 export const isAuroraModule=id=>Object.hasOwn(AURORA_MODULE_SLOTS,id);
 export const auroraModuleSlot=id=>AURORA_MODULE_SLOTS[id]||null;
 export const installedModule=(side,slot)=>(side?.modules||{})[slot]||null;
+export const moduleSlotForCard=id=>auroraModuleSlot(id)||linceModuleSlot(id)||
+ prismaModuleSlot(id)||corvoModuleSlot(id)||falcoModuleSlot(id)||mantaModuleSlot(id)||
+ sharkModuleSlot(id)||nebulaModuleSlot(id)||stormModuleSlot(id)||royalModuleSlot(id)||
+ obsidianModuleSlot(id)||arkModuleSlot(id)||null;
 export const liveModules=side=>Object.values(side?.modules||{}).filter(m=>m&&m.hp>0&&!m.destroyed);
 export function removeModule(side,slot){
  const module=installedModule(side,slot);
@@ -50,6 +54,7 @@ export function removeModule(side,slot){
 export function mountModule(side,def,ownPartId=null){
  const slot=auroraModuleSlot(def.id)||linceModuleSlot(def.id)||prismaModuleSlot(def.id)||corvoModuleSlot(def.id)||falcoModuleSlot(def.id)||mantaModuleSlot(def.id)||sharkModuleSlot(def.id)||nebulaModuleSlot(def.id)||stormModuleSlot(def.id)||royalModuleSlot(def.id)||obsidianModuleSlot(def.id)||arkModuleSlot(def.id);
  if(!slot)return {ok:false,reason:'Questa carta non è un componente montabile'};
+ if(side.heldModules?.[slot])return {ok:false,reason:'Alloggiamento temporaneamente smontato'};
  const old=installedModule(side,slot);
  if(old?.cardId===def.id)return {ok:false,reason:'Modulo identico già montato'};
  if(old)removeModule(side,slot);

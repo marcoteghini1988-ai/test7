@@ -4,7 +4,7 @@ import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression} from './progression.js';
-import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
+import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,moduleSlotForCard,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
 import {LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
  ensureLinceState,linceMarkedRouteReady,lincePrecondition,recallLinceModule,
  recallLinceMachine,recoveredMachineForDeploy} from './linceEngine.js';
@@ -55,6 +55,8 @@ import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
  commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,commandPassiveSuspensions,
  consumePlanciaRestriction,consumePlanciaSplit,planciaSplitCount,
  resetFieldWithBlackHole,TEMP_WEAPON_DURATION} from './newCardEffects.js';
+import {dismantleCandidates,applyDismantleCard,expireDismantleEffects,
+ syncDismantleSide} from './dismantleEffects.js';
 
 const clone=x=>JSON.parse(JSON.stringify(x));
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -87,8 +89,8 @@ export const allVitalsDestroyed=ship=>ship.parts.every(p=>p.destroyed||p.hp<=0);
 // dal Generatore. Non si inventa un terzo vitale su Aurora.
 const resolvedPartId=(mother,id)=>id==='engine'&&!mother.parts.some(p=>p.id==='engine')?'generator':id;
 const motherPart=(mother,id)=>mother.parts.find(x=>x.id===resolvedPartId(mother,id));
-const operational=(mother,id)=>{const p=motherPart(mother,id);return !!p&&!p.destroyed&&p.hp>0;};
-const unitAlive=unit=>!!unit&&unit.hp>0&&!unit.destroyed;
+const operational=(mother,id)=>{const p=motherPart(mother,id);return !!p&&!p.destroyed&&!p.dismantled&&p.hp>0;};
+const unitAlive=unit=>!!unit&&unit.hp>0&&!unit.destroyed&&!unit.dismantled;
 const unitEnabled=(unit,ply)=>unitAlive(unit)&&(unit.disabledUntilPly||0)<=ply&&(unit.jammedUntilPly||0)<=ply;
 const escortEnabled=(side,escort,ply)=>unitEnabled(escort,ply)&&!nebulaHidden(escort,ply)&&
  (escort.skill?.requires||['command']).every(id=>operational(side.ships[0],id));
@@ -124,6 +126,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
   lastPlayed:[],attackSlots:[null,null,null],defenseSlots:[null,null],
   turnCount:0,fireDisabledUntil:0,fireBlocked:false,lastDisarmedPly:null,
   protections:[],reactions:[],charges:[],systemCardEffects:[],systemCardCounters:null,
+  dismantleEffects:[],heldModules:{},
   pendingRepair:0,drawBlockedUntil:0,usedCardEvents:[]};
  refreshEscortLinks(side);return side;
 }
@@ -287,13 +290,18 @@ function normalizeSide(side){
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
  side.synchronizationEffects??=[];side.systemCardEffects??=[];
+ side.dismantleEffects??=[];side.heldModules??={};
  side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);ensureNebulaState(side);ensureStormState(side);ensureRoyalState(side);ensureObsidianState(side);ensureArkState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
- if(!operational(side.ships[0],'generator')){
+ // Un componente SMONTATO sospende i suoi effetti, ma non distrugge le carte
+ // installate: quelle tornano operative dopo il montaggio automatico.
+ if(!unitAlive(motherPart(side.ships[0],'generator'))&&
+  !motherPart(side.ships[0],'generator')?.dismantled){
   for(const entry of [...side.defenses])discardDefense(side,entry.source);
  }
- if(!operational(side.ships[0],characterSystem(side))&&side.commander){
+ if(!unitAlive(motherPart(side.ships[0],characterSystem(side)))&&
+  !motherPart(side.ships[0],characterSystem(side))?.dismantled&&side.commander){
   side.discard.push(side.commander.id);removeSource(side,side.commander.source);side.commander=null;
  }
  refreshEscortLinks(side,ply);
@@ -310,7 +318,7 @@ function selectedOwnPart(side,target,ownPartId){
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
  if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
- if(['systemModifier','fieldReset'].includes(def.effectSpec?.type)){
+ if(['systemModifier','fieldReset','dismantle'].includes(def.effectSpec?.type)){
   if(side.ruleset!==HP_SYNC_RULESET)return 'Questa carta richiede la nuova modalità HP';
   if(def.effectSpec.type==='systemModifier'){
    const foe=battle?.sides?.A===side?battle.sides.B:battle?.sides?.B===side?battle.sides.A:null;
@@ -322,6 +330,17 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
     return 'Plancia: servono due navicelle di supporto nemiche operative';
   }
  }
+ if(def.effectSpec?.type==='dismantle'){
+  const foe=battle?.sides?.A===side?battle.sides.B:
+   battle?.sides?.B===side?battle.sides.A:null;
+  if(!foe)return 'Nessuna navicella avversaria da smontare';
+  if(!dismantleCandidates(foe,battle?.ply||0,
+   {includeBlocked:def.effectSpec.mode==='base'}).length)
+   return 'L’avversario non ha componenti aggiunti o potenziati disponibili';
+ }
+ const heldSlot=moduleSlotForCard(def.id);
+ if(heldSlot&&side.heldModules?.[heldSlot])
+  return 'Alloggiamento '+heldSlot+' temporaneamente smontato';
  if(def.effectSpec.type==='aurora'){
   const reason=auroraPrecondition(def,side,card,side.ships[0].level);
   if(reason)return reason;
@@ -553,6 +572,18 @@ export function validateFleetTurn(b,who,order){
  if(count('character')>1)return 'Massimo un Personaggio per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
  if(count('terrain')>1)return 'Massimo una Carta Terreno per turno';
+ if(chosen.filter(c=>c.effectSpec?.type==='dismantle').length>1)
+  return 'Massimo una carta Smontaggio Forzato per turno';
+ const dismantle=chosen.find(c=>c.effectSpec?.type==='dismantle');
+ if(dismantle&&Array.isArray(order?.dismantleTargets)&&order.dismantleTargets.length){
+  const valid=dismantleCandidates(b.sides[other(who)],b.ply,
+   {includeBlocked:dismantle.effectSpec.mode==='base'}).map(x=>x.key);
+  if(dismantle.effectSpec.mode==='components'&&
+   (order.dismantleTargets.length>dismantle.effectSpec.count||
+    new Set(order.dismantleTargets).size!==order.dismantleTargets.length||
+    order.dismantleTargets.some(key=>!valid.includes(key))))
+   return 'Selezione dei componenti di Smontaggio Forzato non valida';
+ }
  const defenseCapacity=defenseCapacityReason(side,chosen.filter(c=>cardRole(c.id)==='defense'),b.ply);
  if(defenseCapacity)return defenseCapacity;
  const terrainCode=chosen.find(c=>c.effectSpec?.type==='terrain')?.effectSpec.code??b.terrain?.id;
@@ -698,6 +729,11 @@ function discardDefense(side,token){
 function expireSide(side,ply,battle=null){
  normalizeSide(side);
  side.synchronizationEffects=side.synchronizationEffects.filter(e=>e.untilPly>ply);
+ const dismounted=expireDismantleEffects(side,ply);
+ for(const e of dismounted){
+  const owner=battle?.sides?.[e.owner];
+  if(owner)owner.discard.push(e.id);
+ }
  const expired=expireSystemCards(side,ply);
  for(const e of expired){
   const owner=battle?.sides?.[e.owner];
@@ -2546,6 +2582,16 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    at(result.replaced?'Effetto sui sistemi attivato per '+s.turns+' turni':'Effetto più forte già attivo');
    break;
   }
+  case 'dismantle':{
+   const result=applyDismantleCard(enemy,def,b.ply,who,order?.dismantleTargets);
+   if(!result.ok)throw Error(result.reason);
+   refreshEscortLinks(enemy,b.ply);
+   events.push(emit(b,who,'dismantle',
+    (def.nome||def.name)+' · '+result.targets.join(', ')+
+    ' temporaneamente smontati per '+s.turns+' turni avversari',
+    {cardId:def.id,targetKeys:result.targets,untilPly:result.effect.untilPly}));
+   break;
+  }
   case 'fieldReset':{
    const cleared=resetFieldWithBlackHole(b);
    // Gli attacchi e i bonus preparati nello stesso turno non possono
@@ -4199,7 +4245,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='dismantle'&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
@@ -4212,7 +4258,8 @@ export function autoFleetTurn(b,who=b.turn){
   {targetKind:'part',targetId:part?.id,partId:part?.id};
  const candidates=side.hand.map((id,i)=>({id,i,role:cardRole(id),def:card(id)}))
   .filter(x=>!effectUnavailableReason(x.def,side,b,{ownPartId}));
- const score=x=>x.def.effectSpec.type==='ark'&&x.def.effectSpec.action==='ark-fusion'?12:
+ const score=x=>x.def.effectSpec.type==='dismantle'?11:
+  x.def.effectSpec.type==='ark'&&x.def.effectSpec.action==='ark-fusion'?12:
   x.def.effectSpec.type==='royal'&&
   x.def.effectSpec.action==='crown-fusion'?12:x.def.effectSpec.type==='fusion'?10:x.def.effectSpec.type==='deployMachine'?8:
   x.def.effectSpec.type==='bypass'&&guard?7:x.def.effectSpec.type==='repair'?6:

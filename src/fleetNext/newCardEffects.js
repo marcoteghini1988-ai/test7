@@ -1,6 +1,7 @@
 // Motore comune delle nuove 33 carte. Solo regole, nessuna grafica.
 // Effetti disponibili con hp-sync-v2; valori provvisori, bilanciamento finale separato.
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './hpSynchronization.js';
+import {cancelAllDismantle} from './dismantleEffects.js';
 
 const clamp=(n,low,high)=>Math.max(low,Math.min(high,Number(n)||0));
 const BY_TIER=Object.freeze({
@@ -163,6 +164,12 @@ export function resetFieldWithBlackHole(b){
   // la scarta prima che possa essere rilasciata nel turno successivo.
   if(side.falco?.pending?.cardId)out.push(side.falco.pending.cardId);
   if(side.obsidian?.pending?.cardId)out.push(side.obsidian.pending.cardId);
+  const dismantled=cancelAllDismantle(side,b.ply);
+  for(const m of dismantled.held)if(m.cardId)out.push(m.cardId);
+  for(const effect of dismantled.cancelled){
+   const owner=['A','B'].includes(effect.owner)?effect.owner:key;
+   removed[owner].push(effect.id);
+  }
   for(const effect of side.systemCardEffects||[]){
    const owner=['A','B'].includes(effect.owner)?effect.owner:key;
    removed[owner].push(effect.id);

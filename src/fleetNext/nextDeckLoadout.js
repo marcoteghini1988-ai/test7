@@ -3,6 +3,7 @@
 // La selezione è conservata separatamente dall'inventario schema 4.
 import {card,cardCopyLimit,eligibleExclusives} from './rules.js';
 import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
+import {DISMANTLE_BY_ID,DISMANTLE_CARDS} from './dismantleCards.js';
 
 export const NEXT_DECK_LIMIT=40;
 export const NEXT_TEMP_WEAPON_IDS=Object.freeze(['prog-machine-striker','prog-machine-guard']);
@@ -32,7 +33,7 @@ export function readNextDeckSelection(storage=globalThis.localStorage){
 export function canSelectNewGeneric(id){
  const def=card(id);
  return !!def&&!def.shipId&&def.playable!==false&&
-  (Object.hasOwn(NEXT_COMMON_CARD_BY_ID,id)||NEXT_TEMP_WEAPON_IDS.includes(id)||def.kind==='character');
+  ((Object.hasOwn(NEXT_COMMON_CARD_BY_ID,id)||Object.hasOwn(DISMANTLE_BY_ID,id))||NEXT_TEMP_WEAPON_IDS.includes(id)||def.kind==='character');
 }
 export function buildNextBaseDeck(inventory,shipId,level,selection=null){
  const owned=inventory?.owned||{},capacity=nextGenericCapacity(shipId,level);
@@ -67,7 +68,7 @@ export function saveNextDeckSelection(inventory,shipId,level,ids,storage=globalT
  }catch(e){return {ok:false,reason:e?.message||'Impossibile salvare il mazzo'};}
 }
 export function buyNextCommonCard(inventory,id){
- const def=NEXT_COMMON_CARD_BY_ID[id];
+ const def=NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id];
  if(!def)return {ok:false,reason:'Carta non acquistabile'};
  const cost=NEXT_CARD_COSTS[def.rarita];
  if(!Number.isInteger(cost))return {ok:false,reason:'Prezzo non valido'};
@@ -78,4 +79,4 @@ export function buyNextCommonCard(inventory,id){
   credits:inventory.credits-cost};
  return {ok:true,inventory:next,cost,copies:owned+1};
 }
-export const NEXT_COMMON_AVAILABLE=NEXT_COMMON_CARDS;
+export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS]);
