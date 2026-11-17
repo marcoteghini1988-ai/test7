@@ -12,6 +12,7 @@ import {BOSS_CARDS,bossCard} from './bossCards.js';
 import {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
 import {getShipProgression} from './progression.js';
 import {EXCLUSIVE_DESIGNS_120,NEW_EXCLUSIVE_BLUEPRINTS,EXCLUSIVE_SHIP_IDS,EXCLUSIVE_DESIGN_BY_ID} from './exclusive120.js';
+import {VARIANT_EXCLUSIVE_CARDS} from './variantExclusives.js';
 export {EXCLUSIVE_DESIGNS_120,EXCLUSIVE_SHIP_IDS} from './exclusive120.js';
 export {BOSS_CARDS,bossCard} from './bossCards.js';
 export {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
@@ -61,7 +62,7 @@ const preservedCharacters=exclusiveData.cards.map(c=>{
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  return c;
 });
-export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS)].map(card =>
+export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS),...Object.values(VARIANT_EXCLUSIVE_CARDS)].map(card =>
  [card.id,definedCard(card,card.kind||(/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
   /Scudiera|Supporto|Tattica/i.test(card.category)?'support':
   /Controllo/i.test(card.category)?'control':
@@ -85,8 +86,8 @@ export const VITAL_LABELS = Object.freeze({engine:'Motori',weapons:'Arsenale',co
 export const RARITY_COPY_LIMIT = Object.freeze({Comune:5,Rara:4,Epica:3,Leggendaria:2});
 export const MAX_EXCLUSIVE_UPGRADE = 3;
 
-if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==125||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==0)
- throw new Error('Catalogo esclusivo incompleto: 120 schede nuove (12 Personaggi già conservati), 5 Personaggi varianti e 12 Boss');
+if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==170||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==0)
+ throw new Error('Catalogo esclusivo incompleto: 120 esclusive principali, 45 carte varianti, 17 Personaggi e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
 export const generalCard = id => NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
