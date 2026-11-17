@@ -82,7 +82,7 @@ export function arkPrecondition(def,side,battle=null){
   return 'Coro richiede almeno un supporto operativo danneggiato';
  if(action==='protected-entry'&&(!vital(side,'command')||
   (side.reserveEscorts||[]).length<1&&!
-  (side.escorts||[]).some(e=>e.sourceIndices?.includes(2))))
+  (side.escorts||[]).some(e=>e.sourceIndices?.includes(2)&&e.deployedAtPly===ply)))
   return 'Ingresso protetto richiede il terzo supporto sbloccato';
  if(action==='fleet-resonance'&&(!vital(side,'command')||
   !arkFusedEscorts(side,ply).length||!arkUnfusedEscorts(side,ply).length))
@@ -100,6 +100,9 @@ export function arkPrecondition(def,side,battle=null){
 }
 export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
  const actions=chosen.filter(c=>c?.effectSpec?.type==='ark').map(c=>c.effectSpec.action);
+ if(actions.filter(a=>a==='ark-fusion').length+
+  chosen.filter(c=>c?.effectSpec?.type==='fusion').length>1)
+  return 'Una sola Fusione dell’Arca per turno';
  if(actions.filter(a=>ARK_ATTACK_ACTIONS.includes(a)).length>1)
   return 'Un solo attacco Arca Astrale per turno';
  const escorts=arkEscorts(side,ply),damaged=arkDamagedEscorts(side,ply);
@@ -159,6 +162,10 @@ export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
    return 'Archivio: nessun modulo Arca negli scarti';
   if(order.arkRecoverModuleId&&!arkModulesInDiscard(side).includes(order.arkRecoverModuleId))
    return 'Archivio: modulo scelto assente dagli scarti';
+ }
+ if(order.arkArchive&&order.arkCustodianSwap){
+  const remaining=(side.hand||[]).length-chosen.length;
+  if(remaining<2)return 'Archivio e Custode richiedono due carte distinte da spendere';
  }
  if(order.arkCustodianSwap){
   const active=(side.commander?.id==='ex-l04-01'&&
