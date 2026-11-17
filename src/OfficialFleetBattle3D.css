@@ -334,3 +334,23 @@
 .es-math-scope .f3d-original-arena .live-card-inspector>label:has(input[type=checkbox]){
  display:flex;flex-direction:row;gap:5px;align-items:center
 }
+
+
+/* Energia Manta: lettura minima sulla plancia metallica 3D esistente. */
+.es-math-scope .f3d-original-arena .f3d-manta-energy{
+ position:absolute;top:146px;left:84px;right:84px;z-index:8;
+ display:flex;gap:4px;align-items:center;justify-content:center;
+ padding:3px 5px;border-radius:5px;border:1px solid #70a8ba;
+ background:linear-gradient(100deg,#132831ee,#183e4fee,#132831ee);
+ color:#c4f7ff;font-size:7px;box-shadow:0 0 9px #57d6ef55;
+ pointer-events:none;white-space:nowrap;overflow:hidden
+}
+.es-math-scope .f3d-original-arena .f3d-manta-energy>b{
+ max-width:100px;overflow:hidden;text-overflow:ellipsis;font-size:7px
+}
+.es-math-scope .f3d-original-arena .f3d-manta-energy>small{
+ font-size:6px;overflow:hidden;text-overflow:ellipsis
+}
+.es-math-scope .f3d-original-arena .f3d-manta-readout{
+ margin:0 0 5px;color:#b9f4ff;font-size:9px;line-height:1.35
+}
