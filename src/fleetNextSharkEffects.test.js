@@ -18,9 +18,6 @@ function make({shipA='R04',shipB='C03',levelA=5,levelB=5}={}){
  return b;
 }
 const enemy=(b,who)=>b.sides[who==='A'?'B':'A'];
-function order(kind,unit){return {pass:false,targetKind:kind,targetId:unit.id,
- ...(kind==='part'?{partId:unit.id}:{escort:'escortSlot',machine:'machineSlot'}[kind]!=null?
-  {[{escort:'escortSlot',machine:'machineSlot'}[kind]]:unit.slot}:{})};}
 function target(kind,unit){
  return {pass:false,targetKind:kind,targetId:unit.id,
   ...(kind==='part'?{partId:unit.id}:kind==='escort'?{escortSlot:unit.slot}:
