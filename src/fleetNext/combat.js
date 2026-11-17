@@ -416,6 +416,7 @@ function expireSide(side,ply){
  for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
  if(side.auroraVeil&&side.auroraVeil.untilPly<=ply)side.auroraVeil=null;
  if(side.lince?.route&&side.lince.route.usePly<ply)side.lince.route=null;
+ if(side.prisma?.shard&&side.prisma.shard.ply<ply)side.prisma.shard=null;
  side.protections=side.protections.filter(s=>s.untilPly>ply&&s.remaining>0);
  side.reactions=side.reactions.filter(s=>s.untilPly>ply);
  side.buffs=side.buffs.filter(s=>s.untilPly==null||s.untilPly>ply);
@@ -871,6 +872,68 @@ function escortPassive(b,side,ctx,events,order){
    {machineId:machine.id,machineSlot:machine.slot}));}
  }
 }
+
+function redirectPrismaMachineHit(b,ctx,events,target){
+ if(target?.kind!=='machine')return target;
+ const defender=b.sides[other(ctx.who)];
+ const defense=defender.defenses.find(d=>d.id==='nx-c02-03'&&!d.hidden&&
+  d.untilPly>b.ply&&d.redirectMachineId);
+ if(!defense)return target;
+ const module=defender.modules?.utility;
+ const machine=(defender.machines||[]).find(m=>m.id===defense.redirectMachineId&&
+  unitEnabled(m,b.ply));
+ if(!machine||machine.id===target.unit.id)return target;
+ discardDefense(defender,defense.source);
+ events.push(emit(b,other(ctx.who),'card','Prisma di deviazione intercetta il colpo diretto a una macchina',
+  {cardId:'nx-c02-03',originalTargetId:target.unit.id,targetId:machine.id,
+   targetKind:'machine'}));
+ return {kind:'machine',unit:machine,redirected:true};
+}
+function redirectFleetHit(b,ctx,events,target){
+ return redirectPrismaMachineHit(b,ctx,events,redirectLinceHit(b,ctx,events,target));
+}
+function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
+ if(!target||!primary||!target.unit||target.unit.id===primary.unit?.id)return false;
+ const defender=b.sides[other(ctx.who)];
+ const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='multi-secondary'&&
+  d.armedAtPly<b.ply&&d.protectedKind===target.kind&&
+  d.protectedId===target.unit.id);
+ if(!trap)return false;
+ discardDefense(defender,trap.source);
+ events.push(emit(b,other(ctx.who),'trap-reveal',
+  'Riflesso falso annulla un colpo secondario, il colpo principale resta valido',
+  {cardId:trap.id,blockedCardId:null,secondaryCancelled:true,
+   targetKind:target.kind,targetId:target.unit.id}));
+ return true;
+}
+function transferPrismaProtection(b,defender,p,ctx,events){
+ if(p.remaining<=0||defender.commander?.id!=='ex-c02-01'||
+  defender.commander.untilPly<=b.ply||!operational(defender.ships[0],characterSystem(defender)))
+  return;
+ const state=ensurePrismaState(defender);
+ if(state.artisanShiftPly===b.ply)return;
+ const category=p.target;
+ const candidates=category==='part'?
+  defender.ships[0].parts.filter(unitAlive).map(unit=>({kind:'part',unit})):
+  category==='escort'?(defender.escorts||[]).filter(e=>escortEnabled(defender,e,b.ply))
+   .map(unit=>({kind:'escort',unit})):
+  category==='machine'?(defender.machines||[]).filter(e=>unitEnabled(e,b.ply))
+   .map(unit=>({kind:'machine',unit})):[];
+ const from=candidates.find(c=>category==='part'?c.unit.id===p.partId:c.unit.slot===
+  (category==='escort'?p.escortSlot:p.machineSlot));
+ const alternatives=candidates.filter(c=>c.unit.id!==from?.unit.id);
+ const pref=state.artisanPreference;
+ const chosen=alternatives.find(c=>c.kind===pref?.kind&&c.unit.id===pref?.id)||alternatives[0];
+ if(!chosen)return;
+ if(category==='part')p.partId=chosen.unit.id;
+ else if(category==='escort')p.escortSlot=chosen.unit.slot;
+ else if(category==='machine')p.machineSlot=chosen.unit.slot;
+ state.artisanShiftPly=b.ply;
+ events.push(emit(b,other(ctx.who),'card',
+  'Artigiana Prisma trasferisce la protezione residua su '+(chosen.unit.name||VITAL_LABELS[chosen.unit.id]),
+  {cardId:'ex-c02-01',remaining:p.remaining,targetKind:chosen.kind,targetId:chosen.unit.id}));
+}
+
 function blockHit(b,defender,targetKind,target,ctx,events){
  for(const p of [...defender.protections]){
   if(p.untilPly<=b.ply||p.remaining<=0)continue;
@@ -880,14 +943,39 @@ function blockHit(b,defender,targetKind,target,ctx,events){
    p.target==='all'||p.target==='part'&&p.partId===target.id;
   if(!matches)continue;
   if(p.kind==='dodge'&&(!activePart(defender,'generator')||b.terrain?.id==='T01'))continue;
-  p.remaining--;
-  const barrel=installedModule(b.sides[ctx.who],'weapon');
+  const attacker=b.sides[ctx.who];
+  const visible=defender.defenses.some(d=>d.source===p.source&&!d.hidden);
+  const barrel=installedModule(attacker,'weapon');
   const canBarrel=targetKind==='part'&&barrel?.cardId==='nx-n00-07'&&
-   barrel.activatedPly!==b.ply&&operational(b.sides[ctx.who].ships[0],'weapons');
-  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel);
-  if(bypass){if(ctx.pierceLeft>0)ctx.pierceLeft--;else barrel.activatedPly=b.ply;}
-  events.push(emit(b,ctx.who,bypass?'pierce':'block',bypass?'Il colpo ignora una protezione':'La protezione blocca il colpo',
-   {cardId:p.id,partId:targetKind==='part'?target.id:null,escortSlot:targetKind==='escort'?target.slot:null}));
+   barrel.activatedPly!==b.ply&&operational(attacker.ships[0],'weapons');
+  const shard=attacker.prisma?.shard;
+  const canShard=visible&&shard?.ply===b.ply&&
+   shard.kind===targetKind&&shard.targetId===target.id;
+  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard;
+  p.remaining--;
+  if(bypass){
+   if(canShard)attacker.prisma.shard=null;
+   else if(targetKind==='part'&&ctx.pierceLeft>0)ctx.pierceLeft--;
+   else if(canBarrel)barrel.activatedPly=b.ply;
+  }else{
+   const lens=installedModule(attacker,'weapon');
+   if(visible&&lens?.cardId==='nx-c02-01'&&
+    operational(attacker.ships[0],'weapons')){
+    const state=ensurePrismaState(attacker);
+    if(state.shardGeneratedPly!==b.ply){
+     state.shardGeneratedPly=b.ply;
+     state.shard={kind:targetKind,targetId:target.id,ply:b.ply};
+     events.push(emit(b,ctx.who,'card',
+      'Lente prismatica: scheggia sul bersaglio, la prossima protezione scoperta sarà ignorata',
+      {cardId:'nx-c02-01',targetKind,targetId:target.id}));
+    }
+   }
+   if(visible)transferPrismaProtection(b,defender,p,ctx,events);
+  }
+  events.push(emit(b,ctx.who,bypass?'pierce':'block',bypass?
+   'Il colpo ignora una protezione scoperta':'La protezione blocca il colpo',
+   {cardId:p.id,partId:targetKind==='part'?target.id:null,
+    escortSlot:targetKind==='escort'?target.slot:null}));
   if(p.remaining<=0)discardDefense(defender,p.source);
   if(!bypass)return true;
  }
@@ -913,6 +1001,11 @@ function blockHit(b,defender,targetKind,target,ctx,events){
  return false;
 }
 function damageFleetUnit(side,kind,unit,amount,ply){
+ // Specchio segmentato limita soltanto il primo danno subito dal modulo nel turno.
+ if(kind==='module'&&unit.cardId==='nx-c02-09'&&amount>0&&
+  unit.hp>0&&!unit.destroyed&&unit.lastCappedPly!==ply){
+  unit.lastCappedPly=ply;amount=Math.min(1,amount);
+ }
  const damage=applyDamage(unit,amount);
  if(kind==='module'&&unit.destroyed&&installedModule(side,unit.slot)?.id===unit.id)
   removeModule(side,unit.slot);
