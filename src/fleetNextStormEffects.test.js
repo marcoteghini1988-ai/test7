@@ -122,7 +122,7 @@ test('Fulmine senza eliminazione del primo bersaglio non genera secondo colpo',(
  assert.equal(x.shot.targets.length,1);
 });
 test('Fronte di Tempesta intercetta una macchina una volta e trasferisce il danno esatto',()=>{
- let b=make();b.sides.B.machines.push(machine('storm-machine',0));
+ let b=make({shipA:'C03',shipB:'E02'});b.sides.B.machines.push(machine('storm-machine',0));
  const escort=b.sides.B.escorts[0];
  b=play(b,'B',['nx-e02-04'],{pass:true,stormFrontEscortId:escort.id}).battle;
  const hp=b.sides.B.escorts[0].hp;
