@@ -2552,6 +2552,50 @@ function resolveSharkShots(b,ctx,events,order){
  return result;
 }
 
+
+// Attacchi Nebulosa: nessuna salva normale aggiuntiva o danni automatici.
+function resolveNebulaShots(b,ctx,events,order){
+ startNebulaVolley(ctx);
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const target=selectedEnemyTarget(enemy,order,b.ply),command=ctx.nebulaAttacks[0];
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targetKind:target?.kind,targetId:target?.unit?.id,played:visiblePlayed(ctx.cards),targets:[]};
+ if(!target||!command||!['escort','machine'].includes(target.kind))return shot;
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  events.push(emit(b,ctx.who,'no-shot','Attacco Nebulosa annullato dal blocco Armi'));
+  return shot;
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((n,x)=>n+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=enemy.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply))
+  .reduce((n,x)=>n+(x.power||0),0);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-
+  enemy.ships[0].defensePower)+ctx.power+
+  terrainSalvoModifier(b.terrain,side.ships[0].id).value-jam-guard);
+ if(!power){
+  events.push(emit(b,ctx.who,'block','Attacco Nebulosa annullato dai disturbi'));
+  return shot;
+ }
+ const damage=command.action==='polar-mist'?1:power;
+ const hit=linceHit(b,ctx,events,target,damage,command.id,order,false,0);
+ if(!hit.damage)return shot;
+ const field=hit.target.kind==='escort'?'escortDamage':'machineDamage';
+ shot[field]=hit.damage;
+ shot.targets.push({kind:hit.target.kind,id:hit.target.unit.id,
+  damage:hit.damage,destroyed:hit.target.unit.destroyed});
+ if(command.action==='polar-mist'&&!hit.target.unit.destroyed){
+  hit.target.unit.nebulaNoProtectionAppliedPly=b.ply+1;
+  hit.target.unit.nebulaNoProtectionUntilPly=b.ply+2;
+  events.push(emit(b,ctx.who,'nebula-frost',
+   'Nebbia polare: nuove protezioni vietate a '+hit.target.unit.name+
+   ' nel prossimo turno avversario',{
+    cardId:command.id,targetKind:hit.target.kind,targetId:hit.target.unit.id,
+    untilPly:hit.target.unit.nebulaNoProtectionUntilPly}));
+ }
+ return shot;
+}
+
 function resolveMantaShots(b,ctx,events,order){
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
