@@ -2,12 +2,14 @@
   "title": "Eclissi Stellare — riprogettazione delle 120 carte esclusive",
   "date": "2026-11-16",
   "source": "Eclissi_120_Carte_Esclusive_Proposta_v1.html (Library)",
-  "status": "SPECIFICA NON ATTIVA: vietato trattare effectText come una regola di combattimento implementata",
+  "status": "IMPLEMENTATO IN COMBATTIMENTO: 120/120 carte esclusive eseguibili; grafiche definitive da creare",
   "notes": [
-    "Preservare 12 carte boss e tutti i personaggi legacy durante il cutover.",
-    "Rimuovere vecchie carte non-personaggio solo insieme a migrazione mazzi, collezione e motore.",
-    "Nessuna immagine generata; le descrizioni visuali sono soltanto promemoria.",
-    "I nomi navi storici e i progressi restano invariati."
+    "12 navi madre ufficiali, 10 definizioni esclusive per nave. Le carte Personaggio esistenti conservano i propri ID.",
+    "Carte non-personaggio del vecchio catalogo sostituite nella pipeline ufficiale; 12 Boss e Personaggi legacy conservati.",
+    "Arca Astrale: due copie di nx-l04-05 nell'autopacchetto. prog-fusion-l04 resta compatibile con vecchi mazzi, ma non e duplicata nel nuovo autopacchetto.",
+    "Le 120 definizioni sono eseguibili nel motore src/fleetNext/combat.js con engine dedicati e collaudi GitHub; 1.492 test verdi al 17/11/2026.",
+    "Le immagini definitive, gli effetti visivi e audio restano da produrre o rifinire; visualBrief e una specifica, non un asset gia creato.",
+    "Le dodici madri, i modelli di progressione e la plancia metallica 3D ufficiale restano invariati."
   ],
   "cards": [
     {
@@ -21,7 +23,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Un obiettivo ottico proietta due carte in ordine davanti alla nave.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-02",
@@ -34,7 +36,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due proiettili ben distanziati: il primo spezza uno scudo, il secondo raggiunge la macchina.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-03",
@@ -47,7 +49,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un raggio stacca un cannone supplementare dal suo attacco meccanico.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-04",
@@ -60,7 +62,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una piastra montata si sposta sul Generatore e si frantuma al posto suo.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-05",
@@ -73,7 +75,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una carta-arma inutilizzata scorre sotto il mazzo, mentre tre alternative si aprono a ventaglio.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-06",
@@ -86,7 +88,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un navigatore traccia la sagoma di un modulo all’interno di quattro carte olografiche.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-07",
@@ -99,7 +101,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una canna lunga spara attraverso un solo pannello-scudo azzurro, con le unità protettrici ancora davanti.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-08",
@@ -112,7 +114,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una corazza sagomata si aggancia esattamente al Generatore, non avvolge l’intera nave.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-09",
@@ -125,7 +127,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Un cannone a forcella apre due fasci a Y verso due bersagli separati.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-n00-10",
@@ -138,7 +140,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un braccio meccanico sostituisce il cannone a forcella con una canna lunga.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-01",
@@ -151,7 +153,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Piccoli propulsori laterali piegano la rotta mentre una macchina alleata rientra vicino alla madre.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-02",
@@ -164,7 +166,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una scia rossa curva intorno a due guardiani e termina su un unico punto della madre.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-03",
@@ -177,7 +179,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un arpione corto colpisce la sezione già incrinata della coda di una macchina.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-04",
@@ -190,7 +192,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due scie rosse divergono e un mirino insegue quella falsa.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-05",
@@ -203,7 +205,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un pilota con visore rosso apre una rotta dietro la formazione nemica.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-06",
@@ -216,7 +218,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una linea di navigazione attraversa il campo verso un vitale evidenziato con un faro rosso.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-07",
@@ -229,7 +231,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una lama sul muso taglia un secondo strato di scudo dopo l’impatto.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-08",
@@ -242,7 +244,7 @@
       "requirements": "parts: ['bridge']",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una scia rossa si chiude come una saracinesca davanti a un missile che tenta la stessa rotta.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-09",
@@ -255,7 +257,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "La Lince spara e ripiega la canna supplementare nel portello di recupero.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c01-10",
@@ -268,7 +270,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "La Lince espelle un modulo incandescente e attraversa il varco verso un solo vitale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-01",
@@ -281,7 +283,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una lente triangolare lascia una piccola scheggia luminosa incastrata nello scudo.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-02",
@@ -294,7 +296,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un raggio si spezza contro lo scudo e una scheggia raggiunge una macchina laterale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-03",
@@ -307,7 +309,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un prisma azzurro piega un colpo da una piccola torretta verso un bastione.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-04",
@@ -320,7 +322,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Tre riflessi della nave appaiono in un prisma e uno svanisce prima dell’impatto.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-05",
@@ -333,7 +335,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un’artigiana sposta una lastra luminosa da uno scudo ancora carico a un altro componente.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-06",
@@ -346,7 +348,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una lama di luce separa una singola lastra dello scudo da un guardiano ancora integro.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-07",
@@ -359,7 +361,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Tre raggi formano un triangolo: due convergono sul primo guardiano e uno sul secondo.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-08",
@@ -372,7 +374,7 @@
       "requirements": "parts: ['command']; supportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Uno scudo si stacca dal Generatore e avvolge il Prisma Custode.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-09",
@@ -385,7 +387,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una piastra a specchi si frantuma in una sola tessera, lasciando intatte le altre.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c02-10",
@@ -398,7 +400,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due scudiere aprono un prisma a fiore da cui partono tre raggi separati.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-01",
@@ -411,7 +413,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Un’antenna emette anelli verdi verso il simbolo di abilità di una scudiera.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-02",
@@ -424,7 +426,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un dardo verde colpisce l’antenna di una macchina mentre la sua aura si spegne.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-03",
@@ -437,7 +439,7 @@
       "requirements": "parts: ['command']; supportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un secondo cavo luminoso collega la Centralina a una scudiera sotto interferenza.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-04",
@@ -450,7 +452,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un’onda di interferenza rimbalza contro una rete verde e si dissolve.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-05",
@@ -463,7 +465,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un comandante legge una frequenza nemica e sceglie una carta sul radar.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-06",
@@ -476,7 +478,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una scansione a frequenze attraversa il dorso di una carta senza sollevarla.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-07",
@@ -489,7 +491,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un arco verde collega i terminali di una torretta, che si ripiega fuori uso.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-08",
@@ -502,7 +504,7 @@
       "requirements": "parts: ['command']; supportIndex: 0; supportGrade: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un impulso torna dalla scudiera alla Centralina e una tacca del suo timer si sposta avanti.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-09",
@@ -515,7 +517,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Un fusibile isolato salta mentre l’alimentazione del Generatore si riaccende.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-c03-10",
@@ -528,7 +530,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una sola bocca di fuoco diventa scura, mentre le armi vicine restano accese.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-01",
@@ -541,7 +543,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Due camere energetiche trattengono un proiettile luminoso tra anelli magnetici.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-02",
@@ -554,7 +556,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un cannone aperto accumula energia e un mirino pubblico resta sul bastione nemico.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-03",
@@ -567,7 +569,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un piccolo raggio traccia una croce sul punto in cui si concentra un grande proiettile in carica.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-04",
@@ -580,7 +582,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un portello corazzato si chiude intorno a un cannone ancora illuminato dalla carica.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-05",
@@ -593,7 +595,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un artigliere controlla due cannoni e seleziona una piastra-scudo sul display.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-06",
@@ -606,7 +608,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una traiettoria tratteggiata si sposta da un guardiano corazzato a una macchina laterale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-07",
@@ -619,7 +621,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due proiettili restano visibili nelle camere di un cannone binario.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-08",
@@ -632,7 +634,7 @@
       "requirements": "parts: ['command']; supportIndex: 0; supportGrade: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Il Falco Sentinella si mette davanti al Generatore e riceve un missile in arrivo.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-09",
@@ -645,7 +647,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una carica rientra nel caricatore e la carta del tiro viene riposta nel mazzo.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r01-10",
@@ -658,7 +660,7 @@
       "requirements": "parts: ['command']; supportCount: 2; supportGrade: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Madre e due scudiere formano un triangolo di puntamento verso due macchine.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-01",
@@ -671,7 +673,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una pinna-condensatore si illumina in due celle dopo l’impatto di un laser.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-02",
@@ -684,7 +686,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una cella del Capacitore si svuota alimentando un arco verso una scudiera.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-03",
@@ -697,7 +699,7 @@
       "requirements": "parts: ['command']; supportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Uno scudo a forma di pinna raccoglie il laser e lo incanala in una cella.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-04",
@@ -710,7 +712,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una rete di scariche conduce a terra i raggi laterali lasciando passare quello centrale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-05",
@@ -723,7 +725,7 @@
       "requirements": "supportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una navigatrice trasferisce una cella luminosa al fianco danneggiato della scudiera.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-06",
@@ -736,7 +738,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Uno scudo cambia polarità e scorre dalla scudiera integra a quella ferita.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-07",
@@ -749,7 +751,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Due rebbi verdi si aprono e dividono una cella energetica in due archi.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-08",
@@ -762,7 +764,7 @@
       "requirements": "parts: ['command']; supportIndex: 0; supportGrade: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un campo ondulato comprime un grosso proiettile in una piccola scintilla.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-09",
@@ -775,7 +777,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Entrambe le celle del Capacitore scaricano un grande arco su una torretta che si arresta.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r02-10",
@@ -788,7 +790,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due tessere di uno scudo si ripiegano nelle due celle del Capacitore.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-01",
@@ -801,7 +803,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Piastre dentate su una nave ferita espellono una spina verso un guardiano nemico.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-02",
@@ -814,7 +816,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una prua dentata avanza mentre una scudiera ferita illumina il bersaglio.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-03",
@@ -827,7 +829,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una macchina emette un grande richiamo luminoso e attira un mirino lontano dalle altre.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-04",
@@ -840,7 +842,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Dalla macchina distrutta partono due arpioni verso due guardiani differenti.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-05",
@@ -853,7 +855,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un ammiraglio scarta un piano tattico e invia una saldatura alla nave appena colpita.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-06",
@@ -866,7 +868,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una torretta danneggiata espelle il suo nucleo come siluro prima di collassare.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-07",
@@ -879,7 +881,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Un arpione ancora una scudiera alla posizione che occupa sul campo.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-08",
@@ -892,7 +894,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Uno scudo frastagliato si chiude intorno a una scudiera già segnata dalle esplosioni.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-09",
@@ -905,7 +907,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una scia di rottami alleati conduce a un siluro diretto al vitale nemico.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-r04-10",
@@ -918,7 +920,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una scudiera cede il suo nucleo all’altra e scompare in un ultimo lampo.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-01",
@@ -931,7 +933,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una scudiera svanisce nella nebbia e il suo scudo verso la madre si interrompe visibilmente.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-02",
@@ -944,7 +946,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un sottile ago di ghiaccio emerge dalla nebbia vicino a una scudiera nascosta.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-03",
@@ -957,7 +959,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un velo gelato si richiude dopo il primo proiettile e respinge i successivi della stessa raffica.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-04",
@@ -970,7 +972,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Il mirino del cannone in carica segue un’ombra che si dissolve al momento del lancio.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-05",
@@ -983,7 +985,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un arconte attraversa una nube e cambia la carta sul pannello del terreno.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-06",
@@ -996,7 +998,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "La nebbia si apre in cerchio e rivela l’arena originale sottostante.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-07",
@@ -1009,7 +1011,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Brina opaca ricopre una macchina e impedisce a un nuovo scudo di aderire.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-08",
@@ -1022,7 +1024,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una nube scorre da una scudiera all’altra, con la prima che riappare.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-09",
@@ -1035,7 +1037,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Un cannone circondato da nebbia mantiene una linea di tiro immobile nonostante i falsi bersagli.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e01-10",
@@ -1048,7 +1050,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "La nebbia lascia visibile un solo mirino per ciascun attacco.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-01",
@@ -1061,7 +1063,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una bobina verde collega con un arco due macchine distinte.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-02",
@@ -1074,7 +1076,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Quattro denti di un’onda elettrica raggiungono supporti e macchine disposti davanti alla madre.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-03",
@@ -1087,7 +1089,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un fulmine attraversa una piccola macchina esplosa e si allarga verso un secondo guardiano.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-04",
@@ -1100,7 +1102,7 @@
       "requirements": "parts: ['command']; supportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una scudiera si mette davanti a una torretta e riceve il fulmine al suo posto.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-05",
@@ -1113,7 +1115,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un capitano segue due impatti simultanei su un radar e cambia un ordine.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-06",
@@ -1126,7 +1128,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un fulmine riconosce la stessa cicatrice lasciata dal turno precedente.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-07",
@@ -1139,7 +1141,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due scariche convergono sul guardiano principale e una più sottile attraversa lo scudo laterale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-08",
@@ -1152,7 +1154,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una rete tra due scudiere scarica il secondo fulmine dopo che la prima è stata colpita.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-09",
@@ -1165,7 +1167,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Tre linee elettriche rientrano in un unico condensatore sopra la madre.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-e02-10",
@@ -1178,7 +1180,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Quattro bocche di fuoco si aprono: due razzi su ciascuno dei due guardiani.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-01",
@@ -1191,7 +1193,7 @@
       "requirements": "parts: ['command']; supportCount: 1",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Un relè dorato invia l’ordine di fuoco a una scudiera laterale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-02",
@@ -1204,7 +1206,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due guardiani dorati orientano i cannoni insieme oppure li aprono verso due direzioni.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-03",
@@ -1217,7 +1219,7 @@
       "requirements": "parts: ['command']; supportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una scudiera dorata forma un anello intorno alla Centralina della madre.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-04",
@@ -1230,7 +1232,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un sigillo dorato blocca il portello di rientro di una macchina nemica.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-05",
@@ -1243,7 +1245,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un sovrano osserva due scudiere accese e sceglie un ordine fra tre proiezioni.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-06",
@@ -1256,7 +1258,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due linee di comando dorate si incrociano tra le scudiere.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-07",
@@ -1269,7 +1271,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una lancia dorata della madre si accende dopo il lampo di una scudiera.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-08",
@@ -1282,7 +1284,7 @@
       "requirements": "parts: ['command']; supportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due scudiere unite da un arco dorato assorbono insieme un singolo proiettile.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-09",
@@ -1295,7 +1297,7 @@
       "requirements": "parts: ['command']; supportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Uno scudo dorato si apre e converge nella bocca di fuoco della scudiera.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l01-10",
@@ -1308,7 +1310,7 @@
       "requirements": "parts: ['command']; supportCount: 2; fusionStage: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due guardiani dorati si incastrano in un’unica nave circolare con una corona frontale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-01",
@@ -1321,7 +1323,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Grandi piedi d’ossidiana fissano la nave all’arena e stabilizzano un cannone.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-02",
@@ -1334,7 +1336,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un obice nero carica un proiettile massiccio puntato a una piattaforma robotica.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-03",
@@ -1347,7 +1349,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un proiettile conico separa lo scudo esterno dalla corazzatura sottostante.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-04",
@@ -1360,7 +1362,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una paratia scura si chiude su una fenditura dopo il primo impatto.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-05",
@@ -1373,7 +1375,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un magistro incide una runa su due ordini dopo aver visto un colpo fermato.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-06",
@@ -1386,7 +1388,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Una rampa frontale allinea un penetratore contro le piastre di una torretta.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-07",
@@ -1399,7 +1401,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Catene d’ossidiana ancorano una macchina mentre il cannone nemico si carica.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-08",
@@ -1412,7 +1414,7 @@
       "requirements": "parts: ['command']; supportCount: 2; fusionStage: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due scudiere pesanti si uniscono in un bastione mobile con una grande canna centrale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-09",
@@ -1425,7 +1427,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Portelli neri coprono le armi aggiunte, lasciando visibili i punti vitali della madre.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l03-10",
@@ -1438,7 +1440,7 @@
       "requirements": "parts: ['command']; fusedSupportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Il bastione fuso apre due canne enormi sullo stesso guardiano marcato.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-01",
@@ -1451,7 +1453,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Un archivio luminoso ricompone la sagoma di un modulo con una sola cella di integrità.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-02",
@@ -1464,7 +1466,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un raggio colpisce il guardiano e un filamento azzurro torna a saldare una scudiera.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-03",
@@ -1477,7 +1479,7 @@
       "requirements": "parts: ['command']; supportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Una culla energetica protegge una scudiera ancora divisa, in attesa della Fusione.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-04",
@@ -1490,7 +1492,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un custode registra due saldature completate e cambia un ordine nel suo archivio.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-05",
@@ -1503,7 +1505,7 @@
       "requirements": "parts: ['command']; fusionStages: [1, 2]",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due coppie distinte di scudiere convergono in due grandi navi, con la madre immutata al centro.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-06",
@@ -1516,7 +1518,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due raggi di saldatura partono dalla madre verso parti danneggiate delle scudiere.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-07",
@@ -1529,7 +1531,7 @@
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
       "counterplay": "Distruggi il modulo quando la madre è raggiungibile o disattiva il suo sistema di alimentazione.",
       "visualBrief": "Il lanciatore si accende con una stella dopo che la scudiera riceve una saldatura.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-08",
@@ -1542,7 +1544,7 @@
       "requirements": "parts: ['command']; reserveCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "La terza nave emerge dalla riserva dentro un portale-scudo azzurro.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-09",
@@ -1555,7 +1557,7 @@
       "requirements": "parts: ['command']; reserveCount: 1; fusedSupportCount: 1",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Un’interferenza si sposta dal nucleo della nave fusa alla scudiera laterale.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     },
     {
       "id": "nx-l04-10",
@@ -1568,7 +1570,8 @@
       "requirements": "parts: ['command']; reserveCountUnlocked: 2; fusedSupportCount: 2",
       "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
       "visualBrief": "Due super-scudiere aprono le armi e colpiscono due guardiani, lasciando la madre dietro di loro.",
-      "state": "design-only; not yet executable"
+      "state": "executable-in-combat-v1; final-art-pending"
     }
-  ]
+  ],
+  "completedAt": "2026-11-17"
 }
