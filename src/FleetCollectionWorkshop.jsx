@@ -72,7 +72,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  function genericCardTile(c){
   const owned=inventory.owned[c.id]||0,equipped=deckInfo.baseDeck.filter(id=>id===c.id).length;
   const copies=Math.min(owned,cardCopyLimit(c.id));
-  const price=NEXT_CARD_COSTS[c.rarita];
+  const price=NEXT_COMMON_CARDS.some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
    <strong>{c.nome||c.name}</strong>
