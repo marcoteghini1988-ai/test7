@@ -1051,7 +1051,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  if(!target||!unitAlive(target.unit))return 0;
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
- target=redirectLinceHit(b,ctx,events,target);
+ target=redirectFleetHit(b,ctx,events,target);
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
  const actual=damageFleetUnit(defender,target.kind,target.unit,amount,b.ply);
  if(actual){
@@ -1074,8 +1074,9 @@ function resolveAuroraShots(b,ctx,events,order,commands=null){
  const first=selectedEnemyTarget(enemy,order,b.ply);
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
   targetKind:first?.kind,targetId:first?.unit?.id,played:visiblePlayed(ctx.cards),targets:[]};
- const record=(target,amount,cardId)=>{
+ const record=(target,amount,cardId,isSecondary=false)=>{
   if(!target||!unitAlive(target.unit))return;
+  if(isSecondary&&cancelPrismaSecondaryHit(b,ctx,events,target,first))return;
   const dealt=auroraHit(b,ctx,events,target,amount,cardId);
   const field={part:'damage',escort:'escortDamage',machine:'machineDamage',module:'moduleDamage'}[target.kind];
   if(field)shot[field]+=dealt;
@@ -1102,7 +1103,7 @@ function resolveAuroraShots(b,ctx,events,order,commands=null){
   !first||!second||first.unit.id===second.unit.id)return null;
  module.activatedPly=b.ply;
  record(first,1,'nx-n00-09');
- record(second,1,'nx-n00-09');
+ record(second,1,'nx-n00-09',true);
  return shot;
 }
 
@@ -1149,7 +1150,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(!target||!unitAlive(target.unit))return {damage:0,target};
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
   return {damage:0,target};
- const finalTarget=redirectLinceHit(b,ctx,events,target);
+ const finalTarget=redirectFleetHit(b,ctx,events,target);
  ctx.pierceLeft=pierce;
  if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
   return {damage:0,target:finalTarget,blocked:true};
@@ -1260,8 +1261,9 @@ function resolveSalvo(b,ctx,events,order){
    [selected,...guards.filter(g=>g.unit!==selected.unit).slice(0,count-1).map(g=>({kind:g.kind,unit:g.unit}))];
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  const hits=[];
- for(const planned of targets){
-  const redirected=redirectLinceHit(b,ctx,events,planned);
+ for(const [hitIndex,planned] of targets.entries()){
+  if(hitIndex>0&&cancelPrismaSecondaryHit(b,ctx,events,planned,selected))continue;
+  const redirected=redirectFleetHit(b,ctx,events,planned);
   const {kind,unit}=redirected;
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   const amount=kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
