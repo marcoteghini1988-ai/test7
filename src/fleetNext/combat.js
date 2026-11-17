@@ -191,7 +191,8 @@ const activePart=(side,id)=>{const p=motherPart(side.ships[0],id);return p&&!p.d
 const livingEscorts=side=>(side.escorts||[]).filter(unitAlive);
 const weakest=items=>[...items].sort((a,z)=>a.hp/a.maxHp-z.hp/z.maxHp)[0]||null;
 const weakestPart=side=>weakest(side.ships[0].parts.filter(p=>!p.destroyed));
-const visiblePlayed=ids=>ids.filter(id=>card(id)?.effectSpec?.type!=='trap');
+const visiblePlayed=ids=>ids.filter(id=>card(id)?.effectSpec?.type!=='trap'&&
+ !(card(id)?.effectSpec?.type==='lince'&&card(id)?.effectSpec?.action==='false-trail'));
 const defenseKind=definition=>definition?.effectSpec?.type==='trap'||
  definition?.effectSpec?.type==='lince'&&definition.effectSpec.action==='false-trail'?'trap':'defense';
 const activeDefenses=(side,ply)=>(side?.defenses||[]).filter(d=>d.untilPly==null||d.untilPly>ply);
@@ -850,6 +851,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  if(!target||!unitAlive(target.unit))return 0;
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
+ target=redirectLinceHit(b,ctx,events,target);
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
  const actual=damageFleetUnit(defender,target.kind,target.unit,amount,b.ply);
  if(actual){
@@ -1042,6 +1044,11 @@ function resolveSalvo(b,ctx,events,order){
  if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: l’attacco fallisce'));return {damage:0,partId:order.partId,played:visiblePlayed(ctx.cards),power};}
  if(emergency)events.push(emit(b,ctx.who,'emergency-shot','Tiro di emergenza: l’Arsenale è distrutto'));
  const guards=protectingFleetUnits(defender,b.ply);
+ if(selected.kind==='part'&&linceMarkedRouteReady(side,b.ply,selected.unit.id)){
+  if(!cancelLinceBypass(b,ctx.who,events,side.lince.route.cardId)){
+   ctx.bypass=true;ctx.routeMarkedBypass=true;
+  }
+ }
  if(['part','module'].includes(selected.kind)&&guards.length&&!ctx.bypass)selected={kind:guards[0].kind,unit:guards[0].unit};
  // Aggiramento abilita un solo componente dietro le unità: multicolpo non
  // moltiplica un'eccezione di accesso in un attacco all'intera madre.
@@ -1053,11 +1060,17 @@ function resolveSalvo(b,ctx,events,order){
    [selected,...guards.filter(g=>g.unit!==selected.unit).slice(0,count-1).map(g=>({kind:g.kind,unit:g.unit}))];
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  const hits=[];
- for(const {kind,unit} of targets){
+ for(const planned of targets){
+  const redirected=redirectLinceHit(b,ctx,events,planned);
+  const {kind,unit}=redirected;
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   const amount=kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
   const damage=damageFleetUnit(defender,kind,unit,amount,b.ply);
-  if(damage)hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
+  if(damage){
+   hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,
+    name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
+   onLinceDamage(b,ctx,events,{kind,unit,damage},order,kind==='part'&&ctx.bypass);
+  }
  }
  const damage=hits.filter(h=>h.kind==='part').reduce((sum,h)=>sum+h.damage,0);
  const escortDamage=hits.filter(h=>h.kind==='escort').reduce((sum,h)=>sum+h.damage,0);
