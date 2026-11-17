@@ -36,25 +36,25 @@ export const TERRAIN_EFFECT_TEXT=Object.freeze({
  T10:'Ogni attacco colpisce un componente in più, fino a 4.'
 });
 export const SIMPLE_RULES=Object.freeze([
- 'Un colpo riuscito toglie punti a un componente o a una scudiera. Un colpo bloccato non attiva gli effetti.',
- 'La potenza determina i danni alle scudiere e viene ridotta dai disturbi. A potenza zero l’attacco fallisce. Un attacco normale toglie 1 punto a ogni componente raggiunto; i contrattacchi infliggono il valore scritto.',
- 'Ogni supporto e macchina d’assalto operativi proteggono la madre. Con un attacco ordinario scegli prima una di queste unità; danneggiarla non basta a superarla.',
- 'Attacco diretto aggira le unità protettrici per un attacco. Perforazione supera soltanto le protezioni indicate; Difese e Trappole continuano a funzionare.',
+ 'Un colpo riuscito riduce gli HP della nave madre o di una navicella di supporto. Un colpo bloccato non attiva gli effetti.',
+ 'La potenza determina il danno alle navicelle; i sabotaggi e le protezioni possono modificarlo. A potenza zero l’attacco fallisce. Si vince portando a zero gli HP della nave madre.',
+ 'Le navicelle di supporto operative proteggono la madre. Le due Armi temporanee aumentano l’attacco ma non sono bersagliabili né intercettano colpi.',
+ 'Attacco diretto può aggirare le navicelle di supporto per un attacco alla barra HP della madre. Difese e Trappole continuano a funzionare.',
  'Un turno avversario termina quando inizia il tuo prossimo turno. Un round comprende un turno per giocatore.',
- 'Le riparazioni non superano i punti massimi e non ricostruiscono componenti o scudiere distrutti.',
+ 'Le riparazioni non superano gli HP massimi e non ricostruiscono navicelle di supporto distrutte.',
  'I personaggi applicano il proprio effetto quando entrano e al tuo turno successivo. Poi lasciano il campo.',
  'Il Terreno scelto si risolve prima delle altre carte del turno. Se viene annullato, non entra in campo.',
  'Le reazioni si attivano solo con i danni degli attacchi normali. Costi delle abilità e contrattacchi non attivano altre reazioni.',
  'Dopo 50 round la partita termina in pareggio. Con l’Arsenale distrutto resta un tiro di emergenza da 1 potenza.',
  'Le Trappole sono carte Difesa: si preparano coperte nel proprio turno e si rivelano solo quando scattano. Altrimenti restano in campo.',
- 'Dal livello 1 hai 3 Attacco, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 posti per macchine d’assalto. Preparare una carta conta nelle 3 giocate del turno.',
+ 'Puoi giocare fino a 3 carte per turno. Hai 3 slot Attacco, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 alloggiamenti per Armi temporanee.',
  'Una Trappola contro i Terreni annulla il prossimo Terreno avversario prima che si attivi. Il Terreno precedente resta; entrambe le carte usate vanno negli scarti.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
  'Aurora ha Arsenale e Generatore, senza supporti. La Plancia separa il Personaggio dal Generatore; la Centralina abilita i supporti. I Motori delle carte precedenti fanno parte del Generatore.',
- 'Distruggere il Generatore spegne Difesa e Trappola; senza una Plancia separata spegne anche il Personaggio. Distruggere la Centralina disattiva i supporti.',
+ 'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
  'Fusione unisce due supporti operativi. La prima può far entrare la terza unità sbloccata; la seconda unisce terza e quarta. Rimangono al massimo due supporti attivi.',
- 'La fusione conserva i danni in proporzione, consuma i supporti usati e non ricostruisce vitali distrutti. Le macchine d’assalto hanno due posti separati.'
+ 'La fusione conserva i danni in proporzione, consuma i supporti usati e non ricostruisce navicelle distrutte. Gli alloggiamenti Arma sono separati dai supporti.'
 ]);
 export const isCharacterCard=card=>card?.kind==='character'||card?.sottotipo==='Personaggio'||/Personaggio/i.test(card?.category||'');
 export const isTrapCard=card=>card?.effectSpec?.type==='trap'||
