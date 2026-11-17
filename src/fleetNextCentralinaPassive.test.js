@@ -20,7 +20,12 @@ test('Centralina Epica/Leggendaria sospendono una/due passive nel primo turno ne
  assert.equal(commandPassiveSuspensions(b.sides.B,1),1,'una sospensione neutralizzata');
 });
 test('In battaglia il sabotaggio Centralina sopprime davvero i bonus dei supporti',()=>{
- let b=battle();
+ let b=createFleetNextBattle({
+  shipA:'C03',levelA:5,shipB:'C03',levelB:5,seed:2121,
+  mode:'pvp',deckA:[],deckB:[],ruleset:HP_SYNC_RULESET
+ });
+ // Al secondo turno il supporto del Corvo attiverebbe la passiva ionica.
+ b.sides.B.turnCount=1;
  applySystemCard(b.sides.B,card('sys-command-minus-l'),0,'A');
  const first=resolveFleetNextTurn(b,'A',{pass:true,cards:[]},1000);
  assert.equal(first.ok,true,first.reason);
