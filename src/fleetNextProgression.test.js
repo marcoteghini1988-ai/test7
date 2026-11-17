@@ -44,8 +44,9 @@ test('Aurora mantiene la progressione iniziale L1–L5 senza supporti e completa
  assert.deepEqual(getShipProgression('N00',20).escortGrades,[2,2]);
  assert.deepEqual(getShipProgression('N00',20).vitalIds,['weapons','generator','command']);
  assert.equal(getShipProgression('N00',20).fusionLimit,0);
- assert.equal(eligibleExclusives('N00',5).length,10,'Aurora ha 10 esclusive, di cui 9 nuove schede');
- assert.equal(eligibleExclusives('N00',5).filter(c=>c.playable!==false).length,10);
+ assert.equal(eligibleExclusives('N00',1).filter(c=>c.shipId==='N00').length,4);
+ assert.equal(eligibleExclusives('N00',5).filter(c=>c.shipId==='N00').length,5);
+ assert.equal(eligibleExclusives('N00',20).filter(c=>c.shipId==='N00'&&c.playable!==false).length,10);
  assert.ok(exclusiveUnlocked('ex-n00-01','N00',1));
  assert.equal(exclusiveUnlocked('ex-n00-04','N00',3),false);
 });
@@ -144,7 +145,7 @@ test('Configurazioni storiche e prerequisiti esclusivi seguono la stessa progres
   assert.equal(Number(row.level>=config.escort1UnlockLevel)+Number(row.level>=config.escort2UnlockLevel),row.escortCount,id);
  }
  for(const def of Object.values(EXCLUSIVE_CARDS)){
-  assert.equal(exclusiveUnlocked(def.id,def.shipId,5),true,def.id+' deve essere disponibile a livello massimo');
+  assert.equal(exclusiveUnlocked(def.id,def.shipId,shipMaxLevel(def.shipId)),true,def.id+' deve essere disponibile a livello massimo');
   assert.equal(def.requiredOwnParts.includes('engine'),false,def.id);
  }
 });
