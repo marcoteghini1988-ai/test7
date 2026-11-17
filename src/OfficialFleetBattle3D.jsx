@@ -20,6 +20,8 @@ import {PRISMA_ATTACK_ACTIONS,livePrismaUnits} from './fleetNext/prismaEngine.js
 import {FALCO_PREP_ACTIONS,falcoUnits,falcoCapacitorActive} from './fleetNext/falcoEngine.js';
 import {mantaCapacitorActive,mantaEnergy,mantaForkActive,mantaActiveSupports,
  mantaVisibleProtections,mantaEnemyUnits} from './fleetNext/mantaEngine.js';
+import {sharkOperationalUnits,sharkUnits,sharkWoundedSupports,
+ sharkWoundedMachines} from './fleetNext/sharkEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
@@ -131,6 +133,10 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      <span>{module.slot==='weapon'?'ARMA':'UTILITÀ'}</span><b>{module.name}</b><small>{module.hp}/{module.maxHp}</small>
     </button>)}
   </div>
+  {unit.ships?.[0]?.id==='R04'&&<div className="f3d-shark-status" role="status">
+   <span aria-hidden="true">◈</span><b>SQUALO DEL VUOTO</b>
+   <small>{unit.shark?.lastEnemyLossPly===ply-1?'RITORSIONE PRONTA':'DIFESA / RITORSIONE'}</small>
+  </div>}
   {unit.ships?.[0]?.id==='R02'&&<div className="f3d-manta-energy" role="status"
    title="Energia Manta Ionica">
    <span aria-hidden="true">⚡</span>
@@ -278,6 +284,9 @@ export default function OfficialFleetBattle3D({
  const [mantaOptions,setMantaOptions]=useState({silence:false,fork:false,second:'',screen:'',
   from:'',to:'',recycle:'',repair:true,repairTarget:''});
  const setMantaOption=(name,value)=>setMantaOptions(old=>({...old,[name]:value}));
+ const [sharkOptions,setSharkOptions]=useState({armor:'',decoy:'',teethFirst:'',teethSecond:'',
+  torpedo:'',shield:'',admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
+ const setSharkOption=(name,value)=>setSharkOptions(old=>({...old,[name]:value}));
  const [linceOptions,setLinceOptions]=useState({
   routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
   linceRecallWeapon:false,radentRecall:false,radentMachineId:''
@@ -356,6 +365,8 @@ export default function OfficialFleetBattle3D({
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
   setMantaOptions({silence:false,fork:false,second:'',screen:'',from:'',to:'',
    recycle:'',repair:true,repairTarget:''});
+  setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
+   admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -418,6 +429,10 @@ export default function OfficialFleetBattle3D({
   const falcoSecondChoice=falcoUnitChoices.find(t=>t.key===falcoOptions.second);
   const falcoCorrectionChoice=falcoUnitChoices.find(t=>t.key===falcoOptions.correction);
   const mantaSecondChoice=mantaUnitChoices.find(t=>t.key===mantaOptions.second);
+  const sharkArmorChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.armor);
+  const sharkDecoyChoice=sharkOwnChoices.find(t=>t.key===sharkOptions.decoy);
+  const sharkTeethFirstChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethFirst);
+  const sharkTeethSecondChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethSecond);
   const result=resolveFleetNextTurn(battle,'A',
    {partId,targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
     escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
@@ -449,7 +464,15 @@ export default function OfficialFleetBattle3D({
     mantaSecondTargetKind:mantaSecondChoice?.kind,mantaSecondTargetId:mantaSecondChoice?.id,
     mantaScreenEscortId:mantaOptions.screen,mantaFromEscortId:mantaOptions.from,
     mantaToEscortId:mantaOptions.to,mantaRecycleSource:mantaOptions.recycle,
-    mantaRepair:mantaOptions.repair,mantaRepairTargetId:mantaOptions.repairTarget
+    mantaRepair:mantaOptions.repair,mantaRepairTargetId:mantaOptions.repairTarget,
+    sharkArmorKind:sharkArmorChoice?.kind,sharkArmorId:sharkArmorChoice?.id,
+    sharkDecoyKind:sharkDecoyChoice?.kind,sharkDecoyId:sharkDecoyChoice?.id,
+    sharkTeethFirstKind:sharkTeethFirstChoice?.kind,sharkTeethFirstId:sharkTeethFirstChoice?.id,
+    sharkTeethSecondKind:sharkTeethSecondChoice?.kind,sharkTeethSecondId:sharkTeethSecondChoice?.id,
+    sharkTorpedoMachineId:sharkOptions.torpedo,sharkShieldEscortId:sharkOptions.shield,
+    sharkAdmiralEnabled:sharkOptions.admiralEnabled,
+    sharkAdmiralDiscardId:sharkOptions.admiralDiscard,
+    sharkSacrificeEscortId:sharkOptions.donor,sharkRecipientEscortId:sharkOptions.receiver
    },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
@@ -457,6 +480,8 @@ export default function OfficialFleetBattle3D({
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
   setMantaOptions({silence:false,fork:false,second:'',screen:'',from:'',to:'',
    recycle:'',repair:true,repairTarget:''});
+  setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
+   admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
@@ -472,6 +497,8 @@ export default function OfficialFleetBattle3D({
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
   setMantaOptions({silence:false,fork:false,second:'',screen:'',from:'',to:'',
    recycle:'',repair:true,repairTarget:''});
+  setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
+   admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
   setMessage(fleetTurnNotice(result.events)||'Turno concluso');
  }
  async function leave(){
@@ -531,7 +558,8 @@ export default function OfficialFleetBattle3D({
  const chosenTypes=chosenCards.map(i=>player.hand[i]).filter(Boolean);
  const directBypass=chosenTypes.some(id=>{
   const spec=card(id)?.effectSpec;
-  return spec?.type==='bypass'||spec?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(spec.action);
+  return spec?.type==='bypass'||spec?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(spec.action)||
+   spec?.type==='shark'&&spec.action==='ruthless-response';
  });
  const routePartId=linceMarkedRouteReady(player,battle.ply,player.lince?.route?.partId)?player.lince.route.partId:null;
  const bypass=directBypass||!!routePartId;
@@ -555,6 +583,21 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const sharkActive=player.ships[0].id==='R04';
+ const sharkEnemyChoices=sharkUnits(enemy).map(({kind,unit})=>({
+  kind,id:unit.id,key:kind+':'+unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
+ }));
+ const sharkOwnChoices=sharkOperationalUnits(player,battle.ply).map(({kind,unit})=>({
+  kind,id:unit.id,key:kind+':'+unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
+ }));
+ const sharkWounded=sharkWoundedSupports(player,battle.ply);
+ const sharkDamagedMachines=sharkWoundedMachines(player,battle.ply);
+ const sharkDonors=sharkWounded;
+ const sharkTeethPrimary=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethFirst)||sharkEnemyChoices[0];
+ const sharkTeethRemaining=sharkEnemyChoices.filter(t=>t.id!==sharkTeethPrimary?.id);
+ const sharkDonor=sharkWounded.find(e=>e.id===sharkOptions.donor)||sharkWounded[0];
+ const sharkReceivers=sharkWounded.filter(e=>e.id!==sharkDonor?.id);
+ const sharkDiscardChoices=player.hand.filter((id,i)=>!chosenCards.includes(i));
  const mantaActive=player.ships[0].id==='R02';
  const mantaSupports=mantaActiveSupports(player,battle.ply);
  const mantaUnitChoices=mantaEnemyUnits(enemy).map(({kind,unit})=>({
@@ -679,7 +722,7 @@ export default function OfficialFleetBattle3D({
      </option>)}
     </select>
    </label>}
-   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive)&&!ended&&<div className="live-card-inspector" role="status">
+   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
