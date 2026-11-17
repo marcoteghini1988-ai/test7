@@ -10,7 +10,7 @@ import retired from '../docs/ARCHIVIO_ID_CARTE_RITIRATE_2026-11-16.json' with {t
 function storage(){const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)};}
 test('350 vecchie carte rimosse, Personaggi Boss e sei carte tecniche conservati',()=>{
  assert.equal(Object.keys(GENERAL_CARDS).length,12);
- assert.equal(Object.keys(EXCLUSIVE_CARDS).length,125);
+ assert.equal(Object.keys(EXCLUSIVE_CARDS).length,170);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.keys(PROGRESSION_CARDS).length,6);
  assert.equal(BASE_CATALOG_COUNT,149);assert.equal(TOTAL_CARD_COUNT,155);
