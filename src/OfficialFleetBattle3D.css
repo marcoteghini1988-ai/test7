@@ -414,3 +414,21 @@
 .es-math-scope .f3d-original-arena .f3d-storm-readout{
  margin:0 0 5px;color:#dcf7e2;font-size:9px;line-height:1.35
 }
+
+
+/* Eclisse Reale: piccoli stati nel tavolo metallico 3D originale. */
+.es-math-scope .f3d-original-arena .f3d-royal-status{
+ position:absolute;top:146px;left:84px;right:84px;z-index:8;
+ display:flex;gap:4px;align-items:center;justify-content:center;
+ padding:3px 5px;border-radius:5px;border:1px solid #c6a56d;
+ background:linear-gradient(100deg,#2b2319ee,#54412cee,#2b2319ee);
+ color:#ffedbc;font-size:7px;box-shadow:0 0 8px #e6c87c55;
+ pointer-events:none;white-space:nowrap;overflow:hidden
+}
+.es-math-scope .f3d-original-arena .f3d-royal-status>b{font-size:7px}
+.es-math-scope .f3d-original-arena .f3d-royal-status>small{
+ font-size:6px;overflow:hidden;text-overflow:ellipsis
+}
+.es-math-scope .f3d-original-arena .f3d-royal-readout{
+ margin:0 0 5px;color:#f7e2bb;font-size:9px;line-height:1.35
+}
