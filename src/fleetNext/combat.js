@@ -297,6 +297,9 @@ export function validateFleetTurn(b,who,order){
  if(!uniqueIndexList(indices,side.hand))return 'Puoi usare fino a tre carte presenti nella mano';
  const chosen=indices.map(i=>card(side.hand[i]));
  if(chosen.some(c=>!c))return 'Carta non riconosciuta';
+ const linceCommands=chosen.filter(c=>c.effectSpec?.type==='lince'&&
+  LINCE_ATTACK_ACTIONS.includes(c.effectSpec.action));
+ if(linceCommands.length>1)return 'Scegli un solo comando offensivo Lince per turno';
  const roles=chosen.map(c=>cardRole(c.id)),count=x=>roles.filter(r=>r===x).length;
  if(count('character')>1)return 'Massimo un Personaggio per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
@@ -317,6 +320,15 @@ export function validateFleetTurn(b,who,order){
  const machineCount=chosen.filter(c=>c.effectSpec.type==='deployMachine').length;
  if(machineCount+(side.machines||[]).filter(unitAlive).length>2)return 'Servono alloggiamenti liberi per le macchine scelte';
  const fusions=chosen.filter(c=>c.effectSpec.type==='fusion').length;
+ const linceTrap=chosen.find(c=>c.effectSpec.type==='lince'&&c.effectSpec.action==='false-trail');
+ if(linceTrap&&order.ownPartId&&!activePart(side,order.ownPartId))
+  return 'Falsa scia: scegli un tuo vitale operativo';
+ const routeCard=chosen.find(c=>c.effectSpec.type==='lince'&&c.effectSpec.action==='marked-route');
+ if(routeCard){
+  const dest=order.routePartId||order.partId||order.targetId;
+  if(!activePart(b.sides[other(who)],dest))
+   return 'Rotta marcata richiede un vitale avversario vivo';
+ }
  if(fusions){
   const preview=clone(side);normalizeSide(preview);
   for(let i=0;i<fusions;i++){const result=fuseFleetSupports(preview,b.ply);if(!result.ok)return result.reason;}
@@ -324,11 +336,18 @@ export function validateFleetTurn(b,who,order){
  if(!order?.pass){
   const enemy=b.sides[other(who)],selected=selectedEnemyTarget(enemy,order,b.ply);
   if(!selected)return 'Seleziona un bersaglio avversario ancora operativo';
-  const bypass=chosen.some(c=>c.effectSpec.type==='bypass');
+  const bypass=chosen.some(c=>c.effectSpec.type==='bypass'||c.effectSpec.type==='lince'&&
+   LINCE_BYPASS_ACTIONS.includes(c.effectSpec.action))||
+   selected.kind==='part'&&linceMarkedRouteReady(side,b.ply,selected.unit.id);
   if(['part','module'].includes(selected.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
    return 'Prima colpisci i supporti o le macchine operative, oppure gioca Aggiramento';
   if(chosen.some(c=>c.effectSpec.type==='aurora'&&c.effectSpec.action==='burst')&&!['escort','machine'].includes(selected.kind))
    return 'Raffica di prova richiede una macchina o un supporto';
+  const linceAction=linceCommands[0]?.effectSpec.action;
+  if(['solar-bypass','crimson-raid'].includes(linceAction)&&selected.kind!=='part')
+   return 'Lince: questo Attacco richiede un vitale avversario';
+  if(['tail-claw','armed-disengage'].includes(linceAction)&&!['escort','machine'].includes(selected.kind))
+   return 'Lince: questo Attacco richiede un supporto o una macchina';
   if(order.secondaryTargetId){
    const secondary=selectedEnemyTarget(enemy,{targetKind:order.secondaryTargetKind,targetId:order.secondaryTargetId},b.ply);
    if(!secondary||secondary.unit.id===selected.unit.id)return 'Secondo bersaglio assente o identico al primo';
@@ -337,7 +356,8 @@ export function validateFleetTurn(b,who,order){
    if(installedModule(side,'weapon')?.cardId!=='nx-n00-09')return 'Cannone biforcato non montato';
   }
  }
- if(order?.pass&&chosen.some(c=>c.effectSpec.type==='aurora'&&['burst','dismantle'].includes(c.effectSpec.action)))
+ if(order?.pass&&chosen.some(c=>c.effectSpec.type==='aurora'&&['burst','dismantle'].includes(c.effectSpec.action)||
+  c.effectSpec.type==='lince'&&LINCE_ATTACK_ACTIONS.includes(c.effectSpec.action)))
   return 'Un comando offensivo non può essere passato';
  return null;
 }
