@@ -54,4 +54,4 @@ Definite 32 schede non ancora giocabili: quattro componenti (Centralina, Arsenal
 - Versione leggibile: [PROGETTAZIONE_32_CARTE_SISTEMI_2026-11-17.md](PROGETTAZIONE_32_CARTE_SISTEMI_2026-11-17.md)
 - Catalogo strutturato: [CATALOGO_32_CARTE_SISTEMI_2026-11-17.json](CATALOGO_32_CARTE_SISTEMI_2026-11-17.json)
 
-Rimane invariata la progressione di sblocco dei componenti per ciascuna nave. Con **Buco Nero** il totale delle nuove carte progettate o individuate è **33**. I quattro gruppi da otto sono ancora proposte da valutare; non sono stati caricati nel runtime.
+Rimane invariata la progressione di sblocco dei componenti per ciascuna nave. Con **Buco Nero** il totale delle nuove carte progettate o individuate è **33**. Il gruppo **Plancia (8 carte su 8)** è stato approvato come progettazione il 17 novembre 2026. I restanti gruppi mantengono i loro stati documentali e vanno riconciliati con le decisioni orali prima dell'integrazione. Nessuna delle 32 carte è ancora caricata nel runtime.
