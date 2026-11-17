@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createFleetNextBattle,resolveFleetNextTurn,effectUnavailableReason} from './fleetNext/combat.js';
-import {card,cardCopyLimit,NEXT_COMMON_CARDS} from './fleetNext/rules.js';
+import {card,cardRole,cardCopyLimit,NEXT_COMMON_CARDS} from './fleetNext/rules.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {activeSystemCard,applySystemCard,commandPenalty} from './fleetNext/newCardEffects.js';
 
@@ -25,8 +25,21 @@ test('Le 33 nuove carte sono riconosciute e Buco Nero può avere tre copie',()=>
  for(const def of NEXT_COMMON_CARDS){
   assert.equal(card(def.id)?.id,def.id);
   assert.equal(def.playable,true,def.id);
+  assert.equal(cardRole(def.id),'attack',def.id+' usa lo slot Attacco');
+  assert.equal(def.kind,'attack',def.id+' classificata Attacco');
  }
 });
+test('Le carte Sistema usano lo slot Attacco senza perdere la durata pluriturno',()=>{
+ let b=setup();
+ b=play(b,'A','sys-command-minus-r');
+ assert.ok(b.sides.A.attackSlots.includes('sys-command-minus-r'));
+ assert.equal(activeSystemCard(b.sides.B,'command','disable',b.ply)?.id,'sys-command-minus-r');
+ b=play(b,'B',null);
+ assert.equal(activeSystemCard(b.sides.B,'command','disable',b.ply)?.id,'sys-command-minus-r');
+ b=play(b,'A',null);
+ assert.equal(activeSystemCard(b.sides.B,'command','disable',b.ply)?.id,'sys-command-minus-r');
+});
+
 test('Le nuove carte sono giocabili solo nella nuova modalità HP',()=>{
  const v2=setup(),legacy=createFleetNextBattle({shipA:'L01',levelA:5,shipB:'L01',levelB:5,
   deckA:['sys-command-minus-c'],deckB:[],mode:'pvp',seed:52});
