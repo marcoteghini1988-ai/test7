@@ -18,3 +18,16 @@ test('La preparazione avversaria è notificata senza rivelarne la carta',()=>{
  assert.equal(fleetEventText(event),'L’avversario prepara una trappola coperta.');
  assert.doesNotMatch(fleetTurnNotice([event]),/test-hidden-trap/);
 });
+
+// La Trappola Lince non può mostrare il fronte durante la preparazione.
+import {card} from './fleetNext/rules.js';
+import {isTrapCard} from './fleetNext/simpleEffects.js';
+test('Falsa scia usa lo slot Trappola coperto anche come carta selezionata',()=>{
+ const definition=card('nx-c01-04');
+ assert.equal(isTrapCard(definition),true);
+ const own=projectFleetSlots({defenses:[],attackSlots:[],defenseSlots:[]},['nx-c01-04'],'A','A');
+ const enemy=projectFleetSlots({defenses:[],attackSlots:[],defenseSlots:[]},['nx-c01-04'],'B','A');
+ assert.equal(own[2].id,'nx-c01-04');assert.equal(own[2].hidden,true);
+ assert.deepEqual(enemy[2],{hidden:true,pending:false});
+ assert.equal(own[1],null);
+});

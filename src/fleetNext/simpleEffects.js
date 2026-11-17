@@ -47,7 +47,8 @@ export const SIMPLE_RULES=Object.freeze([
  'La fusione conserva i danni in proporzione, consuma i supporti usati e non ricostruisce vitali distrutti. Le macchine d’assalto hanno due posti separati.'
 ]);
 export const isCharacterCard=card=>card?.kind==='character'||card?.sottotipo==='Personaggio'||/Personaggio/i.test(card?.category||'');
-export const isTrapCard=card=>card?.effectSpec?.type==='trap';
+export const isTrapCard=card=>card?.effectSpec?.type==='trap'||
+ card?.effectSpec?.type==='lince'&&card.effectSpec.action==='false-trail';
 const integer=(value,min,max)=>Number.isInteger(value)&&value>=min&&value<=max;
 export function validateEffectSpec(spec){
  if(!spec||typeof spec!=='object'||Array.isArray(spec))return 'Effetto mancante';

@@ -6,8 +6,8 @@ import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,cardFacePath} from './fleetNext
 const active=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS)].filter(c=>cardFacePath(c.id));
 const pending=Object.values(EXCLUSIVE_CARDS).filter(c=>c.playable===false);
 test('I fronti storici restano 2:3; nuove carte e Cartografo usano layout senza immagine falsa',()=>{
- assert.equal(active.length,28);assert.equal(pending.length,99);
- for(const id of ['ex-n00-01','nx-n00-01','nx-n00-02','nx-n00-09'])assert.equal(cardFacePath(id),null);
+ assert.equal(active.length,27);assert.equal(pending.length,90);
+ for(const id of ['ex-n00-01','ex-c01-01','nx-n00-01','nx-n00-02','nx-n00-09','nx-c01-04'])assert.equal(cardFacePath(id),null);
  for(const c of pending)assert.equal(cardFacePath(c.id),null,c.id);
  for(const c of active){
   const f=resolve('public'+cardFacePath(c.id));assert.ok(existsSync(f),c.id);

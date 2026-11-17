@@ -9,7 +9,7 @@ const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
 const cards=[
  ...JSON.parse(readFileSync(resolve(ROOT,'src/fleetNext/catalogGeneral.json'),'utf8')).carte,
  ...JSON.parse(readFileSync(resolve(ROOT,'src/fleetNext/catalogExclusive.json'),'utf8')).cards
-];
+].filter(c=>c.nativeFace!==true);
 const activeIds=new Set(cards.map(c=>c.id));
 const faces=resolve(ROOT,'public/assets/fleet-next-cards');
 const illustrations=resolve(ROOT,'public/assets/fleet-card-illustrations');
@@ -41,9 +41,9 @@ function kind(c){
   /Supporto|Scudiera|Tattica|Strategia/i.test(cat)?'support':'attack';
 }
 const src=new Set(cards.map(c=>c.id));
-if(cards.length!==29||src.size!==29)fail('Catalogo Personaggi fuori sincronizzazione');
+if(cards.length!==27||src.size!==27)fail('Fronti illustrati dei Personaggi fuori sincronizzazione');
 const faceIds=readdirSync(faces).filter(x=>x.endsWith('.svg')&&activeIds.has(x.slice(0,-4))).map(x=>x.slice(0,-4));
-if(faceIds.length!==29||faceIds.some(x=>!src.has(x)))fail('Fronte SVG attivo mancante');
+if(faceIds.length!==27||faceIds.some(x=>!src.has(x)))fail('Fronte SVG attivo mancante');
 const assets=readdirSync(illustrations).filter(x=>x.endsWith('.webp')&&activeIds.has(x.slice(0,-5)));
 const perFunction={},hdIds=[],missing=[];
 for(const c of cards){
