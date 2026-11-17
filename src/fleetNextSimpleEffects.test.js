@@ -7,9 +7,9 @@ import {campaignTerrain,TERRAIN_CATALOG} from './fleetNext/terrains.js';
 const all=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS)];
 const deck=deckFromCounts(STARTER_DECK.carteGenerali);
 function battle(options={}){return createFleetNextBattle({shipA:'N00',shipB:'N00',levelA:1,levelB:1,deckA:deck,deckB:deck,mode:'pvp',seed:25,...options});}
-test('155 schede registrate: Aurora, Lince, Vespa e Corvo eseguibili, 45 progetti bloccati',()=>{
+test('155 schede registrate: Aurora, Lince, Vespa e Corvo eseguibili, 36 progetti bloccati',()=>{
  assert.equal(all.length,155);
- assert.equal(all.filter(c=>c.playable===false).length,45);
+ assert.equal(all.filter(c=>c.playable===false).length,36);
  for(const c of all){
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(c.effetto||c.effectProposed,describeEffect(c),c.id);
