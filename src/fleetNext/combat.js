@@ -695,10 +695,14 @@ function discardDefense(side,token){
  removeSource(side,token);
  side.defenseSlots=side.defenses.map(d=>d.id).slice(-2);
 }
-function expireSide(side,ply){
+function expireSide(side,ply,battle=null){
  normalizeSide(side);
  side.synchronizationEffects=side.synchronizationEffects.filter(e=>e.untilPly>ply);
- expireSystemCards(side,ply);
+ const expired=expireSystemCards(side,ply);
+ for(const e of expired){
+  const owner=battle?.sides?.[e.owner];
+  if(owner)owner.discard.push(e.id);
+ }
  expireTemporaryWeapons(side,ply);
  for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
  if(side.auroraVeil&&side.auroraVeil.untilPly<=ply)side.auroraVeil=null;
@@ -2523,6 +2527,11 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'systemModifier':{
    const target=s.operation==='disable'?enemy:side;
    const result=applySystemCard(target,def,b.ply,who);
+   if(result.replacedEffect){
+    const owner=b.sides[result.replacedEffect.owner]||target;
+    owner.discard.push(result.replacedEffect.id);
+   }
+   if(result.discardedPlayedCard)side.discard.push(def.id);
    at(result.replaced?'Effetto sui sistemi attivato per '+s.turns+' turni':'Effetto più forte già attivo');
    break;
   }
@@ -4042,7 +4051,7 @@ function finishTurn(b,ctx,events){
  side.lastPlayed=visiblePlayed(ctx.cards);b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const [id,side] of Object.entries(b.sides)){
-  expireSide(side,b.ply);corvoSafetySwitch(b,id,events);
+  expireSide(side,b.ply,b);corvoSafetySwitch(b,id,events);
  }
  const modern=b.ruleset===HP_SYNC_RULESET;
  const deadA=modern?b.sides.A.ships[0].hp<=0:allVitalsDestroyed(b.sides.A.ships[0]);
@@ -4065,7 +4074,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const b=clone(battle),events=[],side=b.sides[who];
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const [id,s] of Object.entries(b.sides)){
-  expireSide(s,b.ply);corvoSafetySwitch(b,id,events);
+  expireSide(s,b.ply,b);corvoSafetySwitch(b,id,events);
  }
  const cards=takeCards(side,order.cards||[]);
  const ctx={who,nowMs,order,cards:[],auroraAttacks:[],linceAttacks:[],prismaAttacks:[],corvoAttacks:[],
@@ -4139,7 +4148,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
