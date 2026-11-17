@@ -1675,9 +1675,28 @@ function redirectFalcoGenerator(b,ctx,events,target){
    escortSlot:first.slot,redirected:true}));
  return {kind:'escort',unit:first,redirected:true};
 }
+// L'Esca devia solo il primo bersaglio ordinario, mai la madre o un colpo secondario.
+function redirectSharkDecoy(b,ctx,events,target){
+ if(!target||!['escort','machine'].includes(target.kind)||!ctx.sharkPrimary||
+  ctx.sharkLureUsed||ctx.bypass||ctx.sharkBypass||
+  ctx.sharkPrimary.kind!==target.kind||ctx.sharkPrimary.id!==target.unit.id)return target;
+ const defender=b.sides[other(ctx.who)];
+ if(defender.ships[0].id!=='R04')return target;
+ const d=defender.defenses.find(d=>d.id==='nx-r04-03'&&!d.hidden&&
+  d.untilPly>b.ply&&d.sharkDecoyId);
+ if(!d)return target;
+ const lure=sharkOperationalUnits(defender,b.ply).find(t=>
+  t.kind===d.sharkDecoyKind&&t.unit.id===d.sharkDecoyId);
+ if(!lure||lure.unit.id===target.unit.id)return target;
+ ctx.sharkLureUsed=true;discardDefense(defender,d.source);
+ events.push(emit(b,other(ctx.who),'shark-lure',
+  'Esca abissale sposta il colpo principale su '+lure.unit.name,{
+   cardId:d.id,fromTargetId:target.unit.id,targetKind:lure.kind,targetId:lure.unit.id}));
+ return {kind:lure.kind,unit:lure.unit,redirected:true};
+}
 function redirectFleetHit(b,ctx,events,target){
  return redirectPrismaMachineHit(b,ctx,events,redirectLinceHit(b,ctx,events,
-  redirectFalcoGenerator(b,ctx,events,target)));
+  redirectFalcoGenerator(b,ctx,events,redirectSharkDecoy(b,ctx,events,target))));
 }
 function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
  if(!target||!primary||!target.unit||target.unit.id===primary.unit?.id)return false;
@@ -1758,7 +1777,10 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   const shard=attacker.prisma?.shard;
   const canShard=visible&&shard?.ply===b.ply&&
    shard.kind===targetKind&&shard.targetId===target.id;
-  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard;
+  const sharkPierce=visible&&['escort','machine'].includes(targetKind)&&
+   ctx.sharkPierceLeft>0&&ctx.sharkPrimary?.id===target.id&&
+   ctx.sharkPrimary?.kind===targetKind;
+  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce;
   p.remaining--;
   if(!bypass&&p.id==='nx-r02-03'){
    const energy=gainMantaEnergy(defender,b.ply,1);
@@ -1767,7 +1789,8 @@ function blockHit(b,defender,targetKind,target,ctx,events){
     {cardId:p.id,energy:mantaEnergy(defender)}));
   }
   if(bypass){
-   if(canShard)attacker.prisma.shard=null;
+   if(sharkPierce)ctx.sharkPierceLeft--;
+   else if(canShard)attacker.prisma.shard=null;
    else if(targetKind==='part'&&ctx.pierceLeft>0)ctx.pierceLeft--;
    else if(canBarrel)barrel.activatedPly=b.ply;
   }else{
@@ -1867,7 +1890,8 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  target=redirectFleetHit(b,ctx,events,target);
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
  const actual=damageFleetUnit(defender,target.kind,target.unit,
-  mantaCapDamage(b,defender,target.kind,target.unit,amount,events),b.ply);
+  sharkCapDamage(b,defender,target.kind,target.unit,
+   mantaCapDamage(b,defender,target.kind,target.unit,amount,events),events),b.ply);
  if(actual){
   const name=target.unit.name||VITAL_LABELS[target.unit.id]||'Bersaglio';
   events.push(emit(b,ctx.who,'impact',name+' −'+actual,{
@@ -1880,6 +1904,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
    targets:[{kind:target.kind,id:target.unit.id,damage:actual,destroyed:target.unit.destroyed}]
   }));
   onCorvoDamage(b,ctx,events,{kind:target.kind,unit:target.unit,damage:actual},sourceCard);
+  onSharkAttackHit(b,ctx,events,{kind:target.kind,unit:target.unit,damage:actual});
   chargeMantaOnDamage(b,ctx.who,actual,events);
   triggerReactions(b,ctx.who,actual,events);
  }
@@ -1972,7 +1997,8 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
   return {damage:0,target:finalTarget,blocked:true};
  const actual=damageFleetUnit(enemy,finalTarget.kind,finalTarget.unit,
-  mantaCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,amount,events),b.ply);
+  sharkCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,
+   mantaCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,amount,events),events),b.ply);
  if(actual){
   events.push(emit(b,ctx.who,'impact',(finalTarget.unit.name||VITAL_LABELS[finalTarget.unit.id]||'Bersaglio')+' −'+actual,{
    cardId,targetKind:finalTarget.kind,targetId:finalTarget.unit.id,
@@ -1989,6 +2015,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
   }));
   onLinceDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},order,bypass);
   onCorvoDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},cardId);
+  onSharkAttackHit(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual});
   chargeMantaOnDamage(b,ctx.who,actual,events);
   triggerReactions(b,ctx.who,actual,events);
  }
@@ -2341,7 +2368,10 @@ function resolveSalvo(b,ctx,events,order){
    ctx.bypass=true;ctx.routeMarkedBypass=true;
   }
  }
- if(['part','module'].includes(selected.kind)&&guards.length&&!ctx.bypass)selected={kind:guards[0].kind,unit:guards[0].unit};
+ if(['part','module'].includes(selected.kind)&&guards.length&&!ctx.bypass){
+   selected={kind:guards[0].kind,unit:guards[0].unit};
+   ctx.sharkPrimary={kind:selected.kind,id:selected.unit.id};
+  }
  // Aggiramento abilita un solo componente dietro le unità: multicolpo non
  // moltiplica un'eccezione di accesso in un attacco all'intera madre.
  const count=mantaFork?2:guards.length&&selected.kind==='part'&&ctx.bypass?1:
@@ -2363,12 +2393,14 @@ function resolveSalvo(b,ctx,events,order){
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   const amount=mantaFork?1:kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
   const damage=damageFleetUnit(defender,kind,unit,
-   mantaCapDamage(b,defender,kind,unit,amount,events),b.ply);
+   sharkCapDamage(b,defender,kind,unit,
+   mantaCapDamage(b,defender,kind,unit,amount,events),events),b.ply);
   if(damage){
    hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,
     name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
    onLinceDamage(b,ctx,events,{kind,unit,damage},order,kind==='part'&&ctx.bypass);
    onCorvoDamage(b,ctx,events,{kind,unit,damage},null);
+   onSharkAttackHit(b,ctx,events,{kind,unit,damage});
    chargeMantaOnDamage(b,ctx.who,damage,events);
   }
  }
