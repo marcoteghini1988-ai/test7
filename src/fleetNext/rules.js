@@ -46,6 +46,8 @@ const preservedCharacters=exclusiveData.cards.map(c=>{
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  if(c.id==='ex-e01-01')return {...c,effectSpec:{type:'nebula',action:'mist-archon'},
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
+ if(c.id==='ex-e02-01')return {...c,effectSpec:{type:'storm',action:'storm-captain'},
+  effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  return c;
 });
 export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS)].map(card =>
