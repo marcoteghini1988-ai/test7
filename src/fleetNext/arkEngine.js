@@ -100,9 +100,13 @@ export function arkPrecondition(def,side,battle=null){
 }
 export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
  const actions=chosen.filter(c=>c?.effectSpec?.type==='ark').map(c=>c.effectSpec.action);
- if(actions.filter(a=>a==='ark-fusion').length+
-  chosen.filter(c=>c?.effectSpec?.type==='fusion').length>1)
-  return 'Una sola Fusione dell’Arca per turno';
+ const fusionCount=actions.filter(a=>a==='ark-fusion').length+
+  chosen.filter(c=>c?.effectSpec?.type==='fusion'&&c.shipId==='L04').length;
+ if(fusionCount>Math.min(2,side.fusionLimit||0)-(side.fusionsUsed||0))
+  return 'Non ci sono abbastanza Fusioni dell’Arca ancora disponibili';
+ if(fusionCount===2&&(!(side.reserveEscorts||[]).some(e=>e.sourceIndices?.includes(2))||
+  !(side.reserveEscorts||[]).some(e=>e.sourceIndices?.includes(3))))
+  return 'Due Fusioni nello stesso turno richiedono entrambe le riserve sbloccate';
  if(actions.filter(a=>ARK_ATTACK_ACTIONS.includes(a)).length>1)
   return 'Un solo attacco Arca Astrale per turno';
  const escorts=arkEscorts(side,ply),damaged=arkDamagedEscorts(side,ply);
