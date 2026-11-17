@@ -733,6 +733,82 @@ export default function OfficialFleetBattle3D({
       {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
      </select>
     </label>}
+    {mantaActive&&<p className="f3d-manta-readout">
+     <b>Manta Ionica · Energia {mantaEnergy(player)}/2</b>
+     {' · '+(mantaCapacitorActive(player,battle.ply)?'Capacitore operativo':'Capacitore non operativo')}
+    </p>}
+    {mantaActive&&selectedActions.includes('arc-discharge')&&mantaEnergy(player)>0&&
+     mantaCapacitorActive(player,battle.ply)&&<label>
+      <input type="checkbox" checked={mantaOptions.silence}
+       onChange={e=>setMantaOption('silence',e.target.checked)}/>
+      Spendi una energia per silenziare la passiva del bersaglio colpito
+     </label>}
+    {mantaActive&&mantaForkActive(player,battle.ply)&&mantaCapacitorActive(player,battle.ply)&&
+     mantaEnergy(player)>0&&mantaSecondChoices.length>0&&
+     !selectedActions.some(x=>['arc-discharge','total-discharge'].includes(x))&&<>
+     <label><input type="checkbox" checked={mantaOptions.fork}
+      onChange={e=>setMantaOption('fork',e.target.checked)}/>
+      Forcella ionica: due colpi leggeri su unità diverse (−1 energia)
+     </label>
+     {mantaOptions.fork&&<label>Secondo bersaglio Forcella:
+      <select value={mantaOptions.second} onChange={e=>setMantaOption('second',e.target.value)}>
+       <option value="">Prima unità diversa disponibile</option>
+       {mantaSecondChoices.map(t=><option key={t.key} value={t.key}>
+        {t.name} · {t.hp}/{t.maxHp}</option>)}
+      </select></label>}
+    </>}
+    {selectedActions.includes('absorption-screen')&&mantaSupports.length>0&&
+     <label>Schermo di assorbimento — supporto protetto:
+      <select value={mantaOptions.screen} onChange={e=>setMantaOption('screen',e.target.value)}>
+       <option value="">Primo supporto operativo</option>
+       {mantaSupports.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('reverse-polarity')&&<>
+     <label>Polarità inversa — protezione da spostare:
+      <select value={mantaOptions.from} onChange={e=>setMantaOption('from',e.target.value)}>
+       <option value="">Prima protezione scoperta disponibile</option>
+       {mantaVisible.filter(p=>p.target==='escort').map(p=>{
+        const escort=mantaSupports.find(e=>e.slot===p.escortSlot);
+        return <option key={p.source} value={escort?.id||''}>
+         {escort?.name||'Supporto'} · {p.remaining} cariche
+        </option>;
+       })}
+      </select>
+     </label>
+     <label>Polarità inversa — supporto ricevente:
+      <select value={mantaOptions.to} onChange={e=>setMantaOption('to',e.target.value)}>
+       <option value="">Primo supporto differente</option>
+       {mantaSupports.map(e=><option key={e.id} value={e.id}>{e.name}</option>)}
+      </select>
+     </label>
+    </>}
+    {selectedActions.includes('dielectric-reserve')&&mantaVisible.length>0&&
+     <label>Riserva dielettrica — protezione da convertire:
+      <select value={mantaOptions.recycle} onChange={e=>setMantaOption('recycle',e.target.value)}>
+       <option value="">Prima protezione scoperta</option>
+       {mantaVisible.map(p=><option key={p.source} value={p.source}>
+        {(card(p.id)?.nome||card(p.id)?.name||'Difesa')+' · '+p.remaining+' cariche'}
+       </option>)}
+      </select>
+     </label>}
+    {mantaActive&&(selectedActions.includes('manta-navigator')||
+     player.commander?.id==='ex-r02-01')&&<label>
+     <input type="checkbox" checked={mantaOptions.repair}
+      onChange={e=>setMantaOption('repair',e.target.checked)}/>
+     Navigatrice: ripara un supporto danneggiato a fine turno (−1 energia)
+    </label>}
+    {mantaActive&&mantaOptions.repair&&(selectedActions.includes('manta-navigator')||
+     player.commander?.id==='ex-r02-01')&&mantaDamaged.length>0&&
+     <label>Supporto da riparare:
+      <select value={mantaOptions.repairTarget}
+       onChange={e=>setMantaOption('repairTarget',e.target.value)}>
+       <option value="">Supporto più danneggiato</option>
+       {mantaDamaged.map(e=><option key={e.id} value={e.id}>
+        {e.name} · {e.hp}/{e.maxHp}
+       </option>)}
+      </select>
+     </label>}
     {selectedActions.includes('machine-deflection')&&prismaMachines.length>=2&&
      <label>Prisma di deviazione — macchina che intercetta:
       <select value={prismaOptions.redirectMachineId}
