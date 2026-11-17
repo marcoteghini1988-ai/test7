@@ -3,9 +3,9 @@
 
 ## Stato del catalogo
 - **120 esclusive univoche progettate** per le 12 navicelle principali, esattamente 10 per ciascuna; distribuzione: sei dal livello 1, una nuova ai livelli 2, 3, 4 e 5.
-- **30/120 definizioni riprogettate con effetti di battaglia implementati**, dieci ciascuna per Aurora-0 (`N00`), Lince Solare (`C01`) e Vespa di Vetro (`C02`).
-- **81 nuove schede delle altre 9 navicelle restano `playable:false`**: non si pescano e non consumano crediti, perché gli effetti non sono ancora realizzati.
-- Gli altri **9 Personaggi delle navicelle principali** mantengono il comportamento storico fino all'integrazione della rispettiva nave. I 12 Personaggi del progetto riutilizzano i propri ID, senza duplicati.
+- **40/120 definizioni riprogettate con effetti di battaglia implementati nel codice**, dieci ciascuna per Aurora-0 (`N00`), Lince Solare (`C01`), Vespa di Vetro (`C02`) e Corvo a Impulsi (`C03`).
+- **72 nuove schede delle altre 8 navicelle restano `playable:false`**: non si pescano e non consumano crediti, perché gli effetti non sono ancora realizzati.
+- Gli altri **8 Personaggi delle navicelle principali** mantengono il comportamento storico fino all'integrazione della rispettiva nave. I 12 Personaggi del progetto riutilizzano i propri ID, senza duplicati.
 - Restano inoltre i cinque Personaggi delle varianti storiche, dodici Personaggi generici, dodici Boss e sei carte tecniche (Macchine, Aggiramento e Fusioni).
 - `EXCLUSIVE_CARDS` include 125 registrazioni: 120 delle madri principali e cinque Personaggi varianti. Il catalogo complessivo, comprese generiche, Boss e tecniche, contiene **155 definizioni**.
 
@@ -48,17 +48,37 @@ Le scelte sono collegate a `src/OfficialFleetBattle3D.jsx`, senza cambiare la co
 
 Le nuove carte hanno il fronte testuale provvisorio: **non riutilizzano le illustrazioni delle versioni precedenti**. Le difese nascoste non rivelano l'identità all'avversario. Il numero e i livelli dei vitali non sono alterati.
 
+
+## Corvo a Impulsi — 10/10 collegate al motore (17 novembre 2026)
+`src/fleetNext/corvoEngine.js` contiene i nomi delle azioni, le condizioni di sblocco e il controllo anti-blocco consecutivo; `src/fleetNext/combat.js` risolve gli eventi. La plancia ufficiale offre le scelte del comandante e del ricambio privato, senza cambiare l’arena metallica.
+
+| Livello | Carta | Meccanica implementata |
+|---|---|---|
+| 1 | Antenna di disturbo | Modulo d’arma a due integrità. Il primo danno a una unità nel proprio turno prova a silenziarne la passiva; la protezione fisica rimane. |
+| 1 | Dardo intermittente | Un colpo leggero a un supporto o macchina; silenzio solo se infligge danno. |
+| 1 | Canale di riserva | Difesa scoperta: annulla un blocco temporaneo della passiva di un supporto; richiede Centralina e supporto operativo. |
+| 1 | Eco di ritorno | Trappola coperta: intercetta il primo disturbo nemico dopo la posa, lo annulla senza rimandarlo indietro. |
+| 1 | Comandante Risonante | Personaggio originale senza doppione: al primo silenzio riuscito per turno osserva la cima del mazzo e può spostarla sotto. Non pesca. |
+| 1 | Analisi di frequenza | Guarda privatamente una Trappola avversaria senza scoprirla; scarta una propria carta non giocata e pesca una carta. |
+| 2 | Cortocircuito mirato | Colpo leggero esclusivamente su macchina; se infligge danno, la disattiva temporaneamente e non protegge la madre. |
+| 3 | Richiamo inverso | Anticipa il disturbo della prima scudiera di grado 2, poi salta la sua successiva attivazione ordinaria. |
+| 4 | Interruttore di sicurezza | Modulo utilità a due integrità, si sacrifica per rimuovere un blocco temporaneo dal Generatore senza ripararlo. |
+| 5 | Blackout selettivo | Disattiva il solo modulo d’arma nemico raggiungibile durante il suo prossimo turno. Non danneggia l’Arsenale; vietato il blocco consecutivo. |
+
+I silenzi sono diversi dalle disattivazioni: il supporto silenziato continua a fare da guardiano, mentre la macchina disattivata non protegge. I blocchi consecutivi hanno una finestra comune di immunità. Le meccaniche di Canale e Interruttore sono condizionali e intervengono solo quando si verifica l'evento previsto. I nuovi fronti restano testuali, senza riutilizzare immagini storiche.
+
 ## Test e controlli
 - `src/fleetNextAuroraEffects.test.js`: **15 casi** specifici Aurora.
 - `src/fleetNextLinceEffects.test.js`: **17 casi** specifici Lince e interazioni di battaglia.
 - `src/fleetNextPrismaEffects.test.js`: **18 casi** specifici Vespa e interazioni con le altre flotte.
+- `src/fleetNextCorvoEffects.test.js`: **17 nuovi test** Corvo (catalogo, livelli, colpi, silenzi, trappole, personaggio, ricambio, moduli, blackout e regressioni).
 - **12 controlli dinamici Lince superati** in questa sessione valutando il vero motore JavaScript con dipendenze simulate; comprendono modulo, aggiramento, Artiglio, Falsa scia, Helios, Rotta, Lama, Passaggio, Disimpegno, Incursione e macchina recuperata.
 - **18/18 test Vespa superati eseguendo il codice JavaScript reale con dipendenze simulate**, inclusi doppio colpo, deviazioni, Trappola secondaria, Artigiana, trasferimento cariche, Specchio e Rosa. Anche la rilettura indipendente del catalogo ha confermato **10/10 Aurora, 10/10 Lince, 10/10 Vespa** e **81 schede non giocabili**. ID, testi, livelli e assenza di fronti grafici inesatti verificati.
 - La sintassi JavaScript dei moduli principali e del nuovo file di test è stata controllata.
-- **Non sono ancora stati eseguiti** la suite Node completa nel repository, il comando `npm run build` né un collaudo visivo sul telefono/browser. I controlli con dipendenze simulate non sostituiscono queste verifiche.
+- **Non sono ancora stati eseguiti** in questa sessione la suite Node completa nel repository, il comando `npm run build` né un collaudo visivo sul telefono/browser. La pubblicazione su `main` avvia il workflow CI automatico, da verificare separatamente. I controlli con dipendenze simulate non sostituiscono queste verifiche.
 
 ## Vincoli confermati e prossimo blocco
 - Non creare immagini in questa fase. Vecchie illustrazioni restano archiviate e non vengono riutilizzate come nuove carte.
 - Mantenere le navicelle, la progressione L1–L5, i Boss, i Personaggi e l'arena metallica 3D originale.
 - La vittoria resta ancora determinata dalla distruzione dei vitali della madre: l'eventuale cambio dell'obiettivo verso le macchine sarà un intervento separato, non introdotto tacitamente.
-- **Prossima nave: Corvo a Impulsi (`C03`)** e le sue dieci esclusive, incluse interferenze, silenziamenti e contromisure.
+- **Prossima nave: Falco Binario (`R01`)** con le sue dieci esclusive.

@@ -10,13 +10,15 @@ import {LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
  recallLinceMachine,recoveredMachineForDeploy} from './linceEngine.js';
 import {PRISMA_ACTIONS,PRISMA_ATTACK_ACTIONS,isPrismaModule,ensurePrismaState,
  livePrismaUnits,prismaPrecondition} from './prismaEngine.js';
+import {CORVO_ATTACK_ACTIONS,isCorvoModule,ensureCorvoState,corvoPrecondition,
+ corvoModuleActive,canApplyCorvoStatus,unitSilenced} from './corvoEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
  FLEET_HAND_SIZE,
  FLEET_MAX_PLAYED,FLEET_TURN_SECONDS,VITAL_KEYS,VITAL_LABELS
 } from './rules.js';
-import {effectiveEffectSpec,validateEffectSpec,effectNeedsOwnTarget,isCharacterCard} from './simpleEffects.js';
+import {effectiveEffectSpec,validateEffectSpec,effectNeedsOwnTarget,isCharacterCard,isTrapCard} from './simpleEffects.js';
 import {
  activateTerrain,activeTerrain,terrainSalvoModifier,
  neutralTerrain,bossTerrain,campaignTerrain,TERRAIN_CATALOG
@@ -82,7 +84,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
-  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,recalledModules:[],recalledMachines:[],
+  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:progression.fusionLimit,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
@@ -193,12 +195,8 @@ const activePart=(side,id)=>{const p=motherPart(side.ships[0],id);return p&&!p.d
 const livingEscorts=side=>(side.escorts||[]).filter(unitAlive);
 const weakest=items=>[...items].sort((a,z)=>a.hp/a.maxHp-z.hp/z.maxHp)[0]||null;
 const weakestPart=side=>weakest(side.ships[0].parts.filter(p=>!p.destroyed));
-const visiblePlayed=ids=>ids.filter(id=>card(id)?.effectSpec?.type!=='trap'&&
- !(card(id)?.effectSpec?.type==='lince'&&card(id)?.effectSpec?.action==='false-trail')&&
- !(card(id)?.effectSpec?.type==='prisma'&&card(id)?.effectSpec?.action==='false-reflection'));
-const defenseKind=definition=>definition?.effectSpec?.type==='trap'||
- definition?.effectSpec?.type==='lince'&&definition.effectSpec.action==='false-trail'||
- definition?.effectSpec?.type==='prisma'&&definition.effectSpec.action==='false-reflection'?'trap':'defense';
+const visiblePlayed=ids=>ids.filter(id=>!isTrapCard(card(id)));
+const defenseKind=def=>isTrapCard(def)?'trap':'defense';
 const activeDefenses=(side,ply)=>(side?.defenses||[]).filter(d=>d.untilPly==null||d.untilPly>ply);
 export function defenseSlotsAvailable(side,ply=0,kind=null){
  if(!operational(side.ships[0],'generator'))return 0;
@@ -228,7 +226,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
- side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);
+ side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
  if(!operational(side.ships[0],'generator')){
@@ -261,6 +259,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(def.effectSpec.type==='prisma'){
   const reason=prismaPrecondition(def,side,battle);
+  if(reason)return reason;
+ }
+ if(def.effectSpec.type==='corvo'){
+  const reason=corvoPrecondition(def,side,battle);
   if(reason)return reason;
  }
  const invalid=validateEffectSpec(def.effectSpec);
@@ -312,6 +314,9 @@ export function validateFleetTurn(b,who,order){
  const prismaCommands=chosen.filter(c=>c.effectSpec?.type==='prisma'&&
   PRISMA_ATTACK_ACTIONS.includes(c.effectSpec.action));
  if(prismaCommands.length>1)return 'Scegli un solo comando offensivo Vespa per turno';
+ const corvoCommands=chosen.filter(c=>c.effectSpec?.type==='corvo'&&
+  CORVO_ATTACK_ACTIONS.includes(c.effectSpec.action));
+ if(corvoCommands.length>1)return 'Scegli un solo comando offensivo Corvo per turno';
  const roles=chosen.map(c=>cardRole(c.id)),count=x=>roles.filter(r=>r===x).length;
  if(count('character')>1)return 'Massimo un Personaggio per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
@@ -329,6 +334,8 @@ export function validateFleetTurn(b,who,order){
  }
  if(chosen.some(effectNeedsOwnTarget)&&order?.ownPartId&&!activePart(side,order.ownPartId))
   return 'Scegli un tuo componente ancora operativo';
+ if(chosen.some(c=>c.effectSpec?.type==='corvo'&&c.effectSpec.action==='frequency-analysis')&&
+  side.hand.length<=indices.length)return 'Analisi di frequenza richiede una carta non giocata da scartare';
  const machineCount=chosen.filter(c=>c.effectSpec.type==='deployMachine').length;
  if(machineCount+(side.machines||[]).filter(unitAlive).length>2)return 'Servono alloggiamenti liberi per le macchine scelte';
  const fusions=chosen.filter(c=>c.effectSpec.type==='fusion').length;
@@ -365,6 +372,11 @@ export function validateFleetTurn(b,who,order){
     !possible.some(e=>e.unit.id===order.prismaSecondTargetId&&e.kind===order.prismaSecondTargetKind))
     return 'Secondo bersaglio di Geometria non valido';
   }
+  const corvoAction=corvoCommands[0]?.effectSpec.action;
+  if(corvoAction&&!['escort','machine'].includes(selected.kind))
+   return 'Comando Corvo: scegli una unità avversaria';
+  if(corvoAction==='targeted-short'&&selected.kind!=='machine')
+   return 'Cortocircuito mirato colpisce soltanto una macchina';
   const linceAction=linceCommands[0]?.effectSpec.action;
   if(['solar-bypass','crimson-raid'].includes(linceAction)&&selected.kind!=='part')
    return 'Lince: questo Attacco richiede un vitale avversario';
@@ -380,7 +392,8 @@ export function validateFleetTurn(b,who,order){
  }
  if(order?.pass&&chosen.some(c=>c.effectSpec.type==='aurora'&&['burst','dismantle'].includes(c.effectSpec.action)||
   c.effectSpec.type==='lince'&&LINCE_ATTACK_ACTIONS.includes(c.effectSpec.action)||
-  c.effectSpec.type==='prisma'&&PRISMA_ATTACK_ACTIONS.includes(c.effectSpec.action)))
+  c.effectSpec.type==='prisma'&&PRISMA_ATTACK_ACTIONS.includes(c.effectSpec.action)||
+  c.effectSpec.type==='corvo'&&CORVO_ATTACK_ACTIONS.includes(c.effectSpec.action)))
   return 'Un comando offensivo non può essere passato';
  return null;
 }
@@ -453,8 +466,102 @@ function exchangeCards(b,side,amount){
  }
  return count;
 }
-function addWeaken(b,enemy,amount,source){
+
+function cancelCorvoDisturbance(b,who,defender,events,sourceCardId=null){
+ const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='disturbance'&&
+  d.armedAtPly<b.ply);
+ if(!trap)return false;
+ discardDefense(defender,trap.source);
+ if(events)events.push(emit(b,other(who),'trap-reveal',
+  'Eco di ritorno annulla il disturbo, senza rifletterlo',
+  {cardId:trap.id,blockedCardId:sourceCardId}));
+ return true;
+}
+function corvoSafetySwitch(b,who,events){
+ const side=b.sides[who],module=installedModule(side,'utility');
+ const generator=motherPart(side.ships[0],'generator');
+ if(module?.cardId!=='nx-c03-09'||!unitAlive(module)||!unitAlive(generator)||
+  !(generator.disabledUntilPly>b.ply))return false;
+ const name=module.name;removeModule(side,'utility');
+ generator.disabledUntilPly=0;
+ events.push(emit(b,who,'card','Interruttore di sicurezza: '+name+
+  ' sacrificato, Generatore riattivato senza riparazioni',{cardId:'nx-c03-09'}));
+ return true;
+}
+function applyCorvoSilence(b,who,kind,unit,events,cardId,order={}){
+ if(!['escort','machine'].includes(kind)||!canApplyCorvoStatus(unit,b.ply))return false;
+ const defender=b.sides[other(who)];
+ if(kind==='escort'){
+  const channel=defender.defenses.find(d=>d.id==='nx-c03-03'&&!d.hidden&&
+   (d.untilPly==null||d.untilPly>b.ply));
+  if(channel&&operational(defender.ships[0],'command')){
+   discardDefense(defender,channel.source);
+   events.push(emit(b,other(who),'block',
+    'Canale di riserva annulla un blocco temporaneo della passiva',
+    {cardId:'nx-c03-03',blockedCardId:cardId,targetKind:'escort',targetId:unit.id}));
+   return false;
+  }
+ }
+ if(cancelCorvoDisturbance(b,who,defender,events,cardId))return false;
+ unit.silencedUntilPly=b.ply+2;unit.lastSilencedPly=b.ply;
+ events.push(emit(b,who,'card','Passiva silenziata: '+unit.name+
+  ' (la protezione fisica resta attiva)',{cardId,targetKind:kind,targetId:unit.id}));
+ const side=b.sides[who],state=ensureCorvoState(side);
+ if(side.commander?.id==='ex-c03-01'&&side.commander.untilPly>b.ply&&
+  operational(side.ships[0],characterSystem(side))&&state.commanderPeekPly!==b.ply){
+  state.commanderPeekPly=b.ply;
+  const top=side.deck[0];
+  if(top&&order.corvoBottomTop===true)side.deck.push(side.deck.shift());
+  events.push(emit(b,who,'private-scan','Comandante Risonante: prima carta '+
+   (top?(card(top)?.nome||card(top)?.name||top):'assente')+
+   (top&&order.corvoBottomTop?' spostata sotto il mazzo':' lasciata in cima'),{
+   cardId:'ex-c03-01',privateTo:who,peekCardId:top||null}));
+ }
+ return true;
+}
+function applyCorvoUnitBlock(b,who,kind,unit,events,cardId){
+ if(!canApplyCorvoStatus(unit,b.ply,'disabled'))return false;
+ const defender=b.sides[other(who)];
+ if(kind==='escort'){
+  const channel=defender.defenses.find(d=>d.id==='nx-c03-03'&&!d.hidden&&
+   (d.untilPly==null||d.untilPly>b.ply));
+  if(channel&&operational(defender.ships[0],'command')){
+   discardDefense(defender,channel.source);
+   events.push(emit(b,other(who),'block',
+    'Canale di riserva annulla un blocco temporaneo del supporto',
+    {cardId:'nx-c03-03',blockedCardId:cardId}));
+   return false;
+  }
+ }
+ if(cancelCorvoDisturbance(b,who,defender,events,cardId))return false;
+ unit.disabledUntilPly=b.ply+2;unit.lastDisabledPly=b.ply;
+ refreshEscortLinks(defender,b.ply);
+ events.push(emit(b,who,'card',(kind==='module'?'Modulo d’arma':kind==='machine'?'Macchina':'Supporto')+
+  ' disattivato fino alla fine del prossimo turno avversario',
+  {cardId,targetKind:kind,targetId:unit.id}));
+ return true;
+}
+function onCorvoDamage(b,ctx,events,hit,sourceCardId){
+ if(!hit||hit.damage<=0||!['escort','machine'].includes(hit.kind))return;
+ const side=b.sides[ctx.who];
+ if(side.ships[0].id!=='C03')return;
+ const state=ensureCorvoState(side);
+ if(sourceCardId==='nx-c03-02')
+  applyCorvoSilence(b,ctx.who,hit.kind,hit.unit,events,sourceCardId,ctx.order);
+ if(sourceCardId==='nx-c03-07'&&hit.kind==='machine')
+  applyCorvoUnitBlock(b,ctx.who,'machine',hit.unit,events,sourceCardId);
+ const antenna=installedModule(side,'weapon');
+ if(antenna?.cardId==='nx-c03-01'&&corvoModuleActive(antenna,b.ply)&&
+  operational(side.ships[0],'weapons')&&state.firstSilencePly!==b.ply){
+  state.firstSilencePly=b.ply;
+  applyCorvoSilence(b,ctx.who,hit.kind,hit.unit,events,'nx-c03-01',ctx.order);
+ }
+}
+
+function addWeaken(b,enemy,amount,source,attackerWho=null,events=null){
+ if(attackerWho&&cancelCorvoDisturbance(b,attackerWho,enemy,events,source))return false;
  enemy.buffs.push({kind:'jam',power:amount+(b.terrain?.id==='T03'?1:0),source});
+ return true;
 }
 function cancelTerrainWithTrap(b,who,terrainCard,ctx,events){
  const defenderWho=other(who),defender=b.sides[defenderWho];
@@ -700,6 +807,80 @@ function activatePrismaCard(b,who,def,ctx,events,order={},source=null){
  throw Error('Azione Vespa non gestita: '+action);
 }
 
+
+function activateCorvoCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],enemy=b.sides[other(who)],action=def.effectSpec.action;
+ const note=(message,extra={})=>events.push(emit(b,who,'card',
+  (def.nome||def.name)+' · '+message,{cardId:def.id,...extra}));
+ if(isCorvoModule(def.id)){
+  const result=mountModule(side,def);
+  if(!result.ok)throw Error(result.reason);
+  note('Modulo '+(result.replaced?'sostituito':'montato')+' · '+result.entry.hp+'/'+result.entry.maxHp,
+   {moduleId:result.entry.id,moduleSlot:result.entry.slot});
+  corvoSafetySwitch(b,who,events);
+  return;
+ }
+ if(CORVO_ATTACK_ACTIONS.includes(action)){
+  ctx.corvoAttacks.push({id:def.id,action});
+  note('Comando offensivo pronto');
+  return;
+ }
+ if(action==='reserve-channel'){
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!defense)throw Error('Canale di riserva non posato');
+  defense.interceptTemporaryEscort=true;
+  note('Pronto ad annullare un blocco temporaneo sul supporto');
+  return;
+ }
+ if(action==='return-echo'){
+  events.push(emit(b,who,'trap-set','Una trappola è stata preparata coperta.'));
+  return;
+ }
+ if(action==='resonant-commander'){
+  note('Osserva la cima del mazzo dopo il primo silenzio riuscito per turno');
+  return;
+ }
+ if(action==='frequency-analysis'){
+  const trap=enemy.defenses.find(d=>d.hidden);
+  const state=ensureCorvoState(side);
+  state.scannedTrapId=trap?.id||null;state.scanPly=b.ply;
+  events.push(emit(b,who,'private-scan','Analisi di frequenza: '+
+   (trap?(card(trap.id)?.nome||card(trap.id)?.name||trap.id):'nessuna trappola avversaria'),
+   {cardId:def.id,privateTo:who,peekCardId:trap?.id||null}));
+  const selected=side.hand.includes(order.corvoExchangeCardId)?order.corvoExchangeCardId:side.hand[0];
+  if(!selected)throw Error('Analisi richiede una carta non giocata da scartare');
+  side.hand.splice(side.hand.indexOf(selected),1);side.discard.push(selected);
+  if(!side.deck.length&&side.discard.length){
+   side.deck=shuffled(side.discard,b);side.discard=[];
+  }
+  const drawn=side.deck.shift();
+  if(drawn)side.hand.push(drawn);
+  note('Ricambio effettuato: scarta una carta e pescane una');
+  return;
+ }
+ if(action==='reverse-recall'){
+  const first=side.escorts.find(e=>e.sourceIndices?.includes(0)&&!e.fused);
+  if(!first||!escortEnabled(side,first,b.ply)||(first.grade||1)<2||
+   unitSilenced(first,b.ply)||first.skill?.action!=='jam')
+   throw Error('Il primo supporto non ha una passiva anticipabile');
+  const amount=Math.max(1,first.grade||1);
+  const applied=addWeaken(b,enemy,amount,first.id,who,events);
+  ensureCorvoState(side).skippedPassives[first.id]=true;
+  note(applied?'Anticipato il disturbo del primo supporto; salterà la prossima attivazione ordinaria':
+   'La trappola nemica annulla il disturbo anticipato; prossima attivazione consumata');
+  return;
+ }
+ if(action==='selective-blackout'){
+  const module=installedModule(enemy,'weapon');
+  if(!module||!corvoModuleActive(module,b.ply))
+   throw Error('Blackout selettivo richiede un modulo d’arma raggiungibile');
+  if(!applyCorvoUnitBlock(b,who,'module',module,events,def.id))
+   note('Il blocco del modulo è stato annullato da una contromisura');
+  return;
+ }
+ throw Error('Azione Corvo mancante: '+action);
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
@@ -709,6 +890,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'aurora':activateAuroraCard(b,who,def,ctx,events,order,ownPartId,token);break;
   case 'lince':activateLinceCard(b,who,def,ctx,events,order,ownPartId);break;
   case 'prisma':activatePrismaCard(b,who,def,ctx,events,order,token);break;
+  case 'corvo':activateCorvoCard(b,who,def,ctx,events,order,token);break;
   case 'bypass':{
    ctx.bypassPlayed=true;
    if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
@@ -757,9 +939,15 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    side.reactions=side.reactions.filter(r=>r.source!==token);
    side.reactions.push({source:token,id:def.id,type:s.type,trigger:s.trigger||'hurt',amount:s.amount,
     untilPly:expiry,lastTriggeredPly:null});at('Reazione pronta');break;
-  case 'weaken':addWeaken(b,enemy,s.amount,token);at('Prossimo attacco avversario indebolito');break;
+  case 'weaken':{
+   const applied=addWeaken(b,enemy,s.amount,token,who,events);
+   at(applied?'Prossimo attacco avversario indebolito':'Disturbo annullato da Eco di ritorno');break;
+  }
   case 'disarm':
    if(enemy.lastDisarmedPly===b.ply-1){at('Armi avversarie protette da un secondo blocco consecutivo');break;}
+   if(cancelCorvoDisturbance(b,who,enemy,events,def.id)){
+    at('Disarmo annullato da Eco di ritorno');break;
+   }
    enemy.fireBlocked=true;at('Prossimo attacco avversario bloccato');break;
   case 'cleanse':
    side.buffs=side.buffs.filter(x=>x.kind!=='jam');side.fireBlocked=false;side.fireDisabledUntil=0;
@@ -802,13 +990,16 @@ function applyCard(b,who,id,ctx,events,order){
   return false;
  }
  if(role==='character'){
-  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma'].includes(spec.type)?0:1,
+  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo'].includes(spec.type)?0:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
   const falseTrail=spec.type==='lince'&&spec.action==='false-trail';
   const falseReflection=spec.type==='prisma'&&spec.action==='false-reflection';
-  side.defenses.push(falseReflection?
+  const returnEcho=spec.type==='corvo'&&spec.action==='return-echo';
+  side.defenses.push(returnEcho?
+   {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:'disturbance'}:
+   falseReflection?
    {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,
     trigger:'multi-secondary',protectedKind:null,protectedId:null}:
    falseTrail?
@@ -816,7 +1007,7 @@ function applyCard(b,who,id,ctx,events,order){
     redirectPartId:ownPartId}:
    spec.type==='trap'?
    {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:spec.trigger,action:spec.action}:
-   {id,source,untilPly:b.ply+2*(spec.turns||1),
+   {id,source,untilPly:spec.type==='corvo'&&spec.action==='reserve-channel'?b.ply+4:b.ply+2*(spec.turns||1),
      counterBypass:spec.type==='lince'&&spec.action==='exposed-passage'});
   side.defenseSlots=side.defenses.map(d=>d.id);
  }
@@ -837,7 +1028,7 @@ function applyBossPassive(b,ctx,events){
  const note=t=>events.push(emit(b,'B','boss',t));
  if(n===1&&side.turnCount===0){addTemporaryGuard(side,b.ply);note('Gaia: prossimo attacco avversario −1 potenza');}
  if(n===2&&side.turnCount>0&&side.lastDamage>0){ctx.power++;note('Tharsis: +1 potenza');}
- if(n===3&&side.lastDamage>0){addWeaken(b,enemy,1,'boss-3');note('Venere: prossimo attacco avversario −1 potenza');}
+ if(n===3&&side.lastDamage>0){if(addWeaken(b,enemy,1,'boss-3',ctx.who,events))note('Venere: prossimo attacco avversario −1 potenza');}
  if(n===6&&ctx.cards.length>=2){addTemporaryGuard(side,b.ply);note('Crono: prossimo attacco avversario −1 potenza');}
  if(n===7&&enemy.buffs.some(x=>x.kind==='jam')){ctx.power++;note('Sentinella: +1 potenza contro una flotta disturbata');}
  if(n===8&&enemy.ships[0].parts.some(p=>!p.destroyed&&p.hp<p.maxHp)){ctx.power++;note('Leviatano: +1 potenza');}
@@ -851,9 +1042,15 @@ function applyBossPassive(b,ctx,events){
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  for(const e of side.escorts.filter(x=>x.linked)){
+  if(unitSilenced(e,b.ply))continue;
   const amount=Math.max(1,e.grade||1);
   for(const s of e.fusionSkills||[e.skill]){
    if((side.turnCount+1)%Math.max(1,s.interval)!==0)continue;
+   if(side.corvo?.skippedPassives?.[e.id]){
+    delete side.corvo.skippedPassives[e.id];
+    events.push(emit(b,ctx.who,'escort',e.name+' · attivazione già anticipata con Richiamo inverso'));
+    continue;
+   }
    const note=text=>events.push(emit(b,ctx.who,'escort',e.name+' · '+text));
    const part=resolvedPartId(b.sides[other(ctx.who)].ships[0],order.partId||order.targetId);
    if(['ion','strike','corrode'].includes(s.action)){ctx.power+=amount;note('+'+amount+' potenza');}
@@ -863,11 +1060,14 @@ function escortPassive(b,side,ctx,events,order){
    else if(s.action==='precision'||s.action==='pierce'&&s.targetPart===part){ctx.pierce+=amount;note('Ignora '+amount+' protezioni');}
    else if(['repair','mend'].includes(s.action)){const h=heal(b,side,amount,s.action==='mend'?'escort':'weakest');if(h)note('Ripara '+h.name+' +'+h.amount);}
    else if(s.action==='draw')note('Ricambia '+exchangeCards(b,side,amount)+' carte');
-   else if(s.action==='jam'){addWeaken(b,b.sides[other(ctx.who)],amount,e.id);note('Prossimo attacco avversario −'+amount+' potenza');}
+   else if(s.action==='jam'){
+    const applied=addWeaken(b,b.sides[other(ctx.who)],amount,e.id,ctx.who,events);
+    note(applied?'Prossimo attacco avversario −'+amount+' potenza':'Disturbo annullato');
+   }
    else if(s.action==='guard'){addTemporaryGuard(side,b.ply,amount);note('Prossimo turno avversario −'+amount+' potenza');}
   }
  }
- for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply))){
+ for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
   if(machine.power){ctx.power+=machine.power;events.push(emit(b,ctx.who,'machine',machine.name+' · +'+machine.power+' potenza',
    {machineId:machine.id,machineSlot:machine.slot}));}
  }
@@ -946,7 +1146,7 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   const attacker=b.sides[ctx.who];
   const visible=defender.defenses.some(d=>d.source===p.source&&!d.hidden);
   const barrel=installedModule(attacker,'weapon');
-  const canBarrel=targetKind==='part'&&barrel?.cardId==='nx-n00-07'&&
+  const canBarrel=targetKind==='part'&&barrel?.cardId==='nx-n00-07'&&corvoModuleActive(barrel,b.ply)&&
    barrel.activatedPly!==b.ply&&operational(attacker.ships[0],'weapons');
   const shard=attacker.prisma?.shard;
   const canShard=visible&&shard?.ply===b.ply&&
@@ -959,7 +1159,7 @@ function blockHit(b,defender,targetKind,target,ctx,events){
    else if(canBarrel)barrel.activatedPly=b.ply;
   }else{
    const lens=installedModule(attacker,'weapon');
-   if(visible&&lens?.cardId==='nx-c02-01'&&
+   if(visible&&lens?.cardId==='nx-c02-01'&&corvoModuleActive(lens,b.ply)&&
     operational(attacker.ships[0],'weapons')){
     const state=ensurePrismaState(attacker);
     if(state.shardGeneratedPly!==b.ply){
@@ -1065,6 +1265,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
    destroyed:target.unit.destroyed,
    targets:[{kind:target.kind,id:target.unit.id,damage:actual,destroyed:target.unit.destroyed}]
   }));
+  onCorvoDamage(b,ctx,events,{kind:target.kind,unit:target.unit,damage:actual},sourceCard);
   triggerReactions(b,ctx.who,actual,events);
  }
  return actual;
@@ -1099,7 +1300,7 @@ function resolveAuroraShots(b,ctx,events,order,commands=null){
  const module=installedModule(b.sides[ctx.who],'weapon');
  const second=order.secondaryTargetId?
   selectedEnemyTarget(enemy,{targetKind:order.secondaryTargetKind,targetId:order.secondaryTargetId},b.ply):null;
- if(module?.cardId!=='nx-n00-09'||module.activatedPly===b.ply||
+ if(module?.cardId!=='nx-n00-09'||!corvoModuleActive(module,b.ply)||module.activatedPly===b.ply||
   !first||!second||first.unit.id===second.unit.id)return null;
  module.activatedPly=b.ply;
  record(first,1,'nx-n00-09');
@@ -1131,7 +1332,8 @@ function onLinceDamage(b,ctx,events,hit,order={},didBypass=false){
   }
  }
  if(['escort','machine'].includes(hit.kind)&&state.bladeUsedPly!==b.ply&&
-  installedModule(side,'weapon')?.cardId==='nx-c01-07'&&operational(side.ships[0],'weapons')){
+  installedModule(side,'weapon')?.cardId==='nx-c01-07'&&
+  corvoModuleActive(installedModule(side,'weapon'),b.ply)&&operational(side.ships[0],'weapons')){
   const defense=defender.protections.find(p=>p.remaining>0&&p.untilPly>b.ply&&
    (hit.kind==='escort'&&p.target==='escort'&&p.escortSlot===hit.unit.slot||
     hit.kind==='machine'&&p.target==='machine'&&p.machineSlot===hit.unit.slot)&&
@@ -1170,6 +1372,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
     destroyed:finalTarget.unit.destroyed}]
   }));
   onLinceDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},order,bypass);
+  onCorvoDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},cardId);
   triggerReactions(b,ctx.who,actual,events);
  }
  return {damage:actual,target:finalTarget};
@@ -1223,6 +1426,44 @@ function resolveLinceShots(b,ctx,events,order){
  return shot;
 }
 
+
+
+function resolveCorvoShots(b,ctx,events,order){
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const first=selectedEnemyTarget(enemy,order,b.ply);
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targetKind:first?.kind,targetId:first?.unit?.id,played:visiblePlayed(ctx.cards),targets:[]};
+ if(!first)return shot;
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;
+  if(side.lastDisarmedPly!==b.ply-2){
+   side.lastDisarmedPly=b.ply;
+   events.push(emit(b,ctx.who,'no-shot','Comando Corvo bloccato'));
+   return shot;
+  }
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((sum,x)=>sum+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=enemy.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply))
+  .reduce((sum,x)=>sum+(x.power||0),0);
+ const terrain=terrainSalvoModifier(b.terrain,side.ships[0].id);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-enemy.ships[0].defensePower)+
+  ctx.power+terrain.value-jam-guard);
+ if(!power){
+  events.push(emit(b,ctx.who,'block','Potenza zero: comando Corvo fallito'));
+  return shot;
+ }
+ for(const command of ctx.corvoAttacks){
+  const hit=linceHit(b,ctx,events,first,1,command.id,order,false,0);
+  if(hit.damage){
+   const field=hit.target.kind==='machine'?'machineDamage':'escortDamage';
+   shot[field]+=hit.damage;
+   shot.targets.push({kind:hit.target.kind,id:hit.target.unit.id,damage:hit.damage,
+    destroyed:hit.target.unit.destroyed});
+  }
+ }
+ return shot;
+}
 
 // Vespa: le quantità e il numero dei colpi sono fissati dalla carta.
 // I colpi bloccati non procurano danni e non possono rimbalzare in catena.
@@ -1346,6 +1587,7 @@ function resolveSalvo(b,ctx,events,order){
    hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,
     name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
    onLinceDamage(b,ctx,events,{kind,unit,damage},order,kind==='part'&&ctx.bypass);
+   onCorvoDamage(b,ctx,events,{kind,unit,damage},null);
   }
  }
  const damage=hits.filter(h=>h.kind==='part').reduce((sum,h)=>sum+h.damage,0);
@@ -1366,7 +1608,9 @@ function finishTurn(b,ctx,events){
  const side=b.sides[ctx.who];side.turnCount++;refill(b,side);
  side.lastPlayed=visiblePlayed(ctx.cards);b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
  b.terrain=activeTerrain(b.terrain,b.ply);
- for(const s of Object.values(b.sides))expireSide(s,b.ply);
+ for(const [id,side] of Object.entries(b.sides)){
+  expireSide(side,b.ply);corvoSafetySwitch(b,id,events);
+ }
  const deadA=allVitalsDestroyed(b.sides.A.ships[0]),deadB=allVitalsDestroyed(b.sides.B.ships[0]);
  if(deadA||deadB){b.phase='finished';b.winner=deadA&&deadB?'draw':deadA?'B':'A';
   b.finishReason=deadA&&deadB?'Entrambe le navi hanno perso tutti i componenti.':'Una nave ha perso tutti i suoi componenti.';}
@@ -1384,9 +1628,11 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  if(error)return {ok:false,reason:error,battle,events:[]};
  const b=clone(battle),events=[],side=b.sides[who];
  b.terrain=activeTerrain(b.terrain,b.ply);
- for(const s of Object.values(b.sides))expireSide(s,b.ply);
+ for(const [id,s] of Object.entries(b.sides)){
+  expireSide(s,b.ply);corvoSafetySwitch(b,id,events);
+ }
  const cards=takeCards(side,order.cards||[]);
- const ctx={who,nowMs,cards:[],auroraAttacks:[],linceAttacks:[],prismaAttacks:[],bypassPlayed:false,
+ const ctx={who,nowMs,order,cards:[],auroraAttacks:[],linceAttacks:[],prismaAttacks:[],corvoAttacks:[],bypassPlayed:false,
   power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
@@ -1400,12 +1646,13 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
  const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
+  ctx.corvoAttacks.length?resolveCorvoShots(b,ctx,events,order):
   ctx.prismaAttacks.length?resolvePrismaShots(b,ctx,events,order):
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
@@ -1427,7 +1674,11 @@ export function autoFleetTurn(b,who=b.turn){
   if(cards.length>=FLEET_MAX_PLAYED)break;
   const attack=c.def.effectSpec;
   const direct=attack?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(attack.action);
-  const target=direct&&part?{targetKind:'part',targetId:part.id,partId:part.id}:defaultOrder;
+  const short=attack?.type==='corvo'&&attack.action==='targeted-short';
+  const machine=enemy.machines?.find(u=>unitAlive(u));
+  const target=short&&machine?{targetKind:'machine',targetId:machine.id,
+   machineSlot:machine.slot,partId:part?.id}:direct&&part?
+   {targetKind:'part',targetId:part.id,partId:part.id}:defaultOrder;
   const alreadyDirect=cards.some(i=>card(side.hand[i]).effectSpec?.type==='lince'&&
    LINCE_BYPASS_ACTIONS.includes(card(side.hand[i]).effectSpec?.action));
   const preview=alreadyDirect&&part?{targetKind:'part',targetId:part.id,partId:part.id}:target;
@@ -1439,7 +1690,11 @@ export function autoFleetTurn(b,who=b.turn){
   LINCE_BYPASS_ACTIONS.includes(card(side.hand[i]).effectSpec.action));
  const marked=side.lince?.route?.usePly===b.ply?
   enemy.ships[0].parts.find(p=>p.id===side.lince.route.partId&&!p.destroyed):null;
- const target=(bypass&&part||marked&&!cards.some(i=>card(side.hand[i]).effectSpec.type==='lince'&&
+ const hasShort=cards.some(i=>side.hand[i]==='nx-c03-07');
+ const shortTarget=enemy.machines?.find(m=>unitAlive(m));
+ const target=hasShort&&shortTarget?
+  {targetKind:'machine',targetId:shortTarget.id,machineSlot:shortTarget.slot,
+   partId:part?.id}:(bypass&&part||marked&&!cards.some(i=>card(side.hand[i]).effectSpec.type==='lince'&&
   LINCE_ATTACK_ACTIONS.includes(card(side.hand[i]).effectSpec.action)))?
   {targetKind:'part',targetId:(marked||part).id,partId:(marked||part).id}:defaultOrder;
  const helm=side.commander?.id==='ex-c01-01'||cards.some(i=>side.hand[i]==='ex-c01-01');

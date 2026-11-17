@@ -26,6 +26,7 @@ export function projectFleetSlots(side,chosenCards=[],owner='A',viewer='A'){
 }
 
 export function fleetEventText(event,viewer='A'){
+ if(event.privateTo&&event.privateTo!==viewer)return 'L’avversario ha effettuato una scansione privata.';
  if(event.kind==='trap-set')return event.who===viewer?
   'Trappola preparata coperta.':'L’avversario prepara una trappola coperta.';
  return event.text||'';

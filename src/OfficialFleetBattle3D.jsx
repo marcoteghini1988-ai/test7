@@ -255,6 +255,8 @@ export default function OfficialFleetBattle3D({
   secondSelection:'',thirdSelection:''
  });
  const setPrismaOption=(name,value)=>setPrismaOptions(prev=>({...prev,[name]:value}));
+ const [corvoOptions,setCorvoOptions]=useState({exchangeCardId:'',bottomTop:false});
+ const setCorvoOption=(name,value)=>setCorvoOptions(old=>({...old,[name]:value}));
  const [linceOptions,setLinceOptions]=useState({
   routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
   linceRecallWeapon:false,radentRecall:false,radentMachineId:''
@@ -329,6 +331,7 @@ export default function OfficialFleetBattle3D({
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   setPrismaOptions({redirectMachineId:'',trapSelection:'',artisanSelection:'',
    enemySelection:'',secondSelection:'',thirdSelection:''});
+  setCorvoOptions({exchangeCardId:'',bottomTop:false});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -404,10 +407,12 @@ export default function OfficialFleetBattle3D({
     prismaArtisanTargetKind:prismaArtisan?.kind,prismaArtisanTargetId:prismaArtisan?.id,
     prismaEnemyKind:prismaEnemy?.kind,prismaEnemyId:prismaEnemy?.id,
     prismaSecondTargetKind:prismaSecond?.kind,prismaSecondTargetId:prismaSecond?.id,
-    prismaThirdTargetKind:prismaThird?.kind,prismaThirdTargetId:prismaThird?.id
+    prismaThirdTargetKind:prismaThird?.kind,prismaThirdTargetId:prismaThird?.id,
+    corvoExchangeCardId:corvoOptions.exchangeCardId,corvoBottomTop:corvoOptions.bottomTop
    },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
+  setCorvoOptions({exchangeCardId:'',bottomTop:false});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
@@ -697,6 +702,18 @@ export default function OfficialFleetBattle3D({
       {prismaThirdChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
        {t.name} · {t.hp}/{t.maxHp}</option>)}
      </select></label>}
+    {selectedActions.includes('frequency-analysis')&&<label>Analisi di frequenza — carta da scartare:
+     <select value={corvoOptions.exchangeCardId} onChange={e=>setCorvoOption('exchangeCardId',e.target.value)}>
+      <option value="">Prima carta non giocata</option>
+      {player.hand.filter((id,i)=>!chosenCards.includes(i)).map((id,i)=>
+       <option key={id+':'+i} value={id}>{card(id)?.nome||card(id)?.name||id}</option>)}
+     </select>
+    </label>}
+    {(player.commander?.id==='ex-c03-01'||selectedActions.includes('resonant-commander'))&&
+     player.deck.length>0&&<label><input type="checkbox" checked={corvoOptions.bottomTop}
+       onChange={e=>setCorvoOption('bottomTop',e.target.checked)}/>
+      Comandante Risonante: dopo un silenzio riuscito, sposta la prima carta sotto il mazzo
+     </label>}
     {selectedActions.includes('marked-route')&&<label>Rotta marcata — vitale da segnare:
      <select value={linceOptions.routePartId} onChange={e=>setLinceOption('routePartId',e.target.value)}>
       <option value="">Usa il vitale selezionato</option>
