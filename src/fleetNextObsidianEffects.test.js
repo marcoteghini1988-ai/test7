@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,cardFacePath,eligibleExclusives,effectiveDeck,exclusiveUnlocked,
@@ -54,17 +56,17 @@ function fuse(b,cardId='nx-l03-08'){
 }
 test('L03 possiede 10 carte esclusive native con livelli 6,7,8,9,10 e i Personaggi/Boss restano',()=>{
  assert.equal(new Set(IDS).size,10);
- for(let level=1;level<=5;level++){
-  assert.equal(eligibleExclusives('L03',level).filter(c=>IDS.includes(c.id)).length,5+level);
+ for(let level=1;level<=shipMaxLevel('L03');level++){
+  assert.equal(eligibleExclusives('L03',level).filter(c=>IDS.includes(c.id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['L03'].filter(n=>n<=level).length));
  }
  for(const id of IDS){
   const c=card(id);assert.ok(c,id);
   assert.equal(c.shipId,'L03');assert.equal(c.effectSpec.type,'obsidian');
   assert.notEqual(c.playable,false);assert.equal(cardFacePath(id),null);
-  assert.equal(exclusiveUnlocked(id,'L03',5),true);
+  assert.equal(exclusiveUnlocked(id,'L03',shipMaxLevel('L03')),true);
   assert.equal(exclusiveUnlocked(id,'L01',5),false);
  }
- assert.equal(effectiveDeck([],'L03',5).filter(id=>IDS.includes(id)).length,10);
+ assert.equal(effectiveDeck([],'L03',shipMaxLevel('L03')).filter(id=>IDS.includes(id)).length,10);
  assert.ok(effectiveDeck([],'L03',5).includes('prog-fusion-l03'));
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(c=>c.kind==='character').length,12);
