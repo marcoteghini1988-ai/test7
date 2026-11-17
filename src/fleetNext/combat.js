@@ -2064,7 +2064,8 @@ function redirectFleetHit(b,ctx,events,target){
  // Cannone velato ferma i cambi bersaglio senza aggirare la flotta.
  if(ctx.nebulaUnredirectableCardId)return target;
  return redirectPrismaMachineHit(b,ctx,events,redirectLinceHit(b,ctx,events,
-  redirectFalcoGenerator(b,ctx,events,redirectSharkDecoy(b,ctx,events,target))));
+  redirectFalcoGenerator(b,ctx,events,redirectSharkDecoy(b,ctx,events,
+   stormRedirectFront(b,ctx,events,target)))));
 }
 function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
  if(!target||!primary||!target.unit||target.unit.id===primary.unit?.id)return false;
@@ -2158,9 +2159,11 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   const sharkPierce=visible&&['escort','machine'].includes(targetKind)&&
    ctx.sharkPierceLeft>0&&ctx.sharkPrimary?.id===target.id&&
    ctx.sharkPrimary?.kind===targetKind;
+  const stormPierce=visible&&b.terrain?.id!=='T06'&&ctx.stormSinglePierceLeft>0&&
+   ctx.stormSingleTargetKind===targetKind&&ctx.stormSingleTargetId===target.id;
   const nebulaPierce=visible&&['escort','machine'].includes(targetKind)&&
    ctx.nebulaPierceLeft>0;
-  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce||nebulaPierce;
+  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce||nebulaPierce||stormPierce;
   p.remaining--;
   if(!bypass&&p.id==='nx-r02-03'){
    const energy=gainMantaEnergy(defender,b.ply,1);
@@ -2169,7 +2172,8 @@ function blockHit(b,defender,targetKind,target,ctx,events){
     {cardId:p.id,energy:mantaEnergy(defender)}));
   }
   if(bypass){
-   if(sharkPierce)ctx.sharkPierceLeft--;
+   if(stormPierce)ctx.stormSinglePierceLeft--;
+   else if(sharkPierce)ctx.sharkPierceLeft--;
    else if(nebulaPierce)ctx.nebulaPierceLeft--;
    else if(canShard)attacker.prisma.shard=null;
    else if(targetKind==='part'&&ctx.pierceLeft>0)ctx.pierceLeft--;
@@ -2269,6 +2273,8 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  target=redirectFleetHit(b,ctx,events,target);
+ if(stormNetStops(b,ctx,events,target))return 0;
+ amount=stormConsumeHeavy(b,ctx,events,target,amount);
  if(blockNebulaRepeat(b,ctx,events,target))return 0;
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
  const actual=damageFleetUnit(defender,target.kind,target.unit,
@@ -2287,6 +2293,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
   }));
   onCorvoDamage(b,ctx,events,{kind:target.kind,unit:target.unit,damage:actual},sourceCard);
   onSharkAttackHit(b,ctx,events,{kind:target.kind,unit:target.unit,damage:actual});
+  stormOnHit(b,ctx,events,{kind:target.kind,unit:target.unit,damage:actual});
   chargeMantaOnDamage(b,ctx.who,actual,events);
   triggerReactions(b,ctx.who,actual,events);
  }
@@ -2376,6 +2383,8 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
   return {damage:0,target};
  const finalTarget=redirectFleetHit(b,ctx,events,target);
+ if(stormNetStops(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
+ amount=stormConsumeHeavy(b,ctx,events,finalTarget,amount);
  if(blockNebulaRepeat(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  ctx.pierceLeft=pierce;
  if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
@@ -2400,6 +2409,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
   onLinceDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},order,bypass);
   onCorvoDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},cardId);
   onSharkAttackHit(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual});
+  stormOnHit(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual});
   chargeMantaOnDamage(b,ctx.who,actual,events);
   triggerReactions(b,ctx.who,actual,events);
  }
@@ -2874,9 +2884,12 @@ function resolveSalvo(b,ctx,events,order){
   if(hitIndex>0&&cancelPrismaSecondaryHit(b,ctx,events,planned,selected))continue;
   const redirected=redirectFleetHit(b,ctx,events,planned);
   const {kind,unit}=redirected;
+  if(stormNetStops(b,ctx,events,redirected))continue;
   if(blockNebulaRepeat(b,ctx,events,redirected))continue;
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
-  const amount=mantaFork?1:kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
+  const amount=stormConsumeHeavy(b,ctx,events,redirected,
+   mantaFork?1:kind==='part'||kind==='module'?1:
+   power+(kind==='escort'&&redirected.stormOriginKind!=='machine'&&b.terrain?.id==='T04'?1:0));
   const damage=damageFleetUnit(defender,kind,unit,
    sharkCapDamage(b,defender,kind,unit,
    mantaCapDamage(b,defender,kind,unit,amount,events),events),b.ply);
@@ -2886,6 +2899,7 @@ function resolveSalvo(b,ctx,events,order){
    onLinceDamage(b,ctx,events,{kind,unit,damage},order,kind==='part'&&ctx.bypass);
    onCorvoDamage(b,ctx,events,{kind,unit,damage},null);
    onSharkAttackHit(b,ctx,events,{kind,unit,damage});
+   stormOnHit(b,ctx,events,{kind,unit,damage});
    chargeMantaOnDamage(b,ctx.who,damage,events);
   }
  }
@@ -2945,6 +2959,11 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  if(!order.pass){
   const planned=selectedEnemyTarget(b.sides[other(who)],order,b.ply);
   ctx.sharkPrimary=planned?{kind:planned.kind,id:planned.unit.id}:null;
+  const enemies=stormUnits(b.sides[other(who)],b.ply);
+  const picked=enemies.find(t=>t.kind===order.stormChainTargetKind&&
+   t.unit.id===order.stormChainTargetId&&t.unit.id!==planned?.unit.id)||
+   enemies.find(t=>t.unit.id!==planned?.unit.id);
+  ctx.stormChainPlan=picked?{kind:picked.kind,id:picked.unit.id}:null;
  }
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
