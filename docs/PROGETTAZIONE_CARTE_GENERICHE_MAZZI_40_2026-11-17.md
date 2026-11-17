@@ -46,3 +46,12 @@ La sostituzione deve considerare anche bersagli/UI/IA e le esclusive che fanno r
 - Preparata la plancia a mostrare la barra HP madre e nascondere gli hot-spot dei componenti solo nella modalità nuova; le geometrie 3D della nave non sono state sostituite.
 - Creati test mirati `src/fleetNextHpSynchronization.test.js` (danno 20 al 25%, durata, HP, vittoria, alloggiamenti non protettivi).
 - **Non ancora completato / non dichiarare il lavoro finito:** le partite ufficiali non attivano ancora `hp-sync-v2`; occorre convertire le vecchie macchine in Armi temporanee con durate per carta, adattare completamente le 120 carte esclusive e gli effetti mirati sui componenti, creare le carte sabotaggio, gestire feedback sul danno trasferito, e verificare test/build end-to-end. Nessuna nuova immagine va prodotta in questa fase.
+
+
+## Catalogo di progettazione: 32 carte sistemi (17 novembre)
+Definite 32 schede non ancora giocabili: quattro componenti (Centralina, Arsenale, Generatore, Plancia), due funzioni (Sabotaggio e Amplificazione), quattro rarità ciascuna. La progettazione distingue **forza**, **durata** e **ampiezza** dell'effetto in modo non necessariamente lineare. Durate e quantità sono valori provvisori, non bilanciamento definitivo.
+
+- Versione leggibile: [PROGETTAZIONE_32_CARTE_SISTEMI_2026-11-17.md](PROGETTAZIONE_32_CARTE_SISTEMI_2026-11-17.md)
+- Catalogo strutturato: [CATALOGO_32_CARTE_SISTEMI_2026-11-17.json](CATALOGO_32_CARTE_SISTEMI_2026-11-17.json)
+
+Rimane invariata la progressione di sblocco dei componenti per ciascuna nave. Con **Buco Nero** il totale delle nuove carte progettate o individuate è **33**. I quattro gruppi da otto sono ancora proposte da valutare; non sono stati caricati nel runtime.
