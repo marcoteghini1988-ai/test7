@@ -15,6 +15,7 @@ Non si aumenta necessariamente percentuale **e** durata insieme: la progressione
 
 ## Regole comuni
 
+- **Collocazione:** tutte le 32 carte Sistema (Sabotaggio e Amplificazione) e **Buco Nero** sono carte **Attacco**: si giocano nei tre slot Attacco durante il proprio turno, entro il limite complessivo di tre carte giocate per turno. Non occupano gli slot Difesa, Trappola o Personaggio. Sabotaggi e Amplificazioni si attivano alla giocata e persistono come effetti temporanei per i turni indicati senza bloccare uno slot Attacco nei turni successivi. Buco Nero si risolve subito e libera il campo.
 - Non si aggiungono componenti alle navicelle che ne sono sprovviste. Le carte relative a un componente assente non sono utilizzabili su quella nave.
 - I sabotaggi durano il numero indicato di turni **del giocatore che li subisce**; le amplificazioni durano il numero indicato di **turni propri**, compreso quello in cui sono giocate. Le protezioni restano efficaci anche durante la risposta avversaria.
 - Due sabotaggi dello stesso sistema non si sommano: prevale il più incisivo e, a parità, quello che scade dopo. Lo stesso vale per due amplificazioni dello stesso sistema; sabotaggio e amplificazione possono compensarsi.
