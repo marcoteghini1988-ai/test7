@@ -5,6 +5,7 @@ import {card,cardCopyLimit,eligibleExclusives} from './rules.js';
 import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
 
 export const NEXT_DECK_LIMIT=40;
+export const NEXT_TEMP_WEAPON_IDS=Object.freeze(['prog-machine-striker','prog-machine-guard']);
 export const NEXT_DECK_STORAGE_KEY='eclissi_next_cards_40_v1';
 export const NEXT_CARD_COSTS=Object.freeze({
  Comune:50,Rara:110,Epica:220,Leggendaria:440
@@ -31,7 +32,7 @@ export function readNextDeckSelection(storage=globalThis.localStorage){
 export function canSelectNewGeneric(id){
  const def=card(id);
  return !!def&&!def.shipId&&def.playable!==false&&
-  (Object.hasOwn(NEXT_COMMON_CARD_BY_ID,id)||def.kind==='character');
+  (Object.hasOwn(NEXT_COMMON_CARD_BY_ID,id)||NEXT_TEMP_WEAPON_IDS.includes(id)||def.kind==='character');
 }
 export function buildNextBaseDeck(inventory,shipId,level,selection=null){
  const owned=inventory?.owned||{},capacity=nextGenericCapacity(shipId,level);
