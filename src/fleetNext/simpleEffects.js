@@ -7,12 +7,13 @@ import {PRISMA_ACTIONS} from './prismaEngine.js';
 import {CORVO_ACTIONS} from './corvoEngine.js';
 import {FALCO_ACTIONS} from './falcoEngine.js';
 import {MANTA_ACTIONS} from './mantaEngine.js';
+import {SHARK_ACTIONS} from './sharkEngine.js';
 // Revisione dei testi dei fronti approvati; la progressione ha dati separati.
 export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
  'weaken','disarm','cleanse','exchange','recover','charge','terrain','trap',
- 'bypass','deployMachine','fusion','blueprint','aurora','lince','prisma','corvo','falco','manta'
+ 'bypass','deployMachine','fusion','blueprint','aurora','lince','prisma','corvo','falco','manta','shark'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
 const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore',bridge:'la Plancia'};
@@ -55,7 +56,8 @@ export const isTrapCard=card=>card?.effectSpec?.type==='trap'||
  card?.effectSpec?.type==='lince'&&card.effectSpec.action==='false-trail'||
  card?.effectSpec?.type==='prisma'&&card.effectSpec.action==='false-reflection'||
  card?.effectSpec?.type==='corvo'&&card.effectSpec.action==='return-echo'||
- card?.effectSpec?.type==='manta'&&card.effectSpec.action==='ion-ground';
+ card?.effectSpec?.type==='manta'&&card.effectSpec.action==='ion-ground'||
+ card?.effectSpec?.type==='shark'&&card.effectSpec.action==='returning-teeth';
 const integer=(value,min,max)=>Number.isInteger(value)&&value>=min&&value<=max;
 export function validateEffectSpec(spec){
  if(!spec||typeof spec!=='object'||Array.isArray(spec))return 'Effetto mancante';
@@ -67,6 +69,7 @@ export function validateEffectSpec(spec){
  if(spec.type==='corvo'&&!Object.values(CORVO_ACTIONS).includes(spec.action))return 'Azione Corvo non valida';
  if(spec.type==='falco'&&!Object.values(FALCO_ACTIONS).includes(spec.action))return 'Azione Falco non valida';
  if(spec.type==='manta'&&!Object.values(MANTA_ACTIONS).includes(spec.action))return 'Azione Manta non valida';
+ if(spec.type==='shark'&&!Object.values(SHARK_ACTIONS).includes(spec.action))return 'Azione Squalo non valida';
  const ranges={power:[1,3],pierce:[1,2],protect:[1,2],dodge:[1,2],repair:[1,2],
   regenerate:[1,1],counter:[1,1],weaken:[1,2],exchange:[1,2],charge:[1,2]};
  if(ranges[spec.type]&&!integer(spec.amount,...ranges[spec.type]))return 'Quantità non valida: '+spec.type;
@@ -174,6 +177,7 @@ export function describeEffect(card,level=1){
   case 'corvo':return card.effectProposed;
   case 'falco':return card.effectProposed;
 case 'manta':return card.effectProposed;
+case 'shark':return card.effectProposed;
   case 'aurora':return card.effectProposed;
   case 'blueprint':return card.effectProposed;
   case 'fusion':return 'Fonde due supporti operativi. Richiama la riserva sbloccata; la seconda fusione unisce terzo e quarto supporto. Massimo due unità in campo.';
