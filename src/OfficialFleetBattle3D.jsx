@@ -22,7 +22,7 @@ import {mantaCapacitorActive,mantaEnergy,mantaForkActive,mantaActiveSupports,
  mantaVisibleProtections,mantaEnemyUnits} from './fleetNext/mantaEngine.js';
 import {sharkOperationalUnits,sharkUnits,sharkWoundedSupports,
  sharkWoundedMachines} from './fleetNext/sharkEngine.js';
-import {nebulaHidden,nebulaHiddenSupport,nebulaVisibleSupports,nebulaTargets,
+import {nebulaHiddenSupport,nebulaVisibleSupports,nebulaTargets,
  nebulaModuleActive,nebulaHideReason} from './fleetNext/nebulaEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
@@ -105,7 +105,8 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
    const linked=escort.linked!==false;
    return <div key={escort.id} className={'live-escort live-escort--'+slot+
     (escort.hp===0?' live-escort--lost':'')+(escort.fused?' f3d-escort--fused':'')+
-    (nebulaHidden(escort,ply)?' f3d-escort--veiled':'')+
+    ((escort.nebulaHiddenUntilPly||0)>ply&&escort.hp>0&&!escort.destroyed?
+     ' f3d-escort--veiled':'')+
     (selectedTarget?.kind==='escort'&&selectedTarget.id===escort.id?' f3d-unit--selected':'')}
     title={escort.name+' · '+describeEscortEffect(escort)}>
     <img src={escort.visual||ASSET_ROOT+'/escorts/'+mother.id+'_escort_'+(slot+1)+'.svg'}
@@ -138,7 +139,8 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
   </div>
   {unit.ships?.[0]?.id==='E01'&&<div className="f3d-nebula-status" role="status">
    <span aria-hidden="true">◈</span><b>NEBULOSA</b>
-   <small>{nebulaHiddenSupport(unit,ply)?'SUPPORTO OCCULTATO':'BRUMA NON ATTIVA'}</small>
+   <small>{unit.escorts?.some(e=>e.hp>0&&!e.destroyed&&(e.nebulaHiddenUntilPly||0)>ply)?
+    'SUPPORTO OCCULTATO':'BRUMA NON ATTIVA'}</small>
   </div>}
   {unit.ships?.[0]?.id==='R04'&&<div className="f3d-shark-status" role="status">
    <span aria-hidden="true">◈</span><b>SQUALO DEL VUOTO</b>
