@@ -73,6 +73,11 @@ export function recallLinceModule(side,slot){
 export function recallLinceMachine(side,unit,ply=0){
  if(!unit||unit.destroyed||unit.hp<=0||!side.machines?.some(m=>m.id===unit.id))return null;
  if((unit.sharkAnchorUntilPly||0)>ply)return null;
+ if((unit.obsidianChainUntilPly||0)>ply)return null;
+ if(side?.ships?.[0]?.id==='L03'&&side.modules?.utility?.cardId==='nx-l03-01'&&
+  side.modules.utility.hp>0&&!side.modules.utility.destroyed&&
+  (side.modules.utility.disabledUntilPly||0)<=ply&&
+  side.ships[0].parts.some(p=>p.id==='generator'&&p.hp>0&&!p.destroyed))return null;
  if(!unit.sourceCardId)return null;
  ensureLinceState(side);
  side.machines=side.machines.filter(m=>m.id!==unit.id);
