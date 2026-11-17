@@ -69,7 +69,7 @@ test('Tutte le 120 esclusive sono giocabili: Arca completa, 12 madri, Boss e Per
  assert.equal(Object.values(GENERAL_CARDS).filter(c=>c.kind==='character').length,12);
  assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
 });
-test('Arca sblocca esattamente 6,7,8,9,10 definizioni e 2 copie reali della Fusione',()=>{
+test('Arca sblocca 4 carte iniziali, 6 successive e 2 copie reali della Fusione',()=>{
  for(let level=1;level<=shipMaxLevel('L04');level++){
   assert.equal(eligibleExclusives('L04',level).filter(c=>IDS.includes(c.id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['L04'].filter(n=>n<=level).length));
   const physical=effectiveDeck([],'L04',level);
