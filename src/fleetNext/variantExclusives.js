@@ -476,9 +476,14 @@ const entries=VARIANT_DESIGNS.flatMap(([shipId,shipName,rarity,designs])=>
   const number=index+2;
   const id='nx-'+shipId.toLowerCase()+'-'+String(number).padStart(2,'0');
   const minShipLevelDraft=number<=6?1:number-5;
+  const requiredEscortCount=number>=9?2:number>=7?1:0;
+  const requiredOwnParts=number>=7?Object.freeze(['command']):Object.freeze([]);
+  const requirements=requiredEscortCount
+   ?'Richiede Centralina attiva e '+requiredEscortCount+' navicell'+(requiredEscortCount===1?'a':'e')+' di supporto operative.'
+   :'Nessun supporto aggiuntivo richiesto.';
   const c={id,shipId,shipName,name,nome:name,category,kind:KIND[category],
    rarityDraft:rarity,effectSpec:Object.freeze(effectSpec),minShipLevelDraft,
-   requiredOwnParts:Object.freeze([]),requiredEscortCount:0,
+   requiredOwnParts,requiredEscortCount,requirements,
    maxCopiesInAutoPackageDraft:1,upgradeType:'manual_only_ship_exclusive',
    visualBrief,counterplay:'L’avversario può bloccare il colpo, impedire il requisito o neutralizzare il sistema interessato.',
    nativeFace:true,playable:true,exclusiveToShip:true,status:'simple-effect-executable-v1'};
