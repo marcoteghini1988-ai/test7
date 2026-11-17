@@ -54,8 +54,11 @@ export function mountModule(side,def,ownPartId=null){
  if(old?.cardId===def.id)return {ok:false,reason:'Modulo identico già montato'};
  if(old)removeModule(side,slot);
  const restored=recoveredModuleForMount(side,def.id);
+ const arkIndex=side.ark?.recoveredModules?.indexOf(def.id)??-1;
+ const arkRecovered=arkIndex>=0;
+ if(arkRecovered)side.ark.recoveredModules.splice(arkIndex,1);
  const entry={id:restored?.id||'module:'+def.id+':'+(side.moduleSerial=(side.moduleSerial||0)+1),
-  cardId:def.id,name:def.name||def.nome,slot,hp:restored?.hp??2,maxHp:restored?.maxHp??2,
+  cardId:def.id,name:def.name||def.nome,slot,hp:restored?.hp??(arkRecovered?1:2),maxHp:restored?.maxHp??2,
   destroyed:false,attachedPartId:restored?.attachedPartId||
    (def.id==='nx-n00-08'?ownPartId:null),
   mountedAtTurn:side.turnCount||0,activatedPly:restored?.activatedPly??-1,
