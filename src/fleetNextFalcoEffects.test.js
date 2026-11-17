@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,cardFacePath,exclusiveUnlocked,eligibleExclusives,effectiveDeck} from './fleetNext/rules.js';
@@ -51,21 +53,21 @@ function shieldUnit(side,unit,charges=1){
 }
 function defendOnMother(b){b.sides.A.escorts=[];}
 
-test('Falco Binario: dieci esclusive, sei L1 e una per ciascun livello successivo',()=>{
+test('Falco Binario: dieci esclusive, quattro iniziali e sei sbloccate nella progressione',()=>{
  assert.equal(new Set(IDS).size,10);
  for(const id of IDS){
   assert.equal(card(id).shipId,'R01');
   assert.notEqual(card(id).playable,false,id);
-  assert.equal(exclusiveUnlocked(id,'R01',5),true,id);
+  assert.equal(exclusiveUnlocked(id,'R01',shipMaxLevel('R01')),true,id);
   assert.equal(exclusiveUnlocked(id,'C03',5),false,id);
   assert.equal(cardFacePath(id),null,id);
   assert.equal(card(id).effectSpec.type,'falco',id);
  }
- for(let level=1;level<=5;level++){
-  assert.equal(IDS.filter(id=>exclusiveUnlocked(id,'R01',level)).length,5+level);
-  assert.equal(eligibleExclusives('R01',level).filter(x=>IDS.includes(x.id)).length,5+level);
+ for(let level=1;level<=shipMaxLevel('R01');level++){
+  assert.equal(IDS.filter(id=>exclusiveUnlocked(id,'R01',level)).length,4+EXCLUSIVE_UNLOCK_MILESTONES['R01'].filter(n=>n<=level).length);
+  assert.equal(eligibleExclusives('R01',level).filter(x=>IDS.includes(x.id)).length,4+EXCLUSIVE_UNLOCK_MILESTONES['R01'].filter(n=>n<=level).length);
  }
- assert.equal(IDS.filter(id=>effectiveDeck([],'R01',5).includes(id)).length,10);
+ assert.equal(IDS.filter(id=>effectiveDeck([],'R01',shipMaxLevel('R01')).includes(id)).length,10);
 });
 test('Tiro d’assedio: prepara un colpo senza danni immediati né salva gratis',()=>{
  const b=battle(),target=firstUnit(b),before=target.hp;
