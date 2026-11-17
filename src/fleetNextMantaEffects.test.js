@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,deckFromCounts,eligibleExclusives,effectiveDeck} from './fleetNext/rules.js';
@@ -32,7 +34,7 @@ function target(kind,unit){return {pass:false,targetKind:kind,targetId:unit.id,
  ...(kind==='escort'?{escortSlot:unit.slot}:kind==='machine'?{machineSlot:unit.slot}:{})};}
 
 test('Manta: dieci carte esclusive eseguibili e limitate alla madre R02',()=>{
- const own=eligibleExclusives('R02',5);
+ const own=eligibleExclusives('R02',shipMaxLevel('R02'));
  assert.equal(own.length,10);
  for(const c of own){
   assert.equal(c.playable===false,false,c.id);
@@ -41,7 +43,7 @@ test('Manta: dieci carte esclusive eseguibili e limitate alla madre R02',()=>{
    'Carta esclusiva della Manta Ionica');
  }
  assert.equal(own.filter(c=>c.kind==='character').length,1);
- assert.equal(effectiveDeck(deck,'R02',5).filter(id=>own.some(c=>c.id===id)).length,10);
+ assert.equal(effectiveDeck(deck,'R02',shipMaxLevel('R02')).filter(id=>own.some(c=>c.id===id)).length,10);
  assert.equal(effectiveDeck(deck,'C03',5).some(id=>id==='nx-r02-01'),false);
 });
 
