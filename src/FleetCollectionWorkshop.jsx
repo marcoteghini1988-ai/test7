@@ -3,6 +3,7 @@ import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,
  eligibleExclusives,cardFacePath,card,cardCopyLimit} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
+import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
 import {readFleetInventory,writeFleetInventory,
  upgradeFleetExclusive,exclusiveUpgradeCost} from './fleetNext/collection.js';
@@ -122,11 +123,14 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {exclusives.map(c=>{
      const grade=inventory.exclusiveUpgrades[c.id]||1,cost=exclusiveUpgradeCost(grade+1);
+     const rarity=exclusiveRarityAtLevel(c,motherLevel);
+     const upcomingRarity=exclusiveRarityMilestones(activeMother).find(stage=>stage.minLevel>motherLevel);
      const upgradeable=canUpgradeEffect(c,grade),requiredLevel=grade===1?3:5;
      return <div key={c.id} style={box}>
       <FleetCardArt id={c.id} name={c.name||c.nome} grade={grade} large/>
       <strong>{c.name||c.nome}</strong>
-      <div style={small}>Grado {grade}/3 · {c.category||c.categoria}</div>
+      <div style={small}>Rarità {rarity} · Grado effetto {grade}/3 · {c.category||c.categoria}</div>
+      {upcomingRarity&&<div style={small}>Prossima rarità {upcomingRarity.rarity} · navicella L{upcomingRarity.minLevel}</div>}
       <p style={small}>{describeEffect(c,grade)}</p>
       {upgradeable?<>
        <p style={small}>Grado {grade+1}: {describeEffect(c,grade+1)}</p>
