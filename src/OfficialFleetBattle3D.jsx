@@ -806,6 +806,56 @@ export default function OfficialFleetBattle3D({
       {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
      </select>
     </label>}
+    {nebulaActive&&<p className="f3d-nebula-readout">
+     <b>Nebulosa</b>
+     {' · '+(nebulaFog?'Occultato: '+nebulaFog.name:
+      nebulaModuleActive(player,'nx-e01-01',battle.ply)?'Proiettore pronto':'Nessun supporto occultato')}
+    </p>}
+    {nebulaCanHide&&<label>
+     <input type="checkbox" checked={nebulaOptions.hide}
+      onChange={e=>setNebulaOption('hide',e.target.checked)}/>
+     Proiettore di bruma: occulta un supporto (non attacca e non protegge)
+    </label>}
+    {nebulaCanHide&&nebulaOptions.hide&&nebulaVisible.length>0&&
+     <label>Supporto da occultare:
+      <select value={nebulaOptions.hideEscort}
+       onChange={e=>setNebulaOption('hideEscort',e.target.value)}>
+       <option value="">Primo supporto operativo</option>
+       {nebulaVisible.map(e=><option key={e.id} value={e.id}>{e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('cryogenic-veil')&&nebulaTargetChoices.length>0&&
+     <label>Velo criogenico — unità protetta dalle raffiche:
+      <select value={nebulaOptions.veil}
+       onChange={e=>setNebulaOption('veil',e.target.value)}>
+       <option value="">Prima unità alleata viva</option>
+       {nebulaTargetChoices.map(t=><option key={t.key} value={t.key}>
+        {t.name} · {t.hp}/{t.maxHp}</option>)}
+      </select>
+     </label>}
+    {selectedActions.includes('wandering-mist')&&nebulaFog&&nebulaVisible.length>0&&
+     <label>Bruma itinerante — occulta il supporto successivo:
+      <select value={nebulaOptions.swap}
+       onChange={e=>setNebulaOption('swap',e.target.value)}>
+       <option value="">Primo altro supporto operativo</option>
+       {nebulaVisible.map(e=><option key={e.id} value={e.id}>
+        {e.name} · {e.hp}/{e.maxHp}</option>)}
+      </select>
+     </label>}
+    {nebulaActive&&nebulaArchonActive&&nebulaTerrainSelected&&nebulaTradeChoices.length>0&&<>
+     <label><input type="checkbox" checked={nebulaOptions.terrainTrade}
+      onChange={e=>setNebulaOption('terrainTrade',e.target.checked)}/>
+      Arconte della Bruma: metti una carta sotto il mazzo e pescane una
+     </label>
+     {nebulaOptions.terrainTrade&&<label>Carta da mettere sotto il mazzo:
+      <select value={nebulaOptions.tradeCard}
+       onChange={e=>setNebulaOption('tradeCard',e.target.value)}>
+       <option value="">Prima carta non giocata</option>
+       {nebulaTradeChoices.map((id,i)=><option key={id+':'+i} value={id}>
+        {card(id)?.nome||card(id)?.name||id}</option>)}
+      </select>
+     </label>}
+    </>}
     {mantaActive&&<p className="f3d-manta-readout">
      <b>Manta Ionica · Energia {mantaEnergy(player)}/2</b>
      {' · '+(mantaCapacitorActive(player,battle.ply)?'Capacitore operativo':'Capacitore non operativo')}
