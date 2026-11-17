@@ -1,6 +1,6 @@
 # Eclissi Stellare — 32 carte dei sistemi interni (progettazione)
 
-> **PROGETTAZIONE APPROVATA (32/32), NON ANCORA GIOCABILE.** Solo progettazione testuale, nessuna immagine e nessuna modifica alle 120 esclusive.
+> **PROGETTAZIONE APPROVATA (32/32), INTEGRATA NELLA MODALITÀ HP.** Le immagini definitive e il bilanciamento restano per una fase successiva. Le esclusive non sono state eliminate.
 
 Quattro componenti × due funzioni (Sabotaggio, Amplificazione) × quattro rarità = **32 carte distinte**. Non è un obbligo inserire tutte queste carte nel mazzo da 40.
 
@@ -76,10 +76,15 @@ Non si aumenta necessariamente percentuale **e** durata insieme: la progressione
 | Epica | Amplificazione | Analisi predittiva | 2 | Per 2 tuoi turni, i primi 2 attacchi della nave madre per turno possono ciascuno distribuire il proprio danno fra 2 navicelle di supporto nemiche operative. Nessun colpo extra, nessun danno aggiuntivo, nessun aggiramento della madre. |
 | Leggendaria | Amplificazione | Strategia a fuoco | 3 | Per 3 tuoi turni, i primi 2 attacchi della nave madre di ciascun turno possono suddividere i danni fra 2 navicelle di supporto nemiche operative. Nessun nuovo colpo o danno, e le difese si applicano a ciascuna quota. |
 
-## Stato e integrazione
+## Stato tecnico aggiornato (17 novembre 2026)
 
-- **32 su 32** effetti confermati come direzione progettuale. Le carte di Arsenale e Generatore sono state allineate alle spiegazioni approvate oralmente: nessuna nuova penalità ai vecchi componenti come bersagli.
-- **Valori numerici ancora aperti:** in particolare entità dei bonus Arma e distinzione delle capacità energetiche minori/principali. Si definiscono quando le meccaniche sono verificabili, non si inventano in questa bozza.
-- La carta **Buco Nero** è distinta dalle 32 schede, con limite deciso di **fino a tre copie nel mazzo**; azzera le carte in campo senza distruggere navi.
-- Le 33 schede non sono ancora attive nelle battaglie ufficiali; il ruleset HP e le esclusive devono essere verificati. Nessuna immagine o modifica estetica.
+Le **32 carte sistemi** sono ora registrate come giocabili nel ruleset `hp-sync-v2`. La carta separata **Buco Nero** porta il nuovo catalogo a **33 carte**. Le immagini non sono state prodotte.
 
+- **Catalogo e visualizzazione provvisoria:** `src/fleetNext/newCardRegistry.js` e `src/fleetNext/rules.js`; testi leggibili anche senza PNG.
+- **Effetti, durate e scadenze:** `src/fleetNext/newCardEffects.js` e `src/fleetNext/combat.js`. Centralina ripartisce i danni tra supporti e madre e sospende le passive sincronizzate nei gradi alti; Arsenale agisce sulle Armi temporanee; Generatore modifica le funzioni difensive/energetiche; Plancia limita o suddivide il danno sugli HP delle navicelle.
+- **Buco Nero:** annulla le carte attive dei due schieramenti, comprese Armi, carte coperte, Personaggi, Terreno e attacchi preparati; non azzera HP, navicelle, mani o mazzi. Il limite specifico è di **tre copie per mazzo**.
+- **Utilizzo nelle partite:** `src/OfficialFleetBattle3D.jsx` usa il nuovo ruleset HP e la selezione del mazzo; il catalogo e la selezione sono accessibili da `src/FleetCollectionWorkshop.jsx`. I mazzi ammettono fino a 40 carte, contando le esclusive automatiche; le carte nuove devono essere possedute per inserirle.
+- **Armi temporanee per provare Arsenale:** Cannone a impulso e Condensatore offensivo sono disponibili come dotazione iniziale e occupano i due alloggiamenti, senza proteggere la madre.
+- **Verifiche automatiche:** `src/fleetNextNewCardsCombat.test.js`, `src/fleetNextNewCardRegression.test.js`, `src/fleetNextOfficialHpGameplay.test.js`. Le esecuzioni sono tracciate in GitHub Actions.
+
+**Cosa rimane rinviato:** immagini definitive, animazioni e bilanciamento numerico finale. Le descrizioni qualitative di Arsenale e Generatore sono tradotte in parametri provvisori del motore: in caso di ulteriori modifiche, mantenere sincronizzati testi e regole reali. Prima di dichiarare finita tutta la produzione, verificare separatamente la compatibilità completa delle esclusive storiche con gli HP.
