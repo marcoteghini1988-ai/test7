@@ -372,6 +372,7 @@ function expireSide(side,ply){
  normalizeSide(side);
  for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
  if(side.auroraVeil&&side.auroraVeil.untilPly<=ply)side.auroraVeil=null;
+ if(side.lince?.route&&side.lince.route.usePly<ply)side.lince.route=null;
  side.protections=side.protections.filter(s=>s.untilPly>ply&&s.remaining>0);
  side.reactions=side.reactions.filter(s=>s.untilPly>ply);
  side.buffs=side.buffs.filter(s=>s.untilPly==null||s.untilPly>ply);
@@ -496,6 +497,85 @@ function activateAuroraCard(b,who,def,ctx,events,order={},ownPartId=null,source=
  throw Error('Effetto Aurora mancante: '+action);
 }
 
+
+function cancelLinceBypass(b,who,events,sourceCardId){
+ const defender=b.sides[other(who)];
+ const defense=defender.defenses.find(d=>d.counterBypass&&!d.hidden&&(d.untilPly??0)>b.ply);
+ if(!defense)return false;
+ discardDefense(defender,defense.source);
+ events.push(emit(b,other(who),'block','Passaggio scoperto: Aggiramento avversario annullato',
+  {cardId:defense.id,blockedCardId:sourceCardId}));
+ return true;
+}
+// La trappola redirige il medesimo pacchetto di danno; niente secondo impatto
+// gratuito, niente deviazione di catene, nessun bersaglio inventato.
+function redirectLinceHit(b,ctx,events,target,alreadyRedirected=false){
+ if(alreadyRedirected||target?.kind!=='part')return target;
+ const defender=b.sides[other(ctx.who)];
+ const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='mother-part-hit'&&
+  d.armedAtPly<b.ply);
+ if(!trap)return target;
+ const part=activePart(defender,trap.redirectPartId);
+ if(!part||part.id===target.unit.id)return target;
+ discardDefense(defender,trap.source);
+ events.push(emit(b,other(ctx.who),'trap-reveal',
+  'Falsa scia devia il colpo verso '+VITAL_LABELS[part.id],
+  {cardId:trap.id,redirected:true,fromPartId:target.unit.id,toPartId:part.id}));
+ return {kind:'part',unit:part,redirected:true};
+}
+function activateLinceCard(b,who,def,ctx,events,order={},ownPartId=null){
+ const side=b.sides[who],enemy=b.sides[other(who)],action=def.effectSpec.action;
+ const note=message=>events.push(emit(b,who,'card',(def.name||def.nome)+' · '+message,{cardId:def.id}));
+ const state=ensureLinceState(side);
+ if(isLinceModule(def.id)){
+  const mounted=mountModule(side,def,ownPartId);
+  if(!mounted.ok)throw Error(mounted.reason);
+  note('Modulo '+(mounted.replaced?'sostituito':'montato')+' con '+mounted.entry.hp+'/'+mounted.entry.maxHp+' integrità');
+  return;
+ }
+ if(LINCE_ATTACK_ACTIONS.includes(action)){
+  ctx.linceAttacks.push({id:def.id,action});
+  if(LINCE_BYPASS_ACTIONS.includes(action))ctx.bypassPlayed=true;
+  if(action==='crimson-raid'){
+   const module=installedModule(side,order.sacrificeSlot)||liveModules(side)[0];
+   if(!module)throw Error('Incursione cremisi richiede un modulo operativo');
+   removeModule(side,module.slot); // costo definitivo anche se la Difesa annulla il colpo
+   note('Sacrificato '+module.name+' per un colpo con Aggiramento');
+  }else note('Comando offensivo preparato: '+action);
+  return;
+ }
+ if(action==='false-trail'){
+  events.push(emit(b,who,'trap-set','Una trappola è stata preparata coperta.'));
+  return;
+ }
+ if(action==='exposed-passage'){note('Il prossimo Aggiramento avversario sarà annullato');return;}
+ if(action==='helios'){note('Un ricambio facoltativo dopo Aggiramento, per due tuoi turni');return;}
+ if(action==='marked-route'){
+  const partId=order.routePartId||order.partId||order.targetId;
+  const part=activePart(enemy,partId);
+  if(!part)throw Error('Rotta marcata richiede un vitale nemico esistente');
+  state.route={partId:part.id,usePly:b.ply+2,cardId:def.id};
+  note('Marcato '+VITAL_LABELS[part.id]+' per il prossimo tuo turno');
+  return;
+ }
+ throw Error('Lince: effetto non gestito '+action);
+}
+function processHelios(b,who,ctx,events,order){
+ const side=b.sides[who],state=ensureLinceState(side);
+ if(side.commander?.id!=='ex-c01-01'||!ctx.bypassPlayed||!order.heliosTrade||
+  state.heliosUsedPly===b.ply||!operational(side.ships[0],characterSystem(side))||
+  !side.hand.length)return;
+ const index=side.hand.indexOf(order.heliosDiscardId);
+ const discarded=side.hand.splice(index>=0?index:0,1)[0];
+ side.discard.push(discarded);
+ if(!side.deck.length&&side.discard.length){side.deck=shuffled(side.discard,b);side.discard=[];}
+ const drawn=side.deck.shift();
+ if(drawn)side.hand.push(drawn);
+ state.heliosUsedPly=b.ply;
+ events.push(emit(b,who,'card','Pilota Helios: scartata 1 carta e pescata 1',
+  {cardId:'ex-c01-01',discardedCardId:discarded,drawnCardId:drawn||null}));
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
@@ -503,6 +583,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const expiry=b.ply+2*(s.turns||1);
  switch(s.type){
   case 'aurora':activateAuroraCard(b,who,def,ctx,events,order,ownPartId,token);break;
+  case 'lince':activateLinceCard(b,who,def,ctx,events,order,ownPartId);break;
   case 'bypass':{
    ctx.bypassPlayed=true;
    if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
@@ -606,7 +687,8 @@ function applyCard(b,who,id,ctx,events,order){
     redirectPartId:ownPartId}:
    spec.type==='trap'?
    {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:spec.trigger,action:spec.action}:
-   {id,source,untilPly:b.ply+2*(spec.turns||1)});
+   {id,source,untilPly:b.ply+2*(spec.turns||1),
+     counterBypass:spec.type==='lince'&&spec.action==='exposed-passage'});
   side.defenseSlots=side.defenses.map(d=>d.id);
  }
  applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order});
@@ -889,6 +971,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  applyCharacterRepeat(b,who,ctx,events);
  for(const id of cards.filter(id=>cardRole(id)!=='terrain'))
   if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ processHelios(b,who,ctx,events,order);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
  const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
