@@ -55,3 +55,10 @@ Definite 32 schede non ancora giocabili: quattro componenti (Centralina, Arsenal
 - Catalogo strutturato: [CATALOGO_32_CARTE_SISTEMI_2026-11-17.json](CATALOGO_32_CARTE_SISTEMI_2026-11-17.json)
 
 Rimane invariata la progressione di sblocco dei componenti per ciascuna nave. Con **Buco Nero** il totale delle nuove carte progettate o individuate è **33**. Tutti e quattro i gruppi — **Centralina, Arsenale, Generatore, Plancia (32 carte su 32)** — sono approvati come progettazione il 17 novembre 2026. Arsenale e Generatore sono stati riallineati alle decisioni orali; i valori finali richiedono ancora implementazione e verifica. Nessuna delle 32 carte è ancora caricata nel runtime.
+
+
+## Registro tecnico nuove carte — avanzamento (17 novembre)
+- **32/32 schede sistemi riallineate** alle decisioni approvate, comprese le correzioni per Arsenale (Armi temporanee) e Generatore (capacità energetiche).
+- Creato `src/fleetNext/newCardRegistry.js`: contiene **32 schede + Buco Nero = 33**, ID distinti e massimo tre copie dichiarato per Buco Nero.
+- Aggiunto `src/fleetNextNewCardRegistry.test.js`: verifica quantità, categorie, unicità, esclusioni di Buco Nero e stato non giocabile.
+- **Non è un'implementazione degli effetti:** tutte le 33 schede restano `playable:false` e non sono collegate al selettore del mazzo o al turno ufficiale. Mancano azioni nel motore HP, gestione della durata, campo Armi temporanee, effetti Buco Nero e test end-to-end. La CI non è ancora confermata.
