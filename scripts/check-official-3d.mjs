@@ -161,7 +161,7 @@ verify(GENERAL_COUNT===12&&EXCLUSIVE_COUNT===125&&BOSS_COUNT===12&&BASE_CATALOG_
  !shop.includes("id: 'abilities'")&&!hangar.includes('<SpecialDeckPanel')&&
  fleetEditor.includes('readFleetInventory')&&fleetEditor.includes('BOSS_CARDS')&&
  fleetEditor.includes('eligibleExclusives')&&!fleetEditor.includes('equipFleetBaseDeck')&&
- !fleetEditor.includes("'Mazzi pronti'")&&fleetView.includes('deckA:ownedCharacters,deckB:'),
+ !fleetEditor.includes("'Mazzi pronti'")&&read('src/OfficialFleetBattle3D.jsx').includes('deckA:ownedCharacters,deckB:'),
  'Bazar e Hangar mostrano esclusive e Personaggi; la partita non usa mazzi manuali');
 verify(!exists('src/ArsenalCatalog.jsx')&&!exists('src/HardpointBattleView.jsx')&&
  !/\bid:\s*['"](?:weapons|terrain|environments)['"]/.test(shop)&&
