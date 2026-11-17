@@ -2712,6 +2712,91 @@ function mergeFalcoShots(a,b){
 
 // Gli attacchi ionici hanno un colpo proprio, senza duplicare la salva ordinaria.
 // Ogni comando Squalo sostituisce la salva ordinaria: mai due attacchi gratis.
+// Tempesta sostituisce la salva ordinaria con colpi esattamente dichiarati.
+function resolveStormShots(b,ctx,events,order){
+ startNebulaVolley(ctx);
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const command=ctx.stormAttacks[0];
+ const units=stormUnits(enemy,b.ply);
+ const primary=units.find(t=>t.kind===order.targetKind&&t.unit.id===order.targetId)||units[0];
+ const second=units.find(t=>t.kind===order.stormSecondKind&&t.unit.id===order.stormSecondId&&
+  t.unit.id!==primary?.unit.id)||units.find(t=>t.unit.id!==primary?.unit.id);
+ const result={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  played:visiblePlayed(ctx.cards),targetKind:primary?.kind,targetId:primary?.unit?.id,targets:[]};
+ if(!command||!primary)return result;
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  events.push(emit(b,ctx.who,'no-shot','Tempesta: Attacco bloccato'));return result;
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((v,x)=>v+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=enemy.buffs.filter(x=>x.kind==='guard'&&
+  (x.untilPly==null||x.untilPly>b.ply)).reduce((v,x)=>v+(x.power||0),0);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-
+  enemy.ships[0].defensePower)+ctx.power+
+  terrainSalvoModifier(b.terrain,side.ships[0].id).value-jam-guard);
+ if(!power){
+  events.push(emit(b,ctx.who,'block','Tempesta: potenza zero, nessun colpo'));return result;
+ }
+ const record=(planned,amount,index=0)=>{
+  if(!planned||!unitAlive(planned.unit))return {damage:0,target:planned};
+  if(index>0&&planned.unit.id!==primary.unit.id&&
+   cancelPrismaSecondaryHit(b,ctx,events,planned,primary))return {damage:0,target:planned};
+  const hit=linceHit(b,ctx,events,planned,amount,command.id,order,false,0);
+  if(hit.damage){
+   const field=hit.target.kind==='escort'?'escortDamage':'machineDamage';
+   result[field]+=hit.damage;
+   result.targets.push({kind:hit.target.kind,id:hit.target.unit.id,
+    damage:hit.damage,destroyed:hit.target.unit.destroyed});
+  }
+  return hit;
+ };
+ switch(command.action){
+  case 'comb-wave':{
+   // Copia indipendente dal campo: un KO non apre un nuovo bersaglio.
+   const declared=[primary,...units.filter(t=>t.unit.id!==primary.unit.id)].slice(0,4);
+   for(const [index,t] of declared.entries())record(t,1,index);
+   break;
+  }
+  case 'rebound-lightning':{
+   const first=record(primary,1);
+   if(first.damage&&first.target.unit.destroyed&&second)record(second,power,1);
+   break;
+  }
+  case 'thunder-reprise':{
+   const state=ensureStormState(side);
+   const repeated=state.lastHitsPly===b.ply-2&&state.lastHits.includes(
+    primary.kind+':'+primary.unit.id);
+   record(primary,repeated?3:1);
+   events.push(emit(b,ctx.who,'storm-reprise',
+    repeated?'Ripresa del tuono: bersaglio segnato, colpo da 3':
+     'Ripresa del tuono: nessun segno precedente, colpo leggero',{
+      cardId:command.id,repeat:repeated,targetId:primary.unit.id}));
+   break;
+  }
+  case 'selective-discharge':{
+   record(primary,1);
+   record(primary,1);
+   if(second){
+    ctx.stormSinglePierceLeft=b.terrain?.id==='T06'?0:1;
+    ctx.stormSingleTargetKind=second.kind;
+    ctx.stormSingleTargetId=second.unit.id;
+    record(second,1,2);
+    ctx.stormSinglePierceLeft=0;
+   }
+   break;
+  }
+  case 'storm-quadrant':{
+   record(primary,1);
+   record(primary,1);
+   if(second){record(second,1,2);record(second,1,3);}
+   break;
+  }
+  default:throw Error('Comando Tempesta sconosciuto: '+command.action);
+ }
+ return result;
+}
+
 function resolveSharkShots(b,ctx,events,order){
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
