@@ -1,9 +1,17 @@
-# Pulizia grafica delle carte ritirate — 17 novembre 2026
+# Pulizia fisica dei vecchi asset — stato aggiornato al 17 novembre 2026
 
-Il catalogo giocabile non comprende più le 350 carte dismesse. Nel repository `test7` sono stati eliminati fisicamente **362 SVG dei vecchi fronti**, **248 SVG di vecchi gradi** e **54 WebP di illustrazioni non utilizzate**: **664 asset** in totale. La differenza rispetto ai 628 file delle sole carte ritirate è dovuta a 36 vecchi SVG di Personaggi oggi resi nativamente e quindi non più richiamabili.
+## Prima rimozione
+Eliminati 664 asset obsoleti: 362 vecchi SVG di fronti, 248 SVG di gradi e 54 WebP di illustrazioni. Comprendono 36 SVG di Personaggi ormai sostituiti dal rendering nativo.
 
-Restano soltanto **17 fronti SVG effettivamente richiamati da `cardFacePath`** e **10 fronti SVG di potenziamento realmente richiamati**, oltre alle **12 carte Boss** e ai Terreni della campagna. Le 120 nuove esclusive continuano a usare i fronti nativi provvisori in attesa delle illustrazioni finali.
+## Rimozione definitiva dei riferimenti grafici alle carte ritirate
+Eliminati anche i 45 file WebP di public/assets/fleet-approved-fronts e il loro manifest.json. Tutti i 45 ID erano presenti fra i 350 ID delle carte ritirate, quindi nessuna delle nuove 120 esclusive viene privata della propria immagine attiva.
 
-I **45 WebP in `public/assets/fleet-approved-fronts` e il relativo manifest** sono conservati come riferimento grafico approvato, anche se le carte storiche raffigurate non sono più giocabili. Restano inoltre i ritratti originali Boss e le immagini delle navicelle. Il vecchio generatore `scripts/generate-fleet-card-art.mjs` e la sua automazione sono rimossi per evitare la rigenerazione degli asset obsoleti.
+**Totale storico: 709 file grafici obsoleti rimossi**, più un manifest non grafico. Nel repository operativo non deve più esistere la cartella fleet-approved-fronts.
 
-Il controllo `scripts/check-fleet-card-assets.mjs` ora verifica l'assenza di SVG extra, non solo la presenza di quelli attivi. Nessuna modifica al motore delle 120 esclusive, alla plancia metallica 3D o al PvP simulato.
+## Contenuti da mantenere
+Restano 17 SVG di fronti attivi, 10 SVG di varianti di grado attive, 12 carte Boss, ambienti Terreno di campagna, i fronti provvisori nativi delle 120 esclusive e gli asset delle navicelle. Non cambiano il motore delle 120 esclusive, i Personaggi, i Boss, la plancia 3D, il PvP simulato o l'Arca.
+
+I 350 ID storici rimangono soltanto nel documento ARCHIVIO_ID_CARTE_RITIRATE_2026-11-16.json per impedire conflitti e gestire migrazioni; non sono carte eseguibili.
+
+## Nuova fonte grafica
+Le scelte storiche che avevano valore (colore per funzione e cromatura per rarità) sono trascritte nella [bozza grafica provvisoria](BOZZA_GRAFICA_CARTE_FUNZIONE_RARITA.md), in attesa di approvazione per le nuove carte. Non usare i vecchi manifest o i vecchi generatori: non devono tornare.

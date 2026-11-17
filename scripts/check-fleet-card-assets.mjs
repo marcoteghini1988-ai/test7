@@ -2,7 +2,6 @@
 import {readFileSync,readdirSync,existsSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {createHash} from 'node:crypto';
 import {describeEffect,SIMPLE_RULES_REVISION} from '../src/fleetNext/simpleEffects.js';
 import {BOSS_CARDS} from '../src/fleetNext/bossCards.js';
 const ROOT=resolve(fileURLToPath(new URL('..',import.meta.url)));
@@ -10,7 +9,6 @@ const cards=[
  ...JSON.parse(readFileSync(resolve(ROOT,'src/fleetNext/catalogGeneral.json'),'utf8')).carte,
  ...JSON.parse(readFileSync(resolve(ROOT,'src/fleetNext/catalogExclusive.json'),'utf8')).cards
 ].filter(c=>c.nativeFace!==true);
-const activeIds=new Set(cards.map(c=>c.id));
 const faces=resolve(ROOT,'public/assets/fleet-next-cards');
 const illustrations=resolve(ROOT,'public/assets/fleet-card-illustrations');
 const fail=m=>{throw new Error('[CARTE] '+m)};
@@ -25,12 +23,10 @@ function checkEffect(svg,card,grade=1){
  if(grade===1&&expected!==(card.effetto||card.effectProposed))fail('Testo catalogo diverso dal motore '+card.id);
  return svg.indexOf(group[0]);
 }
-const approvedRoot=resolve(ROOT,'public/assets/fleet-approved-fronts');
-const approvedManifest=JSON.parse(readFileSync(resolve(approvedRoot,'manifest.json'),'utf8'));
-const approvedMap=new Map(approvedManifest.cards.filter(item=>activeIds.has(item.id)).map(item=>[item.id,item]));
-const approvedFiles=readdirSync(approvedRoot).filter(f=>f.endsWith('.webp')&&activeIds.has(f.slice(0,-5)));
-if(approvedMap.size!==approvedManifest.cards.filter(item=>activeIds.has(item.id)).length||approvedFiles.length!==approvedMap.size)
- fail('Fronti approvati duplicati o mancanti');
+// Le 45 vecchie immagini approvate appartenevano al catalogo ritirato.
+// Non devono tornare nel repository operativo.
+if(existsSync(resolve(ROOT,'public/assets/fleet-approved-fronts')))
+ fail('Archivio immagini delle carte ritirate ancora presente');
 
 function kind(c){
  const cat=c.categoria||c.category||'',sub=c.sottotipo||'';
@@ -65,27 +61,6 @@ for(const c of cards){
   role.pending++;
  }
 
- const approved=approvedMap.get(id);
- if(approved){
-  if(approved.name!==(c.nome||c.name)||approved.role!==(c.sottotipo||c.category)||
-   approved.rarity!==(c.rarita||c.rarityDraft)||approved.effect!==(c.effetto||c.effectProposed))
-   fail('Identità o regole correnti non sincronizzate '+id);
-  if(approved.rulesRevision!==SIMPLE_RULES_REVISION||!approved.originalApprovedEffect)
-   fail('Provenienza approvazione o revisione regole assente '+id);
-  const full=resolve(approvedRoot,id+'.webp');
-  if(!existsSync(full))fail('WEBP approvato mancante '+id);
-  const content=readFileSync(full);
-  if(content.toString('ascii',0,4)!=='RIFF'||content.toString('ascii',8,12)!=='WEBP')
-   fail('Formato WEBP non valido '+id);
-  const anchor=svg.indexOf('data-approved-front="'+id+'"');
-  if(anchor<0)fail('Fronte approvato non visibile nel gioco '+id);
-  if(currentTextStart<=svg.indexOf('/>',anchor))fail('Regole correnti coperte dal vecchio testo raster '+id);
-  if(createHash('sha256').update(content).digest('hex')!==approved.originalApprovedAssetSha256)
-   fail('Sorgente approvata modificata senza nuovo controllo '+id);
-  const match=svg.slice(anchor).match(/href="data:image\/webp;base64,([A-Za-z0-9+/=]+)"/);
-  if(!match||!Buffer.from(match[1],'base64').equals(content))
-   fail('Fronte approvato non sincronizzato '+id);
- }else if(svg.includes('data-approved-front='))fail('Fronte approvato senza manifest '+id);
  perFunction[type]=role;
 }
 const upgrades=resolve(ROOT,'public/assets/fleet-next-card-upgrades');
@@ -113,9 +88,7 @@ for(const card of bossCards){
 }
 if(assets.some(f=>!src.has(f.slice(0,-5))))fail('WebP orfana');
 if(hdIds.length!==assets.length)fail('Conteggio HD divergente');
-if(approvedFiles.some(x=>!src.has(x.slice(0,-5))||!approvedMap.has(x.slice(0,-5))))
- fail('Fronte approvato orfano');
-const state={total:cards.length,hd:hdIds.length,approved:approvedMap.size,pending:missing.length,upgradeFaces:upgradeFiles.length,bossFaces:bossCards.length,rulesChecked:cards.length+upgradeFiles.length+bossCards.length,perFunction,
+const state={total:cards.length,hd:hdIds.length,approved:0,pending:missing.length,upgradeFaces:upgradeFiles.length,bossFaces:bossCards.length,rulesChecked:cards.length+upgradeFiles.length+bossCards.length,perFunction,
  next:missing.slice(0,15),updatedFrom:'repository'};
 if(process.argv.includes('--json'))console.log(JSON.stringify(state,null,2));
 else console.log('CARTE: '+state.hd+'/'+state.total+' HD, '+state.pending+' ancora vettoriali; '+Object.entries(perFunction).map(([k,v])=>k+':'+v.hd+'/'+v.total).join(' | '));
