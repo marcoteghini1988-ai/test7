@@ -1,6 +1,8 @@
 // Eclissi Stellare — registro tecnico del NUOVO catalogo comune.
 // 32 carte sistemi + Buco Nero. Eseguibili SOLO nel ruleset hp-sync-v2;
 // la modalità storica resta inalterata. Asset grafici non ancora realizzati.
+// Tutte le 33 carte occupano una giocata Attacco nel proprio turno;
+// gli effetti temporanei persistono come stati e non bloccano lo slot nei turni seguenti.
 import design from '../../docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json' with {type:'json'};
 
 const RARITIES=Object.freeze(['Comune','Rara','Epica','Leggendaria']);
@@ -18,7 +20,7 @@ const systemCards=design.cards.map(c=>{
   throw new Error('Carta sistemi non valida o non approvata: '+c.designId);
  return freezeCard({
   id,designId:c.designId,name:c.name,nome:c.name,
-  category:'Sistema',sottotipo:c.type,rarita:c.rarity,kind:'support',
+  category:'Sistema',sottotipo:c.type,rarita:c.rarity,kind:'attack',
   systemId:c.systemId,playable:true,nativeFace:true,
   effectProposed:c.effect,
   effectSpec:{type:'systemModifier',system:c.systemId,
@@ -30,7 +32,7 @@ const systemCards=design.cards.map(c=>{
 
 const blackHole=freezeCard({
  id:'sys-black-hole',name:'Buco Nero',nome:'Buco Nero',category:'Controllo',
- sottotipo:'Controllo campo',rarita:'Leggendaria',kind:'support',
+ sottotipo:'Controllo campo',rarita:'Leggendaria',kind:'attack',
  playable:true,nativeFace:true,maxCopiesPerDeck:3,
  effectProposed:'Risucchia tutte le carte attive sul campo di entrambi i giocatori, comprese le due Armi temporanee e il Terreno. Le navi e i loro HP restano invariati.',
  effectSpec:{type:'fieldReset',scope:'both',discardFieldCards:true,
