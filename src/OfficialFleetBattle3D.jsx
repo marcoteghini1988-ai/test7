@@ -16,6 +16,7 @@ import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {STARTER_DECK,card,cardRole,cardFacePath,deckFromCounts} from './fleetNext/rules.js';
 import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
 import {LINCE_BYPASS_ACTIONS,linceMarkedRouteReady} from './fleetNext/linceEngine.js';
+import {PRISMA_ATTACK_ACTIONS,livePrismaUnits} from './fleetNext/prismaEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
@@ -209,7 +210,7 @@ function TrapReveal({event}){
   {cardFacePath(trap.id)?<img src={cardFacePath(trap.id)} alt={trap.nome||trap.name}/>:
   <span className="f3d-trap-icon" aria-hidden="true">◈</span>}
   <div><strong>TRAPPOLA ATTIVATA</strong><b>{trap.nome||trap.name}</b>
-   <span>{event.redirected?event.text:(blocked?.nome||blocked?.name||'Terreno avversario')+': attivazione annullata.'}</span>
+   <span>{event.redirected||event.secondaryCancelled?event.text:(blocked?.nome||blocked?.name||'Terreno avversario')+': attivazione annullata.'}</span>
   </div>
  </div>;
 }
@@ -249,6 +250,11 @@ export default function OfficialFleetBattle3D({
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
+ const [prismaOptions,setPrismaOptions]=useState({
+  redirectMachineId:'',trapSelection:'',artisanSelection:'',enemySelection:'',
+  secondSelection:'',thirdSelection:''
+ });
+ const setPrismaOption=(name,value)=>setPrismaOptions(prev=>({...prev,[name]:value}));
  const [linceOptions,setLinceOptions]=useState({
   routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
   linceRecallWeapon:false,radentRecall:false,radentMachineId:''
@@ -321,6 +327,8 @@ export default function OfficialFleetBattle3D({
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
+  setPrismaOptions({redirectMachineId:'',trapSelection:'',artisanSelection:'',
+   enemySelection:'',secondSelection:'',thirdSelection:''});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -370,6 +378,11 @@ export default function OfficialFleetBattle3D({
   if(!partId){setMessage('Nessun componente disponibile');return;}
   const reconfig=reconfigChoices.find(c=>c.slot+':'+c.cardId===auroraOptions.reconfigureSelection);
   const secondary=forkActive?targetChoices.find(t=>t.kind+':'+t.id===auroraOptions.secondarySelection):null;
+  const prismaTrap=prismaTrapChoices.find(t=>t.kind+':'+t.id===prismaOptions.trapSelection);
+  const prismaArtisan=prismaTrapChoices.find(t=>t.kind+':'+t.id===prismaOptions.artisanSelection);
+  const prismaEnemy=prismaUnitTargets.find(t=>t.kind+':'+t.id===prismaOptions.enemySelection);
+  const prismaSecond=prismaUnitTargets.find(t=>t.kind+':'+t.id===prismaOptions.secondSelection);
+  const prismaThird=prismaUnitTargets.find(t=>t.kind+':'+t.id===prismaOptions.thirdSelection);
   const result=resolveFleetNextTurn(battle,'A',
    {partId,targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
     escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
@@ -385,7 +398,14 @@ export default function OfficialFleetBattle3D({
     routePartId:linceOptions.routePartId||partId,
     heliosTrade:linceOptions.heliosTrade,heliosDiscardId:linceOptions.heliosDiscardId,
     linceRecallWeapon:linceOptions.linceRecallWeapon,
-    radentRecall:linceOptions.radentRecall,radentMachineId:linceOptions.radentMachineId},Date.now());
+    radentRecall:linceOptions.radentRecall,radentMachineId:linceOptions.radentMachineId,
+    prismaRedirectMachineId:prismaOptions.redirectMachineId,
+    prismaTrapKind:prismaTrap?.kind,prismaTrapTargetId:prismaTrap?.id,
+    prismaArtisanTargetKind:prismaArtisan?.kind,prismaArtisanTargetId:prismaArtisan?.id,
+    prismaEnemyKind:prismaEnemy?.kind,prismaEnemyId:prismaEnemy?.id,
+    prismaSecondTargetKind:prismaSecond?.kind,prismaSecondTargetId:prismaSecond?.id,
+    prismaThirdTargetKind:prismaThird?.kind,prismaThirdTargetId:prismaThird?.id
+   },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
@@ -483,6 +503,17 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const prismaUnitTargets=livePrismaUnits(enemy,battle.ply).map(({kind,unit})=>({
+  kind,id:unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
+ }));
+ const prismaTrapChoices=availableFleetTargets(player,battle.ply);
+ const prismaMachines=player.machines.filter(m=>m.hp>0&&!m.destroyed&&
+  (m.disabledUntilPly||0)<=battle.ply&&(m.jammedUntilPly||0)<=battle.ply);
+ const prismaAttack=selectedActions.find(a=>PRISMA_ATTACK_ACTIONS.includes(a));
+ const prismaSecondChoices=prismaUnitTargets.filter(t=>t.id!==actualTarget?.id);
+ const prismaSelectedSecond=prismaUnitTargets.find(t=>
+  t.kind+':'+t.id===prismaOptions.secondSelection);
+ const prismaThirdChoices=prismaSecondChoices.filter(t=>t.id!==prismaSelectedSecond?.id);
  const linceMachineChoices=player.machines.filter(m=>m.hp>0&&!m.destroyed&&m.sourceCardId);
  const heliosAvailable=(player.commander?.id==='ex-c01-01'||selectedActions.includes('helios'))&&
   directBypass;
@@ -627,6 +658,45 @@ export default function OfficialFleetBattle3D({
       {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
      </select>
     </label>}
+    {selectedActions.includes('machine-deflection')&&prismaMachines.length>=2&&
+     <label>Prisma di deviazione — macchina che intercetta:
+      <select value={prismaOptions.redirectMachineId}
+       onChange={e=>setPrismaOption('redirectMachineId',e.target.value)}>
+       <option value="">Prima macchina operativa</option>
+       {prismaMachines.map(m=><option key={m.id} value={m.id}>{m.name} · {m.hp}/{m.maxHp}</option>)}
+      </select></label>}
+    {selectedActions.includes('false-reflection')&&<label>Riflesso falso — proteggi questo possibile bersaglio secondario:
+     <select value={prismaOptions.trapSelection} onChange={e=>setPrismaOption('trapSelection',e.target.value)}>
+      <option value="">Primo bersaglio valido</option>
+      {prismaTrapChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
+       {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
+    {selectedActions.includes('prisma-artisan')&&<label>Artigiana Prisma — destinazione preferita delle cariche:
+     <select value={prismaOptions.artisanSelection} onChange={e=>setPrismaOption('artisanSelection',e.target.value)}>
+      <option value="">Primo bersaglio compatibile</option>
+      {prismaTrapChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
+       {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
+    {selectedActions.includes('lens-cut')&&<label>Taglio della lente — unità con protezione:
+     <select value={prismaOptions.enemySelection} onChange={e=>setPrismaOption('enemySelection',e.target.value)}>
+      <option value="">Prima unità con Difesa scoperta</option>
+      {prismaUnitTargets.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
+       {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
+    {prismaAttack&&prismaSecondChoices.length>0&&<label>
+     {prismaAttack==='reflected-shard'?'Scheggia riflessa — unità di rimbalzo:':
+      'Colpo secondario — altra unità:'}
+     <select value={prismaOptions.secondSelection} onChange={e=>setPrismaOption('secondSelection',e.target.value)}>
+      <option value="">Prima unità diversa disponibile</option>
+      {prismaSecondChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
+       {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
+    {prismaAttack==='crystal-rose'&&prismaThirdChoices.length>0&&<label>Rosa di cristallo — terza unità:
+     <select value={prismaOptions.thirdSelection} onChange={e=>setPrismaOption('thirdSelection',e.target.value)}>
+      <option value="">Prima terza unità disponibile</option>
+      {prismaThirdChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
+       {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
     {selectedActions.includes('marked-route')&&<label>Rotta marcata — vitale da segnare:
      <select value={linceOptions.routePartId} onChange={e=>setLinceOption('routePartId',e.target.value)}>
       <option value="">Usa il vitale selezionato</option>
