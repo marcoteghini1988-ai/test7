@@ -1,6 +1,6 @@
 # Eclissi Stellare — progettazione nuove carte generiche e mazzi da 40
 **Data:** 17 novembre 2026  
-**Stato:** regole di progettazione concordate. **NON** equivale a implementazione nel motore.  
+**Stato aggiornato:** 33 carte integrate nel nuovo motore HP e nel mazzo da 40; grafica e bilanciamento finale rinviati.  
 **Ambito:** nuovo catalogo comune; immagini rinviate. Non riattivare vecchi cataloghi di carte Attacco/Difesa/Trappola.
 
 ## Mazzi
@@ -16,7 +16,7 @@
 - **Effetto:** quando viene attivata, il buco nero risucchia **tutte le carte attive sul tavolo di entrambi i giocatori**, comprese Attacco, Difesa, Trappole coperte, Personaggi attivi, Terreno e **entrambe le carte Arma temporanee eventualmente schierate nei due slot**. Le carte rimosse vanno negli scarti del rispettivo proprietario; i loro effetti attivi cessano.
 - **Persistono:** nave madre, navicelle di supporto, integrità/danni e componenti distrutti, mani, mazzi e progressione. Il Boss come avversario non sparisce; solo eventuali sue carte attive sul campo vengono rimosse.
 - **Senso della regola:** azzera il **campo delle carte**, non l'intera partita; non infligge danni alle navicelle.
-- **Da implementare:** creazione dell'ID e dell'effetto di Buco Nero, rimozione reale delle carte/effetti del campo, sincronizzazione visuale e test. Il motore al momento NON applica questa nuova carta.
+- **Implementata nel ruleset HP:** `sys-black-hole` rimuove carte ed effetti dal campo, gestisce gli scarti e preserva navicelle e HP. I test sono in `src/fleetNextNewCardsCombat.test.js` e `src/fleetNextNewCardRegression.test.js`. Animazione ancora da creare.
 - **Attenzione al limite copie:** il motore attuale ha un limite generale Leggendaria inferiore a tre; il sistema di costruzione mazzo dovrà rispettare il limite **specifico di tre copie per Buco Nero**, senza correggere arbitrariamente gli altri limiti prima delle decisioni di bilanciamento.
 
 ## Regola dei due slot Arma — APPROVATA COME DESIGN
@@ -29,7 +29,7 @@
 - Le esclusive navicella, i Personaggi, i Boss, la grafica 3D e l'Arca non vanno eliminati o riscritti come parte di questa decisione.
 
 ## Nota tecnica per l'implementazione successiva
-Il motore `src/fleetNext/combat.js` gestisce oggi le due carte tecniche `prog-machine-striker` e `prog-machine-guard` come `deployMachine` in `side.machines`: sono bersagliabili e contribuiscono alla protezione (`protectingFleetUnits`). Questo comportamento è **obsoleto rispetto alla nuova regola dei due slot**. 
+Il motore `src/fleetNext/combat.js` gestisce oggi le due carte tecniche `prog-machine-striker` e `prog-machine-guard` come `deployMachine` in `side.machines`: sono bersagliabili e contribuiscono alla protezione (`protectingFleetUnits`). Questo comportamento è **obsoleto rispetto al ruleset HP** e resta solo nella modalità di compatibilità storica. Nel ruleset HP le due Armi temporanee non sono bersagli né scudi, hanno durate effettive e lasciano il campo a scadenza. 
 La sostituzione deve considerare anche bersagli/UI/IA e le esclusive che fanno riferimento a `machine`, per non compromettere le 120 esclusive. Non dichiarare la regola attiva o testata finché non è stata modificata e verificata completamente.
 
 
@@ -45,7 +45,7 @@ La sostituzione deve considerare anche bersagli/UI/IA e le esclusive che fanno r
 - Aggiunta la modalità **opt-in** `ruleset: 'hp-sync-v2'` a `createFleetNextBattle`: la nave madre ha `hp/maxHp`, il danno al componente nella modalità nuova riduce gli HP madre senza distruggere il componente, gli attacchi alle scudiere ripartiscono il danno, le macchine non proteggono né sono bersagli selezionabili, la condizione di vittoria usa gli HP madre. La vecchia modalità rimane il default per i test/regressioni.
 - Preparata la plancia a mostrare la barra HP madre e nascondere gli hot-spot dei componenti solo nella modalità nuova; le geometrie 3D della nave non sono state sostituite.
 - Creati test mirati `src/fleetNextHpSynchronization.test.js` (danno 20 al 25%, durata, HP, vittoria, alloggiamenti non protettivi).
-- **Non ancora completato / non dichiarare il lavoro finito:** le partite ufficiali non attivano ancora `hp-sync-v2`; occorre convertire le vecchie macchine in Armi temporanee con durate per carta, adattare completamente le 120 carte esclusive e gli effetti mirati sui componenti, creare le carte sabotaggio, gestire feedback sul danno trasferito, e verificare test/build end-to-end. Nessuna nuova immagine va prodotta in questa fase.
+- **Aggiornamento successivo:** le partite ufficiali usano `hp-sync-v2`, le due Armi temporanee hanno durate e i sabotaggi sono collegati al motore. Restano la revisione completa delle vecchie logiche delle esclusive nel nuovo obiettivo HP, l'eventuale feedback aggiuntivo sul danno trasferito e la grafica. Nessuna nuova immagine va prodotta in questa fase.
 
 
 ## Catalogo di progettazione: 32 carte sistemi (17 novembre)
@@ -54,11 +54,15 @@ Definite 32 schede non ancora giocabili: quattro componenti (Centralina, Arsenal
 - Versione leggibile: [PROGETTAZIONE_32_CARTE_SISTEMI_2026-11-17.md](PROGETTAZIONE_32_CARTE_SISTEMI_2026-11-17.md)
 - Catalogo strutturato: [CATALOGO_32_CARTE_SISTEMI_2026-11-17.json](CATALOGO_32_CARTE_SISTEMI_2026-11-17.json)
 
-Rimane invariata la progressione di sblocco dei componenti per ciascuna nave. Con **Buco Nero** il totale delle nuove carte progettate o individuate è **33**. Tutti e quattro i gruppi — **Centralina, Arsenale, Generatore, Plancia (32 carte su 32)** — sono approvati come progettazione il 17 novembre 2026. Arsenale e Generatore sono stati riallineati alle decisioni orali; i valori finali richiedono ancora implementazione e verifica. Nessuna delle 32 carte è ancora caricata nel runtime.
+Rimane invariata la progressione di sblocco dei componenti per ciascuna nave. Con **Buco Nero** il totale delle nuove carte progettate o individuate è **33**. Tutti e quattro i gruppi — **Centralina, Arsenale, Generatore, Plancia (32 carte su 32)** — sono approvati come progettazione il 17 novembre 2026. Arsenale e Generatore sono stati riallineati alle decisioni orali; i valori finali richiedono ancora implementazione e verifica. Tutte le 32 carte sono ora caricate come effetti nel runtime `hp-sync-v2`.
 
 
-## Registro tecnico nuove carte — avanzamento (17 novembre)
-- **32/32 schede sistemi riallineate** alle decisioni approvate, comprese le correzioni per Arsenale (Armi temporanee) e Generatore (capacità energetiche).
-- Creato `src/fleetNext/newCardRegistry.js`: contiene **32 schede + Buco Nero = 33**, ID distinti e massimo tre copie dichiarato per Buco Nero.
-- Aggiunto `src/fleetNextNewCardRegistry.test.js`: verifica quantità, categorie, unicità, esclusioni di Buco Nero e stato non giocabile.
-- **Non è un'implementazione degli effetti:** tutte le 33 schede restano `playable:false` e non sono collegate al selettore del mazzo o al turno ufficiale. Mancano azioni nel motore HP, gestione della durata, campo Armi temporanee, effetti Buco Nero e test end-to-end. La CI non è ancora confermata.
+## Registro e integrazione effettiva delle 33 carte (17 novembre 2026)
+
+- `src/fleetNext/newCardRegistry.js` espone 32 carte sistemi e Buco Nero come `playable:true`, con ID distinti e limite di 3 copie per Buco Nero.
+- `src/fleetNext/newCardEffects.js` e `src/fleetNext/combat.js` gestiscono attivazione, scadenza, interferenze Centralina, effetti Arsenale/Generatore/Plancia, Armi temporanee e reset di Buco Nero.
+- `src/fleetNext/nextDeckLoadout.js` gestisce capienza di 40 carte, copie possedute, acquisti e selezione; `src/FleetCollectionWorkshop.jsx` consente di acquistare e inserire le nuove carte nel mazzo.
+- `src/OfficialFleetBattle3D.jsx` avvia le partite ufficiali nella modalità HP con la selezione del mazzo, non con l'archivio delle vecchie carte Attacco/Difesa/Trappola.
+- I test di carte, durata, mazzi, pescaggio, reset e combattimento si trovano in `src/fleetNextNewCardsCombat.test.js`, `src/fleetNextNewCardRegression.test.js` e `src/fleetNextOfficialHpGameplay.test.js`.
+
+**Ancora fuori dall'ambito di questa fase:** illustrazioni e animazioni definitive, bilanciamento finale e rifinitura della compatibilità delle 120 esclusive con tutte le nuove regole HP. Questa integrazione non reintroduce i cataloghi dismessi.
