@@ -619,6 +619,86 @@ function processHelios(b,who,ctx,events,order){
   {cardId:'ex-c01-01',discardedCardId:discarded,drawnCardId:drawn||null}));
 }
 
+
+// Regole Vespa: il catalogo non conferisce effetti senza esecuzione.
+// Tutte le scelte sono fissate nel turno del proprietario, senza interrompere
+// i trenta secondi del turno avversario.
+function activatePrismaCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],enemy=b.sides[other(who)],action=def.effectSpec.action;
+ const state=ensurePrismaState(side);
+ const note=(message,other={})=>events.push(emit(b,who,'card',(def.name||def.nome)+' · '+message,
+  {cardId:def.id,...other}));
+ if(isPrismaModule(def.id)){
+  const result=mountModule(side,def);
+  if(!result.ok)throw Error(result.reason);
+  note('Modulo '+(result.replaced?'sostituito':'montato')+' · '+result.entry.hp+'/'+result.entry.maxHp,
+   {moduleId:result.entry.id,moduleSlot:result.entry.slot});
+  return;
+ }
+ if(PRISMA_ATTACK_ACTIONS.includes(action)){
+  ctx.prismaAttacks.push({id:def.id,action});
+  note('Comando pronto: '+action);
+  return;
+ }
+ if(action==='machine-deflection'){
+  const machines=(side.machines||[]).filter(m=>unitEnabled(m,b.ply));
+  const selected=machines.find(m=>m.id===order.prismaRedirectMachineId)||machines[0];
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!selected||!defense)throw Error('Prisma: scegli una macchina operativa da usare come esca');
+  defense.redirectMachineId=selected.id;
+  note('Il prossimo colpo su un’altra macchina sarà deviato su '+selected.name);
+  return;
+ }
+ if(action==='false-reflection'){
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!defense)throw Error('Trappola Riflesso falso non posata');
+  const candidates=availableFleetTargets(side,b.ply).filter(t=>!t.blocked);
+  const selected=candidates.find(t=>t.kind===order.prismaTrapKind&&t.id===order.prismaTrapTargetId)||
+   candidates[0];
+  if(!selected)throw Error('Nessun bersaglio da proteggere con Riflesso falso');
+  defense.protectedKind=selected.kind;defense.protectedId=selected.id;
+  events.push(emit(b,who,'trap-set','Una trappola è stata preparata coperta.'));
+  return;
+ }
+ if(action==='prisma-artisan'){
+  state.artisanPreference=order.prismaArtisanTargetId?
+   {kind:order.prismaArtisanTargetKind,id:order.prismaArtisanTargetId}:null;
+  note('Una carica residua può essere spostata dopo un blocco, una volta per turno');
+  return;
+ }
+ if(action==='lens-cut'){
+  const choices=livePrismaUnits(enemy,b.ply);
+  const target=choices.find(t=>t.kind===order.prismaEnemyKind&&t.unit.id===order.prismaEnemyId)||
+   choices.find(({kind,unit})=>(enemy.protections||[]).some(p=>p.remaining>0&&p.untilPly>b.ply&&
+    (kind==='escort'&&p.target==='escort'&&p.escortSlot===unit.slot||
+     kind==='machine'&&p.target==='machine'&&p.machineSlot===unit.slot)&&
+    enemy.defenses.some(d=>d.source===p.source&&!d.hidden)));
+  if(!target)throw Error('Taglio della lente: nessuna unità protetta');
+  const p=enemy.protections.find(p=>p.remaining>0&&p.untilPly>b.ply&&
+   (target.kind==='escort'&&p.target==='escort'&&p.escortSlot===target.unit.slot||
+    target.kind==='machine'&&p.target==='machine'&&p.machineSlot===target.unit.slot)&&
+   enemy.defenses.some(d=>d.source===p.source&&!d.hidden));
+  if(!p)throw Error('Taglio della lente: il bersaglio non ha protezioni scoperte');
+  p.remaining--;
+  note('Rimossa una carica di protezione da '+target.unit.name,{
+   targetKind:target.kind,targetId:target.unit.id});
+  if(p.remaining<=0)discardDefense(enemy,p.source);
+  return;
+ }
+ if(action==='prisma-custody'){
+  const support=(side.escorts||[]).find(e=>e.slot===0&&escortEnabled(side,e,b.ply));
+  const p=side.protections.find(p=>p.target==='part'&&p.partId==='generator'&&
+   p.remaining>0&&p.untilPly>b.ply&&
+   side.defenses.some(d=>d.source===p.source&&!d.hidden));
+  if(!support||!p||!operational(side.ships[0],'command'))
+   throw Error('Custodia richiede Centralina, primo supporto e Difesa sul Generatore');
+  p.target='escort';p.escortSlot=support.slot;p.partId=null;
+  note('Trasferita sul primo supporto la protezione del Generatore, cariche '+p.remaining);
+  return;
+ }
+ throw Error('Azione Vespa non gestita: '+action);
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
@@ -627,6 +707,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  switch(s.type){
   case 'aurora':activateAuroraCard(b,who,def,ctx,events,order,ownPartId,token);break;
   case 'lince':activateLinceCard(b,who,def,ctx,events,order,ownPartId);break;
+  case 'prisma':activatePrismaCard(b,who,def,ctx,events,order,token);break;
   case 'bypass':{
    ctx.bypassPlayed=true;
    if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
@@ -720,12 +801,16 @@ function applyCard(b,who,id,ctx,events,order){
   return false;
  }
  if(role==='character'){
-  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince'].includes(spec.type)?0:1,
+  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma'].includes(spec.type)?0:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
   const falseTrail=spec.type==='lince'&&spec.action==='false-trail';
-  side.defenses.push(falseTrail?
+  const falseReflection=spec.type==='prisma'&&spec.action==='false-reflection';
+  side.defenses.push(falseReflection?
+   {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,
+    trigger:'multi-secondary',protectedKind:null,protectedId:null}:
+   falseTrail?
    {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:'mother-part-hit',
     redirectPartId:ownPartId}:
    spec.type==='trap'?
