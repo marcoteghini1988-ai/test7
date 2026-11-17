@@ -3,7 +3,7 @@
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
-import {getShipProgression} from './progression.js';
+import {getShipProgression,shipMaxLevel} from './progression.js';
 import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,moduleSlotForCard,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
 import {LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
  ensureLinceState,linceMarkedRouteReady,lincePrecondition,recallLinceModule,
@@ -71,7 +71,7 @@ const shuffled=(cards,state)=>{
 export function createFleetMother(id,level=1){
  const config=shipConfig(id),model=SHIPS.get(id);
  if(!config||!model)throw new Error('Madre inesistente '+id);
- const n=clamp(Math.floor(Number(level)||1),1,5),progression=getShipProgression(id,n);
+ const n=clamp(Math.floor(Number(level)||1),1,shipMaxLevel(id)),progression=getShipProgression(id,n);
  const parts=progression.vitalIds.map(id=>({id,hp:progression.integrityByPart[id],
   maxHp:progression.integrityByPart[id],damage:0,destroyed:false}));
  const maxHp=motherIntegrityFromSystems(parts);
@@ -103,7 +103,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  // specifici della madre. La terza e quarta unità non partono in campo.
  const prototypes=buildFleetEscorts({...mother,level:5});
  const model=SHIPS.get(shipId);
- const base=model.hp_motore_L1+(model.hp_motore_L5-model.hp_motore_L1)*(n-1)/4;
+ const base=model.hp_motore_L1+(model.hp_motore_L5-model.hp_motore_L1)*(Math.min(n,5)-1)/4;
  const build=(index,grade,reserve=false)=>{
   const original=prototypes[index%2],arm=ESCORT_ARMORY[shipId][index%2];
   const tough=['cover','bulwark','partCover','phase'].includes(original.skill.action);

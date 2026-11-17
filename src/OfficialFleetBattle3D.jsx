@@ -71,7 +71,7 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
    campaignFleetShipId({planetId:boss?.planetId??bossPlanetId,sectorNumber}):null;
   const motherEnemy=campaignMother||boss?.motherShipId||early||
    chooseCampaignMotherRival(owned.shipId,owned.level,sectorNumber,bossPlanetId,bossSectorLevel).shipId;
-  const levelEnemy=boss?.planetId===20?5:officialCampaignRivalLevel({mode,sectorNumber,playerLevel:owned.level});
+  const levelEnemy=boss?.planetId===20?5:officialCampaignRivalLevel({mode,sectorNumber,playerLevel:owned.level,shipId:motherEnemy});
   // Il mazzo resta di massimo 40 carte, incluse le esclusive della madre.
   // Non importa mai il vecchio inventario/mazzo ritirato.
   const playerDeck=buildNextBaseDeck(inventory,owned.shipId,owned.level,readNextDeckSelection());

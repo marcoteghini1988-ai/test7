@@ -1,4 +1,5 @@
 import {getShipDefinition, validFleet} from './mathDuelEngine.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 
 export const SHIP_COLLECTION_KEY = 'eclissi_ship_collection';
 const SCHEMA_VERSION = 1;
@@ -30,7 +31,7 @@ function normalizeCollection(saved) {
         !cards.some(c => c.instanceId === entry.instanceId)) {
       card.instanceId = entry.instanceId;
     }
-    card.level = Number.isInteger(entry.level) ? Math.max(1, Math.min(5, entry.level)) : 1;
+    card.level = Number.isInteger(entry.level) ? Math.max(1, Math.min(shipMaxLevel(entry.shipId), entry.level)) : 1;
     cards.push(card);
   }
   if (!cards.some(card => card.shipId === STARTER)) cards.unshift(newCard(cards, STARTER));
@@ -69,7 +70,7 @@ export function grantShipCard(collection, shipId) {
 
 export function upgradeShipCard(collection, instanceId, level) {
   const card = collection.cards.find(entry => entry.instanceId === instanceId);
-  if (!card || !Number.isInteger(level) || level < card.level || level > 5 || level > card.level + 1) {
+  if (!card || !Number.isInteger(level) || level < card.level || level > shipMaxLevel(card.shipId) || level > card.level + 1) {
     throw new Error('Potenziamento della navicella non valido');
   }
   if (level === card.level) return collection;

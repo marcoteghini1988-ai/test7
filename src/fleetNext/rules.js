@@ -16,7 +16,8 @@ export {EXCLUSIVE_DESIGNS_120,EXCLUSIVE_SHIP_IDS} from './exclusive120.js';
 export {BOSS_CARDS,bossCard} from './bossCards.js';
 export {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
 export {CAMPAIGN_SHIP_ORDER,SHIP_PROGRESSION_IDS,getShipProgression,
- getShipProgressionLevels,shipProgressionProfile} from './progression.js';
+ getShipProgressionLevels,shipProgressionProfile,shipMaxLevel,
+ shipEscortUnlockLevels,SHIP_MAX_LEVELS,boundedShipLevel} from './progression.js';
 
 function definedCard(card,kind,source){
  const error=validateEffectSpec(card.effectSpec);

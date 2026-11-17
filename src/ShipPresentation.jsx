@@ -122,19 +122,20 @@ export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,o
  const Tag=onSelect?'button':'article';
  const interactive=onSelect?{type:'button','aria-pressed':selected,onClick:onSelect,disabled}:{};
  const engines=Object.keys(vessel.engines);
- const progression=fleetProgression?getShipProgression(vessel.id,vessel.level):null;
+ const effectiveLevel=fleetProgression?getShipProgression(vessel.id,level||vessel.level)?.level:vessel.level;
+ const progression=fleetProgression?getShipProgression(vessel.id,effectiveLevel):null;
  const totalHp=progression?Object.values(progression.integrityByPart).reduce((hp,n)=>hp+n,0):
   Object.values(vessel.engines).reduce((hp,engine)=>hp+engine.max,0);
  const suits=shipSuits(vessel.id);
  const cardSuits=suits.length?suits:Object.keys(SUIT_SIGNS);
  const combos=vessel.weapons.filter(weapon=>weapon.combo);
- return <Tag className={`ship-card${selected?' on':''}`} data-ship-card={vessel.id} data-rarity={vessel.rarity} data-level={vessel.level} {...interactive}>
+ return <Tag className={`ship-card${selected?' on':''}`} data-ship-card={vessel.id} data-rarity={vessel.rarity} data-level={effectiveLevel} {...interactive}>
   <span className="ship-card-face">
    <span className="ship-card-index">
     <span className="ship-card-suits" role="img" aria-label={suits.length?cardSuits.map(suit=>SUIT_NAMES[suit]).join(', '):'Tutti i semi'}>
      {cardSuits.map(suit=><b key={suit} aria-hidden="true" style={{color:CARD_SUIT_COLORS[WEAPON_SIGNS[suit]]}}>{WEAPON_SIGNS[suit]}</b>)}
     </span>
-    <b className="ship-card-level">L{vessel.level}</b>
+    <b className="ship-card-level">L{effectiveLevel}</b>
    </span>
    <span className="ship-card-name">{vessel.name}</span>
    <span className="ship-card-role">{progression?shipProgressionProfile(vessel.id).role:getShipDefinition(vessel.id).ruolo}</span>

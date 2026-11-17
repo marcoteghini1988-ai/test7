@@ -5,8 +5,9 @@
 import {PHASE1_SHIPS,newVessel,fleetCompatibility,getShipDefinition} from './mathDuelEngine.js';
 import {commanderAbility} from './commanderAbilities.js';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 
-const boundedLevel=value=>Math.max(1,Math.min(5,Math.floor(Number(value)||1)));
+const boundedLevel=(value,id)=>Math.max(1,Math.min(shipMaxLevel(id)||5,Math.floor(Number(value)||1)));
 const sector=value=>Math.max(1,Math.min(120,Math.floor(Number(value)||1)));
 const legalId=id=>getShipDefinition(id)?id:'N00';
 const canFight=(playerId,playerLevel,enemyId,enemyLevel)=>
@@ -14,7 +15,7 @@ const canFight=(playerId,playerLevel,enemyId,enemyLevel)=>
   {[playerId]:playerLevel},{[enemyId]:enemyLevel}).compatible;
 
 export function chooseCampaignMotherRival(playerId,playerLevel,globalSector,planetId=null,planetSector=null){
- const level=boundedLevel(playerLevel),global=sector(globalSector);
+ const level=boundedLevel(playerLevel,playerId),global=sector(globalSector);
  const found=PHASE16A_CAMPAIGN_PLANETS.findIndex(p=>p.id===Number(planetId));
  const planetIndex=found>=0?found:Math.min(11,Math.floor((global-1)/10));
  const local=Number.isInteger(Number(planetSector))&&Number(planetSector)>=1&&Number(planetSector)<=10?
@@ -26,7 +27,9 @@ export function chooseCampaignMotherRival(playerId,playerLevel,globalSector,plan
   .filter(id=>id!==playerId&&canFight(playerId,level,id,level));
  const choices=alternatives.length?alternatives:[playerId];
  const index=(planetIndex*7+(local-1)*3+Math.floor((local-1)/3))%choices.length;
- return Object.freeze({shipId:choices[index],level,planetIndex,planetSector:local,
+ const rival=choices[index];
+ const rivalLevel=1+Math.round((level-1)/((shipMaxLevel(playerId)||5)-1)*((shipMaxLevel(rival)||5)-1));
+ return Object.freeze({shipId:rival,level:rivalLevel,planetIndex,planetSector:local,
   rivalAvailable:alternatives.length>0});
 }
 
@@ -35,13 +38,13 @@ export function prepareMotherDuelOptions(options={},{
 }={}){
  const ids=Array.isArray(options.fleetIds)?options.fleetIds:[];
  const motherId=legalId(ids.find(id=>getShipDefinition(id))||'N00');
- const level=boundedLevel(options.shipLevels?.[motherId]??options.shipLevel);
+ const level=boundedLevel(options.shipLevels?.[motherId]??options.shipLevel,motherId);
  let rivalId=motherId,rivalLevel=level;
  if(practice){
   const explicit=Array.isArray(options.enemyFleetIds)?options.enemyFleetIds:[];
   const candidate=explicit.find(id=>getShipDefinition(id));
   if(candidate){
-   const candidateLevel=boundedLevel(options.enemyShipLevels?.[candidate]??options.shipLevel);
+   const candidateLevel=boundedLevel(options.enemyShipLevels?.[candidate]??options.shipLevel,candidate);
    if(canFight(motherId,level,candidate,candidateLevel)){
     rivalId=candidate;rivalLevel=candidateLevel;
    }
@@ -84,7 +87,7 @@ export function chooseCampaignRivalCommander({
  const local=Number.isInteger(Number(planetSector))&&Number(planetSector)>=1&&Number(planetSector)<=10?
   Number(planetSector):((global-1)%10+1);
  const isBoss=local===10;
- const enemyLevel=boundedLevel(shipLevel);
+ const enemyLevel=boundedLevel(shipLevel,shipId);
  const ops=Object.entries(newVessel(legalId(shipId),enemyLevel).engines)
   .filter(([,e])=>e.hp>0).map(([op])=>op);
  const basic={plus:'pilot_com_1',minus:'pilot_com_2',

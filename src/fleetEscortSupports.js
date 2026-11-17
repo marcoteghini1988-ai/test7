@@ -1,4 +1,6 @@
-// Evoluzioni della nave madre: 17 famiglie x 2 scudiere, ai livelli 3 e 5.
+// Due supporti tecnici per ciascuna delle 17 famiglie.
+// I livelli di sblocco REALI sono letti da fleetNext/progression.js;
+// qui il livello 5 è usato per creare i prototipi della coppia, non per sbloccarli.
 // Non sono carte collezionabili, non hanno armi indipendenti e non occupano slot madre.
 // Nomi, ruoli e identita' visiva provengono dall'armamento scudiere gia' presente.
 import {ESCORT_ARMORY} from './escortArmory.js';

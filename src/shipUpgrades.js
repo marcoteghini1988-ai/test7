@@ -1,6 +1,7 @@
 // Costi di potenziamento in polvere stellare già esistente.
 // Nessuna valuta reale, nessun pacchetto acquistato, nessun livello saltato.
 import {getShipDefinition} from './mathDuelEngine.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 
 export const SHIP_UPGRADE_DUST=Object.freeze({
  Comune:Object.freeze({2:100,3:180,4:300,5:500}),
@@ -11,13 +12,19 @@ export const SHIP_UPGRADE_DUST=Object.freeze({
 
 export function shipUpgradeDustCost(shipId,targetLevel){
  const definition=getShipDefinition(shipId);
- if(!definition||!Number.isInteger(targetLevel)||targetLevel<2||targetLevel>5)return null;
- return SHIP_UPGRADE_DUST[definition.rarita]?.[targetLevel]??null;
+ const max=shipMaxLevel(shipId);
+ if(!definition||!max||!Number.isInteger(targetLevel)||targetLevel<2||targetLevel>max)return null;
+ const base=SHIP_UPGRADE_DUST[definition.rarita];
+ if(!base)return null;
+ if(targetLevel<=5)return base[targetLevel]??null;
+ // Prezzi provvisori dei livelli estesi: nessun salto gratuito o limite a L5.
+ // Il bilanciamento dell'economia di progresso è una decisione successiva.
+ return base[5]+(targetLevel-5)*({Comune:24,Rara:34,Epica:48,Leggendaria:64}[definition.rarita]||24);
 }
 export function validateShipUpgradePurchase(collection,instanceId,targetLevel,balance){
  const card=collection?.cards?.find(c=>c.instanceId===instanceId);
  if(!card)return {allowed:false,reason:'not_owned'};
- if(targetLevel!==card.level+1||targetLevel>5)return {allowed:false,reason:'invalid_upgrade'};
+ if(targetLevel!==card.level+1||targetLevel>shipMaxLevel(card.shipId))return {allowed:false,reason:'invalid_upgrade'};
  const cost=shipUpgradeDustCost(card.shipId,targetLevel);
  if(cost===null)return {allowed:false,reason:'invalid_upgrade'};
  if(!Number.isFinite(balance)||balance<cost)return {allowed:false,reason:'insufficient_dust',cost};
