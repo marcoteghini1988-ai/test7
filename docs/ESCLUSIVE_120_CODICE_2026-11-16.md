@@ -3,9 +3,9 @@
 
 ## Stato del catalogo
 - **120 esclusive univoche progettate** per le 12 navicelle principali, esattamente 10 per ciascuna; distribuzione: sei dal livello 1, una nuova ai livelli 2, 3, 4 e 5.
-- **40/120 definizioni riprogettate con effetti di battaglia implementati nel codice**, dieci ciascuna per Aurora-0 (`N00`), Lince Solare (`C01`), Vespa di Vetro (`C02`) e Corvo a Impulsi (`C03`).
-- **72 nuove schede delle altre 8 navicelle restano `playable:false`**: non si pescano e non consumano crediti, perché gli effetti non sono ancora realizzati.
-- Gli altri **8 Personaggi delle navicelle principali** mantengono il comportamento storico fino all'integrazione della rispettiva nave. I 12 Personaggi del progetto riutilizzano i propri ID, senza duplicati.
+- **50/120 definizioni riprogettate con effetti di battaglia implementati nel codice**, dieci ciascuna per Aurora-0 (`N00`), Lince Solare (`C01`), Vespa di Vetro (`C02`), Corvo a Impulsi (`C03`) e Falco Binario (`R01`).
+- **63 nuove schede delle altre 7 navicelle restano `playable:false`**: non si pescano e non consumano crediti, perché gli effetti non sono ancora realizzati.
+- Gli altri **7 Personaggi delle navicelle principali** mantengono il comportamento storico fino all'integrazione della rispettiva nave. I 12 Personaggi del progetto riutilizzano i propri ID, senza duplicati.
 - Restano inoltre i cinque Personaggi delle varianti storiche, dodici Personaggi generici, dodici Boss e sei carte tecniche (Macchine, Aggiramento e Fusioni).
 - `EXCLUSIVE_CARDS` include 125 registrazioni: 120 delle madri principali e cinque Personaggi varianti. Il catalogo complessivo, comprese generiche, Boss e tecniche, contiene **155 definizioni**.
 
@@ -67,11 +67,30 @@ Le nuove carte hanno il fronte testuale provvisorio: **non riutilizzano le illus
 
 I silenzi sono diversi dalle disattivazioni: il supporto silenziato continua a fare da guardiano, mentre la macchina disattivata non protegge. I blocchi consecutivi hanno una finestra comune di immunità. Le meccaniche di Canale e Interruttore sono condizionali e intervengono solo quando si verifica l'evento previsto. I nuovi fronti restano testuali, senza riutilizzare immagini storiche.
 
+## Falco Binario — 10/10 integrate nel codice (17 novembre 2026)
+`src/fleetNext/falcoEngine.js` definisce le dieci azioni e i requisiti; `src/fleetNext/combat.js` esegue i colpi differiti con una sola carta nella zona di preparazione. La plancia 3D mostra pubblicamente la carica e permette di scegliere bersagli, rinvio, correzione e carta recuperata dal Personaggio.
+
+| Livello | Carta | Regola eseguibile |
+|---|---|---|
+| 1 | Capacitore binario | Modulo d'arma con 2 integrità. Conserva una sola carica per un turno aggiuntivo, una volta. La distruzione cancella la carica trattenuta e la sposta negli scarti. |
+| 1 | Tiro d’assedio | Prepara un colpo pesante da 3 danni contro una unità. Non colpisce subito; rilascio al prossimo proprio turno, che consuma una delle tre giocate. |
+| 1 | Salva di taratura | Spara un colpo leggero. Se danneggia la stessa unità già nel mirino di una carica preparata, quella carica ottiene +2 danni una sola volta. |
+| 1 | Camera blindata | Difesa scoperta sul Capacitore carico: annulla il prossimo colpo diretto al modulo. Non protegge il Generatore. |
+| 1 | Artigliere Binario | Personaggio riutilizzato senza duplicato: quando prepari un colpo, osserva tre carte del mazzo, prende al massimo una Difesa scoperta e mette le altre sotto. Una volta per proprio turno. |
+| 1 | Correzione balistica | Cambia bersaglio di una carica non ancora rilasciata verso una diversa unità viva. Non anticipa il tiro, non mira a vitali e non trasferisce tarature precedenti. |
+| 2 | Doppia camera | Una carta prepara due colpi leggeri sullo stesso bersaglio; ogni colpo incontra separatamente protezioni e trappole e può perdersi se l'unità viene distrutta. |
+| 3 | Falco guardiano | Difesa scoperta: primo supporto di grado 2, con Centralina attiva, intercetta un unico colpo diretto al Generatore anche con Aggiramento. Nessun danno eccedente alla madre. |
+| 4 | Caricatore d’emergenza | Annulla una carica già preparata prima del rilascio, pone la sua carta sotto al mazzo e pesca una carta. Non crea copie. |
+| 5 | Triangolazione Falco | Con Centralina e due supporti di grado 2, prepara una carica: colpo pesante contro una unità e leggero contro un'altra. Se al rilascio manca un supporto, si perde solo il colpo leggero. |
+
+**Regola temporale:** la preparazione e il rilascio non eseguono anche un tiro base gratuito; una carica occupa una delle tre giocate quando viene rilasciata. La carica viene consumata una sola volta, va negli scarti al rilascio e si perde se bersaglio o Arsenale non sono più operativi. Il rinvio del Capacitore è opzionale e consentito una sola volta. Le immagini definitive di queste dieci carte non sono ancora state create.
+
 ## Test e controlli
 - `src/fleetNextAuroraEffects.test.js`: **15 casi** specifici Aurora.
 - `src/fleetNextLinceEffects.test.js`: **17 casi** specifici Lince e interazioni di battaglia.
 - `src/fleetNextPrismaEffects.test.js`: **18 casi** specifici Vespa e interazioni con le altre flotte.
 - `src/fleetNextCorvoEffects.test.js`: **17 nuovi test** Corvo (catalogo, livelli, colpi, silenzi, trappole, personaggio, ricambio, moduli, blackout e regressioni).
+- `src/fleetNextFalcoEffects.test.js`: **27 casi** specifici Falco (preparazione, rilascio, limite giocate, Capacitore, due colpi, taratura, difese, personaggio, correzione, cancellazione, triangolazione, IA e compatibilità).
 - **12 controlli dinamici Lince superati** in questa sessione valutando il vero motore JavaScript con dipendenze simulate; comprendono modulo, aggiramento, Artiglio, Falsa scia, Helios, Rotta, Lama, Passaggio, Disimpegno, Incursione e macchina recuperata.
 - **18/18 test Vespa superati eseguendo il codice JavaScript reale con dipendenze simulate**, inclusi doppio colpo, deviazioni, Trappola secondaria, Artigiana, trasferimento cariche, Specchio e Rosa. Anche la rilettura indipendente del catalogo ha confermato **10/10 Aurora, 10/10 Lince, 10/10 Vespa** e **81 schede non giocabili**. ID, testi, livelli e assenza di fronti grafici inesatti verificati.
 - La sintassi JavaScript dei moduli principali e del nuovo file di test è stata controllata.
@@ -81,4 +100,4 @@ I silenzi sono diversi dalle disattivazioni: il supporto silenziato continua a f
 - Non creare immagini in questa fase. Vecchie illustrazioni restano archiviate e non vengono riutilizzate come nuove carte.
 - Mantenere le navicelle, la progressione L1–L5, i Boss, i Personaggi e l'arena metallica 3D originale.
 - La vittoria resta ancora determinata dalla distruzione dei vitali della madre: l'eventuale cambio dell'obiettivo verso le macchine sarà un intervento separato, non introdotto tacitamente.
-- **Prossima nave: Falco Binario (`R01`)** con le sue dieci esclusive.
+- **Prossima nave dopo Falco: Manta Ionica (`R02`)** con le sue dieci esclusive.

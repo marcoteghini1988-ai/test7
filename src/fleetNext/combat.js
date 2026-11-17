@@ -324,6 +324,7 @@ export function validateFleetTurn(b,who,order){
  const corvoCommands=chosen.filter(c=>c.effectSpec?.type==='corvo'&&
   CORVO_ATTACK_ACTIONS.includes(c.effectSpec.action));
  if(corvoCommands.length>1)return 'Scegli un solo comando offensivo Corvo per turno';
+ const enemyFalco=b.sides[other(who)];
  const falcoCards=chosen.filter(c=>c.effectSpec?.type==='falco');
  const preparing=falcoCards.filter(c=>FALCO_PREP_ACTIONS.includes(c.effectSpec.action));
  if(preparing.length>1)return 'Falco: puoi preparare un solo attacco per turno';
@@ -355,7 +356,6 @@ export function validateFleetTurn(b,who,order){
  }
  if((preparing.length||falcoCards.some(c=>c.effectSpec.action==='calibration-shot'))&&order?.pass)
   return 'Un attacco Falco non può essere passato';
- const enemyFalco=b.sides[other(who)];
  if(preparing.length){
   const units=falcoUnits(enemyFalco),primary=units.find(t=>
    t.kind===order.falcoTargetKind&&t.unit.id===order.falcoTargetId)||
@@ -1852,8 +1852,9 @@ function falcoCalibrationShot(b,ctx,events,order){
  return shot;
 }
 function mergeFalcoShots(a,b){
- if(!a)return b;
- if(!b)return a;
+ const empty={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targets:[],played:[]};
+ a=a||empty;b=b||empty;
  return {damage:(a.damage||0)+(b.damage||0),
   escortDamage:(a.escortDamage||0)+(b.escortDamage||0),
   machineDamage:(a.machineDamage||0)+(b.machineDamage||0),

@@ -12,7 +12,7 @@ function battle({shipA='R01',shipB='C03',levelA=5,levelB=5}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,
   deckA:[],deckB:[],mode:'pvp',seed:501});
  for(const side of Object.values(b.sides)){
-  side.hand=[];side.deck=[];side.discard=[];
+  side.hand=[];side.deck=Array(20).fill('gen-216');side.discard=[];
  }
  return b;
 }

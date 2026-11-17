@@ -56,7 +56,7 @@ test('Il catalogo in codice associa esattamente 10 esclusive a ciascuna delle 12
 test('Una carta esclusiva non può essere utilizzata da una navicella diversa e le nuove schede non vengono inserite nel mazzo',async()=>{
  const {exclusiveUnlocked,effectiveDeck,cardFacePath,card,eligibleExclusives,STARTER_DECK,deckFromCounts}=await import('./fleetNext/rules.js');
  const {effectUnavailableReason,createFleetNextBattle}=await import('./fleetNext/combat.js');
- const sample=design.cards.find(c=>c.shipId==='R01'&&c.type==='Attacco');
+ const sample=design.cards.find(c=>c.shipId==='R02'&&c.type==='Attacco');
  assert.ok(sample);
  const def=card(sample.id);
  assert.ok(def&&def.shipId===sample.shipId);
