@@ -56,8 +56,10 @@ test('La rarità evolve automaticamente in quattro stadi fino al massimo di ogni
 });
 
 test('Le cinque varianti possono giocare realmente una loro carta nel motore di battaglia',()=>{
+ const playableSamples={C04:'nx-c04-02',R03:'nx-r03-04',E03:'nx-e03-02',
+  E04:'nx-e04-05',L02:'nx-l02-02'};
  for(const shipId of VARIANT_EXCLUSIVE_IDS){
-  const id='nx-'+shipId.toLowerCase()+'-02',level=shipMaxLevel(shipId);
+  const id=playableSamples[shipId],level=shipMaxLevel(shipId);
   const battle=createFleetNextBattle({shipA:shipId,levelA:level,shipB:'N00',levelB:20,
    deckA:[],deckB:[],seed:59,mode:'pvp'});
   battle.sides.A.hand=[id];
