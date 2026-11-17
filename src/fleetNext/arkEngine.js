@@ -49,7 +49,7 @@ export const arkModuleActive=(side,id,ply=0)=>{
 };
 export const arkModulesInDiscard=(side)=>
  (side?.discard||[]).filter(id=>id==='nx-l04-01'||id==='nx-l04-07');
-export const arkDamagedEscorts=(side,ply=0)=>arkEscorts(side,ply).filter(e=>e.hp<e.maxHp);
+export const arkDamagedEscorts=side=>(side?.escorts||[]).filter(e=>arkAlive(e)&&e.hp<e.maxHp);
 export function arkPrecondition(def,side,battle=null){
  const action=ARK_ACTIONS[def?.id];if(!action)return '';
  if(side?.ships?.[0]?.id!=='L04')return 'Esclusiva utilizzabile solo con Arca Astrale';
@@ -106,6 +106,7 @@ export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
  if(actions.filter(a=>ARK_ATTACK_ACTIONS.includes(a)).length>1)
   return 'Un solo attacco Arca Astrale per turno';
  const escorts=arkEscorts(side,ply),damaged=arkDamagedEscorts(side,ply);
+ const living=(side.escorts||[]).filter(arkAlive);
  const target=arkEnemyUnits(enemy).find(t=>t.kind===order.targetKind&&t.unit.id===order.targetId);
  if(actions.some(a=>ARK_ATTACK_ACTIONS.includes(a))&&
   (!target||!['escort','machine'].includes(target.kind)||order.pass))
@@ -119,7 +120,7 @@ export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
    return 'Convergenza: servono due unità nemiche diverse';
  }
  if(actions.includes('conserving-ray')&&order.arkRayEscortId&&
-  !escorts.some(e=>e.id===order.arkRayEscortId))
+  !living.some(e=>e.id===order.arkRayEscortId))
   return 'Raggio: supporto da riparare non operativo';
  if(actions.includes('reserve-custody')&&order.arkCustodyEscortId&&
   !arkUnfusedEscorts(side,ply).some(e=>e.id===order.arkCustodyEscortId))
