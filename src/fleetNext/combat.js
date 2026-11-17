@@ -2268,6 +2268,175 @@ function obsidianTransformDamage(b,ctx,events,target,amount){
  return amount;
 }
 
+
+// Arca Astrale (L04). Recuperi, riparazioni e fusioni agiscono su carte e HP reali.
+function arkMarkRepair(b,side,kind,actual){
+ if(actual<=0||side.ships[0].id!=='L04'||b.sides[b.turn]!==side)return;
+ const state=ensureArkState(side);
+ if(kind==='escort')state.repairedPly=b.ply;
+ if(actual>=2)state.qualifiedRepairPly=b.ply;
+}
+function arkHealEscort(b,side,unit,amount){
+ if(!unitAlive(unit)||!unit||amount<=0||b.terrain?.id==='T08')return 0;
+ const healed=Math.min(unit.maxHp-unit.hp,amount);
+ if(healed>0){unit.hp+=healed;arkMarkRepair(b,side,'escort',healed);}
+ return Math.max(0,healed);
+}
+function arkArchiveAction(b,ctx,events){
+ const order=ctx.order||{};
+ if(!order.arkArchive)return;
+ const side=b.sides[ctx.who],state=ensureArkState(side);
+ if(!arkModuleActive(side,'nx-l04-01',b.ply)||
+  state.archiveUsedPly===b.ply||!side.hand.length)return;
+ const existing=arkModulesInDiscard(side);
+ const recovered=existing.includes(order.arkRecoverModuleId)?
+  order.arkRecoverModuleId:existing[0];
+ if(!recovered)return;
+ const index=side.hand.indexOf(order.arkArchiveDiscardId);
+ const discarded=side.hand.splice(index>=0?index:0,1)[0];
+ if(!discarded)return;
+ const discardIndex=side.discard.indexOf(recovered);
+ if(discardIndex<0){side.hand.push(discarded);return;}
+ side.discard.push(discarded);
+ side.discard.splice(discardIndex,1);
+ side.hand.push(recovered);
+ state.recoveredModules.push(recovered);
+ state.archiveUsedPly=b.ply;
+ events.push(emit(b,ctx.who,'ark-archive',
+  'Archivio stellare: scartata una carta e recuperato '+(card(recovered)?.name||recovered)+
+  ' con una integrità al rimontaggio',{
+   cardId:'nx-l04-01',discardedCardId:discarded,recoveredCardId:recovered,
+   integrityOnMount:1,freeMount:false}));
+}
+function arkCustodianTurn(b,ctx,events){
+ const side=b.sides[ctx.who],state=ensureArkState(side),order=ctx.order||{};
+ if(!order.arkCustodianSwap||side.ships[0].id!=='L04'||
+  side.commander?.id!=='ex-l04-01'||
+  side.commander.untilPly<=b.ply||
+  !operational(side.ships[0],characterSystem(side))||
+  state.custodianUsedPly===b.ply||
+  state.qualifiedRepairPly!==b.ply||!side.hand.length)return;
+ const index=side.hand.indexOf(order.arkCustodianBottomId);
+ const recycled=side.hand.splice(index>=0?index:0,1)[0];
+ if(!recycled)return;
+ // La carta restituita va sotto il mazzo: la pescata viene dal vecchio top.
+ const drawn=side.deck.shift();
+ side.deck.push(recycled);
+ if(drawn)side.hand.push(drawn);
+ state.custodianUsedPly=b.ply;
+ events.push(emit(b,ctx.who,'ark-custodian',
+  'Custode Astrale: una carta sotto il mazzo, una pescata solo dopo vera riparazione ≥2',{
+   cardId:'ex-l04-01',putBottomCardId:recycled,
+   drawnCardId:drawn||null,qualifiedRepairPly:b.ply,netCards:drawn?0:-1}));
+}
+function arkRedirectControl(b,who,kind,unit,events,cardId){
+ if(kind!=='escort')return {kind,unit};
+ const defender=b.sides[other(who)];
+ if(defender.ships[0].id!=='L04'||!unit.fused)return {kind,unit};
+ const d=defender.defenses.find(d=>d.id==='nx-l04-09'&&!d.hidden&&
+  d.untilPly>b.ply&&d.arkFusedId===unit.id&&d.arkOtherId);
+ if(!d)return {kind,unit};
+ const fused=arkFusedEscorts(defender,b.ply).find(e=>e.id===d.arkFusedId);
+ const otherUnit=arkUnfusedEscorts(defender,b.ply).find(e=>e.id===d.arkOtherId);
+ if(!fused||!otherUnit)return {kind,unit};
+ discardDefense(defender,d.source);
+ events.push(emit(b,other(who),'ark-resonance',
+  'Risonanza della flotta trasferisce il blocco a '+otherUnit.name,{
+   cardId:d.id,fromTargetId:fused.id,targetId:otherUnit.id,
+   targetKind:'escort',blockedCardId:cardId}));
+ return {kind:'escort',unit:otherUnit};
+}
+function activateArkCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],enemy=b.sides[other(who)],action=def.effectSpec.action;
+ const state=ensureArkState(side);
+ const note=(message,extra={})=>events.push(emit(b,who,'card',
+  (def.nome||def.name)+' · '+message,{cardId:def.id,...extra}));
+ if(isArkModule(def.id)){
+  const mounted=mountModule(side,def);
+  if(!mounted.ok)throw Error(mounted.reason);
+  note('Modulo montato con '+mounted.entry.hp+'/'+mounted.entry.maxHp+' integrità',{
+   moduleId:mounted.entry.id,moduleSlot:mounted.entry.slot});
+  return;
+ }
+ if(ARK_ATTACK_ACTIONS.includes(action)){
+  ctx.arkAttacks.push({action,id:def.id,
+   repairEscortId:order.arkRayEscortId||null});
+  note(action==='conserving-ray'?'Raggio leggero pronto; riparazione solo dopo un danno reale':
+   'Convergenza pronta: due colpi pesanti su due bersagli diversi');
+  return;
+ }
+ if(action==='reserve-custody'){
+  const candidates=arkUnfusedEscorts(side,b.ply);
+  const escort=candidates.find(e=>e.id===order.arkCustodyEscortId)||candidates[0];
+  const d=side.defenses.find(d=>d.source===source);
+  if(!escort||!d)throw Error('Custodia richiede supporto non fuso e Difesa reale');
+  d.arkCustodyEscortId=escort.id;
+  side.protections.push({id:def.id,source,kind:'protect',
+   remaining:1,target:'escort',escortSlot:escort.slot,
+   untilPly:d.untilPly,placedPly:b.ply});
+  note('Primo colpo su '+escort.name+' annullato, la Custodia cessa con la fusione',{
+   targetKind:'escort',targetId:escort.id});
+  return;
+ }
+ if(action==='astral-keeper'){
+  note('Una vera riparazione da almeno due punti abilita uno scambio facoltativo');
+  return;
+ }
+ if(action==='ark-fusion'){
+  const result=fuseFleetSupports(side,b.ply);
+  if(!result.ok)throw Error(result.reason);
+  events.push(emit(b,who,'fusion',
+   'Fusione dell’Arca '+result.stage+
+   (result.deployed?': la terza scudiera entra dalla riserva':
+    ': nessuna riserva aggiuntiva schierata'),{
+    cardId:def.id,stage:result.stage,fusedId:result.fused.id,
+    deployedId:result.deployed?.id||null,
+    reserveCount:side.reserveEscorts.length,activeEscorts:side.escorts.length,
+    fusionsUsed:side.fusionsUsed,passives:result.fused.fusionSkills.length}));
+  return;
+ }
+ if(action==='repair-chorus'){
+  const wounded=arkDamagedEscorts(side,b.ply);
+  const first=wounded.find(e=>e.id===order.arkChorusFirstId)||wounded[0];
+  if(!first)throw Error('Coro: nessun supporto ferito');
+  const split=order.arkChorusMode==='split';
+  const otherChoice=wounded.find(e=>e.id===order.arkChorusSecondId&&e.id!==first.id)||
+   wounded.find(e=>e.id!==first.id);
+  const firstHealed=arkHealEscort(b,side,first,split?1:2);
+  const secondHealed=split&&otherChoice?arkHealEscort(b,side,otherChoice,1):0;
+  const total=firstHealed+secondHealed;
+  events.push(emit(b,who,'ark-repair',
+   'Coro di riparazione recupera '+total+' HP reali'+
+   (secondHealed?' fra due supporti':' su un supporto'),{
+    cardId:def.id,firstId:first.id,firstHealed,
+    secondId:secondHealed?otherChoice.id:null,secondHealed,healed:total}));
+  return;
+ }
+ if(action==='protected-entry'){
+  const d=side.defenses.find(d=>d.source===source);
+  if(!d)throw Error('Ingresso protetto non posato');
+  const arrived=side.escorts.find(e=>!e.fused&&e.sourceIndices?.includes(2)&&
+   e.deployedAtPly===b.ply);
+  if(arrived){d.arkReserveId=arrived.id;d.untilPly=b.ply+2;}
+  events.push(emit(b,who,'trap-set','Ingresso protetto preparato per la terza scudiera',{
+   cardId:def.id,preparedFor:'reserve-3'}));
+  return;
+ }
+ if(action==='fleet-resonance'){
+  const fused=arkFusedEscorts(side,b.ply).find(e=>e.id===order.arkFusedId)||
+   arkFusedEscorts(side,b.ply)[0];
+  const unmerged=arkUnfusedEscorts(side,b.ply).find(e=>e.id===order.arkResonanceEscortId)||
+   arkUnfusedEscorts(side,b.ply)[0];
+  const d=side.defenses.find(d=>d.source===source);
+  if(!fused||!unmerged||!d)throw Error('Risonanza richiede fusione e supporto distinti');
+  d.arkFusedId=fused.id;d.arkOtherId=unmerged.id;
+  note('Il prossimo blocco temporaneo su '+fused.name+' passa a '+unmerged.name,{
+   fusedId:fused.id,otherId:unmerged.id});
+  return;
+ }
+ throw Error('Azione Arca mancante: '+action);
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
