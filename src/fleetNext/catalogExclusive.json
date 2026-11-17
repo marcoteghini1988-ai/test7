@@ -988,7 +988,8 @@
       "effectSpec": {
         "type": "power",
         "amount": 1
-      }
+      },
+      "nativeFace": true
     },
     {
       "id": "ex-r02-01",
