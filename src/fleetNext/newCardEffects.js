@@ -73,6 +73,16 @@ export function arsenalBonus(side,machine,ply=0){
    (ply===disabled.appliedPly||ply===disabled.appliedPly+1)))return 0;
  return Math.max(0,(machine.power||0)+(amplified?.amount||0)-(disabled?.amount||0));
 }
+// Le versioni Epica e Leggendaria interrompono i bonus sincronizzati
+// solo al primo turno del bersaglio. La Centralina Leggendaria alleata
+// neutralizza una sospensione, senza aumentare il numero di attivazioni.
+export function commandPassiveSuspensions(side,ply=0){
+ const sabotage=activeSystemCard(side,'command','disable',ply);
+ if(!sabotage||sabotage.tier<3||ply!==sabotage.appliedPly+1)return 0;
+ const prevention=activeSystemCard(side,'command','amplify',ply);
+ const suspended=sabotage.tier===4?2:1;
+ return Math.max(0,suspended-(prevention?.tier===4?1:0));
+}
 export function supportDamageGuard(side,ply=0){
  const buff=activeSystemCard(side,'command','amplify',ply);
  const sabotage=activeSystemCard(side,'command','disable',ply);
