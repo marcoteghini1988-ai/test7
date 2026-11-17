@@ -2,6 +2,7 @@
 import {linceModuleSlot,recoveredModuleForMount} from './linceEngine.js';
 import {prismaModuleSlot} from './prismaEngine.js';
 import {corvoModuleSlot} from './corvoEngine.js';
+import {falcoModuleSlot} from './falcoEngine.js';
 export const AURORA_ACTIONS=Object.freeze({
  'nx-n00-01':'optics',
  'nx-n00-02':'burst',
@@ -29,11 +30,16 @@ export function removeModule(side,slot){
  if(!module)return null;
  side.modules[slot]=null;
  side.discard.push(module.cardId);
+ if(module.cardId==='nx-r01-01'&&side.falco?.pending?.held&&
+  side.falco.pending.capacitorModuleId===module.id){
+  side.discard.push(side.falco.pending.cardId);
+  side.falco.pending=null;
+ }
  if(side.auroraVeil?.moduleId===module.id)side.auroraVeil=null;
  return module;
 }
 export function mountModule(side,def,ownPartId=null){
- const slot=auroraModuleSlot(def.id)||linceModuleSlot(def.id)||prismaModuleSlot(def.id)||corvoModuleSlot(def.id);
+ const slot=auroraModuleSlot(def.id)||linceModuleSlot(def.id)||prismaModuleSlot(def.id)||corvoModuleSlot(def.id)||falcoModuleSlot(def.id);
  if(!slot)return {ok:false,reason:'Questa carta non è un componente montabile'};
  const old=installedModule(side,slot);
  if(old?.cardId===def.id)return {ok:false,reason:'Modulo identico già montato'};

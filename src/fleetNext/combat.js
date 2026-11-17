@@ -12,6 +12,9 @@ import {PRISMA_ACTIONS,PRISMA_ATTACK_ACTIONS,isPrismaModule,ensurePrismaState,
  livePrismaUnits,prismaPrecondition} from './prismaEngine.js';
 import {CORVO_ATTACK_ACTIONS,isCorvoModule,ensureCorvoState,corvoPrecondition,
  corvoModuleActive,canApplyCorvoStatus,unitSilenced} from './corvoEngine.js';
+import {FALCO_ACTIONS,FALCO_ATTACK_ACTIONS,FALCO_PREP_ACTIONS,isFalcoModule,isFalcoPreparation,
+ ensureFalcoState,falcoPrecondition,falcoUnits,falcoEscortReady,
+ falcoCapacitorActive} from './falcoEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
@@ -84,7 +87,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
-  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,recalledModules:[],recalledMachines:[],
+  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:progression.fusionLimit,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
@@ -226,7 +229,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
- side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);
+ side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
  if(!operational(side.ships[0],'generator')){
@@ -263,6 +266,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(def.effectSpec.type==='corvo'){
   const reason=corvoPrecondition(def,side,battle);
+  if(reason)return reason;
+ }
+ if(def.effectSpec.type==='falco'){
+  const reason=falcoPrecondition(def,side,battle);
   if(reason)return reason;
  }
  const invalid=validateEffectSpec(def.effectSpec);
@@ -317,6 +324,57 @@ export function validateFleetTurn(b,who,order){
  const corvoCommands=chosen.filter(c=>c.effectSpec?.type==='corvo'&&
   CORVO_ATTACK_ACTIONS.includes(c.effectSpec.action));
  if(corvoCommands.length>1)return 'Scegli un solo comando offensivo Corvo per turno';
+ const falcoCards=chosen.filter(c=>c.effectSpec?.type==='falco');
+ const preparing=falcoCards.filter(c=>FALCO_PREP_ACTIONS.includes(c.effectSpec.action));
+ if(preparing.length>1)return 'Falco: puoi preparare un solo attacco per turno';
+ const pendingFalco=side.falco?.pending;
+ const falcoDue=pendingFalco&&pendingFalco.releasePly<=b.ply;
+ const loader=falcoCards.some(c=>c.effectSpec.action==='emergency-loader');
+ const holding=!!(falcoDue&&order?.falcoHold&&!loader);
+ if(holding&&(!falcoCapacitorActive(side,b.ply)||pendingFalco.held))
+  return 'Il rinvio Falco richiede Capacitore operativo e non può ripetersi';
+ if(falcoDue&&!holding&&!loader&&indices.length>FLEET_MAX_PLAYED-1)
+  return 'Il rilascio Falco occupa una delle tre giocate: scegli al massimo due carte';
+ if(preparing.length&&pendingFalco&&(!falcoDue||holding)&&!loader)
+  return 'Devi rilasciare o annullare il colpo precedente prima di prepararne un altro';
+ for(const action of ['ballistic-correction','emergency-loader']){
+  if(falcoCards.some(c=>c.effectSpec.action===action)&&!pendingFalco&&!preparing.length)
+   return 'Falco: nessun colpo preparato da modificare';
+ }
+ if(falcoCards.some(c=>c.effectSpec.action==='ballistic-correction')&&falcoDue&&!holding&&!loader&&
+  !preparing.length)return 'Correzione balistica richiede un colpo rinviato o appena preparato';
+ if(falcoCards.some(c=>c.effectSpec.action==='armored-chamber')&&
+  ((!pendingFalco&&!preparing.length)||falcoDue&&!holding&&!preparing.length&&!loader))
+  return 'Camera blindata richiede un colpo conservato o appena preparato';
+ if(loader&&!pendingFalco)return 'Caricatore richiede un colpo già preparato';
+ if(falcoCards.some(c=>c.effectSpec.action==='ballistic-correction')){
+  const primaryId=pendingFalco?.shots?.[0]?.id||order?.falcoTargetId||
+   falcoUnits(enemyFalco)[0]?.unit.id;
+  if(falcoUnits(enemyFalco).filter(t=>t.unit.id!==primaryId).length===0)
+   return 'Correzione balistica richiede un’altra unità ancora viva';
+ }
+ if((preparing.length||falcoCards.some(c=>c.effectSpec.action==='calibration-shot'))&&order?.pass)
+  return 'Un attacco Falco non può essere passato';
+ const enemyFalco=b.sides[other(who)];
+ if(preparing.length){
+  const units=falcoUnits(enemyFalco),primary=units.find(t=>
+   t.kind===order.falcoTargetKind&&t.unit.id===order.falcoTargetId)||
+   units.find(t=>t.kind===order.targetKind&&t.unit.id===order.targetId)||units[0];
+  if(!primary)return 'Falco: nessuna unità nemica da mirare';
+  if(preparing[0].effectSpec.action==='falcon-triangulation'&&
+   !units.some(t=>t.unit.id!==primary.unit.id))
+   return 'Triangolazione richiede due bersagli distinti';
+  if(order.falcoTargetId&&primary.unit.id!==order.falcoTargetId)
+   return 'Falco: bersaglio primario non valido';
+  if(order.falcoSecondTargetId&&!units.some(t=>t.unit.id===order.falcoSecondTargetId&&
+   t.kind===order.falcoSecondTargetKind&&t.unit.id!==primary.unit.id))
+   return 'Falco: secondo bersaglio non valido';
+ }
+ if(falcoCards.some(c=>c.effectSpec.action==='ballistic-correction')&&
+  order.falcoCorrectionTargetId&&
+  !falcoUnits(enemyFalco).some(t=>t.kind===order.falcoCorrectionKind&&
+   t.unit.id===order.falcoCorrectionTargetId))
+  return 'Correzione balistica: nuova unità non valida';
  const roles=chosen.map(c=>cardRole(c.id)),count=x=>roles.filter(r=>r===x).length;
  if(count('character')>1)return 'Massimo un Personaggio per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
@@ -359,8 +417,10 @@ export function validateFleetTurn(b,who,order){
    LINCE_BYPASS_ACTIONS.includes(c.effectSpec.action))||
    selected.kind==='part'&&linceMarkedRouteReady(side,b.ply,selected.unit.id);
   if(['part','module'].includes(selected.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass&&
-   (order.targetKind!=null||order.targetId!=null))
+   !preparing.length&&(order.targetKind!=null||order.targetId!=null))
    return 'Prima colpisci i supporti o le macchine operative, oppure gioca Aggiramento';
+  if(falcoCards.some(c=>c.effectSpec.action==='calibration-shot')&&
+   !['escort','machine'].includes(selected.kind))return 'Taratura richiede una unità avversaria';
   if(chosen.some(c=>c.effectSpec.type==='aurora'&&c.effectSpec.action==='burst')&&!['escort','machine'].includes(selected.kind))
    return 'Raffica di prova richiede una macchina o un supporto';
   const prismaAttack=prismaCommands[0]?.effectSpec.action;
@@ -882,6 +942,132 @@ function activateCorvoCard(b,who,def,ctx,events,order={},source=null){
  throw Error('Azione Corvo mancante: '+action);
 }
 
+// Il Falco conserva UNA carta-attacco in zona di preparazione: mai nel mazzo,
+// scarti o mano fino al rilascio/cancellazione. I colpi si risolvono separatamente.
+function falcoChooseUnit(enemy,kind,id,exclude=null){
+ const units=falcoUnits(enemy).filter(t=>t.unit.id!==exclude);
+ return units.find(t=>t.kind===kind&&t.unit.id===id)||units[0]||null;
+}
+function falcoGunnerSearch(b,who,events,order){
+ const side=b.sides[who],state=ensureFalcoState(side);
+ if(side.commander?.id!=='ex-r01-01'||side.commander.untilPly<=b.ply||
+  !operational(side.ships[0],characterSystem(side))||state.gunnerUsedPly===b.ply)
+  return;
+ state.gunnerUsedPly=b.ply;
+ const top=side.deck.splice(0,3),available=top.filter(id=>cardRole(id)==='defense'&&
+  !isTrapCard(card(id))&&card(id)?.playable!==false);
+ const selected=available.includes(order.falcoGunnerPickId)?order.falcoGunnerPickId:available[0]||null;
+ if(selected){
+  top.splice(top.indexOf(selected),1);
+  side.hand.push(selected);
+ }
+ side.deck.push(...top);
+ events.push(emit(b,who,'private-scan','Artigliere Binario: '+
+  (selected?'presa '+(card(selected)?.nome||card(selected)?.name||selected):'nessuna Difesa scoperta trovata'),
+  {cardId:'ex-r01-01',privateTo:who,pickedCardId:selected,seenCount:Math.min(3,top.length+(selected?1:0))}));
+}
+function activateFalcoCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],enemy=b.sides[other(who)],state=ensureFalcoState(side);
+ const action=def.effectSpec.action;
+ const note=(message,rest={})=>events.push(emit(b,who,'card',
+  (def.nome||def.name)+' · '+message,{cardId:def.id,...rest}));
+ if(isFalcoModule(def.id)){
+  const result=mountModule(side,def);
+  if(!result.ok)throw Error(result.reason);
+  note('Capacitore montato, integrità '+result.entry.hp+'/'+result.entry.maxHp,
+   {moduleId:result.entry.id,moduleSlot:result.entry.slot});
+  return;
+ }
+ if(FALCO_PREP_ACTIONS.includes(action)){
+  if(state.pending)throw Error('È già presente un colpo preparato');
+  const primary=falcoChooseUnit(enemy,order.falcoTargetKind||order.targetKind,
+   order.falcoTargetId||order.targetId);
+  if(!primary)throw Error('Nessuna unità su cui preparare un colpo');
+  const attack={cardId:def.id,action,createdPly:b.ply,releasePly:b.ply+2,
+   held:false,capacitorModuleId:null,calibrationBonus:0,calibrationTargetId:null,
+   shots:action==='double-chamber'?
+    [{kind:primary.kind,id:primary.unit.id,damage:1},
+     {kind:primary.kind,id:primary.unit.id,damage:1}]:
+    [{kind:primary.kind,id:primary.unit.id,damage:3}]};
+  if(action==='falcon-triangulation'){
+   const second=falcoChooseUnit(enemy,order.falcoSecondTargetKind,
+    order.falcoSecondTargetId,primary.unit.id);
+   if(!second)throw Error('Triangolazione: seconda unità non disponibile');
+   attack.shots.push({kind:second.kind,id:second.unit.id,damage:1,
+    requiresEscorts:true});
+  }
+  state.pending=attack;
+  ctx.falcoPrepared=true;
+  events.push(emit(b,who,'falco-prepared',(def.nome||def.name)+
+   ': carica visibile pronta per il prossimo turno',
+   {cardId:def.id,targetKind:primary.kind,targetId:primary.unit.id,
+    releasePly:attack.releasePly,targets:attack.shots.map(x=>({kind:x.kind,id:x.id}))}));
+  falcoGunnerSearch(b,who,events,order);
+  return;
+ }
+ if(action==='calibration-shot'){
+  ctx.falcoCalibration={cardId:def.id};
+  note('Colpo leggero di taratura pronto');
+  return;
+ }
+ if(action==='armored-chamber'){
+  const module=installedModule(side,'weapon');
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!module||!defense||!state.pending)
+   throw Error('Camera blindata richiede il Capacitore carico');
+  defense.falcoProtectedModuleId=module.id;
+  note('La prossima hit sul Capacitore sarà annullata');
+  return;
+ }
+ if(action==='binary-gunner'){
+  note('Alla preparazione: guarda tre carte e prendi al massimo una Difesa scoperta');
+  return;
+ }
+ if(action==='ballistic-correction'){
+  const pending=state.pending;
+  if(!pending)throw Error('Nessun colpo preparato da correggere');
+  const first=pending.shots[0];
+  const next=falcoChooseUnit(enemy,order.falcoCorrectionKind,
+   order.falcoCorrectionTargetId,first.id);
+  if(!next||next.unit.id===first.id||
+   pending.shots.some(s=>s.id===next.unit.id&&s.id!==first.id))
+   throw Error('Correzione richiede un’altra unità viva distinta');
+  for(const shot of pending.shots)if(shot.id===first.id){
+   shot.id=next.unit.id;shot.kind=next.kind;
+  }
+  // La taratura è sul bersaglio precedente: correggere la rotta la perde.
+  if(pending.calibrationTargetId===first.id){
+   pending.calibrationTargetId=null;pending.calibrationBonus=0;
+  }
+  note('Bersaglio preparato cambiato in '+next.unit.name,
+   {targetKind:next.kind,targetId:next.unit.id});
+  return;
+ }
+ if(action==='guardian-falcon'){
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!defense)throw Error('Difesa Falco guardiano non posata');
+  defense.falcoGuardian=true;
+  note('Il primo supporto copre il Generatore anche contro Aggiramento');
+  return;
+ }
+ if(action==='emergency-loader'){
+  const pending=state.pending;
+  if(!pending)throw Error('Non esiste una carica da recuperare');
+  side.deck.push(pending.cardId);
+  state.pending=null;
+  // La carta del vecchio attacco resta sotto al mazzo anche con pesca vuota.
+  if(!side.deck.length&&side.discard.length){
+   side.deck=shuffled(side.discard,b);side.discard=[];
+  }
+  const drawn=side.deck.shift();
+  if(drawn)side.hand.push(drawn);
+  events.push(emit(b,who,'falco-cancel','Caricatore: colpo annullato, carta sotto al mazzo e una pescata',
+   {cardId:def.id,cancelledCardId:pending.cardId,drawnCardId:drawn||null}));
+  return;
+ }
+ throw Error('Azione Falco non implementata: '+action);
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
@@ -892,6 +1078,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'lince':activateLinceCard(b,who,def,ctx,events,order,ownPartId);break;
   case 'prisma':activatePrismaCard(b,who,def,ctx,events,order,token);break;
   case 'corvo':activateCorvoCard(b,who,def,ctx,events,order,token);break;
+  case 'falco':activateFalcoCard(b,who,def,ctx,events,order,token);break;
   case 'bypass':{
    ctx.bypassPlayed=true;
    if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
@@ -991,7 +1178,7 @@ function applyCard(b,who,id,ctx,events,order){
   return false;
  }
  if(role==='character'){
-  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo'].includes(spec.type)?0:1,
+  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo','falco'].includes(spec.type)?0:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
@@ -1090,8 +1277,26 @@ function redirectPrismaMachineHit(b,ctx,events,target){
    targetKind:'machine'}));
  return {kind:'machine',unit:machine,redirected:true};
 }
+// Falco guardiano si applica anche a colpi che hanno Aggiramento: devia lo
+// stesso pacchetto sul primo supporto, senza aggiungere danni alla madre.
+function redirectFalcoGenerator(b,ctx,events,target){
+ if(target?.kind!=='part'||target.unit.id!=='generator')return target;
+ const defender=b.sides[other(ctx.who)];
+ const protection=defender.defenses.find(d=>d.falcoGuardian&&!d.hidden&&
+  d.untilPly>b.ply);
+ if(!protection)return target;
+ const first=defender.escorts.find(e=>e.sourceIndices?.includes(0)&&
+  !e.fused&&falcoEscortReady(defender,e,b.ply));
+ if(!first)return target;
+ discardDefense(defender,protection.source);
+ events.push(emit(b,other(ctx.who),'falco-intercept','Falco guardiano intercetta il colpo sul Generatore',
+  {cardId:protection.id,fromPartId:'generator',targetKind:'escort',targetId:first.id,
+   escortSlot:first.slot,redirected:true}));
+ return {kind:'escort',unit:first,redirected:true};
+}
 function redirectFleetHit(b,ctx,events,target){
- return redirectPrismaMachineHit(b,ctx,events,redirectLinceHit(b,ctx,events,target));
+ return redirectPrismaMachineHit(b,ctx,events,redirectLinceHit(b,ctx,events,
+  redirectFalcoGenerator(b,ctx,events,target)));
 }
 function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
  if(!target||!primary||!target.unit||target.unit.id===primary.unit?.id)return false;
@@ -1136,6 +1341,16 @@ function transferPrismaProtection(b,defender,p,ctx,events){
 }
 
 function blockHit(b,defender,targetKind,target,ctx,events){
+ const chamber=targetKind==='module'&&defender.defenses.find(d=>
+  d.id==='nx-r01-04'&&!d.hidden&&d.untilPly>b.ply&&
+  d.falcoProtectedModuleId===target.id);
+ if(chamber){
+  discardDefense(defender,chamber.source);
+  events.push(emit(b,other(ctx.who),'block',
+   'Camera blindata annulla un colpo sul Capacitore carico',
+   {cardId:chamber.id,moduleId:target.id,targetKind:'module'}));
+  return true;
+ }
  for(const p of [...defender.protections]){
   if(p.untilPly<=b.ply||p.remaining<=0)continue;
   const matches=targetKind==='escort'?p.target==='escort'&&p.escortSlot===target.slot:
@@ -1539,6 +1754,114 @@ function resolvePrismaShots(b,ctx,events,order){
  return shot;
 }
 
+// Salva eseguibile del Falco. Le carte preparate sono una zona fisica separata
+// e non possono mai essere eseguite due volte, neppure se il bersaglio scompare.
+function falcoReleaseAtTurnStart(b,who,ctx,events,order){
+ const side=b.sides[who],q=ensureFalcoState(side).pending;
+ if(!q||q.releasePly>b.ply)return null;
+ if(order.falcoHold){
+  const module=installedModule(side,'weapon');
+  if(!falcoCapacitorActive(side,b.ply)||q.held)
+   throw Error('Non puoi rinviare il colpo senza un Capacitore operativo');
+  q.held=true;q.capacitorModuleId=module.id;q.releasePly+=2;
+  events.push(emit(b,who,'falco-hold','Capacitore: colpo trattenuto per un unico turno aggiuntivo',
+   {cardId:'nx-r01-01',pendingCardId:q.cardId,releasePly:q.releasePly}));
+  return null;
+ }
+ side.falco.pending=null;
+ side.discard.push(q.cardId);
+ ctx.falcoReleased=true; // niente sparo ordinario nello stesso turno
+ const result={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  played:visiblePlayed(ctx.cards),targets:[]};
+ const lose=message=>{
+  events.push(emit(b,who,'falco-lost',message,{cardId:q.cardId}));
+  return result;
+ };
+ if(!operational(side.ships[0],'weapons'))
+  return lose('Colpo preparato perso: Arsenale distrutto');
+ if(q.held&&!falcoCapacitorActive(side,b.ply))
+  return lose('Colpo conservato perso: Capacitore non operativo');
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  return lose('Colpo preparato annullato dal blocco delle Armi');
+ }
+ const enemy=b.sides[other(who)];
+ const power=terrainSalvoModifier(b.terrain,side.ships[0].id).value+
+  Math.max(1,side.ships[0].attackPower-enemy.ships[0].defensePower)-
+  side.buffs.filter(x=>x.kind==='jam').reduce((n,x)=>n+x.power,0)-
+  enemy.buffs.filter(x=>x.kind==='guard'&&x.untilPly>b.ply)
+   .reduce((n,x)=>n+x.power,0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ if(power<=0)return lose('Colpo preparato fallito: potenza annullata');
+ events.push(emit(b,who,'falco-release',
+  'Falco Binario rilascia '+(card(q.cardId)?.nome||card(q.cardId)?.name||q.cardId),
+  {cardId:q.cardId,shotCount:q.shots.length,held:q.held}));
+ const supports=(side.escorts||[]).filter(e=>falcoEscortReady(side,e,b.ply));
+ for(const [index,shot] of q.shots.entries()){
+  if(shot.requiresEscorts&&(supports.length<2||
+   supports.some(e=>(e.grade||1)<2)||!operational(side.ships[0],'command'))){
+   events.push(emit(b,who,'falco-lost','Triangolazione: colpo leggero perso, manca un supporto operativo',
+    {cardId:q.cardId,shotIndex:index}));
+   continue;
+  }
+  const target=falcoUnits(enemy).find(t=>t.kind===shot.kind&&t.unit.id===shot.id);
+  if(!target){
+   events.push(emit(b,who,'falco-lost','Falco: bersaglio preparato distrutto, colpo perso',
+    {cardId:q.cardId,shotIndex:index,targetId:shot.id}));
+   continue;
+  }
+  const bonus=q.calibrationBonus&&q.calibrationTargetId===shot.id&&
+   !result.calibrationUsed?q.calibrationBonus:0;
+  const hit=linceHit(b,ctx,events,target,shot.damage+bonus,q.cardId,order,false,0);
+  if(bonus){result.calibrationUsed=true;}
+  if(hit.damage){
+   const key=hit.target.kind==='escort'?'escortDamage':'machineDamage';
+   result[key]+=hit.damage;
+   result.targets.push({kind:hit.target.kind,id:hit.target.unit.id,
+    damage:hit.damage,destroyed:hit.target.unit.destroyed});
+  }
+ }
+ return result;
+}
+function falcoCalibrationShot(b,ctx,events,order){
+ const enemy=b.sides[other(ctx.who)],target=selectedEnemyTarget(enemy,order,b.ply);
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  played:visiblePlayed(ctx.cards),targets:[]};
+ if(!target||!['escort','machine'].includes(target.kind))return shot;
+ const side=b.sides[ctx.who];
+ if(!operational(side.ships[0],'weapons')||side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;
+  events.push(emit(b,ctx.who,'no-shot','Taratura Falco: sparo bloccato'));
+  return shot;
+ }
+ const hit=linceHit(b,ctx,events,target,1,ctx.falcoCalibration.cardId,order,false,0);
+ if(!hit.damage)return shot;
+ const key=hit.target.kind==='escort'?'escortDamage':'machineDamage';
+ shot[key]=hit.damage;
+ shot.targets.push({kind:hit.target.kind,id:hit.target.unit.id,damage:hit.damage,
+  destroyed:hit.target.unit.destroyed});
+ const q=side.falco?.pending;
+ if(q&&q.shots.some(s=>s.id===hit.target.unit.id&&s.kind===hit.target.kind)&&
+  !q.calibrationBonus){
+  q.calibrationBonus=2;q.calibrationTargetId=hit.target.unit.id;
+  events.push(emit(b,ctx.who,'falco-calibration',
+   'Taratura riuscita: +2 danni a un solo colpo preparato sulla stessa unità',
+   {cardId:ctx.falcoCalibration.cardId,pendingCardId:q.cardId,
+    targetId:hit.target.unit.id}));
+ }
+ return shot;
+}
+function mergeFalcoShots(a,b){
+ if(!a)return b;
+ if(!b)return a;
+ return {damage:(a.damage||0)+(b.damage||0),
+  escortDamage:(a.escortDamage||0)+(b.escortDamage||0),
+  machineDamage:(a.machineDamage||0)+(b.machineDamage||0),
+  moduleDamage:(a.moduleDamage||0)+(b.moduleDamage||0),
+  targets:[...(a.targets||[]),...(b.targets||[])],
+  played:[...new Set([...(a.played||[]),...(b.played||[])])]};
+}
+
 function resolveSalvo(b,ctx,events,order){
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
  let selected=selectedEnemyTarget(defender,order,b.ply);
@@ -1633,27 +1956,40 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   expireSide(s,b.ply);corvoSafetySwitch(b,id,events);
  }
  const cards=takeCards(side,order.cards||[]);
- const ctx={who,nowMs,order,cards:[],auroraAttacks:[],linceAttacks:[],prismaAttacks:[],corvoAttacks:[],bypassPlayed:false,
+ const ctx={who,nowMs,order,cards:[],auroraAttacks:[],linceAttacks:[],prismaAttacks:[],corvoAttacks:[],
+  falcoReleased:false,falcoPrepared:false,falcoCalibration:null,bypassPlayed:false,
   power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
- // Il terreno scelto entra prima delle altre carte e degli effetti del turno.
+ // Il Caricatore annulla una carica prima del suo rilascio automatico.
+ const priority=id=>card(id)?.effectSpec?.type==='falco'&&
+  card(id).effectSpec.action==='emergency-loader';
+ for(const id of cards.filter(priority))if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ const releasedShot=falcoReleaseAtTurnStart(b,who,ctx,events,order);
+ // Terreno e Personaggio Falco precedono la preparazione.
  for(const id of cards.filter(id=>cardRole(id)==='terrain'))
   if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  applyCharacterRepeat(b,who,ctx,events);
- for(const id of cards.filter(id=>cardRole(id)!=='terrain'))
+ for(const id of cards.filter(id=>id==='ex-r01-01'))
   if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ const after=cards.filter(id=>cardRole(id)!=='terrain'&&!priority(id)&&
+  id!=='ex-r01-01');
+ after.sort((x,y)=>Number(isFalcoPreparation(y))-Number(isFalcoPreparation(x)));
+ for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  processHelios(b,who,ctx,events,order);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
- const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
+ const ownShot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
+  ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):
+  ctx.falcoPrepared||ctx.falcoReleased?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.corvoAttacks.length?resolveCorvoShots(b,ctx,events,order):
   ctx.prismaAttacks.length?resolvePrismaShots(b,ctx,events,order):
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
+ const shot=mergeFalcoShots(releasedShot,ownShot);
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }

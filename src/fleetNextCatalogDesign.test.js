@@ -44,8 +44,8 @@ test('Il catalogo in codice associa esattamente 10 esclusive a ciascuna delle 12
   const set=group[shipId]||[];
   assert.equal(set.length,10,shipId);
   assert.equal(set.filter(c=>c.kind==='character').length,1,shipId);
-  assert.equal(set.filter(c=>c.playable===false).length,['N00','C01','C02','C03'].includes(shipId)?0:9,shipId);
-  assert.equal(set.filter(c=>c.playable!==false).length,['N00','C01','C02','C03'].includes(shipId)?10:1,shipId);
+  assert.equal(set.filter(c=>c.playable===false).length,['N00','C01','C02','C03','R01'].includes(shipId)?0:9,shipId);
+  assert.equal(set.filter(c=>c.playable!==false).length,['N00','C01','C02','C03','R01'].includes(shipId)?10:1,shipId);
   const levels=set.map(c=>c.minShipLevelDraft);
   assert.equal(levels.filter(n=>n===1).length,6,shipId+' sei definizioni L1');
   for(const level of [2,3,4,5])assert.equal(levels.filter(n=>n===level).length,1,shipId+' L'+level);

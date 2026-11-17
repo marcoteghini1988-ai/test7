@@ -17,6 +17,7 @@ import {STARTER_DECK,card,cardRole,cardFacePath,deckFromCounts} from './fleetNex
 import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
 import {LINCE_BYPASS_ACTIONS,linceMarkedRouteReady} from './fleetNext/linceEngine.js';
 import {PRISMA_ATTACK_ACTIONS,livePrismaUnits} from './fleetNext/prismaEngine.js';
+import {FALCO_PREP_ACTIONS,falcoUnits,falcoCapacitorActive} from './fleetNext/falcoEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
@@ -128,6 +129,12 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      <span>{module.slot==='weapon'?'ARMA':'UTILITÀ'}</span><b>{module.name}</b><small>{module.hp}/{module.maxHp}</small>
     </button>)}
   </div>
+  {unit.falco?.pending&&<div className="f3d-falco-charge" role="status"
+   title={'Colpo preparato: '+(card(unit.falco.pending.cardId)?.nome||unit.falco.pending.cardId)}>
+   <span aria-hidden="true">◉</span>
+   <b>{card(unit.falco.pending.cardId)?.nome||'COLPO IN CARICA'}</b>
+   <small>{unit.falco.pending.held?'CONSERVATO · ':''}RILASCIO AL PROSSIMO TURNO</small>
+  </div>}
   <div className="f3d-machine-berths" aria-label={player?'Le tue due macchine d’assalto':'Le due macchine d’assalto avversarie'}>
    {berths.map((machine,slot)=>{
     const enabled=machine&&!machine.pending;
@@ -257,6 +264,9 @@ export default function OfficialFleetBattle3D({
  const setPrismaOption=(name,value)=>setPrismaOptions(prev=>({...prev,[name]:value}));
  const [corvoOptions,setCorvoOptions]=useState({exchangeCardId:'',bottomTop:false});
  const setCorvoOption=(name,value)=>setCorvoOptions(old=>({...old,[name]:value}));
+ const [falcoOptions,setFalcoOptions]=useState({hold:false,target:'',second:'',
+  correction:'',gunner:''});
+ const setFalcoOption=(name,value)=>setFalcoOptions(old=>({...old,[name]:value}));
  const [linceOptions,setLinceOptions]=useState({
   routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
   linceRecallWeapon:false,radentRecall:false,radentMachineId:''
@@ -332,6 +342,7 @@ export default function OfficialFleetBattle3D({
   setPrismaOptions({redirectMachineId:'',trapSelection:'',artisanSelection:'',
    enemySelection:'',secondSelection:'',thirdSelection:''});
   setCorvoOptions({exchangeCardId:'',bottomTop:false});
+  setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -347,6 +358,10 @@ export default function OfficialFleetBattle3D({
   const effectReason=effectUnavailableReason(card(type),player,battle,{terrainCode});
   if(effectReason)return effectReason;
   if(!chosenCards.includes(index)){
+   const due=player.falco?.pending?.releasePly<=battle.ply;
+   const cancelling=chosenCards.some(i=>player.hand[i]==='nx-r01-09')||type==='nx-r01-09';
+   if(due&&!falcoOptions.hold&&!cancelling&&chosenCards.length>=2)
+    return 'Falco: il rilascio occupa una giocata, massimo due altre carte';
    const roles=chosenCards.map(i=>cardRole(player.hand[i]));
    if(chosenCards.length>=3)return 'Puoi giocare al massimo 3 carte per turno';
    if(role==='defense'&&roles.filter(x=>x==='defense').length>=2)return 'Puoi giocare al massimo 2 Difese per turno';
@@ -386,6 +401,9 @@ export default function OfficialFleetBattle3D({
   const prismaEnemy=prismaUnitTargets.find(t=>t.kind+':'+t.id===prismaOptions.enemySelection);
   const prismaSecond=prismaUnitTargets.find(t=>t.kind+':'+t.id===prismaOptions.secondSelection);
   const prismaThird=prismaUnitTargets.find(t=>t.kind+':'+t.id===prismaOptions.thirdSelection);
+  const falcoPrimaryChoice=falcoUnitChoices.find(t=>t.key===falcoOptions.target);
+  const falcoSecondChoice=falcoUnitChoices.find(t=>t.key===falcoOptions.second);
+  const falcoCorrectionChoice=falcoUnitChoices.find(t=>t.key===falcoOptions.correction);
   const result=resolveFleetNextTurn(battle,'A',
    {partId,targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
     escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
@@ -408,11 +426,16 @@ export default function OfficialFleetBattle3D({
     prismaEnemyKind:prismaEnemy?.kind,prismaEnemyId:prismaEnemy?.id,
     prismaSecondTargetKind:prismaSecond?.kind,prismaSecondTargetId:prismaSecond?.id,
     prismaThirdTargetKind:prismaThird?.kind,prismaThirdTargetId:prismaThird?.id,
-    corvoExchangeCardId:corvoOptions.exchangeCardId,corvoBottomTop:corvoOptions.bottomTop
+    corvoExchangeCardId:corvoOptions.exchangeCardId,corvoBottomTop:corvoOptions.bottomTop,
+    falcoHold:falcoOptions.hold,falcoTargetKind:falcoPrimaryChoice?.kind,
+    falcoTargetId:falcoPrimaryChoice?.id,falcoSecondTargetKind:falcoSecondChoice?.kind,
+    falcoSecondTargetId:falcoSecondChoice?.id,falcoCorrectionKind:falcoCorrectionChoice?.kind,
+    falcoCorrectionTargetId:falcoCorrectionChoice?.id,falcoGunnerPickId:falcoOptions.gunner
    },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
   setCorvoOptions({exchangeCardId:'',bottomTop:false});
+  setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
@@ -422,10 +445,11 @@ export default function OfficialFleetBattle3D({
  function passTurn(){
   if(!battle||battle.phase!=='playing'||battle.turn!=='A')return;
   const result=resolveFleetNextTurn(battle,'A',
-   {cards:[],partId:null,pass:true},Date.now());
+   {cards:[],partId:null,pass:true,falcoHold:falcoOptions.hold},Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   setBattle(result.battle);setChosenCards([]);
-  setMessage('Turno concluso');
+  setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
+  setMessage(fleetTurnNotice(result.events)||'Turno concluso');
  }
  async function leave(){
   if(busy||submitting.current)return;
@@ -508,6 +532,21 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const falcoActive=player.ships[0].id==='R01';
+ const falcoPending=player.falco?.pending;
+ const falcoReleaseDue=!!(falcoPending&&falcoPending.releasePly<=battle.ply);
+ const falcoUnitChoices=falcoUnits(enemy).map(({kind,unit})=>({
+  kind,id:unit.id,key:kind+':'+unit.id,name:unit.name,
+  hp:unit.hp,maxHp:unit.maxHp
+ }));
+ const falcoPrimary=falcoUnitChoices.find(t=>t.key===falcoOptions.target)||
+  falcoUnitChoices.find(t=>t.id===actualTarget?.id)||falcoUnitChoices[0];
+ const falcoOtherChoices=falcoUnitChoices.filter(t=>t.id!==falcoPrimary?.id);
+ const falcoCorrectionSource=falcoPending?.shots?.[0]?.id||falcoPrimary?.id;
+ const falcoCorrectionChoices=falcoUnitChoices.filter(t=>t.id!==falcoCorrectionSource&&
+  !falcoPending?.shots?.slice(1).some(x=>x.id===t.id));
+ const falcoGunnerChoices=player.deck.slice(0,3).filter(id=>
+  cardRole(id)==='defense'&&!['nx-c03-04','nx-c01-04','nx-c02-04'].includes(id));
  const prismaUnitTargets=livePrismaUnits(enemy,battle.ply,false).map(({kind,unit})=>({
   kind,id:unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
  }));
@@ -609,7 +648,7 @@ export default function OfficialFleetBattle3D({
      </option>)}
     </select>
    </label>}
-   {(selectedType||forkActive||linceExtra)&&!ended&&<div className="live-card-inspector" role="status">
+   {(selectedType||forkActive||linceExtra||falcoActive)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
@@ -701,6 +740,49 @@ export default function OfficialFleetBattle3D({
       <option value="">Prima terza unità disponibile</option>
       {prismaThirdChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
        {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
+    {falcoActive&&falcoPending&&<p className="f3d-falco-pending">
+     <b>Falco · {card(falcoPending.cardId)?.nome||card(falcoPending.cardId)?.name}</b>
+     {' · '+falcoPending.shots.map(x=>
+      falcoUnitChoices.find(t=>t.id===x.id)?.name||'Unità non disponibile').join(' + ')}
+     {' · '+(falcoPending.releasePly<=battle.ply?'Rilascio in questo turno':'Rilascio nel prossimo tuo turno')}
+    </p>}
+    {falcoActive&&falcoReleaseDue&&!falcoPending.held&&
+     falcoCapacitorActive(player,battle.ply)&&
+     !selectedActions.includes('emergency-loader')&&<label>
+      <input type="checkbox" checked={falcoOptions.hold}
+       onChange={e=>setFalcoOption('hold',e.target.checked)}/>
+      Capacitore: rinvia un'unica volta il colpo fino al prossimo tuo turno
+     </label>}
+    {falcoActive&&selectedActions.some(x=>FALCO_PREP_ACTIONS.includes(x))&&
+     falcoUnitChoices.length>0&&<label>Falco · bersaglio del colpo da preparare:
+     <select value={falcoOptions.target} onChange={e=>setFalcoOption('target',e.target.value)}>
+      <option value="">Automatico: {falcoPrimary?.name}</option>
+      {falcoUnitChoices.map(t=><option key={t.key} value={t.key}>
+       {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
+    {falcoActive&&selectedActions.includes('falcon-triangulation')&&
+     falcoOtherChoices.length>0&&<label>Triangolazione · secondo bersaglio:
+     <select value={falcoOptions.second} onChange={e=>setFalcoOption('second',e.target.value)}>
+      <option value="">Automatico: {falcoOtherChoices[0]?.name}</option>
+      {falcoOtherChoices.map(t=><option key={t.key} value={t.key}>
+       {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
+    {falcoActive&&selectedActions.includes('ballistic-correction')&&
+     falcoCorrectionChoices.length>0&&<label>Correzione balistica · nuova unità:
+     <select value={falcoOptions.correction} onChange={e=>setFalcoOption('correction',e.target.value)}>
+      <option value="">Automatico: {falcoCorrectionChoices[0]?.name}</option>
+      {falcoCorrectionChoices.map(t=><option key={t.key} value={t.key}>
+       {t.name} · {t.hp}/{t.maxHp}</option>)}
+     </select></label>}
+    {falcoActive&&(player.commander?.id==='ex-r01-01'||
+     selectedActions.includes('binary-gunner'))&&
+     selectedActions.some(x=>FALCO_PREP_ACTIONS.includes(x))&&
+     falcoGunnerChoices.length>0&&<label>Artigliere Binario · Difesa tra le prime tre carte:
+     <select value={falcoOptions.gunner} onChange={e=>setFalcoOption('gunner',e.target.value)}>
+      <option value="">Prima Difesa scoperta disponibile</option>
+      {falcoGunnerChoices.map((id,i)=><option key={id+':'+i} value={id}>
+       {card(id)?.nome||card(id)?.name||id}</option>)}
      </select></label>}
     {selectedActions.includes('frequency-analysis')&&<label>Analisi di frequenza — carta da scartare:
      <select value={corvoOptions.exchangeCardId} onChange={e=>setCorvoOption('exchangeCardId',e.target.value)}>
