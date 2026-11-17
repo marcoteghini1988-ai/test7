@@ -15,6 +15,7 @@ import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {STARTER_DECK,card,cardRole,cardFacePath,deckFromCounts} from './fleetNext/rules.js';
 import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
+import {LINCE_BYPASS_ACTIONS,linceMarkedRouteReady} from './fleetNext/linceEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
@@ -247,6 +248,11 @@ export default function OfficialFleetBattle3D({
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
+ const [linceOptions,setLinceOptions]=useState({
+  routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
+  linceRecallWeapon:false,radentRecall:false,radentMachineId:''
+ });
+ const setLinceOption=(name,value)=>setLinceOptions(old=>({...old,[name]:value}));
  const [auroraOptions,setAuroraOptions]=useState({
   deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',
   cartographerPickId:'',reconfigureSelection:'',secondarySelection:''
@@ -312,6 +318,8 @@ export default function OfficialFleetBattle3D({
   setSession(next);setBattle(next.battle);
   setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setMessage('');
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
+  setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
+   linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -367,13 +375,20 @@ export default function OfficialFleetBattle3D({
     machineSlot:actualTarget?.kind==='machine'?actualTarget.slot:undefined,
     moduleSlot:actualTarget?.kind==='module'?actualTarget.slot:undefined,
     ownPartId:actualOwnVital,cards:chosenCards,
-    deckTopFlip:auroraOptions.deckTopFlip,sacrificeSlot:auroraOptions.sacrificeSlot,
+    deckTopFlip:auroraOptions.deckTopFlip,
+    sacrificeSlot:selectedActions.includes('crimson-raid')?linceOptions.sacrificeSlot:auroraOptions.sacrificeSlot,
     exchangeCardId:auroraOptions.exchangeCardId,peekPickId:auroraOptions.peekPickId,
     cartographerPickId:auroraOptions.cartographerPickId,
     reconfigureSlot:reconfig?.slot,reconfigureCardId:reconfig?.cardId,
-    secondaryTargetKind:secondary?.kind,secondaryTargetId:secondary?.id},Date.now());
+    secondaryTargetKind:secondary?.kind,secondaryTargetId:secondary?.id,
+    routePartId:linceOptions.routePartId||partId,
+    heliosTrade:linceOptions.heliosTrade,heliosDiscardId:linceOptions.heliosDiscardId,
+    linceRecallWeapon:linceOptions.linceRecallWeapon,
+    radentRecall:linceOptions.radentRecall,radentMachineId:linceOptions.radentMachineId},Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
+  setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
+   linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
   if(!result.battle.sides.B.ships[0].parts.some(p=>p.id===partId&&!p.destroyed))
    if(nextTarget)setSelectedVital(nextTarget.id);
@@ -441,11 +456,19 @@ export default function OfficialFleetBattle3D({
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
   target.parts.find(p=>!p.destroyed)?.id;
  const chosenTypes=chosenCards.map(i=>player.hand[i]).filter(Boolean);
- const bypass=chosenTypes.some(id=>card(id)?.effectSpec?.type==='bypass');
+ const directBypass=chosenTypes.some(id=>{
+  const spec=card(id)?.effectSpec;
+  return spec?.type==='bypass'||spec?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(spec.action);
+ });
+ const routePartId=player.lince?.route?.usePly===battle.ply?player.lince.route.partId:null;
+ const bypass=directBypass||!!routePartId;
  const protectors=protectingFleetUnits(enemy,battle.ply);
- const targetChoices=availableFleetTargets(enemy,battle.ply).filter(t=>!t.blocked||bypass);
+ const targetChoices=availableFleetTargets(enemy,battle.ply).filter(t=>!t.blocked||directBypass||
+  t.kind==='part'&&t.id===routePartId);
  const actualTarget=targetChoices.find(t=>selectedTarget&&t.kind===selectedTarget.kind&&t.id===selectedTarget.id)||
-  (bypass||!protectors.length?targetChoices.find(t=>t.kind==='part'&&t.id===actualVital):null)||protectors[0]||targetChoices[0];
+  (bypass||!protectors.length?
+   targetChoices.find(t=>t.kind==='part'&&t.id===(routePartId||actualVital)):null)||
+  protectors[0]||targetChoices[0];
  function selectTarget(value){
   const choice=targetChoices.find(t=>t.kind+':'+t.id===value);
   if(choice){setSelectedTarget({kind:choice.kind,id:choice.id,slot:choice.slot});
@@ -459,6 +482,13 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const linceMachineChoices=player.machines.filter(m=>m.hp>0&&!m.destroyed&&m.sourceCardId);
+ const heliosAvailable=(player.commander?.id==='ex-c01-01'||selectedActions.includes('helios'))&&
+  (directBypass||selectedActions.includes('helios')||!!routePartId);
+ const heliosDiscardChoices=player.hand.filter((id,i)=>!chosenCards.includes(i));
+ const radentReady=installedModule(player,'utility')?.cardId==='nx-c01-01'&&
+  linceMachineChoices.length>0&&(directBypass||!!routePartId);
+ const linceExtra=heliosAvailable||radentReady;
  const reconfigChoices=reconfigurationOptions(player,card,player.ships[0].level);
  const sacrificeOptions=liveModules(player);
  const adaptationOptions=player.hand.filter((id,i)=>!chosenCards.includes(i)&&card(id)?.shipId==='N00');
@@ -488,7 +518,7 @@ export default function OfficialFleetBattle3D({
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
     selectedTarget={actualTarget} onSelectTarget={setSelectedTarget} canTarget={!ended&&myTurn} ply={battle.ply}
     onSelectVital={id=>{if(!ended&&myTurn){
-     if(protectors.length&&!bypass){setMessage('Prima elimina i supporti e le macchine, oppure gioca Aggiramento.');return;}
+     if(protectors.length&&!directBypass&&id!==routePartId){setMessage('Prima elimina i supporti e le macchine, oppure gioca Aggiramento.');return;}
      setSelectedVital(id);setSelectedTarget({kind:'part',id});setMessage('');
     }}}
     impact={lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='A')&&
@@ -542,7 +572,7 @@ export default function OfficialFleetBattle3D({
      </option>)}
     </select>
    </label>}
-   {(selectedType||forkActive)&&!ended&&<div className="live-card-inspector" role="status">
+   {(selectedType||forkActive||linceExtra)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
