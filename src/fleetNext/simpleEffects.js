@@ -187,8 +187,7 @@ export function describeEffect(card,level=1){
   case 'terrain':return TERRAIN_EFFECT_TEXT[s.code]+' Vale per entrambi i giocatori per 3 round.';
   case 'trap':return 'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
-  case 'deployMachine':return 'Schiera una macchina con '+s.hp+' punti: protegge la madre'+
-   (s.power?' e aggiunge '+s.power+' potenza al tuo attacco.':'.');
+  case 'deployMachine':return 'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
   case 'prisma':return card.effectProposed;
   case 'lince':return card.effectProposed;
   case 'corvo':return card.effectProposed;
