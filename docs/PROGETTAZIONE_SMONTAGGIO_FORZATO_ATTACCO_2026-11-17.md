@@ -1,6 +1,6 @@
 # Eclissi Stellare — Smontaggio Forzato (4 carte Attacco)
 **Data:** 17 novembre 2026  
-**Stato:** progetto delle quattro varianti confermato come famiglia **ATTACCO**; valori e interazioni da finalizzare e implementare.  
+**Stato:** quattro varianti **ATTACCO** implementate e testate nel ruleset HP; bilanciamento numerico finale rinviato.  
 **Fase grafica:** rinviata.
 
 ## Identità e slot
@@ -12,20 +12,30 @@
 - La configurazione iniziale **è specifica per ogni nave**: non forzare tutte le flotte ad avere identici componenti. La versione Leggendaria conserva la dotazione base del livello 1 della nave bersaglio e smonta temporaneamente solo ciò che eccede quella dotazione.
 
 ## Quattro varianti previste
-| ID di progettazione (non runtime) | Nome | Rarità | Effetto proposto | Durata proposta | Categoria |
+| ID eseguibile | Nome | Rarità | Effetto proposto | Durata proposta | Categoria |
 |---|---|---|---|---|---|
-| `design-attack-dismantle-c` | Smontaggio Forzato | Comune | Smonta 1 componente aggiunto/potenziato selezionabile | 1 turno | **ATTACCO** |
-| `design-attack-dismantle-r` | Smontaggio Forzato | Rara | Smonta 1 componente aggiunto/potenziato selezionabile | 2 turni | **ATTACCO** |
-| `design-attack-dismantle-e` | Smontaggio Forzato | Epica | Smonta fino a 2 componenti aggiunti/potenziati selezionabili | 2 turni | **ATTACCO** |
-| `design-attack-dismantle-l` | Smontaggio Forzato | Leggendaria | Riporta temporaneamente la nave bersaglio alla configurazione base della propria nave al livello 1, senza componenti/potenziamenti successivi | 2 turni | **ATTACCO** |
+| `atk-dismantle-c` | Smontaggio Forzato | Comune | Smonta 1 componente aggiunto/potenziato selezionabile | 1 turno | **ATTACCO** |
+| `atk-dismantle-r` | Smontaggio Forzato | Rara | Smonta 1 componente aggiunto/potenziato selezionabile | 2 turni | **ATTACCO** |
+| `atk-dismantle-e` | Smontaggio Forzato | Epica | Smonta fino a 2 componenti aggiunti/potenziati selezionabili | 2 turni | **ATTACCO** |
+| `atk-dismantle-l` | Smontaggio Forzato | Leggendaria | Riporta temporaneamente la nave bersaglio alla configurazione base della propria nave al livello 1, senza componenti/potenziamenti successivi | 2 turni | **ATTACCO** |
 
 ## Regole da rispettare in implementazione
 1. Lo smontaggio è **temporaneo e fisico/operativo**, non una riduzione permanente del livello e non una perdita permanente del componente.
 2. I componenti smontati e le relative funzioni vengono sospesi; al termine si **rimontano automaticamente**, con HP/integrità preesistenti. Non ripristinare HP della madre né annullare danni subiti.
 3. Nessuna carta modifica la proprietà o l'identificativo delle 120 carte esclusive. Verificare le dipendenze fra le dieci esclusive di ciascuna delle dodici navicelle principali, i moduli, le scudiere, la Centralina, l'Arsenale, il Generatore e la Plancia.
 4. L'effetto non deve rimuovere i sistemi innati necessari alla configurazione base della navicella: ogni nave usa la propria configurazione livello 1 e i propri sblocchi reali.
-5. Da implementare e testare: selezione bersagli validi, durata per turni, riattivazione esclusive, restauro componenti, casi di assenza di potenziamenti, effetti sovrapposti, Buco Nero, condizione vittoria su HP e interazioni con la plancia 3D.
-6. **Queste quattro carte non sono giocabili né presenti in `src/fleetNext/newCardRegistry.js`** finché non vengono integrate e testate. Le 33 carte Attacco già eseguibili restano invariate.
+5. **Implementato:** scelta dei componenti in battaglia, durata, conservazione degli HP, rimontaggio, esclusive sospese, interazioni fra rarità, Buco Nero e controllo tramite test automatici.
+6. **Le quattro carte sono giocabili** in `src/fleetNext/dismantleCards.js` e sono registrate nella raccolta e nel mazzo tramite `src/fleetNext/rules.js` e `src/fleetNext/nextDeckLoadout.js`. Il registro `src/fleetNext/newCardRegistry.js` resta volutamente il lotto delle 33 carte precedenti.
 
 ## Recupero futuro per la grafica
 Consultare `docs/INDICE_CARTE_ATTACCO_LOTTO_33.md`, sezione «Quattro ulteriori carte Attacco — Smontaggio Forzato». Le immagini dovranno mostrare lo smontaggio temporaneo di componenti specifici della navicella; non produrre o associare asset finché non sarà richiesto.
+
+## Integrazione nel codice (17 novembre 2026)
+
+- Catalogo e identificativi ufficiali: `src/fleetNext/dismantleCards.js`.
+- Smontaggio, sovrapposizioni, temporizzazioni, ripristino: `src/fleetNext/dismantleEffects.js`.
+- Validazione e risoluzione partite: `src/fleetNext/combat.js`.
+- Selezione dei componenti in plancia 3D: `src/OfficialFleetBattle3D.jsx`.
+- Acquisto e scelta del mazzo: `src/FleetCollectionWorkshop.jsx` e `src/fleetNext/nextDeckLoadout.js`.
+- Test di regressione: `src/fleetNextDismantleCards.test.js` e suite completa GitHub Actions.
+- Nessuna immagine o animazione definitiva creata; tutto l'assetto grafico resta invariato.

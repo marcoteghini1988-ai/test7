@@ -44,24 +44,24 @@ Questo è l'indice **del lotto delle 33 carte nuove**; non sostituisce l'elenco 
 | 32 | `sys-bridge-plus-l` | Strategia a fuoco | Plancia | Amplificazione | Leggendaria | **ATTACCO** |
 | 33 | `sys-black-hole` | Buco Nero | Campo globale | Reset del campo | Leggendaria | **ATTACCO** |
 
-## Quattro ulteriori carte Attacco — Smontaggio Forzato (solo progettazione)
+## Quattro ulteriori carte Attacco — Smontaggio Forzato (funzionanti)
 
-Questa è una **nuova famiglia di 4 carte ATTACCO**, distinta dalle 33 già implementate, ma da ricercare **insieme a tutte le carte Attacco** quando si prepareranno le immagini. I seguenti ID sono **ID di progettazione**, non ID del registro eseguibile. La durata e l'intensità restano soggette al bilanciamento.
+Questa è una **famiglia di 4 carte ATTACCO funzionanti**, distinta dalle 33 precedenti e da ricercare **insieme a tutte le carte Attacco** quando si prepareranno le immagini. Gli ID qui sotto sono ora **ID eseguibili**; i valori saranno bilanciati successivamente.
 
-| # | ID di progettazione | Nome carta | Funzione | Rarità | Durata proposta | Slot | Stato |
+| # | ID eseguibile | Nome carta | Funzione | Rarità | Durata | Slot | Stato |
 |---:|---|---|---|---|---|---|---|
-| 34 | `design-attack-dismantle-c` | Smontaggio Forzato | Smonta 1 componente aggiunto/potenziato | Comune | 1 turno | **ATTACCO** | Progettazione |
-| 35 | `design-attack-dismantle-r` | Smontaggio Forzato | Smonta 1 componente aggiunto/potenziato | Rara | 2 turni | **ATTACCO** | Progettazione |
-| 36 | `design-attack-dismantle-e` | Smontaggio Forzato | Smonta fino a 2 componenti aggiunti/potenziati | Epica | 2 turni | **ATTACCO** | Progettazione |
-| 37 | `design-attack-dismantle-l` | Smontaggio Forzato | Riporta la nave alla propria configurazione di base livello 1, senza i componenti aggiuntivi | Leggendaria | 2 turni | **ATTACCO** | Progettazione |
+| 34 | `atk-dismantle-c` | Smontaggio Forzato | Smonta 1 componente aggiunto/potenziato | Comune | 1 turno | **ATTACCO** | **FUNZIONANTE** |
+| 35 | `atk-dismantle-r` | Smontaggio Forzato | Smonta 1 componente aggiunto/potenziato | Rara | 2 turni | **ATTACCO** | **FUNZIONANTE** |
+| 36 | `atk-dismantle-e` | Smontaggio Forzato | Smonta fino a 2 componenti aggiunti/potenziati | Epica | 2 turni | **ATTACCO** | **FUNZIONANTE** |
+| 37 | `atk-dismantle-l` | Smontaggio Forzato | Riporta la nave alla propria configurazione di base livello 1, senza i componenti aggiuntivi | Leggendaria | 2 turni | **ATTACCO** | **FUNZIONANTE** |
 
-**Regola chiave:** i componenti scompaiono temporaneamente dalla configurazione operativa della nave, poi si rimontano automaticamente. Non si perde il livello permanente e non si recuperano gli HP persi. Le capacità delle carte esclusive dipendenti dai componenti assenti vanno sospese. Nessuna immagine o meccanica runtime di queste quattro è ancora stata creata.
+**Regola chiave:** i componenti scompaiono temporaneamente dalla configurazione operativa della nave, poi si rimontano automaticamente. Non si perde il livello permanente e non si recuperano gli HP persi. Le capacità delle carte esclusive dipendenti dai componenti assenti vanno sospese. Le funzioni sono in `src/fleetNext/dismantleEffects.js`, il catalogo in `src/fleetNext/dismantleCards.js` e i test in `src/fleetNextDismantleCards.test.js`. Restano da realizzare soltanto le immagini/animazioni e il bilanciamento.
 
 **Specifiche:** [PROGETTAZIONE_SMONTAGGIO_FORZATO_ATTACCO_2026-11-17.md](PROGETTAZIONE_SMONTAGGIO_FORZATO_ATTACCO_2026-11-17.md).
 
 ## Istruzioni per creare le immagini (fase successiva)
 
-- Quando viene chiesto **«cerca le carte Attacco»**, consultare prima questo indice, poi il catalogo tecnico. Le 33 carte funzionanti **e le 4 nuove Smontaggio Forzato in progettazione** sono da includere nella ricerca insieme alle altre Attacco del gioco quando richieste.
+- Quando viene chiesto **«cerca le carte Attacco»**, consultare prima questo indice, poi il catalogo tecnico. Le 33 carte precedenti **e le 4 Smontaggio Forzato funzionanti** sono da includere nella ricerca insieme alle altre Attacco del gioco quando richieste.
 - Utilizzare l'**ID tecnico** come chiave stabile per collegare ogni futura immagine alla carta giusta; non rinominare ID o cambiare effetti durante la produzione grafica.
 - Per ogni immagine mantenere identificabili a colpo d'occhio **Attacco**, la funzione (Sabotaggio, Amplificazione, Buco Nero o Smontaggio) e la rarità (Comune, Rara, Epica, Leggendaria). Non generare o inserire immagini senza la fase di approvazione prevista.
 - Sorgente delle definizioni: `src/fleetNext/newCardRegistry.js` (`kind: 'attack'` per tutte le 33). Test automatici di riferimento: `src/fleetNextNewCardsCombat.test.js`. Specifiche: `docs/CATALOGO_32_CARTE_SISTEMI_2026-11-17.json` e `docs/PROGETTAZIONE_32_CARTE_SISTEMI_2026-11-17.md`.

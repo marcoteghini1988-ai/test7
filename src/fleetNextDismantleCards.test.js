@@ -8,6 +8,7 @@ import {createFleetNextBattle,resolveFleetNextTurn,effectUnavailableReason,prote
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {dismantleCandidates,dismantleActive,applyDismantleCard} from './fleetNext/dismantleEffects.js';
 import {projectFleetDefense} from './fleetNext/battlePresentation.js';
+import {installedModule,liveModules} from './fleetNext/auroraEngine.js';
 import {resetFieldWithBlackHole} from './fleetNext/newCardEffects.js';
 
 const make=(shipB='N00',levelB=5)=>createFleetNextBattle({
@@ -142,4 +143,33 @@ test('Le 12 madri non perdono componenti permanenti né HP',()=>{
   assert.deepEqual(side.ships[0].parts.map(p=>p.id),oldParts);
   assert.equal(side.ships[0].hp,hp);
  }
+});
+test('L’Arsenale smontato sospende anche un modulo equipaggiato senza consumarlo',()=>{
+ let b=make();
+ b.sides.B.modules.weapon={id:'arma-preservata',cardId:'nx-n00-07',name:'Cannone',
+  slot:'weapon',hp:1,maxHp:2,destroyed:false};
+ b=play(b,'A','atk-dismantle-c',{dismantleTargets:['part:weapons']}).battle;
+ assert.equal(installedModule(b.sides.B,'weapon'),null);
+ assert.equal(liveModules(b.sides.B).length,0);
+ assert.equal(b.sides.B.modules.weapon.id,'arma-preservata');
+ b=play(b,'B').battle;
+ assert.equal(installedModule(b.sides.B,'weapon').id,'arma-preservata');
+ assert.equal(b.sides.B.modules.weapon.hp,1);
+});
+test('Smontare il Generatore sospende una Difesa senza scartarla o ripristinare HP',()=>{
+ let b=make(),hp=b.sides.B.ships[0].hp;
+ b.sides.B.defenses=[{id:'gen-216',source:'protezione',hidden:false,untilPly:99}];
+ b.sides.B.protections=[{id:'gen-216',source:'protezione',kind:'protect',
+  remaining:1,target:'part',partId:'weapons',untilPly:99}];
+ const fired=play(b,'A','atk-dismantle-c',{dismantleTargets:['part:generator'],
+  targetKind:'part',targetId:'weapons',partId:'weapons',pass:false});
+ assert.ok(fired.shot.damage>0,'Generatore smontato non blocca i colpi');
+ b=fired.battle;
+ assert.equal(b.sides.B.defenses.length,1,'difesa sospesa, non persa');
+ b=play(b,'B').battle;
+ assert.equal(b.sides.B.defenses.length,1);
+ assert.ok(b.sides.B.ships[0].hp<hp,'il rimontaggio non cura la madre');
+ const after=play(b,'A',null,{pass:false,targetKind:'part',
+  targetId:'weapons',partId:'weapons'});
+ assert.equal(after.shot.damage||0,0,'difesa nuovamente operativa');
 });

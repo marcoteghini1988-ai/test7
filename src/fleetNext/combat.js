@@ -327,7 +327,7 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   if(def.effectSpec.type==='systemModifier'){
    const foe=battle?.sides?.A===side?battle.sides.B:battle?.sides?.B===side?battle.sides.A:null;
    const target=def.effectSpec.operation==='disable'?foe:side;
-   if(!target?.ships?.[0]?.parts.some(p=>p.id===def.effectSpec.system&&!p.destroyed))
+   if(!target?.ships?.[0]?.parts.some(p=>p.id===def.effectSpec.system&&!p.destroyed&&!p.dismantled))
     return 'Il sistema '+(VITAL_LABELS[def.effectSpec.system]||'richiesto')+' non è presente sulla nave';
    if(def.effectSpec.system==='bridge'&&def.effectSpec.operation==='amplify'&&
       (foe?.escorts||[]).filter(unitAlive).length<2)
@@ -343,7 +343,8 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
    return 'L’avversario non ha componenti aggiunti o potenziati disponibili';
  }
  const heldSlot=moduleSlotForCard(def.id);
- if(heldSlot&&side.heldModules?.[heldSlot])
+ if(heldSlot&&(side.heldModules?.[heldSlot]||
+  motherPart(side.ships[0],heldSlot==='weapon'?'weapons':'generator')?.dismantled))
   return 'Alloggiamento '+heldSlot+' temporaneamente smontato';
  if(def.effectSpec.type==='aurora'){
   const reason=auroraPrecondition(def,side,card,side.ships[0].level);
@@ -896,6 +897,7 @@ function addWeaken(b,enemy,amount,source,attackerWho=null,events=null){
 }
 function cancelTerrainWithTrap(b,who,terrainCard,ctx,events){
  const defenderWho=other(who),defender=b.sides[defenderWho];
+ if(!operational(defender.ships[0],'generator'))return false;
  const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='terrain'&&d.action==='cancel'&&
   (d.armedAtPly??-1)<b.ply);
  if(!trap)return false;
@@ -2973,9 +2975,10 @@ function transferPrismaProtection(b,defender,p,ctx,events){
 }
 
 function blockHit(b,defender,targetKind,target,ctx,events){
- if(obsidianBulkheadBlock(b,ctx,events,defender,targetKind,target))return true;
+ const generatorReady=operational(defender.ships[0],'generator');
+ if(generatorReady&&obsidianBulkheadBlock(b,ctx,events,defender,targetKind,target))return true;
  royalOwnShotPierce(b,ctx,events);
- const chamber=targetKind==='module'&&defender.defenses.find(d=>
+ const chamber=generatorReady&&targetKind==='module'&&defender.defenses.find(d=>
   d.id==='nx-r01-04'&&!d.hidden&&d.untilPly>b.ply&&
   d.falcoProtectedModuleId===target.id);
  if(chamber){
@@ -2988,6 +2991,9 @@ function blockHit(b,defender,targetKind,target,ctx,events){
  }
  for(const p of [...defender.protections]){
   if(p.untilPly<=b.ply||p.remaining<=0)continue;
+  // Una Difesa resta installata ma non può intercettare colpi
+  // mentre il Generatore è temporaneamente smontato.
+  if(!generatorReady&&defender.defenses.some(d=>d.source===p.source))continue;
   const matches=targetKind==='escort'?p.target==='escort'&&p.escortSlot===target.slot:
    targetKind==='machine'?p.target==='machine'&&p.machineSlot===target.slot:
    targetKind==='module'?p.target==='module'&&p.moduleSlot===target.slot:
