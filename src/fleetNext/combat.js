@@ -1457,6 +1457,141 @@ function sharkCapDamage(b,defender,kind,unit,amount,events){
  return Math.min(1,amount);
 }
 
+
+// Nebulosa: tutti i cambi di stato sono applicati al campo, senza carte gratuite.
+function activateNebulaCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],action=def.effectSpec.action;
+ const note=(message,extra={})=>events.push(emit(b,who,'card',
+  (def.nome||def.name)+' · '+message,{cardId:def.id,...extra}));
+ if(isNebulaModule(def.id)){
+  const mounted=mountModule(side,def);
+  if(!mounted.ok)throw Error(mounted.reason);
+  note('Modulo '+(mounted.replaced?'sostituito':'montato')+' · '+mounted.entry.name,
+   {moduleId:mounted.entry.id,moduleSlot:mounted.entry.slot});
+  return;
+ }
+ if(NEBULA_ATTACK_ACTIONS.includes(action)){
+  if(action==='mist-needle'&&nebulaHiddenSupport(side,b.ply))
+   ctx.nebulaPierceLeft=1;
+  ctx.nebulaAttacks.push({id:def.id,action});
+  note(action==='mist-needle'?'Ago pronto'+
+   (ctx.nebulaPierceLeft?' · supera una protezione scoperta':''):
+   'Nebbia polare pronta · blocca nuove protezioni solo dopo impatto');
+  return;
+ }
+ if(action==='cryogenic-veil'){
+  const choices=nebulaTargets(side);
+  const chosen=choices.find(t=>t.kind===order.nebulaVeilTargetKind&&
+   t.unit.id===order.nebulaVeilTargetId)||choices[0];
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!chosen||!defense)throw Error('Velo criogenico: seleziona una tua unita viva');
+  defense.nebulaVeilTargetKind=chosen.kind;defense.nebulaVeilTargetId=chosen.unit.id;
+  note('Solo il primo colpo della stessa raffica potra ferire '+chosen.unit.name,
+   {targetKind:chosen.kind,targetId:chosen.unit.id});
+  return;
+ }
+ if(action==='false-target'){
+  events.push(emit(b,who,'trap-set','Un Falso bersaglio e stato preparato coperto'));
+  return;
+ }
+ if(action==='mist-archon'){
+  note('Con un futuro Terreno giocato puo ricambiare una carta reale');
+  return;
+ }
+ if(action==='dissipation'){
+  let permanent=b.terrain;
+  while(permanent&&['player','boss_override'].includes(permanent.source))
+   permanent=permanent.underlying;
+  if(!permanent?.id&&b.bossId){
+   const locked=bossTerrain(b.planetId||b.bossId);
+   if(locked.id)permanent=locked;
+  }
+  b.terrain=permanent?activeTerrain(permanent,b.ply):neutralTerrain();
+  events.push(emit(b,who,'terrain-dissipate',
+   b.terrain?.id?'Dissipazione: ritorna '+(TERRAIN_CATALOG[b.terrain.id]?.name||b.terrain.id):
+   'Dissipazione: campo neutro ripristinato',{
+    cardId:def.id,terrainId:b.terrain?.id||null}));
+  return;
+ }
+ if(action==='wandering-mist'){
+  const hidden=nebulaHiddenSupport(side,b.ply);
+  const candidates=nebulaVisibleSupports(side,b.ply).filter(e=>e.id!==hidden?.id);
+  const selected=candidates.find(e=>e.id===order.nebulaSwapTargetId)||candidates[0];
+  if(!hidden||!selected)throw Error('Bruma itinerante richiede due supporti validi');
+  hidden.nebulaHiddenUntilPly=0;
+  selected.nebulaHiddenUntilPly=b.ply+2;
+  refreshEscortLinks(side,b.ply);
+  note(hidden.name+' riappare; '+selected.name+' si occulta fino al prossimo tuo turno',
+   {revealedId:hidden.id,hiddenId:selected.id});
+  return;
+ }
+ if(action==='cryogenic-night'){
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!defense)throw Error('Notte criogenica non posata');
+  defense.nebulaNight=true;
+  note('Per il prossimo turno nemico: un solo bersaglio per attacco');
+  return;
+ }
+ throw Error('Azione Nebulosa non eseguita: '+action);
+}
+function nebulaHideForTurn(b,ctx,events,order={}){
+ if(!order.nebulaHide)return;
+ const side=b.sides[ctx.who],reason=nebulaHideReason(side,b.ply,order.nebulaHideEscortId);
+ if(reason)throw Error(reason);
+ const visible=nebulaVisibleSupports(side,b.ply);
+ const selected=visible.find(e=>e.id===order.nebulaHideEscortId)||visible[0];
+ if(!selected)throw Error('Nessun supporto occultabile');
+ selected.nebulaHiddenUntilPly=b.ply+2;
+ ensureNebulaState(side).lastHidePly=b.ply;
+ refreshEscortLinks(side,b.ply);
+ events.push(emit(b,ctx.who,'nebula-hide',
+  'Proiettore di bruma occulta '+selected.name+' (non agisce e non protegge)',{
+   cardId:'nx-e01-01',targetKind:'escort',targetId:selected.id,
+   untilPly:selected.nebulaHiddenUntilPly}));
+}
+function nebulaArchonTerrainTrade(b,ctx,events,order={}){
+ const side=b.sides[ctx.who],state=ensureNebulaState(side);
+ const active=side.commander?.id==='ex-e01-01'&&
+  side.commander.untilPly>b.ply&&operational(side.ships[0],characterSystem(side));
+ if(!order.nebulaTerrainTrade||!active||state.lastTerrainTradePly===b.ply||
+  !ctx.cards.some(id=>cardRole(id)==='terrain'))return;
+ const index=side.hand.indexOf(order.nebulaTradeCardId);
+ const removed=side.hand.splice(index>=0?index:0,1)[0];
+ if(!removed)return;
+ side.deck.push(removed);
+ const picked=side.deck.shift();
+ if(picked)side.hand.push(picked);
+ state.lastTerrainTradePly=b.ply;
+ events.push(emit(b,ctx.who,'card',
+  'Arconte della Bruma: '+(card(removed)?.nome||removed)+
+  ' sotto al mazzo e pescata una carta',{
+   cardId:'ex-e01-01',discardedCardId:null,putBottomCardId:removed,
+   drawnCardId:picked||null,terrainTrade:true}));
+}
+// Una raffica corrisponde a una singola risoluzione di attacco, non a un intero turno.
+function startNebulaVolley(ctx){
+ ctx.nebulaVolleySerial=(ctx.nebulaVolleySerial||0)+1;
+ ctx.nebulaSeen=new Map();
+}
+function blockNebulaRepeat(b,ctx,events,target){
+ const defender=b.sides[other(ctx.who)];
+ const defense=defender.defenses.find(d=>d.id==='nx-e01-03'&&!d.hidden&&
+  d.untilPly>b.ply&&d.nebulaVeilTargetKind===target.kind&&
+  d.nebulaVeilTargetId===target.unit.id);
+ if(!defense)return false;
+ const key=target.kind+':'+target.unit.id;
+ if(!ctx.nebulaSeen)ctx.nebulaSeen=new Map();
+ if(!ctx.nebulaSeen.has(key)){
+  ctx.nebulaSeen.set(key,true);
+  return false; // Il primo colpo puo ferire; le difese normali restano valide.
+ }
+ discardDefense(defender,defense.source);
+ events.push(emit(b,other(ctx.who),'block',
+  'Velo criogenico annulla i colpi successivi della stessa raffica',{
+   cardId:defense.id,targetKind:target.kind,targetId:target.unit.id}));
+ return true;
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
