@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,exclusiveUnlocked,eligibleExclusives,effectiveDeck,cardFacePath} from './fleetNext/rules.js';
@@ -47,20 +49,20 @@ function shield(side,kind,unit,count=2,source='fixture-shield'){
   remaining:count,untilPly:20,...target});
 }
 
-test('Dieci esclusive Vespa per nave e sei sbloccate al primo livello',()=>{
+test('Dieci esclusive Vespa per nave e quattro iniziali e sei sbloccate nella progressione',()=>{
  assert.equal(new Set(IDS).size,10);
  for(const id of IDS){
   assert.equal(card(id).shipId,'C02',id);
   assert.notEqual(card(id).playable,false,id);
-  assert.ok(exclusiveUnlocked(id,'C02',5),id);
+  assert.ok(exclusiveUnlocked(id,'C02',shipMaxLevel('C02')),id);
   assert.equal(exclusiveUnlocked(id,'N00',5),false,id);
   assert.equal(cardFacePath(id),null,'Mai usare illustrazioni legacy '+id);
  }
- for(let level=1;level<=5;level++){
-  assert.equal(IDS.filter(id=>exclusiveUnlocked(id,'C02',level)).length,5+level);
-  assert.equal(eligibleExclusives('C02',level).filter(c=>c.shipId==='C02').length,5+level);
+ for(let level=1;level<=shipMaxLevel('C02');level++){
+  assert.equal(IDS.filter(id=>exclusiveUnlocked(id,'C02',level)).length,4+EXCLUSIVE_UNLOCK_MILESTONES['C02'].filter(n=>n<=level).length);
+  assert.equal(eligibleExclusives('C02',level).filter(c=>c.shipId==='C02').length,4+EXCLUSIVE_UNLOCK_MILESTONES['C02'].filter(n=>n<=level).length);
  }
- assert.equal(IDS.filter(id=>effectiveDeck([],'C02',5).includes(id)).length,10);
+ assert.equal(IDS.filter(id=>effectiveDeck([],'C02',shipMaxLevel('C02')).includes(id)).length,10);
 });
 
 test('Lente e Specchio sono due moduli separati, da due integrità ciascuno',()=>{
