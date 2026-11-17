@@ -4,7 +4,7 @@ import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,BASE_CATALOG_
 import {validateEffectSpec,describeEffect} from './fleetNext/simpleEffects.js';
 import {createFleetInventory,normalizeFleetInventory,readFleetInventory,writeFleetInventory,buyFleetPack,buyGeneralCard} from './fleetNext/collection.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
-import retired from './fleetNext/retiredCardIds.json' with {type:'json'};
+import retired from '../docs/ARCHIVIO_ID_CARTE_RITIRATE_2026-11-16.json' with {type:'json'};
 function storage(){const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)};}
 test('350 vecchie carte rimosse, Personaggi Boss e sei carte tecniche conservati',()=>{
  assert.equal(Object.keys(GENERAL_CARDS).length,12);
