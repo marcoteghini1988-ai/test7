@@ -145,7 +145,7 @@ export function availableFleetTargets(side,ply=0){
    [{kind:'part',id:'weapons',name:'Nave madre',hp:side.ships[0].hp,
     maxHp:side.ships[0].maxHp,unit:motherPart(side.ships[0],'weapons'),blocked:guards.length>0}]:
    side.ships[0].parts.filter(unitAlive).map(unit=>({kind:'part',id:unit.id,name:VITAL_LABELS[unit.id],
-    hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0}))];
+    hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0})))];
 }
 export function fusionUnavailableReason(side,ply=0){
  const used=side.fusionsUsed||0;
