@@ -52,12 +52,12 @@ test('Le fusioni restano esclusiva di tre navi ai livelli originali',()=>{
 });
 
 test('Le carte nuove non si possono giocare prima dello sblocco anche se forzate nella mano',()=>{
- const id='nx-n00-10',battle=createFleetNextBattle({shipA:'N00',levelA:19,
+ const id='nx-c04-03',battle=createFleetNextBattle({shipA:'C04',levelA:2,
   shipB:'C03',levelB:17,deckA:[],deckB:[],seed:181});
  battle.sides.A.hand=[id];
  const reason=effectUnavailableReason(EXCLUSIVE_CARDS[id],battle.sides.A,battle);
  assert.match(reason,/Nave o componenti richiesti non disponibili/);
- const advanced=createFleetNextBattle({shipA:'N00',levelA:20,
+ const advanced=createFleetNextBattle({shipA:'C04',levelA:3,
   shipB:'C03',levelB:17,deckA:[],deckB:[],seed:181});
  assert.equal(effectUnavailableReason(EXCLUSIVE_CARDS[id],advanced.sides.A,advanced),'');
 });
