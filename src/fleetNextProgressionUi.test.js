@@ -155,7 +155,7 @@ test('The actual session entry initializes final boss Arca L5, two reserves and 
  const boss=session.battle.sides.B;
  assert.equal(boss.ships[0].id,'L04');assert.equal(boss.ships[0].level,5);
  assert.equal(boss.escorts.length,2);assert.equal(boss.reserveEscorts.length,2);
- assert.equal([...boss.deck,...boss.hand].filter(id=>id==='prog-fusion-l04').length,2);
+ assert.equal([...boss.deck,...boss.hand].filter(id=>id==='nx-l04-05').length,2);
  assert.equal(effectUnavailableReason(card('prog-fusion-l04'),boss,session.battle),'');
 });
 
