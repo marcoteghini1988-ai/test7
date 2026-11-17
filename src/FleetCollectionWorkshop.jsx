@@ -1,7 +1,7 @@
 import React,{useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,
  eligibleExclusives,cardFacePath,card,cardCopyLimit} from './fleetNext/rules.js';
-import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS} from './fleetNext/nextDeckLoadout.js';
+import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readShipCollection} from './shipCollection.js';
 import {readFleetInventory,writeFleetInventory,
@@ -47,7 +47,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  const motherOwned=shipOptions.find(s=>s.shipId===motherId)||shipOptions[0];
  const activeMother=motherOwned.shipId,motherLevel=motherOwned.level||1;
  const deckInfo=buildNextBaseDeck(inventory,activeMother,motherLevel,selectedDeck);
- const extraCards=[...Object.values(GENERAL_CARDS),...Object.values(BOSS_CARDS)];
+ const extraCards=[...NEXT_TEMP_WEAPON_IDS.map(card).filter(Boolean),...Object.values(GENERAL_CARDS),...Object.values(BOSS_CARDS)];
  function buyCommon(id){
   const purchase=buyNextCommonCard(inventory,id);
   if(!purchase.ok){setNotice(purchase.reason);return;}
@@ -144,7 +144,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {NEXT_COMMON_CARDS.map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>Personaggi e Boss posseduti</h3>
+   <h3 style={{fontSize:13}}>Armi temporanee, Personaggi e Boss posseduti</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {extraCards.filter(c=>inventory.owned[c.id]>0).map(genericCardTile)}
    </div>
