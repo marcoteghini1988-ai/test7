@@ -52,6 +52,6 @@
 
 1. Valori finali degli HP della madre, degli HP delle scudiere, del danno base, della forza delle armi temporanee e dei costi.
 2. Abilità definitive delle scudiere e delle fusioni, precedentemente discusse come idee.
-3. Evoluzione automatica della rarità delle 10 carte esclusive da Comune fino a Leggendaria. Gli sblocchi e i gradi attuali restano compatibili; la nuova distribuzione per L1–L20 sarà realizzata dopo l'approvazione.
+3. **Aggiornamento successivo del 17/11:** sono attive 170 esclusive per 17 navi e la loro **rarità visiva automatica Comune→Leggendaria** segue i livelli reali (`src/fleetNext/exclusiveEvolution.js`). Restano **da completare** la ridistribuzione degli sblocchi delle 10 carte lungo L1–L20 e l'evoluzione della forza degli effetti: l'attuale sblocco carte L1–L5 e i gradi manuali sono ancora preservati. Vedere `docs/CHECKPOINT_170_ESCLUSIVE_E_RARITA_2026-11-17.md`.
 4. Test di bilanciamento reale PvP fra flotte diverse al massimo livello. La parità di potenziale al 100% è **soltanto un obiettivo comune**, non una percentuale di vittoria garantita.
 5. Nuove illustrazioni e animazioni: **non create**.
