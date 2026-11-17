@@ -6,6 +6,7 @@ import {SHIP_COLLECTION_KEY, equipShipCards, readShipCollection, updateShipColle
 import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import {shipUpgradeDustCost} from './shipUpgrades.js';
 import {getShipProgression,getShipProgressionLevels,shipProgressionProfile,shipMaxLevel} from './fleetNext/progression.js';
+import {EXCLUSIVE_CARDS} from './fleetNext/rules.js';
 import './ShipCollectionPanels.css';
 
 function readCollection() {
@@ -40,7 +41,9 @@ export function ShipProgressionDetails({shipId,level=1}){
   <details><summary>I {profile.maxLevel} livelli · traguardo competitivo 100%</summary>
    <p>{profile.description}</p>
    <ol>{getShipProgressionLevels(shipId).map(stage=><li key={stage.level} aria-current={stage.level===level?'step':undefined}>
-    <b>Livello {stage.level}</b><span>{stage.unlocks.join(' · ')}</span>
+    <b>Livello {stage.level}</b><span>{[...stage.unlocks,
+     ...Object.values(EXCLUSIVE_CARDS).filter(c=>c.shipId===shipId&&c.minShipLevelDraft===stage.level)
+      .map(c=>'Carta esclusiva: '+(c.name||c.nome))].join(' · ')}</span>
    </li>)}</ol>
   </details>
  </div>;
