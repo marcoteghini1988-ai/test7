@@ -68,8 +68,7 @@ export const EXCLUSIVE_UNLOCK_LEVELS=buildExclusiveUnlockLevels(EXCLUSIVE_SOURCE
 export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(EXCLUSIVE_SOURCES.map(raw => {
  const card={...raw,legacyMinShipLevelDraft:raw.minShipLevelDraft,
   minShipLevelDraft:EXCLUSIVE_UNLOCK_LEVELS[raw.id]};
- return
- [card.id,definedCard(card,card.kind||(/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
+ return [card.id,definedCard(card,card.kind||(/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
   /Scudiera|Supporto|Tattica/i.test(card.category)?'support':
   /Controllo/i.test(card.category)?'control':
   /combo|fusione/i.test(card.category)?'combo':'attack'),'exclusive')];
