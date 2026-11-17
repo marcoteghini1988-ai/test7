@@ -33,7 +33,8 @@ import {ROYAL_ATTACK_ACTIONS,isRoyalModule,ensureRoyalState,royalPrecondition,
 import {OBSIDIAN_ATTACK_ACTIONS,OBSIDIAN_PREP_ACTIONS,isObsidianModule,
  isObsidianPreparation,ensureObsidianState,obsidianPrecondition,
  obsidianChoiceReason,obsidianEnemyUnits,obsidianReadyEscorts,
- obsidianFusedEscort,obsidianModuleActive,obsidianPending,obsidianSealed} from './obsidianEngine.js';
+ obsidianFusedEscort,obsidianModuleActive,obsidianPending,obsidianSealed,
+ obsidianReadyEscort,obsidianBulkheadTryHit} from './obsidianEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
@@ -2193,9 +2194,7 @@ function obsidianBulkheadBlock(b,ctx,events,defender,kind,unit){
  const d=defender.defenses.find(d=>d.id==='nx-l03-04'&&!d.hidden&&
   d.untilPly>b.ply&&d.obsidianPartId===unit.id);
  if(!d)return false;
- if(d.obsidianSeenPly!==b.ply){d.obsidianSeenPly=b.ply;return false;}
- if(d.obsidianBlockedPly===b.ply)return false;
- d.obsidianBlockedPly=b.ply;
+ if(!obsidianBulkheadTryHit(d,b.ply,unit.id))return false;
  discardDefense(defender,d.source);
  const who=other(ctx.who);
  events.push(emit(b,who,'block','Paratia d’ossidiana ferma il secondo colpo su '+
@@ -3826,7 +3825,8 @@ export function autoFleetTurn(b,who=b.turn){
   card(side.hand[i]).effectSpec.action==='ruthless-response');
  const marked=side.lince?.route?.usePly===b.ply?
   enemy.ships[0].parts.find(p=>p.id===side.lince.route.partId&&!p.destroyed):null;
- const hasShort=cards.some(i=>side.hand[i]==='nx-c03-07'||side.hand[i]==='nx-r02-09');
+ const hasShort=cards.some(i=>side.hand[i]==='nx-c03-07'||
+  side.hand[i]==='nx-r02-09'||side.hand[i]==='nx-l03-02');
  const shortTarget=enemy.machines?.find(m=>unitAlive(m));
  const target=hasShort&&shortTarget?
   {targetKind:'machine',targetId:shortTarget.id,machineSlot:shortTarget.slot,
