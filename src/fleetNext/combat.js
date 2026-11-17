@@ -52,7 +52,7 @@ import {
 } from './terrains.js';
 import {HP_SYNC_RULESET,motherIntegrityFromSystems,splitSynchronizedDamage} from './hpSynchronization.js';
 import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
- commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,
+ commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,activeSystemCard,
  consumePlanciaRestriction,consumePlanciaSplit,planciaSplitCount,
  resetFieldWithBlackHole,TEMP_WEAPON_DURATION} from './newCardEffects.js';
 
@@ -2532,6 +2532,17 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     owner.discard.push(result.replacedEffect.id);
    }
    if(result.discardedPlayedCard)side.discard.push(def.id);
+   if(result.replaced&&s.system==='generator'&&s.tier===4){
+    if(s.operation==='disable'){
+     // Il sabotaggio maggiore spegne un bonus energetico attivo, senza HP persi.
+     const old=target.buffs.findIndex(v=>v.kind==='guard');
+     if(old>=0){target.buffs.splice(old,1);at('Un bonus energetico difensivo è stato disattivato');}
+     else if(target.charges.length){target.charges.shift();at('Una carica energetica è stata annullata');}
+    }else{
+     target.buffs.push({kind:'guard',power:1,untilPly:b.ply+2,source:def.id});
+     at('Difesa energetica immediata: il prossimo attacco perde 1 potenza');
+    }
+   }
    at(result.replaced?'Effetto sui sistemi attivato per '+s.turns+' turni':'Effetto più forte già attivo');
    break;
   }
@@ -2722,8 +2733,21 @@ function applyBossPassive(b,ctx,events){
 }
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
+ // Centralina Epica ferma una passiva sincronizzata, la Leggendaria
+ // le due passive dei supporti attivi nel primo turno influenzato.
+ const sabotage=side.ruleset===HP_SYNC_RULESET?activeSystemCard(side,'command','disable',b.ply):null;
+ const recovery=side.ruleset===HP_SYNC_RULESET?activeSystemCard(side,'command','amplify',b.ply):null;
+ let suspended=sabotage&&sabotage.tier>=3&&b.ply===sabotage.appliedPly+1&&
+  (!recovery||recovery.tier<sabotage.tier)?sabotage.tier===4?2:1:0;
+ if(suspended&&recovery?.tier===4)suspended=Math.max(0,suspended-1);
  for(const e of side.escorts.filter(x=>x.linked)){
   if(unitSilenced(e,b.ply))continue;
+  if(suspended>0&&(e.skill?.requires||[]).includes('command')){
+   suspended--;
+   events.push(emit(b,ctx.who,'escort',
+    e.name+' · passiva sincronizzata sospesa dal sabotaggio Centralina'));
+   continue;
+  }
   const amount=Math.max(1,e.grade||1);
   for(const s of e.fusionSkills||[e.skill]){
    if(e.obsidianBastion&&ctx.obsidianGuardArmed&&
