@@ -1,6 +1,6 @@
 import React,{useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,
- eligibleExclusives,cardFacePath,card,cardCopyLimit} from './fleetNext/rules.js';
+ eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
@@ -92,6 +92,13 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  }
  const exclusives=eligibleExclusives(activeMother,motherLevel).filter(c=>
   Object.hasOwn(EXCLUSIVE_CARDS,c.id)&&!c.id.startsWith('prog-'));
+ const lockedExclusives=Object.values(EXCLUSIVE_CARDS).filter(c=>c.shipId===activeMother&&
+  !exclusives.some(unlocked=>unlocked.id===c.id));
+ const actualUnlockLevel=c=>{
+  const max=shipMaxLevel(activeMother)||5;
+  for(let level=1;level<=max;level++)if(exclusiveUnlocked(c.id,activeMother,level))return level;
+  return null;
+ };
  function upgrade(id){
   const result=upgradeFleetExclusive(inventory,id,activeMother,motherLevel);
   if(!result.ok){setNotice(result.reason||'Potenziamento non disponibile');return;}
@@ -119,7 +126,10 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
      {shipOptions.map(s=><option key={s.shipId} value={s.shipId}>{SHIP_CONFIGS[s.shipId]?.name||s.shipId} · L{s.level||1}</option>)}
     </select>
    </label>
-   <p style={small}>Esclusive sbloccate: {exclusives.length}. Le restanti si sbloccano con i livelli della madre. Le immagini definitive saranno progettate successivamente.</p>
+   <p style={small}>Esclusive sbloccate: {exclusives.length}/10. Le altre dipendono dal livello della madre e dai supporti operativi. Le immagini definitive arriveranno dopo il progetto grafico.</p>
+   {!!lockedExclusives.length&&<details style={small}><summary style={{cursor:'pointer'}}>Prossimi sblocchi ({lockedExclusives.length})</summary>
+    <ol>{lockedExclusives.map(c=><li key={c.id}>{c.name} · L{actualUnlockLevel(c)??'?'}{c.requirements?' · '+c.requirements:''}</li>)}</ol>
+   </details>}
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {exclusives.map(c=>{
      const grade=inventory.exclusiveUpgrades[c.id]||1,cost=exclusiveUpgradeCost(grade+1);
@@ -132,6 +142,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
       <div style={small}>Rarità {rarity} · Grado effetto {grade}/3 · {c.category||c.categoria}</div>
       {upcomingRarity&&<div style={small}>Prossima rarità {upcomingRarity.rarity} · navicella L{upcomingRarity.minLevel}</div>}
       <p style={small}>{describeEffect(c,grade)}</p>
+      {c.requirements&&<p style={small}>{c.requirements}</p>}
       {upgradeable?<>
        <p style={small}>Grado {grade+1}: {describeEffect(c,grade+1)}</p>
        <button style={btn} onClick={()=>upgrade(c.id)} disabled={motherLevel<requiredLevel}>
