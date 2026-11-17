@@ -27,6 +27,9 @@ import {NEBULA_ATTACK_ACTIONS,isNebulaModule,ensureNebulaState,nebulaPreconditio
  nebulaModuleActive,nebulaHideReason} from './nebulaEngine.js';
 import {STORM_ATTACK_ACTIONS,isStormModule,ensureStormState,stormPrecondition,
  stormChoiceReason,stormModuleActive,stormUnits,stormSupports} from './stormEngine.js';
+import {ROYAL_ATTACK_ACTIONS,isRoyalModule,ensureRoyalState,royalPrecondition,
+ royalChoiceReason,royalSupports,royalUnits,royalVisibleProtections,
+ royalCapableModule,royalPart} from './royalEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
@@ -99,7 +102,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
-  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,recalledModules:[],recalledMachines:[],
+  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,royal:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:progression.fusionLimit,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
@@ -241,7 +244,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
- side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);ensureNebulaState(side);ensureStormState(side);
+ side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);ensureNebulaState(side);ensureStormState(side);ensureRoyalState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
  if(!operational(side.ships[0],'generator')){
@@ -298,6 +301,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(def.effectSpec.type==='storm'){
   const reason=stormPrecondition(def,side,battle);
+  if(reason)return reason;
+ }
+ if(def.effectSpec.type==='royal'){
+  const reason=royalPrecondition(def,side,battle);
   if(reason)return reason;
  }
  const invalid=validateEffectSpec(def.effectSpec);
@@ -373,6 +380,14 @@ export function validateFleetTurn(b,who,order){
  if(stormCommands.length>1)return 'Tempesta: un solo comando offensivo per turno';
  const stormReason=stormChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
  if(stormReason)return stormReason;
+ const royalCommands=chosen.filter(c=>c.effectSpec?.type==='royal'&&
+  ROYAL_ATTACK_ACTIONS.includes(c.effectSpec.action));
+ if(royalCommands.length>1)return 'Eclisse Reale: un solo comando offensivo per turno';
+ const royalReason=royalChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
+ if(royalReason)return royalReason;
+ if(chosen.some(c=>c.effectSpec?.type==='royal'&&c.effectSpec.action==='crown-fusion')&&
+  chosen.some(c=>c.effectSpec?.type==='fusion'))
+  return 'Una sola Fusione per turno e per partita';
  if(chosen.some(c=>c.id==='nx-r02-03')){
   const eligible=mantaActiveSupports(side,b.ply);
   const target=eligible.find(e=>e.id===order.mantaScreenEscortId)||eligible[0];
@@ -533,6 +548,8 @@ export function validateFleetTurn(b,who,order){
    return 'Attacco Nebulosa: scegli un supporto o una macchina nemici';
   if(stormCommands.length&&!['escort','machine'].includes(selected.kind))
    return 'Attacco Tempesta: scegli una macchina o un supporto nemico';
+  if(royalCommands.length&&!['escort','machine'].includes(selected.kind))
+   return 'Comando Eclisse Reale: scegli una unità avversaria';
   const linceAction=linceCommands[0]?.effectSpec.action;
   if(['solar-bypass','crimson-raid'].includes(linceAction)&&selected.kind!=='part')
    return 'Lince: questo Attacco richiede un vitale avversario';
@@ -553,7 +570,8 @@ export function validateFleetTurn(b,who,order){
   c.effectSpec.type==='manta'&&MANTA_ATTACK_ACTIONS.includes(c.effectSpec.action)||
   c.effectSpec.type==='shark'&&SHARK_ATTACK_ACTIONS.includes(c.effectSpec.action)||
   c.effectSpec.type==='nebula'&&NEBULA_ATTACK_ACTIONS.includes(c.effectSpec.action)||
-  c.effectSpec.type==='storm'&&STORM_ATTACK_ACTIONS.includes(c.effectSpec.action)))
+  c.effectSpec.type==='storm'&&STORM_ATTACK_ACTIONS.includes(c.effectSpec.action)||
+  c.effectSpec.type==='royal'&&ROYAL_ATTACK_ACTIONS.includes(c.effectSpec.action)))
   return 'Un comando offensivo non può essere passato';
  return null;
 }
@@ -1807,6 +1825,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'shark':activateSharkCard(b,who,def,ctx,events,order,token);break;
   case 'nebula':activateNebulaCard(b,who,def,ctx,events,order,token);break;
   case 'storm':activateStormCard(b,who,def,ctx,events,order,token);break;
+  case 'royal':activateRoyalCard(b,who,def,ctx,events,order,token);break;
   case 'bypass':{
    ctx.bypassPlayed=true;
    if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
@@ -1913,7 +1932,7 @@ function applyCard(b,who,id,ctx,events,order){
   return false;
  }
  if(role==='character'){
-  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm'].includes(spec.type)?0:1,
+  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal'].includes(spec.type)?0:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
@@ -1924,7 +1943,10 @@ function applyCard(b,who,id,ctx,events,order){
   const sharkTeeth=spec.type==='shark'&&spec.action==='returning-teeth';
   const nebulaFalse=spec.type==='nebula'&&spec.action==='false-target';
   const stormNet=spec.type==='storm'&&spec.action==='lightning-net';
-  side.defenses.push(stormNet?
+  const royalDecree=spec.type==='royal'&&spec.action==='interdiction-decree';
+  side.defenses.push(royalDecree?
+   {id,source,hidden:true,armedAtPly:b.ply,untilPly:null,trigger:'unit-withdrawal'}:
+   stormNet?
    {id,source,hidden:true,armedAtPly:b.ply,untilPly:null,trigger:'storm-second-support'}:
    nebulaFalse?
    {id,source,hidden:true,armedAtPly:b.ply,untilPly:null,trigger:'prepared-release'}:
@@ -3037,6 +3059,8 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   sharkAttacks:[],sharkPierceLeft:0,sharkBypass:false,sharkLureUsed:false,sharkPrimary:null,
   nebulaAttacks:[],nebulaPierceLeft:0,nebulaUnredirectableCardId:null,
   stormAttacks:[],stormSinglePierceLeft:0,stormEscortVictims:new Set(),
+  royalAttacks:[],royalSupportCommand:false,royalRelay:false,
+  royalMotherShot:false,royalLanceUsed:false,royalSplitExtra:0,
   stormHitIds:new Set(),stormSuppressChain:false,stormFrontUsed:false,stormChainPlan:null,
   nebulaVolleySerial:0,nebulaSeen:new Map(),
   bypassPlayed:false,
@@ -3081,13 +3105,14 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.sharkAttacks.length?resolveSharkShots(b,ctx,events,order):
   ctx.nebulaAttacks.length?resolveNebulaShots(b,ctx,events,order):
   ctx.stormAttacks.length?resolveStormShots(b,ctx,events,order):
+  ctx.royalAttacks.length?resolveRoyalShots(b,ctx,events,order):
   ctx.prismaAttacks.length?resolvePrismaShots(b,ctx,events,order):
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  const shot=mergeFalcoShots(releasedShot,ownShot);
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
