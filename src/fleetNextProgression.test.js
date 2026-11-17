@@ -102,7 +102,7 @@ test('Le fusioni precedenti hanno una sola carta e si sbloccano al livello previ
  for(const [shipId,id,at] of [['L01','prog-fusion-l01',5],['L03','prog-fusion-l03',3]]){
   for(let level=1;level<=5;level++){
    assert.equal(exclusiveUnlocked(id,shipId,level),level>=at);
-   assert.equal(effectiveDeck([],shipId,level).filter(x=>x===id).length,level>=at?1:0);
+   assert.equal(effectiveDeck([],shipId,level).filter(x=>x===id).length,0,'La fusione storica non duplica la Fusione nativa');
    assert.equal(requiredReserveCount(shipId,level),0);
   }
  }
