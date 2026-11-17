@@ -1248,6 +1248,199 @@ function mantaNavigatorTurn(b,ctx,events){
    escortSlot:target.slot,energy:state.energy}));
 }
 
+
+// Le esclusive dello Squalo usano bersagli fissati, risorse consumate e stati reali.
+function activateSharkCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],enemy=b.sides[other(who)],action=def.effectSpec.action;
+ const note=(message,extra={})=>events.push(emit(b,who,'card',
+  (def.nome||def.name)+' · '+message,{cardId:def.id,...extra}));
+ const pick=(rows,kind,id)=>rows.find(t=>t.kind===kind&&t.unit.id===id)||rows[0];
+ if(isSharkModule(def.id)){
+  const result=mountModule(side,def);
+  if(!result.ok)throw Error(result.reason);
+  if(action==='toothed-armor'){
+   const target=pick(sharkUnits(enemy),order.sharkArmorKind,order.sharkArmorId);
+   if(!target)throw Error('Corazza dentata: nessuna unità nemica da designare');
+   result.entry.sharkTargetKind=target.kind;
+   result.entry.sharkTargetId=target.unit.id;
+   note('Controcolpo fissato su '+target.unit.name,{
+    targetKind:target.kind,targetId:target.unit.id,moduleId:result.entry.id});
+  }else note('Arpione predatorio montato');
+  return;
+ }
+ if(SHARK_ATTACK_ACTIONS.includes(action)){
+  if(action==='retaliation-torpedo'){
+   const machine=sharkWoundedMachines(side,b.ply).find(m=>m.id===order.sharkTorpedoMachineId)||
+    sharkWoundedMachines(side,b.ply)[0];
+   if(!machine)throw Error('Siluro richiede una macchina ferita');
+   machine.hp=0;machine.destroyed=true;
+   if(!machine.cardDiscarded){
+    if(machine.sourceCardId)side.discard.push(machine.sourceCardId);
+    machine.cardDiscarded=true;
+   }
+   note('Sacrificata '+machine.name+' per lanciare un colpo pesante',{
+    machineId:machine.id,sacrificed:true});
+  }
+  if(action==='void-bite'){
+   ctx.sharkPierceLeft=sharkWoundedSupports(side,b.ply).length?1:0;
+   note(ctx.sharkPierceLeft?'Morso con perforazione di una Difesa scoperta':'Morso ordinario');
+  }
+  if(action==='ruthless-response'){
+   ctx.sharkBypass=true;ctx.bypass=true;
+   note('Ritorsione attiva: un vitale avversario raggiungibile');
+  }
+  ctx.sharkAttacks.push({id:def.id,action});
+  return;
+ }
+ if(action==='abyssal-decoy'){
+  const units=sharkOperationalUnits(side,b.ply);
+  const target=pick(units,order.sharkDecoyKind,order.sharkDecoyId);
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!target||!defense)throw Error('Esca abissale: bersaglio non valido');
+  defense.sharkDecoyKind=target.kind;defense.sharkDecoyId=target.unit.id;
+  note('Attira il prossimo attacco ordinario su '+target.unit.name,{
+   targetKind:target.kind,targetId:target.unit.id});
+  return;
+ }
+ if(action==='returning-teeth'){
+  const units=sharkUnits(enemy);
+  const first=pick(units,order.sharkTeethFirstKind,order.sharkTeethFirstId);
+  const others=units.filter(t=>t.unit.id!==first?.unit?.id);
+  const second=pick(others,order.sharkTeethSecondKind,order.sharkTeethSecondId);
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!first||!second||!defense)throw Error('Denti di ritorno: servono due bersagli diversi');
+  defense.sharkTeethTargets=[
+   {kind:first.kind,id:first.unit.id},{kind:second.kind,id:second.unit.id}
+  ];
+  events.push(emit(b,who,'trap-set','Una Trappola è stata posata coperta'));
+  return;
+ }
+ if(action==='abyssal-admiral'){
+  const state=ensureSharkState(side);
+  state.admiralDiscardId=order.sharkAdmiralDiscardId||null;
+  state.admiralEnabled=order.sharkAdmiralEnabled!==false;
+  state.admiralSeenPly=-999;
+  note('Prima unità ferita nel turno nemico: scarta una vera carta per ripararla');
+  return;
+ }
+ if(action==='predator-shield'){
+  const escort=sharkWoundedSupports(side,b.ply).find(e=>e.id===order.sharkShieldEscortId)||
+   sharkWoundedSupports(side,b.ply)[0];
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!escort||!defense)throw Error('Scudo del predatore: supporto ferito assente');
+  defense.sharkShieldEscortId=escort.id;
+  note('Il primo colpo su '+escort.name+' sarà limitato a 1 danno');
+  return;
+ }
+ if(action==='last-bite'){
+  const supports=sharkActiveSupports(side,b.ply);
+  const donor=supports.find(e=>e.id===order.sharkSacrificeEscortId)||
+   supports.find(e=>e.hp<e.maxHp);
+  const receiver=supports.find(e=>e.id===order.sharkRecipientEscortId&&e.id!==donor?.id)||
+   supports.find(e=>e.id!==donor?.id&&e.hp<e.maxHp);
+  if(!donor||!receiver||donor.hp>=donor.maxHp||receiver.hp>=receiver.maxHp)
+   throw Error('Ultimo morso: servono due supporti feriti distinti');
+  donor.hp=0;donor.destroyed=true;donor.linked=false;
+  const healed=Math.min(2,receiver.maxHp-receiver.hp);
+  receiver.hp+=healed;refreshEscortLinks(side,b.ply);
+  if(!side.deck.length&&side.discard.length){
+   side.deck=shuffled(side.discard,b);side.discard=[];
+  }
+  const drawn=side.deck.shift();
+  if(drawn)side.hand.push(drawn);
+  events.push(emit(b,who,'shark-sacrifice','Ultimo morso: '+donor.name+
+   ' sacrificato, '+receiver.name+' riparato di '+healed+' punti'+
+   (drawn?', pescata una carta':', nessuna carta da pescare'),{
+    cardId:def.id,sacrificedId:donor.id,targetId:receiver.id,
+    healed,drawnCardId:drawn||null}));
+  return;
+ }
+ throw Error('Azione Squalo mancante: '+action);
+}
+// Le risposte non generano ulteriori risposte e non colpiscono parti vitali.
+function sharkCounterShot(b,who,events,kind,id,sourceCard){
+ const defender=b.sides[other(who)];
+ const target=sharkUnits(defender).find(t=>t.kind===kind&&t.unit.id===id);
+ if(!target)return 0;
+ const ctx={who,pierceLeft:0,sharkPierceLeft:0,sharkBypass:false,
+  sharkPrimary:null,sharkLureUsed:true,order:{},bypass:false};
+ const redirected=redirectFleetHit(b,ctx,events,{kind,unit:target.unit});
+ if(blockHit(b,defender,redirected.kind,redirected.unit,ctx,events))return 0;
+ const amount=sharkCapDamage(b,defender,redirected.kind,redirected.unit,1,events);
+ const actual=damageFleetUnit(defender,redirected.kind,redirected.unit,amount,b.ply);
+ if(actual)events.push(emit(b,who,'shark-counter',
+  'Ritorsione Squalo: '+redirected.unit.name+' −'+actual,{
+   cardId:sourceCard,targetKind:redirected.kind,targetId:redirected.unit.id,
+   damage:actual,destroyed:redirected.unit.destroyed,noRecursion:true}));
+ return actual;
+}
+// Richiamato SOLO dopo un vero colpo da attacco. Mai da costi, riflessi o reazioni.
+function onSharkAttackHit(b,ctx,events,hit){
+ if(!hit||hit.damage<=0||!['escort','machine'].includes(hit.kind))return;
+ const attacker=b.sides[ctx.who],defender=b.sides[other(ctx.who)];
+ if(attacker.ships[0].id==='R04'&&sharkModuleActive(attacker,'weapon','nx-r04-07',b.ply)&&
+  unitAlive(hit.unit)){
+  hit.unit.sharkAnchorUntilPly=b.ply+2;
+  events.push(emit(b,ctx.who,'shark-anchor',
+   'Arpione predatorio: '+hit.unit.name+' non può essere ritirato',{
+    cardId:'nx-r04-07',targetKind:hit.kind,targetId:hit.unit.id,
+    untilPly:hit.unit.sharkAnchorUntilPly}));
+ }
+ if(defender.ships[0].id!=='R04')return;
+ const state=ensureSharkState(defender),defenderWho=other(ctx.who);
+ if(hit.unit.destroyed)state.lastEnemyLossPly=b.ply;
+ const armor=installedModule(defender,'utility');
+ if(sharkModuleActive(defender,'utility','nx-r04-01',b.ply)&&state.armorFiredPly!==b.ply){
+  state.armorFiredPly=b.ply;
+  if(sharkCounterShot(b,defenderWho,events,armor.sharkTargetKind,armor.sharkTargetId,armor.cardId)){
+   events.push(emit(b,defenderWho,'card','Corazza dentata: controcolpo eseguito',
+    {cardId:armor.cardId}));
+  }else events.push(emit(b,defenderWho,'card',
+   'Corazza dentata: bersaglio assente o colpo bloccato',{cardId:armor.cardId}));
+ }
+ const admiral=defender.commander;
+ if(admiral?.id==='ex-r04-01'&&admiral.untilPly>b.ply&&
+  operational(defender.ships[0],characterSystem(defender))&&
+  state.admiralSeenPly!==b.ply){
+  state.admiralSeenPly=b.ply;
+  if(unitAlive(hit.unit)&&state.admiralEnabled!==false&&
+   hit.unit.hp<hit.unit.maxHp&&defender.hand.length){
+   const index=defender.hand.indexOf(state.admiralDiscardId);
+   const discarded=defender.hand.splice(index>=0?index:0,1)[0];
+   defender.discard.push(discarded);hit.unit.hp=Math.min(hit.unit.maxHp,hit.unit.hp+1);
+   state.admiralUsedPly=b.ply;
+   events.push(emit(b,defenderWho,'repair','Ammiraglio Abissale: '+hit.unit.name+
+    ' +1, scartata '+(card(discarded)?.nome||card(discarded)?.name||discarded),{
+     cardId:'ex-r04-01',discardedCardId:discarded,
+     targetKind:hit.kind,targetId:hit.unit.id}));
+  }
+ }
+ if(hit.kind==='machine'&&hit.unit.destroyed){
+  const trap=defender.defenses.find(d=>d.id==='nx-r04-04'&&d.hidden&&
+   d.trigger==='shark-machine-destroyed'&&d.armedAtPly<b.ply);
+  if(trap){
+   const targets=[...(trap.sharkTeethTargets||[])];
+   discardDefense(defender,trap.source);
+   events.push(emit(b,defenderWho,'trap-reveal',
+    'Denti di ritorno: due arpioni verso le unità fissate alla posa',{
+     cardId:trap.id,targetCount:targets.length}));
+   for(const t of targets)sharkCounterShot(b,defenderWho,events,t.kind,t.id,trap.id);
+  }
+ }
+}
+// Scudo del predatore: un solo pacchetto di danno, non una salva intera.
+function sharkCapDamage(b,defender,kind,unit,amount,events){
+ if(kind!=='escort'||defender.ships[0].id!=='R04'||amount<=0)return amount;
+ const defense=defender.defenses.find(d=>d.id==='nx-r04-08'&&!d.hidden&&
+  d.sharkShieldEscortId===unit.id&&d.untilPly>b.ply);
+ if(!defense)return amount;
+ discardDefense(defender,defense.source);
+ events.push(emit(b,other(b.turn),'block',
+  'Scudo del predatore limita il colpo a un danno',{
+   cardId:defense.id,targetKind:'escort',targetId:unit.id}));
+ return Math.min(1,amount);
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
