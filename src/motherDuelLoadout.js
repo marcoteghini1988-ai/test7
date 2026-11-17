@@ -28,7 +28,7 @@ export function chooseCampaignMotherRival(playerId,playerLevel,globalSector,plan
  const choices=alternatives.length?alternatives:[playerId];
  const index=(planetIndex*7+(local-1)*3+Math.floor((local-1)/3))%choices.length;
  const rival=choices[index];
- const rivalLevel=1+Math.round((level-1)/((shipMaxLevel(playerId)||5)-1)*((shipMaxLevel(rival)||5)-1));
+ const rivalLevel=boundedLevel(level,rival); // Conserva la difficoltà storica a parità di livello; tetto avversario reale.
  return Object.freeze({shipId:rival,level:rivalLevel,planetIndex,planetSector:local,
   rivalAvailable:alternatives.length>0});
 }

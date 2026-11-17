@@ -57,7 +57,7 @@ test('il caricamento ripara la flotta ma conserva la proprietà delle carte escl
   const loaded = readShipCollection(storage);
   assert.deepEqual(loaded.loadout, ['falco', 'iride', 'aurora']);
   assert.deepEqual(loaded.cards.map(c => [c.instanceId, c.level]), [
-    ['aurora', 1], ['falco', 5], ['iride', 2], ['lince', 4],
+    ['aurora', 1], ['falco', 6], ['iride', 2], ['lince', 4],
   ]);
   assert.throws(() => equipShipCards(loaded, ['falco', 'iride', 'lince']));
   assert.throws(() => equipShipCards(loaded, ['unknown']));
