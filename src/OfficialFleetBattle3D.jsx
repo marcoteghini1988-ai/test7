@@ -22,6 +22,8 @@ import {mantaCapacitorActive,mantaEnergy,mantaForkActive,mantaActiveSupports,
  mantaVisibleProtections,mantaEnemyUnits} from './fleetNext/mantaEngine.js';
 import {sharkOperationalUnits,sharkUnits,sharkWoundedSupports,
  sharkWoundedMachines} from './fleetNext/sharkEngine.js';
+import {nebulaHidden,nebulaHiddenSupport,nebulaVisibleSupports,nebulaTargets,
+ nebulaModuleActive,nebulaHideReason} from './fleetNext/nebulaEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
@@ -103,6 +105,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
    const linked=escort.linked!==false;
    return <div key={escort.id} className={'live-escort live-escort--'+slot+
     (escort.hp===0?' live-escort--lost':'')+(escort.fused?' f3d-escort--fused':'')+
+    (nebulaHidden(escort,ply)?' f3d-escort--veiled':'')+
     (selectedTarget?.kind==='escort'&&selectedTarget.id===escort.id?' f3d-unit--selected':'')}
     title={escort.name+' · '+describeEscortEffect(escort)}>
     <img src={escort.visual||ASSET_ROOT+'/escorts/'+mother.id+'_escort_'+(slot+1)+'.svg'}
@@ -133,6 +136,10 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      <span>{module.slot==='weapon'?'ARMA':'UTILITÀ'}</span><b>{module.name}</b><small>{module.hp}/{module.maxHp}</small>
     </button>)}
   </div>
+  {unit.ships?.[0]?.id==='E01'&&<div className="f3d-nebula-status" role="status">
+   <span aria-hidden="true">◈</span><b>NEBULOSA</b>
+   <small>{nebulaHiddenSupport(unit,ply)?'SUPPORTO OCCULTATO':'BRUMA NON ATTIVA'}</small>
+  </div>}
   {unit.ships?.[0]?.id==='R04'&&<div className="f3d-shark-status" role="status">
    <span aria-hidden="true">◈</span><b>SQUALO DEL VUOTO</b>
    <small>{unit.shark?.lastEnemyLossPly===ply-1?'RITORSIONE PRONTA':'DIFESA / RITORSIONE'}</small>
@@ -287,6 +294,9 @@ export default function OfficialFleetBattle3D({
  const [sharkOptions,setSharkOptions]=useState({armor:'',decoy:'',teethFirst:'',teethSecond:'',
   torpedo:'',shield:'',admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
  const setSharkOption=(name,value)=>setSharkOptions(old=>({...old,[name]:value}));
+ const [nebulaOptions,setNebulaOptions]=useState({hide:false,hideEscort:'',veil:'',swap:'',
+  terrainTrade:false,tradeCard:''});
+ const setNebulaOption=(name,value)=>setNebulaOptions(old=>({...old,[name]:value}));
  const [linceOptions,setLinceOptions]=useState({
   routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
   linceRecallWeapon:false,radentRecall:false,radentMachineId:''
@@ -367,6 +377,7 @@ export default function OfficialFleetBattle3D({
    recycle:'',repair:true,repairTarget:''});
   setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
    admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
+  setNebulaOptions({hide:false,hideEscort:'',veil:'',swap:'',terrainTrade:false,tradeCard:''});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -433,6 +444,7 @@ export default function OfficialFleetBattle3D({
   const sharkDecoyChoice=sharkOwnChoices.find(t=>t.key===sharkOptions.decoy);
   const sharkTeethFirstChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethFirst);
   const sharkTeethSecondChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethSecond);
+  const nebulaVeilChoice=nebulaTargetChoices.find(t=>t.key===nebulaOptions.veil);
   const result=resolveFleetNextTurn(battle,'A',
    {partId,targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
     escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
@@ -472,7 +484,11 @@ export default function OfficialFleetBattle3D({
     sharkTorpedoMachineId:sharkOptions.torpedo,sharkShieldEscortId:sharkOptions.shield,
     sharkAdmiralEnabled:sharkOptions.admiralEnabled,
     sharkAdmiralDiscardId:sharkOptions.admiralDiscard,
-    sharkSacrificeEscortId:sharkOptions.donor,sharkRecipientEscortId:sharkOptions.receiver
+    sharkSacrificeEscortId:sharkOptions.donor,sharkRecipientEscortId:sharkOptions.receiver,
+    nebulaHide:nebulaOptions.hide,nebulaHideEscortId:nebulaOptions.hideEscort,
+    nebulaVeilTargetKind:nebulaVeilChoice?.kind,nebulaVeilTargetId:nebulaVeilChoice?.id,
+    nebulaSwapTargetId:nebulaOptions.swap,nebulaTerrainTrade:nebulaOptions.terrainTrade,
+    nebulaTradeCardId:nebulaOptions.tradeCard
    },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
@@ -482,6 +498,7 @@ export default function OfficialFleetBattle3D({
    recycle:'',repair:true,repairTarget:''});
   setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
    admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
+  setNebulaOptions({hide:false,hideEscort:'',veil:'',swap:'',terrainTrade:false,tradeCard:''});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
@@ -491,7 +508,8 @@ export default function OfficialFleetBattle3D({
  function passTurn(){
   if(!battle||battle.phase!=='playing'||battle.turn!=='A')return;
   const result=resolveFleetNextTurn(battle,'A',
-   {cards:[],partId:null,pass:true,falcoHold:falcoOptions.hold},Date.now());
+   {cards:[],partId:null,pass:true,falcoHold:falcoOptions.hold,
+    nebulaHide:nebulaOptions.hide,nebulaHideEscortId:nebulaOptions.hideEscort},Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   setBattle(result.battle);setChosenCards([]);
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
@@ -499,6 +517,7 @@ export default function OfficialFleetBattle3D({
    recycle:'',repair:true,repairTarget:''});
   setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
    admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
+  setNebulaOptions({hide:false,hideEscort:'',veil:'',swap:'',terrainTrade:false,tradeCard:''});
   setMessage(fleetTurnNotice(result.events)||'Turno concluso');
  }
  async function leave(){
@@ -583,6 +602,17 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const nebulaActive=player.ships[0].id==='E01';
+ const nebulaFog=nebulaHiddenSupport(player,battle.ply);
+ const nebulaVisible=nebulaVisibleSupports(player,battle.ply);
+ const nebulaTargetChoices=nebulaTargets(player).map(({kind,unit})=>({
+  kind,id:unit.id,key:kind+':'+unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
+ }));
+ const nebulaTerrainSelected=chosenTypes.some(id=>cardRole(id)==='terrain');
+ const nebulaArchonActive=(player.commander?.id==='ex-e01-01'&&
+  player.commander.untilPly>battle.ply)||selectedActions.includes('mist-archon');
+ const nebulaTradeChoices=player.hand.filter((id,i)=>!chosenCards.includes(i));
+ const nebulaCanHide=nebulaActive&&!nebulaHideReason(player,battle.ply);
  const sharkActive=player.ships[0].id==='R04';
  const sharkEnemyChoices=sharkUnits(enemy).map(({kind,unit})=>({
   kind,id:unit.id,key:kind+':'+unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
@@ -722,7 +752,7 @@ export default function OfficialFleetBattle3D({
      </option>)}
     </select>
    </label>}
-   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive)&&!ended&&<div className="live-card-inspector" role="status">
+   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
