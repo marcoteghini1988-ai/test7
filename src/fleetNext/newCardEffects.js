@@ -149,6 +149,10 @@ export function resetFieldWithBlackHole(b){
   if(side.commander?.id)out.push(side.commander.id);
   for(const m of Object.values(side.modules||{}))if(m?.cardId)out.push(m.cardId);
   for(const m of side.machines||[])if(m.sourceCardId&&!m.cardDiscarded)out.push(m.sourceCardId);
+  // Un attacco preparato è una carta fisicamente sul tavolo: Buco Nero
+  // la scarta prima che possa essere rilasciata nel turno successivo.
+  if(side.falco?.pending?.cardId)out.push(side.falco.pending.cardId);
+  if(side.obsidian?.pending?.cardId)out.push(side.obsidian.pending.cardId);
   for(const effect of side.systemCardEffects||[]){
    const owner=['A','B'].includes(effect.owner)?effect.owner:key;
    removed[owner].push(effect.id);
@@ -163,6 +167,8 @@ export function resetFieldWithBlackHole(b){
   side.systemCardEffects=[];side.synchronizationEffects=[];
   side.systemCardCounters=null;
   side.auroraVeil=null;
+  if(side.falco)side.falco.pending=null;
+  if(side.obsidian)side.obsidian.pending=null;
   if(side.lince)side.lince.route=null;
   if(side.prisma)side.prisma.shard=null;
   // Le navicelle, i componenti e i relativi HP non vengono toccati.
