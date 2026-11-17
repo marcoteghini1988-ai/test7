@@ -164,6 +164,12 @@ export function fuseFleetSupports(side,ply=0){
  const first=side.escorts.find(e=>!e.fused&&e.sourceIndices.includes(stage===0?0:2));
  const second=stage===0?side.escorts.find(e=>!e.fused&&e.sourceIndices.includes(1)):
   side.reserveEscorts.find(e=>e.sourceIndices.includes(3));
+ if(side.ships[0].id==='L04'){
+  // Una Custodia dei materiali non deve diventare una Difesa gratuita della fusione.
+  for(const d of [...side.defenses])if(d.id==='nx-l04-03'&&
+   (d.arkCustodyEscortId===first.id||d.arkCustodyEscortId===second.id))
+   discardDefense(side,d.source);
+ }
  const maxHp=first.maxHp+second.maxHp+2;
  const hp=Math.max(1,Math.floor(maxHp*(first.hp+second.hp)/(first.maxHp+second.maxHp)));
  const requires=[...new Set([...first.skill.requires,...second.skill.requires])];
@@ -177,7 +183,18 @@ export function fuseFleetSupports(side,ply=0){
  let deployed=null;
  if(stage===0){
   const third=side.reserveEscorts.find(e=>e.sourceIndices.includes(2));
-  if(third){side.reserveEscorts=side.reserveEscorts.filter(e=>e!==third);third.slot=1;third.reserve=false;side.escorts.push(third);deployed=third;}
+  if(third){side.reserveEscorts=side.reserveEscorts.filter(e=>e!==third);third.slot=1;third.reserve=false;side.escorts.push(third);deployed=third;
+   if(side.ships[0].id==='L04'){
+    third.deployedAtPly=ply;
+    for(const d of side.defenses)if(d.id==='nx-l04-08'&&d.hidden&&!d.arkReserveId){
+     d.arkReserveId=third.id;d.untilPly=ply+2;
+    }
+   }
+  }
+ }
+ if(side.ships[0].id==='L04'){
+  fused.name='Fusione dell’Arca '+(stage+1)+' · Arca Astrale';
+  fused.arkFusionStage=stage+1;
  }
  side.escorts.sort((a,z)=>a.slot-z.slot);side.fusionsUsed=stage+1;
  refreshEscortLinks(side,ply);
