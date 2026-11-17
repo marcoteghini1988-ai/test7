@@ -1223,6 +1223,80 @@ function resolveLinceShots(b,ctx,events,order){
  return shot;
 }
 
+
+// Vespa: le quantità e il numero dei colpi sono fissati dalla carta.
+// I colpi bloccati non procurano danni e non possono rimbalzare in catena.
+function resolvePrismaShots(b,ctx,events,order){
+ const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)];
+ const primary=selectedEnemyTarget(defender,order,b.ply);
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targetKind:primary?.kind,targetId:primary?.unit?.id,
+  played:visiblePlayed(ctx.cards),targets:[]};
+ if(!primary)return shot;
+ const live=livePrismaUnits(defender,b.ply);
+ const secondaryOptions=live.filter(t=>t.unit.id!==primary.unit.id);
+ const selectedSecond=secondaryOptions.find(t=>
+  t.kind===order.prismaSecondTargetKind&&t.unit.id===order.prismaSecondTargetId)||
+  secondaryOptions[0];
+ const thirdOptions=secondaryOptions.filter(t=>t.unit.id!==selectedSecond?.unit.id);
+ const selectedThird=thirdOptions.find(t=>
+  t.kind===order.prismaThirdTargetKind&&t.unit.id===order.prismaThirdTargetId)||
+  thirdOptions[0];
+ const first={kind:primary.kind,unit:primary.unit};
+ const second=selectedSecond?{kind:selectedSecond.kind,unit:selectedSecond.unit}:null;
+ const third=selectedThird?{kind:selectedThird.kind,unit:selectedThird.unit}:null;
+ const blocked=side.fireBlocked||side.fireDisabledUntil>b.ply;
+ if(blocked){
+  side.fireBlocked=false;side.fireDisabledUntil=0;
+  if(side.lastDisarmedPly!==b.ply-2){
+   side.lastDisarmedPly=b.ply;
+   events.push(emit(b,ctx.who,'no-shot','Comando Vespa bloccato'));
+   return shot;
+  }
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((sum,x)=>sum+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=defender.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply))
+  .reduce((sum,x)=>sum+(x.power||0),0);
+ const terrain=terrainSalvoModifier(b.terrain,side.ships[0].id);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-
+  defender.ships[0].defensePower)+ctx.power+terrain.value-jam-guard);
+ if(power===0){
+  events.push(emit(b,ctx.who,'block','Potenza zero: attacco Vespa fallito'));
+  return shot;
+ }
+ const record=(target,amount,id,isSecondary=false)=>{
+  if(!target||!unitAlive(target.unit))return {damage:0,target};
+  if(isSecondary&&cancelPrismaSecondaryHit(b,ctx,events,target,first))
+   return {damage:0,target,blocked:true,secondaryCancelled:true};
+  const hit=linceHit(b,ctx,events,target,amount,id,order,false,0);
+  if(hit.damage){
+   const kind=hit.target.kind,field={
+    part:'damage',escort:'escortDamage',machine:'machineDamage',module:'moduleDamage'
+   }[kind];
+   if(field)shot[field]+=hit.damage;
+   shot.targets.push({kind,id:hit.target.unit.id,damage:hit.damage,
+    destroyed:hit.target.unit.destroyed});
+  }
+  return hit;
+ };
+ for(const command of ctx.prismaAttacks){
+  if(command.action==='reflected-shard'){
+   const firstHit=record(first,power,command.id);
+   if(firstHit.blocked&&second)record(second,1,command.id,true);
+  }else if(command.action==='broken-geometry'){
+   record(first,1,command.id);
+   record(first,1,command.id); // secondo colpo perso se il primo ha distrutto il bersaglio
+   if(second)record(second,1,command.id,true);
+  }else if(command.action==='crystal-rose'){
+   record(first,1,command.id);
+   if(second)record(second,1,command.id,true);
+   if(third)record(third,1,command.id,true);
+  }else throw Error('Comando Vespa non riconosciuto: '+command.action);
+ }
+ return shot;
+}
+
 function resolveSalvo(b,ctx,events,order){
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
  let selected=selectedEnemyTarget(defender,order,b.ply);
@@ -1326,6 +1400,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
  const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
+  ctx.prismaAttacks.length?resolvePrismaShots(b,ctx,events,order):
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
