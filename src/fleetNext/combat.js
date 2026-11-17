@@ -8,6 +8,8 @@ import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,mountModule,re
 import {LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
  ensureLinceState,linceMarkedRouteReady,lincePrecondition,recallLinceModule,
  recallLinceMachine,recoveredMachineForDeploy} from './linceEngine.js';
+import {PRISMA_ACTIONS,PRISMA_ATTACK_ACTIONS,isPrismaModule,ensurePrismaState,
+ livePrismaUnits,prismaPrecondition} from './prismaEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
@@ -80,7 +82,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
-  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,recalledModules:[],recalledMachines:[],
+  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:progression.fusionLimit,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
@@ -192,9 +194,11 @@ const livingEscorts=side=>(side.escorts||[]).filter(unitAlive);
 const weakest=items=>[...items].sort((a,z)=>a.hp/a.maxHp-z.hp/z.maxHp)[0]||null;
 const weakestPart=side=>weakest(side.ships[0].parts.filter(p=>!p.destroyed));
 const visiblePlayed=ids=>ids.filter(id=>card(id)?.effectSpec?.type!=='trap'&&
- !(card(id)?.effectSpec?.type==='lince'&&card(id)?.effectSpec?.action==='false-trail'));
+ !(card(id)?.effectSpec?.type==='lince'&&card(id)?.effectSpec?.action==='false-trail')&&
+ !(card(id)?.effectSpec?.type==='prisma'&&card(id)?.effectSpec?.action==='false-reflection'));
 const defenseKind=definition=>definition?.effectSpec?.type==='trap'||
- definition?.effectSpec?.type==='lince'&&definition.effectSpec.action==='false-trail'?'trap':'defense';
+ definition?.effectSpec?.type==='lince'&&definition.effectSpec.action==='false-trail'||
+ definition?.effectSpec?.type==='prisma'&&definition.effectSpec.action==='false-reflection'?'trap':'defense';
 const activeDefenses=(side,ply)=>(side?.defenses||[]).filter(d=>d.untilPly==null||d.untilPly>ply);
 export function defenseSlotsAvailable(side,ply=0,kind=null){
  if(!operational(side.ships[0],'generator'))return 0;
@@ -224,7 +228,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
- side.auroraVeil??=null;ensureLinceState(side);
+ side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
  if(!operational(side.ships[0],'generator')){
@@ -253,6 +257,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(def.effectSpec.type==='lince'){
   const reason=lincePrecondition(def,side,battle);
+  if(reason)return reason;
+ }
+ if(def.effectSpec.type==='prisma'){
+  const reason=prismaPrecondition(def,side,battle);
   if(reason)return reason;
  }
  const invalid=validateEffectSpec(def.effectSpec);
@@ -301,6 +309,9 @@ export function validateFleetTurn(b,who,order){
  const linceCommands=chosen.filter(c=>c.effectSpec?.type==='lince'&&
   LINCE_ATTACK_ACTIONS.includes(c.effectSpec.action));
  if(linceCommands.length>1)return 'Scegli un solo comando offensivo Lince per turno';
+ const prismaCommands=chosen.filter(c=>c.effectSpec?.type==='prisma'&&
+  PRISMA_ATTACK_ACTIONS.includes(c.effectSpec.action));
+ if(prismaCommands.length>1)return 'Scegli un solo comando offensivo Vespa per turno';
  const roles=chosen.map(c=>cardRole(c.id)),count=x=>roles.filter(r=>r===x).length;
  if(count('character')>1)return 'Massimo un Personaggio per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
@@ -344,6 +355,16 @@ export function validateFleetTurn(b,who,order){
    return 'Prima colpisci i supporti o le macchine operative, oppure gioca Aggiramento';
   if(chosen.some(c=>c.effectSpec.type==='aurora'&&c.effectSpec.action==='burst')&&!['escort','machine'].includes(selected.kind))
    return 'Raffica di prova richiede una macchina o un supporto';
+  const prismaAttack=prismaCommands[0]?.effectSpec.action;
+  if(prismaAttack&&!['escort','machine'].includes(selected.kind))
+   return 'Attacco Vespa: scegli una macchina o una navicella di supporto';
+  if(prismaAttack==='broken-geometry'){
+   const possible=livePrismaUnits(enemy,b.ply).filter(e=>e.unit.id!==selected.unit.id);
+   if(!possible.length)return 'Geometria spezzata richiede una seconda unità viva';
+   if(order.prismaSecondTargetId&&
+    !possible.some(e=>e.unit.id===order.prismaSecondTargetId&&e.kind===order.prismaSecondTargetKind))
+    return 'Secondo bersaglio di Geometria non valido';
+  }
   const linceAction=linceCommands[0]?.effectSpec.action;
   if(['solar-bypass','crimson-raid'].includes(linceAction)&&selected.kind!=='part')
    return 'Lince: questo Attacco richiede un vitale avversario';
@@ -358,7 +379,8 @@ export function validateFleetTurn(b,who,order){
   }
  }
  if(order?.pass&&chosen.some(c=>c.effectSpec.type==='aurora'&&['burst','dismantle'].includes(c.effectSpec.action)||
-  c.effectSpec.type==='lince'&&LINCE_ATTACK_ACTIONS.includes(c.effectSpec.action)))
+  c.effectSpec.type==='lince'&&LINCE_ATTACK_ACTIONS.includes(c.effectSpec.action)||
+  c.effectSpec.type==='prisma'&&PRISMA_ATTACK_ACTIONS.includes(c.effectSpec.action)))
   return 'Un comando offensivo non può essere passato';
  return null;
 }
@@ -1110,7 +1132,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const s of Object.values(b.sides))expireSide(s,b.ply);
  const cards=takeCards(side,order.cards||[]);
- const ctx={who,nowMs,cards:[],auroraAttacks:[],linceAttacks:[],bypassPlayed:false,
+ const ctx={who,nowMs,cards:[],auroraAttacks:[],linceAttacks:[],prismaAttacks:[],bypassPlayed:false,
   power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
@@ -1128,7 +1150,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
