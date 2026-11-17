@@ -37,6 +37,7 @@ import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTur
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
+import {exclusiveRarityAtLevel} from './fleetNext/exclusiveEvolution.js';
 import {dismantleCandidates,dismantleActive} from './fleetNext/dismantleEffects.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
@@ -257,7 +258,7 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
     title={title+(offline?' · Sistema distrutto':'')} data-offline={offline||undefined}
     data-slot-role={i===0?'personaggio':i===1?'difesa':i===2?'trappola':'attacco'}
      data-family={covered?'defense':type?cardRole(type):undefined}
-     data-rarity={face?.rarita||face?.rarityDraft||undefined}>
+     data-rarity={face?exclusiveRarityAtLevel(face,unit?.ships?.[0]?.level):undefined}>
     {art?<img className="f3d-slot-art" src={art} alt="" draggable={false}/>:
      <span className={face?'f3d-card-fallback':undefined}>{face?(face.nome||face.name):['♙','◇','◈','✧','✧','✧'][i]}</span>}
     {covered?<>
@@ -281,9 +282,9 @@ function TrapReveal({event}){
   </div>
  </div>;
 }
-function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,unavailableReason=''}){
+function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,motherLevel=1,unavailableReason=''}){
  const def=card(type);
- const rarity=def?.rarita||def?.rarityDraft||'Comune';
+ const rarity=exclusiveRarityAtLevel(def,motherLevel);
  const description=def?describeEffect(def,grade):'Carta tattica';
   const role=cardRole(type)||'support';
   const familyGlyph={attack:'⚔',defense:'⬡',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
@@ -918,7 +919,8 @@ export default function OfficialFleetBattle3D({
      key={battle.round+'-'+index+'-'+type} type={type} index={index}
      offset={index-(hand.length-1)/2}
      selected={chosenCards.includes(index)} disabled={ended||!myTurn}
-     grade={player.exclusiveUpgrades?.[type]||1} unavailableReason={unavailable(type,index)}
+     grade={player.exclusiveUpgrades?.[type]||1} motherLevel={player.ships[0].level}
+     unavailableReason={unavailable(type,index)}
      onClick={()=>chooseCard(index)}/>)}
    </div>
    {!ended&&<label className="f3d-target-status">
