@@ -1,6 +1,6 @@
 // Motore comune delle nuove 33 carte. Solo regole, nessuna grafica.
 // Effetti disponibili con hp-sync-v2; valori provvisori, bilanciamento finale separato.
-import {HP_SYNC_RULESET} from './hpSynchronization.js';
+import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './hpSynchronization.js';
 
 const clamp=(n,low,high)=>Math.max(low,Math.min(high,Number(n)||0));
 const BY_TIER=Object.freeze({
@@ -46,14 +46,14 @@ export function applySystemCard(side,def,ply,who='A'){
 }
 export function expireSystemCards(side,ply){
  side.systemCardEffects=(side.systemCardEffects||[]).filter(e=>e.untilPly>ply);
- if(side.systemCardCounters?.ply!==ply)side.systemCardCounters={ply,generatorUsed:0};
+ if(side.systemCardCounters?.ply!==ply)side.systemCardCounters={ply,generatorUsed:0,commandGuardUsed:0,planciaRestrictedUsed:0,planciaSplitUsed:0};
 }
 export function generatorAdjustment(side,ply=0){
  const effect=activeSystemCard(side,'generator','amplify',ply);
  const sabotage=activeSystemCard(side,'generator','disable',ply);
  const uses=Math.max(effect?.tier===4?2:effect?1:0,sabotage?.tier===2||sabotage?.tier===4?2:sabotage?1:0);
- side.systemCardCounters??={ply,generatorUsed:0};
- if(side.systemCardCounters.ply!==ply)side.systemCardCounters={ply,generatorUsed:0};
+ side.systemCardCounters??={ply,generatorUsed:0,commandGuardUsed:0,planciaRestrictedUsed:0,planciaSplitUsed:0};
+ if(side.systemCardCounters.ply!==ply)side.systemCardCounters={ply,generatorUsed:0,commandGuardUsed:0,planciaRestrictedUsed:0,planciaSplitUsed:0};
  if(side.systemCardCounters.generatorUsed>=uses)return 0;
  side.systemCardCounters.generatorUsed++;
  return (effect?.amount||0)-(sabotage?.amount||0);
@@ -68,7 +68,7 @@ export function arsenalBonus(side,machine,ply=0){
  const first=side.machines?.find(m=>m.hp>0&&!m.destroyed&&m.slot>=0);
  if(first?.id===machine.id&&disabled&&
   (disabled.tier===4||disabled.tier>=2&&
-   (ply===disabled.appliedPly+1||ply===disabled.appliedPly+2)))return 0;
+   (ply===disabled.appliedPly||ply===disabled.appliedPly+1)))return 0;
  return Math.max(0,(machine.power||0)+(amplified?.amount||0)-(disabled?.amount||0));
 }
 export function supportDamageGuard(side,ply=0){
@@ -91,8 +91,55 @@ export function planciaSplitAvailable(side,ply=0){
 export function planciaSplitCount(side,ply=0){
  return planciaSplitAvailable(side,ply)?activeSystemCard(side,'bridge','amplify',ply).tier>=3?2:1:0;
 }
+
+export function commandPenalty(side,ply=0){
+ const legacy=activeSynchronizationPenalty(side,ply);
+ const sabotage=activeSystemCard(side,'command','disable',ply)?.amount||0;
+ const amplification=activeSystemCard(side,'command','amplify',ply)?.amount||0;
+ return clamp(Math.max(legacy,sabotage)-amplification,0,100);
+}
+function counters(side,ply){
+ if(!side.systemCardCounters||side.systemCardCounters.ply!==ply)
+  side.systemCardCounters={ply,generatorUsed:0,commandGuardUsed:0,planciaRestrictedUsed:0,planciaSplitUsed:0};
+ return side.systemCardCounters;
+}
+export function consumeCommandGuard(side,ply=0){
+ const c=counters(side,ply);
+ if(c.commandGuardUsed>=1)return 0;
+ const amount=supportDamageGuard(side,ply);
+ if(amount)c.commandGuardUsed++;
+ return amount;
+}
+export function consumePlanciaRestriction(side,ply=0){
+ const effect=planciaRestriction(side,ply);
+ if(!effect)return false;
+ const c=counters(side,ply);
+ if(c.planciaRestrictedUsed>=effect.groups)return false;
+ c.planciaRestrictedUsed++;
+ return true;
+}
+export function consumePlanciaSplit(side,ply=0){
+ const count=planciaSplitCount(side,ply);
+ if(!count)return false;
+ const c=counters(side,ply);
+ if(c.planciaSplitUsed>=count)return false;
+ c.planciaSplitUsed++;
+ return true;
+}
+export function expireTemporaryWeapons(side,ply=0){
+ if(side.ruleset!==HP_SYNC_RULESET)return [];
+ const removed=(side.machines||[]).filter(m=>m.untilPly!=null&&m.untilPly<=ply);
+ for(const m of removed)if(m.sourceCardId&&!m.cardDiscarded)side.discard.push(m.sourceCardId);
+ side.machines=(side.machines||[]).filter(m=>!removed.includes(m));
+ return removed;
+}
 export function resetFieldWithBlackHole(b){
  const removed={A:[],B:[],terrain:b.terrain?.id||null};
+ let terrain=b.terrain;
+ while(terrain?.id){
+  if(terrain.cardId&&['A','B'].includes(terrain.owner))removed[terrain.owner].push(terrain.cardId);
+  terrain=terrain.underlying||null;
+ }
  for(const key of ['A','B']){
   const side=b.sides[key];
   const out=removed[key];
@@ -106,6 +153,7 @@ export function resetFieldWithBlackHole(b){
   side.attackSlots=[null,null,null];side.stagedComboCards=[];
   side.protections=[];side.reactions=[];side.charges=[];side.buffs=[];
   side.systemCardEffects=[];side.synchronizationEffects=[];
+  side.systemCardCounters=null;
   side.auroraVeil=null;
   if(side.lince)side.lince.route=null;
   if(side.prisma)side.prisma.shard=null;
