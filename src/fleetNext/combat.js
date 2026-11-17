@@ -2273,10 +2273,10 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  target=redirectFleetHit(b,ctx,events,target);
- if(stormNetStops(b,ctx,events,target))return 0;
  amount=stormConsumeHeavy(b,ctx,events,target,amount);
  if(blockNebulaRepeat(b,ctx,events,target))return 0;
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
+ if(stormNetStops(b,ctx,events,target))return 0;
  const actual=damageFleetUnit(defender,target.kind,target.unit,
   sharkCapDamage(b,defender,target.kind,target.unit,
    mantaCapDamage(b,defender,target.kind,target.unit,amount,events),events),b.ply);
@@ -2383,12 +2383,12 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
   return {damage:0,target};
  const finalTarget=redirectFleetHit(b,ctx,events,target);
- if(stormNetStops(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  amount=stormConsumeHeavy(b,ctx,events,finalTarget,amount);
  if(blockNebulaRepeat(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  ctx.pierceLeft=pierce;
  if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
   return {damage:0,target:finalTarget,blocked:true};
+ if(stormNetStops(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  const actual=damageFleetUnit(enemy,finalTarget.kind,finalTarget.unit,
   sharkCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,
    mantaCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,amount,events),events),b.ply);
@@ -2969,9 +2969,9 @@ function resolveSalvo(b,ctx,events,order){
   if(hitIndex>0&&cancelPrismaSecondaryHit(b,ctx,events,planned,selected))continue;
   const redirected=redirectFleetHit(b,ctx,events,planned);
   const {kind,unit}=redirected;
-  if(stormNetStops(b,ctx,events,redirected))continue;
   if(blockNebulaRepeat(b,ctx,events,redirected))continue;
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
+  if(stormNetStops(b,ctx,events,redirected))continue;
   const amount=stormConsumeHeavy(b,ctx,events,redirected,
    mantaFork?1:kind==='part'||kind==='module'?1:
    power+(kind==='escort'&&redirected.stormOriginKind!=='machine'&&b.terrain?.id==='T04'?1:0));
