@@ -22,12 +22,12 @@ export const PRISMA_ATTACK_ACTIONS=Object.freeze([
 export const isPrismaModule=id=>Object.hasOwn(PRISMA_MODULE_SLOTS,id);
 export const prismaModuleSlot=id=>PRISMA_MODULE_SLOTS[id]||null;
 export const isPrismaAction=id=>Object.hasOwn(PRISMA_ACTIONS,id);
-export const livePrismaUnits=(side,ply=0)=>[
- ...(side?.escorts||[]).filter(e=>e.hp>0&&!e.destroyed&&
-  (e.disabledUntilPly||0)<=ply&&(e.jammedUntilPly||0)<=ply&&e.linked!==false)
+export const livePrismaUnits=(side,ply=0,enabledOnly=true)=>[
+ ...(side?.escorts||[]).filter(e=>e.hp>0&&!e.destroyed&&(!enabledOnly||
+  (e.disabledUntilPly||0)<=ply&&(e.jammedUntilPly||0)<=ply&&e.linked!==false))
    .map(unit=>({kind:'escort',unit})),
- ...(side?.machines||[]).filter(m=>m.hp>0&&!m.destroyed&&
-  (m.disabledUntilPly||0)<=ply&&(m.jammedUntilPly||0)<=ply)
+ ...(side?.machines||[]).filter(m=>m.hp>0&&!m.destroyed&&(!enabledOnly||
+  (m.disabledUntilPly||0)<=ply&&(m.jammedUntilPly||0)<=ply))
    .map(unit=>({kind:'machine',unit}))
 ];
 export function ensurePrismaState(side){
@@ -54,7 +54,7 @@ export function prismaPrecondition(def,side,battle=null){
   return 'Arsenale distrutto';
  const selfUnits=livePrismaUnits(side,ply);
  const enemy=battle?battle.sides.A===side?battle.sides.B:battle.sides.A:null;
- const enemyUnits=enemy?livePrismaUnits(enemy,ply):[];
+ const enemyUnits=enemy?livePrismaUnits(enemy,ply,false):[];
  if(action==='machine-deflection'&&selfUnits.filter(e=>e.kind==='machine').length<2)
   return 'Prisma di deviazione richiede due macchine operative';
  if(action==='false-reflection'&&![
