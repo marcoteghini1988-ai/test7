@@ -26,7 +26,7 @@
 - Allineati i test/invarianti del catalogo da 155 a **200 schede totali**: 12 personaggi generici, 170 esclusive, 12 personaggi Boss e 6 carte tecniche.
 
 ## Restano da completare (non simulare come fatti)
-1. **Nuova distribuzione dei singoli sblocchi** delle 120 esclusive principali oltre il vecchio intervallo L1–L5: non è stata cambiata per evitare regressioni nelle 12 batterie di test dei motori già scritti; la stessa distribuzione iniziale vale per le 45 varianti. I livelli L6–L20 ora cambiano la rarità, non la data di ottenimento delle carte.
+1. **AGGIORNAMENTO SUCCESSIVO:** la distribuzione degli sblocchi è stata implementata per tutte le 170 esclusive: quattro carte iniziali e sei distribuite fino al livello massimo di ogni famiglia. Vedere `docs/DISTRIBUZIONE_170_CARTE_E_STUDIO_ELEMENTI_2026-11-17.md`. Le fixture degli antichi test che assumevano 10 carte al livello 5 sono in fase di riallineamento.
 2. **Evoluzione di potenza degli effetti** in base alla progressione estesa: attualmente grado 1–3 manuale, da calibrare senza invalidare effetti e vincoli esistenti.
 3. **Bilanciamento finale** di HP, danni, passivi scudiere, costo delle Fusioni e confronto PvP su potenziale finale 100.
 4. **Illustrazioni, animazioni e cornici di rarità:** non generate; mantenuto il renderer nativo.
