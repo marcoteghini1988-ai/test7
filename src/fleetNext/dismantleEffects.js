@@ -46,7 +46,9 @@
   return result;
  }
  export function syncDismantleSide(side,ply=0){
-  if(!side?.ships?.[0])return;
+  if(!side?.ships?.[0]||
+   (!(side.dismantleEffects||[]).length&&!side.dismantleInitialized))return;
+  side.dismantleInitialized=true;
   side.modules??={weapon:null,utility:null};
   side.heldModules??={};
   const mother=side.ships[0],{current,base}=profile(side);
@@ -63,8 +65,10 @@
    // Se si rimuove un singolo componente, anche la sua funzione si spegne.
    // Lo smontaggio Leggendario lascia sempre accesi i sistemi innati al L1.
    const direct=effects.some(e=>e.mode==='components'&&e.targets.includes('part:'+p.id));
-   p.dismantled=affected&&(direct||!base.vitalIds.includes(p.id));
-   p.upgradeSuspended=affected&&base.vitalIds.includes(p.id);
+   if(affected){
+    p.dismantled=direct||!base.vitalIds.includes(p.id);
+    p.upgradeSuspended=base.vitalIds.includes(p.id);
+   }else{delete p.dismantled;delete p.upgradeSuspended;}
   }
   for(const slot of SLOTS){
    if(blocked.has('module:'+slot)){
@@ -87,8 +91,18 @@
     sources.length===1&&effect.targets.includes('escort:'+sources[0]));
    e.dismantled=!!suppressFusion||!!affected&&(forcedAbsent||baseGrade===0);
    e.grade=affected&&!e.dismantled?Math.min(e.permanentGrade,baseGrade):e.permanentGrade;
+   if(!e.dismantled)delete e.dismantled;
   }
   side.fusionLimit=blocked.has('fusion')?0:current.fusionLimit;
+  if(!effects.length){
+   delete mother.operationalLevel;
+   delete mother.dismantledUpgrades;
+   for(const e of [...(side.escorts||[]),...(side.reserveEscorts||[])]){
+    if(e.permanentGrade!=null)e.grade=e.permanentGrade;
+    delete e.permanentGrade;delete e.dismantled;
+   }
+   side.dismantleInitialized=false;
+  }
  }
  export function applyDismantleCard(side,def,ply,owner='A',selected=[]){
   const s=def.effectSpec;

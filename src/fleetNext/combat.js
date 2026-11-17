@@ -90,7 +90,8 @@ export const allVitalsDestroyed=ship=>ship.parts.every(p=>p.destroyed||p.hp<=0);
 const resolvedPartId=(mother,id)=>id==='engine'&&!mother.parts.some(p=>p.id==='engine')?'generator':id;
 const motherPart=(mother,id)=>mother.parts.find(x=>x.id===resolvedPartId(mother,id));
 const operational=(mother,id)=>{const p=motherPart(mother,id);return !!p&&!p.destroyed&&!p.dismantled&&p.hp>0;};
-const unitAlive=unit=>!!unit&&unit.hp>0&&!unit.destroyed&&!unit.dismantled;
+const unitAlive=unit=>!!unit&&unit.hp>0&&!unit.destroyed&&
+ (!unit.dismantled||VITAL_KEYS.includes(unit.id));
 const unitEnabled=(unit,ply)=>unitAlive(unit)&&(unit.disabledUntilPly||0)<=ply&&(unit.jammedUntilPly||0)<=ply;
 const escortEnabled=(side,escort,ply)=>unitEnabled(escort,ply)&&!nebulaHidden(escort,ply)&&
  (escort.skill?.requires||['command']).every(id=>operational(side.ships[0],id));
@@ -190,7 +191,10 @@ export function fuseFleetSupports(side,ply=0){
  const requires=[...new Set([...first.skill.requires,...second.skill.requires])];
  const fused={...first,id:side.ships[0].id+':fusion:'+(stage+1),slot:stage,
   name:'Fusione '+(stage===0?'I':'II')+' · '+side.ships[0].name,hp,maxHp,fused:true,reserve:false,
-  grade:Math.max(first.grade||1,second.grade||1)+1,sourceIndices:[...first.sourceIndices,...second.sourceIndices],
+  grade:Math.max(first.grade||1,second.grade||1)+1,
+  permanentGrade:Math.max(first.permanentGrade||first.grade||1,
+   second.permanentGrade||second.grade||1)+1,
+  sourceIndices:[...first.sourceIndices,...second.sourceIndices],
   skill:{...first.skill,requires},fusionSkills:[{...first.skill},{...second.skill}],linked:true};
  side.escorts=side.escorts.filter(e=>e!==first&&e!==second);
  side.reserveEscorts=(side.reserveEscorts||[]).filter(e=>e!==second);
