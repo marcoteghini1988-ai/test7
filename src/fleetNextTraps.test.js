@@ -112,8 +112,8 @@ test('Una terza Difesa non entra quando entrambi gli spazi sono occupati',()=>{
  const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},3000);
  assert.equal(r.ok,false);assert.equal(JSON.stringify(b),previous);
 });
-test('La Difesa temporanea scade, la Trappola rimane coperta',()=>{
- let b=battle();b=turn(b,'A',[CHANNEL,ECHO]).battle;
+test('La Difesa temporanea scade, la Trappola rimane coperta senza disturbi nemici',()=>{
+ let b=battle({shipA:'C03',shipB:'N00'});b=turn(b,'A',[CHANNEL,ECHO]).battle;
  for(let i=0;i<3;i++)b=turn(b,b.turn,[]).battle;
  assert.equal(b.ply,4);
  assert.ok(!b.sides.A.defenses.some(d=>d.id===CHANNEL));

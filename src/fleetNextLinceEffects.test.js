@@ -90,14 +90,14 @@ test('Falsa scia viene preparata coperta e devia un solo colpo verso il vitale s
  assert.equal(r.battle.sides.B.defenses.some(d=>d.id==='nx-c01-04'),false);
 });
 
-test('Falsa scia non si attiva se il vitale alternativo è già distrutto',()=>{
+test('Falsa scia non devia se il Generatore è distrutto: la Trappola viene disattivata',()=>{
  let b=battle({shipA:'N00',shipB:'C01'});
  b=turn(b,'B',['nx-c01-04'],{ownPartId:'generator'}).battle;
  const alternate=part(b.sides.B,'generator');alternate.hp=0;alternate.destroyed=true;
  const before=part(b.sides.B,'weapons').hp;
  const r=turn(b,'A',[],{targetKind:'part',targetId:'weapons',partId:'weapons',pass:false});
  assert.equal(part(r.battle.sides.B,'weapons').hp,before-1);
- assert.equal(r.battle.sides.B.defenses.filter(d=>d.id==='nx-c01-04').length,1);
+ assert.equal(r.battle.sides.B.defenses.filter(d=>d.id==='nx-c01-04').length,0);
 });
 
 test('Pilota Helios scarta e pesca una volta dopo Aggiramento, senza pescata netta',()=>{
