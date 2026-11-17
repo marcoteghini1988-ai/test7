@@ -46,7 +46,9 @@ export const nebulaVisibleSupports=(side,ply=0)=>nebulaSupports(side,ply).filter
 export function nebulaHideReason(side,ply=0,id=null){
  if(!nebulaModuleActive(side,'nx-e01-01',ply))return 'Proiettore di bruma non operativo';
  if(ensureNebulaState(side).lastHidePly===ply)return 'Proiettore gia usato in questo turno';
- if(nebulaHiddenSupport(side,ply))return 'Un supporto e gia occultato';
+ const hidden=nebulaHiddenSupport(side,ply);
+ if(hidden&&(hidden.nebulaHiddenUntilPly||0)!==ply+1)
+  return 'Un supporto e gia occultato';
  const choices=nebulaVisibleSupports(side,ply);
  if(!choices.length)return 'Nessun supporto operativo da occultare';
  if(id&&!choices.some(e=>e.id===id))return 'Supporto scelto non occultabile';
