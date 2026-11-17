@@ -7,6 +7,7 @@ import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import {shipUpgradeDustCost} from './shipUpgrades.js';
 import {getShipProgression,getShipProgressionLevels,shipProgressionProfile,shipMaxLevel} from './fleetNext/progression.js';
 import {EXCLUSIVE_CARDS} from './fleetNext/rules.js';
+import {fleetElementNames} from './fleetNext/elementalAffinities.js';
 import './ShipCollectionPanels.css';
 
 function readCollection() {
@@ -33,6 +34,7 @@ export function ShipProgressionDetails({shipId,level=1}){
  const current=getShipProgression(shipId,level);
  const profile=shipProgressionProfile(shipId);
  return <div className="ship-progression" aria-label={'Progressione '+shipId}>
+  <p>Elementi: {fleetElementNames(shipId).join(' + ')}.</p>
   <p>{current.vitalIds.length} vitali · {current.escortCount} supporti
    {current.escortGrades.length?' · gradi '+current.escortGrades.join('/') : ''}
    {current.reserveCount?' · '+current.reserveCount+' in riserva':''}
