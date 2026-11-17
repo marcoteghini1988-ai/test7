@@ -70,8 +70,9 @@ export function recallLinceModule(side,slot){
  side.hand.push(module.cardId);
  return module;
 }
-export function recallLinceMachine(side,unit){
+export function recallLinceMachine(side,unit,ply=0){
  if(!unit||unit.destroyed||unit.hp<=0||!side.machines?.some(m=>m.id===unit.id))return null;
+ if((unit.sharkAnchorUntilPly||0)>ply)return null;
  if(!unit.sourceCardId)return null;
  ensureLinceState(side);
  side.machines=side.machines.filter(m=>m.id!==unit.id);
