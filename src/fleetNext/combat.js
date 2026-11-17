@@ -687,6 +687,7 @@ function heal(b,side,amount,target='weakest',ownPartId=null){
  const extra=escort&&b.terrain?.id==='T09'?1:0;
  const previous=unit.hp;unit.hp=Math.min(unit.maxHp,unit.hp+amount+extra);
  if(!escort)unit.damage=unit.hp<unit.maxHp?1:0;
+ arkMarkRepair(b,side,escort?'escort':'mother',unit.hp-previous);
  return {kind:escort?'escort':'mother',id:unit.id,name:escort?unit.name:VITAL_LABELS[unit.id],amount:unit.hp-previous};
 }
 function applyDamage(part,amount){
@@ -730,6 +731,8 @@ function corvoSafetySwitch(b,who,events){
 }
 function applyCorvoSilence(b,who,kind,unit,events,cardId,order={}){
  if(!['escort','machine'].includes(kind)||!canApplyCorvoStatus(unit,b.ply))return false;
+ ({kind,unit}=arkRedirectControl(b,who,kind,unit,events,cardId));
+ if(!canApplyCorvoStatus(unit,b.ply))return false;
  const defender=b.sides[other(who)];
  if(kind==='escort'){
   const channel=defender.defenses.find(d=>d.id==='nx-c03-03'&&!d.hidden&&
@@ -760,6 +763,8 @@ function applyCorvoSilence(b,who,kind,unit,events,cardId,order={}){
  return true;
 }
 function applyCorvoUnitBlock(b,who,kind,unit,events,cardId){
+ if(!canApplyCorvoStatus(unit,b.ply,'disabled'))return false;
+ ({kind,unit}=arkRedirectControl(b,who,kind,unit,events,cardId));
  if(!canApplyCorvoStatus(unit,b.ply,'disabled'))return false;
  const defender=b.sides[other(who)];
  if(kind==='escort'){
@@ -2338,7 +2343,7 @@ function arkRedirectControl(b,who,kind,unit,events,cardId){
  if(!d)return {kind,unit};
  const fused=arkFusedEscorts(defender,b.ply).find(e=>e.id===d.arkFusedId);
  const otherUnit=arkUnfusedEscorts(defender,b.ply).find(e=>e.id===d.arkOtherId);
- if(!fused||!otherUnit)return {kind,unit};
+ if(!fused||!otherUnit||!canApplyCorvoStatus(otherUnit,b.ply))return {kind,unit};
  discardDefense(defender,d.source);
  events.push(emit(b,other(who),'ark-resonance',
   'Risonanza della flotta trasferisce il blocco a '+otherUnit.name,{
@@ -2891,6 +2896,18 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   if(p.remaining<=0)discardDefense(defender,p.source);
   if(!bypass){
    if(visible)obsidianMagisterOnBlock(b,defender,events,p.id);
+   return true;
+  }
+ }
+ if(targetKind==='escort'){
+  const trap=defender.defenses.find(d=>d.id==='nx-l04-08'&&d.hidden&&
+   d.trigger==='ark-third-entry'&&d.armedAtPly<b.ply&&
+   d.arkReserveId===target.id&&d.untilPly>b.ply);
+  if(trap){
+   discardDefense(defender,trap.source);
+   events.push(emit(b,other(ctx.who),'trap-reveal',
+    'Ingresso protetto annulla il primo colpo sulla scudiera appena schierata',{
+     cardId:trap.id,targetKind:'escort',targetId:target.id}));
    return true;
   }
  }
@@ -3883,6 +3900,7 @@ function resolveSalvo(b,ctx,events,order){
  return data;
 }
 function finishTurn(b,ctx,events){
+ arkCustodianTurn(b,ctx,events);
  royalSovereignTurn(b,ctx,events);
  stormEndOwnTurn(b,ctx,events);
  mantaNavigatorTurn(b,ctx,events);
@@ -3956,6 +3974,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  nebulaHideForTurn(b,ctx,events,order); // Occultamento precede eventuale Ago nello stesso turno
  after.sort((x,y)=>Number(isFalcoPreparation(y))-Number(isFalcoPreparation(x)));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ arkArchiveAction(b,ctx,events);
  obsidianUseBastionGuard(b,ctx,events,order);
  nebulaArchonTerrainTrade(b,ctx,events,order);
  nebulaRevealOnOwnTurn(b,ctx,events);
