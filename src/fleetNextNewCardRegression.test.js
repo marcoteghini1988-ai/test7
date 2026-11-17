@@ -68,3 +68,28 @@ test('Sabotaggio Plancia limita anche i colpi multipli delle carte esclusive',()
  const reduced=play(interfered,'A',['nx-c02-10'],{targetId});
  assert.equal(reduced.shot.targets.length,1);
 });
+
+test('Centralina Epica spegne una passiva sincronizzata realmente prevista in quel turno',()=>{
+ const base=battle('C03');
+ base.sides.B.turnCount=1; // Sul secondo turno scatta Richiamo degli impulsi.
+ const normalA=play(structuredClone(base),'A').battle;
+ const normalB=play(normalA,'B').battle;
+ assert.ok(normalB.sides.A.buffs.some(e=>e.kind==='jam'),'senza sabotaggio il disturbo funziona');
+ const disrupted=structuredClone(base);
+ applySystemCard(disrupted.sides.B,card('sys-command-minus-e'),0,'A');
+ const afterA=play(disrupted,'A').battle;
+ const response=play(afterA,'B');
+ assert.ok(!response.battle.sides.A.buffs.some(e=>e.kind==='jam'),
+  'il sabotaggio annulla la passiva, non solo il testo');
+ assert.ok(response.events.some(e=>e.text?.includes('passiva sincronizzata sospesa')));
+});
+
+test('Generatore Leggendario sabota un bonus energetico esistente e fornisce difesa immediata',()=>{
+ const sabotaged=battle();
+ sabotaged.sides.B.buffs.push({kind:'guard',power:2,untilPly:99});
+ const negative=play(sabotaged,'A',['sys-generator-minus-l']);
+ assert.ok(!negative.battle.sides.B.buffs.some(e=>e.kind==='guard'));
+ const amplified=battle();
+ const positive=play(amplified,'A',['sys-generator-plus-l']);
+ assert.ok(positive.battle.sides.A.buffs.some(e=>e.kind==='guard'&&e.power===1));
+});
