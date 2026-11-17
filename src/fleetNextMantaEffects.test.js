@@ -64,7 +64,7 @@ test('Capacitore: soltanto il primo danno diretto nel turno nemico genera energi
  const r=play(b,'A',[],target('escort',first));
  assert.ok(r.battle.sides.B.escorts[0].hp<before,'Il danno deve essere reale');
  assert.equal(mantaEnergy(r.battle.sides.B),1);
- assert.equal(r.events.filter(e=>e.type==='manta-energy').length,1);
+ assert.equal(r.events.filter(e=>e.kind==='manta-energy').length,1);
 });
 
 test('Schermo di assorbimento: blocca un colpo al supporto e carica il Capacitore',()=>{
@@ -98,7 +98,7 @@ test('Messa a terra: consuma energia e annulla i colpi secondari su unità diver
  const r=play(b,'A',['nx-c02-10'],{...target('escort',first),
   prismaSecondTargetKind:'escort',prismaSecondTargetId:second.id});
  assert.equal(r.battle.sides.B.escorts[1].hp,hp);
- assert.ok(r.events.some(e=>e.type==='trap-reveal'&&e.cardId==='nx-r02-04'));
+ assert.ok(r.events.some(e=>e.kind==='trap-reveal'&&e.cardId==='nx-r02-04'));
  assert.equal(r.battle.sides.B.defenses.some(d=>d.id==='nx-r02-04'),false);
 });
 
@@ -138,7 +138,7 @@ test('Campo Manta: protegge il primo supporto di grado 2 per un solo colpo',()=>
  const hp=b.sides.B.escorts[0].hp;
  const r=play(b,'A',[],target('escort',b.sides.B.escorts[0]));
  assert.equal(r.battle.sides.B.escorts[0].hp,hp-1);
- assert.equal(r.events.some(e=>e.cardId==='nx-r02-08'&&e.type==='block'),true);
+ assert.equal(r.events.some(e=>e.cardId==='nx-r02-08'&&e.kind==='block'),true);
  assert.equal(r.battle.sides.B.defenses.some(d=>d.id==='nx-r02-08'),false);
 });
 
