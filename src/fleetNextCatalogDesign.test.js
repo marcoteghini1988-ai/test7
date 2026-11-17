@@ -51,7 +51,7 @@ test('Il catalogo in codice associa esattamente 10 esclusive a ciascuna delle 12
   assert.equal(levels.filter(n=>n===1).length,6,shipId+' sei definizioni L1');
   for(const level of [2,3,4,5])assert.equal(levels.filter(n=>n===level).length,1,shipId+' L'+level);
  }
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>!ships.includes(c.shipId)).length,5);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>!ships.includes(c.shipId)).length,50);
 });
 
 test('Tutte le carte esclusive sono eseguibili solo con la madre corretta e vengono pescate',async()=>{
