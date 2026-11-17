@@ -2592,6 +2592,7 @@ function transferPrismaProtection(b,defender,p,ctx,events){
 }
 
 function blockHit(b,defender,targetKind,target,ctx,events){
+ if(obsidianBulkheadBlock(b,ctx,events,defender,targetKind,target))return true;
  royalOwnShotPierce(b,ctx,events);
  const chamber=targetKind==='module'&&defender.defenses.find(d=>
   d.id==='nx-r01-04'&&!d.hidden&&d.untilPly>b.ply&&
@@ -2601,6 +2602,7 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   events.push(emit(b,other(ctx.who),'block',
    'Camera blindata annulla un colpo sul Capacitore carico',
    {cardId:chamber.id,moduleId:target.id,targetKind:'module'}));
+  obsidianMagisterOnBlock(b,defender,events,chamber.id);
   return true;
  }
  for(const p of [...defender.protections]){
@@ -2628,9 +2630,12 @@ function blockHit(b,defender,targetKind,target,ctx,events){
    ['escort','machine'].includes(targetKind);
   const stormPierce=visible&&b.terrain?.id!=='T06'&&ctx.stormSinglePierceLeft>0&&
    ctx.stormSingleTargetKind===targetKind&&ctx.stormSingleTargetId===target.id;
+  const obsidianPierce=visible&&b.terrain?.id!=='T06'&&
+   targetKind==='machine'&&ctx.obsidianPierceLeft>0&&
+   ctx.obsidianPierceTargetId===target.id;
   const nebulaPierce=visible&&['escort','machine'].includes(targetKind)&&
    ctx.nebulaPierceLeft>0;
-  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce||nebulaPierce||stormPierce||royalPierce;
+  const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce||nebulaPierce||stormPierce||royalPierce||obsidianPierce;
   p.remaining--;
   if(!bypass&&p.id==='nx-r02-03'){
    const energy=gainMantaEnergy(defender,b.ply,1);
@@ -2639,7 +2644,13 @@ function blockHit(b,defender,targetKind,target,ctx,events){
     {cardId:p.id,energy:mantaEnergy(defender)}));
   }
   if(bypass){
-   if(royalPierce){
+   if(obsidianPierce){
+    ctx.obsidianPierceLeft--;
+    events.push(emit(b,ctx.who,'obsidian-pierce',
+     'Obice nero attraversa una Difesa scoperta sulla macchina',{
+      cardId:'nx-l03-02',targetKind,targetId:target.id}));
+   }
+   else if(royalPierce){
     ctx.royalLanceUsed=true;ctx.royalLanceAvailable=false;
     ensureRoyalState(attacker).lastLancePly=b.ply;
     events.push(emit(b,ctx.who,'royal-lance',
@@ -2671,7 +2682,10 @@ function blockHit(b,defender,targetKind,target,ctx,events){
    {cardId:p.id,partId:targetKind==='part'?target.id:null,
     escortSlot:targetKind==='escort'?target.slot:null}));
   if(p.remaining<=0)discardDefense(defender,p.source);
-  if(!bypass)return true;
+  if(!bypass){
+   if(visible)obsidianMagisterOnBlock(b,defender,events,p.id);
+   return true;
+  }
  }
  if(targetKind==='part'){
   const veil=defender.auroraVeil;
@@ -2750,6 +2764,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  if(blockNebulaRepeat(b,ctx,events,target))return 0;
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
  if(stormNetStops(b,ctx,events,target))return 0;
+ amount=obsidianTransformDamage(b,ctx,events,target,amount);
  const actual=royalDistributeDamage(b,ctx,events,defender,target.kind,target.unit,
   sharkCapDamage(b,defender,target.kind,target.unit,
    mantaCapDamage(b,defender,target.kind,target.unit,amount,events),events));
@@ -2863,6 +2878,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
   return {damage:0,target:finalTarget,blocked:true};
  if(stormNetStops(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
+ amount=obsidianTransformDamage(b,ctx,events,finalTarget,amount);
  const actual=royalDistributeDamage(b,ctx,events,enemy,finalTarget.kind,finalTarget.unit,
   sharkCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,
    mantaCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,amount,events),events));
@@ -3595,9 +3611,10 @@ function resolveSalvo(b,ctx,events,order){
   const amount=stormConsumeHeavy(b,ctx,events,redirected,
    mantaFork?1:planned.kind==='part'||planned.kind==='module'||redirected.royalSameDamage?1:
    power+(kind==='escort'&&redirected.stormOriginKind!=='machine'&&b.terrain?.id==='T04'?1:0));
+  const afterArmor=obsidianTransformDamage(b,ctx,events,redirected,amount);
   const damage=royalDistributeDamage(b,ctx,events,defender,kind,unit,
    sharkCapDamage(b,defender,kind,unit,
-   mantaCapDamage(b,defender,kind,unit,amount,events),events));
+   mantaCapDamage(b,defender,kind,unit,afterArmor,events),events));
   if(damage){
    hits.push({id:unit.id,kind,slot:unit.slot,damage,destroyed:unit.destroyed,
     name:kind==='part'?VITAL_LABELS[unit.id]:unit.name});
