@@ -121,7 +121,7 @@ test('Esca abissale non blocca Aggiramento verso la madre',()=>{
  const part=parts.find(p=>p.id==='weapons'),before=part.hp;
  const r=play(b,'B',['prog-bypass'],target('part',part));
  assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='weapons').hp,before-1);
- assert.equal(r.battle.sides.A.defenses.some(d=>d.id==='nx-r04-03'),true);
+ assert.equal(r.events.some(e=>e.kind==='shark-lure'),false);
 });
 test('Denti di ritorno rivela due bersagli fissati quando un attacco distrugge una macchina',()=>{
  let b=make();const [first,second]=b.sides.B.escorts;
@@ -199,7 +199,7 @@ test('Risposta spietata vietata senza vera distruzione avversaria nell’ultimo 
  const r=resolveFleetNextTurn(b,'A',{cards:[],pass:true,sharkTorpedoMachineId:'m:A:cost'},1000);
  assert.equal(r.ok,true);
  assert.equal(b.sides.A.shark,null);
- assert.equal(JSON.stringify(before),JSON.stringify(b));
+ assert.equal(JSON.stringify(b),before);
 });
 test('Risposta spietata raggiunge un vitale oltre i supporti dopo una vera distruzione',()=>{
  let b=make();
@@ -236,7 +236,7 @@ test('Ultimo morso rifiuta richiesta impossibile senza consumare mano o unità',
 });
 test('Ammiraglio ripara una unità sopravvissuta sacrificando una vera carta della mano',()=>{
  let b=make();
- b=play(b,'A',['ex-r04-01','gen-216'],{pass:true,
+ b=play(b,'A',['ex-r04-01','gen-216'],{pass:true,cards:[0],
   sharkAdmiralEnabled:true,sharkAdmiralDiscardId:'gen-216'}).battle;
  const hp=b.sides.A.escorts[0].hp;
  const r=play(b,'B',[],target('escort',b.sides.A.escorts[0]));
@@ -247,7 +247,7 @@ test('Ammiraglio ripara una unità sopravvissuta sacrificando una vera carta del
 });
 test('Ammiraglio non rianima una unità distrutta e non scarta la carta',()=>{
  let b=make();
- b=play(b,'A',['ex-r04-01','gen-216'],{pass:true,
+ b=play(b,'A',['ex-r04-01','gen-216'],{pass:true,cards:[0],
   sharkAdmiralDiscardId:'gen-216'}).battle;
  b.sides.A.escorts[0].hp=1;
  const r=play(b,'B',[],target('escort',b.sides.A.escorts[0]));
