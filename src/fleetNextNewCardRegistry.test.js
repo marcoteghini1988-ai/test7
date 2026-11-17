@@ -30,9 +30,10 @@ test('Il Buco Nero consente tre copie e non cancella le navicelle',()=>{
  assert.ok(blackHole.effectSpec.excludes.includes('hp'));
 });
 
-test('Le 33 schede sono registrate ma non giocabili finché il motore non è migrato',()=>{
+test('Le 33 schede sono riconosciute e disponibili per il ruleset HP',()=>{
  for(const c of NEXT_COMMON_CARDS){
-  assert.equal(c.playable,false,c.id);
+  assert.equal(c.playable,true,c.id);
+  assert.ok(['systemModifier','fieldReset'].includes(c.effectSpec.type),c.id);
   assert.equal(NEXT_COMMON_CARD_BY_ID[c.id],c);
   assert.ok(c.name.length>0);
   assert.ok(c.effectProposed.length>0);
