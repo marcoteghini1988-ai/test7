@@ -1073,7 +1073,8 @@
         "type": "counter",
         "amount": 1,
         "turns": 1
-      }
+      },
+      "nativeFace": true
     },
     {
       "id": "ex-e01-01",
