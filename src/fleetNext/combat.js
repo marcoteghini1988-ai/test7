@@ -3360,6 +3360,42 @@ function resolveStormShots(b,ctx,events,order){
 }
 
 // Un comando regale è una sola attivazione, anche se effettua due colpi.
+// Frattura d'assedio è un unico colpo reale; non raddoppia la salva ordinaria.
+function resolveObsidianShots(b,ctx,events,order={}){
+ startNebulaVolley(ctx);
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const command=ctx.obsidianAttacks[0];
+ const target=selectedEnemyTarget(enemy,order,b.ply);
+ const result={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  played:visiblePlayed(ctx.cards),targetKind:target?.kind,
+  targetId:target?.unit?.id,targets:[]};
+ if(!command||!target||!['escort','machine'].includes(target.kind))return result;
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  events.push(emit(b,ctx.who,'no-shot','Frattura Ossidiana bloccata dal Disarmo'));
+  return result;
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((n,x)=>n+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=enemy.buffs.filter(x=>x.kind==='guard'&&
+  (x.untilPly==null||x.untilPly>b.ply)).reduce((n,x)=>n+(x.power||0),0);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-
+  enemy.ships[0].defensePower)+ctx.power+
+  terrainSalvoModifier(b.terrain,side.ships[0].id).value-jam-guard);
+ if(!power){
+  events.push(emit(b,ctx.who,'block','Frattura Ossidiana senza potenza sufficiente'));
+  return result;
+ }
+ const hit=linceHit(b,ctx,events,target,power,command.id,order,false,0);
+ if(hit.damage){
+  const kind=hit.target.kind,key=kind==='machine'?'machineDamage':'escortDamage';
+  result[key]=hit.damage;
+  result.targets.push({kind,id:hit.target.unit.id,
+   damage:hit.damage,destroyed:hit.target.unit.destroyed});
+ }
+ return result;
+}
+
 function resolveRoyalShots(b,ctx,events,order={}){
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
