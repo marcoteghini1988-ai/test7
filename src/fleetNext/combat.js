@@ -3039,6 +3039,80 @@ function resolveStormShots(b,ctx,events,order){
  return result;
 }
 
+// Un comando regale è una sola attivazione, anche se effettua due colpi.
+function resolveRoyalShots(b,ctx,events,order={}){
+ startNebulaVolley(ctx);
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const command=ctx.royalAttacks[0],units=royalUnits(enemy,b.ply);
+ const first=units.find(t=>t.kind===order.targetKind&&t.unit.id===order.targetId)||
+  units[0];
+ const second=units.find(t=>t.kind===order.royalSecondKind&&
+  t.unit.id===order.royalSecondId&&t.unit.id!==first?.unit.id)||
+  units.find(t=>t.unit.id!==first?.unit.id);
+ const result={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  played:visiblePlayed(ctx.cards),targetKind:first?.kind,
+  targetId:first?.unit?.id,targets:[]};
+ if(!command||!first)return result;
+ if(ctx.royalRelay){
+  const relay=royalSupports(side,b.ply).find(e=>e.id===ctx.royalRelayEscortId);
+  if(!relay){
+   events.push(emit(b,ctx.who,'no-shot','Relè della Corona: supporto non operativo',
+    {cardId:command.id}));
+   return result;
+  }
+ }
+ if(!ctx.royalRelay&&!royalPart(side,'weapons')){
+  events.push(emit(b,ctx.who,'no-shot','Comando regale perso: Arsenale distrutto',
+   {cardId:command.id}));
+  return result;
+ }
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  events.push(emit(b,ctx.who,'no-shot','Comando regale fermato dal Disarmo: costo non rimborsato',
+   {cardId:command.id}));
+  return result;
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((n,x)=>n+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=enemy.buffs.filter(x=>x.kind==='guard'&&
+  (x.untilPly==null||x.untilPly>b.ply)).reduce((n,x)=>n+(x.power||0),0);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-
+  enemy.ships[0].defensePower)+ctx.power+
+  terrainSalvoModifier(b.terrain,side.ships[0].id).value-jam-guard);
+ if(power<=0){
+  events.push(emit(b,ctx.who,'block','Comando regale senza potenza sufficiente',
+   {cardId:command.id}));
+  return result;
+ }
+ ctx.royalMotherShot=command.action==='royal-rain'&&!ctx.royalRelay;
+ const attack=(target,amount,secondary=false)=>{
+  if(!target||!unitAlive(target.unit))return;
+  ctx.royalFirstShot=!secondary;
+  if(secondary&&cancelPrismaSecondaryHit(b,ctx,events,target,first))return;
+  const hit=linceHit(b,ctx,events,target,amount,command.id,order,false,0);
+  if(!hit.damage)return;
+  const field=hit.target.kind==='escort'?'escortDamage':'machineDamage';
+  result[field]+=hit.damage;
+  result.targets.push({kind:hit.target.kind,id:hit.target.unit.id,damage:hit.damage,
+   destroyed:hit.target.unit.destroyed});
+ };
+ if(command.action==='royal-rain'){
+  if(order.royalRainMode==='split'){
+   attack(first,1);
+   if(second)attack(second,1,true);
+  }else attack(first,3);
+  events.push(emit(b,ctx.who,'royal-rain',
+   order.royalRainMode==='split'?'Pioggia reale: due colpi leggeri distinti':
+    'Pioggia reale: un colpo pesante',{
+     cardId:command.id,mode:order.royalRainMode==='split'?'split':'heavy',
+     targetCount:result.targets.length}));
+ }else if(command.action==='coordinated-judgment'){
+  ctx.royalMotherShot=false; // Il colpo parte dal supporto che ha pagato la Difesa.
+  attack(first,3);
+ }else throw Error('Comando regale sconosciuto: '+command.action);
+ return result;
+}
+
 function resolveSharkShots(b,ctx,events,order){
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
