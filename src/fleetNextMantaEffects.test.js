@@ -1,12 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {card,deckFromCounts,STARTER_DECK,eligibleExclusives,effectiveDeck} from './fleetNext/rules.js';
+import {card,deckFromCounts,eligibleExclusives,effectiveDeck} from './fleetNext/rules.js';
+import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 import {createFleetNextBattle,resolveFleetNextTurn,effectUnavailableReason} from './fleetNext/combat.js';
 import {mountModule,removeModule} from './fleetNext/auroraEngine.js';
 import {ensureMantaState,mantaEnergy,mantaCapacitorActive,mantaForkActive,
  mantaPrecondition} from './fleetNext/mantaEngine.js';
 
-const deck=deckFromCounts(STARTER_DECK.carteGenerali);
+const deck=deckFromCounts(TEST_DECK.carteGenerali);
 const make=(opts={})=>createFleetNextBattle({shipA:'R02',shipB:'C03',levelA:5,levelB:5,
  mode:'pvp',seed:811,deckA:deck,deckB:deck,...opts});
 function equip(side,id){

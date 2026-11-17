@@ -64,8 +64,6 @@ export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...preservedCha
 )));
 export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(s=>[s.id,Object.freeze(s)])));
 export const COMBO_RECIPES = Object.freeze(exclusiveData.comboRecipes.map(c=>Object.freeze(c)));
-export const PREMADE_DECKS = Object.freeze(generalData.mazziPreconfigurati);
-export const STARTER_DECK=Object.freeze({...generalData.mazzoIniziale,carteGenerali:Object.freeze({...generalData.mazzoIniziale.carteGenerali})});
 export const GENERAL_COUNT = Object.keys(GENERAL_CARDS).length;
 export const EXCLUSIVE_COUNT = Object.keys(EXCLUSIVE_CARDS).length;
 export const BOSS_COUNT = Object.keys(BOSS_CARDS).length;
@@ -75,15 +73,11 @@ export const TOTAL_CARD_COUNT = BASE_CATALOG_COUNT+PROGRESSION_CARD_COUNT;
 export const FLEET_TURN_SECONDS = 30;
 export const FLEET_HAND_SIZE = 7;
 export const FLEET_MAX_PLAYED = 3;
-export const FLEET_BASE_DECK_SIZE = 40;
 export const FLEET_SLOTS = Object.freeze({attack:3,defense:2,defenseVisible:1,trap:1,character:1,machine:2});
 // engine rimane riconosciuto per gli effetti storici, ma non è un vitale delle nuove madri.
 export const VITAL_KEYS = Object.freeze(['weapons','generator','bridge','command','engine']);
 export const VITAL_LABELS = Object.freeze({engine:'Motori',weapons:'Arsenale',command:'Centralina',generator:'Generatore',bridge:'Plancia'});
-export const CARD_PRICES = Object.freeze({Comune:80,Rara:220,Epica:550,Leggendaria:1200});
 export const RARITY_COPY_LIMIT = Object.freeze({Comune:5,Rara:4,Epica:3,Leggendaria:2});
-export const PACK_PRICE = 280;
-export const PACK_SIZE = 3;
 export const MAX_EXCLUSIVE_UPGRADE = 3;
 
 if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==125||BOSS_COUNT!==12||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==0)
@@ -160,24 +154,8 @@ export function effectiveDeck(baseDeck,shipId,level){
 export function countDeck(deck){
  const n={};for(const id of deck)n[id]=(n[id]||0)+1;return n;
 }
-export function validateBaseDeck(deck,collection=null){
- if(!Array.isArray(deck)||deck.length!==FLEET_BASE_DECK_SIZE)
-  return {valid:false,reason:'Il mazzo base deve contenere esattamente 40 carte.'};
- const counts=countDeck(deck);
- for(const [id,amount] of Object.entries(counts)){
-  const def=generalCard(id)||bossCard(id);
-  if(!def)return {valid:false,reason:'Carta non ammessa nel mazzo base: '+id};
-  if(amount>cardCopyLimit(id))return {valid:false,reason:'Troppe copie di '+def.nome};
-  if(collection&&amount>(collection.owned[id]||0))
-   return {valid:false,reason:'Copie non possedute: '+def.nome};
- }
- return {valid:true,counts};
-}
 export function deckFromCounts(counts){
  return Object.entries(counts).flatMap(([id,n])=>Array(Math.max(0,Math.floor(n||0))).fill(id));
-}
-export function getPrebuilt(id){
- return PREMADE_DECKS.find(p=>p.id===id)||null;
 }
 export function comboForShip(shipId){
  return COMBO_RECIPES.filter(c=>c.active===true&&c.navicella===shipId);

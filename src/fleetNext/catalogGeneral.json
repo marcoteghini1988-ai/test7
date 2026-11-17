@@ -261,23 +261,5 @@
         "role": "any"
       }
     }
-  ],
-  "mazziPreconfigurati": [],
-  "mazzoIniziale": {
-    "id": "starter-transitorio",
-    "nome": "Personaggi e Macchine (transitorio)",
-    "madre": "N00",
-    "gratuito": true,
-    "carteGenerali": {
-      "prog-machine-striker": 5,
-      "prog-machine-guard": 5,
-      "prog-bypass": 5,
-      "gen-216": 5,
-      "gen-217": 5,
-      "gen-218": 5,
-      "gen-226": 4,
-      "gen-227": 4,
-      "gen-228": 2
-    }
-  }
+  ]
 }

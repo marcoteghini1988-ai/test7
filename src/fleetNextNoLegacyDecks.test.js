@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createFleetInventory,normalizeFleetInventory,
- equipFleetBaseDeck,buyPrebuiltDeck,buyGeneralCard} from './fleetNext/collection.js';
+import {createFleetInventory,normalizeFleetInventory} from './fleetNext/collection.js';
+import * as inventoryExports from './fleetNext/collection.js';
 import {createFleetNextBattle} from './fleetNext/combat.js';
 const src=file=>readFileSync(new URL(file,import.meta.url),'utf8');
 
@@ -11,9 +11,8 @@ test('Nuovo inventario senza mazzo manuale, acquisti dismessi e addebiti',()=>{
  assert.equal(inv.schema,4);
  assert.deepEqual(inv.deck,[]);
  assert.equal(inv.owned['gen-216'],1);
- for(const result of [equipFleetBaseDeck(inv,[]),buyPrebuiltDeck(inv,'test'),buyGeneralCard(inv,'gen-216')]){
-  assert.equal(result.ok,false);assert.equal(result.inventory,inv);
- }
+ for(const method of ['equipFleetBaseDeck','buyPrebuiltDeck','buyGeneralCard','buyFleetPack'])
+  assert.equal(Object.hasOwn(inventoryExports,method),false,method);
  assert.equal(inv.credits,0);
 });
 test('Migrazione conserva il mazzo solo come archivio',()=>{

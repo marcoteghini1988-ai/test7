@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,STARTER_DECK,deckFromCounts,card} from './fleetNext/rules.js';
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,deckFromCounts,card} from './fleetNext/rules.js';
+import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn} from './fleetNext/combat.js';
 import {validateEffectSpec,describeEffect,effectiveEffectSpec} from './fleetNext/simpleEffects.js';
 import {campaignTerrain,TERRAIN_CATALOG} from './fleetNext/terrains.js';
 const all=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS)];
-const deck=deckFromCounts(STARTER_DECK.carteGenerali);
+const deck=deckFromCounts(TEST_DECK.carteGenerali);
 function battle(options={}){return createFleetNextBattle({shipA:'N00',shipB:'N00',levelA:1,levelB:1,deckA:deck,deckB:deck,mode:'pvp',seed:25,...options});}
 test('155 schede registrate: Aurora, Lince, Vespa e Corvo eseguibili, 0 progetti bloccati',()=>{
  assert.equal(all.length,155);

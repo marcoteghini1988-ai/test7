@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import ts from 'typescript';
-import {card,cardRole,cardFacePath,STARTER_DECK,deckFromCounts} from './fleetNext/rules.js';
+import {card,cardRole,cardFacePath} from './fleetNext/rules.js';
 import {liveModules} from './fleetNext/auroraEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {projectFleetSlots,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId,fleetTurnNotice} from './fleetNext/battlePresentation.js';
@@ -144,11 +144,11 @@ test('Twelve official campaign planets use the twelve main fleet steps, ending i
 
 
 test('The actual session entry initializes final boss Arca L5, two reserves and two usable fusion cards',()=>{
- const owned={shipId:'N00',level:1},base=deckFromCounts(STARTER_DECK.carteGenerali);
+ const owned={shipId:'N00',level:1};
  const start=extract('./OfficialFleetBattle3D.jsx','startSession',{
-  readShipCollection:()=>({cards:[owned],loadout:[]}),readFleetInventory:()=>({deck:base,exclusiveUpgrades:{}}),
+  readShipCollection:()=>({cards:[owned],loadout:[]}),readFleetInventory:()=>({owned:{'gen-216':1},exclusiveUpgrades:{}}),
   findMother:()=>owned,officialBossEncounter,officialEarlyCampaignRivalShip,officialCampaignRivalLevel,
-  chooseCampaignMotherRival,campaignFleetShipId,createFleetNextBattle,STARTER_DECK,deckFromCounts
+  chooseCampaignMotherRival,campaignFleetShipId,createFleetNextBattle
  });
  const session=start({mode:'campaign',sectorNumber:120,bossPlanetId:20,bossSectorLevel:10});
  assert.equal(session.error,'');

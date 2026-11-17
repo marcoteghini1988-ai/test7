@@ -72,10 +72,6 @@ const record=(inventory,action,note)=>{
  result.collectionHistory=[...(result.collectionHistory||[]),{action,note}].slice(-40);
  return result;
 };
-// Entrate storiche disabilitate; non spendono crediti.
-export function equipFleetBaseDeck(inventory){
- return {ok:false,reason:'I mazzi manuali sono stati ritirati.',inventory};
-}
 export function selectFleetMother(inventory,shipId,ownedShips=[]){
  if(!shipConfig(shipId))return {ok:false,reason:'Navicella inesistente',inventory};
  if(ownedShips.length&&!ownedShips.includes(shipId))
@@ -84,14 +80,6 @@ export function selectFleetMother(inventory,shipId,ownedShips=[]){
  next.equippedMother=shipId;
  return {ok:true,inventory:next};
 }
-export function buyGeneralCard(inventory){
- return {ok:false,reason:'Le vecchie carte non sono più in vendita.',inventory};
-}
-export function buyPrebuiltDeck(inventory){
- return {ok:false,reason:'I mazzi preconfezionati sono stati ritirati.',inventory};
-}
-// Temporaneamente sospeso: nessun credito speso su carte che saranno sostituite.
-export function buyFleetPack(inventory){return {ok:false,reason:'Pacchetti sospesi durante il rifacimento delle carte.',inventory};}
 export function exclusiveUpgradeCost(nextGrade){
  return [0,0,160,420][nextGrade]||Infinity;
 }

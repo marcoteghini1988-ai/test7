@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CAMPAIGN_SHIP_ORDER,SHIP_PROGRESSION_IDS,getShipProgression,
  getShipProgressionLevels,shipProgressionProfile} from './fleetNext/progression.js';
-import {SHIP_CONFIGS,EXCLUSIVE_CARDS,STARTER_DECK,FLEET_SLOTS,
+import {SHIP_CONFIGS,EXCLUSIVE_CARDS,FLEET_SLOTS,
  BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,PROGRESSION_CARD_COUNT,
  unlockedParts,requiredEscortCount,requiredReserveCount,supportGrade,
  eligibleExclusives,exclusiveUnlocked,exclusiveOperational,effectiveDeck,
- deckFromCounts,validateBaseDeck,card,cardRole,cardCopyLimit,cardFacePath,
+ deckFromCounts,card,cardRole,cardCopyLimit,cardFacePath,
  generalCard,exclusiveCard} from './fleetNext/rules.js';
+import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 
 test('Dodici tappe da cinque livelli conservano anche le cinque varianti possedute',()=>{
  assert.equal(CAMPAIGN_SHIP_ORDER.length,12);
@@ -133,11 +134,11 @@ test('Configurazioni storiche e prerequisiti esclusivi seguono la stessa progres
  }
 });
 
-test('Tutti gli slot esistono da subito; le nuove carte entrano nello starter senza aumentarne la dimensione',()=>{
+test('Tutti gli slot esistono da subito; le carte tecniche restano coperte dai test, non equipaggiate in un mazzo manuale',()=>{
  assert.deepEqual(FLEET_SLOTS,{attack:3,defense:2,defenseVisible:1,trap:1,character:1,machine:2});
- const deck=deckFromCounts(STARTER_DECK.carteGenerali);
+ const deck=deckFromCounts(TEST_DECK.carteGenerali);
  assert.equal(deck.length,40);
- assert.equal(validateBaseDeck(deck).valid,true);
+
  for(const id of ['prog-machine-striker','prog-machine-guard','prog-bypass']){
   assert.equal(deck.filter(x=>x===id).length,5);
   assert.equal(generalCard(id),card(id));

@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,STARTER_DECK,card,cardFacePath,validateBaseDeck,deckFromCounts,effectiveDeck} from './fleetNext/rules.js';
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,card,cardFacePath,deckFromCounts,effectiveDeck} from './fleetNext/rules.js';
 import {validateEffectSpec,describeEffect} from './fleetNext/simpleEffects.js';
-import {createFleetInventory,normalizeFleetInventory,readFleetInventory,writeFleetInventory,buyFleetPack,buyGeneralCard} from './fleetNext/collection.js';
+import {createFleetInventory,normalizeFleetInventory,readFleetInventory,writeFleetInventory} from './fleetNext/collection.js';
+import * as inventoryExports from './fleetNext/collection.js';
+import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
 import retired from '../docs/ARCHIVIO_ID_CARTE_RITIRATE_2026-11-16.json' with {type:'json'};
 function storage(){const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k)};}
@@ -22,17 +24,17 @@ test('350 vecchie carte rimosse, Personaggi Boss e sei carte tecniche conservati
 test('Mazzo storico disponibile solo per regressione, non per le nuove partite',()=>{
  assert.deepEqual(createFleetInventory().deck,[]);
  assert.equal(createFleetInventory().owned['gen-216'],1);
- const deck=deckFromCounts(STARTER_DECK.carteGenerali);
- assert.equal(deck.length,40);assert.equal(validateBaseDeck(deck).valid,true);
+ const deck=deckFromCounts(TEST_DECK.carteGenerali);
+ assert.equal(deck.length,40);
  const old=[...deck];old[0]=retired.generalIds[0];
- assert.equal(validateBaseDeck(old).valid,false);
+ assert.equal(card(old[0]),null,'Le definizioni obsolete non possono essere riattivate');
  assert.ok(effectiveDeck(deck,'N00',1).includes('ex-n00-01'));
 });
-test('Pacchetti sospesi: non si addebitano crediti',()=>{
+test('Nessuna API per il commercio o l’equipaggiamento dei mazzi ritirati',()=>{
  const inv=createFleetInventory();inv.credits=725;
- const pack=buyFleetPack(inv);assert.equal(pack.ok,false);
- assert.equal(inv.credits,725);assert.equal(pack.inventory,inv);
- assert.equal(buyGeneralCard(inv,'gen-001').ok,false);
+ for(const method of ['buyFleetPack','buyGeneralCard','buyPrebuiltDeck','equipFleetBaseDeck'])
+  assert.equal(Object.hasOwn(inventoryExports,method),false,method);
+ assert.equal(inv.credits,725);
 });
 test('Migrazione schema 2 conserva vecchie proprietà in deposito, crediti, premi e nave',()=>{
  const prev={...createFleetInventory(),schema:2,credits:725,packsOpened:4,

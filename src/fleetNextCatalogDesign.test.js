@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import design from '../docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json' with {type:'json'};
 import {EXCLUSIVE_CARDS} from './fleetNext/rules.js';
+import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 
 const ships=['N00','C01','C02','C03','R01','R02','R04','E01','E02','L01','L03','L04'];
 const types=['Modulo utilità','Modulo d’arma','Attacco','Difesa','Trappola','Tattica','Personaggio','Fusione'];
@@ -54,7 +55,7 @@ test('Il catalogo in codice associa esattamente 10 esclusive a ciascuna delle 12
 });
 
 test('Tutte le carte esclusive sono eseguibili solo con la madre corretta e vengono pescate',async()=>{
- const {exclusiveUnlocked,effectiveDeck,cardFacePath,card,eligibleExclusives,STARTER_DECK,deckFromCounts}=await import('./fleetNext/rules.js');
+ const {exclusiveUnlocked,effectiveDeck,cardFacePath,card,eligibleExclusives,deckFromCounts}=await import('./fleetNext/rules.js');
  const {effectUnavailableReason,createFleetNextBattle}=await import('./fleetNext/combat.js');
  const sample=design.cards.find(c=>c.shipId==='L04'&&c.type==='Attacco');
  assert.ok(sample);
@@ -66,7 +67,7 @@ test('Tutte le carte esclusive sono eseguibili solo con la madre corretta e veng
  assert.equal(exclusiveUnlocked(sample.id,'L03',5),false);
  const correct=eligibleExclusives(sample.shipId,5).some(c=>c.id===sample.id);
  assert.equal(correct,true);
- const deck=deckFromCounts(STARTER_DECK.carteGenerali);
+ const deck=deckFromCounts(TEST_DECK.carteGenerali);
  const ids=effectiveDeck(deck,sample.shipId,5);
  assert.equal(ids.includes(sample.id),true,'Ogni carta ora dispone di un effetto giocabile');
  const battle=createFleetNextBattle({shipA:sample.shipId,shipB:'C03',levelA:5,levelB:5,deckA:deck,deckB:deck});
