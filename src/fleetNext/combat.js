@@ -130,7 +130,7 @@ export function availableFleetTargets(side,ply=0){
   ...(side.machines||[]).filter(unitAlive).map(unit=>({kind:'machine',unit}))];
  return [...units.map(({kind,unit})=>({kind,id:unit.id,slot:unit.slot,name:unit.name,
   hp:unit.hp,maxHp:unit.maxHp,unit,blocked:false})),
-  ...liveModules(side).map(unit=>({kind:'module',id:unit.id,slot:unit.slot,name:unit.name,
+  ...(!obsidianSealed(side,ply)?liveModules(side):[]).map(unit=>({kind:'module',id:unit.id,slot:unit.slot,name:unit.name,
    hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0})),
   ...side.ships[0].parts.filter(unitAlive).map(unit=>({kind:'part',id:unit.id,name:VITAL_LABELS[unit.id],
    hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0}))];
@@ -603,6 +603,7 @@ export function validateFleetTurn(b,who,order){
 function selectedEnemyTarget(side,order={},ply=0){
  const kind=order.targetKind||(order.escortSlot!=null?'escort':order.machineSlot!=null?'machine':'part');
  if(kind==='escort'||kind==='machine'||kind==='module'){
+  if(kind==='module'&&obsidianSealed(side,ply))return null;
   const list=kind==='escort'?side.escorts:kind==='machine'?side.machines||[]:liveModules(side);
   const slot=kind==='escort'?order.escortSlot:kind==='machine'?order.machineSlot:order.moduleSlot;
   const unit=list.find(e=>order.targetId?e.id===order.targetId:e.slot===slot);
@@ -1140,6 +1141,7 @@ function activateFalcoCard(b,who,def,ctx,events,order={},source=null){
   }
   state.pending=attack;
   ctx.falcoPrepared=true;
+  obsidianOnPreparation(b,who,attack.releasePly,events,def.id);
   events.push(emit(b,who,'falco-prepared',(def.nome||def.name)+
    ': carica visibile pronta per il prossimo turno',
    {cardId:def.id,targetKind:primary.kind,targetId:primary.unit.id,
@@ -2257,6 +2259,12 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'fusion':{
    const result=fuseFleetSupports(side,b.ply);
    if(!result.ok)throw new Error(result.reason);
+   if(side.ships[0].id==='L03'){
+    result.fused.name='Bastione d’Assedio · Titano Ossidiana';
+    result.fused.obsidianBastion=true;
+    result.fused.obsidianGuardUntilPly=0;
+    result.fused.obsidianGuardUsedPly=-999;
+   }
    events.push(emit(b,who,'fusion',result.fused.name+' formata'+(result.deployed?'; entra '+result.deployed.name:''),
     {cardId:def.id,escortSlot:result.fused.slot,stage:result.stage,deployed:result.deployed?.id||null}));
    break;
@@ -2428,6 +2436,12 @@ function escortPassive(b,side,ctx,events,order){
   if(unitSilenced(e,b.ply))continue;
   const amount=Math.max(1,e.grade||1);
   for(const s of e.fusionSkills||[e.skill]){
+   if(e.obsidianBastion&&ctx.obsidianGuardArmed&&
+    ['ion','strike','corrode','focus','siege','revenge','surge','precision','pierce'].includes(s.action)){
+    events.push(emit(b,ctx.who,'obsidian-guard',
+     e.name+' rinuncia alla passiva offensiva '+s.name));
+    continue;
+   }
    if((side.turnCount+1)%Math.max(1,s.interval)!==0)continue;
    if(side.corvo?.skippedPassives?.[e.id]){
     delete side.corvo.skippedPassives[e.id];
@@ -2509,8 +2523,8 @@ function redirectSharkDecoy(b,ctx,events,target){
  return {kind:lure.kind,unit:lure.unit,redirected:true};
 }
 function redirectFleetHit(b,ctx,events,target){
- // Cannone velato impedisce ogni deviazione, anche quella regale.
- if(ctx.nebulaUnredirectableCardId)return target;
+ // Gli Ancoraggi stabilizzano solo il rilascio, non i colpi ordinari.
+ if(ctx.obsidianNoRedirect||ctx.nebulaUnredirectableCardId)return target;
  const crown=royalGuardCommand(b,ctx,events,target);
  if(crown!==target)return crown;
  return redirectPrismaMachineHit(b,ctx,events,redirectLinceHit(b,ctx,events,
@@ -3669,6 +3683,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   card(id).effectSpec.action==='emergency-loader';
  for(const id of cards.filter(priority))if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  const releasedShot=falcoReleaseAtTurnStart(b,who,ctx,events,order);
+ const obsidianShot=obsidianReleaseAtTurnStart(b,who,ctx,events,order);
  // Terreno e Personaggio Falco precedono la preparazione.
  for(const id of cards.filter(id=>cardRole(id)==='terrain'))
   if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
@@ -3680,6 +3695,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  nebulaHideForTurn(b,ctx,events,order); // Occultamento precede eventuale Ago nello stesso turno
  after.sort((x,y)=>Number(isFalcoPreparation(y))-Number(isFalcoPreparation(x)));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ obsidianUseBastionGuard(b,ctx,events,order);
  nebulaArchonTerrainTrade(b,ctx,events,order);
  nebulaRevealOnOwnTurn(b,ctx,events);
  processHelios(b,who,ctx,events,order);
@@ -3687,7 +3703,8 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
  const ownShot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):
-  ctx.falcoPrepared||ctx.falcoReleased?{damage:0,played:visiblePlayed(ctx.cards)}:
+  ctx.falcoPrepared||ctx.falcoReleased||ctx.obsidianPrepared||ctx.obsidianReleased?
+  {damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.corvoAttacks.length?resolveCorvoShots(b,ctx,events,order):
   ctx.mantaAttacks.length?resolveMantaShots(b,ctx,events,order):
   ctx.sharkAttacks.length?resolveSharkShots(b,ctx,events,order):
@@ -3699,7 +3716,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
- const shot=mergeFalcoShots(releasedShot,ownShot);
+ const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
  side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)));
