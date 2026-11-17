@@ -42,9 +42,9 @@ function kind(c){
 }
 const src=new Set(cards.map(c=>c.id));
 if(cards.length!==17||src.size!==17)fail('Fronti illustrati dei Personaggi fuori sincronizzazione');
-const faceIds=readdirSync(faces).filter(x=>x.endsWith('.svg')&&activeIds.has(x.slice(0,-4))).map(x=>x.slice(0,-4));
+const faceIds=readdirSync(faces).filter(x=>x.endsWith('.svg')).map(x=>x.slice(0,-4));
 if(faceIds.length!==17||faceIds.some(x=>!src.has(x)))fail('Fronte SVG attivo mancante');
-const assets=readdirSync(illustrations).filter(x=>x.endsWith('.webp')&&activeIds.has(x.slice(0,-5)));
+const assets=existsSync(illustrations)?readdirSync(illustrations).filter(x=>x.endsWith('.webp')):[];
 const perFunction={},hdIds=[],missing=[];
 for(const c of cards){
  const id=c.id,svg=readFileSync(resolve(faces,id+'.svg'),'utf8'),type=kind(c);
@@ -90,7 +90,7 @@ for(const c of cards){
 }
 const upgrades=resolve(ROOT,'public/assets/fleet-next-card-upgrades');
 const exclusive=cards.filter(c=>c.shipId);
-const upgradeFiles=readdirSync(upgrades).filter(f=>f.endsWith('.svg')&&activeIds.has(f.replace(/-g[23]\.svg$/,'')));
+const upgradeFiles=readdirSync(upgrades).filter(f=>f.endsWith('.svg'));
 if(upgradeFiles.length!==exclusive.length*2)fail('Varianti di grado mancanti o extra');
 for(const card of exclusive)for(const grade of [2,3]){
  const filename=resolve(upgrades,card.id+'-g'+grade+'.svg');
