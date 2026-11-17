@@ -35,6 +35,10 @@ import {OBSIDIAN_ATTACK_ACTIONS,OBSIDIAN_PREP_ACTIONS,isObsidianModule,
  obsidianChoiceReason,obsidianEnemyUnits,obsidianReadyEscorts,
  obsidianFusedEscort,obsidianModuleActive,obsidianPending,obsidianSealed,
  obsidianReadyEscort,obsidianBulkheadTryHit} from './obsidianEngine.js';
+import {ARK_ACTIONS,ARK_ATTACK_ACTIONS,isArkModule,ensureArkState,
+ arkModuleActive,arkPrecondition,arkChoiceReason,arkEscorts,
+ arkFusedEscorts,arkUnfusedEscorts,arkEnemyUnits,arkDamagedEscorts,
+ arkModulesInDiscard} from './arkEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
@@ -107,7 +111,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
-  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,royal:null,obsidian:null,recalledModules:[],recalledMachines:[],
+  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,royal:null,obsidian:null,ark:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:progression.fusionLimit,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
@@ -249,7 +253,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
- side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);ensureNebulaState(side);ensureStormState(side);ensureRoyalState(side);ensureObsidianState(side);
+ side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);ensureNebulaState(side);ensureStormState(side);ensureRoyalState(side);ensureObsidianState(side);ensureArkState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
  if(!operational(side.ships[0],'generator')){
@@ -314,6 +318,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(def.effectSpec.type==='obsidian'){
   const reason=obsidianPrecondition(def,side,battle);
+  if(reason)return reason;
+ }
+ if(def.effectSpec.type==='ark'){
+  const reason=arkPrecondition(def,side,battle);
   if(reason)return reason;
  }
  const invalid=validateEffectSpec(def.effectSpec);
@@ -401,6 +409,11 @@ export function validateFleetTurn(b,who,order){
  if(obsidianCommands.length>1)return 'Titano Ossidiana: un solo attacco per turno';
  const obsidianReason=obsidianChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
  if(obsidianReason)return obsidianReason;
+ const arkAttacks=chosen.filter(c=>c.effectSpec?.type==='ark'&&
+  ARK_ATTACK_ACTIONS.includes(c.effectSpec.action));
+ if(arkAttacks.length>1)return 'Arca: un solo attacco esclusivo per turno';
+ const arkReason=arkChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
+ if(arkReason)return arkReason;
  if(chosen.some(c=>c.effectSpec?.type==='royal'&&c.effectSpec.action==='crown-fusion')&&
   (chosen.some(c=>c.effectSpec?.type==='fusion')||
    chosen.some(c=>c.effectSpec?.type==='royal'&&
@@ -577,6 +590,8 @@ export function validateFleetTurn(b,who,order){
    return 'Comando Titano: scegli una macchina o un supporto nemico';
   if(obsidianCommands.some(c=>c.effectSpec.action==='black-howitzer')&&selected.kind!=='machine')
    return 'Obice nero: bersaglio esclusivamente una macchina';
+  if(arkAttacks.length&&!['escort','machine'].includes(selected.kind))
+   return 'Attacco Arca: scegli una macchina o un supporto nemico';
   const linceAction=linceCommands[0]?.effectSpec.action;
   if(['solar-bypass','crimson-raid'].includes(linceAction)&&selected.kind!=='part')
    return 'Lince: questo Attacco richiede un vitale avversario';
@@ -599,7 +614,8 @@ export function validateFleetTurn(b,who,order){
   c.effectSpec.type==='nebula'&&NEBULA_ATTACK_ACTIONS.includes(c.effectSpec.action)||
   c.effectSpec.type==='storm'&&STORM_ATTACK_ACTIONS.includes(c.effectSpec.action)||
   c.effectSpec.type==='royal'&&ROYAL_ATTACK_ACTIONS.includes(c.effectSpec.action)||
-  c.effectSpec.type==='obsidian'&&OBSIDIAN_ATTACK_ACTIONS.includes(c.effectSpec.action)))
+  c.effectSpec.type==='obsidian'&&OBSIDIAN_ATTACK_ACTIONS.includes(c.effectSpec.action)||
+  c.effectSpec.type==='ark'&&ARK_ATTACK_ACTIONS.includes(c.effectSpec.action)))
   return 'Un comando offensivo non può essere passato';
  return null;
 }
@@ -2252,6 +2268,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'storm':activateStormCard(b,who,def,ctx,events,order,token);break;
   case 'royal':activateRoyalCard(b,who,def,ctx,events,order,token);break;
   case 'obsidian':activateObsidianCard(b,who,def,ctx,events,order,token);break;
+  case 'ark':activateArkCard(b,who,def,ctx,events,order,token);break;
   case 'bypass':{
    ctx.bypassPlayed=true;
    if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
@@ -2364,7 +2381,7 @@ function applyCard(b,who,id,ctx,events,order){
   return false;
  }
  if(role==='character'){
-  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian'].includes(spec.type)?0:1,
+  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'].includes(spec.type)?0:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
@@ -2377,7 +2394,10 @@ function applyCard(b,who,id,ctx,events,order){
   const stormNet=spec.type==='storm'&&spec.action==='lightning-net';
   const royalDecree=spec.type==='royal'&&spec.action==='interdiction-decree';
   const obsidianChains=spec.type==='obsidian'&&spec.action==='position-chains';
-  side.defenses.push(obsidianChains?
+  const arkEntry=spec.type==='ark'&&spec.action==='protected-entry';
+  side.defenses.push(arkEntry?
+   {id,source,hidden:true,armedAtPly:b.ply,untilPly:null,trigger:'ark-third-entry'}:
+   obsidianChains?
    {id,source,hidden:true,armedAtPly:b.ply,untilPly:null,trigger:'obsidian-preparing'}:
    royalDecree?
    {id,source,hidden:true,armedAtPly:b.ply,untilPly:null,trigger:'unit-withdrawal'}:
@@ -3717,6 +3737,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   obsidianAttacks:[],obsidianPrepared:false,obsidianReleased:false,
   obsidianFractureDeclared:null,obsidianPierceLeft:0,
   obsidianNoRedirect:false,obsidianGuardArmed:false,
+  arkAttacks:[],arkRepairEvents:[],arkNormalBoost:false,
   stormHitIds:new Set(),stormSuppressChain:false,stormFrontUsed:false,stormChainPlan:null,
   nebulaVolleySerial:0,nebulaSeen:new Map(),
   bypassPlayed:false,
@@ -3766,6 +3787,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.stormAttacks.length?resolveStormShots(b,ctx,events,order):
   ctx.royalAttacks.length?resolveRoyalShots(b,ctx,events,order):
   ctx.obsidianAttacks.length?resolveObsidianShots(b,ctx,events,order):
+  ctx.arkAttacks.length?resolveArkShots(b,ctx,events,order):
   ctx.prismaAttacks.length?resolvePrismaShots(b,ctx,events,order):
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
@@ -3773,7 +3795,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
