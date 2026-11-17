@@ -4,6 +4,7 @@ import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
+import {fleetElements} from './elementalAffinities.js';
 import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,moduleSlotForCard,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
 import {LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
  ensureLinceState,linceMarkedRouteReady,lincePrecondition,recallLinceModule,
@@ -76,10 +77,8 @@ export function createFleetMother(id,level=1){
   maxHp:progression.integrityByPart[id],damage:0,destroyed:false}));
  const maxHp=motherIntegrityFromSystems(parts);
  return {id:model.id,name:model.nome,level:n,rarity:model.rarita,hp:maxHp,maxHp,
-  role:progression.role,parts,element:({N00:'ionic',C01:'plasma',C02:'refrigerant',
-  C03:'ionic',C04:'plasma',R01:'plasma',R02:'ionic',R03:'refrigerant',
-  R04:'mineral',E01:'refrigerant',E02:'ionic',E03:'plasma',E04:'mineral',
-  L01:'plasma',L02:'ionic',L03:'mineral',L04:'refrigerant'})[model.id],
+  role:progression.role,parts,element:fleetElements(model.id)[0],
+  elements:fleetElements(model.id),
   attackPower:progression.attackPower,defensePower:progression.defensePower,
   weaponRating:Math.max(0,progression.attackPower-1)};
 }
