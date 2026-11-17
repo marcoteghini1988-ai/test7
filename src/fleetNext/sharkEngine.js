@@ -94,3 +94,54 @@ export function sharkPrecondition(def,side,battle=null){
  }
  return '';
 }
+
+
+// Le scelte del giocatore sono convalidate prima di toccare mano o risorse.
+export function sharkChoiceReason(side,enemy,chosen,order={},ply=0){
+ const actions=chosen.filter(c=>c.effectSpec?.type==='shark').map(c=>c.effectSpec.action);
+ const own=sharkOperationalUnits(side,ply),enemyUnits=sharkUnits(enemy);
+ const select=(rows,kind,id)=>rows.find(t=>t.kind===kind&&t.unit.id===id);
+ const validate=(name,rows,kind,id)=>{
+  if(!id)return '';
+  return select(rows,kind,id)?'':name+': bersaglio dichiarato non disponibile';
+ };
+ if(actions.includes('toothed-armor')){
+  const error=validate('Corazza dentata',enemyUnits,order.sharkArmorKind,order.sharkArmorId);
+  if(error)return error;
+ }
+ if(actions.includes('abyssal-decoy')){
+  const error=validate('Esca abissale',own,order.sharkDecoyKind,order.sharkDecoyId);
+  if(error)return error;
+ }
+ if(actions.includes('returning-teeth')){
+  const first=select(enemyUnits,order.sharkTeethFirstKind,order.sharkTeethFirstId)||enemyUnits[0];
+  const options=enemyUnits.filter(t=>t.unit.id!==first?.unit?.id);
+  if(order.sharkTeethFirstId&&!select(enemyUnits,order.sharkTeethFirstKind,order.sharkTeethFirstId))
+   return 'Denti di ritorno: primo bersaglio non disponibile';
+  if(order.sharkTeethSecondId&&!select(options,order.sharkTeethSecondKind,order.sharkTeethSecondId))
+   return 'Denti di ritorno: secondo bersaglio deve essere diverso e disponibile';
+  if(!first||!options.length)return 'Denti di ritorno richiede due bersagli distinti';
+ }
+ if(actions.includes('retaliation-torpedo')&&order.sharkTorpedoMachineId&&
+  !sharkWoundedMachines(side,ply).some(m=>m.id===order.sharkTorpedoMachineId))
+  return 'Siluro di ritorsione: macchina danneggiata non disponibile';
+ if(actions.includes('predator-shield')&&order.sharkShieldEscortId&&
+  !sharkWoundedSupports(side,ply).some(e=>e.id===order.sharkShieldEscortId))
+  return 'Scudo del predatore: supporto ferito non disponibile';
+ if(actions.includes('last-bite')){
+  const eligible=sharkActiveSupports(side,ply);
+  const donor=eligible.find(e=>e.id===order.sharkSacrificeEscortId)||
+   eligible.find(e=>e.hp<e.maxHp);
+  const target=eligible.find(e=>e.id===order.sharkRecipientEscortId)||
+   eligible.find(e=>e.id!==donor?.id&&e.hp<e.maxHp);
+  if(!donor||donor.hp>=donor.maxHp||!target||target.id===donor.id||
+   target.hp>=target.maxHp||order.sharkSacrificeEscortId&&donor.id!==order.sharkSacrificeEscortId||
+   order.sharkRecipientEscortId&&target.id!==order.sharkRecipientEscortId)
+   return 'Ultimo morso richiede due supporti distinti, feriti e collegati';
+ }
+ if(actions.includes('abyssal-admiral')&&order.sharkAdmiralDiscardId&&
+  !side.hand.some(id=>id===order.sharkAdmiralDiscardId&&
+   !chosen.some(c=>c.id===id)))
+  return 'Ammiraglio: scegli una carta che resti in mano';
+ return '';
+}
