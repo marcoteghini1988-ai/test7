@@ -39,14 +39,16 @@ export function applySystemCard(side,def,ply,who='A'){
  // solo se è più forte o se, a parità, scade dopo.
  const previous=activeSystemCard(side,s.system,s.operation,ply);
  if(previous&&(previous.tier>tier||previous.tier===tier&&previous.untilPly>=effect.untilPly))
-  return {effect:previous,replaced:false};
+  return {effect:previous,replaced:false,discardedPlayedCard:true};
  side.systemCardEffects=side.systemCardEffects.filter(e=>e.system!==s.system||e.operation!==s.operation);
  side.systemCardEffects.push(effect);
- return {effect,replaced:true};
+ return {effect,replaced:true,replacedEffect:previous||null};
 }
 export function expireSystemCards(side,ply){
+ const expired=(side.systemCardEffects||[]).filter(e=>e.untilPly<=ply);
  side.systemCardEffects=(side.systemCardEffects||[]).filter(e=>e.untilPly>ply);
  if(side.systemCardCounters?.ply!==ply)side.systemCardCounters={ply,generatorUsed:0,commandGuardUsed:0,planciaRestrictedUsed:0,planciaSplitUsed:0};
+ return expired;
 }
 export function generatorAdjustment(side,ply=0){
  const effect=activeSystemCard(side,'generator','amplify',ply);
@@ -146,8 +148,14 @@ export function resetFieldWithBlackHole(b){
   for(const d of side.defenses||[])if(d.id)out.push(d.id);
   if(side.commander?.id)out.push(side.commander.id);
   for(const m of Object.values(side.modules||{}))if(m?.cardId)out.push(m.cardId);
-  for(const m of side.machines||[])if(m.sourceCardId)out.push(m.sourceCardId);
-  side.discard??=[];side.discard.push(...out);
+  for(const m of side.machines||[])if(m.sourceCardId&&!m.cardDiscarded)out.push(m.sourceCardId);
+  for(const effect of side.systemCardEffects||[]){
+   const owner=['A','B'].includes(effect.owner)?effect.owner:key;
+   removed[owner].push(effect.id);
+  }
+  side.discard??=[];
+  // Gli effetti lanciati dall'avversario restano di proprietà dell'avversario.
+  // Le carte sono trasferite negli scarti dei rispettivi proprietari al termine del reset.
   side.defenses=[];side.defenseSlots=[];
   side.commander=null;side.modules={weapon:null,utility:null};side.machines=[];
   side.attackSlots=[null,null,null];side.stagedComboCards=[];
@@ -159,6 +167,7 @@ export function resetFieldWithBlackHole(b){
   if(side.prisma)side.prisma.shard=null;
   // Le navicelle, i componenti e i relativi HP non vengono toccati.
  }
+ for(const key of ['A','B'])b.sides[key].discard.push(...removed[key]);
  b.terrain={id:null,cardId:null,source:'neutral',expiresPly:null};
  return removed;
 }
