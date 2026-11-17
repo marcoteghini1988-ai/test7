@@ -158,29 +158,110 @@ const PROFILES = Object.freeze({
  ],'L01')
 });
 
-export const SHIP_PROGRESSION_IDS = Object.freeze(Object.keys(PROFILES));
-const boundedLevel = level => {
- const value=Number(level);
- return Number.isFinite(value)?Math.max(1,Math.min(5,Math.floor(value))):1;
+// Soglie provvisorie dei livelli massimi, dal primo modello all'ultimo.
+// Le potenzialità finali sono normalizzate a 100, NON gli HP: i valori numerici
+// di battaglia andranno bilanciati insieme alle carte e alle abilità dei supporti.
+export const SHIP_MAX_LEVELS=Object.freeze({
+ N00:20,C01:19,C02:18,C03:17,C04:16,
+ R01:15,R02:14,R03:13,R04:12,
+ E01:11,E02:10,E03:9,E04:8,
+ L01:7,L02:6,L03:5,L04:5
+});
+export const SHIP_PROGRESSION_IDS=Object.freeze(Object.keys(PROFILES));
+if(SHIP_PROGRESSION_IDS.length!==17||
+ SHIP_PROGRESSION_IDS.some(id=>!Number.isInteger(SHIP_MAX_LEVELS[id])||
+  SHIP_MAX_LEVELS[id]<5||SHIP_MAX_LEVELS[id]>20))
+ throw Error('Livelli massimi della progressione incompleti');
+
+export const shipMaxLevel=id=>SHIP_MAX_LEVELS[id]||null;
+export const boundedShipLevel=(id,level=1)=>{
+ const max=shipMaxLevel(id);
+ if(!max)return null;
+ const n=Number(level);
+ return Number.isFinite(n)?Math.max(1,Math.min(max,Math.floor(n))):1;
+};
+
+// Solo le prime due famiglie non schieravano scudiere nella vecchia
+// progressione L1-L5; le loro coppie tecniche e gli asset SVG già esistono.
+// I supporti vengono ora effettivamente sbloccati durante la nuova progressione.
+const EXTRA_SUPPORT_UNLOCKS=Object.freeze({
+ N00:Object.freeze([10,18]),C01:Object.freeze([9,17])
+});
+export function shipEscortUnlockLevels(shipId){
+ const p=PROFILES[shipId];
+ if(!p)return null;
+ if(EXTRA_SUPPORT_UNLOCKS[shipId])return EXTRA_SUPPORT_UNLOCKS[shipId];
+ const thresholds=[0,1].map(index=>{
+  const step=p.levels.findIndex(row=>row.escortCount>index);
+  return step<0?null:step+1;
+ });
+ return Object.freeze(thresholds);
+}
+
+// Lo stesso indice di potenziale (0–100) è disponibile per tutte le famiglie:
+// l'uguaglianza dei risultati in PvP sarà verificata soltanto dopo il bilanciamento.
+const masteryFor=(level,max)=>Math.round((level-1)*100/(max-1));
+const makeDerivedRow=(id,level,p,unlocks)=>{
+ const max=SHIP_MAX_LEVELS[id],old=p.levels[4],span=max-5,late=level-5;
+ const percent=late/span;
+ const first=unlocks[0],second=unlocks[1];
+ const count=Number(first!=null&&level>=first)+Number(second!=null&&level>=second);
+ const grade=index=>{
+  const start=unlocks[index];
+  if(start==null||level<start)return 0;
+  if(id==='N00'||id==='C01'){
+   const next=index===0?first+Math.max(2,Math.floor((second-first)/2)):max;
+   return level>=next?2:1;
+  }
+  const oldGrade=old.escortGrades[index]||0;
+  return oldGrade>=2||level>=max?2:oldGrade||1;
+ };
+ const escortGrades=Object.freeze(Array.from({length:count},(_,i)=>grade(i)));
+ // Gli HP dei sistemi già presenti restano quelli attuali: il loro
+ // bilanciamento finale è volutamente rinviato. La Centralina aggiunta
+ // usa l'integrità provvisoria 2, come per le navi che già la possiedono.
+ const parts={...old.integrityByPart};
+ if((id==='N00'||id==='C01')&&count>0)parts.command=2;
+ const ids=Object.freeze(Object.keys(parts));
+ const attackBoost=late>=Math.ceil(span*.65)?1:0;
+ const defenseBoost=late>=Math.ceil(span*.85)?1:0;
+ const attackPower=Math.min(5,old.attackPower+attackBoost);
+ const defensePower=Math.min(2,old.defensePower+defenseBoost);
+ const markers=['Padronanza flotta: '+masteryFor(level,max)+'%'];
+ if(level===first)markers.push('Prima scudiera sbloccata; Centralina attiva');
+ if(level===second)markers.push('Seconda scudiera sbloccata');
+ if(level===first+Math.max(2,Math.floor(((second||max)-first)/2))&&(id==='N00'||id==='C01'))
+  markers.push('Prima scudiera: grado 2');
+ if(level===max&&count>0)markers.push('Potenziale finale; gradi dei supporti completati');
+ if(late===Math.ceil(span*.65))markers.push('Arsenale: nuova soglia di potenza');
+ if(late===Math.ceil(span*.85))markers.push('Corazza: nuova soglia di resistenza');
+ return Object.freeze({...old,attackPower,defensePower,
+  integrityByPart:Object.freeze(parts),vitalIds:ids,escortCount:count,escortGrades,
+  unlocks:Object.freeze(markers)});
 };
 export function shipProgressionProfile(shipId){
  const p=PROFILES[shipId];
  if(!p)return null;
- return Object.freeze({shipId,name:p.name,role:p.role,description:p.description,
+ const special=shipId==='N00'?'Sblocca Velo Aurora e Lancia Aurora ai livelli 10 e 18.':
+  shipId==='C01'?'Sblocca Sentinella Solare e Lama Rubino ai livelli 9 e 17.':'';
+ return Object.freeze({shipId,name:p.name,role:p.role,
+  description:special?special+' '+p.description.replace(/senza supporti[^.]*/gi,'inizialmente senza supporti').replace(/nessun supporto evolutivo/gi,'supporti da sbloccare'):p.description,
   campaignStage:CAMPAIGN_SHIP_ORDER.includes(shipId)?CAMPAIGN_SHIP_ORDER.indexOf(shipId)+1:null,
-  variantOf:p.variantOf,levelCount:5});
+  variantOf:p.variantOf,levelCount:SHIP_MAX_LEVELS[shipId],
+  maxLevel:SHIP_MAX_LEVELS[shipId],targetPotential:100});
 }
 export function getShipProgression(shipId,level=1){
  const p=PROFILES[shipId];
  if(!p)return null;
- const n=boundedLevel(level);
- const escortUnlockLevels=[0,1].map(slot=>{
-  const index=p.levels.findIndex(row=>row.escortCount>slot);
-  return index===-1?99:index+1;
- });
- return Object.freeze({...shipProgressionProfile(shipId),...p.levels[n-1],level:n,
-  escortUnlockLevels:Object.freeze(escortUnlockLevels)});
+ const n=boundedShipLevel(shipId,level),max=SHIP_MAX_LEVELS[shipId];
+ const unlocks=shipEscortUnlockLevels(shipId);
+ const row=n<=5?p.levels[n-1]:makeDerivedRow(shipId,n,p,unlocks);
+ return Object.freeze({...shipProgressionProfile(shipId),...row,level:n,
+  // potenziale parametrico comune: NON equivale ancora a HP/danno uguali
+  potential:masteryFor(n,max),masteryPoints:masteryFor(n,max),
+  escortUnlockLevels:unlocks});
 }
 export function getShipProgressionLevels(shipId){
- return PROFILES[shipId]?Object.freeze([1,2,3,4,5].map(level=>getShipProgression(shipId,level))):Object.freeze([]);
+ const max=SHIP_MAX_LEVELS[shipId];
+ return max?Object.freeze(Array.from({length:max},(_,i)=>getShipProgression(shipId,i+1))):Object.freeze([]);
 }
