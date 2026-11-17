@@ -29,6 +29,8 @@ import {royalUnits,royalSupports,royalVisibleProtections,
  royalCapableModule,royalPart} from './fleetNext/royalEngine.js';
 import {obsidianFusedEscort,obsidianModuleActive,obsidianPending,
  obsidianSealed,obsidianEnemyUnits} from './fleetNext/obsidianEngine.js';
+import {arkModuleActive,arkEscorts,arkFusedEscorts,arkUnfusedEscorts,
+ arkEnemyUnits,arkDamagedEscorts,arkModulesInDiscard} from './fleetNext/arkEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
@@ -142,6 +144,11 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      <span>{module.slot==='weapon'?'ARMA':'UTILITÀ'}</span><b>{module.name}</b><small>{module.hp}/{module.maxHp}</small>
     </button>)}
   </div>
+  {unit.ships?.[0]?.id==='L04'&&<div className="f3d-ark-status" role="status">
+   <span aria-hidden="true">✧</span><b>ARCA ASTRALE</b>
+   <small>{'FUSIONI '+(unit.fusionsUsed||0)+'/'+(unit.fusionLimit||0)+
+    ' · RISERVE '+(unit.reserveEscorts?.length||0)}</small>
+  </div>}
   {unit.ships?.[0]?.id==='L03'&&<div className="f3d-obsidian-status" role="status">
    <span aria-hidden="true">◆</span><b>TITANO OSSIDIANA</b>
    <small>{unit.obsidian?.pending?'COLPO IN PREPARAZIONE':
@@ -330,6 +337,11 @@ export default function OfficialFleetBattle3D({
  const [obsidianOptions,setObsidianOptions]=useState({part:'',chainMachine:'',
   magisterSwap:false,bastionGuard:false});
  const setObsidianOption=(name,value)=>setObsidianOptions(old=>({...old,[name]:value}));
+ const [arkOptions,setArkOptions]=useState({archive:false,archiveDiscard:'',
+  recoverModule:'',rayEscort:'',custodyEscort:'',chorusMode:'focus',
+  chorusFirst:'',chorusSecond:'',custodian:false,custodianBottom:'',
+  fused:'',resonanceEscort:'',second:''});
+ const setArkOption=(name,value)=>setArkOptions(old=>({...old,[name]:value}));
  const [linceOptions,setLinceOptions]=useState({
   routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
   linceRecallWeapon:false,radentRecall:false,radentMachineId:''
@@ -415,6 +427,9 @@ export default function OfficialFleetBattle3D({
   setRoyalOptions({rainMode:'heavy',second:'',guard:'',bastion:'',source:'',
    destination:'',relay:false,relayEscort:'',sovereign:false,discard:'',pick:''});
   setObsidianOptions({part:'',chainMachine:'',magisterSwap:false,bastionGuard:false});
+  setArkOptions({archive:false,archiveDiscard:'',recoverModule:'',rayEscort:'',
+   custodyEscort:'',chorusMode:'focus',chorusFirst:'',chorusSecond:'',
+   custodian:false,custodianBottom:'',fused:'',resonanceEscort:'',second:''});
   setLastFx(null);setTrapReveal(null);setRewardDone(false);setHelp(null);
   submitting.current=false;
  }
@@ -482,6 +497,7 @@ export default function OfficialFleetBattle3D({
   const sharkTeethFirstChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethFirst);
   const sharkTeethSecondChoice=sharkEnemyChoices.find(t=>t.key===sharkOptions.teethSecond);
   const nebulaVeilChoice=nebulaTargetChoices.find(t=>t.key===nebulaOptions.veil);
+  const arkSecondChoice=arkOtherTargets.find(t=>t.key===arkOptions.second);
   const royalSecondChoice=royalOtherTargets.find(t=>t.key===royalOptions.second);
   const stormSecondChoice=stormSecondChoices.find(t=>t.key===stormOptions.second);
   const stormChainChoice=stormSecondChoices.find(t=>t.key===stormOptions.chain);
@@ -544,7 +560,15 @@ export default function OfficialFleetBattle3D({
     obsidianPartId:obsidianOptions.part||actualOwnVital,
     obsidianChainMachineId:obsidianOptions.chainMachine,
     obsidianMagisterSwap:obsidianOptions.magisterSwap,
-    obsidianGuard:obsidianOptions.bastionGuard
+    obsidianGuard:obsidianOptions.bastionGuard,
+    arkArchive:arkOptions.archive,arkArchiveDiscardId:arkOptions.archiveDiscard,
+    arkRecoverModuleId:arkOptions.recoverModule,
+    arkRayEscortId:arkOptions.rayEscort,arkCustodyEscortId:arkOptions.custodyEscort,
+    arkChorusMode:arkOptions.chorusMode,arkChorusFirstId:arkOptions.chorusFirst,
+    arkChorusSecondId:arkOptions.chorusSecond,
+    arkCustodianSwap:arkOptions.custodian,arkCustodianBottomId:arkOptions.custodianBottom,
+    arkFusedId:arkOptions.fused,arkResonanceEscortId:arkOptions.resonanceEscort,
+    arkSecondKind:arkSecondChoice?.kind,arkSecondId:arkSecondChoice?.id
    },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);
@@ -559,6 +583,9 @@ export default function OfficialFleetBattle3D({
   setRoyalOptions({rainMode:'heavy',second:'',guard:'',bastion:'',source:'',
    destination:'',relay:false,relayEscort:'',sovereign:false,discard:'',pick:''});
   setObsidianOptions({part:'',chainMachine:'',magisterSwap:false,bastionGuard:false});
+  setArkOptions({archive:false,archiveDiscard:'',recoverModule:'',rayEscort:'',
+   custodyEscort:'',chorusMode:'focus',chorusFirst:'',chorusSecond:'',
+   custodian:false,custodianBottom:'',fused:'',resonanceEscort:'',second:''});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
   const nextTarget=result.battle.sides.B.ships[0].parts.find(p=>!p.destroyed);
@@ -570,7 +597,11 @@ export default function OfficialFleetBattle3D({
   const result=resolveFleetNextTurn(battle,'A',
    {cards:[],partId:null,pass:true,falcoHold:falcoOptions.hold,
     nebulaHide:nebulaOptions.hide,nebulaHideEscortId:nebulaOptions.hideEscort,
-    obsidianGuard:obsidianOptions.bastionGuard},Date.now());
+    obsidianGuard:obsidianOptions.bastionGuard,
+    arkArchive:arkOptions.archive,arkArchiveDiscardId:arkOptions.archiveDiscard,
+    arkRecoverModuleId:arkOptions.recoverModule,
+    arkCustodianSwap:arkOptions.custodian,
+    arkCustodianBottomId:arkOptions.custodianBottom},Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   setBattle(result.battle);setChosenCards([]);
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
@@ -583,6 +614,9 @@ export default function OfficialFleetBattle3D({
   setRoyalOptions({rainMode:'heavy',second:'',guard:'',bastion:'',source:'',
    destination:'',relay:false,relayEscort:'',sovereign:false,discard:'',pick:''});
   setObsidianOptions({part:'',chainMachine:'',magisterSwap:false,bastionGuard:false});
+  setArkOptions({archive:false,archiveDiscard:'',recoverModule:'',rayEscort:'',
+   custodyEscort:'',chorusMode:'focus',chorusFirst:'',chorusSecond:'',
+   custodian:false,custodianBottom:'',fused:'',resonanceEscort:'',second:''});
   setMessage(fleetTurnNotice(result.events)||'Turno concluso');
  }
  async function leave(){
@@ -671,6 +705,25 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const arkActive=player.ships[0].id==='L04';
+ const arkLiving=player.escorts.filter(e=>e.hp>0&&!e.destroyed);
+ const arkReady=arkEscorts(player,battle.ply);
+ const arkDamaged=arkDamagedEscorts(player,battle.ply);
+ const arkUnfused=arkUnfusedEscorts(player,battle.ply);
+ const arkFused=arkFusedEscorts(player,battle.ply);
+ const arkTargetChoices=arkEnemyUnits(enemy).map(({kind,unit})=>({
+  kind,id:unit.id,key:kind+':'+unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
+ }));
+ const arkOtherTargets=arkTargetChoices.filter(t=>t.id!==actualTarget?.id);
+ const arkArchiveActive=arkActive&&arkModuleActive(player,'nx-l04-01',battle.ply);
+ const arkRecoverChoices=arkModulesInDiscard(player);
+ const arkHandSpare=player.hand.filter((id,i)=>!chosenCards.includes(i));
+ const arkCustodianActive=arkActive&&
+  (player.commander?.id==='ex-l04-01'&&player.commander.untilPly>battle.ply||
+   selectedActions.includes('astral-keeper'));
+ const arkChorusFirst=arkDamaged.find(e=>e.id===arkOptions.chorusFirst)||arkDamaged[0];
+ const arkChorusOthers=arkDamaged.filter(e=>e.id!==arkChorusFirst?.id);
+ const arkActiveFused=arkFused.find(e=>e.id===arkOptions.fused)||arkFused[0];
  const obsidianActive=player.ships[0].id==='L03';
  const obsidianFused=obsidianFusedEscort(player,battle.ply);
  const obsidianPendingShot=obsidianPending(player);
@@ -858,7 +911,7 @@ export default function OfficialFleetBattle3D({
      </option>)}
     </select>
    </label>}
-   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive)&&!ended&&<div className="live-card-inspector" role="status">
+   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive||arkActive)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
