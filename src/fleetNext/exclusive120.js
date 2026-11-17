@@ -1,7 +1,7 @@
 // 120 schede esclusive del nuovo catalogo: la fonte è la specifica approvata.
 // Le carte Personaggio riutilizzano i loro ID eseguibili esistenti: niente doppioni.
-// Le altre 108 schede sono riconosciute dal gioco ma bloccate finché non esiste
-// un'azione eseguibile completa. È vietato simulare gli effetti con bonus generici.
+// Le altre 108 schede hanno ora azioni eseguibili nei rispettivi motori;
+// nessuna simulazione generica sostituisce gli effetti delle carte.
 import definition from '../../docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json' with {type:'json'};
 import oldExclusive from './catalogExclusive.json' with {type:'json'};
 import {AURORA_ACTIONS} from './auroraEngine.js';
@@ -43,7 +43,7 @@ export const EXCLUSIVE_DESIGNS_120=Object.freeze(definition.cards.map(raw=>Objec
  shipName:shipNames.get(raw.shipId),
  rarityDraft:shipRarity.get(raw.shipId),
  isPreservedCharacter:raw.type==='Personaggio',
- // La versione del Personaggio già esistente resta giocabile, non ancora il suo effetto riprogettato.
+ // I 12 Personaggi preservano l'identità originale e usano l'effetto nativo riprogettato.
  currentCharacterPlayable:raw.type==='Personaggio',
  executable:!!(AURORA_ACTIONS[characterIds[raw.id]||raw.id]||LINCE_ACTIONS[characterIds[raw.id]||raw.id]||
   PRISMA_ACTIONS[characterIds[raw.id]||raw.id]||CORVO_ACTIONS[characterIds[raw.id]||raw.id]||FALCO_ACTIONS[characterIds[raw.id]||raw.id]||MANTA_ACTIONS[characterIds[raw.id]||raw.id]||SHARK_ACTIONS[characterIds[raw.id]||raw.id]||NEBULA_ACTIONS[characterIds[raw.id]||raw.id]||STORM_ACTIONS[characterIds[raw.id]||raw.id]||ROYAL_ACTIONS[characterIds[raw.id]||raw.id]||OBSIDIAN_ACTIONS[characterIds[raw.id]||raw.id]||ARK_ACTIONS[characterIds[raw.id]||raw.id])
@@ -96,5 +96,6 @@ export const NEW_EXCLUSIVE_BLUEPRINTS=Object.freeze(Object.fromEntries(
 if(EXCLUSIVE_DESIGNS_120.length!==120||
  new Set(EXCLUSIVE_DESIGNS_120.map(c=>c.id)).size!==120||
  Object.keys(NEW_EXCLUSIVE_BLUEPRINTS).length!==108||
- EXCLUSIVE_SHIP_IDS.some(id=>EXCLUSIVE_DESIGNS_120.filter(c=>c.shipId===id).length!==10))
+ EXCLUSIVE_SHIP_IDS.some(id=>EXCLUSIVE_DESIGNS_120.filter(c=>c.shipId===id).length!==10)||
+ EXCLUSIVE_DESIGNS_120.some(c=>!c.executable))
  throw Error('120 esclusive non coerenti: 10 definizioni univoche per ciascuna delle 12 madri');
