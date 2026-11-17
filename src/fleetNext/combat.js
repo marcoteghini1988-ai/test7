@@ -1725,7 +1725,7 @@ function stormConsumeHeavy(b,ctx,events,target,amount){
  events.push(emit(b,ctx.who,'storm-heavy',
   'Condensatore Tempesta scarica il prossimo colpo pesante',{
    cardId:'nx-e02-09',targetKind:target.kind,targetId:target.unit.id}));
- return Math.max(amount,3);
+ return 3; // Il colpo pesante sostituisce la potenza, non la somma.
 }
 function stormOnHit(b,ctx,events,hit){
  if(!hit?.damage||!['escort','machine'].includes(hit.kind))return;
