@@ -18,6 +18,9 @@ import {FALCO_ACTIONS,FALCO_ATTACK_ACTIONS,FALCO_PREP_ACTIONS,isFalcoModule,isFa
 import {MANTA_ATTACK_ACTIONS,isMantaModule,ensureMantaState,mantaPrecondition,
  mantaActiveSupports,mantaEnemyUnits,mantaVisibleProtections,mantaCapacitorActive,
  mantaForkActive,mantaEnergy,gainMantaEnergy,spendMantaEnergy} from './mantaEngine.js';
+import {SHARK_ATTACK_ACTIONS,isSharkModule,ensureSharkState,sharkPrecondition,
+ sharkChoiceReason,sharkUnits,sharkOperationalUnits,sharkActiveSupports,
+ sharkWoundedSupports,sharkWoundedMachines,sharkModuleActive} from './sharkEngine.js';
 import {
  card,cardRole,shipConfig,
  effectiveDeck,exclusiveOperational,
@@ -90,7 +93,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
-  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,recalledModules:[],recalledMachines:[],
+  moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:progression.fusionLimit,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
@@ -232,7 +235,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
- side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);
+ side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
  if(!operational(side.ships[0],'generator')){
@@ -277,6 +280,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(def.effectSpec.type==='manta'){
   const reason=mantaPrecondition(def,side,battle);
+  if(reason)return reason;
+ }
+ if(def.effectSpec.type==='shark'){
+  const reason=sharkPrecondition(def,side,battle);
   if(reason)return reason;
  }
  const invalid=validateEffectSpec(def.effectSpec);
@@ -334,6 +341,11 @@ export function validateFleetTurn(b,who,order){
  const mantaCommands=chosen.filter(c=>c.effectSpec?.type==='manta'&&
   MANTA_ATTACK_ACTIONS.includes(c.effectSpec.action));
  if(mantaCommands.length>1)return 'Scegli un solo comando offensivo Manta per turno';
+ const sharkCommands=chosen.filter(c=>c.effectSpec?.type==='shark'&&
+  SHARK_ATTACK_ACTIONS.includes(c.effectSpec.action));
+ if(sharkCommands.length>1)return 'Scegli un solo attacco dello Squalo per turno';
+ const sharkChoice=sharkChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
+ if(sharkChoice)return sharkChoice;
  if(mantaCommands.some(c=>c.effectSpec.action==='arc-discharge')&&order?.mantaSilence&&
   (!mantaCapacitorActive(side,b.ply)||mantaEnergy(side)<1))
   return 'Arco di scarica: serve una energia per il Silenzio';
@@ -443,7 +455,8 @@ export function validateFleetTurn(b,who,order){
   const enemy=b.sides[other(who)],selected=selectedEnemyTarget(enemy,order,b.ply);
   if(!selected)return 'Seleziona un bersaglio avversario ancora operativo';
   const bypass=chosen.some(c=>c.effectSpec.type==='bypass'||c.effectSpec.type==='lince'&&
-   LINCE_BYPASS_ACTIONS.includes(c.effectSpec.action))||
+   LINCE_BYPASS_ACTIONS.includes(c.effectSpec.action)||
+   c.effectSpec.type==='shark'&&c.effectSpec.action==='ruthless-response')||
    selected.kind==='part'&&linceMarkedRouteReady(side,b.ply,selected.unit.id);
   if(['part','module'].includes(selected.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass&&
    !preparing.length&&(order.targetKind!=null||order.targetId!=null))
@@ -472,6 +485,12 @@ export function validateFleetTurn(b,who,order){
    return 'Attacco Manta: scegli una unità avversaria';
   if(mantaAction==='total-discharge'&&selected.kind!=='machine')
    return 'Scarica totale colpisce soltanto una macchina';
+  const sharkAction=sharkCommands[0]?.effectSpec.action;
+  if(sharkAction==='ruthless-response'&&selected.kind!=='part')
+   return 'Risposta spietata colpisce esclusivamente un vitale nemico';
+  if(sharkAction&&sharkAction!=='ruthless-response'&&
+   !['escort','machine'].includes(selected.kind))
+   return 'Attacco Squalo: scegli un supporto o una macchina nemici';
   const linceAction=linceCommands[0]?.effectSpec.action;
   if(['solar-bypass','crimson-raid'].includes(linceAction)&&selected.kind!=='part')
    return 'Lince: questo Attacco richiede un vitale avversario';
@@ -489,7 +508,8 @@ export function validateFleetTurn(b,who,order){
   c.effectSpec.type==='lince'&&LINCE_ATTACK_ACTIONS.includes(c.effectSpec.action)||
   c.effectSpec.type==='prisma'&&PRISMA_ATTACK_ACTIONS.includes(c.effectSpec.action)||
   c.effectSpec.type==='corvo'&&CORVO_ATTACK_ACTIONS.includes(c.effectSpec.action)||
-  c.effectSpec.type==='manta'&&MANTA_ATTACK_ACTIONS.includes(c.effectSpec.action)))
+  c.effectSpec.type==='manta'&&MANTA_ATTACK_ACTIONS.includes(c.effectSpec.action)||
+  c.effectSpec.type==='shark'&&SHARK_ATTACK_ACTIONS.includes(c.effectSpec.action)))
   return 'Un comando offensivo non può essere passato';
  return null;
 }
@@ -1240,6 +1260,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'corvo':activateCorvoCard(b,who,def,ctx,events,order,token);break;
   case 'falco':activateFalcoCard(b,who,def,ctx,events,order,token);break;
   case 'manta':activateMantaCard(b,who,def,ctx,events,order,token);break;
+  case 'shark':activateSharkCard(b,who,def,ctx,events,order,token);break;
   case 'bypass':{
    ctx.bypassPlayed=true;
    if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
@@ -1339,7 +1360,7 @@ function applyCard(b,who,id,ctx,events,order){
   return false;
  }
  if(role==='character'){
-  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo','falco','manta'].includes(spec.type)?0:1,
+  side.commander={id,untilPly:b.ply+4,repeatAtPly:b.ply+2,repeatsRemaining:['aurora','lince','prisma','corvo','falco','manta','shark'].includes(spec.type)?0:1,
    effectSpec:spec,source,ownPartId,kind:'simple',power:spec.amount||0};
  }
  if(role==='defense'){
@@ -1347,7 +1368,10 @@ function applyCard(b,who,id,ctx,events,order){
   const falseReflection=spec.type==='prisma'&&spec.action==='false-reflection';
   const returnEcho=spec.type==='corvo'&&spec.action==='return-echo';
   const mantaGround=spec.type==='manta'&&spec.action==='ion-ground';
-  side.defenses.push(mantaGround?
+  const sharkTeeth=spec.type==='shark'&&spec.action==='returning-teeth';
+  side.defenses.push(sharkTeeth?
+   {id,source,hidden:true,armedAtPly:b.ply,untilPly:null,trigger:'shark-machine-destroyed'}:
+   mantaGround?
    {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:'manta-secondary'}:
    returnEcho?
    {id,source,hidden:true,untilPly:null,armedAtPly:b.ply,trigger:'disturbance'}:
@@ -2200,8 +2224,13 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const cards=takeCards(side,order.cards||[]);
  const ctx={who,nowMs,order,cards:[],auroraAttacks:[],linceAttacks:[],prismaAttacks:[],corvoAttacks:[],
   falcoReleased:false,falcoPrepared:false,falcoCalibration:null,mantaAttacks:[],mantaSilence:false,
+  sharkAttacks:[],sharkPierceLeft:0,sharkBypass:false,sharkLureUsed:false,sharkPrimary:null,
   bypassPlayed:false,
   power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
+ if(!order.pass){
+  const planned=selectedEnemyTarget(b.sides[other(who)],order,b.ply);
+  ctx.sharkPrimary=planned?{kind:planned.kind,id:planned.unit.id}:null;
+ }
  for(const charge of side.charges.filter(c=>c.atPly===b.ply))ctx.power+=charge.amount;
  side.charges=side.charges.filter(c=>c.atPly>b.ply);
  // Il Caricatore annulla una carica prima del suo rilascio automatico.
@@ -2227,13 +2256,14 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.falcoPrepared||ctx.falcoReleased?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.corvoAttacks.length?resolveCorvoShots(b,ctx,events,order):
   ctx.mantaAttacks.length?resolveMantaShots(b,ctx,events,order):
+  ctx.sharkAttacks.length?resolveSharkShots(b,ctx,events,order):
   ctx.prismaAttacks.length?resolvePrismaShots(b,ctx,events,order):
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  const shot=mergeFalcoShots(releasedShot,ownShot);
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
@@ -2254,7 +2284,8 @@ export function autoFleetTurn(b,who=b.turn){
  for(const c of candidates){
   if(cards.length>=FLEET_MAX_PLAYED)break;
   const attack=c.def.effectSpec;
-  const direct=attack?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(attack.action);
+  const direct=attack?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(attack.action)||
+   attack?.type==='shark'&&attack.action==='ruthless-response';
   const short=attack?.type==='corvo'&&attack.action==='targeted-short'||
    attack?.type==='manta'&&attack.action==='total-discharge';
   const machine=enemy.machines?.find(u=>unitAlive(u));
@@ -2262,14 +2293,18 @@ export function autoFleetTurn(b,who=b.turn){
    machineSlot:machine.slot,partId:part?.id}:direct&&part?
    {targetKind:'part',targetId:part.id,partId:part.id}:defaultOrder;
   const alreadyDirect=cards.some(i=>card(side.hand[i]).effectSpec?.type==='lince'&&
-   LINCE_BYPASS_ACTIONS.includes(card(side.hand[i]).effectSpec?.action));
+   LINCE_BYPASS_ACTIONS.includes(card(side.hand[i]).effectSpec?.action)||
+   card(side.hand[i]).effectSpec?.type==='shark'&&
+   card(side.hand[i]).effectSpec?.action==='ruthless-response');
   const preview=alreadyDirect&&part?{targetKind:'part',targetId:part.id,partId:part.id}:target;
   if(validateFleetTurn(b,who,{...preview,ownPartId,cards:[...cards,c.i],pass:!part}))continue;
   cards.push(c.i);
  }
  const bypass=cards.some(i=>card(side.hand[i]).effectSpec.type==='bypass'||
   card(side.hand[i]).effectSpec.type==='lince'&&
-  LINCE_BYPASS_ACTIONS.includes(card(side.hand[i]).effectSpec.action));
+  LINCE_BYPASS_ACTIONS.includes(card(side.hand[i]).effectSpec.action)||
+  card(side.hand[i]).effectSpec.type==='shark'&&
+  card(side.hand[i]).effectSpec.action==='ruthless-response');
  const marked=side.lince?.route?.usePly===b.ply?
   enemy.ships[0].parts.find(p=>p.id===side.lince.route.partId&&!p.destroyed):null;
  const hasShort=cards.some(i=>side.hand[i]==='nx-c03-07'||side.hand[i]==='nx-r02-09');
