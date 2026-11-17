@@ -359,7 +359,7 @@ export function validateFleetTurn(b,who,order){
   if(prismaAttack&&!['escort','machine'].includes(selected.kind))
    return 'Attacco Vespa: scegli una macchina o una navicella di supporto';
   if(prismaAttack==='broken-geometry'){
-   const possible=livePrismaUnits(enemy,b.ply).filter(e=>e.unit.id!==selected.unit.id);
+   const possible=livePrismaUnits(enemy,b.ply,false).filter(e=>e.unit.id!==selected.unit.id);
    if(!possible.length)return 'Geometria spezzata richiede una seconda unità viva';
    if(order.prismaSecondTargetId&&
     !possible.some(e=>e.unit.id===order.prismaSecondTargetId&&e.kind===order.prismaSecondTargetKind))
@@ -653,7 +653,7 @@ function activatePrismaCard(b,who,def,ctx,events,order={},source=null){
  if(action==='false-reflection'){
   const defense=side.defenses.find(d=>d.source===source);
   if(!defense)throw Error('Trappola Riflesso falso non posata');
-  const candidates=availableFleetTargets(side,b.ply).filter(t=>!t.blocked);
+  const candidates=availableFleetTargets(side,b.ply);
   const selected=candidates.find(t=>t.kind===order.prismaTrapKind&&t.id===order.prismaTrapTargetId)||
    candidates[0];
   if(!selected)throw Error('Nessun bersaglio da proteggere con Riflesso falso');
@@ -668,7 +668,7 @@ function activatePrismaCard(b,who,def,ctx,events,order={},source=null){
   return;
  }
  if(action==='lens-cut'){
-  const choices=livePrismaUnits(enemy,b.ply);
+  const choices=livePrismaUnits(enemy,b.ply,false);
   const target=choices.find(t=>t.kind===order.prismaEnemyKind&&t.unit.id===order.prismaEnemyId)||
    choices.find(({kind,unit})=>(enemy.protections||[]).some(p=>p.remaining>0&&p.untilPly>b.ply&&
     (kind==='escort'&&p.target==='escort'&&p.escortSlot===unit.slot||
@@ -1233,7 +1233,7 @@ function resolvePrismaShots(b,ctx,events,order){
   targetKind:primary?.kind,targetId:primary?.unit?.id,
   played:visiblePlayed(ctx.cards),targets:[]};
  if(!primary)return shot;
- const live=livePrismaUnits(defender,b.ply);
+ const live=livePrismaUnits(defender,b.ply,false);
  const secondaryOptions=live.filter(t=>t.unit.id!==primary.unit.id);
  const selectedSecond=secondaryOptions.find(t=>
   t.kind===order.prismaSecondTargetKind&&t.unit.id===order.prismaSecondTargetId)||

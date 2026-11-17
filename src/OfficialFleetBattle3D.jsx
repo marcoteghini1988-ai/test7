@@ -503,7 +503,7 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
- const prismaUnitTargets=livePrismaUnits(enemy,battle.ply).map(({kind,unit})=>({
+ const prismaUnitTargets=livePrismaUnits(enemy,battle.ply,false).map(({kind,unit})=>({
   kind,id:unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
  }));
  const prismaTrapChoices=availableFleetTargets(player,battle.ply);
