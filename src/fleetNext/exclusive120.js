@@ -5,6 +5,7 @@
 import definition from '../../docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json' with {type:'json'};
 import oldExclusive from './catalogExclusive.json' with {type:'json'};
 import {AURORA_ACTIONS} from './auroraEngine.js';
+import {LINCE_ACTIONS} from './linceEngine.js';
 
 export const EXCLUSIVE_SHIP_IDS=Object.freeze(["N00","C01","C02","C03","R01","R02","R04","E01","E02","L01","L03","L04"]);
 const characterIds=Object.freeze({
@@ -34,7 +35,7 @@ export const EXCLUSIVE_DESIGNS_120=Object.freeze(definition.cards.map(raw=>Objec
  isPreservedCharacter:raw.type==='Personaggio',
  // La versione del Personaggio già esistente resta giocabile, non ancora il suo effetto riprogettato.
  currentCharacterPlayable:raw.type==='Personaggio',
- executable:!!AURORA_ACTIONS[characterIds[raw.id]||raw.id]
+ executable:!!(AURORA_ACTIONS[characterIds[raw.id]||raw.id]||LINCE_ACTIONS[characterIds[raw.id]||raw.id])
 })));
 export const EXCLUSIVE_DESIGN_BY_ID=Object.freeze(
  Object.fromEntries(EXCLUSIVE_DESIGNS_120.map(c=>[c.id,c]))
@@ -45,7 +46,8 @@ export const NEW_EXCLUSIVE_BLUEPRINTS=Object.freeze(Object.fromEntries(
   id:c.id,shipId:c.shipId,shipName:c.shipName,name:c.name,nome:c.name,
   category:c.type,kind:kindFor(c.type),rarityDraft:c.rarityDraft,
   effectProposed:c.effectText,
-  effectSpec:Object.freeze(AURORA_ACTIONS[c.id]?{type:'aurora',action:AURORA_ACTIONS[c.id]}:{type:'blueprint',code:c.designId}),
+  effectSpec:Object.freeze(AURORA_ACTIONS[c.id]?{type:'aurora',action:AURORA_ACTIONS[c.id]}:
+   LINCE_ACTIONS[c.id]?{type:'lince',action:LINCE_ACTIONS[c.id]}:{type:'blueprint',code:c.designId}),
   minShipLevelDraft:c.minShipLevel,
   requiredOwnParts:Object.freeze([]),requiredEscortCount:0,
   maxCopiesInAutoPackageDraft:1,
@@ -53,8 +55,9 @@ export const NEW_EXCLUSIVE_BLUEPRINTS=Object.freeze(Object.fromEntries(
   counterplay:c.counterplay,
   designRules:c.rules,designRequirements:c.requirements,
   visualBrief:c.visualBrief,
-  nativeFace:true,playable:!!AURORA_ACTIONS[c.id],exclusiveToShip:true,
-  status:AURORA_ACTIONS[c.id]?'aurora-executable-v1':'awaiting-executable-combat-action'
+  nativeFace:true,playable:!!(AURORA_ACTIONS[c.id]||LINCE_ACTIONS[c.id]),exclusiveToShip:true,
+  status:AURORA_ACTIONS[c.id]?'aurora-executable-v1':
+   LINCE_ACTIONS[c.id]?'lince-executable-v1':'awaiting-executable-combat-action'
  })
  ])
 ));

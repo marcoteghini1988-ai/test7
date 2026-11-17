@@ -1,4 +1,5 @@
 // Regole reali delle 10 esclusive Aurora-0. Nessun bonus sostitutivo.
+import {linceModuleSlot,recoveredModuleForMount} from './linceEngine.js';
 export const AURORA_ACTIONS=Object.freeze({
  'nx-n00-01':'optics',
  'nx-n00-02':'burst',
@@ -30,15 +31,17 @@ export function removeModule(side,slot){
  return module;
 }
 export function mountModule(side,def,ownPartId=null){
- const slot=auroraModuleSlot(def.id);
+ const slot=auroraModuleSlot(def.id)||linceModuleSlot(def.id);
  if(!slot)return {ok:false,reason:'Questa carta non è un componente montabile'};
  const old=installedModule(side,slot);
  if(old?.cardId===def.id)return {ok:false,reason:'Modulo identico già montato'};
  if(old)removeModule(side,slot);
- const entry={id:'module:'+def.id+':'+(side.moduleSerial=(side.moduleSerial||0)+1),
-  cardId:def.id,name:def.name||def.nome,slot,hp:2,maxHp:2,destroyed:false,
-  attachedPartId:def.id==='nx-n00-08'?ownPartId:null,
-  mountedAtTurn:side.turnCount||0,activatedPly:-1};
+ const restored=recoveredModuleForMount(side,def.id);
+ const entry={id:restored?.id||'module:'+def.id+':'+(side.moduleSerial=(side.moduleSerial||0)+1),
+  cardId:def.id,name:def.name||def.nome,slot,hp:restored?.hp??2,maxHp:restored?.maxHp??2,
+  destroyed:false,attachedPartId:restored?.attachedPartId||
+   (def.id==='nx-n00-08'?ownPartId:null),
+  mountedAtTurn:side.turnCount||0,activatedPly:restored?.activatedPly??-1};
  side.modules[slot]=entry;
  return {ok:true,entry,replaced:old||null};
 }

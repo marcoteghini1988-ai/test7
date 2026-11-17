@@ -29,9 +29,13 @@ export const GENERAL_CARDS = Object.freeze(Object.fromEntries(generalData.carte.
   card.sottotipo==='Personaggio'?'character':card.sottotipo==='Difesa'?'defense':
   card.categoria==='Attacco'?'attack':card.categoria==='Controllo'?'control':'support','general')]
 )));
-const preservedCharacters=exclusiveData.cards.map(c=>c.id==='ex-n00-01'?
- {...c,effectSpec:{type:'aurora',action:'cartographer'},
-  effectProposed:EXCLUSIVE_DESIGN_BY_ID['ex-n00-01'].effectText,nativeFace:true}:c);
+const preservedCharacters=exclusiveData.cards.map(c=>{
+ if(c.id==='ex-n00-01')return {...c,effectSpec:{type:'aurora',action:'cartographer'},
+  effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
+ if(c.id==='ex-c01-01')return {...c,effectSpec:{type:'lince',action:'helios'},
+  effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
+ return c;
+});
 export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries([...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS)].map(card =>
  [card.id,definedCard(card,card.kind||(/Personaggio/i.test(card.category)?'character':/Difesa/i.test(card.category)?'defense':
   /Scudiera|Supporto|Tattica/i.test(card.category)?'support':

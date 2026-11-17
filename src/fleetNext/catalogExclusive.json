@@ -862,7 +862,7 @@
         "pressione",
         "personaggio"
       ],
-      "effectProposed": "Per 2 turni avversari, evita 1 colpo per turno contro i Motori, se i Motori funzionano.",
+      "effectProposed": "Una volta per tuo turno, dopo aver giocato un Aggiramento, scarta una carta e pescane una.",
       "minShipLevelDraft": 1,
       "requiredOwnParts": [],
       "requiredEscortCount": 0,
@@ -873,11 +873,10 @@
       "comboRecipeId": null,
       "status": "semplificata_implementata",
       "effectSpec": {
-        "type": "dodge",
-        "target": "engine",
-        "amount": 1,
-        "turns": 1
-      }
+        "type": "lince",
+        "action": "helios"
+      },
+      "nativeFace": true
     },
     {
       "id": "ex-c02-01",
