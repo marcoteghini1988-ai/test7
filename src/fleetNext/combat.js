@@ -1854,8 +1854,12 @@ function falcoCalibrationShot(b,ctx,events,order){
 function mergeFalcoShots(a,b){
  const empty={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
   targets:[],played:[]};
- a=a||empty;b=b||empty;
- return {damage:(a.damage||0)+(b.damage||0),
+ // Quando Falco non ha rilasciato una carica, conserva INTATTI bersaglio,
+ // blocchi, tiro di emergenza e tutti gli altri metadati del tiro classico.
+ if(!a)return {...empty,...b};
+ if(!b)return {...empty,...a};
+ return {...empty,...b,...a,
+  damage:(a.damage||0)+(b.damage||0),
   escortDamage:(a.escortDamage||0)+(b.escortDamage||0),
   machineDamage:(a.machineDamage||0)+(b.machineDamage||0),
   moduleDamage:(a.moduleDamage||0)+(b.moduleDamage||0),
