@@ -3908,9 +3908,18 @@ function resolveSalvo(b,ctx,events,order){
   if(blockNebulaRepeat(b,ctx,events,redirected))continue;
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   if(stormNetStops(b,ctx,events,redirected))continue;
-  const amount=stormConsumeHeavy(b,ctx,events,redirected,
+  let amount=stormConsumeHeavy(b,ctx,events,redirected,
    mantaFork?1:planned.kind==='part'||planned.kind==='module'||redirected.royalSameDamage?1:
    power+(kind==='escort'&&redirected.stormOriginKind!=='machine'&&b.terrain?.id==='T04'?1:0));
+  if(hitIndex===0&&!mantaFork&&['escort','machine'].includes(kind)&&
+   arkModuleActive(side,'nx-l04-07',b.ply)&&
+   side.ark?.repairedPly===b.ply&&side.ark.launcherUsedPly!==b.ply){
+   side.ark.launcherUsedPly=b.ply;
+   amount=Math.max(3,amount);
+   events.push(emit(b,ctx.who,'ark-launcher',
+    'Lanciatore di stelle: dopo una vera riparazione, colpo normale pesante',{
+     cardId:'nx-l04-07',targetKind:kind,targetId:unit.id,damage:amount}));
+  }
   const afterArmor=obsidianTransformDamage(b,ctx,events,redirected,amount);
   const damage=royalDistributeDamage(b,ctx,events,defender,kind,unit,
    sharkCapDamage(b,defender,kind,unit,
