@@ -2324,9 +2324,9 @@ function arkCustodianTurn(b,ctx,events){
  const index=side.hand.indexOf(order.arkCustodianBottomId);
  const recycled=side.hand.splice(index>=0?index:0,1)[0];
  if(!recycled)return;
- // La carta restituita va sotto il mazzo: la pescata viene dal vecchio top.
- const drawn=side.deck.shift();
+ // La carta restituita va sotto il mazzo; la pescata proviene dalla vecchia cima.
  side.deck.push(recycled);
+ const drawn=side.deck.shift();
  if(drawn)side.hand.push(drawn);
  state.custodianUsedPly=b.ply;
  events.push(emit(b,ctx.who,'ark-custodian',
@@ -3614,6 +3614,46 @@ function resolveObsidianShots(b,ctx,events,order={}){
   result[key]=hit.damage;
   result.targets.push({kind,id:hit.target.unit.id,
    damage:hit.damage,destroyed:hit.target.unit.destroyed});
+ }
+ return result;
+}
+
+// Le due carte Attacco dell'Arca sostituiscono la salva ordinaria.
+function resolveArkShots(b,ctx,events,order={}){
+ startNebulaVolley(ctx);
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const attack=ctx.arkAttacks[0],first=selectedEnemyTarget(enemy,order,b.ply);
+ const candidates=arkEnemyUnits(enemy);
+ const second=candidates.find(t=>t.kind===order.arkSecondKind&&t.unit.id===order.arkSecondId&&
+  t.unit.id!==first?.unit?.id)||candidates.find(t=>t.unit.id!==first?.unit?.id);
+ const result={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  played:visiblePlayed(ctx.cards),targetKind:first?.kind,targetId:first?.unit?.id,targets:[]};
+ if(!attack||!first||!['escort','machine'].includes(first.kind))return result;
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  events.push(emit(b,ctx.who,'no-shot','Attacco Arca bloccato dal Disarmo'));
+  return result;
+ }
+ const targets=attack.action==='astral-convergence'?[
+  {target:first,damage:3},{target:second,damage:3}]:
+  [{target:first,damage:1}];
+ const repairTarget=side.escorts.find(e=>e.id===attack.repairEscortId&&unitAlive(e))||
+  side.escorts.find(e=>unitAlive(e)&&e.hp<e.maxHp);
+ for(const [i,entry] of targets.entries()){
+  if(!entry.target||!unitAlive(entry.target.unit))continue;
+  if(i>0&&cancelPrismaSecondaryHit(b,ctx,events,entry.target,first))continue;
+  const hit=linceHit(b,ctx,events,entry.target,entry.damage,attack.id,order,false,0);
+  if(!hit.damage)continue;
+  const field=hit.target.kind==='machine'?'machineDamage':'escortDamage';
+  result[field]+=hit.damage;
+  result.targets.push({kind:hit.target.kind,id:hit.target.unit.id,
+   damage:hit.damage,destroyed:hit.target.unit.destroyed});
+  if(attack.action==='conserving-ray'&&repairTarget){
+   const healed=arkHealEscort(b,side,repairTarget,1);
+   if(healed)events.push(emit(b,ctx.who,'ark-repair',
+    'Raggio conservativo salda '+repairTarget.name+' +'+healed,{
+     cardId:attack.id,targetId:repairTarget.id,healed,triggerDamage:hit.damage}));
+  }
  }
  return result;
 }
