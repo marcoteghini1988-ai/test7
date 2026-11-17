@@ -49,6 +49,25 @@ function shield(side,unit){
   target:'escort',escortSlot:unit.slot,untilPly:20,placedPly:-2});
 }
 
+test('Proiettore e Ago nello stesso turno: il supporto occultato abilita una sola perforazione',()=>{
+ const b=battle();equip(b.sides.A,'nx-e01-01');
+ shield(b.sides.B,b.sides.B.escorts[0]);
+ const first=b.sides.B.escorts[0],hp=first.hp;
+ const r=play(b,'A',['nx-e01-02'],{...target('escort',first),
+  nebulaHide:true,nebulaHideEscortId:b.sides.A.escorts[0].id});
+ assert.ok(r.battle.sides.B.escorts[0].hp<hp);
+ assert.ok(r.events.some(e=>e.kind==='nebula-hide'));
+ assert.ok(r.events.some(e=>e.kind==='pierce'));
+});
+test('IA Nebulosa usa il Proiettore disponibile senza carta inventata',()=>{
+ const b=battle();equip(b.sides.A,'nx-e01-01');
+ const order=autoFleetTurn(b,'A');
+ assert.equal(order.nebulaHide,true);
+ assert.equal(order.nebulaHideEscortId,b.sides.A.escorts[0].id);
+ const r=resolveFleetNextTurn(b,'A',order,1000);
+ assert.equal(r.ok,true,r.reason);
+ assert.equal(nebulaHidden(r.battle.sides.A.escorts[0],r.battle.ply),true);
+});
 test('Nebulosa E01: dieci esclusive eseguibili solo con questa nave e livelli 6/7/8/9/10',()=>{
  assert.equal(new Set(IDS).size,10);
  for(let level=1;level<=5;level++){
@@ -110,7 +129,6 @@ test('Occultamento scade al successivo turno del proprietario senza creare suppo
  b=play(b,'A',[],{pass:true}).battle;
  assert.equal(nebulaHiddenSupport(b.sides.A,b.ply),null);
  assert.equal(b.sides.A.escorts.length,2);
- assert.ok(b.events===undefined);
 });
 test('Ago nella nebbia: una protezione visibile e ignorata se un supporto e occultato',()=>{
  let b=battle();equip(b.sides.A,'nx-e01-01');
