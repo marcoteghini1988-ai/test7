@@ -26,7 +26,8 @@
     "Questa bozza non è parte del catalogo runtime delle 120 esclusive e non ne cambia le meccaniche.",
     "Buco Nero resta carta distinta, controllo leggendaria: azzera tutte le carte sul campo compresi due slot Arma, ma non elimina le navi o i sistemi interni.",
     "Nella nuova modalità, i colpi riducono gli HP della nave madre o delle navicelle di supporto. I componenti interni non sono bersagli, ma sistemi che le carte possono sabotare o potenziare. Le sei schede Plancia ancora riferite alla precisione sui vitali vanno riprogettate prima dell'integrazione.",
-    "Sulle carte Plancia approvate o proposte, gli unici bersagli di attacco sono madre e navicelle di supporto: mai i componenti. Le interferenze Plancia possono limitare il numero di bersagli, mentre le amplificazioni consentono di ripartire un pacchetto di danno fra due supporti senza aggiungere danno né aggirare il blocco verso la madre. Serve una futura integrazione esplicita nel motore."
+    "Sulle carte Plancia approvate o proposte, gli unici bersagli di attacco sono madre e navicelle di supporto: mai i componenti. Le interferenze Plancia possono limitare il numero di bersagli, mentre le amplificazioni consentono di ripartire un pacchetto di danno fra due supporti senza aggiungere danno né aggirare il blocco verso la madre. Serve una futura integrazione esplicita nel motore.",
+    "Arsenale e Generatore sono allineati alle descrizioni approvate oralmente il 17 novembre. Durate definite; intensità descritta qualitativamente, per evitare numeri inventati. Prima dell'effettiva attivazione serve identificare le funzioni energetiche/armi temporanee e i contatori del motore."
   ],
   "cards": [
     {
@@ -43,7 +44,7 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "Intercettazione dei supporti ridotta del 15%.",
       "counterplay": "Riallineamento, rimozione sabotaggio o scadenza; il disturbo non distrugge supporti.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato"
     },
     {
       "designId": "draft-sys-command-minus-r",
@@ -59,7 +60,7 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "Intercettazione dei supporti ridotta del 20%.",
       "counterplay": "Riallineamento, rimozione sabotaggio o scadenza; il disturbo non distrugge supporti.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato"
     },
     {
       "designId": "draft-sys-command-minus-e",
@@ -75,7 +76,7 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "Intercettazione ridotta del 30%; nel primo turno colpito si annulla un bonus passivo di supporto che richiede sincronizzazione.",
       "counterplay": "Riallineamento, rimozione sabotaggio o scadenza; il disturbo non distrugge supporti.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato"
     },
     {
       "designId": "draft-sys-command-minus-l",
@@ -91,7 +92,7 @@
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
       "effect": "Intercettazione ridotta del 40%; nel primo turno colpito si sospendono i bonus passivi sincronizzati di entrambi i supporti presenti.",
       "counterplay": "Riallineamento, rimozione sabotaggio o scadenza; il disturbo non distrugge supporti.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato"
     },
     {
       "designId": "draft-sys-command-plus-c",
@@ -107,7 +108,7 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "Recupera fino a 15 punti percentuali di sincronizzazione; il primo colpo a un supporto nel ciclo infligge 1 danno in meno.",
       "counterplay": "Riallineamento, rimozione sabotaggio o scadenza; il disturbo non distrugge supporti.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato"
     },
     {
       "designId": "draft-sys-command-plus-r",
@@ -123,7 +124,7 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "Recupera fino a 20 punti percentuali; il primo colpo al supporto in ciascun ciclo infligge 1 danno in meno.",
       "counterplay": "Riallineamento, rimozione sabotaggio o scadenza; il disturbo non distrugge supporti.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato"
     },
     {
       "designId": "draft-sys-command-plus-e",
@@ -139,7 +140,7 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "Recupera fino a 30 punti percentuali; il primo colpo al supporto in ciascun ciclo infligge 2 danni in meno.",
       "counterplay": "Riallineamento, rimozione sabotaggio o scadenza; il disturbo non distrugge supporti.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato"
     },
     {
       "designId": "draft-sys-command-plus-l",
@@ -155,7 +156,7 @@
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
       "effect": "Recupera fino a 40 punti percentuali; il primo colpo a un supporto in ciascun ciclo infligge 2 danni in meno, e ignora una sospensione di bonus passivo da sabotaggio per ciclo.",
       "counterplay": "Riallineamento, rimozione sabotaggio o scadenza; il disturbo non distrugge supporti.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "stage": "EFFETTO APPROVATO COME DESIGN — non implementato"
     },
     {
       "designId": "draft-sys-weapons-minus-c",
@@ -165,13 +166,14 @@
       "type": "Sabotaggio",
       "rarity": "Comune",
       "tier": 1,
-      "magnitude": 1,
-      "unit": "punti danno su attacco nativo",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 1,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−1 danno al primo attacco nativo della madre nel turno colpito; minimo 1 se il colpo va a segno.",
-      "counterplay": "Amplificazione opposta o rimozione sabotaggio; l'Arsenale non perde l'attacco base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 1 turno avversario, riduce di un livello l'apporto offensivo delle carte Arma temporanee attive; non diminuisce direttamente il colpo base della nave madre.",
+      "counterplay": "Carte di ripristino dell'Arsenale, difese applicabili o scadenza; le Armi non vengono distrutte.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "−1 danno al primo attacco nativo della madre nel turno colpito; minimo 1 se il colpo va a segno."
     },
     {
       "designId": "draft-sys-weapons-minus-r",
@@ -181,13 +183,14 @@
       "type": "Sabotaggio",
       "rarity": "Rara",
       "tier": 2,
-      "magnitude": 1,
-      "unit": "punti danno su attacco nativo",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−1 danno al primo attacco nativo della madre per ciascun turno colpito; minimo 1.",
-      "counterplay": "Amplificazione opposta o rimozione sabotaggio; l'Arsenale non perde l'attacco base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 turni avversari, riduce i danni delle carte Arma temporanee; nel primo turno disattiva una carta Arma già attiva.",
+      "counterplay": "Carte di ripristino dell'Arsenale, difese applicabili o scadenza; le Armi non vengono distrutte.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "−1 danno al primo attacco nativo della madre per ciascun turno colpito; minimo 1."
     },
     {
       "designId": "draft-sys-weapons-minus-e",
@@ -197,13 +200,14 @@
       "type": "Sabotaggio",
       "rarity": "Epica",
       "tier": 3,
-      "magnitude": 2,
-      "unit": "punti danno su attacco nativo",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−2 danni al primo attacco nativo della madre in ciascun turno colpito; minimo 1.",
-      "counterplay": "Amplificazione opposta o rimozione sabotaggio; l'Arsenale non perde l'attacco base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 turni avversari, riduce il danno delle Armi temporanee; nel primo turno annulla anche un effetto aggiuntivo di un'Arma.",
+      "counterplay": "Carte di ripristino dell'Arsenale, difese applicabili o scadenza; le Armi non vengono distrutte.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "−2 danni al primo attacco nativo della madre in ciascun turno colpito; minimo 1."
     },
     {
       "designId": "draft-sys-weapons-minus-l",
@@ -213,13 +217,14 @@
       "type": "Sabotaggio",
       "rarity": "Leggendaria",
       "tier": 4,
-      "magnitude": 2,
-      "unit": "punti danno su attacco nativo",
-      "durationTurns": 3,
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
+      "durationTurns": 2,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−2 danni al primo attacco nativo della madre in ciascun turno colpito; inoltre nel primo turno non si applica il primo bonus a colpi aggiuntivi (non elimina i colpi).",
-      "counterplay": "Amplificazione opposta o rimozione sabotaggio; l'Arsenale non perde l'attacco base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 turni avversari, riduce sensibilmente il danno delle Armi temporanee; ne disattiva una e ne impedisce il riutilizzo finché dura il sabotaggio.",
+      "counterplay": "Carte di ripristino dell'Arsenale, difese applicabili o scadenza; le Armi non vengono distrutte.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "−2 danni al primo attacco nativo della madre in ciascun turno colpito; inoltre nel primo turno non si applica il primo bonus a colpi aggiuntivi (non elimina i colpi)."
     },
     {
       "designId": "draft-sys-weapons-plus-c",
@@ -229,13 +234,14 @@
       "type": "Amplificazione",
       "rarity": "Comune",
       "tier": 1,
-      "magnitude": 1,
-      "unit": "punti danno su attacco nativo",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 1,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+1 danno al primo attacco nativo della madre nel tuo turno.",
-      "counterplay": "Amplificazione opposta o rimozione sabotaggio; l'Arsenale non perde l'attacco base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 1 tuo turno, una carta Arma temporanea attiva aggiunge un piccolo bonus di danno senza prolungare la sua durata.",
+      "counterplay": "Carte di ripristino dell'Arsenale, difese applicabili o scadenza; le Armi non vengono distrutte.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "+1 danno al primo attacco nativo della madre nel tuo turno."
     },
     {
       "designId": "draft-sys-weapons-plus-r",
@@ -245,13 +251,14 @@
       "type": "Amplificazione",
       "rarity": "Rara",
       "tier": 2,
-      "magnitude": 1,
-      "unit": "punti danno su attacco nativo",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+1 danno al primo attacco nativo della madre in ciascuno dei tuoi due turni.",
-      "counterplay": "Amplificazione opposta o rimozione sabotaggio; l'Arsenale non perde l'attacco base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 tuoi turni, una carta Arma temporanea infligge più danni; nel primo turno ignora una riduzione minima subita dall'Arsenale.",
+      "counterplay": "Carte di ripristino dell'Arsenale, difese applicabili o scadenza; le Armi non vengono distrutte.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "+1 danno al primo attacco nativo della madre in ciascuno dei tuoi due turni."
     },
     {
       "designId": "draft-sys-weapons-plus-e",
@@ -261,13 +268,14 @@
       "type": "Amplificazione",
       "rarity": "Epica",
       "tier": 3,
-      "magnitude": 2,
-      "unit": "punti danno su attacco nativo",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+2 danni al primo attacco nativo per turno; nel primo turno +1 al danno di un bersaglio secondario già previsto.",
-      "counterplay": "Amplificazione opposta o rimozione sabotaggio; l'Arsenale non perde l'attacco base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 tuoi turni, una carta Arma temporanea aumenta i danni; nel primo turno ignora una riduzione media applicata al bersaglio.",
+      "counterplay": "Carte di ripristino dell'Arsenale, difese applicabili o scadenza; le Armi non vengono distrutte.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "+2 danni al primo attacco nativo per turno; nel primo turno +1 al danno di un bersaglio secondario già previsto."
     },
     {
       "designId": "draft-sys-weapons-plus-l",
@@ -277,13 +285,14 @@
       "type": "Amplificazione",
       "rarity": "Leggendaria",
       "tier": 4,
-      "magnitude": 2,
-      "unit": "punti danno su attacco nativo",
-      "durationTurns": 3,
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
+      "durationTurns": 2,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+2 danni al primo attacco nativo per turno; +1 danno al primo bersaglio secondario già previsto in ciascun turno.",
-      "counterplay": "Amplificazione opposta o rimozione sabotaggio; l'Arsenale non perde l'attacco base.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 tuoi turni, una carta Arma temporanea aumenta sensibilmente i danni; nel primo turno ignora una riduzione media, ma non le immunità.",
+      "counterplay": "Carte di ripristino dell'Arsenale, difese applicabili o scadenza; le Armi non vengono distrutte.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "+2 danni al primo attacco nativo per turno; +1 danno al primo bersaglio secondario già previsto in ciascun turno."
     },
     {
       "designId": "draft-sys-generator-minus-c",
@@ -293,13 +302,14 @@
       "type": "Sabotaggio",
       "rarity": "Comune",
       "tier": 1,
-      "magnitude": 1,
-      "unit": "punti su protezione/riparazione",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 1,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−1 punto al primo effetto di scudo o riparazione alimentato dal Generatore durante il turno colpito.",
-      "counterplay": "Amplificazione opposta, pulizia o scadenza; valore minimo zero, nessun ripristino oltre HP massimi.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 1 turno avversario, limita l'uso di una capacità energetica non essenziale, senza togliere HP.",
+      "counterplay": "Carte di ripristino energetico, difese applicabili o scadenza; non modifica HP né navicelle.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "−1 punto al primo effetto di scudo o riparazione alimentato dal Generatore durante il turno colpito."
     },
     {
       "designId": "draft-sys-generator-minus-r",
@@ -309,13 +319,14 @@
       "type": "Sabotaggio",
       "rarity": "Rara",
       "tier": 2,
-      "magnitude": 1,
-      "unit": "punti su protezione/riparazione",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−1 al primo effetto di scudo o riparazione alimentato dal Generatore in ciascun turno colpito.",
-      "counterplay": "Amplificazione opposta, pulizia o scadenza; valore minimo zero, nessun ripristino oltre HP massimi.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 turni avversari, limita due capacità energetiche minori, senza disattivare le difese di base.",
+      "counterplay": "Carte di ripristino energetico, difese applicabili o scadenza; non modifica HP né navicelle.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "−1 al primo effetto di scudo o riparazione alimentato dal Generatore in ciascun turno colpito."
     },
     {
       "designId": "draft-sys-generator-minus-e",
@@ -325,13 +336,14 @@
       "type": "Sabotaggio",
       "rarity": "Epica",
       "tier": 3,
-      "magnitude": 2,
-      "unit": "punti su protezione/riparazione",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−2 al primo effetto di scudo o riparazione alimentato dal Generatore in ciascun turno colpito.",
-      "counterplay": "Amplificazione opposta, pulizia o scadenza; valore minimo zero, nessun ripristino oltre HP massimi.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 turni avversari, limita una funzione energetica principale; le difese di base rimangono operative.",
+      "counterplay": "Carte di ripristino energetico, difese applicabili o scadenza; non modifica HP né navicelle.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "−2 al primo effetto di scudo o riparazione alimentato dal Generatore in ciascun turno colpito."
     },
     {
       "designId": "draft-sys-generator-minus-l",
@@ -341,13 +353,14 @@
       "type": "Sabotaggio",
       "rarity": "Leggendaria",
       "tier": 4,
-      "magnitude": 2,
-      "unit": "punti su protezione/riparazione",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "turni del giocatore avversario che subisce l'effetto",
-      "effect": "−2 ai primi due effetti di scudo o riparazione alimentati dal Generatore in ciascun turno colpito.",
-      "counterplay": "Amplificazione opposta, pulizia o scadenza; valore minimo zero, nessun ripristino oltre HP massimi.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 turni avversari, limita una funzione energetica principale e, all'inizio, rimuove un piccolo bonus energetico già attivo.",
+      "counterplay": "Carte di ripristino energetico, difese applicabili o scadenza; non modifica HP né navicelle.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "−2 ai primi due effetti di scudo o riparazione alimentati dal Generatore in ciascun turno colpito."
     },
     {
       "designId": "draft-sys-generator-plus-c",
@@ -357,13 +370,14 @@
       "type": "Amplificazione",
       "rarity": "Comune",
       "tier": 1,
-      "magnitude": 1,
-      "unit": "punti su protezione/riparazione",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 1,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+1 punto al primo effetto di scudo o riparazione alimentato dal Generatore nel tuo ciclo.",
-      "counterplay": "Amplificazione opposta, pulizia o scadenza; valore minimo zero, nessun ripristino oltre HP massimi.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 1 tuo turno, potenzia una capacità energetica minore senza modificare gli HP.",
+      "counterplay": "Carte di ripristino energetico, difese applicabili o scadenza; non modifica HP né navicelle.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "+1 punto al primo effetto di scudo o riparazione alimentato dal Generatore nel tuo ciclo."
     },
     {
       "designId": "draft-sys-generator-plus-r",
@@ -373,13 +387,14 @@
       "type": "Amplificazione",
       "rarity": "Rara",
       "tier": 2,
-      "magnitude": 1,
-      "unit": "punti su protezione/riparazione",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+1 punto al primo effetto di scudo o riparazione alimentato dal Generatore per ciascuno dei tuoi due cicli.",
-      "counterplay": "Amplificazione opposta, pulizia o scadenza; valore minimo zero, nessun ripristino oltre HP massimi.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 tuoi turni, potenzia una capacità energetica intermedia e migliora leggermente la stabilità delle difese.",
+      "counterplay": "Carte di ripristino energetico, difese applicabili o scadenza; non modifica HP né navicelle.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "+1 punto al primo effetto di scudo o riparazione alimentato dal Generatore per ciascuno dei tuoi due cicli."
     },
     {
       "designId": "draft-sys-generator-plus-e",
@@ -389,13 +404,14 @@
       "type": "Amplificazione",
       "rarity": "Epica",
       "tier": 3,
-      "magnitude": 2,
-      "unit": "punti su protezione/riparazione",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+2 punti al primo effetto di scudo o riparazione alimentato dal Generatore per ciclo.",
-      "counterplay": "Amplificazione opposta, pulizia o scadenza; valore minimo zero, nessun ripristino oltre HP massimi.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 tuoi turni, potenzia una funzione energetica principale senza modificare gli HP né le navicelle di supporto.",
+      "counterplay": "Carte di ripristino energetico, difese applicabili o scadenza; non modifica HP né navicelle.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "+2 punti al primo effetto di scudo o riparazione alimentato dal Generatore per ciclo."
     },
     {
       "designId": "draft-sys-generator-plus-l",
@@ -405,13 +421,14 @@
       "type": "Amplificazione",
       "rarity": "Leggendaria",
       "tier": 4,
-      "magnitude": 2,
-      "unit": "punti su protezione/riparazione",
+      "magnitude": null,
+      "unit": "intensità qualitativa approvata; valori esatti da definire prima dell'implementazione",
       "durationTurns": 2,
       "durationConvention": "propri turni di attivazione, compreso quello di gioco; le protezioni coprono la risposta avversaria",
-      "effect": "+2 punti ai primi due effetti di scudo o riparazione alimentati dal Generatore per ciclo.",
-      "counterplay": "Amplificazione opposta, pulizia o scadenza; valore minimo zero, nessun ripristino oltre HP massimi.",
-      "stage": "BOZZA — da approvare per gruppo da 8; non giocabile"
+      "effect": "Per 2 tuoi turni, potenzia notevolmente una funzione energetica principale e concede subito un piccolo bonus difensivo, senza modificare gli HP o le navicelle di supporto.",
+      "counterplay": "Carte di ripristino energetico, difese applicabili o scadenza; non modifica HP né navicelle.",
+      "stage": "EFFETTO APPROVATO COME DESIGN — da dettagliare tecnicamente; non implementato",
+      "previousDraftEffect": "+2 punti ai primi due effetti di scudo o riparazione alimentati dal Generatore per ciclo."
     },
     {
       "designId": "draft-sys-bridge-minus-c",
@@ -553,6 +570,9 @@
     }
   ],
   "approvedGroups": [
+    "Centralina",
+    "Arsenale",
+    "Generatore",
     "Plancia"
   ]
 }
