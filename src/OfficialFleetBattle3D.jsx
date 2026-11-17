@@ -912,6 +912,64 @@ export default function OfficialFleetBattle3D({
       {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
      </select>
     </label>}
+    {obsidianActive&&<p className="f3d-obsidian-readout">
+     <b>Titano Ossidiana</b>{' · '+
+      (obsidianPendingShot?
+       (card(obsidianPendingShot.cardId)?.name||'Colpo preparato')+
+       ' su '+(obsidianEnemyUnits(enemy).find(t=>t.unit.id===obsidianPendingShot.id)?.unit.name||
+       'bersaglio perduto')+' · '+
+       (obsidianPendingShot.releasePly<=battle.ply?'RILASCIO ORA':'prossimo tuo turno'):
+       obsidianFused?'Bastione d’Assedio operativo':
+       'Difese e preparazioni')}
+     {player.fusionLimit>0&&' · Fusioni '+player.fusionsUsed+'/'+player.fusionLimit}
+    </p>}
+    {obsidianActive&&selectedActions.includes('black-howitzer')&&<p className="f3d-obsidian-readout">
+     Obice nero: seleziona una macchina nel menu bersagli. Il colpo pesante
+     partirà il prossimo turno e potrà ignorare una Difesa scoperta
+    </p>}
+    {obsidianActive&&selectedActions.includes('titan-verdict')&&<p className="f3d-obsidian-readout">
+     Sentenza del Titano: due colpi pesanti preparati contro lo stesso bersaglio.
+     Il Bastione fuso deve restare operativo fino al rilascio
+    </p>}
+    {obsidianActive&&selectedActions.includes('obsidian-bulkhead')&&
+     <label>Paratia d’ossidiana — vitale da proteggere dal secondo colpo:
+      <select value={obsidianOptions.part}
+       onChange={e=>setObsidianOption('part',e.target.value)}>
+       <option value="">Componente proprio già selezionato</option>
+       {obsidianVitalParts.map(p=><option key={p.id} value={p.id}>
+        {VITAL_LABELS[p.id]||p.id} · {p.hp}/{p.maxHp}</option>)}
+      </select>
+     </label>}
+    {obsidianActive&&selectedActions.includes('position-chains')&&obsidianEnemyMachines.length>0&&
+     <label>Catene di posizione — macchina da ancorare se il nemico prepara:
+      <select value={obsidianOptions.chainMachine}
+       onChange={e=>setObsidianOption('chainMachine',e.target.value)}>
+       <option value="">Prima macchina nemica viva</option>
+       {obsidianEnemyMachines.map(m=><option key={m.id} value={m.id}>
+        {m.name} · {m.hp}/{m.maxHp}</option>)}
+      </select>
+     </label>}
+    {obsidianActive&&selectedActions.includes('obsidian-magister')&&
+     <label><input type="checkbox" checked={obsidianOptions.magisterSwap}
+      onChange={e=>setObsidianOption('magisterSwap',e.target.checked)}/>
+      Magistro Ossidiana: inverti l’ordine delle prime due carte quando una Difesa blocca un colpo
+     </label>}
+    {obsidianCanGuard&&<label>
+     <input type="checkbox" checked={obsidianOptions.bastionGuard}
+      onChange={e=>setObsidianOption('bastionGuard',e.target.checked)}/>
+     Bastione d’Assedio: rinuncia alle passive offensive per limitare a 1
+     il primo danno ricevuto nel prossimo turno nemico
+    </label>}
+    {obsidianActive&&selectedActions.includes('obsidian-fusion')&&
+     <p className="f3d-obsidian-readout">
+      Fusione Ossidiana: unisce i due supporti nel Bastione d’Assedio.
+      Mantiene i danni proporzionali, le passive e non schiera riserve
+     </p>}
+    {obsidianActive&&obsidianModuleActive(player,'nx-l03-01',battle.ply)&&
+     <p className="f3d-obsidian-readout">
+      Ancoraggi d’assedio attivi: i colpi preparati non possono essere deviati.
+      Il ritiro delle macchine proprie è disabilitato
+     </p>}
     {royalActive&&<p className="f3d-royal-readout">
      <b>Eclisse Reale</b>{' · '+
       (player.escorts.some(e=>e.royalCrown&&e.hp>0&&!e.destroyed)?
