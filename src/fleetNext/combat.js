@@ -1103,6 +1103,131 @@ function activateFalcoCard(b,who,def,ctx,events,order={},source=null){
  throw Error('Azione Falco non implementata: '+action);
 }
 
+
+// Manta R02: effetti dedicati, energia limitata a due e protezioni concrete.
+function activateMantaCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],state=ensureMantaState(side),action=def.effectSpec.action;
+ const note=(message,extra={})=>events.push(emit(b,who,'card',
+  (def.nome||def.name)+' · '+message,{cardId:def.id,...extra}));
+ if(isMantaModule(def.id)){
+  const result=mountModule(side,def);
+  if(!result.ok)throw Error(result.reason);
+  if(action==='ion-capacitor')state.energy=0;
+  note('Modulo '+(result.replaced?'sostituito':'montato')+' con '+result.entry.hp+' integrità',
+   {moduleId:result.entry.id,moduleSlot:result.entry.slot});
+  return;
+ }
+ if(MANTA_ATTACK_ACTIONS.includes(action)){
+  if(action==='total-discharge'&&!spendMantaEnergy(side,b.ply,2))
+   throw Error('Scarica totale: servono due energie');
+  if(action==='arc-discharge'&&order.mantaSilence){
+   if(!spendMantaEnergy(side,b.ply,1))throw Error('Arco ionico senza energia');
+   ctx.mantaSilence=true;
+  }
+  ctx.mantaAttacks.push({id:def.id,action});
+  note(action==='arc-discharge'?'Arco ionico pronto'+(ctx.mantaSilence?' · Silenzio alimentato':''):
+   'Scarica totale alimentata con due energie');
+  return;
+ }
+ if(action==='absorption-screen'){
+  const supports=mantaActiveSupports(side,b.ply);
+  const target=supports.find(e=>e.id===order.mantaScreenEscortId)||supports[0];
+  if(!target)throw Error('Schermo: supporto non operativo');
+  side.protections.push({source,id:def.id,kind:'protect',remaining:1,
+   target:'escort',escortSlot:target.slot,untilPly:b.ply+2});
+  note('Il prossimo colpo su '+target.name+' sarà bloccato');
+  return;
+ }
+ if(action==='ion-ground'){
+  events.push(emit(b,who,'trap-set','Messa a terra preparata coperta'));
+  return;
+ }
+ if(action==='manta-navigator'){
+  state.navigatorUses=0;state.lastNavigatorPly=-999;
+  note('Può spendere fino a due energie per riparare i supporti, una per turno');
+  return;
+ }
+ if(action==='reverse-polarity'){
+  const supports=mantaActiveSupports(side,b.ply);
+  const visible=mantaVisibleProtections(side,b.ply);
+  const sourceEscort=supports.find(e=>e.id===order.mantaFromEscortId);
+  const chosen=visible.find(p=>p.target==='escort'&&p.escortSlot===sourceEscort?.slot)||
+   visible.find(p=>p.target==='escort'&&supports.some(e=>e.slot===p.escortSlot));
+  if(!chosen)throw Error('Polarità: nessuna protezione trasferibile');
+  const destination=supports.find(e=>e.id===order.mantaToEscortId&&e.slot!==chosen.escortSlot)||
+   supports.find(e=>e.slot!==chosen.escortSlot);
+  if(!destination)throw Error('Polarità: manca il supporto ricevente');
+  chosen.escortSlot=destination.slot;
+  if(destination.hp<destination.maxHp){
+   if((destination.disabledUntilPly||0)>b.ply)destination.disabledUntilPly=0;
+   else if((destination.jammedUntilPly||0)>b.ply)destination.jammedUntilPly=0;
+   else if((destination.silencedUntilPly||0)>b.ply)destination.silencedUntilPly=0;
+  }
+  refreshEscortLinks(side,b.ply);
+  note('Protezione spostata su '+destination.name+' · cariche residue '+chosen.remaining);
+  return;
+ }
+ if(action==='manta-field'){
+  const first=mantaActiveSupports(side,b.ply).find(e=>
+   e.sourceIndices?.includes(0)&&!e.fused&&(e.grade||1)>=2);
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!first||!defense||!spendMantaEnergy(side,b.ply,1))
+   throw Error('Campo Manta non attivabile');
+  defense.mantaFieldEscortId=first.id;
+  note('Il primo colpo non bloccato contro '+first.name+' sarà limitato a 1 danno');
+  return;
+ }
+ if(action==='dielectric-reserve'){
+  const options=mantaVisibleProtections(side,b.ply);
+  const selected=options.find(p=>p.source===order.mantaRecycleSource)||options[0];
+  if(!selected)throw Error('Riserva dielettrica senza protezione');
+  const transfer=Math.min(2-mantaEnergy(side),selected.remaining);
+  if(!transfer)throw Error('Riserva dielettrica piena');
+  discardDefense(side,selected.source);
+  const gained=gainMantaEnergy(side,b.ply,transfer);
+  note('Convertite '+gained+' cariche della protezione in energia');
+  return;
+ }
+ throw Error('Azione Manta non implementata: '+action);
+}
+function chargeMantaOnDamage(b,attackerWho,damage,events){
+ const defender=b.sides[other(attackerWho)];
+ if(damage<=0||defender.ships[0].id!=='R02'||!mantaCapacitorActive(defender,b.ply))return;
+ const state=ensureMantaState(defender);
+ if(state.lastEnemyDamagePly===b.ply)return;
+ state.lastEnemyDamagePly=b.ply;
+ const gained=gainMantaEnergy(defender,b.ply);
+ if(gained)events.push(emit(b,other(attackerWho),'manta-energy',
+  'Capacitore Manta: +1 energia per il primo danno nemico del turno',
+  {cardId:'nx-r02-01',energy:state.energy}));
+}
+function mantaCapDamage(b,defender,kind,unit,amount,events){
+ if(kind!=='escort'||defender.ships[0].id!=='R02')return amount;
+ const field=defender.defenses.find(d=>d.mantaFieldEscortId===unit.id&&
+  !d.hidden&&d.untilPly>b.ply);
+ if(!field)return amount;
+ discardDefense(defender,field.source);
+ events.push(emit(b,other(b.turn),'block','Campo Manta limita il primo colpo a 1 danno',
+  {cardId:field.id,targetKind:'escort',targetId:unit.id}));
+ return Math.min(1,amount);
+}
+function mantaNavigatorTurn(b,ctx,events){
+ const side=b.sides[ctx.who],state=ensureMantaState(side),commander=side.commander;
+ if(side.ships[0].id!=='R02'||commander?.id!=='ex-r02-01'||
+  commander.untilPly<=b.ply||!operational(side.ships[0],characterSystem(side))||
+  state.navigatorUses>=2||state.lastNavigatorPly===b.ply||
+  ctx.order?.mantaRepair===false||b.terrain?.id==='T08')return;
+ const damaged=mantaActiveSupports(side,b.ply).filter(e=>e.hp<e.maxHp);
+ const target=damaged.find(e=>e.id===ctx.order?.mantaRepairTargetId)||
+  damaged.sort((a,z)=>a.hp/a.maxHp-z.hp/z.maxHp)[0];
+ if(!target||!spendMantaEnergy(side,b.ply,1))return;
+ target.hp=Math.min(target.maxHp,target.hp+1);
+ state.navigatorUses++;state.lastNavigatorPly=b.ply;
+ events.push(emit(b,ctx.who,'repair','Navigatrice Manta ripara '+target.name+' +1',
+  {cardId:'ex-r02-01',targetKind:'escort',targetId:target.id,
+   escortSlot:target.slot,energy:state.energy}));
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
