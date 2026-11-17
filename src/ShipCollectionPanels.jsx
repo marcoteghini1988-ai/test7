@@ -34,7 +34,7 @@ export function ShipProgressionDetails({shipId,level=1}){
  const current=getShipProgression(shipId,level);
  const profile=shipProgressionProfile(shipId);
  return <div className="ship-progression" aria-label={'Progressione '+shipId}>
-  <p>Elementi: {fleetElementNames(shipId).join(' + ')}.</p>
+  <p>Elementi: {fleetElementNames(shipId).join(' + ')} · Bonus e debolezze in progettazione.</p>
   <p>{current.vitalIds.length} vitali · {current.escortCount} supporti
    {current.escortGrades.length?' · gradi '+current.escortGrades.join('/') : ''}
    {current.reserveCount?' · '+current.reserveCount+' in riserva':''}
