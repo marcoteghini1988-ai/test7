@@ -51,7 +51,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Una Trappola contro i Terreni annulla il prossimo Terreno avversario prima che si attivi. Il Terreno precedente resta; entrambe le carte usate vanno negli scarti.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
- 'Aurora ha Arsenale e Generatore, senza supporti. La Plancia separa il Personaggio dal Generatore; la Centralina abilita i supporti. I Motori delle carte precedenti fanno parte del Generatore.',
+ 'Aurora parte con Arsenale e Generatore; sblocca Velo Aurora al L10 e Lancia Aurora al L18. Lince sblocca Sentinella Solare al L9 e Lama Rubino al L17. La Plancia gestisce il Personaggio; la Centralina abilita i supporti.',
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
  'Smontaggio Forzato è una carta Attacco: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
  'Fusione unisce due supporti operativi. La prima può far entrare la terza unità sbloccata; la seconda unisce terza e quarta. Rimangono al massimo due supporti attivi.',

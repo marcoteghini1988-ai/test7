@@ -1,5 +1,5 @@
-// Progressione della campagna: dodici madri, cinque livelli ciascuna.
-// Le cinque varianti del catalogo restano utilizzabili con la loro identità.
+// Progressione estesa: dodici madri + cinque varianti, livelli massimi L20–L5.
+// I primi cinque livelli storici sono la base dei nuovi percorsi.
 // Gli slot carte non dipendono dal livello. Le riserve entrano solo con Fusione.
 export const CAMPAIGN_SHIP_ORDER = Object.freeze([
  'N00','C01','C02','C03','R01','R02','R04','E01','E02','L01','L03','L04'

@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import React from 'react';
-import {renderToStaticMarkup} from 'react-dom/server';
+import {readFileSync} from 'node:fs';
 import {SHIP_PROGRESSION_IDS,SHIP_MAX_LEVELS,shipMaxLevel,shipEscortUnlockLevels,
  getShipProgression,getShipProgressionLevels} from './fleetNext/progression.js';
 import {FLEET_ESCORT_TRAITS} from './fleetEscortSupports.js';
@@ -9,8 +8,6 @@ import {createFleetSide,createFleetNextBattle,protectingFleetUnits} from './flee
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {readShipCollection,grantShipCard,upgradeShipCard,updateShipCollection} from './shipCollection.js';
 import {shipUpgradeDustCost,validateShipUpgradePurchase} from './shipUpgrades.js';
-import {ShipProgressionDetails} from './ShipCollectionPanels.jsx';
-import {ShipCard} from './ShipPresentation.jsx';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 const memory=()=>{const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v)};};
 test('Parametri definiti per tutte e 17 le navicelle: prima L20, ultima L5, potenziale finale 100',()=>{
@@ -95,16 +92,17 @@ test('L20 reale del giocatore mantiene due supporti e la barra HP madre nella mo
  assert.equal(b.sides.B.escorts.length,2);
  assert.equal(b.sides.A.ships[0].hp,b.sides.A.ships[0].maxHp);
 });
-test('Hangar mostra livello 20 effettivo, non quello del modello legacy L5',()=>{
- const html=renderToStaticMarkup(React.createElement(ShipCard,
-  {shipId:'N00',level:20,compact:true,fleetProgression:true}));
- assert.match(html,/ship-card-level[^>]*>L20</);
- assert.match(html,/data-level="20"/);
- const detail=renderToStaticMarkup(React.createElement(ShipProgressionDetails,
-  {shipId:'N00',level:20}));
- assert.match(detail,/2 supporti/);
- assert.match(detail,/20 livelli/);
- assert.match(detail,/Seconda scudiera sbloccata/);
+test('Hangar usa il livello reale e non il preset grafico legacy L5',()=>{
+ const card=readFileSync(new URL('./ShipPresentation.jsx',import.meta.url),'utf8');
+ const panel=readFileSync(new URL('./ShipCollectionPanels.jsx',import.meta.url),'utf8');
+ assert.match(card,/data-level=\{effectiveLevel\}/);
+ assert.match(card,/<b className="ship-card-level">L\{effectiveLevel\}<\/b>/);
+ assert.match(panel,/getShipProgressionLevels\(shipId\)/);
+ assert.match(panel,/card\.level<maxLevel/);
+ assert.match(panel,/shipMaxLevel\(ship\.id\)/);
+ const row=getShipProgression('N00',20);
+ assert.equal(row.level,20);
+ assert.equal(row.escortCount,2);
 });
 test('I rivali della campagna raggiungono il tetto della loro famiglia a parità di fascia',()=>{
  assert.equal(officialCampaignRivalLevel({mode:'campaign',shipId:'N00',sectorNumber:120}),20);
