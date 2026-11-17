@@ -50,6 +50,7 @@ import {
  activateTerrain,activeTerrain,terrainSalvoModifier,
  neutralTerrain,bossTerrain,campaignTerrain,TERRAIN_CATALOG
 } from './terrains.js';
+import {HP_SYNC_RULESET,motherIntegrityFromSystems,activeSynchronizationPenalty,splitSynchronizedDamage} from './hpSynchronization.js';
 
 const clone=x=>JSON.parse(JSON.stringify(x));
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -67,7 +68,8 @@ export function createFleetMother(id,level=1){
  const n=clamp(Math.floor(Number(level)||1),1,5),progression=getShipProgression(id,n);
  const parts=progression.vitalIds.map(id=>({id,hp:progression.integrityByPart[id],
   maxHp:progression.integrityByPart[id],damage:0,destroyed:false}));
- return {id:model.id,name:model.nome,level:n,rarity:model.rarita,
+ const maxHp=motherIntegrityFromSystems(parts);
+ return {id:model.id,name:model.nome,level:n,rarity:model.rarita,hp:maxHp,maxHp,
   role:progression.role,parts,element:({N00:'ionic',C01:'plasma',C02:'refrigerant',
   C03:'ionic',C04:'plasma',R01:'plasma',R02:'ionic',R03:'refrigerant',
   R04:'mineral',E01:'refrigerant',E02:'ionic',E03:'plasma',E04:'mineral',
@@ -125,20 +127,25 @@ export function refreshEscortLinks(side,ply=0){
 }
 export function protectingFleetUnits(side,ply=0){
  const escortRows=(side.escorts||[]).filter(e=>escortEnabled(side,e,ply)).map(unit=>({kind:'escort',unit}));
- const machineRows=(side.machines||[]).filter(e=>unitEnabled(e,ply)).map(unit=>({kind:'machine',unit}));
+ const machineRows=side.ruleset===HP_SYNC_RULESET?[]:
+  (side.machines||[]).filter(e=>unitEnabled(e,ply)).map(unit=>({kind:'machine',unit}));
  return [...escortRows,...machineRows].map(({kind,unit})=>({kind,id:unit.id,slot:unit.slot,
   name:unit.name,hp:unit.hp,maxHp:unit.maxHp,unit}));
 }
 export function availableFleetTargets(side,ply=0){
  const guards=protectingFleetUnits(side,ply);
  const units=[...(side.escorts||[]).filter(unitAlive).map(unit=>({kind:'escort',unit})),
-  ...(side.machines||[]).filter(unitAlive).map(unit=>({kind:'machine',unit}))];
+  ...(side.ruleset===HP_SYNC_RULESET?[]:(side.machines||[]).filter(unitAlive))
+   .map(unit=>({kind:'machine',unit}))];
  return [...units.map(({kind,unit})=>({kind,id:unit.id,slot:unit.slot,name:unit.name,
   hp:unit.hp,maxHp:unit.maxHp,unit,blocked:false})),
   ...(!obsidianSealed(side,ply)?liveModules(side):[]).map(unit=>({kind:'module',id:unit.id,slot:unit.slot,name:unit.name,
    hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0})),
-  ...side.ships[0].parts.filter(unitAlive).map(unit=>({kind:'part',id:unit.id,name:VITAL_LABELS[unit.id],
-   hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0}))];
+  ...(side.ruleset===HP_SYNC_RULESET?
+   [{kind:'part',id:'weapons',name:'Nave madre',hp:side.ships[0].hp,
+    maxHp:side.ships[0].maxHp,unit:motherPart(side.ships[0],'weapons'),blocked:guards.length>0}]:
+   side.ships[0].parts.filter(unitAlive).map(unit=>({kind:'part',id:unit.id,name:VITAL_LABELS[unit.id],
+    hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0}))];
 }
 export function fusionUnavailableReason(side,ply=0){
  const used=side.fusionsUsed||0;
@@ -217,10 +224,10 @@ function refill(b,side){
 export function createFleetNextBattle({
  shipA='N00',levelA=1,shipB='C01',levelB=1,deckA,deckB,
  upgradesA={},upgradesB={},mode='campaign',bossId=null,planetId=null,sectorNumber=1,
- seed=1988,nowMs=0,bossName=null
+ seed=1988,nowMs=0,bossName=null,ruleset='legacy'
 }={}){
  const terrain=bossId?bossTerrain(bossId):mode==='pvp'?neutralTerrain():campaignTerrain(sectorNumber,planetId);
- const b={version:4,phase:'playing',winner:null,round:1,ply:0,turn:'A',
+ const b={version:4,ruleset,phase:'playing',winner:null,round:1,ply:0,turn:'A',
   deadlineMs:nowMs+FLEET_TURN_SECONDS*1000,mode,
   bossName,bossId:bossId||null,planetId:terrain.planetId??planetId??null,
   bossLockedTerrain:false,seed,rng:seed>>>0,startedAtMs:nowMs,finishedAtMs:null,
@@ -229,6 +236,10 @@ export function createFleetNextBattle({
    A:createFleetSide(shipA,levelA,deckA,seed+11,upgradesA),
    B:createFleetSide(shipB,levelB,deckB,seed+29,upgradesB)
   },lastEvents:[]};
+ for(const side of Object.values(b.sides)){
+  side.ruleset=ruleset;
+  side.synchronizationEffects=[];
+ }
  emit(b,'system','start','Le flotte sono schierate. Ogni turno dura 30 secondi.');
  return b;
 }
@@ -270,6 +281,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
+ side.synchronizationEffects??=[];
  side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);ensureNebulaState(side);ensureStormState(side);ensureRoyalState(side);ensureObsidianState(side);ensureArkState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
@@ -368,7 +380,8 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(s.type==='deployMachine'&&(side.machines||[]).filter(unitAlive).length>=2)return 'I due alloggiamenti delle macchine d’assalto sono occupati';
  if(s.type==='repair'&&!character){
-  const unit=s.target==='escort'?weakest(livingEscorts(side)):selectedOwnPart(side,s.target,ownPartId);
+  const unit=s.target==='escort'?weakest(livingEscorts(side)):
+   side.ruleset===HP_SYNC_RULESET?side.ships[0]:selectedOwnPart(side,s.target,ownPartId);
   if(!unit||unit.hp>=unit.maxHp)return s.target==='escort'?'Nessuna scudiera da riparare':'Nessun danno da riparare sul componente';
  }
  if(s.type==='disarm'&&battle){
@@ -639,6 +652,7 @@ export function validateFleetTurn(b,who,order){
 function selectedEnemyTarget(side,order={},ply=0){
  const kind=order.targetKind||(order.escortSlot!=null?'escort':order.machineSlot!=null?'machine':'part');
  if(kind==='escort'||kind==='machine'||kind==='module'){
+  if(kind==='machine'&&side.ruleset===HP_SYNC_RULESET)return null;
   if(kind==='module'&&obsidianSealed(side,ply))return null;
   const list=kind==='escort'?side.escorts:kind==='machine'?side.machines||[]:liveModules(side);
   const slot=kind==='escort'?order.escortSlot:kind==='machine'?order.machineSlot:order.moduleSlot;
@@ -666,6 +680,7 @@ function discardDefense(side,token){
 }
 function expireSide(side,ply){
  normalizeSide(side);
+ side.synchronizationEffects=side.synchronizationEffects.filter(e=>e.untilPly>ply);
  for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
  if(side.auroraVeil&&side.auroraVeil.untilPly<=ply)side.auroraVeil=null;
  if(side.lince?.route&&side.lince.route.usePly<ply)side.lince.route=null;
@@ -681,6 +696,11 @@ function expireSide(side,ply){
 }
 function heal(b,side,amount,target='weakest',ownPartId=null){
  if(b.terrain?.id==='T08')return null;
+ if(side.ruleset===HP_SYNC_RULESET&&target!=='escort'){
+  const mother=side.ships[0],prev=mother.hp;
+  mother.hp=Math.min(mother.maxHp,mother.hp+amount);
+  return mother.hp>prev?{kind:'mother',id:'mother',name:mother.name,amount:mother.hp-prev}:null;
+ }
  const escort=target==='escort';
  const unit=escort?weakest(livingEscorts(side)):selectedOwnPart(side,target,ownPartId);
  if(!unit||unit.hp>=unit.maxHp)return null;
@@ -2933,6 +2953,18 @@ function blockHit(b,defender,targetKind,target,ctx,events){
  return false;
 }
 function damageFleetUnit(side,kind,unit,amount,ply){
+ if(side.ruleset===HP_SYNC_RULESET){
+  const mother=side.ships[0];
+  if(kind==='part'){
+   const loss=Math.min(mother.hp,Math.max(0,Math.floor(amount)));
+   mother.hp-=loss;return loss;
+  }
+  if(kind==='escort'){
+   const split=splitSynchronizedDamage(amount,activeSynchronizationPenalty(side,ply));
+   mother.hp=Math.max(0,mother.hp-split.mother);
+   amount=split.support;
+  }
+ }
  // Specchio segmentato limita soltanto il primo danno subito dal modulo nel turno.
  if(kind==='module'&&unit.cardId==='nx-c02-09'&&amount>0&&
   unit.hp>0&&!unit.destroyed&&unit.lastCappedPly!==ply){
@@ -3959,9 +3991,12 @@ function finishTurn(b,ctx,events){
  for(const [id,side] of Object.entries(b.sides)){
   expireSide(side,b.ply);corvoSafetySwitch(b,id,events);
  }
- const deadA=allVitalsDestroyed(b.sides.A.ships[0]),deadB=allVitalsDestroyed(b.sides.B.ships[0]);
+ const modern=b.ruleset===HP_SYNC_RULESET;
+ const deadA=modern?b.sides.A.ships[0].hp<=0:allVitalsDestroyed(b.sides.A.ships[0]);
+ const deadB=modern?b.sides.B.ships[0].hp<=0:allVitalsDestroyed(b.sides.B.ships[0]);
  if(deadA||deadB){b.phase='finished';b.winner=deadA&&deadB?'draw':deadA?'B':'A';
-  b.finishReason=deadA&&deadB?'Entrambe le navi hanno perso tutti i componenti.':'Una nave ha perso tutti i suoi componenti.';}
+  b.finishReason=modern?(deadA&&deadB?'Entrambe le navi madri distrutte.':'Nave madre a zero HP.'):
+   deadA&&deadB?'Entrambe le navi hanno perso tutti i componenti.':'Una nave ha perso tutti i suoi componenti.';}
  else if(b.ply>=2*FLEET_MAX_ROUNDS){
   b.phase='finished';b.winner='draw';b.finishReason='Pareggio: raggiunto il limite di '+MAX_FLEET_ROUNDS+' round.';
   events.push(emit(b,'system','finish','Pareggio dopo '+FLEET_MAX_ROUNDS+' round'));
