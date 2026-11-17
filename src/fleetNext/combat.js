@@ -386,8 +386,12 @@ export function validateFleetTurn(b,who,order){
  const royalReason=royalChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
  if(royalReason)return royalReason;
  if(chosen.some(c=>c.effectSpec?.type==='royal'&&c.effectSpec.action==='crown-fusion')&&
-  chosen.some(c=>c.effectSpec?.type==='fusion'))
-  return 'Una sola Fusione per turno e per partita';
+  (chosen.some(c=>c.effectSpec?.type==='fusion')||
+   chosen.some(c=>c.effectSpec?.type==='royal'&&
+    c.effectSpec.action!=='crown-fusion'&&
+    ['royal-rain','coordinated-judgment','cross-order','royal-bastion',
+     'protective-crown','eclipse-sovereign'].includes(c.effectSpec.action))))
+  return 'Fusione della Corona non si combina con altri comandi che richiedono i materiali';
  if(chosen.some(c=>c.id==='nx-r02-03')){
   const eligible=mantaActiveSupports(side,b.ply);
   const target=eligible.find(e=>e.id===order.mantaScreenEscortId)||eligible[0];
@@ -1917,7 +1921,8 @@ function royalOwnShotPierce(b,ctx,events,sourceCard){
  const side=b.sides[ctx.who];
  if(side.ships[0].id!=='L01'||!ctx.royalMotherShot||!ctx.royalSupportCommand||
   !royalCapableModule(side,'nx-l01-07',b.ply)||ctx.royalLanceUsed||
-  !royalPart(side,'weapons')||b.terrain?.id==='T06')return;
+  ensureRoyalState(side).lastLancePly===b.ply||!royalPart(side,'weapons')||
+  b.terrain?.id==='T06'||!ctx.royalFirstShot){ctx.royalLanceAvailable=false;return;}
  ctx.royalLanceAvailable=true;
 }
 function royalGuardCommand(b,ctx,events,target){
@@ -2586,7 +2591,8 @@ function onLinceDamage(b,ctx,events,hit,order={},didBypass=false){
    const machines=(side.machines||[]).filter(e=>unitAlive(e)&&e.sourceCardId);
    const selected=machines.find(e=>e.id===order.radentMachineId)||machines[0];
    if(selected){
-    const recovered=recallLinceMachine(side,selected,b.ply);
+    const recovered=royalCancelWithdrawal(b,ctx.who,events,selected,'machine')?
+     null:recallLinceMachine(side,selected,b.ply);
     if(recovered){
      state.radentUsedPly=b.ply;
      events.push(emit(b,ctx.who,'card','Propulsori radenti: '+recovered.name+' torna in mano senza riparazioni',
@@ -2690,7 +2696,9 @@ function resolveLinceShots(b,ctx,events,order){
     destroyed:hit.target.unit.destroyed});
   }
   if(action==='armed-disengage'&&order.linceRecallWeapon===true){
-   const module=recallLinceModule(side,'weapon');
+   const candidate=installedModule(side,'weapon');
+   const module=candidate&&royalCancelWithdrawal(b,ctx.who,events,candidate,'module')?
+    null:recallLinceModule(side,'weapon');
    if(module)events.push(emit(b,ctx.who,'card',
     'Disimpegno armato: '+module.name+' torna in mano con '+module.hp+' integrità',
     {cardId:command.id,moduleId:module.id}));
@@ -3239,6 +3247,7 @@ function resolveSalvo(b,ctx,events,order){
  return data;
 }
 function finishTurn(b,ctx,events){
+ royalSovereignTurn(b,ctx,events);
  stormEndOwnTurn(b,ctx,events);
  mantaNavigatorTurn(b,ctx,events);
  const side=b.sides[ctx.who];side.turnCount++;refill(b,side);
