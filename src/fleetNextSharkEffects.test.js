@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,cardFacePath,eligibleExclusives,effectiveDeck,exclusiveUnlocked,
@@ -47,20 +49,20 @@ function shield(side,unit,charges=1){
 }
 test('Sette madri: Squalo R04 ha 10 carte native esclusive, 6 al L1 e una per livello',()=>{
  assert.equal(new Set(IDS).size,10);
- for(let level=1;level<=5;level++){
+ for(let level=1;level<=shipMaxLevel('R04');level++){
   const owned=eligibleExclusives('R04',level).filter(c=>IDS.includes(c.id));
-  assert.equal(owned.length,5+level);
+  assert.equal(owned.length,4+EXCLUSIVE_UNLOCK_MILESTONES['R04'].filter(n=>n<=level).length);
  }
  for(const id of IDS){
   const c=card(id);assert.ok(c,id);
   assert.equal(c.shipId,'R04');assert.equal(c.effectSpec.type,'shark');
   assert.notEqual(c.playable,false);assert.equal(cardFacePath(id),null);
   assert.equal(exclusiveUnlocked(id,'C03',5),false);
-  assert.equal(exclusiveUnlocked(id,'R04',5),true);
+  assert.equal(exclusiveUnlocked(id,'R04',shipMaxLevel('R04')),true);
   assert.equal(sharkPrecondition(c,{ships:[{id:'N00',level:5,parts:[]}]}),
    'Carta esclusiva dello Squalo del Vuoto');
  }
- assert.equal(effectiveDeck([],'R04',5).filter(id=>IDS.includes(id)).length,10);
+ assert.equal(effectiveDeck([],'R04',shipMaxLevel('R04')).filter(id=>IDS.includes(id)).length,10);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
 });
 test('Corazza dentata fissa un bersaglio pubblico e contrattacca una sola volta',()=>{
