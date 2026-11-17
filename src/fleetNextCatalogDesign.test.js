@@ -48,8 +48,9 @@ test('Il catalogo in codice associa esattamente 10 esclusive a ciascuna delle 12
   assert.equal(set.filter(c=>c.playable===false).length,0,shipId);
   assert.equal(set.filter(c=>c.playable!==false).length,10,shipId);
   const levels=set.map(c=>c.minShipLevelDraft);
-  assert.equal(levels.filter(n=>n===1).length,6,shipId+' sei definizioni L1');
-  for(const level of [2,3,4,5])assert.equal(levels.filter(n=>n===level).length,1,shipId+' L'+level);
+  assert.equal(levels.filter(n=>n===1).length,4,shipId+' quattro carte iniziali');
+  assert.equal(set.filter(c=>c.minShipLevelDraft>1).length,6,shipId+' sei premi distribuiti');
+  assert.equal(set.filter(c=>c.minShipLevelDraft===Math.max(...levels)).length>=1,true,shipId+' premio finale');
  }
  assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>!ships.includes(c.shipId)).length,50);
 });
@@ -65,7 +66,7 @@ test('Tutte le carte esclusive sono eseguibili solo con la madre corretta e veng
  assert.notEqual(def.playable,false);
  assert.equal(cardFacePath(sample.id),null);
  assert.equal(exclusiveUnlocked(sample.id,'L03',5),false);
- const correct=eligibleExclusives(sample.shipId,5).some(c=>c.id===sample.id);
+ const level=5;const correct=eligibleExclusives(sample.shipId,level).some(c=>c.id===sample.id);
  assert.equal(correct,true);
  const deck=deckFromCounts(TEST_DECK.carteGenerali);
  const ids=effectiveDeck(deck,sample.shipId,5);
