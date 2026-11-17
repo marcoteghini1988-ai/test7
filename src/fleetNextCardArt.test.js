@@ -6,7 +6,7 @@ import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,cardFacePath} from './fleetNext
 const active=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS)].filter(c=>cardFacePath(c.id));
 const pending=Object.values(EXCLUSIVE_CARDS).filter(c=>c.playable===false);
 test('I fronti storici restano 2:3; nuove carte e Cartografo usano layout senza immagine falsa',()=>{
- assert.equal(active.length,18);assert.equal(pending.length,9);
+ assert.equal(active.length,17);assert.equal(pending.length,0);
  for(const id of ['ex-n00-01','ex-c01-01','nx-n00-01','nx-n00-02','nx-n00-09','nx-c01-04','ex-c02-01','nx-c02-01','nx-c02-04','nx-c02-10','ex-c03-01','ex-r02-01','ex-r04-01','ex-e01-01','ex-e02-01','ex-l01-01','ex-l03-01','nx-c03-01','nx-c03-04','nx-c03-10'])assert.equal(cardFacePath(id),null);
  for(const c of pending)assert.equal(cardFacePath(c.id),null,c.id);
  for(const c of active){
