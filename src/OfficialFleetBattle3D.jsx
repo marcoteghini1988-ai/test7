@@ -37,6 +37,7 @@ import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTur
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
+import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
@@ -70,18 +71,17 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
   const motherEnemy=campaignMother||boss?.motherShipId||early||
    chooseCampaignMotherRival(owned.shipId,owned.level,sectorNumber,bossPlanetId,bossSectorLevel).shipId;
   const levelEnemy=boss?.planetId===20?5:officialCampaignRivalLevel({mode,sectorNumber,playerLevel:owned.level});
-  // Esclusive aggiunte dal motore: qui solo Personaggi e Boss posseduti.
-  const ownedCharacters=Object.entries(inventory.owned||{})
-   .filter(([id,amount])=>amount>0&&(id.startsWith('gen-')||id.startsWith('boss-character-')))
-   .map(([id])=>id);
+  // Il mazzo resta di massimo 40 carte, incluse le esclusive della madre.
+  // Non importa mai il vecchio inventario/mazzo ritirato.
+  const playerDeck=buildNextBaseDeck(inventory,owned.shipId,owned.level,readNextDeckSelection());
   return {battle:createFleetNextBattle({
    shipA:owned.shipId,levelA:owned.level,
    shipB:motherEnemy,levelB:levelEnemy,
-   deckA:ownedCharacters,deckB:['gen-216'],
+   deckA:playerDeck.baseDeck,deckB:['gen-216'],
    upgradesA:inventory.exclusiveUpgrades,
    mode,bossName:boss?.name||null,bossId:boss?.planetId??null,planetId:bossPlanetId,
    sectorNumber,seed:Math.floor(Math.random()*0x7fffffff)+1,
-   nowMs:Date.now()
+   nowMs:Date.now(),ruleset:HP_SYNC_RULESET
   }),error:''};
  }catch(e){return {battle:null,error:e?.message||'Battaglia non disponibile'};}
 }
