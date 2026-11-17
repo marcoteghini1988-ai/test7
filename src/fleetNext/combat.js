@@ -904,6 +904,122 @@ function resolveAuroraShots(b,ctx,events,order,commands=null){
  return shot;
 }
 
+
+function onLinceDamage(b,ctx,events,hit,order={},didBypass=false){
+ if(!hit||hit.damage<=0)return;
+ const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)];
+ if(side.ships[0].id!=='C01')return;
+ const state=ensureLinceState(side);
+ if(hit.kind==='part'&&didBypass){
+  state.lastSuccessfulBypassPly=b.ply;
+  const module=installedModule(side,'utility');
+  if(module?.cardId==='nx-c01-01'&&state.radentUsedPly!==b.ply&&
+   order.radentRecall===true){
+   const machines=(side.machines||[]).filter(e=>unitAlive(e)&&e.sourceCardId);
+   const selected=machines.find(e=>e.id===order.radentMachineId)||machines[0];
+   if(selected){
+    const recovered=recallLinceMachine(side,selected);
+    if(recovered){
+     state.radentUsedPly=b.ply;
+     events.push(emit(b,ctx.who,'card','Propulsori radenti: '+recovered.name+' torna in mano senza riparazioni',
+      {cardId:'nx-c01-01',machineId:recovered.id}));
+    }
+   }
+  }
+ }
+ if(['escort','machine'].includes(hit.kind)&&state.bladeUsedPly!==b.ply&&
+  installedModule(side,'weapon')?.cardId==='nx-c01-07'&&operational(side.ships[0],'weapons')){
+  const defense=defender.protections.find(p=>p.remaining>0&&p.untilPly>b.ply&&
+   (hit.kind==='escort'&&p.target==='escort'&&p.escortSlot===hit.unit.slot||
+    hit.kind==='machine'&&p.target==='machine'&&p.machineSlot===hit.unit.slot)&&
+   defender.defenses.some(d=>d.source===p.source&&!d.hidden));
+  if(defense){
+   defense.remaining--;
+   state.bladeUsedPly=b.ply;
+   events.push(emit(b,ctx.who,'card','Lama di prua: rimossa una protezione residua da '+hit.unit.name,
+    {cardId:'nx-c01-07',targetId:hit.unit.id,targetKind:hit.kind}));
+   if(defense.remaining<=0)discardDefense(defender,defense.source);
+  }
+ }
+}
+function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce=0){
+ const enemy=b.sides[other(ctx.who)];
+ if(!target||!unitAlive(target.unit))return {damage:0,target};
+ if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
+  return {damage:0,target};
+ const finalTarget=redirectLinceHit(b,ctx,events,target);
+ ctx.pierceLeft=pierce;
+ if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
+  return {damage:0,target:finalTarget,blocked:true};
+ const actual=damageFleetUnit(enemy,finalTarget.kind,finalTarget.unit,amount,b.ply);
+ if(actual){
+  events.push(emit(b,ctx.who,'impact',(finalTarget.unit.name||VITAL_LABELS[finalTarget.unit.id]||'Bersaglio')+' −'+actual,{
+   cardId,targetKind:finalTarget.kind,targetId:finalTarget.unit.id,
+   damage:finalTarget.kind==='part'?actual:0,
+   escortDamage:finalTarget.kind==='escort'?actual:0,
+   machineDamage:finalTarget.kind==='machine'?actual:0,
+   moduleDamage:finalTarget.kind==='module'?actual:0,
+   partId:finalTarget.kind==='part'?finalTarget.unit.id:null,
+   escortSlot:finalTarget.kind==='escort'?finalTarget.unit.slot:null,
+   machineSlot:finalTarget.kind==='machine'?finalTarget.unit.slot:null,
+   destroyed:finalTarget.unit.destroyed,
+   targets:[{kind:finalTarget.kind,id:finalTarget.unit.id,damage:actual,
+    destroyed:finalTarget.unit.destroyed}]
+  }));
+  onLinceDamage(b,ctx,events,{kind:finalTarget.kind,unit:finalTarget.unit,damage:actual},order,bypass);
+  triggerReactions(b,ctx.who,actual,events);
+ }
+ return {damage:actual,target:finalTarget};
+}
+function resolveLinceShots(b,ctx,events,order){
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)],first=selectedEnemyTarget(enemy,order,b.ply);
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targetKind:first?.kind,targetId:first?.unit?.id,
+  played:visiblePlayed(ctx.cards),targets:[]};
+ if(!first)return shot;
+ const blocked=side.fireBlocked||side.fireDisabledUntil>b.ply;
+ if(blocked){
+  side.fireBlocked=false;side.fireDisabledUntil=0;
+  if(side.lastDisarmedPly!==b.ply-2){
+   side.lastDisarmedPly=b.ply;
+   events.push(emit(b,ctx.who,'no-shot','Comando Lince bloccato'));
+   return shot;
+  }
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((n,x)=>n+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=enemy.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply))
+  .reduce((n,x)=>n+(x.power||0),0);
+ const terrain=terrainSalvoModifier(b.terrain,side.ships[0].id);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-enemy.ships[0].defensePower)+
+  ctx.power+terrain.value-jam-guard);
+ if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: comando Lince fallito'));return shot;}
+ for(const command of ctx.linceAttacks){
+  const action=command.action,bypass=LINCE_BYPASS_ACTIONS.includes(action);
+  if(bypass&&cancelLinceBypass(b,ctx.who,events,command.id))continue;
+  if(!unitAlive(first.unit))break;
+  const amount=action==='tail-claw'?(first.unit.hp<first.unit.maxHp?3:1):
+   action==='solar-bypass'||action==='crimson-raid'?1:
+   Math.max(1,power);
+  const hit=linceHit(b,ctx,events,first,amount,command.id,order,bypass,
+   action==='crimson-raid'?1:0);
+  if(hit.damage){
+   const kind=hit.target.kind,field={part:'damage',escort:'escortDamage',
+    machine:'machineDamage',module:'moduleDamage'}[kind];
+   if(field)shot[field]+=hit.damage;
+   shot.targets.push({kind,id:hit.target.unit.id,damage:hit.damage,
+    destroyed:hit.target.unit.destroyed});
+  }
+  if(action==='armed-disengage'&&order.linceRecallWeapon===true){
+   const module=recallLinceModule(side,'weapon');
+   if(module)events.push(emit(b,ctx.who,'card',
+    'Disimpegno armato: '+module.name+' torna in mano con '+module.hp+' integrità',
+    {cardId:command.id,moduleId:module.id}));
+  }
+ }
+ return shot;
+}
+
 function resolveSalvo(b,ctx,events,order){
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
  let selected=selectedEnemyTarget(defender,order,b.ply);
@@ -995,6 +1111,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
  const shot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
+  ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
