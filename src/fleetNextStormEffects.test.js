@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,cardFacePath,eligibleExclusives,effectiveDeck,exclusiveUnlocked,
@@ -52,18 +54,18 @@ function shield(side,unit,source='shield-1'){
 test('Tempesta ha esattamente dieci esclusive native e sblocchi 6+1+1+1+1',()=>{
  assert.equal(IDS.length,10);
  assert.equal(new Set(IDS).size,10);
- for(let level=1;level<=5;level++){
-  assert.equal(eligibleExclusives('E02',level).filter(x=>IDS.includes(x.id)).length,5+level);
+ for(let level=1;level<=shipMaxLevel('E02');level++){
+  assert.equal(eligibleExclusives('E02',level).filter(x=>IDS.includes(x.id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['E02'].filter(n=>n<=level).length));
  }
  for(const id of IDS){
   const c=card(id);assert.ok(c,id);assert.equal(c.shipId,'E02');
   assert.equal(c.effectSpec.type,'storm');
   assert.equal(c.playable===false,false);
   assert.equal(cardFacePath(id),null);
-  assert.equal(exclusiveUnlocked(id,'E02',5),true);
+  assert.equal(exclusiveUnlocked(id,'E02',shipMaxLevel('E02')),true);
   assert.equal(exclusiveUnlocked(id,'E01',5),false);
  }
- assert.equal(effectiveDeck([],'E02',5).filter(id=>IDS.includes(id)).length,10);
+ assert.equal(effectiveDeck([],'E02',shipMaxLevel('E02')).filter(id=>IDS.includes(id)).length,10);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(c=>c.kind==='character').length,12);
  assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
