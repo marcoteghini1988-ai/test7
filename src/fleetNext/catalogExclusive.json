@@ -1268,7 +1268,8 @@
       "effectSpec": {
         "type": "pierce",
         "amount": 1
-      }
+      },
+      "nativeFace": true
     },
     {
       "id": "ex-l04-01",
