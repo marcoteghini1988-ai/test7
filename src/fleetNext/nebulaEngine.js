@@ -87,6 +87,8 @@ export function nebulaPrecondition(def,side,battle=null){
 }
 export function nebulaChoiceReason(side,enemy,chosen=[],order={},ply=0){
  const actions=chosen.filter(c=>c?.effectSpec?.type==='nebula').map(c=>c.effectSpec.action);
+ if(order.nebulaHide&&actions.includes('wandering-mist'))
+  return 'Non puoi usare Proiettore e Bruma itinerante nello stesso turno';
  if(order.nebulaHide){
   const reason=nebulaHideReason(side,ply,order.nebulaHideEscortId);
   if(reason)return reason;
