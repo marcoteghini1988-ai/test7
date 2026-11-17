@@ -2,6 +2,8 @@
 // Nessuna dipendenza grafica: i componenti di battaglia e Shop usano gli stessi dati.
 // Ogni effetto è esplicito: catalogo, testo e combattimento condividono la stessa regola.
 import generalData from './catalogGeneral.json' with {type:'json'};
+import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
+export {NEXT_COMMON_CARDS,NEXT_COMMON_CARD_BY_ID} from './newCardRegistry.js';
 import exclusiveData from './catalogExclusive.json' with {type:'json'};
 import {describeEffect,validateEffectSpec} from './simpleEffects.js';
 import {BOSS_CARDS,bossCard} from './bossCards.js';
@@ -84,7 +86,7 @@ if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==125||BOSS_COUNT!==12||Object.keys(SHIP_
  throw new Error('Catalogo esclusivo incompleto: 120 schede nuove (12 Personaggi già conservati), 5 Personaggi varianti e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
-export const generalCard = id => GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
+export const generalCard = id => NEXT_COMMON_CARD_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
@@ -101,6 +103,7 @@ export function cardCopyLimit(id){
  const c=card(id);
  if(!c)return 0;
  if(bossCard(id))return 1;
+ if(NEXT_COMMON_CARD_BY_ID[id])return c.maxCopiesPerDeck||RARITY_COPY_LIMIT[c.rarita]||0;
  if(isProgressionCard(id))return c.shipId?c.maxCopiesInAutoPackageDraft:RARITY_COPY_LIMIT[c.rarita]||0;
  return exclusiveCard(id)?(c.maxCopiesInAutoPackageDraft||1):(RARITY_COPY_LIMIT[c.rarita]||0);
 }
@@ -182,7 +185,7 @@ export function generalCatalogStats(){
   rarity[c.rarita]=(rarity[c.rarita]||0)+1;
   category[c.categoria]=(category[c.categoria]||0)+1;
  }
- return {count:GENERAL_COUNT,rarity,category,exclusive:EXCLUSIVE_COUNT,boss:BOSS_COUNT,
+ return {count:GENERAL_COUNT,approvedNewCommon:NEXT_COMMON_CARDS.length,rarity,category,exclusive:EXCLUSIVE_COUNT,boss:BOSS_COUNT,
   baseCatalog:BASE_CATALOG_COUNT,progression:PROGRESSION_CARD_COUNT,
   total:TOTAL_CARD_COUNT,ships:17,recipes:COMBO_RECIPES.filter(c=>c.active===true).length,archivedRecipes:COMBO_RECIPES.length};
 }
