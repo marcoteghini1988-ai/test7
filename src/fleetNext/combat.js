@@ -50,7 +50,11 @@ import {
  activateTerrain,activeTerrain,terrainSalvoModifier,
  neutralTerrain,bossTerrain,campaignTerrain,TERRAIN_CATALOG
 } from './terrains.js';
-import {HP_SYNC_RULESET,motherIntegrityFromSystems,activeSynchronizationPenalty,splitSynchronizedDamage} from './hpSynchronization.js';
+import {HP_SYNC_RULESET,motherIntegrityFromSystems,splitSynchronizedDamage} from './hpSynchronization.js';
+import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
+ commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,
+ consumePlanciaRestriction,consumePlanciaSplit,planciaSplitCount,
+ resetFieldWithBlackHole} from './newCardEffects.js';
 
 const clone=x=>JSON.parse(JSON.stringify(x));
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -119,7 +123,8 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
   lastPlayed:[],attackSlots:[null,null,null],defenseSlots:[null,null],
   turnCount:0,fireDisabledUntil:0,fireBlocked:false,lastDisarmedPly:null,
-  protections:[],reactions:[],charges:[],pendingRepair:0,drawBlockedUntil:0,usedCardEvents:[]};
+  protections:[],reactions:[],charges:[],systemCardEffects:[],systemCardCounters:null,
+  pendingRepair:0,drawBlockedUntil:0,usedCardEvents:[]};
  refreshEscortLinks(side);return side;
 }
 export function refreshEscortLinks(side,ply=0){
@@ -281,7 +286,7 @@ function normalizeSide(side){
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
- side.synchronizationEffects??=[];
+ side.synchronizationEffects??=[];side.systemCardEffects??=[];
  side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);ensureNebulaState(side);ensureStormState(side);ensureRoyalState(side);ensureObsidianState(side);ensureArkState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
@@ -305,6 +310,18 @@ function selectedOwnPart(side,target,ownPartId){
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
  if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
+ if(['systemModifier','fieldReset'].includes(def.effectSpec?.type)){
+  if(side.ruleset!==HP_SYNC_RULESET)return 'Questa carta richiede la nuova modalità HP';
+  if(def.effectSpec.type==='systemModifier'){
+   const foe=battle?.sides?.A===side?battle.sides.B:battle?.sides?.B===side?battle.sides.A:null;
+   const target=def.effectSpec.operation==='disable'?foe:side;
+   if(!target?.ships?.[0]?.parts.some(p=>p.id===def.effectSpec.system&&!p.destroyed))
+    return 'Il sistema '+(VITAL_LABELS[def.effectSpec.system]||'richiesto')+' non è presente sulla nave';
+   if(def.effectSpec.system==='bridge'&&def.effectSpec.operation==='amplify'&&
+      (foe?.escorts||[]).filter(unitAlive).length<2)
+    return 'Plancia: servono due navicelle di supporto nemiche operative';
+  }
+ }
  if(def.effectSpec.type==='aurora'){
   const reason=auroraPrecondition(def,side,card,side.ships[0].level);
   if(reason)return reason;
@@ -681,6 +698,8 @@ function discardDefense(side,token){
 function expireSide(side,ply){
  normalizeSide(side);
  side.synchronizationEffects=side.synchronizationEffects.filter(e=>e.untilPly>ply);
+ expireSystemCards(side,ply);
+ expireTemporaryWeapons(side,ply);
  for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
  if(side.auroraVeil&&side.auroraVeil.untilPly<=ply)side.auroraVeil=null;
  if(side.lince?.route&&side.lince.route.usePly<ply)side.lince.route=null;
@@ -696,6 +715,9 @@ function expireSide(side,ply){
 }
 function heal(b,side,amount,target='weakest',ownPartId=null){
  if(b.terrain?.id==='T08')return null;
+ if(side.ruleset===HP_SYNC_RULESET&&operational(side.ships[0],'generator'))
+  amount=Math.max(0,amount+generatorAdjustment(side,b.ply));
+ if(!amount)return null;
  if(side.ruleset===HP_SYNC_RULESET&&target!=='escort'){
   const mother=side.ships[0],prev=mother.hp;
   mother.hp=Math.min(mother.maxHp,mother.hp+amount);
@@ -2498,17 +2520,33 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     {cardId:def.id,escortSlot:result.fused.slot,stage:result.stage,deployed:result.deployed?.id||null}));
    break;
   }
+  case 'systemModifier':{
+   const target=s.operation==='disable'?enemy:side;
+   const result=applySystemCard(target,def,b.ply,who);
+   at(result.replaced?'Effetto sui sistemi attivato per '+s.turns+' turni':'Effetto più forte già attivo');
+   break;
+  }
+  case 'fieldReset':{
+   const cleared=resetFieldWithBlackHole(b);
+   at('Buco Nero: tutte le carte attive dei due campi sono state scartate');
+   events.push(emit(b,who,'field-reset','Buco Nero ha ripulito entrambi i campi',
+    {cardId:def.id,removed:cleared}));
+   break;
+  }
   case 'deployMachine':{
    const slot=[0,1].find(i=>!side.machines.some(m=>unitAlive(m)&&m.slot===i));
    if(slot==null)throw new Error('Alloggiamenti macchine occupati');
    side.machines=side.machines.filter(m=>m.slot!==slot);
    const saved=recoveredMachineForDeploy(side,def.id);
-   const machine={id:saved?.id||'machine:'+who+':'+token,slot,name:def.nome||def.name,
+   const modern=side.ruleset===HP_SYNC_RULESET;
+   const machine={id:saved?.id||'machine:'+who+':'+token,slot,
+    name:modern?'Arma temporanea · '+(def.nome||def.name):def.nome||def.name,
     sourceCardId:def.id,source:token,hp:saved?.hp??s.hp,
-    maxHp:saved?.maxHp??s.hp,power:s.power||0,destroyed:false,
+    maxHp:saved?.maxHp??s.hp,power:modern?Math.max(1,s.power||0):s.power||0,
+    untilPly:modern?b.ply+2*(def.id==='prog-machine-guard'?2:1):null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
-   events.push(emit(b,who,'machine-deploy',machine.name+' schierata: protegge la madre',
+   events.push(emit(b,who,'machine-deploy',machine.name+(modern?' schierata: potenzia l’attacco, non protegge la madre':' schierata: protegge la madre'),
     {cardId:def.id,machineSlot:slot,machineId:machine.id}));
    break;
   }
@@ -2522,10 +2560,13 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    if(s.target!=='all'&&!escort&&!part){at('Bersaglio non disponibile');break;}
    if(s.type==='dodge'&&!operational(side.ships[0],'generator')){at('Generatore non disponibile');break;}
    side.protections=side.protections.filter(p=>p.source!==token);
-   side.protections.push({source:token,id:def.id,kind:s.type,remaining:s.amount,
+   const energy=side.ruleset===HP_SYNC_RULESET?generatorAdjustment(side,b.ply):0;
+   const available=Math.max(0,s.amount+energy);
+   if(!available){at('Effetto energetico annullato dal Generatore');break;}
+   side.protections.push({source:token,id:def.id,kind:s.type,remaining:available,
     target:s.target==='all'?'all':escort?'escort':'part',partId:part?.id||null,
     escortSlot:escort?.slot??null,untilPly:expiry,placedPly:b.ply});
-   at((s.type==='dodge'?'Schivata':'Protezione')+' pronta: '+s.amount+' colpi');break;
+   at((s.type==='dodge'?'Schivata':'Protezione')+' pronta: '+available+' colpi');break;
   }
   case 'repair':{
    const result=heal(b,side,s.amount,s.target,ownPartId);
@@ -2697,7 +2738,8 @@ function escortPassive(b,side,ctx,events,order){
   }
  }
  for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
-  if(machine.power){ctx.power+=machine.power;events.push(emit(b,ctx.who,'machine',machine.name+' · +'+machine.power+' potenza',
+  const power=side.ruleset===HP_SYNC_RULESET?arsenalBonus(side,machine,b.ply):machine.power;
+  if(power){ctx.power+=power;events.push(emit(b,ctx.who,'machine',machine.name+' · +'+power+' potenza',
    {machineId:machine.id,machineSlot:machine.slot}));}
  }
 }
@@ -2960,9 +3002,9 @@ function damageFleetUnit(side,kind,unit,amount,ply){
    mother.hp-=loss;return loss;
   }
   if(kind==='escort'){
-   const split=splitSynchronizedDamage(amount,activeSynchronizationPenalty(side,ply));
+   const split=splitSynchronizedDamage(amount,commandPenalty(side,ply));
    mother.hp=Math.max(0,mother.hp-split.mother);
-   amount=split.support;
+   amount=Math.max(0,split.support-consumeCommandGuard(side,ply));
   }
  }
  // Specchio segmentato limita soltanto il primo danno subito dal modulo nel turno.
@@ -3926,10 +3968,21 @@ function resolveSalvo(b,ctx,events,order){
  const otherFork=forkUnits.find(x=>x.kind===order.mantaSecondTargetKind&&
   x.unit.id===order.mantaSecondTargetId&&x.unit.id!==selected.unit.id)||
   forkUnits.find(x=>x.unit.id!==selected.unit.id);
- const targets=mantaFork?[selected,...(otherFork?[otherFork]:[])]:selected.kind==='part'?
-  [selected,...enemy.parts.filter(p=>unitAlive(p)&&p!==selected.unit).slice(0,count-1).map(unit=>({kind:'part',unit}))]:
+ let targets=mantaFork?[selected,...(otherFork?[otherFork]:[])]:selected.kind==='part'?
+  (side.ruleset===HP_SYNC_RULESET?[selected]:
+   [selected,...enemy.parts.filter(p=>unitAlive(p)&&p!==selected.unit).slice(0,count-1).map(unit=>({kind:'part',unit}))]):
   selected.kind==='module'?[selected]:
    [selected,...guards.filter(g=>g.unit!==selected.unit).slice(0,count-1).map(g=>({kind:g.kind,unit:g.unit}))];
+ if(side.ruleset===HP_SYNC_RULESET){
+  if(targets.length>1&&consumePlanciaRestriction(defender,b.ply))targets=[targets[0]];
+  const second=defender.escorts.find(e=>unitEnabled(e,b.ply)&&e.id!==selected.unit.id&&
+   (!order.planciaSecondTargetId||e.id===order.planciaSecondTargetId));
+  if(selected.kind==='escort'&&second&&power>1&&planciaSplitCount(side,b.ply)>0&&
+   consumePlanciaSplit(side,b.ply)){
+   const primary=Math.max(1,Math.min(power-1,Number.isInteger(order.planciaSplitAmount)?order.planciaSplitAmount:Math.ceil(power/2)));
+   targets=[{...selected,splitAmount:primary},{kind:'escort',unit:second,splitAmount:power-primary}];
+  }
+ }
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  const hits=[];
  for(const [hitIndex,planned] of targets.entries()){
@@ -3941,7 +3994,7 @@ function resolveSalvo(b,ctx,events,order){
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   if(stormNetStops(b,ctx,events,redirected))continue;
   let amount=stormConsumeHeavy(b,ctx,events,redirected,
-   mantaFork?1:planned.kind==='part'||planned.kind==='module'||redirected.royalSameDamage?1:
+   planned.splitAmount!=null?planned.splitAmount:mantaFork?1:planned.kind==='part'||planned.kind==='module'||redirected.royalSameDamage?1:
    power+(kind==='escort'&&redirected.stormOriginKind!=='machine'&&b.terrain?.id==='T04'?1:0));
   if(hitIndex===0&&!mantaFork&&['escort','machine'].includes(kind)&&
    arkModuleActive(side,'nx-l04-07',b.ply)&&
@@ -4057,6 +4110,8 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   id!=='ex-r01-01');
  nebulaHideForTurn(b,ctx,events,order); // Occultamento precede eventuale Ago nello stesso turno
  after.sort((x,y)=>Number(isFalcoPreparation(y))-Number(isFalcoPreparation(x)));
+ // Buco Nero risolve dopo le altre carte preparate nel medesimo turno.
+ after.sort((x,y)=>Number(card(x)?.effectSpec?.type==='fieldReset')-Number(card(y)?.effectSpec?.type==='fieldReset'));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  arkArchiveAction(b,ctx,events);
  obsidianUseBastionGuard(b,ctx,events,order);
