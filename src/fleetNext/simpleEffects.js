@@ -3,12 +3,13 @@
 import {getShipProgression} from './progression.js';
 import {AURORA_ACTIONS} from './auroraEngine.js';
 import {LINCE_ACTIONS} from './linceEngine.js';
+import {PRISMA_ACTIONS} from './prismaEngine.js';
 // Revisione dei testi dei fronti approvati; la progressione ha dati separati.
 export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
  'weaken','disarm','cleanse','exchange','recover','charge','terrain','trap',
- 'bypass','deployMachine','fusion','blueprint','aurora','lince'
+ 'bypass','deployMachine','fusion','blueprint','aurora','lince','prisma'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
 const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore',bridge:'la Plancia'};
@@ -48,7 +49,8 @@ export const SIMPLE_RULES=Object.freeze([
 ]);
 export const isCharacterCard=card=>card?.kind==='character'||card?.sottotipo==='Personaggio'||/Personaggio/i.test(card?.category||'');
 export const isTrapCard=card=>card?.effectSpec?.type==='trap'||
- card?.effectSpec?.type==='lince'&&card.effectSpec.action==='false-trail';
+ card?.effectSpec?.type==='lince'&&card.effectSpec.action==='false-trail'||
+ card?.effectSpec?.type==='prisma'&&card.effectSpec.action==='false-reflection';
 const integer=(value,min,max)=>Number.isInteger(value)&&value>=min&&value<=max;
 export function validateEffectSpec(spec){
  if(!spec||typeof spec!=='object'||Array.isArray(spec))return 'Effetto mancante';
@@ -56,6 +58,7 @@ export function validateEffectSpec(spec){
  if(spec.type==='blueprint'&&!/^nx-[a-z0-9]+-[0-9]{2}$/.test(spec.code||''))return 'Codice di scheda esclusiva non valido';
  if(spec.type==='aurora'&&!Object.values(AURORA_ACTIONS).includes(spec.action))return 'Azione Aurora non valida';
  if(spec.type==='lince'&&!Object.values(LINCE_ACTIONS).includes(spec.action))return 'Azione Lince non valida';
+ if(spec.type==='prisma'&&!Object.values(PRISMA_ACTIONS).includes(spec.action))return 'Azione Vespa non valida';
  const ranges={power:[1,3],pierce:[1,2],protect:[1,2],dodge:[1,2],repair:[1,2],
   regenerate:[1,1],counter:[1,1],weaken:[1,2],exchange:[1,2],charge:[1,2]};
  if(ranges[spec.type]&&!integer(spec.amount,...ranges[spec.type]))return 'Quantità non valida: '+spec.type;
@@ -158,6 +161,7 @@ export function describeEffect(card,level=1){
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
   case 'deployMachine':return 'Schiera una macchina con '+s.hp+' punti: protegge la madre'+
    (s.power?' e aggiunge '+s.power+' potenza al tuo attacco.':'.');
+  case 'prisma':return card.effectProposed;
   case 'lince':return card.effectProposed;
   case 'aurora':return card.effectProposed;
   case 'blueprint':return card.effectProposed;
