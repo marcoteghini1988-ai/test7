@@ -4069,7 +4069,11 @@ export function autoFleetTurn(b,who=b.turn){
   x.role==='attack'?5:x.role==='character'?4:x.role==='defense'?3:x.role==='terrain'?1:2;
  candidates.sort((a,z)=>score(z)-score(a)||a.i-z.i);
  const cards=[];
+ const arkArchiveOpportunity=side.ships[0].id==='L04'&&
+  arkModuleActive(side,'nx-l04-01',b.ply)&&arkModulesInDiscard(side).length>0&&
+  (side.ark?.archiveUsedPly??-999)!==b.ply;
  for(const c of candidates){
+  if(arkArchiveOpportunity&&side.hand.length-cards.length<=1)break;
   if(cards.length>=FLEET_MAX_PLAYED-(obsidianPending(side)?.releasePly<=b.ply?1:0))break;
   const attack=c.def.effectSpec;
   const direct=attack?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(attack.action)||
