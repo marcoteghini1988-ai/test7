@@ -1693,6 +1693,12 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
 }
 function applyCard(b,who,id,ctx,events,order){
  const side=b.sides[who],def=card(id),role=cardRole(id);
+ if(role==='attack'&&ctx.nebulaUnredirectableCardId==null&&
+  nebulaModuleActive(side,'nx-e01-09',b.ply)){
+  ctx.nebulaUnredirectableCardId=id;
+  events.push(emit(b,who,'card','Cannone velato: primo Attacco non deviabile',
+   {cardId:'nx-e01-09',attackCardId:id}));
+ }
  const spec=effectiveEffectSpec(def,side.exclusiveUpgrades?.[id]||1);
  const source=id+'@'+b.ply+'-'+ctx.effectSerial++;
  const ownPartId=order.ownPartId||weakestPart(side)?.id;
@@ -2059,6 +2065,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
  ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
  target=redirectFleetHit(b,ctx,events,target);
+ if(blockNebulaRepeat(b,ctx,events,target))return 0;
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
  const actual=damageFleetUnit(defender,target.kind,target.unit,
   sharkCapDamage(b,defender,target.kind,target.unit,
@@ -2082,6 +2089,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  return actual;
 }
 function resolveAuroraShots(b,ctx,events,order,commands=null){
+ startNebulaVolley(ctx);
  const enemy=b.sides[other(ctx.who)],mother=b.sides[ctx.who].ships[0];
  const first=selectedEnemyTarget(enemy,order,b.ply);
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
@@ -2164,6 +2172,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
   return {damage:0,target};
  const finalTarget=redirectFleetHit(b,ctx,events,target);
+ if(blockNebulaRepeat(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  ctx.pierceLeft=pierce;
  if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
   return {damage:0,target:finalTarget,blocked:true};
@@ -2193,6 +2202,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  return {damage:actual,target:finalTarget};
 }
 function resolveLinceShots(b,ctx,events,order){
+ startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)],first=selectedEnemyTarget(enemy,order,b.ply);
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
   targetKind:first?.kind,targetId:first?.unit?.id,
@@ -2244,6 +2254,7 @@ function resolveLinceShots(b,ctx,events,order){
 
 
 function resolveCorvoShots(b,ctx,events,order){
+ startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const first=selectedEnemyTarget(enemy,order,b.ply);
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
@@ -2283,6 +2294,7 @@ function resolveCorvoShots(b,ctx,events,order){
 // Vespa: le quantità e il numero dei colpi sono fissati dalla carta.
 // I colpi bloccati non procurano danni e non possono rimbalzare in catena.
 function resolvePrismaShots(b,ctx,events,order){
+ startNebulaVolley(ctx);
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)];
  const primary=selectedEnemyTarget(defender,order,b.ply);
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
@@ -2439,6 +2451,7 @@ function falcoReleaseAtTurnStart(b,who,ctx,events,order){
  return result;
 }
 function falcoCalibrationShot(b,ctx,events,order){
+ startNebulaVolley(ctx);
  const enemy=b.sides[other(ctx.who)],target=selectedEnemyTarget(enemy,order,b.ply);
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
   played:visiblePlayed(ctx.cards),targets:[]};
@@ -2486,6 +2499,7 @@ function mergeFalcoShots(a,b){
 // Gli attacchi ionici hanno un colpo proprio, senza duplicare la salva ordinaria.
 // Ogni comando Squalo sostituisce la salva ordinaria: mai due attacchi gratis.
 function resolveSharkShots(b,ctx,events,order){
+ startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const command=ctx.sharkAttacks[0],selected=selectedEnemyTarget(enemy,order,b.ply);
  const result={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
@@ -2523,6 +2537,7 @@ function resolveSharkShots(b,ctx,events,order){
 }
 
 function resolveMantaShots(b,ctx,events,order){
+ startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const target=selectedEnemyTarget(enemy,order,b.ply),command=ctx.mantaAttacks[0];
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
@@ -2555,6 +2570,7 @@ function resolveMantaShots(b,ctx,events,order){
 }
 
 function resolveSalvo(b,ctx,events,order){
+ startNebulaVolley(ctx);
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
  let selected=selectedEnemyTarget(defender,order,b.ply);
  if(!selected){events.push(emit(b,ctx.who,'no-shot','Bersaglio non valido'));return {damage:0};}
@@ -2610,6 +2626,7 @@ function resolveSalvo(b,ctx,events,order){
   if(hitIndex>0&&cancelPrismaSecondaryHit(b,ctx,events,planned,selected))continue;
   const redirected=redirectFleetHit(b,ctx,events,planned);
   const {kind,unit}=redirected;
+  if(blockNebulaRepeat(b,ctx,events,redirected))continue;
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   const amount=mantaFork?1:kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
   const damage=damageFleetUnit(defender,kind,unit,
@@ -2695,6 +2712,9 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   id!=='ex-r01-01');
  after.sort((x,y)=>Number(isFalcoPreparation(y))-Number(isFalcoPreparation(x)));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ nebulaHideForTurn(b,ctx,events,order);
+ nebulaArchonTerrainTrade(b,ctx,events,order);
+ nebulaRevealOnOwnTurn(b,ctx,events);
  processHelios(b,who,ctx,events,order);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
