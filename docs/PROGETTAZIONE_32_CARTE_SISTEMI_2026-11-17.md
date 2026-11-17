@@ -65,18 +65,18 @@ Non si aumenta necessariamente percentuale **e** durata insieme: la progressione
 
 ### Plancia — 8 carte
 
-Le due carte **Comuni sono approvate** come progettazione. Le sei varianti **Rara, Epica e Leggendaria** sono proposte definite e da approvare. Tutte funzionano sulle barre HP delle navicelle: nessuna prende di mira i componenti interni.
+**Pacchetto Plancia APPROVATO: 8 carte su 8 (17 novembre 2026).** Tutte funzionano sulle barre HP delle navicelle: nessuna prende di mira i componenti interni. L'approvazione riguarda la progettazione; non sono ancora carte giocabili.
 
 | Rarità | Tipo | Carta | Durata | Effetto |
 |---|---|---|---|---|
 | Comune | Sabotaggio | Coordinate falsate | 1 turno | **Approvata.** Per 1 turno avversario, il primo attacco a due o più bersagli viene limitato a una sola navicella bersaglio. I colpi aggiuntivi non si riassegnano; non riduce il danno del colpo rimasto. |
-| Rara | Sabotaggio | Confusione della rotta | 2 turni | **Proposta.** Per i prossimi 2 turni dell'avversario, il primo attacco a più bersagli di ciascun turno può colpire una sola navicella, quella inizialmente scelta. Gli altri colpi vanno persi; il colpo rimasto conserva il suo danno. |
-| Epica | Sabotaggio | Rotta fantasma | 2 turni | **Proposta.** Per 2 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno vengono limitati a una sola navicella per attacco. Gli altri colpi si perdono; il danno dei colpi rimasti non cambia. |
-| Leggendaria | Sabotaggio | Cortocircuito tattico | 3 turni | **Proposta.** Per 3 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno colpiscono una sola navicella per attacco. I colpi aggiuntivi si perdono, senza riassegnarli e senza ridurre il colpo rimasto. |
+| Rara | Sabotaggio | Confusione della rotta | 2 turni | **Approvata.** Per i prossimi 2 turni dell'avversario, il primo attacco a più bersagli di ciascun turno può colpire una sola navicella, quella inizialmente scelta. Gli altri colpi vanno persi; il colpo rimasto conserva il suo danno. |
+| Epica | Sabotaggio | Rotta fantasma | 2 turni | **Approvata.** Per 2 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno vengono limitati a una sola navicella per attacco. Gli altri colpi si perdono; il danno dei colpi rimasti non cambia. |
+| Leggendaria | Sabotaggio | Cortocircuito tattico | 3 turni | **Approvata.** Per 3 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno colpiscono una sola navicella per attacco. I colpi aggiuntivi si perdono, senza riassegnarli e senza ridurre il colpo rimasto. |
 | Comune | Amplificazione | Calcolo di tiro | 1 turno | **Approvata.** Per 1 tuo turno, puoi ripartire il danno complessivo del primo attacco della nave madre tra due navicelle di supporto nemiche operative, se presenti. Esempio: 8 danni possono diventare 5+3. Non aggiunge danni e non permette di aggirare i supporti per colpire la madre. |
-| Rara | Amplificazione | Navigazione assistita | 2 turni | **Proposta.** Per 2 tuoi turni, il primo attacco della nave madre di ogni turno può dividere il proprio danno fra 2 navicelle di supporto avversarie operative. Danno totale invariato; protezioni applicate a ciascuna quota. |
-| Epica | Amplificazione | Analisi predittiva | 2 turni | **Proposta.** Per 2 tuoi turni, i primi 2 attacchi della nave madre per turno possono ciascuno distribuire il proprio danno fra 2 navicelle di supporto nemiche operative. Nessun colpo extra, nessun danno aggiuntivo, nessun aggiramento della madre. |
-| Leggendaria | Amplificazione | Strategia a fuoco | 3 turni | **Proposta.** Per 3 tuoi turni, i primi 2 attacchi della nave madre di ciascun turno possono suddividere i danni fra 2 navicelle di supporto nemiche operative. Nessun nuovo colpo o danno, e le difese si applicano a ciascuna quota. |
+| Rara | Amplificazione | Navigazione assistita | 2 turni | **Approvata.** Per 2 tuoi turni, il primo attacco della nave madre di ogni turno può dividere il proprio danno fra 2 navicelle di supporto avversarie operative. Danno totale invariato; protezioni applicate a ciascuna quota. |
+| Epica | Amplificazione | Analisi predittiva | 2 turni | **Approvata.** Per 2 tuoi turni, i primi 2 attacchi della nave madre per turno possono ciascuno distribuire il proprio danno fra 2 navicelle di supporto nemiche operative. Nessun colpo extra, nessun danno aggiuntivo, nessun aggiramento della madre. |
+| Leggendaria | Amplificazione | Strategia a fuoco | 3 turni | **Approvata.** Per 3 tuoi turni, i primi 2 attacchi della nave madre di ciascun turno possono suddividere i danni fra 2 navicelle di supporto nemiche operative. Nessun nuovo colpo o danno, e le difese si applicano a ciascuna quota. |
 
 **Regole trasversali:** si limitano solo gli attacchi che avrebbero davvero più bersagli; le quote di danno ripartite non superano il danno originale, non raggiungono la madre attraverso i supporti e subiscono ciascuna le difese pertinenti. Se resta meno di due supporti attivi, l'amplificazione non crea bersagli o danni. I numeri di durata sono provvisori in attesa del bilanciamento finale.
 
