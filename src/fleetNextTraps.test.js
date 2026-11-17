@@ -1,248 +1,176 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {card,STARTER_DECK,deckFromCounts} from './fleetNext/rules.js';
-import {
- createFleetNextBattle,resolveFleetNextTurn,validateFleetTurn,autoFleetTurn,
- defenseSlotsAvailable,defenseCapacityReason,effectUnavailableReason
+import {card,cardRole} from './fleetNext/rules.js';
+import {createFleetNextBattle,resolveFleetNextTurn,validateFleetTurn,autoFleetTurn,
+ defenseSlotsAvailable,defenseCapacityReason,effectUnavailableReason,protectingFleetUnits
 } from './fleetNext/combat.js';
-import {TERRAIN_CATALOG,newTerrain,neutralTerrain} from './fleetNext/terrains.js';
+import {isTrapCard} from './fleetNext/simpleEffects.js';
+import {projectFleetSlots,fleetEventText} from './fleetNext/battlePresentation.js';
+import {bossTerrain,TERRAIN_CATALOG} from './fleetNext/terrains.js';
 
-const TRAP='gen-077',PLASMA='gen-238',REPAIR='gen-171',DODGE='gen-072';
-const base=deckFromCounts(STARTER_DECK.carteGenerali);
-const copy=value=>JSON.parse(JSON.stringify(value));
-function make(options={}){
- return createFleetNextBattle({shipA:'C01',shipB:'C01',levelA:1,levelB:1,
-  deckA:base,deckB:base,mode:'pvp',seed:77,...options});
-}
-function hand(b,ids,who=b.turn){
- b.sides[who].hand=[...ids,...Array(Math.max(0,7-ids.length)).fill('gen-002')];
+// Verifiche del sistema di trappole ATTIVO, dopo il ritiro del vecchio mazzo
+// (gen-077, gen-238, gen-171, gen-072 non sono più carte giocabili).
+const ECHO='nx-c03-04',CHANNEL='nx-c03-03',DART='nx-c03-02';
+const FALSE_TRAIL='nx-c01-04',FALSE_REFLECTION='nx-c02-04';
+function battle({shipA='C03',shipB='C03',levelA=1,levelB=1,bossId=null}={}){
+ const b=createFleetNextBattle({shipA,shipB,levelA,levelB,mode:'pvp',
+  deckA:[],deckB:[],seed:77,bossId});
+ for(const side of Object.values(b.sides)){side.hand=[];side.deck=[];side.discard=[];}
  return b;
 }
-function play(b,ids=[],order={}){
- if(ids.length)hand(b,ids);
- const result=resolveFleetNextTurn(b,b.turn,{cards:ids.map((_,i)=>i),pass:true,partId:'engine',...order},b.ply*1000+1);
- assert.equal(result.ok,true,result.reason);
- return result;
+function turn(b,who='A',cards=[],order={},indices=null){
+ b.turn=who;b.sides[who].hand=[...cards];
+ const first=b.sides[who==='A'?'B':'A'].ships[0].parts.find(p=>p.hp>0&&!p.destroyed);
+ const result=resolveFleetNextTurn(b,who,{cards:indices??cards.map((_,i)=>i),
+  pass:true,partId:first?.id,targetKind:'part',targetId:first?.id,...order},1000+b.ply*30000);
+ assert.equal(result.ok,true,result.reason);return result;
 }
-const pass=b=>play(b).battle;
-const setTrap=(b=make())=>play(b,[TRAP]).battle;
-const engine=(b,who)=>b.sides[who].ships[0].parts.find(p=>p.id==='generator');
-const countCard=(side,id)=>[...side.hand,...side.deck,...side.discard,
- ...side.defenses.map(d=>d.id),...(side.commander?[side.commander.id]:[])].filter(x=>x===id).length;
-const cardTotal=side=>side.hand.length+side.deck.length+side.discard.length+
- side.defenses.length+(side.commander?1:0);
 
-test('La trappola si prepara coperta, resta sul campo e non produce effetti immediati',()=>{
- const initial=hand(make(),[TRAP]);
- const before=copy(initial);
- const result=resolveFleetNextTurn(initial,'A',{cards:[0],pass:true});
- assert.equal(result.ok,true);assert.deepEqual(initial,before,'Il turno non muta la partita ricevuta');
- let b=result.battle;
- assert.equal(b.sides.A.defenses.length,1);
- assert.equal(b.sides.A.defenses[0].hidden,true);
- assert.equal(b.sides.A.defenses[0].untilPly,null);
- assert.equal(b.sides.A.protections.length,0);
- assert.equal(b.sides.A.reactions.length,0);
- assert.equal(b.terrain.id,null);
- for(let i=0;i<8;i++)b=pass(b);
- assert.equal(b.sides.A.defenses.length,1);
- assert.equal(b.sides.A.defenses[0].id,TRAP);
- assert.equal(b.sides.A.discard.filter(id=>id===TRAP).length,0);
-});
-
-test('Il Terreno avversario è annullato prima di aggiungere potenza alla salva',()=>{
- const b=setTrap();
- const normalPower=1+b.sides.B.ships[0].weaponRating;
- const result=play(b,[PLASMA],{pass:false});
- assert.equal(result.battle.terrain.id,null);
- assert.equal(result.shot.power,normalPower);
- assert.equal(result.battle.sides.A.defenses.length,0);
- assert.equal(result.battle.sides.A.discard.filter(id=>id===TRAP).length,1);
- assert.equal(result.battle.sides.B.discard.filter(id=>id===PLASMA).length,1);
- const reveal=result.events.findIndex(e=>e.kind==='trap-reveal');
- const cancelled=result.events.findIndex(e=>e.kind==='terrain-cancelled');
- const impact=result.events.findIndex(e=>e.kind==='impact');
- assert.ok(reveal>=0&&cancelled>reveal&&impact>cancelled);
- assert.equal(result.events[reveal].cardId,TRAP);
- assert.equal(result.events[reveal].blockedCardId,PLASMA);
- assert.equal(result.events[reveal].who,'A');
- assert.ok(!result.events.some(e=>e.kind==='card'&&e.cardId===PLASMA));
-});
-
-test('Un Terreno annullato conserva il Terreno precedente e la sua scadenza',()=>{
- const initial=make();initial.terrain=newTerrain('gen-231',0,'A');
- const b=setTrap(initial),previous=copy(b.terrain);
- const result=play(b,[PLASMA],{pass:false});
- assert.deepEqual(result.battle.terrain,previous);
- assert.equal(result.shot.power,b.sides.B.ships[0].weaponRating);
- assert.equal(result.battle.terrain.expiresPly,6);
- let next=result.battle;
- while(next.ply<6)next=pass(next);
- assert.deepEqual(next.terrain,neutralTerrain());
-});
-
-test('La trappola annulla ciascuno dei dieci Terreni senza applicarne la regola',()=>{
- for(const terrain of Object.values(TERRAIN_CATALOG)){
-  const b=setTrap();
-  const result=play(b,[terrain.cardId]);
-  assert.equal(result.battle.terrain.id,null,terrain.code);
-  assert.equal(result.events.filter(e=>e.kind==='trap-reveal').length,1,terrain.code);
-  assert.equal(result.events.filter(e=>e.kind==='terrain-cancelled').length,1,terrain.code);
+test('Le Trappole di Corvo, Lince e Vespa hanno identità e slot coperti',()=>{
+ for(const id of [ECHO,FALSE_TRAIL,FALSE_REFLECTION]){
+  assert.equal(isTrapCard(card(id)),true,id);
+  assert.equal(cardRole(id),'defense',id);
  }
+ assert.equal(isTrapCard(card(CHANNEL)),false);
 });
-
-test('Due trappole identiche non entrano nello stesso slot e nessuna carta è consumata',()=>{
- const initial=hand(make(),[TRAP,TRAP]),before=copy(initial);
- const result=resolveFleetNextTurn(initial,'A',{cards:[0,1],pass:true});
- assert.equal(result.ok,false);assert.match(result.reason,/Trappola/);
- assert.deepEqual(result.battle,before);assert.deepEqual(initial,before);
- let b=setTrap();b=pass(b);hand(b,[TRAP]);
- const occupied=copy(b),second=resolveFleetNextTurn(b,'A',{cards:[0],pass:true});
- assert.equal(second.ok,false);assert.match(second.reason,/Trappola/);
- assert.deepEqual(second.battle,occupied);
+test('Eco di ritorno si posa coperta, senza disturbare subito né generare una carta aggiuntiva',()=>{
+ const original=battle();original.sides.A.hand=[ECHO];
+ const before=JSON.stringify(original);
+ const r=resolveFleetNextTurn(original,'A',{cards:[0],pass:true},1000);
+ assert.equal(r.ok,true,r.reason);
+ assert.equal(JSON.stringify(original),before,'La risoluzione non deve mutare la partita originale');
+ assert.equal(r.battle.sides.A.defenses.length,1);
+ assert.equal(r.battle.sides.A.defenses[0].hidden,true);
+ assert.equal(r.battle.sides.A.defenses[0].untilPly,null);
+ assert.equal(r.battle.sides.A.buffs.length,0);
+ assert.equal(r.events.filter(e=>e.kind==='trap-set').length,1);
+ assert.equal(r.battle.sides.A.lastPlayed.includes(ECHO),false);
 });
-
-test('Terreni propri, attacchi, carte diverse e scadenze non consumano la trappola',()=>{
- let b=setTrap();
- b=play(b,['gen-002'],{pass:false}).battle;
- assert.equal(b.sides.A.defenses.length,1);
- b=play(b,[PLASMA]).battle;
- assert.equal(b.terrain.id,'T02');
- assert.equal(b.sides.A.defenses.length,1);
- for(let i=0;i<6;i++)b=pass(b);
- assert.equal(b.terrain.id,null);
- assert.equal(b.sides.A.defenses.length,1);
- assert.ok(!b.log.some(e=>e.kind==='trap-reveal'));
+test('Eco resta attivo dopo un normale attacco che non applica un disturbo',()=>{
+ let b=battle({shipB:'N00'});
+ b=turn(b,'A',[ECHO]).battle;
+ const guard=b.sides.A.escorts[0];
+ const r=turn(b,'B',[],{pass:false,targetKind:'escort',targetId:guard.id});
+ assert.ok(r.battle.sides.A.defenses.some(d=>d.id===ECHO));
+ assert.ok(!r.events.some(e=>e.kind==='trap-reveal'));
 });
-
-test('La trappola funziona anche dalla parte B e sui Terreni giocati dai boss',()=>{
- let b=pass(make());b=setTrap(b);
- let result=play(b,[PLASMA]);
- assert.equal(result.battle.terrain.id,null);
- assert.equal(result.events.find(e=>e.kind==='trap-reveal').who,'B');
- b=setTrap(make({bossId:6}));const original=copy(b.terrain);
- result=play(b,['gen-245']);
- assert.deepEqual(result.battle.terrain,original);
- assert.equal(result.battle.terrain.source,'boss');
+test('Eco annulla il silenzio ma non il danno del Dardo',()=>{
+ let b=battle();b=turn(b,'A',[ECHO]).battle;
+ const unit=b.sides.A.escorts[0],hp=unit.hp;
+ const r=turn(b,'B',[DART],{pass:false,targetKind:'escort',targetId:unit.id});
+ assert.equal(r.battle.sides.A.escorts[0].hp,hp-1);
+ assert.ok(!r.battle.sides.A.escorts[0].silencedUntilPly);
+ assert.ok(!r.battle.sides.A.defenses.some(d=>d.id===ECHO));
+ assert.equal(r.events.filter(e=>e.kind==='trap-reveal'&&e.cardId===ECHO).length,1);
 });
-
-test('Due Difese occupate impediscono una terza senza scartare carte nascoste',()=>{
- let b=play(make(),['gen-092',TRAP]).battle;b=pass(b);hand(b,['gen-071']);
- const before=copy(b);
- assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),0);
- assert.match(defenseCapacityReason(b.sides.A,1,b.ply),/occupat[oi]/);
- assert.match(effectUnavailableReason(card('gen-071'),b.sides.A,b),/occupat[oi]/);
- const result=resolveFleetNextTurn(b,'A',{cards:[0],pass:true});
- assert.equal(result.ok,false);assert.match(result.reason,/occupat[oi]/);
- assert.deepEqual(result.battle,before);
- assert.deepEqual(b,before);
+test('Il primo disturbo consuma Eco una volta soltanto',()=>{
+ let b=battle();b=turn(b,'A',[ECHO]).battle;
+ let r=turn(b,'B',[DART],{pass:false,targetKind:'escort',targetId:b.sides.A.escorts[0].id});
+ assert.equal(r.battle.sides.A.discard.filter(id=>id===ECHO).length,1);
+ assert.ok(!r.battle.sides.A.defenses.some(d=>d.id===ECHO));
 });
-
-test('Difesa e Trappola hanno spazi distinti e la scadenza libera soltanto la Difesa',()=>{
- let b=play(make(),['gen-092',TRAP]).battle;b=pass(b);hand(b,['gen-071']);
- assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),0);
- assert.match(validateFleetTurn(b,'A',{cards:[0],pass:true}),/occupat[oi]/);
- b=pass(b);b=pass(b);
- assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),1);
- b=play(b,['gen-071']).battle;
+test('L’avversario vede solo il dorso; il proprietario può ispezionare la Trappola',()=>{
+ const b=battle();const r=turn(b,'A',[ECHO]);
+ const mine=projectFleetSlots(r.battle.sides.A,[],'A','A');
+ const theirs=projectFleetSlots(r.battle.sides.A,[],'A','B');
+ assert.equal(mine[2].id,ECHO);
+ assert.deepEqual(theirs[2],{hidden:true,pending:false});
+ const notice=r.events.find(e=>e.kind==='trap-set');
+ assert.ok(!fleetEventText(notice,'B').includes(ECHO));
+ assert.ok(!r.events.some(e=>e.kind==='trap-reveal'));
+});
+test('Due Trappole nello stesso turno sono respinte prima di consumare la mano',()=>{
+ const b=battle();b.sides.A.hand=[ECHO,ECHO];
+ const before=JSON.stringify(b);
+ const r=resolveFleetNextTurn(b,'A',{cards:[0,1],pass:true},1000);
+ assert.equal(r.ok,false);assert.match(r.reason,/Trappola/);
+ assert.equal(JSON.stringify(b),before);
+});
+test('Lo slot Trappola già occupato non può ricevere un’altra Eco',()=>{
+ let b=battle();b=turn(b,'A',[ECHO]).battle;
+ b=turn(b,'B',[]).battle;b.sides.A.hand=[ECHO];
+ const before=JSON.stringify(b);
+ assert.equal(defenseSlotsAvailable(b.sides.A,b.ply,'trap'),0);
+ assert.match(validateFleetTurn(b,'A',{cards:[0],pass:true}),/Trappola/);
+ assert.match(effectUnavailableReason(card(ECHO),b.sides.A,b),/Trappola/);
+ const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},3000);
+ assert.equal(r.ok,false);assert.equal(JSON.stringify(b),before);
+});
+test('Canale visibile ed Eco coperta occupano posti diversi nel medesimo turno',()=>{
+ let b=battle();b=turn(b,'A',[CHANNEL,ECHO]).battle;
  assert.equal(b.sides.A.defenses.length,2);
  assert.equal(b.sides.A.defenses.filter(d=>d.hidden).length,1);
+ assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),0);
+ assert.equal(defenseSlotsAvailable(b.sides.A,b.ply,'defense'),0);
+ assert.equal(defenseSlotsAvailable(b.sides.A,b.ply,'trap'),0);
 });
-
-test('Preparare trappole rispetta i limiti del turno e gli spazi già occupati',()=>{
- const initial=hand(make(),[TRAP,TRAP,TRAP]);
- assert.match(validateFleetTurn(initial,'A',{cards:[0,1,2],pass:true}),/due carte Difesa/);
- assert.match(validateFleetTurn(initial,'A',{cards:[0,1,2,3],pass:true}),/tre carte/);
- let b=setTrap();b=pass(b);hand(b,[TRAP,'gen-071']);
- assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),1);
- assert.match(validateFleetTurn(b,'A',{cards:[0,1],pass:true}),/Trappola/);
- assert.match(validateFleetTurn(b,'A',{cards:[0],pass:true}),/Trappola/);
- assert.equal(validateFleetTurn(b,'A',{cards:[1],pass:true}),null);
+test('Una terza Difesa non entra quando entrambi gli spazi sono occupati',()=>{
+ let b=battle();b=turn(b,'A',[CHANNEL,ECHO]).battle;
+ b=turn(b,'B',[]).battle;b.sides.A.hand=[CHANNEL];
+ const previous=JSON.stringify(b);
+ assert.match(defenseCapacityReason(b.sides.A,1,b.ply,'defense'),/Difesa/);
+ const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},3000);
+ assert.equal(r.ok,false);assert.equal(JSON.stringify(b),previous);
 });
-
-test('Preparazione e annullamento conservano il numero reale delle carte',()=>{
- const initial=hand(make(),[TRAP]);hand(initial,[PLASMA],'B');
- const totals={A:cardTotal(initial.sides.A),B:cardTotal(initial.sides.B)};
- const trapCopies=countCard(initial.sides.A,TRAP),terrainCopies=countCard(initial.sides.B,PLASMA);
- const prepared=resolveFleetNextTurn(initial,'A',{cards:[0],pass:true});
- const result=resolveFleetNextTurn(prepared.battle,'B',{cards:[0],pass:true});
- assert.equal(result.ok,true,result.reason);
- for(const who of ['A','B'])assert.equal(cardTotal(result.battle.sides[who]),totals[who]);
- assert.equal(countCard(result.battle.sides.A,TRAP),trapCopies);
- assert.equal(countCard(result.battle.sides.B,PLASMA),terrainCopies);
+test('La Difesa temporanea scade, la Trappola rimane coperta',()=>{
+ let b=battle();b=turn(b,'A',[CHANNEL,ECHO]).battle;
+ for(let i=0;i<3;i++)b=turn(b,b.turn,[]).battle;
+ assert.equal(b.ply,4);
+ assert.ok(!b.sides.A.defenses.some(d=>d.id===CHANNEL));
+ assert.ok(b.sides.A.defenses.some(d=>d.id===ECHO));
+ assert.equal(defenseSlotsAvailable(b.sides.A,b.ply,'defense'),1);
 });
-
-test('Identità e rarità della trappola non compaiono nei dati pubblici prima dello scatto',()=>{
- const result=play(make(),[TRAP,'gen-002'],{pass:false});
- const published=JSON.stringify({events:result.events,log:result.battle.log,
-  lastEvents:result.battle.lastEvents,shot:result.shot,lastPlayed:result.battle.sides.A.lastPlayed});
- assert.ok(!published.includes(TRAP));
- assert.ok(!published.includes('Ancora di Campo'));
- assert.ok(!published.includes('rarita'));
- assert.equal(result.events.filter(e=>e.kind==='trap-set').length,1);
- assert.ok(result.events.some(e=>e.cardId==='gen-002'));
- const triggered=play(result.battle,[PLASMA]);
- assert.ok(triggered.events.some(e=>e.cardId===TRAP&&e.kind==='trap-reveal'));
+test('Il Generatore distrutto rende indisponibili entrambi gli slot difensivi',()=>{
+ let b=battle();b=turn(b,'A',[ECHO]).battle;
+ const generator=b.sides.A.ships[0].parts.find(p=>p.id==='generator');
+ generator.hp=0;generator.destroyed=true;
+ b=turn(b,'B',[]).battle;
+ assert.equal(defenseSlotsAvailable(b.sides.A,b.ply),0);
+ assert.ok(!b.sides.A.defenses.some(d=>d.id===ECHO));
 });
-
-test('L’IA prepara le proprie trappole e rispetta gli spazi occupati',()=>{
- const b=make();b.sides.A.hand=[TRAP];
- const order=autoFleetTurn(b,'A');assert.deepEqual(order.cards,[0]);
- const result=resolveFleetNextTurn(b,'A',order);assert.equal(result.ok,true,result.reason);
- assert.equal(result.battle.sides.A.defenses[0].hidden,true);
- let full=setTrap();full=pass(full);full.sides.A.hand=[TRAP];
- assert.deepEqual(autoFleetTurn(full,'A').cards,[]);
+test('La trappola può essere preparata anche dal giocatore B',()=>{
+ let b=battle();b=turn(b,'A',[]).battle;
+ b=turn(b,'B',[ECHO]).battle;
+ assert.ok(b.sides.B.defenses.find(d=>d.id===ECHO&&d.hidden));
+ const unit=b.sides.B.escorts[0];
+ const r=turn(b,'A',[DART],{pass:false,targetKind:'escort',targetId:unit.id});
+ assert.ok(r.events.some(e=>e.kind==='trap-reveal'&&e.who==='B'));
 });
-
-test('La scelta dell’IA e la validazione non interrogano l’identità delle trappole avversarie',()=>{
- const withTrap=setTrap();withTrap.sides.B.hand=[PLASMA];
- const withoutTrap=copy(withTrap);withoutTrap.sides.A.defenses=[];withoutTrap.sides.A.defenseSlots=[];
- const fakeTrap=copy(withTrap);fakeTrap.sides.A.defenses[0].id='identita-segreta';
- const order={cards:[0],pass:false,partId:'engine'};
- assert.equal(validateFleetTurn(withTrap,'B',order),validateFleetTurn(withoutTrap,'B',order));
- assert.deepEqual(autoFleetTurn(withTrap,'B'),autoFleetTurn(withoutTrap,'B'));
- assert.deepEqual(autoFleetTurn(withTrap,'B'),autoFleetTurn(fakeTrap,'B'));
+test('La trappola Eco non annulla i terreni ambientali dei Boss',()=>{
+ const b=battle({bossId:6});
+ const terrain=b.terrain?.id;
+ assert.equal(terrain,bossTerrain(6).id);
+ const r=turn(b,'A',[ECHO]);
+ assert.equal(r.battle.terrain?.id,terrain);
+ assert.equal(r.battle.sides.A.defenses[0].id,ECHO);
+ assert.equal(Object.values(TERRAIN_CATALOG).every(t=>t.cardId===null),true);
 });
-
-test('La riparazione resa impossibile dal Terreno annullato resta in mano, in qualsiasi ordine',()=>{
- for(const ids of [[REPAIR,PLASMA],[PLASMA,REPAIR]]){
-  const initial=make();initial.terrain={id:'T08',source:'campaign',expiresPly:null};
-  const b=setTrap(initial);engine(b,'B').hp-=2;engine(b,'B').damage=1;
-  const hp=engine(b,'B').hp;hand(b,ids);
-  const beforeTotal=cardTotal(b.sides.B),copies=countCard(b.sides.B,REPAIR);
-  const order={cards:[0,1],pass:true,ownPartId:'engine'};
-  const noTrap=copy(b);noTrap.sides.A.defenses=[];noTrap.sides.A.defenseSlots=[];
-  assert.equal(validateFleetTurn(b,'B',order),null);
-  assert.equal(validateFleetTurn(noTrap,'B',order),null);
-  const result=resolveFleetNextTurn(b,'B',order);assert.equal(result.ok,true,result.reason);
-  assert.equal(result.battle.terrain.id,'T08');assert.equal(engine(result.battle,'B').hp,hp);
-  assert.equal(result.battle.sides.B.hand.filter(id=>id===REPAIR).length,1);
-  assert.ok(!result.battle.sides.B.discard.includes(REPAIR));
-  assert.ok(!result.battle.sides.B.lastPlayed.includes(REPAIR));
-  assert.ok(!result.shot.played.includes(REPAIR));
-  assert.equal(cardTotal(result.battle.sides.B),beforeTotal);
-  assert.equal(countCard(result.battle.sides.B,REPAIR),copies);
-  assert.equal(result.events.filter(e=>e.kind==='card-returned'&&e.cardId===REPAIR).length,1);
- }
+test('L’IA può preparare Eco e non la duplica in uno slot occupato',()=>{
+ let b=battle();b.sides.A.hand=[ECHO];
+ const order=autoFleetTurn(b,'A');
+ assert.ok(order.cards.includes(0));
+ let r=resolveFleetNextTurn(b,'A',order,1000);
+ assert.equal(r.ok,true,r.reason);
+ b=turn(r.battle,'B',[]).battle;b.sides.A.hand=[ECHO];
+ const next=autoFleetTurn(b,'A');
+ assert.ok(!next.cards.includes(0));
 });
-
-test('La schivata non viene consumata quando la trappola lascia attiva Distesa Gelida',()=>{
- const initial=make();initial.terrain={id:'T01',source:'campaign',expiresPly:null};
- const result=play(setTrap(initial),[DODGE,PLASMA],{ownPartId:'engine'});
- assert.equal(result.battle.terrain.id,'T01');
- assert.ok(result.battle.sides.B.hand.includes(DODGE));
- assert.equal(result.battle.sides.B.defenses.length,0);
- assert.equal(result.battle.sides.B.protections.length,0);
- assert.ok(!result.battle.sides.B.discard.includes(DODGE));
- assert.ok(!result.battle.sides.B.lastPlayed.includes(DODGE));
- assert.equal(result.events.filter(e=>e.kind==='card-returned').length,1);
+test('Falsa scia resta una Trappola distinta dal silenziamento di Corvo',()=>{
+ let b=battle({shipA:'C01',shipB:'N00',levelA:1});
+ b=turn(b,'A',[FALSE_TRAIL],{ownPartId:'generator'}).battle;
+ assert.ok(b.sides.A.defenses.some(d=>d.hidden&&d.trigger==='mother-part-hit'));
+ const weapon=b.sides.A.ships[0].parts.find(p=>p.id==='weapons');
+ const generator=b.sides.A.ships[0].parts.find(p=>p.id==='generator');
+ const hp=weapon.hp,g=generator.hp;
+ const r=turn(b,'B',[],{pass:false,targetKind:'part',targetId:'weapons',partId:'weapons'});
+ assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='weapons').hp,hp);
+ assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='generator').hp,g-1);
 });
-
-test('Una carta che rimane utilizzabile dopo l’annullamento risolve normalmente',()=>{
- const b=setTrap();engine(b,'B').hp-=2;engine(b,'B').damage=1;
- const hp=engine(b,'B').hp;
- const result=play(b,[PLASMA,REPAIR],{ownPartId:'engine'});
- assert.equal(engine(result.battle,'B').hp,hp+1);
- assert.ok(result.battle.sides.B.discard.includes(REPAIR));
- assert.ok(!result.events.some(e=>e.kind==='card-returned'));
+test('La selezione e la scansione del mazzo non possono rivelare identità coperte a terzi',()=>{
+ const b=battle(),own=projectFleetSlots(b.sides.A,[ECHO],'A','A'),
+  enemy=projectFleetSlots(b.sides.A,[ECHO],'A','B');
+ assert.equal(own[2].hidden,true);
+ assert.deepEqual(enemy[2],{hidden:true,pending:false});
+ const event={kind:'private-scan',who:'A',privateTo:'A',text:'Identità segreta'};
+ assert.ok(!fleetEventText(event,'B').includes('Identità segreta'));
 });

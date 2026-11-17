@@ -102,7 +102,7 @@ test('Falsa scia non si attiva se il vitale alternativo è già distrutto',()=>{
 
 test('Pilota Helios scarta e pesca una volta dopo Aggiramento, senza pescata netta',()=>{
  const b=battle(),side=b.sides.A;
- side.deck=['gen-217'];side.hand=['ex-c01-01','nx-c01-02','gen-216'];
+ side.deck=['gen-217',...Array(8).fill('gen-218')];side.hand=['ex-c01-01','nx-c01-02','gen-216'];
  const r=resolveFleetNextTurn(b,'A',
   {cards:[0,1],targetKind:'part',targetId:'weapons',partId:'weapons',
    heliosTrade:true,heliosDiscardId:'gen-216'},1000);
@@ -184,6 +184,7 @@ test('Disimpegno armato richiama l’arma con la stessa integrità e identità',
 test('Incursione cremisi scarta il modulo prima delle reazioni e perfora una protezione',()=>{
  const b=battle({shipB:'C03'}),hp=part(b.sides.B).hp;
  const module=mount(b.sides.A,'nx-c01-07');
+ b.sides.A.deck=Array(8).fill('gen-218');
  b.sides.B.defenses=[{id:'gen-227',source:'shield',untilPly:10}];
  b.sides.B.protections=[{id:'gen-227',source:'shield',kind:'protect',
   target:'part',partId:'weapons',remaining:1,untilPly:10}];

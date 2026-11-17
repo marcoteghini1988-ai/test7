@@ -1,7 +1,8 @@
-// Passaggio al nuovo catalogo: salvaguardia dei Personaggi e dei Boss.
+// Archivio degli ID dismessi del 16/11: non confondere carte tecniche e nuove esclusive con quelle ritirate.
 // Non attiva carte in bozza e non modifica il salvataggio mentre il nuovo
 // motore delle azioni montabili e delle macchine non è stato completato.
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,cardRole} from './rules.js';
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,cardRole} from './rules.js';
+import retired from './retiredCardIds.json' with {type:'json'};
 
 const keys=object=>Object.keys(object);
 const oldGeneral=keys(GENERAL_CARDS);
@@ -14,15 +15,12 @@ export const RETAINED_BOSS_CARDS=Object.freeze([...bossIds]);
 export const RETAINED_CHARACTER_IDS=Object.freeze([
  ...RETAINED_GENERAL_CHARACTERS,...RETAINED_EXCLUSIVE_CHARACTERS,...RETAINED_BOSS_CARDS
 ]);
-export const RETIRED_LEGACY_CARD_IDS=Object.freeze([
- ...oldGeneral.filter(id=>!RETAINED_GENERAL_CHARACTERS.includes(id)),
- ...oldExclusive.filter(id=>!RETAINED_EXCLUSIVE_CHARACTERS.includes(id)),
- ...keys(PROGRESSION_CARDS)
-]);
+export const RETIRED_LEGACY_CARD_IDS=Object.freeze([...retired.generalIds,...retired.exclusiveIds]);
 const retained=new Set(RETAINED_CHARACTER_IDS);
 const retired=new Set(RETIRED_LEGACY_CARD_IDS);
 
 if(retained.size!==RETAINED_CHARACTER_IDS.length||retired.size!==RETIRED_LEGACY_CARD_IDS.length||
+ retired.size!==350||
  [...retired].some(id=>retained.has(id)))throw Error('Cutover: una carta Boss o Personaggio rischia di essere eliminata');
 
 export function isProtectedCharacterCard(id){return retained.has(id);}

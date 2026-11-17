@@ -7,9 +7,9 @@ import {campaignTerrain,TERRAIN_CATALOG} from './fleetNext/terrains.js';
 const all=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS)];
 const deck=deckFromCounts(STARTER_DECK.carteGenerali);
 function battle(options={}){return createFleetNextBattle({shipA:'N00',shipB:'N00',levelA:1,levelB:1,deckA:deck,deckB:deck,mode:'pvp',seed:25,...options});}
-test('155 schede registrate: Aurora, Lince e Vespa eseguibili, 81 progetti bloccati',()=>{
+test('155 schede registrate: Aurora, Lince, Vespa e Corvo eseguibili, 72 progetti bloccati',()=>{
  assert.equal(all.length,155);
- assert.equal(all.filter(c=>c.playable===false).length,81);
+ assert.equal(all.filter(c=>c.playable===false).length,72);
  for(const c of all){
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(c.effetto||c.effectProposed,describeEffect(c),c.id);
@@ -37,7 +37,7 @@ test('Aggiramento: una carta attiva raggiunge la madre dietro i supporti',()=>{
 });
 test('I Terreni ambientali dei Boss restano, senza vecchie Carte Terreno',()=>{
  assert.equal(Object.keys(TERRAIN_CATALOG).length,10);
- assert.ok(campaignTerrain(12).id);
+ assert.ok(campaignTerrain(13).id);
  assert.ok(Object.values(TERRAIN_CATALOG).every(t=>t.cardId===null));
 });
 test('L’intelligenza artificiale produce un ordine di turno senza usare carte inesistenti',()=>{

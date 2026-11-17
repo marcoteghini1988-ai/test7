@@ -113,14 +113,15 @@ test('Il Comandante sposta la prima carta solo dopo un silenzio realmente applic
  const r=turn(next,'A',['nx-c03-02'],{pass:false,targetKind:'escort',targetId:target.id,corvoBottomTop:true});
  assert.equal(r.battle.sides.A.corvo.commanderPeekPly,2);
  assert.ok(r.events.some(e=>e.kind==='private-scan'&&e.cardId==='ex-c03-01'&&e.peekCardId==='nx-c03-07'));
- assert.ok(r.battle.sides.A.hand.indexOf('nx-c03-08')<
-  r.battle.sides.A.hand.indexOf('nx-c03-07'));
+ assert.ok(r.battle.sides.A.hand.includes('nx-c03-08'));
+ assert.ok(r.battle.sides.A.deck.includes('nx-c03-07'));
+ assert.ok(!r.battle.sides.A.hand.includes('nx-c03-07'));
  assert.ok(r.events.some(e=>e.kind==='private-scan'&&e.text?.includes('sotto')));
 });
 test('Analisi di frequenza rivela una trappola solo al giocatore, la lascia in campo e ricambia',()=>{
  const b=battle();b.turn='B';
  let next=turn(b,'B',['nx-c03-04']).battle;
- next.sides.A.deck=['nx-c03-07','nx-c03-08'];
+ next.sides.A.deck=['nx-c03-07','nx-c03-08',...Array(10).fill('nx-c03-03')];
  const r=turn(next,'A',['nx-c03-06','nx-c03-02'],{
   corvoExchangeCardId:'nx-c03-02'
  },[0]);

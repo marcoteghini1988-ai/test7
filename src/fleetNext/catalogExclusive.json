@@ -825,6 +825,7 @@
   "cards": [
     {
       "id": "ex-n00-01",
+      "nativeFace": true,
       "shipId": "N00",
       "shipName": "Aurora-0",
       "rarityDraft": "Comune",

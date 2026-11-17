@@ -358,7 +358,8 @@ export function validateFleetTurn(b,who,order){
   const bypass=chosen.some(c=>c.effectSpec.type==='bypass'||c.effectSpec.type==='lince'&&
    LINCE_BYPASS_ACTIONS.includes(c.effectSpec.action))||
    selected.kind==='part'&&linceMarkedRouteReady(side,b.ply,selected.unit.id);
-  if(['part','module'].includes(selected.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
+  if(['part','module'].includes(selected.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass&&
+   (order.targetKind!=null||order.targetId!=null))
    return 'Prima colpisci i supporti o le macchine operative, oppure gioca Aggiramento';
   if(chosen.some(c=>c.effectSpec.type==='aurora'&&c.effectSpec.action==='burst')&&!['escort','machine'].includes(selected.kind))
    return 'Raffica di prova richiede una macchina o un supporto';
