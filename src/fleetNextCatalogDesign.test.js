@@ -23,7 +23,7 @@ test('Catalogo di sostituzione: 120 carte ragionate, dieci per madre',()=>{
   assert.ok(c.rules?.length>10,c.id+' senza chiarimento di utilizzo');
   assert.ok(c.counterplay?.length>10,c.id+' senza contromossa');
   assert.ok(c.visualBrief?.length>10,c.id+' senza direzione grafica');
-  assert.match(c.state,/not yet executable/,'Una definizione di design non può risultare giocabile');
+  assert.match(c.state,/executable-in-combat-v1/,'Tutte le 120 carte devono essere state implementate');
  }
  assert.equal(design.cards.filter(c=>c.type==='Personaggio').length,12);
  assert.equal(design.cards.filter(c=>c.type==='Fusione').length,3);
