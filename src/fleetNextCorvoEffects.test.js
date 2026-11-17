@@ -1,3 +1,5 @@
+import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,exclusiveUnlocked,eligibleExclusives,effectiveDeck,cardFacePath} from './fleetNext/rules.js';
@@ -46,15 +48,15 @@ test('Corvo: catalogo di 10 esclusive senza doppioni, livelli e immagini legacy'
  for(const id of IDS){
   assert.equal(card(id).shipId,'C03');
   assert.notEqual(card(id).playable,false,id);
-  assert.equal(exclusiveUnlocked(id,'C03',5),true,id);
+  assert.equal(exclusiveUnlocked(id,'C03',shipMaxLevel('C03')),true,id);
   assert.equal(exclusiveUnlocked(id,'C02',5),false,id);
   assert.equal(cardFacePath(id),null,id);
  }
- for(let level=1;level<=5;level++){
-  assert.equal(IDS.filter(id=>exclusiveUnlocked(id,'C03',level)).length,5+level);
-  assert.equal(eligibleExclusives('C03',level).filter(c=>c.shipId==='C03').length,5+level);
+ for(let level=1;level<=shipMaxLevel('C03');level++){
+  assert.equal(IDS.filter(id=>exclusiveUnlocked(id,'C03',level)).length,4+EXCLUSIVE_UNLOCK_MILESTONES['C03'].filter(n=>n<=level).length);
+  assert.equal(eligibleExclusives('C03',level).filter(c=>c.shipId==='C03').length,4+EXCLUSIVE_UNLOCK_MILESTONES['C03'].filter(n=>n<=level).length);
  }
- assert.equal(IDS.filter(id=>effectiveDeck([],'C03',5).includes(id)).length,10);
+ assert.equal(IDS.filter(id=>effectiveDeck([],'C03',shipMaxLevel('C03')).includes(id)).length,10);
 });
 test('Antenna montata silenzia il primo bersaglio danneggiato senza toglierne copertura',()=>{
  const b=battle();const unit=escort(b.sides.B);
