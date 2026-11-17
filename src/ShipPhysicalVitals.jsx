@@ -14,7 +14,7 @@ export const physicalVitalCondition=part=>engineVisualState(part);
 export default function ShipPhysicalVitals({
  side,vessel,defense,hullRef,selectedVital,onSelectVital,canTarget=false,
  knownVitals=[],impactedVitals=[],registerVitalRef,vitalLabels=VITAL_LABELS,
- vitalShortLabels=VITAL_MOTOR_SHORT_NAMES,allowOwnTarget=false
+ vitalShortLabels=VITAL_MOTOR_SHORT_NAMES,allowOwnTarget=false,hideVitalTargets=false
 }){
  const physical=vesselWithPhysicalVitalDamage(vessel,defense);
  // These are EXACTLY the four motor coordinates in the source ZIP/code.
@@ -23,7 +23,7 @@ export default function ShipPhysicalVitals({
  const originalFormation={size:206,engineSize:38,hudWidth:50};
  return <>
   <ShipSkin side={side} vessel={physical} imageRef={hullRef}/>
-  <div className="official-original-motor-targets" aria-label="Componenti vitali distruggibili della nave">
+  {!hideVitalTargets&&<div className="official-original-motor-targets" aria-label="Componenti vitali distruggibili della nave">
    {VITAL_IDS.filter(vital=>defense.parts[VITAL_TO_ORIGINAL_MOTOR[vital]==='times'?'shieldGenerator':vital]?.unlocked!==false).map(vital=>{
     const part=defense.parts[vital];
     const op=VITAL_TO_ORIGINAL_MOTOR[vital];
@@ -41,6 +41,6 @@ export default function ShipPhysicalVitals({
      vitalName={vitalLabels[vital]+' · '+state}
     />;
    })}
-  </div>
+  </div>}
  </>;
 }
