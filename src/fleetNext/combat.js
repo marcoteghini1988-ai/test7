@@ -2056,6 +2056,40 @@ function mergeFalcoShots(a,b){
   played:[...new Set([...(a.played||[]),...(b.played||[])])]};
 }
 
+
+// Gli attacchi ionici hanno un colpo proprio, senza duplicare la salva ordinaria.
+function resolveMantaShots(b,ctx,events,order){
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const target=selectedEnemyTarget(enemy,order,b.ply),command=ctx.mantaAttacks[0];
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targetKind:target?.kind,targetId:target?.unit?.id,played:visiblePlayed(ctx.cards),targets:[]};
+ if(!target||!['escort','machine'].includes(target.kind)||!command)return shot;
+ if(side.fireBlocked||side.fireDisabledUntil>b.ply){
+  side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
+  events.push(emit(b,ctx.who,'no-shot','Attacco ionico bloccato'));return shot;
+ }
+ const jam=side.buffs.filter(x=>x.kind==='jam').reduce((n,x)=>n+(x.power||0),0);
+ side.buffs=side.buffs.filter(x=>x.kind!=='jam');
+ const guard=enemy.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply))
+  .reduce((n,x)=>n+(x.power||0),0);
+ const power=Math.max(0,Math.max(1,side.ships[0].attackPower-
+  enemy.ships[0].defensePower)+ctx.power+
+  terrainSalvoModifier(b.terrain,side.ships[0].id).value-jam-guard);
+ if(!power){events.push(emit(b,ctx.who,'block','Attacco ionico fermato dai disturbi'));return shot;}
+ const amount=command.action==='total-discharge'?3:power;
+ const hit=linceHit(b,ctx,events,target,amount,command.id,order,false,0);
+ if(!hit.damage)return shot;
+ const key=hit.target.kind==='machine'?'machineDamage':'escortDamage';
+ shot[key]=hit.damage;
+ shot.targets.push({kind:hit.target.kind,id:hit.target.unit.id,damage:hit.damage,
+  destroyed:hit.target.unit.destroyed});
+ if(command.action==='arc-discharge'&&ctx.mantaSilence)
+  applyCorvoSilence(b,ctx.who,hit.target.kind,hit.target.unit,events,command.id,order);
+ if(command.action==='total-discharge'&&!hit.target.unit.destroyed)
+  applyCorvoUnitBlock(b,ctx.who,'machine',hit.target.unit,events,command.id);
+ return shot;
+}
+
 function resolveSalvo(b,ctx,events,order){
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
  let selected=selectedEnemyTarget(defender,order,b.ply);
@@ -2078,6 +2112,13 @@ function resolveSalvo(b,ctx,events,order){
  if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: l’attacco fallisce'));return {damage:0,partId:order.partId,played:visiblePlayed(ctx.cards),power};}
  if(emergency)events.push(emit(b,ctx.who,'emergency-shot','Tiro di emergenza: l’Arsenale è distrutto'));
  const guards=protectingFleetUnits(defender,b.ply);
+ const mantaFork=!!(order.mantaFork&&mantaForkActive(side,b.ply)&&mantaCapacitorActive(side,b.ply));
+ if(mantaFork){
+  if(!spendMantaEnergy(side,b.ply,1))throw Error('Forcella senza energia');
+  ensureMantaState(side).lastForkPly=b.ply;
+  events.push(emit(b,ctx.who,'card','Forcella ionica divide il tiro in due colpi leggeri',
+   {cardId:'nx-r02-07'}));
+ }
  if(selected.kind==='part'&&linceMarkedRouteReady(side,b.ply,selected.unit.id)){
   if(!cancelLinceBypass(b,ctx.who,events,side.lince.route.cardId)){
    ctx.bypass=true;ctx.routeMarkedBypass=true;
@@ -2086,9 +2127,13 @@ function resolveSalvo(b,ctx,events,order){
  if(['part','module'].includes(selected.kind)&&guards.length&&!ctx.bypass)selected={kind:guards[0].kind,unit:guards[0].unit};
  // Aggiramento abilita un solo componente dietro le unità: multicolpo non
  // moltiplica un'eccezione di accesso in un attacco all'intera madre.
- const count=guards.length&&selected.kind==='part'&&ctx.bypass?1:
+ const count=mantaFork?2:guards.length&&selected.kind==='part'&&ctx.bypass?1:
   Math.min(4,(emergency?1:ctx.multiTargets)+(b.terrain?.id==='T10'?1:0));
- const targets=selected.kind==='part'?
+ const forkUnits=mantaFork?mantaEnemyUnits(defender):[];
+ const otherFork=forkUnits.find(x=>x.kind===order.mantaSecondTargetKind&&
+  x.unit.id===order.mantaSecondTargetId&&x.unit.id!==selected.unit.id)||
+  forkUnits.find(x=>x.unit.id!==selected.unit.id);
+ const targets=mantaFork?[selected,...(otherFork?[otherFork]:[])]:selected.kind==='part'?
   [selected,...enemy.parts.filter(p=>unitAlive(p)&&p!==selected.unit).slice(0,count-1).map(unit=>({kind:'part',unit}))]:
   selected.kind==='module'?[selected]:
    [selected,...guards.filter(g=>g.unit!==selected.unit).slice(0,count-1).map(g=>({kind:g.kind,unit:g.unit}))];
@@ -2099,7 +2144,7 @@ function resolveSalvo(b,ctx,events,order){
   const redirected=redirectFleetHit(b,ctx,events,planned);
   const {kind,unit}=redirected;
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
-  const amount=kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
+  const amount=mantaFork?1:kind==='part'||kind==='module'?1:power+(kind==='escort'&&b.terrain?.id==='T04'?1:0);
   const damage=damageFleetUnit(defender,kind,unit,
    mantaCapDamage(b,defender,kind,unit,amount,events),b.ply);
   if(damage){
