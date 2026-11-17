@@ -1592,6 +1592,22 @@ function blockNebulaRepeat(b,ctx,events,target){
  return true;
 }
 
+
+function nebulaRevealOnOwnTurn(b,ctx,events){
+ const side=b.sides[ctx.who];
+ if(side.ships[0].id!=='E01')return;
+ for(const escort of side.escorts){
+  // Il turno che segue l'occultamento puo giocare Bruma itinerante.
+  // Dopo la scelta, l'occultamento precedente termina e tornano le passive.
+  if(escort.nebulaHiddenUntilPly===b.ply+1){
+   escort.nebulaHiddenUntilPly=0;
+   events.push(emit(b,ctx.who,'nebula-reveal',escort.name+' esce dalla bruma',
+    {targetKind:'escort',targetId:escort.id}));
+  }
+ }
+ refreshEscortLinks(side,b.ply);
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
