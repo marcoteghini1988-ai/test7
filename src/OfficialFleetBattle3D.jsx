@@ -37,6 +37,7 @@ import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTur
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
+import {dismantleCandidates,dismantleActive} from './fleetNext/dismantleEffects.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
@@ -313,6 +314,7 @@ export default function OfficialFleetBattle3D({
  const [session,setSession]=useState(()=>startSession(opts));
  const [battle,setBattle]=useState(session.battle);
  const [selectedVital,setSelectedVital]=useState('weapons');
+ const [dismantleOptions,setDismantleOptions]=useState({first:'',second:''});
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
@@ -419,6 +421,7 @@ export default function OfficialFleetBattle3D({
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
   setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setMessage('');
+  setDismantleOptions({first:'',second:''});
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
    linceRecallWeapon:false,radentRecall:false,radentMachineId:''});
@@ -515,6 +518,8 @@ export default function OfficialFleetBattle3D({
     machineSlot:actualTarget?.kind==='machine'?actualTarget.slot:undefined,
     moduleSlot:actualTarget?.kind==='module'?actualTarget.slot:undefined,
     ownPartId:actualOwnVital,cards:chosenCards,
+    dismantleTargets:chosenCards.some(i=>card(battle.sides.A.hand[i])?.effectSpec?.type==='dismantle')?
+     [dismantleOptions.first,dismantleOptions.second].filter(Boolean):undefined,
     deckTopFlip:auroraOptions.deckTopFlip,
     sacrificeSlot:selectedActions.includes('crimson-raid')?linceOptions.sacrificeSlot:auroraOptions.sacrificeSlot,
     exchangeCardId:auroraOptions.exchangeCardId,peekPickId:auroraOptions.peekPickId,
@@ -579,7 +584,7 @@ export default function OfficialFleetBattle3D({
     arkSecondKind:arkSecondChoice?.kind,arkSecondId:arkSecondChoice?.id
    },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
-  showResult(result);setChosenCards([]);
+  showResult(result);setChosenCards([]);setDismantleOptions({first:'',second:''});
   setCorvoOptions({exchangeCardId:'',bottomTop:false});
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
   setMantaOptions({silence:false,fork:false,second:'',screen:'',from:'',to:'',
@@ -716,6 +721,9 @@ export default function OfficialFleetBattle3D({
  const enemySlots=projectFleetSlots(enemy,[],'B');
  const selectedType=chosenCards.length?player.hand[chosenCards.at(-1)]:null;
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
+ const dismantleCardChosen=chosenTypes.map(id=>card(id)).find(c=>c?.effectSpec?.type==='dismantle');
+ const dismantleChoices=dismantleCandidates(enemy,battle.ply);
+ const enemyDismantle=dismantleActive(enemy,battle.ply);
  const arkActive=player.ships[0].id==='L04';
  const arkLiving=player.escorts.filter(e=>e.hp>0&&!e.destroyed);
  const arkReady=arkEscorts(player,battle.ply);
@@ -927,6 +935,28 @@ export default function OfficialFleetBattle3D({
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
     </p>)}</div>
+    {enemyDismantle.length>0&&<p>Smontaggio nemico attivo: {enemyDismantle.map(e=>
+     e.targets.join(', ')+' · '+e.remainingTurns+' turni').join('; ')}</p>}
+    {dismantleCardChosen?.effectSpec?.mode==='components'&&dismantleChoices.length>0&&<>
+     <label>Smontaggio Forzato — componente avversario:
+      <select value={dismantleOptions.first}
+       onChange={e=>setDismantleOptions({first:e.target.value,second:''})}>
+       <option value="">Primo componente aggiunto o potenziato</option>
+       {dismantleChoices.map(t=><option key={t.key} value={t.key}>{t.label}</option>)}
+      </select>
+     </label>
+     {dismantleCardChosen.effectSpec.count===2&&dismantleChoices.length>1&&
+      <label>Secondo componente da smontare (facoltativo):
+       <select value={dismantleOptions.second}
+        onChange={e=>setDismantleOptions(o=>({...o,second:e.target.value}))}>
+        <option value="">Nessun secondo componente</option>
+        {dismantleChoices.filter(t=>t.key!==dismantleOptions.first)
+         .map(t=><option key={t.key} value={t.key}>{t.label}</option>)}
+       </select>
+      </label>}
+    </>}
+    {dismantleCardChosen?.effectSpec?.mode==='base'&&
+     <p>Smontaggio Leggendario: riporta la nave avversaria alla configurazione operativa L1 per due turni, senza riparare HP.</p>}
     {needsOwnTarget&&<label className="f3d-own-target">Tuo componente:
      <select value={actualOwnVital||''} onChange={e=>setSelectedOwnVital(e.target.value)} aria-label="Componente da proteggere o riparare">
       {ownTargets.map(p=><option key={p.id} value={p.id}>{VITAL_LABELS[p.id]} · {p.hp}/{p.maxHp}</option>)}
