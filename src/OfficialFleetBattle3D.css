@@ -372,3 +372,27 @@
 .es-math-scope .f3d-original-arena .f3d-shark-readout{
  margin:0 0 5px;color:#cce5e7;font-size:9px;line-height:1.35
 }
+
+
+/* Nebulosa: solo stati visivi, nessuna sostituzione della plancia 3D. */
+.es-math-scope .f3d-original-arena .f3d-nebula-status{
+ position:absolute;top:146px;left:84px;right:84px;z-index:8;
+ display:flex;gap:4px;align-items:center;justify-content:center;
+ padding:3px 5px;border-radius:5px;border:1px solid #9cb7d4;
+ background:linear-gradient(100deg,#111c2bee,#30435aee,#111c2bee);
+ color:#d9ecff;font-size:7px;box-shadow:0 0 8px #96aadd55;
+ pointer-events:none;white-space:nowrap;overflow:hidden
+}
+.es-math-scope .f3d-original-arena .f3d-nebula-status>b{font-size:7px}
+.es-math-scope .f3d-original-arena .f3d-nebula-status>small{
+ font-size:6px;overflow:hidden;text-overflow:ellipsis
+}
+.es-math-scope .f3d-original-arena .f3d-nebula-readout{
+ margin:0 0 5px;color:#d0e5ff;font-size:9px;line-height:1.35
+}
+.es-math-scope .f3d-original-arena .f3d-escort--veiled>img:first-child{
+ opacity:.37;filter:grayscale(.6) brightness(1.17) blur(.5px);
+}
+.es-math-scope .f3d-original-arena .f3d-escort--veiled .f3d-escort-grade{
+ color:#91a9ca
+}
