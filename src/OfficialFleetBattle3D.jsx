@@ -206,9 +206,10 @@ function TrapReveal({event}){
  const trap=card(event?.cardId),blocked=card(event?.blockedCardId);
  if(event?.kind!=='trap-reveal'||!trap)return null;
  return <div className="f3d-trap-reveal" role="status" aria-live="polite">
-  <img src={cardFacePath(trap.id)} alt={trap.nome||trap.name}/>
+  {cardFacePath(trap.id)?<img src={cardFacePath(trap.id)} alt={trap.nome||trap.name}/>:
+  <span className="f3d-trap-icon" aria-hidden="true">◈</span>}
   <div><strong>TRAPPOLA ATTIVATA</strong><b>{trap.nome||trap.name}</b>
-   <span>{blocked?.nome||blocked?.name||'Terreno avversario'}: attivazione annullata.</span>
+   <span>{event.redirected?event.text:(blocked?.nome||blocked?.name||'Terreno avversario')+': attivazione annullata.'}</span>
   </div>
  </div>;
 }
@@ -460,7 +461,7 @@ export default function OfficialFleetBattle3D({
   const spec=card(id)?.effectSpec;
   return spec?.type==='bypass'||spec?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(spec.action);
  });
- const routePartId=player.lince?.route?.usePly===battle.ply?player.lince.route.partId:null;
+ const routePartId=linceMarkedRouteReady(player,battle.ply,player.lince?.route?.partId)?player.lince.route.partId:null;
  const bypass=directBypass||!!routePartId;
  const protectors=protectingFleetUnits(enemy,battle.ply);
  const targetChoices=availableFleetTargets(enemy,battle.ply).filter(t=>!t.blocked||directBypass||
@@ -626,6 +627,46 @@ export default function OfficialFleetBattle3D({
       {forkChoices.map(t=><option key={t.kind+t.id} value={t.kind+':'+t.id}>{t.name} · {t.hp}/{t.maxHp}</option>)}
      </select>
     </label>}
+    {selectedActions.includes('marked-route')&&<label>Rotta marcata — vitale da segnare:
+     <select value={linceOptions.routePartId} onChange={e=>setLinceOption('routePartId',e.target.value)}>
+      <option value="">Usa il vitale selezionato</option>
+      {enemy.ships[0].parts.filter(p=>p.hp>0&&!p.destroyed).map(p=>
+       <option key={p.id} value={p.id}>{VITAL_LABELS[p.id]} · {p.hp}/{p.maxHp}</option>)}
+     </select>
+    </label>}
+    {selectedActions.includes('crimson-raid')&&<label>Incursione cremisi — modulo da scartare:
+     <select value={linceOptions.sacrificeSlot} onChange={e=>setLinceOption('sacrificeSlot',e.target.value)}>
+      <option value="">Primo modulo operativo</option>
+      {liveModules(player).map(m=><option key={m.id} value={m.slot}>{m.name} · {m.hp}/{m.maxHp}</option>)}
+     </select>
+    </label>}
+    {selectedActions.includes('armed-disengage')&&installedModule(player,'weapon')&&
+     <label><input type="checkbox" checked={linceOptions.linceRecallWeapon}
+       onChange={e=>setLinceOption('linceRecallWeapon',e.target.checked)}/>
+      Riprendi il modulo d’arma dopo il colpo, conservando i danni
+     </label>}
+    {heliosAvailable&&heliosDiscardChoices.length>0&&<>
+     <label><input type="checkbox" checked={linceOptions.heliosTrade}
+       onChange={e=>setLinceOption('heliosTrade',e.target.checked)}/>
+      Pilota Helios: scarta una carta e pescane una dopo Aggiramento
+     </label>
+     {linceOptions.heliosTrade&&<label>Carta da scartare:
+      <select value={linceOptions.heliosDiscardId} onChange={e=>setLinceOption('heliosDiscardId',e.target.value)}>
+       <option value="">Prima carta disponibile</option>
+       {heliosDiscardChoices.map((id,i)=><option key={id+i} value={id}>{card(id)?.nome||card(id)?.name||id}</option>)}
+      </select>
+     </label>}
+    </>}
+    {radentReady&&<label><input type="checkbox" checked={linceOptions.radentRecall}
+      onChange={e=>setLinceOption('radentRecall',e.target.checked)}/>
+     Propulsori radenti: richiama una macchina dopo Aggiramento riuscito
+    </label>}
+    {radentReady&&linceOptions.radentRecall&&<label>Macchina da richiamare:
+     <select value={linceOptions.radentMachineId} onChange={e=>setLinceOption('radentMachineId',e.target.value)}>
+      <option value="">Prima macchina operativa</option>
+      {linceMachineChoices.map(m=><option key={m.id} value={m.id}>{m.name} · {m.hp}/{m.maxHp}</option>)}
+     </select>
+    </label>}
    </div>}
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
@@ -647,7 +688,7 @@ export default function OfficialFleetBattle3D({
     <button type="button" onClick={()=>setShowLog(false)}>CHIUDI</button>
     {battle.log.slice(-12).map((e,i)=><p key={i}>{fleetEventText(e)}</p>)}
    </div>}
-   {help&&<div className="f3d-escort-overlay" role="dialog" aria-label={help.rules?'Regole delle carte':help.boss?'Abilità del boss':help.trapId?'La tua trappola coperta':help.machine?'Macchina d’assalto':'Abilità scudiera'}>
+   {help&&<div className="f3d-escort-overlay" role="dialog" aria-label={help.rules?'Regole delle carte':help.boss?'Abilità del boss':help.trapId?'La tua trappola coperta':help.machine?'Macchina d’assalto':help.module?'Modulo montato':'Abilità scudiera'}>
     <button type="button" onClick={()=>setHelp(null)} aria-label="Chiudi">×</button>
     {help.rules?<>
      <strong>Regole delle carte</strong>
@@ -664,6 +705,10 @@ export default function OfficialFleetBattle3D({
      <strong>{help.machine.name}</strong>
      <p>Protegge la madre finché è operativa. Potenza di supporto: {help.machine.power||0}.</p>
      <small>{help.machine.hp}/{help.machine.maxHp} punti · alloggiamento {help.machine.slot+1}</small>
+    </>:help.module?<>
+     <strong>{help.module.name}</strong>
+     <p>Modulo {help.module.slot==='weapon'?'d’arma':'di utilità'} installato sulla nave madre.</p>
+     <small>Integrità: {help.module.hp}/{help.module.maxHp} · distruggibile durante il combattimento</small>
     </>:<>
      <strong>{help.escort.name}</strong><small>{help.escort.role} · Grado {help.escort.grade||1}{help.escort.fused?' · FUSA':''}</small>
      <p>{describeEscortEffect(help.escort)}</p>
