@@ -51,7 +51,7 @@ function revealedShield(side,escort,source='royal:test:shield',charges=1){
   target:'escort',escortSlot:escort.slot,untilPly:20});
  return source;
 }
-test('Eclisse Reale ha dieci esclusive eseguibili, 6 L1 / 10 L5 e una Fusione storica distinta',()=>{
+test('Eclisse Reale completa 10 esclusive al L7 e conserva la Fusione al L5',()=>{
  assert.equal(new Set(IDS).size,10);
  for(let level=1;level<=shipMaxLevel('L01');level++){
   assert.equal(eligibleExclusives('L01',level).filter(c=>IDS.includes(c.id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['L01'].filter(n=>n<=level).length));
