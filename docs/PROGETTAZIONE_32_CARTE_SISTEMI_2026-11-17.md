@@ -1,6 +1,6 @@
 # Eclissi Stellare — 32 carte dei sistemi interni (progettazione)
 
-> **BOZZA DA APPROVARE, NON ANCORA GIOCABILE.** Solo progettazione testuale, nessuna immagine e nessuna modifica alle 120 esclusive.
+> **PROGETTAZIONE APPROVATA (32/32), NON ANCORA GIOCABILE.** Solo progettazione testuale, nessuna immagine e nessuna modifica alle 120 esclusive.
 
 Quattro componenti × due funzioni (Sabotaggio, Amplificazione) × quattro rarità = **32 carte distinte**. Non è un obbligo inserire tutte queste carte nel mazzo da 40.
 
@@ -24,64 +24,62 @@ Non si aumenta necessariamente percentuale **e** durata insieme: la progressione
 
 ## I quattro pacchetti da otto
 
-### Centralina — 8 carte
+### Centralina — 8 carte · Progettazione approvata
 
-| Rarità | Funzione | Carta | Intensità di progetto | Turni | Effetto |
-|---|---|---|---|---:|---|
-| Comune | Sabotaggio | Fruscio di telemetria | −15 punti percentuali sincronizzazione | 1 | Intercettazione dei supporti ridotta del 15%. |
-| Rara | Sabotaggio | Interferenza di collegamento | −20 punti percentuali sincronizzazione | 2 | Intercettazione dei supporti ridotta del 20%. |
-| Epica | Sabotaggio | Sfasamento di formazione | −30 punti percentuali sincronizzazione | 2 | Intercettazione ridotta del 30%; nel primo turno colpito si annulla un bonus passivo di supporto che richiede sincronizzazione. |
-| Leggendaria | Sabotaggio | Silenzio di comando | −40 punti percentuali sincronizzazione | 2 | Intercettazione ridotta del 40%; nel primo turno colpito si sospendono i bonus passivi sincronizzati di entrambi i supporti presenti. |
-| Comune | Amplificazione | Riallineamento del canale | +15 punti percentuali sincronizzazione | 1 | Recupera fino a 15 punti percentuali di sincronizzazione; il primo colpo a un supporto nel ciclo infligge 1 danno in meno. |
-| Rara | Amplificazione | Relè di riserva | +20 punti percentuali sincronizzazione | 2 | Recupera fino a 20 punti percentuali; il primo colpo al supporto in ciascun ciclo infligge 1 danno in meno. |
-| Epica | Amplificazione | Trama risonante | +30 punti percentuali sincronizzazione | 2 | Recupera fino a 30 punti percentuali; il primo colpo al supporto in ciascun ciclo infligge 2 danni in meno. |
-| Leggendaria | Amplificazione | Rete di comando totale | +40 punti percentuali sincronizzazione | 2 | Recupera fino a 40 punti percentuali; il primo colpo a un supporto in ciascun ciclo infligge 2 danni in meno, e ignora una sospensione di bonus passivo da sabotaggio per ciclo. |
+| Rarità | Tipo | Carta | Turni | Effetto concordato |
+|---|---|---|---:|---|
+| Comune | Sabotaggio | Fruscio di telemetria | 1 | Intercettazione dei supporti ridotta del 15%. |
+| Rara | Sabotaggio | Interferenza di collegamento | 2 | Intercettazione dei supporti ridotta del 20%. |
+| Epica | Sabotaggio | Sfasamento di formazione | 2 | Intercettazione ridotta del 30%; nel primo turno colpito si annulla un bonus passivo di supporto che richiede sincronizzazione. |
+| Leggendaria | Sabotaggio | Silenzio di comando | 2 | Intercettazione ridotta del 40%; nel primo turno colpito si sospendono i bonus passivi sincronizzati di entrambi i supporti presenti. |
+| Comune | Amplificazione | Riallineamento del canale | 1 | Recupera fino a 15 punti percentuali di sincronizzazione; il primo colpo a un supporto nel ciclo infligge 1 danno in meno. |
+| Rara | Amplificazione | Relè di riserva | 2 | Recupera fino a 20 punti percentuali; il primo colpo al supporto in ciascun ciclo infligge 1 danno in meno. |
+| Epica | Amplificazione | Trama risonante | 2 | Recupera fino a 30 punti percentuali; il primo colpo al supporto in ciascun ciclo infligge 2 danni in meno. |
+| Leggendaria | Amplificazione | Rete di comando totale | 2 | Recupera fino a 40 punti percentuali; il primo colpo a un supporto in ciascun ciclo infligge 2 danni in meno, e ignora una sospensione di bonus passivo da sabotaggio per ciclo. |
 
-### Arsenale — 8 carte
+### Arsenale — 8 carte · Progettazione approvata
 
-| Rarità | Funzione | Carta | Intensità di progetto | Turni | Effetto |
-|---|---|---|---|---:|---|
-| Comune | Sabotaggio | Tubo surriscaldato | −1 punti danno su attacco nativo | 1 | −1 danno al primo attacco nativo della madre nel turno colpito; minimo 1 se il colpo va a segno. |
-| Rara | Sabotaggio | Munizioni interferite | −1 punti danno su attacco nativo | 2 | −1 danno al primo attacco nativo della madre per ciascun turno colpito; minimo 1. |
-| Epica | Sabotaggio | Alimentazione inceppata | −2 punti danno su attacco nativo | 2 | −2 danni al primo attacco nativo della madre in ciascun turno colpito; minimo 1. |
-| Leggendaria | Sabotaggio | Arsenale in ombra | −2 punti danno su attacco nativo | 3 | −2 danni al primo attacco nativo della madre in ciascun turno colpito; inoltre nel primo turno non si applica il primo bonus a colpi aggiuntivi (non elimina i colpi). |
-| Comune | Amplificazione | Carica rapida | +1 punti danno su attacco nativo | 1 | +1 danno al primo attacco nativo della madre nel tuo turno. |
-| Rara | Amplificazione | Doppia camera | +1 punti danno su attacco nativo | 2 | +1 danno al primo attacco nativo della madre in ciascuno dei tuoi due turni. |
-| Epica | Amplificazione | Sovralimentazione multipla | +2 punti danno su attacco nativo | 2 | +2 danni al primo attacco nativo per turno; nel primo turno +1 al danno di un bersaglio secondario già previsto. |
-| Leggendaria | Amplificazione | Furia coordinata | +2 punti danno su attacco nativo | 3 | +2 danni al primo attacco nativo per turno; +1 danno al primo bersaglio secondario già previsto in ciascun turno. |
+| Rarità | Tipo | Carta | Turni | Effetto concordato |
+|---|---|---|---:|---|
+| Comune | Sabotaggio | Tubo surriscaldato | 1 | Per 1 turno avversario, riduce di un livello l'apporto offensivo delle carte Arma temporanee attive; non diminuisce direttamente il colpo base della nave madre. |
+| Rara | Sabotaggio | Munizioni interferite | 2 | Per 2 turni avversari, riduce i danni delle carte Arma temporanee; nel primo turno disattiva una carta Arma già attiva. |
+| Epica | Sabotaggio | Alimentazione inceppata | 2 | Per 2 turni avversari, riduce il danno delle Armi temporanee; nel primo turno annulla anche un effetto aggiuntivo di un'Arma. |
+| Leggendaria | Sabotaggio | Arsenale in ombra | 2 | Per 2 turni avversari, riduce sensibilmente il danno delle Armi temporanee; ne disattiva una e ne impedisce il riutilizzo finché dura il sabotaggio. |
+| Comune | Amplificazione | Carica rapida | 1 | Per 1 tuo turno, una carta Arma temporanea attiva aggiunge un piccolo bonus di danno senza prolungare la sua durata. |
+| Rara | Amplificazione | Doppia camera | 2 | Per 2 tuoi turni, una carta Arma temporanea infligge più danni; nel primo turno ignora una riduzione minima subita dall'Arsenale. |
+| Epica | Amplificazione | Sovralimentazione multipla | 2 | Per 2 tuoi turni, una carta Arma temporanea aumenta i danni; nel primo turno ignora una riduzione media applicata al bersaglio. |
+| Leggendaria | Amplificazione | Furia coordinata | 2 | Per 2 tuoi turni, una carta Arma temporanea aumenta sensibilmente i danni; nel primo turno ignora una riduzione media, ma non le immunità. |
 
-### Generatore — 8 carte
+### Generatore — 8 carte · Progettazione approvata
 
-| Rarità | Funzione | Carta | Intensità di progetto | Turni | Effetto |
-|---|---|---|---|---:|---|
-| Comune | Sabotaggio | Calo di tensione | −1 punti su protezione/riparazione | 1 | −1 punto al primo effetto di scudo o riparazione alimentato dal Generatore durante il turno colpito. |
-| Rara | Sabotaggio | Perdita di flusso | −1 punti su protezione/riparazione | 2 | −1 al primo effetto di scudo o riparazione alimentato dal Generatore in ciascun turno colpito. |
-| Epica | Sabotaggio | Scarica di ritorno | −2 punti su protezione/riparazione | 2 | −2 al primo effetto di scudo o riparazione alimentato dal Generatore in ciascun turno colpito. |
-| Leggendaria | Sabotaggio | Soffocamento del nucleo | −2 punti su protezione/riparazione | 2 | −2 ai primi due effetti di scudo o riparazione alimentati dal Generatore in ciascun turno colpito. |
-| Comune | Amplificazione | Condensatore ausiliario | +1 punti su protezione/riparazione | 1 | +1 punto al primo effetto di scudo o riparazione alimentato dal Generatore nel tuo ciclo. |
-| Rara | Amplificazione | Flusso stabilizzato | +1 punti su protezione/riparazione | 2 | +1 punto al primo effetto di scudo o riparazione alimentato dal Generatore per ciascuno dei tuoi due cicli. |
-| Epica | Amplificazione | Nucleo potenziato | +2 punti su protezione/riparazione | 2 | +2 punti al primo effetto di scudo o riparazione alimentato dal Generatore per ciclo. |
-| Leggendaria | Amplificazione | Risonanza del Generatore | +2 punti su protezione/riparazione | 2 | +2 punti ai primi due effetti di scudo o riparazione alimentati dal Generatore per ciclo. |
+| Rarità | Tipo | Carta | Turni | Effetto concordato |
+|---|---|---|---:|---|
+| Comune | Sabotaggio | Calo di tensione | 1 | Per 1 turno avversario, limita l'uso di una capacità energetica non essenziale, senza togliere HP. |
+| Rara | Sabotaggio | Perdita di flusso | 2 | Per 2 turni avversari, limita due capacità energetiche minori, senza disattivare le difese di base. |
+| Epica | Sabotaggio | Scarica di ritorno | 2 | Per 2 turni avversari, limita una funzione energetica principale; le difese di base rimangono operative. |
+| Leggendaria | Sabotaggio | Soffocamento del nucleo | 2 | Per 2 turni avversari, limita una funzione energetica principale e, all'inizio, rimuove un piccolo bonus energetico già attivo. |
+| Comune | Amplificazione | Condensatore ausiliario | 1 | Per 1 tuo turno, potenzia una capacità energetica minore senza modificare gli HP. |
+| Rara | Amplificazione | Flusso stabilizzato | 2 | Per 2 tuoi turni, potenzia una capacità energetica intermedia e migliora leggermente la stabilità delle difese. |
+| Epica | Amplificazione | Nucleo potenziato | 2 | Per 2 tuoi turni, potenzia una funzione energetica principale senza modificare gli HP né le navicelle di supporto. |
+| Leggendaria | Amplificazione | Risonanza del Generatore | 2 | Per 2 tuoi turni, potenzia notevolmente una funzione energetica principale e concede subito un piccolo bonus difensivo, senza modificare gli HP o le navicelle di supporto. |
 
-### Plancia — 8 carte
+### Plancia — 8 carte · Progettazione approvata
 
-**Pacchetto Plancia APPROVATO: 8 carte su 8 (17 novembre 2026).** Tutte funzionano sulle barre HP delle navicelle: nessuna prende di mira i componenti interni. L'approvazione riguarda la progettazione; non sono ancora carte giocabili.
+| Rarità | Tipo | Carta | Turni | Effetto concordato |
+|---|---|---|---:|---|
+| Comune | Sabotaggio | Coordinate falsate | 1 | Per 1 turno avversario, il primo attacco a due o più bersagli viene limitato a una sola navicella bersaglio. I colpi aggiuntivi non si riassegnano; non riduce il danno del colpo rimasto. |
+| Rara | Sabotaggio | Confusione della rotta | 2 | Per i prossimi 2 turni dell'avversario, il primo attacco a più bersagli di ciascun turno può colpire una sola navicella, quella inizialmente scelta. Gli altri colpi vanno persi; il colpo rimasto conserva il suo danno. |
+| Epica | Sabotaggio | Rotta fantasma | 2 | Per 2 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno vengono limitati a una sola navicella per attacco. Gli altri colpi si perdono; il danno dei colpi rimasti non cambia. |
+| Leggendaria | Sabotaggio | Cortocircuito tattico | 3 | Per 3 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno colpiscono una sola navicella per attacco. I colpi aggiuntivi si perdono, senza riassegnarli e senza ridurre il colpo rimasto. |
+| Comune | Amplificazione | Calcolo di tiro | 1 | Per 1 tuo turno, puoi ripartire il danno complessivo del primo attacco della nave madre tra due navicelle di supporto nemiche operative, se presenti. Esempio: 8 danni possono diventare 5+3. Non aggiunge danni e non permette di aggirare i supporti per colpire la madre. |
+| Rara | Amplificazione | Navigazione assistita | 2 | Per 2 tuoi turni, il primo attacco della nave madre di ogni turno può dividere il proprio danno fra 2 navicelle di supporto avversarie operative. Danno totale invariato; protezioni applicate a ciascuna quota. |
+| Epica | Amplificazione | Analisi predittiva | 2 | Per 2 tuoi turni, i primi 2 attacchi della nave madre per turno possono ciascuno distribuire il proprio danno fra 2 navicelle di supporto nemiche operative. Nessun colpo extra, nessun danno aggiuntivo, nessun aggiramento della madre. |
+| Leggendaria | Amplificazione | Strategia a fuoco | 3 | Per 3 tuoi turni, i primi 2 attacchi della nave madre di ciascun turno possono suddividere i danni fra 2 navicelle di supporto nemiche operative. Nessun nuovo colpo o danno, e le difese si applicano a ciascuna quota. |
 
-| Rarità | Tipo | Carta | Durata | Effetto |
-|---|---|---|---|---|
-| Comune | Sabotaggio | Coordinate falsate | 1 turno | **Approvata.** Per 1 turno avversario, il primo attacco a due o più bersagli viene limitato a una sola navicella bersaglio. I colpi aggiuntivi non si riassegnano; non riduce il danno del colpo rimasto. |
-| Rara | Sabotaggio | Confusione della rotta | 2 turni | **Approvata.** Per i prossimi 2 turni dell'avversario, il primo attacco a più bersagli di ciascun turno può colpire una sola navicella, quella inizialmente scelta. Gli altri colpi vanno persi; il colpo rimasto conserva il suo danno. |
-| Epica | Sabotaggio | Rotta fantasma | 2 turni | **Approvata.** Per 2 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno vengono limitati a una sola navicella per attacco. Gli altri colpi si perdono; il danno dei colpi rimasti non cambia. |
-| Leggendaria | Sabotaggio | Cortocircuito tattico | 3 turni | **Approvata.** Per 3 turni dell'avversario, i primi 2 attacchi multibersaglio di ciascun turno colpiscono una sola navicella per attacco. I colpi aggiuntivi si perdono, senza riassegnarli e senza ridurre il colpo rimasto. |
-| Comune | Amplificazione | Calcolo di tiro | 1 turno | **Approvata.** Per 1 tuo turno, puoi ripartire il danno complessivo del primo attacco della nave madre tra due navicelle di supporto nemiche operative, se presenti. Esempio: 8 danni possono diventare 5+3. Non aggiunge danni e non permette di aggirare i supporti per colpire la madre. |
-| Rara | Amplificazione | Navigazione assistita | 2 turni | **Approvata.** Per 2 tuoi turni, il primo attacco della nave madre di ogni turno può dividere il proprio danno fra 2 navicelle di supporto avversarie operative. Danno totale invariato; protezioni applicate a ciascuna quota. |
-| Epica | Amplificazione | Analisi predittiva | 2 turni | **Approvata.** Per 2 tuoi turni, i primi 2 attacchi della nave madre per turno possono ciascuno distribuire il proprio danno fra 2 navicelle di supporto nemiche operative. Nessun colpo extra, nessun danno aggiuntivo, nessun aggiramento della madre. |
-| Leggendaria | Amplificazione | Strategia a fuoco | 3 turni | **Approvata.** Per 3 tuoi turni, i primi 2 attacchi della nave madre di ciascun turno possono suddividere i danni fra 2 navicelle di supporto nemiche operative. Nessun nuovo colpo o danno, e le difese si applicano a ciascuna quota. |
+## Stato e integrazione
 
-**Regole trasversali:** si limitano solo gli attacchi che avrebbero davvero più bersagli; le quote di danno ripartite non superano il danno originale, non raggiungono la madre attraverso i supporti e subiscono ciascuna le difese pertinenti. Se resta meno di due supporti attivi, l'amplificazione non crea bersagli o danni. I numeri di durata sono provvisori in attesa del bilanciamento finale.
+- **32 su 32** effetti confermati come direzione progettuale. Le carte di Arsenale e Generatore sono state allineate alle spiegazioni approvate oralmente: nessuna nuova penalità ai vecchi componenti come bersagli.
+- **Valori numerici ancora aperti:** in particolare entità dei bonus Arma e distinzione delle capacità energetiche minori/principali. Si definiscono quando le meccaniche sono verificabili, non si inventano in questa bozza.
+- La carta **Buco Nero** è distinta dalle 32 schede, con limite deciso di **fino a tre copie nel mazzo**; azzera le carte in campo senza distruggere navi.
+- Le 33 schede non sono ancora attive nelle battaglie ufficiali; il ruleset HP e le esclusive devono essere verificati. Nessuna immagine o modifica estetica.
 
-## Stato e implementazione successiva
-
-Le 32 definizioni sono nel catalogo JSON collegato a questo documento. Sono **schede provvisorie di progetto**, non oggetti caricati nel gioco. L'implementazione delle carte avverrà dopo la revisione dei quattro pacchetti, quando il motore HP e sincronizzazione sarà consolidato. Non modificare la grafica, le 120 esclusive, i Boss o la progressione dei componenti in questa fase.
-
-Identificativi provvisori: `draft-sys-*`; non usare questi ID come carte attive senza migrazione e test.
