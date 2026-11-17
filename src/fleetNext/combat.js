@@ -5,7 +5,7 @@ import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression} from './progression.js';
 import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
-import {LINCE_ACTIONS,LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
+import {LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
  ensureLinceState,linceMarkedRouteReady,lincePrecondition,recallLinceModule,
  recallLinceMachine,recoveredMachineForDeploy} from './linceEngine.js';
 import {
@@ -1148,12 +1148,31 @@ export function autoFleetTurn(b,who=b.turn){
  const cards=[];
  for(const c of candidates){
   if(cards.length>=FLEET_MAX_PLAYED)break;
-  if(validateFleetTurn(b,who,{...defaultOrder,ownPartId,cards:[...cards,c.i],pass:!part}))continue;
+  const attack=c.def.effectSpec;
+  const direct=attack?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(attack.action);
+  const target=direct&&part?{targetKind:'part',targetId:part.id,partId:part.id}:defaultOrder;
+  const alreadyDirect=cards.some(i=>card(side.hand[i]).effectSpec?.type==='lince'&&
+   LINCE_BYPASS_ACTIONS.includes(card(side.hand[i]).effectSpec?.action));
+  const preview=alreadyDirect&&part?{targetKind:'part',targetId:part.id,partId:part.id}:target;
+  if(validateFleetTurn(b,who,{...preview,ownPartId,cards:[...cards,c.i],pass:!part}))continue;
   cards.push(c.i);
  }
- const bypass=cards.some(i=>card(side.hand[i]).effectSpec.type==='bypass');
- const target=bypass&&part?{targetKind:'part',targetId:part.id,partId:part.id}:defaultOrder;
- return {...target,ownPartId,cards,pass:!part};
+ const bypass=cards.some(i=>card(side.hand[i]).effectSpec.type==='bypass'||
+  card(side.hand[i]).effectSpec.type==='lince'&&
+  LINCE_BYPASS_ACTIONS.includes(card(side.hand[i]).effectSpec.action));
+ const marked=side.lince?.route?.usePly===b.ply?
+  enemy.ships[0].parts.find(p=>p.id===side.lince.route.partId&&!p.destroyed):null;
+ const target=(bypass&&part||marked&&!cards.some(i=>card(side.hand[i]).effectSpec.type==='lince'&&
+  LINCE_ATTACK_ACTIONS.includes(card(side.hand[i]).effectSpec.action)))?
+  {targetKind:'part',targetId:(marked||part).id,partId:(marked||part).id}:defaultOrder;
+ const helm=side.commander?.id==='ex-c01-01'||cards.some(i=>side.hand[i]==='ex-c01-01');
+ const machines=(side.machines||[]).filter(unitAlive);
+ return {...target,ownPartId,cards,pass:!part,
+  heliosTrade:helm&&bypass&&side.hand.length>cards.length,
+  radentRecall:bypass&&installedModule(side,'utility')?.cardId==='nx-c01-01'&&machines.length>0,
+  radentMachineId:machines[0]?.id,
+  linceRecallWeapon:cards.some(i=>side.hand[i]==='nx-c01-09')&&
+   installedModule(side,'weapon')?.hp<installedModule(side,'weapon')?.maxHp};
 }
 export function timeoutFleetTurn(battle,nowMs){
  if(battle.phase!=='playing'||nowMs<battle.deadlineMs)return {ok:false,battle,events:[]};

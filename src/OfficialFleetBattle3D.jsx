@@ -485,7 +485,7 @@ export default function OfficialFleetBattle3D({
  const selectedActions=chosenTypes.map(id=>card(id)?.effectSpec?.action).filter(Boolean);
  const linceMachineChoices=player.machines.filter(m=>m.hp>0&&!m.destroyed&&m.sourceCardId);
  const heliosAvailable=(player.commander?.id==='ex-c01-01'||selectedActions.includes('helios'))&&
-  (directBypass||selectedActions.includes('helios')||!!routePartId);
+  directBypass;
  const heliosDiscardChoices=player.hand.filter((id,i)=>!chosenCards.includes(i));
  const radentReady=installedModule(player,'utility')?.cardId==='nx-c01-01'&&
   linceMachineChoices.length>0&&(directBypass||!!routePartId);
