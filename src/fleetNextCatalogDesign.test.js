@@ -7,7 +7,7 @@ import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 const ships=['N00','C01','C02','C03','R01','R02','R04','E01','E02','L01','L03','L04'];
 const types=['Modulo utilità','Modulo d’arma','Attacco','Difesa','Trappola','Tattica','Personaggio','Fusione'];
 
-test('Catalogo di sostituzione: 120 carte ragionate, dieci per madre',()=>{
+test('Catalogo sorgente storico: 120 carte ragionate, dieci per madre',()=>{
  assert.equal(design.cards.length,120);
  assert.equal(new Set(design.cards.map(c=>c.id)).size,120);
  for(const shipId of ships){
