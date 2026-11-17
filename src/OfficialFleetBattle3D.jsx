@@ -36,6 +36,7 @@ import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBa
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
+import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
@@ -104,7 +105,8 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     canTarget={canTarget||canSelectOwn} allowOwnTarget={canSelectOwn}
     onSelectVital={id=>onSelectVital?.(FLEET_PHYSICAL_VITALS[id])}
     vitalLabels={PHYSICAL_LABELS} vitalShortLabels={PHYSICAL_SHORT_LABELS}
-    knownVitals={['engine','weapons','shieldGenerator','command']}/>
+    knownVitals={['engine','weapons','shieldGenerator','command']}
+    hideVitalTargets={unit.ruleset===HP_SYNC_RULESET}/>
    <MountedWeapons side={side} vessel={vessel} index={0}/>
    {currentImpact&&<img key={(impact?.round||0)+currentImpact.kind}
     className="f3d-impact f3d-impact--mother" src={currentImpact.image}
@@ -217,16 +219,18 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
 }
 function OriginalFleetBar({side,unit,nickname}){
  const mother=unit.ships[0];
- const max=mother.parts.reduce((n,p)=>n+p.maxHp,0);
- const hp=mother.parts.reduce((n,p)=>n+p.hp,0);
+ const modern=unit.ruleset===HP_SYNC_RULESET;
+ const max=modern?mother.maxHp:mother.parts.reduce((n,p)=>n+p.maxHp,0);
+ const hp=modern?mother.hp:mother.parts.reduce((n,p)=>n+p.hp,0);
+ const synchronization=modern?1-activeSynchronizationPenalty(unit,unit.currentPly??0)/100:null;
  const units=[...unit.escorts.slice(0,1).map(e=>({kind:'escort',hp:e.hp,max:e.maxHp,link:e.linked})),
-  {kind:'mother',hp,max,link:mother.parts.filter(p=>!p.destroyed).length/mother.parts.length},
+  {kind:'mother',hp,max,link:modern?synchronization:mother.parts.filter(p=>!p.destroyed).length/mother.parts.length},
   ...unit.escorts.slice(1,2).map(e=>({kind:'escort',hp:e.hp,max:e.maxHp,link:e.linked}))];
  return <div className={'live-fleet-bar live-fleet-bar--'+side}>
   <strong>{side==='A'?(nickname||'TU'):'AVVERSARIO'}</strong>
   <div className="live-units">{units.map((u,i)=><div key={i}
    className={'live-unit'+(u.kind==='mother'?' live-unit--mother':'')}
-   title={u.kind==='mother'?'Integrità dei componenti vitali':'Resistenza scudiera e collegamento'}>
+   title={u.kind==='mother'?(modern?'HP nave madre e sincronizzazione':'Integrità dei componenti vitali'):'Resistenza scudiera e collegamento'}>
    <span>{u.kind==='mother'?'MADRE':'SCUDIERA'}</span>
    <i className="live-unit-health"><b style={{width:pct(u.hp,u.max)+'%'}}/></i>
    <i className="live-unit-shield"><b style={{
@@ -643,9 +647,12 @@ export default function OfficialFleetBattle3D({
     if(reward.ok)writeFleetInventory(reward.inventory);
    }
    const me=battle.sides.A,op=battle.sides.B;
-   const max=me.ships[0].parts.reduce((sum,p)=>sum+p.maxHp,0)+
+   const modern=me.ruleset===HP_SYNC_RULESET;
+   const max=(modern?me.ships[0].maxHp:
+    me.ships[0].parts.reduce((sum,p)=>sum+p.maxHp,0))+
     me.escorts.reduce((sum,e)=>sum+e.maxHp,0);
-   const hp=me.ships[0].parts.reduce((sum,p)=>sum+p.hp,0)+
+   const hp=(modern?me.ships[0].hp:
+    me.ships[0].parts.reduce((sum,p)=>sum+p.hp,0))+
     me.escorts.reduce((sum,e)=>sum+e.hp,0);
    const health=Math.max(0,Math.min(1,hp/Math.max(1,max)));
    const result=won?'player':battle.winner==='B'?'enemy':'draw';
@@ -656,7 +663,7 @@ export default function OfficialFleetBattle3D({
     starsEarned:[won,won&&health>=.65,won&&health>=.9],
     matchStats:{
      turnsElapsed:battle.round,sectorNumber,
-     damageDealt:op.ships[0].parts.reduce((sum,p)=>sum+p.maxHp-p.hp,0),
+     damageDealt:modern?op.ships[0].maxHp-op.ships[0].hp:op.ships[0].parts.reduce((sum,p)=>sum+p.maxHp-p.hp,0),
      enemyVitalsDestroyed:op.ships[0].parts.filter(p=>p.destroyed).length,
      bossPlanetId:bossPlanetId??null,bossSectorLevel:bossSectorLevel??null
     }
@@ -911,7 +918,7 @@ export default function OfficialFleetBattle3D({
     <select aria-label="Bersaglio dell’attacco" value={actualTarget?actualTarget.kind+':'+actualTarget.id:''}
      disabled={!myTurn} onChange={event=>selectTarget(event.target.value)}>
      {targetChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
-      {t.kind==='part'?'Madre · '+VITAL_LABELS[t.id]:t.kind==='module'?'Modulo · '+t.name:t.name} · {t.hp}/{t.maxHp}
+      {t.kind==='part'?(enemy.ruleset===HP_SYNC_RULESET?'Madre · HP':'Madre · '+VITAL_LABELS[t.id]):t.kind==='module'?'Modulo · '+t.name:t.name} · {t.hp}/{t.maxHp}
      </option>)}
     </select>
    </label>}
