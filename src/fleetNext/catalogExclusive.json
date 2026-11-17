@@ -1016,7 +1016,8 @@
       "effectSpec": {
         "type": "weaken",
         "amount": 1
-      }
+      },
+      "nativeFace": true
     },
     {
       "id": "ex-r03-01",
