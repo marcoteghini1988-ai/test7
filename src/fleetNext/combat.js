@@ -1643,6 +1643,155 @@ function nebulaRevealOnOwnTurn(b,ctx,events){
  refreshEscortLinks(side,b.ply);
 }
 
+
+// Tempesta E02: ogni carta produce un effetto reale; nessuna catena ricorsiva.
+function activateStormCard(b,who,def,ctx,events,order={},source=null){
+ const side=b.sides[who],action=def.effectSpec.action;
+ const note=(message,extra={})=>events.push(emit(b,who,'card',
+  (def.name||def.nome)+' · '+message,{cardId:def.id,...extra}));
+ if(isStormModule(def.id)){
+  const mounted=mountModule(side,def);
+  if(!mounted.ok)throw Error(mounted.reason);
+  if(action==='storm-capacitor'){
+   const state=ensureStormState(side);
+   state.charge=false;state.chargeStoredPly=-999;
+  }
+  note('Modulo montato: '+mounted.entry.name,{
+   moduleId:mounted.entry.id,moduleSlot:mounted.entry.slot});
+  return;
+ }
+ if(STORM_ATTACK_ACTIONS.includes(action)){
+  ctx.stormAttacks.push({action,id:def.id});
+  note('Comando di fuoco '+(ctx.stormAttacks.length));
+  return;
+ }
+ if(action==='storm-front'){
+  const escort=stormSupports(side,b.ply).find(e=>e.id===order.stormFrontEscortId)||
+   stormSupports(side,b.ply)[0];
+  const defense=side.defenses.find(d=>d.source===source);
+  if(!escort||!defense)throw Error('Fronte di Tempesta: supporto non operativo');
+  defense.stormFrontEscortId=escort.id;
+  note(escort.name+' intercetterà il prossimo colpo su una macchina alleata',{
+   escortId:escort.id});
+  return;
+ }
+ if(action==='storm-captain'){
+  note('Ricambia una carta solo dopo aver ferito due unità distinte nello stesso turno');
+  return;
+ }
+ if(action==='lightning-net'){
+  events.push(emit(b,who,'trap-set','Rete parafulmine preparata coperta',
+   {cardId:def.id}));
+  return;
+ }
+ throw Error('Azione Tempesta non riconosciuta: '+action);
+}
+function stormRedirectFront(b,ctx,events,target){
+ if(!target||target.kind!=='machine')return target;
+ const defender=b.sides[other(ctx.who)];
+ if(defender.ships[0].id!=='E02')return target;
+ const defense=defender.defenses.find(d=>d.id==='nx-e02-04'&&!d.hidden&&
+  d.untilPly>b.ply&&d.stormFrontEscortId);
+ if(!defense)return target;
+ const guard=stormSupports(defender,b.ply).find(e=>e.id===defense.stormFrontEscortId);
+ if(!guard||!stormUnits(defender,b.ply).some(t=>t.kind==='machine'&&
+  t.unit.id===target.unit.id))return target;
+ discardDefense(defender,defense.source);
+ events.push(emit(b,other(ctx.who),'storm-front',
+  'Fronte di Tempesta: '+guard.name+' intercetta il colpo sulla macchina',{
+   cardId:defense.id,fromTargetId:target.unit.id,targetId:guard.id,redirected:true}));
+ return {kind:'escort',unit:guard,redirected:true,stormOriginKind:'machine'};
+}
+function stormNetStops(b,ctx,events,target){
+ if(!target||target.kind!=='escort'||!ctx.stormEscortVictims?.size||ctx.stormEscortVictims.has(target.unit.id))
+  return false;
+ const defender=b.sides[other(ctx.who)];
+ const defense=defender.defenses.find(d=>d.id==='nx-e02-08'&&d.hidden&&
+  d.armedAtPly<b.ply&&d.trigger==='storm-second-support');
+ if(!defense||defender.ships[0].id!=='E02')return false;
+ discardDefense(defender,defense.source);
+ events.push(emit(b,other(ctx.who),'trap-reveal',
+  'Rete parafulmine annulla il secondo danno a un supporto',{
+   cardId:defense.id,targetKind:'escort',targetId:target.unit.id}));
+ return true;
+}
+function stormConsumeHeavy(b,ctx,events,target,amount){
+ if(!target||!['escort','machine'].includes(target.kind))return amount;
+ const side=b.sides[ctx.who];
+ if(side.ships[0].id!=='E02'||!stormModuleActive(side,'nx-e02-09',b.ply))return amount;
+ const state=ensureStormState(side);
+ if(!state.charge||state.chargeStoredPly>=b.ply)return amount;
+ state.charge=false;state.chargeStoredPly=-999;
+ events.push(emit(b,ctx.who,'storm-heavy',
+  'Condensatore Tempesta scarica il prossimo colpo pesante',{
+   cardId:'nx-e02-09',targetKind:target.kind,targetId:target.unit.id}));
+ return Math.max(amount,3);
+}
+function stormOnHit(b,ctx,events,hit){
+ if(!hit?.damage||!['escort','machine'].includes(hit.kind))return;
+ if(hit.kind==='escort')ctx.stormEscortVictims?.add(hit.unit.id);
+ const side=b.sides[ctx.who];
+ if(side.ships[0].id!=='E02')return;
+ ctx.stormHitIds??=new Set();
+ ctx.stormHitIds.add(hit.kind+':'+hit.unit.id);
+ const state=ensureStormState(side);
+ if(ctx.stormSuppressChain||!stormModuleActive(side,'nx-e02-01',b.ply)||
+  state.chainFiredPly===b.ply)return;
+ const plan=ctx.stormChainPlan;
+ if(!plan||plan.id===hit.unit.id)return;
+ state.chainFiredPly=b.ply; // L'uso si consuma anche se la destinazione sparisce.
+ const enemy=b.sides[other(ctx.who)];
+ const otherUnit=stormUnits(enemy,b.ply).find(t=>t.kind===plan.kind&&t.unit.id===plan.id);
+ if(!otherUnit){
+  events.push(emit(b,ctx.who,'storm-chain','Bobina: bersaglio fissato non disponibile',
+   {cardId:'nx-e02-01'}));
+  return;
+ }
+ ctx.stormSuppressChain=true;
+ const secondary={kind:otherUnit.kind,unit:otherUnit.unit};
+ const hit2=linceHit(b,ctx,events,secondary,1,'nx-e02-01',ctx.order||{},false,0);
+ ctx.stormSuppressChain=false;
+ events.push(emit(b,ctx.who,'storm-chain',
+  'Bobina a catena: '+(hit2.damage?'colpo leggero riuscito':'colpo bloccato'),{
+   cardId:'nx-e02-01',targetKind:otherUnit.kind,targetId:otherUnit.unit.id,
+   damage:hit2.damage||0}));
+}
+function stormEndOwnTurn(b,ctx,events){
+ const side=b.sides[ctx.who];
+ if(side.ships[0].id!=='E02')return;
+ const state=ensureStormState(side),ids=[...(ctx.stormHitIds||[])];
+ // Il Condensatore riceve la carica solo dopo la risoluzione completa.
+ if(ids.length>=3&&stormModuleActive(side,'nx-e02-09',b.ply)&&
+  !state.charge&&state.lastChargePly!==b.ply){
+  state.charge=true;state.chargeStoredPly=b.ply;state.lastChargePly=b.ply;
+  events.push(emit(b,ctx.who,'storm-charge',
+   'Condensatore: tre unità diverse danneggiate, una carica per il prossimo attacco',{
+    cardId:'nx-e02-09',chargeStoredPly:b.ply,hitCount:ids.length}));
+ }
+ if(ids.length>=2&&ctx.order?.stormCaptainSwap&&
+  side.commander?.id==='ex-e02-01'&&side.commander.untilPly>b.ply&&
+  operational(side.ships[0],characterSystem(side))&&
+  state.captainUsedPly!==b.ply&&side.hand.length){
+  const preferred=side.hand.indexOf(ctx.order.stormCaptainTradeId);
+  const index=preferred>=0?preferred:0;
+  const discarded=side.hand.splice(index,1)[0];
+  if(discarded){
+   side.discard.push(discarded);
+   if(!side.deck.length&&side.discard.length){
+    side.deck=shuffled(side.discard,b);side.discard=[];
+   }
+   const drawn=side.deck.shift();
+   if(drawn)side.hand.push(drawn);
+   state.captainUsedPly=b.ply;
+   events.push(emit(b,ctx.who,'storm-captain',
+    'Capitano della Tempesta: carta scartata e una pescata reale',{
+     cardId:'ex-e02-01',discardedCardId:discarded,drawnCardId:drawn||null,
+     damagedUnits:ids.length}));
+  }
+ }
+ state.lastHits=ids;state.lastHitsPly=b.ply;
+}
+
 function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
  const side=b.sides[who],enemy=b.sides[other(who)];
  const s=spec,token=source||def.id+'@'+b.ply+'-'+ctx.effectSerial++;
