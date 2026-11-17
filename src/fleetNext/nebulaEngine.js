@@ -101,10 +101,15 @@ export function nebulaChoiceReason(side,enemy,chosen=[],order={},ply=0){
   const played=actions.includes('mist-archon');
   const terrain=chosen.some(c=>c.kind==='terrain');
   if(!terrain||!(active||played))return 'Arconte: serve un Personaggio attivo e un Terreno giocato';
-  const left=(side.hand||[]).filter((id,i)=>!chosen.some(c=>c.id===id&&
-   chosen.indexOf(c)===i)); // Solo controllo preliminare, scelta esatta nel turno.
-  if(order.nebulaTradeCardId&&!side.hand.includes(order.nebulaTradeCardId))
-   return 'Arconte: carta da scambiare non presente in mano';
+  const consumed=new Map();
+  for(const c of chosen)consumed.set(c.id,(consumed.get(c.id)||0)+1);
+  const left=(side.hand||[]).filter(id=>{
+   const n=consumed.get(id)||0;
+   if(n){consumed.set(id,n-1);return false;}
+   return true;
+  });
+  if(order.nebulaTradeCardId&&!left.includes(order.nebulaTradeCardId))
+   return 'Arconte: scegli una carta che rimanga in mano';
   if(!left.length)return 'Arconte: serve una carta rimasta in mano';
  }
  return '';
