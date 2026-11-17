@@ -5,21 +5,22 @@ import {PHASE1_SHIPS} from './mathDuelEngine.js';
 import {readShipCollection,grantShipCard,upgradeShipCard,
  updateShipCollection,equipShipCards} from './shipCollection.js';
 import {SHIP_UPGRADE_DUST,shipUpgradeDustCost,validateShipUpgradePurchase} from './shipUpgrades.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 
 function storage(){
  const entries=new Map();
  return {getItem:k=>entries.get(k)??null,setItem:(k,v)=>entries.set(k,v)};
 }
 
-test('piani di potenziamento disponibili per 17 navi in quattro rarità, L2–L5',()=>{
+test('piani di potenziamento disponibili per tutte le 17 navi, fino al livello specifico',()=>{
  assert.equal(PHASE1_SHIPS.length,17);
  for(const ship of PHASE1_SHIPS){
-  for(let target=2;target<=5;target++){
+  for(let target=2;target<=shipMaxLevel(ship.id);target++){
    const price=shipUpgradeDustCost(ship.id,target);
    assert.ok(Number.isSafeInteger(price)&&price>0,ship.id+' L'+target);
    if(target>2)assert.ok(price>shipUpgradeDustCost(ship.id,target-1));
   }
-  assert.equal(shipUpgradeDustCost(ship.id,6),null);
+  assert.equal(shipUpgradeDustCost(ship.id,shipMaxLevel(ship.id)+1),null);
   assert.equal(shipUpgradeDustCost(ship.id,1),null);
  }
  assert.equal(shipUpgradeDustCost('NO_SHIP',2),null);

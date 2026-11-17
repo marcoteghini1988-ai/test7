@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {CAMPAIGN_SHIP_ORDER,SHIP_PROGRESSION_IDS,getShipProgression,
- getShipProgressionLevels,shipProgressionProfile} from './fleetNext/progression.js';
+ getShipProgressionLevels,shipProgressionProfile,shipMaxLevel,shipEscortUnlockLevels} from './fleetNext/progression.js';
 import {SHIP_CONFIGS,EXCLUSIVE_CARDS,FLEET_SLOTS,
  BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,PROGRESSION_CARD_COUNT,
  unlockedParts,requiredEscortCount,requiredReserveCount,supportGrade,
@@ -10,7 +10,7 @@ import {SHIP_CONFIGS,EXCLUSIVE_CARDS,FLEET_SLOTS,
  generalCard,exclusiveCard} from './fleetNext/rules.js';
 import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 
-test('Dodici tappe da cinque livelli conservano anche le cinque varianti possedute',()=>{
+test('Dodici famiglie di campagna e cinque varianti hanno progressioni complete con tetti distinti',()=>{
  assert.equal(CAMPAIGN_SHIP_ORDER.length,12);
  assert.equal(new Set(CAMPAIGN_SHIP_ORDER).size,12);
  assert.equal(CAMPAIGN_SHIP_ORDER[0],'N00');
@@ -19,14 +19,15 @@ test('Dodici tappe da cinque livelli conservano anche le cinque varianti possedu
  assert.deepEqual([...SHIP_PROGRESSION_IDS].sort(),Object.keys(SHIP_CONFIGS).sort());
  for(const id of SHIP_PROGRESSION_IDS){
   const rows=getShipProgressionLevels(id);
-  assert.equal(rows.length,5,id);
-  assert.deepEqual(rows.map(row=>row.level),[1,2,3,4,5],id);
+  assert.equal(rows.length,shipMaxLevel(id),id);
+  assert.deepEqual(rows.map(row=>row.level),Array.from({length:shipMaxLevel(id)},(_,i)=>i+1),id);
+  assert.equal(rows.at(-1).potential,100,'tutte le flotte raggiungono lo stesso indice-obiettivo');
   assert.ok(shipProgressionProfile(id).description,id);
   if(!CAMPAIGN_SHIP_ORDER.includes(id))assert.ok(shipProgressionProfile(id).variantOf,id);
  }
 });
 
-test('Aurora ha sempre soltanto Arsenale e Generatore, senza supporti o fusioni',()=>{
+test('Aurora mantiene la progressione iniziale L1–L5 senza supporti e completa la coppia ai livelli 10/18',()=>{
  for(let level=1;level<=5;level++){
   const row=getShipProgression('N00',level);
   assert.deepEqual(unlockedParts('N00',level),['weapons','generator']);
@@ -35,6 +36,14 @@ test('Aurora ha sempre soltanto Arsenale e Generatore, senza supporti o fusioni'
   assert.equal(requiredReserveCount('N00',level),0);
   assert.equal(row.fusionLimit,0);
  }
+ assert.deepEqual(shipEscortUnlockLevels('N00'),[10,18]);
+ assert.equal(requiredEscortCount('N00',9),0);
+ assert.equal(requiredEscortCount('N00',10),1);
+ assert.equal(requiredEscortCount('N00',17),1);
+ assert.equal(requiredEscortCount('N00',18),2);
+ assert.deepEqual(getShipProgression('N00',20).escortGrades,[2,2]);
+ assert.deepEqual(getShipProgression('N00',20).vitalIds,['weapons','generator','command']);
+ assert.equal(getShipProgression('N00',20).fusionLimit,0);
  assert.equal(eligibleExclusives('N00',5).length,10,'Aurora ha 10 esclusive, di cui 9 nuove schede');
  assert.equal(eligibleExclusives('N00',5).filter(c=>c.playable!==false).length,10);
  assert.ok(exclusiveUnlocked('ex-n00-01','N00',1));
@@ -45,6 +54,11 @@ test('I vitali passano da due a tre e a quattro solo insieme alle funzioni neces
  assert.deepEqual(unlockedParts('C01',2),['weapons','generator']);
  assert.deepEqual(unlockedParts('C01',3),['weapons','generator','bridge']);
  assert.equal(requiredEscortCount('C01',5),0);
+ assert.deepEqual(shipEscortUnlockLevels('C01'),[9,17]);
+ assert.equal(requiredEscortCount('C01',8),0);
+ assert.equal(requiredEscortCount('C01',9),1);
+ assert.equal(requiredEscortCount('C01',17),2);
+ assert.equal(requiredEscortCount('C01',19),2);
  assert.deepEqual(unlockedParts('C02',1),['weapons','generator','bridge']);
  assert.equal(requiredEscortCount('C02',2),0);
  assert.equal(requiredEscortCount('C02',3),1);
@@ -113,7 +127,8 @@ test('Ogni aumento di livello migliora una capacità reale, con ruoli diversi fr
    const before=rows[i-1],after=rows[i];
    const capacity=row=>Object.values(row.integrityByPart).reduce((n,hp)=>n+hp,0);
    const gradeSum=row=>[...row.escortGrades,...row.reserveGrades].reduce((n,grade)=>n+grade,0);
-   assert.ok(after.attackPower>before.attackPower||after.defensePower>before.defensePower||
+   assert.ok(after.masteryPoints>before.masteryPoints||
+    after.attackPower>before.attackPower||after.defensePower>before.defensePower||
     capacity(after)>capacity(before)||gradeSum(after)>gradeSum(before)||after.fusionLimit>before.fusionLimit,
    id+' L'+after.level+' privo di un miglioramento reale');
   }
@@ -123,7 +138,7 @@ test('Ogni aumento di livello migliora una capacità reale, con ruoli diversi fr
 });
 
 test('Configurazioni storiche e prerequisiti esclusivi seguono la stessa progressione',()=>{
- for(const [id,config] of Object.entries(SHIP_CONFIGS))for(const row of getShipProgressionLevels(id)){
+ for(const [id,config] of Object.entries(SHIP_CONFIGS))for(const row of getShipProgressionLevels(id).slice(0,5)){
   const expected=Object.entries(config.partUnlockLevels).filter(([,min])=>min<=row.level).map(([part])=>part);
   assert.deepEqual([...expected].sort(),[...row.vitalIds].sort(),id+' L'+row.level);
   assert.equal(Number(row.level>=config.escort1UnlockLevel)+Number(row.level>=config.escort2UnlockLevel),row.escortCount,id);
@@ -156,7 +171,7 @@ test('Tutti gli slot esistono da subito; le carte tecniche restano coperte dai t
 
 test('Le letture sono immutabili e i livelli fuori intervallo non sbloccano supporti extra',()=>{
  assert.equal(getShipProgression('C02',-3).level,1);
- assert.equal(getShipProgression('C02',99).level,5);
+ assert.equal(getShipProgression('C02',99).level,18);
  assert.equal(getShipProgression('C02',3.8).level,3);
  assert.equal(getShipProgression('C02',NaN).level,1);
  assert.equal(getShipProgression('missing',5),null);

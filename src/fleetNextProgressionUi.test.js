@@ -123,10 +123,13 @@ test('Clicking an enemy support or machine emits its real kind, id and slot',()=
 });
 
 
-test('Hangar shows all five real levels, zero supports for Aurora and the final reserve/fusion cap',()=>{
+test('Hangar mostra le progressioni estese, con Aurora L20 e Arca L5',()=>{
  const aurora=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',level:5}));
  assert.match(aurora,/2 vitali/);assert.match(aurora,/0 supporti/);
- for(let level=1;level<=5;level++)assert.match(aurora,new RegExp('Livello '+level));
+ for(let level=1;level<=20;level++)assert.match(aurora,new RegExp('Livello '+level+'(?:<| )'));
+ const evolved=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',level:20}));
+ assert.match(evolved,/2 supporti/);
+ assert.match(evolved,/100%/);
  const arca=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'L04',level:5}));
  assert.match(arca,/4 vitali/);assert.match(arca,/2 supporti/);
  assert.match(arca,/2 in riserva/);assert.match(arca,/2 fusioni/);
