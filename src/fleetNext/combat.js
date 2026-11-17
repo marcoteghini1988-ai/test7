@@ -54,7 +54,7 @@ import {HP_SYNC_RULESET,motherIntegrityFromSystems,splitSynchronizedDamage} from
 import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
  commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,
  consumePlanciaRestriction,consumePlanciaSplit,planciaSplitCount,
- resetFieldWithBlackHole} from './newCardEffects.js';
+ resetFieldWithBlackHole,TEMP_WEAPON_DURATION} from './newCardEffects.js';
 
 const clone=x=>JSON.parse(JSON.stringify(x));
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -2552,7 +2552,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     name:modern?'Arma temporanea · '+(def.nome||def.name):def.nome||def.name,
     sourceCardId:def.id,source:token,hp:saved?.hp??s.hp,
     maxHp:saved?.maxHp??s.hp,power:modern?Math.max(1,s.power||0):s.power||0,
-    untilPly:modern?b.ply+2*(def.id==='prog-machine-guard'?2:1):null,destroyed:false,
+    untilPly:modern?b.ply+2*(TEMP_WEAPON_DURATION[def.id]||1):null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
    events.push(emit(b,who,'machine-deploy',machine.name+(modern?' schierata: potenzia l’attacco, non protegge la madre':' schierata: protegge la madre'),
