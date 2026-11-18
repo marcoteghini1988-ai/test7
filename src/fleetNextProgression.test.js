@@ -10,12 +10,12 @@ import {SHIP_CONFIGS,EXCLUSIVE_CARDS,FLEET_SLOTS,
  generalCard,exclusiveCard} from './fleetNext/rules.js';
 import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 
-test('Dodici famiglie di campagna e cinque varianti hanno progressioni complete con tetti distinti',()=>{
+test('Le dodici madri ufficiali hanno progressioni complete con tetti distinti',()=>{
  assert.equal(CAMPAIGN_SHIP_ORDER.length,12);
  assert.equal(new Set(CAMPAIGN_SHIP_ORDER).size,12);
  assert.equal(CAMPAIGN_SHIP_ORDER[0],'N00');
  assert.equal(CAMPAIGN_SHIP_ORDER.at(-1),'L04');
- assert.equal(SHIP_PROGRESSION_IDS.length,17);
+ assert.equal(SHIP_PROGRESSION_IDS.length,12);
  assert.deepEqual([...SHIP_PROGRESSION_IDS].sort(),Object.keys(SHIP_CONFIGS).sort());
  for(const id of SHIP_PROGRESSION_IDS){
   const rows=getShipProgressionLevels(id);
