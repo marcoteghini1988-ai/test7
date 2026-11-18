@@ -1,4 +1,4 @@
-// Eclissi Stellare — 17 famiglie, due armamenti per madre.
+// Eclissi Stellare — 12 madri ufficiali, due armamenti tecnici per la modalità storica.
 // Il seme è SOLO una chiave di caricamento. Nessun effetto automatico del seme.
 // Nomi, danni, intercettazione e soglie sono parametri provvisori da bilanciare.
 const p=(name,suits,role,damage,intercept,shield,mode='Immediata',threshold=0)=>
@@ -8,17 +8,12 @@ export const ESCORT_ARMORY=Object.freeze({
  C01:[p('Sentinella Solare','HS','Guardia',2,.24,.30),p('Lama Rubino','DC','Assalto',3,.06,.20)],
  C02:[p('Prisma Custode','DH','Intercettore',2,.23,.29),p('Trapano di Vetro','SC','Assedio',4,.05,.22,'Accumulo',12)],
  C03:[p('Corvo Scudo','CS','Intercettore',2,.19,.26),p('Artiglio a Impulsi','HD','Incursore',3,.09,.21)],
- C04:[p('Velo Cremisi','SH','Guardia',2,.21,.28),p('Dardo d’Ombra','DC','Assalto',3,.07,.23)],
  R01:[p('Falco Sentinella','HD','Guardia',3,.25,.32),p('Cannone Binario','SC','Assedio',4,.06,.24,'Accumulo',14)],
  R02:[p('Manta Barriera','CS','Intercettore',3,.22,.28),p('Sting Ionico','DH','Incursore',4,.09,.22)],
- R03:[p('Iride Scudo','HDS','Guardia',3,.23,.31),p('Prisma Inverso','CD','Artiglieria',4,.06,.24,'Accumulo',12)],
  R04:[p('Scudo del Vuoto','DC','Guardia',3,.24,.32),p('Squalo Siluro','SH','Assedio',5,.05,.23,'Accumulo',13)],
  E01:[p('Baluardo Nebulosa','HDC','Baluardo',4,.28,.34),p('Pulsar Nebulosa','SDC','Artiglieria',5,.07,.26,'Accumulo',13)],
  E02:[p('Fronte Tempesta','SCH','Intercettore',4,.25,.32),p('Tuono Doppio','DHS','Assalto',5,.10,.25)],
- E03:[p('Scudo Fenice','HDS','Guardia',4,.26,.35),p('Rinascita Plasma','CSD','Artiglieria',5,.07,.26,'Accumulo',15)],
- E04:[p('Orizzonte Aegis','CDH','Baluardo',4,.27,.36),p('Orizzonte Lance','HDSC','Assalto',5,.11,.26)],
  L01:[p('Corona Reale','HDC','Baluardo',5,.29,.39),p('Verdetto Stellare','HDSC','Artiglieria',6,.10,.28,'Accumulo',15)],
- L02:[p('Sentinella Eclisse','SDC','Intercettore',5,.26,.38),p('Ascia del Vuoto','HDSC','Assalto',6,.12,.30)],
  L03:[p('Ala del Giudizio','HSD','Guardia',5,.30,.40),p('Lancia dell’Alba','HDSC','Assedio',7,.08,.29,'Accumulo',16)],
  L04:[p('Arca Eterna','HDSC','Baluardo',5,.30,.42),p('Sovrana del Crepuscolo','HDSC','Artiglieria',7,.12,.30,'Accumulo',17)]
 });
