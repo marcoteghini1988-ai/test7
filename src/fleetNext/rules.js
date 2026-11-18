@@ -164,15 +164,13 @@ export function eligibleExclusives(shipId,level){
  return [...Object.values(EXCLUSIVE_CARDS),...Object.values(PROGRESSION_CARDS).filter(c=>c.shipId)]
   .filter(def=>exclusiveUnlocked(def.id,shipId,level));
 }
-const HISTORICAL_FUSION_EXCLUSIVES=new Set(['nx-l01-10','nx-l03-08','nx-l04-05']);
 export function effectiveDeck(baseDeck,shipId,level,{independentSupports=false}={}){
  const base=Array.isArray(baseDeck)?baseDeck:[];
  // Il mazzo non pesca effetti nuovi che non esistono ancora nel motore.
- // Le tre fusioni legacy restano nel registro per salvataggi storici, ma non
- // duplicano le carte Fusione native delle 10 esclusive della nave.
+ // Le tre vecchie Fusioni sono state sostituite con carte tattiche eseguibili.
+ // Le sole carte prog-fusion-* restano fuori dal mazzo ufficiale.
  const ex=eligibleExclusives(shipId,level).filter(c=>c.playable!==false&&
-  !c.id.startsWith('prog-fusion-')&&
-  !(independentSupports&&HISTORICAL_FUSION_EXCLUSIVES.has(c.id)))
+  !c.id.startsWith('prog-fusion-'))
   .flatMap(c=>Array(c.maxCopiesInAutoPackageDraft||1).fill(c.id));
  return [...base,...ex];
 }
