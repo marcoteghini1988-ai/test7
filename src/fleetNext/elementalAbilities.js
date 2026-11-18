@@ -186,7 +186,9 @@ export function elementalAbilityReadiness(side,element,extraCards=0){
 }
 export function elementalSpecialStrength(ability,attackerElement,defenderElement){
  const relation=elementalRelation(attackerElement,defenderElement);
- return Object.freeze({relation,power:Math.max(1,Math.min(3,(ability?.power||1)+relation))});
+ // Il modificatore elementale è applicato una sola volta al danno effettivo
+ // (elementalDamage.js), dopo Difese e intercettazioni: niente bonus doppio.
+ return Object.freeze({relation,power:Math.max(1,Math.min(3,ability?.power||1))});
 }
 if(Object.keys(ELEMENTAL_ABILITIES).length!==17||
  Object.values(ELEMENTAL_ABILITIES).some(a=>!['attack','effect'].includes(a.kind)||
