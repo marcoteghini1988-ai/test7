@@ -4,7 +4,11 @@ import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
-import {fleetElements,activeFleetElements} from './elementalAffinities.js';
+import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
+import {ENERGY_CAPACITY} from './energyCards.js';
+import {elementalAbility,totalElementalEnergy,chargedElementalEnergy,
+ canChargeElementalEnergy,chargeElementalEnergy,spendElementalEnergy,
+ elementalSpecialStrength} from './elementalAbilities.js';
 import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,moduleSlotForCard,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
 import {LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
  ensureLinceState,linceMarkedRouteReady,lincePrecondition,recallLinceModule,
@@ -121,6 +125,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
   moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,royal:null,obsidian:null,ark:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:progression.fusionLimit,
+  elementalCharges:{},elementalLastActivationPly:-999,
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
   lastPlayed:[],attackSlots:[null,null,null],defenseSlots:[null,null],
@@ -290,6 +295,7 @@ export function defenseCapacityReason(side,newDefenseCount=1,ply=0,kind=null){
 function normalizeSide(side){
  for(const key of ['protections','reactions','charges','buffs','defenses','discard','machines','reserveEscorts'])side[key]??=[];
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
+ side.elementalCharges??={};side.elementalLastActivationPly??=-999;
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
  side.synchronizationEffects??=[];side.systemCardEffects??=[];
@@ -321,6 +327,13 @@ function selectedOwnPart(side,target,ownPartId){
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
  if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
+ if(def.effectSpec?.type==='energy'){
+  if(side.ruleset!==HP_SYNC_RULESET)return 'Le Carte Energia richiedono la modalità HP';
+  if(!canChargeElementalEnergy(side,def.effectSpec.elementId))
+   return activeFleetElements(side.ships[0].id,side.ships[0].level).includes(def.effectSpec.elementId)?
+    'Accumulatore pieno: massimo 4 Energie':'Elemento non ancora disponibile sulla navicella';
+  return '';
+ }
  if(['systemModifier','fieldReset','dismantle'].includes(def.effectSpec?.type)){
   if(side.ruleset!==HP_SYNC_RULESET)return 'Questa carta richiede la nuova modalità HP';
   if(def.effectSpec.type==='systemModifier'){
@@ -442,6 +455,32 @@ export function validateFleetTurn(b,who,order){
   return 'Colpo Titano prenotato: resta spazio per due altre carte in questo turno';
  const chosen=indices.map(i=>card(side.hand[i]));
  if(chosen.some(c=>!c))return 'Carta non riconosciuta';
+ const selectedEnergy=chosen.filter(c=>c.effectSpec?.type==='energy');
+ if(selectedEnergy.length){
+  if(b.ruleset!==HP_SYNC_RULESET)return 'Le Carte Energia richiedono la modalità HP';
+  const available=activeFleetElements(side.ships[0].id,side.ships[0].level);
+  if(selectedEnergy.some(c=>!available.includes(c.effectSpec.elementId)))
+   return 'La navicella non possiede questo elemento o non lo ha ancora sbloccato';
+  if(totalElementalEnergy(side)+selectedEnergy.length>ENERGY_CAPACITY)
+   return 'Accumulatore pieno: massimo quattro Energie in totale';
+ }
+ if(order?.activateElemental){
+  if(b.ruleset!==HP_SYNC_RULESET)return 'Il colpo elementale richiede la modalità HP';
+  const ability=elementalAbility(side.ships[0].id);
+  if(!ability)return 'La navicella non ha abilità elementale';
+  const element=order.elementalElement||side.ships[0].element;
+  if(!activeFleetElements(side.ships[0].id,side.ships[0].level).includes(element))
+   return 'L’elemento della speciale non è disponibile';
+  const extra=selectedEnergy.filter(c=>c.effectSpec.elementId===element).length;
+  if(chargedElementalEnergy(side,element)+extra<ability.cost)
+   return 'Per '+ability.name+' servono '+ability.cost+' Carte Energia '+FLEET_ELEMENTS[element].name;
+  if(order.pass!==(ability.kind==='effect'))
+   return ability.kind==='effect'?'L’Effetto Speciale sostituisce lo sparo normale':
+    'L’Attacco Speciale deve avere un bersaglio';
+  if(chosen.some(c=>cardRole(c.id)==='attack'))
+   return 'Non puoi combinare un Attacco Speciale con altre carte Attacco nello stesso turno';
+  if(side.elementalLastActivationPly===b.ply)return 'Abilità elementale già usata nel turno';
+ }
  const linceCommands=chosen.filter(c=>c.effectSpec?.type==='lince'&&
   LINCE_ATTACK_ACTIONS.includes(c.effectSpec.action));
  if(linceCommands.length>1)return 'Scegli un solo comando offensivo Lince per turno';
@@ -2677,6 +2716,13 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    else at('Nessuna carta adatta negli scarti');break;
   }
   case 'charge':side.charges.push({amount:s.amount,atPly:b.ply+2,source:token});at('+'+s.amount+' potenza al prossimo turno');break;
+  case 'energy':{
+   if(!chargeElementalEnergy(side,s.elementId))throw Error('Non puoi caricare questa Energia');
+   events.push(emit(b,who,'energy-charge','Energia '+FLEET_ELEMENTS[s.elementId].name+' accumulata',
+    {cardId:def.id,element:s.elementId,charges:chargedElementalEnergy(side,s.elementId),
+     totalEnergy:totalElementalEnergy(side)}));
+   break;
+  }
   case 'trap':
    events.push(emit(b,who,'trap-set','Una trappola è stata preparata coperta.'));
    break;
@@ -2690,6 +2736,42 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   }
   default:throw new Error('Effetto non implementato: '+s.type);
  }
+}
+// Si attiva dopo aver giocato fino a tre carte, incluse eventuali Energie
+// caricate nello stesso turno; un solo effetto/attacco, mai un colpo bonus.
+function resolveElementalActivation(b,who,order,ctx,events){
+ if(!order?.activateElemental)return;
+ const side=b.sides[who],enemy=b.sides[other(who)],mother=side.ships[0];
+ const ability=elementalAbility(mother.id),element=order.elementalElement||mother.element;
+ if(!ability||!spendElementalEnergy(side,element,ability.cost))
+  throw Error('Energia speciale insufficiente');
+ side.elementalLastActivationPly=b.ply;
+ const strength=elementalSpecialStrength(ability,element,enemy.ships[0].element);
+ const amount=strength.power;
+ if(ability.kind==='attack'){
+  ctx.power+=amount;ctx.elementalShot=true;
+ }else if(ability.mode==='guard'){
+  side.buffs.push({kind:'guard',power:amount,untilPly:b.ply+2,source:'elemental:'+mother.id});
+ }else if(ability.mode==='jam'){
+  enemy.buffs.push({kind:'jam',power:amount,untilPly:b.ply+2,source:'elemental:'+mother.id});
+ }else if(ability.mode==='heal'){
+  const result=heal(b,side,amount,'weakest');
+  ctx.elementalHeal=result?.amount||0;
+ }else if(ability.mode==='disable'){
+  const selected=enemy.escorts.find(e=>e.id===order.elementalTargetId&&escortEnabled(enemy,e,b.ply));
+  const escort=selected||enemy.escorts.find(e=>escortEnabled(enemy,e,b.ply));
+  if(escort){escort.disabledUntilPly=Math.max(escort.disabledUntilPly||0,b.ply+2);
+   refreshEscortLinks(enemy,b.ply);}
+  else enemy.buffs.push({kind:'jam',power:1,untilPly:b.ply+2,source:'elemental:'+mother.id});
+ }
+ events.push(emit(b,who,'elemental-special',ability.name+' · '+FLEET_ELEMENTS[element].name+
+  (strength.relation>0?' · efficace':strength.relation<0?' · contrastata':' · neutrale'),{
+  abilityId:mother.id,abilityName:ability.name,abilityKind:ability.kind,
+  element,visualKey:FLEET_ELEMENTS[element].vfx,cost:ability.cost,
+  relation:strength.relation,power:amount,
+  targetId:order.elementalTargetId||null,
+  remainingEnergy:totalElementalEnergy(side)
+ }));
 }
 function applyCard(b,who,id,ctx,events,order){
  const side=b.sides[who],def=card(id),role=cardRole(id);
@@ -4227,6 +4309,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  // Buco Nero risolve dopo le altre carte preparate nel medesimo turno.
  after.sort((x,y)=>Number(card(x)?.effectSpec?.type==='fieldReset')-Number(card(y)?.effectSpec?.type==='fieldReset'));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ resolveElementalActivation(b,who,order,ctx,events);
  arkArchiveAction(b,ctx,events);
  obsidianUseBastionGuard(b,ctx,events,order);
  nebulaArchonTerrainTrade(b,ctx,events,order);
@@ -4236,6 +4319,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  side.stagedComboCards=[];side.attackSlots=ctx.fieldReset?[]:
   ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
  const ownShot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
+  ctx.elementalShot?resolveSalvo(b,ctx,events,order):
   ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):
   ctx.falcoPrepared||ctx.falcoReleased||ctx.obsidianPrepared||ctx.obsidianReleased?
   {damage:0,played:visiblePlayed(ctx.cards)}:
