@@ -7,6 +7,8 @@ import {SUPPORT_CATALOG,supportDefinition} from './fleetNext/supportCatalog.js';
 import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
 import {SUPPORT_SLOT_CAMPAIGN_UNLOCKS} from './fleetNext/supportCampaign.js';
+import {readFleetInventory} from './fleetNext/collection.js';
+import {supportPurchaseCost,supportUpgradeCost,purchaseSupportModel,purchaseSupportUpgrade} from './fleetNext/supportShop.js';
 
 const cardStyle={padding:10,border:'1px solid #36678c',borderRadius:8,
  background:'#071a2de9',color:'#e3f2ff',minWidth:180,flex:'1 1 180px'};
@@ -20,6 +22,7 @@ export default function SupportHangarPanel(){
  const [state,setState]=useState(safeRead);
  const [draft,setDraft]=useState(null);
  const [notice,setNotice]=useState('');
+ const [credits,setCredits]=useState(()=>readFleetInventory().credits);
  const collection=state.inventory;
  const equipped=draft??collection?.equipped??[null,null];
  useEffect(()=>{
@@ -32,6 +35,20 @@ export default function SupportHangarPanel(){
   return ()=>window.removeEventListener('storage',refresh);
  },[]);
  const roster=collection?equippedSupportRoster({...collection,equipped}):[];
+ function refreshShop(result,successText){
+  if(!result.ok){setNotice(result.reason);return;}
+  setState({inventory:result.collection,error:''});
+  setCredits(result.inventory.credits);
+  setNotice(successText);
+  window.dispatchEvent(new Event('eclissi-shop-changed'));
+ }
+ function buySupport(id){
+  refreshShop(purchaseSupportModel(id),'Navicella acquistata: scegli uno slot in Hangar.');
+ }
+ function upgradeSupport(id){
+  const result=purchaseSupportUpgrade(id);
+  refreshShop(result,result.ok?'Navicella potenziata al livello '+result.level:undefined);
+ }
  function select(slot,id){
   if(!collection)return;
   try{
@@ -94,9 +111,37 @@ export default function SupportHangarPanel(){
     })}
    </div>
    <p>Una Carta Navicella Fusione Leggendaria può fondersi soltanto con un supporto al livello massimo. La carta rappresenta già una navicella MAX; mantiene gli HP del supporto in campo.</p>
-   <p>Le prime due copie si ottengono ai traguardi di sblocco. Le altre
-    potranno essere acquistate o ottenute separatamente quando
-    completeremo il negozio e i miglioramenti dei supporti.</p>
+   <p>Saldo Crediti Stellari: {credits.toLocaleString('it-IT')} ✦. Prezzi dei supporti e dei livelli provvisori.</p>
+   <details><summary>Acquista navicelle di supporto (13 modelli)</summary>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:8}}>
+     {SUPPORT_CATALOG.map(model=>{
+      const cost=supportPurchaseCost(model.id);
+      return <div key={model.id} style={cardStyle}>
+       <img src={model.visual} alt={model.name} loading="lazy" style={{height:74,maxWidth:'100%',objectFit:'contain'}}/>
+       <strong style={{display:'block'}}>{model.name}</strong>
+       <small style={{display:'block'}}>{model.rarita} · {model.skillName} · {FLEET_ELEMENTS[model.elementId]?.name}</small>
+       <button type="button" style={buttonStyle} disabled={credits<cost}
+        onClick={()=>buySupport(model.id)}>ACQUISTA · {cost} ✦</button>
+      </div>;
+     })}
+    </div>
+   </details>
+   <details><summary>Migliora le copie possedute da L1 a L5</summary>
+    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:8}}>
+     {collection.owned.map(unit=>{
+      const model=supportDefinition(unit.supportId),maxed=unit.level>=SUPPORT_MAX_LEVEL;
+      const cost=maxed?null:supportUpgradeCost(unit.supportId,unit.level+1);
+      return <div key={unit.instanceId} style={cardStyle}>
+       <strong style={{display:'block'}}>{model?.name||unit.supportId}</strong>
+       <small style={{display:'block'}}>Copia {unit.instanceId} · L{unit.level}/{SUPPORT_MAX_LEVEL}</small>
+       <button type="button" style={buttonStyle} disabled={maxed||cost===null||credits<cost}
+        onClick={()=>upgradeSupport(unit.instanceId)}>
+        {maxed?'LIVELLO MAX':cost===null?'MODELLO STORICO':`POTENZIA L${unit.level+1} · ${cost} ✦`}</button>
+      </div>;
+     })}
+    </div>
+   </details>
+   <p>Le prime due copie si ottengono ai traguardi della campagna. Le altre si acquistano qui con Crediti Stellari già guadagnati; i valori verranno bilanciati alla fine.</p>
    {notice&&<p role="status">{notice}</p>}
    <button type="button" style={buttonStyle} onClick={save}
     disabled={!draft||draft.every((v,i)=>v===collection.equipped[i])}>
