@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createFleetSide,createFleetNextBattle,resolveFleetNextTurn,
- sacrificeIndependentFleetSupport} from './fleetNext/combat.js';
+ fuseFleetSupports,sacrificeIndependentFleetSupport} from './fleetNext/combat.js';
 import {SUPPORT_SKILL_LABELS,SUPPORT_SKILL_ASSIGNMENTS,
  skillCount,trapsSuppressed,terrainHalf,terrainImmunity,
  effectiveSupportEnergyCost,supportSpecialBoost,supportNormalBoost,
@@ -156,4 +156,27 @@ test('Plancia ufficiale aggiorna gli HP al secondo e rende il Sacrificio cliccab
  assert.match(ui,/advanceIndependentSupportTime\(current,timestamp\)/);
  assert.match(ui,/sacrificeIndependentFleetSupport\(battle,'A'/);
  assert.match(ui,/actualEnergyCost=effectiveSupportEnergyCost/);
+});
+
+
+test('Fusione compatibile: conserva ENTRAMBE le passive dei due supporti',()=>{
+ const arca=createFleetNextBattle({
+  shipA:'L04',levelA:5,shipB:'N00',levelB:20,deckA:[],deckB:[],
+  mode:'pvp',ruleset:HP_SYNC_RULESET,seed:98,nowMs:0,
+  supportRosterA:[
+   {id:'support-l04-01',instanceId:'arca-energy',slot:0,level:1},
+   {id:'support-l04-02',instanceId:'arca-charge',slot:1,level:1}
+  ],supportRosterB:[]
+ });
+ const a=arca.sides.A,merged=fuseFleetSupports(a,0);
+ assert.equal(merged.ok,true,merged.reason);
+ assert.equal(a.escorts.length,1);
+ assert.deepEqual(merged.fused.supportSkillIds,['death-energy','capacitor']);
+ assert.equal(skillCount(a,'death-energy',0),1);
+ assert.equal(skillCount(a,'capacitor',0),1);
+ assert.equal(merged.fused.supportObservedHp,merged.fused.hp);
+ merged.fused.hp=0;merged.fused.destroyed=true;
+ const notes=settleIndependentSupportDamage(arca,'B');
+ assert.ok(notes.some(event=>event.skillId==='death-energy'));
+ assert.equal(a.elementalCharges[a.ships[0].element],2);
 });
