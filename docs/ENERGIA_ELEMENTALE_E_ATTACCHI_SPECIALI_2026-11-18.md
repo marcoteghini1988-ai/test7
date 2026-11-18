@@ -1,4 +1,7 @@
 # Eclissi Stellare — 10 elementi e attacchi speciali tramite Carte Energia
+
+> **Implementazione successiva del 18 novembre 2026:** le 10 Carte Energia e una sola abilità (Attacco Speciale oppure Effetto Speciale) per ciascuna delle 17 navi sono state aggiunte al codice, con costi da 1 a 4 cariche e accumulo reale nel motore HP. Il testo seguente è la bozza precedente all'implementazione; per i parametri attuali e i file consultare [Checkpoint delle Carte Energia e delle 17 abilità](./CARTE_ENERGIA_E_17_ABILITA_IMPLEMENTAZIONE_2026-11-18.md). Le immagini e gli effetti 3D restano da produrre.
+
 **18 novembre 2026 · test7/main**
 
 ## Decisione di gameplay
