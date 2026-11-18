@@ -1,3 +1,5 @@
+// Le prove delle fusioni materne ritirate sono sostituite dai test
+// delle Carte Navicella Fusione indipendenti in fleetNextOfficialFusionEffects.test.js.
 import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
 import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
@@ -271,50 +273,6 @@ test('Relè permette Giudizio a un supporto operativo con Arsenale distrutto',()
  assert.equal(r.battle.sides.B.escorts[0].hp,hp-3);
  assert.ok(r.events.some(e=>e.relayEscortId===b.sides.A.escorts[0].id));
 });
-test('Fusione della Corona crea una sola unità fusa, con passive e HP proporzionati',()=>{
- const b=make();
- b.sides.A.escorts[0].hp-=1;b.sides.A.escorts[1].hp-=2;
- const mother=b.sides.A.ships[0].parts.map(p=>({id:p.id,hp:p.hp}));
- const [a,z]=b.sides.A.escorts,expectedMax=a.maxHp+z.maxHp+2;
- const expectedHP=Math.max(1,Math.floor(expectedMax*(a.hp+z.hp)/(a.maxHp+z.maxHp)));
- const r=play(b,'A',['nx-l01-10'],{pass:true});
- const side=r.battle.sides.A;
- assert.equal(side.fusionsUsed,1);
- assert.equal(side.escorts.length,1);assert.equal(side.reserveEscorts.length,0);
- assert.equal(side.escorts[0].name,'Corona Unita · Eclisse Reale');
- assert.equal(side.escorts[0].hp,expectedHP);
- assert.equal(side.escorts[0].maxHp,expectedMax);
- assert.equal(side.escorts[0].royalCrown,true);
- assert.equal(side.escorts[0].fusionSkills.length,2);
- assert.deepEqual(side.ships[0].parts.map(p=>({id:p.id,hp:p.hp})),mother);
-});
-test('Corona Unita devia sulla propria armatura il colpo diretto alla Centralina',()=>{
- let b=make();b=play(b,'A',['nx-l01-10'],{pass:true}).battle;
- const part=b.sides.A.ships[0].parts.find(p=>p.id==='command'),hp=part.hp;
- const fused=b.sides.A.escorts[0],hpFusion=fused.hp;
- const r=play(b,'B',['prog-bypass'],target('part',part));
- assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='command').hp,hp);
- assert.equal(r.battle.sides.A.escorts[0].hp,hpFusion-1);
- assert.ok(r.events.some(e=>e.kind==='royal-intercept'&&e.fusion));
- assert.equal(r.battle.sides.A.royal.lastCrownGuardPly,1);
-});
-test('Dopo Fusione della Corona la fusione storica usa la medesima disponibilità, senza duplicati',()=>{
- let b=make();b=play(b,'A',['nx-l01-10'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- b.sides.A.hand=['prog-fusion-l01'];
- const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},b.ply*30000+1000);
- assert.equal(r.ok,false);assert.match(r.reason,/fusioni|Fusione|usate/i);
- assert.equal(JSON.stringify(b),before);
-});
-test('Fusione non si combina con Pioggia reale nello stesso turno, senza consumare la mano',()=>{
- const b=make();b.sides.A.hand=['nx-l01-10','nx-l01-02'];
- const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0,1],...target('escort',b.sides.B.escorts[0])},1000);
- assert.equal(r.ok,false);
- assert.match(r.reason,/Fusione/i);
- assert.equal(JSON.stringify(b),before);
-});
 test('Ordine del Sovrano rifiuta carte da scartare già spese, senza corrompere la mano',()=>{
  const b=make();b.sides.A.hand=['ex-l01-01','gen-216'];
  const before=JSON.stringify(b);
@@ -322,14 +280,6 @@ test('Ordine del Sovrano rifiuta carte da scartare già spese, senza corrompere 
   royalSovereignTrade:true,royalDiscardId:'gen-216'},1000);
  assert.equal(r.ok,false);assert.match(r.reason,/rimasta|non giocata/i);
  assert.equal(JSON.stringify(b),before);
-});
-test('IA di Eclisse Reale sceglie comandi eseguibili rispettando un solo attacco e una Fusione',()=>{
- const b=make();b.sides.A.hand=['nx-l01-10','nx-l01-02','nx-l01-03'];
- const order=autoFleetTurn(b,'A');
- const r=resolveFleetNextTurn(b,'A',order,1000);
- assert.equal(r.ok,true,r.reason);
- assert.equal(r.battle.sides.A.fusionsUsed,1);
- assert.equal(r.battle.sides.A.escorts.length,1);
 });
 test('IA può usare Relè e Giudizio anche quando l’Arsenale è distrutto',()=>{
  const b=make();equip(b.sides.A,'nx-l01-01');

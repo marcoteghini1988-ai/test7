@@ -99,8 +99,8 @@ test('Due supporti L5 si fondono nei propri slot senza recuperare HP, per tutte 
   assert.equal(s.fusionsUsed,2);
   assert.ok(s.escorts.every(e=>e.fused&&e.supportSkillIds.length===2));
   const snapshot=JSON.stringify(s);
-  assert.match(fusionShipUnavailableReason(s,'R04',0),/già state utilizzate/);
-  assert.equal(fuseIndependentSupportWithShip(s,'R04',0).ok,false);
+  assert.match(fusionShipUnavailableReason(s,'R01',0),/già state utilizzate/);
+  assert.equal(fuseIndependentSupportWithShip(s,'R01',0).ok,false);
   assert.equal(JSON.stringify(s),snapshot,'una terza Fusione non modifica le unità');
  }
 });

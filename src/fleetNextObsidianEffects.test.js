@@ -1,3 +1,5 @@
+// Le prove delle fusioni materne ritirate sono sostituite dai test
+// delle Carte Navicella Fusione indipendenti in fleetNextOfficialFusionEffects.test.js.
 import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
 import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
@@ -50,9 +52,6 @@ function shield(side,kind,unit,{charges=1,kindOfShield='protect',source='shield:
   target:kind,escortSlot:kind==='escort'?unit.slot:null,
   machineSlot:kind==='machine'?unit.slot:null,
   untilPly:22,placedPly:-1});
-}
-function fuse(b,cardId='nx-l03-08'){
- return play(b,'A',[cardId],{pass:true}).battle;
 }
 test('L03 possiede 10 carte esclusive native con livelli 6,7,8,9,10 e i Personaggi/Boss restano',()=>{
  assert.equal(new Set(IDS).size,10);
@@ -250,89 +249,6 @@ test('Catene non scatta sugli attacchi ordinari e resta coperta',()=>{
  assert.equal(r.battle.sides.A.defenses.some(d=>d.id==='nx-l03-07'),true);
  assert.equal(r.events.some(e=>e.kind==='trap-reveal'&&e.cardId==='nx-l03-07'),false);
 });
-test('Fusione Ossidiana crea un unico Bastione con integrità proporzionale e due passive',()=>{
- const b=make();b.sides.A.escorts[0].hp--;b.sides.A.escorts[1].hp-=2;
- const [a,z]=b.sides.A.escorts;
- const max=a.maxHp+z.maxHp+2;
- const expected=Math.floor(max*(a.hp+z.hp)/(a.maxHp+z.maxHp));
- const r=play(b,'A',['nx-l03-08'],{pass:true});
- const side=r.battle.sides.A;
- assert.equal(side.fusionsUsed,1);
- assert.equal(side.escorts.length,1);assert.equal(side.reserveEscorts.length,0);
- assert.equal(side.escorts[0].hp,expected);assert.equal(side.escorts[0].maxHp,max);
- assert.equal(side.escorts[0].obsidianBastion,true);
- assert.equal(side.escorts[0].fusionSkills.length,2);
- assert.equal(side.escorts[0].name,'Bastione d’Assedio · Titano Ossidiana');
-});
-test('La Fusione storica e quella nuova condividono l’unica fusione senza duplicare supporti',()=>{
- let b=make();b=play(b,'A',['prog-fusion-l03'],{pass:true}).battle;
- assert.equal(b.sides.A.escorts[0].obsidianBastion,true);
- b=play(b,'B',[],{pass:true}).battle;
- b.sides.A.hand=['nx-l03-08'];const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},b.ply*30000+1000);
- assert.equal(r.ok,false);assert.match(r.reason,/Fusione|fusion/i);
- assert.equal(JSON.stringify(b),before);
-});
-test('Bastione fuso rinuncia alle passive offensive e limita a un danno il primo colpo',()=>{
- let b=make();b=play(b,'A',['nx-l03-08'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- const guard=play(b,'A',[],{pass:true,obsidianGuard:true});
- assert.ok(guard.events.some(e=>e.kind==='obsidian-guard'));
- b=guard.battle;
- b.sides.B.ships[0].attackPower=9;
- const hp=b.sides.A.escorts[0].hp;
- const r=play(b,'B',[],target('escort',b.sides.A.escorts[0]));
- assert.equal(r.battle.sides.A.escorts[0].hp,hp-1);
- assert.ok(r.events.some(e=>e.kind==='obsidian-guard'&&e.limit===1));
-});
-test('Bastione non annulla i danni sul vitale né crea protezione senza la scelta',()=>{
- let b=make();b=play(b,'A',['nx-l03-08'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- const before=b.sides.A.escorts[0].hp;
- const r=play(b,'A',[],{pass:true});
- assert.equal(r.battle.sides.A.escorts[0].obsidianGuardUntilPly,0);
- assert.equal(r.battle.sides.A.escorts[0].hp,before);
-});
-test('Sentenza Titano prepara due colpi pesanti contro lo stesso bersaglio',()=>{
- let b=make();b.sides.B.machines.push(machine('verdict-machine',0,12));
- b=play(b,'A',['nx-l03-08'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- const machineTarget=b.sides.B.machines[0],hp=machineTarget.hp;
- b=play(b,'A',['nx-l03-10'],target('machine',machineTarget)).battle;
- assert.equal(b.sides.A.obsidian.pending.shots,2);
- assert.equal(b.sides.B.machines[0].hp,hp);
- b=play(b,'B',[],{pass:true}).battle;
- const r=play(b,'A',[],{pass:true});
- assert.equal(r.shot.machineDamage,6);
- assert.equal(r.shot.targets.length,2);
- assert.equal(r.battle.sides.B.machines[0].hp,hp-6);
-});
-test('Sentenza perde entrambi i colpi se il Bastione fuso viene distrutto',()=>{
- let b=make();b.sides.B.machines.push(machine('m1',0,12));
- b=play(b,'A',['nx-l03-08'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- b=play(b,'A',['nx-l03-10'],target('machine',b.sides.B.machines[0])).battle;
- b.sides.A.escorts[0].hp=1;
- b=play(b,'B',[],target('escort',b.sides.A.escorts[0])).battle;
- const hp=b.sides.B.machines[0].hp;
- const r=play(b,'A',[],{pass:true});
- assert.equal(r.shot.machineDamage,0);
- assert.equal(r.battle.sides.B.machines[0].hp,hp);
- assert.ok(r.events.some(e=>e.kind==='obsidian-lost'&&/Bastione/.test(e.text)));
- assert.equal(r.battle.sides.A.discard.includes('nx-l03-10'),true);
-});
-test('Sentenza non trasferisce danno in eccesso quando distrugge la macchina al primo colpo',()=>{
- let b=make();b.sides.B.machines.push(machine('small',0,1));
- const parts=b.sides.B.ships[0].parts.map(p=>p.hp);
- b=play(b,'A',['nx-l03-08'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- b=play(b,'A',['nx-l03-10'],target('machine',b.sides.B.machines[0])).battle;
- b=play(b,'B',[],{pass:true}).battle;
- const r=play(b,'A',[],{pass:true});
- assert.equal(r.shot.machineDamage,1);
- assert.equal(r.shot.targets.length,1);
- assert.deepEqual(r.battle.sides.B.ships[0].parts.map(p=>p.hp),parts);
-});
 test('Falso bersaglio contro Obice annulla l’intera preparazione senza rimborso',()=>{
  let b=make({shipB:'E01'});b.sides.B.machines.push(machine());
  b=play(b,'A',['nx-l03-02'],target('machine',b.sides.B.machines[0])).battle;
@@ -361,13 +277,4 @@ test('IA Titano sceglie la macchina per Obice e genera sempre un turno valido',(
  const r=resolveFleetNextTurn(b,'A',ai,1000);
  assert.equal(r.ok,true,r.reason);
  assert.ok(r.events.some(e=>e.kind==='obsidian-prepare'));
-});
-test('IA usa la difesa del Bastione quando la fusione è pronta nel turno successivo',()=>{
- let b=make();b=play(b,'A',['nx-l03-08'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- const ai=autoFleetTurn(b,'A');
- assert.equal(ai.obsidianGuard,true);
- const r=resolveFleetNextTurn(b,'A',ai,b.ply*30000+1000);
- assert.equal(r.ok,true,r.reason);
- assert.ok(r.events.some(e=>e.kind==='obsidian-guard'));
 });

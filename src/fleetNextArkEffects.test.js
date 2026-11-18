@@ -1,3 +1,5 @@
+// Le prove delle fusioni materne ritirate sono sostituite dai test
+// delle Carte Navicella Fusione indipendenti in fleetNextOfficialFusionEffects.test.js.
 import {EXCLUSIVE_UNLOCK_MILESTONES} from './fleetNext/exclusiveUnlocks.js';
 import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
@@ -43,13 +45,6 @@ function shield(side,unit,source='ark:test:defense',kind='escort'){
   target:kind,escortSlot:kind==='escort'?unit.slot:null,
   machineSlot:kind==='machine'?unit.slot:null,
   untilPly:20,placedPly:-1});
-}
-function fusedAtLevel5(){
- let b=make();
- b=play(b,'A',['nx-l04-05'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- b=play(b,'A',['nx-l04-05'],{pass:true}).battle;
- return b;
 }
 test('Tutte le 120 esclusive sono giocabili: Arca completa, 12 madri, Boss e Personaggi intatti',()=>{
  assert.equal(EXCLUSIVE_DESIGNS_120.length,120);
@@ -157,23 +152,6 @@ test('Custodia delle riserve annulla il prossimo colpo sul supporto non fuso',()
  assert.equal(r.battle.sides.A.defenses.some(d=>d.id==='nx-l04-03'),false);
  assert.ok(r.events.some(e=>e.kind==='block'&&e.cardId==='nx-l04-03'));
 });
-test('Custodia cessa se il supporto protetto si fonde prima del colpo',()=>{
- const b=make();
- const r=play(b,'A',['nx-l04-03','nx-l04-05'],{pass:true,
-  arkCustodyEscortId:b.sides.A.escorts[0].id});
- assert.equal(r.battle.sides.A.escorts[0].fused,true);
- assert.equal(r.battle.sides.A.defenses.some(d=>d.id==='nx-l04-03'),false);
- assert.equal(r.battle.sides.A.protections.some(p=>p.id==='nx-l04-03'),false);
-});
-test('Custodia non può essere posata su una fusione già attiva',()=>{
- let b=fusedAtLevel5();
- b=play(b,'B',[],{pass:true}).battle;
- // Restano due fusioni: nessun supporto non fuso in campo.
- b.sides.A.hand=['nx-l04-03'];const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},b.ply*30000+1000);
- assert.equal(r.ok,false);assert.match(r.reason,/non fuso/);
- assert.equal(JSON.stringify(b),before);
-});
 test('Coro recupera due HP veri su un supporto vivo, ma non oltre il massimo',()=>{
  const b=make();b.sides.A.escorts[0].hp-=3;
  const hp=b.sides.A.escorts[0].hp;
@@ -248,153 +226,6 @@ test('Lanciatore senza riparazione non potenzia e non colpisce i vitali',()=>{
  const r=play(b,'A',[],target('escort',foe));
  assert.equal(r.shot.escortDamage,1);
  assert.equal(r.events.some(e=>e.kind==='ark-launcher'),false);
-});
-test('La prima Fusione dell’Arca fonde 1+2 senza riserve extra al L1',()=>{
- const b=make({levelA:1});const [first,second]=b.sides.A.escorts;
- first.hp--;second.hp--;
- const max=first.maxHp+second.maxHp+2;
- const hp=Math.floor(max*(first.hp+second.hp)/(first.maxHp+second.maxHp));
- const r=play(b,'A',['nx-l04-05'],{pass:true});
- const side=r.battle.sides.A;
- assert.equal(side.fusionsUsed,1);assert.equal(side.escorts.length,1);
- assert.equal(side.reserveEscorts.length,0);
- assert.equal(side.escorts[0].hp,hp);assert.equal(side.escorts[0].maxHp,max);
- assert.equal(side.escorts[0].fusionSkills.length,2);
-});
-test('La seconda Fusione al L1 è vietata e non genera il quarto supporto',()=>{
- let b=make({levelA:1});b=play(b,'A',['nx-l04-05'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;b.sides.A.hand=['nx-l04-05'];
- const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},b.ply*30000+1000);
- assert.equal(r.ok,false);assert.match(r.reason,/quarto|seconda/i);
- assert.equal(JSON.stringify(b),before);
-});
-test('La prima Fusione al L3 richiama esattamente il terzo supporto dalla riserva',()=>{
- const b=make({levelA:3});
- assert.equal(b.sides.A.escorts.length,2);
- assert.equal(b.sides.A.reserveEscorts.length,1);
- const r=play(b,'A',['nx-l04-05'],{pass:true});
- assert.equal(r.battle.sides.A.fusionsUsed,1);
- assert.equal(r.battle.sides.A.escorts.length,2);
- assert.equal(r.battle.sides.A.reserveEscorts.length,0);
- assert.ok(r.battle.sides.A.escorts.some(e=>e.sourceIndices.includes(2)&&!e.fused));
- assert.ok(r.events.some(e=>e.kind==='fusion'&&e.deployedId));
-});
-test('La seconda Fusione al L3 resta vietata finché il quarto non è sbloccato',()=>{
- let b=make({levelA:3});b=play(b,'A',['nx-l04-05'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- b.sides.A.hand=['nx-l04-05'];const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},b.ply*30000+1000);
- assert.equal(r.ok,false);assert.match(r.reason,/quarto|seconda/i);
- assert.equal(JSON.stringify(b),before);
-});
-test('Al L5 le due Fusioni conservano tutte le passive e non lasciano riserve',()=>{
- const b=fusedAtLevel5();
- assert.equal(b.sides.A.fusionsUsed,2);
- assert.equal(b.sides.A.escorts.length,2);
- assert.equal(b.sides.A.reserveEscorts.length,0);
- assert.equal(arkFusedEscorts(b.sides.A,b.ply).length,2);
- assert.deepEqual(b.sides.A.escorts.map(e=>e.arkFusionStage),[1,2]);
- assert.ok(b.sides.A.escorts.every(e=>e.fusionSkills.length===2));
-});
-test('Dopo due Fusioni, né la stessa carta né quella storica creano altre unità',()=>{
- let b=fusedAtLevel5();b=play(b,'B',[],{pass:true}).battle;
- b.sides.A.hand=['nx-l04-05','prog-fusion-l04'];const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},b.ply*30000+1000);
- assert.equal(r.ok,false);assert.match(r.reason,/fusioni/i);
- assert.equal(JSON.stringify(b),before);
-});
-test('Due copie Fusione al L5 possono risolversi nello stesso turno, senza unità extra',()=>{
- const b=make();b.sides.A.hand=['nx-l04-05','nx-l04-05'];
- const r=resolveFleetNextTurn(b,'A',{cards:[0,1],pass:true},1000);
- assert.equal(r.ok,true,r.reason);
- assert.equal(r.battle.sides.A.fusionsUsed,2);
- assert.equal(r.battle.sides.A.escorts.length,2);
- assert.equal(r.battle.sides.A.reserveEscorts.length,0);
- assert.ok(r.battle.sides.A.escorts.every(e=>e.fused));
-});
-test('Due Fusioni nello stesso turno al L3 restano vietate senza quarta riserva',()=>{
- const b=make({levelA:3});b.sides.A.hand=['nx-l04-05','nx-l04-05'];
- const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0,1],pass:true},1000);
- assert.equal(r.ok,false);assert.match(r.reason,/riserve|quarta/i);
- assert.equal(JSON.stringify(b),before);
-});
-test('Ingresso protetto scatta solo sul terzo supporto appena uscito dalla prima Fusione',()=>{
- let b=make({levelA:3});const side=b.sides.A;
- b=play(b,'A',['nx-l04-08','nx-l04-05'],{pass:true}).battle;
- const third=b.sides.A.escorts.find(e=>e.sourceIndices.includes(2)&&!e.fused);
- assert.ok(third);
- assert.equal(b.sides.A.defenses.find(d=>d.id==='nx-l04-08').arkReserveId,third.id);
- const hp=third.hp;
- const r=play(b,'B',[],target('escort',third));
- assert.equal(r.battle.sides.A.escorts.find(e=>e.id===third.id).hp,hp);
- assert.equal(r.events.filter(e=>e.kind==='trap-reveal'&&e.cardId==='nx-l04-08').length,1);
- assert.ok(!r.battle.sides.A.defenses.some(d=>d.id==='nx-l04-08'));
-});
-test('Ingresso protetto non è disponibile se il terzo supporto è ancora bloccato',()=>{
- const b=make({levelA:2});const def=card('nx-l04-08');
- assert.match(effectUnavailableReason(def,b.sides.A,b),/Livello|terzo supporto/);
-});
-test('Risonanza trasferisce un blocco temporaneo dalla Fusione al terzo supporto',()=>{
- let b=make({shipB:'C03',levelA:4});
- b=play(b,'A',['nx-l04-05'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;
- const fused=b.sides.A.escorts.find(e=>e.fused);
- const third=b.sides.A.escorts.find(e=>!e.fused);
- b=play(b,'A',['nx-l04-09'],{pass:true,
-  arkFusedId:fused.id,arkResonanceEscortId:third.id}).battle;
- const r=play(b,'B',['nx-c03-02'],target('escort',fused));
- const a=r.battle.sides.A;
- assert.ok(r.events.some(e=>e.kind==='ark-resonance'));
- assert.equal((a.escorts.find(e=>e.id===fused.id).silencedUntilPly||0)<=r.battle.ply,true);
- assert.equal(a.escorts.find(e=>e.id===third.id).silencedUntilPly,5);
- assert.equal(a.defenses.some(d=>d.id==='nx-l04-09'),false);
-});
-test('Risonanza richiede una Fusione e un supporto non fuso operativo',()=>{
- const b=make({levelA:4});b.sides.A.hand=['nx-l04-09'];
- const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0],pass:true},1000);
- assert.equal(r.ok,false);assert.match(r.reason,/Risonanza/);
- assert.equal(JSON.stringify(b),before);
-});
-test('Convergenza Astrale colpisce pesante due nemici diversi, non la madre',()=>{
- let b=fusedAtLevel5();b=play(b,'B',[],{pass:true}).battle;
- const [first,second]=b.sides.B.escorts,hp1=first.hp,hp2=second.hp;
- const parts=b.sides.B.ships[0].parts.map(p=>p.hp);
- const r=play(b,'A',['nx-l04-10'],{...target('escort',first),
-  arkSecondKind:'escort',arkSecondId:second.id});
- assert.equal(r.shot.escortDamage,6);
- assert.equal(r.shot.targets.length,2);
- assert.equal(r.battle.sides.B.escorts[0].hp,hp1-3);
- assert.equal(r.battle.sides.B.escorts[1].hp,hp2-3);
- assert.deepEqual(r.battle.sides.B.ships[0].parts.map(p=>p.hp),parts);
-});
-test('Convergenza resta bloccata prima della seconda Fusione',()=>{
- let b=make();b=play(b,'A',['nx-l04-05'],{pass:true}).battle;
- b=play(b,'B',[],{pass:true}).battle;b.sides.A.hand=['nx-l04-10'];
- const before=JSON.stringify(b);
- const r=resolveFleetNextTurn(b,'A',{cards:[0],
-  ...target('escort',b.sides.B.escorts[0])},b.ply*30000+1000);
- assert.equal(r.ok,false);assert.match(r.reason,/due Fusioni/i);
- assert.equal(JSON.stringify(b),before);
-});
-test('Convergenza non moltiplica un colpo bloccato da Difesa',()=>{
- let b=fusedAtLevel5();b=play(b,'B',[],{pass:true}).battle;
- const [first,second]=b.sides.B.escorts;
- shield(b.sides.B,second,'shield:on-second');
- const r=play(b,'A',['nx-l04-10'],{...target('escort',first),
-  arkSecondKind:'escort',arkSecondId:second.id});
- assert.equal(r.shot.targets.length,1);
- assert.equal(r.shot.escortDamage,3);
- assert.equal(r.events.some(e=>e.kind==='block'),true);
-});
-test('IA Arca usa la prima Fusione e produce un ordine sempre eseguibile',()=>{
- const b=make();b.sides.A.hand=['nx-l04-05','nx-l04-02','nx-l04-03'];
- const order=autoFleetTurn(b,'A');
- const r=resolveFleetNextTurn(b,'A',order,1000);
- assert.equal(r.ok,true,r.reason);
- assert.equal(r.battle.sides.A.fusionsUsed,1);
 });
 test('IA Arca sa recuperare un modulo autentico quando Archivio è operativo',()=>{
  const b=make();equip(b.sides.A,'nx-l04-01');
