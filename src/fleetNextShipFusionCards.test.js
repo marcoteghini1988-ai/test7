@@ -82,8 +82,8 @@ test('Due carte fonde due supporti di madre qualsiasi, stessi HP e due abilità'
 
 test('Il supporto non MAX impedisce la fusione e non consuma la carta',()=>{
  const battle=fresh(),side=battle.sides.A;
- side.escorts[0].supportLevel=shipMaxLevel('N00')-1;
- side.escorts[1].supportLevel=shipMaxLevel('L02')-1;
+ side.escorts[0].supportLevel=SUPPORT_MAX_LEVEL-1;
+ side.escorts[1].supportLevel=SUPPORT_MAX_LEVEL-1;
  side.hand=['fusion-ship-r01'];side.deck=[];
  const before=JSON.stringify(battle);
  assert.match(fusionShipUnavailableReason(side,'R01',0),/livello MAX/);
@@ -98,7 +98,7 @@ test('Il supporto non MAX impedisce la fusione e non consuma la carta',()=>{
 
 test('La Carta Fusione può scegliere soltanto lo slot che ha raggiunto MAX',()=>{
  const b=fresh(),side=b.sides.A;
- side.escorts[0].supportLevel=shipMaxLevel('N00')-1;
+ side.escorts[0].supportLevel=SUPPORT_MAX_LEVEL-1;
  assert.equal(fusionShipUnavailableReason(side,'C02',1),'');
  assert.match(fusionShipUnavailableReason(side,'C02',0),/MAX/);
  const result=fuseIndependentSupportWithShip(side,'C02');
