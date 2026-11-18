@@ -1,6 +1,7 @@
 // Regole leggibili e dati eseguibili condividono la stessa definizione.
 // Questo modulo non interpreta nomi, famiglie o descrizioni delle carte.
 import {getShipProgression} from './progression.js';
+import {FLEET_ELEMENTS} from './elementalAffinities.js';
 import {AURORA_ACTIONS} from './auroraEngine.js';
 import {LINCE_ACTIONS} from './linceEngine.js';
 import {PRISMA_ACTIONS} from './prismaEngine.js';
@@ -17,7 +18,7 @@ import {ARK_ACTIONS} from './arkEngine.js';
 export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
- 'weaken','disarm','cleanse','exchange','recover','charge','terrain','trap',
+ 'weaken','disarm','cleanse','exchange','recover','charge','energy','terrain','trap',
  'bypass','deployMachine','fusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
@@ -55,7 +56,9 @@ export const SIMPLE_RULES=Object.freeze([
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
  'Smontaggio Forzato è una carta Attacco: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
  'Fusione unisce due supporti operativi. La prima può far entrare la terza unità sbloccata; la seconda unisce terza e quarta. Rimangono al massimo due supporti attivi.',
- 'La fusione conserva i danni in proporzione, consuma i supporti usati e non ricostruisce navicelle distrutte. Gli alloggiamenti Arma sono separati dai supporti.'
+ 'La fusione conserva i danni in proporzione, consuma i supporti usati e non ricostruisce navicelle distrutte. Gli alloggiamenti Arma sono separati dai supporti.',
+ 'Le Carte Energia occupano una giocata. Ogni carta carica di 1 il reattore fino a 4; una sola abilità elementale per nave consuma da 1 a 4 cariche dello stesso elemento.',
+ 'Attacco ed Effetto Elementale sono alternativi: entrambi sostituiscono l’attacco normale di quel turno, e non creano un colpo aggiuntivo.'
 ]);
 export const isCharacterCard=card=>card?.kind==='character'||card?.sottotipo==='Personaggio'||/Personaggio/i.test(card?.category||'');
 export const isTrapCard=card=>card?.effectSpec?.type==='trap'||
@@ -79,6 +82,7 @@ export function validateEffectSpec(spec){
    (spec.mode==='base')!==(spec.count===99)))return 'Smontaggio non valido';
  if(spec.type==='fieldReset'&&(spec.scope!=='both'||spec.discardFieldCards!==true))return 'Reset campo non valido';
  if(spec.type==='blueprint'&&!/^nx-[a-z0-9]+-[0-9]{2}$/.test(spec.code||''))return 'Codice di scheda esclusiva non valido';
+ if(spec.type==='energy'&&(!Object.hasOwn(FLEET_ELEMENTS,spec.elementId)||Object.keys(spec).length!==2))return 'Energia elementale non valida';
  if(spec.type==='aurora'&&!Object.values(AURORA_ACTIONS).includes(spec.action))return 'Azione Aurora non valida';
  if(spec.type==='lince'&&!Object.values(LINCE_ACTIONS).includes(spec.action))return 'Azione Lince non valida';
  if(spec.type==='prisma'&&!Object.values(PRISMA_ACTIONS).includes(spec.action))return 'Azione Vespa non valida';
@@ -188,6 +192,7 @@ export function describeEffect(card,level=1){
    return repeat+"Rimette in cima al mazzo l’ultima carta "+(label?label+' ':'')+'scartata.';
   }
   case 'charge':return repeat+'Prepara +'+s.amount+' potenza per il tuo attacco del turno successivo.';
+  case 'energy':return 'Accumula 1 Energia '+FLEET_ELEMENTS[s.elementId].name+' (massimo 4 cariche totali). Alimenta l’abilità speciale della navicella.';
   case 'terrain':return TERRAIN_EFFECT_TEXT[s.code]+' Vale per entrambi i giocatori per 3 round.';
   case 'trap':return 'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
