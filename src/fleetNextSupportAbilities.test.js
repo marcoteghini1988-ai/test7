@@ -1,0 +1,159 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
+import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import {createFleetSide,createFleetNextBattle,resolveFleetNextTurn,
+ sacrificeIndependentFleetSupport} from './fleetNext/combat.js';
+import {SUPPORT_SKILL_LABELS,SUPPORT_SKILL_ASSIGNMENTS,
+ skillCount,trapsSuppressed,terrainHalf,terrainImmunity,
+ effectiveSupportEnergyCost,supportSpecialBoost,supportNormalBoost,
+ supportWeaponCardBoost,settleIndependentSupportDamage,
+ advanceIndependentSupportTime,resolveIndependentSupportOwnTurn} from './fleetNext/supportAbilities.js';
+
+const select=(skill,slot=0)=>{
+ const def=SUPPORT_CATALOG.find(x=>x.skillId===skill);
+ assert.ok(def,skill);
+ return {id:def.id,instanceId:'copy-'+skill+'-'+slot,slot,level:1};
+};
+const battle=(skillA=null,skillB=null)=>createFleetNextBattle({
+ shipA:'N00',levelA:20,shipB:'C02',levelB:18,
+ deckA:[],deckB:[],mode:'pvp',ruleset:HP_SYNC_RULESET,seed:2026,nowMs:0,
+ supportRosterA:skillA?[select(skillA)]:[],
+ supportRosterB:skillB?[select(skillB)]:[]
+});
+
+test('34 supporti indipendenti assegnati alle 15 passive, con duplicati ammessi',()=>{
+ assert.equal(SUPPORT_CATALOG.length,34);
+ assert.equal(Object.keys(SUPPORT_SKILL_LABELS).length,15);
+ assert.equal(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length,17);
+ assert.equal(new Set(SUPPORT_CATALOG.map(x=>x.skillId)).size,15);
+ const first=select('regeneration');
+ const side=createFleetSide('N00',1,[],100,{},[
+  first,{...first,slot:1,instanceId:'second'}]);
+ assert.equal(side.escorts.length,2);
+ assert.equal(skillCount(side,'regeneration',0),2);
+ assert.equal(side.escorts[0].parentShipId,null);
+});
+
+test('Bonus distinti: arma, attacco normale, Attacco Speciale e sconto solo su Attacco Speciale',()=>{
+ const weapon=battle('weapon-double').sides.A;
+ const normal=battle('normal-boost').sides.A;
+ const special=battle('special-boost').sides.A;
+ const discount=battle('energy-discount').sides.A;
+ assert.equal(supportWeaponCardBoost(weapon,2,0),4);
+ assert.equal(supportWeaponCardBoost(normal,2,0),2);
+ assert.equal(supportNormalBoost(normal,4,0),5);
+ assert.equal(supportSpecialBoost(normal,4,0),4);
+ assert.equal(supportSpecialBoost(special,4,0),5);
+ assert.equal(supportNormalBoost(special,4,0),4);
+ assert.equal(effectiveSupportEnergyCost(discount,{kind:'attack',cost:4},0),3);
+ assert.equal(effectiveSupportEnergyCost(discount,{kind:'effect',cost:4},0),4);
+ assert.equal(effectiveSupportEnergyCost(discount,{kind:'attack',cost:1},0),1);
+});
+
+test('Trappole nemiche piazzabili ma inattive; immunità terreni e dimezzamento distinti',()=>{
+ const b=battle('trap-silence');
+ b.sides.B.defenses=[{hidden:true,id:'trap',trigger:'terrain'}];
+ assert.equal(trapsSuppressed(b,b.sides.B),true);
+ assert.equal(b.sides.B.defenses.length,1);
+ b.sides.A.escorts[0].destroyed=true;
+ assert.equal(trapsSuppressed(b,b.sides.B),false);
+ assert.equal(b.sides.B.defenses.length,1);
+ const half=battle('terrain-half'),immune=battle('terrain-immunity');
+ assert.equal(terrainHalf(half.sides.A,0),true);
+ assert.equal(terrainImmunity(half.sides.A,0),false);
+ assert.equal(terrainImmunity(immune.sides.A,0),true);
+});
+
+test('Rigenerazione a 0,1 HP/s durante il turno nemico e tick idempotenti',()=>{
+ const b=battle(null,'regeneration');
+ b.sides.B.ships[0].hp=1;
+ const tick=advanceIndependentSupportTime(b,10000);
+ assert.equal(tick.changed,true);
+ assert.equal(tick.battle.sides.B.ships[0].hp,2);
+ assert.equal(advanceIndependentSupportTime(tick.battle,10000).changed,false);
+ assert.equal(advanceIndependentSupportTime(tick.battle,15000).battle.sides.B.ships[0].hp,2.5);
+ assert.equal(b.sides.B.ships[0].hp,1);
+});
+
+test('Veleno reattivo avviato dopo ferita, per il prossimo turno del colpevole',()=>{
+ const b=battle('reactive-poison','last-shield');
+ b.turn='B';b.ply=1;
+ const source=b.sides.A.escorts[0];
+ source.hp--;
+ const notes=settleIndependentSupportDamage(b,'B');
+ assert.ok(notes.some(e=>e.kind==='support-poison'));
+ assert.equal(source.poisonReadyPly,3);
+ b.ply=3;b.turn='B';b.turnStartedAtMs=0;b.supportSecondsProcessed=0;
+ const m=b.sides.B.ships[0].hp,e=b.sides.B.escorts[0].hp;
+ const tick=advanceIndependentSupportTime(b,10000);
+ assert.equal(tick.battle.sides.B.ships[0].hp,m-1);
+ assert.equal(tick.battle.sides.B.escorts[0].hp,e-1);
+});
+
+test('Scudiera resistente: 50 HP e cura alla distruzione una sola volta',()=>{
+ const b=battle('last-shield'),mother=b.sides.A.ships[0],e=b.sides.A.escorts[0];
+ assert.equal(e.maxHp,50);
+ mother.hp=1;e.hp=0;e.destroyed=true;
+ const notes=settleIndependentSupportDamage(b,'B');
+ assert.equal(notes.length,1);
+ assert.equal(mother.hp,Math.min(mother.maxHp,26));
+ assert.equal(settleIndependentSupportDamage(b,'B').length,0);
+});
+
+test('Pioggia di fulmini alla distruzione elimina Attacchi e Personaggio avversari',()=>{
+ const b=battle('death-storm');
+ b.sides.B.attackSlots=['a1','a2'];b.sides.B.commander={id:'ex-c02-01'};
+ const e=b.sides.A.escorts[0];e.hp=0;e.destroyed=true;
+ const notes=settleIndependentSupportDamage(b,'B');
+ assert.equal(notes[0].clearedAttacks,2);
+ assert.equal(notes[0].clearedCharacter,true);
+ assert.equal(b.sides.B.commander,null);
+ assert.deepEqual(b.sides.B.attackSlots,[]);
+});
+
+test('Conversione alla distruzione ricarica due Energie senza superare il massimo di quattro',()=>{
+ const b=battle('death-energy'),side=b.sides.A;
+ side.elementalCharges={ionic:1};
+ side.escorts[0].hp=0;side.escorts[0].destroyed=true;
+ const events=settleIndependentSupportDamage(b,'B');
+ assert.equal(events[0].charge,2);
+ assert.equal(side.elementalCharges.ionic,3);
+});
+
+test('Condensatore: al terzo proprio turno scarica fulmini, mai uno sparo per turno',()=>{
+ const b=battle('capacitor','last-shield'),before=b.sides.B.ships[0].hp;
+ assert.equal(resolveIndependentSupportOwnTurn(b,'A').length,0);
+ b.ply=2;assert.equal(resolveIndependentSupportOwnTurn(b,'A').length,0);
+ b.ply=4;
+ assert.ok(resolveIndependentSupportOwnTurn(b,'A').some(e=>e.kind==='support-lightning'));
+ assert.equal(b.sides.B.ships[0].hp,before-1);
+});
+
+test('Sacrificio volontario negato sotto 80% HP, consentito al valore esatto',()=>{
+ const b=battle('sacrifice'),e=b.sides.A.escorts[0];
+ e.hp=e.maxHp*.79;
+ assert.equal(sacrificeIndependentFleetSupport(b,'A',e.id,0).ok,false);
+ e.hp=e.maxHp*.8;
+ const done=sacrificeIndependentFleetSupport(b,'A',e.id,0);
+ assert.equal(done.ok,true,done.reason);
+ assert.equal(done.battle.sides.A.escorts[0].destroyed,true);
+ assert.ok(done.damage>0);
+});
+
+test('Supporto pescata: mano riempita fino a 8 senza usare altre carte del mazzo',()=>{
+ const b=battle('extra-draw');
+ b.sides.A.hand=[];b.sides.A.deck=Array(12).fill('energy-ionic');
+ const done=resolveFleetNextTurn(b,'A',{cards:[],pass:true},0);
+ assert.equal(done.ok,true,done.reason);
+ assert.equal(done.battle.sides.A.hand.length,8);
+ assert.equal(done.battle.sides.A.deck.length,4);
+});
+
+test('Plancia ufficiale aggiorna gli HP al secondo e rende il Sacrificio cliccabile',()=>{
+ const ui=readFileSync(new URL('./OfficialFleetBattle3D.jsx',import.meta.url),'utf8');
+ assert.match(ui,/advanceIndependentSupportTime\(current,timestamp\)/);
+ assert.match(ui,/sacrificeIndependentFleetSupport\(battle,'A'/);
+ assert.match(ui,/actualEnergyCost=effectiveSupportEnergyCost/);
+});
