@@ -8,6 +8,7 @@ import {shipUpgradeDustCost} from './shipUpgrades.js';
 import {getShipProgression,getShipProgressionLevels,shipProgressionProfile,shipMaxLevel} from './fleetNext/progression.js';
 import {EXCLUSIVE_CARDS} from './fleetNext/rules.js';
 import {fleetElementNames,activeFleetElements,secondaryElementUnlockLevel,FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
+import {elementalAbility} from './fleetNext/elementalAbilities.js';
 import './ShipCollectionPanels.css';
 
 function readCollection() {
@@ -41,7 +42,11 @@ export function ShipProgressionDetails({shipId,level=1}){
   </p>)}
   {secondaryElementUnlockLevel(shipId)&&level<secondaryElementUnlockLevel(shipId)&&
    <p>Seconda affinità: {fleetElementNames(shipId).at(-1)} dal livello {secondaryElementUnlockLevel(shipId)}.</p>}
-  <p>Colpi normali invariati. Il futuro colpo elementale richiederà una Carta Energia.</p>
+  <p>Abilità elementale: <strong>{elementalAbility(shipId)?.name}</strong> ·
+   {elementalAbility(shipId)?.kind==='attack'?' Attacco Speciale':' Effetto Speciale'} ·
+   richiede {elementalAbility(shipId)?.cost} {elementalAbility(shipId)?.cost===1?'Carta Energia':'Carte Energia'}.
+  </p>
+  <p>Il colpo normale resta disponibile senza Carte Energia. Le animazioni definitive saranno create successivamente.</p>
   <p>{current.vitalIds.length} vitali · {current.escortCount} supporti
    {current.escortGrades.length?' · gradi '+current.escortGrades.join('/') : ''}
    {current.reserveCount?' · '+current.reserveCount+' in riserva':''}
