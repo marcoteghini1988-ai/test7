@@ -1,6 +1,7 @@
 // Carte Navicella Fusione: la carta identifica il modello che si aggiunge
 // a UN supporto già schierato. Non rappresenta una fusione universale.
-// Le immagini, i prezzi e la rarità definitiva verranno definiti in seguito.
+// La rarità della Carta Fusione segue quella del modello rappresentato;
+// immagini e prezzi saranno definiti nella fase dedicata.
 // Il registro storico contiene 17 ID: i quattro da escludere quando sarà
 // riconciliato il catalogo ufficiale da 13 non sono ancora identificati.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
@@ -12,8 +13,8 @@ export const FUSION_SHIP_CARDS=Object.freeze(PHASE1_CATALOG.ships.map(ship=>{
  return Object.freeze({
   id:'fusion-ship-'+ship.id.toLowerCase(),
   nome,name:nome,category:'Navicella Fusione',categoria:'Fusione',
-  sottotipo:'Navicella Fusione',kind:'support',rarita:'Epica',
-  rarityProvisional:true,nativeFace:true,playable:true,
+  sottotipo:'Navicella Fusione',kind:'support',rarita:ship.rarita,
+  raritySource:'ship-model',nativeFace:true,playable:true,
   maxCopiesPerDeck:2,acquisitionPending:true,
   fusionShipId:ship.id,fusionShipName:ship.nome,
   fusionElementId:fleetElements(ship.id)[0],
