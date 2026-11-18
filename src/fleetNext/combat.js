@@ -4,7 +4,7 @@ import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
-import {fleetElements} from './elementalAffinities.js';
+import {fleetElements,activeFleetElements} from './elementalAffinities.js';
 import {AURORA_ACTIONS,isAuroraModule,installedModule,liveModules,moduleSlotForCard,mountModule,removeModule,reconfigurationOptions,auroraPrecondition} from './auroraEngine.js';
 import {LINCE_ATTACK_ACTIONS,LINCE_BYPASS_ACTIONS,isLinceModule,
  ensureLinceState,linceMarkedRouteReady,lincePrecondition,recallLinceModule,
@@ -78,7 +78,7 @@ export function createFleetMother(id,level=1){
  const maxHp=motherIntegrityFromSystems(parts);
  return {id:model.id,name:model.nome,level:n,rarity:model.rarita,hp:maxHp,maxHp,
   role:progression.role,parts,element:fleetElements(model.id)[0],
-  elements:fleetElements(model.id),
+  elements:activeFleetElements(model.id,n),
   attackPower:progression.attackPower,defensePower:progression.defensePower,
   weaponRating:Math.max(0,progression.attackPower-1)};
 }
