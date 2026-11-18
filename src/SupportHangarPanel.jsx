@@ -3,7 +3,8 @@
 import React,{useEffect,useState} from 'react';
 import {SUPPORT_COLLECTION_KEY,readSupportCollection,writeSupportCollection,
  equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
-import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
+import {SUPPORT_CATALOG,supportDefinition} from './fleetNext/supportCatalog.js';
+import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import {SUPPORT_SLOT_CAMPAIGN_UNLOCKS} from './fleetNext/supportCampaign.js';
 
 const cardStyle={padding:10,border:'1px solid #36678c',borderRadius:8,
@@ -50,7 +51,7 @@ export default function SupportHangarPanel(){
   padding:10,border:'1px solid #326488',borderRadius:8,
   background:'#081b2dee',color:'#e6f5ff',margin:'10px 0'
  }}>
-  <h4>Navicelle di supporto · fuori dal mazzo da 40</h4>
+  <h4>Carte navicella · supporti scelti prima della battaglia</h4>
   <p>Gli slot si sbloccano in modo permanente con la campagna.
    Le due navicelle si scelgono prima della battaglia e mantengono
    la stessa formazione anche quando cambi nave madre.</p>
@@ -77,7 +78,7 @@ export default function SupportHangarPanel(){
         onChange={e=>select(slot,e.target.value)}>
         <option value="">Slot libero</option>
         {collection.owned.map(item=>{
-         const source=SUPPORT_CATALOG.find(s=>s.id===item.supportId);
+         const source=supportDefinition(item.supportId);
          return <option key={item.instanceId} value={item.instanceId}
           disabled={equipped.some((x,i)=>i!==slot&&x===item.instanceId)}>
           {source?.name||item.supportId} · L{item.level} · copia {item.instanceId}
@@ -85,7 +86,7 @@ export default function SupportHangarPanel(){
         })}
        </select>
        {chosen&&<small>{chosen.name} · {chosen.role} · livello proprio {chosen.level}
-        {' · elemento ereditato dalla madre schierata'}</small>}
+        {' · elemento proprio: '+(FLEET_ELEMENTS[chosen.elementId]?.name||'da definire')}</small>}
       </>}
      </div>;
     })}
