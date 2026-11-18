@@ -187,3 +187,26 @@ export function advanceIndependentSupportTime(battle,nowMs){
  b.lastEvents=events.length?events:b.lastEvents;
  return {battle:b,events,changed:true};
 }
+
+
+// Il condensatore accumula senza armi ordinarie: solo alla terza carica
+// rilascia una scarica alle unità nemiche.
+export function resolveIndependentSupportOwnTurn(b,who){
+ if(!available(b))return [];
+ const side=b.sides[who],enemy=b.sides[who==='A'?'B':'A'],events=[];
+ for(const e of livingSkillSupports(side,'capacitor',b.ply)){
+  e.supportCharge=(e.supportCharge||0)+1;
+  if(e.supportCharge<3)continue;
+  e.supportCharge=0;
+  for(const target of [enemy.ships[0],...(enemy.escorts||[])])
+   if(target.hp>0&&!target.destroyed){
+    target.hp=roundTenth(target.hp-1);
+    if(target!==enemy.ships[0]&&target.hp===0){target.destroyed=true;target.linked=false;}
+   }
+  events.push(note(b,who,'support-lightning',e.name+
+   ' scarica fulmini sulle unità nemiche (−1 HP ciascuna)',
+   {supportId:e.catalogSupportId,damagePerUnit:1}));
+ }
+ events.push(...settleIndependentSupportDamage(b,who));
+ return events;
+}

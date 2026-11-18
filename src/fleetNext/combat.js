@@ -3,6 +3,10 @@
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {createIndependentFleetEscorts,compatibleLegacyFusionCount} from './supportDeployment.js';
+import {skillCount,trapsSuppressed,terrainImmunity,terrainHalf,
+ effectiveSupportEnergyCost,supportNormalBoost,supportSpecialBoost,
+ supportWeaponCardBoost,advanceIndependentSupportTime,
+ settleIndependentSupportDamage,resolveIndependentSupportOwnTurn} from './supportAbilities.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
@@ -272,7 +276,8 @@ export function createFleetNextBattle({
 }={}){
  const terrain=bossId?bossTerrain(bossId):mode==='pvp'?neutralTerrain():campaignTerrain(sectorNumber,planetId);
  const b={version:4,ruleset,phase:'playing',winner:null,round:1,ply:0,turn:'A',
-  deadlineMs:nowMs+FLEET_TURN_SECONDS*1000,mode,
+  deadlineMs:nowMs+FLEET_TURN_SECONDS*1000,turnStartedAtMs:nowMs,
+  supportSecondsProcessed:0,mode,
   bossName,bossId:bossId||null,planetId:terrain.planetId??planetId??null,
   bossLockedTerrain:false,seed,rng:seed>>>0,startedAtMs:nowMs,finishedAtMs:null,
   terrain,
@@ -453,8 +458,8 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   !livingEscorts(side).some(e=>!nebulaProtectionForbidden(e,battle?.ply??0)))
   return 'Nebbia polare: nessun supporto puo ricevere nuove protezioni';
  if(s.type==='dodge'&&!activePart(side,'generator'))return 'La schivata richiede il Generatore attivo';
- if(s.type==='dodge'&&terrain==='T01')return 'La Distesa Gelida blocca le schivate';
- if(s.type==='repair'&&terrain==='T08')return 'La Palude di Silicio blocca le riparazioni';
+ if(s.type==='dodge'&&terrain==='T01'&&!terrainImmunity(side,battle?.ply||0))return 'La Distesa Gelida blocca le schivate';
+ if(s.type==='repair'&&terrain==='T08'&&!terrainImmunity(side,battle?.ply||0))return 'La Palude di Silicio blocca le riparazioni';
  if(['power','pierce','multishot','charge','bypass'].includes(s.type)&&!activePart(side,'weapons'))return 'L’Arsenale è distrutto: resta il tiro di emergenza';
  if(s.type==='fusion'){
   if(def.shipId&&def.shipId!==side.ships[0].id)return 'La Fusione appartiene a un’altra nave';
@@ -501,9 +506,10 @@ export function validateFleetTurn(b,who,order){
   if(!activeFleetElements(side.ships[0].id,side.ships[0].level).includes(element))
    return 'L’elemento della speciale non è disponibile';
   const extra=selectedEnergy.filter(c=>c.effectSpec.elementId===element).length;
-  if(chargedElementalEnergy(side,element)+extra<ability.cost)
-   return 'Per '+ability.name+' servono '+ability.cost+' Carte Energia '+FLEET_ELEMENTS[element].name;
-  if(ability.mode==='heal'&&b.terrain?.id==='T08')
+  const cost=effectiveSupportEnergyCost(side,ability,b.ply);
+  if(chargedElementalEnergy(side,element)+extra<cost)
+   return 'Per '+ability.name+' servono '+cost+' Carte Energia '+FLEET_ELEMENTS[element].name;
+  if(ability.mode==='heal'&&b.terrain?.id==='T08'&&!terrainImmunity(side,b.ply))
    return 'Il Terreno attuale impedisce la riparazione elementale';
   if(ability.mode==='heal'&&side.ships[0].hp>=side.ships[0].maxHp)
    return 'La nave madre è già al massimo degli HP';
@@ -830,7 +836,7 @@ function expireSide(side,ply,battle=null){
  enforceDestroyedSystems(side,ply);
 }
 function heal(b,side,amount,target='weakest',ownPartId=null){
- if(b.terrain?.id==='T08')return null;
+ if(b.terrain?.id==='T08'&&!terrainImmunity(side,b.ply))return null;
  if(side.ruleset===HP_SYNC_RULESET&&operational(side.ships[0],'generator'))
   amount=Math.max(0,amount+generatorAdjustment(side,b.ply));
  if(!amount)return null;
@@ -867,7 +873,7 @@ function exchangeCards(b,side,amount){
 }
 
 function cancelCorvoDisturbance(b,who,defender,events,sourceCardId=null){
- const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='disturbance'&&
+ const trap=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.hidden&&d.trigger==='disturbance'&&
   d.armedAtPly<b.ply);
  if(!trap)return false;
  discardDefense(defender,trap.source);
@@ -969,7 +975,7 @@ function addWeaken(b,enemy,amount,source,attackerWho=null,events=null){
 function cancelTerrainWithTrap(b,who,terrainCard,ctx,events){
  const defenderWho=other(who),defender=b.sides[defenderWho];
  if(!operational(defender.ships[0],'generator'))return false;
- const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='terrain'&&d.action==='cancel'&&
+ const trap=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.hidden&&d.trigger==='terrain'&&d.action==='cancel'&&
   (d.armedAtPly??-1)<b.ply);
  if(!trap)return false;
  const name=card(trap.id)?.nome||card(trap.id)?.name||'Trappola';
@@ -1067,7 +1073,7 @@ function cancelLinceBypass(b,who,events,sourceCardId){
 function redirectLinceHit(b,ctx,events,target,alreadyRedirected=false){
  if(alreadyRedirected||target?.kind!=='part')return target;
  const defender=b.sides[other(ctx.who)];
- const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='mother-part-hit'&&
+ const trap=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.hidden&&d.trigger==='mother-part-hit'&&
   d.armedAtPly<b.ply);
  if(!trap)return target;
  const part=activePart(defender,trap.redirectPartId);
@@ -1245,7 +1251,7 @@ function activateCorvoCard(b,who,def,ctx,events,order={},source=null){
   return;
  }
  if(action==='frequency-analysis'){
-  const trap=enemy.defenses.find(d=>d.hidden);
+  const trap=!trapsSuppressed(b,enemy)&&enemy.defenses.find(d=>d.hidden);
   const state=ensureCorvoState(side);
   state.scannedTrapId=trap?.id||null;state.scanPly=b.ply;
   events.push(emit(b,who,'private-scan','Analisi di frequenza: '+
@@ -1708,7 +1714,7 @@ function onSharkAttackHit(b,ctx,events,hit){
   }
  }
  if(hit.kind==='machine'&&hit.unit.destroyed){
-  const trap=defender.defenses.find(d=>d.id==='nx-r04-04'&&d.hidden&&
+  const trap=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.id==='nx-r04-04'&&d.hidden&&
    d.trigger==='shark-machine-destroyed'&&d.armedAtPly<b.ply);
   if(trap){
    const targets=[...(trap.sharkTeethTargets||[])];
@@ -1952,7 +1958,7 @@ function stormNetStops(b,ctx,events,target){
  if(!target||target.kind!=='escort'||!ctx.stormEscortVictims?.size||ctx.stormEscortVictims.has(target.unit.id))
   return false;
  const defender=b.sides[other(ctx.who)];
- const defense=defender.defenses.find(d=>d.id==='nx-e02-08'&&d.hidden&&
+ const defense=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.id==='nx-e02-08'&&d.hidden&&
   d.armedAtPly<b.ply&&d.trigger==='storm-second-support');
  if(!defense||defender.ships[0].id!=='E02')return false;
  discardDefense(defender,defense.source);
@@ -2176,7 +2182,7 @@ function royalGuardCommand(b,ctx,events,target){
 // Il Decreto agisce sul ritiro, mai sulla Fusione o su sacrifici volontari.
 function royalCancelWithdrawal(b,actor,events,unit,targetKind){
  const defender=b.sides[other(actor)];
- const decree=defender.defenses.find(d=>d.id==='nx-l01-04'&&d.hidden&&
+ const decree=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.id==='nx-l01-04'&&d.hidden&&
   d.trigger==='unit-withdrawal'&&d.armedAtPly<b.ply);
  if(!decree)return false;
  discardDefense(defender,decree.source);
@@ -2272,7 +2278,7 @@ function obsidianChosenTarget(enemy,kind,id){
 }
 function obsidianOnPreparation(b,who,releasePly,events,cardId){
  const defender=b.sides[other(who)],attacker=b.sides[who];
- const d=defender.defenses.find(d=>d.id==='nx-l03-07'&&d.hidden&&
+ const d=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.id==='nx-l03-07'&&d.hidden&&
   d.trigger==='obsidian-preparing'&&d.armedAtPly<b.ply);
  if(!d)return;
  const machine=attacker.machines?.find(m=>unitAlive(m)&&m.id===d.obsidianMachineId);
@@ -2726,7 +2732,10 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     {cardId:def.id,machineSlot:slot,machineId:machine.id}));
    break;
   }
-  case 'power':ctx.power+=s.amount;at('+'+s.amount+' potenza');break;
+  case 'power':{
+   const amount=cardRole(def.id)==='attack'?supportWeaponCardBoost(side,s.amount,b.ply):s.amount;
+   ctx.power+=amount;at('+'+amount+' potenza');break;
+  }
   case 'pierce':ctx.pierce+=s.amount;at('Ignora '+s.amount+' protezioni sui componenti');break;
   case 'multishot':ctx.multiTargets=Math.max(ctx.multiTargets,s.targets);at('Fino a '+s.targets+' componenti');break;
   case 'protect':case 'dodge':{
@@ -2788,7 +2797,12 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    const terrainCard=TERRAIN_CATALOG[s.code]?.cardId;
    const result=activateTerrain(b.terrain,terrainCard,b.ply,who,{boss:!!b.bossId,bossOverride:true});
    if(result.ok&&!cancelTerrainWithTrap(b,who,terrainCard,ctx,events)){
-    b.terrain=result.terrain;at(TERRAIN_CATALOG[s.code].description+' Vale per 3 round.');
+    b.terrain=result.terrain;
+    if(b.terrain.expiresPly!=null&&terrainHalf(enemy,b.ply)){
+     b.terrain.expiresPly=b.ply+3;
+     events.push(emit(b,other(who),'support-terrain','Dimezzata la durata del Terreno'));
+    }
+    at(TERRAIN_CATALOG[s.code].description+' Vale per 3 round (o metà con supporto).');
    }
    break;
   }
@@ -2801,11 +2815,12 @@ function resolveElementalActivation(b,who,order,ctx,events){
  if(!order?.activateElemental)return;
  const side=b.sides[who],enemy=b.sides[other(who)],mother=side.ships[0];
  const ability=elementalAbility(mother.id),element=order.elementalElement||mother.element;
- if(!ability||!spendElementalEnergy(side,element,ability.cost))
+ const effectiveCost=effectiveSupportEnergyCost(side,ability,b.ply);
+ if(!ability||!spendElementalEnergy(side,element,effectiveCost))
   throw Error('Energia speciale insufficiente');
  side.elementalLastActivationPly=b.ply;
  const strength=elementalSpecialStrength(ability,element,enemy.ships[0].element);
- const amount=strength.power;
+ const amount=ability.kind==='attack'?supportSpecialBoost(side,strength.power,b.ply):strength.power;
  if(ability.kind==='attack'){
   ctx.power+=amount;ctx.elementalShot=true;
  }else if(ability.mode==='guard'){
@@ -2825,7 +2840,7 @@ function resolveElementalActivation(b,who,order,ctx,events){
  events.push(emit(b,who,'elemental-special',ability.name+' · '+FLEET_ELEMENTS[element].name+
   (strength.relation>0?' · efficace':strength.relation<0?' · contrastata':' · neutrale'),{
   abilityId:mother.id,abilityName:ability.name,abilityKind:ability.kind,
-  element,visualKey:FLEET_ELEMENTS[element].vfx,cost:ability.cost,
+  element,visualKey:FLEET_ELEMENTS[element].vfx,cost:effectiveCost,
   relation:strength.relation,power:amount,
   targetId:order.elementalTargetId||null,
   remainingEnergy:totalElementalEnergy(side)
@@ -2924,6 +2939,12 @@ function applyBossPassive(b,ctx,events){
 }
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
+ if(side.independentSupportRoster){
+  for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
+   const power=arsenalBonus(side,machine,b.ply);if(power)ctx.power+=power;
+  }
+  return; // Non esegue le vecchie passive delle 17 madri.
+ }
  // Le passive si sospendono soltanto durante il primo turno colpito;
  // la Centralina Leggendaria alleata può salvare una delle attivazioni.
  let suspended=side.ruleset===HP_SYNC_RULESET?commandPassiveSuspensions(side,b.ply):0;
@@ -3064,7 +3085,7 @@ function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
   return true;
  }
  if(ctx.mantaGrounded)return true;
- const grounding=defender.defenses.find(d=>d.hidden&&d.trigger==='manta-secondary'&&
+ const grounding=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.hidden&&d.trigger==='manta-secondary'&&
   d.armedAtPly<b.ply);
  if(grounding&&mantaCapacitorActive(defender,b.ply)&&spendMantaEnergy(defender,b.ply,1)){
   ctx.mantaGrounded=true;discardDefense(defender,grounding.source);
@@ -3073,7 +3094,7 @@ function cancelPrismaSecondaryHit(b,ctx,events,target,primary){
    {cardId:grounding.id,secondaryCancelled:true}));
   return true;
  }
- const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='multi-secondary'&&
+ const trap=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.hidden&&d.trigger==='multi-secondary'&&
   d.armedAtPly<b.ply&&d.protectedKind===target.kind&&
   d.protectedId===target.unit.id);
  if(!trap)return false;
@@ -3140,7 +3161,8 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   if(!matches)continue;
   if(nebulaProtectionForbidden(target,b.ply)&&p.placedPly!=null&&
    p.placedPly>=(target.nebulaNoProtectionAppliedPly??Infinity))continue;
-  if(p.kind==='dodge'&&(!activePart(defender,'generator')||b.terrain?.id==='T01'))continue;
+  if(p.kind==='dodge'&&(!activePart(defender,'generator')||
+   b.terrain?.id==='T01'&&!terrainImmunity(defender,b.ply)))continue;
   const attacker=b.sides[ctx.who];
   const visible=defender.defenses.some(d=>d.source===p.source&&!d.hidden);
   const barrel=installedModule(attacker,'weapon');
@@ -3214,7 +3236,7 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   }
  }
  if(targetKind==='escort'){
-  const trap=defender.defenses.find(d=>d.id==='nx-l04-08'&&d.hidden&&
+  const trap=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.id==='nx-l04-08'&&d.hidden&&
    d.trigger==='ark-third-entry'&&d.armedAtPly<b.ply&&
    d.arkReserveId===target.id&&d.untilPly>b.ply);
   if(trap){
@@ -3641,7 +3663,7 @@ function obsidianReleaseAtTurnStart(b,who,ctx,events,order={}){
   return empty;
  };
  const enemy=b.sides[other(who)];
- const fake=enemy.defenses.find(d=>d.id==='nx-e01-04'&&d.hidden&&
+ const fake=!trapsSuppressed(b,enemy)&&enemy.defenses.find(d=>d.id==='nx-e01-04'&&d.hidden&&
   d.trigger==='prepared-release'&&d.armedAtPly<b.ply);
  if(fake){
   discardDefense(enemy,fake.source);
@@ -3715,7 +3737,7 @@ function falcoReleaseAtTurnStart(b,who,ctx,events,order){
   return result;
  };
  const defender=b.sides[other(who)];
- const falseTarget=defender.defenses.find(d=>d.id==='nx-e01-04'&&d.hidden&&
+ const falseTarget=!trapsSuppressed(b,defender)&&defender.defenses.find(d=>d.id==='nx-e01-04'&&d.hidden&&
   d.armedAtPly<b.ply&&d.trigger==='prepared-release');
  if(falseTarget){
   discardDefense(defender,falseTarget.source);
@@ -4190,11 +4212,14 @@ function resolveSalvo(b,ctx,events,order){
  const jam=side.buffs.filter(x=>x.kind==='jam').reduce((sum,x)=>sum+(x.power||0),0);
  side.buffs=side.buffs.filter(x=>x.kind!=='jam');
  const guardPower=defender.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply)).reduce((sum,x)=>sum+(x.power||0),0);
- const terrain=terrainSalvoModifier(b.terrain,mother.id),emergency=!operational(mother,'weapons');
+ const rawTerrain=terrainSalvoModifier(b.terrain,mother.id);
+ const terrain=rawTerrain.value<0&&terrainImmunity(side,b.ply)?{...rawTerrain,value:0}:rawTerrain;
+ const emergency=!operational(mother,'weapons');
  // La corazza riduce la potenza, ma non rende una nave invulnerabile.
  // Il tiro di emergenza conserva almeno 1 potenza prima degli effetti temporanei.
  const basePower=Math.max(1,(emergency?1:mother.attackPower??1+mother.weaponRating)-(enemy.defensePower||0));
- const power=Math.max(0,basePower+ctx.power+terrain.value-jam-guardPower);
+ const rawPower=Math.max(0,basePower+ctx.power+terrain.value-jam-guardPower);
+ const power=ctx.elementalShot?rawPower:supportNormalBoost(side,rawPower,b.ply);
  if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: l’attacco fallisce'));return {damage:0,partId:order.partId,played:visiblePlayed(ctx.cards),power};}
  if(emergency)events.push(emit(b,ctx.who,'emergency-shot','Tiro di emergenza: l’Arsenale è distrutto'));
  const guards=protectingFleetUnits(defender,b.ply);
@@ -4290,13 +4315,25 @@ function resolveSalvo(b,ctx,events,order){
  return data;
 }
 function finishTurn(b,ctx,events){
+ if(b.ruleset===HP_SYNC_RULESET){
+  events.push(...settleIndependentSupportDamage(b,ctx.who));
+  events.push(...resolveIndependentSupportOwnTurn(b,ctx.who));
+ }
  arkCustodianTurn(b,ctx,events);
  royalSovereignTurn(b,ctx,events);
  stormEndOwnTurn(b,ctx,events);
  mantaNavigatorTurn(b,ctx,events);
  const side=b.sides[ctx.who];side.turnCount++;refill(b,side);
+ const extra=Math.min(2,skillCount(side,'extra-draw',b.ply));
+ let drawn=0;
+ for(let i=0;i<extra;i++){
+  if(!side.deck.length&&side.discard.length){side.deck=shuffled(side.discard,b);side.discard=[];}
+  if(side.deck.length){side.hand.push(side.deck.shift());drawn++;}
+ }
+ if(drawn)events.push(emit(b,ctx.who,'support-draw','Pescata aggiuntiva: +'+drawn+' carte'));
  side.lastPlayed=visiblePlayed(ctx.cards);b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
  b.terrain=activeTerrain(b.terrain,b.ply);
+ b.turnStartedAtMs=ctx.nowMs;b.supportSecondsProcessed=0;
  for(const [id,side] of Object.entries(b.sides)){
   expireSide(side,b.ply,b);corvoSafetySwitch(b,id,events);
  }
@@ -4316,9 +4353,12 @@ function finishTurn(b,ctx,events){
  b.deadlineMs=ctx.nowMs+FLEET_TURN_SECONDS*1000;b.lastEvents=events;
 }
 export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
- const error=validateFleetTurn(battle,who,order);
- if(error)return {ok:false,reason:error,battle,events:[]};
- const b=clone(battle),events=[],side=b.sides[who];
+ const timed=advanceIndependentSupportTime(battle,nowMs);
+ if(timed.battle.phase==='finished')
+  return {ok:true,battle:timed.battle,events:timed.events,shot:{damage:0,timedFinish:true}};
+ const error=validateFleetTurn(timed.battle,who,order);
+ if(error)return {ok:false,reason:error,battle:timed.battle,events:timed.events};
+ const b=clone(timed.battle),events=[...timed.events],side=b.sides[who];
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const [id,s] of Object.entries(b.sides)){
   expireSide(s,b.ply,b);corvoSafetySwitch(b,id,events);
@@ -4524,4 +4564,30 @@ export function autoFleetTurn(b,who=b.turn){
 export function timeoutFleetTurn(battle,nowMs){
  if(battle.phase!=='playing'||nowMs<battle.deadlineMs)return {ok:false,battle,events:[]};
  return resolveFleetNextTurn(battle,battle.turn,{partId:null,cards:[],pass:true},nowMs);
+}
+
+
+// Sacrificio immediato: nessuna carta del mazzo, massimo una volta perché
+// il supporto esce dal campo. I valori HP saranno bilanciati.
+export function sacrificeIndependentFleetSupport(battle,who,supportId,nowMs=0){
+ const timed=advanceIndependentSupportTime(battle,nowMs);
+ if(timed.battle?.phase!=='playing'||timed.battle.turn!==who)
+  return {ok:false,reason:'Non è il tuo turno',battle:timed.battle,events:[]};
+ const b=clone(timed.battle),side=b.sides[who],enemy=b.sides[other(who)];
+ const e=side.escorts.find(u=>u.id===supportId&&u.supportSkillId==='sacrifice');
+ if(!e||e.hp<=0||e.destroyed)
+  return {ok:false,reason:'Sacrificio non disponibile',battle:timed.battle,events:[]};
+ if(e.hp/e.maxHp<.8)
+  return {ok:false,reason:'Sacrificio disponibile soltanto con almeno l’80% degli HP',battle:timed.battle,events:[]};
+ e.hp=0;e.destroyed=true;e.linked=false;e.supportObservedHp=0;e.supportDeathResolved=true;
+ const mother=enemy.ships[0],damage=Math.min(mother.hp,Math.max(1,Math.ceil(mother.maxHp*.25)));
+ mother.hp-=damage;
+ const event=emit(b,who,'support-sacrifice',e.name+' si sacrifica: −'+damage+' HP alla madre avversaria',
+  {supportId:e.catalogSupportId,target:'mother',damage});
+ if(mother.hp<=0){
+  b.phase='finished';b.winner=who;b.finishReason='Madre distrutta dal Sacrificio volontario';
+  b.finishedAtMs=nowMs;
+ }
+ b.lastEvents=[...timed.events,event];
+ return {ok:true,battle:b,events:b.lastEvents,damage};
 }
