@@ -6,7 +6,7 @@
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {fleetElements} from './elementalAffinities.js';
-import {supportSkillFor,SUPPORT_SKILL_LABELS} from './supportAbilities.js';
+import {supportSkillFor,nativeSupportSlotFor,SUPPORT_SKILL_LABELS} from './supportAbilities.js';
 
 export const SUPPORT_ACTIVE_SLOTS=2;
 // Riferimento alle sole tre famiglie fusione del sistema storico.
@@ -18,12 +18,13 @@ export const supportModelIdFor=shipId=>
  PHASE1_CATALOG.ships.some(s=>s.id===shipId)?'support-model-'+shipId.toLowerCase():null;
 
 export const SUPPORT_CATALOG=Object.freeze(PHASE1_CATALOG.ships.map(ship=>{
- const arm=ESCORT_ARMORY[ship.id][0],skillId=supportSkillFor(ship.id,0);
+ const nativeSlot=nativeSupportSlotFor(ship.id);
+ const arm=ESCORT_ARMORY[ship.id][nativeSlot],skillId=supportSkillFor(ship.id,nativeSlot);
  return Object.freeze({
   id:supportModelIdFor(ship.id),name:ship.nome,role:arm.role,
-  originShipId:ship.id,originShipName:ship.nome,originSlot:0,
+  originShipId:ship.id,originShipName:ship.nome,originSlot:nativeSlot,
   shipModelId:ship.id,nativeShipModel:true,
-  category:'Carta navicella',visual:'/assets/escorts/'+ship.id+'_escort_1.svg',
+  category:'Carta navicella',visual:'/assets/escorts/'+ship.id+'_escort_'+(nativeSlot+1)+'.svg',
   elementId:fleetElements(ship.id)[0],inheritedElement:false,
   independentNormalAttack:false,skillId,skillName:SUPPORT_SKILL_LABELS[skillId],
   freelyCombinable:true,duplicatesAllowed:true,fusionFamily:null
