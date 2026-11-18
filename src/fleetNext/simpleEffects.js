@@ -19,7 +19,7 @@ export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
  'weaken','disarm','cleanse','exchange','recover','charge','energy','terrain','trap',
- 'bypass','deployMachine','fusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
+ 'bypass','deployMachine','fusion','shipFusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
 const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore',bridge:'la Plancia'};
@@ -83,6 +83,7 @@ export function validateEffectSpec(spec){
  if(spec.type==='fieldReset'&&(spec.scope!=='both'||spec.discardFieldCards!==true))return 'Reset campo non valido';
  if(spec.type==='blueprint'&&!/^nx-[a-z0-9]+-[0-9]{2}$/.test(spec.code||''))return 'Codice di scheda esclusiva non valido';
  if(spec.type==='energy'&&(!Object.hasOwn(FLEET_ELEMENTS,spec.elementId)||Object.keys(spec).length!==2))return 'Energia elementale non valida';
+ if(spec.type==='shipFusion'&&(!/^(N00|[CREL]\\d{2})$/.test(spec.shipId||'')||Object.keys(spec).length!==2))return 'Navicella Fusione non valida';
  if(spec.type==='aurora'&&!Object.values(AURORA_ACTIONS).includes(spec.action))return 'Azione Aurora non valida';
  if(spec.type==='lince'&&!Object.values(LINCE_ACTIONS).includes(spec.action))return 'Azione Lince non valida';
  if(spec.type==='prisma'&&!Object.values(PRISMA_ACTIONS).includes(spec.action))return 'Azione Vespa non valida';
@@ -212,6 +213,7 @@ case 'ark':return card.effectProposed;
   case 'blueprint':return card.effectProposed;
   case 'systemModifier':case 'fieldReset':case 'dismantle':return card.effectProposed;
   case 'fusion':return 'Fonde due supporti operativi. Richiama la riserva sbloccata; la seconda fusione unisce terzo e quarto supporto. Massimo due unità in campo.';
+  case 'shipFusion':return 'Fondi '+(card.fusionShipName||'questa navicella')+' con un tuo supporto operativo non ancora fuso. Conserva gli HP e le ferite del supporto; unisce elementi e abilità. Un massimo di due fusioni per battaglia.';
   default:throw new Error('Effetto privo di descrizione: '+s.type);
  }
 }
