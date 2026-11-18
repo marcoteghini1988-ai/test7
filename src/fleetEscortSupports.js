@@ -4,6 +4,7 @@
 // Non sono carte collezionabili, non hanno armi indipendenti e non occupano slot madre.
 // Nomi, ruoli e identita' visiva provengono dall'armamento scudiere gia' presente.
 import {ESCORT_ARMORY} from './escortArmory.js';
+import {SUPPORT_CATALOG_BY_ID,supportIdFor} from './fleetNext/supportCatalog.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 
 export const FLEET_ESCORT_UNLOCKS=Object.freeze([3,5]);
@@ -55,8 +56,8 @@ if(SHIPS.size!==17||Object.keys(TRAITS).length!==17||
 export const FLEET_ESCORT_TRAITS=Object.freeze(Object.fromEntries(
  Object.entries(TRAITS).map(([id,pair])=>[id,Object.freeze(pair.map((t,slot)=>
   Object.freeze({slot,action:t[0],name:t[1],requires:t[2].split(','),
-   targetPart:t[3]||null,interval:t[4],model:ESCORT_ARMORY[id][slot].name,
-   role:ESCORT_ARMORY[id][slot].role})))])
+   targetPart:t[3]||null,interval:t[4],model:SUPPORT_CATALOG_BY_ID[supportIdFor(id,slot)].name,
+   role:SUPPORT_CATALOG_BY_ID[supportIdFor(id,slot)].role})))])
 ));
 export const FLEET_ESCORT_ACTIONS=Object.freeze({
  phase:'Intercetta l intera salva sulla madre quando la fase e attiva',
@@ -99,6 +100,7 @@ export function buildFleetEscorts(mother){
  const model=SHIPS.get(mother.id);
  return FLEET_ESCORT_TRAITS[mother.id].slice(0,count).map((skill,slot)=>{
   const original=ESCORT_ARMORY[mother.id][slot];
+  const registered=SUPPORT_CATALOG_BY_ID[supportIdFor(mother.id,slot)];
   const base=(model.hp_motore_L1+(model.hp_motore_L5-model.hp_motore_L1)*(mother.level-1)/4);
   const tough=['cover','bulwark','partCover','phase'].includes(skill.action);
   // I baluardi possono avere piu' punti di resistenza dei 4 necessari
@@ -106,12 +108,13 @@ export function buildFleetEscorts(mother){
   const hp=Math.max(2,Math.min(12,Math.round(2+base/65+
    (skill.action==='bulwark'?4:tough?2:0)+original.shield*3)));
   return {id:mother.id+':escort:'+(slot+1),parentShipId:mother.id,
+   catalogSupportId:registered.id,
    // L'elemento non è autonomo: ogni scudiera copia la firma della madre.
    element:mother.element||null,
    elements:Array.isArray(mother.elements)?[...mother.elements]:mother.element?[mother.element]:[],
    elementInheritedFrom:mother.id,
-   slot,unlockLevel:FLEET_ESCORT_UNLOCKS[slot],name:original.name,role:original.role,
-   skill,hp,maxHp:hp,destroyed:false,visual:'/assets/escorts/'+mother.id+'_escort_'+(slot+1)+'.svg'};
+   slot,unlockLevel:FLEET_ESCORT_UNLOCKS[slot],name:registered.name,role:registered.role,
+   skill,hp,maxHp:hp,destroyed:false,visual:registered.visual};
  });
 }
 export function repairFleetUnit(side){
