@@ -167,7 +167,7 @@ test('Tutti gli slot esistono da subito; le carte tecniche restano coperte dai t
  assert.equal(cardCopyLimit('prog-fusion-l04'),2);
  assert.equal(BASE_CATALOG_COUNT,194);
  assert.equal(PROGRESSION_CARD_COUNT,6);
- assert.equal(TOTAL_CARD_COUNT,200);
+ assert.equal(TOTAL_CARD_COUNT,210);
 });
 
 test('Le letture sono immutabili e i livelli fuori intervallo non sbloccano supporti extra',()=>{
