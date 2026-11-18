@@ -68,7 +68,7 @@ export function elementalAttackProfile(shipId,level=1){
   availableElements:ids,
   energyCardRequired:true,
   normalShotUnchanged:true,
-  combatBonusEnabled:false
+  combatBonusEnabled:true
  });
 }
 
