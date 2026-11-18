@@ -5,6 +5,7 @@ import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {FLEET_ESCORT_TRAITS} from '../fleetEscortSupports.js';
 import {SUPPORT_ACTIVE_SLOTS,supportDefinition} from './supportCatalog.js';
+import {fleetElements} from './elementalAffinities.js';
 
 const motherModels=new Map(PHASE1_CATALOG.ships.map(m=>[m.id,m]));
 const toughActions=new Set(['cover','bulwark','partCover','phase']);
@@ -44,8 +45,10 @@ export function createIndependentFleetEscorts(mother,roster=[]){
    name:definition.name,role:definition.role,supportLevel,grade,skill,
    hp:baseHp,maxHp:baseHp,supportObservedHp:baseHp,
    supportDeathResolved:false,destroyed:false,reserve:false,linked:true,fused:false,
-   element:mother.element,elements:[...mother.elements],
-   elementInheritedFrom:mother.id,visual:definition.visual};
+   element:definition.elementId||fleetElements(definition.originShipId)[0],
+   elements:[definition.elementId||fleetElements(definition.originShipId)[0]],
+   elementInheritedFrom:null,shipModelId:definition.originShipId,
+   visual:definition.visual};
  }).sort((a,b)=>a.slot-b.slot);
 }
 // Finché le Carte Fusione restano nel registro storico della madre,
