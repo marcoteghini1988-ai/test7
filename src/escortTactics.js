@@ -6,17 +6,12 @@ export const ESCORT_DOCTRINES=Object.freeze({
  C01:doctrine('Fuoco Solare','motherShield',.06,.01),
  C02:doctrine('Taglio di Cristallo','motherShield',.07,.015),
  C03:doctrine('Richiamo del Corvo','escortShield',.08,.012),
- C04:doctrine('Penombra Cremisi','motherVital',.07,.015),
  R01:doctrine('Circuito Binario','motherShield',.08,.02),
  R02:doctrine('Marea Ionica','escortShield',.09,.018),
- R03:doctrine('Frazione Iride','motherVital',.09,.02),
  R04:doctrine('Morsa del Vuoto','motherShield',.10,.022),
  E01:doctrine('Campo Nebulosa','motherVital',.10,.027),
  E02:doctrine('Scarica Tempesta','escortShield',.11,.021),
- E03:doctrine('Forgia Fenice','motherVital',.12,.026),
- E04:doctrine('Linea Orizzonte','escortShield',.12,.03),
  L01:doctrine('Corona di Guerra','motherVital',.13,.032),
- L02:doctrine('Eclissi Tattica','escortShield',.14,.028),
  L03:doctrine('Giudizio d’Assedio','motherShield',.15,.035),
  L04:doctrine('Sovranità Stellare','motherVital',.16,.04)
 });
