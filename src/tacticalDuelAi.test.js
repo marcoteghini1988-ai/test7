@@ -114,7 +114,7 @@ test('Contromisura IA contro Io: protegge la barriera nell eruzione pubblica usa
   'nessun effetto gratuito e nessuna carta aggiunta');
 });
 test('IA non consuma Scansione se tutti i vitali ancora vivi sono già visibili',()=>{
- const b=createTacticalDuel({shipA:'C03',levelA:3,shipB:'E03',levelB:3,
+ const b=createTacticalDuel({shipA:'C03',levelA:3,shipB:'E02',levelB:3,
   seed:171,nowMs:100,specialDeckA:[...TACTICAL_STARTER_TYPES]});
  placeRealSpecialsInHand(b.sides.A,[
   'tactic-scan','tactic-numeric-recycle','tactic-reactive',
@@ -131,7 +131,7 @@ test('IA non consuma Scansione se tutti i vitali ancora vivi sono già visibili'
 });
 
 test('L IA conserva scelta reale di munizione scudiera quando barriera e generatore nemici sono KO',()=>{
- const battle=createTacticalDuel({shipA:'E03',levelA:5,shipB:'E03',levelB:5,
+ const battle=createTacticalDuel({shipA:'E02',levelA:5,shipB:'E02',levelB:5,
   seed:171,nowMs:100});
  assert.equal(battle.sides.A.escorts.length,2);
  assert.ok(battle.sides.A.numeric.hand.some(c=>

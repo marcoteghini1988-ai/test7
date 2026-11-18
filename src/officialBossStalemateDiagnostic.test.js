@@ -12,7 +12,7 @@ import {sealTacticalOrder,advanceTacticalDuel,TACTICAL_TIMING}
 const seeds=[17,171,2026,4096,8127,919,1337,251,101,517];
 const starter=createSpecialCollection();
 const scenarios=[
- {planet:'Plutone',sector:70,planetId:9,shipId:'E03'},
+ {planet:'Plutone',sector:70,planetId:9,shipId:'E02'},
  {planet:'Io',sector:110,planetId:19,shipId:'L03'},
 ];
 function runScenario(scenario,seed){

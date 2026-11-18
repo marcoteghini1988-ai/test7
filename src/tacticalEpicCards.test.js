@@ -73,16 +73,16 @@ test('Mazzo 24: massimo un esemplare per Epico, massimo due Epici, no equipaggia
  assert.equal(b.sides.A.epic.used.length,0);
 });
 test('Monolite: attivo 2 cicli blocca calore reale, poi scade; una volta per battaglia',()=>{
- const b=duel('epic_item_7',{shipB:'C04'});
+ const b=duel('epic_item_7',{shipB:'E01'});
  b.sides.A.heated=true;
- const r=play(b,{specialIndices:[0]},{...idle,weaponFocusId:'W07'});
+ const r=play(b,{specialIndices:[0]},{...idle,weaponFocusId:'W17'});
  assert.equal(r.sides.A.heated,false);
  assert.equal(r.sides.A.epic.active.untilRound,2);
  assert.deepEqual(r.sides.A.epic.used,['epic_item_7']);
  const b2=advanceTacticalDuel(r,8102);
  assert.equal(b2.phase,'planning');
  assert.equal(validateTacticalOrder(b2,'A',{...idle,specialIndices:[0]}).reason=== 'epic_already_active',false);
- const next=play(b2,{}, {...idle,weaponFocusId:'W07'},8200);
+ const next=play(b2,{}, {...idle,weaponFocusId:'W17'},8200);
  assert.equal(next.sides.A.heated,false);
  const third=advanceTacticalDuel(next,16201);
  const old=third.sides.A.special.hand.findIndex(c=>c.type==='epic_item_7');

@@ -95,7 +95,7 @@ test('Mazzi speciali da pacchetti autentici prima di 4 boss critici: 100 duelli'
  const starters=readSpecialCollection(storage());
  for(const scenario of [
   {planet:'Nettuno',sector:60,planetId:8,ship:'E02'},
-  {planet:'Plutone',sector:70,planetId:9,ship:'E03'},
+  {planet:'Plutone',sector:70,planetId:9,ship:'E02'},
   {planet:'Proxima b',sector:90,planetId:14,ship:'L01'},
   {planet:'Io',sector:110,planetId:19,ship:'L03'}
  ]){

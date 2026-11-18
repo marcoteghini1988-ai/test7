@@ -628,10 +628,10 @@ test('Ombre e Idra: isola forza della madre e del mazzo speciale in 96 duelli',(
 });
 
 // I tre modelli dell'audit iniziale non rappresentano la selezione
-// ottenibile a quel settore. La progressione reale assegna E03 prima di
-// Ombre (settore 70) ed E04 prima di Idra (settore 80). Questo controllo
+// ottenibile a quel settore. La progressione ufficiale assegna E01 ed E02
+// entro il settore 50, ma esclude E03 ed E04. Questo controllo
 // usa SOLO navi gia' sbloccabili PRIMA del boss, senza modificarne i premi.
-test('Ombre e Idra: 100 duelli con sole navi sbloccabili prima del boss',()=>{
+test('Ombre e Idra: duelli con sole navi sbloccabili prima del boss',()=>{
  const sectors=[70,80],offsets=[1109,1429,1709,1961],groups=[];
  let samples=0;
  for(const sector of sectors){
@@ -666,7 +666,7 @@ test('Ombre e Idra: 100 duelli con sole navi sbloccabili prima del boss',()=>{
   groups.push({sector,boss:boss.name,bossShip:boss.motherShipId,
    availableShips:unlocked.length,byShip});
  }
- assert.equal(samples,100);
+ assert.equal(samples,groups.reduce((sum,g)=>sum+g.availableShips*offsets.length,0));
  console.log('LIVE_UNLOCKED_SHIP_BOSS_AUDIT '+JSON.stringify({
   sampleSize:samples,seedsPerShip:offsets.length,groups,
   note:'Solo navi effettivamente sbloccabili prima dei settori 70 e 80; nessuna modifica a poteri, mazzi, premi e navicelle. IA vs IA e tempo massimo teorico per mezzo turno.'
@@ -705,7 +705,7 @@ test('Ombre: Faglia Moduli Epico in mazzi da 24 solo se posseduti',()=>{
  assert.equal(boss.planetId,9);
  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:70,playerLevel:4});
  const rows=[];
- for(const ship of ['C01','E02','E03','L04'])
+ for(const ship of ['C01','E02','R04','L04'])
   for(const seedOffset of [1109,1429,1709,1961,2213,2417])
    for(const config of groups){
     const r=audit({shipA:ship,levelA:level,levelB:level,boss,
@@ -758,7 +758,7 @@ test('Ablazione Ombre: stessa IA e stessi Moduli, una Faglia contro una Riparazi
  const boss=officialBossEncounter({mode:'campaign',sectorNumber:70});
  const level=officialCampaignRivalLevel({mode:'campaign',sectorNumber:70,playerLevel:4});
  const rows=[];
- for(const ship of ['C01','E02','E03','L04'])
+ for(const ship of ['C01','E02','R04','L04'])
   for(const offset of [1109,1429,1709,1961,2213,2417])
    for(const option of options){
     const r=audit({shipA:ship,levelA:level,levelB:level,boss,

@@ -17,7 +17,7 @@ function storage(){
 }
 function prepareDrawn(collection,type){
  const equipped=equipSpecialDeck(collection,[type,...collection.loadout.slice(1)]);
- const battle=createTacticalDuel({shipA:'C03',shipB:'R03',levelA:3,levelB:3,
+ const battle=createTacticalDuel({shipA:'C03',shipB:'R04',levelA:3,levelB:3,
   specialDeckA:equipped.loadout,nowMs:100,seed:171});
  const pile=battle.sides.A.special;
  let index=pile.hand.findIndex(c=>c.type===type);

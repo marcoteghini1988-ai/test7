@@ -39,7 +39,7 @@ function play(battle,style){
 test('Ricambio intelligente confrontato a rotazione su stessi 16 semi contro Plutone e Io',()=>{
  const report=[];
  for(const scenario of [
-  {planet:'Plutone',sector:70,planetId:9,ship:'E03'},
+  {planet:'Plutone',sector:70,planetId:9,ship:'E02'},
   {planet:'Io',sector:110,planetId:19,ship:'L03'}
  ]){
   for(const variant of [

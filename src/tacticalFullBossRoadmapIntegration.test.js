@@ -47,7 +47,7 @@ test('Completamento cataloghi: dodici boss, dodici mazzi e tutte 23 passive ai t
 });
 
 test('Stress: ogni boss combatte realmente 5 cicli contro navi L1/L3/L5 e tutte le risorse restano coerenti',()=>{
- for(const id of keys)for(const [shipA,shipB,level] of [['C01','C02',1],['R04','E01',3],['L03','R03',5]]){
+ for(const id of keys)for(const [shipA,shipB,level] of [['C01','C02',1],['R04','E01',3],['L03','R04',5]]){
   const b=createTacticalDuel({shipA,shipB,levelA:level,levelB:level,
    seed:183+id,nowMs:0,bossPlanetB:id,
    specialDeckB:buildTacticalBossDeck(id,level,level)});
