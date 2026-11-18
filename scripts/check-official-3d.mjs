@@ -2,7 +2,7 @@
 import {existsSync,readFileSync,readdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {PHASE1_CATALOG} from '../src/phase1FleetCatalog.js';
-import {GENERAL_COUNT,EXCLUSIVE_COUNT,BOSS_COUNT,BASE_CATALOG_COUNT,PROGRESSION_CARD_COUNT,TOTAL_CARD_COUNT} from '../src/fleetNext/rules.js';
+import {GENERAL_COUNT,EXCLUSIVE_COUNT,BOSS_COUNT,BASE_CATALOG_COUNT,PROGRESSION_CARD_COUNT,TOTAL_CARD_COUNT,FUSION_SHIP_CARD_COUNT} from '../src/fleetNext/rules.js';
 import {LIVE_FX_SPRITES} from '../src/officialLiveCombatVisuals.js';
 import {OFFICIAL_NUMERIC_BACK_IDS,officialNumericDeckStackPath} from '../src/officialDeckBackArt.js';
 
@@ -156,7 +156,7 @@ verify(exists('src/officialLiveMobileLayout.test.js'),
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
 verify(GENERAL_COUNT===12&&EXCLUSIVE_COUNT===170&&BOSS_COUNT===12&&BASE_CATALOG_COUNT===194&&
- PROGRESSION_CARD_COUNT===6&&TOTAL_CARD_COUNT===227&&
+ PROGRESSION_CARD_COUNT===6&&TOTAL_CARD_COUNT===210+FUSION_SHIP_CARD_COUNT&&
  shop.includes('<FleetCollectionWorkshop')&&hangar.includes('<FleetCollectionWorkshop initialTab="exclusive"')&&
  !shop.includes("id: 'abilities'")&&!hangar.includes('<SpecialDeckPanel')&&
  fleetEditor.includes('readFleetInventory')&&fleetEditor.includes('BOSS_CARDS')&&
