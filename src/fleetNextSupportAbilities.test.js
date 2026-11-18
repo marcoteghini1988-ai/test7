@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createFleetSide,createFleetNextBattle,resolveFleetNextTurn,
- fuseFleetSupports,sacrificeIndependentFleetSupport} from './fleetNext/combat.js';
+ fuseIndependentSupportWithShip,sacrificeIndependentFleetSupport} from './fleetNext/combat.js';
 import {SUPPORT_SKILL_LABELS,SUPPORT_SKILL_ASSIGNMENTS,
  skillCount,trapsSuppressed,terrainHalf,terrainImmunity,
  effectiveSupportEnergyCost,supportSpecialBoost,supportNormalBoost,
@@ -23,8 +23,8 @@ const battle=(skillA=null,skillB=null)=>createFleetNextBattle({
  supportRosterB:skillB?[select(skillB)]:[]
 });
 
-test('34 supporti indipendenti assegnati alle 15 passive, con duplicati ammessi',()=>{
- assert.equal(SUPPORT_CATALOG.length,34);
+test('I modelli indipendenti conservano tutte e 15 le passive, con duplicati ammessi',()=>{
+ assert.equal(SUPPORT_CATALOG.length,17);
  assert.equal(Object.keys(SUPPORT_SKILL_LABELS).length,15);
  assert.equal(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length,17);
  assert.equal(new Set(SUPPORT_CATALOG.map(x=>x.skillId)).size,15);
@@ -159,24 +159,27 @@ test('Plancia ufficiale aggiorna gli HP al secondo e rende il Sacrificio cliccab
 });
 
 
-test('Fusione compatibile: conserva ENTRAMBE le passive dei due supporti',()=>{
- const arca=createFleetNextBattle({
-  shipA:'L04',levelA:5,shipB:'N00',levelB:20,deckA:[],deckB:[],
+test('La fusione con una carta-navicella conserva entrambe le passive senza sommare HP',()=>{
+ const b=createFleetNextBattle({
+  shipA:'C01',levelA:1,shipB:'N00',levelB:20,deckA:[],deckB:[],
   mode:'pvp',ruleset:HP_SYNC_RULESET,seed:98,nowMs:0,
-  supportRosterA:[
-   {id:'support-l04-01',instanceId:'arca-energy',slot:0,level:1},
-   {id:'support-l04-02',instanceId:'arca-charge',slot:1,level:1}
-  ],supportRosterB:[]
+  supportRosterA:[{id:'support-l04-01',instanceId:'arka-energy',slot:0,level:1}],
+  supportRosterB:[]
  });
- const a=arca.sides.A,merged=fuseFleetSupports(a,0);
- assert.equal(merged.ok,true,merged.reason);
- assert.equal(a.escorts.length,1);
- assert.deepEqual(merged.fused.supportSkillIds,['death-energy','capacitor']);
- assert.equal(skillCount(a,'death-energy',0),1);
- assert.equal(skillCount(a,'capacitor',0),1);
- assert.equal(merged.fused.supportObservedHp,merged.fused.hp);
- merged.fused.hp=0;merged.fused.destroyed=true;
- const notes=settleIndependentSupportDamage(arca,'B');
+ const side=b.sides.A, original=side.escorts[0];
+ original.hp=Math.max(1,original.maxHp-3);
+ const before={hp:original.hp,maxHp:original.maxHp};
+ const result=fuseIndependentSupportWithShip(side,'E02',0,0);
+ assert.equal(result.ok,true,result.reason);
+ assert.equal(side.escorts.length,1);
+ assert.deepEqual(result.fused.supportSkillIds,['death-energy','capacitor']);
+ assert.equal(result.fused.hp,before.hp);
+ assert.equal(result.fused.maxHp,before.maxHp);
+ assert.equal(skillCount(side,'death-energy',0),1);
+ assert.equal(skillCount(side,'capacitor',0),1);
+ assert.equal(result.fused.supportObservedHp,result.fused.hp);
+ result.fused.hp=0;result.fused.destroyed=true;
+ const notes=settleIndependentSupportDamage(b,'B');
  assert.ok(notes.some(event=>event.skillId==='death-energy'));
- assert.equal(a.elementalCharges[a.ships[0].element],2);
+ assert.equal(side.elementalCharges[side.ships[0].element],2);
 });
