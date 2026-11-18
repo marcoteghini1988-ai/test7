@@ -707,7 +707,10 @@ export default function OfficialFleetBattle3D({
    card(player.hand[i])?.effectSpec?.elementId===selectedElement).length;
  const canPrepareElemental=!!elementalAbilityDef&&
   chargesAvailable>=elementalAbilityDef.cost&&totalElementalEnergy(player)+
-  chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy').length<=4;
+  chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy').length<=4&&
+  !chosenCards.some(i=>cardRole(player.hand[i])==='attack')&&
+  (elementalAbilityDef.mode!=='heal'||player.ships[0].hp<player.ships[0].maxHp&&
+   battle.terrain?.id!=='T08');
  const ended=battle.phase==='finished';
  const target=enemy.ships[0];
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
