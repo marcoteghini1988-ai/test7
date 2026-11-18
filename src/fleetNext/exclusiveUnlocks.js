@@ -1,4 +1,4 @@
-// Sblocchi delle dieci carte esclusive lungo la progressione reale delle 17 madri.
+// Sblocchi delle dieci carte esclusive di ciascuna delle dodici madri ufficiali.
 // Le descrizioni e gli effetti del catalogo 120 restano invariati.
 // Quattro carte di avvio (Personaggio, attacco, difesa e identità di flotta),
 // altre sei distribuite in tappe fino al livello massimo della famiglia.
@@ -30,12 +30,6 @@ export const EXCLUSIVE_STARTER_CARDS=Object.freeze({
   "nx-c03-02",
   "nx-c03-03"
  ],
- "C04": [
-  "ex-c04-01",
-  "nx-c04-02",
-  "nx-c04-04",
-  "nx-c04-05"
- ],
  "R01": [
   "ex-r01-01",
   "nx-r01-01",
@@ -47,12 +41,6 @@ export const EXCLUSIVE_STARTER_CARDS=Object.freeze({
   "nx-r02-01",
   "nx-r02-02",
   "nx-r02-03"
- ],
- "R03": [
-  "ex-r03-01",
-  "nx-r03-02",
-  "nx-r03-03",
-  "nx-r03-04"
  ],
  "R04": [
   "ex-r04-01",
@@ -72,29 +60,11 @@ export const EXCLUSIVE_STARTER_CARDS=Object.freeze({
   "nx-e02-02",
   "nx-e02-04"
  ],
- "E03": [
-  "ex-e03-01",
-  "nx-e03-02",
-  "nx-e03-03",
-  "nx-e03-05"
- ],
- "E04": [
-  "ex-e04-01",
-  "nx-e04-02",
-  "nx-e04-04",
-  "nx-e04-06"
- ],
  "L01": [
   "ex-l01-01",
   "nx-l01-01",
   "nx-l01-02",
   "nx-l01-03"
- ],
- "L02": [
-  "ex-l02-01",
-  "nx-l02-02",
-  "nx-l02-03",
-  "nx-l02-04"
  ],
  "L03": [
   "ex-l03-01",
@@ -142,14 +112,6 @@ export const EXCLUSIVE_UNLOCK_MILESTONES=Object.freeze({
   14,
   17
  ],
- "C04": [
-  3,
-  5,
-  8,
-  11,
-  14,
-  16
- ],
  "R01": [
   3,
   5,
@@ -165,14 +127,6 @@ export const EXCLUSIVE_UNLOCK_MILESTONES=Object.freeze({
   10,
   12,
   14
- ],
- "R03": [
-  3,
-  5,
-  7,
-  9,
-  11,
-  13
  ],
  "R04": [
   3,
@@ -198,22 +152,6 @@ export const EXCLUSIVE_UNLOCK_MILESTONES=Object.freeze({
   9,
   10
  ],
- "E03": [
-  2,
-  3,
-  5,
-  6,
-  8,
-  9
- ],
- "E04": [
-  2,
-  3,
-  4,
-  6,
-  7,
-  8
- ],
  "L01": [
   2,
   3,
@@ -221,14 +159,6 @@ export const EXCLUSIVE_UNLOCK_MILESTONES=Object.freeze({
   5,
   6,
   7
- ],
- "L02": [
-  2,
-  3,
-  4,
-  5,
-  5,
-  6
  ],
  "L03": [
   2,
@@ -247,7 +177,7 @@ export const EXCLUSIVE_UNLOCK_MILESTONES=Object.freeze({
   5
  ]
 });
-const LOCKED_FUSION_MILESTONES=Object.freeze({
+const RESERVED_REPLACEMENT_MILESTONES=Object.freeze({
  "nx-l01-10": 5,
  "nx-l03-08": 3,
  "nx-l04-05": 1
@@ -273,7 +203,7 @@ export function buildExclusiveUnlockLevels(definitions){
    (a.minShipLevelDraft||1)-(b.minShipLevelDraft||1)||a.id.localeCompare(b.id));
   const available=[...milestones];
   for(const card of others){
-   const fixed=LOCKED_FUSION_MILESTONES[card.id];
+   const fixed=RESERVED_REPLACEMENT_MILESTONES[card.id];
    if(fixed==null)continue;
    const slot=available.indexOf(fixed);
    if(slot<0)throw Error('Sblocco fusione non rispettato: '+card.id);
@@ -281,7 +211,7 @@ export function buildExclusiveUnlockLevels(definitions){
    levels[card.id]=fixed;
    ids.add(card.id);
   }
-  const remaining=others.filter(c=>LOCKED_FUSION_MILESTONES[c.id]==null);
+  const remaining=others.filter(c=>RESERVED_REPLACEMENT_MILESTONES[c.id]==null);
   if(remaining.length!==available.length)throw Error('Sei sblocchi incompleti: '+shipId);
   for(let i=0;i<remaining.length;i++){
    const card=remaining[i],level=available[i];
@@ -290,9 +220,9 @@ export function buildExclusiveUnlockLevels(definitions){
    levels[card.id]=level;ids.add(card.id);
   }
  }
- if(ids.size!==170||definitions.length!==170)
+ if(ids.size!==120||definitions.length!==120)
   throw Error('Progressione incompleta: '+ids.size+' esclusive su '+definitions.length);
- for(const [id,required] of Object.entries(LOCKED_FUSION_MILESTONES))
+ for(const [id,required] of Object.entries(RESERVED_REPLACEMENT_MILESTONES))
   if(levels[id]!==required)throw Error('Fusione spostata: '+id);
  return Object.freeze(levels);
 }
