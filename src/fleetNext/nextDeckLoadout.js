@@ -73,7 +73,7 @@ export function saveNextDeckSelection(inventory,shipId,level,ids,storage=globalT
  }catch(e){return {ok:false,reason:e?.message||'Impossibile salvare il mazzo'};}
 }
 export function buyNextCommonCard(inventory,id){
- const def=NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||ENERGY_CARD_BY_ID[id];
+ const def=NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id];
  if(!def)return {ok:false,reason:'Carta non acquistabile'};
  const cost=NEXT_CARD_COSTS[def.rarita];
  if(!Number.isInteger(cost))return {ok:false,reason:'Prezzo non valido'};
@@ -84,4 +84,4 @@ export function buyNextCommonCard(inventory,id){
   credits:inventory.credits-cost};
  return {ok:true,inventory:next,cost,copies:owned+1};
 }
-export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS]);
+export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS]);
