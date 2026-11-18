@@ -11,10 +11,10 @@ import {
 
 const defense=(hp={})=>({parts:Object.fromEntries(VITAL_IDS.map(id=>[id,{max:10,hp:hp[id]??10}]))});
 
-test('quattro vitali uguali alle quattro superfici motore originali (17 navi, entrambe le viste)',()=>{
+test('quattro vitali sulle dodici madri ufficiali, entrambe le viste',()=>{
  assert.deepEqual([...ORIGINAL_MOTOR_VITALS].sort(),[...VITAL_IDS].sort());
  assert.deepEqual(Object.values(VITAL_TO_ORIGINAL_MOTOR),['plus','minus','times','divide']);
- assert.equal(PHASE1_CATALOG.ships.length,17);
+ assert.equal(PHASE1_CATALOG.ships.length,12);
  for(const ship of PHASE1_CATALOG.ships)for(const side of ['enemy','player']){
   const encountered=new Set();
   for(const vital of VITAL_IDS){
