@@ -1,6 +1,6 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
- eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS} from './fleetNext/rules.js';
+ eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
@@ -177,6 +177,11 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <h3 style={{fontSize:13}}>33 nuove carte dei sistemi e Buco Nero</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {NEXT_COMMON_CARDS.map(genericCardTile)}
+   </div>
+   <h3 style={{fontSize:13}}>Trappola generica confermata · Interdizione di Fusione</h3>
+   <p style={small}>Coperta nello slot Trappola: si rivela alla prima Fusione avversaria valida e la annulla. La carta Fusione va negli scarti; il supporto non cambia. Rarità, acquisizione e limite definitivo di copie da stabilire, senza prezzi introdotti.</p>
+   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
+    {FUSION_DENIAL_TRAPS.map(genericCardTile)}
    </div>
    <h3 style={{fontSize:13}}>4 carte Attacco · Smontaggio Forzato</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
