@@ -68,12 +68,12 @@ test('289 confronti fra 17 navi: forza e debolezza non dipendono dal verso e non
  for(const a of SHIP_PROGRESSION_IDS)for(const b of SHIP_PROGRESSION_IDS){
   const ab=projectedElementalMatchup(a,b);
   const ba=projectedElementalMatchup(b,a);
-  assert.equal(ab.score,-ba.score,a+' vs '+b);
+  assert.ok(ab.score===-ba.score,a+' vs '+b);
   assert.ok([-1,0,1].includes(ab.score),a);
   if(a===b)assert.equal(ab.score,0,a);
   const first=projectedElementalMatchup(a,b,1,1);
   const reverse=projectedElementalMatchup(b,a,1,1);
-  assert.equal(first.score,-reverse.score,a+' vs '+b+' L1');
+  assert.ok(first.score===-reverse.score,a+' vs '+b+' L1');
  }
  assert.equal(projectedElementalMatchup('C02','C01',1,1).status,'favorevole');
  assert.equal(projectedElementalMatchup('C01','C02',1,1).status,'sfavorevole');
