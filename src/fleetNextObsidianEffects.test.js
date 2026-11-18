@@ -61,16 +61,18 @@ test('L03 possiede 10 carte esclusive native con livelli 6,7,8,9,10 e i Personag
  }
  for(const id of IDS){
   const c=card(id);assert.ok(c,id);
-  assert.equal(c.shipId,'L03');assert.equal(c.effectSpec.type,'obsidian');
+  assert.equal(c.shipId,'L03');
+  assert.equal(c.effectSpec.type,id==='nx-l03-08'?'counter':'obsidian');
   assert.notEqual(c.playable,false);assert.equal(cardFacePath(id),null);
   assert.equal(exclusiveUnlocked(id,'L03',shipMaxLevel('L03')),true);
   assert.equal(exclusiveUnlocked(id,'L01',5),false);
  }
  assert.equal(effectiveDeck([],'L03',shipMaxLevel('L03')).filter(id=>IDS.includes(id)).length,10);
- assert.ok(effectiveDeck([],'L03',5).includes('prog-fusion-l03'));
+ assert.equal(effectiveDeck([],'L03',5,{independentSupports:true}).includes('prog-fusion-l03'),false,
+  'le fusioni storiche non sono pescabili nella battaglia ufficiale');
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(c=>c.kind==='character').length,12);
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,12);
 });
 test('Ancoraggi d’assedio impedisce il ritiro delle macchine proprie finché operativo',()=>{
  const b=make();b.sides.A.machines.push(machine('own-machine'));

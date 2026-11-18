@@ -59,7 +59,8 @@ test('Tutte le 120 esclusive sono giocabili: Arca completa, 12 madri, Boss e Per
  assert.equal(new Set(IDS).size,10);
  for(const id of IDS){
   const c=card(id);assert.ok(c,id);
-  assert.equal(c.shipId,'L04');assert.equal(c.effectSpec.type,'ark');
+  assert.equal(c.shipId,'L04');
+  assert.equal(c.effectSpec.type,id==='nx-l04-05'?'exchange':'ark');
   assert.equal(c.playable!==false,true);
   assert.equal(cardFacePath(id),null);
   assert.equal(exclusiveUnlocked(id,'L04',shipMaxLevel('L04')),true);
@@ -67,17 +68,17 @@ test('Tutte le 120 esclusive sono giocabili: Arca completa, 12 madri, Boss e Per
  }
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(c=>c.kind==='character').length,12);
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,12);
 });
-test('Arca sblocca 4 carte iniziali, 6 successive e 2 copie reali della Fusione',()=>{
+test('Arca sblocca 4 esclusive iniziali, poi 6; la vecchia carta Fusione è tattica',()=>{
  for(let level=1;level<=shipMaxLevel('L04');level++){
   assert.equal(eligibleExclusives('L04',level).filter(c=>IDS.includes(c.id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['L04'].filter(n=>n<=level).length));
   const physical=effectiveDeck([],'L04',level);
-  assert.equal(physical.filter(id=>id==='nx-l04-05').length,2);
+  assert.equal(physical.filter(id=>id==='nx-l04-05').length,1);
   assert.equal(physical.includes('prog-fusion-l04'),false);
-  assert.equal(physical.filter(id=>IDS.includes(id)).length,(5+EXCLUSIVE_UNLOCK_MILESTONES['L04'].filter(n=>n<=level).length));
+  assert.equal(physical.filter(id=>IDS.includes(id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['L04'].filter(n=>n<=level).length));
  }
- assert.equal(cardCopyLimit('nx-l04-05'),2);
+ assert.equal(cardCopyLimit('nx-l04-05'),1);
  assert.equal(cardCopyLimit('nx-l04-06'),1);
  assert.equal(cardCopyLimit('ex-l04-01'),1);
 });

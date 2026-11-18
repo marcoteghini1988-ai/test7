@@ -51,24 +51,24 @@ function revealedShield(side,escort,source='royal:test:shield',charges=1){
   target:'escort',escortSlot:escort.slot,untilPly:20});
  return source;
 }
-test('Eclisse Reale completa 10 esclusive al L7 e conserva la Fusione al L5',()=>{
+test('Eclisse Reale completa 10 esclusive al L7; la vecchia fusione diventa tattica',()=>{
  assert.equal(new Set(IDS).size,10);
  for(let level=1;level<=shipMaxLevel('L01');level++){
   assert.equal(eligibleExclusives('L01',level).filter(c=>IDS.includes(c.id)).length,(4+EXCLUSIVE_UNLOCK_MILESTONES['L01'].filter(n=>n<=level).length));
  }
  for(const id of IDS){
   const c=card(id);assert.ok(c,id);assert.equal(c.shipId,'L01');
-  assert.equal(c.effectSpec.type,'royal');assert.equal(c.playable!==false,true);
+  assert.equal(c.effectSpec.type,id==='nx-l01-10'?'protect':'royal');assert.equal(c.playable!==false,true);
   assert.equal(cardFacePath(id),null);
   assert.equal(exclusiveUnlocked(id,'L01',shipMaxLevel('L01')),true);
   assert.equal(exclusiveUnlocked(id,'E02',5),false);
  }
  assert.equal(effectiveDeck([],'L01',shipMaxLevel('L01')).filter(id=>IDS.includes(id)).length,10);
- assert.equal(effectiveDeck([],'L01',5).includes('prog-fusion-l01'),false);
+ assert.equal(effectiveDeck([],'L01',5,{independentSupports:true}).includes('prog-fusion-l01'),false);
  assert.ok(effectiveDeck([],'L01',5).includes('nx-l01-10'));
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(x=>x.kind==='character').length,12);
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(x=>x.kind==='character').length,17);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(x=>x.kind==='character').length,12);
 });
 test('Relè della Corona: comando assegnato a un supporto senza creare secondo attacco',()=>{
  const b=make();equip(b.sides.A,'nx-l01-01');
