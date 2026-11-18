@@ -1,0 +1,50 @@
+// Danni elementali delle flotte (ruleset HP).
+// Vale per TUTTI gli attacchi delle navicelle, normali o speciali.
+// Il rapporto fra tipi non cambia gli HP massimi e non regala potenza gratuita.
+//
+// Vantaggio: 125% del danno; svantaggio: 50%; neutralità: 100%.
+// I resti frazionari sono custoditi per coppia di elementi sul difensore:
+// due colpi da 1 HP sfavorevoli infliggono insieme 1 HP, non 0 né 2.
+import {FLEET_ELEMENTS,elementalRelation} from './elementalAffinities.js';
+
+export const ELEMENTAL_DAMAGE_PERCENT=Object.freeze({
+ advantage:125,neutral:100,disadvantage:50
+});
+const DENOMINATOR=4;
+
+export function elementalDamagePercent(attackerElement,defenderElement){
+ const relation=elementalRelation(attackerElement,defenderElement);
+ return relation>0?ELEMENTAL_DAMAGE_PERCENT.advantage:
+  relation<0?ELEMENTAL_DAMAGE_PERCENT.disadvantage:ELEMENTAL_DAMAGE_PERCENT.neutral;
+}
+
+export function applyElementalDamage(defender,attackerElement,defenderElement,baseDamage){
+ const base=Math.max(0,Math.floor(Number(baseDamage)||0));
+ const relation=elementalRelation(attackerElement,defenderElement);
+ const percent=elementalDamagePercent(attackerElement,defenderElement);
+ if(!base||!relation)return Object.freeze({
+  original:base,damage:base,relation,percent,
+  carry:0,attackerElement,defenderElement
+ });
+ const carryKey=attackerElement+':'+defenderElement;
+ const remainder=defender?.elementalDamageRemainders?.[carryKey]||0;
+ const numerator=percent===125?5:2;
+ const scaled=base*numerator+remainder;
+ const damage=Math.floor(scaled/DENOMINATOR);
+ const carry=scaled%DENOMINATOR;
+ if(defender){
+  defender.elementalDamageRemainders??={};
+  if(carry)defender.elementalDamageRemainders[carryKey]=carry;
+  else delete defender.elementalDamageRemainders[carryKey];
+ }
+ return Object.freeze({original:base,damage,relation,percent,carry,
+  attackerElement,defenderElement});
+}
+
+export const elementalDamageDescription=result=>{
+ if(!result||result.relation===0)return 'Impatto elementale neutrale';
+ const element=FLEET_ELEMENTS[result.attackerElement]?.name||result.attackerElement;
+ return result.relation>0?
+  element+' efficace: +25% danni ('+result.original+' → '+result.damage+')':
+  element+' contrastato: danni ridotti del 50% ('+result.original+' → '+result.damage+')';
+};
