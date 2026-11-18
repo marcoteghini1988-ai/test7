@@ -9,7 +9,7 @@ import {createFleetNextBattle,effectUnavailableReason} from './fleetNext/combat.
 const only=(shipId,level)=>eligibleExclusives(shipId,level).filter(c=>c.shipId===shipId&&
  Object.hasOwn(EXCLUSIVE_CARDS,c.id));
 test('Ogni nave parte con quattro esclusive e sblocca le altre sei fino al proprio massimo',()=>{
- assert.equal(Object.keys(EXCLUSIVE_UNLOCK_LEVELS).length,170);
+ assert.equal(Object.keys(EXCLUSIVE_UNLOCK_LEVELS).length,120);
  for(const shipId of SHIP_PROGRESSION_IDS){
   const max=shipMaxLevel(shipId),milestones=EXCLUSIVE_UNLOCK_MILESTONES[shipId];
   const cards=Object.values(EXCLUSIVE_CARDS).filter(c=>c.shipId===shipId);
@@ -51,13 +51,19 @@ test('Le fusioni restano esclusiva di tre navi ai livelli originali',()=>{
   assert.ok(!Object.values(EXCLUSIVE_CARDS).some(c=>c.shipId===shipId&&c.effectSpec.type==='fusion'),shipId);
 });
 
-test('Le carte nuove non si possono giocare prima dello sblocco anche se forzate nella mano',()=>{
- const id='nx-c04-03',battle=createFleetNextBattle({shipA:'C04',levelA:2,
-  shipB:'C03',levelB:17,deckA:[],deckB:[],seed:181});
- battle.sides.A.hand=[id];
- const reason=effectUnavailableReason(EXCLUSIVE_CARDS[id],battle.sides.A,battle);
- assert.match(reason,/Nave o componenti richiesti non disponibili/);
- const advanced=createFleetNextBattle({shipA:'C04',levelA:3,
-  shipB:'C03',levelB:17,deckA:[],deckB:[],seed:181});
- assert.equal(effectUnavailableReason(EXCLUSIVE_CARDS[id],advanced.sides.A,advanced),'');
+test('Le esclusive della madre non si attivano prima del livello richiesto',()=>{
+ const def=Object.values(EXCLUSIVE_CARDS).find(c=>c.shipId==='C03'&&c.minShipLevelDraft>1);
+ assert.ok(def,'deve esistere una carta da sbloccare sulla madre ufficiale C03');
+ const lower=def.minShipLevelDraft-1,unlock=def.minShipLevelDraft;
+ const locked=createFleetNextBattle({shipA:'C03',levelA:lower,
+  shipB:'C02',levelB:18,deckA:[],deckB:[],seed:181});
+ locked.sides.A.hand=[def.id];
+ assert.equal(exclusiveUnlocked(def.id,'C03',lower),false);
+ assert.ok(effectUnavailableReason(def,locked.sides.A,locked).length>0);
+ const advanced=createFleetNextBattle({shipA:'C03',levelA:unlock,
+  shipB:'C02',levelB:18,deckA:[],deckB:[],seed:181});
+ assert.equal(exclusiveUnlocked(def.id,'C03',unlock),true);
+ assert.doesNotMatch(effectUnavailableReason(def,advanced.sides.A,advanced),
+  /Nave o componenti richiesti non disponibili/,
+  'dopo lo sblocco possono restare soltanto requisiti tattici');
 });

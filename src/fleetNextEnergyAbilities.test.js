@@ -17,7 +17,7 @@ const battle=(shipA='N00',shipB='C03',levelA=20,levelB=17)=>createFleetNextBattl
 
 test('Dieci Carte Energia realmente registrate, vendibili e inseribili nel mazzo da 40',()=>{
  assert.equal(ENERGY_COUNT,10);
- assert.equal(TOTAL_CARD_COUNT,210+FUSION_SHIP_CARD_COUNT);
+ assert.equal(TOTAL_CARD_COUNT,160+FUSION_SHIP_CARD_COUNT);
  assert.equal(new Set(ENERGY_CARDS.map(c=>c.id)).size,10);
  const inventory=createFleetInventory();
  assert.equal(inventory.owned['energy-ionic'],2);
@@ -40,11 +40,11 @@ test('Dieci Carte Energia realmente registrate, vendibili e inseribili nel mazzo
  assert.ok(base.total<=40);
 });
 
-test('17 abilità esclusive della madre: otto attacchi e nove effetti, costi da 1 a 4',()=>{
- assert.equal(Object.keys(ELEMENTAL_ABILITIES).length,17);
+test('12 abilità elementali delle madri: sei attacchi e sei effetti, costi da 1 a 4',()=>{
+ assert.equal(Object.keys(ELEMENTAL_ABILITIES).length,12);
  const list=Object.values(ELEMENTAL_ABILITIES);
- assert.equal(list.filter(a=>a.kind==='attack').length,8);
- assert.equal(list.filter(a=>a.kind==='effect').length,9);
+ assert.equal(list.filter(a=>a.kind==='attack').length,6);
+ assert.equal(list.filter(a=>a.kind==='effect').length,6);
  assert.deepEqual(new Set(list.map(a=>a.cost)),new Set([1,2,3,4]));
  for(const a of list){
   assert.equal(elementalAbility(a.shipId),a);
@@ -131,11 +131,11 @@ test('Energia sbagliata, massimo quattro cariche e attivazione insufficiente non
 });
 
 test('Secondo elemento utilizzabile solo dal livello di sblocco, IA può attivare',()=>{
- const low=battle('E03','C01',1,19);
- low.sides.A.hand=['energy-radiant'];
+ const low=battle('C03','C01',1,19);
+ low.sides.A.hand=['energy-ionic'];
  assert.match(validateFleetTurn(low,'A',{cards:[0],pass:true}),/non possiede/);
- const high=battle('E03','C01',9,19);
- high.sides.A.hand=['energy-radiant'];
+ const high=battle('C03','C01',17,19);
+ high.sides.A.hand=['energy-ionic'];
  assert.equal(validateFleetTurn(high,'A',{cards:[0],pass:true}),null);
  const ai=battle('C02','C01',18,19);
  ai.sides.A.hand=['energy-refrigerant'];

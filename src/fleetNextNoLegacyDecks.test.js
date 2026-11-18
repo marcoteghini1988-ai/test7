@@ -30,12 +30,12 @@ test('La partita ufficiale usa solo il nuovo mazzo da 40, non l’archivio delle
  assert.doesNotMatch(shop,/Il mio mazzo|Mazzi pronti|buyGeneralCard|equipFleetBaseDeck|buyPrebuiltDeck/);
  assert.match(shop,/eligibleExclusives/);assert.match(shop,/BOSS_CARDS/);
 });
-test('Le carte in ingresso sono esclusive e Personaggi, mai Attacco Difesa Trappola generici',()=>{
+test('La battaglia non introduce carte ritirate nel mazzo delle dodici madri',()=>{
  const b=createFleetNextBattle({shipA:'N00',levelA:1,shipB:'C01',levelB:1,
   deckA:['gen-216'],deckB:['gen-216'],seed:20261117});
  for(const side of Object.values(b.sides)){
   const ids=[...side.deck,...side.hand];
-  assert.ok(ids.length>=7);
+  assert.ok(ids.length>=5,'una comune più almeno quattro esclusive della madre');
   assert.ok(ids.some(id=>id.startsWith('ex-')||id.startsWith('nx-')));
   assert.ok(ids.every(id=>id.startsWith('nx-')||id.startsWith('ex-')||id==='gen-216'));
  }

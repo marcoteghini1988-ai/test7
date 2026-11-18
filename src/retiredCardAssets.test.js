@@ -12,12 +12,14 @@ test('Nessuna delle 350 vecchie carte e raggiungibile dal catalogo di gioco',()=
  assert.equal(new Set(ids).size,350);
  for(const id of ids)assert.equal(card(id),null,id+' ritirata');
  assert.equal(Object.keys(GENERAL_CARDS).length,12);
- assert.equal(Object.keys(EXCLUSIVE_CARDS).length,170);
+ assert.equal(Object.keys(EXCLUSIVE_CARDS).length,120);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
 });
 test('I vecchi fronti approvati non restano nel repository operativo',()=>{
  assert.equal(existsSync(resolve('public/assets/fleet-approved-fronts')),false);
  for(const directory of ['public/assets/fleet-next-cards','public/assets/fleet-next-card-upgrades']){
+  // Una cartella assente non contiene fronti ritirati.
+  if(!existsSync(resolve(directory)))continue;
   const present=readdirSync(resolve(directory));
   for(const id of ids)assert.equal(present.some(f=>f===id+'.svg'||f.startsWith(id+'-g')),false,id+' asset ritirato');
  }

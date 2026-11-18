@@ -10,9 +10,9 @@ import {readShipCollection,grantShipCard,upgradeShipCard,updateShipCollection} f
 import {shipUpgradeDustCost,validateShipUpgradePurchase} from './shipUpgrades.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 const memory=()=>{const m=new Map();return {getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v)};};
-test('Parametri definiti per tutte e 17 le navicelle: prima L20, ultima L5, potenziale finale 100',()=>{
- assert.equal(SHIP_PROGRESSION_IDS.length,17);
- assert.equal(Object.keys(SHIP_MAX_LEVELS).length,17);
+test('Parametri definiti per le 12 madri ufficiali: prima L20, ultima L5, potenziale finale 100',()=>{
+ assert.equal(SHIP_PROGRESSION_IDS.length,12);
+ assert.equal(Object.keys(SHIP_MAX_LEVELS).length,12);
  assert.equal(shipMaxLevel('N00'),20);
  assert.equal(shipMaxLevel('L04'),5);
  for(const id of SHIP_PROGRESSION_IDS){

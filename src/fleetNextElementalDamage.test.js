@@ -107,23 +107,23 @@ test('Il bonus si applica anche ai comandi di attacco con carte, senza alterare 
  assert.equal(r.battle.sides.B.escorts[0].maxHp,12);
 });
 
-test('Le affinità secondarie cambiano il colpo speciale, non il fuoco ordinario',()=>{
- const b=duel('C04','C02',16,18); // Dardo: Vento primario, Fuoco secondario
- assert.deepEqual([...activeFleetElements('C04',16)],['aerial','plasma']);
+test('Tempesta usa Fulmine come secondo elemento senza modificare il colpo normale',()=>{
+ const b=duel('E02','C02',10,18); // Tempesta: Vento primario, Fulmine secondario
+ assert.deepEqual([...activeFleetElements('E02',10)],['aerial','ionic']);
  const normal=hit(b);
  assert.equal(normal.result.events.some(e=>e.kind==='elemental-matchup'),false,
   'Vento contro Acqua è neutrale');
  assert.equal(normal.damage,1);
- const special=duel('C04','C02',16,18);
- special.sides.A.hand=['energy-plasma','energy-plasma'];
+ const special=duel('E02','C02',10,18);
+ special.sides.A.hand=['energy-ionic','energy-ionic','energy-ionic'];
  const partId=target(special);
- const r=resolveFleetNextTurn(special,'A',{cards:[0,1],
+ const r=resolveFleetNextTurn(special,'A',{cards:[0,1,2],
   targetKind:'part',targetId:partId,partId,pass:false,
-  activateElemental:true,elementalElement:'plasma'},1000);
+  activateElemental:true,elementalElement:'ionic'},1000);
  assert.equal(r.ok,true,r.reason);
  const factor=r.events.find(e=>e.kind==='elemental-matchup');
- assert.equal(factor?.percent,50);
- assert.equal(factor?.attackerElement,'plasma');
+ assert.equal(factor?.percent,125);
+ assert.equal(factor?.attackerElement,'ionic');
  assert.ok(r.events.some(e=>e.kind==='elemental-special'));
 });
 

@@ -6,7 +6,7 @@ import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createFleetSide,createFleetNextBattle,resolveFleetNextTurn,
  fuseFleetSupports,refreshEscortLinks,inheritFleetEscortElements} from './fleetNext/combat.js';
 
-test('Le scudiere di tutte le 17 navi ereditano elemento principale, elementi attivi e ID madre',()=>{
+test('Le scudiere delle 12 madri ereditano elemento principale, elementi attivi e ID madre',()=>{
  for(const shipId of SHIP_PROGRESSION_IDS){
   const level=shipMaxLevel(shipId);
   const side=createFleetSide(shipId,level,[],11);
@@ -32,18 +32,18 @@ test('Scudiere sbloccate a L10/L18, riserve e secondo elemento sono sempre sincr
  const full=createFleetSide('N00',18,[],23);
  assert.equal(full.escorts.length,2);
  assert.ok(full.escorts.every(e=>e.element==='ionic'));
- const dual=createFleetSide('C04',16,[],24);
+ const dual=createFleetSide('E02',10,[],24);
  assert.equal(dual.ships[0].element,'aerial');
- assert.deepEqual(dual.escorts[0].elements,['aerial','plasma']);
+ assert.deepEqual(dual.escorts[0].elements,['aerial','ionic']);
  assert.equal(dual.escorts[0].element,'aerial',
   'Il secondo elemento non aggiunge una resistenza difensiva gratuita');
- dual.escorts[0].element='plasma';
+ dual.escorts[0].element='ionic';
  dual.escorts[0].elements=[];
  dual.escorts[0].elementInheritedFrom=null;
  refreshEscortLinks(dual,0);
  assert.equal(dual.escorts[0].element,'aerial');
  assert.deepEqual(dual.escorts[0].elements,['aerial','plasma']);
- assert.equal(dual.escorts[0].elementInheritedFrom,'C04');
+ assert.equal(dual.escorts[0].elementInheritedFrom,'E02');
  assert.equal(inheritFleetEscortElements(dual),dual);
 });
 
@@ -145,13 +145,13 @@ test('Una fusione Titano eredita Terra e subisce il vantaggio di Fuoco',()=>{
  assert.equal(event?.defenderElement,'mineral');
 });
 
-test('La seconda affinità Fuoco del Dardo non rimuove la debolezza Vento contro Ghiaccio',()=>{
- const b=duel('E01','C04',11,16); // Ghiaccio prevale su Vento
+test('La seconda affinità Ionica di Tempesta non rimuove la debolezza Vento contro Ghiaccio',()=>{
+ const b=duel('E01','E02',11,10); // Ghiaccio prevale su Vento
  const escort=b.sides.B.escorts[0];
- assert.deepEqual(escort.elements,['aerial','plasma']);
+ assert.deepEqual(escort.elements,['aerial','ionic']);
  assert.equal(escort.element,'aerial');
  const hit=shot(b),event=hit.r.events.find(e=>e.kind==='elemental-matchup');
  assert.equal(event?.percent,125);
  assert.equal(event?.defenderElement,'aerial');
- assert.equal(event?.inheritedFromMother,'C04');
+ assert.equal(event?.inheritedFromMother,'E02');
 });
