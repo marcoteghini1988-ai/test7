@@ -14,7 +14,7 @@ test('Solo 12 madri ufficiali e 120 carte esclusive eseguibili',()=>{
  assert.deepEqual(PHASE1_CATALOG.ships.map(s=>s.id),OFFICIAL_MOTHER_IDS);
  assert.equal(PHASE1_CATALOG.shipLevels.length,60);
  assert.ok(PHASE1_CATALOG.weapons.every(w=>OFFICIAL_MOTHER_IDS.includes(w.nave_id)));
- assert.deepEqual(SHIP_PROGRESSION_IDS.sort(),[...OFFICIAL_MOTHER_IDS].sort());
+ assert.deepEqual([...SHIP_PROGRESSION_IDS].sort(),[...OFFICIAL_MOTHER_IDS].sort());
  assert.deepEqual(Object.keys(SHIP_CONFIGS).sort(),[...OFFICIAL_MOTHER_IDS].sort());
  assert.deepEqual(Object.keys(FLEET_ELEMENT_IDENTITIES).sort(),[...OFFICIAL_MOTHER_IDS].sort());
  assert.equal(Object.keys(EXCLUSIVE_CARDS).length,120);
