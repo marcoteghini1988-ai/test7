@@ -1,5 +1,5 @@
 // Firme matematiche del duello simultaneo ufficiale: un profilo pubblico e stabile per
-// ciascuna delle 17 madri. Sono fisse per MODELLO, non estratte a ogni scontro.
+// ciascuna delle 12 madri ufficiali. Sono fisse per MODELLO, non estratte a ogni scontro.
 // Le firme Poker da 4/5 carte sono alternative tattiche sugli Epici/Leggendari.
 // Le matematiche 2/3 carte restano possibili: nessuna campagna viene bloccata.
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
@@ -18,24 +18,19 @@ const PUBLIC_SIGNATURES=Object.freeze({
  C01:[M('times',12),M('minus',3),M('plus',9),P('pair')],
  C02:[M('plus',11),M('divide',2),M('times',12),A('minus',4,'pair')],
  C03:[M('minus',5),M('times',15),M('plus',13),A('divide',2,'pair')],
- C04:[M('times',10),M('plus',11),M('minus',6),A('times',8,'pair')],
  R01:[M('divide',3),M('times',18),M('plus',15),A('minus',4,'pair')],
  R02:[M('times',20),M('divide',2),M('minus',5),A('plus',11,'pair')],
- R03:[M('plus',12),M('minus',7),M('times',24),A('divide',3,'pair')],
  R04:[M('times',18),M('minus',3),M('plus',9),P('pair')],
  E01:[M('times',24),M('plus',13),M('divide',2),A('minus',5,'trips','twoPair')],
  E02:[M('minus',8),A('times',18,'fourKind'),M('plus',17),A('divide',3,'pair','flush')],
- E03:[M('times',15),M('minus',6),M('plus',16),A('times',12,'trips','fullHouse')],
- E04:[M('plus',18),M('divide',3),M('times',21),A('minus',7,'pair','straight')],
  L01:[M('times',30),M('plus',19),M('minus',9),A('times',24,'trips','fullHouse')],
- L02:[M('divide',4),M('times',35),M('plus',21),A('minus',8,'trips','fullHouse')],
  L03:[M('times',36),M('minus',10),M('divide',3),A('plus',18,'pair','flush')],
  L04:[M('plus',22),M('times',42),M('minus',11),A('divide',4,'trips','royalFlush')]
 });
 const keys=new Set(PHASE1_CATALOG.ships.map(s=>s.id));
-if(keys.size!==17||Object.keys(PUBLIC_SIGNATURES).length!==keys.size||
+if(keys.size!==12||Object.keys(PUBLIC_SIGNATURES).length!==keys.size||
  Object.keys(PUBLIC_SIGNATURES).some(id=>!keys.has(id)))
- throw new Error('Le firme tattiche devono coprire esattamente le 17 navicelle.');
+ throw new Error('Le firme tattiche devono coprire esattamente le 12 navicelle.');
 export const TACTICAL_SHIP_SIGNATURES=Object.freeze(Object.fromEntries(
  Object.entries(PUBLIC_SIGNATURES).map(([shipId,profiles])=>[
   shipId,Object.freeze(Object.fromEntries(VITAL_IDS.map((id,i)=>[id,profiles[i]])))
