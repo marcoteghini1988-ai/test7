@@ -12,6 +12,7 @@ import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
 import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
+import {supportDefinition} from './supportCatalog.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
 import {applyElementalDamage,elementalDamageDescription} from './elementalDamage.js';
 import {ENERGY_CAPACITY} from './energyCards.js';
@@ -161,8 +162,8 @@ export function inheritFleetEscortElements(side){
  const elements=activeFleetElements(mother.id,mother.level);
  for(const escort of [...(side.escorts||[]),...(side.reserveEscorts||[])]){
   if(side.independentSupportRoster){
-   const own=fleetElements(escort.shipModelId||escort.originShipId)[0]||escort.element;
-   const fusion=fleetElements(escort.fusionShipId)[0];
+   const own=supportDefinition(escort.catalogSupportId)?.elementId||escort.element;
+   const fusion=FUSION_SHIP_CARD_BY_ID['fusion-ship-'+String(escort.fusionShipId).toLowerCase()]?.fusionElementId;
    escort.element=own;
    escort.elements=[...new Set([own,...(escort.fused?[fusion]:[])].filter(Boolean))].slice(0,2);
    escort.elementInheritedFrom=null;
@@ -220,7 +221,7 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
   supportSkillIds:skillIds,
   supportSkillName:skillIds.map(id=>SUPPORT_SKILL_LABELS[id]).join(' + '),
   fusionSkills:[...(original.fusionSkills||[original.skill]),
-   {...FLEET_ESCORT_TRAITS[shipId][nativeSupportSlotFor(shipId)]}],
+   {...FLEET_ESCORT_TRAITS[fusionCard.fusionTemplateShipId][fusionCard.fusionTemplateSlot]}],
   linked:true
  };
  side.escorts[index]=fused;
