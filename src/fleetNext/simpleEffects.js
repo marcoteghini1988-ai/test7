@@ -50,6 +50,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Le Trappole sono carte Difesa: si preparano coperte nel proprio turno e si rivelano solo quando scattano. Altrimenti restano in campo.',
  'Puoi giocare fino a 3 carte per turno. Hai 3 slot Attacco, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 alloggiamenti per Armi temporanee.',
  'Una Trappola contro i Terreni annulla il prossimo Terreno avversario prima che si attivi. Il Terreno precedente resta; entrambe le carte usate vanno negli scarti.',
+ 'Interdizione di Fusione è una Trappola coperta: si rivela alla giocata di una Carta Navicella Fusione nemica, la annulla e la manda agli scarti. Il supporto non cambia e non viene consumato uno dei due usi Fusione.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
  'Le due posizioni di supporto si sbloccano avanzando nella campagna: una nave madre e fino a due carte-navicella scelte nell’Hangar indipendentemente dalla madre.',
@@ -107,7 +108,7 @@ export function validateEffectSpec(spec){
  if(spec.type==='regenerate'&&!['hit','hurt'].includes(spec.trigger))return 'Evento di rigenerazione non valido';
  if(spec.type==='recover'&&!['attack','defense','support','any'].includes(spec.role))return 'Tipo di recupero non valido';
  if(spec.type==='terrain'&&!Object.hasOwn(TERRAIN_EFFECT_TEXT,spec.code))return 'Terreno non valido';
- if(spec.type==='trap'&&(spec.trigger!=='terrain'||spec.action!=='cancel'))return 'Trappola non supportata';
+ if(spec.type==='trap'&&(spec.action!=='cancel'||!['terrain','shipFusion'].includes(spec.trigger)))return 'Trappola non supportata';
  if(spec.type==='deployMachine'&&(!integer(spec.hp,1,12)||!integer(spec.power,0,3)))return 'Macchina d’assalto non valida';
  return null;
 }
@@ -195,7 +196,9 @@ export function describeEffect(card,level=1){
   case 'charge':return repeat+'Prepara +'+s.amount+' potenza per il tuo attacco del turno successivo.';
   case 'energy':return 'Accumula 1 Energia '+FLEET_ELEMENTS[s.elementId].name+' (massimo 4 cariche totali). Alimenta l’abilità speciale della navicella.';
   case 'terrain':return TERRAIN_EFFECT_TEXT[s.code]+' Vale per entrambi i giocatori per 3 round.';
-  case 'trap':return 'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
+  case 'trap':return s.trigger==='shipFusion'?
+   'Trappola coperta. Annulla la prossima Carta Navicella Fusione giocata dall’avversario: la carta viene scartata e il supporto resta invariato.':
+   'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
   case 'deployMachine':return 'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
   case 'prisma':return card.effectProposed;
