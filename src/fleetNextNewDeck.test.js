@@ -33,7 +33,7 @@ test('Limiti di 40 carte totali e limite di tre copie per Buco Nero',()=>{
  const built=buildNextBaseDeck(inv,'L01',5,choice);
  assert.equal(built.discarded.length,0);
  assert.equal(built.total,40);
- assert.equal(effectiveDeck(built.baseDeck,'L01',5).length,40);
+ assert.equal(effectiveDeck(built.baseDeck,'L01',5,{independentSupports:true}).length,40);
  const black=Array(4).fill('sys-black-hole');
  const excessive=buildNextBaseDeck(inv,'L01',5,black);
  assert.equal(cardCopyLimit('sys-black-hole'),3);
