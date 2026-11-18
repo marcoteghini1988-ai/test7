@@ -332,6 +332,7 @@ export default function OfficialFleetBattle3D({
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
+ const [fusionSlot,setFusionSlot]=useState(0);
  const [elementalPrepared,setElementalPrepared]=useState(false);
  const [elementalChoice,setElementalChoice]=useState('');
  const [prismaOptions,setPrismaOptions]=useState({
@@ -550,6 +551,7 @@ export default function OfficialFleetBattle3D({
     machineSlot:actualTarget?.kind==='machine'?actualTarget.slot:undefined,
     moduleSlot:actualTarget?.kind==='module'?actualTarget.slot:undefined,
     ownPartId:actualOwnVital,cards:chosenCards,
+    fusionSlot:actualFusionSlot,
     dismantleTargets:chosenCards.some(i=>card(battle.sides.A.hand[i])?.effectSpec?.type==='dismantle')?
      [dismantleOptions.first,dismantleOptions.second].filter(Boolean):undefined,
     deckTopFlip:auroraOptions.deckTopFlip,
@@ -736,6 +738,10 @@ export default function OfficialFleetBattle3D({
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
   target.parts.find(p=>!p.destroyed)?.id;
  const chosenTypes=chosenCards.map(i=>player.hand[i]).filter(Boolean);
+ const fusionCandidates=player.escorts.filter(e=>e.hp>0&&!e.destroyed&&!e.fused);
+ const actualFusionSlot=fusionCandidates.some(e=>e.slot===fusionSlot)?
+  fusionSlot:fusionCandidates[0]?.slot??0;
+ const fusionSelected=chosenTypes.some(id=>card(id)?.effectSpec?.type==='shipFusion');
  const directBypass=chosenTypes.some(id=>{
   const spec=card(id)?.effectSpec;
   return spec?.type==='bypass'||spec?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(spec.action)||
@@ -974,6 +980,15 @@ export default function OfficialFleetBattle3D({
      disabled={!myTurn} onChange={event=>selectTarget(event.target.value)}>
      {targetChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
       {t.kind==='part'?(enemy.ruleset===HP_SYNC_RULESET?'Madre · HP':'Madre · '+VITAL_LABELS[t.id]):t.kind==='module'?'Modulo · '+t.name:t.name} · {t.hp}/{t.maxHp}
+     </option>)}
+    </select>
+   </label>}
+   {!ended&&fusionSelected&&<label className="f3d-target-status">
+    <span>FONDI CON IL SUPPORTO · </span>
+    <select aria-label="Supporto da fondere" value={actualFusionSlot}
+     disabled={!myTurn} onChange={event=>setFusionSlot(Number(event.target.value))}>
+     {fusionCandidates.map(escort=><option key={escort.id} value={escort.slot}>
+      {escort.name} · {escort.hp}/{escort.maxHp} HP
      </option>)}
     </select>
    </label>}
