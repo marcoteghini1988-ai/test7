@@ -13,7 +13,7 @@ test('350 vecchie carte rimosse, Personaggi Boss e sei carte tecniche conservati
  assert.equal(Object.keys(EXCLUSIVE_CARDS).length,170);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.keys(PROGRESSION_CARDS).length,6);
- assert.equal(BASE_CATALOG_COUNT,194);assert.equal(ENERGY_COUNT,10);assert.equal(TOTAL_CARD_COUNT,210);
+ assert.equal(BASE_CATALOG_COUNT,194);assert.equal(ENERGY_COUNT,10);assert.equal(TOTAL_CARD_COUNT,227);
  assert.equal(retired.generalIds.length,238);assert.equal(retired.exclusiveIds.length,112);
  const entries=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS),...ENERGY_CARDS];
  assert.equal(new Set(entries.map(c=>c.id)).size,210);
