@@ -58,6 +58,16 @@ export const SUPPORT_SKILL_ASSIGNMENTS=Object.freeze({
 });
 export const supportSkillFor=(originShipId,slot)=>
  SUPPORT_SKILL_ASSIGNMENTS[originShipId]?.[slot]||null;
+// Un solo modello per navicella; la scelta della passiva tra le due
+// vecchie varianti conserva tutte le 15 meccaniche già implementate.
+// Assegnazioni provvisorie fino alla fase di bilanciamento dei 13 modelli.
+export const NATIVE_SUPPORT_SKILL_SLOTS=Object.freeze({
+ N00:0,C01:0,C02:1,C03:1,C04:1,R01:0,R02:1,R03:1,R04:1,
+ E01:0,E02:1,E03:1,E04:0,L01:1,L02:1,L03:0,L04:1
+});
+export const nativeSupportSlotFor=id=>NATIVE_SUPPORT_SKILL_SLOTS[id]??0;
+export const nativeSupportSkillFor=id=>supportSkillFor(id,nativeSupportSlotFor(id));
+
 
 if(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length!==17||
  Object.keys(SUPPORT_SKILL_LABELS).length!==15||
