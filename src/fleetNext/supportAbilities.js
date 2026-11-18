@@ -42,17 +42,12 @@ export const SUPPORT_SKILL_ASSIGNMENTS=Object.freeze({
  C01:['last-shield','normal-boost'],
  C02:['terrain-immunity','trap-silence'],
  C03:['reactive-poison','extra-draw'],
- C04:['sacrifice','terrain-half'],
  R01:['normal-boost','weapon-double'],
  R02:['trap-silence','energy-discount'],
- R03:['regeneration','special-boost'],
  R04:['last-shield','sacrifice'],
  E01:['terrain-immunity','terrain-half'],
  E02:['death-storm','capacitor'],
- E03:['regeneration','death-energy'],
- E04:['last-shield','normal-boost'],
  L01:['special-boost','weapon-double'],
- L02:['energy-discount','reactive-poison'],
  L03:['death-storm','last-shield'],
  L04:['death-energy','capacitor']
 });
@@ -62,14 +57,14 @@ export const supportSkillFor=(originShipId,slot)=>
 // vecchie varianti conserva tutte le 15 meccaniche già implementate.
 // Assegnazioni provvisorie fino alla fase di bilanciamento dei 13 modelli.
 export const NATIVE_SUPPORT_SKILL_SLOTS=Object.freeze({
- N00:0,C01:0,C02:1,C03:1,C04:1,R01:0,R02:1,R03:1,R04:1,
- E01:0,E02:1,E03:1,E04:0,L01:1,L02:1,L03:0,L04:1
+ N00:0,C01:0,C02:1,C03:1,R01:0,R02:1,R04:1,
+ E01:0,E02:1,L01:1,L03:0,L04:1
 });
 export const nativeSupportSlotFor=id=>NATIVE_SUPPORT_SKILL_SLOTS[id]??0;
 export const nativeSupportSkillFor=id=>supportSkillFor(id,nativeSupportSlotFor(id));
 
 
-if(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length!==17||
+if(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length!==12||
  Object.keys(SUPPORT_SKILL_LABELS).length!==15||
  Object.values(SUPPORT_SKILL_ASSIGNMENTS).some(pair=>pair.length!==2||
   pair.some(id=>!SUPPORT_SKILL_LABELS[id]))||
