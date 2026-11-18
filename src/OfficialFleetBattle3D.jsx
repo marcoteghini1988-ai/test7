@@ -289,7 +289,8 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
  const rarity=exclusiveRarityAtLevel(def,motherLevel);
  const description=def?describeEffect(def,grade):'Carta tattica';
   const role=cardRole(type)||'support';
-  const familyGlyph={attack:'⚔',defense:'⬡',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
+  const familyGlyph=def?.effectSpec?.type==='energy'?FLEET_ELEMENTS[def.effectSpec.elementId]?.symbol:
+  {attack:'⚔',defense:'⬡',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
  const name=def?.nome||def?.name||type;
  const art=!type?null:card(type)?
      cardFacePath(type,grade):officialSpecialArtPath(type);
