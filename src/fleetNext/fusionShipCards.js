@@ -18,6 +18,7 @@ export const FUSION_SHIP_CARDS=Object.freeze(PHASE1_CATALOG.ships.map(ship=>{
   fusionShipId:ship.id,fusionShipName:ship.nome,
   fusionElementId:fleetElements(ship.id)[0],
   fusionSkillId:nativeSupportSkillFor(ship.id),
+  effectProposed:'Fondi '+ship.nome+' con un tuo supporto operativo non ancora fuso. Conserva gli HP e le ferite del supporto; unisce elementi e abilità. Un massimo di due fusioni per battaglia.',
   effectSpec:Object.freeze({type:'shipFusion',shipId:ship.id})
  });
 }));
