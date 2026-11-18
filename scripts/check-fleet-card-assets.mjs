@@ -65,7 +65,7 @@ for(const c of cards){
 }
 const upgrades=resolve(ROOT,'public/assets/fleet-next-card-upgrades');
 const exclusive=cards.filter(c=>c.shipId);
-const upgradeFiles=readdirSync(upgrades).filter(f=>f.endsWith('.svg'));
+const upgradeFiles=existsSync(upgrades)?readdirSync(upgrades).filter(f=>f.endsWith('.svg')):[];
 if(upgradeFiles.length!==exclusive.length*2)fail('Varianti di grado mancanti o extra');
 for(const card of exclusive)for(const grade of [2,3]){
  const filename=resolve(upgrades,card.id+'-g'+grade+'.svg');
