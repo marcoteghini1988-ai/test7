@@ -1,3 +1,4 @@
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createFleetNextBattle,resolveFleetNextTurn} from './fleetNext/combat.js';
@@ -6,7 +7,7 @@ import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {applySystemCard,resetFieldWithBlackHole} from './fleetNext/newCardEffects.js';
 
 const battle=(ship='L01')=>createFleetNextBattle({
- shipA:ship,shipB:ship,levelA:5,levelB:5,mode:'pvp',
+ shipA:ship,shipB:ship,levelA:shipMaxLevel(ship),levelB:shipMaxLevel(ship),mode:'pvp',
  deckA:[],deckB:[],seed:1234,ruleset:HP_SYNC_RULESET
 });
 const play=(b,who,cards=[],options={})=>{
