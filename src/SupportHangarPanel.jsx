@@ -1,14 +1,15 @@
-// Selettore dei supporti realmente posseduti: due slot indipendenti dalla madre.
-// Le immagini sono i modelli di supporto SVG preesistenti, non nuove Carte Fusione.
+// Hangar dei 13 supporti: una rarità per copia, senza livelli di miglioramento.
 import React,{useEffect,useState} from 'react';
 import {SUPPORT_COLLECTION_KEY,readSupportCollection,writeSupportCollection,
  equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {SUPPORT_CATALOG,supportDefinition} from './fleetNext/supportCatalog.js';
 import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
-import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
 import {SUPPORT_SLOT_CAMPAIGN_UNLOCKS} from './fleetNext/supportCampaign.js';
 import {readFleetInventory} from './fleetNext/collection.js';
-import {supportPurchaseCost,supportUpgradeCost,purchaseSupportModel,purchaseSupportUpgrade} from './fleetNext/supportShop.js';
+import {readRarityCampaign} from './fleetNext/rarityCampaign.js';
+import {SHIP_RARITIES,rarityIndex,rarityMayBeAcquired,nextShipRarity,
+ rarityPurchaseCost,rarityEvolutionCost,RARITY_DUPLICATE_COPIES} from './fleetNext/shipRarity.js';
+import {purchaseSupportCopy,evolveSupportCopy} from './fleetNext/supportShop.js';
 
 const cardStyle={padding:10,border:'1px solid #36678c',borderRadius:8,
  background:'#071a2de9',color:'#e3f2ff',minWidth:180,flex:'1 1 180px'};
@@ -17,73 +18,59 @@ const controlStyle={background:'#102e45',color:'#fff',border:'1px solid #6e9bbf'
 const buttonStyle={...controlStyle,width:'auto',fontWeight:700,cursor:'pointer'};
 const safeRead=()=>{try{return {inventory:readSupportCollection(),error:''};}
  catch{return {inventory:null,error:'Il salvataggio supporti non è leggibile; nessun dato è stato sovrascritto.'};}};
-
 export default function SupportHangarPanel(){
- const [state,setState]=useState(safeRead);
- const [draft,setDraft]=useState(null);
+ const [state,setState]=useState(safeRead),[draft,setDraft]=useState(null);
  const [notice,setNotice]=useState('');
  const [credits,setCredits]=useState(()=>readFleetInventory().credits);
- const collection=state.inventory;
- const equipped=draft??collection?.equipped??[null,null];
+ const [progress,setProgress]=useState(()=>{try{return readRarityCampaign();}catch{return {rarity:'Comune',highestSector:1};}});
+ const collection=state.inventory,equipped=draft??collection?.equipped??[null,null];
  useEffect(()=>{
-  const refresh=event=>{
-   if(event.key===SUPPORT_COLLECTION_KEY||event.key===null){
-    setState(safeRead());setDraft(null);
-   }
-  };
-  const refreshBalances=()=>{
-   try{setCredits(readFleetInventory().credits);}catch{/* Il salvataggio resta intatto. */}
+  const refresh=()=>{
+   setState(safeRead());setDraft(null);
+   try{setCredits(readFleetInventory().credits);setProgress(readRarityCampaign());}catch{}
   };
   window.addEventListener('storage',refresh);
-  window.addEventListener('eclissi-shop-changed',refreshBalances);
+  window.addEventListener('eclissi-shop-changed',refresh);
   return ()=>{
    window.removeEventListener('storage',refresh);
-   window.removeEventListener('eclissi-shop-changed',refreshBalances);
+   window.removeEventListener('eclissi-shop-changed',refresh);
   };
  },[]);
  const roster=collection?equippedSupportRoster({...collection,equipped}):[];
- function refreshShop(result,successText){
+ const action=(result,description)=>{
   if(!result.ok){setNotice(result.reason);return;}
-  setState({inventory:result.collection,error:''});
+  setState({inventory:result.collection,error:''});setDraft(null);
   setCredits(result.inventory.credits);
-  setNotice(successText);
+  setNotice(description+' · '+result.rarita+' · '+result.price+' ✦');
   window.dispatchEvent(new Event('eclissi-shop-changed'));
- }
- function buySupport(id){
-  refreshShop(purchaseSupportModel(id),'Navicella acquistata: scegli uno slot in Hangar.');
- }
- function upgradeSupport(id){
-  const result=purchaseSupportUpgrade(id);
-  refreshShop(result,result.ok?'Navicella potenziata al livello '+result.level:undefined);
- }
- function select(slot,id){
+ };
+ const buy=(id,rarita)=>action(purchaseSupportCopy(id,rarita),'Carta supporto acquistata');
+ const evolve=id=>action(evolveSupportCopy(id),'Evoluzione della carta supporto completata');
+ const select=(slot,id)=>{
   if(!collection)return;
-  try{
-   const current=equipSupportInstance({...collection,equipped},slot,id||null);
-   setDraft(current.equipped);setNotice('');
-  }catch(error){setNotice(error.message);}
- }
- function save(){
+  try{setDraft(equipSupportInstance({...collection,equipped},slot,id||null).equipped);setNotice('');}
+  catch(e){setNotice(e.message);}
+ };
+ const save=()=>{
   if(!collection)return;
   try{
    const latest=readSupportCollection();
-   const result=writeSupportCollection({...latest,equipped});
-   setState({inventory:result,error:''});setDraft(null);
-   setNotice('Supporti equipaggiati: saranno schierati già a inizio partita.');
-  }catch(error){setNotice('Formazione non salvata: '+error.message);}
- }
+   const saved=writeSupportCollection({...latest,equipped});
+   setState({inventory:saved,error:''});setDraft(null);
+   setNotice('Supporti equipaggiati per le prossime partite.');
+  }catch(e){setNotice('Formazione non salvata: '+e.message);}
+ };
  return <section aria-label="Navicelle di supporto indipendenti" style={{
   padding:10,border:'1px solid #326488',borderRadius:8,
   background:'#081b2dee',color:'#e6f5ff',margin:'10px 0'
  }}>
-  <h4>Carte navicella · supporti scelti prima della battaglia</h4>
-  <p>Gli slot si sbloccano in modo permanente con la campagna.
-   Le due navicelle si scelgono prima della battaglia e mantengono
-   la stessa formazione anche quando cambi nave madre.</p>
+  <h4>Carte navicella · 13 supporti indipendenti</h4>
+  <p>Due slot permanenti sbloccati nella campagna. Ogni copia ha rarità ed elemento propri;
+   cambiando madre i supporti rimangono equipaggiati.</p>
   {state.error&&<p role="alert">{state.error}</p>}
   {collection&&<>
-   <p>Modelli ufficiali di supporto: {SUPPORT_CATALOG.length} · Copie possedute: {collection.owned.length}
-    {' · Slot sbloccati: '+collection.unlockedSlots+'/2'}</p>
+   <p>Copie possedute: {collection.owned.length} · Slot: {collection.unlockedSlots}/2
+    {' · Rarità sbloccata: '+progress.rarity+' · Crediti '+credits.toLocaleString('it-IT')+' ✦'}</p>
    <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
     {[0,1].map(slot=>{
      const unlocked=slot<collection.unlockedSlots;
@@ -91,69 +78,73 @@ export default function SupportHangarPanel(){
      const chosen=roster.find(s=>s.slot===slot);
      return <div key={slot} style={cardStyle}>
       <strong>{'SLOT SUPPORTO '+(slot+1)}</strong>
-      {!unlocked?<p>Bloccato · vittoria settore {milestone.sector} della campagna</p>:<>
+      {!unlocked?<p>Bloccato · completa il settore {milestone.sector}</p>:<>
        <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:76}}>
         {chosen?<img src={chosen.visual} alt={chosen.name} loading="lazy"
          style={{maxHeight:74,maxWidth:140,objectFit:'contain'}}/>:
-         <span>Nessun supporto selezionato</span>}
+         <span>Slot libero</span>}
        </div>
-       <label htmlFor={'support-formation-'+slot}>Navicella equipaggiata</label>
+       <label htmlFor={'support-formation-'+slot}>Carta supporto equipaggiata</label>
        <select id={'support-formation-'+slot} style={controlStyle}
-        value={equipped[slot]||''}
-        onChange={e=>select(slot,e.target.value)}>
+        value={equipped[slot]||''} onChange={e=>select(slot,e.target.value)}>
         <option value="">Slot libero</option>
         {collection.owned.map(item=>{
-         const source=supportDefinition(item.supportId);
+         const model=supportDefinition(item.supportId);
          return <option key={item.instanceId} value={item.instanceId}
           disabled={equipped.some((x,i)=>i!==slot&&x===item.instanceId)}>
-          {source?.name||item.supportId} · L{item.level}/{SUPPORT_MAX_LEVEL} · copia {item.instanceId}
+          {model?.name||item.supportId} · {item.rarita} · {item.instanceId}
          </option>;
         })}
        </select>
-       {chosen&&<small>{chosen.name} · {chosen.role} · livello proprio {chosen.level}/{SUPPORT_MAX_LEVEL}
-        {' · elemento proprio: '+(FLEET_ELEMENTS[chosen.elementId]?.name||'da definire')}
-        {' · fusione: '+(chosen.level>=SUPPORT_MAX_LEVEL?'MAX pronto':'bloccata fino al livello MAX')}</small>}
+       {chosen&&<small>{chosen.name} · {chosen.rarita} · {chosen.skillName}
+        {' · '+(FLEET_ELEMENTS[chosen.elementId]?.name||'Elemento non definito')}
+        {' · Fusione '+(chosen.rarita==='Leggendaria'?'disponibile':'richiede Leggendaria')}</small>}
       </>}
      </div>;
     })}
    </div>
-   <p>Una Carta Navicella Fusione Leggendaria può fondersi soltanto con un supporto al livello massimo. La carta rappresenta già una navicella MAX; mantiene gli HP del supporto in campo.</p>
-   <p>Saldo Crediti Stellari: {credits.toLocaleString('it-IT')} ✦. Prezzi dei supporti e dei livelli provvisori.</p>
-   <details><summary>Acquista navicelle di supporto (13 modelli)</summary>
+   <p>Le 13 Carte Navicella Fusione restano carte speciali Leggendarie,
+    giocabili su un supporto Leggendario non ancora fuso. Nessun HP recuperato.</p>
+   <details><summary>Acquista una copia di supporto · 13 modelli</summary>
     <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:8}}>
-     {SUPPORT_CATALOG.map(model=>{
-      const cost=supportPurchaseCost(model.id);
-      return <div key={model.id} style={cardStyle}>
-       <img src={model.visual} alt={model.name} loading="lazy" style={{height:74,maxWidth:'100%',objectFit:'contain'}}/>
-       <strong style={{display:'block'}}>{model.name}</strong>
-       <small style={{display:'block'}}>{model.rarita} · {model.skillName} · {FLEET_ELEMENTS[model.elementId]?.name}</small>
-       <button type="button" style={buttonStyle} disabled={credits<cost}
-        onClick={()=>buySupport(model.id)}>ACQUISTA · {cost} ✦</button>
-      </div>;
-     })}
+     {SUPPORT_CATALOG.map(model=><div key={model.id} style={cardStyle}>
+      <img src={model.visual} alt={model.name} loading="lazy"
+       style={{height:74,maxWidth:'100%',objectFit:'contain'}}/>
+      <strong style={{display:'block'}}>{model.name}</strong>
+      <small style={{display:'block'}}>{model.skillName+' · '+FLEET_ELEMENTS[model.elementId]?.name}</small>
+      {SHIP_RARITIES.filter(r=>rarityIndex(r)>=rarityIndex(model.rarita)).map(r=>{
+       const price=rarityPurchaseCost('support',r),unlocked=rarityMayBeAcquired(r,model.rarita,progress.highestSector);
+       return <button type="button" key={r} style={buttonStyle}
+        disabled={!unlocked||credits<price}
+        onClick={()=>buy(model.id,r)}>
+        {unlocked?'COMPRA '+r+' · '+price+' ✦':r+' · bloccata'}</button>;
+      })}
+     </div>)}
     </div>
    </details>
-   <details><summary>Migliora le copie possedute da L1 a L5</summary>
+   <details><summary>Evolvi le copie usando tre carte uguali</summary>
     <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:8}}>
      {collection.owned.map(unit=>{
-      const model=supportDefinition(unit.supportId),maxed=unit.level>=SUPPORT_MAX_LEVEL;
-      const cost=maxed?null:supportUpgradeCost(unit.supportId,unit.level+1);
+      const model=supportDefinition(unit.supportId),next=nextShipRarity(unit.rarita);
+      const matching=collection.owned.filter(x=>x.supportId===unit.supportId&&x.rarita===unit.rarita).length;
+      const allowed=!!next&&matching>=RARITY_DUPLICATE_COPIES&&
+       rarityMayBeAcquired(next,model?.rarita,progress.highestSector);
+      const cost=next?rarityEvolutionCost('support',next):null;
       return <div key={unit.instanceId} style={cardStyle}>
        <strong style={{display:'block'}}>{model?.name||unit.supportId}</strong>
-       <small style={{display:'block'}}>Copia {unit.instanceId} · L{unit.level}/{SUPPORT_MAX_LEVEL}</small>
-       <button type="button" style={buttonStyle} disabled={maxed||cost===null||credits<cost}
-        onClick={()=>upgradeSupport(unit.instanceId)}>
-        {maxed?'LIVELLO MAX':cost===null?'MODELLO STORICO':`POTENZIA L${unit.level+1} · ${cost} ✦`}</button>
+       <small style={{display:'block'}}>{unit.instanceId+' · '+unit.rarita+' · '+matching+'/3 copie'}</small>
+       {next?<button type="button" style={buttonStyle}
+        disabled={!allowed||credits<cost} onClick={()=>evolve(unit.instanceId)}>
+        {'EVOLVI IN '+next+' · '+cost+' ✦'}</button>:<small>Rarità massima: Leggendaria</small>}
       </div>;
      })}
     </div>
    </details>
-   <p>Le prime due copie si ottengono ai traguardi della campagna. Le altre si acquistano qui con Crediti Stellari già guadagnati; i valori verranno bilanciati alla fine.</p>
+   <p>L'evoluzione usa due doppioni e conserva una copia precedente. La fusione
+    giocata sul campo è una meccanica separata.</p>
    {notice&&<p role="status">{notice}</p>}
    <button type="button" style={buttonStyle} onClick={save}
-    disabled={!draft||draft.every((v,i)=>v===collection.equipped[i])}>
-    SALVA SUPPORTI
-   </button>
+    disabled={!draft||draft.every((v,i)=>v===collection.equipped[i])}>SALVA SUPPORTI</button>
   </>}
  </section>;
 }
