@@ -14,7 +14,7 @@ function run(b,a=idle,bb=idle){
  return advanceTacticalDuel(y.battle,101);
 }
 const impact=b=>b.history.at(-1).impacts.find(e=>e.kind==='barrier'&&e.by==='A');
-test('Tutte le 42 armi possono essere privilegiate senza cambiare il numero di armi o le carte in mano',()=>{
+test('Le 27 armi ufficiali possono essere privilegiate senza cambiare il numero di armi o le carte in mano',()=>{
  let count=0;const types=new Set();
  for(const w of PHASE1_CATALOG.weapons){
   const game=createTacticalDuel({shipA:w.nave_id,levelA:5,shipB:'C01',levelB:3});
@@ -29,7 +29,7 @@ test('Tutte le 42 armi possono essere privilegiate senza cambiare il numero di a
   assert.equal(result.sides.A.special.hand.length,5);
   types.add(info.technology);count++;
  }
- assert.equal(count,42);
+ assert.equal(count,27);
  assert.deepEqual([...types].sort(),['cinetico','esplosivo','ionico','laser','plasma'].sort());
 });
 test('Non si può selezionare un cannone non presente nella propria nave',()=>{

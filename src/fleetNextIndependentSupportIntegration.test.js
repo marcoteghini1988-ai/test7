@@ -8,8 +8,10 @@ import {createSupportCollection,readSupportCollection,writeSupportCollection,
  grantSupportInstance,equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {claimCampaignSupportUnlock} from './shipCampaignRewards.js';
 import {createFleetSide,createFleetNextBattle,protectingFleetUnits,
- fusionShipUnavailableReason,resolveFleetNextTurn} from './fleetNext/combat.js';
+ fusionShipUnavailableReason,fuseIndependentSupportWithShip,resolveFleetNextTurn} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import {CAMPAIGN_SHIP_ORDER} from './fleetNext/progression.js';
+import {FUSION_SHIP_CARDS} from './fleetNext/fusionShipCards.js';
 import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
 
 function storage(){
@@ -142,4 +144,37 @@ test('Hangar e battaglia ufficiali usano il nuovo equipaggiamento',()=>{
  assert.match(game,/supportRosterA:/);
  assert.match(game,/supportRosterB:/);
  assert.match(reward,/claimCampaignSupportUnlock/);
+});
+
+test('Tutte le 12 madri consentono due Fusioni indipendenti, una per slot, senza curare HP',()=>{
+ assert.equal(CAMPAIGN_SHIP_ORDER.length,12);
+ assert.equal(FUSION_SHIP_CARDS.length,13);
+ assert.equal(new Set(FUSION_SHIP_CARDS.map(c=>c.fusionShipId)).size,13);
+ for(const motherId of CAMPAIGN_SHIP_ORDER){
+  const roster=[
+   {id:supportModelIdFor('N00'),instanceId:'owned:one',slot:0,level:5},
+   {id:supportModelIdFor('C03'),instanceId:'owned:two',slot:1,level:5}
+  ];
+  const side=createFleetSide(motherId,1,[],2026,{},roster);
+  assert.equal(side.fusionLimit,2,motherId);
+  assert.equal(side.escorts.length,2,motherId);
+  side.escorts[0].hp=Math.max(1,side.escorts[0].hp-2);
+  const initial=side.escorts.map(x=>({hp:x.hp,maxHp:x.maxHp}));
+  const first=fuseIndependentSupportWithShip(side,'L04',0);
+  assert.equal(first.ok,true,motherId+' prima fusione: '+first.reason);
+  assert.equal(first.fused.hp,initial[0].hp,'nessuna cura gratis dopo la prima fusione');
+  assert.equal(first.fused.maxHp,initial[0].maxHp);
+  assert.equal(first.fused.supportSkillIds.length,2);
+  assert.equal(side.escorts.length,2);
+  const second=fuseIndependentSupportWithShip(side,'C02',1);
+  assert.equal(second.ok,true,motherId+' seconda fusione: '+second.reason);
+  assert.equal(second.fused.hp,initial[1].hp);
+  assert.equal(second.fused.maxHp,initial[1].maxHp);
+  assert.equal(second.fused.supportSkillIds.length,2);
+  assert.equal(side.fusionsUsed,2);
+  assert.equal(side.escorts.length,2,'nessun terzo/quarto slot inventato');
+  assert.equal(side.reserveEscorts.length,0);
+  assert.ok(side.escorts.every(e=>e.fused&&e.hp>0));
+  assert.match(fusionShipUnavailableReason(side,'R01',null),/già state utilizzate/);
+ }
 });

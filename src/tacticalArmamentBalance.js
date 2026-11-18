@@ -1,4 +1,4 @@
-// Scala preliminare di assedio: tutte le 42 armi conservano danno, tipo,
+// Scala preliminare di assedio: le 27 armi ufficiali conservano danno, tipo,
 // livello e bocca di fuoco propri. Rendimento decrescente per evitare che
 // quattro cannoni leggendari azzerino automaticamente 60 HP in un solo ciclo.
 // Non modifica il catalogo, i potenziamenti o altre modalità.

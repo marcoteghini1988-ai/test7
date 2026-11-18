@@ -13,9 +13,9 @@ const sample=(op,target)=>{
  for(const vals of all2)if(tacticalSignatureMatches({kind:'mathGate',op,target,allowedCardCounts:[2,3]},op,vals))return vals;
  return null;
 };
-test('I 17 modelli hanno esattamente quattro firme stabili e senza duplicati di profilo',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,17);
- assert.equal(Object.keys(TACTICAL_SHIP_SIGNATURES).length,17);
+test('Le 12 madri hanno esattamente quattro firme stabili e senza duplicati di profilo',()=>{
+ assert.equal(PHASE1_CATALOG.ships.length,12);
+ assert.equal(Object.keys(TACTICAL_SHIP_SIGNATURES).length,12);
  const printed=new Set();
  for(const ship of PHASE1_CATALOG.ships){
   const sig=tacticalShipSignatures(ship.id);
@@ -84,8 +84,8 @@ test('La firma appartenente a un modello diverso non viene accettata dal motore'
 
 test('Progressione Poker lunga: solo Epiche e Leggendarie e sempre una formula matematica più corta',()=>{
  const expected={
-  E01:'twoPair',E02:'flush',E03:'fullHouse',E04:'straight',
-  L01:'fullHouse',L02:'fullHouse',L03:'flush',L04:'royalFlush'
+  E01:'twoPair',E02:'flush',
+  L01:'fullHouse',L03:'flush',L04:'royalFlush'
  };
  for(const [ship,pattern] of Object.entries(expected)){
   const sign=tacticalShipSignatures(ship).command;
@@ -94,7 +94,7 @@ test('Progressione Poker lunga: solo Epiche e Leggendarie e sempre una formula m
   assert.equal(sign.options.some(o=>o.kind==='mathGate'&&sample(o.op,o.target)),true,ship);
   assert.equal(tacticalSignatureSlotCount(sign),POKER_SIGNATURE_COUNTS[pattern],ship);
  }
- for(const id of ['N00','C01','C02','C03','C04','R01','R02','R03','R04']){
+ for(const id of ['N00','C01','C02','C03','R01','R02','R04']){
   const signatures=tacticalShipSignatures(id);
   assert.equal(Object.values(signatures).some(s=>
    mathSigOptions(s).some(o=>o.kind==='poker'&&POKER_SIGNATURE_COUNTS[o.pattern]>=4)),false,
@@ -106,14 +106,11 @@ test('Alternative Poker lunghe: 4/5 numeriche REALI 1–13, firma canonica e sol
  const examples={
   E01:hand([7,7,3,3],['♥','♠','♦','♣']),
   E02:hand([1,4,7,9,12],['♣','♣','♣','♣','♣']),
-  E03:hand([7,7,3,3,7],['♥','♠','♦','♣','♣']),
-  E04:hand([2,3,4,5,6],['♥','♠','♦','♣','♥']),
   L01:hand([7,7,3,3,7],['♥','♠','♦','♣','♣']),
-  L02:hand([7,3,7,3,7],['♠','♦','♣','♣','♥']),
   L03:hand([1,4,7,9,12],['♣','♣','♣','♣','♣']),
   L04:hand([1,10,11,12,13],['♠','♠','♠','♠','♠'])
  };
- const patterns={E01:'twoPair',E02:'flush',E03:'fullHouse',E04:'straight',
+ const patterns={E01:'twoPair',E02:'flush',
   L01:'fullHouse',L02:'fullHouse',L03:'flush',L04:'royalFlush'};
  for(const [shipId,example] of Object.entries(examples)){
   const sig=tacticalShipSignatures(shipId).command;

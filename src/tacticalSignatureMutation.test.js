@@ -42,8 +42,8 @@ const count=p=>p.hand.length+p.deck.length+p.discard.length;
 const strikeA={numericIndices:[3,2],vitalId:'weapons',op:'minus'}; // C01 -> R04, 8-5=3
 const strikeB={numericIndices:[2,3],vitalId:'engine',op:'times'}; // R04 -> C01, 3x4=12
 
-test('Le 68 firme dei 17 modelli hanno una mutazione diversa e risolvibile da due vere numeriche',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,17);
+test('Le 48 firme delle 12 madri ufficiali hanno una mutazione diversa e risolvibile da due vere numeriche',()=>{
+ assert.equal(PHASE1_CATALOG.ships.length,12);
  let checked=0;
  for(const [shipId,signatures] of Object.entries(TACTICAL_SHIP_SIGNATURES)){
   for(const [id,original] of Object.entries(signatures)){
@@ -63,7 +63,7 @@ test('Le 68 firme dei 17 modelli hanno una mutazione diversa e risolvibile da du
    checked++;
   }
  }
- assert.equal(checked,68);
+ assert.equal(checked,48);
  assert.ok(TACTICAL_SPECIALS[SIGNATURE_MUTATION_CARD_ID]);
 });
 
