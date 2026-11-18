@@ -38,6 +38,8 @@ import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,pro
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
 import {exclusiveRarityAtLevel} from './fleetNext/exclusiveEvolution.js';
+import {activeFleetElements,FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
+import {elementalAbility,chargedElementalEnergy,totalElementalEnergy} from './fleetNext/elementalAbilities.js';
 import {dismantleCandidates,dismantleActive} from './fleetNext/dismantleEffects.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
@@ -319,6 +321,8 @@ export default function OfficialFleetBattle3D({
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
+ const [elementalPrepared,setElementalPrepared]=useState(false);
+ const [elementalChoice,setElementalChoice]=useState('');
  const [prismaOptions,setPrismaOptions]=useState({
   redirectMachineId:'',trapSelection:'',artisanSelection:'',enemySelection:'',
   secondSelection:'',thirdSelection:''
@@ -411,7 +415,7 @@ export default function OfficialFleetBattle3D({
   const id=window.setTimeout(()=>{
    const result=timeoutFleetTurn(battle,Date.now());
    if(result.ok){
-    setBattle(result.battle);setChosenCards([]);
+    setBattle(result.battle);setChosenCards([]);setElementalPrepared(false);setElementalPrepared(false);
     setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
     setMessage('Tempo scaduto: turno passato');
    }
@@ -422,6 +426,7 @@ export default function OfficialFleetBattle3D({
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
   setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setMessage('');
+  setElementalPrepared(false);setElementalChoice('');
   setDismantleOptions({first:'',second:''});
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
   setLinceOptions({routePartId:'',sacrificeSlot:'',heliosTrade:false,heliosDiscardId:'',
@@ -513,8 +518,14 @@ export default function OfficialFleetBattle3D({
   const royalSecondChoice=royalOtherTargets.find(t=>t.key===royalOptions.second);
   const stormSecondChoice=stormSecondChoices.find(t=>t.key===stormOptions.second);
   const stormChainChoice=stormSecondChoices.find(t=>t.key===stormOptions.chain);
+  const ability=elementalAbility(battle.sides.A.ships[0].id);
+  const element=activeFleetElements(battle.sides.A.ships[0].id,
+   battle.sides.A.ships[0].level).includes(elementalChoice)?elementalChoice:battle.sides.A.ships[0].element;
   const result=resolveFleetNextTurn(battle,'A',
-   {partId,targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
+   {partId,pass:!!(elementalPrepared&&ability?.kind==='effect'),
+    activateElemental:elementalPrepared,elementalElement:element,
+    elementalTargetId:actualTarget?.kind==='escort'?actualTarget.id:undefined,
+    targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
     escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
     machineSlot:actualTarget?.kind==='machine'?actualTarget.slot:undefined,
     moduleSlot:actualTarget?.kind==='module'?actualTarget.slot:undefined,
@@ -585,7 +596,8 @@ export default function OfficialFleetBattle3D({
     arkSecondKind:arkSecondChoice?.kind,arkSecondId:arkSecondChoice?.id
    },Date.now());
   if(!result.ok){setMessage(result.reason);return;}
-  showResult(result);setChosenCards([]);setDismantleOptions({first:'',second:''});
+  showResult(result);setChosenCards([]);setElementalPrepared(false);
+  setDismantleOptions({first:'',second:''});
   setCorvoOptions({exchangeCardId:'',bottomTop:false});
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
   setMantaOptions({silence:false,fork:false,second:'',screen:'',from:'',to:'',
@@ -686,6 +698,15 @@ export default function OfficialFleetBattle3D({
   <button onClick={()=>onExit?.()}>TORNA AL MENU</button>
  </main>;
  const player=battle.sides.A,enemy=battle.sides.B;
+ const elementalAbilityDef=elementalAbility(player.ships[0].id);
+ const elementalTypes=activeFleetElements(player.ships[0].id,player.ships[0].level);
+ const selectedElement=elementalTypes.includes(elementalChoice)?elementalChoice:elementalTypes[0];
+ const chargesAvailable=chargedElementalEnergy(player,selectedElement)+
+  chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy'&&
+   card(player.hand[i])?.effectSpec?.elementId===selectedElement).length;
+ const canPrepareElemental=!!elementalAbilityDef&&
+  chargesAvailable>=elementalAbilityDef.cost&&totalElementalEnergy(player)+
+  chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy').length<=4;
  const ended=battle.phase==='finished';
  const target=enemy.ships[0];
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
@@ -1676,9 +1697,25 @@ export default function OfficialFleetBattle3D({
      </select>
     </label>}
    </div>}
+   {!ended&&elementalAbilityDef&&<div className="f3d-elemental-control" role="group"
+    aria-label="Reattore e abilità elementale">
+    <span title={'Energia accumulata: '+totalElementalEnergy(player)+'/4'}>
+     {FLEET_ELEMENTS[selectedElement]?.symbol||'✧'} {chargesAvailable}/{elementalAbilityDef.cost}
+    </span>
+    {elementalTypes.length>1&&<select aria-label="Elemento del colpo speciale" value={selectedElement}
+     disabled={!myTurn||elementalPrepared} onChange={e=>{setElementalChoice(e.target.value);setElementalPrepared(false);}}>
+     {elementalTypes.map(id=><option key={id} value={id}>{FLEET_ELEMENTS[id].name}</option>)}
+    </select>}
+    <button type="button" aria-pressed={elementalPrepared} disabled={!myTurn||!canPrepareElemental}
+     title={elementalAbilityDef.name+' · '+elementalAbilityDef.description}
+     onClick={()=>setElementalPrepared(x=>!x)}>
+     {elementalPrepared?'SPECIALE PRONTA':(elementalAbilityDef.kind==='attack'?'ATTACCO':'EFFETTO')+' SPECIALE'}
+    </button>
+    <small>{elementalAbilityDef.name}</small>
+   </div>}
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
-    <button type="button" disabled={ended||!myTurn} onClick={fire}>ATTACCA · CONFERMA</button>
+    <button type="button" disabled={ended||!myTurn} onClick={fire}>{elementalPrepared?'ATTIVA · SPECIALE':'ATTACCA · CONFERMA'}</button>
     <button type="button" disabled={ended||!myTurn} onClick={passTurn}>PASSA</button>
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
