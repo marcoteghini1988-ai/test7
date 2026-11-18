@@ -6,6 +6,8 @@ import {ASSET_ROOT,MountedWeapons} from './ShipPresentation.jsx';
 import {newVessel} from './mathDuelEngine.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
 import {readShipCollection} from './shipCollection.js';
+import {nativeMotherRarity,rarityUnlockedAtSector,rarityIndex,
+ SHIP_RARITIES,combatLevelForRarity} from './fleetNext/shipRarity.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import {officialBossEncounter} from './officialBossEncounter.js';
@@ -77,17 +79,22 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
   const early=officialEarlyCampaignRivalShip({mode,sectorNumber,planetId:bossPlanetId});
   const campaignMother=['campaign','adventure'].includes(mode)?
    campaignFleetShipId({planetId:boss?.planetId??bossPlanetId,sectorNumber}):null;
+  const playerRarity=owned.rarita||nativeMotherRarity(owned.shipId);
+  const playerLevel=combatLevelForRarity(owned.shipId,playerRarity);
   const motherEnemy=campaignMother||boss?.motherShipId||early||
-   chooseCampaignMotherRival(owned.shipId,owned.level,sectorNumber,bossPlanetId,bossSectorLevel).shipId;
-  const levelEnemy=boss?.planetId===20?5:officialCampaignRivalLevel({mode,sectorNumber,playerLevel:owned.level,shipId:motherEnemy});
+   chooseCampaignMotherRival(owned.shipId,playerLevel,sectorNumber,bossPlanetId,bossSectorLevel).shipId;
+  const stageRarity=rarityUnlockedAtSector(sectorNumber);
+  const rivalRarity=SHIP_RARITIES[Math.max(rarityIndex(stageRarity),
+   rarityIndex(nativeMotherRarity(motherEnemy)))];
+  const levelEnemy=combatLevelForRarity(motherEnemy,rivalRarity);
   // Il mazzo resta di massimo 40 carte, incluse le esclusive della madre.
   // Non importa mai il vecchio inventario/mazzo ritirato.
-  const playerDeck=buildNextBaseDeck(inventory,owned.shipId,owned.level,readNextDeckSelection());
+  const playerDeck=buildNextBaseDeck(inventory,owned.shipId,playerLevel,readNextDeckSelection());
   const supportRoster=equippedSupportRoster(supportCollection);
   const rivalRoster=npcSupportRoster(motherEnemy,mode,sectorNumber,supportCollection.unlockedSlots);
   return {battle:createFleetNextBattle({
-   shipA:owned.shipId,levelA:owned.level,
-   shipB:motherEnemy,levelB:levelEnemy,
+   shipA:owned.shipId,levelA:playerLevel,raritaA:playerRarity,
+   shipB:motherEnemy,levelB:levelEnemy,raritaB:rivalRarity,
    deckA:playerDeck.baseDeck,deckB:['gen-216'],
    supportRosterA:supportRoster,supportRosterB:rivalRoster,
    upgradesA:inventory.exclusiveUpgrades,
@@ -149,7 +156,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      aria-label={'Attacca '+escort.name+' · '+escort.hp+'/'+escort.maxHp+' punti'}
      aria-pressed={selectedTarget?.kind==='escort'&&selectedTarget.id===escort.id}
      onClick={()=>onSelectTarget?.({kind:'escort',id:escort.id,slot})}/> }
-    <small className="f3d-escort-grade">{signature?.symbol||''} {escort.fused?'FUSA · ':''}G{escort.grade||1}</small>
+    <small className="f3d-escort-grade">{signature?.symbol||''} {escort.fused?'FUSA · ':''}{escort.supportRarity||'Supporto'}</small>
     <button type="button" className="f3d-escort-info"
      onClick={()=>inspectEscort({escort,mother,linked,player})}
      aria-label={'Abilità della scudiera '+escort.name+(signature?' · '+signature.name+' · vulnerabile a '+weaknesses:'')}>i</button>

@@ -4,6 +4,7 @@
 // Non attribuisce vittorie, prezzi o carte senza il risultato del duello.
 import {claimFirstWinSpecialPack} from './specialDeckBuilder.js';
 import {claimCampaignShipUnlock,claimCampaignSupportUnlock} from './shipCampaignRewards.js';
+import {claimRarityCampaignVictory} from './fleetNext/rarityCampaign.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
 
 export async function claimOfficialLiveVictoryRewards({
@@ -18,8 +19,9 @@ export async function claimOfficialLiveVictoryRewards({
  const pack=claimFirstWinSpecialPack(mode,sectorNumber,storage);
  const ship=await claimCampaignShipUnlock(mode,sectorNumber,storage);
  const support=claimCampaignSupportUnlock(mode,sectorNumber,storage);
+ const rarity=claimRarityCampaignVictory(mode,sectorNumber,storage);
  const character=claimBossCharacterFromVictory({
   winner,mode,sectorNumber,bossPlanetId,bossSectorLevel
  },storage);
- return {eligible:true,pack,ship,support,character};
+ return {eligible:true,pack,ship,support,character,rarity};
 }

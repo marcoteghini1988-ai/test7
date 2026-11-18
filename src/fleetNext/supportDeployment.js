@@ -7,6 +7,7 @@ import {FLEET_ESCORT_TRAITS} from '../fleetEscortSupports.js';
 import {SUPPORT_ACTIVE_SLOTS,supportDefinition} from './supportCatalog.js';
 import {fleetElements} from './elementalAffinities.js';
 import {SUPPORT_MAX_LEVEL,boundedSupportLevel,supportHpAtLevel} from './supportProgression.js';
+import {rarityIndex,isShipRarity} from './shipRarity.js';
 
 const motherModels=new Map(PHASE1_CATALOG.ships.map(m=>[m.id,m]));
 const toughActions=new Set(['cover','bulwark','partCover','phase']);
@@ -34,7 +35,10 @@ export function createIndependentFleetEscorts(mother,roster=[]){
    Math.max(2,Math.min(12,Math.round(2+origin.hp_motore_L1/65+
    (oldSkill.action==='bulwark'?4:tough?2:0)+arm.shield*3)));
   const supportMaxLevel=SUPPORT_MAX_LEVEL;
-  const supportLevel=boundedSupportLevel(unit.level);
+  const supportRarity=isShipRarity(unit.rarita)?unit.rarita:null;
+  // Scala tecnica per gli effetti esistenti, non un livello della carta.
+  const supportLevel=supportRarity?[1,2,3,SUPPORT_MAX_LEVEL][rarityIndex(supportRarity)]:
+   boundedSupportLevel(unit.level);
   const levelHp=supportHpAtLevel(baseHp,supportLevel);
   // La progressione del supporto è indipendente da quella della madre.
   // La scala delle passive sarà calibrata dopo la progettazione delle carte.
@@ -49,6 +53,7 @@ export function createIndependentFleetEscorts(mother,roster=[]){
    fusionFamily:definition.fusionFamily,slot,sourceIndices:[slot],
    supportSkillId:definition.skillId,supportSkillName:definition.skillName,
    name:definition.name,role:definition.role,supportLevel,supportMaxLevel,grade,skill,
+   ...(supportRarity?{rarita:supportRarity,supportRarity}:{}),
    hp:levelHp,maxHp:levelHp,supportObservedHp:levelHp,
    supportDeathResolved:false,destroyed:false,reserve:false,linked:true,fused:false,
    element:definition.elementId||fleetElements(templateId)[0],
