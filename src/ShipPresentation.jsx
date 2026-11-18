@@ -5,7 +5,7 @@ import {shipEvolution} from './shipEvolution.js';
 import {getShipProgression,shipProgressionProfile} from './fleetNext/progression.js';
 
 export const ASSET_ROOT=(import.meta.env.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
-export const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',C04:'#d261ff',R01:'#ffb269',R02:'#63ffce',R03:'#d4c3ff',R04:'#9dffd4',E01:'#b097ff',E02:'#8cff83',E03:'#ffb75b',E04:'#68ffb5',L01:'#ffca63',L02:'#c394ff',L03:'#ff914e',L04:'#9df4ff'};
+export const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',R01:'#ffb269',R02:'#63ffce',R04:'#9dffd4',E01:'#b097ff',E02:'#8cff83',L01:'#ffca63',L03:'#ff914e',L04:'#9df4ff'};
 const WEBP_HULLS=new Set(PHASE1_SHIPS.filter(s=>s.rarita!=='Comune').map(s=>s.id));
 
 function HullPlating({side,vessel,upgrade}){
