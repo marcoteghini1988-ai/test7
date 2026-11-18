@@ -5,6 +5,7 @@ import {card,cardCopyLimit,eligibleExclusives} from './rules.js';
 import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
 import {DISMANTLE_BY_ID,DISMANTLE_CARDS} from './dismantleCards.js';
 import {ENERGY_CARDS,ENERGY_CARD_BY_ID} from './energyCards.js';
+import {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 
 export const NEXT_DECK_LIMIT=40;
 export const NEXT_TEMP_WEAPON_IDS=Object.freeze(['prog-machine-striker','prog-machine-guard']);
@@ -15,7 +16,8 @@ export const NEXT_CARD_COSTS=Object.freeze({
 
 export function nextExclusiveCount(shipId,level){
  return eligibleExclusives(shipId,level).filter(c=>c.playable!==false&&
-  !c.id.startsWith('prog-fusion-'))
+  !c.id.startsWith('prog-fusion-')&&
+  !['nx-l01-10','nx-l03-08','nx-l04-05'].includes(c.id))
   .reduce((n,c)=>n+(c.maxCopiesInAutoPackageDraft||1),0);
 }
 export function nextGenericCapacity(shipId,level){
@@ -35,7 +37,8 @@ export function canSelectNewGeneric(id){
  const def=card(id);
  return !!def&&!def.shipId&&def.playable!==false&&
   ((Object.hasOwn(NEXT_COMMON_CARD_BY_ID,id)||Object.hasOwn(DISMANTLE_BY_ID,id)||
-  Object.hasOwn(ENERGY_CARD_BY_ID,id))||NEXT_TEMP_WEAPON_IDS.includes(id)||def.kind==='character');
+  Object.hasOwn(ENERGY_CARD_BY_ID,id)||Object.hasOwn(FUSION_SHIP_CARD_BY_ID,id))||
+  NEXT_TEMP_WEAPON_IDS.includes(id)||def.kind==='character');
 }
 export function buildNextBaseDeck(inventory,shipId,level,selection=null){
  const owned=inventory?.owned||{},capacity=nextGenericCapacity(shipId,level);
