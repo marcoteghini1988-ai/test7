@@ -8,7 +8,7 @@ import {SUPPORT_CATALOG,SUPPORT_CATALOG_BY_ID,
 import {createSupportCollection,normalizeSupportCollection,readSupportCollection,
  writeSupportCollection,grantSupportInstance,advanceSupportLevel,claimSupportSlotMilestone,
  equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
-import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
+import {SUPPORT_MAX_LEVEL,supportLevelProfile} from './fleetNext/supportProgression.js';
 import {SUPPORT_MODEL_IDS} from './fleetNext/supportModelRegistry.js';
 
 test('Un modello di carta-navicella per ogni famiglia, con vecchi ID ancora riconosciuti',()=>{
@@ -87,6 +87,24 @@ test('Il livello di ogni supporto è limitato al massimo della propria famiglia'
  assert.equal(normalized.owned[0].level,SUPPORT_MAX_LEVEL);
  assert.equal(normalized.owned[1].level,SUPPORT_MAX_LEVEL);
  assert.equal(SUPPORT_MAX_LEVEL,5);
+});
+
+test('Ogni copia di supporto cresce da L1 a L5 senza cambiare slot né madre',()=>{
+ let inv=grantSupportInstance(createSupportCollection(),supportModelIdFor('N00'));
+ inv=grantSupportInstance(inv,supportModelIdFor('L04'));
+ const first=inv.owned[0].instanceId,second=inv.owned[1].instanceId;
+ for(let level=2;level<=SUPPORT_MAX_LEVEL;level++){
+  inv=advanceSupportLevel(inv,first);
+  assert.equal(inv.owned[0].level,level);
+  assert.equal(supportLevelProfile(level).passiveGrade,level);
+  assert.equal(inv.owned[1].level,1,'Un upgrade non migliora altre copie');
+ }
+ assert.equal(supportLevelProfile(5).potential,100);
+ assert.equal(supportLevelProfile(5).fullyEvolved,true);
+ assert.throws(()=>advanceSupportLevel(inv,first),/MAX/);
+ assert.throws(()=>advanceSupportLevel(inv,'inesistente'),/non posseduta/);
+ assert.equal(inv.unlockedSlots,0,'L5 non sblocca gli slot della campagna');
+ assert.equal(inv.owned.find(unit=>unit.instanceId===second).level,1);
 });
 
 test('Inventario supporti separato, persistente e protetto dai riferimenti non posseduti',()=>{
