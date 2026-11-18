@@ -4,16 +4,20 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {ESCORT_ARMORY} from './escortArmory.js';
 import {buildFleetEscorts,FLEET_ESCORT_TRAITS} from './fleetEscortSupports.js';
 import {SUPPORT_CATALOG,SUPPORT_CATALOG_BY_ID,
- supportDefinition,supportIdFor,SUPPORT_FUSION_FAMILIES} from './fleetNext/supportCatalog.js';
+ supportDefinition,supportIdFor,supportModelIdFor,SUPPORT_FUSION_FAMILIES} from './fleetNext/supportCatalog.js';
 import {createSupportCollection,normalizeSupportCollection,readSupportCollection,
  writeSupportCollection,grantSupportInstance,claimSupportSlotMilestone,
  equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
 
-test('34 supporti distinti, due per madre, con identità indipendenti dalle carte madri',()=>{
- assert.equal(SUPPORT_CATALOG.length,34);
- assert.equal(new Set(SUPPORT_CATALOG.map(s=>s.id)).size,34);
- assert.equal(Object.keys(SUPPORT_CATALOG_BY_ID).length,34);
+test('Un modello di carta-navicella per ogni famiglia, con vecchi ID ancora riconosciuti',()=>{
+ assert.equal(SUPPORT_CATALOG.length,PHASE1_CATALOG.ships.length);
+ assert.equal(new Set(SUPPORT_CATALOG.map(s=>s.shipModelId)).size,PHASE1_CATALOG.ships.length);
+ assert.equal(Object.keys(SUPPORT_CATALOG_BY_ID).length,PHASE1_CATALOG.ships.length*3);
  for(const mother of PHASE1_CATALOG.ships){
+  const own=supportDefinition(supportModelIdFor(mother.id));
+  assert.equal(own.name,mother.nome);
+  assert.equal(own.inheritedElement,false);
+  assert.equal(own.shipModelId,mother.id);
   for(let slot=0;slot<2;slot++){
    const id=supportIdFor(mother.id,slot),def=supportDefinition(id);
    assert.equal(def.originShipId,mother.id);
@@ -21,7 +25,7 @@ test('34 supporti distinti, due per madre, con identità indipendenti dalle cart
    assert.equal(def.visual,'/assets/escorts/'+mother.id+'_escort_'+(slot+1)+'.svg');
    assert.equal(def.freelyCombinable,true);
    assert.equal(def.duplicatesAllowed,true);
-   assert.equal(def.inheritedElement,true);
+   assert.equal(def.inheritedElement,false);
    assert.equal(def.independentNormalAttack,false);
    assert.equal(FLEET_ESCORT_TRAITS[mother.id][slot].model,def.name);
    assert.equal(def.fusionFamily,SUPPORT_FUSION_FAMILIES.includes(mother.id)?mother.id:null);
