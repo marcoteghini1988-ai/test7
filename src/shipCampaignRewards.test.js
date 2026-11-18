@@ -12,12 +12,12 @@ function storage(initial={}){
   dump:()=>Object.fromEntries(data)};
 }
 
-test('tutti i 16 modelli dopo Aurora hanno una sola soglia di campagna',()=>{
+test('le 11 madri dopo Aurora hanno una sola soglia di campagna',()=>{
  const all=PHASE1_SHIPS.map(x=>x.id);
- assert.equal(all.length,17);
- assert.equal(SHIP_CAMPAIGN_UNLOCKS.length,16);
- assert.equal(new Set(SHIP_CAMPAIGN_UNLOCKS.map(m=>m.shipId)).size,16);
- assert.equal(new Set(SHIP_CAMPAIGN_UNLOCKS.map(m=>m.sector)).size,16);
+ assert.equal(all.length,12);
+ assert.equal(SHIP_CAMPAIGN_UNLOCKS.length,11);
+ assert.equal(new Set(SHIP_CAMPAIGN_UNLOCKS.map(m=>m.shipId)).size,11);
+ assert.equal(new Set(SHIP_CAMPAIGN_UNLOCKS.map(m=>m.sector)).size,11);
  assert.deepEqual(
   SHIP_CAMPAIGN_UNLOCKS.map(m=>m.shipId).sort(),
   all.filter(id=>id!=='N00').sort());
@@ -33,6 +33,10 @@ test('tutti i 16 modelli dopo Aurora hanno una sola soglia di campagna',()=>{
  assert.equal(shipUnlockForSector('adventure',NaN),null);
  assert.equal(shipUnlockForSector('adventure',3.5),null);
  assert.equal(shipUnlockForSector('adventure','3'),null);
+ // Ogni settore deve essere interrogabile: un elemento vuoto causava
+ // TypeError dopo la rimozione delle cinque varianti non ufficiali.
+ for(let sector=1;sector<=120;sector++)
+  assert.doesNotThrow(()=>shipUnlockForSector('campaign',sector),`settore ${sector}`);
 });
 
 test('una vittoria a soglia assegna esattamente una navicella senza duplicati',async()=>{
@@ -46,8 +50,8 @@ test('una vittoria a soglia assegna esattamente una navicella senza duplicati',a
   assert.equal(replay.reason,'already_owned');
  }
  const collection=readShipCollection(store);
- assert.equal(collection.cards.length,17);
- assert.equal(new Set(collection.cards.map(x=>x.shipId)).size,17);
+ assert.equal(collection.cards.length,12);
+ assert.equal(new Set(collection.cards.map(x=>x.shipId)).size,12);
  assert.deepEqual(collection.loadout,['ship:N00']);
  assert.equal(store.getItem('eclissi_legacy_level'),'17');
  assert.equal(store.getItem('eclissi_stardust'),'985');
