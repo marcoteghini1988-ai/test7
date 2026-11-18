@@ -89,7 +89,7 @@ export function ShipShopPanel(){
     const campaign=SHIP_CAMPAIGN_UNLOCKS.find(x=>x.shipId===ship.id);
     const preview=owned.reduce((best,c)=>rarityIndex(c.rarita)>rarityIndex(best)?c.rarita:best,native);
     return <div key={ship.id} className="ship-shop-offer">
-     <ShipCard shipId={ship.id} level={combatLevelForRarity(ship.id,preview)}
+     <ShipCard shipId={ship.id} rarita={preview} level={combatLevelForRarity(ship.id,preview)}
       status={owned.length?owned.length+' copie possedute · rarità massima '+preview:
        campaign?'Sblocco modello · settore '+campaign.sector:'Madre iniziale'} fleetProgression/>
      <ShipProgressionDetails shipId={ship.id} rarita={preview}/>
@@ -156,7 +156,7 @@ export function ShipHangarPanel({onOpenCatalog}){
    </ol>
    <div className="ship-collection-grid">
     {collection.cards.map(c=><div className="ship-shop-offer" key={c.instanceId}>
-     <ShipCard shipId={c.shipId} level={combatLevelForRarity(c.shipId,c.rarita)}
+     <ShipCard shipId={c.shipId} rarita={c.rarita} level={combatLevelForRarity(c.shipId,c.rarita)}
       fleetProgression selected={loadout.includes(c.instanceId)}
       onSelect={()=>toggle(c.instanceId)} disabled={saving}
       status={c.rarita+' · '+c.instanceId}/>

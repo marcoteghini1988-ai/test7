@@ -3,6 +3,7 @@ import {META,PHASE1_SHIPS,SUIT_SIGNS,getShipDefinition,newVessel,shipSuits} from
 import {engineSurface,weaponMount,weaponMuzzleCount} from './mathFleetGeometry.js';
 import {shipEvolution} from './shipEvolution.js';
 import {getShipProgression,shipProgressionProfile} from './fleetNext/progression.js';
+import {motherCombatStatsForRarity} from './fleetNext/shipRarity.js';
 
 export const ASSET_ROOT=(import.meta.env.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 export const SHIP_GLOW={N00:'#48cfff',C01:'#ff4059',C02:'#3ecfff',C03:'#5dff61',R01:'#ffb269',R02:'#63ffce',R04:'#9dffd4',E01:'#b097ff',E02:'#8cff83',L01:'#ffca63',L03:'#ff914e',L04:'#9df4ff'};
@@ -118,7 +119,7 @@ function ShipCardModel({vessel,engines}){
  </span>;
 }
 
-export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,onSelect,status,disabled,compact=false,fleetProgression=false}){
+export function ShipCard({shipId,level,rarita=null,vessel=newVessel(shipId,level),selected,onSelect,status,disabled,compact=false,fleetProgression=false}){
  const Tag=onSelect?'button':'article';
  const interactive=onSelect?{type:'button','aria-pressed':selected,onClick:onSelect,disabled}:{};
  const engines=Object.keys(vessel.engines);
@@ -126,29 +127,33 @@ export function ShipCard({shipId,level,vessel=newVessel(shipId,level),selected,o
  const progression=fleetProgression?getShipProgression(vessel.id,effectiveLevel):null;
  const totalHp=progression?Object.values(progression.integrityByPart).reduce((hp,n)=>hp+n,0):
   Object.values(vessel.engines).reduce((hp,engine)=>hp+engine.max,0);
+ const rarityStats=rarita?motherCombatStatsForRarity(rarita):null;
+ const displayHp=rarityStats?.maxHp??totalHp;
+ const displayPower=rarityStats?.attackPower??progression?.attackPower;
  const suits=shipSuits(vessel.id);
  const cardSuits=suits.length?suits:Object.keys(SUIT_SIGNS);
  const combos=vessel.weapons.filter(weapon=>weapon.combo);
- return <Tag className={`ship-card${selected?' on':''}`} data-ship-card={vessel.id} data-rarity={vessel.rarity} data-level={effectiveLevel} {...interactive}>
+ return <Tag className={`ship-card${selected?' on':''}`} data-ship-card={vessel.id} data-rarity={rarita||vessel.rarity} data-level={effectiveLevel} {...interactive}>
   <span className="ship-card-face">
    <span className="ship-card-index">
     <span className="ship-card-suits" role="img" aria-label={suits.length?cardSuits.map(suit=>SUIT_NAMES[suit]).join(', '):'Tutti i semi'}>
      {cardSuits.map(suit=><b key={suit} aria-hidden="true" style={{color:CARD_SUIT_COLORS[WEAPON_SIGNS[suit]]}}>{WEAPON_SIGNS[suit]}</b>)}
     </span>
-    <b className="ship-card-level">L{effectiveLevel}</b>
+    {rarita?<b className="ship-card-level">{rarita}</b>:
+     <b className="ship-card-level">L{effectiveLevel}</b>}
    </span>
    <span className="ship-card-name">{vessel.name}</span>
    <span className="ship-card-role">{progression?shipProgressionProfile(vessel.id).role:getShipDefinition(vessel.id).ruolo}</span>
    <span className="ship-card-stats">
-    <span><b>{totalHp}</b> HP</span>
-    {progression?<span><b>{progression.attackPower}</b> potenza</span>:<span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>}
+    <span><b>{displayHp}</b> HP</span>
+    {progression?<span><b>{displayPower}</b> potenza</span>:<span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>}
    </span>
    {progression?<span className="ship-card-operations" aria-label={progression.vitalIds.length+' componenti vitali'}>
     {progression.vitalIds.map(id=><b key={id} data-card-vital={id}>{({weapons:'ARS',generator:'GEN',bridge:'PLA',command:'CEN'})[id]}</b>)}
    </span>:<span className="ship-card-operations" aria-label={`Motori ${engines.map(op=>META[op].name).join(', ')}`}>
     {engines.map(op=><b key={op} data-card-engine={op}>{META[op].sign}</b>)}
    </span>}
-   <span className="ship-card-meta"><span>{vessel.rarity}</span><span>{vessel.id}</span></span>
+   <span className="ship-card-meta"><span>{rarita||vessel.rarity}</span><span>{vessel.id}</span></span>
   </span>
   {onSelect&&<span className="ship-card-selection" aria-hidden="true">{selected?'✓':'+'}</span>}
   {!compact&&<ShipCardModel vessel={vessel} engines={engines}/>}
