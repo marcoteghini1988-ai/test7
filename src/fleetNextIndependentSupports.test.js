@@ -8,6 +8,7 @@ import {SUPPORT_CATALOG,SUPPORT_CATALOG_BY_ID,
 import {createSupportCollection,normalizeSupportCollection,readSupportCollection,
  writeSupportCollection,grantSupportInstance,claimSupportSlotMilestone,
  equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 
 test('Un modello di carta-navicella per ogni famiglia, con vecchi ID ancora riconosciuti',()=>{
  assert.equal(SUPPORT_CATALOG.length,PHASE1_CATALOG.ships.length);
@@ -74,6 +75,16 @@ test('Supporti di ogni origine combinabili, duplicati consentiti solo come copie
  lineup=equippedSupportRoster(inv);
  assert.deepEqual(lineup.map(s=>s.originShipId),['C03','L04']);
  assert.throws(()=>equipSupportInstance(inv,2,null),/non ancora sbloccato/);
+});
+
+test('Il livello di ogni supporto è limitato al massimo della propria famiglia',()=>{
+ let inv=grantSupportInstance(createSupportCollection(),supportModelIdFor('N00'));
+ inv=grantSupportInstance(inv,supportModelIdFor('L04'));
+ const overflow={...inv,owned:inv.owned.map(unit=>({...unit,level:99}))};
+ const normalized=normalizeSupportCollection(overflow);
+ assert.equal(normalized.owned[0].level,shipMaxLevel('N00'));
+ assert.equal(normalized.owned[1].level,shipMaxLevel('L04'));
+ assert.deepEqual([shipMaxLevel('N00'),shipMaxLevel('L04')],[20,5]);
 });
 
 test('Inventario supporti separato, persistente e protetto dai riferimenti non posseduti',()=>{
