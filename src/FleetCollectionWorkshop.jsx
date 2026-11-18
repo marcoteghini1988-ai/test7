@@ -1,4 +1,4 @@
-import React,{useMemo,useState} from 'react';
+import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
  eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
@@ -43,6 +43,11 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  const [tab,setTab]=useState(allowed.includes(initialTab)?initialTab:'exclusive');
  const [notice,setNotice]=useState('');
  const [motherId,setMotherId]=useState(()=>readFleetInventory().equippedMother);
+ useEffect(()=>{
+  const refresh=()=>setInventory(readFleetInventory());
+  window.addEventListener('eclissi-shop-changed',refresh);
+  return ()=>window.removeEventListener('eclissi-shop-changed',refresh);
+ },[]);
  const ownedShips=useMemo(()=>{try{return readShipCollection().cards||[];}catch{return [];}},[]);
  const shipOptions=ownedShips.length?ownedShips:[{shipId:motherId,level:1}];
  const motherOwned=shipOptions.find(s=>s.shipId===motherId)||shipOptions[0];
@@ -54,6 +59,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   if(!purchase.ok){setNotice(purchase.reason);return;}
   try{
    setInventory(writeFleetInventory(purchase.inventory));
+   window.dispatchEvent(new Event('eclissi-shop-changed'));
    setNotice('Carta acquistata. Ora puoi aggiungerla al mazzo.');
   }catch(e){setNotice('Acquisto non salvato: '+(e?.message||'Errore'));}
  }
@@ -73,7 +79,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  function genericCardTile(c){
   const owned=inventory.owned[c.id]||0,equipped=deckInfo.baseDeck.filter(id=>id===c.id).length;
   const copies=Math.min(owned,cardCopyLimit(c.id));
-  const price=[...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS].some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
+  const price=[...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS].some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
    <strong>{c.nome||c.name}</strong>
@@ -157,8 +163,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    {deckInfo.discarded.length>0&&<p style={{...small,color:'#ffe19e'}}>Alcune carte non sono più disponibili per questa navicella o superano il limite. Il mazzo utilizzato sarà ridotto automaticamente.</p>}
    <h3 style={{fontSize:13}}>Carte Navicella Fusione · una carta per modello</h3>
    <p style={small}>Ogni carta rappresenta una navicella che si fonde con uno dei due supporti in campo.
-    Sono già registrate nel motore, ma prezzi, sblocchi e immagini definitive saranno aggiunti
-    dopo il completamento delle meccaniche. I 13 modelli di supporto hanno ciascuno una passiva e un elemento propri;
+    Sono acquistabili con Crediti Stellari, con prezzo provvisorio Leggendario. Sono tutte L5;
+    possono fondersi solo con supporti L5. Le immagini definitive arriveranno dopo. I 13 modelli di supporto hanno ciascuno una passiva e un elemento propri;
     le 17 madri storiche restano in un catalogo separato.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {FUSION_SHIP_CARDS.map(genericCardTile)}
