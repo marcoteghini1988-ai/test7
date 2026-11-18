@@ -1,4 +1,4 @@
-// Eclissi Stellare — 10 affinità e profili delle 17 madri.
+// Eclissi Stellare — 10 affinità e profili delle 12 madri.
 // La compatibilità non cambia i danni della modalità HP: le future Carte Energia
 // attiveranno un colpo elementale distinto dagli spari normali già esistenti.
 import {shipMaxLevel} from './progression.js';
@@ -28,13 +28,10 @@ export const FLEET_ELEMENTS=Object.freeze(Object.fromEntries(
 export const FLEET_ELEMENT_IDENTITIES=Object.freeze({
  N00:Object.freeze(['ionic']),C01:Object.freeze(['plasma']),
  C02:Object.freeze(['refrigerant']),C03:Object.freeze(['void','ionic']),
- C04:Object.freeze(['aerial','plasma']),R01:Object.freeze(['metallic','aerial']),
- R02:Object.freeze(['ionic','refrigerant']),R03:Object.freeze(['radiant','mineral']),
+ R01:Object.freeze(['metallic','aerial']),R02:Object.freeze(['ionic','refrigerant']),
  R04:Object.freeze(['void','mineral']),E01:Object.freeze(['cryogenic','void']),
- E02:Object.freeze(['aerial','ionic']),E03:Object.freeze(['plasma','radiant']),
- E04:Object.freeze(['mineral','gravity']),L01:Object.freeze(['radiant','void']),
- L02:Object.freeze(['gravity','ionic']),L03:Object.freeze(['mineral','metallic']),
- L04:Object.freeze(['refrigerant','radiant'])
+ E02:Object.freeze(['aerial','ionic']),L01:Object.freeze(['radiant','void']),
+ L03:Object.freeze(['mineral','metallic']),L04:Object.freeze(['refrigerant','radiant'])
 });
 
 export const fleetElements=id=>FLEET_ELEMENT_IDENTITIES[id]||Object.freeze([]);
@@ -93,7 +90,7 @@ export function projectedElementalMatchup(attackerShipId,defenderShipId,
 }
 
 const keys=Object.keys(FLEET_ELEMENTS);
-if(keys.length!==10||Object.keys(FLEET_ELEMENT_IDENTITIES).length!==17||
+if(keys.length!==10||Object.keys(FLEET_ELEMENT_IDENTITIES).length!==12||
  Object.values(FLEET_ELEMENT_IDENTITIES).some(ids=>ids.length<1||ids.length>2||
   new Set(ids).size!==ids.length||ids.some(id=>!FLEET_ELEMENTS[id]))||
  keys.some(id=>FLEET_ELEMENTS[id].beats.length!==2||
