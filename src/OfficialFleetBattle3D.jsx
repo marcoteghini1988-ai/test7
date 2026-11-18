@@ -13,7 +13,7 @@ import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
-import {card,cardRole,cardFacePath} from './fleetNext/rules.js';
+import {card,cardRole,cardFacePath,shipMaxLevel} from './fleetNext/rules.js';
 import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
 import {LINCE_BYPASS_ACTIONS,linceMarkedRouteReady} from './fleetNext/linceEngine.js';
 import {PRISMA_ATTACK_ACTIONS,livePrismaUnits} from './fleetNext/prismaEngine.js';
@@ -738,7 +738,8 @@ export default function OfficialFleetBattle3D({
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
   target.parts.find(p=>!p.destroyed)?.id;
  const chosenTypes=chosenCards.map(i=>player.hand[i]).filter(Boolean);
- const fusionCandidates=player.escorts.filter(e=>e.hp>0&&!e.destroyed&&!e.fused);
+ const fusionCandidates=player.escorts.filter(e=>e.hp>0&&!e.destroyed&&!e.fused&&
+  e.supportLevel>=shipMaxLevel(e.shipModelId||e.originShipId));
  const actualFusionSlot=fusionCandidates.some(e=>e.slot===fusionSlot)?
   fusionSlot:fusionCandidates[0]?.slot??0;
  const fusionSelected=chosenTypes.some(id=>card(id)?.effectSpec?.type==='shipFusion');
@@ -984,13 +985,13 @@ export default function OfficialFleetBattle3D({
     </select>
    </label>}
    {!ended&&fusionSelected&&<label className="f3d-target-status">
-    <span>FONDI CON IL SUPPORTO · </span>
-    <select aria-label="Supporto da fondere" value={actualFusionSlot}
+    <span>FONDI CON IL SUPPORTO MAX · </span>
+    {fusionCandidates.length?<select aria-label="Supporto da fondere" value={actualFusionSlot}
      disabled={!myTurn} onChange={event=>setFusionSlot(Number(event.target.value))}>
      {fusionCandidates.map(escort=><option key={escort.id} value={escort.slot}>
-      {escort.name} · {escort.hp}/{escort.maxHp} HP
+      {escort.name} · L{escort.supportLevel}/{shipMaxLevel(escort.shipModelId||escort.originShipId)} · {escort.hp}/{escort.maxHp} HP
      </option>)}
-    </select>
+    </select>:<span>Serve un supporto al livello massimo del suo modello.</span>}
    </label>}
    {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive||arkActive)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
