@@ -158,8 +158,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <h3 style={{fontSize:13}}>Carte Navicella Fusione · una carta per modello</h3>
    <p style={small}>Ogni carta rappresenta una navicella che si fonde con uno dei due supporti in campo.
     Sono già registrate nel motore, ma prezzi, sblocchi e immagini definitive saranno aggiunti
-    dopo il completamento delle meccaniche. I 17 ID storici saranno ridotti ai 13 modelli approvati
-    quando avremo identificato le quattro varianti da escludere.</p>
+    dopo il completamento delle meccaniche. I 13 modelli di supporto hanno ciascuno una passiva e un elemento propri;
+    le 17 madri storiche restano in un catalogo separato.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {FUSION_SHIP_CARDS.map(genericCardTile)}
    </div>
