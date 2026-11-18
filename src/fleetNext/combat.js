@@ -4,7 +4,7 @@ import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts,FLEET_ESCORT_TRAITS} from '../fleetEscortSupports.js';
 import {createIndependentFleetEscorts,compatibleLegacyFusionCount} from './supportDeployment.js';
 import {skillCount,trapsSuppressed,terrainImmunity,terrainHalf,
- supportSkillFor,nativeSupportSkillFor,nativeSupportSlotFor,SUPPORT_SKILL_LABELS,
+ supportSkillFor,nativeSupportSlotFor,SUPPORT_SKILL_LABELS,
  effectiveSupportEnergyCost,supportNormalBoost,supportSpecialBoost,
  supportWeaponCardBoost,advanceIndependentSupportTime,
  settleIndependentSupportDamage,resolveIndependentSupportOwnTurn} from './supportAbilities.js';
@@ -203,8 +203,9 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
  const original=side.escorts[index];
  const fusionCard=FUSION_SHIP_CARD_BY_ID['fusion-ship-'+shipId.toLowerCase()];
  const skillId=fusionCard.fusionSkillId,newElement=fusionCard.fusionElementId;
- const skillIds=[...new Set([...(original.supportSkillIds||[original.supportSkillId]),
-  skillId].filter(Boolean))];
+ // Due copie della stessa passiva restano due fonti effettive dopo la fusione.
+ // skillCount conta entrambe; la seconda copia non va cancellata con Set.
+ const skillIds=[...(original.supportSkillIds||[original.supportSkillId]),skillId].filter(Boolean);
  const fused={...original,
   id:'escort:fusion:'+original.instanceId+':'+shipId,
   name:original.name+' + '+fusionCard.fusionShipName,
