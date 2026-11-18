@@ -55,7 +55,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Le due posizioni di supporto si sbloccano avanzando nella campagna: una nave madre e fino a due carte-navicella scelte nell’Hangar indipendentemente dalla madre.',
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
  'Smontaggio Forzato è una carta Attacco: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
- 'Fusione unisce due supporti operativi. La prima può far entrare la terza unità sbloccata; la seconda unisce terza e quarta. Rimangono al massimo due supporti attivi.',
+ 'Una Carta Navicella Fusione Leggendaria nel mazzo da 40 unisce un modello L5 al supporto L5 scelto nell’Hangar. Ogni slot supporto si può fondere una sola volta.',
  'La nave fusa conserva gli HP attuali, gli HP massimi e le ferite del supporto scelto. Acquisisce l’elemento e la passiva della nave della carta Fusione, senza sommare HP o occupare nuovi slot.',
  'Le Carte Energia occupano una giocata. Ogni carta carica di 1 il reattore fino a 4; una sola abilità elementale per nave consuma da 1 a 4 cariche dello stesso elemento.',
  'Attacco ed Effetto Elementale sono alternativi: entrambi sostituiscono l’attacco normale di quel turno, e non creano un colpo aggiuntivo.'
