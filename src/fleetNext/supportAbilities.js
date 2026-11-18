@@ -135,7 +135,7 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
     const mother=side.ships[0],healed=Math.min(25,Math.max(0,mother.maxHp-mother.hp));
     mother.hp+=healed;
     events.push(note(b,who,'support-death',e.name+
-     ' si spegne: +'+healed+' HP alla madre',{skillId:e.supportSkillId,healed}));
+     ' si spegne: +'+healed+' HP alla madre',{skillId:'last-shield',healed}));
    }
    if(idsFor(e).includes('death-storm')){
     const enemy=b.sides[who==='A'?'B':'A'];
@@ -146,7 +146,7 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
     enemy.stagedComboCards=[];
     events.push(note(b,who,'support-death',e.name+
      ' scatena una pioggia di fulmini: Personaggio e Attacchi avversari distrutti',
-     {skillId:e.supportSkillId,clearedAttacks:previousAttacks.length,
+     {skillId:'death-storm',clearedAttacks:previousAttacks.length,
       clearedCharacter:!!commander}));
    }
    if(idsFor(e).includes('death-energy')){
@@ -157,7 +157,7 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
     side.elementalCharges[element]=(side.elementalCharges[element]||0)+charge;
     events.push(note(b,who,'support-death',e.name+' diventa '+charge+
      ' cariche Energia per la madre',
-     {skillId:e.supportSkillId,element,charge}));
+     {skillId:'death-energy',element,charge}));
    }
   }
  }
