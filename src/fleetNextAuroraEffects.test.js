@@ -1,3 +1,4 @@
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,exclusiveUnlocked,effectiveDeck} from './fleetNext/rules.js';
@@ -6,7 +7,8 @@ import {createFleetNextBattle,resolveFleetNextTurn,availableFleetTargets,
 import {mountModule} from './fleetNext/auroraEngine.js';
 
 const make=(options={})=>{
- const b=createFleetNextBattle({shipA:'N00',shipB:'N00',levelA:5,levelB:5,
+ const b=createFleetNextBattle({shipA:'N00',shipB:'N00',
+   levelA:shipMaxLevel(options.shipA||'N00'),levelB:shipMaxLevel(options.shipB||'N00'),
   deckA:[],deckB:[],mode:'pvp',seed:1988,...options});
  for(const side of Object.values(b.sides)){side.hand=[];side.deck=[];side.discard=[];}
  return b;
@@ -32,7 +34,7 @@ test('Aurora: dieci esclusive personali, sei disponibili al livello uno e zero e
  assert.equal(defs.filter(id=>exclusiveUnlocked(id,'N00',1)).length,4);
  assert.ok(defs.every(id=>exclusiveUnlocked(id,'N00',20)));
  assert.ok(defs.every(id=>!exclusiveUnlocked(id,'C01',5)));
- const ids=effectiveDeck([], 'N00',5);
+ const ids=effectiveDeck([], 'N00',shipMaxLevel('N00'));
  assert.equal(defs.filter(id=>ids.includes(id)).length,10);
 });
 test('Montaggio: l’arma resta sul campo, ha due integrità e la carta non va negli scarti',()=>{
