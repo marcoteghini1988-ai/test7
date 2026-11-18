@@ -1,6 +1,6 @@
 // Due traguardi permanenti della campagna, provvisori finché non si
 // bilanciano gli XP e la curva dei dodici pianeti. Non si azzerano mai in partita.
-import {supportDefinition,supportModelIdFor} from './supportCatalog.js';
+import {supportDefinition,supportModelIdFor,officialSupportModelIdFor} from './supportCatalog.js';
 
 export const SUPPORT_SLOT_CAMPAIGN_UNLOCKS=Object.freeze([
  Object.freeze({sector:20,slot:0,milestone:'campaign:sector:20',
@@ -23,7 +23,7 @@ export function unlockedNpcSupportSlots(mode,sector,playerSlots=0){
 export function npcSupportRoster(shipId,mode,sector,playerSlots=0){
  const count=unlockedNpcSupportSlots(mode,sector,playerSlots);
  return Array.from({length:count},(_,slot)=>{
-  const def=supportDefinition(supportModelIdFor(shipId));
+  const def=supportDefinition(officialSupportModelIdFor(shipId));
   if(!def)throw Error('Supporto nemico inesistente: '+shipId+' '+slot);
   return {...def,slot,instanceId:'npc:'+shipId+':'+slot,level:1};
  });
