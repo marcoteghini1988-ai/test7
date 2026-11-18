@@ -59,7 +59,7 @@ test('Le diciassette navicelle possono avere uno o due elementi, il secondo si a
   assert.equal(shot.primary,FLEET_ELEMENTS[ids[0]],id);
   assert.equal(shot.energyCardRequired,true,id);
   assert.equal(shot.normalShotUnchanged,true,id);
-  assert.equal(shot.combatBonusEnabled,false,id);
+  assert.equal(shot.combatBonusEnabled,true,id);
  }
  assert.equal(allPrimaries.size,10,'tutti gli elementi sono primari di almeno una nave');
 });
