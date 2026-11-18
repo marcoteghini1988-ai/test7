@@ -4,7 +4,7 @@ import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts,FLEET_ESCORT_TRAITS} from '../fleetEscortSupports.js';
 import {createIndependentFleetEscorts,compatibleLegacyFusionCount} from './supportDeployment.js';
 import {skillCount,trapsSuppressed,terrainImmunity,terrainHalf,
- supportSkillFor,SUPPORT_SKILL_LABELS,
+ supportSkillFor,nativeSupportSkillFor,nativeSupportSlotFor,SUPPORT_SKILL_LABELS,
  effectiveSupportEnergyCost,supportNormalBoost,supportSpecialBoost,
  supportWeaponCardBoost,advanceIndependentSupportTime,
  settleIndependentSupportDamage,resolveIndependentSupportOwnTurn} from './supportAbilities.js';
@@ -176,7 +176,7 @@ export function inheritFleetEscortElements(side){
 // universale. La fusione conserva esattamente HP e maxHp del supporto scelto.
 export function fusionShipUnavailableReason(side,shipId,slot=null,ply=0){
  if(!side?.independentSupportRoster)return 'Serve una flotta di carte-navicella indipendenti';
- if(!SHIPS.has(shipId)||!supportSkillFor(shipId,0))
+ if(!SHIPS.has(shipId)||!nativeSupportSkillFor(shipId))
   return 'Modello della Carta Navicella Fusione sconosciuto';
  if((side.fusionsUsed||0)>=(side.fusionLimit||0))
   return 'Le due fusioni disponibili sono già state utilizzate';
@@ -193,7 +193,7 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
  const index=side.escorts.findIndex(e=>!e.fused&&escortEnabled(side,e,ply)&&
   (slot===null||e.slot===slot));
  const original=side.escorts[index];
- const skillId=supportSkillFor(shipId,0),newElement=fleetElements(shipId)[0];
+ const skillId=nativeSupportSkillFor(shipId),newElement=fleetElements(shipId)[0];
  const skillIds=[...new Set([...(original.supportSkillIds||[original.supportSkillId]),
   skillId].filter(Boolean))];
  const fused={...original,
@@ -209,7 +209,7 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
   supportSkillIds:skillIds,
   supportSkillName:skillIds.map(id=>SUPPORT_SKILL_LABELS[id]).join(' + '),
   fusionSkills:[...(original.fusionSkills||[original.skill]),
-   {...FLEET_ESCORT_TRAITS[shipId][0]}],
+   {...FLEET_ESCORT_TRAITS[shipId][nativeSupportSlotFor(shipId)]}],
   linked:true
  };
  side.escorts[index]=fused;
