@@ -35,9 +35,9 @@ test('Ciclo 30s/8s: il motore resta separato, niente vincitore automatico',()=>{
  assert.equal(Object.keys(TACTICAL_SPECIALS).length,82); // 81 precedenti + Faglia di Vulnerabilità
  assert.equal(b.winner,null);
 });
-test('Tutte le 17 navi hanno fuoco nativo dai veri armamenti del catalogo, anche senza calcolo',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,17);
- assert.equal(PHASE1_CATALOG.weapons.length,42);
+test('Le 12 madri hanno fuoco nativo dai veri armamenti del catalogo, anche senza calcolo',()=>{
+ assert.equal(PHASE1_CATALOG.ships.length,12);
+ assert.equal(PHASE1_CATALOG.weapons.length,27);
  for(const ship of PHASE1_CATALOG.ships){
   const b=createTacticalDuel({shipA:ship.id});
   assert.ok(b.sides.A.weapons.length>=1,ship.id);

@@ -56,8 +56,8 @@ test('Precisione standard: 2 numeriche = 6 HP, 3 numeriche = 8 HP; mai danno aut
  assert.equal(TACTICAL_TIMING.maxRounds,20);
 });
 
-test('I 68 vitali di tutte le 17 madri, a L1 e L5, diventano danneggiati al primo colpo normale',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,17);
+test('I 48 vitali delle 12 madri, a L1 e L5, diventano danneggiati al primo colpo normale',()=>{
+ assert.equal(PHASE1_CATALOG.ships.length,12);
  let validated=0;
  for(const ship of PHASE1_CATALOG.ships)for(const level of [1,5])for(const vitalId of VITAL_IDS){
   const b=createTacticalDuel({shipA:'C01',shipB:ship.id,levelA:1,levelB:level,seed:18});
@@ -78,7 +78,7 @@ test('I 68 vitali di tutte le 17 madri, a L1 e L5, diventano danneggiati al prim
     'Il sistema danneggiato riduce il vero fuoco nativo');
   validated++;
  }
- assert.equal(validated,136);
+ assert.equal(validated,96);
 });
 
 test('Tre carte: colpo da 8 HP lascia un vitale 2/10 in avaria senza cancellarlo',()=>{

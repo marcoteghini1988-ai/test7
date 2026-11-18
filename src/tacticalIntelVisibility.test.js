@@ -10,8 +10,8 @@ import {tacticalShipSignatures} from './tacticalShipSignatures.js';
 
 const num=(x,y)=>[{id:'a',value:x,suit:'♣'},{id:'b',value:y,suit:'♦'}];
 
-test('Faglia in mano non svela in anticipo le 68 firme dei 17 modelli',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,17);
+test('Faglia in mano non svela le 48 firme delle 12 madri ufficiali',()=>{
+ assert.equal(PHASE1_CATALOG.ships.length,12);
  let checked=0;
  for(const ship of PHASE1_CATALOG.ships){
   const game=createTacticalDuel({shipA:'C01',shipB:ship.id});
@@ -26,7 +26,7 @@ test('Faglia in mano non svela in anticipo le 68 firme dei 17 modelli',()=>{
    checked++;
   }
  }
- assert.equal(checked,68);
+ assert.equal(checked,48);
 });
 
 test('La Carta Faglia NON concede visione: una Scansione legittima la concede',()=>{

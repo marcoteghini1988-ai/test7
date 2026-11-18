@@ -33,7 +33,7 @@ test('Timeline follows 30s/8s rhythm with stable, deterministic positions for ev
  assert.equal(tacticalPlaybackElapsed(b,start+4800),4800);
  assert.equal(tacticalPlaybackElapsed(b,start+10000),8000);
 });
-test('Every real weapon of all 17 mother ships has one native profile; no generic projectile is invented',()=>{
+test('Every real weapon of all 12 official mother ships has one native profile; no generic projectile is invented',()=>{
  const weaponIds=new Set();
  for(const ship of PHASE1_CATALOG.ships){
   const b=cycle(createTacticalDuel({shipA:ship.id,shipB:'N00',levelA:5}));
@@ -50,7 +50,7 @@ test('Every real weapon of all 17 mother ships has one native profile; no generi
    assert.ok(shots.every(s=>s.atMs+s.durationMs<=4500));
   }
  }
- assert.equal(weaponIds.size,42);
+ assert.equal(weaponIds.size,27);
 });
 test('Shield and vital HP change visually only after their impact stage, without changing final engine state',()=>{
  const b=cycle(withShields(createTacticalDuel()),{

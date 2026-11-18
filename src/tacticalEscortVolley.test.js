@@ -29,8 +29,8 @@ const next=b=>advanceTacticalDuel(b,b.resolveUntilMs);
 const impact=b=>b.history.at(-1).impacts.find(p=>p.kind==='escort_barrier'&&p.by==='A');
 const ids=p=>[...p.hand,...p.deck,...p.discard].map(c=>c.id);
 
-test('Tutti i 17 scafi usano i due profili di armi scudiera GIA ESISTENTI',()=>{
- assert.equal(Object.keys(ESCORT_ARMORY).length,17);
+test('Tutti i 12 scafi ufficiali usano i due profili di armi scudiera GIA ESISTENTI',()=>{
+ assert.equal(Object.keys(ESCORT_ARMORY).length,12);
  for(const ship of PHASE1_CATALOG.ships){
   const side=createTacticalDuel({shipA:ship.id,levelA:5}).sides.A;
   assert.equal(side.escorts.length,2,ship.id);

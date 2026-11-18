@@ -5,8 +5,8 @@ import {createTacticalDuel,nativeBarrierPacket} from './simultaneousDuelEngine.j
 import {tacticalArmamentProfile,tacticalBarrierPower,tacticalWeaponTechnology} from './tacticalArmamentBalance.js';
 import {weaponEffect} from './mathWeaponEffects.js';
 
-test('Tutte le 42 armi native hanno un contributo fisico e un profilo visivo, non un proiettile globale',()=>{
- assert.equal(PHASE1_CATALOG.weapons.length,42);
+test('Tutte le 27 armi native hanno un contributo fisico e un profilo visivo, non un proiettile globale',()=>{
+ assert.equal(PHASE1_CATALOG.weapons.length,27);
  const tech=new Set(),seen=new Set();
  for(const ship of PHASE1_CATALOG.ships){
   const b=createTacticalDuel({shipA:ship.id,levelA:1});
@@ -22,7 +22,7 @@ test('Tutte le 42 armi native hanno un contributo fisico e un profilo visivo, no
    assert.equal(w.technology,tacticalWeaponTechnology(b.sides.A.weapons.find(x=>x.id===w.weaponId)));
   }
  }
- assert.equal(seen.size,42);
+ assert.equal(seen.size,27);
  assert.equal(tech.size,5,'I cinque tipi tecnologici sono rappresentati nei modelli nativi');
 });
 test('Ogni modello progredisce L1->L5 e nessuna nave azzera da sola lo scudo da 60 al primo ciclo',()=>{
@@ -40,8 +40,8 @@ test('Ogni modello progredisce L1->L5 e nessuna nave azzera da sola lo scudo da 
   for(let level=1;level<5;level++)assert.ok(powers[level]>powers[level-1],ship.id+': '+powers);
   result.set(ship.id,powers[0]);
  }
- assert.ok(result.get('L04')>result.get('E04'));
- assert.ok(result.get('E04')>result.get('R04'));
+ assert.ok(result.get('L04')>result.get('E02'));
+ assert.ok(result.get('E02')>result.get('R04'));
  assert.ok(result.get('R04')>result.get('N00'));
 });
 test('I sistemi vitali armi e motore influenzano davvero la potenza senza alterare le carte in mano',()=>{
