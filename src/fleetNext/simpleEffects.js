@@ -213,7 +213,7 @@ case 'ark':return card.effectProposed;
   case 'blueprint':return card.effectProposed;
   case 'systemModifier':case 'fieldReset':case 'dismantle':return card.effectProposed;
   case 'fusion':return 'Fonde due supporti operativi. Richiama la riserva sbloccata; la seconda fusione unisce terzo e quarto supporto. Massimo due unità in campo.';
-  case 'shipFusion':return 'Fondi '+(card.fusionShipName||'questa navicella')+' (livello MAX) con un tuo supporto a livello MAX non ancora fuso. Conserva HP e ferite del supporto; unisce elementi e abilità. Massimo due fusioni per battaglia.';
+  case 'shipFusion':return 'Fondi '+(card.fusionShipName||'questa navicella')+' (Leggendaria) con un tuo supporto Leggendario non ancora fuso. Conserva HP e ferite del supporto; unisce elementi e abilità. Massimo due fusioni per battaglia.';
   default:throw new Error('Effetto privo di descrizione: '+s.type);
  }
 }
