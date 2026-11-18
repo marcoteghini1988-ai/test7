@@ -4,7 +4,11 @@ import {readFileSync} from 'node:fs';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import ts from 'typescript';
-import {card,cardRole,cardFacePath} from './fleetNext/rules.js';
+import {card,cardRole,cardFacePath,EXCLUSIVE_CARDS} from './fleetNext/rules.js';
+import {exclusiveRarityAtLevel} from './fleetNext/exclusiveEvolution.js';
+import {activeFleetElements,FLEET_ELEMENTS,fleetElementNames,secondaryElementUnlockLevel} from './fleetNext/elementalAffinities.js';
+import {elementalAbility} from './fleetNext/elementalAbilities.js';
+import {mantaEnergy,mantaCapacitorActive} from './fleetNext/mantaEngine.js';
 import {liveModules} from './fleetNext/auroraEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {projectFleetSlots,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId,fleetTurnNotice} from './fleetNext/battlePresentation.js';
@@ -41,21 +45,22 @@ function elements(tree){
 const Labels={engine:'Plancia',weapons:'Arsenale',shieldGenerator:'Generatore',command:'Centralina'};
 const Shorts={engine:'PLA',weapons:'ARS',shieldGenerator:'GEN',command:'CEN'};
 const Slots=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialSlots',{
- card,cardRole,cardFacePath,describeEffect,OFFICIAL_SPECIAL_FIXED_BACK,officialSpecialArtPath
+ card,cardRole,cardFacePath,describeEffect,OFFICIAL_SPECIAL_FIXED_BACK,officialSpecialArtPath,exclusiveRarityAtLevel
 });
 const Fighter=extract('./OfficialFleetBattle3D.jsx','OriginalFleetFighter',{
  useMemo:fn=>fn(),newVessel,projectFleetDefense,projectMachineBerths,
  fleetImpactVisual:()=>null,ShipPhysicalVitals:()=>null,MountedWeapons:()=>null,
  FLEET_PHYSICAL_VITALS,PHYSICAL_LABELS:Labels,PHYSICAL_SHORT_LABELS:Shorts,
  ASSET_ROOT:'/assets',HP_SYNC_RULESET,describeEscortEffect,liveModules,pct:(n,d)=>Math.round(100*n/d),
- activeEscort:e=>e.hp>0&&!e.destroyed
+ activeEscort:e=>e.hp>0&&!e.destroyed,FLEET_ELEMENTS,mantaEnergy,mantaCapacitorActive,card
 });
 const Physical=extract('./ShipPhysicalVitals.jsx','ShipPhysicalVitals',{
  vesselWithPhysicalVitalDamage,VITAL_IDS,VITAL_LABELS,VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,
  ShipSkin:()=>null,Engine:props=>React.createElement('button',{'aria-label':props.vitalName,'data-short-label':props.vitalLabel,disabled:!props.enabled},props.vitalLabel)
 });
 const ProgressionDetails=extract('./ShipCollectionPanels.jsx','ShipProgressionDetails',{
- getShipProgression,getShipProgressionLevels,shipProgressionProfile
+ getShipProgression,getShipProgressionLevels,shipProgressionProfile,
+ activeFleetElements,FLEET_ELEMENTS,fleetElementNames,secondaryElementUnlockLevel,elementalAbility,EXCLUSIVE_CARDS
 });
 
 // Test su carte ritirate eliminati; restano i test delle funzioni ancora attive.
@@ -127,14 +132,14 @@ test('Clicking an enemy support or machine emits its real kind, id and slot',()=
 
 test('Hangar mostra le progressioni estese, con Aurora L20 e Arca L5',()=>{
  const aurora=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',level:5}));
- assert.match(aurora,/2 vitali/);assert.match(aurora,/0 supporti/);
+ assert.match(aurora,/2 sistemi della madre/);assert.match(aurora,/slot supporto sono permanenti/);
  for(let level=1;level<=20;level++)assert.match(aurora,new RegExp('Livello '+level+'(?:<| )'));
  const evolved=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',level:20}));
- assert.match(evolved,/2 supporti/);
+ assert.match(evolved,/slot supporto sono permanenti/);
  assert.match(evolved,/100%/);
  const arca=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'L04',level:5}));
- assert.match(arca,/4 vitali/);assert.match(arca,/2 supporti/);
- assert.match(arca,/2 in riserva/);assert.match(arca,/2 fusioni/);
+ assert.match(arca,/4 sistemi della madre/);
+ assert.match(arca,/slot supporto sono permanenti/);
 });
 
 
@@ -166,12 +171,14 @@ test('La battaglia ufficiale usa due supporti equipaggiati, zero riserve automat
  assert.equal(boss.ships[0].id,'L04');assert.equal(boss.ships[0].level,5);
  assert.equal(boss.escorts.length,2);assert.equal(boss.reserveEscorts.length,0,
   'nessuna riserva viene regalata dal livello della madre');
- assert.equal(boss.fusionLimit,1,
-  'seconda fusione sospesa finché i materiali diventano carte supporto');
+ assert.equal(boss.fusionLimit,2,
+  'tutte le madri possono fondere entrambi i supporti, se sono a L5');
  assert.equal(session.battle.sides.A.escorts.length,0,
   'il giocatore senza traguardi entra solo con la madre');
- assert.equal([...boss.deck,...boss.hand].filter(id=>id==='nx-l04-05').length,2);
- assert.equal(effectUnavailableReason(card('prog-fusion-l04'),boss,session.battle),'');
+ assert.equal([...boss.deck,...boss.hand].filter(id=>id==='nx-l04-05').length,1,
+  'la carta dell’Arca non rappresenta più una fusione automatica');
+ assert.ok(boss.escorts.every(e=>e.level===1),
+  'i supporti avversari partono da L1 e non sono abilitati alla fusione immediata');
 });
 
 function battleUi(seed){
@@ -221,7 +228,8 @@ test('Own-component selection maps the physical Plancia and Generatore to real t
 
 test('Native new card fronts expose complete names and effects without invalid image links',()=>{
  const Hand=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialHandCard',{
-  card,cardRole,cardFacePath,describeEffect,officialSpecialArtPath
+  card,cardRole,cardFacePath,describeEffect,officialSpecialArtPath,
+  exclusiveRarityAtLevel,FLEET_ELEMENTS
  });
  for(const id of ['prog-bypass','prog-machine-striker','prog-machine-guard','prog-fusion-l04']){
   const html=renderToStaticMarkup(React.createElement(Hand,{type:id,index:0,offset:0,selected:true,onClick:()=>{}}));
