@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import design from '../docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json' with {type:'json'};
-import {EXCLUSIVE_CARDS} from './fleetNext/rules.js';
+import {EXCLUSIVE_CARDS,FUSION_SHIP_CARDS} from './fleetNext/rules.js';
 import {TEST_DECK} from './fleetNext/testDeckFixtures.js';
 
 const ships=['N00','C01','C02','C03','R01','R02','R04','E01','E02','L01','L03','L04'];
@@ -27,7 +27,10 @@ test('Catalogo sorgente storico: 120 carte ragionate, dieci per madre',()=>{
   assert.match(c.state,/executable-in-combat-v[12]/,'Tutte le 120 carte devono essere state implementate');
  }
  assert.equal(design.cards.filter(c=>c.type==='Personaggio').length,12);
- assert.equal(design.cards.filter(c=>c.type==='Fusione').length,3);
+ assert.equal(design.cards.filter(c=>c.type==='Fusione').length,0,
+  'le esclusive delle madri non devono contenere Fusioni');
+ assert.equal(FUSION_SHIP_CARDS.length,13,
+  'le carte Fusione indipendenti appartengono ai 13 modelli di supporto');
 });
 
 test('I 12 Personaggi delle nuove esclusive riutilizzano le identità già esistenti',()=>{
