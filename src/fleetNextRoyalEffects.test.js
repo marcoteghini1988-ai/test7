@@ -15,7 +15,7 @@ import {royalSupports,royalVisibleProtections,royalCapableModule} from './fleetN
 
 const IDS=['nx-l01-01','nx-l01-02','nx-l01-03','nx-l01-04','ex-l01-01',
  'nx-l01-06','nx-l01-07','nx-l01-08','nx-l01-09','nx-l01-10'];
-function make({shipA='L01',shipB='C03',levelA=5,levelB=5}={}){
+function make({shipA='L01',shipB='C03',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB)}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,
   deckA:[],deckB:[],mode:'pvp',seed:2130});
  for(const side of Object.values(b.sides)){
