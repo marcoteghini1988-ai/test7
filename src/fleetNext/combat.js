@@ -1,9 +1,10 @@
 // Eclissi Stellare — progressione strutturale e combattimento delle flotte.
 // Nessuna animazione o audio qui: gli eventi sono emessi per il renderer ufficiale.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
-import {buildFleetEscorts} from '../fleetEscortSupports.js';
+import {buildFleetEscorts,FLEET_ESCORT_TRAITS} from '../fleetEscortSupports.js';
 import {createIndependentFleetEscorts,compatibleLegacyFusionCount} from './supportDeployment.js';
 import {skillCount,trapsSuppressed,terrainImmunity,terrainHalf,
+ supportSkillFor,SUPPORT_SKILL_LABELS,
  effectiveSupportEnergyCost,supportNormalBoost,supportSpecialBoost,
  supportWeaponCardBoost,advanceIndependentSupportTime,
  settleIndependentSupportDamage,resolveIndependentSupportOwnTurn} from './supportAbilities.js';
@@ -132,10 +133,11 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={},supportRo
   Array.from({length:progression.escortCount},(_,i)=>build(i,progression.escortGrades[i]||1));
  const reserveEscorts=independent?[]:
   Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
- const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
+ const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n,
+  {independentSupports:independent}),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
   moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,royal:null,obsidian:null,ark:null,recalledModules:[],recalledMachines:[],
-  fusionsUsed:0,fusionLimit:independent?compatibleLegacyFusionCount(shipId,escorts):progression.fusionLimit,
+  fusionsUsed:0,fusionLimit:independent?Math.min(2,escorts.length):progression.fusionLimit,
   independentSupportRoster:independent,
   elementalCharges:{},elementalLastActivationPly:-999,
   elementalDamageRemainders:{},
@@ -148,19 +150,72 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={},supportRo
   pendingRepair:0,drawBlockedUntil:0,usedCardEvents:[]};
  refreshEscortLinks(side);return side;
 }
-// Sincronizza tutte le forme di supporto con la nave madre.
-// Il secondo elemento può comparire dopo lo sblocco, ma non aggiunge
-// una seconda resistenza passiva al supporto.
+// Le carte-navicella schierate come supporto mantengono il proprio elemento;
+// se fuse, conservano entrambi gli elementi dei modelli originali.
+// Il comportamento ereditato dalla madre resta solo per partite storiche.
 export function inheritFleetEscortElements(side){
  const mother=side?.ships?.[0];
  if(!mother)return side;
  const elements=activeFleetElements(mother.id,mother.level);
  for(const escort of [...(side.escorts||[]),...(side.reserveEscorts||[])]){
-  escort.element=mother.element;
-  escort.elements=[...elements];
-  escort.elementInheritedFrom=mother.id;
+  if(side.independentSupportRoster){
+   const own=fleetElements(escort.shipModelId||escort.originShipId)[0]||escort.element;
+   const fusion=fleetElements(escort.fusionShipId)[0];
+   escort.element=own;
+   escort.elements=[...new Set([own,...(escort.fused?[fusion]:[])].filter(Boolean))].slice(0,2);
+   escort.elementInheritedFrom=null;
+  }else{
+   escort.element=mother.element;
+   escort.elements=[...elements];
+   escort.elementInheritedFrom=mother.id;
+  }
  }
  return side;
+}
+// Questa carta rappresenta UNA navicella aggiuntiva e non un potenziamento
+// universale. La fusione conserva esattamente HP e maxHp del supporto scelto.
+export function fusionShipUnavailableReason(side,shipId,slot=null,ply=0){
+ if(!side?.independentSupportRoster)return 'Serve una flotta di carte-navicella indipendenti';
+ if(!SHIPS.has(shipId)||!supportSkillFor(shipId,0))
+  return 'Modello della Carta Navicella Fusione sconosciuto';
+ if((side.fusionsUsed||0)>=(side.fusionLimit||0))
+  return 'Le due fusioni disponibili sono già state utilizzate';
+ if(slot!==null&&(!Number.isInteger(slot)||slot<0||slot>1))
+  return 'Seleziona uno dei due slot supporto';
+ const candidates=(side.escorts||[]).filter(e=>!e.fused&&escortEnabled(side,e,ply)&&
+  (slot===null||e.slot===slot));
+ if(!candidates.length)return 'Non esiste un supporto operativo non ancora fuso nello slot selezionato';
+ return '';
+}
+export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
+ const reason=fusionShipUnavailableReason(side,shipId,slot,ply);
+ if(reason)return {ok:false,reason};
+ const index=side.escorts.findIndex(e=>!e.fused&&escortEnabled(side,e,ply)&&
+  (slot===null||e.slot===slot));
+ const original=side.escorts[index];
+ const skillId=supportSkillFor(shipId,0),newElement=fleetElements(shipId)[0];
+ const skillIds=[...new Set([...(original.supportSkillIds||[original.supportSkillId]),
+  skillId].filter(Boolean))];
+ const fused={...original,
+  id:'escort:fusion:'+original.instanceId+':'+shipId,
+  name:original.name+' + '+SHIPS.get(shipId).nome,
+  fused:true,fusionShipId:shipId,fusionCardId:'fusion-ship-'+shipId.toLowerCase(),
+  fusionModelIds:[original.shipModelId||original.originShipId,shipId],
+  // Barra identica: la carta non ripara, non somma ne' crea punti HP.
+  hp:original.hp,maxHp:original.maxHp,supportObservedHp:original.hp,
+  element:original.element,
+  elements:[...new Set([original.element,newElement].filter(Boolean))],
+  elementInheritedFrom:null,shipModelId:original.shipModelId||original.originShipId,
+  supportSkillIds:skillIds,
+  supportSkillName:skillIds.map(id=>SUPPORT_SKILL_LABELS[id]).join(' + '),
+  fusionSkills:[...(original.fusionSkills||[original.skill]),
+   {...FLEET_ESCORT_TRAITS[shipId][0]}],
+  linked:true
+ };
+ side.escorts[index]=fused;
+ side.fusionsUsed=(side.fusionsUsed||0)+1;
+ refreshEscortLinks(side,ply);
+ return {ok:true,fused,stage:side.fusionsUsed};
 }
 export function refreshEscortLinks(side,ply=0){
  inheritFleetEscortElements(side);
@@ -189,6 +244,7 @@ export function availableFleetTargets(side,ply=0){
     hp:unit.hp,maxHp:unit.maxHp,unit,blocked:guards.length>0})))];
 }
 export function fusionUnavailableReason(side,ply=0){
+ if(side?.independentSupportRoster)return 'La vecchia Fusione non è disponibile: usa una Carta Navicella Fusione';
  const used=side.fusionsUsed||0;
  if(!side.fusionLimit||used>=side.fusionLimit)return 'Le fusioni disponibili sono già state usate';
  if(!operational(side.ships[0],'command'))return 'La Fusione richiede la Centralina attiva';
@@ -469,6 +525,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   if(def.shipId&&def.shipId!==side.ships[0].id)return 'La Fusione appartiene a un’altra nave';
   const reason=fusionUnavailableReason(side,battle?.ply??0);if(reason)return reason;
  }
+ if(s.type==='shipFusion'){
+  const reason=fusionShipUnavailableReason(side,s.shipId,null,battle?.ply??0);
+  if(reason)return reason;
+ }
  if(s.type==='deployMachine'&&(side.machines||[]).filter(unitAlive).length>=2)return 'I due alloggiamenti delle macchine d’assalto sono occupati';
  if(s.type==='repair'&&!character){
   const unit=s.target==='escort'?weakest(livingEscorts(side)):
@@ -688,6 +748,13 @@ export function validateFleetTurn(b,who,order){
  const machineCount=chosen.filter(c=>c.effectSpec.type==='deployMachine').length;
  if(machineCount+(side.machines||[]).filter(unitAlive).length>2)return 'Servono alloggiamenti liberi per le macchine scelte';
  const fusions=chosen.filter(c=>c.effectSpec.type==='fusion').length;
+ const fusionShips=chosen.filter(c=>c.effectSpec.type==='shipFusion');
+ if(fusionShips.length>1)return 'Puoi giocare una Carta Navicella Fusione per turno';
+ if(fusionShips.length){
+  const slot=order?.fusionSlot??null;
+  const result=fusionShipUnavailableReason(side,fusionShips[0].effectSpec.shipId,slot,b.ply);
+  if(result)return result;
+ }
  const linceTrap=chosen.find(c=>c.effectSpec.type==='lince'&&c.effectSpec.action==='false-trail');
  if(linceTrap&&order.ownPartId&&!activePart(side,order.ownPartId))
   return 'Falsa scia: scegli un tuo vitale operativo';
@@ -2659,6 +2726,15 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    if(cancelLinceBypass(b,who,events,def.id)){at('Aggiramento annullato dalla Difesa avversaria');break;}
    ctx.bypass=true;at('Questo attacco può raggiungere direttamente la madre');break;
   }
+  case 'shipFusion':{
+   const result=fuseIndependentSupportWithShip(side,s.shipId,order?.fusionSlot??null,b.ply);
+   if(!result.ok)throw Error(result.reason);
+   events.push(emit(b,who,'fusion',result.fused.name+' · elementi e abilità combinate',
+    {cardId:def.id,escortSlot:result.fused.slot,stage:result.stage,
+     elements:result.fused.elements,skills:result.fused.supportSkillIds,
+     hp:result.fused.hp,maxHp:result.fused.maxHp}));
+   break;
+  }
   case 'fusion':{
    const result=fuseFleetSupports(side,b.ply);
    if(!result.ok)throw new Error(result.reason);
@@ -4466,7 +4542,7 @@ export function autoFleetTurn(b,who=b.turn){
  const score=x=>x.def.effectSpec.type==='energy'?9:x.def.effectSpec.type==='dismantle'?11:
   x.def.effectSpec.type==='ark'&&x.def.effectSpec.action==='ark-fusion'?12:
   x.def.effectSpec.type==='royal'&&
-  x.def.effectSpec.action==='crown-fusion'?12:x.def.effectSpec.type==='fusion'?10:x.def.effectSpec.type==='deployMachine'?8:
+  x.def.effectSpec.action==='crown-fusion'?12:x.def.effectSpec.type==='fusion'?10:x.def.effectSpec.type==='shipFusion'?10:x.def.effectSpec.type==='deployMachine'?8:
   x.def.effectSpec.type==='bypass'&&guard?7:x.def.effectSpec.type==='repair'?6:
   x.role==='attack'?5:x.role==='character'?4:x.role==='defense'?3:x.role==='terrain'?1:2;
  candidates.sort((a,z)=>score(z)-score(a)||a.i-z.i);
