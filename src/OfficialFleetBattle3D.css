@@ -468,3 +468,31 @@
 .es-math-scope .f3d-original-arena .f3d-ark-readout{
  margin:0 0 5px;color:#cbe8f4;font-size:9px;line-height:1.35
 }
+
+/* Reattore elementale: una sola riga fra le 7 carte e i comandi,
+   senza spostare navi, mazzi, slot o prospettiva della plancia 9:16. */
+.es-math-scope .f3d-original-arena .f3d-elemental-control{
+ position:absolute;top:709px;left:54px;right:54px;height:25px;z-index:18;
+ display:flex;gap:5px;align-items:center;justify-content:center;
+ border:1px solid #759bba;border-radius:5px;background:#08192ce8;
+ color:#e3f7ff;font-size:9px;pointer-events:auto
+}
+.es-math-scope .f3d-original-arena .f3d-elemental-control>span{
+ font-weight:800;white-space:nowrap;min-width:43px;text-align:center
+}
+.es-math-scope .f3d-original-arena .f3d-elemental-control select{
+ max-width:70px;min-width:0;background:#0c293d;color:#fff;
+ border:1px solid #547e99;border-radius:4px;font-size:8px;padding:2px
+}
+.es-math-scope .f3d-original-arena .f3d-elemental-control button{
+ color:#fbf6da;background:#163a54;border:1px solid #bda36c;
+ padding:3px 6px;min-width:76px;font-weight:800;border-radius:4px;
+ font-size:8px;cursor:pointer
+}
+.es-math-scope .f3d-original-arena .f3d-elemental-control button[aria-pressed="true"]{
+ background:#705015;border-color:#ffe6a2
+}
+.es-math-scope .f3d-original-arena .f3d-elemental-control button:disabled{opacity:.45;cursor:default}
+.es-math-scope .f3d-original-arena .f3d-elemental-control small{
+ overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:8px
+}
