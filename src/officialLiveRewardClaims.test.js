@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
-import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
+import {SHIP_CAMPAIGN_UNLOCKS,SUPPORT_SLOT_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
+import {readSupportCollection} from './fleetNext/supportCollection.js';
 import {SHIP_COLLECTION_KEY,readShipCollection,updateShipCollection,
  equipShipCards} from './shipCollection.js';
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
@@ -28,24 +29,25 @@ function input(sector,mode='adventure'){
   bossPlanetId:boss?.id??null,bossSectorLevel:boss?10:sector%10};
 }
 
-test('Campagna 1..120: premi REALI idempotenti, 16 navi, 12 trofei e 120 pacchetti',async()=>{
+test('Campagna 1..120: 12 madri, 2 supporti, 12 trofei e 120 pacchetti idempotenti',async()=>{
  const store=storage(),rng=random(20261111),riftIndex=SPECIAL_PACK_TYPES.indexOf(VULNERABILITY_RIFT_CARD_ID);
  assert.ok(riftIndex>=0,'Faglia ottenibile dai veri pacchetti');
  const unlocked=[];
  for(let sector=1;sector<=120;sector++){
   if(sector===70){
    const ships=readShipCollection(store);
-   assert.ok(ships.cards.some(card=>card.shipId==='E03'),
-    'la Fenice si ottiene dopo il settore 60 e prima di Ombre');
-   assert.equal(ships.cards.some(card=>card.shipId==='E04'),false,
-    'Orizzonte non è gratuita prima della vittoria contro Ombre');
+   assert.ok(ships.cards.some(card=>card.shipId==='E02'),
+    'Tempesta è una madre ufficiale ottenibile prima del settore 70');
+   assert.ok(['C04','R03','E03','E04','L02'].every(id=>
+    !ships.cards.some(card=>card.shipId===id)),
+    'nessuna delle cinque varianti eliminate deve essere riscattabile');
    const owned=readSpecialCollection(store);
    assert.ok(owned.owned[VULNERABILITY_RIFT_CARD_ID]>=1,
     'nell estrazione simulata la Faglia deve essere davvero uscita');
    const loadout=equipSpecialDeck(owned,
     [VULNERABILITY_RIFT_CARD_ID,...owned.loadout.slice(1)]);
    assert.equal(validateSpecialDeck(loadout,loadout.loadout).valid,true);
-   const chosen=ships.cards.find(card=>card.shipId==='E03');
+   const chosen=ships.cards.find(card=>card.shipId==='E02');
    const selected=await updateShipCollection(c=>equipShipCards(c,[chosen.instanceId]),store);
    const setup=officialBattleSetup({mode:'adventure',sectorNumber:70,
     bossPlanetId:PHASE16A_CAMPAIGN_PLANETS[6].id,bossSectorLevel:10,
@@ -65,10 +67,14 @@ test('Campagna 1..120: premi REALI idempotenti, 16 navi, 12 trofei e 120 pacchet
   const ship=SHIP_CAMPAIGN_UNLOCKS.find(x=>x.sector===sector);
   assert.equal(first.ship.granted,!!ship,'sblocco nave al settore '+sector);
   if(ship){assert.equal(first.ship.shipId,ship.shipId);unlocked.push(ship.shipId);}
+  const support=SUPPORT_SLOT_CAMPAIGN_UNLOCKS.find(x=>x.sector===sector);
+  assert.equal(first.support.granted,!!support,'supporto al settore '+sector);
+  if(support)assert.equal(first.support.slot,support.slot);
   assert.equal(first.character.granted,sector%10===0,'trofeo al settore '+sector);
   const replay=await claimOfficialLiveVictoryRewards(input(sector,'campaign'),store);
   assert.equal(replay.pack.granted,false,'modalità alternate non duplicano crediti');
   assert.equal(replay.ship.granted,false,'modalità alternate non duplicano navi');
+  assert.equal(replay.support.granted,false,'modalità alternate non duplicano supporti');
   assert.equal(replay.character.granted,false,'modalità alternate non duplicano trofei');
   // L'apertura di ogni pacchetto è una scelta distinta dalla vittoria.
   // Al settore 35 imponiamo una estrazione VALIDA ma favorevole alla Faglia:
@@ -87,9 +93,15 @@ test('Campagna 1..120: premi REALI idempotenti, 16 navi, 12 trofei e 120 pacchet
    !BOSS_CHARACTER_TYPES.includes(type)),'nessun Modulo/Epico/Trofeo gratuito');
  }
  const ships=readShipCollection(store),specials=readSpecialCollection(store);
- assert.equal(ships.cards.length,17);
- assert.equal(new Set(ships.cards.map(x=>x.shipId)).size,17);
- assert.equal(unlocked.length,16);
+ const supports=readSupportCollection(store);
+ assert.equal(ships.cards.length,12);
+ assert.equal(new Set(ships.cards.map(x=>x.shipId)).size,12);
+ assert.equal(unlocked.length,11);
+ assert.deepEqual(supports.equipped.length,2);
+ assert.equal(supports.unlockedSlots,2);
+ assert.equal(supports.owned.length,2);
+ assert.equal(supports.claimedMilestones.length,2);
+ assert.ok(supports.equipped.every(id=>supports.owned.some(c=>c.instanceId===id)));
  assert.equal(specials.openedPacks,120);
  assert.equal(specials.packCredits,0);
  assert.equal(specials.claimedRewards.filter(x=>x.startsWith('adventure:sector:')).length,120);
@@ -114,7 +126,7 @@ test('Se fallisce il secondo salvataggio, il retry recupera senza duplicare prem
   }
   realSet(key,value);
  };
- const award=input(70);
+ const award=input(80);
  await assert.rejects(()=>claimOfficialLiveVictoryRewards(award,s),
   /temporaneamente esaurita/);
  let coll=readSpecialCollection(s);
@@ -127,14 +139,14 @@ test('Se fallisce il secondo salvataggio, il retry recupera senza duplicare prem
  assert.equal(retry.pack.granted,false,'il credito non raddoppia');
  assert.equal(retry.ship.granted,true,'la nave viene recuperata');
  assert.equal(retry.character.granted,true,'il trofeo viene recuperato');
- const next=await claimOfficialLiveVictoryRewards(input(70,'campaign'),s);
+ const next=await claimOfficialLiveVictoryRewards(input(80,'campaign'),s);
  assert.equal(next.pack.granted,false);
  assert.equal(next.ship.granted,false);
  assert.equal(next.character.granted,false);
  coll=readSpecialCollection(s);
  assert.equal(coll.packCredits,1);
  assert.equal(coll.owned[bossCharacterTypeForPlanet(award.bossPlanetId)],1);
- assert.equal(readShipCollection(s).cards.filter(c=>c.shipId==='E04').length,1);
+ assert.equal(readShipCollection(s).cards.filter(c=>c.shipId==='L01').length,1);
  assert.equal(new Set(coll.claimedRewards).size,2);
 });
 
