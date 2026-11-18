@@ -10,7 +10,7 @@ import {SUPPORT_MAX_LEVEL} from './supportProgression.js';
 export const FUSION_SHIP_CARDS=Object.freeze(SUPPORT_CATALOG.map(ship=>{
  const nome='Navicella Fusione — '+ship.name;
  return Object.freeze({
-  id:'fusion-ship-'+ship.id.toLowerCase(),
+  id:'fusion-ship-'+ship.shipModelId.toLowerCase(),
   nome,name:nome,category:'Navicella Fusione',categoria:'Fusione',
   sottotipo:'Navicella Fusione',kind:'support',rarita:'Leggendaria',
   raritySource:'fusion-max',nativeFace:true,playable:true,
@@ -20,7 +20,7 @@ export const FUSION_SHIP_CARDS=Object.freeze(SUPPORT_CATALOG.map(ship=>{
   fusionElementId:ship.elementId,
   fusionSkillId:ship.skillId,
   effectProposed:'Fondi '+ship.name+' (livello MAX) con un tuo supporto a livello MAX non ancora fuso. Conserva HP e ferite del supporto; unisce elementi e abilità. Massimo due fusioni per battaglia.',
-  effectSpec:Object.freeze({type:'shipFusion',shipId:ship.id})
+  effectSpec:Object.freeze({type:'shipFusion',shipId:ship.shipModelId})
  });
 }));
 export const FUSION_SHIP_CARD_BY_ID=Object.freeze(Object.fromEntries(
