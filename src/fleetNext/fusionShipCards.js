@@ -1,25 +1,27 @@
 // Carte Navicella Fusione: la carta identifica il modello che si aggiunge
 // a UN supporto già schierato. Non rappresenta una fusione universale.
-// La rarità della Carta Fusione segue quella del modello rappresentato;
-// immagini e prezzi saranno definiti nella fase dedicata.
+// Ogni Carta Fusione e' Leggendaria e rappresenta il modello gia' al livello MAX.
+// Le immagini e i prezzi saranno definiti nella fase dedicata.
 // Il registro storico contiene 17 ID: i quattro da escludere quando sarà
 // riconciliato il catalogo ufficiale da 13 non sono ancora identificati.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {fleetElements} from './elementalAffinities.js';
 import {nativeSupportSkillFor} from './supportAbilities.js';
+import {shipMaxLevel} from './progression.js';
 
 export const FUSION_SHIP_CARDS=Object.freeze(PHASE1_CATALOG.ships.map(ship=>{
  const nome='Navicella Fusione — '+ship.nome;
  return Object.freeze({
   id:'fusion-ship-'+ship.id.toLowerCase(),
   nome,name:nome,category:'Navicella Fusione',categoria:'Fusione',
-  sottotipo:'Navicella Fusione',kind:'support',rarita:ship.rarita,
-  raritySource:'ship-model',nativeFace:true,playable:true,
+  sottotipo:'Navicella Fusione',kind:'support',rarita:'Leggendaria',
+  raritySource:'fusion-max',nativeFace:true,playable:true,
+  requiresMaxSupportLevel:true,fusionShipLevel:shipMaxLevel(ship.id),
   maxCopiesPerDeck:2,acquisitionPending:true,
   fusionShipId:ship.id,fusionShipName:ship.nome,
   fusionElementId:fleetElements(ship.id)[0],
   fusionSkillId:nativeSupportSkillFor(ship.id),
-  effectProposed:'Fondi '+ship.nome+' con un tuo supporto operativo non ancora fuso. Conserva gli HP e le ferite del supporto; unisce elementi e abilità. Un massimo di due fusioni per battaglia.',
+  effectProposed:'Fondi '+ship.nome+' (livello MAX) con un tuo supporto a livello MAX non ancora fuso. Conserva HP e ferite del supporto; unisce elementi e abilità. Massimo due fusioni per battaglia.',
   effectSpec:Object.freeze({type:'shipFusion',shipId:ship.id})
  });
 }));
