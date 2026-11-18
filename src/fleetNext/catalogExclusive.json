@@ -1,7 +1,7 @@
 {
   "title": "Personaggi esclusivi preservati",
   "date": "2026-11-16",
-  "status": "OLD_EXCLUSIVES_REMOVED",
+  "status": "12 madri e 120 esclusive, cinque varianti storiche escluse. Le 13 Carte Fusione dei supporti sono separate.",
   "shipConfigurations": [
     {
       "id": "N00",
@@ -167,49 +167,6 @@
       ]
     },
     {
-      "id": "C04",
-      "name": "Dardo Cremisi",
-      "rarity": "Comune",
-      "l1Escorts": 0,
-      "escort1UnlockLevel": 3,
-      "escort2UnlockLevel": 5,
-      "partUnlockLevels": {
-        "weapons": 1,
-        "generator": 1,
-        "bridge": 1,
-        "command": 3
-      },
-      "cardCountProposed": 6,
-      "supportGradesByLevel": [
-        [],
-        [],
-        [
-          1
-        ],
-        [
-          1
-        ],
-        [
-          1,
-          1
-        ]
-      ],
-      "reserveCountByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "fusionLimitByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
       "id": "R01",
       "name": "Falco Binario",
       "rarity": "Rara",
@@ -263,57 +220,6 @@
     {
       "id": "R02",
       "name": "Manta Ionica",
-      "rarity": "Rara",
-      "l1Escorts": 2,
-      "escort1UnlockLevel": 1,
-      "escort2UnlockLevel": 1,
-      "partUnlockLevels": {
-        "weapons": 1,
-        "generator": 1,
-        "bridge": 1,
-        "command": 1
-      },
-      "cardCountProposed": 7,
-      "supportGradesByLevel": [
-        [
-          1,
-          1
-        ],
-        [
-          1,
-          1
-        ],
-        [
-          2,
-          1
-        ],
-        [
-          2,
-          1
-        ],
-        [
-          2,
-          2
-        ]
-      ],
-      "reserveCountByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "fusionLimitByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "id": "R03",
-      "name": "Iride",
       "rarity": "Rara",
       "l1Escorts": 2,
       "escort1UnlockLevel": 1,
@@ -516,108 +422,6 @@
       ]
     },
     {
-      "id": "E03",
-      "name": "Fenice",
-      "rarity": "Epica",
-      "l1Escorts": 2,
-      "escort1UnlockLevel": 1,
-      "escort2UnlockLevel": 1,
-      "partUnlockLevels": {
-        "weapons": 1,
-        "generator": 1,
-        "bridge": 1,
-        "command": 1
-      },
-      "cardCountProposed": 8,
-      "supportGradesByLevel": [
-        [
-          1,
-          1
-        ],
-        [
-          1,
-          1
-        ],
-        [
-          2,
-          1
-        ],
-        [
-          2,
-          1
-        ],
-        [
-          2,
-          2
-        ]
-      ],
-      "reserveCountByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "fusionLimitByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
-      "id": "E04",
-      "name": "Orizzonte",
-      "rarity": "Epica",
-      "l1Escorts": 2,
-      "escort1UnlockLevel": 1,
-      "escort2UnlockLevel": 1,
-      "partUnlockLevels": {
-        "weapons": 1,
-        "generator": 1,
-        "bridge": 1,
-        "command": 1
-      },
-      "cardCountProposed": 8,
-      "supportGradesByLevel": [
-        [
-          2,
-          1
-        ],
-        [
-          2,
-          1
-        ],
-        [
-          2,
-          2
-        ],
-        [
-          2,
-          2
-        ],
-        [
-          2,
-          2
-        ]
-      ],
-      "reserveCountByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "fusionLimitByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ]
-    },
-    {
       "id": "L01",
       "name": "Eclisse Reale",
       "rarity": "Leggendaria",
@@ -666,57 +470,6 @@
         0,
         0,
         1
-      ]
-    },
-    {
-      "id": "L02",
-      "name": "Singolarità",
-      "rarity": "Leggendaria",
-      "l1Escorts": 2,
-      "escort1UnlockLevel": 1,
-      "escort2UnlockLevel": 1,
-      "partUnlockLevels": {
-        "weapons": 1,
-        "generator": 1,
-        "bridge": 1,
-        "command": 1
-      },
-      "cardCountProposed": 10,
-      "supportGradesByLevel": [
-        [
-          1,
-          2
-        ],
-        [
-          1,
-          2
-        ],
-        [
-          2,
-          2
-        ],
-        [
-          2,
-          2
-        ],
-        [
-          2,
-          2
-        ]
-      ],
-      "reserveCountByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
-      "fusionLimitByLevel": [
-        0,
-        0,
-        0,
-        0,
-        0
       ]
     },
     {
@@ -936,34 +689,6 @@
       }
     },
     {
-      "id": "ex-c04-01",
-      "shipId": "C04",
-      "shipName": "Dardo Cremisi",
-      "rarityDraft": "Comune",
-      "name": "Cacciatrice Cremisi",
-      "category": "Personaggio",
-      "families": [
-        "mobilità",
-        "pressione",
-        "personaggio"
-      ],
-      "effectProposed": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 2 turni avversari.",
-      "minShipLevelDraft": 1,
-      "requiredOwnParts": [],
-      "requiredEscortCount": 0,
-      "counterplay": "Si attiva solo quando subisci danni.",
-      "vfxIntent": "character-activate",
-      "maxCopiesInAutoPackageDraft": 1,
-      "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": null,
-      "status": "semplificata_implementata",
-      "effectSpec": {
-        "type": "counter",
-        "amount": 1,
-        "turns": 1
-      }
-    },
-    {
       "id": "ex-r01-01",
       "shipId": "R01",
       "shipName": "Falco Binario",
@@ -1018,34 +743,6 @@
         "amount": 1
       },
       "nativeFace": true
-    },
-    {
-      "id": "ex-r03-01",
-      "shipId": "R03",
-      "shipName": "Iride",
-      "rarityDraft": "Rara",
-      "name": "Custode dello Spettro",
-      "category": "Personaggio",
-      "families": [
-        "precisione",
-        "riparazione",
-        "personaggio"
-      ],
-      "effectProposed": "Ripara 1 punto al tuo componente più danneggiato, ora e al tuo prossimo turno.",
-      "minShipLevelDraft": 1,
-      "requiredOwnParts": [],
-      "requiredEscortCount": 0,
-      "counterplay": "Non ripara componenti o scudiere distrutti.",
-      "vfxIntent": "character-activate",
-      "maxCopiesInAutoPackageDraft": 1,
-      "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": null,
-      "status": "semplificata_implementata",
-      "effectSpec": {
-        "type": "repair",
-        "target": "weakest",
-        "amount": 1
-      }
     },
     {
       "id": "ex-r04-01",
@@ -1133,62 +830,6 @@
       "nativeFace": true
     },
     {
-      "id": "ex-e03-01",
-      "shipId": "E03",
-      "shipName": "Fenice",
-      "rarityDraft": "Epica",
-      "name": "Guardiana delle Ceneri",
-      "category": "Personaggio",
-      "families": [
-        "riparazione",
-        "pressione",
-        "personaggio"
-      ],
-      "effectProposed": "Il primo danno subito per turno ripara 1 punto al tuo componente più danneggiato. Dura 2 turni avversari.",
-      "minShipLevelDraft": 1,
-      "requiredOwnParts": [],
-      "requiredEscortCount": 0,
-      "counterplay": "Si attiva solo quando un colpo infligge danno.",
-      "vfxIntent": "character-activate",
-      "maxCopiesInAutoPackageDraft": 1,
-      "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": null,
-      "status": "semplificata_implementata",
-      "effectSpec": {
-        "type": "regenerate",
-        "trigger": "hurt",
-        "amount": 1,
-        "turns": 1
-      }
-    },
-    {
-      "id": "ex-e04-01",
-      "shipId": "E04",
-      "shipName": "Orizzonte",
-      "rarityDraft": "Epica",
-      "name": "Veggente Orbitale",
-      "category": "Personaggio",
-      "families": [
-        "precisione",
-        "protezione",
-        "personaggio"
-      ],
-      "effectProposed": "Per 2 tuoi turni: Il tuo attacco ignora 1 protezione sui componenti.",
-      "minShipLevelDraft": 1,
-      "requiredOwnParts": [],
-      "requiredEscortCount": 0,
-      "counterplay": "Le scudiere possono ancora intercettare l’attacco.",
-      "vfxIntent": "character-activate",
-      "maxCopiesInAutoPackageDraft": 1,
-      "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": null,
-      "status": "semplificata_implementata",
-      "effectSpec": {
-        "type": "pierce",
-        "amount": 1
-      }
-    },
-    {
       "id": "ex-l01-01",
       "shipId": "L01",
       "shipName": "Eclisse Reale",
@@ -1215,33 +856,6 @@
         "amount": 2
       },
       "nativeFace": true
-    },
-    {
-      "id": "ex-l02-01",
-      "shipId": "L02",
-      "shipName": "Singolarità",
-      "rarityDraft": "Leggendaria",
-      "name": "Architetto del Vuoto",
-      "category": "Personaggio",
-      "families": [
-        "interferenza",
-        "deviazione",
-        "personaggio"
-      ],
-      "effectProposed": "Per 2 tuoi turni: Il prossimo attacco avversario ha 1 potenza in meno.",
-      "minShipLevelDraft": 1,
-      "requiredOwnParts": [],
-      "requiredEscortCount": 0,
-      "counterplay": "Il disturbo vale per il prossimo attacco avversario.",
-      "vfxIntent": "character-activate",
-      "maxCopiesInAutoPackageDraft": 1,
-      "upgradeType": "manual_only_ship_exclusive",
-      "comboRecipeId": null,
-      "status": "semplificata_implementata",
-      "effectSpec": {
-        "type": "weaken",
-        "amount": 1
-      }
     },
     {
       "id": "ex-l03-01",
