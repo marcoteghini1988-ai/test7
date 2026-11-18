@@ -4,6 +4,8 @@
 import generalData from './catalogGeneral.json' with {type:'json'};
 import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
 import {DISMANTLE_BY_ID,DISMANTLE_CARDS} from './dismantleCards.js';
+import {FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.js';
+export {FUSION_DENIAL_TRAP,FUSION_DENIAL_TRAPS,FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.js';
 import {ENERGY_CARDS,ENERGY_CARD_BY_ID,ENERGY_CARD_COUNT} from './energyCards.js';
 import {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID,FUSION_SHIP_CARD_COUNT} from './fusionShipCards.js';
 export {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID,FUSION_SHIP_CARD_COUNT} from './fusionShipCards.js';
@@ -100,7 +102,7 @@ if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==120||BOSS_COUNT!==12||ENERGY_COUNT!==10
  throw new Error('Catalogo ufficiale incompleto: 12 madri, 120 esclusive, 12 Personaggi e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
-export const generalCard = id => FUSION_SHIP_CARD_BY_ID[id]||ENERGY_CARD_BY_ID[id]||NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
+export const generalCard = id => FUSION_DENIAL_TRAP_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id]||ENERGY_CARD_BY_ID[id]||NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
@@ -117,7 +119,7 @@ export function cardCopyLimit(id){
  const c=card(id);
  if(!c)return 0;
  if(bossCard(id))return 1;
- if(ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id])return c.maxCopiesPerDeck;
+ if(ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id]||FUSION_DENIAL_TRAP_BY_ID[id])return c.maxCopiesPerDeck;
  if(NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id])return c.maxCopiesPerDeck||RARITY_COPY_LIMIT[c.rarita]||0;
  if(isProgressionCard(id))return c.shipId?c.maxCopiesInAutoPackageDraft:RARITY_COPY_LIMIT[c.rarita]||0;
  return exclusiveCard(id)?(c.maxCopiesInAutoPackageDraft||1):(RARITY_COPY_LIMIT[c.rarita]||0);
