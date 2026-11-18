@@ -90,7 +90,8 @@ test('Arca distingue sempre due supporti schierati dalle riserve per le fusioni'
   assert.equal(row.vitalIds.length,4);
   assert.equal(row.reserveCount,level>=5?2:level>=3?1:0);
   const deck=effectiveDeck([],'L04',level);
-  assert.equal(deck.filter(id=>id==='nx-l04-05').length,2);
+  assert.equal(deck.filter(id=>id==='nx-l04-05').length,1,
+   'la vecchia Fusione è diventata una tattica, non si duplica');
  }
  assert.deepEqual(getShipProgression('L04',3).reserveGrades,[1]);
  assert.deepEqual(getShipProgression('L04',5).reserveGrades,[2,2]);
