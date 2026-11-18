@@ -10,6 +10,7 @@ import {skillCount,trapsSuppressed,terrainImmunity,terrainHalf,
  settleIndependentSupportDamage,resolveIndependentSupportOwnTurn} from './supportAbilities.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
+import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {supportDefinition} from './supportCatalog.js';
@@ -356,7 +357,7 @@ export function createFleetNextBattle({
  shipA='N00',levelA=1,shipB='C01',levelB=1,deckA,deckB,
  upgradesA={},upgradesB={},mode='campaign',bossId=null,planetId=null,sectorNumber=1,
  seed=1988,nowMs=0,bossName=null,ruleset='legacy',
- supportRosterA=null,supportRosterB=null
+ supportRosterA=null,supportRosterB=null,raritaA=null,raritaB=null
 }={}){
  const terrain=bossId?bossTerrain(bossId):mode==='pvp'?neutralTerrain():campaignTerrain(sectorNumber,planetId);
  const b={version:4,ruleset,phase:'playing',winner:null,round:1,ply:0,turn:'A',
@@ -366,12 +367,26 @@ export function createFleetNextBattle({
   bossLockedTerrain:false,seed,rng:seed>>>0,startedAtMs:nowMs,finishedAtMs:null,
   terrain,
   log:[],sides:{
-   A:createFleetSide(shipA,levelA,deckA,seed+11,upgradesA,supportRosterA),
-   B:createFleetSide(shipB,levelB,deckB,seed+29,upgradesB,supportRosterB)
+   A:createFleetSide(shipA,ruleset===HP_SYNC_RULESET&&isShipRarity(raritaA)?
+    combatLevelForRarity(shipA,raritaA):levelA,deckA,seed+11,upgradesA,supportRosterA),
+   B:createFleetSide(shipB,ruleset===HP_SYNC_RULESET&&isShipRarity(raritaB)?
+    combatLevelForRarity(shipB,raritaB):levelB,deckB,seed+29,upgradesB,supportRosterB)
   },lastEvents:[]};
- for(const side of Object.values(b.sides)){
+ for(const [who,side] of Object.entries(b.sides)){
   side.ruleset=ruleset;
   side.synchronizationEffects=[];
+  // La rarità della singola carta determina la potenza di base delle madri.
+  // Leggendaria ha gli stessi HP/attacco/difesa su tutti e 12 i modelli.
+  const rarity=who==='A'?raritaA:raritaB;
+  if(ruleset===HP_SYNC_RULESET&&isShipRarity(rarity)){
+   const stats=motherCombatStatsForRarity(rarity),mother=side.ships[0];
+   mother.rarita=rarity;mother.rarity=rarity;
+   mother.hp=stats.maxHp;mother.maxHp=stats.maxHp;
+   mother.attackPower=stats.attackPower;
+   mother.defensePower=stats.defensePower;
+   mother.weaponRating=Math.max(0,stats.attackPower-1);
+   side.motherCardRarity=rarity;
+  }
  }
  emit(b,'system','start','Le flotte sono schierate. Ogni turno dura 30 secondi.');
  return b;
