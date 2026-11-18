@@ -7,6 +7,7 @@ import {SUPPORT_SKILL_LABELS,skillCount} from './fleetNext/supportAbilities.js';
 import {createFleetNextBattle,resolveFleetNextTurn,
  fuseIndependentSupportWithShip,fusionShipUnavailableReason} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 
 const roster=()=>[
  {id:supportModelIdFor('N00'),instanceId:'official:n00',slot:0,level:1},
@@ -33,6 +34,20 @@ test('Carta Navicella Fusione per ogni modello storico con dati e limite mazzo',
   assert.equal(canSelectNewGeneric(c.id),true);
   assert.equal(c.nativeFace,true);
   assert.equal(c.acquisitionPending,true);
+ }
+});
+
+test('Le Carte Fusione conservano la rarità del modello e l’ordine Comune/Rara/Epica/Leggendaria',()=>{
+ const models=new Map(PHASE1_CATALOG.ships.map(s=>[s.id,s]));
+ const ranks={Comune:0,Rara:1,Epica:2,Leggendaria:3};
+ let lastRank=-1;
+ for(const c of FUSION_SHIP_CARDS){
+  const model=models.get(c.fusionShipId);
+  assert.ok(model,'Modello sorgente sconosciuto: '+c.fusionShipId);
+  assert.equal(c.rarita,model.rarita);
+  assert.equal(c.raritySource,'ship-model');
+  assert.ok(ranks[c.rarita]>=lastRank,'Catalogo Fusione fuori ordine di rarità');
+  lastRank=ranks[c.rarita];
  }
 });
 
