@@ -52,11 +52,11 @@ export const SIMPLE_RULES=Object.freeze([
  'Una Trappola contro i Terreni annulla il prossimo Terreno avversario prima che si attivi. Il Terreno precedente resta; entrambe le carte usate vanno negli scarti.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
- 'Aurora parte con Arsenale e Generatore; sblocca Velo Aurora al L10 e Lancia Aurora al L18. Lince sblocca Sentinella Solare al L9 e Lama Rubino al L17. La Plancia gestisce il Personaggio; la Centralina abilita i supporti.',
+ 'Le due posizioni di supporto si sbloccano avanzando nella campagna: una nave madre e fino a due carte-navicella scelte nell’Hangar indipendentemente dalla madre.',
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
  'Smontaggio Forzato è una carta Attacco: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
  'Fusione unisce due supporti operativi. La prima può far entrare la terza unità sbloccata; la seconda unisce terza e quarta. Rimangono al massimo due supporti attivi.',
- 'La fusione conserva i danni in proporzione, consuma i supporti usati e non ricostruisce navicelle distrutte. Gli alloggiamenti Arma sono separati dai supporti.',
+ 'La nave fusa conserva gli HP attuali, gli HP massimi e le ferite del supporto scelto. Acquisisce l’elemento e la passiva della nave della carta Fusione, senza sommare HP o occupare nuovi slot.',
  'Le Carte Energia occupano una giocata. Ogni carta carica di 1 il reattore fino a 4; una sola abilità elementale per nave consuma da 1 a 4 cariche dello stesso elemento.',
  'Attacco ed Effetto Elementale sono alternativi: entrambi sostituiscono l’attacco normale di quel turno, e non creano un colpo aggiuntivo.'
 ]);
