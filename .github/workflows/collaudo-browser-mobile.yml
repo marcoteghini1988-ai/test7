@@ -1,0 +1,177 @@
+name: Collaudo mobile reale - Eclissi Stellare
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/collaudo-browser-mobile.yml'
+      - 'src/OfficialFleetBattle3D.jsx'
+      - 'src/ShipCollectionPanels.jsx'
+      - 'src/SupportHangarPanel.jsx'
+      - 'src/ShipPresentation.jsx'
+      - 'src/shipCollection.js'
+      - 'src/shipRarityShop.js'
+      - 'src/fleetNext/**'
+jobs:
+  mobile-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Browser Playwright per collaudo (senza app di prova)
+        run: npm install --no-save --package-lock=false playwright-core
+      - name: Avvia la vera applicazione Vite
+        run: |
+          npm run dev -- --host 127.0.0.1 > /tmp/eclissi-vite.log 2>&1 &
+          echo $! > /tmp/eclissi-vite.pid
+      - name: Collauda schermo mobile, battaglia, Hangar, Bazar e salvataggi
+        run: |
+          node <<'JS'
+          const fs=require('node:fs');
+          const assert=require('node:assert/strict');
+          const {execSync}=require('node:child_process');
+          const {chromium}=require('playwright-core');
+          const dir='artifacts/collaudo-mobile';
+          fs.mkdirSync(dir,{recursive:true});
+          const log=[];
+          let lastPage=null;
+          (async()=>{
+            const executablePath=execSync('command -v google-chrome || command -v chromium-browser || command -v chromium',{encoding:'utf8'}).trim();
+            const browser=await chromium.launch({executablePath,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            try{
+              async function contextAndPage(){
+                const context=await browser.newContext({viewport:{width:450,height:800},
+                 deviceScaleFactor:2,isMobile:true,hasTouch:true,locale:'it-IT',reducedMotion:'reduce'});
+                const page=await context.newPage();lastPage=page;
+                page.on('pageerror',e=>{log.push('PAGEERROR: '+String(e));});
+                return {context,page};
+              }
+              async function visit(page){
+                let loaded=false;
+                for(let i=0;i<12;i++){
+                  try{
+                    const r=await page.goto('http://127.0.0.1:5173/',{waitUntil:'domcontentloaded',timeout:2500});
+                    if(r?.ok()){loaded=true;break;}
+                  }catch{}
+                  await page.waitForTimeout(650);
+                }
+                assert.ok(loaded,'il server Vite non ha risposto');
+              }
+              async function splashClick(page){
+                await page.locator('body').click({position:{x:225,y:400},timeout:15000});
+              }
+              function ensureClean(){assert.deepEqual(log.filter(x=>x.startsWith('PAGEERROR')),[],'errori Javascript nel browser');}
+
+              console.log('COLLAUDO 1: primo avvio e combattimento reale in Chrome mobile 450x800');
+              {
+                const {context,page}=await contextAndPage();
+                await visit(page);
+                await splashClick(page);
+                await page.locator('.f3d-original-arena').waitFor({timeout:25000});
+                const hand=await page.locator('.live-special-hand button').count();
+                assert.equal(hand,7,'la mano ufficiale deve mostrare sette carte speciali');
+                assert.ok(await page.locator('.live-fighter--player').count()>0,'la madre del giocatore deve comparire');
+                assert.ok(await page.locator('.live-fighter--enemy').count()>0,'la madre avversaria deve comparire');
+                await page.screenshot({path:dir+'/01-prima-battaglia.png',fullPage:true,animations:'disabled'});
+                const pass=page.getByRole('button',{name:'PASSA',exact:true});
+                await pass.click({timeout:6500});
+                await page.waitForTimeout(700);
+                assert.ok(await page.locator('.f3d-original-arena').count()>0,'la plancia deve restare attiva dopo il turno');
+                ensureClean();
+                console.log('OK: nuova partita, due madri, sette carte, pulsante PASSA, nessun errore JS');
+                await context.close();
+              }
+              console.log('COLLAUDO 2: Hangar e Bazar attraverso interfaccia reale, con dati provvisori isolati');
+              {
+                const {context,page}=await contextAndPage();
+                await context.addInitScript(()=>{
+                  localStorage.setItem('eclissi_profile',JSON.stringify({nickname:'Collaudo QA'}));
+                });
+                await visit(page);
+                await splashClick(page);
+                await page.locator('.trophy-pedestal-container').waitFor({timeout:25000});
+                await page.evaluate(async()=>{
+                  const fleet=await import('/src/fleetNext/collection.js');
+                  const rarity=await import('/src/fleetNext/rarityCampaign.js');
+                  const rewards=await import('/src/shipCampaignRewards.js');
+                  fleet.writeFleetInventory({...fleet.createFleetInventory(),credits:30000});
+                  rarity.claimRarityCampaignVictory('campaign',85);
+                  rewards.claimCampaignSupportUnlock('campaign',20);
+                  rewards.claimCampaignSupportUnlock('campaign',60);
+                });
+                await page.reload({waitUntil:'domcontentloaded'});
+                await splashClick(page);
+                await page.locator('.trophy-pedestal-container').click({timeout:12000});
+                await page.locator('section.ship-hangar').waitFor({timeout:15000});
+                assert.equal(await page.locator('section.ship-hangar button.ship-card[data-rarity="Comune"]').count(),1,
+                  'l Hangar deve presentare la prima madre Comune');
+                assert.equal((await page.locator('section.ship-hangar .ship-card-level').first().innerText()).trim(),'Comune',
+                  'non mostrare L20 al posto della rarità');
+                assert.equal(await page.locator('section[aria-label="Navicelle di supporto indipendenti"] select').count(),2);
+                await page.screenshot({path:dir+'/02-hangar-rarita.png',fullPage:true,animations:'disabled'});
+                await page.getByRole('button',{name:'Catalogo madri'}).click({timeout:10000});
+                await page.getByText('Catalogo madri · Comune, Rara, Epica, Leggendaria').waitFor({timeout:10000});
+                const firstOffer=page.locator('section[aria-label="Catalogo navicelle per rarità"] .ship-shop-offer').first();
+                await firstOffer.locator('summary').first().click({timeout:10000});
+                await firstOffer.getByRole('button',{name:/ACQUISTA Rara/}).click({timeout:10000});
+                assert.ok(await page.evaluate(async()=>{
+                  const {readShipCollection}=await import('/src/shipCollection.js');
+                  return readShipCollection().cards.some(c=>c.shipId==='N00'&&c.rarita==='Rara');
+                }),'l acquisto reale deve aggiungere la madre Rara al salvataggio');
+                console.log('OK: acquisto carta madre Rara e sottrazione Crediti via UI');
+                await page.getByRole('button',{name:/Area/}).first().click({timeout:10000});
+                await page.locator('section.ship-hangar button.ship-card[data-rarity="Rara"]').click({timeout:10000});
+                await page.getByRole('button',{name:'Salva flotta'}).click({timeout:10000});
+                const equipped=await page.evaluate(async()=>{
+                  const {readShipCollection}=await import('/src/shipCollection.js');
+                  const c=readShipCollection();
+                  return c.cards.find(x=>x.instanceId===c.loadout[0])?.rarita;
+                });
+                assert.equal(equipped,'Rara','equipaggiamento della madre Rara persistente');
+                console.log('OK: Hangar salva carta madre Rara');
+                const supportSection=page.locator('section[aria-label="Navicelle di supporto indipendenti"]');
+                await supportSection.locator('details').first().locator('summary').click({timeout:10000});
+                await supportSection.locator('details').first().getByRole('button',{name:/COMPRA Leggendaria/}).first().click({timeout:10000});
+                const options=await page.locator('#support-formation-0 option').evaluateAll(all=>
+                  all.map(o=>({value:o.value,text:o.textContent})));
+                const legendary=options.find(o=>o.value&&o.text.includes('Leggendaria'));
+                assert.ok(legendary,'il supporto Leggendario acquistato deve apparire nella scelta');
+                await page.locator('#support-formation-0').selectOption(legendary.value);
+                await page.getByRole('button',{name:'SALVA SUPPORTI'}).click({timeout:10000});
+                const savedSupport=await page.evaluate(async()=>{
+                  const {readSupportCollection}=await import('/src/fleetNext/supportCollection.js');
+                  const c=readSupportCollection();
+                  return c.owned.find(x=>x.instanceId===c.equipped[0])?.rarita;
+                });
+                assert.equal(savedSupport,'Leggendaria','supporto Leggendario deve restare nello slot 1');
+                console.log('OK: acquisto e equipaggiamento supporto Leggendario');
+                await page.screenshot({path:dir+'/03-supporto-equipaggiato.png',fullPage:true,animations:'disabled'});
+                ensureClean();
+                await context.close();
+              }
+              console.log('COLLAUDO MOBILE COMPLETATO: nessun errore Javascript e salvataggi persistenti');
+            }finally{await browser.close();}
+          })().catch(async error=>{
+            console.error('COLLAUDO BROWSER FALLITO: '+(error.stack||error));
+            console.error('EVENTI BROWSER: '+JSON.stringify(log.slice(-20)));
+            if(lastPage)try{
+              console.error('TESTO SCHERMO: '+(await lastPage.locator('body').innerText()).slice(0,4500));
+              await lastPage.screenshot({path:dir+'/errore-collaudo.png',fullPage:true,animations:'disabled'});
+            }catch{}
+            process.exit(1);
+          });
+          JS
+      - name: Allega schermate del collaudo
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: collaudo-mobile-reale
+          path: artifacts/collaudo-mobile/
+          if-no-files-found: warn
