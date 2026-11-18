@@ -25,6 +25,8 @@ import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoado
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createSupportCollection,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {npcSupportRoster} from './fleetNext/supportCampaign.js';
+import {nativeMotherRarity,rarityUnlockedAtSector,rarityIndex,
+ SHIP_RARITIES,combatLevelForRarity} from './fleetNext/shipRarity.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,vesselWithPhysicalVitalDamage} from './officialVitalMotorAdapter.js';
@@ -59,8 +61,7 @@ const Physical=extract('./ShipPhysicalVitals.jsx','ShipPhysicalVitals',{
  ShipSkin:()=>null,Engine:props=>React.createElement('button',{'aria-label':props.vitalName,'data-short-label':props.vitalLabel,disabled:!props.enabled},props.vitalLabel)
 });
 const ProgressionDetails=extract('./ShipCollectionPanels.jsx','ShipProgressionDetails',{
- getShipProgression,getShipProgressionLevels,shipProgressionProfile,
- activeFleetElements,FLEET_ELEMENTS,fleetElementNames,secondaryElementUnlockLevel,elementalAbility,EXCLUSIVE_CARDS
+ nativeMotherRarity,combatLevelForRarity,activeFleetElements,FLEET_ELEMENTS,elementalAbility
 });
 
 // Test su carte ritirate eliminati; restano i test delle funzioni ancora attive.
@@ -126,20 +127,20 @@ test('Clicking an enemy support or machine emits its real kind, id and slot',()=
  assert.deepEqual(selected,[{kind:'escort',id:side.escorts[0].id,slot:0},{kind:'machine',id:'machine:test',slot:0}]);
  const html=renderToStaticMarkup(tree);
  assert.match(html,/2 in riserva/);
- assert.match(html,/G2/);
+ assert.match(html,/Supporto/);
 });
 
 
-test('Hangar mostra le progressioni estese, con Aurora L20 e Arca L5',()=>{
- const aurora=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',level:5}));
- assert.match(aurora,/2 sistemi della madre/);assert.match(aurora,/slot supporto sono permanenti/);
- for(let level=1;level<=20;level++)assert.match(aurora,new RegExp('Livello '+level+'(?:<| )'));
- const evolved=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',level:20}));
- assert.match(evolved,/slot supporto sono permanenti/);
- assert.match(evolved,/100%/);
- const arca=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'L04',level:5}));
- assert.match(arca,/4 sistemi della madre/);
- assert.match(arca,/slot supporto sono permanenti/);
+test('Hangar mostra rarità proprie e affinità, senza 20 livelli di upgrade',()=>{
+ const aurora=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',rarita:'Comune'}));
+ assert.match(aurora,/Rarità: Comune/);
+ assert.doesNotMatch(aurora,/Livello 20/);
+ const evolved=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'N00',rarita:'Leggendaria'}));
+ assert.match(evolved,/Rarità: Leggendaria/);
+ assert.match(evolved,/Fulmine/);
+ const arca=renderToStaticMarkup(React.createElement(ProgressionDetails,{shipId:'L04',rarita:'Leggendaria'}));
+ assert.match(arca,/Rarità: Leggendaria/);
+ assert.match(arca,/Acqua/);
 });
 
 
@@ -162,7 +163,8 @@ test('La battaglia ufficiale usa due supporti equipaggiati, zero riserve automat
   readSupportCollection:()=>createSupportCollection(),equippedSupportRoster,npcSupportRoster,
   findMother:()=>owned,officialBossEncounter,officialEarlyCampaignRivalShip,officialCampaignRivalLevel,
   chooseCampaignMotherRival,campaignFleetShipId,createFleetNextBattle,
-  readNextDeckSelection:()=>null,buildNextBaseDeck,HP_SYNC_RULESET
+  readNextDeckSelection:()=>null,buildNextBaseDeck,HP_SYNC_RULESET,
+  nativeMotherRarity,rarityUnlockedAtSector,rarityIndex,SHIP_RARITIES,combatLevelForRarity
  });
  const session=start({mode:'campaign',sectorNumber:120,bossPlanetId:20,bossSectorLevel:10});
  assert.equal(session.error,'');
@@ -177,8 +179,8 @@ test('La battaglia ufficiale usa due supporti equipaggiati, zero riserve automat
   'il giocatore senza traguardi entra solo con la madre');
  assert.equal([...boss.deck,...boss.hand].filter(id=>id==='nx-l04-05').length,1,
   'la carta dell’Arca non rappresenta più una fusione automatica');
- assert.ok(boss.escorts.every(e=>e.supportLevel===1),
-  'i supporti avversari partono da L1 e non sono abilitati alla fusione immediata');
+ assert.ok(boss.escorts.every(e=>e.supportRarity==='Leggendaria'),
+  'il settore finale sfida supporti Leggendari ma non regala unità extra');
 });
 
 function battleUi(seed){
