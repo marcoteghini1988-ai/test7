@@ -1,192 +1,175 @@
-import React, {useEffect, useState} from 'react';
-import {getShipDefinition, PHASE1_SHIPS} from './mathDuelEngine.js';
+// Hangar madri: quattro rarità collezionabili, nessun livello numerico esposto.
+// I livelli del motore sono proiezioni interne per non rifare la plancia 3D.
+import React,{useEffect,useState} from 'react';
+import {getShipDefinition,PHASE1_SHIPS} from './mathDuelEngine.js';
 import {ShipCard} from './ShipPresentation.jsx';
 import FleetCollectionWorkshop from './FleetCollectionWorkshop.jsx';
 import SupportHangarPanel from './SupportHangarPanel.jsx';
-import {SHIP_COLLECTION_KEY, equipShipCards, readShipCollection, updateShipCollection} from './shipCollection.js';
+import {SHIP_COLLECTION_KEY,equipShipCards,readShipCollection,updateShipCollection} from './shipCollection.js';
 import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
-import {shipUpgradeDustCost} from './shipUpgrades.js';
-import {getShipProgression,getShipProgressionLevels,shipProgressionProfile,shipMaxLevel} from './fleetNext/progression.js';
 import {EXCLUSIVE_CARDS} from './fleetNext/rules.js';
-import {fleetElementNames,activeFleetElements,secondaryElementUnlockLevel,FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
+import {activeFleetElements,FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import {elementalAbility} from './fleetNext/elementalAbilities.js';
+import {SHIP_RARITIES,rarityIndex,rarityPurchaseCost,rarityEvolutionCost,
+ rarityMayBeAcquired,nativeMotherRarity,nextShipRarity,
+ combatLevelForRarity,RARITY_DUPLICATE_COPIES} from './fleetNext/shipRarity.js';
+import {readRarityCampaign} from './fleetNext/rarityCampaign.js';
+import {readFleetInventory} from './fleetNext/collection.js';
+import {purchaseMotherCopy,evolveMotherCopy} from './shipRarityShop.js';
 import './ShipCollectionPanels.css';
 
-function readCollection() {
-  try {
-    return readShipCollection();
-  } catch {
-    return null;
-  }
+function readCollection(){try{return readShipCollection();}catch{return null;}}
+function useShipCollection(){
+ const [collection,setCollection]=useState(readCollection);
+ useEffect(()=>{
+  const refresh=event=>{if(event.key===SHIP_COLLECTION_KEY||event.key===null)setCollection(readCollection());};
+  window.addEventListener('storage',refresh);
+  return ()=>window.removeEventListener('storage',refresh);
+ },[]);
+ return [collection,setCollection];
 }
-
-function useShipCollection() {
-  const [collection, setCollection] = useState(readCollection);
-  useEffect(() => {
-    function refresh(event) {
-      if (event.key === SHIP_COLLECTION_KEY || event.key === null) setCollection(readCollection());
-    }
-    window.addEventListener('storage', refresh);
-    return () => window.removeEventListener('storage', refresh);
-  }, []);
-  return [collection, setCollection];
-}
-
-export function ShipProgressionDetails({shipId,level=1}){
- const current=getShipProgression(shipId,level);
- const profile=shipProgressionProfile(shipId);
- return <div className="ship-progression" aria-label={'Progressione '+shipId}>
-  {activeFleetElements(shipId,level).map((elementId,index)=><p key={elementId}>
-   <b>{index===0?'Elemento principale':'Secondo elemento'}: {FLEET_ELEMENTS[elementId].name}</b>
-   {' · Forte contro: '+FLEET_ELEMENTS[elementId].beats.map(id=>FLEET_ELEMENTS[id].name).join(' e ')}
-   {' · Debole contro: '+FLEET_ELEMENTS[elementId].weakTo.map(id=>FLEET_ELEMENTS[id].name).join(' e ')}.
-  </p>)}
-  {secondaryElementUnlockLevel(shipId)&&level<secondaryElementUnlockLevel(shipId)&&
-   <p>Seconda affinità: {fleetElementNames(shipId).at(-1)} dal livello {secondaryElementUnlockLevel(shipId)}.</p>}
-  <p>Abilità elementale: <strong>{elementalAbility(shipId)?.name}</strong> ·
-   {elementalAbility(shipId)?.kind==='attack'?' Attacco Speciale':' Effetto Speciale'} ·
-   richiede {elementalAbility(shipId)?.cost} {elementalAbility(shipId)?.cost===1?'Carta Energia':'Carte Energia'}.
-  </p>
-  <p>Vantaggio elementale: <strong>+25% danni</strong> contro gli elementi vulnerabili; 
-   svantaggio: <strong>−50% danni</strong> contro quelli resistenti, anche con armi normali.
-  </p>
-  <p>Il colpo normale resta disponibile senza Carte Energia. Le animazioni definitive saranno create successivamente.</p>
-  <p>{current.vitalIds.length} sistemi della madre · Attacco {current.attackPower}
-   {' · Difesa '+current.defensePower}. Gli slot supporto sono permanenti e
-   dipendono dalla campagna, non dal livello della madre.</p>
-  <details><summary>I {profile.maxLevel} livelli · traguardo competitivo 100%</summary>
-   <p>La progressione della madre migliora i sistemi e le esclusive;
-    lo sblocco dei supporti è separato e comune a tutte le madri.</p>
-   <ol>{getShipProgressionLevels(shipId).map(stage=><li key={stage.level} aria-current={stage.level===level?'step':undefined}>
-    <b>Livello {stage.level}</b><span>{[...stage.unlocks.filter(text=>
-      !/scudiera|supporto|fusione|riserva/i.test(text)),
-     ...Object.values(EXCLUSIVE_CARDS).filter(c=>c.shipId===shipId&&c.minShipLevelDraft===stage.level)
-      .map(c=>'Carta esclusiva: '+(c.name||c.nome))].join(' · ')}</span>
-   </li>)}</ol>
-  </details>
+export function ShipProgressionDetails({shipId,rarita=nativeMotherRarity(shipId)}){
+ const level=combatLevelForRarity(shipId,rarita);
+ const elements=activeFleetElements(shipId,level);
+ return <div className="ship-progression" aria-label={'Rarità '+shipId}>
+  <p><b>Rarità: {rarita}</b> · Elementi: {elements.map(id=>FLEET_ELEMENTS[id].name).join(' / ')}</p>
+  {elements.map(id=><p key={id}>{FLEET_ELEMENTS[id].symbol+' '+FLEET_ELEMENTS[id].name}
+   {' · Forte contro '+FLEET_ELEMENTS[id].beats.map(x=>FLEET_ELEMENTS[x].name).join(' e ')}
+   {' · Debole contro '+FLEET_ELEMENTS[id].weakTo.map(x=>FLEET_ELEMENTS[x].name).join(' e ')}</p>)}
+  <p>Abilità elementale: <b>{elementalAbility(shipId)?.name}</b>.
+   Vantaggio elementale +25% danni, svantaggio −50%.</p>
+  <p>Le 10 esclusive della madre restano uniche per modello; le rarità avanzate
+   consentono di utilizzarne sempre di più. Le fusioni delle carte supporto sono separate.</p>
  </div>;
 }
-
-export function ShipShopPanel({stardust=0,onUpgradeShip=null}) {
-  const [collection,setCollection] = useShipCollection();
-  const [preview,setPreview] = useState('');
-  const [upgrading,setUpgrading] = useState(false);
-  const [message,setMessage] = useState('');
-  async function upgrade(card){
-    if(!card||upgrading||!onUpgradeShip)return;
-    const target=card.level+1,cost=shipUpgradeDustCost(card.shipId,target);
-    if(cost===null||!Number.isFinite(stardust)||stardust<cost)return;
-    setUpgrading(true);
-    try{
-     const done=await onUpgradeShip(card.instanceId,target,cost);
-     if(done){setCollection(readCollection());setMessage('Navicella potenziata al livello '+target);}
-     else setMessage('Potenziamento non eseguito. Verifica le risorse.');
-    }catch{setMessage('Potenziamento non salvato: la carta precedente è conservata.');}
-    finally{setUpgrading(false);}
+export function ShipShopPanel(){
+ const [collection,setCollection]=useShipCollection();
+ const [credits,setCredits]=useState(()=>readFleetInventory().credits);
+ const [progress,setProgress]=useState(()=>{try{return readRarityCampaign();}catch{return {highestSector:1,rarity:'Comune'};}});
+ const [message,setMessage]=useState('');
+ const [busy,setBusy]=useState(false);
+ useEffect(()=>{
+  const reload=()=>{
+   setCollection(readCollection());
+   try{setCredits(readFleetInventory().credits);setProgress(readRarityCampaign());}catch{}
+  };
+  window.addEventListener('eclissi-shop-changed',reload);
+  window.addEventListener('storage',reload);
+  return ()=>{window.removeEventListener('eclissi-shop-changed',reload);window.removeEventListener('storage',reload);};
+ },[setCollection]);
+ const refresh=result=>{
+  setMessage(result.ok?('Carta ottenuta: '+result.rarita+' · '+result.price+' Crediti spesi'):result.reason);
+  if(result.ok){
+   setCollection(result.collection);setCredits(result.inventory.credits);
+   window.dispatchEvent(new Event('eclissi-shop-changed'));
   }
-  return <section className="ship-collection-panel es-math-scope" aria-label="Catalogo navicelle">
-    <h4>Catalogo navicelle</h4>
-    <p>Le navicelle ottenute sono permanenti. Ogni famiglia ha un percorso da 5 a 20 livelli: le prime richiedono più miglioramenti, ma tutte raggiungono il 100% del potenziale progettato. I valori HP finali saranno bilanciati dopo le abilità dei supporti.</p>
-    {collection
-      ? <p>Carte possedute · {collection.cards.length} su {PHASE1_SHIPS.length}</p>
-      : <p role="status">Il salvataggio della collezione è illeggibile. Puoi consultare il catalogo.</p>}
-    <label className="ship-collection-preview">
-      Livello di anteprima
-      <select value={preview} onChange={event => setPreview(event.target.value)}>
-        <option value="">Livelli attuali</option>
-        {Array.from({length:20},(_,i)=>i+1).map(level=><option key={level} value={level}>Anteprima L{level}</option>)}
-      </select>
-    </label>
-    {message&&<p role="status">{message}</p>}
-    <div className="ship-collection-grid">
-      {PHASE1_SHIPS.map(ship => {
-        const card = collection?.cards.find(entry => entry.shipId === ship.id);
-        const equipped = card && collection.loadout[0]===card.instanceId;
-        const milestone=SHIP_CAMPAIGN_UNLOCKS.find(item=>item.shipId===ship.id);
-        const maxLevel=shipMaxLevel(ship.id);
-        const status = card
-          ? `${equipped ? 'Equipaggiata' : 'Posseduta'} · L${card.level}/${maxLevel}${card.level === maxLevel ? ' · Livello massimo' : ''}`
-          : collection ? milestone?'Campagna · vittoria settore '+milestone.sector:'Da ottenere' : 'Proprietà non disponibile';
-        const nextLevel=card&&card.level<maxLevel?card.level+1:null;
-        const cost=nextLevel?shipUpgradeDustCost(ship.id,nextLevel):null;
-        return <div key={ship.id} className="ship-shop-offer">
-          <ShipCard shipId={ship.id} level={Math.min(maxLevel,Number(preview) || card?.level || 1)} status={status} fleetProgression/>
-          <ShipProgressionDetails shipId={ship.id} level={Math.min(maxLevel,Number(preview) || card?.level || 1)}/>
-          {nextLevel&&<button type="button" className="ship-upgrade-button"
-            disabled={upgrading||!!preview||!onUpgradeShip||!Number.isFinite(stardust)||stardust<cost}
-            onClick={()=>upgrade(card)}>
-            POTENZIA L{nextLevel} · {cost} 🌟
-          </button>}
-        </div>;
+ };
+ const buy=(shipId,rarita)=>{
+  if(busy)return;setBusy(true);
+  try{refresh(purchaseMotherCopy(shipId,rarita));}finally{setBusy(false);}
+ };
+ const evolve=instanceId=>{
+  if(busy)return;setBusy(true);
+  try{refresh(evolveMotherCopy(instanceId));}finally{setBusy(false);}
+ };
+ return <section className="ship-collection-panel es-math-scope" aria-label="Catalogo navicelle per rarità">
+  <h4>Catalogo madri · Comune, Rara, Epica, Leggendaria</h4>
+  <p>Ogni copia possiede la propria rarità. Le prime madri possono diventare Leggendarie
+   e competere con le ultime: il vantaggio reale dipende da elementi e abilità.</p>
+  <p>Rarità sbloccata dalla campagna: <b>{progress.rarity}</b>
+   {' · settore raggiunto '+progress.highestSector+' · Crediti Stellari '+credits.toLocaleString('it-IT')+' ✦'}</p>
+  {collection?<p>Carte madri possedute: {collection.cards.length} · 12 modelli ufficiali</p>:
+   <p role="alert">Il salvataggio non è leggibile; nessuna carta è stata sovrascritta.</p>}
+  {message&&<p role="status">{message}</p>}
+  <div className="ship-collection-grid">
+   {PHASE1_SHIPS.map(ship=>{
+    const owned=collection?.cards.filter(c=>c.shipId===ship.id)||[];
+    const native=nativeMotherRarity(ship.id);
+    const first=owned.find(c=>c.rarita===native)||owned[0];
+    const campaign=SHIP_CAMPAIGN_UNLOCKS.find(x=>x.shipId===ship.id);
+    const preview=owned.reduce((best,c)=>rarityIndex(c.rarita)>rarityIndex(best)?c.rarita:best,native);
+    return <div key={ship.id} className="ship-shop-offer">
+     <ShipCard shipId={ship.id} level={combatLevelForRarity(ship.id,preview)}
+      status={owned.length?owned.length+' copie possedute · rarità massima '+preview:
+       campaign?'Sblocco modello · settore '+campaign.sector:'Madre iniziale'} fleetProgression/>
+     <ShipProgressionDetails shipId={ship.id} rarita={preview}/>
+     <p>Copie: {SHIP_RARITIES.filter(r=>rarityIndex(r)>=rarityIndex(native))
+      .map(r=>r+' '+owned.filter(c=>c.rarita===r).length).join(' · ')}</p>
+     {collection&&owned.length>0&&<details><summary>Acquista una copia di questa madre</summary>
+      {SHIP_RARITIES.filter(r=>rarityIndex(r)>=rarityIndex(native)).map(r=>{
+       const price=rarityPurchaseCost('mother',r);
+       const unlocked=rarityMayBeAcquired(r,native,progress.highestSector);
+       return <button type="button" className="ship-upgrade-button" key={r}
+        disabled={!unlocked||credits<price||busy}
+        onClick={()=>buy(ship.id,r)}>
+        {unlocked?'ACQUISTA '+r+' · '+price+' ✦':r+' · rarità bloccata'}</button>;
       })}
-    </div>
-  </section>;
+     </details>}
+     {owned.map(copy=>{
+      const next=nextShipRarity(copy.rarita);
+      const matching=owned.filter(x=>x.rarita===copy.rarita).length;
+      const ready=next&&matching>=RARITY_DUPLICATE_COPIES&&
+       rarityMayBeAcquired(next,native,progress.highestSector);
+      const price=next?rarityEvolutionCost('mother',next):null;
+      return <div key={copy.instanceId}>
+       <small>{copy.instanceId+' · '+copy.rarita}</small>
+       {next&&<button type="button" className="ship-upgrade-button"
+        disabled={!ready||credits<price||busy}
+        onClick={()=>evolve(copy.instanceId)}>
+        {'EVOLVI IN '+next+' · 3 copie '+copy.rarita+' + '+price+' ✦'}
+       </button>}
+      </div>;
+     })}
+    </div>;
+   })}
+  </div>
+  <p>L'evoluzione consuma due copie della stessa rarità, ne conserva una per la
+   collezione e crea la carta successiva. Prezzi provvisori, nessun acquisto con denaro reale.</p>
+ </section>;
 }
-
-export function ShipHangarPanel({onOpenCatalog}) {
-  const [collection, setCollection] = useShipCollection();
-  const [draft, setDraft] = useState(null);
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState('');
-  const loadout = (draft ?? collection?.loadout ?? []).slice(0,1);
-  const changed = draft !== null && (
-    loadout.length !== collection?.loadout.length ||
-    loadout.some((id, index) => id !== collection.loadout[index])
-  );
-
-  function toggle(id) {
-    const next = [id]; // La madre equipaggiata è UNA: le altre carte restano possedute.
-    try {
-      if (next.length) equipShipCards(collection, next);
-      setDraft(next);
-      setMessage('');
-    } catch (error) {
-      setMessage(error.message);
-    }
-  }
-
-  async function save() {
-    setSaving(true);
-    try {
-      const updated = await updateShipCollection(current => equipShipCards(current, loadout));
-      setCollection(updated);
-      setDraft(null);
-      setMessage('Flotta salvata.');
-    } catch {
-      setMessage('Impossibile salvare la flotta. Riapri l’Hangar e riprova.');
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  return <section className="ship-collection-panel ship-hangar es-math-scope" aria-label="Flotta Hangar">
-    <h4>Hangar della flotta</h4>
-    {collection ? <>
-      <p>Seleziona la nave MADRE. I due supporti si scelgono a parte:
-       gli slot si sbloccano con la campagna e i supporti equipaggiati
-       restano gli stessi quando cambi madre.</p>
-      <ol className="ship-collection-formation" aria-label="Navicella madre equipaggiata">
-        {loadout.map(id => {
-          const card = collection.cards.find(entry => entry.instanceId === id);
-          return <li key={id}>{card ? `${getShipDefinition(card.shipId).nome} · L${card.level}` : 'Carta non disponibile'}</li>;
-        })}
-      </ol>
-      <div className="ship-collection-grid">
-        {collection.cards.map(card => <div key={card.instanceId} className="ship-shop-offer">
-         <ShipCard shipId={card.shipId} level={card.level} fleetProgression
-          selected={loadout.includes(card.instanceId)} onSelect={() => toggle(card.instanceId)} disabled={saving}
-          status={card.level === shipMaxLevel(card.shipId) ? 'Livello massimo' : `Potenziamento successivo · L${card.level + 1}/${shipMaxLevel(card.shipId)}`}/>
-         <ShipProgressionDetails shipId={card.shipId} level={card.level}/>
-        </div>)}
-      </div>
-    </> : <p role="status">Il salvataggio della collezione è illeggibile.</p>}
-    {message && <p role="status">{message}</p>}
-    <SupportHangarPanel/>
-    <FleetCollectionWorkshop initialTab="exclusive"/>
-    <div className="ship-collection-actions">
-      <button type="button" className="cyber-btn" onClick={onOpenCatalog} disabled={saving}>Catalogo navi</button>
-      <button type="button" className="cyber-btn cyber-btn-primary" onClick={save}
-        disabled={!collection || !loadout.length || !changed || saving}>Salva flotta</button>
-    </div>
-  </section>;
+export function ShipHangarPanel({onOpenCatalog}){
+ const [collection,setCollection]=useShipCollection();
+ const [draft,setDraft]=useState(null);
+ const [saving,setSaving]=useState(false);
+ const [message,setMessage]=useState('');
+ const loadout=(draft??collection?.loadout??[]).slice(0,1);
+ const changed=draft!==null&&loadout[0]!==collection?.loadout[0];
+ const toggle=id=>{
+  try{equipShipCards(collection,[id]);setDraft([id]);setMessage('');}
+  catch(e){setMessage(e.message);}
+ };
+ const save=async()=>{
+  setSaving(true);
+  try{
+   const updated=await updateShipCollection(current=>equipShipCards(current,loadout));
+   setCollection(updated);setDraft(null);setMessage('Madre salvata.');
+  }catch{setMessage('Formazione non salvata; la copia precedente è conservata.');}
+  finally{setSaving(false);}
+ };
+ return <section className="ship-collection-panel ship-hangar es-math-scope" aria-label="Flotta Hangar">
+  <h4>Hangar · collezione delle madri</h4>
+  {collection?<><p>Seleziona UNA carta madre posseduta. Due copie dello stesso modello possono
+   avere rarità differenti. I due supporti si scelgono separatamente.</p>
+   <ol className="ship-collection-formation" aria-label="Madre equipaggiata">
+    {loadout.map(id=>{const c=collection.cards.find(x=>x.instanceId===id);
+     return <li key={id}>{c?getShipDefinition(c.shipId).nome+' · '+c.rarita:'Carta non disponibile'}</li>;})}
+   </ol>
+   <div className="ship-collection-grid">
+    {collection.cards.map(c=><div className="ship-shop-offer" key={c.instanceId}>
+     <ShipCard shipId={c.shipId} level={combatLevelForRarity(c.shipId,c.rarita)}
+      fleetProgression selected={loadout.includes(c.instanceId)}
+      onSelect={()=>toggle(c.instanceId)} disabled={saving}
+      status={c.rarita+' · '+c.instanceId}/>
+     <ShipProgressionDetails shipId={c.shipId} rarita={c.rarita}/>
+    </div>)}
+   </div></>:<p role="alert">Impossibile leggere la collezione.</p>}
+  {message&&<p role="status">{message}</p>}
+  <SupportHangarPanel/>
+  <FleetCollectionWorkshop initialTab="exclusive"/>
+  <div className="ship-collection-actions">
+   <button type="button" className="cyber-btn" onClick={onOpenCatalog} disabled={saving}>Catalogo madri</button>
+   <button type="button" className="cyber-btn cyber-btn-primary" onClick={save}
+    disabled={!collection||!loadout.length||!changed||saving}>Salva flotta</button>
+  </div>
+ </section>;
 }
