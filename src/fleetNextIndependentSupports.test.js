@@ -15,7 +15,7 @@ test('Un modello di carta-navicella per ogni famiglia, con vecchi ID ancora rico
  assert.equal(SUPPORT_CATALOG.length,13);
  assert.equal(new Set(SUPPORT_CATALOG.map(s=>s.shipModelId)).size,13);
  assert.deepEqual(SUPPORT_CATALOG.map(s=>s.shipModelId),SUPPORT_MODEL_IDS);
- assert.equal(Object.keys(SUPPORT_CATALOG_BY_ID).length,PHASE1_CATALOG.ships.length*3);
+ assert.equal(Object.keys(SUPPORT_CATALOG_BY_ID).length,39);
  for(const mother of PHASE1_CATALOG.ships){
   const own=supportDefinition(supportModelIdFor(mother.id));
   assert.ok(own.name); // I 13 modelli ufficiali prendono il nome dalla passiva

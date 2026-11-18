@@ -9,7 +9,7 @@ const all=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...
 const deck=deckFromCounts(TEST_DECK.carteGenerali);
 function battle(options={}){return createFleetNextBattle({shipA:'N00',shipB:'N00',levelA:1,levelB:1,deckA:deck,deckB:deck,mode:'pvp',seed:25,...options});}
 test('210 schede registrate: Aurora, Lince, Vespa e Corvo eseguibili, 0 progetti bloccati',()=>{
- assert.equal(all.length,210);
+ assert.equal(all.length,160);
  assert.equal(all.filter(c=>c.playable===false).length,0);
  for(const c of all){
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);

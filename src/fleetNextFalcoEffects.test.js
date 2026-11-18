@@ -330,5 +330,5 @@ test('Boss e personaggi restano nel catalogo durante il Falco',async()=>{
  const {BOSS_CARDS,GENERAL_CARDS,EXCLUSIVE_CARDS}=await import('./fleetNext/rules.js');
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(c=>c.kind==='character').length,12);
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,12);
 });

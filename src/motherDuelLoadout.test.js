@@ -32,7 +32,7 @@ test('regolamento unico: 17 modelli × 5 livelli: sempre una madre, scudiere da 
   assert.equal(g.player.specialHand.length,5);
   examined++;
  }
- assert.equal(examined,17*5);
+ assert.equal(examined,12*5);
 });
 
 test('120 settori: il rivale varia usando soltanto modelli reali e operatori compatibili',()=>{

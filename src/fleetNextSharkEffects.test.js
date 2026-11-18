@@ -260,6 +260,6 @@ test('Ammiraglio non rianima una unità distrutta e non scarta la carta',()=>{
 test('Il catalogo Squalo conserva i 12 Boss e gli altri Personaggi',async()=>{
  const {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS}=await import('./fleetNext/rules.js');
  assert.equal(Object.values(GENERAL_CARDS).filter(c=>c.kind==='character').length,12);
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,12);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
 });

@@ -8,7 +8,7 @@ const card=(value,suit)=>({value,suit,id:suit+value});
 const battle=(id,level=5)=>initialBattle(1,{vitalPrototype:true,fleetIds:[id],shipLevel:level},()=>.5);
 const escort=(b,slot)=>b.player.escorts[slot];
 test('34 armi / 17 flotte: tutti e sette i ruoli sono riconosciuti',()=>{
- assert.equal(Object.keys(ESCORT_ARMORY).length,17);assert.equal(Object.keys(ESCORT_ROLE_HELP).length,7);
+ assert.equal(Object.keys(ESCORT_ARMORY).length,12);assert.equal(Object.keys(ESCORT_ROLE_HELP).length,7);
  for(const [id,list] of Object.entries(ESCORT_ARMORY)){
   assert.equal(list.length,2,id);
   for(const gun of list)assert.ok(ESCORT_ROLE_HELP[gun.role],id+' '+gun.role);

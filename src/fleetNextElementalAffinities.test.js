@@ -6,6 +6,7 @@ import {FLEET_ELEMENT_IDENTITIES,FLEET_ELEMENTS,fleetElements,activeFleetElement
  projectedElementalMatchup,elementalRelation,elementalAttackProfile
 } from './fleetNext/elementalAffinities.js';
 import {createFleetMother} from './fleetNext/combat.js';
+import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 
 test('Tutti e dieci gli elementi hanno due vantaggi e due debolezze, nessun doppio vantaggio reciproco',()=>{
  assert.equal(Object.keys(FLEET_ELEMENTS).length,10);
@@ -61,7 +62,8 @@ test('Le diciassette navicelle possono avere uno o due elementi, il secondo si a
   assert.equal(shot.normalShotUnchanged,true,id);
   assert.equal(shot.combatBonusEnabled,true,id);
  }
- assert.equal(allPrimaries.size,10,'tutti gli elementi sono primari di almeno una nave');
+ assert.equal(new Set([...allPrimaries,...SUPPORT_CATALOG.map(s=>s.elementId)]).size,10,
+  'Le 12 madri e i 13 supporti coprono tutti i 10 elementi');
 });
 
 test('289 confronti fra 17 navi: forza e debolezza non dipendono dal verso e non danno bonus PvP gratuiti',()=>{

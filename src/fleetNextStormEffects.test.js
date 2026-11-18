@@ -68,7 +68,7 @@ test('Tempesta ha esattamente dieci esclusive native e sblocchi 6+1+1+1+1',()=>{
  assert.equal(effectiveDeck([],'E02',shipMaxLevel('E02')).filter(id=>IDS.includes(id)).length,10);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.values(GENERAL_CARDS).filter(c=>c.kind==='character').length,12);
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,12);
 });
 test('Bobina a catena: un attacco reale ferisce due unità, ma non crea catene ricorsive',()=>{
  let b=make();mount(b.sides.A,'nx-e02-01');

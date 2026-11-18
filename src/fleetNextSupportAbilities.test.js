@@ -27,7 +27,7 @@ const battle=(skillA=null,skillB=null)=>createFleetNextBattle({
 test('Tredici modelli ufficiali e quindici abilità tecniche legacy ancora riconosciute',()=>{
  assert.equal(SUPPORT_CATALOG.length,13);
  assert.equal(Object.keys(SUPPORT_SKILL_LABELS).length,15);
- assert.equal(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length,17);
+ assert.equal(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length,12);
  assert.equal(new Set(SUPPORT_CATALOG.map(x=>x.skillId)).size,13);
  const first=select('regeneration');
  const side=createFleetSide('N00',1,[],100,{},[

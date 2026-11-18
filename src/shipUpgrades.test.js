@@ -13,7 +13,7 @@ function storage(){
 }
 
 test('piani di potenziamento disponibili per tutte le 17 navi, fino al livello specifico',()=>{
- assert.equal(PHASE1_SHIPS.length,17);
+ assert.equal(PHASE1_SHIPS.length,12);
  for(const ship of PHASE1_SHIPS){
   for(let target=2;target<=shipMaxLevel(ship.id);target++){
    const price=shipUpgradeDustCost(ship.id,target);

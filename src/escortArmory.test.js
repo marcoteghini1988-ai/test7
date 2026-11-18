@@ -4,7 +4,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {ESCORT_ARMORY,ALL_SEMES,escortArmamentFor,routedAmmo} from './escortArmory.js';
 import {newVessel} from './mathDuelEngine.js';
 test('34 armamenti con semi validi e senza carte collezionabili aggiuntive',()=>{
- assert.equal(Object.keys(ESCORT_ARMORY).length,17);
+ assert.equal(Object.keys(ESCORT_ARMORY).length,12);
  for(const def of PHASE1_CATALOG.ships){
   const mother=newVessel(def.id,5);
   const guns=[escortArmamentFor(mother,0),escortArmamentFor(mother,1)];

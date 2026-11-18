@@ -6,7 +6,7 @@ import {initialBattle} from './mathDuelEngine.js';
 const defensive=new Set(['Guardia','Intercettore','Baluardo']);
 const offensive=new Set(['Assalto','Incursore','Assedio','Artiglieria']);
 test('punto24: all 17 mother families have a defensive escort #1 and offensive escort #2',()=>{
- assert.equal(Object.keys(ESCORT_ARMORY).length,17);
+ assert.equal(Object.keys(ESCORT_ARMORY).length,12);
  for(const [id,slots] of Object.entries(ESCORT_ARMORY)){
   assert.equal(slots.length,2,id);
   assert.ok(defensive.has(slots[0].role),id+' escort 1');

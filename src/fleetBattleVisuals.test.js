@@ -14,8 +14,8 @@ const game=(levelA=5,levelB=3)=>createFleetCardBattle({
 const order=()=>({shipIndex:0,partId:'command',cards:[]});
 test('Le 42 armi originali restano assegnate alle 17 madri',()=>{
  const visuals=fleetWeaponVisuals();
- assert.equal(visuals.length,42);
- assert.equal(new Set(visuals.map(w=>w.id)).size,42);
+ assert.equal(visuals.length,27);
+ assert.equal(new Set(visuals.map(w=>w.id)).size,27);
  assert.ok(new Set(visuals.map(w=>w.style)).size>=7);
  for(const w of PHASE1_CATALOG.weapons){
   const v=visuals.find(x=>x.id===w.id);

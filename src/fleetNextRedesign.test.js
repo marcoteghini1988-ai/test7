@@ -27,7 +27,7 @@ test('Le 120 esclusive ufficiali sono eseguibili: dieci per ogni madre, sei al L
 test('Tutti i Personaggi e Boss conservati, le 350 carte obsolete non appartengono al catalogo',()=>{
  assert.equal(Object.keys(GENERAL_CARDS).length,12);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,17);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>c.kind==='character').length,12);
  const allOld=[...retired.generalIds,...retired.exclusiveIds];
  assert.equal(allOld.length,350);
  for(const id of allOld)assert.equal(card(id),null,id);

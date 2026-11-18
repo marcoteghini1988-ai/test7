@@ -7,7 +7,6 @@ import {SUPPORT_SKILL_LABELS,skillCount} from './fleetNext/supportAbilities.js';
 import {createFleetNextBattle,resolveFleetNextTurn,
  fuseIndependentSupportWithShip,fusionShipUnavailableReason} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
-import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
 
 const roster=()=>[
@@ -39,7 +38,7 @@ test('Tredici Carte Navicella Fusione, una per ogni supporto ufficiale',()=>{
 });
 
 test('Tutte le Carte Fusione sono Leggendarie e rappresentano il modello al livello MAX',()=>{
- const models=new Map(PHASE1_CATALOG.ships.map(s=>[s.id,s]));
+ const models=new Map(SUPPORT_CATALOG.map(s=>[s.shipModelId,s]));
  for(const c of FUSION_SHIP_CARDS){
   const model=models.get(c.fusionShipId);
   assert.ok(model,'Modello sorgente sconosciuto: '+c.fusionShipId);
