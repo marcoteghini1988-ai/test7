@@ -395,7 +395,8 @@ export default function OfficialFleetBattle3D({
  function showResult(result){
   setBattle(result.battle);
   setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
-  setMessage(fleetTurnNotice(result.events));
+  const elemental=result.events.filter(e=>e.kind==='elemental-matchup').at(-1);
+  setMessage(elemental?.text||fleetTurnNotice(result.events));
   const revealed=result.events.find(event=>event.kind==='trap-reveal');
   if(revealed)setTrapReveal({...revealed,nonce:Date.now()});
  }
@@ -416,7 +417,7 @@ export default function OfficialFleetBattle3D({
   const id=window.setTimeout(()=>{
    const result=timeoutFleetTurn(battle,Date.now());
    if(result.ok){
-    setBattle(result.battle);setChosenCards([]);setElementalPrepared(false);setElementalPrepared(false);
+    setBattle(result.battle);setChosenCards([]);setElementalPrepared(false);
     setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
     setMessage('Tempo scaduto: turno passato');
    }
