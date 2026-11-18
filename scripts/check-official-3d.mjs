@@ -155,8 +155,8 @@ verify(exists('src/officialLiveMobileLayout.test.js'),
 
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
-verify(GENERAL_COUNT===12&&EXCLUSIVE_COUNT===170&&BOSS_COUNT===12&&BASE_CATALOG_COUNT===194&&
- PROGRESSION_CARD_COUNT===6&&TOTAL_CARD_COUNT===210+FUSION_SHIP_CARD_COUNT&&
+verify(GENERAL_COUNT===12&&EXCLUSIVE_COUNT===120&&BOSS_COUNT===12&&BASE_CATALOG_COUNT===144&&
+ PROGRESSION_CARD_COUNT===6&&TOTAL_CARD_COUNT===160+FUSION_SHIP_CARD_COUNT&&
  shop.includes('<FleetCollectionWorkshop')&&hangar.includes('<FleetCollectionWorkshop initialTab="exclusive"')&&
  !shop.includes("id: 'abilities'")&&!hangar.includes('<SpecialDeckPanel')&&
  fleetEditor.includes('readFleetInventory')&&fleetEditor.includes('BOSS_CARDS')&&
@@ -338,9 +338,11 @@ for(const file of [
 ])verify(exists(file),'Asset in uso mancante: '+file);
 
 const catalog=PHASE1_CATALOG.ships;
-verify(catalog.length===17,'Il catalogo ufficiale deve contenere 17 navi');
-verify(PHASE1_CATALOG.weapons.length===42,
- 'Il catalogo ufficiale deve contenere 42 armi');
+verify(catalog.length===12,'Il catalogo ufficiale deve contenere 12 navi');
+verify(!exists('src/fleetNext/variantExclusives.js'),
+ 'Le 50 carte delle varianti non approvate devono essere rimosse dal sorgente');
+verify(PHASE1_CATALOG.weapons.length===27,
+ 'Il catalogo ufficiale deve contenere 27 armi');
 for(const ship of catalog){
  const extension=ship.rarita==='Comune'?'png':'webp';
  for(const side of ['enemy_to_player','player_to_enemy']){
@@ -364,4 +366,4 @@ if(errors.length){
  for(const error of errors)console.error(' - '+error);
  process.exit(1);
 }
-console.log('Arena 3D ufficiale OK: ingresso unico, catalogo navi, hangar, 17 navi raster e 42 armi integrate.');
+console.log('Arena 3D ufficiale OK: ingresso unico, catalogo navi, hangar, 12 navi raster e 27 armi integrate.');
