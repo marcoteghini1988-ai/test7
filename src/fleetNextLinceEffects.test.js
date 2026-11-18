@@ -11,7 +11,7 @@ import {projectFleetSlots} from './fleetNext/battlePresentation.js';
 
 const IDS=['nx-c01-01','nx-c01-02','nx-c01-03','nx-c01-04','ex-c01-01',
  'nx-c01-06','nx-c01-07','nx-c01-08','nx-c01-09','nx-c01-10'];
-function battle({shipA='C01',shipB='N00',levelA=5,levelB=5}={}){
+function battle({shipA='C01',shipB='N00',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB)}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,
   deckA:[],deckB:[],mode:'pvp',seed:4242});
  for(const side of Object.values(b.sides)){side.hand=[];side.deck=[];side.discard=[];}
