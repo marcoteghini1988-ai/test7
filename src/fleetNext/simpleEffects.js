@@ -83,7 +83,7 @@ export function validateEffectSpec(spec){
  if(spec.type==='fieldReset'&&(spec.scope!=='both'||spec.discardFieldCards!==true))return 'Reset campo non valido';
  if(spec.type==='blueprint'&&!/^nx-[a-z0-9]+-[0-9]{2}$/.test(spec.code||''))return 'Codice di scheda esclusiva non valido';
  if(spec.type==='energy'&&(!Object.hasOwn(FLEET_ELEMENTS,spec.elementId)||Object.keys(spec).length!==2))return 'Energia elementale non valida';
- if(spec.type==='shipFusion'&&(!/^(N00|[CREL]\\d{2})$/.test(spec.shipId||'')||Object.keys(spec).length!==2))return 'Navicella Fusione non valida';
+ if(spec.type==='shipFusion'&&(!/^(N00|[CREL][0-9]{2})$/.test(spec.shipId||'')||Object.keys(spec).length!==2))return 'Navicella Fusione non valida';
  if(spec.type==='aurora'&&!Object.values(AURORA_ACTIONS).includes(spec.action))return 'Azione Aurora non valida';
  if(spec.type==='lince'&&!Object.values(LINCE_ACTIONS).includes(spec.action))return 'Azione Lince non valida';
  if(spec.type==='prisma'&&!Object.values(PRISMA_ACTIONS).includes(spec.action))return 'Azione Vespa non valida';
