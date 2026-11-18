@@ -96,7 +96,7 @@ test('Canale di riserva richiede supporto e Centralina e annulla un silenzio',()
  assert.match(effectUnavailableReason(card('nx-c03-03'),without.sides.A,without),/Centralina/);
 });
 test('Eco di ritorno resta coperta e annulla solo il disturbo, non il danno',()=>{
- const b=battle({levelA:1,levelB:1});
+ const b=battle({levelA:shipMaxLevel('C03'),levelB:1});
  let next=turn(b,'A',['nx-c03-04']).battle;
  const own=escort(next.sides.A);
  assert.equal(isTrapCard(card('nx-c03-04')),true);
@@ -136,7 +136,8 @@ test('Analisi di frequenza rivela una trappola solo al giocatore, la lascia in c
  assert.ok(!r.battle.sides.A.hand.includes('nx-c03-02'));
 });
 test('Cortocircuito colpisce una sola macchina e ne sospende la protezione',()=>{
- const b=battle({levelA:2}),unit=machine(b.sides.B);
+ const b=battle({levelA:shipMaxLevel('C03')}),unit=machine(b.sides.B);
+ b.sides.B.escorts=[]; // la macchina deve essere bersagliabile
  const r=turn(b,'A',['nx-c03-07'],{pass:false,targetKind:'machine',targetId:unit.id});
  assert.equal(r.shot.machineDamage,1);
  const after=r.battle.sides.B.machines[0];
@@ -144,14 +145,15 @@ test('Cortocircuito colpisce una sola macchina e ne sospende la protezione',()=>
  assert.ok(!protectingFleetUnits(r.battle.sides.B,r.battle.ply).some(x=>x.id===unit.id));
 });
 test('Cortocircuito bloccato non disattiva la macchina',()=>{
- const b=battle({levelA:2}),unit=machine(b.sides.B);
+ const b=battle({levelA:shipMaxLevel('C03')}),unit=machine(b.sides.B);
+ b.sides.B.escorts=[];
  protect(b.sides.B,'machine',unit);
  const r=turn(b,'A',['nx-c03-07'],{pass:false,targetKind:'machine',targetId:unit.id});
  assert.equal(r.shot.machineDamage,0);
  assert.ok(!r.battle.sides.B.machines[0].disabledUntilPly);
 });
 test('Richiamo inverso anticipa il primo supporto di grado due, senza duplicarne il turno',()=>{
- const b=battle({levelA:3});
+ const b=battle({levelA:shipMaxLevel('C03')});
  const first=escort(b.sides.A);
  assert.equal(first.grade,2);
  let r=turn(b,'A',['nx-c03-08']);

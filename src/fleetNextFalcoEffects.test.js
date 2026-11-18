@@ -261,7 +261,7 @@ test('Caricatore: annulla la carica, mette la carta sotto il mazzo e pesca una s
  assert.equal(r.battle.sides.A.discard.filter(id=>id==='nx-r01-02').length,0);
 });
 test('Falco guardiano intercetta il prossimo colpo al Generatore anche con Aggiramento',()=>{
- let b=battle({shipA:'R01',shipB:'N00',levelA:3,levelB:2});
+ let b=battle({shipA:'R01',shipB:'N00',levelA:shipMaxLevel('R01'),levelB:2});
  const first=b.sides.A.escorts[0],before=first.hp,g=b.sides.A.ships[0].parts.find(p=>p.id==='generator').hp;
  b=turn(b,'A',['nx-r01-08']).battle;
  const r=turn(b,'B',['prog-bypass'],{
@@ -272,7 +272,7 @@ test('Falco guardiano intercetta il prossimo colpo al Generatore anche con Aggir
  assert.ok(r.events.some(e=>e.kind==='falco-intercept'));
 });
 test('Falco guardiano non intercetta se il primo supporto è disattivato',()=>{
- let b=battle({shipA:'R01',shipB:'N00',levelA:3});
+ let b=battle({shipA:'R01',shipB:'N00',levelA:shipMaxLevel('R01')});
  b=turn(b,'A',['nx-r01-08']).battle;
  const generator=b.sides.A.ships[0].parts.find(p=>p.id==='generator'),before=generator.hp;
  b.sides.A.escorts[0].disabledUntilPly=4;

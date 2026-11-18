@@ -60,6 +60,7 @@ test('Raffica: due colpi leggeri separati, nessun tiro base aggiunto',()=>{
 });
 test('Tiro di smontaggio: due danni a un modulo, senza distruggere un vitale',()=>{
  const b=make(),mod=install(b.sides.B,'nx-n00-08');
+ b.sides.B.escorts=[]; // bersaglio esposto: il test isola il modulo
  const initial=mother(b.sides.B).hp;
  const r=play(b,'A',['nx-n00-03'],{targetKind:'module',targetId:mod.id,moduleSlot:mod.slot,pass:false});
  assert.equal(r.shot.moduleDamage,2);
@@ -68,6 +69,7 @@ test('Tiro di smontaggio: due danni a un modulo, senza distruggere un vitale',()
 });
 test('Un colpo base può bersagliare e danneggiare un modulo raggiungibile',()=>{
  const b=make(),mod=install(b.sides.B,'nx-n00-01');
+ b.sides.B.escorts=[]; // nessuna guardia sulla linea di tiro
  assert.ok(availableFleetTargets(b.sides.B).some(t=>t.kind==='module'&&t.id===mod.id));
  const r=play(b,'A',[],{targetKind:'module',targetId:mod.id,moduleSlot:mod.slot,pass:false});
  assert.equal(r.shot.moduleDamage,1);
@@ -75,6 +77,7 @@ test('Un colpo base può bersagliare e danneggiare un modulo raggiungibile',()=>
 });
 test('Corazza modulare: assorbe il colpo contro il vitale associato e viene distrutta',()=>{
  const b=make();install(b.sides.B,'nx-n00-08','generator');
+ b.sides.B.escorts=[]; // isola la corazza
  const hp=mother(b.sides.B,'generator').hp;
  const r=play(b,'A',[],{targetKind:'part',targetId:'generator',partId:'generator',pass:false});
  assert.equal(mother(r.battle.sides.B,'generator').hp,hp);
@@ -83,6 +86,7 @@ test('Corazza modulare: assorbe il colpo contro il vitale associato e viene dist
 test('Velo di salvataggio: il prossimo colpo distrugge un modulo al posto del Generatore',()=>{
  const b=make();install(b.sides.B,'nx-n00-01');
  const played=play(b,'B',['nx-n00-04'],{ownPartId:'generator'});
+ played.battle.sides.B.escorts=[]; // colpo diretto per collaudare il Velo
  assert.ok(played.battle.sides.B.auroraVeil);
  const hp=mother(played.battle.sides.B,'generator').hp;
  const attack=play(played.battle,'A',[],{targetKind:'part',targetId:'generator',partId:'generator',pass:false});
@@ -124,6 +128,7 @@ test('Cannone biforcato: un tiro base diventa due colpi leggeri su unità differ
 });
 test('Canna perforante supera una sola protezione, senza concedere Aggiramento',()=>{
  const b=make(),enemy=b.sides.B;install(b.sides.A,'nx-n00-07');
+ enemy.escorts=[]; // prova della protezione senza le guardie
  const hp=mother(enemy).hp;
  enemy.defenses=[{id:'gen-227',source:'scudo-prova',untilPly:10}];
  enemy.protections=[{id:'gen-227',source:'scudo-prova',kind:'protect',

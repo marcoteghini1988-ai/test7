@@ -84,6 +84,7 @@ test('Falsa scia viene preparata coperta e devia un solo colpo verso il vitale s
  assert.ok(first.battle.sides.B.defenses[0].hidden);
  assert.equal(isTrapCard(card('nx-c01-04')),true);
  b=first.battle;
+ b.sides.B.escorts=[]; // la Falsa scia deve intercettare un vero colpo diretto
  const a=part(b.sides.B,'weapons').hp,g=part(b.sides.B,'generator').hp;
  const r=turn(b,'A',[],{targetKind:'part',targetId:'weapons',partId:'weapons',pass:false});
  assert.equal(part(r.battle.sides.B,'weapons').hp,a);

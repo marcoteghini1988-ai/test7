@@ -188,7 +188,7 @@ test('Geometria spezzata dà due colpi a una unità e uno a un’altra',()=>{
 });
 
 test('Custodia del Prisma conserva scadenza e cariche spostandole al primo supporto',()=>{
- const b=battle({shipA:'C02',shipB:'N00',levelA:3});
+ const b=battle({shipA:'C02',shipB:'N00',levelA:shipMaxLevel('C02')});
  const generator=vital(b.sides.A,'generator');
  shield(b.sides.A,'part',generator,2);
  const expiry=b.sides.A.protections[0].untilPly;
@@ -200,7 +200,7 @@ test('Custodia del Prisma conserva scadenza e cariche spostandole al primo suppo
 });
 
 test('Custodia del Prisma è impossibile se manca la Centralina',()=>{
- const b=battle({shipA:'C02',levelA:3});
+ const b=battle({shipA:'C02',levelA:shipMaxLevel('C02')});
  const generator=vital(b.sides.A,'generator');shield(b.sides.A,'part',generator);
  const command=vital(b.sides.A,'command');command.hp=0;command.destroyed=true;
  assert.match(effectUnavailableReason(card('nx-c02-08'),b.sides.A,b),/Centralina/);
@@ -229,7 +229,7 @@ test('Rosa di cristallo produce tre colpi distinti, senza Aggiramento',()=>{
 });
 
 test('Rosa di cristallo non si usa senza entrambi i supporti operativi',()=>{
- const b=battle({shipA:'C02',levelA:5});
+ const b=battle({shipA:'C02',levelA:shipMaxLevel('C02')});
  b.sides.A.escorts[1].hp=0;b.sides.A.escorts[1].destroyed=true;
  assert.match(effectUnavailableReason(card('nx-c02-10'),b.sides.A,b),/entrambi i supporti/);
 });
