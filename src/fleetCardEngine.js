@@ -27,16 +27,16 @@ export function fleetSlotCount(motherLevel=1){
  return n>=5?3:n>=3?2:1; // madre inclusa, evoluzioni automatiche
 }
 const ELEMENT_BY_SHIP=Object.freeze({
- N00:'ionic',C01:'plasma',C02:'refrigerant',C03:'ionic',C04:'plasma',
- R01:'plasma',R02:'ionic',R03:'refrigerant',R04:'mineral',
- E01:'refrigerant',E02:'ionic',E03:'plasma',E04:'mineral',
- L01:'plasma',L02:'ionic',L03:'mineral',L04:'refrigerant'
+ N00:'ionic',C01:'plasma',C02:'refrigerant',C03:'ionic',
+ R01:'plasma',R02:'ionic',R04:'mineral',
+ E01:'refrigerant',E02:'ionic',
+ L01:'plasma',L03:'mineral',L04:'refrigerant'
 });
 const ROLE_BY_SHIP=Object.freeze({
  N00:'Versatile',C01:'Assalto',C02:'Tecnica',C03:'Interferenza',
- C04:'Intercettazione',R01:'Assalto',R02:'Controllo',R03:'Supporto',
- R04:'Artiglieria',E01:'Controllo',E02:'Raffica',E03:'Assedio',
- E04:'Supporto',L01:'Assalto',L02:'Controllo',L03:'Artiglieria',L04:'Supporto'
+ R01:'Assalto',R02:'Controllo',R04:'Artiglieria',
+ E01:'Controllo',E02:'Raffica',
+ L01:'Assalto',L03:'Artiglieria',L04:'Supporto'
 });
 const SHIPS=new Map(PHASE1_CATALOG.ships.map(s=>[s.id,s]));
 const WEAPONS_BY_SHIP=new Map(PHASE1_CATALOG.ships.map(ship=>[
