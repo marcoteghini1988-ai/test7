@@ -8,10 +8,11 @@ import {createFleetNextBattle,resolveFleetNextTurn,
  fuseIndependentSupportWithShip,fusionShipUnavailableReason} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 
 const roster=()=>[
- {id:supportModelIdFor('N00'),instanceId:'official:n00',slot:0,level:1},
- {id:supportModelIdFor('L02'),instanceId:'official:l02',slot:1,level:1}
+ {id:supportModelIdFor('N00'),instanceId:'official:n00',slot:0,level:shipMaxLevel('N00')},
+ {id:supportModelIdFor('L02'),instanceId:'official:l02',slot:1,level:shipMaxLevel('L02')}
 ];
 function fresh(){
  return createFleetNextBattle({
@@ -37,17 +38,16 @@ test('Carta Navicella Fusione per ogni modello storico con dati e limite mazzo',
  }
 });
 
-test('Le Carte Fusione conservano la rarità del modello e l’ordine Comune/Rara/Epica/Leggendaria',()=>{
+test('Tutte le Carte Fusione sono Leggendarie e rappresentano il modello al livello MAX',()=>{
  const models=new Map(PHASE1_CATALOG.ships.map(s=>[s.id,s]));
- const ranks={Comune:0,Rara:1,Epica:2,Leggendaria:3};
- let lastRank=-1;
  for(const c of FUSION_SHIP_CARDS){
   const model=models.get(c.fusionShipId);
   assert.ok(model,'Modello sorgente sconosciuto: '+c.fusionShipId);
-  assert.equal(c.rarita,model.rarita);
-  assert.equal(c.raritySource,'ship-model');
-  assert.ok(ranks[c.rarita]>=lastRank,'Catalogo Fusione fuori ordine di rarità');
-  lastRank=ranks[c.rarita];
+  assert.equal(c.rarita,'Leggendaria');
+  assert.equal(c.raritySource,'fusion-max');
+  assert.equal(c.requiresMaxSupportLevel,true);
+  assert.equal(c.fusionShipLevel,shipMaxLevel(model.id));
+  assert.match(c.effectProposed,/livello MAX/);
  }
 });
 
@@ -78,6 +78,34 @@ test('Due carte fonde due supporti di madre qualsiasi, stessi HP e due abilità'
  assert.ok(fusionShipUnavailableReason(side,'C02',null));
  assert.equal(skillCount(side,'reactive-poison'),1);
  assert.equal(skillCount(side,'capacitor'),1);
+});
+
+test('Il supporto non MAX impedisce la fusione e non consuma la carta',()=>{
+ const battle=fresh(),side=battle.sides.A;
+ side.escorts[0].supportLevel=shipMaxLevel('N00')-1;
+ side.escorts[1].supportLevel=shipMaxLevel('L02')-1;
+ side.hand=['fusion-ship-r01'];side.deck=[];
+ const before=JSON.stringify(battle);
+ assert.match(fusionShipUnavailableReason(side,'R01',0),/livello MAX/);
+ assert.match(fusionShipUnavailableReason(side,'R01',1),/livello MAX/);
+ assert.match(fusionShipUnavailableReason(side,'R01',null),/livello MAX/);
+ const denied=fuseIndependentSupportWithShip(side,'R01',0);
+ assert.equal(denied.ok,false);
+ const attempted=resolveFleetNextTurn(battle,'A',{cards:[0],fusionSlot:0,pass:true},100);
+ assert.equal(attempted.ok,false);
+ assert.equal(JSON.stringify(battle),before,'Fusione negata senza mutare carte, HP e slot');
+});
+
+test('La Carta Fusione può scegliere soltanto lo slot che ha raggiunto MAX',()=>{
+ const b=fresh(),side=b.sides.A;
+ side.escorts[0].supportLevel=shipMaxLevel('N00')-1;
+ assert.equal(fusionShipUnavailableReason(side,'C02',1),'');
+ assert.match(fusionShipUnavailableReason(side,'C02',0),/MAX/);
+ const result=fuseIndependentSupportWithShip(side,'C02');
+ assert.equal(result.ok,true,result.reason);
+ assert.equal(result.fused.slot,1);
+ assert.equal(side.escorts[0].fused,false);
+ assert.equal(side.escorts[1].fused,true);
 });
 
 test('La carta Fusione funziona davvero nella mano senza Centralina materna',()=>{
