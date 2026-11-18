@@ -5,6 +5,7 @@ import {SUPPORT_COLLECTION_KEY,readSupportCollection,writeSupportCollection,
  equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {SUPPORT_CATALOG,supportDefinition} from './fleetNext/supportCatalog.js';
 import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 import {SUPPORT_SLOT_CAMPAIGN_UNLOCKS} from './fleetNext/supportCampaign.js';
 
 const cardStyle={padding:10,border:'1px solid #36678c',borderRadius:8,
@@ -81,16 +82,18 @@ export default function SupportHangarPanel(){
          const source=supportDefinition(item.supportId);
          return <option key={item.instanceId} value={item.instanceId}
           disabled={equipped.some((x,i)=>i!==slot&&x===item.instanceId)}>
-          {source?.name||item.supportId} · L{item.level} · copia {item.instanceId}
+          {source?.name||item.supportId} · L{item.level}/{shipMaxLevel(source?.shipModelId)} · copia {item.instanceId}
          </option>;
         })}
        </select>
-       {chosen&&<small>{chosen.name} · {chosen.role} · livello proprio {chosen.level}
-        {' · elemento proprio: '+(FLEET_ELEMENTS[chosen.elementId]?.name||'da definire')}</small>}
+       {chosen&&<small>{chosen.name} · {chosen.role} · livello proprio {chosen.level}/{shipMaxLevel(chosen.shipModelId)}
+        {' · elemento proprio: '+(FLEET_ELEMENTS[chosen.elementId]?.name||'da definire')}
+        {' · fusione: '+(chosen.level>=shipMaxLevel(chosen.shipModelId)?'MAX pronto':'bloccata fino al livello MAX')}</small>}
       </>}
      </div>;
     })}
    </div>
+   <p>Una Carta Navicella Fusione Leggendaria può fondersi soltanto con un supporto al livello massimo. La carta rappresenta già una navicella MAX; mantiene gli HP del supporto in campo.</p>
    <p>Le prime due copie si ottengono ai traguardi di sblocco. Le altre
     potranno essere acquistate o ottenute separatamente quando
     completeremo il negozio e le 15 abilità dei supporti.</p>
