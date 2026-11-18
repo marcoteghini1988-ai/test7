@@ -67,5 +67,5 @@ test('I dodici boss mantengono arene e pilotaggi, ma crescono per progressione e
   }
   assert.deepEqual(variants[0],variants[1],'Il nemico non deve potenziarsi quando potenzio N00');
  }
- assert.equal(PHASE1_CATALOG.ships.length,17);
+ assert.equal(PHASE1_CATALOG.ships.length,12);
 });
