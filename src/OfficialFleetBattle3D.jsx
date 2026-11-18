@@ -120,12 +120,15 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
    const slot=escort.slot??i;
    const tookHit=impact?.escortSlot===slot&&impact?.escortDamage>0;
    const linked=escort.linked!==false;
+   const signature=FLEET_ELEMENTS[escort.element];
+   const weaknesses=signature?.weakTo?.map(id=>FLEET_ELEMENTS[id].name).join(' e ');
    return <div key={escort.id} className={'live-escort live-escort--'+slot+
     (escort.hp===0?' live-escort--lost':'')+(escort.fused?' f3d-escort--fused':'')+
     ((escort.nebulaHiddenUntilPly||0)>ply&&escort.hp>0&&!escort.destroyed?
      ' f3d-escort--veiled':'')+
     (selectedTarget?.kind==='escort'&&selectedTarget.id===escort.id?' f3d-unit--selected':'')}
-    title={escort.name+' · '+describeEscortEffect(escort)}>
+    title={escort.name+' · '+describeEscortEffect(escort)+
+     (signature?' · Elemento ereditato: '+signature.name+' · Debole a '+weaknesses:'')}>
     <img src={escort.visual||ASSET_ROOT+'/escorts/'+mother.id+'_escort_'+(slot+1)+'.svg'}
      alt={escort.name} draggable={false}/>
     <span className="f3d-escort-health" aria-label={'Resistenza '+escort.hp+' di '+escort.maxHp}>
@@ -138,10 +141,10 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      aria-label={'Attacca '+escort.name+' · '+escort.hp+'/'+escort.maxHp+' punti'}
      aria-pressed={selectedTarget?.kind==='escort'&&selectedTarget.id===escort.id}
      onClick={()=>onSelectTarget?.({kind:'escort',id:escort.id,slot})}/> }
-    <small className="f3d-escort-grade">{escort.fused?'FUSA · ':''}G{escort.grade||1}</small>
+    <small className="f3d-escort-grade">{signature?.symbol||''} {escort.fused?'FUSA · ':''}G{escort.grade||1}</small>
     <button type="button" className="f3d-escort-info"
      onClick={()=>inspectEscort({escort,mother,linked})}
-     aria-label={'Abilità della scudiera '+escort.name}>i</button>
+     aria-label={'Abilità della scudiera '+escort.name+(signature?' · '+signature.name+' · vulnerabile a '+weaknesses:'')}>i</button>
    </div>;
   })}
   <div className="f3d-mounted-modules" aria-label={player?'Moduli montati':'Moduli avversari'}>
