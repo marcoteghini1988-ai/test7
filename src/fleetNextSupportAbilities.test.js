@@ -163,7 +163,7 @@ test('La fusione con una carta-navicella conserva entrambe le passive senza somm
  const b=createFleetNextBattle({
   shipA:'C01',levelA:1,shipB:'N00',levelB:20,deckA:[],deckB:[],
   mode:'pvp',ruleset:HP_SYNC_RULESET,seed:98,nowMs:0,
-  supportRosterA:[{id:'support-l04-01',instanceId:'arka-energy',slot:0,level:1}],
+  supportRosterA:[{id:'support-l04-01',instanceId:'arka-energy',slot:0,level:5}], // Arca Astrale MAX
   supportRosterB:[]
  });
  const side=b.sides.A, original=side.escorts[0];
