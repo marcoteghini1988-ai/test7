@@ -756,6 +756,12 @@ export function validateFleetTurn(b,who,order){
   return 'Scegli un tuo componente ancora operativo';
  if(chosen.some(c=>c.effectSpec?.type==='corvo'&&c.effectSpec.action==='frequency-analysis')&&
   side.hand.length<=indices.length)return 'Analisi di frequenza richiede una carta non giocata da scartare';
+ // Una Frattura d'assedio mira a un supporto o a una macchina REALMENTE viva.
+ // L'IA usa la stessa validazione del giocatore: nessun lancio che poi esplode.
+ if(chosen.some(c=>c.effectSpec?.type==='obsidian'&&c.effectSpec.action==='siege-fracture')&&
+  !obsidianEnemyUnits(b.sides[other(who)]).some(t=>
+   t.kind===order?.targetKind&&t.unit.id===order?.targetId))
+  return 'Frattura richiede una unità nemica viva';
  const machineCount=chosen.filter(c=>c.effectSpec.type==='deployMachine').length;
  if(machineCount+(side.machines||[]).filter(unitAlive).length>2)return 'Servono alloggiamenti liberi per le macchine scelte';
  const fusions=chosen.filter(c=>c.effectSpec.type==='fusion').length;
