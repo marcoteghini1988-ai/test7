@@ -202,6 +202,13 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
   isMaxSupportLevel(e.supportLevel)&&
   (slot===null||e.slot===slot));
  const original=side.escorts[index];
+ // La Custodia dell'Arca protegge il materiale non fuso, mai la nuova unità.
+ // Nessuna protezione gratuita può trasferirsi tramite il cambio ID.
+ if(side.ships[0].id==='L04'){
+  for(const d of [...(side.defenses||[])])
+   if(d.id==='nx-l04-03'&&d.arkCustodyEscortId===original.id)
+    discardDefense(side,d.source);
+ }
  const fusionCard=FUSION_SHIP_CARD_BY_ID['fusion-ship-'+shipId.toLowerCase()];
  const skillId=fusionCard.fusionSkillId,newElement=fusionCard.fusionElementId;
  // Due copie della stessa passiva restano due fonti effettive dopo la fusione.
@@ -222,6 +229,11 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
   supportSkillName:skillIds.map(id=>SUPPORT_SKILL_LABELS[id]).join(' + '),
   fusionSkills:[...(original.fusionSkills||[original.skill]),
    {...FLEET_ESCORT_TRAITS[fusionCard.fusionTemplateShipId][fusionCard.fusionTemplateSlot]}],
+  // Il Titano può comandare il proprio Bastione dopo una fusione libera:
+  // non vincola il modello del supporto né consuma una fusione supplementare.
+  ...(side.ships[0].id==='L03'?{
+   obsidianBastion:true,obsidianGuardUntilPly:0,obsidianGuardUsedPly:-999
+  }:{}),
   linked:true
  };
  side.escorts[index]=fused;
@@ -2699,6 +2711,11 @@ function activateArkCard(b,who,def,ctx,events,order={},source=null){
  if(action==='protected-entry'){
   const d=side.defenses.find(d=>d.source===source);
   if(!d)throw Error('Ingresso protetto non posato');
+  if(side.independentSupportRoster){
+   events.push(emit(b,who,'trap-set','Ingresso protetto pronto per una fusione nello slot',{
+    cardId:def.id,preparedFor:'support-fusion'}));
+   return;
+  }
   const arrived=side.escorts.find(e=>!e.fused&&e.sourceIndices?.includes(2)&&
    e.deployedAtPly===b.ply);
   if(arrived){d.arkReserveId=arrived.id;d.untilPly=b.ply+2;}
@@ -2747,6 +2764,13 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'shipFusion':{
    const result=fuseIndependentSupportWithShip(side,s.shipId,order?.fusionSlot??null,b.ply);
    if(!result.ok)throw Error(result.reason);
+   // Ingresso protetto ora segue la fusione nel relativo slot, senza
+   // creare il vecchio terzo supporto o ripristinare HP.
+   if(side.ships[0].id==='L04'){
+    const armed=(side.defenses||[]).find(d=>d.id==='nx-l04-08'&&
+     d.hidden&&!d.arkReserveId);
+    if(armed){armed.arkReserveId=result.fused.id;armed.untilPly=b.ply+2;}
+   }
    events.push(emit(b,who,'fusion',result.fused.name+' · elementi e abilità combinate',
     {cardId:def.id,escortSlot:result.fused.slot,stage:result.stage,
      elements:result.fused.elements,skills:result.fused.supportSkillIds,

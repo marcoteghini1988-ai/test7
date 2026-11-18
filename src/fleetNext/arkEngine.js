@@ -1,5 +1,6 @@
-// Arca Astrale (L04) — 10 esclusive native, due Fusioni e riserve reali.
-// Lo stato non crea supporti fuori dalla progressione ufficiale.
+// Arca Astrale (L04) — 10 esclusive native e protezione delle fusioni.
+ // Le due fusioni ufficiali usano supporti L5 indipendenti, senza riserve.
+import {SUPPORT_MAX_LEVEL} from './supportProgression.js';
 export const ARK_ACTIONS=Object.freeze({
  'nx-l04-01':'stellar-archive',
  'nx-l04-02':'conserving-ray',
@@ -80,10 +81,16 @@ export function arkPrecondition(def,side,battle=null){
  }
  if(action==='repair-chorus'&&!arkDamagedEscorts(side,ply).length)
   return 'Coro richiede almeno un supporto operativo danneggiato';
- if(action==='protected-entry'&&(!vital(side,'command')||
-  (side.reserveEscorts||[]).length<1&&!
-  (side.escorts||[]).some(e=>e.sourceIndices?.includes(2)&&e.deployedAtPly===ply)))
-  return 'Ingresso protetto richiede il terzo supporto sbloccato';
+ if(action==='protected-entry'){
+  if(!vital(side,'command'))return 'Ingresso protetto richiede Centralina';
+  if(side.independentSupportRoster){
+   const canFuse=(side.fusionsUsed||0)<(side.fusionLimit||0)&&
+    arkUnfusedEscorts(side,ply).some(e=>e.supportLevel>=SUPPORT_MAX_LEVEL);
+   if(!canFuse)return 'Ingresso protetto richiede un supporto L5 non ancora fuso';
+  }else if((side.reserveEscorts||[]).length<1&&
+   !(side.escorts||[]).some(e=>e.sourceIndices?.includes(2)&&e.deployedAtPly===ply))
+   return 'Ingresso protetto richiede il terzo supporto sbloccato';
+ }
  if(action==='fleet-resonance'&&(!vital(side,'command')||
   !arkFusedEscorts(side,ply).length||!arkUnfusedEscorts(side,ply).length))
   return 'Risonanza richiede Fusione e supporto non fuso operativi';
