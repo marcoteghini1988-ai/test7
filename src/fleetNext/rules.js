@@ -6,7 +6,7 @@ import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
 import {DISMANTLE_BY_ID,DISMANTLE_CARDS} from './dismantleCards.js';
 import {ENERGY_CARDS,ENERGY_CARD_BY_ID,ENERGY_CARD_COUNT} from './energyCards.js';
 import {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID,FUSION_SHIP_CARD_COUNT} from './fusionShipCards.js';
-export {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
+export {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID,FUSION_SHIP_CARD_COUNT} from './fusionShipCards.js';
 export {ENERGY_CARDS,ENERGY_CARD_BY_ID} from './energyCards.js';
 export {DISMANTLE_CARDS,DISMANTLE_BY_ID} from './dismantleCards.js';
 export {NEXT_COMMON_CARDS,NEXT_COMMON_CARD_BY_ID} from './newCardRegistry.js';
