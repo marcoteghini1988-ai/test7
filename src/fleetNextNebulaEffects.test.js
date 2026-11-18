@@ -18,7 +18,7 @@ import {
 
 const IDS=['nx-e01-01','nx-e01-02','nx-e01-03','nx-e01-04','ex-e01-01',
  'nx-e01-06','nx-e01-07','nx-e01-08','nx-e01-09','nx-e01-10'];
-function battle({shipA='E01',shipB='C03',levelA=5,levelB=5}={}){
+function battle({shipA='E01',shipB='C03',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB)}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,mode:'pvp',
   deckA:[],deckB:[],seed:970});
  for(const side of Object.values(b.sides)){
