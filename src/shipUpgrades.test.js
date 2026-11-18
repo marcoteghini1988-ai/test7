@@ -69,6 +69,7 @@ test('il Bazar usa costi verificati prima di chiamare il salvataggio',()=>{
  assert.match(app,/validateShipUpgradePurchase\(before,instanceId,targetLevel,stardust\)/);
  assert.match(app,/upgradeShipCard\(current,instanceId,targetLevel\)/);
  assert.match(shop,/onUpgradeShip=\{onUpgradeShip\}/);
- assert.match(panel,/shipUpgradeDustCost\(ship.id,nextLevel\)/);
- assert.match(panel,/setCollection\(readCollection\(\)\)/);
+ assert.match(panel,/purchaseMotherCopy\(shipId,rarita\)/);
+ assert.match(panel,/evolveMotherCopy\(instanceId\)/);
+ assert.match(panel,/setCollection\(result.collection\)/);
 });

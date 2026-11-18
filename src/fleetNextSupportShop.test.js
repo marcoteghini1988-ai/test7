@@ -9,7 +9,8 @@ import {SUPPORT_COLLECTION_KEY,readSupportCollection,
 import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
 import {supportPurchaseCost,supportUpgradeCost,purchaseSupportModel,
- purchaseSupportUpgrade} from './fleetNext/supportShop.js';
+ purchaseSupportUpgrade,purchaseSupportCopy,evolveSupportCopy} from './fleetNext/supportShop.js';
+import {claimRarityCampaignVictory} from './fleetNext/rarityCampaign.js';
 import {buyNextCommonCard,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {FUSION_SHIP_CARDS,cardCopyLimit} from './fleetNext/rules.js';
 import {createFleetSide,fuseIndependentSupportWithShip} from './fleetNext/combat.js';
@@ -47,7 +48,7 @@ test('Tredici supporti comprabili con Crediti reali senza modificare slot e madr
  assert.deepEqual(inv.equipped,[null,null]);
  assert.equal(readFleetInventory(store).equippedMother,'N00');
 });
-test('L1–L5 per una copia: prezzi, pagamento, persistenza e Fusione solo dopo MAX',()=>{
+test('Livelli legacy restano migrabili, ma Fusione ufficiale richiede rarità Leggendaria',()=>{
  const store=prepared(),model=SUPPORT_CATALOG[0];
  const bought=purchaseSupportModel(model.id,store);
  assert.equal(bought.ok,true,bought.reason);
@@ -70,7 +71,15 @@ test('L1–L5 per una copia: prezzi, pagamento, persistenza e Fusione solo dopo 
  assert.equal(upgraded.unlockedSlots,1);
  assert.equal(purchaseSupportUpgrade(copy,store).ok,false,'Nessun upgrade oltre L5');
  const side=createFleetSide('C01',1,[],17,{},equippedSupportRoster(upgraded));
- const result=fuseIndependentSupportWithShip(side,SUPPORT_CATALOG[1].shipModelId,0);
+ const denied=fuseIndependentSupportWithShip(side,SUPPORT_CATALOG[1].shipModelId,0);
+ assert.equal(denied.ok,false,'L5 tecnico non trasforma una carta Comune in Leggendaria');
+ claimRarityCampaignVictory('campaign',85,store);
+ const legendary=purchaseSupportCopy(model.id,'Leggendaria',store);
+ assert.equal(legendary.ok,true,legendary.reason);
+ const saved=readSupportCollection(store);
+ writeSupportCollection(equipSupportInstance(saved,0,legendary.instanceId),store);
+ const modern=createFleetSide('C01',1,[],17,{},equippedSupportRoster(readSupportCollection(store)));
+ const result=fuseIndependentSupportWithShip(modern,SUPPORT_CATALOG[1].shipModelId,0);
  assert.equal(result.ok,true,result.reason);
  assert.equal(result.fused.hp,result.fused.maxHp);
  assert.equal(result.fused.supportSkillIds.length,2);
@@ -110,8 +119,8 @@ test('Ricompense reali finanziano acquisto Fusione con massimo due copie e scelt
 test('Interfaccia Hangar e carte Shop hanno acquisto, potenziamento e saldo',()=>{
  const hangar=readFileSync(new URL('./SupportHangarPanel.jsx',import.meta.url),'utf8');
  const workshop=readFileSync(new URL('./FleetCollectionWorkshop.jsx',import.meta.url),'utf8');
- assert.match(hangar,/purchaseSupportModel\(/);
- assert.match(hangar,/purchaseSupportUpgrade\(/);
- assert.match(hangar,/SUPPORT_MAX_LEVEL/);
+ assert.match(hangar,/purchaseSupportCopy\(/);
+ assert.match(hangar,/evolveSupportCopy\(/);
+ assert.doesNotMatch(hangar,/POTENZIA L\{/);
  assert.match(workshop,/\.\.\.FUSION_SHIP_CARDS/);
 });

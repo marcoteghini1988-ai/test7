@@ -46,7 +46,7 @@ test('Tutte le Carte Fusione sono Leggendarie e rappresentano il modello al live
   assert.equal(c.raritySource,'fusion-max');
   assert.equal(c.requiresMaxSupportLevel,true);
   assert.equal(c.fusionShipLevel,SUPPORT_MAX_LEVEL);
-  assert.match(c.effectProposed,/livello MAX/);
+  assert.match(c.effectProposed,/Leggendaria/);
  }
 });
 

@@ -20,7 +20,7 @@ test('la prima apertura aggiunge Aurora senza riscrivere i progressi R12', async
   const storage = makeStorage(legacy);
   const first = await updateShipCollection(current => current, storage);
   assert.deepEqual(first, {schemaVersion: 1,
-    cards: [{instanceId: 'ship:N00', shipId: 'N00', level: 1}], loadout: ['ship:N00']});
+    cards: [{instanceId: 'ship:N00', shipId: 'N00', level: 1, rarita: 'Comune'}], loadout: ['ship:N00']});
   assert.deepEqual(readShipCollection(storage), first);
   for (const [key, value] of Object.entries(legacy)) assert.equal(storage.getItem(key), value);
 });
@@ -37,7 +37,7 @@ test('ricompensa e upgrade sono ripetibili e conservano identità, flotta e live
   const reloaded = readShipCollection(storage);
   assert.deepEqual(equipped, reloaded);
   assert.equal(reloaded.cards.length, 2);
-  assert.deepEqual(reloaded.cards[1], {instanceId: 'ship:R04', shipId: 'R04', level: 2});
+  assert.deepEqual(reloaded.cards[1], {instanceId: 'ship:R04', shipId: 'R04', level: 2, rarita: 'Rara'});
   assert.throws(() => upgradeShipCard(reloaded, 'ship:R04', 4));
   const battle = initialBattle(1, collectionBattleOptions(reloaded));
   assert.deepEqual(battle.player.fleet, [newVessel('R04', 2), newVessel('N00', 1)]);
@@ -57,8 +57,9 @@ test('il caricamento conserva le madri ufficiali ma esclude le varianti ritirate
   const loaded = readShipCollection(storage);
   assert.deepEqual(loaded.loadout, ['falco', 'lince', 'aurora']);
   assert.deepEqual(loaded.cards.map(c => [c.instanceId, c.level]), [
-    ['aurora', 1], ['falco', 6], ['lince', 4],
+    ['aurora', 1], ['duplicate-aurora', 3], ['falco', 6], ['lince', 4],
   ]);
+  assert.equal(loaded.cards.filter(card=>card.shipId==='N00').length,2,'copie duplicate conservate');
   assert.ok(!loaded.cards.some(card => card.shipId === 'R03'));
   assert.throws(() => equipShipCards(loaded, ['falco', 'iride', 'lince']));
   assert.throws(() => equipShipCards(loaded, ['unknown']));

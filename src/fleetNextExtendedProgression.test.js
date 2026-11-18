@@ -92,16 +92,14 @@ test('L20 reale del giocatore mantiene due supporti e la barra HP madre nella mo
  assert.equal(b.sides.B.escorts.length,2);
  assert.equal(b.sides.A.ships[0].hp,b.sides.A.ships[0].maxHp);
 });
-test('Hangar usa il livello reale e non il preset grafico legacy L5',()=>{
- const card=readFileSync(new URL('./ShipPresentation.jsx',import.meta.url),'utf8');
+test('Hangar ufficiale mostra rarità collezionabili senza livelli numerici',()=>{
  const panel=readFileSync(new URL('./ShipCollectionPanels.jsx',import.meta.url),'utf8');
- assert.match(card,/data-level=\{effectiveLevel\}/);
- assert.match(card,/<b className="ship-card-level">L\{effectiveLevel\}<\/b>/);
- assert.match(panel,/getShipProgressionLevels\(shipId\)/);
- assert.match(panel,/card\.level<maxLevel/);
- assert.match(panel,/shipMaxLevel\(ship\.id\)/);
+ assert.match(panel,/purchaseMotherCopy\(/);
+ assert.match(panel,/evolveMotherCopy\(/);
+ assert.match(panel,/combatLevelForRarity\(/);
+ assert.doesNotMatch(panel,/POTENZIA L\{/);
  const row=getShipProgression('N00',20);
- assert.equal(row.level,20);
+ assert.equal(row.level,20,'la traduzione del motore legacy rimane interna');
  assert.equal(row.escortCount,2);
 });
 test('I rivali della campagna raggiungono il tetto della loro famiglia a parità di fascia',()=>{
