@@ -10,7 +10,7 @@ import {claimCampaignSupportUnlock} from './shipCampaignRewards.js';
 import {createFleetSide,createFleetNextBattle,protectingFleetUnits,
  fusionShipUnavailableReason,resolveFleetNextTurn} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
-import {shipMaxLevel} from './fleetNext/progression.js';
+import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
 
 function storage(){
  const data=new Map();
@@ -118,7 +118,7 @@ test('Tutte le madri possono fondere due supporti indipendenti, ma solo a livell
  assert.equal(denied.fusionLimit,2);
  assert.match(fusionShipUnavailableReason(denied,'C03',0),/MAX/);
  assert.match(fusionShipUnavailableReason(denied,'C03',1),/MAX/);
- const chosen=low.map(unit=>({...unit,level:shipMaxLevel(unit.id==='support-model-l01'?'L01':'N00')}));
+ const chosen=low.map(unit=>({...unit,level:SUPPORT_MAX_LEVEL}));
  const allowed=createFleetSide('C01',1,[],11,{},chosen);
  assert.equal(allowed.fusionLimit,2);
  assert.equal(fusionShipUnavailableReason(allowed,'C03',0),'');
