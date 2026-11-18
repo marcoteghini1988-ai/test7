@@ -11,13 +11,13 @@ const shot=(volley,id)=>volley.shots.find(s=>s.weaponId===id);
 const weapon=(fleet,id)=>fleet.flatMap(v=>v.weapons).find(w=>w.id===id);
 const advance=(ship,hand)=>({...ship,fleet:previewVolley(ship,hand).fleet});
 
-test('catalogo v0.1 completo e quattro motori leggendari dal livello 1',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,17);
- assert.equal(PHASE1_CATALOG.weapons.length,42);
- assert.equal(PHASE1_CATALOG.shipLevels.length,85);
- assert.equal(PHASE1_CATALOG.weaponLevels.length,210);
- const hp={L01:[134,155,176,197,218],L02:[130,149,169,188,207],L03:[147,169,191,213,235],L04:[138,159,181,202,223]};
- const armaments={L01:['W30','W31','W32','W33'],L02:['W34','W35','W36'],L03:['W37','W38'],L04:['W39','W40','W41','W42']};
+test('catalogo ufficiale con tre madri leggendarie e quattro motori dal livello 1',()=>{
+ assert.equal(PHASE1_CATALOG.ships.length,12);
+ assert.equal(PHASE1_CATALOG.weapons.length,27);
+ assert.equal(PHASE1_CATALOG.shipLevels.length,60);
+ assert.equal(PHASE1_CATALOG.weaponLevels.length,135);
+ const hp={L01:[134,155,176,197,218],L03:[147,169,191,213,235],L04:[138,159,181,202,223]};
+ const armaments={L01:['W30','W31','W32','W33'],L03:['W37','W38'],L04:['W39','W40','W41','W42']};
  for(const [id,levels] of Object.entries(hp))for(let l=1;l<=5;l++){
   const v=newVessel(id,l);
   assert.deepEqual(Object.keys(v.engines),['plus','minus','times','divide']);
@@ -26,13 +26,13 @@ test('catalogo v0.1 completo e quattro motori leggendari dal livello 1',()=>{
  }
 });
 
-test('le tredici armi leggendarie usano i danni del catalogo a ogni livello',()=>{
+test('le dieci armi leggendarie ufficiali usano i danni del catalogo a ogni livello',()=>{
  const expected={
   W30:[5,6,7,7,8], W31:[6,7,8,8,9], W32:[5,6,7,7,8], W33:[6,7,8,9,10],
-  W34:[6,7,7,8,8], W35:[6,7,8,9,10], W36:[6,7,8,8,9], W37:[7,8,9,9,10],
+  W37:[7,8,9,9,10],
   W38:[7,8,9,10,11], W39:[5,6,7,7,8], W40:[5,6,7,7,8], W41:[6,7,8,8,9], W42:[7,8,9,10,11]
  };
- for(const id of ['L01','L02','L03','L04'])for(let l=1;l<=5;l++){
+ for(const id of ['L01','L03','L04'])for(let l=1;l<=5;l++){
   for(const w of newVessel(id,l).weapons)assert.equal(w.damage,expected[w.id][l-1],w.id);
  }
 });
@@ -103,11 +103,8 @@ test('le due combo si scaricano indipendentemente nella stessa flotta',()=>{
  assert.equal(shot(next,'W42').bullets,7);
 });
 
-test('Esplosione Gemina e le quattro soglie leggendarie mantengono le regole base',()=>{
- const gemini=side(['L02']);
- assert.equal(shot(previewVolley(gemini,cards(8,'♦',3,'♣')),'W36'),undefined);
- assert.equal(shot(previewVolley(gemini,cards(8,'♦',3,'♠')),'W36').bullets,8);
- for(const [id,w,suit,threshold] of [['L01','W31','♦',18],['L02','W35','♣',20],['L03','W38','♠',20],['L04','W41','♣',20]]){
+test('le tre soglie leggendarie ufficiali mantengono le regole di accumulo',()=>{
+ for(const [id,w,suit,threshold] of [['L01','W31','♦',18],['L03','W38','♠',20],['L04','W41','♣',20]]){
   const ship=side([id]),first=previewVolley(ship,cards(12,suit,1,suit));
   assert.equal(shot(first,w).bullets,0);
   assert.equal(shot(first,w).charge,13);
@@ -135,7 +132,7 @@ test('compatibilità delle flotte miste al livello 1 e memoria ferma a nave dist
  assert.ok(validFleet(['N00','R02','L01']));
  assert.equal(validFleet(['R02','L01','L04']),false);
  assert.deepEqual(fleetCompatibility(['E01'],['L03'],1),{compatible:false,playerMissing:['divide'],enemyMissing:[]});
- assert.equal(fleetCompatibility(['N00','R02','L01'],['N00','E03','L03'],1).compatible,true);
+ assert.equal(fleetCompatibility(['N00','R02','L01'],['N00','E01','L03'],1).compatible,true);
  const ship=advance(side(['L04']),cards(2,'♥',3,'♠'));
  for(const e of Object.values(ship.fleet[0].engines))e.hp=0;
  const volley=previewVolley(ship,cards(4,'♦',2,'♣'));

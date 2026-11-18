@@ -10,7 +10,7 @@ test('tutte le armi del duello hanno un effetto distinto, anche nello stesso sem
  assert.ok(official.every(id=>Object.hasOwn(WEAPON_EFFECTS,id)),
   'ogni arma ufficiale deve avere un profilo effetti');
  assert.equal(new Set(official.map(id=>WEAPON_EFFECTS[id].profile)).size,official.length);
- assert.equal(new Set(Object.values(WEAPON_EFFECTS).map(f=>f.profile)).size,PHASE1_CATALOG.weapons.length);
+ for(const id of official)assert.equal(weaponEffect(id),WEAPON_EFFECTS[id],id+' conserva l’effetto ufficiale');
  for(const [a,b] of [['W02','W17'],['W04','W05']]){
   assert.notEqual(weaponEffect(a).profile,weaponEffect(b).profile);
   assert.notEqual(weaponEffect(a).durationMs,weaponEffect(b).durationMs);
