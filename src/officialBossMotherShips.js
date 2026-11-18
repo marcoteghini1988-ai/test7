@@ -3,17 +3,14 @@
 // altrimenti cambiano firme dei vitali e armamenti del boss durante un replay.
 // NON riguarda il motore legacy, il PvP o la plancia. Nessuna nave e donata.
 import {PHASE16A_CAMPAIGN_PLANETS} from './newCombat/phase16ACatalog.js';
-import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
+import {CAMPAIGN_SHIP_ORDER} from './fleetNext/progression.js';
 import {getShipDefinition} from './mathDuelEngine.js';
 
-// Ogni boss presidia il modello dell'ultima soglia nave conquistabile PRIMA
-// del proprio settore. La nave data in premio proprio alla vittoria del boss
-// non e disponibile in anticipo. Dodici madri reali distinte, nessun asset nuovo.
+// Ogni boss ha una madre diversa fra le dodici approvate.
+// Le soglie provvisorie delle ricompense non modificano la sua identità.
 export const OFFICIAL_BOSS_MOTHER_SHIPS=Object.freeze(Object.fromEntries(
  PHASE16A_CAMPAIGN_PLANETS.map((planet,index)=>{
-  const sector=(index+1)*10;
-  const latest=SHIP_CAMPAIGN_UNLOCKS.filter(item=>item.sector<sector).at(-1);
-  const shipId=latest?.shipId??'N00';
+  const shipId=CAMPAIGN_SHIP_ORDER[index];
   if(!getShipDefinition(shipId))throw new Error('Nave boss mancante nel catalogo: '+shipId);
   return [planet.id,shipId];
  })
