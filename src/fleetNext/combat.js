@@ -10,6 +10,8 @@ import {skillCount,trapsSuppressed,terrainImmunity,terrainHalf,
  settleIndependentSupportDamage,resolveIndependentSupportOwnTurn} from './supportAbilities.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
+import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
+import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
 import {applyElementalDamage,elementalDamageDescription} from './elementalDamage.js';
 import {ENERGY_CAPACITY} from './energyCards.js';
@@ -177,7 +179,7 @@ export function inheritFleetEscortElements(side){
 // La fusione mantiene HP e maxHp senza aggiungere livelli o slot.
 export function fusionShipUnavailableReason(side,shipId,slot=null,ply=0){
  if(!side?.independentSupportRoster)return 'Serve una flotta di carte-navicella indipendenti';
- if(!SHIPS.has(shipId)||!nativeSupportSkillFor(shipId))
+ if(!Object.hasOwn(FUSION_SHIP_CARD_BY_ID,'fusion-ship-'+String(shipId).toLowerCase()))
   return 'Modello della Carta Navicella Fusione sconosciuto';
  if((side.fusionsUsed||0)>=(side.fusionLimit||0))
   return 'Le due fusioni disponibili sono già state utilizzate';
@@ -186,8 +188,8 @@ export function fusionShipUnavailableReason(side,shipId,slot=null,ply=0){
  const candidates=(side.escorts||[]).filter(e=>!e.fused&&escortEnabled(side,e,ply)&&
   (slot===null||e.slot===slot));
  if(!candidates.length)return 'Non esiste un supporto operativo non ancora fuso nello slot selezionato';
- if(!candidates.some(e=>e.supportLevel>=shipMaxLevel(e.shipModelId||e.originShipId))){
-  const first=candidates[0],max=shipMaxLevel(first.shipModelId||first.originShipId);
+ if(!candidates.some(e=>isMaxSupportLevel(e.supportLevel)&&e.supportLevel>=SUPPORT_MAX_LEVEL)){
+  const first=candidates[0],max=SUPPORT_MAX_LEVEL;
   return 'Il supporto '+first.name+' deve essere al livello MAX (L'+max+') per fondersi';
  }
  return '';
@@ -196,17 +198,18 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
  const reason=fusionShipUnavailableReason(side,shipId,slot,ply);
  if(reason)return {ok:false,reason};
  const index=side.escorts.findIndex(e=>!e.fused&&escortEnabled(side,e,ply)&&
-  e.supportLevel>=shipMaxLevel(e.shipModelId||e.originShipId)&&
+  isMaxSupportLevel(e.supportLevel)&&
   (slot===null||e.slot===slot));
  const original=side.escorts[index];
- const skillId=nativeSupportSkillFor(shipId),newElement=fleetElements(shipId)[0];
+ const fusionCard=FUSION_SHIP_CARD_BY_ID['fusion-ship-'+shipId.toLowerCase()];
+ const skillId=fusionCard.fusionSkillId,newElement=fusionCard.fusionElementId;
  const skillIds=[...new Set([...(original.supportSkillIds||[original.supportSkillId]),
   skillId].filter(Boolean))];
  const fused={...original,
   id:'escort:fusion:'+original.instanceId+':'+shipId,
-  name:original.name+' + '+SHIPS.get(shipId).nome,
+  name:original.name+' + '+fusionCard.fusionShipName,
   fused:true,fusionShipId:shipId,fusionCardId:'fusion-ship-'+shipId.toLowerCase(),
-  fusionShipLevel:shipMaxLevel(shipId),
+  fusionShipLevel:SUPPORT_MAX_LEVEL,
   fusionModelIds:[original.shipModelId||original.originShipId,shipId],
   // Barra identica: la carta non ripara, non somma ne' crea punti HP.
   hp:original.hp,maxHp:original.maxHp,supportObservedHp:original.hp,
