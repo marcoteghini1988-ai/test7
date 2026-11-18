@@ -1302,15 +1302,15 @@
     {
       "id": "nx-l01-10",
       "shipId": "L01",
-      "type": "Fusione",
+      "type": "Difesa",
       "minShipLevel": 5,
-      "name": "Fusione della Corona",
-      "effectText": "Fondi i due supporti operativi nella Corona Unita. Conserva i danni in proporzione; nessun supporto di riserva entra in campo.",
-      "rules": "Una volta per partita. Mantiene le passive dei materiali. Identità proposta della fusa: una volta per turno può deviare su di sé un colpo alla Centralina. Non crea un nuovo vitale.",
-      "requirements": "parts: ['command']; supportCount: 2; fusionStage: 1",
-      "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
-      "visualBrief": "Due guardiani dorati si incastrano in un’unica nave circolare con una corona frontale.",
-      "state": "executable-in-combat-v1; final-art-pending"
+      "name": "Velo della Corona",
+      "effectText": "Blocca 1 colpo contro i tuoi componenti. Dura 2 turni avversari.",
+      "rules": "Difesa scoperta che assorbe il primo colpo ai tuoi sistemi per due turni avversari; non fonde supporti.",
+      "requirements": "Nave Eclisse Reale, livello di sblocco della carta.",
+      "counterplay": "Può essere consumata dalle salve nemiche o rimossa con effetti di controllo.",
+      "visualBrief": "Corona luminosa protettiva intorno alla nave madre.",
+      "state": "executable-in-combat-v2; final-art-pending"
     },
     {
       "id": "nx-l03-01",
@@ -1406,15 +1406,15 @@
     {
       "id": "nx-l03-08",
       "shipId": "L03",
-      "type": "Fusione",
+      "type": "Difesa",
       "minShipLevel": 3,
-      "name": "Fusione Ossidiana",
-      "effectText": "Fondi i due supporti operativi nel Bastione d’Assedio. Conserva i danni in proporzione; non richiama riserve.",
-      "rules": "Una volta per partita. Mantiene le passive. Identità proposta: puoi rinunciare alle passive offensive della fusa per limitarne a 1 il primo danno del prossimo turno avversario.",
-      "requirements": "parts: ['command']; supportCount: 2; fusionStage: 1",
-      "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
-      "visualBrief": "Due scudiere pesanti si uniscono in un bastione mobile con una grande canna centrale.",
-      "state": "executable-in-combat-v1; final-art-pending"
+      "name": "Spine di Ossidiana",
+      "effectText": "Al primo danno subito per turno, infligge 1 danno alle Armi avversarie. Dura 1 turno avversario.",
+      "rules": "Difesa reattiva che infligge un piccolo contraccolpo al primo danno subito; non fonde supporti.",
+      "requirements": "Nave Titano Ossidiana, livello di sblocco della carta.",
+      "counterplay": "Evita l'impatto o neutralizza la difesa con una trappola.",
+      "visualBrief": "Spine metalliche nere intorno allo scafo.",
+      "state": "executable-in-combat-v2; final-art-pending"
     },
     {
       "id": "nx-l03-09",
@@ -1497,15 +1497,15 @@
     {
       "id": "nx-l04-05",
       "shipId": "L04",
-      "type": "Fusione",
+      "type": "Tattica",
       "minShipLevel": 1,
-      "name": "Fusione dell’Arca",
-      "effectText": "Fondi due supporti operativi. La prima fusione richiama la terza riserva sbloccata; la seconda unisce terzo e quarto supporto.",
-      "rules": "Due copie della stessa definizione, due usi massimi per partita. L1–2: solo prima fusione; L3–4: entra il terzo ma manca il quarto. L5: seconda possibile. Conserva danni proporzionali e passive; non risuscita materiali.",
-      "requirements": "parts: ['command']; fusionStages: [1, 2]",
-      "counterplay": "Mantieni validi i requisiti difensivi; le protezioni e le trappole applicabili si risolvono normalmente.",
-      "visualBrief": "Due coppie distinte di scudiere convergono in due grandi navi, con la madre immutata al centro.",
-      "state": "executable-in-combat-v1; final-art-pending"
+      "name": "Ricambio Astrale",
+      "effectText": "Scarta 1 carta casuale dalla mano e ne pesca altrettante.",
+      "rules": "Ricambio di una carta realmente presente nella mano. Nessuna unità di riserva né fusione aggiuntiva.",
+      "requirements": "Nave Arca Astrale, livello di sblocco della carta.",
+      "counterplay": "Non crea vantaggio numerico: una carta scartata per una pescata.",
+      "visualBrief": "Flusso astrale di carte riciclate nel reattore.",
+      "state": "executable-in-combat-v2; final-art-pending"
     },
     {
       "id": "nx-l04-06",
