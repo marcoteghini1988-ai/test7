@@ -165,7 +165,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <p style={small}>Ogni carta rappresenta una navicella che si fonde con uno dei due supporti in campo.
     Sono acquistabili con Crediti Stellari, con prezzo provvisorio Leggendario. Sono tutte L5;
     possono fondersi solo con supporti L5. Le immagini definitive arriveranno dopo. I 13 modelli di supporto hanno ciascuno una passiva e un elemento propri;
-    le 17 madri storiche restano in un catalogo separato.</p>
+    le 12 madri ufficiali restano in un catalogo separato.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {FUSION_SHIP_CARDS.map(genericCardTile)}
    </div>

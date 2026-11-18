@@ -1,5 +1,5 @@
 // Inventario e schieramento dei supporti, INDIPENDENTI dai livelli delle madri.
-// Non modifica e non migra il salvataggio delle 17 madri o quello delle carte.
+// Non modifica e non migra il salvataggio delle 12 madri o delle loro 120 carte.
 // Gli slot si sbloccano con traguardi di campagna permanenti, mai con i livelli.
 // Le soglie di settore, i prezzi e i potenziamenti verranno collegati nei prossimi passi.
 import {SUPPORT_ACTIVE_SLOTS,supportDefinition} from './supportCatalog.js';

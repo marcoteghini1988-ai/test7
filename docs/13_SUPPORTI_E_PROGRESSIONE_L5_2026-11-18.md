@@ -2,8 +2,8 @@
 **18 novembre 2026** · Sorgente ufficiale: `test7/main`
 
 ## Distinzione fra madri e supporti
-- Il catalogo delle **17 madri storiche** rimane intatto: il numero 13 riguarda esclusivamente le **carte-navicella di supporto** ora selezionabili prima della battaglia.
-- Le 34 scudiere e i 4 ID di modello residui restano **alias legacy**, non nuovi modelli acquistabili. I quattro riferimenti tecnici che non diventano supporti selezionabili sono `R03`, `R04`, `E02` ed `E04`: continuano a esistere come madri. Un incontro contro una di queste madri utilizza come supporto NPC una delle 13 unità ufficiali.
+- Il catalogo ufficiale contiene **12 madri**, **120 carte esclusive** e, separatamente, **13 carte-navicella di supporto**. Le cinque varianti materne escluse sono archiviate in un appunto e non fanno parte delle madri giocabili.
+- I supporti sono autonomi rispetto alle madri. Gli ID tecnici `C04`, `E03` e `L02` sono usati solo come **identità di supporti nuovi**, con nomi, effetti, elementi e scocche provvisorie propri: non ripristinano le madri escluse o le loro 50 carte. `R04` ed `E02` restano due madri ufficiali, senza supporto omonimo.
 - I 13 nomi dei supporti sono **denominazioni funzionali di progettazione**; i nuovi render verranno creati con Flow. Fino ad allora si usano gli SVG originari come segnaposto, senza cambiare la plancia 3D.
 
 ## I tredici supporti e le tredici passive indipendenti
@@ -24,7 +24,7 @@
 | L03 | Titano della Tempesta | Leggendaria | Tempesta alla distruzione | Rimuove Personaggio/Attacchi nemici alla distruzione |
 | L04 | Arca Condensatrice | Leggendaria | Accumulo di fulmini | Rilascia scariche dopo aver accumulato cariche |
 
-Le altre **due passive numeriche** del registro precedente (`normal-boost`, `special-boost`) rimangono nei test e nel sistema storico, senza diventare nuovi modelli ufficiali. Così le 15 meccaniche non sono cancellate, mentre il catalogo nuovo ne assegna esattamente 13 a 13 modelli. Non si sommano due passive a un supporto normale: la seconda arriva **solo con una Fusione**.
+Le altre **due passive numeriche** del registro storico (`normal-boost`, `special-boost`) restano nel sistema tecnico delle dodici madri, senza diventare nuovi modelli di supporto. Così le 15 meccaniche non sono cancellate, mentre il catalogo nuovo ne assegna esattamente 13 a 13 modelli. Non si sommano due passive a un supporto normale: la seconda arriva **solo con una Fusione**.
 
 ## Cinque livelli, indipendenti dalla madre
 - Ogni **copia posseduta** parte da **L1**. Ogni upgrade agisce soltanto su quella copia e porta sequenzialmente fino a **L5**.

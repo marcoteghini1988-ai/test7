@@ -2,8 +2,8 @@
 // a UN supporto già schierato. Non rappresenta una fusione universale.
 // Ogni Carta Fusione e' Leggendaria e rappresenta il modello gia' al livello MAX.
 // Le immagini e i prezzi saranno definiti nella fase dedicata.
-// Le 13 schede provengono dai modelli di supporto ufficiali; le 17 madri
-// storiche e i loro ID rimangono disponibili nei salvataggi precedenti.
+// Le 13 schede provengono dai supporti indipendenti; le madri ufficiali
+// sono 12 e hanno un catalogo separato di 120 carte esclusive.
 import {SUPPORT_CATALOG} from './supportCatalog.js';
 import {SUPPORT_MAX_LEVEL} from './supportProgression.js';
 
