@@ -15,7 +15,7 @@ export const SHIP_CAMPAIGN_UNLOCKS=Object.freeze([
  {sector:30,shipId:'R04'},
  {sector:40,shipId:'E01'},{sector:50,shipId:'E02'},
  
- {sector:80,shipId:'L01'},,
+ {sector:80,shipId:'L01'},
  {sector:100,shipId:'L03'},{sector:110,shipId:'L04'}
 ].map(row=>Object.freeze({...row})));
 
