@@ -33,7 +33,7 @@ import {arkModuleActive,arkEscorts,arkFusedEscorts,arkUnfusedEscorts,
  arkEnemyUnits,arkDamagedEscorts,arkModulesInDiscard} from './fleetNext/arkEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
-import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
+import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,sacrificeIndependentFleetSupport,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
@@ -43,6 +43,7 @@ import {elementalAbility,chargedElementalEnergy,totalElementalEnergy} from './fl
 import {dismantleCandidates,dismantleActive} from './fleetNext/dismantleEffects.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {readSupportCollection,equippedSupportRoster} from './fleetNext/supportCollection.js';
+import {advanceIndependentSupportTime,effectiveSupportEnergyCost,terrainImmunity} from './fleetNext/supportAbilities.js';
 import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
@@ -149,7 +150,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      onClick={()=>onSelectTarget?.({kind:'escort',id:escort.id,slot})}/> }
     <small className="f3d-escort-grade">{signature?.symbol||''} {escort.fused?'FUSA · ':''}G{escort.grade||1}</small>
     <button type="button" className="f3d-escort-info"
-     onClick={()=>inspectEscort({escort,mother,linked})}
+     onClick={()=>inspectEscort({escort,mother,linked,player})}
      aria-label={'Abilità della scudiera '+escort.name+(signature?' · '+signature.name+' · vulnerabile a '+weaknesses:'')}>i</button>
    </div>;
   })}
@@ -393,7 +394,15 @@ export default function OfficialFleetBattle3D({
   return ()=>window.removeEventListener('resize',resize);
  },[]);
  useEffect(()=>{
-  const id=window.setInterval(()=>setNow(Date.now()),250);
+  const id=window.setInterval(()=>{
+  const timestamp=Date.now();
+  setNow(timestamp);
+  setBattle(current=>{
+   if(!current)return current;
+   const next=advanceIndependentSupportTime(current,timestamp);
+   return next.changed?next.battle:current;
+  });
+ },250);
   return ()=>window.clearInterval(id);
  },[]);
  useEffect(()=>{
@@ -712,15 +721,16 @@ export default function OfficialFleetBattle3D({
  const elementalAbilityDef=elementalAbility(player.ships[0].id);
  const elementalTypes=activeFleetElements(player.ships[0].id,player.ships[0].level);
  const selectedElement=elementalTypes.includes(elementalChoice)?elementalChoice:elementalTypes[0];
+ const actualEnergyCost=effectiveSupportEnergyCost(player,elementalAbilityDef,battle.ply);
  const chargesAvailable=chargedElementalEnergy(player,selectedElement)+
   chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy'&&
    card(player.hand[i])?.effectSpec?.elementId===selectedElement).length;
  const canPrepareElemental=!!elementalAbilityDef&&
-  chargesAvailable>=elementalAbilityDef.cost&&totalElementalEnergy(player)+
+  chargesAvailable>=actualEnergyCost&&totalElementalEnergy(player)+
   chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy').length<=4&&
   !chosenCards.some(i=>cardRole(player.hand[i])==='attack')&&
   (elementalAbilityDef.mode!=='heal'||player.ships[0].hp<player.ships[0].maxHp&&
-   battle.terrain?.id!=='T08');
+   (battle.terrain?.id!=='T08'||terrainImmunity(player,battle.ply)));
  const ended=battle.phase==='finished';
  const target=enemy.ships[0];
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
@@ -1714,7 +1724,7 @@ export default function OfficialFleetBattle3D({
    {!ended&&elementalAbilityDef&&<div className="f3d-elemental-control" role="group"
     aria-label="Reattore e abilità elementale">
     <span title={'Energia accumulata: '+totalElementalEnergy(player)+'/4'}>
-     {FLEET_ELEMENTS[selectedElement]?.symbol||'✧'} {chargesAvailable}/{elementalAbilityDef.cost}
+     {FLEET_ELEMENTS[selectedElement]?.symbol||'✧'} {chargesAvailable}/{actualEnergyCost}
     </span>
     {elementalTypes.length>1&&<select aria-label="Elemento del colpo speciale" value={selectedElement}
      disabled={!myTurn||elementalPrepared} onChange={e=>{setElementalChoice(e.target.value);setElementalPrepared(false);}}>
@@ -1773,6 +1783,17 @@ export default function OfficialFleetBattle3D({
      <p>{describeEscortEffect(help.escort)}</p>
      <small>{help.linked?'COLLEGAMENTO ATTIVO':'COLLEGAMENTO INTERROTTO'}
       {' · '+help.escort.hp+'/'+help.escort.maxHp+' punti'}</small>
+     {help.player&&myTurn&&!ended&&
+      player.escorts.some(e=>e.id===help.escort.id&&e.supportSkillId==='sacrifice'&&
+       e.hp>0&&e.hp/e.maxHp>=.8)&&
+      <button type="button" onClick={()=>{
+       const result=sacrificeIndependentFleetSupport(battle,'A',help.escort.id,Date.now());
+       if(!result.ok){setMessage(result.reason);return;}
+       setBattle(result.battle);
+       setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
+       setMessage(result.events.at(-1)?.text||'Navicella sacrificata');
+       setHelp(null);
+      }}>SACRIFICA LA NAVICELLA</button>}
     </>}
    </div>}
    {ended&&<div className="live-end">

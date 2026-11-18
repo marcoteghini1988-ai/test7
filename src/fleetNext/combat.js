@@ -1251,7 +1251,7 @@ function activateCorvoCard(b,who,def,ctx,events,order={},source=null){
   return;
  }
  if(action==='frequency-analysis'){
-  const trap=!trapsSuppressed(b,enemy)&&enemy.defenses.find(d=>d.hidden);
+  const trap=enemy.defenses.find(d=>d.hidden); // Anche soppressa resta ispezionabile.
   const state=ensureCorvoState(side);
   state.scannedTrapId=trap?.id||null;state.scanPly=b.ply;
   events.push(emit(b,who,'private-scan','Analisi di frequenza: '+
@@ -4454,7 +4454,7 @@ export function autoFleetTurn(b,who=b.turn){
  const promisingElement=b.ruleset===HP_SYNC_RULESET&&ability?availableElements.find(element=>{
   const handCount=side.hand.filter(id=>card(id)?.effectSpec?.type==='energy'&&
    card(id)?.effectSpec?.elementId===element).length;
-  return chargedElementalEnergy(side,element)+Math.min(FLEET_MAX_PLAYED,handCount)>=ability.cost;
+  return chargedElementalEnergy(side,element)+Math.min(FLEET_MAX_PLAYED,handCount)>=effectiveSupportEnergyCost(side,ability,b.ply);
  }):null;
  const candidates=side.hand.map((id,i)=>({id,i,role:cardRole(id),def:card(id)}))
   .filter(x=>!effectUnavailableReason(x.def,side,b,{ownPartId}))
@@ -4515,7 +4515,7 @@ export function autoFleetTurn(b,who=b.turn){
  const readyElement=availableElements.find(element=>ability&&
   chargedElementalEnergy(side,element)+cards.filter(i=>
    card(side.hand[i])?.effectSpec?.type==='energy'&&
-   card(side.hand[i])?.effectSpec?.elementId===element).length>=ability.cost);
+   card(side.hand[i])?.effectSpec?.elementId===element).length>=effectiveSupportEnergyCost(side,ability,b.ply));
  const activateElemental=!!readyElement&&b.ruleset===HP_SYNC_RULESET&&
   !cards.some(i=>cardRole(side.hand[i])==='attack')&&
   side.elementalLastActivationPly!==b.ply;
