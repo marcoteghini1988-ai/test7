@@ -50,7 +50,7 @@ Due navi completamente migliorate con lo stesso valore di danno base teorico si 
 - **Attacco Speciale con Energia:** utilizza l'elemento attivo scelto dal giocatore; può essere il secondo, se sbloccato.
 - **Difesa passiva:** resistenza e vulnerabilità della nave madre dipendono dall'elemento **principale**. Il secondo non concede automaticamente una seconda resistenza gratuita.
 - **Carte Energia:** servono per attivare la speciale da 1 a 4 cariche, non per usufruire del danno elementale degli spari normali.
-- **Scudiere:** i colpi contro i supporti sono regolati dall'affinità della **flotta madre che li comanda**. Le scudiere non diventano un terzo o quarto elemento gratuito e non attaccano separatamente.
+- **Scudiere, riserve e fusioni:** ciascun supporto **eredita fisicamente** nel proprio stato `element` e `elements` dalla nave madre (con `elementInheritedFrom`), anche dopo sblocco del secondo elemento. La vulnerabilità ai danni usa il suo **elemento primario ereditato**: una scudiera Fuoco subisce il 125% dei danni da Acqua e un supporto Acqua subisce il 50% da Fuoco. Non si applicano penalità due volte e la seconda affinità non concede resistenza passiva aggiuntiva. La madre e le sue scudiere hanno quindi la stessa debolezza, pur mantenendo HP e passive proprie.
 - **Fusione:** mantiene le regole speciali di ciascuna famiglia senza cambiare di nascosto le affinità.
 - **Scontri a pari massimo livello:** per la verifica non confrontare numeri di livello differenti come se fossero la stessa fase, ma il potenziale completato (100%) di ciascuna famiglia.
 
