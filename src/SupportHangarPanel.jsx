@@ -5,7 +5,7 @@ import {SUPPORT_COLLECTION_KEY,readSupportCollection,writeSupportCollection,
  equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {SUPPORT_CATALOG,supportDefinition} from './fleetNext/supportCatalog.js';
 import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
-import {shipMaxLevel} from './fleetNext/progression.js';
+import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
 import {SUPPORT_SLOT_CAMPAIGN_UNLOCKS} from './fleetNext/supportCampaign.js';
 
 const cardStyle={padding:10,border:'1px solid #36678c',borderRadius:8,
@@ -58,7 +58,7 @@ export default function SupportHangarPanel(){
    la stessa formazione anche quando cambi nave madre.</p>
   {state.error&&<p role="alert">{state.error}</p>}
   {collection&&<>
-   <p>Modelli tecnici registrati: {SUPPORT_CATALOG.length} (13 previsti nel catalogo definitivo) · Copie possedute: {collection.owned.length}
+   <p>Modelli ufficiali di supporto: {SUPPORT_CATALOG.length} · Copie possedute: {collection.owned.length}
     {' · Slot sbloccati: '+collection.unlockedSlots+'/2'}</p>
    <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
     {[0,1].map(slot=>{
@@ -82,13 +82,13 @@ export default function SupportHangarPanel(){
          const source=supportDefinition(item.supportId);
          return <option key={item.instanceId} value={item.instanceId}
           disabled={equipped.some((x,i)=>i!==slot&&x===item.instanceId)}>
-          {source?.name||item.supportId} · L{item.level}/{shipMaxLevel(source?.shipModelId)} · copia {item.instanceId}
+          {source?.name||item.supportId} · L{item.level}/{SUPPORT_MAX_LEVEL} · copia {item.instanceId}
          </option>;
         })}
        </select>
-       {chosen&&<small>{chosen.name} · {chosen.role} · livello proprio {chosen.level}/{shipMaxLevel(chosen.shipModelId)}
+       {chosen&&<small>{chosen.name} · {chosen.role} · livello proprio {chosen.level}/{SUPPORT_MAX_LEVEL}
         {' · elemento proprio: '+(FLEET_ELEMENTS[chosen.elementId]?.name||'da definire')}
-        {' · fusione: '+(chosen.level>=shipMaxLevel(chosen.shipModelId)?'MAX pronto':'bloccata fino al livello MAX')}</small>}
+        {' · fusione: '+(chosen.level>=SUPPORT_MAX_LEVEL?'MAX pronto':'bloccata fino al livello MAX')}</small>}
       </>}
      </div>;
     })}
@@ -96,7 +96,7 @@ export default function SupportHangarPanel(){
    <p>Una Carta Navicella Fusione Leggendaria può fondersi soltanto con un supporto al livello massimo. La carta rappresenta già una navicella MAX; mantiene gli HP del supporto in campo.</p>
    <p>Le prime due copie si ottengono ai traguardi di sblocco. Le altre
     potranno essere acquistate o ottenute separatamente quando
-    completeremo il negozio e le 15 abilità dei supporti.</p>
+    completeremo il negozio e i miglioramenti dei supporti.</p>
    {notice&&<p role="status">{notice}</p>}
    <button type="button" style={buttonStyle} onClick={save}
     disabled={!draft||draft.every((v,i)=>v===collection.equipped[i])}>
