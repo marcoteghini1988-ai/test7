@@ -1,0 +1,196 @@
+// Una e una sola abilità elementale per ognuna delle 17 navicelle.
+// L'abilità è una proprietà della madre, NON una undicesima carta esclusiva.
+// Le Energie si ottengono solo dalle Carte Energia realmente giocate.
+import {activeFleetElements,FLEET_ELEMENTS,elementalRelation} from './elementalAffinities.js';
+import {ENERGY_CAPACITY} from './energyCards.js';
+
+const RAW_ABILITIES=[
+ [
+  "N00",
+  "Blackout Ionico",
+  "effect",
+  "disable",
+  2,
+  1
+ ],
+ [
+  "C01",
+  "Lancia Solare",
+  "attack",
+  "salvo",
+  3,
+  1
+ ],
+ [
+  "C02",
+  "Scudo Prismatico",
+  "effect",
+  "guard",
+  1,
+  1
+ ],
+ [
+  "C03",
+  "Eco del Vuoto",
+  "effect",
+  "jam",
+  2,
+  1
+ ],
+ [
+  "C04",
+  "Dardo Ciclonico",
+  "attack",
+  "salvo",
+  2,
+  1
+ ],
+ [
+  "R01",
+  "Martello Binario",
+  "attack",
+  "salvo",
+  3,
+  2
+ ],
+ [
+  "R02",
+  "Sovraccarico Manta",
+  "effect",
+  "disable",
+  3,
+  1
+ ],
+ [
+  "R03",
+  "Rifrazione Vitale",
+  "effect",
+  "heal",
+  2,
+  2
+ ],
+ [
+  "R04",
+  "Morso Abissale",
+  "attack",
+  "salvo",
+  3,
+  2
+ ],
+ [
+  "E01",
+  "Nebbia Gelida",
+  "effect",
+  "jam",
+  2,
+  2
+ ],
+ [
+  "E02",
+  "Tempesta a Catena",
+  "attack",
+  "salvo",
+  3,
+  2
+ ],
+ [
+  "E03",
+  "Cuore della Fenice",
+  "effect",
+  "heal",
+  3,
+  3
+ ],
+ [
+  "E04",
+  "Baluardo di Orizzonte",
+  "effect",
+  "guard",
+  3,
+  2
+ ],
+ [
+  "L01",
+  "Giudizio Radiante",
+  "attack",
+  "salvo",
+  3,
+  2
+ ],
+ [
+  "L02",
+  "Frattura Gravitazionale",
+  "attack",
+  "salvo",
+  4,
+  2
+ ],
+ [
+  "L03",
+  "Impatto Ossidiana",
+  "attack",
+  "salvo",
+  4,
+  2
+ ],
+ [
+  "L04",
+  "Custodia Astrale",
+  "effect",
+  "heal",
+  4,
+  3
+ ]
+];
+export const ELEMENTAL_ABILITIES=Object.freeze(Object.fromEntries(
+ RAW_ABILITIES.map(([shipId,name,kind,mode,cost,power])=>[shipId,Object.freeze({
+  shipId,name,kind,mode,cost,power,
+  description:kind==='attack'?
+   'Sostituisce l’attacco normale con un colpo elementale potenziato.':
+   mode==='guard'?'Riduce la potenza del prossimo attacco avversario.':
+   mode==='jam'?'Indebolisce il prossimo attacco avversario.':
+   mode==='heal'?'Ripara gli HP della nave madre senza superare il massimo.':
+   'Disattiva una scudiera nemica per il prossimo turno avversario.'
+ })])
+));
+export const elementalAbility=shipId=>ELEMENTAL_ABILITIES[shipId]||null;
+export function totalElementalEnergy(side){
+ return Object.values(side?.elementalCharges||{}).reduce((n,v)=>n+Math.max(0,Math.floor(Number(v)||0)),0);
+}
+export const chargedElementalEnergy=(side,element)=>Math.max(0,Math.floor(Number(side?.elementalCharges?.[element])||0));
+export function canChargeElementalEnergy(side,element){
+ return !!side?.ships?.[0]&&activeFleetElements(side.ships[0].id,side.ships[0].level).includes(element)&&
+  totalElementalEnergy(side)<ENERGY_CAPACITY;
+}
+export function chargeElementalEnergy(side,element){
+ if(!canChargeElementalEnergy(side,element))return false;
+ side.elementalCharges??={};
+ side.elementalCharges[element]=chargedElementalEnergy(side,element)+1;
+ return true;
+}
+export function spendElementalEnergy(side,element,cost){
+ if(!Number.isInteger(cost)||cost<1||cost>ENERGY_CAPACITY||
+  chargedElementalEnergy(side,element)<cost)return false;
+ side.elementalCharges[element]-=cost;
+ if(side.elementalCharges[element]===0)delete side.elementalCharges[element];
+ return true;
+}
+export function elementalAbilityReadiness(side,element,extraCards=0){
+ const mother=side?.ships?.[0],ability=elementalAbility(mother?.id);
+ if(!mother||!ability)return 'Abilità elementale non disponibile';
+ if(!activeFleetElements(mother.id,mother.level).includes(element))
+  return 'Questo elemento non è ancora sbloccato sulla navicella';
+ if(chargedElementalEnergy(side,element)+extraCards<ability.cost)
+  return 'Energia insufficiente: servono '+ability.cost+' carte '+FLEET_ELEMENTS[element].name;
+ return '';
+}
+export function elementalSpecialStrength(ability,attackerElement,defenderElement){
+ const relation=elementalRelation(attackerElement,defenderElement);
+ return Object.freeze({relation,power:Math.max(1,Math.min(3,(ability?.power||1)+relation))});
+}
+if(Object.keys(ELEMENTAL_ABILITIES).length!==17||
+ Object.values(ELEMENTAL_ABILITIES).some(a=>!['attack','effect'].includes(a.kind)||
+ !['salvo','guard','jam','heal','disable'].includes(a.mode)||a.kind==='attack'!==(a.mode==='salvo')||
+ !Number.isInteger(a.cost)||a.cost<1||a.cost>ENERGY_CAPACITY||
+ !Number.isInteger(a.power)||a.power<1||a.power>3))
+ throw Error('Abilità elementali incomplete o senza costo valido');
