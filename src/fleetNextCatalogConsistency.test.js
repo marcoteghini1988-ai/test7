@@ -13,10 +13,10 @@ test('350 vecchie carte rimosse, Personaggi Boss e sei carte tecniche conservati
  assert.equal(Object.keys(EXCLUSIVE_CARDS).length,170);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.keys(PROGRESSION_CARDS).length,6);
- assert.equal(BASE_CATALOG_COUNT,194);assert.equal(ENERGY_COUNT,10);assert.equal(TOTAL_CARD_COUNT,227);
+ assert.equal(BASE_CATALOG_COUNT,194);assert.equal(ENERGY_COUNT,10);assert.equal(TOTAL_CARD_COUNT,210+FUSION_SHIP_CARDS.length);
  assert.equal(retired.generalIds.length,238);assert.equal(retired.exclusiveIds.length,112);
  const entries=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS),...ENERGY_CARDS,...FUSION_SHIP_CARDS];
- assert.equal(new Set(entries.map(c=>c.id)).size,227);
+ assert.equal(new Set(entries.map(c=>c.id)).size,210+FUSION_SHIP_CARDS.length);
  for(const c of entries){assert.equal(card(c.id),c);assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(c.effetto||c.effectProposed,describeEffect(c),c.id);}
  for(const id of [...retired.generalIds,...retired.exclusiveIds]){assert.equal(card(id),null,id);assert.equal(cardFacePath(id),null,id);}
