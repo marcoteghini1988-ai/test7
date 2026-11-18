@@ -1,4 +1,6 @@
 # Decisione — carte-navicella indipendenti e Fusioni
+
+> **Ultima decisione, 18 novembre:** resta **una carta Fusione specifica per ciascun modello**, ma tutte queste carte hanno rarità **Leggendaria**. Ogni carta rappresenta il proprio modello già **MAX**; per utilizzarla bisogna avere un supporto equipaggiato e operativo che abbia raggiunto il **livello massimo del proprio modello**. Nessuna fusione tra livelli inferiori al massimo. In codice la regola è controllata da `fusionShipUnavailableReason` e `fuseIndependentSupportWithShip`, con livelli dei supporti limitati al massimo proprio. Si mantengono due slot e due possibili fusioni, abilità/elementi combinati e HP non sommati. Acquisizione delle carte, upgrade dei supporti, immagini e taratura finale restano separati.
 **18 novembre 2026 · Eclissi Stellare · implementazione diretta su test7/main**
 
 ## Regole approvate
