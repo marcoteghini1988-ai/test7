@@ -10,6 +10,7 @@ import {claimCampaignSupportUnlock} from './shipCampaignRewards.js';
 import {createFleetSide,createFleetNextBattle,protectingFleetUnits,
  fusionShipUnavailableReason,resolveFleetNextTurn} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import {shipMaxLevel} from './fleetNext/progression.js';
 
 function storage(){
  const data=new Map();
@@ -108,15 +109,20 @@ test('Due copie possedute dello stesso supporto usano entrambi gli slot, senza s
  assert.equal(result.ok,true,result.reason);
  assert.equal(result.battle.sides.A.escorts.length,2);
 });
-test('Tutte le madri possono fondere fino a due supporti scelti liberamente',()=>{
- const chosen=[
+test('Tutte le madri possono fondere due supporti indipendenti, ma solo a livello MAX',()=>{
+ const low=[
   {id:supportModelIdFor('L01'),instanceId:'fusion:1',slot:0,level:1},
   {id:supportModelIdFor('N00'),instanceId:'fusion:2',slot:1,level:1}
  ];
+ const denied=createFleetSide('C01',1,[],11,{},low);
+ assert.equal(denied.fusionLimit,2);
+ assert.match(fusionShipUnavailableReason(denied,'C03',0),/MAX/);
+ assert.match(fusionShipUnavailableReason(denied,'C03',1),/MAX/);
+ const chosen=low.map(unit=>({...unit,level:shipMaxLevel(unit.id==='support-model-l01'?'L01':'N00')}));
  const allowed=createFleetSide('C01',1,[],11,{},chosen);
  assert.equal(allowed.fusionLimit,2);
- assert.equal(fusionShipUnavailableReason(allowed,'C03',0),'' );
- assert.equal(fusionShipUnavailableReason(allowed,'C03',1),'' );
+ assert.equal(fusionShipUnavailableReason(allowed,'C03',0),'');
+ assert.equal(fusionShipUnavailableReason(allowed,'C03',1),'');
  const arca=createFleetSide('L04',5,[],11,{},chosen);
  assert.equal(arca.fusionLimit,2);
  assert.equal(arca.reserveEscorts.length,0);
