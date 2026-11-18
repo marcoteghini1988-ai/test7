@@ -57,7 +57,7 @@ export default function SupportHangarPanel(){
    la stessa formazione anche quando cambi nave madre.</p>
   {state.error&&<p role="alert">{state.error}</p>}
   {collection&&<>
-   <p>Modelli disponibili: {SUPPORT_CATALOG.length} · Copie possedute: {collection.owned.length}
+   <p>Modelli tecnici registrati: {SUPPORT_CATALOG.length} (13 previsti nel catalogo definitivo) · Copie possedute: {collection.owned.length}
     {' · Slot sbloccati: '+collection.unlockedSlots+'/2'}</p>
    <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
     {[0,1].map(slot=>{
