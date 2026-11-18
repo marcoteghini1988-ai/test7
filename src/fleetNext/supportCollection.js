@@ -3,7 +3,7 @@
 // Gli slot si sbloccano con traguardi di campagna permanenti, mai con i livelli.
 // Le soglie di settore, i prezzi e i potenziamenti verranno collegati nei prossimi passi.
 import {SUPPORT_ACTIVE_SLOTS,supportDefinition} from './supportCatalog.js';
-import {shipMaxLevel} from './progression.js';
+import {SUPPORT_MAX_LEVEL,boundedSupportLevel} from './supportProgression.js';
 
 export const SUPPORT_COLLECTION_KEY='eclissi_support_collection_v1';
 export const SUPPORT_COLLECTION_SCHEMA=1;
@@ -25,10 +25,8 @@ export function normalizeSupportCollection(input){
   if(!validId(unit?.instanceId)||!supportDefinition(unit?.supportId)||
    used.has(unit.instanceId))continue;
   used.add(unit.instanceId);
-  const modelId=supportDefinition(unit.supportId).shipModelId;
-  const maxLevel=shipMaxLevel(modelId);
   owned.push({instanceId:unit.instanceId,supportId:unit.supportId,
-   level:Number.isInteger(unit.level)?Math.max(1,Math.min(maxLevel,unit.level)):1});
+   level:boundedSupportLevel(unit.level)});
  }
  const slots=Number.isInteger(input.unlockedSlots)?
   Math.max(0,Math.min(SUPPORT_ACTIVE_SLOTS,input.unlockedSlots)):0;
@@ -52,6 +50,17 @@ export function writeSupportCollection(collection,storage=globalThis.localStorag
  const value=normalizeSupportCollection(collection);
  storage.setItem(SUPPORT_COLLECTION_KEY,JSON.stringify(value));
  return value;
+}
+// La funzione aggiorna il solo livello: prezzo/XP saranno verificati dal
+// futuro servizio di miglioramento. Non assegna monete o livelli gratuiti.
+export function advanceSupportLevel(collection,instanceId){
+ const current=normalizeSupportCollection(collection);
+ const at=current.owned.findIndex(unit=>unit.instanceId===instanceId);
+ if(at<0)throw Error('Navicella di supporto non posseduta');
+ if(current.owned[at].level>=SUPPORT_MAX_LEVEL)throw Error('Supporto già al livello MAX');
+ const owned=current.owned.map((unit,index)=>index===at?
+  {...unit,level:unit.level+1}:unit);
+ return {...current,owned};
 }
 export function grantSupportInstance(collection,supportId){
  if(!supportDefinition(supportId))throw Error('Modello supporto inesistente');
