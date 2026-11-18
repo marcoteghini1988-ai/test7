@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {SUPPORT_SLOT_CAMPAIGN_UNLOCKS,supportMilestoneForSector,
  npcSupportRoster,unlockedNpcSupportSlots} from './fleetNext/supportCampaign.js';
-import {supportIdFor} from './fleetNext/supportCatalog.js';
+import {supportIdFor,supportModelIdFor} from './fleetNext/supportCatalog.js';
 import {createSupportCollection,readSupportCollection,writeSupportCollection,
  grantSupportInstance,equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {claimCampaignSupportUnlock} from './shipCampaignRewards.js';
 import {createFleetSide,createFleetNextBattle,protectingFleetUnits,
- fusionUnavailableReason,resolveFleetNextTurn} from './fleetNext/combat.js';
+ fusionShipUnavailableReason,resolveFleetNextTurn} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 
 function storage(){
@@ -37,7 +37,7 @@ test('Ricompense supporti: primo al settore 20, secondo al 60, mai duplicati',()
  let owned=readSupportCollection(store);
  assert.equal(owned.unlockedSlots,1);
  assert.equal(owned.owned.length,1);
- assert.equal(owned.owned[0].supportId,supportIdFor('N00',0));
+ assert.equal(owned.owned[0].supportId,supportModelIdFor('N00'));
  assert.equal(owned.equipped[0],owned.owned[0].instanceId);
  const again=claimCampaignSupportUnlock('campaign',20,store);
  assert.equal(again.granted,false);assert.equal(again.reason,'already_claimed');
@@ -46,7 +46,7 @@ test('Ricompense supporti: primo al settore 20, secondo al 60, mai duplicati',()
  assert.equal(second.granted,true);assert.equal(second.slot,1);
  owned=readSupportCollection(store);
  assert.equal(owned.unlockedSlots,2);assert.equal(owned.owned.length,2);
- assert.equal(owned.owned[1].supportId,supportIdFor('C03',1));
+ assert.equal(owned.owned[1].supportId,supportModelIdFor('C03'));
  assert.equal(owned.equipped[1],owned.owned[1].instanceId);
  assert.equal(claimCampaignSupportUnlock('adventure',60,store).granted,false);
  assert.equal(owned.claimedMilestones.length,2);
@@ -65,8 +65,8 @@ test('Il passaggio tra madri mantiene la stessa coppia indipendente e le debolez
  const other=createFleetSide('N00',20,[],313,{},roster);
  assert.deepEqual(one.escorts.map(e=>e.catalogSupportId),roster.map(e=>e.id));
  assert.deepEqual(other.escorts.map(e=>e.catalogSupportId),roster.map(e=>e.id));
- assert.deepEqual(one.escorts.map(e=>e.element),['plasma','plasma']);
- assert.deepEqual(other.escorts.map(e=>e.element),['ionic','ionic']);
+ assert.deepEqual(one.escorts.map(e=>e.element),['refrigerant','mineral']);
+ assert.deepEqual(other.escorts.map(e=>e.element),['refrigerant','mineral']);
  assert.deepEqual(one.escorts.map(e=>e.parentShipId),[null,null]);
  assert.ok(one.escorts.every(e=>e.linked&&e.hp>0));
  assert.equal(one.ships[0].level,1,'i supporti non cambiano il livello della madre');
@@ -108,24 +108,17 @@ test('Due copie possedute dello stesso supporto usano entrambi gli slot, senza s
  assert.equal(result.ok,true,result.reason);
  assert.equal(result.battle.sides.A.escorts.length,2);
 });
-test('Fusione storica: solo materiali appartenenti alla coppia compatibile',()=>{
+test('Tutte le madri possono fondere fino a due supporti scelti liberamente',()=>{
  const chosen=[
-  {id:supportIdFor('L01',0),instanceId:'fusion:1',slot:0,level:1},
-  {id:supportIdFor('L01',1),instanceId:'fusion:2',slot:1,level:1}
+  {id:supportModelIdFor('L01'),instanceId:'fusion:1',slot:0,level:1},
+  {id:supportModelIdFor('N00'),instanceId:'fusion:2',slot:1,level:1}
  ];
- const allowed=createFleetSide('L01',7,[],11,{},chosen);
- assert.equal(allowed.fusionLimit,1);
- assert.equal(fusionUnavailableReason(allowed),'' );
- const mixed=createFleetSide('L01',7,[],11,{},[
-  chosen[0],{id:supportIdFor('N00',0),instanceId:'fusion:3',slot:1,level:1}
- ]);
- assert.equal(mixed.fusionLimit,0);
- assert.ok(fusionUnavailableReason(mixed));
- const arca=createFleetSide('L04',5,[],11,{},[
-  {id:supportIdFor('L04',0),instanceId:'arca:1',slot:0,level:1},
-  {id:supportIdFor('L04',1),instanceId:'arca:2',slot:1,level:1}
- ]);
- assert.equal(arca.fusionLimit,1,'seconda fusione non inventa due riserve senza carte');
+ const allowed=createFleetSide('C01',1,[],11,{},chosen);
+ assert.equal(allowed.fusionLimit,2);
+ assert.equal(fusionShipUnavailableReason(allowed,'C03',0),'' );
+ assert.equal(fusionShipUnavailableReason(allowed,'C03',1),'' );
+ const arca=createFleetSide('L04',5,[],11,{},chosen);
+ assert.equal(arca.fusionLimit,2);
  assert.equal(arca.reserveEscorts.length,0);
 });
 test('Salvataggio illeggibile: i traguardi non cancellano niente',()=>{
