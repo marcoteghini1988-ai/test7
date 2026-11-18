@@ -8,9 +8,9 @@ const battle=id=>initialBattle(1,{vitalPrototype:true,fleetIds:[id],shipLevel:5}
 const escort=(game,slot)=>game.player.escorts[slot];
 const card=(value,suit)=>({value,suit,id:suit+value});
 
-test('17 mother families have 17 distinct doctrines',()=>{
- assert.equal(Object.keys(ESCORT_DOCTRINES).length,17);
- assert.equal(new Set(Object.values(ESCORT_DOCTRINES).map(x=>x.name)).size,17);
+test('12 official mother families have 12 distinct doctrines',()=>{
+ assert.equal(Object.keys(ESCORT_DOCTRINES).length,12);
+ assert.equal(new Set(Object.values(ESCORT_DOCTRINES).map(x=>x.name)).size,12);
  for(const id of Object.keys(ESCORT_ARMORY))assert.ok(ESCORT_DOCTRINES[id],id);
 });
 test('family target bonus adds to the existing role, but only on preferred target',()=>{
