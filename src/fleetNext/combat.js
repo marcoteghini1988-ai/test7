@@ -230,6 +230,10 @@ export function fuseFleetSupports(side,ply=0){
   permanentGrade:Math.max(first.permanentGrade||first.grade||1,
    second.permanentGrade||second.grade||1)+1,
   sourceIndices:[...first.sourceIndices,...second.sourceIndices],
+  supportSkillIds:[...(first.supportSkillIds||[first.supportSkillId]),
+   ...(second.supportSkillIds||[second.supportSkillId])].filter(Boolean),
+  supportSkillName:[first.supportSkillName,second.supportSkillName].filter(Boolean).join(' + '),
+  supportObservedHp:hp,supportDeathResolved:false,
   skill:{...first.skill,requires},fusionSkills:[{...first.skill},{...second.skill}],linked:true};
  side.escorts=side.escorts.filter(e=>e!==first&&e!==second);
  side.reserveEscorts=(side.reserveEscorts||[]).filter(e=>e!==second);

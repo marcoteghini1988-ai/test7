@@ -67,11 +67,14 @@ if(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length!==17||
   !Object.values(SUPPORT_SKILL_ASSIGNMENTS).some(pair=>pair.includes(skill))))
  throw Error('Le 34 scudiere devono assegnare tutte e 15 le abilità condivise');
 
+const idsFor=e=>Array.isArray(e?.supportSkillIds)?e.supportSkillIds:
+ e?.supportSkillId?[e.supportSkillId]:[];
 export const livingSkillSupports=(side,skillId,ply=0)=>
  side?.independentSupportRoster?
- (side.escorts||[]).filter(e=>e.supportSkillId===skillId&&e.hp>0&&!e.destroyed&&
+ (side.escorts||[]).flatMap(e=>e.hp>0&&!e.destroyed&&
   e.linked!==false&&(e.disabledUntilPly||0)<=ply&&(e.jammedUntilPly||0)<=ply&&
-  (e.silencedUntilPly||0)<=ply):[];
+  (e.silencedUntilPly||0)<=ply?
+  idsFor(e).filter(id=>id===skillId).map(()=>e):[]):[];
 export const skillCount=(side,skillId,ply=0)=>livingSkillSupports(side,skillId,ply).length;
 export const trapsSuppressed=(battle,ownerSide)=>{
  const otherSide=battle?.sides?.A===ownerSide?battle?.sides?.B:
@@ -108,7 +111,7 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
  for(const [who,side] of Object.entries(b.sides)){
   for(const e of side.escorts||[]){
    const last=Number.isFinite(e.supportObservedHp)?e.supportObservedHp:e.maxHp;
-   if(e.hp<last&&e.supportSkillId==='reactive-poison'&&e.hp>0&&
+   if(e.hp<last&&idsFor(e).includes('reactive-poison')&&e.hp>0&&
     attackerWho!==null&&who!==attackerWho){
     e.poisonReadyPly=b.ply+2;
     events.push(note(b,who,'support-poison',e.name+
@@ -118,12 +121,13 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
    e.supportObservedHp=e.hp;
    if(e.hp>0&&!e.destroyed||e.supportDeathResolved)continue;
    e.hp=0;e.destroyed=true;e.linked=false;e.supportDeathResolved=true;
-   if(e.supportSkillId==='last-shield'){
+   if(idsFor(e).includes('last-shield')){
     const mother=side.ships[0],healed=Math.min(25,Math.max(0,mother.maxHp-mother.hp));
     mother.hp+=healed;
     events.push(note(b,who,'support-death',e.name+
      ' si spegne: +'+healed+' HP alla madre',{skillId:e.supportSkillId,healed}));
-   }else if(e.supportSkillId==='death-storm'){
+   }
+   if(idsFor(e).includes('death-storm')){
     const enemy=b.sides[who==='A'?'B':'A'];
     const previousAttacks=(enemy.attackSlots||[]).filter(Boolean);
     const commander=enemy.commander;
@@ -134,7 +138,8 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
      ' scatena una pioggia di fulmini: Personaggio e Attacchi avversari distrutti',
      {skillId:e.supportSkillId,clearedAttacks:previousAttacks.length,
       clearedCharacter:!!commander}));
-   }else if(e.supportSkillId==='death-energy'){
+   }
+   if(idsFor(e).includes('death-energy')){
     side.elementalCharges??={};
     const element=side.ships[0].element;
     const current=Object.values(side.elementalCharges).reduce((n,v)=>n+(v||0),0);

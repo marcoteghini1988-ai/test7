@@ -215,10 +215,13 @@ case 'ark':return card.effectProposed;
   default:throw new Error('Effetto privo di descrizione: '+s.type);
  }
 }
-import {SUPPORT_SKILL_DESCRIPTIONS} from './supportAbilities.js';
+import {SUPPORT_SKILL_DESCRIPTIONS,SUPPORT_SKILL_LABELS} from './supportAbilities.js';
 export function describeEscortEffect(escort){
- if(escort?.supportSkillId)return 'Abilità: '+escort.supportSkillName+'. '+
-  (SUPPORT_SKILL_DESCRIPTIONS[escort.supportSkillId]||'');
+ if(escort?.supportSkillId){
+  const skills=escort.supportSkillIds||[escort.supportSkillId];
+  return skills.map(id=>'Abilità: '+SUPPORT_SKILL_LABELS[id]+'. '+
+   (SUPPORT_SKILL_DESCRIPTIONS[id]||'')).join(' ');
+ }
  const skill=escort?.skill;
  if(!skill)return 'Supporto non disponibile.';
  const amount=Math.max(1,escort.grade||1);
