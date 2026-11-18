@@ -25,7 +25,7 @@ function FleetCardArt({id,name,grade=1,large=false}){
     margin:large?'0 auto 7px':undefined,overflow:'hidden'}}>
     <strong style={{fontSize:large?12:7,lineHeight:1.2}}>{name}</strong>
     <span aria-hidden="true" style={{fontSize:large?28:17,textAlign:'center'}}>
-     {definition?.effectSpec?.type==='fusion'?'⟐':definition?.effectSpec?.type==='bypass'?'➶':'⬡'}</span>
+     {definition?.visualSymbol|| (definition?.effectSpec?.type==='fusion'?'⟐':definition?.effectSpec?.type==='bypass'?'➶':'⬡')}</span>
     {large&&<span style={{fontSize:9,lineHeight:1.3}}>{text}</span>}
    </div>;
  }
