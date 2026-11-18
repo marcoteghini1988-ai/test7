@@ -130,3 +130,28 @@ test('Controflotta neutrale e legacy restano inalterati',()=>{
  assert.equal(e.element,legacy.sides.B.ships[0].element);
  assert.equal(legacy.ruleset,'legacy');
 });
+
+test('Una fusione Titano eredita Terra e subisce il vantaggio di Fuoco',()=>{
+ const b=duel('C01','L03',19,5);
+ const fused=fuseFleetSupports(b.sides.B,0);
+ assert.equal(fused.ok,true,fused.reason);
+ assert.equal(fused.fused.element,'mineral');
+ b.sides.B.escorts[0].hp=20;b.sides.B.escorts[0].maxHp=20;
+ const hit=shot(b);
+ const event=hit.r.events.find(e=>e.kind==='elemental-matchup');
+ assert.equal(event?.percent,125);
+ assert.equal(event?.targetKind,'escort');
+ assert.equal(event?.inheritedFromMother,'L03');
+ assert.equal(event?.defenderElement,'mineral');
+});
+
+test('La seconda affinità Fuoco del Dardo non rimuove la debolezza Vento contro Ghiaccio',()=>{
+ const b=duel('E01','C04',11,16); // Ghiaccio prevale su Vento
+ const escort=b.sides.B.escorts[0];
+ assert.deepEqual(escort.elements,['aerial','plasma']);
+ assert.equal(escort.element,'aerial');
+ const hit=shot(b),event=hit.r.events.find(e=>e.kind==='elemental-matchup');
+ assert.equal(event?.percent,125);
+ assert.equal(event?.defenderElement,'aerial');
+ assert.equal(event?.inheritedFromMother,'C04');
+});
