@@ -13,7 +13,7 @@ import {ensureSharkState,sharkModuleActive,sharkPrecondition,
 
 const IDS=['nx-r04-01','nx-r04-02','nx-r04-03','nx-r04-04','ex-r04-01',
  'nx-r04-06','nx-r04-07','nx-r04-08','nx-r04-09','nx-r04-10'];
-function make({shipA='R04',shipB='C03',levelA=5,levelB=5}={}){
+function make({shipA='R04',shipB='C03',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB)}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,
   deckA:[],deckB:[],mode:'pvp',seed:942});
  for(const s of Object.values(b.sides)){s.hand=[];s.deck=Array(24).fill('gen-216');s.discard=[];}
