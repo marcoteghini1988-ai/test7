@@ -7,7 +7,7 @@ import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import {shipUpgradeDustCost} from './shipUpgrades.js';
 import {getShipProgression,getShipProgressionLevels,shipProgressionProfile,shipMaxLevel} from './fleetNext/progression.js';
 import {EXCLUSIVE_CARDS} from './fleetNext/rules.js';
-import {fleetElementNames,fleetElementStrengths,fleetElementWeaknesses,secondaryElementUnlockLevel,FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
+import {fleetElementNames,activeFleetElements,secondaryElementUnlockLevel,FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import './ShipCollectionPanels.css';
 
 function readCollection() {
@@ -34,7 +34,11 @@ export function ShipProgressionDetails({shipId,level=1}){
  const current=getShipProgression(shipId,level);
  const profile=shipProgressionProfile(shipId);
  return <div className="ship-progression" aria-label={'Progressione '+shipId}>
-  <p>Elemento: {fleetElementNames(shipId,level).join(' + ')} · Forte contro: {fleetElementStrengths(shipId).map(id=>FLEET_ELEMENTS[id].name).join(' e ')} · Debole contro: {fleetElementWeaknesses(shipId).map(id=>FLEET_ELEMENTS[id].name).join(' e ')}.</p>
+  {activeFleetElements(shipId,level).map((elementId,index)=><p key={elementId}>
+   <b>{index===0?'Elemento principale':'Secondo elemento'}: {FLEET_ELEMENTS[elementId].name}</b>
+   {' · Forte contro: '+FLEET_ELEMENTS[elementId].beats.map(id=>FLEET_ELEMENTS[id].name).join(' e ')}
+   {' · Debole contro: '+FLEET_ELEMENTS[elementId].weakTo.map(id=>FLEET_ELEMENTS[id].name).join(' e ')}.
+  </p>)}
   {secondaryElementUnlockLevel(shipId)&&level<secondaryElementUnlockLevel(shipId)&&
    <p>Seconda affinità: {fleetElementNames(shipId).at(-1)} dal livello {secondaryElementUnlockLevel(shipId)}.</p>}
   <p>Colpi normali invariati. Il futuro colpo elementale richiederà una Carta Energia.</p>
