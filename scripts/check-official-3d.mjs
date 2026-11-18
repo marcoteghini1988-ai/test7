@@ -156,7 +156,7 @@ verify(exists('src/officialLiveMobileLayout.test.js'),
 verify(shop.includes('<ShipShopPanel')&&loadout.includes('<ShipHangarPanel'),
  'Negozio e Area Personale devono aprire il catalogo e l’hangar delle navicelle');
 verify(GENERAL_COUNT===12&&EXCLUSIVE_COUNT===170&&BOSS_COUNT===12&&BASE_CATALOG_COUNT===194&&
- PROGRESSION_CARD_COUNT===6&&TOTAL_CARD_COUNT===200&&
+ PROGRESSION_CARD_COUNT===6&&TOTAL_CARD_COUNT===210&&
  shop.includes('<FleetCollectionWorkshop')&&hangar.includes('<FleetCollectionWorkshop initialTab="exclusive"')&&
  !shop.includes("id: 'abilities'")&&!hangar.includes('<SpecialDeckPanel')&&
  fleetEditor.includes('readFleetInventory')&&fleetEditor.includes('BOSS_CARDS')&&
