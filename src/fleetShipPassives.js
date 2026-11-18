@@ -1,5 +1,5 @@
 // Passiva della sola nave madre + sinergie con le due sue evoluzioni.
-// La madre e' l'unica ad avere il fuoco delle 42 armi del catalogo ufficiale.
+// La madre e' l'unica ad avere il fuoco delle 27 armi delle 12 madri.
 import {activeFleetSupportLinks,applyFleetEscortPassives,motherAlive} from './fleetEscortSupports.js';
 
 export const FLEET_SHIP_PASSIVES=Object.freeze({
@@ -7,17 +7,12 @@ export const FLEET_SHIP_PASSIVES=Object.freeze({
  C01:{name:'Spinta solare',kind:'assault',parts:['weapons','engine'],interval:2},
  C02:{name:'Fenditura cristallina',kind:'precision',parts:['weapons','engine'],interval:3},
  C03:{name:'Doppio impulso',kind:'ion',parts:['weapons','generator'],interval:3},
- C04:{name:'Volo cremisi',kind:'assault',parts:['weapons','engine'],interval:3},
  R01:{name:'Cannone binario',kind:'artillery',parts:['weapons','engine'],interval:2},
  R02:{name:'Risonanza Manta',kind:'ion',parts:['weapons','generator'],interval:2},
- R03:{name:'Spettro Iride',kind:'analysis',parts:['command','weapons'],interval:3},
  R04:{name:'Morso del Vuoto',kind:'artillery',parts:['weapons','engine'],interval:2},
  E01:{name:'Nebbia polare',kind:'freeze',parts:['generator','weapons'],interval:3},
  E02:{name:'Scarica Tempesta',kind:'precision',parts:['engine','weapons'],interval:2},
- E03:{name:'Artiglio Fenice',kind:'artillery',parts:['weapons','generator'],interval:2},
- E04:{name:'Orizzonte infinito',kind:'analysis',parts:['command','weapons'],interval:3},
  L01:{name:'Furia dell Eclisse',kind:'assault',parts:['weapons','engine'],interval:2},
- L02:{name:'Singolarita ionica',kind:'ion',parts:['generator','weapons'],interval:2},
  L03:{name:'Giudizio del Titano',kind:'artillery',parts:['weapons','engine'],interval:2},
  L04:{name:'Arca risonante',kind:'precision',parts:['command','weapons'],interval:3}
 });
