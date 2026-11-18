@@ -1,4 +1,4 @@
-// Due supporti tecnici per ciascuna delle 17 famiglie.
+// Due supporti tecnici per ciascuna delle 12 madri ufficiali.
 // I livelli di sblocco REALI sono letti da fleetNext/progression.js;
 // qui il livello 5 è usato per creare i prototipi della coppia, non per sbloccarli.
 // Non sono carte collezionabili, non hanno armi indipendenti e non occupano slot madre.
@@ -21,35 +21,25 @@ const TRAITS=Object.freeze({
       ['pierce','Fenditura di vetro','weapons,engine','weapons',3]],
  C03:[['jam','Richiamo degli impulsi','command,generator','',2],
       ['ion','Scarica coordinata','weapons,generator','',3]],
- C04:[['phase','Velo di disturbo','engine,generator','',2],
-      ['strike','Dardo di risposta','weapons,command','',2]],
  R01:[['cover','Falco guardiano','generator,engine','',1],
       ['siege','Accelerazione binaria','weapons,generator','generator',2]],
  R02:[['guard','Campo Manta','generator,engine','',2],
       ['ion','Sting di risonanza','command,generator','',2]],
- R03:[['repair','Luce di recupero','generator,command','',2],
-      ['focus','Prisma di precisione','weapons,command','command',3]],
  R04:[['bulwark','Scudo totale del Vuoto','generator,engine','',1],
       ['revenge','Contrattacco Squalo','weapons,command','',2]],
  E01:[['bulwark','Nebulosa corazzata','generator,engine','',1],
       ['jam','Pulsar di soppressione','command,generator','',2]],
  E02:[['partCover','Fronte di tempesta','generator,engine','weapons',1],
       ['ion','Tuono risonante','weapons,command','',2]],
- E03:[['repair','Rinascita della Fenice','generator,command','',2],
-      ['surge','Ritorno di fiamma','weapons,engine','',2]],
- E04:[['bulwark','Orizzonte inespugnabile','generator,engine','',1],
-      ['precision','Lancia di Orizzonte','weapons,command','',3]],
  L01:[['bulwark','Corona impenetrabile','generator,engine','',1],
       ['corrode','Verdetto solare','weapons,generator','',3]],
- L02:[['guard','Distorsione della Singolarita','generator,command','',2],
-      ['ion','Ascia di antimateria','weapons,engine','',2]],
  L03:[['bulwark','Ala titanica','generator,engine','',1],
       ['siege','Lancia del Giudizio','weapons,command','weapons',2]],
  L04:[['repair','Rigenerazione dell Arca','generator,command','',2],
       ['mend','Eco dell Arca eterna','generator,engine','',2]]
 });
 const SHIPS=new Map(PHASE1_CATALOG.ships.map(s=>[s.id,s]));
-if(SHIPS.size!==17||Object.keys(TRAITS).length!==17||
+if(SHIPS.size!==12||Object.keys(TRAITS).length!==12||
  [...SHIPS.keys()].some(id=>TRAITS[id]?.length!==2||ESCORT_ARMORY[id]?.length!==2))
  throw new Error('Catalogo scudiere: mancano delle evoluzioni ufficiali');
 
