@@ -1,6 +1,6 @@
 import React,{useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
- eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit} from './fleetNext/rules.js';
+ eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
@@ -155,6 +155,14 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   {tab==='generic'&&<>
    <p style={small}><strong>NUOVO MAZZO · {deckInfo.total}/40</strong> — {deckInfo.exclusiveCount} esclusive della madre + {deckInfo.baseDeck.length}/{deckInfo.capacity} generiche scelte. Scegli fino ai posti disponibili; le copie si pescano dal mazzo in battaglia. Prezzi provvisori, il bilanciamento arriverà dopo.</p>
    {deckInfo.discarded.length>0&&<p style={{...small,color:'#ffe19e'}}>Alcune carte non sono più disponibili per questa navicella o superano il limite. Il mazzo utilizzato sarà ridotto automaticamente.</p>}
+   <h3 style={{fontSize:13}}>Carte Navicella Fusione · una carta per modello</h3>
+   <p style={small}>Ogni carta rappresenta una navicella che si fonde con uno dei due supporti in campo.
+    Sono già registrate nel motore, ma prezzi, sblocchi e immagini definitive saranno aggiunti
+    dopo il completamento delle meccaniche. I 17 ID storici saranno ridotti ai 13 modelli approvati
+    quando avremo identificato le quattro varianti da escludere.</p>
+   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
+    {FUSION_SHIP_CARDS.map(genericCardTile)}
+   </div>
    <h3 style={{fontSize:13}}>10 Carte Energia elementali · accumulo 1–4 cariche</h3>
    <p style={small}>Le Energie vengono aggiunte al mazzo generico; ogni carta caricata consuma una delle 3 giocate del turno. L’abilità unica della nave si attiva dalla plancia.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
