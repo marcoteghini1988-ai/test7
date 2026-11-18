@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
+import {SUPPORT_CATALOG,LEGACY_SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createFleetSide,createFleetNextBattle,resolveFleetNextTurn,
  fuseIndependentSupportWithShip,sacrificeIndependentFleetSupport} from './fleetNext/combat.js';
@@ -12,7 +12,8 @@ import {SUPPORT_SKILL_LABELS,SUPPORT_SKILL_ASSIGNMENTS,
  advanceIndependentSupportTime,resolveIndependentSupportOwnTurn} from './fleetNext/supportAbilities.js';
 
 const select=(skill,slot=0)=>{
- const def=SUPPORT_CATALOG.find(x=>x.skillId===skill);
+ const def=SUPPORT_CATALOG.find(x=>x.skillId===skill)||
+  LEGACY_SUPPORT_CATALOG.find(x=>x.skillId===skill);
  assert.ok(def,skill);
  return {id:def.id,instanceId:'copy-'+skill+'-'+slot,slot,level:1};
 };
@@ -23,11 +24,11 @@ const battle=(skillA=null,skillB=null)=>createFleetNextBattle({
  supportRosterB:skillB?[select(skillB)]:[]
 });
 
-test('I modelli indipendenti conservano tutte e 15 le passive, con duplicati ammessi',()=>{
- assert.equal(SUPPORT_CATALOG.length,17);
+test('Tredici modelli ufficiali e quindici abilità tecniche legacy ancora riconosciute',()=>{
+ assert.equal(SUPPORT_CATALOG.length,13);
  assert.equal(Object.keys(SUPPORT_SKILL_LABELS).length,15);
  assert.equal(Object.keys(SUPPORT_SKILL_ASSIGNMENTS).length,17);
- assert.equal(new Set(SUPPORT_CATALOG.map(x=>x.skillId)).size,15);
+ assert.equal(new Set(SUPPORT_CATALOG.map(x=>x.skillId)).size,13);
  const first=select('regeneration');
  const side=createFleetSide('N00',1,[],100,{},[
   first,{...first,slot:1,instanceId:'second'}]);
@@ -169,7 +170,7 @@ test('La fusione con una carta-navicella conserva entrambe le passive senza somm
  const side=b.sides.A, original=side.escorts[0];
  original.hp=Math.max(1,original.maxHp-3);
  const before={hp:original.hp,maxHp:original.maxHp};
- const result=fuseIndependentSupportWithShip(side,'E02',0,0);
+ const result=fuseIndependentSupportWithShip(side,'L04',0,0);
  assert.equal(result.ok,true,result.reason);
  assert.equal(side.escorts.length,1);
  assert.deepEqual(result.fused.supportSkillIds,['death-energy','capacitor']);
