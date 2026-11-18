@@ -4349,9 +4349,17 @@ export function autoFleetTurn(b,who=b.turn){
  const defaultOrder=guard?{targetKind:guard.kind,targetId:guard.id,partId:part?.id,
   ...(guard.kind==='escort'?{escortSlot:guard.slot}:{machineSlot:guard.slot})}:
   {targetKind:'part',targetId:part?.id,partId:part?.id};
+ const ability=elementalAbility(side.ships[0].id);
+ const availableElements=activeFleetElements(side.ships[0].id,side.ships[0].level);
+ const promisingElement=b.ruleset===HP_SYNC_RULESET&&ability?availableElements.find(element=>{
+  const handCount=side.hand.filter(id=>card(id)?.effectSpec?.type==='energy'&&
+   card(id)?.effectSpec?.elementId===element).length;
+  return chargedElementalEnergy(side,element)+Math.min(FLEET_MAX_PLAYED,handCount)>=ability.cost;
+ }):null;
  const candidates=side.hand.map((id,i)=>({id,i,role:cardRole(id),def:card(id)}))
-  .filter(x=>!effectUnavailableReason(x.def,side,b,{ownPartId}));
- const score=x=>x.def.effectSpec.type==='dismantle'?11:
+  .filter(x=>!effectUnavailableReason(x.def,side,b,{ownPartId}))
+  .filter(x=>!promisingElement||x.role!=='attack');
+ const score=x=>x.def.effectSpec.type==='energy'?9:x.def.effectSpec.type==='dismantle'?11:
   x.def.effectSpec.type==='ark'&&x.def.effectSpec.action==='ark-fusion'?12:
   x.def.effectSpec.type==='royal'&&
   x.def.effectSpec.action==='crown-fusion'?12:x.def.effectSpec.type==='fusion'?10:x.def.effectSpec.type==='deployMachine'?8:
@@ -4404,6 +4412,13 @@ export function autoFleetTurn(b,who=b.turn){
    partId:part?.id}:(bypass&&part||marked&&!cards.some(i=>card(side.hand[i]).effectSpec.type==='lince'&&
   LINCE_ATTACK_ACTIONS.includes(card(side.hand[i]).effectSpec.action)))?
   {targetKind:'part',targetId:(marked||part).id,partId:(marked||part).id}:defaultOrder;
+ const readyElement=availableElements.find(element=>ability&&
+  chargedElementalEnergy(side,element)+cards.filter(i=>
+   card(side.hand[i])?.effectSpec?.type==='energy'&&
+   card(side.hand[i])?.effectSpec?.elementId===element).length>=ability.cost);
+ const activateElemental=!!readyElement&&b.ruleset===HP_SYNC_RULESET&&
+  !cards.some(i=>cardRole(side.hand[i])==='attack')&&
+  side.elementalLastActivationPly!==b.ply;
  const helm=side.commander?.id==='ex-c01-01'||cards.some(i=>side.hand[i]==='ex-c01-01');
  const machines=(side.machines||[]).filter(unitAlive);
  const nebulaAiHide=side.ships[0].id==='E01'&&
@@ -4427,7 +4442,10 @@ export function autoFleetTurn(b,who=b.turn){
  const royalAiSovereign=side.ships[0].id==='L01'&&royalSupports(side,b.ply).length>=2&&
   !!royalSpare.length&&(side.commander?.id==='ex-l01-01'&&side.commander.untilPly>b.ply||
   cards.some(i=>side.hand[i]==='ex-l01-01'));
- return {...target,ownPartId,cards,pass:!part,
+ return {...target,ownPartId,cards,
+  pass:activateElemental&&ability.kind==='effect'?true:!part,
+  activateElemental,elementalElement:activateElemental?readyElement:null,
+  elementalTargetId:activateElemental?enemy.escorts.find(e=>escortEnabled(enemy,e,b.ply))?.id:null,
   arkArchive:arkArchiveAi,arkArchiveDiscardId:arkArchiveAi?royalSpare[0]:null,
   arkRecoverModuleId:arkArchiveAi?arkModulesInDiscard(side)[0]:null,
   arkCustodianSwap:arkKeeperAi,
