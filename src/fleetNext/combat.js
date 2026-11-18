@@ -116,6 +116,8 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
   const requires=[...new Set(['command',...original.skill.requires.map(id=>resolvedPartId(mother,id))])];
   const skill={...original.skill,requires,targetPart:resolvedPartId(mother,original.skill.targetPart)};
   return {...original,id:shipId+':escort:'+(index+1),name:original.name+(reserve?' · Riserva '+(index+1):''),
+   // Scudiere, riserve e fusioni ereditano la firma elementale della madre.
+   element:mother.element,elements:[...mother.elements],elementInheritedFrom:mother.id,
    slot:index,sourceIndices:[index],grade,skill,hp,maxHp:hp,reserve,
    unlockLevel:progression.escortUnlockLevels?.[index]??(index===0?config.escort1UnlockLevel:config.escort2UnlockLevel),
    linked:true,fused:false};
@@ -137,7 +139,22 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
   pendingRepair:0,drawBlockedUntil:0,usedCardEvents:[]};
  refreshEscortLinks(side);return side;
 }
+// Sincronizza tutte le forme di supporto con la nave madre.
+// Il secondo elemento può comparire dopo lo sblocco, ma non aggiunge
+// una seconda resistenza passiva al supporto.
+export function inheritFleetEscortElements(side){
+ const mother=side?.ships?.[0];
+ if(!mother)return side;
+ const elements=activeFleetElements(mother.id,mother.level);
+ for(const escort of [...(side.escorts||[]),...(side.reserveEscorts||[])]){
+  escort.element=mother.element;
+  escort.elements=[...elements];
+  escort.elementInheritedFrom=mother.id;
+ }
+ return side;
+}
 export function refreshEscortLinks(side,ply=0){
+ inheritFleetEscortElements(side);
  for(const e of side.escorts||[])e.linked=escortEnabled(side,e,ply);
 }
 export function protectingFleetUnits(side,ply=0){
@@ -197,6 +214,9 @@ export function fuseFleetSupports(side,ply=0){
  const requires=[...new Set([...first.skill.requires,...second.skill.requires])];
  const fused={...first,id:side.ships[0].id+':fusion:'+(stage+1),slot:stage,
   name:'Fusione '+(stage===0?'I':'II')+' · '+side.ships[0].name,hp,maxHp,fused:true,reserve:false,
+  element:side.ships[0].element,
+  elements:[...activeFleetElements(side.ships[0].id,side.ships[0].level)],
+  elementInheritedFrom:side.ships[0].id,
   grade:Math.max(first.grade||1,second.grade||1)+1,
   permanentGrade:Math.max(first.permanentGrade||first.grade||1,
    second.permanentGrade||second.grade||1)+1,
@@ -298,6 +318,7 @@ function normalizeSide(side){
  for(const key of ['protections','reactions','charges','buffs','defenses','discard','machines','reserveEscorts'])side[key]??=[];
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
  side.elementalCharges??={};side.elementalLastActivationPly??=-999;
+ inheritFleetEscortElements(side);
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
  side.synchronizationEffects??=[];side.systemCardEffects??=[];
@@ -2166,12 +2187,17 @@ function adjustedElementalHit(b,ctx,events,defender,kind,unit,amount){
  if(!mother||!enemy)return amount;
  const attackingElement=ctx.elementalShot&&ctx.order?.elementalElement||
   mother.element;
- const result=applyElementalDamage(defender,attackingElement,enemy.element,amount);
+ // Il colpo indirizzato alla scudiera usa il suo elemento, ereditato
+ // dalla madre. Fallback sui salvataggi storici senza metadata.
+ // Una sola conversione del danno: la debolezza non viene applicata 2 volte.
+ const defendingElement=kind==='escort'?(unit?.element||enemy.element):enemy.element;
+ const result=applyElementalDamage(defender,attackingElement,defendingElement,amount);
  if(result.relation)events.push(emit(b,ctx.who,'elemental-matchup',
   elementalDamageDescription(result),{
    attackerElement:result.attackerElement,defenderElement:result.defenderElement,
    relation:result.relation,percent:result.percent,baseDamage:result.original,
-   modifiedDamage:result.damage,targetKind:kind,targetId:unit?.id??null
+   modifiedDamage:result.damage,targetKind:kind,targetId:unit?.id??null,
+   inheritedFromMother:kind==='escort'?unit?.elementInheritedFrom||enemy.id:null
   }));
  return result.damage;
 }
