@@ -5,6 +5,7 @@ import {buildFleetEscorts} from '../fleetEscortSupports.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
+import {applyElementalDamage,elementalDamageDescription} from './elementalDamage.js';
 import {ENERGY_CAPACITY} from './energyCards.js';
 import {elementalAbility,totalElementalEnergy,chargedElementalEnergy,
  canChargeElementalEnergy,chargeElementalEnergy,spendElementalEnergy,
@@ -126,6 +127,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
   moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,royal:null,obsidian:null,ark:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:progression.fusionLimit,
   elementalCharges:{},elementalLastActivationPly:-999,
+  elementalDamageRemainders:{},
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
   lastPlayed:[],attackSlots:[null,null,null],defenseSlots:[null,null],
@@ -1629,7 +1631,8 @@ function sharkCounterShot(b,who,events,kind,id,sourceCard){
  const redirected=redirectFleetHit(b,ctx,events,{kind,unit:target.unit});
  if(blockHit(b,defender,redirected.kind,redirected.unit,ctx,events))return 0;
  const amount=sharkCapDamage(b,defender,redirected.kind,redirected.unit,1,events);
- const actual=damageFleetUnit(defender,redirected.kind,redirected.unit,amount,b.ply);
+ const adjusted=adjustedElementalHit(b,ctx,events,defender,redirected.kind,redirected.unit,amount);
+ const actual=adjusted>0?damageFleetUnit(defender,redirected.kind,redirected.unit,adjusted,b.ply):0;
  if(actual)events.push(emit(b,who,'shark-counter',
   'Ritorsione Squalo: '+redirected.unit.name+' −'+actual,{
    cardId:sourceCard,targetKind:redirected.kind,targetId:redirected.unit.id,
@@ -2155,8 +2158,27 @@ function royalCancelWithdrawal(b,actor,events,unit,targetKind){
    cardId:decree.id,targetKind,targetId:unit.id,withdrawalCancelled:true}));
  return true;
 }
+// Il vantaggio/svantaggio agisce sui colpi reali prima di distribuire danni
+// tra scudiera e madre. Non si applica ai costi, alle cure o ai Terreni.
+function adjustedElementalHit(b,ctx,events,defender,kind,unit,amount){
+ if(b.ruleset!==HP_SYNC_RULESET||amount<=0)return amount;
+ const mother=b.sides[ctx.who]?.ships?.[0],enemy=defender?.ships?.[0];
+ if(!mother||!enemy)return amount;
+ const attackingElement=ctx.elementalShot&&ctx.order?.elementalElement||
+  mother.element;
+ const result=applyElementalDamage(defender,attackingElement,enemy.element,amount);
+ if(result.relation)events.push(emit(b,ctx.who,'elemental-matchup',
+  elementalDamageDescription(result),{
+   attackerElement:result.attackerElement,defenderElement:result.defenderElement,
+   relation:result.relation,percent:result.percent,baseDamage:result.original,
+   modifiedDamage:result.damage,targetKind:kind,targetId:unit?.id??null
+  }));
+ return result.damage;
+}
 // L'impatto iniziale ha già superato le Difese; il Bastione non ricontrolla né devia.
 function royalDistributeDamage(b,ctx,events,defender,kind,unit,amount){
+ amount=adjustedElementalHit(b,ctx,events,defender,kind,unit,amount);
+ if(amount<=0)return 0;
  if(kind!=='escort'||amount<=0||defender.ships[0].id!=='L01')
   return damageFleetUnit(defender,kind,unit,amount,b.ply);
  const d=defender.defenses.find(d=>d.id==='nx-l01-08'&&!d.hidden&&
@@ -3235,7 +3257,9 @@ function triggerReactions(b,attackerWho,damage,events){
     const guard=protectingFleetUnits(attacker,b.ply)[0];
     const target=guard?.unit||activePart(attacker,'weapons'),kind=guard?.kind||'part';
     const blocked=target&&blockHit(b,attacker,kind,target,{who,pierceLeft:0},events);
-    const actual=!target||blocked?0:damageFleetUnit(attacker,kind,target,reaction.amount,b.ply);
+    const counterCtx={who,order:{},elementalShot:false};
+    const adjusted=!target||blocked?0:adjustedElementalHit(b,counterCtx,events,attacker,kind,target,reaction.amount);
+    const actual=adjusted>0?damageFleetUnit(attacker,kind,target,adjusted,b.ply):0;
     if(actual)events.push(emit(b,who,'counter','Contrattacco: '+(guard?.name||'Arsenale avversario')+' −'+actual,
      {cardId:reaction.id,partId:kind==='part'?target.id:null,escortSlot:kind==='escort'?target.slot:null,
       machineSlot:kind==='machine'?target.slot:null,targetKind:kind,damage:actual,destroyed:target.destroyed,noRecursion:true}));
