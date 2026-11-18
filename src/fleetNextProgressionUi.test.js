@@ -177,7 +177,7 @@ test('La battaglia ufficiale usa due supporti equipaggiati, zero riserve automat
   'il giocatore senza traguardi entra solo con la madre');
  assert.equal([...boss.deck,...boss.hand].filter(id=>id==='nx-l04-05').length,1,
   'la carta dell’Arca non rappresenta più una fusione automatica');
- assert.ok(boss.escorts.every(e=>e.level===1),
+ assert.ok(boss.escorts.every(e=>e.supportLevel===1),
   'i supporti avversari partono da L1 e non sono abilitati alla fusione immediata');
 });
 
