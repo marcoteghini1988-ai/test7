@@ -52,6 +52,10 @@ export function fleetElementNames(shipId,level=null){
  const ids=level==null?fleetElements(shipId):activeFleetElements(shipId,level);
  return ids.map(id=>FLEET_ELEMENTS[id].name);
 }
+export function fleetElementStrengths(shipId){
+ const id=fleetElements(shipId)[0];
+ return id?FLEET_ELEMENTS[id].beats:[];
+}
 export function fleetElementWeaknesses(shipId){
  const id=fleetElements(shipId)[0];
  return id?FLEET_ELEMENTS[id].weakTo:[];
