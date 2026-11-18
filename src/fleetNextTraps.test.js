@@ -1,3 +1,4 @@
+import {shipMaxLevel} from './fleetNext/progression.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,cardRole} from './fleetNext/rules.js';
@@ -12,7 +13,7 @@ import {bossTerrain,TERRAIN_CATALOG} from './fleetNext/terrains.js';
 // (gen-077, gen-238, gen-171, gen-072 non sono più carte giocabili).
 const ECHO='nx-c03-04',CHANNEL='nx-c03-03',DART='nx-c03-02';
 const FALSE_TRAIL='nx-c01-04',FALSE_REFLECTION='nx-c02-04';
-function battle({shipA='C03',shipB='C03',levelA=1,levelB=1,bossId=null}={}){
+function battle({shipA='C03',shipB='C03',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB),bossId=null}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,mode:'pvp',
   deckA:[],deckB:[],seed:77,bossId});
  for(const side of Object.values(b.sides)){side.hand=[];side.deck=[];side.discard=[];}
