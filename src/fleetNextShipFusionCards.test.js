@@ -8,11 +8,11 @@ import {createFleetNextBattle,resolveFleetNextTurn,
  fuseIndependentSupportWithShip,fusionShipUnavailableReason} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
-import {shipMaxLevel} from './fleetNext/progression.js';
+import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
 
 const roster=()=>[
- {id:supportModelIdFor('N00'),instanceId:'official:n00',slot:0,level:shipMaxLevel('N00')},
- {id:supportModelIdFor('L02'),instanceId:'official:l02',slot:1,level:shipMaxLevel('L02')}
+ {id:supportModelIdFor('N00'),instanceId:'official:n00',slot:0,level:SUPPORT_MAX_LEVEL},
+ {id:supportModelIdFor('L02'),instanceId:'official:l02',slot:1,level:SUPPORT_MAX_LEVEL}
 ];
 function fresh(){
  return createFleetNextBattle({
@@ -22,7 +22,7 @@ function fresh(){
  });
 }
 
-test('Carta Navicella Fusione per ogni modello storico con dati e limite mazzo',()=>{
+test('Tredici Carte Navicella Fusione, una per ogni supporto ufficiale',()=>{
  assert.equal(FUSION_SHIP_CARDS.length,SUPPORT_CATALOG.length);
  assert.equal(new Set(FUSION_SHIP_CARDS.map(c=>c.fusionShipId)).size,SUPPORT_CATALOG.length);
  assert.equal(Object.keys(SUPPORT_SKILL_LABELS).length,15);
@@ -46,7 +46,7 @@ test('Tutte le Carte Fusione sono Leggendarie e rappresentano il modello al live
   assert.equal(c.rarita,'Leggendaria');
   assert.equal(c.raritySource,'fusion-max');
   assert.equal(c.requiresMaxSupportLevel,true);
-  assert.equal(c.fusionShipLevel,shipMaxLevel(model.id));
+  assert.equal(c.fusionShipLevel,SUPPORT_MAX_LEVEL);
   assert.match(c.effectProposed,/livello MAX/);
  }
 });
@@ -64,15 +64,15 @@ test('Due carte fonde due supporti di madre qualsiasi, stessi HP e due abilità'
  assert.equal(first.fused.hp,firstStats[0]);
  assert.equal(first.fused.maxHp,firstStats[1]);
  assert.ok(first.fused.supportSkillIds.includes('regeneration'));
- assert.ok(first.fused.supportSkillIds.includes('normal-boost'));
+ assert.ok(first.fused.supportSkillIds.includes('weapon-double'));
  assert.deepEqual(first.fused.elements,['ionic','metallic']);
- const second=fuseIndependentSupportWithShip(side,'E02',1);
+ const second=fuseIndependentSupportWithShip(side,'L04',1);
  assert.equal(second.ok,true,second.reason);
  assert.equal(second.fused.hp,secondStats[0]);
  assert.equal(second.fused.maxHp,secondStats[1]);
  assert.ok(second.fused.supportSkillIds.includes('reactive-poison'));
  assert.ok(second.fused.supportSkillIds.includes('capacitor'));
- assert.deepEqual(second.fused.elements,['gravity','aerial']);
+ assert.deepEqual(second.fused.elements,['gravity','refrigerant']);
  assert.equal(side.escorts.length,2);
  assert.equal(side.fusionsUsed,2);
  assert.ok(fusionShipUnavailableReason(side,'C02',null));
@@ -123,11 +123,11 @@ test('La carta Fusione funziona davvero nella mano senza Centralina materna',()=
  assert.equal(after.escorts.length,2);
  assert.equal(after.escorts[0].hp,hp);
  assert.equal(after.escorts[0].maxHp,maxHp);
- assert.ok(after.escorts[0].supportSkillIds.includes('normal-boost'));
+ assert.ok(after.escorts[0].supportSkillIds.includes('weapon-double'));
  assert.ok(result.events.some(e=>e.kind==='fusion'&&e.cardId==='fusion-ship-r01'));
  const bpass=resolveFleetNextTurn(result.battle,'B',{cards:[],pass:true},200);
  assert.equal(bpass.ok,true,bpass.reason);
- bpass.battle.sides.A.hand=['fusion-ship-e02'];
+ bpass.battle.sides.A.hand=['fusion-ship-l04'];
  bpass.battle.sides.A.deck=[];
  const second=resolveFleetNextTurn(bpass.battle,'A',{cards:[0],fusionSlot:1,pass:true},300);
  assert.equal(second.ok,true,second.reason);
