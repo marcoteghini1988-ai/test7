@@ -176,9 +176,11 @@ export function inheritFleetEscortElements(side){
  }
  return side;
 }
-// La Carta Navicella Fusione e' sempre Leggendaria e rappresenta un modello MAX.
-// Anche il supporto gia' schierato deve aver raggiunto il massimo del suo modello.
-// La fusione mantiene HP e maxHp senza aggiungere livelli o slot.
+// La Carta Fusione è Leggendaria e richiede un supporto Leggendario.
+// Per le sole partite storiche senza rarità si usa ancora il valore L5.
+const supportReadyToFuse=e=>e?.supportRarity?
+ e.supportRarity==='Leggendaria':isMaxSupportLevel(e.supportLevel)&&
+ e.supportLevel>=SUPPORT_MAX_LEVEL;
 export function fusionShipUnavailableReason(side,shipId,slot=null,ply=0){
  if(!side?.independentSupportRoster)return 'Serve una flotta di carte-navicella indipendenti';
  if(!Object.hasOwn(FUSION_SHIP_CARD_BY_ID,'fusion-ship-'+String(shipId).toLowerCase()))
@@ -190,9 +192,11 @@ export function fusionShipUnavailableReason(side,shipId,slot=null,ply=0){
  const candidates=(side.escorts||[]).filter(e=>!e.fused&&escortEnabled(side,e,ply)&&
   (slot===null||e.slot===slot));
  if(!candidates.length)return 'Non esiste un supporto operativo non ancora fuso nello slot selezionato';
- if(!candidates.some(e=>isMaxSupportLevel(e.supportLevel)&&e.supportLevel>=SUPPORT_MAX_LEVEL)){
-  const first=candidates[0],max=SUPPORT_MAX_LEVEL;
-  return 'Il supporto '+first.name+' deve essere al livello MAX (L'+max+') per fondersi';
+ if(!candidates.some(supportReadyToFuse)){
+  const first=candidates[0];
+  return first.supportRarity?
+   'Il supporto '+first.name+' deve diventare Leggendario per fondersi':
+   'Il supporto '+first.name+' deve essere al livello MAX (L5) per fondersi';
  }
  return '';
 }
@@ -200,7 +204,7 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
  const reason=fusionShipUnavailableReason(side,shipId,slot,ply);
  if(reason)return {ok:false,reason};
  const index=side.escorts.findIndex(e=>!e.fused&&escortEnabled(side,e,ply)&&
-  isMaxSupportLevel(e.supportLevel)&&
+  supportReadyToFuse(e)&&
   (slot===null||e.slot===slot));
  const original=side.escorts[index];
  // La Custodia dell'Arca protegge il materiale non fuso, mai la nuova unità.
