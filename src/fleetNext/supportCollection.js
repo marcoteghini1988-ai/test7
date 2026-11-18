@@ -4,6 +4,7 @@
 // Le soglie di settore, i prezzi e i potenziamenti verranno collegati nei prossimi passi.
 import {SUPPORT_ACTIVE_SLOTS,supportDefinition} from './supportCatalog.js';
 import {SUPPORT_MAX_LEVEL,boundedSupportLevel} from './supportProgression.js';
+import {isShipRarity,rarityIndex,nextShipRarity,RARITY_DUPLICATE_COPIES} from './shipRarity.js';
 
 export const SUPPORT_COLLECTION_KEY='eclissi_support_collection_v1';
 export const SUPPORT_COLLECTION_SCHEMA=1;
@@ -25,8 +26,15 @@ export function normalizeSupportCollection(input){
   if(!validId(unit?.instanceId)||!supportDefinition(unit?.supportId)||
    used.has(unit.instanceId))continue;
   used.add(unit.instanceId);
+  const source=supportDefinition(unit.supportId);
+  // Il vecchio L5 è preservato come Leggendaria soltanto per i salvataggi
+  // privi della rarità. Non si reintroducono i livelli nell'Hangar.
+  const historical=unit.level>=5?'Leggendaria':unit.level>=3?'Epica':
+   unit.level>=2?'Rara':source.rarita;
+  const proposed=isShipRarity(unit.rarita)?unit.rarita:historical;
+  const rarita=rarityIndex(proposed)>=rarityIndex(source.rarita)?proposed:source.rarita;
   owned.push({instanceId:unit.instanceId,supportId:unit.supportId,
-   level:boundedSupportLevel(unit.level)});
+   level:boundedSupportLevel(unit.level),rarita});
  }
  const slots=Number.isInteger(input.unlockedSlots)?
   Math.max(0,Math.min(SUPPORT_ACTIVE_SLOTS,input.unlockedSlots)):0;
@@ -62,14 +70,17 @@ export function advanceSupportLevel(collection,instanceId){
   {...unit,level:unit.level+1}:unit);
  return {...current,owned};
 }
-export function grantSupportInstance(collection,supportId){
- if(!supportDefinition(supportId))throw Error('Modello supporto inesistente');
+export function grantSupportInstance(collection,supportId,rarita=supportDefinition(supportId)?.rarita){
+ const definition=supportDefinition(supportId);
+ if(!definition||!isShipRarity(rarita)||
+  rarityIndex(rarita)<rarityIndex(definition.rarita))
+  throw Error('Modello o rarità supporto inesistente');
  const current=normalizeSupportCollection(collection);
  if(current.owned.length>=MAX_OWNED_SUPPORT_INSTANCES)
   throw Error('Inventario supporti pieno');
  let serial=current.serial;
  do{serial++;}while(current.owned.some(e=>e.instanceId==='escort:'+serial));
- const entry={instanceId:'escort:'+serial,supportId,level:1};
+ const entry={instanceId:'escort:'+serial,supportId,level:1,rarita};
  return {...current,serial,owned:[...current.owned,entry]};
 }
 export function claimSupportSlotMilestone(collection,campaignMilestone){
@@ -81,6 +92,24 @@ export function claimSupportSlotMilestone(collection,campaignMilestone){
  const nextSlots=Math.min(SUPPORT_ACTIVE_SLOTS,current.unlockedSlots+1);
  return {...current,unlockedSlots:nextSlots,
   claimedMilestones:[...current.claimedMilestones,campaignMilestone].slice(-100)};
+}
+// Tre copie della stessa rarità: due spese, una conservata.
+export function evolveSupportWithDuplicates(collection,instanceId){
+ const current=normalizeSupportCollection(collection);
+ const chosen=current.owned.find(x=>x.instanceId===instanceId);
+ if(!chosen)throw Error('Navicella di supporto non posseduta');
+ const next=nextShipRarity(chosen.rarita);
+ if(!next)throw Error('Navicella già Leggendaria');
+ const matching=current.owned.filter(x=>x.supportId===chosen.supportId&&
+  x.rarita===chosen.rarita);
+ if(matching.length<RARITY_DUPLICATE_COPIES)
+  throw Error('Servono tre copie della stessa navicella e rarità');
+ const spent=new Set(matching.filter(x=>x.instanceId!==instanceId)
+  .slice(0,RARITY_DUPLICATE_COPIES-1).map(x=>x.instanceId));
+ const survivors={...current,
+  owned:current.owned.filter(x=>!spent.has(x.instanceId)),
+  equipped:current.equipped.map(id=>spent.has(id)?instanceId:id)};
+ return grantSupportInstance(survivors,chosen.supportId,next);
 }
 export function equipSupportInstance(collection,slot,instanceId){
  const current=normalizeSupportCollection(collection);
@@ -100,6 +129,6 @@ export function equippedSupportRoster(collection){
  return current.equipped.flatMap((instanceId,slot)=>{
   const unit=current.owned.find(e=>e.instanceId===instanceId);
   const def=unit&&supportDefinition(unit.supportId);
-  return def?[{...def,instanceId:unit.instanceId,level:unit.level,slot}]:[];
+  return def?[{...def,instanceId:unit.instanceId,level:unit.level,rarita:unit.rarita,slot}]:[];
  });
 }
