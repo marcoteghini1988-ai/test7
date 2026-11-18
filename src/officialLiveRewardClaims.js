@@ -3,7 +3,7 @@
 // fallisce, il giocatore deve poter riprovare e recuperare il terzo.
 // Non attribuisce vittorie, prezzi o carte senza il risultato del duello.
 import {claimFirstWinSpecialPack} from './specialDeckBuilder.js';
-import {claimCampaignShipUnlock} from './shipCampaignRewards.js';
+import {claimCampaignShipUnlock,claimCampaignSupportUnlock} from './shipCampaignRewards.js';
 import {claimBossCharacterFromVictory} from './bossCharacterRewards.js';
 
 export async function claimOfficialLiveVictoryRewards({
@@ -11,14 +11,15 @@ export async function claimOfficialLiveVictoryRewards({
  bossPlanetId=null,bossSectorLevel=null
 }={},storage=globalThis.localStorage){
  if(winner!=='player'||!['campaign','adventure'].includes(mode))
-  return {eligible:false,pack:null,ship:null,character:null};
+  return {eligible:false,pack:null,ship:null,support:null,character:null};
  // L'ordine e' ripetibile e intenzionale: un errore interrompe il flusso
  // invece di essere ignorato. Al tentativo successivo i premi gia'
  // registrati rispondono already_claimed/already_owned, senza duplicarsi.
  const pack=claimFirstWinSpecialPack(mode,sectorNumber,storage);
  const ship=await claimCampaignShipUnlock(mode,sectorNumber,storage);
+ const support=claimCampaignSupportUnlock(mode,sectorNumber,storage);
  const character=claimBossCharacterFromVictory({
   winner,mode,sectorNumber,bossPlanetId,bossSectorLevel
  },storage);
- return {eligible:true,pack,ship,character};
+ return {eligible:true,pack,ship,support,character};
 }

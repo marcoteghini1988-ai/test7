@@ -42,6 +42,8 @@ import {activeFleetElements,FLEET_ELEMENTS} from './fleetNext/elementalAffinitie
 import {elementalAbility,chargedElementalEnergy,totalElementalEnergy} from './fleetNext/elementalAbilities.js';
 import {dismantleCandidates,dismantleActive} from './fleetNext/dismantleEffects.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
+import {readSupportCollection,equippedSupportRoster} from './fleetNext/supportCollection.js';
+import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
@@ -64,7 +66,8 @@ function findMother(ships){
 }
 function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
  try{
-  const ships=readShipCollection(),inventory=readFleetInventory();
+  const ships=readShipCollection(),inventory=readFleetInventory(),
+   supportCollection=readSupportCollection();
   const owned=findMother(ships);
   if(!owned)throw new Error('Nessuna nave madre posseduta.');
   const boss=officialBossEncounter({mode,sectorNumber,planetId:bossPlanetId,
@@ -78,10 +81,13 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
   // Il mazzo resta di massimo 40 carte, incluse le esclusive della madre.
   // Non importa mai il vecchio inventario/mazzo ritirato.
   const playerDeck=buildNextBaseDeck(inventory,owned.shipId,owned.level,readNextDeckSelection());
+  const supportRoster=equippedSupportRoster(supportCollection);
+  const rivalRoster=npcSupportRoster(motherEnemy,mode,sectorNumber,supportCollection.unlockedSlots);
   return {battle:createFleetNextBattle({
    shipA:owned.shipId,levelA:owned.level,
    shipB:motherEnemy,levelB:levelEnemy,
    deckA:playerDeck.baseDeck,deckB:['gen-216'],
+   supportRosterA:supportRoster,supportRosterB:rivalRoster,
    upgradesA:inventory.exclusiveUpgrades,
    mode,bossName:boss?.name||null,bossId:boss?.planetId??null,planetId:bossPlanetId,
    sectorNumber,seed:Math.floor(Math.random()*0x7fffffff)+1,

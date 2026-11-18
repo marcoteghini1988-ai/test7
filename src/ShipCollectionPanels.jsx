@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {getShipDefinition, PHASE1_SHIPS} from './mathDuelEngine.js';
 import {ShipCard} from './ShipPresentation.jsx';
 import FleetCollectionWorkshop from './FleetCollectionWorkshop.jsx';
+import SupportHangarPanel from './SupportHangarPanel.jsx';
 import {SHIP_COLLECTION_KEY, equipShipCards, readShipCollection, updateShipCollection} from './shipCollection.js';
 import {SHIP_CAMPAIGN_UNLOCKS} from './shipCampaignRewards.js';
 import {shipUpgradeDustCost} from './shipUpgrades.js';
@@ -50,15 +51,15 @@ export function ShipProgressionDetails({shipId,level=1}){
    svantaggio: <strong>−50% danni</strong> contro quelli resistenti, anche con armi normali.
   </p>
   <p>Il colpo normale resta disponibile senza Carte Energia. Le animazioni definitive saranno create successivamente.</p>
-  <p>{current.vitalIds.length} vitali · {current.escortCount} supporti
-   {current.escortGrades.length?' · gradi '+current.escortGrades.join('/') : ''}
-   {current.reserveCount?' · '+current.reserveCount+' in riserva':''}
-   {current.fusionLimit?' · '+current.fusionLimit+(current.fusionLimit===1?' fusione':' fusioni'):''}
-  </p>
+  <p>{current.vitalIds.length} sistemi della madre · Attacco {current.attackPower}
+   {' · Difesa '+current.defensePower}. Gli slot supporto sono permanenti e
+   dipendono dalla campagna, non dal livello della madre.</p>
   <details><summary>I {profile.maxLevel} livelli · traguardo competitivo 100%</summary>
-   <p>{profile.description}</p>
+   <p>La progressione della madre migliora i sistemi e le esclusive;
+    lo sblocco dei supporti è separato e comune a tutte le madri.</p>
    <ol>{getShipProgressionLevels(shipId).map(stage=><li key={stage.level} aria-current={stage.level===level?'step':undefined}>
-    <b>Livello {stage.level}</b><span>{[...stage.unlocks,
+    <b>Livello {stage.level}</b><span>{[...stage.unlocks.filter(text=>
+      !/scudiera|supporto|fusione|riserva/i.test(text)),
      ...Object.values(EXCLUSIVE_CARDS).filter(c=>c.shipId===shipId&&c.minShipLevelDraft===stage.level)
       .map(c=>'Carta esclusiva: '+(c.name||c.nome))].join(' · ')}</span>
    </li>)}</ol>
@@ -161,7 +162,9 @@ export function ShipHangarPanel({onOpenCatalog}) {
   return <section className="ship-collection-panel ship-hangar es-math-scope" aria-label="Flotta Hangar">
     <h4>Hangar della flotta</h4>
     {collection ? <>
-      <p>Seleziona la MADRE per il prossimo duello. Supporti, gradi e fusioni dipendono dalla famiglia e dal livello. Anche Aurora e Lince sbloccano due supporti nella progressione estesa. Cambiare madre conserva le altre navi possedute.</p>
+      <p>Seleziona la nave MADRE. I due supporti si scelgono a parte:
+       gli slot si sbloccano con la campagna e i supporti equipaggiati
+       restano gli stessi quando cambi madre.</p>
       <ol className="ship-collection-formation" aria-label="Navicella madre equipaggiata">
         {loadout.map(id => {
           const card = collection.cards.find(entry => entry.instanceId === id);
@@ -178,6 +181,7 @@ export function ShipHangarPanel({onOpenCatalog}) {
       </div>
     </> : <p role="status">Il salvataggio della collezione è illeggibile.</p>}
     {message && <p role="status">{message}</p>}
+    <SupportHangarPanel/>
     <FleetCollectionWorkshop initialTab="exclusive"/>
     <div className="ship-collection-actions">
       <button type="button" className="cyber-btn" onClick={onOpenCatalog} disabled={saving}>Catalogo navi</button>

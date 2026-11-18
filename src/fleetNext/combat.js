@@ -2,6 +2,7 @@
 // Nessuna animazione o audio qui: gli eventi sono emessi per il renderer ufficiale.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {buildFleetEscorts} from '../fleetEscortSupports.js';
+import {createIndependentFleetEscorts,compatibleLegacyFusionCount} from './supportDeployment.js';
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
@@ -100,7 +101,7 @@ const unitEnabled=(unit,ply)=>unitAlive(unit)&&(unit.disabledUntilPly||0)<=ply&&
 const escortEnabled=(side,escort,ply)=>unitEnabled(escort,ply)&&!nebulaHidden(escort,ply)&&
  (escort.skill?.requires||['command']).every(id=>operational(side.ships[0],id));
 const characterSystem=side=>side.ships[0].parts.some(p=>p.id==='bridge')?'bridge':'generator';
-export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
+export function createFleetSide(shipId,level,baseDeck,seed,upgrades={},supportRoster=null){
  const mother=createFleetMother(shipId,level),n=mother.level;
  const config=shipConfig(shipId),progression=getShipProgression(shipId,n);
  // I modelli ufficiali restano gli stessi; quantità, gradi e riserve sono
@@ -122,12 +123,16 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={}){
    unlockLevel:progression.escortUnlockLevels?.[index]??(index===0?config.escort1UnlockLevel:config.escort2UnlockLevel),
    linked:true,fused:false};
  };
- const escorts=Array.from({length:progression.escortCount},(_,i)=>build(i,progression.escortGrades[i]||1));
- const reserveEscorts=Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
+ const independent=Array.isArray(supportRoster);
+ const escorts=independent?createIndependentFleetEscorts(mother,supportRoster):
+  Array.from({length:progression.escortCount},(_,i)=>build(i,progression.escortGrades[i]||1));
+ const reserveEscorts=independent?[]:
+  Array.from({length:progression.reserveCount},(_,i)=>build(i+2,progression.reserveGrades[i]||1,true));
  const rng={rng:seed>>>0},shuffledDeck=shuffled(effectiveDeck(baseDeck,shipId,n),rng);
  const side={ships:[mother],escorts,reserveEscorts,machines:[],modules:{weapon:null,utility:null},
   moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,royal:null,obsidian:null,ark:null,recalledModules:[],recalledMachines:[],
-  fusionsUsed:0,fusionLimit:progression.fusionLimit,
+  fusionsUsed:0,fusionLimit:independent?compatibleLegacyFusionCount(shipId,escorts):progression.fusionLimit,
+  independentSupportRoster:independent,
   elementalCharges:{},elementalLastActivationPly:-999,
   elementalDamageRemainders:{},
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
@@ -262,7 +267,8 @@ function refill(b,side){
 export function createFleetNextBattle({
  shipA='N00',levelA=1,shipB='C01',levelB=1,deckA,deckB,
  upgradesA={},upgradesB={},mode='campaign',bossId=null,planetId=null,sectorNumber=1,
- seed=1988,nowMs=0,bossName=null,ruleset='legacy'
+ seed=1988,nowMs=0,bossName=null,ruleset='legacy',
+ supportRosterA=null,supportRosterB=null
 }={}){
  const terrain=bossId?bossTerrain(bossId):mode==='pvp'?neutralTerrain():campaignTerrain(sectorNumber,planetId);
  const b={version:4,ruleset,phase:'playing',winner:null,round:1,ply:0,turn:'A',
@@ -271,8 +277,8 @@ export function createFleetNextBattle({
   bossLockedTerrain:false,seed,rng:seed>>>0,startedAtMs:nowMs,finishedAtMs:null,
   terrain,
   log:[],sides:{
-   A:createFleetSide(shipA,levelA,deckA,seed+11,upgradesA),
-   B:createFleetSide(shipB,levelB,deckB,seed+29,upgradesB)
+   A:createFleetSide(shipA,levelA,deckA,seed+11,upgradesA,supportRosterA),
+   B:createFleetSide(shipB,levelB,deckB,seed+29,upgradesB,supportRosterB)
   },lastEvents:[]};
  for(const side of Object.values(b.sides)){
   side.ruleset=ruleset;

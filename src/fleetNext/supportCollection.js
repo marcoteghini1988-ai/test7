@@ -55,7 +55,8 @@ export function grantSupportInstance(collection,supportId){
  const current=normalizeSupportCollection(collection);
  if(current.owned.length>=MAX_OWNED_SUPPORT_INSTANCES)
   throw Error('Inventario supporti pieno');
- const serial=current.serial+1;
+ let serial=current.serial;
+ do{serial++;}while(current.owned.some(e=>e.instanceId==='escort:'+serial));
  const entry={instanceId:'escort:'+serial,supportId,level:1};
  return {...current,serial,owned:[...current.owned,entry]};
 }
