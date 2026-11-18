@@ -14,7 +14,7 @@ import {obsidianFusedEscort,obsidianModuleActive,obsidianPending,
 
 const IDS=['nx-l03-01','nx-l03-02','nx-l03-03','nx-l03-04','ex-l03-01',
  'nx-l03-06','nx-l03-07','nx-l03-08','nx-l03-09','nx-l03-10'];
-function make({shipA='L03',shipB='C03',levelA=5,levelB=5}={}){
+function make({shipA='L03',shipB='C03',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB)}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,
   deckA:[],deckB:[],mode:'pvp',seed:803});
  for(const s of Object.values(b.sides)){
