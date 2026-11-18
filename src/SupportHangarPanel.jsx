@@ -31,8 +31,15 @@ export default function SupportHangarPanel(){
     setState(safeRead());setDraft(null);
    }
   };
+  const refreshBalances=()=>{
+   try{setCredits(readFleetInventory().credits);}catch{/* Il salvataggio resta intatto. */}
+  };
   window.addEventListener('storage',refresh);
-  return ()=>window.removeEventListener('storage',refresh);
+  window.addEventListener('eclissi-shop-changed',refreshBalances);
+  return ()=>{
+   window.removeEventListener('storage',refresh);
+   window.removeEventListener('eclissi-shop-changed',refreshBalances);
+  };
  },[]);
  const roster=collection?equippedSupportRoster({...collection,equipped}):[];
  function refreshShop(result,successText){
