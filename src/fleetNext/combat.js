@@ -1109,6 +1109,26 @@ function cancelTerrainWithTrap(b,who,terrainCard,ctx,events){
  return true;
 }
 
+// Annullamento automatico prima che il supporto venga sostituito dalla Fusione.
+// Nessuna informazione sulla Trappola viene letta dal giocatore in validazione:
+// il controllo avviene solo quando la carta è realmente giocata.
+function cancelShipFusionWithTrap(b,who,fusionCardId,events){
+ const defenderWho=other(who),defender=b.sides[defenderWho];
+ if(!operational(defender.ships[0],'generator')||trapsSuppressed(b,defender))return false;
+ const trap=defender.defenses.find(d=>d.hidden&&d.trigger==='shipFusion'&&
+  d.action==='cancel'&&(d.armedAtPly??-1)<b.ply);
+ if(!trap)return false;
+ const trapName=card(trap.id)?.nome||card(trap.id)?.name||'Trappola';
+ const fusionName=card(fusionCardId)?.nome||card(fusionCardId)?.name||'Carta Fusione';
+ discardDefense(defender,trap.source);
+ events.push(emit(b,defenderWho,'trap-reveal',trapName+' si rivela e annulla '+fusionName+'.',
+  {cardId:trap.id,blockedCardId:fusionCardId}));
+ events.push(emit(b,who,'fusion-cancelled',fusionName+
+  ' annullata: la Carta Fusione va negli scarti, il supporto resta invariato.',
+  {cardId:fusionCardId,blockedBy:trap.id}));
+ return true;
+}
+
 // Ogni azione Aurora è eseguita sulla battaglia reale. Gli effetti che richiedono
 // una scelta accettano il valore selezionato nella plancia, senza alterare i testi.
 function activateAuroraCard(b,who,def,ctx,events,order={},ownPartId=null,source=null){
@@ -2781,6 +2801,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    ctx.bypass=true;at('Questo attacco può raggiungere direttamente la madre');break;
   }
   case 'shipFusion':{
+   if(cancelShipFusionWithTrap(b,who,def.id,events))break;
    const result=fuseIndependentSupportWithShip(side,s.shipId,order?.fusionSlot??null,b.ply);
    if(!result.ok)throw Error(result.reason);
    // Ingresso protetto ora segue la fusione nel relativo slot, senza
