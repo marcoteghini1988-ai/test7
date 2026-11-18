@@ -10,7 +10,7 @@ import {falcoCapacitorActive} from './fleetNext/falcoEngine.js';
 
 const IDS=['nx-r01-01','nx-r01-02','nx-r01-03','nx-r01-04','ex-r01-01',
  'nx-r01-06','nx-r01-07','nx-r01-08','nx-r01-09','nx-r01-10'];
-function battle({shipA='R01',shipB='C03',levelA=5,levelB=5}={}){
+function battle({shipA='R01',shipB='C03',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB)}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,
   deckA:[],deckB:[],mode:'pvp',seed:501});
  for(const side of Object.values(b.sides)){
