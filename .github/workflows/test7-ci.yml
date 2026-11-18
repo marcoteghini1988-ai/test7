@@ -21,4 +21,7 @@ jobs:
       - run: npm ci
       - run: npm run preflight
       - run: npm run verify:logic
+      # Le fixture storiche sono ancora in riallineamento: verifica comunque
+      # la compilazione della UI, indipendentemente dall'esito dei test logici.
       - run: npm run build
+        if: always()
