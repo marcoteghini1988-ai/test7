@@ -40,20 +40,26 @@ test('Non si può selezionare un cannone non presente nella propria nave',()=>{
  assert.equal(a.battle.orders.A.weaponFocusId,'W02');
  assert.equal(sealTacticalOrder(a.battle,'A',choose('W02'),101).reason,'already_committed');
 });
-test('Plasma: il vero danno alla barriera prepara calore per lo scontro successivo; cinetico bypassa più intercettazione',()=>{
- const make=()=>createTacticalDuel({shipA:'C04',shipB:'C01',levelA:5,levelB:5});
- const plasma=run(make(),choose('W07'));
- const kinetic=run(make(),choose('W06'));
+test('Plasma di Nebulosa scalda, cinetico del Falco supera più intercettazione',()=>{
+ const nebula=()=>createTacticalDuel({shipA:'E01',shipB:'C01',levelA:5,levelB:5});
+ const falco=()=>createTacticalDuel({shipA:'R01',shipB:'C01',levelA:5,levelB:5});
+ assert.equal(tacticalWeaponTechnology({id:'W17',name:'Corona Solare'}),'plasma');
+ assert.equal(tacticalWeaponTechnology({id:'W39',name:'Stella Cremisi'}),'plasma');
+ const plasma=run(nebula(),choose('W17'));
+ const kinetic=run(falco(),choose('W09'));
+ const normal=run(falco(),choose('W08'));
  assert.equal(impact(plasma).technology,'plasma');
  assert.equal(impact(kinetic).technology,'cinetico');
+ assert.equal(impact(normal).technology,'esplosivo');
  assert.equal(plasma.sides.B.heated,true);
  assert.equal(kinetic.sides.B.heated,false);
- assert.ok(impact(kinetic).intercepted<impact(plasma).intercepted);
- assert.ok(kinetic.sides.B.defense.shield.hp<=plasma.sides.B.defense.shield.hp);
+ assert.ok(impact(kinetic).intercepted<=impact(normal).intercepted,
+  'stessa nave, lo sparo cinetico non aumenta la quota intercettata');
+ assert.ok(kinetic.sides.B.defense.shield.hp<=normal.sides.B.defense.shield.hp);
  const following=advanceTacticalDuel(plasma,8101);
  const baseline=structuredClone(following);baseline.sides.B.heated=false;
- const nextHeat=run(following,choose('W06'));
- const nextNormal=run(baseline,choose('W06'));
+ const nextHeat=run(following,choose('W18'));
+ const nextNormal=run(baseline,choose('W18'));
  assert.ok(nextHeat.history[1].shieldA>=nextNormal.history[1].shieldA);
  assert.equal(nextHeat.sides.B.heated,false);
 });

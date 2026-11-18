@@ -236,7 +236,8 @@ test('La Trappola di Lince è coperta e non mostra identità nel modello avversa
 
 test('Lince non concede vittoria automatica o componenti vitali nuovi',()=>{
  const b=battle(),mother=b.sides.A.ships[0];
- assert.deepEqual(mother.parts.map(p=>p.id),['weapons','generator','bridge']);
+ assert.deepEqual(mother.parts.map(p=>p.id),['weapons','generator','bridge','command'],
+  'La Centralina è un vitale ufficiale sbloccato con la progressione, non una macchina inventata');
  assert.ok(!IDS.some(id=>card(id).effectSpec.type==='blueprint'));
  assert.equal(b.phase,'playing');
 });

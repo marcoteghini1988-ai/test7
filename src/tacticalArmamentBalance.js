@@ -12,6 +12,10 @@ export function nativeWeaponCycleWeight(weapon){
 }
 export function tacticalWeaponTechnology(weapon){
  const fx=weaponEffect(weapon.id);
+ // W17 e W39 emettono plasma nel catalogo ufficiale: i loro nomi
+ // contengono anche termini luminosi (Corona/Stella) che prima li
+ // riclassificavano erroneamente come laser.
+ if(weapon.id==='W17'||weapon.id==='W39')return 'plasma';
  const label=(weapon.name+' '+fx.profile).toLowerCase();
  if(/ionico|ionica|ionic|fulmine|magnet|impuls|onde|ciclone|\barc\b|\bion\b/.test(label))return 'ionico';
  if(/laser|raggio|fot|luce|stella|solare|corona|ecliss/.test(label))return 'laser';
