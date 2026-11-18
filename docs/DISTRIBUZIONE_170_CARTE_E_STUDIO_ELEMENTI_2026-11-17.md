@@ -1,4 +1,7 @@
 # Eclissi Stellare — distribuzione 170 esclusive e studio delle affinità elementali
+
+> **Aggiornamento del 18 novembre 2026 — sistema elementale ampliato.** La sezione qui sotto descrive la precedente bozza a quattro affinità. È stata superata dalla matrice a **dieci elementi**, con i colpi elementali da attivare tramite Carte Energia. Gli sblocchi delle 170 esclusive descritti in questo file rimangono validi. Per la versione attuale consultare [Energia elementale e attacchi speciali](./ENERGIA_ELEMENTALE_E_ATTACCHI_SPECIALI_2026-11-18.md).
+
 **17 novembre 2026 · repository ufficiale test7/main**
 **Stato:** sblocchi carte attivi nel gioco; elementi assegnati alla nave, ma bonus/malus di danno ancora NON attivi nella modalità HP ufficiale.
 
