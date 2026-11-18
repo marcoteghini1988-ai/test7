@@ -19,6 +19,8 @@ import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import {createSupportCollection,equippedSupportRoster} from './fleetNext/supportCollection.js';
+import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,vesselWithPhysicalVitalDamage} from './officialVitalMotorAdapter.js';
@@ -148,10 +150,11 @@ test('Twelve official campaign planets use the twelve main fleet steps, ending i
 
 
 
-test('The actual session entry initializes final boss Arca L5, two reserves and two usable fusion cards',()=>{
+test('La battaglia ufficiale usa due supporti equipaggiati, zero riserve automatiche e una fusione compatibile',()=>{
  const owned={shipId:'N00',level:1};
  const start=extract('./OfficialFleetBattle3D.jsx','startSession',{
   readShipCollection:()=>({cards:[owned],loadout:[]}),readFleetInventory:()=>({owned:{'gen-216':1},exclusiveUpgrades:{}}),
+  readSupportCollection:()=>createSupportCollection(),equippedSupportRoster,npcSupportRoster,
   findMother:()=>owned,officialBossEncounter,officialEarlyCampaignRivalShip,officialCampaignRivalLevel,
   chooseCampaignMotherRival,campaignFleetShipId,createFleetNextBattle,
   readNextDeckSelection:()=>null,buildNextBaseDeck,HP_SYNC_RULESET
@@ -161,7 +164,12 @@ test('The actual session entry initializes final boss Arca L5, two reserves and 
  assert.equal(session.battle.ruleset,HP_SYNC_RULESET);
  const boss=session.battle.sides.B;
  assert.equal(boss.ships[0].id,'L04');assert.equal(boss.ships[0].level,5);
- assert.equal(boss.escorts.length,2);assert.equal(boss.reserveEscorts.length,2);
+ assert.equal(boss.escorts.length,2);assert.equal(boss.reserveEscorts.length,0,
+  'nessuna riserva viene regalata dal livello della madre');
+ assert.equal(boss.fusionLimit,1,
+  'seconda fusione sospesa finché i materiali diventano carte supporto');
+ assert.equal(session.battle.sides.A.escorts.length,0,
+  'il giocatore senza traguardi entra solo con la madre');
  assert.equal([...boss.deck,...boss.hand].filter(id=>id==='nx-l04-05').length,2);
  assert.equal(effectUnavailableReason(card('prog-fusion-l04'),boss,session.battle),'');
 });
