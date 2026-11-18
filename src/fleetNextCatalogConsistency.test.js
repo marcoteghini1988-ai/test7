@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,card,cardFacePath,deckFromCounts,effectiveDeck} from './fleetNext/rules.js';
+import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,PROGRESSION_CARDS,ENERGY_CARDS,ENERGY_COUNT,BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,card,cardFacePath,deckFromCounts,effectiveDeck} from './fleetNext/rules.js';
 import {validateEffectSpec,describeEffect} from './fleetNext/simpleEffects.js';
 import {createFleetInventory,normalizeFleetInventory,readFleetInventory,writeFleetInventory} from './fleetNext/collection.js';
 import * as inventoryExports from './fleetNext/collection.js';
@@ -13,10 +13,10 @@ test('350 vecchie carte rimosse, Personaggi Boss e sei carte tecniche conservati
  assert.equal(Object.keys(EXCLUSIVE_CARDS).length,170);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.keys(PROGRESSION_CARDS).length,6);
- assert.equal(BASE_CATALOG_COUNT,194);assert.equal(TOTAL_CARD_COUNT,200);
+ assert.equal(BASE_CATALOG_COUNT,194);assert.equal(ENERGY_COUNT,10);assert.equal(TOTAL_CARD_COUNT,210);
  assert.equal(retired.generalIds.length,238);assert.equal(retired.exclusiveIds.length,112);
- const entries=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS)];
- assert.equal(new Set(entries.map(c=>c.id)).size,200);
+ const entries=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS),...ENERGY_CARDS];
+ assert.equal(new Set(entries.map(c=>c.id)).size,210);
  for(const c of entries){assert.equal(card(c.id),c);assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(c.effetto||c.effectProposed,describeEffect(c),c.id);}
  for(const id of [...retired.generalIds,...retired.exclusiveIds]){assert.equal(card(id),null,id);assert.equal(cardFacePath(id),null,id);}
