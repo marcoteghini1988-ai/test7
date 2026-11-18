@@ -1,4 +1,7 @@
 # Eclissi Stellare — implementazione delle Carte Energia e delle abilità uniche
+
+> **Regola di bilanciamento aggiornata, 18 novembre 2026:** vantaggio **+25%**, svantaggio **−50%** sui danni di tutti gli attacchi delle navicelle nel combattimento HP, inclusi i colpi normali. I colpi leggeri conservano i resti frazionari. Questo aggiornamento sostituisce le ipotesi precedenti sui soli colpi speciali. Vedi [Vantaggio e resistenza elementale](./VANTAGGIO_RESISTENZA_ELEMENTALE_2026-11-18.md).
+
 **18 novembre 2026 · repository ufficiale `test7/main`**
 
 ## Stato del codice
