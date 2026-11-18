@@ -16,7 +16,6 @@ import {BOSS_CARDS,bossCard} from './bossCards.js';
 import {PROGRESSION_CARDS,isProgressionCard} from './progressionCards.js';
 import {getShipProgression} from './progression.js';
 import {EXCLUSIVE_DESIGNS_120,NEW_EXCLUSIVE_BLUEPRINTS,EXCLUSIVE_SHIP_IDS,EXCLUSIVE_DESIGN_BY_ID} from './exclusive120.js';
-import {VARIANT_EXCLUSIVE_CARDS} from './variantExclusives.js';
 import {buildExclusiveUnlockLevels} from './exclusiveUnlocks.js';
 export {EXCLUSIVE_DESIGNS_120,EXCLUSIVE_SHIP_IDS} from './exclusive120.js';
 export {BOSS_CARDS,bossCard} from './bossCards.js';
@@ -40,7 +39,7 @@ export const GENERAL_CARDS = Object.freeze(Object.fromEntries(generalData.carte.
   card.sottotipo==='Personaggio'?'character':card.sottotipo==='Difesa'?'defense':
   card.categoria==='Attacco'?'attack':card.categoria==='Controllo'?'control':'support','general')]
 )));
-const preservedCharacters=exclusiveData.cards.map(c=>{
+const preservedCharacters=exclusiveData.cards.filter(c=>EXCLUSIVE_SHIP_IDS.includes(c.shipId)).map(c=>{
  if(c.id==='ex-n00-01')return {...c,effectSpec:{type:'aurora',action:'cartographer'},
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  if(c.id==='ex-c01-01')return {...c,effectSpec:{type:'lince',action:'helios'},
@@ -67,7 +66,7 @@ const preservedCharacters=exclusiveData.cards.map(c=>{
   effectProposed:EXCLUSIVE_DESIGN_BY_ID[c.id].effectText,nativeFace:true};
  return c;
 });
-const EXCLUSIVE_SOURCES=[...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS),...Object.values(VARIANT_EXCLUSIVE_CARDS)];
+const EXCLUSIVE_SOURCES=[...preservedCharacters,...Object.values(NEW_EXCLUSIVE_BLUEPRINTS)];
 export const EXCLUSIVE_UNLOCK_LEVELS=buildExclusiveUnlockLevels(EXCLUSIVE_SOURCES);
 export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(EXCLUSIVE_SOURCES.map(raw => {
  const card={...raw,legacyMinShipLevelDraft:raw.minShipLevelDraft,
@@ -77,7 +76,8 @@ export const EXCLUSIVE_CARDS = Object.freeze(Object.fromEntries(EXCLUSIVE_SOURCE
   /Controllo/i.test(card.category)?'control':
   /combo|fusione/i.test(card.category)?'combo':'attack'),'exclusive')];
 })));
-export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations.map(s=>[s.id,Object.freeze(s)])));
+export const SHIP_CONFIGS = Object.freeze(Object.fromEntries(exclusiveData.shipConfigurations
+ .filter(ship=>EXCLUSIVE_SHIP_IDS.includes(ship.id)).map(s=>[s.id,Object.freeze(s)])));
 export const COMBO_RECIPES = Object.freeze(exclusiveData.comboRecipes.map(c=>Object.freeze(c)));
 export const GENERAL_COUNT = Object.keys(GENERAL_CARDS).length;
 export const EXCLUSIVE_COUNT = Object.keys(EXCLUSIVE_CARDS).length;
@@ -96,8 +96,8 @@ export const VITAL_LABELS = Object.freeze({engine:'Motori',weapons:'Arsenale',co
 export const RARITY_COPY_LIMIT = Object.freeze({Comune:5,Rara:4,Epica:3,Leggendaria:2});
 export const MAX_EXCLUSIVE_UPGRADE = 3;
 
-if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==170||BOSS_COUNT!==12||ENERGY_COUNT!==10||Object.keys(SHIP_CONFIGS).length!==17||COMBO_RECIPES.length!==0)
- throw new Error('Catalogo esclusivo incompleto: 120 esclusive principali, 45 carte varianti, 17 Personaggi e 12 Boss');
+if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==120||BOSS_COUNT!==12||ENERGY_COUNT!==10||Object.keys(SHIP_CONFIGS).length!==12||COMBO_RECIPES.length!==0)
+ throw new Error('Catalogo ufficiale incompleto: 12 madri, 120 esclusive, 12 Personaggi e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
 export const generalCard = id => FUSION_SHIP_CARD_BY_ID[id]||ENERGY_CARD_BY_ID[id]||NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
@@ -207,5 +207,5 @@ export function generalCatalogStats(){
  }
  return {count:GENERAL_COUNT,approvedNewCommon:NEXT_COMMON_CARDS.length,rarity,category,exclusive:EXCLUSIVE_COUNT,boss:BOSS_COUNT,
   baseCatalog:BASE_CATALOG_COUNT,progression:PROGRESSION_CARD_COUNT,energy:ENERGY_COUNT,
-  total:TOTAL_CARD_COUNT,fusionShipCards:FUSION_SHIP_CARD_COUNT,ships:17,recipes:COMBO_RECIPES.filter(c=>c.active===true).length,archivedRecipes:COMBO_RECIPES.length};
+  total:TOTAL_CARD_COUNT,fusionShipCards:FUSION_SHIP_CARD_COUNT,ships:12,recipes:COMBO_RECIPES.filter(c=>c.active===true).length,archivedRecipes:COMBO_RECIPES.length};
 }
