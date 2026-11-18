@@ -10,7 +10,7 @@ import {planTacticalAi} from './tacticalDuelAi.js';
 const card=(value,suit='♣')=>({id:suit+value,value,suit});
 const hand=[3,1,2,4,6,7,8].map((n,i)=>card(n,['♣','♦','♥','♠'][i%4]));
 test('Lo scarto conserva una numerica che puo completare una coppia con un futuro pescato',()=>{
- const visible=[{signature:tacticalShipSignatures('E03').engine,hp:10}];
+ const visible=[{signature:tacticalShipSignatures('C03').weapons,hp:10}];
  assert.equal(chooseTacticalAiExchangeIndex(hand,visible,0),1,
   'tiene il 3 utile per 3×5=15, scarta il primo valore senza prospettive');
  assert.equal(chooseTacticalAiExchangeIndex(hand,[],0),0,'firma ignota: rotazione originale');
@@ -18,8 +18,8 @@ test('Lo scarto conserva una numerica che puo completare una coppia con un futur
   'nessun potere di conoscere firme coperte');
  assert.equal(chooseTacticalAiExchangeIndex([],visible,0),0);
 });
-test('IA con vera mano da 52 carte non butta una 3 utile sul bersaglio engine E03 esposto',()=>{
- const b=createTacticalDuel({shipA:'C01',shipB:'E03',seed:18,nowMs:100});
+test('IA con 52 numeriche tutela un 3 utile sulla firma Armi di Corvo esposta',()=>{
+ const b=createTacticalDuel({shipA:'C01',shipB:'C03',seed:18,nowMs:100});
  const oldPile=b.sides.A.numeric;
  const all=[...oldPile.hand,...oldPile.deck];
  const wanted=[3,1,2,4,6,7,8],selected=[];
@@ -33,8 +33,8 @@ test('IA con vera mano da 52 carte non butta una 3 utile sul bersaglio engine E0
  oldPile.deck=all.filter(c=>!retained.has(c.id));
  const enemy=b.sides.B;
  enemy.defense=damageMotherShield(enemy.defense,enemy.defense.shield.hp).defense;
- enemy.defense=exposeMotherPart(enemy.defense,'engine').defense;
- assert.equal(enemy.defense.parts.engine.exposed,true);
+ enemy.defense=exposeMotherPart(enemy.defense,'weapons').defense;
+ assert.equal(enemy.defense.parts.weapons.exposed,true);
  const order=planTacticalAi(b,'A');
  assert.equal(order.numericIndices.length,0,'nessuna formula pronta con la mano scelta');
  assert.ok(order.exchangeIndices.length>=1);
@@ -45,7 +45,7 @@ test('IA con vera mano da 52 carte non butta una 3 utile sul bersaglio engine E0
 
 test('Ricambio speciale valuta due numeriche realmente diverse: preserva carta con formula futura',()=>{
  const cards=[3,1,2,5,6,7,8].map((value,i)=>card(value,['♣','♦','♥','♠'][i%4]));
- const revealed=[{signature:tacticalShipSignatures('E03').engine,hp:4}];
+ const revealed=[{signature:tacticalShipSignatures('C03').weapons,hp:4}];
  assert.deepEqual(chooseTacticalAiExchangeIndices(cards,revealed,2,2),[2,4],
   'non brucia la carta 5: insieme al 3 puo dare 15 su un engine scoperto');
  assert.deepEqual(chooseTacticalAiExchangeIndices(cards,[],2,2),[2,3],

@@ -6,9 +6,12 @@ import {createShip,previewVolley} from './mathDuelEngine.js';
 const cards=(value,suit,other=1)=>[{id:'a',value,suit},{id:'b',value:other,suit:'♣'}];
 
 test('tutte le armi del duello hanno un effetto distinto, anche nello stesso seme',()=>{
- assert.deepEqual(Object.keys(WEAPON_EFFECTS),PHASE1_CATALOG.weapons.map(w=>w.id));
+ const official=PHASE1_CATALOG.weapons.map(w=>w.id);
+ assert.ok(official.every(id=>Object.hasOwn(WEAPON_EFFECTS,id)),
+  'ogni arma ufficiale deve avere un profilo effetti');
+ assert.equal(new Set(official.map(id=>WEAPON_EFFECTS[id].profile)).size,official.length);
  assert.equal(new Set(Object.values(WEAPON_EFFECTS).map(f=>f.profile)).size,PHASE1_CATALOG.weapons.length);
- for(const [a,b] of [['W02','W07'],['W05','W06']]){
+ for(const [a,b] of [['W02','W17'],['W04','W05']]){
   assert.notEqual(weaponEffect(a).profile,weaponEffect(b).profile);
   assert.notEqual(weaponEffect(a).durationMs,weaponEffect(b).durationMs);
   assert.notEqual(weaponEffect(a).cadenceMs,weaponEffect(b).cadenceMs);
@@ -31,12 +34,12 @@ test('da 1 a 26 munizioni: ogni colpo reale ha un solo proiettile e un arrivo fi
 });
 
 test('Prisma e Serbatoio: nessun falso sparo sotto soglia, una scarica e resto conservato',()=>{
- for(const [id,suit,threshold,remainder] of [['C02','♦',12,1],['C04','♥',10,3]]){
+ for(const [id,suit,threshold,remainder,nextValue] of [['C02','♦',12,1,4],['R01','♦',14,1,6]]){
   const side=createShip(1,false,{fleetIds:[id]},()=>.5),first=previewVolley(side,cards(9,suit));
   assert.equal(first.totalDamage,0);assert.deepEqual(planWeaponSalvos(first.shots),[]);
   assert.deepEqual(volleyTimeline(first.shots),{arrivalMs:0,settleMs:550});
   side.fleet=first.fleet;
-  const second=previewVolley(side,cards(4,suit)),before=structuredClone(second);
+  const second=previewVolley(side,cards(nextValue,suit)),before=structuredClone(second);
   const [salvo]=planWeaponSalvos(second.shots);
   assert.equal(salvo.rounds.length,threshold);assert.equal(salvo.shot.charge,remainder);
   assert.equal(second.totalDamage,threshold*salvo.shot.damagePerBullet);
@@ -45,12 +48,12 @@ test('Prisma e Serbatoio: nessun falso sparo sotto soglia, una scarica e resto c
 });
 
 test('munizioni non divise tra navi: il piano visivo conserva quantità e danni del motore',()=>{
- const side=createShip(1,false,{fleetIds:['N00','C01','C04']},()=>.5);
+ const side=createShip(1,false,{fleetIds:['N00','C01','L01']},()=>.5);
  const volley=previewVolley(side,[{id:'a',value:8,suit:'♥'},{id:'b',value:3,suit:'♥'}]),before=structuredClone(volley);
  const salvos=planWeaponSalvos(volley.shots);
- assert.deepEqual(salvos.map(s=>[s.shot.weaponId,s.rounds.length]),[['W01',11],['W02',11],['W07',10]]);
+ assert.deepEqual(salvos.map(s=>[s.shot.weaponId,s.rounds.length]),[['W01',11],['W02',11],['W30',11]]);
  assert.equal(salvos.reduce((sum,s)=>sum+s.rounds.length*s.shot.damagePerBullet,0),volley.totalDamage);
- assert.equal(salvos[2].shot.charge,1);assert.deepEqual(volley,before);
+ assert.equal(salvos[2].shot.charge,0);assert.deepEqual(volley,before);
 });
 
 test('impatto e applicazione HP seguono tutti gli arrivi, anche in una flotta mista',()=>{

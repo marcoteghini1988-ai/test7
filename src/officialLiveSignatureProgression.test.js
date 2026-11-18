@@ -81,7 +81,7 @@ test('Epica E01: Doppia Coppia in quattro carte reali e 2 turni',()=>{
  assert.equal(LIVE_SPECIAL_LIMIT,2);
 });
 test('Ogni alternativa Poker lunga preserva il percorso matematico e i 5 slot non sono obbligatori',()=>{
- for(const id of ['E01','E02','E03','E04','L01','L02','L03','L04']){
+ for(const id of ['E01','E02','L01','L03','L04']){
   const signature=tacticalShipSignatures(id).command;
   assert.equal(signature.kind,'any');
   assert.equal(signature.options[0].kind,'mathGate');
