@@ -230,7 +230,9 @@ test('Lancia regale senza comando precedente non ignora Difese né aggiunge colp
 test('Bastione reale divide un solo colpo 3 punti in 2+1 tra due supporti',()=>{
  let b=make();const [first,second]=b.sides.A.escorts;
  b=play(b,'A',['nx-l01-08'],{pass:true,royalBastionEscortId:first.id}).battle;
- b.sides.B.ships[0].attackPower=4; // Difesa madre L5 = 1: potenza netta 3
+ // La difesa effettiva della madre L01 varia con la progressione attuale:
+ // calibra il colpo a 3 HP netti, non al vecchio valore fisso L5.
+ b.sides.B.ships[0].attackPower=b.sides.A.ships[0].defensePower+3;
  const [hp1,hp2]=b.sides.A.escorts.map(e=>e.hp);
  const r=play(b,'B',[],target('escort',b.sides.A.escorts[0]));
  assert.equal(r.battle.sides.A.escorts[0].hp,hp1-2);
