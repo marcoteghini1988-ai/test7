@@ -10,7 +10,8 @@ import {ensureMantaState,mantaEnergy,mantaCapacitorActive,mantaForkActive,
  mantaPrecondition} from './fleetNext/mantaEngine.js';
 
 const deck=deckFromCounts(TEST_DECK.carteGenerali);
-const make=(opts={})=>createFleetNextBattle({shipA:'R02',shipB:'C03',levelA:5,levelB:5,
+const make=(opts={})=>createFleetNextBattle({shipA:'R02',shipB:'C03',
+ levelA:shipMaxLevel(opts.shipA||'R02'),levelB:shipMaxLevel(opts.shipB||'C03'),
  mode:'pvp',seed:811,deckA:deck,deckB:deck,...opts});
 function equip(side,id){
  const r=mountModule(side,card(id));
