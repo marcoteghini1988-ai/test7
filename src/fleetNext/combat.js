@@ -474,6 +474,10 @@ export function validateFleetTurn(b,who,order){
   const extra=selectedEnergy.filter(c=>c.effectSpec.elementId===element).length;
   if(chargedElementalEnergy(side,element)+extra<ability.cost)
    return 'Per '+ability.name+' servono '+ability.cost+' Carte Energia '+FLEET_ELEMENTS[element].name;
+  if(ability.mode==='heal'&&b.terrain?.id==='T08')
+   return 'Il Terreno attuale impedisce la riparazione elementale';
+  if(ability.mode==='heal'&&side.ships[0].hp>=side.ships[0].maxHp)
+   return 'La nave madre è già al massimo degli HP';
   if(order.pass!==(ability.kind==='effect'))
    return ability.kind==='effect'?'L’Effetto Speciale sostituisce lo sparo normale':
     'L’Attacco Speciale deve avere un bersaglio';
