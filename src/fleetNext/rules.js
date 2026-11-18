@@ -5,6 +5,8 @@ import generalData from './catalogGeneral.json' with {type:'json'};
 import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
 import {DISMANTLE_BY_ID,DISMANTLE_CARDS} from './dismantleCards.js';
 import {ENERGY_CARDS,ENERGY_CARD_BY_ID,ENERGY_CARD_COUNT} from './energyCards.js';
+import {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID,FUSION_SHIP_CARD_COUNT} from './fusionShipCards.js';
+export {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 export {ENERGY_CARDS,ENERGY_CARD_BY_ID} from './energyCards.js';
 export {DISMANTLE_CARDS,DISMANTLE_BY_ID} from './dismantleCards.js';
 export {NEXT_COMMON_CARDS,NEXT_COMMON_CARD_BY_ID} from './newCardRegistry.js';
@@ -83,7 +85,7 @@ export const BOSS_COUNT = Object.keys(BOSS_CARDS).length;
 export const BASE_CATALOG_COUNT = GENERAL_COUNT+EXCLUSIVE_COUNT+BOSS_COUNT;
 export const PROGRESSION_CARD_COUNT = Object.keys(PROGRESSION_CARDS).length;
 export const ENERGY_COUNT = ENERGY_CARD_COUNT;
-export const TOTAL_CARD_COUNT = BASE_CATALOG_COUNT+PROGRESSION_CARD_COUNT+ENERGY_COUNT;
+export const TOTAL_CARD_COUNT = BASE_CATALOG_COUNT+PROGRESSION_CARD_COUNT+ENERGY_COUNT+FUSION_SHIP_CARD_COUNT;
 export const FLEET_TURN_SECONDS = 30;
 export const FLEET_HAND_SIZE = 7;
 export const FLEET_MAX_PLAYED = 3;
@@ -98,7 +100,7 @@ if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==170||BOSS_COUNT!==12||ENERGY_COUNT!==10
  throw new Error('Catalogo esclusivo incompleto: 120 esclusive principali, 45 carte varianti, 17 Personaggi e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
-export const generalCard = id => ENERGY_CARD_BY_ID[id]||NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
+export const generalCard = id => FUSION_SHIP_CARD_BY_ID[id]||ENERGY_CARD_BY_ID[id]||NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
@@ -115,7 +117,7 @@ export function cardCopyLimit(id){
  const c=card(id);
  if(!c)return 0;
  if(bossCard(id))return 1;
- if(ENERGY_CARD_BY_ID[id])return c.maxCopiesPerDeck;
+ if(ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id])return c.maxCopiesPerDeck;
  if(NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id])return c.maxCopiesPerDeck||RARITY_COPY_LIMIT[c.rarita]||0;
  if(isProgressionCard(id))return c.shipId?c.maxCopiesInAutoPackageDraft:RARITY_COPY_LIMIT[c.rarita]||0;
  return exclusiveCard(id)?(c.maxCopiesInAutoPackageDraft||1):(RARITY_COPY_LIMIT[c.rarita]||0);
@@ -204,5 +206,5 @@ export function generalCatalogStats(){
  }
  return {count:GENERAL_COUNT,approvedNewCommon:NEXT_COMMON_CARDS.length,rarity,category,exclusive:EXCLUSIVE_COUNT,boss:BOSS_COUNT,
   baseCatalog:BASE_CATALOG_COUNT,progression:PROGRESSION_CARD_COUNT,energy:ENERGY_COUNT,
-  total:TOTAL_CARD_COUNT,ships:17,recipes:COMBO_RECIPES.filter(c=>c.active===true).length,archivedRecipes:COMBO_RECIPES.length};
+  total:TOTAL_CARD_COUNT,fusionShipCards:FUSION_SHIP_CARD_COUNT,ships:17,recipes:COMBO_RECIPES.filter(c=>c.active===true).length,archivedRecipes:COMBO_RECIPES.length};
 }
