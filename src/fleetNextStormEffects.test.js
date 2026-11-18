@@ -12,7 +12,7 @@ import {stormModuleActive,stormUnits} from './fleetNext/stormEngine.js';
 const IDS=['nx-e02-01','nx-e02-02','nx-e02-03','nx-e02-04','ex-e02-01',
  'nx-e02-06','nx-e02-07','nx-e02-08','nx-e02-09','nx-e02-10'];
 const baseDeck=[];
-function make({shipA='E02',shipB='C03',levelA=5,levelB=5}={}){
+function make({shipA='E02',shipB='C03',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB)}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,
   deckA:baseDeck,deckB:baseDeck,mode:'pvp',seed:312});
  for(const s of Object.values(b.sides)){
