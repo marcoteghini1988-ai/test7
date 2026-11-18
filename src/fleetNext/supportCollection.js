@@ -3,6 +3,7 @@
 // Gli slot si sbloccano con traguardi di campagna permanenti, mai con i livelli.
 // Le soglie di settore, i prezzi e i potenziamenti verranno collegati nei prossimi passi.
 import {SUPPORT_ACTIVE_SLOTS,supportDefinition} from './supportCatalog.js';
+import {shipMaxLevel} from './progression.js';
 
 export const SUPPORT_COLLECTION_KEY='eclissi_support_collection_v1';
 export const SUPPORT_COLLECTION_SCHEMA=1;
@@ -24,8 +25,10 @@ export function normalizeSupportCollection(input){
   if(!validId(unit?.instanceId)||!supportDefinition(unit?.supportId)||
    used.has(unit.instanceId))continue;
   used.add(unit.instanceId);
+  const modelId=supportDefinition(unit.supportId).shipModelId;
+  const maxLevel=shipMaxLevel(modelId);
   owned.push({instanceId:unit.instanceId,supportId:unit.supportId,
-   level:Number.isInteger(unit.level)?Math.max(1,Math.min(99,unit.level)):1});
+   level:Number.isInteger(unit.level)?Math.max(1,Math.min(maxLevel,unit.level)):1});
  }
  const slots=Number.isInteger(input.unlockedSlots)?
   Math.max(0,Math.min(SUPPORT_ACTIVE_SLOTS,input.unlockedSlots)):0;
