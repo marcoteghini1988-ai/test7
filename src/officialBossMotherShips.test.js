@@ -29,7 +29,9 @@ test('Dodici boss: una madre autentica diversa per pianeta e mai la nave in prem
    planetId:planet.id,sectorLevel:10});
   assert.equal(encounter.motherShipId,target,'identita dell\'incontro deve dichiarare la nave');
   const available=shipsUnlockableBeforeSector(sector);
-  assert.equal(target,available.at(-1),planet.name+' utilizza un modello progressivo');
+  assert.equal(target,PHASE1_CATALOG.ships[index].id,
+   planet.name+' utilizza la madre canonica del proprio pianeta');
+  assert.ok(available.includes('N00'),'la nave iniziale resta utilizzabile');
   assert.ok(PHASE1_CATALOG.ships.some(ship=>ship.id===target),planet.name);
   assert.ok(!distinct.has(target),'ogni boss mantiene una nave diversa');
   distinct.add(target);
@@ -67,7 +69,7 @@ test('Modello boss, firme e armi indipendenti da scelta della madre, livello e s
    }
   }
  }
- assert.equal(setups,12*17*2);
+ assert.equal(setups,12*12*2);
 });
 test('La campagna Terra 1-9 non anticipa mai navi e usa copie starter NPC autentiche',()=>{
  assert.deepEqual(FIRST_PLANET_RIVAL_SHIPS,[
@@ -101,6 +103,6 @@ test('La 3D legacy mantiene il proprio algoritmo di compatibilita e non riceve m
  assert.equal(configured.enemyFleetIds[0],selected.shipId);
  assert.ok(fleetCompatibility(['C03'],configured.enemyFleetIds,1,
   configured.shipLevels,configured.enemyShipLevels).compatible);
- assert.notEqual(selected.shipId,officialBossMotherShip(1),
-  'il legacy rimane compatibile, il nuovo boss ha una propria madre costante');
+ assert.equal(officialBossMotherShip(1),'N00',
+  'il boss della Terra mantiene la madre canonica, indipendente dall’algoritmo legacy');
 });
