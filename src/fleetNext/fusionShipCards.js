@@ -5,7 +5,7 @@
 // riconciliato il catalogo ufficiale da 13 non sono ancora identificati.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {fleetElements} from './elementalAffinities.js';
-import {supportSkillFor} from './supportAbilities.js';
+import {nativeSupportSkillFor} from './supportAbilities.js';
 
 export const FUSION_SHIP_CARDS=Object.freeze(PHASE1_CATALOG.ships.map(ship=>{
  const nome='Navicella Fusione — '+ship.nome;
@@ -17,7 +17,7 @@ export const FUSION_SHIP_CARDS=Object.freeze(PHASE1_CATALOG.ships.map(ship=>{
   maxCopiesPerDeck:2,acquisitionPending:true,
   fusionShipId:ship.id,fusionShipName:ship.nome,
   fusionElementId:fleetElements(ship.id)[0],
-  fusionSkillId:supportSkillFor(ship.id,0),
+  fusionSkillId:nativeSupportSkillFor(ship.id),
   effectSpec:Object.freeze({type:'shipFusion',shipId:ship.id})
  });
 }));
