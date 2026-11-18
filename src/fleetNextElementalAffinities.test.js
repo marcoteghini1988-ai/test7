@@ -25,7 +25,7 @@ test('Tutti e dieci gli elementi hanno due vantaggi e due debolezze, nessun dopp
   for(const enemy of set){
    const x=elementalRelation(id,enemy);
    const y=elementalRelation(enemy,id);
-   assert.equal(x,-y,id+' vs '+enemy);
+   assert.ok(x===-y,id+' vs '+enemy); // 0 e -0 sono neutrali equivalenti
   }
  }
 });
