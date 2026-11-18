@@ -6,6 +6,7 @@ import {ESCORT_ARMORY} from '../escortArmory.js';
 import {FLEET_ESCORT_TRAITS} from '../fleetEscortSupports.js';
 import {SUPPORT_ACTIVE_SLOTS,supportDefinition} from './supportCatalog.js';
 import {fleetElements} from './elementalAffinities.js';
+import {shipMaxLevel} from './progression.js';
 
 const motherModels=new Map(PHASE1_CATALOG.ships.map(m=>[m.id,m]));
 const toughActions=new Set(['cover','bulwark','partCover','phase']);
@@ -29,7 +30,8 @@ export function createIndependentFleetEscorts(mother,roster=[]){
   const baseHp=definition.skillId==='last-shield'?50:
    Math.max(2,Math.min(12,Math.round(2+origin.hp_motore_L1/65+
    (oldSkill.action==='bulwark'?4:tough?2:0)+arm.shield*3)));
-  const supportLevel=Number.isInteger(unit.level)?Math.max(1,Math.min(99,unit.level)):1;
+  const supportMaxLevel=shipMaxLevel(definition.shipModelId);
+  const supportLevel=Number.isInteger(unit.level)?Math.max(1,Math.min(supportMaxLevel,unit.level)):1;
   // Non importare potenza e livello della madre: ogni copia ha stato proprio.
   // Grado 1 finché saranno definite le soglie di upgrade del supporto.
   const grade=1,skill={
@@ -42,7 +44,7 @@ export function createIndependentFleetEscorts(mother,roster=[]){
    originSlot:definition.originSlot,parentShipId:null,
    fusionFamily:definition.fusionFamily,slot,sourceIndices:[slot],
    supportSkillId:definition.skillId,supportSkillName:definition.skillName,
-   name:definition.name,role:definition.role,supportLevel,grade,skill,
+   name:definition.name,role:definition.role,supportLevel,supportMaxLevel,grade,skill,
    hp:baseHp,maxHp:baseHp,supportObservedHp:baseHp,
    supportDeathResolved:false,destroyed:false,reserve:false,linked:true,fused:false,
    element:definition.elementId||fleetElements(definition.originShipId)[0],
