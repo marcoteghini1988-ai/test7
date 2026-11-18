@@ -12,7 +12,7 @@ import {projectFleetSlots,fleetEventText} from './fleetNext/battlePresentation.j
 
 const IDS=['nx-c03-01','nx-c03-02','nx-c03-03','nx-c03-04','ex-c03-01',
  'nx-c03-06','nx-c03-07','nx-c03-08','nx-c03-09','nx-c03-10'];
-function battle({shipA='C03',shipB='C03',levelA=5,levelB=5}={}){
+function battle({shipA='C03',shipB='C03',levelA=shipMaxLevel(shipA),levelB=shipMaxLevel(shipB)}={}){
  const b=createFleetNextBattle({shipA,shipB,levelA,levelB,deckA:[],deckB:[],
   mode:'pvp',seed:3030});
  for(const side of Object.values(b.sides)){side.hand=[];side.deck=[];side.discard=[];}
