@@ -106,6 +106,10 @@ export function buildFleetEscorts(mother){
   const hp=Math.max(2,Math.min(12,Math.round(2+base/65+
    (skill.action==='bulwark'?4:tough?2:0)+original.shield*3)));
   return {id:mother.id+':escort:'+(slot+1),parentShipId:mother.id,
+   // L'elemento non è autonomo: ogni scudiera copia la firma della madre.
+   element:mother.element||null,
+   elements:Array.isArray(mother.elements)?[...mother.elements]:mother.element?[mother.element]:[],
+   elementInheritedFrom:mother.id,
    slot,unlockLevel:FLEET_ESCORT_UNLOCKS[slot],name:original.name,role:original.role,
    skill,hp,maxHp:hp,destroyed:false,visual:'/assets/escorts/'+mother.id+'_escort_'+(slot+1)+'.svg'};
  });
