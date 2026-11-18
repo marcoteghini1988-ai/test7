@@ -1,4 +1,6 @@
 # Eclissi Stellare — carte-navicella indipendenti e Carte Navicella Fusione
+
+> **Aggiornamento vincolante (18 novembre, ultimo criterio):** le Carte Navicella Fusione sono **tutte Leggendarie** e specifiche per modello, rappresentano esclusivamente una navicella **MAX**, e possono essere giocate solo su un supporto già schierato al **massimo livello della sua famiglia**. Non esistono Carte Fusione a livelli intermedi. La regola sostituisce le precedenti ipotesi di rarità differenziata. I livelli massimi seguono provvisoriamente `shipMaxLevel` (ad esempio Aurora L20, Arca L5). Restano due fusioni, una per slot, con HP del supporto invariati. Il metodo per migliorare i supporti fino a MAX e acquisire le Carte Fusione è una fase successiva; al momento i nuovi supporti ottenuti dalla campagna sono al livello 1.
 Data: 18 novembre 2026 · repository ufficiale test7, branch main.
 
 ## Decisioni funzionali confermate
