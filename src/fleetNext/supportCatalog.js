@@ -2,12 +2,13 @@
 // obbligatori con la nave madre. Gli ID vecchi (due per famiglia) sono alias
 // di sola compatibilita' per non invalidare i salvataggi e i test storici.
 // Il catalogo ufficiale comprende 13 supporti con 13 passive distinte.
-// Le 17 madri storiche e tutti i loro ID legacy restano conservati.
+// I vecchi identificativi di supporto dei modelli ufficiali restano alias tecnici.
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
 import {fleetElements} from './elementalAffinities.js';
 import {supportSkillFor,SUPPORT_SKILL_LABELS} from './supportAbilities.js';
-import {SUPPORT_MODEL_DESIGNS,officialSupportShipFor} from './supportModelRegistry.js';
+import {SUPPORT_MODEL_DESIGNS,SUPPORT_MODEL_BY_SHIP_ID,officialSupportShipFor} from './supportModelRegistry.js';
+import {isOfficialMotherId} from './officialMotherIds.js';
 
 export const SUPPORT_ACTIVE_SLOTS=2;
 // Riferimento alle sole tre famiglie fusione del sistema storico.
@@ -16,7 +17,8 @@ export const supportIdFor=(originShipId,originSlot)=>
  typeof originShipId==='string'&&Number.isInteger(originSlot)&&originSlot>=0&&originSlot<2?
  'support-'+originShipId.toLowerCase()+'-'+String(originSlot+1).padStart(2,'0'):null;
 export const supportModelIdFor=shipId=>
- PHASE1_CATALOG.ships.some(s=>s.id===shipId)?'support-model-'+shipId.toLowerCase():null;
+ typeof shipId==='string'&&(SUPPORT_MODEL_BY_SHIP_ID[shipId]||isOfficialMotherId(shipId))?
+ 'support-model-'+shipId.toLowerCase():null;
 
 // I nomi e ruoli derivano dall'effetto; i disegni provvisori vengono
 // recuperati dalle scocche originali, senza richiedere nuovi asset ora.
@@ -24,16 +26,16 @@ const HISTORICAL_SHIPS=new Map(PHASE1_CATALOG.ships.map(ship=>[ship.id,ship]));
 export const officialSupportModelIdFor=shipId=>
  supportModelIdFor(officialSupportShipFor(shipId));
 export const SUPPORT_CATALOG=Object.freeze(SUPPORT_MODEL_DESIGNS.map(design=>{
- const ship=HISTORICAL_SHIPS.get(design.shipId);
- if(!ship)throw Error('Modello origine supporto inesistente: '+design.shipId);
- const arm=ESCORT_ARMORY[ship.id][design.originSlot];
+ const template=HISTORICAL_SHIPS.get(design.templateMotherId);
+ if(!template)throw Error('Scocca provvisoria supporto inesistente: '+design.shipId);
+ const arm=ESCORT_ARMORY[template.id][design.originSlot];
  return Object.freeze({
-  id:supportModelIdFor(ship.id),name:design.name,role:design.role,
-  originShipId:ship.id,originShipName:ship.nome,originSlot:design.originSlot,
-  shipModelId:ship.id,nativeShipModel:true,rarita:ship.rarita,
-  category:'Carta navicella',visual:'/assets/escorts/'+ship.id+'_escort_'+(design.originSlot+1)+'.svg',
+  id:supportModelIdFor(design.shipId),name:design.name,role:design.role,
+  originShipId:design.shipId,originShipName:design.name,originSlot:design.originSlot,
+  shipModelId:design.shipId,templateMotherId:template.id,nativeShipModel:true,rarita:design.rarita,
+  category:'Carta navicella',visual:'/assets/escorts/'+template.id+'_escort_'+(design.originSlot+1)+'.svg',
   visualBrief:design.visualBrief,visualPlaceholder:true,
-  elementId:fleetElements(ship.id)[0],inheritedElement:false,
+  elementId:design.elementId,inheritedElement:false,
   independentNormalAttack:false,skillId:design.skillId,
   skillName:SUPPORT_SKILL_LABELS[design.skillId],
   freelyCombinable:true,duplicatesAllowed:true,fusionFamily:null
