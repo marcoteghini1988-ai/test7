@@ -4,7 +4,7 @@
 // Le soglie di settore, i prezzi e i potenziamenti verranno collegati nei prossimi passi.
 import {SUPPORT_ACTIVE_SLOTS,supportDefinition} from './supportCatalog.js';
 import {SUPPORT_MAX_LEVEL,boundedSupportLevel} from './supportProgression.js';
-import {isShipRarity,rarityIndex,nextShipRarity,RARITY_DUPLICATE_COPIES} from './shipRarity.js';
+import {isShipRarity,rarityIndex,nextShipRarity,RARITY_DUPLICATE_COPIES,nativeMotherRarity} from './shipRarity.js';
 
 export const SUPPORT_COLLECTION_KEY='eclissi_support_collection_v1';
 export const SUPPORT_COLLECTION_SCHEMA=1;
@@ -27,12 +27,13 @@ export function normalizeSupportCollection(input){
    used.has(unit.instanceId))continue;
   used.add(unit.instanceId);
   const source=supportDefinition(unit.supportId);
+  const minimum=source.rarita||nativeMotherRarity(source.originShipId)||'Comune';
   // Il vecchio L5 è preservato come Leggendaria soltanto per i salvataggi
   // privi della rarità. Non si reintroducono i livelli nell'Hangar.
   const historical=unit.level>=5?'Leggendaria':unit.level>=3?'Epica':
-   unit.level>=2?'Rara':source.rarita;
+   unit.level>=2?'Rara':minimum;
   const proposed=isShipRarity(unit.rarita)?unit.rarita:historical;
-  const rarita=rarityIndex(proposed)>=rarityIndex(source.rarita)?proposed:source.rarita;
+  const rarita=rarityIndex(proposed)>=rarityIndex(minimum)?proposed:minimum;
   owned.push({instanceId:unit.instanceId,supportId:unit.supportId,
    level:boundedSupportLevel(unit.level),rarita});
  }
@@ -70,10 +71,11 @@ export function advanceSupportLevel(collection,instanceId){
   {...unit,level:unit.level+1}:unit);
  return {...current,owned};
 }
-export function grantSupportInstance(collection,supportId,rarita=supportDefinition(supportId)?.rarita){
+export function grantSupportInstance(collection,supportId,
+ rarita=supportDefinition(supportId)?.rarita||nativeMotherRarity(supportDefinition(supportId)?.originShipId)){
  const definition=supportDefinition(supportId);
  if(!definition||!isShipRarity(rarita)||
-  rarityIndex(rarita)<rarityIndex(definition.rarita))
+  rarityIndex(rarita)<rarityIndex(definition.rarita||nativeMotherRarity(definition.originShipId)))
   throw Error('Modello o rarità supporto inesistente');
  const current=normalizeSupportCollection(collection);
  if(current.owned.length>=MAX_OWNED_SUPPORT_INSTANCES)
