@@ -172,8 +172,9 @@ export function inheritFleetEscortElements(side){
  }
  return side;
 }
-// Questa carta rappresenta UNA navicella aggiuntiva e non un potenziamento
-// universale. La fusione conserva esattamente HP e maxHp del supporto scelto.
+// La Carta Navicella Fusione e' sempre Leggendaria e rappresenta un modello MAX.
+// Anche il supporto gia' schierato deve aver raggiunto il massimo del suo modello.
+// La fusione mantiene HP e maxHp senza aggiungere livelli o slot.
 export function fusionShipUnavailableReason(side,shipId,slot=null,ply=0){
  if(!side?.independentSupportRoster)return 'Serve una flotta di carte-navicella indipendenti';
  if(!SHIPS.has(shipId)||!nativeSupportSkillFor(shipId))
@@ -185,12 +186,17 @@ export function fusionShipUnavailableReason(side,shipId,slot=null,ply=0){
  const candidates=(side.escorts||[]).filter(e=>!e.fused&&escortEnabled(side,e,ply)&&
   (slot===null||e.slot===slot));
  if(!candidates.length)return 'Non esiste un supporto operativo non ancora fuso nello slot selezionato';
+ if(!candidates.some(e=>e.supportLevel>=shipMaxLevel(e.shipModelId||e.originShipId))){
+  const first=candidates[0],max=shipMaxLevel(first.shipModelId||first.originShipId);
+  return 'Il supporto '+first.name+' deve essere al livello MAX (L'+max+') per fondersi';
+ }
  return '';
 }
 export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
  const reason=fusionShipUnavailableReason(side,shipId,slot,ply);
  if(reason)return {ok:false,reason};
  const index=side.escorts.findIndex(e=>!e.fused&&escortEnabled(side,e,ply)&&
+  e.supportLevel>=shipMaxLevel(e.shipModelId||e.originShipId)&&
   (slot===null||e.slot===slot));
  const original=side.escorts[index];
  const skillId=nativeSupportSkillFor(shipId),newElement=fleetElements(shipId)[0];
@@ -200,6 +206,7 @@ export function fuseIndependentSupportWithShip(side,shipId,slot=null,ply=0){
   id:'escort:fusion:'+original.instanceId+':'+shipId,
   name:original.name+' + '+SHIPS.get(shipId).nome,
   fused:true,fusionShipId:shipId,fusionCardId:'fusion-ship-'+shipId.toLowerCase(),
+  fusionShipLevel:shipMaxLevel(shipId),
   fusionModelIds:[original.shipModelId||original.originShipId,shipId],
   // Barra identica: la carta non ripara, non somma ne' crea punti HP.
   hp:original.hp,maxHp:original.maxHp,supportObservedHp:original.hp,
