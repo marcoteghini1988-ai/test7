@@ -1,17 +1,19 @@
 import {getShipDefinition, validFleet} from './mathDuelEngine.js';
 import {shipMaxLevel} from './fleetNext/progression.js';
+import {nativeMotherRarity,rarityFromLegacyLevel,isShipRarity,
+ rarityIndex,nextShipRarity,RARITY_DUPLICATE_COPIES} from './fleetNext/shipRarity.js';
 
 export const SHIP_COLLECTION_KEY = 'eclissi_ship_collection';
 const SCHEMA_VERSION = 1;
 const STARTER = 'N00';
 
-function newCard(cards, shipId) {
+function newCard(cards, shipId, rarita = nativeMotherRarity(shipId)) {
   const baseId = `ship:${shipId}`;
   let instanceId = baseId;
   for (let n = 2; cards.some(card => card.instanceId === instanceId); n++) {
     instanceId = `${baseId}:${n}`;
   }
-  return {instanceId, shipId, level: 1};
+  return {instanceId, shipId, level: 1, rarita};
 }
 
 function resolveLoadout(cards, loadout) {
@@ -25,8 +27,12 @@ function normalizeCollection(saved) {
   }
   const cards = [];
   for (const entry of Array.isArray(saved?.cards) ? saved.cards : []) {
-    if (!getShipDefinition(entry?.shipId) || cards.some(card => card.shipId === entry.shipId)) continue;
-    const card = newCard(cards, entry.shipId);
+    if (!getShipDefinition(entry?.shipId)) continue;
+    const minimum = nativeMotherRarity(entry.shipId);
+    const migrated = isShipRarity(entry.rarita) ? entry.rarita :
+      rarityFromLegacyLevel(entry.shipId,entry.level);
+    const rarita=rarityIndex(migrated)>=rarityIndex(minimum)?migrated:minimum;
+    const card = newCard(cards, entry.shipId,rarita);
     if (typeof entry.instanceId === 'string' && entry.instanceId.trim() &&
         !cards.some(c => c.instanceId === entry.instanceId)) {
       card.instanceId = entry.instanceId;
@@ -42,6 +48,12 @@ function normalizeCollection(saved) {
   }
   if (!fleet.length) fleet.push(cards.find(card => card.shipId === STARTER));
   return {schemaVersion: SCHEMA_VERSION, cards, loadout: fleet.map(card => card.instanceId)};
+}
+
+export function writeShipCollection(collection,storage=globalThis.localStorage){
+  const value=normalizeCollection(collection);
+  storage.setItem(SHIP_COLLECTION_KEY,JSON.stringify(value));
+  return value;
 }
 
 export function readShipCollection(storage = globalThis.localStorage) {
@@ -68,6 +80,30 @@ export function grantShipCard(collection, shipId) {
   return {...collection, cards: [...collection.cards, newCard(collection.cards, shipId)]};
 }
 
+// Le copie sono fisiche: due duplicate della STESSA rarità vengono
+// consumate, una copia rimane nell'album e nasce una carta superiore.
+export function grantShipCopy(collection,shipId,rarita=nativeMotherRarity(shipId)){
+  const minimum=nativeMotherRarity(shipId);
+  if(!getShipDefinition(shipId)||!isShipRarity(rarita)||
+    rarityIndex(rarita)<rarityIndex(minimum))
+    throw Error('Modello o rarità della madre non validi');
+  return {...collection,cards:[...collection.cards,newCard(collection.cards,shipId,rarita)]};
+}
+export function evolveMotherWithDuplicates(collection,instanceId){
+  const chosen=collection.cards.find(c=>c.instanceId===instanceId);
+  if(!chosen)throw Error('Carta madre da evolvere non posseduta');
+  const next=nextShipRarity(chosen.rarita);
+  if(!next)throw Error('La madre è già Leggendaria');
+  const same=collection.cards.filter(c=>c.shipId===chosen.shipId&&c.rarita===chosen.rarita);
+  if(same.length<RARITY_DUPLICATE_COPIES)
+    throw Error('Servono tre copie della stessa madre e rarità');
+  const materials=same.filter(c=>c.instanceId!==chosen.instanceId).slice(0,RARITY_DUPLICATE_COPIES-1);
+  const consumed=new Set(materials.map(c=>c.instanceId));
+  let result={...collection,cards:collection.cards.filter(c=>!consumed.has(c.instanceId)),
+    loadout:collection.loadout.map(id=>consumed.has(id)?chosen.instanceId:id)};
+  result=grantShipCopy(result,chosen.shipId,next);
+  return result;
+}
 export function upgradeShipCard(collection, instanceId, level) {
   const card = collection.cards.find(entry => entry.instanceId === instanceId);
   if (!card || !Number.isInteger(level) || level < card.level || level > shipMaxLevel(card.shipId) || level > card.level + 1) {
