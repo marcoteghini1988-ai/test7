@@ -969,7 +969,7 @@ function onCorvoDamage(b,ctx,events,hit,sourceCardId){
 
 function addWeaken(b,enemy,amount,source,attackerWho=null,events=null){
  if(attackerWho&&cancelCorvoDisturbance(b,attackerWho,enemy,events,source))return false;
- enemy.buffs.push({kind:'jam',power:amount+(b.terrain?.id==='T03'?1:0),source});
+ enemy.buffs.push({kind:'jam',power:amount+(b.terrain?.id==='T03'&&!terrainImmunity(enemy,b.ply)?1:0),source});
  return true;
 }
 function cancelTerrainWithTrap(b,who,terrainCard,ctx,events){
@@ -3332,7 +3332,7 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  const defender=b.sides[other(ctx.who)];
  if(!target||!unitAlive(target.unit))return 0;
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
- ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
+ ctx.pierceLeft=b.terrain?.id==='T06'&&!terrainImmunity(b.sides[ctx.who],b.ply)?0:ctx.pierce;
  target=redirectFleetHit(b,ctx,events,target);
  amount=stormConsumeHeavy(b,ctx,events,target,amount);
  if(blockNebulaRepeat(b,ctx,events,target))return 0;
@@ -4264,7 +4264,7 @@ function resolveSalvo(b,ctx,events,order){
   // dall'amplificazione, altrimenti quella aggirerebbe il blocco.
   if(targets.length>1&&consumePlanciaRestriction(defender,b.ply))targets=[targets[0]];
  }
- ctx.pierceLeft=b.terrain?.id==='T06'?0:ctx.pierce;
+ ctx.pierceLeft=b.terrain?.id==='T06'&&!terrainImmunity(b.sides[ctx.who],b.ply)?0:ctx.pierce;
  const hits=[];
  for(const [hitIndex,planned] of targets.entries()){
   ctx.royalFirstShot=hitIndex===0;

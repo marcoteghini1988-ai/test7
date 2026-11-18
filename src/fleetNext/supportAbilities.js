@@ -81,7 +81,8 @@ export const trapsSuppressed=(battle,ownerSide)=>{
 export const terrainImmunity=(side,ply)=>skillCount(side,'terrain-immunity',ply)>0;
 export const terrainHalf=(side,ply)=>skillCount(side,'terrain-half',ply)>0;
 export const effectiveSupportEnergyCost=(side,ability,ply=0)=>
- ability?Math.max(1,ability.cost-skillCount(side,'energy-discount',ply)):null;
+ ability?Math.max(1,ability.cost-(ability.kind==='attack'?
+ skillCount(side,'energy-discount',ply):0)):null;
 export const supportSpecialBoost=(side,power,ply=0)=>
  Math.max(0,Math.round(power*(1+.25*skillCount(side,'special-boost',ply))));
 export const supportNormalBoost=(side,power,ply=0)=>
