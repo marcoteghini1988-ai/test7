@@ -1,4 +1,4 @@
-// Progressione estesa: dodici madri + cinque varianti, livelli massimi L20–L5.
+// Progressione estesa: dodici madri ufficiali, livelli massimi L20–L5.
 // I primi cinque livelli storici sono la base dei nuovi percorsi.
 // Gli slot carte non dipendono dal livello. Le riserve entrano solo con Fusione.
 export const CAMPAIGN_SHIP_ORDER = Object.freeze([
@@ -116,59 +116,19 @@ const PROFILES = Object.freeze({
   step(4,1,vital(4,5,3,3),[2,2],[2],2,'La terza navicella raggiunge il grado 2; Generatore +1 integrità.'),
   step(4,2,vital(4,5,3,3),[2,2],[2,2],2,'Quarto supporto di grado 2 in riserva: la seconda fusione crea il secondo supporto fuso. Corazza +1.')
  ]),
- C04:profile('Dardo Cremisi','Assalto rapido',
-  'Variante offensiva della prima flotta: cresce nell’attacco prima di migliorare i supporti.',[
-  step(3,0,vital(3,2,2),[],[],0,'Tre vitali e armamento rapido.'),
-  step(4,0,vital(3,2,2),[],[],0,'Arma cremisi: +1 potenza di attacco.'),
-  step(4,0,vital(3,2,2,2),[1],[],0,'Prima navicella di supporto e Centralina.'),
-  step(4,0,vital(3,3,2,2),[1],[],0,'Generatore rinforzato: +1 integrità.'),
-  step(4,0,vital(3,3,2,2),[1,1],[],0,'Seconda navicella di supporto di grado 1.')
- ],'C02'),
- R03:profile('Iride','Recupero',
-  'Variante che protegge il Generatore e affida il recupero ai propri supporti.',[
-  step(2,1,vital(3,4,2,3),[1,1],[],0,'Due supporti di grado 1 dedicati a recupero e precisione.'),
-  step(2,1,vital(3,5,2,3),[1,1],[],0,'Generatore rinforzato: +1 integrità.'),
-  step(2,1,vital(3,5,2,3),[2,1],[],0,'Il supporto di recupero raggiunge il grado 2.'),
-  step(3,1,vital(3,5,2,3),[2,1],[],0,'Arma prismatica: +1 potenza di attacco.'),
-  step(3,1,vital(3,5,2,3),[2,2],[],0,'Il supporto di precisione raggiunge il grado 2.')
- ],'R02'),
- E03:profile('Fenice','Recupero offensivo',
-  'Variante che alterna recupero e pressione con un Arsenale resistente.',[
-  step(3,0,vital(4,3,3,3),[1,1],[],0,'Due supporti di grado 1: recupero e ritorno di fiamma.'),
-  step(3,0,vital(4,4,3,3),[1,1],[],0,'Generatore rinforzato: +1 integrità.'),
-  step(3,0,vital(4,4,3,3),[2,1],[],0,'Il supporto di recupero raggiunge il grado 2.'),
-  step(4,0,vital(4,4,3,3),[2,1],[],0,'Ritorno di fiamma: +1 potenza di attacco.'),
-  step(4,0,vital(4,4,3,3),[2,2],[],0,'Il supporto offensivo raggiunge il grado 2.')
- ],'E02'),
- E04:profile('Orizzonte','Fortezza',
-  'Variante difensiva con una Centralina resistente e un supporto di precisione.',[
-  step(2,1,vital(3,4,3,4),[2,1],[],0,'Baluardo di grado 2 e supporto di precisione di grado 1.'),
-  step(2,1,vital(3,5,3,4),[2,1],[],0,'Generatore rinforzato: +1 integrità.'),
-  step(2,1,vital(3,5,3,4),[2,2],[],0,'Il supporto di precisione raggiunge il grado 2.'),
-  step(2,2,vital(3,5,3,4),[2,2],[],0,'Corazza da fortezza: riduce di 2 la potenza nemica.'),
-  step(3,2,vital(3,5,3,4),[2,2],[],0,'Lancia di Orizzonte: +1 potenza di attacco.')
- ],'E01'),
- L02:profile('Singolarità','Controllo gravitazionale',
-  'Variante leggendaria senza fusioni: mantiene due supporti distinti per difesa e pressione ionica.',[
-  step(3,1,vital(3,4,4,3),[1,2],[],0,'Supporto difensivo di grado 1 e supporto ionico di grado 2.'),
-  step(3,1,vital(3,5,4,3),[1,2],[],0,'Generatore rinforzato: +1 integrità.'),
-  step(3,1,vital(3,5,4,3),[2,2],[],0,'Il supporto difensivo raggiunge il grado 2.'),
-  step(4,1,vital(3,5,4,3),[2,2],[],0,'Ascia di antimateria: +1 potenza di attacco.'),
-  step(4,1,vital(4,5,4,3),[2,2],[],0,'Arsenale rinforzato: +1 integrità.')
- ],'L01')
 });
 
 // Soglie provvisorie dei livelli massimi, dal primo modello all'ultimo.
 // Le potenzialità finali sono normalizzate a 100, NON gli HP: i valori numerici
 // di battaglia andranno bilanciati insieme alle carte e alle abilità dei supporti.
 export const SHIP_MAX_LEVELS=Object.freeze({
- N00:20,C01:19,C02:18,C03:17,C04:16,
- R01:15,R02:14,R03:13,R04:12,
- E01:11,E02:10,E03:9,E04:8,
- L01:7,L02:6,L03:5,L04:5
+ N00:20,C01:19,C02:18,C03:17,
+ R01:15,R02:14,R04:12,
+ E01:11,E02:10,
+ L01:7,L03:5,L04:5
 });
 export const SHIP_PROGRESSION_IDS=Object.freeze(Object.keys(PROFILES));
-if(SHIP_PROGRESSION_IDS.length!==17||
+if(SHIP_PROGRESSION_IDS.length!==12||
  SHIP_PROGRESSION_IDS.some(id=>!Number.isInteger(SHIP_MAX_LEVELS[id])||
   SHIP_MAX_LEVELS[id]<5||SHIP_MAX_LEVELS[id]>20))
  throw Error('Livelli massimi della progressione incompleti');
