@@ -1,4 +1,4 @@
-// Una e una sola abilità elementale per ognuna delle 17 navicelle.
+// Una e una sola abilità elementale per ognuna delle 12 madri ufficiali.
 // L'abilità è una proprietà della madre, NON una undicesima carta esclusiva.
 // Le Energie si ottengono solo dalle Carte Energia realmente giocate.
 import {activeFleetElements,FLEET_ELEMENTS,elementalRelation} from './elementalAffinities.js';
@@ -38,14 +38,6 @@ const RAW_ABILITIES=[
   1
  ],
  [
-  "C04",
-  "Dardo Ciclonico",
-  "attack",
-  "salvo",
-  2,
-  1
- ],
- [
   "R01",
   "Martello Binario",
   "attack",
@@ -60,14 +52,6 @@ const RAW_ABILITIES=[
   "disable",
   3,
   1
- ],
- [
-  "R03",
-  "Rifrazione Vitale",
-  "effect",
-  "heal",
-  2,
-  2
  ],
  [
   "R04",
@@ -94,35 +78,11 @@ const RAW_ABILITIES=[
   2
  ],
  [
-  "E03",
-  "Cuore della Fenice",
-  "effect",
-  "heal",
-  3,
-  3
- ],
- [
-  "E04",
-  "Baluardo di Orizzonte",
-  "effect",
-  "guard",
-  3,
-  2
- ],
- [
   "L01",
   "Giudizio Radiante",
   "attack",
   "salvo",
   3,
-  2
- ],
- [
-  "L02",
-  "Frattura Gravitazionale",
-  "attack",
-  "salvo",
-  4,
   2
  ],
  [
@@ -190,7 +150,7 @@ export function elementalSpecialStrength(ability,attackerElement,defenderElement
  // (elementalDamage.js), dopo Difese e intercettazioni: niente bonus doppio.
  return Object.freeze({relation,power:Math.max(1,Math.min(3,ability?.power||1))});
 }
-if(Object.keys(ELEMENTAL_ABILITIES).length!==17||
+if(Object.keys(ELEMENTAL_ABILITIES).length!==12||
  Object.values(ELEMENTAL_ABILITIES).some(a=>!['attack','effect'].includes(a.kind)||
  !['salvo','guard','jam','heal','disable'].includes(a.mode)||a.kind==='attack'!==(a.mode==='salvo')||
  !Number.isInteger(a.cost)||a.cost<1||a.cost>ENERGY_CAPACITY||
