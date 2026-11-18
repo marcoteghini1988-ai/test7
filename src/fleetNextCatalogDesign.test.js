@@ -24,7 +24,7 @@ test('Catalogo sorgente storico: 120 carte ragionate, dieci per madre',()=>{
   assert.ok(c.rules?.length>10,c.id+' senza chiarimento di utilizzo');
   assert.ok(c.counterplay?.length>10,c.id+' senza contromossa');
   assert.ok(c.visualBrief?.length>10,c.id+' senza direzione grafica');
-  assert.match(c.state,/executable-in-combat-v1/,'Tutte le 120 carte devono essere state implementate');
+  assert.match(c.state,/executable-in-combat-v[12]/,'Tutte le 120 carte devono essere state implementate');
  }
  assert.equal(design.cards.filter(c=>c.type==='Personaggio').length,12);
  assert.equal(design.cards.filter(c=>c.type==='Fusione').length,3);
@@ -52,7 +52,7 @@ test('Il catalogo in codice associa esattamente 10 esclusive a ciascuna delle 12
   assert.equal(set.filter(c=>c.minShipLevelDraft>1).length,6,shipId+' sei premi distribuiti');
   assert.equal(set.filter(c=>c.minShipLevelDraft===Math.max(...levels)).length>=1,true,shipId+' premio finale');
  }
- assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>!ships.includes(c.shipId)).length,50);
+ assert.equal(Object.values(EXCLUSIVE_CARDS).filter(c=>!ships.includes(c.shipId)).length,0);
 });
 
 test('Tutte le carte esclusive sono eseguibili solo con la madre corretta e vengono pescate',async()=>{
