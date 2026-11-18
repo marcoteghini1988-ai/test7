@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {CAMPAIGN_SHIP_ORDER,SHIP_PROGRESSION_IDS,getShipProgression,
  getShipProgressionLevels,shipProgressionProfile,shipMaxLevel,shipEscortUnlockLevels} from './fleetNext/progression.js';
 import {SHIP_CONFIGS,EXCLUSIVE_CARDS,FLEET_SLOTS,
- BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,PROGRESSION_CARD_COUNT,
+ BASE_CATALOG_COUNT,TOTAL_CARD_COUNT,PROGRESSION_CARD_COUNT,FUSION_SHIP_CARD_COUNT,
  unlockedParts,requiredEscortCount,requiredReserveCount,supportGrade,
  eligibleExclusives,exclusiveUnlocked,exclusiveOperational,effectiveDeck,
  deckFromCounts,card,cardRole,cardCopyLimit,cardFacePath,
@@ -167,7 +167,7 @@ test('Tutti gli slot esistono da subito; le carte tecniche restano coperte dai t
  assert.equal(cardCopyLimit('prog-fusion-l04'),2);
  assert.equal(BASE_CATALOG_COUNT,194);
  assert.equal(PROGRESSION_CARD_COUNT,6);
- assert.equal(TOTAL_CARD_COUNT,227);
+ assert.equal(TOTAL_CARD_COUNT,210+FUSION_SHIP_CARD_COUNT);
 });
 
 test('Le letture sono immutabili e i livelli fuori intervallo non sbloccano supporti extra',()=>{
