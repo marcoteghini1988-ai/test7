@@ -17,7 +17,7 @@ const battle=(shipA='N00',shipB='C03',levelA=20,levelB=17)=>createFleetNextBattl
 
 test('Dieci Carte Energia realmente registrate, vendibili e inseribili nel mazzo da 40',()=>{
  assert.equal(ENERGY_COUNT,10);
- assert.equal(TOTAL_CARD_COUNT,210);
+ assert.equal(TOTAL_CARD_COUNT,227);
  assert.equal(new Set(ENERGY_CARDS.map(c=>c.id)).size,10);
  const inventory=createFleetInventory();
  assert.equal(inventory.owned['energy-ionic'],2);
