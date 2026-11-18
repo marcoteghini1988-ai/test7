@@ -46,6 +46,9 @@ export function ShipProgressionDetails({shipId,level=1}){
    {elementalAbility(shipId)?.kind==='attack'?' Attacco Speciale':' Effetto Speciale'} ·
    richiede {elementalAbility(shipId)?.cost} {elementalAbility(shipId)?.cost===1?'Carta Energia':'Carte Energia'}.
   </p>
+  <p>Vantaggio elementale: <strong>+25% danni</strong> contro gli elementi vulnerabili; 
+   svantaggio: <strong>−50% danni</strong> contro quelli resistenti, anche con armi normali.
+  </p>
   <p>Il colpo normale resta disponibile senza Carte Energia. Le animazioni definitive saranno create successivamente.</p>
   <p>{current.vitalIds.length} vitali · {current.escortCount} supporti
    {current.escortGrades.length?' · gradi '+current.escortGrades.join('/') : ''}
