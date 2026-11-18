@@ -40,7 +40,7 @@ test('Un solo modello madre; le scudiere NON sono altre carte madre',()=>{
   shipsB:[{shipId:'R04',level:5}],deckA:deck(),deckB:deck()}),/sola carta madre/);
  assert.throws(()=>fleet('NON_ESISTE'),/catalogo ufficiale/);
 });
-test('Tutte le 17 madri generano gli stessi slot di evoluzione L3/L5 già esistenti',()=>{
+test('Le 12 madri mantengono gli slot storici L3/L5 nel motore di compatibilità',()=>{
  const models=new Set();
  for(const ship of PHASE1_CATALOG.ships)for(let level=1;level<=5;level++){
   const side=fleet(ship.id,'N00',level,1).sides.A;
@@ -55,8 +55,8 @@ test('Tutte le 17 madri generano gli stessi slot di evoluzione L3/L5 già esiste
    models.add(e.id);
   }
  }
- assert.equal(models.size,34);
- assert.equal(Object.keys(FLEET_ESCORT_TRAITS).length,17);
+ assert.equal(models.size,24);
+ assert.equal(Object.keys(FLEET_ESCORT_TRAITS).length,12);
 });
 test('Quattro vitali senza vecchia barriera; due distrutti eliminano la madre',()=>{
  const b=fleet();
@@ -106,7 +106,7 @@ test('Distruggendo il Generatore della madre si interrompe il supporto collegato
  assert.ok(r.battle.sides.B.escorts[0].hp>0);
 });
 test('La madre sconfitta termina la partita anche con scudiere ancora vive',()=>{
- const b=fleet('C01','R03',1,5);
+ const b=fleet('C01','R04',1,5);
  const mother=b.sides.B.ships[0];
  mother.parts.find(p=>p.id==='engine').damage=2;
  mother.parts.find(p=>p.id==='engine').destroyed=true;
@@ -169,18 +169,18 @@ test('Tutte le carte ufficiali hanno un effetto giocabile',()=>{
  }
 });
 test('Upgrade L1-L5: armi e modelli autentici, non scudi di barriera',()=>{
- const low=fleet('L02','N00',1,1).sides.A;
- const high=fleet('L02','N00',5,1).sides.A;
+ const low=fleet('L03','N00',1,1).sides.A;
+ const high=fleet('L03','N00',5,1).sides.A;
  assert.equal(low.ships[0].maxShield,0);
  assert.equal(high.ships[0].maxShield,0);
  assert.ok(high.ships[0].weaponRating>=low.ships[0].weaponRating);
- assert.equal(low.ships[0].weapons.length,3);
+ assert.equal(low.ships[0].weapons.length,2);
  assert.equal(high.escorts.length,2);
- assert.ok(hit(fleet('L02','N00')).events[0].strength>
+ assert.ok(hit(fleet('L03','N00')).events[0].strength>
   hit(fleet('C01','N00')).events[0].strength);
 });
 test('Confronto dei vitali e stato partita senza duplicare i supporti',()=>{
- const b=fleet('C01','R03',5,1);
+ const b=fleet('C01','R04',5,1);
  assert.equal(fleetSurvivors(b.sides.A),1);
  assert.equal(fleetShipDestroyed(b.sides.A.ships[0]),false);
  assert.equal(b.sides.A.escorts.length,2);

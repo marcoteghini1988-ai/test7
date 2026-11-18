@@ -44,8 +44,8 @@ test('rifiuta riferimenti non validi senza generare NaN nei proiettili',()=>{
  assert.equal(sourceToTarget(box(0,0,450,800),null,box(0,0,4,4)),null);
 });
 
-test('motori calibrati per i cinque modelli e per le due viste della nave',()=>{
- for(const id of ['N00','C01','C02','C03','C04'])for(const op of Object.keys(ENGINE_POINTS.enemy)){
+test('coordinate calibrare per cinque madri ufficiali su entrambe le viste',()=>{
+ for(const id of ['N00','C01','C02','C03','R01'])for(const op of Object.keys(ENGINE_POINTS.enemy)){
   const e=enginePoint('enemy',id,op),p=enginePoint('player',id,op);
   assert.deepEqual(e,SHIP_ENGINE_POINTS[id][op]);
   assert.ok(e[0]>.2&&e[0]<.8&&e[1]>.25&&e[1]<.8);
@@ -56,10 +56,10 @@ test('motori calibrati per i cinque modelli e per le due viste della nave',()=>{
 });
 
 test('i due motori di scarico hanno punti distinti per ogni modello',()=>{
- for(const id of ['N00','C01','C02','C03','C04']){
+ for(const id of ['N00','C01','C02','C03','R01']){
   const a=SHIP_ENGINE_POINTS[id];
-  // Dardo uses 46px readouts; the other sprites use 54px readouts on 218px ships.
-  assert.ok((a.minus[0]-a.plus[0])*218>=(id==='C04'?46:54),id+' coppia superiore');
+  // Tutte le madri di questa prova hanno letture distanziate di almeno 54 px.
+  assert.ok((a.minus[0]-a.plus[0])*218>=54,id+' coppia superiore');
   assert.ok(a.plus[0]<a.minus[0],id+' ordine dei moduli');
  }
 });

@@ -20,7 +20,7 @@ const destroy=(ship,id)=>{
  part.damage=2;part.destroyed=true;
 };
 test('IA non attiva Fusioni L5 quando le scudiere non sono sbloccate',()=>{
- const b=mk('C01','R03',1,1);
+ const b=mk('C01','R04',1,1);
  expose(b,'B','fusion-triad');expose(b,'B','fusion-twin',1);
  const ai=selectFleetAiOrder(b);
  assert.ok(!ai.cards.some(i=>['fusion-twin','fusion-triad'].includes(b.sides.B.hand[i])));
@@ -75,7 +75,7 @@ test('Il modulo Sifone ripara anche dopo un colpo che intercetta una scudiera',(
  assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='engine').damage,0);
 });
 test('Una scudiera di riparazione usa la copertura tattica solo grazie alla carta',()=>{
- const b=mk('R03','L03',3,1);
+ const b=mk('R04','L03',3,1);
  expose(b,'A','tactical-cover');
  const r=round(b,order('generator',[0]),order('command'));
  assert.ok(r.events[1].escortDamage>0);
@@ -100,7 +100,7 @@ test('Boss Idra: distruggere il Generatore interrompe anche la rigenerazione bos
  assert.ok(r.battle.log.some(x=>x.text.includes('Rigenerazione bloccata: Generatore distrutto')));
  assert.equal(r.battle.sides.B.ships[0].parts.find(p=>p.id==='engine').damage,1);
 });
-test('Tutte le 34 passivE delle evoluzioni hanno spiegazioni complete e parti reali',()=>{
+test('Le 24 passive storiche dei supporti hanno spiegazioni complete e parti reali',()=>{
  const ids=new Set(['engine','weapons','generator','command']);
  const signatures=new Set();
  for(const ship of PHASE1_CATALOG.ships){
@@ -114,7 +114,7 @@ test('Tutte le 34 passivE delle evoluzioni hanno spiegazioni complete e parti re
    signatures.add(escort.id);
   }
  }
- assert.equal(signatures.size,34);
+ assert.equal(signatures.size,24);
 });
 test('Nessuna nave diversa dalla madre è inserita nello schieramento al livello 5',()=>{
  for(const ship of PHASE1_CATALOG.ships){

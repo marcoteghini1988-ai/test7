@@ -44,7 +44,7 @@ test('ricompensa e upgrade sono ripetibili e conservano identità, flotta e live
   assert.deepEqual(battle.enemy.fleet, battle.player.fleet);
 });
 
-test('il caricamento ripara la flotta ma conserva la proprietà delle carte escluse', async () => {
+test('il caricamento conserva le madri ufficiali ma esclude le varianti ritirate', async () => {
   const raw = {cards: [
     {instanceId: 'aurora', shipId: 'N00', level: 0},
     {instanceId: 'duplicate-aurora', shipId: 'N00', level: 3},
@@ -55,10 +55,11 @@ test('il caricamento ripara la flotta ma conserva la proprietà delle carte escl
   ], loadout: ['unknown', 'falco', 'iride', 'lince', 'aurora', 'aurora']};
   const storage = makeStorage({[SHIP_COLLECTION_KEY]: JSON.stringify(raw)});
   const loaded = readShipCollection(storage);
-  assert.deepEqual(loaded.loadout, ['falco', 'iride', 'aurora']);
+  assert.deepEqual(loaded.loadout, ['falco', 'lince', 'aurora']);
   assert.deepEqual(loaded.cards.map(c => [c.instanceId, c.level]), [
-    ['aurora', 1], ['falco', 6], ['iride', 2], ['lince', 4],
+    ['aurora', 1], ['falco', 6], ['lince', 4],
   ]);
+  assert.ok(!loaded.cards.some(card => card.shipId === 'R03'));
   assert.throws(() => equipShipCards(loaded, ['falco', 'iride', 'lince']));
   assert.throws(() => equipShipCards(loaded, ['unknown']));
   assert.throws(() => equipShipCards(loaded, ['aurora', 'aurora']));

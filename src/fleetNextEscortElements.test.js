@@ -42,7 +42,7 @@ test('Scudiere sbloccate a L10/L18, riserve e secondo elemento sono sempre sincr
  dual.escorts[0].elementInheritedFrom=null;
  refreshEscortLinks(dual,0);
  assert.equal(dual.escorts[0].element,'aerial');
- assert.deepEqual(dual.escorts[0].elements,['aerial','plasma']);
+ assert.deepEqual(dual.escorts[0].elements,['aerial','ionic']);
  assert.equal(dual.escorts[0].elementInheritedFrom,'E02');
  assert.equal(inheritFleetEscortElements(dual),dual);
 });

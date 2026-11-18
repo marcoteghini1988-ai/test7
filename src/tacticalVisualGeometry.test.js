@@ -4,7 +4,7 @@ import {PHASE1_CATALOG} from './phase1FleetCatalog.js';
 import {weaponMuzzleCount} from './mathFleetGeometry.js';
 import {tacticalWeaponTrajectory} from './tacticalVisualGeometry.js';
 const boxes={A:{left:10,top:60,width:35,height:36},B:{left:10,top:5,width:35,height:36}};
-test('All 42 native weapons start at existing integrated hull muzzle coordinates on BOTH sides',()=>{
+test('All 27 official native weapons start at existing integrated hull muzzle coordinates on both sides',()=>{
  let count=0;
  for(const ship of PHASE1_CATALOG.ships){
   const guns=PHASE1_CATALOG.weapons.filter(x=>x.nave_id===ship.id);
@@ -24,7 +24,7 @@ test('All 42 native weapons start at existing integrated hull muzzle coordinates
    count++;
   }
  }
- assert.equal(count,42);
+ assert.equal(count,27);
 });
 test('No shot can be positioned from missing or corrupt geometry, without affecting combat outcome',()=>{
  assert.equal(tacticalWeaponTrajectory({by:'A',weaponId:'W01'},{A:'N00',B:'C01'},null),null);

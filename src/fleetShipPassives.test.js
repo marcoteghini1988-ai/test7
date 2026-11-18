@@ -12,9 +12,9 @@ const make=(motherA='C01',motherB='R04',levelA=5,levelB=1)=>
  createFleetCardBattle({shipsA:[{shipId:motherA,level:levelA}],
   shipsB:[{shipId:motherB,level:levelB}],deckA:deck(),deckB:deck(),seed:48});
 const order=(partId='command')=>({shipIndex:0,partId,cards:[]});
-test('17 madri e 34 evoluzioni: identita, nomi e abilita propri',()=>{
- assert.equal(PHASE1_CATALOG.ships.length,17);
- assert.equal(Object.keys(FLEET_SHIP_PASSIVES).length,17);
+test('12 madri e 24 supporti storici: identità, nomi e abilità propri',()=>{
+ assert.equal(PHASE1_CATALOG.ships.length,12);
+ assert.equal(Object.keys(FLEET_SHIP_PASSIVES).length,12);
  const all=[];
  for(const model of PHASE1_CATALOG.ships){
   assert.ok(fleetShipPassive(model.id)?.name);
@@ -27,7 +27,7 @@ test('17 madri e 34 evoluzioni: identita, nomi e abilita propri',()=>{
    all.push(skill.name);
   }
  }
- assert.equal(new Set(all).size,34,'Ogni evoluzione ha un nome passiva distinto');
+ assert.equal(new Set(all).size,24,'Ogni supporto storico conserva una passiva distinta');
 });
 test('Gli HP scudiere variano per nave e ruolo; un baluardo puo resistere piu della madre',()=>{
  const tank=make('L03','C01').sides.A.escorts[0];
@@ -49,14 +49,16 @@ test('Le sinergie non richiedono sempre la centralina: dipendono dalla parte spe
  assert.equal(readyFleetEscorts(b.sides.A).length,1,
   'Un altra scudiera resta collegata attraverso Armi e Motori');
 });
-test('R03 L3 ripara una frattura della madre senza mai resuscitare componenti',()=>{
- const b=make('R03','C01',3,1);
+test('Una passiva non rianima un componente già distrutto',()=>{
+ const b=make('R04','C01',3,1);
  b.round=2;
- b.sides.A.ships[0].parts.find(p=>p.id==='engine').damage=1;
+ const vital=b.sides.A.ships[0].parts.find(p=>p.id==='engine');
+ vital.damage=2;vital.destroyed=true;
  const r=resolveFleetCardRound(b,order('command'),order('command'));
- assert.equal(r.ok,true);
- assert.equal(r.battle.sides.A.ships[0].parts.find(p=>p.id==='engine').damage,0);
- assert.ok(r.battle.log.some(x=>x.text.includes('Luce di recupero')));
+ assert.equal(r.ok,true,r.reason);
+ const damaged=r.battle.sides.A.ships[0].parts.find(p=>p.id==='engine');
+ assert.equal(damaged.destroyed,true);
+ assert.equal(damaged.damage,2);
 });
 test('R04 L3 difende la madre assorbendo interamente una salva diretta',()=>{
  const b=make('C01','R04',1,3);
