@@ -6,17 +6,19 @@ import {buildFleetEscorts,FLEET_ESCORT_TRAITS} from './fleetEscortSupports.js';
 import {SUPPORT_CATALOG,SUPPORT_CATALOG_BY_ID,
  supportDefinition,supportIdFor,supportModelIdFor,SUPPORT_FUSION_FAMILIES} from './fleetNext/supportCatalog.js';
 import {createSupportCollection,normalizeSupportCollection,readSupportCollection,
- writeSupportCollection,grantSupportInstance,claimSupportSlotMilestone,
+ writeSupportCollection,grantSupportInstance,advanceSupportLevel,claimSupportSlotMilestone,
  equipSupportInstance,equippedSupportRoster} from './fleetNext/supportCollection.js';
-import {shipMaxLevel} from './fleetNext/progression.js';
+import {SUPPORT_MAX_LEVEL} from './fleetNext/supportProgression.js';
+import {SUPPORT_MODEL_IDS} from './fleetNext/supportModelRegistry.js';
 
 test('Un modello di carta-navicella per ogni famiglia, con vecchi ID ancora riconosciuti',()=>{
- assert.equal(SUPPORT_CATALOG.length,PHASE1_CATALOG.ships.length);
- assert.equal(new Set(SUPPORT_CATALOG.map(s=>s.shipModelId)).size,PHASE1_CATALOG.ships.length);
+ assert.equal(SUPPORT_CATALOG.length,13);
+ assert.equal(new Set(SUPPORT_CATALOG.map(s=>s.shipModelId)).size,13);
+ assert.deepEqual(SUPPORT_CATALOG.map(s=>s.shipModelId),SUPPORT_MODEL_IDS);
  assert.equal(Object.keys(SUPPORT_CATALOG_BY_ID).length,PHASE1_CATALOG.ships.length*3);
  for(const mother of PHASE1_CATALOG.ships){
   const own=supportDefinition(supportModelIdFor(mother.id));
-  assert.equal(own.name,mother.nome);
+  assert.ok(own.name); // I 13 modelli ufficiali prendono il nome dalla passiva
   assert.equal(own.inheritedElement,false);
   assert.equal(own.shipModelId,mother.id);
   for(let slot=0;slot<2;slot++){
@@ -82,9 +84,9 @@ test('Il livello di ogni supporto è limitato al massimo della propria famiglia'
  inv=grantSupportInstance(inv,supportModelIdFor('L04'));
  const overflow={...inv,owned:inv.owned.map(unit=>({...unit,level:99}))};
  const normalized=normalizeSupportCollection(overflow);
- assert.equal(normalized.owned[0].level,shipMaxLevel('N00'));
- assert.equal(normalized.owned[1].level,shipMaxLevel('L04'));
- assert.deepEqual([shipMaxLevel('N00'),shipMaxLevel('L04')],[20,5]);
+ assert.equal(normalized.owned[0].level,SUPPORT_MAX_LEVEL);
+ assert.equal(normalized.owned[1].level,SUPPORT_MAX_LEVEL);
+ assert.equal(SUPPORT_MAX_LEVEL,5);
 });
 
 test('Inventario supporti separato, persistente e protetto dai riferimenti non posseduti',()=>{
