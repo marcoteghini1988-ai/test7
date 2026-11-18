@@ -5,6 +5,7 @@
 // Le 15 abilità comuni e le Carte Fusione saranno collegate in un passo separato.
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
+import {supportSkillFor,SUPPORT_SKILL_LABELS} from './supportAbilities.js';
 
 export const SUPPORT_ACTIVE_SLOTS=2;
 export const SUPPORT_FUSION_FAMILIES=Object.freeze(['L01','L03','L04']);
@@ -23,6 +24,8 @@ export const SUPPORT_CATALOG=Object.freeze(PHASE1_CATALOG.ships.flatMap(mother=>
   category:'Navicella di supporto',
   visual:'/assets/escorts/'+mother.id+'_escort_'+(index+1)+'.svg',
   inheritedElement:true,independentNormalAttack:false,
+  skillId:supportSkillFor(mother.id,index),
+  skillName:SUPPORT_SKILL_LABELS[supportSkillFor(mother.id,index)],
   freelyCombinable:true,duplicatesAllowed:true,
   // Predisposizione per le future Carte Fusione legate ai supporti.
   fusionFamily:SUPPORT_FUSION_FAMILIES.includes(mother.id)?mother.id:null

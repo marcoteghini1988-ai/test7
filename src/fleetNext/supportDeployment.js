@@ -25,7 +25,8 @@ export function createIndependentFleetEscorts(mother,roster=[]){
   const arm=ESCORT_ARMORY[definition.originShipId][definition.originSlot];
   const oldSkill=FLEET_ESCORT_TRAITS[definition.originShipId][definition.originSlot];
   const tough=toughActions.has(oldSkill.action);
-  const baseHp=Math.max(2,Math.min(12,Math.round(2+origin.hp_motore_L1/65+
+  const baseHp=definition.skillId==='last-shield'?50:
+   Math.max(2,Math.min(12,Math.round(2+origin.hp_motore_L1/65+
    (oldSkill.action==='bulwark'?4:tough?2:0)+arm.shield*3)));
   const supportLevel=Number.isInteger(unit.level)?Math.max(1,Math.min(99,unit.level)):1;
   // Non importare potenza e livello della madre: ogni copia ha stato proprio.
@@ -39,8 +40,10 @@ export function createIndependentFleetEscorts(mother,roster=[]){
    catalogSupportId:definition.id,originShipId:definition.originShipId,
    originSlot:definition.originSlot,parentShipId:null,
    fusionFamily:definition.fusionFamily,slot,sourceIndices:[slot],
+   supportSkillId:definition.skillId,supportSkillName:definition.skillName,
    name:definition.name,role:definition.role,supportLevel,grade,skill,
-   hp:baseHp,maxHp:baseHp,destroyed:false,reserve:false,linked:true,fused:false,
+   hp:baseHp,maxHp:baseHp,supportObservedHp:baseHp,
+   supportDeathResolved:false,destroyed:false,reserve:false,linked:true,fused:false,
    element:mother.element,elements:[...mother.elements],
    elementInheritedFrom:mother.id,visual:definition.visual};
  }).sort((a,b)=>a.slot-b.slot);
