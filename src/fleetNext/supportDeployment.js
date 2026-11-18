@@ -23,9 +23,12 @@ export function createIndependentFleetEscorts(mother,roster=[]){
    usedSlots.has(slot)||usedInstances.has(instanceId))
    throw Error('Supporto non valido, duplicato o nello slot sbagliato');
   usedSlots.add(slot);usedInstances.add(instanceId);
-  const origin=motherModels.get(definition.originShipId);
-  const arm=ESCORT_ARMORY[definition.originShipId][definition.originSlot];
-  const oldSkill=FLEET_ESCORT_TRAITS[definition.originShipId][definition.originSlot];
+  // Per i supporti senza omonima madre usiamo solo la scocca tecnica
+  // di una delle 12 madri, non ripristiniamo il vecchio modello escluso.
+  const templateId=definition.templateMotherId||definition.originShipId;
+  const origin=motherModels.get(templateId);
+  const arm=ESCORT_ARMORY[templateId][definition.originSlot];
+  const oldSkill=FLEET_ESCORT_TRAITS[templateId][definition.originSlot];
   const tough=toughActions.has(oldSkill.action);
   const baseHp=definition.skillId==='last-shield'?50:
    Math.max(2,Math.min(12,Math.round(2+origin.hp_motore_L1/65+
@@ -48,8 +51,8 @@ export function createIndependentFleetEscorts(mother,roster=[]){
    name:definition.name,role:definition.role,supportLevel,supportMaxLevel,grade,skill,
    hp:levelHp,maxHp:levelHp,supportObservedHp:levelHp,
    supportDeathResolved:false,destroyed:false,reserve:false,linked:true,fused:false,
-   element:definition.elementId||fleetElements(definition.originShipId)[0],
-   elements:[definition.elementId||fleetElements(definition.originShipId)[0]],
+   element:definition.elementId||fleetElements(templateId)[0],
+   elements:[definition.elementId||fleetElements(templateId)[0]],
    elementInheritedFrom:null,shipModelId:definition.originShipId,
    visual:definition.visual};
  }).sort((a,b)=>a.slot-b.slot);
