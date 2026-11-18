@@ -16,6 +16,7 @@ import {STORM_ACTIONS} from './stormEngine.js';
 import {ROYAL_ACTIONS} from './royalEngine.js';
 import {OBSIDIAN_ACTIONS} from './obsidianEngine.js';
 import {ARK_ACTIONS} from './arkEngine.js';
+import {REPLACEMENT_EXCLUSIVE_EFFECTS} from './replacementExclusives.js';
 
 export const EXCLUSIVE_SHIP_IDS=Object.freeze(["N00","C01","C02","C03","R01","R02","R04","E01","E02","L01","L03","L04"]);
 const characterIds=Object.freeze({
@@ -55,9 +56,11 @@ export const NEW_EXCLUSIVE_BLUEPRINTS=Object.freeze(Object.fromEntries(
  EXCLUSIVE_DESIGNS_120.filter(c=>!c.isPreservedCharacter).map(c=>[
  c.id,Object.freeze({
   id:c.id,shipId:c.shipId,shipName:c.shipName,name:c.name,nome:c.name,
-  category:c.type,kind:kindFor(c.type),rarityDraft:c.rarityDraft,
+  category:REPLACEMENT_EXCLUSIVE_EFFECTS[c.id]?.category||c.type,
+  kind:REPLACEMENT_EXCLUSIVE_EFFECTS[c.id]?.kind||kindFor(c.type),rarityDraft:c.rarityDraft,
   effectProposed:c.effectText,
-  effectSpec:Object.freeze(AURORA_ACTIONS[c.id]?{type:'aurora',action:AURORA_ACTIONS[c.id]}:
+  effectSpec:Object.freeze(REPLACEMENT_EXCLUSIVE_EFFECTS[c.id]?.effectSpec||
+   (AURORA_ACTIONS[c.id]?{type:'aurora',action:AURORA_ACTIONS[c.id]}:
    LINCE_ACTIONS[c.id]?{type:'lince',action:LINCE_ACTIONS[c.id]}:
    PRISMA_ACTIONS[c.id]?{type:'prisma',action:PRISMA_ACTIONS[c.id]}:
    CORVO_ACTIONS[c.id]?{type:'corvo',action:CORVO_ACTIONS[c.id]}:
@@ -68,16 +71,17 @@ export const NEW_EXCLUSIVE_BLUEPRINTS=Object.freeze(Object.fromEntries(
    STORM_ACTIONS[c.id]?{type:'storm',action:STORM_ACTIONS[c.id]}:
    ROYAL_ACTIONS[c.id]?{type:'royal',action:ROYAL_ACTIONS[c.id]}:
    OBSIDIAN_ACTIONS[c.id]?{type:'obsidian',action:OBSIDIAN_ACTIONS[c.id]}:
-   ARK_ACTIONS[c.id]?{type:'ark',action:ARK_ACTIONS[c.id]}:{type:'blueprint',code:c.designId}),
+   ARK_ACTIONS[c.id]?{type:'ark',action:ARK_ACTIONS[c.id]}:{type:'blueprint',code:c.designId})),
   minShipLevelDraft:c.minShipLevel,
   requiredOwnParts:Object.freeze([]),requiredEscortCount:0,
-  maxCopiesInAutoPackageDraft:c.id==='nx-l04-05'?2:1,
+  maxCopiesInAutoPackageDraft:1,
   upgradeType:'not-available-until-executable',
   counterplay:c.counterplay,
   designRules:c.rules,designRequirements:c.requirements,
   visualBrief:c.visualBrief,
   nativeFace:true,playable:!!(AURORA_ACTIONS[c.id]||LINCE_ACTIONS[c.id]||PRISMA_ACTIONS[c.id]||CORVO_ACTIONS[c.id]||FALCO_ACTIONS[c.id]||MANTA_ACTIONS[c.id]||SHARK_ACTIONS[c.id]||NEBULA_ACTIONS[c.id]||STORM_ACTIONS[c.id]||ROYAL_ACTIONS[c.id]||OBSIDIAN_ACTIONS[c.id]||ARK_ACTIONS[c.id]),exclusiveToShip:true,
-  status:AURORA_ACTIONS[c.id]?'aurora-executable-v1':
+  status:REPLACEMENT_EXCLUSIVE_EFFECTS[c.id]?'replacement-executable-v2':
+   AURORA_ACTIONS[c.id]?'aurora-executable-v1':
    LINCE_ACTIONS[c.id]?'lince-executable-v1':
    PRISMA_ACTIONS[c.id]?'prisma-executable-v1':
    CORVO_ACTIONS[c.id]?'corvo-executable-v1':
