@@ -116,7 +116,7 @@ export function Engine({side,op,vessel,target,selected,onSelect,enabled,hit,avai
  const dead=engine.hp<=0,ratio=Math.max(0,engine.hp/engine.max);
  const state=engineVisualState(engine),surface=engineSurface(side,vessel.id,op),aux=op==='times'||op==='divide';
  const [px,py]=enginePoint(side,vessel.id,op);
- const narrow=side==='player'&&vessel.id==='C04'&&(op==='plus'||op==='minus');
+ const narrow=false; // Nessuna madre ufficiale richiede la correzione della variante esclusa.
  return <button type="button" style={{left:`${px*100}%`,top:`${py*100}%`,
   '--hud-shift':`${engineHudShift(side,vessel.id,op,formation.size,formation.hudWidth)}px`,'--hit-delay':`${impactDelay||0}ms`,
   '--core-width':`${surface.radius[0]*2*formation.size}px`,'--core-height':`${surface.radius[1]*2*formation.size}px`,'--engine-color':SHIP_GLOW[vessel.id]||'#5edbff',
