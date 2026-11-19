@@ -10,6 +10,9 @@ import {DISCARD_WEAPON} from './fleetNext/discardWeapon.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {createFleetNextBattle,resolveFleetNextTurn} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import originalWeaponProposals from '../docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json' with {type:'json'};
+import weaponReplacementProposals from '../docs/BOZZA_67_NUOVE_ARMI_OFFENSIVE_2026-11-19.json' with {type:'json'};
+import weaponAttackAudit from '../docs/AUDIT_ARMI_VS_ATTACCHI_100_PROPOSTE_2026-11-19.json' with {type:'json'};
 
 test('Terreni potenziano TUTTI gli elementi delle Armi, rarità e famiglie compatibili',()=>{
  assert.equal(Object.keys(FLEET_ELEMENTS).length,10);
@@ -94,4 +97,23 @@ test('Nella battaglia vera un Terreno Fuoco offensivo aumenta lo sparo Arma Fuoc
  assert.ok(increased>=normal,'un terreno offensivo non può ridurre il danno');
  assert.ok(boost.events.some(e=>e.terrainAttackPercent===10),
   'la partita ha davvero applicato il bonus terreno in attacco');
+});
+
+test('100 progetti Arma hanno la stessa regola Terreno, 67 bozze Attacco ne restano fuori',()=>{
+ const approvedDraftIds=new Set(weaponAttackAudit.items.filter(c=>c.proposedType==='Arma').map(c=>c.id));
+ const first=originalWeaponProposals.items.filter(c=>approvedDraftIds.has(c.id));
+ const second=weaponReplacementProposals.items;
+ assert.equal(first.length,33);
+ assert.equal(second.length,67);
+ for(const entry of [...first,...second]){
+  assert.ok(FLEET_ELEMENTS[entry.elementId],entry.name);
+  assert.equal(entry.terrainWeaponBonusRule?.matchingElementOnly,true,entry.name);
+  assert.equal(entry.terrainWeaponBonusRule?.offenseOnly,true,entry.name);
+  const terrain=ELEMENTAL_TERRAIN_CARDS.find(c=>c.elementId===entry.elementId&&
+   c.variant==='offensivo'&&c.rarita==='Comune');
+  assert.equal(terrainWeaponAttackBonus(terrain,entry.elementId,100).bonus,10,entry.name);
+ }
+ const postponed=originalWeaponProposals.items.filter(c=>!approvedDraftIds.has(c.id));
+ assert.equal(postponed.length,67);
+ assert.ok(postponed.every(c=>!c.terrainWeaponBonusRule));
 });
