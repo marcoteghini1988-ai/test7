@@ -214,14 +214,14 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
    <b>{card(unit.falco.pending.cardId)?.nome||'COLPO IN CARICA'}</b>
    <small>{unit.falco.pending.held?'CONSERVATO · ':''}RILASCIO AL PROSSIMO TURNO</small>
   </div>}
-  <div className="f3d-machine-berths" aria-label={player?'Le tue due macchine d’assalto':'Le due macchine d’assalto avversarie'}>
+  <div className="f3d-machine-berths" aria-label={player?'Le tue due Armi temporanee':'Le due Armi temporanee avversarie'}>
    {berths.map((machine,slot)=>{
     const enabled=machine&&!machine.pending;
     const hit=impact?.machineSlot===slot&&impact?.machineDamage>0;
     const selected=selectedTarget?.kind==='machine'&&selectedTarget.id===machine?.id;
     return <button type="button" key={slot} className={'f3d-machine-berth f3d-machine-berth--'+slot+(selected?' f3d-unit--selected':'')+(hit?' f3d-machine--hit':'')}
      disabled={!machine||(!player&&(!canTarget||!enabled))}
-     aria-label={machine?(player?'Consulta ':'Attacca ')+machine.name+' · '+machine.hp+'/'+machine.maxHp+' punti':'Macchina d’assalto '+(slot+1)+' · spazio libero'}
+     aria-label={machine?(unit.ruleset===HP_SYNC_RULESET?'Arma temporanea ':'Macchina d’assalto ')+machine.name+(unit.ruleset===HP_SYNC_RULESET?' · effetto di supporto':' · '+machine.hp+'/'+machine.maxHp+' punti'):'Arma temporanea '+(slot+1)+' · spazio libero'}
      aria-pressed={!player&&selected}
      onClick={()=>player?inspectEscort({machine}):onSelectTarget?.({kind:'machine',id:machine.id,slot})}>
      {machine?<><svg viewBox="0 0 70 56" aria-hidden="true">
@@ -229,8 +229,8 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
       <path d="M22 34V4H29V34M41 34V4H48V34" fill="#172839" stroke="#aac5d3" strokeWidth="3"/>
       <path d="M17 41H53M23 46H47" stroke="#87e9fb" strokeWidth="3"/>
       <circle cx="35" cy="28" r="8" fill="#173546" stroke="#89c8d8" strokeWidth="2"/>
-     </svg><span>{machine.pending?'DA SCHIERARE':machine.hp+'/'+machine.maxHp}</span></>:<b>＋</b>}
-     <small>MACCHINA {slot+1}</small>
+     </svg><span>{machine.pending?'DA SCHIERARE':unit.ruleset===HP_SYNC_RULESET?'ARMA':machine.hp+'/'+machine.maxHp}</span></>:<b>＋</b>}
+     <small>{unit.ruleset===HP_SYNC_RULESET?'ARMA':'MACCHINA'} {slot+1}</small>
     </button>;
    })}
   </div>
