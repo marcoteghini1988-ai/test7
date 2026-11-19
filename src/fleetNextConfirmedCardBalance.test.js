@@ -38,7 +38,7 @@ test('Audit: solo 12 madri, 13 supporti, Attacchi Sistemi, Smontaggio, Energie, 
  assert.equal(ENERGY_CARDS.length,10);
  assert.equal(FUSION_SHIP_CARDS.length,13);
  assert.equal(SUPPORT_CATALOG.length,13);
- assert.equal(Object.keys(TERRAIN_CATALOG).length,10);
+ assert.equal(Object.keys(TERRAIN_CATALOG).length,130);
  assert.equal(TEMP_SUPPORT_WEAPONS.length,4);
  assert.equal(DISCARD_WEAPON.id,'weapon-memory-plasma');
  assert.equal(FUSION_DENIAL_TRAP.id,'trap-fusion-denial');
