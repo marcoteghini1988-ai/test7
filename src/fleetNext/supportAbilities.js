@@ -1,4 +1,7 @@
 // Eclissi Stellare — 15 abilità condivise delle scudiere indipendenti.
+import {supportRegenerationPerSecond,supportPoisonPerSecond,
+ supportLastShieldHeal,supportCapacitorDamage,hasBalancedMother} from './confirmedCardBalance.js';
+import {limitedMotherDamage} from './motherBalance.js';
 // La progressione delle singole scudiere e i valori numerici sono provvisori.
 // Nessuna scudiera spara autonomamente: l'unica scarica offensiva è una passiva.
 export const SUPPORT_SKILL_LABELS=Object.freeze({
@@ -127,7 +130,7 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
    if(e.hp>0&&!e.destroyed||e.supportDeathResolved)continue;
    e.hp=0;e.destroyed=true;e.linked=false;e.supportDeathResolved=true;
    if(idsFor(e).includes('last-shield')){
-    const mother=side.ships[0],healed=Math.min(25,Math.max(0,mother.maxHp-mother.hp));
+    const mother=side.ships[0],healed=Math.min(supportLastShieldHeal(mother),Math.max(0,mother.maxHp-mother.hp));
     mother.hp+=healed;
     events.push(note(b,who,'support-death',e.name+
      ' si spegne: +'+healed+' HP alla madre',{skillId:'last-shield',healed}));
@@ -171,14 +174,15 @@ export function advanceIndependentSupportTime(battle,nowMs){
   const activeSide=b.sides[b.turn],opponent=b.sides[b.turn==='A'?'B':'A'];
   for(const e of livingSkillSupports(opponent,'regeneration',b.ply)){
    const m=opponent.ships[0];
-   if(m.hp>0&&m.hp<m.maxHp)m.hp=Math.min(m.maxHp,roundTenth(m.hp+.1));
+   if(m.hp>0&&m.hp<m.maxHp)m.hp=Math.min(m.maxHp,
+    roundTenth(m.hp+supportRegenerationPerSecond(m)));
   }
   for(const e of livingSkillSupports(opponent,'reactive-poison',b.ply)){
    if(e.poisonReadyPly!==b.ply)continue;
    const victims=[activeSide.ships[0],...(activeSide.escorts||[])];
    for(const target of victims){
     if(target.hp>0&&!target.destroyed){
-     target.hp=roundTenth(target.hp-.1);
+     target.hp=roundTenth(Math.max(0,target.hp-supportPoisonPerSecond(target,activeSide.ships[0])));
      if(target!==activeSide.ships[0]&&target.hp===0){
       target.destroyed=true;target.linked=false;
      }
@@ -209,14 +213,24 @@ export function resolveIndependentSupportOwnTurn(b,who){
   e.supportCharge=(e.supportCharge||0)+1;
   if(e.supportCharge<3)continue;
   e.supportCharge=0;
+  let motherDamage=0,supportDamage=0;
   for(const target of [enemy.ships[0],...(enemy.escorts||[])])
    if(target.hp>0&&!target.destroyed){
-    target.hp=roundTenth(target.hp-1);
-    if(target!==enemy.ships[0]&&target.hp===0){target.destroyed=true;target.linked=false;}
+    const raw=supportCapacitorDamage(target,enemy.ships[0]);
+    const actual=target===enemy.ships[0]?
+     limitedMotherDamage(target,raw,b.ply):Math.min(target.hp,raw);
+    target.hp=roundTenth(Math.max(0,target.hp-actual));
+    if(target===enemy.ships[0])motherDamage+=actual;
+    else{
+     supportDamage+=actual;
+     if(target.hp===0){target.destroyed=true;target.linked=false;}
+    }
    }
   events.push(note(b,who,'support-lightning',e.name+
-   ' scarica fulmini sulle unità nemiche (−1 HP ciascuna)',
-   {supportId:e.catalogSupportId,damagePerUnit:1}));
+   ' scarica fulmini sulle unità nemiche (−'+motherDamage+' HP alla madre)',
+   {supportId:e.catalogSupportId,
+    damagePerUnit:hasBalancedMother(enemy.ships[0])?null:1,
+    motherDamage,supportDamage}));
  }
  events.push(...settleIndependentSupportDamage(b,who));
  return events;

@@ -113,7 +113,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
  const mother=unit.ships[0];
  const vessel=useMemo(()=>newVessel(mother.id,mother.level),[mother.id,mother.level]);
  const defense=useMemo(()=>projectFleetDefense(mother),[mother]);
- const berths=projectMachineBerths(unit,chosenCards);
+ const berths=projectMachineBerths(unit,chosenCards,ply);
  const currentImpact=impact?.escortDamage>0||impact?.machineDamage>0?null:fleetImpactVisual(impact);
  return <div className={'live-fighter live-fighter--'+side} data-own-target={canSelectOwn||undefined}>
   <div className="fleet-ship-wrap complete-ship focused official-mother"

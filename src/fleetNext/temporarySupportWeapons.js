@@ -20,7 +20,7 @@ const third=named(SEQUENCE_WEAPON_IDS[2],'Sequenza Stellare III (provvisorio)',
  {damageMode:'sequence',sequenceStage:3,durationTurns:1,soloDamage:20,chainDamage:70},
  'Sequenza III (Fulmine): giocata da sola aggiunge 20 HP per un turno. Se sovrapposta a Sequenza II concatenata nel turno successivo, aggiunge 70 HP e poi si scarta.');
 const escort=named(ESCORT_WEAPON_ID,'Amplificatore di Scorta (provvisorio)',
- {damageMode:'escort-count',durationTurns:2,baseDamage:10,perEscort:10},
- 'Arma Fulmine per due tuoi turni: 10 HP di base +10 HP per ogni tua navicella di supporto ancora attiva in uno dei due slot. Le Fusioni contano come una sola navicella nello stesso slot.');
+ {damageMode:'escort-count',durationTurns:2,baseDamage:15,perEscort:20},
+ 'Arma Fulmine per due tuoi turni: 15 HP di base +20 HP per ogni tua navicella di supporto ancora attiva in uno dei due slot. Le Fusioni contano come una sola navicella nello stesso slot.');
 export const TEMP_SUPPORT_WEAPONS=Object.freeze([first,second,third,escort]);
 export const TEMP_SUPPORT_WEAPON_BY_ID=Object.freeze(Object.fromEntries(TEMP_SUPPORT_WEAPONS.map(d=>[d.id,d])));

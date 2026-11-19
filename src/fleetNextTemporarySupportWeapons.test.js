@@ -59,31 +59,31 @@ test('Quattro carte registrate, testo valido, non distribuite e non acquistabili
   [ONE,TWO,THREE,ESCORT]);
 });
 
-test('Amplificatore: danno 10 / 20 / 30, fusione conta un supporto per slot',()=>{
- const m={damageMode:'escort-count',baseDamage:10,perEscort:10,weaponElementId:'ionic'};
+test('Amplificatore: danno 15 / 35 / 55, fusione conta un supporto per slot',()=>{
+ const m={damageMode:'escort-count',baseDamage:15,perEscort:20,weaponElementId:'ionic'};
  const side={escorts:[]};
- assert.equal(supportWeaponCharge(side,m).damage,10);
+ assert.equal(supportWeaponCharge(side,m).damage,15);
  side.escorts=[{slot:0,hp:100,destroyed:false}];
- assert.equal(supportWeaponCharge(side,m).damage,20);
+ assert.equal(supportWeaponCharge(side,m).damage,35);
  side.escorts.push({slot:1,hp:100,destroyed:false});
- assert.equal(supportWeaponCharge(side,m).damage,30);
+ assert.equal(supportWeaponCharge(side,m).damage,55);
  side.escorts[0].fused=true;side.escorts[0].sourceIndices=[0,2];
- assert.equal(supportWeaponCharge(side,m).damage,30);
+ assert.equal(supportWeaponCharge(side,m).damage,55);
  side.escorts[1].hp=0;
- assert.equal(supportWeaponCharge(side,m).damage,20);
+ assert.equal(supportWeaponCharge(side,m).damage,35);
  side.escorts[0].destroyed=true;
- assert.equal(supportWeaponCharge(side,m).damage,10);
+ assert.equal(supportWeaponCharge(side,m).damage,15);
 });
 
 test('Amplificatore: due attacchi, perdita di supporto e scadenza',()=>{
  let b=battle(2),r=turn(b,'A',[ESCORT]);
- assert.equal(event(r,'weapon-escort')?.nominalDamage,30);
+ assert.equal(event(r,'weapon-escort')?.nominalDamage,55);
  assert.equal(event(r,'weapon-escort')?.supportCount,2);
  assert.equal(TEMP_WEAPON_DURATION[ESCORT],2);
  b=between(r.battle);
  b.sides.A.escorts[1].hp=0;b.sides.A.escorts[1].destroyed=true;
  r=turn(b,'A',[]);
- assert.equal(event(r,'weapon-escort')?.nominalDamage,20);
+ assert.equal(event(r,'weapon-escort')?.nominalDamage,35);
  b=between(r.battle);
  assert.equal(b.sides.A.machines.length,0);
  assert.ok(b.sides.A.discard.includes(ESCORT));
@@ -156,7 +156,7 @@ test('La II migliora la I anche con due alloggiamenti occupati',()=>{
  r=turn(b,'A',[TWO]);
  assert.equal(r.battle.sides.A.machines.length,2);
  assert.equal(event(r,'weapon-sequence')?.nominalDamage,30);
- assert.equal(event(r,'weapon-escort')?.nominalDamage,10);
+ assert.equal(event(r,'weapon-escort')?.nominalDamage,15);
 });
 
 test('La III senza II concatenata richiede slot libero',()=>{
@@ -171,7 +171,7 @@ test('Le armi sono negli alloggiamenti, non negli slot delle carte Attacco',()=>
  const r=turn(battle(2),'A',[ONE,ESCORT]);
  const berths=projectMachineBerths(r.battle.sides.A);
  assert.equal(berths[0].nominalDamage,10);
- assert.equal(berths[1].nominalDamage,30);
+ assert.equal(berths[1].nominalDamage,55);
  assert.ok(!r.battle.sides.A.attackSlots.includes(ONE));
  assert.ok(!r.battle.sides.A.attackSlots.includes(ESCORT));
 });

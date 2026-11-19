@@ -2,6 +2,8 @@
 // Effetti disponibili con hp-sync-v2; valori provvisori, bilanciamento finale separato.
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './hpSynchronization.js';
 import {cancelAllDismantle} from './dismantleEffects.js';
+import {arsenalTierRate,hasBalancedMother} from './confirmedCardBalance.js';
+import {supportWeaponCardBoost} from './supportAbilities.js';
 
 const clamp=(n,low,high)=>Math.max(low,Math.min(high,Number(n)||0));
 const BY_TIER=Object.freeze({
@@ -113,7 +115,16 @@ export function arsenalBonus(side,machine,ply=0,overridePower=null){
  if(first?.id===machine.id&&disabled&&
   (disabled.tier===4||disabled.tier>=2&&
    (ply===disabled.appliedPly||ply===disabled.appliedPly+1)))return 0;
- return Math.max(0,(overridePower??machine.power??0)+(amplified?.amount||0)-(disabled?.amount||0));
+ const base=overridePower??machine.power??0;
+ // Le armi confermate hanno danni in decine/centinaia di HP:
+ // il modificatore dell'Arsenale agisce in percentuale solo nelle partite con rarita'.
+ if(hasBalancedMother(side?.ships?.[0])&&
+  ['discard-attacks','sequence','escort-count'].includes(machine.damageMode)){
+  const boost=supportWeaponCardBoost(side,base,ply);
+  const multiplier=1+arsenalTierRate(amplified?.tier)-arsenalTierRate(disabled?.tier);
+  return Math.max(0,Math.round(boost*multiplier));
+ }
+ return Math.max(0,base+(amplified?.amount||0)-(disabled?.amount||0));
 }
 // Le versioni Epica e Leggendaria interrompono i bonus sincronizzati
 // solo al primo turno del bersaglio. La Centralina Leggendaria alleata

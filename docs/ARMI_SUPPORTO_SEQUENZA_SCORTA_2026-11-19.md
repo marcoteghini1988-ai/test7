@@ -10,8 +10,8 @@ Tre carte distinte nei due alloggiamenti temporanei Arma. Si gioca al massimo un
 
 ## Amplificatore di Scorta
 Arma temporanea da due propri turni, con attivazione sul normale attacco della nave madre.
-- Danno nominale: `10 + 10 × numero di slot supporto con navicella viva` HP.
-- 0, 1, 2 supporti: **10 / 20 / 30 HP**; le fusioni non aggiungono un terzo slot.
+- Danno nominale: `15 + 20 × numero di slot supporto con navicella viva` HP.
+- 0, 1, 2 supporti: **15 / 35 / 55 HP**; le fusioni non aggiungono un terzo slot.
 - A ogni attacco il numero viene ricalcolato: se un supporto viene distrutto, l'effetto diminuisce.
 - Il danno rimane soggetto a difese, HP reali e sabotaggio Arsenale. Buco Nero rimuove entrambe le armi.
 

@@ -1,6 +1,7 @@
 import {card,cardRole} from './rules.js';
 import {isTrapCard} from './simpleEffects.js';
-import {supportWeaponCharge} from './newCardEffects.js';
+import {supportWeaponCharge,arsenalBonus} from './newCardEffects.js';
+import {hasBalancedMother} from './confirmedCardBalance.js';
 import {CAMPAIGN_SHIP_ORDER} from './progression.js';
 
 // Una carta coperta avversaria non consegna identità o rarità al renderer.
@@ -57,12 +58,14 @@ export function projectFleetDefense(mother){
  }));
  return {kind:'mother',shipId:mother.id,parts,shield:{hp:0,max:1},exposureOrder:[]};
 }
-export function projectMachineBerths(side,chosenCards=[]){
+export function projectMachineBerths(side,chosenCards=[],ply=0){
  const slots=Array(2).fill(null);
  for(const unit of side.machines||[])if(unit.hp>0&&!unit.destroyed&&unit.slot>=0&&unit.slot<2){
   const charge=supportWeaponCharge(side,unit,cardRole);
   slots[unit.slot]={...unit,pending:false,
-   ...(charge?{nominalDamage:charge.damage,discardAttackCount:charge.attackCards,
+   ...(charge?{nominalDamage:hasBalancedMother(side?.ships?.[0])?
+     arsenalBonus(side,unit,ply,charge.damage):charge.damage,
+    discardAttackCount:charge.attackCards,
     matchingEnergy:charge.energyMatched,supportCount:charge.supportCount,
      sequenceStage:charge.stage,chained:charge.chained}: {})};
  }
