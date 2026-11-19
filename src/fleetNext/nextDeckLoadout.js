@@ -9,7 +9,8 @@ import {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {FUSION_DENIAL_TRAPS,FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.js';
 import {DISCARD_WEAPONS,DISCARD_WEAPON_BY_ID} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS,TEMP_SUPPORT_WEAPON_BY_ID} from './temporarySupportWeapons.js';
-import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID} from './elementalTerrainCards.js';
+import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID,terrainNextRarity} from './elementalTerrainCards.js';
+import {RARITY_EVOLUTION_COSTS} from './shipRarity.js';
 
 export const NEXT_DECK_LIMIT=40;
 export const NEXT_TEMP_WEAPON_IDS=Object.freeze(['prog-machine-striker','prog-machine-guard']);
@@ -88,5 +89,31 @@ export function buyNextCommonCard(inventory,id){
  const next={...inventory,owned:{...inventory.owned,[id]:owned+1},
   credits:inventory.credits-cost};
  return {ok:true,inventory:next,cost,copies:owned+1};
+}
+// Costi di evoluzione iniziali, allineati provvisoriamente ai supporti.
+// Non modificano i prezzi dello Shop né le soglie di progressione.
+export const TERRAIN_EVOLUTION_COSTS=Object.freeze({...RARITY_EVOLUTION_COSTS.support});
+// Stesso sistema delle navicelle: 3 copie identiche alla stessa rarità,
+// 2 consumate, la copia originale preservata e 1 nuova copia superiore.
+export function evolveNextTerrainWithDuplicates(inventory,id){
+ const terrain=ELEMENTAL_TERRAIN_BY_ID[id];
+ if(!terrain)return {ok:false,reason:'Terreno inesistente'};
+ const next=terrainNextRarity(terrain.rarita);
+ if(!next)return {ok:false,reason:'Terreno già Leggendario'};
+ const copies=inventory?.owned?.[id]||0;
+ if(!Number.isInteger(copies)||copies<3)
+  return {ok:false,reason:'Servono tre copie dello stesso Terreno e rarità'};
+ const destination=ELEMENTAL_TERRAIN_CARDS.find(c=>c.elementId===terrain.elementId&&
+  c.variant===terrain.variant&&c.rarita===next);
+ if(!destination)return {ok:false,reason:'Rarità Terreno non valida'};
+ const cost=TERRAIN_EVOLUTION_COSTS[next];
+ if(!Number.isInteger(cost)||cost<=0)
+  return {ok:false,reason:'Costo di evoluzione non disponibile'};
+ if(!Number.isInteger(inventory?.credits)||inventory.credits<cost)
+  return {ok:false,reason:'Crediti Stellari insufficienti'};
+ return {ok:true,cost,sourceId:id,destinationId:destination.id,
+  inventory:{...inventory,credits:inventory.credits-cost,
+   owned:{...inventory.owned,[id]:copies-2,
+    [destination.id]:(inventory.owned[destination.id]||0)+1}}};
 }
 export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS,...FUSION_DENIAL_TRAPS,...DISCARD_WEAPONS,...TEMP_SUPPORT_WEAPONS,...ELEMENTAL_TERRAIN_CARDS]);
