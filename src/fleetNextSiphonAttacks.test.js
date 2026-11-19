@@ -119,6 +119,20 @@ test('Nessun supporto o un supporto a 1 HP: la giocata è invalida e non cambia 
  const low=battle(2,2);low.sides.A.escorts[1].hp=1;low.sides.A.hand=[L];
  assert.match(validateFleetTurn(low,'A',{cards:[0],pass:true}),/insufficienti/i);
 });
+test('Le Difese esistenti possono bloccare un bersaglio della Scarica',()=>{
+ const b=battle(1,2);
+ b.sides.B.protections.push({id:'test-guard',source:'test-guard',
+  target:'escort',escortSlot:0,remaining:1,kind:'protect',untilPly:10,placedPly:-1});
+ const r=play(b,[E]);assert.equal(r.ok,true,r.reason);
+ const result=strike(r);assert.ok(result);
+ assert.equal(result.targets.length,3);
+ assert.equal(result.targets[0].nominalDamage,10);
+ assert.equal(result.targets[0].blocked,true);
+ assert.equal(result.targets[0].damage,0);
+ assert.equal(b.sides.B.escorts[0].hp,150,'la validazione non muta la battaglia originale');
+ assert.equal(r.battle.sides.B.escorts[0].hp,150);
+ assert.ok(r.battle.sides.B.escorts[1].hp<150);
+});
 test('Due copie nel turno: il sacrificio viene ricalcolato sugli HP correnti',()=>{
  const b=battle(1,2),r=play(b,[E,E]);
  assert.equal(r.ok,true,r.reason);
