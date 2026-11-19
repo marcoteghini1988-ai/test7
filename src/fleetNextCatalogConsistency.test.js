@@ -13,7 +13,7 @@ test('120 esclusive ufficiali, Personaggi Boss e carte tecniche conservati',()=>
  assert.equal(Object.keys(EXCLUSIVE_CARDS).length,120);
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  assert.equal(Object.keys(PROGRESSION_CARDS).length,6);
- assert.equal(BASE_CATALOG_COUNT,144);assert.equal(ENERGY_COUNT,10);assert.equal(TOTAL_CARD_COUNT,160+FUSION_SHIP_CARDS.length);
+ assert.equal(BASE_CATALOG_COUNT,144);assert.equal(ENERGY_COUNT,10);assert.equal(TOTAL_CARD_COUNT,160+FUSION_SHIP_CARDS.length+120);
  assert.equal(retired.generalIds.length,238);assert.equal(retired.exclusiveIds.length,112);
  const entries=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS),...ENERGY_CARDS,...FUSION_SHIP_CARDS];
  assert.equal(new Set(entries.map(c=>c.id)).size,160+FUSION_SHIP_CARDS.length);
