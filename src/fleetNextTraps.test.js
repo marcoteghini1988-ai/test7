@@ -144,7 +144,7 @@ test('La trappola Eco non annulla i terreni ambientali dei Boss',()=>{
  const r=turn(b,'A',[ECHO]);
  assert.equal(r.battle.terrain?.id,terrain);
  assert.equal(r.battle.sides.A.defenses[0].id,ECHO);
- assert.equal(Object.entries(TERRAIN_CATALOG).filter(([key])=>/^T\\d{2}$/.test(key)).every(([,t])=>t.cardId===null),true);
+ assert.equal(Object.entries(TERRAIN_CATALOG).filter(([key])=>/^T[0-9]{2}$/.test(key)).every(([,t])=>t.cardId===null),true);
 });
 test('L’IA può preparare Eco e non la duplica in uno slot occupato',()=>{
  let b=battle();b.sides.A.hand=[ECHO];
