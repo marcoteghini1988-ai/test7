@@ -788,7 +788,9 @@ export function validateFleetTurn(b,who,order){
  }
  const defenseCapacity=defenseCapacityReason(side,chosen.filter(c=>cardRole(c.id)==='defense'),b.ply);
  if(defenseCapacity)return defenseCapacity;
- const terrainCode=chosen.find(c=>c.effectSpec?.type==='terrain')?.effectSpec.code??b.terrain?.id;
+ const selectedTerrain=chosen.find(c=>['terrain','elementalTerrain'].includes(c.effectSpec?.type));
+ const terrainCode=selectedTerrain?
+  (selectedTerrain.effectSpec.type==='terrain'?selectedTerrain.effectSpec.code:null):b.terrain?.id;
  // Le esclusiva scelta per Adattamento deve restare in mano dopo le giocate.
  if(chosen.some(c=>c.effectSpec.type==='aurora'&&c.effectSpec.action==='adapt')&&
   !side.hand.some((id,i)=>!indices.includes(i)&&card(id)?.shipId==='N00'))
@@ -2997,17 +2999,33 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'trap':
    events.push(emit(b,who,'trap-set','Una trappola è stata preparata coperta.'));
    break;
+  case 'elementalTerrain':
   case 'terrain':{
-   const terrainCard=TERRAIN_CATALOG[s.code]?.cardId;
+   const terrainCard=s.type==='elementalTerrain'?def.id:TERRAIN_CATALOG[s.code]?.cardId;
    const result=activateTerrain(b.terrain,terrainCard,b.ply,who,{boss:!!b.bossId,bossOverride:true});
-   if(result.ok&&!cancelTerrainWithTrap(b,who,terrainCard,ctx,events)){
-    b.terrain=result.terrain;
-    if(b.terrain.expiresPly!=null&&terrainHalf(enemy,b.ply)){
-     b.terrain.expiresPly=b.ply+3;
-     events.push(emit(b,other(who),'support-terrain','Dimezzata la durata del Terreno'));
-    }
-    at(TERRAIN_CATALOG[s.code].description+' Vale per 3 round (o metà con supporto).');
+   if(!result.ok){side.discard.push(def.id);at(result.reason);break;}
+   if(cancelTerrainWithTrap(b,who,terrainCard,ctx,events)){
+    side.discard.push(def.id);break;
    }
+   const replaced=b.terrain;
+   b.terrain=result.terrain;
+   // La carta sul campo non va subito negli scarti: viene scartata solo
+   // alla sostituzione o al reset. Conservare eventuale terreno boss sottostante.
+   if(replaced?.cardId&&['A','B'].includes(replaced.owner)&&
+    replaced.cardId!==b.terrain.underlying?.cardId)
+    b.sides[replaced.owner].discard.push(replaced.cardId);
+   if(b.terrain.expiresPly!=null&&terrainHalf(enemy,b.ply)){
+    b.terrain.expiresPly=b.ply+3;
+    events.push(emit(b,other(who),'support-terrain','Dimezzata la durata del Terreno'));
+   }
+   const definition=TERRAIN_CATALOG[b.terrain.id];
+   const permanent=b.terrain.expiresPly==null;
+   at(definition.description+(permanent?' Effetto continuo finché viene sostituito o annullato.':' Vale per 3 round (o metà con supporto).'));
+   events.push(emit(b,who,'terrain-activate',definition.name+' entra in campo',{
+    cardId:terrainCard,terrainId:b.terrain.id,elementId:definition.elementId||null,
+    attackPercent:definition.attackPercent||0,defensePercent:definition.defensePercent||0,
+    permanent
+   }));
    break;
   }
   default:throw new Error('Effetto non implementato: '+s.type);
@@ -4667,7 +4685,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='dismantle'&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense','terrain'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='dismantle'&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
