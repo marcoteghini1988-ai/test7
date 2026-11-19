@@ -19,7 +19,7 @@ import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {supportDefinition} from './supportCatalog.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
-import {applyElementalDamage,elementalDamageDescription} from './elementalDamage.js';
+import {applyElementalDamage,elementalDamageDescription,terrainWeaponAttackBonus} from './elementalDamage.js';
 // La pila Energia non ha limite; i costi delle abilità restano indipendenti.
 import {elementalAbility,totalElementalEnergy,chargedElementalEnergy,
  canChargeElementalEnergy,chargeElementalEnergy,spendElementalEnergy,
@@ -3243,11 +3243,11 @@ function terrainWeaponExtraPower(b,side,ctx,machine,power){
   machine.weaponElementId===attackerElement)return 0;
  const key=String(terrain.code)+':'+(b.terrain.startedPly??'init')+':'+machine.id;
  side.terrainWeaponRemainders??={};
- const scaled=power*terrain.attackPercent+(side.terrainWeaponRemainders[key]||0);
- const extra=Math.floor(scaled/100),carry=scaled%100;
- if(carry)side.terrainWeaponRemainders[key]=carry;
+ const {bonus,remainder}=terrainWeaponAttackBonus(terrain,machine.weaponElementId,
+  power,side.terrainWeaponRemainders[key]||0);
+ if(remainder)side.terrainWeaponRemainders[key]=remainder;
  else delete side.terrainWeaponRemainders[key];
- return extra;
+ return bonus;
 }
 function recordTerrainWeaponShare(side,ctx,machine,power,extra){
  const activeElement=(ctx.elementalShot&&ctx.order?.elementalElement)||side.ships[0]?.element;
