@@ -2368,8 +2368,11 @@ function adjustedElementalHit(b,ctx,events,defender,kind,unit,amount){
  const defenseBonus=terrain?.elementId===defenseAffinity?terrain.defensePercent||0:0;
  const terrainKey=attackBonus||defenseBonus?
   b.terrain.id+':'+(b.terrain.startedPly??'start'):'none';
+ const terrainAttackBase=attackBonus&&ctx.terrainNormalSalvo?
+  Math.max(0,amount-(ctx.terrainOtherElementPower||0)):null;
  const result=applyElementalDamage(defender,attackingElement,defendingElement,amount,{
-  terrainAttackPercent:attackBonus,terrainDefensePercent:defenseBonus,terrainKey
+  terrainAttackPercent:attackBonus,terrainDefensePercent:defenseBonus,terrainKey,
+  terrainAttackBase
  });
  if(result.relation||attackBonus||defenseBonus)events.push(emit(b,ctx.who,
   result.relation?'elemental-matchup':'terrain-elemental',
@@ -3191,13 +3194,21 @@ function terrainWeaponExtraPower(b,side,ctx,machine,power){
  else delete side.terrainWeaponRemainders[key];
  return extra;
 }
+function recordTerrainWeaponShare(side,ctx,machine,power,extra){
+ const activeElement=(ctx.elementalShot&&ctx.order?.elementalElement)||side.ships[0]?.element;
+ if(!machine.weaponElementId||machine.weaponElementId!==activeElement)
+  ctx.terrainOtherElementPower=(ctx.terrainOtherElementPower||0)+power+extra;
+}
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  if(side.independentSupportRoster){
   for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
    const charge=supportWeaponCharge(side,machine,cardRole);
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
-   if(power)ctx.power+=power+terrainWeaponExtraPower(b,side,ctx,machine,power);
+   if(power){
+    const extra=terrainWeaponExtraPower(b,side,ctx,machine,power);
+    ctx.power+=power+extra;recordTerrainWeaponShare(side,ctx,machine,power,extra);
+   }
    if(charge&&!ctx.order?.pass){
     const kind=charge.mode==='discard-attacks'?'weapon-discard':
      charge.mode==='sequence'?'weapon-sequence':'weapon-escort';
@@ -3264,7 +3275,8 @@ function escortPassive(b,side,ctx,events,order){
  for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
   const power=side.ruleset===HP_SYNC_RULESET?arsenalBonus(side,machine,b.ply):machine.power;
   if(power){const extra=terrainWeaponExtraPower(b,side,ctx,machine,power);
-   ctx.power+=power+extra;events.push(emit(b,ctx.who,'machine',machine.name+' · +'+(power+extra)+' potenza',
+   ctx.power+=power+extra;recordTerrainWeaponShare(side,ctx,machine,power,extra);
+   events.push(emit(b,ctx.who,'machine',machine.name+' · +'+(power+extra)+' potenza',
    {machineId:machine.id,machineSlot:machine.slot}));}
  }
 }
@@ -4473,6 +4485,7 @@ function resolveMantaShots(b,ctx,events,order){
 }
 
 function resolveSalvo(b,ctx,events,order){
+ ctx.terrainNormalSalvo=true;
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
  ctx.royalMotherShot=true;
