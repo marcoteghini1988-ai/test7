@@ -35,7 +35,7 @@ test('Audit: solo 12 madri, 13 supporti, Attacchi Sistemi, Smontaggio, Energie, 
  assert.equal(NEXT_COMMON_CARDS.length,33);
  assert.equal(NEXT_COMMON_CARDS.filter(c=>c.effectSpec.type==='systemModifier').length,32);
  assert.equal(DISMANTLE_CARDS.length,4);
- assert.equal(ENERGY_CARDS.length,10);
+ assert.equal(ENERGY_CARDS.length,40);
  assert.equal(FUSION_SHIP_CARDS.length,13);
  assert.equal(SUPPORT_CATALOG.length,13);
  assert.equal(Object.keys(TERRAIN_CATALOG).length,130);
