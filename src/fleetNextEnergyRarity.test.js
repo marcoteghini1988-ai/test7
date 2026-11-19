@@ -138,11 +138,15 @@ test('Una Leggendaria dura quattro Speciali da una carica e si scarta soltanto a
   r=play(b,'A',[],{activateElemental:true,elementalElement:'refrigerant'});
   b=r.battle;
   assert.equal(chargedElementalEnergy(b.sides.A,'refrigerant'),4-used);
-  assert.equal(b.sides.A.discard.includes('energy-refrigerant-l'),used===4);
+  const spent=[...b.sides.A.discard,...b.sides.A.deck,...b.sides.A.hand]
+   .filter(id=>id==='energy-refrigerant-l');
+  assert.equal(spent.length,used===4?1:0,
+   'dopo il consumo la carta può essere rimescolata e ripescata');
   if(used<4)assert.equal(b.sides.A.energyPile[0].remaining,4-used);
  }
  assert.equal(b.sides.A.energyPile.length,0);
- assert.equal(b.sides.A.discard.filter(id=>id==='energy-refrigerant-l').length,1);
+ assert.equal([...b.sides.A.discard,...b.sides.A.deck,...b.sides.A.hand]
+  .filter(id=>id==='energy-refrigerant-l').length,1);
 });
 
 test('Le energie di altri elementi non si consumano con una Speciale di un altro tipo',()=>{
