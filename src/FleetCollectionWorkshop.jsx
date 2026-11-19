@@ -1,6 +1,6 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
- eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS} from './fleetNext/rules.js';
+ eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,ELEMENTAL_TERRAIN_CARDS} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
@@ -43,6 +43,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  const [tab,setTab]=useState(allowed.includes(initialTab)?initialTab:'exclusive');
  const [notice,setNotice]=useState('');
  const [motherId,setMotherId]=useState(()=>readFleetInventory().equippedMother);
+ const [terrainElement,setTerrainElement]=useState('plasma');
+ const [terrainRarity,setTerrainRarity]=useState('Comune');
  useEffect(()=>{
   const refresh=()=>setInventory(readFleetInventory());
   window.addEventListener('eclissi-shop-changed',refresh);
@@ -168,6 +170,29 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
     le 12 madri ufficiali restano in un catalogo separato.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {FUSION_SHIP_CARDS.map(genericCardTile)}
+   </div>
+   <h3 style={{fontSize:13}}>120 Carte Terreno elementali · 30 modelli e 4 rarità</h3>
+   <p style={small}>Tre tipologie per elemento: offensivo, difensivo, equilibrato.
+    Bonus continui per entrambe le flotte fino alla sostituzione del Terreno o al suo annullamento.
+    Le carte sono selezionabili nel mazzo se possedute; acquisizione e prezzi verranno progettati successivamente.</p>
+   <div style={{display:'flex',gap:7,flexWrap:'wrap'}}>
+    <label style={small}>Elemento:
+     <select aria-label="Elemento del Terreno" style={{...box,marginLeft:5}}
+      value={terrainElement} onChange={e=>setTerrainElement(e.target.value)}>
+      {[...new Map(ELEMENTAL_TERRAIN_CARDS.map(c=>[c.elementId,c.elementName]))].map(([id,name])=>
+       <option key={id} value={id}>{name}</option>)}
+     </select>
+    </label>
+    <label style={small}>Rarità:
+     <select aria-label="Rarità del Terreno" style={{...box,marginLeft:5}}
+      value={terrainRarity} onChange={e=>setTerrainRarity(e.target.value)}>
+      {['Comune','Rara','Epica','Leggendaria'].map(r=><option key={r} value={r}>{r}</option>)}
+     </select>
+    </label>
+   </div>
+   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
+    {ELEMENTAL_TERRAIN_CARDS.filter(c=>c.elementId===terrainElement&&c.rarita===terrainRarity)
+     .map(genericCardTile)}
    </div>
    <h3 style={{fontSize:13}}>10 Carte Energia elementali · accumulo 1–4 cariche</h3>
    <p style={small}>Le Energie vengono aggiunte al mazzo generico; ogni carta caricata consuma una delle 3 giocate del turno. L’abilità unica della nave si attiva dalla plancia.</p>
