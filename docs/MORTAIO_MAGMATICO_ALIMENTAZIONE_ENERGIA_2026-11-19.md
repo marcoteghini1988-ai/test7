@@ -33,8 +33,16 @@
 
 ## Da decidere e implementare
 - **HP del colpo base e di ogni colpo energetico**, bersagli e combinazioni con altri danni, modificatori elementali, difese e limiti della madre.
+- **Compatibilità con la nuova rarità delle Carte Energia:** una Carta Fuoco Comune contiene 1 carica, Rara 2, Epica 3 e Leggendaria 4. Prima di implementare bisogna confermare se il Mortaio genera i colpi aggiuntivi **per carta fisica** o **per carica consumata**. La scelta NON è ancora fissata, a differenza della limitazione confermata a **solo Fuoco**.
 - **Ordine delle azioni e consumo automatico** quando le Energie Fuoco vengono giocate prima o dopo l'Arma nello stesso turno; garantire priorità senza duplice consumo con la Speciale madre.
 - Gestione delle Energie Fuoco in presenza di pile grandi. Non imporre un limite alla pila; l'eventuale tetto di danni dell'Arma deve essere una regola **distinta**, da discutere.
 - **Il Mortaio non è ancora stato implementato**: la regola Energia in pila senza tetto sì, la regola consumi automatici del Mortaio verrà introdotta solo dopo la definizione degli HP.
 
 [Regola generale della pila Energia](./PILA_ENERGIA_ILLIMITATA_2026-11-19.md).
+
+
+## Aggiornamento successivo — rarità dell'Energia e Terreni
+
+Le Carte Energia sono ora giocabili in 4 rarità e si accumulano in un'unica pila **senza limite**. Le versioni pluricarica restano fisicamente in pila finché non spendono l'ultima carica. Un Terreno offensivo o equilibrato **Fuoco** potenzierà anche i colpi reali del Mortaio Magmatico secondo le percentuali previste (+10–16% o +5–8%); il Terreno solo difensivo non aumenta i danni. La nuova rarità non determina automaticamente un tetto alle munizioni del Mortaio.
+
+Consultare [Energia e bonus Terreno](./ENERGIA_RARITA_E_BONUS_ARMI_TERRENO_2026-11-19.md). Il Mortaio resta **progettato ma non inserito nel motore di battaglia**.
