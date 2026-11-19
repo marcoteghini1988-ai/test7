@@ -141,3 +141,49 @@ test('Due copie nel turno: il sacrificio viene ricalcolato sugli HP correnti',()
  assert.equal(r.battle.sides.A.escorts[0].hp,96);
  assert.equal(r.battle.sides.A.machines.length,0);
 });
+
+test('Partita reale multiturno: Epica, risposta avversaria, Leggendaria e slot liberi',()=>{
+ let b=battle(2,2);
+ const first=play(b,[E]);assert.equal(first.ok,true,first.reason);
+ const firstStrike=strike(first);assert.ok(firstStrike);
+ assert.equal(firstStrike.totalSacrificed,60);
+ assert.equal(first.battle.turn,'B');
+ assert.equal(first.battle.sides.A.attackSlots.includes(E),false);
+ assert.equal(first.battle.sides.A.machines.length,0);
+ b=first.battle;
+ b.sides.B.hand=[];
+ const between=resolveFleetNextTurn(b,'B',{cards:[],pass:true},b.turnStartedAtMs);
+ assert.equal(between.ok,true,between.reason);
+ assert.equal(between.battle.turn,'A');
+ assert.equal(between.battle.sides.A.machines.length,0);
+ b=between.battle;
+ const plan=siphonSacrificePlan(b.sides.A);
+ assert.equal(plan.ok,true);
+ const remainingBefore=b.sides.A.escorts.map(unit=>unit.hp);
+ const second=play(b,[L]);assert.equal(second.ok,true,second.reason);
+ const secondStrike=strike(second);assert.ok(secondStrike);
+ assert.equal(secondStrike.totalSacrificed,plan.total);
+ assert.deepEqual(secondStrike.targets.map(t=>t.nominalDamage),
+  Array(secondStrike.targets.length).fill(plan.total));
+ assert.deepEqual(second.battle.sides.A.escorts.map(unit=>unit.hp),
+  remainingBefore.map((hp,i)=>hp-plan.sacrifices[i].cost));
+ assert.equal(second.battle.sides.A.attackSlots.includes(L),false);
+ assert.equal(second.battle.sides.A.machines.length,0);
+ assert.equal(second.battle.turn,'B');
+ assert.ok(second.battle.ply>=3,'sono stati completati tre turni veri');
+});
+
+test('La Scarica Attacco bersaglia tutte le navi anche con tiro normale su un solo supporto',()=>{
+ const b=battle(2,2),target=b.sides.B.escorts[0];
+ b.sides.A.hand=[E];
+ const r=resolveFleetNextTurn(b,'A',{
+  cards:[0],pass:false,targetKind:'escort',targetId:target.id,escortSlot:target.slot
+ },b.turnStartedAtMs);
+ assert.equal(r.ok,true,r.reason);
+ const result=strike(r);assert.ok(result);
+ assert.equal(result.totalSacrificed,60);
+ assert.deepEqual(result.targets.map(hit=>hit.nominalDamage),[20,20,20]);
+ assert.ok(r.events.some(e=>e.kind==='impact'),'il normale tiro è risolto');
+ assert.equal(r.battle.sides.A.attackSlots.includes(E),false);
+ assert.equal(r.battle.sides.A.machines.length,0);
+});
