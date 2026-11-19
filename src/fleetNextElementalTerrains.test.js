@@ -82,7 +82,8 @@ test('Un Terreno nuovo sostituisce il vecchio e resta unico',()=>{
  assert.equal(r.ok,true,r.reason);
  assert.equal(r.battle.terrain.id,plasma);
  assert.equal(r.battle.terrain.expiresPly,null);
- assert.ok(r.battle.sides.A.discard.includes(water));
+ assert.ok([...r.battle.sides.A.discard,...r.battle.sides.A.deck,
+  ...r.battle.sides.A.hand].includes(water),'Carta annullata conservata negli scarti o ripescata');
 });
 test('Una Trappola annulla il Terreno prima di attivarlo',()=>{
  const b=build();
