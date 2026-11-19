@@ -22,3 +22,7 @@ Memoria Stellare: danno 10 +10 per ogni propria Carta Attacco negli scarti, ×2 
 
 ## Ritmo
 Obiettivo PvP **4–6 minuti**, riferimento 5; Boss **8–10 minuti**, riferimento 9. Le prove CI in `src/fleetNextApprovedBalanceAudit.test.js` misurano duelli controllati con mazzi reali, supporti e carte. Sono simulazioni con una durata media presunta delle decisioni, NON certificazioni di durata reale in PvP. Niente scadenza imposta alla partita.
+
+## Rarità provvisorie fissate in questa fase
+- Cannone della Memoria Stellare **Epica**; Sequenza I **Comune**, II **Rara**, III **Epica**; Amplificatore di Scorta **Rara**; Interdizione di Fusione **Epica**.
+- Tutte queste carte hanno una sola copia per mazzo; non sono distribuite gratuitamente e non hanno ancora un costo/acquisizione. I nomi e gli elementi provvisori della Sequenza restano da definire nella progettazione grafica.

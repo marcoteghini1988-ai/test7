@@ -1,11 +1,15 @@
 // Nuove armi temporanee: nomi, elemento e valori tecnici ancora provvisori.
 export const SEQUENCE_WEAPON_IDS=Object.freeze(['weapon-sequence-1','weapon-sequence-2','weapon-sequence-3']);
 export const ESCORT_WEAPON_ID='weapon-escort-charge';
+export const TEMP_SUPPORT_WEAPON_RARITIES=Object.freeze({
+ 'weapon-sequence-1':'Comune','weapon-sequence-2':'Rara',
+ 'weapon-sequence-3':'Epica','weapon-escort-charge':'Rara'
+});
 const named=(id,name,spec,effectProposed)=>Object.freeze({
  id,name,nome:name,category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
  kind:'support',playable:true,nativeFace:true,
- rarita:'Da definire',rarityPending:true,acquisitionPending:true,
- maxCopiesPerDeck:1,copyLimitPending:true,
+ rarita:TEMP_SUPPORT_WEAPON_RARITIES[id],rarityPending:false,acquisitionPending:true,
+ maxCopiesPerDeck:1,copyLimitPending:false,
  elementId:'ionic',elementPending:true,visualKey:'element-lightning',visualSymbol:'⚡',
  effectSpec:Object.freeze({type:'deployMachine',hp:1,power:0,elementId:'ionic',...spec}),
  effectProposed,visualBrief:'Nome, elemento e grafica ancora da definire.'

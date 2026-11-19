@@ -65,8 +65,9 @@ test('Registro ufficiale: arma Fuoco, un turno, rarità e acquisto ancora in sos
  assert.equal(cardRole(W),'support');
  assert.equal(cardFacePath(W),null);
  assert.equal(cardCopyLimit(W),1);
- assert.equal(DISCARD_WEAPON.rarita,'Da definire');
- assert.equal(DISCARD_WEAPON.rarityPending,true);
+ assert.equal(DISCARD_WEAPON.rarita,'Epica');
+ assert.equal(DISCARD_WEAPON.rarityPending,false);
+ assert.equal(DISCARD_WEAPON.copyLimitPending,false);
  assert.equal(DISCARD_WEAPON.acquisitionPending,true);
  assert.equal(DISCARD_WEAPON.elementId,'plasma');
  assert.equal(DISCARD_WEAPON.effectSpec.baseDamage,10);

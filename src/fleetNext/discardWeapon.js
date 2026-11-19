@@ -1,5 +1,5 @@
 // Prima Carta Arma di Supporto confermata: scala solo con i propri scarti.
-// Numeri (10 / +10 / x2) mantenuti come confermati; rarità, copie e costo rinviati.
+// Danno 10 / +10 / x2 confermato; rarita Epica, una copia; acquisto in seguito.
 export const DISCARD_WEAPON_ID='weapon-memory-plasma';
 
 export const DISCARD_WEAPON=Object.freeze({
@@ -7,8 +7,8 @@ export const DISCARD_WEAPON=Object.freeze({
  name:'Cannone della Memoria Stellare',nome:'Cannone della Memoria Stellare',
  category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
  kind:'support',playable:true,nativeFace:true,
- rarita:'Da definire',rarityPending:true,acquisitionPending:true,
- maxCopiesPerDeck:1,copyLimitPending:true,
+ rarita:'Epica',rarityPending:false,acquisitionPending:true,
+ maxCopiesPerDeck:1,copyLimitPending:false,
  elementId:'plasma',visualKey:'element-fire',visualSymbol:'🔥',
  effectSpec:Object.freeze({
   type:'deployMachine',hp:1,power:0,durationTurns:1,

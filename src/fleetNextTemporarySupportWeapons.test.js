@@ -44,7 +44,12 @@ test('Quattro carte registrate, testo valido, non distribuite e non acquistabili
   assert.equal(cardRole(def.id),'support');
   assert.equal(cardFacePath(def.id),null);
   assert.equal(cardCopyLimit(def.id),1);
-  assert.equal(def.rarita,'Da definire');
+  assert.equal(def.rarita,{
+   'weapon-sequence-1':'Comune','weapon-sequence-2':'Rara',
+   'weapon-sequence-3':'Epica','weapon-escort-charge':'Rara'
+  }[def.id]);
+  assert.equal(def.rarityPending,false);
+  assert.equal(def.copyLimitPending,false);
   assert.equal(def.acquisitionPending,true);
   assert.equal(validateEffectSpec(def.effectSpec),null);
   assert.equal(describeEffect(def),def.effectProposed);
