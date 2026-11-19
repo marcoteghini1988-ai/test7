@@ -9,7 +9,7 @@ const all=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...
 const deck=deckFromCounts(TEST_DECK.carteGenerali);
 function battle(options={}){return createFleetNextBattle({shipA:'N00',shipB:'N00',levelA:1,levelB:1,deckA:deck,deckB:deck,mode:'pvp',seed:25,...options});}
 test('210 schede registrate: Aurora, Lince, Vespa e Corvo eseguibili, 0 progetti bloccati',()=>{
- assert.equal(all.length,160);
+ assert.equal(all.length,158);
  assert.equal(all.filter(c=>c.playable===false).length,0);
  for(const c of all){
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
@@ -22,7 +22,7 @@ test('Mazzo transitorio con personaggi e carte tecniche tutte valide',()=>{
  for(const id of deck)assert.ok(card(id),id);
 });
 test('Due Macchine si schierano sui propri alloggiamenti senza coprire la nave',()=>{
- const b=battle();b.sides.A.hand=['prog-machine-striker','prog-machine-guard'];
+ const b=battle();b.sides.A.hand=['weapon-memory-plasma','weapon-sequence-1'];
  const r=resolveFleetNextTurn(b,'A',{cards:[0,1],partId:'weapons',pass:true},1000);
  assert.equal(r.ok,true,r.reason);
  assert.equal(r.battle.sides.A.machines.length,2);
