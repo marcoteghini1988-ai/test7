@@ -2,21 +2,22 @@
 // Vale per TUTTI gli attacchi delle navicelle, normali o speciali.
 // Il rapporto fra tipi non cambia gli HP massimi e non regala potenza gratuita.
 //
-// Vantaggio: 125% del danno; svantaggio: 50%; neutralità: 100%.
+// Vantaggio: 125%; svantaggio 75% con madri bilanciate, 50% storiche; neutro 100%.
 // I resti frazionari sono custoditi per coppia di elementi sul difensore:
 // due colpi da 1 HP sfavorevoli infliggono insieme 1 HP, non 0 né 2.
 import {FLEET_ELEMENTS,elementalRelation} from './elementalAffinities.js';
 
 export const ELEMENTAL_DAMAGE_PERCENT=Object.freeze({
- advantage:125,neutral:100,disadvantage:50,
- balancedDisadvantage:75
+ advantage:125,neutral:100,disadvantage:50
 });
+// Solo le madri con la nuova scala HP usano una penalità meno estrema.
+export const BALANCED_ELEMENTAL_DISADVANTAGE=75;
 const DENOMINATOR=4;
 
 export function elementalDamagePercent(attackerElement,defenderElement,balanced=false){
  const relation=elementalRelation(attackerElement,defenderElement);
  return relation>0?ELEMENTAL_DAMAGE_PERCENT.advantage:
-  relation<0?(balanced?ELEMENTAL_DAMAGE_PERCENT.balancedDisadvantage:
+  relation<0?(balanced?BALANCED_ELEMENTAL_DISADVANTAGE:
    ELEMENTAL_DAMAGE_PERCENT.disadvantage):ELEMENTAL_DAMAGE_PERCENT.neutral;
 }
 
