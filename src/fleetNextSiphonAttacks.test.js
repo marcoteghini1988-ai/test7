@@ -32,7 +32,7 @@ function battle(a=2,z=2){
 }
 function play(b,ids=[E]){
  b.sides[b.turn].hand=[...ids];
- return resolveFleetNextTurn(b,b.turn,{cards:ids.map((_,i)=>i),pass:true},1000+b.ply*30000);
+ return resolveFleetNextTurn(b,b.turn,{cards:ids.map((_,i)=>i),pass:true},b.turnStartedAtMs);
 }
 const strike=r=>r.events.find(e=>e.kind==='siphon-strike');
 
