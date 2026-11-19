@@ -2356,19 +2356,33 @@ function adjustedElementalHit(b,ctx,events,defender,kind,unit,amount){
  if(b.ruleset!==HP_SYNC_RULESET||amount<=0)return amount;
  const mother=b.sides[ctx.who]?.ships?.[0],enemy=defender?.ships?.[0];
  if(!mother||!enemy)return amount;
- const attackingElement=ctx.elementalShot&&ctx.order?.elementalElement||
-  mother.element;
- // Il colpo indirizzato alla scudiera usa il suo elemento, ereditato
- // dalla madre. Fallback sui salvataggi storici senza metadata.
- // Una sola conversione del danno: la debolezza non viene applicata 2 volte.
+ const attackingElement=ctx.attackElement||
+  (ctx.elementalShot&&ctx.order?.elementalElement)||mother.element;
+ // La debolezza elementale del bersaglio resta quella del suo elemento.
+ // Il Terreno difensivo agisce soltanto su unità con una vera affinità.
  const defendingElement=kind==='escort'?(unit?.element||enemy.element):enemy.element;
- const result=applyElementalDamage(defender,attackingElement,defendingElement,amount);
- if(result.relation)events.push(emit(b,ctx.who,'elemental-matchup',
-  elementalDamageDescription(result),{
+ const defenseAffinity=kind==='escort'?(unit?.element||enemy.element):
+  kind==='part'?enemy.element:unit?.element||null;
+ const terrain=b.terrain?.id&&TERRAIN_CATALOG[b.terrain.id];
+ const attackBonus=terrain?.elementId===attackingElement?terrain.attackPercent||0:0;
+ const defenseBonus=terrain?.elementId===defenseAffinity?terrain.defensePercent||0:0;
+ const terrainKey=attackBonus||defenseBonus?
+  b.terrain.id+':'+(b.terrain.startedPly??'start'):'none';
+ const result=applyElementalDamage(defender,attackingElement,defendingElement,amount,{
+  terrainAttackPercent:attackBonus,terrainDefensePercent:defenseBonus,terrainKey
+ });
+ if(result.relation||attackBonus||defenseBonus)events.push(emit(b,ctx.who,
+  result.relation?'elemental-matchup':'terrain-elemental',
+  elementalDamageDescription(result)+
+   (attackBonus?' · Terreno attacco +'+attackBonus+'%':'')+
+   (defenseBonus?' · Terreno difesa +'+defenseBonus+'%':'')+
+   ' ('+result.original+' → '+result.damage+' HP)',{
    attackerElement:result.attackerElement,defenderElement:result.defenderElement,
    relation:result.relation,percent:result.percent,baseDamage:result.original,
    modifiedDamage:result.damage,targetKind:kind,targetId:unit?.id??null,
-   inheritedFromMother:kind==='escort'?unit?.elementInheritedFrom||enemy.id:null
+   inheritedFromMother:kind==='escort'?unit?.elementInheritedFrom||enemy.id:null,
+   terrainId:attackBonus||defenseBonus?b.terrain.id:null,
+   terrainAttackPercent:attackBonus,terrainDefensePercent:defenseBonus
   }));
  return result.damage;
 }
