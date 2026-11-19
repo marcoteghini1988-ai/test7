@@ -70,7 +70,7 @@
     },
     {
       "id": "weapon-new-plasma-03",
-      "name": "Siluro Piromante",
+      "name": "Dardiera Catalitica Cremisi",
       "element": "Fuoco",
       "elementId": "plasma",
       "rarity": "Comune",
@@ -81,17 +81,26 @@
       "durationOwnTurns": 1,
       "firingWindow": "immediato",
       "shotsHP": [
-        11
+        12
       ],
-      "nominalHPPerActivation": 11,
-      "mechanics": "Immediato: siluro autoguidato verso un supporto ferito, altrimenti il primo in campo",
-      "mechanicalAppearance": "Siluro fusiforme con tre alette incandescenti",
+      "nominalHPPerActivation": 12,
+      "mechanics": "Un dardo termo-catalitico di Fuoco infligge 12 HP nominali a una madre o supporto bersagliabile. Se colpisce davvero la stessa navicella con un cristallo lasciato dalla Balestra di Nebbia Gelata, provoca la reazione di frattura criotermica: +12 HP nominali di esplosione, una volta sola, e consuma il cristallo. Senza cristallo è una normale Arma da 12 HP.",
+      "mechanicalAppearance": "Cannone ad arpione corto con una cartuccia rosso-incandescente di reagente termico, due guide a spirale, punta di dardo color rame",
       "independentShot": true,
       "playable": false,
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "combo": {
+        "role": "trigger",
+        "pairId": "weapon-new-cryogenic-03",
+        "requiresRealDamage": true,
+        "bonusBurstHP": 12,
+        "consumesMark": true,
+        "markElementId": "cryogenic",
+        "ownElementId": "plasma"
+      }
     },
     {
       "id": "weapon-new-plasma-05",
@@ -499,14 +508,33 @@
         15
       ],
       "nominalHPPerActivation": 15,
-      "mechanics": "Freccia cristallina solidificata in volo contro il supporto con più HP",
-      "mechanicalAppearance": "Balestra a guide vetrificate",
+      "mechanics": "Un dardo criogenico infligge 15 HP nominali a una madre o a un supporto bersagliabile. Se infligge HP reali lascia un cristallo visibile su quella navicella. Il cristallo resta fino alla conclusione del turno proprio successivo e può essere innescato soltanto dal dardo della Dardiera Catalitica Cremisi sulla stessa navicella. Poi si scioglie senza danno.",
+      "mechanicalAppearance": "Balestra ad ali di metallo ghiacciato, guida centrale vetrificata, dardo trasparente con nucleo cristallino azzurro",
       "independentShot": true,
       "playable": false,
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "combo": {
+        "role": "primer",
+        "pairId": "weapon-new-plasma-03",
+        "mark": "cristallo-cryogenic",
+        "requiresRealDamage": true,
+        "markDuration": "fino a fine prossimo turno proprio",
+        "maxMarksPerTarget": 1
+      },
+      "evolution": {
+        "rarities": [
+          "Comune",
+          "Rara",
+          "Epica",
+          "Leggendaria"
+        ],
+        "duplicateCopiesPerStep": 3,
+        "keepMechanics": true,
+        "damageScalingPending": true
+      }
     },
     {
       "id": "weapon-new-cryogenic-05",
