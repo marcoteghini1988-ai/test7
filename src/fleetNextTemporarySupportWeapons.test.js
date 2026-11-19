@@ -109,10 +109,13 @@ test('Sequenza completa: I 10, II 30, III 70, stesso slot e scarti corretti',()=
  r=turn(b,'A',[THREE]);
  assert.equal(event(r,'weapon-sequence')?.nominalDamage,70);
  assert.equal(event(r,'weapon-sequence')?.chained,true);
- assert.ok(r.battle.sides.A.discard.includes(TWO));
+ assert.equal(r.battle.sides.A.machines.some(m=>m.sourceCardId===TWO),false);
+ assert.ok([...r.battle.sides.A.discard,...r.battle.sides.A.deck,...r.battle.sides.A.hand].includes(TWO),
+  'la carta sostituita puo essere rimescolata fra mazzo e mano');
  b=between(r.battle);
  assert.equal(b.sides.A.machines.length,0);
- assert.ok(b.sides.A.discard.includes(THREE));
+ assert.ok([...b.sides.A.discard,...b.sides.A.deck,...b.sides.A.hand].includes(THREE),
+  'anche la carta finale puo essere rimescolata');
 });
 
 test('Senza catena: I ripete 10 e scade; II e III isolate valgono 10 e 20',()=>{
@@ -149,7 +152,7 @@ test('La II migliora la I anche con due alloggiamenti occupati',()=>{
  assert.equal(r.battle.sides.A.machines.length,2);
  b=between(r.battle);b.sides.A.hand=[TWO];
  const order={cards:[0],pass:false,targetKind:'part',targetId:'weapons',partId:'weapons'};
- assert.equal(validateFleetTurn(b,'A',order),'');
+ assert.ok(!validateFleetTurn(b,'A',order));
  r=turn(b,'A',[TWO]);
  assert.equal(r.battle.sides.A.machines.length,2);
  assert.equal(event(r,'weapon-sequence')?.nominalDamage,30);
