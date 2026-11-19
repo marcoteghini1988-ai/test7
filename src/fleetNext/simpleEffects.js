@@ -219,7 +219,7 @@ export function describeEffect(card,level=1){
    return repeat+"Rimette in cima al mazzo l’ultima carta "+(label?label+' ':'')+'scartata.';
   }
   case 'charge':return repeat+'Prepara +'+s.amount+' potenza per il tuo attacco del turno successivo.';
-  case 'energy':return 'Aggiungi 1 Carta Energia '+FLEET_ELEMENTS[s.elementId].name+' alla pila senza limite. La carta resta fino al consumo e solo allora va negli scarti.';
+  case 'energy':return 'Aggiungi 1 Carta Energia '+FLEET_ELEMENTS[s.elementId].name+' alla pila unica, senza limite di accumulo. Resta fino al consumo e solo allora va negli scarti. Alimenta le abilità speciali e le Armi compatibili.';
   case 'terrain':return TERRAIN_EFFECT_TEXT[s.code]+' Vale per entrambi i giocatori per 3 round.';
   case 'elementalTerrain':return card.description||'Terreno elementale permanente: '+FLEET_ELEMENTS[s.elementId].name;
   case 'trap':return s.trigger==='shipFusion'?
