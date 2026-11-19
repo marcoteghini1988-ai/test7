@@ -4,7 +4,7 @@ export const DISCARD_WEAPON_ID='weapon-memory-plasma';
 
 export const DISCARD_WEAPON=Object.freeze({
  id:DISCARD_WEAPON_ID,
- name:'Cannone della Memoria Stellare',nome:'Cannone della Memoria Stellare',
+ name:'Cannone dei Frammenti',nome:'Cannone dei Frammenti',
  category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
  kind:'support',playable:true,nativeFace:true,
  rarita:'Epica',rarityPending:false,acquisitionPending:true,
