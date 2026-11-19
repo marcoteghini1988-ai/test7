@@ -11,7 +11,8 @@ const BY_TIER=Object.freeze({
  bridge:Object.freeze([1,1,2,2])
 });
 export const TEMP_WEAPON_DURATION=Object.freeze({
- 'prog-machine-striker':1,'prog-machine-guard':2
+ 'prog-machine-striker':1,'prog-machine-guard':2,
+ 'weapon-memory-plasma':1
 });
 export function activeSystemCard(side,system,operation,ply=0){
  return (side?.systemCardEffects||[]).filter(c=>c.system===system&&
@@ -61,7 +62,19 @@ export function generatorAdjustment(side,ply=0){
  side.systemCardCounters.generatorUsed++;
  return (effect?.amount||0)-(sabotage?.amount||0);
 }
-export function arsenalBonus(side,machine,ply=0){
+// La carica legge esclusivamente gli scarti del proprietario. Le carte in mano,
+// quelle appena giocate e gli scarti nemici non contribuiscono.
+export function discardWeaponCharge(side,machine,roleForCard){
+ if(machine?.damageMode!=='discard-attacks')return null;
+ const discard=Array.isArray(side?.discard)?side.discard:[];
+ const attackCards=discard.reduce((n,id)=>n+(roleForCard(id)==='attack'?1:0),0);
+ const energyMatched=discard.includes('energy-'+machine.weaponElementId);
+ const multiplier=energyMatched?machine.energyMultiplier:1;
+ const rawDamage=machine.baseDamage+attackCards*machine.perDiscardAttack;
+ return {attackCards,energyMatched,multiplier,rawDamage,damage:rawDamage*multiplier,
+  elementId:machine.weaponElementId};
+}
+export function arsenalBonus(side,machine,ply=0,overridePower=null){
  if(side.ruleset!==HP_SYNC_RULESET)return machine.power||0;
  if(machine.untilPly!=null&&machine.untilPly<=ply)return 0;
  const amplified=activeSystemCard(side,'weapons','amplify',ply);
@@ -72,7 +85,7 @@ export function arsenalBonus(side,machine,ply=0){
  if(first?.id===machine.id&&disabled&&
   (disabled.tier===4||disabled.tier>=2&&
    (ply===disabled.appliedPly||ply===disabled.appliedPly+1)))return 0;
- return Math.max(0,(machine.power||0)+(amplified?.amount||0)-(disabled?.amount||0));
+ return Math.max(0,(overridePower??machine.power??0)+(amplified?.amount||0)-(disabled?.amount||0));
 }
 // Le versioni Epica e Leggendaria interrompono i bonus sincronizzati
 // solo al primo turno del bersaglio. La Centralina Leggendaria alleata
