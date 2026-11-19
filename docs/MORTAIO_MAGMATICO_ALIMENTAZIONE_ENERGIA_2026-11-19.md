@@ -1,39 +1,40 @@
-# Eclissi Stellare — Mortaio Magmatico, alimentazione automatica con Energie
+# Eclissi Stellare — Mortaio Magmatico ed Energia Fuoco
 
-**19 novembre 2026 · Scheda di progettazione. NON implementata nel motore.**
+**Decisione del 19 novembre 2026 · Progettazione confermata nei principi.** La regola generale della pila Energia è stata implementata, mentre il Mortaio è una bozza **non ancora giocabile**: mancano i suoi danni, la durata in combattimento, la priorità automatica e i test relativi.
 
-## Identità e categoria
-- **Carta:** Mortaio Magmatico (`weapon100-plasma-04`) — Fuoco, Rara.
-- **Categoria:** Carta Arma. Si trascina dalla mano in uno dei **due slot Arma temporanea**.
-- **Durata:** **3 propri turni**, incluso quello in cui viene giocata. Non occupa slot Attacco.
-- **Revisione del nome:** il Mortaio di Grandine non rimane nel gruppo Ghiaccio; per rispettare il conteggio si riutilizza il Mortaio Magmatico già esistente nell'elemento Fuoco. Il posto Ghiaccio Rara diventa provvisoriamente Artiglieria delle Schegge Erranti, da confermare.
+## Identità
+- **Carta:** Mortaio Magmatico (`weapon100-plasma-04`), elemento **Fuoco**, rarità **Rara**.
+- **Tipologia:** Carta Arma, uno dei due slot Arma temporanea; non è una Carta Attacco.
+- **Durata prevista:** tre propri turni, compreso quello di schieramento.
+- **Aspetto meccanico:** un grande mortaio con camera incandescente e condotto di alimentazione dal reattore della madre.
 
-## Sparo dell'Arma e consumo automatico
-1. Appena il Mortaio è installato, **spara un colpo base autonomo** che infligge HP al bersaglio valido (nave madre o supporto secondo le regole di bersaglio; da precisare prima dell'implementazione).
-2. Nel **secondo e nel terzo turno proprio** in cui rimane operativo, spara nuovamente **un colpo base** per ciascun turno. Il valore in HP del colpo base è **da stabilire**.
-3. Se al momento dell'installazione sono già presenti cariche nell'**unico accumulatore di Energie della nave madre**, il Mortaio le **assorbe automaticamente** e per **ogni carica** spara **un colpo supplementare proprio**. Non somma soltanto una percentuale: l'Arma fa un colpo distinto per ogni Energia.
-4. Anche quando il Mortaio è già installato da uno o due turni, ogni nuova **Carta Energia** giocata e caricabile dalla madre viene **convogliata immediatamente al Mortaio** mentre è attivo, dando un ulteriore colpo. È possibile giocare più Carte Energia nel medesimo turno, nel normale limite di 3 carte giocate per turno.
-5. Le cariche assorbite vengono **sottratte all'accumulatore della nave madre**: non possono essere riutilizzate per il suo **Attacco/Effetto Speciale**. Il Mortaio ha priorità automatica sulle Energie, quindi il giocatore accetta questa limitazione schierandolo.
-6. Le Carte Energia effettivamente giocate vanno **agli scarti una sola volta**, secondo le regole del motore. Le cariche accumulate nei turni precedenti derivano da carte già negli scarti: consumarle non deve creare doppioni negli scarti.
-7. Alla scadenza del terzo turno proprio il Mortaio viene rimosso, la Carta Arma va negli scarti e lo slot Arma si libera. Le Energie **non assorbite** potranno di nuovo alimentare la madre normalmente.
+## Ciclo di fuoco
+1. Il Mortaio spara **un colpo autonomo base** nel turno in cui è giocato e **uno in ciascuno dei due turni propri successivi**, se rimane funzionante.
+2. La sua alimentazione usa **ESCLUSIVAMENTE Carte Energia Fuoco**. Energia Ghiaccio, Fulmine e tutte le altre rimangono nella pila e non sono consumate dal Mortaio.
+3. Ogni Energia Fuoco **già presente nella pila** quando si installa o si mantiene il Mortaio viene assorbita automaticamente: **una carta consumata = un colpo autonomo aggiuntivo**.
+4. Anche una nuova Energia Fuoco giocata **dopo l'installazione** e durante uno dei tre turni di vita del Mortaio viene consumata subito per generare un altro colpo.
+5. Le Energie Fuoco assorbite sono **sottratte alle Energie disponibili per la nave madre**; non possono quindi alimentare contemporaneamente il suo Attacco/Effetto Speciale.
+6. Il Mortaio non cancella la pila: vengono rimossi **solo** gli elementi Fuoco consumati, lasciando le altre Energie e tutte le non consumate.
+7. A fine terzo turno proprio l'Arma si scarta e libera il suo slot.
 
-## Esempi concreti, numeri del solo numero di colpi
-- **Turno A senza Energia:** 1 colpo base.
-- **Turno A con 2 Energie già accumulate:** 1 colpo base + 2 colpi energetici, con consumo delle due cariche.
-- **Turno B, Mortaio ancora sul campo, giochi una Energia:** 1 colpo base + 1 colpo energetico nel medesimo turno; l'Energia non rimane alla madre.
-- **Turno C, Mortaio ancora operativo, giochi tre Energie:** 1 colpo base + 3 colpi energetici, poi il Mortaio termina. La madre non può usare quelle tre cariche per la sua Speciale.
+## Pila Energia unica e SENZA LIMITE
+- Ogni giocatore dispone di **un solo slot-pila** per tutte le Carte Energia, senza capienza massima (5, 10 o più Energie possono permanere se accumulate legittimamente).
+- Le Carte Energia fisiche **non** passano agli scarti quando vengono giocate. Si **accumulano nello slot**, compresi i turni successivi.
+- **Solo quando un effetto le consuma**, le relative carte passano agli scarti, una sola volta. Le cariche generate da passive senza una vera Carta Energia sono virtuali e non creano copie fisiche negli scarti.
+- I costi delle abilità speciali rimangono i loro valori indipendenti, **da 1 a 4**, ma questi **non** sono un limite alla pila.
+- Rimane il limite generale di **tre carte giocate per turno**. Anche l'attuale limite di copie di una singola carta nel mazzo è un concetto separato dal limite di accumulo.
+- Lo stato di gioco usa `side.energyPile` per le Carte Energia fisiche e `side.elementalCharges` per i conteggi, inclusi quelli prodotti dalle passive. Interfaccia visiva della pila completa da rifinire in Work senza creare più slot.
 
-## Verifica effettuata sul codice di test7
-- In `src/fleetNext/energyCards.js` il limite è **4 cariche** (`ENERGY_CAPACITY=4`).
-- In `src/fleetNext/elementalAbilities.js` il motore conserva le Energie in un **unico oggetto contatore** `side.elementalCharges` per elemento, con totale massimo quattro. `chargeElementalEnergy` e `spendElementalEnergy` gestiscono le cariche.
-- Il motore `src/fleetNext/combat.js` valida un limite di **tre carte giocate per turno** e attualmente fa consumare le Energie soltanto all'abilità speciale o ad altri effetti già codificati. **Non esiste ancora il consumo automatico del Mortaio** e non esistono i suoi colpi aggiuntivi.
-- `src/OfficialFleetBattle3D.jsx` visualizza al momento un **contatore dell'accumulatore** (`/4`), NON quattro slot separati né una vera pila di carte sovrapposte. L'idea dell'utente è **un solo spazio Energia, impilabile visivamente**; questo si sistemerà nella fase di interfaccia con Work.
+## Esempio
+- **Primo turno:** il Mortaio entra senza alcuna Energia Fuoco, un colpo base.
+- **Secondo turno:** viene pescata e giocata una Energia Fuoco, il Mortaio spara il colpo base + uno extra e l'Energia va negli scarti.
+- **Terzo turno:** sono presenti tre Energie Fuoco: un colpo base + tre extra, tutti con danno proprio; le tre carte consumate passano negli scarti, il Mortaio termina.
+- **Energie non Fuoco:** anche se ne sono accumulate dieci nella stessa pila, il Mortaio le ignora.
 
-## Aspetti da definire prima di codificare
-- **Danno base e danno per singolo proiettile energetico** (non devono essere necessariamente uguali).
-- **Tipo di Energia consumabile:** l'utente parla di 'Carte Energia' genericamente. Il motore attuale permette cariche soltanto degli elementi disponibili alla madre. Stabilire se il Mortaio Fuoco assorbe tutte le cariche legalmente disponibili o solo Energia Fuoco.
-- **Ordine effettivo delle carte** quando sono giocate nello stesso turno (Energia prima o Mortaio prima) e **priorità rispetto all'attivazione Speciale**: la regola scelta è consumo prioritario del Mortaio, ma serve estendere validazione e risoluzione senza generare azioni gratuite, doppie spese o perdita di carte.
-- Con **4 Energie già accumulate** e altre Energie giocabili nella stessa fase dopo che sono state assorbite, il numero di colpi supplementari potrebbe superare quattro nel medesimo turno. Il **tetto di scariche per turno** resta da bilanciare con l'utente.
-- Le **Difese** devono poter intercettare ogni impatto secondo le regole già previste; restano validi limiti HP materni, vantaggi/svantaggi elementali, durata e condizioni di sabotaggio.
+## Da decidere e implementare
+- **HP del colpo base e di ogni colpo energetico**, bersagli e combinazioni con altri danni, modificatori elementali, difese e limiti della madre.
+- **Ordine delle azioni e consumo automatico** quando le Energie Fuoco vengono giocate prima o dopo l'Arma nello stesso turno; garantire priorità senza duplice consumo con la Speciale madre.
+- Gestione delle Energie Fuoco in presenza di pile grandi. Non imporre un limite alla pila; l'eventuale tetto di danni dell'Arma deve essere una regola **distinta**, da discutere.
+- **Il Mortaio non è ancora stato implementato**: la regola Energia in pila senza tetto sì, la regola consumi automatici del Mortaio verrà introdotta solo dopo la definizione degli HP.
 
-**Stato:** documentazione soltanto, nessuna alterazione a codice eseguibile, Shop, immagini o 120 esclusive delle navi.
+[Regola generale della pila Energia](./PILA_ENERGIA_ILLIMITATA_2026-11-19.md).
