@@ -1,42 +1,40 @@
-# Eclissi Stellare — due Armi complementari: cristallo e catalizzatore
+# Eclissi Stellare — Balestra di Nebbia Gelata + Dardiera della Brina Inversa
 
-**Data:** 19 novembre 2026 · **Stato:** progettazione, abbinamento deciso, numeri ancora da bilanciare e testare. **Nessuna modifica al codice giocabile.**
+**Data:** 19 novembre 2026 · **Stato:** bozza corretta dopo la revisione degli elementi e dei bersagli, da approvare nei dettagli e bilanciare. **Non implementata nel motore.**
 
-## Prima Arma: Balestra di Nebbia Gelata
+## Perché queste due Armi sono compatibili
+Entrambe sono di elemento **Ghiaccio**, ma hanno **dardi di polarità criogenica opposta**: la Balestra deposita una struttura cristallina positiva, la Dardiera un reagente cristallino inverso. Il contatto provoca una **frattura esplosiva**. Nessuna combinazione Fuoco/Acqua né Fuoco/Ghiaccio.
 
-- **Categoria:** Carta Arma, slot Arma temporanea
+## Balestra di Nebbia Gelata
+- **ID:** `weapon-new-cryogenic-03`
+- **Rarità iniziale:** Comune; evoluzione con 3 doppioni per passaggio, da Comune fino a Leggendaria; gli HP evoluti vanno bilanciati
 - **Elemento:** Ghiaccio
-- **Rarità iniziale:** Comune, evolve con 3 doppioni identici per grado fino a Leggendaria (meccanica invariata)
-- **Danno proprio:** 15 HP nominali, tiro singolo
-- **Bersaglio:** supporto o madre nemica raggiungibile
-- **Effetto:** se il colpo fa danno reale, resta un **cristallo di ghiaccio visibile** sulla navicella colpita. La Balestra si scarta alla fine del turno e libera il suo slot.
-- **Durata cristallo:** fino alla **fine del prossimo turno proprio** di chi ha usato la Balestra. Se non innescato, si scioglie senza danno. Uno per bersaglio (nessun accumulo gratuito).
+- **Danno diretto:** 15 HP nominali, un dardo
+- **Bersaglio unico:** **nave madre nemica**, anche se ha uno o due supporti operativi
+- **Effetto:** se l'impatto supera le Difese e sottrae HP, lascia un cristallo sulla madre; scartata l'Arma, il cristallo rimane
+- **Scadenza:** al termine del **turno proprio successivo** di chi ha installato la Balestra, se non viene innescato, si scioglie senza danno
+- **Limite:** un cristallo per bersaglio, non cumulabile gratuitamente
 
-## Seconda Arma: Dardiera Catalitica Cremisi
+## Dardiera della Brina Inversa
+- **ID:** `weapon-new-cryogenic-05`
+- **Rarità iniziale:** Rara, progressione per doppioni ancora da definire
+- **Elemento:** Ghiaccio
+- **Danno diretto:** 12 HP nominali, un dardo
+- **Bersaglio unico:** **nave madre nemica**, anche se i supporti sono operativi
+- **Danno autonomo:** anche senza cristallo, infligge il proprio danno normale e si scarta
+- **Reazione:** solo se infligge **HP reali** alla madre con il cristallo della Balestra attivo, il dardo negativo provoca la frattura cristallina: **12 HP nominali aggiuntivi** alla madre, una sola volta, e consuma il cristallo
 
-- **Categoria:** Carta Arma indipendente, slot Arma temporanea
-- **Elemento:** Fuoco (arma termocatalitica, complementare al Ghiaccio)
-- **Rarità iniziale:** Comune (evoluzione da decidere)
-- **Danno proprio:** 12 HP nominali, un singolo dardo
-- **Bersaglio:** supporto o madre nemica raggiungibile
-- **Funzionamento da sola:** infligge il proprio danno di Fuoco e termina; non ha bisogno del cristallo per essere giocabile
-- **Interazione:** se il colpo di questa Dardiera infligge danno reale alla **stessa navicella che ha il cristallo**, il reagente destabilizza il cristallo: **esplosione criotermica di +12 HP nominali**, una sola volta, poi il cristallo si consuma
+## Come si giocano
+**Stesso turno:** installa la Balestra in uno dei due slot Arma; risolvi il suo colpo contro la madre. Installi la Dardiera nel secondo slot, che spara sulla **stessa nave madre**. Se entrambe le condizioni di danno reale sono soddisfatte, esplode il cristallo. Le Armi si scartano a fine turno e liberano gli alloggiamenti.
 
-## Esempio operativo, stessi due slot esistenti
+**Turni propri consecutivi:** nel primo turno installi la Balestra e lasci il cristallo sulla madre. Dopo il turno avversario, nel tuo turno successivo installi la Dardiera, che può innescare il cristallo. A fine turno, se inutilizzato, il cristallo si scioglie. La Balestra non deve restare installata per conservare il cristallo.
 
-**Caso A — nello stesso turno:** gioco Balestra in slot Arma 1, sparo al supporto avversario A (15 nominali) e deposito il cristallo. Gioco Dardiera in slot Arma 2, sparo **allo stesso supporto A** (12 nominali). Se i colpi passano le difese, reazione **+12 nominali**: totale nominale 39. Entrambe le Carte Arma vanno agli scarti alla chiusura del turno, senza creare un terzo slot.
+**Senza seconda Arma:** la Balestra fa solo il danno iniziale, il cristallo si scioglie senza esplodere. **Senza cristallo:** la Dardiera fa solo il suo danno base.
 
-**Caso B — in due turni propri consecutivi:** gioco Balestra nel mio turno, deposito il cristallo, carta negli scarti. Dopo il turno nemico, al mio turno immediatamente successivo gioco Dardiera sullo stesso bersaglio: se il cristallo esiste ancora e il colpo passa, esplosione +12; diversamente solo il danno proprio della Dardiera. Alla fine del mio secondo turno ogni cristallo precedente non consumato si scioglie.
+## Difese e regole di bersaglio
+Queste due Armi sono una **eccezione progettata all'obbligo di colpire prima i supporti**: sparano direttamente alla madre anche quando i supporti nemici sono vivi. **Questo non significa perforazione.** Le difese ordinarie, la mitigazione, gli elementi e i limiti HP madre si applicano a entrambi i colpi e alla reazione, ciascuno come evento distinto. Un colpo completamente bloccato non può creare o innescare il cristallo. Nessuna esplosione può avvenire a vuoto.
 
-**Caso C — non completo la combinazione:** il cristallo si scioglie alla scadenza senza danneggiare ulteriormente il bersaglio.
+## Conteggi
+La Dardiera è stata assegnata a una delle **100** posizioni già esistenti, nella categoria **Ghiaccio Rara**. Al posto della vecchia Dardiera Fuoco ritorna il progetto originale **Siluro Piromante** in **Fuoco Comune**. Le prime 33 Armi, le altre 67 Armi proposte, le 67 Carte Attacco da rivedere e le 4 Armi confermate mantengono tutti i loro conteggi. **Nessuna 101ª Arma.**
 
-## Regole da preservare
-
-1. Sono entrambe **Carte Arma** e fanno danni attribuiti all'arma; non sono Carte Attacco che alterano soltanto lo stato della partita.
-2. Il bersaglio di entrambe è una **navicella**, non uno slot Arma. Non congelano slot o passivi.
-3. Il colpo della Dardiera e la reazione rispettano le difese ordinarie, le relazioni fra elementi e i limiti HP esistenti; **nessun Aggiramento gratuito**.
-4. Se il secondo colpo viene interamente bloccato, il cristallo non si attiva.
-5. I proiettili vanno eseguiti in **ordine di posa** se le due armi sono installate nello stesso turno; la Balestra deve risolvere il colpo prima della Dardiera.
-6. La Dardiera occupa il posto di bozza **`weapon-new-plasma-03`**, già riservato a una delle 100 Armi, sostituendo il nome provvisorio «Siluro Piromante». La Balestra è `weapon-new-cryogenic-03`. **Il totale rimane 100**: 33 precedenti + 67 nuove. Le 67 bozze Attacco originali non cambiano.
-
-**Da approvare:** potenza effettiva, rarità/upgrade della Dardiera, possibilità di ulteriori contromisure delle future Trappole; le immagini e le animazioni saranno elaborate successivamente.
+**Ancora da discutere:** valore dell'esplosione, potenziamento nelle rarità, contromisure specifiche future, implementazione e collaudo nel vero motore.
