@@ -1,5 +1,6 @@
 // Dieci regole pubbliche: valgono per entrambe le flotte, per tre round.
 import {TERRAIN_EFFECT_TEXT} from './simpleEffects.js';
+import {ELEMENTAL_TERRAIN_CARDS} from './elementalTerrainCards.js';
 import {PHASE16A_CAMPAIGN_PLANET_IDS} from '../newCombat/phase16ACatalog.js';
 
 const rows=[
@@ -28,10 +29,20 @@ const affinity=[
 export const TERRAIN_AFFINITY=Object.freeze(Object.fromEntries(affinity.map(([id,favored,weakened])=>
  [id,{favored:favored.split(','),weakened:weakened.split(',')}]
 )));
-export const TERRAIN_CATALOG=Object.freeze(Object.fromEntries(rows.map(([code,cardId,name,theme,trigger,amount])=>
- [code,{code,cardId,name,theme,trigger,amount,durationTurns:6,description:TERRAIN_EFFECT_TEXT[code]}]
-)));
-export const TERRAIN_BY_CARD=Object.freeze(Object.fromEntries(rows.filter(x=>x[1]).map(x=>[x[1],TERRAIN_CATALOG[x[0]]])));
+export const TERRAIN_CATALOG=Object.freeze({
+ ...Object.fromEntries(rows.map(([code,cardId,name,theme,trigger,amount])=>
+  [code,{code,cardId,name,theme,trigger,amount,durationTurns:6,description:TERRAIN_EFFECT_TEXT[code]}])),
+ ...Object.fromEntries(ELEMENTAL_TERRAIN_CARDS.map(card=>[card.id,{
+  code:card.id,cardId:card.id,name:card.name,theme:card.elementId,
+  durationTurns:null,description:card.description,elementId:card.elementId,
+  attackPercent:card.attackPercent,defensePercent:card.defensePercent,
+  kind:'elemental',rarita:card.rarita
+ }]))
+});
+export const TERRAIN_BY_CARD=Object.freeze({
+ ...Object.fromEntries(rows.filter(x=>x[1]).map(x=>[x[1],TERRAIN_CATALOG[x[0]]])),
+ ...Object.fromEntries(ELEMENTAL_TERRAIN_CARDS.map(c=>[c.id,TERRAIN_CATALOG[c.id]]))
+});
 if(rows.length!==10||affinity.length!==17)
  throw Error('Catalogo dei terreni non coerente');
 export function terrainAffinity(shipId,terrainCode){
@@ -42,7 +53,8 @@ export function terrainForCard(cardId){return TERRAIN_BY_CARD[cardId]||null;}
 export function newTerrain(cardId,ply,owner,boss=false,underlying=null){
  const d=terrainForCard(cardId);
  if(!d)return null;
- return {id:d.code,cardId,owner,startedPly:ply,expiresPly:ply+6,
+ return {id:d.code,cardId,owner,startedPly:ply,
+  expiresPly:d.durationTurns==null?null:ply+6,
   underlying:underlying||null,source:boss?'boss_override':'player'};
 }
 export function terrainExpired(terrain,ply){
