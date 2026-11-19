@@ -73,7 +73,7 @@
       "elementSymbol": "🔥",
       "rarity": "Rara",
       "durationOwnTurns": 3,
-      "effectProposal": "Mortaio di Fuoco in uno slot Arma per tre turni propri: spara un colpo base nel turno di posa e in ciascuno dei due successivi. Consuma automaticamente tutte le cariche Energia compatibili già presenti nell'accumulatore della madre, sparando un colpo aggiuntivo autonomo per ognuna; anche le Energie giocate dopo l'installazione, mentre l'Arma resta attiva, vengono convogliate subito al Mortaio per ulteriori colpi e non restano disponibili per la Speciale della madre. Unico accumulatore fino a quattro cariche, nessuno slot Energia aggiuntivo. Danni per colpo ancora da bilanciare; ordine e limiti di scarica nel turno da verificare in codice.",
+      "effectProposal": "Mortaio di Fuoco installato nello slot Arma per 3 propri turni: spara un colpo base in ciascun turno. Ogni Carta Energia Fuoco presente nell'unica pila Energia viene assorbita automaticamente e produce un colpo aggiuntivo autonomo; lo stesso vale per le nuove Energie Fuoco giocate quando l'Arma è attiva. La pila non ha limite di accumulo, e le Energie Fuoco consumate vanno negli scarti soltanto al momento dell'uso. Energie di altri elementi non vengono toccate. Le cariche spese dal Mortaio non sono disponibili per la Speciale della madre. Danni HP e limiti di colpi ancora da bilanciare; implementazione Mortaio da svolgere dopo la revisione.",
       "mechanicalAppearance": "Mortaio pesante di Fuoco ad alimentazione energetica, tubo basculante e camera incandescente collegata al reattore della madre.",
       "category": "Arma di Supporto",
       "slotType": "arma-temporanea",
@@ -83,19 +83,19 @@
       "acquisitionPending": true,
       "artPending": true,
       "fireMode": "1 colpo base per proprio turno, più 1 colpo separato per ogni carica Energia assorbita automaticamente",
-      "energyConsumption": "prioritario sulla Speciale della nave madre, anche con Energia già accumulata o giocata dopo il Mortaio",
-      "energyTypes": "Energia che la nave madre può legalmente accumulare; da confermare se restringere al Fuoco",
-      "maxStoredEnergy": 4,
+      "energyConsumption": "Assorbimento automatico prioritario di tutte e sole le Energie Fuoco disponibili quando il Mortaio è attivo, incluso quando ne vengono giocate altre; non alimentano la Speciale madre",
+      "energyTypes": "Esclusivamente Carta Energia Fuoco (energy-plasma). Le altre Energie restano nella pila e alla madre.",
+      "maxStoredEnergy": null,
       "energySpaceCount": 1,
       "attackPerEnergy": 1,
       "needsApprovalOn": [
         "valore danno base",
         "danno colpo extra",
-        "ammissibilità Energie diverse da Fuoco",
-        "limite colpi per turno",
-        "ordine risoluzione nella UI"
+        "tetto per turno se necessario in bilanciamento",
+        "ordine del tiro e validazione con Attacco/Effetto Speciale"
       ],
-      "revisionStatus": "meccanica descritta dal progettista, verifica codice necessaria"
+      "revisionStatus": "meccanica descritta dal progettista, verifica codice necessaria",
+      "energyCapacityRule": "Pila unica senza limite di accumulo per ogni giocatore"
     },
     {
       "id": "weapon100-plasma-05",
