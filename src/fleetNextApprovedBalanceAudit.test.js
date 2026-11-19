@@ -21,19 +21,22 @@ const sampleRoster=(first=0)=>[0,1].map((step,slot)=>{
 const genericDeck=shipId=>{
  const elements=activeFleetElements(shipId,99);
  const energy=elements.flatMap((element,i)=>Array(i===0?4:2).fill('energy-'+element));
+ const systems=NEXT_COMMON_CARDS.filter(c=>c.id!=='sys-black-hole');
+ const rotation=(shipId.charCodeAt(0)+shipId.charCodeAt(shipId.length-1))%systems.length;
+ const varied=[...systems.slice(rotation),...systems.slice(0,rotation)];
  return [...energy,
   FUSION_SHIP_CARDS[0].id,FUSION_SHIP_CARDS[1].id,
   FUSION_DENIAL_TRAP.id,DISCARD_WEAPON.id,
   ...TEMP_SUPPORT_WEAPONS.map(c=>c.id),
-  ...NEXT_COMMON_CARDS.filter(c=>c.id!=='sys-black-hole'&&c.id!=='sys-command-minus-l').map(c=>c.id),
-  'sys-black-hole',...DISMANTLE_CARDS.map(c=>c.id)
+  'sys-black-hole',...DISMANTLE_CARDS.slice(0,2).map(c=>c.id),
+  ...varied.map(c=>c.id)
  ].slice(0,30);
 };
 function readyBattle(shipA,shipB,{bossId=null,supports=true,seed=1977}={}){
  const b=createFleetNextBattle({shipA,shipB,
   raritaA:'Leggendaria',raritaB:'Leggendaria',
-  supportRosterA:supports?sampleRoster(0):[],
-  supportRosterB:supports?sampleRoster(3):[],
+  supportRosterA:supports?sampleRoster(seed%SUPPORT_CATALOG.length):[],
+  supportRosterB:supports?sampleRoster((seed*3+1)%SUPPORT_CATALOG.length):[],
   ruleset:HP_SYNC_RULESET,mode:bossId==null?'pvp':'campaign',bossId,
   deckA:genericDeck(shipA),deckB:genericDeck(shipB),seed,nowMs:0});
  for(const side of Object.values(b.sides)){
@@ -143,9 +146,10 @@ test('Impatto reale di un Attacco esclusivo contro supporto Leggendario',()=>{
 });
 
 test('Matrice esplorativa PvP con mazzi da 40, 2 supporti e carte approvate, senza Personaggi/Terreni',()=>{
- const cases=[['L04','L03'],['N00','R02'],['C01','L04'],['R04','E01'],['E02','C02']];
+ const cases=[['L04','L03'],['N00','R02'],['C01','L04'],['R04','E01'],['E02','C02'],
+  ['N00','C01'],['C02','C03'],['R01','R02'],['R04','E02'],['E01','L01'],['L03','C03'],['L01','R01']];
  const reports=cases.map(([a,b],i)=>simulate(a,b,{seed:1760+i}));
- assert.equal(reports.length,5);
+ assert.equal(reports.length,12);
  assert.ok(reports.every(r=>r.seconds>0&&r.turns<90));
  assert.equal(FLEET_PACING_WINDOWS.pvp.targetSeconds,300);
  console.log('BALANCE_APPROVED_CARDS_PVP='+JSON.stringify(reports));
