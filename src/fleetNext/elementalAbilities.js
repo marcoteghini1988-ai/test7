@@ -2,7 +2,7 @@
 // L'abilità è una proprietà della madre, NON una undicesima carta esclusiva.
 // Le Energie si ottengono solo dalle Carte Energia realmente giocate.
 import {activeFleetElements,FLEET_ELEMENTS,elementalRelation} from './elementalAffinities.js';
-import {ENERGY_SPECIAL_MAX_COST} from './energyCards.js';
+import {ENERGY_SPECIAL_MAX_COST,ENERGY_CARD_BY_ID} from './energyCards.js';
 
 const RAW_ABILITIES=[
  [
@@ -125,12 +125,18 @@ export function canChargeElementalEnergy(side,element){
 // rimangono fuori dagli scarti finché la relativa carica non viene consumata.
 // Le eventuali cariche virtuali già prodotte dalle passive mantengono i vecchi
 // conteggi senza generare carte inesistenti nella pila o negli scarti.
+// Una carta Comune resta nella pila come ID storico (per i salvataggi vecchi);
+// una Rara/Epica/Leggendaria resta un solo oggetto fisico da 2/3/4 cariche.
+// Consumi parziali non scartano la carta: solo l'ultima carica la scarta.
 export function chargeElementalEnergy(side,element,cardId='energy-'+element){
  if(!canChargeElementalEnergy(side,element))return false;
+ const definition=ENERGY_CARD_BY_ID[cardId];
+ if(!definition||definition.elementId!==element)return false;
+ const charges=definition.charges;
  side.elementalCharges??={};
  side.energyPile??=[];
- side.elementalCharges[element]=chargedElementalEnergy(side,element)+1;
- side.energyPile.push(cardId);
+ side.elementalCharges[element]=chargedElementalEnergy(side,element)+charges;
+ side.energyPile.push(charges===1?cardId:{id:cardId,elementId:element,remaining:charges});
  return true;
 }
 export function spendElementalEnergy(side,element,cost){
@@ -138,16 +144,26 @@ export function spendElementalEnergy(side,element,cost){
   chargedElementalEnergy(side,element)<cost)return false;
  side.elementalCharges[element]-=cost;
  if(side.elementalCharges[element]===0)delete side.elementalCharges[element];
- // Le carte fisiche spese entrano negli scarti ORA, non quando si giocano.
- // Le altre Energie, anche di elementi diversi, restano nella stessa pila.
  const pile=side.energyPile||[];
  let left=cost;
- for(let i=pile.length-1;i>=0&&left>0;i--){
-  if(pile[i]!=='energy-'+element)continue;
-  const [spent]=pile.splice(i,1);
-  (side.discard??=[]).push(spent);
-  left--;
+ for(let i=0;i<pile.length&&left>0;){
+  const entry=pile[i],id=typeof entry==='string'?entry:entry?.id;
+  const definition=ENERGY_CARD_BY_ID[id];
+  if(!definition||definition.elementId!==element){i++;continue;}
+  const remaining=typeof entry==='string'?1:Math.max(0,Math.floor(Number(entry.remaining)||0));
+  if(!remaining){i++;continue;}
+  const used=Math.min(left,remaining);
+  left-=used;
+  if(used===remaining){
+   pile.splice(i,1);
+   (side.discard??=[]).push(id);
+  }else{
+   entry.remaining=remaining-used;
+   i++;
+  }
  }
+ // Può restare un residuo di cariche virtuali generate dalle passive:
+ // non esiste una carta fisica da scartare per quelle cariche.
  return true;
 }
 export function elementalAbilityReadiness(side,element,extraCards=0){
