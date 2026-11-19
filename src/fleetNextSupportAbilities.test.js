@@ -115,13 +115,16 @@ test('Pioggia di fulmini alla distruzione elimina Attacchi e Personaggio avversa
  assert.deepEqual(b.sides.B.attackSlots,[]);
 });
 
-test('Conversione alla distruzione ricarica due Energie senza superare il massimo di quattro',()=>{
+test('Conversione alla distruzione crea due cariche anche oltre quattro, senza carte finte',()=>{
  const b=battle('death-energy'),side=b.sides.A;
- side.elementalCharges={ionic:1};
+ side.elementalCharges={ionic:7};
+ side.energyPile=['energy-ionic'];
  side.escorts[0].hp=0;side.escorts[0].destroyed=true;
  const events=settleIndependentSupportDamage(b,'B');
  assert.equal(events[0].charge,2);
- assert.equal(side.elementalCharges.ionic,3);
+ assert.equal(side.elementalCharges.ionic,9);
+ assert.deepEqual(side.energyPile,['energy-ionic'],
+  'una passiva che genera cariche non inventa Carte Energia fisiche');
 });
 
 test('Condensatore: al terzo proprio turno scarica fulmini, mai uno sparo per turno',()=>{
