@@ -1,5 +1,6 @@
 import {card,cardRole} from './rules.js';
 import {isTrapCard} from './simpleEffects.js';
+import {discardWeaponCharge} from './newCardEffects.js';
 import {CAMPAIGN_SHIP_ORDER} from './progression.js';
 
 // Una carta coperta avversaria non consegna identità o rarità al renderer.
@@ -58,8 +59,12 @@ export function projectFleetDefense(mother){
 }
 export function projectMachineBerths(side,chosenCards=[]){
  const slots=Array(2).fill(null);
- for(const unit of side.machines||[])if(unit.hp>0&&!unit.destroyed&&unit.slot>=0&&unit.slot<2)
-  slots[unit.slot]={...unit,pending:false};
+ for(const unit of side.machines||[])if(unit.hp>0&&!unit.destroyed&&unit.slot>=0&&unit.slot<2){
+  const charge=discardWeaponCharge(side,unit,cardRole);
+  slots[unit.slot]={...unit,pending:false,
+   ...(charge?{nominalDamage:charge.damage,discardAttackCount:charge.attackCards,
+    matchingEnergy:charge.energyMatched}: {})};
+ }
  for(const id of chosenCards){
   const def=card(id);
   if(def?.effectSpec?.type!=='deployMachine')continue;
