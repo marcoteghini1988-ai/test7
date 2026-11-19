@@ -8,7 +8,7 @@ import {
  fusionUnavailableReason,effectUnavailableReason,defenseSlotsAvailable,autoFleetTurn
 } from './fleetNext/combat.js';
 
-const ids={bypass:'prog-bypass',machine:'prog-machine-striker',guard:'prog-machine-guard',fusion:'prog-fusion-l04'};
+const ids={bypass:'prog-bypass',machine:'weapon-memory-plasma',guard:'weapon-sequence-1',fusion:'prog-fusion-l04'};
 const general=type=>Object.values(GENERAL_CARDS).find(c=>c.effectSpec.type===type&&c.kind!=='character'&&
  (type!=='protect'||c.effectSpec.target==='selected'));
 function battle(options={}){
@@ -86,7 +86,7 @@ test('Machine deployment is available on Aurora level one and the deployed card 
  const b=battle({shipB:'N00'});b.sides.A.hand=[ids.machine];
  const r=ownTurn(b,'A',{cards:[0],pass:true}),side=r.battle.sides.A;
  assert.equal(side.machines.length,1);assert.equal(side.machines[0].sourceCardId,ids.machine);
- assert.equal(side.machines[0].slot,0);assert.equal(side.machines[0].hp,3);
+ assert.equal(side.machines[0].slot,0);assert.equal(side.machines[0].hp,1);
  assert.equal(protectingFleetUnits(side).length,1);
  assert.ok(!side.hand.includes(ids.machine)&&!side.deck.includes(ids.machine)&&!side.discard.includes(ids.machine));
 });
