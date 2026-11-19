@@ -70,7 +70,7 @@
     },
     {
       "id": "weapon-new-plasma-03",
-      "name": "Dardiera Catalitica Cremisi",
+      "name": "Siluro Piromante",
       "element": "Fuoco",
       "elementId": "plasma",
       "rarity": "Comune",
@@ -81,26 +81,17 @@
       "durationOwnTurns": 1,
       "firingWindow": "immediato",
       "shotsHP": [
-        12
+        11
       ],
-      "nominalHPPerActivation": 12,
-      "mechanics": "Un dardo termo-catalitico di Fuoco infligge 12 HP nominali a una madre o supporto bersagliabile. Se colpisce davvero la stessa navicella con un cristallo lasciato dalla Balestra di Nebbia Gelata, provoca la reazione di frattura criotermica: +12 HP nominali di esplosione, una volta sola, e consuma il cristallo. Senza cristallo è una normale Arma da 12 HP.",
-      "mechanicalAppearance": "Cannone ad arpione corto con una cartuccia rosso-incandescente di reagente termico, due guide a spirale, punta di dardo color rame",
+      "nominalHPPerActivation": 11,
+      "mechanics": "Immediato: siluro autoguidato verso un supporto ferito, altrimenti il primo in campo",
+      "mechanicalAppearance": "Siluro fusiforme con tre alette incandescenti",
       "independentShot": true,
       "playable": false,
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true,
-      "combo": {
-        "role": "trigger",
-        "pairId": "weapon-new-cryogenic-03",
-        "requiresRealDamage": true,
-        "bonusBurstHP": 12,
-        "consumesMark": true,
-        "markElementId": "cryogenic",
-        "ownElementId": "plasma"
-      }
+      "needsShop": true
     },
     {
       "id": "weapon-new-plasma-05",
@@ -508,8 +499,8 @@
         15
       ],
       "nominalHPPerActivation": 15,
-      "mechanics": "Un dardo criogenico infligge 15 HP nominali a una madre o a un supporto bersagliabile. Se infligge HP reali lascia un cristallo visibile su quella navicella. Il cristallo resta fino alla conclusione del turno proprio successivo e può essere innescato soltanto dal dardo della Dardiera Catalitica Cremisi sulla stessa navicella. Poi si scioglie senza danno.",
-      "mechanicalAppearance": "Balestra ad ali di metallo ghiacciato, guida centrale vetrificata, dardo trasparente con nucleo cristallino azzurro",
+      "mechanics": "La Balestra spara un dardo di Ghiaccio da 15 HP nominali direttamente alla nave madre avversaria, anche se i supporti nemici sono vivi. Le Difese della madre restano valide. Solo se il dardo causa danno reale deposita un cristallo a polarità criogenica positiva sulla madre. Il cristallo persiste fino a fine del prossimo turno proprio e poi si scioglie.",
+      "mechanicalAppearance": "Balestra corazzata ad ali di metallo ghiacciato, guida centrale vetrificata e dardo trasparente con cristallo azzurro",
       "independentShot": true,
       "playable": false,
       "needsApproval": true,
@@ -518,11 +509,13 @@
       "needsShop": true,
       "combo": {
         "role": "primer",
-        "pairId": "weapon-new-plasma-03",
-        "mark": "cristallo-cryogenic",
+        "pairId": "weapon-new-cryogenic-05",
+        "mark": "cristallo-brina-positivo",
         "requiresRealDamage": true,
+        "markTargetKind": "mother",
         "markDuration": "fino a fine prossimo turno proprio",
-        "maxMarksPerTarget": 1
+        "maxMarksPerTarget": 1,
+        "elementSynergy": "cryogenic+cryogenic"
       },
       "evolution": {
         "rarities": [
@@ -534,11 +527,14 @@
         "duplicateCopiesPerStep": 3,
         "keepMechanics": true,
         "damageScalingPending": true
-      }
+      },
+      "targetKind": "mother",
+      "bypassEscortCover": true,
+      "piercing": false
     },
     {
       "id": "weapon-new-cryogenic-05",
-      "name": "Morsa di Grandine Binaria",
+      "name": "Dardiera della Brina Inversa",
       "element": "Ghiaccio",
       "elementId": "cryogenic",
       "rarity": "Rara",
@@ -549,19 +545,30 @@
       "durationOwnTurns": 1,
       "firingWindow": "immediato",
       "shotsHP": [
-        7,
-        7,
-        8
+        12
       ],
-      "nominalHPPerActivation": 22,
-      "mechanics": "Tre grandini di densità crescente sul supporto scelto",
-      "mechanicalAppearance": "Tamburo criogenico a pinza, tre camere",
+      "nominalHPPerActivation": 12,
+      "mechanics": "Questa Dardiera di Ghiaccio spara un dardo a polarità criogenica negativa che infligge 12 HP nominali direttamente alla madre avversaria anche in presenza di supporti. Se il dardo provoca danno reale mentre sulla madre è presente il cristallo della Balestra di Nebbia Gelata, il contatto fra le polarità opposte produce una reazione di frattura con altri 12 HP nominali, consumando il cristallo. Da sola infligge solo 12 HP. Le Difese ordinarie della madre funzionano.",
+      "mechanicalAppearance": "Cannone sottile di ghiaccio scuro con tre anelli controrotanti, ago blu-violetto e bobine di polarità inversa",
       "independentShot": true,
       "playable": false,
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "targetKind": "mother",
+      "bypassEscortCover": true,
+      "piercing": false,
+      "combo": {
+        "role": "trigger",
+        "pairId": "weapon-new-cryogenic-03",
+        "mark": "cristallo-brina-positivo",
+        "requiresRealDamage": true,
+        "bonusBurstHP": 12,
+        "consumesMark": true,
+        "targetKind": "mother",
+        "elementSynergy": "cryogenic+cryogenic"
+      }
     },
     {
       "id": "weapon-new-cryogenic-06",
