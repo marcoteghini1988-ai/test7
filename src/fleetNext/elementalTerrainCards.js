@@ -1,6 +1,6 @@
 // Eclissi Stellare - Catalogo progettato di 30 Terreni elementali x 4 rarita'.
-// Le 120 definizioni sono disponibili come dati. Non sono ancora collegate al
-// motore di battaglia, al mazzo o alle immagini: il legacy in terrains.js resta invariato.
+// Carte giocabili nella modalità HP. Le immagini definitive saranno aggiunte dopo
+// il collaudo; i Terreni ambientali storici dei boss restano compatibili.
 // Valori iniziali da collaudare prima di attivare gli effetti nel combattimento.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 import {SHIP_RARITIES,RARITY_DUPLICATE_COPIES,nextShipRarity} from './shipRarity.js';
@@ -112,9 +112,14 @@ export const ELEMENTAL_TERRAIN_CARDS=Object.freeze(MODELS.flatMap(([elementId,..
    ': +'+percent+'%'+(mode.id==='EQ'?' a entrambi':'')+
    '. Effetto continuo per entrambi i giocatori finche questo Terreno resta attivo.';
   return Object.freeze({
-   id,cardId:id,name:names[mode.index],family:'terrain',kind:'elemental',
-   variant:mode.type,elementId,elementName,rarity:tier.rarity,
-   attackPercent,defensePercent,description,
+   id,cardId:id,name:names[mode.index],nome:names[mode.index],
+   category:'Terreno',categoria:'Terreno',sottotipo:'Terreno',
+   family:'terrain',kind:'terrain',variant:mode.type,elementId,elementName,
+   rarita:tier.rarity,rarity:tier.rarity,visualSymbol:FLEET_ELEMENTS[elementId].symbol,
+   nativeFace:true,playable:true,attackPercent,defensePercent,
+   description,effectProposed:description,
+   effectSpec:Object.freeze({type:'elementalTerrain',cardId:id,elementId,
+    attackPercent,defensePercent}),
    permanent:true,affectsBothPlayers:true,
    activationLimitPerTurn:null
   });
