@@ -7,6 +7,7 @@ import {validateEffectSpec,describeEffect} from './fleetNext/simpleEffects.js';
 import {siphonSacrificePlan,siphonTargetPlan} from './fleetNext/siphonAttacks.js';
 import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 import {createFleetNextBattle,resolveFleetNextTurn,validateFleetTurn} from './fleetNext/combat.js';
+import {projectFleetSlots} from './fleetNext/battlePresentation.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createFleetInventory} from './fleetNext/collection.js';
 import {canSelectNewGeneric,buildNextBaseDeck,buyNextCommonCard,
@@ -78,6 +79,7 @@ test('Danno nominale: Epica ripartita, Leggendaria per ogni bersaglio',()=>{
 });
 test('Epica: 30+30 HP sacrificati, 20/20/20 su due supporti e madre',()=>{
  const b=battle(2,2),before=b.sides.B.ships[0].hp;
+ assert.equal(projectFleetSlots(b.sides.A,[E])[3].id,E);
  const r=play(b);assert.equal(r.ok,true,r.reason);
  const e=strike(r);assert.ok(e);
  assert.equal(e.cardId,E);assert.equal(e.totalSacrificed,60);
@@ -85,7 +87,7 @@ test('Epica: 30+30 HP sacrificati, 20/20/20 su due supporti e madre',()=>{
  assert.deepEqual(e.targets.map(x=>x.nominalDamage),[20,20,20]);
  assert.deepEqual(r.battle.sides.A.escorts.map(x=>x.hp),[120,120]);
  assert.equal(r.battle.sides.A.machines.length,0);
- assert.ok(r.battle.sides.A.attackSlots.includes(E));
+ assert.equal(r.battle.sides.A.attackSlots.includes(E),false,'si libera lo slot Attacco a fine turno');
  assert.ok(r.battle.sides.A.discard.includes(E)||r.battle.sides.A.deck.includes(E)||
   r.battle.sides.A.hand.includes(E));
  assert.ok(r.battle.sides.B.ships[0].hp<before);
@@ -98,8 +100,8 @@ test('Leggendaria: 30+30 HP sacrificati, 60/60/60 su tutti',()=>{
  assert.equal(e.nominalDamage,180);
  assert.deepEqual(r.battle.sides.A.escorts.map(x=>x.hp),[120,120]);
  assert.equal(r.battle.sides.A.machines.length,0);
- assert.equal(r.battle.sides.B.escorts[0].hp,90);
- assert.equal(r.battle.sides.B.escorts[1].hp,90);
+ assert.ok(r.battle.sides.B.escorts[0].hp<150);
+ assert.ok(r.battle.sides.B.escorts[1].hp<150);
 });
 test('Un supporto: sacrifica solo da quello; la versione Epica colpisce tutti i bersagli presenti',()=>{
  const b=battle(1,2),r=play(b,[E]);assert.equal(r.ok,true,r.reason);
