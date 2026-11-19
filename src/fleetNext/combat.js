@@ -70,7 +70,7 @@ import {HP_SYNC_RULESET,motherIntegrityFromSystems,splitSynchronizedDamage} from
 import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
  commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,commandPassiveSuspensions,
  consumePlanciaRestriction,consumePlanciaSplit,planciaSplitCount,
- resetFieldWithBlackHole,TEMP_WEAPON_DURATION} from './newCardEffects.js';
+ resetFieldWithBlackHole,TEMP_WEAPON_DURATION,discardWeaponCharge} from './newCardEffects.js';
 import {dismantleCandidates,applyDismantleCard,expireDismantleEffects,
  syncDismantleSide} from './dismantleEffects.js';
 
@@ -2887,6 +2887,9 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     name:modern?'Arma temporanea · '+(def.nome||def.name):def.nome||def.name,
     sourceCardId:def.id,source:token,hp:saved?.hp??s.hp,
     maxHp:saved?.maxHp??s.hp,power:modern?Math.max(1,s.power||0):s.power||0,
+    damageMode:s.damageMode||null,weaponElementId:s.elementId||null,
+    baseDamage:s.baseDamage??null,perDiscardAttack:s.perDiscardAttack??null,
+    energyMultiplier:s.energyMultiplier??null,
     untilPly:modern?b.ply+2*(TEMP_WEAPON_DURATION[def.id]||1):null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
@@ -3103,7 +3106,16 @@ function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  if(side.independentSupportRoster){
   for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
-   const power=arsenalBonus(side,machine,b.ply);if(power)ctx.power+=power;
+   const charge=discardWeaponCharge(side,machine,cardRole);
+   const power=arsenalBonus(side,machine,b.ply,charge?.damage);
+   if(power)ctx.power+=power;
+   if(charge&&!ctx.order?.pass)events.push(emit(b,ctx.who,'weapon-discard',
+    machine.name+' · '+charge.damage+' HP nominali ('+charge.attackCards+
+    ' Attacchi negli scarti'+(charge.energyMatched?', Energia '+FLEET_ELEMENTS[charge.elementId].name+' ×2':'')+')',
+    {cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
+     attackCards:charge.attackCards,energyMatched:charge.energyMatched,
+     elementId:charge.elementId,multiplier:charge.multiplier,
+     nominalDamage:charge.damage,appliedPower:power}));
   }
   return; // Non esegue le vecchie passive delle 17 madri.
  }
