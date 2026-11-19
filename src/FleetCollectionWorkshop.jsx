@@ -233,13 +233,13 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {DISMANTLE_CARDS.map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>Arma di Supporto confermata · Cannone della Memoria Stellare</h3>
+   <h3 style={{fontSize:13}}>Arma di Supporto confermata · Cannone dei Frammenti</h3>
    <p style={small}>Elemento Fuoco · un turno · 10 HP base + 10 per ogni tua Carta Attacco negli scarti. Una Energia Fuoco nei tuoi scarti raddoppia tutto. Non conta gli scarti avversari. Rarità e acquisizione ancora da stabilire.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {DISCARD_WEAPONS.map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>Nuove Armi di Supporto · Sequenza e Amplificatore di Scorta</h3>
-   <p style={small}>Sequenza I → II → III: evolve soltanto nel turno successivo nello stesso slot (10 → 30 → 70 HP nominali); II e III isolate infliggono 10 e 20 HP. L'Amplificatore di Scorta dura due tuoi turni: 15 HP base, +20 per ogni supporto attivo, massimo due. Nomi, elementi, rarità e valori provvisori; acquisto non ancora abilitato.</p>
+   <h3 style={{fontSize:13}}>Nuove Armi di Supporto · Acceleratore Trifase</h3>
+   <p style={small}>Acceleratore Trifase I → II → III: evolve soltanto nel turno successivo nello stesso slot (10 → 30 → 70 HP nominali); II e III isolate infliggono 10 e 20 HP. Nome, elemento e valori ancora modificabili; acquisto non ancora abilitato.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {TEMP_SUPPORT_WEAPONS.map(genericCardTile)}
    </div>
