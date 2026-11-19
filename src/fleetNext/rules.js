@@ -106,7 +106,7 @@ export const VITAL_LABELS = Object.freeze({engine:'Motori',weapons:'Arsenale',co
 export const RARITY_COPY_LIMIT = Object.freeze({Comune:5,Rara:4,Epica:3,Leggendaria:2});
 export const MAX_EXCLUSIVE_UPGRADE = 3;
 
-if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==120||BOSS_COUNT!==12||ENERGY_COUNT!==10||Object.keys(SHIP_CONFIGS).length!==12||COMBO_RECIPES.length!==0)
+if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==120||BOSS_COUNT!==12||ENERGY_COUNT!==40||Object.keys(SHIP_CONFIGS).length!==12||COMBO_RECIPES.length!==0)
  throw new Error('Catalogo ufficiale incompleto: 12 madri, 120 esclusive, 12 Personaggi e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
