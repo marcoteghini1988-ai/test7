@@ -150,8 +150,9 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
    if(idsFor(e).includes('death-energy')){
     side.elementalCharges??={};
     const element=side.ships[0].element;
-    const current=Object.values(side.elementalCharges).reduce((n,v)=>n+(v||0),0);
-    const charge=Math.min(2,Math.max(0,4-current));
+    // La conversione passiva concede due cariche virtuali, senza tetto.
+    // Non crea Carte Energia fisiche fittizie nella pila.
+    const charge=2;
     side.elementalCharges[element]=(side.elementalCharges[element]||0)+charge;
     events.push(note(b,who,'support-death',e.name+' diventa '+charge+
      ' cariche Energia per la madre',
