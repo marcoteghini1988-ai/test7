@@ -108,6 +108,14 @@ test('Il terreno aumenta il danno di una percentuale costante e non elimina gli 
  assert.equal(better.damage,82);
  assert.ok(better.damage<100);
 });
+test('Bonus solo sulla quota dell\u2019elemento attivo in un colpo misto con Armi',()=>{
+ const result=applyElementalDamage(null,'plasma','ionic',100,
+  {terrainAttackPercent:10,terrainAttackBase:20,terrainKey:'mixed'});
+ assert.equal(result.damage,102);
+ const full=applyElementalDamage(null,'plasma','ionic',100,
+  {terrainAttackPercent:10,terrainKey:'mixed'});
+ assert.equal(full.damage,110);
+});
 test('Difesa elemento attivo e colpi leggeri conservano la frazione',()=>{
  const target={ships:[{defensePercent:8}],elementalDamageRemainders:{}};
  assert.equal(applyElementalDamage(target,'plasma','ionic',100,
