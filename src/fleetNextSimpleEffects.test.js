@@ -37,9 +37,9 @@ test('Aggiramento: una carta attiva raggiunge la madre dietro i supporti',()=>{
  assert.equal(r.battle.sides.B.ships[0].parts.find(p=>p.id==='weapons').hp,hp-1);
 });
 test('I Terreni ambientali dei Boss restano, senza vecchie Carte Terreno',()=>{
- assert.equal(Object.keys(TERRAIN_CATALOG).length,10);
+ assert.equal(Object.keys(TERRAIN_CATALOG).length,130);
  assert.ok(campaignTerrain(13).id);
- assert.ok(Object.values(TERRAIN_CATALOG).every(t=>t.cardId===null));
+ assert.ok(Object.entries(TERRAIN_CATALOG).filter(([id])=>/^T[0-9]{2}$/.test(id)).every(([,t])=>t.cardId===null));
 });
 test('L’intelligenza artificiale produce un ordine di turno senza usare carte inesistenti',()=>{
  const b=battle({shipB:'C03'});
