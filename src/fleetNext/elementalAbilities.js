@@ -122,10 +122,16 @@ export function canChargeElementalEnergy(side,element){
  return !!side?.ships?.[0]&&activeFleetElements(side.ships[0].id,side.ships[0].level).includes(element)&&
   totalElementalEnergy(side)<ENERGY_CAPACITY;
 }
-export function chargeElementalEnergy(side,element){
+// Le Carte Energia sono oggetti fisici nella pila condivisa del giocatore:
+// rimangono fuori dagli scarti finché la relativa carica non viene consumata.
+// Le eventuali cariche virtuali già prodotte dalle passive mantengono i vecchi
+// conteggi senza generare carte inesistenti nella pila o negli scarti.
+export function chargeElementalEnergy(side,element,cardId='energy-'+element){
  if(!canChargeElementalEnergy(side,element))return false;
  side.elementalCharges??={};
+ side.energyPile??=[];
  side.elementalCharges[element]=chargedElementalEnergy(side,element)+1;
+ side.energyPile.push(cardId);
  return true;
 }
 export function spendElementalEnergy(side,element,cost){
@@ -133,6 +139,16 @@ export function spendElementalEnergy(side,element,cost){
   chargedElementalEnergy(side,element)<cost)return false;
  side.elementalCharges[element]-=cost;
  if(side.elementalCharges[element]===0)delete side.elementalCharges[element];
+ // Le carte fisiche spese entrano negli scarti ORA, non quando si giocano.
+ // Le altre Energie, anche di elementi diversi, restano nella stessa pila.
+ const pile=side.energyPile||[];
+ let left=cost;
+ for(let i=pile.length-1;i>=0&&left>0;i--){
+  if(pile[i]!=='energy-'+element)continue;
+  const [spent]=pile.splice(i,1);
+  (side.discard??=[]).push(spent);
+  left--;
+ }
  return true;
 }
 export function elementalAbilityReadiness(side,element,extraCards=0){
