@@ -1,0 +1,1182 @@
+{
+  "source": "docs/CATALOGO_100_ARMI_PROPOSTA_2026-11-19.json",
+  "date": "2026-11-19",
+  "status": "classificazione preliminare, nessuna modifica al gioco",
+  "criteria": {
+    "Arma": "L'arma installata infligge danno con un suo colpo/proiettile/impatto distinto",
+    "Attacco": "Cambia danni, bersagli, stati, difese o l'attacco normale senza un colpo proprio"
+  },
+  "totals": {
+    "Arma": 33,
+    "Attacco": 67
+  },
+  "byElement": [
+    {
+      "element": "Fuoco",
+      "weapons": 3,
+      "attacks": 7,
+      "weaponNames": [
+        "Mortaio Magmatico",
+        "Batteria Meteoritica",
+        "Obice Supernova"
+      ],
+      "attackNames": [
+        "Erogatore di Braci",
+        "Cannone Bifiamma",
+        "Ugello Termico",
+        "Turbina di Plasma",
+        "Trivella Solare",
+        "Reattore di Cenere",
+        "Lancia della Corona Solare"
+      ]
+    },
+    {
+      "element": "Acqua",
+      "weapons": 1,
+      "attacks": 9,
+      "weaponNames": [
+        "Batteria del Diluvio"
+      ],
+      "attackNames": [
+        "Idrogetto Orbitale",
+        "Cannone a Marea",
+        "Eiettore di Vapore",
+        "Pompa di Risacca",
+        "Lancia di Pressione",
+        "Turbina Abissale",
+        "Reattore delle Correnti",
+        "Cannone del Maelstrom",
+        "Monolite Oceanico"
+      ]
+    },
+    {
+      "element": "Ghiaccio",
+      "weapons": 3,
+      "attacks": 7,
+      "weaponNames": [
+        "Mortaio di Grandine",
+        "Obice del Silenzio Boreale",
+        "Cannone del Crepaccio"
+      ],
+      "attackNames": [
+        "Spruzzatore di Brina",
+        "Puntale Criogenico",
+        "Laminatore Polare",
+        "Frusta Glaciale",
+        "Piastra Subzero",
+        "Lancia di Permafrost",
+        "Camera Zero Assoluto"
+      ]
+    },
+    {
+      "element": "Fulmine",
+      "weapons": 4,
+      "attacks": 6,
+      "weaponNames": [
+        "Saetta di Rame",
+        "Centrale delle Saette",
+        "Martello di Giove",
+        "Colonna di Tesla Astrale"
+      ],
+      "attackNames": [
+        "Bobina Sincrona",
+        "Impulsore a Scatti",
+        "Lancetta Tempestosa",
+        "Tridente Voltaico",
+        "Induttore a Catena",
+        "Fulminatore di Nodo"
+      ]
+    },
+    {
+      "element": "Terra",
+      "weapons": 5,
+      "attacks": 5,
+      "weaponNames": [
+        "Lanciaghiaia Cosmico",
+        "Mortaio dei Crateri",
+        "Catapulta di Obsidiana",
+        "Batteria delle Faglie",
+        "Martello Continentale"
+      ],
+      "attackNames": [
+        "Sparachiodi di Basalto",
+        "Pressa Tellurica",
+        "Trivella Sismica",
+        "Nucleo Geotermico",
+        "Cannone della Frattura Planetaria"
+      ]
+    },
+    {
+      "element": "Vento",
+      "weapons": 4,
+      "attacks": 6,
+      "weaponNames": [
+        "Lancia di Monsoni",
+        "Cannoniera di Corrente",
+        "Falce dell'Uragano",
+        "Cannone del Grande Ciclone"
+      ],
+      "attackNames": [
+        "Ventola d'Assalto",
+        "Ago Anemico",
+        "Soffiatore Orbitale",
+        "Turbina Ciclonica",
+        "Batteria dei Vortici",
+        "Iniettore del Jetstream"
+      ]
+    },
+    {
+      "element": "Luce",
+      "weapons": 1,
+      "attacks": 9,
+      "weaponNames": [
+        "Cannone del Solstizio"
+      ],
+      "attackNames": [
+        "Proiettore di Fotoni",
+        "Raggio di Prisma",
+        "Faro Balistico",
+        "Lanciatore d'Aurora",
+        "Specchio Concentrico",
+        "Arco di Helios",
+        "Corona Rifrangente",
+        "Reattore dell'Alba",
+        "Lancia dell'Equinozio"
+      ]
+    },
+    {
+      "element": "Ombra",
+      "weapons": 4,
+      "attacks": 6,
+      "weaponNames": [
+        "Batteria dei Fantasmi",
+        "Fenditura delle Lame",
+        "Obice della Notte Eterna",
+        "Cannone del Nulla Risonante"
+      ],
+      "attackNames": [
+        "Ago dell'Eclisse",
+        "Silenziatore del Vuoto",
+        "Proiettore di Nebbia Nera",
+        "Trivella d'Ombra",
+        "Morsa Crepuscolare",
+        "Cisterna dell'Oblio"
+      ]
+    },
+    {
+      "element": "Metallo",
+      "weapons": 3,
+      "attacks": 7,
+      "weaponNames": [
+        "Cannoncino a Cuscinetti",
+        "Balestra a Binari",
+        "Batteria di Lame Rotanti"
+      ],
+      "attackNames": [
+        "Chiodatrice Magnetica",
+        "Estrattore di Schegge",
+        "Trivella Ferritica",
+        "Martello d'Acciaio",
+        "Fucina Magnetar",
+        "Cannone a Massa Critica",
+        "Colosso delle Leghe"
+      ]
+    },
+    {
+      "element": "Gravità",
+      "weapons": 5,
+      "attacks": 5,
+      "weaponNames": [
+        "Lanciapesi Orbitale",
+        "Mortaio delle Orbite",
+        "Batteria delle Maree Nere",
+        "Cannone dell'Orizzonte",
+        "Singolarità da Assedio"
+      ],
+      "attackNames": [
+        "Impulsore di Massa",
+        "Compressore Gravitico",
+        "Trattore d'Assalto",
+        "Vortice di Compressione",
+        "Reattore di Orbita Spezzata"
+      ]
+    }
+  ],
+  "byRarity": {
+    "Comune": {
+      "Arma": 4,
+      "Attacco": 26
+    },
+    "Rara": {
+      "Arma": 9,
+      "Attacco": 21
+    },
+    "Epica": {
+      "Arma": 7,
+      "Attacco": 13
+    },
+    "Leggendaria": {
+      "Arma": 13,
+      "Attacco": 7
+    }
+  },
+  "ambiguous": [
+    {
+      "id": "weapon100-plasma-02",
+      "name": "Cannone Bifiamma",
+      "preliminary": "Attacco"
+    },
+    {
+      "id": "weapon100-plasma-09",
+      "name": "Lancia della Corona Solare",
+      "preliminary": "Attacco"
+    },
+    {
+      "id": "weapon100-refrigerant-09",
+      "name": "Cannone del Maelstrom",
+      "preliminary": "Attacco"
+    },
+    {
+      "id": "weapon100-cryogenic-09",
+      "name": "Obice del Silenzio Boreale",
+      "preliminary": "Arma"
+    },
+    {
+      "id": "weapon100-cryogenic-10",
+      "name": "Cannone del Crepaccio",
+      "preliminary": "Arma"
+    },
+    {
+      "id": "weapon100-ionic-09",
+      "name": "Martello di Giove",
+      "preliminary": "Arma"
+    },
+    {
+      "id": "weapon100-mineral-09",
+      "name": "Martello Continentale",
+      "preliminary": "Arma"
+    },
+    {
+      "id": "weapon100-aerial-04",
+      "name": "Lancia di Monsoni",
+      "preliminary": "Arma"
+    },
+    {
+      "id": "weapon100-radiant-07",
+      "name": "Corona Rifrangente",
+      "preliminary": "Attacco"
+    },
+    {
+      "id": "weapon100-metallic-09",
+      "name": "Cannone a Massa Critica",
+      "preliminary": "Attacco"
+    },
+    {
+      "id": "weapon100-gravity-09",
+      "name": "Cannone dell'Orizzonte",
+      "preliminary": "Arma"
+    }
+  ],
+  "items": [
+    {
+      "id": "weapon100-plasma-01",
+      "name": "Erogatore di Braci",
+      "rarity": "Comune",
+      "element": "Fuoco",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale applica una bruciatura breve al bersaglio effettivamente colpito; la bruciatura non si cumula con se stessa."
+    },
+    {
+      "id": "weapon100-plasma-02",
+      "name": "Cannone Bifiamma",
+      "rarity": "Comune",
+      "element": "Fuoco",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo attacco normale viene ripartito in due impulsi più piccoli sullo stesso bersaglio; ciascun impulso verifica le difese."
+    },
+    {
+      "id": "weapon100-plasma-03",
+      "name": "Ugello Termico",
+      "rarity": "Comune",
+      "element": "Fuoco",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo riuscito indebolisce temporaneamente la resistenza del bersaglio ai successivi danni da Fuoco."
+    },
+    {
+      "id": "weapon100-plasma-04",
+      "name": "Mortaio Magmatico",
+      "rarity": "Rara",
+      "element": "Fuoco",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Prepara nel primo turno una granata incandescente; al turno proprio successivo aggiunge un impatto ritardato al normale attacco, se l'arma è ancora attiva."
+    },
+    {
+      "id": "weapon100-plasma-05",
+      "name": "Turbina di Plasma",
+      "rarity": "Rara",
+      "element": "Fuoco",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il bonus offensivo cresce quando l'arma contribuisce a due attacchi normali consecutivi; la catena si interrompe se il colpo non parte."
+    },
+    {
+      "id": "weapon100-plasma-06",
+      "name": "Trivella Solare",
+      "rarity": "Rara",
+      "element": "Fuoco",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale riduce l'effetto di una protezione visibile, senza ignorare le altre difese del bersaglio."
+    },
+    {
+      "id": "weapon100-plasma-07",
+      "name": "Batteria Meteoritica",
+      "rarity": "Epica",
+      "element": "Fuoco",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Durante un attacco normale valido rilascia colpi supplementari leggeri verso le navicelle di supporto avversarie ancora operative; non aggira la copertura della madre."
+    },
+    {
+      "id": "weapon100-plasma-08",
+      "name": "Reattore di Cenere",
+      "rarity": "Epica",
+      "element": "Fuoco",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Accumula una quota dei danni che la tua flotta subisce mentre è attivo e la aggiunge, con limite da bilanciare, al successivo attacco normale."
+    },
+    {
+      "id": "weapon100-plasma-09",
+      "name": "Lancia della Corona Solare",
+      "rarity": "Leggendaria",
+      "element": "Fuoco",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Richiede un turno di carica senza scarica propria; se sopravvive, concentra l'energia in un unico colpo normale potenziato, poi si consuma."
+    },
+    {
+      "id": "weapon100-plasma-10",
+      "name": "Obice Supernova",
+      "rarity": "Leggendaria",
+      "element": "Fuoco",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Al primo attacco valido produce un'esplosione che ripartisce danni addizionali fra i supporti nemici presenti; se non ve ne sono, rinforza il colpo normale alla madre."
+    },
+    {
+      "id": "weapon100-refrigerant-01",
+      "name": "Idrogetto Orbitale",
+      "rarity": "Comune",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale marca il bersaglio con una pellicola d'acqua: un successivo effetto Fulmine può sfruttarla una sola volta."
+    },
+    {
+      "id": "weapon100-refrigerant-02",
+      "name": "Cannone a Marea",
+      "rarity": "Comune",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il bonus del prossimo colpo normale aumenta se il supporto bersagliato ha più della metà dei propri HP attuali rispetto al massimo."
+    },
+    {
+      "id": "weapon100-refrigerant-03",
+      "name": "Eiettore di Vapore",
+      "rarity": "Comune",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo riuscito produce una nube che attenua il prossimo bonus offensivo dell'arma avversaria nel turno seguente."
+    },
+    {
+      "id": "weapon100-refrigerant-04",
+      "name": "Pompa di Risacca",
+      "rarity": "Rara",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Parte del danno reale inflitto dal prossimo attacco normale ripara il tuo supporto operativo più danneggiato, senza superare gli HP massimi."
+    },
+    {
+      "id": "weapon100-refrigerant-05",
+      "name": "Lancia di Pressione",
+      "rarity": "Rara",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo attacco concentrato riduce una parte della mitigazione percentuale del bersaglio, ma resta soggetto a coperture, scudi e limiti HP."
+    },
+    {
+      "id": "weapon100-refrigerant-06",
+      "name": "Turbina Abissale",
+      "rarity": "Rara",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Contribuisce agli attacchi normali per due tuoi turni e potenzia il secondo se nel primo hai danneggiato davvero un supporto."
+    },
+    {
+      "id": "weapon100-refrigerant-07",
+      "name": "Batteria del Diluvio",
+      "rarity": "Epica",
+      "element": "Acqua",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Suddivide una salva aggiuntiva tra fino a due supporti nemici distinti; ciascun impatto può essere difeso separatamente."
+    },
+    {
+      "id": "weapon100-refrigerant-08",
+      "name": "Reattore delle Correnti",
+      "rarity": "Epica",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Trattiene una parte del danno nominale annullato da una difesa e la recupera come bonus limitato al tuo prossimo attacco normale."
+    },
+    {
+      "id": "weapon100-refrigerant-09",
+      "name": "Cannone del Maelstrom",
+      "rarity": "Leggendaria",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il colpo normale crea un vortice che può trasferire una parte del danno reale dal primo supporto a un secondo supporto vivo; non crea un attacco diretto alla madre."
+    },
+    {
+      "id": "weapon100-refrigerant-10",
+      "name": "Monolite Oceanico",
+      "rarity": "Leggendaria",
+      "element": "Acqua",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Durante due tuoi turni riduce gradualmente il bonus delle difese energetiche nemiche soltanto dopo colpi normali riusciti; termina dopo la seconda attivazione."
+    },
+    {
+      "id": "weapon100-cryogenic-01",
+      "name": "Spruzzatore di Brina",
+      "rarity": "Comune",
+      "element": "Ghiaccio",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale rallenta temporaneamente la ricarica di una macchina Arma avversaria operativa."
+    },
+    {
+      "id": "weapon100-cryogenic-02",
+      "name": "Puntale Criogenico",
+      "rarity": "Comune",
+      "element": "Ghiaccio",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo attacco normale riceve un bonus contro un supporto già danneggiato, senza cambiare bersaglio automaticamente."
+    },
+    {
+      "id": "weapon100-cryogenic-03",
+      "name": "Laminatore Polare",
+      "rarity": "Comune",
+      "element": "Ghiaccio",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Dopo un impatto valido applica un velo gelato che diminuisce il primo bonus Arma dell'avversario nel turno successivo."
+    },
+    {
+      "id": "weapon100-cryogenic-04",
+      "name": "Mortaio di Grandine",
+      "rarity": "Rara",
+      "element": "Ghiaccio",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Il prossimo colpo normale genera una serie di piccoli impatti sul bersaglio selezionato, ciascuno sensibile alle protezioni disponibili."
+    },
+    {
+      "id": "weapon100-cryogenic-05",
+      "name": "Frusta Glaciale",
+      "rarity": "Rara",
+      "element": "Ghiaccio",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Se il prossimo attacco normale colpisce un supporto, ne sospende per breve tempo la prima abilità attivabile nel turno seguente."
+    },
+    {
+      "id": "weapon100-cryogenic-06",
+      "name": "Piastra Subzero",
+      "rarity": "Rara",
+      "element": "Ghiaccio",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Se nel turno di schieramento non viene sparato un attacco normale, conserva la pressione criogenica e potenzia il successivo; altrimenti concede solo il bonus base."
+    },
+    {
+      "id": "weapon100-cryogenic-07",
+      "name": "Lancia di Permafrost",
+      "rarity": "Epica",
+      "element": "Ghiaccio",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo riuscito blocca temporaneamente la rigenerazione del supporto colpito, senza alterarne gli HP massimi."
+    },
+    {
+      "id": "weapon100-cryogenic-08",
+      "name": "Camera Zero Assoluto",
+      "rarity": "Epica",
+      "element": "Ghiaccio",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Dopo il primo impatto riuscito riduce la potenza di una delle Armi temporanee avversarie per il suo prossimo turno, senza eliminarne la carta."
+    },
+    {
+      "id": "weapon100-cryogenic-09",
+      "name": "Obice del Silenzio Boreale",
+      "rarity": "Leggendaria",
+      "element": "Ghiaccio",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Aggiunge al prossimo attacco normale un effetto che sospende una fonte di danno nel tempo attiva sul bersaglio, se presente, e produce danno di Ghiaccio."
+    },
+    {
+      "id": "weapon100-cryogenic-10",
+      "name": "Cannone del Crepaccio",
+      "rarity": "Leggendaria",
+      "element": "Ghiaccio",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "La scarica finale aumenta contro i supporti con HP attuali bassi, ma non può ignorare una difesa e non genera eliminazioni automatiche."
+    },
+    {
+      "id": "weapon100-ionic-01",
+      "name": "Saetta di Rame",
+      "rarity": "Comune",
+      "element": "Fulmine",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Il prossimo colpo normale produce un piccolo arco secondario verso un altro supporto nemico operativo, se presente."
+    },
+    {
+      "id": "weapon100-ionic-02",
+      "name": "Bobina Sincrona",
+      "rarity": "Comune",
+      "element": "Fulmine",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Aumenta il contributo al prossimo attacco normale se nello stesso turno è stata caricata almeno una tua Carta Energia Fulmine."
+    },
+    {
+      "id": "weapon100-ionic-03",
+      "name": "Impulsore a Scatti",
+      "rarity": "Comune",
+      "element": "Fulmine",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Distribuisce il proprio potenziamento in due impulsi, uno per ciascuno dei prossimi due tuoi attacchi normali validi."
+    },
+    {
+      "id": "weapon100-ionic-04",
+      "name": "Lancetta Tempestosa",
+      "rarity": "Rara",
+      "element": "Fulmine",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Premia due attacchi normali consecutivi su un bersaglio dello stesso tipo: il secondo riceve un bonus, purché l'arma rimanga installata."
+    },
+    {
+      "id": "weapon100-ionic-05",
+      "name": "Tridente Voltaico",
+      "rarity": "Rara",
+      "element": "Fulmine",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Consente al prossimo attacco normale di dividere una parte della potenza fra due supporti distinti, verificando le difese di ciascuno."
+    },
+    {
+      "id": "weapon100-ionic-06",
+      "name": "Induttore a Catena",
+      "rarity": "Rara",
+      "element": "Fulmine",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Ogni Energia Fulmine spesa per una tua abilità mentre l'arma è attiva alimenta una carica che migliora il successivo attacco normale, con tetto da definire."
+    },
+    {
+      "id": "weapon100-ionic-07",
+      "name": "Fulminatore di Nodo",
+      "rarity": "Epica",
+      "element": "Fulmine",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo normale su un supporto può sospendere la sua prossima attivazione di passiva, senza impedirgli di difendere fisicamente."
+    },
+    {
+      "id": "weapon100-ionic-08",
+      "name": "Centrale delle Saette",
+      "rarity": "Epica",
+      "element": "Fulmine",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Accumula un impulso in ciascuno dei primi due turni con attacco normale; al secondo rilascia una scarica supplementare, poi si scarta."
+    },
+    {
+      "id": "weapon100-ionic-09",
+      "name": "Martello di Giove",
+      "rarity": "Leggendaria",
+      "element": "Fulmine",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Necessita di un turno di preparazione; nel successivo aggiunge un forte colpo normale singolo, senza aggirare le difese, poi si disintegra."
+    },
+    {
+      "id": "weapon100-ionic-10",
+      "name": "Colonna di Tesla Astrale",
+      "rarity": "Leggendaria",
+      "element": "Fulmine",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Il prossimo attacco normale genera un arco che passa al secondo supporto avversario, se operativo, con potenza decrescente e una verifica di difesa per bersaglio."
+    },
+    {
+      "id": "weapon100-mineral-01",
+      "name": "Sparachiodi di Basalto",
+      "rarity": "Comune",
+      "element": "Terra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo attacco normale infligge un bonus moderato alle protezioni fisiche dei supporti nemici colpiti."
+    },
+    {
+      "id": "weapon100-mineral-02",
+      "name": "Lanciaghiaia Cosmico",
+      "rarity": "Comune",
+      "element": "Terra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Il prossimo attacco normale rilascia un gruppo di piccoli impatti sullo stesso supporto; eventuali difese possono intercettarli uno alla volta."
+    },
+    {
+      "id": "weapon100-mineral-03",
+      "name": "Pressa Tellurica",
+      "rarity": "Comune",
+      "element": "Terra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo riuscito diminuisce temporaneamente la capacità difensiva del supporto bersagliato, senza disattivarne le abilità."
+    },
+    {
+      "id": "weapon100-mineral-04",
+      "name": "Mortaio dei Crateri",
+      "rarity": "Rara",
+      "element": "Terra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Piazza una carica nel primo turno e la detona con il normale attacco del turno successivo se l'arma è ancora schierata."
+    },
+    {
+      "id": "weapon100-mineral-05",
+      "name": "Trivella Sismica",
+      "rarity": "Rara",
+      "element": "Terra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo su supporto può lasciare una frattura che amplifica il prossimo danno da Terra ricevuto dallo stesso supporto."
+    },
+    {
+      "id": "weapon100-mineral-06",
+      "name": "Catapulta di Obsidiana",
+      "rarity": "Rara",
+      "element": "Terra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Aggiunge un proiettile pesante al normale attacco se il bersaglio ha ancora una protezione visibile; non la salta automaticamente."
+    },
+    {
+      "id": "weapon100-mineral-07",
+      "name": "Batteria delle Faglie",
+      "rarity": "Epica",
+      "element": "Terra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Distribuisce brevi scosse addizionali fra i supporti nemici vivi che hanno già subito danni in questo turno."
+    },
+    {
+      "id": "weapon100-mineral-08",
+      "name": "Nucleo Geotermico",
+      "rarity": "Epica",
+      "element": "Terra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Per due turni accumula una parte dei colpi normali realmente inflitti e converte la carica in un bonus limitato al secondo attacco."
+    },
+    {
+      "id": "weapon100-mineral-09",
+      "name": "Martello Continentale",
+      "rarity": "Leggendaria",
+      "element": "Terra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Dopo un turno di preparazione produce un solo colpo normale molto pesante contro un supporto selezionato, rispettando tutte le difese."
+    },
+    {
+      "id": "weapon100-mineral-10",
+      "name": "Cannone della Frattura Planetaria",
+      "rarity": "Leggendaria",
+      "element": "Terra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale crea un'onda sismica che indebolisce la resistenza degli altri supporti nemici operativi, senza colpirli direttamente."
+    },
+    {
+      "id": "weapon100-aerial-01",
+      "name": "Ventola d'Assalto",
+      "rarity": "Comune",
+      "element": "Vento",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo attacco normale ottiene un bonus se l'arma avversaria ha appena inflitto danni nel turno precedente."
+    },
+    {
+      "id": "weapon100-aerial-02",
+      "name": "Ago Anemico",
+      "rarity": "Comune",
+      "element": "Vento",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo su un supporto rapido riduce temporaneamente un suo bonus di schivata, senza annullare altre difese."
+    },
+    {
+      "id": "weapon100-aerial-03",
+      "name": "Soffiatore Orbitale",
+      "rarity": "Comune",
+      "element": "Vento",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo normale riuscito disperde una parte dei bonus temporanei di precisione del bersaglio."
+    },
+    {
+      "id": "weapon100-aerial-04",
+      "name": "Lancia di Monsoni",
+      "rarity": "Rara",
+      "element": "Vento",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Lancia un impulso normalmente leggero che diventa più incisivo se il bersaglio ha cambiato stato o elemento durante il turno."
+    },
+    {
+      "id": "weapon100-aerial-05",
+      "name": "Turbina Ciclonica",
+      "rarity": "Rara",
+      "element": "Vento",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Produce un bonus sul normale attacco che cresce se i due turni consecutivi hanno bersagli diversi."
+    },
+    {
+      "id": "weapon100-aerial-06",
+      "name": "Cannoniera di Corrente",
+      "rarity": "Rara",
+      "element": "Vento",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Se il primo bersaglio supporto viene distrutto dal tiro normale, un colpo leggero residuo passa a un altro supporto operativo."
+    },
+    {
+      "id": "weapon100-aerial-07",
+      "name": "Batteria dei Vortici",
+      "rarity": "Epica",
+      "element": "Vento",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Consente a un attacco normale valido di suddividere un effetto di vento fra due supporti nemici operativi, senza attaccare direttamente la madre protetta."
+    },
+    {
+      "id": "weapon100-aerial-08",
+      "name": "Iniettore del Jetstream",
+      "rarity": "Epica",
+      "element": "Vento",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il successivo colpo normale aumenta se hai subito un effetto di rallentamento o congelamento, consumando quel vantaggio una volta."
+    },
+    {
+      "id": "weapon100-aerial-09",
+      "name": "Falce dell'Uragano",
+      "rarity": "Leggendaria",
+      "element": "Vento",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Il prossimo attacco normale produce un vortice che colpisce un supporto e può spostare una protezione non vincolata verso un altro bersaglio valido."
+    },
+    {
+      "id": "weapon100-aerial-10",
+      "name": "Cannone del Grande Ciclone",
+      "rarity": "Leggendaria",
+      "element": "Vento",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Rimane in campo per due turni: al secondo attacco normale concentra l'energia accumulata in una raffica su più supporti, senza bypass della madre."
+    },
+    {
+      "id": "weapon100-radiant-01",
+      "name": "Proiettore di Fotoni",
+      "rarity": "Comune",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo attacco normale riceve una potenza aggiuntiva contro bersagli non nascosti o occultati."
+    },
+    {
+      "id": "weapon100-radiant-02",
+      "name": "Raggio di Prisma",
+      "rarity": "Comune",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale conserva una quota della potenza quando una protezione lo attenua, senza annullare il blocco della difesa."
+    },
+    {
+      "id": "weapon100-radiant-03",
+      "name": "Faro Balistico",
+      "rarity": "Comune",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il primo colpo riuscito marca il bersaglio; il successivo attacco normale contro lo stesso bersaglio ottiene un bonus limitato."
+    },
+    {
+      "id": "weapon100-radiant-04",
+      "name": "Lanciatore d'Aurora",
+      "rarity": "Rara",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Durante il prossimo attacco normale conferisce un potenziamento contro supporti che possiedono effetti di oscuramento attivi."
+    },
+    {
+      "id": "weapon100-radiant-05",
+      "name": "Specchio Concentrico",
+      "rarity": "Rara",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Riflette una piccola parte di un bonus offensivo temporaneo avversario in carica per il tuo prossimo tiro normale, senza rubare carte."
+    },
+    {
+      "id": "weapon100-radiant-06",
+      "name": "Arco di Helios",
+      "rarity": "Rara",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il successivo attacco normale aumenta se la nave madre ha ricevuto riparazioni nel tuo turno, senza consumare HP alleati."
+    },
+    {
+      "id": "weapon100-radiant-07",
+      "name": "Corona Rifrangente",
+      "rarity": "Epica",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Trasforma il prossimo attacco valido in due raggi verso supporti differenti, solo se entrambi sono bersagliabili e con controlli difensivi separati."
+    },
+    {
+      "id": "weapon100-radiant-08",
+      "name": "Reattore dell'Alba",
+      "rarity": "Epica",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Accumula luce durante due tuoi turni; al secondo attacco normale concede un bonus maggiore se il primo ha colpito davvero."
+    },
+    {
+      "id": "weapon100-radiant-09",
+      "name": "Lancia dell'Equinozio",
+      "rarity": "Leggendaria",
+      "element": "Luce",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il primo colpo normale valido può neutralizzare temporaneamente un singolo indebolimento offensivo applicato al tuo lato, oltre al suo danno."
+    },
+    {
+      "id": "weapon100-radiant-10",
+      "name": "Cannone del Solstizio",
+      "rarity": "Leggendaria",
+      "element": "Luce",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Al successivo attacco normale converte una parte della potenza accumulata in una salva luminosa distribuita sui supporti nemici vivi, senza superare i limiti materni."
+    },
+    {
+      "id": "weapon100-void-01",
+      "name": "Ago dell'Eclisse",
+      "rarity": "Comune",
+      "element": "Ombra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale ottiene un piccolo bonus contro un supporto che è stato bersagliato nel turno precedente."
+    },
+    {
+      "id": "weapon100-void-02",
+      "name": "Silenziatore del Vuoto",
+      "rarity": "Comune",
+      "element": "Ombra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un impatto normale valido riduce per un turno la potenza della prima Arma temporanea nemica in uso."
+    },
+    {
+      "id": "weapon100-void-03",
+      "name": "Proiettore di Nebbia Nera",
+      "rarity": "Comune",
+      "element": "Ombra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo attacco normale applica una nube che impedisce un bonus di precisione sulla nave colpita nel turno successivo."
+    },
+    {
+      "id": "weapon100-void-04",
+      "name": "Trivella d'Ombra",
+      "rarity": "Rara",
+      "element": "Ombra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo riuscito su un supporto rende più efficace il prossimo attacco Ombra contro quello stesso supporto, senza aggirare protezioni."
+    },
+    {
+      "id": "weapon100-void-05",
+      "name": "Batteria dei Fantasmi",
+      "rarity": "Rara",
+      "element": "Ombra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Il prossimo attacco normale crea un secondo proiettile leggero che può dirigersi verso un altro supporto operativo non occultato."
+    },
+    {
+      "id": "weapon100-void-06",
+      "name": "Morsa Crepuscolare",
+      "rarity": "Rara",
+      "element": "Ombra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Quando il colpo normale danneggia davvero un supporto, ne riduce temporaneamente una sola passiva offensiva nel turno seguente."
+    },
+    {
+      "id": "weapon100-void-07",
+      "name": "Fenditura delle Lame",
+      "rarity": "Epica",
+      "element": "Ombra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Con una salva normale valida produce un attacco secondario leggero contro un supporto già ferito, scegliendolo automaticamente tra quelli bersagliabili."
+    },
+    {
+      "id": "weapon100-void-08",
+      "name": "Cisterna dell'Oblio",
+      "rarity": "Epica",
+      "element": "Ombra",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Conserva parte dei bonus offensivi temporanei avversari dispersi durante la sua durata e li trasforma in un bonus limitato al tuo prossimo colpo."
+    },
+    {
+      "id": "weapon100-void-09",
+      "name": "Obice della Notte Eterna",
+      "rarity": "Leggendaria",
+      "element": "Ombra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Richiede una fase di carica e rilascia sul successivo normale attacco un colpo pesante con breve riduzione della rigenerazione del supporto colpito."
+    },
+    {
+      "id": "weapon100-void-10",
+      "name": "Cannone del Nulla Risonante",
+      "rarity": "Leggendaria",
+      "element": "Ombra",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Un attacco normale riuscito su supporto produce un'eco limitata sul secondo supporto operativo; non può scavalcare la copertura verso la madre."
+    },
+    {
+      "id": "weapon100-metallic-01",
+      "name": "Chiodatrice Magnetica",
+      "rarity": "Comune",
+      "element": "Metallo",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo attacco normale colpisce con una testata che riceve un bonus contro protezioni di tipo fisico."
+    },
+    {
+      "id": "weapon100-metallic-02",
+      "name": "Cannoncino a Cuscinetti",
+      "rarity": "Comune",
+      "element": "Metallo",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Al prossimo attacco normale lancia più pallini leggeri contro un solo supporto; le difese intercettano i singoli impatti."
+    },
+    {
+      "id": "weapon100-metallic-03",
+      "name": "Estrattore di Schegge",
+      "rarity": "Comune",
+      "element": "Metallo",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Quando il normale attacco colpisce un supporto, rimuove un piccolo bonus di armatura temporaneo, se presente."
+    },
+    {
+      "id": "weapon100-metallic-04",
+      "name": "Trivella Ferritica",
+      "rarity": "Rara",
+      "element": "Metallo",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Contribuisce ai colpi normali per due tuoi turni e aumenta il secondo bonus se il primo ha consumato una protezione."
+    },
+    {
+      "id": "weapon100-metallic-05",
+      "name": "Balestra a Binari",
+      "rarity": "Rara",
+      "element": "Metallo",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Carica un proiettile per il prossimo turno e lo aggiunge al tiro normale contro un supporto bersagliabile."
+    },
+    {
+      "id": "weapon100-metallic-06",
+      "name": "Martello d'Acciaio",
+      "rarity": "Rara",
+      "element": "Metallo",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale danneggia più efficacemente un supporto con armatura o difesa temporanea ancora attiva."
+    },
+    {
+      "id": "weapon100-metallic-07",
+      "name": "Batteria di Lame Rotanti",
+      "rarity": "Epica",
+      "element": "Metallo",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Al normale attacco valido aggiunge una raffica ravvicinata sul medesimo supporto, con danni ripartiti in impulsi separati."
+    },
+    {
+      "id": "weapon100-metallic-08",
+      "name": "Fucina Magnetar",
+      "rarity": "Epica",
+      "element": "Metallo",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Una carica si accumula quando una Difesa avversaria intercetta il tuo colpo normale; la carica aumenta il successivo attacco, con tetto da bilanciare."
+    },
+    {
+      "id": "weapon100-metallic-09",
+      "name": "Cannone a Massa Critica",
+      "rarity": "Leggendaria",
+      "element": "Metallo",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Richiede preparazione; al turno successivo concentra in un unico tiro normale potenziato le riserve magnetiche, poi si scarta."
+    },
+    {
+      "id": "weapon100-metallic-10",
+      "name": "Colosso delle Leghe",
+      "rarity": "Leggendaria",
+      "element": "Metallo",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Per due tuoi turni aggiunge potenza ai colpi normali e, dopo un impatto reale, riduce temporaneamente una protezione metallica del bersaglio."
+    },
+    {
+      "id": "weapon100-gravity-01",
+      "name": "Impulsore di Massa",
+      "rarity": "Comune",
+      "element": "Gravità",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo colpo normale ottiene un bonus contro supporti con HP massimi elevati, senza infliggere danni proporzionali automatici."
+    },
+    {
+      "id": "weapon100-gravity-02",
+      "name": "Lanciapesi Orbitale",
+      "rarity": "Comune",
+      "element": "Gravità",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Il prossimo attacco normale aggiunge un singolo proiettile pesante che segue il bersaglio selezionato."
+    },
+    {
+      "id": "weapon100-gravity-03",
+      "name": "Compressore Gravitico",
+      "rarity": "Comune",
+      "element": "Gravità",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Un colpo riuscito riduce temporaneamente un bonus di schivata o mobilità del supporto colpito."
+    },
+    {
+      "id": "weapon100-gravity-04",
+      "name": "Mortaio delle Orbite",
+      "rarity": "Rara",
+      "element": "Gravità",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Prepara una massa in rotazione nel primo turno; nel secondo aggiunge un impatto al normale attacco se l'arma non è stata rimossa."
+    },
+    {
+      "id": "weapon100-gravity-05",
+      "name": "Trattore d'Assalto",
+      "rarity": "Rara",
+      "element": "Gravità",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il prossimo normale attacco può trasferire una parte del danno verso un secondo supporto operativo, senza scavalcare la copertura della madre."
+    },
+    {
+      "id": "weapon100-gravity-06",
+      "name": "Vortice di Compressione",
+      "rarity": "Rara",
+      "element": "Gravità",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Il bonus del normale attacco cresce quando il bersaglio è già stato rallentato o immobilizzato da un effetto temporaneo."
+    },
+    {
+      "id": "weapon100-gravity-07",
+      "name": "Batteria delle Maree Nere",
+      "rarity": "Epica",
+      "element": "Gravità",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Distribuisce piccoli impatti gravitazionali tra tutti i supporti nemici ancora operativi; la madre resta un bersaglio separato."
+    },
+    {
+      "id": "weapon100-gravity-08",
+      "name": "Reattore di Orbita Spezzata",
+      "rarity": "Epica",
+      "element": "Gravità",
+      "proposedType": "Attacco",
+      "reason": "Modifica un attacco, i bersagli o lo stato di gioco; senza un colpo proprio descritto, appartiene alle Carte Attacco.",
+      "effect": "Assorbe una parte delle spinte nemiche che hanno modificato un bersaglio e le trasforma in un bonus limitato al prossimo colpo normale."
+    },
+    {
+      "id": "weapon100-gravity-09",
+      "name": "Cannone dell'Orizzonte",
+      "rarity": "Leggendaria",
+      "element": "Gravità",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Dopo una fase di carica concentra un unico colpo gravitazionale molto forte sul bersaglio normale valido, rispettando difese e limite HP."
+    },
+    {
+      "id": "weapon100-gravity-10",
+      "name": "Singolarità da Assedio",
+      "rarity": "Leggendaria",
+      "element": "Gravità",
+      "proposedType": "Arma",
+      "reason": "Produce un impatto, una salva o un proiettile offensivo distinto; deve restare in uno slot Arma e sparare tramite la sua arma fisica.",
+      "effect": "Durante il secondo turno attivo genera una scarica che danneggia il supporto bersagliato e comprime parte della potenza residua verso un altro supporto vivo; non elimina o risucchia carte come Buco Nero."
+    }
+  ]
+}
