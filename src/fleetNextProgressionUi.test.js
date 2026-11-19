@@ -107,11 +107,11 @@ test('Fixed layout renders Character, Defense, Trap, three Attacks and two machi
 
 test('Machine preview uses its own berth and does not occupy any Attack slot',()=>{
  const side={machines:[],attackSlots:[],defenses:[]};
- assert.deepEqual(projectFleetSlots(side,['prog-machine-striker']),Array(6).fill(null));
- const berths=projectMachineBerths(side,['prog-machine-striker','prog-machine-guard']);
+ assert.deepEqual(projectFleetSlots(side,['weapon-memory-plasma']),Array(6).fill(null));
+ const berths=projectMachineBerths(side,['weapon-memory-plasma','weapon-sequence-1']);
  assert.equal(berths.length,2);
  assert.ok(berths.every(unit=>unit.pending));
- assert.deepEqual(berths.map(unit=>unit.hp),[3,5]);
+ assert.deepEqual(berths.map(unit=>unit.hp),[1,1]);
 });
 
 
@@ -233,7 +233,7 @@ test('Native new card fronts expose complete names and effects without invalid i
   card,cardRole,cardFacePath,describeEffect,officialSpecialArtPath,
   exclusiveRarityAtLevel,FLEET_ELEMENTS
  });
- for(const id of ['prog-bypass','prog-machine-striker','prog-machine-guard','prog-fusion-l04']){
+ for(const id of ['prog-bypass','weapon-memory-plasma','weapon-sequence-1','prog-fusion-l04']){
   const html=renderToStaticMarkup(React.createElement(Hand,{type:id,index:0,offset:0,selected:true,onClick:()=>{}}));
   assert.ok(html.includes(card(id).nome||card(id).name),id);
   assert.doesNotMatch(html,/undefined|src="null"|src=""|<img/,id);
