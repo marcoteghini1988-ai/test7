@@ -20,7 +20,7 @@ import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {supportDefinition} from './supportCatalog.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
 import {applyElementalDamage,elementalDamageDescription} from './elementalDamage.js';
-import {ENERGY_CAPACITY} from './energyCards.js';
+// La pila Energia non ha limite; i costi delle abilità restano indipendenti.
 import {elementalAbility,totalElementalEnergy,chargedElementalEnergy,
  canChargeElementalEnergy,chargeElementalEnergy,spendElementalEnergy,
  elementalSpecialStrength} from './elementalAbilities.js';
@@ -621,8 +621,6 @@ export function validateFleetTurn(b,who,order){
   const available=activeFleetElements(side.ships[0].id,side.ships[0].level);
   if(selectedEnergy.some(c=>!available.includes(c.effectSpec.elementId)))
    return 'La navicella non possiede questo elemento o non lo ha ancora sbloccato';
-  if(totalElementalEnergy(side)+selectedEnergy.length>ENERGY_CAPACITY)
-   return 'Accumulatore pieno: massimo quattro Energie in totale';
  }
  if(order?.activateElemental){
   if(b.ruleset!==HP_SYNC_RULESET)return 'Il colpo elementale richiede la modalità HP';
