@@ -736,7 +736,8 @@ export default function OfficialFleetBattle3D({
  const actualEnergyCost=effectiveSupportEnergyCost(player,elementalAbilityDef,battle.ply);
  const chargesAvailable=chargedElementalEnergy(player,selectedElement)+
   chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy'&&
-   card(player.hand[i])?.effectSpec?.elementId===selectedElement).length;
+   card(player.hand[i])?.effectSpec?.elementId===selectedElement)
+   .reduce((sum,i)=>sum+(card(player.hand[i])?.effectSpec?.charges||0),0);
  const canPrepareElemental=!!elementalAbilityDef&&
   chargesAvailable>=actualEnergyCost&&
   !chosenCards.some(i=>cardRole(player.hand[i])==='attack')&&
