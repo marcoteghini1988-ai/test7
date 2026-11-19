@@ -8,27 +8,30 @@
 import {FLEET_ELEMENTS,elementalRelation} from './elementalAffinities.js';
 
 export const ELEMENTAL_DAMAGE_PERCENT=Object.freeze({
- advantage:125,neutral:100,disadvantage:50
+ advantage:125,neutral:100,disadvantage:50,
+ balancedDisadvantage:75
 });
 const DENOMINATOR=4;
 
-export function elementalDamagePercent(attackerElement,defenderElement){
+export function elementalDamagePercent(attackerElement,defenderElement,balanced=false){
  const relation=elementalRelation(attackerElement,defenderElement);
  return relation>0?ELEMENTAL_DAMAGE_PERCENT.advantage:
-  relation<0?ELEMENTAL_DAMAGE_PERCENT.disadvantage:ELEMENTAL_DAMAGE_PERCENT.neutral;
+  relation<0?(balanced?ELEMENTAL_DAMAGE_PERCENT.balancedDisadvantage:
+   ELEMENTAL_DAMAGE_PERCENT.disadvantage):ELEMENTAL_DAMAGE_PERCENT.neutral;
 }
 
 export function applyElementalDamage(defender,attackerElement,defenderElement,baseDamage){
  const base=Math.max(0,Math.floor(Number(baseDamage)||0));
  const relation=elementalRelation(attackerElement,defenderElement);
- const percent=elementalDamagePercent(attackerElement,defenderElement);
+ const balanced=Number.isFinite(defender?.ships?.[0]?.defensePercent);
+ const percent=elementalDamagePercent(attackerElement,defenderElement,balanced);
  if(!base||!relation)return Object.freeze({
   original:base,damage:base,relation,percent,
   carry:0,attackerElement,defenderElement
  });
  const carryKey=attackerElement+':'+defenderElement;
  const remainder=defender?.elementalDamageRemainders?.[carryKey]||0;
- const numerator=percent===125?5:2;
+ const numerator=percent/25;
  const scaled=base*numerator+remainder;
  const damage=Math.floor(scaled/DENOMINATOR);
  const carry=scaled%DENOMINATOR;
@@ -46,5 +49,6 @@ export const elementalDamageDescription=result=>{
  const element=FLEET_ELEMENTS[result.attackerElement]?.name||result.attackerElement;
  return result.relation>0?
   element+' efficace: +25% danni ('+result.original+' → '+result.damage+')':
-  element+' contrastato: danni ridotti del 50% ('+result.original+' → '+result.damage+')';
+  element+' contrastato: danni ridotti del '+(100-result.percent)+'% ('+
+   result.original+' → '+result.damage+')';
 };

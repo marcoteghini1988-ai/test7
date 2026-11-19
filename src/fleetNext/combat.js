@@ -12,6 +12,7 @@ import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {limitedMotherDamage} from './motherBalance.js';
+import {exclusiveAttackCardDamage} from './confirmedCardBalance.js';
 import {matchPacingTarget} from './battlePacing.js';
 import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
@@ -3539,6 +3540,8 @@ function auroraHit(b,ctx,events,target,amount,sourceCard){
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
  ctx.pierceLeft=b.terrain?.id==='T06'&&!terrainImmunity(b.sides[ctx.who],b.ply)?0:ctx.pierce;
  target=redirectFleetHit(b,ctx,events,target);
+ amount=exclusiveAttackCardDamage(amount,b.sides[ctx.who].ships[0],
+  card(sourceCard)?.shipId!=null&&cardRole(sourceCard)==='attack');
  amount=stormConsumeHeavy(b,ctx,events,target,amount);
  if(blockNebulaRepeat(b,ctx,events,target))return 0;
  if(blockHit(b,defender,target.kind,target.unit,ctx,events))return 0;
@@ -3651,6 +3654,8 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
   return {damage:0,target};
  const finalTarget=redirectFleetHit(b,ctx,events,target);
+ amount=exclusiveAttackCardDamage(amount,b.sides[ctx.who].ships[0],
+  card(cardId)?.shipId!=null&&cardRole(cardId)==='attack');
  amount=stormConsumeHeavy(b,ctx,events,finalTarget,amount);
  if(blockNebulaRepeat(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  ctx.pierceLeft=pierce;
@@ -4787,7 +4792,8 @@ export function sacrificeIndependentFleetSupport(battle,who,supportId,nowMs=0){
  if(e.hp/e.maxHp<.8)
   return {ok:false,reason:'Sacrificio disponibile soltanto con almeno l’80% degli HP',battle:timed.battle,events:[]};
  e.hp=0;e.destroyed=true;e.linked=false;e.supportObservedHp=0;e.supportDeathResolved=true;
- const mother=enemy.ships[0],damage=Math.min(mother.hp,Math.max(1,Math.ceil(mother.maxHp*.25)));
+ const mother=enemy.ships[0],rawDamage=Math.max(1,Math.ceil(mother.maxHp*.25));
+ const damage=limitedMotherDamage(mother,rawDamage,b.ply);
  mother.hp-=damage;
  const event=emit(b,who,'support-sacrifice',e.name+' si sacrifica: −'+damage+' HP alla madre avversaria',
   {supportId:e.catalogSupportId,target:'mother',damage});

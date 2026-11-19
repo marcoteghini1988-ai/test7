@@ -56,7 +56,9 @@ test('Trappola registrata come Difesa coperta, rarità e acquisizione ancora da 
  assert.equal(cardFacePath(TRAP),null);
  assert.equal(cardCopyLimit(TRAP),1);
  assert.equal(FUSION_DENIAL_TRAP.acquisitionPending,true);
- assert.equal(FUSION_DENIAL_TRAP.rarityPending,true);
+ assert.equal(FUSION_DENIAL_TRAP.rarityPending,false);
+ assert.equal(FUSION_DENIAL_TRAP.rarita,'Epica');
+ assert.equal(FUSION_DENIAL_TRAP.copyLimitPending,false);
  assert.equal(canSelectNewGeneric(TRAP),true);
  const inv=createFleetInventory();
  assert.equal(buyNextCommonCard(inv,TRAP).ok,false,
