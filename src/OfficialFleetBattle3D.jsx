@@ -738,8 +738,7 @@ export default function OfficialFleetBattle3D({
   chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy'&&
    card(player.hand[i])?.effectSpec?.elementId===selectedElement).length;
  const canPrepareElemental=!!elementalAbilityDef&&
-  chargesAvailable>=actualEnergyCost&&totalElementalEnergy(player)+
-  chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy').length<=4&&
+  chargesAvailable>=actualEnergyCost&&
   !chosenCards.some(i=>cardRole(player.hand[i])==='attack')&&
   (elementalAbilityDef.mode!=='heal'||player.ships[0].hp<player.ships[0].maxHp&&
    (battle.terrain?.id!=='T08'||terrainImmunity(player,battle.ply)));
@@ -1751,7 +1750,7 @@ export default function OfficialFleetBattle3D({
    </div>}
    {!ended&&elementalAbilityDef&&<div className="f3d-elemental-control" role="group"
     aria-label="Reattore e abilità elementale">
-    <span title={'Energia accumulata: '+totalElementalEnergy(player)+'/4'}>
+    <span title={'Pila Energia: '+totalElementalEnergy(player)+' cariche accumulate, senza limite. Le Carte Energia rimangono nello slot fino al consumo.'}>
      {FLEET_ELEMENTS[selectedElement]?.symbol||'✧'} {chargesAvailable}/{actualEnergyCost}
     </span>
     {elementalTypes.length>1&&<select aria-label="Elemento del colpo speciale" value={selectedElement}
