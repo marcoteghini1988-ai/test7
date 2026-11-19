@@ -1,7 +1,7 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
- eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,ELEMENTAL_TERRAIN_CARDS} from './fleetNext/rules.js';
-import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,TERRAIN_EVOLUTION_COSTS,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
+ eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID} from './fleetNext/rules.js';
+import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,TERRAIN_EVOLUTION_COSTS,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS,evolveNextTerrainWithDuplicates} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
@@ -82,6 +82,16 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
     (saved.ok?'':' Controlla le carte equipaggiate.'));
   }catch(e){setNotice('Evoluzione non salvata: '+(e?.message||'Errore'));}
  }
+ function evolveTerrain(id){
+  const result=evolveNextTerrainWithDuplicates(inventory,id);
+  if(!result.ok){setNotice(result.reason||'Evoluzione non disponibile');return;}
+  try{
+   setInventory(writeFleetInventory(result.inventory));
+   window.dispatchEvent(new Event('eclissi-shop-changed'));
+   setNotice('Terreno evoluto: '+(card(result.destinationId)?.name||result.destinationId)+
+    '. Due doppioni consumati; Crediti invariati fino alla progettazione dello Shop.');
+  }catch(e){setNotice('Evoluzione non salvata: '+(e?.message||'Errore'));}
+ }
  function editDeck(id,add){
   const current=[...deckInfo.baseDeck];
   if(add)current.push(id);
@@ -98,6 +108,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  function genericCardTile(c){
   const owned=inventory.owned[c.id]||0,equipped=deckInfo.baseDeck.filter(id=>id===c.id).length;
   const copies=Math.min(owned,cardCopyLimit(c.id));
+  const isElementalTerrain=Object.hasOwn(ELEMENTAL_TERRAIN_BY_ID,c.id);
+  const nextTerrainRarity=isElementalTerrain?{Comune:'Rara',Rara:'Epica',Epica:'Leggendaria'}[c.rarita]:null;
   const price=[...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS].some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
@@ -109,6 +121,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
     <button style={btn} disabled={equipped>=copies||deckInfo.baseDeck.length>=deckInfo.capacity}
       onClick={()=>editDeck(c.id,true)}>AGGIUNGI</button>
     <button style={btn} disabled={!equipped} onClick={()=>editDeck(c.id,false)}>RIMUOVI</button>
+    {nextTerrainRarity&&<button style={btn} onClick={()=>evolveTerrain(c.id)}
+      disabled={owned<3}>EVOLVI IN {nextTerrainRarity.toUpperCase()} · 3 COPIE</button>}
     {price!=null&&<button style={btn} onClick={()=>buyCommon(c.id)}
       disabled={owned>=cardCopyLimit(c.id)||inventory.credits<price}>
       ACQUISTA · {locale(price)} ✦</button>}
