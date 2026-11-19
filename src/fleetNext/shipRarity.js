@@ -1,6 +1,8 @@
 // Progressione ufficiale: nessun livello numerico per le carte navicella.
 // I vecchi livelli restano SOLO una proiezione tecnica per il motore legacy.
 import {shipMaxLevel} from './progression.js';
+import {scaledMotherStats} from './motherBalance.js';
+export {LEGENDARY_MOTHER_PROFILES,MOTHER_BALANCE_LIMITS,motherBaselinePotential} from './motherBalance.js';
 export const SHIP_RARITIES=Object.freeze(['Comune','Rara','Epica','Leggendaria']);
 export const RARITY_SECTOR_UNLOCKS=Object.freeze({Comune:1,Rara:25,Epica:55,Leggendaria:85});
 export const RARITY_SHOP_PRICES=Object.freeze({
@@ -52,17 +54,12 @@ export function rarityFromLegacyLevel(shipId,level){
  const index=ratio>=.99?3:ratio>=.67?2:ratio>=.34?1:0;
  return SHIP_RARITIES[Math.max(index,rarityIndex(natural))];
 }
-export function legendaryMotherCombatStats(){
- return Object.freeze({maxHp:42,attackPower:5,defensePower:2});
+export function legendaryMotherCombatStats(shipId='L04'){
+ return scaledMotherStats(shipId,3);
 }
-// I bonus dimensionali della rarità sono identici fra modelli; gli elementi
-// e gli effetti esclusivi determinano il vantaggio tattico.
-export function motherCombatStatsForRarity(rarity){
+// Il modello determina il ruolo, la rarita' ne determina la scala.
+// Per vecchie chiamate senza ID si usa solo l'Arca Astrale di riferimento.
+export function motherCombatStatsForRarity(rarity,shipId='L04'){
  const idx=rarityIndex(rarity);
- if(idx<0)return null;
- return Object.freeze({
-  maxHp:[24,30,36,42][idx],
-  attackPower:[2,3,4,5][idx],
-  defensePower:[0,1,1,2][idx]
- });
+ return idx<0?null:scaledMotherStats(shipId,idx);
 }

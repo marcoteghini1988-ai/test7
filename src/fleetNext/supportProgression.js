@@ -17,7 +17,10 @@ export function supportLevelProfile(level=1){
 export function supportHpAtLevel(baseHp,level=1){
  const hp=Number(baseHp);
  if(!Number.isFinite(hp)||hp<=0)throw Error('HP base del supporto non validi');
- // Solo una piccola progressione provvisoria; nessun nuovo scudo o slot.
- return Math.round(hp)+Math.max(1,Math.round(hp*0.05))*(boundedSupportLevel(level)-1);
+ // I livelli sono tecnici: sul profilo giocabile conta solo la rarita'.
+ // Le 13 navicelle supporto devono resistere a colpi nell'ordine di 100 HP.
+ const legendary=Math.round(hp>=30?300:Math.min(240,150+6*Math.max(2,hp)));
+ const multiplier=[.38,.55,.72,.88,1][boundedSupportLevel(level)-1];
+ return Math.max(1,Math.round(legendary*multiplier));
 }
 export const isMaxSupportLevel=level=>boundedSupportLevel(level)===SUPPORT_MAX_LEVEL;

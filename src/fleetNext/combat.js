@@ -11,6 +11,7 @@ import {skillCount,trapsSuppressed,terrainImmunity,terrainHalf,
 import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
+import {limitedMotherDamage} from './motherBalance.js';
 import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {supportDefinition} from './supportCatalog.js';
@@ -379,15 +380,16 @@ export function createFleetNextBattle({
  for(const [who,side] of Object.entries(b.sides)){
   side.ruleset=ruleset;
   side.synchronizationEffects=[];
-  // La rarità della singola carta determina la potenza di base delle madri.
-  // Leggendaria ha gli stessi HP/attacco/difesa su tutti e 12 i modelli.
+  // La rarita' scala i 12 modelli, ognuno con difesa, HP e attacco propri.
+  // Nessun modello ha un vantaggio di potenziale assoluto.
   const rarity=who==='A'?raritaA:raritaB;
   if(ruleset===HP_SYNC_RULESET&&isShipRarity(rarity)){
-   const stats=motherCombatStatsForRarity(rarity),mother=side.ships[0];
+   const mother=side.ships[0],stats=motherCombatStatsForRarity(rarity,mother.id);
    mother.rarita=rarity;mother.rarity=rarity;
    mother.hp=stats.maxHp;mother.maxHp=stats.maxHp;
    mother.attackPower=stats.attackPower;
    mother.defensePower=stats.defensePower;
+   mother.defensePercent=stats.defensePercent;
    mother.weaponRating=Math.max(0,stats.attackPower-1);
    side.motherCardRarity=rarity;
   }
@@ -3471,12 +3473,12 @@ function damageFleetUnit(side,kind,unit,amount,ply){
  if(side.ruleset===HP_SYNC_RULESET){
   const mother=side.ships[0];
   if(kind==='part'){
-   const loss=Math.min(mother.hp,Math.max(0,Math.floor(amount)));
+   const loss=limitedMotherDamage(mother,amount,ply);
    mother.hp-=loss;return loss;
   }
   if(kind==='escort'){
    const split=splitSynchronizedDamage(amount,commandPenalty(side,ply));
-   mother.hp=Math.max(0,mother.hp-split.mother);
+   mother.hp=Math.max(0,mother.hp-limitedMotherDamage(mother,split.mother,ply));
    amount=Math.max(0,split.support-consumeCommandGuard(side,ply));
   }
  }
@@ -4474,7 +4476,9 @@ function resolveSalvo(b,ctx,events,order){
   if(!unitAlive(unit)||blockHit(b,defender,kind,unit,ctx,events))continue;
   if(stormNetStops(b,ctx,events,redirected))continue;
   let amount=stormConsumeHeavy(b,ctx,events,redirected,
-   planned.splitAmount!=null?planned.splitAmount:mantaFork?1:planned.kind==='part'||planned.kind==='module'||redirected.royalSameDamage?1:
+   planned.splitAmount!=null?planned.splitAmount:mantaFork?1:
+   (planned.kind==='part'&&side.ruleset!==HP_SYNC_RULESET)||
+   planned.kind==='module'||redirected.royalSameDamage?1:
    power+(kind==='escort'&&redirected.stormOriginKind!=='machine'&&b.terrain?.id==='T04'?1:0));
   if(hitIndex===0&&!mantaFork&&['escort','machine'].includes(kind)&&
    arkModuleActive(side,'nx-l04-07',b.ply)&&

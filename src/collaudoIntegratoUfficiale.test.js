@@ -104,7 +104,7 @@ test('COLLAUDO integrato: vittoria, rarità, doppioni, Hangar, mazzo, turno e du
   deckA:prepared.baseDeck,deckB:[],supportRosterA:roster,supportRosterB:[],
   seed:20261118,nowMs:0,mode:'campaign',sectorNumber:85,ruleset:HP_SYNC_RULESET
  });
- assert.equal(battle.sides.A.ships[0].maxHp,motherCombatStatsForRarity('Rara').maxHp);
+ assert.equal(battle.sides.A.ships[0].maxHp,motherCombatStatsForRarity('Rara','N00').maxHp);
  assert.equal(battle.sides.A.escorts.length,2);
  assert.equal(battle.sides.A.fusionLimit,2);
  assert.equal(battle.deadlineMs,30000);
@@ -139,12 +139,12 @@ test('COLLAUDO integrato: vittoria, rarità, doppioni, Hangar, mazzo, turno e du
 });
 
 test('COLLAUDO incrociato: 12 madri Leggendarie x 13 supporti Leggendari',()=>{
- const motherStats=motherCombatStatsForRarity('Leggendaria');
  assert.equal(OFFICIAL_MOTHER_IDS.length,12);
  assert.equal(SUPPORT_CATALOG.length,13);
  assert.equal(FUSION_SHIP_CARDS.length,13);
  let total=0;
  for(const motherId of OFFICIAL_MOTHER_IDS){
+  const motherStats=motherCombatStatsForRarity('Leggendaria',motherId);
   for(const support of SUPPORT_CATALOG){
    const roster=[{id:support.id,instanceId:'matrix:'+motherId+':'+support.shipModelId,
     slot:0,rarita:'Leggendaria',level:1}];

@@ -127,7 +127,7 @@ export function ShipCard({shipId,level,rarita=null,vessel=newVessel(shipId,level
  const progression=fleetProgression?getShipProgression(vessel.id,effectiveLevel):null;
  const totalHp=progression?Object.values(progression.integrityByPart).reduce((hp,n)=>hp+n,0):
   Object.values(vessel.engines).reduce((hp,engine)=>hp+engine.max,0);
- const rarityStats=rarita?motherCombatStatsForRarity(rarita):null;
+ const rarityStats=rarita?motherCombatStatsForRarity(rarita,vessel.id):null;
  const displayHp=rarityStats?.maxHp??totalHp;
  const displayPower=rarityStats?.attackPower??progression?.attackPower;
  const suits=shipSuits(vessel.id);
@@ -146,7 +146,9 @@ export function ShipCard({shipId,level,rarita=null,vessel=newVessel(shipId,level
    <span className="ship-card-role">{progression?shipProgressionProfile(vessel.id).role:getShipDefinition(vessel.id).ruolo}</span>
    <span className="ship-card-stats">
     <span><b>{displayHp}</b> HP</span>
-    {progression?<span><b>{displayPower}</b> potenza</span>:<span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>}
+    {rarityStats?<span><b>{displayPower}</b> ATT · <b>{rarityStats.defensePercent}%</b> DIF</span>:
+     progression?<span><b>{displayPower}</b> potenza</span>:
+     <span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>
    </span>
    {progression?<span className="ship-card-operations" aria-label={progression.vitalIds.length+' componenti vitali'}>
     {progression.vitalIds.map(id=><b key={id} data-card-vital={id}>{({weapons:'ARS',generator:'GEN',bridge:'PLA',command:'CEN'})[id]}</b>)}
