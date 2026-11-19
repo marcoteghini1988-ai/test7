@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID,card,cardRole,cardFacePath,cardCopyLimit}
  from './fleetNext/rules.js';
 import {validateEffectSpec,describeEffect} from './fleetNext/simpleEffects.js';
-import {canSelectNewGeneric,buildNextBaseDeck,buyNextCommonCard} from './fleetNext/nextDeckLoadout.js';
+import {canSelectNewGeneric,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,TERRAIN_EVOLUTION_COSTS} from './fleetNext/nextDeckLoadout.js';
 import {createFleetInventory,normalizeFleetInventory} from './fleetNext/collection.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createFleetNextBattle,resolveFleetNextTurn} from './fleetNext/combat.js';
@@ -127,4 +127,25 @@ test('Bonus applicato in un combattimento HP reale fin dalla posa',()=>{
  assert.equal(r.battle.terrain.id,water);
  assert.ok(r.events.some(e=>e.kind==='terrain-elemental'||e.terrainAttackPercent===10),
   'L’attacco dello stesso turno deve già leggere il terreno');
+});
+
+
+test('Tre copie identiche evolvono il Terreno senza perdere la copia originale',()=>{
+ const inventory={...createFleetInventory(),owned:{[water]:3},credits:3000};
+ const result=evolveNextTerrainWithDuplicates(inventory,water);
+ assert.equal(result.ok,true,result.reason);
+ assert.equal(result.cost,TERRAIN_EVOLUTION_COSTS.Rara);
+ assert.equal(result.inventory.owned[water],1);
+ assert.equal(result.inventory.owned['ET-REFRIGERANT-ATT-R'],1);
+ assert.equal(result.inventory.credits,3000-result.cost);
+ assert.equal(inventory.owned[water],3,'L’evoluzione non modifica l’inventario in ingresso');
+ assert.equal(evolveNextTerrainWithDuplicates(
+  {...inventory,owned:{[water]:2}},water).ok,false);
+ assert.equal(evolveNextTerrainWithDuplicates(
+  {...inventory,credits:0},water).ok,false);
+ assert.equal(evolveNextTerrainWithDuplicates(
+  {...inventory,owned:{[water]:2,'ET-REFRIGERANT-DEF-C':1}},water).ok,false,
+  'Non contano doppioni di un Terreno differente');
+ assert.equal(evolveNextTerrainWithDuplicates(
+  {...inventory,owned:{[water]:3}},'ET-REFRIGERANT-ATT-L').ok,false);
 });
