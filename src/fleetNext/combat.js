@@ -3175,13 +3175,29 @@ function applyBossPassive(b,ctx,events){
  if(n===19){const phase=side.turnCount%3;if(phase===1){ctx.power+=2;note('Io: +2 potenza');}else if(phase===2){ctx.power--;note('Io: −1 potenza');}}
  if(n===20&&side.turnCount%2===1){addTemporaryGuard(side,b.ply);note('Vuoto: prossimo turno avversario −1 potenza');}
 }
+// Macchine con elemento diverso dalla madre: il Terreno potenzia
+// soltanto la loro quota di potenza e non raddoppia il bonus della salva.
+function terrainWeaponExtraPower(b,side,ctx,machine,power){
+ const terrain=b.terrain?.id&&TERRAIN_CATALOG[b.terrain.id];
+ const attackerElement=(ctx.elementalShot&&ctx.order?.elementalElement)||side.ships[0]?.element;
+ if(b.ruleset!==HP_SYNC_RULESET||ctx.order?.pass||power<=0||!terrain?.attackPercent||
+  !machine.weaponElementId||machine.weaponElementId!==terrain.elementId||
+  machine.weaponElementId===attackerElement)return 0;
+ const key=String(terrain.code)+':'+(b.terrain.startedPly??'init')+':'+machine.id;
+ side.terrainWeaponRemainders??={};
+ const scaled=power*terrain.attackPercent+(side.terrainWeaponRemainders[key]||0);
+ const extra=Math.floor(scaled/100),carry=scaled%100;
+ if(carry)side.terrainWeaponRemainders[key]=carry;
+ else delete side.terrainWeaponRemainders[key];
+ return extra;
+}
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  if(side.independentSupportRoster){
   for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
    const charge=supportWeaponCharge(side,machine,cardRole);
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
-   if(power)ctx.power+=power;
+   if(power)ctx.power+=power+terrainWeaponExtraPower(b,side,ctx,machine,power);
    if(charge&&!ctx.order?.pass){
     const kind=charge.mode==='discard-attacks'?'weapon-discard':
      charge.mode==='sequence'?'weapon-sequence':'weapon-escort';
@@ -3247,7 +3263,8 @@ function escortPassive(b,side,ctx,events,order){
  }
  for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
   const power=side.ruleset===HP_SYNC_RULESET?arsenalBonus(side,machine,b.ply):machine.power;
-  if(power){ctx.power+=power;events.push(emit(b,ctx.who,'machine',machine.name+' · +'+power+' potenza',
+  if(power){const extra=terrainWeaponExtraPower(b,side,ctx,machine,power);
+   ctx.power+=power+extra;events.push(emit(b,ctx.who,'machine',machine.name+' · +'+(power+extra)+' potenza',
    {machineId:machine.id,machineSlot:machine.slot}));}
  }
 }
