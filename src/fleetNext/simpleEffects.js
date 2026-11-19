@@ -53,6 +53,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Interdizione di Fusione è una Trappola coperta: si rivela alla giocata di una Carta Navicella Fusione nemica, la annulla e la manda agli scarti. Il supporto non cambia e non viene consumato uno dei due usi Fusione.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
+ 'Il Cannone della Memoria Stellare (Fuoco) si attiva per un turno: 10 HP base, +10 per ogni tua carta Attacco negli scarti. Almeno una Energia Fuoco nei tuoi scarti raddoppia il totale una sola volta; gli scarti avversari non contano.',
  'Le due posizioni di supporto si sbloccano avanzando nella campagna: una nave madre e fino a due carte-navicella scelte nell’Hangar indipendentemente dalla madre.',
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
  'Smontaggio Forzato è una carta Attacco: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
@@ -110,6 +111,11 @@ export function validateEffectSpec(spec){
  if(spec.type==='terrain'&&!Object.hasOwn(TERRAIN_EFFECT_TEXT,spec.code))return 'Terreno non valido';
  if(spec.type==='trap'&&(spec.action!=='cancel'||!['terrain','shipFusion'].includes(spec.trigger)))return 'Trappola non supportata';
  if(spec.type==='deployMachine'&&(!integer(spec.hp,1,12)||!integer(spec.power,0,3)))return 'Macchina d’assalto non valida';
+ if(spec.type==='deployMachine'&&spec.damageMode!=null&&
+  (spec.damageMode!=='discard-attacks'||!Object.hasOwn(FLEET_ELEMENTS,spec.elementId)||
+  !integer(spec.baseDamage,1,1000)||!integer(spec.perDiscardAttack,1,1000)||
+  !integer(spec.energyMultiplier,2,4)||spec.durationTurns!==1))
+  return 'Arma di supporto da scarti non valida';
  return null;
 }
 const UPGRADE_CAPS=Object.freeze({power:5,pierce:3,protect:3,dodge:3,repair:3,
@@ -200,7 +206,9 @@ export function describeEffect(card,level=1){
    'Trappola coperta. Annulla la prossima Carta Navicella Fusione giocata dall’avversario: la carta viene scartata e il supporto resta invariato.':
    'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
-  case 'deployMachine':return 'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
+  case 'deployMachine':return s.damageMode==='discard-attacks'?
+   'Arma '+FLEET_ELEMENTS[s.elementId].name+' per un turno: '+s.baseDamage+' HP di danno base, +'+s.perDiscardAttack+' HP per ogni tua Carta Attacco negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+FLEET_ELEMENTS[s.elementId].name+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.':
+   'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
   case 'prisma':return card.effectProposed;
   case 'lince':return card.effectProposed;
   case 'corvo':return card.effectProposed;
