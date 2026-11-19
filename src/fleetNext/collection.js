@@ -10,7 +10,8 @@ const copy=value=>JSON.parse(JSON.stringify(value));
 const clampInt=(n,min,max)=>Math.max(min,Math.min(max,Math.floor(Number(n)||0)));
 export function createFleetInventory(){
  // Dotazione iniziale: un Personaggio e due Armi temporanee non bersagliabili (modalità HP).
- return {schema:FLEET_INVENTORY_SCHEMA,owned:{'gen-216':1,'prog-machine-striker':1,'prog-machine-guard':1,'energy-ionic':2},deck:[],credits:0,packsOpened:0,
+ return {schema:FLEET_INVENTORY_SCHEMA,owned:{'gen-216':1,'prog-machine-striker':1,'prog-machine-guard':1,'energy-ionic':2,
+  'ET-IONIC-ATT-C':1},deck:[],credits:0,packsOpened:0,
   equippedMother:'N00',exclusiveUpgrades:{},claimedRewards:[],collectionHistory:[],
   retiredOwned:{},retiredDeck:null,retiredExclusiveUpgrades:{}};
 }
