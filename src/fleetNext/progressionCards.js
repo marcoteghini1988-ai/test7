@@ -22,10 +22,6 @@ const fusion=(shipId,shipName,minShipLevelDraft,maxCopiesInAutoPackageDraft)=>{
 export const PROGRESSION_CARDS=Object.freeze(Object.fromEntries([
  general('prog-bypass','Attacco diretto','Attacco','Attacco',
   {type:'bypass'},'Difese e Trappole continuano a funzionare.'),
- general('prog-machine-striker','Cannone a impulso','Supporto','Arma temporanea',
-  {type:'deployMachine',hp:3,power:1},'Nella modalità HP resta per un turno, non protegge la madre e non è bersagliabile.'),
- general('prog-machine-guard','Condensatore offensivo','Supporto','Arma temporanea',
-  {type:'deployMachine',hp:5,power:0},'Nella modalità HP resta per due turni, non protegge la madre e non è bersagliabile.'),
  fusion('L01','Eclisse Reale',5,1),
  fusion('L03','Titano Ossidiana',3,1),
  fusion('L04','Arca Astrale',1,2)
