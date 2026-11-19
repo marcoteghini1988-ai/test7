@@ -156,19 +156,19 @@ test('Tutti gli slot esistono da subito; le carte tecniche restano coperte dai t
  const deck=deckFromCounts(TEST_DECK.carteGenerali);
  assert.equal(deck.length,40);
 
- for(const id of ['prog-machine-striker','prog-machine-guard','prog-bypass']){
+ for(const id of ['weapon-memory-plasma','weapon-sequence-1','prog-bypass']){
   assert.equal(deck.filter(x=>x===id).length,5);
   assert.equal(generalCard(id),card(id));
   assert.equal(exclusiveCard(id),null);
-  assert.equal(cardCopyLimit(id),5);
+  assert.equal(cardCopyLimit(id),id==='prog-bypass'?5:1);
   assert.equal(cardFacePath(id),null,'Le nuove carte non devono riutilizzare un’illustrazione non pertinente');
  }
  assert.equal(cardRole('prog-bypass'),'attack');
- assert.equal(cardRole('prog-machine-guard'),'support');
+ assert.equal(cardRole('weapon-sequence-1'),'support');
  assert.equal(cardCopyLimit('prog-fusion-l04'),2);
  assert.equal(BASE_CATALOG_COUNT,144);
- assert.equal(PROGRESSION_CARD_COUNT,6);
- assert.equal(TOTAL_CARD_COUNT,160+FUSION_SHIP_CARD_COUNT+120);
+ assert.equal(PROGRESSION_CARD_COUNT,4);
+ assert.equal(TOTAL_CARD_COUNT,158+FUSION_SHIP_CARD_COUNT+120);
 });
 
 test('Le letture sono immutabili e i livelli fuori intervallo non sbloccano supporti extra',()=>{
