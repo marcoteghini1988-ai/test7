@@ -21,11 +21,31 @@ export function elementalDamagePercent(attackerElement,defenderElement,balanced=
    ELEMENTAL_DAMAGE_PERCENT.disadvantage):ELEMENTAL_DAMAGE_PERCENT.neutral;
 }
 
-export function applyElementalDamage(defender,attackerElement,defenderElement,baseDamage){
+export function applyElementalDamage(defender,attackerElement,defenderElement,baseDamage,
+ {terrainAttackPercent=0,terrainDefensePercent=0,terrainKey=null}={}){
  const base=Math.max(0,Math.floor(Number(baseDamage)||0));
  const relation=elementalRelation(attackerElement,defenderElement);
  const balanced=Number.isFinite(defender?.ships?.[0]?.defensePercent);
  const percent=elementalDamagePercent(attackerElement,defenderElement,balanced);
+ // A parità di Terreno, i bonus sono SEMPRE della stessa percentuale,
+ // anche in svantaggio. Il carry conserva i piccoli colpi frazionari.
+ // Moltiplichiamo una sola volta attacco, relazione e resistenza difensiva.
+ const attack=Number.isInteger(terrainAttackPercent)?Math.max(0,Math.min(16,terrainAttackPercent)):0;
+ const defense=Number.isInteger(terrainDefensePercent)?Math.max(0,Math.min(16,terrainDefensePercent)):0;
+ if(base&&(attack||defense)){
+  const denominator=1000000;
+  const key=attackerElement+':'+defenderElement+':terrain:'+String(terrainKey||'active');
+  const previous=defender?.elementalDamageRemainders?.[key]||0;
+  const scaled=base*percent*(100+attack)*(100-defense)+previous;
+  const damage=Math.floor(scaled/denominator),carry=scaled%denominator;
+  if(defender){
+   defender.elementalDamageRemainders??={};
+   if(carry)defender.elementalDamageRemainders[key]=carry;
+   else delete defender.elementalDamageRemainders[key];
+  }
+  return Object.freeze({original:base,damage,relation,percent,carry,
+   attackerElement,defenderElement,terrainAttackPercent:attack,terrainDefensePercent:defense});
+ }
  if(!base||!relation)return Object.freeze({
   original:base,damage:base,relation,percent,
   carry:0,attackerElement,defenderElement
