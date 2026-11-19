@@ -499,7 +499,7 @@
         15
       ],
       "nominalHPPerActivation": 15,
-      "mechanics": "La Balestra spara un dardo di Ghiaccio da 15 HP nominali direttamente alla nave madre avversaria, anche se i supporti nemici sono vivi. Le Difese della madre restano valide. Solo se il dardo causa danno reale deposita un cristallo a polarità criogenica positiva sulla madre. Il cristallo persiste fino a fine del prossimo turno proprio e poi si scioglie.",
+      "mechanics": "Colpo proprio da 15 HP nominali diretto alla nave madre. Se colpisce per primo e fa danno reale, lascia il cristallo positivo; una successiva Dardiera della Brina Inversa sulla stessa madre lo fa esplodere. Se invece la Dardiera ha già lasciato il suo cristallo inverso, la Balestra innesca subito la stessa esplosione da 12 HP nominali. L'ordine delle due Armi è libero, nello stesso turno o in due turni propri consecutivi.",
       "mechanicalAppearance": "Balestra corazzata ad ali di metallo ghiacciato, guida centrale vetrificata e dardo trasparente con cristallo azzurro",
       "independentShot": true,
       "playable": false,
@@ -508,14 +508,34 @@
       "needsVisuals": true,
       "needsShop": true,
       "combo": {
-        "role": "primer",
+        "role": "symmetric",
         "pairId": "weapon-new-cryogenic-05",
         "mark": "cristallo-brina-positivo",
         "requiresRealDamage": true,
         "markTargetKind": "mother",
         "markDuration": "fino a fine prossimo turno proprio",
         "maxMarksPerTarget": 1,
-        "elementSynergy": "cryogenic+cryogenic"
+        "elementSynergy": "cryogenic+cryogenic",
+        "firstMark": "cristallo-positivo",
+        "triggerMark": "cristallo-inverso",
+        "pair": [
+          "weapon-new-cryogenic-03",
+          "weapon-new-cryogenic-05"
+        ],
+        "orderIndependent": true,
+        "playWindows": [
+          "stesso turno",
+          "turni propri consecutivi"
+        ],
+        "firstWeaponLeavesMark": true,
+        "secondWeaponDetonates": true,
+        "requiresSameTarget": "mother",
+        "requiresRealDamageBoth": true,
+        "markerExpires": "fine del turno proprio successivo a quello di posa",
+        "consumesMark": true,
+        "reactionNominalHp": 12,
+        "oncePerPair": true,
+        "markLogic": "Chi colpisce per primo lascia la propria polarità cristallina; il colpo successivo dell'altra arma, se infligge HP reali alla stessa madre, innesca la reazione indipendentemente dall'ordine."
       },
       "evolution": {
         "rarities": [
@@ -548,7 +568,7 @@
         12
       ],
       "nominalHPPerActivation": 12,
-      "mechanics": "Questa Dardiera di Ghiaccio spara un dardo a polarità criogenica negativa che infligge 12 HP nominali direttamente alla madre avversaria anche in presenza di supporti. Se il dardo provoca danno reale mentre sulla madre è presente il cristallo della Balestra di Nebbia Gelata, il contatto fra le polarità opposte produce una reazione di frattura con altri 12 HP nominali, consumando il cristallo. Da sola infligge solo 12 HP. Le Difese ordinarie della madre funzionano.",
+      "mechanics": "Colpo proprio da 12 HP nominali diretto alla nave madre. Se colpisce per primo e fa danno reale, lascia un cristallo inverso; una successiva Balestra di Nebbia Gelata sulla stessa madre lo fa esplodere. Se invece la Balestra ha già lasciato il cristallo positivo, la Dardiera innesca subito la stessa esplosione da 12 HP nominali. L'ordine delle due Armi è libero, nello stesso turno o in due turni propri consecutivi.",
       "mechanicalAppearance": "Cannone sottile di ghiaccio scuro con tre anelli controrotanti, ago blu-violetto e bobine di polarità inversa",
       "independentShot": true,
       "playable": false,
@@ -560,14 +580,33 @@
       "bypassEscortCover": true,
       "piercing": false,
       "combo": {
-        "role": "trigger",
+        "role": "symmetric",
         "pairId": "weapon-new-cryogenic-03",
         "mark": "cristallo-brina-positivo",
         "requiresRealDamage": true,
         "bonusBurstHP": 12,
         "consumesMark": true,
         "targetKind": "mother",
-        "elementSynergy": "cryogenic+cryogenic"
+        "elementSynergy": "cryogenic+cryogenic",
+        "firstMark": "cristallo-inverso",
+        "triggerMark": "cristallo-positivo",
+        "pair": [
+          "weapon-new-cryogenic-03",
+          "weapon-new-cryogenic-05"
+        ],
+        "orderIndependent": true,
+        "playWindows": [
+          "stesso turno",
+          "turni propri consecutivi"
+        ],
+        "firstWeaponLeavesMark": true,
+        "secondWeaponDetonates": true,
+        "requiresSameTarget": "mother",
+        "requiresRealDamageBoth": true,
+        "markerExpires": "fine del turno proprio successivo a quello di posa",
+        "reactionNominalHp": 12,
+        "oncePerPair": true,
+        "markLogic": "Chi colpisce per primo lascia la propria polarità cristallina; il colpo successivo dell'altra arma, se infligge HP reali alla stessa madre, innesca la reazione indipendentemente dall'ordine."
       }
     },
     {
