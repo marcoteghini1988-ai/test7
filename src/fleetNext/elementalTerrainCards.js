@@ -68,9 +68,9 @@ const MODELS=Object.freeze([
   ]
 ]);
 const MODES=Object.freeze([
- Object.freeze({id:'ATT',type:'offensivo',index:1}),
- Object.freeze({id:'DEF',type:'difensivo',index:2}),
- Object.freeze({id:'EQ',type:'equilibrato',index:3})
+ Object.freeze({id:'ATT',type:'offensivo',index:0}),
+ Object.freeze({id:'DEF',type:'difensivo',index:1}),
+ Object.freeze({id:'EQ',type:'equilibrato',index:2})
 ]);
 const TIERS=Object.freeze([
  Object.freeze({rarity:'Comune',suffix:'C',single:10,dual:5}),
