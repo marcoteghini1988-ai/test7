@@ -112,7 +112,7 @@ test('Effetto da una sola Energia: Scudo Prismatico riduce il prossimo attacco',
  assert.equal(r.shot.damage||0,0);
 });
 
-test('Energia sbagliata, massimo quattro cariche e attivazione insufficiente non consumano la mano',()=>{
+test('Energia sbagliata, pila illimitata e attivazione insufficiente non consumano la mano',()=>{
  const b=battle('N00','C03',1,17);
  b.sides.A.hand=['energy-plasma','energy-ionic','energy-ionic'];
  const before=JSON.stringify(b);
@@ -122,8 +122,15 @@ test('Energia sbagliata, massimo quattro cariche e attivazione insufficiente non
   elementalElement:'ionic',pass:true}),/servono 2/);
  assert.equal(JSON.stringify(b),before);
  b.sides.A.elementalCharges={ionic:4};
- assert.match(validateFleetTurn(b,'A',{cards:[1],pass:true}),/massimo quattro/);
- assert.equal(JSON.stringify(b.sides.A.elementalCharges),JSON.stringify({ionic:4}));
+ assert.equal(validateFleetTurn(b,'A',{cards:[1],pass:true}),null,
+  'una quinta Carta Energia e consentita');
+ const fifth=resolveFleetNextTurn(b,'A',{cards:[1],pass:true},1000);
+ assert.equal(fifth.ok,true,fifth.reason);
+ assert.equal(chargedElementalEnergy(fifth.battle.sides.A,'ionic'),5);
+ assert.deepEqual(fifth.battle.sides.A.energyPile,['energy-ionic']);
+ assert.equal(fifth.battle.sides.A.discard.includes('energy-ionic'),false);
+ assert.equal(JSON.stringify(b.sides.A.elementalCharges),JSON.stringify({ionic:4}),
+  'la validazione e la risoluzione non mutano l originale');
  const duplicate=battle('N00','C03',20,17);
  duplicate.sides.A.hand=['energy-ionic','energy-ionic','nx-n00-02'];
  assert.match(validateFleetTurn(duplicate,'A',{cards:[0,1,2],activateElemental:true,
