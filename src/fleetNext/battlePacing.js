@@ -23,7 +23,7 @@ export function matchPacingTarget(mode='campaign',bossId=null,turnSeconds=30){
 // automatico. In modalita' HP e con rarita' attive aumenta il danno solo
 // dopo diversi minuti, per ridurre gli scontri bloccati da difese e fusioni.
 export const FLEET_PACING_PRESSURE=Object.freeze({
- pvp:Object.freeze({startSeconds:180,stepSeconds:30,stepBonus:.35,maxMultiplier:3.5}),
+ pvp:Object.freeze({startSeconds:180,stepSeconds:30,stepBonus:.40,maxMultiplier:3.5}),
  campaign:Object.freeze({startSeconds:240,stepSeconds:30,stepBonus:.25,maxMultiplier:2.5}),
  boss:Object.freeze({startSeconds:480,stepSeconds:30,stepBonus:.25,maxMultiplier:2.5})
 });
@@ -40,4 +40,13 @@ export function pacingAttackMultiplier(battle,nowMs=0){
  const steps=Math.floor((elapsed-params.startSeconds)/params.stepSeconds);
  return Math.min(params.maxMultiplier,
   Math.round((1+params.stepBonus*steps)*100)/100);
+}
+
+// Le sfide degli ultimi boss sono piu' difensive: la difficolta' cresce
+// tramite resistenza e abilita' senza dover abbattere il giocatore subito.
+// Questo parametro non cambia le Carte Personaggio Boss e non tocca i Terreni.
+export function bossAttackMultiplier(bossId){
+ const index=BOSS_GUARD_ORDER.indexOf(Number(bossId));
+ if(index<8)return 1;
+ return Math.max(.80,Math.round((1-.075*(index-7))*1000)/1000);
 }

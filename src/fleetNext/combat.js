@@ -13,7 +13,8 @@ import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {limitedMotherDamage} from './motherBalance.js';
 import {exclusiveAttackCardDamage} from './confirmedCardBalance.js';
-import {pacingAttackMultiplier,bossExtraDamageResistance} from './battlePacing.js';
+import {pacingAttackMultiplier,bossExtraDamageResistance,
+ bossAttackMultiplier} from './battlePacing.js';
 import {matchPacingTarget} from './battlePacing.js';
 import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
@@ -2385,6 +2386,9 @@ function royalDistributeDamage(b,ctx,events,defender,kind,unit,amount){
     {multiplier:pressure}));
   }
  }
+ // Gli ultimi boss non accorciano la sfida solo grazie a danni sproporzionati.
+ if(b.bossId!=null&&ctx.who==='B'&&balanced)
+  amount=Math.max(1,Math.round(amount*bossAttackMultiplier(b.bossId)));
  amount=adjustedElementalHit(b,ctx,events,defender,kind,unit,amount);
  if(amount<=0)return 0;
  if(kind!=='escort'||amount<=0||defender.ships[0].id!=='L01')
