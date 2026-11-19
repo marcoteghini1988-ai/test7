@@ -207,11 +207,12 @@ test('Se il giocatore passa, nessun danno automatico viene inflitto',()=>{
  assert.ok(!event(result),'nessun evento di sparo quando si passa');
 });
 
-test('Energia Fuoco giocata nello stesso turno NON è ancora negli scarti',()=>{
+test('Energia Fuoco giocata resta nella pila e NON negli scarti, quindi non amplifica subito l Arma',()=>{
  const b=battle();
  const result=fire(b,'A',[W,'energy-plasma']);
  assert.equal(event(result).nominalDamage,10);
- assert.equal(result.battle.sides.A.discard.includes('energy-plasma'),true);
+ assert.equal(result.battle.sides.A.discard.includes('energy-plasma'),false);
+ assert.deepEqual(result.battle.sides.A.energyPile,['energy-plasma']);
 });
 
 test('Il bonus non bypassa il sabotaggio dell’Arsenale',()=>{
