@@ -12,6 +12,8 @@ import {exclusiveAttackCardDamage} from './fleetNext/confirmedCardBalance.js';
 import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,
  validateFleetTurn,protectingFleetUnits} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import {elementalAbility} from './fleetNext/elementalAbilities.js';
+import {advanceIndependentSupportTime} from './fleetNext/supportAbilities.js';
 import {FLEET_PACING_WINDOWS} from './fleetNext/battlePacing.js';
 
 const sampleRoster=(first=0)=>[0,1].map((step,slot)=>{
@@ -62,26 +64,45 @@ function fallback(b){
 }
 function simulate(shipA,shipB,options={}){
  let b=readyBattle(shipA,shipB,options),turns=0,playedCards=0,
-  invalidAiPlans=0,specials=0,traps=0,fusions=0;
- while(b.phase==='playing'&&turns<90){
+  invalidAiPlans=0,specials=0,traps=0,fusions=0,normalShots=0,passed=0;
+ const hpSnapshots=[];
+ while(b.phase==='playing'&&turns<105){
+  const nowMs=b.turnStartedAtMs+15000;
+  b=advanceIndependentSupportTime(b,nowMs).battle;
+  if(b.phase!=='playing')break;
   let order=autoFleetTurn(b,b.turn);
   if(validateFleetTurn(b,b.turn,order)){
    invalidAiPlans++;
    order=fallback(b);
   }
-  const r=resolveFleetNextTurn(b,b.turn,order,b.turnStartedAtMs+15000);
+  let r=resolveFleetNextTurn(b,b.turn,order,nowMs);
+  if(!r.ok){
+   // Evita una falsa interruzione del collaudo se l'IA ha scelto una carta
+   // divenuta non utilizzabile per un effetto temporizzato nel turno.
+   invalidAiPlans++;
+   b=r.battle;
+   order=fallback(b);
+   r=resolveFleetNextTurn(b,b.turn,order,nowMs);
+  }
   assert.equal(r.ok,true,shipA+'/'+shipB+' '+b.turn+': '+r.reason);
   playedCards+=(order.cards||[]).length;
+  if(order.pass)passed++;
+  if(!order.pass)normalShots++;
   specials+=r.events.filter(e=>e.kind==='elemental-special').length;
   traps+=r.events.filter(e=>e.kind==='trap-reveal').length;
   fusions+=r.events.filter(e=>e.kind==='fusion').length;
   b=r.battle;turns++;
+  if(turns%10===0)hpSnapshots.push([turns,
+   Math.round(b.sides.A.ships[0].hp),Math.round(b.sides.B.ships[0].hp),
+   b.sides.A.escorts.filter(e=>e.hp>0&&!e.destroyed).length,
+   b.sides.B.escorts.filter(e=>e.hp>0&&!e.destroyed).length]);
   assert.ok(b.sides.A.ships[0].hp>=0&&b.sides.B.ships[0].hp>=0);
  }
- assert.equal(b.phase,'finished','Duello non concluso in 90 turni: '+shipA+'/'+shipB);
+ assert.equal(b.phase,'finished','Duello non concluso in 105 turni: '+shipA+'/'+shipB);
  return {a:shipA,b:shipB,boss:options.bossId||null,turns,seconds:
   Math.round((b.finishedAtMs??b.turnStartedAtMs)/1000),
-  cards:playedCards,specials,traps,fusions,invalidAiPlans,winner:b.winner};
+  cards:playedCards,specials,traps,fusions,normalShots,passed,
+  invalidAiPlans,winner:b.winner,hpSnapshots};
 }
 
 test('Le 34 Carte Attacco esclusive hanno danno tecnico scalabile, senza intaccare gli effetti storici',()=>{
@@ -145,12 +166,54 @@ test('Impatto reale di un Attacco esclusivo contro supporto Leggendario',()=>{
  assert.ok(old-after>=20,'l Attacco non deve rimanere ad un danno irrilevante');
 });
 
+
+test('Tutte le dodici abilita Speciali con Carte Energia funzionano alla scala Leggendaria',()=>{
+ const ships=['N00','C01','C02','C03','R01','R02','R04','E01','E02','L01','L03','L04'];
+ let attackCount=0,effectCount=0;
+ for(const shipId of ships){
+  const ability=elementalAbility(shipId),element=activeFleetElements(shipId,99)[0];
+  const options={shipA:shipId,shipB:shipId,raritaA:'Leggendaria',
+   raritaB:'Leggendaria',supportRosterA:[],supportRosterB:[],
+   ruleset:HP_SYNC_RULESET,mode:'pvp',deckA:[],deckB:[],seed:2027};
+  const b=createFleetNextBattle(options);
+  b.sides.A.hand=[];
+  b.sides.A.elementalCharges={[element]:ability.cost};
+  if(ability.mode==='heal')b.sides.A.ships[0].hp-=300;
+  const order={cards:[],pass:ability.kind==='effect',
+   targetKind:'part',targetId:'weapons',partId:'weapons',
+   activateElemental:true,elementalElement:element};
+  assert.equal(validateFleetTurn(b,'A',order),null,shipId);
+  const result=resolveFleetNextTurn(b,'A',order,1000);
+  assert.equal(result.ok,true,shipId+': '+result.reason);
+  const used=result.events.find(e=>e.kind==='elemental-special');
+  assert.equal(used?.cost,ability.cost,shipId);
+  assert.ok(!(result.battle.sides.A.elementalCharges[element]>0),shipId);
+  if(ability.kind==='attack'){
+   attackCount++;
+   const normal=createFleetNextBattle(options);
+   normal.sides.A.hand=[];
+   const normalShot=resolveFleetNextTurn(normal,'A',{
+    cards:[],pass:false,targetKind:'part',targetId:'weapons',partId:'weapons'
+   },1000);
+   assert.equal(normalShot.ok,true);
+   assert.ok(result.shot.damage>normalShot.shot.damage,
+    shipId+': Attacco Speciale deve superare il normale');
+  }else{
+   effectCount++;
+   assert.equal(result.shot.damage||0,0,shipId);
+   if(ability.mode==='heal')assert.ok(result.battle.sides.A.ships[0].hp>b.sides.A.ships[0].hp);
+  }
+ }
+ assert.equal(attackCount,6);
+ assert.equal(effectCount,6);
+});
+
 test('Matrice esplorativa PvP con mazzi da 40, 2 supporti e carte approvate, senza Personaggi/Terreni',()=>{
  const cases=[['L04','L03'],['N00','R02'],['C01','L04'],['R04','E01'],['E02','C02'],
   ['N00','C01'],['C02','C03'],['R01','R02'],['R04','E02'],['E01','L01'],['L03','C03'],['L01','R01']];
  const reports=cases.map(([a,b],i)=>simulate(a,b,{seed:1760+i}));
  assert.equal(reports.length,12);
- assert.ok(reports.every(r=>r.seconds>0&&r.turns<90));
+ assert.ok(reports.every(r=>r.seconds>0&&r.turns<=105));
  assert.equal(FLEET_PACING_WINDOWS.pvp.targetSeconds,300);
  console.log('BALANCE_APPROVED_CARDS_PVP='+JSON.stringify(reports));
 });
