@@ -629,7 +629,8 @@ export function validateFleetTurn(b,who,order){
   const element=order.elementalElement||side.ships[0].element;
   if(!activeFleetElements(side.ships[0].id,side.ships[0].level).includes(element))
    return 'L’elemento della speciale non è disponibile';
-  const extra=selectedEnergy.filter(c=>c.effectSpec.elementId===element).length;
+  const extra=selectedEnergy.filter(c=>c.effectSpec.elementId===element)
+   .reduce((sum,c)=>sum+c.effectSpec.charges,0);
   const cost=effectiveSupportEnergyCost(side,ability,b.ply);
   if(chargedElementalEnergy(side,element)+extra<cost)
    return 'Per '+ability.name+' servono '+cost+' Carte Energia '+FLEET_ELEMENTS[element].name;
@@ -3063,7 +3064,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'energy':{
    if(!chargeElementalEnergy(side,s.elementId,def.id))throw Error('Non puoi caricare questa Energia');
    events.push(emit(b,who,'energy-charge','Carta Energia '+FLEET_ELEMENTS[s.elementId].name+' posata nella pila (fino al consumo)',
-    {cardId:def.id,element:s.elementId,charges:chargedElementalEnergy(side,s.elementId),
+    {cardId:def.id,element:s.elementId,cardCharges:s.charges,charges:chargedElementalEnergy(side,s.elementId),
      totalEnergy:totalElementalEnergy(side)}));
    break;
   }
@@ -4801,7 +4802,8 @@ export function autoFleetTurn(b,who=b.turn){
  const availableElements=activeFleetElements(side.ships[0].id,side.ships[0].level);
  const promisingElement=b.ruleset===HP_SYNC_RULESET&&ability?availableElements.find(element=>{
   const handCount=side.hand.filter(id=>card(id)?.effectSpec?.type==='energy'&&
-   card(id)?.effectSpec?.elementId===element).length;
+   card(id)?.effectSpec?.elementId===element)
+   .reduce((sum,id)=>sum+card(id).effectSpec.charges,0);
   return chargedElementalEnergy(side,element)+Math.min(FLEET_MAX_PLAYED,handCount)>=effectiveSupportEnergyCost(side,ability,b.ply);
  }):null;
  const candidates=side.hand.map((id,i)=>({id,i,role:cardRole(id),def:card(id)}))
@@ -4863,7 +4865,8 @@ export function autoFleetTurn(b,who=b.turn){
  const readyElement=availableElements.find(element=>ability&&
   chargedElementalEnergy(side,element)+cards.filter(i=>
    card(side.hand[i])?.effectSpec?.type==='energy'&&
-   card(side.hand[i])?.effectSpec?.elementId===element).length>=effectiveSupportEnergyCost(side,ability,b.ply));
+   card(side.hand[i])?.effectSpec?.elementId===element)
+   .reduce((sum,i)=>sum+card(side.hand[i]).effectSpec.charges,0)>=effectiveSupportEnergyCost(side,ability,b.ply));
  const activateElemental=!!readyElement&&b.ruleset===HP_SYNC_RULESET&&
   !cards.some(i=>cardRole(side.hand[i])==='attack')&&
   side.elementalLastActivationPly!==b.ply;
