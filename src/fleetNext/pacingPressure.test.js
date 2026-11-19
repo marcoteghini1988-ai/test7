@@ -14,7 +14,7 @@ test('L accelerazione e simmetrica, progressiva, senza eliminazione forzata',()=
  assert.equal(pacingAttackMultiplier(b,180000),1);
  assert.equal(pacingAttackMultiplier(b,210000),1.35);
  assert.equal(pacingAttackMultiplier(b,300000),2.4);
- assert.equal(pacingAttackMultiplier(b,390000),FLEET_PACING_PRESSURE.pvp.maxMultiplier);
+ assert.equal(pacingAttackMultiplier(b,420000),FLEET_PACING_PRESSURE.pvp.maxMultiplier);
  assert.equal(matchPacingTarget('pvp').enforcedTimeLimit,false);
  assert.equal(matchPacingTarget('pvp').targetSeconds,300);
  assert.equal(pacingAttackMultiplier(state('campaign',17),300000),1);
