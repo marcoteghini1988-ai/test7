@@ -14,6 +14,19 @@ export const ELEMENTAL_DAMAGE_PERCENT=Object.freeze({
 export const BALANCED_ELEMENTAL_DISADVANTAGE=75;
 const DENOMINATOR=4;
 
+// Regola condivisa fra le Armi temporanee giocabili e le future Armi con
+// propri proiettili. Un Terreno offensivo/equilibrato aumenta SOLO il danno
+// di Armi con lo stesso elemento; quello difensivo non aumenta gli attacchi.
+// La frazione viene conservata per non annullare bonus su piccoli proiettili.
+export function terrainWeaponAttackBonus(terrainDefinition,weaponElement,nominalDamage,previousRemainder=0){
+ const amount=Math.max(0,Math.floor(Number(nominalDamage)||0));
+ const percent=Number(terrainDefinition?.attackPercent)||0;
+ if(!amount||percent<=0||terrainDefinition?.elementId!==weaponElement)
+  return Object.freeze({bonus:0,percent:0,remainder:0});
+ const scaled=amount*percent+Math.max(0,Math.floor(Number(previousRemainder)||0));
+ return Object.freeze({bonus:Math.floor(scaled/100),percent,remainder:scaled%100});
+}
+
 export function elementalDamagePercent(attackerElement,defenderElement,balanced=false){
  const relation=elementalRelation(attackerElement,defenderElement);
  return relation>0?ELEMENTAL_DAMAGE_PERCENT.advantage:
