@@ -10,7 +10,6 @@ import {FUSION_DENIAL_TRAPS,FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.j
 import {DISCARD_WEAPONS,DISCARD_WEAPON_BY_ID} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS,TEMP_SUPPORT_WEAPON_BY_ID} from './temporarySupportWeapons.js';
 import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID,terrainNextRarity} from './elementalTerrainCards.js';
-import {RARITY_EVOLUTION_COSTS} from './shipRarity.js';
 
 export const NEXT_DECK_LIMIT=40;
 export const NEXT_TEMP_WEAPON_IDS=Object.freeze(['prog-machine-striker','prog-machine-guard']);
@@ -90,9 +89,8 @@ export function buyNextCommonCard(inventory,id){
   credits:inventory.credits-cost};
  return {ok:true,inventory:next,cost,copies:owned+1};
 }
-// Costi di evoluzione iniziali, allineati provvisoriamente ai supporti.
-// Non modificano i prezzi dello Shop né le soglie di progressione.
-export const TERRAIN_EVOLUTION_COSTS=Object.freeze({...RARITY_EVOLUTION_COSTS.support});
+// Prezzi rimandati alla progettazione dello Shop: nessun costo inventato.
+export const TERRAIN_EVOLUTION_COSTS=Object.freeze({Rara:null,Epica:null,Leggendaria:null});
 // Stesso sistema delle navicelle: 3 copie identiche alla stessa rarità,
 // 2 consumate, la copia originale preservata e 1 nuova copia superiore.
 export function evolveNextTerrainWithDuplicates(inventory,id){
@@ -106,13 +104,10 @@ export function evolveNextTerrainWithDuplicates(inventory,id){
  const destination=ELEMENTAL_TERRAIN_CARDS.find(c=>c.elementId===terrain.elementId&&
   c.variant===terrain.variant&&c.rarita===next);
  if(!destination)return {ok:false,reason:'Rarità Terreno non valida'};
- const cost=TERRAIN_EVOLUTION_COSTS[next];
- if(!Number.isInteger(cost)||cost<=0)
-  return {ok:false,reason:'Costo di evoluzione non disponibile'};
- if(!Number.isInteger(inventory?.credits)||inventory.credits<cost)
-  return {ok:false,reason:'Crediti Stellari insufficienti'};
- return {ok:true,cost,sourceId:id,destinationId:destination.id,
-  inventory:{...inventory,credits:inventory.credits-cost,
+ // Finché lo Shop non è definito, il consumo dei due doppioni è
+ // l'unico requisito. I Crediti Stellari restano invariati.
+ return {ok:true,cost:null,sourceId:id,destinationId:destination.id,
+  inventory:{...inventory,
    owned:{...inventory.owned,[id]:copies-2,
     [destination.id]:(inventory.owned[destination.id]||0)+1}}};
 }
