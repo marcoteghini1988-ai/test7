@@ -2953,21 +2953,23 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     unit.supportObservedHp=unit.hp;
    }
    const targets=siphonTargetPlan(enemy,plan.total,s.distribution);
+   const motherBefore=enemy.ships[0].hp;
+   const supportBefore=new Map(enemy.escorts.map(unit=>[unit.id,unit.hp]));
    const impacts=[];
    for(const target of targets){
-    let damage=0;
-    if(target.kind==='escort'){
-     const unit=enemy.escorts.find(e=>e.id===target.id);
-     damage=applyDamage(unit,target.nominalDamage);
-    }else{
-     const mother=enemy.ships[0];
-     damage=limitedMotherDamage(mother,target.nominalDamage,b.ply);
-     mother.hp=Math.max(0,mother.hp-damage);
-    }
-    impacts.push({...target,damage});
+    const kind=target.kind==='mother'?'part':'escort';
+    const unit=kind==='part'?motherPart(enemy.ships[0],'weapons'):
+     enemy.escorts.find(e=>e.id===target.id);
+    // Bersagli automatici, ma Difese e resistenze esistenti restano valide.
+    const blocked=!unit||blockHit(b,enemy,kind,unit,ctx,events);
+    const damage=blocked?0:royalDistributeDamage(
+     b,ctx,events,enemy,kind,unit,target.nominalDamage);
+    impacts.push({...target,damage,blocked});
    }
    refreshEscortLinks(side,b.ply);refreshEscortLinks(enemy,b.ply);
-   const actualDamage=impacts.reduce((sum,hit)=>sum+hit.damage,0);
+   const actualDamage=(motherBefore-enemy.ships[0].hp)+
+    enemy.escorts.reduce((sum,unit)=>sum+
+     Math.max(0,(supportBefore.get(unit.id)??unit.hp)-unit.hp),0);
    ctx.siphonDamage=(ctx.siphonDamage||0)+actualDamage;
    events.push(emit(b,who,'siphon-strike',
     (def.nome||def.name)+' · '+plan.total+' HP sacrificati, '+actualDamage+' danni inflitti',
@@ -4676,6 +4678,9 @@ function finishTurn(b,ctx,events){
   if(side.deck.length){side.hand.push(side.deck.shift());drawn++;}
  }
  if(drawn)events.push(emit(b,ctx.who,'support-draw','Pescata aggiuntiva: +'+drawn+' carte'));
+ // La Scarica ha gia' risolto e va negli scarti: lo slot Attacco torna libero.
+ side.attackSlots=(side.attackSlots||[]).map(id=>
+  card(id)?.effectSpec?.type==='siphonStrike'?null:id);
  side.lastPlayed=visiblePlayed(ctx.cards);b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
  b.terrain=activeTerrain(b.terrain,b.ply);
  b.turnStartedAtMs=ctx.nowMs;b.supportSecondsProcessed=0;
