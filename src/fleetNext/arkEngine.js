@@ -109,7 +109,7 @@ export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
  const actions=chosen.filter(c=>c?.effectSpec?.type==='ark').map(c=>c.effectSpec.action);
  const fusionCount=actions.filter(a=>a==='ark-fusion').length+
   chosen.filter(c=>c?.effectSpec?.type==='fusion'&&c.shipId==='L04').length;
- if(fusionCount>Math.min(2,side.fusionLimit||0)-(side.fusionsUsed||0))
+ if(fusionCount>0&&fusionCount>Math.min(2,side.fusionLimit||0)-(side.fusionsUsed||0))
   return 'Non ci sono abbastanza Fusioni dell’Arca ancora disponibili';
  if(fusionCount===2&&(!(side.reserveEscorts||[]).some(e=>e.sourceIndices?.includes(2))||
   !(side.reserveEscorts||[]).some(e=>e.sourceIndices?.includes(3))))
