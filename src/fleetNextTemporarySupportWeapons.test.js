@@ -51,6 +51,9 @@ test('Tre carte Acceleratore registrate, testo valido, non distribuite e non acq
   assert.equal(def.rarityPending,false);
   assert.equal(def.copyLimitPending,false);
   assert.equal(def.acquisitionPending,true);
+  assert.equal(def.elementId,'ionic','Trifase usa l’elemento Fulmine');
+  assert.equal(def.effectSpec.elementId,'ionic');
+  assert.equal(def.elementPending,false,'l’elemento è definitivo');
   assert.equal(validateEffectSpec(def.effectSpec),null);
   assert.equal(describeEffect(def),def.effectProposed);
   assert.equal(canSelectNewGeneric(def.id),true);
