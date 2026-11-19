@@ -22,7 +22,7 @@ export function elementalDamagePercent(attackerElement,defenderElement,balanced=
 }
 
 export function applyElementalDamage(defender,attackerElement,defenderElement,baseDamage,
- {terrainAttackPercent=0,terrainDefensePercent=0,terrainKey=null}={}){
+ {terrainAttackPercent=0,terrainDefensePercent=0,terrainKey=null,terrainAttackBase=null}={}){
  const base=Math.max(0,Math.floor(Number(baseDamage)||0));
  const relation=elementalRelation(attackerElement,defenderElement);
  const balanced=Number.isFinite(defender?.ships?.[0]?.defensePercent);
@@ -36,7 +36,11 @@ export function applyElementalDamage(defender,attackerElement,defenderElement,ba
   const denominator=1000000;
   const key=attackerElement+':'+defenderElement+':terrain:'+String(terrainKey||'active');
   const previous=defender?.elementalDamageRemainders?.[key]||0;
-  const scaled=base*percent*(100+attack)*(100-defense)+previous;
+  // Se una parte della salva proviene da un'Arma di elemento differente,
+  // solo la quota con l'elemento del Terreno riceve il bonus della madre.
+  const eligible=terrainAttackBase==null?base:
+   Math.max(0,Math.min(base,Math.floor(Number(terrainAttackBase)||0)));
+  const scaled=(base*100+eligible*attack)*percent*(100-defense)+previous;
   const damage=Math.floor(scaled/denominator),carry=scaled%denominator;
   if(defender){
    defender.elementalDamageRemainders??={};
