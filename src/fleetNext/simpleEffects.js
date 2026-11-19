@@ -111,11 +111,21 @@ export function validateEffectSpec(spec){
  if(spec.type==='terrain'&&!Object.hasOwn(TERRAIN_EFFECT_TEXT,spec.code))return 'Terreno non valido';
  if(spec.type==='trap'&&(spec.action!=='cancel'||!['terrain','shipFusion'].includes(spec.trigger)))return 'Trappola non supportata';
  if(spec.type==='deployMachine'&&(!integer(spec.hp,1,12)||!integer(spec.power,0,3)))return 'Macchina d’assalto non valida';
- if(spec.type==='deployMachine'&&spec.damageMode!=null&&
-  (spec.damageMode!=='discard-attacks'||!Object.hasOwn(FLEET_ELEMENTS,spec.elementId)||
-  !integer(spec.baseDamage,1,1000)||!integer(spec.perDiscardAttack,1,1000)||
-  !integer(spec.energyMultiplier,2,4)||spec.durationTurns!==1))
-  return 'Arma di supporto da scarti non valida';
+ if(spec.type==='deployMachine'&&spec.damageMode!=null){
+  if(!Object.hasOwn(FLEET_ELEMENTS,spec.elementId))return 'Elemento arma non valido';
+  if(spec.damageMode==='discard-attacks'){
+   if(!integer(spec.baseDamage,1,1000)||!integer(spec.perDiscardAttack,1,1000)||
+    !integer(spec.energyMultiplier,2,4)||spec.durationTurns!==1)
+    return 'Arma di supporto da scarti non valida';
+  }else if(spec.damageMode==='sequence'){
+   if(!integer(spec.sequenceStage,1,3)||!integer(spec.soloDamage,1,1000)||
+    !integer(spec.chainDamage,1,1000)||spec.durationTurns!==(spec.sequenceStage===3?1:2))
+    return 'Arma sequenziale non valida';
+  }else if(spec.damageMode==='escort-count'){
+   if(!integer(spec.baseDamage,1,1000)||!integer(spec.perEscort,1,1000)||
+    spec.durationTurns!==2)return 'Arma di supporto a risonanza non valida';
+  }else return 'Modalita arma non riconosciuta';
+ }
  return null;
 }
 const UPGRADE_CAPS=Object.freeze({power:5,pierce:3,protect:3,dodge:3,repair:3,
@@ -206,9 +216,16 @@ export function describeEffect(card,level=1){
    'Trappola coperta. Annulla la prossima Carta Navicella Fusione giocata dall’avversario: la carta viene scartata e il supporto resta invariato.':
    'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
-  case 'deployMachine':return s.damageMode==='discard-attacks'?
-   'Arma '+FLEET_ELEMENTS[s.elementId].name+' per un turno: '+s.baseDamage+' HP di danno base, +'+s.perDiscardAttack+' HP per ogni tua Carta Attacco negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+FLEET_ELEMENTS[s.elementId].name+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.':
-   'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
+  case 'deployMachine':{
+   if(s.damageMode==='sequence'){
+    if(s.sequenceStage===1)return "Sequenza I ("+FLEET_ELEMENTS[s.elementId].name+"): aggiunge "+s.soloDamage+" HP all'attacco per due tuoi turni. Solo nel turno successivo puoi sovrapporre Sequenza II; senza evoluzione, si scarta dopo il secondo attacco.";
+    if(s.sequenceStage===2)return 'Sequenza II ('+FLEET_ELEMENTS[s.elementId].name+'): giocata da sola aggiunge '+s.soloDamage+' HP per un turno e si scarta. Se sovrapposta a Sequenza I nel turno successivo, aggiunge '+s.chainDamage+' HP e rimane per un turno in attesa di Sequenza III.';
+    return 'Sequenza III ('+FLEET_ELEMENTS[s.elementId].name+'): giocata da sola aggiunge '+s.soloDamage+' HP per un turno. Se sovrapposta a Sequenza II concatenata nel turno successivo, aggiunge '+s.chainDamage+' HP e poi si scarta.';
+   }
+   if(s.damageMode==='escort-count')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per due tuoi turni: '+s.baseDamage+' HP di base +'+s.perEscort+' HP per ogni tua navicella di supporto ancora attiva in uno dei due slot. Le Fusioni contano come una sola navicella nello stesso slot.';
+   if(s.damageMode==='discard-attacks')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per un turno: '+s.baseDamage+' HP di danno base, +'+s.perDiscardAttack+' HP per ogni tua Carta Attacco negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+FLEET_ELEMENTS[s.elementId].name+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.';
+   return 'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
+  }
   case 'prisma':return card.effectProposed;
   case 'lince':return card.effectProposed;
   case 'corvo':return card.effectProposed;

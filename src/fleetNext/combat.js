@@ -70,7 +70,7 @@ import {HP_SYNC_RULESET,motherIntegrityFromSystems,splitSynchronizedDamage} from
 import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
  commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,commandPassiveSuspensions,
  consumePlanciaRestriction,consumePlanciaSplit,planciaSplitCount,
- resetFieldWithBlackHole,TEMP_WEAPON_DURATION,discardWeaponCharge} from './newCardEffects.js';
+ resetFieldWithBlackHole,TEMP_WEAPON_DURATION,sequenceUpgradeTarget,supportWeaponCharge} from './newCardEffects.js';
 import {dismantleCandidates,applyDismantleCard,expireDismantleEffects,
  syncDismantleSide} from './dismantleEffects.js';
 
@@ -572,7 +572,9 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   const reason=fusionShipUnavailableReason(side,s.shipId,null,battle?.ply??0);
   if(reason)return reason;
  }
- if(s.type==='deployMachine'&&(side.machines||[]).filter(unitAlive).length>=2)return 'I due alloggiamenti delle macchine d’assalto sono occupati';
+ if(s.type==='deployMachine'&&(side.machines||[]).filter(unitAlive).length>=2&&
+  !sequenceUpgradeTarget(side,def,battle?.ply??0))
+  return 'I due alloggiamenti delle macchine d’assalto sono occupati';
  if(s.type==='repair'&&!character){
   const unit=s.target==='escort'?weakest(livingEscorts(side)):
    side.ruleset===HP_SYNC_RULESET?side.ships[0]:selectedOwnPart(side,s.target,ownPartId);
@@ -794,8 +796,12 @@ export function validateFleetTurn(b,who,order){
   !obsidianEnemyUnits(b.sides[other(who)]).some(t=>
    t.kind===order?.targetKind&&t.unit.id===order?.targetId))
   return 'Frattura richiede una unità nemica viva';
- const machineCount=chosen.filter(c=>c.effectSpec.type==='deployMachine').length;
- if(machineCount+(side.machines||[]).filter(unitAlive).length>2)return 'Servono alloggiamenti liberi per le macchine scelte';
+ const machineCards=chosen.filter(c=>c.effectSpec.type==='deployMachine');
+ if(machineCards.filter(c=>c.effectSpec.damageMode==='sequence').length>1)
+  return 'Puoi giocare solo una Carta Arma Sequenza per turno';
+ const upgrades=machineCards.filter(c=>sequenceUpgradeTarget(side,c,b.ply));
+ if(machineCards.length+(side.machines||[]).filter(unitAlive).length-upgrades.length>2)
+  return 'Servono alloggiamenti liberi per le macchine scelte';
  const fusions=chosen.filter(c=>c.effectSpec.type==='fusion').length;
  const fusionShips=chosen.filter(c=>c.effectSpec.type==='shipFusion');
  if(fusionShips.length>1)return 'Puoi giocare una Carta Navicella Fusione per turno';
@@ -2878,21 +2884,32 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
    break;
   }
   case 'deployMachine':{
-   const slot=[0,1].find(i=>!side.machines.some(m=>unitAlive(m)&&m.slot===i));
-   if(slot==null)throw new Error('Alloggiamenti macchine occupati');
-   side.machines=side.machines.filter(m=>m.slot!==slot);
-   const saved=recoveredMachineForDeploy(side,def.id);
    const modern=side.ruleset===HP_SYNC_RULESET;
+   const previous=modern?sequenceUpgradeTarget(side,def,b.ply):null;
+   const slot=previous?previous.slot:[0,1].find(i=>!side.machines.some(m=>unitAlive(m)&&m.slot===i));
+   if(slot==null)throw new Error('Alloggiamenti macchine occupati');
+   const saved=recoveredMachineForDeploy(side,def.id);
+   if(previous?.sourceCardId&&!previous.cardDiscarded)side.discard.push(previous.sourceCardId);
+   side.machines=side.machines.filter(m=>m.slot!==slot);
+   const sequence=s.damageMode==='sequence';
+   const duration=sequence&&s.sequenceStage===2&&!previous?1:
+    (TEMP_WEAPON_DURATION[def.id]||s.durationTurns||1);
    const machine={id:saved?.id||'machine:'+who+':'+token,slot,
     name:modern?'Arma temporanea · '+(def.nome||def.name):def.nome||def.name,
     sourceCardId:def.id,source:token,hp:saved?.hp??s.hp,
     maxHp:saved?.maxHp??s.hp,power:modern?Math.max(1,s.power||0):s.power||0,
     damageMode:s.damageMode||null,weaponElementId:s.elementId||null,
     baseDamage:s.baseDamage??null,perDiscardAttack:s.perDiscardAttack??null,
-    energyMultiplier:s.energyMultiplier??null,
-    untilPly:modern?b.ply+2*(TEMP_WEAPON_DURATION[def.id]||1):null,destroyed:false,
+    energyMultiplier:s.energyMultiplier??null,perEscort:s.perEscort??null,
+    sequenceStage:sequence?s.sequenceStage:null,sequenceEnteredPly:sequence?b.ply:null,
+    sequenceEligible:sequence&&(s.sequenceStage===1||!!previous),
+    soloDamage:sequence?s.soloDamage:null,chainDamage:sequence?s.chainDamage:null,
+    untilPly:modern?b.ply+2*duration:null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
+   if(previous)events.push(emit(b,who,'weapon-sequence-upgrade',
+    'Sequenza: carta precedente scartata e sostituita nello stesso slot',
+    {previousCardId:previous.sourceCardId,cardId:def.id,machineSlot:slot}));
    events.push(emit(b,who,'machine-deploy',machine.name+(modern?' schierata: potenzia l’attacco, non protegge la madre':' schierata: protegge la madre'),
     {cardId:def.id,machineSlot:slot,machineId:machine.id}));
    break;
@@ -3106,16 +3123,24 @@ function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  if(side.independentSupportRoster){
   for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
-   const charge=discardWeaponCharge(side,machine,cardRole);
+   const charge=supportWeaponCharge(side,machine,cardRole);
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
    if(power)ctx.power+=power;
-   if(charge&&!ctx.order?.pass)events.push(emit(b,ctx.who,'weapon-discard',
-    machine.name+' · '+charge.damage+' HP nominali ('+charge.attackCards+
-    ' Attacchi negli scarti'+(charge.energyMatched?', Energia '+FLEET_ELEMENTS[charge.elementId].name+' ×2':'')+')',
-    {cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
-     attackCards:charge.attackCards,energyMatched:charge.energyMatched,
-     elementId:charge.elementId,multiplier:charge.multiplier,
-     nominalDamage:charge.damage,appliedPower:power}));
+   if(charge&&!ctx.order?.pass){
+    const kind=charge.mode==='discard-attacks'?'weapon-discard':
+     charge.mode==='sequence'?'weapon-sequence':'weapon-escort';
+    const info=charge.mode==='discard-attacks'?
+     ' ('+charge.attackCards+' Attacchi negli scarti'+
+     (charge.energyMatched?', Energia '+FLEET_ELEMENTS[charge.elementId].name+' ×2':'')+')':
+     charge.mode==='sequence'?' (stadio '+charge.stage+(charge.chained?', concatenato':' singolo')+')':
+     ' ('+charge.supportCount+' supporti attivi)';
+    events.push(emit(b,ctx.who,kind,machine.name+' · '+charge.damage+' HP nominali'+info,
+     {cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
+      attackCards:charge.attackCards,energyMatched:charge.energyMatched,
+      elementId:charge.elementId,multiplier:charge.multiplier,
+      supportCount:charge.supportCount,sequenceStage:charge.stage,chained:charge.chained,
+      nominalDamage:charge.damage,appliedPower:power}));
+   }
   }
   return; // Non esegue le vecchie passive delle 17 madri.
  }

@@ -12,7 +12,9 @@ const BY_TIER=Object.freeze({
 });
 export const TEMP_WEAPON_DURATION=Object.freeze({
  'prog-machine-striker':1,'prog-machine-guard':2,
- 'weapon-memory-plasma':1
+ 'weapon-memory-plasma':1,
+  'weapon-sequence-1':2,'weapon-sequence-2':2,'weapon-sequence-3':1,
+  'weapon-escort-charge':2
 });
 export function activeSystemCard(side,system,operation,ply=0){
  return (side?.systemCardEffects||[]).filter(c=>c.system===system&&
@@ -73,6 +75,32 @@ export function discardWeaponCharge(side,machine,roleForCard){
  const rawDamage=machine.baseDamage+attackCards*machine.perDiscardAttack;
  return {attackCards,energyMatched,multiplier,rawDamage,damage:rawDamage*multiplier,
   elementId:machine.weaponElementId};
+}
+// Solo il passaggio nel proprio turno immediatamente successivo conserva la catena.
+export function sequenceUpgradeTarget(side,def,ply=0){
+ const stage=def?.effectSpec?.damageMode==='sequence'?def.effectSpec.sequenceStage:0;
+ if(stage!==2&&stage!==3)return null;
+ return (side?.machines||[]).find(m=>m.damageMode==='sequence'&&m.sequenceStage===stage-1&&
+  m.sequenceEligible===true&&m.sequenceEnteredPly===ply-2&&m.untilPly>ply&&
+  m.hp>0&&!m.destroyed&&m.slot>=0&&m.slot<2)||null;
+}
+export function supportWeaponCharge(side,machine,roleForCard){
+ const old=discardWeaponCharge(side,machine,roleForCard);
+ if(old)return {...old,mode:'discard-attacks'};
+ if(machine?.damageMode==='escort-count'){
+  const slots=new Set((side?.escorts||[]).filter(e=>e.hp>0&&!e.destroyed&&!e.reserve&&
+   Number.isInteger(e.slot)&&e.slot>=0&&e.slot<2).map(e=>e.slot));
+  return {mode:'escort-count',supportCount:slots.size,
+   damage:(machine.baseDamage||0)+slots.size*(machine.perEscort||0),
+   elementId:machine.weaponElementId};
+ }
+ if(machine?.damageMode==='sequence'){
+  const stage=machine.sequenceStage||1;
+  const chained=stage>=2&&machine.sequenceEligible===true;
+  return {mode:'sequence',stage,chained,damage:chained?machine.chainDamage:machine.soloDamage,
+   elementId:machine.weaponElementId};
+ }
+ return null;
 }
 export function arsenalBonus(side,machine,ply=0,overridePower=null){
  if(side.ruleset!==HP_SYNC_RULESET)return machine.power||0;
