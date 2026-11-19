@@ -18,7 +18,7 @@ import {ARK_ACTIONS} from './arkEngine.js';
 export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
- 'weaken','disarm','cleanse','exchange','recover','charge','energy','terrain','trap',
+ 'weaken','disarm','cleanse','exchange','recover','charge','energy','terrain','elementalTerrain','trap',
  'bypass','deployMachine','fusion','shipFusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
@@ -45,6 +45,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Le riparazioni non superano gli HP massimi e non ricostruiscono navicelle di supporto distrutte.',
  'I personaggi applicano il proprio effetto quando entrano e al tuo turno successivo. Poi lasciano il campo.',
  'Il Terreno scelto si risolve prima delle altre carte del turno. Se viene annullato, non entra in campo.',
+ 'I Terreni elementali influenzano entrambi i giocatori su ogni attacco o difesa dello stesso elemento, a ogni turno fino a sostituzione o annullamento; un solo Terreno può essere attivo.',
  'Le reazioni si attivano solo con i danni degli attacchi normali. Costi delle abilità e contrattacchi non attivano altre reazioni.',
  'Dopo 50 round la partita termina in pareggio. Con l’Arsenale distrutto resta un tiro di emergenza da 1 potenza.',
  'Le Trappole sono carte Difesa: si preparano coperte nel proprio turno e si rivelano solo quando scattano. Altrimenti restano in campo.',
@@ -109,6 +110,10 @@ export function validateEffectSpec(spec){
  if(spec.type==='regenerate'&&!['hit','hurt'].includes(spec.trigger))return 'Evento di rigenerazione non valido';
  if(spec.type==='recover'&&!['attack','defense','support','any'].includes(spec.role))return 'Tipo di recupero non valido';
  if(spec.type==='terrain'&&!Object.hasOwn(TERRAIN_EFFECT_TEXT,spec.code))return 'Terreno non valido';
+ if(spec.type==='elementalTerrain'&&(!Object.hasOwn(FLEET_ELEMENTS,spec.elementId)||
+  typeof spec.cardId!=='string'||!/^ET-[A-Z]+-(ATT|DEF|EQ)-[CREL]$/.test(spec.cardId)||
+  !integer(spec.attackPercent,0,16)||!integer(spec.defensePercent,0,16)||
+  spec.attackPercent===0&&spec.defensePercent===0))return 'Terreno elementale non valido';
  if(spec.type==='trap'&&(spec.action!=='cancel'||!['terrain','shipFusion'].includes(spec.trigger)))return 'Trappola non supportata';
  if(spec.type==='deployMachine'&&(!integer(spec.hp,1,12)||!integer(spec.power,0,3)))return 'Macchina d’assalto non valida';
  if(spec.type==='deployMachine'&&spec.damageMode!=null){
@@ -212,6 +217,7 @@ export function describeEffect(card,level=1){
   case 'charge':return repeat+'Prepara +'+s.amount+' potenza per il tuo attacco del turno successivo.';
   case 'energy':return 'Accumula 1 Energia '+FLEET_ELEMENTS[s.elementId].name+' (massimo 4 cariche totali). Alimenta l’abilità speciale della navicella.';
   case 'terrain':return TERRAIN_EFFECT_TEXT[s.code]+' Vale per entrambi i giocatori per 3 round.';
+  case 'elementalTerrain':return card.description||'Terreno elementale permanente: '+FLEET_ELEMENTS[s.elementId].name;
   case 'trap':return s.trigger==='shipFusion'?
    'Trappola coperta. Annulla la prossima Carta Navicella Fusione giocata dall’avversario: la carta viene scartata e il supporto resta invariato.':
    'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
