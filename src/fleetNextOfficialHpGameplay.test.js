@@ -7,7 +7,7 @@ import {buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 
 test('Duelli HP: dodici madri di campagna, pescaggio e turni IA senza errori',()=>{
  const owned=Object.fromEntries([...NEXT_COMMON_CARDS.map(c=>c.id),
-  'prog-machine-striker','prog-machine-guard','gen-216'].map(id=>[id,1]));
+  'weapon-memory-plasma','weapon-sequence-1','gen-216'].map(id=>[id,1]));
  for(const [index,shipId] of CAMPAIGN_SHIP_ORDER.entries()){
   const deck=buildNextBaseDeck({owned},shipId,5);
   assert.ok(deck.total<=40,shipId);
