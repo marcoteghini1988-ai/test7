@@ -934,7 +934,9 @@ export default function OfficialFleetBattle3D({
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>
    {terrain&&TERRAIN_CATALOG[terrain]&&<div className="f3d-terrain-environment"
     key={'terrain-'+terrain} data-terrain={terrain} aria-hidden="true"
-    style={{'--f3d-terrain-image':'url("/assets/fleet-terrain-scenes/'+terrain+'.svg")'}}/>}
+    style={{'--f3d-terrain-image':TERRAIN_CATALOG[terrain].kind==='elemental'?
+     'radial-gradient(ellipse at center, rgba(43,112,170,.18), transparent 75%)':
+     'url("/assets/fleet-terrain-scenes/'+terrain+'.svg")'}}/>}
    <OriginalFleetBar side="B" unit={enemy}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
     selectedTarget={actualTarget} onSelectTarget={setSelectedTarget} canTarget={!ended&&myTurn} ply={battle.ply}
