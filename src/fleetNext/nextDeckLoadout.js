@@ -4,7 +4,8 @@
 import {card,cardCopyLimit,eligibleExclusives} from './rules.js';
 import {NEXT_COMMON_CARD_BY_ID,NEXT_COMMON_CARDS} from './newCardRegistry.js';
 import {DISMANTLE_BY_ID,DISMANTLE_CARDS} from './dismantleCards.js';
-import {ENERGY_CARDS,ENERGY_CARD_BY_ID} from './energyCards.js';
+import {ENERGY_CARDS,ENERGY_CARD_BY_ID,energyIdForRarity} from './energyCards.js';
+import {evolveCardByRarityWithDuplicates} from './rarityDuplicateEvolution.js';
 import {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {FUSION_DENIAL_TRAPS,FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.js';
 import {DISCARD_WEAPONS,DISCARD_WEAPON_BY_ID} from './discardWeapon.js';
@@ -83,6 +84,9 @@ export function saveNextDeckSelection(inventory,shipId,level,ids,storage=globalT
 export function buyNextCommonCard(inventory,id){
  const def=NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id];
  if(!def)return {ok:false,reason:'Carta non acquistabile'};
+ // La disponibilità nello Shop delle Energie superiori è ancora da decidere.
+ if(ENERGY_CARD_BY_ID[id]&&def.rarita!=='Comune')
+  return {ok:false,reason:'Acquisizione della rarità Energia da definire nello Shop'};
  const cost=NEXT_CARD_COSTS[def.rarita];
  if(!Number.isInteger(cost))return {ok:false,reason:'Prezzo non valido'};
  const owned=Math.max(0,Math.floor(inventory?.owned?.[id]||0));
@@ -99,19 +103,17 @@ export const TERRAIN_EVOLUTION_COSTS=Object.freeze({Rara:null,Epica:null,Leggend
 export function evolveNextTerrainWithDuplicates(inventory,id){
  const terrain=ELEMENTAL_TERRAIN_BY_ID[id];
  if(!terrain)return {ok:false,reason:'Terreno inesistente'};
- const next=terrainNextRarity(terrain.rarita);
- if(!next)return {ok:false,reason:'Terreno già Leggendario'};
- const copies=inventory?.owned?.[id]||0;
- if(!Number.isInteger(copies)||copies<3)
-  return {ok:false,reason:'Servono tre copie dello stesso Terreno e rarità'};
- const destination=ELEMENTAL_TERRAIN_CARDS.find(c=>c.elementId===terrain.elementId&&
-  c.variant===terrain.variant&&c.rarita===next);
- if(!destination)return {ok:false,reason:'Rarità Terreno non valida'};
- // Finché lo Shop non è definito, il consumo dei due doppioni è
- // l'unico requisito. I Crediti Stellari restano invariati.
- return {ok:true,cost:null,sourceId:id,destinationId:destination.id,
-  inventory:{...inventory,
-   owned:{...inventory.owned,[id]:copies-2,
-    [destination.id]:(inventory.owned[destination.id]||0)+1}}};
+ return evolveCardByRarityWithDuplicates(inventory,terrain,next=>
+  ELEMENTAL_TERRAIN_CARDS.find(c=>c.elementId===terrain.elementId&&
+   c.variant===terrain.variant&&c.rarita===next));
+}
+// Una Energia può nascere Comune oppure essere ottenuta direttamente di
+// rarità superiore in futuro. L'evoluzione conserva una copia del grado base.
+// Nessun costo in Crediti finché non viene definita l'economia dello Shop.
+export function evolveNextEnergyWithDuplicates(inventory,id){
+ const energy=ENERGY_CARD_BY_ID[id];
+ if(!energy)return {ok:false,reason:'Carta Energia inesistente'};
+ return evolveCardByRarityWithDuplicates(inventory,energy,next=>
+  ENERGY_CARD_BY_ID[energyIdForRarity(energy.elementId,next)]);
 }
 export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS,...FUSION_DENIAL_TRAPS,...DISCARD_WEAPONS,...TEMP_SUPPORT_WEAPONS,...SIPHON_ATTACKS,...ELEMENTAL_TERRAIN_CARDS]);
