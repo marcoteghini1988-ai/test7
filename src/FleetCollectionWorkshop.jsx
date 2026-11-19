@@ -1,7 +1,7 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
  eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,ELEMENTAL_TERRAIN_CARDS} from './fleetNext/rules.js';
-import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
+import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,TERRAIN_EVOLUTION_COSTS,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
@@ -65,6 +65,23 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    setNotice('Carta acquistata. Ora puoi aggiungerla al mazzo.');
   }catch(e){setNotice('Acquisto non salvato: '+(e?.message||'Errore'));}
  }
+ function evolveTerrain(id){
+  const result=evolveNextTerrainWithDuplicates(inventory,id);
+  if(!result.ok){setNotice(result.reason);return;}
+  try{
+   const changed=writeFleetInventory(result.inventory);
+   setInventory(changed);
+   const active=[...(selectedDeck||deckInfo.baseDeck)];
+   let kept=0;
+   const adjusted=active.filter(entry=>entry!==id||++kept<=changed.owned[id]);
+   const saved=saveNextDeckSelection(changed,activeMother,motherLevel,adjusted);
+   if(saved.ok)setSelectedDeck(saved.deck);
+   window.dispatchEvent(new Event('eclissi-shop-changed'));
+   setNotice('Evoluzione completata: ottenuta '+(card(result.destinationId)?.name||result.destinationId)+
+    '. Copia originale conservata.'+
+    (saved.ok?'':' Controlla le carte equipaggiate.'));
+  }catch(e){setNotice('Evoluzione non salvata: '+(e?.message||'Errore'));}
+ }
  function editDeck(id,add){
   const current=[...deckInfo.baseDeck];
   if(add)current.push(id);
@@ -95,6 +112,12 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
     {price!=null&&<button style={btn} onClick={()=>buyCommon(c.id)}
       disabled={owned>=cardCopyLimit(c.id)||inventory.credits<price}>
       ACQUISTA · {locale(price)} ✦</button>}
+    {c.effectSpec?.type==='elementalTerrain'&&c.rarita!=='Leggendaria'&&
+     <button style={btn} onClick={()=>evolveTerrain(c.id)}
+      disabled={owned<3||inventory.credits<TERRAIN_EVOLUTION_COSTS[
+       {Comune:'Rara',Rara:'Epica',Epica:'Leggendaria'}[c.rarita]]}>
+      EVOLVI · 3 copie + {locale(TERRAIN_EVOLUTION_COSTS[
+       {Comune:'Rara',Rara:'Epica',Epica:'Leggendaria'}[c.rarita]])} ✦</button>}
    </div>
   </div>;
  }
