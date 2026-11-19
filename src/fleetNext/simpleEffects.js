@@ -2,6 +2,7 @@
 // Questo modulo non interpreta nomi, famiglie o descrizioni delle carte.
 import {getShipProgression} from './progression.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
+import {siphonAttackDescription} from './siphonAttacks.js';
 import {AURORA_ACTIONS} from './auroraEngine.js';
 import {LINCE_ACTIONS} from './linceEngine.js';
 import {PRISMA_ACTIONS} from './prismaEngine.js';
@@ -19,7 +20,7 @@ export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
  'weaken','disarm','cleanse','exchange','recover','charge','energy','terrain','elementalTerrain','trap',
- 'bypass','deployMachine','fusion','shipFusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
+ 'bypass','deployMachine','siphonStrike','fusion','shipFusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
 const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore',bridge:'la Plancia'};
@@ -115,6 +116,9 @@ export function validateEffectSpec(spec){
   !integer(spec.attackPercent,0,16)||!integer(spec.defensePercent,0,16)||
   spec.attackPercent===0&&spec.defensePercent===0))return 'Terreno elementale non valido';
  if(spec.type==='trap'&&(spec.action!=='cancel'||!['terrain','shipFusion'].includes(spec.trigger)))return 'Trappola non supportata';
+ if(spec.type==='siphonStrike'&&(spec.sacrificePercent!==20||
+  !['split','each'].includes(spec.distribution)||Object.keys(spec).length!==3))
+  return 'Scarica Sifone non valida';
  if(spec.type==='deployMachine'&&(!integer(spec.hp,1,12)||!integer(spec.power,0,3)))return 'Macchina d’assalto non valida';
  if(spec.type==='deployMachine'&&spec.damageMode!=null){
   if(!Object.hasOwn(FLEET_ELEMENTS,spec.elementId))return 'Elemento arma non valido';
@@ -222,6 +226,7 @@ export function describeEffect(card,level=1){
    'Trappola coperta. Annulla la prossima Carta Navicella Fusione giocata dall’avversario: la carta viene scartata e il supporto resta invariato.':
    'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
+  case 'siphonStrike':return siphonAttackDescription(s);
   case 'deployMachine':{
    if(s.damageMode==='sequence'){
     if(s.sequenceStage===1)return "Sequenza I ("+FLEET_ELEMENTS[s.elementId].name+"): aggiunge "+s.soloDamage+" HP all'attacco per due tuoi turni. Solo nel turno successivo puoi sovrapporre Sequenza II; senza evoluzione, si scarta dopo il secondo attacco.";
