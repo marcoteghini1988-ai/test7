@@ -84,7 +84,7 @@ export const ELEMENTAL_TERRAIN_UPGRADE_RULE=Object.freeze({
  consumedDuplicateCopies:RARITY_DUPLICATE_COPIES-1,
  sourceCopyRemains:true,
  grantsOneCopyAtNextRarity:true,
- needsStellarCredits:true,
+ needsStellarCredits:false, // Il prezzo sarà eventualmente fissato con lo Shop.
  stellarCreditCost:null // Da definire: non usare 0 come prezzo automatico.
 });
 export const ELEMENTAL_TERRAIN_GLOBAL_RULE=Object.freeze({
