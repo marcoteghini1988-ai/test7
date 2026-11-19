@@ -40,14 +40,21 @@ Ogni carta dello stesso modello mantiene nome, elemento ed effetto: **cambia sol
 - Per passare a rarità superiore servono **3 copie fisiche dello stesso Terreno e della stessa rarità**.
 - Si consumano **2 doppioni**; la carta di origine resta conservata e si genera **1 nuova carta** della rarità successiva, esattamente come per madri e supporti.
 - Percorso: Comune → Rara → Epica → Leggendaria. Le carte Leggendarie non possono salire oltre.
-- Il costo aggiuntivo in Crediti Stellari è previsto con il criterio navicelle, ma **l'importo per i Terreni non è ancora definito**; non è gratuito per impostazione predefinita.
+- **Per ora l'evoluzione consuma soltanto i due doppioni**, lasciando invariati i Crediti Stellari: il costo economico resta da stabilire con lo Shop.
 - Non è consentito fondere carte di Terreni diversi o di rarità diverse per ottenere un'evoluzione.
 
-## Stato tecnico
-- Le **120 definizioni collezionabili** sono registrate in `src/fleetNext/elementalTerrainCards.js`, con ID univoci, categoria, elemento, rarità e valori di attacco e difesa.
-- **Non sono ancora state integrate** nel motore di battaglia, nello Shop, nell'inventario o nel mazzo; non sono ancora carte giocabili.
-- `src/fleetNext/terrains.js` conserva il vecchio sistema di Terreni ambientali della campagna e dei boss: non è stato sovrascritto, anche perché contiene scadenze incompatibili con i nuovi Terreni persistenti.
-- Prima dell'integrazione occorre verificare l'ordine dei moltiplicatori e gli arrotondamenti, la difesa, i boss, i limiti di mazzo e il prezzo di evoluzione.
+## Stato tecnico (integrazione del 19 novembre)
+- **120 carte** con ID, elemento, variante, rarità e testo, registrate in `src/fleetNext/elementalTerrainCards.js` e riconosciute dal catalogo ufficiale.
+- **Mazzo da 40:** le carte si possono selezionare e pescare se possedute. Non ci sono nuovi prezzi o acquisti nel negozio. Un Terreno Fulmine offensivo Comune è presente nell'inventario iniziale per collaudare in partita il funzionamento.
+- **Battaglia HP:** il Terreno occupa lo spazio centrale e rimane attivo in tutti i turni, senza scadere, finché non viene sostituito, annullato da una Trappola compatibile oppure rimosso dal reset generale Buco Nero.
+- **Danno:** attacco e difesa si applicano una sola volta sul colpo reale e il calcolo conserva le frazioni, così anche le raffiche leggere accumulano il bonus; gli effetti validi restano simmetrici per A e B.
+- **Armi temporanee:** il motore considera il proprio elemento dell'Arma separatamente quando differisce da quello della madre.
+- **Arena 3D:** mantenuta la geometria esistente, con segnaposto grafico per i nuovi Terreni in attesa delle immagini definitive.
+- **Evoluzione:** tre copie dello stesso modello e rarità permettono di ottenere una carta superiore, consumandone due. L'interfaccia adegua la selezione del mazzo dopo l'evoluzione.
+- **Boss:** i 10 Terreni ambientali storici rimangono separati nei loro effetti e nelle condizioni di durata; non diventano le 120 carte acquistabili.
+- **Collaudi:** sono state aggiunte verifiche automatiche in `src/fleetNextElementalTerrains.test.js`. La riuscita dell'intera suite e della build va ancora confermata in un ambiente eseguibile.
+
+**Rimandati:** prezzi, modalità di ottenimento delle altre copie, eventuale costo in Crediti Stellari per l'evoluzione, grafiche e animazioni definitive.
 
 ## ID del catalogo
 Formato `ET-<ELEMENT_ID>-<ATT|DEF|EQ>-<C|R|E|L>`; esempio: `ET-REFRIGERANT-ATT-C`, `ET-REFRIGERANT-ATT-R`, `ET-REFRIGERANT-ATT-E`, `ET-REFRIGERANT-ATT-L`.
