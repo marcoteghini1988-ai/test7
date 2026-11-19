@@ -143,7 +143,7 @@ test('Registro completo per il primo bilanciamento: esclusi Personaggi e Terreni
  assert.equal(FUSION_DENIAL_TRAP.rarita,'Epica');
  assert.equal(FUSION_DENIAL_TRAP.maxCopiesPerDeck,1);
  assert.equal(ENERGY_CARDS.length,10);
- assert.equal(TEMP_SUPPORT_WEAPONS.length,4);
+ assert.equal(TEMP_SUPPORT_WEAPONS.length,3);
  assert.equal(NEXT_COMMON_CARDS.length,33);
  assert.equal(DISMANTLE_CARDS.length,4);
  const list=[...exclusive,...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,
