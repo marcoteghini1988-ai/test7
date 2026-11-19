@@ -41,7 +41,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-plasma-02",
@@ -66,7 +74,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-plasma-03",
@@ -91,7 +107,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-plasma-05",
@@ -118,7 +142,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-plasma-06",
@@ -143,7 +175,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-plasma-08",
@@ -169,7 +209,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-plasma-09",
@@ -194,7 +242,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-01",
@@ -219,7 +275,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-02",
@@ -245,7 +309,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-03",
@@ -270,7 +342,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-04",
@@ -298,7 +378,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-05",
@@ -323,7 +411,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-06",
@@ -349,7 +445,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-08",
@@ -374,7 +478,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-09",
@@ -400,7 +512,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-refrigerant-10",
@@ -430,7 +550,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-cryogenic-01",
@@ -455,7 +583,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-cryogenic-02",
@@ -481,7 +617,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-cryogenic-03",
@@ -550,7 +694,15 @@
       },
       "targetKind": "mother",
       "bypassEscortCover": true,
-      "piercing": false
+      "piercing": false,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-cryogenic-05",
@@ -607,6 +759,14 @@
         "reactionNominalHp": 12,
         "oncePerPair": true,
         "markLogic": "Chi colpisce per primo lascia la propria polarità cristallina; il colpo successivo dell'altra arma, se infligge HP reali alla stessa madre, innesca la reazione indipendentemente dall'ordine."
+      },
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
       }
     },
     {
@@ -632,7 +792,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-cryogenic-07",
@@ -658,7 +826,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-cryogenic-08",
@@ -686,7 +862,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-ionic-02",
@@ -711,7 +895,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-ionic-03",
@@ -738,7 +930,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-ionic-04",
@@ -763,7 +963,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-ionic-05",
@@ -789,7 +997,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-ionic-06",
@@ -816,7 +1032,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-ionic-07",
@@ -841,7 +1065,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-mineral-01",
@@ -868,7 +1100,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-mineral-03",
@@ -893,7 +1133,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-mineral-05",
@@ -919,7 +1167,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-mineral-08",
@@ -944,7 +1200,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-mineral-10",
@@ -970,7 +1234,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-aerial-01",
@@ -995,7 +1267,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-aerial-02",
@@ -1021,7 +1301,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-aerial-03",
@@ -1046,7 +1334,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-aerial-05",
@@ -1073,7 +1369,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-aerial-07",
@@ -1099,7 +1403,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-aerial-08",
@@ -1127,7 +1439,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-01",
@@ -1152,7 +1472,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-02",
@@ -1179,7 +1507,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-03",
@@ -1205,7 +1541,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-04",
@@ -1232,7 +1576,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-05",
@@ -1257,7 +1609,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-06",
@@ -1283,7 +1643,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-07",
@@ -1311,7 +1679,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-08",
@@ -1337,7 +1713,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-radiant-09",
@@ -1362,7 +1746,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-void-01",
@@ -1387,7 +1779,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-void-02",
@@ -1413,7 +1813,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-void-03",
@@ -1438,7 +1846,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-void-04",
@@ -1465,7 +1881,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-void-06",
@@ -1490,7 +1914,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-void-08",
@@ -1518,7 +1950,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-metallic-01",
@@ -1545,7 +1985,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-metallic-03",
@@ -1570,7 +2018,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-metallic-04",
@@ -1596,7 +2052,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-metallic-06",
@@ -1621,7 +2085,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-metallic-08",
@@ -1648,7 +2120,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-metallic-09",
@@ -1674,7 +2154,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-metallic-10",
@@ -1699,7 +2187,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-gravity-01",
@@ -1725,7 +2221,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-gravity-03",
@@ -1750,7 +2254,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-gravity-05",
@@ -1777,7 +2289,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-gravity-06",
@@ -1803,7 +2323,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     },
     {
       "id": "weapon-new-gravity-08",
@@ -1828,7 +2356,15 @@
       "needsApproval": true,
       "needsBalance": true,
       "needsVisuals": true,
-      "needsShop": true
+      "needsShop": true,
+      "terrainWeaponBonusRule": {
+        "eligibleWhen": "terrain.attackPercent>0 and terrain.elementId===weapon.elementId",
+        "matchingElementOnly": true,
+        "offenseOnly": true,
+        "applyOncePerWeaponHit": true,
+        "sameBothPlayers": true,
+        "doesNotBypassDefenses": true
+      }
     }
   ]
 }
