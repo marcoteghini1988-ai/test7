@@ -4802,9 +4802,9 @@ export function autoFleetTurn(b,who=b.turn){
  const availableElements=activeFleetElements(side.ships[0].id,side.ships[0].level);
  const promisingElement=b.ruleset===HP_SYNC_RULESET&&ability?availableElements.find(element=>{
   const handCount=side.hand.filter(id=>card(id)?.effectSpec?.type==='energy'&&
-   card(id)?.effectSpec?.elementId===element)
+   card(id)?.effectSpec?.elementId===element).slice(0,FLEET_MAX_PLAYED)
    .reduce((sum,id)=>sum+card(id).effectSpec.charges,0);
-  return chargedElementalEnergy(side,element)+Math.min(FLEET_MAX_PLAYED,handCount)>=effectiveSupportEnergyCost(side,ability,b.ply);
+  return chargedElementalEnergy(side,element)+handCount>=effectiveSupportEnergyCost(side,ability,b.ply);
  }):null;
  const candidates=side.hand.map((id,i)=>({id,i,role:cardRole(id),def:card(id)}))
   .filter(x=>!effectUnavailableReason(x.def,side,b,{ownPartId}))
