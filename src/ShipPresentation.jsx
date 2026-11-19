@@ -148,7 +148,7 @@ export function ShipCard({shipId,level,rarita=null,vessel=newVessel(shipId,level
     <span><b>{displayHp}</b> HP</span>
     {rarityStats?<span><b>{displayPower}</b> ATT · <b>{rarityStats.defensePercent}%</b> DIF</span>:
      progression?<span><b>{displayPower}</b> potenza</span>:
-     <span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>
+     <span><b>{vessel.weapons.length}</b> {vessel.weapons.length===1?'arma':'armi'}</span>}
    </span>
    {progression?<span className="ship-card-operations" aria-label={progression.vitalIds.length+' componenti vitali'}>
     {progression.vitalIds.map(id=><b key={id} data-card-vital={id}>{({weapons:'ARS',generator:'GEN',bridge:'PLA',command:'CEN'})[id]}</b>)}

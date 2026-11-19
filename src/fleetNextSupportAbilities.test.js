@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {SUPPORT_CATALOG,LEGACY_SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import {supportHpAtLevel} from './fleetNext/supportProgression.js';
 import {createFleetSide,createFleetNextBattle,resolveFleetNextTurn,
  fuseIndependentSupportWithShip,sacrificeIndependentFleetSupport} from './fleetNext/combat.js';
 import {SUPPORT_SKILL_LABELS,SUPPORT_SKILL_ASSIGNMENTS,
@@ -93,9 +94,9 @@ test('Veleno reattivo avviato dopo ferita, per il prossimo turno del colpevole',
  assert.equal(tick.battle.sides.B.escorts[0].hp,e-1);
 });
 
-test('Scudiera resistente: 50 HP e cura alla distruzione una sola volta',()=>{
+test('Scudiera resistente: HP scalati per rarita e cura alla distruzione una sola volta',()=>{
  const b=battle('last-shield'),mother=b.sides.A.ships[0],e=b.sides.A.escorts[0];
- assert.equal(e.maxHp,50);
+ assert.equal(e.maxHp,supportHpAtLevel(50,e.supportLevel));
  mother.hp=1;e.hp=0;e.destroyed=true;
  const notes=settleIndependentSupportDamage(b,'B');
  assert.equal(notes.length,1);

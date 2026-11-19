@@ -12,6 +12,7 @@ import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {limitedMotherDamage} from './motherBalance.js';
+import {matchPacingTarget} from './battlePacing.js';
 import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {supportDefinition} from './supportCatalog.js';
@@ -368,6 +369,7 @@ export function createFleetNextBattle({
  const b={version:4,ruleset,phase:'playing',winner:null,round:1,ply:0,turn:'A',
   deadlineMs:nowMs+FLEET_TURN_SECONDS*1000,turnStartedAtMs:nowMs,
   supportSecondsProcessed:0,mode,
+  pacingTarget:matchPacingTarget(mode,bossId,FLEET_TURN_SECONDS),
   bossName,bossId:bossId||null,planetId:terrain.planetId??planetId??null,
   bossLockedTerrain:false,seed,rng:seed>>>0,startedAtMs:nowMs,finishedAtMs:null,
   terrain,
@@ -3003,7 +3005,7 @@ function resolveElementalActivation(b,who,order,ctx,events){
  if(!ability||!spendElementalEnergy(side,element,effectiveCost))
   throw Error('Energia speciale insufficiente');
  side.elementalLastActivationPly=b.ply;
- const strength=elementalSpecialStrength(ability,element,enemy.ships[0].element);
+ const strength=elementalSpecialStrength(ability,element,enemy.ships[0].element,mother);
  const amount=ability.kind==='attack'?supportSpecialBoost(side,strength.power,b.ply):strength.power;
  if(ability.kind==='attack'){
   ctx.power+=amount;ctx.elementalShot=true;
@@ -3019,7 +3021,9 @@ function resolveElementalActivation(b,who,order,ctx,events){
   const escort=selected||enemy.escorts.find(e=>escortEnabled(enemy,e,b.ply));
   if(escort){escort.disabledUntilPly=Math.max(escort.disabledUntilPly||0,b.ply+2);
    refreshEscortLinks(enemy,b.ply);}
-  else enemy.buffs.push({kind:'jam',power:1,untilPly:b.ply+2,source:'elemental:'+mother.id});
+  else enemy.buffs.push({kind:'jam',power:Number.isFinite(mother.defensePercent)?
+    Math.max(1,Math.round(mother.attackPower*.25)):1,
+    untilPly:b.ply+2,source:'elemental:'+mother.id});
  }
  events.push(emit(b,who,'elemental-special',ability.name+' · '+FLEET_ELEMENTS[element].name+
   (strength.relation>0?' · efficace':strength.relation<0?' · contrastata':' · neutrale'),{

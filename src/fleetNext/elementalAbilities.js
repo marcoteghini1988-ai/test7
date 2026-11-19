@@ -144,11 +144,26 @@ export function elementalAbilityReadiness(side,element,extraCards=0){
   return 'Energia insufficiente: servono '+ability.cost+' carte '+FLEET_ELEMENTS[element].name;
  return '';
 }
-export function elementalSpecialStrength(ability,attackerElement,defenderElement){
+export function elementalSpecialStrength(ability,attackerElement,defenderElement,mother=null){
  const relation=elementalRelation(attackerElement,defenderElement);
- // Il modificatore elementale è applicato una sola volta al danno effettivo
- // (elementalDamage.js), dopo Difese e intercettazioni: niente bonus doppio.
- return Object.freeze({relation,power:Math.max(1,Math.min(3,ability?.power||1))});
+ const base=Math.max(1,Math.min(3,ability?.power||1));
+ // Le vecchie fixture HP senza una carta-rarita conservano i valori precedenti.
+ if(!Number.isFinite(mother?.defensePercent))
+  return Object.freeze({relation,power:base});
+ const attack=Math.max(1,Math.round(Number(mother.attackPower)||1));
+ const cost=Math.max(1,Math.min(4,Number(ability.cost)||1));
+ let power=base;
+ if(ability.kind==='attack'){
+  // Il costo in Energia paga un potenziamento proporzionale, mai un secondo sparo.
+  power=Math.round(attack*(0.22+0.06*cost+0.08*base));
+ }else if(ability.mode==='heal'){
+  // Cura calibrata sugli HP attuali della nave, non sui vecchi 42 HP.
+  power=Math.round(mother.maxHp*Math.min(.22,.12+.01*cost+.01*base));
+ }else if(ability.mode==='guard'||ability.mode==='jam'){
+  power=Math.round(attack*(.16+.04*cost+.04*base));
+ }
+ // La relazione elementale verra applicata una sola volta al colpo effettivo.
+ return Object.freeze({relation,power:Math.max(base,power)});
 }
 if(Object.keys(ELEMENTAL_ABILITIES).length!==12||
  Object.values(ELEMENTAL_ABILITIES).some(a=>!['attack','effect'].includes(a.kind)||

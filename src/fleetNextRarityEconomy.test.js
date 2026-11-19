@@ -17,6 +17,7 @@ import {createFleetNextBattle,createFleetSide,fuseIndependentSupportWithShip,
 import {CAMPAIGN_SHIP_ORDER} from './fleetNext/progression.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {elementalRelation} from './fleetNext/elementalAffinities.js';
+import {LEGENDARY_MOTHER_PROFILES,motherBaselinePotential} from './fleetNext/motherBalance.js';
 function store(credits=100000){
  const data=new Map(),failKey={key:null};
  const storage={
@@ -107,7 +108,7 @@ test('Una Comune tecnica L5 non aggira il requisito della rarità Leggendaria',(
  assert.match(fusionShipUnavailableReason(side,'R01',0),/Leggendario/);
  assert.equal(fuseIndependentSupportWithShip(side,'R01',0).ok,false);
 });
-test('Tutte le 12 madri Leggendarie hanno stessi HP, attacco e difesa, gli elementi decidono la relazione',()=>{
+test('Le 12 madri Leggendarie hanno statistiche diverse e potenziale iniziale paragonabile',()=>{
  const actual=[];
  for(const id of CAMPAIGN_SHIP_ORDER){
   const b=createFleetNextBattle({
@@ -121,7 +122,10 @@ test('Tutte le 12 madri Leggendarie hanno stessi HP, attacco e difesa, gli eleme
    E01:11,E02:10,L01:7,L03:5,L04:5})[id]);
   actual.push([unit.hp,unit.attackPower,unit.defensePower]);
  }
- assert.equal(new Set(actual.map(x=>JSON.stringify(x))).size,1,'nessun potere base superiore perché sbloccato tardi');
+ assert.equal(new Set(actual.map(x=>JSON.stringify(x))).size,12,'12 profili base distinti');
+ const potential=CAMPAIGN_SHIP_ORDER.map(id=>motherBaselinePotential(LEGENDARY_MOTHER_PROFILES[id]));
+ assert.ok(Math.max(...potential)/Math.min(...potential)<=1.03,
+  'le madri leggendarie devono restare comparabili senza statistiche identiche');
  assert.equal(elementalRelation('plasma','mineral'),1);
  assert.equal(elementalRelation('mineral','plasma'),-1);
  assert.equal(nativeMotherRarity('L04'),'Leggendaria');
