@@ -1,9 +1,9 @@
-// Regressioni su Sequenza Stellare e Amplificatore di Scorta.
+// Regressioni sulle tre fasi dell'Acceleratore Trifase e sulle armi confermate.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {card,cardRole,cardCopyLimit,cardFacePath,TEMP_SUPPORT_WEAPONS,SEQUENCE_WEAPON_IDS,ESCORT_WEAPON_ID} from './fleetNext/rules.js';
+import {card,cardRole,cardCopyLimit,cardFacePath,TEMP_SUPPORT_WEAPONS,SEQUENCE_WEAPON_IDS} from './fleetNext/rules.js';
 import {validateEffectSpec,describeEffect} from './fleetNext/simpleEffects.js';
-import {sequenceUpgradeTarget,supportWeaponCharge,TEMP_WEAPON_DURATION,arsenalBonus} from './fleetNext/newCardEffects.js';
+import {sequenceUpgradeTarget,arsenalBonus} from './fleetNext/newCardEffects.js';
 import {createFleetNextBattle,resolveFleetNextTurn,validateFleetTurn} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
@@ -11,7 +11,7 @@ import {createFleetInventory,normalizeFleetInventory} from './fleetNext/collecti
 import {canSelectNewGeneric,buildNextBaseDeck,buyNextCommonCard,NEXT_COMMON_AVAILABLE} from './fleetNext/nextDeckLoadout.js';
 import {projectMachineBerths} from './fleetNext/battlePresentation.js';
 
-const [ONE,TWO,THREE]=SEQUENCE_WEAPON_IDS,ESCORT=ESCORT_WEAPON_ID;
+const [ONE,TWO,THREE]=SEQUENCE_WEAPON_IDS,MEMORY='weapon-memory-plasma';
 const roster=n=>SUPPORT_CATALOG.slice(0,n).map((s,slot)=>({
  supportId:s.id,instanceId:'test-'+slot,slot,rarita:'Leggendaria'
 }));
@@ -37,7 +37,7 @@ function turn(b,who,cards=[],pass=false){
 const between=b=>turn(b,'B',[],true).battle;
 const event=(result,kind)=>result.events.find(x=>x.kind===kind);
 
-test('Quattro carte registrate, testo valido, non distribuite e non acquistabili',()=>{
+test('Tre carte Acceleratore registrate, testo valido, non distribuite e non acquistabili',()=>{
  const inv=createFleetInventory();
  for(const def of TEMP_SUPPORT_WEAPONS){
   assert.equal(card(def.id),def);
@@ -46,7 +46,7 @@ test('Quattro carte registrate, testo valido, non distribuite e non acquistabili
   assert.equal(cardCopyLimit(def.id),1);
   assert.equal(def.rarita,{
    'weapon-sequence-1':'Comune','weapon-sequence-2':'Rara',
-   'weapon-sequence-3':'Epica','weapon-escort-charge':'Rara'
+   'weapon-sequence-3':'Epica'
   }[def.id]);
   assert.equal(def.rarityPending,false);
   assert.equal(def.copyLimitPending,false);
@@ -60,40 +60,27 @@ test('Quattro carte registrate, testo valido, non distribuite e non acquistabili
   inv.owned[def.id]=1;
  }
  const saved=normalizeFleetInventory(inv);
- assert.deepEqual(buildNextBaseDeck(saved,'C01',20,[ONE,TWO,THREE,ESCORT]).baseDeck,
-  [ONE,TWO,THREE,ESCORT]);
+ assert.deepEqual(buildNextBaseDeck(saved,'C01',20,[ONE,TWO,THREE]).baseDeck,
+  [ONE,TWO,THREE]);
 });
 
-test('Amplificatore: danno 15 / 35 / 55, fusione conta un supporto per slot',()=>{
- const m={damageMode:'escort-count',baseDamage:15,perEscort:20,weaponElementId:'ionic'};
- const side={escorts:[]};
- assert.equal(supportWeaponCharge(side,m).damage,15);
- side.escorts=[{slot:0,hp:100,destroyed:false}];
- assert.equal(supportWeaponCharge(side,m).damage,35);
- side.escorts.push({slot:1,hp:100,destroyed:false});
- assert.equal(supportWeaponCharge(side,m).damage,55);
- side.escorts[0].fused=true;side.escorts[0].sourceIndices=[0,2];
- assert.equal(supportWeaponCharge(side,m).damage,55);
- side.escorts[1].hp=0;
- assert.equal(supportWeaponCharge(side,m).damage,35);
- side.escorts[0].destroyed=true;
- assert.equal(supportWeaponCharge(side,m).damage,15);
-});
 
-test('Amplificatore: due attacchi, perdita di supporto e scadenza',()=>{
- let b=battle(2),r=turn(b,'A',[ESCORT]);
- assert.equal(event(r,'weapon-escort')?.nominalDamage,55);
- assert.equal(event(r,'weapon-escort')?.supportCount,2);
- assert.equal(TEMP_WEAPON_DURATION[ESCORT],2);
- b=between(r.battle);
- b.sides.A.escorts[1].hp=0;b.sides.A.escorts[1].destroyed=true;
- r=turn(b,'A',[]);
- assert.equal(event(r,'weapon-escort')?.nominalDamage,35);
- b=between(r.battle);
- assert.equal(b.sides.A.machines.length,0);
- assert.ok(b.sides.A.discard.includes(ESCORT));
- r=turn(b,'A',[]);
- assert.equal(event(r,'weapon-escort'),undefined);
+test('Tre prototipi esclusi dal catalogo e dal mazzo, anche con un vecchio salvataggio',()=>{
+ const removed=['prog-machine-striker','prog-machine-guard','weapon-escort-charge'];
+ const inv=createFleetInventory();
+ for(const id of removed){
+  assert.equal(card(id),null);
+  assert.equal(canSelectNewGeneric(id),false);
+  assert.equal(inv.owned[id]||0,0);
+  assert.equal(NEXT_COMMON_AVAILABLE.some(def=>def.id===id),false);
+  inv.owned[id]=1;
+ }
+ const normalized=normalizeFleetInventory(inv);
+ for(const id of removed){
+  assert.equal(normalized.owned[id],undefined);
+  assert.equal(normalized.retiredOwned[id],1);
+ }
+ assert.deepEqual(buildNextBaseDeck(normalized,'C01',20,removed).baseDeck,[]);
 });
 
 test('Sequenza completa: I 10, II 30, III 70, stesso slot e scarti corretti',()=>{
@@ -153,19 +140,22 @@ test('Vietate due carte sequenziali nello stesso turno senza perdere la mano',()
 });
 
 test('La II migliora la I anche con due alloggiamenti occupati',()=>{
- let b=battle(),r=turn(b,'A',[ONE,ESCORT]);
+ let b=battle(),r=turn(b,'A',[ONE,MEMORY]);
  assert.equal(r.battle.sides.A.machines.length,2);
+ // Il Cannone dei Frammenti dura normalmente un turno: esteso qui per coprire lo slot occupato.
+ r.battle.sides.A.machines.find(m=>m.sourceCardId===MEMORY).untilPly=100;
  b=between(r.battle);b.sides.A.hand=[TWO];
  const order={cards:[0],pass:false,targetKind:'part',targetId:'weapons',partId:'weapons'};
  assert.ok(!validateFleetTurn(b,'A',order));
  r=turn(b,'A',[TWO]);
  assert.equal(r.battle.sides.A.machines.length,2);
  assert.equal(event(r,'weapon-sequence')?.nominalDamage,30);
- assert.equal(event(r,'weapon-escort')?.nominalDamage,15);
+ assert.equal(event(r,'weapon-discard')?.nominalDamage,10);
 });
 
 test('La III senza II concatenata richiede slot libero',()=>{
- let b=battle(),r=turn(b,'A',[ONE,ESCORT]);
+ let b=battle(),r=turn(b,'A',[ONE,MEMORY]);
+ r.battle.sides.A.machines.find(m=>m.sourceCardId===MEMORY).untilPly=100;
  b=between(r.battle);
  b.sides.A.hand=[THREE];
  const order={cards:[0],pass:false,targetKind:'part',targetId:'weapons',partId:'weapons'};
@@ -173,25 +163,25 @@ test('La III senza II concatenata richiede slot libero',()=>{
 });
 
 test('Le armi sono negli alloggiamenti, non negli slot delle carte Attacco',()=>{
- const r=turn(battle(2),'A',[ONE,ESCORT]);
+ const r=turn(battle(2),'A',[ONE,MEMORY]);
  const berths=projectMachineBerths(r.battle.sides.A);
  assert.equal(berths[0].nominalDamage,10);
- assert.equal(berths[1].nominalDamage,55);
+ assert.equal(berths[1].nominalDamage,10);
  assert.ok(!r.battle.sides.A.attackSlots.includes(ONE));
- assert.ok(!r.battle.sides.A.attackSlots.includes(ESCORT));
+ assert.ok(!r.battle.sides.A.attackSlots.includes(MEMORY));
 });
 
 test('Buco Nero rimuove le armi e le manda negli scarti',()=>{
- let b=turn(battle(),'A',[ONE,ESCORT]).battle;
+ let b=turn(battle(),'A',[ONE,MEMORY]).battle;
  const r=turn(b,'B',['sys-black-hole'],true);
  assert.equal(r.battle.sides.A.machines.length,0);
  assert.ok(r.battle.sides.A.discard.includes(ONE));
- assert.ok(r.battle.sides.A.discard.includes(ESCORT));
+ assert.ok(r.battle.sides.A.discard.includes(MEMORY));
 });
 
 test('Sabotaggio Arsenale annulla il contributo se il sistema e disabilitato',()=>{
- const m={id:'t',slot:0,hp:1,destroyed:false,power:1,damageMode:'escort-count',baseDamage:10,perEscort:10};
- const side={ruleset:HP_SYNC_RULESET,machines:[m],escorts:[{slot:0,hp:100}],
+ const m={id:'t',slot:0,hp:1,destroyed:false,power:1,damageMode:'discard-attacks',baseDamage:10,perDiscardAttack:10,weaponElementId:'plasma'};
+ const side={ruleset:HP_SYNC_RULESET,machines:[m],discard:[],escorts:[{slot:0,hp:100}],
   systemCardEffects:[{system:'weapons',operation:'disable',tier:4,amount:2,appliedPly:0,untilPly:4}]};
  assert.equal(arsenalBonus(side,m,0,20),0);
 });
