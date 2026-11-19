@@ -10,9 +10,9 @@ const named=(id,name,spec,effectProposed)=>Object.freeze({
  kind:'support',playable:true,nativeFace:true,
  rarita:TEMP_SUPPORT_WEAPON_RARITIES[id],rarityPending:false,acquisitionPending:true,
  maxCopiesPerDeck:1,copyLimitPending:false,
- elementId:'ionic',elementPending:true,visualKey:'element-lightning',visualSymbol:'⚡',
+ elementId:'ionic',elementPending:false,visualKey:'element-lightning',visualSymbol:'⚡',
  effectSpec:Object.freeze({type:'deployMachine',hp:1,power:0,elementId:'ionic',...spec}),
- effectProposed,visualBrief:'Nome, elemento e grafica ancora da definire.'
+ effectProposed,visualBrief:'Elemento Fulmine confermato; illustrazione definitiva ancora da approvare.'
 });
 const first=named(SEQUENCE_WEAPON_IDS[0],'Acceleratore Trifase I (nome provvisorio)',
  {damageMode:'sequence',sequenceStage:1,durationTurns:2,soloDamage:10,chainDamage:10},
