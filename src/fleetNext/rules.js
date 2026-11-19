@@ -7,7 +7,7 @@ import {DISMANTLE_BY_ID,DISMANTLE_CARDS} from './dismantleCards.js';
 import {FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.js';
 import {DISCARD_WEAPON_BY_ID} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPON_BY_ID} from './temporarySupportWeapons.js';
-export {TEMP_SUPPORT_WEAPONS,TEMP_SUPPORT_WEAPON_BY_ID,SEQUENCE_WEAPON_IDS,ESCORT_WEAPON_ID} from './temporarySupportWeapons.js';
+export {TEMP_SUPPORT_WEAPONS,TEMP_SUPPORT_WEAPON_BY_ID,SEQUENCE_WEAPON_IDS} from './temporarySupportWeapons.js';
 export {DISCARD_WEAPON,DISCARD_WEAPONS,DISCARD_WEAPON_ID,DISCARD_WEAPON_BY_ID} from './discardWeapon.js';
 export {FUSION_DENIAL_TRAP,FUSION_DENIAL_TRAPS,FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.js';
 import {ENERGY_CARDS,ENERGY_CARD_BY_ID,ENERGY_CARD_COUNT} from './energyCards.js';
