@@ -221,7 +221,9 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     const selected=selectedTarget?.kind==='machine'&&selectedTarget.id===machine?.id;
     return <button type="button" key={slot} className={'f3d-machine-berth f3d-machine-berth--'+slot+(selected?' f3d-unit--selected':'')+(hit?' f3d-machine--hit':'')}
      disabled={!machine||(!player&&(!canTarget||!enabled))}
-     aria-label={machine?(unit.ruleset===HP_SYNC_RULESET?'Arma temporanea ':'Macchina d’assalto ')+machine.name+(unit.ruleset===HP_SYNC_RULESET?' · effetto di supporto':' · '+machine.hp+'/'+machine.maxHp+' punti'):'Arma temporanea '+(slot+1)+' · spazio libero'}
+     aria-label={machine?(unit.ruleset===HP_SYNC_RULESET?(player?'Consulta Arma temporanea ':'Arma temporanea ')+machine.name+' · supporto non bersagliabile':
+       (player?'Consulta ':'Attacca ')+machine.name+' · '+machine.hp+'/'+machine.maxHp+' punti'):
+       (unit.ruleset===HP_SYNC_RULESET?'Arma temporanea ':'Macchina d’assalto ')+(slot+1)+' · spazio libero'}
      aria-pressed={!player&&selected}
      onClick={()=>player?inspectEscort({machine}):onSelectTarget?.({kind:'machine',id:machine.id,slot})}>
      {machine?<><svg viewBox="0 0 70 56" aria-hidden="true">
@@ -229,7 +231,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
       <path d="M22 34V4H29V34M41 34V4H48V34" fill="#172839" stroke="#aac5d3" strokeWidth="3"/>
       <path d="M17 41H53M23 46H47" stroke="#87e9fb" strokeWidth="3"/>
       <circle cx="35" cy="28" r="8" fill="#173546" stroke="#89c8d8" strokeWidth="2"/>
-     </svg><span>{machine.pending?'DA SCHIERARE':unit.ruleset===HP_SYNC_RULESET?'ARMA':machine.hp+'/'+machine.maxHp}</span></>:<b>＋</b>}
+     </svg><span>{machine.pending?'DA SCHIERARE':unit.ruleset===HP_SYNC_RULESET?(machine.nominalDamage!=null?machine.nominalDamage+' HP':'ARMA'):machine.hp+'/'+machine.maxHp}</span></>:<b>＋</b>}
      <small>{unit.ruleset===HP_SYNC_RULESET?'ARMA':'MACCHINA'} {slot+1}</small>
     </button>;
    })}
@@ -1796,8 +1798,14 @@ export default function OfficialFleetBattle3D({
      {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description}</p>}
     </>:help.machine?<>
      <strong>{help.machine.name}</strong>
+     {player.ruleset===HP_SYNC_RULESET?<>
+     <p>{describeEffect(card(help.machine.sourceCardId))}</p>
+     {help.machine.nominalDamage!=null&&<p>Danno nominale attuale: {help.machine.nominalDamage} HP (prima di difese e modificatori).</p>}
+     <small>Arma temporanea · non intercetta colpi e non è bersagliabile · slot {help.machine.slot+1}</small>
+    </>:<>
      <p>Protegge la madre finché è operativa. Potenza di supporto: {help.machine.power||0}.</p>
      <small>{help.machine.hp}/{help.machine.maxHp} punti · alloggiamento {help.machine.slot+1}</small>
+    </>}
     </>:help.module?<>
      <strong>{help.module.name}</strong>
      <p>Modulo {help.module.slot==='weapon'?'d’arma':'di utilità'} installato sulla nave madre.</p>
