@@ -2,7 +2,7 @@
 // L'abilità è una proprietà della madre, NON una undicesima carta esclusiva.
 // Le Energie si ottengono solo dalle Carte Energia realmente giocate.
 import {activeFleetElements,FLEET_ELEMENTS,elementalRelation} from './elementalAffinities.js';
-import {ENERGY_CAPACITY} from './energyCards.js';
+import {ENERGY_SPECIAL_MAX_COST} from './energyCards.js';
 
 const RAW_ABILITIES=[
  [
@@ -119,8 +119,7 @@ export function totalElementalEnergy(side){
 }
 export const chargedElementalEnergy=(side,element)=>Math.max(0,Math.floor(Number(side?.elementalCharges?.[element])||0));
 export function canChargeElementalEnergy(side,element){
- return !!side?.ships?.[0]&&activeFleetElements(side.ships[0].id,side.ships[0].level).includes(element)&&
-  totalElementalEnergy(side)<ENERGY_CAPACITY;
+ return !!side?.ships?.[0]&&activeFleetElements(side.ships[0].id,side.ships[0].level).includes(element);
 }
 // Le Carte Energia sono oggetti fisici nella pila condivisa del giocatore:
 // rimangono fuori dagli scarti finché la relativa carica non viene consumata.
@@ -135,7 +134,7 @@ export function chargeElementalEnergy(side,element,cardId='energy-'+element){
  return true;
 }
 export function spendElementalEnergy(side,element,cost){
- if(!Number.isInteger(cost)||cost<1||cost>ENERGY_CAPACITY||
+ if(!Number.isInteger(cost)||cost<1||
   chargedElementalEnergy(side,element)<cost)return false;
  side.elementalCharges[element]-=cost;
  if(side.elementalCharges[element]===0)delete side.elementalCharges[element];
@@ -184,6 +183,6 @@ export function elementalSpecialStrength(ability,attackerElement,defenderElement
 if(Object.keys(ELEMENTAL_ABILITIES).length!==12||
  Object.values(ELEMENTAL_ABILITIES).some(a=>!['attack','effect'].includes(a.kind)||
  !['salvo','guard','jam','heal','disable'].includes(a.mode)||a.kind==='attack'!==(a.mode==='salvo')||
- !Number.isInteger(a.cost)||a.cost<1||a.cost>ENERGY_CAPACITY||
+ !Number.isInteger(a.cost)||a.cost<1||a.cost>ENERGY_SPECIAL_MAX_COST||
  !Number.isInteger(a.power)||a.power<1||a.power>3))
  throw Error('Abilità elementali incomplete o senza costo valido');
