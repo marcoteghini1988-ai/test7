@@ -9,6 +9,7 @@ import {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {FUSION_DENIAL_TRAPS,FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.js';
 import {DISCARD_WEAPONS,DISCARD_WEAPON_BY_ID} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS,TEMP_SUPPORT_WEAPON_BY_ID} from './temporarySupportWeapons.js';
+import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID} from './elementalTerrainCards.js';
 
 export const NEXT_DECK_LIMIT=40;
 export const NEXT_TEMP_WEAPON_IDS=Object.freeze(['prog-machine-striker','prog-machine-guard']);
@@ -41,7 +42,7 @@ export function canSelectNewGeneric(id){
   ((Object.hasOwn(NEXT_COMMON_CARD_BY_ID,id)||Object.hasOwn(DISMANTLE_BY_ID,id)||
   Object.hasOwn(ENERGY_CARD_BY_ID,id)||Object.hasOwn(FUSION_SHIP_CARD_BY_ID,id)||
    Object.hasOwn(FUSION_DENIAL_TRAP_BY_ID,id)||Object.hasOwn(DISCARD_WEAPON_BY_ID,id)||
-   Object.hasOwn(TEMP_SUPPORT_WEAPON_BY_ID,id))||
+   Object.hasOwn(TEMP_SUPPORT_WEAPON_BY_ID,id)||Object.hasOwn(ELEMENTAL_TERRAIN_BY_ID,id))||
   NEXT_TEMP_WEAPON_IDS.includes(id)||def.kind==='character');
 }
 export function buildNextBaseDeck(inventory,shipId,level,selection=null){
@@ -88,4 +89,4 @@ export function buyNextCommonCard(inventory,id){
   credits:inventory.credits-cost};
  return {ok:true,inventory:next,cost,copies:owned+1};
 }
-export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS,...FUSION_DENIAL_TRAPS,...DISCARD_WEAPONS,...TEMP_SUPPORT_WEAPONS]);
+export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS,...FUSION_DENIAL_TRAPS,...DISCARD_WEAPONS,...TEMP_SUPPORT_WEAPONS,...ELEMENTAL_TERRAIN_CARDS]);
