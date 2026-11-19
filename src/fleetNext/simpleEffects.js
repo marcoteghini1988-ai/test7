@@ -2,6 +2,7 @@
 // Questo modulo non interpreta nomi, famiglie o descrizioni delle carte.
 import {getShipProgression} from './progression.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
+import {energyCardDescription} from './energyCards.js';
 import {siphonAttackDescription} from './siphonAttacks.js';
 import {AURORA_ACTIONS} from './auroraEngine.js';
 import {LINCE_ACTIONS} from './linceEngine.js';
@@ -86,7 +87,8 @@ export function validateEffectSpec(spec){
    (spec.mode==='base')!==(spec.count===99)))return 'Smontaggio non valido';
  if(spec.type==='fieldReset'&&(spec.scope!=='both'||spec.discardFieldCards!==true))return 'Reset campo non valido';
  if(spec.type==='blueprint'&&!/^nx-[a-z0-9]+-[0-9]{2}$/.test(spec.code||''))return 'Codice di scheda esclusiva non valido';
- if(spec.type==='energy'&&(!Object.hasOwn(FLEET_ELEMENTS,spec.elementId)||Object.keys(spec).length!==2))return 'Energia elementale non valida';
+ if(spec.type==='energy'&&(!Object.hasOwn(FLEET_ELEMENTS,spec.elementId)||
+   !integer(spec.charges,1,4)||Object.keys(spec).length!==3))return 'Energia elementale non valida';
  if(spec.type==='shipFusion'&&(!/^(N00|[CREL][0-9]{2})$/.test(spec.shipId||'')||Object.keys(spec).length!==2))return 'Navicella Fusione non valida';
  if(spec.type==='aurora'&&!Object.values(AURORA_ACTIONS).includes(spec.action))return 'Azione Aurora non valida';
  if(spec.type==='lince'&&!Object.values(LINCE_ACTIONS).includes(spec.action))return 'Azione Lince non valida';
@@ -219,7 +221,7 @@ export function describeEffect(card,level=1){
    return repeat+"Rimette in cima al mazzo l’ultima carta "+(label?label+' ':'')+'scartata.';
   }
   case 'charge':return repeat+'Prepara +'+s.amount+' potenza per il tuo attacco del turno successivo.';
-  case 'energy':return 'Aggiungi 1 Carta Energia '+FLEET_ELEMENTS[s.elementId].name+' alla pila unica, senza limite di accumulo. Resta fino al consumo e solo allora va negli scarti. Alimenta le abilità speciali e le Armi compatibili.';
+  case 'energy':return energyCardDescription(FLEET_ELEMENTS[s.elementId].name,s.charges);
   case 'terrain':return TERRAIN_EFFECT_TEXT[s.code]+' Vale per entrambi i giocatori per 3 round.';
   case 'elementalTerrain':return card.description||'Terreno elementale permanente: '+FLEET_ELEMENTS[s.elementId].name;
   case 'trap':return s.trigger==='shipFusion'?
