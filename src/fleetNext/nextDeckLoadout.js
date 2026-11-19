@@ -12,7 +12,8 @@ import {TEMP_SUPPORT_WEAPONS,TEMP_SUPPORT_WEAPON_BY_ID} from './temporarySupport
 import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID,terrainNextRarity} from './elementalTerrainCards.js';
 
 export const NEXT_DECK_LIMIT=40;
-export const NEXT_TEMP_WEAPON_IDS=Object.freeze(['prog-machine-striker','prog-machine-guard']);
+// Nessuna arma di prova equipaggiabile.
+export const NEXT_TEMP_WEAPON_IDS=Object.freeze([]);
 export const NEXT_DECK_STORAGE_KEY='eclissi_next_cards_40_v1';
 export const NEXT_CARD_COSTS=Object.freeze({
  Comune:50,Rara:110,Epica:220,Leggendaria:440
