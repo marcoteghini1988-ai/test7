@@ -75,6 +75,7 @@ import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
  commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,commandPassiveSuspensions,
  consumePlanciaRestriction,consumePlanciaSplit,planciaSplitCount,
  resetFieldWithBlackHole,TEMP_WEAPON_DURATION,sequenceUpgradeTarget,supportWeaponCharge} from './newCardEffects.js';
+import {siphonSacrificePlan,siphonTargetPlan} from './siphonAttacks.js';
 import {dismantleCandidates,applyDismantleCard,expireDismantleEffects,
  syncDismantleSide} from './dismantleEffects.js';
 
@@ -583,6 +584,11 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   const reason=fusionShipUnavailableReason(side,s.shipId,null,battle?.ply??0);
   if(reason)return reason;
  }
+ if(s.type==='siphonStrike'){
+  if(side.ruleset!==HP_SYNC_RULESET)return 'Scarica Sifone richiede la modalità HP';
+  const plan=siphonSacrificePlan(side,s.sacrificePercent);
+  if(!plan.ok)return plan.reason;
+ }
  if(s.type==='deployMachine'&&(side.machines||[]).filter(unitAlive).length>=2&&
   !sequenceUpgradeTarget(side,def,battle?.ply??0))
   return 'I due alloggiamenti delle macchine d’assalto sono occupati';
@@ -798,6 +804,19 @@ export function validateFleetTurn(b,who,order){
  for(const c of chosen){
   const reason=effectUnavailableReason(c,side,b,{ownPartId:order?.ownPartId,terrainCode});
   if(reason)return (c.nome||c.name)+': '+reason;
+ }
+ // Le Scariche multiple calcolano il 20% in successione sugli HP aggiornati.
+ const siphonCards=chosen.filter(c=>c.effectSpec?.type==='siphonStrike');
+ if(siphonCards.length){
+  const preview={escorts:(side.escorts||[]).map(e=>({...e}))};
+  for(const c of siphonCards){
+   const plan=siphonSacrificePlan(preview,c.effectSpec.sacrificePercent);
+   if(!plan.ok)return (c.nome||c.name)+': '+plan.reason;
+   for(const donor of plan.sacrifices){
+    const unit=preview.escorts.find(e=>e.id===donor.id);
+    unit.hp-=donor.cost;
+   }
+  }
  }
  if(chosen.some(effectNeedsOwnTarget)&&order?.ownPartId&&!activePart(side,order.ownPartId))
   return 'Scegli un tuo componente ancora operativo';
@@ -2924,6 +2943,41 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     {cardId:def.id,removed:cleared}));
    break;
   }
+  case 'siphonStrike':{
+   // Carta Attacco immediata: nessuna occupazione degli slot Arma.
+   const plan=siphonSacrificePlan(side,s.sacrificePercent);
+   if(!plan.ok)throw Error(plan.reason);
+   for(const donor of plan.sacrifices){
+    const unit=side.escorts.find(e=>e.id===donor.id);
+    unit.hp-=donor.cost;
+    unit.supportObservedHp=unit.hp;
+   }
+   const targets=siphonTargetPlan(enemy,plan.total,s.distribution);
+   const impacts=[];
+   for(const target of targets){
+    let damage=0;
+    if(target.kind==='escort'){
+     const unit=enemy.escorts.find(e=>e.id===target.id);
+     damage=applyDamage(unit,target.nominalDamage);
+    }else{
+     const mother=enemy.ships[0];
+     damage=limitedMotherDamage(mother,target.nominalDamage,b.ply);
+     mother.hp=Math.max(0,mother.hp-damage);
+    }
+    impacts.push({...target,damage});
+   }
+   refreshEscortLinks(side,b.ply);refreshEscortLinks(enemy,b.ply);
+   const actualDamage=impacts.reduce((sum,hit)=>sum+hit.damage,0);
+   ctx.siphonDamage=(ctx.siphonDamage||0)+actualDamage;
+   events.push(emit(b,who,'siphon-strike',
+    (def.nome||def.name)+' · '+plan.total+' HP sacrificati, '+actualDamage+' danni inflitti',
+    {cardId:def.id,distribution:s.distribution,sacrificePercent:s.sacrificePercent,
+     totalSacrificed:plan.total,sacrifices:plan.sacrifices,
+     nominalDamage:impacts.reduce((sum,hit)=>sum+hit.nominalDamage,0),
+     actualDamage,targets:impacts}));
+   triggerReactions(b,who,actualDamage,events);
+   break;
+  }
   case 'deployMachine':{
    const modern=side.ruleset===HP_SYNC_RULESET;
    const previous=modern?sequenceUpgradeTarget(side,def,b.ply):null;
@@ -4728,7 +4782,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
- side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0);
+ side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0)+(ctx.siphonDamage||0);
  side.discard.push(...ctx.cards.filter(id=>!['character','defense','terrain'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='dismantle'&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
