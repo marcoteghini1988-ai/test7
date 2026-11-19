@@ -1,7 +1,7 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
  eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,SIPHON_ATTACKS,ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID} from './fleetNext/rules.js';
-import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
+import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,evolveNextEnergyWithDuplicates,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
@@ -45,6 +45,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  const [motherId,setMotherId]=useState(()=>readFleetInventory().equippedMother);
  const [terrainElement,setTerrainElement]=useState('plasma');
  const [terrainRarity,setTerrainRarity]=useState('Comune');
+ const [energyElement,setEnergyElement]=useState('ionic');
+ const [energyRarity,setEnergyRarity]=useState('Comune');
  useEffect(()=>{
   const refresh=()=>setInventory(readFleetInventory());
   window.addEventListener('eclissi-shop-changed',refresh);
@@ -66,7 +68,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   }catch(e){setNotice('Acquisto non salvato: '+(e?.message||'Errore'));}
  }
  function evolveTerrain(id){
-  const result=evolveNextTerrainWithDuplicates(inventory,id);
+  const result=card(id)?.effectSpec?.type==='energy'?
+   evolveNextEnergyWithDuplicates(inventory,id):evolveNextTerrainWithDuplicates(inventory,id);
   if(!result.ok){setNotice(result.reason);return;}
   try{
    const changed=writeFleetInventory(result.inventory);
@@ -99,12 +102,15 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   const owned=inventory.owned[c.id]||0,equipped=deckInfo.baseDeck.filter(id=>id===c.id).length;
   const copies=Math.min(owned,cardCopyLimit(c.id));
   const isElementalTerrain=Object.hasOwn(ELEMENTAL_TERRAIN_BY_ID,c.id);
-  const nextTerrainRarity=isElementalTerrain?{Comune:'Rara',Rara:'Epica',Epica:'Leggendaria'}[c.rarita]:null;
-  const price=[...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS].some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
+  const isEnergy=c.effectSpec?.type==='energy';
+  const nextTerrainRarity=isElementalTerrain||isEnergy?
+   {Comune:'Rara',Rara:'Epica',Epica:'Leggendaria'}[c.rarita]:null;
+  const price=isEnergy&&c.rarita!=='Comune'?null:
+   [...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS].some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
    <strong>{c.nome||c.name}</strong>
-   <div style={small}>{c.rarita||'Comune'} · {c.sottotipo||c.category||c.kind}</div>
+   <div style={small}>{c.rarita||'Comune'} · {c.sottotipo||c.category||c.kind}{isEnergy?' · '+c.charges+' '+(c.charges===1?'carica':'cariche'):''}</div>
    <p style={small}>{describeEffect(c)}</p>
    <p style={small}>Possedute: {owned} · Nel mazzo: {equipped} · Massimo: {cardCopyLimit(c.id)}</p>
    <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
@@ -215,10 +221,25 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
     {ELEMENTAL_TERRAIN_CARDS.filter(c=>c.elementId===terrainElement&&c.rarita===terrainRarity)
      .map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>10 Carte Energia elementali · accumulo 1–4 cariche</h3>
-   <p style={small}>Le Energie vengono aggiunte al mazzo generico; ogni carta caricata consuma una delle 3 giocate del turno. L’abilità unica della nave si attiva dalla plancia.</p>
+   <h3 style={{fontSize:13}}>40 Carte Energia · 10 elementi e 4 rarità</h3>
+   <p style={small}>Comune: 1 carica · Rara: 2 · Epica: 3 · Leggendaria: 4. Le carte restano fisicamente nella stessa pila senza limite fino al consumo dell'ultima carica. Con tre copie identiche dello stesso elemento e rarità puoi ottenere la rarità successiva. L'acquisizione diretta delle rarità superiori si definirà in seguito.</p>
+   <div style={{display:'flex',gap:7,flexWrap:'wrap'}}>
+    <label style={small}>Elemento:
+     <select aria-label="Elemento dell'Energia" style={{...box,marginLeft:5}}
+      value={energyElement} onChange={e=>setEnergyElement(e.target.value)}>
+      {[...new Map(ENERGY_CARDS.map(c=>[c.elementId,c.name.replace('Energia ','')]))].map(([id,name])=>
+       <option key={id} value={id}>{name}</option>)}
+     </select>
+    </label>
+    <label style={small}>Rarità:
+     <select aria-label="Rarità dell'Energia" style={{...box,marginLeft:5}}
+      value={energyRarity} onChange={e=>setEnergyRarity(e.target.value)}>
+      {['Comune','Rara','Epica','Leggendaria'].map(r=><option key={r} value={r}>{r}</option>)}
+     </select>
+    </label>
+   </div>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
-    {ENERGY_CARDS.map(genericCardTile)}
+    {ENERGY_CARDS.filter(c=>c.elementId===energyElement&&c.rarita===energyRarity).map(genericCardTile)}
    </div>
    <h3 style={{fontSize:13}}>33 nuove carte dei sistemi e Buco Nero</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
