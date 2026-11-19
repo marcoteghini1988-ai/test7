@@ -99,8 +99,11 @@ function simulate(shipA,shipB,options={}){
   assert.ok(b.sides.A.ships[0].hp>=0&&b.sides.B.ships[0].hp>=0);
  }
  assert.equal(b.phase,'finished','Duello non concluso in 105 turni: '+shipA+'/'+shipB);
- return {a:shipA,b:shipB,boss:options.bossId||null,turns,seconds:
-  Math.round((b.finishedAtMs??b.turnStartedAtMs)/1000),
+ const seconds=Math.round((b.finishedAtMs??b.turnStartedAtMs)/1000);
+ const bounds=options.bossId==null?FLEET_PACING_WINDOWS.pvp:FLEET_PACING_WINDOWS.boss;
+ return {a:shipA,b:shipB,boss:options.bossId||null,turns,seconds,
+  withinIndicativeWindow:seconds>=bounds.minSeconds&&seconds<=bounds.maxSeconds,
+  finishedByDraw:b.winner==='draw',
   cards:playedCards,specials,traps,fusions,normalShots,passed,
   invalidAiPlans,winner:b.winner,hpSnapshots};
 }
@@ -214,6 +217,8 @@ test('Matrice esplorativa PvP con mazzi da 40, 2 supporti e carte approvate, sen
  const reports=cases.map(([a,b],i)=>simulate(a,b,{seed:1760+i}));
  assert.equal(reports.length,12);
  assert.ok(reports.every(r=>r.seconds>0&&r.turns<=105));
+ // Non imporre a tutti i mazzi lo stesso ritmo: i casi fuori range
+ // sono dati diagnostici, non un difetto di regole.
  assert.equal(FLEET_PACING_WINDOWS.pvp.targetSeconds,300);
  console.log('BALANCE_APPROVED_CARDS_PVP='+JSON.stringify(reports));
 });

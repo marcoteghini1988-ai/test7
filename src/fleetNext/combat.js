@@ -13,8 +13,7 @@ import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {limitedMotherDamage} from './motherBalance.js';
 import {exclusiveAttackCardDamage} from './confirmedCardBalance.js';
-import {pacingAttackMultiplier,bossExtraDamageResistance,
- bossAttackMultiplier} from './battlePacing.js';
+import {bossExtraDamageResistance,bossAttackMultiplier} from './battlePacing.js';
 import {matchPacingTarget} from './battlePacing.js';
 import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
@@ -2375,17 +2374,7 @@ function adjustedElementalHit(b,ctx,events,defender,kind,unit,amount){
 function royalDistributeDamage(b,ctx,events,defender,kind,unit,amount){
  const balanced=Number.isFinite(defender?.ships?.[0]?.defensePercent)&&
   b.ruleset===HP_SYNC_RULESET;
- const pressure=balanced?pacingAttackMultiplier(b,ctx.nowMs??b.turnStartedAtMs):1;
- if(pressure>1&&amount>0){
-  amount=Math.round(amount*pressure);
-  if(!ctx.pacingNoticeEmitted){
-   ctx.pacingNoticeEmitted=true;
-   events.push(emit(b,ctx.who,'pacing-pressure',
-    'Sovraccarico di combattimento: danni degli attacchi +'+
-    Math.round((pressure-1)*100)+'% per entrambi i giocatori.',
-    {multiplier:pressure}));
-  }
- }
+ // La durata dello scontro non altera il danno: decide la strategia del mazzo.
  // Gli ultimi boss non accorciano la sfida solo grazie a danni sproporzionati.
  if(b.bossId!=null&&ctx.who==='B'&&balanced)
   amount=Math.max(1,Math.round(amount*bossAttackMultiplier(b.bossId)));
@@ -2478,7 +2467,12 @@ function activateObsidianCard(b,who,def,ctx,events,order={},source=null){
  if(OBSIDIAN_ATTACK_ACTIONS.includes(action)){
   if(action==='siege-fracture'){
    const target=obsidianChosenTarget(enemy,order.targetKind,order.targetId);
-   if(!target)throw Error('Frattura richiede una unità nemica viva');
+   if(!target){
+    // Un altro effetto dello stesso turno puo aver distrutto il bersaglio.
+    // La carta spesa si esaurisce senza inventare una nuova unita da colpire.
+    note('Frattura non eseguita: il bersaglio non è più operativo');
+    return;
+   }
    const visible=enemy.protections.some(p=>p.remaining>0&&p.untilPly>b.ply&&
     enemy.defenses.some(d=>d.source===p.source&&!d.hidden&&d.untilPly>b.ply)&&
     (target.kind==='escort'&&p.target==='escort'&&p.escortSlot===target.unit.slot||

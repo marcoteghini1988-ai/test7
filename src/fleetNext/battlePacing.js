@@ -19,29 +19,17 @@ export function matchPacingTarget(mode='campaign',bossId=null,turnSeconds=30){
   enforcedTimeLimit:false,estimatedAssumingFullTurns:true});
 }
 
-// Pressione progressiva uguale per entrambi i giocatori: niente timeout
-// automatico. In modalita' HP e con rarita' attive aumenta il danno solo
-// dopo diversi minuti, per ridurre gli scontri bloccati da difese e fusioni.
-export const FLEET_PACING_PRESSURE=Object.freeze({
- pvp:Object.freeze({startSeconds:180,stepSeconds:30,stepBonus:.40,maxMultiplier:3.5}),
- campaign:Object.freeze({startSeconds:240,stepSeconds:30,stepBonus:.25,maxMultiplier:2.5}),
- boss:Object.freeze({startSeconds:480,stepSeconds:30,stepBonus:.25,maxMultiplier:2.5})
-});
+// Le finestre in alto sono riferimenti statistici, non parametri del danno.
+// Il precedente sovraccarico a tempo e' stato disattivato per consentire
+// anche mazzi molto aggressivi o difensivi e strategie impreviste.
+export const FLEET_PACING_PRESSURE=Object.freeze({enabled:false});
+export const pacingAttackMultiplier=(_battle,_nowMs=0)=>1;
+
 export const BOSS_GUARD_ORDER=Object.freeze([1,2,3,6,7,8,9,11,14,17,19,20]);
 export function bossExtraDamageResistance(bossId){
  const index=BOSS_GUARD_ORDER.indexOf(Number(bossId));
  return index<0?15:15+index;
 }
-export function pacingAttackMultiplier(battle,nowMs=0){
- const category=battle?.bossId!=null?'boss':battle?.mode==='pvp'?'pvp':'campaign';
- const params=FLEET_PACING_PRESSURE[category];
- const elapsed=Math.max(0,(Number(nowMs)-Number(battle?.startedAtMs||0))/1000);
- if(!Number.isFinite(elapsed)||elapsed<params.startSeconds+params.stepSeconds)return 1;
- const steps=Math.floor((elapsed-params.startSeconds)/params.stepSeconds);
- return Math.min(params.maxMultiplier,
-  Math.round((1+params.stepBonus*steps)*100)/100);
-}
-
 // Le sfide degli ultimi boss sono piu' difensive: la difficolta' cresce
 // tramite resistenza e abilita' senza dover abbattere il giocatore subito.
 // Questo parametro non cambia le Carte Personaggio Boss e non tocca i Terreni.

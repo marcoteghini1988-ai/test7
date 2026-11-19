@@ -26,3 +26,6 @@ Obiettivo PvP **4–6 minuti**, riferimento 5; Boss **8–10 minuti**, riferimen
 ## Rarità provvisorie fissate in questa fase
 - Cannone della Memoria Stellare **Epica**; Sequenza I **Comune**, II **Rara**, III **Epica**; Amplificatore di Scorta **Rara**; Interdizione di Fusione **Epica**.
 - Tutte queste carte hanno una sola copia per mazzo; non sono distribuite gratuitamente e non hanno ancora un costo/acquisizione. I nomi e gli elementi provvisori della Sequenza restano da definire nella progettazione grafica.
+
+## Precisazione sulla durata
+Le finestre PvP 4–6 minuti e Boss 8–10 minuti sono **valori medi approssimativi**. Il tempo di partita non altera automaticamente i danni: eventuali prolungamenti o chiusure rapide dipendono dai mazzi e dalle carte, anche da quelle che devono essere ancora progettate. Non considerare il bilanciamento completo fino a catalogo definitivo.

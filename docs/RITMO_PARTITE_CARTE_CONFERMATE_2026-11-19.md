@@ -1,18 +1,17 @@
-# Bilanciamento del ritmo in duelli con carte confermate
-19 novembre 2026 — Nessuna modifica a Personaggi, Terreni o alle statistiche dei 13 supporti.
+# Durata indicativa delle partite e bilanciamento delle carte confermate
+19 novembre 2026 — Eclissi Stellare.
 
-## Riscontro prima della correzione
-Simulazioni con carte vere, due supporti, possibilita' di doppia Fusione, una Trappola e Carte Energia; tempo medio di decisione modellato: 15 secondi per giocata. Cinque PvP: **285, 330, 465, 525, 570 s**. Due battaglie boss: **420 e 465 s**. Tre PvP su cinque oltre i 6 minuti; boss troppo brevi. Nessuno di questi valori e' una misura dal PvP reale, che resta simulato.
+## Decisione aggiornata
+PvP 4–6 minuti e Boss 8–10 minuti sono riferimenti medi di progettazione, non soglie che ogni partita deve rispettare. Il giocatore puo' creare mazzi offensivi, difensivi, di controllo, energia e fusione; alcune partite termineranno prima e altre dopo. Anche carte non ancora progettate sposteranno queste stime.
 
-## Correzione misurabile e priva di timeout
-- **PvP**: dopo 180 secondi, i danni reali degli attacchi crescono del 40% ogni 30 secondi aggiuntivi, fino al moltiplicatore 3,5. Serve a contrastare le sequenze molto difensive, senza tagliare una partita a tempo. L'effetto e' uguale per entrambi i giocatori e appare nel log; non moltiplica danno di veleno, rigenerazione o Sacrificio.
-- **Campagna ordinaria**: pressione meno rapida dopo 240 secondi, tetto 2,5.
-- **Boss**: i boss con schede-rarita' hanno 15–26% di resistenza supplementare ai danni diretti, diversa secondo il boss, senza aumentare il numero di HP mostrati. La pressione del combattimento parte solo dopo 8 minuti, progressiva e senza eliminazione forzata.
+L'aumento automatico del danno in base al tempo trascorso, inserito durante una prima serie di simulazioni, e' stato **disattivato**. Non vogliamo che una partita difensiva perda la sua identita' dopo 3 minuti o che una partita termini perche' l'orologio impone danni diversi. Il danno dipende dalla flotta, dalle carte e dalle scelte, non dai minuti passati.
 
-I limiti di 40% HP per singolo colpo e 55% HP per turno restano attivi. L'accelerazione interessa soltanto attacchi effettivamente risolti e non aggira Difese o Trappole. Le armi e i loro danni nominali restano confermati. Non sono previsti acquisti, potenziamenti o animazioni aggiuntive.
+## Cosa resta bilanciato ora
+- Le statistiche delle dodici madri, l'elemento e la resistenza intrinseca dei boss possono essere diversi.
+- Le Carte Attacco esclusive sono state portate alla nuova scala HP. Le Armi temporanee conservano formula, durata e slot; Energia, Trappole, Difese e Fusioni mantengono effetti confermati.
+- I Personaggi e i Terreni sono **esclusi dal bilanciamento di questa fase** e saranno decisi successivamente.
+- Le statistiche dei tredici supporti restano nel bilanciamento esistente.
+- Non ci sono nuove regole che rendano obbligatori i 4–6 minuti nel PvP o gli 8–10 contro i boss.
 
 ## Verifica
-Le misure dell'audit su duelli PvP e boss sono in `src/fleetNextApprovedBalanceAudit.test.js`; i valori e la resistenza in `src/fleetNext/pacingPressure.test.js`. Obiettivo statistico PvP 240–360 secondi e Boss 480–600 secondi; nessuna partita termina automaticamente allo scadere di questi intervalli.
-
-### Seconda verifica del ritmo e rifinitura
-Dopo la prima pressione a +35% ogni 30 secondi, cinque PvP si sono conclusi in 255, 270, 315, 360 e 375 secondi: quattro su cinque nel range richiesto; un outlier di 15 secondi. Due boss: 420 e 540 secondi. Per ridurre l'outlier PvP il bonus diventa +40% ogni 30 secondi (stesso tetto ×3,5). Per i boss avanzati il danno in uscita viene moderato progressivamente (boss 17 = 85% del valore di riferimento) senza cambiare gli HP, le abilità speciali, le Carte Personaggio o i Terreni. Si tratta di una correzione da misurare nuovamente in CI.
+Le simulazioni in `src/fleetNextApprovedBalanceAudit.test.js` controllano turni, HP, vittorie e distribuzione dei tempi per combinazioni variabili di mazzi, ma non richiedono che ogni partita rientri nella finestra. E' corretto che alcuni mazzi e alcune strategie producano durate anomale: serviranno per ulteriori regolazioni, quando tutte le carte esisteranno. Il PvP reale e' ancora simulato; i risultati dell'IA sono indicativi.
