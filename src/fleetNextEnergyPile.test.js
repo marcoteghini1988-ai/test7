@@ -63,15 +63,15 @@ test('La Speciale usa solo le Energie necessarie e scarta le carte fisiche al co
 });
 
 test('L Energia caricata e consumata nello stesso turno entra una sola volta negli scarti',()=>{
- const b=make('N00',20);
- const r=turn(b,'A',['energy-ionic','energy-ionic'],{
-  activateElemental:true,elementalElement:'ionic'
+ const b=make('C02',18);
+ const r=turn(b,'A',['energy-refrigerant'],{
+  activateElemental:true,elementalElement:'refrigerant'
  });
  assert.ok(r.events.some(e=>e.kind==='elemental-special'));
  const side=r.battle.sides.A;
  assert.equal(totalElementalEnergy(side),0);
  assert.deepEqual(side.energyPile,[]);
- assert.equal(side.discard.filter(x=>x==='energy-ionic').length,2);
+ assert.equal(side.discard.filter(x=>x==='energy-refrigerant').length,1);
 });
 
 test('Si possono spendere anche sette Energie, senza limite; una pila sola per più elementi',()=>{
