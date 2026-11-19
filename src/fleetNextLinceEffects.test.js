@@ -212,16 +212,16 @@ test('Incursione cremisi senza modulo viene respinta senza consumare la carta',(
 test('Propulsori radenti richiamano una macchina senza curarla e il replay conserva i danni',()=>{
  let b=battle({shipB:'C03'});mount(b.sides.A,'nx-c01-01');
  b.sides.A.machines=[{id:'macchina-1',slot:0,name:'Striker',
-  sourceCardId:'prog-machine-striker',hp:1,maxHp:3,power:1,destroyed:false}];
+  sourceCardId:'weapon-memory-plasma',hp:1,maxHp:3,power:1,destroyed:false}];
  const r=turn(b,'A',['nx-c01-02'],
   {pass:false,targetKind:'part',targetId:'weapons',partId:'weapons',
    radentRecall:true,radentMachineId:'macchina-1'});
  assert.equal(r.shot.damage,1);
  assert.equal(r.battle.sides.A.machines.length,0);
- assert.ok(r.battle.sides.A.hand.includes('prog-machine-striker'));
+ assert.ok(r.battle.sides.A.hand.includes('weapon-memory-plasma'));
  assert.equal(r.battle.sides.A.recalledMachines[0].hp,1);
  b=turn(r.battle,'B',[]).battle;
- const replay=turn(b,'A',['prog-machine-striker']);
+ const replay=turn(b,'A',['weapon-memory-plasma']);
  assert.equal(replay.battle.sides.A.machines[0].hp,1);
  assert.equal(replay.battle.sides.A.machines[0].id,'macchina-1');
 });
