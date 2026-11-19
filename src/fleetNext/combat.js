@@ -148,7 +148,7 @@ export function createFleetSide(shipId,level,baseDeck,seed,upgrades={},supportRo
   moduleSerial:0,lastModuleMountPly:-1,auroraVeil:null,lince:null,prisma:null,corvo:null,falco:null,manta:null,shark:null,nebula:null,storm:null,royal:null,obsidian:null,ark:null,recalledModules:[],recalledMachines:[],
   fusionsUsed:0,fusionLimit:independent?Math.min(2,escorts.length):progression.fusionLimit,
   independentSupportRoster:independent,
-  elementalCharges:{},elementalLastActivationPly:-999,
+  elementalCharges:{},energyPile:[],elementalLastActivationPly:-999,
   elementalDamageRemainders:{},
   deck:shuffledDeck.slice(FLEET_HAND_SIZE),hand:shuffledDeck.slice(0,FLEET_HAND_SIZE),discard:[],commander:null,
   buffs:[],defenses:[],stagedComboCards:[],exclusiveUpgrades:{...upgrades},
@@ -443,7 +443,7 @@ export function defenseCapacityReason(side,newDefenseCount=1,ply=0,kind=null){
 function normalizeSide(side){
  for(const key of ['protections','reactions','charges','buffs','defenses','discard','machines','reserveEscorts'])side[key]??=[];
  side.fireBlocked??=false;side.lastDisarmedPly??=null;side.fusionsUsed??=0;
- side.elementalCharges??={};side.elementalLastActivationPly??=-999;
+ side.elementalCharges??={};side.energyPile??=[];side.elementalLastActivationPly??=-999;
  inheritFleetEscortElements(side);
  side.fusionLimit??=getShipProgression(side.ships[0].id,side.ships[0].level).fusionLimit;
  side.modules??={weapon:null,utility:null};side.moduleSerial??=0;side.lastModuleMountPly??=-1;
@@ -3063,8 +3063,8 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   }
   case 'charge':side.charges.push({amount:s.amount,atPly:b.ply+2,source:token});at('+'+s.amount+' potenza al prossimo turno');break;
   case 'energy':{
-   if(!chargeElementalEnergy(side,s.elementId))throw Error('Non puoi caricare questa Energia');
-   events.push(emit(b,who,'energy-charge','Energia '+FLEET_ELEMENTS[s.elementId].name+' accumulata',
+   if(!chargeElementalEnergy(side,s.elementId,def.id))throw Error('Non puoi caricare questa Energia');
+   events.push(emit(b,who,'energy-charge','Carta Energia '+FLEET_ELEMENTS[s.elementId].name+' posata nella pila (fino al consumo)',
     {cardId:def.id,element:s.elementId,charges:chargedElementalEnergy(side,s.elementId),
      totalEnergy:totalElementalEnergy(side)}));
    break;
@@ -4788,7 +4788,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0)+(ctx.siphonDamage||0);
- side.discard.push(...ctx.cards.filter(id=>!['character','defense','terrain'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='dismantle'&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
+ side.discard.push(...ctx.cards.filter(id=>!['character','defense','terrain'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='energy'&&card(id)?.effectSpec?.type!=='dismantle'&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }
