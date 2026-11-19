@@ -87,8 +87,11 @@ test('Copertura della Trappola: il nemico non ne vede nome, ID o effetto',()=>{
 test('Fusione bloccata: la Trappola si gira, carta Fusione scartata, HP e supporti intatti',()=>{
  const ready=armed();
  const b=ready.battle,original=structuredClone(b.sides.A.escorts);
+ b.sides.A.hand=['fusion-ship-r01'];
+ b.sides.A.deck=Array(8).fill('gen-216'); // impedisce il rimescolamento immediato
  const before=JSON.stringify(b);
- const blocked=play(b,'A',['fusion-ship-r01'],{fusionSlot:0});
+ const blocked=resolveFleetNextTurn(b,'A',{cards:[0],fusionSlot:0,pass:true},b.ply*1000+100);
+ assert.equal(blocked.ok,true,blocked.reason);
  assert.equal(JSON.stringify(b),before,'la funzione non modifica il parametro originale');
  assert.deepEqual(blocked.battle.sides.A.escorts,original);
  assert.equal(blocked.battle.sides.A.fusionsUsed,0);
@@ -156,6 +159,7 @@ test('Trappola nemica rivelata anche quando il giocatore che tenta la Fusione è
  b.sides.B.escorts=structuredClone(technical.sides.A.escorts);
  b.sides.B.fusionLimit=2;
  b.sides.B.independentSupportRoster=true;
+ b.sides.B.deck=Array(8).fill('gen-216'); // scarti osservabili prima del riciclo
  const blocked=play(b,'B',['fusion-ship-r01'],{fusionSlot:1});
  assert.equal(blocked.battle.sides.B.fusionsUsed,0);
  assert.equal(blocked.battle.sides.B.discard.includes('fusion-ship-r01'),true);
