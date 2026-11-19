@@ -220,7 +220,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     const hit=impact?.machineSlot===slot&&impact?.machineDamage>0;
     const selected=selectedTarget?.kind==='machine'&&selectedTarget.id===machine?.id;
     return <button type="button" key={slot} className={'f3d-machine-berth f3d-machine-berth--'+slot+(selected?' f3d-unit--selected':'')+(hit?' f3d-machine--hit':'')}
-     disabled={!machine||(!player&&(!canTarget||!enabled))}
+     disabled={!machine||(!player&&(!canTarget||!enabled||unit.ruleset===HP_SYNC_RULESET))}
      aria-label={machine?(unit.ruleset===HP_SYNC_RULESET?(player?'Consulta Arma temporanea ':'Arma temporanea ')+machine.name+' · supporto non bersagliabile':
        (player?'Consulta ':'Attacca ')+machine.name+' · '+machine.hp+'/'+machine.maxHp+' punti'):
        (unit.ruleset===HP_SYNC_RULESET?'Arma temporanea ':'Macchina d’assalto ')+(slot+1)+' · spazio libero'}
@@ -232,7 +232,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
       <path d="M17 41H53M23 46H47" stroke="#87e9fb" strokeWidth="3"/>
       <circle cx="35" cy="28" r="8" fill="#173546" stroke="#89c8d8" strokeWidth="2"/>
      </svg><span>{machine.pending?'DA SCHIERARE':unit.ruleset===HP_SYNC_RULESET?(machine.nominalDamage!=null?machine.nominalDamage+' HP':'ARMA'):machine.hp+'/'+machine.maxHp}</span></>:<b>＋</b>}
-     <small>{unit.ruleset===HP_SYNC_RULESET?'ARMA':'MACCHINA'} {slot+1}</small>
+     <small>{machine?.weaponElementId?FLEET_ELEMENTS[machine.weaponElementId]?.symbol+' ':''}{unit.ruleset===HP_SYNC_RULESET?'ARMA':'MACCHINA'} {slot+1}</small>
     </button>;
    })}
   </div>
