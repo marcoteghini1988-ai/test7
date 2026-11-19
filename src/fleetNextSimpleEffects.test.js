@@ -8,8 +8,8 @@ import {campaignTerrain,TERRAIN_CATALOG} from './fleetNext/terrains.js';
 const all=[...Object.values(GENERAL_CARDS),...Object.values(EXCLUSIVE_CARDS),...Object.values(BOSS_CARDS),...Object.values(PROGRESSION_CARDS),...ENERGY_CARDS];
 const deck=deckFromCounts(TEST_DECK.carteGenerali);
 function battle(options={}){return createFleetNextBattle({shipA:'N00',shipB:'N00',levelA:1,levelB:1,deckA:deck,deckB:deck,mode:'pvp',seed:25,...options});}
-test('210 schede registrate: Aurora, Lince, Vespa e Corvo eseguibili, 0 progetti bloccati',()=>{
- assert.equal(all.length,158);
+test('Catalogo operativo ampliato: schede Energia in quattro rarità tutte con effetti validi',()=>{
+ assert.equal(all.length,188);
  assert.equal(all.filter(c=>c.playable===false).length,0);
  for(const c of all){
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
