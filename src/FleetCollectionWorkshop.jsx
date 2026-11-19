@@ -1,6 +1,6 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
- eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS} from './fleetNext/rules.js';
+ eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
@@ -186,6 +186,11 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <h3 style={{fontSize:13}}>4 carte Attacco · Smontaggio Forzato</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {DISMANTLE_CARDS.map(genericCardTile)}
+   </div>
+   <h3 style={{fontSize:13}}>Arma di Supporto confermata · Cannone della Memoria Stellare</h3>
+   <p style={small}>Elemento Fuoco · un turno · 10 HP base + 10 per ogni tua Carta Attacco negli scarti. Una Energia Fuoco nei tuoi scarti raddoppia tutto. Non conta gli scarti avversari. Rarità e acquisizione ancora da stabilire.</p>
+   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
+    {DISCARD_WEAPONS.map(genericCardTile)}
    </div>
    <h3 style={{fontSize:13}}>Armi temporanee, Personaggi e Boss posseduti</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
