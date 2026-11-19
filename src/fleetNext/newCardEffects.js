@@ -13,11 +13,9 @@ const BY_TIER=Object.freeze({
  bridge:Object.freeze([1,1,2,2])
 });
 export const TEMP_WEAPON_DURATION=Object.freeze({
- 'prog-machine-striker':1,'prog-machine-guard':2,
  'weapon-memory-plasma':1,
   'weapon-sequence-1':2,'weapon-sequence-2':2,'weapon-sequence-3':1,
-  'weapon-escort-charge':2
-});
+ });
 export function activeSystemCard(side,system,operation,ply=0){
  return (side?.systemCardEffects||[]).filter(c=>c.system===system&&
   c.operation===operation&&c.untilPly>ply)
