@@ -72,7 +72,10 @@ export function limitedMotherDamage(mother,rawDamage,ply=0){
  const capped=Math.min(incoming,perHit,available);
  const defense=clamp(mother.defensePercent,0,cap.maxDefensePercent);
  const reduced=capped>0?Math.max(1,Math.round(capped*(100-defense)/100)):0;
- const dealt=Math.min(mother.hp,available,reduced);
+ // I boss hanno un'ulteriore resistenza, senza superare gli HP mostrati.
+ const bossReduction=clamp(mother.bossGuardPercent||0,0,30);
+ const finalDamage=bossReduction?Math.max(1,Math.round(reduced*(100-bossReduction)/100)):reduced;
+ const dealt=Math.min(mother.hp,available,finalDamage);
  mother.damageReceivedPly=ply;
  mother.damageReceivedOnPly=already+dealt;
  return dealt;

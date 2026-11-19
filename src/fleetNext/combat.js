@@ -13,6 +13,7 @@ import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {limitedMotherDamage} from './motherBalance.js';
 import {exclusiveAttackCardDamage} from './confirmedCardBalance.js';
+import {pacingAttackMultiplier,bossExtraDamageResistance} from './battlePacing.js';
 import {matchPacingTarget} from './battlePacing.js';
 import {SUPPORT_MAX_LEVEL,isMaxSupportLevel} from './supportProgression.js';
 import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
@@ -395,9 +396,14 @@ export function createFleetNextBattle({
    mother.defensePercent=stats.defensePercent;
    mother.weaponRating=Math.max(0,stats.attackPower-1);
    side.motherCardRarity=rarity;
+   if(who==='B'&&bossId!=null)
+    mother.bossGuardPercent=bossExtraDamageResistance(bossId);
   }
  }
  emit(b,'system','start','Le flotte sono schierate. Ogni turno dura 30 secondi.');
+ if(bossId!=null&&b.sides.B.ships[0].bossGuardPercent)
+  emit(b,'system','boss-guard','Boss: resistenza aggiuntiva '+
+   b.sides.B.ships[0].bossGuardPercent+'% contro i danni diretti.');
  return b;
 }
 export const MAX_FLEET_ROUNDS=50;
@@ -2366,6 +2372,19 @@ function adjustedElementalHit(b,ctx,events,defender,kind,unit,amount){
 }
 // L'impatto iniziale ha già superato le Difese; il Bastione non ricontrolla né devia.
 function royalDistributeDamage(b,ctx,events,defender,kind,unit,amount){
+ const balanced=Number.isFinite(defender?.ships?.[0]?.defensePercent)&&
+  b.ruleset===HP_SYNC_RULESET;
+ const pressure=balanced?pacingAttackMultiplier(b,ctx.nowMs??b.turnStartedAtMs):1;
+ if(pressure>1&&amount>0){
+  amount=Math.round(amount*pressure);
+  if(!ctx.pacingNoticeEmitted){
+   ctx.pacingNoticeEmitted=true;
+   events.push(emit(b,ctx.who,'pacing-pressure',
+    'Sovraccarico di combattimento: danni degli attacchi +'+
+    Math.round((pressure-1)*100)+'% per entrambi i giocatori.',
+    {multiplier:pressure}));
+  }
+ }
  amount=adjustedElementalHit(b,ctx,events,defender,kind,unit,amount);
  if(amount<=0)return 0;
  if(kind!=='escort'||amount<=0||defender.ships[0].id!=='L01')
