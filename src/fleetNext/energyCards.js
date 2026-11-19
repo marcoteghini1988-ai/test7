@@ -1,12 +1,13 @@
 // Dieci Carte Energia giocabili. Immagini definitive da creare dopo il codice.
 // Si acquistano e si inseriscono tra le generiche del mazzo da 40.
-// Ogni carta vale UNA carica: le abilità richiedono da 1 a 4 carte accumulate.
+// Ogni carta vale UNA carica: la pila è senza limite; i costi delle Speciali restano da 1 a 4.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
-export const ENERGY_CAPACITY=4;
+export const ENERGY_CAPACITY=Number.POSITIVE_INFINITY; // nessun limite alle Carte Energia nella pila
+export const ENERGY_SPECIAL_MAX_COST=4; // massimo costo di una singola abilità elementale, NON capacità della pila
 export const ENERGY_COPIES_PER_DECK=4;
 export const ENERGY_CARDS=Object.freeze(Object.values(FLEET_ELEMENTS).map((element)=> {
  const elementId=Object.keys(FLEET_ELEMENTS).find(id=>FLEET_ELEMENTS[id]===element);
- const effectText='Accumula 1 Energia '+element.name+' (massimo 4 cariche totali). Alimenta l’abilità speciale della navicella.';
+ const effectText='Aggiungi 1 Carta Energia '+element.name+' alla pila unica, senza limite di accumulo. Resta fino al consumo e solo allora va negli scarti. Alimenta le abilità speciali e le Armi compatibili.';
  return Object.freeze({
   id:'energy-'+elementId,name:'Energia '+element.name,nome:'Energia '+element.name,
   rarita:'Comune',categoria:'Energia',category:'Energia',sottotipo:'Carica elementale',
