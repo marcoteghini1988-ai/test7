@@ -169,7 +169,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
    <div key={'supporto-visivo-'+slot} className={'live-escort live-escort--'+slot+' f3d-escort-preview'}
     aria-hidden="true">
     <img src={ASSET_ROOT+'/mathfleet/views/'+(player?'player_to_enemy':'enemy_to_player')+
-      '/'+mother.id+'_complete.'+{['N00','C01','C02','C03','C04'].includes(mother.id)?'png':'webp'}} alt="" draggable={false}/>
+      '/'+mother.id+'_complete.'+(['N00','C01','C02','C03','C04'].includes(mother.id)?'png':'webp')} alt="" draggable={false}/>
    </div>)}
   <div className="f3d-mounted-modules" aria-label={player?'Moduli montati':'Moduli avversari'}>
    {liveModules(unit).map(module=><button type="button" key={module.id}
