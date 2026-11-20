@@ -4966,7 +4966,7 @@ export function timeoutFleetTurn(battle,nowMs,preparedOrder=null){
  // destinazione per il colpo della madre: possono risolversi anche senza mira.
  const available=awaiting?indices.filter(i=>{
   const id=side.hand[i],spec=card(id)?.effectSpec;
-  return cardRole(id)!=='attack'||['systemModifier','fieldReset','dismantle'].includes(spec?.type);
+  return cardRole(id)!=='attack'||['systemModifier','fieldReset','dismantle','siphonStrike'].includes(spec?.type);
  }):indices;
  const attempts=[];
  function addVariants(cards){

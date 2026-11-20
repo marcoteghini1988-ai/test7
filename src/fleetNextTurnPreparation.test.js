@@ -88,3 +88,18 @@ test('Al timeout un sacrificio non idoneo non elimina le carte valide',()=>{
  assert.equal(r.skippedSacrifice,true);
  assert.equal(r.battle.sides.A.elementalCharges.metallic,1);
 });
+
+test('Se il bersaglio non viene scelto il Tiro d’assedio si esclude, ma Energia e Sistema rimangono',()=>{
+ const b=make();
+ b.sides.A.hand=['energy-metallic','sys-weapons-plus-c','nx-r01-02'];
+ const r=timeoutFleetTurn(b,b.deadlineMs,{
+  cards:[0,1,2],pass:false,awaitingTargetSelection:true,
+  targetKind:'escort',targetId:'non-confermato'
+ });
+ assert.equal(r.ok,true,r.reason);
+ assert.equal(r.battle.turn,'B');
+ assert.equal(r.playedPreparedCards,2);
+ assert.equal(r.droppedPreparedCards,1);
+ assert.equal(r.battle.sides.A.elementalCharges.metallic,1);
+ assert.ok(r.battle.sides.A.systemCardEffects.some(x=>x.id==='sys-weapons-plus-c'));
+});

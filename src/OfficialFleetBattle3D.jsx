@@ -1827,7 +1827,7 @@ export default function OfficialFleetBattle3D({
      {t.name} · {t.hp}/{t.maxHp} HP
     </button>)}
     <button type="button" onClick={()=>setTargetChoice(null)}>MODIFICA LE CARTE</button>
-   </div>
+   </div>}
    {!ended&&<button type="button" className="live-abandon" onClick={leave}
     aria-label="Abbandona la battaglia"><span aria-hidden="true">←</span> ABBANDONA</button>}
    <OriginalFleetBar side="A" unit={player} nickname={nickname}/>
