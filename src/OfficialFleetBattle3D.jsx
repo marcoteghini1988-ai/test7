@@ -36,7 +36,7 @@ import {arkModuleActive,arkEscorts,arkFusedEscorts,arkUnfusedEscorts,
  arkEnemyUnits,arkDamagedEscorts,arkModulesInDiscard} from './fleetNext/arkEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
-import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,sacrificeIndependentFleetSupport,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
+import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
@@ -342,6 +342,7 @@ export default function OfficialFleetBattle3D({
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
+ const [preparedSacrifice,setPreparedSacrifice]=useState(null);
  const [fusionSlot,setFusionSlot]=useState(0);
  const [elementalPrepared,setElementalPrepared]=useState(false);
  const [elementalChoice,setElementalChoice]=useState('');
@@ -427,6 +428,7 @@ export default function OfficialFleetBattle3D({
   setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
   const elemental=result.events.filter(e=>e.kind==='elemental-matchup').at(-1);
   setMessage(elemental?.text||fleetTurnNotice(result.events));
+  setPreparedSacrifice(null);
   const revealed=result.events.find(event=>event.kind==='trap-reveal');
   if(revealed)setTrapReveal({...revealed,nonce:Date.now()});
  }
@@ -468,7 +470,7 @@ export default function OfficialFleetBattle3D({
  function restart(){
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
-  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setMessage('');
+  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setPreparedSacrifice(null);setMessage('');
   setElementalPrepared(false);setElementalChoice('');
   setDismantleOptions({first:'',second:''});
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
@@ -573,6 +575,7 @@ export default function OfficialFleetBattle3D({
     machineSlot:actualTarget?.kind==='machine'?actualTarget.slot:undefined,
     moduleSlot:actualTarget?.kind==='module'?actualTarget.slot:undefined,
     ownPartId:actualOwnVital,cards:chosenCards,
+    sacrificeEscortId:preparedSacrifice||undefined,
     fusionSlot:actualFusionSlot,
     dismantleTargets:chosenCards.some(i=>card(battle.sides.A.hand[i])?.effectSpec?.type==='dismantle')?
      [dismantleOptions.first,dismantleOptions.second].filter(Boolean):undefined,
@@ -1759,6 +1762,14 @@ export default function OfficialFleetBattle3D({
     </button>
     <small>{elementalAbilityDef.name}</small>
    </div>}
+   {preparedSacrifice&&<div className="f3d-sacrifice-prepared" role="status">
+    Sacrificio preparato: {player.escorts.find(e=>e.id===preparedSacrifice)?.name||'supporto'}.
+    Non occupa carte e si attiva a fine turno.
+    <button type="button" disabled={ended||!myTurn}
+     onClick={()=>{setPreparedSacrifice(null);setMessage('Sacrificio annullato');}}>
+     ANNULLA SACRIFICIO
+    </button>
+   </div>}
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
     <button type="button" disabled={ended||!myTurn||chosenCards.length>0} onClick={()=>fire()}>{elementalPrepared?'ATTIVA · SPECIALE':'ATTACCO NORMALE'}</button>
@@ -1811,17 +1822,18 @@ export default function OfficialFleetBattle3D({
      <p>{describeEscortEffect(help.escort)}</p>
      <small>{help.linked?'COLLEGAMENTO ATTIVO':'COLLEGAMENTO INTERROTTO'}
       {' · '+help.escort.hp+'/'+help.escort.maxHp+' punti'}</small>
-     {help.player&&myTurn&&!ended&&
-      player.escorts.some(e=>e.id===help.escort.id&&e.supportSkillId==='sacrifice'&&
-       e.hp>0&&e.hp/e.maxHp>=.8)&&
+     {help.player&&myTurn&&!ended&&help.escort&&
+      player.escorts.some(e=>e.id===help.escort.id&&
+       (e.supportSkillIds||[e.supportSkillId]).includes('sacrifice')&&
+       (preparedSacrifice===e.id||e.hp>0&&e.hp/e.maxHp>=.8))&&
       <button type="button" onClick={()=>{
-       const result=sacrificeIndependentFleetSupport(battle,'A',help.escort.id,Date.now());
-       if(!result.ok){setMessage(result.reason);return;}
-       setBattle(result.battle);
-       setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
-       setMessage(result.events.at(-1)?.text||'Navicella sacrificata');
+       const id=help.escort.id;
+       const cancelling=preparedSacrifice===id;
+       setPreparedSacrifice(cancelling?null:id);
+       setMessage(cancelling?'Sacrificio annullato':
+        'Sacrificio preparato: verrà eseguito alla risoluzione del turno');
        setHelp(null);
-      }}>SACRIFICA LA NAVICELLA</button>}
+      }}>{preparedSacrifice===help.escort.id?'ANNULLA SACRIFICIO':'PREPARA SACRIFICIO'}</button>}
     </>}
    </div>}
    {ended&&<div className="live-end">

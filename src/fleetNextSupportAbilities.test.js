@@ -5,7 +5,7 @@ import {SUPPORT_CATALOG,LEGACY_SUPPORT_CATALOG} from './fleetNext/supportCatalog
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {supportHpAtLevel} from './fleetNext/supportProgression.js';
 import {createFleetSide,createFleetNextBattle,resolveFleetNextTurn,
- fuseIndependentSupportWithShip,sacrificeIndependentFleetSupport} from './fleetNext/combat.js';
+ fuseIndependentSupportWithShip,timeoutFleetTurn,validateFleetTurn} from './fleetNext/combat.js';
 import {SUPPORT_SKILL_LABELS,SUPPORT_SKILL_ASSIGNMENTS,
  skillCount,trapsSuppressed,terrainHalf,terrainImmunity,
  effectiveSupportEnergyCost,supportSpecialBoost,supportNormalBoost,
@@ -136,15 +136,52 @@ test('Condensatore: al terzo proprio turno scarica fulmini, mai uno sparo per tu
  assert.equal(b.sides.B.ships[0].hp,before-1);
 });
 
-test('Sacrificio volontario negato sotto 80% HP, consentito al valore esatto',()=>{
- const b=battle('sacrifice'),e=b.sides.A.escorts[0];
- e.hp=e.maxHp*.79;
- assert.equal(sacrificeIndependentFleetSupport(b,'A',e.id,0).ok,false);
- e.hp=e.maxHp*.8;
- const done=sacrificeIndependentFleetSupport(b,'A',e.id,0);
- assert.equal(done.ok,true,done.reason);
- assert.equal(done.battle.sides.A.escorts[0].destroyed,true);
- assert.ok(done.damage>0);
+test('Sacrificio volontario: preparazione senza effetto e soglia 80% alla risoluzione',()=>{
+ const b=battle('sacrifice'),escort=b.sides.A.escorts[0];
+ const order={cards:[],pass:true,sacrificeEscortId:escort.id};
+ escort.hp=escort.maxHp*.79;
+ const invalid=resolveFleetNextTurn(b,'A',order,0);
+ assert.equal(invalid.ok,true,invalid.reason);
+ assert.equal(invalid.battle.sides.A.escorts[0].destroyed,false);
+ assert.ok(invalid.events.some(e=>e.kind==='support-sacrifice-skipped'));
+ escort.hp=escort.maxHp*.8;
+ assert.equal(validateFleetTurn(b,'A',order),null);
+ assert.equal(b.sides.A.escorts[0].destroyed,false);
+ const result=resolveFleetNextTurn(b,'A',order,0);
+ assert.equal(result.ok,true,result.reason);
+ assert.equal(result.battle.sides.A.escorts[0].destroyed,true);
+ assert.ok(result.shot.sacrificeDamage>0);
+ assert.equal(result.battle.turn,'B');
+ assert.equal(b.sides.A.escorts[0].destroyed,false);
+});
+
+test('Sacrificio non consuma una delle tre carte e si risolve con i loro effetti',()=>{
+ const b=battle('sacrifice'),escort=b.sides.A.escorts[0],hp=b.sides.B.ships[0].hp;
+ b.sides.A.hand=['energy-ionic','sys-weapons-plus-c'];
+ const order={cards:[0,1],pass:true,sacrificeEscortId:escort.id};
+ assert.equal(validateFleetTurn(b,'A',order),null);
+ assert.equal(b.sides.B.ships[0].hp,hp);
+ const result=resolveFleetNextTurn(b,'A',order,1000);
+ assert.equal(result.ok,true,result.reason);
+ assert.equal(result.battle.sides.A.elementalCharges.ionic,1);
+ assert.ok(result.battle.sides.A.systemCardEffects.some(e=>e.id==='sys-weapons-plus-c'));
+ assert.ok(result.battle.sides.B.ships[0].hp<hp);
+ assert.equal(result.battle.sides.A.escorts[0].destroyed,true);
+ assert.equal(result.battle.turn,'B');
+});
+
+test('Sacrificio preparato: al timeout si attiva senza una quarta carta',()=>{
+ const b=battle('sacrifice'),escort=b.sides.A.escorts[0];
+ const result=timeoutFleetTurn(b,b.deadlineMs,{cards:[],pass:true,sacrificeEscortId:escort.id});
+ assert.equal(result.ok,true,result.reason);
+ assert.ok(result.events.some(e=>e.kind==='support-sacrifice'));
+ assert.equal(result.battle.turn,'B');
+});
+
+test('Una scudiera senza Sacrificio non può essere scelta',()=>{
+ const b=battle('regeneration'),escort=b.sides.A.escorts[0];
+ assert.match(validateFleetTurn(b,'A',{cards:[],pass:true,sacrificeEscortId:escort.id}),
+  /non possiede Sacrificio/);
 });
 
 test('Supporto pescata: mano riempita fino a 8 senza usare altre carte del mazzo',()=>{
@@ -159,7 +196,9 @@ test('Supporto pescata: mano riempita fino a 8 senza usare altre carte del mazzo
 test('Plancia ufficiale aggiorna gli HP al secondo e rende il Sacrificio cliccabile',()=>{
  const ui=readFileSync(new URL('./OfficialFleetBattle3D.jsx',import.meta.url),'utf8');
  assert.match(ui,/advanceIndependentSupportTime\(current,timestamp\)/);
- assert.match(ui,/sacrificeIndependentFleetSupport\(battle,'A'/);
+ assert.match(ui,/sacrificeEscortId:preparedSacrifice/);
+ assert.match(ui,/PREPARA SACRIFICIO/);
+ assert.doesNotMatch(ui,/sacrificeIndependentFleetSupport\(battle,'A'/);
  assert.match(ui,/actualEnergyCost=effectiveSupportEnergyCost/);
 });
 

@@ -610,6 +610,17 @@ export function validateFleetTurn(b,who,order){
  if(!b||b.phase!=='playing')return 'Partita non in corso';
  if(!['A','B'].includes(who)||b.turn!==who)return 'Non è il tuo turno';
  const side=b.sides[who],indices=order?.cards||[];
+ if(order?.sacrificeEscortId!=null){
+  // Selezione gratuita in preparazione; nessuna quarta carta.
+  if(b.ruleset!==HP_SYNC_RULESET||!side.independentSupportRoster)
+   return 'Sacrificio disponibile solo con supporti indipendenti';
+  if(typeof order.sacrificeEscortId!=='string'||!order.sacrificeEscortId.trim())
+   return 'Seleziona una navicella da sacrificare';
+  const escort=side.escorts.find(e=>e.id===order.sacrificeEscortId);
+  if(!escort||!(escort.supportSkillIds||[escort.supportSkillId]).includes('sacrifice'))
+   return 'La navicella scelta non possiede Sacrificio volontario';
+  // Gli HP si ricontrollano al rilascio. Il veleno può intanto agire.
+ }
  if(!uniqueIndexList(indices,side.hand))return 'Puoi usare fino a tre carte presenti nella mano';
  if(obsidianPending(side)?.releasePly<=b.ply&&indices.length>=FLEET_MAX_PLAYED)
   return 'Colpo Titano prenotato: resta spazio per due altre carte in questo turno';
@@ -4701,6 +4712,30 @@ function finishTurn(b,ctx,events){
  }
  b.deadlineMs=ctx.nowMs+FLEET_TURN_SECONDS*1000;b.lastEvents=events;
 }
+// Si esegue soltanto alla risoluzione del turno, mai mentre si prepara.
+function resolvePreparedSupportSacrifice(b,who,supportId,events){
+ if(!supportId)return 0;
+ const side=b.sides[who],enemy=b.sides[other(who)];
+ const e=side.escorts.find(u=>u.id===supportId&&
+  (u.supportSkillIds||[u.supportSkillId]).includes('sacrifice'));
+ if(!e||e.destroyed||e.hp<=0||e.hp/e.maxHp<.8){
+  events.push(emit(b,who,'support-sacrifice-skipped',
+   'Sacrificio non attivato: navicella non più disponibile o sotto l’80% HP',
+   {supportId}));
+  return 0;
+ }
+ // Il giocatore non perde il supporto quando l'attacco ha già vinto.
+ if(enemy.ships[0].hp<=0)return 0;
+ e.hp=0;e.destroyed=true;e.linked=false;
+ e.supportObservedHp=0;e.supportDeathResolved=true;
+ const mother=enemy.ships[0],rawDamage=Math.max(1,Math.ceil(mother.maxHp*.25));
+ const damage=limitedMotherDamage(mother,rawDamage,b.ply);
+ mother.hp=Math.max(0,mother.hp-damage);
+ events.push(emit(b,who,'support-sacrifice',
+  e.name+' si sacrifica: −'+damage+' HP alla madre avversaria',
+  {supportId:e.catalogSupportId,target:'mother',damage}));
+ return damage;
+}
 export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const timed=advanceIndependentSupportTime(battle,nowMs);
  if(timed.battle.phase==='finished')
@@ -4786,7 +4821,9 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
  const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
- side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0)+(ctx.siphonDamage||0);
+ const sacrificeDamage=resolvePreparedSupportSacrifice(b,who,order.sacrificeEscortId,events);
+ if(order.sacrificeEscortId)shot.sacrificeDamage=sacrificeDamage;
+ side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0)+(ctx.siphonDamage||0)+sacrificeDamage;
  side.discard.push(...ctx.cards.filter(id=>!['character','defense','terrain'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='energy'&&card(id)?.effectSpec?.type!=='dismantle'&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
@@ -4926,28 +4963,8 @@ export function timeoutFleetTurn(battle,nowMs,preparedOrder=null){
 }
 
 
-// Sacrificio immediato: nessuna carta del mazzo, massimo una volta perché
-// il supporto esce dal campo. I valori HP saranno bilanciati.
-export function sacrificeIndependentFleetSupport(battle,who,supportId,nowMs=0){
- const timed=advanceIndependentSupportTime(battle,nowMs);
- if(timed.battle?.phase!=='playing'||timed.battle.turn!==who)
-  return {ok:false,reason:'Non è il tuo turno',battle:timed.battle,events:[]};
- const b=clone(timed.battle),side=b.sides[who],enemy=b.sides[other(who)];
- const e=side.escorts.find(u=>u.id===supportId&&u.supportSkillId==='sacrifice');
- if(!e||e.hp<=0||e.destroyed)
-  return {ok:false,reason:'Sacrificio non disponibile',battle:timed.battle,events:[]};
- if(e.hp/e.maxHp<.8)
-  return {ok:false,reason:'Sacrificio disponibile soltanto con almeno l’80% degli HP',battle:timed.battle,events:[]};
- e.hp=0;e.destroyed=true;e.linked=false;e.supportObservedHp=0;e.supportDeathResolved=true;
- const mother=enemy.ships[0],rawDamage=Math.max(1,Math.ceil(mother.maxHp*.25));
- const damage=limitedMotherDamage(mother,rawDamage,b.ply);
- mother.hp-=damage;
- const event=emit(b,who,'support-sacrifice',e.name+' si sacrifica: −'+damage+' HP alla madre avversaria',
-  {supportId:e.catalogSupportId,target:'mother',damage});
- if(mother.hp<=0){
-  b.phase='finished';b.winner=who;b.finishReason='Madre distrutta dal Sacrificio volontario';
-  b.finishedAtMs=nowMs;
- }
- b.lastEvents=[...timed.events,event];
- return {ok:true,battle:b,events:b.lastEvents,damage};
+// Vecchi chiamanti: il sacrificio non può più essere applicato immediatamente.
+// Inserire sacrificeEscortId nell'ordine di risoluzione del turno.
+export function sacrificeIndependentFleetSupport(){
+ return {ok:false,reason:'Prepara il sacrificio e risolvilo con le carte del turno'};
 }

@@ -15,13 +15,16 @@
 - Ordine già esistente nel motore: Terreno; effetti delle altre carte; abilità Energia; colpo della madre; Difese e Trappole in reazione; chiusura e prossima mano. Le carte a rilascio differito conservano la propria scadenza al turno previsto.
 - `src/fleetNextTurnPreparation.test.js`: regressioni per assenza di effetti prima della conferma, due/tre carte, timeout con carte e timeout con ordine invalido. `src/fleetNextConfirmedCardBalance.test.js`: test di rigenerazione e veleno al secondo durante la preparazione, con controllo dei secondi già processati.
 
+## Sacrificio volontario differito
+Il pannello supporto permette **PREPARA SACRIFICIO** e **ANNULLA SACRIFICIO**. La scelta viene conservata nel solo stato locale di preparazione, passata al motore con `sacrificeEscortId` e applicata con le altre azioni soltanto al commit del turno. Non modifica anticipatamente HP, carte o tempo disponibile.
+
 ## Effetti in tempo reale confermati
 Rigenerazione e veleno **non sono nuove carte piazzate nel turno**: sono passive già attive. Il timer le aggiorna a passi di un secondo mentre si preparano le carte. Se un turno finisce prima, si applicano soltanto i secondi effettivamente trascorsi. Gli effetti per la risoluzione delle carte selezionate non partono anticipatamente.
 
 ## Punti che richiedono ancora progettazione
 1. **Regola confermata:** rigenerazione e veleno già attivi continuano a modificare gli HP **secondo per secondo**, durante i secondi realmente trascorsi nel turno di preparazione (massimo 30). Non attendono la terza carta né il pulsante PASSA. Si applicano nel turno previsto dalle rispettive passive: rigenerazione della madre difesa durante il turno nemico e veleno reattivo contro chi l'ha colpita nel suo turno successivo. Lo stesso secondo non viene elaborato due volte, gli HP non superano il massimo e i danni non scendono sotto zero.
 2. Alcune carte richiedono selezioni contestuali (bersagli, seconda unità, modulo da sacrificare, Pilota). Il terzo click conferma subito: l'interfaccia deve assicurare che le opzioni desiderate siano configurate **prima** del terzo click, altrimenti valgono le selezioni predefinite. Potrebbe servire una conferma contestuale senza aggiungere un'ulteriore azione di gioco.
-3. L'azione speciale `sacrificeIndependentFleetSupport` resta immediata e non passa per le tre carte: va deciso se rientri nella preparazione, se consumi una delle tre giocate e quando si risolva.
+3. **Decisione confermata:** Sacrificio volontario si prepara selezionando una navicella durante il turno, si può annullare e non occupa una delle tre carte. Alla risoluzione (terza carta, PASSA o scadenza dei 30 secondi) si risolvono prima le altre carte e l'attacco della madre, poi il sacrificio. Si richiede ancora almeno l'80% degli HP: se non è più valido si annulla solo il sacrificio, non le altre carte. Non viene consumato se la madre nemica è già stata distrutta. Potenza e costi rimangono quelli già implementati.
 4. `OfficialLiveBattle3D.jsx` utilizza il motore storico e non è stato modificato: l'uniformazione va effettuata solo dopo decisione esplicita di migrare quella modalità.
 5. Il **Perforatore a Cascata** ha una meccanica progettata (danno in eccesso trasferibile consumando Energia Metallo) e durata di un turno, ma **danno base, rarità e costo preciso** sono ancora provvisori. Non inventare questi valori nel codice ufficiale fino a decisione o bilanciamento.
 

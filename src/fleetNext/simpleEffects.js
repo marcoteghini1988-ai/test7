@@ -54,6 +54,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Puoi preparare fino a 3 carte per turno. Hai 3 slot Attacco, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 alloggiamenti per Armi temporanee.',
  'Le carte preparate non producono effetti mentre le scegli. Alla terza carta il turno si risolve automaticamente; con meno carte puoi premere PASSA · RISOLVI.',
  'Dopo 30 secondi le carte preparate si risolvono anche se sono meno di tre; solo dopo la risoluzione inizia il turno avversario.',
+ 'Il Sacrificio volontario può essere preparato senza consumare una delle tre carte. Si esegue alla risoluzione solo se il supporto possiede ancora almeno l’80% degli HP; il danno applica i limiti esistenti.',
  'Una Trappola contro i Terreni annulla il prossimo Terreno avversario prima che si attivi. Il Terreno precedente resta; entrambe le carte usate vanno negli scarti.',
  'Interdizione di Fusione è una Trappola coperta: si rivela alla giocata di una Carta Navicella Fusione nemica, la annulla e la manda agli scarti. Il supporto non cambia e non viene consumato uno dei due usi Fusione.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
