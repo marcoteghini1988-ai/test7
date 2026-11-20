@@ -55,3 +55,36 @@ test('Il timeout con un ordine invalido chiude comunque il turno senza applicarl
  assert.ok(r.invalidPrepared);
  assert.equal(r.battle.sides.A.elementalCharges.metallic,undefined);
 });
+
+test('Al timeout con bersaglio non scelto si risolvono le carte non offensive',()=>{
+ const b=make(),beforeHp=b.sides.B.ships[0].hp;
+ const r=timeoutFleetTurn(b,b.deadlineMs,{
+  cards:[0,1,2],pass:false,awaitingTargetSelection:true,
+  targetKind:'escort',targetId:'non-confermato'
+ });
+ assert.equal(r.ok,true,r.reason);
+ assert.equal(r.battle.turn,'B');
+ assert.equal(r.playedPreparedCards,3);
+ assert.equal(r.battle.sides.A.elementalCharges.metallic,2);
+ assert.ok(r.battle.sides.A.systemCardEffects.some(x=>x.id==='sys-weapons-plus-c'));
+ assert.equal(r.battle.sides.B.ships[0].hp,beforeHp);
+});
+test('Al timeout con una terza carta non valida le due valide non vengono perse',()=>{
+ const b=make();
+ const r=timeoutFleetTurn(b,b.deadlineMs,{cards:[0,1,99],pass:true});
+ assert.equal(r.ok,true,r.reason);
+ assert.equal(r.battle.turn,'B');
+ assert.equal(r.playedPreparedCards,2);
+ assert.equal(r.droppedPreparedCards,1);
+ assert.equal(r.battle.sides.A.elementalCharges.metallic,1);
+ assert.ok(r.battle.sides.A.systemCardEffects.some(x=>x.id==='sys-weapons-plus-c'));
+});
+test('Al timeout un sacrificio non idoneo non elimina le carte valide',()=>{
+ const b=make();
+ const r=timeoutFleetTurn(b,b.deadlineMs,{cards:[0,1],pass:true,
+  sacrificeEscortId:'inesistente'});
+ assert.equal(r.ok,true,r.reason);
+ assert.equal(r.playedPreparedCards,2);
+ assert.equal(r.skippedSacrifice,true);
+ assert.equal(r.battle.sides.A.elementalCharges.metallic,1);
+});

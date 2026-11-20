@@ -496,3 +496,25 @@
 .es-math-scope .f3d-original-arena .f3d-elemental-control small{
  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:8px
 }
+
+/* Scelta del supporto a fine preparazione, senza modificare l'arena 3D. */
+.es-math-scope .f3d-original-arena .f3d-support-target-choice{
+ position:absolute;top:285px;left:55px;right:55px;z-index:85;
+ display:flex;flex-direction:column;gap:7px;padding:11px;
+ color:#e8f5ff;background:linear-gradient(145deg,#0b1b30f7,#14263af6);
+ border:1px solid #74a9cd;border-radius:9px;box-shadow:0 6px 24px #000c;
+ text-align:center;
+}
+.es-math-scope .f3d-original-arena .f3d-support-target-choice strong{
+ font-size:11px;letter-spacing:.4px;
+}
+.es-math-scope .f3d-original-arena .f3d-support-target-choice p{
+ font-size:10px;line-height:1.3;margin:0;
+}
+.es-math-scope .f3d-original-arena .f3d-support-target-choice button{
+ min-height:34px;color:#f4fbff;background:#163b59;
+ border:1px solid #85b3d5;border-radius:5px;font-size:10px;font-weight:700;
+}
+.es-math-scope .f3d-original-arena .f3d-support-target-choice button:last-child{
+ min-height:25px;color:#dbe6ef;background:transparent;border-color:#586d82;
+}

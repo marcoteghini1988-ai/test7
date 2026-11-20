@@ -4951,15 +4951,55 @@ export function autoFleetTurn(b,who=b.turn){
 }
 export function timeoutFleetTurn(battle,nowMs,preparedOrder=null){
  if(battle.phase!=='playing'||nowMs<battle.deadlineMs)return {ok:false,battle,events:[]};
- // Il tempo scaduto non deve cancellare le carte già scelte dal giocatore.
- // Le tre giocate sono risolte in un unico commit atomico, poi parte l'altro turno.
  const order=preparedOrder&&typeof preparedOrder==='object'&&!Array.isArray(preparedOrder)?
   preparedOrder:{partId:null,cards:[],pass:true};
- const result=resolveFleetNextTurn(battle,battle.turn,order,nowMs);
- if(result.ok)return result;
- // Un ordine diventato impossibile non deve bloccare il cronometro in eterno.
+ const awaiting=!!order.awaitingTargetSelection;
+ // Non sparare sul primo supporto per impostazione predefinita quando il
+ // giocatore non ha ancora scelto fra i due bersagli.
+ const full=awaiting?{ok:false,reason:'Bersaglio non scelto entro i 30 secondi'}:
+  resolveFleetNextTurn(battle,battle.turn,order,nowMs);
+ if(full.ok)return full;
+ const side=battle.sides[battle.turn],requested=Array.isArray(order.cards)?order.cards:[];
+ const indices=[...new Set(requested.filter(i=>Number.isInteger(i)&&i>=0&&i<side.hand.length))]
+  .slice(0,FLEET_MAX_PLAYED);
+ // Amplificazioni, Sabotaggi e controlli di campo non hanno bisogno di una
+ // destinazione per il colpo della madre: possono risolversi anche senza mira.
+ const available=awaiting?indices.filter(i=>{
+  const id=side.hand[i],spec=card(id)?.effectSpec;
+  return cardRole(id)!=='attack'||['systemModifier','fieldReset','dismantle'].includes(spec?.type);
+ }):indices;
+ const attempts=[];
+ function addVariants(cards){
+  const orderForCards={...order,cards,pass:awaiting?true:order.pass,
+   activateElemental:awaiting?false:order.activateElemental,
+   mantaFork:awaiting?false:order.mantaFork,
+   royalRelay:awaiting?false:order.royalRelay,
+   awaitingTargetSelection:false};
+  attempts.push(orderForCards);
+  if(orderForCards.sacrificeEscortId!=null)
+   attempts.push({...orderForCards,sacrificeEscortId:undefined});
+  if(!awaiting)attempts.push({...orderForCards,pass:true,activateElemental:false,
+   mantaFork:false,royalRelay:false,sacrificeEscortId:undefined});
+ }
+ for(let count=available.length;count>=1;count--){
+  const combinations=(start,chosen)=>{
+   if(chosen.length===count){addVariants(chosen);return;}
+   for(let i=start;i<=available.length-(count-chosen.length);i++)
+    combinations(i+1,[...chosen,available[i]]);
+  };
+  combinations(0,[]);
+ }
+ for(const candidate of attempts){
+  const partial=resolveFleetNextTurn(battle,battle.turn,candidate,nowMs);
+  if(partial.ok)return {...partial,invalidPrepared:full.reason,
+   playedPreparedCards:candidate.cards.length,
+   droppedPreparedCards:requested.length-candidate.cards.length,
+   skippedSacrifice:!!order.sacrificeEscortId&&!candidate.sacrificeEscortId};
+ }
+ // Anche un insieme ormai impossibile non deve bloccare il timer.
  const fallback=resolveFleetNextTurn(battle,battle.turn,{partId:null,cards:[],pass:true},nowMs);
- return fallback.ok?{...fallback,invalidPrepared:result.reason}:fallback;
+ return fallback.ok?{...fallback,invalidPrepared:full.reason,
+  playedPreparedCards:0,droppedPreparedCards:requested.length}:fallback;
 }
 
 

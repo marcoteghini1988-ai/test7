@@ -47,6 +47,7 @@ import {dismantleCandidates,dismantleActive} from './fleetNext/dismantleEffects.
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {readSupportCollection,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {advanceIndependentSupportTime,effectiveSupportEnergyCost,terrainImmunity} from './fleetNext/supportAbilities.js';
+import {choosableSupportTargets,shouldChooseSupportTarget} from './fleetNext/preparedTargetChoice.js';
 import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import './MathDuelBattle.css';
@@ -343,6 +344,7 @@ export default function OfficialFleetBattle3D({
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
  const [preparedSacrifice,setPreparedSacrifice]=useState(null);
+ const [targetChoice,setTargetChoice]=useState(null);
  const [fusionSlot,setFusionSlot]=useState(0);
  const [elementalPrepared,setElementalPrepared]=useState(false);
  const [elementalChoice,setElementalChoice]=useState('');
@@ -428,7 +430,7 @@ export default function OfficialFleetBattle3D({
   setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
   const elemental=result.events.filter(e=>e.kind==='elemental-matchup').at(-1);
   setMessage(elemental?.text||fleetTurnNotice(result.events));
-  setPreparedSacrifice(null);
+  setPreparedSacrifice(null);setTargetChoice(null);setSelectedTarget(null);
   const revealed=result.events.find(event=>event.kind==='trap-reveal');
   if(revealed)setTrapReveal({...revealed,nonce:Date.now()});
  }
@@ -461,16 +463,30 @@ export default function OfficialFleetBattle3D({
   },Math.max(50,battle.deadlineMs-Date.now()+60));
   return ()=>window.clearTimeout(id);
  },[battle?.ply,battle?.deadlineMs,battle?.phase]);
- // La selezione non applica effetti. Tre carte completano la preparazione.
+ // Nessuna carta agisce prima del commit. La terza conclude la preparazione
+ // e, se necessario, apre la scelta fra le due navicelle di supporto.
  useEffect(()=>{
   if(battle?.phase==='playing'&&battle.turn==='A'&&chosenCards.length===3){
-   fire();
+   requestPreparedResolution(false);
   }
  },[chosenCards,battle?.ply,battle?.turn,battle?.phase]);
+ // Se un supporto viene distrutto dagli effetti continui mentre la scelta
+ // è aperta, la mira rimasta è obbligata e la preparazione si risolve.
+ useEffect(()=>{
+  if(!targetChoice||!battle||battle.phase!=='playing'||battle.turn!=='A')return;
+  const chosen=chosenCards.map(i=>card(battle.sides.A.hand[i])?.effectSpec);
+  const direct=chosen.some(spec=>spec?.type==='bypass'||
+   spec?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(spec.action)||
+   spec?.type==='shark'&&spec.action==='ruthless-response');
+  const routed=linceMarkedRouteReady(battle.sides.A,battle.ply,
+   battle.sides.A.lince?.route?.partId);
+  if(!shouldChooseSupportTarget(protectingFleetUnits(battle.sides.B,battle.ply),
+   {bypass:direct||!!routed}))fire({endTurn:targetChoice.endTurn});
+ },[targetChoice,battle?.ply,battle?.turn,battle?.phase,battle?.sides?.B?.escorts]);
  function restart(){
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
-  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setPreparedSacrifice(null);setMessage('');
+  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setPreparedSacrifice(null);setTargetChoice(null);setMessage('');
   setElementalPrepared(false);setElementalChoice('');
   setDismantleOptions({first:'',second:''});
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
@@ -537,7 +553,7 @@ export default function OfficialFleetBattle3D({
   setChosenCards(old=>old.includes(index)?old.filter(i=>i!==index):
    old.length<3?[...old,index]:old);
  }
- function fire({endTurn=false,fromTimeout=false}={}){
+ function fire({endTurn=false,fromTimeout=false,chosenTarget=null,awaitingTargetSelection=false}={}){
   if(!battle||battle.phase!=='playing'||battle.turn!=='A')return;
   const target=battle.sides.B.ships[0];
   const partId=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?
@@ -563,17 +579,19 @@ export default function OfficialFleetBattle3D({
   const royalSecondChoice=royalOtherTargets.find(t=>t.key===royalOptions.second);
   const stormSecondChoice=stormSecondChoices.find(t=>t.key===stormOptions.second);
   const stormChainChoice=stormSecondChoices.find(t=>t.key===stormOptions.chain);
+  const attackTarget=chosenTarget||actualTarget;
   const ability=elementalAbility(battle.sides.A.ships[0].id);
   const element=activeFleetElements(battle.sides.A.ships[0].id,
    battle.sides.A.ships[0].level).includes(elementalChoice)?elementalChoice:battle.sides.A.ships[0].element;
   const preparedOrder=
    {partId,pass:!!(elementalPrepared&&ability?.kind==='effect')||(endTurn&&chosenCards.length===0),
+    awaitingTargetSelection:!!(fromTimeout&&awaitingTargetSelection),
     activateElemental:elementalPrepared,elementalElement:element,
-    elementalTargetId:actualTarget?.kind==='escort'?actualTarget.id:undefined,
-    targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
-    escortSlot:actualTarget?.kind==='escort'?actualTarget.slot:undefined,
-    machineSlot:actualTarget?.kind==='machine'?actualTarget.slot:undefined,
-    moduleSlot:actualTarget?.kind==='module'?actualTarget.slot:undefined,
+    elementalTargetId:attackTarget?.kind==='escort'?attackTarget.id:undefined,
+    targetKind:attackTarget?.kind||'part',targetId:attackTarget?.id||partId,
+    escortSlot:attackTarget?.kind==='escort'?attackTarget.slot:undefined,
+    machineSlot:attackTarget?.kind==='machine'?attackTarget.slot:undefined,
+    moduleSlot:attackTarget?.kind==='module'?attackTarget.slot:undefined,
     ownPartId:actualOwnVital,cards:chosenCards,
     sacrificeEscortId:preparedSacrifice||undefined,
     fusionSlot:actualFusionSlot,
@@ -647,7 +665,9 @@ export default function OfficialFleetBattle3D({
    resolveFleetNextTurn(battle,'A',preparedOrder,Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);setElementalPrepared(false);
-  if(fromTimeout&&result.invalidPrepared)setMessage('Tempo scaduto: preparazione non valida, turno passato');
+  if(fromTimeout&&result.invalidPrepared)setMessage(result.playedPreparedCards?
+   'Tempo scaduto: '+result.playedPreparedCards+' carte valide risolte; '+result.droppedPreparedCards+' escluse.':
+   'Tempo scaduto: attacco senza bersaglio non effettuato, turno concluso.');
   setDismantleOptions({first:'',second:''});
   setCorvoOptions({exchangeCardId:'',bottomTop:false});
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
@@ -669,11 +689,27 @@ export default function OfficialFleetBattle3D({
   if(!result.battle.sides.B.ships[0].parts.some(p=>p.id===partId&&!p.destroyed))
    if(nextTarget)setSelectedVital(nextTarget.id);
  }
- function passTurn(){
-  // Passa con meno di tre carte: risolve quelle preparate anziché ignorarle.
-  fire({endTurn:true});
+ function requestPreparedResolution(endTurn=false){
+  if(!battle||battle.phase!=='playing'||battle.turn!=='A'||targetChoice)return;
+  const skipShot=endTurn&&chosenCards.length===0||
+   elementalPrepared&&elementalAbilityDef?.kind==='effect';
+  if(battle.ruleset===HP_SYNC_RULESET&&
+   shouldChooseSupportTarget(protectors,{bypass,skipShot})){
+   setTargetChoice({endTurn,ply:battle.ply});
+   return;
+  }
+  fire({endTurn});
  }
- preparedTimeout.current=()=>fire({endTurn:true,fromTimeout:true});
+ function passTurn(){
+  requestPreparedResolution(true);
+ }
+ preparedTimeout.current=()=>fire({endTurn:true,fromTimeout:true,
+  awaitingTargetSelection:!!targetChoice||
+   battle?.ruleset===HP_SYNC_RULESET&&shouldChooseSupportTarget(protectors,{
+    bypass,skipShot:chosenCards.length===0||
+     elementalPrepared&&elementalAbilityDef?.kind==='effect'
+   })
+ });
   async function leave(){
   if(busy||submitting.current)return;
   if(!battle||battle.phase!=='finished'){
@@ -758,6 +794,7 @@ export default function OfficialFleetBattle3D({
  const routePartId=linceMarkedRouteReady(player,battle.ply,player.lince?.route?.partId)?player.lince.route.partId:null;
  const bypass=directBypass||!!routePartId;
  const protectors=protectingFleetUnits(enemy,battle.ply);
+ const supportTargets=choosableSupportTargets(protectors);
  const targetChoices=availableFleetTargets(enemy,battle.ply).filter(t=>!t.blocked||directBypass||
   t.kind==='part'&&t.id===routePartId);
  const obsidianHowitzer=chosenTypes.some(id=>card(id)?.effectSpec?.action==='black-howitzer');
@@ -936,7 +973,8 @@ export default function OfficialFleetBattle3D({
      'url("/assets/fleet-terrain-scenes/'+terrain+'.svg")'}}/>}
    <OriginalFleetBar side="B" unit={enemy}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
-    selectedTarget={actualTarget} onSelectTarget={setSelectedTarget} canTarget={!ended&&myTurn} ply={battle.ply}
+    selectedTarget={actualTarget} onSelectTarget={setSelectedTarget}
+    canTarget={!ended&&myTurn&&!(battle.ruleset===HP_SYNC_RULESET&&supportTargets.length>1&&!bypass)} ply={battle.ply}
     onSelectVital={id=>{if(!ended&&myTurn){
      if(protectors.length&&!directBypass&&id!==routePartId){setMessage('Prima elimina i supporti e le macchine, oppure gioca Aggiramento.');return;}
      setSelectedVital(id);setSelectedTarget({kind:'part',id});setMessage('');
@@ -979,20 +1017,22 @@ export default function OfficialFleetBattle3D({
     {player.hand.map((type,index,hand)=><OriginalSpecialHandCard
      key={battle.round+'-'+index+'-'+type} type={type} index={index}
      offset={index-(hand.length-1)/2}
-     selected={chosenCards.includes(index)} disabled={ended||!myTurn}
+     selected={chosenCards.includes(index)} disabled={ended||!myTurn||!!targetChoice}
      grade={player.exclusiveUpgrades?.[type]||1} motherLevel={player.ships[0].level}
      unavailableReason={unavailable(type,index)}
      onClick={()=>chooseCard(index)}/>)}
    </div>
-   {!ended&&<label className="f3d-target-status">
-    <span>{protectors.length&&!bypass?'MADRE PROTETTA · ':'BERSAGLIO · '}</span>
-    <select aria-label="Bersaglio dell’attacco" value={actualTarget?actualTarget.kind+':'+actualTarget.id:''}
-     disabled={!myTurn} onChange={event=>selectTarget(event.target.value)}>
-     {targetChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
-      {t.kind==='part'?(enemy.ruleset===HP_SYNC_RULESET?'Madre · HP':'Madre · '+VITAL_LABELS[t.id]):t.kind==='module'?'Modulo · '+t.name:t.name} · {t.hp}/{t.maxHp}
-     </option>)}
-    </select>
-   </label>}
+   {!ended&&(battle.ruleset===HP_SYNC_RULESET&&supportTargets.length>1&&!bypass?
+    <div className="f3d-target-status"><span>MADRE PROTETTA · SUPPORTO DA SCEGLIERE A FINE TURNO</span></div>:
+    <label className="f3d-target-status">
+     <span>{protectors.length&&!bypass?'MADRE PROTETTA · ':'BERSAGLIO · '}</span>
+     <select aria-label="Bersaglio dell’attacco" value={actualTarget?actualTarget.kind+':'+actualTarget.id:''}
+      disabled={!myTurn} onChange={event=>selectTarget(event.target.value)}>
+      {targetChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
+       {t.kind==='part'?(enemy.ruleset===HP_SYNC_RULESET?'Madre · HP':'Madre · '+VITAL_LABELS[t.id]):t.kind==='module'?'Modulo · '+t.name:t.name} · {t.hp}/{t.maxHp}
+      </option>)}
+     </select>
+    </label>)}
    {!ended&&fusionSelected&&<label className="f3d-target-status">
     <span>FONDI CON IL SUPPORTO MAX · </span>
     {fusionCandidates.length?<select aria-label="Supporto da fondere" value={actualFusionSlot}
@@ -1772,10 +1812,21 @@ export default function OfficialFleetBattle3D({
    </div>}
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
-    <button type="button" disabled={ended||!myTurn||chosenCards.length>0} onClick={()=>fire()}>{elementalPrepared?'ATTIVA · SPECIALE':'ATTACCO NORMALE'}</button>
-    <button type="button" disabled={ended||!myTurn} onClick={passTurn}>PASSA</button>
+    <button type="button" disabled={ended||!myTurn||chosenCards.length>0||!!targetChoice}
+     onClick={()=>requestPreparedResolution(false)}>{elementalPrepared?'ATTIVA · SPECIALE':'ATTACCO NORMALE'}</button>
+    <button type="button" disabled={ended||!myTurn||!!targetChoice} onClick={passTurn}>PASSA</button>
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
+   </div>
+   {targetChoice&&myTurn&&!ended&&<div className="f3d-support-target-choice" role="dialog"
+    aria-label="Scegli quale navicella di supporto nemica colpire" aria-modal="true">
+    <strong>SCEGLI IL SUPPORTO DA COLPIRE</strong>
+    <p>Seleziona il supporto prima che scada il turno: {secondsLeft}s.</p>
+    {supportTargets.map(t=><button type="button" key={t.id}
+     onClick={()=>fire({endTurn:targetChoice.endTurn,chosenTarget:t})}>
+     {t.name} · {t.hp}/{t.maxHp} HP
+    </button>)}
+    <button type="button" onClick={()=>setTargetChoice(null)}>MODIFICA LE CARTE</button>
    </div>
    {!ended&&<button type="button" className="live-abandon" onClick={leave}
     aria-label="Abbandona la battaglia"><span aria-hidden="true">←</span> ABBANDONA</button>}
