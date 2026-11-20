@@ -137,7 +137,7 @@
  display:flex;justify-content:space-between;gap:10px
 }
 .es-math-scope .f3d-approved-layout .f3d-weapon-card{
- position:relative;flex:0 0 58px;width:58px;height:87px;aspect-ratio:2/3;
+ position:relative;flex:0 0 54px;width:54px;height:81px;aspect-ratio:2/3;
  padding:0 1px;border:2px solid #ffb43a;border-radius:6px;color:white;
  background:linear-gradient(145deg,#163251,#020d20 80%);
  box-shadow:inset 0 0 8px #0acfff77,0 0 7px #ffaa2855,0 5px 4px #000b;
@@ -176,8 +176,14 @@
  top:526px;right:14px;width:70px;height:84px;
  transform:perspective(300px) rotateY(-12deg) rotateZ(2deg)
 }
-.es-math-scope .f3d-approved-layout .f3d-approved-draw>i{
- transform:translate3d(3px,var(--deck-layer-depth,4px),-5px);opacity:.7
+.es-math-scope .f3d-approved-layout .f3d-approved-draw>i:nth-child(1){
+ transform:translate3d(7px,var(--deck-layer-depth,4px),-12px);opacity:.4
+}
+.es-math-scope .f3d-approved-layout .f3d-approved-draw>i:nth-child(2){
+ transform:translate3d(5px,calc(var(--deck-layer-depth,4px) * .7),-8px);opacity:.55
+}
+.es-math-scope .f3d-approved-layout .f3d-approved-draw>i:nth-child(3){
+ transform:translate3d(2px,calc(var(--deck-layer-depth,4px) * .4),-4px);opacity:.7
 }
 .es-math-scope .f3d-approved-layout .f3d-approved-draw>span{
  background:var(--live-deck-art) center/cover no-repeat,#180a27;
