@@ -4912,9 +4912,17 @@ export function autoFleetTurn(b,who=b.turn){
   linceRecallWeapon:cards.some(i=>side.hand[i]==='nx-c01-09')&&
    installedModule(side,'weapon')?.hp<installedModule(side,'weapon')?.maxHp};
 }
-export function timeoutFleetTurn(battle,nowMs){
+export function timeoutFleetTurn(battle,nowMs,preparedOrder=null){
  if(battle.phase!=='playing'||nowMs<battle.deadlineMs)return {ok:false,battle,events:[]};
- return resolveFleetNextTurn(battle,battle.turn,{partId:null,cards:[],pass:true},nowMs);
+ // Il tempo scaduto non deve cancellare le carte già scelte dal giocatore.
+ // Le tre giocate sono risolte in un unico commit atomico, poi parte l'altro turno.
+ const order=preparedOrder&&typeof preparedOrder==='object'&&!Array.isArray(preparedOrder)?
+  preparedOrder:{partId:null,cards:[],pass:true};
+ const result=resolveFleetNextTurn(battle,battle.turn,order,nowMs);
+ if(result.ok)return result;
+ // Un ordine diventato impossibile non deve bloccare il cronometro in eterno.
+ const fallback=resolveFleetNextTurn(battle,battle.turn,{partId:null,cards:[],pass:true},nowMs);
+ return fallback.ok?{...fallback,invalidPrepared:result.reason}:fallback;
 }
 
 

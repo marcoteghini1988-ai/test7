@@ -51,7 +51,9 @@ export const SIMPLE_RULES=Object.freeze([
  'Le reazioni si attivano solo con i danni degli attacchi normali. Costi delle abilità e contrattacchi non attivano altre reazioni.',
  'Dopo 50 round la partita termina in pareggio. Con l’Arsenale distrutto resta un tiro di emergenza da 1 potenza.',
  'Le Trappole sono carte Difesa: si preparano coperte nel proprio turno e si rivelano solo quando scattano. Altrimenti restano in campo.',
- 'Puoi giocare fino a 3 carte per turno. Hai 3 slot Attacco, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 alloggiamenti per Armi temporanee.',
+ 'Puoi preparare fino a 3 carte per turno. Hai 3 slot Attacco, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 alloggiamenti per Armi temporanee.',
+ 'Le carte preparate non producono effetti mentre le scegli. Alla terza carta il turno si risolve automaticamente; con meno carte puoi premere PASSA · RISOLVI.',
+ 'Dopo 30 secondi le carte preparate si risolvono anche se sono meno di tre; solo dopo la risoluzione inizia il turno avversario.',
  'Una Trappola contro i Terreni annulla il prossimo Terreno avversario prima che si attivi. Il Terreno precedente resta; entrambe le carte usate vanno negli scarti.',
  'Interdizione di Fusione è una Trappola coperta: si rivela alla giocata di una Carta Navicella Fusione nemica, la annulla e la manda agli scarti. Il supporto non cambia e non viene consumato uno dei due usi Fusione.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
@@ -62,7 +64,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Smontaggio Forzato è una carta Attacco: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
  'Una Carta Navicella Fusione Leggendaria nel mazzo da 40 unisce un modello L5 al supporto L5 scelto nell’Hangar. Ogni slot supporto si può fondere una sola volta.',
  'La nave fusa conserva gli HP attuali, gli HP massimi e le ferite del supporto scelto. Acquisisce l’elemento e la passiva della nave della carta Fusione, senza sommare HP o occupare nuovi slot.',
- 'Le Carte Energia occupano una giocata. Ogni carta carica di 1 il reattore fino a 4; una sola abilità elementale per nave consuma da 1 a 4 cariche dello stesso elemento.',
+ 'Le Carte Energia occupano una giocata. Ogni carta aggiunge da 1 a 4 cariche secondo la rarità a una pila senza limite; una sola abilità elementale per nave consuma da 1 a 4 cariche dello stesso elemento.',
  'Attacco ed Effetto Elementale sono alternativi: entrambi sostituiscono l’attacco normale di quel turno, e non creano un colpo aggiuntivo.'
 ]);
 export const isCharacterCard=card=>card?.kind==='character'||card?.sottotipo==='Personaggio'||/Personaggio/i.test(card?.category||'');

@@ -399,6 +399,7 @@ export default function OfficialFleetBattle3D({
  const [rewardDone,setRewardDone]=useState(false);
  const [now,setNow]=useState(()=>Date.now());
  const submitting=useRef(false);
+ const preparedTimeout=useRef(null);
  useEffect(()=>{
   const resize=()=>setScale(Math.max(.3,Math.min(innerWidth/450,innerHeight/800)));
   resize();window.addEventListener('resize',resize);
@@ -444,15 +445,26 @@ export default function OfficialFleetBattle3D({
  useEffect(()=>{
   if(!battle||battle.phase!=='playing')return;
   const id=window.setTimeout(()=>{
+   if(battle.turn==='A'){
+    // Utilizza la preparazione più recente, non la selezione del primo render.
+    preparedTimeout.current?.();
+    return;
+   }
    const result=timeoutFleetTurn(battle,Date.now());
    if(result.ok){
     setBattle(result.battle);setChosenCards([]);setElementalPrepared(false);
     setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
-    setMessage('Tempo scaduto: turno passato');
+    setMessage('Tempo scaduto: turno concluso');
    }
   },Math.max(50,battle.deadlineMs-Date.now()+60));
   return ()=>window.clearTimeout(id);
  },[battle?.ply,battle?.deadlineMs,battle?.phase]);
+ // La selezione non applica effetti. Tre carte completano la preparazione.
+ useEffect(()=>{
+  if(battle?.phase==='playing'&&battle.turn==='A'&&chosenCards.length===3){
+   fire();
+  }
+ },[chosenCards,battle?.ply,battle?.turn,battle?.phase]);
  function restart(){
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
@@ -523,7 +535,7 @@ export default function OfficialFleetBattle3D({
   setChosenCards(old=>old.includes(index)?old.filter(i=>i!==index):
    old.length<3?[...old,index]:old);
  }
- function fire(){
+ function fire({endTurn=false,fromTimeout=false}={}){
   if(!battle||battle.phase!=='playing'||battle.turn!=='A')return;
   const target=battle.sides.B.ships[0];
   const partId=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?
@@ -552,8 +564,8 @@ export default function OfficialFleetBattle3D({
   const ability=elementalAbility(battle.sides.A.ships[0].id);
   const element=activeFleetElements(battle.sides.A.ships[0].id,
    battle.sides.A.ships[0].level).includes(elementalChoice)?elementalChoice:battle.sides.A.ships[0].element;
-  const result=resolveFleetNextTurn(battle,'A',
-   {partId,pass:!!(elementalPrepared&&ability?.kind==='effect'),
+  const preparedOrder=
+   {partId,pass:!!(elementalPrepared&&ability?.kind==='effect')||(endTurn&&chosenCards.length===0),
     activateElemental:elementalPrepared,elementalElement:element,
     elementalTargetId:actualTarget?.kind==='escort'?actualTarget.id:undefined,
     targetKind:actualTarget?.kind||'part',targetId:actualTarget?.id||partId,
@@ -626,9 +638,13 @@ export default function OfficialFleetBattle3D({
     arkCustodianSwap:arkOptions.custodian,arkCustodianBottomId:arkOptions.custodianBottom,
     arkFusedId:arkOptions.fused,arkResonanceEscortId:arkOptions.resonanceEscort,
     arkSecondKind:arkSecondChoice?.kind,arkSecondId:arkSecondChoice?.id
-   },Date.now());
+   };
+  const result=fromTimeout?
+   timeoutFleetTurn(battle,Math.max(Date.now(),battle.deadlineMs),preparedOrder):
+   resolveFleetNextTurn(battle,'A',preparedOrder,Date.now());
   if(!result.ok){setMessage(result.reason);return;}
   showResult(result);setChosenCards([]);setElementalPrepared(false);
+  if(fromTimeout&&result.invalidPrepared)setMessage('Tempo scaduto: preparazione non valida, turno passato');
   setDismantleOptions({first:'',second:''});
   setCorvoOptions({exchangeCardId:'',bottomTop:false});
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
@@ -651,33 +667,11 @@ export default function OfficialFleetBattle3D({
    if(nextTarget)setSelectedVital(nextTarget.id);
  }
  function passTurn(){
-  if(!battle||battle.phase!=='playing'||battle.turn!=='A')return;
-  const result=resolveFleetNextTurn(battle,'A',
-   {cards:[],partId:null,pass:true,falcoHold:falcoOptions.hold,
-    nebulaHide:nebulaOptions.hide,nebulaHideEscortId:nebulaOptions.hideEscort,
-    obsidianGuard:obsidianOptions.bastionGuard,
-    arkArchive:arkOptions.archive,arkArchiveDiscardId:arkOptions.archiveDiscard,
-    arkRecoverModuleId:arkOptions.recoverModule,
-    arkCustodianSwap:arkOptions.custodian,
-    arkCustodianBottomId:arkOptions.custodianBottom},Date.now());
-  if(!result.ok){setMessage(result.reason);return;}
-  setBattle(result.battle);setChosenCards([]);
-  setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
-  setMantaOptions({silence:false,fork:false,second:'',screen:'',from:'',to:'',
-   recycle:'',repair:true,repairTarget:''});
-  setSharkOptions({armor:'',decoy:'',teethFirst:'',teethSecond:'',torpedo:'',shield:'',
-   admiralDiscard:'',admiralEnabled:true,donor:'',receiver:''});
-  setNebulaOptions({hide:false,hideEscort:'',veil:'',swap:'',terrainTrade:false,tradeCard:''});
-  setStormOptions({second:'',chain:'',front:'',captainSwap:false,captainTrade:''});
-  setRoyalOptions({rainMode:'heavy',second:'',guard:'',bastion:'',source:'',
-   destination:'',relay:false,relayEscort:'',sovereign:false,discard:'',pick:''});
-  setObsidianOptions({part:'',chainMachine:'',magisterSwap:false,bastionGuard:false});
-  setArkOptions({archive:false,archiveDiscard:'',recoverModule:'',rayEscort:'',
-   custodyEscort:'',chorusMode:'focus',chorusFirst:'',chorusSecond:'',
-   custodian:false,custodianBottom:'',fused:'',resonanceEscort:'',second:''});
-  setMessage(fleetTurnNotice(result.events)||'Turno concluso');
+  // Passa con meno di tre carte: risolve quelle preparate anziché ignorarle.
+  fire({endTurn:true});
  }
- async function leave(){
+ preparedTimeout.current=()=>fire({endTurn:true,fromTimeout:true});
+  async function leave(){
   if(busy||submitting.current)return;
   if(!battle||battle.phase!=='finished'){
    if(window.confirm('Abbandonare la battaglia senza ricompense?'))onExit?.();
@@ -1767,8 +1761,8 @@ export default function OfficialFleetBattle3D({
    </div>}
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
-    <button type="button" disabled={ended||!myTurn} onClick={fire}>{elementalPrepared?'ATTIVA · SPECIALE':'ATTACCA · CONFERMA'}</button>
-    <button type="button" disabled={ended||!myTurn} onClick={passTurn}>PASSA</button>
+    <button type="button" disabled={ended||!myTurn||chosenCards.length>0} onClick={()=>fire()}>{elementalPrepared?'ATTIVA · SPECIALE':'ATTACCO NORMALE'}</button>
+    <button type="button" disabled={ended||!myTurn} onClick={passTurn}>PASSA · RISOLVI</button>
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
