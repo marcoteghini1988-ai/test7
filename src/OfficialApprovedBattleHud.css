@@ -104,7 +104,8 @@
 .es-math-scope .f3d-approved-layout .live-fighter--player .f3d-machine-berth{top:0}
 .es-math-scope .f3d-approved-layout .f3d-machine-berth--0{left:80px}
 .es-math-scope .f3d-approved-layout .f3d-machine-berth--1{right:80px}
-.es-math-scope .f3d-approved-layout .f3d-machine-berth:disabled{opacity:.23;filter:grayscale(.7)}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth:disabled:not(.f3d-machine-occupied){opacity:.23;filter:grayscale(.7)}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth.f3d-machine-occupied:disabled{opacity:1;filter:none}
 .es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-pedestal{
  position:absolute;left:9px;right:9px;bottom:7px;height:22px;border-radius:50%;
  background:radial-gradient(ellipse,#687788 15%,#203147 55%,#020714 78%);
