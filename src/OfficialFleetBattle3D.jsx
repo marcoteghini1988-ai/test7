@@ -164,6 +164,12 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      aria-label={'Abilità della scudiera '+escort.name+(signature?' · '+signature.name+' · vulnerabile a '+weaknesses:'')}>i</button>
    </div>;
   })}
+  {/* Alloggiamenti visivi: non aggiungono navicelle al motore di gioco. */}
+  {[0,1].filter(slot=>!unit.escorts.some((escort,i)=>(escort.slot??i)===slot)).map(slot=>
+   <div key={'supporto-visivo-'+slot} className={'live-escort live-escort--'+slot+' f3d-escort-preview'}
+    aria-hidden="true">
+    <img src={ASSET_ROOT+'/escorts/'+mother.id+'_escort_'+(slot+1)+'.svg'} alt="" draggable={false}/>
+   </div>)}
   <div className="f3d-mounted-modules" aria-label={player?'Moduli montati':'Moduli avversari'}>
    {liveModules(unit).map(module=><button type="button" key={module.id}
     className={'f3d-mounted-module'+(selectedTarget?.kind==='module'&&selectedTarget.id===module.id?' f3d-unit--selected':'')}
@@ -228,11 +234,10 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
        (unit.ruleset===HP_SYNC_RULESET?'Arma temporanea ':'Macchina d’assalto ')+(slot+1)+' · spazio libero'}
      aria-pressed={!player&&selected}
      onClick={()=>player?inspectEscort({machine}):onSelectTarget?.({kind:'machine',id:machine.id,slot})}>
-     {machine?<><span className="f3d-turret-pedestal" aria-hidden="true"/>
-      <span className="f3d-turret-body" aria-hidden="true"/>
-      <span className="f3d-turret-barrel" aria-hidden="true"/>
-      <span className="f3d-turret-name">{machine.name||'Arma '+(slot+1)}</span>
-     </>:<b aria-hidden="true">＋</b>}
+     <span className="f3d-turret-pedestal" aria-hidden="true"/>
+     <span className="f3d-turret-body" aria-hidden="true"/>
+     <span className="f3d-turret-barrel" aria-hidden="true"/>
+     <span className="f3d-turret-name">{machine?.name||''}</span>
     </button>;
    })}
   </div>
@@ -280,7 +285,9 @@ function OriginalFleetBar({side,unit,nickname}){
  return <div className={'live-fleet-bar live-fleet-bar--'+side}>
   <strong className="f3d-player-label" title={nickname||''}>{nickname||'CPU'}</strong>
   <div className="live-units">{entries.map((entry,i)=>{
-   if(!entry)return <span className="f3d-hp-empty" key={i}/>;
+   if(!entry)return <div className="f3d-hp-empty" key={i} aria-label={'Supporto '+(i===0?'A':'B')+' non schierato'}>
+    <span>{'SUPPORTO '+(i===0?'A':'B')}</span><i className="f3d-empty-meter" aria-hidden="true"/>
+   </div>;
    const {ship,mother:isMother}=entry,max=ship.maxHp||1,hp=Math.max(0,ship.hp||0);
    const rarity=isMother?(ship.rarita||ship.rarity||unit.motherCardRarity):
     (ship.supportRarity||ship.rarity||'Comune');
@@ -431,6 +438,7 @@ export default function OfficialFleetBattle3D({
  const [trapReveal,setTrapReveal]=useState(null);
  const [busy,setBusy]=useState(false);
  const [showLog,setShowLog]=useState(false);
+ const [showBattleCommands,setShowBattleCommands]=useState(false);
  const [rewardDone,setRewardDone]=useState(false);
  const [now,setNow]=useState(()=>Date.now());
  const submitting=useRef(false);
@@ -1834,7 +1842,12 @@ export default function OfficialFleetBattle3D({
      ANNULLA SACRIFICIO
     </button>
    </div>}
-   <div className="live-actions f3d-actions">
+   <button type="button" className="f3d-commands-toggle"
+    aria-label={showBattleCommands?'Chiudi comandi':'Apri comandi'}
+    aria-expanded={showBattleCommands} onClick={()=>setShowBattleCommands(value=>!value)}>
+    <span aria-hidden="true">⋯</span><small>{chosenCards.length}/3</small>
+   </button>
+   <div className={'live-actions f3d-actions'+(showBattleCommands?' f3d-actions-open':'')}>
     <span>CARTE {chosenCards.length}/3</span>
     <button type="button" className="f3d-attack-normal" disabled={ended||!myTurn||chosenCards.length>0||!!targetChoice}
      onClick={()=>requestPreparedResolution(false)}>{elementalPrepared?'ATTIVA SPECIALE':'ATTACCO NORMALE'}</button>
