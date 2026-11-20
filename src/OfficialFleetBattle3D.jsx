@@ -1836,12 +1836,13 @@ export default function OfficialFleetBattle3D({
    </div>}
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
-    <button type="button" disabled={ended||!myTurn||chosenCards.length>0||!!targetChoice}
-     onClick={()=>requestPreparedResolution(false)}>{elementalPrepared?'ATTIVA · SPECIALE':'ATTACCO NORMALE'}</button>
-    <button type="button" disabled={ended||!myTurn||!!targetChoice} onClick={passTurn}>PASSA</button>
+    <button type="button" className="f3d-attack-normal" disabled={ended||!myTurn||chosenCards.length>0||!!targetChoice}
+     onClick={()=>requestPreparedResolution(false)}>{elementalPrepared?'ATTIVA SPECIALE':'ATTACCO NORMALE'}</button>
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
+   <button type="button" className="f3d-approved-pass"
+    disabled={ended||!myTurn||!!targetChoice} onClick={passTurn}>❯❯ PASSA</button>
    {targetChoice&&myTurn&&!ended&&<div className="f3d-support-target-choice" role="dialog"
     aria-label="Scegli quale navicella di supporto nemica colpire" aria-modal="true">
     <strong>SCEGLI IL SUPPORTO DA COLPIRE</strong>
