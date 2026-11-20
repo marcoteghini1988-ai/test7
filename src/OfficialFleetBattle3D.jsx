@@ -1762,7 +1762,7 @@ export default function OfficialFleetBattle3D({
    <div className="live-actions f3d-actions">
     <span>CARTE {chosenCards.length}/3</span>
     <button type="button" disabled={ended||!myTurn||chosenCards.length>0} onClick={()=>fire()}>{elementalPrepared?'ATTIVA · SPECIALE':'ATTACCO NORMALE'}</button>
-    <button type="button" disabled={ended||!myTurn} onClick={passTurn}>PASSA · RISOLVI</button>
+    <button type="button" disabled={ended||!myTurn} onClick={passTurn}>PASSA</button>
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
