@@ -273,12 +273,18 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
        </g>}
       <path d="M39 40L53 23L89 20L103 32L99 58L76 67L46 62L36 50Z"
        fill={"url(#"+armorId+")"} stroke="#9fb2c6" strokeWidth="3"/>
-      <path d="M53 23L89 20L103 32L77 40L40 39Z" fill="#93acbf" stroke="#e7f7ff" strokeWidth="1.6"/>
-      <path d="M47 47L78 49L94 43L91 56L72 60L49 57Z" fill="#122842" stroke="#71899f" strokeWidth="1.6"/>
-      <path d="M51 50L77 53L92 47" fill="none" stroke="currentColor" strokeWidth="3"/>
-      <circle cx="53" cy="31" r="3" fill="#d7f3ff" stroke="#476074"/>
-      <circle cx="87" cy="29" r="3" fill="#d7f3ff" stroke="#476074"/>
-      <path d="M45 64L64 68L95 62" fill="none" stroke="currentColor" strokeWidth="3" opacity=".7"/>
+      <path d="M53 23L89 20L103 32L77 40L40 39Z" fill="#506a7c" stroke="#bdcbd9" strokeWidth="1.6"/>
+      <path d="M48 47L77 44L96 40L92 56L74 63L48 57Z" fill="#081626" stroke="#8299aa" strokeWidth="1.5"/>
+      <path d="M51 49L86 45M52 53L84 49M52 56L80 54" stroke="#1f3b51" strokeWidth="1.7"/>
+      <path d="M60 47L60 56M67 46L67 55M74 45L74 53M81 44L81 51" stroke="currentColor" strokeWidth="2" opacity=".85"/>
+      <path d="M42 37L52 29L72 30M82 32L99 30" fill="none" stroke="#dce7ed" strokeWidth="1.5"/>
+      <path d="M46 38L76 39L99 35" fill="none" stroke="#091626" strokeWidth="3"/>
+      <circle cx="53" cy="31" r="3" fill="#0b2439" stroke="#c0d8e8" strokeWidth="1.4"/>
+      <circle cx="87" cy="29" r="3" fill="#0b2439" stroke="#c0d8e8" strokeWidth="1.4"/>
+      <circle cx="46" cy="49" r="2" fill="#c2d4dd"/>
+      <circle cx="92" cy="48" r="2" fill="#c2d4dd"/>
+      <path d="M45 64L64 69L95 62" fill="none" stroke="#637e95" strokeWidth="3"/>
+      <path d="M50 64L63 67L86 62" fill="none" stroke="currentColor" strokeWidth="1.5" opacity=".8"/>
      </svg>
      {machine&&<span className="f3d-turret-name">{machine.name||''}</span>}
     </button>;
