@@ -805,11 +805,6 @@ export default function OfficialFleetBattle3D({
   (bypass||!protectors.length?
    targetChoices.find(t=>t.kind==='part'&&t.id===(routePartId||actualVital)):null)||
   protectors[0]||targetChoices[0];
- function selectTarget(value){
-  const choice=targetChoices.find(t=>t.kind+':'+t.id===value);
-  if(choice){setSelectedTarget({kind:choice.kind,id:choice.id,slot:choice.slot});
-   if(choice.kind==='part')setSelectedVital(choice.id);setMessage('');}
- }
  const ownTargets=player.ships[0].parts.filter(p=>!p.destroyed&&p.hp>0);
  const actualOwnVital=ownTargets.find(p=>p.id===selectedOwnVital)?.id||
   [...ownTargets].sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]?.id;
@@ -983,17 +978,6 @@ export default function OfficialFleetBattle3D({
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='A'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
    <OriginalSpecialSlots side="B" contents={enemySlots} upgrades={enemy.exclusiveUpgrades} unit={enemy}/>
-   <div className="live-midline">
-    <span className="live-turn-indicator" data-active={battle.turn}>
-     {ended?'FINE PARTITA':(myTurn?'TU':'AVVERSARIO')+' · '+secondsLeft+'s'} ·
-     {' '}{actualTarget?.kind==='part'?(VITAL_LABELS[actualTarget.id]||'VITALI'):actualTarget?.kind==='machine'?'MACCHINA':actualTarget?.kind==='module'?'MODULO':'SUPPORTO'}
-    </span>
-    <button className="live-terrain-slot" type="button"
-     title={'Terreno attivo: '+readableTerrain+' · Tocca per leggere le regole'}
-     data-terrain={terrain||undefined} onClick={()=>setHelp({rules:true,terrain})}>
-     {readableTerrain}
-    </button>
-   </div>
    <OriginalSpecialSlots side="A" contents={playerSlots} upgrades={player.exclusiveUpgrades} inspectTrap={setHelp} unit={player}/>
    <OriginalFleetFighter side="player" unit={player} chosenCards={chosenTypes} ply={battle.ply}
     selectedVital={needsOwnTarget?actualOwnVital:null} canSelectOwn={needsOwnTarget&&myTurn&&!ended}
@@ -1022,18 +1006,8 @@ export default function OfficialFleetBattle3D({
      unavailableReason={unavailable(type,index)}
      onClick={()=>chooseCard(index)}/>)}
    </div>
-   {!ended&&(battle.ruleset===HP_SYNC_RULESET&&supportTargets.length>1&&!bypass?
-    <div className="f3d-target-status"><span>MADRE PROTETTA · SUPPORTO DA SCEGLIERE A FINE TURNO</span></div>:
-    <label className="f3d-target-status">
-     <span>{protectors.length&&!bypass?'MADRE PROTETTA · ':'BERSAGLIO · '}</span>
-     <select aria-label="Bersaglio dell’attacco" value={actualTarget?actualTarget.kind+':'+actualTarget.id:''}
-      disabled={!myTurn} onChange={event=>selectTarget(event.target.value)}>
-      {targetChoices.map(t=><option key={t.kind+':'+t.id} value={t.kind+':'+t.id}>
-       {t.kind==='part'?(enemy.ruleset===HP_SYNC_RULESET?'Madre · HP':'Madre · '+VITAL_LABELS[t.id]):t.kind==='module'?'Modulo · '+t.name:t.name} · {t.hp}/{t.maxHp}
-      </option>)}
-     </select>
-    </label>)}
-   {!ended&&fusionSelected&&<label className="f3d-target-status">
+   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive||arkActive)&&!ended&&<div className="live-card-inspector" role="status">
+   {!ended&&fusionSelected&&<label className="f3d-fusion-choice">
     <span>FONDI CON IL SUPPORTO MAX · </span>
     {fusionCandidates.length?<select aria-label="Supporto da fondere" value={actualFusionSlot}
      disabled={!myTurn} onChange={event=>setFusionSlot(Number(event.target.value))}>
@@ -1042,7 +1016,6 @@ export default function OfficialFleetBattle3D({
      </option>)}
     </select>:<span>Serve un supporto al livello massimo del suo modello.</span>}
    </label>}
-   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive||arkActive)&&!ended&&<div className="live-card-inspector" role="status">
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
      {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
