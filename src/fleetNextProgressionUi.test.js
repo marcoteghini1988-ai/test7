@@ -90,14 +90,16 @@ test('Later Plancia maps to the existing physical slot while keeping its new nam
 });
 
 
-test('Fixed layout renders Character, Defense, Trap, three Attacks and two machine berths from first level',()=>{
+test('La plancia approvata mostra Personaggio, Difesa, Trappola, due Attacchi, Energia e due slot Arma dal primo livello',()=>{
  const side=createFleetSide('N00',1,[],42);
  const slots=projectFleetSlots(side);
  const slotHtml=renderToStaticMarkup(React.createElement(Slots,{side:'A',contents:slots}));
  assert.equal((slotHtml.match(/data-slot-role="personaggio"/g)||[]).length,1);
  assert.equal((slotHtml.match(/data-slot-role="difesa"/g)||[]).length,1);
  assert.equal((slotHtml.match(/data-slot-role="trappola"/g)||[]).length,1);
- assert.equal((slotHtml.match(/data-slot-role="attacco"/g)||[]).length,3);
+ assert.equal((slotHtml.match(/data-slot-role="attacco"/g)||[]).length,2);
+ assert.equal((slotHtml.match(/data-slot-role="energia"/g)||[]).length,1);
+ assert.equal(side.attackSlots.length,3,'il motore conserva la terza posizione logica Attacco');
  const fighterHtml=renderToStaticMarkup(Fighter({side:'player',unit:side,inspectEscort:()=>{}}));
  assert.equal((fighterHtml.match(/spazio libero/g)||[]).length,2);
  assert.match(fighterHtml,/0 supporti/);
