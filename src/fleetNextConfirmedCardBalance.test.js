@@ -134,3 +134,43 @@ test('Arsenale ora modifica in percentuale armi con danni elevati e supporto Arm
  assert.equal(projected[0].nominalDamage,18);
  assert.ok(CONFIRMED_CARD_BALANCE.escortWeapon.maxActiveSupports===2);
 });
+
+
+test('Rigenerazione: un incremento per secondo durante preparazione e mai duplicato',()=>{
+ const b=battle(null,'regeneration');
+ const mother=b.sides.B.ships[0];
+ mother.hp=900;
+ const rate=supportRegenerationPerSecond(mother);
+ const one=advanceIndependentSupportTime(b,1000);
+ assert.equal(one.changed,true);
+ assert.equal(one.battle.sides.B.ships[0].hp,Math.round((900+rate)*10)/10);
+ assert.equal(b.sides.B.ships[0].hp,900,'nessuna mutazione del turno originale');
+ const duplicate=advanceIndependentSupportTime(one.battle,1500);
+ assert.equal(duplicate.changed,false,'il mezzo secondo aggiuntivo non vale un secondo intero');
+ const two=advanceIndependentSupportTime(one.battle,2000);
+ assert.equal(two.battle.sides.B.ships[0].hp,Math.round((900+2*rate)*10)/10);
+ const full=advanceIndependentSupportTime(two.battle,30000);
+ assert.equal(full.battle.supportSecondsProcessed,30);
+ assert.equal(full.battle.sides.B.ships[0].hp,Math.round((900+30*rate)*10)/10);
+ const after=advanceIndependentSupportTime(full.battle,34000);
+ assert.equal(after.changed,false,'non applicare effetti oltre i 30 secondi');
+});
+
+test('Veleno reattivo: toglie HP ogni secondo di preparazione, anche senza carte giocate',()=>{
+ const b=battle(null,'reactive-poison');
+ const support=b.sides.B.escorts[0];
+ support.poisonReadyPly=b.ply;
+ const target=b.sides.A.ships[0],initial=target.hp;
+ const rate=supportPoisonPerSecond(target,target);
+ const one=advanceIndependentSupportTime(b,1000);
+ assert.equal(one.changed,true);
+ assert.equal(one.battle.sides.A.ships[0].hp,Math.round((initial-rate)*10)/10);
+ const sameSecond=advanceIndependentSupportTime(one.battle,1999);
+ assert.equal(sameSecond.changed,false);
+ const two=advanceIndependentSupportTime(one.battle,2000);
+ assert.equal(two.battle.sides.A.ships[0].hp,Math.round((initial-2*rate)*10)/10);
+ const full=advanceIndependentSupportTime(two.battle,30000);
+ assert.equal(full.battle.sides.A.ships[0].hp,Math.round((initial-30*rate)*10)/10);
+ assert.equal(full.battle.supportSecondsProcessed,30);
+ assert.equal(b.sides.A.ships[0].hp,initial,'il modello di preparazione non modifica la partita iniziale');
+});

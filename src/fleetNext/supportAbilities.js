@@ -163,6 +163,9 @@ export function settleIndependentSupportDamage(b,attackerWho=null){
  return events;
 }
 
+// Effetti persistenti: rigenerazione e veleno procedono ogni secondo REALE
+// del turno in corso, anche mentre le tre carte sono soltanto preparate.
+// supportSecondsProcessed impedisce riapplicazioni e il timer si ferma a 30s.
 export function advanceIndependentSupportTime(battle,nowMs){
  if(!available(battle)||!Number.isFinite(nowMs))return {battle,events:[],changed:false};
  const started=Number.isFinite(battle.turnStartedAtMs)?battle.turnStartedAtMs:
