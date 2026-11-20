@@ -457,3 +457,12 @@
 .es-math-scope .f3d-approved-layout .f3d-machine-berth:disabled .f3d-turret-svg{
  opacity:.98;filter:contrast(1.25) brightness(.91) drop-shadow(0 6px 3px #000d)
 }
+
+/* Categorie visibili sulle sette carte approvate */
+.es-math-scope .f3d-approved-layout .live-card-rarity{
+ font-size:6px;line-height:9px;max-width:calc(100% - 16px);overflow:hidden;
+ white-space:nowrap;text-overflow:ellipsis;letter-spacing:0
+}
+.es-math-scope .f3d-approved-layout .live-hand-special[data-family="energy"] .live-card-rarity{
+ background:#4b3306eb;color:#ffe4a1
+}
