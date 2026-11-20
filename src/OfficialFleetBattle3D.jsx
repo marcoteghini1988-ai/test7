@@ -168,7 +168,8 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
   {[0,1].filter(slot=>!unit.escorts.some((escort,i)=>(escort.slot??i)===slot)).map(slot=>
    <div key={'supporto-visivo-'+slot} className={'live-escort live-escort--'+slot+' f3d-escort-preview'}
     aria-hidden="true">
-    <img src={ASSET_ROOT+'/escorts/'+mother.id+'_escort_'+(slot+1)+'.svg'} alt="" draggable={false}/>
+    <img src={ASSET_ROOT+'/mathfleet/views/'+(player?'player_to_enemy':'enemy_to_player')+
+      '/'+mother.id+'_complete.'+{['N00','C01','C02','C03','C04'].includes(mother.id)?'png':'webp'}} alt="" draggable={false}/>
    </div>)}
   <div className="f3d-mounted-modules" aria-label={player?'Moduli montati':'Moduli avversari'}>
    {liveModules(unit).map(module=><button type="button" key={module.id}
@@ -227,6 +228,9 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     const enabled=machine&&!machine.pending;
     const hit=impact?.machineSlot===slot&&impact?.machineDamage>0;
     const selected=selectedTarget?.kind==='machine'&&selectedTarget.id===machine?.id;
+    const rotary=(player?slot===0:slot===1);
+    const armorId='turret-steel-'+side+'-'+slot;
+    const barrelId='turret-barrel-'+side+'-'+slot;
     return <button type="button" key={slot} className={'f3d-machine-berth f3d-machine-berth--'+slot+(selected?' f3d-unit--selected':'')+(hit?' f3d-machine--hit':'')+(machine?' f3d-machine-occupied':'')}
      disabled={!machine||(!player&&(!canTarget||!enabled||unit.ruleset===HP_SYNC_RULESET))}
      aria-label={machine?(unit.ruleset===HP_SYNC_RULESET?(player?'Consulta Arma temporanea ':'Arma temporanea ')+machine.name+' · supporto non bersagliabile':
@@ -234,10 +238,49 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
        (unit.ruleset===HP_SYNC_RULESET?'Arma temporanea ':'Macchina d’assalto ')+(slot+1)+' · spazio libero'}
      aria-pressed={!player&&selected}
      onClick={()=>player?inspectEscort({machine}):onSelectTarget?.({kind:'machine',id:machine.id,slot})}>
-     <span className="f3d-turret-pedestal" aria-hidden="true"/>
-     <span className="f3d-turret-body" aria-hidden="true"/>
-     <span className="f3d-turret-barrel" aria-hidden="true"/>
-     <span className="f3d-turret-name">{machine?.name||''}</span>
+     <svg className="f3d-turret-svg" viewBox="0 0 140 96" aria-hidden="true">
+      <defs>
+       <linearGradient id={armorId} x1="0" y1="0" x2=".9" y2="1">
+        <stop offset="0" stopColor="#f7faff"/><stop offset=".19" stopColor="#a0b0c4"/>
+        <stop offset=".46" stopColor="#3d5266"/><stop offset=".66" stopColor="#0b1c32"/>
+        <stop offset=".84" stopColor="#61798d"/><stop offset="1" stopColor="#172238"/>
+       </linearGradient>
+       <linearGradient id={barrelId} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#d6eafa"/><stop offset=".22" stopColor="#647e97"/>
+        <stop offset=".4" stopColor="#192b3c"/><stop offset=".53" stopColor="currentColor"/>
+        <stop offset=".7" stopColor="#173248"/><stop offset="1" stopColor="#091624"/>
+       </linearGradient>
+      </defs>
+      <ellipse cx="70" cy="84" rx="51" ry="10" fill="#000a"/>
+      <path d="M18 80Q70 56 122 80L117 87Q70 102 23 87Z" fill="#192a3b" stroke="#7f99b2" strokeWidth="3"/>
+      <ellipse cx="70" cy="78" rx="44" ry="13" fill="#071422" stroke="currentColor" strokeWidth="3"/>
+      <ellipse cx="70" cy="78" rx="33" ry="9" fill="#283e52" stroke="#849cb2" strokeWidth="2"/>
+      <path d="M62 67L65 50H84L89 67Z" fill={"url(#"+armorId+")"} stroke="#899bad" strokeWidth="2"/>
+      {rotary?
+       <g transform="translate(2 -2)">
+        {[0,1,2,3].map((i)=><g key={i} transform={'translate(0 '+(i%2*13-6)+')'}>
+         <path d={'M'+(73+Math.floor(i/2)*6)+' 31L119 34L123 42L76 41Z'}
+          fill={"url(#"+barrelId+")"} stroke="#8294a7" strokeWidth="1.7"/>
+         <ellipse cx="120" cy="38" rx="6" ry="5" fill="#040c16" stroke="currentColor" strokeWidth="2.5"/>
+         <ellipse cx="120" cy="38" rx="2" ry="2" fill="currentColor"/>
+        </g>)}
+       </g>:
+       <g>
+        <path d="M68 30L124 28L134 33L133 47L123 51L68 46Z" fill={"url(#"+barrelId+")"} stroke="#91aabd" strokeWidth="2"/>
+        <path d="M71 39L127 39" stroke="currentColor" strokeWidth="4" opacity=".92"/>
+        <ellipse cx="131" cy="40" rx="7" ry="9" fill="#041020" stroke="#b2c3d5" strokeWidth="3"/>
+        <ellipse cx="131" cy="40" rx="3" ry="5" fill="currentColor"/>
+       </g>}
+      <path d="M39 40L53 23L89 20L103 32L99 58L76 67L46 62L36 50Z"
+       fill={"url(#"+armorId+")"} stroke="#9fb2c6" strokeWidth="3"/>
+      <path d="M53 23L89 20L103 32L77 40L40 39Z" fill="#93acbf" stroke="#e7f7ff" strokeWidth="1.6"/>
+      <path d="M47 47L78 49L94 43L91 56L72 60L49 57Z" fill="#122842" stroke="#71899f" strokeWidth="1.6"/>
+      <path d="M51 50L77 53L92 47" fill="none" stroke="currentColor" strokeWidth="3"/>
+      <circle cx="53" cy="31" r="3" fill="#d7f3ff" stroke="#476074"/>
+      <circle cx="87" cy="29" r="3" fill="#d7f3ff" stroke="#476074"/>
+      <path d="M45 64L64 68L95 62" fill="none" stroke="currentColor" strokeWidth="3" opacity=".7"/>
+     </svg>
+     {machine&&<span className="f3d-turret-name">{machine.name||''}</span>}
     </button>;
    })}
   </div>
