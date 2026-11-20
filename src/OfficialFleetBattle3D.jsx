@@ -355,7 +355,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
   {attack:'⚔',defense:'⬡',trap:'◈',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
  const name=def?.nome||def?.name||type;
  const art=type&&def?cardFacePath(type,grade):officialSpecialArtPath(type);
- const fallbackImages=({
+ const fallbackImages={
  attack:'/assets/special-cards/shot-ion.png',
  defense:'/assets/special-cards/tactical-cover.png',
  trap:'/assets/special-cards/tactic-reactive.png',
