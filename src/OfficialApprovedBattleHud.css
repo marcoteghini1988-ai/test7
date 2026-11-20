@@ -226,3 +226,161 @@
  border-color:#4692b1;border-radius:3px;white-space:nowrap
 }
 .es-math-scope .f3d-approved-layout .f3d-actions .f3d-attack-normal{flex:1;min-width:0}
+
+/* CORREZIONE GEOMETRIA APPROVATA 20-11-2026: 940x1672 -> 450x800 */
+/* Le navi non riempiono il tavolo: la prospettiva dell'immagine approvata
+   prevede due formazioni distinte, sopra e sotto gli slot. */
+.es-math-scope .f3d-approved-layout .live-fighter--enemy{top:55px}
+.es-math-scope .f3d-approved-layout .live-fighter--player{top:380px}
+.es-math-scope .f3d-approved-layout .live-fighter .fleet-ship-wrap.official-mother{
+ animation:none!important;transform-origin:50% 0!important;
+}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .fleet-ship-wrap.official-mother{
+ transform:translateX(-50%) scaleX(.79) scaleY(.61)!important
+}
+.es-math-scope .f3d-approved-layout .live-fighter--player .fleet-ship-wrap.official-mother{
+ transform:translateX(-50%) scaleX(.79) scaleY(.70)!important
+}
+/* Supporti accanto alla madre: gli alloggiamenti liberi sono solo scenografia
+   e non aggiungono salute, abilità o bersagli al combattimento. */
+.es-math-scope .f3d-approved-layout .live-escort{width:62px;height:67px;z-index:4}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort{top:25px}
+.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort{top:35px}
+.es-math-scope .f3d-approved-layout .live-escort--0{left:59px}
+.es-math-scope .f3d-approved-layout .live-escort--1{right:59px}
+.es-math-scope .f3d-approved-layout .live-escort img{
+ display:block;width:100%;height:100%;object-fit:contain;
+ filter:drop-shadow(0 0 4px #4df2ff99) drop-shadow(0 7px 5px #000a)
+}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort img{
+ transform:rotate(180deg);
+ filter:sepia(.85) saturate(3.8) hue-rotate(315deg) brightness(.95)
+ drop-shadow(0 0 6px #ff4d5c88)
+}
+.es-math-scope .f3d-approved-layout .f3d-escort-preview{
+ pointer-events:none;opacity:.84;filter:saturate(.85)
+}
+.es-math-scope .f3d-approved-layout .f3d-escort-preview .f3d-unit-target,
+.es-math-scope .f3d-approved-layout .f3d-escort-preview .f3d-escort-info{display:none}
+/* La silhouette della madre rimane operativa e conserva i suoi punti di impatto. */
+.es-math-scope .f3d-approved-layout .f3d-impact{transform-origin:center top}
+/* Torrette in due coppie collocate negli spazi indicati sulla plancia. */
+.es-math-scope .f3d-approved-layout .f3d-machine-berth{
+ width:90px;height:66px;padding:0;top:0;overflow:visible;opacity:1;
+ --turret-accent:#40d9ff;--turret-core:#1570bd;--turret-flash:#b9f7ff
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth--0{left:88px}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth--1{right:92px}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .f3d-machine-berth{top:80px}
+.es-math-scope .f3d-approved-layout .live-fighter--player .f3d-machine-berth{top:-40px}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .f3d-machine-berth--0,
+.es-math-scope .f3d-approved-layout .live-fighter--player .f3d-machine-berth--1{
+ --turret-accent:#ff8b3c;--turret-core:#c85219;--turret-flash:#fff0bc
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth:disabled,
+.es-math-scope .f3d-approved-layout .f3d-machine-berth:disabled:not(.f3d-machine-occupied){
+ opacity:1;filter:none;cursor:default
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth:not(.f3d-machine-occupied){
+ filter:saturate(.7);opacity:.83
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-pedestal{
+ left:3px;right:3px;bottom:6px;height:28px;border-radius:50%;
+ border:3px solid #7a94a7;
+ background:
+ radial-gradient(ellipse at 47% 35%,var(--turret-accent) 0%,#1a314b 26%,#020b19 64%,#050710 80%);
+ box-shadow:inset 0 0 4px var(--turret-accent),0 4px 4px #000d,0 0 7px var(--turret-accent);
+ transform:perspective(170px) rotateX(57deg)
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-pedestal:after{
+ content:'';position:absolute;inset:5px 7px;border-radius:50%;border:2px dashed var(--turret-accent);
+ box-shadow:0 0 7px var(--turret-accent)
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-body{
+ left:19px;top:16px;width:54px;height:30px;transform:skew(-13deg,-2deg);
+ border:2px solid #9aaab6;border-radius:6px 8px 8px 4px;
+ background:linear-gradient(156deg,#fafaff 0%,#809cb3 9%,#1b3047 33%,#415d72 51%,#071323 64%,#6d8296 80%,#172a3a 100%);
+ box-shadow:inset 0 -5px 4px #050e23,0 5px 4px #000a,0 0 12px var(--turret-core)
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-body:before{
+ content:'';position:absolute;left:9px;right:10px;top:3px;height:8px;
+ border-top:3px solid #bad6e0;border-bottom:2px solid var(--turret-accent);
+ background:#294a62;transform:skewX(14deg)
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-body:after{
+ content:'';position:absolute;left:22px;bottom:-8px;width:11px;height:10px;
+ background:linear-gradient(90deg,#222f3c,#91b0cb,#1b2d45);border:1px solid #182a44
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-barrel{
+ left:38px;top:6px;width:48px;height:15px;transform:rotate(-14deg);
+ border:2px solid #8faabd;border-radius:3px 10px 10px 3px;
+ background:linear-gradient(180deg,#e2ebf0,#597a96 19%,#082d51 36%,var(--turret-accent) 46%,#092743 61%,#52677b 74%,#192132);
+ box-shadow:0 1px 3px #000b,0 0 7px var(--turret-accent);
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-barrel:after{
+ top:1px;right:-3px;width:10px;height:9px;border:3px solid #7599b3;
+ background:radial-gradient(circle,var(--turret-flash) 5%,var(--turret-core) 42%,#010816 65%);
+ box-shadow:0 0 5px var(--turret-accent)
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-turret-name{
+ bottom:0;background:none;font-size:6px;line-height:8px
+}
+/* Barra dei tre alloggiamenti, anche quando un supporto non è in battaglia. */
+.es-math-scope .f3d-approved-layout .f3d-hp-empty{
+ display:flex;visibility:visible;height:30px;min-width:0;box-sizing:border-box;
+ padding:1px 3px;gap:2px;flex-direction:column;align-items:center;justify-content:center;
+ border:1px solid #435768;border-radius:3px;
+ background:linear-gradient(155deg,#071622d0,#142034dd);color:#93b0c8
+}
+.es-math-scope .f3d-approved-layout .f3d-hp-empty>span{
+ display:block;font-size:8px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-empty-meter{
+ display:block;width:100%;height:9px;border:1px solid #496377;border-radius:7px;
+ background:linear-gradient(90deg,#102136,#1e3247)
+}
+/* Tavolo delle carte: 12 alloggiamenti 2:3, in due righe rettilinee. */
+.es-math-scope .f3d-approved-layout .live-slot{
+ width:49px;flex:0 0 49px;height:74px;aspect-ratio:2/3;
+ transform:perspective(380px) rotateX(36deg);
+ border-width:2px;box-shadow:inset 0 0 6px #ffffff20,0 5px 3px #000d,0 0 6px #e6a84f77
+}
+.es-math-scope .f3d-approved-layout .live-slot-row{top:auto}
+.es-math-scope .f3d-approved-layout .live-slot-row--enemy{top:221px}
+.es-math-scope .f3d-approved-layout .live-slot-row--player{top:283px}
+/* Mazzi e scarti alla profondità e alle proporzioni del tavolo approvato. */
+.es-math-scope .f3d-approved-layout .live-deck.f3d-approved-discard{
+ top:508px;left:14px;width:80px;height:99px;
+ box-shadow:0 5px 5px #000e,inset 0 0 9px #2acbff55,0 0 11px #17c7ffaa
+}
+.es-math-scope .f3d-approved-layout .live-deck.f3d-approved-draw{
+ top:506px;right:12px;width:78px;height:100px;
+ box-shadow:0 5px 4px #000c,0 0 9px #b447f888
+}
+.es-math-scope .f3d-approved-layout .f3d-weapon-card-slots{top:532px}
+/* Le 7 carte sono sullo stesso piano e della stessa misura. */
+.es-math-scope .f3d-approved-layout .live-special-hand{top:622px}
+/* Barre e comandi nell'ultima fascia, come la schermata di riferimento. */
+.es-math-scope .f3d-approved-layout .live-fleet-bar--A{bottom:18px}
+.es-math-scope .f3d-approved-layout .f3d-vital-strip--A{bottom:56px}
+.es-math-scope .f3d-approved-layout .live-abandon,
+.es-math-scope .f3d-approved-layout .f3d-approved-pass{bottom:56px}
+/* ATTACCO NORMALE, REGISTRO e REGOLE sono disponibili in un menu discreto
+   e non coprono più le sette carte nella schermata di gioco. */
+.es-math-scope .f3d-approved-layout .f3d-commands-toggle{
+ position:absolute;right:13px;bottom:88px;z-index:26;
+ width:27px;height:21px;display:flex;align-items:center;justify-content:center;gap:1px;
+ border:1px solid #6fcfff;background:#081d34e8;border-radius:5px;color:#dbfaff;
+ box-shadow:0 0 5px #36bbff77;cursor:pointer
+}
+.es-math-scope .f3d-approved-layout .f3d-commands-toggle>span{font-size:16px;line-height:12px}
+.es-math-scope .f3d-approved-layout .f3d-commands-toggle>small{font-size:6px;color:#9bd8ef}
+.es-math-scope .f3d-approved-layout .f3d-actions{
+ display:none;position:absolute;left:111px;right:13px;bottom:110px;height:auto;
+ flex-wrap:wrap;gap:4px;align-items:center;justify-content:center;
+ padding:6px;box-sizing:border-box;z-index:27;
+ background:#061629f8;border:1px solid #50c8e8;border-radius:7px;box-shadow:0 5px 12px #000e
+}
+.es-math-scope .f3d-approved-layout .f3d-actions.f3d-actions-open{display:flex}
+.es-math-scope .f3d-approved-layout .f3d-actions button{font-size:8px!important;min-height:24px!important}
+.es-math-scope .f3d-approved-layout .f3d-actions>span{width:100%;text-align:center}
