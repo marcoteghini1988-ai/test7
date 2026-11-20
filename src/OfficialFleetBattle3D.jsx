@@ -54,6 +54,7 @@ import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 import './OfficialLiveBattle3D.css';
 import './OfficialFleetBattle3D.css';
+import './OfficialApprovedBattleHud.css';
 
 const LOADOUT_KEY='eclissi_card_fleet_v1';
 const PHYSICAL_LABELS={engine:'Plancia',weapons:'Arsenale',shieldGenerator:'Generatore',command:'Centralina'};
@@ -242,34 +243,66 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
    ((unit.reserveEscorts||[]).length?' · '+unit.reserveEscorts.length+' in riserva':'')}</span>
  </div>;
 }
+const FLEET_RARITY_FRAMES=Object.freeze({
+ Comune:'#46c9ec',Rara:'#429bff',Epica:'#b66cff',Leggendaria:'#ffc344',Boss:'#ff815f'
+});
+const FLEET_VITAL_DESCRIPTIONS=Object.freeze({
+ bridge:'Plancia: controlla il sistema Personaggio.',
+ weapons:'Arsenale: mantiene operativi gli slot Attacco e il sistema d’armi.',
+ generator:'Generatore: alimenta i sistemi difensivi e le trappole.',
+ command:'Centralina: coordina i sistemi di flotta e i collegamenti.'
+});
+function FleetVitalStrip({side,unit,onInspect}){
+ const parts=unit?.ships?.[0]?.parts||[];
+ const types=[
+  {id:'bridge',name:'Plancia',symbol:'▱'},
+  {id:'weapons',name:'Arsenale',symbol:'⚔'},
+  {id:'generator',name:'Generatore',symbol:'ϟ'},
+  {id:'command',name:'Centralina',symbol:'▦'}
+ ];
+ return <div className={'f3d-vital-strip f3d-vital-strip--'+side}
+  role="group" aria-label={'Stato componenti '+(side==='B'?'avversario':'giocatore')}>
+  {types.map(({id,name,symbol})=>{
+   const part=parts.find(p=>p.id===id);
+   const status=!part?'absent':part.hp<=0||part.destroyed||part.dismantled?'off':'on';
+   const detail=status==='absent'?'non disponibile':status==='off'?'fuori uso':'attivo';
+   return <button type="button" className="f3d-vital" key={id} data-status={status}
+    title={name+' · '+detail+(part?' · '+part.hp+'/'+part.maxHp+' integrità':'')}
+    aria-label={name+' · '+detail} onClick={()=>onInspect?.({id,name,part,status})}>
+    <span className="f3d-vital-icon" aria-hidden="true">{symbol}</span>
+    <span>{name}</span><i className="f3d-vital-led" aria-hidden="true"/>
+   </button>;
+  })}
+ </div>;
+}
 function OriginalFleetBar({side,unit,nickname}){
- const mother=unit.ships[0];
- const modern=unit.ruleset===HP_SYNC_RULESET;
- const max=modern?mother.maxHp:mother.parts.reduce((n,p)=>n+p.maxHp,0);
- const hp=modern?mother.hp:mother.parts.reduce((n,p)=>n+p.hp,0);
- const synchronization=modern?1-activeSynchronizationPenalty(unit,unit.currentPly??0)/100:null;
- const units=[...unit.escorts.slice(0,1).map(e=>({kind:'escort',hp:e.hp,max:e.maxHp,link:e.linked})),
-  {kind:'mother',hp,max,link:modern?synchronization:mother.parts.filter(p=>!p.destroyed).length/mother.parts.length},
-  ...unit.escorts.slice(1,2).map(e=>({kind:'escort',hp:e.hp,max:e.maxHp,link:e.linked}))];
+ const mother=unit.ships[0],escA=unit.escorts?.find(e=>e.slot===0),escB=unit.escorts?.find(e=>e.slot===1);
+ const entries=[escA?{ship:escA,mother:false}:null,{ship:mother,mother:true},
+  escB?{ship:escB,mother:false}:null];
  return <div className={'live-fleet-bar live-fleet-bar--'+side}>
-  <strong>{side==='A'?(nickname||'TU'):'AVVERSARIO'}</strong>
-  <div className="live-units">{units.map((u,i)=><div key={i}
-   className={'live-unit'+(u.kind==='mother'?' live-unit--mother':'')}
-   title={u.kind==='mother'?(modern?'HP nave madre e sincronizzazione':'Integrità dei componenti vitali'):'Resistenza scudiera e collegamento'}>
-   <span>{u.kind==='mother'?'MADRE':'SCUDIERA'}</span>
-   <i className="live-unit-health"><b style={{width:pct(u.hp,u.max)+'%'}}/></i>
-   <i className="live-unit-shield"><b style={{
-    width:(typeof u.link==='number'?u.link*100:u.link?100:0)+'%'}}/></i>
-  </div>)}</div>
+  <strong className="f3d-player-label" title={nickname||''}>{nickname||'CPU'}</strong>
+  <div className="live-units">{entries.map((entry,i)=>{
+   if(!entry)return <span className="f3d-hp-empty" key={i}/>;
+   const {ship,mother:isMother}=entry,max=ship.maxHp||1,hp=Math.max(0,ship.hp||0);
+   const rarity=isMother?(ship.rarita||ship.rarity||unit.motherCardRarity):
+    (ship.supportRarity||ship.rarity||'Comune');
+   const frame=FLEET_RARITY_FRAMES[rarity]||FLEET_RARITY_FRAMES.Comune;
+   return <div key={i} className={'live-unit'+(isMother?' live-unit--mother':'')}
+    data-rarity={rarity} style={{'--rarity-frame':frame}}
+    title={(ship.name||'Navicella')+' · '+hp+'/'+max+' HP · '+rarity}>
+    <span className="f3d-ship-name">{ship.name||'Navicella'}</span>
+    <i className="live-unit-health"><b style={{width:pct(hp,max)+'%'}}/><em>{hp}/{max}</em></i>
+   </div>;
+  })}</div>
  </div>;
 }
 function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
- const labels=['PERS.','DIF.','TRAPP.','ATT.','ATT.','ATT.'];
+ const labels=['PERS.','DIF.','TRAPP.','ATT.','ATT.','ENERGIA'];
  return <div className={'live-slot-row live-slot-row--'+(side==='A'?'player':'enemy')}>
   {contents.map((entry,i)=>{
    const type=entry?.id,covered=!!entry?.hidden;
    const parts=unit?.ships?.[0]?.parts||[];
-   const controller=i===0?(parts.some(p=>p.id==='bridge')?'bridge':'generator'):i<=2?'generator':'weapons';
+   const controller=i===0?(parts.some(p=>p.id==='bridge')?'bridge':'generator'):i<=2||i===5?'generator':'weapons';
    const offline=parts.some(p=>p.id===controller&&(p.hp<=0||p.destroyed));
    const face=!covered&&type?card(type):null;
    const art=covered?OFFICIAL_SPECIAL_FIXED_BACK:!type?null:card(type)?
@@ -279,17 +312,18 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
    return <div key={i} className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
     (entry?' live-slot--occupied':'')+(covered?' live-slot--covered':'')+(offline?' live-slot--offline':'')}
     title={title+(offline?' · Sistema distrutto':'')} data-offline={offline||undefined}
-    data-slot-role={i===0?'personaggio':i===1?'difesa':i===2?'trappola':'attacco'}
+    data-slot-role={i===0?'personaggio':i===1?'difesa':i===2?'trappola':i===5?'energia':'attacco'}
      data-family={covered?'defense':type?cardRole(type):undefined}
      data-rarity={face?exclusiveRarityAtLevel(face,unit?.ships?.[0]?.level):undefined}>
     {art?<img className="f3d-slot-art" src={art} alt="" draggable={false}/>:
-     <span className={face?'f3d-card-fallback':undefined}>{face?(face.nome||face.name):['♙','◇','◈','✧','✧','✧'][i]}</span>}
+     <span className={face?'f3d-card-fallback':undefined}>{face?(face.nome||face.name):['♙','◇','◈','✧','✧','ϟ'][i]}</span>}
     {covered?<>
      <small className="live-slot-role">{entry.pending?'DA POSARE':'COPERTA'}</small>
      {side==='A'&&type&&<button type="button" className="f3d-trap-inspect"
       aria-label="Consulta la tua trappola coperta"
       onClick={()=>inspectTrap?.({trapId:type,pending:entry.pending})}/>}
     </>:!type&&<small className="live-slot-role">{labels[i]}</small>}
+     {(entry?.stackCount||0)>1&&<small className="f3d-slot-count" title={'Carte sovrapposte: '+entry.stackCount}>{entry.stackCount}</small>}
    </div>;
   })}
  </div>;
@@ -332,7 +366,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
  </button>;
 }
 export default function OfficialFleetBattle3D({
- nickname='Comandante',gameMode='campaign',sectorNumber=1,displaySector='',
+ nickname='Comandante',opponentNickname='',gameMode='campaign',sectorNumber=1,displaySector='',
  bossPlanetId=null,bossSectorLevel=null,onResult,onExit
 }){
  const opts={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel};
@@ -956,7 +990,7 @@ export default function OfficialFleetBattle3D({
  const secondsLeft=Math.max(0,Math.ceil((battle.deadlineMs-now)/1000));
  const myTurn=battle.turn==='A';
  return <div className="es-math-scope live-viewport">
-  <div className="es-root official-duel-3d live-root f3d-original-arena"
+  <div className="es-root official-duel-3d live-root f3d-original-arena f3d-approved-layout"
    style={{transform:'translate(-50%,-50%) scale('+scale+')',
     '--live-special-back':'url("'+OFFICIAL_SPECIAL_FIXED_BACK+'")'}}>
    <div className="space-back metal-arena live-background" aria-hidden="true"
@@ -966,7 +1000,8 @@ export default function OfficialFleetBattle3D({
     style={{'--f3d-terrain-image':TERRAIN_CATALOG[terrain].kind==='elemental'?
      'radial-gradient(ellipse at center, rgba(43,112,170,.18), transparent 75%)':
      'url("/assets/fleet-terrain-scenes/'+terrain+'.svg")'}}/>}
-   <OriginalFleetBar side="B" unit={enemy}/>
+   <OriginalFleetBar side="B" unit={enemy} nickname={opponentNickname||battle.bossName||(['campaign','adventure'].includes(gameMode)?'CPU':'AVVERSARIO')}/>
+    <FleetVitalStrip side="B" unit={enemy} onInspect={vital=>setHelp({vital})}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
     selectedTarget={actualTarget} onSelectTarget={setSelectedTarget}
     canTarget={!ended&&myTurn&&!(battle.ruleset===HP_SYNC_RULESET&&supportTargets.length>1&&!bypass)} ply={battle.ply}
@@ -1803,7 +1838,8 @@ export default function OfficialFleetBattle3D({
    </div>}
    {!ended&&<button type="button" className="live-abandon" onClick={leave}
     aria-label="Abbandona la battaglia"><span aria-hidden="true">←</span> ABBANDONA</button>}
-   <OriginalFleetBar side="A" unit={player} nickname={nickname}/>
+   <FleetVitalStrip side="A" unit={player} onInspect={vital=>setHelp({vital})}/>
+    <OriginalFleetBar side="A" unit={player} nickname={nickname}/>
    {message&&<div className="live-action-notice f3d-notice" role="status"
     key={lastFx?.nonce||message}>{message}</div>}
    {trapReveal&&<TrapReveal key={'trap-'+trapReveal.nonce} event={trapReveal}/>}
@@ -1816,7 +1852,11 @@ export default function OfficialFleetBattle3D({
    </div>}
    {help&&<div className="f3d-escort-overlay" role="dialog" aria-label={help.rules?'Regole delle carte':help.boss?'Abilità del boss':help.trapId?'La tua trappola coperta':help.machine?'Macchina d’assalto':help.module?'Modulo montato':'Abilità scudiera'}>
     <button type="button" onClick={()=>setHelp(null)} aria-label="Chiudi">×</button>
-    {help.rules?<>
+    {help.vital?<>
+      <strong>{help.vital.name}</strong>
+      <p>{FLEET_VITAL_DESCRIPTIONS[help.vital.id]}</p>
+      <small>{help.vital.status==='absent'?'Non installato':(help.vital.status==='off'?'FUORI USO':'ATTIVO')+' · '+help.vital.part?.hp+'/'+help.vital.part?.maxHp+' integrità'}</small>
+     </>:help.rules?<>
      <strong>Regole delle carte</strong>
      {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description||TERRAIN_CATALOG[terrain]?.effectText}</p>}
      {SIMPLE_RULES.map(rule=><p key={rule}>{rule}</p>)}
