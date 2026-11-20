@@ -403,6 +403,8 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
  const familyGlyph=isEnergy?FLEET_ELEMENTS[def.effectSpec.elementId]?.symbol||'ϟ':
   {attack:'⚔',defense:'⬡',trap:'◈',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
  const name=def?.nome||def?.name||type;
+ const categoryLabel={attack:'ATTACCO',defense:'DIFESA',trap:'TRAPPOLA',character:'PERSONAGGIO',
+  terrain:'TERRENO',energy:'ENERGIA',support:'SUPPORTO',control:'CONTROLLO'}[role]||'SPECIALE';
  const art=type&&def?cardFacePath(type,grade):officialSpecialArtPath(type);
  const fallbackImages={
  attack:'/assets/special-cards/shot-ion.png',
@@ -431,7 +433,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
     }
    }}/>
   <span className="live-card-emblem">{familyGlyph}</span>
-  <span className="live-card-rarity">{rarity}</span>
+  <span className="live-card-rarity" title={'Rarità '+rarity}>{categoryLabel}</span>
   <span className="live-card-caption"><b>{name}</b>
    <small>{description}</small></span>
  </button>;
