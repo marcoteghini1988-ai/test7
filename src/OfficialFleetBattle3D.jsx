@@ -344,16 +344,6 @@ function TrapReveal({event}){
   </div>
  </div>;
 }
-const APPROVED_CARD_FALLBACK=Object.freeze({
- attack:'/assets/special-cards/shot-ion.png',
- defense:'/assets/special-cards/tactical-cover.png',
- trap:'/assets/special-cards/tactic-reactive.png',
- character:'/assets/special-cards/module-card-planet_char_1.png',
- terrain:'/assets/special-cards/tactic-vulnerability-rift.png',
- energy:'/assets/special-cards/shot-ion.png',
- support:'/assets/special-cards/support-shield-repair.png',
- control:'/assets/special-cards/tactic-suppress.png'
-});
 function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,motherLevel=1,unavailableReason=''}){
  const def=card(type);
  const rarity=exclusiveRarityAtLevel(def,motherLevel);
@@ -365,9 +355,18 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
   {attack:'⚔',defense:'⬡',trap:'◈',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
  const name=def?.nome||def?.name||type;
  const art=type&&def?cardFacePath(type,grade):officialSpecialArtPath(type);
- const [brokenArt,setBrokenArt]=useState(null);
- const fallbackArt=APPROVED_CARD_FALLBACK[role]||APPROVED_CARD_FALLBACK.support;
- const displayArt=art&&brokenArt!==art?art:fallbackArt;
+ const fallbackImages=({
+ attack:'/assets/special-cards/shot-ion.png',
+ defense:'/assets/special-cards/tactical-cover.png',
+ trap:'/assets/special-cards/tactic-reactive.png',
+ character:'/assets/special-cards/module-card-planet_char_1.png',
+ terrain:'/assets/special-cards/tactic-vulnerability-rift.png',
+ energy:'/assets/special-cards/shot-ion.png',
+ support:'/assets/special-cards/support-shield-repair.png',
+ control:'/assets/special-cards/tactic-suppress.png'
+};
+ const fallbackArt=fallbackImages[role]||fallbackImages.support;
+ const displayArt=art||fallbackArt;
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
   style={{'--special-angle':offset*3+'deg','--special-drop':offset**2*1.4+'px'}}
@@ -377,7 +376,11 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
   aria-disabled={!!unavailableReason||disabled}
   aria-pressed={selected} onClick={onClick}>
   <img src={displayArt} alt="" draggable={false}
-   onError={()=>{if(art&&displayArt===art)setBrokenArt(art);}}/>
+   onError={event=>{
+    if(art&&event.currentTarget.getAttribute('src')!==fallbackArt){
+     event.currentTarget.src=fallbackArt;
+    }
+   }}/>
   <span className="live-card-emblem">{familyGlyph}</span>
   <span className="live-card-rarity">{rarity}</span>
   <span className="live-card-caption"><b>{name}</b>
