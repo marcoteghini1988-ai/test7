@@ -238,7 +238,8 @@ test('Native new card fronts expose complete names and effects without invalid i
  for(const id of ['prog-bypass','weapon-memory-plasma','weapon-sequence-1','prog-fusion-l04']){
   const html=renderToStaticMarkup(React.createElement(Hand,{type:id,index:0,offset:0,selected:true,onClick:()=>{}}));
   assert.ok(html.includes(card(id).nome||card(id).name),id);
-  assert.doesNotMatch(html,/undefined|src="null"|src=""|<img/,id);
+  assert.doesNotMatch(html,/undefined|src="null"|src=""/,id);
+  assert.match(html,/<img[^>]+src="\\/assets\\/special-cards\\//,id);
   const label=Hand({type:id,index:0,offset:0}).props['aria-label'];
   assert.ok(label.includes(describeEffect(card(id))),id);
  }
