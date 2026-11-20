@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/collaudo-browser-mobile.yml'
       - 'src/OfficialFleetBattle3D.jsx'
+      - 'src/OfficialApprovedBattleHud.css'
       - 'src/ShipCollectionPanels.jsx'
       - 'src/SupportHangarPanel.jsx'
       - 'src/ShipPresentation.jsx'
@@ -80,6 +81,9 @@ jobs:
                 assert.ok(await page.locator('.live-fighter--player').count()>0,'la madre del giocatore deve comparire');
                 assert.ok(await page.locator('.live-fighter--enemy').count()>0,'la madre avversaria deve comparire');
                 await page.screenshot({path:dir+'/01-prima-battaglia.png',fullPage:true,animations:'disabled'});
+                const jpeg=await page.screenshot({type:'jpeg',quality:60,fullPage:true,animations:'disabled'});
+                console.log('APPROVED_BATTLE_VISUAL_JPEG='+jpeg.toString('base64'));
+
                 const pass=page.getByRole('button',{name:'PASSA',exact:true});
                 await pass.click({timeout:6500});
                 await page.waitForTimeout(700);
