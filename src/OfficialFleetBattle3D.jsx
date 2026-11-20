@@ -344,16 +344,30 @@ function TrapReveal({event}){
   </div>
  </div>;
 }
+const APPROVED_CARD_FALLBACK=Object.freeze({
+ attack:'/assets/special-cards/shot-ion.png',
+ defense:'/assets/special-cards/tactical-cover.png',
+ trap:'/assets/special-cards/tactic-reactive.png',
+ character:'/assets/special-cards/module-card-planet_char_1.png',
+ terrain:'/assets/special-cards/tactic-vulnerability-rift.png',
+ energy:'/assets/special-cards/shot-ion.png',
+ support:'/assets/special-cards/support-shield-repair.png',
+ control:'/assets/special-cards/tactic-suppress.png'
+});
 function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,motherLevel=1,unavailableReason=''}){
  const def=card(type);
  const rarity=exclusiveRarityAtLevel(def,motherLevel);
  const description=def?describeEffect(def,grade):'Carta tattica';
-  const role=cardRole(type)||'support';
-  const familyGlyph=def?.effectSpec?.type==='energy'?FLEET_ELEMENTS[def.effectSpec.elementId]?.symbol:
-  {attack:'⚔',defense:'⬡',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
+ const isEnergy=def?.effectSpec?.type==='energy'||def?.kind==='energy';
+ const isTrap=def?.effectSpec?.type==='trap'||def?.kind==='trap';
+ const role=isEnergy?'energy':isTrap?'trap':cardRole(type)||'support';
+ const familyGlyph=isEnergy?FLEET_ELEMENTS[def.effectSpec.elementId]?.symbol||'ϟ':
+  {attack:'⚔',defense:'⬡',trap:'◈',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
  const name=def?.nome||def?.name||type;
- const art=!type?null:card(type)?
-     cardFacePath(type,grade):officialSpecialArtPath(type);
+ const art=type&&def?cardFacePath(type,grade):officialSpecialArtPath(type);
+ const [brokenArt,setBrokenArt]=useState(null);
+ const fallbackArt=APPROVED_CARD_FALLBACK[role]||APPROVED_CARD_FALLBACK.support;
+ const displayArt=art&&brokenArt!==art?art:fallbackArt;
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
   style={{'--special-angle':offset*3+'deg','--special-drop':offset**2*1.4+'px'}}
@@ -362,14 +376,15 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
   aria-label={name+' · '+description+(unavailableReason?' · '+unavailableReason:'')}
   aria-disabled={!!unavailableReason||disabled}
   aria-pressed={selected} onClick={onClick}>
-  {art?<img src={art} alt="" draggable={false}/>:
-   <span className="live-special-art f3d-mechanic-art">{familyGlyph}</span>}
+  <img src={displayArt} alt="" draggable={false}
+   onError={()=>{if(art&&displayArt===art)setBrokenArt(art);}}/>
   <span className="live-card-emblem">{familyGlyph}</span>
   <span className="live-card-rarity">{rarity}</span>
   <span className="live-card-caption"><b>{name}</b>
    <small>{description}</small></span>
  </button>;
 }
+
 export default function OfficialFleetBattle3D({
  nickname='Comandante',opponentNickname='',gameMode='campaign',sectorNumber=1,displaySector='',
  bossPlanetId=null,bossSectorLevel=null,onResult,onExit
