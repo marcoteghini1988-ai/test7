@@ -1841,7 +1841,7 @@ export default function OfficialFleetBattle3D({
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
-   <button type="button" className="f3d-approved-pass"
+   <button type="button" className="f3d-approved-pass" aria-label="PASSA"
     disabled={ended||!myTurn||!!targetChoice} onClick={passTurn}>❯❯ PASSA</button>
    {targetChoice&&myTurn&&!ended&&<div className="f3d-support-target-choice" role="dialog"
     aria-label="Scegli quale navicella di supporto nemica colpire" aria-modal="true">
