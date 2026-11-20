@@ -1073,7 +1073,7 @@ export default function OfficialFleetBattle3D({
     style={{'--f3d-terrain-image':TERRAIN_CATALOG[terrain].kind==='elemental'?
      'radial-gradient(ellipse at center, rgba(43,112,170,.18), transparent 75%)':
      'url("/assets/fleet-terrain-scenes/'+terrain+'.svg")'}}/>}
-   <OriginalFleetBar side="B" unit={enemy} nickname={opponentNickname||battle.bossName||(['campaign','adventure'].includes(gameMode)?'CPU':'AVVERSARIO')}/>
+   <OriginalFleetBar side="B" unit={enemy} nickname={opponentNickname||battle.bossName||enemy.ships?.[0]?.name||'Avversario'}/>
     <FleetVitalStrip side="B" unit={enemy} onInspect={vital=>setHelp({vital})}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
     selectedTarget={actualTarget} onSelectTarget={setSelectedTarget}
