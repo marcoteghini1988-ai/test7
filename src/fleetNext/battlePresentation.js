@@ -16,13 +16,23 @@ export function projectFleetSlots(side,chosenCards=[],owner='A',viewer='A'){
   const index=entry.hidden||isTrapCard(card(entry.id))?2:1;
   if(!slots[index])slots[index]=visible(entry.id,index===2);
  });
- (side.attackSlots||[]).slice(0,3).forEach((id,i)=>{if(id)slots[i+3]=visible(id);});
+ // Due slot Attacco e uno Energia; la pila effettiva resta illimitata.
+ // Il terzo Attacco esistente si sovrappone al secondo slot senza cambiare le regole.
+ const attacks=(side.attackSlots||[]).filter(Boolean);
+ attacks.slice(0,2).forEach((id,i)=>{slots[i+3]=visible(id);});
+ if(attacks.length>2&&slots[4])slots[4]={...slots[4],stackCount:attacks.length-1};
+ const energyPile=side.energyPile||[];
+ const lastEnergy=energyPile[energyPile.length-1];
+ const energyId=typeof lastEnergy==='string'?lastEnergy:lastEnergy?.id;
+ if(energyId)slots[5]={...visible(energyId),stackCount:energyPile.length};
  for(const id of chosenCards){
-  const role=cardRole(id);
-  const positions=role==='character'?[0]:role==='defense'?[isTrapCard(card(id))?2:1]:
-   role==='terrain'||card(id)?.effectSpec?.type==='deployMachine'?[]:[3,4,5];
+  const definition=card(id),role=cardRole(id);
+  const energy=definition?.effectSpec?.type==='energy';
+  const positions=energy?[5]:role==='character'?[0]:role==='defense'?[isTrapCard(definition)?2:1]:
+   role==='terrain'||definition?.effectSpec?.type==='deployMachine'?[]:[3,4];
   const index=positions.find(i=>!slots[i]);
-  if(index!==undefined)slots[index]=visible(id,isTrapCard(card(id)),true);
+  if(index!==undefined)slots[index]=visible(id,isTrapCard(definition),true);
+  else if(energy&&slots[5])slots[5]={...slots[5],stackCount:(slots[5].stackCount||1)+1};
  }
  return slots;
 }
