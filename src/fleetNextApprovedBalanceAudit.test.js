@@ -219,7 +219,7 @@ test('Matrice esplorativa PvP con mazzi da 40, 2 supporti e carte approvate, sen
  assert.ok(reports.every(r=>r.seconds>0&&r.turns<=105));
  // Non imporre a tutti i mazzi lo stesso ritmo: i casi fuori range
  // sono dati diagnostici, non un difetto di regole.
- assert.equal(FLEET_PACING_WINDOWS.pvp.targetSeconds,300);
+ assert.equal(FLEET_PACING_WINDOWS.pvp.targetSeconds,330);
  console.log('BALANCE_APPROVED_CARDS_PVP='+JSON.stringify(reports));
 });
 
@@ -228,6 +228,6 @@ test('Diagnosi boss con carte approvate e flotta, senza modificare Terreni/Perso
   simulate('R02','L01',{bossId:17,seed:3392})];
  assert.equal(reports.length,2);
  assert.ok(reports.every(r=>r.turns>0));
- assert.equal(FLEET_PACING_WINDOWS.boss.targetSeconds,540);
+ assert.equal(FLEET_PACING_WINDOWS.boss.targetSeconds,345);
  console.log('BALANCE_APPROVED_CARDS_BOSS='+JSON.stringify(reports));
 });
