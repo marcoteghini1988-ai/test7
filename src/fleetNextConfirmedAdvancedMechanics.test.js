@@ -40,3 +40,69 @@ test('Ago: con terreno ghiaccio 2 supporti e madre perforata con somma dei colpi
  assert.deepEqual(plan.map(x=>x.target.kind),['escort','escort','part']);
  assert.equal(plan[2].ignoreOrdinaryDefenses,true);
 });
+import {createFleetNextBattle,resolveFleetNextTurn} from './fleetNext/combat.js';
+import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
+import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
+function simulation(withSupports=false){
+ const supports=withSupports?SUPPORT_CATALOG.slice(0,2).map((s,i)=>({
+  supportId:s.id,instanceId:'confirmed-weapon-'+i,slot:i,rarita:'Leggendaria'
+ })):[];
+ const b=createFleetNextBattle({shipA:'C01',shipB:'C01',
+  raritaA:'Leggendaria',raritaB:'Leggendaria',mode:'pvp',
+  supportRosterA:[],supportRosterB:supports,ruleset:HP_SYNC_RULESET,
+  deckA:[],deckB:[],seed:20411,nowMs:0});
+ for(const s of Object.values(b.sides)){
+  s.hand=[];s.deck=Array(25).fill('gen-216');s.discard=[];
+ }
+ b.sides.B.ships[0].hp=5000;b.sides.B.ships[0].maxHp=5000;
+ return b;
+}
+function mockProfile(b,id,element,profile,turns=1){
+ // HP sintetici usati esclusivamente dal test, MAI assegnati alle vere carte.
+ b.sides.A.machines=[{id:'machine:test-confirmed',name:id,slot:0,
+  sourceCardId:id,source:'test',hp:1,maxHp:1,power:1,
+  damageMode:'designed-shot',weaponElementId:element,
+  weaponProfile:profile,deployedPly:b.ply,untilPly:b.ply+2*turns,
+  destroyed:false,disabledUntilPly:0,jammedUntilPly:0}];
+}
+function pass(b,who){
+ assert.equal(b.turn,who);
+ b.sides[who].hand=[];
+ const r=resolveFleetNextTurn(b,who,{pass:true,cards:[]},b.turnStartedAtMs+1000);
+ assert.equal(r.ok,true,r.reason);
+ return r;
+}
+test('Motore HP: profilo Mortaio completo spara 1 base + 2 aggiuntivi indipendenti',()=>{
+ const b=simulation();
+ b.sides.A.energyPile=['energy-plasma','energy-plasma',
+  {id:'energy-plasma-r',elementId:'plasma',remaining:2},'energy-ionic'];
+ b.sides.A.elementalCharges={plasma:4,ionic:1};
+ mockProfile(b,'weapon-designed-plasma-mortaio-magmatico','plasma',
+  {pattern:'magma-mortar',baseDamage:9,extraDamage:4,maxExtraShots:2,ammoMode:'per-charge'},3);
+ const r=pass(b,'A');
+ const e=r.events.find(e=>e.kind==='weapon-designed-shot'&&
+  e.cardId==='weapon-designed-plasma-mortaio-magmatico');
+ assert.ok(e);assert.equal(e.hitCount,3);
+ assert.deepEqual(e.impacts.map(x=>x.nominalDamage),[9,4,4]);
+ assert.ok(e.actualDamage>0);
+ assert.deepEqual(r.battle.sides.A.energyPile,
+  [{id:'energy-plasma-r',elementId:'plasma',remaining:2},'energy-ionic']);
+ assert.equal(r.battle.sides.A.elementalCharges.plasma,2);
+ assert.equal(r.shot.damage>0,true);
+});
+test('Motore HP: Ago sintetico colpisce 2 supporti; con Terreno Ghiaccio anche la madre',()=>{
+ for(const ice of [false,true]){
+  const b=simulation(true);
+  if(ice)b.terrain={id:'ET-CRYOGENIC-ATT-C',cardId:'ET-CRYOGENIC-ATT-C',
+   owner:'A',source:'player',startedPly:0,expiresPly:null};
+  mockProfile(b,'weapon-designed-cryogenic-ago-inverno-nero','cryogenic',
+   {pattern:'ice-needle',supportDamage:7,terrainSupportDamage:10});
+  const r=pass(b,'A');
+  const e=r.events.find(e=>e.kind==='weapon-designed-shot'&&
+   e.cardId==='weapon-designed-cryogenic-ago-inverno-nero');
+  assert.ok(e);
+  assert.deepEqual(e.impacts.map(x=>x.nominalDamage),ice?[10,10,20]:[7,7]);
+  assert.equal(e.impacts.filter(x=>x.targetKind==='part').length,ice?1:0);
+  assert.ok(e.actualDamage>0);
+ }
+});
