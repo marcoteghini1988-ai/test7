@@ -14,6 +14,8 @@ import {arsenalBonus} from './fleetNext/newCardEffects.js';
 import {NEXT_COMMON_CARDS} from './fleetNext/newCardRegistry.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {STRATEGIC_NO_DRAIN_BALANCE} from './fleetNext/strategicNoDrainBalance.js';
+import {createFleetNextBattle,resolvePreparedFleetTurn,defenseCapacityReason}
+ from './fleetNext/combat.js';
 
 test('Catalogo Difese e Trappole: 21+10 esclusive autentiche, slot separati, nessun Personaggio',()=>{
  const defense=EXCLUSIVE_DESIGNS_120.filter(x=>x.type==='Difesa');
@@ -122,4 +124,57 @@ test('Le 32 Carte Sistema non cambiano i valori di danno stampati sulle 235 Cart
  const resets=NEXT_COMMON_CARDS.filter(c=>c.effectSpec.type==='fieldReset');
  assert.equal(resets.length,1);
  assert.equal(resets[0].id,'sys-black-hole');
+});
+
+test('DEFENSE_DIRECT_COMBAT_20261121: Velo della Corona blocca un colpo reale prenotato, non regala HP',()=>{
+ const b=createFleetNextBattle({shipA:'L01',shipB:'E02',
+  raritaA:'Leggendaria',raritaB:'Leggendaria',
+  supportRosterA:[],supportRosterB:[],deckA:[],deckB:[],
+  ruleset:HP_SYNC_RULESET,newGeneratorCombat:true,
+  strategicNoDeterioration:true,seed:1717,nowMs:0});
+ b.sides.A.hand=['nx-l01-10'];
+ const defense=resolvePreparedFleetTurn(b,'A',
+  {cards:[0],pass:true,targetKind:'part',targetId:'weapons',partId:'weapons'},1000);
+ assert.equal(defense.ok,true,defense.reason);
+ assert.equal(defense.invalidPrepared,undefined,'La Difesa deve essere giocata davvero');
+ assert.ok(defense.battle.sides.A.protections.some(p=>p.id==='nx-l01-10'));
+ const protectedBattle=defense.battle;
+ const control=JSON.parse(JSON.stringify(protectedBattle));
+ control.sides.A.protections=[];
+ control.sides.A.defenses=[];
+ protectedBattle.sides.B.hand=['energy-ionic','energy-ionic'];
+ control.sides.B.hand=['energy-ionic','energy-ionic'];
+ const order={cards:[0,1],pass:false,activateElemental:true,
+  targetKind:'part',targetId:'weapons',partId:'weapons'};
+ const guarded=resolvePreparedFleetTurn(protectedBattle,'B',order,2000);
+ const unguarded=resolvePreparedFleetTurn(control,'B',order,2000);
+ assert.equal(guarded.ok,true,guarded.reason);
+ assert.equal(unguarded.ok,true,unguarded.reason);
+ assert.ok(guarded.events.some(e=>e.kind==='generator-shot'));
+ assert.ok(unguarded.events.some(e=>e.kind==='generator-shot'));
+ const normalDamage=control.sides.A.ships[0].hp-unguarded.battle.sides.A.ships[0].hp;
+ const defendedDamage=protectedBattle.sides.A.ships[0].hp-guarded.battle.sides.A.ships[0].hp;
+ assert.ok(normalDamage>0,'L attacco senza Difesa deve poter colpire');
+ assert.ok(defendedDamage<normalDamage,'La Difesa deve risparmiare HP reali');
+ assert.equal(guarded.battle.sides.A.componentDeteriorationFraction,0);
+ console.log('CARD_FAMILY_DEFENSE_HIT_AUDIT='+JSON.stringify({normalDamage,defendedDamage,
+  prevented:normalDamage-defendedDamage}));
+});
+test('TRAP_DIRECT_COMBAT_20261121: una trappola coperta occupa uno slot e non infligge danni gratuiti',()=>{
+ const b=createFleetNextBattle({shipA:'N00',shipB:'C01',
+  raritaA:'Epica',raritaB:'Epica',supportRosterA:[],supportRosterB:[],
+  deckA:[],deckB:[],ruleset:HP_SYNC_RULESET,newGeneratorCombat:true,
+  strategicNoDeterioration:true,nowMs:0,seed:118});
+ b.sides.A.hand=[FUSION_DENIAL_TRAP.id];
+ const before=b.sides.B.ships[0].hp;
+ const result=resolvePreparedFleetTurn(b,'A',
+  {cards:[0],pass:true,targetKind:'part',targetId:'weapons',partId:'weapons'},1000);
+ assert.equal(result.ok,true,result.reason);
+ assert.equal(result.invalidPrepared,undefined);
+ assert.equal(result.events.some(e=>e.kind==='trap-set'),true);
+ assert.equal(result.battle.sides.A.defenses.filter(d=>d.hidden).length,1);
+ assert.equal(result.battle.sides.B.ships[0].hp,before);
+ const reason=defenseCapacityReason(result.battle.sides.A,1,result.battle.ply,'trap');
+ assert.ok(reason,'Il secondo slot Trappola non esiste');
+ assert.equal(result.battle.sides.A.componentElapsedSeconds,20);
 });
