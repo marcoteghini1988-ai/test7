@@ -128,6 +128,14 @@ test('Tre Energie Fuoco non producono triplo o quadruplo bonus',()=>{
  assert.equal(r.multiplier,2);
 });
 
+test('Un Energia Fuoco di qualsiasi rarità negli scarti attiva il bonus una sola volta',()=>{
+ for(const id of ['energy-plasma','energy-plasma-r','energy-plasma-e','energy-plasma-l']){
+  const r=charge([...ATTACKS,id]);
+  assert.equal(r.energyMatched,true,id);
+  assert.equal(r.damage,120,id);
+ }
+});
+
 test('Energia di altro elemento non raddoppia',()=>{
  const r=charge([...ATTACKS,'energy-ionic','energy-refrigerant']);
  assert.equal(r.damage,60);
