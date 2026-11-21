@@ -21,14 +21,15 @@ const fire=(b,special=false)=>{
  },1000);
 };
 
-test('PvP 4-6 minuti, campagna 5-6, boss 8-10: obiettivi, nessun timer forzato',()=>{
- assert.deepEqual(FLEET_PACING_WINDOWS.pvp,{minSeconds:240,targetSeconds:300,maxSeconds:360});
- assert.deepEqual(FLEET_PACING_WINDOWS.boss,{minSeconds:480,targetSeconds:540,maxSeconds:600});
+test('PvP, campagna e boss: pari livello 5-6 minuti senza timer forzato',()=>{
+ assert.deepEqual(FLEET_PACING_WINDOWS.pvp,{minSeconds:300,targetSeconds:330,maxSeconds:360});
+ assert.deepEqual(FLEET_PACING_WINDOWS.boss,{minSeconds:300,targetSeconds:345,maxSeconds:360});
  const pvp=matchPacingTarget('pvp',null,30);
- assert.deepEqual(pvp.referenceTurns,{min:8,target:10,max:12});
+ assert.deepEqual(pvp.referenceTurns,{min:10,target:11,max:12});
  assert.deepEqual(matchPacingTarget('campaign','boss-01',30).referenceTurns,
-  {min:16,target:18,max:20});
+  {min:10,target:12,max:12});
  assert.equal(pvp.enforcedTimeLimit,false);
+ assert.deepEqual(pvp.typicalTurns,{min:17,target:19,max:20});
  assert.equal(create('C01').pacingTarget.category,'pvp');
  assert.equal(createFleetNextBattle({shipA:'C01',shipB:'L04',bossId:'boss-01',
   mode:'campaign',ruleset:HP_SYNC_RULESET,deckA:[],deckB:[],
