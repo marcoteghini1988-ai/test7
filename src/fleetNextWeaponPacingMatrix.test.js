@@ -221,7 +221,9 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   assert.ok(b.sides.A.ships[0].hp>=0&&b.sides.B.ships[0].hp>=0);
  }
  return {rarity,deck:arch.name,shipA,shipB,seed,model,
-  boss:bossId!=null,seconds:turns*meanTurnMs/1000,
+  boss:bossId!=null,
+  seconds:model==='generator-components-v1'&&b.finishReason?.startsWith('Deterioramento')?
+   b.componentClockSeconds:turns*meanTurnMs/1000,
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
   winner:b.winner||'unfinished',invalid,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
   drainFraction};
