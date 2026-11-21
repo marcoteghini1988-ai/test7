@@ -15,6 +15,8 @@ import {CONFIRMED_WEAPON_CARDS,CONFIRMED_WEAPON_BY_ID} from './confirmedWeaponCa
 import {MULTI_WEAPON_CARDS,MULTI_WEAPON_BY_ID} from './multiWeaponCards.js';
 import {DESIGNED_WEAPON_CARDS,DESIGNED_WEAPON_BY_ID} from './designedWeaponCards.js';
 import {CONFIRMED_TRANSFER_WEAPONS,CONFIRMED_TRANSFER_WEAPON_BY_ID} from './confirmedTransferredWeapons.js';
+import {ALL_WEAPON_CARDS,ALL_WEAPON_BY_ID,WEAPON_BASE_CARDS,EVOLVED_WEAPON_CARDS,
+ weaponNextEvolution} from './weaponRarityEvolutions.js';
 import {SIPHON_ATTACKS,SIPHON_ATTACK_BY_ID} from './siphonAttacks.js';
 import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID,terrainNextRarity} from './elementalTerrainCards.js';
 
@@ -24,11 +26,14 @@ export const NEXT_TEMP_WEAPON_IDS=Object.freeze([]);
 export const NEXT_NEW_WEAPON_CARDS=Object.freeze([...APPROVED_BASE_WEAPONS,
  ...CONFIRMED_WEAPON_CARDS,...MULTI_WEAPON_CARDS,...DESIGNED_WEAPON_CARDS,
  ...CONFIRMED_TRANSFER_WEAPONS]);
-export const NEXT_NEW_WEAPON_BY_ID=Object.freeze(Object.fromEntries(
- NEXT_NEW_WEAPON_CARDS.map(c=>[c.id,c])));
-if(NEXT_NEW_WEAPON_CARDS.length!==69||
- Object.keys(NEXT_NEW_WEAPON_BY_ID).length!==69)
- throw Error('69 Carte Arma nuove non disponibili');
+export const NEXT_WEAPON_COLLECTION_CARDS=ALL_WEAPON_CARDS;
+// L'array storico resta di 69 carte per compatibilita' con i salvataggi.
+// Il registro acquistabile comprende 73 originali e 162 evoluzioni.
+export const NEXT_NEW_WEAPON_BY_ID=ALL_WEAPON_BY_ID;
+export const MAX_WEAPON_INVENTORY_COPIES=12; // distinti dal limite di copie nel mazzo
+if(NEXT_NEW_WEAPON_CARDS.length!==69||WEAPON_BASE_CARDS.length!==73||
+ EVOLVED_WEAPON_CARDS.length!==162||Object.keys(NEXT_NEW_WEAPON_BY_ID).length!==235)
+ throw Error('Progressione delle Carte Arma non disponibile');
 export const NEXT_DECK_STORAGE_KEY='eclissi_next_cards_40_v1';
 export const NEXT_CARD_COSTS=Object.freeze({
  Comune:50,Rara:110,Epica:220,Leggendaria:440
@@ -103,7 +108,8 @@ export function buyNextCommonCard(inventory,id){
  const cost=NEXT_CARD_COSTS[def.rarita];
  if(!Number.isInteger(cost))return {ok:false,reason:'Prezzo non valido'};
  const owned=Math.max(0,Math.floor(inventory?.owned?.[id]||0));
- if(owned>=cardCopyLimit(id))return {ok:false,reason:'Limite massimo di copie già possedute'};
+ if(owned>=(ALL_WEAPON_BY_ID[id]?MAX_WEAPON_INVENTORY_COPIES:cardCopyLimit(id)))
+  return {ok:false,reason:'Limite massimo di copie già possedute'};
  if((inventory?.credits||0)<cost)return {ok:false,reason:'Crediti insufficienti'};
  const next={...inventory,owned:{...inventory.owned,[id]:owned+1},
   credits:inventory.credits-cost};
@@ -129,4 +135,15 @@ export function evolveNextEnergyWithDuplicates(inventory,id){
  return evolveCardByRarityWithDuplicates(inventory,energy,next=>
   ENERGY_CARD_BY_ID[energyIdForRarity(energy.elementId,next)]);
 }
-export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS,...FUSION_DENIAL_TRAPS,...DISCARD_WEAPONS,...TEMP_SUPPORT_WEAPONS,...APPROVED_BASE_WEAPONS,...CONFIRMED_WEAPON_CARDS,...MULTI_WEAPON_CARDS,...DESIGNED_WEAPON_CARDS,...CONFIRMED_TRANSFER_WEAPONS,...SIPHON_ATTACKS,...ELEMENTAL_TERRAIN_CARDS]);
+export function evolveNextWeaponWithDuplicates(inventory,id){
+ const source=ALL_WEAPON_BY_ID[id];
+ if(!source)return {ok:false,reason:'Carta Arma inesistente'};
+ return evolveCardByRarityWithDuplicates(inventory,source,next=>{
+  const destination=weaponNextEvolution(source.id);
+  return destination?.rarita===next?destination:null;
+ });
+}
+
+export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,
+ ...ENERGY_CARDS,...FUSION_SHIP_CARDS,...FUSION_DENIAL_TRAPS,
+ ...ALL_WEAPON_CARDS,...SIPHON_ATTACKS,...ELEMENTAL_TERRAIN_CARDS]);
