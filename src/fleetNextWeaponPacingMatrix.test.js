@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createFleetNextBattle,autoFleetTurn,resolveFleetNextTurn,
- validateFleetTurn,protectingFleetUnits,effectUnavailableReason} from './fleetNext/combat.js';
+ resolvePreparedFleetTurn,validateFleetTurn,protectingFleetUnits,effectUnavailableReason} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {SHIP_RARITIES,combatLevelForRarity} from './fleetNext/shipRarity.js';
 import {activeFleetElements} from './fleetNext/elementalAffinities.js';
@@ -166,7 +166,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   b.componentClockSeconds=0;
  }
  let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0,
-  generatorShots=0,generatorHp=0;
+  generatorShots=0,generatorHp=0,invalidReasons=[];
  const meanTurnMs=17000; // 17s tipici fino alla terza carta/PASSA + animazioni
  while(b.phase==='playing'&&turns<102){
   const who=b.turn;
@@ -176,14 +176,28 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
    // Scenario diagnostico: nessun tiro GRATIS della madre; le armi sparano.
    order={...order,activateElemental:false,pass:true};
   }
-  if(validateFleetTurn(b,who,order)){
+  const invalidReason=validateFleetTurn(b,who,order);
+  if(model==='live-generator'){
+   if(invalidReason){invalid++;invalidReasons.push(invalidReason);}
+  }else if(invalidReason){
    invalid++;order=fallback(b);
-   if(!['current','live-generator'].includes(model))order.pass=true;
+   if(model!=='current')order.pass=true;
   }
-  let r=resolveFleetNextTurn(b,who,order,at);
-  if(!r.ok){invalid++;order=fallback(r.battle);if(!['current','live-generator'].includes(model))order.pass=true;r=resolveFleetNextTurn(r.battle,who,order,at);}
+  let r=model==='live-generator'?resolvePreparedFleetTurn(b,who,order,at):
+   resolveFleetNextTurn(b,who,order,at);
+  if(model==='live-generator'&&r.invalidPrepared&&!invalidReason){
+   invalid++;invalidReasons.push(r.invalidPrepared);
+  }
+  if(!r.ok){
+   invalid++;invalidReasons.push(r.reason);
+   order=fallback(r.battle);
+   if(!['current','live-generator'].includes(model))order.pass=true;
+   r=model==='live-generator'?resolvePreparedFleetTurn(r.battle,who,order,at):
+    resolveFleetNextTurn(r.battle,who,order,at);
+  }
   assert.equal(r.ok,true,shipA+'/'+shipB+'/'+rarity+': '+r.reason);
-  played+=order.cards?.length||0;
+  played+=model==='live-generator'&&r.playedPreparedCards!=null?
+   r.playedPreparedCards:order.cards?.length||0;
   passes+=Number(!!order.pass);
   weaponShots+=r.events.filter(e=>e.kind.startsWith('weapon-')&&
    /shot|cryo|discard|sequence/.test(e.kind)).length;
@@ -230,7 +244,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
    b.finishReason?.startsWith('Deterioramento')?
    b.componentClockSeconds:turns*meanTurnMs/1000,
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
-  winner:b.winner||'unfinished',invalid,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
+  winner:b.winner||'unfinished',invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
   drainFraction};
 }
 function stats(matches){
@@ -426,5 +440,46 @@ test('Partita ufficiale nuova: 24 PvP veri con Generatore e timer integrati',()=
    generatorShots,weaponShots,invalid})=>({rarity,deck,shipA,shipB,
    seconds,winner,generatorShots,weaponShots,invalid}))};
  console.log('WEAPON_PACING_LIVE_GENERATOR='+JSON.stringify(report));
+ assert.equal(cases.length,24);
+});
+
+test('72 PvP nuove regole con vera risoluzione ESEGUI dell IA, semi diversi',()=>{
+ const cases=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,[a,b]] of PRESETS[rarity].entries())
+   for(const shift of [0,47,93,139,211,307])
+    cases.push(simulate(rarity,ARCHETYPES[i],a,b,
+     8903+shift+rIdx(rarity)*179+i*39,null,'live-generator'));
+ const report={overall:stats(cases),
+  byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+   [r,stats(cases.filter(c=>c.rarity===r))])),
+  byDeck:Object.fromEntries(ARCHETYPES.map(a=>
+   [a.name,stats(cases.filter(c=>c.deck===a.name))])),
+  invalidReasons:cases.flatMap(c=>c.invalidReasons.map(reason=>
+   ({rarity:c.rarity,shipA:c.shipA,shipB:c.shipB,reason}))),
+  outliers:cases.filter(c=>c.seconds<300||c.seconds>360||c.draw||c.invalid)
+   .map(({rarity,deck,shipA,shipB,seconds,winner,invalid})=>
+    ({rarity,deck,shipA,shipB,seconds,winner,invalid}))};
+ console.log('WEAPON_PACING_LIVE_72='+JSON.stringify(report));
+ assert.equal(cases.length,72);
+});
+test('24 boss nuove regole con vera risoluzione ESEGUI dell IA, senza Personaggi',()=>{
+ const cases=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,bossId] of [1,8,17].entries())
+   for(const shift of [0,97]){
+    const [a,b]=PRESETS[rarity][i];
+    cases.push(simulate(rarity,ARCHETYPES[1],a,b,
+     9903+shift+rIdx(rarity)*179+i*39,bossId,'live-generator'));
+   }
+ const report={overall:stats(cases),
+  byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+   [r,stats(cases.filter(c=>c.rarity===r))])),
+  invalidReasons:cases.flatMap(c=>c.invalidReasons.map(reason=>
+   ({rarity:c.rarity,shipA:c.shipA,shipB:c.shipB,reason}))),
+  outliers:cases.filter(c=>c.seconds<300||c.seconds>360||c.draw||c.invalid)
+   .map(({rarity,shipA,shipB,seconds,winner,invalid})=>
+    ({rarity,shipA,shipB,seconds,winner,invalid}))};
+ console.log('WEAPON_PACING_LIVE_BOSSES='+JSON.stringify(report));
  assert.equal(cases.length,24);
 });
