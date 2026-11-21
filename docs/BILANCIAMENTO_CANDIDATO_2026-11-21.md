@@ -158,18 +158,22 @@ Con due giocatori simulati che impiegano circa 17 s ciascuno per turno:
 
 Una seconda simulazione, piu vicina ai tempi reali della campagna, usa
 **18,6 s per il giocatore** (scelta e animazioni) e **2,3 s per la CPU**
-(decisione e animazioni):
+(decisione e animazioni). Dal 21/11 la CPU utilizza un vero mazzo
+di 40 carte del catalogo, con Armi ed Energie per ciascun elemento sbloccato:
+questi sono i valori **aggiornati dopo il passaggio al mazzo completo**.
 
 | Rarita | Partite | Durata media |
 |---|---:|---:|
-| Comune | 6 | 252 s |
-| Rara | 6 | 235 s |
-| Epica | 6 | 312 s |
-| Leggendaria | 6 | 331 s |
-| **Totale** | **24** | **282 s** |
+| Comune | 6 | 231 s |
+| Rara | 6 | 218 s |
+| Epica | 6 | 302 s |
+| Leggendaria | 6 | 286 s |
+| **Totale** | **24** | **259 s** |
 
-Solo 10 partite su 24 sono nella finestra 300–360 s; 14 sono terminate per
-danno diretto e 10 per deterioramento. Nessun pareggio.
+Solo **9 partite su 24** sono nella finestra 300–360 s; **15** sono terminate
+per danno diretto e **9** per deterioramento. Si registra un pareggio.
+Il valore precedente di 282 secondi si riferiva al mazzo CPU sintetico di
+collaudo e **non va usato per prendere decisioni sulla campagna reale**.
 
 **CONCLUSIONE DI BILANCIAMENTO:** la media PvP e boss a 17 s per turno e'
 vicina al target, ma **il bilanciamento definitivo delle 235 armi non e'
