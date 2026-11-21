@@ -406,6 +406,7 @@ export function createFleetNextBattle({
    mother.weaponRating=Math.max(0,stats.attackPower-1);
    side.motherCardRarity=rarity;
    if(b.newGeneratorCombat){
+    side.newGeneratorCombat=true;
     const candidate=PACING_BALANCE_CANDIDATE;
     const hp=Math.max(1,Math.round(stats.maxHp*candidate.motherHpMultiplier[rarity]));
     mother.hp=hp;mother.maxHp=hp;
