@@ -22,7 +22,7 @@ test('Catalogo stampa candidato per 235 Armi, senza modificare alcuna carta atti
  assert.equal(WEAPON_BASE_CARDS.length,73);
  assert.equal(WEAPON_PRINT_CANDIDATES.length,235);
  assert.equal(new Set(WEAPON_PRINT_CANDIDATES.map(c=>c.id)).size,235);
- assert.equal(PACING_BALANCE_CANDIDATE.status,'SIMULATED_NOT_LIVE');
+ assert.equal(PACING_BALANCE_CANDIDATE.status,'ACTIVE_NEW_COMBAT_MODE_PENDING_FINAL_BALANCE');
  assert.deepEqual(WEAPON_RARITY_POWER,PACING_BALANCE_CANDIDATE.weaponNominalMultiplier);
  let commonCount=0,diffCount=0;
  for(const source of ALL_WEAPON_CARDS){
