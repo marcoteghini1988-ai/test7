@@ -26,6 +26,7 @@ const machine=()=>({
  baseDamage:DISCARD_WEAPON.effectSpec.baseDamage,
  perDiscardAttack:DISCARD_WEAPON.effectSpec.perDiscardAttack,
  energyMultiplier:DISCARD_WEAPON.effectSpec.energyMultiplier,
+ maxNominalDamage:DISCARD_WEAPON.effectSpec.maxNominalDamage,
  untilPly:2,destroyed:false
 });
 const charge=(own=[],enemy=[])=>{
@@ -73,6 +74,7 @@ test('Registro ufficiale: arma Fuoco, un turno, rarità e acquisto ancora in sos
  assert.equal(DISCARD_WEAPON.effectSpec.baseDamage,10);
  assert.equal(DISCARD_WEAPON.effectSpec.perDiscardAttack,10);
  assert.equal(DISCARD_WEAPON.effectSpec.energyMultiplier,2);
+ assert.equal(DISCARD_WEAPON.effectSpec.maxNominalDamage,120);
  assert.equal(TEMP_WEAPON_DURATION[W],1);
  assert.equal(validateEffectSpec(DISCARD_WEAPON.effectSpec),null);
  assert.equal(describeEffect(DISCARD_WEAPON),DISCARD_WEAPON.effectProposed);
@@ -104,6 +106,20 @@ test('Cinque Attacchi personali e almeno un Energia Fuoco = 120 HP',()=>{
  assert.equal(r.energyMatched,true);
  assert.equal(r.multiplier,2);
  assert.equal(r.damage,120);
+});
+
+test('Finisher bilanciato: gli scarti continuano a contare ma la scarica non supera 120 HP',()=>{
+ const many=Array(25).fill(ATTACKS[0]);
+ const plain=charge(many),boosted=charge([...many,'energy-plasma']);
+ assert.equal(plain.attackCards,25);
+ assert.equal(plain.rawDamage,260);
+ assert.equal(plain.damage,120);
+ assert.equal(boosted.rawDamage,260);
+ assert.equal(boosted.multiplier,2);
+ assert.equal(boosted.damage,120);
+ const b=battle();b.sides.A.discard=[...many,'energy-plasma'];
+ const r=fire(b);
+ assert.equal(event(r).nominalDamage,120);
 });
 
 test('Tre Energie Fuoco non producono triplo o quadruplo bonus',()=>{
