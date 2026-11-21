@@ -3251,7 +3251,7 @@ function resolveModernGeneratorActivation(b,who,order,ctx,events){
    {remainingPhysicalCards:generatorCardCount(side),reason:ready.reason}));
   return;
  }
- const fired=commitGeneratorFiring(side,ready);
+ const fired=commitGeneratorFiring(side,ready,b.ply);
  if(!fired)return;
  ctx.generatorShotDamage=supportSpecialBoost(side,fired.nominalDamage,b.ply);
  ctx.elementalShot=true;
