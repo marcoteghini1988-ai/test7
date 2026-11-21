@@ -1146,3 +1146,57 @@ test('AUDIT_WEAPON_MOTHER_NO_DRAIN: taratura congiunta Carte Arma e Generatore m
  assert.equal(rows.length,5);
  assert.ok(rows.every(x=>x.pvp.n===24&&x.campaign.n===12));
 });
+
+test('AUDIT_WEAPON_MOTHER_CROSSVALIDATE_NO_DRAIN: 72 PvP e 24 boss nuovi semi, armi e madri tarate',()=>{
+ const variants=[
+  {id:'taratura-v2-nodrain',
+   weapon:Object.freeze({Comune:1,Rara:1,Epica:1.7,Leggendaria:1.85}),
+   mother:Object.freeze({Comune:1,Rara:1,Epica:1.25,Leggendaria:1.3}),
+   motherHp:Object.freeze({Comune:1,Rara:1,Epica:1,Leggendaria:1})},
+  {id:'taratura-v2-nodrain-legenda-hp90',
+   weapon:Object.freeze({Comune:1,Rara:1,Epica:1.7,Leggendaria:1.85}),
+   mother:Object.freeze({Comune:1,Rara:1,Epica:1.25,Leggendaria:1.3}),
+   motherHp:Object.freeze({Comune:1,Rara:1,Epica:1,Leggendaria:.90})},
+  {id:'taratura-v2-nodrain-legenda-hp80',
+   weapon:Object.freeze({Comune:1,Rara:1,Epica:1.7,Leggendaria:1.85}),
+   mother:Object.freeze({Comune:1,Rara:1,Epica:1.25,Leggendaria:1.3}),
+   motherHp:Object.freeze({Comune:1,Rara:1,Epica:1,Leggendaria:.80})}
+ ];
+ const rows=[];
+ for(const variant of variants){
+  const pvp=[],campaign=[];
+  for(const rarity of SHIP_RARITIES){
+   const calibration={strategicSecondsPerTurn:20,noDeterioration:true,
+    weaponFactorMultiplier:variant.weapon[rarity],
+    motherGeneratorDamageFactor:variant.mother[rarity],
+    motherHpScale:variant.motherHp[rarity]};
+   for(const [i,[a,b]] of PRESETS[rarity].entries()){
+    for(const shift of [0,43,89,137,219,293])
+     pvp.push(simulate(rarity,ARCHETYPES[i],a,b,
+      20267513+rIdx(rarity)*277+i*79+shift,null,'live-generator',
+      CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration));
+    for(const shift of [0,101])
+     campaign.push(simulate(rarity,ARCHETYPES[1],a,b,
+      20268431+rIdx(rarity)*239+i*53+shift,[1,8,17][i],
+      'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      calibration,'fast-cpu'));
+   }
+  }
+  const stat=matches=>({...stats(matches),
+   winA:matches.filter(x=>x.winner==='A').length,
+   winB:matches.filter(x=>x.winner==='B').length,
+   max:Math.max(...matches.map(x=>x.seconds)),
+   min:Math.min(...matches.map(x=>x.seconds)),
+   win3Intact:matches.filter(x=>x.winnerComponentsAlive===3).length,
+   winSomeIntact:matches.filter(x=>x.winnerComponentsAlive>0).length,
+   roundLimitDraws:matches.filter(x=>x.draw&&/limite.*round/i.test(x.finishReason||'')).length});
+  rows.push({variant:variant.id,parameters:variant,pvp:stat(pvp),campaign:stat(campaign),
+   byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stat(pvp.filter(x=>x.rarity===r))])),
+   campaignRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stat(campaign.filter(x=>x.rarity===r))])),
+   draws:pvp.filter(x=>x.draw).map(x=>({rarity:x.rarity,a:x.shipA,b:x.shipB,seed:x.seed,
+    motherA:x.finalState[0].mother,motherB:x.finalState[1].mother,shots:x.weaponShots,
+    generatorShots:x.generatorShots}))});
+ }
+ console.log('AUDIT_WEAPON_MOTHER_CROSSVALIDATE_NO_DRAIN='+JSON.stringify(rows));
+ assert.ok(rows.every(x=>x.pvp.n===72&&x.campaign.n===24));
+});
