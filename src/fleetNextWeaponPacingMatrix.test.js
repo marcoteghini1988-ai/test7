@@ -24,6 +24,7 @@ import {initializeComponentTimers,advanceTimedComponents,advanceBattleComponentC
 import {PACING_BALANCE_CANDIDATE} from './fleetNext/pacingBalanceCandidate.js';
 import {buildCampaignNpcDeck} from './fleetNext/npcDeck.js';
 import {recycleFleetDiscard} from './fleetNext/deckCycle.js';
+import {activateTerrain} from './fleetNext/terrains.js';
 
 const PRESETS=Object.freeze({
  Comune:[['N00','C01'],['C01','C02'],['C02','C03']],
@@ -199,6 +200,16 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
    side.deck=filtered.slice(7);
   }
  }
+ if(calibration?.initialTerrainMode){
+  const mode=calibration.initialTerrainMode;
+  const homeElement=b.sides.A.ships[0].element;
+  const terrainCard=ELEMENTAL_TERRAIN_CARDS.find(c=>c.rarita===rarity&&
+   c.elementId===homeElement&&c.id.includes('-'+mode+'-'));
+  assert.ok(terrainCard,'Terreno iniziale mancante '+mode+'/'+homeElement+'/'+rarity);
+  const result=activateTerrain(b.terrain,terrainCard.id,b.ply,'A');
+  assert.equal(result.ok,true);
+  b.terrain=result.terrain;
+ }
  // SONDAGGIO_G_2026_11_21 — varianti isolate, NON modificano i valori live.
  // Si applicano al clone iniziale soltanto per misurare conclusioni
  // da danno e da deterioramento nei diversi tempi di giocata.
@@ -258,7 +269,8 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   b.componentClockSeconds=0;
  }
  let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0,
-  generatorShots=0,generatorHp=0,invalidReasons=[];
+  generatorShots=0,generatorHp=0,invalidReasons=[],trapSet=0,trapTriggered=0,
+  terrainActivated=0,defenseAction=0,systemCardsActivated=0;
  const meanTurnMs=17000; // ipotesi diagnostica: 17s medi di scelta+animazioni per turno
  while(b.phase==='playing'&&turns<102){
   const who=b.turn;
@@ -303,6 +315,13 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   if(model==='live-generator')
    generatorShots+=r.events.filter(e=>e.kind==='generator-shot').length;
   blocks+=r.events.filter(e=>e.kind==='block').length;
+  trapSet+=r.events.filter(e=>e.kind==='trap-set').length;
+  trapTriggered+=r.events.filter(e=>e.kind==='trap-reveal').length;
+  terrainActivated+=r.events.filter(e=>e.kind==='terrain-activate').length;
+  defenseAction+=r.events.filter(e=>e.kind==='card'&&e.cardId&&
+   cardRole(e.cardId)==='defense').length;
+  systemCardsActivated+=r.events.filter(e=>e.kind==='system-card-apply'||
+   e.kind==='system-activate').length;
   damage+=r.shot?.damage||0;
   b=r.battle;turns++;
   if(calibration?.recoverBlockedHand&&!calibration.integratedNoDeterioration&&
@@ -375,6 +394,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
   winner:b.winner||'unfinished',finishReason:b.finishReason||null,
   invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
+  trapSet,trapTriggered,terrainActivated,defenseAction,systemCardsActivated,
   handRecoveries:Object.fromEntries(['A','B'].map(who=>[who,b.sides[who].handRecoveries||0])),
   lastLog:b.phase==='finished'&&b.winner==='draw'?(b.log||[]).slice(-20):[],
   drainFraction,
@@ -1314,4 +1334,34 @@ test('AUDIT_STRATEGIC_LIVE_SPEED: parita esatti semi con velocita 6 e 26 secondi
  }
  for(const x of groups.slice(1))assert.equal(x.signature,groups[0].signature,x.timing);
  console.log('AUDIT_STRATEGIC_LIVE_SPEED='+JSON.stringify(groups.map(({signature,...other})=>other)));
+});
+
+test('AUDIT_TERRAIN_MIRROR_20261121: offensivo, difensivo, equilibrato, 48 specchi per scenario',()=>{
+ const modes=[null,'ATT','DEF','EQ'];
+ const report=[];
+ for(const mode of modes){
+  const matches=[];
+  for(const rarity of SHIP_RARITIES)
+   for(const [i,[shipId]] of PRESETS[rarity].entries())
+    for(const shift of [0,61,127,211])
+     matches.push(simulate(rarity,ARCHETYPES[1],shipId,shipId,
+      20269421+rIdx(rarity)*271+i*83+shift,null,'live-generator',
+      CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      {integratedNoDeterioration:true,initialTerrainMode:mode}));
+  const metrics=cases=>({...stats(cases),
+   winsA:cases.filter(x=>x.winner==='A').length,
+   winsB:cases.filter(x=>x.winner==='B').length,
+   min:Math.min(...cases.map(x=>x.seconds)),
+   max:Math.max(...cases.map(x=>x.seconds)),
+   trapSet:cases.reduce((n,m)=>n+m.trapSet,0),
+   trapTriggered:cases.reduce((n,m)=>n+m.trapTriggered,0),
+   terrainActivated:cases.reduce((n,m)=>n+m.terrainActivated,0),
+   defenseAction:cases.reduce((n,m)=>n+m.defenseAction,0),
+   systemCardsActivated:cases.reduce((n,m)=>n+m.systemCardsActivated,0)});
+  report.push({mode:mode||'neutral',pvp:metrics(matches),
+   byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,metrics(matches.filter(x=>x.rarity===r))]))});
+ }
+ console.log('AUDIT_TERRAIN_MIRROR_20261121='+JSON.stringify(report));
+ assert.ok(report.every(x=>x.pvp.n===48));
+ assert.ok(report.every(x=>x.pvp.finishesByComponentDrain===0));
 });
