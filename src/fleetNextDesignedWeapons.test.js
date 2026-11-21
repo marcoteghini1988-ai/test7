@@ -87,7 +87,7 @@ test('Lanciafiamme: supporti + nave madre, 14 HP nominali ognuna',()=>{
  assert.ok(e.impacts.some(h=>h.targetKind==='part'));
 });
 test('Condensatore: livelli nominali 18, 30, 42 con zero, una o due Energie Fuoco',()=>{
- const c=named('Condensatore Pirobalistico');
+ const c=named('Cannone Condensatore Pirobalistico');
  for(const [pile,expected] of [[[],18],[['energy-plasma'],30],[['energy-plasma','energy-plasma-r'],42]]){
   const b=battle();b.sides.A.energyPile=[...pile];
   const r=play(b,'A',[c.id]),e=shots(r)[0];
@@ -104,7 +104,7 @@ test('Ariete Acqua: 22/36/48 HP nominali in base alla pila, senza alterare l Ene
  }
 });
 test('Compressore Ghiaccio: 18+10 per carica fino a due; Energia multi-carica inclusa',()=>{
- const c=named('Compressore Criogenico a Impulso');
+ const c=named('Cannone a Compressione Criogenica d’Impulso');
  const b=battle();b.sides.A.energyPile=[{id:'energy-cryogenic-r',elementId:'cryogenic',remaining:2}];
  const r=play(b,'A',[c.id]),e=shots(r)[0];
  assert.deepEqual(e.impacts.map(h=>h.nominalDamage),[18,10,10]);
@@ -127,8 +127,8 @@ test('Idrocannone a Doppia Mandata: un colpo per turno proprio, totale due',()=>
  assert.equal(b.sides.A.machines.some(m=>m.sourceCardId===c.id),false);
  assert.equal(shots(play(b,'A')).length,0);
 });
-test('Giudizio del Temporale legge la barra HP massima della nave madre, non gli HP del vitale',()=>{
- const c=named('Giudizio del Temporale'),r=play(battle(),'A',[c.id]),e=shots(r)[0];
+test('Cannone del Giudizio Temporale legge la barra HP massima della nave madre, non gli HP del vitale',()=>{
+ const c=named('Cannone del Giudizio Temporale'),r=play(battle(),'A',[c.id]),e=shots(r)[0];
  assert.equal(e.impacts[0].nominalDamage,1000);
  assert.ok(e.actualDamage>0);
 });
@@ -141,7 +141,7 @@ test('Le quattro vecchie Carte Arma rimangono nel catalogo separato',()=>{
 test('La plancia mostra il danno nominale delle Armi progettate, non zero',()=>{
  for(const [name,expected] of [
   ['Batteria Termica a Tre Ugelli',12],
-  ['Condensatore Pirobalistico',18],
+  ['Cannone Condensatore Pirobalistico',18],
   ['Ariete delle Fosse Abissali',22],
   ['Idrocannone a Doppia Mandata',18]
  ]){
@@ -150,7 +150,7 @@ test('La plancia mostra il danno nominale delle Armi progettate, non zero',()=>{
   assert.ok(berth,name);
   assert.equal(berth.nominalDamage,expected,name);
  }
- const giu=named('Giudizio del Temporale');
+ const giu=named('Cannone del Giudizio Temporale');
  const gameState=play(battle(),'A',[giu.id]).battle;
  const berth=projectMachineBerths(gameState.sides.A,[],0).find(x=>x?.sourceCardId===giu.id);
  assert.equal(berth.damagePercent,20);
