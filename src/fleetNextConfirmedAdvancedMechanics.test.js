@@ -4,13 +4,14 @@ import {PENDING_ADVANCED_WEAPON_RULES,PENDING_ADVANCED_WEAPON_COUNT,pendingWeapo
 import {weaponFiresOnOwnTurn,planIceNeedle,mortarAmmunition,consumeMortarEnergy,planMagmaMortar} from './fleetNext/confirmedAdvancedWeaponMechanics.js';
 import {canSelectNewGeneric,buyNextCommonCard} from './fleetNext/nextDeckLoadout.js';
 import {createFleetInventory} from './fleetNext/collection.js';
-test('21 regole confermate conservate ma senza numeri inventati',()=>{
+test('21 regole confermate preservate con numeri provvisori utilizzabili',()=>{
  assert.equal(PENDING_ADVANCED_WEAPON_COUNT,21);
  for(const r of Object.values(PENDING_ADVANCED_WEAPON_RULES)){
-  const c=card(r.id);assert.ok(c,r.id);assert.equal(c.playable,false,r.id);
-  assert.equal(c.designOnly,true);assert.equal(c.confirmedMechanic,r);
-  assert.equal(canSelectNewGeneric(r.id),false);
-  assert.equal(buyNextCommonCard(createFleetInventory(),r.id).ok,false);
+  const c=card(r.id);assert.ok(c,r.id);assert.equal(c.playable,true,r.id);
+  assert.equal(c.designOnly,false);assert.equal(c.provisionalBalance,true);
+  assert.equal(c.confirmedMechanic,r);
+  assert.equal(canSelectNewGeneric(r.id),true);
+  assert.equal(buyNextCommonCard({...createFleetInventory(),credits:10000},r.id).ok,true);
   assert.match(pendingWeaponReason(r.id),/Parametro non ancora deciso/);
  }
 });
