@@ -210,7 +210,7 @@ export const APPROVED_BASE_WEAPONS=Object.freeze(DESIGNS.map(s=>{
   id:s.id,designId:s.designId,name:s.name,nome:s.name,
   category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
   kind:'support',playable:true,nativeFace:true,rarita:s.rarita,
-  rarityPending:false,acquisitionPending:true,maxCopiesPerDeck:COPIES[s.rarita],
+  rarityPending:false,acquisitionPending:false,maxCopiesPerDeck:COPIES[s.rarita],
   elementId:s.elementId,visualKey:element.vfx,visualSymbol:element.symbol,
   visualBrief:s.visualBrief+' · Modello 3D finale ancora da realizzare.',
   effectSpec:Object.freeze({type:'deployMachine',hp:1,power:0,
