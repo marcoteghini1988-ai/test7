@@ -119,13 +119,7 @@ export function arsenalBonus(side,machine,ply=0,overridePower=null){
  if(first?.id===machine.id&&disabled&&
   (disabled.tier===4||disabled.tier>=2&&
    (ply===disabled.appliedPly||ply===disabled.appliedPly+1)))return 0;
- const nominal=overridePower??machine.power??0;
- // TEST DIAGNOSTICO TEMPORANEO: il profilo nel solo stato della simulazione
- // consente di provare il rapporto tra danni e HP senza cambiare i cataloghi.
- // Rimuovere questa calibrazione prima di congelare i valori da illustrare.
- const auditFactor=Number(side?.__weaponPacingAuditFactor);
- const base=Number.isFinite(auditFactor)&&auditFactor>0?
-  Math.max(1,Math.round(nominal*auditFactor)):nominal;
+ const base=overridePower??machine.power??0;
  // Le armi confermate hanno danni in decine/centinaia di HP:
  // il modificatore dell'Arsenale agisce in percentuale solo nelle partite con rarita'.
  if(hasBalancedMother(side?.ships?.[0])&&
