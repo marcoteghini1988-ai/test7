@@ -359,13 +359,15 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
   winner:b.winner||'unfinished',finishReason:b.finishReason||null,
   invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
+  lastLog:b.phase==='finished'&&b.winner==='draw'?(b.log||[]).slice(-20):[],
   drainFraction,
   finalState:['A','B'].map(who=>({who,
    mother:{id:b.sides[who].ships[0].id,hp:b.sides[who].ships[0].hp,
     maxHp:b.sides[who].ships[0].maxHp},
    escorts:(b.sides[who].escorts||[]).map(e=>({id:e.id,hp:e.hp,maxHp:e.maxHp,
     skill:e.supportSkillId})),
-   handCount:b.sides[who].hand?.length||0,deckCount:b.sides[who].deck?.length||0,
+   handCount:b.sides[who].hand?.length||0,handCards:(b.sides[who].hand||[]).slice(0,15),
+   lastPlayed:b.sides[who].lastPlayed||[],deckCount:b.sides[who].deck?.length||0,
    discardCount:b.sides[who].discard?.length||0,
    energyCards:(b.sides[who].energyPile||[]).length,
    activeMachines:(b.sides[who].machines||[]).filter(x=>x.hp>0&&!x.destroyed).length,
@@ -1195,7 +1197,8 @@ test('AUDIT_WEAPON_MOTHER_CROSSVALIDATE_NO_DRAIN: 72 PvP e 24 boss nuovi semi, a
    campaignRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stat(campaign.filter(x=>x.rarity===r))])),
    draws:pvp.filter(x=>x.draw).map(x=>({rarity:x.rarity,a:x.shipA,b:x.shipB,seed:x.seed,
     motherA:x.finalState[0].mother,motherB:x.finalState[1].mother,shots:x.weaponShots,
-    generatorShots:x.generatorShots}))});
+    generatorShots:x.generatorShots,finalState:x.finalState,
+    recentEvents:x.lastLog}))});
  }
  console.log('AUDIT_WEAPON_MOTHER_CROSSVALIDATE_NO_DRAIN='+JSON.stringify(rows));
  assert.ok(rows.every(x=>x.pvp.n===72&&x.campaign.n===24));
