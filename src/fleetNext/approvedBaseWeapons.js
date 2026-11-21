@@ -6,7 +6,7 @@ const DESIGNS=[
     "id": "weapon-base-ionic-01",
     "designId": "draft-base-ionic-01-20261120",
     "elementId": "ionic",
-    "name": "Pettine Ionico di Vega",
+    "name": "Cannone a Pettine Ionico di Vega",
     "rarita": "Comune",
     "baseDamage": 20,
     "visualBrief": "Cinque archetti elettrici paralleli convergono in un unico proiettile azzurro; esplosione a griglia sottile"
@@ -15,7 +15,7 @@ const DESIGNS=[
     "id": "weapon-base-ionic-02",
     "designId": "draft-base-ionic-02-20261120",
     "elementId": "ionic",
-    "name": "Dardo a Spirale di Tesla",
+    "name": "Lanciadardi a Spirale di Tesla",
     "rarita": "Comune",
     "baseDamage": 24,
     "visualBrief": "Un dardo blu-violetto avvolto da una doppia elica di scintille ruota mentre attraversa il campo"
@@ -24,7 +24,7 @@ const DESIGNS=[
     "id": "weapon-base-ionic-03",
     "designId": "draft-base-ionic-03-20261120",
     "elementId": "ionic",
-    "name": "Sferzatore di Rame Lunare",
+    "name": "Sferzatore Ionico di Rame Lunare",
     "rarita": "Comune",
     "baseDamage": 28,
     "visualBrief": "Una frusta di elettricità color rame si piega a zig-zag e si chiude sul bersaglio in un solo impatto"
@@ -78,7 +78,7 @@ const DESIGNS=[
     "id": "weapon-base-aerial-02",
     "designId": "draft-base-aerial-02-20261120",
     "elementId": "aerial",
-    "name": "Vorticatore a Doppia Turbina",
+    "name": "Cannone Vorticatore a Doppia Turbina",
     "rarita": "Comune",
     "baseDamage": 25,
     "visualBrief": "Due vortici trasparenti controrotanti si fondono davanti alla bocca di fuoco in una raffica unica"
@@ -96,7 +96,7 @@ const DESIGNS=[
     "id": "weapon-base-radiant-01",
     "designId": "draft-base-radiant-01-20261120",
     "elementId": "radiant",
-    "name": "Tracciante di Eliotropio",
+    "name": "Raggio Tracciante di Eliotropio",
     "rarita": "Comune",
     "baseDamage": 22,
     "visualBrief": "Un filo laser dorato si accende tra quattro mirini luminosi e produce un punto di impatto netto"
@@ -105,7 +105,7 @@ const DESIGNS=[
     "id": "weapon-base-radiant-02",
     "designId": "draft-base-radiant-02-20261120",
     "elementId": "radiant",
-    "name": "Ventaglio di Fotoni Curvi",
+    "name": "Batteria a Ventaglio di Fotoni Curvi",
     "rarita": "Comune",
     "baseDamage": 27,
     "visualBrief": "Raggi iridescenti disegnano archi separati e convergono tutti sullo stesso bersaglio"
@@ -114,7 +114,7 @@ const DESIGNS=[
     "id": "weapon-base-radiant-03",
     "designId": "draft-base-radiant-03-20261120",
     "elementId": "radiant",
-    "name": "Scalpello dell'Alba",
+    "name": "Cannone Incisore dell'Alba",
     "rarita": "Comune",
     "baseDamage": 30,
     "visualBrief": "Una lama triangolare di luce ambrata discende come un'incisione e svanisce in pulviscolo brillante"
@@ -123,7 +123,7 @@ const DESIGNS=[
     "id": "weapon-base-radiant-04",
     "designId": "draft-base-radiant-04-20261120",
     "elementId": "radiant",
-    "name": "Anello del Sole Spezzato",
+    "name": "Cannone ad Anello del Sole Spezzato",
     "rarita": "Rara",
     "baseDamage": 36,
     "visualBrief": "Un grande anello solare si contrae in una sfera minuscola e scoppia in un unico bagliore al contatto"
@@ -132,7 +132,7 @@ const DESIGNS=[
     "id": "weapon-base-void-01",
     "designId": "draft-base-void-01-20261120",
     "elementId": "void",
-    "name": "Ago dell'Antiluce",
+    "name": "Perforatore dell'Antiluce",
     "rarita": "Comune",
     "baseDamage": 18,
     "visualBrief": "Un ago nero assorbe per un istante le stelle lungo la traiettoria; nessuna perforazione delle Difese"
@@ -150,7 +150,7 @@ const DESIGNS=[
     "id": "weapon-base-void-03",
     "designId": "draft-base-void-03-20261120",
     "elementId": "void",
-    "name": "Falce di Eclisse Franta",
+    "name": "Lama d’Eclisse Franta",
     "rarita": "Comune",
     "baseDamage": 29,
     "visualBrief": "Un arco a mezzaluna opaco taglia l'immagine in diagonale, poi si dissolve in schegge d'ombra"
@@ -168,7 +168,7 @@ const DESIGNS=[
     "id": "weapon-base-gravity-01",
     "designId": "draft-base-gravity-01-20261120",
     "elementId": "gravity",
-    "name": "Mazza a Massa Piegata",
+    "name": "Martello a Massa Piegata",
     "rarita": "Comune",
     "baseDamage": 22,
     "visualBrief": "Rottami sospesi si raggruppano in un martello di gravità che si schianta sul bersaglio"
@@ -177,7 +177,7 @@ const DESIGNS=[
     "id": "weapon-base-gravity-02",
     "designId": "draft-base-gravity-02-20261120",
     "elementId": "gravity",
-    "name": "Fusore di Orbite Gemelle",
+    "name": "Cannone Fusore a Orbite Gemelle",
     "rarita": "Comune",
     "baseDamage": 26,
     "visualBrief": "Due piccoli nuclei in orbita si fondono in un'unica sfera d'urto, senza colpi secondari"
@@ -186,7 +186,7 @@ const DESIGNS=[
     "id": "weapon-base-gravity-03",
     "designId": "draft-base-gravity-03-20261120",
     "elementId": "gravity",
-    "name": "Catenaria di Distorsione",
+    "name": "Emettitore a Catenaria di Distorsione",
     "rarita": "Comune",
     "baseDamage": 31,
     "visualBrief": "Una linea di spazio incurvato avanza come un'onda geometrica e si chiude in un punto"
