@@ -22,7 +22,7 @@ export const CONFIRMED_TRANSFER_WEAPONS=Object.freeze([
  }),
  Object.freeze({
   id:'weapon-transferred-aerial-cicloreattore',
-  name:'Cicloreattore Grandinifero',nome:'Cicloreattore Grandinifero',
+  name:'Cannone Cicloreattore Grandinifero',nome:'Cannone Cicloreattore Grandinifero',
   category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
   kind:'support',playable:true,designOnly:false,reviewRequired:false,nativeFace:true,
   rarita:WIND_DRAFT.rarita,rarityPending:false,acquisitionPending:false,balancePending:true,
