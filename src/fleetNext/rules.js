@@ -11,7 +11,9 @@ import {APPROVED_BASE_WEAPON_BY_ID} from './approvedBaseWeapons.js';
 import {CONFIRMED_WEAPON_BY_ID} from './confirmedWeaponCards.js';
 import {MULTI_WEAPON_BY_ID} from './multiWeaponCards.js';
 import {DESIGNED_WEAPON_BY_ID} from './designedWeaponCards.js';
+import {CONFIRMED_TRANSFER_WEAPON_BY_ID} from './confirmedTransferredWeapons.js';
 export {DESIGNED_WEAPON_CARDS,DESIGNED_WEAPON_BY_ID,DESIGNED_WEAPONS_PLAYABLE,DESIGNED_WEAPONS_PENDING} from './designedWeaponCards.js';
+export {CONFIRMED_TRANSFER_WEAPONS,CONFIRMED_TRANSFER_WEAPON_BY_ID} from './confirmedTransferredWeapons.js';
 export {MULTI_WEAPON_CARDS,MULTI_WEAPON_BY_ID} from './multiWeaponCards.js';
 export {CONFIRMED_WEAPON_CARDS,CONFIRMED_WEAPON_BY_ID} from './confirmedWeaponCards.js';
 export {APPROVED_BASE_WEAPONS,APPROVED_BASE_WEAPON_BY_ID} from './approvedBaseWeapons.js';
@@ -118,7 +120,7 @@ if(GENERAL_COUNT!==12||EXCLUSIVE_COUNT!==120||BOSS_COUNT!==12||ENERGY_COUNT!==40
  throw new Error('Catalogo ufficiale incompleto: 12 madri, 120 esclusive, 12 Personaggi e 12 Boss');
 
 export const progressionCard = id => PROGRESSION_CARDS[id]||null;
-export const generalCard = id => DESIGNED_WEAPON_BY_ID[id]||MULTI_WEAPON_BY_ID[id]||CONFIRMED_WEAPON_BY_ID[id]||APPROVED_BASE_WEAPON_BY_ID[id]||SIPHON_ATTACK_BY_ID[id]||ELEMENTAL_TERRAIN_BY_ID[id]||TEMP_SUPPORT_WEAPON_BY_ID[id]||DISCARD_WEAPON_BY_ID[id]||FUSION_DENIAL_TRAP_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id]||ENERGY_CARD_BY_ID[id]||NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
+export const generalCard = id => CONFIRMED_TRANSFER_WEAPON_BY_ID[id]||DESIGNED_WEAPON_BY_ID[id]||MULTI_WEAPON_BY_ID[id]||CONFIRMED_WEAPON_BY_ID[id]||APPROVED_BASE_WEAPON_BY_ID[id]||SIPHON_ATTACK_BY_ID[id]||ELEMENTAL_TERRAIN_BY_ID[id]||TEMP_SUPPORT_WEAPON_BY_ID[id]||DISCARD_WEAPON_BY_ID[id]||FUSION_DENIAL_TRAP_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id]||ENERGY_CARD_BY_ID[id]||NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||GENERAL_CARDS[id]||(!PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.shipId?PROGRESSION_CARDS[id]:null)||null;
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
@@ -135,7 +137,7 @@ export function cardCopyLimit(id){
  const c=card(id);
  if(!c)return 0;
  if(bossCard(id))return 1;
- if(ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id]||FUSION_DENIAL_TRAP_BY_ID[id]||DISCARD_WEAPON_BY_ID[id]||TEMP_SUPPORT_WEAPON_BY_ID[id]||APPROVED_BASE_WEAPON_BY_ID[id]||CONFIRMED_WEAPON_BY_ID[id]||MULTI_WEAPON_BY_ID[id]||DESIGNED_WEAPON_BY_ID[id])return c.maxCopiesPerDeck;
+ if(ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id]||FUSION_DENIAL_TRAP_BY_ID[id]||DISCARD_WEAPON_BY_ID[id]||TEMP_SUPPORT_WEAPON_BY_ID[id]||APPROVED_BASE_WEAPON_BY_ID[id]||CONFIRMED_WEAPON_BY_ID[id]||MULTI_WEAPON_BY_ID[id]||DESIGNED_WEAPON_BY_ID[id]||CONFIRMED_TRANSFER_WEAPON_BY_ID[id])return c.maxCopiesPerDeck;
  if(ELEMENTAL_TERRAIN_BY_ID[id])return RARITY_COPY_LIMIT[c.rarita]||0;
  if(NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id])return c.maxCopiesPerDeck||RARITY_COPY_LIMIT[c.rarita]||0;
  if(isProgressionCard(id))return c.shipId?c.maxCopiesInAutoPackageDraft:RARITY_COPY_LIMIT[c.rarita]||0;

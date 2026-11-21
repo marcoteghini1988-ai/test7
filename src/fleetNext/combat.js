@@ -473,6 +473,14 @@ function selectedOwnPart(side,target,ownPartId){
  if(target==='weakest')return weakestPart(side);
  return activePart(side,target);
 }
+// Sputacristalli blocca un alloggiamento Arma per il prossimo turno avversario.
+function weaponSlotLocked(side,slot,ply=0){
+ return Number(side?.weaponSlotLocks?.[slot]||0)>ply;
+}
+function availableWeaponSlots(side,ply=0){
+ return [0,1].filter(slot=>!weaponSlotLocked(side,slot,ply)&&
+  !(side.machines||[]).some(m=>unitAlive(m)&&m.slot===slot));
+}
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
  if(def.playable===false)return def.designOnly?
@@ -593,9 +601,11 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   const plan=siphonSacrificePlan(side,s.sacrificePercent);
   if(!plan.ok)return plan.reason;
  }
- if(s.type==='deployMachine'&&(side.machines||[]).filter(unitAlive).length>=2&&
-  !sequenceUpgradeTarget(side,def,battle?.ply??0))
-  return 'I due alloggiamenti delle macchine d’assalto sono occupati';
+ if(s.type==='deployMachine'){
+  const ply=battle?.ply??0,upgrade=sequenceUpgradeTarget(side,def,ply);
+  if(upgrade?weaponSlotLocked(side,upgrade.slot,ply):!availableWeaponSlots(side,ply).length)
+   return 'Alloggiamento Arma occupato o congelato';
+ }
  if(s.type==='repair'&&!character){
   const unit=s.target==='escort'?weakest(livingEscorts(side)):
    side.ruleset===HP_SYNC_RULESET?side.ships[0]:selectedOwnPart(side,s.target,ownPartId);
@@ -846,8 +856,9 @@ export function validateFleetTurn(b,who,order){
  if(machineCards.filter(c=>c.effectSpec.damageMode==='sequence').length>1)
   return 'Puoi giocare solo una Carta Arma Sequenza per turno';
  const upgrades=machineCards.filter(c=>sequenceUpgradeTarget(side,c,b.ply));
- if(machineCards.length+(side.machines||[]).filter(unitAlive).length-upgrades.length>2)
-  return 'Servono alloggiamenti liberi per le macchine scelte';
+ if(upgrades.some(c=>weaponSlotLocked(side,sequenceUpgradeTarget(side,c,b.ply).slot,b.ply))||
+  machineCards.length-upgrades.length>availableWeaponSlots(side,b.ply).length)
+  return 'Servono alloggiamenti Arma liberi e non congelati';
  const fusions=chosen.filter(c=>c.effectSpec.type==='fusion').length;
  const fusionShips=chosen.filter(c=>c.effectSpec.type==='shipFusion');
  if(fusionShips.length>1)return 'Puoi giocare una Carta Navicella Fusione per turno';
@@ -2999,7 +3010,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
   case 'deployMachine':{
    const modern=side.ruleset===HP_SYNC_RULESET;
    const previous=modern?sequenceUpgradeTarget(side,def,b.ply):null;
-   const slot=previous?previous.slot:[0,1].find(i=>!side.machines.some(m=>unitAlive(m)&&m.slot===i));
+   const slot=previous?previous.slot:availableWeaponSlots(side,b.ply)[0];
    if(slot==null)throw new Error('Alloggiamenti macchine occupati');
    const saved=recoveredMachineForDeploy(side,def.id);
    if(previous?.sourceCardId&&!previous.cardDiscarded)side.discard.push(previous.sourceCardId);
@@ -3280,7 +3291,8 @@ function recordTerrainWeaponShare(side,ctx,machine,power,extra){
 function resolveApprovedBaseWeaponShots(b,ctx,events,order){
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const ready=(side.machines||[]).filter(m=>['base-shot','polarity-shot'].includes(m.damageMode)&&
-  m.deployedPly===b.ply&&unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply));
+  m.deployedPly===b.ply&&unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&
+  !weaponSlotLocked(side,m.slot,b.ply));
  if(!ready.length)return null;
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,targets:[],played:[]};
  startNebulaVolley(ctx);
@@ -3352,7 +3364,7 @@ function resolveMultiWeaponShots(b,ctx,events,order){
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const modes=['double-shot','repeat-shot','sweep-shot','energy-burst-shot'];
  const ready=(side.machines||[]).filter(m=>modes.includes(m.damageMode)&&
-  unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&
+  unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&!weaponSlotLocked(side,m.slot,b.ply)&&
   (m.deployedPly===b.ply||m.damageMode==='repeat-shot'&&m.deployedPly===b.ply-2));
  if(!ready.length)return null;
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,targets:[],played:[]};
@@ -3416,7 +3428,7 @@ function resolveMultiWeaponShots(b,ctx,events,order){
 function resolveDesignedWeaponShots(b,ctx,events,order){
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const ready=(side.machines||[]).filter(m=>m.damageMode==='designed-shot'&&
-  unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&
+  unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&!weaponSlotLocked(side,m.slot,b.ply)&&
   (m.deployedPly===b.ply||m.weaponProfile?.pattern==='repeat'&&m.deployedPly===b.ply-2));
  if(!ready.length)return null;
  startNebulaVolley(ctx);
@@ -3521,6 +3533,19 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    }
    impacts.push({shot:n+1,nominalDamage:raw,actualDamage:hit.damage||0,
     targetKind:kind||null,targetId:unit?.id||null});
+   if(pattern==='weapon-slot-freeze'&&hit.damage>0){
+    const requested=ctx.order?.weaponFreezeSlot;
+    const preferred=Number.isInteger(requested)&&requested>=0&&requested<=1?requested:null;
+    const occupied=(enemy.machines||[]).find(m=>unitAlive(m)&&!weaponSlotLocked(enemy,m.slot,b.ply));
+    const freezeSlot=preferred??occupied?.slot??[0,1].find(i=>!weaponSlotLocked(enemy,i,b.ply))??0;
+    enemy.weaponSlotLocks??={};
+    enemy.weaponSlotLocks[freezeSlot]=Math.max(enemy.weaponSlotLocks[freezeSlot]||0,
+     b.ply+2*p.freezeTurns);
+    events.push(emit(b,ctx.who,'weapon-slot-frozen',
+     machine.name+' · slot Arma '+(freezeSlot+1)+' congelato per un turno',
+     {cardId:machine.sourceCardId,machineSlot:freezeSlot,
+      untilPly:enemy.weaponSlotLocks[freezeSlot],actualDamage:hit.damage}));
+   }
   }
   if(machine.deployedPly===b.ply)shot.played.push(machine.sourceCardId);
   const actual=impacts.reduce((n,h)=>n+h.actualDamage,0);
@@ -3537,7 +3562,8 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  if(side.independentSupportRoster){
-  for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
+  for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply)&&
+  !weaponSlotLocked(side,e.slot,b.ply))){
    // Un'Arma base spara da sola, non aggiunge +1 potenza alla madre.
    if(['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(machine.damageMode))continue;
    const charge=supportWeaponCharge(side,machine,cardRole);
@@ -3609,7 +3635,8 @@ function escortPassive(b,side,ctx,events,order){
    else if(s.action==='guard'){addTemporaryGuard(side,b.ply,amount);note('Prossimo turno avversario −'+amount+' potenza');}
   }
  }
- for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
+ for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply)&&
+  !weaponSlotLocked(side,e.slot,b.ply))){
   const power=side.ruleset===HP_SYNC_RULESET?arsenalBonus(side,machine,b.ply):machine.power;
   if(power){const extra=terrainWeaponExtraPower(b,side,ctx,machine,power);
    ctx.power+=power+extra;recordTerrainWeaponShare(side,ctx,machine,power,extra);

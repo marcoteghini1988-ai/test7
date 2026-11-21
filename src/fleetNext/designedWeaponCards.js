@@ -316,12 +316,9 @@ const DESIGNS=[
     "name": "Perforatore a Cascata",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Un colpo può trasferire HP eccedenti al bersaglio successivo consumando Energia Metallo, ma colpo iniziale, durata e costo preciso non sono definitivi. Difese e Trappole valgono per ogni bersaglio.",
-    "damageReference": 35,
-    "durationConflict": [
-      1,
-      3
-    ]
+    "description": "Durata confermata: 3 turni propri inclusa la giocata. Un colpo può trasferire HP eccedenti al bersaglio successivo consumando Energia Metallo; danno iniziale e costo esatto restano da bilanciare. Difese e Trappole si applicano a ciascun bersaglio.",
+    "durationTurns": 3,
+    "damageReference": 35
   },
   {
     "id": "weapon-designed-metallic-impatto-comandante",
