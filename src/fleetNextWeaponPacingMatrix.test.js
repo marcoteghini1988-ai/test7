@@ -804,6 +804,8 @@ test('AUDIT_COMPONENTI_CLOCK_PROPRIO_1PCT: 210s propri, 1% dopo, confronto con t
   const finished=matches.filter(m=>['A','B'].includes(m.winner));
   const saved=finished.map(m=>m.winnerComponentsAlive);
   return {...basic,
+   winBySeatA:matches.filter(m=>m.winner==='A').length,
+   winBySeatB:matches.filter(m=>m.winner==='B').length,
    min:Math.min(...matches.map(m=>m.seconds)),max:Math.max(...matches.map(m=>m.seconds)),
    winAllThreeIntact:saved.filter(n=>n===3).length,
    winAtLeastOneIntact:saved.filter(n=>n>0).length,
@@ -862,6 +864,8 @@ test('AUDIT_COMPONENTI_CLOCK_PROPRIO_1PCT: 6/17/26 secondi e CPU, tempi indipend
       {ownClock210:true},scenario.time));
   const won=matches.filter(x=>['A','B'].includes(x.winner));
   rows.push({name:scenario.name,...stats(matches),
+   winBySeatA:matches.filter(x=>x.winner==='A').length,
+   winBySeatB:matches.filter(x=>x.winner==='B').length,
    winAllThreeIntact:won.filter(x=>x.winnerComponentsAlive===3).length,
    winSomeIntact:won.filter(x=>x.winnerComponentsAlive>0).length,
    avgOwnA:Math.round(matches.reduce((n,m)=>n+m.ownTime.A,0)/matches.length),
