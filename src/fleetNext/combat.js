@@ -413,7 +413,8 @@ export function createFleetNextBattle({
     const hp=Math.max(1,Math.round(stats.maxHp*candidate.motherHpMultiplier[rarity]));
     mother.hp=hp;mother.maxHp=hp;
     side.weaponBalanceFactor=candidate.weaponNominalMultiplier[rarity];
-    side.componentDeteriorationFraction=candidate.deteriorationFractionPerSecond[rarity];
+    side.componentDeteriorationFraction=b.strategicNoDeterioration?0:
+     candidate.deteriorationFractionPerSecond[rarity];
     if(b.strategicNoDeterioration){
      side.motherGeneratorDamageFactor=candidate.generatorDamageMultiplier[rarity];
      initializeStrategicComponentTimers(side);
