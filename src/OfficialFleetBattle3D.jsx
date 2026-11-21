@@ -506,6 +506,7 @@ export default function OfficialFleetBattle3D({
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
+ const [recoverHandCardIndex,setRecoverHandCardIndex]=useState(0);
  const [preparedSacrifice,setPreparedSacrifice]=useState(null);
  const [fusionSlot,setFusionSlot]=useState(0);
  const [elementalPrepared,setElementalPrepared]=useState(false);
@@ -650,7 +651,7 @@ export default function OfficialFleetBattle3D({
   resolutionInProgress.current=false;setResolving(false);
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
-  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setPreparedSacrifice(null);setMessage('');
+  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setRecoverHandCardIndex(0);setPreparedSacrifice(null);setMessage('');
   setElementalPrepared(false);setElementalChoice('');
   setDismantleOptions({first:'',second:''});
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
@@ -766,6 +767,8 @@ export default function OfficialFleetBattle3D({
     machineSlot:attackTarget?.kind==='machine'?attackTarget.slot:undefined,
     moduleSlot:attackTarget?.kind==='module'?attackTarget.slot:undefined,
     ownPartId:actualOwnVital,cards:chosenCards,
+    recoverHandCardIndex:chosenCards.length===0&&battle.strategicNoDeterioration?
+     recoverHandCardIndex:undefined,
     sacrificeEscortId:preparedSacrifice||undefined,
     fusionSlot:actualFusionSlot,
     dismantleTargets:chosenCards.some(i=>card(battle.sides.A.hand[i])?.effectSpec?.type==='dismantle')?
@@ -841,6 +844,7 @@ export default function OfficialFleetBattle3D({
   if(result.invalidPrepared&&result.droppedPreparedCards>0)
    setMessage(result.playedPreparedCards+' carte risolte; '+result.droppedPreparedCards+' escluse perché non valide.');
   setDismantleOptions({first:'',second:''});
+  setRecoverHandCardIndex(0);
   setCorvoOptions({exchangeCardId:'',bottomTop:false});
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
   setMantaOptions({silence:false,fork:false,second:'',screen:'',from:'',to:'',
@@ -1982,7 +1986,17 @@ export default function OfficialFleetBattle3D({
    </button>
    <div className={'live-actions f3d-actions'+(showBattleCommands?' f3d-actions-open':'')}>
     <span>CARTE {chosenCards.length}/3</span>
-
+    {battle.strategicNoDeterioration&&!ended&&myTurn&&
+     player.hand.length>=7&&chosenCards.length===0&&
+     <label title="Scegli una carta da scartare. Se confermi ESEGUI senza usare carte e non infliggi danni, ne peschi una reale e consumi il turno.">
+      RICAMBIO
+      <select aria-label="Carta da scartare per ricambio" value={recoverHandCardIndex}
+       onChange={e=>setRecoverHandCardIndex(Number(e.target.value))}>
+       {player.hand.map((id,i)=><option key={id+':'+i} value={i}>
+        {card(id)?.nome||card(id)?.name||id}
+       </option>)}
+      </select>
+     </label>}
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
