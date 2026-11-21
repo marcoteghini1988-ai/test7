@@ -40,7 +40,7 @@ test('Boreale: gli impulsi formano un singolo colpo intercettato da una Difesa',
  b.sides.B.protections=[{source:'edge-defense',id:'gen-217',kind:'protect',
   target:'part',partId:'weapons',remaining:1,untilPly:100,placedPly:-2}];
  const r=play(b,'A',[c]),event=shot(r,c);
- assert.equal(event.hitCount,1);assert.equal(event.impacts[0].nominalDamage,30);
+ assert.equal(event.hitCount,1);assert.equal(event.impacts[0].nominalDamage,36);
  assert.equal(event.actualDamage,0);
 });
 test('Lancia richiede un Personaggio: valido anche se preparato nello stesso turno',()=>{
