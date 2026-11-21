@@ -450,6 +450,7 @@ export default function OfficialFleetBattle3D({
  });
  const setAuroraOption=(name,value)=>setAuroraOptions(prev=>({...prev,[name]:value}));
  const [scale,setScale]=useState(1);
+ const viewportRef=useRef(null);
  const [message,setMessage]=useState('');
  const [help,setHelp]=useState(null);
  const [lastFx,setLastFx]=useState(null);
@@ -462,9 +463,15 @@ export default function OfficialFleetBattle3D({
  const submitting=useRef(false);
  const preparedTimeout=useRef(null);
  useEffect(()=>{
-  const resize=()=>setScale(Math.max(.3,Math.min(innerWidth/450,innerHeight/800)));
+  const resize=()=>{
+   const viewport=viewportRef.current;
+   if(viewport?.clientWidth&&viewport.clientHeight)
+    setScale(Math.min(viewport.clientWidth/450,viewport.clientHeight/800));
+  };
+  const observer=new ResizeObserver(resize);
+  if(viewportRef.current)observer.observe(viewportRef.current);
   resize();window.addEventListener('resize',resize);
-  return ()=>window.removeEventListener('resize',resize);
+  return ()=>{observer.disconnect();window.removeEventListener('resize',resize);};
  },[]);
  useEffect(()=>{
   const id=window.setInterval(()=>{
@@ -1013,7 +1020,7 @@ export default function OfficialFleetBattle3D({
  const readableTerrain=terrain?TERRAIN_CATALOG[terrain]?.name||'TERRENO':'NEUTRO';
  const secondsLeft=Math.max(0,Math.ceil((battle.deadlineMs-now)/1000));
  const myTurn=battle.turn==='A';
- return <div className="es-math-scope live-viewport">
+ return <div className="es-math-scope live-viewport" ref={viewportRef}>
   <div className="es-root official-duel-3d live-root f3d-original-arena f3d-approved-layout"
    style={{transform:'translate(-50%,-50%) scale('+scale+')',
     '--live-special-back':'url("'+OFFICIAL_SPECIAL_FIXED_BACK+'")'}}>
