@@ -21,6 +21,14 @@ import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID,terrainNextRarity} from 
 export const NEXT_DECK_LIMIT=40;
 // Nessuna arma di prova equipaggiabile.
 export const NEXT_TEMP_WEAPON_IDS=Object.freeze([]);
+export const NEXT_NEW_WEAPON_CARDS=Object.freeze([...APPROVED_BASE_WEAPONS,
+ ...CONFIRMED_WEAPON_CARDS,...MULTI_WEAPON_CARDS,...DESIGNED_WEAPON_CARDS,
+ ...CONFIRMED_TRANSFER_WEAPONS]);
+export const NEXT_NEW_WEAPON_BY_ID=Object.freeze(Object.fromEntries(
+ NEXT_NEW_WEAPON_CARDS.map(c=>[c.id,c])));
+if(NEXT_NEW_WEAPON_CARDS.length!==69||
+ Object.keys(NEXT_NEW_WEAPON_BY_ID).length!==69)
+ throw Error('69 Carte Arma nuove non disponibili');
 export const NEXT_DECK_STORAGE_KEY='eclissi_next_cards_40_v1';
 export const NEXT_CARD_COSTS=Object.freeze({
  Comune:50,Rara:110,Epica:220,Leggendaria:440
@@ -87,7 +95,7 @@ export function saveNextDeckSelection(inventory,shipId,level,ids,storage=globalT
  }catch(e){return {ok:false,reason:e?.message||'Impossibile salvare il mazzo'};}
 }
 export function buyNextCommonCard(inventory,id){
- const def=NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id];
+ const def=NEXT_COMMON_CARD_BY_ID[id]||DISMANTLE_BY_ID[id]||ENERGY_CARD_BY_ID[id]||FUSION_SHIP_CARD_BY_ID[id]||NEXT_NEW_WEAPON_BY_ID[id];
  if(!def)return {ok:false,reason:'Carta non acquistabile'};
  // La disponibilità nello Shop delle Energie superiori è ancora da decidere.
  if(ENERGY_CARD_BY_ID[id]&&def.rarita!=='Comune')

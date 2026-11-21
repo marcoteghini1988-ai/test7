@@ -10,7 +10,7 @@ const RAW=[
       "baseDamage": 20,
       "extraDamage": 8,
       "ammoMode": "per-charge",
-      "maxExtraShots": 99,
+      "maxExtraShots": 1024,
       "durationTurns": 3,
       "provisional": true
     },
@@ -49,6 +49,7 @@ const RAW=[
       "durationTurns": 5,
       "motherCostPercent": 6,
       "allyCostPercent": 4,
+      "couplerBonusDamage": 30,
       "provisional": true
     },
     "description": "Per 5 tuoi turni: colpo dell'8% degli HP massimi nemici, perdita del 6% degli HP massimi della tua madre, colpo del 16%, perdita del 4% degli HP massimi di ogni alleata operativa, poi 20% a ogni nave nemica. I costi possono essere letali."

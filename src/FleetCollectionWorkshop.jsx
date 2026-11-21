@@ -1,7 +1,7 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
  eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,SIPHON_ATTACKS,ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID} from './fleetNext/rules.js';
-import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,evolveNextEnergyWithDuplicates,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS} from './fleetNext/nextDeckLoadout.js';
+import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,evolveNextEnergyWithDuplicates,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS,NEXT_NEW_WEAPON_CARDS,NEXT_NEW_WEAPON_BY_ID} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
@@ -106,7 +106,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   const nextTerrainRarity=isElementalTerrain||isEnergy?
    {Comune:'Rara',Rara:'Epica',Epica:'Leggendaria'}[c.rarita]:null;
   const price=isEnergy&&c.rarita!=='Comune'?null:
-   [...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS].some(def=>def.id===c.id)?NEXT_CARD_COSTS[c.rarita]:null;
+   ([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS].some(def=>def.id===c.id)||NEXT_NEW_WEAPON_BY_ID[c.id])?NEXT_CARD_COSTS[c.rarita]:null;
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
    <strong>{c.nome||c.name}</strong>
@@ -240,6 +240,11 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    </div>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {ENERGY_CARDS.filter(c=>c.elementId===energyElement&&c.rarita===energyRarity).map(genericCardTile)}
+   </div>
+   <h3 style={{fontSize:13}}>69 Carte Arma nuove · statistiche provvisorie</h3>
+   <p style={small}>Armi con colpo autonomo, due alloggiamenti per partita. Acquistabili con prezzi temporanei e aggiungibili al mazzo; bilanciamento finale successivo.</p>
+   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
+    {NEXT_NEW_WEAPON_CARDS.map(genericCardTile)}
    </div>
    <h3 style={{fontSize:13}}>33 nuove carte dei sistemi e Buco Nero</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
