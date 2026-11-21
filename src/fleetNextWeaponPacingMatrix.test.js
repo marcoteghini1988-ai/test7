@@ -155,6 +155,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
     side.ships[0].maxHp=Math.round(side.ships[0].maxHp*scale);
     side.ships[0].hp=side.ships[0].maxHp;
    }
+   if(calibration?.weaponFactor)side.__pacingAuditWeaponFactor=calibration.weaponFactor;
    const offset=calibration?.timerOffsetSeconds||0;
    if(offset)for(const timer of Object.values(side.componentTimers)){
     timer.initialSeconds+=offset;
@@ -325,29 +326,34 @@ test('Matrice tre timer e deterioramento madre, 24 scontri senza Personaggi',()=
  assert.equal(cases.length,24);
 });
 
-test('Taratura comparata: 4 interventi su HP madre Comune e timer (96 scontri)',()=>{
+
+test('Taratura 2: confronta 5 combinazioni su 120 battaglie senza Personaggi',()=>{
  const variants=[
-  {name:'base',motherHpScale:1,timerOffsetSeconds:0,drain:.009},
-  {name:'A',motherHpScale:1.40,timerOffsetSeconds:-30,drain:.009},
-  {name:'B',motherHpScale:1.55,timerOffsetSeconds:-35,drain:.009},
-  {name:'C',motherHpScale:1.50,timerOffsetSeconds:-35,drain:.011}
+  {name:'base',commonHp:1,commonWeapon:1,rareDrain:.009,epicDrain:.009,legendDrain:.009},
+  {name:'D',commonHp:1.20,commonWeapon:.70,rareDrain:.009,epicDrain:.012,legendDrain:.018},
+  {name:'E',commonHp:1.25,commonWeapon:.65,rareDrain:.009,epicDrain:.012,legendDrain:.018},
+  {name:'F',commonHp:1.15,commonWeapon:.60,rareDrain:.009,epicDrain:.012,legendDrain:.016},
+  {name:'G',commonHp:1.30,commonWeapon:.70,rareDrain:.009,epicDrain:.012,legendDrain:.020}
  ];
- const trial=[];
+ const trials=[];
  for(const variant of variants){
   const cases=[];
   for(const rarity of SHIP_RARITIES)
    for(const [i,[a,b]] of PRESETS[rarity].entries())
     for(const shift of [0,101]){
-     const calibration={motherHpScale:rarity==='Comune'?variant.motherHpScale:1,
-      timerOffsetSeconds:variant.timerOffsetSeconds};
+     const calibration={motherHpScale:rarity==='Comune'?variant.commonHp:1,
+      weaponFactor:rarity==='Comune'?variant.commonWeapon:1,timerOffsetSeconds:0};
+     const drain=rarity==='Epica'?variant.epicDrain:
+      rarity==='Leggendaria'?variant.legendDrain:
+      rarity==='Rara'?variant.rareDrain:.009;
      cases.push(simulate(rarity,ARCHETYPES[i],a,b,
       4707+i*29+rIdx(rarity)*83+shift,null,'generator-components-v1',
-      variant.drain,calibration));
+      drain,calibration));
     }
-  trial.push({variant,overall:stats(cases),
+  trials.push({variant,overall:stats(cases),
    byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(cases.filter(x=>x.rarity===r))])),
    cases:cases.map(x=>({rarity:x.rarity,deck:x.deck,seconds:x.seconds,winner:x.winner}))});
  }
- console.log('WEAPON_PACING_CALIBRATION_TRIALS='+JSON.stringify(trial));
- assert.equal(trial.reduce((n,v)=>n+v.cases.length,0),96);
+ console.log('WEAPON_PACING_CALIBRATION_TRIALS2='+JSON.stringify(trials));
+ assert.equal(trials.reduce((n,v)=>n+v.cases.length,0),120);
 });
