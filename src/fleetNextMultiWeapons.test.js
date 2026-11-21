@@ -38,18 +38,18 @@ test('Cannone Acqua: un colpo indipendente da 26 HP nominali',()=>{
  const e=r.events.find(x=>x.kind==='weapon-base-shot'&&x.cardId===CANNON.id);
  assert.ok(e);assert.equal(e.nominalDamage,26);assert.ok(e.actualDamage>0);
 });
-test('Batteria gemellata: esattamente due colpi da 16 HP ciascuno',()=>{
+test('Batteria gemellata: esattamente due colpi da 18 HP ciascuno',()=>{
  const r=turn(game(),'A',[TWINS.id]),e=multi(r)[0];
- assert.equal(e.hitCount,2);assert.deepEqual(e.impacts.map(x=>x.nominalDamage),[16,16]);
+ assert.equal(e.hitCount,2);assert.deepEqual(e.impacts.map(x=>x.nominalDamage),[18,18]);
  assert.ok(e.actualDamage>0);assert.equal(r.battle.sides.B.ships[0].hp<5000,true);
 });
-test('Torretta a Pistoni: 16 HP in due turni, senza terzo sparo',()=>{
+test('Torretta a Pistoni: 18 HP in due turni, senza terzo sparo',()=>{
  let b=game(),r=turn(b,'A',[TURRET.id]);
- assert.equal(multi(r)[0].impacts[0].nominalDamage,16);
+ assert.equal(multi(r)[0].impacts[0].nominalDamage,18);
  b=turn(r.battle,'B').battle;
  r=turn(b,'A');
  assert.equal(multi(r)[0].repeatTurn,true);
- assert.equal(multi(r)[0].impacts[0].nominalDamage,16);
+ assert.equal(multi(r)[0].impacts[0].nominalDamage,18);
  b=turn(r.battle,'B').battle;
  assert.equal(b.sides.A.machines.some(m=>m.sourceCardId===TURRET.id),false);
  assert.equal(multi(turn(b,'A')).length,0);
@@ -67,7 +67,7 @@ test('Batteria Brina: 0/1/2 Energie Ghiaccio creano 1/2/3 colpi, senza consumarl
   const b=game();b.sides.A.energyPile=[...ids];
   const r=turn(b,'A',[BRINA.id]),e=multi(r)[0];
   assert.equal(e.hitCount,1+ids.length);
-  assert.deepEqual(e.impacts.map(i=>i.nominalDamage),[20,...ids.map(()=>10)]);
+  assert.deepEqual(e.impacts.map(i=>i.nominalDamage),[24,...ids.map(()=>12)]);
   assert.deepEqual(r.battle.sides.A.energyPile,ids);
   assert.equal(e.energyCardsConsumed,0);
  }
