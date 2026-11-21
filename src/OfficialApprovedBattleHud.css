@@ -443,6 +443,44 @@
  box-shadow:0 0 8px #bd5efa77;pointer-events:none
 }
 
+/* The support hull is the equipped ship model, with its correct facing. */
+.es-math-scope .f3d-approved-layout .live-escort{width:84px;height:84px}
+.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort{top:31px}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort{top:40px}
+.es-math-scope .f3d-approved-layout .live-escort>.f3d-escort-hull{
+ width:100%;height:100%;object-fit:contain;transform:none;
+ filter:drop-shadow(0 6px 4px #000e) drop-shadow(0 0 5px #19aeff88)
+}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort>.f3d-escort-hull{
+ transform:none;filter:drop-shadow(0 6px 4px #000e) drop-shadow(0 0 6px #ff435988)
+}
+.es-math-scope .f3d-approved-layout .live-escort>.f3d-escort-fusion{
+ position:absolute;left:24%;top:7%;width:71%;height:77%;object-fit:contain;
+ transform:rotate(7deg);filter:drop-shadow(0 0 7px #d296ff);pointer-events:none
+}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort>.f3d-escort-fusion{
+ transform:rotate(-7deg);filter:drop-shadow(0 0 7px #ff5c73)
+}
+
+/* These are only the positions for future card-specific 3D weapon assets. */
+.es-math-scope .f3d-approved-layout .f3d-machine-berth{
+ background:none;border:0;box-shadow:none
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth>.f3d-card-weapon-model{
+ position:absolute;top:-7px;left:-12px;width:114px;height:86px;
+ object-fit:contain;pointer-events:none;filter:drop-shadow(0 6px 4px #000e)
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-pending{opacity:.5}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth .f3d-weapon-position-label{
+ position:absolute;left:4px;right:4px;bottom:0;overflow:hidden;
+ white-space:nowrap;text-overflow:ellipsis;color:#d9eaff;
+ background:#071625e5;border:1px solid #5e879f;border-radius:3px;
+ font-size:6px;line-height:10px;text-shadow:0 1px 3px #000
+}
+.es-math-scope .f3d-approved-layout .f3d-machine-berth:has(.f3d-card-weapon-model) .f3d-weapon-position-label{
+ bottom:-8px
+}
+
 /* Ritocco cromatico senza spostamenti */
 .es-math-scope .f3d-approved-layout .live-fighter--enemy .f3d-escort-preview img{
  transform:none!important;
