@@ -109,6 +109,13 @@ export function supportWeaponCharge(side,machine,roleForCard){
  }
  return null;
 }
+// Fattore numerico esclusivamente diagnostico: nessuna carta o partita
+// normale imposta questa proprieta', cosi' il danno stampato resta intatto.
+const weaponAuditValue=(side,amount)=>{
+ const factor=Number(side?.__pacingAuditWeaponFactor);
+ return Number.isFinite(factor)&&factor>0&&factor!==1?
+  Math.max(0,Math.round(amount*factor)):amount;
+};
 export function arsenalBonus(side,machine,ply=0,overridePower=null){
  if(side.ruleset!==HP_SYNC_RULESET)return machine.power||0;
  if(machine.untilPly!=null&&machine.untilPly<=ply)return 0;
@@ -127,9 +134,9 @@ export function arsenalBonus(side,machine,ply=0,overridePower=null){
   ['discard-attacks','sequence','escort-count','base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(machine.damageMode)){
   const boost=supportWeaponCardBoost(side,base,ply);
   const multiplier=1+arsenalTierRate(amplified?.tier)-arsenalTierRate(disabled?.tier);
-  return arsenalEffectiveDamage(side,Math.max(0,Math.round(boost*multiplier)));
+  return weaponAuditValue(side,arsenalEffectiveDamage(side,Math.max(0,Math.round(boost*multiplier))));
  }
- return arsenalEffectiveDamage(side,Math.max(0,base+(amplified?.amount||0)-(disabled?.amount||0)));
+ return weaponAuditValue(side,arsenalEffectiveDamage(side,Math.max(0,base+(amplified?.amount||0)-(disabled?.amount||0))));
 }
 // Le versioni Epica e Leggendaria interrompono i bonus sincronizzati
 // solo al primo turno del bersaglio. La Centralina Leggendaria alleata
