@@ -167,6 +167,36 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
    side.deck=filtered.slice(7);
   }
  }
+ // SONDAGGIO_G_2026_11_21 — varianti isolate, NON modificano i valori live.
+ // Si applicano al clone iniziale soltanto per misurare conclusioni
+ // da danno e da deterioramento nei diversi tempi di giocata.
+ if(model==='live-generator'&&calibration){
+  for(const side of Object.values(b.sides)){
+   const mother=side.ships[0];
+   if(Number.isFinite(calibration.motherHpScale)&&calibration.motherHpScale>0&&
+    calibration.motherHpScale!==1){
+    mother.maxHp=Math.max(1,Math.round(mother.maxHp*calibration.motherHpScale));
+    mother.hp=mother.maxHp;
+   }
+   if(Number.isFinite(calibration.weaponFactorMultiplier)&&
+    calibration.weaponFactorMultiplier>0)
+    side.weaponBalanceFactor*=calibration.weaponFactorMultiplier;
+   if(Number.isFinite(calibration.drainMultiplier)&&
+    calibration.drainMultiplier>0)
+    side.componentDeteriorationFraction*=calibration.drainMultiplier;
+   const offset=Math.floor(calibration.timerOffsetSeconds||0);
+   if(offset)for(const timer of Object.values(side.componentTimers)){
+    timer.initialSeconds+=offset;
+    timer.remainingSeconds+=offset;
+   }
+   if(Number.isFinite(calibration.supportHpScale)&&calibration.supportHpScale>0)
+    for(const escort of side.escorts||[]){
+     escort.maxHp=Math.max(1,Math.round(escort.maxHp*calibration.supportHpScale));
+     escort.hp=escort.maxHp;
+     escort.supportObservedHp=escort.hp;
+    }
+  }
+ }
  if(model==='generator-components-v1'){
   // Solo nella prova statistica si modificano gli HP e l'istante di scadenza:
   // non si toccano le statistiche delle carte o i timer della plancia.
@@ -529,4 +559,37 @@ test('Durata effettiva PvE con mazzo reale CPU e decisioni veloci, non 17s per t
     ({rarity,shipA,shipB,seconds,winner,invalid,finishReason}))};
  console.log('WEAPON_PACING_REALTIME_CPU='+JSON.stringify(report));
  assert.equal(cases.length,24);
+});
+
+test('Sondaggio G: confronto dei timer e delle resistenze SENZA cambiare i valori live',()=>{
+ const candidates=[
+  {name:'F-live-attuale',params:null},
+  {name:'G1-deterioramento-45pct',params:{drainMultiplier:.45}},
+  {name:'G2-timer+30-deterioramento-50pct',params:{timerOffsetSeconds:30,drainMultiplier:.5}},
+  {name:'G3-timer+45-supporti85pct',params:{timerOffsetSeconds:45,drainMultiplier:.5,supportHpScale:.85}},
+  {name:'G4-timer+50-supporti75pct',params:{timerOffsetSeconds:50,drainMultiplier:.5,supportHpScale:.75}},
+  {name:'G5-timer+60-armi110pct',params:{timerOffsetSeconds:60,drainMultiplier:.55,weaponFactorMultiplier:1.1}},
+  {name:'G6-timer+45-armi115pct-supporti85pct',
+   params:{timerOffsetSeconds:45,drainMultiplier:.5,supportHpScale:.85,weaponFactorMultiplier:1.15}}
+ ];
+ const results=[];
+ for(const candidate of candidates){
+  const pvp=[],campaign=[];
+  for(const rarity of SHIP_RARITIES)
+   for(let i=0;i<2;i++){
+    const [a,b]=PRESETS[rarity][i];
+    const seed=24119+rarity.length*101+i*73;
+    pvp.push(simulate(rarity,ARCHETYPES[i],a,b,seed,null,'live-generator',
+     CANDIDATE_DRAIN_FRACTION_PER_SECOND,candidate.params));
+    campaign.push(simulate(rarity,ARCHETYPES[1],a,b,seed+1003,[1,8][i],
+     'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,candidate.params,'fast-cpu'));
+   }
+  results.push({candidate:candidate.name,
+   pvp:stats(pvp),campaign:stats(campaign),
+   pvpRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(pvp.filter(x=>x.rarity===r))])),
+   campaignRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(campaign.filter(x=>x.rarity===r))]))});
+ }
+ console.log('WEAPON_PACING_G_SWEEP='+JSON.stringify(results));
+ assert.equal(results.length,7);
+ assert.ok(results.every(r=>r.pvp.n===8&&r.campaign.n===8));
 });
