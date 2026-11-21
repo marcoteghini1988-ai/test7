@@ -145,6 +145,12 @@ export function validateEffectSpec(spec){
    if(!integer(spec.baseDamage,1,1000)||spec.durationTurns!==1||spec.power!==0||
     !['positive','negative'].includes(spec.crystalPolarity)||!integer(spec.comboBonus,1,1000))
     return 'Arma cristallo Ghiaccio non valida';
+  }else if(['double-shot','repeat-shot','sweep-shot','energy-burst-shot'].includes(spec.damageMode)){
+   if(!integer(spec.baseDamage,1,1000)||spec.power!==0||
+    spec.durationTurns!==(spec.damageMode==='repeat-shot'?2:1)||
+    (spec.damageMode==='double-shot'&&spec.shotCount!==2)||
+    (spec.damageMode==='energy-burst-shot'&&(!integer(spec.extraDamage,1,1000)||spec.maxExtraShots!==2)))
+    return 'Arma a colpi autonomi non valida';
   }else return 'Modalita arma non riconosciuta';
  }
  return null;
@@ -240,7 +246,7 @@ export function describeEffect(card,level=1){
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
   case 'siphonStrike':return siphonAttackDescription(s);
   case 'deployMachine':{
-   if(['base-shot','polarity-shot'].includes(s.damageMode))return card.effectProposed;
+   if(['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot'].includes(s.damageMode))return card.effectProposed;
    if(s.damageMode==='sequence'){
     if(s.sequenceStage===1)return "Sequenza I ("+FLEET_ELEMENTS[s.elementId].name+"): aggiunge "+s.soloDamage+" HP all'attacco per due tuoi turni. Solo nel turno successivo puoi sovrapporre Sequenza II; senza evoluzione, si scarta dopo il secondo attacco.";
     if(s.sequenceStage===2)return 'Sequenza II ('+FLEET_ELEMENTS[s.elementId].name+'): giocata da sola aggiunge '+s.soloDamage+' HP per un turno e si scarta. Se sovrapposta a Sequenza I nel turno successivo, aggiunge '+s.chainDamage+' HP e rimane per un turno in attesa di Sequenza III.';
