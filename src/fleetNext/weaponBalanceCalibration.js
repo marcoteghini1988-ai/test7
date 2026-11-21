@@ -3,6 +3,7 @@
 // La scala differenzia progressioni con 0/1/2 supporti, non impone un timer.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 import {PACING_BALANCE_CANDIDATE} from './pacingBalanceCandidate.js';
+import {STRATEGIC_NO_DRAIN_BALANCE} from './strategicNoDrainBalance.js';
 export const WEAPON_RARITY_POWER=PACING_BALANCE_CANDIDATE.weaponNominalMultiplier;
 export const WEAPON_BALANCE_REVISION=PACING_BALANCE_CANDIDATE.id;
 const DAMAGE_FIELDS=Object.freeze(new Set([
@@ -180,4 +181,17 @@ export function weaponPrintCandidate(raw){
   effectProposed:factor===1?raw.effectProposed:description(raw,spec),
   balanceRevision:WEAPON_BALANCE_REVISION,
   balanceStatus:'PRINT_PREVIEW_ONLY_NOT_LIVE'});
+}
+
+// Nominali nella NUOVA partita senza deterioramento. La descrizione usa
+// esattamente il fattore della risoluzione, senza aggiornare i PNG approvati.
+// NON sostituisce lo schema RAW conservato per salvataggi e prove storiche.
+export function weaponStrategicPrintCandidate(raw){
+ const factor=STRATEGIC_NO_DRAIN_BALANCE.weaponNominalMultiplier[raw?.rarita];
+ if(!raw||!Number.isFinite(factor))throw Error('Arma priva di rarita');
+ const spec=factor===1?raw.effectSpec:Object.freeze(balanceNativeSpec(raw.effectSpec,factor));
+ return Object.freeze({...raw,effectSpec:spec,
+  effectProposed:factor===1?raw.effectProposed:description(raw,spec),
+  balanceRevision:STRATEGIC_NO_DRAIN_BALANCE.id,
+  balanceStatus:'NOMINAL_STRATEGIC_PLAYTEST_NO_FINAL_IMAGE'});
 }
