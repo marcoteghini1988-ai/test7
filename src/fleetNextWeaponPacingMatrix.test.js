@@ -211,6 +211,10 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
    if(Number.isFinite(calibration.weaponFactorMultiplier)&&
     calibration.weaponFactorMultiplier>0)
     side.weaponBalanceFactor*=calibration.weaponFactorMultiplier;
+   // Fattore valido SOLO per i due colpi prenotati del Generatore.
+   if(Number.isFinite(calibration.motherGeneratorDamageFactor)&&
+    calibration.motherGeneratorDamageFactor>0)
+    side.motherGeneratorDamageFactor=calibration.motherGeneratorDamageFactor;
    if(Number.isFinite(calibration.drainMultiplier)&&
     calibration.drainMultiplier>0)
     side.componentDeteriorationFraction*=calibration.drainMultiplier;
@@ -1075,4 +1079,52 @@ test('AUDIT_NO_DRAIN_20261121: la velocita 6s vs 26s non cambia esito, mosse o c
   samples.push({quota,groups:groups.map(({signature,...rest})=>rest)});
  }
  console.log('AUDIT_NO_DRAIN_SPEED='+JSON.stringify(samples));
+});
+
+test('AUDIT_WEAPON_MOTHER_NO_DRAIN: taratura congiunta Carte Arma e Generatore madre, zero deterioramento',()=>{
+ const variants=[
+  {name:'0-nodrain-attuale',epicWeapon:1,legendWeapon:1,epicMother:1,legendMother:1},
+  {name:'1-medio',epicWeapon:1.4,legendWeapon:1.5,epicMother:1.15,legendMother:1.2},
+  {name:'2-forte',epicWeapon:1.7,legendWeapon:1.85,epicMother:1.25,legendMother:1.3},
+  {name:'3-bilanciamento-alto',epicWeapon:2,legendWeapon:2.15,epicMother:1.35,legendMother:1.4},
+  {name:'4-madri-piu-forti',epicWeapon:1.4,legendWeapon:1.5,epicMother:1.6,legendMother:1.7}
+ ];
+ const rows=[];
+ for(const candidate of variants){
+  const pvp=[],boss=[];
+  for(const rarity of SHIP_RARITIES){
+   const calibration={strategicSecondsPerTurn:20,noDeterioration:true,
+    weaponFactorMultiplier:rarity==='Epica'?candidate.epicWeapon:
+     rarity==='Leggendaria'?candidate.legendWeapon:1,
+    motherGeneratorDamageFactor:rarity==='Epica'?candidate.epicMother:
+     rarity==='Leggendaria'?candidate.legendMother:1};
+   for(const [i,[a,b]] of PRESETS[rarity].entries()){
+    for(const shift of [0,137])
+     pvp.push(simulate(rarity,ARCHETYPES[i],a,b,
+      20261129+rIdx(rarity)*251+i*79+shift,null,'live-generator',
+      CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration));
+    boss.push(simulate(rarity,ARCHETYPES[1],a,b,
+     20261171+rIdx(rarity)*271+i*89,[1,8,17][i],'live-generator',
+     CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration,'fast-cpu'));
+   }
+  }
+  const report=matches=>{
+   const won=matches.filter(m=>['A','B'].includes(m.winner));
+   return {...stats(matches),
+    medianSeconds:stats(matches).median,
+    winA:matches.filter(m=>m.winner==='A').length,
+    winB:matches.filter(m=>m.winner==='B').length,
+    win3Intact:won.filter(m=>m.winnerComponentsAlive===3).length,
+    maxSeconds:Math.max(...matches.map(m=>m.seconds)),
+    roundLimitDraws:matches.filter(m=>m.draw&&/limite di.*round/i.test(m.finishReason||'')).length
+   };
+  };
+  rows.push({name:candidate.name,params:candidate,pvp:report(pvp),
+   campaign:report(boss),
+   byRarity:Object.fromEntries(SHIP_RARITIES.map(ra=>[ra,report(pvp.filter(m=>m.rarity===ra))])),
+   campaignRarity:Object.fromEntries(SHIP_RARITIES.map(ra=>[ra,report(boss.filter(m=>m.rarity===ra))]))});
+ }
+ console.log('AUDIT_WEAPON_MOTHER_NO_DRAIN='+JSON.stringify(rows));
+ assert.equal(rows.length,5);
+ assert.ok(rows.every(x=>x.pvp.n===24&&x.campaign.n===12));
 });
