@@ -17,7 +17,8 @@ import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {card,cardRole,cardFacePath,FLEET_TURN_SECONDS} from './fleetNext/rules.js';
-import {WEAPON_PRINT_CANDIDATE_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
+import {WEAPON_PRINT_CANDIDATE_BY_ID,WEAPON_STRATEGIC_PRINT_BY_ID}
+ from './fleetNext/weaponRarityEvolutions.js';
 import {isMaxSupportLevel} from './fleetNext/supportProgression.js';
 import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
 import {LINCE_BYPASS_ACTIONS,linceMarkedRouteReady} from './fleetNext/linceEngine.js';
@@ -69,14 +70,15 @@ const pct=(n,d)=>d>0?Math.round(Math.max(0,Math.min(1,n/d))*100):0;
 // I valori riportati a schermo devono corrispondere alla scala del nuovo
 // motore; il disegno e il file immagine della carta non vengono cambiati.
 const displayedCard=(id,modern=false)=>modern?
- (WEAPON_PRINT_CANDIDATE_BY_ID[id]||card(id)):card(id);
+ (WEAPON_STRATEGIC_PRINT_BY_ID[id]||WEAPON_PRINT_CANDIDATE_BY_ID[id]||card(id)):card(id);
 const MODERN_GENERATOR_RULES=Object.freeze([
  'Prepara fino a tre carte. Il turno termina soltanto premendo ESEGUI o allo scadere dei 30 secondi.',
  'La madre non spara gratuitamente. Tocca UNA volta la barra del Generatore per prenotare il colpo quando sono disponibili almeno due Carte Energia fisiche.',
  'Con quattro Carte Energia fisiche il colpo prenotato diventa automaticamente potente. Se non prenoti, il Generatore conserva le Carte Energia.',
  'Le Carte Arma consumano prima la propria Energia. Le carte residue rimangono in pila durante il raffreddamento del Generatore.',
- 'Arsenale, Centralina e Plancia hanno timer indipendenti. Quando scadono tutti e tre, la nave madre perde HP ogni secondo. Il Generatore non si rompe.',
- 'Arsenale esaurito: danno Carte Arma ridotto del 30% e massimo due slot Attacco. Centralina esaurita: 25% dei colpi ai supporti raggiunge la madre. Plancia esaurita: primo supporto scelto automaticamente, slot Personaggio disattivato.'
+ 'Arsenale, Centralina e Plancia consumano 20 secondi strategici per ogni turno proprio, indipendentemente da quanto rapidamente giochi. L\'ultimo si esaurisce dopo 3:30 strategici. Nessun danno automatico da timer.',
+ 'Arsenale esaurito: danno Carte Arma ridotto del 30% e massimo due slot Attacco. Centralina esaurita: 25% dei colpi ai supporti raggiunge la madre. Plancia esaurita: primo supporto scelto automaticamente, slot Personaggio disattivato.',
+ 'Quando la mano e\' piena e con ESEGUI non giochi nessuna carta ne\' infliggi danni, scarti una carta reale e la sostituisci con una pescata autentica. Il turno viene consumato.'
 ]);
 const MODERN_OUTDATED_RULE=/PASSA|terza carta|tiro di emergenza|Armi temporanee aumentano|attacchi normali|fine preparazione/iu;
 function activeEscort(e){return e.hp>0&&!e.destroyed;}
@@ -122,7 +124,8 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
    upgradesA:inventory.exclusiveUpgrades,
    mode,bossName:boss?.name||null,bossId:boss?.planetId??null,planetId:bossPlanetId,
    sectorNumber,seed:battleSeed,
-   nowMs:Date.now(),ruleset:HP_SYNC_RULESET,newGeneratorCombat:true
+   nowMs:Date.now(),ruleset:HP_SYNC_RULESET,newGeneratorCombat:true,
+   strategicNoDeterioration:true
   }),error:''};
  }catch(e){return {battle:null,error:e?.message||'Battaglia non disponibile'};}
 }
