@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createFleetNextBattle,autoFleetTurn,resolveFleetNextTurn,
- validateFleetTurn,protectingFleetUnits} from './fleetNext/combat.js';
+ validateFleetTurn,protectingFleetUnits,effectUnavailableReason} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {SHIP_RARITIES,combatLevelForRarity} from './fleetNext/shipRarity.js';
 import {activeFleetElements} from './fleetNext/elementalAffinities.js';
@@ -15,6 +15,9 @@ import {ELEMENTAL_TERRAIN_CARDS} from './fleetNext/elementalTerrainCards.js';
 import {GENERAL_CARDS,card,cardCopyLimit,eligibleExclusives} from './fleetNext/rules.js';
 import {energyIdForRarity} from './fleetNext/energyCards.js';
 import {nextGenericCapacity} from './fleetNext/nextDeckLoadout.js';
+import {applyElementalDamage} from './fleetNext/elementalDamage.js';
+import {limitedMotherDamage} from './fleetNext/motherBalance.js';
+import {generatorCardCount,generatorAttackPreview,commitGeneratorFiring} from './fleetNext/motherGeneratorBalance.js';
 
 const PRESETS=Object.freeze({
  Comune:[['N00','C01'],['C01','C02'],['C02','C03']],
@@ -94,6 +97,30 @@ function fallback(b){
    ...(guard.kind==='escort'?{escortSlot:guard.slot}:{})}:
   {cards:[],pass:false,targetKind:'part',targetId:'weapons',partId:'weapons'};
 }
+function generatorOrder(b){
+ const side=b.sides[b.turn],order=fallback(b);
+ const hand=side.hand.map((id,i)=>({id,i,def:card(id)}));
+ const available=hand.filter(x=>x.def&&
+  !effectUnavailableReason(x.def,side,b));
+ const weapons=available.filter(x=>x.def.effectSpec?.type==='deployMachine');
+ const energy=available.filter(x=>x.def.effectSpec?.type==='energy');
+ const selected=[];
+ const empty=2-(side.machines||[]).filter(m=>m.hp>0&&!m.destroyed).length;
+ if(empty>0&&weapons.length)selected.push(weapons[0].i);
+ // Alimentazione condivisa: nessun consumo o sparo della madre senza prenotazione.
+ for(const e of energy){
+  if(selected.length>=3)break;
+  selected.push(e.i);
+ }
+ for(const w of weapons.slice(1)){
+  if(selected.length>=3||selected.filter(i=>weapons.some(e=>e.i===i)).length>=empty)break;
+  selected.push(w.i);
+ }
+ let chosen=selected;
+ while(chosen.length&&validateFleetTurn(b,b.turn,{...order,cards:chosen,pass:true}))
+  chosen=chosen.slice(0,-1);
+ return {...order,cards:chosen,pass:true};
+}
 function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current'){
  let b=createFleetNextBattle({
   shipA,shipB,raritaA:rarity,raritaB:rarity,
@@ -104,22 +131,23 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current'){
   deckB:generator(shipB,rarity,arch,seed+11),
   seed,nowMs:0
  });
- let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0;
+ let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0,
+  generatorShots=0,generatorHp=0;
  const meanTurnMs=17000; // 17s tipici fino alla terza carta/PASSA + animazioni
  while(b.phase==='playing'&&turns<102){
   const who=b.turn;
   const at=b.turnStartedAtMs+meanTurnMs;
-  let order=autoFleetTurn(b,who);
+  let order=model==='generator-v0'?generatorOrder(b):autoFleetTurn(b,who);
   if(model==='no-normal'){
    // Scenario diagnostico: nessun tiro GRATIS della madre; le armi sparano.
    order={...order,activateElemental:false,pass:true};
   }
   if(validateFleetTurn(b,who,order)){
    invalid++;order=fallback(b);
-   if(model==='no-normal')order.pass=true;
+   if(model!=='current')order.pass=true;
   }
   let r=resolveFleetNextTurn(b,who,order,at);
-  if(!r.ok){invalid++;order=fallback(r.battle);if(model==='no-normal')order.pass=true;r=resolveFleetNextTurn(r.battle,who,order,at);}
+  if(!r.ok){invalid++;order=fallback(r.battle);if(model!=='current')order.pass=true;r=resolveFleetNextTurn(r.battle,who,order,at);}
   assert.equal(r.ok,true,shipA+'/'+shipB+'/'+rarity+': '+r.reason);
   played+=order.cards?.length||0;
   passes+=Number(!!order.pass);
@@ -128,12 +156,39 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current'){
   blocks+=r.events.filter(e=>e.kind==='block').length;
   damage+=r.shot?.damage||0;
   b=r.battle;turns++;
+  if(model==='generator-v0'&&b.phase==='playing'){
+   const owner=b.sides[who],foe=b.sides[who==='A'?'B':'A'];
+   const available=generatorCardCount(owner);
+   const reserved=available>=4||
+    arch.name==='offensivo'&&available>=2||
+    arch.name==='equilibrato'&&available>=2&&turns%3===0;
+   const preview=generatorAttackPreview(owner,reserved);
+   if(preview.ready){
+    const actual=commitGeneratorFiring(owner,preview);
+    if(actual){
+     const guard=protectingFleetUnits(foe,b.ply)[0];
+     const target=guard?.unit||foe.ships[0];
+     const element=owner.ships[0].element;
+     const relationTarget=guard?.unit?.element||foe.ships[0].element;
+     const afterElement=applyElementalDamage(foe,element,relationTarget,actual.nominalDamage).damage;
+     const taken=guard?Math.min(target.hp,afterElement):
+      limitedMotherDamage(target,afterElement,b.ply-1);
+     target.hp=Math.max(0,target.hp-taken);
+     if(guard&&target.hp===0){target.destroyed=true;target.linked=false;}
+     if(!guard&&target.hp===0){
+      b.phase='finished';b.winner=who;b.finishedAtMs=at;
+      b.finishReason='Madre a zero HP (modello diagnostico Generatore)';
+     }
+     generatorShots++;generatorHp+=taken;
+    }
+   }
+  }
   assert.ok(b.sides.A.ships[0].hp>=0&&b.sides.B.ships[0].hp>=0);
  }
  return {rarity,deck:arch.name,shipA,shipB,seed,model,
   boss:bossId!=null,seconds:turns*meanTurnMs/1000,
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
-  winner:b.winner||'unfinished',invalid,played,weaponShots,blocks,passes,damage};
+  winner:b.winner||'unfinished',invalid,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp};
 }
 function stats(matches){
  const seconds=[...matches.map(m=>m.seconds)].sort((a,b)=>a-b);
@@ -147,7 +202,8 @@ function stats(matches){
   within5to6:matches.filter(x=>x.seconds>=300&&x.seconds<=360).length,
   avgTurns:Math.round(matches.reduce((s,v)=>s+v.turns,0)/n),
   invalid:matches.reduce((s,v)=>s+v.invalid,0),
-  avgWeaponShots:Math.round(matches.reduce((s,v)=>s+v.weaponShots,0)/n)
+  avgWeaponShots:Math.round(matches.reduce((s,v)=>s+v.weaponShots,0)/n),
+  avgGeneratorShots:Math.round(matches.reduce((s,v)=>s+(v.generatorShots||0),0)/n*10)/10
  };
 }
 test('Matrice PvP diagnostica: Comune, Rara, Epica, Leggendaria e tre archetipi',()=>{
@@ -196,4 +252,21 @@ test('Audit senza attacco gratuito madre, esclusi Personaggi (12 scenari)',()=>{
   overall:stats(matches),matches};
  console.log('WEAPON_PACING_NO_MOTHER='+JSON.stringify(report));
  assert.equal(matches.length,12);
+});
+
+test('Matrice diagnostica: due attacchi madre a 2/4 Energie fisiche, senza Personaggi',()=>{
+ const cases=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,[a,b]] of PRESETS[rarity].entries()){
+   const arch=ARCHETYPES[i];
+   for(const shift of [0,101])
+    cases.push(simulate(rarity,arch,a,b,2707+i*29+rIdx(rarity)*83+shift,null,'generator-v0'));
+  }
+ const report={byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+   [r,stats(cases.filter(c=>c.rarity===r))])),
+  byDeck:Object.fromEntries(ARCHETYPES.map(a=>[a.name,
+   stats(cases.filter(c=>c.deck===a.name))])),
+  overall:stats(cases),examples:cases.slice(0,12)};
+ console.log('WEAPON_PACING_GENERATOR='+JSON.stringify(report));
+ assert.equal(cases.length,24);
 });
