@@ -16,6 +16,7 @@ import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
 import {card,cardRole,cardFacePath,FLEET_TURN_SECONDS} from './fleetNext/rules.js';
+import {WEAPON_PRINT_CANDIDATE_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {isMaxSupportLevel} from './fleetNext/supportProgression.js';
 import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
 import {LINCE_BYPASS_ACTIONS,linceMarkedRouteReady} from './fleetNext/linceEngine.js';
@@ -63,6 +64,10 @@ const PHYSICAL_LABELS={engine:'Plancia',weapons:'Arsenale',shieldGenerator:'Gene
 const PHYSICAL_SHORT_LABELS={engine:'PLA',weapons:'ARS',shieldGenerator:'GEN',command:'CEN'};
 const VITAL_LABELS={bridge:'Plancia',weapons:'Arsenale',generator:'Generatore',command:'Centralina'};
 const pct=(n,d)=>d>0?Math.round(Math.max(0,Math.min(1,n/d))*100):0;
+// I valori riportati a schermo devono corrispondere alla scala del nuovo
+// motore; il disegno e il file immagine della carta non vengono cambiati.
+const displayedCard=(id,modern=false)=>modern?
+ (WEAPON_PRINT_CANDIDATE_BY_ID[id]||card(id)):card(id);
 function activeEscort(e){return e.hp>0&&!e.destroyed;}
 function findMother(ships){
  const available=new Map(ships.cards.map(card=>[card.shipId,card]));
@@ -381,7 +386,7 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
    const offline=!!unit?.componentTimers?.[controller]?.expired||
     (controller==='bridge'&&!!unit?.componentTimers?.bridge?.expired)||
     parts.some(p=>p.id===controller&&(p.hp<=0||p.destroyed));
-   const face=!covered&&type?card(type):null;
+   const face=!covered&&type?displayedCard(type,unit?.newGeneratorCombat):null;
    const art=covered?OFFICIAL_SPECIAL_FIXED_BACK:!type?null:card(type)?
      cardFacePath(type,upgrades[type]||1):officialSpecialArtPath(type);
    const title=covered?(side==='A'?'La tua trappola coperta · Tocca per consultarla':'Trappola avversaria coperta'):
@@ -427,8 +432,8 @@ function TrapReveal({event}){
   </div>
  </div>;
 }
-function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,motherLevel=1,unavailableReason=''}){
- const def=card(type);
+function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,motherLevel=1,unavailableReason='',modernBalance=false}){
+ const def=displayedCard(type,modernBalance);
  const rarity=exclusiveRarityAtLevel(def,motherLevel);
  const description=def?describeEffect(def,grade):'Carta tattica';
  const isEnergy=def?.effectSpec?.type==='energy'||def?.kind==='energy';
@@ -1174,6 +1179,7 @@ export default function OfficialFleetBattle3D({
      offset={index-(hand.length-1)/2}
      selected={chosenCards.includes(index)} disabled={ended||!myTurn||resolving||(player.provisionalHandFrozenUntilMs||0)>now}
      grade={player.exclusiveUpgrades?.[type]||1} motherLevel={player.ships[0].level}
+     modernBalance={!!player.newGeneratorCombat}
      unavailableReason={unavailable(type,index)}
      onClick={()=>chooseCard(index)}/>)}
    </div>
@@ -1189,7 +1195,7 @@ export default function OfficialFleetBattle3D({
    </label>}
     <div className="f3d-selected-effects">{chosenTypes.map((type,i)=><p key={type+'-'+i}>
      <b>{card(type)?.nome||card(type)?.name||type}</b>
-     {' — '+describeEffect(card(type),player.exclusiveUpgrades?.[type]||1)}
+     {' — '+describeEffect(displayedCard(type,player.newGeneratorCombat),player.exclusiveUpgrades?.[type]||1)}
     </p>)}</div>
     {enemyDismantle.length>0&&<p>Smontaggio nemico attivo: {enemyDismantle.map(e=>
      e.targets.join(', ')+' · '+e.remainingTurns+' turni').join('; ')}</p>}
@@ -2018,7 +2024,7 @@ export default function OfficialFleetBattle3D({
     </>:help.machine?<>
      <strong>{help.machine.name}</strong>
      {player.ruleset===HP_SYNC_RULESET?<>
-     <p>{describeEffect(card(help.machine.sourceCardId))}</p>
+     <p>{describeEffect(displayedCard(help.machine.sourceCardId,player.newGeneratorCombat))}</p>
      {help.machine.nominalDamage!=null&&<p>Danno nominale attuale: {help.machine.nominalDamage} HP (prima di difese e modificatori).</p>}
      {help.machine.damagePercent!=null&&<p>Danno nominale: {help.machine.damagePercent}% degli HP massimi del bersaglio.</p>}
      {help.machine.damageFormula&&<p>{help.machine.damageFormula}</p>}
