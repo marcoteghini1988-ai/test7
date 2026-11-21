@@ -34,6 +34,6 @@ test('Ritmo baseline di sei coppie Leggendarie, non un limite forzato in minuti'
   .map(([a,b])=>playBaseline(a,b));
  assert.equal(samples.length,6);
  assert.ok(samples.every(x=>x.turns>=2&&x.turns<=55));
- assert.equal(FLEET_PACING_WINDOWS.pvp.targetSeconds,300);
+ assert.equal(FLEET_PACING_WINDOWS.pvp.targetSeconds,330);
  console.log('BALANCE_PVP_20S_TURN='+JSON.stringify(samples));
 });
