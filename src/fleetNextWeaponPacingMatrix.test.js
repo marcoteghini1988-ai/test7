@@ -144,7 +144,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   supportRosterB:roster(rarity,seed+4),
   deckA:generator(shipA,rarity,arch,seed),
   deckB:generator(shipB,rarity,arch,seed+11),
-  seed,nowMs:0
+  seed,nowMs:0,newGeneratorCombat:model==='live-generator'
  });
  if(model==='generator-components-v1'){
   // Solo nella prova statistica si modificano gli HP e l'istante di scadenza:
@@ -178,10 +178,10 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   }
   if(validateFleetTurn(b,who,order)){
    invalid++;order=fallback(b);
-   if(model!=='current')order.pass=true;
+   if(!['current','live-generator'].includes(model))order.pass=true;
   }
   let r=resolveFleetNextTurn(b,who,order,at);
-  if(!r.ok){invalid++;order=fallback(r.battle);if(model!=='current')order.pass=true;r=resolveFleetNextTurn(r.battle,who,order,at);}
+  if(!r.ok){invalid++;order=fallback(r.battle);if(!['current','live-generator'].includes(model))order.pass=true;r=resolveFleetNextTurn(r.battle,who,order,at);}
   assert.equal(r.ok,true,shipA+'/'+shipB+'/'+rarity+': '+r.reason);
   played+=order.cards?.length||0;
   passes+=Number(!!order.pass);
@@ -223,7 +223,9 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
  }
  return {rarity,deck:arch.name,shipA,shipB,seed,model,
   boss:bossId!=null,
-  seconds:model==='generator-components-v1'&&b.finishReason?.startsWith('Deterioramento')?
+  seconds:model==='live-generator'&&Number.isFinite(b.finishedAtMs)?
+   b.finishedAtMs/1000:model==='generator-components-v1'&&
+   b.finishReason?.startsWith('Deterioramento')?
    b.componentClockSeconds:turns*meanTurnMs/1000,
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
   winner:b.winner||'unfinished',invalid,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
@@ -404,5 +406,23 @@ test('Controprova F su 24 boss con Terreni e passive, senza Personaggi',()=>{
    .map(({rarity,shipA,shipB,seconds,winner,seed})=>
    ({rarity,shipA,shipB,seconds,winner,seed}))};
  console.log('WEAPON_PACING_F_BOSSES='+JSON.stringify(report));
+ assert.equal(cases.length,24);
+});
+
+test('Partita ufficiale nuova: 24 PvP veri con Generatore e timer integrati',()=>{
+ const cases=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,[a,b]] of PRESETS[rarity].entries())
+   for(const shift of [0,101])
+    cases.push(simulate(rarity,ARCHETYPES[i],a,b,
+     4707+i*29+rIdx(rarity)*83+shift,null,'live-generator'));
+ const report={overall:stats(cases),byRarity:Object.fromEntries(
+  SHIP_RARITIES.map(r=>[r,stats(cases.filter(x=>x.rarity===r))])),
+  byDeck:Object.fromEntries(ARCHETYPES.map(a=>
+   [a.name,stats(cases.filter(x=>x.deck===a.name))])),
+  cases:cases.map(({rarity,deck,shipA,shipB,seconds,winner,
+   generatorShots,weaponShots,invalid})=>({rarity,deck,shipA,shipB,
+   seconds,winner,generatorShots,weaponShots,invalid}))};
+ console.log('WEAPON_PACING_LIVE_GENERATOR='+JSON.stringify(report));
  assert.equal(cases.length,24);
 });
