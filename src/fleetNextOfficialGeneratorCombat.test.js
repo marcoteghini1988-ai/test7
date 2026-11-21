@@ -6,7 +6,7 @@ import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {chargeElementalEnergy} from './fleetNext/elementalAbilities.js';
 import {generatorCardCount,generatorCoolingOwnTurns} from './fleetNext/motherGeneratorBalance.js';
 import {PACING_BALANCE_CANDIDATE} from './fleetNext/pacingBalanceCandidate.js';
-import {componentDurations} from './fleetNext/componentTimerPacing.js';
+import {componentDurations,advanceTimedComponents} from './fleetNext/componentTimerPacing.js';
 const create=()=>createFleetNextBattle({
  shipA:'N00',shipB:'C01',raritaA:'Comune',raritaB:'Comune',
  supportRosterA:[],supportRosterB:[],deckA:[],deckB:[],
@@ -109,4 +109,63 @@ test('Il deterioramento della nave puo terminare la partita senza quarto timer G
  assert.equal(after.battle.sides.A.componentTimers.generator,undefined);
  assert.equal(after.battle.sides.B.componentTimers.generator,undefined);
  assert.ok(after.battle.finishedAtMs<600000);
+});
+
+test('Il cronometro individuale avanza SOLO nel turno del proprietario',()=>{
+ const b=create();
+ b.componentClockMode='active-player-only';
+ for(const side of Object.values(b.sides)){
+  side.componentDeteriorationFraction=.01;
+  for(const [key,at] of Object.entries({weapons:165,command:190,bridge:210})){
+   side.componentTimers[key].initialSeconds=at;
+   side.componentTimers[key].remainingSeconds=at;
+  }
+ }
+ const once=advanceFleetCombatTime(b,10000);
+ assert.equal(once.battle.sides.A.componentElapsedSeconds,10);
+ assert.equal(once.battle.sides.B.componentElapsedSeconds,0);
+ assert.equal(once.battle.sides.B.componentTimers.weapons.remainingSeconds,165);
+ const twice=advanceFleetCombatTime(once.battle,10000);
+ assert.equal(twice.battle.sides.A.componentElapsedSeconds,10,'Nessun doppio conteggio');
+ const a=resolvePreparedFleetTurn(twice.battle,'A',aim(),10000);
+ assert.equal(a.ok,true,a.reason);
+ assert.equal(a.battle.turn,'B');
+ const duringB=advanceFleetCombatTime(a.battle,22000);
+ assert.equal(duringB.battle.sides.A.componentElapsedSeconds,10);
+ assert.equal(duringB.battle.sides.B.componentElapsedSeconds,12);
+ assert.equal(duringB.battle.sides.A.componentTimers.bridge.remainingSeconds,200);
+ assert.equal(duringB.battle.sides.B.componentTimers.bridge.remainingSeconds,198);
+ const bTurn=resolvePreparedFleetTurn(duringB.battle,'B',aim(),22000);
+ assert.equal(bTurn.ok,true,bTurn.reason);
+ const nextA=advanceFleetCombatTime(bTurn.battle,28000);
+ assert.equal(nextA.battle.sides.A.componentElapsedSeconds,16);
+ assert.equal(nextA.battle.sides.B.componentElapsedSeconds,12);
+});
+test('Deterioramento individuale: 1% HP massimi dopo 210 secondi PROPRI, pausa fuori turno',()=>{
+ const b=create(),side=b.sides.A;
+ b.componentClockMode='active-player-only';
+ side.componentDeteriorationFraction=.01;
+ for(const [key,at] of Object.entries({weapons:169,command:191,bridge:210})){
+  side.componentTimers[key].initialSeconds=at;
+  side.componentTimers[key].remainingSeconds=at;
+ }
+ advanceTimedComponents(side,209,{drainFraction:.01});
+ const full=side.ships[0].hp;
+ // Il giocatore ha gia' consumato 209 secondi nei suoi turni precedenti:
+ // l'ultimo componente scade al suo secondo 210, senza danno nello stesso secondo.
+ const t210=advanceFleetCombatTime(b,1000);
+ assert.equal(t210.battle.sides.A.componentElapsedSeconds,210);
+ assert.equal(t210.battle.sides.A.componentTimers.bridge.expired,true);
+ assert.equal(t210.battle.sides.A.ships[0].hp,full);
+ const t211=advanceFleetCombatTime(t210.battle,2000);
+ assert.equal(t211.battle.sides.A.componentElapsedSeconds,211);
+ assert.ok(Math.abs((full-t211.battle.sides.A.ships[0].hp)-full*.01)<.02);
+ const repeated=advanceFleetCombatTime(t211.battle,2000);
+ assert.equal(repeated.battle.sides.A.ships[0].hp,t211.battle.sides.A.ships[0].hp);
+ const passed=resolvePreparedFleetTurn(repeated.battle,'A',aim(),2000);
+ assert.equal(passed.ok,true,passed.reason);
+ const idle=advanceFleetCombatTime(passed.battle,21000);
+ assert.equal(idle.battle.sides.A.componentElapsedSeconds,211);
+ assert.equal(idle.battle.sides.A.ships[0].hp,t211.battle.sides.A.ships[0].hp);
+ assert.equal(idle.battle.sides.B.componentElapsedSeconds,19);
 });
