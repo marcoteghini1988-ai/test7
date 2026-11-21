@@ -35,6 +35,30 @@ export function componentDurations(shipId,rarity){
  return Object.freeze(Object.fromEntries(TIMED_COMPONENT_IDS.map(id=>[id,base[id]+bonus])));
 }
 
+// Profili strategici ufficiali: i tre sistemi scadono in ordine diverso
+// secondo il modello della nave; il piu' longevo raggiunge sempre 3:30.
+export function strategicComponentDurations(shipId){
+ const raw=COMPONENT_TIMER_BASE_SECONDS[shipId];
+ if(!raw)throw Error('Profilo madre senza timer strategici: '+shipId);
+ const sorted=[...TIMED_COMPONENT_IDS].sort((a,b)=>
+  raw[a]-raw[b]||TIMED_COMPONENT_IDS.indexOf(a)-TIMED_COMPONENT_IDS.indexOf(b));
+ const [short,middle,long]=sorted;
+ const earliest=Math.max(150,Math.min(185,
+  194-Math.round((raw[long]-raw[short])*.45)));
+ const median=Math.max(earliest+10,Math.min(198,
+  200-Math.round((raw[long]-raw[middle])*.55)));
+ return Object.freeze({[short]:earliest,[middle]:median,[long]:210});
+}
+
+export function initializeStrategicComponentTimers(side){
+ const durations=strategicComponentDurations(side?.ships?.[0]?.id);
+ side.componentElapsedSeconds=0;
+ side.componentTimers=Object.fromEntries(TIMED_COMPONENT_IDS.map(id=>[id,{
+  running:true,initialSeconds:durations[id],remainingSeconds:durations[id],expired:false
+ }]));
+ return durations;
+}
+
 export function initializeComponentTimers(side,rarity){
  const durations=componentDurations(side?.ships?.[0]?.id,rarity);
  side.componentElapsedSeconds=0;
