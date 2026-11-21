@@ -261,7 +261,7 @@ export function describeEffect(card,level=1){
    }
    if(s.damageMode==='escort-count')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per due tuoi turni: '+s.baseDamage+' HP di base +'+s.perEscort+' HP per ogni tua navicella di supporto ancora attiva in uno dei due slot. Le Fusioni contano come una sola navicella nello stesso slot.';
    if(s.damageMode==='discard-attacks')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per un turno: '+s.baseDamage+' HP di danno base, +'+s.perDiscardAttack+' HP per ogni tua Carta Attacco negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+FLEET_ELEMENTS[s.elementId].name+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
-    (s.maxNominalDamage?' Danno nominale massimo '+s.maxNominalDamage+' HP per attivazione.':'');
+    (s.maxNominalDamage?' Danno base massimo '+s.maxNominalDamage+' HP nominali prima dei modificatori di Arsenale, elementi e Terreno.':'');
    return 'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
   }
   case 'prisma':return card.effectProposed;
