@@ -72,6 +72,7 @@ import {
  activateTerrain,activeTerrain,terrainSalvoModifier,
  neutralTerrain,bossTerrain,campaignTerrain,TERRAIN_CATALOG
 } from './terrains.js';
+import {attackCardCapacity,characterSlotEnabled,planciaRestrictedTargetOrder} from './componentFailureBalance.js';
 import {HP_SYNC_RULESET,motherIntegrityFromSystems,splitSynchronizedDamage} from './hpSynchronization.js';
 import {applySystemCard,expireSystemCards,expireTemporaryWeapons,
  commandPenalty,consumeCommandGuard,arsenalBonus,generatorAdjustment,commandPassiveSuspensions,
@@ -578,6 +579,7 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   const capacity=defenseCapacityReason(side,1,battle?.ply??0,defenseKind(def));
   if(capacity)return capacity;
  }
+ if(character&&!characterSlotEnabled(side))return 'Plancia esaurita: slot Personaggio disattivato';
  if(character&&!operational(side.ships[0],characterSystem(side)))return 'Il sistema del Personaggio è distrutto';
  if(character&&side.commander&&side.commander.untilPly>(battle?.ply??0))return 'È già attivo un Personaggio';
  if(def.shipId&&s.type!=='fusion'&&!exclusiveOperational(def.id,side.ships[0],side.escorts))return 'Nave o componenti richiesti non disponibili';
@@ -827,6 +829,8 @@ export function validateFleetTurn(b,who,order){
   return 'Correzione balistica: nuova unità non valida';
  const roles=chosen.map(c=>cardRole(c.id)),count=x=>roles.filter(r=>r===x).length;
  if(count('character')>1)return 'Massimo un Personaggio per turno';
+ if(count('attack')>attackCardCapacity(side))
+  return 'Arsenale esaurito: massimo 2 carte Attacco per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
  if(count('terrain')>1)return 'Massimo una Carta Terreno per turno';
  if(chosen.filter(c=>c.effectSpec?.type==='dismantle').length>1)
@@ -5102,6 +5106,12 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
    battle:timed.battle,events:timed.events};
  if(timed.battle.phase==='finished')
   return {ok:true,battle:timed.battle,events:timed.events,shot:{damage:0,timedFinish:true}};
+ // Plancia fuori uso: la scelta manuale del supporto non ha effetto.
+ // A parita' di bersagli disponibili colpisce prima lo slot 0.
+ if(timed.battle?.sides?.[who]){
+  order=planciaRestrictedTargetOrder(timed.battle.sides[who],
+   timed.battle.sides[other(who)],order);
+ }
  const error=validateFleetTurn(timed.battle,who,order);
  if(error)return {ok:false,reason:error,battle:timed.battle,events:timed.events};
  const b=clone(timed.battle),events=[...timed.events],side=b.sides[who];
@@ -5164,7 +5174,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  processHelios(b,who,ctx,events,order);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.fieldReset?[]:
-  ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
+  ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,attackCardCapacity(side));
  const weaponShot=mergeFalcoShots(
   resolveProvisionalWeaponShots(b,ctx,events,order,{other,unitAlive,unitEnabled,unitSilenced,weaponSlotLocked,
   startNebulaVolley,protectingFleetUnits,selectedEnemyTarget,motherPart,arsenalBonus,
