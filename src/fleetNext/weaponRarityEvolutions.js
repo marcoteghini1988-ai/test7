@@ -10,7 +10,8 @@ import {DESIGNED_WEAPON_CARDS} from './designedWeaponCards.js';
 import {CONFIRMED_TRANSFER_WEAPONS} from './confirmedTransferredWeapons.js';
 import {DISCARD_WEAPONS} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS} from './temporarySupportWeapons.js';
-import {SHIP_RARITIES,MOTHER_RARITY_SCALING} from './shipRarity.js';
+import {SHIP_RARITIES} from './shipRarity.js';
+import {MOTHER_RARITY_SCALING} from './motherBalance.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 
 // Per mantenere una simile durata negli scontri alla pari, la potenza nominale
