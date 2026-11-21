@@ -180,7 +180,7 @@ const fleetEngine=read('src/fleetNext/combat.js');
 const fleetCss=read('src/OfficialFleetBattle3D.css');
 verify(fleetView.includes("readShipCollection")&&fleetView.includes("readFleetInventory")&&
  fleetView.includes("claimOfficialLiveVictoryRewards")&&
- fleetView.includes("resolveFleetNextTurn")&&
+ fleetView.includes("resolvePreparedFleetTurn")&&
  fleetView.includes("<ShipPhysicalVitals")&&fleetView.includes("<MountedWeapons")&&
  fleetView.includes("OfficialLiveBattle3D.css"),
  'Nuove meccaniche: obbligatorio mantenere le navicelle 3D e i vitali fisici originali');
