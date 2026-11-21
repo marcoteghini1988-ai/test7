@@ -2,10 +2,9 @@
 // La stessa regola produce il numero SULLA carta e il numero nel combattimento.
 // La scala differenzia progressioni con 0/1/2 supporti, non impone un timer.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
-export const WEAPON_RARITY_POWER=Object.freeze({
- Comune:0.47,Rara:0.69,Epica:1.21,Leggendaria:1
-});
-export const WEAPON_BALANCE_REVISION='candidate-2026-11-21-v3';
+import {PACING_BALANCE_CANDIDATE} from './pacingBalanceCandidate.js';
+export const WEAPON_RARITY_POWER=PACING_BALANCE_CANDIDATE.weaponNominalMultiplier;
+export const WEAPON_BALANCE_REVISION=PACING_BALANCE_CANDIDATE.id;
 const DAMAGE_FIELDS=Object.freeze(new Set([
  'baseDamage','secondDamage','extraDamage','supportDamage','motherDamage',
  'terrainSupportDamage','bonusDamage','comboBonus','comboBonusDamage',
@@ -168,4 +167,17 @@ export function calibratedWeaponCard(raw){
  if(!raw||!Object.hasOwn(WEAPON_RARITY_POWER,raw.rarita))
   throw Error('Arma priva di rarita');
  return raw;
+}
+
+// Versione PRE-STAMPA: produce un clone, non modifica lo schema ufficiale.
+// Le 73 carte di origine e le 162 evoluzioni rimangono eseguibili con gli
+// effetti storici fino alla migrazione al nuovo motore senza sparo gratuito.
+export function weaponPrintCandidate(raw){
+ const factor=WEAPON_RARITY_POWER[raw?.rarita];
+ if(!raw||!Number.isFinite(factor))throw Error('Carta Arma senza rarita');
+ const spec=factor===1?raw.effectSpec:Object.freeze(balanceNativeSpec(raw.effectSpec,factor));
+ return Object.freeze({...raw,effectSpec:spec,
+  effectProposed:factor===1?raw.effectProposed:description(raw,spec),
+  balanceRevision:WEAPON_BALANCE_REVISION,
+  balanceStatus:'PRINT_PREVIEW_ONLY_NOT_LIVE'});
 }
