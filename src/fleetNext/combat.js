@@ -3050,6 +3050,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     maxHp:saved?.maxHp??s.hp,power:modern?Math.max(1,s.power||0):s.power||0,
     damageMode:s.damageMode||null,weaponElementId:s.elementId||null,
     baseDamage:s.baseDamage??null,perDiscardAttack:s.perDiscardAttack??null,
+    maxNominalDamage:s.maxNominalDamage??null,
     energyMultiplier:s.energyMultiplier??null,perEscort:s.perEscort??null,
     sequenceStage:sequence?s.sequenceStage:null,sequenceEnteredPly:sequence?b.ply:null,
     sequenceEligible:sequence&&(s.sequenceStage===1||!!previous),
