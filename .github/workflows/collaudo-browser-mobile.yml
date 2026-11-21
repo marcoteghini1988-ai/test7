@@ -82,12 +82,12 @@ jobs:
                 assert.ok(await page.locator('.live-fighter--enemy').count()>0,'la madre avversaria deve comparire');
                 await page.screenshot({path:dir+'/01-prima-battaglia.png',fullPage:true,animations:'disabled'});
 
-                const pass=page.getByRole('button',{name:'PASSA',exact:true});
+                const pass=page.getByRole('button',{name:'ESEGUI',exact:true});
                 await pass.click({timeout:6500});
                 await page.waitForTimeout(700);
                 assert.ok(await page.locator('.f3d-original-arena').count()>0,'la plancia deve restare attiva dopo il turno');
                 ensureClean();
-                console.log('OK: nuova partita, due madri, sette carte, pulsante PASSA, nessun errore JS');
+                console.log('OK: nuova partita, due madri, sette carte, pulsante ESEGUI, nessun errore JS');
                 await context.close();
               }
               console.log('COLLAUDO 2: Hangar e Bazar attraverso interfaccia reale, con dati provvisori isolati');
