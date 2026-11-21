@@ -611,9 +611,9 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
    return 'Lancia del Comando Ionico richiede un Personaggio attivo';
   if(pattern==='thermal-coupler'&&!(side.machines||[]).some(m=>
    m.weaponProfile?.pattern==='binary-overload'&&unitAlive(m)&&unitEnabled(m,ply)))
-   return 'Serve Sistema Binario a Sovraccarico già installato';
+   return 'Serve Cannone Binario a Sovraccarico già installato';
   if(pattern==='high-tide'&&side.provisionalWeaponStatus?.lowTide?.ply!==ply-2)
-   return 'Alta Marea richiede Bassa Marea nel turno proprio precedente';
+   return 'Cannone di Alta Marea richiede Cannone di Bassa Marea nel turno proprio precedente';
   if(pattern==='alloy-collision'&&(side.provisionalWeaponStatus?.grapple?.ply!==ply-2||
    (side.provisionalWeaponStatus?.grapple?.ids||[]).length<2))
    return 'Collassatore richiede due bersagli delle Ganasce nel turno precedente';
