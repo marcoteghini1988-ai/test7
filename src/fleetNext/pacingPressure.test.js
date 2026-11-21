@@ -15,13 +15,13 @@ test('La durata resta indicativa: nessuna accelerazione automatica del danno',()
  assert.equal(pacingAttackMultiplier(b,420000),1);
  assert.equal(pacingAttackMultiplier(state('campaign',17),900000),1);
  assert.equal(matchPacingTarget('pvp').enforcedTimeLimit,false);
- assert.equal(matchPacingTarget('pvp').targetSeconds,300);
- assert.equal(matchPacingTarget('boss',17).targetSeconds,540);
+ assert.equal(matchPacingTarget('pvp').targetSeconds,330);
+ assert.equal(matchPacingTarget('boss',17).targetSeconds,345);
 });
 
 test('Resistenza boss lascia invariati HP visibili e incrementa con il boss',()=>{
- assert.equal(bossExtraDamageResistance(8),20);
- assert.equal(bossExtraDamageResistance(17),24);
+ assert.equal(bossExtraDamageResistance(8),11);
+ assert.equal(bossExtraDamageResistance(17),13);
  assert.equal(bossAttackMultiplier(8),1);
  assert.equal(bossAttackMultiplier(17),.85);
  const m={hp:1000,maxHp:1000,defensePercent:10,bossGuardPercent:20};
@@ -32,7 +32,7 @@ test('Resistenza boss lascia invariati HP visibili e incrementa con il boss',()=
   ruleset:HP_SYNC_RULESET,mode:'campaign',bossId:8,
   supportRosterA:[],supportRosterB:[],deckA:[],deckB:[]});
  assert.equal(b.sides.B.ships[0].maxHp,1000);
- assert.equal(b.sides.B.ships[0].bossGuardPercent,20);
+ assert.equal(b.sides.B.ships[0].bossGuardPercent,11);
  assert.equal(b.sides.A.ships[0].bossGuardPercent,undefined);
  assert.ok(b.log.some(e=>e.kind==='boss-guard'));
 });
