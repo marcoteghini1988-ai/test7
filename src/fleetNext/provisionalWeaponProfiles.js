@@ -29,10 +29,11 @@ const RAW=[
       "burnTurns": 5,
       "burnPerDiscard": 2,
       "burnMinimum": 2,
+      "burnMaxDamage": 12,
       "durationTurns": 2,
       "provisional": true
     },
-    "description": "Spara 22 HP e 16 HP al turno successivo. Il primo colpo riuscito applica una bruciatura di 5 turni: 2 HP per propria Carta Attacco negli scarti al momento dell'impatto, minimo 2 HP, senza ricalcolo."
+    "description": "Spara 22 HP e 16 HP al turno successivo. Il primo colpo riuscito applica una bruciatura di 5 turni: 2 HP per propria Carta Attacco negli scarti al momento dell'impatto, minimo 2 HP e massimo 12 HP per turno, senza ricalcolo."
   },
   {
     "id": "weapon-designed-plasma-sistema-binario",
@@ -97,12 +98,12 @@ const RAW=[
     "rarita": "Rara",
     "profile": {
       "pattern": "boreal-binary",
-      "baseDamage": 13,
-      "secondDamage": 17,
+      "baseDamage": 16,
+      "secondDamage": 20,
       "durationTurns": 1,
       "provisional": true
     },
-    "description": "Unisce due impulsi Ghiaccio da 13 e 17 HP in un singolo colpo da 30 HP sul bersaglio scelto, con una verifica difensiva."
+    "description": "Unisce due impulsi Ghiaccio da 16 e 20 HP in un singolo colpo da 36 HP sul bersaglio scelto, con una verifica difensiva."
   },
   {
     "id": "weapon-designed-refrigerant-torretta-crioguidata",
@@ -304,13 +305,13 @@ const RAW=[
       ],
       "freezeSeconds": [
         2,
-        4,
-        6
+        3,
+        4
       ],
       "durationTurns": 3,
       "provisional": true
     },
-    "description": "Per 3 tuoi turni colpisce ogni nave nemica da 8/12/16 HP e congela la mano del rivale per 2/4/6 secondi mentre il timer continua."
+    "description": "Per 3 tuoi turni colpisce ogni nave nemica da 8/12/16 HP e congela la mano del rivale per 2/3/4 secondi mentre il timer continua."
   }
 ];
 export const PROVISIONAL_ADVANCED_WEAPONS=Object.freeze(RAW.map(r=>Object.freeze({
