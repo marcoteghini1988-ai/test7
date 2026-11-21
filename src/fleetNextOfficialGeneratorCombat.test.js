@@ -94,7 +94,8 @@ test('L orologio di partita avanza anche tra le carte e consuma i 3 timer in par
  assert.equal(advanced.battle.sides.A.componentTimers.weapons.remainingSeconds,210);
  assert.equal(advanced.battle.sides.A.ships[0].hp,before);
  assert.equal(advanced.battle.componentClockSeconds,40);
- const all=advanceFleetCombatTime(advanced.battle,(max+10)*1000);
+ const allEnds=Math.max(max,...Object.values(componentDurations('C01','Comune')));
+ const all=advanceFleetCombatTime(advanced.battle,(allEnds+10)*1000);
  assert.ok(all.battle.sides.A.componentTimers.weapons.expired);
  assert.ok(all.battle.sides.A.componentTimers.command.expired);
  assert.ok(all.battle.sides.A.componentTimers.bridge.expired);
