@@ -70,7 +70,9 @@ export function discardWeaponCharge(side,machine,roleForCard){
  if(machine?.damageMode!=='discard-attacks')return null;
  const discard=Array.isArray(side?.discard)?side.discard:[];
  const attackCards=discard.reduce((n,id)=>n+(roleForCard(id)==='attack'?1:0),0);
- const energyMatched=discard.includes('energy-'+machine.weaponElementId);
+ const energyPrefix='energy-'+machine.weaponElementId;
+ const energyMatched=discard.some(id=>id===energyPrefix||
+  ['-r','-e','-l'].some(suffix=>id===energyPrefix+suffix));
  const multiplier=energyMatched?machine.energyMultiplier:1;
  const rawDamage=machine.baseDamage+attackCards*machine.perDiscardAttack;
  // Limite alla scarica finale: la crescita per scarti e il raddoppio restano validi.
