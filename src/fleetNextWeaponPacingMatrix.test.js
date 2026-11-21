@@ -630,3 +630,46 @@ test('SONDAGGIO_H_2026_11_21: correzioni PER RARITA, sempre isolate',()=>{
  console.log('WEAPON_PACING_H_SWEEP='+JSON.stringify(report));
  assert.ok(report.every(x=>x.pvp.n===12&&x.boss.n===12));
 });
+
+test('SONDAGGIO_J_2026_11_21: taratura separata per rarita e modalita, conferma semi nuovi',()=>{
+ const v=(motherHpScale,timerOffsetSeconds,drainMultiplier,supportHpScale,weaponFactorMultiplier)=>
+  ({motherHpScale,timerOffsetSeconds,drainMultiplier,supportHpScale,weaponFactorMultiplier});
+ const candidates=[
+  {name:'F-live-attuale',pvp:null,boss:null},
+  {name:'J1-misto',pvp:{
+   Comune:v(1,30,.6,.9,1.1),Rara:v(1.10,30,.6,.9,1.05),
+   Epica:v(1,0,.8,.8,1.20),Leggendaria:v(1,0,.8,.8,1.15)},boss:{
+   Comune:v(1.5,20,.55,.9,1.05),Rara:v(1.65,25,.5,.9,1),
+   Epica:v(1,0,.65,.85,1.15),Leggendaria:v(1.10,0,.65,.85,1.10)}},
+  {name:'J2-piu-resistenza',pvp:{
+   Comune:v(1.10,25,.65,.95,1.05),Rara:v(1.20,25,.6,.95,1),
+   Epica:v(1,0,.75,.75,1.25),Leggendaria:v(1.10,0,.75,.75,1.20)},boss:{
+   Comune:v(1.4,15,.6,.9,1.05),Rara:v(1.7,15,.6,.9,.95),
+   Epica:v(1,0,.75,.8,1.20),Leggendaria:v(1.15,0,.75,.8,1.15)}}
+ ];
+ const report=[];
+ for(const candidate of candidates){
+  const pvp=[],boss=[];
+  for(const rarity of SHIP_RARITIES)
+   for(const [i,[a,b]] of PRESETS[rarity].entries()){
+    const seeds=[0,53,127,293];
+    for(const shift of seeds)
+     pvp.push(simulate(rarity,ARCHETYPES[i],a,b,27121+rIdx(rarity)*293+i*109+shift,
+      null,'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      candidate.pvp?.[rarity]||null));
+    for(const shift of [0,127])
+     boss.push(simulate(rarity,ARCHETYPES[1],a,b,28417+rIdx(rarity)*317+i*59+shift,
+      [1,8,17][i],'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      candidate.boss?.[rarity]||null,'fast-cpu'));
+   }
+  report.push({name:candidate.name,pvp:stats(pvp),boss:stats(boss),
+   pvpRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(pvp.filter(x=>x.rarity===r))])),
+   bossRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(boss.filter(x=>x.rarity===r))])),
+   pvpOutliers:pvp.filter(x=>x.seconds<270||x.seconds>420||x.draw)
+    .map(x=>({rarity:x.rarity,seconds:x.seconds,winner:x.winner,reason:x.finishReason})),
+   bossOutliers:boss.filter(x=>x.seconds<240||x.seconds>450||x.draw)
+    .map(x=>({rarity:x.rarity,seconds:x.seconds,winner:x.winner,reason:x.finishReason}))});
+ }
+ console.log('WEAPON_PACING_J_CROSSCHECK='+JSON.stringify(report));
+ assert.ok(report.every(r=>r.pvp.n===48&&r.boss.n===24));
+});
