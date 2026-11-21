@@ -465,3 +465,48 @@
 .es-math-scope .f3d-approved-layout .f3d-resolution-interlock {
  position:absolute;inset:0;z-index:60;pointer-events:auto;background:transparent;
 }
+
+/* Generatore nuovo: barra sempre visibile; una pressione prenota l'attacco.
+   Rimane nella posizione HUD già prevista, nessuna finestra aggiuntiva. */
+.es-math-scope .f3d-approved-layout .f3d-elemental-control:has(.f3d-generator-bar){
+ display:flex!important;z-index:29;gap:0;padding:0;
+ border:1px solid #658b98;background:#0a1729fa;
+}
+.es-math-scope .f3d-approved-layout .f3d-elemental-control .f3d-generator-bar{
+ width:100%;height:100%;display:flex;justify-content:space-between;align-items:center;
+ padding:1px 7px;min-width:0;font-size:10px;line-height:12px;
+ border:1px solid #416f8b;background:#0d2c40;
+ color:#dceef7;text-shadow:0 1px 2px #000;
+ font-weight:900;font-style:normal;white-space:nowrap;
+}
+.es-math-scope .f3d-approved-layout .f3d-elemental-control .f3d-generator-bar--quick:not(:disabled){
+ border-color:#79d9f6;color:#ffffff;background:#123950;
+ animation:f3d-generator-glow-blue 1.2s ease-in-out infinite alternate;
+}
+.es-math-scope .f3d-approved-layout .f3d-elemental-control .f3d-generator-bar--heavy:not(:disabled){
+ border-color:#e8ad58;color:#fff5db;background:#60411a;
+ animation:f3d-generator-glow-gold 1.2s ease-in-out infinite alternate;
+}
+.es-math-scope .f3d-approved-layout .f3d-elemental-control .f3d-generator-bar--reserved,
+.es-math-scope .f3d-approved-layout .f3d-elemental-control .f3d-generator-bar--reserved:disabled{
+ opacity:1;animation:none;border-color:#7fe8ad;background:#194c3b;color:#f2fff6;
+}
+.es-math-scope .f3d-approved-layout .f3d-fleet-console .f3d-vital-countdown{
+ display:block;font-size:7px;line-height:8px;font-style:normal;
+ font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:0;
+ color:#e0f5ff;text-shadow:0 0 2px #1b8dac,0 1px 1px #000;
+}
+.es-math-scope .f3d-approved-layout .f3d-fleet-console .f3d-vital[data-status="off"] .f3d-vital-countdown{
+ color:#ff9ca4;
+}
+@keyframes f3d-generator-glow-blue{
+ from{box-shadow:inset 0 0 1px #226988,0 0 1px #41cfff}
+ to{box-shadow:inset 0 0 7px #38a5d7,0 0 7px #41cfff}
+}
+@keyframes f3d-generator-glow-gold{
+ from{box-shadow:inset 0 0 1px #8b5d13,0 0 1px #e8b54b}
+ to{box-shadow:inset 0 0 7px #c78d38,0 0 7px #ffdf84}
+}
+@media (prefers-reduced-motion:reduce){
+ .es-math-scope .f3d-approved-layout .f3d-elemental-control .f3d-generator-bar{animation:none!important}
+}
