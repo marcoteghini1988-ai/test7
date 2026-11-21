@@ -20,6 +20,7 @@ import {limitedMotherDamage} from './fleetNext/motherBalance.js';
 import {generatorCardCount,generatorAttackPreview,commitGeneratorFiring} from './fleetNext/motherGeneratorBalance.js';
 import {initializeComponentTimers,advanceBattleComponentClock,CANDIDATE_DRAIN_FRACTION_PER_SECOND}
  from './fleetNext/componentTimerPacing.js';
+import {PACING_BALANCE_CANDIDATE} from './fleetNext/pacingBalanceCandidate.js';
 
 const PRESETS=Object.freeze({
  Comune:[['N00','C01'],['C01','C02'],['C02','C03']],
@@ -365,9 +366,9 @@ test('Controprova F su 72 scontri: stessi tipi di mazzo, semi nuovi',()=>{
  for(const rarity of SHIP_RARITIES)
   for(const [i,[a,b]] of PRESETS[rarity].entries())
    for(const shift of [0,47,93,139,211,307]){
-    const variant={motherHpScale:rarity==='Comune'?1.15:1,
-     weaponFactor:rarity==='Comune'?.60:1,timerOffsetSeconds:0};
-    const drain=rarity==='Epica'?.012:rarity==='Leggendaria'?.016:.009;
+    const variant={motherHpScale:PACING_BALANCE_CANDIDATE.motherHpMultiplier[rarity],
+     weaponFactor:PACING_BALANCE_CANDIDATE.weaponNominalMultiplier[rarity],timerOffsetSeconds:0};
+    const drain=PACING_BALANCE_CANDIDATE.deteriorationFractionPerSecond[rarity];
     matches.push(simulate(rarity,ARCHETYPES[i],a,b,
      8903+shift+rIdx(rarity)*179+i*39,null,'generator-components-v1',
      drain,variant));
@@ -389,9 +390,9 @@ test('Controprova F su 24 boss con Terreni e passive, senza Personaggi',()=>{
   for(const [i,bossId] of [1,8,17].entries())
    for(const shift of [0,97]){
     const [a,b]=PRESETS[rarity][i];
-    const variant={motherHpScale:rarity==='Comune'?1.15:1,
-     weaponFactor:rarity==='Comune'?.60:1,timerOffsetSeconds:0};
-    const drain=rarity==='Epica'?.012:rarity==='Leggendaria'?.016:.009;
+    const variant={motherHpScale:PACING_BALANCE_CANDIDATE.motherHpMultiplier[rarity],
+     weaponFactor:PACING_BALANCE_CANDIDATE.weaponNominalMultiplier[rarity],timerOffsetSeconds:0};
+    const drain=PACING_BALANCE_CANDIDATE.deteriorationFractionPerSecond[rarity];
     cases.push(simulate(rarity,ARCHETYPES[1],a,b,
      9903+shift+rIdx(rarity)*179+i*39,bossId,'generator-components-v1',
      drain,variant));
