@@ -1,7 +1,7 @@
 // Eclissi Stellare: nuovo motore tattico, PLANCIA 3D ORIGINALE invariata.
 // Usa i medesimi pezzi, hardpoint, scudiere SVG, arena e geometria del
 // renderer OfficialLiveBattle3D. NON usa FleetCardBattle.css né cards-site.
-import React,{useEffect,useMemo,useState,useRef,useId} from 'react';
+import React,{useEffect,useMemo,useState,useRef} from 'react';
 import {ASSET_ROOT,MountedWeapons} from './ShipPresentation.jsx';
 import {newVessel} from './mathDuelEngine.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
@@ -284,16 +284,27 @@ function FleetVitalStrip({side,unit,onInspect,consoleMode=false}){
     title={name+' · '+detail+(part?' · '+part.hp+'/'+part.maxHp+' integrità':'')}
     aria-label={name+' · '+detail} onClick={()=>onInspect?.({id,name,part,status})}>
     <span className="f3d-vital-icon" aria-hidden="true">{consoleMode?<FleetVitalGlyph type={id}/>:symbol}</span>
-    <span className="f3d-vital-name">{name}</span>{!consoleMode&&<i className="f3d-vital-led" aria-hidden="true"/>}
+    <span className="f3d-vital-name">{name}</span><i className="f3d-vital-led" aria-hidden="true"/>
    </button>;
   })}
  </div>;
 }
-function FleetCommandConsole({unit,onInspect,onLeave,onPass,passDisabled,ended,secondsLeft,turnProgress}){
- return <div className="f3d-command-console" role="group" aria-label="Console di comando">
-  <svg className="f3d-console-shell" viewBox="0 188 2172 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-   <image href={ASSET_ROOT+'/hud/command-console-shell.webp'} width="2172" height="724"/>
-  </svg>
+function FleetConsoleShell({side}){
+ return <svg className="f3d-console-shell" viewBox="16 244 2144 242" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <image href={ASSET_ROOT+'/hud/'+(side==='B'?'opponent':'command')+'-console-shell.webp'} width="2172" height="724"/>
+ </svg>;
+}
+function FleetOpponentConsole({unit,nickname,onInspect}){
+ return <div className="f3d-fleet-console f3d-opponent-console" role="group" aria-label="Console avversario">
+  <FleetConsoleShell side="B"/>
+  <OriginalFleetBar side="B" unit={unit} nickname={nickname}/>
+  <FleetVitalStrip side="B" unit={unit} onInspect={onInspect} consoleMode/>
+ </div>;
+}
+function FleetCommandConsole({unit,nickname,onInspect,onLeave,onPass,passDisabled,ended,secondsLeft,turnProgress}){
+ return <div className="f3d-fleet-console f3d-command-console" role="group" aria-label="Console di comando">
+  <FleetConsoleShell side="A"/>
+  <OriginalFleetBar side="A" unit={unit} nickname={nickname}/>
   <button type="button" className="live-abandon" onClick={onLeave} disabled={ended}
    aria-label="Abbandona la battaglia"><span className="f3d-abandon-label">ABBANDONA</span></button>
   <FleetVitalStrip side="A" unit={unit} onInspect={onInspect} consoleMode/>
@@ -309,35 +320,6 @@ function FleetCommandConsole({unit,onInspect,onLeave,onPass,passDisabled,ended,s
   </button>
  </div>;
 }
-// Un solo profilo metallico continuo per la flotta, senza riquadri intorno alle singole navi.
-function FleetHudSpine(){
- const id=useId(),metal=id+'-metal',glass=id+'-glass';
- return <svg className="f3d-hud-spine" viewBox="0 0 436 34" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-  <defs>
-   <linearGradient id={metal} x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stopColor="#c0dce8"/><stop offset=".08" stopColor="#627f92"/>
-    <stop offset=".23" stopColor="#142738"/><stop offset=".63" stopColor="#07121c"/>
-    <stop offset=".8" stopColor="#2e4759"/><stop offset=".92" stopColor="#8baabb"/>
-    <stop offset="1" stopColor="#122838"/>
-   </linearGradient>
-   <linearGradient id={glass} x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stopColor="#142b3c"/><stop offset=".43" stopColor="#050e18"/>
-    <stop offset="1" stopColor="#102534"/>
-   </linearGradient>
-  </defs>
-  <path d="M2 18Q8 7 23 6H173Q183 6 192 1H311Q320 6 331 6H413Q428 7 434 18L426 28H333Q322 28 314 33H190Q182 29 172 29H12Z"
-   fill={'url(#'+metal+')'} stroke="#02070d" strokeWidth="1.5"/>
-  <path d="M8 18Q13 9 26 9H175Q185 9 194 4H309Q319 9 330 9H411Q422 9 428 18L422 25H332Q321 25 312 29H192Q183 26 172 26H16Z"
-   fill={'url(#'+glass+')'}/>
-  <path d="M14 6.8Q19 5.6 29 5.6H172Q184 5.6 193 1H310Q320 6 332 6H409Q420 6 426 11"
-   fill="none" stroke="#afc9d8" strokeOpacity=".65" strokeWidth=".6"/>
-  <path d="M4 18L13 28H173Q183 28 191 32H313Q322 27 334 27H425L432 18"
-   fill="none" stroke="#41b9e2" strokeOpacity=".65" strokeWidth="1"/>
-  <path d="M17 29H58M196 32H229M279 32H309M379 28H416" fill="none" stroke="#a8edff" strokeWidth=".9"/>
-  <path d="M19 10H75L68 13H15ZM197 4H308L301 5.5H195Z" fill="#c4e7f2" fillOpacity=".1"/>
-  <path d="M3 18L10 13M426 13L433 18" stroke="#b9efff" strokeWidth="1.1"/>
- </svg>;
-}
 function FleetHullMark({mother=false}){
  return <svg className="f3d-hull-mark" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
   {mother?<><path d="M7 1L8.7 5.3L13 7L8.7 8.7L7 13L5.3 8.7L1 7L5.3 5.3Z" fill="none" stroke="currentColor" strokeWidth="1.3"/>
@@ -351,14 +333,13 @@ function OriginalFleetBar({side,unit,nickname}){
   escB?{ship:escB,mother:false}:null];
  return <div className={'live-fleet-bar live-fleet-bar--'+side} role="group"
   aria-label={'Integrità flotta '+(side==='B'?'avversario':'giocatore')}>
-  <FleetHudSpine/>
   <strong className="f3d-player-label" title={nickname||'CPU'}>
    <span>{nickname||'CPU'}</span>
   </strong>
   <div className="live-units">{entries.map((entry,i)=>{
    if(!entry)return <div className="f3d-hp-empty" key={i} aria-label={'Supporto '+(i===0?'A':'B')+' non schierato'}>
     <span className="f3d-ship-name"><FleetHullMark/><span className="f3d-ship-title">{'SUPPORTO '+(i===0?'A':'B')}</span></span>
-    <i className="f3d-empty-meter" aria-hidden="true">NON SCHIERATO</i>
+    <i className="f3d-empty-meter" aria-hidden="true">—</i>
    </div>;
    const {ship,mother:isMother}=entry,max=ship.maxHp||1,hp=Math.max(0,ship.hp||0);
    const rarity=isMother?(ship.rarita||ship.rarity||unit.motherCardRarity):
@@ -1114,8 +1095,8 @@ export default function OfficialFleetBattle3D({
     style={{'--f3d-terrain-image':TERRAIN_CATALOG[terrain].kind==='elemental'?
      'radial-gradient(ellipse at center, rgba(43,112,170,.18), transparent 75%)':
      'url("/assets/fleet-terrain-scenes/'+terrain+'.svg")'}}/>}
-   <OriginalFleetBar side="B" unit={enemy} nickname={opponentNickname||battle.bossName||enemy.ships?.[0]?.name||'Avversario'}/>
-    <FleetVitalStrip side="B" unit={enemy} onInspect={vital=>setHelp({vital})}/>
+   <FleetOpponentConsole unit={enemy} nickname={opponentNickname||battle.bossName||enemy.ships?.[0]?.name||'Avversario'}
+    onInspect={vital=>setHelp({vital})}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
     selectedTarget={actualTarget} onSelectTarget={setSelectedTarget}
     canTarget={!ended&&myTurn&&!(battle.ruleset===HP_SYNC_RULESET&&supportTargets.length>1&&!bypass)} ply={battle.ply}
@@ -1965,7 +1946,7 @@ export default function OfficialFleetBattle3D({
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
-   <FleetCommandConsole unit={player} onInspect={vital=>setHelp({vital})} onLeave={leave} onPass={passTurn}
+   <FleetCommandConsole unit={player} nickname={nickname} onInspect={vital=>setHelp({vital})} onLeave={leave} onPass={passTurn}
     passDisabled={ended||!myTurn||!!targetChoice} ended={ended} secondsLeft={secondsLeft} turnProgress={turnProgress}/>
    {targetChoice&&myTurn&&!ended&&<div className="f3d-support-target-choice" role="dialog"
     aria-label="Scegli quale navicella di supporto nemica colpire" aria-modal="true">
@@ -1977,7 +1958,6 @@ export default function OfficialFleetBattle3D({
     </button>)}
     <button type="button" onClick={()=>setTargetChoice(null)}>MODIFICA LE CARTE</button>
    </div>}
-    <OriginalFleetBar side="A" unit={player} nickname={nickname}/>
    {message&&<div className="live-action-notice f3d-notice" role="status"
     key={lastFx?.nonce||message}>{message}</div>}
    {trapReveal&&<TrapReveal key={'trap-'+trapReveal.nonce} event={trapReveal}/>}

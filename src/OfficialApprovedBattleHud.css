@@ -4,8 +4,8 @@
  --ui-blue:#4ce5ff;--ui-gold:#ffb42f;--ui-red:#ff586b;color:#f4faff;
  --enemy-fleet-top:45px;--player-fleet-top:394px;
  --enemy-slot-top:206px;--player-slot-top:268px;
- --hand-top:641px;--hand-card-width:58px;--hand-card-height:87px;
- --player-hud-bottom:7px;--player-controls-bottom:49px;
+ --hand-top:683px;--hand-card-width:58px;--hand-card-height:87px;
+ --player-hud-bottom:7px;--player-controls-bottom:7px;
 }
 .es-math-scope .f3d-approved-layout:before,
 .es-math-scope .f3d-approved-layout:after {display:none}
@@ -13,85 +13,70 @@
  background-size:100% 100%;background-position:center;
 }
 
-/* HUD di flotta: un solo profilo metallico continuo, con le letture incassate.
-   Nomi e indicatori condividono la fascia; nessuna cornice intorno alle singole navi. */
+/* HP di madre e supporti sono incassati nella fascia superiore della console. */
 .es-math-scope .f3d-approved-layout .live-fleet-bar {
- left:7px;right:7px;height:34px;padding:2px;gap:0;box-sizing:border-box;isolation:isolate;
- border:0;border-radius:0;background:transparent;box-shadow:none;display:flex;align-items:stretch;
-}
-.es-math-scope .f3d-approved-layout .live-fleet-bar--B {top:3px}
-.es-math-scope .f3d-approved-layout .live-fleet-bar--A {bottom:var(--player-hud-bottom)}
-.es-math-scope .f3d-approved-layout .f3d-hud-spine {
- position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:-1;
- filter:drop-shadow(0 2px 2px #000b) drop-shadow(0 0 2px #45bbdd33);
+ position:absolute;left:3.8%;right:3.8%;top:3px;bottom:auto;height:16px;padding:0;gap:0;
+ box-sizing:border-box;border:0;border-radius:0;background:none;box-shadow:none;
+ display:flex;align-items:stretch;
 }
 .es-math-scope .f3d-approved-layout .live-fleet-bar .f3d-player-label {
- position:relative;flex:0 0 80px;width:80px;box-sizing:border-box;display:flex;
- align-items:center;justify-content:center;overflow:visible;padding:3px 7px 3px 9px;
- color:#ecf6fc;font-size:9.5px;font-weight:850;text-align:center;
- text-transform:uppercase;letter-spacing:.25px;line-height:13px;
- border:0;border-radius:0;background:none;box-shadow:none;
- text-shadow:0 1px 2px #000,0 0 5px #80d8ff44;
+ position:relative;flex:0 0 62px;width:62px;min-width:0;box-sizing:border-box;display:flex;
+ align-items:center;justify-content:center;padding:0 5px 0 0;color:#ecf6fc;
+ font-size:8px;font-weight:850;font-style:italic;text-align:center;text-transform:uppercase;
+ letter-spacing:.15px;line-height:10px;border:0;border-radius:0;background:none;box-shadow:none;
+ text-shadow:0 1px 2px #000;
 }
 .es-math-scope .f3d-approved-layout .f3d-player-label:after {
- content:'';position:absolute;right:0;top:8px;width:1px;height:14px;transform:rotate(17deg);
+ content:'';position:absolute;right:0;top:3px;width:1px;height:10px;transform:rotate(17deg);
  background:linear-gradient(transparent,#8fa8b8aa,transparent);
 }
 .es-math-scope .f3d-approved-layout .f3d-player-label>span {
  display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .es-math-scope .f3d-approved-layout .live-units {
- flex:1;min-width:0;height:100%;display:grid;grid-template-columns:1fr 1.24fr 1fr;gap:0;
+ flex:1;min-width:0;height:100%;display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:0;
 }
 .es-math-scope .f3d-approved-layout .live-unit,
 .es-math-scope .f3d-approved-layout .f3d-hp-empty {
- --hud-accent:var(--rarity-frame,#5edffd);position:relative;
- min-width:0;min-height:0;height:30px;box-sizing:border-box;display:flex;flex-direction:column;
- justify-content:center;align-items:stretch;gap:2px;text-align:center;overflow:visible;
- padding:3px 9px 5px;border:0;border-radius:0;background:none;box-shadow:none;
-}
-.es-math-scope .f3d-approved-layout .live-unit--mother {padding-inline:10px}
-.es-math-scope .f3d-approved-layout .live-unit--mother:before {
- content:'';position:absolute;left:28%;right:28%;bottom:0;height:1px;
- background:linear-gradient(90deg,transparent,var(--hud-accent),transparent);
- box-shadow:0 0 4px color-mix(in srgb,var(--hud-accent) 45%,transparent);
+ --hud-accent:var(--rarity-frame,#5edffd);position:relative;min-width:0;min-height:0;height:16px;
+ box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:stretch;
+ gap:1px;text-align:center;overflow:visible;padding:0 5px;border:0;border-radius:0;background:none;box-shadow:none;
 }
 .es-math-scope .f3d-approved-layout .live-unit .f3d-ship-name,
 .es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-ship-name {
- display:flex;align-items:center;justify-content:center;gap:3px;min-width:0;max-width:100%;
- margin:0;color:#eff7ff;font-size:8.1px;line-height:9px;font-weight:800;
- text-transform:uppercase;letter-spacing:.12px;text-shadow:0 1px 2px #000;
+ display:flex;align-items:center;justify-content:center;gap:2px;min-width:0;max-width:100%;
+ margin:0;color:#eff7ff;font-size:6.6px;line-height:7px;font-weight:800;
+ text-transform:uppercase;letter-spacing:.08px;text-shadow:0 1px 2px #000;
 }
 .es-math-scope .f3d-approved-layout .f3d-ship-name .f3d-ship-title {
- display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
- font:inherit;color:inherit;
+ display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:inherit;color:inherit;
 }
 .es-math-scope .f3d-approved-layout .f3d-hull-mark {
- display:block;width:9px;height:9px;flex:0 0 9px;color:var(--hud-accent);
- filter:drop-shadow(0 0 2px var(--hud-accent));
+ display:block;width:6px;height:6px;flex:0 0 6px;color:var(--hud-accent);
+ filter:drop-shadow(0 0 1px var(--hud-accent));
 }
 .es-math-scope .f3d-approved-layout .live-unit .live-unit-health {
- position:relative;display:block;width:100%;height:10px;min-height:10px;
+ position:relative;display:block;width:100%;height:7px;min-height:7px;
  box-sizing:border-box;overflow:hidden;border:0;border-radius:999px;
  background:linear-gradient(180deg,#01070c,#112332);
- box-shadow:inset 0 1px 3px #000,0 1px 0 #9cb9cc66,0 -1px 0 #02080e;
+ box-shadow:inset 0 1px 2px #000,0 1px 0 #9cb9cc66,0 -1px 0 #02080e;
 }
 .es-math-scope .f3d-approved-layout .live-unit .live-unit-health>b {
  display:block;position:absolute;inset:1px auto 1px 0;height:auto;border-radius:999px;
  background:linear-gradient(180deg,#97f5ff,#11cde9 38%,#027ba7 72%,#37bfd7);
- box-shadow:inset 0 1px 1px #e0ffff99,0 0 5px #00c5ec55;
+ box-shadow:inset 0 1px 1px #e0ffff99,0 0 3px #00c5ec55;
 }
 .es-math-scope .f3d-approved-layout .live-unit .live-unit-health>b:after {
- content:'';position:absolute;inset:1px 5px auto;height:1px;
+ content:'';position:absolute;inset:0 5px auto;height:1px;
  background:linear-gradient(90deg,transparent,#e4ffff99,transparent);
 }
 .es-math-scope .f3d-approved-layout .live-unit--mother .live-unit-health>b {
  background:linear-gradient(180deg,#ffb0b6,#fa3c64 38%,#a70b33 72%,#e8516b);
- box-shadow:inset 0 1px 1px #ffdbe199,0 0 5px #f5345555;
+ box-shadow:inset 0 1px 1px #ffdbe199,0 0 3px #f5345555;
 }
 .es-math-scope .f3d-approved-layout .live-unit .live-unit-health>em {
  position:absolute;inset:-1px 0;display:flex;align-items:center;justify-content:center;gap:1px;
- color:#fff;font-style:normal;font-size:8.5px;font-weight:900;line-height:10px;
+ color:#fff;font-style:normal;font-size:7px;font-weight:900;line-height:8px;
  font-variant-numeric:tabular-nums;text-shadow:0 1px 1px #000,1px 0 1px #000,-1px 0 1px #000;
 }
 .es-math-scope .f3d-approved-layout .live-unit .live-unit-health>em>span {font:inherit}
@@ -105,49 +90,17 @@
  box-shadow:inset 0 1px 3px #000,0 1px 0 #80505d88;
 }
 .es-math-scope .f3d-approved-layout .f3d-hp-empty {
- --hud-accent:#4b687f;visibility:visible;color:#708c9e;
+ --hud-accent:#64727e;visibility:visible;color:#8b969e;
 }
 .es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-ship-name {
- color:#7892a2;font-size:6.8px;font-weight:650;
+ color:#98a1a7;font-size:5.8px;font-weight:650;
 }
 .es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-hull-mark {opacity:.5;filter:none}
 .es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-empty-meter {
- display:flex;align-items:center;justify-content:center;gap:4px;width:100%;height:10px;min-height:10px;
- box-sizing:border-box;border:0;border-radius:0;background:none;box-shadow:none;
- color:#5f7b8b;font-size:5.4px;font-style:normal;font-weight:600;letter-spacing:.45px;line-height:8px;
-}
-.es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-empty-meter:before,
-.es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-empty-meter:after {
- content:'';height:1px;flex:1;background:linear-gradient(90deg,transparent,#496779);
-}
-.es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-empty-meter:after {transform:rotate(180deg)}
-
-/* Indicatori dei componenti e comandi condividono una fascia, senza sovrapporsi. */
-.es-math-scope .f3d-approved-layout .f3d-vital-strip {
- position:absolute;z-index:20;left:86px;right:86px;height:19px;box-sizing:border-box;
- display:flex;gap:1px;align-items:stretch;justify-content:center;padding:1px 2px;
- border:1px solid #537a99;border-radius:4px;
- background:linear-gradient(180deg,#0e1926f2,#080e1bf5);box-shadow:0 1px 5px #000a;
-}
-.es-math-scope .f3d-approved-layout .f3d-vital-strip--B {top:43px}
-.es-math-scope .f3d-approved-layout .f3d-vital-strip--A {bottom:var(--player-controls-bottom)}
-.es-math-scope .f3d-approved-layout .f3d-vital {
- min-width:0;flex:1;display:flex;align-items:center;justify-content:center;gap:2px;
- padding:1px;border:0;border-right:1px solid #7897aa66;
- background:transparent;color:#f0f8ff;font-size:7px;font-weight:800;cursor:pointer;white-space:nowrap;
-}
-.es-math-scope .f3d-approved-layout .f3d-vital:last-child {border-right:0}
-.es-math-scope .f3d-approved-layout .f3d-vital-icon {color:#89cdeb;font-size:9px}
-.es-math-scope .f3d-approved-layout .f3d-vital-led {
- width:7px;height:7px;flex:0 0 7px;border-radius:50%;display:inline-block;
- background:#27e77a;border:1px solid #8fffd0;box-shadow:0 0 5px #00ff62;
-}
-.es-math-scope .f3d-approved-layout .f3d-vital[data-status="off"] .f3d-vital-led {
- background:#e52d41;border-color:#ff99a1;box-shadow:0 0 5px #ff2b48;
-}
-.es-math-scope .f3d-approved-layout .f3d-vital[data-status="absent"] {opacity:.45}
-.es-math-scope .f3d-approved-layout .f3d-vital[data-status="absent"] .f3d-vital-led {
- background:#636b78;border-color:#8894a8;box-shadow:none;
+ display:flex;align-items:center;justify-content:center;width:100%;height:7px;min-height:7px;
+ box-sizing:border-box;border:1px solid #5a6872;border-radius:999px;
+ background:linear-gradient(#040a10,#15202a);box-shadow:inset 0 1px 2px #000;
+ color:#9aabb5;font-size:6px;font-style:normal;line-height:5px;
 }
 
 /* Formazioni: stessi modelli e punti di impatto, scala coerente con il tavolo. */
@@ -344,84 +297,94 @@
 }
 .es-math-scope .f3d-approved-layout .live-hand-special[data-family="energy"] .live-card-rarity {background:#4b3306eb;color:#ffe4a1}
 
-/* I comandi aggiuntivi si aprono sopra la mano e conservano le azioni esistenti. */
-/* Console approvata: la striscia del timer appartiene solo al pulsante Passa. */
-.es-math-scope .f3d-approved-layout .f3d-command-console {
- position:absolute;left:7px;right:7px;bottom:var(--player-controls-bottom);height:52px;z-index:30;
- isolation:isolate;
+/* Due console compatte: HP e componenti condividono il medesimo telaio. */
+.es-math-scope .f3d-approved-layout .f3d-fleet-console {
+ position:absolute;left:7px;right:7px;height:52px;z-index:30;isolation:isolate;
 }
+.es-math-scope .f3d-approved-layout .f3d-command-console {bottom:var(--player-controls-bottom)}
+.es-math-scope .f3d-approved-layout .f3d-opponent-console {top:3px;height:48px}
 .es-math-scope .f3d-approved-layout .f3d-console-shell {
  position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;
- filter:drop-shadow(0 3px 2px #000b);
+ filter:drop-shadow(0 2px 2px #000b);
 }
 .es-math-scope .f3d-approved-layout .f3d-command-console .live-abandon,
 .es-math-scope .f3d-approved-layout .f3d-command-console .f3d-approved-pass {
- position:absolute;bottom:15%;top:22%;right:auto;left:4.5%;width:16.8%;height:auto;min-height:0;
+ position:absolute;top:44%;bottom:10%;right:auto;left:3.3%;width:16.8%;height:auto;min-height:0;
  box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:2px;padding:0;
  border:0;border-radius:0;background:none;box-shadow:none;cursor:pointer;
- color:#f6e6e3;font-size:8.7px;line-height:12px;font-weight:900;font-style:italic;letter-spacing:.1px;
+ color:#f6e6e3;font-size:8.4px;line-height:11px;font-weight:900;font-style:italic;letter-spacing:.1px;
  text-shadow:0 1px 2px #000,0 -1px 0 #fff6;
 }
 .es-math-scope .f3d-approved-layout .f3d-command-console .live-abandon:after {content:none}
 .es-math-scope .f3d-approved-layout .f3d-command-console .live-abandon .f3d-abandon-label {font:inherit;color:inherit}
 .es-math-scope .f3d-approved-layout .f3d-command-console .live-abandon:hover:not(:disabled) {
- background:none;box-shadow:none;color:#fff;text-shadow:0 0 6px #ff665d,0 1px 2px #000;
+ background:none;box-shadow:none;color:#fff;text-shadow:0 0 5px #ff665d,0 1px 2px #000;
 }
 .es-math-scope .f3d-approved-layout .f3d-command-console .f3d-approved-pass {
- left:77.1%;width:20%;font-size:13px;line-height:16px;padding-bottom:5px;
- color:#eafaff;
+ left:80.1%;width:16.5%;font-size:12px;line-height:14px;padding-bottom:5px;color:#eafaff;
 }
 .es-math-scope .f3d-approved-layout .f3d-command-console .f3d-approved-pass:hover:not(:disabled) {
- color:#fff;text-shadow:0 0 6px #65edff,0 1px 2px #000;
+ color:#fff;text-shadow:0 0 5px #65edff,0 1px 2px #000;
 }
 .es-math-scope .f3d-approved-layout .f3d-pass-chevron {
- width:12px;height:15px;flex:0 0 12px;color:#58e9ff;filter:drop-shadow(0 0 3px #00bfe0);
+ width:10px;height:12px;flex:0 0 10px;color:#58e9ff;filter:drop-shadow(0 0 2px #00bfe0);
 }
 .es-math-scope .f3d-approved-layout .f3d-command-console .f3d-approved-pass:disabled,
 .es-math-scope .f3d-approved-layout .f3d-command-console .live-abandon:disabled {
  opacity:1;cursor:default;color:#8b9aa2;text-shadow:0 1px 1px #000;
 }
 .es-math-scope .f3d-approved-layout .f3d-approved-pass:disabled .f3d-pass-chevron {color:#597b88;filter:none}
+/* Il solo timer del turno resta fisicamente dentro Passa, sotto la scritta. */
 .es-math-scope .f3d-approved-layout .f3d-pass-timer {
- position:absolute;left:9%;right:20%;bottom:12%;height:3px;overflow:hidden;
+ position:absolute;left:24%;right:22%;bottom:8%;height:2.5px;overflow:hidden;border-radius:999px;
  background:#020a10;box-shadow:inset 0 1px 2px #000;
- clip-path:polygon(5% 0,100% 0,95% 100%,0 100%);
 }
 .es-math-scope .f3d-approved-layout .f3d-pass-timer>i {
  display:block;width:100%;height:100%;transform-origin:left center;
  background:linear-gradient(180deg,#d5ffff,#30e6ff 40%,#007dba);
- box-shadow:0 0 5px #20d6ff;transition:transform .25s linear;
+ box-shadow:0 0 4px #20d6ff;transition:transform .25s linear;
 }
-.es-math-scope .f3d-approved-layout .f3d-command-console .f3d-vital-strip {
- position:absolute;top:17%;bottom:19%;left:22.1%;right:23.1%;height:auto;
+.es-math-scope .f3d-approved-layout .f3d-fleet-console .f3d-vital-strip {
+ position:absolute;z-index:1;top:43%;bottom:10%;left:20.3%;right:21%;height:auto;
  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:0;
  border:0;border-radius:0;background:none;box-shadow:none;
 }
-.es-math-scope .f3d-approved-layout .f3d-command-console .f3d-vital {
- --component-tint:#8a959f;display:flex;flex-direction:column;gap:1px;min-width:0;
- justify-content:center;align-items:center;padding:1px 0;border:0;background:none;
- color:#c3cdd2;font-size:8px;line-height:9.5px;font-weight:850;font-style:italic;
- text-transform:uppercase;opacity:1;text-shadow:0 1px 1px #000;
+.es-math-scope .f3d-approved-layout .f3d-fleet-console .f3d-vital {
+ --component-tint:#87939d;position:relative;min-width:0;display:flex;flex-direction:column;
+ gap:1px;justify-content:center;align-items:center;padding:0;border:0;background:none;cursor:pointer;
+ color:#c3cdd2;font-size:6.6px;line-height:7.5px;font-weight:850;font-style:italic;
+ text-transform:uppercase;white-space:nowrap;opacity:1;text-shadow:0 1px 1px #000;
 }
-.es-math-scope .f3d-approved-layout .f3d-command-console .f3d-vital[data-status="on"] {--component-tint:#6dea9a}
-.es-math-scope .f3d-approved-layout .f3d-command-console .f3d-vital[data-status="off"] {--component-tint:#ff606b}
-.es-math-scope .f3d-approved-layout .f3d-command-console .f3d-vital[data-status="absent"] {color:#8b969e}
-.es-math-scope .f3d-approved-layout .f3d-command-console .f3d-vital-icon {
- display:block;width:25px;height:18px;color:var(--component-tint);font-size:inherit;
+.es-math-scope .f3d-approved-layout .f3d-fleet-console .f3d-vital[data-status="on"] {--component-tint:#6dea9a}
+.es-math-scope .f3d-approved-layout .f3d-fleet-console .f3d-vital[data-status="off"] {--component-tint:#ff606b}
+.es-math-scope .f3d-approved-layout .f3d-fleet-console .f3d-vital[data-status="absent"] {color:#87939d}
+.es-math-scope .f3d-approved-layout .f3d-fleet-console .f3d-vital-icon {
+ display:block;width:22px;height:14px;color:inherit;font-size:inherit;
  filter:drop-shadow(0 -1px .2px #e2f4ff55) drop-shadow(0 1px .5px #000);
 }
-.es-math-scope .f3d-approved-layout .f3d-command-console .f3d-vital[data-status="on"] .f3d-vital-icon,
-.es-math-scope .f3d-approved-layout .f3d-command-console .f3d-vital[data-status="off"] .f3d-vital-icon {
- filter:drop-shadow(0 1px .5px #000) drop-shadow(0 0 3px var(--component-tint));
-}
 .es-math-scope .f3d-approved-layout .f3d-vital-glyph {display:block;width:100%;height:100%;overflow:visible}
-.es-math-scope .f3d-approved-layout .f3d-command-console button:focus-visible {
+/* Il materiale resta neutro; solo gli indicatori leggono lo stato dei componenti. */
+.es-math-scope .f3d-approved-layout .f3d-vital-led {
+ position:absolute;top:2px;right:6px;width:3px;height:3px;border-radius:50%;
+ background:var(--component-tint);box-shadow:0 0 3px var(--component-tint);
+}
+.es-math-scope .f3d-approved-layout .f3d-vital[data-status="absent"] .f3d-vital-led {box-shadow:none}
+.es-math-scope .f3d-approved-layout .f3d-opponent-console .f3d-vital-strip {
+ top:46%;bottom:9%;left:4%;right:4%;
+}
+.es-math-scope .f3d-approved-layout .f3d-opponent-console .f3d-vital {
+ flex-direction:row;gap:4px;font-size:7.8px;line-height:10px;font-style:normal;text-transform:none;
+}
+.es-math-scope .f3d-approved-layout .f3d-opponent-console .f3d-vital-icon {width:15px;height:14px}
+.es-math-scope .f3d-approved-layout .f3d-opponent-console .f3d-vital-led {position:static;flex:0 0 3px}
+.es-math-scope .f3d-approved-layout .f3d-fleet-console button:focus-visible {
  outline:1px solid #e5f8ff;outline-offset:0;border-radius:3px;
 }
-.es-math-scope .f3d-approved-layout .f3d-command-console button:active:not(:disabled) {transform:translateY(1px)}
+.es-math-scope .f3d-approved-layout .f3d-fleet-console button:active:not(:disabled) {transform:translateY(1px)}
 @media(prefers-reduced-motion:reduce){
  .es-math-scope .f3d-approved-layout .f3d-pass-timer>i {transition:none}
 }
+/* I comandi aggiuntivi si aprono sopra la mano. */
 .es-math-scope .f3d-approved-layout .f3d-commands-toggle {
  position:absolute;right:116px;top:589px;bottom:auto;z-index:26;
  width:27px;height:21px;display:flex;align-items:center;justify-content:center;gap:1px;
