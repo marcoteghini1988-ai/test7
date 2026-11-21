@@ -593,3 +593,40 @@ test('Sondaggio G: confronto dei timer e delle resistenze SENZA cambiare i valor
  assert.equal(results.length,7);
  assert.ok(results.every(r=>r.pvp.n===8&&r.campaign.n===8));
 });
+
+test('SONDAGGIO_H_2026_11_21: correzioni PER RARITA, sempre isolate',()=>{
+ const v=(motherHpScale,timerOffsetSeconds,drainMultiplier,supportHpScale,weaponFactorMultiplier)=>
+  ({motherHpScale,timerOffsetSeconds,drainMultiplier,supportHpScale,weaponFactorMultiplier});
+ const profiles=[
+  {name:'F-live-attuale',byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,null]))},
+  {name:'H1-hp-moderati',byRarity:{
+   Comune:v(1.3,20,.55,.9,1.08),Rara:v(1.25,30,.55,.9,1.08),
+   Epica:v(1,0,.55,.85,1.15),Leggendaria:v(1,0,.55,.85,1.10)}},
+  {name:'H2-hp-alti',byRarity:{
+   Comune:v(1.5,25,.45,.85,1.10),Rara:v(1.45,30,.45,.85,1.10),
+   Epica:v(1,0,.45,.85,1.15),Leggendaria:v(1.1,0,.45,.85,1.15)}},
+  {name:'H3-controllo-danni',byRarity:{
+   Comune:v(1.4,25,.5,.9,1.08),Rara:v(1.4,40,.5,.9,1),
+   Epica:v(1,0,.5,.8,1.20),Leggendaria:v(1.1,0,.5,.8,1.15)}}
+ ];
+ const report=[];
+ for(const candidate of profiles){
+  const pvp=[],boss=[];
+  for(const rarity of SHIP_RARITIES)
+   for(let i=0;i<3;i++){
+    const [a,b]=PRESETS[rarity][i];
+    const seed=26121+SHIP_RARITIES.indexOf(rarity)*197+i*101;
+    const params=candidate.byRarity[rarity];
+    pvp.push(simulate(rarity,ARCHETYPES[i],a,b,seed,null,'live-generator',
+     CANDIDATE_DRAIN_FRACTION_PER_SECOND,params));
+    boss.push(simulate(rarity,ARCHETYPES[1],a,b,seed+2303,[1,8,17][i],
+     'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,params,'fast-cpu'));
+   }
+  report.push({name:candidate.name,pvp:stats(pvp),boss:stats(boss),
+   pvpRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(pvp.filter(x=>x.rarity===r))])),
+   bossRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(boss.filter(x=>x.rarity===r))])),
+   earlyBossCases:boss.filter(x=>x.seconds<260).map(x=>({rarity:x.rarity,seconds:x.seconds,winner:x.winner}))});
+ }
+ console.log('WEAPON_PACING_H_SWEEP='+JSON.stringify(report));
+ assert.ok(report.every(x=>x.pvp.n===12&&x.boss.n===12));
+});
