@@ -36,7 +36,8 @@ import {arkModuleActive,arkEscorts,arkFusedEscorts,arkUnfusedEscorts,
  arkEnemyUnits,arkDamagedEscorts,arkModulesInDiscard} from './fleetNext/arkEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
-import {createFleetNextBattle,resolvePreparedFleetTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
+import {createFleetNextBattle,resolvePreparedFleetTurn,autoFleetTurn,timeoutFleetTurn,advanceFleetCombatTime,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
+import {generatorCardCount,generatorCoolingOwnTurns} from './fleetNext/motherGeneratorBalance.js';
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
@@ -103,7 +104,7 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
    upgradesA:inventory.exclusiveUpgrades,
    mode,bossName:boss?.name||null,bossId:boss?.planetId??null,planetId:bossPlanetId,
    sectorNumber,seed:Math.floor(Math.random()*0x7fffffff)+1,
-   nowMs:Date.now(),ruleset:HP_SYNC_RULESET
+   nowMs:Date.now(),ruleset:HP_SYNC_RULESET,newGeneratorCombat:true
   }),error:''};
  }catch(e){return {battle:null,error:e?.message||'Battaglia non disponibile'};}
 }
@@ -308,10 +309,10 @@ function FleetCommandConsole({unit,nickname,onInspect,onLeave,onPass,passDisable
   <button type="button" className="live-abandon" onClick={onLeave} disabled={ended}
    aria-label="Abbandona la battaglia"><span className="f3d-abandon-label">ABBANDONA</span></button>
   <FleetVitalStrip side="A" unit={unit} onInspect={onInspect} consoleMode/>
-  <button type="button" className="f3d-approved-pass" aria-label="PASSA" disabled={passDisabled} onClick={onPass}>
+  <button type="button" className="f3d-approved-pass" aria-label="ESEGUI il turno" disabled={passDisabled} onClick={onPass}>
    <svg className="f3d-pass-chevron" viewBox="0 0 20 22" aria-hidden="true" focusable="false">
     <path d="M2 3L8 11L2 19M10 3L16 11L10 19" fill="none" stroke="currentColor" strokeWidth="3"/>
-   </svg><span className="f3d-pass-label">PASSA</span>
+   </svg><span className="f3d-pass-label">ESEGUI</span>
    <span className="f3d-pass-timer" role="progressbar" aria-label="Tempo rimanente del turno"
     aria-valuemin={0} aria-valuemax={FLEET_TURN_SECONDS} aria-valuenow={secondsLeft}
     aria-valuetext={secondsLeft+' secondi'} data-seconds-left={secondsLeft}>
@@ -552,7 +553,7 @@ export default function OfficialFleetBattle3D({
   setNow(timestamp);
   setBattle(current=>{
    if(!current||resolutionInProgress.current)return current;
-   const next=advanceIndependentSupportTime(current,timestamp);
+   const next=advanceFleetCombatTime(current,timestamp);
    return next.changed?next.battle:current;
   });
  },250);
@@ -607,13 +608,8 @@ export default function OfficialFleetBattle3D({
   },Math.max(50,battle.deadlineMs-Date.now()+60));
   return ()=>window.clearTimeout(id);
  },[battle?.ply,battle?.deadlineMs,battle?.phase,resolving]);
- // Nessuna carta agisce prima del commit. La terza conclude la preparazione
- // e, se necessario, apre la scelta fra le due navicelle di supporto.
- useEffect(()=>{
-  if(!resolving&&battle?.phase==='playing'&&battle.turn==='A'&&chosenCards.length===3){
-   requestPreparedResolution(false);
-  }
- },[chosenCards,battle?.ply,battle?.turn,battle?.phase,resolving]);
+ // Anche dopo la terza carta la preparazione resta aperta:
+ // la barra Generatore va prenotata prima di premere ESEGUI.
  function restart(){
   window.clearTimeout(resolutionTimeout.current);
   resolutionInProgress.current=false;setResolving(false);
@@ -722,7 +718,8 @@ export default function OfficialFleetBattle3D({
   const element=activeFleetElements(battle.sides.A.ships[0].id,
    battle.sides.A.ships[0].level).includes(elementalChoice)?elementalChoice:battle.sides.A.ships[0].element;
   const preparedOrder=
-   {partId,pass:!!(elementalPrepared&&ability?.kind==='effect')||(endTurn&&chosenCards.length===0),
+   {partId,pass:battle.newGeneratorCombat?false:
+     (!!(elementalPrepared&&ability?.kind==='effect')||(endTurn&&chosenCards.length===0)),
     awaitingTargetSelection:!!(fromTimeout&&awaitingTargetSelection),
     activateElemental:elementalPrepared,elementalElement:element,
     elementalTargetId:attackTarget?.kind==='escort'?attackTarget.id:undefined,
@@ -891,16 +888,23 @@ export default function OfficialFleetBattle3D({
  const elementalAbilityDef=elementalAbility(player.ships[0].id);
  const elementalTypes=activeFleetElements(player.ships[0].id,player.ships[0].level);
  const selectedElement=elementalTypes.includes(elementalChoice)?elementalChoice:elementalTypes[0];
+ // La barra legge CARTE FISICHE, non la somma delle cariche di rarita'.
+ // Si possono giocare le tre carte e PRENOTARE solo dopo, premendo poi ESEGUI.
+ const generatorPhysicalCards=generatorCardCount(player)+
+  chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy').length;
+ const generatorCooling=generatorCoolingOwnTurns(player);
+ const generatorTier=generatorPhysicalCards>=4?'heavy':generatorPhysicalCards>=2?'quick':null;
  const actualEnergyCost=effectiveSupportEnergyCost(player,elementalAbilityDef,battle.ply);
  const chargesAvailable=chargedElementalEnergy(player,selectedElement)+
   chosenCards.filter(i=>card(player.hand[i])?.effectSpec?.type==='energy'&&
    card(player.hand[i])?.effectSpec?.elementId===selectedElement)
    .reduce((sum,i)=>sum+(card(player.hand[i])?.effectSpec?.charges||0),0);
- const canPrepareElemental=!!elementalAbilityDef&&
-  chargesAvailable>=actualEnergyCost&&
+ const canPrepareElemental=battle.newGeneratorCombat?
+  (!!generatorTier&&generatorCooling===0):
+  (!!elementalAbilityDef&&chargesAvailable>=actualEnergyCost&&
   !chosenCards.some(i=>cardRole(player.hand[i])==='attack')&&
   (elementalAbilityDef.mode!=='heal'||player.ships[0].hp<player.ships[0].maxHp&&
-   (battle.terrain?.id!=='T08'||terrainImmunity(player,battle.ply)));
+   (battle.terrain?.id!=='T08'||terrainImmunity(player,battle.ply))));
  const ended=battle.phase==='finished';
  const target=enemy.ships[0];
  const actualVital=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?.id||
@@ -1909,11 +1913,26 @@ export default function OfficialFleetBattle3D({
      </select>
     </label>}
    </div>}
-   {!ended&&elementalAbilityDef&&<div className="f3d-elemental-control" role="group"
+   {!ended&&battle.newGeneratorCombat&&<div className="f3d-elemental-control" role="group"
+    aria-label="Generatore e attacco speciale della nave madre">
+    <button type="button" className={'f3d-generator-bar'+(generatorTier?' f3d-generator-bar--'+generatorTier:'')+
+     (elementalPrepared?' f3d-generator-bar--reserved':'')}
+     aria-label={elementalPrepared?'Attacco prenotato, livello '+(generatorTier==='heavy'?'potente':'rapido'):
+      'Generatore '+generatorPhysicalCards+' carte energia, tocca per prenotare'}
+     aria-pressed={elementalPrepared}
+     disabled={!myTurn||resolving||!canPrepareElemental||elementalPrepared}
+     title={elementalPrepared?'Attacco prenotato: alla risoluzione usa automaticamente 4 carte se disponibili, altrimenti 2':
+      'Tocca una volta per prenotare. Non spara se non prenotato.'}
+     onClick={()=>setElementalPrepared(true)}>
+     <span>ϟ {generatorPhysicalCards}/4</span>
+     <span>{generatorCooling>0?'RAFFREDDAMENTO '+generatorCooling:
+      elementalPrepared?(generatorTier==='heavy'?'POTENTE PRENOTATO':'ATTACCO PRENOTATO'):
+      generatorTier==='heavy'?'POTENTE PRONTO':generatorTier==='quick'?'RAPIDO PRONTO':'IN CARICA'}</span>
+    </button>
+   </div>}
+   {!ended&&!battle.newGeneratorCombat&&elementalAbilityDef&&<div className="f3d-elemental-control" role="group"
     aria-label="Reattore e abilità elementale">
-    <span title={'Pila Energia: '+totalElementalEnergy(player)+' cariche accumulate, senza limite. Le Carte Energia rimangono nello slot fino al consumo.'}>
-     {FLEET_ELEMENTS[selectedElement]?.symbol||'✧'} {chargesAvailable}/{actualEnergyCost}
-    </span>
+    <span>{FLEET_ELEMENTS[selectedElement]?.symbol||'✧'} {chargesAvailable}/{actualEnergyCost}</span>
     {elementalTypes.length>1&&<select aria-label="Elemento del colpo speciale" value={selectedElement}
      disabled={!myTurn||elementalPrepared} onChange={e=>{setElementalChoice(e.target.value);setElementalPrepared(false);}}>
      {elementalTypes.map(id=><option key={id} value={id}>{FLEET_ELEMENTS[id].name}</option>)}
@@ -1940,8 +1959,7 @@ export default function OfficialFleetBattle3D({
    </button>
    <div className={'live-actions f3d-actions'+(showBattleCommands?' f3d-actions-open':'')}>
     <span>CARTE {chosenCards.length}/3</span>
-    <button type="button" className="f3d-attack-normal" disabled={ended||!myTurn||resolving||chosenCards.length>0}
-     onClick={()=>requestPreparedResolution(false)}>{elementalPrepared?'ATTIVA SPECIALE':'ATTACCO NORMALE'}</button>
+
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
