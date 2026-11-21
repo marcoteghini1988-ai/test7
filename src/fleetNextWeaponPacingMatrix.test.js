@@ -178,7 +178,8 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   deckB:turnTiming==='fast-cpu'?
    buildCampaignNpcDeck(shipB,combatLevelForRarity(shipB,rarity),rarity,seed+11):
    generator(shipB,rarity,arch,seed+11),
-  seed,nowMs:0,newGeneratorCombat:model==='live-generator'
+  seed,nowMs:0,newGeneratorCombat:model==='live-generator',
+  strategicNoDeterioration:calibration?.integratedNoDeterioration===true
  });
  if(model==='live-generator'){
   // I Personaggi non sono ancora bilanciati: non devono entrare neppure
@@ -201,7 +202,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
  // SONDAGGIO_G_2026_11_21 — varianti isolate, NON modificano i valori live.
  // Si applicano al clone iniziale soltanto per misurare conclusioni
  // da danno e da deterioramento nei diversi tempi di giocata.
- if(model==='live-generator'&&calibration){
+ if(model==='live-generator'&&calibration&&!calibration.integratedNoDeterioration){
   for(const side of Object.values(b.sides)){
    const mother=side.ships[0];
    if(Number.isFinite(calibration.motherHpScale)&&calibration.motherHpScale>0&&
@@ -304,7 +305,8 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   blocks+=r.events.filter(e=>e.kind==='block').length;
   damage+=r.shot?.damage||0;
   b=r.battle;turns++;
-  if(calibration?.recoverBlockedHand&&b.phase==='playing'&&
+  if(calibration?.recoverBlockedHand&&!calibration.integratedNoDeterioration&&
+   b.phase==='playing'&&
    (r.playedPreparedCards??order.cards?.length??0)===0&&
    !r.events.some(e=>e.kind==='generator-shot')){
    const owner=b.sides[who];
@@ -320,7 +322,8 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   // di ogni turno PROPRIO, senza usare i secondi trascorsi a scegliere carte.
   // Nessuna scadenza a meta' preparazione: le mosse giocabili restano valide.
   // Il giocatore che ha gia' vinto con la propria mossa non paga la quota.
-  if(model==='live-generator'&&calibration?.strategicSecondsPerTurn&&b.phase==='playing'){
+  if(model==='live-generator'&&calibration?.strategicSecondsPerTurn&&
+   !calibration.integratedNoDeterioration&&b.phase==='playing'){
    const cost=calibration.strategicSecondsPerTurn;
    assert.ok(Number.isInteger(cost)&&cost>0&&cost<=30);
    const ownSide=b.sides[who];
@@ -1261,4 +1264,54 @@ test('AUDIT_HAND_RECOVERY_NO_DRAIN: confronto 72 PvP e 24 boss con mano bloccata
  console.log('AUDIT_HAND_RECOVERY_NO_DRAIN='+JSON.stringify(result));
  assert.equal(result.length,2);
  assert.ok(result.every(x=>x.pvp.n===72&&x.boss.n===24));
+});
+
+test('AUDIT_STRATEGIC_LIVE_72_24: vera nuova modalita attiva, 72 PvP e 24 boss',()=>{
+ const calibration={integratedNoDeterioration:true};
+ const pvp=[],boss=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,[a,b]] of PRESETS[rarity].entries()){
+   for(const shift of [0,43,89,137,219,293])
+    pvp.push(simulate(rarity,ARCHETYPES[i],a,b,
+     20267513+rIdx(rarity)*277+i*79,null,'live-generator',
+     CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration));
+   for(const shift of [0,101])
+    boss.push(simulate(rarity,ARCHETYPES[1],a,b,
+     20268431+rIdx(rarity)*239+i*53+shift,[1,8,17][i],
+     'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration,'fast-cpu'));
+  }
+ const status=matches=>({...stats(matches),
+  winsA:matches.filter(x=>x.winner==='A').length,
+  winsB:matches.filter(x=>x.winner==='B').length,
+  drawsByLimit:matches.filter(x=>/limite.*round/.test(x.finishReason||'')).length,
+  handRecoveries:matches.reduce((n,x)=>n+x.handRecoveries.A+x.handRecoveries.B,0),
+  max:Math.max(...matches.map(x=>x.seconds))});
+ const result={pvp:status(pvp),campaign:status(boss),
+  pvpRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,status(pvp.filter(x=>x.rarity===r))])),
+  bossRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,status(boss.filter(x=>x.rarity===r))])),
+  draws:pvp.filter(x=>x.draw).map(x=>({rarity:x.rarity,a:x.shipA,b:x.shipB,
+   hands:x.finalState.map(y=>y.handCards)}))};
+ console.log('AUDIT_STRATEGIC_LIVE_72_24='+JSON.stringify(result));
+ assert.equal(pvp.length,72);
+ assert.equal(boss.length,24);
+ assert.equal(pvp.filter(x=>String(x.finishReason).startsWith('Deterioramento')).length,0);
+ assert.equal(boss.filter(x=>String(x.finishReason).startsWith('Deterioramento')).length,0);
+});
+test('AUDIT_STRATEGIC_LIVE_SPEED: parita esatti semi con velocita 6 e 26 secondi',()=>{
+ const calibration={integratedNoDeterioration:true};
+ const groups=[];
+ for(const timing of ['symmetric','fast-vs-slow','slow-vs-fast','both-fast','both-slow']){
+  const matches=[];
+  for(const rarity of SHIP_RARITIES)
+   for(const [i,[a,b]] of PRESETS[rarity].entries())
+    for(const shift of [0,137])
+     matches.push(simulate(rarity,ARCHETYPES[i],a,b,
+      20262343+rIdx(rarity)*181+i*51+shift,null,'live-generator',
+      CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration,timing));
+  groups.push({timing,stat:stats(matches),
+   signature:matches.map(m=>[m.seed,m.winner,m.turns,m.winnerComponentsAlive,
+    m.finishReason,m.handRecoveries.A,m.handRecoveries.B].join(':')).join('|')});
+ }
+ for(const x of groups.slice(1))assert.equal(x.signature,groups[0].signature,x.timing);
+ console.log('AUDIT_STRATEGIC_LIVE_SPEED='+JSON.stringify(groups.map(({signature,...other})=>other)));
 });
