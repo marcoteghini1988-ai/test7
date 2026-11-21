@@ -265,7 +265,8 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
    b.finishReason?.startsWith('Deterioramento')?
    b.componentClockSeconds:turns*meanTurnMs/1000,
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
-  winner:b.winner||'unfinished',invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
+  winner:b.winner||'unfinished',finishReason:b.finishReason||null,
+  invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
   drainFraction};
 }
 function stats(matches){
@@ -277,6 +278,9 @@ function stats(matches){
   p90:seconds[Math.floor((n-1)*.9)],
   draw:matches.filter(x=>x.draw).length,
   unfinished:matches.filter(x=>x.winner==='unfinished').length,
+  finishesByComponentDrain:matches.filter(x=>String(x.finishReason||'').startsWith('Deterioramento')).length,
+  finishesByMotherDamage:matches.filter(x=>/Nave madre a zero HP|nave madre distrutt/i.test(x.finishReason||'')).length,
+  finishesByRoundLimit:matches.filter(x=>/limite di.*round/i.test(x.finishReason||'')).length,
   within5to6:matches.filter(x=>x.seconds>=300&&x.seconds<=360).length,
   avgTurns:Math.round(matches.reduce((s,v)=>s+v.turns,0)/n),
   invalid:matches.reduce((s,v)=>s+v.invalid,0),
@@ -518,8 +522,8 @@ test('Durata effettiva PvE con CPU veloce, non 17 secondi a turno IA',()=>{
  const report={overall:stats(cases),
   byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
    [r,stats(cases.filter(x=>x.rarity===r))])),
-  cases:cases.map(({rarity,shipA,shipB,seconds,winner,invalid})=>
-    ({rarity,shipA,shipB,seconds,winner,invalid}))};
+  cases:cases.map(({rarity,shipA,shipB,seconds,winner,invalid,finishReason})=>
+    ({rarity,shipA,shipB,seconds,winner,invalid,finishReason}))};
  console.log('WEAPON_PACING_REALTIME_CPU='+JSON.stringify(report));
  assert.equal(cases.length,24);
 });
