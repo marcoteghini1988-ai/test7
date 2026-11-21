@@ -163,6 +163,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
      ignoreCover:second.kind==='part'});
    }
   }else if(pattern==='low-tide'){
+   if(stage!==1)continue; // Non sovrascrivere la carica nel secondo turno.
    const total=Math.min(p.maxDiscardCards,(side.discard?.length||0)+(enemy.discard?.length||0));
    const base=p.baseDamage+total*p.damagePerDiscard;
    planned=[{base}];
@@ -184,6 +185,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
     Math.round(Math.max(0,deficit-m.baselineDeficit)*p.damageConversionPercent/100))}];
   }else if(pattern==='metal-base-shot')planned=[{base:p.baseDamage}];
   else if(pattern==='magnetic-grapple'){
+   if(stage!==1)continue; // Mantieni i bersagli delle Ganasce per il Collassatore.
    const first=ordinary(),second=opposite(first?.unit?.id);
    planned=[...(first?[{target:first,base:p.baseDamage}]:[]),
     ...(second?[{target:second,base:p.baseDamage,ignoreCover:second.kind==='part'}]:[])];
