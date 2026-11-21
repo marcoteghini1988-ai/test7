@@ -42,7 +42,7 @@ test('Bruciatura Inceneritore limitata a 12 HP per attivazione',()=>{
  assert.equal(r.battle.sides.B.provisionalBurns[0]?.damage,12);
  const tick=play(r.battle,'B');
  const burning=tick.events.find(e=>e.kind==='weapon-burn'&&e.cardId===c);
- assert.equal(burning?.actualDamage,12);
+ assert.ok(burning?.actualDamage>0&&burning.actualDamage<=12, 'Difesa della madre applicata dopo il limite di bruciatura');
 });
 
 test('Cicloreattore: blocco della mano 2/3/4 secondi sui tre turni propri',()=>{
