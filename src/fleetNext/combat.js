@@ -469,6 +469,12 @@ function normalizeSide(side){
  side.auroraVeil??=null;ensureLinceState(side);ensurePrismaState(side);ensureCorvoState(side);ensureFalcoState(side);ensureMantaState(side);ensureSharkState(side);ensureNebulaState(side);ensureStormState(side);ensureRoyalState(side);ensureObsidianState(side);ensureArkState(side);
 }
 function enforceDestroyedSystems(side,ply=0){
+ // Plancia a zero: anche il Personaggio gia' attivo perde lo slot.
+ if(!characterSlotEnabled(side)&&side.commander){
+  side.discard.push(side.commander.id);
+  removeSource(side,side.commander.source);
+  side.commander=null;
+ }
  // Un componente SMONTATO sospende i suoi effetti, ma non distrugge le carte
  // installate: quelle tornano operative dopo il montaggio automatico.
  if(!unitAlive(motherPart(side.ships[0],'generator'))&&
@@ -5156,6 +5162,8 @@ export function advanceFleetCombatTime(battle,nowMs){
  if(elapsed<=(timed.battle.componentClockSeconds||0))return timed;
  const b=timed.changed?timed.battle:clone(timed.battle);
  const advanced=advanceBattleComponentClock(b,elapsed);
+ for(const side of Object.values(advanced.battle.sides))
+  enforceDestroyedSystems(side,advanced.battle.ply);
  return {battle:advanced.battle,events:[...timed.events,...advanced.events],changed:true};
 }
 export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
