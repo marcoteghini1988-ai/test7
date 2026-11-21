@@ -22,6 +22,7 @@ import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {OFFICIAL_SPECIAL_FIXED_BACK} from './officialDeckBackArt.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
+import {buildCampaignNpcDeck} from './fleetNext/npcDeck.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createSupportCollection,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {npcSupportRoster} from './fleetNext/supportCampaign.js';
@@ -169,7 +170,7 @@ test('La battaglia ufficiale usa due supporti equipaggiati, zero riserve automat
   readSupportCollection:()=>createSupportCollection(),equippedSupportRoster,npcSupportRoster,
   findMother:()=>owned,officialBossEncounter,officialEarlyCampaignRivalShip,officialCampaignRivalLevel,
   chooseCampaignMotherRival,campaignFleetShipId,createFleetNextBattle,
-  readNextDeckSelection:()=>null,buildNextBaseDeck,HP_SYNC_RULESET,
+  readNextDeckSelection:()=>null,buildNextBaseDeck,buildCampaignNpcDeck,HP_SYNC_RULESET,
   nativeMotherRarity,rarityUnlockedAtSector,rarityIndex,SHIP_RARITIES,combatLevelForRarity
  });
  const session=start({mode:'campaign',sectorNumber:120,bossPlanetId:20,bossSectorLevel:10});
