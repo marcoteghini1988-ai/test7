@@ -4,6 +4,7 @@ import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './hpSynchronization.
 import {cancelAllDismantle} from './dismantleEffects.js';
 import {arsenalTierRate,hasBalancedMother} from './confirmedCardBalance.js';
 import {supportWeaponCardBoost} from './supportAbilities.js';
+import {arsenalEffectiveDamage,centralinaMinimumLeak} from './componentFailureBalance.js';
 
 const clamp=(n,low,high)=>Math.max(low,Math.min(high,Number(n)||0));
 const BY_TIER=Object.freeze({
@@ -126,9 +127,9 @@ export function arsenalBonus(side,machine,ply=0,overridePower=null){
   ['discard-attacks','sequence','escort-count','base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(machine.damageMode)){
   const boost=supportWeaponCardBoost(side,base,ply);
   const multiplier=1+arsenalTierRate(amplified?.tier)-arsenalTierRate(disabled?.tier);
-  return Math.max(0,Math.round(boost*multiplier));
+  return arsenalEffectiveDamage(side,Math.max(0,Math.round(boost*multiplier)));
  }
- return Math.max(0,base+(amplified?.amount||0)-(disabled?.amount||0));
+ return arsenalEffectiveDamage(side,Math.max(0,base+(amplified?.amount||0)-(disabled?.amount||0)));
 }
 // Le versioni Epica e Leggendaria interrompono i bonus sincronizzati
 // solo al primo turno del bersaglio. La Centralina Leggendaria alleata
@@ -165,7 +166,7 @@ export function commandPenalty(side,ply=0){
  const legacy=activeSynchronizationPenalty(side,ply);
  const sabotage=activeSystemCard(side,'command','disable',ply)?.amount||0;
  const amplification=activeSystemCard(side,'command','amplify',ply)?.amount||0;
- return clamp(Math.max(legacy,sabotage)-amplification,0,100);
+ return Math.max(centralinaMinimumLeak(side),clamp(Math.max(legacy,sabotage)-amplification,0,100));
 }
 function counters(side,ply){
  if(!side.systemCardCounters||side.systemCardCounters.ply!==ply)
