@@ -236,7 +236,7 @@ test('Own-component selection maps the physical Plancia and Generatore to real t
 
 test('Native new card fronts expose complete names and effects without invalid image links',()=>{
  const Hand=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialHandCard',{
-  card,cardRole,cardFacePath,describeEffect,officialSpecialArtPath,
+  card,displayedCard:(id)=>card(id),cardRole,cardFacePath,describeEffect,officialSpecialArtPath,
   exclusiveRarityAtLevel,FLEET_ELEMENTS
  });
  for(const id of ['prog-bypass','weapon-memory-plasma','weapon-sequence-1','prog-fusion-l04']){
