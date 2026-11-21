@@ -21,6 +21,7 @@ import {supportDefinition} from './supportCatalog.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
 import {applyElementalDamage,elementalDamageDescription,terrainWeaponAttackBonus} from './elementalDamage.js';
 import {weaponFiresOnOwnTurn,planIceNeedle,planMagmaMortar,consumeMortarEnergy} from './confirmedAdvancedWeaponMechanics.js';
+import {reserveProvisionalMortarFuel,resolveProvisionalWeaponShots,tickProvisionalBurns} from './provisionalWeaponEngine.js';
 // La pila Energia non ha limite; i costi delle abilità restano indipendenti.
 import {elementalAbility,totalElementalEnergy,chargedElementalEnergy,
  canChargeElementalEnergy,chargeElementalEnergy,spendElementalEnergy,
@@ -603,7 +604,16 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   if(!plan.ok)return plan.reason;
  }
  if(s.type==='deployMachine'){
-  const ply=battle?.ply??0,upgrade=sequenceUpgradeTarget(side,def,ply);
+  const ply=battle?.ply??0,pattern=s.weaponProfile?.pattern;
+  if(pattern==='thermal-coupler'&&!(side.machines||[]).some(m=>
+   m.weaponProfile?.pattern==='binary-overload'&&unitAlive(m)&&unitEnabled(m,ply)))
+   return 'Serve Sistema Binario a Sovraccarico già installato';
+  if(pattern==='high-tide'&&side.provisionalWeaponStatus?.lowTide?.ply!==ply-2)
+   return 'Alta Marea richiede Bassa Marea nel turno proprio precedente';
+  if(pattern==='alloy-collision'&&(side.provisionalWeaponStatus?.grapple?.ply!==ply-2||
+   (side.provisionalWeaponStatus?.grapple?.ids||[]).length<2))
+   return 'Collassatore richiede due bersagli delle Ganasce nel turno precedente';
+  const upgrade=sequenceUpgradeTarget(side,def,ply);
   if(upgrade&&weaponSlotLocked(side,upgrade.slot,ply))
    return 'Alloggiamenti Arma temporaneamente congelati';
   if(!upgrade&&!availableWeaponSlots(side,ply).length)
@@ -3433,7 +3443,8 @@ function resolveMultiWeaponShots(b,ctx,events,order){
 function resolveDesignedWeaponShots(b,ctx,events,order){
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const ready=(side.machines||[]).filter(m=>m.damageMode==='designed-shot'&&
-  unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&!weaponSlotLocked(side,m.slot,b.ply)&&
+  !m.weaponProfile?.provisional&&unitEnabled(m,b.ply)&&
+  !unitSilenced(m,b.ply)&&!weaponSlotLocked(side,m.slot,b.ply)&&
   (m.deployedPly===b.ply||m.weaponProfile?.pattern==='repeat'&&m.deployedPly===b.ply-2||
   m.weaponProfile?.pattern==='magma-mortar'&&weaponFiresOnOwnTurn(m.deployedPly,b.ply,3)));
  if(!ready.length)return null;
@@ -5007,6 +5018,7 @@ function finishTurn(b,ctx,events){
   card(id)?.effectSpec?.type==='siphonStrike'?null:id);
  side.lastPlayed=visiblePlayed(ctx.cards);b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
  b.terrain=activeTerrain(b.terrain,b.ply);
+ tickProvisionalBurns(b,events,{limitedMotherDamage,emit});
  b.turnStartedAtMs=ctx.nowMs;b.supportSecondsProcessed=0;
  for(const [id,side] of Object.entries(b.sides)){
   expireSide(side,b.ply,b);corvoSafetySwitch(b,id,events);
@@ -5052,6 +5064,10 @@ function resolvePreparedSupportSacrifice(b,who,supportId,events){
 }
 export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const timed=advanceIndependentSupportTime(battle,nowMs);
+ if(order?.cards?.length>0&&
+  (timed.battle?.sides?.[who]?.provisionalHandFrozenUntilMs||0)>nowMs)
+  return {ok:false,reason:'Mano congelata, il timer continua',
+   battle:timed.battle,events:timed.events};
  if(timed.battle.phase==='finished')
   return {ok:true,battle:timed.battle,events:timed.events,shot:{damage:0,timedFinish:true}};
  const error=validateFleetTurn(timed.battle,who,order);
@@ -5107,6 +5123,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  // Buco Nero risolve dopo le altre carte preparate nel medesimo turno.
  after.sort((x,y)=>Number(card(x)?.effectSpec?.type==='fieldReset')-Number(card(y)?.effectSpec?.type==='fieldReset'));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ reserveProvisionalMortarFuel(b,ctx,{unitEnabled,unitSilenced,weaponSlotLocked});
  resolveElementalActivation(b,who,order,ctx,events);
  arkArchiveAction(b,ctx,events);
  obsidianUseBastionGuard(b,ctx,events,order);
@@ -5116,9 +5133,13 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.fieldReset?[]:
   ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
- const weaponShot=mergeFalcoShots(resolveDesignedWeaponShots(b,ctx,events,order),
-  mergeFalcoShots(resolveApprovedBaseWeaponShots(b,ctx,events,order),
-  resolveMultiWeaponShots(b,ctx,events,order)));
+ const weaponShot=mergeFalcoShots(
+  resolveProvisionalWeaponShots(b,ctx,events,order,{other,unitAlive,unitEnabled,unitSilenced,weaponSlotLocked,
+  startNebulaVolley,protectingFleetUnits,selectedEnemyTarget,motherPart,arsenalBonus,
+  linceHit,discardDefense,spendElementalEnergy,card,emit,terrainCatalog:TERRAIN_CATALOG}),
+  mergeFalcoShots(resolveDesignedWeaponShots(b,ctx,events,order),
+   mergeFalcoShots(resolveApprovedBaseWeaponShots(b,ctx,events,order),
+    resolveMultiWeaponShots(b,ctx,events,order))));
  const ownShot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.elementalShot?resolveSalvo(b,ctx,events,order):
   ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):
