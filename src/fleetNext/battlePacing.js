@@ -11,8 +11,8 @@ export function matchPacingTarget(mode='campaign',bossId=null,turnSeconds=30){
  const window=FLEET_PACING_WINDOWS[category];
  const seconds=Number.isFinite(turnSeconds)&&turnSeconds>0?turnSeconds:30;
  // referenceTurns considera il limite di 30 s, non la durata media effettiva.
- // Dopo la terza carta o PASSA il turno termina subito. Nelle simulazioni
- // va misurata anche la scelta media e il tempo reale delle animazioni.
+ // Nella nuova modalita' si attende ESEGUI, anche dopo la terza carta.
+ // Nelle simulazioni si stimano durata scelta e tempo reale delle animazioni.
  const referenceTurns=Object.freeze({
   min:Math.ceil(window.minSeconds/seconds),
   target:Math.ceil(window.targetSeconds/seconds),
