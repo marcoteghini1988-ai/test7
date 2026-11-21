@@ -85,7 +85,7 @@ test('Il surriscaldamento non cancella le carte rimaste o quelle destinate alle 
 });
 test('Carte Arma consumano prima: con una sola Carta Energia rimasta non parte il colpo',()=>{
  const s=side();
- setCharge(s,['energy-ionic-r','energy-ionic']);
+ setCharge(s,['energy-ionic','energy-ionic-r']);
  assert.equal(generatorAttackPreview(s,true).ready,true);
  assert.equal(spendElementalEnergy(s,'ionic',1),true);
  assert.equal(generatorCardCount(s),1);
