@@ -94,3 +94,21 @@ test('Carte Arma consumano prima: con una sola Carta Energia rimasta non parte i
  assert.equal(generatorCardCount(s),1);
  assert.equal(s.discard.length,1);
 });
+
+test('Sconto Energia dei supporti toglie un turno al raffreddamento potente, non riduce 4 carte',()=>{
+ const s=side('N00','Comune');
+ s.newGeneratorCombat=true;
+ s.independentSupportRoster=true;
+ s.escorts=[{hp:100,maxHp:100,destroyed:false,linked:true,slot:0,
+  supportSkillId:'energy-discount'}];
+ setCharge(s,Array(4).fill('energy-ionic'));
+ const preview=generatorAttackPreview(s,true);
+ assert.equal(preview.tier,'heavy');
+ assert.equal(preview.physicalCardsCost,4);
+ const fired=commitGeneratorFiring(s,preview,0);
+ assert.ok(fired?.discounted);
+ assert.equal(fired.spent.count,4);
+ assert.equal(fired.coolingOwnTurns,1);
+ s.turnCount++;
+ assert.equal(generatorCoolingOwnTurns(s),1);
+});
