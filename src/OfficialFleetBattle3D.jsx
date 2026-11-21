@@ -47,6 +47,7 @@ import {activeFleetElements,FLEET_ELEMENTS} from './fleetNext/elementalAffinitie
 import {elementalAbility,chargedElementalEnergy,totalElementalEnergy} from './fleetNext/elementalAbilities.js';
 import {dismantleCandidates,dismantleActive} from './fleetNext/dismantleEffects.js';
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
+import {buildCampaignNpcDeck} from './fleetNext/npcDeck.js';
 import {readSupportCollection,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {advanceIndependentSupportTime,effectiveSupportEnergyCost,terrainImmunity} from './fleetNext/supportAbilities.js';
 import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turnPresentation.js';
@@ -110,14 +111,16 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
   const playerDeck=buildNextBaseDeck(inventory,owned.shipId,playerLevel,readNextDeckSelection());
   const supportRoster=equippedSupportRoster(supportCollection);
   const rivalRoster=npcSupportRoster(motherEnemy,mode,sectorNumber,supportCollection.unlockedSlots);
+  const battleSeed=Math.floor(Math.random()*0x7fffffff)+1;
+  const rivalDeck=buildCampaignNpcDeck(motherEnemy,levelEnemy,rivalRarity,battleSeed);
   return {battle:createFleetNextBattle({
    shipA:owned.shipId,levelA:playerLevel,raritaA:playerRarity,
    shipB:motherEnemy,levelB:levelEnemy,raritaB:rivalRarity,
-   deckA:playerDeck.baseDeck,deckB:['gen-216'],
+   deckA:playerDeck.baseDeck,deckB:rivalDeck,
    supportRosterA:supportRoster,supportRosterB:rivalRoster,
    upgradesA:inventory.exclusiveUpgrades,
    mode,bossName:boss?.name||null,bossId:boss?.planetId??null,planetId:bossPlanetId,
-   sectorNumber,seed:Math.floor(Math.random()*0x7fffffff)+1,
+   sectorNumber,seed:battleSeed,
    nowMs:Date.now(),ruleset:HP_SYNC_RULESET,newGeneratorCombat:true
   }),error:''};
  }catch(e){return {battle:null,error:e?.message||'Battaglia non disponibile'};}
