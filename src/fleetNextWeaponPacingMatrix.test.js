@@ -187,6 +187,8 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   passes+=Number(!!order.pass);
   weaponShots+=r.events.filter(e=>e.kind.startsWith('weapon-')&&
    /shot|cryo|discard|sequence/.test(e.kind)).length;
+  if(model==='live-generator')
+   generatorShots+=r.events.filter(e=>e.kind==='generator-shot').length;
   blocks+=r.events.filter(e=>e.kind==='block').length;
   damage+=r.shot?.damage||0;
   b=r.battle;turns++;
