@@ -1,7 +1,8 @@
 // Regressione: 73 famiglie Arma, progressioni di rarita' e ritmo a pari livelli.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SHIP_RARITIES,MOTHER_RARITY_SCALING} from './fleetNext/shipRarity.js';
+import {SHIP_RARITIES} from './fleetNext/shipRarity.js';
+import {MOTHER_RARITY_SCALING} from './fleetNext/motherBalance.js';
 import {ALL_WEAPON_CARDS,WEAPON_BASE_CARDS,EVOLVED_WEAPON_CARDS,
  WEAPON_EVOLUTION_FAMILIES,weaponAtRarity,weaponNextEvolution}
  from './fleetNext/weaponRarityEvolutions.js';
