@@ -360,6 +360,18 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   winner:b.winner||'unfinished',finishReason:b.finishReason||null,
   invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
   drainFraction,
+  finalState:['A','B'].map(who=>({who,
+   mother:{id:b.sides[who].ships[0].id,hp:b.sides[who].ships[0].hp,
+    maxHp:b.sides[who].ships[0].maxHp},
+   escorts:(b.sides[who].escorts||[]).map(e=>({id:e.id,hp:e.hp,maxHp:e.maxHp,
+    skill:e.supportSkillId})),
+   handCount:b.sides[who].hand?.length||0,deckCount:b.sides[who].deck?.length||0,
+   discardCount:b.sides[who].discard?.length||0,
+   energyCards:(b.sides[who].energyPile||[]).length,
+   activeMachines:(b.sides[who].machines||[]).filter(x=>x.hp>0&&!x.destroyed).length,
+   components:Object.fromEntries(Object.entries(b.sides[who].componentTimers||{})
+    .map(([id,t])=>[id,{expired:t.expired,remaining:t.remainingSeconds}]))
+  })),
   ownTime:Object.fromEntries(['A','B'].map(who=>[who,b.sides[who].componentElapsedSeconds||0])),
   componentsAlive:Object.fromEntries(['A','B'].map(who=>[who,
    Object.values(b.sides[who].componentTimers||{}).filter(c=>!c.expired).length])),
@@ -1121,6 +1133,12 @@ test('AUDIT_WEAPON_MOTHER_NO_DRAIN: taratura congiunta Carte Arma e Generatore m
   };
   rows.push({name:candidate.name,params:candidate,pvp:report(pvp),
    campaign:report(boss),
+   pvpStalemates:pvp.filter(x=>x.draw).map(x=>({seed:x.seed,rarity:x.rarity,
+    a:x.shipA,b:x.shipB,rounds:x.rounds,turns:x.turns,
+    shots:x.weaponShots,generatorShots:x.generatorShots,finalState:x.finalState})),
+   campaignStalemates:boss.filter(x=>x.draw).map(x=>({seed:x.seed,rarity:x.rarity,
+    a:x.shipA,b:x.shipB,rounds:x.rounds,turns:x.turns,
+    shots:x.weaponShots,generatorShots:x.generatorShots,finalState:x.finalState})),
    byRarity:Object.fromEntries(SHIP_RARITIES.map(ra=>[ra,report(pvp.filter(m=>m.rarity===ra))])),
    campaignRarity:Object.fromEntries(SHIP_RARITIES.map(ra=>[ra,report(boss.filter(m=>m.rarity===ra))]))});
  }
