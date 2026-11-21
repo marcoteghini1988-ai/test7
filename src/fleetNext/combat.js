@@ -603,8 +603,12 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(s.type==='deployMachine'){
   const ply=battle?.ply??0,upgrade=sequenceUpgradeTarget(side,def,ply);
-  if(upgrade?weaponSlotLocked(side,upgrade.slot,ply):!availableWeaponSlots(side,ply).length)
-   return 'Alloggiamento Arma occupato o congelato';
+  if(upgrade&&weaponSlotLocked(side,upgrade.slot,ply))
+   return 'Alloggiamenti Arma temporaneamente congelati';
+  if(!upgrade&&!availableWeaponSlots(side,ply).length)
+   return (side.machines||[]).filter(unitAlive).length>=2?
+    'I due alloggiamenti delle macchine d’assalto sono occupati':
+    'Alloggiamenti Arma temporaneamente congelati';
  }
  if(s.type==='repair'&&!character){
   const unit=s.target==='escort'?weakest(livingEscorts(side)):
