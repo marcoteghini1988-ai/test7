@@ -61,8 +61,11 @@ export function advanceTimedComponents(side,elapsedSeconds,{drainFraction=CANDID
  const deteriorationSeconds=Math.max(0,now-allExpiredAt)-
   Math.max(0,before-allExpiredAt);
  const mother=side.ships[0];
- const hpLost=Math.min(mother.hp,Math.max(0,Math.round(
-  mother.maxHp*drainFraction*deteriorationSeconds*100)/100));
+ // La quantita' e' cumulativa, con centesimi conservati: iterare secondo
+ // per secondo produce lo stesso totale che avanzare direttamente 10 secondi.
+ const endTotal=Math.round(mother.maxHp*drainFraction*Math.max(0,now-allExpiredAt)*100)/100;
+ const startTotal=Math.round(mother.maxHp*drainFraction*Math.max(0,before-allExpiredAt)*100)/100;
+ const hpLost=Math.min(mother.hp,Math.max(0,Math.round((endTotal-startTotal)*100)/100));
  mother.hp=Math.max(0,Math.round((mother.hp-hpLost)*100)/100);
  side.componentElapsedSeconds=now;
  return Object.freeze({elapsedSeconds:now,allExpiredAt,
@@ -73,21 +76,36 @@ export function advanceTimedComponents(side,elapsedSeconds,{drainFraction=CANDID
    side.componentTimers[id].expired),motherHp:mother.hp});
 }
 
+// I secondi reali devono essere valutati nell'ordine: se una madre muore
+// al secondo 312, NON si devono applicare i successivi 16 secondi del turno
+// e trasformare artificialmente la vittoria in pareggio.
 export function advanceBattleComponentClock(battle,elapsedSeconds,options){
- const previous=Number(battle?.componentClockSeconds)||0;
- const seconds=Math.max(previous,Math.floor(Number(elapsedSeconds)||0));
+ const previous=Math.max(0,Math.floor(Number(battle?.componentClockSeconds)||0));
+ const target=Math.max(previous,Math.floor(Number(elapsedSeconds)||0));
  if(battle.phase!=='playing')return {battle,elapsedSeconds:previous,events:[]};
- const events=[];
- for(const [who,side] of Object.entries(battle.sides)){
-  const result=advanceTimedComponents(side,seconds,options);
-  for(const id of result.newlyExpired)events.push({who,kind:'component-expired',component:id,atSecond:seconds});
-  if(result.deteriorationSeconds)events.push({who,kind:'mother-deterioration',
-   hpLost:result.hpLost,seconds:result.deteriorationSeconds});
+ const events=[],totalDamage={A:0,B:0},drainTime={A:0,B:0};
+ for(let second=previous+1;second<=target;second++){
+  for(const [who,side] of Object.entries(battle.sides)){
+   const result=advanceTimedComponents(side,second,options);
+   for(const id of result.newlyExpired)events.push({
+    who,kind:'component-expired',component:id,atSecond:second
+   });
+   totalDamage[who]=Math.round((totalDamage[who]+result.hpLost)*100)/100;
+   drainTime[who]+=result.deteriorationSeconds;
+  }
+  battle.componentClockSeconds=second;
+  const deadA=battle.sides.A.ships[0].hp<=0,
+   deadB=battle.sides.B.ships[0].hp<=0;
+  if(deadA||deadB){
+   battle.phase='finished';
+   battle.winner=deadA&&deadB?'draw':deadA?'B':'A';
+   battle.finishReason='Deterioramento nave madre dopo esaurimento Arsenale, Centralina e Plancia';
+   battle.finishedAtMs=battle.startedAtMs+second*1000;
+   break;
+  }
  }
- battle.componentClockSeconds=seconds;
- const a=battle.sides.A.ships[0].hp<=0,b=battle.sides.B.ships[0].hp<=0;
- if(a||b){battle.phase='finished';battle.winner=a&&b?'draw':a?'B':'A';
-  battle.finishReason='Deterioramento nave madre dopo esaurimento Arsenale, Centralina e Plancia';
-  battle.finishedAtMs=battle.startedAtMs+seconds*1000;}
- return {battle,elapsedSeconds:seconds,events};
+ for(const who of ['A','B'])if(drainTime[who])events.push({
+  who,kind:'mother-deterioration',hpLost:totalDamage[who],seconds:drainTime[who]
+ });
+ return {battle,elapsedSeconds:battle.componentClockSeconds||previous,events};
 }
