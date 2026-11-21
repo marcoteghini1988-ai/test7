@@ -62,7 +62,7 @@ test('Tutte le 21 Armi con parametri provvisori eseguono un effetto nella battag
  for(const d of PROVISIONAL_ADVANCED_WEAPONS){
   const b=game(true),who='A',s=b.sides.A,e=b.sides.B;
   if(d.profile.pattern==='thermal-coupler'){
-   s.machines=[{id:'machine:binary-test',slot:0,sourceCardId:lookup('Sistema Binario a Sovraccarico'),
+   s.machines=[{id:'machine:binary-test',slot:0,sourceCardId:lookup('Cannone Binario a Sovraccarico'),
     hp:1,maxHp:1,destroyed:false,deployedPly:-2,untilPly:8,
     damageMode:'designed-shot',weaponElementId:'plasma',
     weaponProfile:{pattern:'binary-overload',provisional:true,durationTurns:5,
@@ -81,10 +81,10 @@ test('Tutte le 21 Armi con parametri provvisori eseguono un effetto nella battag
    assert.ok(ev[0].hitCount>0||ev[0].actualDamage===0,d.name);
  }
 });
-test('Bassa e Alta Marea: effetto concatenato nel turno proprio successivo',()=>{
+test('Bassa e Cannone di Alta Marea: effetto concatenato nel turno proprio successivo',()=>{
  let b=game(true);
  b.sides.A.discard=['sys-black-hole'];
- const low=lookup('Bassa Marea'),high=lookup('Alta Marea');
+ const low=lookup('Cannone di Bassa Marea'),high=lookup('Cannone di Alta Marea');
  b=play(b,'A',[low]).battle;
  assert.ok(b.sides.A.provisionalWeaponStatus.lowTide);
  b=play(b,'B').battle;
@@ -94,7 +94,7 @@ test('Bassa e Alta Marea: effetto concatenato nel turno proprio successivo',()=>
 });
 test('Ganasce e Collassatore: due bersagli agganciati, collisione successiva',()=>{
  let b=game(true);
- const g=lookup('Ganasce Magnetiche'),c=lookup('Collassatore di Lega');
+ const g=lookup('Arpioni a Ganasce Magnetiche'),c=lookup('Cannone Collassatore di Lega');
  b=play(b,'A',[g]).battle;
  assert.equal(b.sides.A.provisionalWeaponStatus.grapple.ids.length,2);
  b=play(b,'B').battle;
@@ -102,7 +102,7 @@ test('Ganasce e Collassatore: due bersagli agganciati, collisione successiva',()
  assert.equal(shots(result,c)[0].hitCount,2);
 });
 test('Sonda e Martello: colpo di combinazione sulla stessa nave',()=>{
- const b=game(true),probe=lookup('Sonda Ionica'),hammer=lookup('Martello del Tuono');
+ const b=game(true),probe=lookup('Sonda Ionica d’Assalto'),hammer=lookup('Martello del Tuono');
  const r=play(b,'A',[probe,hammer]);
  assert.equal(shots(r,probe)[0].hitCount,1);
  assert.equal(shots(r,hammer)[0].hitCount,2);
@@ -127,7 +127,7 @@ test('Inceneritore: applica bruciatura e mantiene i danni per il numero di turni
  assert.ok(b.sides.B.ships[0].hp<hp);
 });
 test('Cicloreattore: la mano si sblocca dopo i secondi mentre il turno prosegue',()=>{
- const b=game(true),id=lookup('Cicloreattore Grandinifero');
+ const b=game(true),id=lookup('Cannone Cicloreattore Grandinifero');
  const r=play(b,'A',[id]);
  assert.ok(r.battle.sides.B.provisionalHandFrozenUntilMs>r.battle.turnStartedAtMs);
  const next=r.battle;
