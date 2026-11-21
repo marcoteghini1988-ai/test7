@@ -116,6 +116,14 @@ function generatorOrder(b){
   if(selected.length>=3||selected.filter(i=>weapons.some(e=>e.i===i)).length>=empty)break;
   selected.push(w.i);
  }
+ // Le Carte Sistema/Terreno esistenti non rimangono bloccate in mano:
+ // nella vera partita possono occupare una giocata senza sparo della madre.
+ const extra=available.filter(x=>!selected.includes(x.i)&&
+  ['systemModifier','elementalTerrain','fieldReset','dismantle'].includes(x.def.effectSpec?.type));
+ for(const e of extra){
+  if(selected.length>=3)break;
+  selected.push(e.i);
+ }
  let chosen=selected;
  while(chosen.length&&validateFleetTurn(b,b.turn,{...order,cards:chosen,pass:true}))
   chosen=chosen.slice(0,-1);
