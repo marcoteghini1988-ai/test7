@@ -63,7 +63,7 @@ export function canSelectNewGeneric(id){
   ((Object.hasOwn(NEXT_COMMON_CARD_BY_ID,id)||Object.hasOwn(DISMANTLE_BY_ID,id)||
   Object.hasOwn(ENERGY_CARD_BY_ID,id)||Object.hasOwn(FUSION_SHIP_CARD_BY_ID,id)||
    Object.hasOwn(FUSION_DENIAL_TRAP_BY_ID,id)||Object.hasOwn(DISCARD_WEAPON_BY_ID,id)||
-   Object.hasOwn(TEMP_SUPPORT_WEAPON_BY_ID,id)||Object.hasOwn(APPROVED_BASE_WEAPON_BY_ID,id)||Object.hasOwn(CONFIRMED_WEAPON_BY_ID,id)||Object.hasOwn(MULTI_WEAPON_BY_ID,id)||Object.hasOwn(DESIGNED_WEAPON_BY_ID,id)||Object.hasOwn(CONFIRMED_TRANSFER_WEAPON_BY_ID,id)||Object.hasOwn(SIPHON_ATTACK_BY_ID,id)||
+   Object.hasOwn(TEMP_SUPPORT_WEAPON_BY_ID,id)||Object.hasOwn(NEXT_NEW_WEAPON_BY_ID,id)||Object.hasOwn(APPROVED_BASE_WEAPON_BY_ID,id)||Object.hasOwn(CONFIRMED_WEAPON_BY_ID,id)||Object.hasOwn(MULTI_WEAPON_BY_ID,id)||Object.hasOwn(DESIGNED_WEAPON_BY_ID,id)||Object.hasOwn(CONFIRMED_TRANSFER_WEAPON_BY_ID,id)||Object.hasOwn(SIPHON_ATTACK_BY_ID,id)||
    Object.hasOwn(ELEMENTAL_TERRAIN_BY_ID,id))||
   NEXT_TEMP_WEAPON_IDS.includes(id)||def.kind==='character');
 }
