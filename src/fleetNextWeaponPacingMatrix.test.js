@@ -18,7 +18,8 @@ import {nextGenericCapacity} from './fleetNext/nextDeckLoadout.js';
 import {applyElementalDamage} from './fleetNext/elementalDamage.js';
 import {limitedMotherDamage} from './fleetNext/motherBalance.js';
 import {generatorCardCount,generatorAttackPreview,commitGeneratorFiring} from './fleetNext/motherGeneratorBalance.js';
-import {initializeComponentTimers,advanceBattleComponentClock,CANDIDATE_DRAIN_FRACTION_PER_SECOND}
+import {initializeComponentTimers,advanceTimedComponents,advanceBattleComponentClock,
+ COMPONENT_TIMER_BASE_SECONDS,TIMED_COMPONENT_IDS,CANDIDATE_DRAIN_FRACTION_PER_SECOND}
  from './fleetNext/componentTimerPacing.js';
 import {PACING_BALANCE_CANDIDATE} from './fleetNext/pacingBalanceCandidate.js';
 import {buildCampaignNpcDeck} from './fleetNext/npcDeck.js';
@@ -34,6 +35,35 @@ const ARCHETYPES=Object.freeze([
  Object.freeze({name:'equilibrato',weapon:11,energy:10,system:8,terrain:2}),
  Object.freeze({name:'controllo',weapon:8,energy:8,system:13,terrain:3})
 ]);
+// AUDIT_COMPONENTI_210_2PCT — SOLO TEST: il terzo timer arriva a 210 secondi.
+ // Le priorita' relative conservano l'identita' dei dodici modelli:
+ // alcuni proteggono l'Arsenale, altri la Centralina o la Plancia.
+ // Nessun bonus rarita' prolunga i timer oltre i 210 secondi richiesti.
+function experimentalThreeHalfTimerProfile(shipId){
+ const raw=COMPONENT_TIMER_BASE_SECONDS[shipId];
+ if(!raw)throw Error('Madre mancante per il test 210s: '+shipId);
+ const sorted=[...TIMED_COMPONENT_IDS].sort((a,b)=>
+  raw[a]-raw[b]||TIMED_COMPONENT_IDS.indexOf(a)-TIMED_COMPONENT_IDS.indexOf(b));
+ const [short,middle,long]=sorted;
+ const earliest=Math.max(150,Math.min(185,194-Math.round((raw[long]-raw[short])*.45)));
+ const mid=Math.max(earliest+10,Math.min(198,200-Math.round((raw[long]-raw[middle])*.55)));
+ return Object.freeze({[short]:earliest,[middle]:mid,[long]:210});
+}
+function applyExperimentalThreeHalfTimer(side,elapsed=210,drain=.02){
+ if(!side?.componentTimers)throw Error('I timer devono essere inizializzati');
+ const durations=experimentalThreeHalfTimerProfile(side.ships[0].id);
+ if(elapsed!==210)throw Error('L audit 3:30 usa sempre 210 secondi');
+ for(const id of TIMED_COMPONENT_IDS){
+  const timer=side.componentTimers[id];
+  timer.initialSeconds=durations[id];
+  timer.remainingSeconds=durations[id];
+  timer.expired=false;
+ }
+ side.componentElapsedSeconds=0;
+ side.componentDeteriorationFraction=drain;
+ return durations;
+}
+
 const SIMPLE=new Set(['base-shot','polarity-shot','double-shot',
  'repeat-shot','sweep-shot','energy-burst-shot']);
 const rIdx=r=>SHIP_RARITIES.indexOf(r);
@@ -195,6 +225,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
      escort.hp=escort.maxHp;
      escort.supportObservedHp=escort.hp;
     }
+   if(calibration.threeHalf210)applyExperimentalThreeHalfTimer(side,210,.02);
   }
  }
  if(model==='generator-components-v1'){
@@ -672,4 +703,81 @@ test('SONDAGGIO_J_2026_11_21: taratura separata per rarita e modalita, conferma 
  }
  console.log('WEAPON_PACING_J_CROSSCHECK='+JSON.stringify(report));
  assert.ok(report.every(r=>r.pvp.n===48&&r.boss.n===24));
+});
+
+test('AUDIT 3:30: 12 profili diversi, tutti e tre scaduti a 210s, -2% HP massimi al secondo',()=>{
+ const signatures=new Set();
+ const dominant={weapons:0,command:0,bridge:0};
+ const profiles=[];
+ for(const shipId of Object.keys(COMPONENT_TIMER_BASE_SECONDS)){
+  const d=experimentalThreeHalfTimerProfile(shipId);
+  const durations=TIMED_COMPONENT_IDS.map(id=>d[id]);
+  signatures.add(durations.join('/'));
+  assert.equal(Math.max(...durations),210,shipId);
+  assert.equal(new Set(durations).size,3,shipId+' timer distinti');
+  assert.ok(Math.min(...durations)>=150,shipId);
+  dominant[TIMED_COMPONENT_IDS.find(id=>d[id]===210)]++;
+  const side={ships:[{id:shipId,maxHp:100,hp:100}]};
+  initializeComponentTimers(side,'Comune');
+  applyExperimentalThreeHalfTimer(side);
+  const before=advanceTimedComponents(side,209,{drainFraction:.02});
+  assert.equal(before.allExpired,false,shipId);
+  assert.equal(side.ships[0].hp,100);
+  const atDeadline=advanceTimedComponents(side,210,{drainFraction:.02});
+  assert.equal(atDeadline.allExpired,true,shipId);
+  assert.equal(atDeadline.hpLost,0,shipId);
+  const firstSecond=advanceTimedComponents(side,211,{drainFraction:.02});
+  assert.equal(firstSecond.hpLost,2,shipId);
+  assert.equal(side.ships[0].hp,98);
+  const exhausted=advanceTimedComponents(side,260,{drainFraction:.02});
+  assert.equal(exhausted.motherHp,0,shipId);
+  profiles.push({shipId,arsenale:d.weapons,centralina:d.command,plancia:d.bridge,
+   longest:TIMED_COMPONENT_IDS.find(id=>d[id]===210)});
+ }
+ assert.equal(profiles.length,12);
+ assert.ok(Object.values(dominant).every(x=>x>=2),'I tre vantaggi devono essere distribuiti');
+ assert.ok(signatures.size>=9,'Tempi variegati fra le madri');
+ console.log('AUDIT_COMPONENTI_210_PROFILI='+JSON.stringify({profiles,dominant}));
+});
+test('AUDIT 3:30/2%: confronto PvP e campagna sui veri turni e mazzi, senza Personaggi',()=>{
+ const scenarios=[
+  {id:'F-ufficiale-invariato',calibration:null},
+  {id:'210s-tre-timer-2pct-hp',calibration:{threeHalf210:true}}
+ ];
+ const report=[];
+ for(const scenario of scenarios){
+  const pvp=[],campaign=[];
+  for(const rarity of SHIP_RARITIES)
+   for(const [i,[shipA,shipB]] of PRESETS[rarity].entries()){
+    for(const shift of [0,47,93,139,211,307])
+     pvp.push(simulate(rarity,ARCHETYPES[i],shipA,shipB,
+      32121+shift+rIdx(rarity)*193+i*43,
+      null,'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,scenario.calibration));
+    for(const shift of [0,97])
+     campaign.push(simulate(rarity,ARCHETYPES[1],shipA,shipB,
+      33121+shift+rIdx(rarity)*173+i*79,[1,8,17][i],
+      'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      scenario.calibration,'fast-cpu'));
+   }
+  const outcome=items=>({
+   ...stats(items),
+   before210:items.filter(x=>x.seconds<=210).length,
+   from211to260:items.filter(x=>x.seconds>210&&x.seconds<=260).length,
+   after260:items.filter(x=>x.seconds>260).length,
+   fastest:Math.min(...items.map(x=>x.seconds)),
+   slowest:Math.max(...items.map(x=>x.seconds))
+  });
+  report.push({scenario:scenario.id,
+   pvp:outcome(pvp),campaign:outcome(campaign),
+   pvpByRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,outcome(pvp.filter(x=>x.rarity===r))])),
+   campaignByRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,outcome(campaign.filter(x=>x.rarity===r))])),
+   pvpOutliers:pvp.filter(x=>x.draw||x.seconds>260).map(x=>
+    ({rarity:x.rarity,shipA:x.shipA,shipB:x.shipB,seconds:x.seconds,
+     winner:x.winner,reason:x.finishReason})),
+   campaignOutliers:campaign.filter(x=>x.draw||x.seconds>260).map(x=>
+    ({rarity:x.rarity,shipA:x.shipA,shipB:x.shipB,seconds:x.seconds,
+     winner:x.winner,reason:x.finishReason}))});
+ }
+ console.log('AUDIT_COMPONENTI_210_BATTAGLIE='+JSON.stringify(report));
+ assert.ok(report.every(x=>x.pvp.n===72&&x.campaign.n===24));
 });
