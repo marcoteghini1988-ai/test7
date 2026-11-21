@@ -22,7 +22,7 @@ export const SUPPORT_SKILL_LABELS=Object.freeze({
  'death-energy':'Conversione Energetica'
 });
 export const SUPPORT_SKILL_DESCRIPTIONS=Object.freeze({
- 'weapon-double':'Raddoppia la potenza delle Carte Arma Attacco che aggiungono danno.',
+ 'weapon-double':'Raddoppia il danno delle Carte Arma. Nella nuova modalita due scudiere uguali insieme hanno un bonus totale ×2,5, non ×4.',
  'regeneration':'Recupera gradualmente HP della madre durante i secondi del turno avversario.',
  'last-shield':'Possiede molti HP e alla distruzione restituisce HP alla madre.',
  'trap-silence':'Le Trappole nemiche si possono piazzare ma non si attivano finché questo supporto è operativo.',
@@ -98,8 +98,17 @@ export const supportSpecialBoost=(side,power,ply=0)=>
  Math.max(0,Math.round(power*(1+.25*skillCount(side,'special-boost',ply))));
 export const supportNormalBoost=(side,power,ply=0)=>
  Math.max(0,Math.round(power*(1+.25*skillCount(side,'normal-boost',ply))));
-export const supportWeaponCardBoost=(side,amount,ply=0)=>
- amount*Math.pow(2,Math.min(2,skillCount(side,'weapon-double',ply)));
+// Nella nuova modalita' le Armi sparano da sole: la vecchia passiva
+// "attacco normale +25%" potenzia invece il danno delle Carte Arma.
+// Due bonus di raddoppio sono progressivi e limitati a x2.5 (non x4):
+// l'identita' delle scudiere resta forte senza rendere inutili le difensive.
+export const supportWeaponCardBoost=(side,amount,ply=0)=>{
+ const doubles=Math.min(2,skillCount(side,'weapon-double',ply));
+ if(!side?.newGeneratorCombat)return amount*Math.pow(2,doubles);
+ const weaponBoost=doubles===2?2.5:doubles===1?2:1;
+ const normalBoost=1+.25*Math.min(2,skillCount(side,'normal-boost',ply));
+ return amount*weaponBoost*normalBoost;
+};
 
 const roundTenth=x=>Math.round(Math.max(0,x)*10)/10;
 const available=b=>b?.phase==='playing'&&
