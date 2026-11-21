@@ -72,7 +72,7 @@ export function projectMachineBerths(side,chosenCards=[],ply=0){
  const slots=Array(2).fill(null);
  for(const unit of side.machines||[])if(unit.hp>0&&!unit.destroyed&&unit.slot>=0&&unit.slot<2){
   const charge=supportWeaponCharge(side,unit,cardRole);
-  const baseShot=unit.damageMode==='base-shot'?
+  const baseShot=['base-shot','polarity-shot'].includes(unit.damageMode)?
    arsenalBonus(side,unit,ply,unit.baseDamage):null;
   slots[unit.slot]={...unit,pending:false,
    ...(baseShot!==null?{nominalDamage:baseShot}:{}),

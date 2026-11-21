@@ -476,7 +476,7 @@ function selectedOwnPart(side,target,ownPartId){
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
  if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
- if(def.effectSpec?.damageMode==='base-shot'&&side.ruleset!==HP_SYNC_RULESET)
+ if(['base-shot','polarity-shot'].includes(def.effectSpec?.damageMode)&&side.ruleset!==HP_SYNC_RULESET)
   return 'Carta Arma base richiede la modalità HP';
  if(def.effectSpec?.type==='energy'){
   if(side.ruleset!==HP_SYNC_RULESET)return 'Le Carte Energia richiedono la modalità HP';
@@ -876,7 +876,8 @@ export function validateFleetTurn(b,who,order){
   const bypass=chosen.some(c=>c.effectSpec.type==='bypass'||c.effectSpec.type==='lince'&&
    LINCE_BYPASS_ACTIONS.includes(c.effectSpec.action)||
    c.effectSpec.type==='shark'&&c.effectSpec.action==='ruthless-response')||
-   selected.kind==='part'&&linceMarkedRouteReady(side,b.ply,selected.unit.id);
+   selected.kind==='part'&&linceMarkedRouteReady(side,b.ply,selected.unit.id)||
+    chosen.some(c=>c.effectSpec?.damageMode==='polarity-shot');
   if(['part','module'].includes(selected.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass&&
    !preparing.length&&(order.targetKind!=null||order.targetId!=null))
    return 'Prima colpisci i supporti o le macchine operative, oppure gioca Aggiramento';
@@ -992,6 +993,7 @@ function expireSide(side,ply,battle=null){
   if(owner)owner.discard.push(e.id);
  }
  expireTemporaryWeapons(side,ply);
+ if(side.cryoCrystal?.expiresPly<=ply)side.cryoCrystal=null;
  for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
  if(side.auroraVeil&&side.auroraVeil.untilPly<=ply)side.auroraVeil=null;
  if(side.lince?.route&&side.lince.route.usePly<ply)side.lince.route=null;
@@ -3013,7 +3015,8 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     sequenceStage:sequence?s.sequenceStage:null,sequenceEnteredPly:sequence?b.ply:null,
     sequenceEligible:sequence&&(s.sequenceStage===1||!!previous),
     soloDamage:sequence?s.soloDamage:null,chainDamage:sequence?s.chainDamage:null,
-    deployedPly:b.ply,
+    deployedPly:b.ply,crystalPolarity:s.crystalPolarity||null,
+    comboBonus:s.comboBonus||null,
     untilPly:modern?b.ply+2*duration:null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
@@ -3272,43 +3275,69 @@ function recordTerrainWeaponShare(side,ctx,machine,power,extra){
 // Nessuna aggiunta di Attacchi, slot Arma o abilità delle navicelle di supporto.
 function resolveApprovedBaseWeaponShots(b,ctx,events,order){
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
- const ready=(side.machines||[]).filter(m=>m.damageMode==='base-shot'&&
+ const ready=(side.machines||[]).filter(m=>['base-shot','polarity-shot'].includes(m.damageMode)&&
   m.deployedPly===b.ply&&unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply));
  if(!ready.length)return null;
- const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
-  targets:[],played:[]};
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,targets:[],played:[]};
  startNebulaVolley(ctx);
+ const record=hit=>{
+  const kind=hit.target?.kind,unit=hit.target?.unit;
+  if(!hit.damage||!kind)return;
+  const field={part:'damage',escort:'escortDamage',machine:'machineDamage',module:'moduleDamage'}[kind];
+  if(field)shot[field]+=hit.damage;
+  shot.targets.push({kind,id:unit.id,damage:hit.damage,destroyed:unit.destroyed});
+ };
  for(const machine of ready){
   if(enemy.ships[0].hp<=0)break;
+  const polar=machine.damageMode==='polarity-shot';
   const guards=protectingFleetUnits(enemy,b.ply);
   const selected=selectedEnemyTarget(enemy,order,b.ply);
-  // Come l'attacco normale: prima le navicelle di supporto e le coperture.
-  const target=selected&&(!guards.length||!['part','module'].includes(selected.kind))?
-   selected:guards.length?{kind:guards[0].kind,unit:guards[0].unit}:
+  const target=polar?selectedEnemyTarget(enemy,{targetKind:'part',targetId:'weapons'},b.ply):
+   selected&&(!guards.length||!['part','module'].includes(selected.kind))?selected:
+   guards.length?{kind:guards[0].kind,unit:guards[0].unit}:
    selectedEnemyTarget(enemy,{targetKind:'part',targetId:'weapons'},b.ply);
-  const nominal=Math.max(0,Number(machine.baseDamage)||0);
+  const nominal=Number(machine.baseDamage)||0;
   const effective=arsenalBonus(side,machine,b.ply,nominal);
-  const disabled=side.fireBlocked||side.fireDisabledUntil>b.ply;
-  const priorElement=ctx.attackElement;
-  ctx.attackElement=machine.weaponElementId;
-  const hit=!target||!effective||disabled?{damage:0,target,blocked:true}:
-   linceHit(b,ctx,events,target,effective,machine.sourceCardId,order,false,0);
-  ctx.attackElement=priorElement;
-  const kind=hit.target?.kind,unit=hit.target?.unit;
-  if(hit.damage&&kind){
-   const field={part:'damage',escort:'escortDamage',machine:'machineDamage',
-    module:'moduleDamage'}[kind];
-   if(field)shot[field]+=hit.damage;
-   shot.targets.push({kind,id:unit.id,damage:hit.damage,destroyed:unit.destroyed});
+  const blocked=side.fireBlocked||side.fireDisabledUntil>b.ply;
+  const old=ctx.attackElement;ctx.attackElement=machine.weaponElementId;
+  const hit=!target||!effective||blocked?{damage:0,target,blocked:true}:
+   linceHit(b,ctx,events,target,effective,machine.sourceCardId,order,polar,0);
+  record(hit);
+  const prior=enemy.cryoCrystal;
+  const opposed=polar&&prior&&prior.owner===ctx.who&&
+   prior.polarity!==machine.crystalPolarity&&prior.expiresPly>b.ply;
+  let combo=0;
+  if(polar){
+   if(opposed){
+    enemy.cryoCrystal=null;
+    if(hit.damage&&hit.target?.kind==='part'){
+     const fx=linceHit(b,ctx,events,hit.target,machine.comboBonus,
+      machine.sourceCardId,order,true,0);
+     record(fx);combo=fx.damage||0;
+    }
+   }else if(hit.damage&&hit.target?.kind==='part'){
+    enemy.cryoCrystal={owner:ctx.who,polarity:machine.crystalPolarity,
+     cardId:machine.sourceCardId,appliedPly:b.ply,expiresPly:b.ply+3};
+   }
   }
+  ctx.attackElement=old;
   shot.played.push(machine.sourceCardId);
-  events.push(emit(b,ctx.who,'weapon-base-shot',machine.name+' · '+(hit.damage||0)+
-   ' HP (colpo nominale '+nominal+' HP)',{
-   cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
-   nominalDamage:nominal,appliedPower:effective,actualDamage:hit.damage||0,
-   elementId:machine.weaponElementId,targetKind:kind||null,targetId:unit?.id||null,
-   blocked:!hit.damage
-  }));
+  const kind=hit.target?.kind,unit=hit.target?.unit;
+  events.push(emit(b,ctx.who,polar?'weapon-cryo-shot':'weapon-base-shot',
+   machine.name+' · '+((hit.damage||0)+combo)+' HP',{
+    cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
+    nominalDamage:nominal,appliedPower:effective,actualDamage:(hit.damage||0)+combo,
+    comboTriggered:!!opposed&&!!hit.damage,comboNominalDamage:opposed?machine.comboBonus:0,
+    comboActualDamage:combo,crystalPolarity:polar?machine.crystalPolarity:null,
+    elementId:machine.weaponElementId,targetKind:kind||null,targetId:unit?.id||null,
+    blocked:!hit.damage&&!combo
+   }));
+  if(polar){
+   // I due dardi sono scartati subito; il cristallo è uno stato distinto.
+   if(!machine.cardDiscarded)side.discard.push(machine.sourceCardId);
+   machine.cardDiscarded=true;
+   side.machines=side.machines.filter(m=>m.id!==machine.id);
+  }
  }
  return shot;
 }
@@ -3318,7 +3347,7 @@ function escortPassive(b,side,ctx,events,order){
  if(side.independentSupportRoster){
   for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
    // Un'Arma base spara da sola, non aggiunge +1 potenza alla madre.
-   if(machine.damageMode==='base-shot')continue;
+   if(['base-shot','polarity-shot'].includes(machine.damageMode))continue;
    const charge=supportWeaponCharge(side,machine,cardRole);
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
    if(power){
