@@ -5,7 +5,7 @@
 // e Frammenti senza sparo base, combinazioni reali di Difese/Trappole future.
 export const PACING_BALANCE_CANDIDATE=Object.freeze({
  id:'nov-21-generator-three-timers-F-validated-v1',
- status:'SIMULATED_NOT_LIVE',
+ status:'ACTIVE_NEW_COMBAT_MODE_PENDING_FINAL_BALANCE',
  targetSeconds:Object.freeze({min:300,max:360}),
  assumedSecondsPerTurn:17,
  motherHpMultiplier:Object.freeze({
