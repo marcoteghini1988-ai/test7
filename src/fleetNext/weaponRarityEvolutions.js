@@ -12,7 +12,8 @@ import {DISCARD_WEAPONS} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS} from './temporarySupportWeapons.js';
 import {SHIP_RARITIES} from './shipRarity.js';
 import {MOTHER_RARITY_SCALING} from './motherBalance.js';
-import {scaleObject,description,weaponPrintCandidate} from './weaponBalanceCalibration.js';
+import {scaleObject,description,weaponPrintCandidate,weaponStrategicPrintCandidate}
+ from './weaponBalanceCalibration.js';
 
 // Per mantenere una simile durata negli scontri alla pari, la potenza nominale
 // segue gli HP delle navi, NON il tempo del timer. Non e' un moltiplicatore
@@ -61,6 +62,13 @@ export const ALL_WEAPON_BY_ID=Object.freeze(Object.fromEntries(ALL_WEAPON_CARDS.
  export const WEAPON_PRINT_CANDIDATE_BY_ID=Object.freeze(Object.fromEntries(
   WEAPON_PRINT_CANDIDATES.map(card=>[card.id,card])
  ));
+// Nuovo testo delle 235 armi nella partita strategica, separato dai
+// valori storici. Nessuna modifica ai fronti grafici finche' non approvati.
+export const WEAPON_STRATEGIC_PRINT_CANDIDATES=Object.freeze(
+ ALL_WEAPON_CARDS.map(weaponStrategicPrintCandidate));
+export const WEAPON_STRATEGIC_PRINT_BY_ID=Object.freeze(Object.fromEntries(
+ WEAPON_STRATEGIC_PRINT_CANDIDATES.map(c=>[c.id,c])
+));
 export const WEAPON_EVOLUTION_FAMILIES=Object.freeze(Object.fromEntries(
  WEAPON_BASE_CARDS.map(base=>[base.id,Object.freeze([
   base,...EVOLVED_WEAPON_CARDS.filter(c=>c.weaponFamilyId===base.id)
