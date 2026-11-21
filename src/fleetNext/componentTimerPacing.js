@@ -46,7 +46,9 @@ export function initializeComponentTimers(side,rarity){
 export function advanceTimedComponents(side,elapsedSeconds,{drainFraction=CANDIDATE_DRAIN_FRACTION_PER_SECOND}={}){
  if(!side?.componentTimers||!side?.ships?.[0]||!Number.isFinite(elapsedSeconds))
   throw Error('Timer non inizializzati');
- if(!(drainFraction>0&&drainFraction<.03))throw Error('Tasso deterioramento fuori collaudo');
+ // 0 e' consentito per il collaudo SENZA deterioramento: i timer
+ // continuano a scadere e ad applicare le penalita' dei sistemi.
+ if(!(drainFraction>=0&&drainFraction<.03))throw Error('Tasso deterioramento fuori collaudo');
  const now=Math.max(0,Math.floor(elapsedSeconds));
  const before=Math.min(now,Math.max(0,Math.floor(side.componentElapsedSeconds||0)));
  const previouslyExpired=TIMED_COMPONENT_IDS.filter(id=>side.componentTimers[id]?.expired);
