@@ -30,7 +30,7 @@ test('Le cinque schede sono registrate e valide, senza nuove rarità o shop',()=
   assert.equal(card(c.id),c);assert.equal(cardRole(c.id),'support');
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(describeEffect(c),c.effectProposed);
-  assert.ok(NEXT_COMMON_AVAILABLE.includes(c));assert.equal(c.acquisitionPending,true);
+  assert.ok(NEXT_COMMON_AVAILABLE.includes(c));assert.equal(c.acquisitionPending,false);
  }
 });
 test('Cannone Acqua: un colpo indipendente da 26 HP nominali',()=>{
