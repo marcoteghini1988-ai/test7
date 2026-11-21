@@ -41,10 +41,13 @@ test('22 Carte Arma base registrate in sei elementi, con scheda e copia valide',
   assert.ok(canSelectNewGeneric(def.id));assert.ok(NEXT_COMMON_AVAILABLE.includes(def));
  }
 });
-test('Non regalare né vendere automaticamente armi senza prezzi approvati',()=>{
+test('Armi base acquistabili con prezzi provvisori, mai regalate automaticamente',()=>{
  const inv=createFleetInventory();
  for(const d of APPROVED_BASE_WEAPONS){
-  assert.equal(inv.owned[d.id]||0,0);assert.equal(buyNextCommonCard(inv,d.id).ok,false);
+  assert.equal(inv.owned[d.id]||0,0);
+  const result=buyNextCommonCard({...inv,credits:10000},d.id);
+  assert.equal(result.ok,true,d.id);
+  assert.equal(result.inventory.owned[d.id],1);
  }
  inv.owned[ONE.id]=1;
  assert.deepEqual(buildNextBaseDeck(normalizeFleetInventory(inv),'C01',20,[ONE.id]).baseDeck,[ONE.id]);
