@@ -5318,21 +5318,22 @@ export function autoFleetTurn(b,who=b.turn){
   linceRecallWeapon:cards.some(i=>side.hand[i]==='nx-c01-09')&&
    installedModule(side,'weapon')?.hp<installedModule(side,'weapon')?.maxHp};
 }
-export function timeoutFleetTurn(battle,nowMs,preparedOrder=null){
- if(battle.phase!=='playing'||nowMs<battle.deadlineMs)return {ok:false,battle,events:[]};
+// Risoluzione immediata di un ordine preparato: la terza carta e PASSA
+// non attendono lo scadere dei 30 secondi. In caso di ordine non più valido,
+// conserva il massimo numero possibile di carte giocabili, senza bloccare il turno.
+export function resolvePreparedFleetTurn(battle,who,preparedOrder={},nowMs=0){
+ if(!battle||battle.phase!=='playing'||battle.turn!==who)
+  return {ok:false,reason:'Non è il tuo turno',battle,events:[]};
  const order=preparedOrder&&typeof preparedOrder==='object'&&!Array.isArray(preparedOrder)?
   preparedOrder:{partId:null,cards:[],pass:true};
  const awaiting=!!order.awaitingTargetSelection;
- // Non sparare sul primo supporto per impostazione predefinita quando il
- // giocatore non ha ancora scelto fra i due bersagli.
- const full=awaiting?{ok:false,reason:'Bersaglio non scelto entro i 30 secondi'}:
-  resolveFleetNextTurn(battle,battle.turn,order,nowMs);
+ const full=awaiting?{ok:false,reason:'Bersaglio non scelto entro il turno'}:
+  resolveFleetNextTurn(battle,who,order,nowMs);
  if(full.ok)return full;
- const side=battle.sides[battle.turn],requested=Array.isArray(order.cards)?order.cards:[];
+ const side=battle.sides[who],requested=Array.isArray(order.cards)?order.cards:[];
  const indices=[...new Set(requested.filter(i=>Number.isInteger(i)&&i>=0&&i<side.hand.length))]
   .slice(0,FLEET_MAX_PLAYED);
- // Amplificazioni, Sabotaggi e controlli di campo non hanno bisogno di una
- // destinazione per il colpo della madre: possono risolversi anche senza mira.
+ // Gli effetti non offensivi possono risolversi anche quando la mira non è valida.
  const available=awaiting?indices.filter(i=>{
   const id=side.hand[i],spec=card(id)?.effectSpec;
   return cardRole(id)!=='attack'||['systemModifier','fieldReset','dismantle','siphonStrike'].includes(spec?.type);
@@ -5359,18 +5360,24 @@ export function timeoutFleetTurn(battle,nowMs,preparedOrder=null){
   combinations(0,[]);
  }
  for(const candidate of attempts){
-  const partial=resolveFleetNextTurn(battle,battle.turn,candidate,nowMs);
+  const partial=resolveFleetNextTurn(battle,who,candidate,nowMs);
   if(partial.ok)return {...partial,invalidPrepared:full.reason,
    playedPreparedCards:candidate.cards.length,
    droppedPreparedCards:requested.length-candidate.cards.length,
    skippedSacrifice:!!order.sacrificeEscortId&&!candidate.sacrificeEscortId};
  }
- // Anche un insieme ormai impossibile non deve bloccare il timer.
- const fallback=resolveFleetNextTurn(battle,battle.turn,{partId:null,cards:[],pass:true},nowMs);
+ // Nessun insieme valido: il turno passa comunque, senza consumare le carte.
+ const fallback=resolveFleetNextTurn(battle,who,{partId:null,cards:[],pass:true},nowMs);
  return fallback.ok?{...fallback,invalidPrepared:full.reason,
   playedPreparedCards:0,droppedPreparedCards:requested.length}:fallback;
 }
 
+export function timeoutFleetTurn(battle,nowMs,preparedOrder=null){
+ if(!battle||battle.phase!=='playing'||nowMs<battle.deadlineMs)
+  return {ok:false,battle,events:[]};
+ return resolvePreparedFleetTurn(battle,battle.turn,
+  preparedOrder||{partId:null,cards:[],pass:true},nowMs);
+}
 
 // Vecchi chiamanti: il sacrificio non può più essere applicato immediatamente.
 // Inserire sacrificeEscortId nell'ordine di risoluzione del turno.
