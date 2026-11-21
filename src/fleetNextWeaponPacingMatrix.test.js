@@ -357,3 +357,49 @@ test('Taratura 2: confronta 5 combinazioni su 120 battaglie senza Personaggi',()
  console.log('WEAPON_PACING_CALIBRATION_TRIALS2='+JSON.stringify(trials));
  assert.equal(trials.reduce((n,v)=>n+v.cases.length,0),120);
 });
+
+test('Controprova F su 72 scontri: stessi tipi di mazzo, semi nuovi',()=>{
+ const matches=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,[a,b]] of PRESETS[rarity].entries())
+   for(const shift of [0,47,93,139,211,307]){
+    const variant={motherHpScale:rarity==='Comune'?1.15:1,
+     weaponFactor:rarity==='Comune'?.60:1,timerOffsetSeconds:0};
+    const drain=rarity==='Epica'?.012:rarity==='Leggendaria'?.016:.009;
+    matches.push(simulate(rarity,ARCHETYPES[i],a,b,
+     8903+shift+rIdx(rarity)*179+i*39,null,'generator-components-v1',
+     drain,variant));
+   }
+ const report={overall:stats(matches),
+  byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+   [r,stats(matches.filter(m=>m.rarity===r))])),
+  byDeck:Object.fromEntries(ARCHETYPES.map(a=>
+   [a.name,stats(matches.filter(m=>m.deck===a.name))])),
+  outliers:matches.filter(m=>m.seconds<300||m.seconds>360||m.draw)
+   .map(({rarity,deck,shipA,shipB,seconds,winner,seed})=>
+   ({rarity,deck,shipA,shipB,seconds,winner,seed}))};
+ console.log('WEAPON_PACING_F_CROSSVALIDATE='+JSON.stringify(report));
+ assert.equal(matches.length,72);
+});
+test('Controprova F su 24 boss con Terreni e passive, senza Personaggi',()=>{
+ const cases=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,bossId] of [1,8,17].entries())
+   for(const shift of [0,97]){
+    const [a,b]=PRESETS[rarity][i];
+    const variant={motherHpScale:rarity==='Comune'?1.15:1,
+     weaponFactor:rarity==='Comune'?.60:1,timerOffsetSeconds:0};
+    const drain=rarity==='Epica'?.012:rarity==='Leggendaria'?.016:.009;
+    cases.push(simulate(rarity,ARCHETYPES[1],a,b,
+     9903+shift+rIdx(rarity)*179+i*39,bossId,'generator-components-v1',
+     drain,variant));
+   }
+ const report={overall:stats(cases),
+  byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+   [r,stats(cases.filter(m=>m.rarity===r))])),
+  outliers:cases.filter(m=>m.seconds<300||m.seconds>360||m.draw)
+   .map(({rarity,shipA,shipB,seconds,winner,seed})=>
+   ({rarity,shipA,shipB,seconds,winner,seed}))};
+ console.log('WEAPON_PACING_F_BOSSES='+JSON.stringify(report));
+ assert.equal(cases.length,24);
+});
