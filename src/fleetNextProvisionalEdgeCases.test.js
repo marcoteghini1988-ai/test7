@@ -35,6 +35,26 @@ test('Mortaio conserva il limite confermato di due colpi extra per turno',()=>{
  assert.equal(r.battle.sides.A.elementalCharges.plasma,2);
  assert.equal(r.battle.sides.A.energyPile.length,2);
 });
+test('Bruciatura Inceneritore limitata a 12 HP per attivazione',()=>{
+ const c=id('plasma-inceneritore-rotante'),b=game();
+ b.sides.A.discard=Array(30).fill('sys-weapons-minus-c');
+ const r=play(b,'A',[c]);
+ assert.equal(r.battle.sides.B.provisionalBurns[0]?.damage,12);
+ const tick=play(r.battle,'B');
+ const burning=tick.events.find(e=>e.kind==='weapon-burn'&&e.cardId===c);
+ assert.equal(burning?.actualDamage,12);
+});
+
+test('Cicloreattore: blocco della mano 2/3/4 secondi sui tre turni propri',()=>{
+ const c='weapon-transferred-aerial-cicloreattore';let b=game();
+ for(const seconds of [2,3,4]){
+  const played=play(b,'A',seconds===2?[c]:[]);
+  const freeze=played.events.find(e=>e.kind==='weapon-hand-freeze'&&e.cardId===c);
+  assert.equal(freeze?.seconds,seconds);
+  b=play(played.battle,'B').battle;
+ }
+});
+
 test('Boreale: gli impulsi formano un singolo colpo intercettato da una Difesa',()=>{
  const c=id('cryogenic-acceleratore-boreale'),b=game();
  b.sides.B.protections=[{source:'edge-defense',id:'gen-217',kind:'protect',
