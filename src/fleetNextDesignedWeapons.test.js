@@ -136,3 +136,22 @@ test('Le quattro vecchie Carte Arma rimangono nel catalogo separato',()=>{
   assert.ok(card(id));assert.equal(card(id).playable,true);
  }
 });
+
+test('La plancia mostra il danno nominale delle Armi progettate, non zero',()=>{
+ for(const [name,expected] of [
+  ['Batteria Termica a Tre Ugelli',12],
+  ['Condensatore Pirobalistico',18],
+  ['Ariete delle Fosse Abissali',22],
+  ['Idrocannone a Doppia Mandata',18]
+ ]){
+  const c=named(name),b=play(battle(),'A',[c.id]).battle;
+  const berth=projectMachineBerths(b.sides.A,[],0).find(x=>x?.sourceCardId===c.id);
+  assert.ok(berth,name);
+  assert.equal(berth.nominalDamage,expected,name);
+ }
+ const giu=named('Giudizio del Temporale');
+ const gameState=play(battle(),'A',[giu.id]).battle;
+ const berth=projectMachineBerths(gameState.sides.A,[],0).find(x=>x?.sourceCardId===giu.id);
+ assert.equal(berth.damagePercent,20);
+ assert.equal(berth.nominalDamage,undefined,'il 20% non è un danno fisso');
+});

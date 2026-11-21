@@ -68,14 +68,42 @@ export function projectFleetDefense(mother){
  }));
  return {kind:'mother',shipId:mother.id,parts,shield:{hp:0,max:1},exposureOrder:[]};
 }
+function designedWeaponPreview(side,machine,ply){
+ const profile=machine.weaponProfile;
+ if(!profile)return null;
+ if(profile.pattern==='percent')return {damagePercent:profile.damagePercent};
+ const pile=(side.energyPile||[]).filter(entry=>{
+  const id=typeof entry==='string'?entry:entry?.id;
+  return card(id)?.effectSpec?.type==='energy'&&
+   card(id)?.effectSpec?.elementId===machine.weaponElementId;
+ });
+ const tier=Math.min(2,pile.length);
+ let nominal=profile.baseDamage??profile.motherDamage??profile.damages?.[0]??null;
+ if(['energy-tier','energy-fan'].includes(profile.pattern))nominal=profile.damages?.[tier];
+ if(profile.pattern==='character-health')nominal=profile.damages?.[0];
+ const commander=card(side.commander?.id);
+ const match=commander&&side.commander?.untilPly>ply&&
+  (commander.name||commander.nome||'').toLowerCase().includes(
+   (profile.characterName||'').toLowerCase());
+ if(profile.pattern==='character'&&match&&nominal!=null)
+  nominal=Math.round(nominal*(1+profile.bonusPercent/100));
+ if(profile.pattern==='character-health'&&match){
+  const mother=side.ships?.[0],lost=mother?.maxHp>0?
+   100*(1-mother.hp/mother.maxHp):0;
+  nominal=profile.damages?.[lost>=50?2:lost>=25?1:0];
+ }
+ return Number.isFinite(nominal)?{nominalDamage:arsenalBonus(side,machine,ply,nominal)}:{};
+}
 export function projectMachineBerths(side,chosenCards=[],ply=0){
  const slots=Array(2).fill(null);
  for(const unit of side.machines||[])if(unit.hp>0&&!unit.destroyed&&unit.slot>=0&&unit.slot<2){
   const charge=supportWeaponCharge(side,unit,cardRole);
-  const baseShot=['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(unit.damageMode)?
+  const baseShot=['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot'].includes(unit.damageMode)?
    arsenalBonus(side,unit,ply,unit.baseDamage):null;
+  const designedPreview=unit.damageMode==='designed-shot'?designedWeaponPreview(side,unit,ply):null;
   slots[unit.slot]={...unit,pending:false,
    ...(baseShot!==null?{nominalDamage:baseShot}:{}),
+   ...(designedPreview||{}),
    ...(charge?{nominalDamage:hasBalancedMother(side?.ships?.[0])?
      arsenalBonus(side,unit,ply,charge.damage):charge.damage,
     discardAttackCount:charge.attackCards,

@@ -3419,6 +3419,7 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
   unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&
   (m.deployedPly===b.ply||m.weaponProfile?.pattern==='repeat'&&m.deployedPly===b.ply-2));
  if(!ready.length)return null;
+ startNebulaVolley(ctx);
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
   targets:[],played:[]};
  const energyUnits=(element,physical=true)=>{
