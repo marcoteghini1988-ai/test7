@@ -1,4 +1,4 @@
-// Prima griglia di bilanciamento 19/11/2026: forza equivalente, ruoli distinti.
+// Griglia di bilanciamento calibrata 21/11/2026: 5-6 minuti a pari rarita'.
 // Nessun livello visibile: le quattro rarita' modulano le statistiche finali.
 // Gli elementi e le abilita' restano specifici e vengono valutati separatamente.
 export const LEGENDARY_MOTHER_PROFILES=Object.freeze({
@@ -25,9 +25,9 @@ export const MOTHER_BALANCE_LIMITS=Object.freeze({
  maxMotherDamagePerPlyPercent:55
 });
 export const MOTHER_RARITY_SCALING=Object.freeze([
- Object.freeze({hp:.36,attack:.42,defense:.45}),
- Object.freeze({hp:.55,attack:.61,defense:.65}),
- Object.freeze({hp:.77,attack:.82,defense:.82}),
+ Object.freeze({hp:.36,attack:.22,defense:.45}),
+ Object.freeze({hp:.55,attack:.44,defense:.65}),
+ Object.freeze({hp:.77,attack:.97,defense:.82}),
  Object.freeze({hp:1,attack:1,defense:1})
 ]);
 const clamp=(n,low,high)=>Math.min(high,Math.max(low,n));
