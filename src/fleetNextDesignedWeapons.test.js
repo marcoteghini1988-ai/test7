@@ -77,13 +77,13 @@ test('Tutte le 15 Carte Arma parametrizzate infliggono HP reali in battaglia',()
   assert.ok(r.battle.sides.A.machines.some(m=>m.sourceCardId===c.id));
  }
 });
-test('Batteria tre ugelli: tre colpi distinti da 12 HP',()=>{
+test('Batteria tre ugelli: tre colpi distinti da 14 HP',()=>{
  const c=named('Batteria Termica a Tre Ugelli'),e=shots(play(battle(),'A',[c.id]))[0];
- assert.equal(e.hitCount,3);assert.deepEqual(e.impacts.map(h=>h.nominalDamage),[12,12,12]);
-});
-test('Lanciafiamme: supporti + nave madre, 14 HP nominali ognuna',()=>{
- const c=named('Lanciafiamme a Ventaglio'),r=play(battle(true),'A',[c.id]),e=shots(r)[0];
  assert.equal(e.hitCount,3);assert.deepEqual(e.impacts.map(h=>h.nominalDamage),[14,14,14]);
+});
+test('Lanciafiamme: supporti + nave madre, 11 HP nominali ognuna',()=>{
+ const c=named('Lanciafiamme a Ventaglio'),r=play(battle(true),'A',[c.id]),e=shots(r)[0];
+ assert.equal(e.hitCount,3);assert.deepEqual(e.impacts.map(h=>h.nominalDamage),[11,11,11]);
  assert.ok(e.impacts.some(h=>h.targetKind==='part'));
 });
 test('Condensatore: livelli nominali 18, 30, 42 con zero, una o due Energie Fuoco',()=>{
@@ -140,10 +140,10 @@ test('Le quattro vecchie Carte Arma rimangono nel catalogo separato',()=>{
 
 test('La plancia mostra il danno nominale delle Armi progettate, non zero',()=>{
  for(const [name,expected] of [
-  ['Batteria Termica a Tre Ugelli',12],
+  ['Batteria Termica a Tre Ugelli',14],
   ['Cannone Condensatore Pirobalistico',18],
   ['Ariete delle Fosse Abissali',22],
-  ['Idrocannone a Doppia Mandata',18]
+  ['Idrocannone a Doppia Mandata',21]
  ]){
   const c=named(name),b=play(battle(),'A',[c.id]).battle;
   const berth=projectMachineBerths(b.sides.A,[],0).find(x=>x?.sourceCardId===c.id);
