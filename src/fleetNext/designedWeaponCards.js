@@ -72,10 +72,10 @@ const DESIGNS=[
     "rarita": "Rara",
     "profile": {
       "pattern": "multi",
-      "baseDamage": 12,
+      "baseDamage": 14,
       "shots": 3
     },
-    "description": "Tre colpi autonomi da 12 HP, risolti separatamente con le Difese."
+    "description": "Tre colpi autonomi da 14 HP, risolti separatamente con le Difese."
   },
   {
     "id": "weapon-designed-plasma-lanciafiamme-ventaglio",
@@ -84,9 +84,9 @@ const DESIGNS=[
     "rarita": "Comune",
     "profile": {
       "pattern": "sweep",
-      "baseDamage": 14
+      "baseDamage": 11
     },
-    "description": "Un colpo da 14 HP su ciascuna navicella avversaria operativa, incluse le due di supporto e la madre."
+    "description": "Un colpo da 11 HP su ciascuna navicella avversaria operativa, incluse le due di supporto e la madre."
   },
   {
     "id": "weapon-designed-plasma-torretta-piroclastica",
@@ -95,11 +95,11 @@ const DESIGNS=[
     "rarita": "Rara",
     "profile": {
       "pattern": "character",
-      "baseDamage": 26,
+      "baseDamage": 30,
       "bonusPercent": 35,
       "characterName": "Artificiere"
     },
-    "description": "Un colpo da 26 HP, aumentato del 35% se il Personaggio Artificiere di Bordo è effettivamente attivo."
+    "description": "Un colpo da 30 HP, aumentato del 35% se il Personaggio Artificiere di Bordo è effettivamente attivo."
   },
   {
     "id": "weapon-designed-plasma-condensatore-pirobalistico",
@@ -149,10 +149,10 @@ const DESIGNS=[
     "rarita": "Da definire",
     "profile": {
       "pattern": "spread",
-      "baseDamage": 8,
+      "baseDamage": 10,
       "shots": 3
     },
-    "description": "Tre colpi da 8 HP distribuibili fra madre e supporti, ciascuno soggetto alle Difese."
+    "description": "Tre colpi da 10 HP distribuibili fra madre e supporti, ciascuno soggetto alle Difese."
   },
   {
     "id": "weapon-designed-cryogenic-acceleratore-boreale",
@@ -182,9 +182,9 @@ const DESIGNS=[
     "rarita": "Da definire",
     "profile": {
       "pattern": "repeat",
-      "baseDamage": 18
+      "baseDamage": 21
     },
-    "description": "Un colpo da 18 HP per due turni propri consecutivi; due colpi totali.",
+    "description": "Un colpo da 21 HP per due turni propri consecutivi; due colpi totali.",
     "durationTurns": 2
   },
   {
