@@ -68,6 +68,15 @@ const pct=(n,d)=>d>0?Math.round(Math.max(0,Math.min(1,n/d))*100):0;
 // motore; il disegno e il file immagine della carta non vengono cambiati.
 const displayedCard=(id,modern=false)=>modern?
  (WEAPON_PRINT_CANDIDATE_BY_ID[id]||card(id)):card(id);
+const MODERN_GENERATOR_RULES=Object.freeze([
+ 'Prepara fino a tre carte. Il turno termina soltanto premendo ESEGUI o allo scadere dei 30 secondi.',
+ 'La madre non spara gratuitamente. Tocca UNA volta la barra del Generatore per prenotare il colpo quando sono disponibili almeno due Carte Energia fisiche.',
+ 'Con quattro Carte Energia fisiche il colpo prenotato diventa automaticamente potente. Se non prenoti, il Generatore conserva le Carte Energia.',
+ 'Le Carte Arma consumano prima la propria Energia. Le carte residue rimangono in pila durante il raffreddamento del Generatore.',
+ 'Arsenale, Centralina e Plancia hanno timer indipendenti. Quando scadono tutti e tre, la nave madre perde HP ogni secondo. Il Generatore non si rompe.',
+ 'Arsenale esaurito: danno Carte Arma ridotto del 30% e massimo due slot Attacco. Centralina esaurita: 25% dei colpi ai supporti raggiunge la madre. Plancia esaurita: primo supporto scelto automaticamente, slot Personaggio disattivato.'
+]);
+const MODERN_OUTDATED_RULE=/PASSA|terza carta|tiro di emergenza|Armi temporanee aumentano|attacchi normali|fine preparazione/iu;
 function activeEscort(e){return e.hp>0&&!e.destroyed;}
 function findMother(ships){
  const available=new Map(ships.cards.map(card=>[card.shipId,card]));
@@ -2013,7 +2022,9 @@ export default function OfficialFleetBattle3D({
      </>:help.rules?<>
      <strong>Regole delle carte</strong>
      {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description||TERRAIN_CATALOG[terrain]?.effectText}</p>}
-     {SIMPLE_RULES.map(rule=><p key={rule}>{rule}</p>)}
+     {(battle.newGeneratorCombat?
+      [...MODERN_GENERATOR_RULES,...SIMPLE_RULES.filter(rule=>!MODERN_OUTDATED_RULE.test(rule))]:
+      SIMPLE_RULES).map(rule=><p key={rule}>{rule}</p>)}
     </>:help.trapId?<>
      <strong>{card(help.trapId)?.nome||card(help.trapId)?.name}</strong>
      <p>{describeEffect(card(help.trapId),player.exclusiveUpgrades?.[help.trapId]||1)}</p>
