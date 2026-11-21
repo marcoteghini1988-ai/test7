@@ -112,7 +112,7 @@ export function supportWeaponCharge(side,machine,roleForCard){
 // Fattore numerico esclusivamente diagnostico: nessuna carta o partita
 // normale imposta questa proprieta', cosi' il danno stampato resta intatto.
 const weaponAuditValue=(side,amount)=>{
- const factor=Number(side?.__pacingAuditWeaponFactor);
+ const factor=Number(side?.weaponBalanceFactor??side?.__pacingAuditWeaponFactor);
  return Number.isFinite(factor)&&factor>0&&factor!==1?
   Math.max(0,Math.round(amount*factor)):amount;
 };
