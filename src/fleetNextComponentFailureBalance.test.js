@@ -46,7 +46,9 @@ test('Arsenale: -30% a tutte le Armi, ma NON chiude i due slot Arma',()=>{
 test('Arsenale: -1 slot Attacco ma sempre massimo tre carte complessive',()=>{
  const b=make();
  b.sides.A.hand=['sys-weapons-plus-c','sys-generator-plus-c','sys-command-plus-c'];
- const order={cards:[0,1,2],pass:false,targetKind:'part',targetId:'weapons',partId:'weapons'};
+ const target=b.sides.B.escorts[0];
+ const order={cards:[0,1,2],pass:false,targetKind:'escort',targetId:target.id,
+  escortSlot:target.slot,partId:'weapons'};
  assert.equal(validateFleetTurn(b,'A',order),null);
  b.sides.A.componentTimers={weapons:{expired:true}};
  assert.match(validateFleetTurn(b,'A',order),/Arsenale esaurito/);
