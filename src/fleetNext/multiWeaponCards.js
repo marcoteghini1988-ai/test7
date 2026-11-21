@@ -17,7 +17,7 @@ const DESIGNS=[
     "elementId": "refrigerant",
     "rarita": "Rara",
     "mode": "double-shot",
-    "baseDamage": 16,
+    "baseDamage": 18,
     "shots": 2,
     "durationTurns": 1
   },
@@ -27,7 +27,7 @@ const DESIGNS=[
     "elementId": "cryogenic",
     "rarita": "Comune",
     "mode": "repeat-shot",
-    "baseDamage": 16,
+    "baseDamage": 18,
     "durationTurns": 2
   },
   {
@@ -45,8 +45,8 @@ const DESIGNS=[
     "elementId": "cryogenic",
     "rarita": "Epica",
     "mode": "energy-burst-shot",
-    "baseDamage": 20,
-    "extraDamage": 10,
+    "baseDamage": 24,
+    "extraDamage": 12,
     "maxExtraShots": 2,
     "durationTurns": 1
   }
