@@ -12,7 +12,7 @@ import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 import {ALL_WEAPON_CARDS} from './fleetNext/weaponRarityEvolutions.js';
 import {NEXT_COMMON_CARDS} from './fleetNext/newCardRegistry.js';
 import {ELEMENTAL_TERRAIN_CARDS} from './fleetNext/elementalTerrainCards.js';
-import {GENERAL_CARDS,card,cardCopyLimit,eligibleExclusives} from './fleetNext/rules.js';
+import {GENERAL_CARDS,card,cardRole,cardCopyLimit,eligibleExclusives} from './fleetNext/rules.js';
 import {energyIdForRarity} from './fleetNext/energyCards.js';
 import {nextGenericCapacity} from './fleetNext/nextDeckLoadout.js';
 import {applyElementalDamage} from './fleetNext/elementalDamage.js';
