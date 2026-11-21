@@ -69,3 +69,14 @@ test('Le passive supporto modificano intensita offensive: controllo rischio molt
  console.log('MOTHER_SUPPORT_WEAPON_BOOST='+JSON.stringify({without:100,one:200,two:400}));
  assert.ok(FLEET_PACING_WINDOWS.pvp.targetSeconds>=300);
 });
+
+test('Nuova modalita: bonus Arma dei supporti limitato, doppio x2.5 invece di x4',()=>{
+ const sideWith=n=>({independentSupportRoster:true,newGeneratorCombat:true,
+  escorts:Array.from({length:n},(_,i)=>({
+   hp:100,destroyed:false,linked:true,slot:i,supportSkillId:'weapon-double'
+  }))});
+ assert.deepEqual([0,1,2].map(n=>supportWeaponCardBoost(sideWith(n),100)),[100,200,250]);
+ const helper={independentSupportRoster:true,newGeneratorCombat:true,
+  escorts:[{hp:100,destroyed:false,linked:true,slot:0,supportSkillId:'normal-boost'}]};
+ assert.equal(supportWeaponCardBoost(helper,100),125);
+});
