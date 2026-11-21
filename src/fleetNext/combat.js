@@ -12,6 +12,9 @@ import {ESCORT_ARMORY} from '../escortArmory.js';
 import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {limitedMotherDamage} from './motherBalance.js';
+import {PACING_BALANCE_CANDIDATE} from './pacingBalanceCandidate.js';
+import {initializeComponentTimers,advanceBattleComponentClock} from './componentTimerPacing.js';
+import {generatorCardCount,generatorAttackPreview,commitGeneratorFiring,generatorCoolingOwnTurns} from './motherGeneratorBalance.js';
 import {exclusiveAttackCardDamage} from './confirmedCardBalance.js';
 import {bossExtraDamageResistance,bossAttackMultiplier} from './battlePacing.js';
 import {matchPacingTarget} from './battlePacing.js';
@@ -369,10 +372,12 @@ export function createFleetNextBattle({
  shipA='N00',levelA=1,shipB='C01',levelB=1,deckA,deckB,
  upgradesA={},upgradesB={},mode='campaign',bossId=null,planetId=null,sectorNumber=1,
  seed=1988,nowMs=0,bossName=null,ruleset='legacy',
- supportRosterA=null,supportRosterB=null,raritaA=null,raritaB=null
+ supportRosterA=null,supportRosterB=null,raritaA=null,raritaB=null,
+ newGeneratorCombat=false
 }={}){
  const terrain=bossId?bossTerrain(bossId):mode==='pvp'?neutralTerrain():campaignTerrain(sectorNumber,planetId);
- const b={version:4,ruleset,phase:'playing',winner:null,round:1,ply:0,turn:'A',
+ const b={version:4,ruleset,newGeneratorCombat:!!(newGeneratorCombat&&ruleset===HP_SYNC_RULESET),
+  phase:'playing',winner:null,round:1,ply:0,turn:'A',
   deadlineMs:nowMs+FLEET_TURN_SECONDS*1000,turnStartedAtMs:nowMs,
   supportSecondsProcessed:0,mode,
   pacingTarget:matchPacingTarget(mode,bossId,FLEET_TURN_SECONDS),
@@ -400,6 +405,14 @@ export function createFleetNextBattle({
    mother.defensePercent=stats.defensePercent;
    mother.weaponRating=Math.max(0,stats.attackPower-1);
    side.motherCardRarity=rarity;
+   if(b.newGeneratorCombat){
+    const candidate=PACING_BALANCE_CANDIDATE;
+    const hp=Math.max(1,Math.round(stats.maxHp*candidate.motherHpMultiplier[rarity]));
+    mother.hp=hp;mother.maxHp=hp;
+    side.weaponBalanceFactor=candidate.weaponNominalMultiplier[rarity];
+    side.componentDeteriorationFraction=candidate.deteriorationFractionPerSecond[rarity];
+    initializeComponentTimers(side,rarity);
+   }
    if(who==='B'&&bossId!=null)
     mother.bossGuardPercent=bossExtraDamageResistance(bossId);
   }
@@ -5098,8 +5111,20 @@ function resolvePreparedSupportSacrifice(b,who,supportId,events){
   {supportId:e.catalogSupportId,target:'mother',damage}));
  return damage;
 }
-export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
+// Una sola funzione per far avanzare i supporti e i tre timer della nuova
+// partita; i test storici senza modalita' Generatore restano invariati.
+export function advanceFleetCombatTime(battle,nowMs){
  const timed=advanceIndependentSupportTime(battle,nowMs);
+ if(!battle?.newGeneratorCombat||timed.battle?.phase!=='playing')
+  return timed;
+ const elapsed=Math.max(0,Math.floor((nowMs-timed.battle.startedAtMs)/1000));
+ if(elapsed<=(timed.battle.componentClockSeconds||0))return timed;
+ const b=timed.changed?timed.battle:clone(timed.battle);
+ const advanced=advanceBattleComponentClock(b,elapsed);
+ return {battle:advanced.battle,events:[...timed.events,...advanced.events],changed:true};
+}
+export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
+ const timed=advanceFleetCombatTime(battle,nowMs);
  if(order?.cards?.length>0&&
   (timed.battle?.sides?.[who]?.provisionalHandFrozenUntilMs||0)>nowMs)
   return {ok:false,reason:'Mano congelata, il timer continua',
