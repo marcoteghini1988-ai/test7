@@ -160,13 +160,12 @@ function balanceNativeSpec(spec,factor){
  return copy;
 }
 // Non riscrive ID, elemento, durata, numero colpi, costi, o effetti speciali.
+// I coefficienti restano esclusivamente scenari diagnostici:
+// le 73 armi originali non vengono sovrascritte finche' la nuova meccanica
+// della madre (colpi solo a Energia) non sara' collaudata.
+// Altrimenti i valori sul catalogo divergono dalle carte approvate.
 export function calibratedWeaponCard(raw){
- const factor=WEAPON_RARITY_POWER[raw?.rarita];
- if(!raw||!Number.isFinite(factor))throw Error('Arma priva di rarita');
- if(factor===1)return raw; // Leggendaria originale gia allo stadio finale.
- const effectSpec=Object.freeze(balanceNativeSpec(raw.effectSpec,factor));
- return Object.freeze({...raw,rarity:raw.rarita,effectSpec,
-  balanceRevision:WEAPON_BALANCE_REVISION,
-  preBalanceEffectText:raw.effectProposed,
-  effectProposed:description(raw,effectSpec)});
+ if(!raw||!Object.hasOwn(WEAPON_RARITY_POWER,raw.rarita))
+  throw Error('Arma priva di rarita');
+ return raw;
 }
