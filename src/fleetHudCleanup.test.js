@@ -16,10 +16,13 @@ test('Plancia: nessun timer, menu bersagli o terreno nella fascia centrale',()=>
  ])assert.ok(!board.includes(removed),'Elemento ancora visibile: '+removed);
 });
 
-test('Meccaniche conservate: scelta supporti finale, fusione e regole terreni',()=>{
- assert.ok(board.includes('f3d-support-target-choice'));
- assert.ok(board.includes('SCEGLI IL SUPPORTO DA COLPIRE'));
- assert.ok(board.includes('shouldChooseSupportTarget(protectors'));
+test('Meccaniche aggiornate: supporti selezionabili direttamente, PASSA senza dialoghi',()=>{
+ assert.ok(!board.includes('f3d-support-target-choice'));
+ assert.ok(!board.includes('SCEGLI IL SUPPORTO DA COLPIRE'));
+ assert.ok(!board.includes('shouldChooseSupportTarget(protectors'));
+ assert.ok(board.includes('onSelectTarget={setSelectedTarget}'));
+ assert.ok(board.includes('fire({endTurn});'));
+ assert.ok(board.includes('passDisabled={ended||!myTurn||resolving}'));
  assert.ok(board.includes('f3d-fusion-choice'));
  assert.ok(board.includes('TERRAIN_CATALOG[terrain]'));
  assert.ok(board.includes('secondsLeft'));
