@@ -67,19 +67,21 @@ function description(source,s){
   case 'energy-burst-shot':return prefix+base+' HP e fino a '+s.maxExtraShots+
    ' colpi supplementari da '+s.extraDamage+' HP con Energie '+e+
    ' in pila, non consumate.';
-  case 'discard-attacks':return prefix+base+' HP, +'+s.perDiscardAttack+
-   ' HP per ogni tua Carta Attacco negli scarti. Energia '+e+
-   ' nei tuoi scarti: x'+s.energyMultiplier+' una sola volta. Massimo '+
-   s.maxNominalDamage+' HP nominali base prima degli altri modificatori.';
+  case 'discard-attacks':return 'Arma '+e+' per un turno: '+base+
+   ' HP di danno base, +'+s.perDiscardAttack+
+   ' HP per ogni tua Carta Attacco negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+
+   e+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
+   (s.maxNominalDamage?' Danno base massimo '+s.maxNominalDamage+
+    ' HP nominali prima dei modificatori di Arsenale, elementi e Terreno.':'');
   case 'sequence':{
    if(s.sequenceStage===1)return 'Sequenza I ('+e+'): aggiunge '+s.soloDamage+
-    ' HP all attacco per due turni propri. Puoi concatenare Sequenza II nel turno successivo.';
-   if(s.sequenceStage===2)return 'Sequenza II ('+e+'): da sola '+s.soloDamage+
-    ' HP per un turno; concatenata a I nel turno proprio successivo +'+s.chainDamage+
-    ' HP e rimane pronta per III.';
-   return 'Sequenza III ('+e+'): da sola '+s.soloDamage+
-    ' HP; concatenata a II nel turno proprio successivo +'+s.chainDamage+
-    ' HP, poi si scarta.';
+    " HP all'attacco per due tuoi turni. Solo nel turno successivo puoi sovrapporre Sequenza II; senza evoluzione, si scarta dopo il secondo attacco.";
+   if(s.sequenceStage===2)return 'Sequenza II ('+e+'): giocata da sola aggiunge '+s.soloDamage+
+    ' HP per un turno e si scarta. Se sovrapposta a Sequenza I nel turno successivo, aggiunge '+
+    s.chainDamage+' HP e rimane per un turno in attesa di Sequenza III.';
+   return 'Sequenza III ('+e+'): giocata da sola aggiunge '+s.soloDamage+
+    ' HP per un turno. Se sovrapposta a Sequenza II concatenata nel turno successivo, aggiunge '+
+    s.chainDamage+' HP e poi si scarta.';
   }
  }
  const p=s.weaponProfile||{},b=p.baseDamage||0,n=p.shots||1;
