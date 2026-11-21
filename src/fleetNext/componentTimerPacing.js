@@ -76,6 +76,50 @@ export function advanceTimedComponents(side,elapsedSeconds,{drainFraction=CANDID
    side.componentTimers[id].expired),motherHp:mother.hp});
 }
 
+// Sondaggio bilanciamento: un orologio indipendente per ciascun giocatore.
+// Modalita' OPT-IN, non e' il cronometro live finche' non viene approvata.
+// Solo il turno del proprietario fa avanzare i suoi tre componenti e il
+// deterioramento: secondi avversari e tempo fuori turno NON si sommano.
+export function advanceBattleActivePlayerComponentClock(battle,nowMs){
+ if(battle?.phase!=='playing'||!['A','B'].includes(battle?.turn))
+  return {battle,events:[],changed:false};
+ const who=battle.turn,side=battle.sides[who];
+ if(!side?.componentTimers)throw Error('Timer del giocatore assenti');
+ const start=Number(battle.turnStartedAtMs);
+ if(!Number.isFinite(start)||!Number.isFinite(nowMs))
+  throw Error('Turno privo di orologio valido');
+ const maxTurnSeconds=Math.min(30,Math.max(0,Math.floor(
+  (Number(battle.deadlineMs)-start)/1000)||30));
+ const elapsed=Math.max(0,Math.min(maxTurnSeconds,
+  Math.floor((Math.min(nowMs,battle.deadlineMs)-start)/1000)));
+ const processed=battle.componentClockProcessedPly===battle.ply?
+  Math.max(0,Math.floor(battle.componentTurnSecondsProcessed||0)):0;
+ if(elapsed<=processed)return {battle,events:[],changed:false};
+ const events=[];
+ let hpLost=0,drainSeconds=0;
+ const drainFraction=side.componentDeteriorationFraction??CANDIDATE_DRAIN_FRACTION_PER_SECOND;
+ battle.componentClockProcessedPly=battle.ply;
+ for(let second=processed+1;second<=elapsed;second++){
+  const ownSecond=Math.max(0,Math.floor(side.componentElapsedSeconds||0))+1;
+  const state=advanceTimedComponents(side,ownSecond,{drainFraction});
+  for(const id of state.newlyExpired)
+   events.push({who,kind:'component-expired',component:id,
+    atOwnSecond:ownSecond,atSecond:ownSecond});
+  hpLost=Math.round((hpLost+state.hpLost)*100)/100;
+  drainSeconds+=state.deteriorationSeconds;
+  battle.componentTurnSecondsProcessed=second;
+  if(side.ships[0].hp<=0){
+   battle.phase='finished';battle.winner=who==='A'?'B':'A';
+   battle.finishReason='Deterioramento nave madre dopo esaurimento Arsenale, Centralina e Plancia';
+   battle.finishedAtMs=start+second*1000;
+   break;
+  }
+ }
+ if(drainSeconds)events.push({who,kind:'mother-deterioration',
+  hpLost,seconds:drainSeconds,ownClock:true});
+ return {battle,events,changed:true};
+}
+
 // I secondi reali devono essere valutati nell'ordine: se una madre muore
 // al secondo 312, NON si devono applicare i successivi 16 secondi del turno
 // e trasformare artificialmente la vittoria in pareggio.
