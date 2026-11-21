@@ -1,7 +1,9 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
  eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,SIPHON_ATTACKS,ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID} from './fleetNext/rules.js';
-import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,evolveNextEnergyWithDuplicates,NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS,NEXT_NEW_WEAPON_CARDS,NEXT_NEW_WEAPON_BY_ID} from './fleetNext/nextDeckLoadout.js';
+import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,evolveNextEnergyWithDuplicates,evolveNextWeaponWithDuplicates,
+ NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS,NEXT_WEAPON_COLLECTION_CARDS,NEXT_NEW_WEAPON_BY_ID,
+ MAX_WEAPON_INVENTORY_COPIES} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
@@ -47,6 +49,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
  const [terrainRarity,setTerrainRarity]=useState('Comune');
  const [energyElement,setEnergyElement]=useState('ionic');
  const [energyRarity,setEnergyRarity]=useState('Comune');
+ const [weaponElement,setWeaponElement]=useState('ionic');
+ const [weaponRarity,setWeaponRarity]=useState('Comune');
  useEffect(()=>{
   const refresh=()=>setInventory(readFleetInventory());
   window.addEventListener('eclissi-shop-changed',refresh);
@@ -68,8 +72,10 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   }catch(e){setNotice('Acquisto non salvato: '+(e?.message||'Errore'));}
  }
  function evolveTerrain(id){
-  const result=card(id)?.effectSpec?.type==='energy'?
-   evolveNextEnergyWithDuplicates(inventory,id):evolveNextTerrainWithDuplicates(inventory,id);
+  const result=NEXT_NEW_WEAPON_BY_ID[id]?
+   evolveNextWeaponWithDuplicates(inventory,id):
+   card(id)?.effectSpec?.type==='energy'?
+    evolveNextEnergyWithDuplicates(inventory,id):evolveNextTerrainWithDuplicates(inventory,id);
   if(!result.ok){setNotice(result.reason);return;}
   try{
    const changed=writeFleetInventory(result.inventory);
@@ -103,7 +109,9 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   const copies=Math.min(owned,cardCopyLimit(c.id));
   const isElementalTerrain=Object.hasOwn(ELEMENTAL_TERRAIN_BY_ID,c.id);
   const isEnergy=c.effectSpec?.type==='energy';
-  const nextTerrainRarity=isElementalTerrain||isEnergy?
+  const isWeapon=!!NEXT_NEW_WEAPON_BY_ID[c.id];
+  const maxOwned=isWeapon?MAX_WEAPON_INVENTORY_COPIES:cardCopyLimit(c.id);
+  const nextTerrainRarity=isElementalTerrain||isEnergy||isWeapon?
    {Comune:'Rara',Rara:'Epica',Epica:'Leggendaria'}[c.rarita]:null;
   const price=isEnergy&&c.rarita!=='Comune'?null:
    ([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS].some(def=>def.id===c.id)||NEXT_NEW_WEAPON_BY_ID[c.id])?NEXT_CARD_COSTS[c.rarita]:null;
@@ -112,7 +120,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <strong>{c.nome||c.name}</strong>
    <div style={small}>{c.rarita||'Comune'} · {c.sottotipo||c.category||c.kind}{isEnergy?' · '+c.charges+' '+(c.charges===1?'carica':'cariche'):''}</div>
    <p style={small}>{describeEffect(c)}</p>
-   <p style={small}>Possedute: {owned} · Nel mazzo: {equipped} · Massimo: {cardCopyLimit(c.id)}</p>
+   <p style={small}>Possedute: {owned} · Nel mazzo: {equipped} · Limite mazzo: {cardCopyLimit(c.id)}{isWeapon?' · Limite inventario: '+maxOwned:''}</p>
    <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
     <button style={btn} disabled={equipped>=copies||deckInfo.baseDeck.length>=deckInfo.capacity}
       onClick={()=>editDeck(c.id,true)}>AGGIUNGI</button>
@@ -120,7 +128,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
     {nextTerrainRarity&&<button style={btn} onClick={()=>evolveTerrain(c.id)}
       disabled={owned<3}>EVOLVI IN {nextTerrainRarity.toUpperCase()} · 3 COPIE</button>}
     {price!=null&&<button style={btn} onClick={()=>buyCommon(c.id)}
-      disabled={owned>=cardCopyLimit(c.id)||inventory.credits<price}>
+      disabled={owned>=maxOwned||inventory.credits<price}>
       ACQUISTA · {locale(price)} ✦</button>}
    </div>
   </div>;
@@ -241,10 +249,28 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {ENERGY_CARDS.filter(c=>c.elementId===energyElement&&c.rarita===energyRarity).map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>69 Carte Arma nuove · statistiche provvisorie</h3>
-   <p style={small}>Armi con colpo autonomo, due alloggiamenti per partita. Acquistabili con prezzi temporanei e aggiungibili al mazzo; bilanciamento finale successivo.</p>
+   <h3 style={{fontSize:13}}>73 famiglie di Carte Arma · 235 versioni per rarita</h3>
+   <p style={small}>Comune → Rara → Epica → Leggendaria. Il tempo di attivazione
+    non cresce automaticamente: gli effetti conservano la propria identita.
+    Tre copie identiche consentono l'evoluzione, due vengono consumate.</p>
+   <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:8}}>
+    <label style={small}>Elemento
+     <select aria-label="Elemento dell'Arma" value={weaponElement}
+      style={{...box,marginLeft:5}} onChange={e=>setWeaponElement(e.target.value)}>
+      {[...new Map(NEXT_WEAPON_COLLECTION_CARDS.map(c=>[c.elementId,c.elementId]))].map(([id])=>
+       <option key={id} value={id}>{id}</option>)}
+     </select>
+    </label>
+    <label style={small}>Rarita
+     <select aria-label="Rarita dell'Arma" value={weaponRarity}
+      style={{...box,marginLeft:5}} onChange={e=>setWeaponRarity(e.target.value)}>
+      {['Comune','Rara','Epica','Leggendaria'].map(r=><option key={r} value={r}>{r}</option>)}
+     </select>
+    </label>
+   </div>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
-    {NEXT_NEW_WEAPON_CARDS.map(genericCardTile)}
+    {NEXT_WEAPON_COLLECTION_CARDS.filter(c=>c.elementId===weaponElement&&
+     c.rarita===weaponRarity).map(genericCardTile)}
    </div>
    <h3 style={{fontSize:13}}>33 nuove carte dei sistemi e Buco Nero</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
@@ -263,16 +289,6 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <p style={small}>Epica e Leggendaria: consumano il 20% degli HP attuali di ciascun supporto operativo. L’Epica ripartisce il danno, la Leggendaria lo infligge a ogni nave avversaria presente. Occupano uno slot Attacco soltanto nel turno corrente, non uno slot Arma. Acquisizione e immagini da definire.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {SIPHON_ATTACKS.map(genericCardTile)}
-   </div>
-   <h3 style={{fontSize:13}}>Arma di Supporto confermata · Cannone dei Frammenti</h3>
-   <p style={small}>Elemento Fuoco · un turno · 10 HP base + 10 per ogni tua Carta Attacco negli scarti. Una Energia Fuoco nei tuoi scarti raddoppia tutto. Non conta gli scarti avversari. Rarità e acquisizione ancora da stabilire.</p>
-   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
-    {DISCARD_WEAPONS.map(genericCardTile)}
-   </div>
-   <h3 style={{fontSize:13}}>Nuove Armi di Supporto · Cannone Acceleratore Trifase</h3>
-   <p style={small}>Cannone Acceleratore Trifase I → II → III: evolve soltanto nel turno successivo nello stesso slot (10 → 30 → 70 HP nominali); II e III isolate infliggono 10 e 20 HP. Nome, elemento e valori ancora modificabili; acquisto non ancora abilitato.</p>
-   <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
-    {TEMP_SUPPORT_WEAPONS.map(genericCardTile)}
    </div>
    <h3 style={{fontSize:13}}>Armi temporanee, Personaggi e Boss posseduti</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
