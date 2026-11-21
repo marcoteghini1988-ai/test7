@@ -1,4 +1,7 @@
 # Eclissi Stellare — BOZZA grafica: FUNZIONE × RARITÀ
+
+> **RIFERIMENTO GRAFICO CONFERMATO — 21 novembre 2026:** le immagini originali della **base di carta** e dei **simboli approvati** sono state salvate nel repository e documentate in [CARTE_RIFERIMENTI_GRAFICI_UFFICIALI_2026-11-21.md](CARTE_RIFERIMENTI_GRAFICI_UFFICIALI_2026-11-21.md). Per i nuovi fronti usare **quella base e quei simboli**, non introdurre altre geometrie. I simboli degli ambienti barrati sono esclusi; Difesa e Trappola sono universali e senza elemento. Questo aggiornamento grafico prevale sulle indicazioni visive storiche non più pertinenti.
+
 **Versione:** 0.1 — 17 novembre 2026. **Stato:** PROVVISORIO, da discutere e approvare insieme.
 **Repository di lavoro:** marcoteghini1988-ai/test7, ramo main.
 **Scopo:** decidere e fissare qui le regole di aspetto delle NUOVE carte, prima di generare i fronti. Questo file è la fonte operativa per le decisioni grafiche future; non modifica il combattimento.
