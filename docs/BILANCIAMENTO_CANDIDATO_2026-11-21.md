@@ -200,3 +200,96 @@ le carte valide senza bloccare il turno.
 - Quanto la vittoria derivi dalle carte rispetto al deterioramento,
   senza trasformare il timer in una condizione di sconfitta inevitabile.
 - Boss su campagna reale con IA tattica e senza rallentamenti artificiali.
+
+
+## Audit aggiuntivo G/H/J — 21 novembre 2026 (nessuna modifica alle statistiche live)
+
+Dopo l'integrazione dell'attuale candidato F abbiamo eseguito **424 partite
+diagnostiche aggiuntive** (112 nella matrice G, 96 nella H e 216 nella J),
+tutte con il **vero risolutore della nuova modalita**, senza Personaggi.
+I fattori sperimentali vengono applicati solo alla copia della battaglia
+nel test `src/fleetNextWeaponPacingMatrix.test.js`: **nessun parametro
+ufficiale del gioco e nessuna immagine di Carta Arma viene sostituita**.
+Non sono 424 partite umane. Rimangono ipotesi di tempo dell'IA.
+
+### Matrice G — 7 scenari, ognuno con 8 PvP e 8 boss
+
+| Scenario | PvP medio | PvP da danni diretti | Boss medio |
+|---|---:|---:|---:|
+| F attuale | 316 s | 1/8 | 250 s |
+| G1: deterioramento ×0,45 | 340 s | 4/8 | 267 s |
+| G2: +30 s timer, deterioramento ×0,50 | 351 s | 3/8 | 274 s |
+| G3: +45 s, deterioramento ×0,50, supporti HP ×0,85 | 355 s | 5/8 | 270 s |
+| G4: +50 s, deterioramento ×0,50, supporti HP ×0,75 | 355 s | 4/8 | 271 s |
+| G5: +60 s, deterioramento ×0,55, Armi ×1,10 | 352 s | 4/8 | 263 s |
+| G6: +45 s, deterioramento ×0,50, supporti HP ×0,85, Armi ×1,15 | 333 s | 6/8 | 254 s |
+
+Il risultato e' sensibile alla rarita': per G6, ad esempio, nella
+campagna Comune 207 s, Rara 188 s, Epica 401 s, Leggendaria 218 s.
+**Un unico coefficiente generale non bilancia tutte le quattro rarita'.**
+
+### Matrice H — 4 scenari, ognuno con 12 PvP e 12 boss
+
+La variante H2 con HP aggiuntivi per Comune e Rara ha portato la media
+PvP a **341 s** e la campagna a **303 s** (rispetto al baseline 311 s/265 s
+sugli stessi semi), ma nei PvP le morti da timer sono ancora **7/12**.
+Le durate PvP per rarita' erano Comune **366 s**, Rara **317 s**,
+Epica **328 s**, Leggendaria **351 s**. La sola durata media non e'
+sufficiente per promuovere uno scenario a definitivo.
+
+### Matrice J — 3 scenari, ognuno con 48 PvP e 24 boss, semi nuovi
+
+| Scenario | PvP medio | PvP in 300–360 s | PvP KO diretti | Boss medio | Boss in 300–360 s |
+|---|---:|---:|---:|---:|---:|
+| F live | 319 s | 40/48 | 8/48 | 264 s | 8/24 |
+| J1 per rarita'/modalita' | 329 s | 41/48 | 16/48 | 288 s | 12/24 |
+| J2 per rarita'/modalita' | 332 s | 40/48 | 18/48 | 284 s | 12/24 |
+
+J2 **aumenta l'incidenza delle vittorie ottenute giocando e danneggiando
+la madre** nel PvP (da 8/48 a 18/48), ma ancora **30/48** PvP sono
+decisi dal deterioramento e la campagna resta sotto il target.
+J2 registra anche un pareggio nella campagna, contro nessuno del
+baseline sugli stessi semi. Non va attivata alla cieca.
+
+**Durata media J2 per rarita':**
+
+| Rarita' | PvP | Campagna con CPU veloce |
+|---|---:|---:|
+| Comune | 327 s | 276 s |
+| Rara | 339 s | 272 s |
+| Epica | 333 s | 310 s |
+| Leggendaria | 330 s | 279 s |
+
+**Nota:** J1 e J2 non sono moltiplicatori globali: hanno scale separate
+per rarita' e per PvP/campagna, definite direttamente nel test.
+Le 3 matrici sono test di sensibilita', NON aggiornamenti alla scala
+delle carte stampate. Gli effetti e gli slot persi per Arsenale,
+Centralina e Plancia rimangono quelli approvati; il Generatore continua
+a usare 2/4 Carte Energia fisiche. Nessuna carta Personaggio ha
+partecipato al collaudo.
+
+### Risultato e decisioni tecniche
+
+1. **Non promuovere ancora G/H/J a bilanciamento ufficiale.**
+   La durata generale e' migliorabile, ma J2 porta la campagna a 284 s
+   e lascia troppi KO da timer nelle rarita' elevate.
+2. Separare i prossimi test **PvP da campagna** e **Comune/Rara da
+   Epica/Leggendaria**; fare particolare attenzione alla campagna
+   Rara e ai colpi che concludono troppo presto la partita.
+3. Ricontrollare i **235 profili Arma** e le combinazioni con le
+   **13 navicelle di supporto**, inclusi mazzi con Difese e Trappole:
+   questi campioni non rappresentano ancora tutte le strategie.
+4. Non allungare artificialmente il tempo decisionale della CPU per
+   ottenere 300 s; misurare tempi e cause della vittoria.
+5. Prima di fissare numeri da stampare, collaudare le stesse partite
+   dalla plancia mobile, includendo recupero carte, risoluzione di
+   mosse diventate invalide alla scadenza di Arsenale e animazioni.
+
+### Tracciabilita'
+
+- G: commit `56c5f12`, 1.869 test superati + build.
+- H: commit `2ce602b`, 1.870 test superati + build.
+- J: commit `a1faa2a`, **1.871 test superati su 1.871** + build.
+- I report raw JSON sono emessi nei log del workflow `Test7 — Eclissi Stellare checks`
+  come `WEAPON_PACING_G_SWEEP`, `WEAPON_PACING_H_SWEEP` e
+  `WEAPON_PACING_J_CROSSCHECK`.
