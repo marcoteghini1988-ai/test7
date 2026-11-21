@@ -22,6 +22,11 @@ const PRESETS=Object.freeze({
  Epica:[['E01','E02'],['R04','R02'],['C02','E01']],
  Leggendaria:[['L03','L04'],['C01','E02'],['R04','L01']]
 });
+// Valori ESPLORATIVI: non sono cambiamenti definitivi alle carte.
+const TRIAL_FACTORS=Object.freeze({
+ Comune:{mother:.40,weapon:.35},Rara:{mother:.57,weapon:.55},
+ Epica:{mother:1.14,weapon:1.13},Leggendaria:{mother:1,weapon:1}
+});
 const ARCHETYPES=Object.freeze([
  Object.freeze({name:'offensivo',weapon:16,energy:4,system:3,terrain:1}),
  Object.freeze({name:'equilibrato',weapon:11,energy:6,system:8,terrain:2}),
@@ -104,6 +109,13 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null){
   deckB:generator(shipB,rarity,arch,seed+11),
   seed,nowMs:0
  });
+ // Asset e cataloghi non vengono cambiati: i fattori vivono solo nello
+ // stato di questa battaglia diagnostica e NON nel gioco del giocatore.
+ for(const side of Object.values(b.sides)){
+  side.ships[0].attackPower=Math.max(1,Math.round(
+   side.ships[0].attackPower*TRIAL_FACTORS[rarity].mother));
+  side.__weaponPacingAuditFactor=TRIAL_FACTORS[rarity].weapon;
+ }
  let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0;
  const meanTurnMs=17000; // 17s tipici fino alla terza carta/PASSA + animazioni
  while(b.phase==='playing'&&turns<102){
@@ -150,7 +162,7 @@ test('Matrice PvP diagnostica: Comune, Rara, Epica, Leggendaria e tre archetipi'
     rows.push(simulate(rarity,arch,a,b,630+index*13+rIdx(rarity)*57+shift));
  assert.equal(rows.length,72);
  assert.equal(rows.filter(x=>x.winner==='unfinished').length,0);
- const report={byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+ const report={calibration:TRIAL_FACTORS,byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
    [r,stats(rows.filter(x=>x.rarity===r))])),
   byDeck:Object.fromEntries(ARCHETYPES.map(a=>[a.name,
    stats(rows.filter(x=>x.deck===a.name))])),
@@ -167,7 +179,7 @@ test('Matrice boss diagnostica: parita rarita e boss di difficolta crescente',()
     cases.push(simulate(rarity,ARCHETYPES[1],a,b,985+i*17+rIdx(rarity)*101+shift,bossId));
   }
  assert.equal(cases.length,24);
- const report={overall:stats(cases),
+ const report={calibration:TRIAL_FACTORS,overall:stats(cases),
   byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(cases.filter(x=>x.rarity===r))])),
   cases:cases.map(({rarity,shipA,shipB,seconds,turns,draw,invalid,weaponShots})=>
    ({rarity,a:shipA,b:shipB,seconds,turns,draw,invalid,weaponShots}))};
