@@ -403,6 +403,18 @@ const DESIGNS=[
   }
 ];
 const RARITY_LIMIT={"Comune":5,"Rara":4,"Epica":3,"Leggendaria":2};
+// Le altre otto armi già attive avevano ancora "Da definire".
+// Rarità temporanee per renderle realmente acquistabili.
+const PRELIMINARY_RARITIES=Object.freeze({
+ 'weapon-designed-plasma-obice-crogiolo':'Rara',
+ 'weapon-designed-cryogenic-cannone-condensazione':'Comune',
+ 'weapon-designed-cryogenic-batteria-dardi-polari':'Comune',
+ 'weapon-designed-refrigerant-idrocannone-doppia-mandata':'Rara',
+ 'weapon-designed-refrigerant-ariete-fosse':'Rara',
+ 'weapon-designed-metallic-frantumatore-induzione':'Epica',
+ 'weapon-designed-metallic-impatto-comandante':'Rara',
+ 'weapon-designed-ionic-giudizio-temporale':'Leggendaria'
+});
 const MODES=Object.freeze(['single','multi','sweep','character','energy-tier',
  'target-dependent','spread','energy-charge-burst','repeat','energy-fan',
  'induction','character-health','percent']);
@@ -414,7 +426,7 @@ export const DESIGNED_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
  if(!playable)throw Error('Carta Arma senza profilo: '+s.id);
  const mechanic=pendingAdvancedWeaponRule(s.id);
  const profile=Object.freeze({...provisional?.profile||s.profile});
- const rarity=provisional?.rarita||s.rarita;
+ const rarity=provisional?.rarita||PRELIMINARY_RARITIES[s.id]||s.rarita;
  const spec=Object.freeze({type:'deployMachine',hp:1,power:0,
   elementId:s.elementId,damageMode:'designed-shot',
   durationTurns:profile.durationTurns||s.durationTurns||1,weaponProfile:profile});
@@ -424,7 +436,8 @@ export const DESIGNED_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
   visualSymbol:element.symbol,rarita:rarity,
   rarityPending:!Object.hasOwn(RARITY_LIMIT,rarity),
   playable,nativeFace:true,acquisitionPending:false,balancePending:true,
-  provisionalBalance:!!provisional,reviewRequired:false,designOnly:false,
+  provisionalBalance:!!provisional,provisionalRarity:!!PRELIMINARY_RARITIES[s.id],
+  reviewRequired:false,designOnly:false,
   confirmedMechanic:mechanic,missingDecisions:Object.freeze([]),
   maxCopiesPerDeck:RARITY_LIMIT[rarity]||1,
   effectSpec:spec,effectProposed:provisional?.description||s.description,
