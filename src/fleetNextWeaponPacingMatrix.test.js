@@ -24,8 +24,8 @@ const PRESETS=Object.freeze({
 });
 // Valori ESPLORATIVI: non sono cambiamenti definitivi alle carte.
 const TRIAL_FACTORS=Object.freeze({
- Comune:{mother:.40,weapon:.35},Rara:{mother:.57,weapon:.55},
- Epica:{mother:1.14,weapon:1.13},Leggendaria:{mother:1,weapon:1}
+ Comune:{mother:.52,weapon:.47},Rara:{mother:.72,weapon:.69},
+ Epica:{mother:1.23,weapon:1.21},Leggendaria:{mother:1,weapon:1}
 });
 const ARCHETYPES=Object.freeze([
  Object.freeze({name:'offensivo',weapon:16,energy:4,system:3,terrain:1}),
@@ -111,6 +111,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null){
  });
  // Asset e cataloghi non vengono cambiati: i fattori vivono solo nello
  // stato di questa battaglia diagnostica e NON nel gioco del giocatore.
+ if(bossId!=null)b.sides.B.ships[0].bossGuardPercent=0;
  for(const side of Object.values(b.sides)){
   side.ships[0].attackPower=Math.max(1,Math.round(
    side.ships[0].attackPower*TRIAL_FACTORS[rarity].mother));
