@@ -35,12 +35,13 @@ export const FLEET_PACING_PRESSURE=Object.freeze({enabled:false});
 export const pacingAttackMultiplier=(_battle,_nowMs=0)=>1;
 
 export const BOSS_GUARD_ORDER=Object.freeze([1,2,3,6,7,8,9,11,14,17,19,20]);
-export function bossExtraDamageResistance(bossId){
- const index=BOSS_GUARD_ORDER.indexOf(Number(bossId));
- return index<0?10:8+Math.round(index*.55);
+export function bossExtraDamageResistance(_bossId){
+ // Il boss mantiene Terreno e passiva propri. Un moltiplicatore HP aggiuntivo
+ // falserebbe il bilanciamento delle Carte Arma stampate: resta inattivo.
+ return 0;
 }
-// I boss usano Terreno e passive strategiche. La resistenza supplementare
-// e' moderata per mantenere il medesimo obiettivo di 5-6 minuti del PvP.
+// La difficolta' boss viene dalle scelte, dai Terreni e dalle passive,
+// non da un vantaggio di HP nascosto e non stampato sulle carte.
 // Questo parametro non cambia le Carte Personaggio Boss e non tocca i Terreni.
 export function bossAttackMultiplier(bossId){
  const index=BOSS_GUARD_ORDER.indexOf(Number(bossId));
