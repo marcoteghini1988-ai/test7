@@ -1,5 +1,6 @@
 // Trasferimenti approvati 20/11: le identità restano quelle già progettate.
 // Nessuna rarità, immagine, costo o danno definitivo viene inventato.
+import {calibratedWeaponCard} from './weaponBalanceCalibration.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 import {pendingAdvancedWeaponRule} from './confirmedAdvancedWeaponMechanics.js';
 import {PROVISIONAL_ADVANCED_WEAPON_BY_ID} from './provisionalWeaponProfiles.js';
@@ -35,7 +36,7 @@ export const CONFIRMED_TRANSFER_WEAPONS=Object.freeze([
    damageMode:'designed-shot',durationTurns:3,weaponProfile:WIND_DRAFT.profile}),
   effectProposed:WIND_DRAFT.description
  })
-]);
+].map(calibratedWeaponCard));
 export const CONFIRMED_TRANSFER_WEAPON_BY_ID=Object.freeze(
  Object.fromEntries(CONFIRMED_TRANSFER_WEAPONS.map(c=>[c.id,c])));
 if(CONFIRMED_TRANSFER_WEAPONS.length!==2||
