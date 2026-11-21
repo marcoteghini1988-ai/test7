@@ -21,7 +21,7 @@ function play(b,who,cards=[]){
 const shots=r=>r.events.filter(e=>e.kind==='weapon-cryo-shot');
 test('Cinque Armi approvate, con ID, effetti, rarità e danni documentati',()=>{
  assert.equal(CONFIRMED_WEAPON_CARDS.length,5);
- assert.deepEqual(CONFIRMED_WEAPON_CARDS.map(c=>c.effectSpec.baseDamage),[15,12,28,30,24]);
+ assert.deepEqual(CONFIRMED_WEAPON_CARDS.map(c=>c.effectSpec.baseDamage),[18,24,28,30,24]);
  for(const c of CONFIRMED_WEAPON_CARDS){
   assert.equal(card(c.id),c);assert.equal(cardRole(c.id),'support');
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
@@ -30,12 +30,12 @@ test('Cinque Armi approvate, con ID, effetti, rarità e danni documentati',()=>{
   assert.equal(c.acquisitionPending,false);assert.equal(c.balancePending,true);
  }
 });
-test('Dardi Ghiaccio: entrambi gli ordini innescano un solo cristallo, 39 HP nominali',()=>{
+test('Dardi Ghiaccio: entrambi gli ordini innescano un solo cristallo, 58 HP nominali',()=>{
  for(const pair of [[BALESTRA,DARDIERA],[DARDIERA,BALESTRA]]){
   const r=play(make(),'A',pair.map(c=>c.id)),e=shots(r);
   assert.equal(e.length,2);
   assert.equal(e.filter(x=>x.comboTriggered).length,1);
-  assert.equal(e.reduce((n,x)=>n+x.nominalDamage+x.comboNominalDamage,0),39);
+  assert.equal(e.reduce((n,x)=>n+x.nominalDamage+x.comboNominalDamage,0),58);
   assert.equal(r.battle.sides.B.cryoCrystal,null);
   assert.equal(r.battle.sides.A.machines.length,0);
   assert.ok(r.battle.sides.A.discard.includes(BALESTRA.id));
