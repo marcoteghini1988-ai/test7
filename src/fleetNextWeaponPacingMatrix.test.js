@@ -136,7 +136,7 @@ function generatorOrder(b){
   chosen=chosen.slice(0,-1);
  return {...order,cards:chosen,pass:true};
 }
-function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drainFraction=CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration=null){
+function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drainFraction=CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration=null,turnTiming='symmetric'){
  let b=createFleetNextBattle({
   shipA,shipB,raritaA:rarity,raritaB:rarity,
   ruleset:HP_SYNC_RULESET,mode:bossId!=null?'campaign':'pvp',bossId,
@@ -188,7 +188,10 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
  const meanTurnMs=17000; // ipotesi diagnostica: 17s medi di scelta+animazioni per turno
  while(b.phase==='playing'&&turns<102){
   const who=b.turn;
-  const at=b.turnStartedAtMs+meanTurnMs;
+  // PvE reale: il giocatore prepara per circa 17s, la CPU decide in
+  // ~0,7s. I tempi includono anche le animazioni (~1,6s per turno).
+  const at=b.turnStartedAtMs+(turnTiming==='fast-cpu'?
+   (who==='A'?18600:2300):meanTurnMs);
   let order=['generator-v0','generator-components-v1'].includes(model)?generatorOrder(b):autoFleetTurn(b,who);
   if(model==='no-normal'){
    // Scenario diagnostico: nessun tiro GRATIS della madre; le armi sparano.
@@ -499,5 +502,24 @@ test('24 boss nuove regole con vera risoluzione ESEGUI dell IA, senza Personaggi
    .map(({rarity,shipA,shipB,seconds,winner,invalid})=>
     ({rarity,shipA,shipB,seconds,winner,invalid}))};
  console.log('WEAPON_PACING_LIVE_BOSSES='+JSON.stringify(report));
+ assert.equal(cases.length,24);
+});
+
+test('Durata effettiva PvE con CPU veloce, non 17 secondi a turno IA',()=>{
+ const cases=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,bossId] of [1,8,17].entries())
+   for(const shift of [0,97]){
+    const [a,b]=PRESETS[rarity][i];
+    cases.push(simulate(rarity,ARCHETYPES[1],a,b,
+     9903+shift+rIdx(rarity)*179+i*39,bossId,'live-generator',
+     CANDIDATE_DRAIN_FRACTION_PER_SECOND,null,'fast-cpu'));
+   }
+ const report={overall:stats(cases),
+  byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+   [r,stats(cases.filter(x=>x.rarity===r))])),
+  cases:cases.map(({rarity,shipA,shipB,seconds,winner,invalid})=>
+    ({rarity,shipA,shipB,seconds,winner,invalid}))};
+ console.log('WEAPON_PACING_REALTIME_CPU='+JSON.stringify(report));
  assert.equal(cases.length,24);
 });
