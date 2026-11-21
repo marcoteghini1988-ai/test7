@@ -73,7 +73,11 @@ export function discardWeaponCharge(side,machine,roleForCard){
  const energyMatched=discard.includes('energy-'+machine.weaponElementId);
  const multiplier=energyMatched?machine.energyMultiplier:1;
  const rawDamage=machine.baseDamage+attackCards*machine.perDiscardAttack;
- return {attackCards,energyMatched,multiplier,rawDamage,damage:rawDamage*multiplier,
+ // Limite alla scarica finale: la crescita per scarti e il raddoppio restano validi.
+ const maxNominal=Number.isFinite(machine.maxNominalDamage)?
+  Math.max(1,Math.floor(machine.maxNominalDamage)):Number.POSITIVE_INFINITY;
+ return {attackCards,energyMatched,multiplier,rawDamage,
+  damage:Math.min(maxNominal,rawDamage*multiplier),
   elementId:machine.weaponElementId};
 }
 // Solo il passaggio nel proprio turno immediatamente successivo conserva la catena.
