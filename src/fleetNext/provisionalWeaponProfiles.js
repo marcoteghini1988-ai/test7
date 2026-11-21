@@ -36,7 +36,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-plasma-sistema-binario",
-    "name": "Sistema Binario a Sovraccarico",
+    "name": "Cannone Binario a Sovraccarico",
     "rarita": "Leggendaria",
     "profile": {
       "pattern": "binary-overload",
@@ -58,7 +58,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-plasma-accoppiatore-termofagico",
-    "name": "Accoppiatore Termofagico",
+    "name": "Cannone Accoppiatore Termofagico",
     "rarita": "Epica",
     "profile": {
       "pattern": "thermal-coupler",
@@ -73,7 +73,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-cryogenic-ago-inverno-nero",
-    "name": "Ago dell'Inverno Nero",
+    "name": "Perforatore dell’Inverno Nero",
     "rarita": "Comune",
     "profile": {
       "pattern": "ice-needle",
@@ -93,7 +93,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-cryogenic-acceleratore-boreale",
-    "name": "Acceleratore Boreale Binario",
+    "name": "Cannone Acceleratore Boreale",
     "rarita": "Rara",
     "profile": {
       "pattern": "boreal-binary",
@@ -119,7 +119,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-refrigerant-bassa-marea",
-    "name": "Bassa Marea",
+    "name": "Cannone di Bassa Marea",
     "rarita": "Rara",
     "profile": {
       "pattern": "low-tide",
@@ -129,11 +129,11 @@ const RAW=[
       "durationTurns": 2,
       "provisional": true
     },
-    "description": "Un colpo da 14 HP e 2 HP extra per ciascuna carta nei due scarti (massimo 30 contate); prepara Alta Marea per il turno proprio successivo."
+    "description": "Un colpo da 14 HP e 2 HP extra per ciascuna carta nei due scarti (massimo 30 contate); prepara Cannone di Alta Marea per il turno proprio successivo."
   },
   {
     "id": "weapon-designed-refrigerant-alta-marea",
-    "name": "Alta Marea",
+    "name": "Cannone di Alta Marea",
     "rarita": "Epica",
     "profile": {
       "pattern": "high-tide",
@@ -143,7 +143,7 @@ const RAW=[
       "durationTurns": 1,
       "provisional": true
     },
-    "description": "Giocabile solo nel turno proprio successivo a Bassa Marea. Travolge le Difese e le Trappole di entrambi i giocatori e colpisce con 4 volte la potenza caricata, massimo 120 HP."
+    "description": "Giocabile solo nel turno proprio successivo a Cannone di Bassa Marea. Travolge le Difese e le Trappole di entrambi i giocatori e colpisce con 4 volte la potenza caricata, massimo 120 HP."
   },
   {
     "id": "weapon-designed-metallic-artiglieria-schegge",
@@ -159,7 +159,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-metallic-recuperatore-termobalistico",
-    "name": "Recuperatore Termobalistico",
+    "name": "Artiglieria Termobalistica di Recupero",
     "rarita": "Epica",
     "profile": {
       "pattern": "thermal-reclaimer",
@@ -185,7 +185,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-metallic-ganasce-magnetiche",
-    "name": "Ganasce Magnetiche",
+    "name": "Arpioni a Ganasce Magnetiche",
     "rarita": "Rara",
     "profile": {
       "pattern": "magnetic-grapple",
@@ -193,11 +193,11 @@ const RAW=[
       "durationTurns": 2,
       "provisional": true
     },
-    "description": "Due arpioni infliggono 14 HP a due navicelle diverse; se colpiscono, conservano i bersagli agganciati per Collassatore di Lega nel tuo turno successivo."
+    "description": "Due arpioni infliggono 14 HP a due navicelle diverse; se colpiscono, conservano i bersagli agganciati per Cannone Collassatore di Lega nel tuo turno successivo."
   },
   {
     "id": "weapon-designed-metallic-collassatore-lega",
-    "name": "Collassatore di Lega",
+    "name": "Cannone Collassatore di Lega",
     "rarita": "Epica",
     "profile": {
       "pattern": "alloy-collision",
@@ -205,7 +205,7 @@ const RAW=[
       "durationTurns": 1,
       "provisional": true
     },
-    "description": "Richiede Ganasce Magnetiche nel turno proprio precedente; fa collidere i bersagli agganciati infliggendo 24 HP ciascuno (Difese individuali)."
+    "description": "Richiede Arpioni a Ganasce Magnetiche nel turno proprio precedente; fa collidere i bersagli agganciati infliggendo 24 HP ciascuno (Difese individuali)."
   },
   {
     "id": "weapon-designed-metallic-perforatore-cascata",
@@ -222,7 +222,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-ionic-nucleo-folgore",
-    "name": "Nucleo della Folgore Crescente",
+    "name": "Cannone a Nucleo di Folgore Crescente",
     "rarita": "Rara",
     "profile": {
       "pattern": "growing-thunder-core",
@@ -240,7 +240,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-ionic-sonda-ionica",
-    "name": "Sonda Ionica",
+    "name": "Sonda Ionica d’Assalto",
     "rarita": "Comune",
     "profile": {
       "pattern": "ion-probe",
@@ -261,7 +261,7 @@ const RAW=[
       "durationTurns": 1,
       "provisional": true
     },
-    "description": "Colpo Fulmine da 28 HP; se il bersaglio è segnato da Sonda Ionica, un secondo impatto autonomo da 18 HP consuma il segnale."
+    "description": "Colpo Fulmine da 28 HP; se il bersaglio è segnato da Sonda Ionica d’Assalto, un secondo impatto autonomo da 18 HP consuma il segnale."
   },
   {
     "id": "weapon-designed-ionic-lancia-comando-ionico",
@@ -278,7 +278,7 @@ const RAW=[
   },
   {
     "id": "weapon-designed-ionic-condensatore-tempesta",
-    "name": "Condensatore della Tempesta Stellare",
+    "name": "Cannone Condensatore della Tempesta Stellare",
     "rarita": "Epica",
     "profile": {
       "pattern": "storm-capacitor",
@@ -292,7 +292,7 @@ const RAW=[
   },
   {
     "id": "weapon-transferred-aerial-cicloreattore",
-    "name": "Cicloreattore Grandinifero",
+    "name": "Cannone Cicloreattore Grandinifero",
     "rarita": "Epica",
     "profile": {
       "pattern": "wind-cycloreactor",
