@@ -269,8 +269,8 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {DISCARD_WEAPONS.map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>Nuove Armi di Supporto · Acceleratore Trifase</h3>
-   <p style={small}>Acceleratore Trifase I → II → III: evolve soltanto nel turno successivo nello stesso slot (10 → 30 → 70 HP nominali); II e III isolate infliggono 10 e 20 HP. Nome, elemento e valori ancora modificabili; acquisto non ancora abilitato.</p>
+   <h3 style={{fontSize:13}}>Nuove Armi di Supporto · Cannone Acceleratore Trifase</h3>
+   <p style={small}>Cannone Acceleratore Trifase I → II → III: evolve soltanto nel turno successivo nello stesso slot (10 → 30 → 70 HP nominali); II e III isolate infliggono 10 e 20 HP. Nome, elemento e valori ancora modificabili; acquisto non ancora abilitato.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {TEMP_SUPPORT_WEAPONS.map(genericCardTile)}
    </div>
