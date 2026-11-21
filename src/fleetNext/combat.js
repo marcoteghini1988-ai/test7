@@ -476,6 +476,8 @@ function selectedOwnPart(side,target,ownPartId){
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
  if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
+ if(def.effectSpec?.damageMode==='base-shot'&&side.ruleset!==HP_SYNC_RULESET)
+  return 'Carta Arma base richiede la modalità HP';
  if(def.effectSpec?.type==='energy'){
   if(side.ruleset!==HP_SYNC_RULESET)return 'Le Carte Energia richiedono la modalità HP';
   if(!canChargeElementalEnergy(side,def.effectSpec.elementId))
@@ -3011,6 +3013,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     sequenceStage:sequence?s.sequenceStage:null,sequenceEnteredPly:sequence?b.ply:null,
     sequenceEligible:sequence&&(s.sequenceStage===1||!!previous),
     soloDamage:sequence?s.soloDamage:null,chainDamage:sequence?s.chainDamage:null,
+    deployedPly:b.ply,
     untilPly:modern?b.ply+2*duration:null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
@@ -3265,10 +3268,57 @@ function recordTerrainWeaponShare(side,ctx,machine,power,extra){
  if(!machine.weaponElementId||machine.weaponElementId!==activeElement)
   ctx.terrainOtherElementPower=(ctx.terrainOtherElementPower||0)+power+extra;
 }
+// Sparo reale e indipendente, una sola volta alla risoluzione della carta.
+// Nessuna aggiunta di Attacchi, slot Arma o abilità delle navicelle di supporto.
+function resolveApprovedBaseWeaponShots(b,ctx,events,order){
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const ready=(side.machines||[]).filter(m=>m.damageMode==='base-shot'&&
+  m.deployedPly===b.ply&&unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply));
+ if(!ready.length)return null;
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targets:[],played:[]};
+ startNebulaVolley(ctx);
+ for(const machine of ready){
+  if(enemy.ships[0].hp<=0)break;
+  const guards=protectingFleetUnits(enemy,b.ply);
+  const selected=selectedEnemyTarget(enemy,order,b.ply);
+  // Come l'attacco normale: prima le navicelle di supporto e le coperture.
+  const target=selected&&(!guards.length||!['part','module'].includes(selected.kind))?
+   selected:guards.length?{kind:guards[0].kind,unit:guards[0].unit}:
+   selectedEnemyTarget(enemy,{targetKind:'part',targetId:'weapons'},b.ply);
+  const nominal=Math.max(0,Number(machine.baseDamage)||0);
+  const effective=arsenalBonus(side,machine,b.ply,nominal);
+  const disabled=side.fireBlocked||side.fireDisabledUntil>b.ply;
+  const priorElement=ctx.attackElement;
+  ctx.attackElement=machine.weaponElementId;
+  const hit=!target||!effective||disabled?{damage:0,target,blocked:true}:
+   linceHit(b,ctx,events,target,effective,machine.sourceCardId,order,false,0);
+  ctx.attackElement=priorElement;
+  const kind=hit.target?.kind,unit=hit.target?.unit;
+  if(hit.damage&&kind){
+   const field={part:'damage',escort:'escortDamage',machine:'machineDamage',
+    module:'moduleDamage'}[kind];
+   if(field)shot[field]+=hit.damage;
+   shot.targets.push({kind,id:unit.id,damage:hit.damage,destroyed:unit.destroyed});
+  }
+  shot.played.push(machine.sourceCardId);
+  events.push(emit(b,ctx.who,'weapon-base-shot',machine.name+' · '+(hit.damage||0)+
+   ' HP (colpo nominale '+nominal+' HP)',{
+   cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
+   nominalDamage:nominal,appliedPower:effective,actualDamage:hit.damage||0,
+   elementId:machine.weaponElementId,targetKind:kind||null,targetId:unit?.id||null,
+   blocked:!hit.damage
+  }));
+ }
+ return shot;
+}
+
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  if(side.independentSupportRoster){
   for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
+   // Un'Arma base spara da sola, non aggiunge +1 potenza alla madre.
+   if(machine.damageMode==='base-shot')continue;
    const charge=supportWeaponCharge(side,machine,cardRole);
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
    if(power){
@@ -4802,6 +4852,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.fieldReset?[]:
   ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
+ const weaponShot=resolveApprovedBaseWeaponShots(b,ctx,events,order);
  const ownShot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.elementalShot?resolveSalvo(b,ctx,events,order):
   ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):
@@ -4819,7 +4870,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
   resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
- const shot=mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot));
+ const shot=mergeFalcoShots(weaponShot,mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot)));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  const sacrificeDamage=resolvePreparedSupportSacrifice(b,who,order.sacrificeEscortId,events);
  if(order.sacrificeEscortId)shot.sacrificeDamage=sacrificeDamage;

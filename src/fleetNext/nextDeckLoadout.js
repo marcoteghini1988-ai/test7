@@ -10,6 +10,7 @@ import {FUSION_SHIP_CARDS,FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {FUSION_DENIAL_TRAPS,FUSION_DENIAL_TRAP_BY_ID} from './fusionDenialTrap.js';
 import {DISCARD_WEAPONS,DISCARD_WEAPON_BY_ID} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS,TEMP_SUPPORT_WEAPON_BY_ID} from './temporarySupportWeapons.js';
+import {APPROVED_BASE_WEAPONS,APPROVED_BASE_WEAPON_BY_ID} from './approvedBaseWeapons.js';
 import {SIPHON_ATTACKS,SIPHON_ATTACK_BY_ID} from './siphonAttacks.js';
 import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID,terrainNextRarity} from './elementalTerrainCards.js';
 
@@ -45,7 +46,7 @@ export function canSelectNewGeneric(id){
   ((Object.hasOwn(NEXT_COMMON_CARD_BY_ID,id)||Object.hasOwn(DISMANTLE_BY_ID,id)||
   Object.hasOwn(ENERGY_CARD_BY_ID,id)||Object.hasOwn(FUSION_SHIP_CARD_BY_ID,id)||
    Object.hasOwn(FUSION_DENIAL_TRAP_BY_ID,id)||Object.hasOwn(DISCARD_WEAPON_BY_ID,id)||
-   Object.hasOwn(TEMP_SUPPORT_WEAPON_BY_ID,id)||Object.hasOwn(SIPHON_ATTACK_BY_ID,id)||
+   Object.hasOwn(TEMP_SUPPORT_WEAPON_BY_ID,id)||Object.hasOwn(APPROVED_BASE_WEAPON_BY_ID,id)||Object.hasOwn(SIPHON_ATTACK_BY_ID,id)||
    Object.hasOwn(ELEMENTAL_TERRAIN_BY_ID,id))||
   NEXT_TEMP_WEAPON_IDS.includes(id)||def.kind==='character');
 }
@@ -116,4 +117,4 @@ export function evolveNextEnergyWithDuplicates(inventory,id){
  return evolveCardByRarityWithDuplicates(inventory,energy,next=>
   ENERGY_CARD_BY_ID[energyIdForRarity(energy.elementId,next)]);
 }
-export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS,...FUSION_DENIAL_TRAPS,...DISCARD_WEAPONS,...TEMP_SUPPORT_WEAPONS,...SIPHON_ATTACKS,...ELEMENTAL_TERRAIN_CARDS]);
+export const NEXT_COMMON_AVAILABLE=Object.freeze([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS,...FUSION_DENIAL_TRAPS,...DISCARD_WEAPONS,...TEMP_SUPPORT_WEAPONS,...APPROVED_BASE_WEAPONS,...SIPHON_ATTACKS,...ELEMENTAL_TERRAIN_CARDS]);
