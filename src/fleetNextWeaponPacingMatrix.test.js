@@ -18,6 +18,8 @@ import {nextGenericCapacity} from './fleetNext/nextDeckLoadout.js';
 import {applyElementalDamage} from './fleetNext/elementalDamage.js';
 import {limitedMotherDamage} from './fleetNext/motherBalance.js';
 import {generatorCardCount,generatorAttackPreview,commitGeneratorFiring} from './fleetNext/motherGeneratorBalance.js';
+import {initializeComponentTimers,advanceBattleComponentClock,CANDIDATE_DRAIN_FRACTION_PER_SECOND}
+ from './fleetNext/componentTimerPacing.js';
 
 const PRESETS=Object.freeze({
  Comune:[['N00','C01'],['C01','C02'],['C02','C03']],
@@ -133,7 +135,7 @@ function generatorOrder(b){
   chosen=chosen.slice(0,-1);
  return {...order,cards:chosen,pass:true};
 }
-function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current'){
+function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drainFraction=CANDIDATE_DRAIN_FRACTION_PER_SECOND){
  let b=createFleetNextBattle({
   shipA,shipB,raritaA:rarity,raritaB:rarity,
   ruleset:HP_SYNC_RULESET,mode:bossId!=null?'campaign':'pvp',bossId,
@@ -143,13 +145,17 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current'){
   deckB:generator(shipB,rarity,arch,seed+11),
   seed,nowMs:0
  });
+ if(model==='generator-components-v1'){
+  for(const side of Object.values(b.sides))initializeComponentTimers(side,rarity);
+  b.componentClockSeconds=0;
+ }
  let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0,
   generatorShots=0,generatorHp=0;
  const meanTurnMs=17000; // 17s tipici fino alla terza carta/PASSA + animazioni
  while(b.phase==='playing'&&turns<102){
   const who=b.turn;
   const at=b.turnStartedAtMs+meanTurnMs;
-  let order=model==='generator-v0'?generatorOrder(b):autoFleetTurn(b,who);
+  let order=['generator-v0','generator-components-v1'].includes(model)?generatorOrder(b):autoFleetTurn(b,who);
   if(model==='no-normal'){
    // Scenario diagnostico: nessun tiro GRATIS della madre; le armi sparano.
    order={...order,activateElemental:false,pass:true};
@@ -168,7 +174,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current'){
   blocks+=r.events.filter(e=>e.kind==='block').length;
   damage+=r.shot?.damage||0;
   b=r.battle;turns++;
-  if(model==='generator-v0'&&b.phase==='playing'){
+  if(['generator-v0','generator-components-v1'].includes(model)&&b.phase==='playing'){
    const owner=b.sides[who],foe=b.sides[who==='A'?'B':'A'];
    const available=generatorCardCount(owner);
    const reserved=available>=4||
@@ -195,12 +201,15 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current'){
     }
    }
   }
+  if(model==='generator-components-v1'&&b.phase==='playing')
+   advanceBattleComponentClock(b,turns*meanTurnMs/1000,{drainFraction});
   assert.ok(b.sides.A.ships[0].hp>=0&&b.sides.B.ships[0].hp>=0);
  }
  return {rarity,deck:arch.name,shipA,shipB,seed,model,
   boss:bossId!=null,seconds:turns*meanTurnMs/1000,
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
-  winner:b.winner||'unfinished',invalid,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp};
+  winner:b.winner||'unfinished',invalid,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
+  drainFraction};
 }
 function stats(matches){
  const seconds=[...matches.map(m=>m.seconds)].sort((a,b)=>a-b);
@@ -280,5 +289,24 @@ test('Matrice diagnostica: due attacchi madre a 2/4 Energie fisiche, senza Perso
    stats(cases.filter(c=>c.deck===a.name))])),
   overall:stats(cases),examples:cases.slice(0,12)};
  console.log('WEAPON_PACING_GENERATOR='+JSON.stringify(report));
+ assert.equal(cases.length,24);
+});
+
+test('Matrice tre timer e deterioramento madre, 24 scontri senza Personaggi',()=>{
+ const cases=[];
+ for(const rarity of SHIP_RARITIES)
+  for(const [i,[a,b]] of PRESETS[rarity].entries()){
+   const arch=ARCHETYPES[i];
+   for(const shift of [0,101])cases.push(simulate(rarity,arch,a,b,
+    4707+i*29+rIdx(rarity)*83+shift,null,'generator-components-v1'));
+  }
+ const report={rate:CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+  overall:stats(cases),byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+   [r,stats(cases.filter(c=>c.rarity===r))])),
+  byDeck:Object.fromEntries(ARCHETYPES.map(a=>[a.name,
+   stats(cases.filter(c=>c.deck===a.name))])),
+  examples:cases.map(({rarity,deck,shipA,shipB,seconds,winner,generatorShots,weaponShots})=>
+   ({rarity,deck,shipA,shipB,seconds,winner,generatorShots,weaponShots}))};
+ console.log('WEAPON_PACING_THREE_TIMERS='+JSON.stringify(report));
  assert.equal(cases.length,24);
 });
