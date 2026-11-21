@@ -16,17 +16,17 @@ const profile=(quick,heavy,heavyCooldown=2)=>Object.freeze({
  heavy:Object.freeze({physicalCards:4,maxHpPercent:heavy,coolingOwnTurns:heavyCooldown})
 });
 export const MOTHER_GENERATOR_PROFILES=Object.freeze({
- N00:profile(15,30), // versatile
- C01:profile(18,35,3), // assalto: meno HP, attacco potente
- C02:profile(16,32), // precisione
- C03:profile(15,30), // disturbo
- R01:profile(18,35,3), // pressione
- R02:profile(13,27), // resistenza
- R04:profile(13,28), // contrattacco
- E01:profile(13,28), // controllo
- E02:profile(19,36,3), // assalto veloce
- L01:profile(16,32), // tattica
- L03:profile(12,26), // corazza
+ N00:profile(14,28), // versatile: media offensiva
+ C01:profile(22,42,3), // assalto leggero: colpi forti, HP inferiori
+ C02:profile(19,35), // precisione: danno medio-alto
+ C03:profile(14,29), // disturbo
+ R01:profile(22,41,3), // pressione offensiva: colpi forti
+ R02:profile(10,23), // resistenza: colpi piu leggeri
+ R04:profile(10,23), // contrattacco: tank
+ E01:profile(10,22), // controllo: sopravvivenza
+ E02:profile(23,43,3), // assalto veloce: massimo potere, tempi maggiori
+ L01:profile(16,33), // tattica
+ L03:profile(9,20), // corazza: maggiore HP, meno danni
  L04:profile(15,30) // equilibrio
 });
 export const GENERATOR_ATTACK_THRESHOLDS=Object.freeze({quick:2,heavy:4});
