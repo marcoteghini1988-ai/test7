@@ -276,32 +276,33 @@ function FleetVitalStrip({side,unit,onInspect}){
   })}
  </div>;
 }
-// Cornice vettoriale: i riflessi restano nitidi anche quando la plancia viene ingrandita.
-function FleetHudFrame(){
+// Un solo profilo metallico continuo per la flotta, senza riquadri intorno alle singole navi.
+function FleetHudSpine(){
  const id=useId(),metal=id+'-metal',glass=id+'-glass';
- return <svg className="f3d-hud-frame" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+ return <svg className="f3d-hud-spine" viewBox="0 0 436 34" preserveAspectRatio="none" aria-hidden="true" focusable="false">
   <defs>
-   <linearGradient id={metal} x1="0" y1="0" x2=".24" y2="1">
-    <stop offset="0" stopColor="#dce9f2"/><stop offset=".09" stopColor="#526c85"/>
-    <stop offset=".24" stopColor="#132333"/><stop offset=".69" stopColor="#0a1320"/>
-    <stop offset=".88" stopColor="#6e899e"/><stop offset="1" stopColor="#d3e1ec"/>
+   <linearGradient id={metal} x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stopColor="#c0dce8"/><stop offset=".08" stopColor="#627f92"/>
+    <stop offset=".23" stopColor="#142738"/><stop offset=".63" stopColor="#07121c"/>
+    <stop offset=".8" stopColor="#2e4759"/><stop offset=".92" stopColor="#8baabb"/>
+    <stop offset="1" stopColor="#122838"/>
    </linearGradient>
-   <linearGradient id={glass} x1="0" y1="0" x2=".65" y2="1">
-    <stop offset="0" stopColor="#172e42"/><stop offset=".4" stopColor="#07121e"/>
-    <stop offset=".74" stopColor="#030a12"/><stop offset="1" stopColor="#15283a"/>
+   <linearGradient id={glass} x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stopColor="#142b3c"/><stop offset=".43" stopColor="#050e18"/>
+    <stop offset="1" stopColor="#102534"/>
    </linearGradient>
   </defs>
-  <path d="M8 1H112L119 8V24L112 31H8L1 24V8Z" fill="#02050a" stroke="#000" strokeWidth="2"/>
-  <path d="M8 1H112L119 8V24L112 31H8L1 24V8Z" fill={'url(#'+metal+')'}/>
-  <path className="f3d-hud-lit-edge" d="M9 2H111L118 9V23L111 30H9L2 23V9Z" fill="none" stroke="currentColor" strokeWidth="1.2"/>
-  <path d="M10 4H110L115.5 9.5V22.5L110 28H10L4.5 22.5V9.5Z" fill={'url(#'+glass+')'} stroke="#02060d" strokeWidth="1.5"/>
-  <path d="M11 5H109L114 10V22L109 27H11L6 22V10Z" fill="none" stroke="currentColor" strokeOpacity=".45" strokeWidth=".5"/>
-  <path d="M9 2.4H37M44 2.4H77M84 2.4H110M117.6 10V19M10 29.5H34M42 29.5H78M86 29.5H110M2.4 12V22" fill="none" stroke="currentColor" strokeWidth="1.8"/>
-  <path d="M10 2H36M45 2H76M85 2H109M11 30H33M43 30H77M87 30H109" fill="none" stroke="#e9fcff" strokeOpacity=".85" strokeWidth=".55"/>
-  <path d="M8 8L11 5H54L46 8Z" fill="#d0eaff" fillOpacity=".08"/>
-  <g fill="#c8d9e5" stroke="#020810" strokeWidth=".65">
-   <circle cx="7" cy="7" r="1"/><circle cx="113" cy="25" r="1"/>
-  </g>
+  <path d="M2 18Q8 7 23 6H173Q183 6 192 1H311Q320 6 331 6H413Q428 7 434 18L426 28H333Q322 28 314 33H190Q182 29 172 29H12Z"
+   fill={'url(#'+metal+')'} stroke="#02070d" strokeWidth="1.5"/>
+  <path d="M8 18Q13 9 26 9H175Q185 9 194 4H309Q319 9 330 9H411Q422 9 428 18L422 25H332Q321 25 312 29H192Q183 26 172 26H16Z"
+   fill={'url(#'+glass+')'}/>
+  <path d="M14 6.8Q19 5.6 29 5.6H172Q184 5.6 193 1H310Q320 6 332 6H409Q420 6 426 11"
+   fill="none" stroke="#afc9d8" strokeOpacity=".65" strokeWidth=".6"/>
+  <path d="M4 18L13 28H173Q183 28 191 32H313Q322 27 334 27H425L432 18"
+   fill="none" stroke="#41b9e2" strokeOpacity=".65" strokeWidth="1"/>
+  <path d="M17 29H58M196 32H229M279 32H309M379 28H416" fill="none" stroke="#a8edff" strokeWidth=".9"/>
+  <path d="M19 10H75L68 13H15ZM197 4H308L301 5.5H195Z" fill="#c4e7f2" fillOpacity=".1"/>
+  <path d="M3 18L10 13M426 13L433 18" stroke="#b9efff" strokeWidth="1.1"/>
  </svg>;
 }
 function FleetHullMark({mother=false}){
@@ -317,12 +318,13 @@ function OriginalFleetBar({side,unit,nickname}){
   escB?{ship:escB,mother:false}:null];
  return <div className={'live-fleet-bar live-fleet-bar--'+side} role="group"
   aria-label={'Integrità flotta '+(side==='B'?'avversario':'giocatore')}>
+  <FleetHudSpine/>
   <strong className="f3d-player-label" title={nickname||'CPU'}>
-   <FleetHudFrame/><span>{nickname||'CPU'}</span>
+   <span>{nickname||'CPU'}</span>
   </strong>
   <div className="live-units">{entries.map((entry,i)=>{
    if(!entry)return <div className="f3d-hp-empty" key={i} aria-label={'Supporto '+(i===0?'A':'B')+' non schierato'}>
-    <FleetHudFrame/><span className="f3d-ship-name"><FleetHullMark/><span className="f3d-ship-title">{'SUPPORTO '+(i===0?'A':'B')}</span></span>
+    <span className="f3d-ship-name"><FleetHullMark/><span className="f3d-ship-title">{'SUPPORTO '+(i===0?'A':'B')}</span></span>
     <i className="f3d-empty-meter" aria-hidden="true">NON SCHIERATO</i>
    </div>;
    const {ship,mother:isMother}=entry,max=ship.maxHp||1,hp=Math.max(0,ship.hp||0);
@@ -333,7 +335,6 @@ function OriginalFleetBar({side,unit,nickname}){
     data-rarity={rarity} data-status={hp<=0?'destroyed':hp/max<=.25?'critical':'operational'}
     style={{'--rarity-frame':frame}}
     title={(ship.name||'Navicella')+' · '+hp+'/'+max+' HP · '+rarity}>
-    <FleetHudFrame/>
     <span className="f3d-ship-name"><FleetHullMark mother={isMother}/><span className="f3d-ship-title">{ship.name||'Navicella'}</span></span>
     <i className="live-unit-health" role="meter" aria-label={'HP '+(ship.name||'Navicella')}
      aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.min(hp,max)}>
