@@ -278,14 +278,26 @@ function FleetVitalStrip({side,unit,onInspect,consoleMode=false}){
  return <div className={'f3d-vital-strip f3d-vital-strip--'+side+(consoleMode?' f3d-vital-strip--console':'')}
   role="group" aria-label={'Stato componenti '+(side==='B'?'avversario':'giocatore')}>
   {types.map(({id,name,symbol})=>{
-   const part=parts.find(p=>p.id===id);
-   const status=!part?'absent':part.hp<=0||part.destroyed||part.dismantled?'off':'on';
+   const part=parts.find(p=>p.id===id),timer=unit?.componentTimers?.[id];
+   const cooling=id==='generator'&&unit?.newGeneratorCombat?
+    generatorCoolingOwnTurns(unit):0;
+   const status=timer?(timer.expired?'off':'on'):
+    id==='generator'&&unit?.newGeneratorCombat?'on':
+    !part?'absent':part.hp<=0||part.destroyed||part.dismantled?'off':'on';
    const detail=status==='absent'?'non disponibile':status==='off'?'fuori uso':'attivo';
+   const seconds=timer?Math.max(0,Math.ceil(timer.remainingSeconds)):null;
+   const timerLabel=seconds!=null?
+    (seconds===0?'00:00':String(Math.floor(seconds/60)).padStart(2,'0')+':'+
+     String(seconds%60).padStart(2,'0')):
+    unit?.newGeneratorCombat&&id==='generator'?(cooling?'PAUSA '+cooling:'PRONTO'):null;
    return <button type="button" className="f3d-vital" key={id} data-status={status}
-    title={name+' · '+detail+(part?' · '+part.hp+'/'+part.maxHp+' integrità':'')}
-    aria-label={name+' · '+detail} onClick={()=>onInspect?.({id,name,part,status})}>
+    title={name+' · '+detail+(timerLabel?' · '+timerLabel:part?' · '+part.hp+'/'+part.maxHp+' integrità':'')}
+    aria-label={name+' · '+detail+(timerLabel?' · '+timerLabel:'')}
+    onClick={()=>onInspect?.({id,name,part,status,timer,remainingSeconds:seconds})}>
     <span className="f3d-vital-icon" aria-hidden="true">{consoleMode?<FleetVitalGlyph type={id}/>:symbol}</span>
-    <span className="f3d-vital-name">{name}</span><i className="f3d-vital-led" aria-hidden="true"/>
+    <span className="f3d-vital-name">{name}</span>
+    {timerLabel&&<span className="f3d-vital-countdown" aria-hidden="true">{timerLabel}</span>}
+    <i className="f3d-vital-led" aria-hidden="true"/>
    </button>;
   })}
  </div>;
@@ -366,7 +378,9 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
    const type=entry?.id,covered=!!entry?.hidden;
    const parts=unit?.ships?.[0]?.parts||[];
    const controller=i===0?(parts.some(p=>p.id==='bridge')?'bridge':'generator'):i<=2||i===5?'generator':'weapons';
-   const offline=parts.some(p=>p.id===controller&&(p.hp<=0||p.destroyed));
+   const offline=!!unit?.componentTimers?.[controller]?.expired||
+    (controller==='bridge'&&!!unit?.componentTimers?.bridge?.expired)||
+    parts.some(p=>p.id===controller&&(p.hp<=0||p.destroyed));
    const face=!covered&&type?card(type):null;
    const art=covered?OFFICIAL_SPECIAL_FIXED_BACK:!type?null:card(type)?
      cardFacePath(type,upgrades[type]||1):officialSpecialArtPath(type);
@@ -662,6 +676,9 @@ export default function OfficialFleetBattle3D({
     return 'Falco: il rilascio occupa una giocata, massimo due altre carte';
    const roles=chosenCards.map(i=>cardRole(player.hand[i]));
    if(chosenCards.length>=3)return 'Puoi giocare al massimo 3 carte per turno';
+   if(role==='attack'&&player.componentTimers?.weapons?.expired&&
+    roles.filter(x=>x==='attack').length>=2)
+    return 'Arsenale esaurito: massimo due Carte Attacco per turno';
    if(role==='defense'&&roles.filter(x=>x==='defense').length>=2)return 'Puoi giocare al massimo 2 Difese per turno';
    if(role==='defense'){
     const selectedDefenses=chosenCards.map(i=>player.hand[i]).filter(id=>cardRole(id)==='defense');
@@ -1981,7 +1998,12 @@ export default function OfficialFleetBattle3D({
     {help.vital?<>
       <strong>{help.vital.name}</strong>
       <p>{FLEET_VITAL_DESCRIPTIONS[help.vital.id]}</p>
-      <small>{help.vital.status==='absent'?'Non installato':(help.vital.status==='off'?'FUORI USO':'ATTIVO')+' · '+help.vital.part?.hp+'/'+help.vital.part?.maxHp+' integrità'}</small>
+      <small>{help.vital.remainingSeconds!=null?
+      (help.vital.status==='off'?'FUORI USO':'TIMER ATTIVO')+' · '+help.vital.remainingSeconds+' secondi':
+      help.vital.id==='generator'&&player.newGeneratorCombat?
+       'Surriscaldamento: '+generatorCoolingOwnTurns(player)+' turni propri rimanenti':
+      help.vital.status==='absent'?'Non installato':
+      (help.vital.status==='off'?'FUORI USO':'ATTIVO')+' · '+help.vital.part?.hp+'/'+help.vital.part?.maxHp+' integrità'}</small>
      </>:help.rules?<>
      <strong>Regole delle carte</strong>
      {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description||TERRAIN_CATALOG[terrain]?.effectText}</p>}
