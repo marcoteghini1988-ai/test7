@@ -23,6 +23,7 @@ import {initializeComponentTimers,advanceTimedComponents,advanceBattleComponentC
  from './fleetNext/componentTimerPacing.js';
 import {PACING_BALANCE_CANDIDATE} from './fleetNext/pacingBalanceCandidate.js';
 import {buildCampaignNpcDeck} from './fleetNext/npcDeck.js';
+import {recycleFleetDiscard} from './fleetNext/deckCycle.js';
 
 const PRESETS=Object.freeze({
  Comune:[['N00','C01'],['C01','C02'],['C02','C03']],
@@ -303,6 +304,18 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   blocks+=r.events.filter(e=>e.kind==='block').length;
   damage+=r.shot?.damage||0;
   b=r.battle;turns++;
+  if(calibration?.recoverBlockedHand&&b.phase==='playing'&&
+   (r.playedPreparedCards??order.cards?.length??0)===0&&
+   !r.events.some(e=>e.kind==='generator-shot')){
+   const owner=b.sides[who];
+   if(owner.hand.length>=7){
+    const discarded=owner.hand.shift();
+    owner.discard.push(discarded);
+    recycleFleetDiscard(b,owner);
+    if(owner.deck.length)owner.hand.push(owner.deck.shift());
+    owner.handRecoveries=(owner.handRecoveries||0)+1;
+   }
+  }
   // AUDIT_STRATEGY_TURN_QUOTA_20261121: una quota uguale al completamento
   // di ogni turno PROPRIO, senza usare i secondi trascorsi a scegliere carte.
   // Nessuna scadenza a meta' preparazione: le mosse giocabili restano valide.
@@ -359,6 +372,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
   winner:b.winner||'unfinished',finishReason:b.finishReason||null,
   invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
+  handRecoveries:Object.fromEntries(['A','B'].map(who=>[who,b.sides[who].handRecoveries||0])),
   lastLog:b.phase==='finished'&&b.winner==='draw'?(b.log||[]).slice(-20):[],
   drainFraction,
   finalState:['A','B'].map(who=>({who,
@@ -1202,4 +1216,49 @@ test('AUDIT_WEAPON_MOTHER_CROSSVALIDATE_NO_DRAIN: 72 PvP e 24 boss nuovi semi, a
  }
  console.log('AUDIT_WEAPON_MOTHER_CROSSVALIDATE_NO_DRAIN='+JSON.stringify(rows));
  assert.ok(rows.every(x=>x.pvp.n===72&&x.campaign.n===24));
+});
+
+test('AUDIT_HAND_RECOVERY_NO_DRAIN: confronto 72 PvP e 24 boss con mano bloccata e recupero fisico',()=>{
+ const variants=[
+  {name:'taratura-senza-recupero',recoverBlockedHand:false},
+  {name:'taratura-con-recupero',recoverBlockedHand:true}
+ ];
+ const result=[];
+ for(const candidate of variants){
+  const pvp=[],boss=[];
+  for(const rarity of SHIP_RARITIES){
+   const calibration={strategicSecondsPerTurn:20,noDeterioration:true,
+    weaponFactorMultiplier:rarity==='Epica'?1.7:rarity==='Leggendaria'?1.85:1,
+    motherGeneratorDamageFactor:rarity==='Epica'?1.25:rarity==='Leggendaria'?1.3:1,
+    recoverBlockedHand:candidate.recoverBlockedHand};
+   for(const [i,[a,b]] of PRESETS[rarity].entries()){
+    for(const shift of [0,43,89,137,219,293])
+     pvp.push(simulate(rarity,ARCHETYPES[i],a,b,
+      20267513+rIdx(rarity)*277+i*79+shift,null,'live-generator',
+      CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration));
+    for(const shift of [0,101])
+     boss.push(simulate(rarity,ARCHETYPES[1],a,b,
+      20268431+rIdx(rarity)*239+i*53+shift,[1,8,17][i],
+      'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      calibration,'fast-cpu'));
+   }
+  }
+  const statsWithRecovery=matches=>({
+   ...stats(matches),
+   recoveries:matches.reduce((n,m)=>n+m.handRecoveries.A+m.handRecoveries.B,0),
+   winsA:matches.filter(m=>m.winner==='A').length,
+   winsB:matches.filter(m=>m.winner==='B').length,
+   max:Math.max(...matches.map(m=>m.seconds))
+  });
+  result.push({name:candidate.name,
+   pvp:statsWithRecovery(pvp),boss:statsWithRecovery(boss),
+   pvpRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,statsWithRecovery(pvp.filter(x=>x.rarity===r))])),
+   campaignRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,statsWithRecovery(boss.filter(x=>x.rarity===r))])),
+   draws:pvp.filter(m=>m.draw).map(m=>({rarity:m.rarity,ships:[m.shipA,m.shipB],
+    seed:m.seed,handRecoveries:m.handRecoveries,
+    finalHands:m.finalState.map(x=>x.handCards)}))});
+ }
+ console.log('AUDIT_HAND_RECOVERY_NO_DRAIN='+JSON.stringify(result));
+ assert.equal(result.length,2);
+ assert.ok(result.every(x=>x.pvp.n===72&&x.boss.n===24));
 });
