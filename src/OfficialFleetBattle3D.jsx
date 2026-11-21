@@ -36,7 +36,7 @@ import {arkModuleActive,arkEscorts,arkFusedEscorts,arkUnfusedEscorts,
  arkEnemyUnits,arkDamagedEscorts,arkModulesInDiscard} from './fleetNext/arkEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
-import {createFleetNextBattle,resolveFleetNextTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
+import {createFleetNextBattle,resolvePreparedFleetTurn,autoFleetTurn,timeoutFleetTurn,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {HP_SYNC_RULESET,activeSynchronizationPenalty} from './fleetNext/hpSynchronization.js';
@@ -47,7 +47,7 @@ import {dismantleCandidates,dismantleActive} from './fleetNext/dismantleEffects.
 import {readNextDeckSelection,buildNextBaseDeck} from './fleetNext/nextDeckLoadout.js';
 import {readSupportCollection,equippedSupportRoster} from './fleetNext/supportCollection.js';
 import {advanceIndependentSupportTime,effectiveSupportEnergyCost,terrainImmunity} from './fleetNext/supportAbilities.js';
-import {choosableSupportTargets,shouldChooseSupportTarget} from './fleetNext/preparedTargetChoice.js';
+import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turnPresentation.js';
 import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
@@ -460,7 +460,6 @@ export default function OfficialFleetBattle3D({
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
  const [preparedSacrifice,setPreparedSacrifice]=useState(null);
- const [targetChoice,setTargetChoice]=useState(null);
  const [fusionSlot,setFusionSlot]=useState(0);
  const [elementalPrepared,setElementalPrepared]=useState(false);
  const [elementalChoice,setElementalChoice]=useState('');
@@ -511,6 +510,7 @@ export default function OfficialFleetBattle3D({
  const [scale,setScale]=useState(1);
  const viewportRef=useRef(null);
  const [message,setMessage]=useState('');
+ const [resolving,setResolving]=useState(false);
  const [help,setHelp]=useState(null);
  const [lastFx,setLastFx]=useState(null);
  const [trapReveal,setTrapReveal]=useState(null);
@@ -521,6 +521,9 @@ export default function OfficialFleetBattle3D({
  const [now,setNow]=useState(()=>Date.now());
  const submitting=useRef(false);
  const preparedTimeout=useRef(null);
+ const resolutionInProgress=useRef(false);
+ const resolutionTimeout=useRef(null);
+ useEffect(()=>()=>window.clearTimeout(resolutionTimeout.current),[]);
  useEffect(()=>{
   const resize=()=>{
    const viewport=viewportRef.current;
@@ -537,7 +540,7 @@ export default function OfficialFleetBattle3D({
   const timestamp=Date.now();
   setNow(timestamp);
   setBattle(current=>{
-   if(!current)return current;
+   if(!current||resolutionInProgress.current)return current;
    const next=advanceIndependentSupportTime(current,timestamp);
    return next.changed?next.battle:current;
   });
@@ -550,28 +553,38 @@ export default function OfficialFleetBattle3D({
   return ()=>window.clearTimeout(id);
  },[trapReveal]);
  function showResult(result){
-  setBattle(result.battle);
-  setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
-  const elemental=result.events.filter(e=>e.kind==='elemental-matchup').at(-1);
-  setMessage(elemental?.text||fleetTurnNotice(result.events));
-  setPreparedSacrifice(null);setTargetChoice(null);setSelectedTarget(null);
+  if(resolutionInProgress.current)return;
+  resolutionInProgress.current=true;
+  setResolving(true);
+  const stamp=Date.now();
+  setLastFx({nonce:stamp,round:battle.round,events:result.events});
+  // Lascia gli eventi nel Registro senza scritte automatiche sopra le navi.
+  setMessage('');
+  setShowBattleCommands(false);
+  setPreparedSacrifice(null);setSelectedTarget(null);
   const revealed=result.events.find(event=>event.kind==='trap-reveal');
-  if(revealed)setTrapReveal({...revealed,nonce:Date.now()});
+  if(revealed)setTrapReveal({...revealed,nonce:stamp});
+  window.clearTimeout(resolutionTimeout.current);
+  resolutionTimeout.current=window.setTimeout(()=>{
+   setBattle(releaseFleetTurnAfterEffects(result.battle,Date.now()));
+   setChosenCards([]);setElementalPrepared(false);
+   resolutionInProgress.current=false;setResolving(false);
+  },fleetResolutionFxMs(result.events));
  }
  // Anche il nemico segue l'alternanza dei turni. Nel PvP attuale resta IA simulata.
  useEffect(()=>{
-  if(!battle||battle.phase!=='playing'||battle.turn!=='B')return;
+  if(!battle||battle.phase!=='playing'||battle.turn!=='B'||resolving)return;
   const id=window.setTimeout(()=>{
    const ai=autoFleetTurn(battle,'B');
-   const result=resolveFleetNextTurn(battle,'B',ai,Date.now());
+   const result=resolvePreparedFleetTurn(battle,'B',ai,Date.now());
    if(result.ok){
     showResult(result);
    }else setMessage(result.reason);
   },Math.max(680,(battle.sides.B.provisionalHandFrozenUntilMs||0)-Date.now()+30));
   return ()=>window.clearTimeout(id);
- },[battle?.ply,battle?.turn,battle?.phase]);
+ },[battle?.ply,battle?.turn,battle?.phase,resolving]);
  useEffect(()=>{
-  if(!battle||battle.phase!=='playing')return;
+  if(!battle||battle.phase!=='playing'||resolving)return;
   const id=window.setTimeout(()=>{
    if(battle.turn==='A'){
     // Utilizza la preparazione più recente, non la selezione del primo render.
@@ -579,38 +592,23 @@ export default function OfficialFleetBattle3D({
     return;
    }
    const result=timeoutFleetTurn(battle,Date.now());
-   if(result.ok){
-    setBattle(result.battle);setChosenCards([]);setElementalPrepared(false);
-    setLastFx({nonce:Date.now(),round:battle.round,events:result.events});
-    setMessage('Tempo scaduto: turno concluso');
-   }
+   if(result.ok)showResult(result);
   },Math.max(50,battle.deadlineMs-Date.now()+60));
   return ()=>window.clearTimeout(id);
- },[battle?.ply,battle?.deadlineMs,battle?.phase]);
+ },[battle?.ply,battle?.deadlineMs,battle?.phase,resolving]);
  // Nessuna carta agisce prima del commit. La terza conclude la preparazione
  // e, se necessario, apre la scelta fra le due navicelle di supporto.
  useEffect(()=>{
-  if(battle?.phase==='playing'&&battle.turn==='A'&&chosenCards.length===3){
+  if(!resolving&&battle?.phase==='playing'&&battle.turn==='A'&&chosenCards.length===3){
    requestPreparedResolution(false);
   }
- },[chosenCards,battle?.ply,battle?.turn,battle?.phase]);
- // Se un supporto viene distrutto dagli effetti continui mentre la scelta
- // è aperta, la mira rimasta è obbligata e la preparazione si risolve.
- useEffect(()=>{
-  if(!targetChoice||!battle||battle.phase!=='playing'||battle.turn!=='A')return;
-  const chosen=chosenCards.map(i=>card(battle.sides.A.hand[i])?.effectSpec);
-  const direct=chosen.some(spec=>spec?.type==='bypass'||
-   spec?.type==='lince'&&LINCE_BYPASS_ACTIONS.includes(spec.action)||
-   spec?.type==='shark'&&spec.action==='ruthless-response');
-  const routed=linceMarkedRouteReady(battle.sides.A,battle.ply,
-   battle.sides.A.lince?.route?.partId);
-  if(!shouldChooseSupportTarget(protectingFleetUnits(battle.sides.B,battle.ply),
-   {bypass:direct||!!routed}))fire({endTurn:targetChoice.endTurn});
- },[targetChoice,battle?.ply,battle?.turn,battle?.phase,battle?.sides?.B?.escorts]);
+ },[chosenCards,battle?.ply,battle?.turn,battle?.phase,resolving]);
  function restart(){
+  window.clearTimeout(resolutionTimeout.current);
+  resolutionInProgress.current=false;setResolving(false);
   const next=startSession(opts);
   setSession(next);setBattle(next.battle);
-  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setPreparedSacrifice(null);setTargetChoice(null);setMessage('');
+  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setPreparedSacrifice(null);setMessage('');
   setElementalPrepared(false);setElementalChoice('');
   setDismantleOptions({first:'',second:''});
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
@@ -636,6 +634,7 @@ export default function OfficialFleetBattle3D({
   submitting.current=false;
  }
  function unavailable(type,index){
+  if(resolutionInProgress.current)return 'Risoluzione in corso';
   if(!battle||battle.phase!=='playing')return 'Partita terminata';
   if(battle.turn!=='A')return 'Attendi il turno avversario';
   const player=battle.sides.A;
@@ -668,6 +667,7 @@ export default function OfficialFleetBattle3D({
   return '';
  }
  function chooseCard(index){
+  if(resolutionInProgress.current)return;
   if(chosenCards.includes(index)){setChosenCards(old=>old.filter(i=>i!==index));setMessage('');return;}
   const type=battle.sides.A.hand[index];
   const reason=unavailable(type,index);
@@ -681,7 +681,7 @@ export default function OfficialFleetBattle3D({
    old.length<3?[...old,index]:old);
  }
  function fire({endTurn=false,fromTimeout=false,chosenTarget=null,awaitingTargetSelection=false}={}){
-  if(!battle||battle.phase!=='playing'||battle.turn!=='A')return;
+  if(!battle||battle.phase!=='playing'||battle.turn!=='A'||resolutionInProgress.current)return;
   const target=battle.sides.B.ships[0];
   const partId=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?
    selectedVital:target.parts.find(p=>!p.destroyed)?.id;
@@ -789,12 +789,11 @@ export default function OfficialFleetBattle3D({
    };
   const result=fromTimeout?
    timeoutFleetTurn(battle,Math.max(Date.now(),battle.deadlineMs),preparedOrder):
-   resolveFleetNextTurn(battle,'A',preparedOrder,Date.now());
+   resolvePreparedFleetTurn(battle,'A',preparedOrder,Date.now());
   if(!result.ok){setMessage(result.reason);return;}
-  showResult(result);setChosenCards([]);setElementalPrepared(false);
-  if(fromTimeout&&result.invalidPrepared)setMessage(result.playedPreparedCards?
-   'Tempo scaduto: '+result.playedPreparedCards+' carte valide risolte; '+result.droppedPreparedCards+' escluse.':
-   'Tempo scaduto: attacco senza bersaglio non effettuato, turno concluso.');
+  showResult(result);
+  if(result.invalidPrepared&&result.droppedPreparedCards>0)
+   setMessage(result.playedPreparedCards+' carte risolte; '+result.droppedPreparedCards+' escluse perché non valide.');
   setDismantleOptions({first:'',second:''});
   setCorvoOptions({exchangeCardId:'',bottomTop:false});
   setFalcoOptions({hold:false,target:'',second:'',correction:'',gunner:''});
@@ -817,26 +816,14 @@ export default function OfficialFleetBattle3D({
    if(nextTarget)setSelectedVital(nextTarget.id);
  }
  function requestPreparedResolution(endTurn=false){
-  if(!battle||battle.phase!=='playing'||battle.turn!=='A'||targetChoice)return;
-  const skipShot=endTurn&&chosenCards.length===0||
-   elementalPrepared&&elementalAbilityDef?.kind==='effect';
-  if(battle.ruleset===HP_SYNC_RULESET&&
-   shouldChooseSupportTarget(protectors,{bypass,skipShot})){
-   setTargetChoice({endTurn,ply:battle.ply});
-   return;
-  }
+  if(!battle||battle.phase!=='playing'||battle.turn!=='A'||resolutionInProgress.current)return;
+  // Bersaglio scelto sul tavolo o supporto predefinito: nessuna dialog a fine preparazione.
   fire({endTurn});
  }
  function passTurn(){
   requestPreparedResolution(true);
  }
- preparedTimeout.current=()=>fire({endTurn:true,fromTimeout:true,
-  awaitingTargetSelection:!!targetChoice||
-   battle?.ruleset===HP_SYNC_RULESET&&shouldChooseSupportTarget(protectors,{
-    bypass,skipShot:chosenCards.length===0||
-     elementalPrepared&&elementalAbilityDef?.kind==='effect'
-   })
- });
+ preparedTimeout.current=()=>fire({endTurn:true,fromTimeout:true});
   async function leave(){
   if(busy||submitting.current)return;
   if(!battle||battle.phase!=='finished'){
@@ -921,7 +908,6 @@ export default function OfficialFleetBattle3D({
  const routePartId=linceMarkedRouteReady(player,battle.ply,player.lince?.route?.partId)?player.lince.route.partId:null;
  const bypass=directBypass||!!routePartId;
  const protectors=protectingFleetUnits(enemy,battle.ply);
- const supportTargets=choosableSupportTargets(protectors);
  const targetChoices=availableFleetTargets(enemy,battle.ply).filter(t=>!t.blocked||directBypass||
   t.kind==='part'&&t.id===routePartId);
  const obsidianHowitzer=chosenTypes.some(id=>card(id)?.effectSpec?.action==='black-howitzer');
@@ -1084,7 +1070,7 @@ export default function OfficialFleetBattle3D({
  const secondsLeft=Math.ceil(remainingTurnMs/1000);
  const turnProgress=remainingTurnMs/(FLEET_TURN_SECONDS*1000);
  const myTurn=battle.turn==='A';
- return <div className="es-math-scope live-viewport" ref={viewportRef}>
+ return <div className="es-math-scope live-viewport" ref={viewportRef} aria-busy={resolving}>
   <div className="es-root official-duel-3d live-root f3d-original-arena f3d-approved-layout"
    style={{transform:'translate(-50%,-50%) scale('+scale+')',
     '--live-special-back':'url("'+OFFICIAL_SPECIAL_FIXED_BACK+'")'}}>
@@ -1099,7 +1085,7 @@ export default function OfficialFleetBattle3D({
     onInspect={vital=>setHelp({vital})}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
     selectedTarget={actualTarget} onSelectTarget={setSelectedTarget}
-    canTarget={!ended&&myTurn&&!(battle.ruleset===HP_SYNC_RULESET&&supportTargets.length>1&&!bypass)} ply={battle.ply}
+    canTarget={!ended&&myTurn&&!resolving} ply={battle.ply}
     onSelectVital={id=>{if(!ended&&myTurn){
      if(protectors.length&&!directBypass&&id!==routePartId){setMessage('Prima elimina i supporti e le macchine, oppure gioca Aggiramento.');return;}
      setSelectedVital(id);setSelectedTarget({kind:'part',id});setMessage('');
@@ -1110,7 +1096,7 @@ export default function OfficialFleetBattle3D({
    <OriginalSpecialSlots side="B" contents={enemySlots} upgrades={enemy.exclusiveUpgrades} unit={enemy}/>
    <OriginalSpecialSlots side="A" contents={playerSlots} upgrades={player.exclusiveUpgrades} inspectTrap={setHelp} unit={player}/>
    <OriginalFleetFighter side="player" unit={player} chosenCards={chosenTypes} ply={battle.ply}
-    selectedVital={needsOwnTarget?actualOwnVital:null} canSelectOwn={needsOwnTarget&&myTurn&&!ended}
+    selectedVital={needsOwnTarget?actualOwnVital:null} canSelectOwn={needsOwnTarget&&myTurn&&!ended&&!resolving}
     onSelectVital={id=>{if(ownTargets.some(p=>p.id===id)){setSelectedOwnVital(id);setMessage('');}}}
     impact={lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='B')&&
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='B'),round:lastFx.nonce}}
@@ -1152,12 +1138,12 @@ export default function OfficialFleetBattle3D({
     {player.hand.map((type,index,hand)=><OriginalSpecialHandCard
      key={battle.round+'-'+index+'-'+type} type={type} index={index}
      offset={index-(hand.length-1)/2}
-     selected={chosenCards.includes(index)} disabled={ended||!myTurn||!!targetChoice||(player.provisionalHandFrozenUntilMs||0)>now}
+     selected={chosenCards.includes(index)} disabled={ended||!myTurn||resolving||(player.provisionalHandFrozenUntilMs||0)>now}
      grade={player.exclusiveUpgrades?.[type]||1} motherLevel={player.ships[0].level}
      unavailableReason={unavailable(type,index)}
      onClick={()=>chooseCard(index)}/>)}
    </div>
-   {(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive||arkActive)&&!ended&&<div className="live-card-inspector" role="status">
+   {showBattleCommands&&(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive||arkActive)&&!ended&&<div className="live-card-inspector" role="group" aria-label="Opzioni avanzate delle carte">
    {!ended&&fusionSelected&&<label className="f3d-fusion-choice">
     <span>FONDI CON IL SUPPORTO MAX · </span>
     {fusionCandidates.length?<select aria-label="Supporto da fondere" value={actualFusionSlot}
@@ -1941,23 +1927,14 @@ export default function OfficialFleetBattle3D({
    </button>
    <div className={'live-actions f3d-actions'+(showBattleCommands?' f3d-actions-open':'')}>
     <span>CARTE {chosenCards.length}/3</span>
-    <button type="button" className="f3d-attack-normal" disabled={ended||!myTurn||chosenCards.length>0||!!targetChoice}
+    <button type="button" className="f3d-attack-normal" disabled={ended||!myTurn||resolving||chosenCards.length>0}
      onClick={()=>requestPreparedResolution(false)}>{elementalPrepared?'ATTIVA SPECIALE':'ATTACCO NORMALE'}</button>
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
    <FleetCommandConsole unit={player} nickname={nickname} onInspect={vital=>setHelp({vital})} onLeave={leave} onPass={passTurn}
-    passDisabled={ended||!myTurn||!!targetChoice} ended={ended} secondsLeft={secondsLeft} turnProgress={turnProgress}/>
-   {targetChoice&&myTurn&&!ended&&<div className="f3d-support-target-choice" role="dialog"
-    aria-label="Scegli quale navicella di supporto nemica colpire" aria-modal="true">
-    <strong>SCEGLI IL SUPPORTO DA COLPIRE</strong>
-    <p>Seleziona il supporto prima che scada il turno: {secondsLeft}s.</p>
-    {supportTargets.map(t=><button type="button" key={t.id}
-     onClick={()=>fire({endTurn:targetChoice.endTurn,chosenTarget:t})}>
-     {t.name} · {t.hp}/{t.maxHp} HP
-    </button>)}
-    <button type="button" onClick={()=>setTargetChoice(null)}>MODIFICA LE CARTE</button>
-   </div>}
+    passDisabled={ended||!myTurn||resolving} ended={ended} secondsLeft={secondsLeft} turnProgress={turnProgress}/>
+   {resolving&&<div className="f3d-resolution-interlock" aria-hidden="true"/>}
    {message&&<div className="live-action-notice f3d-notice" role="status"
     key={lastFx?.nonce||message}>{message}</div>}
    {trapReveal&&<TrapReveal key={'trap-'+trapReveal.nonce} event={trapReveal}/>}
