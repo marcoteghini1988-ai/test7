@@ -1,5 +1,9 @@
 # Carte Arma: valori provvisori — 21 novembre 2026
 
+> **Aggiornamento successivo:** questo documento conserva i valori della prima integrazione.
+> Il bilanciamento attuale (revisione 2), con nomi corretti e registro completo delle 73 Armi,
+> è in [BILANCIAMENTO_73_CARTE_ARMA_2026-11-21.md](BILANCIAMENTO_73_CARTE_ARMA_2026-11-21.md).
+
 ## Decisione dell'utente
 
 Tutte le carte già confermate devono essere inserite e funzionare con valori
