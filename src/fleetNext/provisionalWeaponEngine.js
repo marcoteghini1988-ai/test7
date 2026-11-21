@@ -243,7 +243,8 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    if(pattern==='ion-probe')comboSide.ionProbe={id:r.target.unit.id,ply:b.ply,expiresPly:b.ply+3};
    if(pattern==='incinerator'&&stage===1){
     const discarded=(side.discard||[]).filter(id=>h.card(id)?.kind==='attack').length;
-    const burn=Math.max(p.burnMinimum,discarded*p.burnPerDiscard);
+    const burn=Math.min(p.burnMaxDamage??Number.POSITIVE_INFINITY,
+     Math.max(p.burnMinimum,discarded*p.burnPerDiscard));
     enemy.provisionalBurns??=[];
     enemy.provisionalBurns.push({cardId:m.sourceCardId,name:m.name,damage:burn,
      remaining:p.burnTurns,nextPly:b.ply+1});
