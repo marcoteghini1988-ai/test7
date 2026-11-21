@@ -65,7 +65,11 @@ export function generatorAttackPreview(side,reserved=false){
   coolingOwnTurns:chosen.coolingOwnTurns,
   // La potenza e' un numero di HP nominali proprio della nave, da stampare
   // SOLO dopo il bilanciamento. Il ruolo e' dato dal profilo della madre.
-  nominalDamage:Math.max(1,Math.round(mother.maxHp*chosen.maxHpPercent/100))});
+  // Il coefficiente diagnostico/di bilanciamento puo' correggere la
+  // potenza della madre senza cambiare soglie, carte fisiche o cooldown.
+  nominalDamage:Math.max(1,Math.round(mother.maxHp*chosen.maxHpPercent/100*
+   (Number.isFinite(side.motherGeneratorDamageFactor)&&side.motherGeneratorDamageFactor>0?
+    side.motherGeneratorDamageFactor:1)))});
 }
 // Il Generatore sceglie il minor consumo di cariche disponibili per non
 // sacrificare carte di rarita' alta quando le Comuni bastano. Il risultato
