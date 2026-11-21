@@ -14,7 +14,8 @@ import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {limitedMotherDamage} from './motherBalance.js';
 import {PACING_BALANCE_CANDIDATE} from './pacingBalanceCandidate.js';
-import {initializeComponentTimers,advanceBattleComponentClock} from './componentTimerPacing.js';
+import {initializeComponentTimers,advanceBattleComponentClock,
+ advanceBattleActivePlayerComponentClock} from './componentTimerPacing.js';
 import {generatorCardCount,generatorAttackPreview,commitGeneratorFiring,generatorCoolingOwnTurns} from './motherGeneratorBalance.js';
 import {exclusiveAttackCardDamage} from './confirmedCardBalance.js';
 import {bossExtraDamageResistance,bossAttackMultiplier} from './battlePacing.js';
@@ -5145,6 +5146,16 @@ export function advanceFleetCombatTime(battle,nowMs){
  const timed=advanceIndependentSupportTime(battle,nowMs);
  if(!battle?.newGeneratorCombat||timed.battle?.phase!=='playing')
   return timed;
+ // Sperimentazione opt-in: sul turno avversario il cronometro del
+ // giocatore fermo non scorre. La modalita live esistente resta invariata.
+ if(timed.battle.componentClockMode==='active-player-only'){
+  const b=timed.changed?timed.battle:clone(timed.battle);
+  const advanced=advanceBattleActivePlayerComponentClock(b,nowMs);
+  if(advanced.changed)for(const side of Object.values(advanced.battle.sides))
+   enforceDestroyedSystems(side,advanced.battle.ply);
+  return {battle:advanced.battle,events:[...timed.events,...advanced.events],
+   changed:timed.changed||advanced.changed};
+ }
  const elapsed=Math.max(0,Math.floor((nowMs-timed.battle.startedAtMs)/1000));
  if(elapsed<=(timed.battle.componentClockSeconds||0))return timed;
  const b=timed.changed?timed.battle:clone(timed.battle);
