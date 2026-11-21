@@ -33,10 +33,11 @@ const named=name=>{
  assert.ok(c,'Arma non registrata: '+name);return c;
 };
 const shots=r=>r.events.filter(e=>e.kind==='weapon-designed-shot');
-test('Catalogo: 35 identità progettate, 15 complete e 20 in attesa, senza duplicati',()=>{
+test('Catalogo: 35 carte attive, 20 con bilanciamento provvisorio',()=>{
  assert.equal(DESIGNED_WEAPON_CARDS.length,35);
- assert.equal(DESIGNED_WEAPONS_PLAYABLE.length,15);
- assert.equal(DESIGNED_WEAPONS_PENDING.length,20);
+ assert.equal(DESIGNED_WEAPONS_PLAYABLE.length,35);
+ assert.equal(DESIGNED_WEAPONS_PENDING.length,0);
+ assert.equal(DESIGNED_WEAPONS_PLAYABLE.filter(c=>c.provisionalBalance).length,20);
  const all=DESIGNED_WEAPON_CARDS.map(c=>c.id);
  assert.equal(new Set(all).size,35);
  const distribution={plasma:9,cryogenic:5,refrigerant:6,metallic:9,ionic:6};
@@ -46,27 +47,27 @@ test('Catalogo: 35 identità progettate, 15 complete e 20 in attesa, senza dupli
   assert.equal(card(c.id),c,c.id);assert.equal(cardRole(c.id),'support');
   assert.equal(cardFacePath(c.id),null);assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(describeEffect(c),c.effectProposed,c.id);
-  assert.ok(NEXT_COMMON_AVAILABLE.includes(c));assert.equal(c.acquisitionPending,true);
+  assert.ok(NEXT_COMMON_AVAILABLE.includes(c));assert.equal(c.acquisitionPending,false);
   assert.equal(canSelectNewGeneric(c.id),c.playable);
   assert.ok(cardCopyLimit(c.id)>=1);
  }
 });
-test('Le 20 schede incomplete sono memorizzate ma non equipaggiabili, non vendute né regalate',()=>{
+test('Le 20 Armi progettate sono ora acquistabili e inseribili nel mazzo',()=>{
  const inv=createFleetInventory();
- for(const c of DESIGNED_WEAPONS_PENDING){
-  assert.equal(c.playable,false);assert.equal(c.designOnly,true);
+ for(const c of DESIGNED_WEAPONS_PLAYABLE.filter(c=>c.provisionalBalance)){
+  assert.equal(c.playable,true);assert.equal(c.designOnly,false);
   assert.equal(inv.owned[c.id]||0,0);
-  assert.equal(canSelectNewGeneric(c.id),false);
-  assert.equal(buyNextCommonCard(inv,c.id).ok,false);
-  assert.match(effectUnavailableReason(c,battle().sides.A),/danni|costo|sequenza/i);
+  assert.equal(canSelectNewGeneric(c.id),true);
+  const buy=buyNextCommonCard({...inv,credits:10000},c.id);
+  assert.equal(buy.ok,true,c.id);
+  assert.equal(buy.inventory.owned[c.id],1);
  }
- const bad=DESIGNED_WEAPONS_PENDING[0];
- inv.owned[bad.id]=1;
- const normalized=normalizeFleetInventory(inv);
- assert.deepEqual(buildNextBaseDeck(normalized,'C01',20,[bad.id]).baseDeck,[]);
+ const first=DESIGNED_WEAPONS_PLAYABLE.find(c=>c.provisionalBalance);
+ const owned={...inv,owned:{...inv.owned,[first.id]:1}};
+ assert.deepEqual(buildNextBaseDeck(normalizeFleetInventory(owned),'C01',20,[first.id]).baseDeck,[first.id]);
 });
 test('Tutte le 15 Carte Arma parametrizzate infliggono HP reali in battaglia',()=>{
- for(const c of DESIGNED_WEAPONS_PLAYABLE){
+ for(const c of DESIGNED_WEAPONS_PLAYABLE.filter(c=>!c.provisionalBalance)){
   const r=play(battle(),'A',[c.id],true),e=shots(r);
   assert.equal(e.length,1,c.name);
   assert.equal(e[0].cardId,c.id);
