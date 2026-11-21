@@ -86,7 +86,11 @@ export function advanceBattleComponentClock(battle,elapsedSeconds,options){
  const events=[],totalDamage={A:0,B:0},drainTime={A:0,B:0};
  for(let second=previous+1;second<=target;second++){
   for(const [who,side] of Object.entries(battle.sides)){
-   const result=advanceTimedComponents(side,second,options);
+   // Il tasso e' specifico della rarita' nella partita aggiornata;
+  // i vecchi test senza questa proprieta' conservano il valore esplicito.
+  const settings=side.componentDeteriorationFraction!=null?
+   {...options,drainFraction:side.componentDeteriorationFraction}:options;
+  const result=advanceTimedComponents(side,second,settings);
    for(const id of result.newlyExpired)events.push({
     who,kind:'component-expired',component:id,atSecond:second
    });
