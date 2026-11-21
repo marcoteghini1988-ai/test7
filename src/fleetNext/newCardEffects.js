@@ -111,7 +111,14 @@ export function supportWeaponCharge(side,machine,roleForCard){
 }
 // Fattore di bilanciamento riservato alla nuova modalita' ufficiale e
 // agli audit. Le vecchie partite conservano i danni originali delle Armi.
-const weaponAuditValue=(side,amount)=>{
+// Le armi il cui danno base e' GIA' una percentuale degli HP
+// non devono essere moltiplicate ancora per la rarita'. Altrimenti
+// Giudizio Temporale (20%) si trasformerebbe invisibilmente in 37%
+// in Leggendaria, divergendo dal testo e dalle regole della carta.
+// Restano validi Arsenale, Difese, elementi, terreni e passive supporti.
+const PERCENT_BASED_WEAPON_PATTERNS=new Set(['percent','binary-overload']);
+const weaponAuditValue=(side,amount,machine=null)=>{
+ if(PERCENT_BASED_WEAPON_PATTERNS.has(machine?.weaponProfile?.pattern))return amount;
  const factor=Number(side?.weaponBalanceFactor??side?.__pacingAuditWeaponFactor);
  return Number.isFinite(factor)&&factor>0&&factor!==1?
   Math.max(0,Math.round(amount*factor)):amount;
@@ -134,9 +141,9 @@ export function arsenalBonus(side,machine,ply=0,overridePower=null){
   ['discard-attacks','sequence','escort-count','base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(machine.damageMode)){
   const boost=supportWeaponCardBoost(side,base,ply);
   const multiplier=1+arsenalTierRate(amplified?.tier)-arsenalTierRate(disabled?.tier);
-  return weaponAuditValue(side,arsenalEffectiveDamage(side,Math.max(0,Math.round(boost*multiplier))));
+  return weaponAuditValue(side,arsenalEffectiveDamage(side,Math.max(0,Math.round(boost*multiplier))),machine);
  }
- return weaponAuditValue(side,arsenalEffectiveDamage(side,Math.max(0,base+(amplified?.amount||0)-(disabled?.amount||0))));
+ return weaponAuditValue(side,arsenalEffectiveDamage(side,Math.max(0,base+(amplified?.amount||0)-(disabled?.amount||0))),machine);
 }
 // Le versioni Epica e Leggendaria interrompono i bonus sincronizzati
 // solo al primo turno del bersaglio. La Centralina Leggendaria alleata
