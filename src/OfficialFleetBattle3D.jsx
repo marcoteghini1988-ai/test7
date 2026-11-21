@@ -15,7 +15,7 @@ import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
-import {card,cardRole,cardFacePath} from './fleetNext/rules.js';
+import {card,cardRole,cardFacePath,FLEET_TURN_SECONDS} from './fleetNext/rules.js';
 import {isMaxSupportLevel} from './fleetNext/supportProgression.js';
 import {isAuroraModule,installedModule,liveModules,reconfigurationOptions} from './fleetNext/auroraEngine.js';
 import {LINCE_BYPASS_ACTIONS,linceMarkedRouteReady} from './fleetNext/linceEngine.js';
@@ -253,7 +253,20 @@ const FLEET_VITAL_DESCRIPTIONS=Object.freeze({
  generator:'Generatore: alimenta i sistemi difensivi e le trappole.',
  command:'Centralina: coordina i sistemi di flotta e i collegamenti.'
 });
-function FleetVitalStrip({side,unit,onInspect}){
+function FleetVitalGlyph({type}){
+ return <svg className="f3d-vital-glyph" viewBox="0 0 32 28" aria-hidden="true" focusable="false"
+  fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round">
+  {type==='bridge'?<><path d="M3 22L7 8Q16 3 25 8L29 22ZM8 20L11 9M16 7V21M22 9L25 20M3 24H29"/>
+   <path d="M8 11H24" strokeWidth=".8"/></>:type==='weapons'?<><path d="M3 22L10 14L24 5L29 3L27 9L14 20Z"/>
+    <path d="M10 14L17 17M24 5L27 9M10 21L10 26L17 21M8 16L3 16L8 11M3 26L7 22"/></>:
+   type==='generator'?<><path d="M18 2L8 15H15L13 26L25 11H18Z" fill="currentColor" strokeWidth=".6"/>
+    <path d="M9 4A12 12 0 0 0 5 22M23 25A12 12 0 0 0 28 6"/></>:
+   <><rect x="9" y="7" width="14" height="14" rx="1.5"/><rect x="12" y="10" width="8" height="8" rx=".5" strokeWidth=".8"/>
+    <path d="M12 7V2M20 7V2M12 21V26M20 21V26M9 10H3M9 18H3M23 10H29M23 18H29"/>
+    <path d="M3 8V12M3 16V20M29 8V12M29 16V20" strokeWidth=".8"/></>}
+ </svg>;
+}
+function FleetVitalStrip({side,unit,onInspect,consoleMode=false}){
  const parts=unit?.ships?.[0]?.parts||[];
  const types=[
   {id:'bridge',name:'Plancia',symbol:'▱'},
@@ -261,7 +274,7 @@ function FleetVitalStrip({side,unit,onInspect}){
   {id:'generator',name:'Generatore',symbol:'ϟ'},
   {id:'command',name:'Centralina',symbol:'▦'}
  ];
- return <div className={'f3d-vital-strip f3d-vital-strip--'+side}
+ return <div className={'f3d-vital-strip f3d-vital-strip--'+side+(consoleMode?' f3d-vital-strip--console':'')}
   role="group" aria-label={'Stato componenti '+(side==='B'?'avversario':'giocatore')}>
   {types.map(({id,name,symbol})=>{
    const part=parts.find(p=>p.id===id);
@@ -270,10 +283,30 @@ function FleetVitalStrip({side,unit,onInspect}){
    return <button type="button" className="f3d-vital" key={id} data-status={status}
     title={name+' · '+detail+(part?' · '+part.hp+'/'+part.maxHp+' integrità':'')}
     aria-label={name+' · '+detail} onClick={()=>onInspect?.({id,name,part,status})}>
-    <span className="f3d-vital-icon" aria-hidden="true">{symbol}</span>
-    <span>{name}</span><i className="f3d-vital-led" aria-hidden="true"/>
+    <span className="f3d-vital-icon" aria-hidden="true">{consoleMode?<FleetVitalGlyph type={id}/>:symbol}</span>
+    <span className="f3d-vital-name">{name}</span>{!consoleMode&&<i className="f3d-vital-led" aria-hidden="true"/>}
    </button>;
   })}
+ </div>;
+}
+function FleetCommandConsole({unit,onInspect,onLeave,onPass,passDisabled,ended,secondsLeft,turnProgress}){
+ return <div className="f3d-command-console" role="group" aria-label="Console di comando">
+  <svg className="f3d-console-shell" viewBox="0 188 2172 340" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+   <image href={ASSET_ROOT+'/hud/command-console-shell.webp'} width="2172" height="724"/>
+  </svg>
+  <button type="button" className="live-abandon" onClick={onLeave} disabled={ended}
+   aria-label="Abbandona la battaglia"><span className="f3d-abandon-label">ABBANDONA</span></button>
+  <FleetVitalStrip side="A" unit={unit} onInspect={onInspect} consoleMode/>
+  <button type="button" className="f3d-approved-pass" aria-label="PASSA" disabled={passDisabled} onClick={onPass}>
+   <svg className="f3d-pass-chevron" viewBox="0 0 20 22" aria-hidden="true" focusable="false">
+    <path d="M2 3L8 11L2 19M10 3L16 11L10 19" fill="none" stroke="currentColor" strokeWidth="3"/>
+   </svg><span className="f3d-pass-label">PASSA</span>
+   <span className="f3d-pass-timer" role="progressbar" aria-label="Tempo rimanente del turno"
+    aria-valuemin={0} aria-valuemax={FLEET_TURN_SECONDS} aria-valuenow={secondsLeft}
+    aria-valuetext={secondsLeft+' secondi'} data-seconds-left={secondsLeft}>
+    <i style={{transform:'scaleX('+turnProgress+')'}}/>
+   </span>
+  </button>
  </div>;
 }
 // Un solo profilo metallico continuo per la flotta, senza riquadri intorno alle singole navi.
@@ -414,7 +447,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
  const displayArt=art||fallbackArt;
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
-  style={{'--special-angle':offset*3+'deg','--special-drop':offset**2*1.4+'px'}}
+  style={{'--special-angle':offset*3+'deg','--special-drop':-(offset**2)*.2+'px'}}
   data-family={role} data-rarity={rarity}
   title={name+' · '+description+(unavailableReason?' · '+unavailableReason:'')}
   aria-label={name+' · '+description+(unavailableReason?' · '+unavailableReason:'')}
@@ -1066,7 +1099,9 @@ export default function OfficialFleetBattle3D({
  const boss=battle.bossId?{name:battle.bossName||'BOSS',ability:'ABILITÀ',
   description:describeBossPassive(battle.bossId)}:null;
  const readableTerrain=terrain?TERRAIN_CATALOG[terrain]?.name||'TERRENO':'NEUTRO';
- const secondsLeft=Math.max(0,Math.ceil((battle.deadlineMs-now)/1000));
+ const remainingTurnMs=ended?0:Math.max(0,Math.min(FLEET_TURN_SECONDS*1000,battle.deadlineMs-now));
+ const secondsLeft=Math.ceil(remainingTurnMs/1000);
+ const turnProgress=remainingTurnMs/(FLEET_TURN_SECONDS*1000);
  const myTurn=battle.turn==='A';
  return <div className="es-math-scope live-viewport" ref={viewportRef}>
   <div className="es-root official-duel-3d live-root f3d-original-arena f3d-approved-layout"
@@ -1930,8 +1965,8 @@ export default function OfficialFleetBattle3D({
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
-   <button type="button" className="f3d-approved-pass" aria-label="PASSA"
-    disabled={ended||!myTurn||!!targetChoice} onClick={passTurn}>❯❯ PASSA</button>
+   <FleetCommandConsole unit={player} onInspect={vital=>setHelp({vital})} onLeave={leave} onPass={passTurn}
+    passDisabled={ended||!myTurn||!!targetChoice} ended={ended} secondsLeft={secondsLeft} turnProgress={turnProgress}/>
    {targetChoice&&myTurn&&!ended&&<div className="f3d-support-target-choice" role="dialog"
     aria-label="Scegli quale navicella di supporto nemica colpire" aria-modal="true">
     <strong>SCEGLI IL SUPPORTO DA COLPIRE</strong>
@@ -1942,9 +1977,6 @@ export default function OfficialFleetBattle3D({
     </button>)}
     <button type="button" onClick={()=>setTargetChoice(null)}>MODIFICA LE CARTE</button>
    </div>}
-   {!ended&&<button type="button" className="live-abandon" onClick={leave}
-    aria-label="Abbandona la battaglia"><span aria-hidden="true">←</span> ABBANDONA</button>}
-   <FleetVitalStrip side="A" unit={player} onInspect={vital=>setHelp({vital})}/>
     <OriginalFleetBar side="A" unit={player} nickname={nickname}/>
    {message&&<div className="live-action-notice f3d-notice" role="status"
     key={lastFx?.nonce||message}>{message}</div>}
