@@ -21,6 +21,7 @@ import {generatorCardCount,generatorAttackPreview,commitGeneratorFiring} from '.
 import {initializeComponentTimers,advanceBattleComponentClock,CANDIDATE_DRAIN_FRACTION_PER_SECOND}
  from './fleetNext/componentTimerPacing.js';
 import {PACING_BALANCE_CANDIDATE} from './fleetNext/pacingBalanceCandidate.js';
+import {buildCampaignNpcDeck} from './fleetNext/npcDeck.js';
 
 const PRESETS=Object.freeze({
  Comune:[['N00','C01'],['C01','C02'],['C02','C03']],
@@ -143,7 +144,9 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   supportRosterA:roster(rarity,seed),
   supportRosterB:roster(rarity,seed+4),
   deckA:generator(shipA,rarity,arch,seed),
-  deckB:generator(shipB,rarity,arch,seed+11),
+  deckB:turnTiming==='fast-cpu'?
+   buildCampaignNpcDeck(shipB,combatLevelForRarity(shipB,rarity),rarity,seed+11):
+   generator(shipB,rarity,arch,seed+11),
   seed,nowMs:0,newGeneratorCombat:model==='live-generator'
  });
  if(model==='live-generator'){
@@ -509,7 +512,7 @@ test('24 boss nuove regole con vera risoluzione ESEGUI dell IA, senza Personaggi
  assert.equal(cases.length,24);
 });
 
-test('Durata effettiva PvE con CPU veloce, non 17 secondi a turno IA',()=>{
+test('Durata effettiva PvE con mazzo reale CPU e decisioni veloci, non 17s per turno IA',()=>{
  const cases=[];
  for(const rarity of SHIP_RARITIES)
   for(const [i,bossId] of [1,8,17].entries())
