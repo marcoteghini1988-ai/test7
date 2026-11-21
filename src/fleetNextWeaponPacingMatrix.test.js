@@ -308,7 +308,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
    assert.ok(Number.isInteger(cost)&&cost>0&&cost<=30);
    const ownSide=b.sides[who];
    const end=advanceTimedComponents(ownSide,(ownSide.componentElapsedSeconds||0)+cost,
-    {drainFraction:.01});
+    {drainFraction:calibration.noDeterioration?0:.01});
    if(end.motherHp<=0){
     b.phase='finished';b.winner=who==='A'?'B':'A';
     b.finishedAtMs=at;
@@ -977,4 +977,102 @@ test('AUDIT_STRATEGY_SPEED_TEST_20261121: stesso numero turni a prescindere da r
     'La rapidita dei tocchi ha cambiato la strategia a quota '+quota.secondsPerTurn+
     ' / '+scenario.timing);
  }
+});
+
+test('AUDIT_NO_DRAIN_20261121: componenti scaduti a 210s, nessun HP automatico dopo 10 turni aggiuntivi',()=>{
+ const mother={id:'C01',maxHp:1000,hp:775};
+ const side={ships:[mother]};
+ initializeComponentTimers(side,'Comune');
+ applyExperimentalThreeHalfTimer(side,210,.01);
+ const expiry=advanceTimedComponents(side,210,{drainFraction:0});
+ assert.equal(expiry.allExpired,true);
+ assert.equal(expiry.hpLost,0);
+ assert.equal(side.ships[0].hp,775);
+ const later=advanceTimedComponents(side,510,{drainFraction:0});
+ assert.equal(later.allExpired,true);
+ assert.equal(later.hpLost,0);
+ assert.equal(later.deteriorationSeconds,300);
+ assert.equal(side.ships[0].hp,775);
+ assert.deepEqual(Object.values(side.componentTimers).map(t=>t.expired),[true,true,true]);
+});
+test('AUDIT_NO_DRAIN_20261121: con e senza deterioramento, stessi mazzi e semi, quota strategica invariata',()=>{
+ const variants=[
+  {name:'deterioramento-1pct',noDeterioration:false},
+  {name:'deterioramento-rimosso',noDeterioration:true}
+ ];
+ const report=[];
+ for(const quota of [15,20,25]){
+  for(const scenario of variants){
+   const pvp=[],boss=[];
+   for(const rarity of SHIP_RARITIES)
+    for(const [i,[a,b]] of PRESETS[rarity].entries()){
+     for(const shift of [0,61,127])
+      pvp.push(simulate(rarity,ARCHETYPES[i],a,b,
+       20262521+rIdx(rarity)*181+i*37+shift,null,'live-generator',
+       CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+       {strategicSecondsPerTurn:quota,noDeterioration:scenario.noDeterioration}));
+     for(const shift of [0,97])
+      boss.push(simulate(rarity,ARCHETYPES[1],a,b,
+       20262631+rIdx(rarity)*193+i*43+shift,[1,8,17][i],
+       'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+       {strategicSecondsPerTurn:quota,noDeterioration:scenario.noDeterioration},
+       'fast-cpu'));
+    }
+   const outcome=matches=>{
+    const won=matches.filter(m=>['A','B'].includes(m.winner));
+    return {...stats(matches),
+     winsA:matches.filter(m=>m.winner==='A').length,
+     winsB:matches.filter(m=>m.winner==='B').length,
+     winnerAllThreeIntact:won.filter(m=>m.winnerComponentsAlive===3).length,
+     winnerSomeIntact:won.filter(m=>m.winnerComponentsAlive>0).length,
+     avgOwnA:Math.round(matches.reduce((n,m)=>n+m.ownTime.A,0)/matches.length),
+     avgOwnB:Math.round(matches.reduce((n,m)=>n+m.ownTime.B,0)/matches.length),
+     min:Math.min(...matches.map(m=>m.seconds)),
+     max:Math.max(...matches.map(m=>m.seconds)),
+     roundLimitDraws:matches.filter(m=>m.draw&&/limite di.*round/i.test(m.finishReason||'')).length
+    };
+   };
+   report.push({quota,noDeterioration:scenario.noDeterioration,scenario:scenario.name,
+    pvp:outcome(pvp),campaign:outcome(boss),
+    pvpRarity:Object.fromEntries(SHIP_RARITIES.map(ra=>[ra,outcome(pvp.filter(m=>m.rarity===ra))])),
+    campaignRarity:Object.fromEntries(SHIP_RARITIES.map(ra=>[ra,outcome(boss.filter(m=>m.rarity===ra))])),
+    pvpEndReasons:Object.fromEntries([...new Set(pvp.map(m=>m.finishReason))].map(reason=>[
+     reason,pvp.filter(m=>m.finishReason===reason).length])),
+    campaignEndReasons:Object.fromEntries([...new Set(boss.map(m=>m.finishReason))].map(reason=>[
+     reason,boss.filter(m=>m.finishReason===reason).length]))
+   });
+  }
+ }
+ console.log('AUDIT_NO_DRAIN_COMPARISON='+JSON.stringify(report));
+ assert.equal(report.length,6);
+ assert.ok(report.every(x=>x.pvp.n===36&&x.campaign.n===24));
+ assert.ok(report.filter(x=>x.noDeterioration).every(x=>
+  x.pvp.finishesByComponentDrain===0&&x.campaign.finishesByComponentDrain===0),
+  'In modalita senza deterioramento nessuna madre puo morire per timer');
+});
+test('AUDIT_NO_DRAIN_20261121: la velocita 6s vs 26s non cambia esito, mosse o componenti',()=>{
+ const samples=[];
+ for(const quota of [15,20]){
+  const groups=[];
+  for(const timing of ['symmetric','fast-vs-slow','slow-vs-fast','both-fast','both-slow']){
+   const matches=[];
+   for(const rarity of SHIP_RARITIES)
+    for(const [i,[a,b]] of PRESETS[rarity].entries())
+     matches.push(simulate(rarity,ARCHETYPES[i],a,b,
+      20262721+rIdx(rarity)*151+i*47,null,'live-generator',
+      CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      {strategicSecondsPerTurn:quota,noDeterioration:true},timing));
+   groups.push({timing,mean:stats(matches).mean,draw:stats(matches).draw,
+    avgTurns:stats(matches).avgTurns,winsA:matches.filter(m=>m.winner==='A').length,
+    winsB:matches.filter(m=>m.winner==='B').length,
+    signature:matches.map(m=>[m.shipA,m.shipB,m.seed,m.winner,m.turns,
+     m.winnerComponentsAlive,m.finishReason].join(':')).join('|')});
+  }
+  const baseline=groups[0].signature;
+  for(const group of groups)
+   assert.equal(group.signature,baseline,
+    'La rapidita non deve cambiare la strategia senza deterioramento, '+quota+'/'+group.timing);
+  samples.push({quota,groups:groups.map(({signature,...rest})=>rest)});
+ }
+ console.log('AUDIT_NO_DRAIN_SPEED='+JSON.stringify(samples));
 });
