@@ -21,7 +21,7 @@ export const SIMPLE_RULES_REVISION='simple-effects-v2-traps';
 export const EFFECT_TYPES=Object.freeze([
  'power','pierce','multishot','protect','dodge','repair','regenerate','counter',
  'weaken','disarm','cleanse','exchange','recover','charge','energy','terrain','elementalTerrain','trap',
- 'bypass','deployMachine','siphonStrike','fusion','shipFusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
+ 'bypass','deployMachine','plannedWeapon','siphonStrike','fusion','shipFusion','blueprint','systemModifier','fieldReset','dismantle','aurora','lince','prisma','corvo','falco','manta','shark','nebula','storm','royal','obsidian','ark'
 ]);
 const PARTS=['engine','weapons','command','generator','bridge'];
 const LABELS={engine:'i Motori',weapons:'le Armi',command:'la Centralina',generator:'il Generatore',bridge:'la Plancia'};
@@ -151,6 +151,10 @@ export function validateEffectSpec(spec){
     (spec.damageMode==='double-shot'&&spec.shotCount!==2)||
     (spec.damageMode==='energy-burst-shot'&&(!integer(spec.extraDamage,1,1000)||spec.maxExtraShots!==2)))
     return 'Arma a colpi autonomi non valida';
+  }else if(spec.damageMode==='designed-shot'){
+   if(!spec.weaponProfile||typeof spec.weaponProfile.pattern!=='string'||
+    !integer(spec.durationTurns,1,3)||spec.power!==0)
+    return 'Schema Arma progettata non valido';
   }else return 'Modalita arma non riconosciuta';
  }
  return null;
@@ -245,7 +249,9 @@ export function describeEffect(card,level=1){
    'Trappola coperta. Annulla il prossimo Terreno giocato dall’avversario.';
   case 'bypass':return 'Permette di superare supporti e macchine per colpire un solo componente della madre. Difese e Trappole restano valide.';
   case 'siphonStrike':return siphonAttackDescription(s);
-  case 'deployMachine':{
+  case 'plannedWeapon':return card.effectProposed;
+   case 'deployMachine':{
+   if(s.damageMode==='designed-shot')return card.effectProposed;
    if(['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot'].includes(s.damageMode))return card.effectProposed;
    if(s.damageMode==='sequence'){
     if(s.sequenceStage===1)return "Sequenza I ("+FLEET_ELEMENTS[s.elementId].name+"): aggiunge "+s.soloDamage+" HP all'attacco per due tuoi turni. Solo nel turno successivo puoi sovrapporre Sequenza II; senza evoluzione, si scarta dopo il secondo attacco.";

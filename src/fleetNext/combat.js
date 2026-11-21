@@ -475,8 +475,10 @@ function selectedOwnPart(side,target,ownPartId){
 }
 export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
  if(!def||!side)return 'Carta non disponibile';
- if(def.playable===false)return 'Esclusiva registrata: effetto di battaglia ancora da implementare';
- if(['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot'].includes(def.effectSpec?.damageMode)&&side.ruleset!==HP_SYNC_RULESET)
+ if(def.playable===false)return def.designOnly?
+  'Carta Arma progettata: danni, costo o sequenza non ancora determinati':
+  'Esclusiva registrata: effetto di battaglia ancora da implementare';
+ if(['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(def.effectSpec?.damageMode)&&side.ruleset!==HP_SYNC_RULESET)
   return 'Carta Arma base richiede la modalità HP';
  if(def.effectSpec?.type==='energy'){
   if(side.ruleset!==HP_SYNC_RULESET)return 'Le Carte Energia richiedono la modalità HP';
@@ -3018,6 +3020,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     deployedPly:b.ply,crystalPolarity:s.crystalPolarity||null,
     comboBonus:s.comboBonus||null,shotCount:s.shotCount||1,
     extraDamage:s.extraDamage||0,maxExtraShots:s.maxExtraShots||0,
+    weaponProfile:s.weaponProfile||null,
     untilPly:modern?b.ply+2*duration:null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
@@ -3404,12 +3407,117 @@ function resolveMultiWeaponShots(b,ctx,events,order){
  return shot;
 }
 
+// Motore degli effetti con valori esplicitamente decisi. Un colpo significa
+// un evento HP, con Difese/Trappole e affinità per ogni bersaglio distinto.
+// Dove il consumo Energia non è stabilito, la carta legge le cariche senza
+// sottrarle: l'inventario non deve cambiare per un costo non approvato.
+function resolveDesignedWeaponShots(b,ctx,events,order){
+ const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
+ const ready=(side.machines||[]).filter(m=>m.damageMode==='designed-shot'&&
+  unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&
+  (m.deployedPly===b.ply||m.weaponProfile?.pattern==='repeat'&&m.deployedPly===b.ply-2));
+ if(!ready.length)return null;
+ const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
+  targets:[],played:[]};
+ const energyUnits=(element,physical=true)=>{
+  const matching=(side.energyPile||[]).filter(entry=>{
+   const id=typeof entry==='string'?entry:entry?.id;
+   return card(id)?.effectSpec?.type==='energy'&&
+    card(id)?.effectSpec?.elementId===element;
+  });
+  return physical?matching.length:matching.reduce((n,e)=>n+
+   (typeof e==='string'?1:Math.max(0,Number(e.remaining)||0)),0);
+ };
+ const allTargets=()=>[...(enemy.escorts||[]).filter(unitAlive)
+  .map(unit=>({kind:'escort',unit})),
+  ...((enemy.ships[0]?.hp||0)>0&&motherPart(enemy.ships[0],'weapons')?
+   [{kind:'part',unit:motherPart(enemy.ships[0],'weapons')}]:[])];
+ const ordinaryTarget=()=>{
+  const guards=protectingFleetUnits(enemy,b.ply);
+  const selected=selectedEnemyTarget(enemy,order,b.ply);
+  if(selected&&(!guards.length||!['part','module'].includes(selected.kind)))return selected;
+  if(guards.length)return {kind:guards[0].kind,unit:guards[0].unit};
+  return selectedEnemyTarget(enemy,{targetKind:'part',targetId:'weapons'},b.ply);
+ };
+ for(const machine of ready){
+  if(enemy.ships[0].hp<=0)break;
+  const p=machine.weaponProfile,pattern=p?.pattern,energy=energyUnits(machine.weaponElementId),
+   charges=energyUnits(machine.weaponElementId,false),tier=Math.min(2,energy),
+   impacts=[];
+  if(!p)continue;
+  const motherHp=side.ships[0].hp,motherMax=Math.max(1,side.ships[0].maxHp);
+  const commander=side.commander?.id&&card(side.commander.id);
+  const charActive=commander&&side.commander.untilPly>b.ply&&
+   (commander.name||commander.nome||'').toLowerCase().includes((p.characterName||'').toLowerCase());
+  const extra=pattern==='energy-charge-burst'?Math.min(p.maxBonus,charges):0;
+  let planned=[];
+  if(pattern==='sweep')planned=allTargets().map(target=>({target,base:p.baseDamage,ignoreCover:target.kind==='part'}));
+  else if(pattern==='multi'||pattern==='spread'){
+   const targets=pattern==='spread'?allTargets():[];
+   planned=Array.from({length:p.shots},(_,i)=>({
+    target:pattern==='spread'&&targets.length?targets[i%targets.length]:null,base:p.baseDamage,
+    ignoreCover:pattern==='spread'&&targets[i%targets.length]?.kind==='part'
+   }));
+  }else if(pattern==='energy-fan'){
+   const count=Math.min(3,1+tier),targets=allTargets();
+   planned=targets.slice(0,count).map(target=>({target,base:p.damages[tier],
+    ignoreCover:target.kind==='part'}));
+   if(!planned.length)planned=[{base:p.damages[tier]}];
+  }else if(pattern==='energy-charge-burst'){
+   planned=[{base:p.baseDamage},...Array.from({length:extra},()=>({base:p.bonusDamage}))];
+  }else{
+   let base=p.baseDamage||0;
+   if(pattern==='energy-tier')base=p.damages[tier];
+   if(pattern==='character'&&charActive)base=Math.round(base*(1+p.bonusPercent/100));
+   if(pattern==='character-health'&&charActive){
+    const lost=100*(1-motherHp/motherMax);
+    base=p.damages[lost>=50?2:lost>=25?1:0];
+   }
+   if(pattern==='character-health'&&!charActive)base=p.damages[0];
+   if(pattern==='percent')base=0;
+   planned=[{base}];
+  }
+  for(let n=0;n<planned.length;n++){
+   if(enemy.ships[0].hp<=0)break;
+   const target=planned[n].target||ordinaryTarget();
+   if(!target||!unitAlive(target.unit))continue;
+   let raw=planned[n].base;
+   if(pattern==='percent')raw=Math.max(1,Math.round(target.unit.maxHp*p.damagePercent/100));
+   if(pattern==='target-dependent')raw=target.kind==='part'?p.motherDamage:p.supportDamage;
+   const power=arsenalBonus(side,machine,b.ply,raw);
+   const ignoreCover=!!planned[n].ignoreCover;
+   const priorElement=ctx.attackElement;ctx.attackElement=machine.weaponElementId;
+   const hit=side.fireBlocked||side.fireDisabledUntil>b.ply||!power?{damage:0,target}:
+    linceHit(b,ctx,events,target,power,machine.sourceCardId,order,ignoreCover,0);
+   ctx.attackElement=priorElement;
+   const kind=hit.target?.kind,unit=hit.target?.unit;
+   if(hit.damage&&kind){
+    const field={part:'damage',escort:'escortDamage',machine:'machineDamage',
+     module:'moduleDamage'}[kind];
+    if(field)shot[field]+=hit.damage;
+    shot.targets.push({kind,id:unit.id,damage:hit.damage,destroyed:unit.destroyed});
+   }
+   impacts.push({shot:n+1,nominalDamage:raw,actualDamage:hit.damage||0,
+    targetKind:kind||null,targetId:unit?.id||null});
+  }
+  if(machine.deployedPly===b.ply)shot.played.push(machine.sourceCardId);
+  const actual=impacts.reduce((n,h)=>n+h.actualDamage,0);
+  events.push(emit(b,ctx.who,'weapon-designed-shot',machine.name+' · '+actual+' HP',{
+   cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
+   pattern,hitCount:impacts.length,impacts,actualDamage:actual,
+   energyCardsSeen:energy,energyChargesSeen:charges,energyConsumed:0,
+   repeatTurn:pattern==='repeat'&&machine.deployedPly!==b.ply
+  }));
+ }
+ return shot;
+}
+
 function escortPassive(b,side,ctx,events,order){
  refreshEscortLinks(side,b.ply);
  if(side.independentSupportRoster){
   for(const machine of (side.machines||[]).filter(e=>unitEnabled(e,b.ply)&&!unitSilenced(e,b.ply))){
    // Un'Arma base spara da sola, non aggiunge +1 potenza alla madre.
-   if(['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot'].includes(machine.damageMode))continue;
+   if(['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(machine.damageMode))continue;
    const charge=supportWeaponCharge(side,machine,cardRole);
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
    if(power){
@@ -4943,8 +5051,9 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.fieldReset?[]:
   ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,3);
- const weaponShot=mergeFalcoShots(resolveApprovedBaseWeaponShots(b,ctx,events,order),
-  resolveMultiWeaponShots(b,ctx,events,order));
+ const weaponShot=mergeFalcoShots(resolveDesignedWeaponShots(b,ctx,events,order),
+  mergeFalcoShots(resolveApprovedBaseWeaponShots(b,ctx,events,order),
+  resolveMultiWeaponShots(b,ctx,events,order)));
  const ownShot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.elementalShot?resolveSalvo(b,ctx,events,order):
   ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):

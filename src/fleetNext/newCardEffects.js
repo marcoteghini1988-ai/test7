@@ -117,7 +117,7 @@ export function arsenalBonus(side,machine,ply=0,overridePower=null){
  // Le armi confermate hanno danni in decine/centinaia di HP:
  // il modificatore dell'Arsenale agisce in percentuale solo nelle partite con rarita'.
  if(hasBalancedMother(side?.ships?.[0])&&
-  ['discard-attacks','sequence','escort-count','base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot'].includes(machine.damageMode)){
+  ['discard-attacks','sequence','escort-count','base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(machine.damageMode)){
   const boost=supportWeaponCardBoost(side,base,ply);
   const multiplier=1+arsenalTierRate(amplified?.tier)-arsenalTierRate(disabled?.tier);
   return Math.max(0,Math.round(boost*multiplier));
