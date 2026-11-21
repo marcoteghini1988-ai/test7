@@ -1,5 +1,6 @@
 // 22 Carte Arma base deliberate il 20 novembre 2026.
 // Effetti indipendenti dagli Attacchi, senza illustrazioni provvisorie nel gioco.
+import {calibratedWeaponCard} from './weaponBalanceCalibration.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 const DESIGNS=[
   {
@@ -206,7 +207,7 @@ export const APPROVED_BASE_WEAPONS=Object.freeze(DESIGNS.map(s=>{
  const element=FLEET_ELEMENTS[s.elementId];
  if(!element||!COPIES[s.rarita]||!Number.isInteger(s.baseDamage)||s.baseDamage<=0)
   throw Error('Carta Arma base non valida: '+s.id);
- return Object.freeze({
+ return calibratedWeaponCard(Object.freeze({
   id:s.id,designId:s.designId,name:s.name,nome:s.name,
   category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
   kind:'support',playable:true,nativeFace:true,rarita:s.rarita,
@@ -217,7 +218,7 @@ export const APPROVED_BASE_WEAPONS=Object.freeze(DESIGNS.map(s=>{
    damageMode:'base-shot',elementId:s.elementId,baseDamage:s.baseDamage,durationTurns:1}),
   effectProposed:'Arma '+element.name+': infligge un colpo autonomo da '+s.baseDamage+
    ' HP nominali a un bersaglio avversario. Un solo impatto alla risoluzione del turno; Difese, Trappole, supporti e Terreni si applicano normalmente.'
- });
+ }));
 }));
 export const APPROVED_BASE_WEAPON_BY_ID=Object.freeze(Object.fromEntries(
  APPROVED_BASE_WEAPONS.map(c=>[c.id,c])));
