@@ -64,7 +64,7 @@ export const MULTI_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
   categoria:'Supporto',category:'Arma di supporto',sottotipo:'Arma temporanea',
   kind:'support',playable:true,nativeFace:true,rarita:s.rarita,
   elementId:s.elementId,visualKey:elem.vfx,visualSymbol:elem.symbol,
-  acquisitionPending:true,balancePending:true,maxCopiesPerDeck:COPIES[s.rarita],
+  acquisitionPending:false,balancePending:true,maxCopiesPerDeck:COPIES[s.rarita],
   effectSpec:Object.freeze({type:'deployMachine',hp:1,power:0,
    damageMode:s.mode,elementId:s.elementId,baseDamage:s.baseDamage,
    durationTurns:s.durationTurns,...(s.shots?{shotCount:s.shots}:{}),
