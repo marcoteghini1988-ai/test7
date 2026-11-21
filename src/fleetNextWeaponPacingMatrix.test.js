@@ -146,6 +146,24 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   deckB:generator(shipB,rarity,arch,seed+11),
   seed,nowMs:0,newGeneratorCombat:model==='live-generator'
  });
+ if(model==='live-generator'){
+  // I Personaggi non sono ancora bilanciati: non devono entrare neppure
+  // come esclusive aggiunte automaticamente dal motore ai mazzi di prova.
+  for(const [who,side] of Object.entries(b.sides)){
+   const original=[...side.hand,...side.deck];
+   const filtered=original.filter(id=>cardRole(id)!=='character');
+   const base=generator(who==='A'?shipA:shipB,rarity,arch,seed+(who==='A'?0:11));
+   for(let k=0;filtered.length<original.length&&k<base.length*4;k++){
+    const id=base[k%base.length];
+    if(cardRole(id)==='character'||filtered.filter(x=>x===id).length>=cardCopyLimit(id))
+     continue;
+    filtered.push(id);
+   }
+   assert.ok(filtered.every(id=>cardRole(id)!=='character'),'Nessun Personaggio nelle simulazioni');
+   side.hand=filtered.slice(0,7);
+   side.deck=filtered.slice(7);
+  }
+ }
  if(model==='generator-components-v1'){
   // Solo nella prova statistica si modificano gli HP e l'istante di scadenza:
   // non si toccano le statistiche delle carte o i timer della plancia.
@@ -167,7 +185,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
  }
  let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0,
   generatorShots=0,generatorHp=0,invalidReasons=[];
- const meanTurnMs=17000; // 17s tipici fino alla terza carta/PASSA + animazioni
+ const meanTurnMs=17000; // ipotesi diagnostica: 17s medi di scelta+animazioni per turno
  while(b.phase==='playing'&&turns<102){
   const who=b.turn;
   const at=b.turnStartedAtMs+meanTurnMs;
