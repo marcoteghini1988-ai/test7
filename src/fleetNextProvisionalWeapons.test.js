@@ -34,6 +34,13 @@ const shots=(r,id)=>r.events.filter(x=>x.kind==='weapon-provisional-shot'&&x.car
 test('69 nuove armi ufficiali: 21 con bilanciamento temporaneo, acquistabili e equipaggiabili',()=>{
  assert.equal(PROVISIONAL_ADVANCED_WEAPONS.length,21);
  assert.equal(NEXT_NEW_WEAPON_CARDS.length,69);
+ const rarities=new Set(['Comune','Rara','Epica','Leggendaria']);
+ for(const weapon of NEXT_NEW_WEAPON_CARDS){
+  assert.equal(weapon.playable,true,weapon.id);
+  assert.ok(rarities.has(weapon.rarita),'Rarità provvisoria mancante: '+weapon.id);
+  const purchased=buyNextCommonCard({...createFleetInventory(),credits:20000},weapon.id);
+  assert.equal(purchased.ok,true,'Carta non acquistabile: '+weapon.id);
+ }
  const inv=createFleetInventory();
  const ids=new Set();
  for(const d of PROVISIONAL_ADVANCED_WEAPONS){
