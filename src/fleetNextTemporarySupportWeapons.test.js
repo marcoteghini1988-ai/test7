@@ -1,4 +1,4 @@
-// Regressioni sulle tre fasi dell'Acceleratore Trifase e sulle armi confermate.
+// Regressioni sulle tre fasi dell'Cannone Acceleratore Trifase e sulle armi confermate.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {card,cardRole,cardCopyLimit,cardFacePath,TEMP_SUPPORT_WEAPONS,SEQUENCE_WEAPON_IDS} from './fleetNext/rules.js';
