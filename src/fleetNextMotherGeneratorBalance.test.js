@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {SHIP_RARITIES,motherCombatStatsForRarity} from './fleetNext/shipRarity.js';
 import {ELEMENTAL_ABILITIES} from './fleetNext/elementalAbilities.js';
 import {chargeElementalEnergy,spendElementalEnergy} from './fleetNext/elementalAbilities.js';
+import {activeFleetElements} from './fleetNext/elementalAffinities.js';
 import {GENERATOR_ATTACK_THRESHOLDS,MOTHER_GENERATOR_PROFILES,
  generatorCardCount,generatorAttackPreview,generatorCoolingOwnTurns,
  spendGeneratorPhysicalCards,commitGeneratorFiring} from './fleetNext/motherGeneratorBalance.js';
@@ -30,7 +31,7 @@ test('12 madri x 4 rarita: due colpi 2/4 carte, durata maggiore per potenza magg
   assert.ok(p.heavy.coolingOwnTurns>p.quick.coolingOwnTurns,id);
   for(const rarity of SHIP_RARITIES){
    const s=side(id,rarity);
-   setCharge(s,['energy-ionic','energy-ionic','energy-ionic','energy-ionic']);
+   setCharge(s,Array(4).fill('energy-'+activeFleetElements(id,1)[0]));
    const preview=generatorAttackPreview(s,true);
    assert.equal(preview.ready,true,id+' '+rarity);
    assert.equal(preview.tier,'heavy',id+' '+rarity);
