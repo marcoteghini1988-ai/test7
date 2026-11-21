@@ -27,7 +27,7 @@ export const COMPONENT_TIMER_RARITY_BONUS=Object.freeze({
 // La perdita dopo tutti e tre i timer e' una ipotesi numerica
 // da confrontare con .006 e .012. Nessun danno gratuito da Generatore.
 export const CANDIDATE_DRAIN_FRACTION_PER_SECOND=.009;
-export const COMPONENT_TIMER_STATUS='SIMULATION_ONLY';
+export const COMPONENT_TIMER_STATUS='ACTIVE_NEW_COMBAT_MODE_PENDING_FINAL_BALANCE';
 
 export function componentDurations(shipId,rarity){
  const base=COMPONENT_TIMER_BASE_SECONDS[shipId],bonus=COMPONENT_TIMER_RARITY_BONUS[rarity];
