@@ -3365,9 +3365,11 @@ function resolveMultiWeaponShots(b,ctx,events,order){
  };
  for(const m of ready){
   if(enemy.ships[0].hp<=0)break;
-  const energ=(side.energyPile||[]).filter(id=>{
+  const energ=(side.energyPile||[]).filter(entry=>{
+   const id=typeof entry==='string'?entry:entry?.id;
    const e=card(id)?.effectSpec;
-   return e?.type==='energy'&&e.elementId===m.weaponElementId;
+   return e?.type==='energy'&&e.elementId===m.weaponElementId&&
+    (typeof entry==='string'||Number(entry.remaining)>0);
   }).length;
   const extras=m.damageMode==='energy-burst-shot'?Math.min(m.maxExtraShots,energ):0;
   const targets=m.damageMode==='sweep-shot'?
@@ -3482,13 +3484,32 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    const target=planned[n].target||ordinaryTarget();
    if(!target||!unitAlive(target.unit))continue;
    let raw=planned[n].base;
-   if(pattern==='percent')raw=Math.max(1,Math.round(target.unit.maxHp*p.damagePercent/100));
+   if(pattern==='percent'){
+    // In modalità HP il vitale weapons è il punto di mira, non la barra madre.
+    const hpMax=target.kind==='part'?enemy.ships[0].maxHp:target.unit.maxHp;
+    raw=Math.max(1,Math.round(hpMax*p.damagePercent/100));
+   }
    if(pattern==='target-dependent')raw=target.kind==='part'?p.motherDamage:p.supportDamage;
    const power=arsenalBonus(side,machine,b.ply,raw);
    const ignoreCover=!!planned[n].ignoreCover;
+   // Frantumatore: una Energia supera una Difesa, due ne smontano una.
+   // Non si attraversa la copertura di un supporto e non si spendono Energie
+   // finché il loro costo preciso non viene deliberato.
+   if(pattern==='induction'&&energy>=2){
+    const defense=enemy.defenses.find(d=>!d.hidden&&d.id&&d.source);
+    if(defense){discardDefense(enemy,defense.source);
+     events.push(emit(b,ctx.who,'weapon-break-defense',
+      machine.name+' distrugge una Difesa attiva',{cardId:machine.sourceCardId,
+      defenseCardId:defense.id,targetKind:target.kind}));}
+   }
+   const piercing=pattern==='induction'&&energy>=1;
+   const previousNebulaPierce=ctx.nebulaPierceLeft||0;
+   if(piercing&&['escort','machine'].includes(target.kind))ctx.nebulaPierceLeft=1;
    const priorElement=ctx.attackElement;ctx.attackElement=machine.weaponElementId;
    const hit=side.fireBlocked||side.fireDisabledUntil>b.ply||!power?{damage:0,target}:
-    linceHit(b,ctx,events,target,power,machine.sourceCardId,order,ignoreCover,0);
+    linceHit(b,ctx,events,target,power,machine.sourceCardId,order,ignoreCover,
+     piercing&&target.kind==='part'?1:0);
+   ctx.nebulaPierceLeft=previousNebulaPierce;
    ctx.attackElement=priorElement;
    const kind=hit.target?.kind,unit=hit.target?.unit;
    if(hit.damage&&kind){
