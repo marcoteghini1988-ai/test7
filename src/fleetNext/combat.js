@@ -5146,6 +5146,10 @@ export function advanceFleetCombatTime(battle,nowMs){
  const timed=advanceIndependentSupportTime(battle,nowMs);
  if(!battle?.newGeneratorCombat||timed.battle?.phase!=='playing')
   return timed;
+ // Test strategico opt-in: i tre componenti si consumano a quota fissa
+ // alla conclusione del PROPRIO turno, non durante la preparazione.
+ // La battaglia ufficiale e le abilita' in tempo reale sono invariate.
+ if(timed.battle.componentClockMode==='strategy-per-turn')return timed;
  // Sperimentazione opt-in: sul turno avversario il cronometro del
  // giocatore fermo non scorre. La modalita live esistente resta invariata.
  if(timed.battle.componentClockMode==='active-player-only'){
