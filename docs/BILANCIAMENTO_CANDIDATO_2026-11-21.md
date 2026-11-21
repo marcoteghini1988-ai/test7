@@ -143,3 +143,56 @@ misurare la durata REALE di una partita, non solo il numero di turni.
 - `src/fleetNext/weaponRarityEvolutions.js`: anteprima di 235 Carte Arma.
 - `src/fleetNextWeaponPacingMatrix.test.js`: matrici statistiche e boss.
 - `src/fleetNextOfficialGeneratorCombat.test.js`: regressioni di combattimento.
+
+## Controprova sul motore ufficiale, 21/11 — collaudo finale di questo turno
+
+Dopo l'integrazione delle meccaniche effettive nella plancia, le ultime
+verifiche automatizzate hanno superato **1.859 test su 1.859** e la build.
+
+Con due giocatori simulati che impiegano circa 17 s ciascuno per turno:
+
+| Scenario | Casi | Durata media | Nella finestra 5–6 min | KO per deterioramento componenti | KO per danni diretti |
+|---|---:|---:|---:|---:|---:|
+| PvP | 72 | 319 s | 54 | 60 | 12 |
+| Boss | 24 | 326 s | 23 | 19 | 5 |
+
+Una seconda simulazione, piu vicina ai tempi reali della campagna, usa
+**18,6 s per il giocatore** (scelta e animazioni) e **2,3 s per la CPU**
+(decisione e animazioni):
+
+| Rarita | Partite | Durata media |
+|---|---:|---:|
+| Comune | 6 | 252 s |
+| Rara | 6 | 235 s |
+| Epica | 6 | 312 s |
+| Leggendaria | 6 | 331 s |
+| **Totale** | **24** | **282 s** |
+
+Solo 10 partite su 24 sono nella finestra 300–360 s; 14 sono terminate per
+danno diretto e 10 per deterioramento. Nessun pareggio.
+
+**CONCLUSIONE DI BILANCIAMENTO:** la media PvP e boss a 17 s per turno e'
+vicina al target, ma **il bilanciamento definitivo delle 235 armi non e'
+ancora certificabile**. In particolare, i timer decidono l'esito di
+83% dei PvP simulati (60 su 72), mentre un avversario CPU veloce
+riduce sensibilmente la durata delle partite Comune e Rara.
+
+Non si deve rallentare artificialmente la CPU per ottenere il tempo
+nominale, ne' ridurre il deterioramento senza eseguire nuovi collaudi
+sul motore effettivo. Le Carte Personaggio rimangono escluse.
+Le penalita' concordate di Arsenale (-30%), Centralina (75/25) e
+Plancia (blocco scelta bersaglio e slot Personaggio) rimangono invariate.
+
+I test hanno anche rilevato che alcune giocate possono essere
+diventate non valide durante la preparazione quando il timer
+Arsenale scade; l'attuale funzione di risoluzione recupera
+le carte valide senza bloccare il turno.
+
+### Da validare prima delle immagini definitive
+
+- PvP reale con azioni veloci/lente, non un unico intervallo di 17 secondi.
+- Varieta' dei mazzi con Difese e Trappole progettate, che ancora non
+  partecipano a tutte le simulazioni.
+- Quanto la vittoria derivi dalle carte rispetto al deterioramento,
+  senza trasformare il timer in una condizione di sconfitta inevitabile.
+- Boss su campagna reale con IA tattica e senza rallentamenti artificiali.
