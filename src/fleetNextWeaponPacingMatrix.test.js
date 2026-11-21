@@ -951,6 +951,8 @@ test('AUDIT_STRATEGY_SPEED_TEST_20261121: stesso numero turni a prescindere da r
        'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
        {strategicSecondsPerTurn:cost},timing));
    grouped.push({timing,n:matches.length,mean:stats(matches).mean,
+    outcomeSignature:matches.map(m=>[m.seed,m.winner,m.turns,
+     m.winnerComponentsAlive,m.finishReason].join(':')).join('|'),
     turns:stats(matches).avgTurns,drain:stats(matches).finishesByComponentDrain,
     winsA:matches.filter(x=>x.winner==='A').length,
     winsB:matches.filter(x=>x.winner==='B').length,
@@ -965,4 +967,14 @@ test('AUDIT_STRATEGY_SPEED_TEST_20261121: stesso numero turni a prescindere da r
  console.log('AUDIT_STRATEGY_SPEED_TEST_20261121='+JSON.stringify(all));
  assert.equal(all.length,2);
  assert.ok(all.every(x=>x.scenarios.every(y=>y.n===24)));
+ // Il test non si limita alle medie: confronta tutti i 24 risultati per
+ // nave, seme, numero di turni, componenti salvi e causa della vittoria.
+ // Cambiare la velocita' non deve cambiare una singola partita.
+ for(const quota of all){
+  const baseline=quota.scenarios.find(x=>x.timing==='symmetric').outcomeSignature;
+  for(const scenario of quota.scenarios.filter(x=>x.timing!=='fast-cpu'))
+   assert.equal(scenario.outcomeSignature,baseline,
+    'La rapidita dei tocchi ha cambiato la strategia a quota '+quota.secondsPerTurn+
+    ' / '+scenario.timing);
+ }
 });
