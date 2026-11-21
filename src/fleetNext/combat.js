@@ -3157,8 +3157,19 @@ function resolveElementalActivation(b,who,order,ctx,events){
  const side=b.sides[who],enemy=b.sides[other(who)],mother=side.ships[0];
  const ability=elementalAbility(mother.id),element=order.elementalElement||mother.element;
  const effectiveCost=effectiveSupportEnergyCost(side,ability,b.ply);
- if(!ability||!spendElementalEnergy(side,element,effectiveCost))
+ if(!ability||!spendElementalEnergy(side,element,effectiveCost)){
+  // Priorità confermata: il Mortaio consuma prima le cariche Fuoco reali.
+  // Se le esaurisce, la Speciale non parte e non può spendere due volte la stessa carica.
+  if(ability&&element==='plasma'&&(side.machines||[]).some(m=>
+    m.weaponProfile?.pattern==='magma-mortar'&&unitAlive(m)&&
+    (ctx.provisionalMortarShots?.[m.id]||0)>0)){
+   events.push(emit(b,who,'weapon-energy-priority',
+    'Mortaio Magmatico: Energia Fuoco già assorbita, Speciale non attivata',
+    {elementId:'plasma',cost:effectiveCost,remainingEnergy:chargedElementalEnergy(side,'plasma')}));
+   return;
+  }
   throw Error('Energia speciale insufficiente');
+ }
  side.elementalLastActivationPly=b.ply;
  const strength=elementalSpecialStrength(ability,element,enemy.ships[0].element,mother);
  const amount=ability.kind==='attack'?supportSpecialBoost(side,strength.power,b.ply):strength.power;
