@@ -8,6 +8,7 @@
 // L'arma puo' spendere Energia PRIMA che il Generatore scelga la soglia.
 // Nessuna Carte Personaggio e' coinvolta nel bilanciamento qui.
 import {ENERGY_CARD_BY_ID} from './energyCards.js';
+import {skillCount} from './supportAbilities.js';
 
 // V0: potenze e raffreddamenti DA COLLAUDARE contro madri, supporti e Armi.
 // Non inserire negli asset grafici fino alla conclusione dei test.
@@ -90,7 +91,7 @@ export function spendGeneratorPhysicalCards(side,count){
  side.discard.push(...removed);
  return Object.freeze({count:removed.length,spentIds:Object.freeze(removed)});
 }
-export function commitGeneratorFiring(side,preview){
+export function commitGeneratorFiring(side,preview,ply=0){
  if(!side||preview?.ready!==true||!['quick','heavy'].includes(preview.tier))
   return null;
  // Ricontrolla la soglia al rilascio dopo le Carte Arma: niente attacco
@@ -99,6 +100,11 @@ export function commitGeneratorFiring(side,preview){
  if(!actual.ready)return null;
  const spent=spendGeneratorPhysicalCards(side,actual.physicalCardsCost);
  if(!spent)return null;
- side.generatorReadyAtTurn=(side.turnCount||0)+actual.coolingOwnTurns+1;
- return Object.freeze({...actual,spent});
+ // La vecchia passiva 'sconto Energia' non abbassa le soglie fisiche
+ // concordate 2/4: riduce di UN turno il raffreddamento del colpo potente.
+ const discounted=!!side.newGeneratorCombat&&actual.tier==='heavy'&&
+  skillCount(side,'energy-discount',ply)>0;
+ const coolingOwnTurns=Math.max(1,actual.coolingOwnTurns-(discounted?1:0));
+ side.generatorReadyAtTurn=(side.turnCount||0)+coolingOwnTurns+1;
+ return Object.freeze({...actual,coolingOwnTurns,discounted,spent});
 }
