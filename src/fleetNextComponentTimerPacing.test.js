@@ -101,3 +101,28 @@ test('Dopo i timer la partita prosegue, ma puo terminare per HP nave madre zero'
  assert.equal(b.sides.B.ships[0].hp,0);
  assert.equal(r.events.filter(e=>e.kind==='mother-deterioration').length,2);
 });
+
+test('Il primo KO interrompe il tempo al secondo esatto, senza falsi pareggi',()=>{
+ const b=make('N00','Comune');
+ const last=Math.max(...Object.values(componentDurations('N00','Comune')));
+ const full=b.sides.A.ships[0].maxHp;
+ b.sides.B.ships[0].hp=Math.round(full*.75);
+ const result=advanceBattleComponentClock(b,last+200);
+ assert.equal(b.phase,'finished');
+ assert.equal(b.winner,'A');
+ assert.equal(b.sides.B.ships[0].hp,0);
+ assert.ok(b.sides.A.ships[0].hp>0);
+ assert.ok(result.elapsedSeconds<last+200);
+ assert.equal(result.elapsedSeconds,b.componentClockSeconds);
+ assert.equal(b.finishedAtMs,result.elapsedSeconds*1000);
+});
+test('Dieci tick singoli equivalgono a un avanzamento cumulativo',()=>{
+ const a=make('R02','Epica').sides.A,b=make('R02','Epica').sides.B;
+ const last=Math.max(...Object.values(componentDurations('R02','Epica')));
+ advanceTimedComponents(a,last);
+ advanceTimedComponents(b,last);
+ advanceTimedComponents(a,last+10);
+ for(let sec=last+1;sec<=last+10;sec++)advanceTimedComponents(b,sec);
+ assert.equal(a.ships[0].hp,b.ships[0].hp);
+ assert.equal(a.componentElapsedSeconds,b.componentElapsedSeconds);
+});
