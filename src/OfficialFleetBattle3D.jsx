@@ -580,6 +580,8 @@ export default function OfficialFleetBattle3D({
   if(!battle||battle.phase!=='playing')return 'Partita terminata';
   if(battle.turn!=='A')return 'Attendi il turno avversario';
   const player=battle.sides.A;
+  if((player.provisionalHandFrozenUntilMs||0)>Date.now())
+   return 'Mano congelata: attendi lo sblocco, il timer continua';
   if(!type||!card(type))return 'Carta non riconosciuta';
   const role=cardRole(type);
   if(role==='character'&&!chosenCards.includes(index)&&
