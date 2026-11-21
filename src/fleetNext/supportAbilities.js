@@ -32,9 +32,9 @@ export const SUPPORT_SKILL_DESCRIPTIONS=Object.freeze({
  'extra-draw':'Pesca una carta aggiuntiva a fine turno; massimo tre giocate resta invariato.',
  'sacrifice':'Se possiede almeno l’80% degli HP, puoi sacrificarla per danneggiare direttamente la madre avversaria.',
  'reactive-poison':'Quando viene colpita avvelena la madre e i supporti nemici: −0,1 HP al secondo durante il successivo turno di chi l’ha colpita.',
- 'normal-boost':'Aumenta percentualmente il danno del tiro normale della madre.',
+ 'normal-boost':'Aumenta del 25% i colpi delle Carte Arma nella nuova modalità; nelle partite storiche rafforza il tiro normale.',
  'special-boost':'Aumenta percentualmente la potenza dell’Attacco Speciale della madre.',
- 'energy-discount':'Riduce di una carica, fino a un minimo di una, il costo dell’Attacco Speciale.',
+ 'energy-discount':'Nella nuova modalità riduce di un turno il raffreddamento dell’attacco potente (minimo un turno). Nelle vecchie partite riduce il costo speciale di una carica.',
  'death-storm':'Alla distruzione scatena fulmini che eliminano le Carte Personaggio e Attacco attive sul campo nemico.',
  'death-energy':'Alla distruzione si converte in cariche per la barra Energia della nave madre.'
 });
