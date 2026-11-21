@@ -4,6 +4,7 @@
 // ma non possono essere giocati né acquistati: niente potenza inventata.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 import {pendingAdvancedWeaponRule} from './confirmedAdvancedWeaponMechanics.js';
+import {PROVISIONAL_ADVANCED_WEAPON_BY_ID} from './provisionalWeaponProfiles.js';
 const DESIGNS=[
   {
     "id": "weapon-designed-plasma-mortaio-magmatico",
@@ -408,24 +409,26 @@ const MODES=Object.freeze(['single','multi','sweep','character','energy-tier',
 export const DESIGNED_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
  const element=FLEET_ELEMENTS[s.elementId];
  if(!element||s.profile&&!MODES.includes(s.profile.pattern))throw Error('Progetto Arma non valido: '+s.id);
- const playable=!!s.profile;
- const mechanic=playable?null:pendingAdvancedWeaponRule(s.id);
- if(!playable&&!mechanic)throw Error('Unregistered pending weapon: '+s.id);
- const p=playable?Object.freeze({...s.profile}):null;
- const spec=playable?Object.freeze({type:'deployMachine',hp:1,power:0,
-  elementId:s.elementId,damageMode:'designed-shot',durationTurns:s.durationTurns||1,
-  weaponProfile:p}):Object.freeze({type:'plannedWeapon',elementId:s.elementId,
-  review:'Richiede valori di danno/costo/durata già deliberati'});
+ const provisional=PROVISIONAL_ADVANCED_WEAPON_BY_ID[s.id]||null;
+ const playable=!!s.profile||!!provisional;
+ if(!playable)throw Error('Carta Arma senza profilo: '+s.id);
+ const mechanic=pendingAdvancedWeaponRule(s.id);
+ const profile=Object.freeze({...provisional?.profile||s.profile});
+ const rarity=provisional?.rarita||s.rarita;
+ const spec=Object.freeze({type:'deployMachine',hp:1,power:0,
+  elementId:s.elementId,damageMode:'designed-shot',
+  durationTurns:profile.durationTurns||s.durationTurns||1,weaponProfile:profile});
  return Object.freeze({id:s.id,name:s.name,nome:s.name,
-  category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',kind:'support',
-  elementId:s.elementId,visualKey:element.vfx,visualSymbol:element.symbol,
-  rarita:s.rarita,rarityPending:!Object.hasOwn(RARITY_LIMIT,s.rarita),
-  playable,nativeFace:true,acquisitionPending:true,balancePending:true,
-  reviewRequired:!playable,designOnly:!playable,
-  confirmedMechanic:mechanic,missingDecisions:mechanic?.missing||Object.freeze([]),
-  maxCopiesPerDeck:RARITY_LIMIT[s.rarita]||1,
-  effectSpec:spec,effectProposed:s.description,
-  designNotes:Object.freeze({durationTurns:s.durationTurns||null,
+  category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
+  kind:'support',elementId:s.elementId,visualKey:element.vfx,
+  visualSymbol:element.symbol,rarita:rarity,
+  rarityPending:!Object.hasOwn(RARITY_LIMIT,rarity),
+  playable,nativeFace:true,acquisitionPending:false,balancePending:true,
+  provisionalBalance:!!provisional,reviewRequired:false,designOnly:false,
+  confirmedMechanic:mechanic,missingDecisions:Object.freeze([]),
+  maxCopiesPerDeck:RARITY_LIMIT[rarity]||1,
+  effectSpec:spec,effectProposed:provisional?.description||s.description,
+  designNotes:Object.freeze({durationTurns:profile.durationTurns||s.durationTurns||null,
    combo:s.combo||null,damageReference:s.damageReference||null,
    durationConflict:s.durationConflict||null,activationTimingPending:!!s.activationTimingPending,
    source:'Decisioni Carte Arma 19-20 novembre 2026'})
@@ -435,6 +438,6 @@ export const DESIGNED_WEAPON_BY_ID=Object.freeze(Object.fromEntries(
  DESIGNED_WEAPON_CARDS.map(c=>[c.id,c])));
 export const DESIGNED_WEAPONS_PLAYABLE=Object.freeze(DESIGNED_WEAPON_CARDS.filter(c=>c.playable));
 export const DESIGNED_WEAPONS_PENDING=Object.freeze(DESIGNED_WEAPON_CARDS.filter(c=>!c.playable));
-if(DESIGNED_WEAPON_CARDS.length!==35||DESIGNED_WEAPONS_PLAYABLE.length!==15||
- DESIGNED_WEAPONS_PENDING.length!==20||Object.keys(DESIGNED_WEAPON_BY_ID).length!==35)
+if(DESIGNED_WEAPON_CARDS.length!==35||DESIGNED_WEAPONS_PLAYABLE.length!==35||
+ DESIGNED_WEAPONS_PENDING.length!==0||Object.keys(DESIGNED_WEAPON_BY_ID).length!==35)
  throw Error('Registro delle armi progettate incompleto');

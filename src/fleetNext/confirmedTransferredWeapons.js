@@ -2,6 +2,8 @@
 // Nessuna rarità, immagine, costo o danno definitivo viene inventato.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 import {pendingAdvancedWeaponRule} from './confirmedAdvancedWeaponMechanics.js';
+import {PROVISIONAL_ADVANCED_WEAPON_BY_ID} from './provisionalWeaponProfiles.js';
+const WIND_DRAFT=PROVISIONAL_ADVANCED_WEAPON_BY_ID['weapon-transferred-aerial-cicloreattore'];
 
 const sirioElement=FLEET_ELEMENTS.mineral,windElement=FLEET_ELEMENTS.aerial;
 export const CONFIRMED_TRANSFER_WEAPONS=Object.freeze([
@@ -10,7 +12,7 @@ export const CONFIRMED_TRANSFER_WEAPONS=Object.freeze([
   name:'Sputacristalli di Sirio',nome:'Sputacristalli di Sirio',
   category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
   kind:'support',playable:true,nativeFace:true,rarita:'Comune',rarityPending:false,
-  acquisitionPending:true,balancePending:true,maxCopiesPerDeck:5,
+  acquisitionPending:false,balancePending:true,maxCopiesPerDeck:5,
   elementId:'mineral',visualKey:sirioElement.vfx,visualSymbol:sirioElement.symbol,
   visualBrief:'Arma trasferita da Ghiaccio a Terra. Grafica fisica definitiva da approvare.',
   effectSpec:Object.freeze({type:'deployMachine',hp:1,power:0,
@@ -22,16 +24,16 @@ export const CONFIRMED_TRANSFER_WEAPONS=Object.freeze([
   id:'weapon-transferred-aerial-cicloreattore',
   name:'Cicloreattore Grandinifero',nome:'Cicloreattore Grandinifero',
   category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
-  kind:'support',playable:false,designOnly:true,reviewRequired:true,nativeFace:true,
-  rarita:'Da definire',rarityPending:true,acquisitionPending:true,balancePending:true,
+  kind:'support',playable:true,designOnly:false,reviewRequired:false,nativeFace:true,
+  rarita:WIND_DRAFT.rarita,rarityPending:false,acquisitionPending:false,balancePending:true,
+  provisionalBalance:true,
   confirmedMechanic:pendingAdvancedWeaponRule('weapon-transferred-aerial-cicloreattore'),
-  missingDecisions:pendingAdvancedWeaponRule('weapon-transferred-aerial-cicloreattore').missing,
-  maxCopiesPerDeck:1,elementId:'aerial',
+  missingDecisions:Object.freeze([]),maxCopiesPerDeck:3,elementId:'aerial',
   visualKey:windElement.vfx,visualSymbol:windElement.symbol,
   visualBrief:'Arma trasferita da Ghiaccio a Vento; grafica finale da approvare.',
-  effectSpec:Object.freeze({type:'plannedWeapon',elementId:'aerial',
-   review:'Da chiudere danno per bersaglio e durata del congelamento mano'}),
-  effectProposed:'Arma Vento, tre turni propri, colpisce nave madre e supporti. Nella bozza precedente: danni 6/12/18 HP e blocco mano 2/4/6 secondi nei tre turni, timer attivo. Valori provvisori: resta non giocabile finché non sono approvati danni per ciascun bersaglio e congelamento.'
+  effectSpec:Object.freeze({type:'deployMachine',hp:1,power:0,elementId:'aerial',
+   damageMode:'designed-shot',durationTurns:3,weaponProfile:WIND_DRAFT.profile}),
+  effectProposed:WIND_DRAFT.description
  })
 ]);
 export const CONFIRMED_TRANSFER_WEAPON_BY_ID=Object.freeze(

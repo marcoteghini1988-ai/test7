@@ -153,7 +153,7 @@ export function validateEffectSpec(spec){
     return 'Arma a colpi autonomi non valida';
   }else if(spec.damageMode==='designed-shot'){
    if(!spec.weaponProfile||typeof spec.weaponProfile.pattern!=='string'||
-    !integer(spec.durationTurns,1,3)||spec.power!==0)
+    !integer(spec.durationTurns,1,5)||spec.power!==0)
     return 'Schema Arma progettata non valido';
   }else return 'Modalita arma non riconosciuta';
  }
