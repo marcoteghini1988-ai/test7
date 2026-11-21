@@ -63,7 +63,12 @@ export function buildCampaignNpcDeck(shipId,level,rarity,seed=1){
  const rot=Math.max(0,Math.floor(Number(seed)||0));
  const plans=rolePlan(profile.role);
  add(rotating(weaponPool,rot%Math.max(1,weaponPool.length)),plans.weapons);
- add(rotating(energyPool,rot%Math.max(1,energyPool.length)),plans.energy);
+ // Ogni elemento effettivamente sbloccato deve avere almeno una Carta Energia
+ // fisica: ruotare semplicemente il pool favoriva il primo elemento e poteva
+ // lasciare una nave con attacchi speciali inutilizzabili.
+ add(own.map(element=>energyIdForRarity(element,rarity)),own.length);
+ add(rotating(energyPool,rot%Math.max(1,energyPool.length)),
+  Math.max(0,plans.energy-own.length));
  add(rotating(systemPool,rot%Math.max(1,systemPool.length)),plans.systems);
  add(rotating(terrainPool,rot%Math.max(1,terrainPool.length)),plans.terrain);
  const more=[...rotating(energyPool,rot),...rotating(weaponPool,rot+3),
