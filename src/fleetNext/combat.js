@@ -5242,7 +5242,9 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   mergeFalcoShots(resolveDesignedWeaponShots(b,ctx,events,order),
    mergeFalcoShots(resolveApprovedBaseWeaponShots(b,ctx,events,order),
     resolveMultiWeaponShots(b,ctx,events,order))));
+ if(b.newGeneratorCombat)resolveModernGeneratorActivation(b,who,order,ctx,events);
  const ownShot=order.pass||side.ships[0].hp<=0?{damage:0,played:visiblePlayed(ctx.cards)}:
+  ctx.generatorShotDamage!=null?resolveSalvo(b,ctx,events,order):
   ctx.elementalShot?resolveSalvo(b,ctx,events,order):
   ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):
   ctx.falcoPrepared||ctx.falcoReleased||ctx.obsidianPrepared||ctx.obsidianReleased?
@@ -5258,8 +5260,20 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   ctx.prismaAttacks.length?resolvePrismaShots(b,ctx,events,order):
   ctx.linceAttacks.length?resolveLinceShots(b,ctx,events,order):
   ctx.auroraAttacks.length?resolveAuroraShots(b,ctx,events,order,ctx.auroraAttacks):
-  resolveAuroraShots(b,ctx,events,order)||resolveSalvo(b,ctx,events,order);
- const shot=mergeFalcoShots(weaponShot,mergeFalcoShots(obsidianShot,mergeFalcoShots(releasedShot,ownShot)));
+  resolveAuroraShots(b,ctx,events,order)||
+   (b.newGeneratorCombat?{damage:0,played:visiblePlayed(ctx.cards)}:
+    resolveSalvo(b,ctx,events,order));
+ // Le Armi degli alloggiamenti che prima aggiungevano solo potenza allo
+ // sparo gratuito adesso effettuano il proprio colpo autonomo.
+ const independentShot=b.newGeneratorCombat&&!order.pass&&
+  ctx.independentWeaponPower>0&&side.ships[0].hp>0?
+  resolveSalvo(b,{...ctx,power:0,generatorShotDamage:null,
+   independentWeaponPowerShot:ctx.independentWeaponPower,
+   independentWeaponShot:true,elementalShot:true},events,order):
+  {damage:0,played:[]};
+ const shot=mergeFalcoShots(weaponShot,
+  mergeFalcoShots(independentShot,mergeFalcoShots(obsidianShot,
+   mergeFalcoShots(releasedShot,ownShot))));
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  const sacrificeDamage=resolvePreparedSupportSacrifice(b,who,order.sacrificeEscortId,events);
  if(order.sacrificeEscortId)shot.sacrificeDamage=sacrificeDamage;
@@ -5344,7 +5358,11 @@ export function autoFleetTurn(b,who=b.turn){
    card(side.hand[i])?.effectSpec?.type==='energy'&&
    card(side.hand[i])?.effectSpec?.elementId===element)
    .reduce((sum,i)=>sum+card(side.hand[i]).effectSpec.charges,0)>=effectiveSupportEnergyCost(side,ability,b.ply));
- const activateElemental=!!readyElement&&b.ruleset===HP_SYNC_RULESET&&
+ const modernPhysicalCards=generatorCardCount(side)+cards.filter(i=>
+  card(side.hand[i])?.effectSpec?.type==='energy').length;
+ const modernReady=!!(b.newGeneratorCombat&&!generatorCoolingOwnTurns(side)&&modernPhysicalCards>=2);
+ const activateElemental=b.newGeneratorCombat?modernReady:
+  !!readyElement&&b.ruleset===HP_SYNC_RULESET&&
   !cards.some(i=>cardRole(side.hand[i])==='attack')&&
   side.elementalLastActivationPly!==b.ply;
  const helm=side.commander?.id==='ex-c01-01'||cards.some(i=>side.hand[i]==='ex-c01-01');
@@ -5371,8 +5389,9 @@ export function autoFleetTurn(b,who=b.turn){
   !!royalSpare.length&&(side.commander?.id==='ex-l01-01'&&side.commander.untilPly>b.ply||
   cards.some(i=>side.hand[i]==='ex-l01-01'));
  return {...target,ownPartId,cards,
-  pass:activateElemental&&ability.kind==='effect'?true:!part,
-  activateElemental,elementalElement:activateElemental?readyElement:null,
+  pass:b.newGeneratorCombat?false:activateElemental&&ability.kind==='effect'?true:!part,
+  activateElemental,elementalElement:activateElemental?
+   (b.newGeneratorCombat?side.ships[0].element:readyElement):null,
   elementalTargetId:activateElemental?enemy.escorts.find(e=>escortEnabled(enemy,e,b.ply))?.id:null,
   arkArchive:arkArchiveAi,arkArchiveDiscardId:arkArchiveAi?royalSpare[0]:null,
   arkRecoverModuleId:arkArchiveAi?arkModulesInDiscard(side)[0]:null,
