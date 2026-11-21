@@ -29,19 +29,20 @@ test('Trasferimenti Ghiaccio -> Terra e Vento registrati senza doppioni',()=>{
  assert.equal(CONFIRMED_TRANSFER_WEAPONS.length,2);
  assert.equal(SIRIO.elementId,'mineral');assert.equal(WIND.elementId,'aerial');
  assert.equal(SIRIO.rarita,'Comune');assert.equal(SIRIO.effectSpec.weaponProfile.baseDamage,10);
- assert.equal(WIND.playable,false);assert.equal(WIND.designOnly,true);
+ assert.equal(WIND.playable,true);assert.equal(WIND.designOnly,false);assert.equal(WIND.provisionalBalance,true);
  for(const c of CONFIRMED_TRANSFER_WEAPONS){
   assert.equal(card(c.id),c);assert.equal(cardRole(c.id),'support');
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.ok(NEXT_COMMON_AVAILABLE.includes(c));
  }
  assert.equal(canSelectNewGeneric(SIRIO.id),true);
- assert.equal(canSelectNewGeneric(WIND.id),false);
+ assert.equal(canSelectNewGeneric(WIND.id),true);
  const inv=createFleetInventory();
- assert.equal(buyNextCommonCard(inv,SIRIO.id).ok,false);
+ assert.equal(buyNextCommonCard({...inv,credits:10000},SIRIO.id).ok,true);
+ assert.equal(buyNextCommonCard({...inv,credits:10000},WIND.id).ok,true);
  inv.owned[SIRIO.id]=1;inv.owned[WIND.id]=1;
  const deck=buildNextBaseDeck(normalizeFleetInventory(inv),'C01',20,[SIRIO.id,WIND.id]);
- assert.deepEqual(deck.baseDeck,[SIRIO.id]);
+ assert.deepEqual(deck.baseDeck,[SIRIO.id,WIND.id]);
 });
 test('Sputacristalli: 10 HP e blocco dello slot con Torretta montata',()=>{
  let b=play(make(),'A').battle;
@@ -76,7 +77,9 @@ test('Se il proiettile è annullato dalla Difesa, lo slot non congela',()=>{
 });
 test('Perforatore Metallo mantiene la durata approvata di tre turni',()=>{
  const p=card('weapon-designed-metallic-perforatore-cascata');
- assert.equal(p.designOnly,true);
+ assert.equal(p.designOnly,false);
+ assert.equal(p.playable,true);
+ assert.equal(p.provisionalBalance,true);
  assert.equal(p.designNotes.durationTurns,3);
  assert.equal(p.designNotes.durationConflict,null);
 });
