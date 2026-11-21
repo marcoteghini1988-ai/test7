@@ -2,6 +2,21 @@
 
 **Repository unico:** [marcoteghini1988-ai/test7](https://github.com/marcoteghini1988-ai/test7), ramo `main`. Non creare copie, altri repository, ingressi paralleli o schermate di prova.
 
+## Decisione operativa corrente — 21 novembre 2026
+
+Tutte le Carte Arma già progettate vanno inserite e rese giocabili con valori
+provvisori. Il bilanciamento definitivo si farà **dopo aver deciso tutte le carte
+e tutti i criteri**. La mancanza di HP, costi o rarità definitivi non deve più
+bloccare l'integrazione: usare i parametri provvisori espliciti del catalogo,
+marcati `balancePending:true`, rispettando le meccaniche già concordate.
+
+Stato attuale: **73 Carte Arma giocabili**, comprese le 21 prima escluse.
+Acquisto con i prezzi provvisori per rarità già usati dal progetto, poi normale
+selezione nel mazzo. [Parametri e scelte provvisorie](docs/VALORI_PROVVISORI_ARMI_2026-11-21.md).
+
+La plancia attuale è `OfficialFleetBattle3D.jsx`, con mano di sette carte e
+slot Arma dedicati. Le sezioni storiche seguenti descrivono anche versioni precedenti.
+
 ## Aprire il gioco
 
 1. Apri `test7` in StackBlitz oppure scarica il repository GitHub completo.

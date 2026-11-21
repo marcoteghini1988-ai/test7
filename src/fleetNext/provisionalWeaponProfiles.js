@@ -1,5 +1,7 @@
 // Eclissi Stellare — statistiche temporanee approvate per il collaudo delle 21 Armi.
 // I valori non sono il bilanciamento finale. NON creare carte aggiuntive.
+export const WEAPON_BALANCE_POLICY=Object.freeze({revision:'provisional-2026-11-21',
+ status:'provisional',finalBalanceAfter:'all-cards-and-criteria-defined'});
 const RAW=[
   {
     "id": "weapon-designed-plasma-mortaio-magmatico",
@@ -10,11 +12,11 @@ const RAW=[
       "baseDamage": 20,
       "extraDamage": 8,
       "ammoMode": "per-charge",
-      "maxExtraShots": 1024,
+      "maxExtraShots": 2,
       "durationTurns": 3,
       "provisional": true
     },
-    "description": "Per 3 tuoi turni spara 20 HP. Ogni carica fisica Energia Fuoco disponibile produce un colpo extra da 8 HP e viene consumata; le Energie di altri elementi restano nella pila."
+    "description": "Per 3 tuoi turni spara 20 HP, più fino a 2 colpi extra da 8 HP. Ogni colpo extra consuma una carica fisica Energia Fuoco; le cariche rimanenti e gli altri elementi restano nella pila."
   },
   {
     "id": "weapon-designed-plasma-inceneritore-rotante",
@@ -100,7 +102,7 @@ const RAW=[
       "durationTurns": 1,
       "provisional": true
     },
-    "description": "Lancia due colpi Ghiaccio autonomi da 13 e 17 HP; preferisce due bersagli diversi, ognuno con una verifica difensiva."
+    "description": "Unisce due impulsi Ghiaccio da 13 e 17 HP in un singolo colpo da 30 HP sul bersaglio scelto, con una verifica difensiva."
   },
   {
     "id": "weapon-designed-refrigerant-torretta-crioguidata",
@@ -272,7 +274,7 @@ const RAW=[
       "durationTurns": 1,
       "provisional": true
     },
-    "description": "Un colpo Fulmine da 24 HP; sale a 38 HP se è attivo un Personaggio alleato."
+    "description": "Richiede un Personaggio alleato attivo: un colpo Fulmine da 24 HP più 14 HP di bonus Personaggio, per 38 HP nominali."
   },
   {
     "id": "weapon-designed-ionic-condensatore-tempesta",
@@ -286,7 +288,7 @@ const RAW=[
       "energyCost": 1,
       "provisional": true
     },
-    "description": "Per 3 tuoi turni consuma 1 carica Energia Fulmine a turno e spara 18 HP +8 HP per ogni supporto alleato operativo, senza sacrificare HP."
+    "description": "Per 3 tuoi turni, se giochi una nuova Energia Fulmine ne consuma 1 carica e spara 18 HP +8 HP per ogni supporto alleato vivo, senza sacrificare HP."
   },
   {
     "id": "weapon-transferred-aerial-cicloreattore",

@@ -319,6 +319,14 @@
 .es-math-scope .f3d-approved-layout .live-special-hand {
  top:var(--hand-top);left:17px;right:17px;gap:1.5px;
 }
+.es-math-scope .f3d-approved-layout .live-special-hand[data-frozen] .live-hand-special {
+ filter:saturate(.45) brightness(.8);box-shadow:0 0 6px #85deff;
+}
+.es-math-scope .f3d-approved-layout .f3d-hand-freeze {
+ position:absolute;left:50%;top:-24px;transform:translateX(-50%);z-index:30;
+ padding:3px 9px;border:1px solid #a1e6ff;border-radius:4px;
+ background:#08283cef;color:#d9f6ff;font-size:10px;font-weight:800;white-space:nowrap;
+}
 .es-math-scope .f3d-approved-layout .live-hand-special {
  width:var(--hand-card-width);flex:0 0 var(--hand-card-width);
  height:var(--hand-card-height);aspect-ratio:2/3;

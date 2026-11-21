@@ -483,7 +483,7 @@ function availableWeaponSlots(side,ply=0){
  return [0,1].filter(slot=>!weaponSlotLocked(side,slot,ply)&&
   !(side.machines||[]).some(m=>unitAlive(m)&&m.slot===slot));
 }
-export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode}={}){
+export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainCode,selectedCardIds=[]}={}){
  if(!def||!side)return 'Carta non disponibile';
  if(def.playable===false)return def.designOnly?
   'Carta Arma progettata: danni, costo o sequenza non ancora determinati':
@@ -605,6 +605,10 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(s.type==='deployMachine'){
   const ply=battle?.ply??0,pattern=s.weaponProfile?.pattern;
+  if(pattern==='command-lance'&&!(side.commander?.untilPly>ply&&
+    operational(side.ships[0],characterSystem(side)))&&
+    !selectedCardIds.some(id=>isCharacterCard(card(id))))
+   return 'Lancia del Comando Ionico richiede un Personaggio attivo';
   if(pattern==='thermal-coupler'&&!(side.machines||[]).some(m=>
    m.weaponProfile?.pattern==='binary-overload'&&unitAlive(m)&&unitEnabled(m,ply)))
    return 'Serve Sistema Binario a Sovraccarico già installato';
@@ -613,6 +617,12 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
   if(pattern==='alloy-collision'&&(side.provisionalWeaponStatus?.grapple?.ply!==ply-2||
    (side.provisionalWeaponStatus?.grapple?.ids||[]).length<2))
    return 'Collassatore richiede due bersagli delle Ganasce nel turno precedente';
+  if(pattern==='alloy-collision'&&battle){
+   const enemy=battle.sides.A===side?battle.sides.B:battle.sides.A;
+   const liveIds=[...enemy.escorts.filter(unitAlive),...enemy.ships[0].parts.filter(unitAlive)].map(u=>u.id);
+   if(side.provisionalWeaponStatus.grapple.ids.filter(id=>liveIds.includes(id)).length<2)
+    return 'Collassatore richiede entrambe le navi agganciate ancora vive';
+  }
   const upgrade=sequenceUpgradeTarget(side,def,ply);
   if(upgrade&&weaponSlotLocked(side,upgrade.slot,ply))
    return 'Alloggiamenti Arma temporaneamente congelati';
@@ -841,7 +851,8 @@ export function validateFleetTurn(b,who,order){
   !side.hand.some((id,i)=>!indices.includes(i)&&card(id)?.shipId==='N00'))
   return 'Adattamento richiede un’altra esclusiva non giocata nello stesso turno';
  for(const c of chosen){
-  const reason=effectUnavailableReason(c,side,b,{ownPartId:order?.ownPartId,terrainCode});
+  const reason=effectUnavailableReason(c,side,b,{ownPartId:order?.ownPartId,terrainCode,
+   selectedCardIds:chosen.map(c=>c.id)});
   if(reason)return (c.nome||c.name)+': '+reason;
  }
  // Le Scariche multiple calcolano il 20% in successione sugli HP aggiornati.
@@ -2461,13 +2472,13 @@ function royalDistributeDamage(b,ctx,events,defender,kind,unit,amount){
  amount=adjustedElementalHit(b,ctx,events,defender,kind,unit,amount);
  if(amount<=0)return 0;
  if(kind!=='escort'||amount<=0||defender.ships[0].id!=='L01')
-  return damageFleetUnit(defender,kind,unit,amount,b.ply);
+  return damageFleetUnit(defender,kind,unit,amount,b.ply,ctx.trackWeaponOverflow?ctx:null);
  const d=defender.defenses.find(d=>d.id==='nx-l01-08'&&!d.hidden&&
   d.untilPly>b.ply&&d.royalBastionEscortId===unit.id);
  const supports=royalSupports(defender,b.ply);
  const second=d&&supports.find(e=>e.id!==unit.id);
  if(!second||!supports.some(e=>e.id===unit.id))
-  return damageFleetUnit(defender,kind,unit,amount,b.ply);
+  return damageFleetUnit(defender,kind,unit,amount,b.ply,ctx.trackWeaponOverflow?ctx:null);
  discardDefense(defender,d.source);
  const firstAmount=Math.ceil(amount/2),secondAmount=Math.floor(amount/2);
  const first=damageFleetUnit(defender,kind,unit,firstAmount,b.ply);
@@ -3047,6 +3058,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     comboBonus:s.comboBonus||null,shotCount:s.shotCount||1,
     extraDamage:s.extraDamage||0,maxExtraShots:s.maxExtraShots||0,
     weaponProfile:s.weaponProfile||null,
+    observedHpLoss:side.weaponObservedHpLoss||0,
     untilPly:modern?b.ply+2*duration:null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
@@ -3953,12 +3965,17 @@ function blockHit(b,defender,targetKind,target,ctx,events){
  }
  return false;
 }
-function damageFleetUnit(side,kind,unit,amount,ply){
+function damageFleetUnit(side,kind,unit,amount,ply,overflow=null){
+ const fleetHp=()=>Math.max(0,side.ships[0].hp)+(side.escorts||[])
+  .reduce((n,e)=>n+Math.max(0,e.hp||0),0);
+ const before=fleetHp();
+ const observed=result=>{side.weaponObservedHpLoss=(side.weaponObservedHpLoss||0)+
+  Math.max(0,before-fleetHp());return result;};
  if(side.ruleset===HP_SYNC_RULESET){
   const mother=side.ships[0];
   if(kind==='part'){
    const loss=limitedMotherDamage(mother,amount,ply);
-   mother.hp-=loss;return loss;
+   mother.hp-=loss;return observed(loss);
   }
   if(kind==='escort'){
    const split=splitSynchronizedDamage(amount,commandPenalty(side,ply));
@@ -3971,6 +3988,7 @@ function damageFleetUnit(side,kind,unit,amount,ply){
   unit.hp>0&&!unit.destroyed&&unit.lastCappedPly!==ply){
   unit.lastCappedPly=ply;amount=Math.min(1,amount);
  }
+ if(overflow&&kind==='escort')overflow.weaponExcess=Math.max(0,amount-unit.hp);
  const damage=applyDamage(unit,amount);
  if(kind==='module'&&unit.destroyed&&installedModule(side,unit.slot)?.id===unit.id)
   removeModule(side,unit.slot);
@@ -3978,7 +3996,7 @@ function damageFleetUnit(side,kind,unit,amount,ply){
   if(unit.sourceCardId)side.discard.push(unit.sourceCardId);
   unit.cardDiscarded=true;
  }
- enforceDestroyedSystems(side,ply);return damage;
+ enforceDestroyedSystems(side,ply);return observed(damage);
 }
 function triggerReactions(b,attackerWho,damage,events){
  if(damage<=0)return;
@@ -4129,6 +4147,7 @@ function onLinceDamage(b,ctx,events,hit,order={},didBypass=false){
 }
 function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce=0){
  const enemy=b.sides[other(ctx.who)];
+ if(ctx.trackWeaponOverflow)ctx.weaponExcess=0;
  if(!target||!unitAlive(target.unit))return {damage:0,target};
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
   return {damage:0,target};
@@ -4146,6 +4165,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  const actual=royalDistributeDamage(b,ctx,events,enemy,finalTarget.kind,finalTarget.unit,
   sharkCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,
    mantaCapDamage(b,enemy,finalTarget.kind,finalTarget.unit,amount,events),events));
+ const excessDamage=ctx.trackWeaponOverflow?ctx.weaponExcess||0:0;
  if(actual){
   events.push(emit(b,ctx.who,'impact',(finalTarget.unit.name||VITAL_LABELS[finalTarget.unit.id]||'Bersaglio')+' −'+actual,{
    cardId,targetKind:finalTarget.kind,targetId:finalTarget.unit.id,
@@ -4167,7 +4187,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
   chargeMantaOnDamage(b,ctx.who,actual,events);
   triggerReactions(b,ctx.who,actual,events);
  }
- return {damage:actual,target:finalTarget};
+ return {damage:actual,target:finalTarget,excessDamage};
 }
 function resolveLinceShots(b,ctx,events,order){
  startNebulaVolley(ctx);
@@ -5151,7 +5171,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   mergeFalcoShots(resolveDesignedWeaponShots(b,ctx,events,order),
    mergeFalcoShots(resolveApprovedBaseWeaponShots(b,ctx,events,order),
     resolveMultiWeaponShots(b,ctx,events,order))));
- const ownShot=order.pass?{damage:0,played:visiblePlayed(ctx.cards)}:
+ const ownShot=order.pass||side.ships[0].hp<=0?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.elementalShot?resolveSalvo(b,ctx,events,order):
   ctx.falcoCalibration?falcoCalibrationShot(b,ctx,events,order):
   ctx.falcoPrepared||ctx.falcoReleased||ctx.obsidianPrepared||ctx.obsidianReleased?

@@ -10,11 +10,9 @@ const activeMachine=(m,ply,h)=>m.damageMode==='designed-shot'&&
  !h.weaponSlotLocked(m.ownerSide||h.side,m.slot,ply)&&
  weaponFiresOnOwnTurn(m.deployedPly,ply,m.weaponProfile.durationTurns||1);
 const physical=unit=>!!unit&&unit.hp>0&&!unit.destroyed;
-const fleetDeficit=side=>Math.max(0,(side.ships?.[0]?.maxHp||0)-(side.ships?.[0]?.hp||0))+
- (side.escorts||[]).reduce((n,e)=>n+Math.max(0,(e.maxHp||0)-(e.hp||0)),0);
 const money=(percent,maxHp)=>Math.max(1,Math.round(maxHp*percent/100));
 function spendOwnHp(side,percent,{allAllies=false}={}){
- const ships=allAllies?(side.escorts||[]).filter(physical):[side.ships[0]];
+ const ships=allAllies?[side.ships[0],...(side.escorts||[]).filter(physical)]:[side.ships[0]];
  const entries=[];
  for(const unit of ships){
   const amount=Math.min(unit.hp,money(percent,unit.maxHp));
@@ -82,7 +80,15 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   return mother();
  };
  const opposite=(except)=>every().find(t=>t.unit.id!==except)||null;
- const liveEnergy=(element)=>Math.max(0,Number(side.elementalCharges?.[element]||0));
+ const freshIonic=ctx.cards.reduce((n,id)=>{
+  const spec=h.card(id)?.effectSpec;
+  return n+(spec?.type==='energy'&&spec.elementId==='ionic'?spec.charges||1:0);
+ },0);
+ const spendFreshIonic=cost=>{
+  if(freshIonic-(ctx.provisionalFreshEnergySpent||0)<cost||
+   !h.spendElementalEnergy(side,'ionic',cost))return false;
+  ctx.provisionalFreshEnergySpent=(ctx.provisionalFreshEnergySpent||0)+cost;return true;
+ };
  const hitOnce=(m,hit,n,impacts)=>{
   const target=hit.target||ordinary();
   if(!target||target.kind==='escort'&&!physical(target.unit))return 0;
@@ -91,11 +97,13 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const old=ctx.attackElement,priorPiercing=ctx.iceNeedlePiercing||false;
   ctx.attackElement=m.weaponElementId;
   if(hit.ignoreOrdinaryDefenses)ctx.iceNeedlePiercing=true;
-  const beforeHp=target.unit.hp;
+  const beforeHp=target.unit.hp,previousOverflow=ctx.trackWeaponOverflow;
+  ctx.trackWeaponOverflow=m.weaponProfile?.pattern==='cascade-piercer';
   const actual=side.fireBlocked||side.fireDisabledUntil>b.ply||power<=0?
    {damage:0,target}:h.linceHit(b,ctx,events,target,power,m.sourceCardId,order,
     !!hit.ignoreCover,hit.ignoreOrdinaryDefenses?99:0);
   ctx.iceNeedlePiercing=priorPiercing;ctx.attackElement=old;
+  ctx.trackWeaponOverflow=previousOverflow;
   const kind=actual.target?.kind||target.kind,unit=actual.target?.unit||target.unit;
   const damage=actual.damage||0;
   if(damage){
@@ -105,12 +113,13 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   }
   impacts.push({index:n+1,nominalDamage:nominal,actualDamage:damage,
    targetKind:kind,targetId:unit?.id||null});
-  return {damage,target:actual.target||target,beforeHp};
+  return {damage,target:actual.target||target,beforeHp,excessDamage:actual.excessDamage||0};
  };
  const event=(m,kind,label,data={})=>events.push(h.emit(b,ctx.who,kind,label,{
   cardId:m.sourceCardId,machineId:m.id,machineSlot:m.slot,
   elementId:m.weaponElementId,...data}));
  for(const m of ready){
+  if(side.ships[0].hp<=0||enemy.ships[0].hp<=0)break;
   const p=m.weaponProfile,pattern=p.pattern,stage=ownStage(m,b.ply),hits=[];
   if(!Number.isInteger(stage)||stage<1)continue;
   const comboSide=side.provisionalWeaponStatus??={};
@@ -151,9 +160,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    if(ice&&live.length===2&&mother())planned.push({target:mother(),
     base:power*2,ignoreCover:true,ignoreOrdinaryDefenses:true});
   }else if(pattern==='boreal-binary'){
-   const first=ordinary(),second=opposite(first?.unit?.id);
-   planned=[{target:first,base:p.baseDamage},...(second?[{target:second,base:p.secondDamage,
-    ignoreCover:second.kind==='part'}]:[{base:p.secondDamage}])];
+   planned=[{target:ordinary(),base:p.baseDamage+p.secondDamage}];
   }else if(pattern==='character-turret'){
    const first=ordinary(),extra=side.commander?.id&&side.commander.untilPly>b.ply;
    planned=[{target:first,base:p.baseDamage}];
@@ -179,10 +186,9 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    const target=stage>1?opposite(m.previousTargetId)||ordinary():ordinary();
    planned=[{target,base:p.baseDamage}];
   }else if(pattern==='thermal-reclaimer'){
-   const deficit=fleetDeficit(side);
-   if(m.baselineDeficit==null)m.baselineDeficit=deficit;
+   const lostHp=Math.max(0,(side.weaponObservedHpLoss||0)-(m.observedHpLoss||0));
    planned=[{base:p.baseDamage+Math.min(p.maxExtraDamage,
-    Math.round(Math.max(0,deficit-m.baselineDeficit)*p.damageConversionPercent/100))}];
+    Math.round(lostHp*p.damageConversionPercent/100))}];
   }else if(pattern==='metal-base-shot')planned=[{base:p.baseDamage}];
   else if(pattern==='magnetic-grapple'){
    if(stage!==1)continue; // Mantieni i bersagli delle Ganasce per il Collassatore.
@@ -193,17 +199,17 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   }else if(pattern==='alloy-collision'){
    const grapple=comboSide.grapple;
    if(!grapple||grapple.ply!==b.ply-2)continue;
-   planned=(grapple.ids||[]).map(byId).filter(Boolean).map(target=>({target,
+   const live=(grapple.ids||[]).map(byId).filter(Boolean);
+   if(live.length===2)planned=live.map(target=>({target,
     base:p.baseDamage,ignoreCover:target.kind==='part'}));
    comboSide.grapple=null;
   }else if(pattern==='cascade-piercer')planned=[{base:p.baseDamage}];
   else if(pattern==='growing-thunder-core'){
    if(stage>1&&!m.chargeBroken){
-    const fresh=ctx.cards.some(id=>h.card(id)?.effectSpec?.type==='energy'&&
-     h.card(id)?.effectSpec?.elementId==='ionic');
-    if(!fresh||!h.spendElementalEnergy(side,'ionic',p.freshEnergyCost))
+    if(m.lastChargePly!==b.ply-2||!spendFreshIonic(p.freshEnergyCost))
      m.chargeBroken=true;
    }
+   m.lastChargePly=b.ply;
    planned=[{base:m.chargeBroken?p.damageStages[0]:p.damageStages[stage-1]}];
   }else if(pattern==='ion-probe')planned=[{base:p.baseDamage}];
   else if(pattern==='thunder-hammer'){
@@ -213,10 +219,12 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    if(signal&&signal.expiresPly>b.ply&&target?.unit?.id===signal.id)
     planned.push({target,base:p.comboBonusDamage});
    comboSide.ionProbe=null;
-  }else if(pattern==='command-lance')planned=[{base:p.baseDamage+
-   (side.commander?.id&&side.commander.untilPly>b.ply?p.characterBonusDamage:0)}];
+  }else if(pattern==='command-lance'){
+   if(side.commander?.id&&side.commander.untilPly>b.ply)
+    planned=[{base:p.baseDamage+p.characterBonusDamage}];
+  }
   else if(pattern==='storm-capacitor'){
-   if(!h.spendElementalEnergy(side,'ionic',p.energyCost)){
+   if(!spendFreshIonic(p.energyCost)){
     event(m,'weapon-no-energy',m.name+' · Energia Fulmine insufficiente',{stage});
    }else planned=[{base:p.baseDamage+(side.escorts||[]).filter(physical).length*
     p.perSupportDamage}];
@@ -242,16 +250,15 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    }
    if(pattern==='thermal-coupler'){
     const add=money(p.healOnHitPercent,side.ships[0].maxHp);
-    const actual=Math.min(add,side.ships[0].maxHp-side.ships[0].hp);
+    const actual=Math.min(add,r.damage,side.ships[0].maxHp-side.ships[0].hp);
     side.ships[0].hp+=actual;
     if(actual)event(m,'weapon-heal',m.name+' · recupera '+actual+' HP',{actualHealing:actual});
    }
-   if(pattern==='cascade-piercer'&&r.target.unit.hp<=0&&
-    instruction.base>r.beforeHp){
-    const next=opposite(r.target.unit.id);
+   if(pattern==='cascade-piercer'&&r.target.kind==='escort'&&r.target.unit.hp<=0&&r.excessDamage>0){
+    const used=new Set(hits.map(x=>x.targetKind+':'+x.targetId));
+    const next=every().find(t=>!used.has(t.kind+':'+t.unit.id));
     if(next&&h.spendElementalEnergy(side,'metallic',p.energyTransferCost)){
-     hitOnce(m,{target:next,base:instruction.base-r.beforeHp,
-      ignoreCover:next.kind==='part'},n+1,hits);
+     planned.push({target:next,base:r.excessDamage,ignoreCover:next.kind==='part'});
      event(m,'weapon-cascade',m.name+' · trasferimento del danno eccedente',
       {energySpent:p.energyTransferCost});
     }

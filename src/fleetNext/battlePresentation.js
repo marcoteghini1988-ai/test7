@@ -72,6 +72,12 @@ function designedWeaponPreview(side,machine,ply){
  const profile=machine.weaponProfile;
  if(!profile)return null;
  if(profile.pattern==='percent')return {damagePercent:profile.damagePercent};
+ const stage=Math.max(0,Math.floor((ply-machine.deployedPly)/2));
+ if(profile.pattern==='binary-overload')return stage===1||stage===3?
+  {damageFormula:'Costo: '+(stage===1?profile.motherCostPercent:profile.allyCostPercent)+'% HP alleati'}:
+  {damagePercent:profile.damageStages[stage]};
+ if(profile.pattern==='low-tide')return {damageFormula:profile.baseDamage+' HP + '+profile.damagePerDiscard+' HP × scarti dei due giocatori'};
+ if(profile.pattern==='high-tide')return {damageFormula:'Potenza di Bassa Marea ×'+profile.comboMultiplier+' (massimo '+profile.maxDamage+' HP)'};
  const pile=(side.energyPile||[]).filter(entry=>{
   const id=typeof entry==='string'?entry:entry?.id;
   return card(id)?.effectSpec?.type==='energy'&&
@@ -79,6 +85,16 @@ function designedWeaponPreview(side,machine,ply){
  });
  const tier=Math.min(2,pile.length);
  let nominal=profile.baseDamage??profile.motherDamage??profile.damages?.[0]??null;
+ if(profile.pattern==='ice-needle')nominal=profile.supportDamage;
+ if(profile.pattern==='boreal-binary')nominal=profile.baseDamage+profile.secondDamage;
+ if(profile.pattern==='incinerator')nominal=stage?profile.secondDamage:profile.baseDamage;
+ if(profile.pattern==='wind-cycloreactor')nominal=profile.damageStages[stage];
+ if(profile.pattern==='thermal-reclaimer')nominal=profile.baseDamage+Math.min(profile.maxExtraDamage,
+  Math.round(Math.max(0,(side.weaponObservedHpLoss||0)-(machine.observedHpLoss||0))*profile.damageConversionPercent/100));
+ if(profile.pattern==='growing-thunder-core')nominal=machine.chargeBroken?profile.baseDamage:
+  profile.damageStages[stage]??profile.baseDamage;
+ if(profile.pattern==='storm-capacitor')nominal=profile.baseDamage+
+  (side.escorts||[]).filter(e=>e.hp>0&&!e.destroyed).length*profile.perSupportDamage;
  if(['energy-tier','energy-fan'].includes(profile.pattern))nominal=profile.damages?.[tier];
  if(profile.pattern==='character-health')nominal=profile.damages?.[0];
  const commander=card(side.commander?.id);
@@ -87,6 +103,7 @@ function designedWeaponPreview(side,machine,ply){
    (profile.characterName||'').toLowerCase());
  if(profile.pattern==='character'&&match&&nominal!=null)
   nominal=Math.round(nominal*(1+profile.bonusPercent/100));
+ if(profile.pattern==='command-lance'&&match)nominal+=profile.characterBonusDamage;
  if(profile.pattern==='character-health'&&match){
   const mother=side.ships?.[0],lost=mother?.maxHp>0?
    100*(1-mother.hp/mother.maxHp):0;

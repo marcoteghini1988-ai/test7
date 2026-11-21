@@ -14,6 +14,7 @@ import {DESIGNED_WEAPON_BY_ID} from './designedWeaponCards.js';
 import {CONFIRMED_TRANSFER_WEAPON_BY_ID} from './confirmedTransferredWeapons.js';
 export {DESIGNED_WEAPON_CARDS,DESIGNED_WEAPON_BY_ID,DESIGNED_WEAPONS_PLAYABLE,DESIGNED_WEAPONS_PENDING} from './designedWeaponCards.js';
 export {PENDING_ADVANCED_WEAPON_RULES,PENDING_ADVANCED_WEAPON_COUNT,pendingWeaponReason} from './confirmedAdvancedWeaponMechanics.js';
+export {WEAPON_BALANCE_POLICY,PROVISIONAL_ADVANCED_WEAPONS} from './provisionalWeaponProfiles.js';
 export {CONFIRMED_TRANSFER_WEAPONS,CONFIRMED_TRANSFER_WEAPON_BY_ID} from './confirmedTransferredWeapons.js';
 export {MULTI_WEAPON_CARDS,MULTI_WEAPON_BY_ID} from './multiWeaponCards.js';
 export {CONFIRMED_WEAPON_CARDS,CONFIRMED_WEAPON_BY_ID} from './confirmedWeaponCards.js';

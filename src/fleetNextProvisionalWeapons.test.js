@@ -71,7 +71,8 @@ test('Tutte le 21 Armi con parametri provvisori eseguono un effetto nella battag
   if(d.profile.pattern==='high-tide')s.provisionalWeaponStatus={lowTide:{ply:-2,power:24}};
   if(d.profile.pattern==='alloy-collision')
    s.provisionalWeaponStatus={grapple:{ply:-2,ids:e.escorts.slice(0,2).map(x=>x.id)}};
-  const r=play(b,who,[d.id]);
+  if(d.profile.pattern==='command-lance')s.commander={id:'gen-216',untilPly:100,source:'fixture'};
+  const r=play(b,who,d.profile.pattern==='storm-capacitor'?['energy-ionic',d.id]:[d.id]);
   const ev=shots(r,d.id);
   assert.equal(ev.length,1,d.name);
   assert.ok(ev[0].pattern===d.profile.pattern,d.name);

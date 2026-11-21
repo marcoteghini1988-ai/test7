@@ -553,7 +553,7 @@ export default function OfficialFleetBattle3D({
    if(result.ok){
     showResult(result);
    }else setMessage(result.reason);
-  },680);
+  },Math.max(680,(battle.sides.B.provisionalHandFrozenUntilMs||0)-Date.now()+30));
   return ()=>window.clearTimeout(id);
  },[battle?.ply,battle?.turn,battle?.phase]);
  useEffect(()=>{
@@ -632,7 +632,8 @@ export default function OfficialFleetBattle3D({
   if(role==='character'&&!chosenCards.includes(index)&&
    player.commander?.untilPly>battle.ply)return 'Personaggio già attivo';
   const terrainCode=chosenCards.map(i=>card(player.hand[i])?.effectSpec).find(s=>s?.type==='terrain')?.code;
-  const effectReason=effectUnavailableReason(card(type),player,battle,{terrainCode});
+  const effectReason=effectUnavailableReason(card(type),player,battle,{terrainCode,
+   selectedCardIds:chosenCards.map(i=>player.hand[i])});
   if(effectReason)return effectReason;
   if(!chosenCards.includes(index)){
    const due=player.falco?.pending?.releasePly<=battle.ply;
@@ -1128,11 +1129,14 @@ export default function OfficialFleetBattle3D({
      </button>;
     })}
    </div>
-   <div className="live-special-hand" role="group" aria-label="Sette carte del mazzo">
+   <div className="live-special-hand" role="group" aria-label="Sette carte del mazzo"
+    data-frozen={(player.provisionalHandFrozenUntilMs||0)>now||undefined}>
+    {(player.provisionalHandFrozenUntilMs||0)>now&&<span className="f3d-hand-freeze" role="status">
+     Mano congelata · {Math.ceil((player.provisionalHandFrozenUntilMs-now)/1000)} s</span>}
     {player.hand.map((type,index,hand)=><OriginalSpecialHandCard
      key={battle.round+'-'+index+'-'+type} type={type} index={index}
      offset={index-(hand.length-1)/2}
-     selected={chosenCards.includes(index)} disabled={ended||!myTurn||!!targetChoice}
+     selected={chosenCards.includes(index)} disabled={ended||!myTurn||!!targetChoice||(player.provisionalHandFrozenUntilMs||0)>now}
      grade={player.exclusiveUpgrades?.[type]||1} motherLevel={player.ships[0].level}
      unavailableReason={unavailable(type,index)}
      onClick={()=>chooseCard(index)}/>)}
@@ -1974,6 +1978,8 @@ export default function OfficialFleetBattle3D({
      {player.ruleset===HP_SYNC_RULESET?<>
      <p>{describeEffect(card(help.machine.sourceCardId))}</p>
      {help.machine.nominalDamage!=null&&<p>Danno nominale attuale: {help.machine.nominalDamage} HP (prima di difese e modificatori).</p>}
+     {help.machine.damagePercent!=null&&<p>Danno nominale: {help.machine.damagePercent}% degli HP massimi del bersaglio.</p>}
+     {help.machine.damageFormula&&<p>{help.machine.damageFormula}</p>}
      <small>Arma temporanea · non intercetta colpi e non è bersagliabile · slot {help.machine.slot+1}</small>
     </>:<>
      <p>Protegge la madre finché è operativa. Potenza di supporto: {help.machine.power||0}.</p>
