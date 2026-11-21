@@ -2,6 +2,7 @@
 // Non importa la proposta storica da 100: contiene Carte Attacco non approvate.
 // Gli effetti senza danno/costo/timing definito sono visibili come PROGETTO,
 // ma non possono essere giocati né acquistati: niente potenza inventata.
+import {calibratedWeaponCard} from './weaponBalanceCalibration.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 import {pendingAdvancedWeaponRule} from './confirmedAdvancedWeaponMechanics.js';
 import {PROVISIONAL_ADVANCED_WEAPON_BY_ID} from './provisionalWeaponProfiles.js';
@@ -430,7 +431,7 @@ export const DESIGNED_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
  const spec=Object.freeze({type:'deployMachine',hp:1,power:0,
   elementId:s.elementId,damageMode:'designed-shot',
   durationTurns:profile.durationTurns||s.durationTurns||1,weaponProfile:profile});
- return Object.freeze({id:s.id,name:s.name,nome:s.name,
+ return calibratedWeaponCard(Object.freeze({id:s.id,name:s.name,nome:s.name,
   category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
   kind:'support',elementId:s.elementId,visualKey:element.vfx,
   visualSymbol:element.symbol,rarita:rarity,
@@ -445,7 +446,7 @@ export const DESIGNED_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
    combo:s.combo||null,damageReference:s.damageReference||null,
    durationConflict:s.durationConflict||null,activationTimingPending:!!s.activationTimingPending,
    source:'Decisioni Carte Arma 19-20 novembre 2026'})
- });
+ }));
 }));
 export const DESIGNED_WEAPON_BY_ID=Object.freeze(Object.fromEntries(
  DESIGNED_WEAPON_CARDS.map(c=>[c.id,c])));
