@@ -321,7 +321,7 @@ function FleetCommandConsole({unit,nickname,onInspect,onLeave,onPass,passDisable
   <button type="button" className="live-abandon" onClick={onLeave} disabled={ended}
    aria-label="Abbandona la battaglia"><span className="f3d-abandon-label">ABBANDONA</span></button>
   <FleetVitalStrip side="A" unit={unit} onInspect={onInspect} consoleMode/>
-  <button type="button" className="f3d-approved-pass" aria-label="ESEGUI il turno" disabled={passDisabled} onClick={onPass}>
+  <button type="button" className="f3d-approved-pass" aria-label="ESEGUI" disabled={passDisabled} onClick={onPass}>
    <svg className="f3d-pass-chevron" viewBox="0 0 20 22" aria-hidden="true" focusable="false">
     <path d="M2 3L8 11L2 19M10 3L16 11L10 19" fill="none" stroke="currentColor" strokeWidth="3"/>
    </svg><span className="f3d-pass-label">ESEGUI</span>
