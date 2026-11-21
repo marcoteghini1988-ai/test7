@@ -1,6 +1,6 @@
 // Eclissi Stellare — statistiche temporanee approvate per il collaudo delle 21 Armi.
 // I valori non sono il bilanciamento finale. NON creare carte aggiuntive.
-export const WEAPON_BALANCE_POLICY=Object.freeze({revision:'provisional-2026-11-21',
+export const WEAPON_BALANCE_POLICY=Object.freeze({revision:'provisional-2026-11-21-balance-v2',
  status:'provisional',finalBalanceAfter:'all-cards-and-criteria-defined'});
 const RAW=[
   {
