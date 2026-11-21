@@ -227,8 +227,10 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
     }
    if(calibration.threeHalf210)applyExperimentalThreeHalfTimer(side,210,.02);
    if(calibration.ownClock210)applyExperimentalThreeHalfTimer(side,210,.01);
+   if(calibration.strategicSecondsPerTurn)applyExperimentalThreeHalfTimer(side,210,.01);
   }
   if(calibration.ownClock210)b.componentClockMode='active-player-only';
+  if(calibration.strategicSecondsPerTurn)b.componentClockMode='strategy-per-turn';
  }
  if(model==='generator-components-v1'){
   // Solo nella prova statistica si modificano gli HP e l'istante di scadenza:
@@ -297,6 +299,22 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   blocks+=r.events.filter(e=>e.kind==='block').length;
   damage+=r.shot?.damage||0;
   b=r.battle;turns++;
+  // AUDIT_STRATEGY_TURN_QUOTA_20261121: una quota uguale al completamento
+  // di ogni turno PROPRIO, senza usare i secondi trascorsi a scegliere carte.
+  // Nessuna scadenza a meta' preparazione: le mosse giocabili restano valide.
+  // Il giocatore che ha gia' vinto con la propria mossa non paga la quota.
+  if(model==='live-generator'&&calibration?.strategicSecondsPerTurn&&b.phase==='playing'){
+   const cost=calibration.strategicSecondsPerTurn;
+   assert.ok(Number.isInteger(cost)&&cost>0&&cost<=30);
+   const ownSide=b.sides[who];
+   const end=advanceTimedComponents(ownSide,(ownSide.componentElapsedSeconds||0)+cost,
+    {drainFraction:.01});
+   if(end.motherHp<=0){
+    b.phase='finished';b.winner=who==='A'?'B':'A';
+    b.finishedAtMs=at;
+    b.finishReason='Deterioramento nave madre dopo esaurimento Arsenale, Centralina e Plancia';
+   }
+  }
   if(['generator-v0','generator-components-v1'].includes(model)&&b.phase==='playing'){
    const owner=b.sides[who],foe=b.sides[who==='A'?'B':'A'];
    const available=generatorCardCount(owner);
@@ -880,4 +898,71 @@ test('AUDIT_COMPONENTI_CLOCK_PROPRIO_1PCT: 6/17/26 secondi e CPU, tempi indipend
  }
  console.log('AUDIT_COMPONENTI_PROPRI_SPEEDS='+JSON.stringify(rows));
  assert.ok(rows.every(x=>x.n===24));
+});
+
+test('AUDIT_STRATEGY_TURN_QUOTA_20261121: cronometro strategico da 3:30 / 1%, quote 10/15/20/25s a fine turno proprio',()=>{
+ const values=[10,15,20,25];
+ const summaries=[];
+ for(const secondsPerTurn of values){
+  const pvp=[],cpu=[];
+  for(const rarity of SHIP_RARITIES)
+   for(const [i,[a,b]] of PRESETS[rarity].entries()){
+    for(const shift of [0,61,127])
+     pvp.push(simulate(rarity,ARCHETYPES[i],a,b,
+      20262113+rIdx(rarity)*173+i*47+shift,null,'live-generator',
+      CANDIDATE_DRAIN_FRACTION_PER_SECOND,{strategicSecondsPerTurn:secondsPerTurn}));
+    for(const shift of [0,97])
+     cpu.push(simulate(rarity,ARCHETYPES[1],a,b,
+      20262231+rIdx(rarity)*179+i*67+shift,[1,8,17][i],
+      'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      {strategicSecondsPerTurn:secondsPerTurn},'fast-cpu'));
+   }
+  const summary=(cases)=>{
+   const won=cases.filter(x=>['A','B'].includes(x.winner));
+   return {...stats(cases),
+    winsA:cases.filter(x=>x.winner==='A').length,
+    winsB:cases.filter(x=>x.winner==='B').length,
+    winnerAllThreeIntact:won.filter(x=>x.winnerComponentsAlive===3).length,
+    winnerSomeIntact:won.filter(x=>x.winnerComponentsAlive>0).length,
+    ownAvgA:Math.round(cases.reduce((n,x)=>n+x.ownTime.A,0)/cases.length),
+    ownAvgB:Math.round(cases.reduce((n,x)=>n+x.ownTime.B,0)/cases.length),
+    min:Math.min(...cases.map(x=>x.seconds)),max:Math.max(...cases.map(x=>x.seconds))
+   };
+  };
+  summaries.push({secondsPerTurn,pvp:summary(pvp),cpu:summary(cpu),
+   pvpByRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,summary(pvp.filter(x=>x.rarity===r))])),
+   cpuByRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,summary(cpu.filter(x=>x.rarity===r))]))});
+ }
+ console.log('AUDIT_STRATEGY_TURN_QUOTA_20261121='+JSON.stringify(summaries));
+ assert.ok(summaries.every(x=>x.pvp.n===36&&x.cpu.n===24));
+});
+test('AUDIT_STRATEGY_SPEED_TEST_20261121: stesso numero turni a prescindere da rapidita dei tocchi',()=>{
+ const all=[];
+ for(const cost of [15,20]){
+  const grouped=[];
+  for(const timing of ['symmetric','fast-vs-slow','slow-vs-fast','both-fast','both-slow','fast-cpu']){
+   const matches=[];
+   for(const rarity of SHIP_RARITIES)
+    for(const [i,[a,b]] of PRESETS[rarity].entries())
+     for(const shift of [0,137])
+      matches.push(simulate(rarity,ARCHETYPES[i],a,b,
+       20262343+rIdx(rarity)*181+i*51+shift,
+       timing==='fast-cpu'?[1,8,17][i]:null,
+       'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+       {strategicSecondsPerTurn:cost},timing));
+   grouped.push({timing,n:matches.length,mean:stats(matches).mean,
+    turns:stats(matches).avgTurns,drain:stats(matches).finishesByComponentDrain,
+    winsA:matches.filter(x=>x.winner==='A').length,
+    winsB:matches.filter(x=>x.winner==='B').length,
+    draws:matches.filter(x=>x.draw).length,
+    winIntact:matches.filter(x=>x.winnerComponentsAlive===3).length,
+    samples:matches.slice(0,3).map(m=>({ships:[m.shipA,m.shipB],
+     seed:m.seed,winner:m.winner,turns:m.turns,seconds:m.seconds,
+     personalClocks:m.ownTime}))});
+  }
+  all.push({secondsPerTurn:cost,scenarios:grouped});
+ }
+ console.log('AUDIT_STRATEGY_SPEED_TEST_20261121='+JSON.stringify(all));
+ assert.equal(all.length,2);
+ assert.ok(all.every(x=>x.scenarios.every(y=>y.n===24)));
 });
