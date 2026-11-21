@@ -226,7 +226,9 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
      escort.supportObservedHp=escort.hp;
     }
    if(calibration.threeHalf210)applyExperimentalThreeHalfTimer(side,210,.02);
+   if(calibration.ownClock210)applyExperimentalThreeHalfTimer(side,210,.01);
   }
+  if(calibration.ownClock210)b.componentClockMode='active-player-only';
  }
  if(model==='generator-components-v1'){
   // Solo nella prova statistica si modificano gli HP e l'istante di scadenza:
@@ -254,8 +256,12 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   const who=b.turn;
   // PvE reale: il giocatore prepara per circa 17s, la CPU decide in
   // ~0,7s. I tempi includono anche le animazioni (~1,6s per turno).
-  const at=b.turnStartedAtMs+(turnTiming==='fast-cpu'?
-   (who==='A'?18600:2300):meanTurnMs);
+  const turnMs=turnTiming==='fast-cpu'?(who==='A'?18600:2300):
+   turnTiming==='fast-vs-slow'?(who==='A'?6000:26000):
+   turnTiming==='slow-vs-fast'?(who==='A'?26000:6000):
+   turnTiming==='both-fast'?6000:
+   turnTiming==='both-slow'?26000:meanTurnMs;
+  const at=b.turnStartedAtMs+turnMs;
   let order=['generator-v0','generator-components-v1'].includes(model)?generatorOrder(b):autoFleetTurn(b,who);
   if(model==='no-normal'){
    // Scenario diagnostico: nessun tiro GRATIS della madre; le armi sparano.
@@ -331,7 +337,12 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
   winner:b.winner||'unfinished',finishReason:b.finishReason||null,
   invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
-  drainFraction};
+  drainFraction,
+  ownTime:Object.fromEntries(['A','B'].map(who=>[who,b.sides[who].componentElapsedSeconds||0])),
+  componentsAlive:Object.fromEntries(['A','B'].map(who=>[who,
+   Object.values(b.sides[who].componentTimers||{}).filter(c=>!c.expired).length])),
+  winnerComponentsAlive:['A','B'].includes(b.winner)?
+   Object.values(b.sides[b.winner].componentTimers||{}).filter(c=>!c.expired).length:null};
 }
 function stats(matches){
  const seconds=[...matches.map(m=>m.seconds)].sort((a,b)=>a-b);
@@ -780,4 +791,89 @@ test('AUDIT 3:30/2%: confronto PvP e campagna sui veri turni e mazzi, senza Pers
  }
  console.log('AUDIT_COMPONENTI_210_BATTAGLIE='+JSON.stringify(report));
  assert.ok(report.every(x=>x.pvp.n===72&&x.campaign.n===24));
+});
+
+test('AUDIT_COMPONENTI_CLOCK_PROPRIO_1PCT: 210s propri, 1% dopo, confronto con tempo globale',()=>{
+ const variants=[
+  {name:'F-attuale-globale',calibration:null},
+  {name:'210s-globale-2pct',calibration:{threeHalf210:true}},
+  {name:'210s-individuale-1pct',calibration:{ownClock210:true}}
+ ];
+ const aggregate=matches=>{
+  const basic=stats(matches);
+  const finished=matches.filter(m=>['A','B'].includes(m.winner));
+  const saved=finished.map(m=>m.winnerComponentsAlive);
+  return {...basic,
+   min:Math.min(...matches.map(m=>m.seconds)),max:Math.max(...matches.map(m=>m.seconds)),
+   winAllThreeIntact:saved.filter(n=>n===3).length,
+   winAtLeastOneIntact:saved.filter(n=>n>0).length,
+   winNoneIntact:saved.filter(n=>n===0).length,
+   ownAverage:Object.fromEntries(['A','B'].map(who=>[who,
+    Math.round(matches.reduce((n,m)=>n+m.ownTime[who],0)/matches.length)])),
+   ownOver210:Object.fromEntries(['A','B'].map(who=>[who,
+    matches.filter(m=>m.ownTime[who]>=210).length]))
+  };
+ };
+ const rows=[];
+ for(const variant of variants){
+  const pvp=[],campaign=[];
+  for(const rarity of SHIP_RARITIES)
+   for(const [i,[a,b]] of PRESETS[rarity].entries()){
+    for(const shift of [0,47,93,139,211,307])
+     pvp.push(simulate(rarity,ARCHETYPES[i],a,b,
+      20261122+shift+rIdx(rarity)*193+i*43,null,'live-generator',
+      CANDIDATE_DRAIN_FRACTION_PER_SECOND,variant.calibration));
+    for(const shift of [0,97])
+     campaign.push(simulate(rarity,ARCHETYPES[1],a,b,
+      20261214+shift+rIdx(rarity)*173+i*79,[1,8,17][i],
+      'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      variant.calibration,'fast-cpu'));
+   }
+  rows.push({name:variant.name,pvp:aggregate(pvp),campaign:aggregate(campaign),
+   pvpRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,aggregate(pvp.filter(m=>m.rarity===r))])),
+   campaignRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,aggregate(campaign.filter(m=>m.rarity===r))])),
+   pvpExamples:pvp.slice(0,4).map(m=>({seconds:m.seconds,who:m.winner,
+    ownTime:m.ownTime,alive:m.winnerComponentsAlive})),
+   campaignExamples:campaign.slice(0,4).map(m=>({seconds:m.seconds,who:m.winner,
+    ownTime:m.ownTime,alive:m.winnerComponentsAlive}))});
+ }
+ console.log('AUDIT_COMPONENTI_PROPRI_210_1PCT='+JSON.stringify(rows));
+ assert.ok(rows.every(x=>x.pvp.n===72&&x.campaign.n===24));
+});
+test('AUDIT_COMPONENTI_CLOCK_PROPRIO_1PCT: 6/17/26 secondi e CPU, tempi indipendenti',()=>{
+ const scenarios=[
+  {name:'17s-17s',time:'symmetric'},
+  {name:'6s-26s',time:'fast-vs-slow'},
+  {name:'26s-6s',time:'slow-vs-fast'},
+  {name:'6s-6s',time:'both-fast'},
+  {name:'26s-26s',time:'both-slow'},
+  {name:'18.6s-2.3s',time:'fast-cpu'}
+ ];
+ const rows=[];
+ for(const scenario of scenarios){
+  const matches=[];
+  for(const rarity of SHIP_RARITIES)
+   for(const [i,[a,b]] of PRESETS[rarity].entries())
+    for(const shift of [0,131])
+     matches.push(simulate(rarity,ARCHETYPES[i],a,b,
+      20261311+shift+rIdx(rarity)*177+i*37,
+      scenario.time==='fast-cpu'?[1,8,17][i]:null,
+      'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      {ownClock210:true},scenario.time));
+  const won=matches.filter(x=>['A','B'].includes(x.winner));
+  rows.push({name:scenario.name,...stats(matches),
+   winAllThreeIntact:won.filter(x=>x.winnerComponentsAlive===3).length,
+   winSomeIntact:won.filter(x=>x.winnerComponentsAlive>0).length,
+   avgOwnA:Math.round(matches.reduce((n,m)=>n+m.ownTime.A,0)/matches.length),
+   avgOwnB:Math.round(matches.reduce((n,m)=>n+m.ownTime.B,0)/matches.length),
+   avgIntactA:Math.round(matches.reduce((n,m)=>n+m.componentsAlive.A,0)/matches.length*10)/10,
+   avgIntactB:Math.round(matches.reduce((n,m)=>n+m.componentsAlive.B,0)/matches.length*10)/10,
+   durationMin:Math.min(...matches.map(x=>x.seconds)),
+   durationMax:Math.max(...matches.map(x=>x.seconds)),
+   examples:matches.slice(0,2).map(x=>({seconds:x.seconds,winner:x.winner,
+    ownTime:x.ownTime,components:x.componentsAlive}))
+  });
+ }
+ console.log('AUDIT_COMPONENTI_PROPRI_SPEEDS='+JSON.stringify(rows));
+ assert.ok(rows.every(x=>x.n===24));
 });
