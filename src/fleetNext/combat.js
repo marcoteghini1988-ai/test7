@@ -14,7 +14,9 @@ import {getShipProgression,shipMaxLevel} from './progression.js';
 import {isShipRarity,combatLevelForRarity,motherCombatStatsForRarity} from './shipRarity.js';
 import {limitedMotherDamage} from './motherBalance.js';
 import {PACING_BALANCE_CANDIDATE} from './pacingBalanceCandidate.js';
-import {initializeComponentTimers,advanceBattleComponentClock,
+import {STRATEGIC_NO_DRAIN_BALANCE} from './strategicNoDrainBalance.js';
+import {initializeComponentTimers,initializeStrategicComponentTimers,
+ advanceTimedComponents,advanceBattleComponentClock,
  advanceBattleActivePlayerComponentClock} from './componentTimerPacing.js';
 import {generatorCardCount,generatorAttackPreview,commitGeneratorFiring,generatorCoolingOwnTurns} from './motherGeneratorBalance.js';
 import {exclusiveAttackCardDamage} from './confirmedCardBalance.js';
@@ -371,10 +373,11 @@ export function createFleetNextBattle({
  upgradesA={},upgradesB={},mode='campaign',bossId=null,planetId=null,sectorNumber=1,
  seed=1988,nowMs=0,bossName=null,ruleset='legacy',
  supportRosterA=null,supportRosterB=null,raritaA=null,raritaB=null,
- newGeneratorCombat=false
+ newGeneratorCombat=false,strategicNoDeterioration=false
 }={}){
  const terrain=bossId?bossTerrain(bossId):mode==='pvp'?neutralTerrain():campaignTerrain(sectorNumber,planetId);
  const b={version:4,ruleset,newGeneratorCombat:!!(newGeneratorCombat&&ruleset===HP_SYNC_RULESET),
+  strategicNoDeterioration:!!(strategicNoDeterioration&&newGeneratorCombat&&ruleset===HP_SYNC_RULESET),
   phase:'playing',winner:null,round:1,ply:0,turn:'A',
   deadlineMs:nowMs+FLEET_TURN_SECONDS*1000,turnStartedAtMs:nowMs,
   supportSecondsProcessed:0,mode,
@@ -405,16 +408,24 @@ export function createFleetNextBattle({
    side.motherCardRarity=rarity;
    if(b.newGeneratorCombat){
     side.newGeneratorCombat=true;
-    const candidate=PACING_BALANCE_CANDIDATE;
+    const candidate=b.strategicNoDeterioration?
+     STRATEGIC_NO_DRAIN_BALANCE:PACING_BALANCE_CANDIDATE;
     const hp=Math.max(1,Math.round(stats.maxHp*candidate.motherHpMultiplier[rarity]));
     mother.hp=hp;mother.maxHp=hp;
     side.weaponBalanceFactor=candidate.weaponNominalMultiplier[rarity];
     side.componentDeteriorationFraction=candidate.deteriorationFractionPerSecond[rarity];
-    initializeComponentTimers(side,rarity);
+    if(b.strategicNoDeterioration){
+     side.motherGeneratorDamageFactor=candidate.generatorDamageMultiplier[rarity];
+     initializeStrategicComponentTimers(side);
+    }else initializeComponentTimers(side,rarity);
    }
    if(who==='B'&&bossId!=null)
     mother.bossGuardPercent=bossExtraDamageResistance(bossId);
   }
+ }
+ if(b.strategicNoDeterioration){
+  b.componentClockMode='strategy-per-turn';
+  b.strategicSecondsPerTurn=STRATEGIC_NO_DRAIN_BALANCE.strategicSecondsPerOwnTurn;
  }
  emit(b,'system','start','Le flotte sono schierate. Ogni turno dura 30 secondi.');
  if(bossId!=null&&b.sides.B.ships[0].bossGuardPercent)
@@ -5083,7 +5094,24 @@ function finishTurn(b,ctx,events){
  royalSovereignTurn(b,ctx,events);
  stormEndOwnTurn(b,ctx,events);
  mantaNavigatorTurn(b,ctx,events);
- const side=b.sides[ctx.who];side.turnCount++;refill(b,side);
+ const side=b.sides[ctx.who];
+ // Un turno senza carte risolte e senza danni con mano piena permette
+ // ricambio FISICO a costo del turno: una carta scartata, una nuova
+ // pescata dal proprio mazzo/scarti. Niente Energia o attacco gratuito.
+ if(b.strategicNoDeterioration&&ctx.cards.length===0&&
+  !ctx.order?.activateElemental&&!(side.lastDamage>0)&&
+  side.hand.length>=FLEET_HAND_SIZE){
+  const requested=ctx.order?.recoverHandCardIndex;
+  const index=Number.isInteger(requested)&&requested>=0&&
+   requested<side.hand.length?requested:0;
+  const [discarded]=side.hand.splice(index,1);
+  side.discard.push(discarded);
+  side.handRecoveries=(side.handRecoveries||0)+1;
+  events.push(emit(b,ctx.who,'hand-recovery',
+   'Mano bloccata: una carta scartata per il ricambio di fine turno',
+   {cardId:discarded,paidOwnTurn:true}));
+ }
+ side.turnCount++;refill(b,side);
  const extra=Math.min(2,skillCount(side,'extra-draw',b.ply));
  let drawn=0;
  for(let i=0;i<extra;i++){
@@ -5094,6 +5122,19 @@ function finishTurn(b,ctx,events){
  // La Scarica ha gia' risolto e va negli scarti: lo slot Attacco torna libero.
  side.attackSlots=(side.attackSlots||[]).map(id=>
   card(id)?.effectSpec?.type==='siphonStrike'?null:id);
+ // Ogni turno PROPRIO consuma la stessa quota, indipendentemente
+ // da quanto tempo reale il giocatore ha usato per premere ESEGUI.
+ // Non c'e deterioramento: gli HP scendono solo per danni reali.
+ if(b.strategicNoDeterioration&&b.phase==='playing'&&
+  b.sides.A.ships[0].hp>0&&b.sides.B.ships[0].hp>0){
+  const quota=b.strategicSecondsPerTurn;
+  const state=advanceTimedComponents(side,(side.componentElapsedSeconds||0)+quota,
+   {drainFraction:0});
+  for(const id of state.newlyExpired)events.push(emit(b,ctx.who,
+   'component-expired',id+' esaurito dopo '+state.elapsedSeconds+
+   ' secondi strategici personali',{component:id,atOwnSecond:state.elapsedSeconds}));
+  enforceDestroyedSystems(side,b.ply);
+ }
  side.lastPlayed=visiblePlayed(ctx.cards);b.ply++;b.round=1+Math.floor(b.ply/2);b.turn=other(ctx.who);
  b.terrain=activeTerrain(b.terrain,b.ply);
  tickProvisionalBurns(b,events,{limitedMotherDamage,emit});
@@ -5143,6 +5184,11 @@ function resolvePreparedSupportSacrifice(b,who,supportId,events){
 // Una sola funzione per far avanzare i supporti e i tre timer della nuova
 // partita; i test storici senza modalita' Generatore restano invariati.
 export function advanceFleetCombatTime(battle,nowMs){
+ // Nel nuovo bilanciamento i secondi reali servono solo a limitare
+ // la preparazione a 30 s: effetti temporizzati e componenti
+ // avanzano a quota fissa alla conferma, non mentre si tocca la mano.
+ if(battle?.strategicNoDeterioration)
+  return {battle,events:[],changed:false};
  const timed=advanceIndependentSupportTime(battle,nowMs);
  if(!battle?.newGeneratorCombat||timed.battle?.phase!=='playing')
   return timed;
@@ -5169,7 +5215,12 @@ export function advanceFleetCombatTime(battle,nowMs){
  return {battle:advanced.battle,events:[...timed.events,...advanced.events],changed:true};
 }
 export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
- const timed=advanceFleetCombatTime(battle,nowMs);
+ // La rigenerazione e il veleno consumano una quota IDENTICA di tempo
+ // per turno, cosi' non favoriscono ne' la CPU veloce ne' l'umano lento.
+ const timed=battle?.strategicNoDeterioration&&battle.phase==='playing'?
+  advanceIndependentSupportTime(battle,battle.turnStartedAtMs+
+   (battle.strategicSecondsPerTurn||20)*1000):
+  advanceFleetCombatTime(battle,nowMs);
  if(order?.cards?.length>0&&
   (timed.battle?.sides?.[who]?.provisionalHandFrozenUntilMs||0)>nowMs)
   return {ok:false,reason:'Mano congelata, il timer continua',
