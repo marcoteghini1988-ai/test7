@@ -109,8 +109,8 @@ export function supportWeaponCharge(side,machine,roleForCard){
  }
  return null;
 }
-// Fattore numerico esclusivamente diagnostico: nessuna carta o partita
-// normale imposta questa proprieta', cosi' il danno stampato resta intatto.
+// Fattore di bilanciamento riservato alla nuova modalita' ufficiale e
+// agli audit. Le vecchie partite conservano i danni originali delle Armi.
 const weaponAuditValue=(side,amount)=>{
  const factor=Number(side?.weaponBalanceFactor??side?.__pacingAuditWeaponFactor);
  return Number.isFinite(factor)&&factor>0&&factor!==1?
