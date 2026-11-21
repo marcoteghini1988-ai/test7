@@ -12,7 +12,7 @@ import {DISCARD_WEAPONS} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS} from './temporarySupportWeapons.js';
 import {SHIP_RARITIES} from './shipRarity.js';
 import {MOTHER_RARITY_SCALING} from './motherBalance.js';
-import {scaleObject,description} from './weaponBalanceCalibration.js';
+import {scaleObject,description,weaponPrintCandidate} from './weaponBalanceCalibration.js';
 
 // Per mantenere una simile durata negli scontri alla pari, la potenza nominale
 // segue gli HP delle navi, NON il tempo del timer. Non e' un moltiplicatore
@@ -55,6 +55,12 @@ export const EVOLVED_WEAPON_CARDS=Object.freeze(WEAPON_BASE_CARDS.flatMap(base=>
 }));
 export const ALL_WEAPON_CARDS=Object.freeze([...WEAPON_BASE_CARDS,...EVOLVED_WEAPON_CARDS]);
 export const ALL_WEAPON_BY_ID=Object.freeze(Object.fromEntries(ALL_WEAPON_CARDS.map(c=>[c.id,c])));
+ // Un catalogo separato di valori candidati da mostrare prima della grafica.
+ // Non altera ALL_WEAPON_CARDS, usato dagli attuali combattimenti e test.
+ export const WEAPON_PRINT_CANDIDATES=Object.freeze(ALL_WEAPON_CARDS.map(weaponPrintCandidate));
+ export const WEAPON_PRINT_CANDIDATE_BY_ID=Object.freeze(Object.fromEntries(
+  WEAPON_PRINT_CANDIDATES.map(card=>[card.id,card])
+ ));
 export const WEAPON_EVOLUTION_FAMILIES=Object.freeze(Object.fromEntries(
  WEAPON_BASE_CARDS.map(base=>[base.id,Object.freeze([
   base,...EVOLVED_WEAPON_CARDS.filter(c=>c.weaponFamilyId===base.id)
