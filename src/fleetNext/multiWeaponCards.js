@@ -1,5 +1,6 @@
 // Cinque Armi Acqua/Ghiaccio con meccaniche definite 20 novembre 2026.
 // Danni nominali da bilanciare, nessuna carta addizionale inventata.
+import {calibratedWeaponCard} from './weaponBalanceCalibration.js';
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 const DESIGNS=[
   {
@@ -60,7 +61,7 @@ export const MULTI_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
   s.mode==='repeat-shot'?'un colpo da '+s.baseDamage+' HP per due tuoi turni':
   s.mode==='sweep-shot'?'un colpo da '+s.baseDamage+' HP a ciascuna nave nemica':
   'un colpo da '+s.baseDamage+' HP, più fino a '+s.maxExtraShots+' colpi da '+s.extraDamage+' HP con altrettante Carte Energia '+elem.name+' fisiche nella pila, senza consumarle';
- return Object.freeze({id:s.id,name:s.name,nome:s.name,
+ return calibratedWeaponCard(Object.freeze({id:s.id,name:s.name,nome:s.name,
   categoria:'Supporto',category:'Arma di supporto',sottotipo:'Arma temporanea',
   kind:'support',playable:true,nativeFace:true,rarita:s.rarita,
   elementId:s.elementId,visualKey:elem.vfx,visualSymbol:elem.symbol,
@@ -70,7 +71,7 @@ export const MULTI_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
    durationTurns:s.durationTurns,...(s.shots?{shotCount:s.shots}:{}),
    ...(s.extraDamage?{extraDamage:s.extraDamage,maxExtraShots:s.maxExtraShots}:{})}),
   effectProposed:'Arma '+elem.name+': '+detail+'. Difese, Terreni e relazioni elementali applicabili.'
- });
+ }));
 }));
 export const MULTI_WEAPON_BY_ID=Object.freeze(Object.fromEntries(MULTI_WEAPON_CARDS.map(c=>[c.id,c])));
 if(MULTI_WEAPON_CARDS.length!==5||Object.keys(MULTI_WEAPON_BY_ID).length!==5)throw Error('Armi Acqua/Ghiaccio incomplete');
