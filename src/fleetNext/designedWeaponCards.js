@@ -31,7 +31,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-plasma-sistema-binario",
     "elementId": "plasma",
-    "name": "Sistema Binario a Sovraccarico",
+    "name": "Cannone Binario a Sovraccarico",
     "rarita": "Da definire",
     "profile": null,
     "description": "Ciclo di cinque turni propri: sovraccarichi percentuali e perdite di HP alleati, anche letali; ultimo turno supercolpo alle navicelle nemiche. Tempi e priorità non ancora collaudati.",
@@ -47,7 +47,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-plasma-accoppiatore-termofagico",
     "elementId": "plasma",
-    "name": "Accoppiatore Termofagico",
+    "name": "Cannone Accoppiatore Termofagico",
     "rarita": "Da definire",
     "profile": null,
     "description": "Arma gemella del Sistema Binario, giocabile solo dopo la prima; ricarica con sottrazione di HP e possibilità di recupero. Manca il danno finale e la scelta degli slot.",
@@ -104,7 +104,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-plasma-condensatore-pirobalistico",
     "elementId": "plasma",
-    "name": "Condensatore Pirobalistico",
+    "name": "Cannone Condensatore Pirobalistico",
     "rarita": "Rara",
     "profile": {
       "pattern": "energy-tier",
@@ -120,7 +120,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-cryogenic-ago-inverno-nero",
     "elementId": "cryogenic",
-    "name": "Ago dell'Inverno Nero",
+    "name": "Perforatore dell’Inverno Nero",
     "rarita": "Da definire",
     "profile": null,
     "description": "Colpisce i due supporti nemici. Con Terreno Ghiaccio migliora i danni e aggiunge un perforante sulla madre pari alla somma dei due colpi; quattro rarità in evoluzione, danni da fissare.",
@@ -157,7 +157,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-cryogenic-acceleratore-boreale",
     "elementId": "cryogenic",
-    "name": "Acceleratore Boreale Binario",
+    "name": "Cannone Acceleratore Boreale",
     "rarita": "Da definire",
     "profile": null,
     "description": "Carta Arma Ghiaccio a scarica binaria progettata; sequenza degli attacchi e danni ancora da chiudere."
@@ -165,7 +165,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-cryogenic-compressore-impulso",
     "elementId": "cryogenic",
-    "name": "Compressore Criogenico a Impulso",
+    "name": "Cannone a Compressione Criogenica d’Impulso",
     "rarita": "Rara",
     "profile": {
       "pattern": "energy-charge-burst",
@@ -198,7 +198,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-refrigerant-bassa-marea",
     "elementId": "refrigerant",
-    "name": "Bassa Marea",
+    "name": "Cannone di Bassa Marea",
     "rarita": "Da definire",
     "profile": null,
     "description": "Prima arma della coppia su due turni consecutivi; accumula la potenza dagli scarti reali dei due giocatori. Base HP per scarto da definire.",
@@ -207,10 +207,10 @@ const DESIGNS=[
   {
     "id": "weapon-designed-refrigerant-alta-marea",
     "elementId": "refrigerant",
-    "name": "Alta Marea",
+    "name": "Cannone di Alta Marea",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Seconda arma della coppia: deve seguire Bassa Marea al turno proprio successivo, travolge Difese e Trappole di entrambi e moltiplica la potenza accumulata fino a quattro volte. Danno base non definito.",
+    "description": "Seconda arma della coppia: deve seguire Cannone di Bassa Marea al turno proprio successivo, travolge Difese e Trappole di entrambi e moltiplica la potenza accumulata fino a quattro volte. Danno base non definito.",
     "combo": "bassa-marea",
     "maxMultiplier": 4
   },
@@ -252,13 +252,13 @@ const DESIGNS=[
     "name": "Artiglieria delle Schegge Erranti",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Arma Metallo trasferita dal Ghiaccio, attacco distribuito su due turni; danno per colpo da precisare. Non è combinata con Recuperatore Termobalistico.",
+    "description": "Arma Metallo trasferita dal Ghiaccio, attacco distribuito su due turni; danno per colpo da precisare. Non è combinata con Artiglieria Termobalistica di Recupero.",
     "durationTurns": 2
   },
   {
     "id": "weapon-designed-metallic-recuperatore-termobalistico",
     "elementId": "metallic",
-    "name": "Recuperatore Termobalistico",
+    "name": "Artiglieria Termobalistica di Recupero",
     "rarita": "Da definire",
     "profile": null,
     "description": "Arma Metallo trasferita da Fuoco; trasforma i danni subiti realmente dalla propria flotta in potenza offensiva. Formula numerica non fissata, non combinata con Artiglieria."
@@ -286,7 +286,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-metallic-ganasce-magnetiche",
     "elementId": "metallic",
-    "name": "Ganasce Magnetiche",
+    "name": "Arpioni a Ganasce Magnetiche",
     "rarita": "Da definire",
     "profile": null,
     "description": "Prima arma della coppia Metallo: due arpioni agganciano due navicelle, infliggendo danni; prepara la collisione nel turno proprio successivo. Valori HP mancanti.",
@@ -295,10 +295,10 @@ const DESIGNS=[
   {
     "id": "weapon-designed-metallic-collassatore-lega",
     "elementId": "metallic",
-    "name": "Collassatore di Lega",
+    "name": "Cannone Collassatore di Lega",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Seconda arma della coppia Metallo: dopo Ganasce Magnetiche attiva il campo e fa collidere le navicelle agganciate. Danno e soglie non fissati.",
+    "description": "Seconda arma della coppia Metallo: dopo Arpioni a Ganasce Magnetiche attiva il campo e fa collidere le navicelle agganciate. Danno e soglie non fissati.",
     "combo": "ganasce-magnetiche"
   },
   {
@@ -325,7 +325,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-metallic-impatto-comandante",
     "elementId": "metallic",
-    "name": "Impatto del Comandante d'Acciaio",
+    "name": "Impattatore del Comandante d’Acciaio",
     "rarita": "Da definire",
     "profile": {
       "pattern": "character-health",
@@ -345,7 +345,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-ionic-nucleo-folgore",
     "elementId": "ionic",
-    "name": "Nucleo della Folgore Crescente",
+    "name": "Cannone a Nucleo di Folgore Crescente",
     "rarita": "Da definire",
     "profile": null,
     "description": "Arma Fulmine per tre turni: nuova Energia nei turni successivi consente la supercarica; se manca, resta al danno minimo fino alla scadenza senza riprendere la progressione. Danni non fissati.",
@@ -355,7 +355,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-ionic-sonda-ionica",
     "elementId": "ionic",
-    "name": "Sonda Ionica",
+    "name": "Sonda Ionica d’Assalto",
     "rarita": "Da definire",
     "profile": null,
     "description": "Prima delle due Armi Fulmine combinabili con Martello del Tuono; effetto di coppia e danni da definire.",
@@ -367,7 +367,7 @@ const DESIGNS=[
     "name": "Martello del Tuono",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Arma Fulmine combinabile con Sonda Ionica; danno e sequenza della combinazione da definire.",
+    "description": "Arma Fulmine combinabile con Sonda Ionica d’Assalto; danno e sequenza della combinazione da definire.",
     "combo": "sonda-ionica"
   },
   {
@@ -381,7 +381,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-ionic-condensatore-tempesta",
     "elementId": "ionic",
-    "name": "Condensatore della Tempesta Stellare",
+    "name": "Cannone Condensatore della Tempesta Stellare",
     "rarita": "Da definire",
     "profile": null,
     "description": "Arma Fulmine per tre turni, alimentata da una Energia per turno; più navicelle alleate operative ne amplificano il danno senza sacrificare HP. Danno base ancora da definire.",
@@ -391,7 +391,7 @@ const DESIGNS=[
   {
     "id": "weapon-designed-ionic-giudizio-temporale",
     "elementId": "ionic",
-    "name": "Giudizio del Temporale",
+    "name": "Cannone del Giudizio Temporale",
     "rarita": "Da definire",
     "profile": {
       "pattern": "percent",
