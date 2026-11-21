@@ -26,9 +26,9 @@ const PRESETS=Object.freeze({
  Leggendaria:[['L03','L04'],['C01','E02'],['R04','L01']]
 });
 const ARCHETYPES=Object.freeze([
- Object.freeze({name:'offensivo',weapon:16,energy:4,system:3,terrain:1}),
- Object.freeze({name:'equilibrato',weapon:11,energy:6,system:8,terrain:2}),
- Object.freeze({name:'controllo',weapon:8,energy:5,system:13,terrain:3})
+ Object.freeze({name:'offensivo',weapon:16,energy:8,system:3,terrain:1}),
+ Object.freeze({name:'equilibrato',weapon:11,energy:10,system:8,terrain:2}),
+ Object.freeze({name:'controllo',weapon:8,energy:8,system:13,terrain:3})
 ]);
 const SIMPLE=new Set(['base-shot','polarity-shot','double-shot',
  'repeat-shot','sweep-shot','energy-burst-shot']);
@@ -67,10 +67,14 @@ function generator(ship,rarity,arch,seed){
   }
  };
  push(rotate(weapons,seed%13).map(c=>c.id),arch.weapon);
- const energies=own.flatMap(element=>Array(4).fill(energyIdForRarity(element,rarity)));
+ // Le Energie delle rarita' inferiori restano utilizzabili: una Leggendaria
+ // non sostituisce fisicamente quattro Carte Energia Comune.
+ const energies=own.flatMap(element=>SHIP_RARITIES.slice(0,rIdx(rarity)+1)
+  .reverse().flatMap(tier=>Array(4).fill(energyIdForRarity(element,tier))));
  push(energies,arch.energy);
  const systems=NEXT_COMMON_CARDS.filter(c=>c.rarita===rarity&&
-  c.effectSpec.type==='systemModifier');
+  c.effectSpec.type==='systemModifier'&&
+  ['weapons','generator'].includes(c.effectSpec.system));
  push(rotate(systems,seed%4).map(c=>c.id),arch.system);
  const terrains=ELEMENTAL_TERRAIN_CARDS.filter(c=>c.rarita===rarity&&
   own.includes(c.elementId));
