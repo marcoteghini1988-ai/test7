@@ -411,3 +411,20 @@
  z-index:28;border-color:#5bbee5;background:#07152af8;
 }
 .es-math-scope .f3d-approved-layout:has(.f3d-actions-open) .f3d-elemental-control {display:flex}
+
+/* Correzione turni 21/11: niente testi tecnici sopra le navicelle. */
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-mounted-modules,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-ark-status,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-obsidian-status,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-royal-status,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-storm-status,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-nebula-status,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-shark-status,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-manta-energy,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-falco-charge {
+ display:none!important;
+}
+/* Blocca i comandi durante il playback senza coprire navi, carte o VFX. */
+.es-math-scope .f3d-approved-layout .f3d-resolution-interlock {
+ position:absolute;inset:0;z-index:60;pointer-events:auto;background:transparent;
+}
