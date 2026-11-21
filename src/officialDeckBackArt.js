@@ -4,6 +4,10 @@ import {BOSS_NUMERIC_DECK_IDS,numericBossDeck} from './bossNumericDecks.js';
 export const OFFICIAL_NUMERIC_BACK_IDS=Object.freeze(['neutral_starter',...BOSS_NUMERIC_DECK_IDS]);
 const BACK_IDS=new Set(OFFICIAL_NUMERIC_BACK_IDS);
 export const OFFICIAL_SPECIAL_FIXED_BACK='/assets/deck-backs/special_fixed.png';
+// Il dorso del nuovo mazzo verra' creato e approvato separatamente.
+// null mostra il cartoncino neutro; un PNG/WebP qui, o side.deckBackPath,
+// si applica anche alle carte in volo nel rimescolamento.
+export const OFFICIAL_FLEET_DRAW_BACK=null;
 
 function numericBackId(id){
  return BACK_IDS.has(id)?id:'neutral_starter';

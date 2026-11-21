@@ -1,3 +1,4 @@
+import {shuffleFleetCards as shuffled,recycleFleetDiscard} from './deckCycle.js';
 // Eclissi Stellare — progressione strutturale e combattimento delle flotte.
 // Nessuna animazione o audio qui: gli eventi sono emessi per il renderer ufficiale.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
@@ -92,9 +93,7 @@ const roll=(state,n)=>{
  state.rng=(1664525*(state.rng>>>0)+1013904223)>>>0;
  return n?(state.rng>>>0)%n:0;
 };
-const shuffled=(cards,state)=>{
- const a=[...cards];for(let i=a.length-1;i>0;i--){const j=roll(state,i+1);[a[i],a[j]]=[a[j],a[i]];}return a;
-};
+
 export function createFleetMother(id,level=1){
  const config=shipConfig(id),model=SHIPS.get(id);
  if(!config||!model)throw new Error('Madre inesistente '+id);
@@ -361,9 +360,7 @@ function emit(b,who,kind,text,rest={}){
 }
 function refill(b,side){
  while(side.hand.length<FLEET_HAND_SIZE){
-  if(!side.deck.length&&side.discard.length){
-   side.deck=shuffled(side.discard,b);side.discard=[];
-  }
+  recycleFleetDiscard(b,side);
   if(!side.deck.length)break;
   side.hand.push(side.deck.shift());
  }
@@ -1100,7 +1097,7 @@ function exchangeCards(b,side,amount){
  for(let i=0;i<count;i++)side.discard.push(side.hand.splice(roll(b,side.hand.length),1)[0]);
  const targetSize=side.hand.length+count;
  while(side.hand.length<targetSize){
-  if(!side.deck.length&&side.discard.length){side.deck=shuffled(side.discard,b);side.discard=[];}
+  recycleFleetDiscard(b,side);
   if(!side.deck.length)break;
   side.hand.push(side.deck.shift());
  }
@@ -1384,7 +1381,7 @@ function processHelios(b,who,ctx,events,order){
  const index=side.hand.indexOf(order.heliosDiscardId);
  const discarded=side.hand.splice(index>=0?index:0,1)[0];
  side.discard.push(discarded);
- if(!side.deck.length&&side.discard.length){side.deck=shuffled(side.discard,b);side.discard=[];}
+ recycleFleetDiscard(b,side);
  const drawn=side.deck.shift();
  if(drawn)side.hand.push(drawn);
  state.heliosUsedPly=b.ply;
@@ -1515,9 +1512,7 @@ function activateCorvoCard(b,who,def,ctx,events,order={},source=null){
   const selected=side.hand.includes(order.corvoExchangeCardId)?order.corvoExchangeCardId:side.hand[0];
   if(!selected)throw Error('Analisi richiede una carta non giocata da scartare');
   side.hand.splice(side.hand.indexOf(selected),1);side.discard.push(selected);
-  if(!side.deck.length&&side.discard.length){
-   side.deck=shuffled(side.discard,b);side.discard=[];
-  }
+  recycleFleetDiscard(b,side);
   const drawn=side.deck.shift();
   if(drawn)side.hand.push(drawn);
   note('Ricambio effettuato: scarta una carta e pescane una');
@@ -1661,9 +1656,7 @@ function activateFalcoCard(b,who,def,ctx,events,order={},source=null){
   side.deck.push(pending.cardId);
   state.pending=null;
   // La carta del vecchio attacco resta sotto al mazzo anche con pesca vuota.
-  if(!side.deck.length&&side.discard.length){
-   side.deck=shuffled(side.discard,b);side.discard=[];
-  }
+  recycleFleetDiscard(b,side);
   const drawn=side.deck.shift();
   if(drawn)side.hand.push(drawn);
   events.push(emit(b,who,'falco-cancel','Caricatore: colpo annullato, carta sotto al mazzo e una pescata',
@@ -1895,9 +1888,7 @@ function activateSharkCard(b,who,def,ctx,events,order={},source=null){
   donor.hp=0;donor.destroyed=true;donor.linked=false;
   const healed=Math.min(2,receiver.maxHp-receiver.hp);
   receiver.hp+=healed;refreshEscortLinks(side,b.ply);
-  if(!side.deck.length&&side.discard.length){
-   side.deck=shuffled(side.discard,b);side.discard=[];
-  }
+  recycleFleetDiscard(b,side);
   const drawn=side.deck.shift();
   if(drawn)side.hand.push(drawn);
   events.push(emit(b,who,'shark-sacrifice','Ultimo morso: '+donor.name+
@@ -2284,9 +2275,7 @@ function stormEndOwnTurn(b,ctx,events){
   const discarded=side.hand.splice(index,1)[0];
   if(discarded){
    side.discard.push(discarded);
-   if(!side.deck.length&&side.discard.length){
-    side.deck=shuffled(side.discard,b);side.discard=[];
-   }
+   recycleFleetDiscard(b,side);
    const drawn=side.deck.shift();
    if(drawn)side.hand.push(drawn);
    state.captainUsedPly=b.ply;
@@ -2531,9 +2520,7 @@ function royalSovereignTurn(b,ctx,events){
  const discarded=side.hand.splice(index>=0?index:0,1)[0];
  if(!discarded)return;
  side.discard.push(discarded);
- if(!side.deck.length&&side.discard.length){
-  side.deck=shuffled(side.discard,b);side.discard=[];
- }
+ recycleFleetDiscard(b,side);
  const top=side.deck.splice(0,3);
  if(!top.length){
   side.deck.push(discarded);side.discard.pop();side.hand.push(discarded);
@@ -5099,7 +5086,7 @@ function finishTurn(b,ctx,events){
  const extra=Math.min(2,skillCount(side,'extra-draw',b.ply));
  let drawn=0;
  for(let i=0;i<extra;i++){
-  if(!side.deck.length&&side.discard.length){side.deck=shuffled(side.discard,b);side.discard=[];}
+  recycleFleetDiscard(b,side);
   if(side.deck.length){side.hand.push(side.deck.shift());drawn++;}
  }
  if(drawn)events.push(emit(b,ctx.who,'support-draw','Pescata aggiuntiva: +'+drawn+' carte'));

@@ -2,6 +2,7 @@
 // Usa i medesimi pezzi, hardpoint, scudiere SVG, arena e geometria del
 // renderer OfficialLiveBattle3D. NON usa FleetCardBattle.css né cards-site.
 import React,{useEffect,useMemo,useState,useRef} from 'react';
+import FleetDeckPiles from './FleetDeckPiles.jsx';
 import {ASSET_ROOT,MountedWeapons} from './ShipPresentation.jsx';
 import {newVessel} from './mathDuelEngine.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
@@ -1152,23 +1153,7 @@ export default function OfficialFleetBattle3D({
     impact={lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='B')&&
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='B'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
-   <div className="live-deck f3d-approved-discard" role="img"
-    aria-label={'Scarti: '+player.discard.length+' carte'} title="Slot SCARTI: si riempie delle carte usate">
-    <span className="f3d-discard-pile">{player.discard.length>0&&
-     (cardFacePath(player.discard[player.discard.length-1])?
-      <img src={cardFacePath(player.discard[player.discard.length-1])} alt=""/>:
-      <b aria-hidden="true">✧</b>)}</span>
-    <small className="f3d-discard-label">SCARTI {player.discard.length||''}</small>
-   </div>
-   <div className="live-deck live-deck--special f3d-approved-draw"
-    data-special-back="fixed" data-empty={player.deck.length===0}
-    aria-label={'Mazzo: '+player.deck.length+' carte rimaste'}
-    title="Mazzo di pesca, dorso provvisorio"
-    style={{'--live-deck-art':'url("'+OFFICIAL_SPECIAL_FIXED_BACK+'")',
-     '--deck-layer-depth':Math.min(10,Math.ceil(player.deck.length/5))+'px'}}>
-    <i/><i/><i/><span><b aria-hidden="true">✧</b><small>MAZZO</small></span>
-    <em>{player.deck.length}</em>
-   </div>
+   <FleetDeckPiles side={player}/>
    <div className="f3d-weapon-card-slots" role="group" aria-label="Due slot Carte Arma">
     {projectMachineBerths(player,chosenTypes,battle.ply).map((machine,slot)=>{
      const artwork=machine?.sourceCardId?cardFacePath(machine.sourceCardId):null;

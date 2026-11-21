@@ -1,0 +1,115 @@
+/* Carte fisiche sul medesimo piano della plancia. Nessun contenitore luminoso. */
+.es-math-scope .f3d-approved-layout .fleet-card-piles {
+ --pile-width:68px;--pile-height:102px;--pile-transfer-x:298px;
+ position:absolute;left:42px;right:42px;top:448px;height:142px;z-index:12;
+ transform:perspective(1450px) rotateX(58deg);transform-origin:50% 100%;
+ transform-style:preserve-3d;pointer-events:none;
+}
+.es-math-scope .fleet-card-pile {
+ position:absolute;top:0;width:var(--pile-width);height:var(--pile-height);
+ transform-style:preserve-3d;pointer-events:auto;
+}
+.es-math-scope .fleet-card-pile--discard {left:0}
+.es-math-scope .fleet-card-pile--draw {right:0}
+.es-math-scope .fleet-pile-floor {
+ position:absolute;inset:-2px;border:1px solid #a1a6aa44;border-radius:5px;
+ background:#090d1014;box-shadow:inset 0 1px 1px #0008;
+}
+.es-math-scope .fleet-card-pile[data-empty="false"] .fleet-pile-floor {
+ border-color:transparent;background:#0005;box-shadow:3px 7px 7px 3px #000a;
+}
+.es-math-scope .fleet-pile-stack {
+ position:absolute;inset:0;transform-style:preserve-3d;
+}
+.es-math-scope .fleet-pile-layer,.es-math-scope .fleet-pile-top,
+.es-math-scope .fleet-pile-under-card {
+ position:absolute;inset:0;border-radius:4px;transform-style:preserve-3d;
+}
+.es-math-scope .fleet-pile-layer {
+ border:1px solid #777b7f;background:linear-gradient(130deg,#1e242a,#0c1016);
+ box-shadow:0 1px 0 #080b0e;
+}
+.es-math-scope .fleet-pile-edge {
+ position:absolute;border:1px solid #45494d;
+ background:repeating-linear-gradient(0deg,#a3a5a7 0 .4px,#33383e .4px .9px,#10161d .9px 1.4px);
+}
+.es-math-scope .fleet-pile-edge--front {
+ left:0;bottom:0;width:100%;height:var(--pile-depth);
+ transform-origin:50% 100%;transform:rotateX(-90deg);border-radius:0 0 3px 3px;
+}
+.es-math-scope .fleet-pile-edge--right {
+ right:0;top:0;width:var(--pile-depth);height:100%;
+ transform-origin:100% 50%;transform:rotateY(90deg);
+ background:repeating-linear-gradient(90deg,#a3a5a7 0 .4px,#33383e .4px .9px,#10161d .9px 1.4px);
+}
+.es-math-scope .fleet-pile-back,.es-math-scope .fleet-pile-face {
+ position:absolute;inset:0;display:block;overflow:hidden;border:1px solid #c0b9a5;
+ border-radius:4px;box-sizing:border-box;background:#151b22;
+ box-shadow:inset 0 0 0 1px #050709,0 1px 1px #000b;
+}
+.es-math-scope .fleet-pile-back {
+ background:repeating-linear-gradient(110deg,#24272b10 0 1px,#090c1010 1px 3px),
+  linear-gradient(135deg,#363a3e,#14181d 48%,#252a30);border-color:#8b8983;
+}
+.es-math-scope .fleet-pile-back svg {position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#bdb8ab;stroke-width:.55}
+.es-math-scope .fleet-pile-back img,.es-math-scope .fleet-pile-face img {width:100%;height:100%;object-fit:fill;display:block}
+.es-math-scope .fleet-pile-face {
+ --pile-card-color:#d6b66a;border:1.4px solid var(--pile-card-color);
+ background:linear-gradient(160deg,#15344b,#07111d 70%);
+}
+.es-math-scope .fleet-pile-face[data-family="attack"] {--pile-card-color:#ee765d}
+.es-math-scope .fleet-pile-face[data-family="energy"] {--pile-card-color:#e9bd42}
+.es-math-scope .fleet-pile-face[data-family="defense"] {--pile-card-color:#55cced}
+.es-math-scope .fleet-pile-face[data-family="trap"] {--pile-card-color:#ac73df}
+.es-math-scope .fleet-pile-face[data-family="character"] {--pile-card-color:#dc64e2}
+.es-math-scope .fleet-pile-face[data-family="terrain"] {--pile-card-color:#66c3b0}
+.es-math-scope .fleet-pile-face:not(.fleet-pile-face--art) img {position:absolute;inset:0;opacity:.9}
+.es-math-scope .fleet-pile-face>small,.es-math-scope .fleet-pile-face>b {
+ position:absolute;left:3px;right:3px;z-index:1;text-align:center;color:white;
+ background:#050b12e0;text-shadow:0 1px 1px #000;border-radius:2px;
+}
+.es-math-scope .fleet-pile-face>small {top:3px;font-size:5.5px;line-height:10px;color:var(--pile-card-color);font-weight:850}
+.es-math-scope .fleet-pile-face>b {bottom:5px;padding:3px 1px;font-size:8px;line-height:10px}
+.es-math-scope .fleet-pile-label {
+ position:absolute;left:-8px;right:-8px;top:116px;text-align:center;font-size:9px;font-weight:850;
+ letter-spacing:.8px;line-height:11px;color:#bdb7aa;transform:scaleY(1.7);transform-origin:center top;
+ text-shadow:0 1px 1px #000,0 -1px 0 #dfe3e22b;
+}
+.es-math-scope .fleet-pile-label:before,.es-math-scope .fleet-pile-label:after {content:'—';font-weight:400;opacity:.6;margin:0 4px}
+.es-math-scope .fleet-card-piles[data-shuffling="true"] {z-index:17}
+.es-math-scope .fleet-card-pile--discard[data-recycling="true"] .fleet-pile-stack {
+ animation:fleet-discard-to-deck var(--shuffle-duration) both;
+}
+.es-math-scope .fleet-card-pile--draw[data-recycling="true"] .fleet-pile-stack {
+ animation:fleet-deck-rebuilt var(--shuffle-duration) both;
+}
+.es-math-scope .fleet-pile-transfer {position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
+.es-math-scope .fleet-pile-flying-card {
+ position:absolute;left:0;top:0;width:var(--pile-width);height:var(--pile-height);transform-style:preserve-3d;
+ animation:fleet-shuffle-flight calc(var(--shuffle-duration) * .78) both;
+ animation-delay:calc(var(--flight-index) * var(--shuffle-duration) * .025);
+}
+.es-math-scope .fleet-pile-flying-front,.es-math-scope .fleet-pile-flying-back {
+ position:absolute;inset:0;transform-style:preserve-3d;
+ animation:fleet-shuffle-front calc(var(--shuffle-duration) * .78) both;
+ animation-delay:calc(var(--flight-index) * var(--shuffle-duration) * .025);
+}
+.es-math-scope .fleet-pile-flying-front {transform:translateZ(.1px)}
+.es-math-scope .fleet-pile-flying-back {transform:rotateY(180deg) translateZ(.1px);animation-name:fleet-shuffle-back}
+.es-math-scope .fleet-pile-announcement {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@keyframes fleet-discard-to-deck {0%,7%{opacity:1}33%,100%{opacity:0}}
+@keyframes fleet-deck-rebuilt {0%,50%{opacity:0}88%,100%{opacity:1}}
+@keyframes fleet-shuffle-front {0%,40%{opacity:1}41%,100%{opacity:0}}
+@keyframes fleet-shuffle-back {0%,40%{opacity:0}41%,100%{opacity:1}}
+@keyframes fleet-shuffle-flight {
+ 0% {transform:translate3d(0,0,var(--flight-start-depth)) rotateZ(var(--flight-angle));opacity:0}
+ 7% {opacity:1}
+ 35% {transform:translate3d(calc(var(--pile-transfer-x) * .35),-12px,65px) rotateZ(10deg) rotateY(70deg);opacity:1}
+ 65% {transform:translate3d(calc(var(--pile-transfer-x) * .7),-7px,48px) rotateZ(-8deg) rotateY(180deg);opacity:1}
+ 94% {opacity:1}
+ 100% {transform:translate3d(var(--pile-transfer-x),0,var(--flight-end-depth)) rotateY(180deg);opacity:0}
+}
+@media (prefers-reduced-motion:reduce) {
+ .es-math-scope .fleet-pile-flying-card {animation:none;display:none}
+ .es-math-scope .fleet-card-pile[data-recycling="true"] .fleet-pile-stack {animation:none}
+}
