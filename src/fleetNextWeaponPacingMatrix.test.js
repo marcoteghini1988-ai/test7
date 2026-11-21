@@ -135,7 +135,7 @@ function generatorOrder(b){
   chosen=chosen.slice(0,-1);
  return {...order,cards:chosen,pass:true};
 }
-function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drainFraction=CANDIDATE_DRAIN_FRACTION_PER_SECOND){
+function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drainFraction=CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration=null){
  let b=createFleetNextBattle({
   shipA,shipB,raritaA:rarity,raritaB:rarity,
   ruleset:HP_SYNC_RULESET,mode:bossId!=null?'campaign':'pvp',bossId,
@@ -146,7 +146,21 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   seed,nowMs:0
  });
  if(model==='generator-components-v1'){
-  for(const side of Object.values(b.sides))initializeComponentTimers(side,rarity);
+  // Solo nella prova statistica si modificano gli HP e l'istante di scadenza:
+  // non si toccano le statistiche delle carte o i timer della plancia.
+  for(const side of Object.values(b.sides)){
+   initializeComponentTimers(side,rarity);
+   const scale=calibration?.motherHpScale||1;
+   if(scale!==1){
+    side.ships[0].maxHp=Math.round(side.ships[0].maxHp*scale);
+    side.ships[0].hp=side.ships[0].maxHp;
+   }
+   const offset=calibration?.timerOffsetSeconds||0;
+   if(offset)for(const timer of Object.values(side.componentTimers)){
+    timer.initialSeconds+=offset;
+    timer.remainingSeconds+=offset;
+   }
+  }
   b.componentClockSeconds=0;
  }
  let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0,
@@ -309,4 +323,31 @@ test('Matrice tre timer e deterioramento madre, 24 scontri senza Personaggi',()=
    ({rarity,deck,shipA,shipB,seconds,winner,generatorShots,weaponShots}))};
  console.log('WEAPON_PACING_THREE_TIMERS='+JSON.stringify(report));
  assert.equal(cases.length,24);
+});
+
+test('Taratura comparata: 4 interventi su HP madre Comune e timer (96 scontri)',()=>{
+ const variants=[
+  {name:'base',motherHpScale:1,timerOffsetSeconds:0,drain:.009},
+  {name:'A',motherHpScale:1.40,timerOffsetSeconds:-30,drain:.009},
+  {name:'B',motherHpScale:1.55,timerOffsetSeconds:-35,drain:.009},
+  {name:'C',motherHpScale:1.50,timerOffsetSeconds:-35,drain:.011}
+ ];
+ const trial=[];
+ for(const variant of variants){
+  const cases=[];
+  for(const rarity of SHIP_RARITIES)
+   for(const [i,[a,b]] of PRESETS[rarity].entries())
+    for(const shift of [0,101]){
+     const calibration={motherHpScale:rarity==='Comune'?variant.motherHpScale:1,
+      timerOffsetSeconds:variant.timerOffsetSeconds};
+     cases.push(simulate(rarity,ARCHETYPES[i],a,b,
+      4707+i*29+rIdx(rarity)*83+shift,null,'generator-components-v1',
+      variant.drain,calibration));
+    }
+  trial.push({variant,overall:stats(cases),
+   byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(cases.filter(x=>x.rarity===r))])),
+   cases:cases.map(x=>({rarity:x.rarity,deck:x.deck,seconds:x.seconds,winner:x.winner}))});
+ }
+ console.log('WEAPON_PACING_CALIBRATION_TRIALS='+JSON.stringify(trial));
+ assert.equal(trial.reduce((n,v)=>n+v.cases.length,0),96);
 });
