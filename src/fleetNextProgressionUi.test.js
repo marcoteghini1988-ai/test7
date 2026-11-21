@@ -28,6 +28,7 @@ import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {nativeMotherRarity,rarityUnlockedAtSector,rarityIndex,
  SHIP_RARITIES,combatLevelForRarity} from './fleetNext/shipRarity.js';
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
+import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,vesselWithPhysicalVitalDamage} from './officialVitalMotorAdapter.js';
 
@@ -54,7 +55,8 @@ const Fighter=extract('./OfficialFleetBattle3D.jsx','OriginalFleetFighter',{
  fleetImpactVisual:()=>null,ShipPhysicalVitals:()=>null,MountedWeapons:()=>null,
  FLEET_PHYSICAL_VITALS,PHYSICAL_LABELS:Labels,PHYSICAL_SHORT_LABELS:Shorts,
  ASSET_ROOT:'/assets',HP_SYNC_RULESET,describeEscortEffect,liveModules,pct:(n,d)=>Math.round(100*n/d),
- activeEscort:e=>e.hp>0&&!e.destroyed,FLEET_ELEMENTS,mantaEnergy,mantaCapacitorActive,card
+ activeEscort:e=>e.hp>0&&!e.destroyed,FLEET_ELEMENTS,mantaEnergy,mantaCapacitorActive,card,
+  escortArtwork,fusedEscortArtwork
 });
 const Physical=extract('./ShipPhysicalVitals.jsx','ShipPhysicalVitals',{
  vesselWithPhysicalVitalDamage,VITAL_IDS,VITAL_LABELS,VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,
@@ -101,7 +103,9 @@ test('La plancia approvata mostra Personaggio, Difesa, Trappola, due Attacchi, E
  assert.equal((slotHtml.match(/data-slot-role="energia"/g)||[]).length,1);
  assert.equal(side.attackSlots.length,3,'il motore conserva la terza posizione logica Attacco');
  const fighterHtml=renderToStaticMarkup(Fighter({side:'player',unit:side,inspectEscort:()=>{}}));
- assert.equal((fighterHtml.match(/spazio libero/g)||[]).length,2);
+ // Il layout dinamico non rende navi o armi fittizie negli slot vuoti.
+  assert.equal((fighterHtml.match(/spazio libero/g)||[]).length,0);
+  assert.deepEqual(projectMachineBerths(side),[null,null]);
  assert.match(fighterHtml,/0 supporti/);
  assert.doesNotMatch(fighterHtml,/f3d-escort-grade/);
 });
