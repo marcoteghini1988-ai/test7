@@ -1,7 +1,7 @@
 // Eclissi Stellare: nuovo motore tattico, PLANCIA 3D ORIGINALE invariata.
 // Usa i medesimi pezzi, hardpoint, scudiere SVG, arena e geometria del
 // renderer OfficialLiveBattle3D. NON usa FleetCardBattle.css né cards-site.
-import React,{useEffect,useMemo,useState,useRef} from 'react';
+import React,{useEffect,useMemo,useState,useRef,useId} from 'react';
 import {ASSET_ROOT,MountedWeapons} from './ShipPresentation.jsx';
 import {newVessel} from './mathDuelEngine.js';
 import ShipPhysicalVitals from './ShipPhysicalVitals.jsx';
@@ -276,25 +276,69 @@ function FleetVitalStrip({side,unit,onInspect}){
   })}
  </div>;
 }
+// Cornice vettoriale: i riflessi restano nitidi anche quando la plancia viene ingrandita.
+function FleetHudFrame(){
+ const id=useId(),metal=id+'-metal',glass=id+'-glass';
+ return <svg className="f3d-hud-frame" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <defs>
+   <linearGradient id={metal} x1="0" y1="0" x2=".24" y2="1">
+    <stop offset="0" stopColor="#dce9f2"/><stop offset=".09" stopColor="#526c85"/>
+    <stop offset=".24" stopColor="#132333"/><stop offset=".69" stopColor="#0a1320"/>
+    <stop offset=".88" stopColor="#6e899e"/><stop offset="1" stopColor="#d3e1ec"/>
+   </linearGradient>
+   <linearGradient id={glass} x1="0" y1="0" x2=".65" y2="1">
+    <stop offset="0" stopColor="#172e42"/><stop offset=".4" stopColor="#07121e"/>
+    <stop offset=".74" stopColor="#030a12"/><stop offset="1" stopColor="#15283a"/>
+   </linearGradient>
+  </defs>
+  <path d="M8 1H112L119 8V24L112 31H8L1 24V8Z" fill="#02050a" stroke="#000" strokeWidth="2"/>
+  <path d="M8 1H112L119 8V24L112 31H8L1 24V8Z" fill={'url(#'+metal+')'}/>
+  <path className="f3d-hud-lit-edge" d="M9 2H111L118 9V23L111 30H9L2 23V9Z" fill="none" stroke="currentColor" strokeWidth="1.2"/>
+  <path d="M10 4H110L115.5 9.5V22.5L110 28H10L4.5 22.5V9.5Z" fill={'url(#'+glass+')'} stroke="#02060d" strokeWidth="1.5"/>
+  <path d="M11 5H109L114 10V22L109 27H11L6 22V10Z" fill="none" stroke="currentColor" strokeOpacity=".45" strokeWidth=".5"/>
+  <path d="M9 2.4H37M44 2.4H77M84 2.4H110M117.6 10V19M10 29.5H34M42 29.5H78M86 29.5H110M2.4 12V22" fill="none" stroke="currentColor" strokeWidth="1.8"/>
+  <path d="M10 2H36M45 2H76M85 2H109M11 30H33M43 30H77M87 30H109" fill="none" stroke="#e9fcff" strokeOpacity=".85" strokeWidth=".55"/>
+  <path d="M8 8L11 5H54L46 8Z" fill="#d0eaff" fillOpacity=".08"/>
+  <g fill="#c8d9e5" stroke="#020810" strokeWidth=".65">
+   <circle cx="7" cy="7" r="1"/><circle cx="113" cy="25" r="1"/>
+  </g>
+ </svg>;
+}
+function FleetHullMark({mother=false}){
+ return <svg className="f3d-hull-mark" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+  {mother?<><path d="M7 1L8.7 5.3L13 7L8.7 8.7L7 13L5.3 8.7L1 7L5.3 5.3Z" fill="none" stroke="currentColor" strokeWidth="1.3"/>
+   <path d="M3 3L11 11M11 3L3 11" stroke="currentColor" strokeWidth=".8"/></>:
+   <path d="M2 6L7 2L12 6M2 10L7 6L12 10M2 14L7 10L12 14" fill="none" stroke="currentColor" strokeWidth="1.6"/>}
+ </svg>;
+}
 function OriginalFleetBar({side,unit,nickname}){
  const mother=unit.ships[0],escA=unit.escorts?.find(e=>e.slot===0),escB=unit.escorts?.find(e=>e.slot===1);
  const entries=[escA?{ship:escA,mother:false}:null,{ship:mother,mother:true},
   escB?{ship:escB,mother:false}:null];
- return <div className={'live-fleet-bar live-fleet-bar--'+side}>
-  <strong className="f3d-player-label" title={nickname||''}>{nickname||'CPU'}</strong>
+ return <div className={'live-fleet-bar live-fleet-bar--'+side} role="group"
+  aria-label={'Integrità flotta '+(side==='B'?'avversario':'giocatore')}>
+  <strong className="f3d-player-label" title={nickname||'CPU'}>
+   <FleetHudFrame/><span>{nickname||'CPU'}</span>
+  </strong>
   <div className="live-units">{entries.map((entry,i)=>{
    if(!entry)return <div className="f3d-hp-empty" key={i} aria-label={'Supporto '+(i===0?'A':'B')+' non schierato'}>
-    <span>{'SUPPORTO '+(i===0?'A':'B')}</span><i className="f3d-empty-meter" aria-hidden="true"/>
+    <FleetHudFrame/><span className="f3d-ship-name"><FleetHullMark/><span className="f3d-ship-title">{'SUPPORTO '+(i===0?'A':'B')}</span></span>
+    <i className="f3d-empty-meter" aria-hidden="true">NON SCHIERATO</i>
    </div>;
    const {ship,mother:isMother}=entry,max=ship.maxHp||1,hp=Math.max(0,ship.hp||0);
    const rarity=isMother?(ship.rarita||ship.rarity||unit.motherCardRarity):
     (ship.supportRarity||ship.rarity||'Comune');
    const frame=FLEET_RARITY_FRAMES[rarity]||FLEET_RARITY_FRAMES.Comune;
    return <div key={i} className={'live-unit'+(isMother?' live-unit--mother':'')}
-    data-rarity={rarity} style={{'--rarity-frame':frame}}
+    data-rarity={rarity} data-status={hp<=0?'destroyed':hp/max<=.25?'critical':'operational'}
+    style={{'--rarity-frame':frame}}
     title={(ship.name||'Navicella')+' · '+hp+'/'+max+' HP · '+rarity}>
-    <span className="f3d-ship-name">{ship.name||'Navicella'}</span>
-    <i className="live-unit-health"><b style={{width:pct(hp,max)+'%'}}/><em>{hp}/{max}</em></i>
+    <FleetHudFrame/>
+    <span className="f3d-ship-name"><FleetHullMark mother={isMother}/><span className="f3d-ship-title">{ship.name||'Navicella'}</span></span>
+    <i className="live-unit-health" role="meter" aria-label={'HP '+(ship.name||'Navicella')}
+     aria-valuemin={0} aria-valuemax={max} aria-valuenow={Math.min(hp,max)}>
+     <b style={{width:pct(hp,max)+'%'}}/><em>{hp}<span aria-hidden="true"> / </span><span className="f3d-hp-max">{max}</span></em>
+    </i>
    </div>;
   })}</div>
  </div>;

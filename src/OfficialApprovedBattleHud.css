@@ -13,67 +13,107 @@
  background-size:100% 100%;background-position:center;
 }
 
-/* Cornici HP: i tre posti seguono i supporti effettivamente schierati. */
+/* HUD di flotta: metallo sfaccettato, bordi luminosi e letture HP dal vivo.
+   Le cornici SVG seguono la rarità; gli alloggiamenti vuoti restano spenti. */
 .es-math-scope .f3d-approved-layout .live-fleet-bar {
- left:7px;right:7px;height:34px;padding:2px;gap:3px;box-sizing:border-box;
+ left:7px;right:7px;height:34px;padding:2px;gap:0;box-sizing:border-box;
  border:0;background:transparent;box-shadow:none;display:flex;align-items:stretch;
 }
 .es-math-scope .f3d-approved-layout .live-fleet-bar--B {top:3px}
 .es-math-scope .f3d-approved-layout .live-fleet-bar--A {bottom:var(--player-hud-bottom)}
+.es-math-scope .f3d-approved-layout .f3d-hud-frame {
+ position:absolute;inset:0;width:100%;height:100%;overflow:visible;
+ color:var(--hud-accent);pointer-events:none;z-index:-1;
+ filter:drop-shadow(0 1px 1px #000) drop-shadow(0 0 2px var(--hud-accent));
+}
+.es-math-scope .f3d-approved-layout .f3d-hud-lit-edge {
+ filter:drop-shadow(0 0 1px currentColor);
+}
 .es-math-scope .f3d-approved-layout .live-fleet-bar .f3d-player-label {
+ --hud-accent:#24caff;position:relative;isolation:isolate;overflow:visible;
  flex:0 0 80px;width:80px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;
- overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:1px 4px;
- color:#f0faff;font-size:10px;font-weight:900;text-align:center;
- border:1.5px solid #42dcff;border-radius:6px 1px 1px 6px;
- background:linear-gradient(145deg,#102e4c,#051426);
- box-shadow:0 0 6px #13baff80,inset 0 1px 2px #a9efff66;
+ padding:3px 7px;color:#f3f9ff;font-size:10px;font-weight:900;text-align:center;
+ text-transform:uppercase;letter-spacing:.15px;line-height:13px;
+ border:0;border-radius:0;background:none;box-shadow:none;
+ text-shadow:0 1px 2px #000,0 0 4px #9adfff55;
+}
+.es-math-scope .f3d-approved-layout .f3d-player-label>span {
+ display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .es-math-scope .f3d-approved-layout .live-units {
- flex:1;min-width:0;display:grid;grid-template-columns:1fr 1.24fr 1fr;gap:2px;
+ flex:1;min-width:0;height:100%;display:grid;grid-template-columns:1fr 1.24fr 1fr;gap:0;
 }
-.es-math-scope .f3d-approved-layout .live-unit {
+.es-math-scope .f3d-approved-layout .live-unit,
+.es-math-scope .f3d-approved-layout .f3d-hp-empty {
+ --hud-accent:var(--rarity-frame,#5edffd);position:relative;isolation:isolate;
  min-width:0;min-height:0;height:30px;box-sizing:border-box;display:flex;flex-direction:column;
- justify-content:center;gap:1px;text-align:center;overflow:hidden;padding:1px 3px;
- border:1.5px solid var(--rarity-frame,#5edffd);border-radius:3px;
- background:linear-gradient(155deg,#06101bf5,#12233af0 55%,#080c16f5);
- box-shadow:inset 0 0 4px color-mix(in srgb,var(--rarity-frame) 24%,transparent),
-  0 0 5px color-mix(in srgb,var(--rarity-frame) 48%,transparent);
+ justify-content:center;align-items:stretch;gap:2px;text-align:center;overflow:visible;
+ padding:4px 9px 5px;border:0;border-radius:0;background:none;box-shadow:none;
 }
-.es-math-scope .f3d-approved-layout .live-unit--mother {
- box-shadow:inset 0 0 4px #fff3,0 0 7px color-mix(in srgb,var(--rarity-frame) 54%,transparent);
+.es-math-scope .f3d-approved-layout .live-unit--mother {padding-inline:10px}
+.es-math-scope .f3d-approved-layout .live-unit .f3d-ship-name,
+.es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-ship-name {
+ display:flex;align-items:center;justify-content:center;gap:3px;min-width:0;max-width:100%;
+ margin:0;color:#f1f7ff;font-size:8.1px;line-height:9px;font-weight:850;
+ text-transform:uppercase;letter-spacing:.08px;text-shadow:0 1px 2px #000;
 }
-.es-math-scope .f3d-approved-layout .live-unit .f3d-ship-name {
- display:block;max-width:100%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;
- color:#f7faff;font-size:8px;line-height:10px;font-weight:900;
+.es-math-scope .f3d-approved-layout .f3d-ship-name .f3d-ship-title {
+ display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+ font:inherit;color:inherit;
+}
+.es-math-scope .f3d-approved-layout .f3d-hull-mark {
+ display:block;width:9px;height:9px;flex:0 0 9px;color:var(--hud-accent);
+ filter:drop-shadow(0 0 2px var(--hud-accent));
 }
 .es-math-scope .f3d-approved-layout .live-unit .live-unit-health {
- position:relative;display:block;width:100%;height:11px;min-height:11px;
- box-sizing:border-box;overflow:hidden;border:1px solid color-mix(in srgb,var(--rarity-frame) 75%,white);
- border-radius:7px;background:#0c1729;
+ position:relative;display:block;width:100%;height:10px;min-height:10px;
+ box-sizing:border-box;overflow:hidden;border:1px solid #a6eeff;border-radius:5px;
+ background:linear-gradient(180deg,#01060c,#153043);
+ box-shadow:0 0 0 1px #010812,0 1px 1px #b3daee33,inset 0 1px 3px #000;
 }
 .es-math-scope .f3d-approved-layout .live-unit .live-unit-health>b {
- display:block;position:absolute;inset:0 auto 0 0;height:100%;
- background:linear-gradient(180deg,#75faff,#0084d3 70%,#073055);
+ display:block;position:absolute;inset:0 auto 0 0;height:100%;border-radius:3px;
+ background:linear-gradient(180deg,#eeffff 0%,#57f2ff 16%,#00c9f3 38%,#0098cb 60%,#02628d 74%,#58e7ff 100%);
+ box-shadow:inset 0 0 2px #bfffff,0 0 4px #00d9ff;
 }
+.es-math-scope .f3d-approved-layout .live-unit .live-unit-health>b:after {
+ content:'';position:absolute;inset:1px 0;
+ background:repeating-linear-gradient(90deg,transparent 0 8px,#001a2b25 8px 9px);
+}
+.es-math-scope .f3d-approved-layout .live-unit--mother .live-unit-health {border-color:#ffb0b9}
 .es-math-scope .f3d-approved-layout .live-unit--mother .live-unit-health>b {
- background:linear-gradient(180deg,#ff9ca4,#ff3157 63%,#7d0b25);
+ background:linear-gradient(180deg,#fff0eb 0%,#ff8d9f 16%,#ff3158 38%,#ec0b3b 60%,#8d0a2d 74%,#ff6c80 100%);
+ box-shadow:inset 0 0 2px #ffd8df,0 0 4px #ff194c;
 }
 .es-math-scope .f3d-approved-layout .live-unit .live-unit-health>em {
- position:absolute;inset:0;display:grid;place-items:center;color:white;font-style:normal;
- font-size:8px;font-weight:950;line-height:9px;text-shadow:0 1px 2px #000,0 0 3px #000;
+ position:absolute;inset:-1px 0;display:flex;align-items:center;justify-content:center;gap:1px;
+ color:#fff;font-style:normal;font-size:8.5px;font-weight:900;line-height:10px;
+ font-variant-numeric:tabular-nums;text-shadow:0 1px 1px #000,1px 0 1px #000,-1px 0 1px #000;
 }
+.es-math-scope .f3d-approved-layout .live-unit .f3d-hp-max {font:inherit;color:#e7f2fa}
+.es-math-scope .f3d-approved-layout .live-unit .live-unit-health>em>span {font:inherit}
+.es-math-scope .f3d-approved-layout .live-unit[data-status="critical"] .live-unit-health {
+ border-color:#ffd0b3;box-shadow:0 0 0 1px #180809,0 0 4px #ff643b99;
+}
+.es-math-scope .f3d-approved-layout .live-unit[data-status="destroyed"] {
+ --hud-accent:#775c64;
+}
+.es-math-scope .f3d-approved-layout .live-unit[data-status="destroyed"] .f3d-ship-name {color:#c2a5ad}
+.es-math-scope .f3d-approved-layout .live-unit[data-status="destroyed"] .live-unit-health {border-color:#966570}
 .es-math-scope .f3d-approved-layout .f3d-hp-empty {
- display:flex;visibility:visible;height:30px;min-width:0;box-sizing:border-box;
- padding:1px 3px;gap:2px;flex-direction:column;align-items:center;justify-content:center;
- border:1px solid #435768;border-radius:3px;color:#93b0c8;box-shadow:none;
- background:linear-gradient(155deg,#071622d0,#142034dd);
+ --hud-accent:#4b687f;visibility:visible;color:#89a1b5;
 }
-.es-math-scope .f3d-approved-layout .f3d-hp-empty>span {
- display:block;font-size:8px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+.es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-hud-frame {filter:drop-shadow(0 1px 1px #000)}
+.es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-ship-name {
+ color:#93aabd;font-size:7px;font-weight:700;
 }
+.es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-hull-mark {opacity:.6;filter:none}
 .es-math-scope .f3d-approved-layout .f3d-hp-empty .f3d-empty-meter {
- display:block;width:100%;height:9px;border:1px solid #496377;border-radius:7px;
- background:linear-gradient(90deg,#102136,#1e3247);
+ display:block;width:100%;height:10px;min-height:10px;box-sizing:border-box;
+ border:1px solid #365268;border-radius:5px;
+ background:repeating-linear-gradient(125deg,#071522 0 3px,#122333 3px 4px);
+ color:#8da5ba;font-size:5px;font-style:normal;font-weight:650;letter-spacing:.55px;line-height:8px;
+ box-shadow:0 0 0 1px #0009,inset 0 1px 2px #000;
 }
 
 /* Indicatori dei componenti e comandi condividono una fascia, senza sovrapporsi. */
