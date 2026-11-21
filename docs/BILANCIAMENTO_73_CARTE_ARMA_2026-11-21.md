@@ -22,7 +22,7 @@ Le Armi sottraggono HP tramite gli slot Arma (massimo 2). Le Carte Attacco modif
 | Colpi multipli troppo deboli oppure superiori alle Armi di categoria | Tre Ugelli 3×14; Dardi Polari 3×10; Lanciafiamme 11 HP per bersaglio; Idrocannone 21 HP×2 turni. |
 | Torretta con Personaggio poco incisiva | Piroclastica 30 HP (+35% con Artificiere). |
 | Accumulatore Boreale sottodimensionato | Singolo impatto da 16+20=36 HP, una sola verifica difensiva. |
-| Crescita illimitata Cannone dei Frammenti | Danno nominale massimo 120 HP; preservati +10 per Attacco scartato e ×2 Fuoco. |
+| Crescita illimitata Cannone dei Frammenti | Danno base massimo 120 HP nominali prima dei modificatori; preservati +10 per Attacco scartato e ×2 Fuoco. |
 | Bruciatura variabile con tanti scarti | Inceneritore limitato a 12 HP per attivazione periodica, sempre 5 turni. |
 | Blocco della mano troppo lungo | Cicloreattore 2/3/4 secondi (invece di 2/4/6) nei tre stadi. |
 
