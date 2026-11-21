@@ -30,7 +30,7 @@ export const MOTHER_GENERATOR_PROFILES=Object.freeze({
  L04:profile(15,30) // equilibrio
 });
 export const GENERATOR_ATTACK_THRESHOLDS=Object.freeze({quick:2,heavy:4});
-export const GENERATOR_BALANCE_STATUS='TEST_ONLY_PENDING_ENGINE_INTEGRATION';
+export const GENERATOR_BALANCE_STATUS='ACTIVE_NEW_COMBAT_MODE_PENDING_FINAL_BALANCE';
 
 const physicalEntry=entry=>{
  const id=typeof entry==='string'?entry:entry?.id;
