@@ -9,7 +9,7 @@ export const CONFIRMED_WEAPON_CARDS=Object.freeze(RAW.map(([id,name,elementId,ra
  return Object.freeze({id,name,nome:name,kind:'support',categoria:'Supporto',
   category:'Arma di supporto',sottotipo:'Arma temporanea',playable:true,nativeFace:true,
   rarita,maxCopiesPerDeck:COPIES[rarita],elementId,visualKey:element.vfx,
-  visualSymbol:element.symbol,acquisitionPending:true,balancePending:true,
+  visualSymbol:element.symbol,acquisitionPending:false,balancePending:true,
   effectSpec:Object.freeze({type:'deployMachine',hp:1,power:0,damageMode:mode,elementId,
    baseDamage:damage,durationTurns:1,...(cryo?{crystalPolarity:polarity,comboBonus:12}:{})}),
   effectProposed:cryo?'Colpisce direttamente la madre con '+damage+' HP nominali. Se infligge HP reali lascia un cristallo '+polarity+'. Il colpo della polarità opposta, nello stesso turno o nel prossimo turno proprio, innesca +12 HP nominali. Difese e resistenze restano valide.':
