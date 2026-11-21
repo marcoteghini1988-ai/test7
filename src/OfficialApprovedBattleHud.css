@@ -3,7 +3,7 @@
 .es-math-scope .f3d-original-arena.f3d-approved-layout {
  --ui-blue:#4ce5ff;--ui-gold:#ffb42f;--ui-red:#ff586b;color:#f4faff;
  --enemy-fleet-top:45px;--player-fleet-top:394px;
- --enemy-slot-top:206px;--player-slot-top:268px;
+ --enemy-slot-top:0px;--player-slot-top:135px;
  --hand-top:683px;--hand-card-width:58px;--hand-card-height:87px;
  --player-hud-bottom:7px;--player-controls-bottom:7px;
 }
@@ -165,33 +165,70 @@
 }
 .es-math-scope .f3d-approved-layout .f3d-machine-berth:has(.f3d-card-weapon-model) .f3d-weapon-position-label {bottom:-8px}
 
-/* Sei posti per lato: le superfici 2:3 seguono la prospettiva del tavolo. */
+/* Carte 58 x 87: entrambe le file condividono lo stesso piano e punto di fuga.
+   Ingombri visibili circa y=236..274 e y=296..340: le due fasce Arma 3D restano libere. */
+.es-math-scope .f3d-approved-layout .f3d-slot-field {
+ position:absolute;left:31px;right:31px;top:118px;height:222px;z-index:12;
+ transform:perspective(1450px) rotateX(58deg);transform-origin:50% 100%;
+}
 .es-math-scope .f3d-approved-layout .live-slot-row {
- left:55px;right:55px;height:74px;gap:8px;align-items:center;
+ left:0;right:0;height:87px;gap:8px;align-items:stretch;transform:none;
 }
 .es-math-scope .f3d-approved-layout .live-slot-row--enemy {top:var(--enemy-slot-top)}
 .es-math-scope .f3d-approved-layout .live-slot-row--player {top:var(--player-slot-top)}
 .es-math-scope .f3d-approved-layout .live-slot {
- width:49px;flex:0 0 49px;height:74px;aspect-ratio:2/3;box-sizing:border-box;
- border:2px solid #ffa93e;border-radius:5px;background:linear-gradient(145deg,#10202d,#040a15 75%);
- transform:perspective(380px) rotateX(36deg);transform-origin:center bottom;
- box-shadow:inset 0 0 6px #ffffff20,0 5px 3px #000d,0 0 6px #e6a84f77;
+ --slot-accent:#ff6957;position:relative;width:58px;flex:0 0 58px;height:87px;aspect-ratio:2/3;
+ box-sizing:border-box;padding:0;border:0;border-radius:3px;transform:none;overflow:hidden;
+ background:linear-gradient(150deg,#27313a,#090f19 55%,#151c24);
+ clip-path:polygon(8% 0,92% 0,100% 6%,100% 94%,92% 100%,8% 100%,0 94%,0 6%);
+ box-shadow:0 2px 1px #000c,inset 0 0 7px #000a;
 }
-.es-math-scope .f3d-approved-layout .live-slot[data-slot-role="personaggio"] {
- border-color:#dc57ff;box-shadow:inset 0 0 6px #d44dff44,0 2px 3px #000b,0 0 6px #dc48ff99;
+.es-math-scope .f3d-approved-layout .live-slot:not(.live-slot--occupied)[data-slot-role="personaggio"] {
+ --slot-accent:#ee66e6;border:0;background:linear-gradient(150deg,#2a2031,#0b1019 65%);
 }
-.es-math-scope .f3d-approved-layout .live-slot[data-slot-role="difesa"],
-.es-math-scope .f3d-approved-layout .live-slot[data-slot-role="trappola"] {
- border-color:#22dfff;box-shadow:inset 0 0 6px #1fbffb44,0 2px 3px #000b,0 0 6px #29dfff99;
+.es-math-scope .f3d-approved-layout .live-slot:not(.live-slot--occupied)[data-slot-role="difesa"] {
+ --slot-accent:#4de0ff;border:0;background:linear-gradient(150deg,#1b2a38,#0b1019 65%);
+}
+.es-math-scope .f3d-approved-layout .live-slot:not(.live-slot--occupied)[data-slot-role="trappola"] {
+ --slot-accent:#b66aff;border:0;background:linear-gradient(150deg,#271f36,#0b1019 65%);
 }
 .es-math-scope .f3d-approved-layout .live-slot[data-slot-role="energia"] {
- border-color:#ffcc48;box-shadow:inset 0 0 7px #ffac2466,0 2px 3px #000b,0 0 6px #ffc02c99;
+ --slot-accent:#bab6ae;border:0;background:linear-gradient(135deg,#b5bcc211,#080d161a);
+ box-shadow:inset 0 0 0 1px #a0a4a638,0 1px 1px #0008;
 }
-.es-math-scope .f3d-approved-layout .live-slot-role {
- bottom:auto;top:0;background:transparent;font-size:7px;line-height:10px;text-shadow:0 1px 2px #000;
+.es-math-scope .f3d-approved-layout .f3d-slot-frame {
+ position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;
 }
+.es-math-scope .f3d-approved-layout .f3d-slot-frame-corners {color:var(--slot-accent)}
+/* Si inquadrano esclusivamente i quattro disegni della riga Categorie del riferimento originale.
+   I simboli Elementi e il riquadro Ambienti barrato non vengono mai mostrati. */
+.es-math-scope .f3d-approved-layout .f3d-slot-category-symbol {
+ position:absolute;top:12px;left:5px;width:48px;height:52px;display:block;
+ background-image:url('../docs/riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png');
+ background-repeat:no-repeat;background-size:695.6863% 347.451%;background-position:23.0415% 29.794%;
+ mask-image:radial-gradient(ellipse at center,#000 54%,#000b 72%,transparent 98%);
+}
+.es-math-scope .f3d-approved-layout .live-slot[data-slot-role="personaggio"] .f3d-slot-category-symbol {background-position-x:61.8828%}
+.es-math-scope .f3d-approved-layout .live-slot[data-slot-role="difesa"] .f3d-slot-category-symbol {background-position-x:42.0013%}
+.es-math-scope .f3d-approved-layout .live-slot[data-slot-role="trappola"] .f3d-slot-category-symbol {background-position-x:98.552995%}
+.es-math-scope .f3d-approved-layout .f3d-slot-energy-symbol {
+ position:absolute;left:9px;top:26px;width:40px;height:31px;color:#b7b1a8;
+ filter:drop-shadow(0 1px .4px #000b) drop-shadow(0 -1px .3px #d1d5d466);
+}
+.es-math-scope .f3d-approved-layout .live-slot .f3d-slot-art {
+ inset:2px;width:calc(100% - 4px);height:calc(100% - 4px);object-fit:contain;
+}
+.es-math-scope .f3d-approved-layout .live-slot--covered {background:#091224}
+.es-math-scope .f3d-approved-layout .live-slot .f3d-card-fallback {padding:12px 4px;font-size:7px}
+.es-math-scope .f3d-approved-layout .live-slot .live-slot-role {
+ top:auto;bottom:7px;left:2px;right:2px;z-index:4;background:transparent;
+ color:#eef0ee;font-size:6.4px;font-weight:850;line-height:8px;letter-spacing:-.1px;
+ transform:scaleY(1.7);transform-origin:center bottom;
+ text-shadow:0 1px 2px #000,0 -1px 1px #000;white-space:nowrap;
+}
+.es-math-scope .f3d-approved-layout .live-slot[data-slot-role="energia"] .live-slot-role {color:#c4beb5}
 .es-math-scope .f3d-approved-layout .f3d-slot-count {
- position:absolute;right:1px;bottom:1px;min-width:12px;height:11px;line-height:11px;
+ position:absolute;right:3px;top:3px;bottom:auto;min-width:12px;height:12px;line-height:12px;z-index:4;
  border-radius:5px;background:#10233fe8;border:1px solid #fee9a9;color:white;font-size:8px;text-align:center;
 }
 

@@ -359,7 +359,7 @@ function OriginalFleetBar({side,unit,nickname}){
  </div>;
 }
 function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
- const labels=['PERS.','DIF.','TRAPP.','ATT.','ATT.','ENERGIA'];
+ const labels=['PERSONAGGIO','DIFESA','TRAPPOLA','ATTACCO','ATTACCO','ENERGIA'];
  return <div className={'live-slot-row live-slot-row--'+(side==='A'?'player':'enemy')}>
   {contents.map((entry,i)=>{
    const type=entry?.id,covered=!!entry?.hidden;
@@ -377,8 +377,19 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
     data-slot-role={i===0?'personaggio':i===1?'difesa':i===2?'trappola':i===5?'energia':'attacco'}
      data-family={covered?'defense':type?cardRole(type):undefined}
      data-rarity={face?exclusiveRarityAtLevel(face,unit?.ships?.[0]?.level):undefined}>
+    <svg className="f3d-slot-frame" viewBox="0 0 58 87" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+     <path d="M5 1H53L57 5V82L53 86H5L1 82V5Z" fill="none" stroke="#05090e" strokeWidth="2"/>
+     <path d="M5 1H53L57 5V82L53 86H5L1 82V5Z" fill="none" stroke="#77818a" strokeWidth=".8"/>
+     <path d="M5 2H52L56 6M2 6V81L6 85" fill="none" stroke="#cbd0d0" strokeWidth=".45" opacity=".6"/>
+     <path className="f3d-slot-frame-corners" d="M15 3H6L3 6V15M43 3H52L55 6V15M55 72V81L52 84H43M15 84H6L3 81V72"
+      fill="none" stroke="currentColor" strokeWidth="1.7"/>
+    </svg>
     {art?<img className="f3d-slot-art" src={art} alt="" draggable={false}/>:
-     <span className={face?'f3d-card-fallback':undefined}>{face?(face.nome||face.name):['♙','◇','◈','✧','✧','ϟ'][i]}</span>}
+     face?<span className="f3d-card-fallback">{face.nome||face.name}</span>:
+     i===5?<svg className="f3d-slot-energy-symbol" viewBox="0 0 64 42" aria-hidden="true" focusable="false" fill="currentColor">
+      <path d="M22 3L11 8L5 30L16 38L20 34L11 28L15 12L25 7ZM42 3L53 8L59 30L48 38L44 34L53 28L49 12L39 7Z"/>
+      <path d="M24 13H28V30H24ZM31 13H35V30H31ZM38 13H42V30H38Z"/>
+     </svg>:<span className="f3d-slot-category-symbol" aria-hidden="true"/>}
     {covered?<>
      <small className="live-slot-role">{entry.pending?'DA POSARE':'COPERTA'}</small>
      {side==='A'&&type&&<button type="button" className="f3d-trap-inspect"
@@ -1093,8 +1104,10 @@ export default function OfficialFleetBattle3D({
     impact={lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='A')&&
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='A'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
-   <OriginalSpecialSlots side="B" contents={enemySlots} upgrades={enemy.exclusiveUpgrades} unit={enemy}/>
-   <OriginalSpecialSlots side="A" contents={playerSlots} upgrades={player.exclusiveUpgrades} inspectTrap={setHelp} unit={player}/>
+   <div className="f3d-slot-field">
+    <OriginalSpecialSlots side="B" contents={enemySlots} upgrades={enemy.exclusiveUpgrades} unit={enemy}/>
+    <OriginalSpecialSlots side="A" contents={playerSlots} upgrades={player.exclusiveUpgrades} inspectTrap={setHelp} unit={player}/>
+   </div>
    <OriginalFleetFighter side="player" unit={player} chosenCards={chosenTypes} ply={battle.ply}
     selectedVital={needsOwnTarget?actualOwnVital:null} canSelectOwn={needsOwnTarget&&myTurn&&!ended&&!resolving}
     onSelectVital={id=>{if(ownTargets.some(p=>p.id===id)){setSelectedOwnVital(id);setMessage('');}}}
