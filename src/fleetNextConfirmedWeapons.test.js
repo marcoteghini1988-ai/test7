@@ -27,7 +27,7 @@ test('Cinque Armi approvate, con ID, effetti, rarità e danni documentati',()=>{
   assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(describeEffect(c),c.effectProposed);
   assert.ok(canSelectNewGeneric(c.id));assert.ok(NEXT_COMMON_AVAILABLE.includes(c));
-  assert.equal(c.acquisitionPending,true);assert.equal(c.balancePending,true);
+  assert.equal(c.acquisitionPending,false);assert.equal(c.balancePending,true);
  }
 });
 test('Dardi Ghiaccio: entrambi gli ordini innescano un solo cristallo, 39 HP nominali',()=>{
