@@ -3,6 +3,7 @@
 // Gli effetti senza danno/costo/timing definito sono visibili come PROGETTO,
 // ma non possono essere giocati né acquistati: niente potenza inventata.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
+import {pendingAdvancedWeaponRule} from './confirmedAdvancedWeaponMechanics.js';
 const DESIGNS=[
   {
     "id": "weapon-designed-plasma-mortaio-magmatico",
@@ -408,6 +409,8 @@ export const DESIGNED_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
  const element=FLEET_ELEMENTS[s.elementId];
  if(!element||s.profile&&!MODES.includes(s.profile.pattern))throw Error('Progetto Arma non valido: '+s.id);
  const playable=!!s.profile;
+ const mechanic=playable?null:pendingAdvancedWeaponRule(s.id);
+ if(!playable&&!mechanic)throw Error('Unregistered pending weapon: '+s.id);
  const p=playable?Object.freeze({...s.profile}):null;
  const spec=playable?Object.freeze({type:'deployMachine',hp:1,power:0,
   elementId:s.elementId,damageMode:'designed-shot',durationTurns:s.durationTurns||1,
@@ -419,6 +422,7 @@ export const DESIGNED_WEAPON_CARDS=Object.freeze(DESIGNS.map(s=>{
   rarita:s.rarita,rarityPending:!Object.hasOwn(RARITY_LIMIT,s.rarita),
   playable,nativeFace:true,acquisitionPending:true,balancePending:true,
   reviewRequired:!playable,designOnly:!playable,
+  confirmedMechanic:mechanic,missingDecisions:mechanic?.missing||Object.freeze([]),
   maxCopiesPerDeck:RARITY_LIMIT[s.rarita]||1,
   effectSpec:spec,effectProposed:s.description,
   designNotes:Object.freeze({durationTurns:s.durationTurns||null,

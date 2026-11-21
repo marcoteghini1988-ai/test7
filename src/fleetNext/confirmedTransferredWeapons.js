@@ -1,6 +1,7 @@
 // Trasferimenti approvati 20/11: le identità restano quelle già progettate.
 // Nessuna rarità, immagine, costo o danno definitivo viene inventato.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
+import {pendingAdvancedWeaponRule} from './confirmedAdvancedWeaponMechanics.js';
 
 const sirioElement=FLEET_ELEMENTS.mineral,windElement=FLEET_ELEMENTS.aerial;
 export const CONFIRMED_TRANSFER_WEAPONS=Object.freeze([
@@ -23,6 +24,8 @@ export const CONFIRMED_TRANSFER_WEAPONS=Object.freeze([
   category:'Arma di supporto',categoria:'Supporto',sottotipo:'Arma temporanea',
   kind:'support',playable:false,designOnly:true,reviewRequired:true,nativeFace:true,
   rarita:'Da definire',rarityPending:true,acquisitionPending:true,balancePending:true,
+  confirmedMechanic:pendingAdvancedWeaponRule('weapon-transferred-aerial-cicloreattore'),
+  missingDecisions:pendingAdvancedWeaponRule('weapon-transferred-aerial-cicloreattore').missing,
   maxCopiesPerDeck:1,elementId:'aerial',
   visualKey:windElement.vfx,visualSymbol:windElement.symbol,
   visualBrief:'Arma trasferita da Ghiaccio a Vento; grafica finale da approvare.',

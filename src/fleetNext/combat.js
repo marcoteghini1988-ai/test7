@@ -20,6 +20,7 @@ import {FUSION_SHIP_CARD_BY_ID} from './fusionShipCards.js';
 import {supportDefinition} from './supportCatalog.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
 import {applyElementalDamage,elementalDamageDescription,terrainWeaponAttackBonus} from './elementalDamage.js';
+import {weaponFiresOnOwnTurn,planIceNeedle,planMagmaMortar,consumeMortarEnergy} from './confirmedAdvancedWeaponMechanics.js';
 // La pila Energia non ha limite; i costi delle abilità restano indipendenti.
 import {elementalAbility,totalElementalEnergy,chargedElementalEnergy,
  canChargeElementalEnergy,chargeElementalEnergy,spendElementalEnergy,
@@ -3433,7 +3434,8 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const ready=(side.machines||[]).filter(m=>m.damageMode==='designed-shot'&&
   unitEnabled(m,b.ply)&&!unitSilenced(m,b.ply)&&!weaponSlotLocked(side,m.slot,b.ply)&&
-  (m.deployedPly===b.ply||m.weaponProfile?.pattern==='repeat'&&m.deployedPly===b.ply-2));
+  (m.deployedPly===b.ply||m.weaponProfile?.pattern==='repeat'&&m.deployedPly===b.ply-2||
+  m.weaponProfile?.pattern==='magma-mortar'&&weaponFiresOnOwnTurn(m.deployedPly,b.ply,3)));
  if(!ready.length)return null;
  startNebulaVolley(ctx);
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,
@@ -3470,7 +3472,12 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    (commander.name||commander.nome||'').toLowerCase().includes((p.characterName||'').toLowerCase());
   const extra=pattern==='energy-charge-burst'?Math.min(p.maxBonus,charges):0;
   let planned=[];
-  if(pattern==='sweep')planned=allTargets().map(target=>({target,base:p.baseDamage,ignoreCover:target.kind==='part'}));
+  if(pattern==='magma-mortar')planned=planMagmaMortar(side,p);
+  else if(pattern==='ice-needle')planned=planIceNeedle(enemy.escorts,
+   motherPart(enemy.ships[0],'weapons'),
+   TERRAIN_CATALOG[b.terrain?.id]?.elementId==='cryogenic',
+   p.supportDamage,p.terrainSupportDamage);
+  else if(pattern==='sweep')planned=allTargets().map(target=>({target,base:p.baseDamage,ignoreCover:target.kind==='part'}));
   else if(pattern==='multi'||pattern==='spread'){
    const targets=pattern==='spread'?allTargets():[];
    planned=Array.from({length:p.shots},(_,i)=>({
@@ -3500,6 +3507,7 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    if(enemy.ships[0].hp<=0)break;
    const target=planned[n].target||ordinaryTarget();
    if(!target||!unitAlive(target.unit))continue;
+   if(planned[n].usesMagmaEnergy&&!consumeMortarEnergy(side,p.ammoMode))continue;
    let raw=planned[n].base;
    if(pattern==='percent'){
     // In modalità HP il vitale weapons è il punto di mira, non la barra madre.
@@ -3521,12 +3529,15 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    }
    const piercing=pattern==='induction'&&energy>=1;
    const previousNebulaPierce=ctx.nebulaPierceLeft||0;
+   const previousIcePierce=ctx.iceNeedlePiercing||false;
+   if(planned[n].ignoreOrdinaryDefenses)ctx.iceNeedlePiercing=true;
    if(piercing&&['escort','machine'].includes(target.kind))ctx.nebulaPierceLeft=1;
    const priorElement=ctx.attackElement;ctx.attackElement=machine.weaponElementId;
    const hit=side.fireBlocked||side.fireDisabledUntil>b.ply||!power?{damage:0,target}:
     linceHit(b,ctx,events,target,power,machine.sourceCardId,order,ignoreCover,
-     piercing&&target.kind==='part'?1:0);
+     planned[n].ignoreOrdinaryDefenses?99:piercing&&target.kind==='part'?1:0);
    ctx.nebulaPierceLeft=previousNebulaPierce;
+   ctx.iceNeedlePiercing=previousIcePierce;
    ctx.attackElement=priorElement;
    const kind=hit.target?.kind,unit=hit.target?.unit;
    if(hit.damage&&kind){
@@ -4105,7 +4116,8 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  amount=stormConsumeHeavy(b,ctx,events,finalTarget,amount);
  if(blockNebulaRepeat(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  ctx.pierceLeft=pierce;
- if(blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
+ if(!(ctx.iceNeedlePiercing&&finalTarget.kind==='part')&&
+  blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
   return {damage:0,target:finalTarget,blocked:true};
  if(stormNetStops(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  amount=obsidianTransformDamage(b,ctx,events,finalTarget,amount);
