@@ -687,7 +687,7 @@ export function validateFleetTurn(b,who,order){
   if(selectedEnergy.some(c=>!available.includes(c.effectSpec.elementId)))
    return 'La navicella non possiede questo elemento o non lo ha ancora sbloccato';
  }
- if(order?.activateElemental){
+ if(order?.activateElemental&&!b.newGeneratorCombat){
   if(b.ruleset!==HP_SYNC_RULESET)return 'Il colpo elementale richiede la modalità HP';
   const ability=elementalAbility(side.ships[0].id);
   if(!ability)return 'La navicella non ha abilità elementale';
@@ -3230,6 +3230,34 @@ function resolveElementalActivation(b,who,order,ctx,events){
   remainingEnergy:totalElementalEnergy(side)
  }));
 }
+// La barra del Generatore e' l'unico comando necessario: un tocco
+// prenota il colpo. Le Carte Arma consumano prima la loro Energia, poi
+// si valuta il numero di Carte Energia FISICHE rimaste (non le cariche).
+function resolveModernGeneratorActivation(b,who,order,ctx,events){
+ if(!b.newGeneratorCombat||!order?.activateElemental)return;
+ const side=b.sides[who],mother=side.ships[0];
+ const ready=generatorAttackPreview(side,true);
+ if(!ready.ready){
+  events.push(emit(b,who,'generator-skip',
+   ready.reason==='cooling'?'Generatore in raffreddamento':
+   'Energia insufficiente dopo la risoluzione delle Carte Arma',
+   {remainingPhysicalCards:generatorCardCount(side),reason:ready.reason}));
+  return;
+ }
+ const fired=commitGeneratorFiring(side,ready);
+ if(!fired)return;
+ ctx.generatorShotDamage=supportSpecialBoost(side,fired.nominalDamage,b.ply);
+ ctx.elementalShot=true;
+ const element=mother.element;
+ const kind=fired.tier==='heavy'?'potente':'rapido';
+ events.push(emit(b,who,'generator-shot','Generatore · attacco '+kind+
+  ' · '+ctx.generatorShotDamage+' HP nominali',{
+  generatorTier:fired.tier,visualKey:FLEET_ELEMENTS[element]?.vfx,
+  elementId:element,nominalDamage:ctx.generatorShotDamage,
+  spentPhysicalCards:fired.physicalCardsCost,
+  coolingOwnTurns:fired.coolingOwnTurns,spentEnergyIds:fired.spent.spentIds
+ }));
+}
 function applyCard(b,who,id,ctx,events,order){
  const side=b.sides[who],def=card(id),role=cardRole(id);
  if(role==='attack'&&!['systemModifier','fieldReset'].includes(def.effectSpec?.type)&&
@@ -3637,7 +3665,9 @@ function escortPassive(b,side,ctx,events,order){
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
    if(power){
     const extra=terrainWeaponExtraPower(b,side,ctx,machine,power);
-    ctx.power+=power+extra;recordTerrainWeaponShare(side,ctx,machine,power,extra);
+    if(b.newGeneratorCombat)ctx.independentWeaponPower+=power+extra;
+    else ctx.power+=power+extra;
+    recordTerrainWeaponShare(side,ctx,machine,power,extra);
    }
    if(charge&&!ctx.order?.pass){
     const kind=charge.mode==='discard-attacks'?'weapon-discard':
@@ -4928,7 +4958,7 @@ function resolveSalvo(b,ctx,events,order){
  ctx.terrainNormalSalvo=true;
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],defender=b.sides[other(ctx.who)],mother=side.ships[0],enemy=defender.ships[0];
- ctx.royalMotherShot=true;
+ ctx.royalMotherShot=!ctx.independentWeaponShot;
  let selected=selectedEnemyTarget(defender,order,b.ply);
  if(!selected){events.push(emit(b,ctx.who,'no-shot','Bersaglio non valido'));return {damage:0};}
  if(side.fireBlocked||side.fireDisabledUntil>b.ply){
@@ -4943,12 +4973,16 @@ function resolveSalvo(b,ctx,events,order){
  const guardPower=defender.buffs.filter(x=>x.kind==='guard'&&(x.untilPly==null||x.untilPly>b.ply)).reduce((sum,x)=>sum+(x.power||0),0);
  const rawTerrain=terrainSalvoModifier(b.terrain,mother.id);
  const terrain=rawTerrain.value<0&&terrainImmunity(side,b.ply)?{...rawTerrain,value:0}:rawTerrain;
- const emergency=!operational(mother,'weapons');
+ const modernShot=Number.isFinite(ctx.generatorShotDamage)||
+  Number.isFinite(ctx.independentWeaponPowerShot);
+ const emergency=!modernShot&&!operational(mother,'weapons');
  // La corazza riduce la potenza, ma non rende una nave invulnerabile.
  // Il tiro di emergenza conserva almeno 1 potenza prima degli effetti temporanei.
- const basePower=Math.max(1,(emergency?1:mother.attackPower??1+mother.weaponRating)-(enemy.defensePower||0));
+ const basePower=modernShot?
+  Math.max(0,Number(ctx.generatorShotDamage??ctx.independentWeaponPowerShot)):
+  Math.max(1,(emergency?1:mother.attackPower??1+mother.weaponRating)-(enemy.defensePower||0));
  const rawPower=Math.max(0,basePower+ctx.power+terrain.value-jam-guardPower);
- const power=ctx.elementalShot?rawPower:supportNormalBoost(side,rawPower,b.ply);
+ const power=modernShot||ctx.elementalShot?rawPower:supportNormalBoost(side,rawPower,b.ply);
  if(power===0){events.push(emit(b,ctx.who,'block','Potenza zero: l’attacco fallisce'));return {damage:0,partId:order.partId,played:visiblePlayed(ctx.cards),power};}
  if(emergency)events.push(emit(b,ctx.who,'emergency-shot','Tiro di emergenza: l’Arsenale è distrutto'));
  const guards=protectingFleetUnits(defender,b.ply);
@@ -5159,7 +5193,8 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   stormHitIds:new Set(),stormSuppressChain:false,stormFrontUsed:false,stormChainPlan:null,
   nebulaVolleySerial:0,nebulaSeen:new Map(),
   bypassPlayed:false,
-  power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0};
+  power:0,pierce:0,bypass:false,multiTargets:1,pierceLeft:0,effectSerial:0,
+  independentWeaponPower:0,generatorShotDamage:null};
  if(!order.pass){
   const planned=selectedEnemyTarget(b.sides[other(who)],order,b.ply);
   ctx.sharkPrimary=planned?{kind:planned.kind,id:planned.unit.id}:null;
@@ -5191,7 +5226,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  after.sort((x,y)=>Number(card(x)?.effectSpec?.type==='fieldReset')-Number(card(y)?.effectSpec?.type==='fieldReset'));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
  reserveProvisionalMortarFuel(b,ctx,{unitEnabled,unitSilenced,weaponSlotLocked});
- resolveElementalActivation(b,who,order,ctx,events);
+ if(!b.newGeneratorCombat)resolveElementalActivation(b,who,order,ctx,events);
  arkArchiveAction(b,ctx,events);
  obsidianUseBastionGuard(b,ctx,events,order);
  nebulaArchonTerrainTrade(b,ctx,events,order);
