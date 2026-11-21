@@ -77,9 +77,12 @@ function generator(ship,rarity,arch,seed){
  push(rotate(characters,seed%5).map(c=>c.id),2);
  // Riempie il mazzo con una rotazione di Carte Arma e sistemi gia' registrati.
  // Nessuna carta inesistente, nessuna eccezione al limite copie.
- const fillers=[...rotate(weapons,seed%7).map(c=>c.id),
-  ...rotate(systems,seed%5).map(c=>c.id),
-  ...characters.map(c=>c.id),...terrains.map(c=>c.id),...energies];
+ // Non usare armi come riempitivo universale: altrimenti persino il mazzo
+ // "controllo" diventa ricco di cannoni e falsifica la durata media.
+ // I sistemi esistenti possono essere presenti in piu' copie, entro i limiti.
+ const fillers=[...rotate(systems,seed%5).map(c=>c.id),
+  ...characters.map(c=>c.id),...terrains.map(c=>c.id),...energies,
+  ...rotate(weapons,seed%7).map(c=>c.id)];
  for(let k=0;wanted.length<capacity&&k<capacity*12;k++)push(rotate(fillers,k),1);
  assert.equal(wanted.length,capacity,'Mazzo non completo '+ship+'/'+rarity+'/'+arch.name);
  return wanted;
@@ -143,8 +146,9 @@ test('Matrice PvP diagnostica: Comune, Rara, Epica, Leggendaria e tre archetipi'
  const rows=[];
  for(const rarity of SHIP_RARITIES)for(const arch of ARCHETYPES)
   for(const [index,[a,b]] of PRESETS[rarity].entries())
-   rows.push(simulate(rarity,arch,a,b,630+index*13+rIdx(rarity)*57));
- assert.equal(rows.length,36);
+   for(const shift of [0,101])
+    rows.push(simulate(rarity,arch,a,b,630+index*13+rIdx(rarity)*57+shift));
+ assert.equal(rows.length,72);
  assert.equal(rows.filter(x=>x.winner==='unfinished').length,0);
  const report={byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
    [r,stats(rows.filter(x=>x.rarity===r))])),
@@ -159,9 +163,10 @@ test('Matrice boss diagnostica: parita rarita e boss di difficolta crescente',()
  for(const rarity of SHIP_RARITIES)
   for(const [i,bossId] of [1,8,17].entries()){
    const [a,b]=PRESETS[rarity][i];
-   cases.push(simulate(rarity,ARCHETYPES[1],a,b,985+i*17+rIdx(rarity)*101,bossId));
+   for(const shift of [0,101])
+    cases.push(simulate(rarity,ARCHETYPES[1],a,b,985+i*17+rIdx(rarity)*101+shift,bossId));
   }
- assert.equal(cases.length,12);
+ assert.equal(cases.length,24);
  const report={overall:stats(cases),
   byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[r,stats(cases.filter(x=>x.rarity===r))])),
   cases:cases.map(({rarity,shipA,shipB,seconds,turns,draw,invalid,weaponShots})=>
