@@ -72,8 +72,8 @@ function generator(ship,rarity,arch,seed){
  const terrains=ELEMENTAL_TERRAIN_CARDS.filter(c=>c.rarita===rarity&&
   own.includes(c.elementId));
  push(terrains.map(c=>c.id),arch.terrain);
- const characters=Object.values(GENERAL_CARDS).filter(c=>
-  rIdx(c.rarita)<=rIdx(rarity));
+ // Personaggi esclusi dall'audit: effetti e valori non sono ancora definitivi.
+ const characters=[];
  push(rotate(characters,seed%5).map(c=>c.id),2);
  // Riempie il mazzo con una rotazione di Carte Arma e sistemi gia' registrati.
  // Nessuna carta inesistente, nessuna eccezione al limite copie.
@@ -94,7 +94,7 @@ function fallback(b){
    ...(guard.kind==='escort'?{escortSlot:guard.slot}:{})}:
   {cards:[],pass:false,targetKind:'part',targetId:'weapons',partId:'weapons'};
 }
-function simulate(rarity,arch,shipA,shipB,seed,bossId=null){
+function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current'){
  let b=createFleetNextBattle({
   shipA,shipB,raritaA:rarity,raritaB:rarity,
   ruleset:HP_SYNC_RULESET,mode:bossId!=null?'campaign':'pvp',bossId,
@@ -110,9 +110,16 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null){
   const who=b.turn;
   const at=b.turnStartedAtMs+meanTurnMs;
   let order=autoFleetTurn(b,who);
-  if(validateFleetTurn(b,who,order)){invalid++;order=fallback(b);}
+  if(model==='no-normal'){
+   // Scenario diagnostico: nessun tiro GRATIS della madre; le armi sparano.
+   order={...order,activateElemental:false,pass:true};
+  }
+  if(validateFleetTurn(b,who,order)){
+   invalid++;order=fallback(b);
+   if(model==='no-normal')order.pass=true;
+  }
   let r=resolveFleetNextTurn(b,who,order,at);
-  if(!r.ok){invalid++;order=fallback(r.battle);r=resolveFleetNextTurn(r.battle,who,order,at);}
+  if(!r.ok){invalid++;order=fallback(r.battle);if(model==='no-normal')order.pass=true;r=resolveFleetNextTurn(r.battle,who,order,at);}
   assert.equal(r.ok,true,shipA+'/'+shipB+'/'+rarity+': '+r.reason);
   played+=order.cards?.length||0;
   passes+=Number(!!order.pass);
@@ -123,7 +130,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null){
   b=r.battle;turns++;
   assert.ok(b.sides.A.ships[0].hp>=0&&b.sides.B.ships[0].hp>=0);
  }
- return {rarity,deck:arch.name,shipA,shipB,seed,
+ return {rarity,deck:arch.name,shipA,shipB,seed,model,
   boss:bossId!=null,seconds:turns*meanTurnMs/1000,
   rounds:Math.ceil(turns/2),turns,draw:b.winner==='draw',
   winner:b.winner||'unfinished',invalid,played,weaponShots,blocks,passes,damage};
@@ -136,6 +143,7 @@ function stats(matches){
   p10:seconds[Math.floor((n-1)*.10)],
   p90:seconds[Math.floor((n-1)*.9)],
   draw:matches.filter(x=>x.draw).length,
+  unfinished:matches.filter(x=>x.winner==='unfinished').length,
   within5to6:matches.filter(x=>x.seconds>=300&&x.seconds<=360).length,
   avgTurns:Math.round(matches.reduce((s,v)=>s+v.turns,0)/n),
   invalid:matches.reduce((s,v)=>s+v.invalid,0),
@@ -172,4 +180,20 @@ test('Matrice boss diagnostica: parita rarita e boss di difficolta crescente',()
   cases:cases.map(({rarity,shipA,shipB,seconds,turns,draw,invalid,weaponShots})=>
    ({rarity,a:shipA,b:shipB,seconds,turns,draw,invalid,weaponShots}))};
  console.log('WEAPON_PACING_BOSS='+JSON.stringify(report));
+});
+
+test('Audit senza attacco gratuito madre, esclusi Personaggi (12 scenari)',()=>{
+ const matches=[];
+ for(const rarity of SHIP_RARITIES)for(let k=0;k<3;k++){
+  const [a,b]=PRESETS[rarity][k];
+  matches.push(simulate(rarity,ARCHETYPES[k],a,b,
+   2401+rIdx(rarity)*71+k*17,null,'no-normal'));
+ }
+ const report={byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>
+  [r,stats(matches.filter(m=>m.rarity===r))])),
+  byDeck:Object.fromEntries(ARCHETYPES.map(a=>
+   [a.name,stats(matches.filter(m=>m.deck===a.name))])),
+  overall:stats(matches),matches};
+ console.log('WEAPON_PACING_NO_MOTHER='+JSON.stringify(report));
+ assert.equal(matches.length,12);
 });
