@@ -12,7 +12,7 @@ import {DISCARD_WEAPONS} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS} from './temporarySupportWeapons.js';
 import {SHIP_RARITIES} from './shipRarity.js';
 import {MOTHER_RARITY_SCALING} from './motherBalance.js';
-import {scaleObject,description,WEAPON_RARITY_POWER} from './weaponBalanceCalibration.js';
+import {scaleObject,description} from './weaponBalanceCalibration.js';
 
 // Per mantenere una simile durata negli scontri alla pari, la potenza nominale
 // segue gli HP delle navi, NON il tempo del timer. Non e' un moltiplicatore
@@ -29,8 +29,9 @@ export const WEAPON_BASE_CARDS=Object.freeze([
 function evolveOne(base,rarita,previousId){
  const index=SHIP_RARITIES.indexOf(base.rarita),next=SHIP_RARITIES.indexOf(rarita);
  if(index<0||next<=index)throw Error('Evoluzione arma non valida '+base.id);
- const factor=(HP_SCALE[rarita]/HP_SCALE[base.rarita])*
-  (WEAPON_RARITY_POWER[rarita]/WEAPON_RARITY_POWER[base.rarita]);
+ // Fattore HP originario. I coefficienti WEAPON_RARITY_POWER rimangono
+ // esclusivamente nella matrice diagnostica fino al collaudo delle nuove regole.
+ const factor=HP_SCALE[rarita]/HP_SCALE[base.rarita];
  const spec=Object.freeze(scaleObject(base.effectSpec,factor));
  const id=base.id+'-rarity-'+SUFFIX[rarita];
  const maxCopies=base.maxCopiesPerDeck===1?1:COPIES[rarita];
