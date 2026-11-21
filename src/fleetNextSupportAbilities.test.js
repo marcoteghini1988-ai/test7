@@ -195,7 +195,8 @@ test('Supporto pescata: mano riempita fino a 8 senza usare altre carte del mazzo
 
 test('Plancia ufficiale aggiorna gli HP al secondo e rende il Sacrificio cliccabile',()=>{
  const ui=readFileSync(new URL('./OfficialFleetBattle3D.jsx',import.meta.url),'utf8');
- assert.match(ui,/advanceIndependentSupportTime\(current,timestamp\)/);
+ // La plancia usa un solo orologio per supporti e tre componenti.
+ assert.match(ui,/advanceFleetCombatTime\(current,timestamp\)/);
  assert.match(ui,/sacrificeEscortId:preparedSacrifice/);
  assert.match(ui,/PREPARA SACRIFICIO/);
  assert.doesNotMatch(ui,/sacrificeIndependentFleetSupport\(battle,'A'/);
