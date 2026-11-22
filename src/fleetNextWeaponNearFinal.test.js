@@ -27,8 +27,7 @@ const SUMMARIZE=['baseDamage','secondDamage','extraDamage','supportDamage',
  'binarioBonusDamage','couplerBonusDamage','freezeSeconds','healingPercent',
  'energyCost','energyTransferCost'];
 
-function assertValues(raw,shown,pattern){
- const factor=STRATEGIC_NO_DRAIN_BALANCE.weaponNominalMultiplier[raw.rarita];
+function assertValues(raw,shown,pattern,factor){
  for(const name of DAMAGE_FIELDS)if(typeof raw[name]==='number'&&raw[name]>0)
   assert.equal(shown[name],Math.round(raw[name]*factor),raw.id+'/'+name);
  for(const name of ['damages','damageStages']){
@@ -40,7 +39,7 @@ function assertValues(raw,shown,pattern){
  for(const [key,value] of Object.entries(raw))
   if(!DAMAGE_FIELDS.includes(key)&&!['damages','damageStages','weaponProfile'].includes(key))
    assert.deepEqual(shown[key],value,raw.id+' conserva '+key);
- if(raw.weaponProfile)assertValues(raw.weaponProfile,shown.weaponProfile,pattern);
+ if(raw.weaponProfile)assertValues(raw.weaponProfile,shown.weaponProfile,pattern,factor);
 }
 
 function damageSummary(spec){
@@ -71,7 +70,7 @@ test('LOCK_235_WEAPON_VALUES: ogni Arma ha numeri quasi definitivi senza doppio 
   assert.equal(shown.effectSpec.damageMode,raw.effectSpec.damageMode,raw.id);
   assert.equal(shown.effectSpec.durationTurns,raw.effectSpec.durationTurns,raw.id);
   const pattern=raw.effectSpec.weaponProfile?.pattern||raw.effectSpec.damageMode;
-  assertValues(raw.effectSpec,shown.effectSpec,pattern);
+  assertValues(raw.effectSpec,shown.effectSpec,pattern,factor);
   // La scheda mostra il nominale senza difesa, elemento o passive.
   // Il danno reale del motore ha questi modificatori, non un nuovo fattore.
   const base=raw.effectSpec.weaponProfile?.baseDamage??raw.effectSpec.baseDamage;
