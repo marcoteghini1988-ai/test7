@@ -178,7 +178,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   deckA:generator(shipA,rarity,arch,seed),
   deckB:turnTiming==='fast-cpu'?
    buildCampaignNpcDeck(shipB,combatLevelForRarity(shipB,rarity),rarity,seed+11):
-   generator(shipB,rarity,arch,seed+11),
+   generator(shipB,rarity,calibration?.opponentArchetype||arch,seed+11),
   seed,nowMs:0,newGeneratorCombat:model==='live-generator',
   strategicNoDeterioration:calibration?.integratedNoDeterioration===true
  });
@@ -188,7 +188,9 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   for(const [who,side] of Object.entries(b.sides)){
    const original=[...side.hand,...side.deck];
    const filtered=original.filter(id=>cardRole(id)!=='character');
-   const base=generator(who==='A'?shipA:shipB,rarity,arch,seed+(who==='A'?0:11));
+   const base=generator(who==='A'?shipA:shipB,rarity,
+    who==='B'?(calibration?.opponentArchetype||arch):arch,
+    seed+(who==='A'?0:11));
    for(let k=0;filtered.length<original.length&&k<base.length*4;k++){
     const id=base[k%base.length];
     if(cardRole(id)==='character'||filtered.filter(x=>x===id).length>=cardCopyLimit(id))
@@ -1364,4 +1366,50 @@ test('AUDIT_TERRAIN_MIRROR_20261121: offensivo, difensivo, equilibrato, 48 specc
  console.log('AUDIT_TERRAIN_MIRROR_20261121='+JSON.stringify(report));
  assert.ok(report.every(x=>x.pvp.n===48));
  assert.ok(report.every(x=>x.pvp.finishesByComponentDrain===0));
+});
+
+
+test('AUDIT_ARCHETYPE_CROSS_20261122: mazzi offensivo equilibrato e controllo a confronto senza deterioramento',()=>{
+ // Confronto solo diagnostico: nessuna carta, madre o AI viene ritoccata.
+ // Identiche navi, semi e supporti; in una seconda prova si invertono
+ // gli archetipi A/B per distinguere i mazzi dal vantaggio dello schieramento.
+ const pairs=[[ARCHETYPES[0],ARCHETYPES[1]],
+  [ARCHETYPES[0],ARCHETYPES[2]],
+  [ARCHETYPES[1],ARCHETYPES[2]]];
+ const rows=[];
+ for(const [left,right] of pairs){
+  for(const reversed of [false,true]){
+   const own=reversed?right:left,opponent=reversed?left:right;
+   const matches=[];
+   for(const rarity of SHIP_RARITIES)
+    for(const [i,[shipA,shipB]] of PRESETS[rarity].entries())
+     for(const shift of [0,137])
+      matches.push(simulate(rarity,own,shipA,shipB,
+       20261122+rIdx(rarity)*253+i*71+shift,null,'live-generator',
+       CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+       {integratedNoDeterioration:true,opponentArchetype:opponent}));
+   const totals=cases=>({
+    ...stats(cases),
+    winsA:cases.filter(m=>m.winner==='A').length,
+    winsB:cases.filter(m=>m.winner==='B').length,
+    draws:cases.filter(m=>m.draw).length,
+    trapSet:cases.reduce((n,m)=>n+m.trapSet,0),
+    trapTriggered:cases.reduce((n,m)=>n+m.trapTriggered,0),
+    defenseActions:cases.reduce((n,m)=>n+m.defenseAction,0),
+    weaponShots:cases.reduce((n,m)=>n+m.weaponShots,0),
+    generatorShots:cases.reduce((n,m)=>n+m.generatorShots,0),
+    systemActions:cases.reduce((n,m)=>n+m.systemCardsActivated,0),
+    componentsIntactAtWin:cases.filter(m=>m.winnerComponentsAlive>0).length
+   });
+   rows.push({own:own.name,opponent:opponent.name,
+    total:totals(matches),
+    byRarity:Object.fromEntries(SHIP_RARITIES.map(r=>[
+     r,totals(matches.filter(m=>m.rarity===r))]))});
+   assert.equal(matches.length,24);
+   assert.ok(matches.every(m=>!String(m.finishReason).startsWith('Deterioramento')),
+    'Nessun archetipo deve vincere per deterioramento');
+  }
+ }
+ assert.equal(rows.length,6);
+ console.log('AUDIT_ARCHETYPE_CROSS_20261122='+JSON.stringify(rows));
 });
