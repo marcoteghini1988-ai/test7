@@ -32,6 +32,20 @@ NON aggiungono nuove abilità o modifiche al combattimento. Prima di mostrare
 le varianti, verificare questa differenza a colpo d'occhio.
 Riferimento operativo: `docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md`.
 
+**CARTE ARMA — REGOLA DI REALIZZABILITÀ 3D OBBLIGATORIA:** prima
+di generare qualsiasi Arma, pensarla come un dispositivo offensivo
+futuristico realmente modellabile e montabile su una navicella. La scena
+deve mostrarne scocca, volumi 3D, innesti, struttura meccanica, emettitori,
+nuclei e parti funzionali leggibili. **Non disegnare utensili fantasy o
+martelli tradizionali**. Anche se la carta si chiama «Maglio
+Ferrogravitazionale», raffigurare un apparato gravitazionale pesante
+tecnologico con aggancio navale, non un martello da impugnare. Ogni
+evoluzione mantiene l'identità dell'apparato ma ne evolve componenti
+fisici riproducibili in 3D. Se non è plausibile modellarlo e animarlo
+come arma della flotta, l'illustrazione va rifatta. Non alterare regole,
+danni, simboli, cornice e base di carta. La procedura completa è in
+`docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md`.
+
 Se una sorgente PNG non può essere letta come immagine, non dichiarare
 conforme una generazione che ne imita la forma: dirlo e risolvere la lettura
 della sorgente prima di proseguire.
