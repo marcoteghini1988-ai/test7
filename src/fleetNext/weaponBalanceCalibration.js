@@ -1,4 +1,5 @@
-// Bilanciamento candidato per grafiche definitive, 2026-11-21.
+// Valori Carte Arma quasi definitivi, congelati il 22/11/2026.
+// L'originale conserva i dati compatibili con il motore legacy.
 // La stessa regola produce il numero SULLA carta e il numero nel combattimento.
 // La scala differenzia progressioni con 0/1/2 supporti, non impone un timer.
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
@@ -159,15 +160,14 @@ function balanceNativeSpec(spec,factor){
   copy.weaponProfile=Object.freeze(balanceNativeSpec(spec.weaponProfile,factor));
  return copy;
 }
-// Non riscrive ID, elemento, durata, numero colpi, costi, o effetti speciali.
-// I coefficienti restano esclusivamente scenari diagnostici:
-// le 73 armi originali non vengono sovrascritte finche' la nuova meccanica
-// della madre (colpi solo a Energia) non sara' collaudata.
-// Altrimenti i valori sul catalogo divergono dalle carte approvate.
+// La versione strategica gia' applica i coefficienti nel combattimento.
+// Questi originali restano raw per i salvataggi storici; la vista strategica
+// espone i valori nominali quasi definitivi, senza moltiplicarli due volte.
 export function calibratedWeaponCard(raw){
  if(!raw||!Object.hasOwn(WEAPON_RARITY_POWER,raw.rarita))
   throw Error('Arma priva di rarita');
- return raw;
+ return Object.freeze({...raw,balancePending:false,weaponValuesNearFinal:true,
+  weaponBalanceRevision:STRATEGIC_NO_DRAIN_BALANCE.id});
 }
 
 // Versione PRE-STAMPA: produce un clone, non modifica lo schema ufficiale.
@@ -193,5 +193,6 @@ export function weaponStrategicPrintCandidate(raw){
  return Object.freeze({...raw,effectSpec:spec,
   effectProposed:factor===1?raw.effectProposed:description(raw,spec),
   balanceRevision:STRATEGIC_NO_DRAIN_BALANCE.id,
-  balanceStatus:'NOMINAL_STRATEGIC_PLAYTEST_NO_FINAL_IMAGE'});
+  balancePending:false,weaponValuesNearFinal:true,
+  balanceStatus:'NEAR_FINAL_235_WEAPONS_ART_PENDING'});
 }
