@@ -1,5 +1,8 @@
 # ECLISSI STELLARE — AVVIO DEL GIOCO UFFICIALE
 
+> **REGOLA OBBLIGATORIA CREAZIONE CARTE (22 novembre 2026):** prima di generare, leggere [docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md](docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md) e [AGENTS.md](AGENTS.md). Aprire catalogo e valori reali, base PNG originale e simboli PNG originali; usare il simbolo ARMA esatto della tavola, senza inventarlo. Anteprime prima dell'inserimento nel gioco. Questa regola prevale sulle note storiche sotto.
+
+
 **Repository unico:** [marcoteghini1988-ai/test7](https://github.com/marcoteghini1988-ai/test7), ramo `main`. Non creare copie, altri repository, ingressi paralleli o schermate di prova.
 
 ## Decisione operativa corrente — 21 novembre 2026
