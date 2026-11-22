@@ -8,7 +8,7 @@ import {SUPPORT_CATALOG} from './fleetNext/supportCatalog.js';
 import {TERRAIN_CATALOG} from './fleetNext/terrains.js';
 import {CONFIRMED_CARD_BALANCE,supportRegenerationPerSecond,supportPoisonPerSecond,
  supportLastShieldHeal,supportCapacitorDamage,arsenalTierRate} from './fleetNext/confirmedCardBalance.js';
-import {createFleetNextBattle} from './fleetNext/combat.js';
+import {createFleetNextBattle,advanceFleetCombatTime,resolvePreparedFleetTurn} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {settleIndependentSupportDamage,advanceIndependentSupportTime,
  resolveIndependentSupportOwnTurn} from './fleetNext/supportAbilities.js';
@@ -173,4 +173,58 @@ test('Veleno reattivo: toglie HP ogni secondo di preparazione, anche senza carte
  assert.equal(full.battle.sides.A.ships[0].hp,Math.round((initial-30*rate)*10)/10);
  assert.equal(full.battle.supportSecondsProcessed,30);
  assert.equal(b.sides.A.ships[0].hp,initial,'il modello di preparazione non modifica la partita iniziale');
+});
+
+
+test('TEMPO_REALE_20261122: nella partita strategica Rigenerazione segue i secondi, non i 20s dei componenti',()=>{
+ const create=()=>createFleetNextBattle({shipA:'L04',shipB:'L04',
+  raritaA:'Leggendaria',raritaB:'Leggendaria',deckA:[],deckB:[],
+  supportRosterA:[],supportRosterB:roster('regeneration','B'),
+  ruleset:HP_SYNC_RULESET,mode:'pvp',seed:221122,nowMs:0,
+  newGeneratorCombat:true,strategicNoDeterioration:true});
+ const b=create();b.sides.B.ships[0].hp=900;
+ const rate=supportRegenerationPerSecond(b.sides.B.ships[0]);
+ const tick=advanceFleetCombatTime(b,3000);
+ assert.equal(tick.changed,true,'La rigenerazione deve partire DURANTE preparazione');
+ assert.equal(tick.battle.sides.B.ships[0].hp,Math.round((900+3*rate)*10)/10);
+ assert.equal(tick.battle.sides.A.componentElapsedSeconds,0,
+  'Il timer dei componenti non avanza durante preparazione');
+ const repeated=advanceFleetCombatTime(tick.battle,3900);
+ assert.equal(repeated.changed,false,'Non contare due volte lo stesso secondo');
+ const resolved=resolvePreparedFleetTurn(tick.battle,'A',{cards:[],pass:true},6000);
+ assert.equal(resolved.ok,true,resolved.reason);
+ assert.equal(resolved.battle.sides.B.ships[0].hp,Math.round((900+6*rate)*10)/10,
+  'Conferma al sesto secondo: non sostituire con 20 secondi fissi');
+ assert.equal(resolved.battle.sides.A.componentElapsedSeconds,20);
+ assert.equal(resolved.battle.sides.B.componentElapsedSeconds,0);
+ const slow=create();slow.sides.B.ships[0].hp=900;
+ const long=resolvePreparedFleetTurn(slow,'A',{cards:[],pass:true},26000);
+ assert.equal(long.ok,true,long.reason);
+ assert.equal(long.battle.sides.B.ships[0].hp,Math.round((900+26*rate)*10)/10);
+ assert.equal(long.battle.sides.A.componentElapsedSeconds,20,
+  '6s o 26s reali consumano stessa quota dei componenti');
+});
+
+test('TEMPO_REALE_20261122: Veleno avanza al secondo, non duplica tick e rispetta max 30s',()=>{
+ const create=()=>createFleetNextBattle({shipA:'L04',shipB:'L04',
+  raritaA:'Leggendaria',raritaB:'Leggendaria',deckA:[],deckB:[],
+  supportRosterA:[],supportRosterB:roster('reactive-poison','B'),
+  ruleset:HP_SYNC_RULESET,mode:'pvp',seed:221123,nowMs:0,
+  newGeneratorCombat:true,strategicNoDeterioration:true});
+ const b=create();b.sides.B.escorts[0].poisonReadyPly=0;
+ const mother=b.sides.A.ships[0],initial=mother.hp;
+ const rate=supportPoisonPerSecond(mother,mother);
+ const tick=advanceFleetCombatTime(b,4000);
+ assert.equal(tick.battle.sides.A.ships[0].hp,Math.round((initial-4*rate)*10)/10);
+ const duplicate=advanceFleetCombatTime(tick.battle,4200);
+ assert.equal(duplicate.changed,false);
+ const resolution=resolvePreparedFleetTurn(tick.battle,'A',{cards:[],pass:true},9000);
+ assert.equal(resolution.ok,true,resolution.reason);
+ assert.equal(resolution.battle.sides.A.ships[0].hp,Math.round((initial-9*rate)*10)/10);
+ assert.equal(resolution.battle.sides.A.componentElapsedSeconds,20);
+ const capped=create();capped.sides.B.escorts[0].poisonReadyPly=0;
+ const result=advanceFleetCombatTime(capped,36000);
+ assert.equal(result.battle.supportSecondsProcessed,30);
+ assert.equal(result.battle.sides.A.ships[0].hp,Math.round((initial-30*rate)*10)/10,
+  'Non aggiungere danno oltre il limite di preparazione');
 });
