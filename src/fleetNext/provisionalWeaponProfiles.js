@@ -1,7 +1,10 @@
-// Eclissi Stellare — statistiche temporanee approvate per il collaudo delle 21 Armi.
-// I valori non sono il bilanciamento finale. NON creare carte aggiuntive.
-export const WEAPON_BALANCE_POLICY=Object.freeze({revision:'provisional-2026-11-21-balance-v2',
- status:'provisional',finalBalanceAfter:'all-cards-and-criteria-defined'});
+// Eclissi Stellare — profili numerici di 21 Armi speciali originali.
+// Il flag tecnico profile.provisional e' usato dal motore dei colpi:
+// NON indica che questi numeri siano ancora in attesa di una nuova taratura.
+// Dal 22 novembre tutti i 235 valori di battaglia sono prossimi al definitivo.
+export const WEAPON_BALANCE_POLICY=Object.freeze({revision:'near-final-2026-11-22-235-v1',
+ status:'near-final',finalBalanceAfter:'solo correzioni mirate a carte e combinazioni',
+ preservesExistingWeaponMechanics:true});
 const RAW=[
   {
     "id": "weapon-designed-plasma-mortaio-magmatico",
