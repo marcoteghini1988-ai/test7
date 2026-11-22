@@ -99,6 +99,6 @@ test('LOCK_235_WEAPON_VALUES: ogni Arma ha numeri quasi definitivi senza doppio 
  const perRarity=Object.fromEntries(RARITIES.map(r=>[r,rows.filter(x=>x.rarity===r).length]));
  console.log('LOCK_235_WEAPON_SUMMARY='+JSON.stringify({count:rows.length,perRarity,
   first:rows.find(x=>x.id==='weapon-confirmed-metallic-maglio')}));
- for(let offset=0;offset<rows.length;offset+=30)
-  console.log('LOCK_235_WEAPON_BATCH_'+offset+'='+JSON.stringify(rows.slice(offset,offset+30)));
+ for(let offset=0;offset<rows.length;offset+=8)
+  console.log('LOCK_235_WEAPON_BATCH_'+offset+'='+JSON.stringify(rows.slice(offset,offset+8)));
 });
