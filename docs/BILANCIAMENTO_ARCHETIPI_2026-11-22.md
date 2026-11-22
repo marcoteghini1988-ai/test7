@@ -201,6 +201,33 @@ esclusive, 10 Trappole esclusive, Interdizione di Fusione,
 36 Piloti, 12 madri. Niente bilanciamento definitivo dei Piloti
 né cambio di grafica prima delle simulazioni con carte realmente giocate.
 
+### Verifica del ripristino (22/11, dopo gli aggiornamenti)
+
+Commit funzionali:
+- `9f7f1f4a789a984e25dd20e6cad1e7fdd9cfc700`: effetti temporizzati
+  tornano a scorrere in tempo reale durante la preparazione; il cronometro
+  strategico dei tre componenti e' rimasto indipendente.
+- `7ec4207d9dae5e8afd150f50b7453516a4296e04`: test 6/26 secondi,
+  tick non duplicati, massimo 30s, timer componenti invariato.
+- `ebead4aa47f235c6b318bddf5197b4b3ca5529b4`: test di velocita'
+  neutrale con supporti NON temporizzati, evitando di cancellare il Veleno
+  per ottenere artificiosamente lo stesso esito.
+- `96be21493a38f56ee2943cf506250d748431892c`: census automatico dei
+  36 Personaggi, separazione cure, attacchi e abilita'.
+
+GitHub Actions sul commit `96be2149`: **1.904 test superati su 1.904**,
+0 fallimenti, preflight e build riusciti. Gli audit campione registrano
+**72/72 PvP e 24/24 boss conclusi per HP reali, zero KO da componenti**,
+con durate diagnostiche medie di 405 e 224 secondi.
+Le sei righe dell'audit dei 144 archetipi mantengono i conteggi precedenti
+nella popolazione testata; questo NON sostituisce prove dedicate con Piloti
+temporalmente attivi, avvelenamento reale e contromisure.
+
+**Importante:** i Piloti +2 potenza e le cure +1 HP sono valori storici
+censiti, non valori confermati per la scala da centinaia di HP.
+Nessun coefficiente nuovo, grafica o Pilota e' stato cambiato in modo
+generalizzato in questo passaggio.
+
 ## Verifica tecnica e commit
 
 - `8e15766b17393ae7fc830c9c0dc0c9987e3bd75a`: aggiunti 144 duelli.
