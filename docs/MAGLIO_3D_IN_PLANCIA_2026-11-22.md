@@ -87,3 +87,18 @@ la sessione ha bloccato i nuovi processi Node e al riavvio ha mostrato
 eseguito dopo questo salvataggio. Le immagini e registrazioni già presenti
 in `collaudi/maglio/` documentano la precedente versione raster finché non
 vengono sostituite da nuove prove; non provano questa nuova presentazione.
+
+## Esito dopo il salvataggio ufficiale
+
+Dopo aver salvato il codice su `main` nel commit
+`09650ba5313066264d9e435e976a9df37f4a9d2c`, StackBlitz è stato riaperto
+senza modifiche simultanee al codice. Ha mostrato ancora
+`Could not clone repository`. Il collaudo visivo finale resta bloccato.
+
+- [Errore osservato dopo il salvataggio](collaudi/maglio/snodi/stackblitz-dopo-salvataggio.jpg)
+- [Primo piano del modello CPU](collaudi/maglio/snodi/primo-piano-cpu-comune.png):
+  render tecnico del vero GLB, eseguito fuori dal browser, non screenshot
+  della partita e non approvazione della qualità grafica finale.
+- [Verifiche e misure del prototipo](collaudi/maglio/snodi/verifica.json):
+  la base resta a posizione zero e rotazione identità mentre ralla,
+  braccio e pistone cambiano posa.
