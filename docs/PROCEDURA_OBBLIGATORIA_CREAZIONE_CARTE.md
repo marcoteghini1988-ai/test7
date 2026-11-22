@@ -1,0 +1,32 @@
+# PROCEDURA OBBLIGATORIA — "crea la carta" (22 novembre 2026)
+
+**Decisione esplicita dell'utente; valida per OGNI richiesta successiva di creare, rifare, evolvere, illustrare, mostrare o inserire una carta di Eclissi Stellare.** Anche se la richiesta è solo "crea la carta", la procedura completa si esegue PRIMA di generare qualsiasi immagine. Applicare sul repository ufficiale `marcoteghini1988-ai/test7`, ramo `main`.
+
+## Ordine vincolante: CATALOGO → BASE → SIMBOLI → ANTEPRIMA → APPROVAZIONE
+
+1. **CATALOGO:** trovare l'ID esatto e il modello tramite `src/fleetNext/rules.js`, `src/fleetNext/weaponRarityEvolutions.js` e la sorgente reale della famiglia; leggere nome, tipo/categoria, elemento, rarità esistenti, durate, condizioni ed effetto. Per le Armi leggere `WEAPON_NEAR_FINAL_BY_ID` e il controllo `docs/VALORI_QUASI_DEFINITIVI_235_ARMI_2026-11-22.md`; mai ricalcolare arbitrariamente il danno dalle statistiche di partenza. Se manca il valore, dirlo e verificare il codice, non inventarlo.
+2. **BASE:** APRIRE E USARE MATERIALMENTE `docs/riferimenti-carte/BASE_UFFICIALE_CARTE_2026-11-21.png` (PNG originale 1024×1536, Git blob SHA `cb142462bbfbe1388e1ad640e1ccc3f0eb815cae`). La base è immutabile: mantenere pixel, proporzioni, coordinate, curvature, testata, riquadro illustrazione, pannello effetto e targhetta rarità; non fare "una carta simile".
+3. **SIMBOLI:** APRIRE E RITAGLIARE MATERIALMENTE da `docs/riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png` (PNG originale 1774×886, Git blob SHA `c7e35d0656a4198a90ba2e7cbf90661c61f0f182`) le icone giuste. Il simbolo categoria è nel gruppo superiore, il simbolo elemento nella fila inferiore sinistra. Non generare MAI versioni simili o nuove dei pittogrammi; non riprodurre i simboli ambienti barrati.
+4. **COMPOSIZIONE VINCOLATA:** fare generare solo l'**illustrazione centrale** quando serve, NON la cornice, i simboli, le etichette o la carta completa. Comporre la scheda con la base PNG autentica e i ritagli autentici del PNG simboli; inserirvi testo dal catalogo. Se il file PNG originale non è accessibile come immagine binaria, FERMARE la produzione finale e dichiararlo: non sostituirlo con fantasia. Si può usare una copia byte-identica fornita dall'utente, dopo verifica dell'hash Git, come sorgente esatta.
+5. **POSIZIONI:** in alto a sinistra SOLO simbolo categoria, in alto al centro nome, in alto a destra simbolo elemento (se esiste); illustrazione al centro; categoria nel nastro fra immagine ed effetto; effetto verificato in basso; rarità nella targhetta al centro del bordo inferiore. Niente logo Eclissi Stellare sul fronte.
+6. **COLORI:** colore interno/di categoria separato dalla rarità: **Arma arancione, Attacco rosso, Difesa azzurro, Personaggio magenta, Terreno verde, Trappola viola**. Cornice esterna **Comune argento, Rara blu, Epica viola, Leggendaria oro**. Il simbolo ARMA è sempre il **cannone futuristico arancione esatto** della tavola ufficiale, NON un cannone ottocentesco su ruote, un cannocchiale, una spada o un logo generico. **Nessun bagliore giallo/blu dietro la scritta della rarità**.
+7. **CONTROLLO VISIVO OBBLIGATORIO:** affiancare i risultati ai due PNG originali. Controllare corrispondenza materiale degli stessi simboli nelle quattro rarità, nessuno scambio ARMA/ATTACCO, elemento esatto, testo e valori, formato verticale 2:3, geometria della base realmente invariata. In caso di errore, correggere solo l'area difettosa, senza ridisegnare l'intero fronte.
+8. **MOSTRA PRIMA DI INSERIRE:** mostrare le immagini definitive IN CHAT per approvazione. **Non sovrascrivere assets giocabili o inserire i nuovi fronti nell'app finché l'utente non approva**. Dopo approvazione, inserire direttamente nel solo `test7/main`, verificare immagini, motore e collaudo.
+
+## Esempio vincolante: Maglio Ferrogravitazionale (4 rarità)
+
+- Famiglia di origine `weapon-confirmed-metallic-maglio`, `effectSpec.damageMode = base-shot`, elemento `metallic` → **METALLO**.
+- Tipo **ARMA** → ritaglio dalla **prima icona del gruppo CATEGORIE** nella tavola ufficiale (cannone futuristico arancione con scafo/armatura). Non confonderlo col tipo **ATTACCO** (salva di proiettili rossa).
+- Ritaglio **METALLO** → quarta icona della fila inferiore sinistra `SIMBOLI ELEMENTI` (lingotti all'interno del simbolo esagonale).
+- Danni nominali in `WEAPON_NEAR_FINAL_BY_ID`: **Comune 18 HP, Rara 46 HP, Epica 109 HP, Leggendaria 154 HP**, ognuna durata **1 turno proprio**.
+- Identica illustrazione nelle quattro varianti; differiscono soltanto i dettagli di rarità previsti (cornice/targhetta) e il testo del danno.
+- **NON** generare una seconda tavola di simboli e NON inventare un'icona del cannone.
+
+## Fonti ufficiali e precedenza
+
+- [Riferimenti grafici approvati il 21 novembre](CARTE_RIFERIMENTI_GRAFICI_UFFICIALI_2026-11-21.md)
+- [Base ufficiale PNG](riferimenti-carte/BASE_UFFICIALE_CARTE_2026-11-21.png)
+- [Tavola simboli ufficiale PNG](riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png)
+- [Valori delle 235 Carte Arma](VALORI_QUASI_DEFINITIVI_235_ARMI_2026-11-22.md)
+
+**Questa procedura è la prima cosa da leggere per qualsiasi nuova carta. Prevale su mockup AI, stampe di vecchie chat, testi in README obsoleti e vecchie specifiche grafiche.** I PNG originali non si modificano e non si sostituiscono.
