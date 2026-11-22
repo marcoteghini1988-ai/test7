@@ -5,6 +5,7 @@ import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCom
  NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS,NEXT_WEAPON_COLLECTION_CARDS,NEXT_NEW_WEAPON_BY_ID,
  MAX_WEAPON_INVENTORY_COPIES} from './fleetNext/nextDeckLoadout.js';
 import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
+import {WEAPON_NEAR_FINAL_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
 import {readFleetInventory,writeFleetInventory,
@@ -18,7 +19,7 @@ const locale=n=>Number(n||0).toLocaleString('it-IT');
 function FleetCardArt({id,name,grade=1,large=false}){
  const width=large?114:38;
  if(!cardFacePath(id,grade)){
-  const definition=card(id),text=definition?describeEffect(definition,grade):name;
+  const definition=WEAPON_NEAR_FINAL_BY_ID[id]||card(id),text=definition?describeEffect(definition,grade):name;
   return <div role="img" aria-label={'Carta '+name+' · '+text}
    style={{width,minHeight:width*1.5,aspectRatio:'2 / 3',flexShrink:0,boxSizing:'border-box',
     padding:large?9:3,border:'2px solid '+(definition?.kind==='attack'?'#ff594c':'#ffb24d'),
@@ -119,7 +120,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
    <strong>{c.nome||c.name}</strong>
    <div style={small}>{c.rarita||'Comune'} · {c.sottotipo||c.category||c.kind}{isEnergy?' · '+c.charges+' '+(c.charges===1?'carica':'cariche'):''}</div>
-   <p style={small}>{describeEffect(c)}</p>
+   <p style={small}>{describeEffect(WEAPON_NEAR_FINAL_BY_ID[c.id]||c)}</p>
    <p style={small}>Possedute: {owned} · Nel mazzo: {equipped} · Limite mazzo: {cardCopyLimit(c.id)}{isWeapon?' · Limite inventario: '+maxOwned:''}</p>
    <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
     <button style={btn} disabled={equipped>=copies||deckInfo.baseDeck.length>=deckInfo.capacity}
