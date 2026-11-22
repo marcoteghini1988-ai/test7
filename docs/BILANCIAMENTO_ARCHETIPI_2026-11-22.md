@@ -14,8 +14,14 @@ marker `AUDIT_ARCHETYPE_CROSS_20261122`.
   Leggendaria ×1,85. Generator: ×1,00 / ×1,00 / ×1,25 / ×1,30.
 - Generatore prenotato con almeno 2/4 Energie fisiche; nessuno sparo gratuito.
 - Personaggi fuori dal perimetro; no modifiche a plancia 3D, arte o PNG.
-- Rigenerazione e Veleno nel combattimento strategico usano una quota fissa,
-  non il tempo reale impiegato dall'essere umano o dalla CPU.
+- **Correzione 22/11:** Rigenerazione e Veleno sono effetti al **secondo reale**
+  durante la preparazione (0–30 secondi per turno). Solo la scadenza dei tre
+  componenti segue i 20 secondi strategici fissi per turno proprio.
+
+> **Nota di compatibilità:** le simulazioni numeriche di seguito appartengono
+> all'audit eseguito prima del ripristino dei secondi reali per Veleno e
+> Rigenerazione. Sono una base storica: i risultati non certificano la
+> versione temporale corretta, che richiede una nuova calibrazione.
 
 ## Campione e metodologia
 
@@ -135,6 +141,65 @@ ne' le fusioni.
 Commit di test: `e963de8a3adc13baa50ab9db0f7f4f8a62b8d786`.   
 Ultima verifica: **1.901 test superati su 1.901**, preflight e build
 Vite riusciti, zero fallimenti.
+
+## Regole temporali preservate — 22 novembre, revisione successiva
+
+Il giocatore può risolvere il turno in qualsiasi istante fra 0 e 30 secondi
+reali. Solo la quota dei **tre timer dei componenti** è fissa e personale
+(20 secondi strategici per turno completato, ultimo componente a 210).
+Non c'è deterioramento per la loro scadenza.
+
+**Veleno reattivo:** dopo che il supporto viene realmente ferito,
+si attiva contro la flotta di chi lo ha colpito nel suo successivo turno:
+un tick per ciascun secondo reale di preparazione, fino a 30.
+Resta valido anche senza altre carte giocate, non è una perdita da timer
+dei componenti e può portare la madre a 0 HP. Non va eliminato.
+
+**Rigenerazione del supporto:** recupera HP ogni secondo reale
+del turno avversario, senza superare il massimo e senza duplicazioni
+al momento di ESEGUI. Non avanza durante l'animazione di cambio turno.
+In questa fase non è cambiato il suo valore numerico (attualmente
+0,06% degli HP massimi madre per secondo); idem il Veleno
+(0,07% max HP madre e 0,10% max HP supporto per secondo).
+Questi coefficienti saranno ricalibrati con le Carte Pilota e le
+altre famiglie, non sostituiti da effetti generici a turni.
+
+La carta posizionata non produce il suo effetto finché il turno
+non si risolve; le passive già attive invece continuano a scorrere.
+
+Implementazione: `src/fleetNext/combat.js`, test di regressione
+`TEMPO_REALE_20261122` in `src/fleetNextConfirmedCardBalance.test.js`.
+I test di neutralità della velocità escludono esplicitamente le
+passive temporizzate, proprio perché il loro tempo reale è
+una meccanica voluta.
+
+### Bilanciamento Piloti / Personaggi
+
+Il catalogo contiene **12 Piloti generici, 12 esclusivi e 12 Boss**,
+per un totale di 36, con un solo slot Personaggio attivo e
+disattivazione prevista alla scadenza della Plancia.
+
+Problemi concreti delle schede ereditate da sistemi precedenti:
+
+| Pilota | Dato oggi | Rischio |
+|---|---|---|
+| Meccanico di Bordo, Comune | ripara 1 HP per applicazione | marginale contro madre da 1000 HP |
+| Arcanista Stellare, Epica | ripara 1 HP per applicazione | non si distingue sufficientemente dalla Comune |
+| Alchimista dei Soli, Leggendaria | rigenera 1 HP quando subisce il primo danno | effetto a evento, non al secondo; cura da tarare |
+| Stratega del Crepuscolo, Epica | +2 potenza per due attivazioni | bonus assoluto quasi nullo sulle Armi a centinaia HP |
+| Scudiera Veterana, Rara | protegge una scudiera per un colpo | impatto elevato contro il colpo singolo; valutare multi-colpo |
+
+I Piloti **non sono tutti uguali**: l'effetto di riparazione dopo un colpo
+non diventa automaticamente rigenerazione al secondo.
+I bonus futuri a Carte Attacco e Carte Arma saranno valutati separatamente:
+il moltiplicatore ai proiettili del Generatore non deve automaticamente
+raddoppiare le scariche autonome delle Carte Arma.
+
+Categorie da verificare insieme: 120 Terreni elementali, 21 Difese
+esclusive, 10 Trappole esclusive, Interdizione di Fusione,
+32 Sistemi, Carte Arma, rigenerazione e poison, 13 modelli di supporto,
+36 Piloti, 12 madri. Niente bilanciamento definitivo dei Piloti
+né cambio di grafica prima delle simulazioni con carte realmente giocate.
 
 ## Verifica tecnica e commit
 
