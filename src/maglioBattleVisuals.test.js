@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
-import {MAGLIO_CARD_ID,MAGLIO_VARIANTS,maglioArtwork,maglioShots,maglioPresentationBerths,
+import {MAGLIO_CARD_ID,MAGLIO_VARIANTS,maglioArtwork,maglioShots,maglioPresentationBerths,maglioAttackMotion,
  maglioResolutionMs} from './maglioBattleVisuals.js';
 import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turnPresentation.js';
 import {resolvePreparedFleetTurn,autoFleetTurn,createFleetNextBattle} from './fleetNext/combat.js';
@@ -9,6 +9,28 @@ import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createMaglioReviewBattle} from '../scripts/maglioReviewBattle.js';
 
 const order={cards:[0],targetKind:'part',targetId:'weapons',partId:'weapons'};
+for(const [name,from,to] of [
+ ['giocatore verso supporto sinistro',{x:150,y:400},{x:75,y:145}],
+ ['giocatore verso supporto destro',{x:150,y:400},{x:375,y:145}],
+ ['giocatore verso madre',{x:300,y:400},{x:225,y:145}],
+ ['avversario verso supporto sinistro',{x:150,y:200},{x:75,y:550}],
+ ['avversario verso supporto destro',{x:300,y:200},{x:375,y:550}],
+ ['avversario verso madre',{x:300,y:200},{x:225,y:550}]
+])test('Affondo Maglio: '+name,()=>{
+ const {step,recoil,fireFrom}=maglioAttackMotion(from,to);
+ const dx=to.x-from.x,dy=to.y-from.y;
+ assert.ok(Math.abs(step.x*dy-step.y*dx)<1e-8,'Affondo sulla linea del bersaglio');
+ assert.ok(step.x*dx+step.y*dy>0,'Il dispositivo si avvicina al bersaglio');
+ assert.ok(Math.abs(Math.hypot(step.x,step.y)-14)<1e-8,'Ingombro massimo 14 px');
+ assert.ok(Math.hypot(to.x-fireFrom.x,to.y-fireFrom.y)<Math.hypot(dx,dy));
+ assert.ok(recoil.x*dx+recoil.y*dy<0,'Rinculo opposto al bersaglio');
+});
+test('Affondo Maglio: bersaglio vicino o coincidente non viene oltrepassato',()=>{
+ const close=maglioAttackMotion({x:100,y:100},{x:103,y:104});
+ assert.ok(Math.hypot(close.step.x,close.step.y)<5);
+ const same=maglioAttackMotion({x:100,y:100},{x:100,y:100});
+ assert.deepEqual(same.step,{x:0,y:0});assert.deepEqual(same.fireFrom,{x:100,y:100});
+});
 test('Maglio: otto veri sprite RGBA distinti per quattro rarità e due viste',()=>{
  const paths=MAGLIO_VARIANTS.flatMap(v=>['player','enemy'].map(side=>maglioArtwork(v.id,side)));
  assert.equal(new Set(paths).size,8);
