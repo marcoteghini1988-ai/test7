@@ -272,7 +272,8 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
  }
  let turns=0,invalid=0,played=0,weaponShots=0,blocks=0,damage=0,passes=0,
   generatorShots=0,generatorHp=0,invalidReasons=[],trapSet=0,trapTriggered=0,
-  terrainActivated=0,defenseAction=0,systemCardsActivated=0;
+  terrainActivated=0,defenseAction=0,systemCardsActivated=0,
+  systemCardsAttempted=0;
  const meanTurnMs=17000; // ipotesi diagnostica: 17s medi di scelta+animazioni per turno
  while(b.phase==='playing'&&turns<102){
   const who=b.turn;
@@ -322,8 +323,15 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   terrainActivated+=r.events.filter(e=>e.kind==='terrain-activate').length;
   defenseAction+=r.events.filter(e=>e.kind==='card'&&e.cardId&&
    cardRole(e.cardId)==='defense').length;
-  systemCardsActivated+=r.events.filter(e=>e.kind==='system-card-apply'||
-   e.kind==='system-activate').length;
+  // Le Carte Sistema sono eventi 'card' con cardId, non 'system-activate'.
+  // Contiamo solo la risoluzione vera: una carta giocata senza beneficio
+  // resta distinta da una Amplificazione/Sabotaggio effettivo.
+  const systemEvents=r.events.filter(e=>e.kind==='card'&&
+   card(e.cardId)?.effectSpec?.type==='systemModifier'&&
+   /Effetto sui sistemi attivato|Effetto più forte già attivo/.test(e.text));
+  systemCardsAttempted+=systemEvents.length;
+  systemCardsActivated+=systemEvents.filter(e=>
+   e.text.includes('Effetto sui sistemi attivato')).length;
   damage+=r.shot?.damage||0;
   b=r.battle;turns++;
   if(calibration?.recoverBlockedHand&&!calibration.integratedNoDeterioration&&
@@ -397,6 +405,7 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
   winner:b.winner||'unfinished',finishReason:b.finishReason||null,
   invalid,invalidReasons,played,weaponShots,blocks,passes,damage,generatorShots,generatorHp,
   trapSet,trapTriggered,terrainActivated,defenseAction,systemCardsActivated,
+  systemCardsAttempted,
   handRecoveries:Object.fromEntries(['A','B'].map(who=>[who,b.sides[who].handRecoveries||0])),
   lastLog:b.phase==='finished'&&b.winner==='draw'?(b.log||[]).slice(-20):[],
   drainFraction,
@@ -1399,6 +1408,7 @@ test('AUDIT_ARCHETYPE_CROSS_20261122: mazzi offensivo equilibrato e controllo a 
     weaponShots:cases.reduce((n,m)=>n+m.weaponShots,0),
     generatorShots:cases.reduce((n,m)=>n+m.generatorShots,0),
     systemActions:cases.reduce((n,m)=>n+m.systemCardsActivated,0),
+    systemAttempts:cases.reduce((n,m)=>n+m.systemCardsAttempted,0),
     componentsIntactAtWin:cases.filter(m=>m.winnerComponentsAlive>0).length
    });
    rows.push({own:own.name,opponent:opponent.name,
