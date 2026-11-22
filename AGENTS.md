@@ -23,6 +23,15 @@ storico su ruote o mirino. Le icone elemento si ritagliano realmente dalla
 stessa tavola. Nessun logo del gioco sulle carte. Grafica base immutabile.
 Le rarità cambiano la finitura esterna, non la categoria.
 
+**Ogni evoluzione della stessa carta deve avere un dettaglio VISIVO
+AGGIUNTIVO E DIVERSO nell'illustrazione centrale**, progressivo fra Comune,
+Rara, Epica e Leggendaria. Non basta cambiare i danni, la cornice o il suo
+colore: si deve vedere la progressione fisica del soggetto pur conservandone
+identità, scena, simboli ufficiali e geometria della base. I dettagli artistici
+NON aggiungono nuove abilità o modifiche al combattimento. Prima di mostrare
+le varianti, verificare questa differenza a colpo d'occhio.
+Riferimento operativo: `docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md`.
+
 Se una sorgente PNG non può essere letta come immagine, non dichiarare
 conforme una generazione che ne imita la forma: dirlo e risolvere la lettura
 della sorgente prima di proseguire.
