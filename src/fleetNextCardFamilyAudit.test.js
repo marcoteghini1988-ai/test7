@@ -1,9 +1,9 @@
-// Eclissi Stellare — audit riproducibile Difese, Trappole, Terreni e
-// Carte Arma con danni percentuali, senza Personaggi o immagini.
+// Eclissi Stellare — audit riproducibile Difese, Trappole, Terreni,
+// Armi percentuali e censimento dei 36 Piloti senza alterare la grafica.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {EXCLUSIVE_DESIGNS_120} from './fleetNext/exclusive120.js';
-import {EXCLUSIVE_CARDS,card,cardRole} from './fleetNext/rules.js';
+import {EXCLUSIVE_CARDS,GENERAL_CARDS,BOSS_CARDS,card,cardRole} from './fleetNext/rules.js';
 import {isTrapCard} from './fleetNext/simpleEffects.js';
 import {FUSION_DENIAL_TRAP} from './fleetNext/fusionDenialTrap.js';
 import {ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_GLOBAL_RULE}
@@ -177,4 +177,26 @@ test('TRAP_DIRECT_COMBAT_20261121: una trappola coperta occupa uno slot e non in
  const reason=defenseCapacityReason(result.battle.sides.A,1,result.battle.ply,'trap');
  assert.ok(reason,'Il secondo slot Trappola non esiste');
  assert.equal(result.battle.sides.A.componentElapsedSeconds,20);
+});
+
+
+test('AUDIT_PILOTI_36_20261122: 12 generici, 12 esclusivi, 12 boss nel solo slot Personaggio',()=>{
+ const generic=Object.values(GENERAL_CARDS).filter(c=>cardRole(c.id)==='character');
+ const exclusive=Object.values(EXCLUSIVE_CARDS).filter(c=>cardRole(c.id)==='character');
+ const boss=Object.values(BOSS_CARDS).filter(c=>cardRole(c.id)==='character');
+ assert.deepEqual([generic.length,exclusive.length,boss.length],[12,12,12]);
+ const all=[...generic,...exclusive,...boss];
+ assert.equal(new Set(all.map(c=>c.id)).size,36);
+ assert.ok(all.every(c=>card(c.id)?.id===c.id));
+ assert.ok(all.every(c=>c.effectSpec&&typeof c.effectSpec.type==='string'));
+ const catalog=entries=>entries.map(c=>({id:c.id,name:c.nome||c.name,
+  rarity:c.rarita||c.rarity,type:c.effectSpec.type,
+  amount:c.effectSpec.amount??null,turns:c.effectSpec.turns??null}));
+ const heals=all.filter(c=>['repair','regenerate'].includes(c.effectSpec.type));
+ const buffs=all.filter(c=>['power','multishot','pierce'].includes(c.effectSpec.type));
+ // Queste cifre sono un AUDIT di schede esistenti, NON un bilanciamento
+ // automatico dei Piloti: differenze tra potenza legacy e HP da tarare.
+ console.log('AUDIT_PILOTI_36_20261122='+JSON.stringify({
+  categories:{generic:generic.length,exclusive:exclusive.length,boss:boss.length},
+  heals:catalog(heals),buffs:catalog(buffs),all:catalog(all)}));
 });
