@@ -124,7 +124,7 @@ osservate in questa sessione. I materiali risultano più dettagliati del
 primo prototipo, ma restano provvisori rispetto alla qualità della carta
 originale: il collaudo funzionale non equivale all'approvazione artistica.
 
-### Prove attuali
+### Prove della versione del 22 novembre
 
 - [Plancia: attacco del giocatore](collaudi/maglio/snodi/stackblitz/plancia-giocatore.png)
 - [Plancia: risposta dell'avversario](collaudi/maglio/snodi/stackblitz/plancia-avversario.png)
@@ -142,6 +142,49 @@ Immagini e video provengono dalla sessione StackBlitz. Le plance ritagliano
 soltanto i bordi del browser, senza ridimensionare il gioco. I video
 mantengono la cadenza delle catture native; non vengono interpolati
 fotogrammi. I file in questa
-sottocartella documentano il modello articolato attuale. Le precedenti
+sottocartella documentano il modello articolato del 22 novembre. Le precedenti
 registrazioni negli altri percorsi di `collaudi/maglio/` appartengono alla
 vecchia versione raster o ai tentativi di apertura precedenti.
+
+## Revisione grafica del 23 novembre 2026
+
+Il commit `183c65f7f3e90bd3bfba71fef9ee8c01e94905ec` sostituisce i quattro
+GLB mantenendo gerarchia, dimensioni in plancia e valori di combattimento.
+Il modello ora segue più da vicino l'illustrazione centrale originale:
+corazza a pannelli, bracci triangolari, cavi scuri, condotti arancioni,
+anello dietro la testa e una faccia d'impatto corazzata. La Rara espone
+il condensatore laterale; l'Epica aggiunge condotti e feritoie sulla testa;
+la Leggendaria ha la testa anulare a sei segmenti con iride articolata
+graficamente. Il renderer CPU ora usa **tutti i materiali delle primitive
+del GLB**: prima applicava il primo materiale a ogni pezzo unito, facendo
+perdere le distinzioni fra metallo, incavi e luce.
+
+Verifica locale: **97/97 test mirati**, build e preflight superati. Uno dei
+test controlla che le primitive luminose del GLB restino arancioni nel
+renderer CPU. Su StackBlitz è stato eseguito `git pull origin main`, quindi
+controllato `git rev-parse HEAD` uguale a `183c65f7…`; il generatore della
+pagina di prova è stato rieseguito dopo il pull. I quattro confronti qui
+sotto derivano dalla plancia e dal renderer della sessione, non da mockup.
+
+Nella prova interattiva, il primo piano mostra la ralla che cambia segno
+fra bersaglio sinistro (`yaw 0,53808`) e destro (`yaw -0,19967`), con
+basamento a `0,0,0` e quaternion `0,0,0,1` in entrambi i casi. Il canvas
+del primo piano misura `1568 × 1120` pixel per una vista `784 × 560`.
+In partita, la Leggendaria nello slot 1 porta la madre avversaria da
+820 a 674 HP dopo le difese; nello slot 2 contro i supporti porta Prisma
+Silente da 174 a 59 HP. La risposta dell'IA usa a sua volta il Maglio.
+
+La sessione usa `cpu-3d` perché WebGL non è disponibile nel browser di
+collaudo. Le immagini verificano il modello e l'articolazione in quel
+percorso; la resa WebGL resta da osservare in un browser che la supporti.
+Il modello resta una ricostruzione geometrica della carta, non una copia
+fotorealistica della sua illustrazione.
+
+### Schermate della revisione
+
+- [Comune: carta e viste fronte/retro](collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/confronto-comune.jpg)
+- [Rara: condensatore laterale](collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/confronto-rara.jpg)
+- [Epica: condotti e testa rinforzata](collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/confronto-epica.jpg)
+- [Leggendaria: iride anulare](collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/confronto-leggendaria.jpg)
+- [Primo piano 3D della Leggendaria](collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/leggendaria-primo-piano.jpg)
+- [Maglio nello slot 2 con i supporti](collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/plancia-attacco.jpg)
