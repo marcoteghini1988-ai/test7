@@ -9,7 +9,7 @@ export class MaglioSoftwareRenderer{
  constructor(canvas=document.createElement('canvas')){
   this.domElement=canvas;this.context=this.domElement.getContext('2d',{alpha:true});
   if(!this.context)throw Error('Canvas 2D non disponibile');
-  this.isSoftwareRenderer=true;this.shadowMap={};this.info={render:{calls:0}};this.ratio=1;this.cache=new WeakMap();
+  this.isSoftwareRenderer=true;this.shadowMap={};this.info={render:{calls:0}};this.ratio=1;this.cache=new WeakMap();this.frame=0;
   this.mvp=new Matrix4();this.normal=new Matrix3();this.view=new Vector3();this.shadow=new Vector3();
  }
  setPixelRatio(r){this.ratio=r;}
@@ -36,40 +36,49 @@ export class MaglioSoftwareRenderer{
   for(let y=Math.max(0,Math.floor(sy-ry*1.8));y<Math.min(height,sy+ry*1.8);y++)for(let x=Math.max(0,Math.floor(sx-rx*1.8));x<Math.min(width,sx+rx*1.8);x++){
    const fall=Math.exp(-2*((x-sx)**2/rx**2+(y-sy)**2/ry**2));data[(y*width+x)*4+3]=Math.round(fall*48);
   }
-  this.info.render.calls=0;
+  this.info.render.calls=0;this.frame++;
   scene.traverse(mesh=>{
    if(!mesh.isMesh||!mesh.visible||mesh.material?.isShadowMaterial)return;
-   const material=Array.isArray(mesh.material)?mesh.material[0]:mesh.material;if(!material?.color)return;
+   const materials=Array.isArray(mesh.material)?mesh.material:[mesh.material];
    const geometry=mesh.geometry,pos=geometry.attributes.position,norm=geometry.attributes.normal;if(!norm)return;
-   let cache=this.cache.get(mesh);if(!cache||cache.screen.length!==pos.count*3){cache={screen:new Float32Array(pos.count*3),color:new Float32Array(pos.count*3)};this.cache.set(mesh,cache);}
-   const screen=cache.screen,colors=cache.color;
+   let cache=this.cache.get(mesh);if(!cache||cache.screen.length!==pos.count*3){cache={screen:new Float32Array(pos.count*3),shades:new Map()};this.cache.set(mesh,cache);}
+   const screen=cache.screen;
    this.mvp.multiplyMatrices(camera.matrixWorldInverse,mesh.matrixWorld);this.mvp.premultiply(camera.projectionMatrix);
    this.normal.getNormalMatrix(mesh.matrixWorld);const e=this.mvp.elements,n=this.normal.elements;
-   const base=material.color,em=material.emissive,emission=material.emissiveIntensity||0,metal=material.metalness||0,rough=material.roughness??.4;
-   const exponent=Math.max(9,Math.min(85,4/(rough*rough))),specStrength=.12+metal*.42;
    for(let i=0;i<pos.count;i++){
     const x=pos.getX(i),y=pos.getY(i),z=pos.getZ(i),k=i*3,iw=1/(e[3]*x+e[7]*y+e[11]*z+e[15]);
     screen[k]=((e[0]*x+e[4]*y+e[8]*z+e[12])*iw*.5+.5)*width;
     screen[k+1]=(.5-(e[1]*x+e[5]*y+e[9]*z+e[13])*iw*.5)*height;
     screen[k+2]=(e[2]*x+e[6]*y+e[10]*z+e[14])*iw;
-    const ax=norm.getX(i),ay=norm.getY(i),az=norm.getZ(i);
-    let nx=n[0]*ax+n[3]*ay+n[6]*az,ny=n[1]*ax+n[4]*ay+n[7]*az,nz=n[2]*ax+n[5]*ay+n[8]*az;
-    const inv=1/(Math.hypot(nx,ny,nz)||1);nx*=inv;ny*=inv;nz*=inv;
-    const ambient=.18+.18*Math.max(0,ny)+.05*(nx+1);
-    let r=base.r*ambient,g=base.g*ambient,b=base.b*ambient;
-    for(let l=0;l<lights.length;l++){
-     const d=directions[l],h=half[l],light=lights[l],diff=Math.max(0,nx*d[0]+ny*d[1]+nz*d[2]);
-     const spec=Math.pow(Math.max(0,nx*h[0]+ny*h[1]+nz*h[2]),exponent)*specStrength;
-     r+=(base.r*diff*.40+spec*(.55+base.r*metal))*light[3];
-     g+=(base.g*diff*.40+spec*(.55+base.g*metal))*light[4];
-     b+=(base.b*diff*.40+spec*(.55+base.b*metal))*light[5];
-    }
-    colors[k]=aces(r+(em?.r||0)*emission);colors[k+1]=aces(g+(em?.g||0)*emission);colors[k+2]=aces(b+(em?.b||0)*emission);
    }
    const indices=geometry.index?.array,count=indices?indices.length:pos.count;this.info.render.calls++;
-   const texture=material.map?.image,uv=geometry.attributes.uv,repeat=material.map?.repeat;
-   for(let i=0;i<count;i+=3){
+   const groups=geometry.groups.length?geometry.groups:[{start:0,count,materialIndex:0}];
+   for(const group of groups){
+    const material=materials[group.materialIndex];if(!material?.color)continue;
+    let shade=cache.shades.get(group.materialIndex);
+    if(!shade){shade={colors:new Float32Array(pos.count*3),marks:new Uint32Array(pos.count)};cache.shades.set(group.materialIndex,shade);}
+    const colors=shade.colors,marks=shade.marks,base=material.color,em=material.emissive;
+    const emission=material.emissiveIntensity||0,metal=material.metalness||0,rough=material.roughness??.4;
+    const exponent=Math.max(9,Math.min(85,4/(rough*rough))),specStrength=.12+metal*.42;
+    const texture=material.map?.image,uv=geometry.attributes.uv,repeat=material.map?.repeat;
+    for(let i=group.start;i<Math.min(count,group.start+group.count);i+=3){
     const ia=(indices?indices[i]:i)*3,ib=(indices?indices[i+1]:i+1)*3,ic=(indices?indices[i+2]:i+2)*3;
+    for(const k of [ia,ib,ic]){
+     const vertex=k/3;if(marks[vertex]===this.frame)continue;marks[vertex]=this.frame;
+     const ax=norm.getX(vertex),ay=norm.getY(vertex),az=norm.getZ(vertex);
+     let nx=n[0]*ax+n[3]*ay+n[6]*az,ny=n[1]*ax+n[4]*ay+n[7]*az,nz=n[2]*ax+n[5]*ay+n[8]*az;
+     const inv=1/(Math.hypot(nx,ny,nz)||1);nx*=inv;ny*=inv;nz*=inv;
+     const ambient=.18+.18*Math.max(0,ny)+.05*(nx+1);
+     let r=base.r*ambient,g=base.g*ambient,b=base.b*ambient;
+     for(let l=0;l<lights.length;l++){
+      const d=directions[l],h=half[l],light=lights[l],diff=Math.max(0,nx*d[0]+ny*d[1]+nz*d[2]);
+      const spec=Math.pow(Math.max(0,nx*h[0]+ny*h[1]+nz*h[2]),exponent)*specStrength;
+      r+=(base.r*diff*.40+spec*(.55+base.r*metal))*light[3];
+      g+=(base.g*diff*.40+spec*(.55+base.g*metal))*light[4];
+      b+=(base.b*diff*.40+spec*(.55+base.b*metal))*light[5];
+     }
+     colors[k]=aces(r+(em?.r||0)*emission);colors[k+1]=aces(g+(em?.g||0)*emission);colors[k+2]=aces(b+(em?.b||0)*emission);
+    }
     const x0=screen[ia],y0=screen[ia+1],x1=screen[ib],y1=screen[ib+1],x2=screen[ic],y2=screen[ic+1];
     const a0=y1-y2,b0=x2-x1,c0=x1*y2-x2*y1,a1=y2-y0,b1=x0-x2,c1=x2*y0-x0*y2;
     const area=a0*x0+b0*y0+c0;if(area>=-.001)continue;
@@ -93,6 +102,7 @@ export class MaglioSoftwareRenderer{
       data[k]=(u*colors[ia]+v*colors[ib]+w*colors[ic])*tint;data[k+1]=(u*colors[ia+1]+v*colors[ib+1]+w*colors[ic+1])*tint;data[k+2]=(u*colors[ia+2]+v*colors[ib+2]+w*colors[ic+2])*tint;data[k+3]=255;
      }
     }
+   }
    }
   });
   this.context.putImageData(this.pixels,0,0);

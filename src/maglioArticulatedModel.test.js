@@ -64,6 +64,11 @@ test('Renderer CPU: rasterizza la geometria del GLB e gli snodi cambiano il foto
  renderer.render(scene,camera);const before=painted;
  assert.equal(canvas.width,228);assert.equal(canvas.height,172);
  assert.ok(renderer.info.render.calls>0);assert.ok(before.filter((_,i)=>i%4===3&&before[i]===255).length>1000,'La mesh e visibile e copre pixel reali');
+ // Il GLB contiene piu materiali in ogni snodo: il bagliore non deve
+ // ereditare il grigio della prima primitiva della mesh.
+ const warm=Array.from({length:before.length/4},(_,i)=>i*4).filter(i=>
+  before[i+3]===255&&before[i]>before[i+1]*1.18&&before[i+1]>before[i+2]*1.5&&before[i]>90).length;
+ assert.ok(warm>50,'I materiali arancioni delle primitive restano visibili nel renderer CPU');
  root.getObjectByName('TurretYaw').rotation.y=.55;root.getObjectByName('ArmPitch').rotation.x=-.04;
  renderer.render(scene,camera);let changed=0;for(let i=0;i<painted.length;i++)if(painted[i]!==before[i])changed++;
  assert.ok(changed>1000,'Il raster cambia con lo snodo 3D');

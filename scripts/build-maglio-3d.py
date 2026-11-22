@@ -94,7 +94,9 @@ manifest=[]
 for level,slug in enumerate(['comune','rara','epica','leggendaria']):
  bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
  for block in list(bpy.data.materials):bpy.data.materials.remove(block)
- M={'steel':material('Acciaio satinato',(.24,.28,.31),.82,.34),'edge':material('Titanio bordi',(.36,.40,.43),.88,.30),'dark':material('Scafo grafite',(.045,.065,.085),.75,.44),'joint':material('Giunti meccanici',(.115,.145,.175),.85,.34),'rubber':material('Guaina cavi',(.018,.024,.030),.08,.52),'bolt':material('Viti nere',(.04,.05,.06),.8,.32),'amber':material('AmberIdle',(.72,.19,.025),.15,.32,1.7),'pulse':material('PulseCore',(.95,.30,.035),.05,.25,2.4)}
+ # La carta mostra acciaio grafite, giunti quasi neri e luce arancio intenso.
+ # Le rarita' aggiungono pezzi fisici; non tingono l'intera arma di blu/viola/oro.
+ M={'steel':material('Acciaio satinato',(.18,.19,.22),.82,.38),'edge':material('Titanio bordi',(.30,.31,.35),.88,.32),'dark':material('Scafo grafite',(.028,.035,.048),.75,.46),'joint':material('Giunti meccanici',(.075,.085,.105),.85,.35),'rubber':material('Guaina cavi',(.018,.023,.030),.08,.56),'bolt':material('Viti nere',(.025,.028,.034),.8,.36),'amber':material('AmberIdle',(.82,.07,.002),.15,.30,1.1),'pulse':material('PulseCore',(.95,.10,.003),.05,.23,1.5)}
  root=empty('Maglio_'+slug);base=empty('BaseFixed',root);yaw=empty('TurretYaw',root,(0,0,.51));pitch=empty('ArmPitch',yaw,(0,-.12,1.06));recoil=empty('PistonRecoil',pitch);muzzle=empty('Muzzle',recoil,(0,2.065,0))
  root['rarity']=slug;root['card_reference']='weapon-confirmed-metallic-maglio'+['','-rarity-r','-rarity-e','-rarity-l'][level]
  plate('Scafo inferiore',base,3.8,3.05,.04,.20,.98,M['dark']);plate('Corazza bassa',base,3.72,3.0,.20,.43,.87,M['steel'])
@@ -109,6 +111,13 @@ for level,slug in enumerate(['comune','rara','epica','leggendaria']):
  for x in [-1.07,1.07]:
   box('Scatola base',base,(x,-.84,.62),(.43,.50,.32),M['dark'])
   grille(base,(x,-1.098,.63),.22,.17)
+  box('Scudo inclinato base',base,(x,-.45,.48),(.55,.93,.09),M['steel'],.045,rotation=(0,0,x*.07))
+  for y in [-.61,-.39,-.17]:
+   box('Striscia segnaletica',base,(x,y,.533),(.14,.045,.012),M['amber'],.004,rotation=(0,0,-.28))
+ for y in [-1.19,1.19]:
+  box('Fascia corazzata longitudinale',base,(0,y,.43),(2.15,.20,.10),M['steel'],.03)
+  for x in [-.80,-.48,-.16,.16,.48,.80]:
+   box('Feritoia longitudinale',base,(x,y,.49),(.16,.035,.012),M['dark'],.003)
  cyl('Ralla fissa',base,(0,0,.48),1.28,.16,M['joint']);torus('Gola ralla',base,(0,0,.565),1.17,.035,M['dark'])
  cyl('Ralla rotante',yaw,(0,0,.10),1.12,.18,M['steel']);torus('Bordo ralla',yaw,(0,0,.20),1.09,.043,M['edge'])
  for i in range(12):
@@ -124,6 +133,8 @@ for level,slug in enumerate(['comune','rara','epica','leggendaria']):
   torus('Flangia snodo',yaw,(x+side*.13,-.12,1.06),.203,.026,M['edge'],'X')
   for i in range(6):
    a=i*math.pi/3;bolt(yaw,(x+side*.145,-.12+.16*math.cos(a),1.06+.16*math.sin(a)),'X',.032)
+  box('Corazza laterale del sostegno',yaw,(side*.84,.21,.64),(.10,.64,.35),M['edge'],.035,rotation=(side*.12,0,0))
+  box('Incavo laterale del sostegno',yaw,(side*.90,.17,.65),(.016,.43,.13),M['dark'],.006)
  # Corpo inclinabile, asse lungo Y. Il basamento e i sostegni restano fuori da questo snodo.
  box('Otturatore posteriore',pitch,(0,-.66,0),(1.02,.91,.82),M['dark'],.10)
  for x in [-.37,.37]:
@@ -132,52 +143,95 @@ for level,slug in enumerate(['comune','rara','epica','leggendaria']):
  box('Piastra superiore otturatore',pitch,(0,-.65,.47),(.78,.75,.13),M['edge'])
  grille(pitch,(0,-1.135,0),.29,.40)
  cyl('Sede posteriore pistone',pitch,(0,-.31,0),.355,.34,M['joint'],'Y')
- cyl('Nucleo interno',pitch,(0,.46,0),.285,1.89,M['pulse'],'Y')
+ cyl('Nucleo interno',pitch,(0,.46,0),.255,1.89,M['dark'],'Y')
+ # Due guide illuminate lungo il pistone sono visibili anche dalla vista
+ # obliqua della carta. Restano montate sullo snodo ArmPitch.
+ for side in [-1,1]:
+  cyl('Condotto gravitazionale',pitch,(side*.21,.48,.15),.080,1.73,M['pulse'],'Y',24)
+  cyl('Guaina condotto inferiore',pitch,(side*.21,.48,-.11),.065,1.67,M['joint'],'Y',24)
+  box('Lama di protezione longitudinale',pitch,(side*.37,.55,.21),(.13,1.72,.20),M['steel'],.045)
+  box('Incavo lama',pitch,(side*.449,.53,.21),(.018,1.30,.035),M['dark'],.005)
+  for y in [-.23,.34,.92]:
+   box('Morsetto condotto',pitch,(side*.22,y,.15),(.28,.15,.34),M['edge'],.025)
  for y in [-.28,.30,.90,1.35]:
   cyl('Collare pistone',pitch,(0,y,0),.41,.17,M['steel'],'Y')
   for x in [-.35,.35]:box('Piastra collare',pitch,(x,y,.05),(.17,.27,.49),M['edge'],.035)
  for x in [-.31,.31]:
   box('Longherone corpo',pitch,(x,.44,.30),(.16,1.65,.14),M['steel'])
+  for y in [-.23,.36,.93]:
+   box('Piastra longherone',pitch,(x,y,.395),(.25,.29,.05),M['edge'],.018)
+   bolt(pitch,(x,y,.428),r=.023)
  for side in [-1,1]:
   tube('Cavo flessibile corpo',pitch,[(side*.35,-.80,.35),(side*.46,-.35,.64),(side*.42,.36,.56),(side*.37,1.24,.29)],.061,M['rubber'])
   for y in [-.48,.10,.68]:torus('Fascetta cavo',pitch,(side*.425,y,.51),.071,.012,M['joint'],'Y')
  # Testa e pistone mobile: scorrimento nel solo braccio, mai della base.
  cyl('Slitta cromata',recoil,(0,1.45,0),.31,.56,M['edge'],'Y')
  cyl('Aggancio testa',recoil,(0,1.65,0),.56,.25,M['dark'],'Y')
- torus('Anello gravitazionale',recoil,(0,1.70,0),.59,.033,M['pulse'],'Y')
+ torus('Anello gravitazionale',recoil,(0,1.70,0),.61,.043,M['pulse'],'Y')
+ torus('Collare esterno',recoil,(0,1.72,0),.72,.065,M['joint'],'Y')
+ for i in range(12):
+  a=i*math.tau/12
+  box('Rinforzo anello',recoil,(.69*math.cos(a),1.72,.69*math.sin(a)),(.16,.20,.12),M['edge'],.018,rotation=(0,-a,0))
  if level<3:
-  for z in [-.30,.30]:
-   box('Testa impatto corazzata',recoil,(0,1.90,z),(1.23,.36,.56),M['steel'],.085)
-   box('Piastra frontale testa',recoil,(0,2.086,z),(1.07,.040,.42),M['edge'],.045)
-   for x in [-.43,.43]:bolt(recoil,(x,2.112,z),'Y',.035)
-  box('Fessura centrale ambra',recoil,(0,2.112,0),(1.02,.017,.024),M['pulse'],.004)
-  for x in [-.60,.60]:box('Blocchi testa laterali',recoil,(x,1.92,0),(.15,.42,.38),M['dark'],.055)
+  box('Nucleo quadrangolare testata',recoil,(0,1.96,0),(1.38,.48,1.27),M['dark'],.12)
+  for z in [-.46,.46]:
+   box('Placca superiore e inferiore testata',recoil,(0,1.95,z),(1.43,.52,.37),M['steel'],.095)
+   box('Rilievo della placca',recoil,(0,2.08,z*1.45),(1.16,.23,.045),M['edge'],.018)
+   for x in [-.46,.46]:bolt(recoil,(x,2.222,z),'Y',.028)
+  for side in [-1,1]:
+   box('Mascella laterale testata',recoil,(side*.58,1.95,0),(.32,.51,1.01),M['edge'],.075)
+   box('Pannello incassato testa',recoil,(side*.755,1.95,.06),(.022,.30,.56),M['dark'],.008)
+   box('Luce laterale testata',recoil,(side*.774,2.02,.04),(.012,.14,.31),M['amber'],.004)
+  box('Fronte d impatto scuro',recoil,(0,2.215,0),(1.05,.042,.64),M['joint'],.035)
+  box('Fessura centrale ambra',recoil,(0,2.240,0),(.98,.014,.060),M['pulse'],.005)
+  for z in [-.28,.28]:box('Costa frontale',recoil,(0,2.250,z),(.90,.026,.055),M['steel'],.012)
+  if level==2:
+   # La carta Epica mostra un maglio corazzato con feritoie luminose
+   # sull'impatto, sopra e su entrambi i fianchi.
+   for x in [-.34,.34]:
+    box('Modulo urto epico',recoil,(x,2.265,0),(.34,.075,.50),M['steel'],.025)
+    for z in [-.15,0,.15]:box('Feritoia urto epico',recoil,(x,2.307,z),(.23,.013,.046),M['amber'],.004)
+   for side in [-1,1]:
+    box('Carter laterale epico',recoil,(side*.785,1.94,0),(.10,.55,.76),M['steel'],.030)
+    for z in [-.22,0,.22]:box('Cella laterale epica',recoil,(side*.844,2.02,z),(.012,.23,.08),M['amber'],.004)
+   for x in [-.44,0,.44]:box('Condotto apicale epico',recoil,(x,1.94,.685),(.16,.40,.045),M['amber'],.018)
+  muzzle.location.y=2.265
  else:
-  cyl('Camera anulare',recoil,(0,1.87,0),.70,.40,M['dark'],'Y',64)
-  torus('Cerchio esterno testa',recoil,(0,2.06,0),.68,.045,M['edge'],'Y')
-  torus('Traccia nucleo',recoil,(0,2.115,0),.46,.018,M['pulse'],'Y')
-  cyl('Iride scura',recoil,(0,2.075,0),.44,.033,M['dark'],'Y',64)
+  cyl('Camera anulare',recoil,(0,1.90,0),.75,.43,M['dark'],'Y',64)
+  torus('Cerchio esterno testa',recoil,(0,2.10,0),.74,.070,M['edge'],'Y')
+  torus('Traccia nucleo',recoil,(0,2.169,0),.52,.045,M['pulse'],'Y')
+  torus('Secondo avvolgimento',recoil,(0,2.175,0),.37,.020,M['amber'],'Y')
+  cyl('Iride scura',recoil,(0,2.145,0),.46,.038,M['dark'],'Y',64)
+  cyl('Pozzo energia',recoil,(0,2.185,0),.35,.035,M['joint'],'Y',64)
+  torus('Orbita iride interna',recoil,(0,2.212,0),.29,.016,M['pulse'],'Y')
+  torus('Orbita iride mediana',recoil,(0,2.215,0),.17,.012,M['amber'],'Y')
+  cyl('Nucleo radiante',recoil,(0,2.223,0),.088,.027,M['pulse'],'Y',32)
+  for i in range(12):
+   a=i*math.tau/12
+   box('Raggio energia iride',recoil,(.235*math.sin(a),2.227,.235*math.cos(a)),(.025,.012,.12),M['pulse'],.004,rotation=(0,a,0))
   for i in range(6):
-   a=i*math.pi/3;x,z=.67*math.sin(a),.67*math.cos(a)
-   box('Artiglio testa',recoil,(x,1.98,z),(.35,.44,.40),M['steel'],.055,rotation=(0,a,0))
-   box('Inserto artiglio',recoil,(x,2.213,z),(.21,.026,.22),M['dark'],.015,rotation=(0,a,0))
+   a=i*math.pi/3;x,z=.72*math.sin(a),.72*math.cos(a)
+   box('Artiglio testa',recoil,(x,2.00,z),(.44,.50,.42),M['steel'],.075,rotation=(0,a,0))
+   box('Inserto artiglio',recoil,(x,2.264,z),(.27,.030,.24),M['dark'],.018,rotation=(0,a,0))
    for j in [-1,0,1]:
     xx=x+j*.047*math.cos(a);zz=z-j*.047*math.sin(a)
-    box('Griglia artiglio',recoil,(xx,2.23,zz),(.021,.012,.15),M['amber'],.003,rotation=(0,a,0))
+    box('Griglia artiglio',recoil,(xx,2.286,zz),(.021,.012,.15),M['amber'],.003,rotation=(0,a,0))
    # Segmenti della chiusura dell'iride, disegno geometrico sul metallo scuro.
    pts=[]
    for rr,aa in [(.03,a+.35),(.42,a),(.42,a+.93),(.19,a+1.20)]:pts.append((rr*math.sin(aa),2.099,rr*math.cos(aa)))
    mesh=bpy.data.meshes.new('Lamina iride');mesh.from_pydata(pts,[],[(0,1,2,3)]);mesh.update();o=bpy.data.objects.new('Lamina iride',mesh);bpy.context.collection.objects.link(o);finish(o,'Lamina iride',recoil,(0,0,0),M['joint'])
-  muzzle.location.y=2.245
+  muzzle.location.y=2.305
  if level>=1:
   box('Modulo posteriore raro',pitch,(0,-.77,.70),(.84,.80,.32),M['steel'],.065)
   grille(pitch,(0,-.77,.872),.55,.44,'Z',3)
-  cyl('Condensatore laterale',pitch,(.70,.16,-.20),.18,.88,M['joint'],'Y')
-  cyl('Spira condensatore',pitch,(.70,.16,-.20),.144,.68,M['pulse'],'Y')
-  for y in [-.27,-.06,.16,.38,.60]:torus('Rivestimento condensatore',pitch,(.70,y,-.20),.171,.024,M['edge'],'Y')
+  cyl('Condensatore laterale',pitch,(.82,.25,-.25),.205,.96,M['joint'],'Y')
+  for y in [-.19,.03,.25,.47,.69]:torus('Rivestimento condensatore',pitch,(.82,y,-.25),.208,.024,M['edge'],'Y')
+  for z in [-.34,-.22]:box('Bobina a vista',pitch,(1.025,.25,z),(.018,.68,.055),M['amber'],.004)
+  torus('Corona condensatore',pitch,(.82,.743,-.25),.17,.034,M['pulse'],'Y')
+  cyl('Lente condensatore',pitch,(.82,.747,-.25),.10,.028,M['pulse'],'Y',32)
  if level>=2:
   for x in [-.25,0,.25]:
-   cyl('Condotto epico',pitch,(x,.40,.43),.073,1.61,M['pulse'],'Y')
+   cyl('Condotto epico',pitch,(x,.40,.43),.056,1.61,M['pulse'],'Y')
    for y in [-.37,.13,.64,1.15]:cyl('Anello condotto epico',pitch,(x,y,.43),.091,.085,M['steel'],'Y',24)
   for side in [-1,1]:
    tube('Cavo potenziato',pitch,[(side*.48,-.83,.50),(side*.64,-.13,.78),(side*.55,.58,.69),(side*.43,1.34,.38)],.065,M['rubber'])
