@@ -11,14 +11,9 @@ export const MAGLIO_VARIANTS=Object.freeze([
 export const maglioVariant=id=>MAGLIO_VARIANTS.find(v=>v.id===id)||null;
 export const MAGLIO_FX_MS=2200;
 export const MAGLIO_SHOT_GAP_MS=260;
-// Affondo breve sul piano della plancia verso il bersaglio risolto.
-// Il punto d'emissione deve seguire il dispositivo, non la posizione a riposo.
-export function maglioAttackMotion(from,to){
- const dx=to.x-from.x,dy=to.y-from.y,distance=Math.hypot(dx,dy);
- const travel=distance?Math.min(14,distance/4)/distance:0;
- const step={x:dx*travel,y:dy*travel};
- return {step,recoil:{x:-step.x*.24,y:-step.y*.24},
-  fireFrom:{x:from.x+step.x,y:from.y+step.y}};
+export function maglioModelPath(id){
+ const variant=maglioVariant(id);
+ return variant?'/assets/fleet-weapons/maglio/models/'+(variant.folder.slice(0,-1)||'comune')+'.glb':null;
 }
 export function maglioArtwork(id,side){
  const variant=maglioVariant(id);

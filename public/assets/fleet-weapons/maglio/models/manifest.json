@@ -1,0 +1,55 @@
+{
+  "generator": "scripts/build-maglio-3d.py",
+  "units": "metri artistici",
+  "forward": "-Z in glTF",
+  "assets": [
+    {
+      "rarity": "comune",
+      "file": "public/assets/fleet-weapons/maglio/models/comune.glb",
+      "bytes": 1585012,
+      "joints": [
+        "BaseFixed",
+        "TurretYaw",
+        "ArmPitch",
+        "PistonRecoil",
+        "Muzzle"
+      ]
+    },
+    {
+      "rarity": "rara",
+      "file": "public/assets/fleet-weapons/maglio/models/rara.glb",
+      "bytes": 1792840,
+      "joints": [
+        "BaseFixed",
+        "TurretYaw",
+        "ArmPitch",
+        "PistonRecoil",
+        "Muzzle"
+      ]
+    },
+    {
+      "rarity": "epica",
+      "file": "public/assets/fleet-weapons/maglio/models/epica.glb",
+      "bytes": 2226648,
+      "joints": [
+        "BaseFixed",
+        "TurretYaw",
+        "ArmPitch",
+        "PistonRecoil",
+        "Muzzle"
+      ]
+    },
+    {
+      "rarity": "leggendaria",
+      "file": "public/assets/fleet-weapons/maglio/models/leggendaria.glb",
+      "bytes": 2435040,
+      "joints": [
+        "BaseFixed",
+        "TurretYaw",
+        "ArmPitch",
+        "PistonRecoil",
+        "Muzzle"
+      ]
+    }
+  ]
+}

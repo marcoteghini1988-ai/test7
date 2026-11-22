@@ -1,23 +1,30 @@
-import React,{useLayoutEffect,useRef,useState} from 'react';
-import {MAGLIO_CARD_ID,MAGLIO_VARIANTS,maglioArtwork,maglioVariant,maglioAttackMotion} from './maglioBattleVisuals.js';
+import React,{lazy,Suspense,useCallback,useEffect,useLayoutEffect,useRef,useState} from 'react';
+import {MAGLIO_CARD_ID,MAGLIO_VARIANTS,maglioArtwork,maglioVariant,maglioModelPath} from './maglioBattleVisuals.js';
 import './MaglioBattleEffects.css';
 
+const loadModelModule=()=>import('./MaglioArticulatedModel.jsx');
+const ArticulatedModel=lazy(loadModelModule);
 export function MaglioArtPreload(){
- return <>{MAGLIO_VARIANTS.flatMap(v=>['player','enemy'].map(side=><link key={v.id+side} rel="preload" as="image"
-  href={maglioArtwork(v.id,side)}/>))}</>;
+ useEffect(()=>{let active=true;loadModelModule().then(m=>{
+  if(active)for(const variant of MAGLIO_VARIANTS)m.preloadMaglioModel(maglioModelPath(variant.id)).catch(()=>{});
+ });return ()=>{active=false;};},[]);
+ return null;
 }
 
 export function MaglioWeaponModel({side,shot,pending,cardId=MAGLIO_CARD_ID,slot=0}){
  const variant=maglioVariant(cardId),head=side==='enemy'?variant.enemyHead:variant.playerHead;
- return <span className="maglio-device" data-side={side} data-slot={slot} data-rarity={variant.rarity}
+ const device=useRef(null),onMuzzle=useCallback(point=>{
+  device.current?.style.setProperty('--maglio-head-x',point.x+'%');
+  device.current?.style.setProperty('--maglio-head-y',point.y+'%');
+ },[]);
+ return <span ref={device} className="maglio-device" data-side={side} data-slot={slot} data-rarity={variant.rarity}
   data-state={pending?'pending':shot?.fires?'firing':shot?'deploying':'idle'}
   style={{'--maglio-delay':(shot?.delayMs||0)+'ms','--maglio-head-x':head[0]+'%','--maglio-head-y':head[1]+'%'}}>
-  <span className="maglio-motion"><span className="maglio-orientation">
-  <img className="maglio-device-art" src={maglioArtwork(cardId,side)}
-   alt={'Maglio Ferrogravitazionale '+variant.rarity+' 3D'} draggable={false}/>
+  <Suspense fallback={<img className="maglio-model-fallback" src={maglioArtwork(cardId,side)} alt="Maglio in caricamento"/>}>
+   <ArticulatedModel cardId={cardId} side={side} shot={shot} pending={pending} onMuzzle={onMuzzle}/>
+  </Suspense>
   <i className="maglio-muzzle-anchor" aria-hidden="true"/>
   {shot?.fires&&<span className="maglio-charge" aria-hidden="true"><i/><b/></span>}
-  </span></span>
  </span>;
 }
 
@@ -34,44 +41,35 @@ function shotGeometry(root,shot){
  if(!board.width||!board.height)return null;
  const point=r=>({x:((r.left+r.width/2)-board.left)*450/board.width,
   y:((r.top+r.height/2)-board.top)*800/board.height});
- const device=source.closest('.maglio-device'),moving=source.closest('.maglio-motion');
- const fromRest=point(a),to=point(b);
- // Una misura durante l'affondo o un resize deve ritrovare l'origine a riposo.
- if(device&&moving){
-  const fixed=device.getBoundingClientRect(),shifted=moving.getBoundingClientRect();
-  fromRest.x-=(shifted.left-fixed.left)*450/board.width;
-  fromRest.y-=(shifted.top-fixed.top)*800/board.height;
+ const device=source.closest('.maglio-device'),from=point(a),to=point(b);
+ if(device&&(device.dataset.targetX!==String(to.x)||device.dataset.targetY!==String(to.y))){
+  device.dataset.targetX=String(to.x);device.dataset.targetY=String(to.y);
+  device.dispatchEvent(new CustomEvent('maglio-target-ready'));
  }
- const motion=maglioAttackMotion(fromRest,to),from=motion.fireFrom;
- return {from,to,device,motion,angle:Math.atan2(to.y-from.y,to.x-from.x)*180/Math.PI};
+ return {from,to,device,angle:Math.atan2(to.y-from.y,to.x-from.x)*180/Math.PI};
 }
 export default function MaglioBattleEffects({shots,nonce}){
  const ref=useRef(null),[paths,setPaths]=useState([]);
  useLayoutEffect(()=>{
   const root=ref.current?.closest('.f3d-approved-layout');
   if(!root)return;
-  const movingDevices=new Set();
+  const aimedDevices=new Set();
   const measure=()=>setPaths(shots.filter(s=>s.fires).flatMap(shot=>{
    const geometry=shotGeometry(root,shot);
    if(!geometry)return [];
-   const {device,motion,...path}=geometry;
-   if(device){
-    for(const axis of ['x','y']){
-     device.style.setProperty('--maglio-step-'+axis,motion.step[axis]+'px');
-     device.style.setProperty('--maglio-recoil-'+axis,motion.recoil[axis]+'px');
-    }
-    movingDevices.add(device);
-   }
+   const {device,...path}=geometry;
+   if(device)aimedDevices.add(device);
    return [{shot,...path}];
   }));
   measure();
-  // Misura nuovamente dopo l'appoggio sul tavolo: il punto di emissione
-  // non deve restare quello transitorio della comparsa (scala .86).
+  // Rimisura dopo la comparsa e, tramite maglio-muzzle-ready, dopo il
+  // puntamento: l'impulso deve partire dalla testa 3D orientata.
   const settled=window.setTimeout(measure,460+Math.max(0,...shots.map(s=>s.delayMs||0)));
   const observer=new ResizeObserver(measure);observer.observe(root);
+  root.addEventListener('maglio-muzzle-ready',measure);
   return ()=>{window.clearTimeout(settled);observer.disconnect();
-   for(const device of movingDevices)for(const kind of ['step','recoil'])
-    for(const axis of ['x','y'])device.style.removeProperty('--maglio-'+kind+'-'+axis);
+   root.removeEventListener('maglio-muzzle-ready',measure);
+   for(const device of aimedDevices){delete device.dataset.targetX;delete device.dataset.targetY;}
   };
  },[shots,nonce]);
  return <svg ref={ref} className="maglio-battle-effects" viewBox="0 0 450 800"
