@@ -13,6 +13,7 @@ import {MULTI_WEAPON_BY_ID} from './multiWeaponCards.js';
 import {DESIGNED_WEAPON_BY_ID} from './designedWeaponCards.js';
 import {CONFIRMED_TRANSFER_WEAPON_BY_ID} from './confirmedTransferredWeapons.js';
 import {ALL_WEAPON_BY_ID} from './weaponRarityEvolutions.js';
+import {officialWeaponFacePath} from './officialWeaponArt.js';
 export {ALL_WEAPON_CARDS,ALL_WEAPON_BY_ID,WEAPON_BASE_CARDS,EVOLVED_WEAPON_CARDS,
  WEAPON_EVOLUTION_FAMILIES,weaponAtRarity,weaponNextEvolution} from './weaponRarityEvolutions.js';
 export {DESIGNED_WEAPON_CARDS,DESIGNED_WEAPON_BY_ID,DESIGNED_WEAPONS_PLAYABLE,DESIGNED_WEAPONS_PENDING} from './designedWeaponCards.js';
@@ -130,7 +131,10 @@ export const exclusiveCard = id => EXCLUSIVE_CARDS[id]||(PROGRESSION_CARDS[id]?.
 export const card = id => generalCard(id)||exclusiveCard(id)||bossCard(id);
 export function cardFacePath(id,level=1){
  const definition=card(id);
- if(!definition||definition.playable===false||definition.nativeFace||isProgressionCard(id))return null;
+ if(!definition||definition.playable===false||isProgressionCard(id))return null;
+ const approvedWeaponArt=officialWeaponFacePath(id);
+ if(approvedWeaponArt)return approvedWeaponArt;
+ if(definition.nativeFace)return null;
  if(bossCard(id))return '/assets/fleet-next-boss-cards/'+id+'.svg';
  const grade=Math.max(1,Math.min(3,Math.floor(Number(level)||1)));
  return exclusiveCard(id)&&grade>1?
