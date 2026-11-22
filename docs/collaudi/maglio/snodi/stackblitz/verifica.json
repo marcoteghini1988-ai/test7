@@ -1,0 +1,1081 @@
+{
+  "testedCommit": "161b50f89ed7a6ba12359820bf4214162c532c42",
+  "runtimeCommit": "09650ba5313066264d9e435e976a9df37f4a9d2c",
+  "previewUrl": "https://test7-jjhn-wxyw1uz8--5173--e1edbc98.local-credentialless.webcontainer.io/.maglio-review.html",
+  "stackblitzUrl": "https://stackblitz.com/~/github.com/marcoteghini1988-ai/test7",
+  "stackblitzTests": {
+    "passed": 97,
+    "failed": 0,
+    "durationMs": 7159.35
+  },
+  "trackedSourceChangesDuringTest": 0,
+  "renderer": "cpu-3d",
+  "webglVerified": false,
+  "scenarios": {
+    "comune": {
+      "frames": 78,
+      "durationMs": 7806,
+      "largestCaptureGapMs": 219,
+      "shots": [
+        {
+          "actualDamage": "13",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort"
+        },
+        {
+          "actualDamage": "13",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "finalHp": [
+        {
+          "label": "HP Prisma Silente",
+          "value": "53"
+        },
+        {
+          "label": "HP Lince Solare",
+          "value": "339"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "66"
+        },
+        {
+          "label": "HP Prisma Silente",
+          "value": "53"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "435"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "66"
+        }
+      ],
+      "rig": {
+        "player": {
+          "slot": "0",
+          "baseFixed": true,
+          "position": [
+            534.6875,
+            448.7999877929687
+          ],
+          "peakRecoil": 0.18993,
+          "recoilCaptured": true,
+          "peakFrame": 5,
+          "yawRange": [
+            0.0,
+            0.13913
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/comune.glb",
+            "muzzleX": "46.1760",
+            "muzzleY": "18.8816",
+            "pitch": "-0.02522",
+            "rarity": "Comune",
+            "recoil": "0.18993",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "0",
+            "state": "firing",
+            "targetX": "101.00000841864224",
+            "targetY": "128.99999158135776",
+            "yaw": "0.13913"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/comune.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "11.6846",
+            "pitch": "0.13963",
+            "rarity": "Comune",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "0",
+            "state": "idle",
+            "yaw": "0.00000"
+          }
+        },
+        "enemy": {
+          "slot": "0",
+          "baseFixed": true,
+          "position": [
+            534.6875,
+            216.0749969482422
+          ],
+          "peakRecoil": 0.17728,
+          "recoilCaptured": true,
+          "peakFrame": 32,
+          "yawRange": [
+            2.94026,
+            3.14159
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/comune.glb",
+            "muzzleX": "44.4460",
+            "muzzleY": "78.0720",
+            "pitch": "-0.02460",
+            "rarity": "Comune",
+            "recoil": "0.17728",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "0",
+            "state": "firing",
+            "targetX": "79.00000561242815",
+            "targetY": "456.99998877514366",
+            "yaw": "2.94026"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/comune.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "77.3842",
+            "pitch": "0.13963",
+            "rarity": "Comune",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "0",
+            "state": "idle",
+            "yaw": "3.14159"
+          }
+        }
+      }
+    },
+    "rara": {
+      "frames": 77,
+      "durationMs": 8074,
+      "largestCaptureGapMs": 212,
+      "shots": [
+        {
+          "actualDamage": "34",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        },
+        {
+          "actualDamage": "34",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "finalHp": [
+        {
+          "label": "HP Prisma Silente",
+          "value": "96"
+        },
+        {
+          "label": "HP Lince Solare",
+          "value": "451"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "62"
+        },
+        {
+          "label": "HP Prisma Silente",
+          "value": "62"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "578"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "96"
+        }
+      ],
+      "rig": {
+        "player": {
+          "slot": "1",
+          "baseFixed": true,
+          "position": [
+            704.3375244140625,
+            448.7999877929687
+          ],
+          "peakRecoil": 0.18222,
+          "recoilCaptured": true,
+          "peakFrame": 5,
+          "yawRange": [
+            -0.13913,
+            0.0
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/rara.glb",
+            "muzzleX": "53.8408",
+            "muzzleY": "18.7536",
+            "pitch": "-0.02522",
+            "rarity": "Rara",
+            "recoil": "0.18222",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 704.3375244140625,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "1",
+            "state": "firing",
+            "targetX": "349.00000561242814",
+            "targetY": "128.99999158135776",
+            "yaw": "-0.13913"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/rara.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "11.6846",
+            "pitch": "0.13963",
+            "rarity": "Rara",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 704.3375244140625,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "1",
+            "state": "idle",
+            "yaw": "0.00000"
+          }
+        },
+        "enemy": {
+          "slot": "1",
+          "baseFixed": true,
+          "position": [
+            704.3375244140625,
+            216.0749969482422
+          ],
+          "peakRecoil": 0.17403,
+          "recoilCaptured": true,
+          "peakFrame": 33,
+          "yawRange": [
+            2.54968,
+            3.14159
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/rara.glb",
+            "muzzleX": "34.4741",
+            "muzzleY": "73.5152",
+            "pitch": "-0.02086",
+            "rarity": "Rara",
+            "recoil": "0.17403",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 704.3375244140625,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "1",
+            "state": "firing",
+            "targetX": "79.00000561242815",
+            "targetY": "456.99998877514366",
+            "yaw": "2.54968"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/rara.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "77.3842",
+            "pitch": "0.13963",
+            "rarity": "Rara",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 704.3375244140625,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "1",
+            "state": "idle",
+            "yaw": "3.14159"
+          }
+        }
+      }
+    },
+    "epica": {
+      "frames": 82,
+      "durationMs": 8028,
+      "largestCaptureGapMs": 272,
+      "shots": [
+        {
+          "actualDamage": "81",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort"
+        },
+        {
+          "actualDamage": "81",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "finalHp": [
+        {
+          "label": "HP Prisma Silente",
+          "value": "44"
+        },
+        {
+          "label": "HP Lince Solare",
+          "value": "631"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "125"
+        },
+        {
+          "label": "HP Prisma Silente",
+          "value": "44"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "809"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "125"
+        }
+      ],
+      "rig": {
+        "player": {
+          "slot": "0",
+          "baseFixed": true,
+          "position": [
+            534.6875,
+            448.7999877929687
+          ],
+          "peakRecoil": 0.1885,
+          "recoilCaptured": true,
+          "peakFrame": 4,
+          "yawRange": [
+            0.0,
+            0.13913
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/epica.glb",
+            "muzzleX": "46.1729",
+            "muzzleY": "18.8579",
+            "pitch": "-0.02522",
+            "rarity": "Epica",
+            "recoil": "0.18850",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "0",
+            "state": "firing",
+            "targetX": "101.00000841864224",
+            "targetY": "128.99999158135776",
+            "yaw": "0.13913"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/epica.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "11.6846",
+            "pitch": "0.13963",
+            "rarity": "Epica",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "0",
+            "state": "idle",
+            "yaw": "0.00000"
+          }
+        },
+        "enemy": {
+          "slot": "0",
+          "baseFixed": true,
+          "position": [
+            534.6875,
+            216.0749969482422
+          ],
+          "peakRecoil": 0.18524,
+          "recoilCaptured": true,
+          "peakFrame": 31,
+          "yawRange": [
+            2.94026,
+            3.14159
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/epica.glb",
+            "muzzleX": "44.4710",
+            "muzzleY": "77.9366",
+            "pitch": "-0.02460",
+            "rarity": "Epica",
+            "recoil": "0.18524",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "0",
+            "state": "firing",
+            "targetX": "79.00000561242815",
+            "targetY": "456.99998877514366",
+            "yaw": "2.94026"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/epica.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "77.3842",
+            "pitch": "0.13963",
+            "rarity": "Epica",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "0",
+            "state": "idle",
+            "yaw": "3.14159"
+          }
+        }
+      }
+    },
+    "leggendaria": {
+      "frames": 83,
+      "durationMs": 8046,
+      "largestCaptureGapMs": 192,
+      "shots": [
+        {
+          "actualDamage": "1",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        },
+        {
+          "actualDamage": "1",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-1",
+          "targetKind": "escort"
+        }
+      ],
+      "finalHp": [
+        {
+          "label": "HP Prisma Silente",
+          "value": "174"
+        },
+        {
+          "label": "HP Lince Solare",
+          "value": "820"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "0"
+        },
+        {
+          "label": "HP Prisma Silente",
+          "value": "174"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "1050"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "0"
+        }
+      ],
+      "rig": {
+        "player": {
+          "slot": "1",
+          "baseFixed": true,
+          "position": [
+            704.3375244140625,
+            448.7999877929687
+          ],
+          "peakRecoil": 0.18597,
+          "recoilCaptured": true,
+          "peakFrame": 4,
+          "yawRange": [
+            -0.13913,
+            0.0
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/leggendaria.glb",
+            "muzzleX": "54.2248",
+            "muzzleY": "15.8289",
+            "pitch": "-0.02522",
+            "rarity": "Leggendaria",
+            "recoil": "0.18597",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 704.3375244140625,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "1",
+            "state": "firing",
+            "targetX": "349.00000561242814",
+            "targetY": "128.99999158135776",
+            "yaw": "-0.13913"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/leggendaria.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "8.3433",
+            "pitch": "0.13963",
+            "rarity": "Leggendaria",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 704.3375244140625,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "1",
+            "state": "idle",
+            "yaw": "0.00000"
+          }
+        },
+        "enemy": {
+          "slot": "1",
+          "baseFixed": true,
+          "position": [
+            704.3375244140625,
+            216.0749969482422
+          ],
+          "peakRecoil": 0.18597,
+          "recoilCaptured": true,
+          "peakFrame": 32,
+          "yawRange": [
+            3.14159,
+            3.34293
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/leggendaria.glb",
+            "muzzleX": "56.0923",
+            "muzzleY": "80.9860",
+            "pitch": "-0.02460",
+            "rarity": "Leggendaria",
+            "recoil": "0.18597",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 704.3375244140625,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "1",
+            "state": "firing",
+            "targetX": "370.99996632543105",
+            "targetY": "456.99998877514366",
+            "yaw": "3.34293"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/leggendaria.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "80.1267",
+            "pitch": "0.13963",
+            "rarity": "Leggendaria",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 704.3375244140625,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "1",
+            "state": "idle",
+            "yaw": "3.14159"
+          }
+        }
+      }
+    },
+    "madre": {
+      "frames": 42,
+      "durationMs": 8000,
+      "largestCaptureGapMs": 3653,
+      "shots": [
+        {
+          "actualDamage": "18",
+          "shooter": "A",
+          "targetId": "weapons",
+          "targetKind": "part"
+        },
+        {
+          "actualDamage": "17",
+          "shooter": "B",
+          "targetId": "generator",
+          "targetKind": "part"
+        }
+      ],
+      "finalHp": [
+        {
+          "label": "HP Lince Solare",
+          "value": "321"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "418"
+        }
+      ],
+      "rig": {
+        "player": {
+          "slot": "0",
+          "baseFixed": true,
+          "position": [
+            534.6875,
+            448.7999877929687
+          ],
+          "peakRecoil": 0.18999,
+          "recoilCaptured": true,
+          "peakFrame": 5,
+          "yawRange": [
+            -0.21668,
+            0.0
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/comune.glb",
+            "muzzleX": "55.9281",
+            "muzzleY": "19.2437",
+            "pitch": "-0.02307",
+            "rarity": "Comune",
+            "recoil": "0.18999",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "0",
+            "state": "firing",
+            "targetX": "225",
+            "targetY": "107.82999674479167",
+            "yaw": "-0.21668"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/comune.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "11.6846",
+            "pitch": "0.13963",
+            "rarity": "Comune",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "0",
+            "state": "idle",
+            "yaw": "0.00000"
+          }
+        },
+        "enemy": {
+          "slot": "0",
+          "baseFixed": true,
+          "position": [
+            534.6875,
+            216.0749969482422
+          ],
+          "peakRecoil": 0.0,
+          "recoilCaptured": false,
+          "peakFrame": 25,
+          "yawRange": [
+            3.14159,
+            3.35068
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/comune.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "77.3842",
+            "pitch": "0.13963",
+            "rarity": "Comune",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "0",
+            "state": "firing",
+            "targetX": "224.9999719378592",
+            "targetY": "474.3399784482759",
+            "yaw": "3.14159"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "25",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/comune.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "77.3842",
+            "pitch": "0.13963",
+            "rarity": "Comune",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "0",
+            "state": "idle",
+            "yaw": "3.14159"
+          }
+        }
+      },
+      "captureLimitation": "Pausa di cattura di 3.653 ms durante il colpo B: il suo picco di rinculo non e campionato in questa sequenza. La rotazione e il danno sono osservati; il rinculo B e campionato nelle quattro prove sui supporti."
+    },
+    "bloccata": {
+      "frames": 95,
+      "durationMs": 7941,
+      "largestCaptureGapMs": 151,
+      "shots": [
+        {
+          "actualDamage": "115",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "finalHp": [
+        {
+          "label": "HP Prisma Silente",
+          "value": "174"
+        },
+        {
+          "label": "HP Lince Solare",
+          "value": "820"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "174"
+        },
+        {
+          "label": "HP Prisma Silente",
+          "value": "59"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "1050"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "174"
+        }
+      ],
+      "rig": {
+        "player": {
+          "slot": "0",
+          "baseFixed": true,
+          "position": [
+            534.6875,
+            448.7999877929687
+          ],
+          "peakRecoil": 0.0,
+          "recoilCaptured": false,
+          "peakFrame": 0,
+          "yawRange": [
+            0.0,
+            0.0
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/leggendaria.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "8.3433",
+            "pitch": "0.13963",
+            "rarity": "Leggendaria",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "0",
+            "state": "deploying",
+            "yaw": "0.00000"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/leggendaria.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "8.3433",
+            "pitch": "0.13963",
+            "rarity": "Leggendaria",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52496337890624,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 448.7999877929687
+            },
+            "renderer": "cpu-3d",
+            "side": "player",
+            "slot": "0",
+            "state": "idle",
+            "yaw": "0.00000"
+          }
+        },
+        "enemy": {
+          "slot": "0",
+          "baseFixed": true,
+          "position": [
+            534.6875,
+            216.0749969482422
+          ],
+          "peakRecoil": 0.17471,
+          "recoilCaptured": true,
+          "peakFrame": 44,
+          "yawRange": [
+            2.94026,
+            3.14159
+          ],
+          "sampleAtPeak": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/leggendaria.glb",
+            "muzzleX": "43.8724",
+            "muzzleY": "81.1774",
+            "pitch": "-0.02460",
+            "rarity": "Leggendaria",
+            "recoil": "0.17471",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "0",
+            "state": "firing",
+            "targetX": "79.00000561242815",
+            "targetY": "456.99998877514366",
+            "yaw": "2.94026"
+          },
+          "lastSample": {
+            "basePosition": "0,0,0",
+            "baseQuaternion": "0,0,0,1",
+            "bufferHeight": "187",
+            "bufferWidth": "248",
+            "drawCalls": "26",
+            "maglio3dReady": "true",
+            "modelPath": "/assets/fleet-weapons/maglio/models/leggendaria.glb",
+            "muzzleX": "50.0000",
+            "muzzleY": "80.1267",
+            "pitch": "0.13963",
+            "rarity": "Leggendaria",
+            "recoil": "0.00000",
+            "rect": {
+              "height": 93.52497863769533,
+              "width": 123.9749755859375,
+              "x": 534.6875,
+              "y": 216.0749969482422
+            },
+            "renderer": "cpu-3d",
+            "side": "enemy",
+            "slot": "0",
+            "state": "idle",
+            "yaw": "3.14159"
+          }
+        }
+      }
+    }
+  },
+  "note": "Il primo piano CPU è pesante: verifica funzionale distinta dalla qualità e fluidità finale del percorso WebGL.",
+  "visualQuality": "Materiali ancora provvisori rispetto alla carta. Percorso CPU verificato; WebGL non osservato in questa sessione."
+}
