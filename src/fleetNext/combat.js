@@ -5185,12 +5185,11 @@ function resolvePreparedSupportSacrifice(b,who,supportId,events){
 // Una sola funzione per far avanzare i supporti e i tre timer della nuova
 // partita; i test storici senza modalita' Generatore restano invariati.
 export function advanceFleetCombatTime(battle,nowMs){
- // Nel nuovo bilanciamento i secondi reali servono solo a limitare
- // la preparazione a 30 s: effetti temporizzati e componenti
- // avanzano a quota fissa alla conferma, non mentre si tocca la mano.
- if(battle?.strategicNoDeterioration)
-  return {battle,events:[],changed:false};
+ // Veleno e Rigenerazione sono effetti al SECONDO REALE durante i 30s
+ // di preparazione (anche se le carte nuove non sono ancora risolte).
+ // Solo i TIMER DEI COMPONENTI usano la quota strategica per turno.
  const timed=advanceIndependentSupportTime(battle,nowMs);
+ if(battle?.strategicNoDeterioration)return timed;
  if(!battle?.newGeneratorCombat||timed.battle?.phase!=='playing')
   return timed;
  // Test strategico opt-in: i tre componenti si consumano a quota fissa
@@ -5216,12 +5215,10 @@ export function advanceFleetCombatTime(battle,nowMs){
  return {battle:advanced.battle,events:[...timed.events,...advanced.events],changed:true};
 }
 export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
- // La rigenerazione e il veleno consumano una quota IDENTICA di tempo
- // per turno, cosi' non favoriscono ne' la CPU veloce ne' l'umano lento.
- const timed=battle?.strategicNoDeterioration&&battle.phase==='playing'?
-  advanceIndependentSupportTime(battle,battle.turnStartedAtMs+
-   (battle.strategicSecondsPerTurn||20)*1000):
-  advanceFleetCombatTime(battle,nowMs);
+ // Risolvi gli effetti temporizzati REALMENTE trascorsi (massimo 30s).
+ // I tick gia' elaborati durante la preparazione non si ripetono.
+ // I timer dei componenti rimangono a quota fissa in finishTurn.
+ const timed=advanceFleetCombatTime(battle,nowMs);
  if(order?.cards?.length>0&&
   (timed.battle?.sides?.[who]?.provisionalHandFrozenUntilMs||0)>nowMs)
   return {ok:false,reason:'Mano congelata, il timer continua',
