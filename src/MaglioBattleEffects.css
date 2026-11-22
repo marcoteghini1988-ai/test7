@@ -6,8 +6,10 @@
 }
 .maglio-device-art {width:100%;height:100%;object-fit:contain;display:block;
  filter:drop-shadow(0 5px 3px #000d);transform-origin:50% 65%;}
-.maglio-muzzle-anchor {position:absolute;left:50%;top:14%;width:1px;height:1px;}
-.maglio-device[data-side="enemy"] .maglio-muzzle-anchor {top:84%;}
+.maglio-orientation {position:absolute;inset:0;display:block;}
+.maglio-device[data-side="player"][data-slot="1"] .maglio-orientation,
+.maglio-device[data-side="enemy"][data-slot="0"] .maglio-orientation {transform:scaleX(-1);}
+.maglio-muzzle-anchor {position:absolute;left:var(--maglio-head-x);top:var(--maglio-head-y);width:1px;height:1px;}
 .maglio-device[data-state="pending"] {filter:saturate(.45);}
 .maglio-device[data-state="deploying"],.maglio-device[data-state="firing"] {
  animation:maglio-deploy 420ms var(--maglio-delay) both;
@@ -17,11 +19,10 @@
  animation:maglio-recoil 480ms calc(780ms + var(--maglio-delay)) both;
 }
 .maglio-device[data-side="enemy"] .maglio-device-art {--maglio-recoil:-5px;}
-.maglio-charge {position:absolute;left:50%;top:14%;width:26px;height:16px;opacity:0;
+.maglio-charge {position:absolute;left:var(--maglio-head-x);top:var(--maglio-head-y);width:26px;height:16px;opacity:0;
  transform:translate(-50%,-50%);border-radius:50%;
  background:radial-gradient(ellipse,#fff9d0 0%,#ffb33999 30%,transparent 72%);
  animation:maglio-charge 650ms calc(320ms + var(--maglio-delay)) both;}
-.maglio-device[data-side="enemy"] .maglio-charge {top:84%;}
 .maglio-charge i,.maglio-charge b {position:absolute;inset:1px;border:1px solid #ffd087;
  border-radius:50%;transform:scale(.7);box-shadow:0 0 5px #ffb957;}
 .maglio-charge b {inset:4px 6px;}

@@ -1,0 +1,6420 @@
+{
+  "before": {
+    "hp": {
+      "A": [
+        {
+          "hp": 125,
+          "name": "HP Prisma Silente"
+        },
+        {
+          "hp": 809,
+          "name": "HP Aurora-0"
+        },
+        {
+          "hp": 125,
+          "name": "HP Corvo Esploratore"
+        }
+      ],
+      "B": [
+        {
+          "hp": 125,
+          "name": "HP Prisma Silente"
+        },
+        {
+          "hp": 631,
+          "name": "HP Lince Solare"
+        },
+        {
+          "hp": 125,
+          "name": "HP Corvo Esploratore"
+        }
+      ]
+    },
+    "shots": [],
+    "weapons": [
+      {
+        "loaded": true,
+        "rarity": "Epica",
+        "side": "player",
+        "state": "pending"
+      }
+    ]
+  },
+  "after": {
+    "hp": {
+      "A": [
+        {
+          "hp": 44,
+          "name": "HP Prisma Silente"
+        },
+        {
+          "hp": 809,
+          "name": "HP Aurora-0"
+        },
+        {
+          "hp": 125,
+          "name": "HP Corvo Esploratore"
+        }
+      ],
+      "B": [
+        {
+          "hp": 125,
+          "name": "HP Prisma Silente"
+        },
+        {
+          "hp": 631,
+          "name": "HP Lince Solare"
+        },
+        {
+          "hp": 44,
+          "name": "HP Corvo Esploratore"
+        }
+      ]
+    },
+    "shots": [],
+    "weapons": [
+      {
+        "loaded": true,
+        "rarity": "Epica",
+        "side": "enemy",
+        "state": "idle"
+      }
+    ]
+  },
+  "frames": [
+    {
+      "n": 0,
+      "ms": 0,
+      "endMs": 49,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 6.525496779584082,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 1,
+      "ms": 49,
+      "endMs": 102,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 6.911974732199143,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "ms": 102,
+      "endMs": 160,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 6.787407094676036,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "ms": 160,
+      "endMs": 212,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 6.243995607903617,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "ms": 212,
+      "endMs": 274,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 6.128751767577781,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "ms": 274,
+      "endMs": 325,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "ms": 325,
+      "endMs": 378,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "ms": 378,
+      "endMs": 460,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "ms": 460,
+      "endMs": 531,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "ms": 531,
+      "endMs": 584,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "ms": 584,
+      "endMs": 639,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "ms": 639,
+      "endMs": 686,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "ms": 686,
+      "endMs": 744,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 13,
+      "ms": 744,
+      "endMs": 792,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 14,
+      "ms": 792,
+      "endMs": 841,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 15,
+      "ms": 841,
+      "endMs": 904,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "ms": 904,
+      "endMs": 958,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 17,
+      "ms": 958,
+      "endMs": 1012,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 18,
+      "ms": 1012,
+      "endMs": 1066,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 19,
+      "ms": 1066,
+      "endMs": 1120,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 20,
+      "ms": 1120,
+      "endMs": 1185,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 21,
+      "ms": 1185,
+      "endMs": 1235,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 22,
+      "ms": 1235,
+      "endMs": 1288,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 23,
+      "ms": 1288,
+      "endMs": 1340,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 24,
+      "ms": 1340,
+      "endMs": 1403,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 25,
+      "ms": 1403,
+      "endMs": 1451,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 26,
+      "ms": 1451,
+      "endMs": 1498,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 27,
+      "ms": 1498,
+      "endMs": 1547,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 28,
+      "ms": 1547,
+      "endMs": 1607,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 29,
+      "ms": 1607,
+      "endMs": 1655,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 30,
+      "ms": 1655,
+      "endMs": 1703,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 31,
+      "ms": 1703,
+      "endMs": 1749,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 32,
+      "ms": 1749,
+      "endMs": 1804,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 33,
+      "ms": 1804,
+      "endMs": 1853,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 34,
+      "ms": 1853,
+      "endMs": 1898,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 35,
+      "ms": 1898,
+      "endMs": 1943,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 36,
+      "ms": 1943,
+      "endMs": 1995,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "firing"
+        }
+      ]
+    },
+    {
+      "n": 37,
+      "ms": 1995,
+      "endMs": 2043,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 38,
+      "ms": 2043,
+      "endMs": 2089,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 39,
+      "ms": 2089,
+      "endMs": 2146,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 40,
+      "ms": 2146,
+      "endMs": 2200,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 41,
+      "ms": 2200,
+      "endMs": 2247,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 42,
+      "ms": 2247,
+      "endMs": 2292,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 43,
+      "ms": 2292,
+      "endMs": 2336,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 44,
+      "ms": 2336,
+      "endMs": 2391,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 45,
+      "ms": 2391,
+      "endMs": 2465,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 46,
+      "ms": 2465,
+      "endMs": 2524,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 47,
+      "ms": 2524,
+      "endMs": 2579,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 48,
+      "ms": 2579,
+      "endMs": 2627,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 49,
+      "ms": 2627,
+      "endMs": 2693,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 50,
+      "ms": 2693,
+      "endMs": 2743,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 51,
+      "ms": 2743,
+      "endMs": 2792,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 2.2142481922711985,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 52,
+      "ms": 2792,
+      "endMs": 2842,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 5.717104704771426,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 53,
+      "ms": 2842,
+      "endMs": 2902,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 8.373883369843526,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 54,
+      "ms": 2902,
+      "endMs": 2950,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 9.293372657637592,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 55,
+      "ms": 2950,
+      "endMs": 3001,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 9.675821154436209,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 56,
+      "ms": 3001,
+      "endMs": 3057,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 9.422399441862446,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 57,
+      "ms": 3057,
+      "endMs": 3104,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 8.66827195905503,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 58,
+      "ms": 3104,
+      "endMs": 3156,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 8.508570305886069,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 59,
+      "ms": 3156,
+      "endMs": 3207,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 60,
+      "ms": 3207,
+      "endMs": 3269,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 61,
+      "ms": 3269,
+      "endMs": 3317,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 62,
+      "ms": 3317,
+      "endMs": 3365,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 63,
+      "ms": 3365,
+      "endMs": 3412,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 64,
+      "ms": 3412,
+      "endMs": 3459,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 65,
+      "ms": 3459,
+      "endMs": 3508,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 66,
+      "ms": 3508,
+      "endMs": 3557,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 67,
+      "ms": 3557,
+      "endMs": 3618,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 68,
+      "ms": 3618,
+      "endMs": 3687,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 69,
+      "ms": 3687,
+      "endMs": 3736,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 70,
+      "ms": 3736,
+      "endMs": 3789,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 71,
+      "ms": 3789,
+      "endMs": 3837,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 72,
+      "ms": 3837,
+      "endMs": 3893,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 73,
+      "ms": 3893,
+      "endMs": 3952,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 74,
+      "ms": 3952,
+      "endMs": 4009,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 75,
+      "ms": 4009,
+      "endMs": 4061,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 76,
+      "ms": 4061,
+      "endMs": 4116,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 77,
+      "ms": 4116,
+      "endMs": 4185,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 78,
+      "ms": 4185,
+      "endMs": 4248,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 79,
+      "ms": 4248,
+      "endMs": 4350,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 80,
+      "ms": 4350,
+      "endMs": 4419,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 81,
+      "ms": 4419,
+      "endMs": 4494,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 82,
+      "ms": 4494,
+      "endMs": 4587,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 83,
+      "ms": 4587,
+      "endMs": 4664,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 84,
+      "ms": 4664,
+      "endMs": 4719,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 85,
+      "ms": 4719,
+      "endMs": 4781,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 86,
+      "ms": 4781,
+      "endMs": 4829,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 87,
+      "ms": 4829,
+      "endMs": 4879,
+      "hp": {
+        "A": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "81",
+          "originDelta": 0,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 88,
+      "ms": 4879,
+      "endMs": 4949,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 89,
+      "ms": 4949,
+      "endMs": 5003,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 90,
+      "ms": 5003,
+      "endMs": 5069,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 91,
+      "ms": 5069,
+      "endMs": 5116,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 92,
+      "ms": 5116,
+      "endMs": 5173,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 93,
+      "ms": 5173,
+      "endMs": 5221,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 94,
+      "ms": 5221,
+      "endMs": 5283,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 95,
+      "ms": 5283,
+      "endMs": 5330,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 96,
+      "ms": 5330,
+      "endMs": 5392,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 97,
+      "ms": 5392,
+      "endMs": 5442,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 98,
+      "ms": 5442,
+      "endMs": 5500,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 99,
+      "ms": 5500,
+      "endMs": 5549,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 100,
+      "ms": 5549,
+      "endMs": 5598,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 101,
+      "ms": 5598,
+      "endMs": 5651,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 102,
+      "ms": 5651,
+      "endMs": 5718,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 103,
+      "ms": 5718,
+      "endMs": 5768,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 104,
+      "ms": 5768,
+      "endMs": 5826,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 105,
+      "ms": 5826,
+      "endMs": 5879,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 106,
+      "ms": 5879,
+      "endMs": 5930,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 107,
+      "ms": 5930,
+      "endMs": 5985,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 108,
+      "ms": 5985,
+      "endMs": 6037,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 109,
+      "ms": 6037,
+      "endMs": 6086,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 110,
+      "ms": 6086,
+      "endMs": 6146,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 111,
+      "ms": 6146,
+      "endMs": 6194,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 112,
+      "ms": 6194,
+      "endMs": 6256,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 113,
+      "ms": 6256,
+      "endMs": 6307,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 114,
+      "ms": 6307,
+      "endMs": 6358,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 115,
+      "ms": 6358,
+      "endMs": 6407,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 116,
+      "ms": 6407,
+      "endMs": 6468,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 117,
+      "ms": 6468,
+      "endMs": 6516,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 118,
+      "ms": 6516,
+      "endMs": 6591,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 119,
+      "ms": 6591,
+      "endMs": 6652,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 120,
+      "ms": 6652,
+      "endMs": 6712,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 121,
+      "ms": 6712,
+      "endMs": 6764,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 122,
+      "ms": 6764,
+      "endMs": 6815,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 123,
+      "ms": 6815,
+      "endMs": 6879,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    {
+      "n": 124,
+      "ms": 6879,
+      "endMs": 6934,
+      "hp": {
+        "A": [
+          {
+            "hp": 44,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 809,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 125,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 125,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 631,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 44,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Epica",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    }
+  ],
+  "boardClip": {
+    "height": 870,
+    "width": 489.375,
+    "x": 436.8125,
+    "y": 66
+  }
+}

@@ -263,7 +263,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
      aria-pressed={!player&&selected}
      onClick={()=>player?inspectEscort({machine}):onSelectTarget?.({kind:'machine',id:machine.id,slot})}>
      {maglio?<MaglioWeaponModel key={machine.maglioShot?machine.maglioShot.machineId+'-'+machine.maglioShot.visualNonce:machine.id}
-      side={side} pending={machine.pending} shot={machine.maglioShot}/>:
+      side={side} slot={slot} cardId={machine.sourceCardId||machine.id} pending={machine.pending} shot={machine.maglioShot}/>:
       modelArt&&<img className="f3d-card-weapon-model" src={modelArt} alt="" draggable={false}/>}
      <span className="f3d-weapon-position-label">{machine.name||''}</span>
     </button>;

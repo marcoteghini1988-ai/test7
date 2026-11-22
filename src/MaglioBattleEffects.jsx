@@ -1,20 +1,23 @@
 import React,{useLayoutEffect,useRef,useState} from 'react';
-import {MAGLIO_CARD_ID,maglioArtwork} from './maglioBattleVisuals.js';
+import {MAGLIO_CARD_ID,MAGLIO_VARIANTS,maglioArtwork,maglioVariant} from './maglioBattleVisuals.js';
 import './MaglioBattleEffects.css';
 
 export function MaglioArtPreload(){
- return <>{['player','enemy'].map(side=><link key={side} rel="preload" as="image"
-  href={maglioArtwork(MAGLIO_CARD_ID,side)}/>)}</>;
+ return <>{MAGLIO_VARIANTS.flatMap(v=>['player','enemy'].map(side=><link key={v.id+side} rel="preload" as="image"
+  href={maglioArtwork(v.id,side)}/>))}</>;
 }
 
-export function MaglioWeaponModel({side,shot,pending}){
- return <span className="maglio-device" data-side={side}
+export function MaglioWeaponModel({side,shot,pending,cardId=MAGLIO_CARD_ID,slot=0}){
+ const variant=maglioVariant(cardId),head=side==='enemy'?variant.enemyHead:variant.playerHead;
+ return <span className="maglio-device" data-side={side} data-slot={slot} data-rarity={variant.rarity}
   data-state={pending?'pending':shot?.fires?'firing':shot?'deploying':'idle'}
-  style={{'--maglio-delay':(shot?.delayMs||0)+'ms'}}>
-  <img className="maglio-device-art" src={maglioArtwork(MAGLIO_CARD_ID,side)}
-   alt="Maglio Ferrogravitazionale 3D" draggable={false}/>
+  style={{'--maglio-delay':(shot?.delayMs||0)+'ms','--maglio-head-x':head[0]+'%','--maglio-head-y':head[1]+'%'}}>
+  <span className="maglio-orientation">
+  <img className="maglio-device-art" src={maglioArtwork(cardId,side)}
+   alt={'Maglio Ferrogravitazionale '+variant.rarity+' 3D'} draggable={false}/>
   <i className="maglio-muzzle-anchor" aria-hidden="true"/>
   {shot?.fires&&<span className="maglio-charge" aria-hidden="true"><i/><b/></span>}
+  </span>
  </span>;
 }
 
@@ -43,8 +46,11 @@ export default function MaglioBattleEffects({shots,nonce}){
    const geometry=shotGeometry(root,shot);return geometry?[{shot,...geometry}]:[];
   }));
   measure();
+  // Misura nuovamente dopo l'appoggio sul tavolo: il punto di emissione
+  // non deve restare quello transitorio della comparsa (scala .86).
+  const settled=window.setTimeout(measure,460+Math.max(0,...shots.map(s=>s.delayMs||0)));
   const observer=new ResizeObserver(measure);observer.observe(root);
-  return ()=>observer.disconnect();
+  return ()=>{window.clearTimeout(settled);observer.disconnect();};
  },[shots,nonce]);
  return <svg ref={ref} className="maglio-battle-effects" viewBox="0 0 450 800"
   aria-hidden="true" focusable="false" data-maglio-effects={paths.length}>
@@ -70,7 +76,7 @@ export default function MaglioBattleEffects({shots,nonce}){
      <ellipse cx="-7" rx="2" ry="6" fill="none" stroke="#ffb76b"/>
     </g>
    </g>
-   <g transform={'translate('+to.x+' '+to.y+')'}>
+   <g transform={'translate('+to.x+' '+to.y+') scale('+maglioVariant(shot.cardId).impactScale+')'}>
     <g className="maglio-gravity-impact">
      <ellipse rx="48" ry="32" fill={'url(#maglio-impact-'+nonce+')'}/>
      <ellipse className="maglio-impact-ring" rx="25" ry="15" fill="none" stroke="#fff0c3" strokeWidth="2"/>

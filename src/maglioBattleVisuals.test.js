@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
-import {MAGLIO_CARD_ID,maglioArtwork,maglioShots,maglioPresentationBerths,
+import {MAGLIO_CARD_ID,MAGLIO_VARIANTS,maglioArtwork,maglioShots,maglioPresentationBerths,
  maglioResolutionMs} from './maglioBattleVisuals.js';
 import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turnPresentation.js';
 import {resolvePreparedFleetTurn,autoFleetTurn,createFleetNextBattle} from './fleetNext/combat.js';
@@ -9,16 +9,16 @@ import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {createMaglioReviewBattle} from '../scripts/maglioReviewBattle.js';
 
 const order={cards:[0],targetKind:'part',targetId:'weapons',partId:'weapons'};
-test('Maglio: due veri sprite RGBA distinti, nessuna immagine inventata per altre rarità',()=>{
- const paths=['player','enemy'].map(side=>maglioArtwork(MAGLIO_CARD_ID,side));
- assert.notEqual(paths[0],paths[1]);
+test('Maglio: otto veri sprite RGBA distinti per quattro rarità e due viste',()=>{
+ const paths=MAGLIO_VARIANTS.flatMap(v=>['player','enemy'].map(side=>maglioArtwork(v.id,side)));
+ assert.equal(new Set(paths).size,8);
  for(const path of paths){
   assert.ok(existsSync('public'+path));
   const bytes=readFileSync('public'+path);
   assert.equal(bytes.toString('ascii',0,4),'RIFF');
   assert.ok(bytes.includes(Buffer.from('ALPH')),'Alpha reale mancante');
  }
- assert.equal(maglioArtwork(MAGLIO_CARD_ID+'-rarity-l','enemy'),null);
+ assert.equal(maglioArtwork(MAGLIO_CARD_ID+'-rarity-inventata','enemy'),null);
  assert.equal(maglioArtwork('weapon-confirmed-metallic-slitta','player'),null);
 });
 for(const slot of [0,1])test('Maglio: giocatore e vera IA sparano dallo slot '+slot+' e sottraggono HP reali',()=>{

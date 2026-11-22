@@ -1,56 +1,1306 @@
 {
-  "source": "StackBlitz test7, renderer OfficialFleetBattle3D, motore resolvePreparedFleetTurn + autoFleetTurn",
-  "candidate": "0889f198f9a92ba6635357aafcebd36ffce21345",
   "date": "2026-11-22",
-  "hpBefore": [
+  "runtimeCandidate": "d8a75472f57236df710b0ef8db059721b91e01ab",
+  "source": "Screenshot nativi della partita reale eseguita su StackBlitz; stessi renderer e motore ufficiali. Non sono immagini generate della plancia.",
+  "cases": [
     {
-      "hp": "339",
-      "name": "HP Lince Solare"
+      "rarity": "Comune",
+      "before": {
+        "hp": {
+          "A": [
+            {
+              "hp": 66,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 435,
+              "name": "HP Aurora-0"
+            },
+            {
+              "hp": 66,
+              "name": "HP Corvo Esploratore"
+            }
+          ],
+          "B": [
+            {
+              "hp": 66,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 339,
+              "name": "HP Lince Solare"
+            },
+            {
+              "hp": 66,
+              "name": "HP Corvo Esploratore"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Comune",
+            "side": "player",
+            "state": "pending"
+          }
+        ]
+      },
+      "after": {
+        "hp": {
+          "A": [
+            {
+              "hp": 53,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 435,
+              "name": "HP Aurora-0"
+            },
+            {
+              "hp": 66,
+              "name": "HP Corvo Esploratore"
+            }
+          ],
+          "B": [
+            {
+              "hp": 66,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 339,
+              "name": "HP Lince Solare"
+            },
+            {
+              "hp": 53,
+              "name": "HP Corvo Esploratore"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Comune",
+            "side": "enemy",
+            "state": "idle"
+          }
+        ]
+      },
+      "impactFrames": {
+        "A": {
+          "frame": 22,
+          "ms": 1143,
+          "shot": {
+            "actualDamage": "13",
+            "originDelta": 0,
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-1",
+            "targetKind": "escort"
+          }
+        },
+        "B": {
+          "frame": 74,
+          "ms": 3830,
+          "shot": {
+            "actualDamage": "13",
+            "originDelta": 0,
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort"
+          }
+        }
+      },
+      "boardClip": {
+        "height": 899,
+        "width": 505.6875,
+        "x": 428.65625,
+        "y": 37
+      },
+      "recordedMs": 6794,
+      "checks": {
+        "bothActors": true,
+        "noRemainingShots": true,
+        "playerWeaponExpired": true,
+        "allImagesLoaded": true
+      }
     },
     {
-      "hp": "435",
-      "name": "HP Aurora-0"
-    }
-  ],
-  "hpAfter": [
-    {
-      "hp": "321",
-      "name": "HP Lince Solare"
+      "rarity": "Rara",
+      "before": {
+        "hp": {
+          "A": [
+            {
+              "hp": 96,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 578,
+              "name": "HP Aurora-0"
+            },
+            {
+              "hp": 96,
+              "name": "HP Corvo Esploratore"
+            }
+          ],
+          "B": [
+            {
+              "hp": 96,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 451,
+              "name": "HP Lince Solare"
+            },
+            {
+              "hp": 96,
+              "name": "HP Corvo Esploratore"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Rara",
+            "side": "player",
+            "state": "pending"
+          }
+        ]
+      },
+      "after": {
+        "hp": {
+          "A": [
+            {
+              "hp": 62,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 578,
+              "name": "HP Aurora-0"
+            },
+            {
+              "hp": 96,
+              "name": "HP Corvo Esploratore"
+            }
+          ],
+          "B": [
+            {
+              "hp": 62,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 451,
+              "name": "HP Lince Solare"
+            },
+            {
+              "hp": 96,
+              "name": "HP Corvo Esploratore"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Rara",
+            "side": "enemy",
+            "state": "idle"
+          }
+        ]
+      },
+      "impactFrames": {
+        "A": {
+          "frame": 21,
+          "ms": 1165,
+          "shot": {
+            "actualDamage": "34",
+            "originDelta": 0,
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort"
+          }
+        },
+        "B": {
+          "frame": 69,
+          "ms": 3845,
+          "shot": {
+            "actualDamage": "34",
+            "originDelta": 0.018034929842954437,
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort"
+          }
+        }
+      },
+      "boardClip": {
+        "height": 899,
+        "width": 505.6875,
+        "x": 428.65625,
+        "y": 37
+      },
+      "recordedMs": 7036,
+      "checks": {
+        "bothActors": true,
+        "noRemainingShots": true,
+        "playerWeaponExpired": true,
+        "allImagesLoaded": true
+      }
     },
     {
-      "hp": "418",
-      "name": "HP Aurora-0"
+      "rarity": "Epica",
+      "before": {
+        "hp": {
+          "A": [
+            {
+              "hp": 125,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 809,
+              "name": "HP Aurora-0"
+            },
+            {
+              "hp": 125,
+              "name": "HP Corvo Esploratore"
+            }
+          ],
+          "B": [
+            {
+              "hp": 125,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 631,
+              "name": "HP Lince Solare"
+            },
+            {
+              "hp": 125,
+              "name": "HP Corvo Esploratore"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Epica",
+            "side": "player",
+            "state": "pending"
+          }
+        ]
+      },
+      "after": {
+        "hp": {
+          "A": [
+            {
+              "hp": 44,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 809,
+              "name": "HP Aurora-0"
+            },
+            {
+              "hp": 125,
+              "name": "HP Corvo Esploratore"
+            }
+          ],
+          "B": [
+            {
+              "hp": 125,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 631,
+              "name": "HP Lince Solare"
+            },
+            {
+              "hp": 44,
+              "name": "HP Corvo Esploratore"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Epica",
+            "side": "enemy",
+            "state": "idle"
+          }
+        ]
+      },
+      "impactFrames": {
+        "A": {
+          "frame": 20,
+          "ms": 1120,
+          "shot": {
+            "actualDamage": "81",
+            "originDelta": 0,
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-1",
+            "targetKind": "escort"
+          }
+        },
+        "B": {
+          "frame": 72,
+          "ms": 3837,
+          "shot": {
+            "actualDamage": "81",
+            "originDelta": 0,
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort"
+          }
+        }
+      },
+      "boardClip": {
+        "height": 870,
+        "width": 489.375,
+        "x": 436.8125,
+        "y": 66
+      },
+      "recordedMs": 6934,
+      "checks": {
+        "bothActors": true,
+        "noRemainingShots": true,
+        "playerWeaponExpired": true,
+        "allImagesLoaded": true
+      }
+    },
+    {
+      "rarity": "Leggendaria",
+      "before": {
+        "hp": {
+          "A": [
+            {
+              "hp": 174,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 1050,
+              "name": "HP Aurora-0"
+            },
+            {
+              "hp": 174,
+              "name": "HP Corvo Esploratore"
+            }
+          ],
+          "B": [
+            {
+              "hp": 174,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 820,
+              "name": "HP Lince Solare"
+            },
+            {
+              "hp": 174,
+              "name": "HP Corvo Esploratore"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Leggendaria",
+            "side": "player",
+            "state": "pending"
+          }
+        ]
+      },
+      "after": {
+        "hp": {
+          "A": [
+            {
+              "hp": 59,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 1050,
+              "name": "HP Aurora-0"
+            },
+            {
+              "hp": 174,
+              "name": "HP Corvo Esploratore"
+            }
+          ],
+          "B": [
+            {
+              "hp": 59,
+              "name": "HP Prisma Silente"
+            },
+            {
+              "hp": 820,
+              "name": "HP Lince Solare"
+            },
+            {
+              "hp": 174,
+              "name": "HP Corvo Esploratore"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Leggendaria",
+            "side": "enemy",
+            "state": "idle"
+          }
+        ]
+      },
+      "impactFrames": {
+        "A": {
+          "frame": 19,
+          "ms": 1148,
+          "shot": {
+            "actualDamage": "115",
+            "originDelta": 0,
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort"
+          }
+        },
+        "B": {
+          "frame": 68,
+          "ms": 3833,
+          "shot": {
+            "actualDamage": "115",
+            "originDelta": 0,
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort"
+          }
+        }
+      },
+      "boardClip": {
+        "height": 870,
+        "width": 489.375,
+        "x": 436.8125,
+        "y": 66
+      },
+      "recordedMs": 7058,
+      "checks": {
+        "bothActors": true,
+        "noRemainingShots": true,
+        "playerWeaponExpired": true,
+        "allImagesLoaded": true
+      }
     }
   ],
-  "shots": [
-    [
-      "A",
-      "18",
-      "part",
-      "weapons"
-    ],
-    [
-      "B",
-      "17",
-      "part",
-      "generator"
+  "letale": {
+    "before": {
+      "hp": {
+        "A": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 1050,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 820,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Leggendaria",
+          "side": "player",
+          "state": "pending"
+        }
+      ]
+    },
+    "after": {
+      "hp": {
+        "A": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 1050,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 0,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 820,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 0,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Leggendaria",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    "destroyed": 2,
+    "boardClip": {
+      "height": 870,
+      "width": 489.375,
+      "x": 436.8125,
+      "y": 66
+    },
+    "shotsByActor": [
+      {
+        "actualDamage": "1",
+        "originDelta": 0,
+        "shooter": "A",
+        "targetId": "escort:maglio-review-B-1",
+        "targetKind": "escort"
+      },
+      {
+        "actualDamage": "1",
+        "originDelta": 0,
+        "shooter": "B",
+        "targetId": "escort:maglio-review-A-1",
+        "targetKind": "escort"
+      }
     ]
-  ],
-  "missingImages": 0,
-  "extraChecks": {
-    "secondA": {
-      "slot": "1",
-      "state": "firing"
+  },
+  "arma-bloccata": {
+    "before": {
+      "hp": {
+        "A": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 1050,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 820,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Leggendaria",
+          "side": "player",
+          "state": "pending"
+        }
+      ]
     },
-    "secondB": {
-      "slot": "1",
-      "state": "firing"
+    "during": {
+      "hp": {
+        "A": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 1050,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 820,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Leggendaria",
+          "side": "player",
+          "state": "deploying"
+        }
+      ]
     },
-    "blockedProof": {
-      "charging": 0,
-      "enemyHp": "339",
-      "shots": 0,
-      "state": "deploying"
+    "reply": {
+      "hp": {
+        "A": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 1050,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 820,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [
+        {
+          "actualDamage": "1",
+          "originDelta": 3.1411884272587254,
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-1",
+          "targetKind": "escort"
+        }
+      ],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Leggendaria",
+          "side": "enemy",
+          "state": "firing"
+        },
+        {
+          "loaded": true,
+          "rarity": "Leggendaria",
+          "side": "player",
+          "state": "idle"
+        }
+      ]
+    },
+    "after": {
+      "hp": {
+        "A": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 1050,
+            "name": "HP Aurora-0"
+          },
+          {
+            "hp": 0,
+            "name": "HP Corvo Esploratore"
+          }
+        ],
+        "B": [
+          {
+            "hp": 174,
+            "name": "HP Prisma Silente"
+          },
+          {
+            "hp": 820,
+            "name": "HP Lince Solare"
+          },
+          {
+            "hp": 1,
+            "name": "HP Corvo Esploratore"
+          }
+        ]
+      },
+      "shots": [],
+      "weapons": [
+        {
+          "loaded": true,
+          "rarity": "Leggendaria",
+          "side": "enemy",
+          "state": "idle"
+        }
+      ]
+    },
+    "boardClip": {
+      "height": 870,
+      "width": 489.375,
+      "x": 436.8125,
+      "y": 66
     }
+  },
+  "motherCases": [
+    {
+      "cardId": "weapon-confirmed-metallic-maglio",
+      "before": {
+        "hp": {
+          "A": [
+            {
+              "hp": 435,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 339,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Comune",
+            "side": "player",
+            "state": "pending"
+          }
+        ]
+      },
+      "player": {
+        "hp": {
+          "A": [
+            {
+              "hp": 435,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 339,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [
+          {
+            "actualDamage": "18",
+            "originDelta": 4.760144267595307,
+            "shooter": "A",
+            "targetId": "weapons",
+            "targetKind": "part"
+          }
+        ],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Comune",
+            "side": "player",
+            "state": "firing"
+          }
+        ]
+      },
+      "enemy": {
+        "hp": {
+          "A": [
+            {
+              "hp": 435,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 321,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [
+          {
+            "actualDamage": "17",
+            "originDelta": 1.1026946795148769,
+            "shooter": "B",
+            "targetId": "generator",
+            "targetKind": "part"
+          }
+        ],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Comune",
+            "side": "enemy",
+            "state": "firing"
+          },
+          {
+            "loaded": true,
+            "rarity": "Comune",
+            "side": "player",
+            "state": "idle"
+          }
+        ]
+      },
+      "after": {
+        "hp": {
+          "A": [
+            {
+              "hp": 418,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 321,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Comune",
+            "side": "enemy",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "cardId": "weapon-confirmed-metallic-maglio-rarity-r",
+      "before": {
+        "hp": {
+          "A": [
+            {
+              "hp": 578,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 451,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Rara",
+            "side": "player",
+            "state": "pending"
+          }
+        ]
+      },
+      "player": {
+        "hp": {
+          "A": [
+            {
+              "hp": 578,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 451,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [
+          {
+            "actualDamage": "45",
+            "originDelta": 5.490008147910268,
+            "shooter": "A",
+            "targetId": "weapons",
+            "targetKind": "part"
+          }
+        ],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Rara",
+            "side": "player",
+            "state": "firing"
+          }
+        ]
+      },
+      "enemy": {
+        "hp": {
+          "A": [
+            {
+              "hp": 578,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 406,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [
+          {
+            "actualDamage": "43",
+            "originDelta": 2.186178602966845,
+            "shooter": "B",
+            "targetId": "generator",
+            "targetKind": "part"
+          }
+        ],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Rara",
+            "side": "enemy",
+            "state": "firing"
+          },
+          {
+            "loaded": true,
+            "rarity": "Rara",
+            "side": "player",
+            "state": "idle"
+          }
+        ]
+      },
+      "after": {
+        "hp": {
+          "A": [
+            {
+              "hp": 535,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 406,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Rara",
+            "side": "enemy",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "cardId": "weapon-confirmed-metallic-maglio-rarity-e",
+      "before": {
+        "hp": {
+          "A": [
+            {
+              "hp": 809,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 631,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Epica",
+            "side": "player",
+            "state": "pending"
+          }
+        ]
+      },
+      "player": {
+        "hp": {
+          "A": [
+            {
+              "hp": 809,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 631,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [
+          {
+            "actualDamage": "105",
+            "originDelta": 6.694493752920622,
+            "shooter": "A",
+            "targetId": "weapons",
+            "targetKind": "part"
+          }
+        ],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Epica",
+            "side": "player",
+            "state": "firing"
+          }
+        ]
+      },
+      "enemy": {
+        "hp": {
+          "A": [
+            {
+              "hp": 809,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 526,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [
+          {
+            "actualDamage": "99",
+            "originDelta": 3.4672739150411114,
+            "shooter": "B",
+            "targetId": "command",
+            "targetKind": "part"
+          }
+        ],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Epica",
+            "side": "enemy",
+            "state": "firing"
+          },
+          {
+            "loaded": true,
+            "rarity": "Epica",
+            "side": "player",
+            "state": "idle"
+          }
+        ]
+      },
+      "after": {
+        "hp": {
+          "A": [
+            {
+              "hp": 710,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 526,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Epica",
+            "side": "enemy",
+            "state": "idle"
+          }
+        ]
+      }
+    },
+    {
+      "cardId": "weapon-confirmed-metallic-maglio-rarity-l",
+      "before": {
+        "hp": {
+          "A": [
+            {
+              "hp": 1050,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 820,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Leggendaria",
+            "side": "player",
+            "state": "pending"
+          }
+        ]
+      },
+      "player": {
+        "hp": {
+          "A": [
+            {
+              "hp": 1050,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 820,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [
+          {
+            "actualDamage": "146",
+            "originDelta": 5.287064955617425,
+            "shooter": "A",
+            "targetId": "weapons",
+            "targetKind": "part"
+          }
+        ],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Leggendaria",
+            "side": "player",
+            "state": "firing"
+          }
+        ]
+      },
+      "enemy": {
+        "hp": {
+          "A": [
+            {
+              "hp": 1050,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 674,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [
+          {
+            "actualDamage": "137",
+            "originDelta": 0.3485321664004106,
+            "shooter": "B",
+            "targetId": "command",
+            "targetKind": "part"
+          }
+        ],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Leggendaria",
+            "side": "enemy",
+            "state": "firing"
+          },
+          {
+            "loaded": true,
+            "rarity": "Leggendaria",
+            "side": "player",
+            "state": "idle"
+          }
+        ]
+      },
+      "after": {
+        "hp": {
+          "A": [
+            {
+              "hp": 913,
+              "name": "HP Aurora-0"
+            }
+          ],
+          "B": [
+            {
+              "hp": 674,
+              "name": "HP Lince Solare"
+            }
+          ]
+        },
+        "shots": [],
+        "weapons": [
+          {
+            "loaded": true,
+            "rarity": "Leggendaria",
+            "side": "enemy",
+            "state": "idle"
+          }
+        ]
+      }
+    }
+  ],
+  "console": {
+    "gameErrors": [],
+    "extensionErrors": 30
+  },
+  "tests": {
+    "logic": {
+      "passed": 1969,
+      "failed": 0
+    },
+    "focusedOnStackBlitz": {
+      "passed": 74,
+      "failed": 0
+    },
+    "build": "passed",
+    "preflight": "passed"
   }
 }

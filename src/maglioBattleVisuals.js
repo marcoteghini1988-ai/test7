@@ -1,15 +1,23 @@
-// Presentazione del Maglio Comune approvato; nessun calcolo di danni nel renderer.
+// Quattro dispositivi ricavati dalle carte ufficiali; nessun calcolo di danni nel renderer.
 import {projectMachineBerths} from './fleetNext/battlePresentation.js';
 
 export const MAGLIO_CARD_ID='weapon-confirmed-metallic-maglio';
+export const MAGLIO_VARIANTS=Object.freeze([
+ {id:MAGLIO_CARD_ID,rarity:'Comune',folder:'',playerHead:[68,18],enemyHead:[32,56],impactScale:1},
+ {id:MAGLIO_CARD_ID+'-rarity-r',rarity:'Rara',folder:'rara/',playerHead:[73,18],enemyHead:[32,57],impactScale:1.08},
+ {id:MAGLIO_CARD_ID+'-rarity-e',rarity:'Epica',folder:'epica/',playerHead:[79,24],enemyHead:[25,54],impactScale:1.16},
+ {id:MAGLIO_CARD_ID+'-rarity-l',rarity:'Leggendaria',folder:'leggendaria/',playerHead:[70,21],enemyHead:[37,53],impactScale:1.24}
+].map(Object.freeze));
+export const maglioVariant=id=>MAGLIO_VARIANTS.find(v=>v.id===id)||null;
 export const MAGLIO_FX_MS=2200;
 export const MAGLIO_SHOT_GAP_MS=260;
 export function maglioArtwork(id,side){
- return id===MAGLIO_CARD_ID?'/assets/fleet-weapons/maglio/'+
+ const variant=maglioVariant(id);
+ return variant?'/assets/fleet-weapons/maglio/'+variant.folder+
   (side==='enemy'?'enemy':'player')+'.webp':null;
 }
 export function maglioShots(events=[]){
- return events.filter(e=>e?.kind==='weapon-base-shot'&&e.cardId===MAGLIO_CARD_ID&&
+ return events.filter(e=>e?.kind==='weapon-base-shot'&&maglioVariant(e.cardId)&&
   ['A','B'].includes(e.who)&&[0,1].includes(e.machineSlot)).map((e,index)=>({
    ...e,delayMs:index*MAGLIO_SHOT_GAP_MS,
    fires:!e.blocked&&e.actualDamage>0&&!!e.targetKind&&!!e.targetId
