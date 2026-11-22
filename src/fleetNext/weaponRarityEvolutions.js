@@ -1,5 +1,5 @@
 // Evoluzioni delle Carte Arma: stessa identita', stessa meccanica, rarita' crescente.
-// Valori provvisori: bilanciamento proporzionato alla crescita degli HP delle navi.
+// Valori delle evoluzioni consolidati per la nuova battaglia (22 novembre 2026).
 // Non genera immagini, non modifica le armi originali e non allunga i turni.
 // Trifase I/II/III sono tre carte in SEQUENZA di combattimento, ognuna con
 // una sua evoluzione di rarita': i due concetti sono intenzionalmente distinti.
@@ -39,7 +39,8 @@ function evolveOne(base,rarita,previousId){
  return Object.freeze({...base,id,name:base.name,nome:base.name,rarita,
   rarity:rarita,weaponFamilyId:base.id,originRarity:base.rarita,
   evolutionOf:previousId,evolutionStage:next-index,isWeaponEvolution:true,
-  playable:true,nativeFace:true,acquisitionPending:false,balancePending:true,
+  playable:true,nativeFace:true,acquisitionPending:false,balancePending:false,
+  weaponValuesNearFinal:true,
   maxCopiesPerDeck:maxCopies,effectSpec:spec,
   effectProposed:description(base,spec),
   visualBrief:(base.visualBrief||'Arma '+base.name)+
@@ -62,13 +63,16 @@ export const ALL_WEAPON_BY_ID=Object.freeze(Object.fromEntries(ALL_WEAPON_CARDS.
  export const WEAPON_PRINT_CANDIDATE_BY_ID=Object.freeze(Object.fromEntries(
   WEAPON_PRINT_CANDIDATES.map(card=>[card.id,card])
  ));
-// Nuovo testo delle 235 armi nella partita strategica, separato dai
-// valori storici. Nessuna modifica ai fronti grafici finche' non approvati.
+// Numeri nominali quasi definitivi delle 235 Armi per la battaglia strategica.
+// Identita' e vecchi salvataggi restano intatti, la grafica non viene cambiata.
 export const WEAPON_STRATEGIC_PRINT_CANDIDATES=Object.freeze(
  ALL_WEAPON_CARDS.map(weaponStrategicPrintCandidate));
 export const WEAPON_STRATEGIC_PRINT_BY_ID=Object.freeze(Object.fromEntries(
  WEAPON_STRATEGIC_PRINT_CANDIDATES.map(c=>[c.id,c])
 ));
+// Alias ufficiale: la plancia usa gia' questi valori per visualizzare i numeri.
+export const WEAPON_NEAR_FINAL_VALUES=WEAPON_STRATEGIC_PRINT_CANDIDATES;
+export const WEAPON_NEAR_FINAL_BY_ID=WEAPON_STRATEGIC_PRINT_BY_ID;
 export const WEAPON_EVOLUTION_FAMILIES=Object.freeze(Object.fromEntries(
  WEAPON_BASE_CARDS.map(base=>[base.id,Object.freeze([
   base,...EVOLVED_WEAPON_CARDS.filter(c=>c.weaponFamilyId===base.id)
