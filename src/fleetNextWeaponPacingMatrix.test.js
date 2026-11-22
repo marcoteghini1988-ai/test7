@@ -173,8 +173,8 @@ function simulate(rarity,arch,shipA,shipB,seed,bossId=null,model='current',drain
  let b=createFleetNextBattle({
   shipA,shipB,raritaA:rarity,raritaB:rarity,
   ruleset:HP_SYNC_RULESET,mode:bossId!=null?'campaign':'pvp',bossId,
-  supportRosterA:roster(rarity,seed),
-  supportRosterB:roster(rarity,seed+4),
+  supportRosterA:calibration?.supportRosterA??roster(rarity,seed),
+  supportRosterB:calibration?.supportRosterB??roster(rarity,seed+4),
   deckA:generator(shipA,rarity,arch,seed),
   deckB:turnTiming==='fast-cpu'?
    buildCampaignNpcDeck(shipB,combatLevelForRarity(shipB,rarity),rarity,seed+11):
@@ -1422,4 +1422,49 @@ test('AUDIT_ARCHETYPE_CROSS_20261122: mazzi offensivo equilibrato e controllo a 
  }
  assert.equal(rows.length,6);
  console.log('AUDIT_ARCHETYPE_CROSS_20261122='+JSON.stringify(rows));
+});
+
+
+test('AUDIT_SUPPORT_PAIR_20261122: armi potenziate e sconto Energia contro rigenerazione e guardia finale',()=>{
+ // Solo archetipi tecnici di supporto, senza alterare schede o passive live.
+ // Confronto speculare con due supporti disponibili in Epica e Leggendaria,
+ // alternando la posizione delle due formazioni a parita' di navi e mazzo.
+ const offenseSkills=['weapon-double','energy-discount'];
+ const defenseSkills=['regeneration','last-shield'];
+ const team=(rarity,skills,seed,who)=>skills.map((skill,slot)=>{
+  const def=SUPPORT_CATALOG.find(c=>c.skillId===skill);
+  assert.ok(def,'Supporto autentico non trovato: '+skill);
+  return {id:def.id,instanceId:'support-audit:'+seed+':'+who+':'+slot,
+   slot,rarita:rarity};
+ });
+ const rows=[];
+ for(const offensiveA of [true,false]){
+  const matches=[];
+  for(const rarity of ['Epica','Leggendaria'])
+   for(const [i,[shipA,shipB]] of PRESETS[rarity].entries())
+    for(const shift of [0,73,149,239]){
+     const seed=20261127+rIdx(rarity)*241+i*73+shift;
+     const a=offensiveA?offenseSkills:defenseSkills;
+     const z=offensiveA?defenseSkills:offenseSkills;
+     matches.push(simulate(rarity,ARCHETYPES[1],shipA,shipB,seed,
+      null,'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      {integratedNoDeterioration:true,
+       supportRosterA:team(rarity,a,seed,'A'),
+       supportRosterB:team(rarity,z,seed,'B')}));
+    }
+  const report=x=>({...stats(x),
+   offenseWins:x.filter(m=>m.winner===(offensiveA?'A':'B')).length,
+   defenseWins:x.filter(m=>m.winner===(offensiveA?'B':'A')).length,
+   systemActions:x.reduce((n,m)=>n+m.systemCardsActivated,0),
+   weaponShots:x.reduce((n,m)=>n+m.weaponShots,0),
+   generatorShots:x.reduce((n,m)=>n+m.generatorShots,0),
+   supportNames:{offensive:offenseSkills,defensive:defenseSkills}});
+  rows.push({offensiveA,report:report(matches),
+   byRarity:Object.fromEntries(['Epica','Leggendaria'].map(r=>[
+    r,report(matches.filter(x=>x.rarity===r))]))});
+  assert.equal(matches.length,24);
+  assert.ok(matches.every(m=>m.winner==='A'||m.winner==='B'));
+  assert.ok(matches.every(m=>!/Deterioramento/.test(m.finishReason||'')));
+ }
+ console.log('AUDIT_SUPPORT_PAIR_20261122='+JSON.stringify(rows));
 });
