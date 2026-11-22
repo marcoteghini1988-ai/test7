@@ -1,0 +1,84 @@
+import React,{useLayoutEffect,useRef,useState} from 'react';
+import {MAGLIO_CARD_ID,maglioArtwork} from './maglioBattleVisuals.js';
+import './MaglioBattleEffects.css';
+
+export function MaglioArtPreload(){
+ return <>{['player','enemy'].map(side=><link key={side} rel="preload" as="image"
+  href={maglioArtwork(MAGLIO_CARD_ID,side)}/>)}</>;
+}
+
+export function MaglioWeaponModel({side,shot,pending}){
+ return <span className="maglio-device" data-side={side}
+  data-state={pending?'pending':shot?.fires?'firing':shot?'deploying':'idle'}
+  style={{'--maglio-delay':(shot?.delayMs||0)+'ms'}}>
+  <img className="maglio-device-art" src={maglioArtwork(MAGLIO_CARD_ID,side)}
+   alt="Maglio Ferrogravitazionale 3D" draggable={false}/>
+  <i className="maglio-muzzle-anchor" aria-hidden="true"/>
+  {shot?.fires&&<span className="maglio-charge" aria-hidden="true"><i/><b/></span>}
+ </span>;
+}
+
+// Gli estremi vengono misurati sui pezzi reali della plancia: supporti,
+// moduli, armi o madre. Nessuna coordinata fittizia del bersaglio.
+function shotGeometry(root,shot){
+ const source=root.querySelector(`[data-weapon-actor="${shot.who}"][data-weapon-slot="${shot.machineSlot}"] .maglio-muzzle-anchor`);
+ const fleet=root.querySelector(`[data-fleet-side="${shot.who==='A'?'B':'A'}"]`);
+ const target=shot.targetKind==='part'?fleet?.querySelector('.official-mother'):
+  [...(fleet?.querySelectorAll('[data-combat-id]')||[])].find(el=>
+   el.dataset.combatId===shot.targetId&&el.dataset.combatKind===shot.targetKind);
+ if(!source||!target)return null;
+ const board=root.getBoundingClientRect(),a=source.getBoundingClientRect(),b=target.getBoundingClientRect();
+ if(!board.width||!board.height)return null;
+ const point=r=>({x:((r.left+r.width/2)-board.left)*450/board.width,
+  y:((r.top+r.height/2)-board.top)*800/board.height});
+ const from=point(a),to=point(b);
+ return {from,to,angle:Math.atan2(to.y-from.y,to.x-from.x)*180/Math.PI};
+}
+export default function MaglioBattleEffects({shots,nonce}){
+ const ref=useRef(null),[paths,setPaths]=useState([]);
+ useLayoutEffect(()=>{
+  const root=ref.current?.closest('.f3d-approved-layout');
+  if(!root)return;
+  const measure=()=>setPaths(shots.filter(s=>s.fires).flatMap(shot=>{
+   const geometry=shotGeometry(root,shot);return geometry?[{shot,...geometry}]:[];
+  }));
+  measure();
+  const observer=new ResizeObserver(measure);observer.observe(root);
+  return ()=>observer.disconnect();
+ },[shots,nonce]);
+ return <svg ref={ref} className="maglio-battle-effects" viewBox="0 0 450 800"
+  aria-hidden="true" focusable="false" data-maglio-effects={paths.length}>
+  <defs>
+   <radialGradient id={'maglio-impact-'+nonce}>
+    <stop offset="0" stopColor="#fff9dc"/>
+    <stop offset=".2" stopColor="#ffe3a4" stopOpacity=".9"/>
+    <stop offset=".5" stopColor="#ffab4b" stopOpacity=".4"/>
+    <stop offset="1" stopColor="#c15d1d" stopOpacity="0"/>
+   </radialGradient>
+  </defs>
+  {paths.map(({shot,from,to,angle})=><g key={nonce+'-'+shot.machineId}
+   className="maglio-shot" data-shooter={shot.who} data-target-kind={shot.targetKind}
+   data-target-id={shot.targetId} data-actual-damage={shot.actualDamage}
+   style={{'--maglio-delay':shot.delayMs+'ms'}}>
+   <g className="maglio-pulse-travel" style={{'--maglio-from-x':from.x+'px',
+    '--maglio-from-y':from.y+'px','--maglio-to-x':to.x+'px','--maglio-to-y':to.y+'px'}}>
+    <g transform={'rotate('+angle+')'}>
+     <ellipse rx="14" ry="5" fill="#ffb34b" opacity=".25"/>
+     <path d="M-22 0H9" stroke="#ffb554" strokeWidth="3" strokeLinecap="round"/>
+     <path d="M-12 0H10" stroke="#fff6cf" strokeWidth="1.5"/>
+     <ellipse rx="3" ry="9" fill="none" stroke="#ffe8ad" strokeWidth="1.8"/>
+     <ellipse cx="-7" rx="2" ry="6" fill="none" stroke="#ffb76b"/>
+    </g>
+   </g>
+   <g transform={'translate('+to.x+' '+to.y+')'}>
+    <g className="maglio-gravity-impact">
+     <ellipse rx="48" ry="32" fill={'url(#maglio-impact-'+nonce+')'}/>
+     <ellipse className="maglio-impact-ring" rx="25" ry="15" fill="none" stroke="#fff0c3" strokeWidth="2"/>
+     <ellipse className="maglio-impact-ring maglio-impact-ring--outer" rx="32" ry="19" fill="none" stroke="#ffad48" strokeWidth="1.2"/>
+     <path d="M-30-9L-12-3M11 4L32 10M-9 22L-3 8M3-9L8-23M-24 14L-9 5M10-4L27-14"
+      stroke="#ffe6b1" strokeWidth="1.4" strokeLinecap="round"/>
+    </g>
+   </g>
+  </g>)}
+ </svg>;
+}

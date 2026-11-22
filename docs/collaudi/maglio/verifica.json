@@ -1,0 +1,56 @@
+{
+  "source": "StackBlitz test7, renderer OfficialFleetBattle3D, motore resolvePreparedFleetTurn + autoFleetTurn",
+  "candidate": "0889f198f9a92ba6635357aafcebd36ffce21345",
+  "date": "2026-11-22",
+  "hpBefore": [
+    {
+      "hp": "339",
+      "name": "HP Lince Solare"
+    },
+    {
+      "hp": "435",
+      "name": "HP Aurora-0"
+    }
+  ],
+  "hpAfter": [
+    {
+      "hp": "321",
+      "name": "HP Lince Solare"
+    },
+    {
+      "hp": "418",
+      "name": "HP Aurora-0"
+    }
+  ],
+  "shots": [
+    [
+      "A",
+      "18",
+      "part",
+      "weapons"
+    ],
+    [
+      "B",
+      "17",
+      "part",
+      "generator"
+    ]
+  ],
+  "missingImages": 0,
+  "extraChecks": {
+    "secondA": {
+      "slot": "1",
+      "state": "firing"
+    },
+    "secondB": {
+      "slot": "1",
+      "state": "firing"
+    },
+    "blockedProof": {
+      "charging": 0,
+      "enemyHp": "339",
+      "shots": 0,
+      "state": "deploying"
+    }
+  }
+}

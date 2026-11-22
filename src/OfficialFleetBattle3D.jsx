@@ -56,6 +56,8 @@ import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turn
 import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
+import MaglioBattleEffects,{MaglioWeaponModel,MaglioArtPreload} from './MaglioBattleEffects.jsx';
+import {maglioArtwork,maglioShots,maglioPresentationBerths} from './maglioBattleVisuals.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 import './OfficialLiveBattle3D.css';
@@ -133,14 +135,14 @@ function startSession({mode,sectorNumber,bossPlanetId,bossSectorLevel}){
 // nave centrale 316×206 con ShipPhysicalVitals/MountedWeapons,
 // scudiere nelle posizioni originali left:45/right:45, stessa arena.
 function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOwn=false,impact,inspectEscort,
- selectedTarget,onSelectTarget,canTarget=false,chosenCards=[],ply=0}){
+ selectedTarget,onSelectTarget,canTarget=false,chosenCards=[],ply=0,weaponShots=[],resolvedUnit}){
  const player=side==='player';
  const mother=unit.ships[0];
  const vessel=useMemo(()=>newVessel(mother.id,mother.level),[mother.id,mother.level]);
  const defense=useMemo(()=>projectFleetDefense(mother),[mother]);
- const berths=projectMachineBerths(unit,chosenCards,ply);
+ const berths=maglioPresentationBerths(unit,chosenCards,ply,weaponShots,resolvedUnit);
  const currentImpact=impact?.escortDamage>0||impact?.machineDamage>0?null:fleetImpactVisual(impact);
- return <div className={'live-fighter live-fighter--'+side} data-own-target={canSelectOwn||undefined}>
+ return <div className={'live-fighter live-fighter--'+side} data-fleet-side={player?'A':'B'} data-own-target={canSelectOwn||undefined}>
   <div className="fleet-ship-wrap complete-ship focused official-mother"
    data-vital-weapons={mother.parts.find(p=>p.id==='weapons')?.destroyed?'destroyed':'healthy'}
    style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
@@ -162,7 +164,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
    const linked=escort.linked!==false;
    const signature=FLEET_ELEMENTS[escort.element];
    const weaknesses=signature?.weakTo?.map(id=>FLEET_ELEMENTS[id].name).join(' e ');
-   return <div key={escort.id} className={'live-escort live-escort--'+slot+
+   return <div key={escort.id} data-combat-id={escort.id} data-combat-kind="escort" className={'live-escort live-escort--'+slot+
     (escort.hp===0?' live-escort--lost':'')+(escort.fused?' f3d-escort--fused':'')+
     ((escort.nebulaHiddenUntilPly||0)>ply&&escort.hp>0&&!escort.destroyed?
      ' f3d-escort--veiled':'')+
@@ -191,6 +193,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
   })}
   <div className="f3d-mounted-modules" aria-label={player?'Moduli montati':'Moduli avversari'}>
    {liveModules(unit).map(module=><button type="button" key={module.id}
+    data-combat-id={module.id} data-combat-kind="module"
     className={'f3d-mounted-module'+(selectedTarget?.kind==='module'&&selectedTarget.id===module.id?' f3d-unit--selected':'')}
     disabled={!player&&!canTarget}
     title={module.name+' · Integrità '+module.hp+'/'+module.maxHp}
@@ -248,15 +251,20 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     const selected=selectedTarget?.kind==='machine'&&selectedTarget.id===machine?.id;
     if(!machine)return null;
     const modelArt=card(machine.sourceCardId||machine.id)?.battleModelPath;
+    const maglio=maglioArtwork(machine.sourceCardId||machine.id,side);
     return <button type="button" key={slot} className={'f3d-machine-berth f3d-machine-berth--'+slot+(selected?' f3d-unit--selected':'')+(hit?' f3d-machine--hit':'')+' f3d-machine-occupied'+(machine.pending?' f3d-machine-pending':'')}
      data-weapon-card={machine.sourceCardId||machine.id}
+     data-weapon-actor={player?'A':'B'} data-weapon-slot={slot}
+     data-combat-id={machine.id} data-combat-kind="machine"
      disabled={!machine||(!player&&(!canTarget||!enabled||unit.ruleset===HP_SYNC_RULESET))}
      aria-label={machine?(unit.ruleset===HP_SYNC_RULESET?(player?'Consulta Arma temporanea ':'Arma temporanea ')+machine.name+' · supporto non bersagliabile':
        (player?'Consulta ':'Attacca ')+machine.name+' · '+machine.hp+'/'+machine.maxHp+' punti'):
        (unit.ruleset===HP_SYNC_RULESET?'Arma temporanea ':'Macchina d’assalto ')+(slot+1)+' · spazio libero'}
      aria-pressed={!player&&selected}
      onClick={()=>player?inspectEscort({machine}):onSelectTarget?.({kind:'machine',id:machine.id,slot})}>
-     {modelArt&&<img className="f3d-card-weapon-model" src={modelArt} alt="" draggable={false}/>}
+     {maglio?<MaglioWeaponModel key={machine.maglioShot?machine.maglioShot.machineId+'-'+machine.maglioShot.visualNonce:machine.id}
+      side={side} pending={machine.pending} shot={machine.maglioShot}/>:
+      modelArt&&<img className="f3d-card-weapon-model" src={modelArt} alt="" draggable={false}/>}
      <span className="f3d-weapon-position-label">{machine.name||''}</span>
     </button>;
    })}
@@ -496,10 +504,12 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
 
 export default function OfficialFleetBattle3D({
  nickname='Comandante',opponentNickname='',gameMode='campaign',sectorNumber=1,displaySector='',
- bossPlanetId=null,bossSectorLevel=null,onResult,onExit
+ bossPlanetId=null,bossSectorLevel=null,onResult,onExit,initialBattle=null
 }){
  const opts={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel};
- const [session,setSession]=useState(()=>startSession(opts));
+ const newSession=()=>initialBattle?{battle:releaseFleetTurnAfterEffects(
+  structuredClone(initialBattle),Date.now()),error:''}:startSession(opts);
+ const [session,setSession]=useState(newSession);
  const [battle,setBattle]=useState(session.battle);
  const [selectedVital,setSelectedVital]=useState('weapons');
  const [dismantleOptions,setDismantleOptions]=useState({first:'',second:''});
@@ -605,7 +615,9 @@ export default function OfficialFleetBattle3D({
   resolutionInProgress.current=true;
   setResolving(true);
   const stamp=Date.now();
-  setLastFx({nonce:stamp,round:battle.round,events:result.events});
+  setLastFx({nonce:stamp,round:battle.round,events:result.events,
+   weaponShots:maglioShots(result.events).map(s=>({...s,visualNonce:stamp})),
+   resolvedSides:result.battle.sides});
   // Lascia gli eventi nel Registro senza scritte automatiche sopra le navi.
   setMessage('');
   setShowBattleCommands(false);
@@ -649,7 +661,8 @@ export default function OfficialFleetBattle3D({
  function restart(){
   window.clearTimeout(resolutionTimeout.current);
   resolutionInProgress.current=false;setResolving(false);
-  const next=startSession(opts);
+  const next=newSession();
+  setLastFx(null);
   setSession(next);setBattle(next.battle);
   setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setRecoverHandCardIndex(0);setPreparedSacrifice(null);setMessage('');
   setElementalPrepared(false);setElementalChoice('');
@@ -876,6 +889,7 @@ export default function OfficialFleetBattle3D({
  preparedTimeout.current=()=>fire({endTurn:true,fromTimeout:true});
   async function leave(){
   if(busy||submitting.current)return;
+  if(initialBattle){onExit?.();return;}
   if(!battle||battle.phase!=='finished'){
    if(window.confirm('Abbandonare la battaglia senza ricompense?'))onExit?.();
    return;
@@ -1128,6 +1142,7 @@ export default function OfficialFleetBattle3D({
  const turnProgress=remainingTurnMs/(FLEET_TURN_SECONDS*1000);
  const myTurn=battle.turn==='A';
  return <div className="es-math-scope live-viewport" ref={viewportRef} aria-busy={resolving}>
+  <MaglioArtPreload/>
   <div className="es-root official-duel-3d live-root f3d-original-arena f3d-approved-layout"
    style={{transform:'translate(-50%,-50%) scale('+scale+')',
     '--live-special-back':'url("'+OFFICIAL_SPECIAL_FIXED_BACK+'")'}}>
@@ -1141,6 +1156,8 @@ export default function OfficialFleetBattle3D({
    <FleetOpponentConsole unit={enemy} nickname={opponentNickname||battle.bossName||enemy.ships?.[0]?.name||'Avversario'}
     onInspect={vital=>setHelp({vital})}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
+    weaponShots={resolving?lastFx?.weaponShots?.filter(s=>s.who==='B'):[]}
+    resolvedUnit={resolving?lastFx?.resolvedSides?.B:null}
     selectedTarget={actualTarget} onSelectTarget={setSelectedTarget}
     canTarget={!ended&&myTurn&&!resolving} ply={battle.ply}
     onSelectVital={id=>{if(!ended&&myTurn){
@@ -1155,11 +1172,15 @@ export default function OfficialFleetBattle3D({
     <OriginalSpecialSlots side="A" contents={playerSlots} upgrades={player.exclusiveUpgrades} inspectTrap={setHelp} unit={player}/>
    </div>
    <OriginalFleetFighter side="player" unit={player} chosenCards={chosenTypes} ply={battle.ply}
+    weaponShots={resolving?lastFx?.weaponShots?.filter(s=>s.who==='A'):[]}
+    resolvedUnit={resolving?lastFx?.resolvedSides?.A:null}
     selectedVital={needsOwnTarget?actualOwnVital:null} canSelectOwn={needsOwnTarget&&myTurn&&!ended&&!resolving}
     onSelectVital={id=>{if(ownTargets.some(p=>p.id===id)){setSelectedOwnVital(id);setMessage('');}}}
     impact={lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='B')&&
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='B'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
+   {resolving&&lastFx?.weaponShots?.length>0&&<MaglioBattleEffects
+    key={lastFx.nonce} shots={lastFx.weaponShots} nonce={lastFx.nonce}/>}
    <FleetDeckPiles side={player}/>
    <div className="f3d-weapon-card-slots" role="group" aria-label="Due slot Carte Arma">
     {projectMachineBerths(player,chosenTypes,battle.ply).map((machine,slot)=>{

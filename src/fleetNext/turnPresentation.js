@@ -1,14 +1,16 @@
 // La plancia attende la fine degli effetti visivi prima di mostrare il turno seguente.
 import {FLEET_TURN_SECONDS} from './rules.js';
+import {maglioResolutionMs} from '../maglioBattleVisuals.js';
 
 export function fleetResolutionFxMs(events=[]){
  const shown=Array.isArray(events)?events:[];
  // La scoperta di una Trappola usa un'animazione di 4,2 secondi.
- if(shown.some(e=>e?.kind==='trap-reveal'))return 4200;
+ const weaponMs=maglioResolutionMs(shown);
+ if(shown.some(e=>e?.kind==='trap-reveal'))return Math.max(4200,weaponMs);
  // Il punto d'impatto attuale resta visibile per 1,5 secondi.
- if(shown.some(e=>e?.kind==='impact'))return 1600;
+ if(shown.some(e=>e?.kind==='impact'))return Math.max(1600,weaponMs);
  // Gli effetti passivi e le carte non offensive hanno una breve risoluzione.
- return 650;
+ return Math.max(650,weaponMs);
 }
 
 export function releaseFleetTurnAfterEffects(battle,nowMs){
