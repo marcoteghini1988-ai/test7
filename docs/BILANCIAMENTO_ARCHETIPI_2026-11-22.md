@@ -94,16 +94,52 @@ Le carte funzionano: la discrepanza era nell'instrumentazione dell'audit.
 - **Prossima verifica:** testare IA che usa coerentemente Sabotaggi, Difese,
   Trappole e Terreni, confrontandola a parita' di flotta, con supporti invertiti;
   distinguere fallimenti di scelta dall'effettiva forza numerica.
-- **Poi:** valutare in particolare la passiva supporto `weapon-double`
-  e le interazioni con Armi multi-colpo, effetti perforanti e Generatore;
-  controllare i tempi PvP e boss senza deterioramento.
+- **Primo confronto passive completato:** formazione `weapon-double` +
+  `energy-discount` contro `regeneration` + `last-shield`, risultati sotto.
+- **Poi:** verificare le combinazioni di supporti doppi, le Armi multi-colpo,
+  gli effetti perforanti e il Generatore; controllare i tempi PvP e boss
+  senza deterioramento.
 - **Nessuna correzione generalizzata** ai danni delle 235 Armi, ai timer o
   alle 32 Carte Sistema e' giustificata da questi soli duelli.
+
+## Ulteriore confronto di 48 duelli: passive dei supporti
+
+Test: `AUDIT_SUPPORT_PAIR_20261122` sul motore integrato, con lo stesso
+mazzo Equilibrato per entrambe le flotte e supporti a parita' di rarita'.
+Le formazioni sono state invertite tra A e B:
+
+- **Offensiva:** `weapon-double` (Armi potenziate) +
+  `energy-discount` (Sconto Energia).
+- **Difensiva:** `regeneration` (Rigenerazione) +
+  `last-shield` (Guardia finale).
+
+| Orientamento | Vittorie formazione offensiva | Vittorie difensiva | Durata media |
+|---|---:|---:|---:|
+| Offensiva schierata A | 15/24 | 9/24 | 353 s |
+| Offensiva schierata B | 7/24 | 17/24 | 369 s |
+| **Totale** | **22/48** | **26/48** | **361 s** |
+
+Per rarita': **Epica 12–12**, **Leggendaria 10–14**
+(offensiva contro difensiva). **48/48** concluse con HP reali,
+0 pareggi, 0 deterioramento, 0 ordini invalidi.
+
+**Indicazione:** la passiva `weapon-double` non domina questo confronto:
+non si riduce il suo moltiplicatore solo perche' produce grandi singoli
+colpi. L'asimmetria tra A e B e la scelta delle madri rendono necessario
+verificare ulteriori abbinamenti prima di dichiarare il bilanciamento
+competitivo completo. Il test non copre due copie dello stesso supporto
+ne' le fusioni.
+
+### CI
+
+Commit di test: `e963de8a3adc13baa50ab9db0f7f4f8a62b8d786`.   
+Ultima verifica: **1.901 test superati su 1.901**, preflight e build
+Vite riusciti, zero fallimenti.
 
 ## Verifica tecnica e commit
 
 - `8e15766b17393ae7fc830c9c0dc0c9987e3bd75a`: aggiunti 144 duelli.
 - `8928d7d8929cb0879403c2f47b3bc7ef2bf777bd`: corretto il conteggio Sistemi.
-- CI dell'ultimo commit: **1.900 test superati su 1.900**, 0 fallimenti,
+- CI precedente: **1.900 test superati su 1.900**, 0 fallimenti,
   preflight e build Vite riusciti.
 - Nessuna modifica a statistiche live, carte Personaggio, immagini o layout.
