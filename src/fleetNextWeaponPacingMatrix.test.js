@@ -80,6 +80,19 @@ function roster(rarity,seed){
   return {id:c.id,instanceId:'balance:'+seed+':'+slot,slot,rarita:rarity};
  });
 }
+// Per verificare l'indipendenza della strategia dalla velocita' si isolano
+// le passive non temporizzate. Veleno e Rigenerazione seguono invece
+// intenzionalmente i SECONDI REALI e vengono collaudati a parte.
+function rosterWithoutTimedPassives(rarity,seed){
+ const n=startingSupportCount(rarity),eligible=SUPPORT_CATALOG.filter(c=>
+  rIdx(c.rarita)<=rIdx(rarity)&&
+  !['regeneration','reactive-poison'].includes(c.skillId));
+ return Array.from({length:n},(_,slot)=>{
+  const c=eligible[(seed+slot*4)%eligible.length];
+  return {id:c.id,instanceId:'speed-no-temporal:'+seed+':'+slot,
+   slot,rarita:rarity};
+ });
+}
 function generator(ship,rarity,arch,seed){
  const level=combatLevelForRarity(ship,rarity);
  const capacity=nextGenericCapacity(ship,level);
@@ -1328,17 +1341,21 @@ test('AUDIT_STRATEGIC_LIVE_72_24: vera nuova modalita attiva, 72 PvP e 24 boss',
  assert.equal(pvp.filter(x=>String(x.finishReason).startsWith('Deterioramento')).length,0);
  assert.equal(boss.filter(x=>String(x.finishReason).startsWith('Deterioramento')).length,0);
 });
-test('AUDIT_STRATEGIC_LIVE_SPEED: parita esatti semi con velocita 6 e 26 secondi',()=>{
+test('AUDIT_STRATEGIC_LIVE_SPEED: stesso esito 6/26s senza passive al secondo; poison/regen esclusi intenzionalmente',()=>{
  const calibration={integratedNoDeterioration:true};
  const groups=[];
  for(const timing of ['symmetric','fast-vs-slow','slow-vs-fast','both-fast','both-slow']){
   const matches=[];
   for(const rarity of SHIP_RARITIES)
    for(const [i,[a,b]] of PRESETS[rarity].entries())
-    for(const shift of [0,137])
-     matches.push(simulate(rarity,ARCHETYPES[i],a,b,
-      20262343+rIdx(rarity)*181+i*51+shift,null,'live-generator',
-      CANDIDATE_DRAIN_FRACTION_PER_SECOND,calibration,timing));
+    for(const shift of [0,137]){
+     const seed=20262343+rIdx(rarity)*181+i*51+shift;
+     matches.push(simulate(rarity,ARCHETYPES[i],a,b,seed,
+      null,'live-generator',CANDIDATE_DRAIN_FRACTION_PER_SECOND,
+      {...calibration,
+       supportRosterA:rosterWithoutTimedPassives(rarity,seed),
+       supportRosterB:rosterWithoutTimedPassives(rarity,seed+4)},timing));
+    }
   groups.push({timing,stat:stats(matches),
    signature:matches.map(m=>[m.seed,m.winner,m.turns,m.winnerComponentsAlive,
     m.finishReason,m.handRecoveries.A,m.handRecoveries.B].join(':')).join('|')});
