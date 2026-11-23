@@ -6,7 +6,7 @@
     {
       "rarity": "comune",
       "file": "public/assets/fleet-weapons/maglio/models/comune.glb",
-      "bytes": 2178944,
+      "bytes": 3185316,
       "joints": [
         "BaseFixed",
         "TurretYaw",
@@ -18,7 +18,7 @@
     {
       "rarity": "rara",
       "file": "public/assets/fleet-weapons/maglio/models/rara.glb",
-      "bytes": 2417300,
+      "bytes": 3491712,
       "joints": [
         "BaseFixed",
         "TurretYaw",
@@ -30,7 +30,7 @@
     {
       "rarity": "epica",
       "file": "public/assets/fleet-weapons/maglio/models/epica.glb",
-      "bytes": 2993236,
+      "bytes": 4066356,
       "joints": [
         "BaseFixed",
         "TurretYaw",
@@ -42,7 +42,7 @@
     {
       "rarity": "leggendaria",
       "file": "public/assets/fleet-weapons/maglio/models/leggendaria.glb",
-      "bytes": 3209408,
+      "bytes": 4620340,
       "joints": [
         "BaseFixed",
         "TurretYaw",

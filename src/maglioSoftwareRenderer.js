@@ -59,7 +59,9 @@ export class MaglioSoftwareRenderer{
     if(!shade){shade={colors:new Float32Array(pos.count*3),marks:new Uint32Array(pos.count)};cache.shades.set(group.materialIndex,shade);}
     const colors=shade.colors,marks=shade.marks,base=material.color,em=material.emissive;
     const emission=material.emissiveIntensity||0,metal=material.metalness||0,rough=material.roughness??.4;
-    const exponent=Math.max(9,Math.min(85,4/(rough*rough))),specStrength=.12+metal*.42;
+    // L'acciaio brunito delle carte riflette lungo gli spigoli; il vecchio
+    // bianco speculare uniforme faceva apparire tutta l'arma grigio chiaro.
+    const exponent=Math.max(12,Math.min(95,5/(rough*rough))),specStrength=.024+metal*.105;
     const texture=material.map?.image,uv=geometry.attributes.uv,repeat=material.map?.repeat;
     for(let i=group.start;i<Math.min(count,group.start+group.count);i+=3){
     const ia=(indices?indices[i]:i)*3,ib=(indices?indices[i+1]:i+1)*3,ic=(indices?indices[i+2]:i+2)*3;
@@ -68,14 +70,14 @@ export class MaglioSoftwareRenderer{
      const ax=norm.getX(vertex),ay=norm.getY(vertex),az=norm.getZ(vertex);
      let nx=n[0]*ax+n[3]*ay+n[6]*az,ny=n[1]*ax+n[4]*ay+n[7]*az,nz=n[2]*ax+n[5]*ay+n[8]*az;
      const inv=1/(Math.hypot(nx,ny,nz)||1);nx*=inv;ny*=inv;nz*=inv;
-     const ambient=.18+.18*Math.max(0,ny)+.05*(nx+1);
+     const ambient=.135+.125*Math.max(0,ny)+.028*(nx+1);
      let r=base.r*ambient,g=base.g*ambient,b=base.b*ambient;
      for(let l=0;l<lights.length;l++){
       const d=directions[l],h=half[l],light=lights[l],diff=Math.max(0,nx*d[0]+ny*d[1]+nz*d[2]);
       const spec=Math.pow(Math.max(0,nx*h[0]+ny*h[1]+nz*h[2]),exponent)*specStrength;
-      r+=(base.r*diff*.40+spec*(.55+base.r*metal))*light[3];
-      g+=(base.g*diff*.40+spec*(.55+base.g*metal))*light[4];
-      b+=(base.b*diff*.40+spec*(.55+base.b*metal))*light[5];
+      r+=(base.r*diff*.47+spec*(.28+base.r*metal))*light[3];
+      g+=(base.g*diff*.47+spec*(.28+base.g*metal))*light[4];
+      b+=(base.b*diff*.47+spec*(.28+base.b*metal))*light[5];
      }
      colors[k]=aces(r+(em?.r||0)*emission);colors[k+1]=aces(g+(em?.g||0)*emission);colors[k+2]=aces(b+(em?.b||0)*emission);
     }
