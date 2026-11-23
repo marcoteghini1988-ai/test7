@@ -1,44 +1,74 @@
-/* Solo il Maglio: ingombri e quote dei due alloggiamenti approvati invariati. */
-.es-math-scope .f3d-approved-layout .f3d-machine-berth>.maglio-device {
- position:absolute;left:-12px;top:-7px;width:114px;height:86px;
- right:auto;bottom:auto;background:none;border:0;
- display:block;pointer-events:none;isolation:isolate;
+/* Il fronte ufficiale resta leggibile al centro; i colpi entrano dai bordi. */
+.es-math-scope .f3d-approved-layout .maglio-battle-stage {
+ position:absolute;inset:0;z-index:38;pointer-events:none;overflow:hidden;
 }
-.maglio-model-viewer {position:absolute;inset:0;display:block;pointer-events:none;}
-.maglio-model-canvas,.maglio-model-fallback {display:block;width:100%;height:100%;object-fit:contain;}
-.maglio-muzzle-anchor {position:absolute;left:var(--maglio-head-x);top:var(--maglio-head-y);width:1px;height:1px;}
-.maglio-device[data-state="pending"] {filter:saturate(.45);}
-.maglio-device[data-state="deploying"],.maglio-device[data-state="firing"] {
- animation:maglio-deploy 420ms var(--maglio-delay) both;
+.es-math-scope .f3d-approved-layout .maglio-card-flight {
+ position:absolute;width:58px;height:87px;object-fit:contain;border-radius:5px;
+ filter:drop-shadow(0 0 8px #ffc574);
+ animation:maglio-card-to-slot 680ms var(--card-delay) cubic-bezier(.2,.7,.25,1) both;
 }
-.maglio-charge {position:absolute;left:var(--maglio-head-x);top:var(--maglio-head-y);width:26px;height:16px;opacity:0;
- transform:translate(-50%,-50%);border-radius:50%;
- background:radial-gradient(ellipse,#fff9d0 0%,#ffb33999 30%,transparent 72%);
- animation:maglio-charge 650ms calc(320ms + var(--maglio-delay)) both;}
-.maglio-charge i,.maglio-charge b {position:absolute;inset:1px;border:1px solid #ffd087;
- border-radius:50%;transform:scale(.7);box-shadow:0 0 5px #ffb957;}
-.maglio-charge b {inset:4px 6px;}
-.es-math-scope .f3d-approved-layout .f3d-machine-berth:has(.maglio-device) .f3d-weapon-position-label {display:none;}
-.maglio-battle-effects {position:absolute;inset:0;width:450px;height:800px;z-index:26;
- overflow:visible;pointer-events:none;contain:layout style;}
-.maglio-pulse-travel {opacity:0;animation:maglio-flight 350ms calc(790ms + var(--maglio-delay)) both;}
-.maglio-gravity-impact {opacity:0;transform-origin:center;transform-box:fill-box;
- animation:maglio-impact 870ms calc(1090ms + var(--maglio-delay)) both;}
-.maglio-impact-ring {transform-origin:center;transform-box:fill-box;
- animation:maglio-ring 800ms calc(1090ms + var(--maglio-delay)) both;}
-.maglio-impact-ring--outer {animation-delay:calc(1180ms + var(--maglio-delay));}
-@keyframes maglio-deploy {0% {opacity:0}70%,100% {opacity:1}}
-@keyframes maglio-charge {0% {opacity:0;scale:.35}55% {opacity:.85;scale:.9}
- 85% {opacity:1;scale:1.3}100% {opacity:0;scale:1.7}}
-@keyframes maglio-flight {0% {opacity:0;transform:translate(var(--maglio-from-x),var(--maglio-from-y))}
- 8% {opacity:1}94% {opacity:1}100% {opacity:0;transform:translate(var(--maglio-to-x),var(--maglio-to-y))}}
-@keyframes maglio-impact {0% {opacity:0;scale:.5}12% {opacity:1;scale:1.05}
- 45% {opacity:.8}100% {opacity:0;scale:1.6}}
-@keyframes maglio-ring {0% {opacity:.9;scale:.2}100% {opacity:0;scale:1.9}}
+.es-math-scope .f3d-approved-layout .maglio-card-reveal {
+ position:absolute;left:122px;top:225px;width:206px;height:309px;object-fit:contain;
+ border-radius:9px;filter:drop-shadow(0 0 15px #ffe0a0);
+ animation:maglio-card-spotlight 740ms var(--reveal-delay) ease-in-out both;
+}
+.es-math-scope .f3d-approved-layout .maglio-battle-effects {
+ position:absolute;inset:0;width:450px;height:800px;overflow:hidden;
+}
+.maglio-pulse-travel {
+ opacity:0;animation:maglio-flight 470ms var(--maglio-flight-delay) linear both;
+ filter:drop-shadow(0 0 7px #ffb74e);
+}
+.maglio-gravity-impact {
+ opacity:0;transform-origin:center;transform-box:fill-box;
+ animation:maglio-impact 700ms var(--maglio-impact-delay) ease-out both;
+}
+.maglio-impact-ring {
+ transform-origin:center;transform-box:fill-box;
+ animation:maglio-ring 650ms var(--maglio-impact-delay) ease-out both;
+}
+.maglio-impact-ring--outer {animation-delay:calc(var(--maglio-impact-delay) + 80ms)}
+.es-math-scope .f3d-approved-layout .live-fighter .fleet-ship-wrap.official-mother.f3d-ship-hit,
+.es-math-scope .f3d-approved-layout .live-fighter .live-escort.f3d-ship-hit,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-mounted-module.f3d-ship-hit,
+.es-math-scope .f3d-approved-layout .live-fighter .f3d-machine-berth.f3d-ship-hit {
+ animation:maglio-hull-reaction 660ms var(--ship-hit-delay) ease-out both!important;
+}
+@keyframes maglio-card-to-slot {
+ 0% {opacity:1;transform:translate(0,0) scale(1)}
+ 65% {opacity:1;transform:translate(calc(var(--card-dx)*.74),calc(var(--card-dy)*.74)) scale(.85)}
+ 100% {opacity:0;transform:translate(var(--card-dx),var(--card-dy)) scale(.65)}
+}
+@keyframes maglio-card-spotlight {
+ 0% {opacity:0;transform:perspective(600px) rotateY(-52deg) scale(.5)}
+ 25%,70% {opacity:1;transform:perspective(600px) rotateY(0) scale(1)}
+ 100% {opacity:0;transform:translate(var(--reveal-x),var(--reveal-y)) perspective(600px) rotateY(24deg) scale(.28)}
+}
+@keyframes maglio-flight {
+ 0% {opacity:0;transform:translate(var(--maglio-from-x),var(--maglio-from-y)) scale(.65)}
+ 6%,91% {opacity:1}
+ 100% {opacity:0;transform:translate(var(--maglio-to-x),var(--maglio-to-y)) scale(1.2)}
+}
+@keyframes maglio-impact {
+ 0% {opacity:0;scale:.35}
+ 12% {opacity:1;scale:1.05}
+ 48% {opacity:.85}
+ 100% {opacity:0;scale:1.65}
+}
+@keyframes maglio-ring {0% {opacity:.9;scale:.2}100% {opacity:0;scale:1.85}}
+@keyframes maglio-hull-reaction {
+ 0% {translate:0 0;filter:brightness(1)}
+  15% {translate:-5px 2px;filter:brightness(2.4) drop-shadow(0 0 13px #ffc775)}
+  35% {translate:5px -3px;filter:brightness(1.7)}
+  55% {translate:-3px 1px;filter:brightness(1.3)}
+  100% {translate:0 0;filter:brightness(1)}
+}
 @media (prefers-reduced-motion:reduce) {
- .maglio-device[data-state] {animation:none;}
- .maglio-charge,.maglio-pulse-travel {display:none;}
- .maglio-gravity-impact {animation-name:maglio-reduced-impact;}
- .maglio-impact-ring {animation:none;}
- @keyframes maglio-reduced-impact {0%,100% {opacity:0}25%,65% {opacity:.65}}
+ .es-math-scope .f3d-approved-layout .maglio-card-flight,
+ .maglio-pulse-travel {display:none}
+ .es-math-scope .f3d-approved-layout .maglio-card-reveal {
+  animation-name:maglio-card-reduced;
+ }
+ .es-math-scope .f3d-approved-layout .live-fighter .f3d-ship-hit {animation:none!important}
+ @keyframes maglio-card-reduced {0%,100% {opacity:0}25%,75% {opacity:1}}
 }

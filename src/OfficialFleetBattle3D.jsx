@@ -56,8 +56,8 @@ import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turn
 import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
-import MaglioBattleEffects,{MaglioWeaponModel,MaglioArtPreload} from './MaglioBattleEffects.jsx';
-import {maglioArtwork,maglioShots,maglioPresentationBerths} from './maglioBattleVisuals.js';
+import MaglioBattleEffects from './MaglioBattleEffects.jsx';
+import {fleetWeaponShots,maglioPresentationBerths} from './maglioBattleVisuals.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 import './OfficialLiveBattle3D.css';
@@ -250,8 +250,6 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     const hit=impact?.machineSlot===slot&&impact?.machineDamage>0;
     const selected=selectedTarget?.kind==='machine'&&selectedTarget.id===machine?.id;
     if(!machine)return null;
-    const modelArt=card(machine.sourceCardId||machine.id)?.battleModelPath;
-    const maglio=maglioArtwork(machine.sourceCardId||machine.id,side);
     return <button type="button" key={slot} className={'f3d-machine-berth f3d-machine-berth--'+slot+(selected?' f3d-unit--selected':'')+(hit?' f3d-machine--hit':'')+' f3d-machine-occupied'+(machine.pending?' f3d-machine-pending':'')}
      data-weapon-card={machine.sourceCardId||machine.id}
      data-weapon-actor={player?'A':'B'} data-weapon-slot={slot}
@@ -262,9 +260,6 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
        (unit.ruleset===HP_SYNC_RULESET?'Arma temporanea ':'Macchina d’assalto ')+(slot+1)+' · spazio libero'}
      aria-pressed={!player&&selected}
      onClick={()=>player?inspectEscort({machine}):onSelectTarget?.({kind:'machine',id:machine.id,slot})}>
-     {maglio?<MaglioWeaponModel key={machine.maglioShot?machine.maglioShot.machineId+'-'+machine.maglioShot.visualNonce:machine.id}
-      side={side} slot={slot} cardId={machine.sourceCardId||machine.id} pending={machine.pending} shot={machine.maglioShot}/>:
-      modelArt&&<img className="f3d-card-weapon-model" src={modelArt} alt="" draggable={false}/>}
      <span className="f3d-weapon-position-label">{machine.name||''}</span>
     </button>;
    })}
@@ -418,6 +413,7 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
    return <div key={i} className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
     (entry?' live-slot--occupied':'')+(covered?' live-slot--covered':'')+(offline?' live-slot--offline':'')}
     title={title+(offline?' · Sistema distrutto':'')} data-offline={offline||undefined}
+    data-fleet-card-slot={side+'-'+i} data-pending-card={entry?.pending||undefined}
     data-slot-role={i===0?'personaggio':i===1?'difesa':i===2?'trappola':i===5?'energia':'attacco'}
      data-family={covered?'defense':type?cardRole(type):undefined}
      data-rarity={face?exclusiveRarityAtLevel(face,unit?.ships?.[0]?.level):undefined}>
@@ -483,6 +479,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
  const displayArt=art||fallbackArt;
  return <button type="button" disabled={disabled}
   className={'live-hand-special'+(selected?' live-chosen':'')}
+  data-fleet-hand-index={index}
   style={{'--special-angle':offset*3+'deg','--special-drop':-(offset**2)*.2+'px'}}
   data-family={role} data-rarity={rarity}
   title={name+' · '+description+(unavailableReason?' · '+unavailableReason:'')}
@@ -610,13 +607,16 @@ export default function OfficialFleetBattle3D({
   const id=window.setTimeout(()=>setTrapReveal(null),4200);
   return ()=>window.clearTimeout(id);
  },[trapReveal]);
- function showResult(result){
+ function showResult(result,selectedIndexes=[]){
   if(resolutionInProgress.current)return;
   resolutionInProgress.current=true;
   setResolving(true);
   const stamp=Date.now();
   setLastFx({nonce:stamp,round:battle.round,events:result.events,
-   weaponShots:maglioShots(result.events).map(s=>({...s,visualNonce:stamp})),
+   selectedCards:battle.turn==='A'?selectedIndexes.slice(0,3).map(index=>({
+    index,id:battle.sides.A.hand[index],grade:battle.sides.A.exclusiveUpgrades?.[battle.sides.A.hand[index]]||1
+   })).filter(entry=>entry.id):[],
+   weaponShots:fleetWeaponShots(result.events),
    resolvedSides:result.battle.sides});
   // Lascia gli eventi nel Registro senza scritte automatiche sopra le navi.
   setMessage('');
@@ -629,7 +629,7 @@ export default function OfficialFleetBattle3D({
    setBattle(releaseFleetTurnAfterEffects(result.battle,Date.now()));
    setChosenCards([]);setElementalPrepared(false);
    resolutionInProgress.current=false;setResolving(false);
-  },fleetResolutionFxMs(result.events));
+  },Math.max(fleetResolutionFxMs(result.events),selectedIndexes.length?2450:0));
  }
  // Anche il nemico segue l'alternanza dei turni. Nel PvP attuale resta IA simulata.
  useEffect(()=>{
@@ -853,7 +853,7 @@ export default function OfficialFleetBattle3D({
    timeoutFleetTurn(battle,Math.max(Date.now(),battle.deadlineMs),preparedOrder):
    resolvePreparedFleetTurn(battle,'A',preparedOrder,Date.now());
   if(!result.ok){setMessage(result.reason);return;}
-  showResult(result);
+  showResult(result,preparedOrder.cards);
   if(result.invalidPrepared&&result.droppedPreparedCards>0)
    setMessage(result.playedPreparedCards+' carte risolte; '+result.droppedPreparedCards+' escluse perché non valide.');
   setDismantleOptions({first:'',second:''});
@@ -1142,7 +1142,6 @@ export default function OfficialFleetBattle3D({
  const turnProgress=remainingTurnMs/(FLEET_TURN_SECONDS*1000);
  const myTurn=battle.turn==='A';
  return <div className="es-math-scope live-viewport" ref={viewportRef} aria-busy={resolving}>
-  <MaglioArtPreload/>
   <div className="es-root official-duel-3d live-root f3d-original-arena f3d-approved-layout"
    style={{transform:'translate(-50%,-50%) scale('+scale+')',
     '--live-special-back':'url("'+OFFICIAL_SPECIAL_FIXED_BACK+'")'}}>
@@ -1164,7 +1163,8 @@ export default function OfficialFleetBattle3D({
      if(protectors.length&&!directBypass&&id!==routePartId){setMessage('Prima elimina i supporti e le macchine, oppure gioca Aggiramento.');return;}
      setSelectedVital(id);setSelectedTarget({kind:'part',id});setMessage('');
     }}}
-    impact={lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='A')&&
+    impact={resolving&&!lastFx?.weaponShots?.some(s=>s.who==='A'&&s.fires)&&
+     lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='A')&&
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='A'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
    <div className="f3d-slot-field">
@@ -1176,16 +1176,18 @@ export default function OfficialFleetBattle3D({
     resolvedUnit={resolving?lastFx?.resolvedSides?.A:null}
     selectedVital={needsOwnTarget?actualOwnVital:null} canSelectOwn={needsOwnTarget&&myTurn&&!ended&&!resolving}
     onSelectVital={id=>{if(ownTargets.some(p=>p.id===id)){setSelectedOwnVital(id);setMessage('');}}}
-    impact={lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='B')&&
+    impact={resolving&&!lastFx?.weaponShots?.some(s=>s.who==='B'&&s.fires)&&
+     lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='B')&&
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='B'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
-   {resolving&&lastFx?.weaponShots?.length>0&&<MaglioBattleEffects
-    key={lastFx.nonce} shots={lastFx.weaponShots} nonce={lastFx.nonce}/>}
+   {resolving&&(lastFx?.weaponShots?.length>0||lastFx?.selectedCards?.length>0)&&<MaglioBattleEffects
+    key={lastFx.nonce} shots={lastFx.weaponShots} selectedCards={lastFx.selectedCards}
+    playerSide={player} ply={battle.ply} nonce={lastFx.nonce}/>}
    <FleetDeckPiles side={player}/>
    <div className="f3d-weapon-card-slots" role="group" aria-label="Due slot Carte Arma">
     {projectMachineBerths(player,chosenTypes,battle.ply).map((machine,slot)=>{
      const artwork=machine?.sourceCardId?cardFacePath(machine.sourceCardId):null;
-     return <button type="button" key={slot} className="f3d-weapon-card"
+     return <button type="button" key={slot} className="f3d-weapon-card" data-fleet-weapon-slot={slot}
       title={machine?(machine.name||'Arma'):'Slot ARMA '+(slot+1)}
       aria-label={machine?(machine.name||'Arma'):'Slot ARMA '+(slot+1)}
       onClick={()=>machine&&setHelp({machine})}>

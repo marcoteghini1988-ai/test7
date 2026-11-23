@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {MAGLIO_CARD_ID,MAGLIO_VARIANTS,maglioArtwork,maglioShots,maglioPresentationBerths,
- maglioResolutionMs} from './maglioBattleVisuals.js';
+ maglioResolutionMs,maglioHammerCount,fleetWeaponShots} from './maglioBattleVisuals.js';
 import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turnPresentation.js';
 import {resolvePreparedFleetTurn,autoFleetTurn,createFleetNextBattle} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
@@ -50,7 +50,7 @@ for(const slot of [0,1])test('Maglio: giocatore e vera IA sparano dallo slot '+s
  const released=releaseFleetTurnAfterEffects(reply.battle,9000);
  assert.equal(released.deadlineMs,39000,'I 30 secondi iniziano dopo gli effetti');
 });
-test('Maglio bloccato: compare il dispositivo, senza sparo o impatto fittizio',()=>{
+test('Maglio bloccato: resta visibile la carta, senza sparo o impatto fittizio',()=>{
  const b=createMaglioReviewBattle({blocked:true,nowMs:0}),hp=b.sides.B.ships[0].hp;
  const r=resolvePreparedFleetTurn(b,'A',order,1000);
  assert.equal(r.ok,true,r.reason);
@@ -77,8 +77,25 @@ test('Nessuno sparo in preparazione; due Magli separati e attesa fino alla fine 
  assert.equal(r.ok,true,r.reason);
  const shots=maglioShots(r.events);
  assert.equal(shots.length,2);assert.equal(shots[1].delayMs,260);
- assert.equal(maglioResolutionMs(r.events),2460);assert.equal(fleetResolutionFxMs(r.events),2460);
- assert.equal(fleetResolutionFxMs([...r.events,{kind:'trap-reveal'}]),4200);
+ assert.equal(maglioResolutionMs(r.events),5110);assert.equal(fleetResolutionFxMs(r.events),5110);
+ assert.equal(fleetResolutionFxMs([...r.events,{kind:'trap-reveal'}]),5110);
  assert.equal(fleetResolutionFxMs([{kind:'impact'}]),1600);
  assert.equal(fleetResolutionFxMs([]),650);
+});
+test('Rarità Maglio: raffiche cosmetiche proporzionate senza replicare i danni',()=>{
+ assert.deepEqual(MAGLIO_VARIANTS.map(v=>maglioHammerCount(v.id)),[2,3,5,7]);
+ const shot={kind:'weapon-base-shot',who:'A',cardId:MAGLIO_CARD_ID,
+  actualDamage:18,targetKind:'part',targetId:'weapons',machineSlot:0};
+ assert.equal(fleetWeaponShots([shot]).length,1);
+ assert.equal(fleetWeaponShots([shot])[0].actualDamage,18);
+ assert.equal(fleetWeaponShots([{...shot,blocked:true,actualDamage:0}])[0].fires,false);
+});
+test('Arma pluricolpo: ogni effetto conserva bersaglio e danno effettivo del motore',()=>{
+ const shots=fleetWeaponShots([{kind:'weapon-designed-shot',who:'B',
+  cardId:'weapon-confirmed-metallic-slitta',machineId:'review-weapon',machineSlot:1,
+  impacts:[{targetKind:'escort',targetId:'guard-1',actualDamage:9},
+   {targetKind:'part',targetId:'weapons',actualDamage:0}]}]);
+ assert.deepEqual(shots.map(s=>[s.who,s.targetKind,s.targetId,s.actualDamage,s.fires]),[
+  ['B','escort','guard-1',9,true],['B','part','weapons',0,false]]);
+ assert.equal(shots[1].delayMs,260);
 });
