@@ -1,5 +1,7 @@
 # Eclissi Stellare — BOZZA grafica: FUNZIONE × RARITÀ
 
+> **Aggiornamento approvato 23/11/2026:** la finitura delle quattro rarità e la matrice delle sei categorie sono in [CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md](CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md). La sezione storica sulle rarità più sotto non è più la palette attiva.
+
 > **RIFERIMENTO GRAFICO CONFERMATO — 21 novembre 2026:** le immagini originali della **base di carta** e dei **simboli approvati** sono state salvate nel repository e documentate in [CARTE_RIFERIMENTI_GRAFICI_UFFICIALI_2026-11-21.md](CARTE_RIFERIMENTI_GRAFICI_UFFICIALI_2026-11-21.md). Per i nuovi fronti usare **quella base e quei simboli**, non introdurre altre geometrie. I simboli degli ambienti barrati sono esclusi; Difesa e Trappola sono universali e senza elemento. Questo aggiornamento grafico prevale sulle indicazioni visive storiche non più pertinenti.
 
 **Versione:** 0.1 — 17 novembre 2026. **Stato:** PROVVISORIO, da discutere e approvare insieme.

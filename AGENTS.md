@@ -1,5 +1,9 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Aggiornamento approvato il 23 novembre 2026 — cornici di rarità
+
+Leggere [docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md](docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md) per la palette aggiornata: **Comune grafite, Rara sabbia bronzata, Epica argento, Leggendaria oro**, identica per ogni categoria. Le quattro basi vuote Attacco in `docs/riferimenti-carte/nuove-basi-2026-11-23/attacco/` sono approvate. Il colore interno rimane quello della categoria. Questa decisione esplicita dell'utente prevale sulle vecchie indicazioni Comune argento / Rara blu / Epica viola, senza modificare i due PNG originali del 21 novembre o le regole sui simboli ufficiali. Le basi delle altre categorie devono essere verificate visivamente prima di diventare fronti giocabili.
+
 ## IMPORTANTISSIMO — ogni richiesta «crea una carta»
 
 La PRIMA OPERAZIONE, anche in nuove chat o sessioni, è leggere il file

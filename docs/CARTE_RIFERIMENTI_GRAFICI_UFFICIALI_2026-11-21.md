@@ -1,5 +1,7 @@
 # Eclissi Stellare — riferimenti grafici obbligatori delle carte (21 novembre 2026)
 
+> **Aggiornamento 23/11/2026:** la nuova palette delle rarità e i quattro campioni Attacco approvati sono in [CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md](CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md). I due PNG originali qui sotto restano intatti come riferimenti di geometria e simboli; i colori di rarità descritti più sotto sono storici e superati.
+
 **Stato:** riferimenti forniti e confermati dall'utente il 21/11/2026. **Ambito:** progettazione grafica delle nuove carte; nessuna modifica al motore, ai valori o alla grafica 3D del gioco.
 
 ## Immagine 1 — BASE OBBLIGATORIA PER CREARE LE CARTE
