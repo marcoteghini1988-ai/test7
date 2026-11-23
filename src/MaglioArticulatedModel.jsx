@@ -74,7 +74,7 @@ export default function MaglioArticulatedModel({cardId,side='player',shot,pendin
    model.traverse(o=>{if(!o.isMesh)return;o.castShadow=o.receiveShadow=true;
     const clone=m=>{const c=m.clone();materials.push(c);
      if(c.metalness>.3){c.map=metalColorDetail();c.roughnessMap=metalDetail();c.roughness=Math.max(.32,c.roughness);}
-     if(/PulseCore|AmberIdle/.test(c.name)){pulse.push({material:c,core:c.name.includes('PulseCore')});c.emissiveIntensity=.24;}
+     if(/PulseCore|AmberIdle/.test(c.name)){pulse.push({material:c,core:c.name.includes('PulseCore')});c.emissiveIntensity=c.name.includes('PulseCore')?1.55:.95;}
      return c;};o.material=Array.isArray(o.material)?o.material.map(clone):clone(o.material);
    });
    const yaw=model.getObjectByName('TurretYaw'),pitch=model.getObjectByName('ArmPitch'),
@@ -106,7 +106,9 @@ export default function MaglioArticulatedModel({cardId,side='player',shot,pendin
     const age=s?Date.now()-s.visualNonce-(s.delayMs||0):0;
     const target=aim(),pose=maglioRigPose({side,ageMs:age,aim:target,fires:!!s?.fires,reducedMotion:reduced.matches});
     yaw.rotation.y=pose.yaw;pitch.rotation.x=pose.pitch;recoil.position.z=pose.recoil;
-    for(const {material,core}of pulse)material.emissiveIntensity=.24+pose.charge*(core?5:2.0);
+    // I condotti restano accesi anche a riposo, come nell'illustrazione;
+    // durante il colpo il nucleo aumenta ulteriormente la propria intensità.
+    for(const {material,core}of pulse)material.emissiveIntensity=(core?1.55:.95)+pose.charge*(core?4.5:2.2);
     model.updateMatrixWorld(true);muzzle.getWorldPosition(projected);projected.project(camera);
     const point={x:(projected.x*.5+.5)*100,y:(.5-projected.y*.5)*100};current.onMuzzle?.(point);
     element.dataset.yaw=pose.yaw.toFixed(5);element.dataset.pitch=pose.pitch.toFixed(5);element.dataset.recoil=pose.recoil.toFixed(5);
