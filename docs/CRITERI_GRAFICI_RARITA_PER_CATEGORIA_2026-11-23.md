@@ -17,12 +17,12 @@ La **rarità** cambia soltanto il metallo esterno, i bordi degli alloggiamenti e
 
 | Categoria | Colore interno | Comune | Rara | Epica | Leggendaria |
 | --- | --- | --- | --- | --- | --- |
-| Arma | Arancione | Grafite + arancione | Sabbia bronzata + arancione | Argento + arancione | Oro + arancione |
-| Attacco | Rosso | Grafite + rosso | Sabbia bronzata + rosso | Argento + rosso | Oro + rosso |
-| Difesa | Azzurro | Grafite + azzurro | Sabbia bronzata + azzurro | Argento + azzurro | Oro + azzurro |
-| Personaggio | Magenta | Grafite + magenta | Sabbia bronzata + magenta | Argento + magenta | Oro + magenta |
-| Terreno | Verde | Grafite + verde | Sabbia bronzata + verde | Argento + verde | Oro + verde |
-| Trappola | Viola | Grafite + viola | Sabbia bronzata + viola | Argento + viola | Oro + viola |
+| Arma | Arancione | [Grafite + arancione](riferimenti-carte/nuove-basi-2026-11-23/anteprime/arma/comune.webp) | [Sabbia bronzata + arancione](riferimenti-carte/nuove-basi-2026-11-23/anteprime/arma/rara.webp) | [Argento + arancione](riferimenti-carte/nuove-basi-2026-11-23/anteprime/arma/epica.webp) | [Oro + arancione](riferimenti-carte/nuove-basi-2026-11-23/anteprime/arma/leggendaria.webp) |
+| Attacco | Rosso | [Grafite + rosso](riferimenti-carte/nuove-basi-2026-11-23/attacco/comune.png) | [Sabbia bronzata + rosso](riferimenti-carte/nuove-basi-2026-11-23/attacco/rara.png) | [Argento + rosso](riferimenti-carte/nuove-basi-2026-11-23/attacco/epica.png) | [Oro + rosso](riferimenti-carte/nuove-basi-2026-11-23/attacco/leggendaria.png) |
+| Difesa | Azzurro | [Grafite + azzurro](riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/comune.webp) | [Sabbia bronzata + azzurro](riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/rara.webp) | [Argento + azzurro](riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/epica.webp) | [Oro + azzurro](riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/leggendaria.webp) |
+| Personaggio | Magenta | [Grafite + magenta](riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/comune.webp) | [Sabbia bronzata + magenta](riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/rara.webp) | [Argento + magenta](riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/epica.webp) | [Oro + magenta](riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/leggendaria.webp) |
+| Terreno | Verde | [Grafite + verde](riferimenti-carte/nuove-basi-2026-11-23/anteprime/terreno/comune.webp) | [Sabbia bronzata + verde](riferimenti-carte/nuove-basi-2026-11-23/anteprime/terreno/rara.webp) | [Argento + verde](riferimenti-carte/nuove-basi-2026-11-23/anteprime/terreno/epica.webp) | [Oro + verde](riferimenti-carte/nuove-basi-2026-11-23/anteprime/terreno/leggendaria.webp) |
+| Trappola | Viola | [Grafite + viola](riferimenti-carte/nuove-basi-2026-11-23/anteprime/trappola/comune.webp) | [Sabbia bronzata + viola](riferimenti-carte/nuove-basi-2026-11-23/anteprime/trappola/rara.webp) | [Argento + viola](riferimenti-carte/nuove-basi-2026-11-23/anteprime/trappola/epica.webp) | [Oro + viola](riferimenti-carte/nuove-basi-2026-11-23/anteprime/trappola/leggendaria.webp) |
 
 Le categorie e i simboli sono quelli della [tavola ufficiale](riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png). Arma e Attacco rimangono categorie diverse. Difesa e Trappola non hanno un elemento obbligatorio, quindi l'alloggiamento destro resta vuoto per le loro carte universali. Non usare i simboli degli ambienti barrati.
 
@@ -35,4 +35,4 @@ Le categorie e i simboli sono quelli della [tavola ufficiale](riferimenti-carte/
 | Epica | [epica.png](riferimenti-carte/nuove-basi-2026-11-23/attacco/epica.png) — copia esatta della base inviata dall'utente |
 | Leggendaria | [leggendaria.png](riferimenti-carte/nuove-basi-2026-11-23/attacco/leggendaria.png) |
 
-Le quattro immagini sono **riferimenti di cornice**, non carte giocabili. Non sostituire i fronti già approvati né modificare il motore. Il PNG originale del 21 novembre e la tavola dei simboli rimangono intatti. Le nuove categorie si preparano mantenendo struttura e spazi vuoti, poi si mostrano per il controllo visivo prima di considerarle definitive.
+Le quattro immagini Attacco sono **riferimenti di cornice approvati**, non carte giocabili. Le altre 20 immagini collegate nella matrice sono **anteprime da controllare**, salvate in WebP 1024×1536; derivano dalle quattro finiture approvate variando soltanto il colore interno. Non sostituire i fronti già approvati né modificare il motore. Il PNG originale del 21 novembre e la tavola dei simboli rimangono intatti. Le nuove categorie si mostrano per il controllo visivo prima di considerarle definitive.
