@@ -1,7 +1,8 @@
-import React,{useLayoutEffect,useRef,useState} from 'react';
+import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {card,cardFacePath,cardRole} from './fleetNext/rules.js';
 import {projectFleetSlots,projectMachineBerths} from './fleetNext/battlePresentation.js';
-import {maglioHammerCount,maglioVariant} from './maglioBattleVisuals.js';
+import {weaponEffectProfile,weaponPortalOrigin} from './maglioBattleVisuals.js';
+import {playSound} from './audio.js';
 import './MaglioBattleEffects.css';
 
 const point=(rect,board)=>({
@@ -57,10 +58,42 @@ const visualCards=(shots,selectedCards)=>{
  return cards.filter(c=>cardFacePath(c.id,c.grade));
 };
 
+function WeaponProjectile({profile}){
+ switch(profile.kind){
+  case 'gravity-maul':return <>
+   <ellipse rx={15+profile.tier*3} ry={23+profile.tier*3} fill={profile.glow} opacity=".2"/>
+   {Array.from({length:profile.tier+1},(_,i)=><ellipse key={i}
+    rx={11+i*5} ry={17+i*5} fill="none" stroke={i%2?profile.secondary:profile.core}
+    strokeWidth="1.3" opacity={.8-i*.12}/>)}
+   <path d="M-8 10 L-11-10 L-6-21 L6-21 L11-10 L8 10 L0 19 Z"
+    fill="#2a3542" stroke={profile.core} strokeWidth="2.4"/>
+   <path d="M-8-8 H8 M-7 2 H7 M-5 10 H5" stroke={profile.secondary} strokeWidth="2"/>
+   <circle cy="-17" r="4" fill={profile.core}/>
+  </>;
+  default:return <><ellipse rx="8" ry="18" fill="#8eeaff" opacity=".2"/>
+   <path d="M0-18 L6 5 L0 15 L-6 5 Z" fill="#9deaff" stroke="#f1ffff" strokeWidth="1.2"/></>;
+ }
+}
+
 export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSide,ply,nonce}){
  const ref=useRef(null),[paths,setPaths]=useState([]),[placements,setPlacements]=useState([]);
  const reveals=visualCards(shots,selectedCards);
  const shotStart=980+reveals.length*520;
+ // Il suono segue l'evento reale e gli stessi tempi della traiettoria visiva.
+ // La chiave nonce rimonta il componente a ogni risoluzione: nessun doppio audio
+ // durante i ricalcoli delle coordinate del ResizeObserver.
+ useEffect(()=>{
+  const timers=[];
+  for(const shot of shots){
+   if(!shot.fires)continue;
+   const profile=weaponEffectProfile(shot.cardId);
+   if(!profile?.sound)continue;
+   const start=shotStart+(shot.delayMs||0);
+   timers.push(window.setTimeout(()=>playSound(profile.sound.fire),start));
+   timers.push(window.setTimeout(()=>playSound(profile.sound.impact),start+470));
+  }
+  return ()=>timers.forEach(id=>window.clearTimeout(id));
+ },[nonce,shots,shotStart]);
  useLayoutEffect(()=>{
   const root=ref.current?.closest('.f3d-approved-layout');
   if(!root)return;
@@ -73,13 +106,14 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
     const target=targetForShot(root,shot);
     if(!target)return [];
     const to=point(target.getBoundingClientRect(),board);
-    const from={x:225+(shot.machineSlot===0?-13:13),y:shot.who==='A'?824:-24};
-    const count=maglioHammerCount(shot.cardId)||1;
+    const from=weaponPortalOrigin(shot.who);
+    const profile=weaponEffectProfile(shot.cardId);
+    if(!from||!profile)return [];
     const start=shotStart+(shot.delayMs||0);
     target.classList.add('f3d-ship-hit');
-    target.style.setProperty('--ship-hit-delay',start+(count-1)*82+470+'ms');
+    target.style.setProperty('--ship-hit-delay',start+470+'ms');
     hitTargets.add(target);
-    return [{shot,from,to,count,start}];
+    return [{shot,from,to,profile,start}];
    }));
   };
   measure();
@@ -108,52 +142,58 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
      '--reveal-y':(destination?.y??379.5)-379.5+'px'}}/>;
   })}
   <svg className="maglio-battle-effects" viewBox="0 0 450 800" focusable="false">
-   <defs>
-    <radialGradient id={'maglio-impact-'+nonce}>
-     <stop offset="0" stopColor="#fff9dc"/>
-     <stop offset=".24" stopColor="#ffe3a4" stopOpacity=".92"/>
-     <stop offset=".58" stopColor="#ffab4b" stopOpacity=".4"/>
-     <stop offset="1" stopColor="#c15d1d" stopOpacity="0"/>
-    </radialGradient>
-   </defs>
-   {paths.map(({shot,from,to,count,start},index)=>{
-    const hammer=!!maglioVariant(shot.cardId);
-    const impactDelay=start+(count-1)*82+470;
+   {paths.map(({shot,from,to,profile,start},index)=>{
+    const impactDelay=start+470;
+    const gradientId='weapon-impact-'+nonce+'-'+index;
+    const flashY=shot.who==='A'?790:10;
+    const angle=Math.atan2(to.y-from.y,to.x-from.x)*180/Math.PI+90;
+    const impactCore=profile.impactCore||profile.core;
+    const impactGlow=profile.impactGlow||profile.glow;
+    const impactSecondary=profile.impactSecondary||profile.secondary;
+    const style={'--shot-core':profile.core,'--shot-glow':profile.glow,
+     '--shot-secondary':profile.secondary};
     return <g key={nonce+'-shot-'+index} className="maglio-shot"
      data-shooter={shot.who} data-target-kind={shot.targetKind}
      data-target-id={shot.targetId} data-actual-damage={shot.actualDamage}
-     data-projectiles={count}>
-     {Array.from({length:count},(_,i)=>{
-      const spread=i-(count-1)/2;
-      const fromX=from.x+spread*3,toX=to.x+spread*6;
-      const toY=to.y+(i%2?4:-4);
-      const angle=Math.atan2(toY-from.y,toX-fromX)*180/Math.PI+90;
-      return <g key={i} className="maglio-pulse-travel"
-       style={{'--maglio-from-x':fromX+'px','--maglio-from-y':from.y+'px',
-        '--maglio-to-x':toX+'px','--maglio-to-y':toY+'px',
-        '--maglio-flight-delay':start+i*82+'ms'}}>
-       <g transform={'rotate('+angle+')'}>
-        {hammer?<>
-         <ellipse rx="16" ry="20" fill="#ff9b32" opacity=".18"/>
-         <path d="M-3 17L-3-7M3 17L3-7" stroke="#ffd382" strokeWidth="2"/>
-         <path d="M-17-17L17-17L17-5L-17-5Z" fill="#3c5362" stroke="#ffe4a0" strokeWidth="2"/>
-         <path d="M-12-15H12M-15-9H15" stroke="#fff4c2" strokeWidth="1.4"/>
-         <path d="M-7 20L0 25L7 20" fill="none" stroke="#ffb145" strokeWidth="2"/>
-        </>:<>
-         <ellipse rx="8" ry="18" fill="#8eeaff" opacity=".2"/>
-         <path d="M0-18L6 5L0 15L-6 5Z" fill="#9deaff" stroke="#f1ffff" strokeWidth="1.2"/>
-        </>}
-       </g>
-      </g>;
-     })}
-     <g transform={'translate('+to.x+' '+to.y+') scale('+(maglioVariant(shot.cardId)?.impactScale||1)+')'}
+     data-projectiles="1" data-origin-edge={from.edge}
+     data-weapon-kind={profile.kind} data-rarity={profile.rarity} style={style}>
+     <defs><radialGradient id={gradientId}>
+      <stop offset="0" stopColor={impactCore} stopOpacity=".95"/>
+      <stop offset=".42" stopColor={impactGlow} stopOpacity=".55"/>
+      <stop offset="1" stopColor={impactGlow} stopOpacity="0"/>
+     </radialGradient></defs>
+     <g transform={'translate(225 '+flashY+')'} className="weapon-portal-flash"
+      style={{'--maglio-flight-delay':start+'ms'}}>
+      <ellipse rx="21" ry="9" fill={profile.glow} opacity=".8"/>
+      <ellipse rx="9" ry="4" fill={profile.core}/>
+     </g>
+     <g className="maglio-pulse-travel"
+      style={{'--maglio-from-x':from.x+'px','--maglio-from-y':from.y+'px',
+       '--maglio-to-x':to.x+'px','--maglio-to-y':to.y+'px',
+       '--maglio-flight-delay':start+'ms'}}>
+      <g transform={'rotate('+angle+') scale('+profile.scale+')'}>
+       {Array.from({length:profile.trailBands},(_,i)=><path key={i}
+        d={'M'+(-4-i*3)+' '+(20+i*3)+' Q0 '+(35+i*8)+' '+(4+i*3)+' '+(20+i*3)}
+        fill="none" stroke={i%2?profile.secondary:profile.glow}
+        strokeWidth={Math.max(1,2-i*.25)} opacity={.78-i*.15}/>)}
+       <WeaponProjectile profile={profile}/>
+      </g>
+     </g>
+     <g transform={'translate('+to.x+' '+to.y+') scale('+profile.impactScale+')'}
       style={{'--maglio-impact-delay':impactDelay+'ms'}}>
       <g className="maglio-gravity-impact">
-       <ellipse rx="53" ry="38" fill={'url(#maglio-impact-'+nonce+')'}/>
-       <ellipse className="maglio-impact-ring" rx="27" ry="17" fill="none" stroke="#fff0c3" strokeWidth="2"/>
-       <ellipse className="maglio-impact-ring maglio-impact-ring--outer" rx="37" ry="22" fill="none" stroke="#ffad48" strokeWidth="1.2"/>
-       <path d="M-30-9L-12-3M11 4L32 10M-9 22L-3 8M3-9L8-23M-24 14L-9 5M10-4L27-14"
-        stroke="#ffe6b1" strokeWidth="1.4" strokeLinecap="round"/>
+       <ellipse rx="48" ry="34" fill={'url(#'+gradientId+')'}/>
+       {Array.from({length:profile.impactRings},(_,i)=><ellipse key={i}
+        className="maglio-impact-ring" rx={22+i*8} ry={13+i*5}
+        fill="none" stroke={i%2?impactSecondary:impactCore}
+        strokeWidth={Math.max(1,2.1-i*.25)}
+        style={{'--ring-delay':impactDelay+i*65+'ms'}}/>)}
+       {Array.from({length:4+profile.tier*2},(_,i)=>{
+        const a=i*Math.PI*2/(4+profile.tier*2);
+        const x=Math.cos(a),y=Math.sin(a);
+        return <path key={i} d={'M'+(x*14)+' '+(y*9)+' L'+(x*(29+profile.tier*4))+' '+(y*(20+profile.tier*3))}
+         stroke={i%2?impactSecondary:impactCore} strokeWidth="1.4" strokeLinecap="round"/>;
+       })}
       </g>
      </g>
     </g>;

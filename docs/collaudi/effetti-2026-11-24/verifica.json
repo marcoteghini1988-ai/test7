@@ -1,0 +1,40 @@
+{
+  "maglio": [
+    {
+      "id": "weapon-confirmed-metallic-maglio",
+      "rarity": "Comune",
+      "visualKind": "gravity-maul",
+      "trailBands": 1,
+      "impactRings": 1,
+      "actualDamageA": 18,
+      "actualDamageB": 17
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-r",
+      "rarity": "Rara",
+      "visualKind": "gravity-maul",
+      "trailBands": 2,
+      "impactRings": 2,
+      "actualDamageA": 45,
+      "actualDamageB": 43
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-e",
+      "rarity": "Epica",
+      "visualKind": "gravity-maul",
+      "trailBands": 3,
+      "impactRings": 3,
+      "actualDamageA": 105,
+      "actualDamageB": 99
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-l",
+      "rarity": "Leggendaria",
+      "visualKind": "gravity-maul",
+      "trailBands": 4,
+      "impactRings": 4,
+      "actualDamageA": 146,
+      "actualDamageB": 137
+    }
+  ]
+}

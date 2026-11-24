@@ -1,4 +1,5 @@
-/* Il fronte ufficiale resta leggibile al centro; i colpi entrano dai bordi. */
+/* La porta USB in basso e il bordo del dispositivo avversario in alto sono
+   le due sole origini: forme e colori appartengono all'Arma che ha colpito. */
 .es-math-scope .f3d-approved-layout .maglio-battle-stage {
  position:absolute;inset:0;z-index:38;pointer-events:none;overflow:hidden;
 }
@@ -17,17 +18,21 @@
 }
 .maglio-pulse-travel {
  opacity:0;animation:maglio-flight 470ms var(--maglio-flight-delay) linear both;
- filter:drop-shadow(0 0 7px #ffb74e);
+ filter:drop-shadow(0 0 7px var(--shot-glow));
+}
+.weapon-portal-flash {
+ opacity:0;animation:weapon-port-fire 360ms var(--maglio-flight-delay) ease-out both;
+ filter:drop-shadow(0 0 14px var(--shot-glow));
 }
 .maglio-gravity-impact {
  opacity:0;transform-origin:center;transform-box:fill-box;
  animation:maglio-impact 700ms var(--maglio-impact-delay) ease-out both;
+ filter:drop-shadow(0 0 10px var(--shot-glow));
 }
 .maglio-impact-ring {
  transform-origin:center;transform-box:fill-box;
- animation:maglio-ring 650ms var(--maglio-impact-delay) ease-out both;
+ animation:maglio-ring 650ms var(--ring-delay) ease-out both;
 }
-.maglio-impact-ring--outer {animation-delay:calc(var(--maglio-impact-delay) + 80ms)}
 .es-math-scope .f3d-approved-layout .live-fighter .fleet-ship-wrap.official-mother.f3d-ship-hit,
 .es-math-scope .f3d-approved-layout .live-fighter .live-escort.f3d-ship-hit,
 .es-math-scope .f3d-approved-layout .live-fighter .f3d-mounted-module.f3d-ship-hit,
@@ -49,6 +54,12 @@
  6%,91% {opacity:1}
  100% {opacity:0;transform:translate(var(--maglio-to-x),var(--maglio-to-y)) scale(1.2)}
 }
+@keyframes weapon-port-fire {
+ 0% {opacity:0;scale:.25}
+ 12% {opacity:1;scale:1.4}
+ 58% {opacity:.8;scale:1}
+ 100% {opacity:0;scale:.4}
+}
 @keyframes maglio-impact {
  0% {opacity:0;scale:.35}
  12% {opacity:1;scale:1.05}
@@ -65,7 +76,7 @@
 }
 @media (prefers-reduced-motion:reduce) {
  .es-math-scope .f3d-approved-layout .maglio-card-flight,
- .maglio-pulse-travel {display:none}
+ .maglio-pulse-travel,.weapon-portal-flash {display:none}
  .es-math-scope .f3d-approved-layout .maglio-card-reveal {
   animation-name:maglio-card-reduced;
  }

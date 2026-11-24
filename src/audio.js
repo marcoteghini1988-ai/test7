@@ -446,6 +446,48 @@ const playSound = (type, pitchSemitones = 0) => {
     gain.connect(sfxGainNode || audioCtx.destination);
 
     switch (type) {
+      // Maglio Ferrogravitazionale: un lancio e un impatto per colpo reale.
+      // Ogni rarità ha frequenze, timbro, armonici e coda propri. Usa il bus
+      // SFX esistente, per rispettare volume, silenziamento e limiter del gioco.
+      case 'maglio_fire_common':
+      case 'maglio_fire_rare':
+      case 'maglio_fire_epic':
+      case 'maglio_fire_legendary':
+      case 'maglio_impact_common':
+      case 'maglio_impact_rare':
+      case 'maglio_impact_epic':
+      case 'maglio_impact_legendary': {
+        const names = ['common', 'rare', 'epic', 'legendary'];
+        const tier = names.findIndex(name => type.endsWith('_' + name));
+        const impact = type.startsWith('maglio_impact_');
+        const fundamentals = impact ? [72, 86, 104, 121] : [136, 164, 193, 224];
+        const tail = impact ? [0.25, 0.31, 0.39, 0.51][tier] : [0.24, 0.29, 0.34, 0.42][tier];
+        osc.type = impact ? 'sine' : ['triangle', 'sawtooth', 'triangle', 'sawtooth'][tier];
+        osc.frequency.setValueAtTime(applyPitch(fundamentals[tier] * (impact ? 1.35 : 1.6)), now);
+        osc.frequency.exponentialRampToValueAtTime(applyPitch(fundamentals[tier] * (impact ? .55 : .7)), now + tail);
+        gain.gain.setValueAtTime(impact ? .3 : .17, now);
+        gain.gain.exponentialRampToValueAtTime(.001, now + tail);
+        osc.start(now);
+        osc.stop(now + tail);
+        // I moduli della Rara, gli anelli dell'Epica e i cristalli della
+        // Leggendaria aggiungono armonici, non ulteriori spari o danni.
+        for (let i = 0; i <= tier; i++) {
+          const partial = audioCtx.createOscillator();
+          const envelope = audioCtx.createGain();
+          partial.type = i % 2 ? 'triangle' : 'sine';
+          const multiplier = impact ? 2.4 + i * .8 : 2 + i * .45;
+          partial.frequency.setValueAtTime(applyPitch(fundamentals[tier] * multiplier), now);
+          partial.frequency.exponentialRampToValueAtTime(
+            applyPitch(fundamentals[tier] * (impact ? 1.1 : 1.45) + i * 17), now + tail);
+          envelope.gain.setValueAtTime((impact ? .09 : .045) / (i + 1), now);
+          envelope.gain.exponentialRampToValueAtTime(.001, now + tail * (impact ? .8 : .95));
+          partial.connect(envelope);
+          envelope.connect(sfxGainNode || audioCtx.destination);
+          partial.start(now);
+          partial.stop(now + tail);
+        }
+        break;
+      }
       case 'click':
         osc.type = 'sine';
         osc.frequency.setValueAtTime(applyPitch(1200), now);

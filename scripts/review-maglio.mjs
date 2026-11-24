@@ -6,7 +6,7 @@ writeFileSync('.maglio-review.html',`<!doctype html><html lang="it"><head>
 .maglio-review-host .es-math-scope.live-viewport{position:absolute;width:100%;height:100%}
 .maglio-review-controls{display:flex;justify-content:center;align-items:center;gap:8px;padding:8px;flex-wrap:wrap;color:#dce7ec;font:12px system-ui}
 </style></head><body style="margin:0"><div id="root"></div><script type="module" src="/.maglio-review.jsx"></script></body></html>`);
-writeFileSync('.maglio-review.jsx',`import React,{useState} from 'react';
+writeFileSync('.maglio-review.jsx',`import React,{useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import OfficialFleetBattle3D from './src/OfficialFleetBattle3D.jsx';
 import {createMaglioReviewBattle} from './scripts/maglioReviewBattle.js';
@@ -14,6 +14,51 @@ import {MAGLIO_CARD_ID,MAGLIO_VARIANTS} from './src/maglioBattleVisuals.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import './src/index.css';
 function Review(){
+ const capture=useRef(null);
+ const [recording,setRecording]=useState(false);
+ const [recordStatus,setRecordStatus]=useState('');
+ const [recordUrl,setRecordUrl]=useState('');
+ const recordBattle=async()=>{
+  try{
+   setRecordStatus('Scegli questa scheda e includi il suo audio.');
+   const display=await navigator.mediaDevices.getDisplayMedia({
+    video:{displaySurface:'browser',frameRate:30},audio:true,preferCurrentTab:true});
+   const video=document.createElement('video');video.muted=true;video.srcObject=display;
+   await video.play();
+   const canvas=document.createElement('canvas');canvas.width=900;canvas.height=1600;
+   const context=canvas.getContext('2d');
+   const media=canvas.captureStream(30);
+   display.getAudioTracks().forEach(track=>media.addTrack(track));
+   const mime=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']
+    .find(type=>MediaRecorder.isTypeSupported(type));
+   const recorder=new MediaRecorder(media,{mimeType:mime,videoBitsPerSecond:6000000});
+   const chunks=[];
+   const session={display,recorder,frame:0,timer:0};capture.current=session;
+   const draw=()=>{
+    const board=document.querySelector('.f3d-approved-layout');
+    const rect=board?.getBoundingClientRect();
+    if(rect&&video.videoWidth&&video.videoHeight){
+     const x=video.videoWidth/window.innerWidth,y=video.videoHeight/window.innerHeight;
+     context.fillStyle='#05090e';context.fillRect(0,0,900,1600);
+     context.drawImage(video,rect.left*x,rect.top*y,rect.width*x,rect.height*y,0,0,900,1600);
+    }
+    session.frame=requestAnimationFrame(draw);
+   };
+   recorder.ondataavailable=event=>{if(event.data.size)chunks.push(event.data);};
+   recorder.onstop=()=>{
+    cancelAnimationFrame(session.frame);clearTimeout(session.timer);
+    display.getTracks().forEach(track=>track.stop());
+    video.srcObject=null;
+    setRecordUrl(previous=>{if(previous)URL.revokeObjectURL(previous);
+     return URL.createObjectURL(new Blob(chunks,{type:mime}));});
+    setRecording(false);setRecordStatus('Video della partita pronto.');capture.current=null;
+   };
+   display.getVideoTracks()[0].onended=()=>{if(recorder.state==='recording')recorder.stop();};
+   draw();recorder.start(250);setRecording(true);
+   setRecordStatus(display.getAudioTracks().length?'Registrazione con audio della scheda':'Registrazione senza audio: includilo nella condivisione.');
+   session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},90000);
+  }catch(error){setRecordStatus(error.message||'Registrazione non avviata.');}
+ };
  const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:MAGLIO_CARD_ID,supports:false,wounded:false,focus:0});
  const [initial,setInitial]=useState(()=>createMaglioReviewBattle());
  const reset=(options={})=>{setSetup(s=>({...s,...options,serial:s.serial+1}));setInitial(createMaglioReviewBattle({...setup,...options}));};
@@ -26,6 +71,9 @@ function Review(){
    <button onClick={()=>reset({slot:1,blocked:false})}>Riprova slot 2</button>
    <button onClick={()=>reset({slot:0,blocked:true})}>Verifica arma bloccata</button>
    <button onClick={()=>reset({supports:true,wounded:true,focus:1,blocked:false})}>Supporto con 1 HP</button>
+   <button onClick={()=>recording?capture.current?.recorder.stop():recordBattle()}>{recording?'Ferma registrazione':'Registra battaglia'}</button>
+   <span role="status">{recordStatus}</span>
+   {recordUrl&&<a href={recordUrl} download="maglio-quattro-rarita-in-battaglia.webm">Scarica video battaglia</a>}
   </div>
   <div className="maglio-review-host" style={{position:'relative',flex:1,minHeight:0}}>
    <OfficialFleetBattle3D key={setup.serial} initialBattle={initial} nickname="GIOCATORE" opponentNickname="AVVERSARIO" gameMode="pvp" onExit={()=>reset()}/>

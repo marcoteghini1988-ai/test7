@@ -3672,7 +3672,10 @@ function escortPassive(b,side,ctx,events,order){
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
    if(power){
     const extra=terrainWeaponExtraPower(b,side,ctx,machine,power);
-    if(b.newGeneratorCombat)ctx.independentWeaponPower+=power+extra;
+    if(b.newGeneratorCombat){
+     ctx.independentWeaponPower+=power+extra;
+     (ctx.independentWeaponContributors??=[]).push(machine.sourceCardId);
+    }
     else ctx.power+=power+extra;
     recordTerrainWeaponShare(side,ctx,machine,power,extra);
    }
@@ -5081,7 +5084,11 @@ function resolveSalvo(b,ctx,events,order){
   targetKind,targetId:main.id,damage,escortDamage,machineDamage,moduleDamage,destroyed:main.destroyed,
   escortSlot:targetKind==='escort'?main.slot:null,machineSlot:targetKind==='machine'?main.slot:null,
   escortName:targetKind==='escort'?main.name:null,escortDestroyed:targetKind==='escort'&&main.destroyed,
-  played:visiblePlayed(ctx.cards),targets:hits,terrainBonus:terrain.value,power,emergency};
+  played:visiblePlayed(ctx.cards),targets:hits,terrainBonus:terrain.value,power,emergency,
+  ...(ctx.independentWeaponShot?{
+   independentWeaponShot:true,
+   weaponContributors:[...new Set(ctx.independentWeaponContributors||[])]
+  }:{})};
  events.push(emit(b,ctx.who,'impact',hits.length?'Attacco: '+hits.map(h=>h.name+' −'+h.damage).join(', '):'Tutti i colpi sono stati bloccati',data));
  triggerReactions(b,ctx.who,damage+escortDamage+machineDamage+moduleDamage,events);
  return data;

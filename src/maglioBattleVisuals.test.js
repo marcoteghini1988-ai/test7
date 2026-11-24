@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 import {MAGLIO_CARD_ID,MAGLIO_VARIANTS,maglioArtwork,maglioShots,maglioPresentationBerths,
- maglioResolutionMs,maglioHammerCount,fleetWeaponShots} from './maglioBattleVisuals.js';
+ maglioResolutionMs,weaponEffectProfile,weaponPortalOrigin,fleetWeaponShots} from './maglioBattleVisuals.js';
 import {fleetResolutionFxMs,releaseFleetTurnAfterEffects} from './fleetNext/turnPresentation.js';
 import {resolvePreparedFleetTurn,autoFleetTurn,createFleetNextBattle} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
@@ -82,13 +82,33 @@ test('Nessuno sparo in preparazione; due Magli separati e attesa fino alla fine 
  assert.equal(fleetResolutionFxMs([{kind:'impact'}]),1600);
  assert.equal(fleetResolutionFxMs([]),650);
 });
-test('Rarità Maglio: raffiche cosmetiche proporzionate senza replicare i danni',()=>{
- assert.deepEqual(MAGLIO_VARIANTS.map(v=>maglioHammerCount(v.id)),[2,3,5,7]);
+test('Rarità Maglio: un impatto per ogni rarità, rifiniture visive progressive',()=>{
+ const profiles=MAGLIO_VARIANTS.map(v=>weaponEffectProfile(v.id));
+ assert.deepEqual(profiles.map(p=>p.trailBands),[1,2,3,4]);
+ assert.deepEqual(profiles.map(p=>p.impactRings),[1,2,3,4]);
+ assert.ok(profiles.every(p=>p.kind==='gravity-maul'));
+ assert.ok(profiles.every(p=>p.approved&&p.sound?.fire&&p.sound?.impact));
+ assert.equal(new Set(profiles.map(p=>p.sound.fire)).size,4);
+ assert.equal(new Set(profiles.map(p=>p.sound.impact)).size,4);
  const shot={kind:'weapon-base-shot',who:'A',cardId:MAGLIO_CARD_ID,
   actualDamage:18,targetKind:'part',targetId:'weapons',machineSlot:0};
- assert.equal(fleetWeaponShots([shot]).length,1);
- assert.equal(fleetWeaponShots([shot])[0].actualDamage,18);
+ for(const variant of MAGLIO_VARIANTS){
+  const shown=fleetWeaponShots([{...shot,cardId:variant.id}]);
+  assert.equal(shown.length,1);assert.equal(shown[0].actualDamage,18);
+ }
  assert.equal(fleetWeaponShots([{...shot,blocked:true,actualDamage:0}])[0].fires,false);
+ assert.equal(maglioResolutionMs([{...shot,blocked:true,actualDamage:0}]),0);
+});
+test('Le altre Armi attendono un profilo approvato; i due spari partono dai bordi centrali',()=>{
+ const ids=['weapon-confirmed-plasma-nucleo','weapon-confirmed-refrigerant-compression',
+  'weapon-new-cryogenic-03','weapon-base-ionic-01','weapon-base-mineral-01',
+  'weapon-base-aerial-01','weapon-base-radiant-01','weapon-base-void-01',
+  'weapon-base-gravity-01'];
+ const profiles=ids.map(weaponEffectProfile);
+ assert.ok(profiles.every(p=>p.kind==='legacy-pulse'&&!p.approved&&p.sound===null));
+ assert.deepEqual(weaponPortalOrigin('A'),{x:225,y:812,edge:'bottom-usb'});
+ assert.deepEqual(weaponPortalOrigin('B'),{x:225,y:-12,edge:'top-opponent'});
+ assert.equal(weaponPortalOrigin('C'),null);
 });
 test('Arma pluricolpo: ogni effetto conserva bersaglio e danno effettivo del motore',()=>{
  const shots=fleetWeaponShots([{kind:'weapon-designed-shot',who:'B',
@@ -98,4 +118,18 @@ test('Arma pluricolpo: ogni effetto conserva bersaglio e danno effettivo del mot
  assert.deepEqual(shots.map(s=>[s.who,s.targetKind,s.targetId,s.actualDamage,s.fires]),[
   ['B','escort','guard-1',9,true],['B','part','weapons',0,false]]);
  assert.equal(shots[1].delayMs,260);
+});
+test('Armi avanzate e combinate usano gli impatti effettivi, senza colpi inventati',()=>{
+ const events=[{kind:'weapon-provisional-shot',who:'A',
+  cardId:'weapon-designed-plasma-mortaio-magmatico',machineSlot:0,
+  impacts:[{targetKind:'escort',targetId:'guard-1',actualDamage:9},
+   {targetKind:'part',targetId:'weapons',actualDamage:0}]},
+  {kind:'impact',who:'B',independentWeaponShot:true,
+   weaponContributors:['weapon-memory-plasma','weapon-sequence-1'],
+   targets:[{kind:'part',id:'weapons',damage:21}]}];
+ const shots=fleetWeaponShots(events);
+ assert.equal(shots.length,3);
+ assert.deepEqual(shots.map(s=>s.fires),[true,false,true]);
+ assert.equal(shots[2].actualDamage,21);
+ assert.deepEqual(shots[2].contributors,events[1].weaponContributors);
 });

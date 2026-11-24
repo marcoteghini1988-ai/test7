@@ -1,5 +1,19 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Regola dei colpi approvata il 24 novembre 2026
+
+Leggere `docs/REGOLA_EFFETTI_VISIVI_CARTE_2026-11-24.md` quando si crea o
+inserisce un'Arma o il suo effetto. Il colpo parte dal centro del bordo basso
+per il giocatore e dal centro del bordo alto per l'avversario. Forma, colore
+e rifiniture seguono l'arma e la rarità; numero di colpi, bersagli e danno
+seguono esclusivamente gli eventi del motore. Il Maglio ha un colpo per
+ciascuna rarità e un impatto visivo progressivamente più ricco.
+Quando una carta è approvata, nello stesso inserimento implementare il colpo
+univoco e il suono per ogni sua rarità, pubblicare codice e PNG su `test7/main`
+e controllare visivamente e acusticamente la partita su StackBlitz. Non
+attribuire automaticamente a tutte le Armi uno sparo in base al solo elemento.
+Le altre Armi conservano un effetto provvisorio finché progettate una per una.
+
 ## Correzione del 24 novembre 2026 — cornici di rarità e simboli
 
 Le quattro cornici HD Comune, Rara, Epica e Leggendaria in `docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/` rappresentano **rarità, non categoria Arma**. Consultare [docs/BASI_UFFICIALI_RARITA_2026-11-24.md](docs/BASI_UFFICIALI_RARITA_2026-11-24.md). Sono PNG trasparenti 3072×4608, senza testi, icone o illustrazioni. L'arancione interno è il colore dell'esempio Arma: per Difesa o altra categoria adattare il colore interno; conservare geometria degli slot e finitura esterna della rarità. La Leggendaria approvata è in cristallo prismatico. Le vecchie anteprime Arma WebP del 23/11 sono ritirate. Non ridurre o ricostruire queste basi.
