@@ -1,0 +1,330 @@
+{
+  "sourceCommit": "db4bcb25de8a4334c0c8d71886bd6a086df2a9c7",
+  "physicalScale": 0.48,
+  "cases": [
+    {
+      "rarity": "Comune",
+      "supports": false,
+      "slot": 1,
+      "a": {
+        "shot": {
+          "actualDamage": "18",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Comune",
+          "shooter": "A",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "visibleEnd": "rear",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":225.00000304539043,\"y\":740.1488466333276}",
+          "physicalScale": "0.48",
+          "progress": "0.055",
+          "renderer": "cycles-views",
+          "shooter": "A",
+          "views": "[{\"row\":3,\"col\":1,\"end\":\"rear\",\"weight\":1}]",
+          "visibleEnd": "rear"
+        }
+      },
+      "b": {
+        "shot": {
+          "actualDamage": "17",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Comune",
+          "shooter": "B",
+          "targetId": "generator",
+          "targetKind": "part",
+          "visibleEnd": "front",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":225,\"y\":10.266770095046107}",
+          "physicalScale": "0.48",
+          "progress": "0.078",
+          "renderer": "cycles-views",
+          "shooter": "B",
+          "views": "[{\"row\":4,\"col\":1,\"end\":\"front\",\"weight\":1}]",
+          "visibleEnd": "front"
+        }
+      },
+      "hp": [
+        {
+          "label": "HP Lince Solare",
+          "value": "321"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "418"
+        }
+      ]
+    },
+    {
+      "rarity": "Rara",
+      "supports": false,
+      "slot": 2,
+      "a": {
+        "shot": {
+          "actualDamage": "45",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "shooter": "A",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "visibleEnd": "rear",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":225.00000235757344,\"y\":756.3767964129878}",
+          "physicalScale": "0.48",
+          "progress": "0.042",
+          "renderer": "cycles-views",
+          "shooter": "A",
+          "views": "[{\"row\":3,\"col\":1,\"end\":\"rear\",\"weight\":1}]",
+          "visibleEnd": "rear"
+        }
+      },
+      "b": {
+        "shot": {
+          "actualDamage": "43",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "shooter": "B",
+          "targetId": "generator",
+          "targetKind": "part",
+          "visibleEnd": "front",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":225,\"y\":-1.1918065230329233}",
+          "physicalScale": "0.48",
+          "progress": "0.039",
+          "renderer": "cycles-views",
+          "shooter": "B",
+          "views": "[{\"row\":4,\"col\":1,\"end\":\"front\",\"weight\":1}]",
+          "visibleEnd": "front"
+        }
+      },
+      "hp": [
+        {
+          "label": "HP Lince Solare",
+          "value": "406"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "535"
+        }
+      ]
+    },
+    {
+      "rarity": "Epica",
+      "supports": true,
+      "slot": 1,
+      "a": {
+        "shot": {
+          "actualDamage": "81",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":215.3912756412121,\"y\":759.0745174427914}",
+          "physicalScale": "0.48",
+          "progress": "0.043",
+          "renderer": "cycles-views",
+          "shooter": "A",
+          "views": "[{\"row\":3,\"col\":1,\"end\":\"rear\",\"weight\":1}]",
+          "visibleEnd": "rear"
+        }
+      },
+      "b": {
+        "shot": {
+          "actualDamage": "81",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":223.9421431409725,\"y\":-8.601815383245004}",
+          "physicalScale": "0.48",
+          "progress": "0.013",
+          "renderer": "cycles-views",
+          "shooter": "B",
+          "views": "[{\"row\":4,\"col\":1,\"end\":\"front\",\"weight\":1}]",
+          "visibleEnd": "front"
+        }
+      },
+      "hp": [
+        {
+          "label": "HP Prisma Silente",
+          "value": "44"
+        },
+        {
+          "label": "HP Lince Solare",
+          "value": "631"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "125"
+        },
+        {
+          "label": "HP Prisma Silente",
+          "value": "44"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "809"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "125"
+        }
+      ]
+    },
+    {
+      "rarity": "Leggendaria",
+      "supports": true,
+      "slot": 2,
+      "right": true,
+      "a": {
+        "shot": {
+          "actualDamage": "115",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":234.94946910595155,\"y\":757.1976730772876}",
+          "physicalScale": "0.48",
+          "progress": "0.044",
+          "renderer": "cycles-views",
+          "shooter": "A",
+          "views": "[{\"row\":3,\"col\":1,\"end\":\"rear\",\"weight\":1}]",
+          "visibleEnd": "rear"
+        }
+      },
+      "b": {
+        "shot": {
+          "actualDamage": "115",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":212.41621045246103,\"y\":28.423276264680865}",
+          "physicalScale": "0.48",
+          "progress": "0.141",
+          "renderer": "cycles-views",
+          "shooter": "B",
+          "views": "[{\"row\":4,\"col\":1,\"end\":\"front\",\"weight\":1}]",
+          "visibleEnd": "front"
+        }
+      },
+      "hp": [
+        {
+          "label": "HP Prisma Silente",
+          "value": "174"
+        },
+        {
+          "label": "HP Lince Solare",
+          "value": "820"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "59"
+        },
+        {
+          "label": "HP Prisma Silente",
+          "value": "59"
+        },
+        {
+          "label": "HP Aurora-0",
+          "value": "1050"
+        },
+        {
+          "label": "HP Corvo Esploratore",
+          "value": "174"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "targetedTests": 21,
+    "failures": 0,
+    "build": "passed",
+    "preflight": "passed",
+    "githubRun": 45476289858,
+    "githubConclusion": "success",
+    "head": "Otto piastre compatte e pistone metallico frontale, senza cornice quadrata vuota",
+    "flightMs": 1400,
+    "impactMs": 950
+  },
+  "video": {
+    "filename": "Maglio_testata_compatta_StackBlitz.mp4",
+    "durationSeconds": 40.659,
+    "bytes": 9602222,
+    "sha256": "59f461af4449894649b12a46deab64e4b40f7e396853fe0e867d12a0b7975eb5",
+    "width": 900,
+    "height": 1600,
+    "fps": 30,
+    "audio": true,
+    "audioPeakDb": -2.5,
+    "playbackSpeed": 1
+  }
+}

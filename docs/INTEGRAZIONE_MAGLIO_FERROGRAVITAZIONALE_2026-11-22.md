@@ -125,3 +125,24 @@ I danni, i turni, le carte HD e il layout della plancia non sono modificati.
 
 Video finale: 40,821 s, 900×1600 a 30 fps, H.264/AAC, picco audio -2.9 dB.
 SHA-256: `08690a66ee186f7a79a0d7c903067108c6bfbc34d8dacc68ed507d9ad21fa72b`.
+
+
+## Correzione utente: testata compatta e dimensioni — 24 novembre
+
+La testata della prova precedente sembrava una grande cornice quadrata
+vuota ed era troppo ingombrante. È sostituita con otto piastre attorno
+al pistone d’urto metallico. Il proiettile in partita ha scala fisica
+0,48 rispetto al modello artistico precedente; anche scia, ugello e
+distanza fra centro e punta seguono questa scala. La punta rimane ancorata
+al bersaglio in entrambe le direzioni. I 96 render PNG sono stati rigenerati.
+
+Sorgente verificata in StackBlitz: `db4bcb25de8a4334c0c8d71886bd6a086df2a9c7`.
+Quattro rarità, otto spari reali, slot 1 e 2, bersagli madre e supporti
+sinistro/destro; dati in `testata-compatta-verifica.json` nella cartella
+del collaudo. Verificati nel nuovo video scala e assenza del grande
+riquadro frontale. Volo 1.400 ms e impatto 950 ms restano invariati.
+21 test pertinenti, build, preflight e controlli GitHub superati.
+La carta mostrata prima dello sparo non è modificata: l’utente ha precisato
+che il riquadro da correggere era la testa del proiettile.
+
+Nuova registrazione reale con audio: `Maglio_testata_compatta_StackBlitz.mp4`.
