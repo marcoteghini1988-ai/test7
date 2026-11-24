@@ -75,4 +75,4 @@ in un atlante PNG RGBA. Volo di 1.400 ms e impatto di 950 ms, con prospettiva
 verso il bersaglio. Il suono d’impatto, la reazione della nave e il termine
 della risoluzione condividono la stessa durata. Il calcolo include tutte
 le carte mostrate prima dell’ultimo colpo; il timer del nuovo turno
-riparte dopo l’impatto. Il successivo collaudo StackBlitz verifica questa revisione.
+riparte dopo l’impatto. Il collaudo StackBlitz della revisione `979bbc6553f314a6add8a935c35213aa9d0a2d5b` è concluso: quattro rarità, otto spari reali nei due sensi, tempi CSS di 1,4 s verificati, slot 1 e 2, bersagli madre e supporti. La registrazione mantiene la velocità reale di gioco. Dettagli in `docs/collaudi/effetti-2026-11-24/proiettili-velocita-verifica.json`. Validazione aggiornata: 1.998 test superati, build, controlli GitHub e collaudo mobile automatico superati.

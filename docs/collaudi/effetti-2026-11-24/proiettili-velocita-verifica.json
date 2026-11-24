@@ -1,0 +1,177 @@
+{
+  "sourceCommit": "979bbc6553f314a6add8a935c35213aa9d0a2d5b",
+  "checkedAt": "2026-11-24T19:05:24.868Z",
+  "url": "https://test7-jjhn--5173--668d8eeb.local-credentialless.webcontainer.io/.maglio-review.html",
+  "cases": [
+    {
+      "rarity": "Comune",
+      "supports": false,
+      "slot": 1,
+      "player": [
+        {
+          "actualDamage": "18",
+          "cssFlight": "1.4s",
+          "flightMs": "1400",
+          "image": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/979bbc6553f314a6add8a935c35213aa9d0a2d5b/public/assets/fleet-weapons/maglio/projectiles/approved-atlas.png",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "rarity": "Comune",
+          "shooter": "A",
+          "sprite": "0 175 480.5 610",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "weaponKind": "gravity-maul"
+        }
+      ],
+      "enemy": [
+        {
+          "actualDamage": "17",
+          "cssFlight": "1.4s",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "rarity": "Comune",
+          "shooter": "B",
+          "sprite": "0 175 480.5 610",
+          "targetId": "generator",
+          "targetKind": "part",
+          "weaponKind": "gravity-maul"
+        }
+      ]
+    },
+    {
+      "rarity": "Rara",
+      "supports": false,
+      "slot": 2,
+      "player": [
+        {
+          "actualDamage": "45",
+          "cssFlight": "1.4s",
+          "flightMs": "1400",
+          "image": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/979bbc6553f314a6add8a935c35213aa9d0a2d5b/public/assets/fleet-weapons/maglio/projectiles/approved-atlas.png",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "rarity": "Rara",
+          "shooter": "A",
+          "sprite": "480.5 175 480.5 610",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "weaponKind": "gravity-maul"
+        }
+      ],
+      "enemy": [
+        {
+          "actualDamage": "43",
+          "cssFlight": "1.4s",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "rarity": "Rara",
+          "shooter": "B",
+          "sprite": "480.5 175 480.5 610",
+          "targetId": "generator",
+          "targetKind": "part",
+          "weaponKind": "gravity-maul"
+        }
+      ]
+    },
+    {
+      "rarity": "Epica",
+      "supports": true,
+      "slot": 1,
+      "player": [
+        {
+          "actualDamage": "81",
+          "cssFlight": "1.4s",
+          "flightMs": "1400",
+          "image": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/979bbc6553f314a6add8a935c35213aa9d0a2d5b/public/assets/fleet-weapons/maglio/projectiles/approved-atlas.png",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "rarity": "Epica",
+          "shooter": "A",
+          "sprite": "961 175 480.5 610",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "weaponKind": "gravity-maul"
+        }
+      ],
+      "enemy": [
+        {
+          "actualDamage": "81",
+          "cssFlight": "1.4s",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "rarity": "Epica",
+          "shooter": "B",
+          "sprite": "961 175 480.5 610",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "weaponKind": "gravity-maul"
+        }
+      ]
+    },
+    {
+      "rarity": "Leggendaria",
+      "supports": true,
+      "slot": 2,
+      "player": [
+        {
+          "actualDamage": "115",
+          "cssFlight": "1.4s",
+          "flightMs": "1400",
+          "image": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/979bbc6553f314a6add8a935c35213aa9d0a2d5b/public/assets/fleet-weapons/maglio/projectiles/approved-atlas.png",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "rarity": "Leggendaria",
+          "shooter": "A",
+          "sprite": "1441.5 175 480.5 610",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "weaponKind": "gravity-maul"
+        }
+      ],
+      "enemy": [
+        {
+          "actualDamage": "115",
+          "cssFlight": "1.4s",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "rarity": "Leggendaria",
+          "shooter": "B",
+          "sprite": "1441.5 175 480.5 610",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "weaponKind": "gravity-maul"
+        }
+      ]
+    }
+  ],
+  "testsPassed": 1998,
+  "testsFailed": 0,
+  "productionBuild": "passed",
+  "githubCi": "passed",
+  "githubMobileCi": "passed",
+  "flightMs": 1400,
+  "impactMs": 950,
+  "assetAtlas": "public/assets/fleet-weapons/maglio/projectiles/approved-atlas.png",
+  "renderer": "OfficialFleetBattle3D + MaglioBattleEffects",
+  "recordedVideo": "Maglio_4_rarita_proiettili_leggibili.mp4",
+  "videoWidth": 900,
+  "videoHeight": 1600,
+  "videoFps": 30,
+  "captureType": "Actual StackBlitz browser tab and its audio; lead-in trimmed; export audio gain 0.7",
+  "videoDurationSeconds": 46.853,
+  "videoSha256": "a6aca8b5fa8a1915f0a748b0142b2b48559460c0095d73bad02a941229b517eb",
+  "audioMeanDb": -28.8,
+  "audioPeakDb": -2.9
+}
