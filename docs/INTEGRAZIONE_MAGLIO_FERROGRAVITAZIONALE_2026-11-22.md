@@ -69,6 +69,9 @@ riuscita, controlli GitHub e collaudo mobile automatico riusciti.
 
 ## Revisione approvata: proiettili illustrati e volo leggibile
 
+**Revisione superata per la prospettiva:** conservava la stessa vista obliqua nei due sensi.
+L’illustrazione e i tempi restano approvati; il rendering è sostituito dalla revisione seguente.
+
 La proposta dei quattro proiettili è approvata dall’utente. Il renderer usa
 le sagome illustrate con piastre, giroscopi, dissipatori e prismi, raccolte
 in un atlante PNG RGBA. Volo di 1.400 ms e impatto di 950 ms, con prospettiva
@@ -76,3 +79,49 @@ verso il bersaglio. Il suono d’impatto, la reazione della nave e il termine
 della risoluzione condividono la stessa durata. Il calcolo include tutte
 le carte mostrate prima dell’ultimo colpo; il timer del nuovo turno
 riparte dopo l’impatto. Il collaudo StackBlitz della revisione `979bbc6553f314a6add8a935c35213aa9d0a2d5b` è concluso: quattro rarità, otto spari reali nei due sensi, tempi CSS di 1,4 s verificati, slot 1 e 2, bersagli madre e supporti. La registrazione mantiene la velocità reale di gioco. Dettagli in `docs/collaudi/effetti-2026-11-24/proiettili-velocita-verifica.json`. Validazione aggiornata: 1.998 test superati, build, controlli GitHub e collaudo mobile automatico superati.
+
+
+## Prospettiva corretta e nuovo collaudo StackBlitz — 24 novembre
+
+Codice verificato: `a58773e6270cfacc9b7e42070d4f8afa962f7916`.
+Asset immutabili: `65d93a1b63a1839e7ce1775139f860aa431f6f8a`.
+I sette file del renderer copiati nel progetto StackBlitz sono stati verificati
+con il loro blob SHA Git, compreso `OfficialFleetBattle3D.jsx` completo.
+
+La munizione è ricostruita come volume in `src/maglioProjectile3D.js`: piastre
+smussate e rivetti Comune, giroscopi bronzo Rara, manicotti e dissipatori Epica,
+prismi e nucleo bianco violetto Leggendaria. Una camera fissa sul tavolo
+ricava la traiettoria dalle coordinate reali della plancia. Il naso della
+testata arriva al bersaglio; la scala cambia con la profondità e il lato
+superiore rimane verso l’alto. A mostra il retro, B mostra il fronte.
+
+Per conservare ombre, riflessi e incassi senza WebGL, il renderer seleziona
+24 viste fisiche Cycles dello stesso volume per rarità (96 in totale).
+Gli atlanti sono PNG RGBA 1152×3840, con celle 384×480. Le viste coprono
+fronte e retro, azimut −24°/0°/+24° e elevazioni 28°/42°/56°/70°; le brevi
+transizioni evitano di lasciare a lungo sovrapposte le piastre di due viste.
+La mesh CPU è disponibile durante il caricamento. Il modello non viene
+ricreato a ogni aggiornamento del timer. I render sono riproducibili con
+`scripts/build-maglio-projectile-atlas.mjs`.
+
+La nuova prova ha eseguito il motore e la plancia ufficiali: Comune e Rara
+contro la madre, Epica contro il supporto sinistro, Leggendaria contro
+il supporto destro; risposta della vera IA in tutti e quattro i casi.
+Otto spari, un proiettile per evento, volo 1.400 ms, impatto 950 ms.
+Il nuovo turno ha riavuto 30 secondi dopo la fine di ciascuna sequenza.
+Dati osservati in `docs/collaudi/effetti-2026-11-24/prospettiva-verifica.json`.
+
+La registrazione `Maglio_4_rarita_prospettiva_StackBlitz.mp4` è una cattura
+della scheda StackBlitz con audio della partita, ritagliata sulla plancia
+9:16. La velocità di gioco è mantenuta. Sono stati controllati i fotogrammi
+del volo nelle due direzioni, le finiture di rarità e gli impatti sui due
+supporti laterali. Non è una dimostrazione isolata del proiettile.
+
+Verifica: 2.007 test logici superati, nessun fallimento; test aggiuntivi
+sulla proiezione, sulle viste e sul rasterizzatore CPU superati; build e
+preflight riusciti. Controlli GitHub del codice `a58773e` riusciti; collaudo
+mobile automatico della sorgente degli asset `65d93a1` riuscito.
+I danni, i turni, le carte HD e il layout della plancia non sono modificati.
+
+Video finale: 40,821 s, 900×1600 a 30 fps, H.264/AAC, picco audio -2.9 dB.
+SHA-256: `08690a66ee186f7a79a0d7c903067108c6bfbc34d8dacc68ed507d9ad21fa72b`.

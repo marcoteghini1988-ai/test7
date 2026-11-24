@@ -1,0 +1,300 @@
+{
+  "sourceCommit": "a58773e6270cfacc9b7e42070d4f8afa962f7916",
+  "assetCommit": "65d93a1b63a1839e7ce1775139f860aa431f6f8a",
+  "cases": [
+    {
+      "rarity": "Comune",
+      "supports": false,
+      "slot": 1,
+      "a": {
+        "shot": {
+          "actualDamage": "18",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Comune",
+          "shooter": "A",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "visibleEnd": "rear",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":225.00000537330615,\"y\":685.2253696809283}",
+          "progress": "0.102",
+          "renderer": "cycles-views",
+          "shooter": "A",
+          "views": "[{\"row\":2,\"col\":1,\"end\":\"rear\",\"weight\":0.065},{\"row\":3,\"col\":1,\"end\":\"rear\",\"weight\":0.935}]",
+          "visibleEnd": "rear"
+        }
+      },
+      "b": {
+        "shot": {
+          "actualDamage": "17",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Comune",
+          "shooter": "B",
+          "targetId": "generator",
+          "targetKind": "part",
+          "visibleEnd": "front",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":225,\"y\":-11.175512674162302}",
+          "progress": "0.003",
+          "renderer": "cycles-views",
+          "shooter": "B",
+          "views": "[{\"row\":4,\"col\":1,\"end\":\"front\",\"weight\":1}]",
+          "visibleEnd": "front"
+        }
+      },
+      "hp": [
+        {
+          "label": "Tempo rimanente del turno",
+          "value": "30"
+        }
+      ]
+    },
+    {
+      "rarity": "Rara",
+      "supports": false,
+      "slot": 2,
+      "a": {
+        "shot": {
+          "actualDamage": "45",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "shooter": "A",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "visibleEnd": "rear",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":225.00000346078406,\"y\":730.3482923847736}",
+          "progress": "0.063",
+          "renderer": "cycles-views",
+          "shooter": "A",
+          "views": "[{\"row\":3,\"col\":1,\"end\":\"rear\",\"weight\":1}]",
+          "visibleEnd": "rear"
+        }
+      },
+      "b": {
+        "shot": {
+          "actualDamage": "43",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "shooter": "B",
+          "targetId": "generator",
+          "targetKind": "part",
+          "visibleEnd": "front",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":225,\"y\":11.952334028075251}",
+          "progress": "0.084",
+          "renderer": "cycles-views",
+          "shooter": "B",
+          "views": "[{\"row\":4,\"col\":1,\"end\":\"front\",\"weight\":1}]",
+          "visibleEnd": "front"
+        }
+      },
+      "hp": [
+        {
+          "label": "Tempo rimanente del turno",
+          "value": "30"
+        }
+      ]
+    },
+    {
+      "rarity": "Epica",
+      "supports": true,
+      "slot": 1,
+      "a": {
+        "shot": {
+          "actualDamage": "81",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":211.25660630953817,\"y\":736.3004881937155}",
+          "progress": "0.062",
+          "renderer": "cycles-views",
+          "shooter": "A",
+          "views": "[{\"row\":3,\"col\":1,\"end\":\"rear\",\"weight\":1}]",
+          "visibleEnd": "rear"
+        }
+      },
+      "b": {
+        "shot": {
+          "actualDamage": "81",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":220.9047981132936,\"y\":1.1551371389813436}",
+          "progress": "0.048",
+          "renderer": "cycles-views",
+          "shooter": "B",
+          "views": "[{\"row\":4,\"col\":1,\"end\":\"front\",\"weight\":1}]",
+          "visibleEnd": "front"
+        }
+      },
+      "hp": [
+        {
+          "label": "Tempo rimanente del turno",
+          "value": "30"
+        }
+      ]
+    },
+    {
+      "rarity": "Leggendaria",
+      "supports": true,
+      "slot": 2,
+      "right": true,
+      "a": {
+        "shot": {
+          "actualDamage": "115",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":235.36641021819293,\"y\":754.9011341466925}",
+          "progress": "0.046",
+          "renderer": "cycles-views",
+          "shooter": "A",
+          "views": "[{\"row\":3,\"col\":1,\"end\":\"rear\",\"weight\":1}]",
+          "visibleEnd": "rear"
+        }
+      },
+      "b": {
+        "shot": {
+          "actualDamage": "115",
+          "flightMs": "1400",
+          "impactAtMs": "2900",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "gravity-maul"
+        },
+        "view": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":220.1354940230472,\"y\":3.6263952329045335}",
+          "progress": "0.057",
+          "renderer": "cycles-views",
+          "shooter": "B",
+          "views": "[{\"row\":4,\"col\":1,\"end\":\"front\",\"weight\":1}]",
+          "visibleEnd": "front"
+        }
+      },
+      "hp": [
+        {
+          "label": "Tempo rimanente del turno",
+          "value": "30"
+        }
+      ]
+    }
+  ],
+  "flightMs": 1400,
+  "impactMs": 950,
+  "logicTests": {
+    "tests": 2007,
+    "pass": 2007,
+    "fail": 0
+  },
+  "finalRarityHp": {
+    "enemyRight": 59,
+    "playerLeft": 59,
+    "enemyMother": 820,
+    "playerMother": 1050
+  },
+  "viewsPerRarity": 24,
+  "totalViews": 96,
+  "bakedRenderer": "Blender Cycles CPU",
+  "observedViewDirections": {
+    "A": "rear",
+    "B": "front"
+  },
+  "video": {
+    "filename": "Maglio_4_rarita_prospettiva_StackBlitz.mp4",
+    "sha256": "08690a66ee186f7a79a0d7c903067108c6bfbc34d8dacc68ed507d9ad21fa72b",
+    "bytes": 10189022,
+    "durationSeconds": 40.821,
+    "width": 900,
+    "height": 1600,
+    "fps": 30,
+    "videoCodec": "H.264",
+    "audioCodec": "AAC",
+    "sampleRate": 48000,
+    "audioPeakDb": -2.9,
+    "audioMeanDb": -28.4,
+    "exportVolume": 0.7,
+    "playbackSpeed": 1,
+    "capture": "Browser tab StackBlitz, plancia ufficiale e audio della scheda"
+  },
+  "githubChecks": {
+    "code": {
+      "sha": "a58773e6270cfacc9b7e42070d4f8afa962f7916",
+      "run": 45472823497,
+      "conclusion": "success"
+    },
+    "mobile": {
+      "sha": "65d93a1b63a1839e7ce1775139f860aa431f6f8a",
+      "run": 45472305768,
+      "conclusion": "success"
+    }
+  }
+}
