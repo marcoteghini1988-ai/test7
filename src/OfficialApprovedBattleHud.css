@@ -283,6 +283,25 @@
 }
 .es-math-scope .f3d-approved-layout .live-hand-special[data-family="energy"] .live-card-rarity {background:#4b3306eb;color:#ffe4a1}
 
+/* I fronti completi approvati contengono già cornice, simboli e testi.
+   Il selettore segue l'immagine caricata: se scatta il fallback, la scheda
+   generica torna leggibile senza nascondere le informazioni della carta. */
+.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"]) {
+ background:transparent;
+}
+.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"]):not(.live-chosen) {
+ border-color:transparent;box-shadow:none;
+}
+.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"])>img {
+ object-fit:contain;filter:none;
+}
+.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"])::after,
+.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"])>.live-card-emblem,
+.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"])>.live-card-rarity,
+.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"])>.live-card-caption {
+ display:none;
+}
+
 /* Due console compatte: HP e componenti condividono il medesimo telaio. */
 .es-math-scope .f3d-approved-layout .f3d-fleet-console {
  position:absolute;left:7px;right:7px;height:52px;z-index:30;isolation:isolate;
