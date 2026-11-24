@@ -1,0 +1,313 @@
+{
+  "date": "2026-11-24",
+  "sourceCommit": "5d4b3762eb0f6c6414b5dba674cb1b14af045e01",
+  "request": [
+    "Supporti leggermente più grandi",
+    "Navi sollevate dal piano e reattori di tutte le navi in movimento"
+  ],
+  "supportSize": {
+    "previousCssPx": [
+      84,
+      64
+    ],
+    "currentCssPx": [
+      94,
+      72
+    ],
+    "widthIncreasePercent": 11.9,
+    "slotCentersPreserved": true
+  },
+  "presentation": {
+    "hulls": "Movimento lento con fasi diverse, ombra separata sul piano",
+    "reactors": "Due ugelli per modello, colore originale dello scafo, direzione coerente con il lato",
+    "visibility": "Reattori fusi solidali allo scafo; trasparenza rispettata sui supporti nascosti; spenti sulle navi distrutte"
+  },
+  "stackblitz": {
+    "page": "/.maglio-review.html",
+    "fixture": "Motore di battaglia e plancia ufficiali; selettori di flotta e registrazione solo nel collaudo di sviluppo",
+    "modelChecks": [
+      {
+        "flow": [
+          "-27.4894px",
+          "-27.428px",
+          "-64.4537px",
+          "-75.5676px",
+          "-27.4894px",
+          "-27.428px",
+          "-64.4537px",
+          "-75.5676px",
+          "-27.4894px",
+          "-27.428px",
+          "-64.4537px",
+          "-75.5676px",
+          "-0.167946px",
+          "-81.8466px",
+          "-37.1322px",
+          "-39.9862px",
+          "-0.167946px",
+          "-81.8466px",
+          "-37.1322px",
+          "-39.9862px",
+          "-0.167946px",
+          "-81.8466px",
+          "-37.1322px",
+          "-39.9862px"
+        ],
+        "hovers": [
+          {
+            "animation": "f3d-craft-float",
+            "transform": "matrix(0.999998, 0.00197494, -0.00197494, 0.999998, 0, -6.49126)"
+          },
+          {
+            "animation": "f3d-craft-float",
+            "transform": "matrix(1, 0.000695646, -0.000695646, 1, 0, -5.30071)"
+          },
+          {
+            "animation": "f3d-craft-float",
+            "transform": "matrix(0.999989, -0.00477939, 0.00477939, 0.999989, 0, -6.8692)"
+          },
+          {
+            "animation": "f3d-craft-float",
+            "transform": "matrix(1, 0.000433277, -0.000433277, 1, 0, -7.669)"
+          },
+          {
+            "animation": "f3d-craft-float",
+            "transform": "matrix(0.999992, 0.00405166, -0.00405166, 0.999992, 0, -4.33928)"
+          },
+          {
+            "animation": "f3d-craft-float",
+            "transform": "matrix(0.999989, 0.00471622, -0.00471622, 0.999989, 0, -4.1489)"
+          }
+        ],
+        "name": "Aurora / Lince",
+        "ships": [
+          {
+            "model": "C01",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "C02",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "C03",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "N00",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "C02",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "C03",
+            "ports": 2,
+            "side": "player"
+          }
+        ],
+        "supportWidth": "94px"
+      },
+      {
+        "loaded": true,
+        "name": "Binaria / Manta",
+        "ships": [
+          {
+            "model": "R02",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "C04",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "E03",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "R01",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "C04",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "E03",
+            "ports": 2,
+            "side": "player"
+          }
+        ]
+      },
+      {
+        "loaded": true,
+        "name": "Squalo / Tempesta",
+        "ships": [
+          {
+            "model": "E02",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "E01",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "L02",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "R04",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "E01",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "L02",
+            "ports": 2,
+            "side": "player"
+          }
+        ]
+      },
+      {
+        "loaded": true,
+        "name": "Regina / Titano",
+        "ships": [
+          {
+            "model": "L03",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "L04",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "N00",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "L01",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "L04",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "N00",
+            "ports": 2,
+            "side": "player"
+          }
+        ]
+      },
+      {
+        "loaded": true,
+        "name": "Nebula / Arca",
+        "ships": [
+          {
+            "model": "L04",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "L01",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "L03",
+            "ports": 2,
+            "side": "enemy"
+          },
+          {
+            "model": "E01",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "L01",
+            "ports": 2,
+            "side": "player"
+          },
+          {
+            "model": "L03",
+            "ports": 2,
+            "side": "player"
+          }
+        ]
+      }
+    ],
+    "motion": {
+      "allShipsMove": true,
+      "allJetsMove": true
+    },
+    "fusion": [
+      {
+        "model": "C01",
+        "ports": 2,
+        "side": "enemy"
+      },
+      {
+        "model": "C01",
+        "ports": 2,
+        "side": "player"
+      }
+    ],
+    "destroyedSupport": [
+      {
+        "hoverAnimation": "none",
+        "id": "escort:maglio-review-B-1",
+        "reactors": 0,
+        "side": "B"
+      }
+    ]
+  },
+  "validation": {
+    "targetedNodeTests": "passed",
+    "build": "passed",
+    "preflight": "passed",
+    "githubWorkflow": {
+      "runId": 45483158636,
+      "conclusion": "success",
+      "checks": [
+        "npm run preflight",
+        "npm run verify:logic",
+        "npm run build"
+      ]
+    }
+  },
+  "video": {
+    "filename": "Flotta_sospesa_reattori_StackBlitz.mp4",
+    "libraryFileId": "libfile_c0c39cd79c388191aeec8ba910dcaea3",
+    "durationSeconds": 54.5,
+    "width": 900,
+    "height": 1600,
+    "fps": 30,
+    "videoCodec": "H264",
+    "audioCodec": "AAC",
+    "sha256": "542e45120e205d8acff658f06707886e38c8500f217f447a86755261cf7f40b2",
+    "capture": "Ripresa della scheda StackBlitz; nessun cambiamento di velocità"
+  }
+}
