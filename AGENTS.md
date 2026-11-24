@@ -1,12 +1,14 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
-## Aggiornamento approvato il 24 novembre 2026 — basi vuote Arma HD
+## Correzione del 24 novembre 2026 — cornici di rarità e simboli
 
-Le quattro basi **Arma** Comune, Rara, Epica e Leggendaria approvate sono i PNG trasparenti 3072×4608 in `docs/riferimenti-carte/basi-arma-ufficiali-2026-11-24/`. Prima di creare una Carta Arma aprire e usare materialmente la base della sua rarità; consultare [docs/BASI_UFFICIALI_ARMA_2026-11-24.md](docs/BASI_UFFICIALI_ARMA_2026-11-24.md). Sono cornici vuote, senza testi, icone o illustrazioni. La Leggendaria Arma ha finitura di cristallo prismatico; questa scelta più recente prevale sull'oro della matrice precedente **solo per la categoria Arma**. Le quattro vecchie anteprime Arma in WebP del 23/11 sono state ritirate. Non usarle né ricostruire le nuove basi da immagini ridotte. Restano validi i simboli originali del 21/11 e la verifica della carta completa prima di inserirla nel gioco.
+Le quattro cornici HD Comune, Rara, Epica e Leggendaria in `docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/` rappresentano **rarità, non categoria Arma**. Consultare [docs/BASI_UFFICIALI_RARITA_2026-11-24.md](docs/BASI_UFFICIALI_RARITA_2026-11-24.md). Sono PNG trasparenti 3072×4608, senza testi, icone o illustrazioni. L'arancione interno è il colore dell'esempio Arma: per Difesa o altra categoria adattare il colore interno; conservare geometria degli slot e finitura esterna della rarità. La Leggendaria approvata è in cristallo prismatico. Le vecchie anteprime Arma WebP del 23/11 sono ritirate. Non ridurre o ricostruire queste basi.
+
+Il simbolo della **categoria variabile** va nello slot tondo sinistro; l'eventuale elemento nello slot tondo destro. L'utente ha autorizzato prove di nuovi simboli fedeli ai soggetti della tavola del 21/11 ma adattati ai fori circolari, senza il vecchio contenitore a rombo/esagono. Le prove non sono asset approvati: mostrarle e ottenere approvazione prima di inserirle nel gioco. La tavola del 21/11 rimane fonte visiva dei soggetti fino all'approvazione dei nuovi simboli.
 
 ## Aggiornamento approvato il 23 novembre 2026 — cornici di rarità
 
-Leggere [docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md](docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md) per la palette aggiornata il 23/11: **Comune grafite, Rara sabbia bronzata, Epica argento, Leggendaria oro**. Le quattro basi vuote Attacco in `docs/riferimenti-carte/nuove-basi-2026-11-23/attacco/` sono approvate. Per Arma vale l'aggiornamento del 24/11 sopra. Il colore interno rimane quello della categoria. Le basi delle altre categorie devono essere verificate visivamente prima di diventare fronti giocabili.
+Leggere [docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md](docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md) per la palette del 23/11: **Comune grafite, Rara sabbia bronzata, Epica argento, Leggendaria oro**. Le quattro basi vuote Attacco del 23/11 sono approvate. Le quattro cornici HD più recenti del 24/11 sono riferimenti di rarità trasversali alle categorie, inclusa la Leggendaria prismatica; gli accenti interni e i simboli cambiano con categoria ed elemento. Le varianti delle altre categorie vanno verificate visivamente prima di diventare fronti giocabili.
 
 ## IMPORTANTISSIMO — ogni richiesta «crea una carta»
 
@@ -19,16 +21,19 @@ PNG dei simboli ufficiali → composizione sul modello ORIGINALE → controllo
 visuale → anteprima in chat → approvazione prima dell'inserimento.**
 
 Sorgenti obbligatorie, originali da riutilizzare MATERIALMENTE:
+- `docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/` (quattro cornici HD)
 - `docs/riferimenti-carte/BASE_UFFICIALE_CARTE_2026-11-21.png`
 - `docs/riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png`
 - `docs/CARTE_RIFERIMENTI_GRAFICI_UFFICIALI_2026-11-21.md`
 - `src/fleetNext/rules.js`, `src/fleetNext/weaponRarityEvolutions.js`
 - `docs/VALORI_QUASI_DEFINITIVI_235_ARMI_2026-11-22.md` per le Armi
 
-**Divieto assoluto** di inventare icone "simili": ARMA è la torretta/cannone
-futuristico arancione **esattamente nella tavola ufficiale**, non cannone
-storico su ruote o mirino. Le icone elemento si ritagliano realmente dalla
-stessa tavola. Nessun logo del gioco sulle carte. Grafica base immutabile.
+Fino all'approvazione dei nuovi simboli, usare i soggetti della tavola
+ufficiale: ARMA è la torretta/cannone futuristico arancione, non cannone
+storico su ruote o mirino. Le prove autorizzate possono eliminare i vecchi
+contorni a rombo/esagono e adattare scala e composizione ai fori circolari,
+conservando il soggetto riconoscibile. Nessun logo del gioco sulle carte.
+Grafica della cornice esterna immutabile.
 Le rarità cambiano la finitura esterna, non la categoria.
 
 **Ogni evoluzione della stessa carta deve avere un dettaglio VISIVO
@@ -68,4 +73,4 @@ Non creare cloni, progetti paralleli o versioni di prova.
 Non cambiare meccaniche, valori, layout della plancia 3D o vecchie
 immagini approvate mentre si crea un'anteprima carta.
 
-**Questa è una regola operativa persistente del progetto.**
+**Questa è una regola operativa persistente del progetto.** Le prove di simboli restano separate dalle carte giocabili fino alla loro approvazione.
