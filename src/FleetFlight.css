@@ -52,6 +52,9 @@
 .es-math-scope .f3d-approved-layout .official-mother[data-flight-alive="false"] .f3d-craft-hover {
  animation:none;transform:translateY(0);
 }
+.es-math-scope .f3d-original-arena .f3d-escort--veiled .f3d-escort-visual {
+ opacity:.37;filter:grayscale(.6) brightness(1.17) blur(.5px);
+}
 @keyframes f3d-craft-float {
  0%,100% {transform:translate3d(0,var(--flight-low),0) rotate(var(--flight-roll))}
  50% {transform:translate3d(0,var(--flight-high),0) rotate(calc(var(--flight-roll)*-1))}
