@@ -1,0 +1,26 @@
+[
+  {
+    "name": "weapon-confirmed-metallic-maglio.png",
+    "rarity": "comune",
+    "parts": 3,
+    "sha256": "ffcc9b548cb81e7efd000b8676d3fa94c8f6b0754999ce16b5d6ece70bc931c8"
+  },
+  {
+    "name": "weapon-confirmed-metallic-maglio-rarity-r.png",
+    "rarity": "rara",
+    "parts": 3,
+    "sha256": "732d18584d6a04886a72abe165986dd44f34b584e003486b002ea4b1da39fe17"
+  },
+  {
+    "name": "weapon-confirmed-metallic-maglio-rarity-e.png",
+    "rarity": "epica",
+    "parts": 3,
+    "sha256": "9b6b1eb6efd2959184291f023c2b8e252ec03f9eef1da06f99231ed4d57e629b"
+  },
+  {
+    "name": "weapon-confirmed-metallic-maglio-rarity-l.png",
+    "rarity": "leggendaria",
+    "parts": 4,
+    "sha256": "65786345c13a140f8df7b888939972ee7634b85cdf2cd3b614829f32876cb532"
+  }
+]
