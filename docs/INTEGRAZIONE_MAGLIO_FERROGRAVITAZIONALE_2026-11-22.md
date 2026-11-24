@@ -35,3 +35,33 @@ Collegamento: `src/fleetNext/officialWeaponArt.js` →
 `src/fleetNext/rules.js` → `cardFacePath` → schermate già esistenti.
 Regressione: `src/fleetNextOfficialMaglioArt.test.js`.
 Per altre carte, seguire `docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md`.
+
+
+## Collaudo concluso su StackBlitz — 24 novembre 2026
+
+Codice e quattro PNG HD sono salvati in `test7/main`. Versione del codice
+collaudata: `59c3c31c71a86d21f4ec6db97d077156a6c38d55`.
+
+La prova ha eseguito il motore e `OfficialFleetBattle3D` originali, con
+la configurazione controllata di `scripts/maglioReviewBattle.js`. Sono
+verificati Comune e Rara contro la madre, Epica e Leggendaria contro i
+supporti, i due slot Arma e le due direzioni di tiro. Ogni attivazione
+produce un solo proiettile del Maglio e il bersaglio/danno calcolato dal
+motore. I dati osservati nel browser sono in
+`docs/collaudi/effetti-2026-11-24/stackblitz-verifica.json`.
+
+Il controllo visivo ha individuato e corretto le etichette generiche
+sovrapposte ai fronti completi nella mano. Sono conservati selezione,
+informazioni accessibili e scheda generica in caso di immagine mancante.
+I quattro fronti usati sono PNG 3072×4608, verificati tramite blob Git.
+
+La registrazione `Maglio_4_rarita_StackBlitz_con_audio.mp4` mostra
+Comune → Rara → Epica → Leggendaria, ciascuna con sparo del giocatore e
+risposta avversaria. È una cattura della vera scheda StackBlitz, ritagliata
+sulla plancia 9:16, con l'audio della scheda. Durata 49,915 secondi,
+900×1600 a 30 fps, H.264/AAC; è stato eliminato il tempo di preparazione
+e ridotto soltanto il volume dell'esportazione. La traccia audio è presente
+e il picco del file finale è −2,7 dB. Il video è stato consegnato in chat.
+
+Validazione: **1.996 test superati, zero fallimenti**, build di produzione
+riuscita, controlli GitHub e collaudo mobile automatico riusciti.

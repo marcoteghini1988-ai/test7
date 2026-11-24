@@ -1,0 +1,160 @@
+{
+  "checkedAt": "2026-11-24T18:25:37.763Z",
+  "runtime": "StackBlitz WebContainer",
+  "url": "https://test7-jjhn--5173--668d8eeb.local-credentialless.webcontainer.io/.maglio-review.html",
+  "sourceCommit": "59c3c31c71a86d21f4ec6db97d077156a6c38d55",
+  "capture": {
+    "kind": "recording of actual browser tab",
+    "width": 900,
+    "height": 1600,
+    "audio": "tab audio, recorded by MediaRecorder",
+    "file": "Maglio_4_rarita_StackBlitz_con_audio.mp4",
+    "durationSeconds": 49.915,
+    "frameRate": 30,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "sha256": "55f0e3a2136c81a638f661244bcf3c71d94ab753539d48dc167b6167c0d73377",
+    "trimmedLeadInSeconds": 21,
+    "recordedAudioGain": 0.7,
+    "audioMeanDb": -30.0,
+    "audioPeakDb": -2.7
+  },
+  "cases": [
+    {
+      "rarity": "Comune",
+      "supports": false,
+      "slot": 1,
+      "player": [
+        {
+          "actualDamage": "18",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "rarity": "Comune",
+          "shooter": "A",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "weaponKind": "gravity-maul"
+        }
+      ],
+      "enemy": [
+        {
+          "actualDamage": "17",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "rarity": "Comune",
+          "shooter": "B",
+          "targetId": "generator",
+          "targetKind": "part",
+          "weaponKind": "gravity-maul"
+        }
+      ]
+    },
+    {
+      "rarity": "Rara",
+      "supports": false,
+      "slot": 2,
+      "player": [
+        {
+          "actualDamage": "45",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "rarity": "Rara",
+          "shooter": "A",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "weaponKind": "gravity-maul"
+        }
+      ],
+      "enemy": [
+        {
+          "actualDamage": "43",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "rarity": "Rara",
+          "shooter": "B",
+          "targetId": "generator",
+          "targetKind": "part",
+          "weaponKind": "gravity-maul"
+        }
+      ]
+    },
+    {
+      "rarity": "Epica",
+      "supports": true,
+      "slot": 1,
+      "player": [
+        {
+          "actualDamage": "81",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "rarity": "Epica",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "weaponKind": "gravity-maul"
+        }
+      ],
+      "enemy": [
+        {
+          "actualDamage": "81",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "rarity": "Epica",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "weaponKind": "gravity-maul"
+        }
+      ]
+    },
+    {
+      "rarity": "Leggendaria",
+      "supports": true,
+      "slot": 2,
+      "player": [
+        {
+          "actualDamage": "115",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "rarity": "Leggendaria",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "weaponKind": "gravity-maul"
+        }
+      ],
+      "enemy": [
+        {
+          "actualDamage": "115",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "rarity": "Leggendaria",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "weaponKind": "gravity-maul"
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "logicTestsPassed": 1996,
+    "logicTestsFailed": 0,
+    "productionBuild": "passed",
+    "githubCi": "passed",
+    "githubMobileBrowserCi": "passed",
+    "handGenericOverlays": "hidden on approved fronts, fallback retained",
+    "handCssGitBlob": "3e9288b02ce39c0036a2df409c4eb550e4789e08",
+    "pngDimensions": [
+      3072,
+      4608
+    ]
+  },
+  "approvedPngBlobs": {
+    "weapon-confirmed-metallic-maglio-rarity-e.png": "2100bcf562b5f770e9fe3fd6442a25948d35baa6",
+    "weapon-confirmed-metallic-maglio-rarity-l.png": "242c7dbe3cb58a0682d7f54682d4e8a75c1e29bc",
+    "weapon-confirmed-metallic-maglio.png": "5e5d3d80a11ed8e791c9a4c969379b8829e6fb10",
+    "weapon-confirmed-metallic-maglio-rarity-r.png": "d8d849d2b3130b9ed0c58d08e2d16b1056be4616"
+  }
+}
