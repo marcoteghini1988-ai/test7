@@ -29,7 +29,7 @@ import bpy
 from mathutils import Matrix,Vector
 work,dest=map(Path,sys.argv[-2:]);extra='--extra' in sys.argv
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
-scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=48;scene.cycles.use_denoising=False
+scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=24;scene.cycles.use_denoising=False
 scene.render.resolution_x=384;scene.render.resolution_y=480;scene.render.resolution_percentage=100
 scene.render.film_transparent=True;scene.render.image_settings.file_format='PNG';scene.render.image_settings.color_mode='RGBA'
 scene.world.color=(.23,.23,.23);scene.view_settings.view_transform='AgX'

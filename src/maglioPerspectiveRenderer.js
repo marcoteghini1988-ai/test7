@@ -61,7 +61,7 @@ export class MaglioPerspectiveRenderer{
    ctx.save();ctx.scale(this.ratio,this.ratio);
    const image=images.get(model.userData.tier),center=worldPointToBoard(model.position,camera);
    const forward=new Vector3(0,0,-1).applyAxisAngle(new Vector3(0,1,0),model.rotation.y);
-   const nose=worldPointToBoard(model.position.clone().addScaledVector(forward,-MAGLIO_NOSE_Z),camera);
+   const nose=worldPointToBoard(model.position.clone().addScaledVector(forward,-MAGLIO_NOSE_Z*model.scale.z),camera);
    const dx=nose.x-center.x,dy=nose.y-center.y;
    const samples=projectileViewSamples(model,camera);
    this.lastSamples=samples.map(v=>({row:v.row,col:v.col,end:v.end,weight:Math.round(v.weight*1000)/1000}));

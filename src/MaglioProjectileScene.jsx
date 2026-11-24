@@ -2,7 +2,7 @@ import React,{useEffect,useRef} from 'react';
 import {Scene,Vector3} from 'three';
 import {MaglioPerspectiveRenderer} from './maglioPerspectiveRenderer.js';
 import {createProjectileCamera,createMaglioProjectile,disposeProjectile,
- projectileFlightFrame,worldPointToBoard} from './maglioProjectile3D.js';
+ projectileFlightFrame,worldPointToBoard,MAGLIO_PROJECTILE_SCALE} from './maglioProjectile3D.js';
 
 export default function MaglioProjectileScene({paths,startedAt}){
  const host=useRef(null);
@@ -18,7 +18,11 @@ export default function MaglioProjectileScene({paths,startedAt}){
   element.dataset.renderer='perspective-3d-views';
   element.append(trail,canvas);
   const scene=new Scene(),camera=createProjectileCamera();
-  const entries=paths.map(path=>({...path,model:createMaglioProjectile(path.profile.tier)}));
+  const entries=paths.map(path=>{
+   const model=createMaglioProjectile(path.profile.tier);model.scale.setScalar(MAGLIO_PROJECTILE_SCALE);
+   return {...path,model};
+  });
+  element.dataset.physicalScale=String(MAGLIO_PROJECTILE_SCALE);
   let raf=0;
   const draw=now=>{
    const age=now-startedAt;ctx.clearRect(0,0,450,800);
@@ -35,21 +39,21 @@ export default function MaglioProjectileScene({paths,startedAt}){
     element.dataset.progress=progress.toFixed(3);
     element.dataset.nose=JSON.stringify(worldPointToBoard(pose.nose,camera));
     // La scia nasce dall'ugello posteriore nello stesso spazio 3D del corpo.
-    const rear=pose.center.clone().addScaledVector(pose.direction,-.96);
+    const rear=pose.center.clone().addScaledVector(pose.direction,-.96*MAGLIO_PROJECTILE_SCALE);
     const head=worldPointToBoard(rear,camera);
-    const tail=worldPointToBoard(rear.clone().addScaledVector(pose.direction,-1.7),camera);
+    const tail=worldPointToBoard(rear.clone().addScaledVector(pose.direction,-1.7*MAGLIO_PROJECTILE_SCALE),camera);
     const radius=Math.hypot(head.x-tail.x,head.y-tail.y)*.30;
     const glow=ctx.createRadialGradient(head.x,head.y,0,head.x,head.y,radius);
     glow.addColorStop(0,profile.glow+'aa');glow.addColorStop(1,profile.glow+'00');
     ctx.fillStyle=glow;ctx.fillRect(head.x-radius,head.y-radius,radius*2,radius*2);
     ctx.globalAlpha=Math.min(1,progress*18,(1-progress)*22);
     for(let i=0;i<5+profile.tier*2;i++){
-     const a=i*2.39996,offset=new Vector3(Math.sin(a)*.12,Math.cos(a)*.12,0);
+     const a=i*2.39996,offset=new Vector3(Math.sin(a)*.12,Math.cos(a)*.12,0).multiplyScalar(MAGLIO_PROJECTILE_SCALE);
      const s=worldPointToBoard(rear.clone().add(offset),camera);
-     const e=worldPointToBoard(rear.clone().addScaledVector(pose.direction,-(1+i%4*.24)).add(offset.multiplyScalar(.35)),camera);
+     const e=worldPointToBoard(rear.clone().addScaledVector(pose.direction,-(1+i%4*.24)*MAGLIO_PROJECTILE_SCALE).add(offset.multiplyScalar(.35)),camera);
      const g=ctx.createLinearGradient(s.x,s.y,e.x,e.y);
      g.addColorStop(0,i%2?profile.core:profile.glow);g.addColorStop(1,profile.glow+'00');
-     ctx.strokeStyle=g;ctx.lineWidth=i===0?4:1.1;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(e.x,e.y);ctx.stroke();
+     ctx.strokeStyle=g;ctx.lineWidth=(i===0?4:1.1)*Math.sqrt(MAGLIO_PROJECTILE_SCALE);ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(e.x,e.y);ctx.stroke();
     }
     ctx.globalAlpha=1;
    }

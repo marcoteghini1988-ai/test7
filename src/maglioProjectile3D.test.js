@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {Vector3,Box3,Scene,BoxGeometry,Mesh,MeshStandardMaterial} from 'three';
 import {createProjectileCamera,projectileFlightFrame,worldPointToBoard,
- createMaglioProjectile,disposeProjectile,MAGLIO_NOSE_Z} from './maglioProjectile3D.js';
+ createMaglioProjectile,disposeProjectile,MAGLIO_NOSE_Z,MAGLIO_PROJECTILE_SCALE} from './maglioProjectile3D.js';
 import {MaglioSoftwareRenderer} from './maglioSoftwareRenderer.js';
 import {projectileViewSamples} from './maglioPerspectiveRenderer.js';
 
@@ -20,7 +20,7 @@ for(const who of ['A','B'])for(const x of [110,225,340]){
    assert.ok(views.every(v=>v.row>=0&&v.row<8&&v.col>=0&&v.col<3));
    const forward=new Vector3(0,0,-1).applyAxisAngle(new Vector3(0,1,0),frame.yaw);
    assert.ok(forward.dot(frame.direction)>1-1e-10,'La testata punta lungo la traiettoria');
-   const nose=frame.center.clone().addScaledVector(forward,-MAGLIO_NOSE_Z);
+   const nose=frame.center.clone().addScaledVector(forward,-MAGLIO_NOSE_Z*MAGLIO_PROJECTILE_SCALE);
    assert.ok(nose.distanceTo(frame.nose)<1e-10);
    const point=worldPointToBoard(nose,camera);
    if(t===0)assert.ok(Math.hypot(point.x-from.x,point.y-from.y)<1e-8);
@@ -45,7 +45,7 @@ test('La camera riduce fisicamente il corpo che si allontana e conserva la verti
 test('Quattro volumi con retro, testata, giroscopi, dissipatori e prismi fisici',()=>{
  for(let tier=0;tier<4;tier++){
   const model=createMaglioProjectile(tier),names=[];model.traverse(o=>names.push(o.name));
-  assert.ok(names.includes('Ugello interno')&&names.includes('Piastra orizzontale'));
+  assert.ok(names.includes('Ugello interno')&&names.includes('Segmento corazza testata'));
   assert.equal(names.includes('Giroscopio'),tier===1);
   assert.equal(names.includes('Aletta dissipatrice'),tier>=2);
   assert.equal(names.includes('Prisma sfaccettato'),tier===3);

@@ -6,6 +6,8 @@ import {RoundedBoxGeometry} from 'three/addons/geometries/RoundedBoxGeometry.js'
 // Una camera fissa sopra il tavolo. Origine e bersaglio sono misurati nel DOM
 // e riproiettati su questo piano: il naso arriva esattamente al punto colpito.
 export const MAGLIO_NOSE_Z=-.88;
+// Dimensione fisica in partita, distinta dal modello artistico e dai render.
+export const MAGLIO_PROJECTILE_SCALE=.48;
 export function createProjectileCamera(){
  const camera=new PerspectiveCamera(42,450/800,.1,100);
  camera.position.set(0,12,12);camera.lookAt(0,0,0);camera.updateMatrixWorld(true);
@@ -22,7 +24,7 @@ export function projectileFlightFrame(from,to,progress,camera){
  const a=boardPointToWorld(from,camera),b=boardPointToWorld(to,camera);
  const direction=b.clone().sub(a).normalize();
  const nose=a.clone().lerp(b,Math.max(0,Math.min(1,progress)));
- const center=nose.clone().addScaledVector(direction,MAGLIO_NOSE_Z);
+ const center=nose.clone().addScaledVector(direction,MAGLIO_NOSE_Z*MAGLIO_PROJECTILE_SCALE);
  return {nose,center,direction,yaw:Math.atan2(-direction.x,-direction.z),
   visibleEnd:direction.dot(camera.position.clone().sub(center))>0?'front':'rear'};
 }
@@ -89,28 +91,24 @@ export function createMaglioProjectile(tier=0){
  for(const z of [-.25,-.37,-.45])ring('Avvolgimento arancione',z,.47,.024,m.orange);
  ring('Bordo flangia',-.18,.514,.035,tier===1?m.bronze:m.edge);
  ring('Bordo anteriore flangia',-.49,.515,.032,m.edge);
- // Testa a quattro ganasce, con apertura centrale e piastre frontali separate.
- for(const side of [-1,1]){
-  box('Piastra orizzontale',[0,side*.49,-.63],[1.18,.29,.43],m.steel,.055);
-  box('Smusso piastra',[0,side*.59,-.67],[1.02,.058,.31],m.edge,.018);
-  for(const x of [-.42,-.14,.14,.42]){
-   box('Pannello superiore testata',[x,side*.64,-.63],[.255,.035,.27],m.dark,.012);
-   const o=cyl('Rivetto superiore',-.68,.016,.012,m.edge,6,x,side*.665);
-   o.rotation.x=side>0?0:Math.PI;
-  }
-  box('Giunto piastra',[0,side*.49,-.858],[.85,.046,.018],m.black,.005);
-  box('Fessura luminosa',[0,side*.49,-.871],[.76,.027,.016],m.orange,.004);
-  box('Mascella laterale',[side*.49,0,-.62],[.29,.73,.42],m.dark,.05);
-  box('Piastra laterale',[side*.608,0,-.64],[.05,.60,.32],m.edge,.015);
-  for(const y of [-.2,0,.2]){
-   box('Griglia laterale',[side*.637,y,-.65],[.012,.044,.22],m.black,.003);
-  }
-  for(const x of [-.44,-.20,.20,.44])bolt(x,side*.56,-.86);
-  for(const y of [-.26,.26])bolt(side*.56,y,-.84);
+ // Testata compatta a otto piastre separate: niente cornice rettangolare
+ // vuota. Il pistone d'urto occupa il fronte e resta un volume metallico.
+ for(let i=0;i<8;i++){
+  const a=i*Math.PI/4,x=Math.sin(a),y=Math.cos(a),rotation=[0,0,-a];
+  box('Segmento corazza testata',[x*.49,y*.49,-.65],[.32,.21,.42],i%2?m.dark:m.steel,.038,rotation);
+  box('Piastra frontale testata',[x*.49,y*.49,-.855],[.27,.16,.035],m.steel,.014,rotation);
+  box('Smusso testata',[x*.58,y*.58,-.65],[.27,.035,.31],m.edge,.011,rotation);
+  box('Fessura termica testata',[x*.50,y*.50,-.878],[.18,.018,.008],m.orange,.003,rotation);
+  for(const side of [-1,1])bolt(x*.49+side*Math.cos(a)*.103,y*.49-side*Math.sin(a)*.103,-.878);
  }
- cyl('Recesso del nucleo',-.57,.26,.07,m.black,32);
- ring('Anello frontale',-.617,.24,.021,tier===3?m.violet:m.orange);
- cyl('Nucleo frontale',-.626,.11,.022,tier===3?m.violet:m.dark,24);
+ cyl('Pistone frontale',-.795,.34,.14,m.dark,24);
+ ring('Flangia pistone frontale',-.854,.32,.022,m.edge);
+ ring('Anello frontale',-.873,.27,.015,tier===3?m.violet:m.orange);
+ cyl('Nucleo frontale',-.868,.225,.022,tier===3?m.violet:m.steel,24);
+ if(tier<3){
+  for(const side of [-1,1])box('Giunto pistone',[side*.08,0,-.883],[.014,.32,.006],m.black,.002);
+  cyl('Centro pistone',-.888,.07,.012,m.dark,16);
+ }
  if(tier===1){
   for(const side of [-1,1]){
    box('Braccio giroscopio',[0,side*.63,.09],[.14,.44,.12],m.bronze,.022);

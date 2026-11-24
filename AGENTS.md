@@ -14,7 +14,10 @@ Le viste sono riproducibili con `scripts/build-maglio-projectile-atlas.mjs`;
 la mesh CPU rimane disponibile durante il caricamento. Non tornare a un'unica
 immagine obliqua ruotata nei due sensi. Conservare piastre, giroscopi, alette e prismi;
 mostrare questi dettagli durante
-il volo. La calibrazione approvata richiede leggibilità: il Maglio viaggia per
+il volo. **Correzione utente del 24/11:** testata compatta a piastre, senza
+una grossa cornice quadrata vuota; scala fisica in partita 0,48 rispetto
+al modello artistico. Ridimensionare anche scia e distanza naso/centro,
+conservando arrivo sul bersaglio e viste fronte/retro. La calibrazione approvata richiede leggibilità: il Maglio viaggia per
 1.400 ms e l'impatto rimane visibile 950 ms. Audio, reazione della nave e
 rilascio del turno usano gli stessi tempi. Il numero di colpi deriva dal motore.
 

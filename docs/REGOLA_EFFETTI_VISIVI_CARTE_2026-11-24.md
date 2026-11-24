@@ -93,3 +93,15 @@ Il suono d'impatto e la reazione dello scafo iniziano all'arrivo. La durata
 della risoluzione comprende tutte le carte mostrate e l'ultimo impatto,
 anche con tre carte selezionate e due Armi già in campo: i 30 secondi del
 turno successivo iniziano dopo questa sequenza.
+
+
+## Correzione testata e ingombro — 24 novembre
+
+La vecchia testata a quattro barre sembrava una grande cornice quadrata
+vuota ed è stata rifiutata. Il Maglio usa otto piastre compatte attorno
+al pistone metallico frontale. La scala fisica in partita è 0,48 rispetto
+al modello artistico precedente, con ugello e scia ridotti nella stessa
+proporzione. Non ridurre soltanto il bitmap: anche la distanza fra centro
+e naso segue la scala, così la testata arriva esattamente al bersaglio.
+Restano volo 1.400 ms, impatto 950 ms, viste A da dietro e B frontale.
+La carta ingrandita prima dello sparo non era l’oggetto della correzione.
