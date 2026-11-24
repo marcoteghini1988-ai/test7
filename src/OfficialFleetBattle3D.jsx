@@ -59,11 +59,13 @@ import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
 import MaglioBattleEffects from './MaglioBattleEffects.jsx';
 import {fleetWeaponShots,maglioPresentationBerths} from './maglioBattleVisuals.js';
 import {preloadProjectileViews} from './maglioPerspectiveRenderer.js';
+import ShipFlightSurface from './ShipFlightSurface.jsx';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 import './OfficialLiveBattle3D.css';
 import './OfficialFleetBattle3D.css';
 import './OfficialApprovedBattleHud.css';
+import './FleetFlight.css';
 
 const LOADOUT_KEY='eclissi_card_fleet_v1';
 const PHYSICAL_LABELS={engine:'Plancia',weapons:'Arsenale',shieldGenerator:'Generatore',command:'Centralina'};
@@ -145,8 +147,11 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
  const currentImpact=impact?.escortDamage>0||impact?.machineDamage>0?null:fleetImpactVisual(impact);
  return <div className={'live-fighter live-fighter--'+side} data-fleet-side={player?'A':'B'} data-own-target={canSelectOwn||undefined}>
   <div className="fleet-ship-wrap complete-ship focused official-mother"
+   data-flight-alive={mother.hp>0}
    data-vital-weapons={mother.parts.find(p=>p.id==='weapons')?.destroyed?'destroyed':'healthy'}
-   style={{left:'50%',top:0,width:316,height:206,zIndex:3}}>
+   style={{left:'50%',top:0,width:316,height:206,zIndex:3,'--flight-phase':player?'-.8s':'-2.4s'}}>
+   <ShipFlightSurface shipId={mother.id} side={side} layer="ground" alive={mother.hp>0}/>
+   <div className="f3d-craft-hover">
    <ShipPhysicalVitals side={side} vessel={{...vessel,defense}} defense={defense}
     selectedVital={selectedVital==='generator'?'shieldGenerator':selectedVital==='bridge'?'engine':selectedVital}
     canTarget={canTarget||canSelectOwn} allowOwnTarget={canSelectOwn}
@@ -154,15 +159,18 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     vitalLabels={PHYSICAL_LABELS} vitalShortLabels={PHYSICAL_SHORT_LABELS}
     knownVitals={['engine','weapons','shieldGenerator','command']}
     hideVitalTargets={unit.ruleset===HP_SYNC_RULESET}/>
+   <ShipFlightSurface shipId={mother.id} side={side} alive={mother.hp>0}/>
    <MountedWeapons side={side} vessel={vessel} index={0}/>
    {currentImpact&&<img key={(impact?.round||0)+currentImpact.kind}
     className="f3d-impact f3d-impact--mother" src={currentImpact.image}
     alt="" aria-hidden="true"/>}
+   </div>
   </div>
   {unit.escorts.map((escort,i)=>{
    const slot=escort.slot??i;
    const tookHit=impact?.escortSlot===slot&&impact?.escortDamage>0;
    const linked=escort.linked!==false;
+   const fusionModel=escort.fused&&escort.fusionModelIds?.find(id=>id!==escort.shipModelId);
    const signature=FLEET_ELEMENTS[escort.element];
    const weaknesses=signature?.weakTo?.map(id=>FLEET_ELEMENTS[id].name).join(' e ');
    return <div key={escort.id} data-combat-id={escort.id} data-combat-kind="escort" className={'live-escort live-escort--'+slot+
@@ -170,12 +178,21 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     ((escort.nebulaHiddenUntilPly||0)>ply&&escort.hp>0&&!escort.destroyed?
      ' f3d-escort--veiled':'')+
     (selectedTarget?.kind==='escort'&&selectedTarget.id===escort.id?' f3d-unit--selected':'')}
+    style={{'--flight-phase':(-slot*.9-(player?1.3:2.9))+'s'}}
     title={escort.name+' · '+describeEscortEffect(escort)+
      (signature?' · Elemento ereditato: '+signature.name+' · Debole a '+weaknesses:'')}>
+    <ShipFlightSurface shipId={escort.shipModelId||escort.originShipId} side={side}
+     kind="escort" layer="ground" alive={activeEscort(escort)}/>
+    <div className="f3d-craft-hover f3d-escort-visual">
     <img className="f3d-escort-hull" src={escortArtwork(escort,side,ASSET_ROOT)}
      alt={escort.name} draggable={false}/>
     {fusedEscortArtwork(escort,side,ASSET_ROOT)&&<img className="f3d-escort-fusion"
      src={fusedEscortArtwork(escort,side,ASSET_ROOT)} alt="" draggable={false} aria-hidden="true"/>}
+    <ShipFlightSurface shipId={escort.shipModelId||escort.originShipId} side={side}
+     kind="escort" alive={activeEscort(escort)}/>
+    {fusionModel&&<ShipFlightSurface shipId={fusionModel} side={side}
+     kind="fusion" alive={activeEscort(escort)}/>}
+    </div>
     <span className="f3d-escort-health" aria-label={'Resistenza '+escort.hp+' di '+escort.maxHp}>
      <i style={{width:pct(escort.hp,escort.maxHp)+'%'}}/>
     </span>

@@ -1,0 +1,80 @@
+/* Ombra sul piano separata dallo scafo: la flotta resta negli slot originali. */
+.es-math-scope .f3d-approved-layout .f3d-craft-hover {
+ position:absolute;inset:0;overflow:visible;pointer-events:none;
+ --flight-low:-6px;--flight-high:-10px;--flight-roll:.15deg;
+ animation:f3d-craft-float 4.6s var(--flight-phase,-.8s) ease-in-out infinite;
+}
+.es-math-scope .f3d-approved-layout .f3d-escort-visual {
+ --flight-low:-4px;--flight-high:-7px;--flight-roll:.3deg;
+}
+.es-math-scope .f3d-approved-layout .f3d-flight-surface {
+ position:absolute;pointer-events:none;overflow:visible;
+}
+.es-math-scope .f3d-approved-layout .f3d-flight-surface--mother {
+ left:55px;top:0;width:206px;height:206px;
+}
+.es-math-scope .f3d-approved-layout .f3d-flight-surface--escort {
+ inset:0;width:94px;height:94px;transform:scaleY(.72);transform-origin:50% 0;
+}
+.es-math-scope .f3d-approved-layout .f3d-flight-surface--fusion {
+ left:24%;top:7%;width:71%;height:77%;transform:rotate(7deg);
+}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .f3d-flight-surface--fusion {
+ transform:rotate(-7deg);
+}
+.es-math-scope .f3d-approved-layout .f3d-flight-ground {z-index:0}
+.es-math-scope .f3d-approved-layout .f3d-flight-reactors {z-index:3;mix-blend-mode:screen}
+.es-math-scope .f3d-approved-layout .f3d-flight-floor-shadow {
+ transform-box:fill-box;transform-origin:center;
+ animation:f3d-floor-shadow 4.6s var(--flight-phase,-.8s) ease-in-out infinite;
+}
+.es-math-scope .f3d-approved-layout .f3d-flight-floor-light {
+ animation:f3d-floor-spill .63s var(--reactor-phase) ease-in-out infinite alternate;
+}
+.es-math-scope .f3d-approved-layout .f3d-reactor-plume {
+ transform-origin:0 0;filter:drop-shadow(0 0 9px var(--reactor-color));
+ animation:f3d-reactor-thrust .49s var(--reactor-phase) linear infinite;
+}
+.es-math-scope .f3d-approved-layout .f3d-reactor-flow {
+ opacity:.8;animation:f3d-reactor-flow .56s var(--reactor-phase) linear infinite;
+}
+.es-math-scope .f3d-approved-layout .f3d-reactor-flow--secondary {
+ opacity:.65;animation-duration:.43s;
+}
+.es-math-scope .f3d-approved-layout .official-mother .fleet-ship-img {
+ filter:drop-shadow(0 2px 2px #0008) drop-shadow(0 0 3px #8ad8ed33);
+}
+.es-math-scope .f3d-approved-layout .live-escort .f3d-escort-hull,
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort .f3d-escort-hull {
+ filter:drop-shadow(0 2px 2px #0008) drop-shadow(0 0 3px #8ad8ed33);
+}
+.es-math-scope .f3d-approved-layout .live-escort--lost .f3d-craft-hover,
+.es-math-scope .f3d-approved-layout .official-mother[data-flight-alive="false"] .f3d-craft-hover {
+ animation:none;transform:translateY(0);
+}
+@keyframes f3d-craft-float {
+ 0%,100% {transform:translate3d(0,var(--flight-low),0) rotate(var(--flight-roll))}
+ 50% {transform:translate3d(0,var(--flight-high),0) rotate(calc(var(--flight-roll)*-1))}
+}
+@keyframes f3d-floor-shadow {
+ 0%,100% {opacity:.82;transform:scale(1,.94)}
+ 50% {opacity:.56;transform:scale(1.06,1.08)}
+}
+@keyframes f3d-floor-spill {from{opacity:.35}to{opacity:.75}}
+@keyframes f3d-reactor-thrust {
+ 0%,100% {transform:scale(.92,.88);opacity:.72}
+ 18% {transform:scale(1.03,1.04);opacity:.96}
+ 36% {transform:scale(.96,.94);opacity:.86}
+ 54% {transform:scale(1.05,1.14);opacity:.98}
+ 76% {transform:scale(.93,.95);opacity:.78}
+}
+@keyframes f3d-reactor-flow {to{stroke-dashoffset:-90}}
+@media (prefers-reduced-motion:reduce) {
+ .es-math-scope .f3d-approved-layout .f3d-craft-hover {
+  animation:none;transform:translateY(var(--flight-low));
+ }
+ .es-math-scope .f3d-approved-layout .f3d-flight-floor-shadow,
+ .es-math-scope .f3d-approved-layout .f3d-flight-floor-light,
+ .es-math-scope .f3d-approved-layout .f3d-reactor-plume {animation:none}
+ .es-math-scope .f3d-approved-layout .f3d-reactor-flow {display:none}
+}

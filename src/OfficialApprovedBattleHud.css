@@ -115,26 +115,26 @@
 .es-math-scope .f3d-approved-layout .live-fighter--player .fleet-ship-wrap.official-mother {
  transform:translateX(-50%) scale(.88,.78)!important;
 }
-.es-math-scope .f3d-approved-layout .live-escort {width:84px;height:64px;z-index:4}
-.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort {top:52px}
-.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort {top:31px}
-.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort--0 {left:59px}
-.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort--1 {right:59px}
-.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort--0 {left:37px}
-.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort--1 {right:37px}
-.es-math-scope .f3d-approved-layout .live-escort>.f3d-escort-hull {
- display:block;width:84px;height:84px;object-fit:contain;
+.es-math-scope .f3d-approved-layout .live-escort {width:94px;height:72px;z-index:4}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort {top:48px}
+.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort {top:27px}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort--0 {left:54px}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort--1 {right:54px}
+.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort--0 {left:32px}
+.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort--1 {right:32px}
+.es-math-scope .f3d-approved-layout .live-escort .f3d-escort-hull {
+ display:block;width:94px;height:94px;object-fit:contain;
  transform:scaleY(.72);transform-origin:center top;
  filter:drop-shadow(0 6px 4px #000e) drop-shadow(0 0 5px #19aeff88);
 }
-.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort>.f3d-escort-hull {
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort .f3d-escort-hull {
  transform:scaleY(.72);filter:drop-shadow(0 6px 4px #000e) drop-shadow(0 0 6px #ff435988);
 }
-.es-math-scope .f3d-approved-layout .live-escort>.f3d-escort-fusion {
+.es-math-scope .f3d-approved-layout .live-escort .f3d-escort-fusion {
  position:absolute;left:24%;top:7%;width:71%;height:77%;object-fit:contain;
  transform:rotate(7deg);filter:drop-shadow(0 0 7px #d296ff);pointer-events:none;
 }
-.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort>.f3d-escort-fusion {
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort .f3d-escort-fusion {
  transform:rotate(-7deg);filter:drop-shadow(0 0 7px #ff5c73);
 }
 .es-math-scope .f3d-approved-layout .f3d-escort-health,

@@ -14,6 +14,13 @@ import {MAGLIO_CARD_ID,MAGLIO_VARIANTS} from './src/maglioBattleVisuals.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import './src/index.css';
 function Review(){
+ const fleets=[
+  {name:'Aurora / Lince',shipA:'N00',shipB:'C01',supportModels:['C02','C03']},
+  {name:'Binaria / Manta',shipA:'R01',shipB:'R02',supportModels:['C04','E03']},
+  {name:'Squalo / Tempesta',shipA:'R04',shipB:'E02',supportModels:['E01','L02']},
+  {name:'Regina / Titano',shipA:'L01',shipB:'L03',supportModels:['L04','N00']},
+  {name:'Nebula / Arca',shipA:'E01',shipB:'L04',supportModels:['L01','L03']}
+ ];
  const capture=useRef(null);
  const [recording,setRecording]=useState(false);
  const [recordStatus,setRecordStatus]=useState('');
@@ -59,11 +66,15 @@ function Review(){
    session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},90000);
   }catch(error){setRecordStatus(error.message||'Registrazione non avviata.');}
  };
- const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:MAGLIO_CARD_ID,supports:false,wounded:false,focus:0});
+ const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:MAGLIO_CARD_ID,supports:false,wounded:false,focus:0,fleetPreset:0});
  const [initial,setInitial]=useState(()=>createMaglioReviewBattle());
  const reset=(options={})=>{setSetup(s=>({...s,...options,serial:s.serial+1}));setInitial(createMaglioReviewBattle({...setup,...options}));};
  return <div style={{height:'100dvh',background:'#05090e',display:'flex',flexDirection:'column'}}>
   <div className="maglio-review-controls">
+   <label>Flotta di prova <select aria-label="Flotta di prova" value={setup.fleetPreset}
+    onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
+    {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
+   </select></label>
    <label>Rarità Maglio <select aria-label="Rarità Maglio" value={setup.cardId} onChange={e=>reset({cardId:e.target.value})}>{MAGLIO_VARIANTS.map(v=><option key={v.id} value={v.id}>{v.rarity}</option>)}</select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage} HP nominali</span>
    <label><input type="checkbox" aria-label="Supporti in campo" checked={setup.supports} onChange={e=>reset({supports:e.target.checked,wounded:false})}/>Supporti in campo</label>
@@ -71,6 +82,7 @@ function Review(){
    <button onClick={()=>reset({slot:1,blocked:false})}>Riprova slot 2</button>
    <button onClick={()=>reset({slot:0,blocked:true})}>Verifica arma bloccata</button>
    <button onClick={()=>reset({supports:true,wounded:true,focus:1,blocked:false})}>Supporto con 1 HP</button>
+   <button onClick={()=>reset({supports:true,fused:true,wounded:false,blocked:false})}>Supporto fuso</button>
    <button onClick={()=>recording?capture.current?.recorder.stop():recordBattle()}>{recording?'Ferma registrazione':'Registra battaglia'}</button>
    <span role="status">{recordStatus}</span>
    {recordUrl&&<a href={recordUrl} download="maglio-quattro-rarita-in-battaglia.webm">Scarica video battaglia</a>}

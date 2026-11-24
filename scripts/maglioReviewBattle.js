@@ -4,12 +4,13 @@ import {HP_SYNC_RULESET} from '../src/fleetNext/hpSynchronization.js';
 import {MAGLIO_CARD_ID,maglioVariant} from '../src/maglioBattleVisuals.js';
 
 export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
- cardId=MAGLIO_CARD_ID,supports=false,wounded=false,focus=0,boost=false}={}){
+ cardId=MAGLIO_CARD_ID,supports=false,wounded=false,focus=0,boost=false,
+ shipA='N00',shipB='C01',supportModels=['C02','C03'],fused=false}={}){
  const rarity=maglioVariant(cardId)?.rarity||'Comune';
- const roster=who=>supports?['c02','c03'].map((model,index)=>({
-  id:'support-model-'+model,instanceId:'maglio-review-'+who+'-'+index,
+ const roster=who=>supports?supportModels.map((model,index)=>({
+  id:'support-model-'+model.toLowerCase(),instanceId:'maglio-review-'+who+'-'+index,
   slot:index,rarita:rarity})):[];
- const b=createFleetNextBattle({shipA:'N00',shipB:'C01',raritaA:rarity,raritaB:rarity,
+ const b=createFleetNextBattle({shipA,shipB,raritaA:rarity,raritaB:rarity,
   supportRosterA:boost?[{id:'support-model-r01',instanceId:'review-booster',slot:0,rarita:rarity}]:roster('A'),
   supportRosterB:roster('B'),deckA:[],deckB:[],mode:'pvp',
   ruleset:HP_SYNC_RULESET,newGeneratorCombat:true,strategicNoDeterioration:true,
@@ -27,6 +28,10 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
  }
  if(supports&&wounded)for(const side of Object.values(b.sides)){
   if(side.escorts[focus])side.escorts[focus].hp=1;
+ }
+ if(supports&&fused)for(const side of Object.values(b.sides)){
+  if(side.escorts[0]){side.escorts[0].fused=true;
+   side.escorts[0].fusionModelIds=[side.escorts[0].shipModelId,'C01'];}
  }
  if(blocked)b.sides.A.fireDisabledUntil=20;
  return b;
