@@ -14,7 +14,11 @@ export function preloadProjectileViews(){
 const bracket=(v,values)=>{
  if(v<=values[0])return [[0,1]];
  for(let i=1;i<values.length;i++)if(v<=values[i]){
-  const t=(v-values[i-1])/(values[i]-values[i-1]);return [[i-1,1-t],[i,t]].filter(([,w])=>w>1e-6);
+  // La transizione è breve: una lunga dissolvenza sovrappone piastre e
+  // bulloni di due prospettive e rende trasparente il corpo metallico.
+  const phase=(v-values[i-1])/(values[i]-values[i-1]);
+  const mix=Math.max(0,Math.min(1,(phase-.44)/.12)),t=mix*mix*(3-2*mix);
+  return [[i-1,1-t],[i,t]].filter(([,w])=>w>1e-6);
  }
  return [[values.length-1,1]];
 };

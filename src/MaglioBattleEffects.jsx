@@ -1,4 +1,4 @@
-import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
+import React,{useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {card,cardFacePath,cardRole} from './fleetNext/rules.js';
 import {projectFleetSlots,projectMachineBerths} from './fleetNext/battlePresentation.js';
 import {weaponEffectProfile,weaponPortalOrigin,weaponVisualCards,weaponShotStartMs} from './maglioBattleVisuals.js';
@@ -62,6 +62,7 @@ function WeaponProjectile(){
 export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSide,ply,nonce}){
  const ref=useRef(null),[paths,setPaths]=useState([]),[placements,setPlacements]=useState([]);
  const startedAt=useRef(performance.now()).current;
+ const projectilePaths=useMemo(()=>paths.filter(p=>p.profile.kind==='gravity-maul'),[paths]);
  const reveals=visualCards(shots,selectedCards);
  const shotStart=weaponShotStartMs(reveals.length);
  // Il suono segue l'evento reale e gli stessi tempi della traiettoria visiva.
@@ -126,7 +127,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
      '--reveal-x':(destination?.x??225)-225+'px',
      '--reveal-y':(destination?.y??379.5)-379.5+'px'}}/>;
   })}
-  <MaglioProjectileScene paths={paths.filter(p=>p.profile.kind==='gravity-maul')} startedAt={startedAt}/>
+  <MaglioProjectileScene paths={projectilePaths} startedAt={startedAt}/>
   <svg className="maglio-battle-effects" viewBox="0 0 450 800" focusable="false">
    {paths.map(({shot,from,to,profile,start},index)=>{
     const impactDelay=start+profile.flightMs;
