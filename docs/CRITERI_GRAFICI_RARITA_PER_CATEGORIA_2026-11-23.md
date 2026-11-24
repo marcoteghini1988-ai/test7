@@ -2,6 +2,8 @@
 
 **Decisione approvata il 23 novembre 2026.** Questa pagina aggiorna la palette delle cornici descritta nei documenti del 21–22 novembre. I quattro campioni della categoria **Attacco** sono stati mostrati e approvati in chat. Le altre categorie seguono la stessa matrice cromatica; i loro fronti completi richiedono ancora il controllo visivo prima dell'uso nel gioco.
 
+**Aggiornamento Arma del 24 novembre 2026:** le quattro anteprime Arma del 23/11 sono state sostituite dalle [basi ufficiali HD trasparenti](BASI_UFFICIALI_ARMA_2026-11-24.md). La Leggendaria Arma è in cristallo prismatico con riflessi iridescenti, secondo l'ultima approvazione. La tabella storica delle finiture sotto resta valida per Attacco e per le altre categorie in attesa di verifica, non sovrascrive le quattro nuove basi Arma.
+
 ## Due assi indipendenti
 
 La **rarità** cambia soltanto il metallo esterno, i bordi degli alloggiamenti e l'intensità dei suoi riflessi. La **categoria** cambia il colore interno, i filamenti, il cerchio HUD e il pannello dell'effetto. Non convertire il colore della categoria in quello della rarità. Nome, illustrazione, effetto, icone e scritta della rarità sono aggiunti in seguito; le basi restano vuote.
@@ -17,7 +19,7 @@ La **rarità** cambia soltanto il metallo esterno, i bordi degli alloggiamenti e
 
 | Categoria | Colore interno | Comune | Rara | Epica | Leggendaria |
 | --- | --- | --- | --- | --- | --- |
-| Arma | Arancione | [Grafite + arancione](riferimenti-carte/nuove-basi-2026-11-23/anteprime/arma/comune.webp) | [Sabbia bronzata + arancione](riferimenti-carte/nuove-basi-2026-11-23/anteprime/arma/rara.webp) | [Argento + arancione](riferimenti-carte/nuove-basi-2026-11-23/anteprime/arma/epica.webp) | [Oro + arancione](riferimenti-carte/nuove-basi-2026-11-23/anteprime/arma/leggendaria.webp) |
+| Arma | Arancione | [Grafite + arancione HD](riferimenti-carte/basi-arma-ufficiali-2026-11-24/comune.png) | [Bronzo + arancione HD](riferimenti-carte/basi-arma-ufficiali-2026-11-24/rara.png) | [Argento + arancione HD](riferimenti-carte/basi-arma-ufficiali-2026-11-24/epica.png) | [Cristallo prismatico + arancione HD](riferimenti-carte/basi-arma-ufficiali-2026-11-24/leggendaria.png) |
 | Attacco | Rosso | [Grafite + rosso](riferimenti-carte/nuove-basi-2026-11-23/attacco/comune.png) | [Sabbia bronzata + rosso](riferimenti-carte/nuove-basi-2026-11-23/attacco/rara.png) | [Argento + rosso](riferimenti-carte/nuove-basi-2026-11-23/attacco/epica.png) | [Oro + rosso](riferimenti-carte/nuove-basi-2026-11-23/attacco/leggendaria.png) |
 | Difesa | Azzurro | [Grafite + azzurro](riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/comune.webp) | [Sabbia bronzata + azzurro](riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/rara.webp) | [Argento + azzurro](riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/epica.webp) | [Oro + azzurro](riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/leggendaria.webp) |
 | Personaggio | Magenta | [Grafite + magenta](riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/comune.webp) | [Sabbia bronzata + magenta](riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/rara.webp) | [Argento + magenta](riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/epica.webp) | [Oro + magenta](riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/leggendaria.webp) |
@@ -35,4 +37,4 @@ Le categorie e i simboli sono quelli della [tavola ufficiale](riferimenti-carte/
 | Epica | [epica.png](riferimenti-carte/nuove-basi-2026-11-23/attacco/epica.png) — copia esatta della base inviata dall'utente |
 | Leggendaria | [leggendaria.png](riferimenti-carte/nuove-basi-2026-11-23/attacco/leggendaria.png) |
 
-Le quattro immagini Attacco sono **riferimenti di cornice approvati**, non carte giocabili. Le altre 20 immagini collegate nella matrice sono **anteprime da controllare**, salvate in WebP 1024×1536; derivano dalle quattro finiture approvate variando soltanto il colore interno. Non sostituire i fronti già approvati né modificare il motore. Il PNG originale del 21 novembre e la tavola dei simboli rimangono intatti. Le nuove categorie si mostrano per il controllo visivo prima di considerarle definitive.
+Le quattro immagini Attacco e le quattro immagini Arma del 24/11 sono **riferimenti di cornice approvati**, non carte giocabili. Le altre 16 immagini collegate nella matrice sono **anteprime da controllare**, salvate in WebP 1024×1536. Non sostituire i fronti già approvati né modificare il motore. Il PNG originale del 21 novembre e la tavola dei simboli rimangono intatti. Le altre categorie si mostrano per il controllo visivo prima di considerarle definitive.

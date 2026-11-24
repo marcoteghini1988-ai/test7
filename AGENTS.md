@@ -1,8 +1,12 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Aggiornamento approvato il 24 novembre 2026 — basi vuote Arma HD
+
+Le quattro basi **Arma** Comune, Rara, Epica e Leggendaria approvate sono i PNG trasparenti 3072×4608 in `docs/riferimenti-carte/basi-arma-ufficiali-2026-11-24/`. Prima di creare una Carta Arma aprire e usare materialmente la base della sua rarità; consultare [docs/BASI_UFFICIALI_ARMA_2026-11-24.md](docs/BASI_UFFICIALI_ARMA_2026-11-24.md). Sono cornici vuote, senza testi, icone o illustrazioni. La Leggendaria Arma ha finitura di cristallo prismatico; questa scelta più recente prevale sull'oro della matrice precedente **solo per la categoria Arma**. Le quattro vecchie anteprime Arma in WebP del 23/11 sono state ritirate. Non usarle né ricostruire le nuove basi da immagini ridotte. Restano validi i simboli originali del 21/11 e la verifica della carta completa prima di inserirla nel gioco.
+
 ## Aggiornamento approvato il 23 novembre 2026 — cornici di rarità
 
-Leggere [docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md](docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md) per la palette aggiornata: **Comune grafite, Rara sabbia bronzata, Epica argento, Leggendaria oro**, identica per ogni categoria. Le quattro basi vuote Attacco in `docs/riferimenti-carte/nuove-basi-2026-11-23/attacco/` sono approvate. Il colore interno rimane quello della categoria. Questa decisione esplicita dell'utente prevale sulle vecchie indicazioni Comune argento / Rara blu / Epica viola, senza modificare i due PNG originali del 21 novembre o le regole sui simboli ufficiali. Le basi delle altre categorie devono essere verificate visivamente prima di diventare fronti giocabili.
+Leggere [docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md](docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md) per la palette aggiornata il 23/11: **Comune grafite, Rara sabbia bronzata, Epica argento, Leggendaria oro**. Le quattro basi vuote Attacco in `docs/riferimenti-carte/nuove-basi-2026-11-23/attacco/` sono approvate. Per Arma vale l'aggiornamento del 24/11 sopra. Il colore interno rimane quello della categoria. Le basi delle altre categorie devono essere verificate visivamente prima di diventare fronti giocabili.
 
 ## IMPORTANTISSIMO — ogni richiesta «crea una carta»
 
