@@ -1,7 +1,8 @@
 import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {card,cardFacePath,cardRole} from './fleetNext/rules.js';
 import {projectFleetSlots,projectMachineBerths} from './fleetNext/battlePresentation.js';
-import {weaponEffectProfile,weaponPortalOrigin} from './maglioBattleVisuals.js';
+import {weaponEffectProfile,weaponPortalOrigin,weaponVisualCards,weaponShotStartMs,
+ MAGLIO_ATLAS_SIZE} from './maglioBattleVisuals.js';
 import {playSound} from './audio.js';
 import './MaglioBattleEffects.css';
 
@@ -50,26 +51,20 @@ function measurePlacements(root,selectedCards,playerSide,ply,board){
 }
 
 const visualCards=(shots,selectedCards)=>{
- const cards=[...selectedCards];
- for(const shot of shots){
-  if(cards.some(c=>c.id===shot.cardId))continue;
-  cards.push({id:shot.cardId,grade:1});
- }
- return cards.filter(c=>cardFacePath(c.id,c.grade));
+ return weaponVisualCards(shots,selectedCards).filter(c=>cardFacePath(c.id,c.grade));
 };
 
 function WeaponProjectile({profile}){
  switch(profile.kind){
-  case 'gravity-maul':return <>
-   <ellipse rx={15+profile.tier*3} ry={23+profile.tier*3} fill={profile.glow} opacity=".2"/>
-   {Array.from({length:profile.tier+1},(_,i)=><ellipse key={i}
-    rx={11+i*5} ry={17+i*5} fill="none" stroke={i%2?profile.secondary:profile.core}
-    strokeWidth="1.3" opacity={.8-i*.12}/>)}
-   <path d="M-8 10 L-11-10 L-6-21 L6-21 L11-10 L8 10 L0 19 Z"
-    fill="#2a3542" stroke={profile.core} strokeWidth="2.4"/>
-   <path d="M-8-8 H8 M-7 2 H7 M-5 10 H5" stroke={profile.secondary} strokeWidth="2"/>
-   <circle cy="-17" r="4" fill={profile.core}/>
-  </>;
+  case 'gravity-maul':return <g transform="rotate(-66)" className="maglio-projectile-art">
+   <svg x={-profile.spriteSize*.64} y={-profile.spriteSize*.54}
+    width={profile.spriteSize} height={profile.spriteSize*610/MAGLIO_ATLAS_SIZE.cellWidth}
+    viewBox={[profile.spriteCell*MAGLIO_ATLAS_SIZE.cellWidth,175,
+     MAGLIO_ATLAS_SIZE.cellWidth,610].join(' ')} overflow="hidden">
+    <image href={profile.projectileArt} width={MAGLIO_ATLAS_SIZE.width}
+     height={MAGLIO_ATLAS_SIZE.height} preserveAspectRatio="none"/>
+   </svg>
+  </g>;
   default:return <><ellipse rx="8" ry="18" fill="#8eeaff" opacity=".2"/>
    <path d="M0-18 L6 5 L0 15 L-6 5 Z" fill="#9deaff" stroke="#f1ffff" strokeWidth="1.2"/></>;
  }
@@ -78,7 +73,7 @@ function WeaponProjectile({profile}){
 export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSide,ply,nonce}){
  const ref=useRef(null),[paths,setPaths]=useState([]),[placements,setPlacements]=useState([]);
  const reveals=visualCards(shots,selectedCards);
- const shotStart=980+reveals.length*520;
+ const shotStart=weaponShotStartMs(reveals.length);
  // Il suono segue l'evento reale e gli stessi tempi della traiettoria visiva.
  // La chiave nonce rimonta il componente a ogni risoluzione: nessun doppio audio
  // durante i ricalcoli delle coordinate del ResizeObserver.
@@ -90,7 +85,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
    if(!profile?.sound)continue;
    const start=shotStart+(shot.delayMs||0);
    timers.push(window.setTimeout(()=>playSound(profile.sound.fire),start));
-   timers.push(window.setTimeout(()=>playSound(profile.sound.impact),start+470));
+   timers.push(window.setTimeout(()=>playSound(profile.sound.impact),start+profile.flightMs));
   }
   return ()=>timers.forEach(id=>window.clearTimeout(id));
  },[nonce,shots,shotStart]);
@@ -111,7 +106,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
     if(!from||!profile)return [];
     const start=shotStart+(shot.delayMs||0);
     target.classList.add('f3d-ship-hit');
-    target.style.setProperty('--ship-hit-delay',start+470+'ms');
+    target.style.setProperty('--ship-hit-delay',start+profile.flightMs+'ms');
     hitTargets.add(target);
     return [{shot,from,to,profile,start}];
    }));
@@ -143,7 +138,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
   })}
   <svg className="maglio-battle-effects" viewBox="0 0 450 800" focusable="false">
    {paths.map(({shot,from,to,profile,start},index)=>{
-    const impactDelay=start+470;
+    const impactDelay=start+profile.flightMs;
     const gradientId='weapon-impact-'+nonce+'-'+index;
     const flashY=shot.who==='A'?790:10;
     const angle=Math.atan2(to.y-from.y,to.x-from.x)*180/Math.PI+90;
@@ -151,11 +146,13 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
     const impactGlow=profile.impactGlow||profile.glow;
     const impactSecondary=profile.impactSecondary||profile.secondary;
     const style={'--shot-core':profile.core,'--shot-glow':profile.glow,
-     '--shot-secondary':profile.secondary};
+     '--shot-secondary':profile.secondary,'--maglio-flight-ms':profile.flightMs+'ms',
+     '--maglio-impact-ms':profile.impactMs+'ms'};
     return <g key={nonce+'-shot-'+index} className="maglio-shot"
      data-shooter={shot.who} data-target-kind={shot.targetKind}
      data-target-id={shot.targetId} data-actual-damage={shot.actualDamage}
      data-projectiles="1" data-origin-edge={from.edge}
+     data-flight-ms={profile.flightMs} data-impact-at-ms={impactDelay}
      data-weapon-kind={profile.kind} data-rarity={profile.rarity} style={style}>
      <defs><radialGradient id={gradientId}>
       <stop offset="0" stopColor={impactCore} stopOpacity=".95"/>
@@ -170,9 +167,11 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
      <g className="maglio-pulse-travel"
       style={{'--maglio-from-x':from.x+'px','--maglio-from-y':from.y+'px',
        '--maglio-to-x':to.x+'px','--maglio-to-y':to.y+'px',
+       '--maglio-from-scale':shot.who==='A'?1.18:.68,
+       '--maglio-to-scale':.68+Math.max(0,Math.min(1,to.y/800))*.5,
        '--maglio-flight-delay':start+'ms'}}>
       <g transform={'rotate('+angle+') scale('+profile.scale+')'}>
-       {Array.from({length:profile.trailBands},(_,i)=><path key={i}
+       {profile.kind!=='gravity-maul'&&Array.from({length:profile.trailBands},(_,i)=><path key={i}
         d={'M'+(-4-i*3)+' '+(20+i*3)+' Q0 '+(35+i*8)+' '+(4+i*3)+' '+(20+i*3)}
         fill="none" stroke={i%2?profile.secondary:profile.glow}
         strokeWidth={Math.max(1,2-i*.25)} opacity={.78-i*.15}/>)}

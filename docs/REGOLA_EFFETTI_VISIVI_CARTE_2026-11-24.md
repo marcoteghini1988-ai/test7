@@ -63,3 +63,21 @@ questo collaudo il fronte e il suo effetto si considerano integrati.
 
 I quattro fronti del Maglio sono PNG 3072×4608. Comune, Rara, Epica e
 Leggendaria mantengono un unico colpo reale, con scia, impatto e suono distinti.
+
+## Proiettili e velocità approvati — revisione del 24 novembre
+
+Il confronto `docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png`
+fissa l'aspetto delle quattro munizioni: testa segmentata Comune, giroscopi
+bronzei Rara, piastre e dissipatori Epica, struttura prismatica Leggendaria.
+Il gioco usa quelle sagome mediante l'atlante PNG con trasparenza
+`public/assets/fleet-weapons/maglio/projectiles/approved-atlas.png`.
+Le prime tre varianti mantengono l'energia arancione; l'ultima aggiunge il
+nucleo bianco-violetto. I dettagli devono restare visibili nella partita.
+
+Il volo dura **1.400 ms** e l'impatto **950 ms**. La prospettiva riduce
+gradualmente il proiettile che parte dal bordo basso e ingrandisce quello
+che arriva dal bordo alto. La direzione della testata segue il bersaglio.
+Il suono d'impatto e la reazione dello scafo iniziano all'arrivo. La durata
+della risoluzione comprende tutte le carte mostrate e l'ultimo impatto,
+anche con tre carte selezionate e due Armi già in campo: i 30 secondi del
+turno successivo iniziano dopo questa sequenza.

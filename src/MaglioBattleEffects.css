@@ -17,8 +17,9 @@
  position:absolute;inset:0;width:450px;height:800px;overflow:hidden;
 }
 .maglio-pulse-travel {
- opacity:0;animation:maglio-flight 470ms var(--maglio-flight-delay) linear both;
- filter:drop-shadow(0 0 7px var(--shot-glow));
+ opacity:0;transform-origin:0 0;
+ animation:maglio-flight var(--maglio-flight-ms,470ms) var(--maglio-flight-delay) linear both;
+ filter:drop-shadow(0 0 2px var(--shot-glow));
 }
 .weapon-portal-flash {
  opacity:0;animation:weapon-port-fire 360ms var(--maglio-flight-delay) ease-out both;
@@ -26,8 +27,8 @@
 }
 .maglio-gravity-impact {
  opacity:0;transform-origin:center;transform-box:fill-box;
- animation:maglio-impact 700ms var(--maglio-impact-delay) ease-out both;
- filter:drop-shadow(0 0 10px var(--shot-glow));
+ animation:maglio-impact var(--maglio-impact-ms,700ms) var(--maglio-impact-delay) ease-out both;
+ filter:drop-shadow(0 0 6px var(--shot-glow));
 }
 .maglio-impact-ring {
  transform-origin:center;transform-box:fill-box;
@@ -50,9 +51,9 @@
  100% {opacity:0;transform:translate(var(--reveal-x),var(--reveal-y)) perspective(600px) rotateY(24deg) scale(.28)}
 }
 @keyframes maglio-flight {
- 0% {opacity:0;transform:translate(var(--maglio-from-x),var(--maglio-from-y)) scale(.65)}
- 6%,91% {opacity:1}
- 100% {opacity:0;transform:translate(var(--maglio-to-x),var(--maglio-to-y)) scale(1.2)}
+ 0% {opacity:0;transform:translate(var(--maglio-from-x),var(--maglio-from-y)) scale(var(--maglio-from-scale,1))}
+ 5%,96% {opacity:1}
+ 100% {opacity:0;transform:translate(var(--maglio-to-x),var(--maglio-to-y)) scale(var(--maglio-to-scale,1))}
 }
 @keyframes weapon-port-fire {
  0% {opacity:0;scale:.25}

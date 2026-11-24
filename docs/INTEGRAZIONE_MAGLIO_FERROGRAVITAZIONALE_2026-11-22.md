@@ -27,7 +27,7 @@ dorso delle carte, progressione, timer, IA, plancia o meccaniche del gioco.
 Gli effetti ora partono dal bordo basso per A e dal bordo alto per B; la forma
 del Maglio è un impulso gravitazionale con un solo impatto reale e rifiniture
 progressive. Ciascuna rarità ha un timbro di lancio e impatto distinto nel
-bus SFX del gioco, sincronizzato con i 470 ms fra sparo e impatto e soggetto
+bus SFX del gioco, sincronizzato con i 1.400 ms fra sparo e impatto e soggetto
 alla preferenza Effetti Sonori. Si veda
 `docs/REGOLA_EFFETTI_VISIVI_CARTE_2026-11-24.md`.
 
@@ -65,3 +65,14 @@ e il picco del file finale è −2,7 dB. Il video è stato consegnato in chat.
 
 Validazione: **1.996 test superati, zero fallimenti**, build di produzione
 riuscita, controlli GitHub e collaudo mobile automatico riusciti.
+
+
+## Revisione approvata: proiettili illustrati e volo leggibile
+
+La proposta dei quattro proiettili è approvata dall’utente. Il renderer usa
+le sagome illustrate con piastre, giroscopi, dissipatori e prismi, raccolte
+in un atlante PNG RGBA. Volo di 1.400 ms e impatto di 950 ms, con prospettiva
+verso il bersaglio. Il suono d’impatto, la reazione della nave e il termine
+della risoluzione condividono la stessa durata. Il calcolo include tutte
+le carte mostrate prima dell’ultimo colpo; il timer del nuovo turno
+riparte dopo l’impatto. Il successivo collaudo StackBlitz verifica questa revisione.

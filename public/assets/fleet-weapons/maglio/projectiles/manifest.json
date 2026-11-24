@@ -1,0 +1,19 @@
+{
+  "image": "approved-atlas.png",
+  "width": 1922,
+  "height": 818,
+  "alpha": true,
+  "columns": [
+    "Comune",
+    "Rara",
+    "Epica",
+    "Leggendaria"
+  ],
+  "cellWidth": 480.5,
+  "cropY": 175,
+  "cropHeight": 610,
+  "forwardRotationDegrees": -66,
+  "flightMs": 1400,
+  "impactMs": 950,
+  "reference": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png"
+}

@@ -57,7 +57,7 @@ import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
 import MaglioBattleEffects from './MaglioBattleEffects.jsx';
-import {fleetWeaponShots,maglioPresentationBerths} from './maglioBattleVisuals.js';
+import {fleetWeaponShots,maglioPresentationBerths,MAGLIO_PROJECTILE_ATLAS} from './maglioBattleVisuals.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 import './OfficialLiveBattle3D.css';
@@ -504,6 +504,9 @@ export default function OfficialFleetBattle3D({
  bossPlanetId=null,bossSectorLevel=null,onResult,onExit,initialBattle=null
 }){
  const opts={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel};
+ useEffect(()=>{
+  const artwork=new Image();artwork.decoding='async';artwork.src=MAGLIO_PROJECTILE_ATLAS;
+ },[]);
  const newSession=()=>initialBattle?{battle:releaseFleetTurnAfterEffects(
   structuredClone(initialBattle),Date.now()),error:''}:startSession(opts);
  const [session,setSession]=useState(newSession);
@@ -612,10 +615,11 @@ export default function OfficialFleetBattle3D({
   resolutionInProgress.current=true;
   setResolving(true);
   const stamp=Date.now();
+  const selectedCards=battle.turn==='A'?selectedIndexes.slice(0,3).map(index=>({
+   index,id:battle.sides.A.hand[index],grade:battle.sides.A.exclusiveUpgrades?.[battle.sides.A.hand[index]]||1
+  })).filter(entry=>entry.id):[];
   setLastFx({nonce:stamp,round:battle.round,events:result.events,
-   selectedCards:battle.turn==='A'?selectedIndexes.slice(0,3).map(index=>({
-    index,id:battle.sides.A.hand[index],grade:battle.sides.A.exclusiveUpgrades?.[battle.sides.A.hand[index]]||1
-   })).filter(entry=>entry.id):[],
+   selectedCards,
    weaponShots:fleetWeaponShots(result.events),
    resolvedSides:result.battle.sides});
   // Lascia gli eventi nel Registro senza scritte automatiche sopra le navi.
@@ -629,7 +633,7 @@ export default function OfficialFleetBattle3D({
    setBattle(releaseFleetTurnAfterEffects(result.battle,Date.now()));
    setChosenCards([]);setElementalPrepared(false);
    resolutionInProgress.current=false;setResolving(false);
-  },Math.max(fleetResolutionFxMs(result.events),selectedIndexes.length?2450:0));
+  },Math.max(fleetResolutionFxMs(result.events,selectedCards),selectedIndexes.length?2450:0));
  }
  // Anche il nemico segue l'alternanza dei turni. Nel PvP attuale resta IA simulata.
  useEffect(()=>{

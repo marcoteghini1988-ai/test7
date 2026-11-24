@@ -2,10 +2,10 @@
 import {FLEET_TURN_SECONDS} from './rules.js';
 import {maglioResolutionMs} from '../maglioBattleVisuals.js';
 
-export function fleetResolutionFxMs(events=[]){
+export function fleetResolutionFxMs(events=[],selectedCards=[]){
  const shown=Array.isArray(events)?events:[];
  // La scoperta di una Trappola usa un'animazione di 4,2 secondi.
- const weaponMs=maglioResolutionMs(shown);
+ const weaponMs=maglioResolutionMs(shown,selectedCards);
  if(shown.some(e=>e?.kind==='trap-reveal'))return Math.max(4200,weaponMs);
  // Il punto d'impatto attuale resta visibile per 1,5 secondi.
  if(shown.some(e=>e?.kind==='impact'))return Math.max(1600,weaponMs);

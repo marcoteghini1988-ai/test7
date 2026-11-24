@@ -1,16 +1,17 @@
 // Prova delle quattro rarità approvate del Maglio, con impatti del motore reale.
 // node scripts/render-weapon-fx-demo.mjs
 import {createRequire} from 'node:module';
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {spawn} from 'node:child_process';
 import {once} from 'node:events';
 import {resolve} from 'node:path';
 import {createMaglioReviewBattle} from './maglioReviewBattle.js';
 import {resolvePreparedFleetTurn,autoFleetTurn} from '../src/fleetNext/combat.js';
-import {MAGLIO_VARIANTS,fleetWeaponShots,weaponEffectProfile}
+import {MAGLIO_VARIANTS,fleetWeaponShots,weaponEffectProfile,MAGLIO_PROJECTILE_ATLAS,MAGLIO_ATLAS_SIZE}
  from '../src/maglioBattleVisuals.js';
 
 const require=createRequire(import.meta.url),sharp=require('sharp');
+const atlasData='data:image/png;base64,'+(await readFile(resolve('public'+MAGLIO_PROJECTILE_ATLAS))).toString('base64');
 const out=resolve('docs/collaudi/effetti-2026-11-24');
 const aim={cards:[0],targetKind:'part',targetId:'weapons',partId:'weapons'};
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
@@ -30,10 +31,10 @@ function actualShots(id){
 function projectile(p){
  const c=p.core,g=p.glow,s=p.secondary;
  switch(p.kind){
-  case 'gravity-maul':return `<ellipse rx="${15+p.tier*3}" ry="${23+p.tier*3}" fill="${g}" opacity=".25"/>
-   ${Array.from({length:p.tier+1},(_,i)=>`<ellipse rx="${11+i*5}" ry="${17+i*5}" fill="none" stroke="${i%2?s:c}" stroke-width="1.5" opacity="${.8-i*.12}"/>`).join('')}
-   <path d="M-8 10L-11-10L-6-21L6-21L11-10L8 10L0 19Z" fill="#293542" stroke="${c}" stroke-width="2.4"/>
-   <path d="M-8-8H8M-7 2H7M-5 10H5" stroke="${s}" stroke-width="2"/><circle cy="-17" r="4" fill="${c}"/>`;
+  case 'gravity-maul':return `<g transform="rotate(-66)"><svg x="${-p.spriteSize*.64}" y="${-p.spriteSize*.54}"
+   width="${p.spriteSize}" height="${p.spriteSize*610/MAGLIO_ATLAS_SIZE.cellWidth}"
+   viewBox="${p.spriteCell*MAGLIO_ATLAS_SIZE.cellWidth} 175 ${MAGLIO_ATLAS_SIZE.cellWidth} 610" overflow="hidden">
+   <image href="${atlasData}" width="${MAGLIO_ATLAS_SIZE.width}" height="${MAGLIO_ATLAS_SIZE.height}"/></svg></g>`;
   case 'arc':return `<path d="M0-26L-8-7L1-9L-6 18L10-3L1-1L9-24Z" fill="${c}" stroke="${g}" stroke-width="2"/>`;
   case 'flame':return `<path d="M0-27C14-10 16 0 8 18C3 26-6 26-10 15C-16 3-6-13 0-27Z" fill="${g}" stroke="${c}" stroke-width="2"/><path d="M1-11Q9 2 2 15Q-6 10 1-11Z" fill="${c}"/>`;
   case 'wave':return `<path d="M0-26C16-7 19 3 11 17Q0 28-11 17C-19 3-16-7 0-26Z" fill="${g}" stroke="${c}" stroke-width="2"/><path d="M-9 6Q0-2 9 6M-8 13Q0 5 8 13" fill="none" stroke="${c}" stroke-width="2"/>`;
@@ -46,17 +47,17 @@ function projectile(p){
  }
 }
 function movingShot(profile,who,t,start,fromY,toY){
- const age=t-start;if(age<0||age>1.6)return '';
- const duration=.66,travel=clamp(age/duration,0,1),y=fromY+(toY-fromY)*travel;
+ const age=t-start;if(age<0||age>(profile.flightMs+profile.impactMs)/1000)return '';
+ const duration=profile.flightMs/1000,travel=clamp(age/duration,0,1),y=fromY+(toY-fromY)*travel;
  const angle=who==='A'?0:180,head=who==='A'?1:-1;
- const bands=Array.from({length:profile.trailBands},(_,i)=>
+ const bands=profile.kind==='gravity-maul'?'':Array.from({length:profile.trailBands},(_,i)=>
   `<path d="M${-4-i*3} ${20+i*3}Q0 ${35+i*8} ${4+i*3} ${20+i*3}" fill="none" stroke="${i%2?profile.secondary:profile.glow}" stroke-width="${Math.max(1,2-i*.25)}" opacity="${.78-i*.15}"/>`).join('');
  const flash=age<.26?`<g transform="translate(225 ${who==='A'?696:24})" opacity="${1-age/.26}">
   <ellipse rx="24" ry="9" fill="${profile.glow}"/><ellipse rx="9" ry="4" fill="${profile.core}"/></g>`:'';
  const flight=age<duration?`<g transform="translate(225 ${y}) rotate(${angle}) scale(${profile.scale})" filter="url(#glow)">
   <path d="M0 16V${19+profile.trailBands*12}" stroke="${profile.glow}" stroke-width="5" opacity=".35"/>
   ${bands}${projectile(profile)}</g>`:'';
- const impactAge=age-duration,opacity=clamp(1-impactAge/.72,0,1);
+ const impactAge=age-duration,opacity=clamp(1-impactAge/(profile.impactMs/1000),0,1);
  const impact=impactAge>=0&&opacity>0?`<g transform="translate(225 ${toY}) scale(${profile.impactScale})" opacity="${opacity}">
   <ellipse rx="46" ry="34" fill="${profile.glow}" opacity="${opacity*.22}"/>
   ${Array.from({length:profile.impactRings},(_,i)=>`<ellipse rx="${(20+i*8)*(1+impactAge*.95)}" ry="${(13+i*5)*(1+impactAge*.95)}" fill="none" stroke="${i%2?profile.secondary:profile.core}" stroke-width="${Math.max(1,2.2-i*.25)}"/>`).join('')}

@@ -77,10 +77,31 @@ test('Nessuno sparo in preparazione; due Magli separati e attesa fino alla fine 
  assert.equal(r.ok,true,r.reason);
  const shots=maglioShots(r.events);
  assert.equal(shots.length,2);assert.equal(shots[1].delayMs,260);
- assert.equal(maglioResolutionMs(r.events),5110);assert.equal(fleetResolutionFxMs(r.events),5110);
- assert.equal(fleetResolutionFxMs([...r.events,{kind:'trap-reveal'}]),5110);
+ assert.equal(maglioResolutionMs(r.events),4260);assert.equal(fleetResolutionFxMs(r.events),4260);
+ assert.equal(fleetResolutionFxMs([...r.events,{kind:'trap-reveal'}]),4260);
+ const chosen=[{id:MAGLIO_CARD_ID},{id:MAGLIO_CARD_ID}];
+ assert.equal(fleetResolutionFxMs(r.events,chosen),4780,'Due carte devono finire il volo e il loro impatto');
  assert.equal(fleetResolutionFxMs([{kind:'impact'}]),1600);
  assert.equal(fleetResolutionFxMs([]),650);
+});
+test('Proiettili approvati: quattro ritagli diversi dello stesso PNG RGBA, con volo leggibile',()=>{
+ const profiles=MAGLIO_VARIANTS.map(v=>weaponEffectProfile(v.id));
+ assert.deepEqual(profiles.map(p=>p.spriteCell),[0,1,2,3]);
+ assert.ok(profiles.every(p=>p.flightMs===1400&&p.impactMs===950));
+ const bytes=readFileSync('public'+profiles[0].projectileArt);
+ assert.deepEqual([...bytes.subarray(0,8)],[137,80,78,71,13,10,26,10]);
+ assert.equal(bytes.readUInt32BE(16),1922);assert.equal(bytes.readUInt32BE(20),818);
+ assert.equal(bytes[25],6,'Il fondo deve essere trasparente, senza rettangoli sulla plancia');
+ assert.equal(weaponEffectProfile('weapon-confirmed-metallic-slitta').flightMs,470);
+});
+test('Tre carte e due Armi in campo: il turno non taglia il proiettile o l’ultimo impatto',()=>{
+ const events=MAGLIO_VARIANTS.slice(0,2).map(v=>({kind:'weapon-base-shot',who:'A',
+  cardId:v.id,machineSlot:0,actualDamage:18,targetKind:'part',targetId:'weapons'}));
+ const cards=[{id:'energy-metallic'},{id:'energy-plasma'},{id:'energy-refrigerant'}];
+ assert.equal(fleetResolutionFxMs(events,cards),6340);
+ assert.ok(fleetResolutionFxMs(events,cards)>fleetResolutionFxMs(events));
+ const release=releaseFleetTurnAfterEffects({phase:'playing'},6340);
+ assert.equal(release.deadlineMs,36340,'Restano disponibili tutti i 30 secondi del turno seguente');
 });
 test('Rarità Maglio: un impatto per ogni rarità, rifiniture visive progressive',()=>{
  const profiles=MAGLIO_VARIANTS.map(v=>weaponEffectProfile(v.id));
