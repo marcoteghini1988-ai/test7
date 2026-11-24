@@ -57,7 +57,8 @@ import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
 import MaglioBattleEffects from './MaglioBattleEffects.jsx';
-import {fleetWeaponShots,maglioPresentationBerths,MAGLIO_PROJECTILE_ATLAS} from './maglioBattleVisuals.js';
+import {fleetWeaponShots,maglioPresentationBerths} from './maglioBattleVisuals.js';
+import {preloadProjectileViews} from './maglioPerspectiveRenderer.js';
 import './MathDuelBattle.css';
 import './OfficialBattle3D.css';
 import './OfficialLiveBattle3D.css';
@@ -504,9 +505,7 @@ export default function OfficialFleetBattle3D({
  bossPlanetId=null,bossSectorLevel=null,onResult,onExit,initialBattle=null
 }){
  const opts={mode:gameMode,sectorNumber,bossPlanetId,bossSectorLevel};
- useEffect(()=>{
-  const artwork=new Image();artwork.decoding='async';artwork.src=MAGLIO_PROJECTILE_ATLAS;
- },[]);
+ useEffect(()=>{preloadProjectileViews();},[]);
  const newSession=()=>initialBattle?{battle:releaseFleetTurnAfterEffects(
   structuredClone(initialBattle),Date.now()),error:''}:startSession(opts);
  const [session,setSession]=useState(newSession);

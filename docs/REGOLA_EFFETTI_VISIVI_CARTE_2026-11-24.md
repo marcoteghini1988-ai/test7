@@ -69,8 +69,20 @@ Leggendaria mantengono un unico colpo reale, con scia, impatto e suono distinti.
 Il confronto `docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png`
 fissa l'aspetto delle quattro munizioni: testa segmentata Comune, giroscopi
 bronzei Rara, piastre e dissipatori Epica, struttura prismatica Leggendaria.
-Il gioco usa quelle sagome mediante l'atlante PNG con trasparenza
-`public/assets/fleet-weapons/maglio/projectiles/approved-atlas.png`.
+Il gioco ne ricostruisce i volumi in `src/maglioProjectile3D.js`. L'atlante PNG
+con trasparenza resta come riferimento artistico. Non basta ruotare la stessa
+immagine: nel tiro del giocatore si vede il retro, in quello avversario il
+fronte. Una camera fissa sul tavolo proietta geometria, scia e punto di arrivo;
+le superfici si coprono correttamente anche puntando i supporti laterali.
+Il corpo mantiene il lato superiore verso l'alto e cambia dimensione con la
+profondità. Il naso della testata, non il centro della figura, tocca il bersaglio.
+Il renderer interpola 24 viste fisiche Cycles per rarità dello stesso modello:
+due estremità, tre azimut (-24°, 0°, +24°) e quattro elevazioni (28°, 42°, 56°,
+70°). Questo conserva riflessi, incassi e ombre anche senza WebGL. La camera
+seleziona le viste durante il volo e ancora il naso al bersaglio; non ruota
+un'unica immagine obliqua. La mesh CPU dello stesso modello resta disponibile
+mentre si caricano gli atlanti. I render si ricostruiscono con
+`node scripts/build-maglio-projectile-atlas.mjs` (Blender e Pillow richiesti).
 Le prime tre varianti mantengono l'energia arancione; l'ultima aggiunge il
 nucleo bianco-violetto. I dettagli devono restare visibili nella partita.
 

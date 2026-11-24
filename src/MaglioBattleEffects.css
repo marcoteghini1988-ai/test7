@@ -16,6 +16,9 @@
 .es-math-scope .f3d-approved-layout .maglio-battle-effects {
  position:absolute;inset:0;width:450px;height:800px;overflow:hidden;
 }
+.maglio-projectiles-3d,.maglio-projectiles-3d canvas {
+ position:absolute;inset:0;width:450px;height:800px;pointer-events:none;
+}
 .maglio-pulse-travel {
  opacity:0;transform-origin:0 0;
  animation:maglio-flight var(--maglio-flight-ms,470ms) var(--maglio-flight-delay) linear both;
@@ -77,7 +80,7 @@
 }
 @media (prefers-reduced-motion:reduce) {
  .es-math-scope .f3d-approved-layout .maglio-card-flight,
- .maglio-pulse-travel,.weapon-portal-flash {display:none}
+ .maglio-pulse-travel,.maglio-projectiles-3d,.weapon-portal-flash {display:none}
  .es-math-scope .f3d-approved-layout .maglio-card-reveal {
   animation-name:maglio-card-reduced;
  }

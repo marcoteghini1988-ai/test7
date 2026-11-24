@@ -1,0 +1,63 @@
+{
+  "generator": "scripts/build-maglio-projectile-atlas.mjs",
+  "renderer": "Blender Cycles CPU",
+  "model": "src/maglioProjectile3D.js",
+  "tileWidth": 384,
+  "tileHeight": 480,
+  "orthographicHeight": 3,
+  "columns": [
+    -24,
+    0,
+    24
+  ],
+  "rows": [
+    {
+      "end": "rear",
+      "elevation": 28
+    },
+    {
+      "end": "rear",
+      "elevation": 42
+    },
+    {
+      "end": "rear",
+      "elevation": 56
+    },
+    {
+      "end": "rear",
+      "elevation": 70
+    },
+    {
+      "end": "front",
+      "elevation": 28
+    },
+    {
+      "end": "front",
+      "elevation": 42
+    },
+    {
+      "end": "front",
+      "elevation": 56
+    },
+    {
+      "end": "front",
+      "elevation": 70
+    }
+  ],
+  "files": [
+    "perspective-0.png",
+    "perspective-1.png",
+    "perspective-2.png",
+    "perspective-3.png"
+  ],
+  "cameraUp": [
+    0,
+    1,
+    0
+  ],
+  "modelForward": [
+    0,
+    0,
+    -1
+  ]
+}

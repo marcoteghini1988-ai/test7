@@ -6,7 +6,8 @@ const unit=v=>{const n=Math.hypot(...v);return v.map(x=>x/n);};
 const directions=lights.map(l=>unit(l.slice(0,3)));
 const aces=x=>Math.pow(Math.max(0,Math.min(1,(x*(2.51*x+.03))/(x*(2.43*x+.59)+.14))),1/2.2)*255;
 export class MaglioSoftwareRenderer{
- constructor(canvas=document.createElement('canvas')){
+ constructor(canvas=document.createElement('canvas'),{contactShadow=true}={}){
+  this.contactShadow=contactShadow;
   this.domElement=canvas;this.context=this.domElement.getContext('2d',{alpha:true});
   if(!this.context)throw Error('Canvas 2D non disponibile');
   this.isSoftwareRenderer=true;this.shadowMap={};this.info={render:{calls:0}};this.ratio=1;this.cache=new WeakMap();this.frame=0;
@@ -33,11 +34,11 @@ export class MaglioSoftwareRenderer{
   // Ombra di contatto trasparente sul piano del basamento.
   this.shadow.set(0,.03,0).project(camera);const sx=(this.shadow.x*.5+.5)*width,sy=(.5-this.shadow.y*.5)*height;
   const rx=width*.29,ry=height*.105;
-  for(let y=Math.max(0,Math.floor(sy-ry*1.8));y<Math.min(height,sy+ry*1.8);y++)for(let x=Math.max(0,Math.floor(sx-rx*1.8));x<Math.min(width,sx+rx*1.8);x++){
+  if(this.contactShadow)for(let y=Math.max(0,Math.floor(sy-ry*1.8));y<Math.min(height,sy+ry*1.8);y++)for(let x=Math.max(0,Math.floor(sx-rx*1.8));x<Math.min(width,sx+rx*1.8);x++){
    const fall=Math.exp(-2*((x-sx)**2/rx**2+(y-sy)**2/ry**2));data[(y*width+x)*4+3]=Math.round(fall*48);
   }
   this.info.render.calls=0;this.frame++;
-  scene.traverse(mesh=>{
+  scene.traverseVisible(mesh=>{
    if(!mesh.isMesh||!mesh.visible||mesh.material?.isShadowMaterial)return;
    const materials=Array.isArray(mesh.material)?mesh.material:[mesh.material];
    const geometry=mesh.geometry,pos=geometry.attributes.position,norm=geometry.attributes.normal;if(!norm)return;
@@ -52,7 +53,7 @@ export class MaglioSoftwareRenderer{
     screen[k+2]=(e[2]*x+e[6]*y+e[10]*z+e[14])*iw;
    }
    const indices=geometry.index?.array,count=indices?indices.length:pos.count;this.info.render.calls++;
-   const groups=geometry.groups.length?geometry.groups:[{start:0,count,materialIndex:0}];
+   const groups=Array.isArray(mesh.material)&&geometry.groups.length?geometry.groups:[{start:0,count,materialIndex:0}];
    for(const group of groups){
     const material=materials[group.materialIndex];if(!material?.color)continue;
     let shade=cache.shades.get(group.materialIndex);

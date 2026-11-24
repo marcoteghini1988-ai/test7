@@ -4,8 +4,16 @@
 
 **Proiettili approvati, revisione del 24/11:** il Maglio usa le quattro
 sagome illustrate in `docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png`.
-L'atlante PNG RGBA giocabile è in `public/assets/fleet-weapons/maglio/projectiles/`.
-Conservare piastre, giroscopi, alette e prismi; mostrare questi dettagli durante
+Il modello volumetrico è in `src/maglioProjectile3D.js`; l'atlante PNG RGBA
+resta un riferimento artistico, non una faccia da ruotare per entrambi i lati.
+La camera del tavolo mostra il retro nel tiro A e il fronte nel tiro B, con
+verticale stabile, occlusioni reali e scala prospettica. Il naso arriva al
+bersaglio misurato sulla plancia. Il renderer interpola 24 viste Cycles per
+rarità dello stesso volume (fronte/retro, tre azimut e quattro elevazioni).
+Le viste sono riproducibili con `scripts/build-maglio-projectile-atlas.mjs`;
+la mesh CPU rimane disponibile durante il caricamento. Non tornare a un'unica
+immagine obliqua ruotata nei due sensi. Conservare piastre, giroscopi, alette e prismi;
+mostrare questi dettagli durante
 il volo. La calibrazione approvata richiede leggibilità: il Maglio viaggia per
 1.400 ms e l'impatto rimane visibile 950 ms. Audio, reazione della nave e
 rilascio del turno usano gli stessi tempi. Il numero di colpi deriva dal motore.

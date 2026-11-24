@@ -1,8 +1,8 @@
 import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {card,cardFacePath,cardRole} from './fleetNext/rules.js';
 import {projectFleetSlots,projectMachineBerths} from './fleetNext/battlePresentation.js';
-import {weaponEffectProfile,weaponPortalOrigin,weaponVisualCards,weaponShotStartMs,
- MAGLIO_ATLAS_SIZE} from './maglioBattleVisuals.js';
+import {weaponEffectProfile,weaponPortalOrigin,weaponVisualCards,weaponShotStartMs} from './maglioBattleVisuals.js';
+import MaglioProjectileScene from './MaglioProjectileScene.jsx';
 import {playSound} from './audio.js';
 import './MaglioBattleEffects.css';
 
@@ -54,24 +54,14 @@ const visualCards=(shots,selectedCards)=>{
  return weaponVisualCards(shots,selectedCards).filter(c=>cardFacePath(c.id,c.grade));
 };
 
-function WeaponProjectile({profile}){
- switch(profile.kind){
-  case 'gravity-maul':return <g transform="rotate(-66)" className="maglio-projectile-art">
-   <svg x={-profile.spriteSize*.64} y={-profile.spriteSize*.54}
-    width={profile.spriteSize} height={profile.spriteSize*610/MAGLIO_ATLAS_SIZE.cellWidth}
-    viewBox={[profile.spriteCell*MAGLIO_ATLAS_SIZE.cellWidth,175,
-     MAGLIO_ATLAS_SIZE.cellWidth,610].join(' ')} overflow="hidden">
-    <image href={profile.projectileArt} width={MAGLIO_ATLAS_SIZE.width}
-     height={MAGLIO_ATLAS_SIZE.height} preserveAspectRatio="none"/>
-   </svg>
-  </g>;
-  default:return <><ellipse rx="8" ry="18" fill="#8eeaff" opacity=".2"/>
+function WeaponProjectile(){
+ return <><ellipse rx="8" ry="18" fill="#8eeaff" opacity=".2"/>
    <path d="M0-18 L6 5 L0 15 L-6 5 Z" fill="#9deaff" stroke="#f1ffff" strokeWidth="1.2"/></>;
- }
 }
 
 export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSide,ply,nonce}){
  const ref=useRef(null),[paths,setPaths]=useState([]),[placements,setPlacements]=useState([]);
+ const startedAt=useRef(performance.now()).current;
  const reveals=visualCards(shots,selectedCards);
  const shotStart=weaponShotStartMs(reveals.length);
  // Il suono segue l'evento reale e gli stessi tempi della traiettoria visiva.
@@ -136,6 +126,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
      '--reveal-x':(destination?.x??225)-225+'px',
      '--reveal-y':(destination?.y??379.5)-379.5+'px'}}/>;
   })}
+  <MaglioProjectileScene paths={paths.filter(p=>p.profile.kind==='gravity-maul')} startedAt={startedAt}/>
   <svg className="maglio-battle-effects" viewBox="0 0 450 800" focusable="false">
    {paths.map(({shot,from,to,profile,start},index)=>{
     const impactDelay=start+profile.flightMs;
@@ -153,6 +144,8 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
      data-target-id={shot.targetId} data-actual-damage={shot.actualDamage}
      data-projectiles="1" data-origin-edge={from.edge}
      data-flight-ms={profile.flightMs} data-impact-at-ms={impactDelay}
+     data-projection={profile.kind==='gravity-maul'?'perspective-3d':'legacy'}
+     data-visible-end={profile.kind==='gravity-maul'?(shot.who==='A'?'rear':'front'):undefined}
      data-weapon-kind={profile.kind} data-rarity={profile.rarity} style={style}>
      <defs><radialGradient id={gradientId}>
       <stop offset="0" stopColor={impactCore} stopOpacity=".95"/>
@@ -164,7 +157,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
       <ellipse rx="21" ry="9" fill={profile.glow} opacity=".8"/>
       <ellipse rx="9" ry="4" fill={profile.core}/>
      </g>
-     <g className="maglio-pulse-travel"
+     {profile.kind!=='gravity-maul'&&<g className="maglio-pulse-travel"
       style={{'--maglio-from-x':from.x+'px','--maglio-from-y':from.y+'px',
        '--maglio-to-x':to.x+'px','--maglio-to-y':to.y+'px',
        '--maglio-from-scale':shot.who==='A'?1.18:.68,
@@ -177,7 +170,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
         strokeWidth={Math.max(1,2-i*.25)} opacity={.78-i*.15}/>)}
        <WeaponProjectile profile={profile}/>
       </g>
-     </g>
+     </g>}
      <g transform={'translate('+to.x+' '+to.y+') scale('+profile.impactScale+')'}
       style={{'--maglio-impact-delay':impactDelay+'ms'}}>
       <g className="maglio-gravity-impact">
