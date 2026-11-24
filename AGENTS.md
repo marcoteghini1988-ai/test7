@@ -6,6 +6,8 @@ Le quattro cornici HD Comune, Rara, Epica e Leggendaria in `docs/riferimenti-car
 
 Il simbolo della **categoria variabile** va nello slot tondo sinistro; l'eventuale elemento nello slot tondo destro. L'utente ha autorizzato prove di nuovi simboli fedeli ai soggetti della tavola del 21/11 ma adattati ai fori circolari, senza il vecchio contenitore a rombo/esagono. Le prove non sono asset approvati: mostrarle e ottenere approvazione prima di inserirle nel gioco. La tavola del 21/11 rimane fonte visiva dei soggetti fino all'approvazione dei nuovi simboli.
 
+Le **16 prove PNG separate** sono indicizzate in [docs/SIMBOLI_ADESIVI_2026-11-24.md](docs/SIMBOLI_ADESIVI_2026-11-24.md) e in `docs/riferimenti-carte/adesivi-slot-2026-11-24/manifest.json`: sei categorie a sinistra e dieci elementi a destra, con ID reali del motore, soggetto e coordinate dei cerchi su ciascuna rarità. La posizione è confermata; l'aspetto dei singoli adesivi è ancora da revisionare. Quando si prepara una nuova carta usare l'indice per recuperare il candidato corretto e mostrarlo prima dell'inserimento.
+
 ## Aggiornamento approvato il 23 novembre 2026 — cornici di rarità
 
 Leggere [docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md](docs/CRITERI_GRAFICI_RARITA_PER_CATEGORIA_2026-11-23.md) per la palette del 23/11: **Comune grafite, Rara sabbia bronzata, Epica argento, Leggendaria oro**. Le quattro basi vuote Attacco del 23/11 sono approvate. Le quattro cornici HD più recenti del 24/11 sono riferimenti di rarità trasversali alle categorie, inclusa la Leggendaria prismatica; gli accenti interni e i simboli cambiano con categoria ed elemento. Le varianti delle altre categorie vanno verificate visivamente prima di diventare fronti giocabili.

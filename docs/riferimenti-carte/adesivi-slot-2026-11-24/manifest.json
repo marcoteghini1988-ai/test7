@@ -1,0 +1,214 @@
+{
+  "version": "2026-11-24",
+  "status": "bozza grafica da approvare prima dell’uso nelle carte giocabili",
+  "approvedPlacement": true,
+  "approvedArtwork": false,
+  "referenceSheet": "../SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png",
+  "canvasPx": [
+    1254,
+    1254
+  ],
+  "rendering": {
+    "stickerSidePxAt3072Frame": 300,
+    "centersPxAt3072Frame": {
+      "comune": {
+        "sinistra": [
+          384,
+          519
+        ],
+        "destra": [
+          2688,
+          516
+        ]
+      },
+      "rara": {
+        "sinistra": [
+          383,
+          517
+        ],
+        "destra": [
+          2689,
+          517
+        ]
+      },
+      "epica": {
+        "sinistra": [
+          383,
+          514
+        ],
+        "destra": [
+          2692,
+          514
+        ]
+      },
+      "leggendaria": {
+        "sinistra": [
+          379,
+          519
+        ],
+        "destra": [
+          2694,
+          519
+        ]
+      }
+    }
+  },
+  "categories": [
+    {
+      "id": "arma",
+      "name": "Arma",
+      "subject": "Torretta a energia",
+      "slot": "sinistra",
+      "file": "categorie/arma.png",
+      "sha256": "bd1588451cc7aaf295fdb0e2b245c88f6640f51cbb0382368690da9ec241e10a",
+      "gitBlobSha": "15c9c6cb8c1e1e206753298c86553c339712a4e2"
+    },
+    {
+      "id": "attacco",
+      "name": "Attacco",
+      "subject": "Tre razzi",
+      "slot": "sinistra",
+      "file": "categorie/attacco.png",
+      "sha256": "7e17d495a13b843cc04244687fa336f28827113ba5e5f232c677337daab491e5",
+      "gitBlobSha": "b5e6f4ba1876e52dceb9eee637cf88abd7d0990d"
+    },
+    {
+      "id": "difesa",
+      "name": "Difesa",
+      "subject": "Scudo energetico",
+      "slot": "sinistra",
+      "file": "categorie/difesa.png",
+      "sha256": "0bb6ec2ce7fe00f536f2ffbc5f245049326dac111249d8ce64240c23988edd0f",
+      "gitBlobSha": "0d5451f87c60e02cd5cd95f065babdc44aab0891"
+    },
+    {
+      "id": "personaggio",
+      "name": "Personaggio",
+      "subject": "Pilota",
+      "slot": "sinistra",
+      "file": "categorie/personaggio.png",
+      "sha256": "98435c7dfba2949e9482b15c3918a87700d27499d525c266ff58d554fa8dc50b",
+      "gitBlobSha": "23efd3cbabce55942a50709ec7aad605390d7451"
+    },
+    {
+      "id": "terreno",
+      "name": "Terreno",
+      "subject": "Paesaggio alieno",
+      "slot": "sinistra",
+      "file": "categorie/terreno.png",
+      "sha256": "bfbb5988600e32fde639683027e157c726116c559bd45fa32fa3311ebf12e5b5",
+      "gitBlobSha": "490bbf95e7a5ac075884f1a44803cccfa0f198b3"
+    },
+    {
+      "id": "trappola",
+      "name": "Trappola",
+      "subject": "Mina energetica",
+      "slot": "sinistra",
+      "file": "categorie/trappola.png",
+      "sha256": "5bcdbb4e8166b2bb5dcd6aa3737c9d7f8e30856540bae500157d6b3ece829c84",
+      "gitBlobSha": "e109983c19123cfd9432ca09fb1fcda8c9ce85f9"
+    }
+  ],
+  "elements": [
+    {
+      "id": "fuoco",
+      "name": "Fuoco",
+      "subject": "Fiamma",
+      "slot": "destra",
+      "file": "elementi/fuoco.png",
+      "sha256": "31b8bdceb7278fd56e852c149a335c655796a9a1da964ea5de57f285ca0a39ae",
+      "gitBlobSha": "d4d847e8574d885e9193bbdc539b0d47d2629aeb",
+      "fleetElementId": "plasma"
+    },
+    {
+      "id": "ghiaccio",
+      "name": "Ghiaccio",
+      "subject": "Cristallo di neve",
+      "slot": "destra",
+      "file": "elementi/ghiaccio.png",
+      "sha256": "f0e2b54e7f0b46f1bedd7ee76bd4be32d61668785dec5b855608b54c986c5b6a",
+      "gitBlobSha": "6ebb9bf2c525d6b88944127750b73c707aa3ec99",
+      "fleetElementId": "cryogenic"
+    },
+    {
+      "id": "acqua",
+      "name": "Acqua",
+      "subject": "Goccia",
+      "slot": "destra",
+      "file": "elementi/acqua.png",
+      "sha256": "62d9785638ecaee896d2463e3bc880c4b45ca4eb8e85b4771a16e4fc27588cf7",
+      "gitBlobSha": "c553b969430d802830d87cef1a0e85ea229f3946",
+      "fleetElementId": "refrigerant"
+    },
+    {
+      "id": "metallo",
+      "name": "Metallo",
+      "subject": "Tre lingotti",
+      "slot": "destra",
+      "file": "elementi/metallo.png",
+      "sha256": "dfb3f7df48ec6a10fa7953d570b20f6b2f1cfcc087f7bedd90cde802af984b6b",
+      "gitBlobSha": "130ff928bffcbd0df26fa8e6f79673ace15c0aa7",
+      "fleetElementId": "metallic"
+    },
+    {
+      "id": "fulmine",
+      "name": "Fulmine",
+      "subject": "Saetta",
+      "slot": "destra",
+      "file": "elementi/fulmine.png",
+      "sha256": "367d0599d8218cf76a94cc6f52ce14b9a90bfb136790d8efd1c79425e7e404a0",
+      "gitBlobSha": "f0e049978904bfd276882c07338e92dab90c64ad",
+      "fleetElementId": "ionic"
+    },
+    {
+      "id": "terra",
+      "name": "Terra",
+      "subject": "Cristalli minerali",
+      "slot": "destra",
+      "file": "elementi/terra.png",
+      "sha256": "ab2185aae1d7fe47d6554fa40cbd1297d9e51276c636219c62ca9c94855c4843",
+      "gitBlobSha": "1e1c8124f583912edc09b8c8a20e57ad6221b923",
+      "fleetElementId": "mineral"
+    },
+    {
+      "id": "vento",
+      "name": "Vento",
+      "subject": "Spirale d’aria",
+      "slot": "destra",
+      "file": "elementi/vento.png",
+      "sha256": "bced2ffba98f2351a5314df5a6d3c0e8245264ef5f00a42227b52b5ff8c8b6ea",
+      "gitBlobSha": "d6f7f1829e2bebe5ae3a215f89a475c6b3c2bee1",
+      "fleetElementId": "aerial"
+    },
+    {
+      "id": "luce",
+      "name": "Luce",
+      "subject": "Stella radiante",
+      "slot": "destra",
+      "file": "elementi/luce.png",
+      "sha256": "23422cccee29c83163699b5b2f1f9ce2c3cac05d2e1b018e0ea0f1e093aec307",
+      "gitBlobSha": "62d0265ad708f48db47924629d48304c16a89f3a",
+      "fleetElementId": "radiant"
+    },
+    {
+      "id": "ombra",
+      "name": "Ombra",
+      "subject": "Vortice oscuro",
+      "slot": "destra",
+      "file": "elementi/ombra.png",
+      "sha256": "8b82a1fbdb32061dcb28027a0b90c2505f5fd7307be74b94d6d4b9acd1772b88",
+      "gitBlobSha": "9ee4670c459c502f250f1c5f975d91c4e197faf9",
+      "fleetElementId": "void"
+    },
+    {
+      "id": "gravita",
+      "name": "Gravità",
+      "subject": "Singolarità gravitazionale",
+      "slot": "destra",
+      "file": "elementi/gravita.png",
+      "sha256": "058918f34c3787840723c522e49478f03184a9627e0e7fb443ddebac5a8384e2",
+      "gitBlobSha": "5664fa94ecdb569457452dd964ec767d16fc17d0",
+      "fleetElementId": "gravity"
+    }
+  ]
+}
