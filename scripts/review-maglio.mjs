@@ -15,6 +15,7 @@ import {METAL_WEAPON_VARIANTS,metalWeaponVariant} from './src/metalWeaponBattleV
 import {CHAIN_WEAPON_VARIANTS,chainWeaponVariant} from './src/chainWeaponBattleVisuals.js';
 import {PRECISION_WEAPON_VARIANTS,precisionWeaponVariant,CASCADE_ID} from './src/precisionWeaponBattleVisuals.js';
 import {hapticsEnabled,setHapticsEnabled} from './src/weaponHaptics.js';
+import {approvedWeaponSalvo} from './src/fleetNext/approvedWeaponSalvos.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import './src/index.css';
 function Review(){
@@ -84,6 +85,7 @@ function Review(){
     {[...MAGLIO_VARIANTS,...METAL_WEAPON_VARIANTS,...CHAIN_WEAPON_VARIANTS,...PRECISION_WEAPON_VARIANTS].map(v=><option key={v.id} value={v.id}>{(WEAPON_NEAR_FINAL_BY_ID[v.id].name||'Maglio')+' · '+v.rarity}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
+   <span>{(()=>{const s=approvedWeaponSalvo(setup.cardId);return !s?'':s.familyId.includes('ganasce')?'2 agganci laterali':s.count===0?'1 schianto tra 2 scafi':s.style==='six-plus-lance'?'6 colpi + 1 lancia finale':s.count+' colpi per salva';})()}</span>
    <label><input type="checkbox" aria-label="Supporti in campo" checked={setup.supports} onChange={e=>reset({supports:e.target.checked,wounded:false})}/>Supporti in campo</label>
    <button onClick={()=>reset({slot:0,blocked:false,expiredCombo:false,wounded:false})}>Riprova slot 1</button>
    <button onClick={()=>reset({slot:1,blocked:false})}>Riprova slot 2</button>

@@ -1,5 +1,18 @@
 # Regola dei colpi e degli effetti delle carte — 24 novembre 2026
 
+## Decisione più recente del 25/11 — sostituisce le partenze e i colpi fissi
+
+L'utente chiede ora punti di lancio variabili sul lato del rispettivo
+giocatore, salve da 3/6/9, curve, rotazioni ed esplosioni differenti per
+famiglia e rarità. Le prescrizioni sotto sul centro USB obbligatorio e su
+un unico proiettile per tutte le rarità sono superate per le 22 varianti
+già approvate. Leggere `RAFFICHE_ORIGINI_VARIABILI_2026-11-25.md` e
+`src/fleetNext/approvedWeaponSalvos.js` prima di lavorare sugli effetti.
+Rimangono vincolanti corrispondenza con il codice, bersagli reali,
+prospettiva, audio e aptica sincronizzati e distinzione fra studio offline
+e collaudo nella partita. Il danno totale si ripartisce nei proiettili,
+senza moltiplicarlo; Difesa e copertura verificano la salva per bersaglio.
+
 ## Prima di ogni effetto — precisazione vincolante del 25 novembre
 
 Per **qualsiasi carta**, prima di ideare un effetto leggere nel codice la

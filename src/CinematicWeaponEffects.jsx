@@ -2,7 +2,8 @@ import React,{useEffect,useRef} from 'react';
 import {createProjectileCamera} from './maglioProjectile3D.js';
 import {combatTargetElement,boardHullPoint} from './chainWeaponCanvas.js';
 import {prepareCinematicEntry,drawCinematicWeapon} from './weaponCinematicRenderer.js';
-import {weaponHullFrame,weaponTravelProgress} from './weaponCinematicStyle.js';
+import {weaponHullFrame,clamp01} from './weaponCinematicStyle.js';
+import {weaponFlightFrame} from './weaponKinematics.js';
 import './CinematicWeaponEffects.css';
 
 const properties={x:'px',y:'px',roll:'deg',pitch:'deg',lift:'px',light:'',thrust:'',color:''};
@@ -34,7 +35,7 @@ export default function CinematicWeaponEffects({paths,startedAt}){
    ship.active=false;
   };
   let raf=0,previous=-Infinity,frames=0,maxFrame=0;
-  element.dataset.presentation='cinematic-v2';
+  element.dataset.presentation='salvos-v3';
   element.dataset.motifs=JSON.stringify(entries.map(e=>e.style.motif));
   const draw=now=>{
    if(now-previous<1000/30){raf=requestAnimationFrame(draw);return;}
@@ -46,13 +47,11 @@ export default function CinematicWeaponEffects({paths,startedAt}){
    for(const entry of entries){
     const {profile:p,start,shot}=entry,elapsed=age-start,hitAge=elapsed-p.flightMs;
     if(elapsed<p.flightMs+p.impactMs)pending=true;
-    if(elapsed<-(p.chargeMs||420)||hitAge>=p.impactMs)continue;
+    if(elapsed<-(p.chargeMs||0)||hitAge>=p.impactMs)continue;
     active++;drawCinematicWeapon(floor,air,entry,age,{reduced});
     element.dataset.phase=elapsed<0?'charge':hitAge<0?'flight':shot.defenseBlocked?'shield-contact':'contact';
     element.dataset.motif=entry.style.motif;element.dataset.targetId=shot.targetId;
-    const progress=weaponTravelProgress(p.kind,elapsed/p.flightMs);
-    // World-space travel is projected like the model, not interpolated on screen.
-    const moving=entry.a.clone().lerp(entry.b,progress).project(camera);
+    const moving=weaponFlightFrame(entry.from,entry.to,elapsed/p.flightMs,camera,0,{shot,kind:p.kind}).nose.project(camera);
     moving.x=(moving.x+1)*225;moving.y=(1-moving.y)*400;
     for(const ship of ships){
      if(ship.target.dataset.collisionMotion)continue;
@@ -64,10 +63,20 @@ export default function CinematicWeaponEffects({paths,startedAt}){
       const distance=Math.hypot(ship.point.x-moving.x,ship.point.y-moving.y);
       pose.light=Math.max(pose.light,.32*(1-clamp01(distance/90))**2);
      }
+     if(hit&&(shot.salvoCount||1)>1&&!shot.salvoLast){
+      for(const key of ['x','y','roll','pitch','lift','thrust'])pose[key]*=.50;
+      pose.light*=.7;
+     }
      if(pose.light<.004&&!pose.thrust&&!pose.x&&!pose.y)continue;
-     const current=reactions.get(ship.target);
-     if(!current||pose.light>current.light)reactions.set(ship.target,{...pose,color:p.glow,kind:p.kind,
-      motion:hit&&hitAge>=0});
+     const current=reactions.get(ship.target),motion=hit&&hitAge>=0;
+     if(!current)reactions.set(ship.target,{...pose,color:p.glow,kind:p.kind,motion});
+     else{
+      // Reflections from the next round must not cancel an active recoil.
+      const body=motion&&(!current.motion||pose.thrust>current.thrust)?pose:current;
+      const brighter=pose.light>current.light;
+      reactions.set(ship.target,{...body,light:Math.max(pose.light,current.light),
+       color:brighter?p.glow:current.color,kind:motion?p.kind:current.kind,motion:motion||current.motion});
+     }
     }
    }
    for(const ship of ships){

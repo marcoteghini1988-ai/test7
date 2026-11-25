@@ -1,5 +1,35 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Ultima decisione utente — raffiche e punti di lancio variabili, 25/11
+
+L'utente ha rifiutato anche la seconda revisione: cambiava il disegno ma
+restava la stessa azione. SOSTITUISCE il vincolo precedente del centro USB
+fisso e del singolo proiettile per tutte le rarità. Usare lanci diversi
+entro il lato A/B, salve vere 3/6/9, traiettorie curve/incrociate, rotazioni,
+esplosioni coerenti e finali diversi. Il catalogo vincolante è ora
+`src/fleetNext/approvedWeaponSalvos.js`; dettagli e matrice in
+`docs/RAFFICHE_ORIGINI_VARIABILI_2026-11-25.md`.
+
+Il danno totale resta quello della carta ed è distribuito esattamente nei
+pacchetti `projectileHits` emessi dal motore. Una salva verifica Difesa e
+copertura come un'azione per bersaglio; non moltiplicare danni, costi Energia
+o reazioni per il numero di proiettili. Ganasce: due agganci reali e porte
+persistenti; Collassatore: un solo scontro fra due scafi. La Cascata aspetta
+l'ultimo impatto della salva precedente e paga una volta per trasferimento.
+
+La plancia usa `fleetWeaponProjectiles`, non i colpi aggregati di diagnosi
+`fleetWeaponShots`. I contatori della carta si compongono con il PNG HD
+approvato e `WeaponSalvoCardMarks`: sfondi estratti dalle cornici originali,
+testo vettoriale `TOTAL DAMAGE` / `N SHOTS` o `6 + 1`, stessi simboli e arte.
+Nel salvare/esportare un fronte completo includere entrambi gli strati.
+Le descrizioni e i manifest precedenti sono storici quando indicano uno
+sparo fisso; leggere sempre la definizione corrente del codice.
+
+Eseguire anche `weaponRendererBindings.test.js`: i test del combattimento
+da soli non eseguono gli effetti React. È stato corretto un import mancante
+che poteva fermare il canvas della revisione precedente. Non dichiarare
+collaudata in partita una dimostrazione offline o una sola build riuscita.
+
 ## Revisione generale degli effetti — 25 novembre 2026
 
 L'utente ha fermato le nuove carte per rivedere tutti i 22 effetti già

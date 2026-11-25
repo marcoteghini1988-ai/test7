@@ -23,7 +23,9 @@ const bracket=(v,values)=>{
  return [[values.length-1,1]];
 };
 export function projectileViewSamples(model,camera){
- const view=camera.position.clone().sub(model.position).applyAxisAngle(new Vector3(0,1,0),-model.rotation.y);
+ const view=camera.position.clone().sub(model.position);
+ if(model.quaternion)view.applyQuaternion(model.quaternion.clone().invert());
+ else view.applyAxisAngle(new Vector3(0,1,0),-model.rotation.y);
  const az=Math.atan2(view.x,view.z),front=Math.cos(az)<0;
  const center=front?Math.PI:0,offset=Math.atan2(Math.sin(az-center),Math.cos(az-center))*180/Math.PI;
  const elevation=Math.atan2(view.y,Math.hypot(view.x,view.z))*180/Math.PI;
@@ -38,11 +40,12 @@ export function projectileViewSamples(model,camera){
 // Cycles. Naso, scala e orientamento vengono dalla camera 3D della partita.
 // Questo conserva riflessi e occlusioni sui dispositivi senza accelerazione.
 export class MaglioPerspectiveRenderer{
- constructor(canvas){
+ constructor(canvas,{viewImages=images,forceMesh=false}={}){
   this.domElement=canvas;this.context=canvas.getContext('2d',{alpha:true});
   this.blendCanvas=document.createElement('canvas');this.blend=this.blendCanvas.getContext('2d',{alpha:true});
   this.isPerspectiveRenderer=true;this.ratio=1;
-  this.fallback=new MaglioSoftwareRenderer(canvas,{contactShadow:false});preloadProjectileViews();
+  this.images=viewImages;this.forceMesh=forceMesh;this.fallback=new MaglioSoftwareRenderer(canvas,{contactShadow:false});
+  if(viewImages===images)preloadProjectileViews();
  }
  setPixelRatio(r){this.ratio=r;this.fallback.setPixelRatio(r);}
  setSize(w,h){this.fallback.setSize(w,h);this.blendCanvas.width=this.domElement.width;this.blendCanvas.height=this.domElement.height;}
@@ -50,7 +53,7 @@ export class MaglioPerspectiveRenderer{
   const models=scene.children.filter(o=>o.isGroup).sort((a,b)=>
    camera.position.distanceToSquared(b.position)-camera.position.distanceToSquared(a.position));
   const output=this.context,ctx=this.blend;
-  if(models.some(model=>!images.get(model.userData.tier)?.complete||!images.get(model.userData.tier)?.naturalWidth)){
+  if(this.forceMesh||models.some(model=>!this.images.get(model.userData.tier)?.complete||!(this.images.get(model.userData.tier)?.naturalWidth||this.images.get(model.userData.tier)?.width))){
    this.lastMethod='cpu-mesh';this.lastSamples=[];
    this.fallback.render(scene,camera);return;
   }
@@ -59,8 +62,8 @@ export class MaglioPerspectiveRenderer{
   for(const model of models){
    ctx.clearRect(0,0,this.blendCanvas.width,this.blendCanvas.height);
    ctx.save();ctx.scale(this.ratio,this.ratio);
-   const image=images.get(model.userData.tier),center=worldPointToBoard(model.position,camera);
-   const forward=new Vector3(0,0,-1).applyAxisAngle(new Vector3(0,1,0),model.rotation.y);
+   const image=this.images.get(model.userData.tier),center=worldPointToBoard(model.position,camera);
+   const forward=new Vector3(0,0,-1).applyQuaternion(model.quaternion);
    const nose=worldPointToBoard(model.position.clone().addScaledVector(forward,-MAGLIO_NOSE_Z*model.scale.z),camera);
    const dx=nose.x-center.x,dy=nose.y-center.y;
    const samples=projectileViewSamples(model,camera);

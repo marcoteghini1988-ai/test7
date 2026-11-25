@@ -2,8 +2,10 @@ import {Vector3} from 'three';
 import {boardPointToWorld,worldPointToBoard} from './maglioProjectile3D.js';
 import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
 import {cinematicStyle,clamp01,weaponVisualSeed,seededUnit,weaponTravelProgress} from './weaponCinematicStyle.js';
+import {weaponFlightFrame} from './weaponKinematics.js';
 
 const TAU=Math.PI*2;
+const UP=new Vector3(0,1,0);
 const prism=['#c4f5ff','#c9b3ff','#f9e5ff','#8cdbff'];
 const rgba=(hex,a)=>{const h=hex.slice(1);return `rgba(${parseInt(h.slice(0,2),16)},${parseInt(h.slice(2,4),16)},${parseInt(h.slice(4,6),16)},${clamp01(a)})`;};
 const point=(ctx,p,first)=>first?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);
@@ -16,7 +18,9 @@ export function prepareCinematicEntry(path,camera){
   thermal:thermalChargeForShot(path.shot),camera};
 }
 function local(entry,center,side=0,up=0,back=0){
- return center.clone().addScaledVector(entry.side,side).addScaledVector(entry.axis,-back).add(new Vector3(0,up,0));
+ const scale=entry.flightScale||1;
+ return center.clone().addScaledVector(entry.side,side*scale).addScaledVector(entry.axis,-back*scale)
+  .addScaledVector(entry.flightUp||UP,up*scale);
 }
 const project=(entry,p)=>worldPointToBoard(p,entry.camera);
 function polygon(ctx,points,fill,stroke=null,width=1){
@@ -127,9 +131,10 @@ function floorWave(ctx,e,ms,{delay=0,radius=1.1,color=e.profile.secondary,alpha=
  }
 }
 function charge(floor,air,e,elapsed){
- const {profile:p}=e,ms=p.chargeMs||420,t=clamp01(1+elapsed/ms);
+ const {profile:p}=e,ms=p.chargeMs||0;if(!ms)return;
+ const t=clamp01(1+elapsed/ms);
  if(elapsed<-ms||elapsed>=0||e.shot.cascadeTransfer)return;
- const source={x:225,y:e.shot.who==='A'?779:21},o=boardPointToWorld(source,e.camera);
+ const source=e.from,o=boardPointToWorld(source,e.camera);
  const color=p.glow;
  glow(floor,source,30+t*32,color,t*.5,.28);
  air.save();air.globalAlpha=t;
@@ -213,6 +218,19 @@ function gravityFlight(floor,air,e,nose,t,age){
 }
 function railFlight(floor,air,e,nose,t,age){
  const p=e.profile,n=p.tier===0?1:p.tier===1?2:3;
+ if(e.shot.finisher){
+  const head=project(e,local(e,nose,0,.02,.85)),tail=project(e,local(e,nose,0,.02,3.65));
+  const light=floor.createLinearGradient(head.x,head.y,tail.x,tail.y);
+  light.addColorStop(0,rgba(p.core,.95));light.addColorStop(.45,rgba(p.secondary,.62));light.addColorStop(1,rgba(p.glow,0));
+  // The seventh round is a charged lance, with two luminous blade planes
+  // and a continuous shaft, different from the six preceding tracers.
+  for(const vertical of [false,true]){
+   const points=[[-.065,.80],[.065,.80],[.018,3.65],[-.018,3.65]].map(([w,z])=>
+    project(e,local(e,nose,vertical?0:w,vertical?w+.02:.02,z)));
+   polygon(floor,points,light);
+  }
+  streak(floor,tail,head,p.core,2.7,.95);glow(floor,head,18,p.secondary,.65);
+ }
  for(let i=0;i<n;i++)ribbon(floor,e,nose,{length:1.9,radius:p.tier===0?.018:.12+i*.025,
   phase:age*.017+i*TAU/n,turns:p.tier===1?1.8:p.tier===3?.65:.15,
   color:p.tier===3?prism[i]:i?p.secondary:p.core,width:i===0?.034:.023,alpha:.90});
@@ -321,6 +339,24 @@ function impact(floor,air,e,ms,reduced){
   glow(air,q,24,'#9bd9ff',Math.exp(-ms/130)*.35);return;
  }
  if(reduced){glow(air,q,21,p.glow,fade*.5,.6);return;}
+ if((e.shot.salvoCount||1)>1&&!p.salvoLast){
+  // Each early round makes a sharp local contact. The last round resolves
+  // the family-specific finish instead of nine identical full explosions.
+  const thermal=p.kind==='thermal-reclaimer',narrow=['steel-rail','cascade-piercer'].includes(p.kind);
+  glow(air,q,thermal?19:12,p.glow,Math.exp(-ms/70)*.65);
+  particles(floor,air,e,ms,{count:thermal?7:6,hot:thermal||narrow,
+   cone:narrow?Math.PI/2:null,spread:narrow?.7:1,speed:.5});
+  if(thermal)for(let i=0;i<3;i++){
+   const a=i*TAU/3;smoke(air,e,local(e,e.b,Math.cos(a)*t*.25,t*.5,Math.sin(a)*t*.25),
+    .14+t*.19,fade*.7,true);
+  }
+  if(p.kind==='induction')for(let i=0;i<3;i++){
+   const a=project(e,local(e,e.b,-.18,.03+i*.06,-.12+t*.18));
+   const b=project(e,local(e,e.b,.18,.03+i*.06,.12-t*.18));
+   streak(air,a,b,p.core,1.25,fade);
+  }
+  return;
+ }
  if(p.kind==='gravity-maul'){
   const well=clamp01(1-ms/140);
   glow(floor,q,44,p.glow,flash*.55,.4);
@@ -356,6 +392,18 @@ function impact(floor,air,e,ms,reduced){
    if(p.tier===3)ring(air,e,pos,.18+t*.2,.7+i*.45,prism[i],Math.exp(-ms/200)*.5);
   }
   particles(floor,air,e,ms,{hot:true,count:16,speed:.5});
+  if((e.shot.salvoCount||1)>1){
+   // A plasma capsule blooms upward in billowing lobes, distinct from the
+   // Collassatore's ground-level kinetic explosion and shock ring.
+   const rise=clamp01(ms/360),burn=Math.exp(-ms/210);
+   for(let i=0;i<7;i++){
+    const a=i*2.399,r=(.12+rise*.35)*(i%3+1)/3;
+    const pos=local(e,e.b,Math.cos(a)*r,.08+rise*(.35+i%3*.18),Math.sin(a)*r);
+    smoke(air,e,pos,.20+rise*.32,(1-t)*.65,true);
+    glow(air,project(e,pos),10+rise*17,p.tier===3?prism[i%4]:'#ff9c36',burn*.75);
+   }
+   glow(air,q,26,p.core,Math.exp(-ms/45)*.9);
+  }
   if(p.tier===3)for(let i=0;i<6;i++){
    const a=i*TAU/6,r=.12+Math.sin(Math.min(1,t*1.6)*Math.PI)*.4;
    const center=local(e,e.b,Math.cos(a)*r,.10+t*.45,Math.sin(a)*r);
@@ -413,9 +461,16 @@ function impact(floor,air,e,ms,reduced){
 export function drawCinematicWeapon(floor,air,e,age,{reduced=false}={}){
  const elapsed=age-e.start,p=e.profile;
  if(elapsed<0){if(!reduced)charge(floor,air,e,elapsed);return;}
- if(elapsed>=p.flightMs){impact(floor,air,e,elapsed-p.flightMs,reduced);return;}
+ if(elapsed>=p.flightMs){
+  const end=weaponFlightFrame(e.from,e.to,1,e.camera,0,{shot:e.shot,kind:p.kind});
+  e.axis.copy(end.direction);e.axis.y=0;e.axis.normalize();e.side.set(e.axis.z,0,-e.axis.x).normalize();
+  e.flightScale=1;e.flightUp=null;
+  impact(floor,air,e,elapsed-p.flightMs,reduced);return;
+ }
  if(reduced)return;
- const t=weaponTravelProgress(p.kind,elapsed/p.flightMs),nose=e.a.clone().lerp(e.b,t);
+ const t=weaponTravelProgress(p.kind,elapsed/p.flightMs),pose=weaponFlightFrame(e.from,e.to,elapsed/p.flightMs,e.camera,0,{shot:e.shot,kind:p.kind}),nose=pose.nose;
+ e.axis.copy(pose.direction);e.side.set(e.axis.z,0,-e.axis.x).normalize();
+ e.flightScale=e.shot.visualScale||1;e.flightUp=new Vector3().crossVectors(e.axis,e.side).normalize();
  // A soft ground shadow separates a flying volume from the metal surface.
  const center=local(e,nose,0,0,.5),screen=project(e,center),fade=Math.min(1,t*18,(1-t)*22);
  floor.save();air.save();floor.globalAlpha=fade;air.globalAlpha=fade;

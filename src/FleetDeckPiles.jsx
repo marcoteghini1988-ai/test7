@@ -4,6 +4,7 @@ import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import {OFFICIAL_FLEET_DRAW_BACK} from './officialDeckBackArt.js';
 import {FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView} from './fleetDeckPiles.js';
 import './FleetDeckPiles.css';
+import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
 
 const FALLBACK_ART={attack:'shot-ion',energy:'shot-ion',defense:'tactical-cover',
  trap:'tactic-reactive',character:'module-card-planet_char_1',
@@ -21,6 +22,7 @@ export function FleetPileCardFace({id}){
   data-family={role} data-rarity={def?.rarita||'Comune'}>
   <img src={art||fallback} alt="" draggable={false}
    onError={e=>{if(e.currentTarget.getAttribute('src')!==fallback)e.currentTarget.src=fallback;}}/>
+  {art&&<WeaponSalvoCardMarks cardId={id}/>}
   {!art&&<><small>{FLEET_ELEMENTS[def?.elementId]?.symbol||'✦'} {ROLE_LABELS[role]||'SPECIALE'}</small>
    <b>{name}</b></>}
  </span>;

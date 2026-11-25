@@ -109,7 +109,8 @@ export function activeGrappleLinks(battle){
    const part=enemy.ships?.[0]?.parts?.find(p=>p.id===id);
    const target=escort||part;
    if(!target||target.hp<=0||target.destroyed||part&&enemy.ships[0].hp<=0)continue;
-   links.push({who,cardId:machine.sourceCardId,grapplePly:g.ply,
+   links.push({who,cardId:machine.sourceCardId,grapplePly:g.ply,ply:g.ply,
+    machineId:machine.id,machineSlot:machine.slot,stage:1,impactIndex:g.ports?.[id]??g.ids.indexOf(id),
     targetKind:escort?'escort':'part',targetId:id});
   }
  }

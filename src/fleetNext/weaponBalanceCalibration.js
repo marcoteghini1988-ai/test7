@@ -5,6 +5,7 @@
 import {FLEET_ELEMENTS} from './elementalAffinities.js';
 import {PACING_BALANCE_CANDIDATE} from './pacingBalanceCandidate.js';
 import {STRATEGIC_NO_DRAIN_BALANCE} from './strategicNoDrainBalance.js';
+import {salvoCardDescription,withApprovedWeaponSalvo} from './approvedWeaponSalvos.js';
 export const WEAPON_RARITY_POWER=PACING_BALANCE_CANDIDATE.weaponNominalMultiplier;
 export const WEAPON_BALANCE_REVISION=PACING_BALANCE_CANDIDATE.id;
 const DAMAGE_FIELDS=Object.freeze(new Set([
@@ -35,6 +36,7 @@ function scaleObject(spec,factor){
 }
 const fmt=list=>list.join('/');
 function description(source,s){
+ const salvo=salvoCardDescription(source,s);if(salvo)return 'Arma Metallo · '+salvo;
  const e=FLEET_ELEMENTS[source.elementId]?.name||source.elementId;
  const prefix='Arma '+e+' · ';
  const base=s.baseDamage||0;
@@ -166,7 +168,7 @@ function balanceNativeSpec(spec,factor){
 export function calibratedWeaponCard(raw){
  if(!raw||!Object.hasOwn(WEAPON_RARITY_POWER,raw.rarita))
   throw Error('Arma priva di rarita');
- return Object.freeze({...raw,balancePending:false,weaponValuesNearFinal:true,
+ return withApprovedWeaponSalvo({...raw,balancePending:false,weaponValuesNearFinal:true,
   weaponBalanceRevision:STRATEGIC_NO_DRAIN_BALANCE.id});
 }
 

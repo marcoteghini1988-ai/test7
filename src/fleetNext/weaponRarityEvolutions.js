@@ -12,6 +12,7 @@ import {DISCARD_WEAPONS} from './discardWeapon.js';
 import {TEMP_SUPPORT_WEAPONS} from './temporarySupportWeapons.js';
 import {SHIP_RARITIES} from './shipRarity.js';
 import {MOTHER_RARITY_SCALING} from './motherBalance.js';
+import {withApprovedWeaponSalvo} from './approvedWeaponSalvos.js';
 import {scaleObject,description,weaponPrintCandidate,weaponStrategicPrintCandidate}
  from './weaponBalanceCalibration.js';
 
@@ -22,11 +23,12 @@ const HP_SCALE=Object.freeze(Object.fromEntries(SHIP_RARITIES.map((r,i)=>
  [r,MOTHER_RARITY_SCALING[i].hp])));
 const COPIES=Object.freeze({Comune:5,Rara:4,Epica:3,Leggendaria:2});
 const SUFFIX=Object.freeze({Rara:'r',Epica:'e',Leggendaria:'l'});
+const withApprovedSalvo=withApprovedWeaponSalvo;
 export const WEAPON_BASE_CARDS=Object.freeze([
  ...APPROVED_BASE_WEAPONS,...CONFIRMED_WEAPON_CARDS,...MULTI_WEAPON_CARDS,
  ...DESIGNED_WEAPON_CARDS,...CONFIRMED_TRANSFER_WEAPONS,
  ...DISCARD_WEAPONS,...TEMP_SUPPORT_WEAPONS
-]);
+].map(withApprovedSalvo));
 function evolveOne(base,rarita,previousId){
  const index=SHIP_RARITIES.indexOf(base.rarita),next=SHIP_RARITIES.indexOf(rarita);
  if(index<0||next<=index)throw Error('Evoluzione arma non valida '+base.id);
@@ -36,7 +38,7 @@ function evolveOne(base,rarita,previousId){
  const spec=Object.freeze(scaleObject(base.effectSpec,factor));
  const id=base.id+'-rarity-'+SUFFIX[rarita];
  const maxCopies=base.maxCopiesPerDeck===1?1:COPIES[rarita];
- return Object.freeze({...base,id,name:base.name,nome:base.name,rarita,
+ return withApprovedSalvo({...base,id,name:base.name,nome:base.name,rarita,
   rarity:rarita,weaponFamilyId:base.id,originRarity:base.rarita,
   evolutionOf:previousId,evolutionStage:next-index,isWeaponEvolution:true,
   playable:true,nativeFace:true,acquisitionPending:false,balancePending:false,

@@ -32,7 +32,7 @@ export function cinematicStyle(profile){
  return Object.freeze({motif,weight:weights[profile.kind],
   // Particle budget is bounded even in a three-card resolution.
   fragments:14+profile.tier*5,smoke:7+profile.tier*2,
-  prism:profile.tier===3,version:2});
+  prism:profile.tier===3,version:3});
 }
 export function weaponHullFrame(kind,age,duration,{tier=0,direction=1,reduced=false,blocked=false}={}){
  const zero={x:0,y:0,roll:0,pitch:0,lift:0,light:0,thrust:0};
@@ -64,7 +64,7 @@ export function weaponHullFrame(kind,age,duration,{tier=0,direction=1,reduced=fa
 // Stable per event, independent of rendering frame rate and replay order.
 export function weaponVisualSeed(shot){
  let seed=2166136261;
- for(const c of `${shot.cardId}:${shot.who}:${shot.targetKind}:${shot.targetId}:${shot.cascadeIndex||0}`)
+ for(const c of `${shot.cardId}:${shot.who}:${shot.targetKind}:${shot.targetId}:${shot.cascadeIndex||0}:${shot.salvoIndex||0}:${shot.ply||0}`)
   seed=Math.imul(seed^c.charCodeAt(0),16777619)>>>0;
  return seed;
 }

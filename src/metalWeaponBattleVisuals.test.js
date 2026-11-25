@@ -20,7 +20,7 @@ for(const v of METAL_WEAPON_VARIANTS){
   const png=readFileSync('public'+path);assert.equal(png.readUInt32BE(16),3072);
   assert.equal(png.readUInt32BE(20),4608);assert.equal(png[25],6);
   const p=weaponEffectProfile(v.id);assert.ok(p.approved);assert.equal(p.kind,v.kind);
-  assert.ok(p.flightMs>=1200&&p.impactMs>=850);
+  assert.equal(p.flightMs,v.kind==='steel-rail'?720:1250);assert.ok(p.impactMs>=850);
   for(const phase of ['charge','fire','impact']){
    const sound=metalWeaponSoundPlan(p.sound[phase]);assert.ok(sound);
    assert.equal(sound.tier,v.tier);assert.equal(sound.phase,phase);

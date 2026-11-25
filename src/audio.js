@@ -432,7 +432,7 @@ const stopBGM = () => {
 };
 
 // 2.1 RIPRODUZIONE EFFETTI SONORI SFX CON SUPPORTO PITCH SHIFT A SEMITONI
-const playSound = (type, pitchSemitones = 0, pan = 0) => {
+const playSound = (type, pitchSemitones = 0, pan = 0, level = 1, timeScale = 1) => {
   if (isMutedSFX || typeof window === 'undefined') return;
   try {
     initAudio();
@@ -441,7 +441,7 @@ const playSound = (type, pitchSemitones = 0, pan = 0) => {
     const pitchFactor = Math.pow(2, (Number(pitchSemitones) || 0) / 12);
     const applyPitch = (freq) => freq * pitchFactor;
 
-    if(playMetalWeaponSound(audioCtx,sfxGainNode||audioCtx.destination,type,pitchFactor,pan))return;
+    if(playMetalWeaponSound(audioCtx,sfxGainNode||audioCtx.destination,type,pitchFactor,pan,level,timeScale))return;
 
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();

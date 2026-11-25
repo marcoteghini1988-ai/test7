@@ -58,7 +58,8 @@ import {npcSupportRoster} from './fleetNext/supportCampaign.js';
 import {fleetImpactVisual} from './fleetBattleVisuals.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
 import MaglioBattleEffects from './MaglioBattleEffects.jsx';
-import {fleetWeaponShots,maglioPresentationBerths} from './maglioBattleVisuals.js';
+import {fleetWeaponProjectiles,maglioPresentationBerths} from './maglioBattleVisuals.js';
+import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
 import {preloadProjectileViews} from './maglioPerspectiveRenderer.js';
 import ShipFlightSurface from './ShipFlightSurface.jsx';
 import './MathDuelBattle.css';
@@ -443,7 +444,7 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
      <path className="f3d-slot-frame-corners" d="M15 3H6L3 6V15M43 3H52L55 6V15M55 72V81L52 84H43M15 84H6L3 81V72"
       fill="none" stroke="currentColor" strokeWidth="1.7"/>
     </svg>
-    {art?<img className="f3d-slot-art" src={art} alt="" draggable={false}/>:
+    {art?<><img className="f3d-slot-art" src={art} alt="" draggable={false}/><WeaponSalvoCardMarks cardId={type}/></>:
      face?<span className="f3d-card-fallback">{face.nome||face.name}</span>:
      i===5?<svg className="f3d-slot-energy-symbol" viewBox="0 0 64 42" aria-hidden="true" focusable="false" fill="currentColor">
       <path d="M22 3L11 8L5 30L16 38L20 34L11 28L15 12L25 7ZM42 3L53 8L59 30L48 38L44 34L53 28L49 12L39 7Z"/>
@@ -511,6 +512,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
      event.currentTarget.src=fallbackArt;
     }
    }}/>
+  {art&&<WeaponSalvoCardMarks cardId={type}/>}
   <span className="live-card-emblem">{familyGlyph}</span>
   <span className="live-card-rarity" title={'Rarità '+rarity}>{categoryLabel}</span>
   <span className="live-card-caption"><b>{name}</b>
@@ -637,7 +639,7 @@ export default function OfficialFleetBattle3D({
   })).filter(entry=>entry.id):[];
   setLastFx({nonce:stamp,startedAt:performance.now(),round:battle.round,events:result.events,
    selectedCards,
-   weaponShots:fleetWeaponShots(result.events),
+   weaponShots:fleetWeaponProjectiles(result.events),
    resolvedSides:result.battle.sides});
   // Lascia gli eventi nel Registro senza scritte automatiche sopra le navi.
   setMessage('');
@@ -1215,7 +1217,7 @@ export default function OfficialFleetBattle3D({
       title={machine?(machine.name||'Arma'):'Slot ARMA '+(slot+1)}
       aria-label={machine?(machine.name||'Arma'):'Slot ARMA '+(slot+1)}
       onClick={()=>machine&&setHelp({machine})}>
-      {artwork?<img src={artwork} alt="" draggable={false}/>:
+      {artwork?<><img src={artwork} alt="" draggable={false}/><WeaponSalvoCardMarks cardId={faceId}/></>:
        <span className="f3d-weapon-icon" aria-hidden="true">⚔</span>}
       <span className="f3d-weapon-label">ARMA {slot+1}</span>
      </button>;

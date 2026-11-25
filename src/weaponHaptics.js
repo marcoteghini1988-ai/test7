@@ -31,8 +31,12 @@ export function setHapticsEnabled(enabled){
  if(!enabled)cancelWeaponHaptics();return !!enabled;
 }
 export function requestWeaponHaptic(kind,phase,tier,{nav=globalThis.navigator,
- doc=globalThis.document,storage=globalThis.localStorage}={}){
- const pattern=weaponHapticPattern(kind,phase,tier);
+ doc=globalThis.document,storage=globalThis.localStorage,salvoCount=1,finisher=false,salvoLast=false}={}){
+ let pattern=weaponHapticPattern(kind,phase,tier);
+ if(salvoCount>1){
+  if(['fire','transfer'].includes(phase))pattern=[6+tier];
+  if(phase==='impact')pattern=finisher?[40,25,14]:salvoLast?[28,22,10]:[9+tier*2];
+ }
  const result=status=>({status,pattern,physicalVerified:false});
  if(!pattern.length)return result('none');
  if(!hapticsEnabled(storage))return result('muted');

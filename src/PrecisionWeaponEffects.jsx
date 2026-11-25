@@ -6,7 +6,7 @@ import {metalProjectileFlightFrame,metalTrailPoint} from './metalWeaponProjectil
 import {precisionWeaponVariant} from './precisionWeaponBattleVisuals.js';
 import {createPrecisionProjectile,articulatePrecisionProjectile} from './precisionWeaponProjectile3D.js';
 import {createEffectCanvas,boardHullPoint} from './chainWeaponCanvas.js';
-import {weaponTravelProgress} from './weaponCinematicStyle.js';
+import {weaponFlightFrame,applyWeaponFlightPose} from './weaponKinematics.js';
 
 const clamp=n=>Math.max(0,Math.min(1,n));
 function worldRing(ctx,pose,camera,z,r,angle,color,width=1){
@@ -20,7 +20,7 @@ function worldRing(ctx,pose,camera,z,r,angle,color,width=1){
 }
 function charge(ctx,entry,elapsed,camera,reduced){
  const {shot,profile,from,to}=entry,p=clamp(1+elapsed/profile.chargeMs);
- const origin={x:225,y:shot.who==='A'?778:22};
+ const origin=from;
  const pose=metalProjectileFlightFrame(origin,to,0,camera,0);
  ctx.save();ctx.globalAlpha=.25+p*.7;
  if(profile.kind==='cascade-piercer'){
@@ -126,7 +126,7 @@ function contact(ctx,entry,age,reduced){
  ctx.restore();
 }
 function energyTransfer(ctx,entry,elapsed){
- if(!entry.shot.cascadeTransfer||elapsed<0||elapsed>420||!entry.energyPoint)return;
+ if(!entry.shot.cascadeTransfer||!entry.shot.transferEnergySpent||elapsed<0||elapsed>420||!entry.energyPoint)return;
  const t=elapsed/420,p=entry.energyPoint,q=entry.from;
  ctx.save();ctx.globalAlpha=1-t;ctx.strokeStyle=entry.profile.secondary;ctx.lineWidth=1.8;
  ctx.beginPath();ctx.ellipse(p.x,p.y,17+t*10,22+t*10,0,0,Math.PI*2);ctx.stroke();
@@ -149,6 +149,7 @@ export default function PrecisionWeaponEffects({paths=[],startedAt,cinematic=fal
    return {...path,model:createPrecisionProjectile(path.profile.kind,path.profile.tier),
     energyPoint:energy?boardHullPoint(energy,board):null};
   });
+  for(const entry of entries)entry.model.scale.setScalar(entry.shot.visualScale||1);
   element.dataset.renderer='volume-depth-buffer';element.dataset.camera='table-fixed';
   let raf=0,previous=-Infinity;
   const draw=now=>{
@@ -164,9 +165,10 @@ export default function PrecisionWeaponEffects({paths=[],startedAt,cinematic=fal
     element.dataset.phase=t<1?'flight':'impact';element.dataset.progress=clamp(t).toFixed(3);
     energyTransfer(ctx,entry,elapsed);
     if(t<1&&!reduced){
-     const pose=metalProjectileFlightFrame(from,to,cinematic?weaponTravelProgress(profile.kind,t):t,camera,model.userData.frontZ);
-     articulatePrecisionProjectile(model,elapsed);model.position.copy(pose.center);model.rotation.y=pose.yaw;scene.add(model);
-     if(cinematic&&profile.kind==='wandering-shrapnel')model.rotation.z=elapsed*.008;
+     const pose=cinematic?weaponFlightFrame(from,to,t,camera,model.userData.frontZ*model.scale.z,{shot,kind:profile.kind}):metalProjectileFlightFrame(from,to,t,camera,model.userData.frontZ);
+     articulatePrecisionProjectile(model,elapsed);
+     if(cinematic)applyWeaponFlightPose(model,pose);else{model.position.copy(pose.center);model.rotation.y=pose.yaw;}
+     scene.add(model);
      element.dataset.visibleEnd=pose.visibleEnd;element.dataset.nose=JSON.stringify(worldPointToBoard(pose.nose,camera));
      if(!cinematic)trail(ctx,entry,pose,camera,age,t);
     }else if(t>=1&&!cinematic)contact(ctx,entry,elapsed-profile.flightMs,reduced);

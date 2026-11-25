@@ -84,7 +84,7 @@ export function metalWeaponSoundPlan(type){
   add('noise',2200+i*510,840,.055,.019,.14+i*.06,{q:2.6});
  return {...plan,layers};
 }
-export function playMetalWeaponSound(context,bus,type,pitchFactor=1,pan=0){
+export function playMetalWeaponSound(context,bus,type,pitchFactor=1,pan=0,level=1,timeScale=1){
  const plan=metalWeaponSoundPlan(type);if(!plan)return false;
  const now=context.currentTime;
  // Keep the low body audible on phone speakers, with the existing global
@@ -94,10 +94,13 @@ export function playMetalWeaponSound(context,bus,type,pitchFactor=1,pan=0){
  if(context.createStereoPanner){panner=context.createStereoPanner();panner.pan.value=Math.max(-.6,Math.min(.6,pan));panner.connect(bus);destination=panner;}
  let remaining=plan.layers.length;
  const ended=()=>{remaining--;if(!remaining)panner?.disconnect();};
- for(const [index,layer] of plan.layers.entries()){
+ const rate=Math.max(.2,Math.min(1.5,timeScale)),volume=Math.max(0,Math.min(1.5,level));
+ for(const [index,original] of plan.layers.entries()){
+  const layer={...original,delay:original.delay*rate,duration:original.duration*rate,
+   attack:(original.attack||.004)*rate};
   const time=now+layer.delay,envelope=context.createGain();
   envelope.gain.setValueAtTime(.0001,time);
-  envelope.gain.linearRampToValueAtTime(layer.gain*punch,time+Math.min(layer.duration*.6,layer.attack||.004));
+  envelope.gain.linearRampToValueAtTime(Math.max(.0001,layer.gain*punch*volume),time+Math.min(layer.duration*.6,layer.attack||.004));
   envelope.gain.exponentialRampToValueAtTime(.0001,time+layer.duration);
   envelope.connect(destination);
   if(layer.wave==='noise'){

@@ -10,6 +10,7 @@ import {fleetWeaponShots,weaponEffectProfile,weaponResolutionMs,weaponShotStartM
 import {cardFacePath} from './fleetNext/rules.js';
 import {metalWeaponSoundPlan} from './metalWeaponSounds.js';
 import {weaponHapticPattern} from './weaponHaptics.js';
+import {salvoSpan} from './fleetNext/approvedWeaponSalvos.js';
 import {createPrecisionProjectile} from './precisionWeaponProjectile3D.js';
 import {createProjectileCamera,worldPointToBoard,disposeProjectile} from './maglioProjectile3D.js';
 import {metalProjectileFlightFrame} from './metalWeaponProjectile3D.js';
@@ -68,7 +69,7 @@ test(id+' · '+who+' · '+energyCards+' Energie: continuità, pagamenti e tempi 
   const prior=shots[i-1],s=shots[i],priorProfile=weaponEffectProfile(id,prior),p=weaponEffectProfile(id,s);
   assert.equal(s.sourceTargetId,prior.targetId);assert.equal(s.sourceTargetKind,prior.targetKind);
   assert.ok(s.cascadeTransfer);assert.equal(s.transferEnergySpent,payments[i-1].energySpent);
-  assert.equal(s.delayMs,prior.delayMs+priorProfile.flightMs+CASCADE_CONTACT_MS);
+  assert.equal(s.delayMs,prior.delayMs+priorProfile.flightMs+salvoSpan(id)+CASCADE_CONTACT_MS);
   assert.ok(p.flightMs<priorProfile.flightMs||i>1);
   assert.equal(prior.targetKind,'escort');
   assert.ok(r.battle.sides[other(who)].escorts.find(e=>e.id===prior.targetId).hp<=0);

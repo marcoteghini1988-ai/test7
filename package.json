@@ -10,11 +10,11 @@
     "preview": "vite preview",
     "test:combat": "node --test src/specialFlow.test.js src/bossNumericDecks.test.js src/specialSupport.test.js src/specialDeckBuilder.test.js src/strategicShots.test.js src/localizedSystems.test.js src/motherCover.test.js src/escortRolesMatrix.test.js src/fleetCooperation.test.js src/specialCards.test.js src/fleetManeuvers.test.js src/escortDoctrine.test.js src/escortTactics.test.js src/escortArmory.test.js src/escortFiring.test.js src/fleetSystems.test.js src/linkedEscorts.test.js src/mathDuelEngine.test.js src/mathFleetGeometry.test.js src/mathWeaponEffects.test.js src/rareFleetCatalog.test.js src/epicFleetCatalog.test.js src/legendaryFleetCatalog.test.js",
     "verify:logic": "node --test src/*.test.js src/newCombat/*.test.js",
-    "preflight": "node scripts/restore-weapon-fronts.mjs && node scripts/check-structure.mjs && node scripts/check-official-3d.mjs && node scripts/audit-source-reachability.mjs && node scripts/check-fleet-card-assets.mjs",
+    "preflight": "node scripts/restore-weapon-fronts.mjs && node scripts/check-structure.mjs && node scripts/check-official-3d.mjs && node scripts/audit-source-reachability.mjs && node scripts/check-fleet-card-assets.mjs && node --test src/weaponRendererBindings.test.js",
     "check:structure": "node scripts/check-structure.mjs",
     "check:official-3d": "node scripts/check-official-3d.mjs",
     "check:card-art": "node scripts/check-fleet-card-assets.mjs",
-    "predev": "node scripts/restore-weapon-fronts.mjs",
+    "predev": "node scripts/restore-weapon-fronts.mjs && node scripts/review-maglio.mjs",
     "prebuild": "node scripts/restore-weapon-fronts.mjs"
   },
   "dependencies": {

@@ -195,7 +195,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    const first=ordinary(),second=opposite(first?.unit?.id);
    planned=[...(first?[{target:first,base:p.baseDamage}]:[]),
     ...(second?[{target:second,base:p.baseDamage,ignoreCover:second.kind==='part'}]:[])];
-   comboSide.grapple={ply:b.ply,ids:[]};
+   comboSide.grapple={ply:b.ply,ids:[],ports:{}};
   }else if(pattern==='alloy-collision'){
    const grapple=comboSide.grapple;
    if(!grapple||grapple.ply!==b.ply-2)continue;
@@ -239,7 +239,9 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    const r=hitOnce(m,instruction,n,hits);
    if(!r||!r.damage)continue;
    if(pattern==='wandering-shrapnel')m.previousTargetId=r.target.unit?.id;
-   if(pattern==='magnetic-grapple')comboSide.grapple?.ids.push(r.target.unit.id);
+   if(pattern==='magnetic-grapple'&&comboSide.grapple){
+    comboSide.grapple.ids.push(r.target.unit.id);comboSide.grapple.ports[r.target.unit.id]=n;
+   }
    if(pattern==='ion-probe')comboSide.ionProbe={id:r.target.unit.id,ply:b.ply,expiresPly:b.ply+3};
    if(pattern==='incinerator'&&stage===1){
     const discarded=(side.discard||[]).filter(id=>h.card(id)?.kind==='attack').length;

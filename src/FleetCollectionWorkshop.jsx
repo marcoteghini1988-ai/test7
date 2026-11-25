@@ -8,6 +8,7 @@ import {describeEffect,canUpgradeEffect,SIMPLE_RULES} from './fleetNext/simpleEf
 import {WEAPON_NEAR_FINAL_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
+import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
 import {readFleetInventory,writeFleetInventory,
  upgradeFleetExclusive,exclusiveUpgradeCost} from './fleetNext/collection.js';
 const box={padding:'9px',background:'#071a2de9',border:'1px solid #36678c',borderRadius:'8px',color:'#e3f2ff'};
@@ -32,10 +33,10 @@ function FleetCardArt({id,name,grade=1,large=false}){
     {large&&<span style={{fontSize:9,lineHeight:1.3}}>{text}</span>}
    </div>;
  }
- return <img src={cardFacePath(id,grade)}
+ return <span className="weapon-salvo-gallery" style={{width,margin:large?'0 auto 7px':undefined}}><img src={cardFacePath(id,grade)}
   width={width} height={width*1.5} loading="lazy" decoding="async"
   alt={'Carta '+name} style={{width,aspectRatio:'2 / 3',height:'auto',display:'block',
-   objectFit:'contain',flexShrink:0,margin:large?'0 auto 7px':undefined}}/>;
+   objectFit:'contain',flexShrink:0}}/><WeaponSalvoCardMarks cardId={id}/></span>;
 }
 
 

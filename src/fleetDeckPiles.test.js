@@ -10,6 +10,7 @@ import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
 import {card,cardRole,cardFacePath} from './fleetNext/rules.js';
 import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import {FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView} from './fleetDeckPiles.js';
+import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
 
 const multiset=ids=>[...ids].sort();
 test('Il rimescolamento conserva copie, input e sequenza casuale del motore',()=>{
@@ -95,6 +96,14 @@ test('La presentazione segue spessore e ultima carta reale, poi svuota gli scart
  assert.equal(fleetPileView(side,{serial:0,cards:['gen-216']}).recycling,false);
 });
 
+const marksSource=readFileSync(new URL('./WeaponSalvoCardMarks.jsx',import.meta.url),'utf8');
+const marksAst=ts.createSourceFile('WeaponSalvoCardMarks.jsx',marksSource,ts.ScriptTarget.Latest,true,ts.ScriptKind.JSX);
+const marksBody=marksAst.statements.filter(s=>!ts.isImportDeclaration(s)).map(s=>
+ s.getText(marksAst).replace(/^export default /,'').replace(/^export /,'')).join('\n');
+const marksCompiled=ts.transpileModule(marksBody,{compilerOptions:{target:ts.ScriptTarget.ES2022,
+ jsx:ts.JsxEmit.React,module:ts.ModuleKind.CommonJS}}).outputText;
+const WeaponSalvoCardMarks=new Function('React','useId','approvedWeaponSalvo',marksCompiled+
+ '\nreturn WeaponSalvoCardMarks;')(React,React.useId,approvedWeaponSalvo);
 const source=readFileSync(new URL('./FleetDeckPiles.jsx',import.meta.url),'utf8');
 const ast=ts.createSourceFile('FleetDeckPiles.jsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JSX);
 const body=ast.statements.filter(s=>!ts.isImportDeclaration(s)).map(s=>
@@ -103,7 +112,7 @@ const compiled=ts.transpileModule(body,{compilerOptions:{target:ts.ScriptTarget.
  jsx:ts.JsxEmit.React,module:ts.ModuleKind.CommonJS}}).outputText;
 const scope={React,...Object.fromEntries(['useEffect','useLayoutEffect','useRef','useState'].map(k=>[k,React[k]])),
  card,cardRole,cardFacePath,FLEET_ELEMENTS,OFFICIAL_FLEET_DRAW_BACK:null,
- FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView};
+ FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView,WeaponSalvoCardMarks};
 const {FleetDeckPiles,FleetCardPile}=new Function(...Object.keys(scope),compiled+
  '\nreturn {FleetDeckPiles,FleetCardPile};')(...Object.values(scope));
 
@@ -121,4 +130,9 @@ test('Il renderer mostra il dorso configurato e le facce vere degli ultimi scart
  const fallback=renderToStaticMarkup(React.createElement(FleetDeckPiles,{side}));
  assert.match(fallback,/data-custom-back="false"/);
  assert.doesNotMatch(fallback,/src="null"|src="undefined"/);
+});
+test('The visible discard face composes the current salvo count over its approved art',()=>{
+ const html=renderToStaticMarkup(React.createElement(FleetDeckPiles,{side:{deck:[],discard:['weapon-confirmed-metallic-slitta']}}));
+ assert.match(html,/data-salvo-count="3"/);assert.match(html,/3 SHOTS/);assert.match(html,/TOTAL DAMAGE/);
+ assert.match(html,/weapon-confirmed-metallic-slitta\.png/);
 });

@@ -1,4 +1,5 @@
 // Terzo gruppo Metallo approvato: i profili descrivono soltanto eventi reali.
+import {salvoSpan} from './fleetNext/approvedWeaponSalvos.js';
 export const CASCADE_ID='weapon-designed-metallic-perforatore-cascata';
 export const SHARD_ARTILLERY_ID='weapon-designed-metallic-artiglieria-schegge';
 export const CASCADE_FLIGHT_MS=1350;
@@ -42,6 +43,6 @@ export function cascadeImpactPresentation(event,impactIndex,events,groupStart){
   transferEnergySpent:transfer?payment.energySpent:0,
   sourceTargetKind:transfer?previous.targetKind:null,
   sourceTargetId:transfer?previous.targetId:null,
-  delayMs:groupStart+(impactIndex?CASCADE_FLIGHT_MS+CASCADE_CONTACT_MS+
-   (impactIndex-1)*(CASCADE_TRANSFER_MS+CASCADE_CONTACT_MS):0)};
+  delayMs:groupStart+(impactIndex?CASCADE_FLIGHT_MS+salvoSpan(event.cardId)+CASCADE_CONTACT_MS+
+   (impactIndex-1)*(CASCADE_TRANSFER_MS+salvoSpan(event.cardId)+CASCADE_CONTACT_MS):0)};
 }

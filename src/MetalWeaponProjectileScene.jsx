@@ -4,7 +4,7 @@ import {MaglioSoftwareRenderer} from './maglioSoftwareRenderer.js';
 import {createProjectileCamera,worldPointToBoard,disposeProjectile} from './maglioProjectile3D.js';
 import {createMetalProjectile,metalProjectileFlightFrame,metalTrailPoint} from './metalWeaponProjectile3D.js';
 import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
-import {weaponTravelProgress} from './weaponCinematicStyle.js';
+import {weaponFlightFrame,applyWeaponFlightPose} from './weaponKinematics.js';
 
 export default function MetalWeaponProjectileScene({paths,startedAt,cinematic=false}){
  const host=useRef(null);
@@ -21,6 +21,7 @@ export default function MetalWeaponProjectileScene({paths,startedAt,cinematic=fa
   const camera=createProjectileCamera(),scene=new Scene();
   const entries=paths.map(path=>({...path,charge:thermalChargeForShot(path.shot),
    model:createMetalProjectile(path.profile.kind,path.profile.tier,thermalChargeForShot(path.shot).ratio)}));
+  for(const entry of entries)entry.model.scale.setScalar(entry.shot.visualScale||1);
   element.dataset.renderer='volume-depth-buffer';
   let raf=0,previous=-Infinity;
   const draw=now=>{
@@ -31,9 +32,9 @@ export default function MetalWeaponProjectileScene({paths,startedAt,cinematic=fa
     const {from,to,start,profile,model,shot,charge}=entry;
     const t=(age-start)/profile.flightMs;
     if(t<0){pending=true;continue;}if(t>=1)continue;pending=true;
-    const pose=metalProjectileFlightFrame(from,to,cinematic?weaponTravelProgress(profile.kind,t):t,camera,model.userData.frontZ);
-    model.position.copy(pose.center);model.rotation.y=pose.yaw;scene.add(model);
-    if(cinematic)model.rotation.z=profile.kind==='thermal-reclaimer'?Math.sin(age*.009)*.12:profile.tier>=1?age*.004:0;
+    const pose=cinematic?weaponFlightFrame(from,to,t,camera,model.userData.frontZ*model.scale.z,{shot,kind:profile.kind}):metalProjectileFlightFrame(from,to,t,camera,model.userData.frontZ);
+    if(cinematic)applyWeaponFlightPose(model,pose);else{model.position.copy(pose.center);model.rotation.y=pose.yaw;}
+    scene.add(model);
     element.dataset.visibleEnd=pose.visibleEnd;element.dataset.shooter=shot.who;
     element.dataset.sequence=profile.sequence;element.dataset.progress=t.toFixed(3);
     element.dataset.nose=JSON.stringify(worldPointToBoard(pose.nose,camera));

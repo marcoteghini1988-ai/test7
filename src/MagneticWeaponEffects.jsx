@@ -9,7 +9,7 @@ import {weaponPortalOrigin,weaponEffectProfile,weaponShotStartMs,weaponVisualCar
 import {combatTargetElement,boardHullPoint,createEffectCanvas,drawMagneticChain,drawLatch,drawMetalContact} from './chainWeaponCanvas.js';
 import {drawCollisionExplosion} from './collisionExplosion.js';
 import {prepareCinematicEntry,drawCollisionConvergence,drawDefenseDismantle} from './weaponCinematicRenderer.js';
-import {weaponTravelProgress} from './weaponCinematicStyle.js';
+import {weaponFlightFrame,applyWeaponFlightPose,weaponLaunchOrigin} from './weaponKinematics.js';
 
 const clamp=n=>Math.max(0,Math.min(1,n));
 const aliveAfter=(sides,shot)=>{
@@ -103,6 +103,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const entries=special.filter(p=>p.profile.kind!=='alloy-collision'&&(p.shot.fires||p.shot.defenseBlocked)).map(path=>
    ({...path,model:createChainWeaponModel(path.profile.kind,path.profile.tier)}));
+  for(const entry of entries)entry.model.scale.setScalar(entry.shot.visualScale||1);
   const collisions=collisionGroups(special.map(p=>p.shot)).flatMap(shots=>{
    const pairs=shots.map(s=>special.find(p=>p.shot===s));
    const board=root.getBoundingClientRect();
@@ -134,7 +135,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
     if(t<0){
      pending=true;
      if(!cinematic&&elapsed>=-profile.chargeMs){
-      const p=clamp(1+elapsed/profile.chargeMs),origin={x:225,y:shot.who==='A'?778:22};
+      const p=clamp(1+elapsed/profile.chargeMs),origin=from;
       ctx.save();ctx.translate(origin.x,origin.y);ctx.globalAlpha=p*.85;
       if(profile.kind==='induction'){
        for(let i=0;i<3;i++){
@@ -155,9 +156,10 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
      continue;
     }
     if(elapsed>profile.flightMs+profile.impactMs)continue;pending=true;
-    const pose=metalProjectileFlightFrame(from,to,cinematic?weaponTravelProgress(profile.kind,t):clamp(t),camera,model.userData.frontZ);
+    const pose=cinematic?weaponFlightFrame(from,to,t,camera,model.userData.frontZ*model.scale.z,{shot,kind:profile.kind}):metalProjectileFlightFrame(from,to,clamp(t),camera,model.userData.frontZ);
     const progress=profile.kind==='magnetic-grapple'?clamp((t-.82)/.18):clamp(t*1.9);
-    articulateChainWeapon(model,progress);model.position.copy(pose.center);model.rotation.y=pose.yaw;
+    articulateChainWeapon(model,progress);
+    if(cinematic)applyWeaponFlightPose(model,pose);else{model.position.copy(pose.center);model.rotation.y=pose.yaw;}
     const after=t>=1,alive=aliveAfter(resolvedSides,shot);
     element.dataset.shooter=shot.who;element.dataset.visibleEnd=pose.visibleEnd;
     element.dataset.sequence=profile.sequence;element.dataset.progress=clamp(t).toFixed(3);
@@ -278,7 +280,7 @@ export function MagneticGrappleTethers({battle,resolving,fx}){
     const target=combatTargetElement(root,link);if(!target)continue;
     const p=boardHullPoint(target,board),profile=chainWeaponEffectProfile(link.cardId);
     const tension=cs?collisionFrame(collisionElapsed,cp).pull:.55;
-    drawMagneticChain(ctx,weaponPortalOrigin(link.who),p,profile,camera,now,tension,.82);
+    drawMagneticChain(ctx,weaponLaunchOrigin(link),p,profile,camera,now,tension,.82);
     drawLatch(ctx,p,profile);visible++;
    }
    element.dataset.activeLinks=String(visible);

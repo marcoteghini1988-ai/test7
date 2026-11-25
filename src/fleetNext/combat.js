@@ -1,4 +1,5 @@
 import {shuffleFleetCards as shuffled,recycleFleetDiscard} from './deckCycle.js';
+import {withWeaponSalvoEvent} from './approvedWeaponSalvos.js';
 // Eclissi Stellare — progressione strutturale e combattimento delle flotte.
 // Nessuna animazione o audio qui: gli eventi sono emessi per il renderer ufficiale.
 import {PHASE1_CATALOG} from '../phase1FleetCatalog.js';
@@ -357,7 +358,7 @@ export function fuseFleetSupports(side,ply=0){
  return {ok:true,fused,deployed,stage:stage+1};
 }
 function emit(b,who,kind,text,rest={}){
- const event={round:b.round,ply:b.ply,who,kind,text,...rest};
+ const event={round:b.round,ply:b.ply,who,kind,text,...withWeaponSalvoEvent(kind,rest)};
  b.log=[...b.log,event].slice(-80);
  return event;
 }

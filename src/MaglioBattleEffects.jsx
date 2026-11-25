@@ -10,6 +10,9 @@ import {playSound} from './audio.js';
 import MagneticWeaponEffects from './MagneticWeaponEffects.jsx';
 import PrecisionWeaponEffects from './PrecisionWeaponEffects.jsx';
 import CinematicWeaponEffects from './CinematicWeaponEffects.jsx';
+import {weaponLaunchOrigin,weaponContactPoint} from './weaponKinematics.js';
+import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
+import {weaponSalvoAudioCue} from './weaponSalvoAudio.js';
 import {collisionGroups,chainWeaponVariant,COLLISION_RELEASE_AFTER_MS} from './chainWeaponBattleVisuals.js';
 import {combatTargetElement,boardHullPoint} from './chainWeaponCanvas.js';
 import {requestWeaponHaptic,cancelWeaponHaptics} from './weaponHaptics.js';
@@ -84,9 +87,14 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    Math.max(0,delay-(performance.now()-startedAt))));
   const cue=(profile,phase,time,shot)=>schedule(time,()=>{
    const root=ref.current?.closest('.f3d-approved-layout'),target=root&&combatTargetElement(root,shot);
-   const pan=target&&['impact','block'].includes(phase)?(boardHullPoint(target,root.getBoundingClientRect()).x-225)/225:0;
-   playSound(profile.sound[phase],phase==='charge'?thermalChargeForShot(shot).ratio*3:0,pan);
-   const result=requestWeaponHaptic(profile.kind,phase,profile.tier);
+   const source=shot.cascadeTransfer&&root?combatTargetElement(root,{...shot,targetKind:shot.sourceTargetKind,targetId:shot.sourceTargetId}):null;
+   const origin=source?boardHullPoint(source,root.getBoundingClientRect()):weaponLaunchOrigin(shot);
+   const pan=target&&['impact','block'].includes(phase)?(boardHullPoint(target,root.getBoundingClientRect()).x-225)/225:
+    origin?(origin.x-225)/225:0;
+   const cue=weaponSalvoAudioCue(profile,shot,phase);
+   playSound(cue.type,cue.pitchSemitones,pan,cue.level,cue.timeScale);
+   const result=requestWeaponHaptic(profile.kind,phase,profile.tier,{salvoCount:shot.salvoCount,
+    finisher:shot.finisher,salvoLast:shot.salvoLast});
    if(result.status==='requested')requested=true;
    if(ref.current){ref.current.dataset.hapticStatus=result.status;
     ref.current.dataset.hapticPhase=phase;ref.current.dataset.hapticPattern=JSON.stringify(result.pattern);}
@@ -124,11 +132,12 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
     const special=!!profile?.approved;
     const target=special?combatTargetElement(root,shot):targetForShot(root,shot);
     if(!target)return [];
-    const to=special?boardHullPoint(target,board):point(target.getBoundingClientRect(),board);
+    const measured=special?boardHullPoint(target,board):point(target.getBoundingClientRect(),board);
+    const to=special?weaponContactPoint(measured,shot):measured;
     const source=shot.cascadeTransfer?combatTargetElement(root,{...shot,
      targetKind:shot.sourceTargetKind,targetId:shot.sourceTargetId}):null;
     if(shot.cascadeTransfer&&!source)return [];
-    const from=source?{...boardHullPoint(source,board),edge:'previous-hull'}:weaponPortalOrigin(shot.who);
+    const from=source?{...boardHullPoint(source,board),edge:'previous-hull'}:weaponLaunchOrigin(shot);
     if(!from||!profile)return [];
     const start=shotStart+(shot.delayMs||0);
     if(!profile.approved&&!shot.defenseBlocked){
@@ -152,17 +161,23 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
 
  return <div ref={ref} className="maglio-battle-stage" aria-hidden="true"
   data-weapon-effects={paths.length} data-card-flights={placements.length}>
-  {placements.map(({id,index,from,to,art})=>art&&<img key={nonce+'-place-'+index}
-   className="maglio-card-flight" src={art} alt="" draggable={false}
-   style={{left:from.x-29,top:from.y-43,'--card-dx':to.x-from.x+'px',
-    '--card-dy':to.y-from.y+'px','--card-delay':index*110+'ms'}}/>)}
+  {placements.map(({id,index,from,to,art})=>{
+   const style={left:from.x-29,top:from.y-43,'--card-dx':to.x-from.x+'px',
+    '--card-dy':to.y-from.y+'px','--card-delay':index*110+'ms'};
+   return art&&<React.Fragment key={nonce+'-place-'+index}>
+    <img className="maglio-card-flight" src={art} alt="" draggable={false} style={style}/>
+    <WeaponSalvoCardMarks cardId={id} className="maglio-card-flight" style={style}/>
+   </React.Fragment>;
+  })}
   {reveals.map(({id,grade},index)=>{
    const destination=index<selectedCards.length?placements[index]?.to:null;
-   return <img key={nonce+'-reveal-'+index+'-'+id}
-    className="maglio-card-reveal" src={cardFacePath(id,grade)} alt="" draggable={false}
-    style={{'--reveal-delay':650+index*520+'ms',
+   const style={'--reveal-delay':650+index*520+'ms',
      '--reveal-x':(destination?.x??225)-225+'px',
-     '--reveal-y':(destination?.y??379.5)-379.5+'px'}}/>;
+     '--reveal-y':(destination?.y??379.5)-379.5+'px'};
+   return <React.Fragment key={nonce+'-reveal-'+index+'-'+id}>
+    <img className="maglio-card-reveal" src={cardFacePath(id,grade)} alt="" draggable={false} style={style}/>
+    <WeaponSalvoCardMarks cardId={id} className="maglio-card-reveal" style={style}/>
+   </React.Fragment>;
   })}
   <CinematicWeaponEffects paths={paths} startedAt={startedAt}/>
   <MaglioProjectileScene paths={projectilePaths} startedAt={startedAt} cinematic/>

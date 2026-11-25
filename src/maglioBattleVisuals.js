@@ -5,6 +5,7 @@ import {ALL_WEAPON_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {metalWeaponEffectProfile} from './metalWeaponBattleVisuals.js';
 import {chainWeaponEffectProfile} from './chainWeaponBattleVisuals.js';
 import {precisionWeaponEffectProfile,cascadeImpactPresentation} from './precisionWeaponBattleVisuals.js';
+import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
 
 export const MAGLIO_CARD_ID='weapon-confirmed-metallic-maglio';
 export const MAGLIO_VARIANTS=Object.freeze([
@@ -42,7 +43,7 @@ export function weaponEffectProfile(id,shot){
  const tier=RARITY_TIER[definition.rarita]??0;
  const maglio=!!maglioVariant(id);
  const finish=maglio?MAGLIO_FINISH[tier]:LEGACY_EFFECT;
- return Object.freeze({
+ const profile={
   cardId:id,familyId:definition.weaponFamilyId||id,
   rarity:definition.rarita,elementId:definition.elementId,
   pattern:definition.effectSpec?.weaponProfile?.pattern||definition.effectSpec?.damageMode,
@@ -59,7 +60,15 @@ export function weaponEffectProfile(id,shot){
    fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
   ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id),...precisionWeaponEffectProfile(id,shot)
- });
+ };
+ const salvo=approvedWeaponSalvo(id);
+ const flight=salvo?.count>1?salvo.flightMs:profile.flightMs;
+ const last=!!shot?.salvoCount&&shot.salvoIndex===shot.salvoCount-1;
+ const charge=shot?.finisher&&salvo?.style==='six-plus-lance'?360:shot?.salvoIndex>0?0:profile.chargeMs;
+ return Object.freeze({...profile,...(salvo?{salvoCount:salvo.count,choreography:salvo.style}:{}),salvoLast:last,
+  flightMs:shot?.cascadeTransfer?profile.flightMs:shot?.finisher&&salvo?.style==='six-plus-lance'?1250:flight,
+  impactMs:shot?.salvoCount>1&&!last?Math.round(profile.impactMs*.48):profile.impactMs,
+  chargeMs:charge,sound:profile.sound?{...profile.sound,charge:charge?profile.sound.charge:null}:profile.sound});
 }
 // Centro della porta USB del dispositivo locale, centro del bordo remoto.
 // Entrambe le parti usano la stessa coordinata x: nessun colpo nasce di lato.
@@ -99,7 +108,7 @@ export function fleetWeaponShots(events=[]){
     defenseBlocked:event.pattern==='induction'&&hit.actualDamage===0&&
      events[eventIndex-1]?.kind==='block'&&events[eventIndex-1]?.who===event.who,
     targetKind:hit.targetKind,targetId:hit.targetId,actualDamage:hit.actualDamage,
-    nominalDamage:hit.nominalDamage,
+    nominalDamage:hit.nominalDamage,projectileHits:hit.projectileHits,
     delayMs:event.pattern==='alloy-collision'?groupStart:shots.length*MAGLIO_SHOT_GAP_MS,
     ...cascadeImpactPresentation(event,impactIndex,events,groupStart),
     fires:hit.actualDamage>0&&!!hit.targetKind&&!!hit.targetId});
@@ -117,6 +126,25 @@ export function fleetWeaponShots(events=[]){
  }
  return shots;
 }
+// Aggregate weapon activations remain available for rules, HP and combo
+// diagnostics. The live scene consumes only projectile packets issued by
+// the combat emitter, with exact per-projectile damage attribution.
+export function fleetWeaponProjectiles(events=[]){
+ return fleetWeaponShots(events).flatMap(shot=>{
+  const packets=shot.projectileHits;
+  if(!packets?.length)return [shot];
+  return packets.map(packet=>({...shot,projectileHits:undefined,
+   activationDamage:shot.actualDamage,actualDamage:packet.actualDamage,
+   salvoIndex:packet.index,salvoCount:packet.count,finisher:packet.finisher,
+   salvoLast:packet.index===packet.count-1,
+   visualScale:packet.visualScale,salvoStyle:shot.salvo?.style,
+   transferEnergySpent:packet.index===0?(shot.transferEnergySpent||0):0,
+   delayMs:(shot.delayMs||0)+packet.delayMs,
+   // A zero allocation can still be a real round in an authorized volley.
+   // It never claims extra HP; a completely blocked volley stays suppressed.
+   fires:shot.fires,defenseBlocked:shot.defenseBlocked}));
+ });
+}
 export function maglioResolutionMs(events=[],selectedCards=[]){
  return weaponResolutionMs(events,selectedCards);
 }
@@ -130,7 +158,7 @@ export function weaponVisualCards(shots=[],selectedCards=[]){
  return cards;
 }
 export function weaponResolutionMs(events=[],selectedCards=[]){
- const allShots=fleetWeaponShots(events),shots=allShots.filter(shot=>shot.fires||shot.defenseBlocked);
+ const allShots=fleetWeaponProjectiles(events),shots=allShots.filter(shot=>shot.fires||shot.defenseBlocked);
  const breaks=events.filter(e=>e.kind==='weapon-break-defense'&&chainWeaponEffectProfile(e.cardId));
  if(!shots.length&&!breaks.length)return 0;
  const start=weaponShotStartMs(weaponVisualCards(allShots,selectedCards).length);
