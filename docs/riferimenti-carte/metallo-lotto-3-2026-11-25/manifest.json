@@ -1,9 +1,9 @@
 {
   "date": "2026-11-25",
-  "status": "sei fronti approvati e integrati; collaudo StackBlitz in corso",
+  "status": "sei fronti confermati, integrati e collaudati sulla plancia StackBlitz",
   "reviewStatus": "user-approved",
   "playableFrontsInstalled": true,
-  "effectsImplementationStatus": "sequenze VFX, audio e richieste aptiche implementate; verifica visiva StackBlitz in corso",
+  "effectsImplementationStatus": "VFX e suoni dedicati verificati in partita A/B, slot 1/2 e casi condizionali; richieste aptiche verificate, riscontro fisico su telefono da verificare",
   "sourceRepository": "marcoteghini1988-ai/test7",
   "sourceCommit": "b4596f6be804fe780b28c96098535e06c04f9a2b",
   "element": "metallic",
@@ -369,5 +369,15 @@
   },
   "visualReview": "Sei fronti completi e confronti verificati; testi, simboli, cornice e differenze fisiche delle evoluzioni leggibili. Nessun effetto nuovo dichiarato collaudato in partita.",
   "assetSourceManifest": "asset-sources/weapon-fronts/metallo-3/manifest.json",
-  "assetRestoration": "Dodici parti binarie versionate; predev/prebuild/preflight ricompongono i sei PNG originali con verifica SHA-256. Nessuna modifica di pixel o compressione."
+  "assetRestoration": "Dodici parti binarie versionate; predev/prebuild/preflight ricompongono i sei PNG originali con verifica SHA-256. Nessuna modifica di pixel o compressione.",
+  "runtimeSourceCommit": "4666b637fcb794f8882095199958c7e78809b467",
+  "stackblitzValidation": {
+    "status": "passed",
+    "cases": 14,
+    "conditions": 7,
+    "report": "collaudo-stackblitz.json",
+    "videoUrl": "https://chatgpt.com/library?file_id=libfile_c756b13068f4819184480118b400bf86&account_id=personal",
+    "videoLibraryFileId": "libfile_c756b13068f4819184480118b400bf86",
+    "physicalHapticsVerified": false
+  }
 }

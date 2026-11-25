@@ -1,0 +1,61 @@
+{
+  "sourceFile": "Metallo_terzo_gruppo_registrazione_integrale.webm",
+  "outputFile": "Metallo_6_carte_effetti_in_battaglia_StackBlitz.mp4",
+  "videoSize": [
+    900,
+    1600
+  ],
+  "boardSize": [
+    810,
+    1440
+  ],
+  "captionsOutsideBoard": true,
+  "audioIncluded": true,
+  "noSpeedChanges": true,
+  "segments": [
+    {
+      "title": "Frantumatore a Induzione",
+      "subtitle": "Leggendaria · 2 Energie · rimozione Difesa",
+      "sourceStartSeconds": 48.83,
+      "sourceEndSeconds": 61.586,
+      "nativeSpeed": true
+    },
+    {
+      "title": "Perforatore a Cascata",
+      "subtitle": "Epica · due trasferimenti reali",
+      "sourceStartSeconds": 72.977,
+      "sourceEndSeconds": 87.701,
+      "nativeSpeed": true
+    },
+    {
+      "title": "Perforatore a Cascata",
+      "subtitle": "Leggendaria · due trasferimenti reali",
+      "sourceStartSeconds": 91.943,
+      "sourceEndSeconds": 106.868,
+      "nativeSpeed": true
+    },
+    {
+      "title": "Artiglieria delle Schegge Erranti",
+      "subtitle": "Rara · primo turno · un colpo",
+      "sourceStartSeconds": 109.941,
+      "sourceEndSeconds": 121.55799999999999,
+      "nativeSpeed": true
+    },
+    {
+      "title": "Artiglieria delle Schegge Erranti",
+      "subtitle": "Epica · secondo turno · nuovo bersaglio",
+      "sourceStartSeconds": 128.98499999999999,
+      "sourceEndSeconds": 141.288,
+      "nativeSpeed": true
+    },
+    {
+      "title": "Artiglieria delle Schegge Erranti",
+      "subtitle": "Leggendaria · primo turno · un colpo",
+      "sourceStartSeconds": 145.881,
+      "sourceEndSeconds": 158.057,
+      "nativeSpeed": true
+    }
+  ],
+  "audioExportGain": 0.85,
+  "runtimeAudioUnchanged": true
+}

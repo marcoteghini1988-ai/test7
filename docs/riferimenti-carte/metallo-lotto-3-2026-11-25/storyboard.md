@@ -1,7 +1,7 @@
 # Metallo, terzo gruppo — sei anteprime e progetto degli effetti
 
 Stato aggiornato dopo la conferma dell’utente: sei fronti approvati e
-sequenze implementate. Collaudo visivo StackBlitz in corso. I paragrafi
+sequenze implementate. Collaudo visivo StackBlitz completato, con audio e prova video. I paragrafi
 seguenti conservano il progetto letto prima dell’implementazione; non
 introducono nuovi valori o nuove regole. Base meccanica:
 `test7/main` a `b4596f6be804fe780b28c96098535e06c04f9a2b`.
@@ -36,7 +36,7 @@ due condensatori posteriori e l'innesto navale dell'Epica già approvata.
 Aggiunge bordi diamantati, protezioni prismatiche sui bracci e un arco
 articolato sulla scocca. Non aggiunge canne o un'altra scarica.
 
-Effetto da implementare dopo conferma: carica sulle tre piastre e sulle
+Effetto implementato: carica sulle tre piastre e sulle
 giunzioni reali del nuovo arco; un solo nucleo volumetrico coerente con la
 carta, retro da A e fronte da B; rifrazioni nella scia e impatto sullo scafo
 misurato. Il varco e la frattura della Difesa seguono esclusivamente i
@@ -64,7 +64,7 @@ d'argento, camera del penetratore, circuito di ricircolo e innesto laterale
 snodato. La Leggendaria conserva questi volumi e aggiunge rinforzi diamantati
 attorno ai tre anelli, ponte prismatico e collettore posteriore.
 
-Effetto da implementare dopo conferma: anelli in rotazione coordinata,
+Effetto implementato: anelli in rotazione coordinata,
 compressione del nucleo e un penetratore fisico al primo bersaglio. Se gli
 eventi confermano un trasferimento, rendere leggibile il consumo di una
 Energia Metallo e proseguire la scia residua dallo scafo distrutto al prossimo
@@ -96,7 +96,7 @@ anche tali parti e aggiunge il ponte di rinforzo e la guida prismatica.
 Le cinque cassette sono munizioni del dispositivo e non cinque canne che
 sparano insieme. Le evoluzioni non aggiungono colpi.
 
-Effetto da implementare dopo conferma: indicizzazione di una cassetta,
+Effetto implementato: indicizzazione di una cassetta,
 rotazione del singolo carrello verso il bersaglio, rinculo e lancio di un
 solo nucleo a scheggia per turno. Il secondo turno orienta di nuovo il
 carrello verso l'ID reale, senza forzare un cambio che il motore non consente.

@@ -191,3 +191,8 @@ Conservare questa preparazione anche nei checkout nuovi. La Cascata
 prosegue dallo scafo precedente soltanto per trasferimenti reali pagati;
 le Schegge sparano una volta per turno proprio e usano il bersaglio reale.
 Vedi `docs/ARMI_METALLO_TERZO_GRUPPO_INTEGRATO_2026-11-25.md`.
+
+Le sei varianti del terzo gruppo sono state collaudate sulla plancia reale
+StackBlitz: A/B, entrambi gli slot, turni successivi e condizioni Energia/
+Difesa/blocco, con video e audio a velocità nativa. Il riscontro aptico
+fisico sul telefono resta da verificare. Dettagli nel resoconto del lotto 3.

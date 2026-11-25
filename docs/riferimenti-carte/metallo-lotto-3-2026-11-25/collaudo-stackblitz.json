@@ -1,0 +1,827 @@
+{
+  "sourceCommit": "4666b637fcb794f8882095199958c7e78809b467",
+  "previewUrl": "https://test7-jjhn--5173--ca94085c.local-credentialless.webcontainer.io/.maglio-review.html",
+  "clips": [
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "label": "Frantumatore Leggendario · 2 Energie e Difesa",
+      "from": 0.93,
+      "to": 11.186
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "label": "Perforatore Epico · due trasferimenti",
+      "from": 25.077,
+      "to": 37.301
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "label": "Perforatore Leggendario · due trasferimenti",
+      "from": 44.043,
+      "to": 56.468
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "label": "Schegge Erranti Rare · primo turno",
+      "from": 62.041,
+      "to": 71.158
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "label": "Schegge Erranti Epiche · secondo turno e nuovo bersaglio",
+      "from": 81.085,
+      "to": 90.888
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "label": "Schegge Erranti Leggendarie · primo turno",
+      "from": 97.981,
+      "to": 107.657
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "label": "Schegge Erranti Leggendarie · secondo turno",
+      "from": 113.653,
+      "to": 123.266
+    }
+  ],
+  "cases": [
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "label": "Frantumatore Leggendario · 2 Energie e Difesa",
+      "slot": 1,
+      "stage": 1,
+      "shooter": "A",
+      "shots": [
+        {
+          "actualDamage": "40",
+          "cascadeIndex": "0",
+          "flightMs": "1350",
+          "impactAtMs": "2850",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-brace-induction",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "induction"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "label": "Frantumatore Leggendario · 2 Energie e Difesa",
+      "slot": 1,
+      "stage": 1,
+      "shooter": "B",
+      "effect": {},
+      "haptics": {
+        "cardFlights": "0",
+        "hapticPattern": "[36,25,14,25,8]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "1"
+      },
+      "shots": [
+        {
+          "actualDamage": "40",
+          "cascadeIndex": "0",
+          "flightMs": "1350",
+          "impactAtMs": "2850",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-brace-induction",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "induction"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "label": "Perforatore Epico · due trasferimenti",
+      "slot": 0,
+      "stage": 1,
+      "shooter": "A",
+      "shots": [
+        {
+          "actualDamage": "1",
+          "cascadeIndex": "0",
+          "flightMs": "1350",
+          "impactAtMs": "2850",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "silver-ring-penetrator",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "cascade-piercer"
+        },
+        {
+          "actualDamage": "1",
+          "cascadeIndex": "1",
+          "flightMs": "650",
+          "impactAtMs": "3590",
+          "originEdge": "previous-hull",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "silver-ring-penetrator",
+          "shooter": "A",
+          "sourceTargetId": "escort:maglio-review-B-0",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort",
+          "transferEnergy": "1",
+          "visibleEnd": "rear",
+          "weaponKind": "cascade-piercer"
+        },
+        {
+          "actualDamage": "96",
+          "cascadeIndex": "2",
+          "flightMs": "650",
+          "impactAtMs": "4330",
+          "originEdge": "previous-hull",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "silver-ring-penetrator",
+          "shooter": "A",
+          "sourceTargetId": "escort:maglio-review-B-1",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "1",
+          "visibleEnd": "rear",
+          "weaponKind": "cascade-piercer"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "label": "Perforatore Epico · due trasferimenti",
+      "slot": 0,
+      "stage": 1,
+      "shooter": "B",
+      "effect": {
+        "camera": "table-fixed",
+        "cascadeIndex": "2",
+        "energySpent": "1",
+        "nose": "{\"x\":235.49847562657766,\"y\":465.8340853300051}",
+        "phase": "impact",
+        "progress": "1.000",
+        "renderer": "volume-depth-buffer",
+        "sequence": "silver-ring-penetrator",
+        "shooter": "B",
+        "sourceTargetId": "escort:maglio-review-A-1",
+        "targetId": "weapons",
+        "visibleEnd": "front"
+      },
+      "haptics": {
+        "cardFlights": "0",
+        "hapticPattern": "[32,25,12]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "3"
+      },
+      "shots": [
+        {
+          "actualDamage": "1",
+          "cascadeIndex": "0",
+          "flightMs": "1350",
+          "impactAtMs": "2850",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "silver-ring-penetrator",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "cascade-piercer"
+        },
+        {
+          "actualDamage": "1",
+          "cascadeIndex": "1",
+          "flightMs": "650",
+          "impactAtMs": "3590",
+          "originEdge": "previous-hull",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "silver-ring-penetrator",
+          "shooter": "B",
+          "sourceTargetId": "escort:maglio-review-A-0",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-1",
+          "targetKind": "escort",
+          "transferEnergy": "1",
+          "visibleEnd": "front",
+          "weaponKind": "cascade-piercer"
+        },
+        {
+          "actualDamage": "91",
+          "cascadeIndex": "2",
+          "flightMs": "650",
+          "impactAtMs": "4330",
+          "originEdge": "previous-hull",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "silver-ring-penetrator",
+          "shooter": "B",
+          "sourceTargetId": "escort:maglio-review-A-1",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "1",
+          "visibleEnd": "front",
+          "weaponKind": "cascade-piercer"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "label": "Perforatore Leggendario · due trasferimenti",
+      "slot": 1,
+      "stage": 1,
+      "shooter": "A",
+      "shots": [
+        {
+          "actualDamage": "1",
+          "cascadeIndex": "0",
+          "flightMs": "1350",
+          "impactAtMs": "2850",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-return-bridge",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "cascade-piercer"
+        },
+        {
+          "actualDamage": "1",
+          "cascadeIndex": "1",
+          "flightMs": "650",
+          "impactAtMs": "3590",
+          "originEdge": "previous-hull",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-return-bridge",
+          "shooter": "A",
+          "sourceTargetId": "escort:maglio-review-B-0",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort",
+          "transferEnergy": "1",
+          "visibleEnd": "rear",
+          "weaponKind": "cascade-piercer"
+        },
+        {
+          "actualDamage": "162",
+          "cascadeIndex": "2",
+          "flightMs": "650",
+          "impactAtMs": "4330",
+          "originEdge": "previous-hull",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-return-bridge",
+          "shooter": "A",
+          "sourceTargetId": "escort:maglio-review-B-1",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "1",
+          "visibleEnd": "rear",
+          "weaponKind": "cascade-piercer"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "label": "Perforatore Leggendario · due trasferimenti",
+      "slot": 1,
+      "stage": 1,
+      "shooter": "B",
+      "effect": {
+        "camera": "table-fixed",
+        "cascadeIndex": "2",
+        "energySpent": "1",
+        "nose": "{\"x\":233.27328637236056,\"y\":466.7906377757741}",
+        "phase": "impact",
+        "progress": "1.000",
+        "renderer": "volume-depth-buffer",
+        "sequence": "prismatic-return-bridge",
+        "shooter": "B",
+        "sourceTargetId": "escort:maglio-review-A-1",
+        "targetId": "weapons",
+        "visibleEnd": "front"
+      },
+      "haptics": {
+        "cardFlights": "0",
+        "hapticPattern": "[34,25,12,25,8]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "3"
+      },
+      "shots": [
+        {
+          "actualDamage": "1",
+          "cascadeIndex": "0",
+          "flightMs": "1350",
+          "impactAtMs": "2850",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-return-bridge",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "cascade-piercer"
+        },
+        {
+          "actualDamage": "1",
+          "cascadeIndex": "1",
+          "flightMs": "650",
+          "impactAtMs": "3590",
+          "originEdge": "previous-hull",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-return-bridge",
+          "shooter": "B",
+          "sourceTargetId": "escort:maglio-review-A-0",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-1",
+          "targetKind": "escort",
+          "transferEnergy": "1",
+          "visibleEnd": "front",
+          "weaponKind": "cascade-piercer"
+        },
+        {
+          "actualDamage": "151",
+          "cascadeIndex": "2",
+          "flightMs": "650",
+          "impactAtMs": "4330",
+          "originEdge": "previous-hull",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-return-bridge",
+          "shooter": "B",
+          "sourceTargetId": "escort:maglio-review-A-1",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "1",
+          "visibleEnd": "front",
+          "weaponKind": "cascade-piercer"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "label": "Schegge Erranti Rare · primo turno",
+      "slot": 0,
+      "stage": 1,
+      "shooter": "A",
+      "shots": [
+        {
+          "actualDamage": "15",
+          "cascadeIndex": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "bronze-indexed-carriage",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "wandering-shrapnel"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "label": "Schegge Erranti Rare · primo turno",
+      "slot": 0,
+      "stage": 1,
+      "shooter": "B",
+      "effect": {
+        "camera": "table-fixed",
+        "cascadeIndex": "0",
+        "energySpent": "0",
+        "nose": "{\"x\":95.65235582079985,\"y\":395.6825263301167}",
+        "phase": "impact",
+        "progress": "1.000",
+        "renderer": "volume-depth-buffer",
+        "sequence": "bronze-indexed-carriage",
+        "shooter": "B",
+        "sourceTargetId": "",
+        "targetId": "escort:maglio-review-A-0",
+        "visibleEnd": "front"
+      },
+      "haptics": {
+        "cardFlights": "0",
+        "hapticPattern": "[27]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "1"
+      },
+      "shots": [
+        {
+          "actualDamage": "15",
+          "cascadeIndex": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "bronze-indexed-carriage",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "wandering-shrapnel"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "label": "Schegge Erranti Epiche · secondo turno e nuovo bersaglio",
+      "slot": 1,
+      "stage": 2,
+      "shooter": "A",
+      "shots": [
+        {
+          "actualDamage": "36",
+          "cascadeIndex": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "silver-recoil-carriage",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "wandering-shrapnel"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "label": "Schegge Erranti Epiche · secondo turno e nuovo bersaglio",
+      "slot": 1,
+      "stage": 2,
+      "shooter": "B",
+      "effect": {
+        "camera": "table-fixed",
+        "cascadeIndex": "0",
+        "energySpent": "0",
+        "nose": "{\"x\":361.65080130757053,\"y\":418.72931296497626}",
+        "phase": "impact",
+        "progress": "1.000",
+        "renderer": "volume-depth-buffer",
+        "sequence": "silver-recoil-carriage",
+        "shooter": "B",
+        "sourceTargetId": "",
+        "targetId": "escort:maglio-review-A-1",
+        "visibleEnd": "front"
+      },
+      "haptics": {
+        "cardFlights": "0",
+        "hapticPattern": "[28,30,10]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "1"
+      },
+      "shots": [
+        {
+          "actualDamage": "36",
+          "cascadeIndex": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "silver-recoil-carriage",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "escort:maglio-review-A-1",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "wandering-shrapnel"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "label": "Schegge Erranti Leggendarie · primo turno",
+      "slot": 0,
+      "stage": 1,
+      "shooter": "A",
+      "shots": [
+        {
+          "actualDamage": "50",
+          "cascadeIndex": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-fan-gantry",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "wandering-shrapnel"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "label": "Schegge Erranti Leggendarie · primo turno",
+      "slot": 0,
+      "stage": 1,
+      "shooter": "B",
+      "effect": {
+        "camera": "table-fixed",
+        "cascadeIndex": "0",
+        "energySpent": "0",
+        "nose": "{\"x\":83.43837692655492,\"y\":433.96600181102787}",
+        "phase": "impact",
+        "progress": "1.000",
+        "renderer": "volume-depth-buffer",
+        "sequence": "prismatic-fan-gantry",
+        "shooter": "B",
+        "sourceTargetId": "",
+        "targetId": "escort:maglio-review-A-0",
+        "visibleEnd": "front"
+      },
+      "haptics": {
+        "cardFlights": "0",
+        "hapticPattern": "[32,25,14,25,8]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "1"
+      },
+      "shots": [
+        {
+          "actualDamage": "50",
+          "cascadeIndex": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-fan-gantry",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "wandering-shrapnel"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "label": "Schegge Erranti Leggendarie · secondo turno",
+      "slot": 0,
+      "stage": 2,
+      "shooter": "A",
+      "shots": [
+        {
+          "actualDamage": "50",
+          "cascadeIndex": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-fan-gantry",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "escort:maglio-review-B-1",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "wandering-shrapnel"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "label": "Schegge Erranti Leggendarie · secondo turno",
+      "slot": 0,
+      "stage": 2,
+      "shooter": "B",
+      "effect": {
+        "camera": "table-fixed",
+        "cascadeIndex": "0",
+        "energySpent": "0",
+        "nose": "{\"x\":355.72996612770413,\"y\":400.066688491127}",
+        "phase": "impact",
+        "progress": "1.000",
+        "renderer": "volume-depth-buffer",
+        "sequence": "prismatic-fan-gantry",
+        "shooter": "B",
+        "sourceTargetId": "",
+        "targetId": "escort:maglio-review-A-1",
+        "visibleEnd": "front"
+      },
+      "haptics": {
+        "cardFlights": "0",
+        "hapticPattern": "[32,25,14,25,8]",
+        "hapticPhase": "impact",
+        "hapticStatus": "requested",
+        "weaponEffects": "1"
+      },
+      "shots": [
+        {
+          "actualDamage": "50",
+          "cascadeIndex": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "prismatic-fan-gantry",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "escort:maglio-review-A-1",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "wandering-shrapnel"
+        }
+      ]
+    }
+  ],
+  "conditions": [
+    {
+      "case": "cascata: supporti a 1 HP ma zero Energia",
+      "shots": 1,
+      "transfers": 0
+    },
+    {
+      "case": "cascata: due Energie senza eccedenza; aptica disattivata",
+      "shots": 1,
+      "transfers": 0,
+      "haptic": "muted"
+    },
+    {
+      "case": "cascata: una sola Energia disponibile",
+      "shots": 2,
+      "transfers": 1,
+      "energy": 1
+    },
+    {
+      "case": "cascata: arma bloccata",
+      "energy": "Energia Metallo2",
+      "shots": 0
+    },
+    {
+      "case": "Induzione: zero Energie, blocco della Difesa",
+      "shots": 1,
+      "damage": 0,
+      "phase": "defense-block",
+      "renderer": "volume-depth-buffer"
+    },
+    {
+      "case": "Induzione: una Energia, attraversa la Difesa senza distruggerla",
+      "broken": null,
+      "damage": 40,
+      "energy": "Energia Metallo",
+      "renderer": "volume-depth-buffer"
+    },
+    {
+      "case": "Induzione: due Energie con fuoco bloccato, solo smontaggio reale",
+      "broken": "gen-227",
+      "hapticPhase": "defense",
+      "shots": 0
+    }
+  ],
+  "recordedAudio": true,
+  "physicalHapticsVerified": false,
+  "testedAt": "2026-11-25",
+  "status": "passed",
+  "observedCases": 14,
+  "uniqueApprovedCards": 6,
+  "conditionsCount": 7,
+  "localValidation": {
+    "targetedTests": 159,
+    "passed": 159,
+    "failed": 0,
+    "build": "passed",
+    "preflight": "passed",
+    "gameMechanicsChanged": false,
+    "pngRestoration": "all six reconstructed and SHA-256 verified locally and on StackBlitz"
+  },
+  "video": {
+    "fileName": "Metallo_6_carte_effetti_in_battaglia_StackBlitz.mp4",
+    "library_file_id": "libfile_c756b13068f4819184480118b400bf86",
+    "url": "https://chatgpt.com/library?file_id=libfile_c756b13068f4819184480118b400bf86&account_id=personal",
+    "pixels": [
+      900,
+      1600
+    ],
+    "fps": 30,
+    "durationSeconds": 78.610352,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "nativeSpeed": true,
+    "captionsOutsideBoard": true,
+    "audioPeakDb": -1.1,
+    "audioMeanDb": -27.2,
+    "sha256": "1d50f849e44a2b6977bdc262906f4b388fd01e411812603bfca99f1c5852edf0"
+  },
+  "originalRecording": {
+    "fileName": "Metallo_terzo_gruppo_registrazione_integrale.webm",
+    "library_file_id": "libfile_f1ec47198ebc81918842e0b376a7e928",
+    "url": "https://chatgpt.com/library?file_id=libfile_f1ec47198ebc81918842e0b376a7e928&account_id=personal",
+    "pixels": [
+      900,
+      1600
+    ],
+    "durationSeconds": 171.07,
+    "videoCodec": "vp9",
+    "audioCodec": "opus",
+    "audioSampleRate": 48000
+  },
+  "haptics": {
+    "requestsObserved": "requested",
+    "mutedPreferenceObserved": true,
+    "physicalVerified": false,
+    "note": "Il browser accetta la richiesta; il riscontro fisico va verificato su un telefono compatibile."
+  },
+  "inductionRendererSampling": "Il selettore iniziale della prima coppia A/B ha letto il contenitore Precision vuoto. Il renderer Induzione è stato osservato esplicitamente nei casi condizionali 0/1 Energia; nessun valore viene ricostruito retroattivamente."
+}
