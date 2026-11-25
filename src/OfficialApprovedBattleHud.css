@@ -286,14 +286,22 @@
 /* I fronti completi approvati contengono già cornice, simboli e testi.
    Il selettore segue l'immagine caricata: se scatta il fallback, la scheda
    generica torna leggibile senza nascondere le informazioni della carta. */
-.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"]) {
- background:transparent;
+.es-math-scope .f3d-approved-layout :is(.live-hand-special,.live-slot,.f3d-weapon-card):has(>img[src*="/fleet-weapon-fronts/"]) {
+ padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;
+ outline:none;clip-path:none;overflow:visible;
 }
-.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"]):not(.live-chosen) {
- border-color:transparent;box-shadow:none;
+.es-math-scope .f3d-approved-layout :is(.live-hand-special,.live-slot,.f3d-weapon-card)>img[src*="/fleet-weapon-fronts/"] {
+ inset:0;width:100%;height:100%;object-fit:contain;object-position:center;
+ border:0;border-radius:0;background:transparent;box-shadow:none;filter:none;
 }
-.es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"])>img {
- object-fit:contain;filter:none;
+/* La selezione segue l'alpha della cornice, senza un rettangolo esterno. */
+.es-math-scope .f3d-approved-layout .live-hand-special.live-chosen>img[src*="/fleet-weapon-fronts/"],
+.es-math-scope .f3d-approved-layout :is(.live-hand-special,.f3d-weapon-card):focus-visible>img[src*="/fleet-weapon-fronts/"] {
+ filter:drop-shadow(0 0 2px #fff3ac);
+}
+.es-math-scope .f3d-approved-layout .live-slot:has(>img[src*="/fleet-weapon-fronts/"])>.f3d-slot-frame,
+.es-math-scope .f3d-approved-layout .f3d-weapon-card:has(>img[src*="/fleet-weapon-fronts/"])>.f3d-weapon-label {
+ display:none;
 }
 .es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"])::after,
 .es-math-scope .f3d-approved-layout .live-hand-special:has(>img[src*="/fleet-weapon-fronts/"])>.live-card-emblem,
