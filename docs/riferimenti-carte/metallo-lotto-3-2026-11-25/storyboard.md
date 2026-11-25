@@ -1,8 +1,9 @@
 # Metallo, terzo gruppo — sei anteprime e progetto degli effetti
 
-Stato: immagini complete da sottoporre all'approvazione grafica. Le carte e
-le loro regole esistono nel codice; queste nuove illustrazioni e gli effetti
-qui descritti non sono ancora installati negli asset giocabili. Base letta:
+Stato aggiornato dopo la conferma dell’utente: sei fronti approvati e
+sequenze implementate. Collaudo visivo StackBlitz in corso. I paragrafi
+seguenti conservano il progetto letto prima dell’implementazione; non
+introducono nuovi valori o nuove regole. Base meccanica:
 `test7/main` a `b4596f6be804fe780b28c96098535e06c04f9a2b`.
 
 | Carta | Rarità | Danno nominale | Durata propria |

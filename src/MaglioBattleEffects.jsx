@@ -8,6 +8,8 @@ import MetalWeaponShotAccents from './MetalWeaponShotAccents.jsx';
 import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
 import {playSound} from './audio.js';
 import MagneticWeaponEffects from './MagneticWeaponEffects.jsx';
+import PrecisionWeaponEffects from './PrecisionWeaponEffects.jsx';
+import {precisionWeaponVariant} from './precisionWeaponBattleVisuals.js';
 import {collisionGroups,chainWeaponVariant} from './chainWeaponBattleVisuals.js';
 import {combatTargetElement,boardHullPoint} from './chainWeaponCanvas.js';
 import {requestWeaponHaptic,cancelWeaponHaptics} from './weaponHaptics.js';
@@ -89,7 +91,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
   });
   for(const shot of shots){
    if(!shot.fires&&!shot.defenseBlocked)continue;
-   const profile=weaponEffectProfile(shot.cardId);
+   const profile=weaponEffectProfile(shot.cardId,shot);
    if(!profile?.sound)continue;
    if(profile.kind==='alloy-collision'){
     if(collisionKeys.has(shot.visualGroupId))continue;
@@ -97,7 +99,8 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    }
    const start=shotStart+(shot.delayMs||0);
    if(profile.sound.charge)cue(profile,'charge',Math.max(0,start-profile.chargeMs),shot);
-   cue(profile,'fire',start,shot);cue(profile,shot.defenseBlocked?'block':'impact',start+profile.flightMs,shot);
+   cue(profile,shot.cascadeTransfer?'transfer':'fire',start,shot);
+   cue(profile,shot.defenseBlocked?'block':'impact',start+profile.flightMs,shot);
    if(profile.kind==='alloy-collision')cue(profile,'release',start+profile.flightMs+400,shot);
   }
   for(const event of events.filter(e=>e.kind==='weapon-break-defense'&&chainWeaponVariant(e.cardId))){
@@ -115,12 +118,15 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    setPlacements(measurePlacements(root,selectedCards,playerSide,ply,board));
    const collisionShots=collisionGroups(shots).flat();
    setPaths(shots.filter(s=>s.fires||s.defenseBlocked||collisionShots.includes(s)).flatMap(shot=>{
-    const special=!!chainWeaponVariant(shot.cardId);
+    const special=!!chainWeaponVariant(shot.cardId)||!!precisionWeaponVariant(shot.cardId);
     const target=special?combatTargetElement(root,shot):targetForShot(root,shot);
     if(!target)return [];
     const to=special?boardHullPoint(target,board):point(target.getBoundingClientRect(),board);
-    const from=weaponPortalOrigin(shot.who);
-    const profile=weaponEffectProfile(shot.cardId);
+    const source=shot.cascadeTransfer?combatTargetElement(root,{...shot,
+     targetKind:shot.sourceTargetKind,targetId:shot.sourceTargetId}):null;
+    if(shot.cascadeTransfer&&!source)return [];
+    const from=source?{...boardHullPoint(source,board),edge:'previous-hull'}:weaponPortalOrigin(shot.who);
+    const profile=weaponEffectProfile(shot.cardId,shot);
     if(!from||!profile)return [];
     const start=shotStart+(shot.delayMs||0);
     if(profile.kind!=='alloy-collision'&&!shot.defenseBlocked){
@@ -160,16 +166,19 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
   <MetalWeaponProjectileScene paths={metalPaths} startedAt={startedAt}/>
   <MagneticWeaponEffects paths={paths} events={events} startedAt={startedAt}
    shotStart={shotStart} resolvedSides={resolvedSides}/>
+  <PrecisionWeaponEffects paths={paths} startedAt={startedAt}/>
   <svg className="maglio-battle-effects" viewBox="0 0 450 800" focusable="false">
    {paths.map(({shot,from,to,profile,start},index)=>{
-    if(chainWeaponVariant(shot.cardId))return <g key={nonce+'-shot-'+index}
+    if(chainWeaponVariant(shot.cardId)||precisionWeaponVariant(shot.cardId))return <g key={nonce+'-shot-'+index}
      className="maglio-shot magnetic-shot" data-shooter={shot.who}
      data-target-kind={shot.targetKind} data-target-id={shot.targetId}
      data-actual-damage={shot.actualDamage} data-projectiles={profile.kind==='alloy-collision'?0:1}
      data-origin-edge={from.edge} data-flight-ms={profile.flightMs}
      data-impact-at-ms={start+profile.flightMs} data-projection="perspective-3d"
      data-visible-end={shot.who==='A'?'rear':'front'} data-weapon-kind={profile.kind}
-     data-rarity={profile.rarity} data-sequence={profile.sequence}/>;
+     data-rarity={profile.rarity} data-sequence={profile.sequence}
+     data-cascade-index={shot.cascadeIndex||0} data-source-target-id={shot.sourceTargetId||''}
+     data-transfer-energy={shot.transferEnergySpent||0} data-stage={shot.stage||1}/>;
     const impactDelay=start+profile.flightMs;
     const gradientId='weapon-impact-'+nonce+'-'+index;
     const flashY=shot.who==='A'?790:10;

@@ -49,6 +49,7 @@ export function chainWeaponSoundPlan(type){
  }else if(phase==='impact'){
   tone('sine',180,42,.28,.17);tone('noise',3800,520,.26,.09);
   for(let i=0;i<3;i++)tone('triangle',930+i*180,330+i*100,.23,.035,i*.04);
+  if(tier===3)for(let i=0;i<3;i++)tone('sine',1610+i*340,830+i*180,.51,.024,.07+i*.05);
  }else if(phase==='defense'){
   for(let i=0;i<5;i++)tone('noise',2400+i*460,700,.15,.045,i*.045);
   tone('sine',1210,380,.43,.06);

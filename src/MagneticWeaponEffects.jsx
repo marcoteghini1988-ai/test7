@@ -28,6 +28,15 @@ function drawInductionField(ctx,from,to,profile,age,energy){
   ctx.strokeStyle=[profile.core,profile.glow,profile.secondary][i];ctx.lineWidth=i?1:2.2;
   ctx.globalAlpha=.75;ctx.stroke();
  }
+ if(profile.tier===3){
+  // Il ponte e le protezioni diamantate rifrangono la stessa scarica.
+  for(let i=0;i<4;i++){
+   const u=(age*.001+i*.23)%1,x=from.x+dx*u,y=from.y+dy*u;
+   ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(dy,dx));
+   ctx.strokeStyle=i%2?'#c0efff':'#e1c3ff';ctx.lineWidth=1;
+   ctx.beginPath();ctx.moveTo(-3,0);ctx.lineTo(0,-2.4);ctx.lineTo(5,0);ctx.lineTo(0,2.4);ctx.closePath();ctx.stroke();ctx.restore();
+  }
+ }
  if(energy>=1){
   // Un varco nel campo di Difesa, mai un bypass della copertura dei supporti.
   ctx.translate(to.x,to.y);ctx.strokeStyle='#b9e5ff';ctx.lineWidth=1.5;
@@ -130,6 +139,10 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
         ctx.fillRect(x-3,-14+(i-1)*(7-p*5),6,28);
         ctx.fillStyle=profile.glow;ctx.fillRect(x-2,-11+(i-1)*(7-p*5),4,3);
        }
+       if(profile.tier===3){
+        ctx.strokeStyle='#cebfff';ctx.lineWidth=1.8;
+        ctx.beginPath();ctx.moveTo(-23,10);ctx.lineTo(-18,-17);ctx.lineTo(18,-17);ctx.lineTo(23,10);ctx.stroke();
+       }
       }else{
        for(const s of [-1,1]){ctx.beginPath();ctx.ellipse(s*12,0,8,5,p*Math.PI*3,0,Math.PI*2);
         ctx.strokeStyle=profile.secondary;ctx.lineWidth=2;ctx.stroke();}
@@ -157,7 +170,18 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
       const tail={x:from.x+(to.x-from.x)*Math.max(0,t-.16),y:from.y+(to.y-from.y)*Math.max(0,t-.16)};
       drawInductionField(ctx,tail,worldPointToBoard(pose.nose,camera),profile,age,0);
      }else{
-      if(!shot.defenseBlocked)drawMetalContact(ctx,to,profile,elapsed-profile.flightMs);
+      if(!shot.defenseBlocked){
+       drawMetalContact(ctx,to,profile,elapsed-profile.flightMs);
+       if(profile.tier===3){
+        const q=clamp((elapsed-profile.flightMs)/profile.impactMs);
+        ctx.save();ctx.translate(to.x,to.y);ctx.globalAlpha=1-q;
+        for(let i=0;i<3;i++){
+         const a=i*Math.PI*2/3,r=8+q*35;ctx.save();ctx.translate(Math.cos(a)*r,Math.sin(a)*r*.65);ctx.rotate(a);
+         ctx.strokeStyle=i%2?'#b5f0ff':'#e0c2ff';ctx.beginPath();ctx.moveTo(0,-6);ctx.lineTo(3,0);ctx.lineTo(0,6);ctx.lineTo(-3,0);ctx.closePath();ctx.stroke();ctx.restore();
+        }
+        ctx.restore();
+       }
+      }
       ctx.globalAlpha=clamp(1-(elapsed-profile.flightMs)/profile.impactMs);
       if(shot.defenseBlocked){
        ctx.strokeStyle='#9cdbff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(to.x,to.y,24,17,0,0,Math.PI*2);ctx.stroke();

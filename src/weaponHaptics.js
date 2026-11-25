@@ -6,8 +6,12 @@ export function weaponHapticPattern(kind,phase,tier=2){
   phase==='fire'?[14]:phase==='impact'?tier===3?[24,28,16,28,10]:tier===2?[22,30,14]:[22]:[];
  if(kind==='alloy-collision')return phase==='charge'?[12,65,12]:
   phase==='fire'?[16,70,20,70,24]:phase==='impact'?tier===3?[120,35,45,40,20]:[95,35,32]:phase==='release'?[12]:[];
- if(kind==='induction')return phase==='charge'?[8,45,8,45,8]:
-  phase==='fire'?[18]:phase==='impact'?[32,30,12]:phase==='defense'?[12,25,18]:phase==='block'?[10]:[];
+ if(kind==='induction')return phase==='charge'?tier===3?[8,35,8,35,8,35,12]:[8,45,8,45,8]:
+  phase==='fire'?[18]:phase==='impact'?tier===3?[36,25,14,25,8]:[32,30,12]:phase==='defense'?[12,25,18]:phase==='block'?[10]:[];
+ if(kind==='cascade-piercer')return phase==='charge'?[8,50,10,45,12]:
+  phase==='fire'?[22]:phase==='transfer'?[12,25,9]:phase==='impact'?tier===3?[34,25,12,25,8]:[32,25,12]:[];
+ if(kind==='wandering-shrapnel')return phase==='charge'?tier>=2?[8,60,10]:[8]:
+  phase==='fire'?[18]:phase==='impact'?tier===3?[32,25,14,25,8]:tier===2?[28,30,10]:[27]:[];
  return [];
 }
 export function hapticsEnabled(storage=globalThis.localStorage){

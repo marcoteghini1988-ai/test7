@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "description": "PNG HD approvati; trasporto diviso in parti binarie, ricomposizione senza perdita prima di dev/build.",
+  "cards": [
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-frantumatore-induzione-rarity-l.png",
+      "bytes": 14901063,
+      "sha256": "d746bcb683eea3331e94ed9b86bd4773659025d2fbe206755f9e1b7c9f94d09d",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-frantumatore-induzione-rarity-l.png.part1",
+          "bytes": 8000000,
+          "sha256": "9a473e8a9a61fb7d243bcd56156a444df18091f74c9d8670e5379d1d335b30de"
+        },
+        {
+          "name": "weapon-designed-metallic-frantumatore-induzione-rarity-l.png.part2",
+          "bytes": 6901063,
+          "sha256": "7fa0185164a01882e3e405fe6c7ee272a44535392e8cd9e34ebd31b72b1ba42c"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-perforatore-cascata.png",
+      "bytes": 13181824,
+      "sha256": "0a392f7cb8a2013789839c376ad04b9cbdd9f146496991113e8c1d30cad36eb9",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata.png.part1",
+          "bytes": 8000000,
+          "sha256": "6027f93f0c1f37502e063ab1cef8a38da4775fda8b27e1f0ea4d3bc39f0860e6"
+        },
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata.png.part2",
+          "bytes": 5181824,
+          "sha256": "34682f50482bec131f2221f84f9cc6930eee0ba377e53ae3f5741503b7d88f5d"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-perforatore-cascata-rarity-l.png",
+      "bytes": 14567806,
+      "sha256": "9bd81663d453d115dc4926923931fad1487e29f02298a8b6caf585131ff8b4de",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata-rarity-l.png.part1",
+          "bytes": 8000000,
+          "sha256": "0656896f307504061d2e7e57425b792f208585abff69b4316552c76561b46508"
+        },
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata-rarity-l.png.part2",
+          "bytes": 6567806,
+          "sha256": "3c7c8831002d3dc52705d35ff4128ab0a8c9c429db107c5961d3829c833189e0"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge.png",
+      "bytes": 12555331,
+      "sha256": "1ab704e160a125659c0e812dc3d1844d2cda60f330f3ad2dc645ac8811aa78af",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge.png.part1",
+          "bytes": 8000000,
+          "sha256": "12a2ae78b9823a6acfb73b28c6068a8090d87dc4b4e836ad5509019f2cbf22ce"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge.png.part2",
+          "bytes": 4555331,
+          "sha256": "77a8975c17c8e557874d5d5c5b6b08598de9b0decee06938d70a81b7053cd263"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge-rarity-e.png",
+      "bytes": 13430906,
+      "sha256": "71535f7fc8551ade2d8737e25a6df4a15f6d008e63156b742172b2888c9062d6",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-e.png.part1",
+          "bytes": 8000000,
+          "sha256": "2b7aab97d9ff1a12ec80046c86a1b6652949e0777d6fd406f1867f93bdffc668"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-e.png.part2",
+          "bytes": 5430906,
+          "sha256": "e2e4810ff828a5b144bb7d105e3c93eca4c501cc1e04b27192b0a6a395166247"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge-rarity-l.png",
+      "bytes": 14953549,
+      "sha256": "c1c8e10c8b90e5107005ac35f17b79ffab042774c7b810b108c781b9cccfcd7c",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-l.png.part1",
+          "bytes": 8000000,
+          "sha256": "18f5a543ea16fbee769ec2a000fc1316af28fe92fcf38bf855339132f1f72635"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-l.png.part2",
+          "bytes": 6953549,
+          "sha256": "b69d8b5dc787198c55e7133f34a7435973b3c0873e6398f49691ff4a44d46bbb"
+        }
+      ]
+    }
+  ]
+}

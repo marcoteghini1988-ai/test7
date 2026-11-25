@@ -4,12 +4,15 @@ import {HP_SYNC_RULESET} from '../src/fleetNext/hpSynchronization.js';
 import {MAGLIO_CARD_ID,maglioVariant} from '../src/maglioBattleVisuals.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from '../src/fleetNext/weaponRarityEvolutions.js';
 import {chainWeaponVariant,GRAPPLE_ID,COLLISION_ID} from '../src/chainWeaponBattleVisuals.js';
+import {precisionWeaponVariant} from '../src/precisionWeaponBattleVisuals.js';
 
 export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
  cardId=MAGLIO_CARD_ID,supports=false,wounded=false,focus=0,boost=false,
  shipA='N00',shipB='C01',supportModels=['C02','C03'],fused=false,secondTurn=false,
- supportCount=2,energyCards=0,withDefense=false,expiredCombo=false}={}){
+ supportCount=2,energyCards=0,withDefense=false,expiredCombo=false,
+ cascadeMode='none',ownStage=1}={}){
  const chain=chainWeaponVariant(cardId),collision=chain?.kind==='alloy-collision';
+ const precision=precisionWeaponVariant(cardId);
  const grappleId=rarityGrapple(cardId),comboId=cardId.endsWith('-rarity-l')?COLLISION_ID+'-rarity-l':COLLISION_ID;
  const rarity=maglioVariant(cardId)?.rarity||WEAPON_NEAR_FINAL_BY_ID[cardId]?.rarita||'Comune';
  const roster=who=>supports?supportModels.slice(0,supportCount).map((model,index)=>({
@@ -27,6 +30,7 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
   // Il Maglio base è autonomo: senza Energie evitiamo anche il colpo
   // del Generatore IA, così la prova visiva isola soltanto questa Arma.
   side.energyPile=Array(energyCards).fill('energy-metallic');
+  if(precision)side.elementalCharges=energyCards?{metallic:energyCards}:{};
   side.deck=Array(25).fill('energy-metallic');
   side.discard=[];
   // La configurazione slot 2 serve a verificare anche il secondo alloggiamento.
@@ -35,6 +39,10 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
  }
  if(supports&&wounded)for(const side of Object.values(b.sides)){
   if(side.escorts[focus])side.escorts[focus].hp=1;
+ }
+ if(supports&&precision?.kind==='cascade-piercer'&&cascadeMode!=='none'){
+  for(const side of Object.values(b.sides))
+   side.escorts.slice(0,cascadeMode==='two'?2:1).forEach(e=>{e.hp=1;});
  }
  if(supports&&fused)for(const side of Object.values(b.sides)){
   if(side.escorts[0]){side.escorts[0].fused=true;
@@ -74,6 +82,16 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
    state=result.battle;
   }
   return state;
+ }
+ if(precision&&ownStage>1){
+  for(let stage=1;stage<Math.min(ownStage,precision.kind==='cascade-piercer'?3:2);stage++){
+   for(const who of ['A','B']){
+    const r=resolvePreparedFleetTurn(state,who,{cards:stage===1?[0]:[],pass:stage!==1,
+     targetKind:'part',targetId:'weapons',partId:'weapons'},nowMs);
+    if(!r.ok)throw new Error('Preparazione turno proprio '+stage+': '+r.reason);
+    state=r.battle;
+   }
+  }
  }
  return state;
 }

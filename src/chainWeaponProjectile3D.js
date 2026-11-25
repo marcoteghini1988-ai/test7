@@ -42,8 +42,16 @@ export function createChainWeaponModel(kind,tier=2){
     [.08,.28,.38],silver);plates.push(plate);
    box(plate,'Avvolgimento in rame',[0,.16,0],[.10,.04,.27],bronze);
    box(plate,'Fessura di campo',[0,-.02,-.20],[.10,.09,.018],amber);
+   if(tier===3){
+    box(plate,'Bordo diamantato della piastra',[0,0,-.207],[.096,.30,.025],crystal);
+    box(plate,'Guardia prismatica articolata',[0,.20,.05],[.11,.035,.29],crystal);
+   }
   }
   for(const z of [-.27,0,.27])ring('Anello del campo induttivo',z,.25,amber);
+  if(tier===3){
+   box(root,'Traversa prismatica posteriore',[0,.28,.22],[.54,.04,.07],crystal);
+   for(const s of [-1,1])box(root,'Braccio del ponte articolato',[s*.25,.18,.22],[.035,.20,.07],crystal);
+  }
   root.userData={kind,tier,frontZ:-.42,rearZ:.31,plates};
  }
  return root;

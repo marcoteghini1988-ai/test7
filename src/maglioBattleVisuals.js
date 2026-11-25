@@ -4,6 +4,7 @@ import {projectMachineBerths} from './fleetNext/battlePresentation.js';
 import {ALL_WEAPON_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {metalWeaponEffectProfile} from './metalWeaponBattleVisuals.js';
 import {chainWeaponEffectProfile} from './chainWeaponBattleVisuals.js';
+import {precisionWeaponEffectProfile,cascadeImpactPresentation} from './precisionWeaponBattleVisuals.js';
 
 export const MAGLIO_CARD_ID='weapon-confirmed-metallic-maglio';
 export const MAGLIO_VARIANTS=Object.freeze([
@@ -35,7 +36,7 @@ const MAGLIO_FINISH=Object.freeze([
  {core:'#fff0d2',glow:'#ff8b25',secondary:'#fff4df'},
  {core:'#fff5ff',glow:'#b38aff',secondary:'#7fdfff'}
 ]);
-export function weaponEffectProfile(id){
+export function weaponEffectProfile(id,shot){
  const definition=ALL_WEAPON_BY_ID[id];
  if(!definition)return null;
  const tier=RARITY_TIER[definition.rarita]??0;
@@ -55,7 +56,7 @@ export function weaponEffectProfile(id){
   ...finish,
   ...(maglio?{sound:{fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
-  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id)
+  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id),...precisionWeaponEffectProfile(id,shot)
  });
 }
 // Centro della porta USB del dispositivo locale, centro del bordo remoto.
@@ -98,6 +99,7 @@ export function fleetWeaponShots(events=[]){
     targetKind:hit.targetKind,targetId:hit.targetId,actualDamage:hit.actualDamage,
     nominalDamage:hit.nominalDamage,
     delayMs:event.pattern==='alloy-collision'?groupStart:shots.length*MAGLIO_SHOT_GAP_MS,
+    ...cascadeImpactPresentation(event,impactIndex,events,groupStart),
     fires:hit.actualDamage>0&&!!hit.targetKind&&!!hit.targetId});
   }else if(event.kind==='impact'&&event.independentWeaponShot&&event.weaponContributors?.length){
    // Le Armi storiche sommano il danno in un solo impatto: una traiettoria
@@ -131,7 +133,7 @@ export function weaponResolutionMs(events=[],selectedCards=[]){
  if(!shots.length&&!breaks.length)return 0;
  const start=weaponShotStartMs(weaponVisualCards(allShots,selectedCards).length);
  const end=Math.max(0,...shots.map(shot=>{
-  const profile=weaponEffectProfile(shot.cardId);
+  const profile=weaponEffectProfile(shot.cardId,shot);
   return start+(shot.delayMs||0)+(profile?.flightMs||470)+(profile?.impactMs||700)+150;
  }));
  // Conserva l'attesa precedente degli effetti provvisori delle altre Armi.

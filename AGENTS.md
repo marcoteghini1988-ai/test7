@@ -179,3 +179,15 @@ Non cambiare meccaniche, valori, layout della plancia 3D o vecchie
 immagini approvate mentre si crea un'anteprima carta.
 
 **Questa è una regola operativa persistente del progetto.** Le prove di simboli restano separate dalle carte giocabili fino alla loro approvazione.
+
+## Terzo gruppo Metallo — sei fronti confermati il 25/11
+
+Frantumatore a Induzione Leggendario, Perforatore a Cascata Epico e
+Leggendario, Artiglieria delle Schegge Erranti Metallo Rara, Epica e
+Leggendaria sono approvati dall’utente. I loro PNG originali si ricompongono
+con verifica SHA-256 tramite `scripts/restore-weapon-fronts.mjs`, eseguito
+prima di dev/build/preflight; le parti sono in `asset-sources/weapon-fronts/`.
+Conservare questa preparazione anche nei checkout nuovi. La Cascata
+prosegue dallo scafo precedente soltanto per trasferimenti reali pagati;
+le Schegge sparano una volta per turno proprio e usano il bersaglio reale.
+Vedi `docs/ARMI_METALLO_TERZO_GRUPPO_INTEGRATO_2026-11-25.md`.

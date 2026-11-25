@@ -1,9 +1,9 @@
 {
   "date": "2026-11-25",
-  "status": "anteprime complete in attesa di approvazione grafica",
-  "reviewStatus": "awaiting-user-approval",
-  "playableFrontsInstalled": false,
-  "effectsImplementationStatus": "meccaniche lette dal resolver; storyboard dedicato, effetti dopo approvazione delle nuove carte",
+  "status": "sei fronti approvati e integrati; collaudo StackBlitz in corso",
+  "reviewStatus": "user-approved",
+  "playableFrontsInstalled": true,
+  "effectsImplementationStatus": "sequenze VFX, audio e richieste aptiche implementate; verifica visiva StackBlitz in corso",
   "sourceRepository": "marcoteghini1988-ai/test7",
   "sourceCommit": "b4596f6be804fe780b28c96098535e06c04f9a2b",
   "element": "metallic",
@@ -60,7 +60,8 @@
       "bytes": 14901063,
       "frontFileName": "weapon-designed-metallic-frantumatore-induzione-rarity-l.png",
       "library_file_id": "libfile_94f2b222e28c8191ad92d59471d03a6f",
-      "previewUrl": "https://chatgpt.com/library?file_id=libfile_94f2b222e28c8191ad92d59471d03a6f&account_id=personal"
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_94f2b222e28c8191ad92d59471d03a6f&account_id=personal",
+      "runtimePath": "/assets/fleet-weapon-fronts/weapon-designed-metallic-frantumatore-induzione-rarity-l.png"
     },
     {
       "id": "weapon-designed-metallic-perforatore-cascata",
@@ -113,7 +114,8 @@
       "bytes": 13181824,
       "frontFileName": "weapon-designed-metallic-perforatore-cascata.png",
       "library_file_id": "libfile_3f5c737a3cc081919843bc7e8d6926d0",
-      "previewUrl": "https://chatgpt.com/library?file_id=libfile_3f5c737a3cc081919843bc7e8d6926d0&account_id=personal"
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_3f5c737a3cc081919843bc7e8d6926d0&account_id=personal",
+      "runtimePath": "/assets/fleet-weapon-fronts/weapon-designed-metallic-perforatore-cascata.png"
     },
     {
       "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
@@ -166,7 +168,8 @@
       "bytes": 14567806,
       "frontFileName": "weapon-designed-metallic-perforatore-cascata-rarity-l.png",
       "library_file_id": "libfile_6941d0c7ffac819186888c0480b76867",
-      "previewUrl": "https://chatgpt.com/library?file_id=libfile_6941d0c7ffac819186888c0480b76867&account_id=personal"
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_6941d0c7ffac819186888c0480b76867&account_id=personal",
+      "runtimePath": "/assets/fleet-weapon-fronts/weapon-designed-metallic-perforatore-cascata-rarity-l.png"
     },
     {
       "id": "weapon-designed-metallic-artiglieria-schegge",
@@ -217,7 +220,8 @@
       "bytes": 12555331,
       "frontFileName": "weapon-designed-metallic-artiglieria-schegge.png",
       "library_file_id": "libfile_777624a601308191a5050c7b95f91077",
-      "previewUrl": "https://chatgpt.com/library?file_id=libfile_777624a601308191a5050c7b95f91077&account_id=personal"
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_777624a601308191a5050c7b95f91077&account_id=personal",
+      "runtimePath": "/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge.png"
     },
     {
       "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
@@ -268,7 +272,8 @@
       "bytes": 13430906,
       "frontFileName": "weapon-designed-metallic-artiglieria-schegge-rarity-e.png",
       "library_file_id": "libfile_8283557be2fc81918da72de1c4a7cd3c",
-      "previewUrl": "https://chatgpt.com/library?file_id=libfile_8283557be2fc81918da72de1c4a7cd3c&account_id=personal"
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_8283557be2fc81918da72de1c4a7cd3c&account_id=personal",
+      "runtimePath": "/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge-rarity-e.png"
     },
     {
       "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
@@ -319,7 +324,8 @@
       "bytes": 14953549,
       "frontFileName": "weapon-designed-metallic-artiglieria-schegge-rarity-l.png",
       "library_file_id": "libfile_0aab4ecbd68c819188abeeaac7d1fec4",
-      "previewUrl": "https://chatgpt.com/library?file_id=libfile_0aab4ecbd68c819188abeeaac7d1fec4&account_id=personal"
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_0aab4ecbd68c819188abeeaac7d1fec4&account_id=personal",
+      "runtimePath": "/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge-rarity-l.png"
     }
   ],
   "frameSourceHashes": {
@@ -361,5 +367,7 @@
       "verification"
     ]
   },
-  "visualReview": "Sei fronti completi e confronti verificati; testi, simboli, cornice e differenze fisiche delle evoluzioni leggibili. Nessun effetto nuovo dichiarato collaudato in partita."
+  "visualReview": "Sei fronti completi e confronti verificati; testi, simboli, cornice e differenze fisiche delle evoluzioni leggibili. Nessun effetto nuovo dichiarato collaudato in partita.",
+  "assetSourceManifest": "asset-sources/weapon-fronts/metallo-3/manifest.json",
+  "assetRestoration": "Dodici parti binarie versionate; predev/prebuild/preflight ricompongono i sei PNG originali con verifica SHA-256. Nessuna modifica di pixel o compressione."
 }

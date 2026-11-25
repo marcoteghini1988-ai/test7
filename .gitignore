@@ -4,3 +4,11 @@ dist/
 *.tsbuildinfo
 .maglio-review.html
 .maglio-review.jsx
+
+# Fronti HD riprodotti integralmente da asset-sources prima di dev/build.
+/public/assets/fleet-weapon-fronts/weapon-designed-metallic-frantumatore-induzione-rarity-l.png
+/public/assets/fleet-weapon-fronts/weapon-designed-metallic-perforatore-cascata.png
+/public/assets/fleet-weapon-fronts/weapon-designed-metallic-perforatore-cascata-rarity-l.png
+/public/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge.png
+/public/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge-rarity-e.png
+/public/assets/fleet-weapon-fronts/weapon-designed-metallic-artiglieria-schegge-rarity-l.png

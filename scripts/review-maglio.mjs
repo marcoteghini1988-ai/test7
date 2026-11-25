@@ -13,6 +13,7 @@ import {createMaglioReviewBattle} from './scripts/maglioReviewBattle.js';
 import {MAGLIO_CARD_ID,MAGLIO_VARIANTS} from './src/maglioBattleVisuals.js';
 import {METAL_WEAPON_VARIANTS,metalWeaponVariant} from './src/metalWeaponBattleVisuals.js';
 import {CHAIN_WEAPON_VARIANTS,chainWeaponVariant} from './src/chainWeaponBattleVisuals.js';
+import {PRECISION_WEAPON_VARIANTS,precisionWeaponVariant,CASCADE_ID} from './src/precisionWeaponBattleVisuals.js';
 import {hapticsEnabled,setHapticsEnabled} from './src/weaponHaptics.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import './src/index.css';
@@ -70,8 +71,8 @@ function Review(){
    session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},360000);
   }catch(error){setRecordStatus(error.message||'Registrazione non avviata.');}
  };
- const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:CHAIN_WEAPON_VARIANTS[0].id,supports:true,wounded:false,focus:0,fleetPreset:0,secondTurn:false});
- const [initial,setInitial]=useState(()=>createMaglioReviewBattle({cardId:CHAIN_WEAPON_VARIANTS[0].id,supports:true}));
+ const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:CASCADE_ID,supports:true,wounded:false,focus:0,fleetPreset:0,secondTurn:false,cascadeMode:'two',energyCards:2,ownStage:1});
+ const [initial,setInitial]=useState(()=>createMaglioReviewBattle({cardId:CASCADE_ID,supports:true,cascadeMode:'two',energyCards:2}));
  const reset=(options={})=>{setSetup(s=>({...s,...options,serial:s.serial+1}));setInitial(createMaglioReviewBattle({...setup,...options}));};
  return <div style={{height:'100dvh',background:'#05090e',display:'flex',flexDirection:'column'}}>
   <div className="maglio-review-controls">
@@ -79,8 +80,8 @@ function Review(){
     onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
-   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value),supportCount:2,energyCards:0,withDefense:false,expiredCombo:false,wounded:false,blocked:false,slot:0})}>
-    {[...MAGLIO_VARIANTS,...METAL_WEAPON_VARIANTS,...CHAIN_WEAPON_VARIANTS].map(v=><option key={v.id} value={v.id}>{(WEAPON_NEAR_FINAL_BY_ID[v.id].name||'Maglio')+' · '+v.rarity}</option>)}
+   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,energyCards:0,withDefense:false,expiredCombo:false,wounded:false,blocked:false,slot:0})}>
+    {[...MAGLIO_VARIANTS,...METAL_WEAPON_VARIANTS,...CHAIN_WEAPON_VARIANTS,...PRECISION_WEAPON_VARIANTS].map(v=><option key={v.id} value={v.id}>{(WEAPON_NEAR_FINAL_BY_ID[v.id].name||'Maglio')+' · '+v.rarity}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
    <label><input type="checkbox" aria-label="Supporti in campo" checked={setup.supports} onChange={e=>reset({supports:e.target.checked,wounded:false})}/>Supporti in campo</label>
@@ -99,6 +100,19 @@ function Review(){
       {[0,1,2].map(n=><option key={n} value={n}>{n}</option>)}
      </select></label>
      <label><input type="checkbox" aria-label="Difesa pubblica" checked={setup.withDefense||false} onChange={e=>reset({withDefense:e.target.checked})}/>Difesa pubblica</label>
+    </>}
+   </>}
+   {precisionWeaponVariant(setup.cardId)&&<>
+    <label>Turno proprio <select aria-label="Turno proprio" value={setup.ownStage||1} onChange={e=>reset({ownStage:Number(e.target.value),blocked:false})}>
+     {(precisionWeaponVariant(setup.cardId).kind==='cascade-piercer'?[1,2,3]:[1,2]).map(n=><option key={n} value={n}>{n}</option>)}
+    </select></label>
+    {precisionWeaponVariant(setup.cardId).kind==='cascade-piercer'&&<>
+     <label>Energie Metallo <select aria-label="Energie Metallo" value={setup.energyCards||0} onChange={e=>reset({energyCards:Number(e.target.value),ownStage:1,blocked:false})}>
+      {[0,1,2].map(n=><option key={n} value={n}>{n}</option>)}
+     </select></label>
+     <button onClick={()=>reset({supports:true,cascadeMode:'none',ownStage:1,blocked:false})}>Senza eccedenza</button>
+     <button onClick={()=>reset({supports:true,cascadeMode:'one',energyCards:1,ownStage:1,blocked:false})}>Un trasferimento</button>
+     <button onClick={()=>reset({supports:true,cascadeMode:'two',energyCards:2,ownStage:1,blocked:false})}>Due trasferimenti</button>
     </>}
    </>}
    <button aria-pressed={hapticsOn} onClick={()=>setHapticsOn(setHapticsEnabled(!hapticsOn))}>Vibrazione {hapticsOn?'attiva':'disattiva'}</button>

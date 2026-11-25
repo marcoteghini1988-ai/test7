@@ -1,6 +1,10 @@
 # Armi Metallo — terzo gruppo, sei anteprime complete
 
-25 novembre 2026. Stato: **in attesa dell’approvazione grafica**. Le regole
+25 novembre 2026. Anteprime **confermate dall’utente**.
+La presente pagina conserva la fase di preparazione; l’integrazione corrente
+è descritta in [ARMI_METALLO_TERZO_GRUPPO_INTEGRATO_2026-11-25.md](ARMI_METALLO_TERZO_GRUPPO_INTEGRATO_2026-11-25.md).
+
+Stato storico prima della conferma: Le regole
 sono già nel catalogo; i nuovi fronti e i nuovi effetti non sono ancora
 installati in partita. Il codice di gioco resta invariato.
 

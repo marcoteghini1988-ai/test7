@@ -9,6 +9,7 @@ const ASSET_ROOT=(import.meta.env?.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,''
 // le pesanti immagini delle navi. Nel repository entrambi restano /assets.
 const METAL_FRONT_ROOT=(import.meta.env?.VITE_METAL_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 const CHAIN_FRONT_ROOT=(import.meta.env?.VITE_CHAIN_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
+const PRECISION_FRONT_ROOT=(import.meta.env?.VITE_PRECISION_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
  'weapon-confirmed-metallic-maglio':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio.png`,
  'weapon-confirmed-metallic-maglio-rarity-r':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio-rarity-r.png`,
@@ -29,6 +30,14 @@ export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
   'weapon-designed-metallic-collassatore-lega',
   'weapon-designed-metallic-collassatore-lega-rarity-l',
   'weapon-designed-metallic-frantumatore-induzione'
- ].map(id=>[id,`${CHAIN_FRONT_ROOT}/fleet-weapon-fronts/${id}.png`]))
+ ].map(id=>[id,`${CHAIN_FRONT_ROOT}/fleet-weapon-fronts/${id}.png`])),
+ ...Object.fromEntries([
+  'weapon-designed-metallic-frantumatore-induzione-rarity-l',
+  'weapon-designed-metallic-perforatore-cascata',
+  'weapon-designed-metallic-perforatore-cascata-rarity-l',
+  'weapon-designed-metallic-artiglieria-schegge',
+  'weapon-designed-metallic-artiglieria-schegge-rarity-e',
+  'weapon-designed-metallic-artiglieria-schegge-rarity-l'
+ ].map(id=>[id,`${PRECISION_FRONT_ROOT}/fleet-weapon-fronts/${id}.png`]))
 });
 export const officialWeaponFacePath=id=>OFFICIAL_WEAPON_FRONT_BY_ID[id]||null;

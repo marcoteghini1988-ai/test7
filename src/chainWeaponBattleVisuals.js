@@ -8,7 +8,8 @@ export const CHAIN_WEAPON_VARIANTS=Object.freeze([
  {id:GRAPPLE_ID+'-rarity-l',rarity:'Leggendaria',tier:3,kind:'magnetic-grapple'},
  {id:COLLISION_ID,rarity:'Epica',tier:2,kind:'alloy-collision'},
  {id:COLLISION_ID+'-rarity-l',rarity:'Leggendaria',tier:3,kind:'alloy-collision'},
- {id:INDUCTION_ID,rarity:'Epica',tier:2,kind:'induction'}
+ {id:INDUCTION_ID,rarity:'Epica',tier:2,kind:'induction'},
+ {id:INDUCTION_ID+'-rarity-l',rarity:'Leggendaria',tier:3,kind:'induction'}
 ].map(Object.freeze));
 export const chainWeaponVariant=id=>CHAIN_WEAPON_VARIANTS.find(v=>v.id===id)||null;
 export function chainWeaponEffectProfile(id){
@@ -16,7 +17,8 @@ export function chainWeaponEffectProfile(id){
  const {tier:t,kind}=v,collision=kind==='alloy-collision';
  const sequence=kind==='magnetic-grapple'?
   ['','bronze-jaw-latch','silver-arch-lock','prismatic-cage-lock'][t]:
-  collision?t===2?'opposed-pole-convergence':'prismatic-yoke-convergence':'three-plate-induction';
+  collision?t===2?'opposed-pole-convergence':'prismatic-yoke-convergence':
+   t===3?'prismatic-brace-induction':'three-plate-induction';
  const family=kind==='magnetic-grapple'?'grapple':collision?'collision':'induction';
  const rarity=['common','rare','epic','legendary'][t];
  return {kind,approved:true,tier:t,sequence,
@@ -27,7 +29,7 @@ export function chainWeaponEffectProfile(id){
   secondary:t===3?'#9deaff':t===2?'#d4e5f0':'#c99156',
   sound:{charge:family+'_charge_'+rarity,fire:family+'_fire_'+rarity,
    impact:family+'_impact_'+rarity,release:family+'_release_'+rarity,
-   defense:'induction_defense_epic',block:'induction_block_epic'}
+   defense:'induction_defense_'+rarity,block:'induction_block_'+rarity}
  };
 }
 
