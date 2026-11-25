@@ -44,13 +44,13 @@ export function collisionGroups(shots=[]){
  return [...groups.values()].filter(g=>g.length===2&&g.some(s=>s.fires)&&
   new Set(g.map(s=>s.targetKind+':'+s.targetId)).size===2);
 }
-export function collisionMotionPlan(a,b){
+export function collisionMotionPlan(a,b,{forward=0}={}){
  const dx=b.x-a.x,dy=b.y-a.y,distance=Math.hypot(dx,dy);
  if(distance<1)return {contact:{x:a.x,y:a.y},offsets:[{x:0,y:0},{x:0,y:0}]};
  const separation=Math.min(distance*.42,(a.radius||20)+(b.radius||20));
  const travel=(distance-separation)/2,ux=dx/distance,uy=dy/distance;
- return {contact:{x:(a.x+b.x)/2,y:(a.y+b.y)/2},
-  offsets:[{x:ux*travel,y:uy*travel},{x:-ux*travel,y:-uy*travel}]};
+ return {contact:{x:(a.x+b.x)/2,y:(a.y+b.y)/2+forward},
+  offsets:[{x:ux*travel,y:uy*travel+forward},{x:-ux*travel,y:-uy*travel+forward}]};
 }
 const clamp=n=>Math.max(0,Math.min(1,n));
 const smooth=n=>{const t=clamp(n);return t*t*(3-2*t);};

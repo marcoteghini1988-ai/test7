@@ -1,0 +1,992 @@
+{
+  "date": "2026-11-25",
+  "project": "marcoteghini1988-ai/test7",
+  "sourceAssetCommit": "3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e",
+  "runtimeBaseCommit": "45a6cb105a29ea86f4302aecb4b177a486a56b9c",
+  "appliedClearanceCorrection": "collisionMotionPlan forward +78 per scafi B, -72 per scafi A; stessi scafi, danni e bersagli",
+  "visualChecks": [
+    {
+      "check": "front",
+      "label": "Arpioni a Ganasce Magnetiche · Rara",
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "height": 4608,
+      "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e/public/assets/fleet-weapon-fronts/weapon-designed-metallic-ganasce-magnetiche.png",
+      "width": 3072
+    },
+    {
+      "check": "front",
+      "label": "Arpioni a Ganasce Magnetiche · Epica",
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "height": 4608,
+      "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e/public/assets/fleet-weapon-fronts/weapon-designed-metallic-ganasce-magnetiche-rarity-e.png",
+      "width": 3072
+    },
+    {
+      "check": "front",
+      "label": "Arpioni a Ganasce Magnetiche · Leggendaria",
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "height": 4608,
+      "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e/public/assets/fleet-weapon-fronts/weapon-designed-metallic-ganasce-magnetiche-rarity-l.png",
+      "width": 3072
+    },
+    {
+      "check": "front",
+      "label": "Cannone Collassatore di Lega · Epica",
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "height": 4608,
+      "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e/public/assets/fleet-weapon-fronts/weapon-designed-metallic-collassatore-lega.png",
+      "width": 3072
+    },
+    {
+      "check": "front",
+      "label": "Cannone Collassatore di Lega · Leggendaria",
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "height": 4608,
+      "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e/public/assets/fleet-weapon-fronts/weapon-designed-metallic-collassatore-lega-rarity-l.png",
+      "width": 3072
+    },
+    {
+      "check": "front",
+      "label": "Frantumatore a Induzione · Epica",
+      "background": "rgba(0, 0, 0, 0)",
+      "border": "0px",
+      "height": 4608,
+      "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e/public/assets/fleet-weapon-fronts/weapon-designed-metallic-frantumatore-induzione.png",
+      "width": 3072
+    },
+    {
+      "check": "induction-energy-2-A",
+      "effect": {
+        "camera": "table-fixed",
+        "defenseBroken": "gen-227",
+        "nose": "{\"x\":218.15366359773574,\"y\":773.8807905682712}",
+        "phase": "flight",
+        "progress": "0.030",
+        "renderer": "volume-depth-buffer",
+        "sequence": "three-plate-induction",
+        "shooter": "A",
+        "visibleEnd": "rear"
+      },
+      "shots": [
+        {
+          "actualDamage": "27",
+          "flightMs": "1350",
+          "impactAtMs": "2850",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "three-plate-induction",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "induction"
+        }
+      ],
+      "stage": {
+        "cardFlights": "1",
+        "hapticPattern": "[18]",
+        "hapticPhase": "fire",
+        "hapticStatus": "requested",
+        "weaponEffects": "1"
+      }
+    },
+    {
+      "check": "induction-energy-2-B",
+      "effect": {
+        "camera": "table-fixed",
+        "defenseBroken": "gen-227",
+        "nose": "{\"x\":214.31724994231996,\"y\":21.644037859868792}",
+        "phase": "flight",
+        "progress": "0.120",
+        "renderer": "volume-depth-buffer",
+        "sequence": "three-plate-induction",
+        "shooter": "B",
+        "visibleEnd": "front"
+      },
+      "shots": [
+        {
+          "actualDamage": "27",
+          "flightMs": "1350",
+          "impactAtMs": "2850",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "three-plate-induction",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "induction"
+        }
+      ]
+    },
+    {
+      "check": "grapple-rare-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":201.82123005990925,\"y\":682.9314123860446}",
+          "phase": "flight",
+          "progress": "0.108",
+          "renderer": "volume-depth-buffer",
+          "sequence": "bronze-jaw-latch",
+          "shooter": "A",
+          "visibleEnd": "rear"
+        },
+        "shots": [
+          {
+            "actualDamage": "10",
+            "flightMs": "1450",
+            "impactAtMs": "2950",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "bronze-jaw-latch",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "magnetic-grapple"
+          },
+          {
+            "actualDamage": "10",
+            "flightMs": "1450",
+            "impactAtMs": "3210",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "bronze-jaw-latch",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-1",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "magnetic-grapple"
+          }
+        ]
+      }
+    },
+    {
+      "check": "grapple-rare-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":213.83372195960598,\"y\":23.175289208571883}",
+          "phase": "flight",
+          "progress": "0.125",
+          "renderer": "volume-depth-buffer",
+          "sequence": "bronze-jaw-latch",
+          "shooter": "B",
+          "visibleEnd": "front"
+        },
+        "shots": [
+          {
+            "actualDamage": "10",
+            "flightMs": "1450",
+            "impactAtMs": "2950",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "bronze-jaw-latch",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "magnetic-grapple"
+          },
+          {
+            "actualDamage": "10",
+            "flightMs": "1450",
+            "impactAtMs": "3210",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Rara",
+            "sequence": "bronze-jaw-latch",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-1",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "magnetic-grapple"
+          }
+        ]
+      }
+    },
+    {
+      "check": "persistent-after-rare",
+      "data": {
+        "activeLinks": "4",
+        "targetIds": "[\"escort:maglio-review-B-0\",\"escort:maglio-review-B-1\",\"escort:maglio-review-A-0\",\"escort:maglio-review-A-1\"]"
+      }
+    },
+    {
+      "check": "rare-to-epic-collision-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-0\",\"damage\":18},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-1\",\"damage\":18}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "opposed-pole-convergence",
+          "shooter": "A"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-B-0",
+            "translate": "96.0408px 77.3355px"
+          },
+          {
+            "id": "escort:maglio-review-B-1",
+            "translate": "-97.3111px 78.6645px"
+          }
+        ]
+      }
+    },
+    {
+      "check": "rare-to-epic-collision-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-0\",\"damage\":18},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-1\",\"damage\":18}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "opposed-pole-convergence",
+          "shooter": "B"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-A-0",
+            "translate": "118.718px -72.5432px"
+          },
+          {
+            "id": "escort:maglio-review-A-1",
+            "translate": "-118.645px -71.4568px"
+          }
+        ]
+      }
+    },
+    {
+      "check": "grapple-Epica-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":209.60374339145753,\"y\":726.3891471497201}",
+          "phase": "flight",
+          "progress": "0.069",
+          "renderer": "volume-depth-buffer",
+          "sequence": "silver-arch-lock",
+          "shooter": "A",
+          "visibleEnd": "rear"
+        },
+        "shots": [
+          {
+            "actualDamage": "25",
+            "flightMs": "1450",
+            "impactAtMs": "2950",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "silver-arch-lock",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "magnetic-grapple"
+          },
+          {
+            "actualDamage": "25",
+            "flightMs": "1450",
+            "impactAtMs": "3210",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "silver-arch-lock",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-1",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "magnetic-grapple"
+          }
+        ]
+      }
+    },
+    {
+      "check": "grapple-Epica-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":219.33753124156712,\"y\":5.880692743308691}",
+          "phase": "flight",
+          "progress": "0.065",
+          "renderer": "volume-depth-buffer",
+          "sequence": "silver-arch-lock",
+          "shooter": "B",
+          "visibleEnd": "front"
+        },
+        "shots": [
+          {
+            "actualDamage": "25",
+            "flightMs": "1450",
+            "impactAtMs": "2950",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "silver-arch-lock",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "magnetic-grapple"
+          },
+          {
+            "actualDamage": "25",
+            "flightMs": "1450",
+            "impactAtMs": "3210",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "silver-arch-lock",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-1",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "magnetic-grapple"
+          }
+        ]
+      }
+    },
+    {
+      "check": "collision-Epica-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-0\",\"damage\":31},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-1\",\"damage\":31}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "opposed-pole-convergence",
+          "shooter": "A"
+        },
+        "haptics": {
+          "cardFlights": "1",
+          "hapticPattern": "[60]",
+          "hapticPhase": "impact",
+          "hapticStatus": "requested",
+          "weaponEffects": "2"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-B-0",
+            "translate": "96.6829px 77.4862px"
+          },
+          {
+            "id": "escort:maglio-review-B-1",
+            "translate": "-96.6784px 78.5138px"
+          }
+        ]
+      }
+    },
+    {
+      "check": "collision-Epica-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-0\",\"damage\":31},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-1\",\"damage\":31}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "opposed-pole-convergence",
+          "shooter": "B"
+        },
+        "haptics": {
+          "cardFlights": "0",
+          "hapticPattern": "[60]",
+          "hapticPhase": "impact",
+          "hapticStatus": "requested",
+          "weaponEffects": "2"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-A-0",
+            "translate": "118.268px -72.7488px"
+          },
+          {
+            "id": "escort:maglio-review-A-1",
+            "translate": "-119.073px -71.2512px"
+          }
+        ]
+      }
+    },
+    {
+      "check": "restored-Epica",
+      "data": {
+        "tethers": {
+          "activeLinks": "0",
+          "targetIds": "[\"escort:maglio-review-A-0\",\"escort:maglio-review-A-1\"]"
+        },
+        "translations": [
+          "",
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    {
+      "check": "grapple-Leggendaria-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":205.22742127503037,\"y\":702.0229460309473}",
+          "phase": "flight",
+          "progress": "0.091",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-cage-lock",
+          "shooter": "A",
+          "visibleEnd": "rear"
+        },
+        "shots": [
+          {
+            "actualDamage": "34",
+            "flightMs": "1450",
+            "impactAtMs": "2950",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "prismatic-cage-lock",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "magnetic-grapple"
+          },
+          {
+            "actualDamage": "34",
+            "flightMs": "1450",
+            "impactAtMs": "3210",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "prismatic-cage-lock",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-1",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "magnetic-grapple"
+          }
+        ]
+      }
+    },
+    {
+      "check": "grapple-Leggendaria-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":223.91847435375118,\"y\":-8.585084098542417}",
+          "phase": "flight",
+          "progress": "0.013",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-cage-lock",
+          "shooter": "B",
+          "visibleEnd": "front"
+        },
+        "shots": [
+          {
+            "actualDamage": "34",
+            "flightMs": "1450",
+            "impactAtMs": "2950",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "prismatic-cage-lock",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "magnetic-grapple"
+          },
+          {
+            "actualDamage": "34",
+            "flightMs": "1450",
+            "impactAtMs": "3210",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "prismatic-cage-lock",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-1",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "magnetic-grapple"
+          }
+        ]
+      }
+    },
+    {
+      "check": "collision-Leggendaria-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-0\",\"damage\":43},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-1\",\"damage\":43}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-yoke-convergence",
+          "shooter": "A"
+        },
+        "haptics": {
+          "cardFlights": "1",
+          "hapticPattern": "[68,40,20]",
+          "hapticPhase": "impact",
+          "hapticStatus": "requested",
+          "weaponEffects": "2"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-B-0",
+            "translate": "94.9893px 77.6126px"
+          },
+          {
+            "id": "escort:maglio-review-B-1",
+            "translate": "-98.3466px 78.3874px"
+          }
+        ]
+      }
+    },
+    {
+      "check": "collision-Leggendaria-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-0\",\"damage\":43},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-1\",\"damage\":43}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-yoke-convergence",
+          "shooter": "B"
+        },
+        "haptics": {
+          "cardFlights": "0",
+          "hapticPattern": "[68,40,20]",
+          "hapticPhase": "impact",
+          "hapticStatus": "requested",
+          "weaponEffects": "2"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-A-0",
+            "translate": "117.376px -72.7023px"
+          },
+          {
+            "id": "escort:maglio-review-A-1",
+            "translate": "-119.974px -71.2977px"
+          }
+        ]
+      }
+    },
+    {
+      "check": "restored-Leggendaria",
+      "data": {
+        "tethers": {
+          "activeLinks": "0",
+          "targetIds": "[\"escort:maglio-review-A-0\",\"escort:maglio-review-A-1\"]"
+        },
+        "translations": [
+          "",
+          "",
+          "",
+          ""
+        ]
+      }
+    },
+    {
+      "check": "induction-energy-0-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":218.64876792980084,\"y\":776.6173107368811}",
+          "phase": "flight",
+          "progress": "0.028",
+          "renderer": "volume-depth-buffer",
+          "sequence": "three-plate-induction",
+          "shooter": "A",
+          "visibleEnd": "rear"
+        },
+        "haptics": {
+          "cardFlights": "1",
+          "hapticPattern": "[18]",
+          "hapticPhase": "fire",
+          "hapticStatus": "requested",
+          "weaponEffects": "1"
+        },
+        "shots": [
+          {
+            "actualDamage": "0",
+            "flightMs": "1350",
+            "impactAtMs": "2850",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "three-plate-induction",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "induction"
+          }
+        ]
+      }
+    },
+    {
+      "check": "induction-energy-0-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":167.9797586501518,\"y\":167.6920186892342}",
+          "phase": "flight",
+          "progress": "0.526",
+          "renderer": "volume-depth-buffer",
+          "sequence": "three-plate-induction",
+          "shooter": "B",
+          "visibleEnd": "front"
+        },
+        "haptics": {
+          "cardFlights": "0",
+          "hapticPattern": "[18]",
+          "hapticPhase": "fire",
+          "hapticStatus": "requested",
+          "weaponEffects": "1"
+        },
+        "shots": [
+          {
+            "actualDamage": "0",
+            "flightMs": "1350",
+            "impactAtMs": "2850",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "three-plate-induction",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "induction"
+          }
+        ]
+      }
+    },
+    {
+      "check": "induction-energy-1-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":207.1716669866239,\"y\":712.8259053447798}",
+          "phase": "flight",
+          "progress": "0.081",
+          "renderer": "volume-depth-buffer",
+          "sequence": "three-plate-induction",
+          "shooter": "A",
+          "visibleEnd": "rear"
+        },
+        "haptics": {
+          "cardFlights": "1",
+          "hapticPattern": "[18]",
+          "hapticPhase": "fire",
+          "hapticStatus": "requested",
+          "weaponEffects": "1"
+        },
+        "shots": [
+          {
+            "actualDamage": "27",
+            "flightMs": "1350",
+            "impactAtMs": "2850",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "three-plate-induction",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "induction"
+          }
+        ]
+      }
+    },
+    {
+      "check": "induction-energy-1-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "nose": "{\"x\":223.6530624190269,\"y\":-7.7575398970958}",
+          "phase": "flight",
+          "progress": "0.016",
+          "renderer": "volume-depth-buffer",
+          "sequence": "three-plate-induction",
+          "shooter": "B",
+          "visibleEnd": "front"
+        },
+        "haptics": {
+          "cardFlights": "0",
+          "hapticPattern": "[18]",
+          "hapticPhase": "fire",
+          "hapticStatus": "requested",
+          "weaponEffects": "1"
+        },
+        "shots": [
+          {
+            "actualDamage": "27",
+            "flightMs": "1350",
+            "impactAtMs": "2850",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "three-plate-induction",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "induction"
+          }
+        ]
+      }
+    },
+    {
+      "check": "induction-energy-2-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "defenseBroken": "gen-227",
+          "nose": "{\"x\":205.93508602419186,\"y\":705.8552428852951}",
+          "phase": "flight",
+          "progress": "0.087",
+          "renderer": "volume-depth-buffer",
+          "sequence": "three-plate-induction",
+          "shooter": "A",
+          "visibleEnd": "rear"
+        },
+        "haptics": {
+          "cardFlights": "1",
+          "hapticPattern": "[18]",
+          "hapticPhase": "fire",
+          "hapticStatus": "requested",
+          "weaponEffects": "1"
+        },
+        "shots": [
+          {
+            "actualDamage": "27",
+            "flightMs": "1350",
+            "impactAtMs": "2850",
+            "originEdge": "bottom-usb",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "three-plate-induction",
+            "shooter": "A",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "visibleEnd": "rear",
+            "weaponKind": "induction"
+          }
+        ]
+      }
+    },
+    {
+      "check": "induction-energy-2-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "defenseBroken": "gen-227",
+          "nose": "{\"x\":217.70320813550268,\"y\":10.980895020515113}",
+          "phase": "flight",
+          "progress": "0.083",
+          "renderer": "volume-depth-buffer",
+          "sequence": "three-plate-induction",
+          "shooter": "B",
+          "visibleEnd": "front"
+        },
+        "haptics": {
+          "cardFlights": "0",
+          "hapticPattern": "[18]",
+          "hapticPhase": "fire",
+          "hapticStatus": "requested",
+          "weaponEffects": "1"
+        },
+        "shots": [
+          {
+            "actualDamage": "27",
+            "flightMs": "1350",
+            "impactAtMs": "2850",
+            "originEdge": "top-opponent",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "three-plate-induction",
+            "shooter": "B",
+            "targetId": "escort:maglio-review-A-0",
+            "targetKind": "escort",
+            "visibleEnd": "front",
+            "weaponKind": "induction"
+          }
+        ]
+      }
+    },
+    {
+      "check": "mother-support-collision-A",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-0\",\"damage\":43},{\"kind\":\"part\",\"id\":\"weapons\",\"damage\":54}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-yoke-convergence",
+          "shooter": "A"
+        },
+        "haptics": {
+          "cardFlights": "1",
+          "hapticPattern": "[68,40,20]",
+          "hapticPhase": "impact",
+          "hapticStatus": "requested",
+          "weaponEffects": "2"
+        },
+        "motions": [
+          {
+            "id": "mother",
+            "translate": "-35.8421px 83.5911px"
+          },
+          {
+            "id": "escort:maglio-review-B-0",
+            "translate": "36.0771px 72.4089px"
+          }
+        ]
+      }
+    },
+    {
+      "check": "mother-support-collision-B",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-0\",\"damage\":43},{\"kind\":\"part\",\"id\":\"weapons\",\"damage\":51}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-yoke-convergence",
+          "shooter": "B"
+        },
+        "haptics": {
+          "cardFlights": "0",
+          "hapticPattern": "[68,40,20]",
+          "hapticPhase": "impact",
+          "hapticStatus": "requested",
+          "weaponEffects": "2"
+        },
+        "motions": [
+          {
+            "id": "mother",
+            "translate": "-43.4246px -77.1774px"
+          },
+          {
+            "id": "escort:maglio-review-A-0",
+            "translate": "41.257px -66.8226px"
+          }
+        ]
+      }
+    },
+    {
+      "check": "expired-combo-UI",
+      "card": {
+        "ariaDisabled": "true",
+        "enabled": true,
+        "text": "✚SUPPORTOCannone Collassatore di LegaArma Metallo · 57 HP per bersaglio agganciato; richiede gli Arpioni del turno proprio precedente.",
+        "title": "Cannone Collassatore di Lega · Arma Metallo · 57 HP per bersaglio agganciato; richiede gli Arpioni del turno proprio precedente. · Collassatore richiede due bersagli delle Ganasce nel turno precedente"
+      },
+      "tethers": {}
+    },
+    {
+      "check": "dead-support-no-tether",
+      "data": {
+        "dead": [
+          "escort:maglio-review-B-1"
+        ],
+        "tethers": {
+          "activeLinks": "1",
+          "targetIds": "[\"escort:maglio-review-B-0\"]"
+        }
+      }
+    },
+    {
+      "check": "blocked-induction-break-only-muted-haptics",
+      "data": {
+        "effect": {
+          "camera": "table-fixed",
+          "defenseBroken": "gen-227",
+          "renderer": "volume-depth-buffer"
+        },
+        "projectiles": 0,
+        "stage": {
+          "cardFlights": "1",
+          "hapticPattern": "[12,25,18]",
+          "hapticPhase": "defense",
+          "hapticStatus": "muted",
+          "weaponEffects": "0"
+        }
+      }
+    }
+  ],
+  "recordedClips": [
+    {
+      "label": "Ganasce Rara e Collassatore Epica · A/B",
+      "start": 0.46,
+      "end": 23.203
+    },
+    {
+      "label": "Ganasce e Collassatore Epica · A/B",
+      "start": 46.639,
+      "end": 69.833
+    },
+    {
+      "label": "Ganasce e Collassatore Leggendaria · A/B",
+      "start": 69.95,
+      "end": 93.272
+    },
+    {
+      "label": "Frantumatore · 0 Energie · A/B",
+      "start": 124.576,
+      "end": 135.048
+    },
+    {
+      "label": "Frantumatore · 1 Energie · A/B",
+      "start": 135.564,
+      "end": 145.724
+    },
+    {
+      "label": "Frantumatore · 2 Energie · A/B",
+      "start": 145.802,
+      "end": 155.615
+    },
+    {
+      "label": "Collassatore Leggendaria · supporto e madre · A/B",
+      "start": 175.42,
+      "end": 187.223
+    }
+  ],
+  "audioCapture": "WebM VP9 900x1600 + Opus 48kHz, audio scheda incluso",
+  "haptics": "requested e muted osservati; riscontro fisico su telefono non verificato"
+}

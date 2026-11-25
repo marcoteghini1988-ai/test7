@@ -1,6 +1,6 @@
 {
   "date": "2026-11-25",
-  "status": "sei fronti approvati dall’utente; effetti implementati, collaudo StackBlitz in corso",
+  "status": "sei fronti approvati, integrati e collaudati in partita su StackBlitz con audio",
   "sourceRepository": "marcoteghini1988-ai/test7",
   "sourceCommit": "27033d9a189a1ccb54f8409cd1838c64fcefd211",
   "element": "metallic",
@@ -337,5 +337,14 @@
     "date": "2026-11-25",
     "message": "confermate, procedi con gli effetti e mostrameli"
   },
-  "assetCommit": "3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e"
+  "assetCommit": "3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e",
+  "qa": {
+    "tests": 2095,
+    "passed": 2095,
+    "build": true,
+    "preflight": true,
+    "browserChecks": 34,
+    "hapticsPhysicalVerified": false,
+    "browserRecord": "collaudo-stackblitz.json"
+  }
 }

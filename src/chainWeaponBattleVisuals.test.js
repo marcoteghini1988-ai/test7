@@ -83,6 +83,9 @@ test('Collassatore: supporto e madre, due scafi reali, una sola collisione e rip
  const p=chainWeaponEffectProfile(COLLISION_ID),plan=collisionMotionPlan({x:90,y:240,radius:27},{x:225,y:220,radius:55});
  assert.ok(plan.offsets[0].x>0&&plan.offsets[1].x<0);
  assert.equal(plan.offsets[0].x+plan.offsets[1].x,0);
+ const clear=collisionMotionPlan({x:90,y:240,radius:27},{x:225,y:220,radius:55},{forward:78});
+ assert.equal(clear.contact.y,plan.contact.y+78);
+ assert.equal(clear.offsets[0].y+clear.offsets[1].y,156,'Entrambi gli scafi avanzano sul tavolo senza attraversare la madre ferma');
  assert.equal(collisionFrame(p.flightMs,p).phase,'contact');assert.equal(collisionFrame(p.flightMs,p).pull,1);
  assert.equal(collisionFrame(p.flightMs+p.impactMs,p).pull,0);
  assert.equal(collisionFrame(p.flightMs+p.impactMs,p).phase,'restored');

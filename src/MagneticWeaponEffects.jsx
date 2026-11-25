@@ -80,7 +80,10 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
    const targets=shots.map(s=>combatTargetElement(root,s));if(targets.some(t=>!t))return [];
    const centers=targets.map(el=>boardHullPoint(el,board));
    return [{shots,profile:pairs[0].profile,start:pairs[0].start,targets,
-    previous:targets.map(t=>t.style.translate),plan:collisionMotionPlan(...centers)}];
+    previous:targets.map(t=>t.style.translate),
+    // Porta l'urto davanti alla formazione: due supporti non attraversano
+    // la madre ferma che occupa il centro del loro schieramento.
+    plan:collisionMotionPlan(...centers,{forward:shots[0].who==='A'?78:-72})}];
   });
   element.dataset.renderer='volume-depth-buffer';element.dataset.camera='table-fixed';
   let raf=0,previous=-Infinity;

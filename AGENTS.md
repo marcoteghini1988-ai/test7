@@ -25,7 +25,10 @@ Abbinare suono e vibrazione ad aggancio, trazione e collisione. Non ridurre
 la combinazione a due proiettili generici o a una sola esplosione mentre
 le navi restano ferme. La coreografia rappresenta gli eventi reali, senza
 aggiungere immobilizzazione, danni, bersagli o durata non previsti dal codice.
-La meccanica è già implementata; il suo effetto dedicato è ancora da creare.
+La meccanica e la presentazione dedicata sono implementate e collaudate su
+StackBlitz per le sei carte del secondo gruppo Metallo approvate il 25/11.
+Vedi `docs/ARMI_METALLO_CATENE_COLLISIONI_INDUZIONE_2026-11-25.md`.
+La vibrazione fisica su telefono rimane da verificare.
 
 **Proiettili approvati, revisione del 24/11:** il Maglio usa le quattro
 sagome illustrate in `docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png`.

@@ -23,6 +23,7 @@
  position:absolute;inset:0;width:450px;height:800px;pointer-events:none;
 }
 .magnetic-persistent-tethers {z-index:37;overflow:hidden}
+[data-collision-motion] .f3d-unit-target {opacity:0!important}
 .maglio-pulse-travel {
  opacity:0;transform-origin:0 0;
  animation:maglio-flight var(--maglio-flight-ms,470ms) var(--maglio-flight-delay) linear both;
