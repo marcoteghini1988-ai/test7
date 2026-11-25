@@ -45,7 +45,11 @@ test('Catalogo: 35 carte attive, 20 con bilanciamento provvisorio',()=>{
   DESIGNED_WEAPON_CARDS.filter(c=>c.elementId===e).length])),distribution);
  for(const c of DESIGNED_WEAPON_CARDS){
   assert.equal(card(c.id),c,c.id);assert.equal(cardRole(c.id),'support');
-  assert.equal(cardFacePath(c.id),null);assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
+  // Il Recuperatore ha ora il fronte completo approvato; le altre Armi
+  // progettate attendono ancora la propria illustrazione.
+  const approvedFront=c.id==='weapon-designed-metallic-recuperatore-termobalistico'?
+   '/assets/fleet-weapon-fronts/'+c.id+'.png':null;
+  assert.equal(cardFacePath(c.id),approvedFront);assert.equal(validateEffectSpec(c.effectSpec),null,c.id);
   assert.equal(describeEffect(c),c.effectProposed,c.id);
   assert.ok(NEXT_COMMON_AVAILABLE.includes(c));assert.equal(c.acquisitionPending,false);
   assert.equal(canSelectNewGeneric(c.id),c.playable);
