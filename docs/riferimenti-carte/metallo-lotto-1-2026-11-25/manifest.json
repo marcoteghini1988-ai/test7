@@ -1,0 +1,251 @@
+{
+  "date": "2026-11-25",
+  "status": "anteprime complete in attesa di approvazione grafica",
+  "sourceRepository": "marcoteghini1988-ai/test7",
+  "sourceCommit": "1dec16daee0d02715c20bf04d117b763ca9c94f9",
+  "element": "metallic",
+  "canvas": [
+    3072,
+    4608
+  ],
+  "illustrationMode": "built-in image_gen",
+  "cards": [
+    {
+      "id": "weapon-confirmed-metallic-slitta",
+      "familyId": "weapon-confirmed-metallic-slitta",
+      "name": "Cannone a Slitta d'Acciaio",
+      "titleLines": [
+        "STEEL SLIDE",
+        "CANNON"
+      ],
+      "rarity": "Comune",
+      "raritySlug": "comune",
+      "rarityLabel": "COMMON",
+      "artPath": "illustrazioni/slitta-comune.png",
+      "duration": 1,
+      "damage": 14,
+      "recoveryPercent": null,
+      "maxBonus": null,
+      "effectItalian": "Arma Metallo · 14 HP su un bersaglio, un colpo autonomo. Difese e Terreni applicabili.",
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "damageMode": "base-shot",
+        "elementId": "metallic",
+        "baseDamage": 14,
+        "durationTurns": 1
+      },
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "libraryFileId": "libfile_60017e099a5081919be19b3d1cbbebb6",
+      "sha256": "10fb252e2fe0b3b5666643ca5a3ecbae2db59202d6b9e8a331db6dc5efe551b6"
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-r",
+      "familyId": "weapon-confirmed-metallic-slitta",
+      "name": "Cannone a Slitta d'Acciaio",
+      "titleLines": [
+        "STEEL SLIDE",
+        "CANNON"
+      ],
+      "rarity": "Rara",
+      "raritySlug": "rara",
+      "rarityLabel": "RARE",
+      "artPath": "illustrazioni/slitta-rara.png",
+      "duration": 1,
+      "damage": 37,
+      "recoveryPercent": null,
+      "maxBonus": null,
+      "effectItalian": "Arma Metallo · 37 HP su un bersaglio, un colpo autonomo. Difese e Terreni applicabili.",
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "damageMode": "base-shot",
+        "elementId": "metallic",
+        "baseDamage": 37,
+        "durationTurns": 1
+      },
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "libraryFileId": "libfile_48d70c1f83088191a9b63dd7ccee2c52",
+      "sha256": "e204b37fa656b6017dafc72d5214b27d9ff724082a9d90f4ba2881dfa018d533"
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-e",
+      "familyId": "weapon-confirmed-metallic-slitta",
+      "name": "Cannone a Slitta d'Acciaio",
+      "titleLines": [
+        "STEEL SLIDE",
+        "CANNON"
+      ],
+      "rarity": "Epica",
+      "raritySlug": "epica",
+      "rarityLabel": "EPIC",
+      "artPath": "illustrazioni/slitta-epica.png",
+      "duration": 1,
+      "damage": 87,
+      "recoveryPercent": null,
+      "maxBonus": null,
+      "effectItalian": "Arma Metallo · 87 HP su un bersaglio, un colpo autonomo. Difese e Terreni applicabili.",
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "damageMode": "base-shot",
+        "elementId": "metallic",
+        "baseDamage": 87,
+        "durationTurns": 1
+      },
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "libraryFileId": "libfile_cb69451804b4819183d16465cb186c2b",
+      "sha256": "ab14850905e7a804c8a6b4a8edaf44c348452055a5316c199fc0871b13132f01"
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-l",
+      "familyId": "weapon-confirmed-metallic-slitta",
+      "name": "Cannone a Slitta d'Acciaio",
+      "titleLines": [
+        "STEEL SLIDE",
+        "CANNON"
+      ],
+      "rarity": "Leggendaria",
+      "raritySlug": "leggendaria",
+      "rarityLabel": "LEGENDARY",
+      "artPath": "illustrazioni/slitta-leggendaria.png",
+      "duration": 1,
+      "damage": 124,
+      "recoveryPercent": null,
+      "maxBonus": null,
+      "effectItalian": "Arma Metallo · 124 HP su un bersaglio, un colpo autonomo. Difese e Terreni applicabili.",
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "damageMode": "base-shot",
+        "elementId": "metallic",
+        "baseDamage": 124,
+        "durationTurns": 1
+      },
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "libraryFileId": "libfile_3dbe44920acc8191896b8b2fedf40534",
+      "sha256": "b06a1f1bccf4ae7ce642c5b5e857b9d5c9c08dbc4996d9bdecf9236144a8ac78"
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico",
+      "familyId": "weapon-designed-metallic-recuperatore-termobalistico",
+      "name": "Artiglieria Termobalistica di Recupero",
+      "titleLines": [
+        "THERMOBALLISTIC",
+        "RECLAIMER"
+      ],
+      "rarity": "Epica",
+      "raritySlug": "epica",
+      "rarityLabel": "EPIC",
+      "artPath": "illustrazioni/recuperatore-epica.png",
+      "duration": 2,
+      "damage": 31,
+      "recoveryPercent": 60,
+      "maxBonus": 92,
+      "effectItalian": "Arma Metallo · 31 HP +60% degli HP realmente persi dalla tua flotta dopo la posa (massimo +92 HP), per 2 turni.",
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 2,
+        "weaponProfile": {
+          "pattern": "thermal-reclaimer",
+          "baseDamage": 31,
+          "damageConversionPercent": 60,
+          "maxExtraDamage": 92,
+          "durationTurns": 2,
+          "provisional": true
+        }
+      },
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "libraryFileId": "libfile_c6d12524605c8191864a9f21e21eb164",
+      "sha256": "0f58738c4cc6746434c165d2b000df33ca70368ec9f038c44eaa0113cfa20e56"
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
+      "familyId": "weapon-designed-metallic-recuperatore-termobalistico",
+      "name": "Artiglieria Termobalistica di Recupero",
+      "titleLines": [
+        "THERMOBALLISTIC",
+        "RECLAIMER"
+      ],
+      "rarity": "Leggendaria",
+      "raritySlug": "leggendaria",
+      "rarityLabel": "LEGENDARY",
+      "artPath": "illustrazioni/recuperatore-leggendaria.png",
+      "duration": 2,
+      "damage": 43,
+      "recoveryPercent": 60,
+      "maxBonus": 130,
+      "effectItalian": "Arma Metallo · 43 HP +60% degli HP realmente persi dalla tua flotta dopo la posa (massimo +130 HP), per 2 turni.",
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 2,
+        "weaponProfile": {
+          "pattern": "thermal-reclaimer",
+          "baseDamage": 43,
+          "damageConversionPercent": 60,
+          "maxExtraDamage": 130,
+          "durationTurns": 2,
+          "provisional": true
+        }
+      },
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "libraryFileId": "libfile_82921680cd3481919ec84fa4a2b6c04f",
+      "sha256": "d87b3a6b293ced01bdec90801b713f9530cf3f8366c032addfb30a5cc85663a4"
+    }
+  ],
+  "reviewStatus": "awaiting-user-approval",
+  "playableFrontsInstalled": false,
+  "effectsImplementationStatus": "after visual approval",
+  "compositionScript": "scripts/compose-weapon-fronts.cjs",
+  "frameSourceHashes": {
+    "comune": "8871d4dd7ab1b9705d26ba71dd0015bbbdc2b0ce5ac33d91154cef494df6df59",
+    "rara": "f1a23a4aac5de496a2f0849ab0030aba6c7824f2b8f4abcaae1f4153858ec341",
+    "epica": "fcb109079c3dd78e845fa9a99f6eb1a9cef6982db7c0412676727c363e6157bc",
+    "leggendaria": "834c1773c093f1f6338d7bca3c3ad71b7d7501d5b83c9d1900c50a3369c84221"
+  },
+  "renderValidation": "Six RGBA PNG fronts 3072x4608; no pixels added outside the original frame profile; original opaque outer frame preserved.",
+  "downloadPackage": {
+    "file_name": "Metallo_primo_gruppo_6_carte_HD.zip",
+    "library_file_id": "libfile_204cc81a83888191b7cadbd98f21f468"
+  },
+  "comparisonSheets": [
+    {
+      "file_name": "Metallo_Slitta_quattro_rarita.png",
+      "library_file_id": "libfile_1c4524338e508191ba70eb5281d31734"
+    },
+    {
+      "file_name": "Metallo_Recuperatore_due_rarita.png",
+      "library_file_id": "libfile_82d0847f17c881918953e271fca43893"
+    }
+  ]
+}
