@@ -45,9 +45,10 @@
       "Fine puntuale e movimento ridotto"
     ],
     "pixelReview": "Ispezionati contatti iniziali/finali di Maglio, Recuperatore, Induzione e Schegge; studio video con tutte le otto famiglie.",
-    "liveStackBlitz": "not-verified",
+    "liveStackBlitz": "blocked-before-battle",
     "physicalHaptics": "not-verified",
-    "liveNote": "La nuova revisione non è stata attestata in partita. L’ultimo tentativo del progetto ha restituito Could not clone repository e fetch failed anche nel runtime; i vecchi collaudi non sono prova della nuova revisione."
+    "liveNote": "Ricontrollato il progetto originale dopo la pubblicazione: il workspace mostra ancora Unable to resolve workspace folder (Failed to fetch) e l’anteprima resta su Booting WebContainer. Il nuovo collaudo in partita non è avvenuto; i precedenti non sono una prova di questa revisione.",
+    "liveSourceCommit": "d255854209f36ae4c9fa13ff3f93c8e92e4e9901"
   },
   "video": {
     "filename": "Impatti_sulle_navicelle_Eclissi.mp4",
