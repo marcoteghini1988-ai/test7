@@ -53,6 +53,16 @@ aggiunge frammenti prismatici. Il contatto resta nel punto calcolato dagli
 scafi e dalla camera reale, senza introdurre danni ad area, bersagli o colpi.
 Non rendere esplosivi anche gli altri attacchi per semplice riuso dell'effetto.
 
+**Revisione successiva, dinamica e luce:** il solo aumento dell'esplosione
+non ha reso convincente lo scontro: gli scafi scorrevano lentamente e
+frenavano all'arrivo. Il Collassatore ora libera il corridoio davanti alla
+madre, poi accelera fino al contatto negli ultimi 380 ms della trazione di
+1000 ms. Lo scafo si inclina, subisce torsione e rinculo, riflette il lampo
+e reagisce con i reattori; la reazione/rientro dura 1350 ms, con rilascio
+dopo 75 ms. Il risucchio sonoro termina sul nuovo istante del BOOM. I video
+di prova mantengono la velocità reale. Non spostare barre e slot né lasciare
+rotazioni, filtri o variabili d'animazione dopo la sequenza.
+
 ## Direzione della battaglia
 
 Nella plancia verticale il giocatore A spara dal centro del bordo inferiore,

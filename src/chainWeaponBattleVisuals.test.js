@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {CHAIN_WEAPON_VARIANTS,GRAPPLE_ID,COLLISION_ID,INDUCTION_ID,chainWeaponEffectProfile,
- collisionGroups,collisionFrame,collisionMotionPlan,activeGrappleLinks} from './chainWeaponBattleVisuals.js';
+ collisionGroups,collisionFrame,collisionMotionPlan,collisionHullFrame,activeGrappleLinks} from './chainWeaponBattleVisuals.js';
 import {fleetWeaponShots,weaponEffectProfile,weaponResolutionMs,weaponShotStartMs,weaponVisualCards} from './maglioBattleVisuals.js';
 import {createMaglioReviewBattle} from '../scripts/maglioReviewBattle.js';
 import {resolvePreparedFleetTurn,autoFleetTurn} from './fleetNext/combat.js';
@@ -89,6 +89,32 @@ test('Collassatore: supporto e madre, due scafi reali, una sola collisione e rip
  assert.equal(collisionFrame(p.flightMs,p).phase,'contact');assert.equal(collisionFrame(p.flightMs,p).pull,1);
  assert.equal(collisionFrame(p.flightMs+p.impactMs,p).pull,0);
  assert.equal(collisionFrame(p.flightMs+p.impactMs,p).phase,'restored');
+});
+test('Collassatore: prima libera il corridoio, poi accelera fino al contatto senza frenare',()=>{
+ const p=chainWeaponEffectProfile(COLLISION_ID);
+ assert.ok(p.flightMs<=1000,'Lo strappo non resta una lenta traslazione');
+ const staging=collisionFrame(p.flightMs*.62,p);
+ assert.equal(staging.advance,1);assert.ok(staging.pull<.1,'Gli scafi escono davanti alla madre prima di chiudere');
+ const step=40,end=collisionFrame(p.flightMs,p).pull;
+ const last=end-collisionFrame(p.flightMs-step,p).pull;
+ const before=collisionFrame(p.flightMs-step,p).pull-collisionFrame(p.flightMs-step*2,p).pull;
+ assert.ok(last>before*1.1,'Il tratto finale accelera: niente ease-out prima dello schianto');
+ assert.equal(collisionFrame(p.flightMs+80,p).phase,'release','Non congela gli scafi per 230 ms dopo il contatto');
+});
+test('Collassatore: torsione speculare, reattori in spinta, reazione e ritorno neutro',()=>{
+ const p=chainWeaponEffectProfile(COLLISION_ID);
+ const a=collisionHullFrame(p.flightMs-25,p,{direction:1}),b=collisionHullFrame(p.flightMs-25,p,{direction:-1});
+ assert.ok(Math.abs(a.roll)>10&&a.thrust>.8);assert.equal(a.roll,-b.roll);
+ const hit=collisionHullFrame(p.flightMs+70,p);
+ assert.ok(hit.recoil>15&&hit.light>.8&&Math.abs(hit.pitch)>5,'Lo scafo reagisce, si illumina e rincula');
+ for(const elapsed of [-1,p.flightMs-25,p.flightMs+70,p.flightMs+p.impactMs]){
+  const pose=collisionHullFrame(elapsed,p,{reduced:true});assert.ok(Object.values(pose).every(n=>n===0));
+ }
+ const final=collisionHullFrame(p.flightMs+p.impactMs,p);assert.ok(Object.values(final).every(n=>n===0));
+ for(const id of [COLLISION_ID,COLLISION_ID+'-rarity-l']){
+  const profile=chainWeaponEffectProfile(id),sound=metalWeaponSoundPlan(profile.sound.fire);
+  assert.ok(sound.layers.every(layer=>(layer.delay+layer.duration)*1000<=profile.flightMs),'Il risucchio termina prima del BOOM');
+ }
 });
 for(const count of [0,1,2])test('Induzione: '+count+' Energie fisiche, Difesa e nessun consumo',()=>{
  const b=createMaglioReviewBattle({cardId:INDUCTION_ID,supports:true,energyCards:count,withDefense:true,nowMs:0});

@@ -20,9 +20,9 @@ export function chainWeaponEffectProfile(id){
  const family=kind==='magnetic-grapple'?'grapple':collision?'collision':'induction';
  const rarity=['common','rare','epic','legendary'][t];
  return {kind,approved:true,tier:t,sequence,
-  chargeMs:collision?650:kind==='induction'?720:380+t*70,
-  flightMs:collision?1800:kind==='induction'?1350:1450,
-  impactMs:collision?1650:kind==='induction'?1050:1050+t*90,
+  chargeMs:collision?450:kind==='induction'?720:380+t*70,
+  flightMs:collision?1000:kind==='induction'?1350:1450,
+  impactMs:collision?1350:kind==='induction'?1050:1050+t*90,
   core:t===3?'#ecf8ff':'#fff1ce',glow:t===3?'#b9b8ff':'#ffc178',
   secondary:t===3?'#9deaff':t===2?'#d4e5f0':'#c99156',
   sound:{charge:family+'_charge_'+rarity,fire:family+'_fire_'+rarity,
@@ -46,21 +46,48 @@ export function collisionGroups(shots=[]){
 }
 export function collisionMotionPlan(a,b,{forward=0}={}){
  const dx=b.x-a.x,dy=b.y-a.y,distance=Math.hypot(dx,dy);
- if(distance<1)return {contact:{x:a.x,y:a.y},offsets:[{x:0,y:0},{x:0,y:0}]};
+ if(distance<1)return {forward:0,contact:{x:a.x,y:a.y},offsets:[{x:0,y:0},{x:0,y:0}]};
  const separation=Math.min(distance*.42,(a.radius||20)+(b.radius||20));
  const travel=(distance-separation)/2,ux=dx/distance,uy=dy/distance;
- return {contact:{x:(a.x+b.x)/2,y:(a.y+b.y)/2+forward},
+ return {forward,contact:{x:(a.x+b.x)/2,y:(a.y+b.y)/2+forward},
   offsets:[{x:ux*travel,y:uy*travel+forward},{x:-ux*travel,y:-uy*travel+forward}]};
 }
 const clamp=n=>Math.max(0,Math.min(1,n));
 const smooth=n=>{const t=clamp(n);return t*t*(3-2*t);};
 export function collisionFrame(elapsed,profile){
  const touch=profile.flightMs,end=touch+profile.impactMs;
- if(elapsed<0)return {phase:'waiting',pull:0,flash:0};
- if(elapsed<touch)return {phase:'tension',pull:smooth(elapsed/touch),flash:0};
- if(elapsed<touch+230)return {phase:'contact',pull:1,flash:1-(elapsed-touch)/230};
- if(elapsed<end)return {phase:'release',pull:1-smooth((elapsed-touch-230)/(profile.impactMs-230)),flash:0};
- return {phase:'restored',pull:0,flash:0};
+ if(elapsed<0)return {phase:'waiting',pull:0,advance:0,flash:0,rush:0};
+ if(elapsed<touch){
+  const t=elapsed/touch,snap=clamp((t-.62)/.38);
+  // Prima libera il corridoio davanti alla madre; poi STRAPPA verso l'urto.
+  // Nessuna frenata prima del contatto: l'ultimo tratto è il più veloce.
+  return {phase:t<.62?'tension':'snap',pull:.07*smooth(t/.62)+.93*snap**2.7,
+   advance:smooth(t/.62),flash:0,rush:snap**1.7};
+ }
+ const age=elapsed-touch;
+ if(age<75)return {phase:'contact',pull:1,advance:1,flash:Math.exp(-age/95),rush:0};
+ if(elapsed<end){
+  const returning=1-smooth((age-75)/(profile.impactMs-75));
+  return {phase:'release',pull:returning,advance:returning,flash:Math.exp(-age/95),rush:0};
+ }
+ return {phase:'restored',pull:0,advance:0,flash:0,rush:0};
+}
+
+// Posa dello scafo, distinta dalla traslazione del suo alloggiamento. Non
+// tocca regole o HP e torna esattamente neutra anche con movimento ridotto.
+export function collisionHullFrame(elapsed,profile,{direction=1,reduced=false}={}){
+ const f=collisionFrame(elapsed,profile),age=elapsed-profile.flightMs;
+ if(reduced||f.phase==='waiting'||f.phase==='restored')
+  return {roll:0,pitch:0,lift:0,recoil:0,shake:0,light:0,thrust:0};
+ if(age<0)return {roll:direction*(-3*Math.sin(f.advance*Math.PI)+16*f.rush),
+  pitch:-7*f.rush,lift:-5*f.rush,recoil:0,shake:0,
+  light:.18*f.rush,thrust:.2*f.advance+.8*f.rush};
+ const decay=Math.exp(-age/310),kick=(1-Math.exp(-age/15))*Math.exp(-age/200);
+ return {roll:direction*(16*Math.exp(-age/35)-19*Math.sin(age/70)*decay),
+  pitch:13*Math.sin(age/60)*decay,lift:-9*Math.sin(age/85)*decay,
+  recoil:(profile.tier===3?29:24)*kick,
+  shake:Math.sin(age*.115)*6*Math.exp(-age/105),
+  light:1.65*Math.exp(-age/125),thrust:.85*decay};
 }
 
 // Legge soltanto gli ID realmente registrati dal resolver dopo danni > 0.

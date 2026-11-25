@@ -35,8 +35,20 @@ vengono tirate l'una contro l'altra, il contatto deve avere un BOOM deciso:
 lampo breve, esplosione incandescente, onda sul piano, schegge e scintille,
 fumo e contraccolpo degli scafi, con audio profondo sincronizzato. La
 Leggendaria aggiunge frammenti prismatici. Conservare un unico urto visivo
-per la coppia, i bersagli e i danni del motore, la prospettiva, i tempi e
+per la coppia, i bersagli e i danni del motore, la prospettiva, la sincronia e
 il rientro nelle posizioni corrette; nessuna esplosione per colpi bloccati.
+
+**Revisione successiva — movimento vivo:** la sola esplosione aggiunta al
+lento scorrimento degli scafi è stata rifiutata come grafica spenta. Il
+Collassatore libera prima il corridoio davanti alla madre, poi accelera
+negli ultimi 380 ms fino allo schianto, senza frenare all'arrivo. Carica
+450 ms, trazione 1000 ms (prima 1800), reazione/rientro 1350 ms; lo scafo
+inizia il rilascio dopo 75 ms. Animare il vero scafo con inclinazione,
+torsione speculare, contraccolpo, reattori in spinta e luce del contatto.
+Ritarare il suono sul nuovo tempo. Non cambiare la velocità dei video per
+simulare il risultato: verificare il movimento nativo nella partita.
+La posa e tutte le proprietà transitorie devono essere ripristinate; le
+preferenze di movimento ridotto restano rispettate.
 
 **Proiettili approvati, revisione del 24/11:** il Maglio usa le quattro
 sagome illustrate in `docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png`.

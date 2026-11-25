@@ -33,8 +33,8 @@ una reazione e un timbro propri.
 
 Camera del tavolo fissa, volume con depth buffer e naso al punto di impatto:
 A parte dal centro USB e mostra il retro, B dal centro alto e mostra il fronte.
-Il volo delle Ganasce dura 1450 ms, quello induttivo 1350 ms; il Collassatore
-arriva all’urto dopo 1800 ms e completa rilascio/rientro in altri 1650 ms.
+Il volo delle Ganasce dura 1450 ms, quello induttivo 1350 ms. La revisione dinamica del Collassatore
+arriva all’urto dopo 1000 ms e completa reazione/rientro in altri 1350 ms.
 La risoluzione e il nuovo timer attendono tutti gli effetti realmente presentati.
 
 ## Audio, vibrazione e verifiche
@@ -98,3 +98,40 @@ plancia e dell'audio della scheda; sono tagliate soltanto le attese fra le
 tre prove, senza cambiare velocità, aggiungere VFX o sostituire il suono.
 Audio medio −20,3 dBFS.
 SHA256: `3c9249e91037965d6af35f79169de7d3b5d8af3fedc0e4cf3ed0a59e818cdc5b`.
+
+
+## Seconda revisione: strappo rapido e scafi animati
+
+L'utente ha segnalato che il solo BOOM lasciava la grafica spenta e il
+movimento troppo lento. La vecchia interpolazione rallentava prima del
+contatto e traslava i contenitori senza inclinare gli scafi. La trazione
+ora dura 1000 ms, con preparazione del corridoio davanti alla madre e
+accelerazione negli ultimi 380 ms; non frena prima di colpire. La carica
+è di 450 ms, la fase di reazione/rientro 1350 ms. Il rilascio inizia dopo
+75 ms anziché mantenere gli scafi in posa per 230 ms.
+
+I veri asset approvati della madre e dei supporti si inclinano e subiscono
+torsione speculare e contraccolpo. I reattori aumentano estensione e ritmo,
+lo scafo riflette il lampo e il nucleo esplosivo ha un fronte breve più
+netto. Le scie compaiono dietro gli scafi nello strappo finale. Ombre sul
+piano, barre e slot restano separati. Suono di tensione e risucchio sono
+ritarati sul nuovo contatto; niente nuovi danni, colpi o bersagli.
+
+Verifica sulla partita reale in StackBlitz: Epica e Leggendaria A/B con
+due supporti, Leggendaria A/B con madre e supporto. Osservati matrici di
+rotazione reali, luce riflessa, estensione dei reattori e bersagli del motore.
+Al termine: traslazioni vuote, nessuna variabile transitoria residua e
+hovering normale ripristinato su tutti gli scafi. Nessun errore applicativo.
+100/100 test mirati, build e preflight superati. La prova della vibrazione
+fisica sul telefono resta aperta.
+
+Osservazioni: `riferimenti-carte/metallo-lotto-2-2026-11-25/collaudo-collisione-dinamica.json`.
+La prova precedente dell'urto esplosivo rimane come cronologia ed è superata
+da questa revisione del movimento.
+
+Nuovo video: `Collassatore_schianto_rapido_navicelle_animate.mp4`, 29,898 s,
+H.264 900×1600 a 30 fps e AAC mono 48 kHz, 6.846.438 byte.
+Velocità nativa della partita; sono rimosse soltanto le attese fra le tre
+prove, senza accelerare il video, aggiungere effetti o sostituire l'audio.
+Audio medio −20,7 dBFS.
+SHA256: `9a8f1f4087062acc6aac55fa0ff358185dac5ce386e4cf3cb6e09224e40920f0`.

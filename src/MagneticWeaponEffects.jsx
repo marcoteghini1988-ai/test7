@@ -4,7 +4,7 @@ import {MaglioSoftwareRenderer} from './maglioSoftwareRenderer.js';
 import {createProjectileCamera,worldPointToBoard,disposeProjectile} from './maglioProjectile3D.js';
 import {metalProjectileFlightFrame} from './metalWeaponProjectile3D.js';
 import {createChainWeaponModel,articulateChainWeapon} from './chainWeaponProjectile3D.js';
-import {chainWeaponVariant,chainWeaponEffectProfile,collisionGroups,collisionMotionPlan,collisionFrame,activeGrappleLinks} from './chainWeaponBattleVisuals.js';
+import {chainWeaponVariant,chainWeaponEffectProfile,collisionGroups,collisionMotionPlan,collisionFrame,collisionHullFrame,activeGrappleLinks} from './chainWeaponBattleVisuals.js';
 import {weaponPortalOrigin,weaponEffectProfile,weaponShotStartMs,weaponVisualCards} from './maglioBattleVisuals.js';
 import {combatTargetElement,boardHullPoint,createEffectCanvas,drawMagneticChain,drawLatch,drawMetalContact} from './chainWeaponCanvas.js';
 import {drawCollisionExplosion} from './collisionExplosion.js';
@@ -38,7 +38,7 @@ function drawInductionField(ctx,from,to,profile,age,energy){
  ctx.restore();
 }
 function drawCollisionField(ctx,group,frame,elapsed,camera,reduced){
- const {profile,plan}=group,p=plan.contact,t=clamp(elapsed/profile.flightMs);
+ const {profile,plan}=group,p=plan.contact,t=frame.pull;
  if(elapsed<0||frame.phase==='restored')return;
  const impactAge=elapsed-profile.flightMs;
  ctx.save();ctx.translate(p.x,p.y);ctx.globalAlpha=impactAge>=0?Math.max(0,1-impactAge/180):.45+t*.5;
@@ -60,6 +60,22 @@ function drawCollisionField(ctx,group,frame,elapsed,camera,reduced){
   }
  }
  ctx.restore();
+ if(frame.rush>.08&&!reduced){
+  // Sfilacci di velocità DIETRO i due scafi, non altri proiettili.
+  ctx.save();ctx.lineCap='round';
+  group.centers.forEach((center,i)=>{
+   const offset=plan.offsets[i],x=center.x+offset.x*frame.pull,
+    y=center.y+(offset.y-plan.forward)*frame.pull+plan.forward*frame.advance;
+   const dx=offset.x,dy=offset.y-plan.forward,len=Math.hypot(dx,dy)||1,
+    ux=dx/len,uy=dy/len,trail=15+frame.rush*55;
+   for(let n=-1;n<=1;n++){
+    ctx.beginPath();ctx.moveTo(x-ux*22-uy*n*10,y-uy*22+ux*n*10);
+    ctx.lineTo(x-ux*(22+trail)-uy*n*10,y-uy*(22+trail)+ux*n*10);
+    ctx.globalAlpha=frame.rush*(n===0?.7:.35);
+    ctx.strokeStyle=n===0?'#e6faff':profile.secondary;ctx.lineWidth=n===0?2.2:1;ctx.stroke();
+   }
+  });ctx.restore();
+ }
  return drawCollisionExplosion(ctx,p,profile,impactAge,camera,{reduced});
 }
 
@@ -82,9 +98,10 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
    const targets=shots.map(s=>combatTargetElement(root,s));if(targets.some(t=>!t))return [];
    const centers=targets.map(el=>boardHullPoint(el,board));
    const dx=centers[1].x-centers[0].x,dy=centers[1].y-centers[0].y,length=Math.hypot(dx,dy)||1;
-   return [{shots,profile:pairs[0].profile,start:pairs[0].start,targets,
+   return [{shots,profile:pairs[0].profile,start:pairs[0].start,targets,centers,
     axis:{x:dx/length,y:dy/length},
-    previous:targets.map(t=>t.style.translate),
+    previous:targets.map(t=>({translate:t.style.translate,
+     properties:['roll','pitch','lift','light','thrust'].map(name=>[name,t.style.getPropertyValue('--collision-'+name)])})),
     // Porta l'urto davanti alla formazione: due supporti non attraversano
     // la madre ferma che occupa il centro del loro schieramento.
     plan:collisionMotionPlan(...centers,{forward:shots[0].who==='A'?78:-72})}];
@@ -92,7 +109,9 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
   element.dataset.renderer='volume-depth-buffer';element.dataset.camera='table-fixed';
   let raf=0,previous=-Infinity;
   const restore=group=>group.targets.forEach((target,i)=>{
-   target.style.translate=group.previous[i];delete target.dataset.collisionMotion;
+   target.style.translate=group.previous[i].translate;delete target.dataset.collisionMotion;
+   group.previous[i].properties.forEach(([name,value])=>value?
+    target.style.setProperty('--collision-'+name,value):target.style.removeProperty('--collision-'+name));
   });
   const draw=now=>{
    const age=now-startedAt;
@@ -151,17 +170,19 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
    for(const group of collisions){
     const elapsed=age-group.start,frame=collisionFrame(elapsed,group.profile);
     if(frame.phase!=='restored')pending=true;
+    if(frame.phase==='waiting')continue;
     element.dataset.collisionPhase=frame.phase;element.dataset.shooter=group.shots[0].who;
     element.dataset.sequence=group.profile.sequence;
     element.dataset.collisionTargets=JSON.stringify(group.shots.map(s=>({kind:s.targetKind,id:s.targetId,damage:s.actualDamage})));
-    const impactAge=elapsed-group.profile.flightMs;
-    const recoil=impactAge>=0?(group.profile.tier===3?20:16)*(1-Math.exp(-impactAge/24))*Math.exp(-impactAge/230):0;
     group.targets.forEach((target,i)=>{
-     const offset=group.plan.offsets[i],shake=impactAge>=0&&impactAge<310?Math.sin(impactAge*.095)*4*Math.exp(-impactAge/100):0;
-     const kick=i===0?-recoil:recoil;
-     const x=reduced?0:offset.x*frame.pull+group.axis.x*kick+shake,
-      y=reduced?0:offset.y*frame.pull+group.axis.y*kick-shake*.45;
+     const direction=(i===0?1:-1)*Math.sign(group.axis.x||1)*(group.shots[0].who==='A'?-1:1);
+     const pose=collisionHullFrame(elapsed,group.profile,{direction,reduced});
+     const offset=group.plan.offsets[i],kick=i===0?-pose.recoil:pose.recoil;
+     const x=reduced?0:offset.x*frame.pull+group.axis.x*kick+pose.shake,
+      y=reduced?0:(offset.y-group.plan.forward)*frame.pull+group.plan.forward*frame.advance+group.axis.y*kick-pose.shake*.45;
      target.style.translate=`${x}px ${y}px`;target.dataset.collisionMotion=frame.phase;
+     for(const [name,unit]of [['roll','deg'],['pitch','deg'],['lift','px'],['light',''],['thrust','']])
+      target.style.setProperty('--collision-'+name,pose[name].toFixed(4)+unit);
     });
     element.dataset.collisionBurst=drawCollisionField(ctx,group,frame,elapsed,camera,reduced)||'none';
     if(frame.phase==='restored')restore(group);

@@ -21,10 +21,12 @@ export function chainWeaponSoundPlan(type){
   }else tone('noise',1250,400,.15,.04);
  }else if(family==='collision'){
   if(phase==='charge'||phase==='fire'){
-   tone('sine',phase==='charge'?80:110,phase==='charge'?180:360,phase==='charge'?.62:1.7,.08);
-   tone('triangle',phase==='charge'?170:260,phase==='charge'?260:510,phase==='charge'?.6:1.65,.035);
-   for(let i=0;i<(phase==='fire'?8:3);i++)tone('noise',1800,450,.07,.035,i*.18);
-   if(tier===3)tone('sine',660,990,phase==='charge'?.6:1.6,.025);
+   tone('sine',phase==='charge'?80:110,phase==='charge'?180:440,phase==='charge'?.43:.97,.08);
+   tone('triangle',phase==='charge'?170:260,phase==='charge'?260:620,phase==='charge'?.42:.95,.035);
+   for(let i=0;i<(phase==='fire'?6:3);i++)tone('noise',1800,450,.055,.035,i*(phase==='fire'?.16:.13));
+   // Risucchio finale: la trazione accelera e si interrompe sul BOOM a 1 s.
+   if(phase==='fire')tone('noise',700,5100,.32,.075,.65);
+   if(tier===3)tone('sine',660,990,phase==='charge'?.42:.95,.025);
   }else if(phase==='impact'){
    // Attacco secco, corpo del BOOM udibile anche dagli altoparlanti del
    // telefono, subgrave e coda di detriti; stesso bus/limiter e singolo urto.

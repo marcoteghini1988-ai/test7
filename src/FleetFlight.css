@@ -72,6 +72,22 @@
  76% {transform:scale(.93,.95);opacity:.78}
 }
 @keyframes f3d-reactor-flow {to{stroke-dashoffset:-90}}
+/* Il Collassatore anima GLI SCAFI, non solo il contenitore. Le ombre sul
+   piano restano separate; reattori e innesti seguono la torsione della nave. */
+.es-math-scope .f3d-approved-layout [data-collision-motion] > .f3d-craft-hover {
+ animation:none;transform-origin:50% 48%;
+ transform:perspective(500px) translateY(calc(var(--flight-low) + var(--collision-lift,0px)))
+  rotateZ(var(--collision-roll,0deg)) rotateX(var(--collision-pitch,0deg));
+ filter:brightness(calc(1 + var(--collision-light,0))) saturate(1.2)
+  drop-shadow(0 0 calc(2px + var(--collision-light,0)*12px) #ffd087);
+ will-change:transform;
+}
+.es-math-scope .f3d-approved-layout [data-collision-motion] .f3d-reactor-plume {
+ animation-duration:.14s;
+ scale:calc(1 + var(--collision-thrust,0)*.18) calc(1 + var(--collision-thrust,0)*1.15);
+ filter:brightness(calc(1 + var(--collision-thrust,0)*.65)) drop-shadow(0 0 12px var(--reactor-color));
+}
+.es-math-scope .f3d-approved-layout [data-collision-motion] .f3d-reactor-flow {animation-duration:.18s;opacity:1}
 @media (prefers-reduced-motion:reduce) {
  .es-math-scope .f3d-approved-layout .f3d-craft-hover {
   animation:none;transform:translateY(var(--flight-low));

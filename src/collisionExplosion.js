@@ -12,7 +12,7 @@ export function drawCollisionExplosion(ctx,p,profile,elapsed,camera,{reduced=fal
  const origin=boardPointToWorld(p,camera),right=worldPointToBoard(origin.clone().add(new Vector3(1,0,0)),camera);
  const unit=Math.max(1,Math.hypot(right.x-p.x,right.y-p.y));
  const depth=.75+clamp(p.y/800)*.25,power=(legendary?1.12:1)*depth;
- const flash=Math.exp(-elapsed/80),heat=Math.pow(1-clamp(elapsed/650),1.15);
+ const flash=Math.exp(-elapsed/55),heat=Math.pow(1-clamp(elapsed/480),1.15);
  ctx.save();ctx.globalCompositeOperation='source-over';
  // Fumo volumetrico irregolare: emerge dietro il nucleo caldo e sale.
  if(elapsed>100){
@@ -38,6 +38,21 @@ export function drawCollisionExplosion(ctx,p,profile,elapsed,camera,{reduced=fal
   ctx.globalAlpha=(1-wave)*(band===0?.9:.65);ctx.lineWidth=(band===0?5:2)*(1-wave)+.5;ctx.stroke();
  }
  ctx.globalAlpha=1;
+ // Fronte spezzato e netto, brevissimo: rende leggibile lo schianto anche
+ // prima che il fumo e il nucleo sfumati prendano il sopravvento.
+ if(elapsed<190&&!reduced){
+  const burst=1-elapsed/190,spread=1-Math.exp(-elapsed/35);
+  ctx.save();ctx.translate(p.x,p.y);ctx.globalCompositeOperation='lighter';
+  for(let i=0;i<18;i++){
+   const a=i*2.399,inner=(10+seed(i+380)*12)*power,
+    outer=(inner+spread*(30+seed(i+410)*43))*power;
+   ctx.globalAlpha=burst*(.4+seed(i+430)*.5);ctx.fillStyle=i%3?'#ffcf6a':'#f6fbff';
+   ctx.beginPath();ctx.moveTo(Math.cos(a-.07)*inner,Math.sin(a-.07)*inner*.65);
+   ctx.lineTo(Math.cos(a)*outer,Math.sin(a)*outer*.65);
+   ctx.lineTo(Math.cos(a+.07)*inner,Math.sin(a+.07)*inner*.65);ctx.closePath();ctx.fill();
+  }
+  ctx.restore();
+ }
  // Lampo bianco, palla di fuoco multilobo e getto di gas incandescenti.
  if(heat>0){
   ctx.globalCompositeOperation='lighter';
@@ -92,5 +107,5 @@ export function drawCollisionExplosion(ctx,p,profile,elapsed,camera,{reduced=fal
   }
  }
  ctx.restore();
- return elapsed<140?'flash':elapsed<650?'fireball':'smoke';
+ return elapsed<95?'flash':elapsed<480?'fireball':'smoke';
 }
