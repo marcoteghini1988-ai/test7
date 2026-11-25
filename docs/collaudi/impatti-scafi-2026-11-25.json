@@ -1,0 +1,170 @@
+{
+  "date": "2026-11-25",
+  "presentation": "hull-impacts-v4",
+  "sourceParent": "ffe2e467015e62ec2e25959a6a2891c0efe8cebd",
+  "scope": "Impatti locali sui veri scafi delle 22 varianti e regole permanenti per tutte le prossime carte.",
+  "contacts": {
+    "gravity-maul": "detonazione da compressione",
+    "steel-rail": "breccia incandescente e getto assiale",
+    "thermal-reclaimer": "esplosione di plasma e vapori",
+    "magnetic-grapple": "morso metallico e arco",
+    "alloy-collision": "unico BOOM esistente, non duplicato",
+    "induction": "taglio e scarica sulla corazza",
+    "cascade-piercer": "breccia rotante e getto perforante",
+    "wandering-shrapnel": "detonazioni irregolari e schegge"
+  },
+  "mechanicsChanged": false,
+  "salvoCountsAndOriginsPreserved": true,
+  "synchronization": "Scafo e contatti condividono la posa finale durante colpi sovrapposti; suoni e aptica mantengono gli istanti degli impatti.",
+  "rulesSavedIn": [
+    "AGENTS.md",
+    "docs/REGOLE_PERMANENTI_EFFETTI_CARTE.md",
+    "docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md",
+    "docs/REGOLA_EFFETTI_VISIVI_CARTE_2026-11-24.md"
+  ],
+  "validation": {
+    "logic": {
+      "command": "npm run verify:logic",
+      "passed": 2289,
+      "failed": 0,
+      "skipped": 0
+    },
+    "lastVisualTests": {
+      "command": "node --test src/weaponCinematicStyle.test.js",
+      "passed": 13,
+      "failed": 0
+    },
+    "productionBuild": "passed",
+    "preflight": "passed",
+    "gitDiffCheck": "passed",
+    "newChecks": [
+      "Corpo visibile dei contatti intermedi A/B",
+      "Quota zero di una salva: solo corazza, senza fumo o rinculo",
+      "Blocchi, colpi mancanti e nessun doppio Collassatore",
+      "Ancora sulla posa comune e ingombro locale",
+      "Fine puntuale e movimento ridotto"
+    ],
+    "pixelReview": "Ispezionati contatti iniziali/finali di Maglio, Recuperatore, Induzione e Schegge; studio video con tutte le otto famiglie.",
+    "liveStackBlitz": "not-verified",
+    "physicalHaptics": "not-verified",
+    "liveNote": "La nuova revisione non è stata attestata in partita. L’ultimo tentativo del progetto ha restituito Could not clone repository e fetch failed anche nel runtime; i vecchi collaudi non sono prova della nuova revisione."
+  },
+  "video": {
+    "filename": "Impatti_sulle_navicelle_Eclissi.mp4",
+    "sha256": "f5d39fa3ad0c0a0b068fed0ffd2f1123045c3c65fe1d6068d9d796d8ea233e04",
+    "bytes": 4503937,
+    "type": "offline-renderer-study",
+    "isStackBlitzRecording": false,
+    "width": 900,
+    "height": 1600,
+    "fps": 30,
+    "duration": 32.166666666666664,
+    "playbackRate": 1,
+    "audio": "AAC stereo 48 kHz, stessi score/cue/bus del gioco sintetizzati offline",
+    "audioPeakDb": -5.93279682780536,
+    "fullDecode": "passed",
+    "limitations": [
+      "UI completa della partita non inclusa",
+      "Rivelazione introduttiva abbreviata, voli e contatti ai tempi nativi",
+      "Studio offline, non collaudo StackBlitz né prova fisica di vibrazione"
+    ],
+    "chapters": [
+      {
+        "index": 0,
+        "id": "weapon-confirmed-metallic-maglio-rarity-l",
+        "kind": "gravity-maul",
+        "rarity": "Leggendaria",
+        "who": "A",
+        "projectiles": 9,
+        "damage": 146,
+        "start": 0,
+        "duration": 4,
+        "caption": "Detonazioni da compressione e corazza espulsa"
+      },
+      {
+        "index": 1,
+        "id": "weapon-confirmed-metallic-slitta-rarity-l",
+        "kind": "steel-rail",
+        "rarity": "Leggendaria",
+        "who": "B",
+        "projectiles": 7,
+        "damage": 110,
+        "start": 4,
+        "duration": 4.066666666666666,
+        "caption": "Perforazioni incandescenti e getto della lancia finale"
+      },
+      {
+        "index": 2,
+        "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
+        "kind": "thermal-reclaimer",
+        "rarity": "Leggendaria",
+        "who": "A",
+        "projectiles": 6,
+        "damage": 41,
+        "start": 8.066666666666666,
+        "duration": 4.133333333333334,
+        "caption": "Esplosioni di plasma, vapori e frammenti"
+      },
+      {
+        "index": 3,
+        "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+        "kind": "magnetic-grapple",
+        "rarity": "Leggendaria",
+        "who": "B",
+        "projectiles": 2,
+        "damage": 68,
+        "start": 12.2,
+        "duration": 3.933333333333333,
+        "caption": "Morsi metallici, scintille e archi magnetici"
+      },
+      {
+        "index": 4,
+        "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+        "kind": "alloy-collision",
+        "rarity": "Leggendaria",
+        "who": "A",
+        "projectiles": 0,
+        "damage": 86,
+        "start": 16.133333333333333,
+        "duration": 3.2666666666666666,
+        "caption": "Due veri scafi, uno schianto e un solo BOOM"
+      },
+      {
+        "index": 5,
+        "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+        "kind": "induction",
+        "rarity": "Leggendaria",
+        "who": "B",
+        "projectiles": 6,
+        "damage": 48,
+        "start": 19.4,
+        "duration": 3.566666666666667,
+        "caption": "Fratture a taglio e scariche sulla corazza"
+      },
+      {
+        "index": 6,
+        "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+        "kind": "cascade-piercer",
+        "rarity": "Leggendaria",
+        "who": "A",
+        "projectiles": 9,
+        "damage": 164,
+        "start": 22.966666666666665,
+        "duration": 5.4,
+        "caption": "Brecce rotanti sui bersagli dei trasferimenti reali"
+      },
+      {
+        "index": 7,
+        "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+        "kind": "wandering-shrapnel",
+        "rarity": "Leggendaria",
+        "who": "B",
+        "projectiles": 9,
+        "damage": 60,
+        "start": 28.366666666666667,
+        "duration": 3.8,
+        "caption": "Detonazioni irregolari e schegge balistiche"
+      }
+    ]
+  }
+}

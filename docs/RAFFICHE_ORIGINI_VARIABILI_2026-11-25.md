@@ -108,3 +108,19 @@ motore e la stessa sintesi sonora. Comprende tutte le famiglie e Maglio
 clipping, tempi di volo e raffica nativi. La rivelazione introduttiva della
 carta è abbreviata; la UI della partita non è inclusa. Non presentarlo come
 registrazione StackBlitz o verifica della vibrazione fisica.
+
+## Impatti e regole permanenti per le prossime carte
+
+L’utente ha approvato la direzione delle raffiche e chiesto esplosioni o
+altri effetti evidenti quando una nave viene colpita, oltre allo scossone.
+Le regole consolidate sono in `REGOLE_PERMANENTI_EFFETTI_CARTE.md`,
+richiamate anche da AGENTS e dalla procedura di creazione delle carte.
+
+`weaponHullImpacts.js` e il renderer aggiungono corpo del contatto, schegge,
+scintille e quando coerenti plasma, fumi, getti o scariche. I contatti
+seguono la posa comune del vero scafo durante le raffiche; i colpi con
+quota zero fanno solo un piccolo contatto sulla corazza. Restano invariati
+conteggi, origini, HP, costi, blocchi e l’unico BOOM del Collassatore.
+Il rapporto più recente è `collaudi/impatti-scafi-2026-11-25.json`: 2289 test
+logici passati, build e preflight riusciti; il video aggiornato è uno
+studio offline, non una nuova registrazione StackBlitz.

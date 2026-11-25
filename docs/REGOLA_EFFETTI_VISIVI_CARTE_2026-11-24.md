@@ -1,5 +1,17 @@
 # Regola dei colpi e degli effetti delle carte — 24 novembre 2026
 
+## Impatti sulle navicelle e regola per le prossime carte — 25/11
+
+L'utente chiede ora esplosioni o altri contatti ben visibili sulle navicelle,
+oltre al rinculo, e vuole salvare tutte le decisioni per le prossime carte.
+Il riferimento consolidato è
+[REGOLE_PERMANENTI_EFFETTI_CARTE.md](REGOLE_PERMANENTI_EFFETTI_CARTE.md).
+Il contatto ha corpo, frammenti/scintille e quando coerenti fumo, plasma,
+taglio o scarica; segue il vero scafo durante la reazione. Ogni famiglia e
+rarità ha un finale riconoscibile, non la stessa palla di fuoco. Una quota
+zero di una salva dà un piccolo contatto sulla corazza; una Difesa mantiene
+il contatto sullo scudo. Nessun effetto aggiunge danni, Bruciature o bersagli.
+
 ## Decisione più recente del 25/11 — sostituisce le partenze e i colpi fissi
 
 L'utente chiede ora punti di lancio variabili sul lato del rispettivo
@@ -76,14 +88,14 @@ dopo 75 ms. Il risucchio sonoro termina sul nuovo istante del BOOM. I video
 di prova mantengono la velocità reale. Non spostare barre e slot né lasciare
 rotazioni, filtri o variabili d'animazione dopo la sequenza.
 
-## Direzione della battaglia
+## Direzione della battaglia — aggiornata alla decisione più recente
 
-Nella plancia verticale il giocatore A spara dal centro del bordo inferiore,
-allineato alla porta USB del proprio telefono, verso il bersaglio avversario.
-L'avversario B spara dal centro del bordo superiore, come se il colpo uscisse
-dal suo dispositivo e arrivasse alle navi del giocatore. I due lati sono
-speculari: nessun colpo nasce casualmente ai lati dell'arena, dalla carta o
-da un punto estraneo alla prospettiva della partita.
+Nella plancia verticale il giocatore A spara da più porte nel proprio lato
+inferiore verso i veri bersagli; B usa porte speculari nel proprio lato
+superiore. Alternare centro, fianchi e profondità; la porta USB centrale
+non è più l'unica origine. Prospettiva, parte anteriore/posteriore, naso e
+scia devono restare corretti. I trasferimenti ripartono invece dallo scafo
+colpito quando previsti e pagati nel motore.
 
 ## Contratto fra carta, motore e animazione
 

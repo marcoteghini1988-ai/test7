@@ -10,6 +10,7 @@ import {prepareCinematicEntry,drawCinematicWeapon,drawCollisionConvergence,drawD
 import {createProjectileCamera,worldPointToBoard} from './maglioProjectile3D.js';
 import {metalWeaponSoundPlan} from './metalWeaponSounds.js';
 import {weaponHapticPattern} from './weaponHaptics.js';
+import {weaponHullImpactProfile,weaponImpactHullFrame,weaponHullContactPoint,weaponHullImpactRadius} from './weaponHullImpacts.js';
 
 const variants=[...MAGLIO_VARIANTS,...METAL_WEAPON_VARIANTS,...CHAIN_WEAPON_VARIANTS,...PRECISION_WEAPON_VARIANTS];
 const profiles=variants.map(v=>weaponEffectProfile(v.id));
@@ -115,4 +116,76 @@ test('Presentation preparation never mutates engine events, target IDs, HP or sh
   from:weaponPortalOrigin(shot.who),to:{x:150,y:260},start:1000},camera);
  assert.equal(JSON.stringify(events),before);assert.equal(JSON.stringify(shots),snapshot);
  assert.equal(shots.length,22);
+});
+
+function filledAreas(ctx){
+ let points=[];const areas=[];
+ for(const [command,...args]of ctx.commands){
+  if(command==='beginPath')points=[];
+  if(command==='moveTo'||command==='lineTo')points.push(args);
+  if(command==='fill'&&points.length>2){
+   const sum=points.reduce((n,p,i)=>{const q=points[(i+1)%points.length];return n+p[0]*q[1]-q[0]*p[1];},0);
+   areas.push(Math.abs(sum)/2);
+  }
+ }
+ return areas;
+}
+test('Early real hits paint a readable explosion body, not only a hull jolt',()=>{
+ for(const who of ['A','B'])for(const kind of ['gravity-maul','thermal-reclaimer','wandering-shrapnel']){
+  const base=profiles.find(p=>p.kind===kind&&p.tier===3);
+  const shot={cardId:base.cardId,who,fires:true,actualDamage:8,salvoCount:6,salvoIndex:0,salvoLast:false};
+  const profile=weaponEffectProfile(base.cardId,shot),camera=createProjectileCamera();
+  const entry=prepareCinematicEntry({shot,profile,start:500,from:weaponPortalOrigin(who),
+   to:{x:225,y:who==='A'?268:540,radius:28}},camera);
+  const floor=recordingCanvas(),air=recordingCanvas();
+  drawCinematicWeapon(floor,air,entry,500+profile.flightMs+60);
+  assert.ok(Math.max(0,...filledAreas(air))>200,kind+' needs a substantial visible contact');
+  assert.equal(air.depth,0);assert.equal(floor.depth,0);
+ }
+});
+test('Zero-HP allocations in a real salvo make armor pings without smoke or invented recoil',()=>{
+ const base=profiles.find(p=>p.kind==='thermal-reclaimer'&&p.tier===3),camera=createProjectileCamera();
+ const shot={cardId:base.cardId,who:'A',fires:true,actualDamage:0,activationDamage:1,
+  salvoCount:6,salvoIndex:5,salvoLast:true};
+ const profile=weaponEffectProfile(base.cardId,shot),contact=weaponHullImpactProfile(profile,shot);
+ assert.equal(contact.damaging,false);assert.equal(contact.smoke,false);
+ const pose=weaponImpactHullFrame(profile,shot,60);
+ assert.ok(Object.entries(pose).every(([k,n])=>k==='light'||n===0));
+ const entry=prepareCinematicEntry({shot,profile,start:0,from:weaponPortalOrigin('A'),to:{x:225,y:268,radius:28}},camera);
+ const floor=recordingCanvas(),air=recordingCanvas();
+ drawCinematicWeapon(floor,air,entry,profile.flightMs+60);
+ assert.ok(!air.commands.some(c=>c[0]==='drawImage'));
+ assert.ok(Math.max(0,...filledAreas(air))<40,'No explosive body for a zero damage allocation');
+});
+test('Missing shots, blocks, legacy placeholders and the separate collision controller do not get hull explosions',()=>{
+ for(const p of profiles){
+  const shot={who:'A',fires:true,actualDamage:18};
+  assert.equal(weaponHullImpactProfile(p,{...shot,fires:false}),null);
+  assert.equal(weaponHullImpactProfile(p,{...shot,defenseBlocked:true}),null);
+  assert.equal(weaponHullImpactProfile({...p,approved:false},shot),null);
+  if(p.kind==='alloy-collision')assert.equal(weaponHullImpactProfile(p,shot),null);
+ }
+});
+test('Contacts follow the common moving hull during overlapping salvos and remain local',()=>{
+ const point={x:225,y:268,radius:28},pose={x:7,y:-11,lift:-3};
+ assert.deepEqual(weaponHullContactPoint(point,pose),{x:232,y:254,radius:28});
+ for(const p of profiles.filter(p=>p.kind!=='alloy-collision')){
+  const shot={who:'A',fires:true,actualDamage:18,salvoCount:9};
+  const early=weaponHullImpactProfile(p,{...shot,salvoLast:false}),last=weaponHullImpactProfile(p,{...shot,salvoLast:true,finisher:true});
+  assert.ok(weaponHullImpactRadius(point,last)>weaponHullImpactRadius(point,early));
+  for(const radius of [0,12,28,70,1000])assert.ok(weaponHullImpactRadius({...point,radius},last)<=52);
+  const neutral=weaponImpactHullFrame(p,shot,p.impactMs);
+  assert.ok(Object.values(neutral).every(n=>n===0));
+ }
+});
+test('Visible hull contacts end on time and reduced motion keeps only a subdued indication',()=>{
+ const p=profiles.find(p=>p.kind==='gravity-maul'&&p.tier===3),camera=createProjectileCamera();
+ const shot={who:'A',cardId:p.cardId,fires:true,actualDamage:18};
+ const entry=prepareCinematicEntry({shot,profile:p,start:500,from:weaponPortalOrigin('A'),to:{x:225,y:268,radius:28}},camera);
+ const floor=recordingCanvas(),air=recordingCanvas();
+ drawCinematicWeapon(floor,air,entry,500+p.flightMs+p.impactMs);
+ assert.equal(floor.commands.length+air.commands.length,0);
+ drawCinematicWeapon(floor,air,entry,500+p.flightMs+60,{reduced:true});
+ assert.ok(!air.commands.some(c=>['lineTo','drawImage'].includes(c[0])));
+ assert.equal(air.depth,0);
 });

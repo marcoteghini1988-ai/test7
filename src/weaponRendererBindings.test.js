@@ -8,7 +8,7 @@ test('Live weapon renderers contain no unbound identifiers',()=>{
  const files=['CinematicWeaponEffects.jsx','MaglioBattleEffects.jsx','MaglioProjectileScene.jsx',
   'MetalWeaponProjectileScene.jsx','MagneticWeaponEffects.jsx','PrecisionWeaponEffects.jsx',
   'WeaponSalvoCardMarks.jsx','weaponKinematics.js','weaponCinematicRenderer.js',
-  'weaponCinematicStyle.js','weaponSalvoAudio.js','maglioPerspectiveRenderer.js',
+  'weaponCinematicStyle.js','weaponHullImpacts.js','weaponSalvoAudio.js','maglioPerspectiveRenderer.js',
   'metalWeaponSounds.js','weaponHaptics.js'].map(p=>'src/'+p);
  const program=ts.createProgram(files,{allowJs:true,checkJs:true,noEmit:true,skipLibCheck:true,
   target:ts.ScriptTarget.ES2023,module:ts.ModuleKind.ESNext,moduleResolution:ts.ModuleResolutionKind.Bundler,

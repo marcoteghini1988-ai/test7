@@ -3,6 +3,8 @@ import {boardPointToWorld,worldPointToBoard} from './maglioProjectile3D.js';
 import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
 import {cinematicStyle,clamp01,weaponVisualSeed,seededUnit,weaponTravelProgress} from './weaponCinematicStyle.js';
 import {weaponFlightFrame} from './weaponKinematics.js';
+import {weaponHullImpactProfile,weaponImpactHullFrame,weaponHullContactPoint,
+ weaponHullImpactRadius,hullImpactEnvelope} from './weaponHullImpacts.js';
 
 const TAU=Math.PI*2;
 const UP=new Vector3(0,1,0);
@@ -330,15 +332,147 @@ function precisionFlight(floor,air,e,nose,t,age){
   }
  }
 }
-function impact(floor,air,e,ms,reduced){
- const {profile:p}=e;if(ms<0||ms>p.impactMs)return;
- const t=ms/p.impactMs,q=project(e,e.b),flash=Math.exp(-ms/65),fade=(1-t)**2;
+// A solid, shaded pressure lobe gives a hit a readable body. It is built
+// around the measured contact in the table camera, never a full-screen flash.
+function pressureLobe(ctx,e,center,size,heat,alpha,color){
+ const q=project(e,center),edge=project(e,local(e,center,size,0,0));
+ const r=Math.hypot(q.x-edge.x,q.y-edge.y);if(r<.1||alpha<.003)return;
+ const g=ctx.createRadialGradient(q.x-r*.22,q.y-r*.25,r*.04,q.x,q.y,r);
+ g.addColorStop(0,rgba('#fff9e8',alpha*.96));
+ g.addColorStop(.28,rgba(heat?'#ffe9b0':e.profile.core,alpha*.95));
+ g.addColorStop(.61,rgba(color,alpha*.91));
+ g.addColorStop(1,rgba(heat?'#a43b20':'#364c66',0));
+ const points=Array.from({length:12},(_,i)=>{
+  const a=i*TAU/12,noise=.68+seededUnit(e.seed,i+401)*.53;
+  return project(e,local(e,center,Math.cos(a)*size*noise,Math.sin(a)*size*.76*noise,0));
+ });
+ polygon(ctx,points,g);
+}
+function drawHullContact(floor,air,e,ms,contact){
+ const {profile:p}=e,age=ms/1000,fade=hullImpactEnvelope(ms,p.impactMs);
+ if(!fade)return;
+ const q=project(e,e.b),radius=weaponHullImpactRadius(e.to,contact);
+ const unit=project(e,e.b.clone().add(e.side)),world=radius/Math.max(1,Math.hypot(unit.x-q.x,unit.y-q.y));
+ const h={...e,flightScale:world,flightUp:null};
+ const pop=1-Math.exp(-ms/45),heat=Math.exp(-ms/(contact.intermediate?135:260));
+ const color=p.tier===3?p.glow:'#ff9e38',hot=['compression-detonation','plasma-bloom','fragmentation-burst'].includes(contact.kind);
+ air.save();floor.save();
+ // Every actual round has a sharp material contact, including early rounds.
+ // Zero-HP packets are an armor ping rather than another damaging explosion.
+ const star=(1-clamp01(ms/contact.flashMs))**.55;
+ const strikeRays=()=>{if(star>0){
+  const n=contact.damaging?contact.intermediate?7:11+p.tier:4;
+  for(let i=0;i<n;i++){
+   const a=i*2.399963+seededUnit(e.seed,i)*.35,length=.65+pop*(1.05+seededUnit(e.seed,i+9)*.90);
+   const tip=local(h,h.b,Math.cos(a)*length,Math.sin(a)*length*.6,.02);
+   const a1=local(h,h.b,Math.cos(a-.12)*.28,Math.sin(a-.12)*.20,0);
+   const b1=local(h,h.b,Math.cos(a+.12)*.28,Math.sin(a+.12)*.20,0);
+   polygon(air,[project(h,a1),project(h,tip),project(h,b1)],rgba(i%3?p.core:hot?'#ffc15b':p.secondary,star*.85));
+  }
+ }};
+ if(!contact.damaging){
+  strikeRays();particles(floor,air,h,ms,{count:4,hot:true,speed:.65});air.restore();floor.restore();return;
+ }
+ if(contact.kind==='compression-detonation'){
+  // A crushed center opens into a dense mechanical detonation, with armor
+  // pieces above it and pressure traveling over the table below it.
+  const burst=clamp01((ms-38)/90);
+  for(let i=0;i<(contact.intermediate?3:5+p.tier);i++){
+   const a=i*2.399963,r=burst*(.12+(i%3)*.16);
+   pressureLobe(air,h,local(h,h.b,Math.cos(a)*r,.06+burst*.09,Math.sin(a)*r*.5),
+    .48+pop*(contact.intermediate?.48:.70),true,heat*.90,color);
+  }
+  if(!contact.intermediate)floorWave(floor,h,ms,{delay:40,radius:2.0,alpha:.8});
+ }else if(contact.kind==='plasma-bloom'){
+  const rise=clamp01(ms/390),lobes=contact.intermediate?3:6;
+  for(let i=0;i<lobes;i++){
+   const a=i*2.399963,r=pop*(.15+i%3*.18);
+   const c=local(h,h.b,Math.cos(a)*r,.08+rise*(.4+i%3*.32),Math.sin(a)*r*.35);
+   pressureLobe(air,h,c,.45+pop*.50,true,heat*.90,p.tier===3?prism[i%4]:'#ff7528');
+   if(ms>80)smoke(air,h,c,world*(.24+rise*.30),fade*.42,true);
+  }
+ }else if(contact.kind==='armor-punch'||contact.kind==='drill-breach'){
+  const drill=contact.kind==='drill-breach',length=pop*(contact.intermediate?.95:1.65);
+  // A white-hot puncture and an axial ejecta jet, not a spherical fireball.
+  for(let i=0;i<3;i++){
+   const width=.13-i*.032,a=project(h,local(h,h.b,-width,.035,0)),b=project(h,local(h,h.b,width,.035,0));
+   const tip=project(h,local(h,h.b,Math.sin(ms*.022+i)*.10,.10+length*.30,-length));
+   polygon(air,[a,tip,b],rgba(i===2?p.core:p.secondary,heat*(.42+i*.17)));
+  }
+  const cutA=project(h,local(h,h.b,-.32,.025,.06)),cutB=project(h,local(h,h.b,.32,.025,-.06));
+  streak(air,cutA,cutB,'#0a1018',Math.max(2,radius*.13),fade*.8);
+  streak(air,cutA,cutB,p.core,1.4,heat);
+  if(drill)for(let i=0;i<2+p.tier%2;i++){
+   const phase=ms*.014+i*TAU/3;
+   ring(air,h,local(h,h.b,0,.06,-pop*.20),.25+pop*.40,Math.PI/2,
+    p.tier===3?prism[i]:p.secondary,heat*.8,22,phase,phase+Math.PI*.75);
+  }
+ }else if(contact.kind==='jaw-bite'){
+  const shut=Math.exp(-ms/55),a=ms*.02;
+  for(const s of [-1,1]){
+   const c=local(h,h.b,s*(.1+shut*.45),.08,0);
+   shard(air,h,c,world*.16,a*s,p.secondary,fade);
+   const tip=project(h,local(h,h.b,s*.04,.04,-.08));
+   streak(air,project(h,c),tip,p.core,2.4,heat);
+  }
+  // A metal bite and a traveling magnetic arc leave the real latch intact.
+  ring(air,h,h.b,.27+pop*.45,Math.PI/2,p.secondary,heat*.7,25,ms*.018,ms*.018+Math.PI*1.4);
+ }else if(contact.kind==='induction-rupture'){
+  // Offset jagged field cuts discharge across the hull; no invented burn.
+  for(let plane=0;plane<(p.tier===3?6:3);plane++){
+   const a=plane*Math.PI/3+ms*.002,span=.5+pop*.95;
+   const points=Array.from({length:8},(_,i)=>{
+    const u=i/7*2-1,jag=Math.sin(i*2.4+plane+ms*.04)*.11;
+    return project(h,local(h,h.b,Math.cos(a)*u*span-Math.sin(a)*jag,
+     .04+plane*.035,Math.sin(a)*u*span+Math.cos(a)*jag));
+   });
+   air.beginPath();points.forEach((pt,i)=>point(air,pt,i===0));
+   air.strokeStyle=rgba(p.tier===3?prism[plane%4]:p.core,heat*.9);air.lineWidth=plane%2?1.6:2.7;air.stroke();
+   if(plane<3)shard(air,h,local(h,h.b,Math.cos(a)*pop*.7,.1+pop*.3,Math.sin(a)*pop*.7),world*.22,a+age*7,p.secondary,fade);
+  }
+ }else if(contact.kind==='fragmentation-burst'){
+  // Asymmetric armor pops, followed by spinning fragments and gray vapor.
+  for(let i=0;i<(contact.intermediate?2:4);i++){
+   const a=seededUnit(e.seed,i+31)*TAU,r=pop*(.14+i*.18),c=local(h,h.b,Math.cos(a)*r,.06+pop*.12,Math.sin(a)*r*.5);
+   pressureLobe(air,h,c,.43+pop*.36,true,heat*.85,i%2?p.secondary:color);
+  }
+ }
+ // Crisp edges remain above the luminous body. Otherwise the bloom would
+ // hide the material fracture and look like another soft glowing ellipse.
+ strikeRays();
+ // Ballistic metal chips and their floor shadows give the strike depth.
+ const narrow=['armor-punch','drill-breach'].includes(contact.kind);
+ particles(floor,air,h,ms,{count:contact.sparks,hot:true,speed:contact.intermediate?2.8:3.6,
+  cone:narrow?Math.PI/2:null,spread:narrow?.8:1});
+ if(ms<560)for(let i=0;i<(contact.intermediate?3:6);i++){
+  const a=seededUnit(e.seed,i+550)*TAU,travel=.20+age*(3.5+i*.45),up=.12+age*(1.7+i*.2)-age*age*3.5;
+  const c=local(h,h.b,Math.cos(a)*travel,Math.max(.02,up),Math.sin(a)*travel);
+  const size=world*(.09+seededUnit(e.seed,i+570)*.085),alpha=fade*(1-ms/560);
+  shard(air,h,c,size,a+age*(i%2?-12:15),p.tier===3?prism[i%4]:i%2?'#bccbd3':'#6c7b85',alpha);
+ }
+ if(contact.smoke&&ms>90&&contact.kind!=='plasma-bloom')for(let i=0;i<(contact.intermediate?2:4);i++){
+  const a=i*2.399963,c=local(h,h.b,Math.cos(a)*age*.7,.10+age*.9,Math.sin(a)*age*.4);
+  smoke(air,h,c,world*(.28+age*.30),fade*.52);
+ }
+ glow(floor,q,radius*1.25,p.glow,heat*.40,.38);
+ air.restore();floor.restore();
+}
+function impact(floor,air,entry,ms,reduced,contactPose){
+ const {profile:p}=entry;if(ms<0||ms>=p.impactMs)return;
+ let e=entry;
+ const t=ms/p.impactMs,flash=Math.exp(-ms/65),fade=(1-t)**2;
+ let q=project(e,e.b);
  if(e.shot.defenseBlocked){
   // Shield contact only. No hole, debris from a hull, or hull reaction.
   ring(air,e,e.b,.34+t*.10,Math.PI/2,'#9bd9ff',fade);
   glow(air,q,24,'#9bd9ff',Math.exp(-ms/130)*.35);return;
  }
  if(reduced){glow(air,q,21,p.glow,fade*.5,.6);return;}
+ const contact=weaponHullImpactProfile(p,e.shot);if(!contact)return;
+ const pose=contactPose||weaponImpactHullFrame(p,e.shot,ms);
+ const anchor=weaponHullContactPoint(e.to,pose);
+ e={...e,to:anchor,b:boardPointToWorld(anchor,e.camera)};q=project(e,e.b);
+ if(!contact.damaging){drawHullContact(floor,air,e,ms,contact);return;}
  if((e.shot.salvoCount||1)>1&&!p.salvoLast){
   // Each early round makes a sharp local contact. The last round resolves
   // the family-specific finish instead of nine identical full explosions.
@@ -355,7 +489,7 @@ function impact(floor,air,e,ms,reduced){
    const b=project(e,local(e,e.b,.18,.03+i*.06,.12-t*.18));
    streak(air,a,b,p.core,1.25,fade);
   }
-  return;
+  drawHullContact(floor,air,e,ms,contact);return;
  }
  if(p.kind==='gravity-maul'){
   const well=clamp01(1-ms/140);
@@ -457,15 +591,16 @@ function impact(floor,air,e,ms,reduced){
    streak(air,a,b,p.tier===3?prism[1]:p.secondary,1.2,Math.exp(-ms/220));
   }
  }
+ drawHullContact(floor,air,e,ms,contact);
 }
-export function drawCinematicWeapon(floor,air,e,age,{reduced=false}={}){
+export function drawCinematicWeapon(floor,air,e,age,{reduced=false,contactPose=null}={}){
  const elapsed=age-e.start,p=e.profile;
  if(elapsed<0){if(!reduced)charge(floor,air,e,elapsed);return;}
  if(elapsed>=p.flightMs){
   const end=weaponFlightFrame(e.from,e.to,1,e.camera,0,{shot:e.shot,kind:p.kind});
   e.axis.copy(end.direction);e.axis.y=0;e.axis.normalize();e.side.set(e.axis.z,0,-e.axis.x).normalize();
   e.flightScale=1;e.flightUp=null;
-  impact(floor,air,e,elapsed-p.flightMs,reduced);return;
+  impact(floor,air,e,elapsed-p.flightMs,reduced,contactPose);return;
  }
  if(reduced)return;
  const t=weaponTravelProgress(p.kind,elapsed/p.flightMs),pose=weaponFlightFrame(e.from,e.to,elapsed/p.flightMs,e.camera,0,{shot:e.shot,kind:p.kind}),nose=pose.nose;

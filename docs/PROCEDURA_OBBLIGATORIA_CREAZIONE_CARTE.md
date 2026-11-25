@@ -1,5 +1,14 @@
 # PROCEDURA OBBLIGATORIA — "crea la carta" (22 novembre 2026)
 
+> **Regole permanenti confermate il 25/11:** leggere anche
+> [REGOLE_PERMANENTI_EFFETTI_CARTE.md](REGOLE_PERMANENTI_EFFETTI_CARTE.md).
+> Le prossime carte devono avere origini A/B variabili, sequenze inventive
+> per arma e rarità, raffiche coerenti col motore e **impatti evidenti sulle
+> navi**, non il solo scossone: esplosioni o altri contatti specifici sullo
+> scafo, con suoni e vibrazione sincronizzati. Progettare insieme il lancio,
+> il volo, il contatto e la reazione. Modello e proiettile devono essere
+> coerenti con l'illustrazione e con la prospettiva della partita.
+
 > **Regola esplicita del 25/11 — effetti reali, suoni e vibrazione:** prima
 > di creare l'effetto di QUALSIASI carta leggere la definizione e soprattutto
 > la risoluzione reale nel codice, incluse condizioni, combo, durata e bersagli.

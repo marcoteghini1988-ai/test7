@@ -1,5 +1,31 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Regola permanente — impatti sulle navi e prossime carte, 25/11
+
+L'utente approva salve e partenze variabili e chiede **esplosioni o altri
+effetti evidenti quando le navi vengono colpite, non solo un leggero
+scossone**. Queste decisioni devono guidare anche TUTTE le prossime carte.
+Leggere `docs/REGOLE_PERMANENTI_EFFETTI_CARTE.md`: consolida meccanica reale,
+inventiva del dispositivo, origini A/B variabili, salve, prospettiva 3D,
+impatto personalizzato sullo scafo, suono, aptica e collaudo.
+
+Ogni Arma deve progettare insieme lancio/volo e contatto. Al colpo reale
+mostrare corpo dell'impatto, frammenti/scintille, eventuali plasma/fumo o
+scariche e reazione dello scafo; le rarità evolvono la sequenza. Il contatto
+segue il punto sulla vera nave anche durante il rinculo e non copre tutta
+la flotta. Ganasce: morso e archi; Induzione: taglio e scarica; perforanti:
+getto assiale; Maglio/Recuperatore/Schegge: detonazioni differenti. Non
+copiare la stessa palla di fuoco su ogni carta. Il Collassatore mantiene
+l'unico BOOM fra i due scafi, senza duplicarlo per le due contabilizzazioni HP.
+
+`src/weaponHullImpacts.js` definisce i contatti attuali e la posa condivisa
+da scafo e renderer. Nessun danno, colpo, bruciatura, distruzione o bersaglio
+può essere inventato dalla grafica. Una Difesa bloccante mostra il contatto
+sullo scudo; una quota zero di una salva reale fa solo un piccolo contatto
+sulla corazza. Nessuna esplosione di danno su colpi bloccati/non alimentati.
+Movimento ridotto, preferenze audio/aptiche e ripristino restano obbligatori.
+I collaudi delle versioni precedenti non attestano automaticamente questa.
+
 ## Ultima decisione utente — raffiche e punti di lancio variabili, 25/11
 
 L'utente ha rifiutato anche la seconda revisione: cambiava il disegno ma
@@ -116,11 +142,11 @@ conservando arrivo sul bersaglio e viste fronte/retro. La calibrazione approvata
 rilascio del turno usano gli stessi tempi. Il numero di colpi deriva dal motore.
 
 Leggere `docs/REGOLA_EFFETTI_VISIVI_CARTE_2026-11-24.md` quando si crea o
-inserisce un'Arma o il suo effetto. Il colpo parte dal centro del bordo basso
-per il giocatore e dal centro del bordo alto per l'avversario. Forma, colore
-e rifiniture seguono l'arma e la rarità; numero di colpi, bersagli e danno
-seguono esclusivamente gli eventi del motore. Il Maglio ha un colpo per
-ciascuna rarità e un impatto visivo progressivamente più ricco.
+inserisce un'Arma o il suo effetto. La decisione successiva richiede porte
+variabili entro il lato della propria flotta; forma, sequenza, contatto e
+rifiniture seguono arma e rarità. Numero di colpi, bersagli e danno seguono
+gli eventi del motore. Il Maglio corrente ha 1/3/6/9 colpi: la vecchia
+prescrizione di un centro fisso e un solo colpo per rarità è superata.
 Quando una carta è approvata, nello stesso inserimento implementare il colpo
 univoco e il suono per ogni sua rarità, pubblicare codice e PNG su `test7/main`
 e controllare visivamente e acusticamente la partita su StackBlitz. Non

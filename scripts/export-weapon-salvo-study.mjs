@@ -29,7 +29,7 @@ writeFileSync(concat,study.cases.map(c=>{
 // Studio captions replace code identifiers with plain Italian. The image
 // sequence and native flight timings are unchanged by this finishing pass.
 for(const c of study.cases){
- const caption=resolve(root,'caption-'+c.index+'.txt');writeFileSync(caption,STUDY_SALVO_LABELS[c.style]||c.style);
+ const caption=resolve(root,'caption-'+c.index+'.txt');writeFileSync(caption,c.caption||STUDY_SALVO_LABELS[c.style]||c.style);
  const enable=`between(t,${c.start.toFixed(6)},${(c.start+c.duration).toFixed(6)})`;
  filters.push(`drawbox=x=0:y=210:w=900:h=60:color=0x0d1723:t=fill:enable='${enable}'`,
   `drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf:textfile=${caption}:fontcolor=0x99b1c0:fontsize=19:x=(w-text_w)/2:y=222:enable='${enable}'`);

@@ -20,7 +20,7 @@ import {MaglioPerspectiveRenderer} from '../src/maglioPerspectiveRenderer.js';
 import {drawMagneticChain,drawLatch} from '../src/chainWeaponCanvas.js';
 import {drawCollisionExplosion} from '../src/collisionExplosion.js';
 import {collisionFrame,collisionMotionPlan,collisionHullFrame,collisionGroups,COLLISION_RELEASE_AFTER_MS} from '../src/chainWeaponBattleVisuals.js';
-import {weaponHullFrame} from '../src/weaponCinematicStyle.js';
+import {weaponImpactHullFrame} from '../src/weaponHullImpacts.js';
 import {thermalChargeForShot} from '../src/metalWeaponBattleVisuals.js';
 import {weaponSalvoAudioCue} from '../src/weaponSalvoAudio.js';
 import {STUDY_SALVO_LABELS} from './weaponSalvoStudyLabels.mjs';
@@ -29,8 +29,19 @@ const {createCanvas,loadImage}=await import(process.env.ECLISSI_CANVAS_MODULE||'
 globalThis.document={createElement:()=>createCanvas(1,1)};
 const output=resolve(process.argv[2]);mkdirSync(output,{recursive:true});
 const selected=process.argv.includes('--all')?APPROVED_WEAPON_SALVOS:
- [0,1,2,3,7,9,12,14,16,18,21].map(i=>APPROVED_WEAPON_SALVOS[i]);
+ (process.argv.includes('--contacts')?[3,7,9,12,14,16,18,21]:[0,1,2,3,7,9,12,14,16,18,21])
+  .map(i=>APPROVED_WEAPON_SALVOS[i]);
 const only=process.argv.find(a=>a.startsWith('--only='))?.slice(7).split(',').map(Number);
+const contactStudy=process.argv.includes('--contacts');
+const contactCaptions={
+ 'gravity-maul':'Detonazioni da compressione e corazza espulsa',
+ 'steel-rail':'Perforazioni incandescenti e getto della lancia finale',
+ 'thermal-reclaimer':'Esplosioni di plasma, vapori e frammenti',
+ 'magnetic-grapple':'Morsi metallici, scintille e archi magnetici',
+ 'alloy-collision':'Due veri scafi, uno schianto e un solo BOOM',
+ induction:'Fratture a taglio e scariche sulla corazza',
+ 'cascade-piercer':'Brecce rotanti sui bersagli dei trasferimenti reali',
+ 'wandering-shrapnel':'Detonazioni irregolari e schegge balistiche'};
 const stills=process.argv.includes('--stills'),camera=createProjectileCamera(),scene=new Scene();
 const canvas=createCanvas(900,1600),ctx=canvas.getContext('2d');ctx.scale(2,2);
 const fc=createCanvas(900,1600),ac=createCanvas(900,1600),floor=fc.getContext('2d'),air=ac.getContext('2d');floor.scale(2,2);air.scale(2,2);
@@ -59,7 +70,7 @@ function background(profile,who,count,style){
  ctx.textAlign='center';ctx.fillStyle='#e6f0f5';ctx.font='600 12px sans-serif';ctx.fillText(names[profile.kind],225,40);
  ctx.fillStyle=profile.glow;ctx.font='12px sans-serif';ctx.fillText(profile.rarity+' · '+(who==='A'?'LATO GIOCATORE':'LATO AVVERSARIO'),225,65);
  ctx.fillStyle='#eff7ff';ctx.font='600 13px sans-serif';ctx.fillText(profile.kind==='alloy-collision'?'2 SCAFI · 1 SCHIANTO':count+' PROIETTILI REALI',225,95);
- ctx.fillStyle='#99b1c0';ctx.font='10px sans-serif';ctx.fillText(STUDY_SALVO_LABELS[style]||style,225,119);
+ ctx.fillStyle='#99b1c0';ctx.font='10px sans-serif';ctx.fillText(contactStudy?contactCaptions[profile.kind]:STUDY_SALVO_LABELS[style]||style,225,119);
  ctx.fillStyle='#bacbd5';ctx.font='10px sans-serif';ctx.fillText('SEQUENZE DAI VERI EVENTI DEL MOTORE',225,754);
  ctx.fillStyle='#8198a7';ctx.font='9px sans-serif';ctx.fillText('Studio offline · non è una registrazione StackBlitz',225,777);
 }
@@ -108,6 +119,7 @@ for(const [caseIndex,plan]of selected.entries()){
  }
  const chapter={index:caseIndex,id:plan.cardId,kind:profile.kind,rarity:profile.rarity,who,projectiles:profile.kind==='alloy-collision'?0:paths.length,
   damage:shots.reduce((n,s)=>n+s.actualDamage,0),duration,frames:nframes,start:offset,style:plan.style,
+  ...(contactStudy?{caption:contactCaptions[profile.kind],presentation:'hull-impacts-v4'}:{}),
   origins:paths.filter(p=>!p.shot.cascadeTransfer).map(p=>p.from),cues};manifest.cases.push(chapter);offset+=duration;
  writeFileSync(resolve(output,'salvo-study.json'),JSON.stringify({...manifest,duration:offset},null,2));
  if(only&&!only.includes(caseIndex)){paths.forEach(p=>p.model&&disposeProjectile(p.model));continue;}
@@ -120,6 +132,7 @@ for(const [caseIndex,plan]of selected.entries()){
   if(stills&&!snapshots.has(frame))continue;
   const age=frame/fps*1000;background(profile,who,chapter.projectiles,plan.style);
   floor.clearRect(0,0,450,800);air.clearRect(0,0,450,800);scene.clear();
+  const targetPoses=new Map();
   for(const t of targets){
    let pose={x:0,y:0,roll:0,pitch:0,lift:0,light:0,thrust:0},display={...t,p:{...t.p}};
    const collision=groups.find(g=>g.pair.some(p=>p.target===t));
@@ -128,16 +141,17 @@ for(const [caseIndex,plan]of selected.entries()){
     display.p.x+=off.x*motion.pull+collision.axis.x*kick+body.shake;
     display.p.y+=(off.y-collision.plan.forward)*motion.pull+collision.plan.forward*motion.advance+collision.axis.y*kick-body.shake*.45;pose={...body,x:0,y:0};
    }else for(const p of paths.filter(p=>p.target===t)){
-    const h=weaponHullFrame(p.profile.kind,age-p.start-p.profile.flightMs,p.profile.impactMs,{tier:p.profile.tier,direction:who==='A'?-1:1});
-    if((p.shot.salvoCount||1)>1&&!p.shot.salvoLast){for(const k of ['x','y','roll','pitch','lift','thrust'])h[k]*=.5;h.light*=.7;}
-    if(h.light>pose.light)pose=h;
+    const h=weaponImpactHullFrame(p.profile,p.shot,age-p.start-p.profile.flightMs);
+    if(h.thrust>pose.thrust)pose={...h,light:Math.max(pose.light,h.light)};
+    else pose.light=Math.max(pose.light,h.light);
    }
+   targetPoses.set(t,pose);
    target(display,pose);
   }
   for(const p of paths){
    const elapsed=age-p.start,t=elapsed/p.profile.flightMs;
    if(p.profile.kind==='alloy-collision')continue;
-   drawCinematicWeapon(floor,air,p,age);
+   drawCinematicWeapon(floor,air,p,age,{contactPose:targetPoses.get(p.target)});
    if(t>=0&&t<1){
     const front=p.profile.kind==='gravity-maul'?MAGLIO_NOSE_Z*p.model.scale.z:p.model.userData.frontZ*p.model.scale.z;
     const pose=weaponFlightFrame(p.from,p.to,t,camera,front,{shot:p.shot,kind:p.profile.kind});applyWeaponFlightPose(p.model,pose);
