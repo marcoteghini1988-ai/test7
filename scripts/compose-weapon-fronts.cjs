@@ -21,6 +21,10 @@ const xml=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll
 const text=(x,y,size,s,cls='')=>`<text x="${x}" y="${y}" font-size="${size}" class="${cls}">${xml(s)}</text>`;
 function characteristics(c,color){
  const recovery=c.recoveryPercent!=null;
+ const panel=c.panel||{};
+ const customRight=panel.rightLabel?text(2056,3547,panel.rightLabelSize||78,panel.rightLabel,'minor')+
+  panel.rightLines.map((line,index)=>text(2056,panel.rightLines.length===1?3700:3652+index*100,
+   panel.rightValueSize||100,line,'strong')).join(''):null;
  return `<g filter="url(#soft)">
   <path d="M655 3482H2417M660 3817H2412" fill="none" stroke="${color[2]}" stroke-width="5" opacity=".57"/>
   <path d="M1536 3468L1550 3482L1536 3496L1522 3482ZM1536 3803L1550 3817L1536 3831L1522 3817Z" fill="${color[0]}" opacity=".82"/>
@@ -29,7 +33,7 @@ function characteristics(c,color){
   <g transform="translate(1752 3352)"><circle r="79" fill="#13223a" fill-opacity=".34" stroke="${color[2]}" stroke-width="10"/>
    <path d="M0-50V0L33 23" fill="none" stroke="${color[0]}" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><circle r="9" fill="${color[0]}"/></g>
   ${text(1930,3355,152,c.duration,'number')}${text(2220,3355,104,c.duration===1?'TURN':'TURNS','strong')}
-  ${text(1042,3547,88,'BASE DAMAGE','minor')}
+  ${text(1042,3547,panel.damageLabel?78:88,panel.damageLabel||'BASE DAMAGE','minor')}
   <g transform="translate(754 3700)"><path d="M-91-42L-47-81L-18-44L20-96L52-42L94-22L52 7L82 54L30 52L10 96L-20 56L-63 72L-63 34L-97 8L-59-15Z" fill="url(#material)" stroke="#182535" stroke-width="9" stroke-linejoin="round"/><circle r="21" fill="${color[0]}" stroke="#263c52" stroke-width="7"/></g>
   ${text(1114,3700,159,c.damage+' HP','number')}
   ${recovery?text(2056,3547,82,'REAL HULL LOSS','minor')+
@@ -39,11 +43,11 @@ function characteristics(c,color){
    text(1860,3770,70,'MAX','strong')+
    `<path d="M1985 3750V3790M1965 3770H2005" stroke="${color[0]}" stroke-width="8"/>`+
    text(2180,3770,70,c.maxBonus+' HP','strong'):
-   text(2056,3547,82,'DEFENSES / TERRAIN','minor')+text(2056,3700,126,'APPLY','strong')}
+   customRight||text(2056,3547,82,'DEFENSES / TERRAIN','minor')+text(2056,3700,126,'APPLY','strong')}
   <g transform="translate(735 3933)"><circle r="61" fill="none" stroke="${color[2]}" stroke-width="13"/><circle r="16" fill="${color[0]}"/><path d="M0-92V-46M0 46V92M-92 0H-46M46 0H92" stroke="${color[0]}" stroke-width="13" stroke-linecap="round"/></g>
-  ${text(1138,3933,115,'1 TARGET','strong')}<circle cx="1536" cy="3933" r="10" fill="${color[0]}" opacity=".85"/>
+  ${text(1138,3933,panel.targets?108:115,panel.targets||'1 TARGET','strong')}<circle cx="1536" cy="3933" r="10" fill="${color[0]}" opacity=".85"/>
   <g transform="translate(1740 3933)"><path d="M-80-29H-17L32-63L84 0L32 63L-17 29H-80M-101-60H-59M-104 59H-62" fill="none" stroke="${color[2]}" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/></g>
-  ${text(2076,3933,recovery?104:115,recovery?'1 / TURN':'1 SHOT','strong')}
+  ${text(panel.action?2160:2076,3933,panel.action?95:recovery?104:115,panel.action||(recovery?'1 / TURN':'1 SHOT'),'strong')}
  </g>`;
 }
 function labels(c){
@@ -58,9 +62,9 @@ function backing(centers){return Buffer.from(`<svg xmlns="http://www.w3.org/2000
 async function scene(c){
  const file=path.resolve(batchRoot,c.artPath);
  let blurred=await sharp(file).resize(2900,2265,{fit:'cover'}).blur(28).toBuffer();
- if(c.recoveryPercent!=null){
+ if(c.recoveryPercent!=null||c.cleanBackdrop){
   // Cielo senza copie delle alette in alto; il piano originale prosegue in basso.
-  const sky=await sharp(file).extract({left:0,top:0,width:110,height:560}).resize(2900,1040,{fit:'fill'}).blur(50).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+  const sky=await sharp(file).extract({left:0,top:0,width:c.cleanBackdrop?24:110,height:c.cleanBackdrop?220:560}).resize(2900,1040,{fit:'fill'}).blur(50).ensureAlpha().raw().toBuffer({resolveWithObject:true});
   for(let y=0;y<sky.info.height;y++)for(let x=0;x<sky.info.width;x++)sky.data[(y*sky.info.width+x)*4+3]=Math.round(255*Math.max(0,Math.min(1,(sky.info.height-1-y)/160)));
   const skyLayer=await sharp(sky.data,{raw:sky.info}).png().toBuffer();
   blurred=await sharp(blurred).composite([{input:skyLayer,left:0,top:0}]).png().toBuffer();
@@ -84,7 +88,8 @@ async function main(){
  const category=await sharp(path.join(stickers,'categorie/arma.png')).resize(300,300).toBuffer();
  const element=await sharp(path.join(stickers,'elementi/metallo.png')).resize(300,300).toBuffer();
  const statElement=await sharp(path.join(stickers,'elementi/metallo.png')).resize(170,170).toBuffer();
- for(const c of manifest.cards.filter(card=>!process.argv[5]||card.familyId===process.argv[5])){
+ for(const c of manifest.cards.filter(card=>(!process.argv[5]||card.familyId===process.argv[5])&&
+  (!process.argv[6]||card.id===process.argv[6]))){
   const center=slots[c.raritySlug],type=labels(c),art=await scene(c);
   fs.writeFileSync(path.join(batchRoot,'livelli-testo',c.id+'.svg'),type);
   const result=await sharp(art).composite([
@@ -92,7 +97,7 @@ async function main(){
    {input:category,left:center.sinistra[0]-150,top:center.sinistra[1]-150},
    {input:element,left:center.destra[0]-150,top:center.destra[1]-150},
    {input:type,left:0,top:0},{input:statElement,left:612,top:3267}
-  ]).png({compressionLevel:8}).toBuffer();
+  ]).png({compressionLevel:9,adaptiveFiltering:true}).toBuffer();
   const target=path.join(output,c.id+'.png');fs.writeFileSync(target,result);
   console.log(JSON.stringify({id:c.id,path:target,width:W,height:H,bytes:result.length}));
  }

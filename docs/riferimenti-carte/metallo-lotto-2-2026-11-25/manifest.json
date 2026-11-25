@@ -1,0 +1,336 @@
+{
+  "date": "2026-11-25",
+  "status": "anteprime complete in attesa di approvazione grafica",
+  "sourceRepository": "marcoteghini1988-ai/test7",
+  "sourceCommit": "27033d9a189a1ccb54f8409cd1838c64fcefd211",
+  "element": "metallic",
+  "canvas": [
+    3072,
+    4608
+  ],
+  "illustrationMode": "built-in image_gen",
+  "cards": [
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche",
+      "familyId": "weapon-designed-metallic-ganasce-magnetiche",
+      "name": "Arpioni a Ganasce Magnetiche",
+      "titleLines": [
+        "MAGNETIC JAW",
+        "HARPOONS"
+      ],
+      "rarity": "Rara",
+      "raritySlug": "rara",
+      "rarityLabel": "RARE",
+      "artPath": "illustrazioni/ganasce-rara.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "duration": 2,
+      "damage": 14,
+      "panel": {
+        "damageLabel": "DAMAGE / TARGET",
+        "rightLabel": "PREPARES COMBO",
+        "rightLines": [
+          "NEXT OWN TURN"
+        ],
+        "rightValueSize": 98,
+        "targets": "2 TARGETS",
+        "action": "2 HARPOONS"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 2,
+        "weaponProfile": {
+          "pattern": "magnetic-grapple",
+          "baseDamage": 14,
+          "durationTurns": 2,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Due arpioni infliggono 14 HP a due navicelle diverse; se colpiscono, conservano i bersagli agganciati per Cannone Collassatore di Lega nel tuo turno successivo.",
+      "sourceImage": "exec-2c2c3b8a-7633-4a48-8daa-b371bb4a4e35.png",
+      "cleanBackdrop": true,
+      "sha256": "e3b950fe6299658acc4ba44cdbdd23b6ff13a991e44dd3baaaf3997d32364c2c",
+      "bytes": 13625707,
+      "libraryFileId": "libfile_4005a06b05308191a0d8101821c4e620"
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
+      "familyId": "weapon-designed-metallic-ganasce-magnetiche",
+      "name": "Arpioni a Ganasce Magnetiche",
+      "titleLines": [
+        "MAGNETIC JAW",
+        "HARPOONS"
+      ],
+      "rarity": "Epica",
+      "raritySlug": "epica",
+      "rarityLabel": "EPIC",
+      "artPath": "illustrazioni/ganasce-epica.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "duration": 2,
+      "damage": 34,
+      "panel": {
+        "damageLabel": "DAMAGE / TARGET",
+        "rightLabel": "PREPARES COMBO",
+        "rightLines": [
+          "NEXT OWN TURN"
+        ],
+        "rightValueSize": 98,
+        "targets": "2 TARGETS",
+        "action": "2 HARPOONS"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 2,
+        "weaponProfile": {
+          "pattern": "magnetic-grapple",
+          "baseDamage": 34,
+          "durationTurns": 2,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Arma Metallo · due arpioni da 34 HP a due bersagli differenti; prepara la collisione di lega al turno proprio successivo.",
+      "sourceImage": "exec-92642570-c278-4328-b9d0-037ba3bc5a7c.png",
+      "cleanBackdrop": true,
+      "sha256": "362ab1b64836f7ac92f3b42215de904c1f73dcc16374d32ae592a7e8a21cb7e5",
+      "bytes": 13952525,
+      "libraryFileId": "libfile_b6a21bff242481919d2850c5ded77127"
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+      "familyId": "weapon-designed-metallic-ganasce-magnetiche",
+      "name": "Arpioni a Ganasce Magnetiche",
+      "titleLines": [
+        "MAGNETIC JAW",
+        "HARPOONS"
+      ],
+      "rarity": "Leggendaria",
+      "raritySlug": "leggendaria",
+      "rarityLabel": "LEGENDARY",
+      "artPath": "illustrazioni/ganasce-leggendaria.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "duration": 2,
+      "damage": 46,
+      "panel": {
+        "damageLabel": "DAMAGE / TARGET",
+        "rightLabel": "PREPARES COMBO",
+        "rightLines": [
+          "NEXT OWN TURN"
+        ],
+        "rightValueSize": 98,
+        "targets": "2 TARGETS",
+        "action": "2 HARPOONS"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 2,
+        "weaponProfile": {
+          "pattern": "magnetic-grapple",
+          "baseDamage": 46,
+          "durationTurns": 2,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Arma Metallo · due arpioni da 46 HP a due bersagli differenti; prepara la collisione di lega al turno proprio successivo.",
+      "sourceImage": "exec-e1f01538-2985-4483-bb64-9846050dd7bf.png",
+      "cleanBackdrop": true,
+      "sha256": "111255e24440e756fb42068ab6e3bba2565c85544e54e83a299e2da606f631c5",
+      "bytes": 15206907,
+      "libraryFileId": "libfile_c3bb87f875cc81918204cedf9f56008d"
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega",
+      "familyId": "weapon-designed-metallic-collassatore-lega",
+      "name": "Cannone Collassatore di Lega",
+      "titleLines": [
+        "ALLOY",
+        "COLLAPSER"
+      ],
+      "rarity": "Epica",
+      "raritySlug": "epica",
+      "rarityLabel": "EPIC",
+      "artPath": "illustrazioni/collassatore-epica.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "duration": 1,
+      "damage": 41,
+      "panel": {
+        "damageLabel": "DAMAGE / TARGET",
+        "rightLabel": "REQUIRES GRAPPLE",
+        "rightLabelSize": 70,
+        "rightLines": [
+          "PRIOR OWN TURN",
+          "2 LIVE TARGETS"
+        ],
+        "rightValueSize": 90,
+        "targets": "2 TARGETS",
+        "action": "1 COLLISION"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 1,
+        "weaponProfile": {
+          "pattern": "alloy-collision",
+          "baseDamage": 41,
+          "durationTurns": 1,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Arma Metallo · 41 HP per bersaglio agganciato; richiede gli Arpioni del turno proprio precedente.",
+      "sourceImage": "exec-e27a1190-acf3-4b90-9365-00e6f97ae5b1.png",
+      "cleanBackdrop": true,
+      "sha256": "7796b8e3d0885cb300e6c0543c0bf44ed45ecc654cc5021c9b81bc19b65d424e",
+      "bytes": 13707758,
+      "libraryFileId": "libfile_73b92772fbe081918ac6637ef82f66e6"
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+      "familyId": "weapon-designed-metallic-collassatore-lega",
+      "name": "Cannone Collassatore di Lega",
+      "titleLines": [
+        "ALLOY",
+        "COLLAPSER"
+      ],
+      "rarity": "Leggendaria",
+      "raritySlug": "leggendaria",
+      "rarityLabel": "LEGENDARY",
+      "artPath": "illustrazioni/collassatore-leggendaria.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "duration": 1,
+      "damage": 57,
+      "panel": {
+        "damageLabel": "DAMAGE / TARGET",
+        "rightLabel": "REQUIRES GRAPPLE",
+        "rightLabelSize": 70,
+        "rightLines": [
+          "PRIOR OWN TURN",
+          "2 LIVE TARGETS"
+        ],
+        "rightValueSize": 90,
+        "targets": "2 TARGETS",
+        "action": "1 COLLISION"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 1,
+        "weaponProfile": {
+          "pattern": "alloy-collision",
+          "baseDamage": 57,
+          "durationTurns": 1,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Arma Metallo · 57 HP per bersaglio agganciato; richiede gli Arpioni del turno proprio precedente.",
+      "sourceImage": "exec-daaa27aa-9f1a-4749-8e2f-2fdcaef98c8b.png",
+      "cleanBackdrop": true,
+      "sha256": "812722f23b2eaf769cd047be8adede8bc765183543c99d8cc4998a097d1abfbf",
+      "bytes": 14604985,
+      "libraryFileId": "libfile_6de0a10335388191b47c4bc9172df833"
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione",
+      "familyId": "weapon-designed-metallic-frantumatore-induzione",
+      "name": "Frantumatore a Induzione",
+      "titleLines": [
+        "INDUCTION",
+        "BREAKER"
+      ],
+      "rarity": "Epica",
+      "raritySlug": "epica",
+      "rarityLabel": "EPIC",
+      "artPath": "illustrazioni/frantumatore-epica.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "duration": 1,
+      "damage": 37,
+      "panel": {
+        "rightLabel": "ENERGY BONUS",
+        "rightLines": [
+          "1 BYPASS",
+          "2 BREAK"
+        ],
+        "rightValueSize": 104,
+        "targets": "1 TARGET",
+        "action": "1 SHOT"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 1,
+        "weaponProfile": {
+          "pattern": "induction",
+          "baseDamage": 37
+        }
+      },
+      "effectItalian": "Arma Metallo · 37 HP; con una Energia Metallo attraversa una Difesa, con due ne distrugge una e colpisce.",
+      "sourceImage": "exec-79782db4-f4c6-4879-bc1d-58f1908f227c.png",
+      "cleanBackdrop": true,
+      "sha256": "2f971f9d34c96e264e342b43de2d15f6c85c5a9a9805775851b9c9c79ed6d457",
+      "bytes": 13100684,
+      "libraryFileId": "libfile_26c21ef86bfc8191981640676cad8b33"
+    }
+  ],
+  "reviewStatus": "awaiting-user-approval",
+  "playableFrontsInstalled": false,
+  "effectsImplementationStatus": "storyboard preparato dal codice; implementazione dopo approvazione dei fronti",
+  "nextBatchCarryOver": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+  "downloadPackage": {
+    "file_name": "Metallo_secondo_gruppo_6_carte_HD.zip",
+    "library_file_id": "libfile_a530a975ebe48191b4fe8e388982cb06"
+  },
+  "comparisonSheets": [
+    {
+      "file_name": "Ganasce_Magnetiche_tre_rarita.png",
+      "library_file_id": "libfile_8b9b09bef39c8191a01da6fad94304bc"
+    },
+    {
+      "file_name": "Collassatore_e_Induzione_tre_carte.png",
+      "library_file_id": "libfile_26a0dbc45ff48191a91215936a3c6b1d"
+    }
+  ],
+  "frameSourceHashes": {
+    "rara": "f1a23a4aac5de496a2f0849ab0030aba6c7824f2b8f4abcaae1f4153858ec341",
+    "epica": "fcb109079c3dd78e845fa9a99f6eb1a9cef6982db7c0412676727c363e6157bc",
+    "leggendaria": "834c1773c093f1f6338d7bca3c3ad71b7d7501d5b83c9d1900c50a3369c84221"
+  },
+  "renderValidation": "Sei PNG RGBA 3072x4608: zero pixel aggiunti fuori dal profilo della cornice originale, zero pixel opachi esterni alterati, nessun glifo mancante.",
+  "effectStoryboard": "storyboard.md",
+  "sourcePrompts": "prompts.json"
+}

@@ -1,0 +1,82 @@
+{
+  "cards": [
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche",
+      "bytes": 13625707,
+      "sha256": "e3b950fe6299658acc4ba44cdbdd23b6ff13a991e44dd3baaaf3997d32364c2c",
+      "outsideFramePixels": 0,
+      "opaqueOuterFrameAlteredPixels": 0,
+      "format": "PNG RGBA",
+      "pixels": [
+        3072,
+        4608
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
+      "bytes": 13952525,
+      "sha256": "362ab1b64836f7ac92f3b42215de904c1f73dcc16374d32ae592a7e8a21cb7e5",
+      "outsideFramePixels": 0,
+      "opaqueOuterFrameAlteredPixels": 0,
+      "format": "PNG RGBA",
+      "pixels": [
+        3072,
+        4608
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+      "bytes": 15206907,
+      "sha256": "111255e24440e756fb42068ab6e3bba2565c85544e54e83a299e2da606f631c5",
+      "outsideFramePixels": 0,
+      "opaqueOuterFrameAlteredPixels": 0,
+      "format": "PNG RGBA",
+      "pixels": [
+        3072,
+        4608
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega",
+      "bytes": 13707758,
+      "sha256": "7796b8e3d0885cb300e6c0543c0bf44ed45ecc654cc5021c9b81bc19b65d424e",
+      "outsideFramePixels": 0,
+      "opaqueOuterFrameAlteredPixels": 0,
+      "format": "PNG RGBA",
+      "pixels": [
+        3072,
+        4608
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+      "bytes": 14604985,
+      "sha256": "812722f23b2eaf769cd047be8adede8bc765183543c99d8cc4998a097d1abfbf",
+      "outsideFramePixels": 0,
+      "opaqueOuterFrameAlteredPixels": 0,
+      "format": "PNG RGBA",
+      "pixels": [
+        3072,
+        4608
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione",
+      "bytes": 13100684,
+      "sha256": "2f971f9d34c96e264e342b43de2d15f6c85c5a9a9805775851b9c9c79ed6d457",
+      "outsideFramePixels": 0,
+      "opaqueOuterFrameAlteredPixels": 0,
+      "format": "PNG RGBA",
+      "pixels": [
+        3072,
+        4608
+      ]
+    }
+  ],
+  "missingFontGlyphs": [],
+  "originalFrameSha256": {
+    "rara": "f1a23a4aac5de496a2f0849ab0030aba6c7824f2b8f4abcaae1f4153858ec341",
+    "epica": "fcb109079c3dd78e845fa9a99f6eb1a9cef6982db7c0412676727c363e6157bc",
+    "leggendaria": "834c1773c093f1f6338d7bca3c3ad71b7d7501d5b83c9d1900c50a3369c84221"
+  }
+}
