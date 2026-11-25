@@ -1,0 +1,599 @@
+{
+  "date": "2026-11-25",
+  "sourceCommit": "b20f5019ec157e70c9f3b1a744a99421a2b65a62",
+  "scope": "22 varianti approvate, 8 famiglie; raffiche, origini variabili, curve 3D, carte, audio e aptica",
+  "validation": {
+    "logic": {
+      "command": "npm run verify:logic",
+      "passed": 2284,
+      "failed": 0,
+      "skipped": 0
+    },
+    "lastTargeted": {
+      "passed": 136,
+      "failed": 0
+    },
+    "productionBuild": {
+      "command": "npm run build",
+      "result": "passed"
+    },
+    "preflight": {
+      "command": "npm run preflight",
+      "result": "passed",
+      "rendererBindingsIncluded": true
+    },
+    "cardComposite": "Componente SVG e fronte PNG originali composti e ispezionati visivamente; stessa cornice, nuovi contatori.",
+    "semantics": "Danno totale, copertura e difesa risolti per azione/bersaglio; somma dei pacchetti esatta; Energia Cascata una per trasferimento.",
+    "engineMatrix": "Ogni variante A/B, slot 0/1, blocchi e condizioni; test sulle tangenti 3D e sulla persistenza degli agganci."
+  },
+  "stackblitz": {
+    "url": "https://stackblitz.com/~/github.com/marcoteghini1988-ai/test7?file=src/OfficialFleetBattle3D.jsx&initialPath=/.maglio-review.html",
+    "result": "blocked-before-live-battle",
+    "observed": [
+      "Could not clone repository",
+      "Unable to resolve workspace folder (Failed to fetch)",
+      "Il terminale jsh risponde a pwd e node -v. Il tentativo di ripristino nello stesso workspace fallisce: le richieste runtime a api.github.com, raw.githubusercontent.com e registry.npmjs.org restituiscono fetch failed."
+    ],
+    "liveVisualAudioVerified": false,
+    "physicalHapticsVerified": false,
+    "note": "Nessun nuovo repository/progetto; nessun ampliamento OAuth o bot abilitato. I vecchi collaudi non provano questa revisione."
+  },
+  "demonstration": {
+    "file": "Raffiche_3_6_9_origini_variabili_Eclissi.mp4",
+    "sha256": "b21d021077ca4639f6b7bd937f686f96388b3d6c9a66514c09accbc7fabba0b8",
+    "bytes": 5391714,
+    "type": "offline-renderer-study",
+    "isStackBlitzRecording": false,
+    "source": "Pacchetti reali emessi dal combattimento e gli stessi renderer/curve/audio del gioco.",
+    "fps": 30,
+    "width": 900,
+    "height": 1600,
+    "duration": 42.83333333333333,
+    "playbackRate": 1,
+    "audio": "Stereo AAC 48 kHz, stessi cue e bus SFX, sintesi offline.",
+    "audioPeakDb": -5.93279682780536,
+    "fullVideoDecode": "passed",
+    "limitations": [
+      "Studio tecnico senza la UI completa della partita.",
+      "Anticipo della rivelazione carta abbreviato; voli, intervalli e collisioni ai tempi nativi.",
+      "Nessuna prova fisica di vibrazione né nuova prova StackBlitz."
+    ],
+    "chapters": [
+      {
+        "index": 0,
+        "id": "weapon-confirmed-metallic-maglio",
+        "kind": "gravity-maul",
+        "rarity": "Comune",
+        "who": "A",
+        "projectiles": 1,
+        "damage": 18,
+        "start": 0,
+        "duration": 3.2666666666666666,
+        "style": "piston",
+        "origins": [
+          {
+            "x": 391,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 4
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 1,
+          "impact": 1
+        }
+      },
+      {
+        "index": 1,
+        "id": "weapon-confirmed-metallic-maglio-rarity-r",
+        "kind": "gravity-maul",
+        "rarity": "Rara",
+        "who": "B",
+        "projectiles": 3,
+        "damage": 43,
+        "start": 3.2666666666666666,
+        "duration": 3.5,
+        "style": "orbital-trident",
+        "origins": [
+          {
+            "x": 129,
+            "y": -10,
+            "edge": "opponent-launch-band",
+            "port": 3
+          },
+          {
+            "x": 385,
+            "y": 23,
+            "edge": "opponent-launch-band",
+            "port": 0
+          },
+          {
+            "x": 221,
+            "y": 57,
+            "edge": "opponent-launch-band",
+            "port": 2
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 3,
+          "impact": 3
+        }
+      },
+      {
+        "index": 2,
+        "id": "weapon-confirmed-metallic-maglio-rarity-e",
+        "kind": "gravity-maul",
+        "rarity": "Epica",
+        "who": "A",
+        "projectiles": 6,
+        "damage": 105,
+        "start": 6.766666666666667,
+        "duration": 3.9,
+        "style": "double-orbit",
+        "origins": [
+          {
+            "x": 224,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 2
+          },
+          {
+            "x": 388,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 4
+          },
+          {
+            "x": 132,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 1
+          },
+          {
+            "x": 316,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 3
+          },
+          {
+            "x": 60,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 0
+          },
+          {
+            "x": 224,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 2
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 6,
+          "impact": 6
+        }
+      },
+      {
+        "index": 3,
+        "id": "weapon-confirmed-metallic-maglio-rarity-l",
+        "kind": "gravity-maul",
+        "rarity": "Leggendaria",
+        "who": "B",
+        "projectiles": 9,
+        "damage": 137,
+        "start": 10.666666666666666,
+        "duration": 4,
+        "style": "gravity-storm",
+        "origins": [
+          {
+            "x": 395,
+            "y": 57,
+            "edge": "opponent-launch-band",
+            "port": 0
+          },
+          {
+            "x": 231,
+            "y": -10,
+            "edge": "opponent-launch-band",
+            "port": 2
+          },
+          {
+            "x": 67,
+            "y": 23,
+            "edge": "opponent-launch-band",
+            "port": 4
+          },
+          {
+            "x": 323,
+            "y": 57,
+            "edge": "opponent-launch-band",
+            "port": 1
+          },
+          {
+            "x": 139,
+            "y": -10,
+            "edge": "opponent-launch-band",
+            "port": 3
+          },
+          {
+            "x": 395,
+            "y": 23,
+            "edge": "opponent-launch-band",
+            "port": 0
+          },
+          {
+            "x": 231,
+            "y": 57,
+            "edge": "opponent-launch-band",
+            "port": 2
+          },
+          {
+            "x": 67,
+            "y": -10,
+            "edge": "opponent-launch-band",
+            "port": 4
+          },
+          {
+            "x": 323,
+            "y": 23,
+            "edge": "opponent-launch-band",
+            "port": 1
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 9,
+          "impact": 9
+        }
+      },
+      {
+        "index": 4,
+        "id": "weapon-confirmed-metallic-slitta-rarity-l",
+        "kind": "steel-rail",
+        "rarity": "Leggendaria",
+        "who": "A",
+        "projectiles": 7,
+        "damage": 118,
+        "start": 14.666666666666666,
+        "duration": 4.066666666666666,
+        "style": "six-plus-lance",
+        "origins": [
+          {
+            "x": 384,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 4
+          },
+          {
+            "x": 128,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 1
+          },
+          {
+            "x": 312,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 3
+          },
+          {
+            "x": 56,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 0
+          },
+          {
+            "x": 220,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 2
+          },
+          {
+            "x": 384,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 4
+          },
+          {
+            "x": 128,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 1
+          }
+        ],
+        "audioCues": {
+          "charge": 2,
+          "fire": 7,
+          "impact": 7
+        }
+      },
+      {
+        "index": 5,
+        "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
+        "kind": "thermal-reclaimer",
+        "rarity": "Leggendaria",
+        "who": "B",
+        "projectiles": 6,
+        "damage": 38,
+        "start": 18.733333333333334,
+        "duration": 4.133333333333334,
+        "style": "plasma-spiral",
+        "origins": [
+          {
+            "x": 63,
+            "y": 23,
+            "edge": "opponent-launch-band",
+            "port": 4
+          },
+          {
+            "x": 319,
+            "y": 57,
+            "edge": "opponent-launch-band",
+            "port": 1
+          },
+          {
+            "x": 135,
+            "y": -10,
+            "edge": "opponent-launch-band",
+            "port": 3
+          },
+          {
+            "x": 391,
+            "y": 23,
+            "edge": "opponent-launch-band",
+            "port": 0
+          },
+          {
+            "x": 227,
+            "y": 57,
+            "edge": "opponent-launch-band",
+            "port": 2
+          },
+          {
+            "x": 63,
+            "y": -10,
+            "edge": "opponent-launch-band",
+            "port": 4
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 6,
+          "impact": 6
+        }
+      },
+      {
+        "index": 6,
+        "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+        "kind": "magnetic-grapple",
+        "rarity": "Leggendaria",
+        "who": "A",
+        "projectiles": 2,
+        "damage": 68,
+        "start": 22.866666666666667,
+        "duration": 3.933333333333333,
+        "style": "orbital-anchors",
+        "origins": [
+          {
+            "x": 59,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 0
+          },
+          {
+            "x": 387,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 4
+          }
+        ],
+        "audioCues": {
+          "charge": 2,
+          "fire": 2,
+          "impact": 2
+        }
+      },
+      {
+        "index": 7,
+        "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+        "kind": "alloy-collision",
+        "rarity": "Leggendaria",
+        "who": "B",
+        "projectiles": 0,
+        "damage": 86,
+        "start": 26.8,
+        "duration": 3.2666666666666666,
+        "style": "prismatic-crash",
+        "origins": [
+          {
+            "x": 61,
+            "y": -10,
+            "edge": "opponent-launch-band",
+            "port": 4
+          },
+          {
+            "x": 317,
+            "y": 23,
+            "edge": "opponent-launch-band",
+            "port": 1
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 1,
+          "impact": 1,
+          "release": 1
+        }
+      },
+      {
+        "index": 8,
+        "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+        "kind": "induction",
+        "rarity": "Leggendaria",
+        "who": "A",
+        "projectiles": 6,
+        "damage": 51,
+        "start": 30.066666666666666,
+        "duration": 3.566666666666667,
+        "style": "six-blade-cyclone",
+        "origins": [
+          {
+            "x": 391,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 4
+          },
+          {
+            "x": 135,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 1
+          },
+          {
+            "x": 319,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 3
+          },
+          {
+            "x": 63,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 0
+          },
+          {
+            "x": 227,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 2
+          },
+          {
+            "x": 391,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 4
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 6,
+          "impact": 6
+        }
+      },
+      {
+        "index": 9,
+        "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+        "kind": "cascade-piercer",
+        "rarity": "Leggendaria",
+        "who": "B",
+        "projectiles": 9,
+        "damage": 153,
+        "start": 33.63333333333333,
+        "duration": 5.4,
+        "style": "braided-drill",
+        "origins": [
+          {
+            "x": 66,
+            "y": -10,
+            "edge": "opponent-launch-band",
+            "port": 4
+          },
+          {
+            "x": 322,
+            "y": 23,
+            "edge": "opponent-launch-band",
+            "port": 1
+          },
+          {
+            "x": 138,
+            "y": 57,
+            "edge": "opponent-launch-band",
+            "port": 3
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 3,
+          "impact": 9,
+          "transfer": 6
+        }
+      },
+      {
+        "index": 10,
+        "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+        "kind": "wandering-shrapnel",
+        "rarity": "Leggendaria",
+        "who": "A",
+        "projectiles": 9,
+        "damage": 64,
+        "start": 39.03333333333333,
+        "duration": 3.8,
+        "style": "shrapnel-storm",
+        "origins": [
+          {
+            "x": 133,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 1
+          },
+          {
+            "x": 317,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 3
+          },
+          {
+            "x": 61,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 0
+          },
+          {
+            "x": 225,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 2
+          },
+          {
+            "x": 389,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 4
+          },
+          {
+            "x": 133,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 1
+          },
+          {
+            "x": 317,
+            "y": 810,
+            "edge": "player-launch-band",
+            "port": 3
+          },
+          {
+            "x": 61,
+            "y": 777,
+            "edge": "player-launch-band",
+            "port": 0
+          },
+          {
+            "x": 225,
+            "y": 743,
+            "edge": "player-launch-band",
+            "port": 2
+          }
+        ],
+        "audioCues": {
+          "charge": 1,
+          "fire": 9,
+          "impact": 9
+        }
+      }
+    ]
+  }
+}

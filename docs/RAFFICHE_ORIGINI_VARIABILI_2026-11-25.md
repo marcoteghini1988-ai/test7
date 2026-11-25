@@ -91,3 +91,20 @@ Verifiche del codice completate: **2284 test dell'intera suite logica**,
 build di produzione e preflight. Il preflight comprende adesso il
 controllo dei collegamenti dei renderer. L'avvio dev prepara automaticamente
 la pagina di prova già esistente, con il numero di colpi della salva.
+
+## Esito del nuovo collaudo
+
+Lo stato verificato è in `docs/collaudi/raffiche-2026-11-25.json`.
+Le modifiche sono pubblicate al commit `b20f5019ec157e70c9f3b1a744a99421a2b65a62`.
+StackBlitz ha caricato il codice ma non ha clonato il workspace: `Could not
+clone repository`. Il terminale risponde; il ripristino nello stesso progetto
+fallisce perché il runtime restituisce `fetch failed` per sorgenti e registro
+delle dipendenze. Non è stata avviata la nuova partita.
+
+Il video `Raffiche_3_6_9_origini_variabili_Eclissi.mp4` è uno **studio offline**
+di 42,83 secondi a 900×1600 / 30 fps, con 11 sequenze dagli eventi reali del
+motore e la stessa sintesi sonora. Comprende tutte le famiglie e Maglio
+1/3/6/9; alterna A e B. Decodifica completa riuscita, audio stereo senza
+clipping, tempi di volo e raffica nativi. La rivelazione introduttiva della
+carta è abbreviata; la UI della partita non è inclusa. Non presentarlo come
+registrazione StackBlitz o verifica della vibrazione fisica.
