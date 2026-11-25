@@ -1,0 +1,365 @@
+{
+  "date": "2026-11-25",
+  "status": "anteprime complete in attesa di approvazione grafica",
+  "reviewStatus": "awaiting-user-approval",
+  "playableFrontsInstalled": false,
+  "effectsImplementationStatus": "meccaniche lette dal resolver; storyboard dedicato, effetti dopo approvazione delle nuove carte",
+  "sourceRepository": "marcoteghini1988-ai/test7",
+  "sourceCommit": "b4596f6be804fe780b28c96098535e06c04f9a2b",
+  "element": "metallic",
+  "canvas": [
+    3072,
+    4608
+  ],
+  "illustrationMode": "built-in image_gen; una generazione per variante; evoluzioni derivate dalla variante precedente",
+  "cards": [
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "familyId": "weapon-designed-metallic-frantumatore-induzione",
+      "name": "Frantumatore a Induzione",
+      "rarity": "Leggendaria",
+      "raritySlug": "leggendaria",
+      "rarityLabel": "LEGENDARY",
+      "titleLines": [
+        "INDUCTION",
+        "BREAKER"
+      ],
+      "artPath": "illustrazioni/frantumatore-leggendaria.png",
+      "sourceImage": "exec-0a14183b-ca93-4472-ab27-9ce3a7c58ab1.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "cleanBackdrop": true,
+      "duration": 1,
+      "damage": 54,
+      "panel": {
+        "rightLabel": "ENERGY BONUS",
+        "rightLines": [
+          "1 BYPASS",
+          "2 BREAK"
+        ],
+        "rightValueSize": 104,
+        "targets": "1 TARGET",
+        "action": "1 SHOT"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 1,
+        "weaponProfile": {
+          "pattern": "induction",
+          "baseDamage": 54
+        }
+      },
+      "effectItalian": "Arma Metallo · 54 HP; con una Energia Metallo attraversa una Difesa, con due ne distrugge una e colpisce.",
+      "sha256": "d746bcb683eea3331e94ed9b86bd4773659025d2fbe206755f9e1b7c9f94d09d",
+      "bytes": 14901063,
+      "frontFileName": "weapon-designed-metallic-frantumatore-induzione-rarity-l.png",
+      "library_file_id": "libfile_94f2b222e28c8191ad92d59471d03a6f",
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_94f2b222e28c8191ad92d59471d03a6f&account_id=personal"
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "familyId": "weapon-designed-metallic-perforatore-cascata",
+      "name": "Perforatore a Cascata",
+      "rarity": "Epica",
+      "raritySlug": "epica",
+      "rarityLabel": "EPIC",
+      "titleLines": [
+        "CASCADE",
+        "PIERCER"
+      ],
+      "artPath": "illustrazioni/perforatore-epica.png",
+      "sourceImage": "exec-ca429887-a9fa-4ac5-b104-cb7f937d5d83.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "cleanBackdrop": true,
+      "duration": 3,
+      "damage": 65,
+      "panel": {
+        "rightLabel": "OVERFLOW TRANSFER",
+        "rightLabelSize": 67,
+        "rightLines": [
+          "1 METAL ENERGY",
+          "PER TRANSFER"
+        ],
+        "rightValueSize": 88,
+        "targets": "1 TARGET",
+        "action": "CASCADE"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 3,
+        "weaponProfile": {
+          "pattern": "cascade-piercer",
+          "baseDamage": 65,
+          "durationTurns": 3,
+          "energyTransferCost": 1,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Arma Metallo · 65 HP per 3 turni; il danno eccedente passa al prossimo bersaglio spendendo 1 Energia Metallo.",
+      "sha256": "0a392f7cb8a2013789839c376ad04b9cbdd9f146496991113e8c1d30cad36eb9",
+      "bytes": 13181824,
+      "frontFileName": "weapon-designed-metallic-perforatore-cascata.png",
+      "library_file_id": "libfile_3f5c737a3cc081919843bc7e8d6926d0",
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_3f5c737a3cc081919843bc7e8d6926d0&account_id=personal"
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "familyId": "weapon-designed-metallic-perforatore-cascata",
+      "name": "Perforatore a Cascata",
+      "rarity": "Leggendaria",
+      "raritySlug": "leggendaria",
+      "rarityLabel": "LEGENDARY",
+      "titleLines": [
+        "CASCADE",
+        "PIERCER"
+      ],
+      "artPath": "illustrazioni/perforatore-leggendaria.png",
+      "sourceImage": "exec-0fb1cd31-f275-4c87-b519-d0929f3ec2dc.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "cleanBackdrop": true,
+      "duration": 3,
+      "damage": 91,
+      "panel": {
+        "rightLabel": "OVERFLOW TRANSFER",
+        "rightLabelSize": 67,
+        "rightLines": [
+          "1 METAL ENERGY",
+          "PER TRANSFER"
+        ],
+        "rightValueSize": 88,
+        "targets": "1 TARGET",
+        "action": "CASCADE"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 3,
+        "weaponProfile": {
+          "pattern": "cascade-piercer",
+          "baseDamage": 91,
+          "durationTurns": 3,
+          "energyTransferCost": 1,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Arma Metallo · 91 HP per 3 turni; il danno eccedente passa al prossimo bersaglio spendendo 1 Energia Metallo.",
+      "sha256": "9bd81663d453d115dc4926923931fad1487e29f02298a8b6caf585131ff8b4de",
+      "bytes": 14567806,
+      "frontFileName": "weapon-designed-metallic-perforatore-cascata-rarity-l.png",
+      "library_file_id": "libfile_6941d0c7ffac819186888c0480b76867",
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_6941d0c7ffac819186888c0480b76867&account_id=personal"
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "familyId": "weapon-designed-metallic-artiglieria-schegge",
+      "name": "Artiglieria delle Schegge Erranti",
+      "rarity": "Rara",
+      "raritySlug": "rara",
+      "rarityLabel": "RARE",
+      "titleLines": [
+        "WANDERING SHARD",
+        "ARTILLERY"
+      ],
+      "artPath": "illustrazioni/schegge-rara.png",
+      "sourceImage": "exec-548c3312-d54d-4ddd-b046-1e1c98f58ba8.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "cleanBackdrop": true,
+      "duration": 2,
+      "damage": 20,
+      "panel": {
+        "rightLabel": "RETARGETS",
+        "rightLines": [
+          "NEXT OWN TURN",
+          "WHEN POSSIBLE"
+        ],
+        "rightValueSize": 87,
+        "targets": "1 TARGET",
+        "action": "1 / TURN"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 2,
+        "weaponProfile": {
+          "pattern": "wandering-shrapnel",
+          "baseDamage": 20,
+          "durationTurns": 2,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Un colpo da 20 HP nel turno di posa e uno nel proprio turno successivo, scegliendo un bersaglio differente quando possibile.",
+      "sha256": "1ab704e160a125659c0e812dc3d1844d2cda60f330f3ad2dc645ac8811aa78af",
+      "bytes": 12555331,
+      "frontFileName": "weapon-designed-metallic-artiglieria-schegge.png",
+      "library_file_id": "libfile_777624a601308191a5050c7b95f91077",
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_777624a601308191a5050c7b95f91077&account_id=personal"
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "familyId": "weapon-designed-metallic-artiglieria-schegge",
+      "name": "Artiglieria delle Schegge Erranti",
+      "rarity": "Epica",
+      "raritySlug": "epica",
+      "rarityLabel": "EPIC",
+      "titleLines": [
+        "WANDERING SHARD",
+        "ARTILLERY"
+      ],
+      "artPath": "illustrazioni/schegge-epica.png",
+      "sourceImage": "exec-581914f8-4b6a-47f8-9be7-b1555a1db59b.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "cleanBackdrop": true,
+      "duration": 2,
+      "damage": 48,
+      "panel": {
+        "rightLabel": "RETARGETS",
+        "rightLines": [
+          "NEXT OWN TURN",
+          "WHEN POSSIBLE"
+        ],
+        "rightValueSize": 87,
+        "targets": "1 TARGET",
+        "action": "1 / TURN"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 2,
+        "weaponProfile": {
+          "pattern": "wandering-shrapnel",
+          "baseDamage": 48,
+          "durationTurns": 2,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Arma Metallo · 48 HP per 2 turni propri, cambiando bersaglio quando possibile.",
+      "sha256": "71535f7fc8551ade2d8737e25a6df4a15f6d008e63156b742172b2888c9062d6",
+      "bytes": 13430906,
+      "frontFileName": "weapon-designed-metallic-artiglieria-schegge-rarity-e.png",
+      "library_file_id": "libfile_8283557be2fc81918da72de1c4a7cd3c",
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_8283557be2fc81918da72de1c4a7cd3c&account_id=personal"
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "familyId": "weapon-designed-metallic-artiglieria-schegge",
+      "name": "Artiglieria delle Schegge Erranti",
+      "rarity": "Leggendaria",
+      "raritySlug": "leggendaria",
+      "rarityLabel": "LEGENDARY",
+      "titleLines": [
+        "WANDERING SHARD",
+        "ARTILLERY"
+      ],
+      "artPath": "illustrazioni/schegge-leggendaria.png",
+      "sourceImage": "exec-4321afd3-9f53-4e61-bfba-baa9bbe0b0d6.png",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "cleanBackdrop": true,
+      "duration": 2,
+      "damage": 67,
+      "panel": {
+        "rightLabel": "RETARGETS",
+        "rightLines": [
+          "NEXT OWN TURN",
+          "WHEN POSSIBLE"
+        ],
+        "rightValueSize": 87,
+        "targets": "1 TARGET",
+        "action": "1 / TURN"
+      },
+      "effectSpec": {
+        "type": "deployMachine",
+        "hp": 1,
+        "power": 0,
+        "elementId": "metallic",
+        "damageMode": "designed-shot",
+        "durationTurns": 2,
+        "weaponProfile": {
+          "pattern": "wandering-shrapnel",
+          "baseDamage": 67,
+          "durationTurns": 2,
+          "provisional": true
+        }
+      },
+      "effectItalian": "Arma Metallo · 67 HP per 2 turni propri, cambiando bersaglio quando possibile.",
+      "sha256": "c1c8e10c8b90e5107005ac35f17b79ffab042774c7b810b108c781b9cccfcd7c",
+      "bytes": 14953549,
+      "frontFileName": "weapon-designed-metallic-artiglieria-schegge-rarity-l.png",
+      "library_file_id": "libfile_0aab4ecbd68c819188abeeaac7d1fec4",
+      "previewUrl": "https://chatgpt.com/library?file_id=libfile_0aab4ecbd68c819188abeeaac7d1fec4&account_id=personal"
+    }
+  ],
+  "frameSourceHashes": {
+    "rara": "f1a23a4aac5de496a2f0849ab0030aba6c7824f2b8f4abcaae1f4153858ec341",
+    "epica": "fcb109079c3dd78e845fa9a99f6eb1a9cef6982db7c0412676727c363e6157bc",
+    "leggendaria": "834c1773c093f1f6338d7bca3c3ad71b7d7501d5b83c9d1900c50a3369c84221"
+  },
+  "renderValidation": "Sei PNG RGBA 3072x4608, cornici autentiche byte-identiche come sorgenti, zero pixel aggiunti fuori dal profilo, zero pixel opachi protetti alterati, zero glifi mancanti.",
+  "comparisons": [
+    {
+      "name": "Frantumatore_e_Perforatore_tre_carte.png",
+      "library_file_id": "libfile_dd827249237c81918df90e34607a89a9",
+      "url": "https://chatgpt.com/library?file_id=libfile_dd827249237c81918df90e34607a89a9&account_id=personal"
+    },
+    {
+      "name": "Artiglieria_Schegge_Erranti_tre_rarita.png",
+      "library_file_id": "libfile_dda61d82c5208191a327d53f1981409b",
+      "url": "https://chatgpt.com/library?file_id=libfile_dda61d82c5208191a327d53f1981409b&account_id=personal"
+    }
+  ],
+  "reproduciblePackage": {
+    "name": "Metallo_terzo_gruppo_6_carte_HD.zip",
+    "library_file_id": "libfile_7e230d9bd938819183c4a1d359d42ca9",
+    "url": "https://chatgpt.com/library?file_id=libfile_7e230d9bd938819183c4a1d359d42ca9&account_id=personal",
+    "bytes": 132989649,
+    "sha256": "6b7a29bf7d92fba639d6a42c008c6b31c9035fcb57f597f0cb8453a716a80884",
+    "contains": [
+      "six complete fronts",
+      "six illustrations",
+      "two comparisons",
+      "authentic reference frames and icons",
+      "font",
+      "text layers",
+      "hole masks",
+      "composer",
+      "manifest",
+      "prompts",
+      "mechanical storyboard",
+      "verification"
+    ]
+  },
+  "visualReview": "Sei fronti completi e confronti verificati; testi, simboli, cornice e differenze fisiche delle evoluzioni leggibili. Nessun effetto nuovo dichiarato collaudato in partita."
+}

@@ -1,0 +1,114 @@
+{
+  "status": "pass",
+  "cards": [
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "pixels": [
+        3072,
+        4608
+      ],
+      "format": "PNG RGBA",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "bytes": 14901063,
+      "sha256": "d746bcb683eea3331e94ed9b86bd4773659025d2fbe206755f9e1b7c9f94d09d",
+      "outsideFramePixels": 0,
+      "opaqueProtectedFrameAlteredPixels": 0,
+      "missingGlyphs": []
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "pixels": [
+        3072,
+        4608
+      ],
+      "format": "PNG RGBA",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "bytes": 13181824,
+      "sha256": "0a392f7cb8a2013789839c376ad04b9cbdd9f146496991113e8c1d30cad36eb9",
+      "outsideFramePixels": 0,
+      "opaqueProtectedFrameAlteredPixels": 0,
+      "missingGlyphs": []
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "pixels": [
+        3072,
+        4608
+      ],
+      "format": "PNG RGBA",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "bytes": 14567806,
+      "sha256": "9bd81663d453d115dc4926923931fad1487e29f02298a8b6caf585131ff8b4de",
+      "outsideFramePixels": 0,
+      "opaqueProtectedFrameAlteredPixels": 0,
+      "missingGlyphs": []
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "pixels": [
+        3072,
+        4608
+      ],
+      "format": "PNG RGBA",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "bytes": 12555331,
+      "sha256": "1ab704e160a125659c0e812dc3d1844d2cda60f330f3ad2dc645ac8811aa78af",
+      "outsideFramePixels": 0,
+      "opaqueProtectedFrameAlteredPixels": 0,
+      "missingGlyphs": []
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "pixels": [
+        3072,
+        4608
+      ],
+      "format": "PNG RGBA",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "bytes": 13430906,
+      "sha256": "71535f7fc8551ade2d8737e25a6df4a15f6d008e63156b742172b2888c9062d6",
+      "outsideFramePixels": 0,
+      "opaqueProtectedFrameAlteredPixels": 0,
+      "missingGlyphs": []
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "pixels": [
+        3072,
+        4608
+      ],
+      "format": "PNG RGBA",
+      "illustrationNativePx": [
+        1448,
+        1086
+      ],
+      "bytes": 14953549,
+      "sha256": "c1c8e10c8b90e5107005ac35f17b79ffab042774c7b810b108c781b9cccfcd7c",
+      "outsideFramePixels": 0,
+      "opaqueProtectedFrameAlteredPixels": 0,
+      "missingGlyphs": []
+    }
+  ],
+  "frameSourceHashes": {
+    "rara": "f1a23a4aac5de496a2f0849ab0030aba6c7824f2b8f4abcaae1f4153858ec341",
+    "epica": "fcb109079c3dd78e845fa9a99f6eb1a9cef6982db7c0412676727c363e6157bc",
+    "leggendaria": "834c1773c093f1f6338d7bca3c3ad71b7d7501d5b83c9d1900c50a3369c84221"
+  },
+  "runtimeAssetsModified": false,
+  "nativeIllustrationsGeneratedWith": "built-in image_gen"
+}
