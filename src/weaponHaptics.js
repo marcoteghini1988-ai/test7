@@ -2,6 +2,12 @@
 // accettata, mai prova di una vibrazione fisica. Preferenza separata dai suoni.
 export const HAPTICS_KEY='eclissi_haptics_enabled';
 export function weaponHapticPattern(kind,phase,tier=2){
+ if(kind==='gravity-maul')return phase==='charge'?[8,65,12]:phase==='fire'?[24+tier*3]:
+  phase==='impact'?[[42],[50,28,12],[58,24,18,38,8],[64,25,22,32,12]][tier]||[42]:[];
+ if(kind==='steel-rail')return phase==='charge'?[6,45,8]:phase==='fire'?[12]:
+  phase==='impact'?[[20],[22,18,8],[25,18,9,24,6],[28,17,10,22,7]][tier]||[20]:[];
+ if(kind==='thermal-reclaimer')return phase==='charge'?tier===3?[7,35,9,35,13]:[8,45,10,45,12]:
+  phase==='fire'?[22]:phase==='impact'?tier===3?[38,25,18,35,10]:[34,30,16]:[];
  if(kind==='magnetic-grapple')return phase==='charge'?[10,45,10]:
   phase==='fire'?[14]:phase==='impact'?tier===3?[24,28,16,28,10]:tier===2?[22,30,14]:[22]:[];
  if(kind==='alloy-collision')return phase==='charge'?[12,65,12]:

@@ -4,8 +4,9 @@ import {MaglioSoftwareRenderer} from './maglioSoftwareRenderer.js';
 import {createProjectileCamera,worldPointToBoard,disposeProjectile} from './maglioProjectile3D.js';
 import {createMetalProjectile,metalProjectileFlightFrame,metalTrailPoint} from './metalWeaponProjectile3D.js';
 import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
+import {weaponTravelProgress} from './weaponCinematicStyle.js';
 
-export default function MetalWeaponProjectileScene({paths,startedAt}){
+export default function MetalWeaponProjectileScene({paths,startedAt,cinematic=false}){
  const host=useRef(null);
  useEffect(()=>{
   const element=host.current;if(!element||!paths.length||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -30,8 +31,9 @@ export default function MetalWeaponProjectileScene({paths,startedAt}){
     const {from,to,start,profile,model,shot,charge}=entry;
     const t=(age-start)/profile.flightMs;
     if(t<0){pending=true;continue;}if(t>=1)continue;pending=true;
-    const pose=metalProjectileFlightFrame(from,to,t,camera,model.userData.frontZ);
+    const pose=metalProjectileFlightFrame(from,to,cinematic?weaponTravelProgress(profile.kind,t):t,camera,model.userData.frontZ);
     model.position.copy(pose.center);model.rotation.y=pose.yaw;scene.add(model);
+    if(cinematic)model.rotation.z=profile.kind==='thermal-reclaimer'?Math.sin(age*.009)*.12:profile.tier>=1?age*.004:0;
     element.dataset.visibleEnd=pose.visibleEnd;element.dataset.shooter=shot.who;
     element.dataset.sequence=profile.sequence;element.dataset.progress=t.toFixed(3);
     element.dataset.nose=JSON.stringify(worldPointToBoard(pose.nose,camera));
@@ -40,7 +42,7 @@ export default function MetalWeaponProjectileScene({paths,startedAt}){
     ctx.globalAlpha=Math.min(1,t*22,(1-t)*28);
     // I nastri della Rara, gli anelli dell'Epica e i prismi restano
     // collegati alla stessa munizione reale, con un solo punto d'impatto.
-    const streams=thermal?3:tier===0?1:tier===1?2:3;
+    const streams=cinematic?0:thermal?3:tier===0?1:tier===1?2:3;
     for(let band=0;band<streams;band++){
      const colors=tier===3?[profile.core,profile.secondary,'#e0aaff']:[profile.glow,profile.secondary,profile.core];
      ctx.beginPath();
@@ -57,7 +59,7 @@ export default function MetalWeaponProjectileScene({paths,startedAt}){
     }
     ctx.shadowBlur=0;
     // I collari si chiudono nella profondità della camera del tavolo.
-    if(!thermal&&tier>=2){
+    if(!cinematic&&!thermal&&tier>=2){
      for(let ring=0;ring<tier;ring++){
       const phase=(age/270+ring/tier)%1,distance=.55+phase*1.2,radius=.09+phase*.08;
       ctx.beginPath();
@@ -77,6 +79,6 @@ export default function MetalWeaponProjectileScene({paths,startedAt}){
   };
   raf=requestAnimationFrame(draw);
   return ()=>{cancelAnimationFrame(raf);entries.forEach(e=>disposeProjectile(e.model));renderer.dispose();trail.remove();canvas.remove();};
- },[paths,startedAt]);
+ },[paths,startedAt,cinematic]);
  return <div ref={host} className="maglio-projectiles-3d metal-projectiles-3d" data-camera="table-fixed"/>;
 }

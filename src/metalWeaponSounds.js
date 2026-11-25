@@ -2,10 +2,11 @@
 // I piccoli arpeggi sono risonanze meccaniche, non altri colpi di danno.
 import {chainWeaponSoundPlan} from './chainWeaponSounds.js';
 import {precisionWeaponSoundPlan} from './precisionWeaponSounds.js';
+import {maglioWeaponSoundPlan} from './maglioWeaponSounds.js';
 const rarityNames=['common','rare','epic','legendary'];
-export function metalWeaponSoundPlan(type){
+function baseMetalWeaponSoundPlan(type){
  const match=/^(slitta|reclaimer)_(charge|fire|impact)_(common|rare|epic|legendary)$/.exec(type);
- if(!match)return precisionWeaponSoundPlan(type)||chainWeaponSoundPlan(type);
+ if(!match)return maglioWeaponSoundPlan(type)||precisionWeaponSoundPlan(type)||chainWeaponSoundPlan(type);
  const [,family,phase,rarity]=match,tier=rarityNames.indexOf(rarity),thermal=family==='reclaimer';
  if(thermal&&tier<2)return null;
  const layers=[];
@@ -49,31 +50,68 @@ export function metalWeaponSoundPlan(type){
  }
  return {family,phase,tier,layers};
 }
-export function playMetalWeaponSound(context,bus,type,pitchFactor=1){
+export function metalWeaponSoundPlan(type){
+ const plan=baseMetalWeaponSoundPlan(type);if(!plan)return null;
+ const layers=[...plan.layers],{family,phase,tier}=plan;
+ const add=(wave,from,to,duration,gain,delay=0,extra={})=>layers.push({wave,from,to,duration,gain,delay,...extra});
+ // A quiet moving body gives each flight a material identity. These tails
+ // end before contact; the contact score remains one impact, not a volley.
+ if(phase==='fire'){
+  if(family==='maglio')add('noise',280,95,1.20,.026,.10,{attack:.12,q:2.8});
+  if(family==='slitta')add('noise',7100,1900,.95,.024,.08,{attack:.025,q:1.8});
+  if(family==='reclaimer')add('noise',850,2300,1.32,.038,.12,{attack:.16,q:.55});
+  if(family==='grapple'){
+   add('noise',1100,650,1.20,.026,.10,{attack:.06,q:2.1});
+   for(let i=0;i<3;i++)add('triangle',510+i*83,280+i*31,.045,.017,.70+i*.19);
+  }
+  if(family==='induction'){
+   for(let i=0;i<3;i++)add('triangle',350+i*113,650+i*197,.45,.019,.22+i*.22,{attack:.10});
+  }
+  if(family==='cascade')add('noise',2850,5100,1.10,.025,.12,{q:3.2,attack:.08});
+  if(family==='shard'){
+   add('noise',2100,450,.96,.021,.09,{q:1.4,attack:.06});
+   add('triangle',440,210,.25,.018,.34);add('triangle',340,170,.23,.015,.74);
+  }
+  if(tier===3&&family!=='collision')add('sine',2240,1190,.67,.012,.28,{attack:.04});
+ }
+ // Long resonances sound different from the common attack. They stay inside
+ // the existing visual impact window and never postpone the next turn.
+ if(phase==='impact'&&family==='reclaimer')add('noise',1700,280,.85,.037,.08,{attack:.05,q:.6});
+ if(phase==='impact'&&family==='induction')add('triangle',540,126,.47,.028,.12,{attack:.01});
+ if(phase==='impact'&&family==='shard')for(let i=0;i<tier+2;i++)
+  add('noise',2200+i*510,840,.055,.019,.14+i*.06,{q:2.6});
+ return {...plan,layers};
+}
+export function playMetalWeaponSound(context,bus,type,pitchFactor=1,pan=0){
  const plan=metalWeaponSoundPlan(type);if(!plan)return false;
  const now=context.currentTime;
- for(const layer of plan.layers){
+ let destination=bus,panner;
+ if(context.createStereoPanner){panner=context.createStereoPanner();panner.pan.value=Math.max(-.6,Math.min(.6,pan));panner.connect(bus);destination=panner;}
+ let remaining=plan.layers.length;
+ const ended=()=>{remaining--;if(!remaining)panner?.disconnect();};
+ for(const [index,layer] of plan.layers.entries()){
   const time=now+layer.delay,envelope=context.createGain();
   envelope.gain.setValueAtTime(.0001,time);
-  envelope.gain.linearRampToValueAtTime(layer.gain,time+.009);
+  envelope.gain.linearRampToValueAtTime(layer.gain,time+Math.min(layer.duration*.6,layer.attack||.004));
   envelope.gain.exponentialRampToValueAtTime(.0001,time+layer.duration);
-  envelope.connect(bus);
+  envelope.connect(destination);
   if(layer.wave==='noise'){
    const buffer=context.createBuffer(1,Math.ceil(context.sampleRate*layer.duration),context.sampleRate);
-   const samples=buffer.getChannelData(0);let seed=711+plan.tier*1709;
+   const samples=buffer.getChannelData(0);let seed=711+plan.tier*1709+index*7919;
+   for(const c of plan.family+plan.phase)seed=Math.imul(seed^c.charCodeAt(0),16777619)>>>0;
    for(let i=0;i<samples.length;i++){seed=(Math.imul(seed,1664525)+1013904223)>>>0;samples[i]=seed/2147483648-1;}
    const source=context.createBufferSource(),filter=context.createBiquadFilter();
-   source.buffer=buffer;filter.type='bandpass';filter.Q.value=.6;
+   source.buffer=buffer;filter.type='bandpass';filter.Q.value=layer.q||.6;
    filter.frequency.setValueAtTime(layer.from*pitchFactor,time);
    filter.frequency.exponentialRampToValueAtTime(layer.to*pitchFactor,time+layer.duration);
    source.connect(filter);filter.connect(envelope);source.start(time);source.stop(time+layer.duration);
-   source.onended=()=>{source.disconnect();filter.disconnect();envelope.disconnect();};
+   source.onended=()=>{source.disconnect();filter.disconnect();envelope.disconnect();ended();};
   }else{
    const source=context.createOscillator();source.type=layer.wave;
    source.frequency.setValueAtTime(layer.from*pitchFactor,time);
    source.frequency.exponentialRampToValueAtTime(layer.to*pitchFactor,time+layer.duration);
    source.connect(envelope);source.start(time);source.stop(time+layer.duration);
-   source.onended=()=>{source.disconnect();envelope.disconnect();};
+   source.onended=()=>{source.disconnect();envelope.disconnect();ended();};
   }
  }
  return true;

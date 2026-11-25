@@ -1,0 +1,26 @@
+.weapon-cinema {display:contents}
+.weapon-cinema canvas {position:absolute;inset:0;width:450px;height:800px;pointer-events:none}
+.weapon-cinema-floor {z-index:0}
+.weapon-cinema-air {z-index:3}
+.maglio-battle-stage .maglio-projectiles-3d {z-index:2}
+.maglio-battle-stage .maglio-card-reveal,.maglio-battle-stage .maglio-card-flight {z-index:5}
+.es-math-scope .f3d-approved-layout [data-weapon-light] > .f3d-craft-hover {
+ filter:brightness(calc(1 + var(--weapon-light,0)*.8))
+  drop-shadow(0 0 calc(var(--weapon-light,0)*13px) var(--weapon-color,#ffc17b));
+}
+.es-math-scope .f3d-approved-layout [data-weapon-motion] > .f3d-craft-hover {
+ animation:none;transform-origin:50% 48%;will-change:transform;
+ transform:perspective(500px) translate3d(var(--weapon-x,0px),calc(var(--flight-low,-6px) + var(--weapon-y,0px) + var(--weapon-lift,0px)),0)
+  rotateZ(var(--weapon-roll,0deg)) rotateX(var(--weapon-pitch,0deg));
+}
+.es-math-scope .f3d-approved-layout [data-weapon-motion] .f3d-reactor-plume {
+ scale:calc(1 + var(--weapon-thrust,0)*.12) calc(1 + var(--weapon-thrust,0)*.65);
+ filter:brightness(calc(1 + var(--weapon-thrust,0)*.5)) drop-shadow(0 0 9px var(--reactor-color));
+ animation-duration:.22s;
+}
+@media (prefers-reduced-motion:reduce) {
+ .es-math-scope .f3d-approved-layout [data-weapon-motion] > .f3d-craft-hover {
+  transform:translateY(var(--flight-low,-6px));will-change:auto;
+ }
+ .es-math-scope .f3d-approved-layout [data-weapon-motion] .f3d-reactor-plume {scale:1;animation:none}
+}

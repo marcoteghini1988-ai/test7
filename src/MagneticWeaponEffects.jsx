@@ -8,6 +8,8 @@ import {chainWeaponVariant,chainWeaponEffectProfile,collisionGroups,collisionMot
 import {weaponPortalOrigin,weaponEffectProfile,weaponShotStartMs,weaponVisualCards} from './maglioBattleVisuals.js';
 import {combatTargetElement,boardHullPoint,createEffectCanvas,drawMagneticChain,drawLatch,drawMetalContact} from './chainWeaponCanvas.js';
 import {drawCollisionExplosion} from './collisionExplosion.js';
+import {prepareCinematicEntry,drawCollisionConvergence} from './weaponCinematicRenderer.js';
+import {weaponTravelProgress} from './weaponCinematicStyle.js';
 
 const clamp=n=>Math.max(0,Math.min(1,n));
 const aliveAfter=(sides,shot)=>{
@@ -88,7 +90,7 @@ function drawCollisionField(ctx,group,frame,elapsed,camera,reduced){
  return drawCollisionExplosion(ctx,p,profile,impactAge,camera,{reduced});
 }
 
-export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shotStart,resolvedSides}){
+export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shotStart,resolvedSides,cinematic=false}){
  const host=useRef(null);
  useEffect(()=>{
   const element=host.current,root=element?.closest('.f3d-approved-layout');if(!root)return;
@@ -130,7 +132,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
     const {from,to,start,profile,model,shot}=entry,elapsed=age-start,t=elapsed/profile.flightMs;
     if(t<0){
      pending=true;
-     if(elapsed>=-profile.chargeMs){
+     if(!cinematic&&elapsed>=-profile.chargeMs){
       const p=clamp(1+elapsed/profile.chargeMs),origin={x:225,y:shot.who==='A'?778:22};
       ctx.save();ctx.translate(origin.x,origin.y);ctx.globalAlpha=p*.85;
       if(profile.kind==='induction'){
@@ -152,7 +154,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
      continue;
     }
     if(elapsed>profile.flightMs+profile.impactMs)continue;pending=true;
-    const pose=metalProjectileFlightFrame(from,to,clamp(t),camera,model.userData.frontZ);
+    const pose=metalProjectileFlightFrame(from,to,cinematic?weaponTravelProgress(profile.kind,t):clamp(t),camera,model.userData.frontZ);
     const progress=profile.kind==='magnetic-grapple'?clamp((t-.82)/.18):clamp(t*1.9);
     articulateChainWeapon(model,progress);model.position.copy(pose.center);model.rotation.y=pose.yaw;
     const after=t>=1,alive=aliveAfter(resolvedSides,shot);
@@ -163,14 +165,14 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
      const fade=after&&!alive?clamp(1-(elapsed-profile.flightMs)/450):1;
      drawMagneticChain(ctx,from,worldPointToBoard(pose.center,camera),profile,camera,age,after?.65:0,fade);
      if(!after||alive)scene.add(model);
-     if(after){drawLatch(ctx,to,profile,1,fade);drawMetalContact(ctx,to,profile,elapsed-profile.flightMs,520);}
+     if(after){drawLatch(ctx,to,profile,1,fade);if(!cinematic)drawMetalContact(ctx,to,profile,elapsed-profile.flightMs,520);}
     }else{
      if(!after){
       scene.add(model);
       const tail={x:from.x+(to.x-from.x)*Math.max(0,t-.16),y:from.y+(to.y-from.y)*Math.max(0,t-.16)};
-      drawInductionField(ctx,tail,worldPointToBoard(pose.nose,camera),profile,age,0);
+      if(!cinematic)drawInductionField(ctx,tail,worldPointToBoard(pose.nose,camera),profile,age,0);
      }else{
-      if(!shot.defenseBlocked){
+      if(!shot.defenseBlocked&&!cinematic){
        drawMetalContact(ctx,to,profile,elapsed-profile.flightMs);
        if(profile.tier===3){
         const q=clamp((elapsed-profile.flightMs)/profile.impactMs);
@@ -186,7 +188,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
       if(shot.defenseBlocked){
        ctx.strokeStyle='#9cdbff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(to.x,to.y,24,17,0,0,Math.PI*2);ctx.stroke();
        element.dataset.phase='defense-block';
-      }else drawInductionField(ctx,{x:to.x-5,y:to.y+(shot.who==='A'?30:-30)},to,profile,age,shot.energyCardsSeen||0);
+      }else if(!cinematic||(shot.energyCardsSeen||0)>=1)drawInductionField(ctx,{x:to.x-5,y:to.y+(shot.who==='A'?30:-30)},to,profile,age,shot.energyCardsSeen||0);
       ctx.globalAlpha=1;
      }
     }
@@ -208,6 +210,11 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
      for(const [name,unit]of [['roll','deg'],['pitch','deg'],['lift','px'],['light',''],['thrust','']])
       target.style.setProperty('--collision-'+name,pose[name].toFixed(4)+unit);
     });
+    if(cinematic){
+     group.cinemaEntry??=prepareCinematicEntry({shot:group.shots[0],profile:group.profile,
+      from:weaponPortalOrigin(group.shots[0].who),to:group.plan.contact,start:group.start},camera);
+     if(group.cinemaEntry)drawCollisionConvergence(ctx,ctx,group.cinemaEntry,group.plan.contact,elapsed,reduced);
+    }
     element.dataset.collisionBurst=drawCollisionField(ctx,group,frame,elapsed,camera,reduced)||'none';
     if(frame.phase==='restored')restore(group);
    }
@@ -230,7 +237,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
   raf=requestAnimationFrame(draw);
   return ()=>{cancelAnimationFrame(raf);collisions.forEach(restore);
    entries.forEach(e=>disposeProjectile(e.model));renderer.dispose();canvas.remove();meshCanvas.remove();};
- },[paths,events,startedAt,shotStart,resolvedSides]);
+ },[paths,events,startedAt,shotStart,resolvedSides,cinematic]);
  return <div ref={host} className="maglio-projectiles-3d magnetic-weapon-effects"/>;
 }
 

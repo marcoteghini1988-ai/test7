@@ -9,7 +9,7 @@ import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
 import {playSound} from './audio.js';
 import MagneticWeaponEffects from './MagneticWeaponEffects.jsx';
 import PrecisionWeaponEffects from './PrecisionWeaponEffects.jsx';
-import {precisionWeaponVariant} from './precisionWeaponBattleVisuals.js';
+import CinematicWeaponEffects from './CinematicWeaponEffects.jsx';
 import {collisionGroups,chainWeaponVariant} from './chainWeaponBattleVisuals.js';
 import {combatTargetElement,boardHullPoint} from './chainWeaponCanvas.js';
 import {requestWeaponHaptic,cancelWeaponHaptics} from './weaponHaptics.js';
@@ -83,7 +83,9 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
   const schedule=(delay,callback)=>timers.push(window.setTimeout(callback,
    Math.max(0,delay-(performance.now()-startedAt))));
   const cue=(profile,phase,time,shot)=>schedule(time,()=>{
-   playSound(profile.sound[phase],phase==='charge'?thermalChargeForShot(shot).ratio*3:0);
+   const root=ref.current?.closest('.f3d-approved-layout'),target=root&&combatTargetElement(root,shot);
+   const pan=target&&['impact','block'].includes(phase)?(boardHullPoint(target,root.getBoundingClientRect()).x-225)/225:0;
+   playSound(profile.sound[phase],phase==='charge'?thermalChargeForShot(shot).ratio*3:0,pan);
    const result=requestWeaponHaptic(profile.kind,phase,profile.tier);
    if(result.status==='requested')requested=true;
    if(ref.current){ref.current.dataset.hapticStatus=result.status;
@@ -118,7 +120,8 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    setPlacements(measurePlacements(root,selectedCards,playerSide,ply,board));
    const collisionShots=collisionGroups(shots).flat();
    setPaths(shots.filter(s=>s.fires||s.defenseBlocked||collisionShots.includes(s)).flatMap(shot=>{
-    const special=!!chainWeaponVariant(shot.cardId)||!!precisionWeaponVariant(shot.cardId);
+    const profile=weaponEffectProfile(shot.cardId,shot);
+    const special=!!profile?.approved;
     const target=special?combatTargetElement(root,shot):targetForShot(root,shot);
     if(!target)return [];
     const to=special?boardHullPoint(target,board):point(target.getBoundingClientRect(),board);
@@ -126,10 +129,9 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
      targetKind:shot.sourceTargetKind,targetId:shot.sourceTargetId}):null;
     if(shot.cascadeTransfer&&!source)return [];
     const from=source?{...boardHullPoint(source,board),edge:'previous-hull'}:weaponPortalOrigin(shot.who);
-    const profile=weaponEffectProfile(shot.cardId,shot);
     if(!from||!profile)return [];
     const start=shotStart+(shot.delayMs||0);
-    if(profile.kind!=='alloy-collision'&&!shot.defenseBlocked){
+    if(!profile.approved&&!shot.defenseBlocked){
      target.classList.add('f3d-ship-hit');
      target.style.setProperty('--ship-hit-delay',start+profile.flightMs+'ms');
      hitTargets.add(target);
@@ -162,14 +164,15 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
      '--reveal-x':(destination?.x??225)-225+'px',
      '--reveal-y':(destination?.y??379.5)-379.5+'px'}}/>;
   })}
-  <MaglioProjectileScene paths={projectilePaths} startedAt={startedAt}/>
-  <MetalWeaponProjectileScene paths={metalPaths} startedAt={startedAt}/>
+  <CinematicWeaponEffects paths={paths} startedAt={startedAt}/>
+  <MaglioProjectileScene paths={projectilePaths} startedAt={startedAt} cinematic/>
+  <MetalWeaponProjectileScene paths={metalPaths} startedAt={startedAt} cinematic/>
   <MagneticWeaponEffects paths={paths} events={events} startedAt={startedAt}
-   shotStart={shotStart} resolvedSides={resolvedSides}/>
-  <PrecisionWeaponEffects paths={paths} startedAt={startedAt}/>
+   shotStart={shotStart} resolvedSides={resolvedSides} cinematic/>
+  <PrecisionWeaponEffects paths={paths} startedAt={startedAt} cinematic/>
   <svg className="maglio-battle-effects" viewBox="0 0 450 800" focusable="false">
    {paths.map(({shot,from,to,profile,start},index)=>{
-    if(chainWeaponVariant(shot.cardId)||precisionWeaponVariant(shot.cardId))return <g key={nonce+'-shot-'+index}
+    if(profile.approved)return <g key={nonce+'-shot-'+index}
      className="maglio-shot magnetic-shot" data-shooter={shot.who}
      data-target-kind={shot.targetKind} data-target-id={shot.targetId}
      data-actual-damage={shot.actualDamage} data-projectiles={profile.kind==='alloy-collision'?0:1}

@@ -1,5 +1,21 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Revisione generale degli effetti — 25 novembre 2026
+
+L'utente ha fermato le nuove carte per rivedere tutti i 22 effetti già
+approvati: li considera troppo simili e piatti. Ogni famiglia deve avere
+dinamica, volume, contatto, reazione degli scafi e suono riconoscibili;
+le rarità devono cambiare struttura e sequenza, oltre al colore. Non
+sostituire questa revisione con altri bagliori o una medesima esplosione.
+Vedi `docs/REVISIONE_EFFETTI_22_ARMI_2026-11-25.md`.
+
+La revisione è implementata e verificata nel codice; il nuovo collaudo
+StackBlitz è ancora da eseguire a causa dell'errore di clonazione della
+sessione. Lo studio offline dei renderer NON è una registrazione in
+battaglia. Non riutilizzare i precedenti collaudi per dichiarare verificata
+questa nuova versione. Conservare Maglio 0,48 / 1400 / 950 ms, Collassatore
+450 / 1000 / 1350 ms, prospettiva, eventi, bersagli e danni reali.
+
 ## Regola dei colpi approvata il 24 novembre 2026
 
 ### Regola obbligatoria del 25/11 — meccanica reale, immagini, suoni e vibrazione

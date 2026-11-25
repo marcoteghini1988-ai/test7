@@ -1,10 +1,11 @@
 import React,{useEffect,useRef} from 'react';
 import {Scene,Vector3} from 'three';
 import {MaglioPerspectiveRenderer} from './maglioPerspectiveRenderer.js';
+import {weaponTravelProgress} from './weaponCinematicStyle.js';
 import {createProjectileCamera,createMaglioProjectile,disposeProjectile,
  projectileFlightFrame,worldPointToBoard,MAGLIO_PROJECTILE_SCALE} from './maglioProjectile3D.js';
 
-export default function MaglioProjectileScene({paths,startedAt}){
+export default function MaglioProjectileScene({paths,startedAt,cinematic=false}){
  const host=useRef(null);
  useEffect(()=>{
   const element=host.current;if(!element||!paths.length)return;
@@ -33,7 +34,7 @@ export default function MaglioProjectileScene({paths,startedAt}){
     const progress=(age-start)/profile.flightMs;
     if(progress<0){next=Math.min(next,start);continue;}
     if(progress>=1)continue;
-    const pose=projectileFlightFrame(from,to,progress,camera);
+    const pose=projectileFlightFrame(from,to,cinematic?weaponTravelProgress(profile.kind,progress):progress,camera);
     model.position.copy(pose.center);model.rotation.y=pose.yaw;scene.add(model);active++;
     element.dataset.visibleEnd=pose.visibleEnd;element.dataset.shooter=shot.who;
     element.dataset.progress=progress.toFixed(3);
@@ -47,7 +48,7 @@ export default function MaglioProjectileScene({paths,startedAt}){
     glow.addColorStop(0,profile.glow+'aa');glow.addColorStop(1,profile.glow+'00');
     ctx.fillStyle=glow;ctx.fillRect(head.x-radius,head.y-radius,radius*2,radius*2);
     ctx.globalAlpha=Math.min(1,progress*18,(1-progress)*22);
-    for(let i=0;i<5+profile.tier*2;i++){
+    for(let i=0;i<(cinematic?0:5+profile.tier*2);i++){
      const a=i*2.39996,offset=new Vector3(Math.sin(a)*.12,Math.cos(a)*.12,0).multiplyScalar(MAGLIO_PROJECTILE_SCALE);
      const s=worldPointToBoard(rear.clone().add(offset),camera);
      const e=worldPointToBoard(rear.clone().addScaledVector(pose.direction,-(1+i%4*.24)*MAGLIO_PROJECTILE_SCALE).add(offset.multiplyScalar(.35)),camera);
@@ -66,6 +67,6 @@ export default function MaglioProjectileScene({paths,startedAt}){
    cancelAnimationFrame(raf);entries.forEach(e=>disposeProjectile(e.model));renderer.dispose();
    canvas.remove();trail.remove();
   };
- },[paths,startedAt]);
+ },[paths,startedAt,cinematic]);
  return <div ref={host} className="maglio-projectiles-3d" data-camera="table-fixed"/>;
 }

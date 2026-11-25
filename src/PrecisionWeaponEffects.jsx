@@ -6,6 +6,7 @@ import {metalProjectileFlightFrame,metalTrailPoint} from './metalWeaponProjectil
 import {precisionWeaponVariant} from './precisionWeaponBattleVisuals.js';
 import {createPrecisionProjectile,articulatePrecisionProjectile} from './precisionWeaponProjectile3D.js';
 import {createEffectCanvas,boardHullPoint} from './chainWeaponCanvas.js';
+import {weaponTravelProgress} from './weaponCinematicStyle.js';
 
 const clamp=n=>Math.max(0,Math.min(1,n));
 function worldRing(ctx,pose,camera,z,r,angle,color,width=1){
@@ -134,7 +135,7 @@ function energyTransfer(ctx,entry,elapsed){
  ctx.beginPath();ctx.arc(x,y,2.3,0,Math.PI*2);ctx.fill();ctx.restore();
 }
 
-export default function PrecisionWeaponEffects({paths=[],startedAt}){
+export default function PrecisionWeaponEffects({paths=[],startedAt,cinematic=false}){
  const host=useRef(null);
  useEffect(()=>{
   const element=host.current,root=element?.closest('.f3d-approved-layout');if(!root)return;
@@ -163,16 +164,17 @@ export default function PrecisionWeaponEffects({paths=[],startedAt}){
     element.dataset.phase=t<1?'flight':'impact';element.dataset.progress=clamp(t).toFixed(3);
     energyTransfer(ctx,entry,elapsed);
     if(t<1&&!reduced){
-     const pose=metalProjectileFlightFrame(from,to,t,camera,model.userData.frontZ);
+     const pose=metalProjectileFlightFrame(from,to,cinematic?weaponTravelProgress(profile.kind,t):t,camera,model.userData.frontZ);
      articulatePrecisionProjectile(model,elapsed);model.position.copy(pose.center);model.rotation.y=pose.yaw;scene.add(model);
+     if(cinematic&&profile.kind==='wandering-shrapnel')model.rotation.z=elapsed*.008;
      element.dataset.visibleEnd=pose.visibleEnd;element.dataset.nose=JSON.stringify(worldPointToBoard(pose.nose,camera));
-     trail(ctx,entry,pose,camera,age,t);
-    }else if(t>=1)contact(ctx,entry,elapsed-profile.flightMs,reduced);
+     if(!cinematic)trail(ctx,entry,pose,camera,age,t);
+    }else if(t>=1&&!cinematic)contact(ctx,entry,elapsed-profile.flightMs,reduced);
    }
    renderer.render(scene,camera);if(pending)raf=requestAnimationFrame(draw);
   };
   raf=requestAnimationFrame(draw);
   return ()=>{cancelAnimationFrame(raf);entries.forEach(e=>disposeProjectile(e.model));renderer.dispose();canvas.remove();meshCanvas.remove();};
- },[paths,startedAt]);
+ },[paths,startedAt,cinematic]);
  return <div ref={host} className="maglio-projectiles-3d precision-weapon-effects"/>;
 }

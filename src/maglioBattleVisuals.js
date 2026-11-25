@@ -54,7 +54,9 @@ export function weaponEffectProfile(id,shot){
   trailBands:maglio?1+tier:1,impactRings:maglio?1+tier:1,
   scale:maglio?1+tier*.12:1,impactScale:maglioVariant(id)?.impactScale||1,
   ...finish,
-  ...(maglio?{sound:{fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
+  ...(maglio?{chargeMs:420,sequence:['piston-pressure','orbital-sling','gravity-well','prismatic-implosion'][tier],
+   sound:{charge:'maglio_charge_'+['common','rare','epic','legendary'][tier],
+   fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
   ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id),...precisionWeaponEffectProfile(id,shot)
  });
