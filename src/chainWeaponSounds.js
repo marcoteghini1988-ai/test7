@@ -26,8 +26,14 @@ export function chainWeaponSoundPlan(type){
    for(let i=0;i<(phase==='fire'?8:3);i++)tone('noise',1800,450,.07,.035,i*.18);
    if(tier===3)tone('sine',660,990,phase==='charge'?.6:1.6,.025);
   }else if(phase==='impact'){
-   tone('sine',92,30,.55,.25);tone('noise',2800,200,.7,.14);
-   tone('triangle',470,120,.51,.07);
+   // Attacco secco, corpo del BOOM udibile anche dagli altoparlanti del
+   // telefono, subgrave e coda di detriti; stesso bus/limiter e singolo urto.
+   tone('noise',5900,850,.10,.14);
+   tone('triangle',165,48,.44,.19);
+   tone('sine',128,34,.78,.27);
+   tone('sine',76,29,.95,.12,.035);
+   tone('noise',2500,190,.82,.115,.025);
+   for(let i=0;i<7;i++)tone('noise',2600+i*370,650,.10,.026,.15+i*.055);
    if(tier===3)for(let i=0;i<4;i++)tone('sine',1260+i*250,650+i*160,.7,.034,.07+i*.055);
   }else if(phase==='release'){
    tone('sine',310,85,.8,.07);tone('noise',900,200,.6,.04);

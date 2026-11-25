@@ -7,6 +7,7 @@ import {createChainWeaponModel,articulateChainWeapon} from './chainWeaponProject
 import {chainWeaponVariant,chainWeaponEffectProfile,collisionGroups,collisionMotionPlan,collisionFrame,activeGrappleLinks} from './chainWeaponBattleVisuals.js';
 import {weaponPortalOrigin,weaponEffectProfile,weaponShotStartMs,weaponVisualCards} from './maglioBattleVisuals.js';
 import {combatTargetElement,boardHullPoint,createEffectCanvas,drawMagneticChain,drawLatch,drawMetalContact} from './chainWeaponCanvas.js';
+import {drawCollisionExplosion} from './collisionExplosion.js';
 
 const clamp=n=>Math.max(0,Math.min(1,n));
 const aliveAfter=(sides,shot)=>{
@@ -36,10 +37,11 @@ function drawInductionField(ctx,from,to,profile,age,energy){
  }
  ctx.restore();
 }
-function drawCollisionField(ctx,group,frame,elapsed){
+function drawCollisionField(ctx,group,frame,elapsed,camera,reduced){
  const {profile,plan}=group,p=plan.contact,t=clamp(elapsed/profile.flightMs);
  if(elapsed<0||frame.phase==='restored')return;
- ctx.save();ctx.translate(p.x,p.y);ctx.globalAlpha=frame.phase==='release'?1-frame.pull*.15:.45+t*.5;
+ const impactAge=elapsed-profile.flightMs;
+ ctx.save();ctx.translate(p.x,p.y);ctx.globalAlpha=impactAge>=0?Math.max(0,1-impactAge/180):.45+t*.5;
  // Due poli curvi convergenti, coerenti con il giogo aperto della carta.
  const radius=54-t*23;
  for(const s of [-1,1]){
@@ -58,7 +60,7 @@ function drawCollisionField(ctx,group,frame,elapsed){
   }
  }
  ctx.restore();
- if(elapsed>=profile.flightMs)drawMetalContact(ctx,p,profile,elapsed-profile.flightMs,650);
+ return drawCollisionExplosion(ctx,p,profile,impactAge,camera,{reduced});
 }
 
 export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shotStart,resolvedSides}){
@@ -79,7 +81,9 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
    const board=root.getBoundingClientRect();
    const targets=shots.map(s=>combatTargetElement(root,s));if(targets.some(t=>!t))return [];
    const centers=targets.map(el=>boardHullPoint(el,board));
+   const dx=centers[1].x-centers[0].x,dy=centers[1].y-centers[0].y,length=Math.hypot(dx,dy)||1;
    return [{shots,profile:pairs[0].profile,start:pairs[0].start,targets,
+    axis:{x:dx/length,y:dy/length},
     previous:targets.map(t=>t.style.translate),
     // Porta l'urto davanti alla formazione: due supporti non attraversano
     // la madre ferma che occupa il centro del loro schieramento.
@@ -150,12 +154,16 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
     element.dataset.collisionPhase=frame.phase;element.dataset.shooter=group.shots[0].who;
     element.dataset.sequence=group.profile.sequence;
     element.dataset.collisionTargets=JSON.stringify(group.shots.map(s=>({kind:s.targetKind,id:s.targetId,damage:s.actualDamage})));
+    const impactAge=elapsed-group.profile.flightMs;
+    const recoil=impactAge>=0?(group.profile.tier===3?20:16)*(1-Math.exp(-impactAge/24))*Math.exp(-impactAge/230):0;
     group.targets.forEach((target,i)=>{
-     const offset=group.plan.offsets[i],shake=frame.phase==='contact'?Math.sin(elapsed*.075)*frame.flash*2:0;
-     const x=reduced?0:offset.x*frame.pull+shake,y=reduced?0:offset.y*frame.pull;
+     const offset=group.plan.offsets[i],shake=impactAge>=0&&impactAge<310?Math.sin(impactAge*.095)*4*Math.exp(-impactAge/100):0;
+     const kick=i===0?-recoil:recoil;
+     const x=reduced?0:offset.x*frame.pull+group.axis.x*kick+shake,
+      y=reduced?0:offset.y*frame.pull+group.axis.y*kick-shake*.45;
      target.style.translate=`${x}px ${y}px`;target.dataset.collisionMotion=frame.phase;
     });
-    drawCollisionField(ctx,group,frame,elapsed);
+    element.dataset.collisionBurst=drawCollisionField(ctx,group,frame,elapsed,camera,reduced)||'none';
     if(frame.phase==='restored')restore(group);
    }
    for(const event of breaks){

@@ -30,6 +30,14 @@ StackBlitz per le sei carte del secondo gruppo Metallo approvate il 25/11.
 Vedi `docs/ARMI_METALLO_CATENE_COLLISIONI_INDUZIONE_2026-11-25.md`.
 La vibrazione fisica su telefono rimane da verificare.
 
+**Correzione utente del 25/11 — urto del Collassatore:** quando le navi
+vengono tirate l'una contro l'altra, il contatto deve avere un BOOM deciso:
+lampo breve, esplosione incandescente, onda sul piano, schegge e scintille,
+fumo e contraccolpo degli scafi, con audio profondo sincronizzato. La
+Leggendaria aggiunge frammenti prismatici. Conservare un unico urto visivo
+per la coppia, i bersagli e i danni del motore, la prospettiva, i tempi e
+il rientro nelle posizioni corrette; nessuna esplosione per colpi bloccati.
+
 **Proiettili approvati, revisione del 24/11:** il Maglio usa le quattro
 sagome illustrate in `docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png`.
 Il modello volumetrico è in `src/maglioProjectile3D.js`; l'atlante PNG RGBA

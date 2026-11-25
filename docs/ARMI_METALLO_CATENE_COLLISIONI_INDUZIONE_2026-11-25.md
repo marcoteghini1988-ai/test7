@@ -68,3 +68,33 @@ Sorgenti di presentazione: `chainWeaponBattleVisuals.js`,
 `chainWeaponSounds.js` e `weaponHaptics.js`, integrati nell’unica plancia
 `OfficialFleetBattle3D.jsx`. I precedenti Maglio, Slitta e Recuperatore conservano
 le proprie sequenze e i tempi approvati.
+
+## Revisione richiesta dall'utente: un urto con più BOOM
+
+Il precedente contatto era percepito come troppo morbido. Il Collassatore
+ora genera un lampo breve, un nucleo incandescente multilobo, onde radenti
+proiettate sul piano del tavolo, 46 scintille/schegge nell'Epica e 62 nella
+Leggendaria, fumo in dissolvenza e un contraccolpo più netto dei due scafi.
+La Leggendaria aggiunge frammenti prismatici. L'esplosione dura al massimo
+1250 ms, dentro la finestra di rilascio già prevista, e nasce una sola volta
+nel punto d'urto calcolato. Il nuovo renderer è `src/collisionExplosion.js`.
+
+Il suono combina attacco metallico secco, corpo grave udibile sul telefono,
+subgrave e coda di detriti, sul bus SFX esistente. L'impulso aptico d'urto è
+più marcato, rispetta la preferenza e termina prima del cue di rilascio.
+Il riscontro fisico su telefono resta da verificare. Danni, bersagli, combo,
+numero di impatti, durata delle azioni e timer non sono stati modificati.
+La modalità movimento ridotto conserva gli scafi fermi e attenua il lampo.
+
+Collaudo della revisione sulla plancia reale in StackBlitz: Epica e
+Leggendaria con due supporti, Leggendaria con madre e supporto, attacchi
+A/B. Osservati punto d'urto, onda, traslazioni dei bersagli reali e cleanup;
+nessun errore applicativo nella console. 98/98 test dedicati, build e preflight passati.
+Osservazioni in `riferimenti-carte/metallo-lotto-2-2026-11-25/collaudo-urto-esplosivo.json`.
+
+Nuovo video: `Collassatore_urto_esplosivo_prova_in_battaglia.mp4`, 38,316 s,
+H.264 900×1600 a 30 fps, AAC mono 48 kHz, 7.354.796 byte. Registrazione della
+plancia e dell'audio della scheda; sono tagliate soltanto le attese fra le
+tre prove, senza cambiare velocità, aggiungere VFX o sostituire il suono.
+Audio medio −20,3 dBFS.
+SHA256: `3c9249e91037965d6af35f79169de7d3b5d8af3fedc0e4cf3ed0a59e818cdc5b`.

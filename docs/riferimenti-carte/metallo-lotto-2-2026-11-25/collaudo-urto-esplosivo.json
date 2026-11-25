@@ -1,0 +1,182 @@
+{
+  "date": "2026-11-25",
+  "request": "Urto fra navi più esplosivo, con più BOOM",
+  "environment": "StackBlitz, plancia e motore reali di test7",
+  "source": "https://test7-jjhn--5173--ca94085c.local-credentialless.webcontainer.io/.maglio-review.html",
+  "observations": [
+    {
+      "case": "epic-two-supports-A",
+      "time": 12.484,
+      "dom": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionBurst": "fireball",
+          "collisionPhase": "release",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-0\",\"damage\":31},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-1\",\"damage\":31}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "opposed-pole-convergence",
+          "shooter": "A"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-B-0",
+            "translate": "90.7747px 75.7653px"
+          },
+          {
+            "id": "escort:maglio-review-B-1",
+            "translate": "-90.7747px 75.8726px"
+          }
+        ]
+      }
+    },
+    {
+      "case": "epic-restored",
+      "dom": {
+        "effects": 0,
+        "hp": [
+          {
+            "label": "Tempo rimanente del turno",
+            "value": "0"
+          }
+        ],
+        "motions": []
+      }
+    },
+    {
+      "case": "legendary-two-supports-A",
+      "time": 56.063,
+      "dom": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionBurst": "fireball",
+          "collisionPhase": "contact",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-0\",\"damage\":43},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-1\",\"damage\":43}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-yoke-convergence",
+          "shooter": "A"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-B-0",
+            "translate": "87.2278px 78.2357px"
+          },
+          {
+            "id": "escort:maglio-review-B-1",
+            "translate": "-88.3308px 78.2606px"
+          }
+        ]
+      }
+    },
+    {
+      "case": "legendary-two-supports-B",
+      "time": 61.951,
+      "dom": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionBurst": "fireball",
+          "collisionPhase": "release",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-0\",\"damage\":43},{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-1\",\"damage\":43}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-yoke-convergence",
+          "shooter": "B"
+        },
+        "motions": [
+          {
+            "id": "escort:maglio-review-A-0",
+            "translate": "111.949px -70.3153px"
+          },
+          {
+            "id": "escort:maglio-review-A-1",
+            "translate": "-111.949px -70.8899px"
+          }
+        ]
+      }
+    },
+    {
+      "case": "legendary-mother-support-A",
+      "time": 84.77,
+      "dom": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionBurst": "fireball",
+          "collisionPhase": "release",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-B-0\",\"damage\":43},{\"kind\":\"part\",\"id\":\"weapons\",\"damage\":54}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-yoke-convergence",
+          "shooter": "A"
+        },
+        "motions": [
+          {
+            "translate": "-29.7109px 82.2872px"
+          },
+          {
+            "id": "escort:maglio-review-B-0",
+            "translate": "30.1905px 72.9613px"
+          }
+        ]
+      }
+    },
+    {
+      "case": "legendary-mother-support-B",
+      "time": 90.591,
+      "dom": {
+        "effect": {
+          "camera": "table-fixed",
+          "collisionBurst": "fireball",
+          "collisionPhase": "release",
+          "collisionTargets": "[{\"kind\":\"escort\",\"id\":\"escort:maglio-review-A-0\",\"damage\":43},{\"kind\":\"part\",\"id\":\"weapons\",\"damage\":51}]",
+          "renderer": "volume-depth-buffer",
+          "sequence": "prismatic-yoke-convergence",
+          "shooter": "B"
+        },
+        "motions": [
+          {
+            "translate": "-36.0027px -76.2908px"
+          },
+          {
+            "id": "escort:maglio-review-A-0",
+            "translate": "35.5316px -67.3595px"
+          }
+        ]
+      }
+    },
+    {
+      "case": "legendary-mother-restored",
+      "dom": {
+        "effects": 0,
+        "motions": [],
+        "tethers": 0
+      }
+    }
+  ],
+  "applicationConsoleErrors": [],
+  "verification": {
+    "dedicatedTests": {
+      "passed": 98,
+      "failed": 0
+    },
+    "productionBuild": "passed",
+    "videoVisualReview": "Epica e Leggendaria, A e B; due supporti e madre/supporto",
+    "physicalHaptics": "not verified on phone",
+    "preflight": "passed"
+  },
+  "video": {
+    "filename": "Collassatore_urto_esplosivo_prova_in_battaglia.mp4",
+    "libraryFileId": "libfile_f54fad21017c8191be14a6258dc1c9d0",
+    "durationSeconds": 38.316,
+    "width": 900,
+    "height": 1600,
+    "fps": 30,
+    "audio": "AAC mono 48000 Hz, captured tab audio",
+    "meanVolumeDbfs": -20.3,
+    "bytes": 7354796,
+    "sha256": "3c9249e91037965d6af35f79169de7d3b5d8af3fedc0e4cf3ed0a59e818cdc5b",
+    "editing": "Only gaps between three real battle sequences removed; original speed, VFX and audio retained"
+  },
+  "runtimeGitBlobSha1": {
+    "src/collisionExplosion.js": "126049d284eab00efb55f967c059b8a0f591ab18",
+    "src/MagneticWeaponEffects.jsx": "cb178c29bbfffda9e33a9c515b80650c2ac94469",
+    "src/chainWeaponSounds.js": "e60fb0170c1af2014189611b8129362feb3f179c",
+    "src/weaponHaptics.js": "4a36fdfa4ad93e2b29173b2f9bc435369d525616"
+  }
+}

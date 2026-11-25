@@ -5,7 +5,7 @@ export function weaponHapticPattern(kind,phase,tier=2){
  if(kind==='magnetic-grapple')return phase==='charge'?[10,45,10]:
   phase==='fire'?[14]:phase==='impact'?tier===3?[24,28,16,28,10]:tier===2?[22,30,14]:[22]:[];
  if(kind==='alloy-collision')return phase==='charge'?[12,65,12]:
-  phase==='fire'?[16,70,20,70,24]:phase==='impact'?tier===3?[68,40,20]:[60]:phase==='release'?[12]:[];
+  phase==='fire'?[16,70,20,70,24]:phase==='impact'?tier===3?[120,35,45,40,20]:[95,35,32]:phase==='release'?[12]:[];
  if(kind==='induction')return phase==='charge'?[8,45,8,45,8]:
   phase==='fire'?[18]:phase==='impact'?[32,30,12]:phase==='defense'?[12,25,18]:phase==='block'?[10]:[];
  return [];

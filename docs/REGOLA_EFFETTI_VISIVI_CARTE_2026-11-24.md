@@ -40,10 +40,18 @@ mancato, un bersaglio distrutto o una combo scaduta non producono una
 collisione fittizia. Non aggiungere un blocco delle azioni nemiche: non è
 previsto dalla meccanica. Conservare la prospettiva delle due flotte.
 
-**Stato al 25/11:** la logica dell'aggancio e della collisione è nel motore
-e ha test dedicati. Queste due famiglie usano ancora la visualizzazione
-provvisoria: catene, movimento degli scafi, suoni e vibrazioni specifici
-restano da realizzare insieme ai loro fronti approvati.
+**Stato al 25/11:** fronti approvati, catene persistenti, trazione e movimento
+degli scafi reali, suoni e richieste aptiche specifici sono integrati e
+collaudati su StackBlitz. Il riscontro fisico della vibrazione sul telefono
+resta da verificare. Vedi `ARMI_METALLO_CATENE_COLLISIONI_INDUZIONE_2026-11-25.md`.
+
+**Correzione dell'utente, urto esplosivo:** il contatto fra le due navi deve
+avere un BOOM netto, con lampo breve, nucleo incandescente, onda d'urto sul
+piano, scintille, schegge metalliche, fumo e contraccolpo degli scafi. Audio
+profondo e impulso aptico accompagnano lo stesso unico urto; la Leggendaria
+aggiunge frammenti prismatici. Il contatto resta nel punto calcolato dagli
+scafi e dalla camera reale, senza introdurre danni ad area, bersagli o colpi.
+Non rendere esplosivi anche gli altri attacchi per semplice riuso dell'effetto.
 
 ## Direzione della battaglia
 
