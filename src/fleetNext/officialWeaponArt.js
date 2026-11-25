@@ -8,6 +8,7 @@ const ASSET_ROOT=(import.meta.env?.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,''
 // In StackBlitz è possibile aggiornare i nuovi fronti senza ricaricare tutte
 // le pesanti immagini delle navi. Nel repository entrambi restano /assets.
 const METAL_FRONT_ROOT=(import.meta.env?.VITE_METAL_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
+const CHAIN_FRONT_ROOT=(import.meta.env?.VITE_CHAIN_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
  'weapon-confirmed-metallic-maglio':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio.png`,
  'weapon-confirmed-metallic-maglio-rarity-r':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio-rarity-r.png`,
@@ -20,6 +21,14 @@ export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
   'weapon-confirmed-metallic-slitta-rarity-l',
   'weapon-designed-metallic-recuperatore-termobalistico',
   'weapon-designed-metallic-recuperatore-termobalistico-rarity-l'
- ].map(id=>[id,`${METAL_FRONT_ROOT}/fleet-weapon-fronts/${id}.png`]))
+ ].map(id=>[id,`${METAL_FRONT_ROOT}/fleet-weapon-fronts/${id}.png`])),
+ ...Object.fromEntries([
+  'weapon-designed-metallic-ganasce-magnetiche',
+  'weapon-designed-metallic-ganasce-magnetiche-rarity-e',
+  'weapon-designed-metallic-ganasce-magnetiche-rarity-l',
+  'weapon-designed-metallic-collassatore-lega',
+  'weapon-designed-metallic-collassatore-lega-rarity-l',
+  'weapon-designed-metallic-frantumatore-induzione'
+ ].map(id=>[id,`${CHAIN_FRONT_ROOT}/fleet-weapon-fronts/${id}.png`]))
 });
 export const officialWeaponFacePath=id=>OFFICIAL_WEAPON_FRONT_BY_ID[id]||null;

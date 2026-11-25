@@ -3,6 +3,7 @@
 import {projectMachineBerths} from './fleetNext/battlePresentation.js';
 import {ALL_WEAPON_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {metalWeaponEffectProfile} from './metalWeaponBattleVisuals.js';
+import {chainWeaponEffectProfile} from './chainWeaponBattleVisuals.js';
 
 export const MAGLIO_CARD_ID='weapon-confirmed-metallic-maglio';
 export const MAGLIO_VARIANTS=Object.freeze([
@@ -54,7 +55,7 @@ export function weaponEffectProfile(id){
   ...finish,
   ...(maglio?{sound:{fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
-  ...metalWeaponEffectProfile(id)
+  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id)
  });
 }
 // Centro della porta USB del dispositivo locale, centro del bordo remoto.
@@ -83,16 +84,20 @@ export function maglioShots(events=[]){
 // Ogni bersaglio e ogni danno vengono dagli eventi del motore, mai dal renderer.
 export function fleetWeaponShots(events=[]){
  const shots=[];
- for(const event of events){
+ for(const [eventIndex,event] of events.entries()){
   if(!['A','B'].includes(event?.who))continue;
   if(['weapon-base-shot','weapon-cryo-shot'].includes(event.kind)){
    shots.push({...event,delayMs:shots.length*MAGLIO_SHOT_GAP_MS,
     fires:!event.blocked&&event.actualDamage>0&&!!event.targetKind&&!!event.targetId});
   }else if(['weapon-multi-shot','weapon-designed-shot','weapon-provisional-shot'].includes(event.kind)){
-   for(const hit of event.impacts||[])shots.push({...event,
+   const groupStart=shots.length*MAGLIO_SHOT_GAP_MS;
+   for(const [impactIndex,hit] of (event.impacts||[]).entries())shots.push({...event,
+    visualGroupId:event.who+':'+eventIndex,impactIndex,
+    defenseBlocked:event.pattern==='induction'&&hit.actualDamage===0&&
+     events[eventIndex-1]?.kind==='block'&&events[eventIndex-1]?.who===event.who,
     targetKind:hit.targetKind,targetId:hit.targetId,actualDamage:hit.actualDamage,
     nominalDamage:hit.nominalDamage,
-    delayMs:shots.length*MAGLIO_SHOT_GAP_MS,
+    delayMs:event.pattern==='alloy-collision'?groupStart:shots.length*MAGLIO_SHOT_GAP_MS,
     fires:hit.actualDamage>0&&!!hit.targetKind&&!!hit.targetId});
   }else if(event.kind==='impact'&&event.independentWeaponShot&&event.weaponContributors?.length){
    // Le Armi storiche sommano il danno in un solo impatto: una traiettoria
@@ -121,16 +126,18 @@ export function weaponVisualCards(shots=[],selectedCards=[]){
  return cards;
 }
 export function weaponResolutionMs(events=[],selectedCards=[]){
- const allShots=fleetWeaponShots(events),shots=allShots.filter(shot=>shot.fires);
- if(!shots.length)return 0;
+ const allShots=fleetWeaponShots(events),shots=allShots.filter(shot=>shot.fires||shot.defenseBlocked);
+ const breaks=events.filter(e=>e.kind==='weapon-break-defense'&&chainWeaponEffectProfile(e.cardId));
+ if(!shots.length&&!breaks.length)return 0;
  const start=weaponShotStartMs(weaponVisualCards(allShots,selectedCards).length);
- const end=Math.max(...shots.map(shot=>{
+ const end=Math.max(0,...shots.map(shot=>{
   const profile=weaponEffectProfile(shot.cardId);
   return start+(shot.delayMs||0)+(profile?.flightMs||470)+(profile?.impactMs||700)+150;
  }));
  // Conserva l'attesa precedente degli effetti provvisori delle altre Armi.
  const legacy=shots.some(s=>!weaponEffectProfile(s.cardId)?.approved)?4850+(shots.length-1)*MAGLIO_SHOT_GAP_MS:0;
- return Math.max(legacy,end);
+ // La rimozione di una Difesa è un evento autonomo, anche se lo sparo è bloccato.
+ return Math.max(legacy,end,breaks.length?start+1100:0);
 }
 // Durante gli effetti la plancia conserva gli HP precedenti. Lo snapshot
 // del Maglio risolto mantiene il nome nello slot anche sul lato IA.

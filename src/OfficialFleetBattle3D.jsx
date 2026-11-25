@@ -2,6 +2,7 @@
 // Usa i medesimi pezzi, hardpoint, scudiere SVG, arena e geometria del
 // renderer OfficialLiveBattle3D. NON usa FleetCardBattle.css né cards-site.
 import React,{useEffect,useMemo,useState,useRef} from 'react';
+import {MagneticGrappleTethers} from './MagneticWeaponEffects.jsx';
 import FleetDeckPiles from './FleetDeckPiles.jsx';
 import {ASSET_ROOT,MountedWeapons} from './ShipPresentation.jsx';
 import {newVessel} from './mathDuelEngine.js';
@@ -634,7 +635,7 @@ export default function OfficialFleetBattle3D({
   const selectedCards=battle.turn==='A'?selectedIndexes.slice(0,3).map(index=>({
    index,id:battle.sides.A.hand[index],grade:battle.sides.A.exclusiveUpgrades?.[battle.sides.A.hand[index]]||1
   })).filter(entry=>entry.id):[];
-  setLastFx({nonce:stamp,round:battle.round,events:result.events,
+  setLastFx({nonce:stamp,startedAt:performance.now(),round:battle.round,events:result.events,
    selectedCards,
    weaponShots:fleetWeaponShots(result.events),
    resolvedSides:result.battle.sides});
@@ -1200,9 +1201,11 @@ export default function OfficialFleetBattle3D({
      lastFx?.events?.find(e=>e.kind==='impact'&&e.who==='B')&&
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='B'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
-   {resolving&&(lastFx?.weaponShots?.length>0||lastFx?.selectedCards?.length>0)&&<MaglioBattleEffects
+   <MagneticGrappleTethers battle={battle} resolving={resolving} fx={lastFx}/>
+   {resolving&&(lastFx?.weaponShots?.length>0||lastFx?.selectedCards?.length>0||lastFx?.events?.some(e=>e.kind==='weapon-break-defense'))&&<MaglioBattleEffects
     key={lastFx.nonce} shots={lastFx.weaponShots} selectedCards={lastFx.selectedCards}
-    playerSide={player} ply={battle.ply} nonce={lastFx.nonce}/>}
+    playerSide={player} ply={battle.ply} nonce={lastFx.nonce} events={lastFx.events}
+    resolvedSides={lastFx.resolvedSides} startedAt={lastFx.startedAt}/>}
    <FleetDeckPiles side={player}/>
    <div className="f3d-weapon-card-slots" role="group" aria-label="Due slot Carte Arma">
     {projectMachineBerths(player,chosenTypes,battle.ply).map((machine,slot)=>{

@@ -1,3 +1,9 @@
+> Aggiornamento dopo approvazione: tutti e sei i fronti sono installati negli
+> asset giocabili. Ganasce, catene persistenti, collisione dei veri scafi e
+> Induzione sono implementati con audio e aptica. I 2.095 test, build e preflight
+> sono superati; il collaudo visivo/acustico StackBlitz è in corso.
+> Le sezioni seguenti conservano l’analisi meccanica che precede l’integrazione.
+
 # Metallo — gruppo 2: lettura del codice e progetto degli effetti
 
 Stato: sei fronti da approvare; nessun nuovo effetto installato nel gioco.

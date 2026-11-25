@@ -1,6 +1,6 @@
 {
   "date": "2026-11-25",
-  "status": "anteprime complete in attesa di approvazione grafica",
+  "status": "sei fronti approvati dall’utente; effetti implementati, collaudo StackBlitz in corso",
   "sourceRepository": "marcoteghini1988-ai/test7",
   "sourceCommit": "27033d9a189a1ccb54f8409cd1838c64fcefd211",
   "element": "metallic",
@@ -308,7 +308,7 @@
     }
   ],
   "reviewStatus": "awaiting-user-approval",
-  "playableFrontsInstalled": false,
+  "playableFrontsInstalled": true,
   "effectsImplementationStatus": "storyboard preparato dal codice; implementazione dopo approvazione dei fronti",
   "nextBatchCarryOver": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
   "downloadPackage": {
@@ -332,5 +332,10 @@
   },
   "renderValidation": "Sei PNG RGBA 3072x4608: zero pixel aggiunti fuori dal profilo della cornice originale, zero pixel opachi esterni alterati, nessun glifo mancante.",
   "effectStoryboard": "storyboard.md",
-  "sourcePrompts": "prompts.json"
+  "sourcePrompts": "prompts.json",
+  "approval": {
+    "date": "2026-11-25",
+    "message": "confermate, procedi con gli effetti e mostrameli"
+  },
+  "assetCommit": "3029c4be1a3c2c3bdb6b3d458875e500f6eaf36e"
 }

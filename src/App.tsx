@@ -1,3 +1,4 @@
+import {hapticsEnabled,setHapticsEnabled} from './weaponHaptics.js';
 import React, {
   useState,
   useEffect,
@@ -5396,6 +5397,7 @@ function App() {
   const [pvpMeta, setPvpMeta] = useState(null);
   const [bgmMutedState, setBgmMutedState] = useState(() => localStorage.getItem('eclissi_muted_bgm') === 'true');
   const [sfxMutedState, setSfxMutedState] = useState(() => localStorage.getItem('eclissi_muted_sfx') === 'true');
+  const [hapticsOn, setHapticsOn] = useState(() => hapticsEnabled());
 
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [activeRuleDetail, setActiveRuleDetail] = useState(null);
@@ -8496,6 +8498,13 @@ function App() {
                 <span style={{ fontSize: '0.8rem' }}>{t.sfxToggle}</span>
                 <button className="cyber-btn" onClick={() => setSfxMutedState(toggleMuteSFX())} style={{ padding: '2px 8px', fontSize: '0.7rem' }}>
                   {sfxMutedState ? t.disabledState : t.activeState}
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem', background: 'rgba(15, 23, 42, 0.8)', borderRadius: '6px' }}>
+                <span style={{ fontSize: '0.8rem' }}>Vibrazione</span>
+                <button className="cyber-btn" aria-pressed={hapticsOn} onClick={() => setHapticsOn(setHapticsEnabled(!hapticsOn))} style={{ padding: '2px 8px', fontSize: '0.7rem' }}>
+                  {hapticsOn ? t.activeState : t.disabledState}
                 </button>
               </div>
 

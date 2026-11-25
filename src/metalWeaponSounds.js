@@ -1,9 +1,10 @@
 // Partiture brevi per ID di famiglia e rarità, sul bus SFX del gioco.
 // I piccoli arpeggi sono risonanze meccaniche, non altri colpi di danno.
+import {chainWeaponSoundPlan} from './chainWeaponSounds.js';
 const rarityNames=['common','rare','epic','legendary'];
 export function metalWeaponSoundPlan(type){
  const match=/^(slitta|reclaimer)_(charge|fire|impact)_(common|rare|epic|legendary)$/.exec(type);
- if(!match)return null;
+ if(!match)return chainWeaponSoundPlan(type);
  const [,family,phase,rarity]=match,tier=rarityNames.indexOf(rarity),thermal=family==='reclaimer';
  if(thermal&&tier<2)return null;
  const layers=[];

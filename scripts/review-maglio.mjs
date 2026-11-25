@@ -12,6 +12,8 @@ import OfficialFleetBattle3D from './src/OfficialFleetBattle3D.jsx';
 import {createMaglioReviewBattle} from './scripts/maglioReviewBattle.js';
 import {MAGLIO_CARD_ID,MAGLIO_VARIANTS} from './src/maglioBattleVisuals.js';
 import {METAL_WEAPON_VARIANTS,metalWeaponVariant} from './src/metalWeaponBattleVisuals.js';
+import {CHAIN_WEAPON_VARIANTS,chainWeaponVariant} from './src/chainWeaponBattleVisuals.js';
+import {hapticsEnabled,setHapticsEnabled} from './src/weaponHaptics.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import './src/index.css';
 function Review(){
@@ -24,6 +26,7 @@ function Review(){
  ];
  const capture=useRef(null);
  const [recording,setRecording]=useState(false);
+ const [hapticsOn,setHapticsOn]=useState(()=>hapticsEnabled());
  const [recordStatus,setRecordStatus]=useState('');
  const [recordUrl,setRecordUrl]=useState('');
  const recordBattle=async()=>{
@@ -64,11 +67,11 @@ function Review(){
    display.getVideoTracks()[0].onended=()=>{if(recorder.state==='recording')recorder.stop();};
    draw();recorder.start(250);setRecording(true);
    setRecordStatus(display.getAudioTracks().length?'Registrazione con audio della scheda':'Registrazione senza audio: includilo nella condivisione.');
-   session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},240000);
+   session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},360000);
   }catch(error){setRecordStatus(error.message||'Registrazione non avviata.');}
  };
- const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:MAGLIO_CARD_ID,supports:false,wounded:false,focus:0,fleetPreset:0,secondTurn:false});
- const [initial,setInitial]=useState(()=>createMaglioReviewBattle());
+ const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:CHAIN_WEAPON_VARIANTS[0].id,supports:true,wounded:false,focus:0,fleetPreset:0,secondTurn:false});
+ const [initial,setInitial]=useState(()=>createMaglioReviewBattle({cardId:CHAIN_WEAPON_VARIANTS[0].id,supports:true}));
  const reset=(options={})=>{setSetup(s=>({...s,...options,serial:s.serial+1}));setInitial(createMaglioReviewBattle({...setup,...options}));};
  return <div style={{height:'100dvh',background:'#05090e',display:'flex',flexDirection:'column'}}>
   <div className="maglio-review-controls">
@@ -76,17 +79,29 @@ function Review(){
     onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
-   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false})}>
-    {[...MAGLIO_VARIANTS,...METAL_WEAPON_VARIANTS].map(v=><option key={v.id} value={v.id}>{(WEAPON_NEAR_FINAL_BY_ID[v.id].name||'Maglio')+' · '+v.rarity}</option>)}
+   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value),supportCount:2,energyCards:0,withDefense:false,expiredCombo:false,wounded:false,blocked:false,slot:0})}>
+    {[...MAGLIO_VARIANTS,...METAL_WEAPON_VARIANTS,...CHAIN_WEAPON_VARIANTS].map(v=><option key={v.id} value={v.id}>{(WEAPON_NEAR_FINAL_BY_ID[v.id].name||'Maglio')+' · '+v.rarity}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
    <label><input type="checkbox" aria-label="Supporti in campo" checked={setup.supports} onChange={e=>reset({supports:e.target.checked,wounded:false})}/>Supporti in campo</label>
-   <button onClick={()=>reset({slot:0,blocked:false})}>Riprova slot 1</button>
+   <button onClick={()=>reset({slot:0,blocked:false,expiredCombo:false,wounded:false})}>Riprova slot 1</button>
    <button onClick={()=>reset({slot:1,blocked:false})}>Riprova slot 2</button>
    <button onClick={()=>reset({slot:0,blocked:true})}>Verifica arma bloccata</button>
    <button onClick={()=>reset({supports:true,wounded:true,focus:1,blocked:false})}>Supporto con 1 HP</button>
    <button onClick={()=>reset({supports:true,fused:true,wounded:false,blocked:false})}>Supporto fuso</button>
    {metalWeaponVariant(setup.cardId)?.kind==='thermal-reclaimer'&&<button onClick={()=>reset({secondTurn:true,blocked:false})}>Secondo turno con recupero reale</button>}
+   {chainWeaponVariant(setup.cardId)&&<>
+    <button onClick={()=>reset({supports:true,supportCount:1,wounded:false,blocked:false,expiredCombo:false})}>Un supporto e madre</button>
+    <button onClick={()=>reset({supports:true,supportCount:2,wounded:false,blocked:false,expiredCombo:false})}>Due supporti vivi</button>
+    {chainWeaponVariant(setup.cardId).kind==='alloy-collision'&&<button onClick={()=>reset({expiredCombo:true,blocked:false})}>Combo scaduta</button>}
+    {chainWeaponVariant(setup.cardId).kind==='induction'&&<>
+     <label>Energie Metallo <select aria-label="Energie Metallo" value={setup.energyCards||0} onChange={e=>reset({energyCards:Number(e.target.value),withDefense:true,blocked:false})}>
+      {[0,1,2].map(n=><option key={n} value={n}>{n}</option>)}
+     </select></label>
+     <label><input type="checkbox" aria-label="Difesa pubblica" checked={setup.withDefense||false} onChange={e=>reset({withDefense:e.target.checked})}/>Difesa pubblica</label>
+    </>}
+   </>}
+   <button aria-pressed={hapticsOn} onClick={()=>setHapticsOn(setHapticsEnabled(!hapticsOn))}>Vibrazione {hapticsOn?'attiva':'disattiva'}</button>
    <button onClick={()=>recording?capture.current?.recorder.stop():recordBattle()}>{recording?'Ferma registrazione':'Registra battaglia'}</button>
    <span role="status">{recordStatus}</span>
    {recordUrl&&<a href={recordUrl} download="armi-metallo-effetti-in-battaglia.webm">Scarica video battaglia</a>}
