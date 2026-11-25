@@ -92,7 +92,7 @@ test('Proiettili approvati: quattro ritagli diversi dello stesso PNG RGBA, con v
  assert.deepEqual([...bytes.subarray(0,8)],[137,80,78,71,13,10,26,10]);
  assert.equal(bytes.readUInt32BE(16),1922);assert.equal(bytes.readUInt32BE(20),818);
  assert.equal(bytes[25],6,'Il fondo deve essere trasparente, senza rettangoli sulla plancia');
- assert.equal(weaponEffectProfile('weapon-confirmed-metallic-slitta').flightMs,470);
+ assert.equal(weaponEffectProfile('weapon-confirmed-metallic-slitta').flightMs,1200);
 });
 test('Tre carte e due Armi in campo: il turno non taglia il proiettile o l’ultimo impatto',()=>{
  const events=MAGLIO_VARIANTS.slice(0,2).map(v=>({kind:'weapon-base-shot',who:'A',

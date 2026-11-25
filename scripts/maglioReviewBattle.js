@@ -1,12 +1,13 @@
 // Fixture di collaudo: usa il motore e la plancia ufficiali, senza inventario o ricompense.
-import {createFleetNextBattle} from '../src/fleetNext/combat.js';
+import {createFleetNextBattle,resolvePreparedFleetTurn} from '../src/fleetNext/combat.js';
 import {HP_SYNC_RULESET} from '../src/fleetNext/hpSynchronization.js';
 import {MAGLIO_CARD_ID,maglioVariant} from '../src/maglioBattleVisuals.js';
+import {WEAPON_NEAR_FINAL_BY_ID} from '../src/fleetNext/weaponRarityEvolutions.js';
 
 export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
  cardId=MAGLIO_CARD_ID,supports=false,wounded=false,focus=0,boost=false,
- shipA='N00',shipB='C01',supportModels=['C02','C03'],fused=false}={}){
- const rarity=maglioVariant(cardId)?.rarity||'Comune';
+ shipA='N00',shipB='C01',supportModels=['C02','C03'],fused=false,secondTurn=false}={}){
+ const rarity=maglioVariant(cardId)?.rarity||WEAPON_NEAR_FINAL_BY_ID[cardId]?.rarita||'Comune';
  const roster=who=>supports?supportModels.map((model,index)=>({
   id:'support-model-'+model.toLowerCase(),instanceId:'maglio-review-'+who+'-'+index,
   slot:index,rarita:rarity})):[];
@@ -34,5 +35,17 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
    side.escorts[0].fusionModelIds=[side.escorts[0].shipModelId,'C01'];}
  }
  if(blocked)b.sides.A.fireDisabledUntil=20;
+ // Prova della conversione: due veri turni precedenti, non HP o carica
+ // aggiunti dal pannello. Il terzo turno usa la stessa macchina già posata.
+ if(secondTurn&&cardId.startsWith('weapon-designed-metallic-recuperatore-termobalistico')){
+  let state=b;
+  for(const who of ['A','B']){
+   const result=resolvePreparedFleetTurn(state,who,{cards:[0],
+    targetKind:'part',targetId:'weapons',partId:'weapons'},nowMs);
+   if(!result.ok)throw new Error('Preparazione secondo turno: '+result.reason);
+   state=result.battle;
+  }
+  return state;
+ }
  return b;
 }

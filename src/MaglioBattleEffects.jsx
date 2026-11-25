@@ -3,6 +3,9 @@ import {card,cardFacePath,cardRole} from './fleetNext/rules.js';
 import {projectFleetSlots,projectMachineBerths} from './fleetNext/battlePresentation.js';
 import {weaponEffectProfile,weaponPortalOrigin,weaponVisualCards,weaponShotStartMs} from './maglioBattleVisuals.js';
 import MaglioProjectileScene from './MaglioProjectileScene.jsx';
+import MetalWeaponProjectileScene from './MetalWeaponProjectileScene.jsx';
+import MetalWeaponShotAccents from './MetalWeaponShotAccents.jsx';
+import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
 import {playSound} from './audio.js';
 import './MaglioBattleEffects.css';
 
@@ -63,6 +66,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
  const ref=useRef(null),[paths,setPaths]=useState([]),[placements,setPlacements]=useState([]);
  const startedAt=useRef(performance.now()).current;
  const projectilePaths=useMemo(()=>paths.filter(p=>p.profile.kind==='gravity-maul'),[paths]);
+ const metalPaths=useMemo(()=>paths.filter(p=>['steel-rail','thermal-reclaimer'].includes(p.profile.kind)),[paths]);
  const reveals=visualCards(shots,selectedCards);
  const shotStart=weaponShotStartMs(reveals.length);
  // Il suono segue l'evento reale e gli stessi tempi della traiettoria visiva.
@@ -75,6 +79,8 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
    const profile=weaponEffectProfile(shot.cardId);
    if(!profile?.sound)continue;
    const start=shotStart+(shot.delayMs||0);
+   if(profile.sound.charge)timers.push(window.setTimeout(()=>
+    playSound(profile.sound.charge,thermalChargeForShot(shot).ratio*3),Math.max(0,start-profile.chargeMs)));
    timers.push(window.setTimeout(()=>playSound(profile.sound.fire),start));
    timers.push(window.setTimeout(()=>playSound(profile.sound.impact),start+profile.flightMs));
   }
@@ -128,6 +134,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
      '--reveal-y':(destination?.y??379.5)-379.5+'px'}}/>;
   })}
   <MaglioProjectileScene paths={projectilePaths} startedAt={startedAt}/>
+  <MetalWeaponProjectileScene paths={metalPaths} startedAt={startedAt}/>
   <svg className="maglio-battle-effects" viewBox="0 0 450 800" focusable="false">
    {paths.map(({shot,from,to,profile,start},index)=>{
     const impactDelay=start+profile.flightMs;
@@ -137,6 +144,8 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
     const impactCore=profile.impactCore||profile.core;
     const impactGlow=profile.impactGlow||profile.glow;
     const impactSecondary=profile.impactSecondary||profile.secondary;
+    const metal=['steel-rail','thermal-reclaimer'].includes(profile.kind);
+    const volumetric=metal||profile.kind==='gravity-maul';
     const style={'--shot-core':profile.core,'--shot-glow':profile.glow,
      '--shot-secondary':profile.secondary,'--maglio-flight-ms':profile.flightMs+'ms',
      '--maglio-impact-ms':profile.impactMs+'ms'};
@@ -145,20 +154,20 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
      data-target-id={shot.targetId} data-actual-damage={shot.actualDamage}
      data-projectiles="1" data-origin-edge={from.edge}
      data-flight-ms={profile.flightMs} data-impact-at-ms={impactDelay}
-     data-projection={profile.kind==='gravity-maul'?'perspective-3d':'legacy'}
-     data-visible-end={profile.kind==='gravity-maul'?(shot.who==='A'?'rear':'front'):undefined}
+     data-projection={volumetric?'perspective-3d':'legacy'}
+     data-visible-end={volumetric?(shot.who==='A'?'rear':'front'):undefined}
      data-weapon-kind={profile.kind} data-rarity={profile.rarity} style={style}>
      <defs><radialGradient id={gradientId}>
       <stop offset="0" stopColor={impactCore} stopOpacity=".95"/>
       <stop offset=".42" stopColor={impactGlow} stopOpacity=".55"/>
       <stop offset="1" stopColor={impactGlow} stopOpacity="0"/>
      </radialGradient></defs>
-     <g transform={'translate(225 '+flashY+')'} className="weapon-portal-flash"
+     {!metal&&<g transform={'translate(225 '+flashY+')'} className="weapon-portal-flash"
       style={{'--maglio-flight-delay':start+'ms'}}>
       <ellipse rx="21" ry="9" fill={profile.glow} opacity=".8"/>
       <ellipse rx="9" ry="4" fill={profile.core}/>
-     </g>
-     {profile.kind!=='gravity-maul'&&<g className="maglio-pulse-travel"
+     </g>}
+     {!volumetric&&<g className="maglio-pulse-travel"
       style={{'--maglio-from-x':from.x+'px','--maglio-from-y':from.y+'px',
        '--maglio-to-x':to.x+'px','--maglio-to-y':to.y+'px',
        '--maglio-from-scale':shot.who==='A'?1.18:.68,
@@ -172,6 +181,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
        <WeaponProjectile profile={profile}/>
       </g>
      </g>}
+     {metal?<MetalWeaponShotAccents shot={shot} profile={profile} start={start} to={to} gradientId={gradientId}/>:
      <g transform={'translate('+to.x+' '+to.y+') scale('+profile.impactScale+')'}
       style={{'--maglio-impact-delay':impactDelay+'ms'}}>
       <g className="maglio-gravity-impact">
@@ -188,7 +198,7 @@ export default function MaglioBattleEffects({shots=[],selectedCards=[],playerSid
          stroke={i%2?impactSecondary:impactCore} strokeWidth="1.4" strokeLinecap="round"/>;
        })}
       </g>
-     </g>
+     </g>}
     </g>;
    })}
   </svg>

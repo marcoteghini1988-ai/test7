@@ -25,6 +25,15 @@ Mostrare la **carta completa** per controllo visivo prima dell'inserimento nei f
 
 ## Ordine vincolante: CATALOGO → BASE → SIMBOLI → ANTEPRIMA → APPROVAZIONE
 
+**Varietà richiesta il 25/11/2026, per le prossime Armi:** non rendere tutte
+le macchine cannoni o apparati su basi a quattro piedi. Scegliere sagome e
+montaggi diversi in funzione della meccanica: per esempio anelli, ganasce,
+moduli agganciati lateralmente, bobine o strutture articolate. Restano
+obbligatori volumi e collegamenti modellabili, progressione fisica delle
+rarità e coerenza del colpo; nessuna nuova abilità nasce dall'illustrazione.
+Le sei carte Slitta/Recuperatore già mostrate sono approvate e non vanno
+rifatte per applicare questa regola alle successive.
+
 1. **CATALOGO:** trovare l'ID esatto e il modello tramite `src/fleetNext/rules.js`, `src/fleetNext/weaponRarityEvolutions.js` e la sorgente reale della famiglia; leggere nome, tipo/categoria, elemento, rarità esistenti, durate, condizioni ed effetto. Per le Armi leggere `WEAPON_NEAR_FINAL_BY_ID` e il controllo `docs/VALORI_QUASI_DEFINITIVI_235_ARMI_2026-11-22.md`; mai ricalcolare arbitrariamente il danno dalle statistiche di partenza. Se manca il valore, dirlo e verificare il codice, non inventarlo.
 2. **BASE:** selezionare la cornice PNG della **rarità** in `docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/`; i campioni hanno accenti arancioni dell'esempio Arma. Per le altre categorie cambiare soltanto gli accenti e i contenuti interni necessari, sottoponendo la variante alla verifica visiva; mantenere forma e finitura esterna della rarità. Resta conservata `docs/riferimenti-carte/BASE_UFFICIALE_CARTE_2026-11-21.png` (PNG originale 1024×1536, Git blob SHA `cb142462bbfbe1388e1ad640e1ccc3f0eb815cae`). Non fare "una carta simile".
 3. **SIMBOLI:** APRIRE la tavola sorgente `docs/riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png` (PNG originale 1774×886, Git blob SHA `c7e35d0656a4198a90ba2e7cbf90661c61f0f182`). Usare l'[indice dei 16 adesivi in revisione](SIMBOLI_ADESIVI_2026-11-24.md) per individuare il candidato del tipo esatto: categoria nel foro sinistro ed eventuale elemento nel destro. La mappatura degli elementi usa gli ID reali di `FLEET_ELEMENTS`. I candidati riprendono i soggetti riconoscibili senza il vecchio rombo/esagono. Finché non approvati graficamente, non diventano icone ufficiali delle carte. Non riprodurre i simboli degli ambienti barrati.

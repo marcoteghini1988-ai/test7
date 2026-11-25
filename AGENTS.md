@@ -103,6 +103,26 @@ della sorgente prima di proseguire.
 **Le anteprime di immagini non si inseriscono negli asset giocabili finché
 non sono approvate dall'utente.**
 
+## Varietà delle Armi — decisione del 25 novembre 2026
+
+Per le prossime illustrazioni variare davvero sagoma, struttura e agganci:
+non ripetere per tutte le Armi un cannone o una base a quattro piedi.
+Progettare, quando coerente con l'effetto, apparati ad anello, ganasce,
+moduli laterali, bobine sospese, strutture pieghevoli o altri dispositivi
+offensivi riconoscibili e modellabili. L'inventiva riguarda la macchina,
+non introduce abilità, colpi o danni nuovi. Ogni famiglia conserva una
+propria identità attraverso le rarità. Le sei carte Slitta e Recuperatore
+mostrate il 25/11 sono approvate; questa indicazione vale dalle successive.
+
+**Effetti per rarità, precisazione del 25/11:** leggere tutta la carta e
+personalizzare anche la sequenza: carica, raffiche quando previste, scie,
+componenti mobili, impatto ed effetti condizionali. Non riciclare lo stesso
+colpo con un colore o una grandezza diversi per tutte le rarità. Gli effetti
+seguono le condizioni effettive della carta; il numero dei colpi di danno,
+le durate e i bersagli continuano a provenire dal motore. Per Slitta e
+Recuperatore il catalogo prevede un colpo per turno di attivazione: le
+evoluzioni rendono distinta l'intera sequenza, senza aggiungere danni.
+
 ## Lavoro sul repository
 
 Repository unico: `marcoteghini1988-ai/test7`, ramo `main`.

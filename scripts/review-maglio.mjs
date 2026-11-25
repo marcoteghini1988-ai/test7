@@ -2,7 +2,7 @@
 import {writeFileSync} from 'node:fs';
 writeFileSync('.maglio-review.html',`<!doctype html><html lang="it"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Maglio Ferrogravitazionale — plancia ufficiale</title><style>
+<title>Armi Metallo — plancia ufficiale</title><style>
 .maglio-review-host .es-math-scope.live-viewport{position:absolute;width:100%;height:100%}
 .maglio-review-controls{display:flex;justify-content:center;align-items:center;gap:8px;padding:8px;flex-wrap:wrap;color:#dce7ec;font:12px system-ui}
 </style></head><body style="margin:0"><div id="root"></div><script type="module" src="/.maglio-review.jsx"></script></body></html>`);
@@ -11,6 +11,7 @@ import {createRoot} from 'react-dom/client';
 import OfficialFleetBattle3D from './src/OfficialFleetBattle3D.jsx';
 import {createMaglioReviewBattle} from './scripts/maglioReviewBattle.js';
 import {MAGLIO_CARD_ID,MAGLIO_VARIANTS} from './src/maglioBattleVisuals.js';
+import {METAL_WEAPON_VARIANTS,metalWeaponVariant} from './src/metalWeaponBattleVisuals.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import './src/index.css';
 function Review(){
@@ -63,10 +64,10 @@ function Review(){
    display.getVideoTracks()[0].onended=()=>{if(recorder.state==='recording')recorder.stop();};
    draw();recorder.start(250);setRecording(true);
    setRecordStatus(display.getAudioTracks().length?'Registrazione con audio della scheda':'Registrazione senza audio: includilo nella condivisione.');
-   session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},90000);
+   session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},240000);
   }catch(error){setRecordStatus(error.message||'Registrazione non avviata.');}
  };
- const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:MAGLIO_CARD_ID,supports:false,wounded:false,focus:0,fleetPreset:0});
+ const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:MAGLIO_CARD_ID,supports:false,wounded:false,focus:0,fleetPreset:0,secondTurn:false});
  const [initial,setInitial]=useState(()=>createMaglioReviewBattle());
  const reset=(options={})=>{setSetup(s=>({...s,...options,serial:s.serial+1}));setInitial(createMaglioReviewBattle({...setup,...options}));};
  return <div style={{height:'100dvh',background:'#05090e',display:'flex',flexDirection:'column'}}>
@@ -75,17 +76,20 @@ function Review(){
     onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
-   <label>Rarità Maglio <select aria-label="Rarità Maglio" value={setup.cardId} onChange={e=>reset({cardId:e.target.value})}>{MAGLIO_VARIANTS.map(v=><option key={v.id} value={v.id}>{v.rarity}</option>)}</select></label>
-   <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage} HP nominali</span>
+   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false})}>
+    {[...MAGLIO_VARIANTS,...METAL_WEAPON_VARIANTS].map(v=><option key={v.id} value={v.id}>{(WEAPON_NEAR_FINAL_BY_ID[v.id].name||'Maglio')+' · '+v.rarity}</option>)}
+   </select></label>
+   <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
    <label><input type="checkbox" aria-label="Supporti in campo" checked={setup.supports} onChange={e=>reset({supports:e.target.checked,wounded:false})}/>Supporti in campo</label>
    <button onClick={()=>reset({slot:0,blocked:false})}>Riprova slot 1</button>
    <button onClick={()=>reset({slot:1,blocked:false})}>Riprova slot 2</button>
    <button onClick={()=>reset({slot:0,blocked:true})}>Verifica arma bloccata</button>
    <button onClick={()=>reset({supports:true,wounded:true,focus:1,blocked:false})}>Supporto con 1 HP</button>
    <button onClick={()=>reset({supports:true,fused:true,wounded:false,blocked:false})}>Supporto fuso</button>
+   {metalWeaponVariant(setup.cardId)?.kind==='thermal-reclaimer'&&<button onClick={()=>reset({secondTurn:true,blocked:false})}>Secondo turno con recupero reale</button>}
    <button onClick={()=>recording?capture.current?.recorder.stop():recordBattle()}>{recording?'Ferma registrazione':'Registra battaglia'}</button>
    <span role="status">{recordStatus}</span>
-   {recordUrl&&<a href={recordUrl} download="maglio-quattro-rarita-in-battaglia.webm">Scarica video battaglia</a>}
+   {recordUrl&&<a href={recordUrl} download="armi-metallo-effetti-in-battaglia.webm">Scarica video battaglia</a>}
   </div>
   <div className="maglio-review-host" style={{position:'relative',flex:1,minHeight:0}}>
    <OfficialFleetBattle3D key={setup.serial} initialBattle={initial} nickname="GIOCATORE" opponentNickname="AVVERSARIO" gameMode="pvp" onExit={()=>reset()}/>

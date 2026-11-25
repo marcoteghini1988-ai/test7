@@ -2,6 +2,7 @@
 // mai il numero di danni o di bersagli deciso dalla Carta Arma.
 import {projectMachineBerths} from './fleetNext/battlePresentation.js';
 import {ALL_WEAPON_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
+import {metalWeaponEffectProfile} from './metalWeaponBattleVisuals.js';
 
 export const MAGLIO_CARD_ID='weapon-confirmed-metallic-maglio';
 export const MAGLIO_VARIANTS=Object.freeze([
@@ -52,7 +53,8 @@ export function weaponEffectProfile(id){
   scale:maglio?1+tier*.12:1,impactScale:maglioVariant(id)?.impactScale||1,
   ...finish,
   ...(maglio?{sound:{fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
-   impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null})
+   impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
+  ...metalWeaponEffectProfile(id)
  });
 }
 // Centro della porta USB del dispositivo locale, centro del bordo remoto.
@@ -89,6 +91,7 @@ export function fleetWeaponShots(events=[]){
   }else if(['weapon-multi-shot','weapon-designed-shot','weapon-provisional-shot'].includes(event.kind)){
    for(const hit of event.impacts||[])shots.push({...event,
     targetKind:hit.targetKind,targetId:hit.targetId,actualDamage:hit.actualDamage,
+    nominalDamage:hit.nominalDamage,
     delayMs:shots.length*MAGLIO_SHOT_GAP_MS,
     fires:hit.actualDamage>0&&!!hit.targetKind&&!!hit.targetId});
   }else if(event.kind==='impact'&&event.independentWeaponShot&&event.weaponContributors?.length){
@@ -126,7 +129,7 @@ export function weaponResolutionMs(events=[],selectedCards=[]){
   return start+(shot.delayMs||0)+(profile?.flightMs||470)+(profile?.impactMs||700)+150;
  }));
  // Conserva l'attesa precedente degli effetti provvisori delle altre Armi.
- const legacy=shots.some(s=>!maglioVariant(s.cardId))?4850+(shots.length-1)*MAGLIO_SHOT_GAP_MS:0;
+ const legacy=shots.some(s=>!weaponEffectProfile(s.cardId)?.approved)?4850+(shots.length-1)*MAGLIO_SHOT_GAP_MS:0;
  return Math.max(legacy,end);
 }
 // Durante gli effetti la plancia conserva gli HP precedenti. Lo snapshot
@@ -134,10 +137,10 @@ export function weaponResolutionMs(events=[],selectedCards=[]){
 export function maglioPresentationBerths(unit,chosenCards,ply,shots=[],resolvedUnit){
  const berths=projectMachineBerths(unit,chosenCards,ply);
  for(const shot of shots){
-  if(!maglioVariant(shot.cardId))continue;
+  if(!weaponEffectProfile(shot.cardId)?.approved)continue;
   const machine=resolvedUnit?.machines?.find(m=>m.id===shot.machineId);
   berths[shot.machineSlot]={...(machine||berths[shot.machineSlot]),
-   id:shot.machineId,sourceCardId:shot.cardId,name:'Maglio Ferrogravitazionale',
+   id:shot.machineId,sourceCardId:shot.cardId,name:ALL_WEAPON_BY_ID[shot.cardId].name,
    pending:false,maglioShot:shot};
  }
  return berths;

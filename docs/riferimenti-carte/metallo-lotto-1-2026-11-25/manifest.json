@@ -1,6 +1,6 @@
 {
   "date": "2026-11-25",
-  "status": "anteprime complete in attesa di approvazione grafica",
+  "status": "sei carte approvate dall’utente; fronti e sequenze in collaudo di integrazione",
   "sourceRepository": "marcoteghini1988-ai/test7",
   "sourceCommit": "1dec16daee0d02715c20bf04d117b763ca9c94f9",
   "element": "metallic",
@@ -41,7 +41,14 @@
         1086
       ],
       "libraryFileId": "libfile_60017e099a5081919be19b3d1cbbebb6",
-      "sha256": "10fb252e2fe0b3b5666643ca5a3ecbae2db59202d6b9e8a331db6dc5efe551b6"
+      "sha256": "10fb252e2fe0b3b5666643ca5a3ecbae2db59202d6b9e8a331db6dc5efe551b6",
+      "playableAsset": {
+        "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-slitta.png",
+        "bytes": 11886073,
+        "sha": "a0ecbc593ea55dc26bb4230a3692a2991e2713e9",
+        "decodedPixelsUnchanged": true,
+        "sha256": "edfce0e68fb4d1bbce2fb6dbfe8a9a604acc0e6fe4dec6ab9cb2b1b7bbad8978"
+      }
     },
     {
       "id": "weapon-confirmed-metallic-slitta-rarity-r",
@@ -74,7 +81,14 @@
         1086
       ],
       "libraryFileId": "libfile_48d70c1f83088191a9b63dd7ccee2c52",
-      "sha256": "e204b37fa656b6017dafc72d5214b27d9ff724082a9d90f4ba2881dfa018d533"
+      "sha256": "e204b37fa656b6017dafc72d5214b27d9ff724082a9d90f4ba2881dfa018d533",
+      "playableAsset": {
+        "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-slitta-rarity-r.png",
+        "bytes": 12260733,
+        "sha": "54ed1544c2ba143dfb3215bd9c535a1ecfdf3455",
+        "decodedPixelsUnchanged": true,
+        "sha256": "4c738cb33483b26fd5e88109ea8470dfe6b5ac951ecf48942fedf9164a3561ff"
+      }
     },
     {
       "id": "weapon-confirmed-metallic-slitta-rarity-e",
@@ -107,7 +121,14 @@
         1086
       ],
       "libraryFileId": "libfile_cb69451804b4819183d16465cb186c2b",
-      "sha256": "ab14850905e7a804c8a6b4a8edaf44c348452055a5316c199fc0871b13132f01"
+      "sha256": "ab14850905e7a804c8a6b4a8edaf44c348452055a5316c199fc0871b13132f01",
+      "playableAsset": {
+        "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-slitta-rarity-e.png",
+        "bytes": 12646808,
+        "sha": "d100dd0413c75e1b02cc9b3c9f11546c7b51183c",
+        "decodedPixelsUnchanged": true,
+        "sha256": "3cf6d06a31d8c5402ebf40ed3c95ccc41b62945cf9ae00aacf29dfaf20705987"
+      }
     },
     {
       "id": "weapon-confirmed-metallic-slitta-rarity-l",
@@ -140,7 +161,14 @@
         1086
       ],
       "libraryFileId": "libfile_3dbe44920acc8191896b8b2fedf40534",
-      "sha256": "b06a1f1bccf4ae7ce642c5b5e857b9d5c9c08dbc4996d9bdecf9236144a8ac78"
+      "sha256": "b06a1f1bccf4ae7ce642c5b5e857b9d5c9c08dbc4996d9bdecf9236144a8ac78",
+      "playableAsset": {
+        "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-slitta-rarity-l.png",
+        "bytes": 13473351,
+        "sha": "7b8ef69b0a9be4fb216c577719247472d4edddc1",
+        "decodedPixelsUnchanged": true,
+        "sha256": "324852ac56f5409182e01c298d97c4ed60186913cf7709184fcecfcd9553203e"
+      }
     },
     {
       "id": "weapon-designed-metallic-recuperatore-termobalistico",
@@ -180,7 +208,14 @@
         1086
       ],
       "libraryFileId": "libfile_c6d12524605c8191864a9f21e21eb164",
-      "sha256": "0f58738c4cc6746434c165d2b000df33ca70368ec9f038c44eaa0113cfa20e56"
+      "sha256": "0f58738c4cc6746434c165d2b000df33ca70368ec9f038c44eaa0113cfa20e56",
+      "playableAsset": {
+        "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-recuperatore-termobalistico.png",
+        "bytes": 13010370,
+        "sha": "3b0c2c41b4f2ee9f865d7368311d435af2d9d20a",
+        "decodedPixelsUnchanged": true,
+        "sha256": "1a47fd40de1287ce3bf99946e55d2be4b21f68cba5047fea497429386653fd60"
+      }
     },
     {
       "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
@@ -220,11 +255,18 @@
         1086
       ],
       "libraryFileId": "libfile_82921680cd3481919ec84fa4a2b6c04f",
-      "sha256": "d87b3a6b293ced01bdec90801b713f9530cf3f8366c032addfb30a5cc85663a4"
+      "sha256": "d87b3a6b293ced01bdec90801b713f9530cf3f8366c032addfb30a5cc85663a4",
+      "playableAsset": {
+        "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-recuperatore-termobalistico-rarity-l.png",
+        "bytes": 13970864,
+        "sha": "c913c9ebf9fdcc9b0b5436d2bfe00ea5769c019a",
+        "decodedPixelsUnchanged": true,
+        "sha256": "b22fd91c0bc2c892aa343a2956e91f2ac1368a438e8adfa327290e8d7ce67f5f"
+      }
     }
   ],
   "reviewStatus": "awaiting-user-approval",
-  "playableFrontsInstalled": false,
+  "playableFrontsInstalled": true,
   "effectsImplementationStatus": "after visual approval",
   "compositionScript": "scripts/compose-weapon-fronts.cjs",
   "frameSourceHashes": {
@@ -247,5 +289,14 @@
       "file_name": "Metallo_Recuperatore_due_rarita.png",
       "library_file_id": "libfile_82d0847f17c881918953e271fca43893"
     }
-  ]
+  ],
+  "approvalDate": "2026-11-25",
+  "losslessOptimization": "PNG ricodificati con filtraggio adattivo; tutti i pixel RGBA confrontati con le sei immagini approvate e identici",
+  "effects": {
+    "status": "implementati, collaudo StackBlitz da completare",
+    "profiles": "src/metalWeaponBattleVisuals.js",
+    "geometry": "src/metalWeaponProjectile3D.js",
+    "sound": "src/metalWeaponSounds.js",
+    "damageRulesChanged": false
+  }
 }

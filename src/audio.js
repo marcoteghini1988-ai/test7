@@ -1,3 +1,4 @@
+import {playMetalWeaponSound} from './metalWeaponSounds.js';
 // 2.0 MOTORE AUDIO SINTETICO PROCEDURALE AVANZATO (WEB AUDIO API & SYNTHWAVE)
 let audioCtx = null;
 let masterLimiterNode = null;
@@ -439,6 +440,8 @@ const playSound = (type, pitchSemitones = 0) => {
     const now = audioCtx.currentTime;
     const pitchFactor = Math.pow(2, (Number(pitchSemitones) || 0) / 12);
     const applyPitch = (freq) => freq * pitchFactor;
+
+    if(playMetalWeaponSound(audioCtx,sfxGainNode||audioCtx.destination,type,pitchFactor))return;
 
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();

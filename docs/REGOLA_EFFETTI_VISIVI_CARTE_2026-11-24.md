@@ -53,6 +53,26 @@ effetti definitivi delle singole Armi e sono state ritirate.
 
 ## Ogni nuova carta approvata
 
+### Precisazione dell'utente, 25 novembre: inventiva e rarità
+
+Leggere ogni carta per intero prima di disegnare l'effetto. Ogni rarità deve
+avere una sequenza riconoscibile, non lo stesso sparo ricolorato: carica,
+eventuali raffiche, scie, parti mobili, risonanze e impatto possono evolvere.
+Gli effetti particolari reagiscono alle condizioni effettive della carta.
+Una raffica mostra i colpi realmente autorizzati dal motore; i moduli
+estetici non aggiungono impatti HP o bersagli. Le prossime macchine devono
+variare anche forma e sistemi di aggancio, evitando una serie di cannoni o
+basi a quattro piedi.
+
+Le sei Slitta/Recuperatore mostrate il 25/11 sono approvate. La Slitta ha un
+unico colpo per risoluzione: Comune con dardo/tracciante, Rara con doppia
+elica, Epica con collari di compressione e Leggendaria con coste e scia
+prismatiche. Il Recuperatore ha un colpo per ciascuno dei due turni propri:
+tre flussi di conversione nell'Epica, condensatore prismatico e rifrazioni
+nella Leggendaria. La carica segue il bonus nominale dello specifico evento,
+nello stesso spazio RAW del motore prima dei modificatori della partita.
+Suoni di carica, lancio e impatto sono distinti per tutte e sei le varianti.
+
 Insieme al fronte completo, definire per ciascuna rarità esistente l'aspetto
 dello sparo, la scia, l'impatto e il suono coerenti con il dispositivo della
 carta. Collegare i profili agli ID esatti, agli eventi reali del motore e alle

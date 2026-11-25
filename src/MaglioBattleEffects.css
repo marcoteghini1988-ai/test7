@@ -78,9 +78,39 @@
   55% {translate:-3px 1px;filter:brightness(1.3)}
   100% {translate:0 0;filter:brightness(1)}
 }
+.metal-weapon-charge {
+ opacity:0;animation:metal-charge var(--metal-charge-ms) var(--metal-charge-delay) ease-in both;
+ filter:drop-shadow(0 0 4px var(--shot-glow));
+}
+.metal-collector-flow {
+ stroke-dasharray:7 5;animation:metal-collector-flow 240ms linear infinite;
+ animation-delay:var(--collector-phase);
+}
+.metal-muzzle {
+ opacity:0;animation:weapon-port-fire 290ms var(--maglio-flight-delay) ease-out both;
+ filter:drop-shadow(0 0 8px var(--shot-glow));
+}
+.metal-muzzle--thermal {animation-duration:480ms}
+.metal-weapon-impact {
+ opacity:0;animation:metal-impact var(--maglio-impact-ms) var(--maglio-impact-delay) ease-out both;
+ filter:drop-shadow(0 0 5px var(--shot-glow));
+ transform-box:fill-box;transform-origin:center;
+}
+.metal-impact-petal {
+ opacity:0;animation:metal-petal 650ms var(--petal-delay) ease-out both;
+ transform-origin:0 0;
+}
+.metal-heat-lens {animation:metal-heat-lens 500ms ease-in-out infinite alternate;transform-origin:0 0}
+.metal-prism-fracture {stroke-dasharray:5 2}
+@keyframes metal-charge {0% {opacity:0;scale:.6}50% {opacity:.75}100% {opacity:1;scale:1}}
+@keyframes metal-collector-flow {to {stroke-dashoffset:-24}}
+@keyframes metal-impact {0% {opacity:0;scale:.4}10% {opacity:1;scale:1}65% {opacity:.72}100% {opacity:0;scale:1.35}}
+@keyframes metal-petal {0% {opacity:0;scale:.3}16% {opacity:1}100% {opacity:0;scale:1.4}}
+@keyframes metal-heat-lens {from {scale:.75 1.1}to {scale:1.2 .75}}
 @media (prefers-reduced-motion:reduce) {
  .es-math-scope .f3d-approved-layout .maglio-card-flight,
- .maglio-pulse-travel,.maglio-projectiles-3d,.weapon-portal-flash {display:none}
+ .maglio-pulse-travel,.maglio-projectiles-3d,.weapon-portal-flash,.metal-weapon-charge,.metal-muzzle {display:none}
+ .metal-collector-flow,.metal-heat-lens {animation:none}
  .es-math-scope .f3d-approved-layout .maglio-card-reveal {
   animation-name:maglio-card-reduced;
  }
