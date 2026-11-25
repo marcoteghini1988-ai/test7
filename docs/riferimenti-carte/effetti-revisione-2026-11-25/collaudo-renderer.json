@@ -1,0 +1,300 @@
+{
+  "date": "2026-11-25",
+  "status": "implemented-offline-verified-live-qa-pending",
+  "baseCommit": "127876c67fdd760e5743cb5c830822df83ff2a57",
+  "scope": {
+    "variants": 22,
+    "families": 8,
+    "newCards": 0,
+    "gameplayChanged": false,
+    "engineBlobSha": {
+      "src/fleetNext/combat.js": "3d47397766ca2ed53b722b330925d9d36daa2d5b",
+      "src/fleetNext/provisionalWeaponEngine.js": "37b1731624f2886e9f2c3519585bac73deb96776",
+      "src/fleetNext/weaponRarityEvolutions.js": "d53caaf13d1d3712d3c950d2bb6dc854a925e412"
+    }
+  },
+  "checks": {
+    "targetedTests": 234,
+    "failures": 0,
+    "build": "passed",
+    "preflight": "passed",
+    "projectionDirections": [
+      "A",
+      "B"
+    ],
+    "checksInclude": [
+      "actual targets and HP",
+      "conditional energy and defense",
+      "paid cascade transfers",
+      "one collision per pair",
+      "nose projection",
+      "monotonic material-specific speed",
+      "reduced motion",
+      "neutral hull pose",
+      "independent defense dismantling",
+      "audio and haptic profiles"
+    ]
+  },
+  "preview": {
+    "filename": "Studio_22_effetti_armi_Eclissi_Stellare.mp4",
+    "kind": "offline renderer study",
+    "isStackBlitzRecording": false,
+    "isBrowserAudio": false,
+    "durationSeconds": 71.60000000000001,
+    "fps": 30,
+    "frames": 2148,
+    "width": 900,
+    "height": 1600,
+    "videoCodec": "H264",
+    "audioCodec": "AAC",
+    "audioSampleRate": 48000,
+    "bytes": 4841405,
+    "sha256": "b74092739cf9599a48a77a55c071ff22632660f4c88d72462b7b9cf456239c74",
+    "audioPeakDbBeforeAac": -7.5034883979102185,
+    "audioRmsDbBeforeAac": -36.151647861294556,
+    "timeScaling": 1,
+    "notes": [
+      "Views alternate between A and B",
+      "Study shows individual projectiles and contacts, not a complete battle",
+      "Maglio uses its CPU mesh fallback in this study; the game retains the 24 Cycles views",
+      "Physical haptics and phone frame rate are not verified"
+    ]
+  },
+  "liveReview": {
+    "site": "StackBlitz",
+    "status": "not completed",
+    "classification": "site_error",
+    "messages": [
+      "Could not clone repository",
+      "Workspace does not exist"
+    ],
+    "recovery": "one reload did not resolve",
+    "newPermissionsGranted": false
+  },
+  "haptics": {
+    "softwareProfiles": "all approved variants",
+    "physicalVerified": false
+  },
+  "chapters": [
+    {
+      "id": "weapon-confirmed-metallic-maglio",
+      "kind": "gravity-maul",
+      "tier": 0,
+      "who": "A",
+      "frames": 97,
+      "durationMs": 3220,
+      "motif": "piston-pressure",
+      "start": 0
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-r",
+      "kind": "gravity-maul",
+      "tier": 1,
+      "who": "B",
+      "frames": 97,
+      "durationMs": 3220,
+      "motif": "orbital-sling",
+      "start": 3.2333333333333334
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-e",
+      "kind": "gravity-maul",
+      "tier": 2,
+      "who": "A",
+      "frames": 97,
+      "durationMs": 3220,
+      "motif": "gravity-well",
+      "start": 6.466666666666667
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-l",
+      "kind": "gravity-maul",
+      "tier": 3,
+      "who": "B",
+      "frames": 97,
+      "durationMs": 3220,
+      "motif": "prismatic-implosion",
+      "start": 9.7
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta",
+      "kind": "steel-rail",
+      "tier": 0,
+      "who": "A",
+      "frames": 88,
+      "durationMs": 2920,
+      "motif": "mach-cut",
+      "start": 12.933333333333334
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-r",
+      "kind": "steel-rail",
+      "tier": 1,
+      "who": "B",
+      "frames": 90,
+      "durationMs": 2990,
+      "motif": "braided-rail",
+      "start": 15.866666666666667
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-e",
+      "kind": "steel-rail",
+      "tier": 2,
+      "who": "A",
+      "frames": 92,
+      "durationMs": 3060,
+      "motif": "compression-tunnel",
+      "start": 18.866666666666667
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-l",
+      "kind": "steel-rail",
+      "tier": 3,
+      "who": "B",
+      "frames": 94,
+      "durationMs": 3130,
+      "motif": "refracted-lance",
+      "start": 21.933333333333334
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico",
+      "kind": "thermal-reclaimer",
+      "tier": 2,
+      "who": "A",
+      "frames": 106,
+      "durationMs": 3520,
+      "motif": "three-flow-furnace",
+      "start": 25.066666666666666
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
+      "kind": "thermal-reclaimer",
+      "tier": 3,
+      "who": "B",
+      "frames": 106,
+      "durationMs": 3520,
+      "motif": "crystal-converter",
+      "start": 28.6
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche",
+      "kind": "magnetic-grapple",
+      "tier": 1,
+      "who": "A",
+      "frames": 104,
+      "durationMs": 3460,
+      "motif": "winch-snap",
+      "start": 32.13333333333333
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
+      "kind": "magnetic-grapple",
+      "tier": 2,
+      "who": "B",
+      "frames": 107,
+      "durationMs": 3550,
+      "motif": "magnetic-arch",
+      "start": 35.6
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+      "kind": "magnetic-grapple",
+      "tier": 3,
+      "who": "A",
+      "frames": 110,
+      "durationMs": 3640,
+      "motif": "crystal-cage",
+      "start": 39.16666666666667
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega",
+      "kind": "alloy-collision",
+      "tier": 2,
+      "who": "B",
+      "frames": 97,
+      "durationMs": 3220,
+      "motif": "pole-collapse",
+      "start": 42.833333333333336
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+      "kind": "alloy-collision",
+      "tier": 3,
+      "who": "A",
+      "frames": 97,
+      "durationMs": 3220,
+      "motif": "prismatic-crush",
+      "start": 46.06666666666667
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione",
+      "kind": "induction",
+      "tier": 2,
+      "who": "B",
+      "frames": 99,
+      "durationMs": 3270,
+      "motif": "three-plane-shear",
+      "start": 49.300000000000004
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "kind": "induction",
+      "tier": 3,
+      "who": "A",
+      "frames": 99,
+      "durationMs": 3270,
+      "motif": "crystal-interference",
+      "start": 52.6
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "kind": "cascade-piercer",
+      "tier": 2,
+      "who": "B",
+      "frames": 94,
+      "durationMs": 3120,
+      "motif": "residual-drill",
+      "start": 55.9
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "kind": "cascade-piercer",
+      "tier": 3,
+      "who": "A",
+      "frames": 94,
+      "durationMs": 3120,
+      "motif": "prismatic-relay",
+      "start": 59.03333333333333
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "kind": "wandering-shrapnel",
+      "tier": 1,
+      "who": "B",
+      "frames": 92,
+      "durationMs": 3050,
+      "motif": "indexed-fragment",
+      "start": 62.166666666666664
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "kind": "wandering-shrapnel",
+      "tier": 2,
+      "who": "A",
+      "frames": 94,
+      "durationMs": 3130,
+      "motif": "recoil-splinter",
+      "start": 65.23333333333333
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "kind": "wandering-shrapnel",
+      "tier": 3,
+      "who": "B",
+      "frames": 97,
+      "durationMs": 3210,
+      "motif": "prismatic-fracture",
+      "start": 68.36666666666667
+    }
+  ]
+}

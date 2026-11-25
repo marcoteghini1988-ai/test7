@@ -10,7 +10,7 @@ import {playSound} from './audio.js';
 import MagneticWeaponEffects from './MagneticWeaponEffects.jsx';
 import PrecisionWeaponEffects from './PrecisionWeaponEffects.jsx';
 import CinematicWeaponEffects from './CinematicWeaponEffects.jsx';
-import {collisionGroups,chainWeaponVariant} from './chainWeaponBattleVisuals.js';
+import {collisionGroups,chainWeaponVariant,COLLISION_RELEASE_AFTER_MS} from './chainWeaponBattleVisuals.js';
 import {combatTargetElement,boardHullPoint} from './chainWeaponCanvas.js';
 import {requestWeaponHaptic,cancelWeaponHaptics} from './weaponHaptics.js';
 import './MaglioBattleEffects.css';
@@ -103,7 +103,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    if(profile.sound.charge)cue(profile,'charge',Math.max(0,start-profile.chargeMs),shot);
    cue(profile,shot.cascadeTransfer?'transfer':'fire',start,shot);
    cue(profile,shot.defenseBlocked?'block':'impact',start+profile.flightMs,shot);
-   if(profile.kind==='alloy-collision')cue(profile,'release',start+profile.flightMs+400,shot);
+   if(profile.kind==='alloy-collision')cue(profile,'release',start+profile.flightMs+COLLISION_RELEASE_AFTER_MS,shot);
   }
   for(const event of events.filter(e=>e.kind==='weapon-break-defense'&&chainWeaponVariant(e.cardId))){
    cue(weaponEffectProfile(event.cardId),'defense',shotStart-180,event);

@@ -37,8 +37,13 @@ const floor=floorCanvas.getContext('2d'),air=airCanvas.getContext('2d');floor.sc
 const meshCanvas=createCanvas(1,1),renderer=new MaglioSoftwareRenderer(meshCanvas,{contactShadow:false});
 renderer.setPixelRatio(2);renderer.setSize(450,800);
 // The approved hull asset is a scale reference, not a reconstructed game UI.
-const smallHull=await loadImage(resolve('public/assets/mathfleet/views/player_to_enemy/C02_complete.png')).catch(()=>null);
+const hulls={
+ A:await loadImage(resolve('public/assets/mathfleet/views/enemy_to_player/C02_complete.png')).catch(()=>null),
+ B:await loadImage(resolve('public/assets/mathfleet/views/player_to_enemy/C02_complete.png')).catch(()=>null)
+};
 const frames=process.argv.includes('--frames');
+const onlyArgument=process.argv.find(a=>a.startsWith('--only='));
+const only=onlyArgument?new Set(onlyArgument.slice(7).split(',').map(Number)):null;
 const stats=[];
 function background(profile,who){
  const g=ctx.createLinearGradient(0,0,450,800);g.addColorStop(0,'#0b1320');g.addColorStop(.45,'#192734');g.addColorStop(1,'#090e19');
@@ -54,9 +59,11 @@ function background(profile,who){
  ctx.fillStyle='#bbcbd4';ctx.font='10px sans-serif';ctx.fillText('STUDIO DEL RENDERER · VELOCITÀ NATIVA',225,755);
  ctx.fillStyle='#7b929f';ctx.font='9px sans-serif';ctx.fillText('Anteprima tecnica · non è una registrazione StackBlitz',225,778);
 }
-function target(p,profile,elapsed,who,size=47){
- const pose=weaponHullFrame(profile.kind,elapsed-profile.flightMs,profile.impactMs,{tier:profile.tier,direction:who==='A'?-1:1});
+function target(p,profile,elapsed,who,size=47,override=null){
+ const smallHull=hulls[who];
+ const pose=override||weaponHullFrame(profile.kind,elapsed-profile.flightMs,profile.impactMs,{tier:profile.tier,direction:who==='A'?-1:1});
  ctx.save();ctx.translate(p.x+pose.x,p.y+pose.y+pose.lift);ctx.rotate(pose.roll*Math.PI/180);
+ ctx.scale(1,Math.cos(pose.pitch*Math.PI/180));
  ctx.fillStyle='#0008';ctx.beginPath();ctx.ellipse(0,9,size*.53,size*.18,0,0,Math.PI*2);ctx.fill();
  if(smallHull){ctx.save();ctx.globalAlpha=1;ctx.filter=`brightness(${1+pose.light*.8})`;ctx.drawImage(smallHull,-size*.75,-size*.75,size*1.5,size*1.5);ctx.restore();}
  else{ctx.fillStyle='#718999';ctx.beginPath();ctx.moveTo(0,-size*.7);ctx.lineTo(size*.48,size*.42);ctx.lineTo(0,size*.25);ctx.lineTo(-size*.48,size*.42);ctx.closePath();ctx.fill();
@@ -75,12 +82,15 @@ for(const [variantIndex,v] of variants.entries()){
  const nframes=frames?Math.ceil((650+p.flightMs+p.impactMs+220)/1000*30):2;
  const dir=resolve(output,'frames-'+String(variantIndex).padStart(2,'0'));if(frames)mkdirSync(dir,{recursive:true});
  for(let frame=0;frame<nframes;frame++){
+  if(only&&!only.has(variantIndex))break;
   const age=frames?frame/30*1000:frame===0?650+p.flightMs*.66:650+p.flightMs+130,elapsed=age-entry.start;
   const t=elapsed/p.flightMs;
   background(p,who);floor.clearRect(0,0,450,800);air.clearRect(0,0,450,800);scene.clear();
   if(collision){
-   const motion=collisionFrame(elapsed,p),a={x:135+55*motion.pull,y:400},b={x:315-55*motion.pull,y:400};
-   target(a,p,elapsed,who);target(b,p,elapsed,who);
+   const motion=collisionFrame(elapsed,p),poses=[1,-1].map(direction=>collisionHullFrame(elapsed,p,{direction}));
+   const a={x:135+70*motion.pull-poses[0].recoil+poses[0].shake,y:400},
+    b={x:315-70*motion.pull+poses[1].recoil+poses[1].shake,y:400};
+   target(a,p,elapsed,who,47,{...poses[0],x:0,y:0});target(b,p,elapsed,who,47,{...poses[1],x:0,y:0});
    drawCollisionConvergence(floor,air,entry,{x:225,y:400},elapsed,false);
    drawCollisionExplosion(air,{x:225,y:400},p,elapsed-p.flightMs,camera,{});
   }else{

@@ -26,10 +26,12 @@ export default function CinematicWeaponEffects({paths,startedAt}){
    motion:target.getAttribute('data-weapon-motion'),light:target.getAttribute('data-weapon-light')}));
   for(const entry of entries)entry.target=combatTargetElement(root,entry.shot);
   const restore=ship=>{
+   if(!ship.active)return;
    for(const [key,value]of ship.previous)value?ship.target.style.setProperty('--weapon-'+key,value):
     ship.target.style.removeProperty('--weapon-'+key);
    for(const name of ['motion','light'])ship[name]===null?ship.target.removeAttribute('data-weapon-'+name):
     ship.target.setAttribute('data-weapon-'+name,ship[name]);
+   ship.active=false;
   };
   let raf=0,previous=-Infinity,frames=0,maxFrame=0;
   element.dataset.presentation='cinematic-v2';
@@ -71,6 +73,7 @@ export default function CinematicWeaponEffects({paths,startedAt}){
    for(const ship of ships){
     const pose=reactions.get(ship.target);
     if(!pose){restore(ship);continue;}
+    ship.active=true;
     ship.target.dataset.weaponLight=pose.kind;
     if(pose.motion)ship.target.dataset.weaponMotion=pose.kind;
     else ship.target.removeAttribute('data-weapon-motion');

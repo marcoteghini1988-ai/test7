@@ -8,7 +8,7 @@ import {chainWeaponVariant,chainWeaponEffectProfile,collisionGroups,collisionMot
 import {weaponPortalOrigin,weaponEffectProfile,weaponShotStartMs,weaponVisualCards} from './maglioBattleVisuals.js';
 import {combatTargetElement,boardHullPoint,createEffectCanvas,drawMagneticChain,drawLatch,drawMetalContact} from './chainWeaponCanvas.js';
 import {drawCollisionExplosion} from './collisionExplosion.js';
-import {prepareCinematicEntry,drawCollisionConvergence} from './weaponCinematicRenderer.js';
+import {prepareCinematicEntry,drawCollisionConvergence,drawDefenseDismantle} from './weaponCinematicRenderer.js';
 import {weaponTravelProgress} from './weaponCinematicStyle.js';
 
 const clamp=n=>Math.max(0,Math.min(1,n));
@@ -118,6 +118,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
     plan:collisionMotionPlan(...centers,{forward:shots[0].who==='A'?78:-72})}];
   });
   element.dataset.renderer='volume-depth-buffer';element.dataset.camera='table-fixed';
+  const defenseArt=new Map();
   let raf=0,previous=-Infinity;
   const restore=group=>group.targets.forEach((target,i)=>{
    target.style.translate=group.previous[i].translate;delete target.dataset.collisionMotion;
@@ -223,6 +224,12 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
     const target=root.querySelector(`[data-fleet-card-slot="${event.who==='A'?'B':'A'}-1"]`);
     if(!target)continue;
     const p=boardHullPoint(target,root.getBoundingClientRect()),t=elapsed/1000;
+    if(cinematic){
+     const art=target.querySelector('.f3d-slot-art,.f3d-card-fallback');
+     if(art){if(!defenseArt.has(art))defenseArt.set(art,art.style.opacity);art.style.opacity=String(clamp(1-elapsed/140));}
+     drawDefenseDismantle(ctx,p,weaponEffectProfile(event.cardId),elapsed,camera,{reduced});
+     element.dataset.defenseBroken=event.defenseCardId;continue;
+    }
     ctx.save();ctx.translate(p.x,p.y);ctx.globalAlpha=1-t;
     for(let i=0;i<7;i++){
      const a=i*Math.PI*2/7,r=9+t*35;
@@ -236,6 +243,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
   };
   raf=requestAnimationFrame(draw);
   return ()=>{cancelAnimationFrame(raf);collisions.forEach(restore);
+   defenseArt.forEach((opacity,art)=>{art.style.opacity=opacity;});
    entries.forEach(e=>disposeProjectile(e.model));renderer.dispose();canvas.remove();meshCanvas.remove();};
  },[paths,events,startedAt,shotStart,resolvedSides,cinematic]);
  return <div ref={host} className="maglio-projectiles-3d magnetic-weapon-effects"/>;

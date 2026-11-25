@@ -44,7 +44,7 @@ Recuperatore; preferenze e visibilità continuano a essere rispettate.
 
 ## Verifiche e limite attuale
 
-- 233 test mirati passati: i 159 precedenti, sette nuovi controlli e 67
+- 234 test mirati passati: i 159 precedenti, otto nuovi controlli e 67
   verifiche di geometrie, supporti e volo. I controlli coprono
   tutte le 22 varianti, entrambe le direzioni, proiezione, velocità,
   assenza di eventi inventati, contatto sulla Difesa, movimento ridotto,
@@ -67,3 +67,17 @@ Il precedente collaudo StackBlitz dei tre gruppi descrive la versione prima
 di questa revisione: non costituisce una verifica automatica degli effetti
 nuovi. Non dichiarare questa revisione «perfetta» o «collaudata in partita»
 sulla sola base dei test o dello studio offline.
+
+## Anteprima tecnica consegnata
+
+`Studio_22_effetti_armi_Eclissi_Stellare.mp4`: 22 varianti, 71,6 secondi,
+900×1600 a 30 fps, H.264 e AAC 48 kHz. Nessuna variazione della velocità
+delle azioni. Suoni sintetizzati dalle stesse partiture e dallo stesso
+limiter; picco PCM −7,50 dBFS, senza clipping. Il rilascio sonoro del
+Collassatore è allineato ai 75 ms del ritorno degli scafi.
+
+Il video alterna viste A/B e illustra le singole munizioni/contatti,
+non un incontro completo. Il Maglio nello studio usa la mesh CPU di
+ripiego; il gioco continua a usare le 24 viste Cycles. Metadati, SHA-256,
+capitoli e stato delle verifiche in
+`riferimenti-carte/effetti-revisione-2026-11-25/collaudo-renderer.json`.

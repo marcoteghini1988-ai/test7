@@ -55,6 +55,7 @@ export function collisionMotionPlan(a,b,{forward=0}={}){
   offsets:[{x:ux*travel,y:uy*travel+forward},{x:-ux*travel,y:-uy*travel+forward}]};
 }
 const clamp=n=>Math.max(0,Math.min(1,n));
+export const COLLISION_RELEASE_AFTER_MS=75;
 const smooth=n=>{const t=clamp(n);return t*t*(3-2*t);};
 export function collisionFrame(elapsed,profile){
  const touch=profile.flightMs,end=touch+profile.impactMs;
@@ -67,9 +68,9 @@ export function collisionFrame(elapsed,profile){
    advance:smooth(t/.62),flash:0,rush:snap**1.7};
  }
  const age=elapsed-touch;
- if(age<75)return {phase:'contact',pull:1,advance:1,flash:Math.exp(-age/95),rush:0};
+ if(age<COLLISION_RELEASE_AFTER_MS)return {phase:'contact',pull:1,advance:1,flash:Math.exp(-age/95),rush:0};
  if(elapsed<end){
-  const returning=1-smooth((age-75)/(profile.impactMs-75));
+  const returning=1-smooth((age-COLLISION_RELEASE_AFTER_MS)/(profile.impactMs-COLLISION_RELEASE_AFTER_MS));
   return {phase:'release',pull:returning,advance:returning,flash:Math.exp(-age/95),rush:0};
  }
  return {phase:'restored',pull:0,advance:0,flash:0,rush:0};

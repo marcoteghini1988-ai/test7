@@ -446,3 +446,28 @@ export function drawCollisionConvergence(floor,air,e,contact,elapsed,reduced){
  glow(floor,contact,35+power*25,e.profile.glow,.2+power*.35,.35);
  if(e.style.prism)for(let i=0;i<3;i++)ring(floor,e,center,.35+(1-power)*.7,i*.6,prism[i],power*.5);
 }
+export function drawDefenseDismantle(ctx,position,profile,elapsed,camera,{reduced=false}={}){
+ if(elapsed<0||elapsed>=1000)return;
+ const t=elapsed/1000,fade=(1-t)**2,center=boardPointToWorld(position,camera);
+ const axis=new Vector3(0,0,1),side=new Vector3(1,0,0);
+ const e={camera,axis,side,profile,b:center,style:{prism:profile.tier===3,fragments:12},seed:1733};
+ if(reduced){glow(ctx,position,24,profile.secondary,fade*.45);return;}
+ // Three armor leaves peel apart at different heights, with lit thickness.
+ for(let i=0;i<3;i++){
+  const angle=(i-1)*1.1,spread=(1-Math.exp(-elapsed/80))*.55;
+  const c=local(e,center,Math.sin(angle)*spread,.04+Math.sin(t*Math.PI)*(.26+i*.10),Math.cos(angle)*spread*.35);
+  const rotation=(i-1)*t*1.5,pts=[[-.10,-.23],[.10,-.23],[.10,.23],[-.10,.23]];
+  const face=pts.map(([x,z])=>project(e,local(e,c,x*Math.cos(rotation),x*Math.sin(rotation),z)));
+  ctx.save();ctx.globalAlpha=fade;
+  polygon(ctx,face,profile.tier===3?prism[i]:'#748b9d',profile.core,.6);
+  const a=project(e,local(e,c,-.08*Math.cos(rotation),-.08*Math.sin(rotation)+.01,0));
+  const b=project(e,local(e,c,.08*Math.cos(rotation),.08*Math.sin(rotation)+.01,0));
+  streak(ctx,a,b,profile.glow,1.5,.9);ctx.restore();
+ }
+ glow(ctx,position,27,profile.glow,Math.exp(-elapsed/110)*.45,.5);
+ for(let i=0;i<10;i++){
+  const a=i*2.399,r=.08+t*(.25+seededUnit(1733,i)*.3);
+  shard(ctx,e,local(e,center,Math.cos(a)*r,.03+t*.2,Math.sin(a)*r),.032,a+t*4,
+   profile.tier===3?prism[i%4]:profile.secondary,fade);
+ }
+}

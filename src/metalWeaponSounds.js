@@ -78,6 +78,8 @@ export function metalWeaponSoundPlan(type){
  // the existing visual impact window and never postpone the next turn.
  if(phase==='impact'&&family==='reclaimer')add('noise',1700,280,.85,.037,.08,{attack:.05,q:.6});
  if(phase==='impact'&&family==='induction')add('triangle',540,126,.47,.028,.12,{attack:.01});
+ if(phase==='impact'&&['maglio','collision'].includes(family))
+  add('triangle',285,112,.32,.075,.025,{attack:.006});
  if(phase==='impact'&&family==='shard')for(let i=0;i<tier+2;i++)
   add('noise',2200+i*510,840,.055,.019,.14+i*.06,{q:2.6});
  return {...plan,layers};
@@ -85,6 +87,9 @@ export function metalWeaponSoundPlan(type){
 export function playMetalWeaponSound(context,bus,type,pitchFactor=1,pan=0){
  const plan=metalWeaponSoundPlan(type);if(!plan)return false;
  const now=context.currentTime;
+ // Keep the low body audible on phone speakers, with the existing global
+ // SFX volume, mute and limiter still in control of the final level.
+ const punch=plan.phase==='impact'?2.1:plan.phase==='fire'?1.65:plan.phase==='charge'?1.35:1.45;
  let destination=bus,panner;
  if(context.createStereoPanner){panner=context.createStereoPanner();panner.pan.value=Math.max(-.6,Math.min(.6,pan));panner.connect(bus);destination=panner;}
  let remaining=plan.layers.length;
@@ -92,7 +97,7 @@ export function playMetalWeaponSound(context,bus,type,pitchFactor=1,pan=0){
  for(const [index,layer] of plan.layers.entries()){
   const time=now+layer.delay,envelope=context.createGain();
   envelope.gain.setValueAtTime(.0001,time);
-  envelope.gain.linearRampToValueAtTime(layer.gain,time+Math.min(layer.duration*.6,layer.attack||.004));
+  envelope.gain.linearRampToValueAtTime(layer.gain*punch,time+Math.min(layer.duration*.6,layer.attack||.004));
   envelope.gain.exponentialRampToValueAtTime(.0001,time+layer.duration);
   envelope.connect(destination);
   if(layer.wave==='noise'){

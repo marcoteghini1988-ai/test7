@@ -4,9 +4,10 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {playMetalWeaponSound} from '../src/metalWeaponSounds.js';
 import {weaponEffectProfile} from '../src/maglioBattleVisuals.js';
+import {COLLISION_RELEASE_AFTER_MS} from '../src/chainWeaponBattleVisuals.js';
 const {default:engine}=await import(process.env.ECLISSI_AUDIO_MODULE||'web-audio-engine');
 const output=resolve(process.argv[2]),study=JSON.parse(readFileSync(resolve(output,'study.json')));
-let cursor=0;const chapters=study.variants.map(v=>{const c={...v,start:cursor};cursor+=v.frames/30;return c;});
+let cursor=0;const chapters=study.variants.map(v=>{const frames=Math.ceil(v.durationMs*.03),c={...v,frames,start:cursor};cursor+=frames/30;return c;});
 const rate=48000,length=Math.ceil(cursor*rate),ctx=new engine.OfflineAudioContext(2,length,rate);
 const limiter=ctx.createDynamicsCompressor();limiter.threshold.value=-12;limiter.ratio.value=8;
 limiter.knee.value=24;limiter.attack.value=.003;limiter.release.value=.12;limiter.connect(ctx.destination);
@@ -22,7 +23,7 @@ for(const chapter of chapters){
  const p=weaponEffectProfile(chapter.id),fire=chapter.start+.650;
  cue(p,'charge',Math.max(chapter.start,fire-(p.chargeMs||0)/1000));
  cue(p,'fire',fire);cue(p,'impact',fire+p.flightMs/1000);
- if(p.kind==='alloy-collision')cue(p,'release',fire+p.flightMs/1000+.4);
+ if(p.kind==='alloy-collision')cue(p,'release',fire+(p.flightMs+COLLISION_RELEASE_AFTER_MS)/1000);
 }
 const result=await ctx.startRendering(),channels=[result.getChannelData(0),result.getChannelData(1)];
 let peak=0,sum=0;for(let i=0;i<length;i++)for(const c of channels){peak=Math.max(peak,Math.abs(c[i]));sum+=c[i]*c[i];}

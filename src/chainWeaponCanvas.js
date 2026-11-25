@@ -22,9 +22,13 @@ export function createEffectCanvas(element){
 export function drawMagneticChain(ctx,from,to,profile,camera,age=0,tension=0,opacity=1){
  const a=boardPointToWorld(from,camera),b=boardPointToWorld(to,camera);
  const distance=Math.hypot(to.x-from.x,to.y-from.y),count=Math.max(3,Math.ceil(distance/6));
+ const axis=b.clone().sub(a).normalize(),side={x:axis.z,z:-axis.x};
  const points=[];
  for(let i=0;i<=count;i++){
-  const u=i/count,p=a.clone().lerp(b,u);p.y-=Math.sin(u*Math.PI)*.24*(1-tension);
+  const u=i/count,p=a.clone().lerp(b,u),wave=Math.sin(u*Math.PI)*
+   Math.sin(u*Math.PI*5-age*.014)*.048*(1-tension);
+  p.y-=Math.sin(u*Math.PI)*.24*(1-tension);p.y+=wave*.45;
+  p.x+=side.x*wave;p.z+=side.z*wave;
   points.push(worldPointToBoard(p,camera));
  }
  ctx.save();ctx.globalAlpha=opacity;

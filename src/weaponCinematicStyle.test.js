@@ -6,7 +6,7 @@ import {METAL_WEAPON_VARIANTS} from './metalWeaponBattleVisuals.js';
 import {CHAIN_WEAPON_VARIANTS} from './chainWeaponBattleVisuals.js';
 import {PRECISION_WEAPON_VARIANTS} from './precisionWeaponBattleVisuals.js';
 import {cinematicStyle,weaponHullFrame,weaponVisualSeed,seededUnit,weaponTravelProgress} from './weaponCinematicStyle.js';
-import {prepareCinematicEntry,drawCinematicWeapon,drawCollisionConvergence} from './weaponCinematicRenderer.js';
+import {prepareCinematicEntry,drawCinematicWeapon,drawCollisionConvergence,drawDefenseDismantle} from './weaponCinematicRenderer.js';
 import {createProjectileCamera,worldPointToBoard} from './maglioProjectile3D.js';
 import {metalWeaponSoundPlan} from './metalWeaponSounds.js';
 import {weaponHapticPattern} from './weaponHaptics.js';
@@ -69,6 +69,18 @@ test('No firing event means no cinematic projectile; shield contacts remain shie
  assert.equal(floor.commands.length,0);
  assert.ok(!air.commands.some(c=>c[0]==='drawImage'),'No smoke or hull damage on a shield');
  assert.deepEqual(weaponHullFrame(p.kind,20,p.impactMs,{blocked:true}),weaponHullFrame(p.kind,-1,p.impactMs));
+});
+test('Independent defense dismantling has volume, a bounded lifetime and reduced motion',()=>{
+ const p=profiles.find(p=>p.kind==='induction'),camera=createProjectileCamera(),point={x:143,y:340};
+ const idle=recordingCanvas();
+ drawDefenseDismantle(idle,point,p,-1,camera);drawDefenseDismantle(idle,point,p,1000,camera);
+ assert.equal(idle.commands.length,0);
+ const full=recordingCanvas(),reduced=recordingCanvas();
+ for(const ms of [0,50,200,500,999]){drawDefenseDismantle(full,point,p,ms,camera);
+  drawDefenseDismantle(reduced,point,p,ms,camera,{reduced:true});}
+ assert.equal(full.depth,0);assert.equal(reduced.depth,0);
+ assert.ok(full.commands.filter(c=>c[0]==='lineTo').length>50);
+ assert.equal(reduced.commands.filter(c=>c[0]==='lineTo').length,0);
 });
 test('Every hull reaction ends neutral, respects reduced motion and excludes the collision controller',()=>{
  const signatures=[];
