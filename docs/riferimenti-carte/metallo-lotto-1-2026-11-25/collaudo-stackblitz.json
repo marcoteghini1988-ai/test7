@@ -1,0 +1,540 @@
+{
+  "date": "2026-11-25",
+  "runtimeCommit": "3aff7e5c7a2c5158ef71fb11a1356f92e35dd1c9",
+  "assetCommit": "880b71ff83deb061747c1b2a60e7a3793c0477ac",
+  "preview": "https://test7-jjhn--5173--668d8eeb.local-credentialless.webcontainer.io/.maglio-review.html",
+  "fronts": [
+    {
+      "id": "weapon-confirmed-metallic-slitta",
+      "hand": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      },
+      "slot": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      }
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-r",
+      "hand": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      },
+      "slot": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      }
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-e",
+      "hand": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      },
+      "slot": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      }
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-l",
+      "hand": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      },
+      "slot": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      }
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico",
+      "hand": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      },
+      "slot": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      }
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
+      "hand": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      },
+      "slot": {
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "image": [
+          true,
+          3072,
+          4608
+        ],
+        "shadow": "none"
+      }
+    }
+  ],
+  "shots": [
+    {
+      "card": "Slitta Comune",
+      "side": "A",
+      "shots": [
+        {
+          "actualDamage": "14",
+          "flightMs": "1200",
+          "impactAtMs": "2700",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Comune",
+          "shooter": "A",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "visibleEnd": "rear",
+          "weaponKind": "steel-rail"
+        }
+      ]
+    },
+    {
+      "card": "Slitta Comune",
+      "side": "B",
+      "shots": [
+        {
+          "actualDamage": "13",
+          "flightMs": "1200",
+          "impactAtMs": "2700",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Comune",
+          "shooter": "B",
+          "targetId": "generator",
+          "targetKind": "part",
+          "visibleEnd": "front",
+          "weaponKind": "steel-rail"
+        }
+      ]
+    },
+    {
+      "card": "Slitta Rara",
+      "side": "A",
+      "shots": [
+        {
+          "actualDamage": "27",
+          "flightMs": "1200",
+          "impactAtMs": "2700",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "steel-rail"
+        }
+      ]
+    },
+    {
+      "card": "Slitta Rara",
+      "side": "B",
+      "shots": [
+        {
+          "actualDamage": "27",
+          "flightMs": "1200",
+          "impactAtMs": "2700",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "steel-rail"
+        }
+      ]
+    },
+    {
+      "card": "Slitta Epica",
+      "side": "A",
+      "shots": [
+        {
+          "actualDamage": "65",
+          "flightMs": "1200",
+          "impactAtMs": "2700",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "steel-rail"
+        }
+      ]
+    },
+    {
+      "card": "Slitta Epica",
+      "side": "B",
+      "shots": [
+        {
+          "actualDamage": "65",
+          "flightMs": "1200",
+          "impactAtMs": "2700",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "steel-rail"
+        }
+      ]
+    },
+    {
+      "card": "Slitta Leggendaria",
+      "side": "A",
+      "shots": [
+        {
+          "actualDamage": "93",
+          "flightMs": "1200",
+          "impactAtMs": "2700",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "steel-rail"
+        }
+      ]
+    },
+    {
+      "card": "Slitta Leggendaria",
+      "side": "B",
+      "shots": [
+        {
+          "actualDamage": "93",
+          "flightMs": "1200",
+          "impactAtMs": "2700",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "steel-rail"
+        }
+      ]
+    },
+    {
+      "card": "Recuperatore Epico",
+      "side": "A",
+      "shots": [
+        {
+          "actualDamage": "23",
+          "flightMs": "1550",
+          "impactAtMs": "3050",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "thermal-reclaimer"
+        }
+      ],
+      "charge": [
+        {
+          "effectSequence": "three-collector-conversion",
+          "recoveredBonus": "0"
+        }
+      ]
+    },
+    {
+      "card": "Recuperatore Epico",
+      "side": "B",
+      "shots": [
+        {
+          "actualDamage": "23",
+          "flightMs": "1550",
+          "impactAtMs": "3050",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "thermal-reclaimer"
+        }
+      ],
+      "charge": [
+        {
+          "effectSequence": "three-collector-conversion",
+          "recoveredBonus": "0"
+        }
+      ]
+    },
+    {
+      "card": "Recuperatore Epico secondo turno",
+      "side": "A",
+      "shots": [
+        {
+          "actualDamage": "40",
+          "flightMs": "1550",
+          "impactAtMs": "3050",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "thermal-reclaimer"
+        }
+      ],
+      "charge": [
+        {
+          "effectSequence": "three-collector-conversion",
+          "recoveredBonus": "14"
+        }
+      ]
+    },
+    {
+      "card": "Recuperatore Epico secondo turno",
+      "side": "B",
+      "shots": [
+        {
+          "actualDamage": "53",
+          "flightMs": "1550",
+          "impactAtMs": "3050",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "thermal-reclaimer"
+        }
+      ],
+      "charge": [
+        {
+          "effectSequence": "three-collector-conversion",
+          "recoveredBonus": "24"
+        }
+      ]
+    },
+    {
+      "card": "Recuperatore Leggendario",
+      "side": "A",
+      "shots": [
+        {
+          "actualDamage": "32",
+          "flightMs": "1550",
+          "impactAtMs": "3050",
+          "originEdge": "bottom-usb",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "A",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "visibleEnd": "rear",
+          "weaponKind": "thermal-reclaimer"
+        }
+      ],
+      "charge": [
+        {
+          "effectSequence": "prismatic-condenser",
+          "recoveredBonus": "0"
+        }
+      ]
+    },
+    {
+      "card": "Recuperatore Leggendario",
+      "side": "B",
+      "shots": [
+        {
+          "actualDamage": "32",
+          "flightMs": "1550",
+          "impactAtMs": "3050",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "thermal-reclaimer"
+        }
+      ],
+      "charge": [
+        {
+          "effectSequence": "prismatic-condenser",
+          "recoveredBonus": "0"
+        }
+      ]
+    },
+    {
+      "card": "Recuperatore Leggendario secondo turno",
+      "side": "B",
+      "shots": [
+        {
+          "actualDamage": "80",
+          "flightMs": "1550",
+          "impactAtMs": "3050",
+          "originEdge": "top-opponent",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "shooter": "B",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "visibleEnd": "front",
+          "weaponKind": "thermal-reclaimer"
+        }
+      ],
+      "charge": [
+        {
+          "effectSequence": "prismatic-condenser",
+          "recoveredBonus": "35"
+        }
+      ]
+    },
+    {
+      "card": "Recuperatore Leggendario secondo turno",
+      "side": "A",
+      "shot": {
+        "actualDamage": "58",
+        "flightMs": "1550",
+        "impactAtMs": "3050",
+        "originEdge": "bottom-usb",
+        "projectiles": "1",
+        "projection": "perspective-3d",
+        "rarity": "Leggendaria",
+        "shooter": "A",
+        "targetId": "escort:maglio-review-B-0",
+        "targetKind": "escort",
+        "visibleEnd": "rear",
+        "weaponKind": "thermal-reclaimer"
+      },
+      "charge": [
+        {
+          "effectSequence": "prismatic-condenser",
+          "recoveredBonus": "19"
+        }
+      ],
+      "volume": {
+        "camera": "table-fixed",
+        "nose": "{\"x\":185.48826674570591,\"y\":594.3668088685658}",
+        "progress": "0.199",
+        "recoveredBonus": "19",
+        "renderer": "volume-depth-buffer",
+        "sequence": "prismatic-condenser",
+        "shooter": "A",
+        "visibleEnd": "rear"
+      }
+    }
+  ],
+  "transientQueryNote": "Una query del secondo tiro Leggendario A è arrivata a fine animazione; la stessa condizione è stata riprovata con i due turni reali della fixture e acquisita nel record finale.",
+  "audio": "registrazione con audio della scheda; stream AAC presente e non silenzioso",
+  "video": {
+    "file_name": "Metallo_sei_varianti_prova_in_battaglia.mp4",
+    "library_file_id": "libfile_eb7c647640f08191b2857cd3b9005c5a",
+    "bytes": 15338275,
+    "sha256": "b4bdaa1556b2ed9e6bd4f7d34241549d4db7cd46d420768e5f7f93a986b71563",
+    "format": "H.264 / AAC, 900x1600, 30 fps",
+    "seconds": 89.833333,
+    "editing": "tagliati soltanto i tempi di attesa tra prove; velocità originale"
+  },
+  "targetedTests": 119,
+  "allLogicTestsStatus": "2049/2049 superati; build e preflight superati",
+  "validatedCommit": "53c40b88200a3b5bf6f115e8a5e7be4069d5bccf",
+  "githubActionsRunId": 45572197078,
+  "mobileBrowserRunId": 45570556419
+}

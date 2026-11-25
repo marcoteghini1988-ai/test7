@@ -1,6 +1,6 @@
 {
   "date": "2026-11-25",
-  "status": "sei carte approvate dall’utente; fronti e sequenze in collaudo di integrazione",
+  "status": "sei carte approvate, integrate e collaudate su StackBlitz",
   "sourceRepository": "marcoteghini1988-ai/test7",
   "sourceCommit": "1dec16daee0d02715c20bf04d117b763ca9c94f9",
   "element": "metallic",
@@ -265,9 +265,9 @@
       }
     }
   ],
-  "reviewStatus": "awaiting-user-approval",
+  "reviewStatus": "approved-by-user",
   "playableFrontsInstalled": true,
-  "effectsImplementationStatus": "after visual approval",
+  "effectsImplementationStatus": "implemented-and-verified-in-StackBlitz",
   "compositionScript": "scripts/compose-weapon-fronts.cjs",
   "frameSourceHashes": {
     "comune": "8871d4dd7ab1b9705d26ba71dd0015bbbdc2b0ce5ac33d91154cef494df6df59",
@@ -293,10 +293,21 @@
   "approvalDate": "2026-11-25",
   "losslessOptimization": "PNG ricodificati con filtraggio adattivo; tutti i pixel RGBA confrontati con le sei immagini approvate e identici",
   "effects": {
-    "status": "implementati, collaudo StackBlitz da completare",
+    "status": "profili e audio distinti verificati nelle due direzioni; Recuperatore verificato anche nel secondo turno",
     "profiles": "src/metalWeaponBattleVisuals.js",
     "geometry": "src/metalWeaponProjectile3D.js",
     "sound": "src/metalWeaponSounds.js",
     "damageRulesChanged": false
+  },
+  "runtimeCommit": "3aff7e5c7a2c5158ef71fb11a1356f92e35dd1c9",
+  "assetCommit": "880b71ff83deb061747c1b2a60e7a3793c0477ac",
+  "battleVideo": {
+    "file_name": "Metallo_sei_varianti_prova_in_battaglia.mp4",
+    "library_file_id": "libfile_eb7c647640f08191b2857cd3b9005c5a",
+    "bytes": 15338275,
+    "sha256": "b4bdaa1556b2ed9e6bd4f7d34241549d4db7cd46d420768e5f7f93a986b71563",
+    "format": "H.264 / AAC, 900x1600, 30 fps",
+    "seconds": 89.833333,
+    "editing": "tagliati soltanto i tempi di attesa tra prove; velocità originale"
   }
 }
