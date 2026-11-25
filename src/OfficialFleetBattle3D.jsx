@@ -1206,7 +1206,8 @@ export default function OfficialFleetBattle3D({
    <FleetDeckPiles side={player}/>
    <div className="f3d-weapon-card-slots" role="group" aria-label="Due slot Carte Arma">
     {projectMachineBerths(player,chosenTypes,battle.ply).map((machine,slot)=>{
-     const artwork=machine?.sourceCardId?cardFacePath(machine.sourceCardId):null;
+     const faceId=machine?.sourceCardId||(machine?.pending?machine.id:null);
+     const artwork=faceId?cardFacePath(faceId):null;
      return <button type="button" key={slot} className="f3d-weapon-card" data-fleet-weapon-slot={slot}
       title={machine?(machine.name||'Arma'):'Slot ARMA '+(slot+1)}
       aria-label={machine?(machine.name||'Arma'):'Slot ARMA '+(slot+1)}
