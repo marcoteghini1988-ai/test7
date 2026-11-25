@@ -2,6 +2,31 @@
 
 ## Regola dei colpi approvata il 24 novembre 2026
 
+### Regola obbligatoria del 25/11 — meccanica reale, immagini, suoni e vibrazione
+
+PRIMA di progettare l'effetto di QUALSIASI carta, leggere nel codice la
+definizione aggiornata, la risoluzione effettiva del motore e gli eventi
+emessi. Verificare condizioni, bersagli, quantità di colpi, durata, ordine,
+combo, blocchi e scadenze; il nome della carta e i ricordi della chat non
+bastano. Studiare quindi come rendere leggibile l'intera meccanica con una
+sequenza personalizzata di **effetti visivi, suoni e vibrazione**. La
+rarità evolve la sequenza coerentemente con l'illustrazione e con le regole.
+La vibrazione segue le fasi reali (aggancio, tensione, urto, ecc.), rispetta
+le preferenze del giocatore e va verificata su un dispositivo compatibile:
+un browser senza riscontro aptico non costituisce un collaudo della vibrazione.
+
+Esempio vincolante: **Arpioni a Ganasce Magnetiche → Cannone Collassatore
+di Lega** sono due carte. La prima aggancia i due bersagli effettivamente
+colpiti; nel turno proprio successivo la seconda richiede che entrambi
+siano ancora vivi e li fa collidere. Mostrare agganci e catene/cavi sui
+veri scafi, mantenerli per la durata dell'aggancio, tendere i collegamenti
+e muovere le due navi fino all'urto, poi rilasciarle nelle posizioni corrette.
+Abbinare suono e vibrazione ad aggancio, trazione e collisione. Non ridurre
+la combinazione a due proiettili generici o a una sola esplosione mentre
+le navi restano ferme. La coreografia rappresenta gli eventi reali, senza
+aggiungere immobilizzazione, danni, bersagli o durata non previsti dal codice.
+La meccanica è già implementata; il suo effetto dedicato è ancora da creare.
+
 **Proiettili approvati, revisione del 24/11:** il Maglio usa le quattro
 sagome illustrate in `docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png`.
 Il modello volumetrico è in `src/maglioProjectile3D.js`; l'atlante PNG RGBA

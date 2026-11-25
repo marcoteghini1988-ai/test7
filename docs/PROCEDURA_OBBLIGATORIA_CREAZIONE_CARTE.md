@@ -1,5 +1,16 @@
 # PROCEDURA OBBLIGATORIA — "crea la carta" (22 novembre 2026)
 
+> **Regola esplicita del 25/11 — effetti reali, suoni e vibrazione:** prima
+> di creare l'effetto di QUALSIASI carta leggere la definizione e soprattutto
+> la risoluzione reale nel codice, incluse condizioni, combo, durata e bersagli.
+> Studiare quindi la sequenza più leggibile di immagini/movimento, suoni e
+> vibrazione, sincronizzata agli eventi del motore. Per le Ganasce e il
+> Collassatore devono vedersi aggancio, catene in tensione e le vere navi
+> che si scontrano. Non basta uno sparo generico. Il collaudo della vibrazione
+> richiede un dispositivo compatibile e deve rispettare le preferenze del
+> giocatore. Il dettaglio e lo stato effettivo della coppia sono in
+> [REGOLA_EFFETTI_VISIVI_CARTE_2026-11-24.md](REGOLA_EFFETTI_VISIVI_CARTE_2026-11-24.md).
+
 > **Effetto visivo in battaglia, 24/11/2026:** per ogni nuova Carta Arma
 > abbinare al fronte un profilo di colpo coerente con la macchina illustrata.
 > Direzione, bersagli, rarità e numero effettivo degli impatti seguono

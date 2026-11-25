@@ -1,5 +1,50 @@
 # Regola dei colpi e degli effetti delle carte — 24 novembre 2026
 
+## Prima di ogni effetto — precisazione vincolante del 25 novembre
+
+Per **qualsiasi carta**, prima di ideare un effetto leggere nel codice la
+definizione corrente, la funzione che lo risolve e gli eventi effettivi.
+Controllare ID, rarità, condizioni, combo, bersagli, quantità di colpi,
+tempi, durata, blocchi e scadenze. Partire da questa verifica per studiare
+la rappresentazione migliore dell'intera azione; non dal nome, dal solo
+elemento o da uno sparo già pronto.
+
+Preparare una sequenza che descriva insieme **immagini e movimento,
+effetti sonori e vibrazione**. Specificare per ogni fase cosa si vede,
+quando si sente e quale impulso aptico accompagna l'azione. Sincronizzare
+i tre canali sugli stessi eventi e sul momento dell'impatto. La vibrazione
+rispetta le preferenze del giocatore; verificarla su un dispositivo che
+la supporta e indicare quando il browser di prova non permette il riscontro.
+Non dichiararla verificata sulla sola base della chiamata software.
+
+### Esempio: aggancio magnetico e collisione fra navi
+
+La sequenza reale è composta da due Carte Arma Metallo:
+
+1. `weapon-designed-metallic-ganasce-magnetiche` e relative evoluzioni:
+   i due arpioni attaccano bersagli differenti; il motore conserva soltanto
+   quelli effettivamente colpiti. L'aggancio prepara il turno proprio successivo.
+2. `weapon-designed-metallic-collassatore-lega` e relativa evoluzione:
+   richiede l'aggancio nel turno proprio precedente e due bersagli ancora
+   vivi; applica l'urto ai due bersagli, con Difese individuali.
+
+Il relativo effetto deve rendere visibili i punti d'aggancio e le catene o
+i cavi magnetici ancorati agli scafi reali. I collegamenti seguono le navi
+finché l'aggancio è valido. Alla collisione si tendono, le due navi vengono
+tirate l'una contro l'altra, gli scafi si urtano nel punto calcolato e poi
+tornano negli alloggiamenti corretti; ripristinare la posa anche se una nave
+viene distrutta. Movimento, suono metallico e impulso aptico dell'urto
+devono coincidere con la risoluzione del motore. Distinguere aggancio,
+trazione e urto; non sostituirli con spari o esplosioni generiche. Un aggancio
+mancato, un bersaglio distrutto o una combo scaduta non producono una
+collisione fittizia. Non aggiungere un blocco delle azioni nemiche: non è
+previsto dalla meccanica. Conservare la prospettiva delle due flotte.
+
+**Stato al 25/11:** la logica dell'aggancio e della collisione è nel motore
+e ha test dedicati. Queste due famiglie usano ancora la visualizzazione
+provvisoria: catene, movimento degli scafi, suoni e vibrazioni specifici
+restano da realizzare insieme ai loro fronti approvati.
+
 ## Direzione della battaglia
 
 Nella plancia verticale il giocatore A spara dal centro del bordo inferiore,
