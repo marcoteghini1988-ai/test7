@@ -34,6 +34,24 @@ La regola non autorizza la creazione anticipata delle sequenze: nella
 modalità corrente si documentano le scelte; si realizzeranno al comando
 esplicito dell'utente. Dettagli vincolanti nel documento collegato.
 
+## Stato corrente — otto armi riviste verbalmente; Super Combo in bozza
+
+L'utente precisa che il completamento riguarda la **revisione verbale**,
+non il codice. Per tutte le otto famiglie del gruppo è stata concordata
+la direzione degli effetti; parametri tecnici/numerici ancora aperti
+restano da definire. Nessuna nuova implementazione o verifica live viene
+certificata da questa ricognizione e non va iniziata automaticamente.
+
+La nuova Carta Attacco della Super Combo è **soltanto una bozza futura
+approssimativa da accantonare**, per esplicita richiesta successiva
+dell'utente. L'idea: Ganasce A e B già ancorate, sacrificio di uno o due
+supporti propri, HP attuali convertiti in corrente lungo le catene,
+rapporto ipotizzato 1:1; metà a ciascuno dei due bersagli agganciati o
+tutto all'unico bersaglio. Nome e dettagli non definiti; fuori dalle dieci
+Armi per elemento. Il «Sì» al riepilogo non è approvazione finale:
+prevale «per ora è una bozza approssimativa e lasciamola stare».
+Dettagli e riepilogo delle otto famiglie nel documento di ripresa.
+
 ## Ultima scelta approvata — Ganasce A/B; nuova idea futura Super Combo
 
 **Due carte distinte A e B**, una sola ganascia ciascuna, entrambe
