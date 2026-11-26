@@ -34,6 +34,22 @@ La regola non autorizza la creazione anticipata delle sequenze: nella
 modalità corrente si documentano le scelte; si realizzeranno al comando
 esplicito dell'utente. Dettagli vincolanti nel documento collegato.
 
+## Revisione delle forme delle navi e grafica delle fusioni
+
+L'utente vuole forme più particolari e varie: navi con silhouette proprie,
+non scafi quasi uguali differenziati soltanto per colore. È una modifica
+da realizzare; forme dei singoli modelli e nuove immagini non sono ancora
+state scelte. Conservare il catalogo e le meccaniche, proporre le nuove
+sagome prima di sostituire gli asset approvati.
+
+L'utente chiede anche delle immagini delle navicelle fuse, distinte dalle
+Carte Fusione. Il codice corrente usa `fusedEscortArtwork` e due livelli
+in `OfficialFleetBattle3D.jsx`: sovrappone le immagini ordinarie dei due
+modelli. Non sono state individuate immagini dedicate di nuove sagome
+fuse negli asset del progetto. Non descrivere la sovrapposizione come
+una nuova nave fusa già disegnata. Riscontro e lavoro aperto nel documento
+di ripresa; nessun nuovo asset o modello è stato creato in questa fase.
+
 ## Nuova specifica navi — dimensioni dei supporti e stadi di danno
 
 L'utente richiede **supporti più grandi** e tre-quattro stadi di rottura
