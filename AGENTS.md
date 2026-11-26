@@ -34,24 +34,34 @@ La regola non autorizza la creazione anticipata delle sequenze: nella
 modalità corrente si documentano le scelte; si realizzeranno al comando
 esplicito dell'utente. Dettagli vincolanti nel documento collegato.
 
-## Lavoro corrente — elemento Fulmine, prima famiglia Pettine Ionico
+## Lavoro corrente — Fulmine, seconda famiglia: Lanciadardi a Spirale di Tesla
 
-L'utente richiede spari coerenti con ogni elemento: Fulmine elettrico,
-Fuoco di fuoco, Acqua d'acqua, Metallo metallico, e così per gli altri.
-Applicare la nuova sezione nelle regole permanenti degli effetti,
-mantenendo effetti univoci per arma e rarità, con suoni e vibrazioni.
+L'utente ha approvato il **Cannone a Pettine Ionico di Vega** in tutte
+le quattro rarità. Restano un solo colpo, un bersaglio e un turno;
+le rarità aumentano il danno e differiscono solo lievemente nella resa.
+Comune: cinque archetti che confluiscono in una scarica e reticolo breve
+all'impatto. Epica approvata: scarica più densa e ramificata, suono più
+corposo e unico impulso aptico più deciso. Leggendaria accettata sullo
+stesso effetto con maggiore intensità, senza cambiare forma o meccanica.
+Non riaprire numero di colpi o nuove abilità e non dichiarare l'effetto
+già creato: è la definizione verbale approvata.
 
-Ora si procede **una famiglia alla volta**, con tutte le sue rarità,
-e si completano le **dieci Armi dell'elemento scelto prima di cambiarlo**.
-Elemento scelto: **Fulmine**, dieci famiglie riscontrate nel catalogo.
-Prima famiglia: **Cannone a Pettine Ionico di Vega**, Comune/Rara/Epica/
-Leggendaria. L'utente chiede nell'ordine: nome, funzione, proposta visiva.
-Non saltare la spiegazione della funzione e non inserire carte non
-riscontrate nel catalogo.
+Prossima famiglia del catalogo: **Lanciadardi a Spirale di Tesla**,
+`weapon-base-ionic-02`, Fulmine, Comune/Rara/Epica/Leggendaria.
+Un attacco autonomo su un solo bersaglio per un turno, senza costo
+Energia aggiuntivo; protezioni ordinarie applicabili.
+Presentare subito nome, funzione e proposta visiva, senza ricontrolli
+di dati già verificati. L'utente ha più volte detto «vai/procedi».
 
-La proposta del Pettine è da approvare; non dichiararla già creata.
-La revisione verbale precedente delle otto armi resta conclusa e la
-Super Combo del sacrificio resta una bozza futura sospesa.
+Proposta da approvare: un unico dardo elettrico blu-violetto, ruotante,
+avvolto da una doppia elica di scintille. Al contatto si contrae in una
+scarica locale breve sulla nave o sulla protezione che lo blocca,
+con suono elettrico e un solo impulso aptico al vero impatto.
+Due spirali visive non significano due colpi. Non è già stato realizzato.
+
+Si procede una famiglia alla volta, completando le dieci Armi Fulmine
+prima di cambiare elemento. Valgono la regola elementale e quella di
+corrispondenza completa fra meccanica, grafica, suono e vibrazione.
 
 ## Stato corrente — otto armi riviste verbalmente; Super Combo in bozza
 
