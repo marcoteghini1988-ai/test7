@@ -24,19 +24,19 @@ function characteristics(c,color){
  const recovery=c.recoveryPercent!=null;
  const panel=c.panel||{};
  const customRight=panel.rightLabel?text(2056,3547,panel.rightLabelSize||78,panel.rightLabel,'minor')+
-  panel.rightLines.map((line,index)=>text(2056,panel.rightLines.length===1?3700:3652+index*100,
+  panel.rightLines.map((line,index)=>text(2056,panel.rightLines.length===1?3700:panel.rightLines.length===3?3620+index*72:3652+index*100,
    panel.rightValueSize||100,line,'strong')).join(''):null;
  return `<g filter="url(#soft)">
   <path d="M655 3482H2417M660 3817H2412" fill="none" stroke="${color[2]}" stroke-width="5" opacity=".57"/>
   <path d="M1536 3468L1550 3482L1536 3496L1522 3482ZM1536 3803L1550 3817L1536 3831L1522 3817Z" fill="${color[0]}" opacity=".82"/>
-  ${text(1045,3202,85,'ELEMENT','minor')}${text(1158,3355,102,'METAL','strong')}
+  ${text(1045,3202,85,'ELEMENT','minor')}${text(1158,3355,c.elementText==='LIGHTNING'?80:102,c.elementText||'METAL','strong')}
   ${text(2024,3202,88,'DURATION','minor')}
   <g transform="translate(1752 3352)"><circle r="79" fill="#13223a" fill-opacity=".34" stroke="${color[2]}" stroke-width="10"/>
    <path d="M0-50V0L33 23" fill="none" stroke="${color[0]}" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><circle r="9" fill="${color[0]}"/></g>
   ${text(1930,3355,152,c.duration,'number')}${text(2220,3355,104,c.duration===1?'TURN':'TURNS','strong')}
   ${text(1042,3547,panel.damageLabel?78:88,panel.damageLabel||'BASE DAMAGE','minor')}
   <g transform="translate(754 3700)"><path d="M-91-42L-47-81L-18-44L20-96L52-42L94-22L52 7L82 54L30 52L10 96L-20 56L-63 72L-63 34L-97 8L-59-15Z" fill="url(#material)" stroke="#182535" stroke-width="9" stroke-linejoin="round"/><circle r="21" fill="${color[0]}" stroke="#263c52" stroke-width="7"/></g>
-  ${text(1114,3700,159,c.damage+' HP','number')}
+  ${text(panel.damageValueX||1114,3700,panel.damageValueSize||159,panel.damageValue||c.damage+' HP','number')}
   ${recovery?text(2056,3547,82,'REAL HULL LOSS','minor')+
    `<g transform="translate(1830 3668)"><path d="M-26 0H26M0-26V26" fill="none" stroke="#121a23" stroke-width="22"/><path d="M-26 0H26M0-26V26" fill="none" stroke="${color[0]}" stroke-width="12"/></g>`+
    text(2056,3668,130,c.recoveryPercent,'number')+
@@ -63,6 +63,7 @@ function backing(centers){return Buffer.from(`<svg xmlns="http://www.w3.org/2000
 async function scene(c){
  const file=path.resolve(batchRoot,c.artPath);
  let blurred=await sharp(file).resize(2900,2265,{fit:'cover'}).blur(28).toBuffer();
+ if(c.neutralBackdrop)blurred=await sharp(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="2900" height="2265"><defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#030b16"/><stop offset="1" stop-color="#091527"/></linearGradient></defs><rect width="2900" height="2265" fill="url(#sky)"/></svg>')).png().toBuffer();
  if(c.recoveryPercent!=null||c.cleanBackdrop){
   // Cielo senza copie delle alette in alto; il piano originale prosegue in basso.
   const sky=await sharp(file).extract({left:0,top:0,width:c.cleanBackdrop?24:110,height:c.cleanBackdrop?220:560}).resize(2900,1040,{fit:'fill'}).blur(50).ensureAlpha().raw().toBuffer({resolveWithObject:true});
@@ -87,10 +88,12 @@ async function main(){
  if(manifest.status!=='anteprime complete in attesa di approvazione grafica')throw Error('Manifest non marcato come anteprima');
  fs.mkdirSync(output,{recursive:true});fs.mkdirSync(path.join(batchRoot,'livelli-testo'),{recursive:true});
  const category=await sharp(path.join(stickers,'categorie/arma.png')).resize(300,300).toBuffer();
- const element=await sharp(path.join(stickers,'elementi/metallo.png')).resize(300,300).toBuffer();
- const statElement=await sharp(path.join(stickers,'elementi/metallo.png')).resize(170,170).toBuffer();
  for(const c of manifest.cards.filter(card=>(!process.argv[5]||card.familyId===process.argv[5])&&
   (!process.argv[6]||card.id===process.argv[6]))){
+  const elementIcon=c.elementIcon||'metallo';
+  if(!['metallo','fulmine','fuoco','ghiaccio','acqua','terra','vento','luce','ombra','gravita'].includes(elementIcon))throw Error('Elemento non riconosciuto: '+elementIcon);
+  const element=await sharp(path.join(stickers,'elementi',elementIcon+'.png')).resize(300,300).toBuffer();
+  const statElement=await sharp(path.join(stickers,'elementi',elementIcon+'.png')).resize(170,170).toBuffer();
   const center=slots[c.raritySlug],type=labels(c),art=await scene(c);
   fs.writeFileSync(path.join(batchRoot,'livelli-testo',c.id+'.svg'),type);
   const result=await sharp(art).composite([

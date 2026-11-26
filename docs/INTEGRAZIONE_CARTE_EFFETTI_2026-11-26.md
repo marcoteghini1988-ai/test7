@@ -80,8 +80,10 @@ presentati come riprese di una partita reale.
   Folgore Crescente**, Rara/Epica/Leggendaria. Meccanica riletta e proposta
   ad anelli documentata in
   `FULMINE_05_NUCLEO_FOLGORE_CRESCENTE_2026-11-26.md`.
-  L'associazione con il motivo Faraday e la sequenza dei tre stadi sono
-  proposte da approvare, non asset già creati o nuove integrazioni.
+  La direzione è stata approvata con «ok». Tre fronti PNG HD e una
+  previsualizzazione con audio sono pronti e conservati nell'archivio
+  indicato nella scheda. Attendono conferma visiva prima dell'inserimento;
+  il registro attivo resta a 37 e il video non è una ripresa StackBlitz.
 
 Non introdurre valori sostitutivi né modificare bilanciamento o slot per
 chiudere questi punti senza la decisione dell'utente.

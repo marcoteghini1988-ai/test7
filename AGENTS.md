@@ -10,6 +10,21 @@ ARMA è rossa (#ff594c), STRATEGIA è arancione (#ffb24d) e sostituisce la denom
 
 ## Punto di ripresa — 37 varianti integrate; regole mancanti confermate
 
+**Passo successivo preparato:** l'utente ha approvato con «ok» la direzione
+del Cannone a Nucleo di Folgore Crescente, quinta famiglia Fulmine reale.
+Sono pronti tre fronti PNG RGBA 3072×4608 e una previsualizzazione isolata
+con audio (68 secondi, 17 colpi in 7 sequenze), non una ripresa StackBlitz.
+Le illustrazioni centrali originali sono 1536×1024. Cornici autentiche,
+alfa esterna e pixel protetti verificati; nessun nuovo bordo esterno.
+**Attendere la conferma visiva delle nuove immagini e dell'effetto prima
+di inserirli.** Non contare ancora 40 varianti: i fronti attivi restano 37.
+Il codice di partita in `src/` non è cambiato per questa anteprima.
+Scheda, archivio recuperabile, hash e verifiche in
+`docs/FULMINE_05_NUCLEO_FOLGORE_CRESCENTE_2026-11-26.md`.
+Non tornare a chiedere l'approvazione della direzione già data; la scelta
+pendente riguarda la realizzazione mostrata. Dopo l'approvazione visiva
+collegare immagini, effetti, audio e aptica e collaudare la partita reale.
+
 L'utente ha chiesto «procedi a sistemare tutto» e ha scelto espressamente:
 - **Ganascia A e Ganascia B entrambe per tre turni propri.** Una ganascia
   per carta; ciascuna funziona da sola. A conserva lo strappo finale +50%.

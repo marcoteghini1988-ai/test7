@@ -1,9 +1,11 @@
 # Fulmine, famiglia 5 — Cannone a Nucleo di Folgore Crescente
 
-Stato: **meccanica letta nel codice; proposta grafica da approvare**.
+Stato: **direzione approvata con «ok»; tre fronti completi e anteprima
+dell'effetto pronti, in attesa di conferma visiva prima dell'integrazione**.
 L'utente ha chiesto di proseguire dopo l'integrazione delle 37 varianti.
 Si continua una famiglia alla volta, senza riaprire le prime quattro.
-Questo documento non aggiunge carte, asset giocabili o renderer.
+I nuovi renderer sono soltanto negli strumenti di anteprima; non sono
+collegati alla partita e il registro dei fronti attivi resta a 37 varianti.
 
 ## Identità e ruolo verificati
 
@@ -40,12 +42,12 @@ Fonti: `provisionalWeaponProfiles.js`, `designedWeaponCards.js`,
 `weaponRarityEvolutions.js`, `weaponBalanceCalibration.js` e ramo
 `growing-thunder-core` in `provisionalWeaponEngine.js`.
 
-## Proposta di associazione e disegno — non approvata
+## Associazione e disegno — direzione approvata
 
 Nel parlato è già stato accettato il motivo degli anelli elettrici sotto
 il nome «Torretta ad Anelli di Faraday». Quel nome non è una famiglia
 codificata. Si propone di riutilizzare il motivo per il Nucleo reale,
-adattandolo alle sue ricariche: l'associazione richiede la scelta dell'utente.
+adattandolo alle sue ricariche: l'utente ha approvato questa direzione con «ok».
 Non sostituire nomi, ID o meccaniche con la descrizione del colpo singolo
 senza Energia pronunciata nella vecchia proposta. Le altre proposte
 Faraday/Volta/Maxwell/Kelvin/Hertz/Ampère/Franklin/Coulomb restano conservate.
@@ -58,7 +60,7 @@ un anello orientabile d'argento; Leggendaria: mantiene i precedenti e
 aggiunge una gabbia prismatica. Questi dettagli non aggiungono abilità.
 Usare le cornici ufficiali PNG HD, pannello Arma rosso e simboli ufficiali.
 
-## Proposta della sequenza — non approvata
+## Sequenza — direzione approvata; anteprima da confermare visivamente
 
 Ogni lancio entra da punti variabili del bordo del lato che spara. La
 macchina resta nella carta. Un nodo di folgore bianco-azzurra avvolto
@@ -93,13 +95,64 @@ anche lo stadio effettivo: una Leggendaria senza ricarica non deve
 simulare lo stadio massimo. Scala e prospettiva devono lasciare leggibile
 la nave, senza una testata enorme o un quadrato sul bersaglio.
 
-## Verifica e passo successivo
+## Realizzazione delle anteprime e verifica
 
 Superata la regressione esistente «Nucleo: interruzione permanente anche
 quando si gioca Energia in seguito» in `fleetNextProvisionalEdgeCases.test.js`.
-Nessuna nuova verifica grafica, sonora o aptica è attestata per questa
-proposta; i collaudi delle 37 varianti precedenti non la coprono.
+Sono pronti tre fronti completi PNG RGBA **3072×4608**, composti sulle
+cornici autentiche rosse Rara/Epica/Leggendaria con simboli corretti.
+Le tre illustrazioni centrali originali sono **1536×1024**; non presentarle
+come generazioni native a 3072×4608. L'Epica aggiunge l'anello fisico
+d'argento; la Leggendaria mantiene bronzo e argento e aggiunge la gabbia
+articolata prismatica. L'interno non duplica l'arma nello sfondo sfocato.
+Il testo dei danni a tre stadi è allineato senza sovrapporsi all'icona.
 
-Presentare all'utente ruolo e proposta. Dopo la scelta, preparare i fronti
-completi e la prova degli effetti per approvazione visiva prima di inserirli.
+Il controllo automatico delle immagini conferma tutti i pixel protetti
+della cornice immutati e l'alfa esterna identica alle basi, compreso
+l'antialias originale: nessun nuovo pixel o bordo esterno.
+
+L'anteprima comprende HTML autonomo e **video di 68 secondi, 900×1600,
+H.264 con AAC stereo a 48 kHz**. Sette sequenze mostrano le tre rarità,
+ricarica interrotta, sole Energie precedenti, tiro dal lato avversario e
+colpo bloccato: diciassette colpi calcolati dal motore, senza inventare HP,
+consumi o bersagli. La scena utilizza arena e scafi originali e la
+proiezione del tavolo per il nodo e le corone elettriche. Include la
+reazione locale dello scafo, la carica sulle Energie realmente spese,
+il blocco sulla protezione e la scadenza reale negli scarti.
+
+**È una previsualizzazione isolata, non una registrazione StackBlitz.**
+Audio e richieste aptiche condividono gli istanti della rappresentazione.
+Audio misurato senza clipping: picco circa −8,29 dBFS; non si attesta
+ascolto strumentale. La vibrazione fisica sul telefono non è verificata.
+I collaudi precedenti delle 37 varianti non coprono questa nuova famiglia.
+
+Verifiche superate: quattro test delle sequenze reali (crescita e costo,
+rottura permanente e conservazione Energia tardiva, Difese/lati, unicità
+e sincronia del contatto); `npm run preflight`; compilazione della pagina
+interattiva e controllo sintattico del compositore storico. Nessun file
+in `src/` né fronte giocabile è cambiato per preparare questa consegna.
+
+Strumenti riproducibili in `scripts/previews/nucleo-20261126/`:
+`prepare-cards.mjs`, `sequence.mjs`, `visuals.mjs`, `audio.mjs`,
+`browser.mjs`, `export.mjs`, `verify-frames.py` e `sequence.test.mjs`.
+Il compositore comune supporta ora Fulmine e valori su tre stadi,
+conservando le impostazioni predefinite delle vecchie carte.
+
+## Consegna recuperabile
+
+Archivio `nucleo-folgore-carte-e-anteprima.zip`, 63.047.878 byte,
+SHA-256 `e0af4f32caac92444c0eef53baa4b6c15ec109a25dafeda0af73fb5f45cd6439`.
+Contiene i tre PNG HD, le tre illustrazioni originali, confronto visivo,
+video con audio, HTML autonomo, scheda italiana, valori e verifiche.
+I percorsi delle illustrazioni nel manifest sono relativi e portabili.
+Il file è conservato come `libfile_1217e21ff8588191958c5883325b01ba`;
+backing file corrente `file_000000002d5881f6936a50263e0857dc`, versione 1.
+L'HTML rispetta anche la preferenza di movimento ridotto, conservando
+gli istanti reali di audio e aptica.
+Per recuperarlo usare i normali strumenti del servizio file e verificare
+l'hash, senza inventare un nuovo soggetto o ricreare le cornici.
+
+Mostrare ora carte e video. **Attendere la conferma visiva** prima di
+collegare questi fronti e il nuovo effetto al gioco: la precedente
+risposta «ok» approvava la direzione descritta, non immagini ancora inesistenti.
 Conservare invariati il gruppo già integrato e la bozza futura Super Combo.

@@ -38,9 +38,7 @@ composer=composer.replace("c.duration,'number'","c.duration??'TBD','number'").re
 composer=composer.replace("c.damage+' HP'","c.damage==null?'TBD':c.damage+' HP'");
 composer=composer.replace("const element=await sharp(path.join(stickers,'elementi/metallo.png')).resize(300,300).toBuffer();",'');
 composer=composer.replace("const statElement=await sharp(path.join(stickers,'elementi/metallo.png')).resize(170,170).toBuffer();",'');
-composer=composer.replace("const center=slots[c.raritySlug],type=labels(c),art=await scene(c);",`const element=await sharp(path.join(stickers,'elementi',c.elementIcon+'.png')).resize(300,300).toBuffer();
-  const statElement=await sharp(path.join(stickers,'elementi',c.elementIcon+'.png')).resize(170,170).toBuffer();
-  const center=slots[c.raritySlug];let type=labels(c);const art=await scene(c);
+composer=composer.replace("const center=slots[c.raritySlug],type=labels(c),art=await scene(c);",`const center=slots[c.raritySlug];let type=labels(c);const art=await scene(c);
   if(c.duration==null)type=Buffer.from(type.toString().replace(/<g transform="translate\\(1752 3352\\)">[\\s\\S]*?<\\/g>/,''));`);
 composer=composer.replace("const file=path.resolve(batchRoot,c.artPath);",`const file=path.resolve(batchRoot,c.artPath);
  if(c.existingFront)return sharp(file).composite([{input:path.join(batchRoot,'maschere',c.raritySlug+'.png'),blend:'dest-in'}]).png().toBuffer();`);
