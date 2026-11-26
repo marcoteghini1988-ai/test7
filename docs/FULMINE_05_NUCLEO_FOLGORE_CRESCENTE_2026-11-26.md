@@ -1,7 +1,7 @@
 # Fulmine, famiglia 5 — Cannone a Nucleo di Folgore Crescente
 
 Stato: **tre fronti e revisione scenica 2 approvati e collegati alla
-partita; pubblicazione e collaudo StackBlitz in corso**.
+partita; pubblicati su GitHub e collaudati su StackBlitz**.
 L'utente ha approvato prima le carte («per le carte ok») e poi il colpo
 scenico 2 («ok»). Le immagini sono identiche ai PNG approvati; nessuna
 cornice, illustrazione, testo o trasparenza è stata ricostruita.
@@ -232,3 +232,46 @@ Il collaudo ufficiale espone tutti i 40 fronti e, per il Nucleo, turni
 1/2/3, Energia nuova, ricarica T2 saltata, sole Energie precedenti e Difesa.
 I turni precedenti delle prove sono risolti dal motore, non iniettati come
 stadi o danni inventati.
+
+## Collaudo concluso nella partita StackBlitz
+
+La copia esistente `https://stackblitz.com/edit/github-edu2s6xy` è aggiornata
+e l'avvio dal commit nativo `f00344fecc1a947ef39473d11f1eab960e441d1e`
+è stato verificato dopo riapertura completa: 690 sorgenti controllati,
+438 aggiornamenti e 40 carte nel selettore. I PNG del Nucleo caricati dal
+browser misurano davvero 3072×4608.
+
+Osservati Rara T1 autonoma (23 HP effettivi nella fixture), Epica T2
+ricaricata su un supporto (53 HP), Leggendaria T3 sulla madre anche nel
+secondo slot (172 HP); ciascun caso ha un solo proiettile reale.
+Le corone seguono lo stadio di carica, non il solo numero del turno.
+Due casi Epica T2 senza Energia nuova mantengono lo stadio 1 e non
+spendono cariche. La Leggendaria T3 bloccata dalla Difesa mantiene la
+ricarica pagata ma produce zero HP, contatto sulla protezione e nessun
+movimento dello scafo. Il tiro B parte dal proprio bordo superiore e
+mostra il fronte del volume; nel caso osservato l'IA aveva perso la
+crescita, quindi il nodo resta correttamente minimo. L'uscita della carta
+A è stata osservata al confine reale dopo il terzo turno, con slot poi
+vuoto e nessuna proprietà di rinculo residua.
+
+Il contributo Energia nello slot A-5 identifica la vera carta fisica,
+indice 0, una carica prima e zero dopo, scarto reale. Nessuna carta
+Energia virtuale viene aggiunta dal renderer. I nominali rimangono quelli
+della scheda: le differenze fra fixture dipendono da bersaglio e difese.
+
+CI del commit `ed3489c7f103cc645d4ac163562d329946140f4c` superata:
+preflight, intera verifica logica e build, run 45900846619. Chrome mobile
+superato, run 45900846659. Il commit figlio materializza soltanto i tre
+PNG nativi approvati e aggiorna la verifica dei fronti; i loro hash
+corrispondono ai sorgenti. I test sui 40 PNG nativi passano anche dopo
+il recupero del commit pubblicato. Il test di estrazione della UI include
+ora la dipendenza reale degli ologrammi, conservando tutte le asserzioni.
+
+Prova dal vivo recuperabile: `nucleo-leggendario-battaglia-stackblitz.mp4`,
+`libfile_9b30d8b0817881919408edb698047603`, 277.952 byte, 474×842, 2,8 s.
+È ricavata da venti catture del vero colpo nella scheda StackBlitz, con
+intervalli temporali originali: circa 7,5 fotogrammi catturati al secondo,
+non una misura del frame rate del gioco. Non include audio registrato e
+non altera la velocità; l'audio approvato è integrato nella partita.
+La vibrazione fisica e l'ascolto strumentale restano non verificati.
+Dati dei casi in `docs/collaudi/nucleo-folgore-2026-11-26/verifica-stackblitz.json`.

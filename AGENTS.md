@@ -30,7 +30,7 @@ ARMA è rossa (#ff594c), STRATEGIA è arancione (#ffb24d) e sostituisce la denom
 
 
 
-## Punto di ripresa — 40 varianti; Nucleo scenico 2 approvato
+## Punto di ripresa — 40 varianti; Nucleo scenico 2 integrato e collaudato
 
 L'utente ha approvato le tre carte del Cannone a Nucleo di Folgore
 Crescente con «per le carte ok», quindi il colpo scenico 2 con «ok».
@@ -46,9 +46,15 @@ codice: nucleo volumetrico, corone in precessione, compressione finale,
 un solo sboccio elettrico e reazione dello scafo realmente colpito.
 Audio PCM e piano aptico condividono gli stessi tempi. Energia spesa,
 interruzione e scadenza seguono metadati del motore; nessun consumo finto.
-Il collaudo reale su StackBlitz va eseguito dopo la pubblicazione di
-questa integrazione. Non sostituire quel collaudo con il video isolato
-approvato; documentare separatamente test, build e osservazioni reali.
+Il collaudo reale su StackBlitz è completato: Rara T1, Epica T2 con
+Energia e supporti, Leggendaria T3 sulla madre anche dal secondo slot,
+interruzione, sole Energie vecchie, Difesa, tiro B e scadenza negli scarti.
+Otto casi osservati, contributi Energia fisici e ripristino degli scafi
+verificati. Registro: `docs/collaudi/nucleo-folgore-2026-11-26/verifica-stackblitz.json`.
+Test completi, build e Chrome mobile passano sul commit di integrazione
+`ed3489c7f103cc645d4ac163562d329946140f4c`; PNG nativi verificati nel figlio
+`f00344fecc1a947ef39473d11f1eab960e441d1e`. Non confondere questa verifica
+con la prima anteprima isolata.
 La vibrazione fisica resta da verificare su telefono compatibile.
 Scheda e sorgenti delle approvazioni:
 `docs/FULMINE_05_NUCLEO_FOLGORE_CRESCENTE_2026-11-26.md`.
@@ -91,16 +97,29 @@ tavola dei simboli viene servita anch'essa da ASSET_ROOT, senza duplicarla
 nel limite di caricamento della copia salvata.
 **Persistenza verificata:** le sole scritture del terminale non rimangono
 nella copia salvata. Il `package.json` salvato tramite l'editor contiene
-ora l'avvio dal commit verificato `433d367c0c52908231a50375820240473349a892`.
-Al ricaricamento completo scarica e verifica i 664 sorgenti, usa gli asset
-dello stesso commit e rigenera il collaudo con tutte le 37 varianti.
-Il risultato è stato osservato dopo Save e ricaricamento, con 412 file
-aggiornati e il commit letto da `.stackblitz-sync.json` nell'editor.
+ora l'avvio dal commit verificato `f00344fecc1a947ef39473d11f1eab960e441d1e`.
+Al ricaricamento completo scarica e verifica i 690 sorgenti, usa gli asset
+dello stesso commit e rigenera il collaudo con tutte le 40 varianti.
+Dopo Save e ricaricamento sono stati osservati il riferimento persistente,
+il bootstrap con 690 sorgenti e 438 aggiornamenti, il selettore di 40
+carte e i PNG del Nucleo realmente caricati a 3072×4608.
 Per aggiornare la versione, generare il package con
 `node scripts/stackblitz-saved-package.mjs --ref=SHA_VERIFICATO`, incollarlo
 nell'editor di `package.json` della stessa copia e salvare prima dell'avvio.
 Non sostituire questo avvio persistente con il package temporaneo scritto
-dal sincronizzatore né creare copie nuove. Il salvataggio globale della
+dal sincronizzatore né creare copie nuove.
+**Salvataggio verificato:** prima dell'aggiornamento fermare l'avvio
+automatico prima che il sincronizzatore scriva i sorgenti. Nella UI,
+Open New Terminal rende visibile Close Terminal: chiudere il primo
+terminale (quello dell'avvio), lasciando il nuovo vuoto. Selezionare poi
+esplicitamente `package.json` nell'albero e controllare che la scheda
+attiva sia davvero quella: durante il bootstrap può tornare a README.
+La copia salvata usa soltanto dev/build/predev nel package iniziale;
+il sincronizzatore ripristina poi il package canonico in esecuzione.
+Save a sincronizzazione ferma è stato osservato disabilitarsi dopo il
+salvataggio; il ricaricamento ha confermato il nuovo riferimento.
+Il README salvato conserva il testo originale. Non presumere riuscito
+un Save che restituisce l'errore del servizio o perde la versione al reload. Il salvataggio globale della
 sessione dopo la sincronizzazione può dare un errore del servizio;
 l'avvio salvato nell'editor è quello verificato dopo il ricaricamento.
 Distinguere sempre test, build e osservazioni

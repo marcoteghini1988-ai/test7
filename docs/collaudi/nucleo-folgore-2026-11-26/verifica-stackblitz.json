@@ -1,0 +1,261 @@
+{
+  "commit": "f00344fecc1a947ef39473d11f1eab960e441d1e",
+  "cases": [
+    {
+      "case": "Rara T1 autonoma",
+      "shots": [
+        {
+          "actualDamage": "23",
+          "cascadeIndex": "0",
+          "coreBroken": "false",
+          "coreChargeStage": "1",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "precessing-coronas-compression-electric-bloom",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "growing-thunder-core"
+        }
+      ]
+    },
+    {
+      "case": "Epica T2 con Energia e supporti",
+      "shots": [
+        {
+          "actualDamage": "53",
+          "cascadeIndex": "0",
+          "coreBroken": "false",
+          "coreChargeStage": "2",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "precessing-coronas-compression-electric-bloom",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "growing-thunder-core"
+        }
+      ]
+    },
+    {
+      "case": "Leggendaria T3 avversario con crescita interrotta",
+      "shots": [
+        {
+          "actualDamage": "72",
+          "cascadeIndex": "0",
+          "coreBroken": "true",
+          "coreChargeStage": "1",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "precessing-coronas-compression-electric-bloom",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "3",
+          "targetId": "command",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "growing-thunder-core"
+        }
+      ]
+    },
+    {
+      "case": "Epica T2: ricarica saltata",
+      "shots": [
+        {
+          "actualDamage": "56",
+          "cascadeIndex": "0",
+          "coreBroken": "true",
+          "coreChargeStage": "1",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "precessing-coronas-compression-electric-bloom",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "growing-thunder-core"
+        }
+      ]
+    },
+    {
+      "case": "Epica T2: sole Energie vecchie",
+      "shots": [
+        {
+          "actualDamage": "56",
+          "cascadeIndex": "0",
+          "coreBroken": "true",
+          "coreChargeStage": "1",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "precessing-coronas-compression-electric-bloom",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "growing-thunder-core"
+        }
+      ]
+    },
+    {
+      "case": "Leggendaria T3: Difesa pubblica",
+      "shots": [
+        {
+          "actualDamage": "0",
+          "cascadeIndex": "0",
+          "coreBroken": "false",
+          "coreChargeStage": "3",
+          "defenseBlocked": "true",
+          "energySpent": "1",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "precessing-coronas-compression-electric-bloom",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "3",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "growing-thunder-core"
+        }
+      ],
+      "movingHulls": 0,
+      "contact": {
+        "active": "1",
+        "contacts": "[\"shield\"]",
+        "frames": "61",
+        "maxFrameMs": "83.3",
+        "motif": "prismatic-core-bloom",
+        "motifs": "[\"prismatic-core-bloom\"]",
+        "phase": "shield-contact",
+        "presentation": "hull-impacts-v4",
+        "targetId": "weapons"
+      }
+    },
+    {
+      "case": "Leggendaria T3: secondo slot, madre",
+      "shots": [
+        {
+          "actualDamage": "172",
+          "cascadeIndex": "0",
+          "coreBroken": "false",
+          "coreChargeStage": "3",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1250",
+          "impactAtMs": "2750",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "precessing-coronas-compression-electric-bloom",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "3",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "growing-thunder-core"
+        }
+      ]
+    },
+    {
+      "case": "Scadenza reale dopo il terzo turno",
+      "cards": [
+        {
+          "cardId": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+          "coreEvent": "weapon-core-expired",
+          "owner": "A"
+        }
+      ]
+    }
+  ],
+  "date": "2026-11-26",
+  "project": "https://stackblitz.com/edit/github-edu2s6xy",
+  "savedBootVerifiedAfterReload": true,
+  "sourceFilesVerified": 690,
+  "sourceFilesUpdated": 438,
+  "approvedFronts": 40,
+  "nativePngDimensions": [
+    3072,
+    4608
+  ],
+  "hullStylesRestored": true,
+  "hardwareVibrationVerified": false,
+  "audioHardwareListeningVerified": false,
+  "automatedChecks": {
+    "sourceCommit": "ed3489c7f103cc645d4ac163562d329946140f4c",
+    "nativePngCommit": "f00344fecc1a947ef39473d11f1eab960e441d1e",
+    "ciRun": 45900846619,
+    "ciConclusion": "success",
+    "mobileRun": 45900846659,
+    "mobileConclusion": "success",
+    "nativePngRun": 45900846613
+  },
+  "capture": {
+    "filename": "nucleo-leggendario-battaglia-stackblitz.mp4",
+    "library_file_id": "libfile_9b30d8b0817881919408edb698047603",
+    "bytes": 277952,
+    "dimensions": [
+      474,
+      842
+    ],
+    "durationSeconds": 2.8,
+    "source": "20 schermate della partita StackBlitz con intervalli temporali originali",
+    "averageCapturedFramesPerSecond": 7.5,
+    "gameFrameRateMeasuredByVideo": false,
+    "audioCaptured": false,
+    "speedChanged": false,
+    "sha256": "026d0a4fb9928a1fc340ae220c89741d58d0d5904b548c30da3112905d20568c"
+  }
+}
