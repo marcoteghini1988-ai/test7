@@ -1,11 +1,48 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — immagini arma e colpo; due famiglie Fulmine approvate
+## Revisione corrente — immagini arma e colpo; tre famiglie Fulmine approvate
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Punto di ripresa aggiornato — Sferzatore approvato; Cannone del Lampo Bianco
+
+L'utente ha approvato la proposta dello **Sferzatore Ionico di Rame
+Lunare** con «Sì, va bene» e ha richiesto di proseguire.
+Questa è la terza famiglia Fulmine, `weapon-base-ionic-03`.
+
+**Specifica approvata, Comune/Rara/Epica/Leggendaria:**
+un solo attacco a una navicella in un turno proprio, senza Energie
+aggiuntive; Difese e protezioni ordinarie applicate normalmente.
+Una frusta elettrica parte dai terminali di rame, si allunga a zigzag
+e colpisce con una sola sferzata. Al vero contatto: scintille sulla
+corazza, schiocco elettrico e vibrazione breve sincronizzata.
+Nelle quattro rarità rimangono la stessa dinamica e un solo impatto:
+aumentano danno e intensità visiva, sonora e aptica. La carta raffigura
+la macchina mentre emette quella stessa frusta.
+Applicare la regola sulle Difese: un blocco completo non simula danno
+allo scafo; l'intervento è visibile anche sulla carta coinvolta.
+Nessun nuovo asset, renderer o codice di gioco realizzato qui.
+
+**Quarta famiglia da presentare:** Cannone del Lampo Bianco,
+`weapon-base-ionic-04`, Fulmine; rarità iniziale Rara nel catalogo,
+non inventare una Comune. Il nome «Arco del Lampo Bianco» emerso nel
+parlato non è il nome del catalogo. Fonte: `approvedBaseWeapons.js`.
+Un colpo su un bersaglio in un turno, senza Energia aggiuntiva nel
+profilo base; protezioni normali. Nessun valore di danno ancora scelto
+in questa revisione grafica.
+
+**Proposta non ancora approvata:** il condensatore apre quattro
+diaframmi e libera una singola scarica elettrica bianca rettilinea e
+brevissima. Al contatto reale, scintille e bagliore localizzato,
+uno schiocco elettrico e un impulso aptico. I diaframmi sono parti
+dell'arma, non attacchi aggiuntivi. Nessun accecamento o stordimento.
+Nell'illustrazione, macchina ed emissione corrispondono all'effetto.
+L'utente chiede «Cioè»: spiegare subito in termini semplici il colpo.
+Le note storiche successive sulle famiglie 1 e 2 non sono il punto
+attuale e non riaprono le approvazioni ricevute.
 
 ### Nuova regola generale — immagine della macchina e del suo colpo
 
@@ -31,10 +68,10 @@ nello stato «non ancora approvata», non nella descrizione accettata.
 L'utente ha chiarito che da queste famiglie il lavoro comprende anche
 le carte complete: illustrazione, cornice e simboli ufficiali, testi e
 caratteristiche dal catalogo, in PNG HD, più effetti, audio e vibrazione.
-Finora sono state concordate le prime due famiglie; **le nuove immagini
+Finora sono state concordate le prime tre famiglie; **le nuove immagini
 complete non sono ancora state create**. Il nuovo requisito arma+colpo
 si applicherà alla loro produzione. La prossima famiglia della lista,
-quando si proseguirà, è Sferzatore Ionico di Rame Lunare.
+quando si proseguirà, è Cannone del Lampo Bianco.
 
 ### Punto attuale — Pettine approvato; famiglia 2, Lanciadardi di Tesla
 
