@@ -148,9 +148,9 @@ function Review(){
    <span role="status">{recordStatus}</span>
    {recordUrl&&<a href={recordUrl} download="armi-metallo-effetti-in-battaglia.webm">Scarica video battaglia</a>}
   </div>
-  {showCard&&hasCardTextLayer(setup.cardId)&&<div role="dialog" aria-label="Card preview" style={{position:'fixed',inset:0,zIndex:1000,background:'#020812e8',display:'grid',placeItems:'center'}}>
-   <div><label>Card language <select aria-label="Preview language" value={textLocale} onChange={e=>setCardTextLocale(e.target.value)}><option value="en">English</option><option value="it">Italiano</option></select></label><button onClick={()=>setShowCard(false)}>Close card</button><span className="weapon-salvo-gallery" style={{width:'min(380px,70vw,52vh)',aspectRatio:'2 / 3'}}>
-    <img src={cardTextBasePath(setup.cardId)||OFFICIAL_WEAPON_FRONT_BY_ID[setup.cardId]} alt={cardTextName(WEAPON_NEAR_FINAL_BY_ID[setup.cardId])} style={{width:'100%',height:'100%',objectFit:'contain'}}/><WeaponSalvoCardMarks cardId={setup.cardId}/>
+  {showCard&&hasCardTextLayer(setup.cardId)&&<div role="dialog" aria-label="Card preview" style={{position:'fixed',inset:0,zIndex:2147483647,background:'#020812e8',display:'grid',placeItems:'center'}}>
+   <div><label>Card language <select aria-label="Preview language" value={textLocale} onChange={e=>setCardTextLocale(e.target.value)}><option value="en">English</option><option value="it">Italiano</option></select></label><button onClick={()=>setShowCard(false)}>Close card</button><span className="weapon-salvo-gallery" style={{width:'min(380px,70vw,52vh)',aspectRatio:'2 / 3',lineHeight:0}}>
+    <img src={cardTextBasePath(setup.cardId)||OFFICIAL_WEAPON_FRONT_BY_ID[setup.cardId]} alt={cardTextName(WEAPON_NEAR_FINAL_BY_ID[setup.cardId])} style={{display:'block',width:'100%',height:'100%',objectFit:'contain'}}/><WeaponSalvoCardMarks cardId={setup.cardId}/>
    </span></div>
   </div>}
   <div className="maglio-review-host" style={{position:'relative',flex:1,minHeight:0}}>
