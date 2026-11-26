@@ -1,13 +1,55 @@
 # PROCEDURA OBBLIGATORIA — "crea la carta" (22 novembre 2026)
 
-> **Nuovo ordine deciso dall'utente, 26/11:** creare/presentare la carta,
-> spiegare il suo ruolo reale nel gioco e attendere l'indicazione dell'utente
-> su quale effetto grafico realizzare. Verificare prima la meccanica nel
-> codice. L'approvazione dell'immagine da sola non avvia più la creazione
-> autonoma di una coreografia. Dopo la scelta dell'effetto, procedere con
-> implementazione, suoni, aptica, integrazione e verifiche già autorizzate.
-> Per le carte esistenti, spiegare prima ruolo e grafica corrente e poi
-> seguire la revisione scelta. Vedi le
+## Regola obbligatoria — nell'illustrazione mostrare arma e colpo
+
+**Richiesta generale dell'utente, 26 novembre 2026:** quando si creano
+le immagini delle carte Arma, raffigurare **sia la macchina sia il tipo
+di colpo che deve partire da quella macchina**. Vale per tutte le
+famiglie, tutti gli elementi e tutte le rarità, non soltanto per quella
+in discussione.
+
+- Integrare arma e colpo nella stessa illustrazione centrale: mostrare
+  chiaramente il dispositivo e il proiettile, la scarica o l'emissione
+  prodotta. Il collegamento fra bocca/emettitore e colpo deve essere
+  comprensibile, per esempio raffigurandone l'uscita o un istante di volo.
+- Il colpo deve corrispondere alla rappresentazione prevista in battaglia:
+  stessa forma riconoscibile, materiale/natura elementale, componenti,
+  colori, scia e comportamento caratteristico. Non inventare per la
+  carta un colpo diverso da quello che poi viene animato.
+- La macchina deve restare leggibile e modellabile in 3D. Il colpo è
+  altrettanto riconoscibile e riproducibile; non coprire l'arma con
+  particelle o una luce indistinta.
+- Applicare la coerenza dell'elemento: Fulmine elettrico, Metallo
+  metallico, Fuoco di fuoco, Acqua d'acqua e così per tutti gli elementi.
+  Uno stesso elemento non giustifica colpi identici per tutte le armi.
+- Aggiornare coerentemente arma e colpo per ciascuna rarità. Se la scelta
+  approvata mantiene la forma del colpo con differenze soltanto lievi,
+  rispettarla; non aggiungere rimbalzi, impatti, status o bersagli.
+- Quantità raffigurate e tracce di movimento non devono suggerire colpi
+  o abilità assenti dalla carta. Gli archetti che formano una sola
+  scarica e le due spirali attorno a un dardo sono parti visive dello
+  stesso attacco, non attacchi aggiuntivi.
+- Per un dispositivo senza proiettile convenzionale rappresentare la
+  sua emissione o azione effettiva, senza inventargli un'arma da fuoco.
+- Mantenere cornici PNG originali, simboli, nomi, statistiche e spazi
+  approvati. Il colpo rimane nell'area dell'illustrazione e non richiede
+  nuovi riquadri, icone o modifiche alla geometria del fronte.
+- Prima di consegnare confrontare illustrazione e specifica dell'effetto,
+  poi verificarne la corrispondenza con il modello e il colpo in gioco
+  durante l'integrazione. Mostrare la carta completa per approvazione.
+
+La regola va letta autonomamente nella procedura prima di creare o
+rifare le immagini. Non certifica nuove immagini già prodotte e non
+autorizza a sostituire automaticamente gli asset approvati esistenti.
+Vedi anche le regole permanenti per grafica, suono e vibrazione.
+
+> **Ordine corrente aggiornato del 26/11:** leggere catalogo, meccanica e
+> specifiche; presentare nome e funzione, poi proporre l’effetto all’utente,
+> che lo approva o corregge. Le immagini devono mostrare insieme arma e
+> colpo come prescritto sopra. Salvare le scelte e produrre le carte
+> complete con i riferimenti originali quando richiesto. L’approvazione
+> di una proposta non equivale a immagini o animazioni già realizzate;
+> implementazione e collaudo seguono l’ordine operativo dell’utente. Vedi le
 > [regole permanenti](REGOLE_PERMANENTI_EFFETTI_CARTE.md).
 
 > **Regole permanenti confermate il 25/11:** leggere anche
