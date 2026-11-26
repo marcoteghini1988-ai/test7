@@ -1,5 +1,39 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Regola obbligatoria — leggere prima di creare qualsiasi effetto di carta
+
+**Ordine permanente dell'utente, 26 novembre 2026.**
+Prima di progettare, creare, modificare, integrare o collaudare effetti
+di QUALSIASI carta, leggere autonomamente
+[`docs/REGOLE_PERMANENTI_EFFETTI_CARTE.md`](docs/REGOLE_PERMANENTI_EFFETTI_CARTE.md).
+Non aspettare che l'utente dica «leggi la regola». La lettura deve
+precedere il lavoro sugli effetti, anche nelle chat successive. Se la
+versione corrente è già stata letta nella stessa sessione, usarla senza
+recuperarla di nuovo a ogni chiarimento; rileggerla se è stata aggiornata.
+
+Poi leggere la scheda completa della carta, la variante di rarità, le
+decisioni approvate e la risoluzione del motore/eventi. Distinguere sempre
+il codice attuale dalle revisioni documentate ancora da implementare.
+
+**Ogni effetto descritto dalla carta deve avere una corrispondenza visiva,
+sonora e di vibrazione coerente e sincronizzata.** Vale per tutte le
+categorie, per effetti principali/secondari/condizionali, durata e
+scadenza, costi e conseguenze, e per ogni nave o carta realmente coinvolta.
+Non limitarsi allo sparo: rappresentare anche attivazione, protezione,
+superamento, rottura/rimozione, trasferimenti, cure, stati e interruzioni
+quando la carta li prevede. Sulle Difese mostrare la reazione anche
+sulla carta stessa. Un bypass non ne simula la distruzione.
+
+Prima di dichiarare concluso un effetto verificare la copertura di ogni
+meccanica nei tre canali e nei casi previsti, sincronizzati agli eventi
+reali. Rispettare preferenze audio/aptiche, movimento ridotto e capacità
+del dispositivo; non dichiarare provata la vibrazione fisica senza
+riscontro sul dispositivo. Non inventare meccaniche dalla sola grafica.
+
+La regola non autorizza la creazione anticipata delle sequenze: nella
+modalità corrente si documentano le scelte; si realizzeranno al comando
+esplicito dell'utente. Dettagli vincolanti nel documento collegato.
+
 ## Frantumatore a Induzione — chiarimento corrente: lame da realizzare
 
 L'utente sta definendo il colpo desiderato, NON descrivendo un effetto già
@@ -60,11 +94,10 @@ Epica e Leggendaria. La risposta esplicita «Sei» chiude la scelta 5/6:
 non richiederla più e non distinguere i numeri in base alla rarità.
 
 Scelte documentate: Maglio, Cannone a Slitta, Termobalistica.
-**Punto di ripresa: revisione Ganasce/Collassatore.** Le Ganasce autonome
-per tre turni e il palo/perno d'impatto sono la proposta corrente.
-Ascoltare e definire i punti aperti della combinazione senza ripartire
-dalle spiegazioni precedenti. Una coppia alla volta; non recuperare un
-elenco nuovo.
+**Punto di ripresa:** Frantumatore a Induzione; leggere il documento di
+ripresa aggiornato. Le Ganasce e la seconda Metallo sono in pausa per
+volontà dell'utente. Non riproporre le alternative già rifiutate o aprire
+un elenco nuovo.
 
 Il completamento richiesto prima di passare alla carta dopo, in questa
 fase, è la definizione e il salvataggio della scelta. Implementazione e
