@@ -34,7 +34,7 @@ test('Tutte le 73 famiglie hanno ogni stadio superiore fino a Leggendaria (235 c
  assert.equal(WEAPON_BASE_CARDS.length,73);
  assert.equal(EVOLVED_WEAPON_CARDS.length,162);
  assert.equal(ALL_WEAPON_CARDS.length,235);
- assert.equal(NEXT_WEAPON_COLLECTION_CARDS.length,235);
+ assert.ok(NEXT_WEAPON_COLLECTION_CARDS.length>=235); // comprende il registro corrente aggiuntivo
  assert.equal(new Set(ALL_WEAPON_CARDS.map(c=>c.id)).size,235);
  assert.equal(Object.keys(WEAPON_EVOLUTION_FAMILIES).length,73);
  for(const base of WEAPON_BASE_CARDS){

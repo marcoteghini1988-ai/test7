@@ -1,0 +1,20 @@
+name: Test nuove Armi 26 novembre
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/fleetNext/nextBalanced*.js'
+      - 'src/fleetNext/nextWeaponBalance20261126.json'
+      - 'src/fleetNext/combat.js'
+      - 'src/fleetNextNextBalancedWeapons.test.js'
+      - '.github/workflows/next-weapons-26.yml'
+  workflow_dispatch:
+jobs:
+  mechanics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test src/fleetNextNextBalancedWeapons.test.js src/fleetNextConfirmedNextWeaponDesigns.test.js src/fleetNextWeaponEvolutions.test.js src/fleetNextProvisionalWeapons.test.js

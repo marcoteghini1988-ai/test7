@@ -30,6 +30,8 @@ import {supportDefinition} from './supportCatalog.js';
 import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffinities.js';
 import {applyElementalDamage,elementalDamageDescription,terrainWeaponAttackBonus} from './elementalDamage.js';
 import {weaponFiresOnOwnTurn,planIceNeedle,planMagmaMortar,consumeMortarEnergy} from './confirmedAdvancedWeaponMechanics.js';
+import {nextWeaponUnavailableReason,prepareNextSingularity,absorbNextWeaponShot,finishNextSingularity,
+ resolveNextBalancedWeaponShots,resolveNextOpponentReactions,advanceNextCommandAcceleration} from './nextBalancedWeaponEngine.js';
 import {reserveProvisionalMortarFuel,resolveProvisionalWeaponShots,tickProvisionalBurns} from './provisionalWeaponEngine.js';
 // La pila Energia non ha limite; i costi delle abilità restano indipendenti.
 import {elementalAbility,totalElementalEnergy,chargedElementalEnergy,
@@ -266,6 +268,7 @@ export function refreshEscortLinks(side,ply=0){
  for(const e of side.escorts||[])e.linked=escortEnabled(side,e,ply);
 }
 export function protectingFleetUnits(side,ply=0){
+ if(side.nextCoverSuppressedPly===ply)return [];
  const escortRows=(side.escorts||[]).filter(e=>escortEnabled(side,e,ply)).map(unit=>({kind:'escort',unit}));
  const machineRows=side.ruleset===HP_SYNC_RULESET?[]:
   (side.machines||[]).filter(e=>unitEnabled(e,ply)).map(unit=>({kind:'machine',unit}));
@@ -639,6 +642,8 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
  }
  if(s.type==='deployMachine'){
   const ply=battle?.ply??0,pattern=s.weaponProfile?.pattern;
+  const newWeaponReason=nextWeaponUnavailableReason(def,side,battle,selectedCardIds,card);
+  if(newWeaponReason)return newWeaponReason;
   if(pattern==='command-lance'&&!(side.commander?.untilPly>ply&&
     operational(side.ships[0],characterSystem(side)))&&
     !selectedCardIds.some(id=>isCharacterCard(card(id))))
@@ -1018,6 +1023,7 @@ export function validateFleetTurn(b,who,order){
  return null;
 }
 function selectedEnemyTarget(side,order={},ply=0){
+ if(side.nextForceMotherPly===ply){const unit=motherPart(side.ships[0],'weapons');return unitAlive(unit)&&side.ships[0].hp>0?{kind:'part',unit}:null;}
  const kind=order.targetKind||(order.escortSlot!=null?'escort':order.machineSlot!=null?'machine':'part');
  if(kind==='escort'||kind==='machine'||kind==='module'){
   if(kind==='machine'&&side.ruleset===HP_SYNC_RULESET)return null;
@@ -3513,7 +3519,7 @@ function resolveMultiWeaponShots(b,ctx,events,order){
 function resolveDesignedWeaponShots(b,ctx,events,order){
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
  const ready=(side.machines||[]).filter(m=>m.damageMode==='designed-shot'&&
-  !m.weaponProfile?.provisional&&unitEnabled(m,b.ply)&&
+  !m.weaponProfile?.provisional&&!m.weaponProfile?.nextBalanced&&unitEnabled(m,b.ply)&&
   !unitSilenced(m,b.ply)&&!weaponSlotLocked(side,m.slot,b.ply)&&
   (m.deployedPly===b.ply||m.weaponProfile?.pattern==='repeat'&&m.deployedPly===b.ply-2||
   m.weaponProfile?.pattern==='magma-mortar'&&weaponFiresOnOwnTurn(m.deployedPly,b.ply,3)));
@@ -3674,6 +3680,7 @@ function escortPassive(b,side,ctx,events,order){
    if(['base-shot','polarity-shot','double-shot','repeat-shot','sweep-shot','energy-burst-shot','designed-shot'].includes(machine.damageMode))continue;
    const charge=supportWeaponCharge(side,machine,cardRole);
    const power=arsenalBonus(side,machine,b.ply,charge?.damage);
+   if(power&&absorbNextWeaponShot(b,ctx,events,machine.sourceCardId,power,{card,emit}))continue;
    if(power){
     const extra=terrainWeaponExtraPower(b,side,ctx,machine,power);
     if(b.newGeneratorCombat){
@@ -4211,6 +4218,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  const enemy=b.sides[other(ctx.who)];
  if(ctx.trackWeaponOverflow)ctx.weaponExcess=0;
  if(!target||!unitAlive(target.unit))return {damage:0,target};
+ if(absorbNextWeaponShot(b,ctx,events,cardId,amount,{card,emit}))return {damage:0,target,absorbed:true};
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
   return {damage:0,target};
  const finalTarget=redirectFleetHit(b,ctx,events,target);
@@ -5200,7 +5208,7 @@ export function advanceFleetCombatTime(battle,nowMs){
  // Veleno e Rigenerazione sono effetti al SECONDO REALE durante i 30s
  // di preparazione (anche se le carte nuove non sono ancora risolte).
  // Solo i TIMER DEI COMPONENTI usano la quota strategica per turno.
- const timed=advanceIndependentSupportTime(battle,nowMs);
+ const timed=advanceNextCommandAcceleration(advanceIndependentSupportTime(battle,nowMs),nowMs,{clone,emit,enforceDestroyedSystems});
  if(battle?.strategicNoDeterioration)return timed;
  if(!battle?.newGeneratorCombat||timed.battle?.phase!=='playing')
   return timed;
@@ -5304,16 +5312,21 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  nebulaArchonTerrainTrade(b,ctx,events,order);
  nebulaRevealOnOwnTurn(b,ctx,events);
  processHelios(b,who,ctx,events,order);
+ const nextWeaponHooks={unitEnabled,unitSilenced,weaponSlotLocked,startNebulaVolley,protectingFleetUnits,
+  selectedEnemyTarget,motherPart,arsenalBonus,linceHit,spendElementalEnergy,card,emit};
+ prepareNextSingularity(b,ctx,nextWeaponHooks);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.fieldReset?[]:
   ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,attackCardCapacity(side));
- const weaponShot=mergeFalcoShots(
+ const nextShot=resolveNextBalancedWeaponShots(b,ctx,events,order,nextWeaponHooks);
+ const legacyWeaponShot=mergeFalcoShots(
   resolveProvisionalWeaponShots(b,ctx,events,order,{other,unitAlive,unitEnabled,unitSilenced,weaponSlotLocked,
   startNebulaVolley,protectingFleetUnits,selectedEnemyTarget,motherPart,arsenalBonus,
   linceHit,discardDefense,spendElementalEnergy,card,emit,terrainCatalog:TERRAIN_CATALOG}),
   mergeFalcoShots(resolveDesignedWeaponShots(b,ctx,events,order),
    mergeFalcoShots(resolveApprovedBaseWeaponShots(b,ctx,events,order),
     resolveMultiWeaponShots(b,ctx,events,order))));
+ const weaponShot=mergeFalcoShots(nextShot,mergeFalcoShots(legacyWeaponShot,finishNextSingularity(b,ctx,events,order,nextWeaponHooks)));
  if(b.newGeneratorCombat)resolveModernGeneratorActivation(b,who,order,ctx,events);
  const ownShot=order.pass||side.ships[0].hp<=0?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.generatorShotDamage!=null?resolveSalvo(b,ctx,events,order):
@@ -5351,6 +5364,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  if(order.sacrificeEscortId)shot.sacrificeDamage=sacrificeDamage;
  side.lastDamage=(shot.damage||0)+(shot.escortDamage||0)+(shot.machineDamage||0)+(shot.moduleDamage||0)+(ctx.siphonDamage||0)+sacrificeDamage;
  side.discard.push(...ctx.cards.filter(id=>!['character','defense','terrain'].includes(cardRole(id))&&card(id)?.effectSpec?.type!=='energy'&&card(id)?.effectSpec?.type!=='dismantle'&&card(id)?.effectSpec?.type!=='systemModifier'&&card(id)?.effectSpec?.type!=='deployMachine'&&!isAuroraModule(id)&&!isLinceModule(id)&&!isPrismaModule(id)&&!isCorvoModule(id)&&!isFalcoModule(id)&&!isFalcoPreparation(id)&&!isMantaModule(id)&&!isSharkModule(id)&&!isNebulaModule(id)&&!isStormModule(id)&&!isRoyalModule(id)&&!isObsidianModule(id)&&!isObsidianPreparation(id)&&!isArkModule(id)));
+ resolveNextOpponentReactions(b,ctx,events,nextWeaponHooks);
  finishTurn(b,ctx,events);
  return {ok:true,battle:b,events,shot};
 }

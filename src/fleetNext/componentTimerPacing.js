@@ -76,11 +76,12 @@ export function advanceTimedComponents(side,elapsedSeconds,{drainFraction=CANDID
  const now=Math.max(0,Math.floor(elapsedSeconds));
  const before=Math.min(now,Math.max(0,Math.floor(side.componentElapsedSeconds||0)));
  const previouslyExpired=TIMED_COMPONENT_IDS.filter(id=>side.componentTimers[id]?.expired);
- const expiries=TIMED_COMPONENT_IDS.map(id=>side.componentTimers[id].initialSeconds);
+ const extraFor=id=>id==='command'?Math.max(0,side.nextCommandExtraSeconds||0):0;
+ const expiries=TIMED_COMPONENT_IDS.map(id=>Math.max(0,side.componentTimers[id].initialSeconds-extraFor(id)));
  const allExpiredAt=Math.max(...expiries);
  for(const id of TIMED_COMPONENT_IDS){
   const timer=side.componentTimers[id];
-  timer.remainingSeconds=Math.max(0,timer.initialSeconds-now);
+  timer.remainingSeconds=Math.max(0,timer.initialSeconds-now-extraFor(id));
   timer.expired=timer.remainingSeconds===0;
  }
  // Si conta ogni secondo una sola volta dopo l'esaurimento del terzo componente.

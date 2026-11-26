@@ -3,6 +3,7 @@
 // Non genera immagini, non modifica le armi originali e non allunga i turni.
 // Trifase I/II/III sono tre carte in SEQUENZA di combattimento, ognuna con
 // una sua evoluzione di rarita': i due concetti sono intenzionalmente distinti.
+import {NEXT_BALANCED_WEAPON_CARDS,NEXT_BALANCED_BY_ID,NEXT_BALANCED_FAMILIES} from './nextBalancedWeapons.js';
 import {APPROVED_BASE_WEAPONS} from './approvedBaseWeapons.js';
 import {CONFIRMED_WEAPON_CARDS} from './confirmedWeaponCards.js';
 import {MULTI_WEAPON_CARDS} from './multiWeaponCards.js';
@@ -59,6 +60,9 @@ export const EVOLVED_WEAPON_CARDS=Object.freeze(WEAPON_BASE_CARDS.flatMap(base=>
 }));
 export const ALL_WEAPON_CARDS=Object.freeze([...WEAPON_BASE_CARDS,...EVOLVED_WEAPON_CARDS]);
 export const ALL_WEAPON_BY_ID=Object.freeze(Object.fromEntries(ALL_WEAPON_CARDS.map(c=>[c.id,c])));
+// La matrice storica 235 resta riproducibile; il catalogo corrente include il nuovo registro.
+export const CURRENT_WEAPON_CARDS=Object.freeze([...ALL_WEAPON_CARDS,...NEXT_BALANCED_WEAPON_CARDS]);
+export const CURRENT_WEAPON_BY_ID=Object.freeze({...ALL_WEAPON_BY_ID,...NEXT_BALANCED_BY_ID});
  // Un catalogo separato di valori candidati da mostrare prima della grafica.
  // Non altera ALL_WEAPON_CARDS, usato dagli attuali combattimenti e test.
  export const WEAPON_PRINT_CANDIDATES=Object.freeze(ALL_WEAPON_CARDS.map(weaponPrintCandidate));
@@ -74,18 +78,18 @@ export const WEAPON_STRATEGIC_PRINT_BY_ID=Object.freeze(Object.fromEntries(
 ));
 // Alias ufficiale: la plancia usa gia' questi valori per visualizzare i numeri.
 export const WEAPON_NEAR_FINAL_VALUES=WEAPON_STRATEGIC_PRINT_CANDIDATES;
-export const WEAPON_NEAR_FINAL_BY_ID=WEAPON_STRATEGIC_PRINT_BY_ID;
+export const WEAPON_NEAR_FINAL_BY_ID=Object.freeze({...WEAPON_STRATEGIC_PRINT_BY_ID,...NEXT_BALANCED_BY_ID});
 export const WEAPON_EVOLUTION_FAMILIES=Object.freeze(Object.fromEntries(
  WEAPON_BASE_CARDS.map(base=>[base.id,Object.freeze([
   base,...EVOLVED_WEAPON_CARDS.filter(c=>c.weaponFamilyId===base.id)
  ])])
 ));
 export const weaponFamily=id=>{
- const c=ALL_WEAPON_BY_ID[id];return c?WEAPON_EVOLUTION_FAMILIES[c.weaponFamilyId||c.id]:null;
+ const c=CURRENT_WEAPON_BY_ID[id];return c?(WEAPON_EVOLUTION_FAMILIES[c.weaponFamilyId||c.id]||NEXT_BALANCED_FAMILIES[c.weaponFamilyId||c.id]):null;
 };
 export const weaponAtRarity=(id,rarita)=>weaponFamily(id)?.find(c=>c.rarita===rarita)||null;
 export const weaponNextEvolution=id=>{
- const f=weaponFamily(id),c=ALL_WEAPON_BY_ID[id];if(!f||!c)return null;
+ const f=weaponFamily(id),c=CURRENT_WEAPON_BY_ID[id];if(!f||!c)return null;
  const next=SHIP_RARITIES[SHIP_RARITIES.indexOf(c.rarita)+1];
  return next?f.find(w=>w.rarita===next)||null:null;
 };

@@ -1,0 +1,472 @@
+{
+  "schemaVersion": 1,
+  "revision": "2026-11-26-next-22-calibration-v1",
+  "status": "nominali-fissati-da-validare-in-combattimento",
+  "units": "HP nominali prima di Arsenale, supporti, Difese, elementi, Terreno. Non riscalare per rarità o fattore strategico.",
+  "profiles": [
+    {
+      "slug": "marea-laterale",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "baseDamage": 38,
+          "commandRate": 0
+        },
+        {
+          "baseDamage": 68,
+          "commandRate": 1
+        },
+        {
+          "baseDamage": 100,
+          "commandRate": 2
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "pressione-isobarica",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 2,
+      "values": [
+        {
+          "baseDamage": 30
+        },
+        {
+          "baseDamage": 52
+        },
+        {
+          "baseDamage": 78
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "sismico-tettonico",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "values": [
+        {
+          "baseDamage": 30,
+          "secondDamage": 15
+        },
+        {
+          "baseDamage": 52,
+          "secondDamage": 26
+        },
+        {
+          "baseDamage": 72,
+          "secondDamage": 36
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "tempeste-silicee",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "values": [
+        {
+          "baseDamage": 16
+        },
+        {
+          "baseDamage": 26
+        },
+        {
+          "baseDamage": 34
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "macigni-tettonici",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 2,
+      "values": [
+        {
+          "baseDamage": 38,
+          "recoilDamage": 18
+        },
+        {
+          "baseDamage": 65,
+          "recoilDamage": 30
+        },
+        {
+          "baseDamage": 95,
+          "recoilDamage": 44
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "collettore-frammenti",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 2,
+      "values": [
+        {
+          "baseDamage": 27
+        },
+        {
+          "baseDamage": 46
+        },
+        {
+          "baseDamage": 68
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "vortici-ciclonici",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "damagePerDiscard": 3,
+          "energyCost": 3
+        },
+        {
+          "damagePerDiscard": 4,
+          "energyCost": 4
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "spinta-eolica",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "baseDamage": 12,
+          "energyCost": 1
+        },
+        {
+          "baseDamage": 20,
+          "energyCost": 1
+        },
+        {
+          "baseDamage": 30,
+          "energyCost": 1
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "boato-cosmico",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "baseDamage": 55
+        },
+        {
+          "baseDamage": 85
+        },
+        {
+          "baseDamage": 120
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "convertitore-cinetico",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "conversionPercent": 100
+        },
+        {
+          "conversionPercent": 100
+        },
+        {
+          "conversionPercent": 100
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "concentrazione-solare",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "damages": [
+            60,
+            92,
+            130
+          ]
+        },
+        {
+          "damages": [
+            95,
+            145,
+            200
+          ]
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "fotoni-riflessi",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "baseDamage": 38,
+          "energyGain": 1
+        },
+        {
+          "baseDamage": 64,
+          "energyGain": 2
+        },
+        {
+          "baseDamage": 95,
+          "energyGain": 2
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "replicatore-olografico",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "values": [
+        {
+          "soloMultiplier": 0.7,
+          "comboMultiplier": 1
+        },
+        {
+          "soloMultiplier": 0.7,
+          "comboMultiplier": 1
+        }
+      ],
+      "blocked": "Replica completa dell'ultima arma, incluse combinazioni, stato e costi; non attivare prima della verifica."
+    },
+    {
+      "slug": "proiettore-olografico",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "values": [
+        {
+          "soloMultiplier": 0.7,
+          "comboMultiplier": 1
+        },
+        {
+          "soloMultiplier": 0.7,
+          "comboMultiplier": 1
+        }
+      ],
+      "blocked": "Terzo bersaglio indistinguibile, scelta per posizione e rimescolamento senza rivelare l'identità; richiede integrazione con plancia e risolutori."
+    },
+    {
+      "slug": "eclissi-quantistica",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "baseDamage": 38,
+          "bonusDamage": 28
+        },
+        {
+          "baseDamage": 64,
+          "bonusDamage": 46
+        },
+        {
+          "baseDamage": 95,
+          "bonusDamage": 70
+        }
+      ],
+      "blocked": "Scelte segrete in due turni separati, UI e risoluzione ritardata; non sostituire con una scelta automatica nel gioco del giocatore."
+    },
+    {
+      "slug": "inversione-vitale",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "baseDamage": 28,
+          "maxExtraDamage": 40,
+          "gapPercent": 20
+        },
+        {
+          "baseDamage": 50,
+          "maxExtraDamage": 65,
+          "gapPercent": 20
+        },
+        {
+          "baseDamage": 70,
+          "maxExtraDamage": 90,
+          "gapPercent": 20
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "drone-parassita",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "values": [
+        {
+          "baseDamage": 24
+        },
+        {
+          "baseDamage": 40
+        },
+        {
+          "baseDamage": 58
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "estrattore-materia-oscura",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "baseDamage": 35
+        },
+        {
+          "baseDamage": 58
+        },
+        {
+          "baseDamage": 88
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "massa-inerziale",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "values": [
+        {
+          "perCardDamage": 19
+        },
+        {
+          "perCardDamage": 29
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "implosore-singolarita",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 2,
+      "values": [
+        {
+          "boostPercent": 20
+        },
+        {
+          "boostPercent": 30
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "oscurita-gravitazionale",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "values": [
+        {
+          "baseDamage": 3
+        },
+        {
+          "baseDamage": 4
+        }
+      ],
+      "blocked": null
+    },
+    {
+      "slug": "tenebre-infinite",
+      "rarities": [
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "values": [
+        {
+          "discardMultiplier": 1
+        }
+      ],
+      "blocked": null
+    }
+  ]
+}
