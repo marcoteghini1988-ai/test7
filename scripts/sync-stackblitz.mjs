@@ -64,7 +64,7 @@ export async function syncStackblitz({cwd=process.cwd(),ref='main',apply=false,f
  const result={repository:REPOSITORY,commit,files:entries.length,updated:staged.length,applied:true,backup};
  await writeFile(path.join(cwd,'.stackblitz-sync.json'),JSON.stringify(result,null,2)+'\n');
  log('Sorgenti verificati e aggiornati. Conservata la configurazione degli asset remoti.');
- log('Avviare: npm install, poi npm run dev. Salvare la copia StackBlitz e verificare dopo il ricaricamento.');
+ log('Avviare: npm install, poi npm run dev. Per la persistenza, salvare nell\'editor il package generato da scripts/stackblitz-saved-package.mjs e verificare il ricaricamento.');
  return result;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){

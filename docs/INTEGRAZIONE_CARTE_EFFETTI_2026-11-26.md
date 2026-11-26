@@ -68,7 +68,7 @@ revisioni approvate e materializza i PNG sul repository.
   ripartizione delle salve, Maglio/Slitta, Termobalistica 3/6, Difese,
   origini e trasferimenti a pagamento.
 
-Questi controlli non costituiscono una registrazione in StackBlitz. I tre
+I test automatici non costituiscono una registrazione in StackBlitz. I tre
 video della consegna precedente restano simulazioni offline e non vengono
 presentati come riprese di una partita reale.
 
@@ -113,5 +113,31 @@ Il foglio ufficiale dei simboli è lo stesso PNG, servito da
 `public/assets/fleet-ui/category-symbols.png`, per evitare un duplicato
 locale oltre il limite di caricamento della copia. Le tre regressioni
 del sincronizzatore passano; build e preflight del gioco sono superati.
-Il collaudo della versione finale va verificato anche dopo il salvataggio
-e il ricaricamento della copia: non sostituirlo con una semplice build.
+Le scritture del terminale non persistevano dopo il ricaricamento. È stato
+quindi salvato tramite l'editor un `package.json` di avvio che installa le
+dipendenze, richiama il sincronizzatore del commit verificato
+`433d367c0c52908231a50375820240473349a892`, fissa gli asset allo stesso
+commit e rigenera la pagina di collaudo. La procedura è riproducibile con
+`node scripts/stackblitz-saved-package.mjs --ref=SHA_VERIFICATO`.
+
+Dopo **Save e ricaricamento completo** sono stati osservati nell'editor:
+repository canonico, commit corretto, 664 sorgenti, 412 aggiornamenti e
+`applied: true`. Il selettore del gioco ricaricato contiene tutte le 37
+varianti. B mostra una ganascia, tre turni e combo unica. Sono state
+avviate nel WebContainer reale la collisione fra due supporti e lo
+schianto della sola madre sul piano. Le letture DOM hanno rilevato
+rispettivamente due bersagli e un bersaglio unico, con esplosione e
+renderer tridimensionale `volume-depth-buffer`.
+
+Dopo il ricaricamento è stata eseguita anche l'Induzione Epica con due
+Energie e senza Difesa pubblica: salva tridimensionale di tre lame,
+contributo `counted` di due carte fisiche e pila Energia conservata.
+Le prove di calcolo verificano separatamente +20% / +40% e assenza di
+cumulo con bypass/rimozione. L'audio è collegato; non si attesta ascolto
+strumentale né vibrazione fisica del telefono. Non è stato prodotto un
+nuovo video della sessione e le vecchie simulazioni rimangono tali.
+
+Il servizio ha mostrato un errore nel salvataggio globale dei file scritti
+dall'avvio; non va confuso con l'avvio salvato nell'editor, la cui
+persistenza è stata verificata. Il repository resta la fonte canonica.
+Dettagli: `docs/collaudi/ganasce-2026-11-26/stackblitz-verifica.json`.

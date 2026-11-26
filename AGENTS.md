@@ -45,8 +45,22 @@ verifica gli hash dei soli sorgenti del repository Test7, conserva
 `.env.local` e serve le immagini HD da GitHub. Non clonare l'archivio
 binario nel WebContainer e non creare un'altra copia/fork. La grande
 tavola dei simboli viene servita anch'essa da ASSET_ROOT, senza duplicarla
-nel limite di caricamento della copia salvata. Salvare e ricaricare per
-verificare la persistenza. Distinguere sempre test, build e osservazioni
+nel limite di caricamento della copia salvata.
+**Persistenza verificata:** le sole scritture del terminale non rimangono
+nella copia salvata. Il `package.json` salvato tramite l'editor contiene
+ora l'avvio dal commit verificato `433d367c0c52908231a50375820240473349a892`.
+Al ricaricamento completo scarica e verifica i 664 sorgenti, usa gli asset
+dello stesso commit e rigenera il collaudo con tutte le 37 varianti.
+Il risultato è stato osservato dopo Save e ricaricamento, con 412 file
+aggiornati e il commit letto da `.stackblitz-sync.json` nell'editor.
+Per aggiornare la versione, generare il package con
+`node scripts/stackblitz-saved-package.mjs --ref=SHA_VERIFICATO`, incollarlo
+nell'editor di `package.json` della stessa copia e salvare prima dell'avvio.
+Non sostituire questo avvio persistente con il package temporaneo scritto
+dal sincronizzatore né creare copie nuove. Il salvataggio globale della
+sessione dopo la sincronizzazione può dare un errore del servizio;
+l'avvio salvato nell'editor è quello verificato dopo il ricaricamento.
+Distinguere sempre test, build e osservazioni
 visive; la vibrazione hardware resta da provare su telefono compatibile.
 
 Le altre sei famiglie Fulmine richiedono ancora riconciliazione con i nomi

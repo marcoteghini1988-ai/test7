@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-26",
+  "repository": "marcoteghini1988-ai/test7",
+  "applicationCommit": "433d367c0c52908231a50375820240473349a892",
+  "savedProjectUrl": "https://stackblitz.com/edit/github-edu2s6xy?file=.stackblitz-sync.json",
+  "environment": "StackBlitz WebContainer, copia esistente dell'utente",
+  "persistence": {
+    "terminalWritesAlonePersisted": false,
+    "bootstrapSavedThroughEditor": true,
+    "fullReloadVerified": true,
+    "syncManifestObservedInEditor": {"files": 664, "updated": 412, "applied": true},
+    "sameCommitRemoteAssets": true,
+    "globalRuntimeSaveWarning": "Unexpected error occurred. Try to save the project later or download it to not lose the changes."
+  },
+  "reloadedReview": {
+    "weaponOptions": 37,
+    "jawBLabel": "1 ganascia · 3 turni · combo unica",
+    "ownTurnOptions": [1, 2, 3],
+    "induction": {"rarity": "Epica", "energyCards": 2, "visibleDefense": false, "physicalCardsContribution": "counted", "contributingCardIndices": [0, 1], "energyStackRetained": true, "blades": 3}
+  },
+  "liveJawRunsBeforeReload": {
+    "pair": {"targetKinds": ["escort", "escort"], "targetDamage": [30, 31], "collisionPhase": "contact"},
+    "onlyMother": {"uniqueTargets": 1, "targetKind": "part", "targetId": "weapons", "targetDamage": 39, "collisionPhase": "release"},
+    "renderer": "volume-depth-buffer",
+    "camera": "table-fixed",
+    "explosionObserved": true
+  },
+  "automatedVerification": {"logicTestsPassed": 2402, "logicFailures": 0, "preflight": "passed", "productionBuild": "passed", "githubChecksRun": 45888002581, "mobileChromeRun": 45887663925, "activeNativePngFilesVerified": 37},
+  "limits": {"newSessionVideoRecorded": false, "physicalPhoneVibrationVerified": false, "audioPlaybackMeasured": false, "remainingLightningFamiliesClosed": false}
+}
