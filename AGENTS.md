@@ -34,6 +34,26 @@ La regola non autorizza la creazione anticipata delle sequenze: nella
 modalità corrente si documentano le scelte; si realizzeranno al comando
 esplicito dell'utente. Dettagli vincolanti nel documento collegato.
 
+## Metodo corrente e punto di ripresa — Artiglieria confermata
+
+L'utente vuole rivedere gli effetti delle **otto armi già inserite**.
+L'assistente propone la grafica, il suono e la vibrazione; l'utente
+approva o corregge. Non chiedergli di inventare ogni effetto da zero.
+Questa modalità aggiorna le vecchie istruzioni sul proponente della
+direzione grafica; realizzare soltanto al comando esplicito.
+
+Usare dati già verificati senza ricontrolli a ogni chiarimento; salvare
+la scheda alla conferma o alla pausa, poi proseguire. Non inventare
+altre carte del gruppo. Il Dissalatore citato per errore non risulta
+nel catalogo e non va trattato come confermato.
+
+L'Artiglieria delle Schegge Erranti è confermata nell'effetto corrente
+3/6/9 schegge; è l'ultima del gruppo ordinato. Restano Ganasce e seconda
+Metallo/Collassatore da chiudere. Il Perforatore ha una nuova direzione
+approvata: distruzione visibile, esplosione e nuovo colpo del danno residuo
+formato dal relitto; non lo stesso siluro intatto fra tutti i bersagli.
+Dettagli e stati reali nel documento di ripresa, da leggere per continuare.
+
 ## Revisione delle forme delle navi e grafica delle fusioni
 
 L'utente vuole forme più particolari e varie: navi con silhouette proprie,
