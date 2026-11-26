@@ -7,6 +7,26 @@ documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
 
+### Regola generale obbligatoria per tutti gli effetti delle carte
+
+L'utente ha esteso il requisito a **tutte le carte e a tutti i loro
+effetti**: ogni meccanica descritta deve avere una corrispondenza visiva,
+sonora e di vibrazione, coerente e sincronizzata anche sulle altre carte
+e navi realmente coinvolte.
+
+Prima di progettare, creare, modificare, integrare o collaudare effetti,
+leggere autonomamente le
+[regole permanenti degli effetti](REGOLE_PERMANENTI_EFFETTI_CARTE.md),
+senza aspettare che l'utente chieda di farlo. Il richiamo obbligatorio è
+posto all'inizio di `AGENTS.md`. La procedura copre testo e motore,
+tutti i rami dell'effetto, i tre canali e la verifica del risultato.
+La lettura già valida della versione corrente non va ripetuta a ogni
+semplice domanda; va aggiornata quando cambiano le istruzioni.
+
+Questa regola generale di rappresentazione non estende alle altre Armi
+il nuovo bonus Energia specifico del Frantumatore. L'attuale fase resta
+documentazione delle scelte, con realizzazione al comando esplicito.
+
 ### Frantumatore a Induzione — lame richieste, effetto da realizzare
 
 **Correzione esplicita dell'utente:** «attualmente non c'è messo le lame.
