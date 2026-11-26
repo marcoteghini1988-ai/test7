@@ -1,6 +1,6 @@
 import React,{useEffect,useMemo,useState} from 'react';
 import {GENERAL_CARDS,EXCLUSIVE_CARDS,BOSS_CARDS,SHIP_CONFIGS,NEXT_COMMON_CARDS,DISMANTLE_CARDS,ENERGY_CARDS,
- eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,SIPHON_ATTACKS,ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID} from './fleetNext/rules.js';
+ eligibleExclusives,exclusiveUnlocked,shipMaxLevel,cardDisplayFacePath as cardFacePath,card,cardCopyLimit,FUSION_SHIP_CARDS,FUSION_DENIAL_TRAPS,DISCARD_WEAPONS,TEMP_SUPPORT_WEAPONS,SIPHON_ATTACKS,ELEMENTAL_TERRAIN_CARDS,ELEMENTAL_TERRAIN_BY_ID} from './fleetNext/rules.js';
 import {readNextDeckSelection,saveNextDeckSelection,buildNextBaseDeck,buyNextCommonCard,evolveNextTerrainWithDuplicates,evolveNextEnergyWithDuplicates,evolveNextWeaponWithDuplicates,
  NEXT_CARD_COSTS,NEXT_TEMP_WEAPON_IDS,NEXT_WEAPON_COLLECTION_CARDS,NEXT_NEW_WEAPON_BY_ID,
  MAX_WEAPON_INVENTORY_COPIES} from './fleetNext/nextDeckLoadout.js';
@@ -9,6 +9,7 @@ import {WEAPON_NEAR_FINAL_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
 import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
+import {cardCategoryColor,cardCategoryLabel} from './fleetNext/cardCategory.js';
 import {readFleetInventory,writeFleetInventory,
  upgradeFleetExclusive,exclusiveUpgradeCost} from './fleetNext/collection.js';
 const box={padding:'9px',background:'#071a2de9',border:'1px solid #36678c',borderRadius:'8px',color:'#e3f2ff'};
@@ -23,7 +24,7 @@ function FleetCardArt({id,name,grade=1,large=false}){
   const definition=WEAPON_NEAR_FINAL_BY_ID[id]||card(id),text=definition?describeEffect(definition,grade):name;
   return <div role="img" aria-label={'Carta '+name+' · '+text}
    style={{width,minHeight:width*1.5,aspectRatio:'2 / 3',flexShrink:0,boxSizing:'border-box',
-    padding:large?9:3,border:'2px solid '+(definition?.kind==='attack'?'#ff594c':'#ffb24d'),
+    padding:large?9:3,border:'2px solid '+(cardCategoryColor(definition)||'#ffb24d'),
     borderRadius:6,background:'linear-gradient(145deg,#19354c,#08121f)',
     color:'#f3f9ff',display:'flex',flexDirection:'column',justifyContent:'space-between',
     margin:large?'0 auto 7px':undefined,overflow:'hidden'}}>
@@ -120,7 +121,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
    <strong>{c.nome||c.name}</strong>
-   <div style={small}>{c.rarita||'Comune'} · {c.sottotipo||c.category||c.kind}{isEnergy?' · '+c.charges+' '+(c.charges===1?'carica':'cariche'):''}</div>
+   <div style={small}>{c.rarita||'Comune'} · {cardCategoryLabel(c)}{c.sottotipo&&c.sottotipo.toUpperCase()!==cardCategoryLabel(c)?' · '+c.sottotipo:''}{isEnergy?' · '+c.charges+' '+(c.charges===1?'carica':'cariche'):''}</div>
    <p style={small}>{describeEffect(WEAPON_NEAR_FINAL_BY_ID[c.id]||c)}</p>
    <p style={small}>Possedute: {owned} · Nel mazzo: {equipped} · Limite mazzo: {cardCopyLimit(c.id)}{isWeapon?' · Limite inventario: '+maxOwned:''}</p>
    <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
@@ -184,7 +185,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
      return <div key={c.id} style={box}>
       <FleetCardArt id={c.id} name={c.name||c.nome} grade={grade} large/>
       <strong>{c.name||c.nome}</strong>
-      <div style={small}>Rarità {rarity} · Grado effetto {grade}/3 · {c.category||c.categoria}</div>
+      <div style={small}>Rarità {rarity} · Grado effetto {grade}/3 · {cardCategoryLabel(c)}</div>
       {upcomingRarity&&<div style={small}>Prossima rarità {upcomingRarity.rarity} · navicella L{upcomingRarity.minLevel}</div>}
       <p style={small}>{describeEffect(c,grade)}</p>
       {c.requirements&&<p style={small}>{c.requirements}</p>}
@@ -283,12 +284,12 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {FUSION_DENIAL_TRAPS.map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>4 carte Attacco · Smontaggio Forzato</h3>
+   <h3 style={{fontSize:13}}>4 carte Strategia · Smontaggio Forzato</h3>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {DISMANTLE_CARDS.map(genericCardTile)}
    </div>
-   <h3 style={{fontSize:13}}>2 carte Attacco · Scarica Sifone</h3>
-   <p style={small}>Epica e Leggendaria: consumano il 20% degli HP attuali di ciascun supporto operativo. L’Epica ripartisce il danno, la Leggendaria lo infligge a ogni nave avversaria presente. Occupano uno slot Attacco soltanto nel turno corrente, non uno slot Arma. Acquisizione e immagini da definire.</p>
+   <h3 style={{fontSize:13}}>2 carte Strategia · Scarica Sifone</h3>
+   <p style={small}>Epica e Leggendaria: consumano il 20% degli HP attuali di ciascun supporto operativo. L’Epica ripartisce il danno, la Leggendaria lo infligge a ogni nave avversaria presente. Occupano uno slot Strategia soltanto nel turno corrente, non uno slot Arma. Acquisizione e immagini da definire.</p>
    <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))',gap:7}}>
     {SIPHON_ATTACKS.map(genericCardTile)}
    </div>

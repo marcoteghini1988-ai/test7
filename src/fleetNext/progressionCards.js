@@ -4,7 +4,7 @@ import {describeEffect} from './simpleEffects.js';
 
 const general=(id,nome,categoria,sottotipo,effectSpec,controgioco)=>{
  const card={id,nome,name:nome,rarita:'Comune',categoria,sottotipo,
-  kind:categoria==='Attacco'?'attack':'support',famiglia:'flotta',
+  kind:categoria==='Strategia'?'attack':'support',famiglia:'flotta',
   migliorabile:false,effectSpec:Object.freeze(effectSpec),controgioco,
   nativeFace:true};
  return Object.freeze({...card,effetto:describeEffect(card)});
@@ -20,7 +20,7 @@ const fusion=(shipId,shipName,minShipLevelDraft,maxCopiesInAutoPackageDraft)=>{
 };
 
 export const PROGRESSION_CARDS=Object.freeze(Object.fromEntries([
- general('prog-bypass','Attacco diretto','Attacco','Attacco',
+ general('prog-bypass','Attacco diretto','Strategia','Strategia',
   {type:'bypass'},'Difese e Trappole continuano a funzionare.'),
  fusion('L01','Eclisse Reale',5,1),
  fusion('L03','Titano Ossidiana',3,1),

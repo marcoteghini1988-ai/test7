@@ -56,7 +56,7 @@ export const NEW_EXCLUSIVE_BLUEPRINTS=Object.freeze(Object.fromEntries(
  EXCLUSIVE_DESIGNS_120.filter(c=>!c.isPreservedCharacter).map(c=>[
  c.id,Object.freeze({
   id:c.id,shipId:c.shipId,shipName:c.shipName,name:c.name,nome:c.name,
-  category:REPLACEMENT_EXCLUSIVE_EFFECTS[c.id]?.category||c.type,
+  category:REPLACEMENT_EXCLUSIVE_EFFECTS[c.id]?.category||(c.type==='Attacco'?'Strategia':c.type),
   kind:REPLACEMENT_EXCLUSIVE_EFFECTS[c.id]?.kind||kindFor(c.type),rarityDraft:c.rarityDraft,
   effectProposed:c.effectText,
   effectSpec:Object.freeze(REPLACEMENT_EXCLUSIVE_EFFECTS[c.id]?.effectSpec||

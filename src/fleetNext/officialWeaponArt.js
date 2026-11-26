@@ -4,6 +4,7 @@
 // Nessuna modifica a HP, danni, rarità, costi o meccaniche del combattimento.
 // La copia salvata di StackBlitz usa VITE_ASSET_ROOT per leggere gli asset
 // pubblici da test7/main; la versione GitHub conserva i PNG nel repository.
+import redWeaponFronts from './redWeaponFronts.json' with {type:'json'};
 const ASSET_ROOT=(import.meta.env?.VITE_ASSET_ROOT||'/assets').replace(/\/+$/,'');
 // In StackBlitz è possibile aggiornare i nuovi fronti senza ricaricare tutte
 // le pesanti immagini delle navi. Nel repository entrambi restano /assets.
@@ -41,3 +42,8 @@ export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
  ].map(id=>[id,`${PRECISION_FRONT_ROOT}/fleet-weapon-fronts/${id}.png`]))
 });
 export const officialWeaponFacePath=id=>OFFICIAL_WEAPON_FRONT_BY_ID[id]||null;
+// Gli originali restano verificabili; si usa una variante PNG solo dopo che
+// la pipeline ha materializzato e verificato il fronte con pannello rosso.
+const redFrontIds=new Set(redWeaponFronts);
+export const officialWeaponDisplayFacePath=id=>redFrontIds.has(id)&&OFFICIAL_WEAPON_FRONT_BY_ID[id]?
+ `${ASSET_ROOT}/fleet-weapon-fronts-red/${id}.png`:officialWeaponFacePath(id);

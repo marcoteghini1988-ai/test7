@@ -1,5 +1,10 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Decisione categorie del 26/11/2026 — prioritaria
+
+ARMA è rossa (#ff594c), STRATEGIA è arancione (#ffb24d) e sostituisce la denominazione ATTACCO delle carte. Il colore di categoria riguarda il pannello delle caratteristiche; conservare illustrazione, simboli, geometria, rarità e stile dei testi. Le chiavi tecniche `attack`, gli ID e la risoluzione non cambiano. Gli slot dedicati/misti e il bilanciamento sono un intervento separato, non autorizzato da questa modifica cromatica. I PNG sorgente già approvati restano recuperabili; usare i fronti derivati verificati. Le anteprime non ancora approvate restano tali.
+
+
 
 
 
@@ -578,7 +583,7 @@ Le altre Armi conservano un effetto provvisorio finché progettate una per una.
 
 Le quattro cornici HD Comune, Rara, Epica e Leggendaria in `docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/` rappresentano **rarità, non categoria Arma**. Consultare [docs/BASI_UFFICIALI_RARITA_2026-11-24.md](docs/BASI_UFFICIALI_RARITA_2026-11-24.md). Sono PNG trasparenti 3072×4608, senza testi, icone o illustrazioni. L'arancione interno è il colore dell'esempio Arma: per Difesa o altra categoria adattare il colore interno; conservare geometria degli slot e finitura esterna della rarità. La Leggendaria approvata è in cristallo prismatico. Le vecchie anteprime Arma WebP del 23/11 sono ritirate. Non ridurre o ricostruire queste basi.
 
-**Nuova regola 24/11 — scheda completa:** il pannello sotto le scritte delle caratteristiche/effetto prende il colore della categoria (Arma arancione, Attacco rosso, Difesa azzurro, Personaggio magenta, Terreno verde, Trappola viola); cornice esterna e stile delle scritte seguono la rarità. Alla richiesta «crea una carta», scegliere la cornice HD originale, cercare nel catalogo ID, valori, categoria, elemento e rarità, usare i simboli indicizzati, comporre illustrazione e testi nei rispettivi spazi, verificare il contrasto e mostrare l'anteprima completa prima di inserirla nel gioco. Le prove di adesivi esistono ma devono ancora essere approvate visivamente. Per il dettaglio e l'esempio di allineamento ENERGY / ATTACK consultare la procedura.
+**Nuova regola 24/11 — scheda completa:** il pannello sotto le scritte delle caratteristiche/effetto prende il colore della categoria (Arma rosso, Strategia arancione, Difesa azzurro, Personaggio magenta, Terreno verde, Trappola viola); cornice esterna e stile delle scritte seguono la rarità. Alla richiesta «crea una carta», scegliere la cornice HD originale, cercare nel catalogo ID, valori, categoria, elemento e rarità, usare i simboli indicizzati, comporre illustrazione e testi nei rispettivi spazi, verificare il contrasto e mostrare l'anteprima completa prima di inserirla nel gioco. Le prove di adesivi esistono ma devono ancora essere approvate visivamente. Per il dettaglio e l'esempio di allineamento ENERGY / ATTACK consultare la procedura.
 
 Il simbolo della **categoria variabile** va nello slot tondo sinistro; l'eventuale elemento nello slot tondo destro. L'utente ha autorizzato prove di nuovi simboli fedeli ai soggetti della tavola del 21/11 ma adattati ai fori circolari, senza il vecchio contenitore a rombo/esagono. Le prove non sono asset approvati: mostrarle e ottenere approvazione prima di inserirle nel gioco. La tavola del 21/11 rimane fonte visiva dei soggetti fino all'approvazione dei nuovi simboli.
 

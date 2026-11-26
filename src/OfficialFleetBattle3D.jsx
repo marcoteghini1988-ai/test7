@@ -17,7 +17,8 @@ import {officialEarlyCampaignRivalShip} from './officialEarlyCampaignRivals.js';
 import {officialCampaignRivalLevel} from './officialCampaignRivalScaling.js';
 import {chooseCampaignMotherRival} from './motherDuelLoadout.js';
 import {claimOfficialLiveVictoryRewards} from './officialLiveRewardClaims.js';
-import {card,cardRole,cardFacePath,FLEET_TURN_SECONDS} from './fleetNext/rules.js';
+import {card,cardRole,cardDisplayFacePath as cardFacePath,FLEET_TURN_SECONDS} from './fleetNext/rules.js';
+import {cardVisualFamily,cardCategoryLabel} from './fleetNext/cardCategory.js';
 import {WEAPON_PRINT_CANDIDATE_BY_ID,WEAPON_STRATEGIC_PRINT_BY_ID}
  from './fleetNext/weaponRarityEvolutions.js';
 import {isMaxSupportLevel} from './fleetNext/supportProgression.js';
@@ -84,7 +85,7 @@ const MODERN_GENERATOR_RULES=Object.freeze([
  'Con quattro Carte Energia fisiche il colpo prenotato diventa automaticamente potente. Se non prenoti, il Generatore conserva le Carte Energia.',
  'Le Carte Arma consumano prima la propria Energia. Le carte residue rimangono in pila durante il raffreddamento del Generatore.',
  'Arsenale, Centralina e Plancia consumano 20 secondi strategici per ogni turno proprio, indipendentemente da quanto rapidamente giochi. L\'ultimo si esaurisce dopo 3:30 strategici. Nessun danno automatico da timer.',
- 'Arsenale esaurito: danno Carte Arma ridotto del 30% e massimo due slot Attacco. Centralina esaurita: 25% dei colpi ai supporti raggiunge la madre. Plancia esaurita: primo supporto scelto automaticamente, slot Personaggio disattivato.',
+ 'Arsenale esaurito: danno Carte Arma ridotto del 30% e massimo due slot Strategia. Centralina esaurita: 25% dei colpi ai supporti raggiunge la madre. Plancia esaurita: primo supporto scelto automaticamente, slot Personaggio disattivato.',
  'Quando la mano e\' piena e con ESEGUI non giochi nessuna carta ne\' infliggi danni, scarti una carta reale e la sostituisci con una pescata autentica. Il turno viene consumato.'
 ]);
 const MODERN_OUTDATED_RULE=/PASSA|terza carta|tiro di emergenza|Armi temporanee aumentano|attacchi normali|fine preparazione/iu;
@@ -416,7 +417,7 @@ function OriginalFleetBar({side,unit,nickname}){
  </div>;
 }
 function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
- const labels=['PERSONAGGIO','DIFESA','TRAPPOLA','ATTACCO','ATTACCO','ENERGIA'];
+ const labels=['PERSONAGGIO','DIFESA','TRAPPOLA','STRATEGIA','STRATEGIA','ENERGIA'];
  return <div className={'live-slot-row live-slot-row--'+(side==='A'?'player':'enemy')}>
   {contents.map((entry,i)=>{
    const type=entry?.id,covered=!!entry?.hidden;
@@ -435,7 +436,7 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
     title={title+(offline?' · Sistema distrutto':'')} data-offline={offline||undefined}
     data-fleet-card-slot={side+'-'+i} data-pending-card={entry?.pending||undefined}
     data-slot-role={i===0?'personaggio':i===1?'difesa':i===2?'trappola':i===5?'energia':'attacco'}
-     data-family={covered?'defense':type?cardRole(type):undefined}
+     data-family={covered?'defense':type?cardVisualFamily(face,cardRole(type)):undefined}
      data-rarity={face?exclusiveRarityAtLevel(face,unit?.ships?.[0]?.level):undefined}>
     <svg className="f3d-slot-frame" viewBox="0 0 58 87" preserveAspectRatio="none" aria-hidden="true" focusable="false">
      <path d="M5 1H53L57 5V82L53 86H5L1 82V5Z" fill="none" stroke="#05090e" strokeWidth="2"/>
@@ -478,14 +479,15 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
  const description=def?describeEffect(def,grade):'Carta tattica';
  const isEnergy=def?.effectSpec?.type==='energy'||def?.kind==='energy';
  const isTrap=def?.effectSpec?.type==='trap'||def?.kind==='trap';
- const role=isEnergy?'energy':isTrap?'trap':cardRole(type)||'support';
+ const role=isEnergy?'energy':isTrap?'trap':cardVisualFamily(def,cardRole(type));
  const familyGlyph=isEnergy?FLEET_ELEMENTS[def.effectSpec.elementId]?.symbol||'ϟ':
-  {attack:'⚔',defense:'⬡',trap:'◈',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
+  {weapon:'⚔',strategy:'◎',attack:'◎',defense:'⬡',trap:'◈',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
  const name=def?.nome||def?.name||type;
- const categoryLabel={attack:'ATTACCO',defense:'DIFESA',trap:'TRAPPOLA',character:'PERSONAGGIO',
-  terrain:'TERRENO',energy:'ENERGIA',support:'SUPPORTO',control:'CONTROLLO'}[role]||'SPECIALE';
+ const categoryLabel=cardCategoryLabel(def,role);
  const art=type&&def?cardFacePath(type,grade):officialSpecialArtPath(type);
  const fallbackImages={
+ weapon:'/assets/special-cards/shot-ion.png',
+ strategy:'/assets/special-cards/tactic-suppress.png',
  attack:'/assets/special-cards/shot-ion.png',
  defense:'/assets/special-cards/tactical-cover.png',
  trap:'/assets/special-cards/tactic-reactive.png',
@@ -736,7 +738,7 @@ export default function OfficialFleetBattle3D({
    if(chosenCards.length>=3)return 'Puoi giocare al massimo 3 carte per turno';
    if(role==='attack'&&player.componentTimers?.weapons?.expired&&
     roles.filter(x=>x==='attack').length>=2)
-    return 'Arsenale esaurito: massimo due Carte Attacco per turno';
+    return 'Arsenale esaurito: massimo due Carte Strategia per turno';
    if(role==='defense'&&roles.filter(x=>x==='defense').length>=2)return 'Puoi giocare al massimo 2 Difese per turno';
    if(role==='defense'){
     const selectedDefenses=chosenCards.map(i=>player.hand[i]).filter(id=>cardRole(id)==='defense');

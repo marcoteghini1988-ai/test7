@@ -1,4 +1,4 @@
-// Due Carte Attacco a sacrificio, distinte dalle Armi temporanee.
+// Due Carte Strategia a sacrificio, distinte dalle Armi temporanee.
 // I costi si calcolano sugli HP ATTUALI dei supporti presenti nei due slot.
 export const SIPHON_ATTACK_IDS=Object.freeze({
  epic:'atk-siphon-e',legendary:'atk-siphon-l'
@@ -17,7 +17,7 @@ export function siphonAttackDescription(spec){
 function named(id,name,rarita,distribution){
  const effectSpec=Object.freeze({type:'siphonStrike',sacrificePercent:20,distribution});
  return Object.freeze({
-  id,name,nome:name,kind:'attack',category:'Attacco',categoria:'Attacco',
+  id,name,nome:name,kind:'attack',category:'Strategia',categoria:'Strategia',
   sottotipo:'Scarica a sacrificio',playable:true,nativeFace:true,
   rarita,rarityPending:false,acquisitionPending:true,
   effectSpec,effectProposed:siphonAttackDescription(effectSpec),

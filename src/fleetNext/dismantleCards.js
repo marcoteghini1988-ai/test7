@@ -1,4 +1,4 @@
-// Quattro carte ATTACCO Smontaggio Forzato, senza asset grafici.
+// Quattro carte STRATEGIA Smontaggio Forzato, senza asset grafici.
  // La rarità governa numero di componenti e durata in turni avversari.
  const variants=[
   ['c','Comune',1,1,'Smonta temporaneamente 1 componente aggiunto o potenziato della nave avversaria per 1 turno avversario.'],
@@ -9,7 +9,7 @@
  export const DISMANTLE_CARDS=Object.freeze(variants.map(([code,rarita,count,turns,description])=>{
   const id='atk-dismantle-'+code;
   return Object.freeze({id,designId:'design-attack-dismantle-'+code,name:'Smontaggio Forzato',
-   nome:'Smontaggio Forzato',category:'Attacco',categoria:'Attacco',
+   nome:'Smontaggio Forzato',category:'Strategia',categoria:'Strategia',
    sottotipo:'Smontaggio temporaneo',rarita,kind:'attack',playable:true,
    nativeFace:true, effectProposed:description,
    effectSpec:Object.freeze({type:'dismantle',count,turns,mode:code==='l'?'base':'components'})});

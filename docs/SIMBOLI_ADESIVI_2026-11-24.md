@@ -9,7 +9,7 @@ La **cornice indica la rarità**. Il simbolo di categoria entra nel **cerchio si
 | Categoria | Soggetto riconoscibile | Anteprima PNG |
 | --- | --- | --- |
 | Arma | Torretta a energia | [<img src="riferimenti-carte/adesivi-slot-2026-11-24/categorie/arma.png" width="88" alt="Torretta Arma">](riferimenti-carte/adesivi-slot-2026-11-24/categorie/arma.png) |
-| Attacco | Tre razzi | [<img src="riferimenti-carte/adesivi-slot-2026-11-24/categorie/attacco.png" width="88" alt="Razzi Attacco">](riferimenti-carte/adesivi-slot-2026-11-24/categorie/attacco.png) |
+| Strategia (già Attacco; soggetto da rivedere separatamente) | Tre razzi | [<img src="riferimenti-carte/adesivi-slot-2026-11-24/categorie/attacco.png" width="88" alt="Razzi Attacco">](riferimenti-carte/adesivi-slot-2026-11-24/categorie/attacco.png) |
 | Difesa | Scudo energetico | [<img src="riferimenti-carte/adesivi-slot-2026-11-24/categorie/difesa.png" width="88" alt="Scudo Difesa">](riferimenti-carte/adesivi-slot-2026-11-24/categorie/difesa.png) |
 | Personaggio | Pilota | [<img src="riferimenti-carte/adesivi-slot-2026-11-24/categorie/personaggio.png" width="88" alt="Pilota Personaggio">](riferimenti-carte/adesivi-slot-2026-11-24/categorie/personaggio.png) |
 | Terreno | Paesaggio alieno | [<img src="riferimenti-carte/adesivi-slot-2026-11-24/categorie/terreno.png" width="88" alt="Paesaggio Terreno">](riferimenti-carte/adesivi-slot-2026-11-24/categorie/terreno.png) |
