@@ -1,3 +1,5 @@
+import {rememberLastWeapon,prepareHolographicReplica,restoreHolographicReplica,prepareHolographicProjection,
+ hologramDisplayEscorts,hologramSelectedEscort,hologramGuardUnits,hologramCombatEscorts,interceptHologramHit} from './nextHolographicWeapons.js';
 import {weaponEnergyContributions} from './weaponEnergyFeedback.js';
 import {shuffleFleetCards as shuffled,recycleFleetDiscard} from './deckCycle.js';
 import {withWeaponSalvoEvent} from './approvedWeaponSalvos.js';
@@ -269,15 +271,16 @@ export function refreshEscortLinks(side,ply=0){
 }
 export function protectingFleetUnits(side,ply=0){
  if(side.nextCoverSuppressedPly===ply)return [];
- const escortRows=(side.escorts||[]).filter(e=>escortEnabled(side,e,ply)).map(unit=>({kind:'escort',unit}));
+ const escortRows=hologramGuardUnits(side,ply,(side.escorts||[]).filter(e=>escortEnabled(side,e,ply))).map(unit=>({kind:'escort',unit}));
  const machineRows=side.ruleset===HP_SYNC_RULESET?[]:
   (side.machines||[]).filter(e=>unitEnabled(e,ply)).map(unit=>({kind:'machine',unit}));
  return [...escortRows,...machineRows].map(({kind,unit})=>({kind,id:unit.id,slot:unit.slot,
   name:unit.name,hp:unit.hp,maxHp:unit.maxHp,unit}));
 }
-export function availableFleetTargets(side,ply=0){
+export function availableFleetTargets(side,ply=0,masked=true){
  const guards=protectingFleetUnits(side,ply);
- const units=[...(side.escorts||[]).filter(unitAlive).map(unit=>({kind:'escort',unit})),
+ const escorts=(masked?hologramDisplayEscorts(side,ply):null)||side.escorts||[];
+ const units=[...escorts.filter(unitAlive).map(unit=>({kind:'escort',unit})),
   ...(side.ruleset===HP_SYNC_RULESET?[]:(side.machines||[]).filter(unitAlive))
    .map(unit=>({kind:'machine',unit}))];
  return [...units.map(({kind,unit})=>({kind,id:unit.id,slot:unit.slot,name:unit.name,
@@ -912,6 +915,7 @@ export function validateFleetTurn(b,who,order){
    t.kind===order?.targetKind&&t.unit.id===order?.targetId))
   return 'Frattura richiede una unità nemica viva';
  const machineCards=chosen.filter(c=>c.effectSpec.type==='deployMachine');
+ for(const slug of ['replicatore-olografico','proiettore-olografico'])if(machineCards.filter(c=>c.effectSpec.weaponProfile?.slug===slug).length>1)return 'Una sola arma olografica per famiglia';
  if(machineCards.filter(c=>c.effectSpec.weaponProfile?.slug==='eclissi-quantistica').length>1)
   return 'Un solo proiettile a Eclissi Quantistica per volta';
  for(const n of [order.nextEclipseTurn,order.nextEclipseGuess])if(n!=null&&(!Number.isInteger(n)||n<1||n>3))return 'Scegli un turno da 1 a 3';
@@ -1031,6 +1035,7 @@ function selectedEnemyTarget(side,order={},ply=0){
  if(kind==='escort'||kind==='machine'||kind==='module'){
   if(kind==='machine'&&side.ruleset===HP_SYNC_RULESET)return null;
   if(kind==='module'&&obsidianSealed(side,ply))return null;
+  if(kind==='escort'){const projected=hologramSelectedEscort(side,ply,order);if(projected)return {kind,unit:projected};}
   const list=kind==='escort'?side.escorts:kind==='machine'?side.machines||[]:liveModules(side);
   const slot=kind==='escort'?order.escortSlot:kind==='machine'?order.machineSlot:order.moduleSlot;
   const unit=list.find(e=>order.targetId?e.id===order.targetId:e.slot===slot);
@@ -1438,7 +1443,7 @@ function activatePrismaCard(b,who,def,ctx,events,order={},source=null){
  if(action==='false-reflection'){
   const defense=side.defenses.find(d=>d.source===source);
   if(!defense)throw Error('Trappola Riflesso falso non posata');
-  const candidates=availableFleetTargets(side,b.ply);
+  const candidates=availableFleetTargets(side,b.ply,false);
   const selected=candidates.find(t=>t.kind===order.prismaTrapKind&&t.id===order.prismaTrapTargetId)||
    candidates[0];
   if(!selected)throw Error('Nessun bersaglio da proteggere con Riflesso falso');
@@ -2492,6 +2497,7 @@ function adjustedElementalHit(b,ctx,events,defender,kind,unit,amount){
 }
 // L'impatto iniziale ha già superato le Difese; il Bastione non ricontrolla né devia.
 function royalDistributeDamage(b,ctx,events,defender,kind,unit,amount){
+ if(interceptHologramHit(b,ctx,events,{kind,unit},amount,{protectingFleetUnits,motherPart,linceHit,startNebulaVolley,emit}))return 0;
  const balanced=Number.isFinite(defender?.ships?.[0]?.defensePercent)&&
   b.ruleset===HP_SYNC_RULESET;
  // La durata dello scontro non altera il danno: decide la strategia del mazzo.
@@ -3090,6 +3096,7 @@ function applyEffect(b,who,def,spec,ctx,events,{source,ownPartId,order}={}){
     untilPly:modern?b.ply+2*duration:null,destroyed:false,
     disabledUntilPly:saved?.disabledUntilPly||0,jammedUntilPly:saved?.jammedUntilPly||0};
    side.machines.push(machine);
+    rememberLastWeapon(side,machine,b.ply);
    if(previous)events.push(emit(b,who,'weapon-sequence-upgrade',
     'Sequenza: carta precedente scartata e sostituita nello stesso slot',
     {previousCardId:previous.sourceCardId,cardId:def.id,machineSlot:slot}));
@@ -3421,7 +3428,7 @@ function resolveApprovedBaseWeaponShots(b,ctx,events,order){
    if(opposed){
     enemy.cryoCrystal=null;
     if(hit.damage&&hit.target?.kind==='part'){
-     const fx=linceHit(b,ctx,events,hit.target,machine.comboBonus,
+     const fx=linceHit(b,ctx,events,hit.target,Math.round(machine.comboBonus*(machine.holoMultiplier??1)),
       machine.sourceCardId,order,true,0);
      record(fx);combo=fx.damage||0;
     }
@@ -3479,7 +3486,7 @@ function resolveMultiWeaponShots(b,ctx,events,order){
   }).length;
   const extras=m.damageMode==='energy-burst-shot'?Math.min(m.maxExtraShots,energ):0;
   const targets=m.damageMode==='sweep-shot'?
-   [...(enemy.escorts||[]).filter(unitAlive).map(unit=>({kind:'escort',unit})),
+   [...hologramCombatEscorts(enemy,b.ply).filter(unitAlive).map(unit=>({kind:'escort',unit})),
     ...(motherTarget()?[motherTarget()]:[])]:
    Array(m.damageMode==='double-shot'?m.shotCount:1+extras).fill(null);
   const impacts=[];
@@ -3539,7 +3546,7 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
   return physical?matching.length:matching.reduce((n,e)=>n+
    (typeof e==='string'?1:Math.max(0,Number(e.remaining)||0)),0);
  };
- const allTargets=()=>[...(enemy.escorts||[]).filter(unitAlive)
+ const allTargets=()=>[...hologramCombatEscorts(enemy,b.ply).filter(unitAlive)
   .map(unit=>({kind:'escort',unit})),
   ...((enemy.ships[0]?.hp||0)>0&&motherPart(enemy.ships[0],'weapons')?
    [{kind:'part',unit:motherPart(enemy.ships[0],'weapons')}]:[])];
@@ -4085,6 +4092,7 @@ function triggerReactions(b,attackerWho,damage,events){
    }else if(reaction.type==='counter'){
     const guard=protectingFleetUnits(attacker,b.ply)[0];
     const target=guard?.unit||activePart(attacker,'weapons'),kind=guard?.kind||'part';
+    if(interceptHologramHit(b,{who},events,{kind,unit:target},reaction.amount,{protectingFleetUnits,motherPart,linceHit,startNebulaVolley,emit}))continue;
     const blocked=target&&blockHit(b,attacker,kind,target,{who,pierceLeft:0},events);
     const counterCtx={who,order:{},elementalShot:false};
     const adjusted=!target||blocked?0:adjustedElementalHit(b,counterCtx,events,attacker,kind,target,reaction.amount);
@@ -4104,6 +4112,7 @@ function triggerReactions(b,attackerWho,damage,events){
 
 // I nuovi attacchi sono comandi autonomi, non potenziamenti della salva gratuita.
 function auroraHit(b,ctx,events,target,amount,sourceCard){
+ if(interceptHologramHit(b,ctx,events,target,amount,{protectingFleetUnits,motherPart,linceHit,startNebulaVolley,emit}))return 0;
  const defender=b.sides[other(ctx.who)];
  if(!target||!unitAlive(target.unit))return 0;
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(defender,b.ply).length&&!ctx.bypass)return 0;
@@ -4222,6 +4231,7 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  if(ctx.trackWeaponOverflow)ctx.weaponExcess=0;
  if(!target||!unitAlive(target.unit))return {damage:0,target};
  if(absorbNextWeaponShot(b,ctx,events,cardId,amount,{card,emit}))return {damage:0,target,absorbed:true};
+ if(interceptHologramHit(b,ctx,events,target,amount,{protectingFleetUnits,motherPart,linceHit,startNebulaVolley,emit}))return {damage:0,target,hologramDestroyed:true};
  if(['part','module'].includes(target.kind)&&protectingFleetUnits(enemy,b.ply).length&&!bypass)
   return {damage:0,target};
  const finalTarget=redirectFleetHit(b,ctx,events,target);
@@ -5058,6 +5068,7 @@ function resolveSalvo(b,ctx,events,order){
  for(const [hitIndex,planned] of targets.entries()){
   ctx.royalFirstShot=hitIndex===0;
   if(hitIndex>0&&cancelPrismaSecondaryHit(b,ctx,events,planned,selected))continue;
+  if(interceptHologramHit(b,ctx,events,planned,planned.splitAmount??power,{protectingFleetUnits,motherPart,linceHit,startNebulaVolley,emit}))continue;
   const redirected=redirectFleetHit(b,ctx,events,planned);
   const {kind,unit}=redirected;
   if(blockNebulaRepeat(b,ctx,events,redirected))continue;
@@ -5252,7 +5263,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  // A parita' di bersagli disponibili colpisce prima lo slot 0.
  if(timed.battle?.sides?.[who]){
   order=planciaRestrictedTargetOrder(timed.battle.sides[who],
-   timed.battle.sides[other(who)],order);
+   timed.battle.sides[other(who)],order,timed.battle.ply);
  }
  const error=validateFleetTurn(timed.battle,who,order);
  if(error)return {ok:false,reason:error,battle:timed.battle,events:timed.events};
@@ -5308,6 +5319,9 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  // Buco Nero risolve dopo le altre carte preparate nel medesimo turno.
  after.sort((x,y)=>Number(card(x)?.effectSpec?.type==='fieldReset')-Number(card(y)?.effectSpec?.type==='fieldReset'));
  for(const id of after)if(applyCard(b,who,id,ctx,events,order))ctx.cards.push(id);
+ const holoHooks={unitEnabled,unitSilenced,weaponSlotLocked,arsenalBonus,emit};
+ prepareHolographicReplica(b,ctx,events,holoHooks);
+ prepareHolographicProjection(b,ctx,events,holoHooks);
  reserveProvisionalMortarFuel(b,ctx,{unitEnabled,unitSilenced,weaponSlotLocked});
  if(!b.newGeneratorCombat)resolveElementalActivation(b,who,order,ctx,events);
  arkArchiveAction(b,ctx,events);
@@ -5315,7 +5329,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  nebulaArchonTerrainTrade(b,ctx,events,order);
  nebulaRevealOnOwnTurn(b,ctx,events);
  processHelios(b,who,ctx,events,order);
- const nextWeaponHooks={unitEnabled,unitSilenced,weaponSlotLocked,startNebulaVolley,protectingFleetUnits,
+ const nextWeaponHooks={ply:b.ply,unitEnabled,unitSilenced,weaponSlotLocked,startNebulaVolley,protectingFleetUnits,
   selectedEnemyTarget,motherPart,arsenalBonus,linceHit,spendElementalEnergy,card,emit};
  prepareNextSingularity(b,ctx,nextWeaponHooks);
  lockNextEclipseGuess(b,ctx,events,order,nextWeaponHooks);
@@ -5364,6 +5378,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const shot=mergeFalcoShots(weaponShot,
   mergeFalcoShots(independentShot,mergeFalcoShots(obsidianShot,
    mergeFalcoShots(releasedShot,ownShot))));
+ restoreHolographicReplica(b,ctx);
  if(ctx.royalSplitExtra)shot.escortDamage=(shot.escortDamage||0)+ctx.royalSplitExtra;
  const sacrificeDamage=resolvePreparedSupportSacrifice(b,who,order.sacrificeEscortId,events);
  if(order.sacrificeEscortId)shot.sacrificeDamage=sacrificeDamage;
@@ -5376,7 +5391,8 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
 export function autoFleetTurn(b,who=b.turn){
  const side=b.sides[who],enemy=b.sides[other(who)],ownPartId=weakestPart(side)?.id;
  const part=enemy.ships[0].parts.filter(unitAlive).sort((a,z)=>a.hp-z.hp)[0];
- const guard=protectingFleetUnits(enemy,b.ply).sort((a,z)=>a.hp-z.hp)[0];
+ const projected=hologramDisplayEscorts(enemy,b.ply);
+ const guard=projected&&protectingFleetUnits(enemy,b.ply).length?availableFleetTargets(enemy,b.ply).filter(t=>t.kind==='escort').sort((a,z)=>a.hp-z.hp)[0]:protectingFleetUnits(enemy,b.ply).sort((a,z)=>a.hp-z.hp)[0];
  const defaultOrder=guard?{targetKind:guard.kind,targetId:guard.id,partId:part?.id,
   ...(guard.kind==='escort'?{escortSlot:guard.slot}:{machineSlot:guard.slot})}:
   {targetKind:'part',targetId:part?.id,partId:part?.id};

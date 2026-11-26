@@ -41,6 +41,7 @@ import {arkModuleActive,arkEscorts,arkFusedEscorts,arkUnfusedEscorts,
  arkEnemyUnits,arkDamagedEscorts,arkModulesInDiscard} from './fleetNext/arkEngine.js';
 import {describeEffect,describeEscortEffect,describeBossPassive,effectNeedsOwnTarget,SIMPLE_RULES} from './fleetNext/simpleEffects.js';
 import {readFleetInventory,writeFleetInventory,claimFleetReward,fleetRewardForBattle} from './fleetNext/collection.js';
+import {hologramDisplayEscorts} from './fleetNext/nextHolographicWeapons.js';
 import {createFleetNextBattle,resolvePreparedFleetTurn,autoFleetTurn,timeoutFleetTurn,advanceFleetCombatTime,effectUnavailableReason,defenseCapacityReason,protectingFleetUnits,availableFleetTargets} from './fleetNext/combat.js';
 import {generatorCardCount,generatorCoolingOwnTurns} from './fleetNext/motherGeneratorBalance.js';
 import {projectFleetSlots,fleetEventText,fleetTurnNotice,projectFleetDefense,projectMachineBerths,FLEET_PHYSICAL_VITALS,campaignFleetShipId} from './fleetNext/battlePresentation.js';
@@ -148,6 +149,7 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
  const defense=useMemo(()=>projectFleetDefense(mother),[mother]);
  const berths=maglioPresentationBerths(unit,chosenCards,ply,weaponShots,resolvedUnit);
  const currentImpact=impact?.escortDamage>0||impact?.machineDamage>0?null:fleetImpactVisual(impact);
+ const projection=hologramDisplayEscorts(unit,ply);
  return <div className={'live-fighter live-fighter--'+side} data-fleet-side={player?'A':'B'} data-own-target={canSelectOwn||undefined}>
   <div className="fleet-ship-wrap complete-ship focused official-mother"
    data-flight-alive={mother.hp>0}
@@ -169,19 +171,19 @@ function OriginalFleetFighter({side,unit,selectedVital,onSelectVital,canSelectOw
     alt="" aria-hidden="true"/>}
    </div>
   </div>
-  {unit.escorts.map((escort,i)=>{
+  {(projection||unit.escorts).map((escort,i)=>{
    const slot=escort.slot??i;
    const tookHit=impact?.escortSlot===slot&&impact?.escortDamage>0;
    const linked=escort.linked!==false;
    const fusionModel=escort.fused&&escort.fusionModelIds?.find(id=>id!==escort.shipModelId);
    const signature=FLEET_ELEMENTS[escort.element];
    const weaknesses=signature?.weakTo?.map(id=>FLEET_ELEMENTS[id].name).join(' e ');
-   return <div key={escort.id} data-combat-id={escort.id} data-combat-kind="escort" className={'live-escort live-escort--'+slot+
+   return <div key={escort.id} data-combat-id={escort.id} data-combat-kind="escort" className={'live-escort live-escort--'+slot+(projection?' f3d-hologram-position':'')+
     (escort.hp===0?' live-escort--lost':'')+(escort.fused?' f3d-escort--fused':'')+
     ((escort.nebulaHiddenUntilPly||0)>ply&&escort.hp>0&&!escort.destroyed?
      ' f3d-escort--veiled':'')+
     (selectedTarget?.kind==='escort'&&selectedTarget.id===escort.id?' f3d-unit--selected':'')}
-    style={{'--flight-phase':(-slot*.9-(player?1.3:2.9))+'s'}}
+    style={{'--flight-phase':(-slot*.9-(player?1.3:2.9))+'s',...(projection?{'--holo-left':(20+slot*30)+'%'}:{})}}
     title={escort.name+' · '+describeEscortEffect(escort)+
      (signature?' · Elemento ereditato: '+signature.name+' · Debole a '+weaknesses:'')}>
     <ShipFlightSurface shipId={escort.shipModelId||escort.originShipId} side={side}
@@ -352,17 +354,17 @@ function FleetConsoleShell({side}){
   <image href={ASSET_ROOT+'/hud/'+(side==='B'?'opponent':'command')+'-console-shell.webp'} width="2172" height="724"/>
  </svg>;
 }
-function FleetOpponentConsole({unit,nickname,onInspect}){
+function FleetOpponentConsole({unit,nickname,onInspect,ply}){
  return <div className="f3d-fleet-console f3d-opponent-console" role="group" aria-label="Console avversario">
   <FleetConsoleShell side="B"/>
-  <OriginalFleetBar side="B" unit={unit} nickname={nickname}/>
+  <OriginalFleetBar side="B" unit={unit} nickname={nickname} ply={ply}/>
   <FleetVitalStrip side="B" unit={unit} onInspect={onInspect} consoleMode/>
  </div>;
 }
-function FleetCommandConsole({unit,nickname,onInspect,onLeave,onPass,passDisabled,ended,secondsLeft,turnProgress}){
+function FleetCommandConsole({unit,nickname,onInspect,onLeave,onPass,passDisabled,ended,secondsLeft,turnProgress,ply}){
  return <div className="f3d-fleet-console f3d-command-console" role="group" aria-label="Console di comando">
   <FleetConsoleShell side="A"/>
-  <OriginalFleetBar side="A" unit={unit} nickname={nickname}/>
+  <OriginalFleetBar side="A" unit={unit} nickname={nickname} ply={ply}/>
   <button type="button" className="live-abandon" onClick={onLeave} disabled={ended}
    aria-label="Abbandona la battaglia"><span className="f3d-abandon-label">ABBANDONA</span></button>
   <FleetVitalStrip side="A" unit={unit} onInspect={onInspect} consoleMode/>
@@ -385,10 +387,11 @@ function FleetHullMark({mother=false}){
    <path d="M2 6L7 2L12 6M2 10L7 6L12 10M2 14L7 10L12 14" fill="none" stroke="currentColor" strokeWidth="1.6"/>}
  </svg>;
 }
-function OriginalFleetBar({side,unit,nickname}){
+function OriginalFleetBar({side,unit,nickname,ply=0}){
  const mother=unit.ships[0],escA=unit.escorts?.find(e=>e.slot===0),escB=unit.escorts?.find(e=>e.slot===1);
- const entries=[escA?{ship:escA,mother:false}:null,{ship:mother,mother:true},
-  escB?{ship:escB,mother:false}:null];
+ const projection=hologramDisplayEscorts(unit,ply);
+ const entries=projection?[{ship:mother,mother:true},...projection.map(ship=>({ship,mother:false}))]:
+  [escA?{ship:escA,mother:false}:null,{ship:mother,mother:true},escB?{ship:escB,mother:false}:null];
  return <div className={'live-fleet-bar live-fleet-bar--'+side} role="group"
   aria-label={'Integrità flotta '+(side==='B'?'avversario':'giocatore')}>
   <strong className="f3d-player-label" title={nickname||'CPU'}>
@@ -1021,7 +1024,7 @@ export default function OfficialFleetBattle3D({
   targetChoices.find(t=>selectedTarget&&t.kind===selectedTarget.kind&&t.id===selectedTarget.id)||
   (bypass||!protectors.length?
    targetChoices.find(t=>t.kind==='part'&&t.id===(routePartId||actualVital)):null)||
-  protectors[0]||targetChoices[0];
+  (hologramDisplayEscorts(enemy,battle.ply)?targetChoices.find(t=>t.kind==='escort'):protectors[0])||targetChoices[0];
  const ownTargets=player.ships[0].parts.filter(p=>!p.destroyed&&p.hp>0);
  const actualOwnVital=ownTargets.find(p=>p.id===selectedOwnVital)?.id||
   [...ownTargets].sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0]?.id;
@@ -1141,7 +1144,7 @@ export default function OfficialFleetBattle3D({
  const prismaUnitTargets=livePrismaUnits(enemy,battle.ply,false).map(({kind,unit})=>({
   kind,id:unit.id,name:unit.name,hp:unit.hp,maxHp:unit.maxHp
  }));
- const prismaTrapChoices=availableFleetTargets(player,battle.ply);
+ const prismaTrapChoices=availableFleetTargets(player,battle.ply,false);
  const prismaMachines=player.machines.filter(m=>m.hp>0&&!m.destroyed&&
   (m.disabledUntilPly||0)<=battle.ply&&(m.jammedUntilPly||0)<=battle.ply);
  const prismaAttack=selectedActions.find(a=>PRISMA_ATTACK_ACTIONS.includes(a));
@@ -1188,7 +1191,7 @@ export default function OfficialFleetBattle3D({
     style={{'--f3d-terrain-image':TERRAIN_CATALOG[terrain].kind==='elemental'?
      'radial-gradient(ellipse at center, rgba(43,112,170,.18), transparent 75%)':
      'url("/assets/fleet-terrain-scenes/'+terrain+'.svg")'}}/>}
-   <FleetOpponentConsole unit={enemy} nickname={opponentNickname||battle.bossName||enemy.ships?.[0]?.name||'Avversario'}
+   <FleetOpponentConsole unit={enemy} ply={battle.ply} nickname={opponentNickname||battle.bossName||enemy.ships?.[0]?.name||'Avversario'}
     onInspect={vital=>setHelp({vital})}/>
    <OriginalFleetFighter side="enemy" unit={enemy} selectedVital={actualTarget?.kind==='part'?actualTarget.id:null}
     weaponShots={resolving?lastFx?.weaponShots?.filter(s=>s.who==='B'):[]}
@@ -2064,7 +2067,7 @@ export default function OfficialFleetBattle3D({
     <button type="button" onClick={()=>setShowLog(v=>!v)}>{showLog?'CHIUDI':'REGISTRO'}</button>
     <button type="button" onClick={()=>setHelp({rules:true,terrain})}>REGOLE</button>
    </div>
-   <FleetCommandConsole unit={player} nickname={nickname} onInspect={vital=>setHelp({vital})} onLeave={leave} onPass={passTurn}
+   <FleetCommandConsole unit={player} ply={battle.ply} nickname={nickname} onInspect={vital=>setHelp({vital})} onLeave={leave} onPass={passTurn}
     passDisabled={ended||!myTurn||resolving} ended={ended} secondsLeft={secondsLeft} turnProgress={turnProgress}/>
    {resolving&&<div className="f3d-resolution-interlock" aria-hidden="true"/>}
    {message&&<div className="live-action-notice f3d-notice" role="status"

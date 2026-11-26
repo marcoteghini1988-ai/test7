@@ -1,5 +1,6 @@
 // Eclissi Stellare — effetti HP delle Carte Arma con bilanciamento PROVVISORIO.
 // Usa i medesimi controlli di Difese, Terreni, copertura e limiti della nave madre.
+import {hologramCombatEscorts} from './nextHolographicWeapons.js';
 import {weaponEnergyContributions} from './weaponEnergyFeedback.js';
 import {PROVISIONAL_ADVANCED_WEAPON_BY_ID} from './provisionalWeaponProfiles.js';
 import {weaponFiresOnOwnTurn,consumeMortarEnergy,mortarAmmunition} from './confirmedAdvancedWeaponMechanics.js';
@@ -71,7 +72,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
  const shot={damage:0,escortDamage:0,machineDamage:0,moduleDamage:0,targets:[],played:[]};
  const mother=()=>{const unit=h.motherPart(enemy.ships[0],'weapons');
   return enemy.ships[0].hp>0&&unit?{kind:'part',unit}:null;};
- const every=()=>[...(enemy.escorts||[]).filter(physical).map(unit=>({kind:'escort',unit})),
+ const every=()=>[...hologramCombatEscorts(enemy,b.ply).filter(physical).map(unit=>({kind:'escort',unit})),
   ...(mother()?[mother()]:[])];
  const byId=(id)=>every().find(t=>t.unit.id===id)||null;
  const ordinary=()=>{
@@ -157,7 +158,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    planned=[{base:p.baseDamage}];
   }else if(pattern==='ice-needle'){
    const ice=b.terrain?.id==='T01'||h.terrainCatalog[b.terrain?.id]?.elementId==='cryogenic';
-   const live=(enemy.escorts||[]).filter(physical).slice(0,2),power=ice?p.terrainSupportDamage:p.supportDamage;
+   const live=hologramCombatEscorts(enemy,b.ply).filter(physical).slice(0,2),power=ice?p.terrainSupportDamage:p.supportDamage;
    planned=live.map(unit=>({target:{kind:'escort',unit},base:power}));
    if(ice&&live.length===2&&mother())planned.push({target:mother(),
     base:power*2,ignoreCover:true,ignoreOrdinaryDefenses:true});
@@ -246,7 +247,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
     const burn=Math.min(p.burnMaxDamage??Number.POSITIVE_INFINITY,
      Math.max(p.burnMinimum,discarded*p.burnPerDiscard));
     enemy.provisionalBurns??=[];
-    enemy.provisionalBurns.push({cardId:m.sourceCardId,name:m.name,damage:burn,
+    enemy.provisionalBurns.push({cardId:m.sourceCardId,name:m.name,damage:Math.round(burn*(m.holoMultiplier??1)),
      remaining:p.burnTurns,nextPly:b.ply+1});
    }
    if(pattern==='thermal-coupler'){

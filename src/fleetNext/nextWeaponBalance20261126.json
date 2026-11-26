@@ -290,7 +290,7 @@
           "comboMultiplier": 1
         }
       ],
-      "blocked": "Replica completa dell'ultima arma, incluse combinazioni, stato e costi; non attivare prima della verifica."
+      "blocked": null
     },
     {
       "slug": "proiettore-olografico",
@@ -309,7 +309,7 @@
           "comboMultiplier": 1
         }
       ],
-      "blocked": "Terzo bersaglio indistinguibile, scelta per posizione e rimescolamento senza rivelare l'identità; richiede integrazione con plancia e risolutori."
+      "blocked": null
     },
     {
       "slug": "eclissi-quantistica",

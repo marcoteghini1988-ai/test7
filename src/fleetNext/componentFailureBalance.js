@@ -1,3 +1,4 @@
+import {hologramDisplayEscorts} from './nextHolographicWeapons.js';
 // Regole CONFERMATE per i componenti quando scade il loro timer.
 // I secondi dei timer sono ancora in fase di bilanciamento; questo modulo
 // descrive gli effetti, non introduce un timer fittizio o un'altra plancia.
@@ -22,10 +23,11 @@ export const characterSlotEnabled=side=>!componentTimerExpired(side,'bridge');
 // Quando la Plancia e' fuori uso non si sceglie liberamente quale supporto
 // avversario colpire per primo. I colpi con aggiramento/bersaglio obbligato
 // rimangono regolati dalle rispettive Carte Arma e non sono riscritti qui.
-export function planciaRestrictedTargetOrder(side,foe,order={}){
+export function planciaRestrictedTargetOrder(side,foe,order={},ply=null){
  if(!componentTimerExpired(side,'bridge'))return order;
  if(order.targetKind!=='escort'&&order.escortSlot==null)return order;
- const first=[...(foe?.escorts||[])].filter(e=>e.hp>0&&!e.destroyed&&!e.reserve)
+ const projection=ply==null?null:hologramDisplayEscorts(foe,ply);
+ const first=[...(projection||foe?.escorts||[])].filter(e=>e.hp>0&&!e.destroyed&&!e.reserve)
   .sort((a,b)=>(a.slot||0)-(b.slot||0))[0];
  if(!first)return order;
  return {...order,targetKind:'escort',targetId:first.id,escortSlot:first.slot};

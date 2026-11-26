@@ -1,0 +1,10 @@
+# Armi Luce: Replicatore e Proiettore Olografico
+
+Entrambe tre turni propri, danno 70% da sole, 100% insieme, HP attuali del supporto copiato, rimescolamento/rigenerazione ogni turno. Il contrattacco rispetta la protezione dei supporti. Entrambe Epica → Leggendaria. La coppia funziona anche con rarità differenti (è richiesta contemporaneità, non parità di rarità).
+
+- Ultima arma fisica effettivamente installata dall'avversario. Copia virtuale nel medesimo slot, con i propri costi e condizioni, senza carta fisica aggiuntiva. Se resta la stessa arma, avanza le fasi e riparte quando il ciclo termina; quando cambia, inizia dal primo stadio. Non copia un altro Replicatore; può riprodurre un Proiettore senza creare una seconda esca. Se non esiste una precedente arma, nessuno sparo. Una sola copia attiva per famiglia. Il danno usa 70/100% della potenza nominale del profilo copiato dopo le regole di Arsenale, prima di Difese/affinità. Il costo non è ridotto. Verificare tutte le combinazioni e gli stati ritardati del catalogo.
+- Proiettore: proiezione separata da side.escorts. Nessun HP reale, abilità passiva o bonus di conteggio. Copia un supporto vivo scelto pseudo-casualmente; se non ce ne sono non genera esca. Le posizioni vengono rimescolate con chiavi opache. L'esca dura sino al prossimo turno proprio, incluso il turno avversario dopo il terzo. Si distrugge al primo impatto positivo, senza perdita di HP propri; contrattacca una sola volta con 70/100% degli HP copiati su un supporto reale protettivo, oppure sulla madre se non rimane protezione. Difese ed elementi del bersaglio valgono. L'esca non offre protezione autonoma dopo la perdita di tutti i supporti reali. Le azioni che colpiscono esclusivamente componenti/supporti fisici conservano la regola originaria.
+- Interfaccia: tre bersagli con stile identico e chiavi pubbliche per posizione; collocazione temporanea, non approvazione grafica definitiva. Il futuro PvP in rete dovrà tenere la corrispondenza reale/ologramma sul server.
+
+## Stato
+Meccaniche e UI collegate; test e bilanciamento globale da verificare. Nessun PNG definitivo o VFX/SFX/aptica approvato viene sostituito.

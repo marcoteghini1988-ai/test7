@@ -118,10 +118,10 @@ export function supportWeaponCharge(side,machine,roleForCard){
 // Restano validi Arsenale, Difese, elementi, terreni e passive supporti.
 const PERCENT_BASED_WEAPON_PATTERNS=new Set(['percent','binary-overload']);
 const weaponAuditValue=(side,amount,machine=null)=>{
- if(machine?.weaponProfile?.finalNominal||PERCENT_BASED_WEAPON_PATTERNS.has(machine?.weaponProfile?.pattern))return amount;
- const factor=Number(side?.weaponBalanceFactor??side?.__pacingAuditWeaponFactor);
- return Number.isFinite(factor)&&factor>0&&factor!==1?
-  Math.max(0,Math.round(amount*factor)):amount;
+ const nominal=machine?.weaponProfile?.finalNominal||PERCENT_BASED_WEAPON_PATTERNS.has(machine?.weaponProfile?.pattern);
+ const factor=Number(machine?.holoSourceBalanceFactor??side?.weaponBalanceFactor??side?.__pacingAuditWeaponFactor);
+ const raw=nominal?amount:Number.isFinite(factor)&&factor>0&&factor!==1?Math.max(0,Math.round(amount*factor)):amount;
+ return machine?.holoMultiplier!=null?Math.max(0,Math.round(raw*machine.holoMultiplier)):raw;
 };
 export function arsenalBonus(side,machine,ply=0,overridePower=null){
  if(side.ruleset!==HP_SYNC_RULESET)return machine.power||0;

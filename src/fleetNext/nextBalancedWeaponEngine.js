@@ -1,4 +1,5 @@
 // Risoluzione delle nuove Armi del 26/11; usa l'unica pipeline di danno del combattimento.
+import {hologramCombatEscorts} from './nextHolographicWeapons.js';
 import {weaponEnergyContributions} from './weaponEnergyFeedback.js';
 const alive=u=>!!u&&u.hp>0&&!u.destroyed;
 const stage=(m,ply)=>1+(ply-m.deployedPly)/2;
@@ -19,7 +20,7 @@ const record=(out,hit)=>{
 };
 const mother=(side,h)=>side.ships[0].hp>0&&h.motherPart(side.ships[0],'weapons')?
  {kind:'part',unit:h.motherPart(side.ships[0],'weapons')}:null;
-const all=(side,h)=>[...side.escorts.filter(alive).map(unit=>({kind:'escort',unit})),...(mother(side,h)?[mother(side,h)]:[])];
+const all=(side,h)=>[...hologramCombatEscorts(side,h.ply??0).filter(alive).map(unit=>({kind:'escort',unit})),...(mother(side,h)?[mother(side,h)]:[])];
 const identity=t=>t?.kind==='part'?'mother':t?.unit?.id;
 const legal=(target,side,ply,h)=>!!target&&alive(target.unit)&&
  (!['part','module'].includes(target.kind)||!h.protectingFleetUnits(side,ply).length);
@@ -90,6 +91,8 @@ export function nextWeaponUnavailableReason(def,side,b,selectedCardIds,lookup){
  if(!def.playable)return def.blockedReason||'Arma non ancora disponibile';
  if(side.ruleset!=='hp-sync-v2')return 'Richiede la partita con HP sincronizzati';
  const ply=b?.ply??0;
+ if(['replicatore-olografico','proiettore-olografico'].includes(p.slug)&&((side.machines||[]).some(m=>m.weaponProfile?.slug===p.slug&&alive(m)&&(m.untilPly==null||m.untilPly>ply))||selectedCardIds.filter(id=>lookup(id)?.effectSpec?.weaponProfile?.slug===p.slug).length>1))
+  return 'Una sola arma olografica per famiglia contemporaneamente';
  if(p.slug==='eclissi-quantistica'&&side.nextEclipsePending&&side.nextEclipsePending.releasePly>ply)
   return 'È già presente un proiettile nascosto in attesa';
  if(p.slug==='convertitore-cinetico'){
@@ -119,7 +122,7 @@ export function finishNextSingularity(b,ctx,events,order,h){
  ctx.nextAbsorber=null;
  const total=m.nextAbsorbed||0;m.nextAbsorbed=0;
  const out=empty(),target=ordinary(b.sides[other(ctx.who)],order,b.ply,h);
- const nominal=Math.round(total*(1+profile(m).boostPercent/100));
+ const nominal=Math.round(total*(1+profile(m).boostPercent/100)*(m.holoMultiplier??1));
  h.startNebulaVolley(ctx);
  const hit=directHit(b,ctx,events,m,nominal,target,order,h,{alreadyPowered:true});record(out,hit);
  event(b,ctx.who,events,m,h,'next-weapon-shot',{pattern:profile(m).pattern,stage:2,nominalDamage:nominal,
@@ -239,6 +242,7 @@ export function resolveNextBalancedWeaponShots(b,ctx,events,order,h){
      event(b,ctx.who,events,m,h,'next-weapon-reflected-energy',{energyGain:p.energyGain,virtualCharges:true});
     }break;
    }
+   case 'replicatore-olografico':case 'proiettore-olografico':break;
    case 'eclissi-quantistica':{
     const delay=validEclipseChoice(order.nextEclipseTurn)?order.nextEclipseTurn:eclipseRandom(b);
     if(side.nextEclipsePending)break;
@@ -296,7 +300,7 @@ export function resolveNextBalancedWeaponShots(b,ctx,events,order,h){
 }
 export function resolveNextOpponentReactions(b,ctx,events,h){
  const who=other(ctx.who),owner=b.sides[who],enemy=b.sides[ctx.who];
- for(const m of owner.machines.filter(m=>is(m,'massa-inerziale')&&alive(m)&&m.nextMassReactionPly===b.ply)){
+ for(const m of owner.machines.flatMap(m=>[m,...(m.replicaState&&alive(m)&&m.untilPly>b.ply?[m.replicaState]:[])]).filter(m=>is(m,'massa-inerziale')&&alive(m)&&m.nextMassReactionPly===b.ply)){
   m.nextMassReactionPly=-1;
   if(!ctx.cards.length||!alive(owner.ships[0])||!alive(enemy.ships[0])||!h.unitEnabled(m,b.ply)||h.unitSilenced(m,b.ply))continue;
   const target=all(enemy,h).find(t=>identity(t)===m.nextMassTarget);
@@ -344,6 +348,7 @@ export function releaseNextEclipse(b,ctx,events,order,h){
  const side=b.sides[ctx.who],pending=side.nextEclipsePending;
  if(!pending||pending.releasePly!==b.ply)return null;
  side.nextEclipsePending=null;
+ if(pending.machine.holoOwnerCardId&&!(side.machines||[]).some(m=>m.id===pending.machine.id&&alive(m)&&(m.holoOwnerUntilPly??m.untilPly)>b.ply))return null;
  const m=pending.machine,correct=pending.guess===pending.chosenDelay,
   nominal=correct?pending.basePower:pending.bonusPower;
  const enemy=b.sides[other(ctx.who)],target=ordinary(enemy,order,b.ply,h),out=empty();

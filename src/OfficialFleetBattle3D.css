@@ -514,3 +514,8 @@
 .es-math-scope .f3d-original-arena .f3d-support-target-choice button:last-child{
  min-height:25px;color:#dbe6ef;background:transparent;border-color:#586d82;
 }
+
+/* Tre posizioni indistinguibili: nessun bordo o stile riservato all'esca. */
+.es-math-scope .f3d-approved-layout .live-fighter .live-escort.f3d-hologram-position{left:var(--holo-left);right:auto;transform:translateX(-50%);width:74px;height:60px;z-index:5}
+.es-math-scope .f3d-approved-layout .live-fighter--enemy .live-escort.f3d-hologram-position{top:105px}
+.es-math-scope .f3d-approved-layout .live-fighter--player .live-escort.f3d-hologram-position{top:-22px}
