@@ -22,7 +22,8 @@ non dimostra che il nuovo effetto scelto sia già visibile nel gioco.
   con incisioni/tagli, scintille e schegge metalliche.
 - Se una Difesa effettivamente blocca il colpo, mostrare il contatto sullo
   scudo. La sola presenza di una Difesa non implica che il colpo sia
-  bloccato: mantenere le regole Energia/bypass del Frantumatore.
+  bloccato: mantenere il bypass del Frantumatore e leggere la revisione
+  specifica del suo bonus riportata sotto.
 - L'utente ha aggiunto: «Primo turno si vede le lame colpiscono la
   navicella». È la fase di impatto descritta per il turno di attivazione.
 - Non dedurre da «primo turno» una durata nuova: la carta attuale dura
@@ -31,6 +32,39 @@ non dimostra che il nuovo effetto scelto sia già visibile nel gioco.
 - Il numero delle lame e la loro eventuale progressione per rarità non
   sono stati scelti in questa indicazione. Non presentare conteggi
   precedenti del codice come una nuova scelta esplicita dell'utente.
+
+### Frantumatore — revisione del bonus limitata a questa carta
+
+Dopo aver chiarito che il comportamento attuale non aumenta il danno
+quando mancano Difese, l'assistente ha proposto un vantaggio alternativo:
+con Difese attive, le Energie Metallo servono a superarle/rimuoverne una;
+senza Difese attive, danno invece un bonus al danno delle lame.
+
+L'utente ha precisato **«Per la carta, non per le energie»**.
+La revisione riguarda quindi **soltanto il Frantumatore a Induzione**,
+nelle sue versioni Epica e Leggendaria. Non trasformarla in una regola
+globale delle Energie Metallo e non applicarla alle altre Armi.
+
+Direzione della revisione specifica:
+- Senza Energie Metallo presenti: danno base, con applicazione delle
+  protezioni effettivamente attive.
+- Con Energie Metallo e Difese attive: mantenere le soglie della carta,
+  una Energia per superare una Difesa e almeno due per eliminare anche
+  una carta Difesa attiva e scoperta.
+- Con Energie Metallo e senza Difese attive: il danno delle lame aumenta.
+  Quantità del bonus ed eventuale differenza fra una e più Energie non
+  sono state definite; non inventare numeri o una crescita illimitata.
+- Le soglie e il danno supplementare appartengono all'effetto del
+  Frantumatore. Il comportamento di riferimento conta le Energie senza
+  consumarle; non è stata richiesta una modifica del consumo.
+- Durata di un turno proprio e bersaglio singolo restano i riferimenti.
+  L'ordine dei controlli quando una Difesa viene rimossa e i dettagli
+  numerici saranno definiti nella futura realizzazione; non sommare
+  automaticamente entrambe le modalità nello stesso colpo.
+
+**Stato:** revisione annotata nella progettazione. Il codice di gioco
+precedente non applica ancora il nuovo bonus senza Difese. Non è stato
+modificato o collaudato in questa conversazione.
 
 **Stato:** specifica documentata; nuova animazione da realizzare e
 collaudare al successivo comando di creazione. In questa fase non si
