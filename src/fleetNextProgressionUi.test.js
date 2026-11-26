@@ -32,6 +32,7 @@ import {nativeMotherRarity,rarityUnlockedAtSector,rarityIndex,
 import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
 import {maglioArtwork,maglioPresentationBerths} from './maglioBattleVisuals.js';
+import {hologramDisplayEscorts} from './fleetNext/nextHolographicWeapons.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,vesselWithPhysicalVitalDamage} from './officialVitalMotorAdapter.js';
 
@@ -59,7 +60,7 @@ const Fighter=extract('./OfficialFleetBattle3D.jsx','OriginalFleetFighter',{
  FLEET_PHYSICAL_VITALS,PHYSICAL_LABELS:Labels,PHYSICAL_SHORT_LABELS:Shorts,
  ASSET_ROOT:'/assets',HP_SYNC_RULESET,describeEscortEffect,liveModules,pct:(n,d)=>Math.round(100*n/d),
  activeEscort:e=>e.hp>0&&!e.destroyed,FLEET_ELEMENTS,mantaEnergy,mantaCapacitorActive,card,
-  escortArtwork,fusedEscortArtwork,maglioArtwork,maglioPresentationBerths,MaglioWeaponModel:()=>null
+  escortArtwork,fusedEscortArtwork,maglioArtwork,maglioPresentationBerths,hologramDisplayEscorts,MaglioWeaponModel:()=>null
 });
 const Physical=extract('./ShipPhysicalVitals.jsx','ShipPhysicalVitals',{
  vesselWithPhysicalVitalDamage,VITAL_IDS,VITAL_LABELS,VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,

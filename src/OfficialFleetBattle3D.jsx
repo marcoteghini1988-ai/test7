@@ -1220,7 +1220,7 @@ export default function OfficialFleetBattle3D({
      {...lastFx.events.find(e=>e.kind==='impact'&&e.who==='B'),round:lastFx.nonce}}
     inspectEscort={setHelp}/>
    <MagneticGrappleTethers battle={battle} resolving={resolving} fx={lastFx}/>
-   {resolving&&(lastFx?.weaponShots?.length>0||lastFx?.selectedCards?.length>0||lastFx?.events?.some(e=>e.kind==='weapon-break-defense'))&&<MaglioBattleEffects
+   {resolving&&(lastFx?.weaponShots?.length>0||lastFx?.selectedCards?.length>0||lastFx?.events?.some(e=>['weapon-break-defense','weapon-core-expired'].includes(e.kind)))&&<MaglioBattleEffects
     key={lastFx.nonce} shots={lastFx.weaponShots} selectedCards={lastFx.selectedCards}
     playerSide={player} ply={battle.ply} nonce={lastFx.nonce} events={lastFx.events}
     resolvedSides={lastFx.resolvedSides} startedAt={lastFx.startedAt}/>}

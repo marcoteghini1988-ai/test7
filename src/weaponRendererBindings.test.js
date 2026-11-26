@@ -11,7 +11,8 @@ test('Live weapon renderers contain no unbound identifiers',()=>{
   'approvedProjectileEffects.js','ionicWeaponBattleVisuals.js','ionicWeaponSounds.js',
   'weaponKinematics.js','weaponCinematicRenderer.js',
   'weaponCinematicStyle.js','weaponHullImpacts.js','weaponSalvoAudio.js','maglioPerspectiveRenderer.js',
-  'metalWeaponSounds.js','weaponHaptics.js'].map(p=>'src/'+p);
+  'metalWeaponSounds.js','weaponHaptics.js','CoreThunderCardState.jsx','coreThunderRenderer.js',
+  'coreThunderAudio.js','coreThunderBattleVisuals.js','coreThunderSpec.js'].map(p=>'src/'+p);
  const program=ts.createProgram(files,{allowJs:true,checkJs:true,noEmit:true,skipLibCheck:true,
   target:ts.ScriptTarget.ES2023,module:ts.ModuleKind.ESNext,moduleResolution:ts.ModuleResolutionKind.Bundler,
   jsx:ts.JsxEmit.ReactJSX,lib:['lib.es2023.d.ts','lib.dom.d.ts'],allowSyntheticDefaultImports:true});

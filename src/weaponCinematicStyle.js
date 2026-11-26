@@ -1,6 +1,7 @@
 // Coreografia di presentazione: nessun evento HP viene creato qui.
 // Ogni riga corrisponde a una variante già approvata e a una dinamica diversa.
 const motifs=Object.freeze({
+ 'growing-thunder-core':[null,'precessing-core-bloom','silver-core-bloom','prismatic-core-bloom'],
  'ionic-comb':Array(4).fill('five-arcs-one-discharge'),
  'ionic-dart':Array(4).fill('double-helix-dart'),
  'ionic-whip':Array(4).fill('single-zigzag-whip'),
@@ -15,6 +16,7 @@ const motifs=Object.freeze({
  'wandering-shrapnel':[null,'indexed-fragment','recoil-splinter','prismatic-fracture']
 });
 const weights=Object.freeze({
+ 'growing-thunder-core':1,
  'ionic-comb':.48,'ionic-dart':.48,'ionic-whip':.48,'ionic-flash':.48,
  'gravity-maul':1.3,'steel-rail':.62,'thermal-reclaimer':.95,
  'magnetic-grapple':.5,'alloy-collision':1.6,induction:.7,
@@ -40,12 +42,17 @@ export function cinematicStyle(profile){
   fragments:14+profile.tier*5,smoke:7+profile.tier*2,
   prism:profile.tier===3,version:3});
 }
-export function weaponHullFrame(kind,age,duration,{tier=0,direction=1,reduced=false,blocked=false}={}){
+export function weaponHullFrame(kind,age,duration,{tier=0,direction=1,reduced=false,blocked=false,coreStage=1}={}){
  const zero={x:0,y:0,roll:0,pitch:0,lift:0,light:0,thrust:0};
  if(blocked||kind==='alloy-collision'||age<0||age>=duration||!weights[kind])return zero;
  const t=age/duration,tail=(1-t)**2,kick=(1-Math.exp(-age/11))*Math.exp(-age/160);
  const w=weights[kind]*(1+tier*.07),r={...zero,light:Math.exp(-age/145)*.85};
  if(reduced)return {...r,light:r.light*.3};
+ if(kind==='growing-thunder-core'){
+  const k=(1-Math.exp(-age/12))*Math.exp(-age/180);
+  return {...zero,y:direction*k*(9+coreStage*3.6),roll:Math.sin(age*.028)*k*.068*180/Math.PI,
+   pitch:direction*k*(4+coreStage),light:Math.exp(-age/135)*.85,thrust:k*(.7+coreStage*.15)};
+ }
  if(kind.startsWith('ionic-')){
   r.y=direction*3.2*kick;r.roll=Math.sin(age*.023)*kick*5;r.pitch=kick*6;r.light=Math.exp(-age/95)*.6;
  }else if(kind==='gravity-maul'){

@@ -22,20 +22,27 @@ export default function WeaponCardInteractions({events,paths,startedAt}){
     const slot=slots.find(s=>s.dataset.fleetCardSlot===event.who+'-5');
     const participating=event.energyContributions.map(c=>c.pileIndex).join(','),cards=event.energyContributions.map(c=>c.cardId).join(',');
     const shown=[];
-    schedule(at,()=>{mark(slot,'energy',transfer?'spent':'counted');mark(slot,'energy-indices',participating);mark(slot,'energy-cards',cards);mark(slot,'energy-amount',String(event.energyContributions.reduce((n,c)=>n+(c.consumed||1),0)));
+    const spent=event.energyContributions.some(c=>c.consumed>0),duration=profile.kind==='growing-thunder-core'?880:600;
+    schedule(at,()=>{mark(slot,'energy',spent?'spent':'counted');mark(slot,'energy-indices',participating);mark(slot,'energy-cards',cards);mark(slot,'energy-amount',String(event.energyContributions.reduce((n,c)=>n+(c.consumed||1),0)));
      if(!slot)return;
      event.energyContributions.forEach((c,i)=>{
-      const art=cardDisplayFacePath(c.cardId);if(!art)return;
+      const art=cardDisplayFacePath(c.cardId);
       const face=document.createElement('span');face.className='weapon-energy-contributor';
       face.dataset.cardId=c.cardId;face.dataset.pileIndex=String(c.pileIndex);face.dataset.discarded=String(c.discarded);
       face.dataset.chargesBefore=String(c.beforeCharges);face.dataset.chargesAfter=String(c.afterCharges);
       face.style.setProperty('--contributor-x',((i-(event.energyContributions.length-1)/2)*9)+'px');
-      const image=document.createElement('img');image.src=art;image.alt='';image.draggable=false;face.append(image);
+      face.style.setProperty('--contributor-duration',duration+'ms');
+      if(art){const image=document.createElement('img');image.src=art;image.alt='';image.draggable=false;face.append(image);}
+      else{const label=document.createElement('span');label.className='weapon-energy-native';
+       label.dataset.element=card(c.cardId)?.effectSpec?.elementId||'';
+       const icon=document.createElement('b');icon.textContent=label.dataset.element==='ionic'?'ϟ':'◆';
+       const name=document.createElement('small');name.textContent=card(c.cardId)?.name||c.cardId;
+       label.append(icon,name);face.append(label);}
       if(c.consumed&&c.afterCharges>0){const charges=document.createElement('span');charges.className='weapon-energy-charges';charges.textContent=String(c.afterCharges);face.append(charges);}
       slot.append(face);shown.push(face);contributors.add(face);
      });
     });
-    schedule(at+600,()=>{mark(slot,'energy','idle');for(const face of shown){face.remove();contributors.delete(face);}});
+    schedule(at+duration,()=>{mark(slot,'energy','idle');for(const face of shown){face.remove();contributors.delete(face);}});
    }
    if(!['pierce','block','weapon-break-defense'].includes(event.kind))continue;
    const defender=event.who==='A'?'B':'A',source=event.defenseSource;

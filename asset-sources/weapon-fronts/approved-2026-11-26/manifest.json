@@ -1636,6 +1636,134 @@
           "blobSha": "f77d08993a1839e3561df6de46b74b70ff10df1d"
         }
       ]
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore",
+      "familyId": "weapon-designed-ionic-nucleo-folgore",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "growing-thunder-core",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore.png",
+      "sha256": "d39996219f9dbc22265defe17f794592e0c1d7871987aecc2d0846a4b247062e",
+      "bytes": 11795658,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "d39996219f9dbc22265defe17f794592e0c1d7871987aecc2d0846a4b247062e",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "scenicRevision": 2,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore.png",
+      "blobSha": "0490e10af9ecea933518a229055d0b9b83a56ba6",
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-nucleo-folgore.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "f580cdbb0eac4f1f5c1b97decea1f0fb199d27ef9a1c231325630a0cbac7f5b4",
+          "blobSha": "e92bc49ac9b26656fa184723dc9274944407fbb6"
+        },
+        {
+          "name": "weapon-designed-ionic-nucleo-folgore.part-002",
+          "offset": 6000000,
+          "bytes": 5795658,
+          "sha256": "713a228831c757346f0f9a0419e5db9cc99ec6fcd205321ba713254f34545694",
+          "blobSha": "f68faeadeac68f821921f6b455b3ac4f39117185"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore-rarity-e",
+      "familyId": "weapon-designed-ionic-nucleo-folgore",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "growing-thunder-core",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-e.png",
+      "sha256": "c675e387e8063244b64e8c44d1b94c7a4474d06ea8974a0ba7e64a8ed8782a34",
+      "bytes": 12731419,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "c675e387e8063244b64e8c44d1b94c7a4474d06ea8974a0ba7e64a8ed8782a34",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "scenicRevision": 2,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-e.png",
+      "blobSha": "9db65c03b2e53f283d627ca0ae6b42167ce9b561",
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-nucleo-folgore-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "125f0d425d7917fd3ffbd6beb9206d73d34db797ad85a1cb2e36ffda8d479d52",
+          "blobSha": "aea83cee57fe9ba627902bbf99f0958a8febff19"
+        },
+        {
+          "name": "weapon-designed-ionic-nucleo-folgore-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "967cece77dfb54f38f94a6be0ec02adaa19eae5a7b6a589f4caf439c0cdbe0b0",
+          "blobSha": "525bf8793e376494d5ef19437b891e648eb4f34c"
+        },
+        {
+          "name": "weapon-designed-ionic-nucleo-folgore-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 731419,
+          "sha256": "1e0c7f4f098f5e1eef616be31fde1e70a5bf58da149b7bf5d53de9444bff9c4c",
+          "blobSha": "6d47ff4b076d9566c8fb2b9445308befefb8c506"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+      "familyId": "weapon-designed-ionic-nucleo-folgore",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "growing-thunder-core",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-l.png",
+      "sha256": "3aa8e0fce40cb9ffe71f63660e94db9feb536b67713862cd71485bdd9d78c143",
+      "bytes": 13855241,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "3aa8e0fce40cb9ffe71f63660e94db9feb536b67713862cd71485bdd9d78c143",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "scenicRevision": 2,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-l.png",
+      "blobSha": "9df0b51196171af526d93a6cdc51c13974b78acd",
+      "parts": [
+        {
+          "name": "weapon-designed-ionic-nucleo-folgore-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "36a2a058ab419dc70c3ea76de40d9a583a15d75c6a6041f288082416ddf03239",
+          "blobSha": "3561af0cbdee5fd2310d0e0d2c6d28d0da400170"
+        },
+        {
+          "name": "weapon-designed-ionic-nucleo-folgore-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "bd33b40ab183c901bb366fc9384f4586734683f91b07af4a9490d3540a799e90",
+          "blobSha": "4efb2ebba422a67c54269efeab1dd5a0c058f168"
+        },
+        {
+          "name": "weapon-designed-ionic-nucleo-folgore-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 1855241,
+          "sha256": "3d2e871ee7fd27f2596209ea140b9d6d8f2874dcc3d2491b209f6df93ea40ef2",
+          "blobSha": "f9cd458a257c289d99a3a2392ae48681aa8eb89b"
+        }
+      ]
     }
   ],
   "rulesConfirmed": {
@@ -1648,6 +1776,14 @@
       40
     ],
     "inductionBonusCapEnergyCards": 2,
-    "energyConsumed": false
+    "energyConsumed": false,
+    "growingThunderCore": {
+      "ownTurns": 3,
+      "freshEnergyCost": 1,
+      "permanentBreak": true,
+      "oneHitPerOwnTurn": true,
+      "scenicRevision": 2,
+      "visualApprovalReceived": true
+    }
   }
 }

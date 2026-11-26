@@ -18,6 +18,7 @@ import {OFFICIAL_WEAPON_FRONT_BY_ID} from './src/fleetNext/officialWeaponArt.js'
 import {hapticsEnabled,setHapticsEnabled} from './src/weaponHaptics.js';
 import {approvedWeaponSalvo} from './src/fleetNext/approvedWeaponSalvos.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
+import {CORE_FAMILY} from './src/coreThunderSpec.js';
 import './src/index.css';
 function Review(){
  const fleets=[
@@ -82,7 +83,7 @@ function Review(){
     onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
-   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0})}>
+   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,coreMode:'charged',energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0})}>
     {Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).map(id=><option key={id} value={id}>{WEAPON_NEAR_FINAL_BY_ID[id].name+' · '+WEAPON_NEAR_FINAL_BY_ID[id].rarita}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
@@ -123,6 +124,15 @@ function Review(){
      <button onClick={()=>reset({supports:true,cascadeMode:'one',energyCards:1,ownStage:1,blocked:false})}>Un trasferimento</button>
      <button onClick={()=>reset({supports:true,cascadeMode:'two',energyCards:2,ownStage:1,blocked:false})}>Due trasferimenti</button>
     </>}
+   </>}
+   {setup.cardId.startsWith(CORE_FAMILY)&&<>
+    <span>1 nucleo per turno · tre turni · nuova Energia per crescere</span>
+    <label>Turno del Nucleo <select aria-label="Turno del Nucleo" value={setup.ownStage||1} onChange={e=>reset({ownStage:Number(e.target.value),blocked:false})}>
+     {[1,2,3].map(n=><option key={n} value={n}>{n}</option>)}</select></label>
+    <label>Ricarica Nucleo <select aria-label="Ricarica Nucleo" value={setup.coreMode||'charged'} onChange={e=>reset({coreMode:e.target.value,blocked:false})}>
+     <option value="charged">Energia nuova disponibile</option><option value="broken">Salta ricarica T2</option><option value="old-only">Solo Energia vecchia</option>
+    </select></label>
+    <label><input type="checkbox" aria-label="Difesa pubblica Nucleo" checked={setup.withDefense||false} onChange={e=>reset({withDefense:e.target.checked})}/>Difesa pubblica</label>
    </>}
    <button aria-pressed={hapticsOn} onClick={()=>setHapticsOn(setHapticsEnabled(!hapticsOn))}>Vibrazione {hapticsOn?'attiva':'disattiva'}</button>
    <button onClick={()=>recording?capture.current?.recorder.stop():recordBattle()}>{recording?'Ferma registrazione':'Registra battaglia'}</button>

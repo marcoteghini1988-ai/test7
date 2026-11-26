@@ -3,6 +3,7 @@
 import {clamp01,weaponHullFrame} from './weaponCinematicStyle.js';
 
 const contacts=Object.freeze({
+ 'growing-thunder-core':{kind:'electric-core-bloom',radius:1,sparks:26,smoke:false},
  'ionic-comb':{kind:'electric-grid',radius:.85,sparks:14,smoke:false},
  'ionic-dart':{kind:'helix-discharge',radius:.85,sparks:14,smoke:false},
  'ionic-whip':{kind:'electric-snap',radius:.85,sparks:14,smoke:false},
@@ -34,7 +35,7 @@ export function weaponHullImpactProfile(profile,shot){
 // the smaller intermediate salvo kicks. Passing light cannot erase a recoil.
 export function weaponImpactHullFrame(profile,shot,age,{reduced=false}={}){
  const pose=weaponHullFrame(profile.kind,age,profile.impactMs,{tier:profile.tier,
-  direction:shot.who==='A'?-1:1,reduced,blocked:!!shot.defenseBlocked||!shot.fires});
+  direction:shot.who==='A'?-1:1,reduced,blocked:!!shot.defenseBlocked||!shot.fires,coreStage:shot.coreChargeStage||1});
  if(shot.jawPhase==='tear'&&shot.fires&&!reduced){pose.y*=1.4;pose.roll*=1.35;}
  if((shot.salvoCount||1)>1&&!shot.salvoLast){
   for(const k of ['x','y','roll','pitch','lift','thrust'])pose[k]*=.5;

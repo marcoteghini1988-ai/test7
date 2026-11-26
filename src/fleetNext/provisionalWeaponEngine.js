@@ -126,7 +126,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const p=m.weaponProfile,pattern=p.pattern,stage=ownStage(m,b.ply),hits=[];
   if(!Number.isInteger(stage)||stage<1)continue;
   const comboSide=side.provisionalWeaponStatus??={};
-  let planned=[];
+  let planned=[],coreFeedback=null;
   if(pattern==='magma-mortar'){
    const extras=ctx.provisionalMortarShots?.[m.id]||0;
    planned=[{base:p.baseDamage},...Array.from({length:extras},()=>({base:p.extraDamage}))];
@@ -205,11 +205,17 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
     ignoreCover:target.kind==='part'&&!!sibling}]:[];
   }else if(pattern==='cascade-piercer')planned=[{base:p.baseDamage}];
   else if(pattern==='growing-thunder-core'){
+   const wasBroken=!!m.chargeBroken;
+   let energySpent=0,energyContributions=[];
    if(stage>1&&!m.chargeBroken){
+    const contributors=weaponEnergyContributions(side,'ionic',{cost:p.freshEnergyCost},h.card);
     if(m.lastChargePly!==b.ply-2||!spendFreshIonic(p.freshEnergyCost))
      m.chargeBroken=true;
+    else{energySpent=p.freshEnergyCost;energyContributions=contributors;}
    }
    m.lastChargePly=b.ply;
+   coreFeedback={coreChargeStage:m.chargeBroken?1:stage,coreChargeBroken:!!m.chargeBroken,
+    coreChargeLost:!wasBroken&&!!m.chargeBroken,energySpent,energyContributions};
    planned=[{base:m.chargeBroken?p.damageStages[0]:p.damageStages[stage-1]}];
   }else if(pattern==='ion-probe')planned=[{base:p.baseDamage}];
   else if(pattern==='thunder-hammer'){
@@ -278,6 +284,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   const sum=hits.reduce((n,x)=>n+x.actualDamage,0);
   event(m,'weapon-provisional-shot',m.name+' · '+sum+' HP',{
    pattern,stage,baseNominalDamage:p.baseDamage,hitCount:hits.length,impacts:hits,actualDamage:sum,provisional:true,
+   ...(coreFeedback||{}),
    ...(jawRole(m)?{jawRole:jawRole(m),jawPhase:m.jawPhase,jawWasLatched:m.jawWasLatched,launchPly:m.deployedPly}:{}),
   });
  }

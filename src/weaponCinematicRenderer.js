@@ -1,4 +1,6 @@
 import {electricFlight,electricImpact,kineticImpact} from './approvedProjectileEffects.js';
+import {drawScenicPreparation,drawScenicFlight,drawScenicContact} from './coreThunderRenderer.js';
+import {CORE_KIND,coreFrame} from './coreThunderSpec.js';
 import {Vector3} from 'three';
 import {boardPointToWorld,worldPointToBoard} from './maglioProjectile3D.js';
 import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
@@ -596,6 +598,15 @@ function impact(floor,air,entry,ms,reduced,contactPose){
 }
 export function drawCinematicWeapon(floor,air,e,age,{reduced=false,contactPose=null}={}){
  const elapsed=age-e.start,p=e.profile;
+ if(p.kind===CORE_KIND){
+  const f=coreFrame(p,e.shot),ms=elapsed-p.flightMs;
+  if(elapsed<0){if(!reduced)drawScenicPreparation(floor,f,elapsed+p.chargeMs,e.from,p.chargeMs);return;}
+  if(ms<0){if(!reduced)drawScenicFlight(air,f,elapsed,e.from,e.to,p.flightMs);return;}
+  if(!e.shot.fires&&!f.blocked)return;
+  if(reduced&&ms>=300)return;
+  drawScenicContact(air,f,reduced?90:ms,weaponHullContactPoint(e.to,contactPose||{x:0,y:0,lift:0}),p.impactMs);
+  return;
+ }
  if(elapsed<0){if(!reduced)charge(floor,air,e,elapsed);return;}
  if(p.kind==='magnetic-grapple'&&e.shot.jawWasLatched&&elapsed<p.flightMs)return;
  if((p.kind.startsWith('ionic-')||p.kind==='steel-rail')&&elapsed>=0){

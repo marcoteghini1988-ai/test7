@@ -40,7 +40,8 @@ export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
   'weapon-designed-metallic-artiglieria-schegge-rarity-e',
   'weapon-designed-metallic-artiglieria-schegge-rarity-l'
  ].map(id=>[id,`${PRECISION_FRONT_ROOT}/fleet-weapon-fronts/${id}.png`])),
- ...Object.fromEntries(["weapon-base-ionic-01", "weapon-base-ionic-01-rarity-r", "weapon-base-ionic-01-rarity-e", "weapon-base-ionic-01-rarity-l", "weapon-base-ionic-02", "weapon-base-ionic-02-rarity-r", "weapon-base-ionic-02-rarity-e", "weapon-base-ionic-02-rarity-l", "weapon-base-ionic-03", "weapon-base-ionic-03-rarity-r", "weapon-base-ionic-03-rarity-e", "weapon-base-ionic-03-rarity-l", "weapon-base-ionic-04", "weapon-base-ionic-04-rarity-e", "weapon-base-ionic-04-rarity-l"].map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`]))
+ ...Object.fromEntries(["weapon-base-ionic-01", "weapon-base-ionic-01-rarity-r", "weapon-base-ionic-01-rarity-e", "weapon-base-ionic-01-rarity-l", "weapon-base-ionic-02", "weapon-base-ionic-02-rarity-r", "weapon-base-ionic-02-rarity-e", "weapon-base-ionic-02-rarity-l", "weapon-base-ionic-03", "weapon-base-ionic-03-rarity-r", "weapon-base-ionic-03-rarity-e", "weapon-base-ionic-03-rarity-l", "weapon-base-ionic-04", "weapon-base-ionic-04-rarity-e", "weapon-base-ionic-04-rarity-l"].map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`])),
+ ...Object.fromEntries(["weapon-designed-ionic-nucleo-folgore", "weapon-designed-ionic-nucleo-folgore-rarity-e", "weapon-designed-ionic-nucleo-folgore-rarity-l"].map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`]))
 });
 export const officialWeaponFacePath=id=>OFFICIAL_WEAPON_FRONT_BY_ID[id]||null;
 // Gli originali restano verificabili; si usa una variante PNG solo dopo che

@@ -1060,7 +1060,7 @@ function discardDefense(side,token){
  removeSource(side,token);
  side.defenseSlots=side.defenses.map(d=>d.id).slice(-2);
 }
-function expireSide(side,ply,battle=null){
+function expireSide(side,ply,battle=null,events=null,who=null){
  normalizeSide(side);
  side.synchronizationEffects=side.synchronizationEffects.filter(e=>e.untilPly>ply);
  const dismounted=expireDismantleEffects(side,ply);
@@ -1073,7 +1073,11 @@ function expireSide(side,ply,battle=null){
   const owner=battle?.sides?.[e.owner];
   if(owner)owner.discard.push(e.id);
  }
- expireTemporaryWeapons(side,ply);
+ const expiredWeapons=expireTemporaryWeapons(side,ply);
+ if(events&&battle&&who)for(const m of expiredWeapons)
+  if(m.weaponProfile?.pattern==='growing-thunder-core')events.push(emit(battle,who,
+   'weapon-core-expired',m.name+' · fine dei tre turni',{cardId:m.sourceCardId,
+    machineId:m.id,machineSlot:m.slot,elementId:'ionic',reason:'expired'}));
  if(side.cryoCrystal?.expiresPly<=ply)side.cryoCrystal=null;
  for(const entry of [...side.defenses])if(entry.untilPly!=null&&entry.untilPly<=ply)discardDefense(side,entry.source);
  if(side.auroraVeil&&side.auroraVeil.untilPly<=ply)side.auroraVeil=null;
@@ -5175,7 +5179,7 @@ function finishTurn(b,ctx,events){
  tickProvisionalBurns(b,events,{limitedMotherDamage,emit});
  b.turnStartedAtMs=ctx.nowMs;b.supportSecondsProcessed=0;
  for(const [id,side] of Object.entries(b.sides)){
-  expireSide(side,b.ply,b);corvoSafetySwitch(b,id,events);
+  expireSide(side,b.ply,b,events,id);corvoSafetySwitch(b,id,events);
  }
  const modern=b.ruleset===HP_SYNC_RULESET;
  const deadA=modern?b.sides.A.ships[0].hp<=0:allVitalsDestroyed(b.sides.A.ships[0]);
@@ -5270,7 +5274,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const b=clone(timed.battle),events=[...timed.events],side=b.sides[who];
  b.terrain=activeTerrain(b.terrain,b.ply);
  for(const [id,s] of Object.entries(b.sides)){
-  expireSide(s,b.ply,b);corvoSafetySwitch(b,id,events);
+  expireSide(s,b.ply,b,events,id);corvoSafetySwitch(b,id,events);
  }
  const cards=takeCards(side,order.cards||[]);
  const ctx={who,nowMs,order,cards:[],auroraAttacks:[],linceAttacks:[],prismaAttacks:[],corvoAttacks:[],

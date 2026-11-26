@@ -713,6 +713,66 @@
       "alphaUnchanged": true,
       "protectedTextAndSymbolsUnchanged": true,
       "mechanicsConfirmed": "3 own turns A/B; induction 20/40 cap"
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore",
+      "familyId": "weapon-designed-ionic-nucleo-folgore",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "growing-thunder-core",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore.png",
+      "sha256": "d39996219f9dbc22265defe17f794592e0c1d7871987aecc2d0846a4b247062e",
+      "bytes": 11795658,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "d39996219f9dbc22265defe17f794592e0c1d7871987aecc2d0846a4b247062e",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "scenicRevision": 2
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore-rarity-e",
+      "familyId": "weapon-designed-ionic-nucleo-folgore",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "growing-thunder-core",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-e.png",
+      "sha256": "c675e387e8063244b64e8c44d1b94c7a4474d06ea8974a0ba7e64a8ed8782a34",
+      "bytes": 12731419,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "c675e387e8063244b64e8c44d1b94c7a4474d06ea8974a0ba7e64a8ed8782a34",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "scenicRevision": 2
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+      "familyId": "weapon-designed-ionic-nucleo-folgore",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "growing-thunder-core",
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-l.png",
+      "sha256": "3aa8e0fce40cb9ffe71f63660e94db9feb536b67713862cd71485bdd9d78c143",
+      "bytes": 13855241,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "3aa8e0fce40cb9ffe71f63660e94db9feb536b67713862cd71485bdd9d78c143",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "scenicRevision": 2
     }
   ],
   "rulesConfirmed": {
@@ -725,6 +785,14 @@
       40
     ],
     "inductionBonusCapEnergyCards": 2,
-    "energyConsumed": false
+    "energyConsumed": false,
+    "growingThunderCore": {
+      "ownTurns": 3,
+      "freshEnergyCost": 1,
+      "permanentBreak": true,
+      "oneHitPerOwnTurn": true,
+      "scenicRevision": 2,
+      "visualApprovalReceived": true
+    }
   }
 }

@@ -6,6 +6,7 @@ import {metalWeaponEffectProfile} from './metalWeaponBattleVisuals.js';
 import {chainWeaponEffectProfile} from './chainWeaponBattleVisuals.js';
 import {precisionWeaponEffectProfile,cascadeImpactPresentation} from './precisionWeaponBattleVisuals.js';
 import {ionicWeaponEffectProfile} from './ionicWeaponBattleVisuals.js';
+import {coreThunderEffectProfile} from './coreThunderBattleVisuals.js';
 import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
 
 export const MAGLIO_CARD_ID='weapon-confirmed-metallic-maglio';
@@ -60,7 +61,7 @@ export function weaponEffectProfile(id,shot){
    sound:{charge:'maglio_charge_'+['common','rare','epic','legendary'][tier],
    fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
-  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id)
+  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id),...coreThunderEffectProfile(id,shot)
  };
  const salvo=approvedWeaponSalvo(id);
  const flight=salvo?.count>1?salvo.flightMs:profile.flightMs;
@@ -166,7 +167,9 @@ export function weaponVisualCards(shots=[],selectedCards=[]){
 export function weaponResolutionMs(events=[],selectedCards=[]){
  const allShots=fleetWeaponProjectiles(events),shots=allShots.filter(shot=>shot.fires||shot.defenseBlocked);
  const breaks=events.filter(e=>e.kind==='weapon-break-defense'&&chainWeaponEffectProfile(e.cardId));
- if(!shots.length&&!breaks.length)return 0;
+ const coreExpiry=events.some(e=>e.kind==='weapon-core-expired');
+ const coreFeedback=allShots.some(s=>s.coreChargeLost||s.energySpent>0&&coreThunderEffectProfile(s.cardId));
+ if(!shots.length&&!breaks.length&&!coreExpiry&&!coreFeedback)return 0;
  const start=weaponShotStartMs(weaponVisualCards(allShots,selectedCards).length);
  const end=Math.max(0,...shots.map(shot=>{
   const profile=weaponEffectProfile(shot.cardId,shot);
@@ -175,7 +178,13 @@ export function weaponResolutionMs(events=[],selectedCards=[]){
  // Conserva l'attesa precedente degli effetti provvisori delle altre Armi.
  const legacy=shots.some(s=>!weaponEffectProfile(s.cardId)?.approved)?4850+(shots.length-1)*MAGLIO_SHOT_GAP_MS:0;
  // La rimozione di una Difesa è un evento autonomo, anche se lo sparo è bloccato.
- return Math.max(legacy,end,breaks.length?start+1100:0);
+ return Math.max(legacy,end,breaks.length?start+1100:0,coreFeedback?start+150:0,
+  coreExpiry?weaponExpiryStartMs(allShots,start)+720:0);
+}
+export function weaponExpiryStartMs(shots=[],start=0){
+ return Math.max(160,...shots.filter(s=>s.fires||s.defenseBlocked).map(s=>{
+  const p=weaponEffectProfile(s.cardId,s);return start+(s.delayMs||0)+(p?.flightMs||470)+(p?.impactMs||700)+150;
+ }));
 }
 // Durante gli effetti la plancia conserva gli HP precedenti. Lo snapshot
 // del Maglio risolto mantiene il nome nello slot anche sul lato IA.

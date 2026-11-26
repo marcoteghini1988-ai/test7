@@ -1,13 +1,12 @@
 # Fulmine, famiglia 5 — Cannone a Nucleo di Folgore Crescente
 
-Stato: **tre fronti completi approvati visivamente; effetto in revisione
-per renderlo più scenico, prima dell'integrazione**.
-Ultima risposta: «mi immaginavo il colpo un po piu scenico, per le carte ok».
-Conservare i tre PNG esistenti e i loro hash, senza ridisegnarli.
-L'utente ha chiesto di proseguire dopo l'integrazione delle 37 varianti.
-Si continua una famiglia alla volta, senza riaprire le prime quattro.
-I nuovi renderer sono soltanto negli strumenti di anteprima; non sono
-collegati alla partita e il registro dei fronti attivi resta a 37 varianti.
+Stato: **tre fronti e revisione scenica 2 approvati e collegati alla
+partita; pubblicazione e collaudo StackBlitz in corso**.
+L'utente ha approvato prima le carte («per le carte ok») e poi il colpo
+scenico 2 («ok»). Le immagini sono identiche ai PNG approvati; nessuna
+cornice, illustrazione, testo o trasparenza è stata ricostruita.
+Il registro attivo passa da 37 a **40 varianti (22 Metallo + 18 Fulmine)**.
+Il collaudo dal vivo e le prove isolate restano distinti.
 
 ## Identità e ruolo verificati
 
@@ -154,13 +153,12 @@ gli istanti reali di audio e aptica.
 Per recuperarlo usare i normali strumenti del servizio file e verificare
 l'hash, senza inventare un nuovo soggetto o ricreare le cornici.
 
-Le carte sono ora confermate. Mostrare la nuova versione del colpo e
-**attendere soltanto la conferma dell'effetto** prima di collegare
-l'inserimento completo al gioco. Non richiedere ancora l'approvazione
-delle tre immagini né trattare l'effetto della prima anteprima come definitivo.
+Le carte e il colpo scenico 2 sono confermati. La prima anteprima del
+colpo rimane un riferimento storico superato; non richiedere ancora
+approvazioni delle immagini o della revisione 2.
 Conservare invariati il gruppo già integrato e la bozza futura Super Combo.
 
-## Revisione scenica 2 — carte approvate, colpo da confermare
+## Revisione scenica 2 — carte e colpo approvati
 
 Richiesta dell'utente: «mi immaginavo il colpo un po piu scenico, per le
 carte ok». È una conferma visiva dei tre fronti e una revisione del solo
@@ -207,4 +205,30 @@ Cinque test superati: i quattro controlli sulle sequenze reali più la
 verifica del punto di partenza/arrivo e della compressione per A/B.
 Compilazione dell'HTML e controllo sintattico superati. Nessun file di
 partita in `src/` o asset giocabile è stato modificato per questa revisione.
-**L'unica approvazione pendente è quella del colpo scenico 2.**
+**Approvazione del colpo scenico 2 ricevuta con «ok»; nessuna conferma pendente.**
+
+## Collegamento alla partita
+
+Renderer in `src/coreThunderRenderer.js`, partitura PCM condivisa in
+`src/coreThunderAudio.js`, profilo per ID e rarità in
+`src/coreThunderBattleVisuals.js`. I moduli dell'anteprima riesportano gli
+stessi renderer: la partita non usa una nuova approssimazione del colpo.
+Il tempo nativo è 880 ms preparazione, 1250 ms volo e 1150 ms contatto.
+Le partenze variano sul bordo del proprio lato; arrivo e scarica seguono
+il punto della nave misurato sulla plancia e la sua reazione reale.
+Nessuna macchina Arma viene aggiunta al campo.
+
+Gli eventi `weapon-provisional-shot` includono stadio reale, interruzione,
+transizione di perdita e contributi delle Carte Energia prima della spesa.
+Una carta con cariche residue resta nella pila. Nessuna ricarica è simulata
+al primo turno, con sole Energie vecchie o dopo l'interruzione permanente.
+La scadenza viene emessa solo quando il motore rimuove davvero l'istanza,
+al successivo confine previsto; non subito dopo il terzo impatto.
+`CoreThunderCardState` mostra interruzione e uscita della carta pubblica;
+le proprietà temporanee vengono ripristinate. Protezione, mute, pagina
+nascosta e movimento ridotto mantengono i controlli della partita.
+
+Il collaudo ufficiale espone tutti i 40 fronti e, per il Nucleo, turni
+1/2/3, Energia nuova, ricarica T2 saltata, sole Energie precedenti e Difesa.
+I turni precedenti delle prove sono risolti dal motore, non iniettati come
+stadi o danni inventati.

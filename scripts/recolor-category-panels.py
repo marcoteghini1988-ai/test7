@@ -105,8 +105,8 @@ def main():
     # Il registro originale, non la directory, decide quali carte sono attive.
     module = (ROOT / "src/fleetNext/officialWeaponArt.js").read_text()
     ids = list(dict.fromkeys(re.findall(r"[\"'](weapon-[a-z0-9-]+)[\"']", module)))
-    if len(ids) != 37:
-        raise ValueError(f"Attesi 37 fronti approvati, trovati {len(ids)}")
+    if len(ids) != 40:
+        raise ValueError(f"Attesi 40 fronti approvati, trovati {len(ids)}")
     OUT.mkdir(parents=True, exist_ok=True)
     AUDIT.mkdir(parents=True, exist_ok=True)
     models = {}

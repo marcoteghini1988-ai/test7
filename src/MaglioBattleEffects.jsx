@@ -1,7 +1,8 @@
 import React,{useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {card,cardDisplayFacePath as cardFacePath,cardRole} from './fleetNext/rules.js';
 import {projectFleetSlots,projectMachineBerths} from './fleetNext/battlePresentation.js';
-import {weaponEffectProfile,weaponPortalOrigin,weaponVisualCards,weaponShotStartMs} from './maglioBattleVisuals.js';
+import {weaponEffectProfile,weaponPortalOrigin,weaponVisualCards,weaponShotStartMs,weaponExpiryStartMs} from './maglioBattleVisuals.js';
+import CoreThunderCardState from './CoreThunderCardState.jsx';
 import WeaponCardInteractions from './WeaponCardInteractions.jsx';
 import IonicWeaponProjectileScene from './IonicWeaponProjectileScene.jsx';
 import MaglioProjectileScene from './MaglioProjectileScene.jsx';
@@ -89,6 +90,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
   const schedule=(delay,callback)=>timers.push(window.setTimeout(callback,
    Math.max(0,delay-(performance.now()-startedAt))));
   const cue=(profile,phase,time,shot)=>schedule(time,()=>{
+   if(document.visibilityState!=='visible')return;
    const root=ref.current?.closest('.f3d-approved-layout'),target=root&&combatTargetElement(root,shot);
    const source=shot.cascadeTransfer&&root?combatTargetElement(root,{...shot,targetKind:shot.sourceTargetKind,targetId:shot.sourceTargetId}):null;
    const origin=source?boardHullPoint(source,root.getBoundingClientRect()):weaponLaunchOrigin(shot);
@@ -97,13 +99,13 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    const cue=weaponSalvoAudioCue(profile,shot,phase);
    playSound(cue.type,cue.pitchSemitones,pan,cue.level,cue.timeScale);
    const result=requestWeaponHaptic(profile.kind,phase,profile.tier,{salvoCount:shot.salvoCount,
-    finisher:shot.finisher,salvoLast:shot.salvoLast,destroyed:shot.destroyed,jawPhase:shot.jawPhase,inductionBonusPercent:shot.inductionBonusPercent});
+    finisher:shot.finisher,salvoLast:shot.salvoLast,destroyed:shot.destroyed,jawPhase:shot.jawPhase,inductionBonusPercent:shot.inductionBonusPercent,coreStage:shot.coreChargeStage||1});
    if(result.status==='requested')requested=true;
    if(ref.current){ref.current.dataset.hapticStatus=result.status;
     ref.current.dataset.hapticPhase=phase;ref.current.dataset.hapticPattern=JSON.stringify(result.pattern);}
   });
   for(const shot of shots){
-   if(!shot.fires&&!shot.defenseBlocked)continue;
+   if(!shot.fires&&!shot.defenseBlocked&&!shot.coreChargeLost&&!shot.energySpent)continue;
    const profile=weaponEffectProfile(shot.cardId,shot);
    if(!profile?.sound)continue;
    if(profile.kind==='alloy-collision'){
@@ -113,7 +115,13 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
     collisionKeys.add(shot.visualGroupId);
    }
    const start=shotStart+(shot.delayMs||0);
-   if(profile.sound.charge)cue(profile,'charge',Math.max(0,start-profile.chargeMs),shot);
+   if(profile.sound.charge&&(profile.kind!=='growing-thunder-core'||shot.energySpent>0))
+    cue(profile,'charge',Math.max(0,start-profile.chargeMs)+(profile.kind==='growing-thunder-core'?20:0),shot);
+   if(profile.kind==='growing-thunder-core'){
+    if(shot.coreChargeLost)cue(profile,'lost',Math.max(0,start-profile.chargeMs)+20,shot);
+    if(shot.fires&&!shot.defenseBlocked)cue(profile,'compression',start+profile.flightMs-240,shot);
+   }
+   if(!shot.fires&&!shot.defenseBlocked)continue;
    cue(profile,shot.cascadeTransfer?'transfer':'fire',start,shot);
    cue(profile,shot.defenseBlocked?'block':'impact',start+profile.flightMs,shot);
    if(profile.kind==='alloy-collision')cue(profile,'release',start+profile.flightMs+COLLISION_RELEASE_AFTER_MS,shot);
@@ -123,6 +131,8 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
   for(const event of events.filter(e=>e.kind==='weapon-break-defense'&&chainWeaponVariant(e.cardId))){
    cue(weaponEffectProfile(event.cardId),'defense',shotStart-180,event);
   }
+  for(const event of events.filter(e=>e.kind==='weapon-core-expired'))
+   cue(weaponEffectProfile(event.cardId),'release',weaponExpiryStartMs(shots,shotStart),event);
   return ()=>{timers.forEach(id=>window.clearTimeout(id));if(requested)cancelWeaponHaptics();};
  },[nonce,shots,shotStart]);
  useLayoutEffect(()=>{
@@ -134,7 +144,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    if(!board.width||!board.height)return;
    setPlacements(measurePlacements(root,selectedCards,playerSide,ply,board));
    const collisionShots=collisionGroups(shots).flat();
-   setPaths(shots.filter(s=>s.fires||s.defenseBlocked||collisionShots.includes(s)).flatMap(shot=>{
+   setPaths(shots.filter(s=>s.fires||s.defenseBlocked||s.coreChargeLost||s.energySpent||collisionShots.includes(s)).flatMap(shot=>{
     const profile=weaponEffectProfile(shot.cardId,shot);
     const special=!!profile?.approved;
     const target=special?combatTargetElement(root,shot):targetForShot(root,shot);
@@ -187,6 +197,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    </React.Fragment>;
   })}
   <WeaponCardInteractions events={events} paths={paths} startedAt={startedAt}/>
+  <CoreThunderCardState events={events} paths={paths} startedAt={startedAt} expiryAt={weaponExpiryStartMs(shots,shotStart)}/>
   <CinematicWeaponEffects paths={paths} startedAt={startedAt}/>
   <IonicWeaponProjectileScene paths={ionicPaths} startedAt={startedAt}/>
   <MaglioProjectileScene paths={projectilePaths} startedAt={startedAt} cinematic/>
@@ -205,7 +216,9 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
      data-visible-end={shot.who==='A'?'rear':'front'} data-weapon-kind={profile.kind}
      data-rarity={profile.rarity} data-sequence={profile.sequence}
      data-cascade-index={shot.cascadeIndex||0} data-source-target-id={shot.sourceTargetId||''}
-     data-transfer-energy={shot.transferEnergySpent||0} data-stage={shot.stage||1}/>;
+     data-transfer-energy={shot.transferEnergySpent||0} data-stage={shot.stage||1}
+     data-core-charge-stage={shot.coreChargeStage} data-core-broken={shot.coreChargeBroken}
+     data-energy-spent={shot.energySpent||0} data-defense-blocked={shot.defenseBlocked||false}/>;
     const impactDelay=start+profile.flightMs;
     const gradientId='weapon-impact-'+nonce+'-'+index;
     const flashY=shot.who==='A'?790:10;

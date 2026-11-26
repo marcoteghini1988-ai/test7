@@ -1,0 +1,6 @@
+.core-card-state{position:absolute;width:42px;height:63px;object-fit:contain;z-index:11;pointer-events:none;transform-origin:center}
+.core-card-charge-lost{animation:core-charge-lost .7s ease-out both}
+.core-card-expired{animation:core-card-expired .7s ease-in both}
+@keyframes core-charge-lost{0%,100%{opacity:0}15%,40%{opacity:1;filter:brightness(1.8) drop-shadow(0 0 5px #78cdff)}70%{opacity:.45;filter:saturate(.2)}}
+@keyframes core-card-expired{0%{opacity:1;filter:brightness(1.3)}100%{opacity:0;transform:translate(18px,22px) rotate(12deg) scale(.65);filter:saturate(.2)}}
+@media(prefers-reduced-motion:reduce){.core-card-state{animation:none;opacity:.65;filter:saturate(.4)}}

@@ -30,32 +30,28 @@ ARMA è rossa (#ff594c), STRATEGIA è arancione (#ffb24d) e sostituisce la denom
 
 
 
-## Punto di ripresa — 37 varianti integrate; regole mancanti confermate
+## Punto di ripresa — 40 varianti; Nucleo scenico 2 approvato
 
-**Passo successivo preparato:** l'utente ha approvato con «ok» la direzione
-del Cannone a Nucleo di Folgore Crescente, quinta famiglia Fulmine reale.
-Sono pronti tre fronti PNG RGBA 3072×4608 e una previsualizzazione isolata
-con audio (68 secondi, 17 colpi in 7 sequenze), non una ripresa StackBlitz.
-Le illustrazioni centrali originali sono 1536×1024. Cornici autentiche,
-alfa esterna e pixel protetti verificati; nessun nuovo bordo esterno.
-**Le tre carte sono ora approvate visivamente:** l'utente ha risposto
-«mi immaginavo il colpo un po piu scenico, per le carte ok». Conservare
-gli stessi PNG e hash; non rifare le illustrazioni né richiedere ancora
-la conferma delle carte. Si sta rivedendo soltanto l'effetto, con nucleo
-volumetrico più vivo, corone in precessione, compressione e una sola
-detonazione elettrica coordinata con suono e aptica. Attendere la
-conferma della nuova anteprima dell'effetto prima dell'inserimento
-completo. Non contare ancora 40 varianti: i fronti attivi restano 37.
-La revisione scenica 2 è pronta: clip del colpo massimo di 4 secondi,
-video dei tre cicli di 36 secondi e HTML interattivo con tutti i casi.
-Dettagli e identificatori dei file nella scheda del Nucleo; le nuove
-consegne sono distinte dalla prima anteprima ritenuta poco scenica.
-Il codice di partita in `src/` non è cambiato per questa anteprima.
-Scheda, archivio recuperabile, hash e verifiche in
+L'utente ha approvato le tre carte del Cannone a Nucleo di Folgore
+Crescente con «per le carte ok», quindi il colpo scenico 2 con «ok».
+Entrambe le approvazioni sono definitive per questo inserimento:
+non rigenerare le immagini né chiedere altre conferme.
+I PNG RGBA 3072×4608 sono promossi senza alterare un byte, verificati
+contro gli hash originali. Il registro comprende 40 varianti, 22 Metallo
+e 18 Fulmine. La quinta famiglia Fulmine conserva un solo colpo per turno
+proprio, crescita solo con nuova Energia e pagamento reale, perdita
+permanente della crescita e scadenza reale negli scarti.
+Il renderer della partita e quello dell'anteprima condividono lo stesso
+codice: nucleo volumetrico, corone in precessione, compressione finale,
+un solo sboccio elettrico e reazione dello scafo realmente colpito.
+Audio PCM e piano aptico condividono gli stessi tempi. Energia spesa,
+interruzione e scadenza seguono metadati del motore; nessun consumo finto.
+Il collaudo reale su StackBlitz va eseguito dopo la pubblicazione di
+questa integrazione. Non sostituire quel collaudo con il video isolato
+approvato; documentare separatamente test, build e osservazioni reali.
+La vibrazione fisica resta da verificare su telefono compatibile.
+Scheda e sorgenti delle approvazioni:
 `docs/FULMINE_05_NUCLEO_FOLGORE_CRESCENTE_2026-11-26.md`.
-Non tornare a chiedere l'approvazione della direzione già data; la scelta
-pendente riguarda soltanto la revisione scenica del colpo. Dopo l'approvazione visiva
-collegare immagini, effetti, audio e aptica e collaudare la partita reale.
 
 L'utente ha chiesto «procedi a sistemare tutto» e ha scelto espressamente:
 - **Ganascia A e Ganascia B entrambe per tre turni propri.** Una ganascia
@@ -72,7 +68,7 @@ L'utente ha chiesto «procedi a sistemare tutto» e ha scelto espressamente:
   o più.** Energie non consumate. La modalità si fissa prima di rimuovere
   una Difesa: non cumulare bonus, superamento e rimozione nello stesso colpo.
 
-Sono collegate **37 varianti: 22 Metallo e 15 Fulmine**, con i fronti
+Sono collegate **40 varianti: 22 Metallo e 18 Fulmine**, con i fronti
 completi 3072×4608 e i tre canali dell'effetto. Le cinque Ganasce sono ora
 la revisione approvata; non riproporre i vecchi due arpioni per carta né
 il requisito di giocare B soltanto nel turno successivo ad A. Le ipotesi
