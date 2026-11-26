@@ -1,5 +1,10 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Progettazione Personaggi — 30 generici, rarità fissa
+
+Leggere `docs/PROGETTAZIONE_30_PERSONAGGI_GENERICI.md` e `docs/REGISTRO_30_PERSONAGGI_GENERICI.json` prima di creare o integrare Personaggi. Decisioni approvate: neutri, nessuna evoluzione, 4 rarità (Comune 1 abilità, Rara 1–2, Epica 2, Leggendaria 3), durata permanente/temporanea/istantanea, uno attivo ma sostituibile prima della scadenza usando una giocata, più copie/famiglie nel mazzo secondo futuri limiti; Plancia esaurita disattiva lo slot. 30 generici (20 strategici e 10 specializzati Arma); primi tre confermati, altre 27 proposte da verificare. Boss fisso e potenziato durante la sfida, versione sbloccabile adattata. Il motore non è stato cambiato: sostituzione, timer riparabili, scelta Plancia esaurita e sinergie richiedono integrazione e test. Non dichiarare le proposte già approvate o giocabili. Le dieci Armi Personaggio di Terra, Vento, Luce, Ombra e Gravità restano da progettare.
+
+
 ## Regola permanente — testi delle carte in inglese e traducibili
 
 **Conferma esplicita dell'utente, 26/11/2026:** tutti i testi delle carte
