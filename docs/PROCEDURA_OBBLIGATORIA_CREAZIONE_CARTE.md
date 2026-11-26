@@ -1,5 +1,34 @@
 # PROCEDURA OBBLIGATORIA — "crea la carta" (22 novembre 2026)
 
+
+## Regola corrente — in battaglia compaiono i colpi; macchina nella carta
+
+**Correzione esplicita dell'utente, 26 novembre 2026, confermata con «Sì».**
+Nella battaglia non mostrare il dispositivo/arma completo, la sua bocca
+o le sue parti mentre si aprono per sparare: il lancio iniziale proviene
+da fuori dello schermo del telefono.
+- Lato giocatore: ingresso da punti variabili lungo il bordo inferiore.
+- Lato avversario: ingresso da punti variabili lungo il bordo superiore.
+- Si animano proiettile, scarica, frusta, ganascia o altre parti realmente
+  emesse, traiettoria, contatto e conseguenze previste dalla carta.
+  Non aggiungere modelli o immagini delle macchine al campo.
+- Restano i trasferimenti successivi già previsti dalle meccaniche
+  approvate, come il colpo residuo del Perforatore dal bersaglio distrutto.
+- Nell'illustrazione della **carta** restano insieme macchina e suo colpo,
+  con cornici e simboli ufficiali. Il colpo illustrato deve corrispondere
+  a quello in battaglia. La coerenza tridimensionale della macchina nella
+  carta non richiede di crearne un modello o un'animazione in battaglia.
+Questa correzione prevale sulle vecchie indicazioni di mostrare macchine,
+bocche, diaframmi o armi montate durante il lancio. Non rimuovere asset o
+modificare codice di gioco ora: la fase corrente resta documentazione.
+
+**Effetti distinti per famiglia:** la medesima provenienza dal bordo e
+il medesimo elemento non autorizzano lo stesso sparo con un colore diverso.
+Ogni famiglia mantiene la forma, il movimento, il ritmo e il contatto
+approvati, con audio e aptica coerenti. Le rarità seguono la progressione
+specificamente concordata; non inventare colpi o nuove abilità.
+
+
 ## Regola obbligatoria — nell'illustrazione mostrare arma e colpo
 
 **Richiesta generale dell'utente, 26 novembre 2026:** quando si creano
@@ -35,7 +64,7 @@ in discussione.
   approvati. Il colpo rimane nell'area dell'illustrazione e non richiede
   nuovi riquadri, icone o modifiche alla geometria del fronte.
 - Prima di consegnare confrontare illustrazione e specifica dell'effetto,
-  poi verificarne la corrispondenza con il modello e il colpo in gioco
+  poi verificarne la corrispondenza con il colpo effettivo in gioco
   durante l'integrazione. Mostrare la carta completa per approvazione.
 
 La regola va letta autonomamente nella procedura prima di creare o
@@ -58,8 +87,8 @@ Vedi anche le regole permanenti per grafica, suono e vibrazione.
 > per arma e rarità, raffiche coerenti col motore e **impatti evidenti sulle
 > navi**, non il solo scossone: esplosioni o altri contatti specifici sullo
 > scafo, con suoni e vibrazione sincronizzati. Progettare insieme il lancio,
-> il volo, il contatto e la reazione. Modello e proiettile devono essere
-> coerenti con l'illustrazione e con la prospettiva della partita.
+> il volo, il contatto e la reazione. Il colpo deve essere
+> coerente con l'illustrazione e con la prospettiva della partita.
 
 > **Regola esplicita del 25/11 — effetti reali, suoni e vibrazione:** prima
 > di creare l'effetto di QUALSIASI carta leggere la definizione e soprattutto
@@ -112,7 +141,7 @@ rifatte per applicare questa regola alle successive.
 4. **COMPOSIZIONE VINCOLATA:** generare l'**illustrazione centrale** quando serve; mantenere cornice e geometria approvate. Comporre la scheda con il PNG autentico della rarità, adattando il colore interno alla categoria, e aggiungere testi e simboli approvati dal catalogo. Se un PNG originale necessario non è accessibile come immagine binaria, FERMARE la produzione finale e dichiararlo: non sostituirlo con fantasia. Si può usare una copia byte-identica fornita dall'utente, dopo verifica dell'hash, come sorgente esatta.
 5. **EVOLUZIONI VISIVAMENTE DISTINTE:** quando la **stessa carta** esiste in più rarità/evoluzioni, non basta cambiare colore della cornice e numeri: **ogni evoluzione deve avere almeno un dettaglio nuovo e riconoscibile nell'illustrazione centrale**, che mostri il potenziamento. Esempi da adattare al soggetto: una nuova piastra corazzata, un modulo aggiuntivo, condotti energetici più elaborati o una trasformazione visibile dell'arma. L'evoluzione deve essere progressiva (Comune → Rara → Epica → Leggendaria) e coerente: **stessa arma/personaggio/soggetto identificabile e stessa scena di base**, ma un dettaglio fisico diverso e significativo per ciascuno stadio; evitare quattro immagini identiche con sola cornice ricolorata. Le differenze sono **solo estetiche**, non aggiungono effetti, elementi, colpi o abilità non previsti dal catalogo. Non cambiare arbitrariamente la categoria, l'elemento, gli alloggiamenti, il testo esterno o la geometria del modello di carta; le icone ridisegnate attendono approvazione.
    **Regola aggiuntiva vincolante per ogni Arma (24/11/2026):** la Comune definisce la struttura base; ogni rarità successiva **mantiene i componenti precedenti e aggiunge un componente fisico nuovo e ben riconoscibile**, non soltanto particelle luminose, colore o un diverso angolo di ripresa. **Su ciascuna variante almeno una caratteristica dell'arma stessa riprende il materiale/colore della rarità:** grafite nella Comune, bronzo nella Rara, argento nell'Epica, cristallo diamantato con riflessi prismatici nella Leggendaria. La progressione deve potersi riconoscere anche coprendo la cornice. Queste finiture non cambiano valori o abilità: la meccanica si legge esclusivamente dal catalogo.
-**REGOLA OBBLIGATORIA SPECIFICA PER LE CARTE ARMA — PROGETTAZIONE 3D:** l'illustrazione centrale deve rappresentare un **dispositivo offensivo fantascientifico plausibile come oggetto tridimensionale**, progettato per essere successivamente modellato, animato e montato su una navicella del gioco. Devono essere visibili quando pertinenti struttura fisica e parti funzionali (scocca, sostegni/punti di aggancio, canne o emettitori, moduli meccanici, nucleo, condotti e aperture di fuoco/impatto); prospettiva, volumi, materiali e collegamenti devono risultare coerenti e modellabili. **VIETATI utensili o armi fantasy generiche, martelli a mano, icone astratte/2D e oggetti senza un montaggio credibile**. I nomi evocativi NON autorizzano a disegnare letteralmente utensili: per esempio **«Maglio Ferrogravitazionale» deve essere un'arma pesante gravitazionale da flotta/navicella, con un sistema d'impatto tecnologico e innesto meccanico, NON un martello tradizionale fluttuante nello spazio**. Ogni sua evoluzione aggiunge dettagli tecnici visibili dello STESSO apparecchio 3D, senza cambiare gli effetti del codice. **Controllo obbligatorio prima della consegna:** chiedersi se dalla figura si potrebbe realmente costruire un modello 3D con parti riconoscibili, articolazioni e attacchi; se no, rifare soltanto l'illustrazione centrale, mantenendo base, simboli, geometria e valori originali.
+**REGOLA OBBLIGATORIA SPECIFICA PER LE CARTE ARMA — PROGETTAZIONE 3D:** l'illustrazione centrale deve rappresentare un **dispositivo offensivo fantascientifico plausibile come oggetto tridimensionale**, con volumi, materiali e componenti fisici leggibili nell'illustrazione della carta. Devono essere visibili quando pertinenti struttura fisica e parti funzionali (scocca, sostegni/punti di aggancio, canne o emettitori, moduli meccanici, nucleo, condotti e aperture di fuoco/impatto); prospettiva, volumi, materiali e collegamenti devono risultare coerenti e modellabili. **VIETATI utensili o armi fantasy generiche, martelli a mano, icone astratte/2D e oggetti senza un montaggio credibile**. I nomi evocativi NON autorizzano a disegnare letteralmente utensili: per esempio **«Maglio Ferrogravitazionale» deve essere un'arma pesante gravitazionale da flotta/navicella, con un sistema d'impatto tecnologico e innesto meccanico, NON un martello tradizionale fluttuante nello spazio**. Ogni sua evoluzione aggiunge dettagli tecnici visibili dello STESSO apparecchio 3D, senza cambiare gli effetti del codice. **Controllo obbligatorio prima della consegna:** chiedersi se dalla figura si potrebbe realmente costruire un modello 3D con parti riconoscibili, articolazioni e attacchi; se no, rifare soltanto l'illustrazione centrale, mantenendo base, simboli, geometria e valori originali.
 
 6. **POSIZIONI:** in alto a sinistra SOLO simbolo categoria, in alto al centro nome, in alto a destra simbolo elemento (se esiste); illustrazione al centro; categoria nel nastro fra immagine ed effetto; effetto verificato in basso; rarità nella targhetta al centro del bordo inferiore. Niente logo Eclissi Stellare sul fronte.
 7. **COLORI:** colore interno/di categoria separato dalla rarità: **Arma arancione, Attacco rosso, Difesa azzurro, Personaggio magenta, Terreno verde, Trappola viola**. Le quattro cornici del 24/11 rappresentano **Comune grafite, Rara bronzo, Epica argento, Leggendaria cristallo prismatico**; l'arancione interno dei PNG è solo l'esempio Arma. Per Attacco restano i campioni del 23/11 finché le varianti ulteriori non saranno verificate. Il soggetto ARMA resta un cannone futuristico riconoscibile; le prove autorizzate possono ripensare la sua composizione, non trasformarlo in un cannone storico su ruote o in un logo generico. Nessuna scritta o icona è già incorporata nelle quattro cornici HD.
