@@ -7,6 +7,58 @@ documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
 
+### Rettifica dello stato Fulmine e ulteriori accettazioni nel parlato
+
+**Domanda corrente:** «nel Fulmine manca ancora da creare carte, giusto?»
+Sì: le nuove carte complete, gli effetti da integrare e il collaudo non
+sono stati prodotti da questa progettazione verbale. Restano validi
+gli asset storici: non dichiarare che non esista alcuna illustrazione.
+La frase «Fulmine chiuso» detta nella trascrizione è prematura e va
+corretta, anche sul piano della copertura delle dieci famiglie reali.
+
+**Riscontro sui due registri correnti del codice:** verificati
+`src/fleetNext/approvedBaseWeapons.js` (blob
+`9c9dc4572d29d5ba34ba5cc361ae7a7925e627b7`) e
+`src/fleetNext/designedWeaponCards.js` (blob
+`bb4a68cb45a3031c3ca2284e7d4f51f1fc3eedc5`).
+Sono presenti tutte le dieci denominazioni dell'elenco canonico sotto,
+comprese le sei successive al Lampo Bianco. Non sono presenti nei due
+registri le nove denominazioni recenti Faraday, Volta, Maxwell, Kelvin,
+Hertz, Ampère, Franklin, Asse Risonante e Coulomb.
+Non è una ricerca di ogni file o ramo del repository: è il riscontro
+dei due cataloghi di definizione già identificati.
+Le quattro proposte collegate alle voci reali restano approvate.
+Le altre nove sono proposte grafiche accettate nel parlato e conservate,
+da associare alle vere carte prima di produzione/inserimento.
+Non rinominare, aggiungere o sostituire armi, né cambiare meccaniche
+sulla sola base delle denominazioni introdotte dall'assistente.
+
+**Altre sei proposte accettate dopo Faraday/Volta/Maxwell:**
+
+| Denominazione nel parlato | Proposta grafica accettata |
+| --- | --- |
+| Disgiuntore a Corona di Kelvin | Una corona di scintille sottili dal bordo collassa in un punto sulla corazza; bagliore corto, crepitio acuto e vibrazione breve. |
+| Arpione di Carica di Hertz | Dardo elettrico bianco-azzurro appuntito, breve scia di scintille e contatto radiale; schiocco metallico e vibrazione secca. |
+| Condotto a Spirale di Ampère | Fascio sottile blu pallido a spirale, rotazione stretta, un punto di contatto; bagliore breve, crepitio elettrico e vibrazione breve. |
+| Lancio impulsore di Franklin (nome trascritto) | Impulso azzurro chiaro corto e denso, apertura in cerchio di scintille all'impatto; schiocco e vibrazione netta. |
+| Asse Risonante di Faraday | Scarica blu-bianca sottile a impulsi ravvicinati, considerata un solo colpo compatto; bagliore breve, crepitio acuto e vibrazione secca. |
+| Bobina di Rimbalzo di Coulomb | Scarica blu-violacea con breve rimbalzo visivo locale sulla stessa corazza; unico impatto, schiocco, crepitio e vibrazione secca. |
+
+L'assistente le ha presentate tutte come un attacco su un bersaglio in
+un turno senza Energia: questa ripetizione non verifica la meccanica
+delle sei famiglie reali ancora da rivedere. Non trasferire quei profili
+al motore. Il rimbalzo di Coulomb non autorizza altri bersagli o danni.
+I dettagli di macchina sono soltanto per l'illustrazione della carta;
+in battaglia le emissioni iniziali provengono da fuori schermo.
+Le dichiarazioni «segnata/registrata» nel parlato non certificano
+immagini complete, integrazione nel gioco o collaudi.
+
+**Regola rarità riconfermata dall'utente:** ogni evoluzione conserva i
+componenti precedenti e aggiunge un componente fisico riconoscibile,
+con almeno un particolare nel materiale/colore della propria rarità:
+grafite, bronzo, argento, cristallo diamantato con riflessi prismatici.
+È già nella procedura obbligatoria; non richiedere ulteriori conferme.
+
 ### Ultima richiesta — rendere visibile l'uso delle Carte Energia
 
 L'utente richiede una regola indipendente dall'elemento: quando una
