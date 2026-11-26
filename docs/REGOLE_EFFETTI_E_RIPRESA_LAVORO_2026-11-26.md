@@ -1,11 +1,59 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — dimensioni dei supporti e stadi di danneggiamento
+## Revisione corrente — forme delle navi, fusioni, dimensioni e stadi di danno
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Navi — forme più varie e verifica delle immagini delle fusioni
+
+**Richiesta dell'utente:** rivedere la forma delle navi, attualmente
+percepite come troppo simili, dando loro sagome particolari e più
+inventiva. Aggiungere questa revisione alle modifiche da realizzare.
+
+La revisione riguarda l'identità visiva delle navi: differenziare
+silhouette, proporzioni, struttura dello scafo e disposizione dei
+componenti, non soltanto colori e decorazioni. Non sono ancora state
+assegnate nuove forme ai singoli modelli. Conservare la riconoscibilità
+della stessa famiglia e la coerenza fra illustrazione, modello
+riproducibile in 3D, viste dei due lati, rarità e stadi di danno.
+Preparare proposte da valutare prima di sostituire immagini approvate;
+nessuna nuova forma è già stata disegnata o inserita con questo appunto.
+La richiesta non cambia il catalogo, gli elementi, le abilità o gli HP.
+
+**Domanda dell'utente:** oltre alle Carte Fusione, sono già state create
+immagini dedicate delle navicelle fuse?
+
+**Riscontro verificato nel progetto corrente:**
+- `src/fleetBattleModels.js`, funzione `fusedEscortArtwork`, restituisce
+  l'immagine ordinaria del secondo modello partecipante alla fusione.
+  La funzione usa gli stessi asset `mathfleet/views/.../*_complete` delle
+  navi non fuse; non sceglie un'immagine di una forma fusa dedicata.
+- `src/OfficialFleetBattle3D.jsx` disegna l'immagine di base del supporto
+  e un secondo livello `f3d-escort-fusion`, più i livelli di volo dei due
+  modelli. È una composizione dei due modelli esistenti.
+- Nell'albero delle risorse corrente non è stata individuata una serie
+  dedicata di immagini di nuove sagome fuse. Le immagini speciali
+  `fusion-barrier/strike/twin/triad` sono carte, non prova di nuovi scafi.
+- La rappresentazione della fusione nel codice è quindi provvisoria:
+  due immagini esistenti sovrapposte. Non equivale a una nuova nave
+  disegnata come forma unica che integri i due modelli.
+- Non affermare che immagini fuse definitive siano già pronte. Il
+  riscontro riguarda gli asset e il codice attivi, non una nuova prova
+  visiva in partita né una certificazione sull'assenza di ogni possibile
+  bozza esterna al repository.
+
+**Da affrontare:** includere le sagome delle navi fuse nella revisione
+grafica, definendo come integrare i tratti dei modelli coinvolti. Non
+assegnare combinazioni definitive o generare un intero catalogo di
+fusioni senza averne definito il criterio. Questa domanda non approva
+automaticamente nuove immagini o la sostituzione degli asset giocabili.
+
+**Stato:** revisione delle forme annotata e stato attuale delle fusioni
+verificato. Nessuna nuova immagine, fusione grafica o modello è stato
+creato o sostituito in questa fase.
 
 ### Navi — supporti più grandi e danneggiamento progressivo
 
