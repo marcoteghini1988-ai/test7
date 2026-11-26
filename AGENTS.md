@@ -1,6 +1,20 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
 
+
+## Regola obbligatoria — coordinazione visibile tra Energia ed effetto
+
+Per ogni elemento e carta che dipende da Energie, evidenziare sulle
+Carte Energia realmente coinvolte il contributo all'attivazione o al
+potenziamento e sincronizzarlo con grafica, suono e vibrazione
+dell'effetto. Leggere la sezione corrispondente in
+`docs/REGOLE_PERMANENTI_EFFETTI_CARTE.md`.
+Il conteggio senza consumo lascia la carta nello slot; una spesa deve
+mostrare solo l'aggiornamento o la rimozione realmente previsti.
+I colpi continuano a entrare da fuori schermo e ogni famiglia conserva
+il suo effetto. Si sta documentando: nessuna nuova implementazione qui.
+
+
 ## Regola corrente — in battaglia compaiono i colpi; macchina nella carta
 
 **Correzione esplicita dell'utente, 26 novembre 2026, confermata con «Sì».**
