@@ -1,0 +1,628 @@
+{
+  "schemaVersion": 1,
+  "revision": "2026-11-26",
+  "scope": "Nuove famiglie progettate e approvate verbalmente 25-26 novembre; non ancora attive nel gioco.",
+  "catalogPolicy": "Escluse quattro armi storiche. Una famiglia conta una sola volta indipendentemente dalle evoluzioni. Il piano è 100 + 1 Metallo. Alcune famiglie già presenti hanno sinergie Personaggio da rivedere.",
+  "gameplayStatus": "not-integrated",
+  "visualStatus": "not-created-or-approved-in-this-registry",
+  "existingCatalogReference": "docs/BILANCIAMENTO_73_CARTE_ARMA_2026-11-21.md",
+  "totals": {
+    "existingNewFamilies": 69,
+    "historicalExcluded": 4,
+    "confirmedDesignOnly": 22,
+    "designedTotal": 91,
+    "remainingCharacterFamilies": 10,
+    "plannedTotal": 101
+  },
+  "counts": {
+    "plasma": {
+      "existingFamilies": 10,
+      "newConfirmedDesigns": 0,
+      "remainingCharacterFamilies": 0,
+      "target": 10
+    },
+    "cryogenic": {
+      "existingFamilies": 10,
+      "newConfirmedDesigns": 0,
+      "remainingCharacterFamilies": 0,
+      "target": 10
+    },
+    "refrigerant": {
+      "existingFamilies": 8,
+      "newConfirmedDesigns": 2,
+      "remainingCharacterFamilies": 0,
+      "target": 10
+    },
+    "ionic": {
+      "existingFamilies": 10,
+      "newConfirmedDesigns": 0,
+      "remainingCharacterFamilies": 0,
+      "target": 10
+    },
+    "metallic": {
+      "existingFamilies": 11,
+      "newConfirmedDesigns": 0,
+      "remainingCharacterFamilies": 0,
+      "target": 11
+    },
+    "mineral": {
+      "existingFamilies": 4,
+      "newConfirmedDesigns": 4,
+      "remainingCharacterFamilies": 2,
+      "target": 10
+    },
+    "aerial": {
+      "existingFamilies": 4,
+      "newConfirmedDesigns": 4,
+      "remainingCharacterFamilies": 2,
+      "target": 10
+    },
+    "radiant": {
+      "existingFamilies": 4,
+      "newConfirmedDesigns": 4,
+      "remainingCharacterFamilies": 2,
+      "target": 10
+    },
+    "void": {
+      "existingFamilies": 4,
+      "newConfirmedDesigns": 4,
+      "remainingCharacterFamilies": 2,
+      "target": 10
+    },
+    "gravity": {
+      "existingFamilies": 4,
+      "newConfirmedDesigns": 4,
+      "remainingCharacterFamilies": 2,
+      "target": 10
+    }
+  },
+  "generalRules": [
+    "Valori da bilanciare globalmente dopo la progettazione; non presentare gli esempi come definitivi.",
+    "Le due navicelle di supporto non attaccano autonomamente. Applicare protezione, Difese, Trappole e affinità standard salvo eccezioni esplicitamente approvate.",
+    "Durate in turni propri, salvo reazione al turno avversario o secondi di tempo proprio indicati.",
+    "Evoluzioni dalla rarità iniziale verso Leggendaria senza inventare nuove meccaniche, eccetto differenze espressamente approvate.",
+    "Le coppie hanno grado compatibile secondo la regola generale; per Tenebre Infinite la compatibilità Epica/Leggendaria è da risolvere e non deve essere inventata.",
+    "Nomi e ID di questo file sono identificatori di progetto, non sostituiscono alcuna carta esistente.",
+    "Rarità e durate null significano non definite; non indovinare automaticamente.",
+    "Prima di attivare ciascuna famiglia verificare ogni condizione, bersaglio e rarità e realizzare/approvare illustrazione, VFX, SFX, aptica secondo le regole ufficiali."
+  ],
+  "designs": [
+    {
+      "id": "weapon-design-20261126-refrigerant-marea-laterale",
+      "elementId": "refrigerant",
+      "name": "Condotto di Marea Laterale",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "mechanics": [
+        "Getto Acqua che infligge danno a un bersaglio valido.",
+        "Rara: solo getto dannoso. Epica: getto e Centralina avversaria con deterioramento doppio per 15 secondi di tempo proprio dell'avversario (+1 s/s, +15 s totali). Leggendaria: getto più ampio e deterioramento triplo per 15 secondi (+2 s/s, +30 s totali).",
+        "L'effetto temporale è persistente tra turni avversari; non si resetta al passaggio del turno."
+      ],
+      "open": [
+        "Danni per rarità; comportamento se Centralina già rotta; rapporto con timer attuali."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true
+    },
+    {
+      "id": "weapon-design-20261126-refrigerant-pressione-isobarica",
+      "elementId": "refrigerant",
+      "name": "Disgregatore di Pressione Isobarica",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 2,
+      "mechanics": [
+        "T1: colpisce un bersaglio valido A con danno D. T2: se A è ancora vivo, colpisce A con 2D; se distrutto, un altro bersaglio valido con D.",
+        "Con Personaggio compatibile: T1 colpisce A e B distinti per D ciascuno; T2 colpisce ciascuno dei due superstiti per 2D, oppure l'unico superstite per 3D.",
+        "Stessa meccanica a ogni rarità; aumentano solo i danni. Esempio non definitivo Rara: D=40 HP."
+      ],
+      "open": [
+        "Personaggio compatibile e sua scheda; caso entrambi i bersagli distrutti; danni definitivi."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "characterSynergy": true
+    },
+    {
+      "id": "weapon-design-20261126-mineral-sismico-tettonico",
+      "elementId": "mineral",
+      "name": "Generatore Sismico Tettonico",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "mechanics": [
+        "T1: consuma 2 Energie Terra e produce un terremoto su tutte le navicelle avversarie.",
+        "T2 e T3: consuma 1 Energia Terra per turno e produce assestamenti più deboli su tutte le navicelle avversarie.",
+        "Se T1 non si attiva, non si attivano gli assestamenti. Se manca Energia, nessun danno, ma il turno trascorre. Scarti dopo T3. Evoluzioni aumentano solo la potenza."
+      ],
+      "open": [
+        "Danni e riduzione assestamenti per rarità."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "energy": {
+        "elementId": "mineral",
+        "consume": true,
+        "costByTurn": [
+          2,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "weapon-design-20261126-mineral-tempeste-silicee",
+      "elementId": "mineral",
+      "name": "Generatore di Tempeste Silicee",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "mechanics": [
+        "Tre stadi consecutivi di tempesta: consumano rispettivamente 1, 2, 3 Energie Terra, colpiscono tutte le navicelle avversarie e rendono inattiva la protezione dei supporti durante l'effetto.",
+        "Danno base, intermedio, triplo. Se manca Energia la tempesta si placa; al successivo turno può riprendere dallo stadio non eseguito, senza saltare livelli. Esempio: se T2 manca, T3 con 2 Energie produce solo lo stadio intermedio.",
+        "La durata non si estende: scarti dopo T3."
+      ],
+      "open": [
+        "Danno intermedio/base per rarità e finestra esatta di sospensione della protezione fuori dalla tempesta."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "energy": {
+        "elementId": "mineral",
+        "consume": true,
+        "costByStage": [
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "weapon-design-20261126-mineral-macigni-tettonici",
+      "elementId": "mineral",
+      "name": "Lanciatore di Macigni Tettonici",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 2,
+      "mechanics": [
+        "Un macigno per turno su una navicella nemica valida.",
+        "I frammenti di ritorno provocano un danno totale da contraccolpo diviso equamente fra le proprie navicelle superstiti.",
+        "Con Collettore attivo di pari rarità, i frammenti sono intercettati e il danno alleato viene annullato; il valore recuperato alimenta il Collettore."
+      ],
+      "open": [
+        "Danni del macigno e dei frammenti, arrotondamenti e simultaneità per rarità."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "mineral-macigni-collettore",
+        "role": "A",
+        "sameRarity": true
+      }
+    },
+    {
+      "id": "weapon-design-20261126-mineral-collettore-frammenti",
+      "elementId": "mineral",
+      "name": "Collettore di Frammenti Minerali",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 2,
+      "mechanics": [
+        "Da solo colpisce un bersaglio valido per turno.",
+        "In combinazione con Lanciatore di pari rarità intercetta i frammenti, annulla il loro danno alleato, somma il danno recuperato al proprio danno base e divide il totale equamente fra tutte le navicelle avversarie superstiti."
+      ],
+      "open": [
+        "Danni per rarità, arrotondamenti e ordine di risoluzione."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "mineral-macigni-collettore",
+        "role": "B",
+        "sameRarity": true
+      }
+    },
+    {
+      "id": "weapon-design-20261126-aerial-vortici-ciclonici",
+      "elementId": "aerial",
+      "name": "Generatore di Vortici Ciclonici",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "mechanics": [
+        "Consuma 3 Energie Vento in Epica, 4 in Leggendaria. Raccoglie solo le carte degli scarti avversari e le trasforma in un vortice che si abbatte sulle navicelle nemiche.",
+        "Il danno cresce con il numero di carte negli scarti; ciascuna navicella nemica superstite riceve il valore pieno, non una frazione. Anche se ne resta una sola, riceve il valore pieno.",
+        "Le carte tornano negli scarti. La Leggendaria ha danno superiore."
+      ],
+      "open": [
+        "Danno base/multiplicatore e limite per rarità."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "energy": {
+        "elementId": "aerial",
+        "consume": true,
+        "costByRarity": {
+          "Epica": 3,
+          "Leggendaria": 4
+        }
+      }
+    },
+    {
+      "id": "weapon-design-20261126-aerial-spinta-eolica",
+      "elementId": "aerial",
+      "name": "Turbina a Spinta Eolica",
+      "rarities": null,
+      "turns": null,
+      "mechanics": [
+        "Infligge un piccolo danno ai supporti avversari e li respinge.",
+        "Gli attacchi alleati successivi, durante l'effetto, puntano direttamente alla nave madre avversaria superando la protezione dei supporti."
+      ],
+      "open": [
+        "Rarità, durata, costo Energia e danni delegati al bilanciamento."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "protectionException": "support-bypass-while-active"
+    },
+    {
+      "id": "weapon-design-20261126-aerial-boato-cosmico",
+      "elementId": "aerial",
+      "name": "Boato Cosmico",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "mechanics": [
+        "Tutte le navicelle proprie vive (madre inclusa) caricano le posizioni avversarie corrispondenti, non il terreno.",
+        "Scontro singolo: 100% del danno d'impatto alla navicella nemica corrispondente; 25% del danno nominale di contraccolpo alla propria navicella anche se la posizione nemica è vuota. Non reindirizzare lo schianto a un'altra nave.",
+        "Il contraccolpo è sempre subito, anche con B. Il totale dei danni da contraccolpo realmente subiti è disponibile per B nello stesso turno o nel turno proprio immediatamente successivo; poi scade."
+      ],
+      "open": [
+        "Danni d'impatto per rarità, arrotondamento e gestione della distruzione propria durante la carica."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "aerial-boato-convertitore",
+        "role": "A",
+        "sameRarity": true
+      }
+    },
+    {
+      "id": "weapon-design-20261126-aerial-convertitore-cinetico",
+      "elementId": "aerial",
+      "name": "Convertitore di Energia Cinetica",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "mechanics": [
+        "Non giocabile da solo né prima di A. Giocabile insieme ad A nello stesso turno (risolve dopo A), oppure nel turno proprio immediatamente successivo.",
+        "Somma i danni da contraccolpo effettivamente subiti dalle proprie navicelle per A e converte quel totale in un singolo attacco contro un bersaglio avversario valido.",
+        "Rispetta la protezione dei supporti. Non guarisce, non annulla il contraccolpo. Consuma una sola volta il totale di A."
+      ],
+      "open": [
+        "Taratura per rarità; gestione di più copie di A senza duplicazione del contraccolpo."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "aerial-boato-convertitore",
+        "role": "B",
+        "sameRarity": true
+      },
+      "requiresPair": true
+    },
+    {
+      "id": "weapon-design-20261126-radiant-concentrazione-solare",
+      "elementId": "radiant",
+      "name": "Cannone a Concentrazione Solare",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "mechanics": [
+        "Un solo fascio contro un bersaglio valido. Potenza dipendente dal numero di carte giocate nel turno corrente, arma inclusa: 3 carte potenza normale, 2 carte potenza aumentata, solo questa carta potenza massima."
+      ],
+      "open": [
+        "Danni per i tre livelli e per rarità; valutare il conteggio delle azioni effettivamente giocate, non quelle rimaste in campo."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "rarityNote": "Epica iniziale approvata; evoluzione Leggendaria da regola generale."
+    },
+    {
+      "id": "weapon-design-20261126-radiant-fotoni-riflessi",
+      "elementId": "radiant",
+      "name": "Emettitore di Fotoni Riflessi",
+      "rarities": null,
+      "turns": 1,
+      "mechanics": [
+        "Spara contro un bersaglio valido. Se una Carta Difesa blocca il colpo, recupera parte dell'energia luminosa respinta e la converte in cariche Energia Luce proprie.",
+        "Se il colpo va a segno, infligge il danno normale senza generare Energia."
+      ],
+      "open": [
+        "Rarità, danno, quantità di cariche, difesa parziale e gestione slot Energia pieni."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true
+    },
+    {
+      "id": "weapon-design-20261126-radiant-replicatore-olografico",
+      "elementId": "radiant",
+      "name": "Replicatore Olografico",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "mechanics": [
+        "A ogni turno proprio per tre turni riproduce l'ultima Carta Arma utilizzata dall'avversario, aggiornandola a ogni turno.",
+        "Se B non è contemporaneamente attiva, danno al 70% (riduzione del 30%). Se A e B sono attive contemporaneamente, danno pieno al 100%.",
+        "Rispetta sempre la protezione dei supporti."
+      ],
+      "open": [
+        "Se l'avversario non ha ancora utilizzato armi; replica di armi con requisiti, costi, stati, durata o combo; impedire auto-replica ricorsiva; numeri/rarità della copia."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "radiant-ologrammi",
+        "role": "A",
+        "sameRarity": true
+      },
+      "damageMultiplier": {
+        "alone": 0.7,
+        "together": 1
+      }
+    },
+    {
+      "id": "weapon-design-20261126-radiant-proiettore-olografico",
+      "elementId": "radiant",
+      "name": "Proiettore Olografico",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "mechanics": [
+        "Crea un ologramma di una propria navicella di supporto reale: con due supporti vivi compaiono tre bersagli indistinguibili, mescolati in posizione.",
+        "Se l'avversario colpisce una nave reale, questa subisce normalmente il danno. Se colpisce l'ologramma, questo viene distrutto e restituisce un contrattacco commisurato ai propri HP.",
+        "L'ologramma si rigenera a ogni turno proprio nei tre turni della carta e le posizioni vengono rimescolate ogni volta; HP copiati dagli HP attuali del supporto reale (scelta delegata).",
+        "Da sola restituisce il 70% degli HP dell'ologramma; con A contemporaneamente attiva restituisce il 100%. Il contrattacco rispetta la protezione dei supporti avversari."
+      ],
+      "open": [
+        "Se non restano supporti; scelta del supporto copiato; bersaglio del contrattacco, attacchi ad area/multipli e limiti per rarità; UI non rivelare l'identità."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "radiant-ologrammi",
+        "role": "B",
+        "sameRarity": true
+      },
+      "damageMultiplier": {
+        "alone": 0.7,
+        "together": 1
+      }
+    },
+    {
+      "id": "weapon-design-20261126-void-eclissi-quantistica",
+      "elementId": "void",
+      "name": "Lanciatore a Eclissi Quantistica",
+      "rarities": [
+        "Rara",
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "mechanics": [
+        "Alla giocata il proiettile scompare; il giocatore seleziona segretamente uno dei tre successivi turni propri in cui ricomparirà. L'avversario prova a indovinare quel turno. Entrambe le scelte sono nascoste e bloccate fino alla comparsa.",
+        "Se l'avversario indovina, danno base; se sbaglia, danno maggiorato. Un singolo colpo, protezione dei supporti valida. Lo slot Arma si libera dopo il lancio (proposta originaria conservata)."
+      ],
+      "open": [
+        "Danno base e maggiorato; tempi di risposta dell'avversario, mancata risposta, momento della scelta del bersaglio e protezione della scelta lato rete."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "effectWindowOwnTurnsAfterPlay": 3,
+      "hiddenChoices": true
+    },
+    {
+      "id": "weapon-design-20261126-void-inversione-vitale",
+      "elementId": "void",
+      "name": "Disgregatore a Inversione Vitale",
+      "rarities": null,
+      "turns": 1,
+      "mechanics": [
+        "Un colpo il cui danno aumenta con lo svantaggio di HP della propria nave madre rispetto alla madre nemica, fino a un limite massimo."
+      ],
+      "open": [
+        "Rarità, danno base, formula della differenza e limite massimo."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true
+    },
+    {
+      "id": "weapon-design-20261126-void-drone-parassita",
+      "elementId": "void",
+      "name": "Drone Parassita",
+      "rarities": null,
+      "turns": 3,
+      "mechanics": [
+        "Si aggancia a una navicella avversaria valida per tre turni e le sottrae HP, accumulando gli HP realmente sottratti."
+      ],
+      "open": [
+        "Rarità, danno per turno, bersaglio distrutto, finestra di conservazione della riserva e modalità di consumo da B."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "void-parassita-estrattore",
+        "role": "A",
+        "sameRarity": true
+      }
+    },
+    {
+      "id": "weapon-design-20261126-void-estrattore-materia-oscura",
+      "elementId": "void",
+      "name": "Estrattore di Materia Oscura",
+      "rarities": null,
+      "turns": null,
+      "mechanics": [
+        "Da solo infligge danno normale. In combinazione con A recupera gli HP accumulati dal Drone e li usa per riparare una propria navicella."
+      ],
+      "open": [
+        "Rarità, durata, danno autonomo, limite cura, esatta finestra e consumo; la cura non può superare HP massimi."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "void-parassita-estrattore",
+        "role": "B",
+        "sameRarity": true
+      }
+    },
+    {
+      "id": "weapon-design-20261126-gravity-massa-inerziale",
+      "elementId": "gravity",
+      "name": "Generatore di Massa Inerziale",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "mechanics": [
+        "Aumenta artificialmente il peso di una navicella avversaria per tre turni. Più carte l'avversario gioca durante il suo turno, maggiore è il danno per pressione gravitazionale."
+      ],
+      "open": [
+        "Danno per numero di carte giocate, conteggio zero, tempistica e cap."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true
+    },
+    {
+      "id": "weapon-design-20261126-gravity-implosore-singolarita",
+      "elementId": "gravity",
+      "name": "Implosore a Singolarità",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 2,
+      "mechanics": [
+        "Crea un piccolo buco nero sul campo per due turni propri.",
+        "Assorbe i proiettili delle proprie altre armi, impedendo loro di colpire. Alla scadenza collassa e libera tutti i danni accumulati maggiorati da un bonus gravitazionale, su un singolo bersaglio avversario valido."
+      ],
+      "open": [
+        "Bonus/cap per rarità, gestione armi ad area, condizionali e momento di calcolo del danno assorbito."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true
+    },
+    {
+      "id": "weapon-design-20261126-gravity-oscurita-gravitazionale",
+      "elementId": "gravity",
+      "name": "Generatore di Oscurità Gravitazionale",
+      "rarities": [
+        "Epica",
+        "Leggendaria"
+      ],
+      "turns": 3,
+      "mechanics": [
+        "Un'ombra ricopre porzioni della plancia di entrambi i giocatori: 33% T1, 66% T2, 100% T3.",
+        "A ogni turno infligge a un solo bersaglio nemico valido il danno base moltiplicato per il numero delle carte sul campo comprese nell'ombra.",
+        "Le carte restano sul campo e conservano tutti gli effetti; non vengono distrutte né consumate. Con B attiva a T3, al conteggio si aggiungono gli scarti di entrambi i giocatori."
+      ],
+      "open": [
+        "Geometria esatta delle tre porzioni, categorie di carte contate (inclusione dell'arma stessa e del Terreno), danno base, limite e caso zero carte."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "gravity-tenebre",
+        "role": "A",
+        "sameRarity": false
+      },
+      "coverageByTurn": [
+        33,
+        66,
+        100
+      ]
+    },
+    {
+      "id": "weapon-design-20261126-gravity-tenebre-infinite",
+      "elementId": "gravity",
+      "name": "Tenebre Infinite",
+      "rarities": [
+        "Leggendaria"
+      ],
+      "turns": 1,
+      "mechanics": [
+        "Giocabile soltanto mentre A è attiva; non ha effetto autonomo. Deve essere presente al terzo turno di A per potenziare esclusivamente il colpo di quel turno.",
+        "Conta tutte le carte negli scarti di entrambi i giocatori in aggiunta alle carte sul campo ricoperto. Gli scarti non vengono rimossi. Il danno risultante è concentrato in un solo bersaglio valido, con normale protezione dei supporti."
+      ],
+      "open": [
+        "Finestra esatta in cui può essere giocata per essere presente a T3; cap e regola su compatibilità con A Epica/Leggendaria."
+      ],
+      "implementationStatus": "confirmed-design-only",
+      "playable": false,
+      "balancePending": true,
+      "pair": {
+        "id": "gravity-tenebre",
+        "role": "B",
+        "sameRarity": false
+      },
+      "requiresPair": true,
+      "enhancesStage": 3
+    }
+  ]
+}

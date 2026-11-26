@@ -1,5 +1,22 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Registro progettuale aggiornato — 22 nuove famiglie Arma (26/11/2026)
+
+Prima di progettare altre Armi o i Personaggi, leggere
+[`docs/REGISTRO_22_ARMI_CONFERMATE_2026-11-26.md`](docs/REGISTRO_22_ARMI_CONFERMATE_2026-11-26.md)
+e il registro strutturato `src/fleetNext/confirmedNextWeaponDesigns.json`.
+Sono 22 famiglie approvate nella progettazione: Acqua 2; Terra, Vento,
+Luce, Ombra, Gravità 4 ciascuno. Sommate alle 69 precedenti, sono 91
+famiglie nuove progettate su 101 (Metallo 11); le quattro storiche non
+contano. Restano 10 famiglie Personaggio (due per Terra, Vento, Luce,
+Ombra, Gravità) e la revisione delle sinergie Personaggio già previste.
+**Le 22 famiglie del nuovo registro non sono ancora attive nel motore.**
+Rarità/durate aperte e valori numerici rimangono espliciti. Non confondere
+il conteggio progettuale con la disponibilità nel gioco o con l'approvazione
+visiva. Applicare le regole permanenti di grafica, suono, aptica e collaudo.
+Non sovrascrivere il lavoro parallelo Fulmine/Metallo.
+
+
 ## Decisione categorie del 26/11/2026 — prioritaria
 
 ARMA è rossa (#ff594c), STRATEGIA è arancione (#ffb24d) e sostituisce la denominazione ATTACCO delle carte. Il colore di categoria riguarda il pannello delle caratteristiche; conservare illustrazione, simboli, geometria, rarità e stile dei testi. Le chiavi tecniche `attack`, gli ID e la risoluzione non cambiano. Gli slot dedicati/misti e il bilanciamento sono un intervento separato, non autorizzato da questa modifica cromatica. I PNG sorgente già approvati restano recuperabili; usare i fronti derivati verificati. Le anteprime non ancora approvate restano tali.
