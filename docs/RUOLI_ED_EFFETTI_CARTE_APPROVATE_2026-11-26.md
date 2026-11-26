@@ -11,8 +11,11 @@
 > ufficiale. Anche questa scelta è nel documento di ripresa.
 > Per la Termobalistica è stata poi scelta una salva di granate metalliche
 > a parabola, con scie termiche ed esplosioni distinte: 3 nel caso base,
-> 5 oppure 6 ancora da scegliere nel caso potenziato, indipendentemente
+> 6 confermati nel caso potenziato, indipendentemente
 > dalla rarità. Il riepilogo completo è nel documento di ripresa.
+> L'utente ha poi chiesto di raccogliere soltanto le specifiche e creare
+> gli effetti tutti insieme al suo successivo comando. Nessuna domanda
+> 5/6 è ancora pendente: la risposta esplicita è stata «Sei».
 > Queste nuove direttive sono documentate, non ancora implementate.
 
 Fotografia letta dal codice il 26 novembre 2026, base

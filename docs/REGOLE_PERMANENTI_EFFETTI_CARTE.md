@@ -1,5 +1,15 @@
 # Regole permanenti per gli effetti delle carte
 
+## Modalità corrente: raccogliere, salvare, poi creare su comando
+
+L'utente ha chiesto di annotare per ora gli effetti carta per carta e di
+crearli più avanti tutti insieme, quando lo dirà esplicitamente. Questa
+fase riguarda soltanto le specifiche. Una scelta grafica non avvia ancora
+l'implementazione, la modifica del motore o il collaudo. Alla ripresa
+continuare dalle Ganasce Magnetiche; Maglio, Slitta e Termobalistica hanno
+la direzione già documentata. La Termobalistica è chiusa a 3 base / 6
+potenziati, indipendentemente dalla rarità.
+
 ## Precisazioni vocali del 26 novembre 2026
 
 Riferimento dettagliato per riprendere in un'altra chat:
@@ -21,12 +31,12 @@ o alle altre carte. Anche questa nuova direzione resta da implementare.
 
 **SOLO Artiglieria Termobalistica di Recupero:** granate metalliche a
 parabola, scie termiche ed esplosione distinta per ciascun impatto reale.
-Tre proiettili se il colpo è al danno base; più proiettili se il colpo è
+Tre proiettili se il colpo è al danno base, **sei** se il colpo è
 amplificato dal bonus degli HP persi dopo la posa. Il passaggio dipende dal
-bonus, non dalla rarità. Cinque oppure sei per il potenziato è ancora una
-scelta aperta: il «sì» alla grafica non ha selezionato un numero. Danno
+bonus, non dalla rarità Epica/Leggendaria. Il numero è stato scelto con
+la risposta esplicita «Sei»: nessuna scelta numerica rimane aperta. Danno
 totale, due turni propri, copertura e Difese rimangono quelli del motore.
-Completare l'attività su questa carta prima di passare alla successiva.
+Per ora la direzione è soltanto documentata, su richiesta dell'utente.
 
 I martelli partono a intervalli brevi, uno dopo l'altro: il successivo può
 partire prima dell'arrivo del precedente, ma le partenze non sono simultanee.
@@ -43,16 +53,16 @@ nel codice e il relativo collaudo restano da completare.
 
 ## Ordine vincolante dal 26 novembre 2026
 
-**Carta → spiegazione del ruolo reale → indicazione grafica dell'utente →
-realizzazione dell'effetto.**
+**Ora: carta → ruolo reale → indicazione grafica dell'utente → salvataggio
+→ carta successiva. Più avanti: realizzazione su comando esplicito.**
 
 Leggere prima catalogo e risoluzione del motore. Creare/presentare la carta
 con le basi ufficiali e spiegare bersagli, durata, condizioni, costi, combo
 e differenze per rarità. L'utente sceglie quindi come rappresentarla in
 gioco. Non definire o implementare autonomamente una nuova coreografia
-prima della sua indicazione. Dopo la scelta, realizzare la sequenza con
-grafica, suoni e aptica sincronizzati, integrare e verificare quanto già
-autorizzato senza ulteriori conferme di routine.
+prima della sua indicazione. Dopo la scelta, nella modalità corrente
+salvare le specifiche senza creare gli effetti. Grafica, suoni, aptica,
+integrazione e collaudo si faranno al successivo comando di creazione.
 
 Per le carte esistenti, presentare **una carta alla volta**: nome, rarità,
 elemento e ruolo reale. Poi ascoltare la scelta dell'utente. Riportare la

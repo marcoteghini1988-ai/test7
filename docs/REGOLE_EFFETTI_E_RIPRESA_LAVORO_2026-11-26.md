@@ -1,5 +1,22 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
+## Ultimo ordine operativo: soltanto documentare, creazione più avanti
+
+L'utente ha chiesto espressamente: «per ora scrivitelo», poi gli effetti
+verranno creati tutti insieme quando lo chiederà. Non implementare nuove
+sequenze, non modificare motore/renderer e non dichiarare in corso un
+collaudo. La scelta della direzione grafica, in questa fase, autorizza il
+salvataggio della specifica e il passaggio alla carta dopo, non la creazione.
+
+**Termobalistica completata come specifica:** 3 granate base e 6 quando
+potenziata dal bonus degli HP persi dopo la posa, in entrambe le rarità.
+La risposta «Sei» ha risolto il dubbio precedente: non chiederlo di nuovo.
+
+**Ripresa:** Arpioni a Ganasce Magnetiche. È stata spiegata la funzione;
+nessuna nuova direzione grafica è ancora stata scelta per questa carta.
+Presentare e spiegare le funzioni singolarmente, poi ascoltare la scelta.
+Non recuperare un elenco estraneo o ricominciare dalle carte già definite.
+
 Aggiornamento del **26 novembre 2026**, conversazione vocale. Salvataggio
 chiesto dall'utente per recuperare in un'altra chat tutte le decisioni
 sugli effetti e proseguire senza doverle spiegare nuovamente.
@@ -22,7 +39,7 @@ presenza nel documento non significa che siano già eseguite in partita.
 | Slitta nel codice di partenza | Conteggi precedenti: 3/6/9/7; non ancora adeguati alla nuova scelta. |
 | Nuova scelta per il solo Cannone a Slitta | Un'unica palla in tutte le rarità, con dettagli nei colori della rarità e possibili differenze dimensionali: da implementare. |
 | Termobalistica nel codice di partenza | Conteggi fissi precedenti: 3 Epica e 6 Leggendaria. Non sono la nuova scelta condizionata al bonus. |
-| Nuova scelta per la sola Termobalistica | Granate metalliche a parabola, scie termiche ed esplosioni distinte; 3 proiettili senza bonus, 5 o 6 ancora da scegliere con bonus, in entrambe le rarità. Revisione da implementare e collaudare. |
+| Nuova scelta per la sola Termobalistica | Specifica completa: granate metalliche a parabola, scie termiche, esplosioni distinte; 3 proiettili senza bonus e 6 con bonus, in entrambe le rarità. Creazione rinviata al comando dell'utente. |
 | Precisazione generale sul punto di partenza | Tutto il bordo inferiore per il giocatore, tutto il superiore per l'avversario: istruzione salvata, adeguamento e prova ancora necessari. |
 | Nuovo collaudo della revisione richiesta in questa conversazione | Non eseguito. |
 | Ultima revisione precedente degli effetti | Test e studi offline documentati; il nuovo collaudo StackBlitz risultava ancora da eseguire. Non è stata ricontrollata qui la disponibilità attuale del sito. |
@@ -47,12 +64,14 @@ questa tabella con versione e riscontro effettivamente osservati.
 6. Ascoltare la descrizione fino alla fine: non interromperla ripetendo una
    domanda cui l'utente sta rispondendo. Una precisazione successiva modifica
    la stessa decisione, non apre un lavoro differente.
-7. Dopo la scelta, realizzare e verificare l'inserimento autorizzato: grafica,
-   suoni, aptica, testi/conteggi e codice coerenti. Non chiedere di nuovo
-   approvazioni di routine per ciò che l'utente ha già deciso.
+7. Dopo la scelta, salvare la descrizione dettagliata e passare alla carta
+   successiva. L'utente ha rinviato la creazione degli effetti a una sua
+   richiesta esplicita successiva, per farli tutti insieme. Non riaprire
+   scelte concluse e non confondere specifiche salvate con effetti creati.
 
-L'ordine è **carta → ruolo reale → direzione grafica dell'utente →
-realizzazione e collaudo**. La sola approvazione dell'immagine non autorizza
+L'ordine attuale è **carta → ruolo reale → direzione grafica dell'utente →
+salvataggio → carta dopo**. Realizzazione e collaudo arriveranno al comando
+esplicito dell'utente. La sola approvazione dell'immagine non autorizza
 a scegliere automaticamente un effetto arbitrario per tutte le armi.
 
 ## 3. Provenienza dei colpi: regola generale
@@ -198,68 +217,48 @@ la palla, la sua finitura o il suo conteggio alle altre famiglie.
 Il catalogo precedente della Slitta usa 3/6/9/7 colpi: non presentarlo come
 attuazione della nuova scelta 1/1/1/1.
 
-## 4 ter. Artiglieria Termobalistica di Recupero: effetto condizionato al bonus
+## 4 ter. Artiglieria Termobalistica di Recupero — specifica completa
 
-### Carta e funzione già spiegate
+Arma Metallo, Epica e Leggendaria, attiva per due turni propri. Al danno
+base aggiunge il 60% degli HP realmente persi dalla propria flotta dopo la
+posa, entro il massimo della variante. La grafica deve leggere il bonus
+effettivo della singola attivazione, non dedurlo dalla rarità.
 
-Arma Metallo disponibile in Epica e Leggendaria, attiva per due turni
-propri. Al danno base aggiunge il 60% degli HP realmente persi dalla propria
-flotta dopo la posa, entro il massimo della variante. Senza perdita di HP
-rilevante per il bonus, l'attacco rimane al danno base. La grafica deve
-leggere il bonus effettivo della singola attivazione dal motore, non
-ricostruire una condizione fittizia a partire dal colore o dalla rarità.
+### Granate e azione approvate
 
-La parola «recupero» qui riguarda il potenziamento offensivo; questa
-conversazione non ha introdotto una nuova cura, costi o abilità aggiuntive.
+Granate d'artiglieria con corpo metallico tozzo, punta e piccolo nucleo
+incandescente, coerenti con l'elemento Metallo. Salva con traiettorie a
+parabola, scie termiche ed esplosioni distinte sullo scafo per ciascun
+impatto reale: l'utente ha richiesto un effetto «degno di artiglieria».
+Non ridurre la sequenza alla traslazione dritta di una figura piatta.
 
-### Forma e azione approvate
+| Stato dell'attacco | Granate visibili per attivazione | Rarità cui si applica |
+| --- | ---: | --- |
+| Danno base, senza bonus degli HP persi dopo la posa | 3 | Epica e Leggendaria. |
+| Danno amplificato dal bonus effettivo degli HP persi dopo la posa | 6 | Epica e Leggendaria. |
 
-Su richiesta di un riferimento coerente con l'elemento Metallo, è stata
-proposta una granata d'artiglieria: corpo metallico tozzo, punta e piccolo
-nucleo incandescente. L'utente ha accettato questa direzione.
+Il cambio di numero dipende dal potenziamento del colpo. L'interpretazione
+«tre nell'Epica, cinque nella Leggendaria» era stata respinta dall'utente.
+La proposta iniziale «cinque, sei» è stata poi risolta dalla risposta
+esplicita **«Sei»**: la scelta è conclusa, non chiedere un altro numero.
 
-La conferma successiva riguarda una **vera salva d'artiglieria**: più
-granate con traiettoria a parabola, scia termica e un'esplosione distinta
-sullo scafo per ciascun impatto reale. Deve leggersi un bombardamento
-volumetrico e riconoscibile. L'utente ha chiesto un effetto «degno di
-artiglieria», non la sola traslazione dritta di un proiettile verso la nave.
+Il danno totale base o amplificato è ripartito fra le munizioni reali:
+non moltiplicare HP, costi o reazioni delle Difese per il numero di
+proiettili. Durata, bersaglio, copertura e blocchi seguono il motore.
+Le esplosioni non creano danni ad area o Bruciature aggiuntive.
 
-Applicare la provenienza dal bordo corretto, la prospettiva, la coerenza
-del modello con la carta e le regole di contatto, scudo, audio e aptica.
-Non applicare automaticamente a questa famiglia i colori scelti solo per
-la Slitta o le rotazioni dei martelli del Maglio.
+Partenza dal bordo della flotta che spara; arrivi e contatti sul bersaglio
+effettivo, con audio e aptica sincronizzati. Non copiare su questa famiglia
+i colori scelti soltanto per la Slitta o le rotazioni dei martelli.
 
-### Numero dei colpi: dipende dal bonus, non dalla rarità
+### Stato e prosecuzione
 
-| Stato della singola attivazione | Numero richiesto | Stato della decisione |
-| --- | --- | --- |
-| Attacco al danno base, senza bonus dagli HP persi dopo la posa | 3 granate | Confermato. |
-| Attacco amplificato dal bonus effettivo degli HP persi dopo la posa | 5 oppure 6 granate | L'aumento è confermato; il numero esatto non è ancora stato scelto. |
-
-Questa distinzione vale sia nell'Epica sia nella Leggendaria. L'assistente
-aveva chiesto erroneamente se si intendessero tre nell'Epica e cinque
-nella Leggendaria: l'utente ha risposto «No, non hai capito» e ha chiarito
-che sta distinguendo danno base e danno amplificato. Non recuperare
-l'interpretazione per rarità come se fosse stata approvata.
-
-Dopo la domanda «cinque o sei?» seguita dalla descrizione della salva,
-l'utente ha risposto «Sì». Questo conferma la descrizione grafica e non
-seleziona cinque o sei. Mantenere aperta soltanto questa scelta numerica;
-non richiedere nuovamente la descrizione della grafica già confermata.
-
-Il danno totale base o amplificato viene ripartito fra le munizioni
-effettive. Non moltiplicarlo per tre, cinque o sei, non aggiungere reazioni
-difensive/costi per ogni elemento grafico e non creare danni ad area con
-le esplosioni. Durata, bersaglio e copertura seguono il combattimento.
-
-### Punto esatto in cui riprendere
-
-La direzione è salvata, non ancora implementata o collaudata. Chiarire
-soltanto il conteggio potenziato ancora aperto (5 oppure 6); poi realizzare
-e verificare l'effetto autorizzato. L'utente ha aggiunto: **quando è fatto
-si passa alla carta dopo**. Non dichiarare finito l'effetto per il solo
-salvataggio della documentazione, né saltare alla carta successiva mentre
-l'attività corrente è ancora da completare, salvo nuova indicazione.
+Specifica grafica completa e salvata. Nessuna nuova animazione è stata
+implementata o collaudata in questa fase. L'utente ha chiarito di voler
+prima raccogliere gli effetti e poi farli creare tutti insieme al suo
+comando. «Quando è fatto si passa alla carta dopo» si riferisce ora alla
+chiusura e al salvataggio della specifica. Si può proseguire con le Ganasce
+Magnetiche senza avviare la creazione della Termobalistica.
 
 ## 5. Regole permanenti valide anche per le prossime carte
 
@@ -320,6 +319,9 @@ Riferimento: [PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md](PROCEDURA_OBBLIGATORIA_
 
 ## 7. Da dove riprendere tecnicamente
 
+**Questa sezione è un promemoria per il futuro comando di creazione.**
+Adesso continuare soltanto la raccolta delle scelte dalle Ganasce Magnetiche.
+
 1. Leggere questo documento e `AGENTS.md`, poi controllare il ramo `main`
    corrente. Il salvataggio documenta ciò che era presente nella base
    indicata; cambi successivi possono aver implementato parte del lavoro.
@@ -359,7 +361,7 @@ Termobalistica sono stati ridiscussi; le nuove direzioni sono sopra.
 | --- | --- | --- |
 | Maglio Ferrogravitazionale | Comune, Rara, Epica, Leggendaria | Danno concentrato su un bersaglio, un turno. Nuova direzione 2/3/5/7 descritta sopra. |
 | Cannone a Slitta d'Acciaio | Comune, Rara, Epica, Leggendaria | Danno diretto su un bersaglio, un turno; base inferiore al Maglio. Nuova direzione: una palla per tutte le rarità con dettagli nei colori della rarità. |
-| Artiglieria Termobalistica di Recupero | Epica, Leggendaria | Due turni; bonus dal 60% degli HP realmente persi dalla propria flotta dopo la posa, entro il massimo della variante. Nuova salva: 3 granate base, 5 o 6 da scegliere quando potenziata; la condizione non è la rarità. |
+| Artiglieria Termobalistica di Recupero | Epica, Leggendaria | Due turni; bonus dal 60% degli HP realmente persi dalla propria flotta dopo la posa, entro il massimo della variante. Nuova salva: 3 granate base e 6 quando potenziata; la condizione non è la rarità. |
 | Arpioni a Ganasce Magnetiche | Rara, Epica, Leggendaria | Due agganci reali nel turno di posa; preparano il Collassatore nel turno proprio successivo. |
 | Cannone Collassatore di Lega | Epica, Leggendaria | Combo con Ganasce del turno proprio precedente e due bersagli agganciati ancora vivi; danni ai due bersagli, un solo urto visivo. |
 | Frantumatore a Induzione | Epica, Leggendaria | Un turno; con 1 Energia Metallo supera una Difesa, con 2 ne rimuove anche una visibile. Le Energie del bonus non vengono consumate. |
@@ -386,7 +388,9 @@ prescrizioni precedenti in conflitto. In particolare:
   colori della rarità ufficiale; il codice non è ancora stato adeguato.
 - Termobalistica: la distinzione richiesta è tra attacco base e attacco
   potenziato dagli HP persi dopo la posa, non tra Epica e Leggendaria.
-  Tre proiettili base confermati; cinque/sei potenziati ancora da scegliere.
+  Tre proiettili base e sei potenziati sono confermati; la scelta è chiusa.
+- Creazione immediata dopo la scelta grafica: rinviata esplicitamente
+  dall'utente. Adesso documentare, poi creare tutto insieme al suo comando.
 - Numeri o coreografia del Maglio applicati a tutte le carte: rifiutati
   espressamente. L'utente sceglie carta per carta.
 - Effetto inventato automaticamente dall'assistente dopo il solo fronte:

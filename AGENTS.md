@@ -1,5 +1,29 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Modalità corrente — solo raccolta degli effetti, 26 novembre 2026
+
+L'utente ha precisato: per ora scrivere gli effetti, poi li farà creare
+tutti insieme quando darà il comando esplicito. **Adesso documentare
+soltanto: non implementare effetti, non cambiare il motore o i renderer,
+non avviare un collaudo come se la creazione fosse già stata richiesta.**
+Questa indicazione sostituisce ogni precedente automatismo che faceva
+seguire subito la realizzazione alla scelta della direzione grafica.
+
+La Termobalistica è definita: **3 granate al danno base e 6 quando il
+colpo è potenziato dagli HP persi dopo la posa**, in entrambe le rarità
+Epica e Leggendaria. La risposta esplicita «Sei» chiude la scelta 5/6:
+non richiederla più e non distinguere i numeri in base alla rarità.
+
+Scelte documentate: Maglio, Cannone a Slitta, Termobalistica.
+**Punto di ripresa: Arpioni a Ganasce Magnetiche.** È stata presentata
+la funzione, ma l'utente non ha ancora scelto il nuovo effetto grafico.
+Spiegare singolarmente le sue funzioni reali e poi ascoltare l'utente.
+Una carta alla volta; non ritardare con il recupero di un elenco nuovo.
+
+Il completamento richiesto prima di passare alla carta dopo, in questa
+fase, è la definizione e il salvataggio della scelta. Implementazione e
+collaudo saranno una fase successiva su esplicita richiesta dell'utente.
+
 ## Ripresa obbligatoria — chiarimenti vocali del 26 novembre 2026
 
 Leggere prima `docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md`.
@@ -20,12 +44,11 @@ in un'altra chat. Questo documento distingue decisioni, codice e collaudi.
 - **SOLO Artiglieria Termobalistica di Recupero:** approvata la salva di
   granate metalliche tozze, con punta e nucleo incandescente, traiettorie
   a parabola, scie termiche ed esplosioni distinte sui veri impatti.
-  Tre proiettili nell'attacco senza bonus; raffica più numerosa quando
+  Tre proiettili nell'attacco senza bonus; sei proiettili quando
   l'attacco è amplificato dagli HP realmente persi dalla flotta dopo la
   posa (bonus del 60%, entro il massimo). Il cambio di conteggio dipende
-  dal bonus del colpo, NON dalla rarità Epica/Leggendaria. L'utente non ha
-  ancora scelto fra cinque e sei per il potenziato: il suo ultimo «sì»
-  conferma la rappresentazione della salva, non sceglie uno dei due numeri.
+  dal bonus del colpo, NON dalla rarità Epica/Leggendaria. L'utente ha
+  scelto esplicitamente «Sei» per il potenziato. La scelta è chiusa.
   Non inventare il conteggio e non ripetere la lettura errata «tre Epica,
   cinque Leggendaria». Due turni propri, danni totali e blocchi invariati.
   La carta successiva si affronta dopo aver completato l'attività corrente;
@@ -54,8 +77,9 @@ di combattimento o renderer modificato. Il codice di partenza `ff600528`
 conta ancora 1/3/6/9 per il Maglio e 3/6/9/7 per la Slitta. Nuovi conteggi,
 rotazione del Maglio, palla e dettagli di rarità della Slitta e provenienza
 precisata vanno implementati e collaudati; non risultano già verificati.
-Per la Termobalistica la direzione è salvata, ma mancano la scelta esatta
-5/6 per il potenziato, l'implementazione e il collaudo della revisione.
+Per la Termobalistica la direzione 3 base / 6 potenziati è completa.
+Implementazione e collaudo restano da svolgere solo al successivo comando
+esplicito dell'utente, come indicato nella modalità corrente sopra.
 Le indicazioni precedenti contrastanti sono storiche e subordinate a queste.
 
 ## Ordine di lavoro deciso dall'utente — 26 novembre 2026
@@ -65,9 +89,9 @@ Prima verificare il catalogo e il motore, creare/presentare la carta e
 spiegarne chiaramente il ruolo reale: bersagli, durata, condizioni, costi,
 combo e differenze fra rarità. Poi l'utente dice quale effetto realizzare.
 Non inventare o implementare autonomamente una nuova coreografia prima
-della sua indicazione. Quando la direzione è stata indicata/confermata,
-realizzare grafica, suoni e aptica coerenti, integrare, verificare e salvare
-quanto già autorizzato senza altre conferme di routine.
+della sua indicazione. Nella modalità corrente, dopo la scelta salvarne
+la descrizione dettagliata e passare alla carta successiva. Realizzare
+le sequenze soltanto quando l'utente chiederà esplicitamente di crearle.
 
 Per le carte già fatte, spiegare il ruolo reale e attendere la scelta della
 revisione; descrivere la grafica attuale soltanto se l'utente la chiede.
