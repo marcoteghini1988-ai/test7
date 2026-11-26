@@ -1,11 +1,84 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — immagini arma e colpo; tre famiglie Fulmine approvate
+## Revisione corrente — colpi da fuori schermo; quattro famiglie Fulmine approvate
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Regola corrente — in battaglia compaiono i colpi; macchina nella carta
+
+**Correzione esplicita dell'utente, 26 novembre 2026, confermata con «Sì».**
+Nella battaglia non mostrare il dispositivo/arma completo, la sua bocca
+o le sue parti mentre si aprono per sparare: il lancio iniziale proviene
+da fuori dello schermo del telefono.
+- Lato giocatore: ingresso da punti variabili lungo il bordo inferiore.
+- Lato avversario: ingresso da punti variabili lungo il bordo superiore.
+- Si animano proiettile, scarica, frusta, ganascia o altre parti realmente
+  emesse, traiettoria, contatto e conseguenze previste dalla carta.
+  Non aggiungere modelli o immagini delle macchine al campo.
+- Restano i trasferimenti successivi già previsti dalle meccaniche
+  approvate, come il colpo residuo del Perforatore dal bersaglio distrutto.
+- Nell'illustrazione della **carta** restano insieme macchina e suo colpo,
+  con cornici e simboli ufficiali. Il colpo illustrato deve corrispondere
+  a quello in battaglia. La coerenza tridimensionale della macchina nella
+  carta non richiede di crearne un modello o un'animazione in battaglia.
+Questa correzione prevale sulle vecchie indicazioni di mostrare macchine,
+bocche, diaframmi o armi montate durante il lancio. Non rimuovere asset o
+modificare codice di gioco ora: la fase corrente resta documentazione.
+
+**Effetti distinti per famiglia:** la medesima provenienza dal bordo e
+il medesimo elemento non autorizzano lo stesso sparo con un colore diverso.
+Ogni famiglia mantiene la forma, il movimento, il ritmo e il contatto
+approvati, con audio e aptica coerenti. Le rarità seguono la progressione
+specificamente concordata; non inventare colpi o nuove abilità.
+
+### Lavoro corrente — Fulmine, quattro famiglie approvate
+
+Sono approvate nella progettazione le prime quattro famiglie Fulmine.
+La fase resta documentazione: nessuna nuova carta completa o effetto
+viene dichiarato già prodotto da questi appunti.
+1. **Cannone a Pettine Ionico di Vega:** cinque archi/filamenti visibili
+   confluiscono in una sola scarica azzurro-bianca a zigzag; reticolo
+   elettrico transitorio all'impatto, crepitio e schiocco, breve impulso
+   aptico. Le quattro rarità aumentano danno e intensità con variazioni lievi.
+2. **Lanciadardi a Spirale di Tesla:** un dardo elettrico blu-violetto
+   con due spirali di scintille rotanti; scarica locale al contatto,
+   sibilo crescente e schiocco, un impulso aptico. Stessa dinamica nelle
+   quattro rarità, danno e intensità crescenti.
+3. **Sferzatore Ionico di Rame Lunare:** una frusta elettrica a zigzag,
+   una sferzata sulla corazza, scintille, schiocco e breve impulso aptico.
+   Quattro rarità, stessa dinamica e danno/intensità crescenti.
+4. **Cannone del Lampo Bianco**, `weapon-base-ionic-04`, Fulmine:
+   approvata la proposta corretta con «Sì». Una sola scarica elettrica
+   bianca, rettilinea e rapidissima, entra dal bordo fuori schermo verso
+   un solo bersaglio. Al vero contatto: scintille concentrate, bagliore
+   localizzato, schiocco secco e vibrazione breve. Niente dispositivo,
+   bocca, alette o diaframmi visibili in battaglia. Questi dettagli sono
+   pertinenti soltanto all'illustrazione della carta.
+   Rarità iniziale Rara nel catalogo; nessuna Comune inventata e nessun
+   nuovo valore di danno stabilito durante questa revisione.
+
+Queste armi hanno un attacco su un bersaglio in un turno proprio nel
+profilo base, senza Energia aggiuntiva; le Difese e le protezioni ordinarie
+si applicano normalmente. Gli effetti diversi non aggiungono abilità.
+Tutti i lanci iniziali entrano da fuori schermo, basso per il giocatore
+e alto per l'avversario. Il requisito di macchina+colpo riguarda la carta.
+
+L'utente domanda se le prime due sono uguali al Lampo: spiegare subito
+le tre firme distinte (archi convergenti a zigzag / dardo con doppia
+spirale / impulso bianco rettilineo), senza ricontrolli ripetuti.
+Alla ripresa successiva la quinta famiglia dell'elenco è Cannone a Nucleo
+di Folgore Crescente: usare il suo profilo reale prima di presentarne la
+meccanica. Non riaprire le approvazioni delle prime quattro.
+
+Le descrizioni successive di terminali, condensatore, alette e diaframmi
+riguardano il dispositivo illustrato sulla carta; non vanno animate in
+battaglia. La proposta corretta del Lampo Bianco è approvata: i vecchi
+stati «non ancora approvata» sotto sono storici. L'utente ribadisce che
+le armi devono avere effetti diversi, e chiede il confronto con le prime
+due; dare subito il confronto, non riaprire la distinzione carta/battaglia.
 
 ### Punto di ripresa aggiornato — Sferzatore approvato; Cannone del Lampo Bianco
 
@@ -68,10 +141,10 @@ nello stato «non ancora approvata», non nella descrizione accettata.
 L'utente ha chiarito che da queste famiglie il lavoro comprende anche
 le carte complete: illustrazione, cornice e simboli ufficiali, testi e
 caratteristiche dal catalogo, in PNG HD, più effetti, audio e vibrazione.
-Finora sono state concordate le prime tre famiglie; **le nuove immagini
+Finora sono state concordate le prime quattro famiglie; **le nuove immagini
 complete non sono ancora state create**. Il nuovo requisito arma+colpo
 si applicherà alla loro produzione. La prossima famiglia della lista,
-quando si proseguirà, è Cannone del Lampo Bianco.
+quando si proseguirà, è Cannone a Nucleo di Folgore Crescente.
 
 ### Punto attuale — Pettine approvato; famiglia 2, Lanciadardi di Tesla
 
