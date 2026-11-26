@@ -1,11 +1,61 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — Frantumatore; Ganasce e altre proposte in pausa
+## Revisione corrente — dimensioni dei supporti e stadi di danneggiamento
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Navi — supporti più grandi e danneggiamento progressivo
+
+**Nuova richiesta dell'utente:** ingrandire le navicelle di supporto;
+per **supporti e navi madri** creare tre-quattro stadi visibili di
+danneggiamento, legati alla vita rimasta, fino alla distruzione finale.
+L'utente ha richiamato una soglia del 25%; non ha fissato un fattore
+numerico per l'ingrandimento né tutti i dettagli artistici degli stadi.
+
+**Dimensioni:** aumentare la leggibilità e la dimensione visiva dei
+supporti nella plancia. Il fattore esatto sarà scelto con una prova
+visiva, preservando immagini/modelli approvati e gli spazi necessari a
+barre, slot e bersagli. Aggiornare coerentemente geometria visiva,
+punti di contatto degli effetti e selezione del vero scafo.
+La richiesta di ingrandimento riguarda i supporti; gli stadi di danno
+riguardano sia supporti sia madri, per entrambi i giocatori.
+
+**Schema proposto dall'assistente:** quattro stadi di rottura alle soglie
+75%, 50%, 25% e 0% degli HP residui, oltre all'aspetto integro iniziale.
+È una proposta concreta per i «tre-quattro stadi» indicati dall'utente,
+non un elenco di percentuali già scelto esplicitamente da lui.
+
+| HP residui rispetto agli HP massimi della singola nave | Stato visivo proposto |
+| --- | --- |
+| Oltre 75% | Aspetto integro iniziale. |
+| Oltre 50% e fino a 75% incluso | Primo stadio: crepe e segni di danno sulla corazza. |
+| Oltre 25% e fino a 50% incluso | Secondo stadio: pannelli danneggiati, danni più evidenti e fumo. |
+| Oltre 0% e fino a 25% incluso | Terzo stadio: danni critici, scafo compromesso e scintille. |
+| 0% | Quarto stadio: rottura/distruzione finale coerente con l'eliminazione reale. |
+
+Le percentuali indicano **HP rimasti**, non HP persi. In particolare,
+75% residui significa che è stato perso un quarto della vita massima.
+
+Lo stadio segue gli HP effettivi della singola unità e i loro
+aggiornamenti; non dipende dal timer o dal numero di turni. Il solo cambio
+visivo non causa danni aggiuntivi, penalità, perdita di abilità o rotture
+anticipate di componenti di gioco. La rimozione finale, gli effetti di
+morte e l'esito della partita restano governati dalla meccanica reale.
+
+Applicare autonomamente la regola generale: i passaggi di stadio e la
+rottura finale avranno grafica, suono e vibrazione coerenti e sincronizzati
+agli eventi reali, rispettando preferenze e supporto del dispositivo.
+Non far vibrare continuamente il telefono per la sola permanenza nello
+stato danneggiato.
+
+**Stato:** richiesta e schema proposto salvati. Nessuna nave è già stata
+ingrandita, nessun nuovo modello/stadio è stato implementato e nessun
+collaudo visivo di questa modifica è stato eseguito in questa fase.
+La realizzazione resta al successivo comando esplicito, come stabilito
+per la raccolta corrente delle specifiche.
 
 ### Regola generale obbligatoria per tutti gli effetti delle carte
 
