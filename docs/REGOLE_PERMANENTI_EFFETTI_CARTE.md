@@ -5,10 +5,34 @@
 L'utente ha chiesto di annotare per ora gli effetti carta per carta e di
 crearli più avanti tutti insieme, quando lo dirà esplicitamente. Questa
 fase riguarda soltanto le specifiche. Una scelta grafica non avvia ancora
-l'implementazione, la modifica del motore o il collaudo. Alla ripresa
-continuare dalle Ganasce Magnetiche; Maglio, Slitta e Termobalistica hanno
-la direzione già documentata. La Termobalistica è chiusa a 3 base / 6
+l'implementazione, la modifica del motore o il collaudo. Il punto attuale
+è il Frantumatore a Induzione, descritto nel documento di ripresa; le
+Ganasce sono in pausa. Maglio, Slitta e Termobalistica hanno la direzione
+già documentata. La Termobalistica è chiusa a 3 base / 6
 potenziati, indipendentemente dalla rarità.
+
+## Carte Difesa: rendere visibile l'interazione sulla carta stessa
+
+Richiesta dell'utente durante la progettazione del Frantumatore a
+Induzione, 26/11: quando una carta Difesa interviene, viene superata o
+viene rotta, l'effetto deve vedersi **anche sulla carta Difesa coinvolta**.
+
+Coordinare la reazione visibile della carta nel campo con protezione,
+impatto, audio e stato effettivo. Un bypass lascia la carta attiva in
+campo e non ne simula la distruzione; una rimozione reale mostra una
+rottura/smontaggio leggibile e il passaggio agli scarti. Se la Difesa
+riduce il danno, mostrare sulla nave soltanto il residuo; se lo blocca
+interamente, non inventare un impatto di danno sullo scafo.
+Il solo bagliore sullo scudo o sulla nave non sostituisce la reazione
+richiesta sulla carta Difesa stessa.
+
+Applicare il principio agli effetti che coinvolgono davvero una Difesa,
+seguendo i relativi eventi del motore. Non animare rimozioni di altre
+carte o conseguenze non previste dalla meccanica. I dettagli artistici
+si definiscono coerentemente con la singola arma, la Difesa e la rarità.
+
+Questa è una specifica da realizzare al comando di creazione, non una
+dichiarazione di implementazione o collaudo già conclusi.
 
 ## Precisazioni vocali del 26 novembre 2026
 
