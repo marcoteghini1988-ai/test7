@@ -1,11 +1,71 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — otto armi riviste verbalmente; Super Combo in bozza
+## Revisione corrente — Fulmine, Cannone a Pettine Ionico di Vega
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Nuova regola — colpi coerenti con tutti gli elementi
+
+L'utente richiede che l'elemento sia riconoscibile nella natura dello
+sparo: Metallo metallico, Fulmine elettrico, Fuoco di fuoco, Acqua
+d'acqua e così per tutti gli elementi. Salvata come regola obbligatoria
+in `REGOLE_PERMANENTI_EFFETTI_CARTE.md` e richiamata in `AGENTS.md`.
+La coerenza elementale non sostituisce l'effetto distinto per ogni arma
+e rarità e non introduce status o danni nuovi.
+
+### Punto attuale — Fulmine, famiglia 1: Cannone a Pettine Ionico di Vega
+
+Si lavora **una famiglia alla volta** con le sue evoluzioni e si
+completano le dieci Armi Fulmine prima di cambiare elemento.
+La proposta operativa precedente di tre famiglie per lotto non è
+l'ordine corrente dell'utente.
+
+Prima famiglia: `weapon-base-ionic-01`, **Cannone a Pettine Ionico di
+Vega**, con rarità Comune, Rara, Epica e Leggendaria.
+Fonte riletta: `src/fleetNext/approvedBaseWeapons.js`.
+Funzione: un attacco autonomo di elemento Fulmine su un solo bersaglio
+in un turno proprio; un solo impatto. Nessun costo Energia aggiuntivo
+previsto dal profilo base; Difese, Trappole, supporti, Terreni e
+modificatori applicabili seguono le regole ordinarie.
+Le evoluzioni conservano la meccanica e hanno valori propri di danno.
+Non attribuire come nuovi valori approvati i numeri grezzi prima della
+calibrazione del catalogo.
+
+**Proposta visiva dell'assistente, non ancora approvata:** cinque
+archetti elettrici del pettine si accendono e confluiscono in una sola
+scarica azzurro-bianca, che raggiunge a zigzag il bersaglio. Sullo scafo
+si apre per un istante un reticolo di scariche e scintille, poi si
+spegne. I cinque rami sono la struttura visiva di un unico attacco:
+non cinque colpi o bersagli aggiuntivi. Se il colpo viene bloccato,
+il contatto elettrico e la reazione interessano la protezione e la
+carta Difesa invece di simulare danno alla nave.
+Suono proposto: crepitio di carica e schiocco elettrico al contatto;
+vibrazione breve, sincronizzata al vero impatto, secondo le impostazioni.
+Dettagli della progressione visiva Rara/Epica/Leggendaria da proporre
+e valutare; non considerare approvato un semplice cambio di colore.
+
+L'utente chiede di presentare **nome → funzione → proposta dell'effetto**.
+Non creare l'effetto o inventare un'approvazione prima della sua risposta.
+
+**Lista delle dieci famiglie Fulmine riscontrate nel catalogo:**
+1. Cannone a Pettine Ionico di Vega.
+2. Lanciadardi a Spirale di Tesla.
+3. Sferzatore Ionico di Rame Lunare.
+4. Cannone del Lampo Bianco.
+5. Cannone a Nucleo di Folgore Crescente.
+6. Sonda Ionica d’Assalto.
+7. Martello del Tuono.
+8. Lancia del Comando Ionico.
+9. Cannone Condensatore della Tempesta Stellare.
+10. Cannone del Giudizio Temporale.
+
+Le prime quattro famiglie provengono da `approvedBaseWeapons.js`,
+le altre sei da `designedWeaponCards.js` e relativi profili operativi.
+Non usare i commenti delle bozze grezze come sostituto dei profili attivi.
+Nessuna nuova immagine o sequenza è già stata realizzata con questo appunto.
 
 ### Stato aggiornato — revisione verbale delle otto armi conclusa
 
