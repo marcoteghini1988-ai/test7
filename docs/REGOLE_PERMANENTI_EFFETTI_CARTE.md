@@ -10,6 +10,15 @@ rotanti appartengono soltanto al Maglio Ferrogravitazionale. Ogni altra
 carta conserva le proprie regole e attende una scelta grafica specifica
 dell'utente. Nessun conteggio o movimento del Maglio è un modello universale.
 
+**SOLO Cannone a Slitta d'Acciaio:** una sola palla di cannone per
+attivazione in tutte e quattro le rarità. Il danno cresce con la rarità;
+non aggiungere raffiche. Dimensioni o dettagli possono evolvere. L'utente
+ha scelto dettagli nei colori della rarità ufficiale: Comune grafite,
+Rara bronzo/sabbia bronzata, Epica argento, Leggendaria cristallo prismatico
+(la base più recente del 24/11 prevale sulla vecchia Leggendaria oro).
+Conservare la palla riconoscibile; non estendere questa sequenza al Maglio
+o alle altre carte. Anche questa nuova direzione resta da implementare.
+
 I martelli partono a intervalli brevi, uno dopo l'altro: il successivo può
 partire prima dell'arrivo del precedente, ma le partenze non sono simultanee.
 Ogni martello ruota durante il volo e ha un contatto distinto sul vero

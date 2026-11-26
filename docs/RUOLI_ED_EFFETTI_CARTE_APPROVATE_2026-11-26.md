@@ -6,6 +6,9 @@
 > i punti di partenza possono variare lungo tutto il bordo inferiore A e
 > superiore B. Direttive e stato effettivo sono nel
 > [documento di ripresa](REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md).
+> Successivamente l'utente ha scelto per il solo Cannone a Slitta una
+> sola palla in tutte le rarità, con dettagli nei colori della rarità
+> ufficiale. Anche questa scelta è nel documento di ripresa.
 > Queste nuove direttive sono documentate, non ancora implementate.
 
 Fotografia letta dal codice il 26 novembre 2026, base

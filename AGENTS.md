@@ -9,6 +9,14 @@ in un'altra chat. Questo documento distingue decisioni, codice e collaudi.
 - **SOLO Maglio Ferrogravitazionale:** Comune 2 martelli, Rara 3, Epica 5,
   Leggendaria 7. Non estendere questi conteggi o la sua coreografia ad altre
   carte: gli effetti vengono decisi dall'utente carta per carta.
+- **SOLO Cannone a Slitta d'Acciaio:** una sola palla di cannone per
+  attivazione in tutte e quattro le rarità. Il danno cresce con la rarità;
+  non aggiungere raffiche. Dimensioni o dettagli possono evolvere. L'utente
+  ha scelto dettagli nei colori della rarità ufficiale: Comune grafite,
+  Rara bronzo/sabbia bronzata, Epica argento, Leggendaria cristallo prismatico
+  (la base più recente del 24/11 prevale sulla vecchia Leggendaria oro).
+  Conservare la palla riconoscibile; non estendere questa sequenza al Maglio
+  o alle altre carte. Anche questa nuova direzione resta da implementare.
 - I martelli partono **uno dopo l'altro**, con un breve intervallo: non
   tutti nello stesso istante e non aspettando l'impatto del precedente.
   Si deve vedere una serie di martelli in volo, ciascuno in rotazione
@@ -30,7 +38,8 @@ in un'altra chat. Questo documento distingue decisioni, codice e collaudi.
 
 **Stato di questo salvataggio:** documentazione aggiornata; nessun codice
 di combattimento o renderer modificato. Il codice di partenza `ff600528`
-conta ancora 1/3/6/9 per il Maglio. Nuovi conteggi, rotazione e provenienza
+conta ancora 1/3/6/9 per il Maglio e 3/6/9/7 per la Slitta. Nuovi conteggi,
+rotazione del Maglio, palla e dettagli di rarità della Slitta e provenienza
 precisata vanno implementati e collaudati; non risultano già verificati.
 Le indicazioni precedenti contrastanti sono storiche e subordinate a queste.
 

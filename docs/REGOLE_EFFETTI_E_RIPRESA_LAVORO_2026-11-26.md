@@ -19,6 +19,8 @@ presenza nel documento non significa che siano già eseguite in partita.
 | Otto Armi Metallo e 22 varianti già illustrate/inserite | Presenti nel catalogo e nel codice letto; riepilogo nella sezione 8. |
 | Maglio Comune/Rara/Epica/Leggendaria nel codice di partenza | Conteggi precedenti: 1/3/6/9. |
 | Nuova scelta per il solo Maglio | 2/3/5/7 martelli, partenze successive, rotazione e impatto di ciascuno: da implementare. |
+| Slitta nel codice di partenza | Conteggi precedenti: 3/6/9/7; non ancora adeguati alla nuova scelta. |
+| Nuova scelta per il solo Cannone a Slitta | Un'unica palla in tutte le rarità, con dettagli nei colori della rarità e possibili differenze dimensionali: da implementare. |
 | Precisazione generale sul punto di partenza | Tutto il bordo inferiore per il giocatore, tutto il superiore per l'avversario: istruzione salvata, adeguamento e prova ancora necessari. |
 | Nuovo collaudo della revisione richiesta in questa conversazione | Non eseguito. |
 | Ultima revisione precedente degli effetti | Test e studi offline documentati; il nuovo collaudo StackBlitz risultava ancora da eseguire. Non è stata ricontrollata qui la disponibilità attuale del sito. |
@@ -152,6 +154,48 @@ l'intero danno della carta a ognuno dei 2/3/5/7 martelli. Il motore deve
 emettere i pacchetti reali, conservarne la somma e rispettare bersaglio,
 Difese, copertura e costi senza moltiplicarli per il numero di munizioni.
 
+## 4 bis. Cannone a Slitta d'Acciaio: scelta successiva dell'utente
+
+Arma Metallo con quattro versioni: Comune e tre evoluzioni, Rara, Epica e
+Leggendaria. Danno concentrato su una sola nave, durata un turno; il danno
+base è inferiore a quello del Maglio. Difese, copertura e modificatori
+restano applicabili.
+
+L'utente ha scelto **un solo colpo visibile: una palla di cannone**. Questa
+scelta vale per tutte e quattro le rarità della Slitta; l'aumento di rarità
+accresce il danno, senza aggiungere munizioni, bersagli o nuove abilità.
+
+| Rarità della Slitta | Colpi visibili per attivazione | Dettagli visivi della rarità ufficiale |
+| --- | ---: | --- |
+| Comune | 1 palla | Grafite/grigio scuro. |
+| Rara | 1 palla | Bronzo/sabbia bronzata. |
+| Epica | 1 palla | Argento. |
+| Leggendaria | 1 palla | Cristallo e riflessi prismatici della cornice approvata più recente. |
+
+L'utente ha prima proposto di cambiare dimensioni o qualche dettaglio con
+la rarità e poi ha indicato espressamente **i dettagli visivi del colore
+della rarità**. Le finiture devono riprendere quelle ufficiali del
+progetto: per la Leggendaria vale il riferimento prismatico approvato il
+24/11, successivo alla vecchia palette oro. Non reinterpretare questi
+colori come nuovi elementi della carta o nuove proprietà di combattimento.
+
+Mantenere riconoscibile il corpo sferico metallico. Dimensioni e
+rifiniture possono rendere leggibile la progressione, senza nascondere la
+nave all'impatto; i fattori dimensionali esatti non sono stati fissati.
+Non attribuire all'utente dettagli aggiuntivi che non ha scelto.
+
+Le partenze seguono la regola generale dei bordi descritta sopra; ogni
+attivazione produce un solo arrivo e un contatto coerente con il danno
+reale. Suono e aptica devono seguire lo stesso unico contatto.
+
+**Ambito:** questa è la direzione del solo Cannone a Slitta d'Acciaio.
+Non ridurre a un colpo i martelli del Maglio e non applicare automaticamente
+la palla, la sua finitura o il suo conteggio alle altre famiglie.
+
+**Stato:** direzione documentata, animazione e conteggi ancora da adeguare.
+Il catalogo precedente della Slitta usa 3/6/9/7 colpi: non presentarlo come
+attuazione della nuova scelta 1/1/1/1.
+
 ## 5. Regole permanenti valide anche per le prossime carte
 
 - **Coerenza con la meccanica:** prima leggere carta e motore; grafica,
@@ -218,7 +262,11 @@ Riferimento: [PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md](PROCEDURA_OBBLIGATORIA_
    `src/fleetNext/approvedWeaponSalvos.js`: al momento sono ancora 1/3/6/9.
 3. Applicare 2/3/5/7 soltanto agli ID della famiglia
    `weapon-confirmed-metallic-maglio` e alle sue evoluzioni.
-4. Adeguare ritardi reali e testi/conteggi della carta, rotazione fisica,
+4. Adeguare anche i soli ID della famiglia `weapon-confirmed-metallic-slitta`
+   a un colpo per tutte le rarità: una palla con dettagli nei colori della
+   rarità ufficiale, come nella sezione 4 bis. Non trasferire i conteggi
+   del Maglio alla Slitta né il colpo singolo della Slitta alle altre carte.
+   Adeguare ritardi reali e testi/conteggi della carta, rotazione fisica,
    provenienza dai bordi, contatti, suoni e aptica. Le partenze dai bordi
    sono generali; il numero e il movimento dei martelli sono specifici.
 5. Controllare anche `src/weaponKinematics.js`,
@@ -239,13 +287,13 @@ Riferimento: [PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md](PROCEDURA_OBBLIGATORIA_
 ## 8. Carte già presenti: indice per continuare
 
 L'elenco fotografa le otto famiglie/22 varianti già realizzate, non una
-nuova approvazione delle loro animazioni. Solo il Maglio è stato ridiscusso
-in dettaglio in questa conversazione.
+nuova approvazione delle loro animazioni. Maglio e Cannone a Slitta sono stati
+ridiscussi in questa conversazione; le loro nuove direzioni sono sopra.
 
 | Famiglia | Rarità presenti | Ruolo reale in sintesi |
 | --- | --- | --- |
 | Maglio Ferrogravitazionale | Comune, Rara, Epica, Leggendaria | Danno concentrato su un bersaglio, un turno. Nuova direzione 2/3/5/7 descritta sopra. |
-| Cannone a Slitta d'Acciaio | Comune, Rara, Epica, Leggendaria | Danno diretto su un bersaglio, un turno; base inferiore al Maglio. |
+| Cannone a Slitta d'Acciaio | Comune, Rara, Epica, Leggendaria | Danno diretto su un bersaglio, un turno; base inferiore al Maglio. Nuova direzione: una palla per tutte le rarità con dettagli nei colori della rarità. |
 | Artiglieria Termobalistica di Recupero | Epica, Leggendaria | Due turni; bonus dal 60% degli HP realmente persi dalla propria flotta dopo la posa, entro il massimo della variante. |
 | Arpioni a Ganasce Magnetiche | Rara, Epica, Leggendaria | Due agganci reali nel turno di posa; preparano il Collassatore nel turno proprio successivo. |
 | Cannone Collassatore di Lega | Epica, Leggendaria | Combo con Ganasce del turno proprio precedente e due bersagli agganciati ancora vivi; danni ai due bersagli, un solo urto visivo. |
@@ -268,6 +316,9 @@ prescrizioni precedenti in conflitto. In particolare:
   dalla scelta specifica 2/3/5/7; il codice non è ancora stato adeguato.
 - Lancio simultaneo: rifiutato. Attesa dell'intero viaggio precedente
   prima del lancio successivo: rifiutata. Vale la serie a brevi intervalli.
+- Raffiche 3/6/9/7 del vecchio Cannone a Slitta: superate come direzione
+  richiesta da un solo colpo sferico in tutte le rarità, con finiture nei
+  colori della rarità ufficiale; il codice non è ancora stato adeguato.
 - Numeri o coreografia del Maglio applicati a tutte le carte: rifiutati
   espressamente. L'utente sceglie carta per carta.
 - Effetto inventato automaticamente dall'assistente dopo il solo fronte:
