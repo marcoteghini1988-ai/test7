@@ -34,6 +34,29 @@ La regola non autorizza la creazione anticipata delle sequenze: nella
 modalità corrente si documentano le scelte; si realizzeranno al comando
 esplicito dell'utente. Dettagli vincolanti nel documento collegato.
 
+## Ultima scelta approvata — Ganasce A/B; nuova idea futura Super Combo
+
+**Due carte distinte A e B**, una sola ganascia ciascuna, entrambe
+utilizzabili da sole; non due copie della stessa carta e non la vecchia
+A con due ganasce seguita da una macchina diversa.
+
+La coppia produce un solo schianto: con due navi agganciate vive,
+collisione fra loro; con una sola nave presente, anche la sola madre,
+due prese sullo stesso scafo, inclinazione e trazione verso il basso
+contro il piano metallico dell'arena. L'utente ha approvato esplicitamente
+quest'ultima soluzione con «Perfetto, aggiudicato» e ha chiesto tutti
+i dettagli grafici, sonori e aptici. La specifica completa è all'inizio di
+`docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md`.
+Le vecchie ipotesi incompatibili sotto sono storiche. Non dichiarare
+questa revisione già implementata: si stanno ancora salvando specifiche.
+
+**Nuova idea dell'utente da conservare:** Super Combo da introdurre in
+futuro **fuori dalla quota delle dieci Carte Arma per elemento**.
+Non sostituire Armi approvate, non assegnare categoria o meccaniche
+non ancora descritte e non iniziare la realizzazione ora.
+L'utente vuole spiegare l'idea: ascoltare il seguito, senza richiedere
+conferme già date o passare automaticamente ad altre carte.
+
 ## Metodo corrente e punto di ripresa — Artiglieria confermata
 
 L'utente vuole rivedere gli effetti delle **otto armi già inserite**.
@@ -48,8 +71,8 @@ altre carte del gruppo. Il Dissalatore citato per errore non risulta
 nel catalogo e non va trattato come confermato.
 
 L'Artiglieria delle Schegge Erranti è confermata nell'effetto corrente
-3/6/9 schegge; è l'ultima del gruppo ordinato. Restano Ganasce e seconda
-Metallo/Collassatore da chiudere. Il Perforatore ha una nuova direzione
+3/6/9 schegge; è l'ultima del gruppo ordinato. La coppia Ganasce A/B ha ora una
+nuova specifica approvata, dettagliata nella sezione più recente. Il Perforatore ha una nuova direzione
 approvata: distruzione visibile, esplosione e nuovo colpo del danno residuo
 formato dal relitto; non lo stesso siluro intatto fra tutti i bersagli.
 Dettagli e stati reali nel documento di ripresa, da leggere per continuare.
