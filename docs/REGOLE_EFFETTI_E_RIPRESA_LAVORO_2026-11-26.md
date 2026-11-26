@@ -1,6 +1,60 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Ultima discussione — Ganasce e Collassatore da rivedere
+## Revisione utente corrente — Ganasce autonome e palo d'impatto
+
+**26 novembre 2026, conversazione vocale (circa 11:08 Europe/Rome).**
+Questa proposta dell'utente sostituisce, nella progettazione, la precedente
+coppia basata sullo scontro fra due navi. Si tratta di una revisione delle
+meccaniche oltre che della rappresentazione. Per ora documentare: nessuna
+implementazione di combattimento/renderer o nuovo collaudo è autorizzato.
+
+### Prima carta: Arpioni a Ganasce Magnetiche, elemento Metallo
+
+- Carta indipendente: deve funzionare anche giocata da sola.
+- Aggancia una o due navi avversarie, secondo quante sono presenti in
+  campo. Con la sola madre deve funzionare su quella; non richiede una
+  coppia di navi e non si raddoppia automaticamente il danno su un bersaglio.
+- L'aggancio dura **tre turni propri**.
+- Nei primi due turni le ganasce restano attaccate e tirano gli scafi:
+  la trazione infligge un danno base a ogni nave agganciata.
+- Nel terzo e ultimo turno le ganasce si staccano strappando parti di
+  metallo dalla nave: il distacco infligge un **danno maggiorato**.
+- Non sono stati fissati nuovi valori HP, percentuali, costi o differenze
+  fra rarità. Non inventare danni numerici o sommare arbitrariamente un
+  ulteriore colpo base al danno del distacco.
+
+### Seconda carta: revisione del Cannone Collassatore di Lega, Metallo
+
+- L'utente propone una combinazione mentre la prima carta tiene agganciate
+  le navi. Ha menzionato il lancio di altre due ganasce e una struttura che
+  faccia **da palo/perno contro cui tirare e schiantare la nave**.
+- Le ganasce trascinano ogni nave agganciata verso quel palo; l'urto
+  contro la struttura causa il danno della combinazione.
+- La combinazione deve poter funzionare con **una o due navi**: non
+  dipende dall'urto fra due navi. Il bersaglio può essere anche la sola madre.
+- Il numero e la disposizione esatta dei perni e delle eventuali ganasce
+  aggiuntive restano da precisare; non trasformare la spiegazione ancora
+  in corso in una coreografia già approvata.
+
+### Punti ancora da definire
+
+- Uno schianto per bersaglio oppure schianti ripetuti nei turni in cui le
+  due carte sono attive.
+- Quando avviene lo schianto e quando si può giocare la seconda carta:
+  stesso turno, turni successivi o entrambi.
+- Durata e funzionamento autonomo della seconda carta, se previsto.
+- Se la combinazione mantiene gli agganci fino al distacco del terzo turno
+  o li consuma prima; interazione con bersagli distrutti, Difese e blocchi.
+- Nome definitivo, quantità/disposizione dei dispositivi, valori e
+  progressione per rarità.
+
+Non chiedere nuovamente se la prima carta sia autonoma, se duri tre turni
+o se debba funzionare sulla sola madre: l'utente lo ha già specificato.
+Restare su questa coppia e ascoltare il completamento della proposta.
+Il testo storico sotto documenta il codice precedente e proposte ormai
+superate; non prevale sulle nuove indicazioni dell'utente.
+
+## Discussione precedente — Ganasce e Collassatore da rivedere
 
 Il 26/11 l'utente ha aperto questi tre punti:
 
@@ -54,10 +108,11 @@ salvataggio della specifica e il passaggio alla carta dopo, non la creazione.
 potenziata dal bonus degli HP persi dopo la posa, in entrambe le rarità.
 La risposta «Sei» ha risolto il dubbio precedente: non chiederlo di nuovo.
 
-**Ripresa:** Arpioni a Ganasce Magnetiche. È stata spiegata la funzione;
-nessuna nuova direzione grafica è ancora stata scelta per questa carta.
-Presentare e spiegare le funzioni singolarmente, poi ascoltare la scelta.
-Non recuperare un elenco estraneo o ricominciare dalle carte già definite.
+**Ripresa:** proseguire la revisione Ganasce/Collassatore descritta in
+apertura. L'utente ha definito le Ganasce autonome per tre turni e proposto
+il palo d'impatto della seconda carta; restano aperti i dettagli della
+combinazione. Non recuperare un elenco estraneo o ricominciare dalle
+carte già definite.
 
 Aggiornamento del **26 novembre 2026**, conversazione vocale. Salvataggio
 chiesto dall'utente per recuperare in un'altra chat tutte le decisioni
