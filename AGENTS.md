@@ -7,12 +7,16 @@ una carta Metallo autonoma: aggancia una o due navi presenti, anche la
 sola madre, per tre turni propri. Primi due turni: danno base da trazione.
 Terzo turno: danno maggiorato quando si stacca strappando metallo.
 
-La seconda carta Metallo (attuale Collassatore) deve far tirare e
-schiantare ciascuna nave agganciata contro un **palo/perno**, funzionando
-con una o due navi. L'utente ha menzionato anche altre due ganasce:
-disposizione, numero esatto dei perni, frequenza dello schianto, finestra
-della combo e destino degli agganci restano da precisare. Non riproporre
-automaticamente lo scontro fra due navi o il piano dell'arena.
+La seconda carta Metallo (attuale Collassatore) deve funzionare con una
+o due navi agganciate. **La combinazione produce un solo schianto per
+bersaglio: l'utente ha risposto «No, una volta sola».** Non ripeterlo a
+ogni turno e non richiedere nuovamente la scelta della frequenza.
+
+Il palo/perno è soltanto un'idea: l'utente ha chiesto altre proposte.
+Le alternative dell'assistente (incudine magnetica oppure pressa a due
+piastre) sono da scegliere, non approvate. Restano aperti forma e quantità
+dei dispositivi, finestra della combo e destino degli agganci dopo l'urto.
+Non riproporre automaticamente lo scontro fra due navi.
 
 Leggere l'apertura aggiornata di
 `docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md`.
