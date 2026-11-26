@@ -6,6 +6,17 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const sources=path.join(root,'asset-sources/weapon-fronts/metallo-3');
+// La copia StackBlitz salvata usa gli stessi PNG pubblicati da GitHub.
+// Se non ospita l'archivio binario, non richiederne la clonazione per avviare Vite.
+let remoteAssets=process.env.VITE_ASSET_ROOT||'';
+try{remoteAssets||=(await readFile(path.join(root,'.env.local'),'utf8')).match(/^VITE_ASSET_ROOT\s*=\s*["']?([^\s"']+)/m)?.[1]||'';}catch(e){if(e.code!=='ENOENT')throw e;}
+try{await access(path.join(sources,'manifest.json'));}catch(e){
+ if(e.code==='ENOENT'&&/^https:\/\/raw\.githubusercontent\.com\/marcoteghini1988-ai\/test7\/(?:main|[a-f0-9]{40})\/public\/assets\/?$/.test(remoteAssets)){
+  console.log('StackBlitz: PNG HD serviti dal repository Test7; archivio binario locale non necessario.');
+  process.exit(0);
+ }
+ throw e;
+}
 const manifest=JSON.parse(await readFile(path.join(sources,'manifest.json'),'utf8'));
 const hash=data=>createHash('sha256').update(data).digest('hex');
 let restored=0;
