@@ -1,11 +1,42 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — Ganasce, proposta Fulmine e seconda arma Metallo
+## Revisione corrente — Frantumatore; Ganasce e altre proposte in pausa
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Frantumatore a Induzione — lame richieste, effetto da realizzare
+
+**Correzione esplicita dell'utente:** «attualmente non c'è messo le lame.
+Vanno messe, io ti parlo che come devono essere fatti». Questa discussione
+definisce il colpo futuro. Non descrivere la sequenza come già inserita o
+osservata in battaglia. Un riferimento illustrato o codice precedente
+non dimostra che il nuovo effetto scelto sia già visibile nel gioco.
+
+**Direzione scelta per il colpo:**
+- Lame metalliche rotanti volano dal lato della flotta che attacca verso
+  la navicella bersaglio e convergono sullo stesso bersaglio.
+- Il contatto sullo scafo deve rendere leggibile l'impatto delle lame,
+  con incisioni/tagli, scintille e schegge metalliche.
+- Se una Difesa effettivamente blocca il colpo, mostrare il contatto sullo
+  scudo. La sola presenza di una Difesa non implica che il colpo sia
+  bloccato: mantenere le regole Energia/bypass del Frantumatore.
+- L'utente ha aggiunto: «Primo turno si vede le lame colpiscono la
+  navicella». È la fase di impatto descritta per il turno di attivazione.
+- Non dedurre da «primo turno» una durata nuova: la carta attuale dura
+  un turno proprio. Eventuali fasi o turni ulteriori non sono ancora stati
+  richiesti né approvati. Ascoltare il seguito prima di modificarla.
+- Il numero delle lame e la loro eventuale progressione per rarità non
+  sono stati scelti in questa indicazione. Non presentare conteggi
+  precedenti del codice come una nuova scelta esplicita dell'utente.
+
+**Stato:** specifica documentata; nuova animazione da realizzare e
+collaudare al successivo comando di creazione. In questa fase non si
+modificano combattimento, renderer o immagini. Le Ganasce restano in pausa.
+Non recuperare nuovamente gli stessi appunti già disponibili e non dire
+che siano mancanti.
 
 ### Punto di ripresa aggiornato: Ganasce in pausa, prossima carta
 
