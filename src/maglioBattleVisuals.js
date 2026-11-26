@@ -60,7 +60,7 @@ export function weaponEffectProfile(id,shot){
    sound:{charge:'maglio_charge_'+['common','rare','epic','legendary'][tier],
    fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
-  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id)
+  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id,shot),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id)
  };
  const salvo=approvedWeaponSalvo(id);
  const flight=salvo?.count>1?salvo.flightMs:profile.flightMs;
@@ -103,14 +103,19 @@ export function fleetWeaponShots(events=[]){
    shots.push({...event,delayMs:shots.length*MAGLIO_SHOT_GAP_MS,
     fires:!event.blocked&&event.actualDamage>0&&!!event.targetKind&&!!event.targetId});
   }else if(['weapon-multi-shot','weapon-designed-shot','weapon-provisional-shot'].includes(event.kind)){
-   const groupStart=shots.length*MAGLIO_SHOT_GAP_MS;
+   let groupStart=shots.length*MAGLIO_SHOT_GAP_MS;
+   if(event.jawCombo){
+    const arrivals=shots.filter(s=>s.who===event.who&&event.jawMachineIds?.includes(s.machineId))
+     .map(s=>(s.delayMs||0)+(weaponEffectProfile(s.cardId,s)?.flightMs||1450));
+    groupStart=Math.max(groupStart,...arrivals.map(t=>t+630));
+   }
    for(const [impactIndex,hit] of (event.impacts||[]).entries())shots.push({...event,
     visualGroupId:event.who+':'+eventIndex,impactIndex,
     defenseBlocked:!!hit.defenseBlocked||event.pattern==='induction'&&hit.actualDamage===0&&
      events[eventIndex-1]?.kind==='block'&&events[eventIndex-1]?.who===event.who,
     targetKind:hit.targetKind,targetId:hit.targetId,actualDamage:hit.actualDamage,
     nominalDamage:hit.nominalDamage,projectileHits:hit.projectileHits,destroyed:!!hit.destroyed,
-    delayMs:event.pattern==='alloy-collision'?groupStart:shots.length*MAGLIO_SHOT_GAP_MS,
+    delayMs:event.jawCombo?groupStart:shots.length*MAGLIO_SHOT_GAP_MS,
     ...cascadeImpactPresentation(event,impactIndex,events,groupStart),
     fires:hit.actualDamage>0&&!!hit.targetKind&&!!hit.targetId});
   }else if(event.kind==='impact'&&event.independentWeaponShot&&event.weaponContributors?.length){

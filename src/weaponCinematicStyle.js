@@ -32,7 +32,8 @@ export function weaponTravelProgress(kind,progress){
  return t;
 }
 export function cinematicStyle(profile){
- const motif=motifs[profile.kind]?.[profile.tier];
+ const motif=profile.kind==='magnetic-grapple'&&profile.jawRole==='b'?
+  profile.tier===3?'three-finger-prismatic-grip':'three-finger-steel-grip':motifs[profile.kind]?.[profile.tier];
  if(!profile.approved||!motif)return null;
  return Object.freeze({motif,weight:weights[profile.kind],
   // Particle budget is bounded even in a three-card resolution.

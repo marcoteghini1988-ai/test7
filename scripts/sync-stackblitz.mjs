@@ -1,6 +1,6 @@
 // Aggiorna la copia Test7 già salvata: solo sorgenti del repository canonico.
 // I PNG HD rimangono su GitHub, senza clonare l'archivio binario nel WebContainer.
-import {readFile,mkdir,writeFile,rename,mkdtemp} from 'node:fs/promises';
+import {readFile,mkdir,writeFile,rename,mkdtemp,unlink} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 import os from 'node:os';
@@ -10,8 +10,7 @@ export const REPOSITORY='marcoteghini1988-ai/test7';
 const API='https://api.github.com/repos/'+REPOSITORY;
 const ROOT_FILES=new Set(['package.json','package-lock.json','index.html','vite.config.ts',
  'tsconfig.json','tsconfig.app.json','tsconfig.node.json','README.md','AGENTS.md','.gitignore']);
-const IMPORTED_ART=new Set(['docs/riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png',
- 'docs/riferimenti-carte/font/EclissiVettore-Regular.ttf']);
+const IMPORTED_ART=new Set(['docs/riferimenti-carte/font/EclissiVettore-Regular.ttf']);
 export function sourcePath(name){
  if(typeof name!=='string'||name.startsWith('/')||name.includes('\\')||path.posix.normalize(name)!==name||name.split('/').includes('..'))return false;
  return ROOT_FILES.has(name)||name.startsWith('src/')||IMPORTED_ART.has(name)||
@@ -49,6 +48,14 @@ export async function syncStackblitz({cwd=process.cwd(),ref='main',apply=false,f
   if(entry.old){const saved=path.join(backup,entry.path);await mkdir(path.dirname(saved),{recursive:true});await writeFile(saved,entry.old);}
   const destination=path.join(cwd,entry.path);await mkdir(path.dirname(destination),{recursive:true});
   await writeFile(destination+'.syncing',entry.data);await rename(destination+'.syncing',destination);
+ }
+ // Il foglio ufficiale è ora servito da ASSET_ROOT. Rimuovere dalla copia
+ // soltanto il vecchio duplicato identico e verificato, conservandone il backup.
+ const oldSheet='docs/riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png';
+ const sheet=await existing(path.join(cwd,oldSheet)),reference=tree.tree.find(e=>e.path===oldSheet);
+ if(sheet&&reference&&gitBlobSha(sheet)===reference.sha){
+  await mkdir(path.dirname(path.join(backup,oldSheet)),{recursive:true});await writeFile(path.join(backup,oldSheet),sheet);
+  await unlink(path.join(cwd,oldSheet));
  }
  const env=path.join(cwd,'.env.local'),oldEnv=await existing(env);
  if(!oldEnv||!/^VITE_ASSET_ROOT\s*=/m.test(oldEnv.toString())){

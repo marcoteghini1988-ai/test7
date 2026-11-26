@@ -18,7 +18,7 @@ for(const v of CHAIN_WEAPON_VARIANTS){
  test(v.id+' · fronte approvato HD, sequenza e suoni dedicati',()=>{
   const art=cardFacePath(v.id);assert.equal(art,'/assets/fleet-weapon-fronts/'+v.id+'.png');
   const png=readFileSync('public'+art);assert.equal(png.readUInt32BE(16),3072);assert.equal(png.readUInt32BE(20),4608);
-  const p=weaponEffectProfile(v.id);assert.equal(p.kind,v.kind);assert.ok(p.approved);
+  const p=weaponEffectProfile(v.id);assert.equal(p.kind,v.kind==='induction'?'induction':'magnetic-grapple');assert.ok(p.approved);
   for(const phase of ['charge','fire','impact']){
    const plan=metalWeaponSoundPlan(p.sound[phase]);assert.ok(plan?.layers.length);
    assert.equal(plan.tier,v.tier);assert.equal(plan.phase,phase);
@@ -32,15 +32,15 @@ for(const v of CHAIN_WEAPON_VARIANTS){
   const snapshot=JSON.stringify(b),r=resolvePreparedFleetTurn(b,who,order,2000);assert.ok(r.ok,r.reason);
   const event=r.events.find(e=>e.cardId===v.id&&e.kind.endsWith('-shot'));assert.ok(event);
   const shots=fleetWeaponShots(r.events).filter(s=>s.cardId===v.id);
-  assert.equal(shots.length,v.kind==='induction'?1:2);
+  assert.equal(shots.length,1);
   assert.deepEqual(shots.map(s=>s.targetId),event.impacts.map(h=>h.targetId));
   assert.deepEqual(shots.map(s=>s.actualDamage),event.impacts.map(h=>h.actualDamage));
   assert.ok(shots.every(s=>s.machineSlot===slot));
   const start=weaponShotStartMs(weaponVisualCards(shots,[]).length),p=weaponEffectProfile(v.id);
   assert.ok(weaponResolutionMs(r.events)>=start+p.flightMs+p.impactMs);
   if(v.kind==='alloy-collision'){
-   assert.equal(collisionGroups(shots).length,1);assert.equal(shots[0].delayMs,shots[1].delayMs);
-   assert.equal(activeGrappleLinks(r.battle).filter(l=>l.who===who).length,0);
+   assert.equal(collisionGroups(shots).length,0);
+   assert.equal(activeGrappleLinks(r.battle).filter(l=>l.who===who).length,1);
   }
   assert.equal(JSON.stringify(b),snapshot,'La presentazione non altera il combattimento');
  });
@@ -51,36 +51,34 @@ for(const v of CHAIN_WEAPON_VARIANTS){
   assert.ok(shots.every(s=>!s.fires));assert.equal(collisionGroups(shots).length,0);
  });
 }
-test('Ganasce: catene persistenti, nessun nuovo colpo nel secondo turno, consumo della combo',()=>{
+test('Ganasce: presa singola persistente, nuova trazione nel secondo turno e consumo della combo',()=>{
  let b=createMaglioReviewBattle({cardId:GRAPPLE_ID,supports:true,nowMs:0});
  let r=resolvePreparedFleetTurn(b,'A',order,1000);assert.ok(r.ok);
  const ids=r.events.find(e=>e.pattern==='magnetic-grapple').impacts.map(h=>h.targetId);
  assert.deepEqual(activeGrappleLinks(r.battle).filter(l=>l.who==='A').map(l=>l.targetId),ids);
  r=resolvePreparedFleetTurn(r.battle,'B',autoFleetTurn(r.battle,'B'),2000);assert.ok(r.ok,r.reason);
- assert.equal(activeGrappleLinks(r.battle).filter(l=>l.who==='A').length,2);
+ assert.equal(activeGrappleLinks(r.battle).filter(l=>l.who==='A').length,1);
  r=resolvePreparedFleetTurn(r.battle,'A',order,3000);assert.ok(r.ok,r.reason);
- assert.equal(r.events.filter(e=>e.cardId===GRAPPLE_ID&&e.kind==='weapon-provisional-shot').length,0);
+ assert.equal(r.events.filter(e=>e.cardId===GRAPPLE_ID&&e.kind==='weapon-provisional-shot').length,1);
  assert.equal(collisionGroups(fleetWeaponShots(r.events)).length,1);
  assert.equal(activeGrappleLinks(r.battle).filter(l=>l.who==='A').length,0);
 });
-test('Ganasce: non lascia catene su scafi morti e non rende valida la combo',()=>{
- const b=createMaglioReviewBattle({cardId:GRAPPLE_ID,supports:true,wounded:true,focus:1,nowMs:0});
+test('Ganasce: non lascia catene sullo scafo realmente distrutto',()=>{
+ const b=createMaglioReviewBattle({cardId:GRAPPLE_ID,supports:true,wounded:true,focus:0,nowMs:0});
  const first=resolvePreparedFleetTurn(b,'A',order,1000);
- assert.equal(activeGrappleLinks(first.battle).filter(l=>l.who==='A').length,1);
- const enemy=resolvePreparedFleetTurn(first.battle,'B',{cards:[],pass:true},2000);
- const attempt=resolvePreparedFleetTurn(enemy.battle,'A',order,3000);
- assert.match(attempt.invalidPrepared,/ancora vive/);assert.equal(fleetWeaponShots(attempt.events).filter(s=>s.fires).length,0);
+ assert.equal(activeGrappleLinks(first.battle).filter(l=>l.who==='A').length,0);
+ assert.equal(collisionGroups(fleetWeaponShots(first.events)).length,0);
 });
-test('Collassatore: combo scaduta rifiutata senza catene residue',()=>{
- const b=createMaglioReviewBattle({cardId:COLLISION_ID,supports:true,expiredCombo:true,nowMs:0});
+test('Ganascia B: dopo la scadenza di A funziona ancora da sola, senza una falsa combo',()=>{
+ const b=createMaglioReviewBattle({cardId:COLLISION_ID,supports:true,expiredCombo:true,jawCombo:true,nowMs:0});
  assert.equal(activeGrappleLinks(b).length,0);
- const r=resolvePreparedFleetTurn(b,'A',order,2000);assert.match(r.invalidPrepared,/turno precedente/);assert.equal(collisionGroups(fleetWeaponShots(r.events)).length,0);
+ const r=resolvePreparedFleetTurn(b,'A',{...order,targetKind:'escort',targetId:b.sides.B.escorts[0].id},2000);assert.ok(r.ok);assert.ok(!r.invalidPrepared);assert.equal(collisionGroups(fleetWeaponShots(r.events)).length,0);
 });
 test('Collassatore: supporto e madre, due scafi reali, una sola collisione e ripristino esatto',()=>{
- const b=createMaglioReviewBattle({cardId:COLLISION_ID,supports:true,supportCount:1,nowMs:0});
+ const b=createMaglioReviewBattle({cardId:COLLISION_ID,supports:true,supportCount:1,jawCombo:true,nowMs:0});
  const r=resolvePreparedFleetTurn(b,'A',order,2000);assert.ok(r.ok,r.reason);
  const [g]=collisionGroups(fleetWeaponShots(r.events));assert.ok(g);assert.deepEqual(new Set(g.map(s=>s.targetKind)),new Set(['escort','part']));
- const p=chainWeaponEffectProfile(COLLISION_ID),plan=collisionMotionPlan({x:90,y:240,radius:27},{x:225,y:220,radius:55});
+ const p=chainWeaponEffectProfile(COLLISION_ID,{jawCombo:true}),plan=collisionMotionPlan({x:90,y:240,radius:27},{x:225,y:220,radius:55});
  assert.ok(plan.offsets[0].x>0&&plan.offsets[1].x<0);
  assert.equal(plan.offsets[0].x+plan.offsets[1].x,0);
  const clear=collisionMotionPlan({x:90,y:240,radius:27},{x:225,y:220,radius:55},{forward:78});
@@ -91,7 +89,7 @@ test('Collassatore: supporto e madre, due scafi reali, una sola collisione e rip
  assert.equal(collisionFrame(p.flightMs+p.impactMs,p).phase,'restored');
 });
 test('Collassatore: prima libera il corridoio, poi accelera fino al contatto senza frenare',()=>{
- const p=chainWeaponEffectProfile(COLLISION_ID);
+ const p=chainWeaponEffectProfile(COLLISION_ID,{jawCombo:true});
  assert.ok(p.flightMs<=1000,'Lo strappo non resta una lenta traslazione');
  const staging=collisionFrame(p.flightMs*.62,p);
  assert.equal(staging.advance,1);assert.ok(staging.pull<.1,'Gli scafi escono davanti alla madre prima di chiudere');
@@ -102,7 +100,7 @@ test('Collassatore: prima libera il corridoio, poi accelera fino al contatto sen
  assert.equal(collisionFrame(p.flightMs+80,p).phase,'release','Non congela gli scafi per 230 ms dopo il contatto');
 });
 test('Collassatore: torsione speculare, reattori in spinta, reazione e ritorno neutro',()=>{
- const p=chainWeaponEffectProfile(COLLISION_ID);
+ const p=chainWeaponEffectProfile(COLLISION_ID,{jawCombo:true});
  const a=collisionHullFrame(p.flightMs-25,p,{direction:1}),b=collisionHullFrame(p.flightMs-25,p,{direction:-1});
  assert.ok(Math.abs(a.roll)>10&&a.thrust>.8);assert.equal(a.roll,-b.roll);
  const hit=collisionHullFrame(p.flightMs+70,p);
@@ -126,12 +124,12 @@ for(const count of [0,1,2])test('Induzione: '+count+' Energie fisiche, Difesa e 
  if(count===0)assert.equal(e.actualDamage,0);else assert.ok(e.actualDamage>0);
  assert.equal(e.impacts[0].targetKind,'escort','Non oltrepassa il supporto per colpire la madre');
 });
-test('Induzione bloccata: smontaggio reale della Difesa anche senza colpo di danno',()=>{
+test('Induzione bloccata: conserva la Difesa e non produce danni o rimozioni',()=>{
  const b=createMaglioReviewBattle({cardId:INDUCTION_ID,supports:true,energyCards:2,withDefense:true,blocked:true,nowMs:0});
  const r=resolvePreparedFleetTurn(b,'A',order,1000);assert.ok(r.ok,r.reason);
  assert.equal(fleetWeaponShots(r.events).filter(s=>s.fires).length,0);
- assert.equal(r.events.filter(e=>e.kind==='weapon-break-defense').length,1);
- assert.ok(weaponResolutionMs(r.events)>=weaponShotStartMs(1)+1100);
+ assert.equal(r.events.filter(e=>e.kind==='weapon-break-defense').length,0);
+ assert.deepEqual(r.battle.sides.B.defenses,b.sides.B.defenses);
 });
 test('Modello ganasce: articolazione, dettagli cumulativi e viste fisiche A/B',()=>{
  const camera=createProjectileCamera();let previous=0;

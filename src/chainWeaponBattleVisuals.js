@@ -12,23 +12,26 @@ export const CHAIN_WEAPON_VARIANTS=Object.freeze([
  {id:INDUCTION_ID+'-rarity-l',rarity:'Leggendaria',tier:3,kind:'induction'}
 ].map(Object.freeze));
 export const chainWeaponVariant=id=>CHAIN_WEAPON_VARIANTS.find(v=>v.id===id)||null;
-export function chainWeaponEffectProfile(id){
+export function chainWeaponEffectProfile(id,shot){
  const v=chainWeaponVariant(id);if(!v)return null;
- const {tier:t,kind}=v,collision=kind==='alloy-collision';
- const sequence=kind==='magnetic-grapple'?
+ const t=v.tier,jawRole=v.kind==='magnetic-grapple'?'a':v.kind==='alloy-collision'?'b':null;
+ const collision=!!shot?.jawCombo,kind=jawRole?(collision?'alloy-collision':'magnetic-grapple'):v.kind;
+ const held=!!shot?.jawWasLatched,phase=shot?.jawPhase;
+ const sequence=kind==='magnetic-grapple'&&jawRole==='b'?t===3?'prismatic-three-finger-lock':'silver-three-finger-lock':kind==='magnetic-grapple'?
   ['','bronze-jaw-latch','silver-arch-lock','prismatic-cage-lock'][t]:
   collision?t===2?'opposed-pole-convergence':'prismatic-yoke-convergence':
    t===3?'prismatic-brace-induction':'three-plate-induction';
  const family=kind==='magnetic-grapple'?'grapple':collision?'collision':'induction';
  const rarity=['common','rare','epic','legendary'][t];
  return {kind,approved:true,tier:t,sequence,
-  chargeMs:collision?450:kind==='induction'?720:380+t*70,
-  flightMs:collision?1000:kind==='induction'?1350:1450,
+  jawRole,inductionBoostRatio:(shot?.inductionBonusPercent||0)/40,
+  chargeMs:collision?450:kind==='induction'?720:held?180:380+t*70,
+  flightMs:collision?1000:kind==='induction'?1350:held?700:1450,
   impactMs:collision?1350:kind==='induction'?1050:1050+t*90,
   core:t===3?'#ecf8ff':'#fff1ce',glow:t===3?'#b9b8ff':'#ffc178',
   secondary:t===3?'#9deaff':t===2?'#d4e5f0':'#c99156',
-  sound:{charge:family+'_charge_'+rarity,fire:family+'_fire_'+rarity,
-   impact:family+'_impact_'+rarity,release:family+'_release_'+rarity,
+  sound:{charge:family+'_charge_'+rarity,fire:family+'_'+(held?'pull':'fire')+'_'+rarity,
+   impact:family+'_'+(phase==='tear'&&!shot?.jawReleaseAfterCombo?'tear':'impact')+'_'+rarity,release:family+'_release_'+rarity,
    defense:'induction_defense_'+rarity,block:'induction_block_'+rarity}
  };
 }
@@ -38,13 +41,13 @@ export function chainWeaponEffectProfile(id){
 export function collisionGroups(shots=[]){
  const groups=new Map();
  for(const s of shots){
-  if(chainWeaponVariant(s.cardId)?.kind!=='alloy-collision')continue;
+  if(!s.jawCombo)continue;
   const key=s.visualGroupId||`${s.who}:${s.machineId}:${s.cardId}`;
   if(!groups.has(key))groups.set(key,[]);
   groups.get(key).push(s);
  }
- return [...groups.values()].filter(g=>g.length===2&&g.some(s=>s.fires)&&
-  new Set(g.map(s=>s.targetKind+':'+s.targetId)).size===2);
+ return [...groups.values()].filter(g=>g.some(s=>s.fires)&&
+  (g[0].contactMode==='floor'?g.length===1:g.length===2&&new Set(g.map(s=>s.targetKind+':'+s.targetId)).size===2));
 }
 export function collisionMotionPlan(a,b,{forward=0}={}){
  const dx=b.x-a.x,dy=b.y-a.y,distance=Math.hypot(dx,dy);
@@ -99,6 +102,17 @@ export function activeGrappleLinks(battle){
  const links=[];if(!battle?.sides)return links;
  for(const who of ['A','B']){
   const side=battle.sides[who],enemy=battle.sides[who==='A'?'B':'A'];
+  if(side.provisionalWeaponStatus?.jawRevision){
+   for(const machine of side.machines||[]){
+    const latch=machine.jawLatch;if(!latch||latch.untilPly<=battle.ply||machine.hp<=0||machine.silencedUntil>battle.ply||machine.disabledUntil>battle.ply)continue;
+    const escort=enemy.escorts?.find(e=>e.id===latch.targetId),part=enemy.ships?.[0]?.parts?.find(p=>p.id===latch.targetId);
+    if(escort?escort.hp<=0||escort.destroyed:!part||enemy.ships[0].hp<=0)continue;
+    links.push({who,cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
+     launchPly:latch.launchPly,grapplePly:latch.launchPly,ply:latch.launchPly,jawRole:machine.weaponProfile.pattern==='magnetic-grapple'?'a':'b',
+     stage:1+(battle.ply-machine.deployedPly)/2,impactIndex:0,targetKind:latch.targetKind,targetId:latch.targetId});
+   }
+   continue;
+  }
   const g=side.provisionalWeaponStatus?.grapple;
   if(!g||battle.ply>g.ply+2)continue;
   const machine=side.machines?.find(m=>m.deployedPly===g.ply&&

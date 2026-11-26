@@ -106,8 +106,8 @@ test('Persistent chains keep the actual launch port after an unsuccessful first 
   const r=resolvePreparedFleetTurn(b,'A',order,2000),shots=fleetWeaponProjectiles(r.events).filter(s=>s.cardId===id&&s.fires);
   const links=activeGrappleLinks(r.battle).filter(l=>l.who==='A');
   for(const link of links){const s=shots.find(s=>s.targetId===link.targetId);assert.ok(s);assert.deepEqual(weaponLaunchOrigin(link),weaponLaunchOrigin(s));}
-  assert.equal(shots.length,withDefense?1:2);
-  if(!withDefense)assert.notEqual(weaponLaunchOrigin(shots[0]).x,weaponLaunchOrigin(shots[1]).x);
+  assert.equal(shots.length,withDefense?0:1);
+  assert.equal(links.length,shots.length);
  }
 });
 test('Salvo haptics give short ticks and one stronger final contact, respecting preferences',()=>{

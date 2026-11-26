@@ -449,19 +449,20 @@
       "elementId": "metallic",
       "kind": "induction",
       "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione.png",
-      "sha256": "e0c6ec711e72f6d31f174adbf5595b7d9b89291315ee888981666183ffc49d10",
-      "bytes": 13534842,
+      "sha256": "34d44479729d88b1d1c87eaea4bde9301bc2e0af3f06236ae576bf91831cf718",
+      "bytes": 13557135,
       "dimensions": [
         3072,
         4608
       ],
-      "sourceApprovalSha256": "d26a60f2f0e695d4c8687fd75751d54ec692d3a4614272821893dc08f9236f24",
-      "previousActiveSha256": "16ff52fe0fe2c0de4794971340d34116d104970b312718d1a6feae8f47c3ef5f",
+      "sourceApprovalSha256": "e0c6ec711e72f6d31f174adbf5595b7d9b89291315ee888981666183ffc49d10",
+      "previousActiveSha256": "e0c6ec711e72f6d31f174adbf5595b7d9b89291315ee888981666183ffc49d10",
       "outsidePanelUnchanged": true,
       "alphaUnchanged": true,
       "protectedTextAndSymbolsUnchanged": true,
+      "mechanicsConfirmed": "3 own turns A/B; induction 20/40 cap",
       "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione.png",
-      "blobSha": "3a14141ff5742658b7e69c958d311ef8c449e206",
+      "blobSha": "c627cbec5f2fd71ae97616512815888d6345de69",
       "parts": [
         {
           "name": "weapon-designed-metallic-frantumatore-induzione.part-001",
@@ -474,15 +475,15 @@
           "name": "weapon-designed-metallic-frantumatore-induzione.part-002",
           "offset": 6000000,
           "bytes": 6000000,
-          "sha256": "f55253384248fbcfb9834ff38508b61a7e6e089e95d346b7c87e01229a305f59",
-          "blobSha": "c8aa83d52e2c6802f225dce48dec04533157d45e"
+          "sha256": "19e95b767b5a13f16622971603bd506abd34f611115a92c59c55cc2e7b6d356e",
+          "blobSha": "7bd7d26a6e25c60172838a5677e71d7c7e45620a"
         },
         {
           "name": "weapon-designed-metallic-frantumatore-induzione.part-003",
           "offset": 12000000,
-          "bytes": 1534842,
-          "sha256": "86c66d1ed788330670ed2e5edccadaf82b6d5f157d3603482d7a62e9267dfff2",
-          "blobSha": "3c7ffbaa967222ee30ce8bf4290f89ceba91928b"
+          "bytes": 1557135,
+          "sha256": "4f7ea27a6853034e3475261289c03a4ee90a0f63b9507147ee1181ae5e0d880f",
+          "blobSha": "4f0a0f89817a2e62c08157d62b089003dfdb2795"
         }
       ]
     },
@@ -493,19 +494,20 @@
       "elementId": "metallic",
       "kind": "induction",
       "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione-rarity-l.png",
-      "sha256": "801e92251c24e693b823ec037c87dfd84ebb3a92f24f96da76a488f5f86ec19f",
-      "bytes": 15271807,
+      "sha256": "c1c07b1703c6aa401dfd8152358cbb84ea4545c898719adb0a667186949f5444",
+      "bytes": 15290074,
       "dimensions": [
         3072,
         4608
       ],
-      "sourceApprovalSha256": "70bebdb98b8354dce8a4160e9dd9c0978aa3f398f706fbedfd8efc7b24c6adf3",
-      "previousActiveSha256": "ff6c964e581110d58e80f4c0494d45fb4a56a822c5ca8043d0cbf2a1123fe81f",
+      "sourceApprovalSha256": "801e92251c24e693b823ec037c87dfd84ebb3a92f24f96da76a488f5f86ec19f",
+      "previousActiveSha256": "801e92251c24e693b823ec037c87dfd84ebb3a92f24f96da76a488f5f86ec19f",
       "outsidePanelUnchanged": true,
       "alphaUnchanged": true,
       "protectedTextAndSymbolsUnchanged": true,
+      "mechanicsConfirmed": "3 own turns A/B; induction 20/40 cap",
       "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione-rarity-l.png",
-      "blobSha": "5bbb6a554cd7c5c407e2982938ff4e663f930c69",
+      "blobSha": "a4cfcf1b10d33c4c1433b1201bf8497d9eb7d575",
       "parts": [
         {
           "name": "weapon-designed-metallic-frantumatore-induzione-rarity-l.part-001",
@@ -524,9 +526,9 @@
         {
           "name": "weapon-designed-metallic-frantumatore-induzione-rarity-l.part-003",
           "offset": 12000000,
-          "bytes": 3271807,
-          "sha256": "237744c1fbfe1a7602c0d09787175e3f2bef687ae645dcd803e2af06c71eadd1",
-          "blobSha": "f5f486cae0819fe1df9d8852c1ed608edeee5635"
+          "bytes": 3290074,
+          "sha256": "a8d94c58c1ffb8a39bf341116330b0e77f3669c2f0e15a9291f94e68565dc69b",
+          "blobSha": "44d371b98f0623236cc227f93a02b3e7ba0e42b6"
         }
       ]
     },
@@ -1409,6 +1411,243 @@
           "blobSha": "584618af85f102e2db2e37d9ea4663e3b3ae7ba9"
         }
       ]
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche",
+      "familyId": "weapon-designed-metallic-ganasce-magnetiche",
+      "rarity": "Rara",
+      "elementId": "metallic",
+      "kind": "magnetic-grapple",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche.png",
+      "sha256": "8caef243d481eaddb725b0480da64baf8220517ebbe080fa778c8ef48b1dcd16",
+      "bytes": 12968890,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "63bf615665a0ed18aecb90377d4e1746145114ad1057f992195ae040f2815c91",
+      "previousActiveSha256": "31b35cbc188291c60b016344f15f7a7893691c33022fe5addc0876310d6d1351",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "mechanicsConfirmed": "3 own turns A/B; induction 20/40 cap",
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche.png",
+      "blobSha": "8324aca7b808fc6989de65f69533bd89fd86744d",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "a44ee6cc50f500e6f26c58978e97ef19288c96ac83f9fb060ade3f70e7178e0c",
+          "blobSha": "bcaf4ddeead8aecf3e4922b89f4e1bdd42405acb"
+        },
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "786fb5a3c27b3eaa1cb696352cde26d2318c2bcc7f02aee2dc03e36fc12e8f62",
+          "blobSha": "5cb00dcdf548fd86eec9b524320866ba8cc218c7"
+        },
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche.part-003",
+          "offset": 12000000,
+          "bytes": 968890,
+          "sha256": "9e5cb509ebe369b663d133ab0b29e1b0f693c451a6c591ca5b5a0b66fc2478eb",
+          "blobSha": "ce168a2a45888c98f682c95b335a9e812feeafdd"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
+      "familyId": "weapon-designed-metallic-ganasce-magnetiche",
+      "rarity": "Epica",
+      "elementId": "metallic",
+      "kind": "magnetic-grapple",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche-rarity-e.png",
+      "sha256": "5bad23f99c29dd6f6bf74dae9e27c1e027d50f452fb8d9d4589f06c32ef614ce",
+      "bytes": 13095385,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "0281e4fc0963274e629b7dc04c084e9121747aafc8b8405d2c748d4531687f10",
+      "previousActiveSha256": "ff276d21376dd6f9581d87ec8746a2577ef98aab7c5389cf0c7110111b6c9d38",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "mechanicsConfirmed": "3 own turns A/B; induction 20/40 cap",
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche-rarity-e.png",
+      "blobSha": "9099fda0aded1759c1480b8662a8a6772619b66f",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "14fc094090208fa7e86c5dfd3d4ab381bfa1444b5d173fcd5efb15ad892fcf13",
+          "blobSha": "0a947c3f0a7d562de6aadde2ce3e8a40cc3058e0"
+        },
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "b336b8eb75b9053e971b1002ac183e37263e0eee9e8efa0b03afb080d677be33",
+          "blobSha": "711e0e66e66bfe192f5c4130528dbbebecf839b9"
+        },
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 1095385,
+          "sha256": "2d097677eaba72d2df62d59b38335a2d925ebd8c6b3a9a49746d9945dd9503f1",
+          "blobSha": "50a0a055b3928cb2689c2018984abf79d83afc5a"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+      "familyId": "weapon-designed-metallic-ganasce-magnetiche",
+      "rarity": "Leggendaria",
+      "elementId": "metallic",
+      "kind": "magnetic-grapple",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche-rarity-l.png",
+      "sha256": "8725fbaa5eea6a57ec7bffe70dee68244b4e2e39054d22afa6a80489936cd0af",
+      "bytes": 13872715,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "28d39c1be0cea4ac16cd28b79a81c5686e4eb6aade2d90780b8b8387852c02ef",
+      "previousActiveSha256": "11c2bb857e62921ea197984060916d9feffb9c282b5badf37de3bba870a19c36",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "mechanicsConfirmed": "3 own turns A/B; induction 20/40 cap",
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche-rarity-l.png",
+      "blobSha": "ee946ce24211170aedbca9aac47a3c22a4887578",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "68532939389623f171ee8465b4b0f840d66b647bb172726aad4ad59c21e81410",
+          "blobSha": "a61ffbd2aa8bb17ea1a9e764ab8bc2750ec6222f"
+        },
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "6e9b9c640394833554f4fc6f01a30a71a8e451e3b0d1f65de6e552d3f2772706",
+          "blobSha": "b857f3d108be1ace649afa973b03b342e8db4595"
+        },
+        {
+          "name": "weapon-designed-metallic-ganasce-magnetiche-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 1872715,
+          "sha256": "64387e7ca31759fc4f1b4a01ce8093252cc43885e7da9a6901292cad2ba8c1e7",
+          "blobSha": "a256d5ecd4f04cdcd039bfcf5e5bafd4fd3dcc76"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega",
+      "familyId": "weapon-designed-metallic-collassatore-lega",
+      "rarity": "Epica",
+      "elementId": "metallic",
+      "kind": "alloy-collision",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-collassatore-lega.png",
+      "sha256": "e00a00b1081fe124f616c028476c04beda7cf3903c4c02a94a1dd09f23ad03e6",
+      "bytes": 12631680,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "2fb36f456d80ddb230eb7da8aa938d84aa332e7817cd9a0c7234aaad587e403b",
+      "previousActiveSha256": "d423110bc47b9d81db66e55572402337e3679e7cc56517695dca93748fc628c1",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "mechanicsConfirmed": "3 own turns A/B; induction 20/40 cap",
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-collassatore-lega.png",
+      "blobSha": "a89b4d5102c369a201bebd403bfdddb2b3c6342b",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-collassatore-lega.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "b30299edcea86c0343d5a23a5ecaa0e4d4f0472b5dd335a3f7e44cae47f0a3ea",
+          "blobSha": "8de738ab6ebb48d443185a5e75f4d1c9ba84bc88"
+        },
+        {
+          "name": "weapon-designed-metallic-collassatore-lega.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "23aca77467abf26050e3d740739dec0dc569bd05b925bc326ac1aa0beb189b51",
+          "blobSha": "c221347aebe17e128ea5145c429604942e1ad4e7"
+        },
+        {
+          "name": "weapon-designed-metallic-collassatore-lega.part-003",
+          "offset": 12000000,
+          "bytes": 631680,
+          "sha256": "72d27912608ca4185a1f060fa693fa0797b24cabdf4de439ffc368b891840b6e",
+          "blobSha": "7871ec2ca05aea861d508a0798ce9c1f7c474bd3"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+      "familyId": "weapon-designed-metallic-collassatore-lega",
+      "rarity": "Leggendaria",
+      "elementId": "metallic",
+      "kind": "alloy-collision",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-collassatore-lega-rarity-l.png",
+      "sha256": "fb4f077e8f77529f4ef8119bbb01f5267564756c9103abc51c543105be1ea02d",
+      "bytes": 13737850,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "5c24afde21d7a423835c595bfdea4d1d98cc335318f3b99b1f7b6caf6b4b23fa",
+      "previousActiveSha256": "f82aefb3921f631f6d158e533c7427cc1b35ae7134fa530e99e82b82f2348e89",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "mechanicsConfirmed": "3 own turns A/B; induction 20/40 cap",
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-collassatore-lega-rarity-l.png",
+      "blobSha": "e693049af6fcf505ed8d44ab411d665109e99ac8",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-collassatore-lega-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "459c04a9a931dcb82c3cdbc4ee730a0d13403e0ea07b5f28ab408b58cfa0f281",
+          "blobSha": "2e90df87c6f17e7f014553391d618709b392ad30"
+        },
+        {
+          "name": "weapon-designed-metallic-collassatore-lega-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "02ac5b39a3de1e662c907956c7d95e96a73558a0d9e4c477daabea21c606ed0d",
+          "blobSha": "4deeb72911eea78cfe5dee9e7003ad0720b67d41"
+        },
+        {
+          "name": "weapon-designed-metallic-collassatore-lega-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 1737850,
+          "sha256": "a51d94c901e76252b13115e6f1e81f34e9c4dd535d14d87a599fb7272bf75dfb",
+          "blobSha": "f77d08993a1839e3561df6de46b74b70ff10df1d"
+        }
+      ]
     }
-  ]
+  ],
+  "rulesConfirmed": {
+    "jawOwnTurns": 3,
+    "aFinalTearBonusPercent": 50,
+    "oneCollisionThenRelease": true,
+    "inductionNoDefenseBonusPercent": [
+      0,
+      20,
+      40
+    ],
+    "inductionBonusCapEnergyCards": 2,
+    "energyConsumed": false
+  }
 }

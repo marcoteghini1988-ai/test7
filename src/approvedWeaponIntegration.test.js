@@ -12,11 +12,10 @@ import {resolvePreparedFleetTurn} from './fleetNext/combat.js';
 
 const integration=JSON.parse(readFileSync(new URL('./fleetNext/approvedWeaponIntegration.json',import.meta.url),'utf8'));
 const order={cards:[0],targetKind:'part',targetId:'weapons',partId:'weapons'};
-test('The 32 active fronts are the verified native RGBA files, with no pending Ganasce revision',()=>{
- assert.equal(integration.cards.length,32);
+test('The 37 active fronts are verified native RGBA files, including the confirmed Ganasce revision',()=>{
+ assert.equal(integration.cards.length,37);
  assert.equal(integration.cards.filter(c=>c.elementId==='ionic').length,15);
  for(const c of integration.cards){
-  assert.doesNotMatch(c.id,/ganasce|collassatore/);
   assert.equal(cardDisplayFacePath(c.id),'/'+c.path.replace(/^public\//,''));
   const png=readFileSync(c.path);
   assert.equal(png.length,c.bytes,c.id);

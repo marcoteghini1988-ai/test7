@@ -204,7 +204,7 @@
    I simboli Elementi e il riquadro Ambienti barrato non vengono mai mostrati. */
 .es-math-scope .f3d-approved-layout .f3d-slot-category-symbol {
  position:absolute;top:12px;left:5px;width:48px;height:52px;display:block;
- background-image:url('../docs/riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png');
+ background-image:var(--official-category-symbols,url('/assets/fleet-ui/category-symbols.png'));
  background-repeat:no-repeat;background-size:695.6863% 347.451%;background-position:23.0415% 29.794%;
  mask-image:radial-gradient(ellipse at center,#000 54%,#000b 72%,transparent 98%);
 }

@@ -290,7 +290,7 @@ const DESIGNS=[
     "name": "Arpioni a Ganasce Magnetiche",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Prima arma della coppia Metallo: due arpioni agganciano due navicelle, infliggendo danni; prepara la collisione nel turno proprio successivo. Valori HP mancanti.",
+    "description": "Ganascia A: una presa autonoma per tre turni, +50% di danno allo strappo finale. Con la Ganascia B attiva prepara un solo schianto, poi rilascia il gancio.",
     "combo": "collassatore-lega"
   },
   {
@@ -299,7 +299,7 @@ const DESIGNS=[
     "name": "Cannone Collassatore di Lega",
     "rarita": "Da definire",
     "profile": null,
-    "description": "Seconda arma della coppia Metallo: dopo Arpioni a Ganasce Magnetiche attiva il campo e fa collidere le navicelle agganciate. Danno e soglie non fissati.",
+    "description": "Ganascia B: una presa autonoma per tre turni. Con A agganciata fa scontrare due navi, oppure schianta la sola nave sul piano dell'arena. Una sola combo e rilascio di entrambi i ganci.",
     "combo": "ganasce-magnetiche"
   },
   {
@@ -309,9 +309,11 @@ const DESIGNS=[
     "rarita": "Da definire",
     "profile": {
       "pattern": "induction",
-      "baseDamage": 22
+      "baseDamage": 22,
+      "noDefenseBonusOnePercent": 20,
+      "noDefenseBonusTwoPercent": 40
     },
-    "description": "Un colpo da 22 HP. Con una Energia Metallo supera una Difesa valida, con due la distrugge e colpisce. Valori da bilanciare."
+    "description": "Un colpo da 22 HP. Con una Energia Metallo supera una Difesa valida, con due ne distrugge una. Senza Difese attive: +20% con una Energia, +40% con due o più, senza consumo e senza cumulo col bypass."
   },
   {
     "id": "weapon-designed-metallic-perforatore-cascata",

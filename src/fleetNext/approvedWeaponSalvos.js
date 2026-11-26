@@ -7,7 +7,7 @@ const rows=[
  ['weapon-confirmed-metallic-slitta',[1,1,1,1],['single-cannonball','single-cannonball','single-cannonball','single-cannonball'],1030,0],
  ['weapon-designed-metallic-recuperatore-termobalistico',[0,0,3,3],[null,null,'thermal-lob','thermal-lob'],1250,175],
  ['weapon-designed-metallic-ganasce-magnetiche',[0,1,1,1],[null,'opposed-jaws','whip-anchors','orbital-anchors'],1450,0],
- ['weapon-designed-metallic-collassatore-lega',[0,0,0,0],[null,null,'pole-crash','prismatic-crash'],1000,0],
+ ['weapon-designed-metallic-collassatore-lega',[0,0,1,1],[null,null,'single-jaw-b','single-jaw-b'],1450,0],
  ['weapon-designed-metallic-frantumatore-induzione',[0,0,3,6],[null,null,'three-blade-sweep','six-blade-cyclone'],1000,125],
  ['weapon-designed-metallic-perforatore-cascata',[0,0,1,3],[null,null,'axial-drill','braided-drill'],1350,130],
  ['weapon-designed-metallic-artiglieria-schegge',[0,3,6,9],[null,'fan-three','rotating-six','shrapnel-storm'],1050,110],
@@ -54,6 +54,7 @@ function packets(plan,hit){
 // This is called by the combat event emitter, never invented by a renderer.
 export function withWeaponSalvoEvent(kind,data){
  if(!['weapon-base-shot','weapon-designed-shot','weapon-provisional-shot'].includes(kind))return data;
+ if(data.jawCombo)return data;
  let p=approvedWeaponSalvo(data.cardId);if(!p||p.count===0)return data;
  if(p.familyId.endsWith('recuperatore-termobalistico')){
   const base=data.baseNominalDamage??(p.tier===3?23:18),boosted=(data.impacts||[]).some(h=>h.nominalDamage>base);
@@ -73,7 +74,7 @@ export function salvoCardDescription(card,spec=card.effectSpec){
  if(p.style==='six-plus-lance')return `6 colpi rapidi + 1 lancia finale · ${damage} HP totali su un bersaglio. Difese e copertura verificano l'azione completa.`;
  if(p.style.includes('thermal')||p.style.includes('plasma'))return `3 granate base / 6 potenziate · ${damage} HP totali`+
   ` +${w.damageConversionPercent}% degli HP realmente persi dalla flotta dopo la posa (max +${w.maxExtraDamage} HP), per ${w.durationTurns} turni propri.`;
- if(p.style.includes('blade'))return base+'. Con 1 Energia Metallo supera una Difesa; con 2 ne smonta una. Non consuma le Energie del bonus.';
+ if(p.style.includes('blade'))return base+'. Con 1 Energia Metallo supera una Difesa; con 2 ne smonta una. Senza Difese: +20% / +40% con 1 / almeno 2 Energie. Non consuma Energie e non cumula bonus e bypass.';
  if(p.style.includes('drill'))return base+` per ${w.durationTurns} turni. Il residuo passa al prossimo bersaglio pagando ${w.energyTransferCost} Energia Metallo per trasferimento.`;
  if(p.familyId.endsWith('artiglieria-schegge'))return base+` per ${w.durationTurns} turni propri; cambia bersaglio quando possibile.`;
  return base+' su un bersaglio. Difese e copertura verificano la salva completa.';

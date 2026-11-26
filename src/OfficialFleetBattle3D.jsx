@@ -1169,6 +1169,7 @@ export default function OfficialFleetBattle3D({
  return <div className="es-math-scope live-viewport" ref={viewportRef} aria-busy={resolving}>
   <div className="es-root official-duel-3d live-root f3d-original-arena f3d-approved-layout"
    style={{transform:'translate(-50%,-50%) scale('+scale+')',
+    '--official-category-symbols':'url("'+ASSET_ROOT+'/fleet-ui/category-symbols.png")',
     '--live-special-back':'url("'+OFFICIAL_SPECIAL_FIXED_BACK+'")'}}>
    <div className="space-back metal-arena live-background" aria-hidden="true"
     style={{backgroundImage:'url('+ASSET_ROOT+'/mathduel/arena_titanio_9x16.webp)'}}/>

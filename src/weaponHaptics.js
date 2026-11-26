@@ -10,7 +10,7 @@ export function weaponHapticPattern(kind,phase,tier=2){
  if(kind==='thermal-reclaimer')return phase==='charge'?tier===3?[7,35,9,35,13]:[8,45,10,45,12]:
   phase==='fire'?[22]:phase==='impact'?tier===3?[38,25,18,35,10]:[34,30,16]:[];
  if(kind==='magnetic-grapple')return phase==='charge'?[10,45,10]:
-  phase==='fire'?[14]:phase==='impact'?tier===3?[24,28,16,28,10]:tier===2?[22,30,14]:[22]:[];
+  phase==='fire'?[14]:phase==='release'?[8]:phase==='impact'?tier===3?[24,28,16,28,10]:tier===2?[22,30,14]:[22]:[];
  if(kind==='alloy-collision')return phase==='charge'?[12,65,12]:
   phase==='fire'?[16,70,20,70,24]:phase==='impact'?tier===3?[120,35,45,40,20]:[95,35,32]:phase==='release'?[12]:[];
  if(kind==='induction')return phase==='charge'?tier===3?[8,35,8,35,8,35,12]:[8,45,8,45,8]:
@@ -32,13 +32,15 @@ export function setHapticsEnabled(enabled){
  if(!enabled)cancelWeaponHaptics();return !!enabled;
 }
 export function requestWeaponHaptic(kind,phase,tier,{nav=globalThis.navigator,
- doc=globalThis.document,storage=globalThis.localStorage,salvoCount=1,finisher=false,salvoLast=false,destroyed=false}={}){
+ doc=globalThis.document,storage=globalThis.localStorage,salvoCount=1,finisher=false,salvoLast=false,destroyed=false,jawPhase,inductionBonusPercent=0}={}){
  let pattern=weaponHapticPattern(kind,phase,tier);
  if(salvoCount>1){
   if(['fire','transfer'].includes(phase))pattern=[6+tier];
   if(phase==='impact')pattern=finisher?[40,25,14]:salvoLast?[28,22,10]:[9+tier*2];
  }
- if(destroyed&&phase==='impact'&&(salvoCount<=1||salvoLast))pattern=[45,20,16];
+ if(destroyed&&kind!=='alloy-collision'&&phase==='impact'&&(salvoCount<=1||salvoLast))pattern=[45,20,16];
+ if(jawPhase==='tear'&&phase==='impact')pattern=[38,22,15];
+ if(inductionBonusPercent&&phase==='impact'&&pattern.length)pattern=[Math.min(60,pattern[0]+Math.round(inductionBonusPercent/5)),...pattern.slice(1)];
  const result=status=>({status,pattern,physicalVerified:false});
  if(!pattern.length)return result('none');
  if(!hapticsEnabled(storage))return result('muted');

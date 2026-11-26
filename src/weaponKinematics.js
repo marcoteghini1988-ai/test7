@@ -5,7 +5,7 @@ import {weaponTravelProgress,clamp01} from './weaponCinematicStyle.js';
 
 function seedOf(shot){
  let n=2166136261;
- for(const c of `${shot.cardId}:${shot.ply||0}:${shot.machineSlot||0}:${shot.stage||1}`)
+ for(const c of `${shot.cardId}:${shot.launchPly??shot.grapplePly??shot.ply??0}:${shot.machineSlot||0}:${shot.jawRole?1:shot.stage||1}`)
   n=Math.imul(n^c.charCodeAt(0),16777619)>>>0;
  return n;
 }

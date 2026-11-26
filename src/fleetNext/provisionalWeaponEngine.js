@@ -11,6 +11,7 @@ const activeMachine=(m,ply,h)=>m.damageMode==='designed-shot'&&
  !h.weaponSlotLocked(m.ownerSide||h.side,m.slot,ply)&&
  weaponFiresOnOwnTurn(m.deployedPly,ply,m.weaponProfile.durationTurns||1);
 const physical=unit=>!!unit&&unit.hp>0&&!unit.destroyed;
+const jawRole=m=>m.weaponProfile?.pattern==='magnetic-grapple'?'a':m.weaponProfile?.pattern==='alloy-collision'?'b':null;
 const money=(percent,maxHp)=>Math.max(1,Math.round(maxHp*percent/100));
 function spendOwnHp(side,percent,{allAllies=false}={}){
  const ships=allAllies?[side.ships[0],...(side.escorts||[]).filter(physical)]:[side.ships[0]];
@@ -116,9 +117,9 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    targetKind:kind,targetId:unit?.id||null,destroyed:kind==='part'?enemy.ships[0].hp<=0:!!unit?.destroyed});
   return {damage,target:actual.target||target,beforeHp,excessDamage:actual.excessDamage||0};
  };
- const event=(m,kind,label,data={})=>events.push(h.emit(b,ctx.who,kind,label,{
+ const event=(m,kind,label,data={})=>{const e=h.emit(b,ctx.who,kind,label,{
   cardId:m.sourceCardId,machineId:m.id,machineSlot:m.slot,
-  elementId:m.weaponElementId,...data}));
+  elementId:m.weaponElementId,...data});events.push(e);return e;};
  for(const m of ready){
   if(side.ships[0].hp<=0||enemy.ships[0].hp<=0)break;
   const p=m.weaponProfile,pattern=p.pattern,stage=ownStage(m,b.ply),hits=[];
@@ -191,19 +192,16 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    planned=[{base:p.baseDamage+Math.min(p.maxExtraDamage,
     Math.round(lostHp*p.damageConversionPercent/100))}];
   }else if(pattern==='metal-base-shot')planned=[{base:p.baseDamage}];
-  else if(pattern==='magnetic-grapple'){
-   if(stage!==1)continue; // Mantieni i bersagli delle Ganasce per il Collassatore.
-   const first=ordinary(),second=opposite(first?.unit?.id);
-   planned=[...(first?[{target:first,base:p.baseDamage}]:[]),
-    ...(second?[{target:second,base:p.baseDamage,ignoreCover:second.kind==='part'}]:[])];
-   comboSide.grapple={ply:b.ply,ids:[],ports:{}};
-  }else if(pattern==='alloy-collision'){
-   const grapple=comboSide.grapple;
-   if(!grapple||grapple.ply!==b.ply-2)continue;
-   const live=(grapple.ids||[]).map(byId).filter(Boolean);
-   if(live.length===2)planned=live.map(target=>({target,
-    base:p.baseDamage,ignoreCover:target.kind==='part'}));
-   comboSide.grapple=null;
+  else if(jawRole(m)){
+   comboSide.jawRevision=true;
+   const locked=m.jawLatch&&byId(m.jawLatch.targetId);
+   const sibling=ready.find(other=>jawRole(other)&&jawRole(other)!==jawRole(m)&&other.jawLatch&&byId(other.jawLatch.targetId));
+   let target=locked||ordinary();
+   if(!locked&&sibling&&every().length>1&&target?.unit.id===sibling.jawLatch.targetId)target=opposite(sibling.jawLatch.targetId);
+   m.jawWasLatched=!!locked;
+   m.jawPhase=stage===3?(jawRole(m)==='a'?'tear':'release'):locked?'pull':'latch';
+   planned=target?[{target,base:Math.round(p.baseDamage*(stage===3?1+(p.finalTearBonusPercent||0)/100:1)),
+    ignoreCover:target.kind==='part'&&!!sibling}]:[];
   }else if(pattern==='cascade-piercer')planned=[{base:p.baseDamage}];
   else if(pattern==='growing-thunder-core'){
    if(stage>1&&!m.chargeBroken){
@@ -240,9 +238,8 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    const r=hitOnce(m,instruction,n,hits);
    if(!r||!r.damage)continue;
    if(pattern==='wandering-shrapnel')m.previousTargetId=r.target.unit?.id;
-   if(pattern==='magnetic-grapple'&&comboSide.grapple){
-    comboSide.grapple.ids.push(r.target.unit.id);comboSide.grapple.ports[r.target.unit.id]=n;
-   }
+   if(jawRole(m))m.jawLatch={targetKind:r.target.kind,targetId:r.target.unit.id,launchPly:m.deployedPly,
+    untilPly:m.deployedPly+2*p.durationTurns};
    if(pattern==='ion-probe')comboSide.ionProbe={id:r.target.unit.id,ply:b.ply,expiresPly:b.ply+3};
    if(pattern==='incinerator'&&stage===1){
     const discarded=(side.discard||[]).filter(id=>h.card(id)?.kind==='attack').length;
@@ -279,8 +276,39 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   shot.played.push(m.sourceCardId);
   const sum=hits.reduce((n,x)=>n+x.actualDamage,0);
   event(m,'weapon-provisional-shot',m.name+' · '+sum+' HP',{
-   pattern,stage,baseNominalDamage:p.baseDamage,hitCount:hits.length,impacts:hits,actualDamage:sum,provisional:true
+   pattern,stage,baseNominalDamage:p.baseDamage,hitCount:hits.length,impacts:hits,actualDamage:sum,provisional:true,
+   ...(jawRole(m)?{jawRole:jawRole(m),jawPhase:m.jawPhase,jawWasLatched:m.jawWasLatched,launchPly:m.deployedPly}:{}),
   });
+ }
+ // Entrambe funzionano da sole per tre turni. Il secondo aggancio valido
+ // attiva un solo urto della coppia, anche se posate nello stesso turno.
+ const jaws=ready.filter(m=>jawRole(m)&&m.jawLatch&&!m.jawComboUsed&&byId(m.jawLatch.targetId));
+ const a=jaws.find(m=>jawRole(m)==='a'),z=jaws.find(m=>jawRole(m)==='b');
+ if(a&&z&&!side.fireBlocked&&!(side.fireDisabledUntil>b.ply)&&enemy.ships[0].hp>0){
+  const targets=[...new Set([a.jawLatch.targetId,z.jawLatch.targetId])].map(byId).filter(Boolean);
+  const floor=targets.length===1&&every().length===1;
+  if(targets.length===2||floor){
+   const impacts=[];
+   for(const [i,target]of targets.entries())hitOnce(z,{target,base:z.weaponProfile.comboBonusDamage||z.weaponProfile.baseDamage,
+    ignoreCover:target.kind==='part'},i,impacts);
+   event(z,'weapon-provisional-shot',z.name+' · schianto delle Ganasce',{
+    pattern:'alloy-collision',jawCombo:true,contactMode:floor?'floor':'pair',jawMachineIds:[a.id,z.id],
+    jawOrigins:[{cardId:a.sourceCardId,launchPly:a.deployedPly,machineSlot:a.slot},{cardId:z.sourceCardId,launchPly:z.deployedPly,machineSlot:z.slot}],
+    stage:ownStage(z,b.ply),impacts,hitCount:impacts.length,actualDamage:impacts.reduce((n,v)=>n+v.actualDamage,0),provisional:true});
+   for(const m of [a,z]){
+    m.jawComboUsed=true;m.jawLatch=null;
+    // L'eventuale ultimo strappo confluisce nel rilascio dello schianto.
+    const activation=events.findLast(e=>e.kind==='weapon-provisional-shot'&&!e.jawCombo&&e.machineId===m.id);
+    if(activation){activation.jawReleaseAfterCombo=true;if(activation.jawPhase==='tear'||activation.jawPhase==='release')activation.jawPhase='pull';}
+    event(m,'weapon-jaw-release',m.name+' · rilascio dopo lo schianto',{reason:'combo'});
+   }
+  }
+ }
+ for(const m of ready.filter(jawRole)){
+  if(ownStage(m,b.ply)>=m.weaponProfile.durationTurns){
+   if(m.jawLatch)event(m,'weapon-jaw-release',m.name+' · fine aggancio',{reason:'expired'});
+   m.jawLatch=null;
+  }
  }
  return shot;
 }

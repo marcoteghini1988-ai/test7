@@ -35,6 +35,7 @@ export function weaponHullImpactProfile(profile,shot){
 export function weaponImpactHullFrame(profile,shot,age,{reduced=false}={}){
  const pose=weaponHullFrame(profile.kind,age,profile.impactMs,{tier:profile.tier,
   direction:shot.who==='A'?-1:1,reduced,blocked:!!shot.defenseBlocked||!shot.fires});
+ if(shot.jawPhase==='tear'&&shot.fires&&!reduced){pose.y*=1.4;pose.roll*=1.35;}
  if((shot.salvoCount||1)>1&&!shot.salvoLast){
   for(const k of ['x','y','roll','pitch','lift','thrust'])pose[k]*=.5;
   pose.light*=.7;

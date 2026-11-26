@@ -110,12 +110,12 @@ test('Recuperatore conserva la perdita reale anche se la flotta viene poi ripara
  r=play(r.battle,'A');
  assert.equal(shot(r,c).impacts[0].nominalDamage,18+Math.min(54,Math.round(loss*.6)));
 });
-test('Collassatore respinge la collisione se una delle due navi agganciate è distrutta',()=>{
+test('Ganascia B resta autonoma quando il vecchio aggancio di A è distrutto',()=>{
  const first=id('metallic-ganasce-magnetiche'),second=id('metallic-collassatore-lega');
  let r=play(game(true),'A',[first]);r=play(r.battle,'B');
  const dead=r.battle.sides.B.escorts[0];dead.hp=0;dead.destroyed=true;
  r.battle.sides.A.hand=[second];
- assert.match(validateFleetTurn(r.battle,'A',{pass:true,cards:[0]}),/ancora vive/);
+ assert.equal(validateFleetTurn(r.battle,'A',{pass:true,cards:[0]}),null);
 });
 test('Costo letale: la madre distrutta non spara dopo aver pagato HP',()=>{
  const c=id('plasma-sistema-binario');let r=play(game(),'A',[c]);

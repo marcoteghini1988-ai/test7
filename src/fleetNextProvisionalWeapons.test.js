@@ -92,14 +92,14 @@ test('Bassa e Cannone di Alta Marea: effetto concatenato nel turno proprio succe
  assert.ok(shots(r,high)[0].actualDamage>0);
  assert.equal(r.battle.sides.A.provisionalWeaponStatus.lowTide,null);
 });
-test('Ganasce e Collassatore: due bersagli agganciati, collisione successiva',()=>{
+test('Ganasce A/B: una presa ciascuna e una collisione con due bersagli',()=>{
  let b=game(true);
  const g=lookup('Arpioni a Ganasce Magnetiche'),c=lookup('Cannone Collassatore di Lega');
  b=play(b,'A',[g]).battle;
- assert.equal(b.sides.A.provisionalWeaponStatus.grapple.ids.length,2);
+ assert.equal(b.sides.A.machines.filter(m=>m.jawLatch).length,1);
  b=play(b,'B').battle;
  const result=play(b,'A',[c]);
- assert.equal(shots(result,c)[0].hitCount,2);
+ assert.equal(shots(result,c).find(e=>e.jawCombo).hitCount,2);
 });
 test('Sonda e Martello: colpo di combinazione sulla stessa nave',()=>{
  const b=game(true),probe=lookup('Sonda Ionica d’Assalto'),hammer=lookup('Martello del Tuono');

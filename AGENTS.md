@@ -8,25 +8,46 @@ ARMA è rossa (#ff594c), STRATEGIA è arancione (#ffb24d) e sostituisce la denom
 
 
 
-## Punto di ripresa — 32 varianti confermate collegate al gioco
+## Punto di ripresa — 37 varianti integrate; regole mancanti confermate
 
-Il 26 novembre l'utente ha risposto «ok» dopo la consegna delle anteprime e
-ha chiesto se fossero già nel gioco. Questa conferma consente l'inserimento
-nelle parti definite: **17 varianti Metallo e 15 Fulmine**. I fronti completi
-3072×4608 e gli effetti ora sono importati dalla scena di battaglia effettiva.
-Conservare il pannello Arma rosso richiesto successivamente alle anteprime.
-Registro degli asset e degli hash: `src/fleetNext/approvedWeaponIntegration.json`.
-Dettagli e verifiche: `docs/INTEGRAZIONE_CARTE_EFFETTI_2026-11-26.md`.
+L'utente ha chiesto «procedi a sistemare tutto» e ha scelto espressamente:
+- **Ganascia A e Ganascia B entrambe per tre turni propri.** Una ganascia
+  per carta; ciascuna funziona da sola. A conserva lo strappo finale +50%.
+  B conserva il danno base nei tre turni. Nomi, ID e rarità restano quelli
+  del catalogo; A/B identificano le due funzioni, non nuove famiglie.
+- Con entrambi gli agganci validi, **una sola collisione** della coppia:
+  due navi vive si scontrano; se rimane una sola nave, entrambe le prese
+  la schiantano contro il piano metallico. Dopo l'urto si rilasciano i
+  ganci; gli eventuali turni autonomi rimasti non ripetono la combo.
+  Il danno della combo conserva il valore provvisorio del vecchio
+  Collassatore per nave coinvolta, senza raddoppiare quello sulla sola madre.
+- **Induzione senza Difese: +20% con una Energia Metallo, +40% con due
+  o più.** Energie non consumate. La modalità si fissa prima di rimuovere
+  una Difesa: non cumulare bonus, superamento e rimozione nello stesso colpo.
 
-Le **cinque nuove varianti Ganasce A/B** restano fuori dall'inserimento:
-bersagli, durata e parametri della meccanica sono ancora aperti. Le cinque
-vecchie Ganasce/Collassatore già presenti non vengono sostituite. Anche il
-bonus del Frantumatore a Induzione in assenza di Difese resta da deliberare.
-Non inventare questi valori. Le vecchie anteprime sono conservate in
-`scripts/previews/20261126/` e nella [consegna originale](docs/ANTEPRIME_CARTE_EFFETTI_2026-11-26.md).
-Il materiale video esistente rimane una simulazione offline, non una
-registrazione StackBlitz. Non dichiarare collaudi visivi, audio o aptici
-su un dispositivo senza averli realmente osservati.
+Sono collegate **37 varianti: 22 Metallo e 15 Fulmine**, con i fronti
+completi 3072×4608 e i tre canali dell'effetto. Le cinque Ganasce sono ora
+la revisione approvata; non riproporre i vecchi due arpioni per carta né
+il requisito di giocare B soltanto nel turno successivo ad A. Le ipotesi
+storiche sotto e i parametri aperti delle vecchie anteprime sono superati.
+La Super Combo del sacrificio resta una bozza esclusa da questo lavoro.
+
+Registro: `src/fleetNext/approvedWeaponIntegration.json`. I sorgenti
+originali delle carte rimangono recuperabili; la scena usa i fronti rossi
+verificati. I cinque disegni Ganasce approvati sono conservati fuori dal
+pannello; nel pannello sono aggiornati durata e numeri confermati.
+
+La copia StackBlitz già esistente è
+`https://stackblitz.com/edit/github-edu2s6xy?file=README.md`.
+Il caricamento GitHub diretto ha fallito la clonazione. Usare il
+sincronizzatore `scripts/sync-stackblitz.mjs` nella copia esistente:
+verifica gli hash dei soli sorgenti del repository Test7, conserva
+`.env.local` e serve le immagini HD da GitHub. Non clonare l'archivio
+binario nel WebContainer e non creare un'altra copia/fork. La grande
+tavola dei simboli viene servita anch'essa da ASSET_ROOT, senza duplicarla
+nel limite di caricamento della copia salvata. Salvare e ricaricare per
+verificare la persistenza. Distinguere sempre test, build e osservazioni
+visive; la vibrazione hardware resta da provare su telefono compatibile.
 
 Le altre sei famiglie Fulmine richiedono ancora riconciliazione con i nomi
 pronunciati; non dichiarare «Fulmine chiuso».

@@ -10,8 +10,8 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
  cardId=MAGLIO_CARD_ID,supports=false,wounded=false,focus=0,boost=false,
  shipA='N00',shipB='C01',supportModels=['C02','C03'],fused=false,secondTurn=false,
  supportCount=2,energyCards=0,withDefense=false,expiredCombo=false,
- cascadeMode='none',ownStage=1}={}){
- const chain=chainWeaponVariant(cardId),collision=chain?.kind==='alloy-collision';
+ cascadeMode='none',ownStage=1,jawCombo=false}={}){
+ const chain=chainWeaponVariant(cardId),collision=chain?.kind==='alloy-collision'&&jawCombo;
  const precision=precisionWeaponVariant(cardId);
  const grappleId=rarityGrapple(cardId),comboId=cardId.endsWith('-rarity-l')?COLLISION_ID+'-rarity-l':COLLISION_ID;
  const rarity=maglioVariant(cardId)?.rarity||WEAPON_NEAR_FINAL_BY_ID[cardId]?.rarita||'Comune';
@@ -59,8 +59,7 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
   if(expiredCombo){
    // Il passaggio recupera la prima carta: la seconda copia viene realmente
    // pescata, così possiamo tentare la combo fuori tempo senza crearne lo stato.
-   for(const side of Object.values(state.sides))side.deck.unshift(cardId);
-   for(const who of ['A','B'])state=resolvePreparedFleetTurn(state,who,{cards:[],pass:true},nowMs).battle;
+   for(let turn=0;turn<2;turn++)for(const who of ['A','B'])state=resolvePreparedFleetTurn(state,who,{cards:[],pass:true},nowMs).battle;
    for(const side of Object.values(state.sides)){
     const i=side.hand.indexOf(cardId);if(i>=0)side.hand.unshift(...side.hand.splice(i,1));
    }
@@ -83,8 +82,9 @@ export function createMaglioReviewBattle({nowMs=Date.now(),slot=0,blocked=false,
   }
   return state;
  }
- if(precision&&ownStage>1){
-  for(let stage=1;stage<Math.min(ownStage,precision.kind==='cascade-piercer'?3:2);stage++){
+ const jaw=chain&&chain.kind!=='induction';
+ if((precision||jaw&&!collision)&&ownStage>1){
+  for(let stage=1;stage<Math.min(ownStage,jaw||precision?.kind==='cascade-piercer'?3:2);stage++){
    for(const who of ['A','B']){
     const r=resolvePreparedFleetTurn(state,who,{cards:stage===1?[0]:[],pass:stage!==1,
      targetKind:'part',targetId:'weapons',partId:'weapons'},nowMs);

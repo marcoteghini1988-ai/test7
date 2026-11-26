@@ -92,7 +92,7 @@ function description(source,s){
   case 'energy-fan':return prefix+'1/2/3 bersagli, '+fmt(p.damages)+
    ' HP ciascuno con 0/1/2 Energie '+e+' presenti.';
   case 'induction':return prefix+b+' HP; con una Energia '+e+
-   ' attraversa una Difesa, con due ne distrugge una e colpisce.';
+   ' attraversa una Difesa, con due ne distrugge una. Senza Difese: +20% / +40% con 1 / almeno 2 Energie, non consumate. Nessun cumulo col bypass.';
   case 'ice-needle':return prefix+p.supportDamage+' HP a ciascuno dei due supporti. Con Terreno Ghiaccio: '+
    p.terrainSupportDamage+' HP per supporto e '+(2*p.terrainSupportDamage)+
    ' HP perforanti alla madre, ignorando le Difese ordinarie.';
@@ -121,10 +121,11 @@ function description(source,s){
   case 'thermal-reclaimer':return prefix+b+' HP +'+p.damageConversionPercent+
    '% degli HP realmente persi dalla tua flotta dopo la posa (massimo +'+p.maxExtraDamage+
    ' HP), per '+active+' turni.';
-  case 'magnetic-grapple':return prefix+'due arpioni da '+b+
-   ' HP a due bersagli differenti; prepara la collisione di lega al turno proprio successivo.';
-  case 'alloy-collision':return prefix+b+
-   ' HP per bersaglio agganciato; richiede gli Arpioni del turno proprio precedente.';
+  case 'magnetic-grapple':return prefix+'una ganascia, '+b+
+   ' HP per 3 turni propri; strappo del terzo +50%. Con la Ganascia B attiva: un solo schianto, poi rilascio.';
+  case 'alloy-collision':return prefix+'una ganascia autonoma, '+b+
+   ' HP per 3 turni propri. Con A agganciata: una sola collisione da '+(p.comboBonusDamage||b)+
+   ' HP per nave coinvolta; contro il piano se rimane una sola nave. Poi rilascia entrambi i ganci.';
   case 'cascade-piercer':return prefix+b+' HP per '+active+
    ' turni; il danno eccedente passa al prossimo bersaglio spendendo '+
    p.energyTransferCost+' Energia Metallo.';

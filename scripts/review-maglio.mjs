@@ -14,6 +14,7 @@ import {MAGLIO_CARD_ID,MAGLIO_VARIANTS} from './src/maglioBattleVisuals.js';
 import {METAL_WEAPON_VARIANTS,metalWeaponVariant} from './src/metalWeaponBattleVisuals.js';
 import {CHAIN_WEAPON_VARIANTS,chainWeaponVariant} from './src/chainWeaponBattleVisuals.js';
 import {PRECISION_WEAPON_VARIANTS,precisionWeaponVariant,CASCADE_ID} from './src/precisionWeaponBattleVisuals.js';
+import {OFFICIAL_WEAPON_FRONT_BY_ID} from './src/fleetNext/officialWeaponArt.js';
 import {hapticsEnabled,setHapticsEnabled} from './src/weaponHaptics.js';
 import {approvedWeaponSalvo} from './src/fleetNext/approvedWeaponSalvos.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
@@ -72,7 +73,7 @@ function Review(){
    session.timer=setTimeout(()=>{if(recorder.state==='recording')recorder.stop();},360000);
   }catch(error){setRecordStatus(error.message||'Registrazione non avviata.');}
  };
- const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:CASCADE_ID,supports:true,wounded:false,focus:0,fleetPreset:0,secondTurn:false,cascadeMode:'two',energyCards:2,ownStage:1});
+ const [setup,setSetup]=useState({serial:0,slot:0,blocked:false,cardId:CASCADE_ID,supports:true,wounded:false,focus:0,fleetPreset:0,secondTurn:false,cascadeMode:'two',energyCards:2,ownStage:1,jawCombo:false});
  const [initial,setInitial]=useState(()=>createMaglioReviewBattle({cardId:CASCADE_ID,supports:true,cascadeMode:'two',energyCards:2}));
  const reset=(options={})=>{setSetup(s=>({...s,...options,serial:s.serial+1}));setInitial(createMaglioReviewBattle({...setup,...options}));};
  return <div style={{height:'100dvh',background:'#05090e',display:'flex',flexDirection:'column'}}>
@@ -81,11 +82,11 @@ function Review(){
     onChange={e=>{const index=Number(e.target.value);reset({...fleets[index],fleetPreset:index,supports:true,fused:false});}}>
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
-   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,energyCards:0,withDefense:false,expiredCombo:false,wounded:false,blocked:false,slot:0})}>
-    {[...MAGLIO_VARIANTS,...METAL_WEAPON_VARIANTS,...CHAIN_WEAPON_VARIANTS,...PRECISION_WEAPON_VARIANTS].map(v=><option key={v.id} value={v.id}>{(WEAPON_NEAR_FINAL_BY_ID[v.id].name||'Maglio')+' · '+v.rarity}</option>)}
+   <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0})}>
+    {Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).map(id=><option key={id} value={id}>{WEAPON_NEAR_FINAL_BY_ID[id].name+' · '+WEAPON_NEAR_FINAL_BY_ID[id].rarita}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
-   <span>{(()=>{const s=approvedWeaponSalvo(setup.cardId);return !s?'':s.familyId.includes('ganasce')?'2 agganci laterali':s.count===0?'1 schianto tra 2 scafi':s.style==='six-plus-lance'?'6 colpi + 1 lancia finale':s.count+' colpi per salva';})()}</span>
+   <span>{(()=>{const s=approvedWeaponSalvo(setup.cardId);return !s?'':/ganasce|collassatore/.test(s.familyId)?'1 ganascia · 3 turni · combo unica':s.style==='six-plus-lance'?'6 colpi + 1 lancia finale':s.count+' colpi per salva';})()}</span>
    <label><input type="checkbox" aria-label="Supporti in campo" checked={setup.supports} onChange={e=>reset({supports:e.target.checked,wounded:false})}/>Supporti in campo</label>
    <button onClick={()=>reset({slot:0,blocked:false,expiredCombo:false,wounded:false})}>Riprova slot 1</button>
    <button onClick={()=>reset({slot:1,blocked:false})}>Riprova slot 2</button>
@@ -96,7 +97,13 @@ function Review(){
    {chainWeaponVariant(setup.cardId)&&<>
     <button onClick={()=>reset({supports:true,supportCount:1,wounded:false,blocked:false,expiredCombo:false})}>Un supporto e madre</button>
     <button onClick={()=>reset({supports:true,supportCount:2,wounded:false,blocked:false,expiredCombo:false})}>Due supporti vivi</button>
-    {chainWeaponVariant(setup.cardId).kind==='alloy-collision'&&<button onClick={()=>reset({expiredCombo:true,blocked:false})}>Combo scaduta</button>}
+    {chainWeaponVariant(setup.cardId).kind==='alloy-collision'&&<>
+     <button onClick={()=>reset({jawCombo:false,expiredCombo:false,ownStage:1,blocked:false})}>B autonoma</button>
+     <button onClick={()=>reset({jawCombo:true,expiredCombo:false,ownStage:1,blocked:false})}>Combo A + B</button>
+     <button onClick={()=>reset({jawCombo:true,expiredCombo:true,blocked:false})}>Combo scaduta</button>
+    </>}
+    {chainWeaponVariant(setup.cardId).kind!=='induction'&&<label>Turno proprio <select aria-label="Turno proprio" value={setup.ownStage||1} onChange={e=>reset({ownStage:Number(e.target.value),jawCombo:false,blocked:false})}>
+     {[1,2,3].map(n=><option key={n} value={n}>{n}</option>)}</select></label>}
     {chainWeaponVariant(setup.cardId).kind==='induction'&&<>
      <label>Energie Metallo <select aria-label="Energie Metallo" value={setup.energyCards||0} onChange={e=>reset({energyCards:Number(e.target.value),withDefense:true,blocked:false})}>
       {[0,1,2].map(n=><option key={n} value={n}>{n}</option>)}

@@ -1,6 +1,6 @@
 import {Group,Mesh,MeshStandardMaterial,BoxGeometry,CylinderGeometry,TorusGeometry,OctahedronGeometry} from 'three';
 
-export function createChainWeaponModel(kind,tier=2){
+export function createChainWeaponModel(kind,tier=2,jawRole='a'){
  const root=new Group(),jaws=[],plates=[];
  const mat=(color,emissive='#000000',emissiveIntensity=0)=>new MeshStandardMaterial({
   color,emissive,emissiveIntensity,metalness:.88,roughness:.25});
@@ -19,7 +19,7 @@ export function createChainWeaponModel(kind,tier=2){
   cylinder('Tamburo bronzeo e cavo posteriore',.30,.15,.13,bronze);
   for(const z of [.25,.29,.33])ring('Spire del tamburo',z,.16,bronze);
   cylinder('Giunto frontale',-.17,.20,.09,bronze);
-  for(const a of [0,Math.PI]){
+  for(const a of jawRole==='b'?[0,Math.PI*2/3,Math.PI*4/3]:[0,Math.PI]){
    const turn=new Group();turn.rotation.z=a;root.add(turn);
    const pivot=new Group();pivot.position.set(.15,0,-.18);turn.add(pivot);jaws.push(pivot);
    box(pivot,'Braccio articolato della ganascia',[0,0,-.16],[.09,.10,.36],bronze);
@@ -34,7 +34,7 @@ export function createChainWeaponModel(kind,tier=2){
    const a=i*Math.PI/2,prism=add(root,'Gabbia prismatica',new OctahedronGeometry(.095),crystal,[Math.cos(a)*.21,Math.sin(a)*.21,.02]);
    prism.scale.set(.7,.7,1.65);
   }
-  root.userData={kind,tier,frontZ:-.64,rearZ:.40,jaws};
+  root.userData={kind,tier,jawRole,frontZ:-.64,rearZ:.40,jaws};
  }else{
   cylinder('Nucleo induttivo compresso',0,.10,.43,amber);
   for(let i=0;i<3;i++){

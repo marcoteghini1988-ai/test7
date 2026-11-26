@@ -597,6 +597,7 @@ function impact(floor,air,entry,ms,reduced,contactPose){
 export function drawCinematicWeapon(floor,air,e,age,{reduced=false,contactPose=null}={}){
  const elapsed=age-e.start,p=e.profile;
  if(elapsed<0){if(!reduced)charge(floor,air,e,elapsed);return;}
+ if(p.kind==='magnetic-grapple'&&e.shot.jawWasLatched&&elapsed<p.flightMs)return;
  if((p.kind.startsWith('ionic-')||p.kind==='steel-rail')&&elapsed>=0){
   const ms=elapsed-p.flightMs;
   if(ms<0){if(!reduced&&p.kind.startsWith('ionic-'))electricFlight(air,e,elapsed,e.camera);return;}

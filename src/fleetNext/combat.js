@@ -648,15 +648,7 @@ export function effectUnavailableReason(def,side,battle=null,{ownPartId,terrainC
    return 'Serve Cannone Binario a Sovraccarico già installato';
   if(pattern==='high-tide'&&side.provisionalWeaponStatus?.lowTide?.ply!==ply-2)
    return 'Cannone di Alta Marea richiede Cannone di Bassa Marea nel turno proprio precedente';
-  if(pattern==='alloy-collision'&&(side.provisionalWeaponStatus?.grapple?.ply!==ply-2||
-   (side.provisionalWeaponStatus?.grapple?.ids||[]).length<2))
-   return 'Collassatore richiede due bersagli delle Ganasce nel turno precedente';
-  if(pattern==='alloy-collision'&&battle){
-   const enemy=battle.sides.A===side?battle.sides.B:battle.sides.A;
-   const liveIds=[...enemy.escorts.filter(unitAlive),...enemy.ships[0].parts.filter(unitAlive)].map(u=>u.id);
-   if(side.provisionalWeaponStatus.grapple.ids.filter(id=>liveIds.includes(id)).length<2)
-    return 'Collassatore richiede entrambe le navi agganciate ancora vive';
-  }
+  // Le due Ganasce sono autonome; gli agganci limitano soltanto la combo.
   const upgrade=sequenceUpgradeTarget(side,def,ply);
   if(upgrade&&weaponSlotLocked(side,upgrade.slot,ply))
    return 'Alloggiamenti Arma temporaneamente congelati';
@@ -3555,6 +3547,11 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    charges=energyUnits(machine.weaponElementId,false),tier=Math.min(2,energy),
    impacts=[];
   if(!p)continue;
+  // Fissare la modalità prima dell'eventuale rimozione: non sommare il
+  // bonus senza Difese al bypass/rimozione nello stesso attacco.
+  const inductionDefenses=pattern==='induction'?enemy.defenses.filter(d=>!d.hidden&&d.id&&d.source&&(d.remaining==null||d.remaining>0)&&(d.untilPly==null||d.untilPly>b.ply)):[];
+  const inductionMode=pattern!=='induction'?null:inductionDefenses.length?'defense':energy?'boost':'base';
+  const inductionBonusPercent=inductionMode==='boost'?(energy>=2?p.noDefenseBonusTwoPercent:p.noDefenseBonusOnePercent)||0:0;
   const motherHp=side.ships[0].hp,motherMax=Math.max(1,side.ships[0].maxHp);
   const commander=side.commander?.id&&card(side.commander.id);
   const charActive=commander&&side.commander.untilPly>b.ply&&
@@ -3590,6 +3587,7 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    }
    if(pattern==='character-health'&&!charActive)base=p.damages[0];
    if(pattern==='percent')base=0;
+   if(pattern==='induction'&&inductionBonusPercent)base=Math.round(base*(1+inductionBonusPercent/100));
    planned=[{base}];
   }
   for(let n=0;n<planned.length;n++){
@@ -3609,14 +3607,14 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    // Frantumatore: una Energia supera una Difesa, due ne smontano una.
    // Non si attraversa la copertura di un supporto e non si spendono Energie
    // finché il loro costo preciso non viene deliberato.
-   if(pattern==='induction'&&energy>=2){
-    const defense=enemy.defenses.find(d=>!d.hidden&&d.id&&d.source);
+   if(inductionMode==='defense'&&energy>=2&&!side.fireBlocked&&!(side.fireDisabledUntil>b.ply)&&power>0){
+    const defense=inductionDefenses.find(d=>enemy.defenses.includes(d));
     if(defense){const defenseSource=defense.source;discardDefense(enemy,defense.source);
      events.push(emit(b,ctx.who,'weapon-break-defense',
       machine.name+' distrugge una Difesa attiva',{cardId:machine.sourceCardId,
       defenseCardId:defense.id,defenseSource,targetKind:target.kind}));}
    }
-   const piercing=pattern==='induction'&&energy>=1;
+   const piercing=inductionMode==='defense'&&energy>=1;
    const previousPreserve=ctx.preserveBypassedDefense;ctx.preserveBypassedDefense=pattern==='induction'&&piercing;
    const previousNebulaPierce=ctx.nebulaPierceLeft||0;
    const previousIcePierce=ctx.iceNeedlePiercing||false;
@@ -3659,6 +3657,7 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
    pattern,hitCount:impacts.length,impacts,actualDamage:actual,
    energyCardsSeen:energy,energyChargesSeen:charges,energyConsumed:0,
+   ...(pattern==='induction'?{inductionMode,inductionBonusPercent}:{}),
    energyContributions:pattern==='induction'&&!side.fireBlocked&&!(side.fireDisabledUntil>b.ply)?weaponEnergyContributions(side,'metallic',{physicalCount:Math.min(energy,2)},card):[],
    repeatTurn:pattern==='repeat'&&machine.deployedPly!==b.ply
   }));

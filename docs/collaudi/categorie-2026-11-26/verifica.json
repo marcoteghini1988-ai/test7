@@ -100,58 +100,48 @@
     },
     {
       "id": "weapon-designed-metallic-ganasce-magnetiche",
-      "rarity": "rara",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1890150,
-      "sourceSha256": "e3b950fe6299658acc4ba44cdbdd23b6ff13a991e44dd3baaaf3997d32364c2c",
-      "redSha256": "31b35cbc188291c60b016344f15f7a7893691c33022fe5addc0876310d6d1351"
+      "redSha256": "8caef243d481eaddb725b0480da64baf8220517ebbe080fa778c8ef48b1dcd16",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
-      "rarity": "epica",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1893763,
-      "sourceSha256": "362ab1b64836f7ac92f3b42215de904c1f73dcc16374d32ae592a7e8a21cb7e5",
-      "redSha256": "ff276d21376dd6f9581d87ec8746a2577ef98aab7c5389cf0c7110111b6c9d38"
+      "redSha256": "5bad23f99c29dd6f6bf74dae9e27c1e027d50f452fb8d9d4589f06c32ef614ce",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
-      "rarity": "leggendaria",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1861454,
-      "sourceSha256": "111255e24440e756fb42068ab6e3bba2565c85544e54e83a299e2da606f631c5",
-      "redSha256": "11c2bb857e62921ea197984060916d9feffb9c282b5badf37de3bba870a19c36"
+      "redSha256": "8725fbaa5eea6a57ec7bffe70dee68244b4e2e39054d22afa6a80489936cd0af",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-collassatore-lega",
-      "rarity": "epica",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1842344,
-      "sourceSha256": "7796b8e3d0885cb300e6c0543c0bf44ed45ecc654cc5021c9b81bc19b65d424e",
-      "redSha256": "d423110bc47b9d81db66e55572402337e3679e7cc56517695dca93748fc628c1"
+      "redSha256": "e00a00b1081fe124f616c028476c04beda7cf3903c4c02a94a1dd09f23ad03e6",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
-      "rarity": "leggendaria",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1805975,
-      "sourceSha256": "812722f23b2eaf769cd047be8adede8bc765183543c99d8cc4998a097d1abfbf",
-      "redSha256": "f82aefb3921f631f6d158e533c7427cc1b35ae7134fa530e99e82b82f2348e89"
+      "redSha256": "fb4f077e8f77529f4ef8119bbb01f5267564756c9103abc51c543105be1ea02d",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-frantumatore-induzione",
@@ -159,7 +149,7 @@
         3072,
         4608
       ],
-      "redSha256": "e0c6ec711e72f6d31f174adbf5595b7d9b89291315ee888981666183ffc49d10",
+      "redSha256": "34d44479729d88b1d1c87eaea4bde9301bc2e0af3f06236ae576bf91831cf718",
       "preservedApprovedRevision": true
     },
     {
@@ -168,7 +158,7 @@
         3072,
         4608
       ],
-      "redSha256": "801e92251c24e693b823ec037c87dfd84ebb3a92f24f96da76a488f5f86ec19f",
+      "redSha256": "c1c07b1703c6aa401dfd8152358cbb84ea4545c898719adb0a667186949f5444",
       "preservedApprovedRevision": true
     },
     {

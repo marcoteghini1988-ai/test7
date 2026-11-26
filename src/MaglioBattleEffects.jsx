@@ -97,7 +97,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    const cue=weaponSalvoAudioCue(profile,shot,phase);
    playSound(cue.type,cue.pitchSemitones,pan,cue.level,cue.timeScale);
    const result=requestWeaponHaptic(profile.kind,phase,profile.tier,{salvoCount:shot.salvoCount,
-    finisher:shot.finisher,salvoLast:shot.salvoLast,destroyed:shot.destroyed});
+    finisher:shot.finisher,salvoLast:shot.salvoLast,destroyed:shot.destroyed,jawPhase:shot.jawPhase,inductionBonusPercent:shot.inductionBonusPercent});
    if(result.status==='requested')requested=true;
    if(ref.current){ref.current.dataset.hapticStatus=result.status;
     ref.current.dataset.hapticPhase=phase;ref.current.dataset.hapticPattern=JSON.stringify(result.pattern);}
@@ -107,6 +107,8 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    const profile=weaponEffectProfile(shot.cardId,shot);
    if(!profile?.sound)continue;
    if(profile.kind==='alloy-collision'){
+    const representative=shots.find(s=>s.visualGroupId===shot.visualGroupId&&s.jawCombo&&s.fires);
+    if(representative&&representative!==shot)continue;
     if(collisionKeys.has(shot.visualGroupId))continue;
     collisionKeys.add(shot.visualGroupId);
    }
@@ -115,6 +117,8 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    cue(profile,shot.cascadeTransfer?'transfer':'fire',start,shot);
    cue(profile,shot.defenseBlocked?'block':'impact',start+profile.flightMs,shot);
    if(profile.kind==='alloy-collision')cue(profile,'release',start+profile.flightMs+COLLISION_RELEASE_AFTER_MS,shot);
+   if(profile.kind==='magnetic-grapple'&&['tear','release'].includes(shot.jawPhase)&&!shot.jawReleaseAfterCombo)
+    cue(profile,'release',start+profile.flightMs+420,shot);
   }
   for(const event of events.filter(e=>e.kind==='weapon-break-defense'&&chainWeaponVariant(e.cardId))){
    cue(weaponEffectProfile(event.cardId),'defense',shotStart-180,event);

@@ -52,6 +52,16 @@ function drawCollisionField(ctx,group,frame,elapsed,camera,reduced){
  const {profile,plan}=group,p=plan.contact,t=frame.pull;
  if(elapsed<0||frame.phase==='restored')return;
  const impactAge=elapsed-profile.flightMs;
+ if(group.shots[0].jawCombo){
+  group.shots[0].jawOrigins.forEach((origin,i)=>{
+   const index=group.shots[0].contactMode==='floor'?0:i,center=group.centers[index],offset=plan.offsets[index];
+   const target={x:center.x+offset.x*frame.pull+(group.shots[0].contactMode==='floor'?(i?7:-7):0),
+    y:center.y+(offset.y-plan.forward)*frame.pull+plan.forward*frame.advance};
+   const from=weaponLaunchOrigin({...group.shots[0],...origin,jawRole:i?'b':'a',stage:1,impactIndex:0,salvoIndex:0});
+   if(impactAge<75)drawMagneticChain(ctx,from,target,profile,camera,elapsed,frame.pull,1);
+  });
+  return drawCollisionExplosion(ctx,p,profile,impactAge,camera,{reduced});
+ }
  ctx.save();ctx.translate(p.x,p.y);ctx.globalAlpha=impactAge>=0?Math.max(0,1-impactAge/180):.45+t*.5;
  // Due poli curvi convergenti, coerenti con il giogo aperto della carta.
  const radius=54-t*23;
@@ -102,21 +112,28 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
   const camera=createProjectileCamera(),scene=new Scene();
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const entries=special.filter(p=>p.profile.kind!=='alloy-collision'&&(p.shot.fires||p.shot.defenseBlocked)).map(path=>
-   ({...path,model:createChainWeaponModel(path.profile.kind,path.profile.tier)}));
+   ({...path,model:createChainWeaponModel(path.profile.kind,path.profile.tier,path.profile.jawRole)}));
   for(const entry of entries)entry.model.scale.setScalar(entry.shot.visualScale||1);
+  for(const entry of entries)if(entry.profile.inductionBoostRatio)entry.model.traverse(mesh=>{
+   if(mesh.isMesh&&mesh.name.startsWith('Piastra induttiva')){mesh.material.emissive.set(entry.profile.secondary);mesh.material.emissiveIntensity=.12+.18*entry.profile.inductionBoostRatio;}
+  });
   const collisions=collisionGroups(special.map(p=>p.shot)).flatMap(shots=>{
    const pairs=shots.map(s=>special.find(p=>p.shot===s));
    const board=root.getBoundingClientRect();
    const targets=shots.map(s=>combatTargetElement(root,s));if(targets.some(t=>!t))return [];
    const centers=targets.map(el=>boardHullPoint(el,board));
-   const dx=centers[1].x-centers[0].x,dy=centers[1].y-centers[0].y,length=Math.hypot(dx,dy)||1;
+   const floor=shots[0].contactMode==='floor';
+   const dx=floor?0:centers[1].x-centers[0].x,dy=floor?1:centers[1].y-centers[0].y,length=Math.hypot(dx,dy)||1;
    return [{shots,profile:pairs[0].profile,start:pairs[0].start,targets,centers,
     axis:{x:dx/length,y:dy/length},
-    previous:targets.map(t=>({translate:t.style.translate,
+    jaws:shots[0].jawOrigins?.map((_,i)=>createChainWeaponModel('magnetic-grapple',pairs[0].profile.tier,i?'b':'a'))||[],
+    previous:targets.map(t=>({translate:t.style.translate,hull:t.querySelector('.f3d-escort-visual,.f3d-craft-hover')||t,
+     opacity:(t.querySelector('.f3d-escort-visual,.f3d-craft-hover')||t).style.opacity,
      properties:['roll','pitch','lift','light','thrust'].map(name=>[name,t.style.getPropertyValue('--collision-'+name)])})),
     // Porta l'urto davanti alla formazione: due supporti non attraversano
     // la madre ferma che occupa il centro del loro schieramento.
-    plan:collisionMotionPlan(...centers,{forward:shots[0].who==='A'?78:-72})}];
+    plan:floor?{forward:0,contact:{x:centers[0].x,y:centers[0].y+18},offsets:[{x:0,y:18}]}:
+     collisionMotionPlan(...centers,{forward:shots[0].who==='A'?78:-72})}];
   });
   element.dataset.renderer='volume-depth-buffer';element.dataset.camera='table-fixed';
   const defenseArt=new Map();
@@ -156,8 +173,11 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
      continue;
     }
     if(elapsed>profile.flightMs+profile.impactMs)continue;pending=true;
-    const pose=cinematic?weaponFlightFrame(from,to,t,camera,model.userData.frontZ*model.scale.z,{shot,kind:profile.kind}):metalProjectileFlightFrame(from,to,clamp(t),camera,model.userData.frontZ);
-    const progress=profile.kind==='magnetic-grapple'?clamp((t-.82)/.18):clamp(t*1.9);
+    const held=profile.kind==='magnetic-grapple'&&shot.jawWasLatched;
+    const movingTarget=(held||t>=1)&&combatTargetElement(root,shot);
+    const contact=movingTarget?boardHullPoint(movingTarget,root.getBoundingClientRect()):to;
+    const pose=cinematic?weaponFlightFrame(from,contact,held?1:t,camera,model.userData.frontZ*model.scale.z,{shot,kind:profile.kind}):metalProjectileFlightFrame(from,contact,held?1:clamp(t),camera,model.userData.frontZ);
+    const progress=profile.kind==='magnetic-grapple'?held?1:clamp((t-.82)/.18):clamp(t*1.9);
     articulateChainWeapon(model,progress);
     if(cinematic)applyWeaponFlightPose(model,pose);else{model.position.copy(pose.center);model.rotation.y=pose.yaw;}
     const after=t>=1,alive=aliveAfter(resolvedSides,shot);
@@ -165,10 +185,11 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
     element.dataset.sequence=profile.sequence;element.dataset.progress=clamp(t).toFixed(3);
     element.dataset.phase=after?'latched':'flight';element.dataset.nose=JSON.stringify(worldPointToBoard(pose.nose,camera));
     if(profile.kind==='magnetic-grapple'){
-     const fade=after&&!alive?clamp(1-(elapsed-profile.flightMs)/450):1;
+     const releasing=after&&['tear','release'].includes(shot.jawPhase)&&!shot.jawReleaseAfterCombo;
+     const fade=after&&(!alive||shot.defenseBlocked||releasing)?clamp(1-(elapsed-profile.flightMs)/450):1;
      drawMagneticChain(ctx,from,worldPointToBoard(pose.center,camera),profile,camera,age,after?.65:0,fade);
-     if(!after||alive)scene.add(model);
-     if(after){drawLatch(ctx,to,profile,1,fade);if(!cinematic)drawMetalContact(ctx,to,profile,elapsed-profile.flightMs,520);}
+     if(!after||alive&&!shot.defenseBlocked&&(!releasing||elapsed-profile.flightMs<350))scene.add(model);
+     if(after&&shot.fires&&!shot.defenseBlocked){drawLatch(ctx,contact,profile,1,fade);if(!cinematic)drawMetalContact(ctx,contact,profile,elapsed-profile.flightMs,520);}
     }else{
      if(!after){
       scene.add(model);
@@ -191,7 +212,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
       if(shot.defenseBlocked){
        ctx.strokeStyle='#9cdbff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(to.x,to.y,24,17,0,0,Math.PI*2);ctx.stroke();
        element.dataset.phase='defense-block';
-      }else if(!cinematic||(shot.energyCardsSeen||0)>=1)drawInductionField(ctx,{x:to.x-5,y:to.y+(shot.who==='A'?30:-30)},to,profile,age,shot.energyCardsSeen||0);
+      }else if(!cinematic||shot.inductionMode==='defense')drawInductionField(ctx,{x:to.x-5,y:to.y+(shot.who==='A'?30:-30)},to,profile,age,shot.inductionMode==='defense'?shot.energyCardsSeen||0:0);
       ctx.globalAlpha=1;
      }
     }
@@ -206,14 +227,26 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
     group.targets.forEach((target,i)=>{
      const direction=(i===0?1:-1)*Math.sign(group.axis.x||1)*(group.shots[0].who==='A'?-1:1);
      const pose=collisionHullFrame(elapsed,group.profile,{direction,reduced});
+     if(group.shots[0].contactMode==='floor'&&!reduced){pose.pitch-=18*frame.pull;pose.lift+=8*frame.pull;}
      const offset=group.plan.offsets[i],kick=i===0?-pose.recoil:pose.recoil;
      const x=reduced?0:offset.x*frame.pull+group.axis.x*kick+pose.shake,
       y=reduced?0:(offset.y-group.plan.forward)*frame.pull+group.plan.forward*frame.advance+group.axis.y*kick-pose.shake*.45;
      target.style.translate=`${x}px ${y}px`;target.dataset.collisionMotion=frame.phase;
      for(const [name,unit]of [['roll','deg'],['pitch','deg'],['lift','px'],['light',''],['thrust','']])
       target.style.setProperty('--collision-'+name,pose[name].toFixed(4)+unit);
+     if(group.shots[i]?.destroyed&&elapsed>=group.profile.flightMs)
+      group.previous[i].hull.style.opacity=String(1-clamp((elapsed-group.profile.flightMs)/320));
     });
-    if(cinematic){
+    if(group.shots[0].jawCombo&&elapsed<group.profile.flightMs+75){
+     group.jaws.forEach((model,i)=>{
+      const index=group.shots[0].contactMode==='floor'?0:i,target=boardHullPoint(group.targets[index],root.getBoundingClientRect());
+      if(group.shots[0].contactMode==='floor')target.x+=i?7:-7;
+      const origin=group.shots[0].jawOrigins[i],from=weaponLaunchOrigin({...group.shots[0],...origin,jawRole:i?'b':'a',stage:1,impactIndex:0,salvoIndex:0});
+      applyWeaponFlightPose(model,weaponFlightFrame(from,target,1,camera,model.userData.frontZ,{shot:group.shots[0],kind:'magnetic-grapple'}));
+      articulateChainWeapon(model,1);scene.add(model);
+     });
+    }
+    if(cinematic&&!group.shots[0].jawCombo){
      group.cinemaEntry??=prepareCinematicEntry({shot:group.shots[0],profile:group.profile,
       from:weaponPortalOrigin(group.shots[0].who),to:group.plan.contact,start:group.start},camera);
      if(group.cinemaEntry)drawCollisionConvergence(ctx,ctx,group.cinemaEntry,group.plan.contact,elapsed,reduced);
@@ -244,7 +277,7 @@ export default function MagneticWeaponEffects({paths=[],events=[],startedAt,shot
    if(pending)raf=requestAnimationFrame(draw);
   };
   raf=requestAnimationFrame(draw);
-  return ()=>{cancelAnimationFrame(raf);collisions.forEach(restore);
+  return ()=>{cancelAnimationFrame(raf);collisions.forEach(group=>{restore(group);group.previous.forEach(p=>p.hull.style.opacity=p.opacity);group.jaws.forEach(disposeProjectile);});
    defenseArt.forEach((opacity,art)=>{art.style.opacity=opacity;});
    entries.forEach(e=>disposeProjectile(e.model));renderer.dispose();canvas.remove();meshCanvas.remove();};
  },[paths,events,startedAt,shotStart,resolvedSides,cinematic]);
@@ -269,9 +302,11 @@ export function MagneticGrappleTethers({battle,resolving,fx}){
    ctx.clearRect(0,0,450,800);let visible=0;
    for(const link of links){
     const collision=groups.find(g=>g[0].who===link.who&&g.some(s=>s.targetId===link.targetId));
-    const cs=collision?.[0],cp=cs&&weaponEffectProfile(cs.cardId);
+    const cs=collision?.[0],cp=cs&&weaponEffectProfile(cs.cardId,cs);
     const collisionElapsed=cs?age-start-(cs.delayMs||0):0;
-    if(cs&&collisionElapsed>cp.flightMs+230)continue;
+    if(cs&&collisionElapsed>cp.flightMs+75)continue;
+    const release=shots.find(s=>s.machineId===link.machineId&&['tear','release'].includes(s.jawPhase)&&!s.jawReleaseAfterCombo);
+    if(resolving&&release&&age>=start+(release.delayMs||0)+weaponEffectProfile(release.cardId,release).flightMs+420)continue;
     // Elimina un aggancio alla distruzione effettivamente risolta del bersaglio.
     if(resolving&&!aliveAfter(fx.resolvedSides,link)){
      const hit=shots.find(s=>s.who===link.who&&s.targetId===link.targetId&&s.fires);

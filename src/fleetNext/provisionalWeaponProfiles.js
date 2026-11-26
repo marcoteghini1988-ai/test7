@@ -194,10 +194,11 @@ const RAW=[
     "profile": {
       "pattern": "magnetic-grapple",
       "baseDamage": 14,
-      "durationTurns": 2,
+      "durationTurns": 3,
+      "finalTearBonusPercent": 50,
       "provisional": true
     },
-    "description": "Due arpioni infliggono 14 HP a due navicelle diverse; se colpiscono, conservano i bersagli agganciati per Cannone Collassatore di Lega nel tuo turno successivo."
+    "description": "Ganascia A autonoma: una presa, tre turni propri. Trazione da 14 HP nei primi due; strappo con +50% al terzo. Con B agganciata, uno schianto e rilascio dei ganci."
   },
   {
     "id": "weapon-designed-metallic-collassatore-lega",
@@ -206,10 +207,11 @@ const RAW=[
     "profile": {
       "pattern": "alloy-collision",
       "baseDamage": 24,
-      "durationTurns": 1,
+      "comboBonusDamage": 24,
+      "durationTurns": 3,
       "provisional": true
     },
-    "description": "Richiede Arpioni a Ganasce Magnetiche nel turno proprio precedente; fa collidere i bersagli agganciati infliggendo 24 HP ciascuno (Difese individuali)."
+    "description": "Ganascia B autonoma: una presa, 24 HP per tre turni propri. Con A ancora agganciata, uno schianto da 24 HP per nave coinvolta, oppure 24 HP sulla sola nave contro il piano. La combo non si ripete; poi i due ganci si rilasciano."
   },
   {
     "id": "weapon-designed-metallic-perforatore-cascata",

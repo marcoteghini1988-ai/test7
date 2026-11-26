@@ -1,13 +1,19 @@
 // Ganasce: verricello, catena e chiusura. Collassatore: poli, tensione e urto.
 // Induzione: tre piastre, scarica compressa e smontaggio reale della Difesa.
 export function chainWeaponSoundPlan(type){
- const match=/^(grapple|collision|induction)_(charge|fire|impact|release|defense|block)_(rare|epic|legendary)$/.exec(type);
+ const match=/^(grapple|collision|induction)_(charge|fire|impact|pull|tear|release|defense|block)_(rare|epic|legendary)$/.exec(type);
  if(!match)return null;
  const [,family,phase,rarity]=match,tier={rare:1,epic:2,legendary:3}[rarity];
  const layers=[],tone=(wave,from,to,duration,gain,delay=0)=>
   layers.push({wave,from,to,duration,gain,delay});
  if(family==='grapple'){
-  if(phase==='charge'){
+  if(phase==='pull'){
+   tone('triangle',140,330,.68,.075);tone('noise',1200,420,.64,.045);
+   for(let i=0;i<4;i++)tone('sine',660,220,.055,.035,i*.14);
+  }else if(phase==='tear'){
+   tone('noise',5900,520,.32,.13);tone('triangle',230,65,.30,.14);
+   tone('noise',2600,700,.18,.055,.13);
+  }else if(phase==='charge'){
    tone('triangle',130,285,.42,.055);
    for(let i=0;i<3+tier;i++)tone('noise',1700+i*130,640,.045,.04,i*.065);
   }else if(phase==='fire'){
