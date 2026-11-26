@@ -123,7 +123,7 @@ test('Replicatore: ultima arma fisica, 70%, cambio dinamico e niente carte extra
  copy=r.events.find(e=>e.kind==='next-weapon-holo-copy');assert.equal(copy.copiedCardId,second);
  r=play(r.battle,'A');r=play(r.battle,'B');
  assert.equal(r.events.find(e=>e.kind==='next-weapon-holo-copy').copiedCardId,second);
- r=play(r.battle,'A');r=play(r.battle,'B');r=play(r.battle,'A');
+ r=play(r.battle,'A'); // fine dell'ultimo turno avversario: scadenza, prima della nuova pescata B
  assert.equal(r.battle.sides.B.machines.length,0);
  assert.equal(r.battle.sides.B.discard.filter(x=>x===a).length,1);
 });
@@ -169,4 +169,33 @@ test('Replica consuma le energie del replicante, non dell’avversario, e non ri
  assert.equal(r.battle.sides.B.elementalCharges.mineral||0,0);
  assert.ok(r.events.some(e=>e.kind==='next-weapon-energy'&&e.cardId===quake));
  r=play(r.battle,'A',[a]);assert.equal(r.events.some(e=>e.kind==='next-weapon-holo-copy'),false);
+});
+
+test('Contrattacco olografico non oltrepassa i supporti reali del giocatore che attacca',()=>{
+ const b=createFleetNextBattle({shipA:'N00',shipB:'C01',raritaA:'Leggendaria',raritaB:'Leggendaria',
+  supportRosterA:supports,supportRosterB:supports.map((x,i)=>({...x,instanceId:'B-'+i})),
+  mode:'pvp',ruleset:HP_SYNC_RULESET,deckA:[],deckB:[],seed:9947,nowMs:0});
+ for(const side of Object.values(b.sides)){side.hand=[];side.deck=Array(25).fill('gen-216');side.discard=[];side.ships[0].hp=5000;side.ships[0].maxHp=5000;}
+ let r=play(b,'A');r=play(r.battle,'B',[id('proiettore-olografico','Leggendaria')]);
+ const decoy=r.battle.sides.B.nextHologram.decoy;
+ const validIds=r.battle.sides.A.escorts.map(u=>u.id);
+ r=play(r.battle,'A',['weapon-base-ionic-01'],{targetKind:'escort',targetId:decoy.id});
+ const counter=r.events.find(e=>e.kind==='next-weapon-holo-counter');
+ assert.ok(counter);assert.equal(counter.targetKind,'escort');assert.ok(validIds.includes(counter.targetId));
+ assert.equal(r.events.filter(e=>e.kind==='next-weapon-holo-counter').length,1);
+});
+test('Nessun supporto reale: il Proiettore non crea una navicella dal nulla',()=>{
+ const r=play(game(),'A',[id('proiettore-olografico','Epica')]);
+ assert.equal(r.battle.sides.A.escorts.length,0);assert.ok(!r.battle.sides.A.nextHologram);
+});
+test('Replicatore senza storico di armi: niente attacco gratuito',()=>{
+ const r=play(game(),'A',[id('replicatore-olografico','Epica')]);
+ assert.ok(r.events.some(e=>e.kind==='next-weapon-holo-no-source'));
+ assert.ok(!r.events.some(e=>e.kind==='next-weapon-holo-copy'));
+ assert.equal(r.battle.sides.B.ships[0].hp,5000);
+});
+test('Il Replicatore non crea più di uno slot olografico per la stessa famiglia',()=>{
+ const b=game(),a=id('replicatore-olografico','Epica');b.sides.A.hand=[a,a];
+ const r=resolveFleetNextTurn(b,'A',{pass:true,cards:[0,1]},1000);
+ assert.equal(r.ok,false);
 });

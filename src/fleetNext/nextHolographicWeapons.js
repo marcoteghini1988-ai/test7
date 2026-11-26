@@ -54,11 +54,13 @@ export function prepareHolographicReplica(b,ctx,events,h){
  const source=enemy.nextLastWeapon;
  if(!source||isA(source.machine)){
   real.replicaState=null;real.replicaSerial=null;
+  if(side.nextEclipsePending?.machine?.holoOwnerCardId&&side.nextEclipsePending.machine.id===real.id)side.nextEclipsePending=null;
   events.push(h.emit(b,ctx.who,'next-weapon-holo-no-source',real.name+' · nessuna arma replicabile',
    {cardId:real.sourceCardId,machineId:real.id,sourceCardId:source?.machine.sourceCardId||null}));
   return null;
  }
  const same=real.replicaSerial===source.serial;
+ if(!same&&side.nextEclipsePending?.machine?.holoOwnerCardId&&side.nextEclipsePending.machine.id===real.id)side.nextEclipsePending=null;
  const previous=same&&real.replicaState&&real.replicaState.untilPly>b.ply?real.replicaState:null;
  const spec=source.machine.weaponProfile,base=source.machine;
  if(spec?.pattern==='thermal-coupler'&&!side.machines.some(m=>m.id!==real.id&&m.weaponProfile?.pattern==='binary-overload'&&active(side,m,b.ply))){
