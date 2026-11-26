@@ -61,3 +61,21 @@ for(const card of approved.cards){
  await writeFile(temporary,png);await rename(temporary,target);approvedRestored++;
 }
 console.log('Fronti confermati HD verificati: '+approved.cards.length+'; ricomposti: '+approvedRestored+'.');
+
+// Basi senza scritte delle carte localizzabili. Gli originali approvati
+// rimangono intatti; il livello SVG della lingua viene disegnato nell'app.
+const textSources=path.join(root,'asset-sources/card-text/nucleo-folgore');
+const textManifest=JSON.parse(await readFile(path.join(textSources,'manifest.json'),'utf8'));
+let textRestored=0;
+for(const card of textManifest.cards){
+ const target=path.join(root,card.path);
+ try{const current=await readFile(target);if(current.length===card.bytes&&hash(current)===card.sha256)continue;}catch{/* Checkout nuovo. */}
+ const parts=[];
+ for(const part of card.parts){const bytes=await readFile(path.join(textSources,part.name));
+  if(bytes.length!==part.bytes||hash(bytes)!==part.sha256)throw Error('Parte base traducibile non integra: '+part.name);parts.push(bytes);}
+ const png=Buffer.concat(parts);
+ if(png.length!==card.bytes||hash(png)!==card.sha256)throw Error('Base traducibile non integra: '+card.id);
+ await mkdir(path.dirname(target),{recursive:true});const temporary=target+'.restoring-'+process.pid;
+ await writeFile(temporary,png);await rename(temporary,target);textRestored++;
+}
+console.log('Basi traducibili HD verificate: '+textManifest.cards.length+'; ricomposte: '+textRestored+'.');

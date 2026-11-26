@@ -9,6 +9,7 @@ import {WEAPON_NEAR_FINAL_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {exclusiveRarityAtLevel,exclusiveRarityMilestones} from './fleetNext/exclusiveEvolution.js';
 import {readShipCollection} from './shipCollection.js';
 import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
+import {cardTextName,cardTextDescription} from './cardTextPresentation.js';
 import {cardCategoryColor,cardCategoryLabel} from './fleetNext/cardCategory.js';
 import {readFleetInventory,writeFleetInventory,
  upgradeFleetExclusive,exclusiveUpgradeCost} from './fleetNext/collection.js';
@@ -20,9 +21,10 @@ const locale=n=>Number(n||0).toLocaleString('it-IT');
 // La plancia e lo stile grafico delle carte non cambiano.
 // Fronte ufficiale del catalogo, identico in Shop, mazzi ed arena.
 function FleetCardArt({id,name,grade=1,large=false}){
+ name=cardTextName(WEAPON_NEAR_FINAL_BY_ID[id]||card(id))||name;
  const width=large?114:38;
  if(!cardFacePath(id,grade)){
-  const definition=WEAPON_NEAR_FINAL_BY_ID[id]||card(id),text=definition?describeEffect(definition,grade):name;
+  const definition=WEAPON_NEAR_FINAL_BY_ID[id]||card(id),text=definition?cardTextDescription(definition,describeEffect(definition,grade)):name;
   return <div role="img" aria-label={'Carta '+name+' · '+text}
    style={{width,minHeight:width*1.5,aspectRatio:'2 / 3',flexShrink:0,boxSizing:'border-box',
     padding:large?9:3,border:'2px solid '+(cardCategoryColor(definition)||'#ffb24d'),
@@ -121,9 +123,9 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
    ([...NEXT_COMMON_CARDS,...DISMANTLE_CARDS,...ENERGY_CARDS,...FUSION_SHIP_CARDS].some(def=>def.id===c.id)||NEXT_NEW_WEAPON_BY_ID[c.id])?NEXT_CARD_COSTS[c.rarita]:null;
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
-   <strong>{c.nome||c.name}</strong>
+   <strong>{cardTextName(c)}</strong>
    <div style={small}>{c.rarita||'Comune'} · {collectionCategory(c,c.sottotipo||c.category||c.kind)}{isEnergy?' · '+c.charges+' '+(c.charges===1?'carica':'cariche'):''}</div>
-   <p style={small}>{describeEffect(WEAPON_NEAR_FINAL_BY_ID[c.id]||c)}</p>
+   <p style={small}>{cardTextDescription(WEAPON_NEAR_FINAL_BY_ID[c.id]||c,describeEffect(WEAPON_NEAR_FINAL_BY_ID[c.id]||c))}</p>
    <p style={small}>Possedute: {owned} · Nel mazzo: {equipped} · Limite mazzo: {cardCopyLimit(c.id)}{isWeapon?' · Limite inventario: '+maxOwned:''}</p>
    <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
     <button style={btn} disabled={equipped>=copies||deckInfo.baseDeck.length>=deckInfo.capacity}

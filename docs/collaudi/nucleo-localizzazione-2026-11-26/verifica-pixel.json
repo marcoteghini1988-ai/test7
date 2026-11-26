@@ -1,0 +1,65 @@
+[
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore",
+    "locale": "base",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore",
+    "locale": "en",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore",
+    "locale": "it",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore-rarity-e",
+    "locale": "base",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore-rarity-e",
+    "locale": "en",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore-rarity-e",
+    "locale": "it",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+    "locale": "base",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+    "locale": "en",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+    "locale": "it",
+    "changedOutsideTextRegions": 0,
+    "illustrationUnchanged": true,
+    "outerFrameUnchanged": true
+  }
+]

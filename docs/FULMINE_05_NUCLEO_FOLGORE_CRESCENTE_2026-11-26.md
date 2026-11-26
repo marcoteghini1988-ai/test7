@@ -1,14 +1,14 @@
 # Fulmine, famiglia 5 — Cannone a Nucleo di Folgore Crescente
 
-**Correzione linguistica richiesta il 26/11/2026:** l'utente ha ribadito
-che tutti i testi delle carte devono essere inglesi e traducibili senza
-rifare la carta. Il generatore corrente usa ancora il titolo italiano
-`CANNONE A NUCLEO / DI FOLGORE CRESCENTE`; le etichette inglesi non bastano.
-I fronti attivi sono PNG completi con testo incorporato: la verifica della
-partita riportata sotto non certifica la localizzazione. Restano da
-adeguare titolo e gestione dei livelli testo secondo la nuova sezione
-«Lingua e localizzazione» della procedura. L'approvazione dell'illustrazione
-e del colpo resta conservata; non ridisegnare la grafica per tradurla.
+**Correzione linguistica implementata il 26/11/2026:** il nome inglese
+predefinito è **Growing Thunder Core Cannon**. Le tre varianti usano una
+base PNG senza scritte e un livello SVG con testi EN/IT provenienti da
+dizionari separati. Il cambio lingua conserva immagini, ID, valori ed
+effetti; il titolo italiano compare solo selezionando l'italiano.
+I tre PNG completi precedentemente approvati restano intatti come
+sorgenti recuperabili. Esportazioni di lettura EN/IT e nove confronti
+pixel verificano l'assenza di modifiche fuori dalle aree delle scritte.
+Dettagli in `CARTE_TESTI_TRADUCIBILI_2026-11-26.md`.
 
 Stato: **tre fronti e revisione scenica 2 approvati e collegati alla
 partita; pubblicati su GitHub e collaudati su StackBlitz**.

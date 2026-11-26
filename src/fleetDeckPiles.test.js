@@ -11,6 +11,7 @@ import {card,cardRole,cardDisplayFacePath as cardFacePath} from './fleetNext/rul
 import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import {FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView} from './fleetDeckPiles.js';
 import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
+import {cardTextName,localizedCardText,hasCardTextLayer} from './cardTextPresentation.js';
 
 const multiset=ids=>[...ids].sort();
 test('Il rimescolamento conserva copie, input e sequenza casuale del motore',()=>{
@@ -103,8 +104,8 @@ const marksBody=marksAst.statements.filter(s=>!ts.isImportDeclaration(s)).map(s=
 const marksCompiled=ts.transpileModule(marksBody,{compilerOptions:{target:ts.ScriptTarget.ES2022,
  jsx:ts.JsxEmit.React,module:ts.ModuleKind.CommonJS}}).outputText;
 const integratedFronts=JSON.parse(readFileSync(new URL('./fleetNext/approvedWeaponIntegration.json',import.meta.url),'utf8'));
-const WeaponSalvoCardMarks=new Function('React','useId','approvedWeaponSalvo','integratedFronts',marksCompiled+
- '\nreturn WeaponSalvoCardMarks;')(React,React.useId,approvedWeaponSalvo,integratedFronts);
+const WeaponSalvoCardMarks=new Function('React','useId','approvedWeaponSalvo','integratedFronts','hasCardTextLayer','CardTextLayer',marksCompiled+
+ '\nreturn WeaponSalvoCardMarks;')(React,React.useId,approvedWeaponSalvo,integratedFronts,hasCardTextLayer,()=>null);
 const source=readFileSync(new URL('./FleetDeckPiles.jsx',import.meta.url),'utf8');
 const ast=ts.createSourceFile('FleetDeckPiles.jsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JSX);
 const body=ast.statements.filter(s=>!ts.isImportDeclaration(s)).map(s=>
@@ -112,7 +113,7 @@ const body=ast.statements.filter(s=>!ts.isImportDeclaration(s)).map(s=>
 const compiled=ts.transpileModule(body,{compilerOptions:{target:ts.ScriptTarget.ES2022,
  jsx:ts.JsxEmit.React,module:ts.ModuleKind.CommonJS}}).outputText;
 const scope={React,...Object.fromEntries(['useEffect','useLayoutEffect','useRef','useState'].map(k=>[k,React[k]])),
- card,cardRole,cardFacePath,FLEET_ELEMENTS,OFFICIAL_FLEET_DRAW_BACK:null,
+ card,cardRole,cardFacePath,cardTextName,localizedCardText,FLEET_ELEMENTS,OFFICIAL_FLEET_DRAW_BACK:null,
  FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView,WeaponSalvoCardMarks};
 const {FleetDeckPiles,FleetCardPile}=new Function(...Object.keys(scope),compiled+
  '\nreturn {FleetDeckPiles,FleetCardPile};')(...Object.values(scope));

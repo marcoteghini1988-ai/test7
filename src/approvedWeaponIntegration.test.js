@@ -6,6 +6,7 @@ import {card,cardDisplayFacePath} from './fleetNext/rules.js';
 import {weaponEnergyContributions} from './fleetNext/weaponEnergyFeedback.js';
 import {weaponEffectProfile,fleetWeaponProjectiles} from './maglioBattleVisuals.js';
 import {coreThunderSoundPlan} from './coreThunderAudio.js';
+import {cardTextBasePath} from './cardTextAssets.js';
 import {metalWeaponSoundPlan} from './metalWeaponSounds.js';
 import {weaponSalvoAudioCue} from './weaponSalvoAudio.js';
 import {createMaglioReviewBattle} from '../scripts/maglioReviewBattle.js';
@@ -17,7 +18,7 @@ test('The 40 active fronts are verified native RGBA files, including the confirm
  assert.equal(integration.cards.length,40);
  assert.equal(integration.cards.filter(c=>c.elementId==='ionic').length,18);
  for(const c of integration.cards){
-  assert.equal(cardDisplayFacePath(c.id),'/'+c.path.replace(/^public\//,''));
+  assert.equal(cardDisplayFacePath(c.id),cardTextBasePath(c.id)||'/'+c.path.replace(/^public\//,''));
   const png=readFileSync(c.path);
   assert.equal(png.length,c.bytes,c.id);
   assert.equal(createHash('sha256').update(png).digest('hex'),c.sha256,c.id);

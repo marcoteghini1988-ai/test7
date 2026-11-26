@@ -22,9 +22,14 @@ di nuovo immagini, cornici o simboli. Vale anche per i fronti nativi
 creati dall'interfaccia. Leggere la sezione «Lingua e localizzazione» in
 `docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md` prima di ogni carta.
 Le indicazioni precedenti sulle sole etichette inglesi sono superate.
-I PNG completi con testo incorporato non attestano questa capacità:
-il nome del Nucleo appena integrato è ancora italiano e va adeguato;
-non dichiarare la sua localizzazione già implementata nella partita.
+La correzione del Nucleo è implementata: tre basi PNG HD senza scritte
+separate dagli originali approvati; dizionari `cardTexts.en.json` e
+`cardTexts.it.json`, livello SVG `CardTextLayer`, stesso fronte e stessi
+valori al cambio lingua. Il nome predefinito è Growing Thunder Core Cannon.
+I tre originali approvati restano intatti. Anche i nomi e gli effetti delle
+40 Energie native usano il dizionario. Le altre 37 varianti Arma non sono
+ancora migrate: non dichiarare tutto il catalogo localizzato.
+Verifiche e stato del collaudo in `docs/CARTE_TESTI_TRADUCIBILI_2026-11-26.md`.
 
 ## Integrazione meccaniche 26/11 — nuovi nominali, collaudo pendente
 

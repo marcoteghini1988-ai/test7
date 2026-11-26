@@ -2,6 +2,8 @@ import integratedFronts from './fleetNext/approvedWeaponIntegration.json';
 import React,{useId} from 'react';
 import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
 import './WeaponSalvoCardMarks.css';
+import CardTextLayer from './CardTextLayer.jsx';
+import {hasCardTextLayer} from './cardTextPresentation.js';
 
 const integratedIds=new Set(integratedFronts.cards.map(c=>c.id));
 const slugs=['comune','rara','epica','leggendaria'];
@@ -11,6 +13,7 @@ const colors=[['#e5edf1','#a9b9c4','#d0dce2'],['#fff0d6','#d38c5b','#f3c393'],
 // the same live catalog. Approved art, frame and symbols remain intact.
 export default function WeaponSalvoCardMarks({cardId,className='',style}){
  const unique=useId().replace(/[^a-zA-Z0-9]/g,''),p=approvedWeaponSalvo(cardId);
+ if(hasCardTextLayer(cardId))return <CardTextLayer cardId={cardId} className={className} style={style}/>;
  if(!p||p.count<=1||integratedIds.has(cardId))return null;
  const c=colors[p.tier],matte='/assets/fleet-card-marks/salvo-'+slugs[p.tier]+'.png',gradient='salvo-material-'+unique;
  return <svg className={'weapon-salvo-marks '+className} style={style}

@@ -5,6 +5,7 @@ import {OFFICIAL_FLEET_DRAW_BACK} from './officialDeckBackArt.js';
 import {FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView} from './fleetDeckPiles.js';
 import './FleetDeckPiles.css';
 import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
+import {cardTextName,localizedCardText} from './cardTextPresentation.js';
 
 const FALLBACK_ART={attack:'shot-ion',energy:'shot-ion',defense:'tactical-cover',
  trap:'tactic-reactive',character:'module-card-planet_char_1',
@@ -17,13 +18,13 @@ export function FleetPileCardFace({id}){
   def?.kind==='trap'?'trap':cardRole(id)||'support';
  const art=cardFacePath(id);
  const fallback='/assets/special-cards/'+(FALLBACK_ART[role]||FALLBACK_ART.support)+'.png';
- const name=def?.nome||def?.name||id;
+ const name=cardTextName(def)||id;
  return <span className={'fleet-pile-face'+(art?' fleet-pile-face--art':'')}
   data-family={role} data-rarity={def?.rarita||'Comune'}>
   <img src={art||fallback} alt="" draggable={false}
    onError={e=>{if(e.currentTarget.getAttribute('src')!==fallback)e.currentTarget.src=fallback;}}/>
   {art&&<WeaponSalvoCardMarks cardId={id}/>}
-  {!art&&<><small>{FLEET_ELEMENTS[def?.elementId]?.symbol||'✦'} {ROLE_LABELS[role]||'SPECIALE'}</small>
+  {!art&&<><small>{FLEET_ELEMENTS[def?.elementId]?.symbol||'✦'} {localizedCardText(def)?.category||ROLE_LABELS[role]||'SPECIALE'}</small>
    <b>{name}</b></>}
  </span>;
 }
@@ -40,7 +41,7 @@ export function FleetPileCardBack({src}){
 
 function FleetCardPile({kind,count,cards=[],backSrc,recycling}){
  const top=cards[cards.length-1],discard=kind==='discard';
- const topName=top&&(card(top)?.nome||card(top)?.name||top);
+ const topName=top&&(cardTextName(card(top))||top);
  const label=discard?'Scarti: '+count+' carte'+(topName?' · '+topName:''):'Mazzo: '+count+' carte rimaste';
  const depth=fleetPileDepth(count);
  const layers=Math.min(count,48);

@@ -62,6 +62,7 @@ import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
 import MaglioBattleEffects from './MaglioBattleEffects.jsx';
 import {fleetWeaponProjectiles,maglioPresentationBerths} from './maglioBattleVisuals.js';
 import WeaponSalvoCardMarks from './WeaponSalvoCardMarks.jsx';
+import {cardTextName,cardTextDescription,localizedCardText} from './cardTextPresentation.js';
 import {preloadProjectileViews} from './maglioPerspectiveRenderer.js';
 import ShipFlightSurface from './ShipFlightSurface.jsx';
 import './MathDuelBattle.css';
@@ -433,7 +434,7 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
    const art=covered?OFFICIAL_SPECIAL_FIXED_BACK:!type?null:card(type)?
      cardFacePath(type,upgrades[type]||1):officialSpecialArtPath(type);
    const title=covered?(side==='A'?'La tua trappola coperta · Tocca per consultarla':'Trappola avversaria coperta'):
-    face?(face.nome||face.name||type)+' · '+describeEffect(face,upgrades[type]||1):labels[i];
+    face?(cardTextName(face)||type)+' · '+cardTextDescription(face,describeEffect(face,upgrades[type]||1)):labels[i];
    return <div key={i} className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
     (entry?' live-slot--occupied':'')+(covered?' live-slot--covered':'')+(offline?' live-slot--offline':'')}
     title={title+(offline?' · Sistema distrutto':'')} data-offline={offline||undefined}
@@ -479,14 +480,14 @@ function TrapReveal({event}){
 function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,grade=1,motherLevel=1,unavailableReason='',modernBalance=false}){
  const def=displayedCard(type,modernBalance);
  const rarity=exclusiveRarityAtLevel(def,motherLevel);
- const description=def?describeEffect(def,grade):'Carta tattica';
+ const description=def?cardTextDescription(def,describeEffect(def,grade)):'Carta tattica';
  const isEnergy=def?.effectSpec?.type==='energy'||def?.kind==='energy';
  const isTrap=def?.effectSpec?.type==='trap'||def?.kind==='trap';
  const role=isEnergy?'energy':isTrap?'trap':cardVisualFamily(def,cardRole(type));
  const familyGlyph=isEnergy?FLEET_ELEMENTS[def.effectSpec.elementId]?.symbol||'ϟ':
   {weapon:'⚔',strategy:'◎',attack:'◎',defense:'⬡',trap:'◈',character:'♛',terrain:'◈',support:'✚',control:'◎'}[role]||'✦';
- const name=def?.nome||def?.name||type;
- const categoryLabel=cardCategoryLabel(def,role);
+ const name=cardTextName(def)||type;
+ const categoryLabel=localizedCardText(def)?.category||cardCategoryLabel(def,role);
  const art=type&&def?cardFacePath(type,grade):officialSpecialArtPath(type);
  const fallbackImages={
  weapon:'/assets/special-cards/shot-ion.png',
@@ -519,7 +520,7 @@ function OriginalSpecialHandCard({type,index,selected,disabled,onClick,offset,gr
    }}/>
   {art&&<WeaponSalvoCardMarks cardId={type}/>}
   <span className="live-card-emblem">{familyGlyph}</span>
-  <span className="live-card-rarity" title={'Rarità '+rarity}>{categoryLabel}</span>
+  <span className="live-card-rarity" title={localizedCardText(def)?.rarity||'Rarità '+rarity}>{categoryLabel}</span>
   <span className="live-card-caption"><b>{name}</b>
    <small>{description}</small></span>
  </button>;
@@ -1230,8 +1231,8 @@ export default function OfficialFleetBattle3D({
      const faceId=machine?.sourceCardId||(machine?.pending?machine.id:null);
      const artwork=faceId?cardFacePath(faceId):null;
      return <button type="button" key={slot} className="f3d-weapon-card" data-fleet-weapon-slot={slot}
-      title={machine?(machine.name||'Arma'):'Slot ARMA '+(slot+1)}
-      aria-label={machine?(machine.name||'Arma'):'Slot ARMA '+(slot+1)}
+      title={machine?(cardTextName(card(faceId))||machine.name||'Arma'):'Slot ARMA '+(slot+1)}
+      aria-label={machine?(cardTextName(card(faceId))||machine.name||'Arma'):'Slot ARMA '+(slot+1)}
       onClick={()=>machine&&setHelp({machine})}>
       {artwork?<><img src={artwork} alt="" draggable={false}/><WeaponSalvoCardMarks cardId={faceId}/></>:
        <span className="f3d-weapon-icon" aria-hidden="true">⚔</span>}
@@ -2105,9 +2106,9 @@ export default function OfficialFleetBattle3D({
      <strong>{boss?.name}</strong><p>{boss?.description}</p>
      {terrain&&<p><b>{readableTerrain}</b><br/>{TERRAIN_CATALOG[terrain]?.description}</p>}
     </>:help.machine?<>
-     <strong>{help.machine.name}</strong>
+     <strong>{cardTextName(card(help.machine.sourceCardId))||help.machine.name}</strong>
      {player.ruleset===HP_SYNC_RULESET?<>
-     <p>{describeEffect(displayedCard(help.machine.sourceCardId,player.newGeneratorCombat))}</p>
+     <p>{cardTextDescription(displayedCard(help.machine.sourceCardId,player.newGeneratorCombat),describeEffect(displayedCard(help.machine.sourceCardId,player.newGeneratorCombat)))}</p>
      {help.machine.nominalDamage!=null&&<p>Danno nominale attuale: {help.machine.nominalDamage} HP (prima di difese e modificatori).</p>}
      {help.machine.damagePercent!=null&&<p>Danno nominale: {help.machine.damagePercent}% degli HP massimi del bersaglio.</p>}
      {help.machine.damageFormula&&<p>{help.machine.damageFormula}</p>}

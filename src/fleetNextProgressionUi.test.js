@@ -33,6 +33,7 @@ import {officialSpecialArtPath} from './officialSpecialCardArt.js';
 import {escortArtwork,fusedEscortArtwork} from './fleetBattleModels.js';
 import {maglioArtwork,maglioPresentationBerths} from './maglioBattleVisuals.js';
 import {hologramDisplayEscorts} from './fleetNext/nextHolographicWeapons.js';
+import {cardTextName,cardTextDescription,localizedCardText} from './cardTextPresentation.js';
 import {VITAL_IDS,VITAL_LABELS} from './vitalDefense.js';
 import {VITAL_TO_ORIGINAL_MOTOR,VITAL_MOTOR_SHORT_NAMES,vesselWithPhysicalVitalDamage} from './officialVitalMotorAdapter.js';
 
@@ -52,7 +53,7 @@ function elements(tree){
 const Labels={engine:'Plancia',weapons:'Arsenale',shieldGenerator:'Generatore',command:'Centralina'};
 const Shorts={engine:'PLA',weapons:'ARS',shieldGenerator:'GEN',command:'CEN'};
 const Slots=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialSlots',{
- card,cardRole,cardFacePath,describeEffect,OFFICIAL_SPECIAL_FIXED_BACK,officialSpecialArtPath,exclusiveRarityAtLevel,cardVisualFamily,displayedCard:(id)=>card(id),WeaponSalvoCardMarks:()=>null
+ card,cardRole,cardFacePath,describeEffect,cardTextName,cardTextDescription,OFFICIAL_SPECIAL_FIXED_BACK,officialSpecialArtPath,exclusiveRarityAtLevel,cardVisualFamily,displayedCard:(id)=>card(id),WeaponSalvoCardMarks:()=>null
 });
 const Fighter=extract('./OfficialFleetBattle3D.jsx','OriginalFleetFighter',{
  useMemo:fn=>fn(),newVessel,projectFleetDefense,projectMachineBerths,
@@ -242,7 +243,7 @@ test('Own-component selection maps the physical Plancia and Generatore to real t
 test('Native new card fronts expose complete names and effects without invalid image links',()=>{
  const Hand=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialHandCard',{
   card,displayedCard:(id)=>card(id),cardRole,cardFacePath,describeEffect,officialSpecialArtPath,
-  exclusiveRarityAtLevel,FLEET_ELEMENTS,cardVisualFamily,cardCategoryLabel,WeaponSalvoCardMarks:()=>null
+  exclusiveRarityAtLevel,FLEET_ELEMENTS,cardVisualFamily,cardCategoryLabel,cardTextName,cardTextDescription,localizedCardText,WeaponSalvoCardMarks:()=>null
  });
  for(const id of ['prog-bypass','weapon-memory-plasma','weapon-sequence-1','prog-fusion-l04']){
   const html=renderToStaticMarkup(React.createElement(Hand,{type:id,index:0,offset:0,selected:true,onClick:()=>{}}));

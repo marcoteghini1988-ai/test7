@@ -1,0 +1,46 @@
+{
+  "coreName": "Growing Thunder Core Cannon",
+  "coreTitle": [
+    "GROWING THUNDER",
+    "CORE CANNON"
+  ],
+  "weapon": "WEAPON",
+  "energy": "ENERGY",
+  "elementLabel": "ELEMENT",
+  "lightning": "LIGHTNING",
+  "durationLabel": "DURATION",
+  "turn": "TURN",
+  "turns": "TURNS",
+  "damageLabel": "TURN DAMAGE / HP",
+  "rechargeLabel": "RECHARGE T2 / T3",
+  "rechargeLines": [
+    "PLAY AND SPEND 1",
+    "NEW LIGHTNING",
+    "MISSED: STAYS MIN"
+  ],
+  "target": "1 TARGET",
+  "action": "1 / TURN",
+  "rarities": {
+    "Comune": "COMMON",
+    "Rara": "RARE",
+    "Epica": "EPIC",
+    "Leggendaria": "LEGENDARY"
+  },
+  "coreDescription": "Deals {stages} HP over {turns} of your turns, one shot at one target per turn. On turns 2 and 3, play a new Lightning Energy card and spend 1 charge to increase power. Missing a recharge permanently returns this weapon to minimum damage until it expires. Normal defenses and cover apply.",
+  "energyName": "{element} Energy",
+  "energyDescription": "Adds {charges} {element} Energy {chargeWord} to the single unlimited pile. The physical card remains until its last charge is spent, then moves to the discard pile. Powers compatible weapons and mother ship specials.",
+  "elements": {
+    "plasma": "Fire",
+    "cryogenic": "Ice",
+    "refrigerant": "Water",
+    "metallic": "Metal",
+    "ionic": "Lightning",
+    "mineral": "Earth",
+    "aerial": "Wind",
+    "radiant": "Light",
+    "void": "Shadow",
+    "gravity": "Gravity"
+  },
+  "charge": "charge",
+  "charges": "charges"
+}

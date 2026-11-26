@@ -19,8 +19,13 @@ import {hapticsEnabled,setHapticsEnabled} from './src/weaponHaptics.js';
 import {approvedWeaponSalvo} from './src/fleetNext/approvedWeaponSalvos.js';
 import {WEAPON_NEAR_FINAL_BY_ID} from './src/fleetNext/weaponRarityEvolutions.js';
 import {CORE_FAMILY} from './src/coreThunderSpec.js';
+import {useCardTextLocale} from './src/CardTextLayer.jsx';
+import {setCardTextLocale} from './src/cardTextLocale.js';
+import {cardTextName,hasCardTextLayer,cardTextBasePath} from './src/cardTextPresentation.js';
+import WeaponSalvoCardMarks from './src/WeaponSalvoCardMarks.jsx';
 import './src/index.css';
 function Review(){
+ const textLocale=useCardTextLocale(),[showCard,setShowCard]=useState(false);
  const fleets=[
   {name:'Aurora / Lince',shipA:'N00',shipB:'C01',supportModels:['C02','C03']},
   {name:'Binaria / Manta',shipA:'R01',shipB:'R02',supportModels:['C04','E03']},
@@ -84,7 +89,7 @@ function Review(){
     {fleets.map((fleet,index)=><option key={fleet.name} value={index}>{fleet.name}</option>)}
    </select></label>
    <label>Carta Arma <select aria-label="Carta Arma" value={setup.cardId} onChange={e=>reset({cardId:e.target.value,secondTurn:false,supports:!!chainWeaponVariant(e.target.value)||!!precisionWeaponVariant(e.target.value),supportCount:2,cascadeMode:'none',ownStage:1,coreMode:'charged',energyCards:0,withDefense:false,expiredCombo:false,jawCombo:false,wounded:false,blocked:false,slot:0})}>
-    {Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).map(id=><option key={id} value={id}>{WEAPON_NEAR_FINAL_BY_ID[id].name+' · '+WEAPON_NEAR_FINAL_BY_ID[id].rarita}</option>)}
+    {Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).map(id=><option key={id} value={id}>{cardTextName(WEAPON_NEAR_FINAL_BY_ID[id])+' · '+WEAPON_NEAR_FINAL_BY_ID[id].rarita}</option>)}
    </select></label>
    <span>{WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.baseDamage??WEAPON_NEAR_FINAL_BY_ID[setup.cardId].effectSpec.weaponProfile?.baseDamage} HP base</span>
    <span>{(()=>{const s=approvedWeaponSalvo(setup.cardId);return !s?'':/ganasce|collassatore/.test(s.familyId)?'1 ganascia · 3 turni · combo unica':s.style==='six-plus-lance'?'6 colpi + 1 lancia finale':s.count+' colpi per salva';})()}</span>
@@ -134,11 +139,20 @@ function Review(){
     </select></label>
     <label><input type="checkbox" aria-label="Difesa pubblica Nucleo" checked={setup.withDefense||false} onChange={e=>reset({withDefense:e.target.checked})}/>Difesa pubblica</label>
    </>}
+   {hasCardTextLayer(setup.cardId)&&<>
+    <label>Card language <select aria-label="Card language" value={textLocale} onChange={e=>setCardTextLocale(e.target.value)}><option value="en">English</option><option value="it">Italiano</option></select></label>
+    <button onClick={()=>setShowCard(v=>!v)}>{showCard?'Close card':'Read card'}</button>
+   </>}
    <button aria-pressed={hapticsOn} onClick={()=>setHapticsOn(setHapticsEnabled(!hapticsOn))}>Vibrazione {hapticsOn?'attiva':'disattiva'}</button>
    <button onClick={()=>recording?capture.current?.recorder.stop():recordBattle()}>{recording?'Ferma registrazione':'Registra battaglia'}</button>
    <span role="status">{recordStatus}</span>
    {recordUrl&&<a href={recordUrl} download="armi-metallo-effetti-in-battaglia.webm">Scarica video battaglia</a>}
   </div>
+  {showCard&&hasCardTextLayer(setup.cardId)&&<div role="dialog" aria-label="Card preview" style={{position:'fixed',inset:0,zIndex:1000,background:'#020812e8',display:'grid',placeItems:'center'}}>
+   <div><label>Card language <select aria-label="Preview language" value={textLocale} onChange={e=>setCardTextLocale(e.target.value)}><option value="en">English</option><option value="it">Italiano</option></select></label><button onClick={()=>setShowCard(false)}>Close card</button><span className="weapon-salvo-gallery" style={{width:'min(380px,70vw,52vh)',aspectRatio:'2 / 3'}}>
+    <img src={cardTextBasePath(setup.cardId)||OFFICIAL_WEAPON_FRONT_BY_ID[setup.cardId]} alt={cardTextName(WEAPON_NEAR_FINAL_BY_ID[setup.cardId])} style={{width:'100%',height:'100%',objectFit:'contain'}}/><WeaponSalvoCardMarks cardId={setup.cardId}/>
+   </span></div>
+  </div>}
   <div className="maglio-review-host" style={{position:'relative',flex:1,minHeight:0}}>
    <OfficialFleetBattle3D key={setup.serial} initialBattle={initial} nickname="GIOCATORE" opponentNickname="AVVERSARIO" gameMode="pvp" onExit={()=>reset()}/>
   </div>

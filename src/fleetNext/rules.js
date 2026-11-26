@@ -14,6 +14,7 @@ import {DESIGNED_WEAPON_BY_ID} from './designedWeaponCards.js';
 import {CONFIRMED_TRANSFER_WEAPON_BY_ID} from './confirmedTransferredWeapons.js';
 import {CURRENT_WEAPON_BY_ID} from './weaponRarityEvolutions.js';
 import {officialWeaponFacePath,officialWeaponDisplayFacePath} from './officialWeaponArt.js';
+import {cardTextBasePath} from '../cardTextAssets.js';
 export {ALL_WEAPON_CARDS,ALL_WEAPON_BY_ID,CURRENT_WEAPON_CARDS,CURRENT_WEAPON_BY_ID,WEAPON_BASE_CARDS,EVOLVED_WEAPON_CARDS,
  WEAPON_EVOLUTION_FAMILIES,weaponAtRarity,weaponNextEvolution} from './weaponRarityEvolutions.js';
 export {DESIGNED_WEAPON_CARDS,DESIGNED_WEAPON_BY_ID,DESIGNED_WEAPONS_PLAYABLE,DESIGNED_WEAPONS_PENDING} from './designedWeaponCards.js';
@@ -144,7 +145,7 @@ export function cardFacePath(id,level=1){
 // I fronti approvati originali conservano percorso e hash; il renderer usa la variante cromatica verificata.
 export function cardDisplayFacePath(id,level=1){
  const source=cardFacePath(id,level);
- return source?(officialWeaponDisplayFacePath(id)||source):null;
+ return source?(cardTextBasePath(id)||officialWeaponDisplayFacePath(id)||source):null;
 }
 export const shipConfig = id => SHIP_CONFIGS[id]||null;
 export function cardCopyLimit(id){

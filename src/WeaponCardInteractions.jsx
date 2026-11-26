@@ -3,6 +3,7 @@ import {card,cardDisplayFacePath} from './fleetNext/rules.js';
 import {isTrapCard} from './fleetNext/simpleEffects.js';
 import {weaponEffectProfile} from './maglioBattleVisuals.js';
 import './WeaponCardInteractions.css';
+import {cardTextName} from './cardTextPresentation.js';
 
 export default function WeaponCardInteractions({events,paths,startedAt}){
  const host=useRef(null);
@@ -36,7 +37,7 @@ export default function WeaponCardInteractions({events,paths,startedAt}){
       else{const label=document.createElement('span');label.className='weapon-energy-native';
        label.dataset.element=card(c.cardId)?.effectSpec?.elementId||'';
        const icon=document.createElement('b');icon.textContent=label.dataset.element==='ionic'?'ϟ':'◆';
-       const name=document.createElement('small');name.textContent=card(c.cardId)?.name||c.cardId;
+       const name=document.createElement('small');name.textContent=cardTextName(card(c.cardId))||c.cardId;
        label.append(icon,name);face.append(label);}
       if(c.consumed&&c.afterCharges>0){const charges=document.createElement('span');charges.className='weapon-energy-charges';charges.textContent=String(c.afterCharges);face.append(charges);}
       slot.append(face);shown.push(face);contributors.add(face);

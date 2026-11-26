@@ -1,0 +1,46 @@
+{
+  "coreName": "Cannone a Nucleo di Folgore Crescente",
+  "coreTitle": [
+    "CANNONE A NUCLEO",
+    "DI FOLGORE CRESCENTE"
+  ],
+  "weapon": "ARMA",
+  "energy": "ENERGIA",
+  "elementLabel": "ELEMENTO",
+  "lightning": "FULMINE",
+  "durationLabel": "DURATA",
+  "turn": "TURNO",
+  "turns": "TURNI",
+  "damageLabel": "DANNO / TURNO HP",
+  "rechargeLabel": "RICARICA T2 / T3",
+  "rechargeLines": [
+    "GIOCA E SPENDI 1",
+    "NUOVA FULMINE",
+    "SALTATA: AL MINIMO"
+  ],
+  "target": "1 BERSAGLIO",
+  "action": "1 / TURNO",
+  "rarities": {
+    "Comune": "COMUNE",
+    "Rara": "RARA",
+    "Epica": "EPICA",
+    "Leggendaria": "LEGGENDARIA"
+  },
+  "coreDescription": "Infligge {stages} HP in {turns} tuoi turni, un colpo a un bersaglio per turno. Nei turni 2 e 3 gioca una nuova Carta Energia Fulmine e spendi una carica per aumentare la potenza. Saltare una ricarica riporta definitivamente quest'arma al danno minimo fino alla scadenza. Si applicano le normali Difese e coperture.",
+  "energyName": "Energia {element}",
+  "energyDescription": "Aggiungi {charges} {chargeWord} Energia {element} alla pila unica senza limite. La carta fisica resta fino al consumo dell'ultima carica, poi va negli scarti. Alimenta Armi compatibili e Speciali della madre.",
+  "elements": {
+    "plasma": "Fuoco",
+    "cryogenic": "Ghiaccio",
+    "refrigerant": "Acqua",
+    "metallic": "Metallo",
+    "ionic": "Fulmine",
+    "mineral": "Terra",
+    "aerial": "Vento",
+    "radiant": "Luce",
+    "void": "Ombra",
+    "gravity": "Gravità"
+  },
+  "charge": "carica",
+  "charges": "cariche"
+}

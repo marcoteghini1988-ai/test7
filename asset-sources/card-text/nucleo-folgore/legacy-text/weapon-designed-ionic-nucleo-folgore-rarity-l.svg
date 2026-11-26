@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3072" height="4608"><defs>
+  <linearGradient id="material" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#ffffff"/><stop offset=".2" stop-color="#80e5ff"/><stop offset=".46" stop-color="#ffffff"/><stop offset=".78" stop-color="#e5b4fa"/><stop offset="1" stop-color="#ffffff"/></linearGradient>
+  <filter id="soft"><feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#070e17" flood-opacity=".85"/></filter>
+  <style>text{font-family:'Eclissi Vettore',sans-serif;text-anchor:middle;dominant-baseline:middle;fill:url(#material);stroke:#121a23;stroke-width:7;paint-order:stroke fill;letter-spacing:1px}.strong{stroke-width:9;font-weight:600}.number{stroke-width:12;font-weight:600}.minor{stroke-width:7;letter-spacing:4px}</style>
+ </defs><g filter="url(#soft)"><text x="1536" y="416" font-size="102" class="">CANNONE A NUCLEO</text><text x="1536" y="502" font-size="105" class="">DI FOLGORE CRESCENTE</text><text x="1536" y="2925" font-size="91" class="">WEAPON</text><text x="1536" y="4250" font-size="91" class="">LEGENDARY</text></g><g filter="url(#soft)">
+  <path d="M655 3482H2417M660 3817H2412" fill="none" stroke="#d99ff3" stroke-width="5" opacity=".57"/>
+  <path d="M1536 3468L1550 3482L1536 3496L1522 3482ZM1536 3803L1550 3817L1536 3831L1522 3817Z" fill="#ffffff" opacity=".82"/>
+  <text x="1045" y="3202" font-size="85" class="minor">ELEMENT</text><text x="1158" y="3355" font-size="80" class="strong">LIGHTNING</text>
+  <text x="2024" y="3202" font-size="88" class="minor">DURATION</text>
+  <g transform="translate(1752 3352)"><circle r="79" fill="#13223a" fill-opacity=".34" stroke="#d99ff3" stroke-width="10"/>
+   <path d="M0-50V0L33 23" fill="none" stroke="#ffffff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/><circle r="9" fill="#ffffff"/></g>
+  <text x="1930" y="3355" font-size="152" class="number">3</text><text x="2220" y="3355" font-size="104" class="strong">TURNS</text>
+  <text x="1042" y="3547" font-size="78" class="minor">TURN DAMAGE / HP</text>
+  <g transform="translate(754 3700)"><path d="M-91-42L-47-81L-18-44L20-96L52-42L94-22L52 7L82 54L30 52L10 96L-20 56L-63 72L-63 34L-97 8L-59-15Z" fill="url(#material)" stroke="#182535" stroke-width="9" stroke-linejoin="round"/><circle r="21" fill="#ffffff" stroke="#263c52" stroke-width="7"/></g>
+  <text x="1190" y="3700" font-size="80" class="number">81 / 120 / 181</text>
+  <text x="2056" y="3547" font-size="64" class="minor">RECHARGE T2 / T3</text><text x="2056" y="3620" font-size="64" class="strong">PLAY + SPEND 1</text><text x="2056" y="3692" font-size="64" class="strong">NEW LIGHTNING</text><text x="2056" y="3764" font-size="64" class="strong">MISSED: STAYS MIN</text>
+  <g transform="translate(735 3933)"><circle r="61" fill="none" stroke="#d99ff3" stroke-width="13"/><circle r="16" fill="#ffffff"/><path d="M0-92V-46M0 46V92M-92 0H-46M46 0H92" stroke="#ffffff" stroke-width="13" stroke-linecap="round"/></g>
+  <text x="1138" y="3933" font-size="108" class="strong">1 TARGET</text><circle cx="1536" cy="3933" r="10" fill="#ffffff" opacity=".85"/>
+  <g transform="translate(1740 3933)"><path d="M-80-29H-17L32-63L84 0L32 63L-17 29H-80M-101-60H-59M-104 59H-62" fill="none" stroke="#d99ff3" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/></g>
+  <text x="2160" y="3933" font-size="95" class="strong">1 / TURN</text>
+ </g></svg>
