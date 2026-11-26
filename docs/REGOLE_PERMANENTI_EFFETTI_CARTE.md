@@ -92,6 +92,45 @@ riscontro effettivo di ogni canale e gli eventuali controlli ancora aperti.
 L'ordine corrente resta raccolta e salvataggio delle specifiche; nessuna
 implementazione degli effetti parte prima del comando dell'utente.
 
+## Regola obbligatoria — natura del colpo coerente con l'elemento
+
+**Richiesta dell'utente, 26 novembre 2026:** il tipo di sparo e l'effetto
+scenico devono rendere riconoscibile l'elemento della carta. Vale per
+tutti gli elementi e per tutte le rarità, insieme alla corrispondenza
+visiva, sonora e aptica già obbligatoria.
+
+| Elemento | Natura visiva del colpo da rispettare |
+| --- | --- |
+| Metallo | Corpi e frammenti metallici, massa, taglio, perforazione o urto meccanico secondo l'arma. |
+| Fulmine | Scariche elettriche, saette e archi che esprimono conduzione e impatto elettrico. |
+| Fuoco | Fiamme, plasma caldo, scie incandescenti e combustione scenica coerente con l'arma. |
+| Acqua | Getti, onde, gocce, flussi e impatti fluidi. |
+| Ghiaccio | Ghiaccio, brina, cristalli freddi e frammentazione gelida. |
+| Terra | Rocce, minerali, polvere e detriti solidi coerenti con il dispositivo. |
+| Vento | Flussi d'aria, vortici, pressione e distorsioni leggibili del movimento dell'aria. |
+| Luce | Radiazione luminosa, raggi e geometrie di luce coerenti con il dispositivo. |
+| Ombra | Ombre, oscuramento e distorsioni scure secondo la natura della carta. |
+| Gravità | Distorsione spaziale, compressione e rappresentazione della massa e dei campi gravitazionali. |
+
+La tabella orienta la rappresentazione; non approva una stessa animazione
+per tutte le armi dello stesso elemento. Ogni arma e ogni evoluzione
+devono conservare una sequenza riconoscibile per forma, azione, ritmo,
+lancio e contatto, secondo la proposta approvata. Non limitarsi a cambiare
+il colore di un proiettile generico.
+Macchina e proiettile devono restare coerenti con l'illustrazione approvata.
+
+Anche il suono e la vibrazione seguono materiale, azione ed elemento.
+Gli effetti visivi non aggiungono meccaniche: una fiamma transitoria non
+crea Bruciatura, la brina non congela, l'aria non respinge e la gravità
+non rallenta se il motore non prevede quegli effetti.
+Rispettare sempre bersagli, numero di impatti, danni, costi, Difese e
+durate della carta. Una Difesa bloccante reagisce sulla protezione e
+sulla carta stessa, senza simulare danno riuscito sulla nave.
+
+Leggere e applicare questa regola autonomamente prima di progettare o
+creare gli effetti. Le scelte specifiche delle carte restano distinte
+dalla regola generale dell'elemento.
+
 ## Modalità corrente: raccogliere, salvare, poi creare su comando
 
 L'utente ha chiesto di annotare per ora gli effetti carta per carta e di
