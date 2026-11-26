@@ -1,0 +1,254 @@
+{
+  "scope": "pannello caratteristiche",
+  "box": [
+    300,
+    3050,
+    2772,
+    4140
+  ],
+  "sourcesUnchanged": true,
+  "cards": [
+    {
+      "id": "weapon-confirmed-metallic-maglio",
+      "rarity": "comune",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1945987,
+      "sourceSha256": "ffcc9b548cb81e7efd000b8676d3fa94c8f6b0754999ce16b5d6ece70bc931c8",
+      "redSha256": "ac5b9a8f15ca8f378e186d66e46a796f827e95548dbd2052f970f9063de9bd4e"
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-r",
+      "rarity": "rara",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1937989,
+      "sourceSha256": "732d18584d6a04886a72abe165986dd44f34b584e003486b002ea4b1da39fe17",
+      "redSha256": "208ed17eea496af5b06895ec32d283812fe6439368f5d430155e2665f8772e2f"
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-e",
+      "rarity": "epica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1932796,
+      "sourceSha256": "9b6b1eb6efd2959184291f023c2b8e252ec03f9eef1da06f99231ed4d57e629b",
+      "redSha256": "e42cc251f1b447f9b8ee73e9653dff829a4d4800388d4a4066052a5d3c27be8f"
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-l",
+      "rarity": "leggendaria",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1904043,
+      "sourceSha256": "65786345c13a140f8df7b888939972ee7634b85cdf2cd3b614829f32876cb532",
+      "redSha256": "ac836ab14868db34ce895129dbacba1ae741d8f23bf2fc5589cf813172e139ee"
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta",
+      "rarity": "comune",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1951131,
+      "sourceSha256": "edfce0e68fb4d1bbce2fb6dbfe8a9a604acc0e6fe4dec6ab9cb2b1b7bbad8978",
+      "redSha256": "017b59e4fa74ab850b8ee06cbb4cfe837afbccee283ebcfaf5dbf9bda8873765"
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-r",
+      "rarity": "rara",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1939293,
+      "sourceSha256": "4c738cb33483b26fd5e88109ea8470dfe6b5ac951ecf48942fedf9164a3561ff",
+      "redSha256": "b545e549f20eb362eb582c3882204fefcd549c4c75ffc3455902a1597de8034e"
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-e",
+      "rarity": "epica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1945430,
+      "sourceSha256": "3cf6d06a31d8c5402ebf40ed3c95ccc41b62945cf9ae00aacf29dfaf20705987",
+      "redSha256": "86336f71dd31d68ecdb7219646cbc876b0ee5fa0f9d0fb399dc3cfa4cb451226"
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-l",
+      "rarity": "leggendaria",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1904999,
+      "sourceSha256": "324852ac56f5409182e01c298d97c4ed60186913cf7709184fcecfcd9553203e",
+      "redSha256": "50dc4af3670b6993afd2ef988c3dff8db46187bf31bcd2d1ad7d52fa669e6654"
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico",
+      "rarity": "epica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1933049,
+      "sourceSha256": "1a47fd40de1287ce3bf99946e55d2be4b21f68cba5047fea497429386653fd60",
+      "redSha256": "87b2137364be4a15ea812495d415f3b9ad8990be0d43565daf24780b4c3d9860"
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
+      "rarity": "leggendaria",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1896513,
+      "sourceSha256": "b22fd91c0bc2c892aa343a2956e91f2ac1368a438e8adfa327290e8d7ce67f5f",
+      "redSha256": "10777a569f3c2aa14be30d4081d3fca76cec2cd4588778805ff6e0e5515596a4"
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche",
+      "rarity": "rara",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1890150,
+      "sourceSha256": "e3b950fe6299658acc4ba44cdbdd23b6ff13a991e44dd3baaaf3997d32364c2c",
+      "redSha256": "31b35cbc188291c60b016344f15f7a7893691c33022fe5addc0876310d6d1351"
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
+      "rarity": "epica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1893763,
+      "sourceSha256": "362ab1b64836f7ac92f3b42215de904c1f73dcc16374d32ae592a7e8a21cb7e5",
+      "redSha256": "ff276d21376dd6f9581d87ec8746a2577ef98aab7c5389cf0c7110111b6c9d38"
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+      "rarity": "leggendaria",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1861454,
+      "sourceSha256": "111255e24440e756fb42068ab6e3bba2565c85544e54e83a299e2da606f631c5",
+      "redSha256": "11c2bb857e62921ea197984060916d9feffb9c282b5badf37de3bba870a19c36"
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega",
+      "rarity": "epica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1842344,
+      "sourceSha256": "7796b8e3d0885cb300e6c0543c0bf44ed45ecc654cc5021c9b81bc19b65d424e",
+      "redSha256": "d423110bc47b9d81db66e55572402337e3679e7cc56517695dca93748fc628c1"
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+      "rarity": "leggendaria",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1805975,
+      "sourceSha256": "812722f23b2eaf769cd047be8adede8bc765183543c99d8cc4998a097d1abfbf",
+      "redSha256": "f82aefb3921f631f6d158e533c7427cc1b35ae7134fa530e99e82b82f2348e89"
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione",
+      "rarity": "epica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1944943,
+      "sourceSha256": "2f971f9d34c96e264e342b43de2d15f6c85c5a9a9805775851b9c9c79ed6d457",
+      "redSha256": "16ff52fe0fe2c0de4794971340d34116d104970b312718d1a6feae8f47c3ef5f"
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "rarity": "leggendaria",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1911695,
+      "sourceSha256": "d746bcb683eea3331e94ed9b86bd4773659025d2fbe206755f9e1b7c9f94d09d",
+      "redSha256": "ff6c964e581110d58e80f4c0494d45fb4a56a822c5ca8043d0cbf2a1123fe81f"
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "rarity": "epica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1868686,
+      "sourceSha256": "0a392f7cb8a2013789839c376ad04b9cbdd9f146496991113e8c1d30cad36eb9",
+      "redSha256": "a21550e3fd16bec75eb571699681e6fe414897617ef91c185e3ad5db316f89fd"
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "rarity": "leggendaria",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1842220,
+      "sourceSha256": "9bd81663d453d115dc4926923931fad1487e29f02298a8b6caf585131ff8b4de",
+      "redSha256": "4faf5438560757e7e47fd7ec19c77fb50207a18a797fe570a6e6e5ccd8de48bb"
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "rarity": "rara",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1885398,
+      "sourceSha256": "1ab704e160a125659c0e812dc3d1844d2cda60f330f3ad2dc645ac8811aa78af",
+      "redSha256": "9fd65ad7423c1e8a13e6a2fd2bf1f1710fefb5d0c79a7bd8b923856232e2736a"
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "rarity": "epica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1895276,
+      "sourceSha256": "71535f7fc8551ade2d8737e25a6df4a15f6d008e63156b742172b2888c9062d6",
+      "redSha256": "b9b019fb9736bde670e29b817e654abfe86c2204d0764fe14e8df8ea8dbc67b1"
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "rarity": "leggendaria",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "changedPixels": 1865129,
+      "sourceSha256": "c1c8e10c8b90e5107005ac35f17b79ffab042774c7b810b108c781b9cccfcd7c",
+      "redSha256": "d39be6c972cd6ba350c02c13afc1987dbdd514ac564b3704f085a65985ea142a"
+    }
+  ]
+}
