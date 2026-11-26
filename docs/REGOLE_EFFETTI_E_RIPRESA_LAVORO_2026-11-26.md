@@ -1,11 +1,73 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — Ganasce A/B approvate; idea futura Super Combo
+## Revisione corrente — otto armi riviste verbalmente; Super Combo in bozza
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Stato aggiornato — revisione verbale delle otto armi conclusa
+
+L'utente chiede se siano state risistemate tutte le carte del gruppo e
+precisa: **verbalmente, non nel codice**.
+La revisione generale delle direzioni visive delle otto famiglie già
+dotate di effetti è conclusa; restano i parametri tecnici e numerici non
+ancora fissati. Questo stato non significa effetti nuovi implementati,
+collaudati o tutte le varianti definite in ogni parametro.
+
+| Famiglia del gruppo | Direzione concordata nella revisione |
+| --- | --- |
+| Maglio Ferrogravitazionale | 2/3/5/7 martelli secondo rarità, rotanti, lanciati uno dopo l'altro, con impatti distinti. |
+| Cannone a Slitta d'Acciaio | Una palla per attivazione in ogni rarità, con dettagli nei colori delle rarità ufficiali. |
+| Artiglieria Termobalistica di Recupero | Granate a parabola, 3 senza bonus e 6 con bonus degli HP persi, in entrambe le rarità. |
+| Ganascia A, revisione degli Arpioni | Una ganascia autonoma; aggancio, trazione e strappo finale del ciclo già descritto. |
+| Ganascia B, revisione del Collassatore | Seconda carta distinta con una ganascia; insieme ad A, un solo schianto fra due navi o contro l'arena se ne rimane una. |
+| Frantumatore a Induzione | Lame rotanti sul bersaglio; rendere visibili anche intervento, superamento o rottura della carta Difesa. Bonus senza Difese annotato come revisione specifica. |
+| Perforatore a Cascata | Distruzione visibile ed esplosione, con una nuova rappresentazione del danno residuo formata nel relitto verso il prossimo bersaglio. |
+| Artiglieria delle Schegge Erranti Metallo | Confermato l'effetto corrente: 3/6/9 schegge secondo rarità, con salve distinte nei due turni. |
+
+Grafica, audio e vibrazione devono corrispondere alle meccaniche reali
+secondo la regola obbligatoria. La realizzazione resta al successivo
+comando dell'utente; la domanda sul completamento verbale non la avvia.
+
+### Super Combo del sacrificio — bozza approssimativa sospesa
+
+L'utente ha chiarito: **«su questa idea qui per ora è una bozza
+approssimativa e lasciamola stare»**.
+Conservare quindi il concetto per il futuro, fuori dalla quota delle
+dieci Carte Arma per elemento. Non trattarlo come progetto definitivo
+o carta già approvata per l'inserimento.
+
+**Contenuto della bozza compreso e confermato nel riepilogo:**
+- Una nuova **Carta Attacco**, nome ancora da scegliere, utilizzabile
+  nello slot Attacco quando entrambe le Ganasce A e B sono già ancorate.
+  Non è una terza Carta Arma e non richiede che tutte e tre le carte
+  siano state giocate nello stesso turno, condizione non indicata.
+- Sacrifica i supporti propri presenti, uno o entrambi secondo quanti
+  ne rimangono, convertendo la somma dei loro **HP attuali rimasti**
+  in una scarica elettrica che percorre le catene.
+- Il rapporto ipotizzato è **1 HP sacrificato = 1 punto di danno
+  complessivo**. La nave madre propria non è il supporto sacrificato.
+- Due navi nemiche agganciate: dividere il danno a metà.
+  Una sola nave agganciata: concentrare tutto il danno su quella.
+- Esempio illustrativo del riepilogo: 200 + 300 HP sacrificati danno
+  una scarica da 500, cioè 250 per ciascuno di due bersagli oppure
+  500 sull'unico bersaglio. Non sono statistiche definitive di una carta.
+
+Il «Sì» dell'utente confermava che il riepilogo aveva compreso l'idea.
+Il chiarimento successivo ne stabilisce lo stato: **bozza futura
+approssimativa da accantonare**, non approvazione finale o ordine di
+realizzazione. Non implementare o bilanciare questa carta ora.
+
+Rarità, elemento, costi ulteriori, acquisizione, interazioni con
+Difese/Trappole, effetti di morte dei supporti sacrificati, ordine
+rispetto allo schianto A/B, durata e persistenza degli agganci,
+arrotondamento della divisione e dettagli degli effetti restano aperti.
+Non trasformare la corrente in nuove Carte Energia o introdurre bypass,
+Bruciatura o danni aggiuntivi non richiesti.
+Applicare la regola visiva/sonora/aptica quando l'utente riaprirà il
+progetto; per ora non inventare una coreografia approvata.
 
 ### Idea futura da conservare — Super Combo fuori dalla quota delle Armi
 
