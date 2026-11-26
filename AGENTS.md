@@ -1,28 +1,33 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
-## Revisione Ganasce/Collassatore — nuova proposta utente, 26/11
+## Revisione Ganasce e seconda macchina — chiarimento corrente del 26/11
 
-La proposta corrente dell'utente rende **Arpioni a Ganasce Magnetiche**
-una carta Metallo autonoma: aggancia una o due navi presenti, anche la
-sola madre, per tre turni propri. Primi due turni: danno base da trazione.
-Terzo turno: danno maggiorato quando si stacca strappando metallo.
+Le **Ganasce Magnetiche Metallo** sono autonome: una o due navi, anche la
+sola madre; tre turni propri, primi due con danno base da trazione, terzo
+con distacco/strappo e danno maggiorato. La trazione appartiene alla prima
+carta. La seconda deve avere danno base autonomo e bonus con le Ganasce.
 
-La seconda carta Metallo (attuale Collassatore) deve funzionare con una
-o due navi agganciate. **La combinazione produce un solo schianto per
-bersaglio: l'utente ha risposto «No, una volta sola».** Non ripeterlo a
-ogni turno e non richiedere nuovamente la scelta della frequenza.
+L'utente ha rifiutato l'attrazione autonoma dell'Incudine e poi le proposte
+Incudine a Propulsione, Pressa Orbitale e Spaccacorazze a Cuneo.
+Non riproporle come alternative ancora da scegliere.
 
-Il palo/perno è soltanto un'idea: l'utente ha chiesto altre proposte.
-Le alternative dell'assistente (incudine magnetica oppure pressa a due
-piastre) sono da scegliere, non approvate. Restano aperti forma e quantità
-dei dispositivi, finestra della combo e destino degli agganci dopo l'urto.
-Non riproporre automaticamente lo scontro fra due navi.
+**Nuova idea dell'utente da registrare e valutare:** una macchina B di
+elemento Tuono/Fulmine usa le catene delle Ganasce come conduttori per
+amplificare il danno. È una proposta separata; l'utente chiede comunque
+una macchina **Metallo** combinabile con le Ganasce. Non riclassificare
+automaticamente il Collassatore e non sostituire una famiglia Fulmine.
+
+La combinazione si attiva **una volta sola per bersaglio coinvolto**:
+risposta esplicita «No, una volta sola». Non ripetere la domanda.
+Il Percussore a Risonanza è soltanto una nuova proposta dell'assistente,
+non approvata. Forma della seconda Metallo, bersagli, finestra della
+combo e destino degli agganci restano da definire.
 
 Leggere l'apertura aggiornata di
 `docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md`.
-Questa è la progettazione corrente; le vecchie regole di collisione sotto
-descrivono il codice precedente. **Solo documentare**, senza implementare
-effetti o meccaniche prima del successivo comando di creazione.
+**Solo documentare.** Nessuna nuova meccanica, effetto o prova di gioco
+prima del comando esplicito di creazione. I vecchi scontri fra due scafi
+descritti sotto appartengono al codice precedente.
 
 ## Modalità corrente — solo raccolta degli effetti, 26 novembre 2026
 
