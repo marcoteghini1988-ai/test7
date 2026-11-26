@@ -1,5 +1,18 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Revisione della coppia Ganasce/Collassatore in discussione — 26/11
+
+L'utente accetta la meccanica della prima carta e chiede di rivedere la
+seconda: cosa succede con la sola madre, se le due carte vadano giocate
+contemporaneamente e se le catene debbano schiantare la/le navi contro
+qualcosa invece che fra loro. Questi punti sono ancora in discussione;
+non considerare già scelte la superficie o la finestra della combo.
+La proposta annotata all'inizio di
+`docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md` distingue codice,
+indicazioni dell'utente e ipotesi da confermare. Restare su questa coppia,
+documentare la decisione successiva e non implementare effetti o meccaniche
+prima del comando di creazione previsto dalla modalità corrente.
+
 ## Modalità corrente — solo raccolta degli effetti, 26 novembre 2026
 
 L'utente ha precisato: per ora scrivere gli effetti, poi li farà creare

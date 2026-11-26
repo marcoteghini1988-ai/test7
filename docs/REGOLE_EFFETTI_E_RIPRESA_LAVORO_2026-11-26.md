@@ -1,5 +1,47 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
+## Ultima discussione — Ganasce e Collassatore da rivedere
+
+Il 26/11 l'utente ha aperto questi tre punti:
+
+1. Cosa succede quando è presente soltanto la nave madre?
+2. Forse le due carte devono essere giocate contemporaneamente?
+3. La meccanica della prima va bene; va rivista la seconda. Le catene
+   dovrebbero schiantare la/le navi contro qualcosa, invece che fra loro.
+
+**Riscontro nel codice `cf1f273`:** le Ganasce già colpiscono la sola madre
+quando non esiste un secondo bersaglio. Il Collassatore, invece, richiede
+gli agganci del turno proprio precedente e due bersagli ancora vivi;
+contro la sola madre non esegue lo schianto. L'uso immediato nella stessa
+risoluzione non è attualmente valido. I danni per bersaglio e i controlli
+delle Difese restano quelli del motore.
+
+**Proposta dell'assistente, ancora da discutere:**
+
+- Conservare la prima carta: un aggancio per ciascuna nave effettivamente
+  colpita, fino a due. Con la sola madre rimane un aggancio e il normale
+  danno per un bersaglio, senza raddoppiarlo.
+- Rendere il Collassatore utilizzabile su uno o due bersagli agganciati e
+  ancora vivi, invece di richiederne esattamente due.
+- Consentire la combo nello stesso turno, usando due delle tre giocate:
+  risolvere prima gli arpioni, poi lo schianto. La proposta mantiene anche
+  la possibilità del proprio turno successivo finché l'aggancio è valido.
+  L'obbligo di giocare entrambe nello stesso turno non è stato deciso.
+- Come possibile superficie di schianto, proporre il piano metallico
+  dell'arena: ogni nave agganciata viene trascinata contro la superficie,
+  indipendentemente dall'altra. Con una nave, uno schianto; con due, uno
+  per nave. Il danno rimane individuale e le Difese applicabili restano.
+- Dopo l'uso, consumare l'aggancio e rilasciare le catene, evitando di
+  riutilizzare lo stesso aggancio per più attivazioni del Collassatore.
+
+**Stato:** la revisione è aperta. La superficie (piano dell'arena o altro
+oggetto), la finestra della combo e la coreografia precisa non sono ancora
+scelte definitive dell'utente. Non presentare queste ipotesi come regole
+già approvate o come codice implementato. Le vecchie descrizioni dello
+scontro fra due navi rimangono una fotografia del codice precedente,
+non la direzione da dare automaticamente alla revisione in corso.
+Nessuna modifica di motore/renderer o nuovo collaudo in questa discussione.
+
 ## Ultimo ordine operativo: soltanto documentare, creazione più avanti
 
 L'utente ha chiesto espressamente: «per ora scrivitelo», poi gli effetti
