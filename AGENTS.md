@@ -38,13 +38,23 @@ Sono pronti tre fronti PNG RGBA 3072×4608 e una previsualizzazione isolata
 con audio (68 secondi, 17 colpi in 7 sequenze), non una ripresa StackBlitz.
 Le illustrazioni centrali originali sono 1536×1024. Cornici autentiche,
 alfa esterna e pixel protetti verificati; nessun nuovo bordo esterno.
-**Attendere la conferma visiva delle nuove immagini e dell'effetto prima
-di inserirli.** Non contare ancora 40 varianti: i fronti attivi restano 37.
+**Le tre carte sono ora approvate visivamente:** l'utente ha risposto
+«mi immaginavo il colpo un po piu scenico, per le carte ok». Conservare
+gli stessi PNG e hash; non rifare le illustrazioni né richiedere ancora
+la conferma delle carte. Si sta rivedendo soltanto l'effetto, con nucleo
+volumetrico più vivo, corone in precessione, compressione e una sola
+detonazione elettrica coordinata con suono e aptica. Attendere la
+conferma della nuova anteprima dell'effetto prima dell'inserimento
+completo. Non contare ancora 40 varianti: i fronti attivi restano 37.
+La revisione scenica 2 è pronta: clip del colpo massimo di 4 secondi,
+video dei tre cicli di 36 secondi e HTML interattivo con tutti i casi.
+Dettagli e identificatori dei file nella scheda del Nucleo; le nuove
+consegne sono distinte dalla prima anteprima ritenuta poco scenica.
 Il codice di partita in `src/` non è cambiato per questa anteprima.
 Scheda, archivio recuperabile, hash e verifiche in
 `docs/FULMINE_05_NUCLEO_FOLGORE_CRESCENTE_2026-11-26.md`.
 Non tornare a chiedere l'approvazione della direzione già data; la scelta
-pendente riguarda la realizzazione mostrata. Dopo l'approvazione visiva
+pendente riguarda soltanto la revisione scenica del colpo. Dopo l'approvazione visiva
 collegare immagini, effetti, audio e aptica e collaudare la partita reale.
 
 L'utente ha chiesto «procedi a sistemare tutto» e ha scelto espressamente:

@@ -1,107 +1,21 @@
 // Renderer di anteprima condiviso da HTML e video; nessuna registrazione live.
-import {Vector3} from 'three';
-import {createProjectileCamera,boardPointToWorld,worldPointToBoard} from '../../../src/maglioProjectile3D.js';
+import {drawScenicFlight,drawScenicContact,drawScenicPreparation} from './scenic-core.mjs';
 import {stroke,glow} from '../20261126/review-visuals.mjs';
 const TAU=Math.PI*2,clamp=n=>Math.max(0,Math.min(1,n));
 export const TIMING={charge:880,flight:1250,impact:1150,total:4000};
-const camera=createProjectileCamera();
 export const coreOrigin=f=>({x:[88,332,170][(f.stage-1+(f.who==='B'?1:0))%3],y:f.who==='A'?835:-35});
 const label=(ctx,text,x,y,size=12,color='#e5f3ff',align='left')=>{ctx.fillStyle=color;ctx.font=`600 ${size}px "Eclissi Preview",sans-serif`;ctx.textAlign=align;ctx.fillText(text,x,y);};
 function circle(ctx,x,y,r,color,width=1,alpha=1){ctx.save();ctx.globalAlpha*=alpha;ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.restore();}
-function ring(ctx,center,axis,radius,phase,color,alpha=1,tilt=0){
- const side=new Vector3(1,0,0).cross(axis).normalize();
- if(side.lengthSq()<.01)side.set(1,0,0);
- const up=axis.clone().cross(side).normalize();
- const points=[];
- for(let i=0;i<=72;i++){
-  const a=i/72*TAU,noise=1+.035*Math.sin(i*2.9+phase*4);
-  const q=center.clone().addScaledVector(side,Math.cos(a)*radius*noise)
-   .addScaledVector(up,Math.sin(a)*radius*noise).addScaledVector(axis,Math.sin(a+phase)*tilt);
-  points.push(worldPointToBoard(q,camera));
- }
- stroke(ctx,points,color,4,alpha*.13);stroke(ctx,points,color,1.5,alpha*.75);stroke(ctx,points,'#effcff',.55,alpha);
-}
 export function drawCoreFlight(ctx,f,elapsed,from,to){
- const t=elapsed/TIMING.flight;if(t<0||t>1)return;
- const a=boardPointToWorld(from,camera),b=boardPointToWorld(to,camera),axis=b.clone().sub(a).normalize();
- const center=a.clone().lerp(b,t);center.y+=.14;
- const tier=['Rara','Epica','Leggendaria'].indexOf(f.rarity),level=f.currentStage;
- const point=worldPointToBoard(center,camera),radius=.09+level*.035+tier*.006;
- // Il nucleo è un intreccio volumetrico elettrico, non una sfera metallica.
- const side=new Vector3(axis.z,0,-axis.x).normalize(),up=axis.clone().cross(side).normalize();
- for(let k=0;k<8+level*3+tier*3;k++){
-  const pts=[];
-  for(let j=0;j<=14;j++){
-   const u=j/14,angle=u*TAU*1.4+k*2.399+elapsed*.006;
-   const r=radius*.62*Math.sin(Math.PI*u)*(1+.24*Math.sin(j*2.7+k));
-   const q=center.clone().addScaledVector(axis,(u-.5)*radius*1.5)
-    .addScaledVector(side,Math.cos(angle)*r).addScaledVector(up,Math.sin(angle)*r);
-   pts.push(worldPointToBoard(q,camera));
-  }
-  stroke(ctx,pts,k%3?'#8cdcff':'#ffffff',k%3?.8:1.1,.9);
- }
- for(let r=0;r<level;r++){
-  const c=center.clone().addScaledVector(axis,(r-(level-1)/2)*radius*.44);
-  ring(ctx,c,axis,radius*(1.8+r*.32),elapsed*.006*(r%2?-1:1)+r,
-   tier===2&&r%2?'#d3b6ff':'#78ceff',.85,radius*.18);
- }
- const tail=[];
- for(let i=0;i<=24;i++){
-  const q=center.clone().addScaledVector(axis,-i*radius*.18)
-   .addScaledVector(side,Math.sin(i*2.71+elapsed*.027)*radius*.19*(i/24));
-  tail.push(worldPointToBoard(q,camera));
- }
- stroke(ctx,tail,'#58aaff',5,.10);stroke(ctx,tail,'#b8eaff',1.1,.75);
- glow(ctx,point,7+level*1.4,'#87cfff',.55);glow(ctx,point,2,'#ffffff',.95);
+ return drawScenicFlight(ctx,f,elapsed,from,to,TIMING.flight);
 }
-function impact(ctx,f,ms,p){
- if(ms<0||ms>TIMING.impact)return;
- const u=ms/TIMING.impact,fade=(1-u)**2,level=f.currentStage,tier=['Rara','Epica','Leggendaria'].indexOf(f.rarity);
- if(f.blocked){
-  ctx.save();ctx.globalAlpha=fade*.70;ctx.strokeStyle='#83dcff';ctx.lineWidth=2;
-  ctx.beginPath();ctx.ellipse(p.x,p.y,29,19,0,0,TAU);ctx.stroke();ctx.restore();
-  for(let i=0;i<10;i++){const a=i*TAU/10,q={x:p.x+Math.cos(a)*25,y:p.y+Math.sin(a)*15};
-   stroke(ctx,[p,q],'#b1e7ff',.75,fade*.7);}
-  glow(ctx,p,17,'#83dcff',Math.exp(-ms/90)*.6);return;
- }
- // Un solo contatto elettrico: le ramificazioni non sono nuovi colpi.
- ctx.save();ctx.globalCompositeOperation='lighter';
- glow(ctx,p,26+level*10,'#6ec6ff',Math.exp(-ms/180)*.92);
- for(let i=0;i<4+level;i++){
-  const angle=i*2.399,spread=(7+level*2)*(1+u*2),q={x:p.x+Math.cos(angle)*spread,y:p.y+Math.sin(angle)*spread*.5};
-  glow(ctx,q,9+level*4,'#a0ddff',Math.exp(-ms/150)*.68);
- }
- glow(ctx,p,8+level*3,'#ffffff',Math.exp(-ms/110)*.95);ctx.restore();
- if(ms<800){
-  ctx.save();const shock=7+Math.sqrt(u)*(32+level*12);ctx.globalAlpha=(1-ms/800)*.78;
-  ctx.strokeStyle='#a9eaff';ctx.lineWidth=level===3?2.3:1.3;ctx.beginPath();ctx.ellipse(p.x,p.y,shock,shock*.46,0,0,TAU);ctx.stroke();
-  ctx.strokeStyle='#edfaff';ctx.lineWidth=.7;ctx.beginPath();ctx.ellipse(p.x,p.y,shock-2,(shock-2)*.46,0,0,TAU);ctx.stroke();ctx.restore();
- }
- for(let i=0;i<11+level*5+tier;i++){
-  const angle=i*2.399,reach=(8+u*(24+level*7))*(.65+(i%4)*.12);
-  const pts=[p];for(let k=1;k<=6;k++){
-   const a=angle+Math.sin(k*3.1+i+Math.floor(ms/30))*.13;
-   pts.push({x:p.x+Math.cos(a)*reach*k/6,y:p.y+Math.sin(a)*reach*k/6*.60});
-  }
-  stroke(ctx,pts,tier===2&&i%5===0?'#e1b8ff':'#a3e3ff',i%3?1:1.7,fade);
- }
- // Le corone collassano sul medesimo punto all'ultimo stadio.
- if(level===3&&ms<420)for(let i=0;i<3;i++){
-  ctx.save();ctx.globalAlpha=fade*.75;ctx.strokeStyle=i%2?'#8ad9ff':'#e7faff';ctx.lineWidth=.8;
-  const r=Math.max(2,32+i*7-ms*.085);ctx.beginPath();ctx.ellipse(p.x,p.y,r,r*.54,i*.4,0,TAU);ctx.stroke();ctx.restore();
- }
- if(ms>70)for(let i=0;i<16+level*4;i++){
-  const angle=i*2.41,v=18+(i%5)*8,age=ms/1000;
-  const q={x:p.x+Math.cos(angle)*age*v,y:p.y+Math.sin(angle)*age*v*.60-age*8};
-  stroke(ctx,[q,{x:q.x-Math.cos(angle)*4*fade,y:q.y-Math.sin(angle)*3*fade}],i%3?'#80d1ff':'#ffffff',.8,fade);
- }
-}
+function impact(ctx,f,ms,p){return drawScenicContact(ctx,f,ms,p,TIMING.impact);}
 function ship(ctx,image,p,size,{pose=0,ms=0,enemy=false,light=0}={}){
  ctx.save();ctx.fillStyle='#0008';ctx.beginPath();ctx.ellipse(p.x,p.y+size*.18,size*.35,size*.10,0,0,TAU);ctx.fill();
  const ry=p.y+(enemy?-1:1)*size*.24;
  glow(ctx,{x:p.x,y:ry},9+Math.sin(ms*.013)*2,'#73bdff',.30);
  glow(ctx,{x:p.x,y:ry+(enemy?-1:1)*(8+Math.sin(ms*.018)*2)},5,'#b4f0ff',.45);
- ctx.translate(p.x,p.y);ctx.rotate(Math.sin(ms*.028)*pose*.025);ctx.filter=`brightness(${1+light})`;
+ ctx.translate(p.x,p.y);ctx.rotate(Math.sin(ms*.028)*pose*.068);ctx.scale(1,1-pose*.045);ctx.filter=`brightness(${1+light})`;
  ctx.drawImage(image,-size/2,-size/2,size,size);ctx.restore();
 }
 function resources(ctx,f,ms,assets,reducedMotion=false){
@@ -136,10 +50,11 @@ export function drawCorePreview(ctx,f,ms,assets,{last=false,reducedMotion=false}
  const target=f.targetKind==='escort'?{x:128,y:defender==='B'?335:507}:positions[defender];
  const hitAge=ms-TIMING.charge-TIMING.flight;
  const kick=!reducedMotion&&!f.blocked&&hitAge>=0?(1-Math.exp(-hitAge/12))*Math.exp(-hitAge/180):0;
- const move=(defender==='B'?-1:1)*kick*(7+f.currentStage*3);
+ const move=(defender==='B'?-1:1)*kick*(9+f.currentStage*3.6);
  for(const who of ['B','A']){
   const id=before.sides[who].ships[0].id,p={...positions[who]};if(who===defender&&f.targetKind!=='escort')p.y+=move;
-  ship(ctx,assets.hulls[who+':'+id],p,130,{enemy:who==='B',ms:reducedMotion?0:ms,pose:who===defender?kick:0,light:who===defender&&!f.blocked&&hitAge>=0?Math.exp(-hitAge/95)*.6:0});
+  const targetMother=who===defender&&f.targetKind!=='escort';
+  ship(ctx,assets.hulls[who+':'+id],p,130,{enemy:who==='B',ms:reducedMotion?0:ms,pose:targetMother?kick:0,light:targetMother&&!f.blocked&&hitAge>=0?Math.exp(-hitAge/135)*.85:0});
   if(before.sides[who].escorts.length)for(const [i,e]of before.sides[who].escorts.entries()){
    const ep={x:i?322:128,y:who==='B'?335:507};if(who===defender&&e.id===f.targetId)ep.y+=move;
    ship(ctx,assets.hulls[who+':'+e.shipModelId],ep,91,{enemy:who==='B',ms:reducedMotion?0:ms,pose:who===defender&&e.id===f.targetId?kick:0});
@@ -147,6 +62,7 @@ export function drawCorePreview(ctx,f,ms,assets,{last=false,reducedMotion=false}
  }
  const contact={...target,y:target.y+move};
  resources(ctx,f,ms,assets,reducedMotion);
+ if(!reducedMotion)drawScenicPreparation(ctx,f,ms,coreOrigin(f),TIMING.charge);
  if(!reducedMotion)drawCoreFlight(ctx,f,ms-TIMING.charge,coreOrigin(f),target);
  impact(ctx,f,reducedMotion&&hitAge>=0?(hitAge<300?90:TIMING.impact+1):hitAge,contact);
  if(f.broken&&f.stage===2&&ms<600){for(let i=0;i<3;i++)circle(ctx,66,f.who==='A'?652:186,8+i*5,'#91d9ff',.8,(1-ms/600)*.65);}

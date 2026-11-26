@@ -4,6 +4,11 @@ Strumenti isolati per la conferma visiva, non importati dalla partita.
 I valori e le sequenze vengono dal motore corrente; non cambiano il
 bilanciamento e non aggiungono la famiglia al registro dei 37 fronti attivi.
 
+Revisione attuale dell'effetto: **scenica 2**, in `scenic-core.mjs`.
+Le tre carte sono approvate dall'utente e conservate byte per byte.
+La prima anteprima resta recuperabile dalla consegna e dal commit
+`5bd7065a9fc2a2a78e0eedaf896e0b8f5e3b73b1`.
+
 Preparare nella cartella di uscita `art-inputs.json` con le chiavi `rara`,
 `epica`, `leggendaria` e i percorsi delle tre illustrazioni create per la
 direzione approvata. L'archivio della consegna contiene immagini originali e
@@ -18,6 +23,9 @@ percorsi relativi. Leggere la scheda in `docs/` per recuperarne gli esatti byte.
 6. `node scripts/previews/nucleo-20261126/export.mjs OUTPUT --stills`
 7. Dopo il controllo, ripetere l'export senza `--stills` per il video.
    `--audio-only` conserva il video muto già calcolato e aggiorna HTML/audio.
+   `--cards-dir=PATH` legge i PNG già approvati senza copiarli o ricomporli.
+   `--showcase` esporta i nove colpi dei tre cicli completi; l'HTML mantiene
+   anche i quattro casi aggiuntivi. `--html-only` rigenera solo la pagina.
 
 Servono Sharp, @napi-rs/canvas, esbuild, Three, FFmpeg e DejaVu Sans.
 Usare i moduli già installati tramite `NODE_PATH` o le variabili

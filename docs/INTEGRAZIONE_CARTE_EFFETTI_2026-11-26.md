@@ -80,9 +80,10 @@ presentati come riprese di una partita reale.
   Folgore Crescente**, Rara/Epica/Leggendaria. Meccanica riletta e proposta
   ad anelli documentata in
   `FULMINE_05_NUCLEO_FOLGORE_CRESCENTE_2026-11-26.md`.
-  La direzione è stata approvata con «ok». Tre fronti PNG HD e una
-  previsualizzazione con audio sono pronti e conservati nell'archivio
-  indicato nella scheda. Attendono conferma visiva prima dell'inserimento;
+  Le tre carte PNG HD sono ora approvate con «per le carte ok».
+  L'utente vuole il colpo più scenico: si rivede l'effetto e si conserva
+  integralmente il disegno. Le sorgenti delle carte sono nell'archivio
+  indicato nella scheda. Attende conferma soltanto il nuovo effetto;
   il registro attivo resta a 37 e il video non è una ripresa StackBlitz.
 
 Non introdurre valori sostitutivi né modificare bilanciamento o slot per

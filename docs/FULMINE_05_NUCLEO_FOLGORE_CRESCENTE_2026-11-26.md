@@ -1,7 +1,9 @@
 # Fulmine, famiglia 5 — Cannone a Nucleo di Folgore Crescente
 
-Stato: **direzione approvata con «ok»; tre fronti completi e anteprima
-dell'effetto pronti, in attesa di conferma visiva prima dell'integrazione**.
+Stato: **tre fronti completi approvati visivamente; effetto in revisione
+per renderlo più scenico, prima dell'integrazione**.
+Ultima risposta: «mi immaginavo il colpo un po piu scenico, per le carte ok».
+Conservare i tre PNG esistenti e i loro hash, senza ridisegnarli.
 L'utente ha chiesto di proseguire dopo l'integrazione delle 37 varianti.
 Si continua una famiglia alla volta, senza riaprire le prime quattro.
 I nuovi renderer sono soltanto negli strumenti di anteprima; non sono
@@ -152,7 +154,57 @@ gli istanti reali di audio e aptica.
 Per recuperarlo usare i normali strumenti del servizio file e verificare
 l'hash, senza inventare un nuovo soggetto o ricreare le cornici.
 
-Mostrare ora carte e video. **Attendere la conferma visiva** prima di
-collegare questi fronti e il nuovo effetto al gioco: la precedente
-risposta «ok» approvava la direzione descritta, non immagini ancora inesistenti.
+Le carte sono ora confermate. Mostrare la nuova versione del colpo e
+**attendere soltanto la conferma dell'effetto** prima di collegare
+l'inserimento completo al gioco. Non richiedere ancora l'approvazione
+delle tre immagini né trattare l'effetto della prima anteprima come definitivo.
 Conservare invariati il gruppo già integrato e la bozza futura Super Combo.
+
+## Revisione scenica 2 — carte approvate, colpo da confermare
+
+Richiesta dell'utente: «mi immaginavo il colpo un po piu scenico, per le
+carte ok». È una conferma visiva dei tre fronti e una revisione del solo
+effetto. Gli SHA-256 dei tre PNG sono stati confrontati con la precedente
+verifica e sono identici. Non usare la richiesta per ridisegnare le carte.
+
+La versione 2 dà volume al nodo con filamenti longitudinali e pelle di
+scariche; le corone cambiano inclinazione e precessione, con segmenti
+luminosi in rotazione e una scia a imbuto che si sfilaccia. La luce
+dell'emissione si proietta sul piano. Negli ultimi istanti di volo le
+corone si comprimono nello stesso nucleo e arrivano sul punto effettivo
+del bersaglio, senza salto di quota fra proiettile e contatto.
+
+All'arrivo: implosione breve, un unico sboccio elettrico con lobi di
+plasma e corona di fulmini, fronte luminoso sul piano, scintille e
+filamenti residui. Il vero scafo bersaglio reagisce con contraccolpo,
+torsione e luce. Una Difesa riceve invece la distensione dell'elettricità
+sulla protezione, senza simulare danni o rinculo sulla nave. Non muovere
+la madre quando il bersaglio reale è un supporto. Il nuovo spettacolo
+non aggiunge HP, colpi, bersagli, costi o stati persistenti.
+
+L'audio aggiunge compressione crescente prima del contatto e uno sbocco
+più corposo, con transiente elettrico, corpo basso e risonanza. Resta un
+solo evento di impatto; l'aptica distingue compressione e contatto.
+Gli stessi tempi controllano video, HTML, audio e piano aptico. Restano
+rispettati mute, movimento ridotto e interruzione a pagina nascosta.
+Non dichiarare collaudata la vibrazione fisica.
+
+Consegna corrente, sempre **anteprima isolata e non ripresa StackBlitz**:
+
+| File | Contenuto | Identificatore recuperabile |
+| --- | --- | --- |
+| `nucleo-folgore-colpo-massimo-v2.mp4` | Quattro secondi a velocità nativa, Leggendaria T3, con audio | `libfile_0ab2c40b5ff481918c6b0c240a90b4f5` |
+| `nucleo-folgore-effetto-scenico-v2.mp4` | Trentasei secondi, i nove colpi dei tre cicli Rara/Epica/Leggendaria | `libfile_008f01ce1fa081918824185c0eea9c44` |
+| `nucleo-folgore-anteprima-scenica-v2.html` | Tutti i sette casi e diciassette colpi, compresi blocco, Energie vecchie, interruzione e lato B | `libfile_50297eba1b408191a4eebc42bb300b8d` |
+
+Entrambi i video sono 900×1600 con audio AAC stereo a 48 kHz. Il picco
+misurato del video completo è circa −11,01 dBFS, senza clipping; non si
+attesta ascolto strumentale. La clip di quattro secondi è estratta senza
+alterarne la velocità. Le carte originali rimangono nell'archivio sopra;
+il suo vecchio video rappresenta la versione 1 e non la revisione attuale.
+
+Cinque test superati: i quattro controlli sulle sequenze reali più la
+verifica del punto di partenza/arrivo e della compressione per A/B.
+Compilazione dell'HTML e controllo sintattico superati. Nessun file di
+partita in `src/` o asset giocabile è stato modificato per questa revisione.
+**L'unica approvazione pendente è quella del colpo scenico 2.**
