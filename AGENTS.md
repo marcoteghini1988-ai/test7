@@ -34,6 +34,25 @@ La regola non autorizza la creazione anticipata delle sequenze: nella
 modalità corrente si documentano le scelte; si realizzeranno al comando
 esplicito dell'utente. Dettagli vincolanti nel documento collegato.
 
+## Lavoro corrente — elemento Fulmine, prima famiglia Pettine Ionico
+
+L'utente richiede spari coerenti con ogni elemento: Fulmine elettrico,
+Fuoco di fuoco, Acqua d'acqua, Metallo metallico, e così per gli altri.
+Applicare la nuova sezione nelle regole permanenti degli effetti,
+mantenendo effetti univoci per arma e rarità, con suoni e vibrazioni.
+
+Ora si procede **una famiglia alla volta**, con tutte le sue rarità,
+e si completano le **dieci Armi dell'elemento scelto prima di cambiarlo**.
+Elemento scelto: **Fulmine**, dieci famiglie riscontrate nel catalogo.
+Prima famiglia: **Cannone a Pettine Ionico di Vega**, Comune/Rara/Epica/
+Leggendaria. L'utente chiede nell'ordine: nome, funzione, proposta visiva.
+Non saltare la spiegazione della funzione e non inserire carte non
+riscontrate nel catalogo.
+
+La proposta del Pettine è da approvare; non dichiararla già creata.
+La revisione verbale precedente delle otto armi resta conclusa e la
+Super Combo del sacrificio resta una bozza futura sospesa.
+
 ## Stato corrente — otto armi riviste verbalmente; Super Combo in bozza
 
 L'utente precisa che il completamento riguarda la **revisione verbale**,
