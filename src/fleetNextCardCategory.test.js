@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
+import redFronts from './fleetNext/redWeaponFronts.json' with {type:'json'};
 import {cardVisualFamily,cardCategoryLabel,cardCategoryColor} from './fleetNext/cardCategory.js';
 import {card,cardRole,ALL_WEAPON_CARDS,DISMANTLE_CARDS,SIPHON_ATTACKS,NEXT_COMMON_CARDS,cardFacePath,cardDisplayFacePath} from './fleetNext/rules.js';
 test('ARMA rossa e STRATEGIA arancione, ruoli del motore invariati',()=>{
@@ -22,4 +24,11 @@ test('Lettura sorgente e percorso di visualizzazione restano separati',()=>{
  const id='weapon-confirmed-metallic-maglio';
  assert.equal(cardFacePath(id),'/assets/fleet-weapon-fronts/'+id+'.png');
  assert.match(cardDisplayFacePath(id),/fleet-weapon-fronts(?:-red)?\//);
+ if(redFronts.length){
+  assert.equal(redFronts.length,22);
+  for(const id of redFronts){
+   assert.equal(cardDisplayFacePath(id),'/assets/fleet-weapon-fronts-red/'+id+'.png');
+   assert.ok(existsSync('public'+cardDisplayFacePath(id)),id);
+  }
+ }
 });

@@ -51,7 +51,7 @@ export const SIMPLE_RULES=Object.freeze([
  'Le reazioni si attivano solo con i danni degli attacchi normali. Costi delle abilità e contrattacchi non attivano altre reazioni.',
  'Dopo 50 round la partita termina in pareggio. Con l’Arsenale distrutto resta un tiro di emergenza da 1 potenza.',
  'Le Trappole sono carte Difesa: si preparano coperte nel proprio turno e si rivelano solo quando scattano. Altrimenti restano in campo.',
- 'Puoi preparare fino a 3 carte per turno. Hai 3 slot Attacco, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 alloggiamenti per Armi temporanee.',
+ 'Puoi preparare fino a 3 carte per turno. Hai 3 slot Strategia, 1 Difesa scoperta, 1 Trappola coperta, 1 Personaggio e 2 alloggiamenti per Armi temporanee.',
  'Le carte preparate non producono effetti prima della risoluzione. Alla terza carta o a PASSA puoi scegliere quale dei due supporti nemici colpire.',
  'Con uno o nessun supporto, la scelta è automatica. Se i 30 secondi scadono prima della scelta, l’attacco non parte: le altre carte valide si risolvono, poi inizia il turno avversario.',
  'Il Sacrificio volontario può essere preparato senza consumare una delle tre carte. Si esegue alla risoluzione solo se il supporto possiede ancora almeno l’80% degli HP; il danno applica i limiti esistenti.',
@@ -59,10 +59,10 @@ export const SIMPLE_RULES=Object.freeze([
  'Interdizione di Fusione è una Trappola coperta: si rivela alla giocata di una Carta Navicella Fusione nemica, la annulla e la manda agli scarti. Il supporto non cambia e non viene consumato uno dei due usi Fusione.',
  'Se hai più Trappole con lo stesso annullamento, ne scatta una sola. Le altre restano coperte.',
  'Dopo un Terreno annullato, le altre carte scelte che il Terreno rimasto impedisce tornano in mano.',
- 'Il Cannone della Memoria Stellare (Fuoco) si attiva per un turno: 10 HP base, +10 per ogni tua carta Attacco negli scarti. Almeno una Energia Fuoco nei tuoi scarti raddoppia il totale una sola volta; gli scarti avversari non contano.',
+ 'Il Cannone della Memoria Stellare (Fuoco) si attiva per un turno: 10 HP base, +10 per ogni tua carta Strategia negli scarti. Almeno una Energia Fuoco nei tuoi scarti raddoppia il totale una sola volta; gli scarti avversari non contano.',
  'Le due posizioni di supporto si sbloccano avanzando nella campagna: una nave madre e fino a due carte-navicella scelte nell’Hangar indipendentemente dalla madre.',
  'I componenti interni non sono più bersagli distruttibili: carte Sabotaggio e Amplificazione ne modificano temporaneamente sincronizzazione, Armi, energia e comandi tattici.',
- 'Smontaggio Forzato è una carta Attacco: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
+ 'Smontaggio Forzato è una carta Strategia: rimuove temporaneamente componenti o potenziamenti della nave nemica senza cambiare gli HP. Alla scadenza ripristina esattamente lo stato precedente.',
  'Una Carta Navicella Fusione Leggendaria nel mazzo da 40 unisce un modello L5 al supporto L5 scelto nell’Hangar. Ogni slot supporto si può fondere una sola volta.',
  'La nave fusa conserva gli HP attuali, gli HP massimi e le ferite del supporto scelto. Acquisisce l’elemento e la passiva della nave della carta Fusione, senza sommare HP o occupare nuovi slot.',
  'Le Carte Energia occupano una giocata. Ogni carta aggiunge da 1 a 4 cariche secondo la rarità a una pila senza limite; una sola abilità elementale per nave consuma da 1 a 4 cariche dello stesso elemento.',
@@ -238,7 +238,7 @@ export function describeEffect(card,level=1){
   case 'cleanse':return repeat+'Rimuove i disturbi e i blocchi dalle tue Armi e scudiere.';
   case 'exchange':return repeat+'Scarta '+s.amount+' '+(s.amount===1?'carta casuale':'carte casuali')+' dalla mano e ne pesca altrettante.';
   case 'recover':{
-   const label={attack:'Attacco',defense:'Difesa',support:'Supporto o Controllo',any:''}[s.role];
+   const label={attack:'Strategia',defense:'Difesa',support:'Supporto o Controllo',any:''}[s.role];
    return repeat+"Rimette in cima al mazzo l’ultima carta "+(label?label+' ':'')+'scartata.';
   }
   case 'charge':return repeat+'Prepara +'+s.amount+' potenza per il tuo attacco del turno successivo.';
@@ -260,7 +260,7 @@ export function describeEffect(card,level=1){
     return 'Sequenza III ('+FLEET_ELEMENTS[s.elementId].name+'): giocata da sola aggiunge '+s.soloDamage+' HP per un turno. Se sovrapposta a Sequenza II concatenata nel turno successivo, aggiunge '+s.chainDamage+' HP e poi si scarta.';
    }
    if(s.damageMode==='escort-count')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per due tuoi turni: '+s.baseDamage+' HP di base +'+s.perEscort+' HP per ogni tua navicella di supporto ancora attiva in uno dei due slot. Le Fusioni contano come una sola navicella nello stesso slot.';
-   if(s.damageMode==='discard-attacks')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per un turno: '+s.baseDamage+' HP di danno base, +'+s.perDiscardAttack+' HP per ogni tua Carta Attacco negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+FLEET_ELEMENTS[s.elementId].name+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
+   if(s.damageMode==='discard-attacks')return 'Arma '+FLEET_ELEMENTS[s.elementId].name+' per un turno: '+s.baseDamage+' HP di danno base, +'+s.perDiscardAttack+' HP per ogni tua Carta Strategia negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+FLEET_ELEMENTS[s.elementId].name+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
     (s.maxNominalDamage?' Danno base massimo '+s.maxNominalDamage+' HP nominali prima dei modificatori di Arsenale, elementi e Terreno.':'');
    return 'Arma temporanea: aumenta di 1 la potenza del tuo attacco per '+(card.id==='prog-machine-guard'?'2 tuoi turni':'1 tuo turno')+'. Non protegge la madre e non è bersagliabile.';
   }

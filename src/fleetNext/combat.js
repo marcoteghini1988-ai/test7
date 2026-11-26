@@ -725,7 +725,7 @@ export function validateFleetTurn(b,who,order){
    return ability.kind==='effect'?'L’Effetto Speciale sostituisce lo sparo normale':
     'L’Attacco Speciale deve avere un bersaglio';
   if(chosen.some(c=>cardRole(c.id)==='attack'))
-   return 'Non puoi combinare un Attacco Speciale con altre carte Attacco nello stesso turno';
+   return 'Non puoi combinare un Attacco Speciale con altre carte Strategia nello stesso turno';
   if(side.elementalLastActivationPly===b.ply)return 'Abilità elementale già usata nel turno';
  }
  const linceCommands=chosen.filter(c=>c.effectSpec?.type==='lince'&&
@@ -861,7 +861,7 @@ export function validateFleetTurn(b,who,order){
  const roles=chosen.map(c=>cardRole(c.id)),count=x=>roles.filter(r=>r===x).length;
  if(count('character')>1)return 'Massimo un Personaggio per turno';
  if(count('attack')>attackCardCapacity(side))
-  return 'Arsenale esaurito: massimo 2 carte Attacco per turno';
+  return 'Arsenale esaurito: massimo 2 carte Strategia per turno';
  if(count('defense')>2)return 'Massimo due carte Difesa per turno';
  if(count('terrain')>1)return 'Massimo una Carta Terreno per turno';
  if(chosen.filter(c=>c.effectSpec?.type==='dismantle').length>1)

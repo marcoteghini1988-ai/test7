@@ -10,7 +10,7 @@ permissions:
   contents: write
 concurrency:
   group: eclissi-category-panels
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   recolor:
     runs-on: ubuntu-latest
@@ -41,4 +41,5 @@ jobs:
           git add public/assets/fleet-weapon-fronts-red docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/arma-rosso docs/collaudi/categorie-2026-11-26 src/fleetNext/redWeaponFronts.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Materializza i 22 fronti Arma con pannello rosso, PNG HD verificati'
+          git pull --rebase origin main
           git push origin HEAD:main

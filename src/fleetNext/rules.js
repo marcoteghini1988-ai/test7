@@ -63,7 +63,7 @@ function definedCard(card,kind,source){
 export const GENERAL_CARDS = Object.freeze(Object.fromEntries(generalData.carte.map(card =>
  [card.id, definedCard(card,card.sottotipo==='Terreno'?'terrain':
   card.sottotipo==='Personaggio'?'character':card.sottotipo==='Difesa'?'defense':
-  card.categoria==='Attacco'?'attack':card.categoria==='Controllo'?'control':'support','general')]
+  ['Attacco','Strategia'].includes(card.categoria)?'attack':card.categoria==='Controllo'?'control':'support','general')]
 )));
 const preservedCharacters=exclusiveData.cards.filter(c=>EXCLUSIVE_SHIP_IDS.includes(c.shipId)).map(c=>{
  if(c.id==='ex-n00-01')return {...c,effectSpec:{type:'aurora',action:'cartographer'},

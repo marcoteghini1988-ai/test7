@@ -57,7 +57,7 @@ function description(source,s){
    ' in pila, non consumate.';
   case 'discard-attacks':return 'Arma '+e+' per un turno: '+base+
    ' HP di danno base, +'+s.perDiscardAttack+
-   ' HP per ogni tua Carta Attacco negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+
+   ' HP per ogni tua Carta Strategia negli scarti. Se nei tuoi scarti è presente almeno una Carta Energia '+
    e+', raddoppia il danno totale una sola volta. Gli scarti avversari non contano.'+
    (s.maxNominalDamage?' Danno base massimo '+s.maxNominalDamage+
     ' HP nominali prima dei modificatori di Arsenale, elementi e Terreno.':'');
@@ -102,7 +102,7 @@ function description(source,s){
    p.maxExtraShots+' colpi da '+p.extraDamage+' HP ciascuno, consumando Energie Fuoco.';
   case 'incinerator':return prefix+b+' HP nel primo turno, '+p.secondDamage+
    ' HP nel secondo; bruciatura '+p.burnTurns+' attivazioni, '+p.burnPerDiscard+
-   ' HP per propria Carta Attacco scartata, min '+p.burnMinimum+
+   ' HP per propria Carta Strategia scartata, min '+p.burnMinimum+
    ', max '+p.burnMaxDamage+' HP per attivazione.';
   case 'thermal-coupler':return prefix+b+' HP per '+active+
    ' turni; richiede Cannone Binario, costa '+p.motherCostPercent+

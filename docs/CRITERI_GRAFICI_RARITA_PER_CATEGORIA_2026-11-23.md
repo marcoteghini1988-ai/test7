@@ -1,5 +1,7 @@
 # Eclissi Stellare — quattro rarità per ciascuna categoria
 
+> **Decisione successiva del 26/11:** ARMA rosso e STRATEGIA arancione. La tabella delle basi storiche qui sotto documenta i campioni originali, non la palette attuale. Vedi [decisione e processo di conversione](DECISIONE_ARMA_STRATEGIA_2026-11-26.md).
+
 **Decisione approvata il 23 novembre 2026.** Questa pagina aggiorna la palette delle cornici descritta nei documenti del 21–22 novembre. I quattro campioni della categoria **Attacco** sono stati mostrati e approvati in chat. Le altre categorie seguono la stessa matrice cromatica; i loro fronti completi richiedono ancora il controllo visivo prima dell'uso nel gioco.
 
 **Correzione del 24 novembre 2026:** le quattro [cornici ufficiali HD trasparenti](BASI_UFFICIALI_RARITA_2026-11-24.md) rappresentano soltanto la rarità; Arma è una categoria usata per i campioni arancioni. La stessa cornice può mostrare il simbolo e il nome Difesa o un'altra categoria, con il colore interno adatto. La Leggendaria più recente è in cristallo prismatico con riflessi iridescenti. Le vecchie quattro anteprime Arma del 23/11 sono ritirate. La tabella del 23/11 qui sotto resta come riferimento storico delle altre categorie in attesa di verifica.

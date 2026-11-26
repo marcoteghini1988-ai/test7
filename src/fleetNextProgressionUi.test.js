@@ -5,6 +5,7 @@ import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import ts from 'typescript';
 import {card,cardRole,cardFacePath,EXCLUSIVE_CARDS} from './fleetNext/rules.js';
+import {cardVisualFamily,cardCategoryLabel} from './fleetNext/cardCategory.js';
 import {exclusiveRarityAtLevel} from './fleetNext/exclusiveEvolution.js';
 import {activeFleetElements,FLEET_ELEMENTS,fleetElementNames,secondaryElementUnlockLevel} from './fleetNext/elementalAffinities.js';
 import {elementalAbility} from './fleetNext/elementalAbilities.js';
@@ -50,7 +51,7 @@ function elements(tree){
 const Labels={engine:'Plancia',weapons:'Arsenale',shieldGenerator:'Generatore',command:'Centralina'};
 const Shorts={engine:'PLA',weapons:'ARS',shieldGenerator:'GEN',command:'CEN'};
 const Slots=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialSlots',{
- card,cardRole,cardFacePath,describeEffect,OFFICIAL_SPECIAL_FIXED_BACK,officialSpecialArtPath,exclusiveRarityAtLevel
+ card,cardRole,cardFacePath,describeEffect,OFFICIAL_SPECIAL_FIXED_BACK,officialSpecialArtPath,exclusiveRarityAtLevel,cardVisualFamily,displayedCard:(id)=>card(id),WeaponSalvoCardMarks:()=>null
 });
 const Fighter=extract('./OfficialFleetBattle3D.jsx','OriginalFleetFighter',{
  useMemo:fn=>fn(),newVessel,projectFleetDefense,projectMachineBerths,
@@ -103,6 +104,7 @@ test('La plancia approvata mostra Personaggio, Difesa, Trappola, due Attacchi, E
  assert.equal((slotHtml.match(/data-slot-role="trappola"/g)||[]).length,1);
  assert.equal((slotHtml.match(/data-slot-role="attacco"/g)||[]).length,2);
  assert.equal((slotHtml.match(/data-slot-role="energia"/g)||[]).length,1);
+ assert.equal((slotHtml.match(/>STRATEGIA</g)||[]).length,2);
  assert.equal(side.attackSlots.length,3,'il motore conserva la terza posizione logica Attacco');
  const fighterHtml=renderToStaticMarkup(Fighter({side:'player',unit:side,inspectEscort:()=>{}}));
  // Il layout dinamico non rende navi o armi fittizie negli slot vuoti.
@@ -239,13 +241,15 @@ test('Own-component selection maps the physical Plancia and Generatore to real t
 test('Native new card fronts expose complete names and effects without invalid image links',()=>{
  const Hand=extract('./OfficialFleetBattle3D.jsx','OriginalSpecialHandCard',{
   card,displayedCard:(id)=>card(id),cardRole,cardFacePath,describeEffect,officialSpecialArtPath,
-  exclusiveRarityAtLevel,FLEET_ELEMENTS
+  exclusiveRarityAtLevel,FLEET_ELEMENTS,cardVisualFamily,cardCategoryLabel,WeaponSalvoCardMarks:()=>null
  });
  for(const id of ['prog-bypass','weapon-memory-plasma','weapon-sequence-1','prog-fusion-l04']){
   const html=renderToStaticMarkup(React.createElement(Hand,{type:id,index:0,offset:0,selected:true,onClick:()=>{}}));
   assert.ok(html.includes(card(id).nome||card(id).name),id);
   assert.doesNotMatch(html,/undefined|src="null"|src=""/,id);
   assert.ok(html.includes('src="/assets/special-cards/'),id);
+  if(id.startsWith('weapon-'))assert.match(html,/data-family="weapon"/);
+  if(id==='prog-bypass')assert.match(html,/data-family="strategy"/);
   const label=Hand({type:id,index:0,offset:0}).props['aria-label'];
   assert.ok(label.includes(describeEffect(card(id))),id);
  }

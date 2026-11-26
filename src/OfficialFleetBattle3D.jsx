@@ -436,7 +436,7 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
     title={title+(offline?' · Sistema distrutto':'')} data-offline={offline||undefined}
     data-fleet-card-slot={side+'-'+i} data-pending-card={entry?.pending||undefined}
     data-slot-role={i===0?'personaggio':i===1?'difesa':i===2?'trappola':i===5?'energia':'attacco'}
-     data-family={covered?'defense':type?cardVisualFamily(face,cardRole(type)):undefined}
+     data-family={covered?'defense':type?(['weapon','strategy'].includes(cardVisualFamily(face,cardRole(type)))?cardVisualFamily(face,cardRole(type)):cardRole(type)):undefined}
      data-rarity={face?exclusiveRarityAtLevel(face,unit?.ships?.[0]?.level):undefined}>
     <svg className="f3d-slot-frame" viewBox="0 0 58 87" preserveAspectRatio="none" aria-hidden="true" focusable="false">
      <path d="M5 1H53L57 5V82L53 86H5L1 82V5Z" fill="none" stroke="#05090e" strokeWidth="2"/>

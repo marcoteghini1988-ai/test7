@@ -15,6 +15,7 @@ import {readFleetInventory,writeFleetInventory,
 const box={padding:'9px',background:'#071a2de9',border:'1px solid #36678c',borderRadius:'8px',color:'#e3f2ff'};
 const btn={background:'#17496b',color:'white',border:'1px solid #79a9c9',borderRadius:'6px',padding:'7px 9px',fontSize:'11px',fontWeight:700};
 const small={fontSize:'11px',color:'#a4c7dd'};
+const collectionCategory=(c,oldLabel)=>cardCategoryColor(c)?cardCategoryLabel(c):oldLabel;
 const locale=n=>Number(n||0).toLocaleString('it-IT');
 // La plancia e lo stile grafico delle carte non cambiano.
 // Fronte ufficiale del catalogo, identico in Shop, mazzi ed arena.
@@ -121,7 +122,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
   return <div key={c.id} style={box}>
    <FleetCardArt id={c.id} name={c.nome||c.name} large/>
    <strong>{c.nome||c.name}</strong>
-   <div style={small}>{c.rarita||'Comune'} · {cardCategoryLabel(c)}{c.sottotipo&&c.sottotipo.toUpperCase()!==cardCategoryLabel(c)?' · '+c.sottotipo:''}{isEnergy?' · '+c.charges+' '+(c.charges===1?'carica':'cariche'):''}</div>
+   <div style={small}>{c.rarita||'Comune'} · {collectionCategory(c,c.sottotipo||c.category||c.kind)}{isEnergy?' · '+c.charges+' '+(c.charges===1?'carica':'cariche'):''}</div>
    <p style={small}>{describeEffect(WEAPON_NEAR_FINAL_BY_ID[c.id]||c)}</p>
    <p style={small}>Possedute: {owned} · Nel mazzo: {equipped} · Limite mazzo: {cardCopyLimit(c.id)}{isWeapon?' · Limite inventario: '+maxOwned:''}</p>
    <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>
@@ -185,7 +186,7 @@ export default function FleetCollectionWorkshop({initialTab='exclusive'}){
      return <div key={c.id} style={box}>
       <FleetCardArt id={c.id} name={c.name||c.nome} grade={grade} large/>
       <strong>{c.name||c.nome}</strong>
-      <div style={small}>Rarità {rarity} · Grado effetto {grade}/3 · {cardCategoryLabel(c)}</div>
+      <div style={small}>Rarità {rarity} · Grado effetto {grade}/3 · {collectionCategory(c,c.category||c.categoria)}</div>
       {upcomingRarity&&<div style={small}>Prossima rarità {upcomingRarity.rarity} · navicella L{upcomingRarity.minLevel}</div>}
       <p style={small}>{describeEffect(c,grade)}</p>
       {c.requirements&&<p style={small}>{c.requirements}</p>}
