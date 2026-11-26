@@ -76,6 +76,12 @@ presentati come riprese di una partita reale.
 
 - Le altre sei famiglie Fulmine richiedono riconciliazione tra nomi proposti
   e veri ID. Non considerare chiuso l'elemento Fulmine.
+- Ripresa dopo «procediamo»: quinta famiglia reale, **Cannone a Nucleo di
+  Folgore Crescente**, Rara/Epica/Leggendaria. Meccanica riletta e proposta
+  ad anelli documentata in
+  `FULMINE_05_NUCLEO_FOLGORE_CRESCENTE_2026-11-26.md`.
+  L'associazione con il motivo Faraday e la sequenza dei tre stadi sono
+  proposte da approvare, non asset già creati o nuove integrazioni.
 
 Non introdurre valori sostitutivi né modificare bilanciamento o slot per
 chiudere questi punti senza la decisione dell'utente.
