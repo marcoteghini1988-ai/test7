@@ -1,5 +1,21 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Regola permanente — testi delle carte in inglese e traducibili
+
+**Conferma esplicita dell'utente, 26/11/2026:** tutti i testi delle carte
+sono in inglese come lingua predefinita, compresi nome, categoria,
+elemento, rarità, caratteristiche, condizioni, costi ed effetto.
+Testi e traduzioni devono essere livelli separati da illustrazione e
+cornice: stringhe esterne con chiavi stabili e locale predefinito `en`.
+Cambiare lingua deve aggiornare il solo livello testo, senza generare
+di nuovo immagini, cornici o simboli. Vale anche per i fronti nativi
+creati dall'interfaccia. Leggere la sezione «Lingua e localizzazione» in
+`docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md` prima di ogni carta.
+Le indicazioni precedenti sulle sole etichette inglesi sono superate.
+I PNG completi con testo incorporato non attestano questa capacità:
+il nome del Nucleo appena integrato è ancora italiano e va adeguato;
+non dichiarare la sua localizzazione già implementata nella partita.
+
 ## Integrazione meccaniche 26/11 — nuovi nominali, collaudo pendente
 
 Leggere `docs/INTEGRAZIONE_ARMI_26_11_2026.md` e `src/fleetNext/nextWeaponBalance20261126.json`. Le 22 famiglie hanno una tabella per rarità; 22 famiglie sono collegate al motore HP e alla collezione (57 varianti), incluse le due olografiche. Leggere `docs/INTEGRAZIONE_OLOGRAMMI_2026-11-26.md` per i casi limite e il collaudo; non confondere collegamento con approvazione visiva. Eclissi Quantistica è collegata alla scelta segreta nella partita locale; non dichiarare sicurezza PvP di rete. I nominali nuovi non subiscono il moltiplicatore strategico legacy. Non dichiarare bilanciamento definitivo collaudato né immagini/effetti approvati senza prove. Il registro storico 235 resta riproducibile; il catalogo corrente è CURRENT_WEAPON_CARDS. La sinergia Personaggio Isobarica aspetta la scheda Personaggio. Il lavoro parallelo grafico non viene modificato.

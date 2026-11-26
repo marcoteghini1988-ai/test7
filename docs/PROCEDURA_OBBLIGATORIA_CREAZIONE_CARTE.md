@@ -1,5 +1,31 @@
 # PROCEDURA OBBLIGATORIA — "crea la carta" (22 novembre 2026)
 
+## Lingua e localizzazione — regola permanente del 26/11/2026
+
+**Tutti i testi delle carte sono in inglese come lingua predefinita.**
+Vale per nome, categoria, elemento, rarità, statistiche, unità, durata,
+requisiti, costi, condizioni ed effetto completo: non soltanto le etichette.
+La regola comprende carte illustrate e fronti costruiti dall'interfaccia,
+ogni categoria e rarità, nuove carte e successive correzioni.
+
+**La traduzione deve essere possibile senza rifare la carta.** Conservare
+illustrazione e cornice come asset grafici indipendenti dal testo; gestire
+le scritte come livello SVG/DOM o equivalente, alimentato da dizionari
+di traduzione con chiavi stabili per carta e campo. Il locale predefinito
+è `en`; cambiare locale sostituisce le stringhe e ricalcola gli ingombri
+nel medesimo spazio, usando gli stessi asset di illustrazione, cornice e
+simboli. Non rigenerare la grafica per tradurre. I valori numerici provengono
+dal catalogo e dalla meccanica, non dalla traduzione; ID e abilità restano
+collegati alla stessa carta in ogni lingua.
+
+Un PNG completo può restare un'esportazione o una prova visiva, ma non
+deve essere l'unico sorgente della carta con le scritte incorporate in
+modo inseparabile. Prima dell'inserimento verificare inglese completo,
+separazione dei livelli e una prova di cambio lingua, controllando
+centratura e leggibilità senza modificare la grafica. Non dichiarare già
+traducibili le vecchie carte con il solo testo rasterizzato. Questa regola
+prevale sulla vecchia indicazione delle sole «etichette brevi in inglese».
+
 
 
 ## Regola obbligatoria — coordinazione visibile tra Energia ed effetto
@@ -128,7 +154,7 @@ Quando viene chiesto «crea questa carta», ricostruire la scheda completa dai d
 
 **Il fondo del pannello sotto le scritte delle caratteristiche/effetto assume il colore della categoria della carta**, insieme agli altri accenti interni. La finitura esterna, gli alloggiamenti e lo stile cromatico delle scritte continuano a dipendere dalla rarità. Mappa confermata: Arma **rosso**, Strategia **arancione**, Difesa **azzurro**, Personaggio **magenta**, Terreno **verde**, Trappola **viola**. Per esempio una carta Difesa usa un pannello delle caratteristiche azzurro su ciascuna delle quattro rarità. Modificare soltanto l'area cromatica interna prevista, conservando i PNG originali come sorgenti intatte; verificare contrasto e leggibilità della scritta su ogni colore. La tonalità precisa delle nuove varianti di categoria va controllata nelle anteprime, non inventata come valore esadecimale approvato.
 
-Riprodurre **lo stile delle scritte approvato** qui sotto: nome nella testata, categoria nel nastro, caratteristiche/effetto nel pannello basso, rarità nella targhetta inferiore. Restano i materiali di testo per Comune, Rara, Epica e Leggendaria e i limiti di centratura già documentati; il blocco delle caratteristiche è più marcato. Conservare testo e traduzioni come livelli separati dalla cornice e dall'illustrazione. Fronte con etichette brevi in inglese e simboli leggibili; al tocco mostrare l'effetto completo nella lingua scelta dal giocatore, incluso l'italiano.
+Riprodurre **lo stile delle scritte approvato** qui sotto: nome nella testata, categoria nel nastro, caratteristiche/effetto nel pannello basso, rarità nella targhetta inferiore. Restano i materiali di testo per Comune, Rara, Epica e Leggendaria e i limiti di centratura già documentati; il blocco delle caratteristiche è più marcato. Applicare la regola «Lingua e localizzazione»: tutti i testi della carta, compresi nome ed effetto, sono inglesi per impostazione predefinita e gestiti su livelli separati da cornice e illustrazione. Le traduzioni usano gli stessi livelli e asset, ricalcolando il solo testo nella lingua scelta.
 
 **Esempio specifico, non valore universale:** sul fronte di `Cannone Condensatore della Tempesta Stellare`, `ENERGY / ATTACK` sta sopra il gruppo `[simbolo energia] 1 LIGHTNING`; la linea centrale e i centri visivi dei due gruppi devono corrispondere. Il costo è **1 Energia Fulmine per ogni attacco**: senza energia la navicella non attacca; **3 turni** è la durata della carta. Le altre statistiche si leggono dai dati reali della carta; non trasferire numeri o simboli di questo esempio ad altre carte.
 

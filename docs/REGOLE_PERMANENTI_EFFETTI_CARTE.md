@@ -1,5 +1,14 @@
 # Regole permanenti per gli effetti delle carte
 
+## Lingua dei testi delle carte
+
+Inglese predefinito per **tutti** i testi delle carte, inclusi i nomi.
+Le stringhe devono essere esterne e traducibili su un livello separato
+da cornice e illustrazione; cambiare lingua non richiede rifare la grafica.
+Applicare la sezione «Lingua e localizzazione» della
+`PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md`. Una traduzione non modifica
+la meccanica né la sincronizzazione degli effetti.
+
 
 
 ## Regola obbligatoria — coordinazione visibile tra Energia ed effetto
