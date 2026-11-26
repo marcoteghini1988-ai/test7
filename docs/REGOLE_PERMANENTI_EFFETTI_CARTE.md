@@ -1,5 +1,26 @@
 # Regole permanenti per gli effetti delle carte
 
+## Ordine vincolante dal 26 novembre 2026
+
+**Carta → spiegazione del ruolo reale → indicazione grafica dell'utente →
+realizzazione dell'effetto.**
+
+Leggere prima catalogo e risoluzione del motore. Creare/presentare la carta
+con le basi ufficiali e spiegare bersagli, durata, condizioni, costi, combo
+e differenze per rarità. L'utente sceglie quindi come rappresentarla in
+gioco. Non definire o implementare autonomamente una nuova coreografia
+prima della sua indicazione. Dopo la scelta, realizzare la sequenza con
+grafica, suoni e aptica sincronizzati, integrare e verificare quanto già
+autorizzato senza ulteriori conferme di routine.
+
+Per le carte esistenti, prima riportare **ruolo reale** e **grafica attuale**
+come informazioni distinte, poi applicare soltanto la revisione scelta.
+La fotografia iniziale è in
+[RUOLI_ED_EFFETTI_CARTE_APPROVATE_2026-11-26.md](RUOLI_ED_EFFETTI_CARTE_APPROVATE_2026-11-26.md).
+La richiesta di spiegazione non autorizza da sola altri cambiamenti grafici.
+
+## Criteri di realizzazione
+
 Consolidate su richiesta esplicita dell'utente il 25 novembre 2026.
 Applicarle alle carte attuali e alle prossime, di qualsiasi elemento.
 Sostituiscono le vecchie prescrizioni di un unico punto di lancio e dello
@@ -48,7 +69,8 @@ stesso singolo colpo per tutte le rarità. Non approvano nuove illustrazioni.
    raffiche e finale riconoscibile. Rispettare volume, mute, preferenze,
    visibilità e movimento ridotto. Non scambiare una richiesta software
    accettata con un collaudo fisico della vibrazione sul telefono.
-9. **Verificare e salvare l'inserimento completo.** Per ogni carta approvata
+9. **Verificare e salvare l'inserimento completo.** Dopo approvazione del
+   fronte e indicazione/conferma dell'effetto grafico da parte dell'utente,
    inserire illustrazione, conteggio/testo, effetto per rarità, suoni e
    aptica nella stessa versione di `test7`. Verificare entrambi i lati,
    madre/supporti, combo, blocchi e rilascio del turno. Collaudare la

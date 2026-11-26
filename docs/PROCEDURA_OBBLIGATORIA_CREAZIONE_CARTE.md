@@ -1,5 +1,15 @@
 # PROCEDURA OBBLIGATORIA — "crea la carta" (22 novembre 2026)
 
+> **Nuovo ordine deciso dall'utente, 26/11:** creare/presentare la carta,
+> spiegare il suo ruolo reale nel gioco e attendere l'indicazione dell'utente
+> su quale effetto grafico realizzare. Verificare prima la meccanica nel
+> codice. L'approvazione dell'immagine da sola non avvia più la creazione
+> autonoma di una coreografia. Dopo la scelta dell'effetto, procedere con
+> implementazione, suoni, aptica, integrazione e verifiche già autorizzate.
+> Per le carte esistenti, spiegare prima ruolo e grafica corrente e poi
+> seguire la revisione scelta. Vedi le
+> [regole permanenti](REGOLE_PERMANENTI_EFFETTI_CARTE.md).
+
 > **Regole permanenti confermate il 25/11:** leggere anche
 > [REGOLE_PERMANENTI_EFFETTI_CARTE.md](REGOLE_PERMANENTI_EFFETTI_CARTE.md).
 > Le prossime carte devono avere origini A/B variabili, sequenze inventive

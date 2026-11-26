@@ -1,5 +1,25 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Ordine di lavoro deciso dall'utente — 26 novembre 2026
+
+Da ora l'utente sceglie la direzione dell'effetto grafico di ogni carta.
+Prima verificare il catalogo e il motore, creare/presentare la carta e
+spiegarne chiaramente il ruolo reale: bersagli, durata, condizioni, costi,
+combo e differenze fra rarità. Poi l'utente dice quale effetto realizzare.
+Non inventare o implementare autonomamente una nuova coreografia prima
+della sua indicazione. Quando la direzione è stata indicata/confermata,
+realizzare grafica, suoni e aptica coerenti, integrare, verificare e salvare
+quanto già autorizzato senza altre conferme di routine.
+
+Per le carte già fatte, descrivere separatamente ruolo reale ed effetto
+grafico attualmente codificato, poi attendere la scelta della revisione.
+La richiesta del 26/11 è una ricognizione: non cambia ancora i loro effetti.
+Fotografia delle otto armi/22 varianti correnti in
+`docs/RUOLI_ED_EFFETTI_CARTE_APPROVATE_2026-11-26.md`.
+Questa sequenza precede le vecchie istruzioni che collegavano l'approvazione
+del fronte alla creazione automatica dell'effetto. Restano valide le regole
+di coerenza, impatti, prospettiva, salve e collaudo del 25/11.
+
 ## Regola permanente — impatti sulle navi e prossime carte, 25/11
 
 L'utente approva salve e partenze variabili e chiede **esplosioni o altri
@@ -147,8 +167,9 @@ variabili entro il lato della propria flotta; forma, sequenza, contatto e
 rifiniture seguono arma e rarità. Numero di colpi, bersagli e danno seguono
 gli eventi del motore. Il Maglio corrente ha 1/3/6/9 colpi: la vecchia
 prescrizione di un centro fisso e un solo colpo per rarità è superata.
-Quando una carta è approvata, nello stesso inserimento implementare il colpo
-univoco e il suono per ogni sua rarità, pubblicare codice e PNG su `test7/main`
+Quando il fronte è approvato e l'utente ha indicato/confermato la direzione
+grafica dell'effetto, nello stesso inserimento implementare il colpo univoco
+e il suono per ogni sua rarità, pubblicare codice e PNG su `test7/main`
 e controllare visivamente e acusticamente la partita su StackBlitz. Non
 attribuire automaticamente a tutte le Armi uno sparo in base al solo elemento.
 Le altre Armi conservano un effetto provvisorio finché progettate una per una.

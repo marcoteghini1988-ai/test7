@@ -1,5 +1,16 @@
 # Regola dei colpi e degli effetti delle carte — 24 novembre 2026
 
+## Nuovo ordine di lavoro — 26 novembre 2026
+
+Creare/presentare la carta e spiegarne il ruolo reale dopo verifica nel
+codice. Poi l'utente dice quale effetto grafico creare; realizzarlo dopo
+questa indicazione, con gli stessi vincoli di meccanica, prospettiva,
+impatti, suoni e aptica. Per le carte già fatte descrivere prima ruolo ed
+effetto attualmente codificato; non modificarli sulla sola richiesta di
+spiegazione. Questo ordine sostituisce la creazione autonoma dell'effetto
+alla sola approvazione del fronte. Riferimento:
+[REGOLE_PERMANENTI_EFFETTI_CARTE.md](REGOLE_PERMANENTI_EFFETTI_CARTE.md).
+
 ## Impatti sulle navicelle e regola per le prossime carte — 25/11
 
 L'utente chiede ora esplosioni o altri contatti ben visibili sulle navicelle,
