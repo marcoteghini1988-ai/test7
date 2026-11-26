@@ -1,81 +1,84 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione utente corrente — Ganasce autonome e palo d'impatto
+## Revisione corrente — Ganasce, proposta Fulmine e seconda arma Metallo
 
-**26 novembre 2026, conversazione vocale (circa 11:08 Europe/Rome).**
-Questa proposta dell'utente sostituisce, nella progettazione, la precedente
-coppia basata sullo scontro fra due navi. Si tratta di una revisione delle
-meccaniche oltre che della rappresentazione. Per ora documentare: nessuna
-implementazione di combattimento/renderer o nuovo collaudo è autorizzato.
+**26 novembre 2026, conversazione vocale.** Solo progettazione e
+documentazione: effetti, meccaniche e collaudi saranno realizzati al
+successivo comando esplicito dell'utente. I blocchi storici successivi
+non prevalgono su questa sintesi aggiornata.
 
 ### Prima carta: Arpioni a Ganasce Magnetiche, elemento Metallo
 
-- Carta indipendente: deve funzionare anche giocata da sola.
-- Aggancia una o due navi avversarie, secondo quante sono presenti in
-  campo. Con la sola madre deve funzionare su quella; non richiede una
-  coppia di navi e non si raddoppia automaticamente il danno su un bersaglio.
-- L'aggancio dura **tre turni propri**.
-- Nei primi due turni le ganasce restano attaccate e tirano gli scafi:
-  la trazione infligge un danno base a ogni nave agganciata.
-- Nel terzo e ultimo turno le ganasce si staccano strappando parti di
-  metallo dalla nave: il distacco infligge un **danno maggiorato**.
-- Non sono stati fissati nuovi valori HP, percentuali, costi o differenze
-  fra rarità. Non inventare danni numerici o sommare arbitrariamente un
-  ulteriore colpo base al danno del distacco.
+- Carta indipendente, utilizzabile anche da sola.
+- Aggancia una o due navi presenti in campo; deve funzionare anche quando
+  rimane soltanto la madre. Un solo bersaglio non raddoppia il danno.
+- L'aggancio dura **tre turni propri**. Nei primi due le Ganasce tirano
+  e infliggono danno base; al terzo si staccano strappando metallo e
+  infliggono un danno maggiore.
+- Nuovi valori HP, costi e differenze per rarità non sono stati fissati.
 
-### Seconda carta: revisione del Cannone Collassatore di Lega, Metallo
+### Vincoli emersi per la seconda carta e proposte scartate
 
-- L'utente propone una combinazione mentre la prima carta tiene agganciate
-  le navi. Ha menzionato il lancio di altre due ganasce e una struttura che
-  faccia **da palo/perno contro cui tirare e schiantare la nave**.
-- Le ganasce trascinano ogni nave agganciata verso quel palo; l'urto
-  contro la struttura causa il danno della combinazione.
-- La combinazione deve poter funzionare con **una o due navi**: non
-  dipende dall'urto fra due navi. Il bersaglio può essere anche la sola madre.
-- Il numero e la disposizione esatta dei perni e delle eventuali ganasce
-  aggiuntive restano da precisare; non trasformare la spiegazione ancora
-  in corso in una coreografia già approvata.
+L'utente vuole una macchina che faccia **danno base anche da sola** e
+possa amplificarlo grazie alle Ganasce già agganciate.
+La trazione appartiene alle Ganasce della prima carta. L'utente ha
+rifiutato di attribuire un'attrazione magnetica autonoma all'Incudine.
 
-### Chiarimento successivo: uno schianto soltanto, dispositivo da proporre
+La combinazione deve produrre **una sola attivazione potenziata per
+bersaglio coinvolto**, non ripetersi ogni turno. La risposta esplicita
+alla domanda sulla frequenza è stata «No, una volta sola». Non ripeterla.
 
-Alla domanda «una volta sola oppure ogni turno», l'utente ha risposto
-**«No, una volta sola»**. La combinazione deve quindi produrre **una sola
-attivazione dello schianto**, con un urto per ciascuna nave agganciata
-coinvolta; non ripeterlo nei turni successivi. Non richiedere questa scelta.
+Il palo era soltanto un'idea. Incudine a Propulsione, Pressa Orbitale e
+Spaccacorazze a Cuneo sono stati rifiutati nella discussione successiva;
+non presentarli come alternative ancora da approvare o come decisioni.
+L'Incudine che richiede necessariamente le Ganasce non soddisfa da sola
+il requisito di funzionamento autonomo della seconda macchina.
 
-L'utente ha inoltre precisato che la combo col palo è **un'idea** e ha
-chiesto altre proposte. Il palo/perno non è quindi una forma definitiva
-già approvata della seconda arma.
+### Nuova idea dell'utente: macchina Tuono/Fulmine conduttrice
 
-**Due varianti proposte dall'assistente, ancora da scegliere:**
-1. Incudine magnetica: un blocco metallico viene disposto presso ciascun
-   bersaglio agganciato; le catene si accorciano di scatto e trascinano la
-   nave contro il blocco, con un unico schianto.
-2. Pressa magnetica: due piastre si chiudono una volta sulla nave trattenuta
-   dalle Ganasce. La sequenza viene applicata ai bersagli agganciati
-   coinvolti; deve funzionare anche sulla sola madre.
+L'utente ha proposto una macchina B **di elemento Tuono/Fulmine** che
+usa le catene metalliche delle Ganasce **come conduttori per amplificare
+il danno**. Ha detto che questa idea va bene «da inserire e da valutare».
 
-L'assistente preferisce l'incudine perché rende chiaro il ruolo delle
-catene nella trazione e nell'urto. Sono alternative di progettazione,
-non nuove carte aggiuntive al catalogo e non effetti realizzati.
-Il mantenimento degli agganci dopo l'urto resta una decisione aperta.
+- Annotarla come **proposta da valutare**, distinta dalla macchina
+  Metallo ancora richiesta. Non trasformare automaticamente l'attuale
+  Collassatore Metallo in una carta Fulmine.
+- Nome definitivo, rarità, danno base e bonus, bersagli, durata e costi
+  Energia restano da progettare e valutare; non assegnare valori approvati.
+- Non sostituire automaticamente una delle dieci famiglie Fulmine già
+  presenti: la collocazione della nuova proposta nel catalogo va valutata.
+- L'idea è registrata nella progettazione; non è stata inserita nel codice
+  giocabile, illustrata, animata o collaudata.
 
-### Punti ancora da definire
+### Richiesta attiva: una macchina Metallo combinabile con le Ganasce
 
-- Quando avviene lo schianto e quando si può giocare la seconda carta:
-  stesso turno, turni successivi o entrambi.
-- Durata e funzionamento autonomo della seconda carta, se previsto.
-- Se la combinazione mantiene gli agganci fino al distacco del terzo turno
-  o li consuma prima; interazione con bersagli distrutti, Difese e blocchi.
-- Nome definitivo, quantità/disposizione dei dispositivi, valori e
-  progressione per rarità.
+Dopo l'idea Fulmine, l'utente ha precisato che serve comunque una macchina
+**Metallo** combinabile con la prima carta. La scelta resta aperta.
 
-Non chiedere nuovamente se la prima carta sia autonoma, se duri tre turni
-se debba funzionare sulla sola madre o se lo schianto sia ripetuto:
-l'utente ha già specificato questi punti.
-Restare su questa coppia e ascoltare il completamento della proposta.
-Il testo storico sotto documenta il codice precedente e proposte ormai
-superate; non prevale sulle nuove indicazioni dell'utente.
+**Nuova proposta dell'assistente, non ancora approvata: Percussore a
+Risonanza.** Da solo lancia un proiettile con una testata vibrante che
+provoca danno base all'impatto. Con le Ganasce agganciate, l'apparato
+trasmette un impulso meccanico lungo le catene tese fino agli agganci,
+amplificando il medesimo colpo sullo scafo. La combinazione è una sola
+attivazione potenziata, non un secondo colpo aggiuntivo o un danno
+periodico. È vibrazione/percussione meccanica, senza scarica elettrica
+né trazione autonoma della seconda macchina. Nome e funzionamento
+restano una proposta da discutere, non una carta già scelta.
+
+### Punti aperti
+
+- Scelta della seconda macchina Metallo e valutazione della nuova
+  proposta Fulmine, mantenendole distinte.
+- Bersagli esatti, finestra della combinazione (stesso turno e/o turni
+  successivi), durata della seconda carta e destino degli agganci.
+- Controlli Difesa/blocchi, valori, Energia e progressione per rarità.
+- La combinazione deve poter funzionare anche sulla sola madre;
+  non riproporre lo scontro obbligatorio fra due navi.
+
+Non chiedere nuovamente se le Ganasce siano autonome, se durino tre turni
+o se lo schianto vada ripetuto: questi punti sono stati già specificati.
+Non passare alla carta successiva o iniziare l'implementazione mentre
+l'utente sta ancora scegliendo la seconda macchina.
 
 ## Discussione precedente — Ganasce e Collassatore da rivedere
 
