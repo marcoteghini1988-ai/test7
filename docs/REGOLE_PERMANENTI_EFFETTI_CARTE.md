@@ -167,25 +167,30 @@ i punti lungo il bordo pertinente; non usare un solo emettitore centrale.
 Questo salvataggio riguarda le istruzioni. L'attuazione dei chiarimenti
 nel codice e il relativo collaudo restano da completare.
 
-## Ordine vincolante dal 26 novembre 2026
+## Ordine aggiornato: proposta dell'assistente e approvazione dell'utente
 
-**Ora: carta → ruolo reale → indicazione grafica dell'utente → salvataggio
-→ carta successiva. Più avanti: realizzazione su comando esplicito.**
+L'utente ha chiesto di velocizzare la revisione delle carte già inserite:
+le funzioni confermate sono nel codice; l'assistente deve proporre
+l'effetto, poi l'utente dice se va bene o cosa cambiare.
 
-Leggere prima catalogo e risoluzione del motore. Creare/presentare la carta
-con le basi ufficiali e spiegare bersagli, durata, condizioni, costi, combo
-e differenze per rarità. L'utente sceglie quindi come rappresentarla in
-gioco. Non definire o implementare autonomamente una nuova coreografia
-prima della sua indicazione. Dopo la scelta, nella modalità corrente
-salvare le specifiche senza creare gli effetti. Grafica, suoni, aptica,
-integrazione e collaudo si faranno al successivo comando di creazione.
+**Sequenza:** verificare una volta carta, illustrazione e meccanica →
+spiegare brevemente la funzione quando serve → proporre una sequenza
+visiva, sonora e aptica completa → recepire approvazione/correzioni →
+salvare la scheda confermata → passare alla successiva già nel gruppo.
+Non aspettare che l'utente inventi la direzione grafica. Questa modalità
+aggiorna le precedenti istruzioni che gli assegnavano ogni proposta.
 
-Per le carte esistenti, presentare **una carta alla volta**: nome, rarità,
-elemento e ruolo reale. Poi ascoltare la scelta dell'utente. Riportare la
-grafica attuale soltanto se richiesta, distinguendola dal ruolo di gioco.
-La fotografia iniziale è in
-[RUOLI_ED_EFFETTI_CARTE_APPROVATE_2026-11-26.md](RUOLI_ED_EFFETTI_CARTE_APPROVATE_2026-11-26.md).
-La richiesta di spiegazione non autorizza da sola altri cambiamenti grafici.
+Riutilizzare la versione corrente già verificata nella sessione e
+controllare di nuovo soltanto dati mancanti, dubbi reali o file cambiati.
+Non risalvare la stessa scheda dopo ogni semplice domanda; salvare alla
+conferma o al cambio di argomento per conservare una carta sospesa.
+Non presentare nomi o meccaniche come confermati senza riscontro.
+
+Una conferma della meccanica non approva automaticamente una proposta
+grafica. La progettazione approvata non equivale a un effetto già creato.
+**Ora si definiscono e salvano le scelte; la realizzazione degli effetti
+verrà al comando esplicito dell'utente.** Gli effetti attuali si descrivono
+quando richiesto, distinguendoli sempre dalla nuova proposta.
 
 ## Criteri di realizzazione
 
