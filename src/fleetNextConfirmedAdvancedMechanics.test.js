@@ -12,7 +12,8 @@ test('21 regole confermate preservate con numeri provvisori utilizzabili',()=>{
   assert.equal(c.confirmedMechanic,r);
   assert.equal(canSelectNewGeneric(r.id),true);
   assert.equal(buyNextCommonCard({...createFleetInventory(),credits:10000},r.id).ok,true);
-  assert.match(pendingWeaponReason(r.id),/Parametro non ancora deciso/);
+  if(r.missing.length)assert.match(pendingWeaponReason(r.id),/Parametro non ancora deciso/);
+  else{assert.equal(pendingWeaponReason(r.id),null);assert.equal(r.confirmed.turns,3);assert.equal(r.confirmed.oneJaw,true);}
  }
 });
 test('Mortaio: massimo tre colpi propri, fuoco fisico consumato solo con profilo completo',()=>{
