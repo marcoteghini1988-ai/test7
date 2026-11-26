@@ -1,13 +1,65 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — grafica delle carte inserite: Perforatore a Cascata
+## Revisione corrente — Artiglieria confermata; Ganasce e Collassatore da chiudere
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
 
-### Punto attuale — grafica delle carte già inserite: Perforatore a Cascata
+### Punto attuale — Artiglieria confermata; riprendere le carte sospese
+
+L'utente ha confermato l'effetto attuale dell'**Artiglieria delle Schegge
+Erranti Metallo** con «Va bene. Procediamo alla prossima».
+Era l'ultima della sequenza delle **otto famiglie già dotate di effetti**.
+Restano aperte le Ganasce e la seconda macchina Metallo/Collassatore,
+sospese durante la discussione; non inventare una nona carta del gruppo.
+
+**Artiglieria confermata per questa revisione:** schegge corte a cuneo,
+rotanti e convergenti sul singolo bersaglio; Rara 3 a ventaglio, Epica 6,
+Leggendaria 9 in tre gruppi successivi. Impatti con scintille, frammenti e
+fumo coerenti con il danno reale. Una salva per turno per due turni
+propri, cambiando bersaglio nel secondo quando possibile.
+Non applicare la vecchia descrizione di danni secondari a tutta la flotta.
+
+**Perforatore a Cascata — scelta grafica approvata nella conversazione:**
+il primo proiettile colpisce il supporto; se lo distrugge, deve vedersi
+la distruzione della navicella e l'esplosione. Dal relitto/esplosione si
+forma una nuova rappresentazione del danno eccedente (detriti/proiettile
+residuo) che raggiunge il bersaglio successivo. Se anche quello viene
+distrutto e la cascata continua legalmente, ripetere esplosione e
+formazione del nuovo colpo residuo. «Razzo» era un esempio dell'utente,
+non l'obbligo di usare razzi identici a ogni passaggio.
+Non riproporre come scelta approvata il medesimo siluro intatto che
+attraversa tutti gli scafi: l'utente ha richiesto distruzione visibile e
+un'altra immagine del colpo avanzato formata nel punto della distruzione.
+Trasferimenti soltanto con supporto distrutto, residuo positivo, bersaglio
+valido e carica Energia Metallo realmente consumata. Nessun danno ad area
+gratuito dai detriti. Applicare suono e vibrazione a impatti, distruzione,
+formazione e trasferimento secondo gli eventi reali.
+
+**Correzione:** il «Dissalatore a Onda di Ritorno» citato dall'assistente
+non è stato riscontrato nel catalogo di test7 e non appartiene al gruppo
+da rivedere. Non presentarlo come carta confermata o attribuirgli la
+meccanica inventata delle Difese scartate.
+
+**Metodo aggiornato richiesto dall'utente:** le funzioni delle carte
+confermate sono già nel codice; l'assistente propone come realizzare
+l'effetto grafico, sonoro e aptico, e l'utente lo approva o lo corregge.
+Non chiedere all'utente di inventare ogni effetto da zero. Dare la funzione
+in breve quando serve e tenere distinte meccanica, grafica attuale,
+proposta e realizzazione effettiva.
+Riutilizzare i dati già verificati; salvare una scheda completa alla
+conferma o quando si mette una carta in pausa, senza riletture e
+salvataggi ripetuti dopo ogni semplice chiarimento.
+La modalità corrente resta progettazione: realizzare al comando esplicito.
+
+**Prossimo punto da proporre:** completare l'effetto delle Ganasce
+autonome sui tre turni già definiti, mantenendo aperta la scelta della
+seconda macchina Metallo. Non considerare approvata una nuova proposta
+per le Ganasce prima della risposta dell'utente.
+
+### Riferimento meccanico — Perforatore a Cascata
 
 L'utente chiede di tornare alla progettazione della **prossima carta già
 creata e inserita**, per finire la grafica di quelle esistenti.
@@ -38,10 +90,9 @@ Fonti: `src/fleetNext/provisionalWeaponProfiles.js` e
 più le evoluzioni di rarità. Questo riepilogo descrive il ruolo della
 carta; non approva una nuova forma del proiettile o quantità di colpi.
 
-**Prossimo passo:** ascoltare come l'utente vuole raffigurare il colpo e
-il trasferimento fra navi, applicando la regola obbligatoria per grafica,
-suoni e vibrazione. Salvare la scelta; la realizzazione resta rinviata
-al comando esplicito. Le Ganasce restano in pausa.
+**Aggiornamento successivo:** la direzione grafica del Perforatore è stata
+approvata ed è descritta nel punto attuale sopra. Non ricominciare la
+scelta. La realizzazione resta al comando esplicito.
 
 ### Navi — forme più varie e verifica delle immagini delle fusioni
 
