@@ -7,6 +7,7 @@ on:
       - 'src/fleetNext/nextWeaponBalance20261126.json'
       - 'src/fleetNext/combat.js'
       - 'src/fleetNextNextBalancedWeapons.test.js'
+      - 'src/fleetNextNextBalanceAudit.test.js'
       - '.github/workflows/next-weapons-26.yml'
   workflow_dispatch:
 jobs:
@@ -15,8 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: src
+          sparse-checkout: |
+            /src/
+            /docs/*.json
+            /package.json
+            /package-lock.json
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test src/fleetNextNextBalancedWeapons.test.js src/fleetNextConfirmedNextWeaponDesigns.test.js src/fleetNextWeaponEvolutions.test.js src/fleetNextProvisionalWeapons.test.js
+      - run: node --test src/fleetNextNextBalancedWeapons.test.js src/fleetNextConfirmedNextWeaponDesigns.test.js src/fleetNextWeaponEvolutions.test.js src/fleetNextProvisionalWeapons.test.js src/fleetNextNextBalanceAudit.test.js
