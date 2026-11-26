@@ -1,5 +1,97 @@
 # Regole permanenti per gli effetti delle carte
 
+## Regola obbligatoria: corrispondenza completa fra carta, grafica, suono e vibrazione
+
+**Richiesta permanente dell'utente — 26 novembre 2026:**
+«Tutti gli effetti che vengono descritti dalle carte devono esserci una
+corrispondenza visiva, sonora e di vibrazione».
+L'utente chiede che questa regola sia letta spontaneamente quando si
+creano gli effetti, senza doverlo ricordare.
+
+### Quando leggerla
+
+Prima di progettare, creare, modificare, integrare o collaudare un effetto
+di qualsiasi carta, leggere questo documento e le istruzioni in
+`AGENTS.md`. È un passaggio obbligatorio dell'attività, anche in una
+nuova chat. Non aspettare una richiesta «leggi la regola».
+Riutilizzare una lettura della versione corrente già effettuata nella
+stessa sessione; rileggerla se il documento cambia, evitando recuperi
+ripetuti a ogni domanda conversazionale.
+
+### Che cosa deve corrispondere
+
+La regola vale per tutte le categorie di carte: Arma, Attacco, Difesa,
+Trappola, Personaggio, Energia, Terreno e Fusione. Riguarda ogni effetto
+principale, secondario, condizionale o combinato, la sua persistenza e la
+sua fine, secondo ciò che la carta prevede realmente.
+
+Per ogni effetto previsto devono essere progettati e realizzati insieme:
+- **Rappresentazione visiva:** azione riconoscibile sul vero oggetto
+  coinvolto, con provenienza, bersaglio, ordine, durata e conseguenze
+  corretti. Mostrare l'effetto anche sulle carte coinvolte, non soltanto
+  sulle navicelle o su un generico bagliore.
+- **Suono:** segnale coerente con l'azione, la macchina/materiale e la
+  fase reale, sincronizzato con il contatto o cambiamento di stato.
+- **Vibrazione:** riscontro coerente con gli stessi eventi e fasi,
+  distinto ove serve per attivazione, tensione, impatto, rottura,
+  rilascio o scadenza. Rispettare impostazioni e capacità del dispositivo.
+
+La copertura non si esaurisce nel colpo iniziale. A seconda della carta,
+comprende caricamento/attivazione, consumo o uso di risorse, movimento,
+aggancio, trazione, impatto, blocco/riduzione, superamento di una Difesa,
+distruzione/rimozione, passaggio agli scarti, cura, potenziamento,
+indebolimento, stati persistenti, trasferimenti, fusioni, fine dell'effetto
+e ripristino. Questi sono casi da verificare quando previsti, non nuove
+abilità da aggiungere alle carte.
+
+Le condizioni non soddisfatte o gli attacchi bloccati devono avere un
+riscontro coerente con il mancato effetto. Non mostrare un danno riuscito,
+una rottura o una rimozione che il motore non ha prodotto. Non rivelare
+carte coperte o Trappole prima di quanto consentano le regole.
+
+### Procedura obbligatoria per ogni realizzazione
+
+1. Leggere definizione completa, ID, categoria, elemento, rarità, testo
+   e valori della carta; leggere motore, eventi e decisioni approvate.
+   Separare la meccanica corrente dalle revisioni ancora da realizzare.
+2. Per ciascun effetto previsto annotare internamente condizioni,
+   oggetti coinvolti, inizio/fine e corrispondenti animazione, suono e
+   vibrazione. Individuare ogni ramo condizionale, interazione e scadenza.
+3. Realizzare i tre canali sulla stessa sequenza di eventi reali,
+   personalizzata per carta e rarità secondo le scelte dell'utente.
+   Non sostituire effetti distinti con lo stesso sparo generico.
+4. Verificare le situazioni pertinenti: attivazione riuscita e impedita,
+   con/senza condizioni o risorse, Difese, bersagli realmente presenti,
+   turni successivi, fine/interruzione, rarità e lati A/B quando applicabili.
+   Verificare anche reazione e stato delle altre carte coinvolte.
+5. Considerare il lavoro completo soltanto quando tutti gli effetti
+   della meccanica hanno la corrispondenza nei tre canali. Se un canale
+   o una situazione resta da realizzare/verificare, dichiararlo
+   chiaramente senza presentare l'effetto come finito.
+
+### Fedeltà e verifica
+
+Preservare quantità di colpi, danni totali, costi, bersagli e durate
+approvati. Effetti visivi, suoni e vibrazioni non aggiungono danni,
+Bruciature, immobilizzazioni o rimozioni. Coordinare animazione e stato
+reale: una carta soltanto superata rimane in campo; una carta distrutta
+deve mostrare la rimozione reale e la destinazione corretta.
+
+Rispettare mute/volume, preferenze aptiche, movimento ridotto e visibilità.
+Progettare sempre il riscontro aptico; la sua esecuzione dipende dal
+supporto e dalle impostazioni del dispositivo. Distinguere codice del
+pattern, verifica software e prova fisica sul telefono: non dichiarare
+quest'ultima conclusa senza averla osservata. La mancanza di supporto in
+un ambiente di prova non giustifica l'omissione del progetto aptico.
+
+Una sola build, un test del motore o uno studio offline non certificano
+grafica, audio e vibrazione nella partita. Registrare separatamente il
+riscontro effettivo di ogni canale e gli eventuali controlli ancora aperti.
+
+**Stato operativo:** questa regola governa le future realizzazioni.
+L'ordine corrente resta raccolta e salvataggio delle specifiche; nessuna
+implementazione degli effetti parte prima del comando dell'utente.
+
 ## Modalità corrente: raccogliere, salvare, poi creare su comando
 
 L'utente ha chiesto di annotare per ora gli effetti carta per carta e di
