@@ -34,6 +34,29 @@ La regola non autorizza la creazione anticipata delle sequenze: nella
 modalità corrente si documentano le scelte; si realizzeranno al comando
 esplicito dell'utente. Dettagli vincolanti nel documento collegato.
 
+## Regola generale delle immagini — raffigurare anche il colpo dell'arma
+
+Per **tutte le carte Arma**, tutte le famiglie e tutte le rarità,
+l'illustrazione deve mostrare la macchina **insieme al tipo di colpo che
+produce**, con aspetto coerente con ciò che si vedrà in battaglia.
+Forma, natura elementale, materiali, scia e peculiarità del proiettile
+o dell'emissione devono corrispondere; non usare un colpo scenico
+estraneo al modello poi animato.
+
+Leggere prima di creare immagini la sezione obbligatoria in
+`docs/PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md`. Conservare cornici,
+simboli e impaginazione: arma e colpo stanno nell'illustrazione centrale.
+Non aggiungere impatti o abilità per sola decorazione.
+La regola vale per il lavoro futuro e per rifacimenti autorizzati,
+non dichiara nuove immagini già create.
+
+Il lavoro da queste famiglie include **carte complete PNG HD nelle
+rarità previste**, oltre agli effetti visivi, sonori e aptici.
+Pettine e Lanciadardi sono stati approvati nella progettazione degli
+effetti; le nuove immagini complete non sono ancora state prodotte.
+Il Lanciadardi è ora confermato in tutte le rarità: medesimo dardo con
+due spirali, meccanica invariata e danno/intensità crescenti.
+
 ## Lavoro corrente — Fulmine, seconda famiglia: Lanciadardi a Spirale di Tesla
 
 L'utente ha approvato il **Cannone a Pettine Ionico di Vega** in tutte
