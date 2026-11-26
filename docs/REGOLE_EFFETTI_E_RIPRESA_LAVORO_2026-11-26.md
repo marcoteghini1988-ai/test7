@@ -7,6 +7,42 @@ documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
 
+### Ultima richiesta — rendere visibile l'uso delle Carte Energia
+
+L'utente richiede una regola indipendente dall'elemento: quando una
+carta usa Carte Energia deve vedersi il loro contributo e la
+coordinazione con l'effetto prodotto. Regola salvata nelle istruzioni,
+nelle regole permanenti degli effetti e nella procedura di creazione.
+La carta Energia interessata si evidenzia al vero uso e l'effetto
+segue la stessa sequenza temporale, con audio e aptica coerenti.
+Distinguere Energia solo conteggiata e Energia consumata, senza
+inventare spese o scarti. I lanci iniziali restano fuori schermo.
+
+**Ulteriori proposte accettate nel parlato, da associare ai veri ID
+prima di produrre o aggiornare il catalogo:**
+- «Torretta ad Anelli di Faraday»: l'utente risponde «Sì, giudicata».
+  Un impulso elettrico blu pallido ad anelli concentrici entra dal
+  bordo; un impatto, bagliore breve, crepitio e impulso aptico.
+- «Frusta elettrostatica di Volta»: l'utente risponde «Sì».
+  Una frusta sottile giallo-bianca di scintille entra dal bordo e
+  schiocca una volta; scintille diffuse, schiocco e aptica breve.
+  La carta raffigura il dispositivo e un'emissione coerente.
+- «Tridente a Scintilla di Maxwell»: l'utente risponde «Sì».
+  Una scarica a tre punte sottili converge su un solo punto, una
+  stoccata; schiocco, breve crepitio e impulso aptico.
+  La carta raffigura il dispositivo e la stessa tripla emissione.
+Nel parlato sono state presentate come un attacco su un bersaglio in
+un turno, Difese ordinarie e senza Energia, con progressione di danno
+e intensità nelle evoluzioni. Questi profili non sono stati verificati
+contro i veri ID del catalogo in questa trascrizione.
+Le denominazioni differiscono dall'elenco delle dieci famiglie già
+verificato: conservarne l'accettazione grafica senza dichiararle nuove
+voci codificate, sostituire armi approvate o superare la quota di dieci.
+La Frusta di Volta è inoltre visivamente vicina allo Sferzatore:
+riconciliare identità e differenze prima della produzione.
+Nessuna carta completa, nuovo effetto o collaudo certificato qui.
+Rispondere ora alla regola Energia, senza deviare la conversazione.
+
 ### Regola corrente — in battaglia compaiono i colpi; macchina nella carta
 
 **Correzione esplicita dell'utente, 26 novembre 2026, confermata con «Sì».**
