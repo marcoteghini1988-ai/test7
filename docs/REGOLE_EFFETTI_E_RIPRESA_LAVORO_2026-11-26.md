@@ -33,6 +33,37 @@ non dimostra che il nuovo effetto scelto sia già visibile nel gioco.
   sono stati scelti in questa indicazione. Non presentare conteggi
   precedenti del codice come una nuova scelta esplicita dell'utente.
 
+### Frantumatore — effetto visibile anche sulla carta Difesa coinvolta
+
+L'utente richiede che, quando si realizzeranno gli effetti, sia visibile
+anche **quello che succede alla carta Difesa stessa**: quando interviene,
+quando viene superata e quando viene rotta/eliminata. Il solo colpo alla
+nave o un effetto generico sullo scudo non bastano a rendere leggibile
+l'interazione con la carta presente nel campo.
+
+- **Difesa applicata:** la carta coinvolta reagisce visivamente quando
+  protegge la nave. Se riduce il danno, sulla nave si mostra soltanto il
+  danno residuo reale; se blocca tutto, non mostrare una ferita da danno
+  sullo scafo.
+- **Difesa superata:** rendere riconoscibile l'aggiramento della protezione
+  e la reazione della carta interessata. La carta rimane in campo:
+  nessuna animazione di distruzione o rimozione per un semplice bypass.
+- **Difesa distrutta:** la rottura/smontaggio deve essere evidente sulla
+  vera carta coinvolta, seguita dal suo passaggio agli scarti quando il
+  motore la rimuove. Collegare la sequenza all'effetto reale della carta
+  attaccante e all'impatto delle lame, senza effetti su Difese estranee.
+- Stato della carta, animazione, suono e risoluzione del colpo devono
+  essere coordinati. La grafica mostra le conseguenze effettive senza
+  inventare rotture, danni, bersagli o costi aggiuntivi.
+- La forma artistica dettagliata resta da realizzare coerentemente con
+  arma, carta Difesa e rarità. Questa indicazione non fissa il numero
+  delle lame né il valore del bonus Energia.
+
+**Stato:** requisito salvato per la futura realizzazione. Non è stato
+creato o collaudato un nuovo effetto in questa fase. Il principio di
+rendere visibile la carta Difesa realmente coinvolta vale anche nelle
+successive progettazioni degli effetti pertinenti.
+
 ### Frantumatore — revisione del bonus limitata a questa carta
 
 Dopo aver chiarito che il comportamento attuale non aumenta il danno
