@@ -1,0 +1,116 @@
+{
+  "coreNodes": [
+    {
+      "attrs": [
+        [
+          "data-shooter",
+          "A"
+        ],
+        [
+          "data-target-kind",
+          "part"
+        ],
+        [
+          "data-target-id",
+          "weapons"
+        ],
+        [
+          "data-actual-damage",
+          "172"
+        ],
+        [
+          "data-projectiles",
+          "1"
+        ],
+        [
+          "data-origin-edge",
+          "player-launch-band"
+        ],
+        [
+          "data-flight-ms",
+          "1250"
+        ],
+        [
+          "data-impact-at-ms",
+          "2750"
+        ],
+        [
+          "data-projection",
+          "perspective-3d"
+        ],
+        [
+          "data-visible-end",
+          "rear"
+        ],
+        [
+          "data-weapon-kind",
+          "growing-thunder-core"
+        ],
+        [
+          "data-rarity",
+          "Leggendaria"
+        ],
+        [
+          "data-sequence",
+          "precessing-coronas-compression-electric-bloom"
+        ],
+        [
+          "data-cascade-index",
+          "0"
+        ],
+        [
+          "data-source-target-id",
+          ""
+        ],
+        [
+          "data-transfer-energy",
+          "0"
+        ],
+        [
+          "data-stage",
+          "3"
+        ],
+        [
+          "data-core-charge-stage",
+          "3"
+        ],
+        [
+          "data-core-broken",
+          "false"
+        ],
+        [
+          "data-energy-spent",
+          "1"
+        ],
+        [
+          "data-defense-blocked",
+          "false"
+        ]
+      ],
+      "classes": "maglio-shot magnetic-shot",
+      "tag": "g"
+    }
+  ],
+  "hp": [
+    [
+      "HP Lince Solare",
+      "629"
+    ],
+    [
+      "HP Aurora-0",
+      "906"
+    ]
+  ],
+  "textLayers": [
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+      "locale": "en",
+      "parent": "maglio-battle-stage"
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+      "locale": "en",
+      "parent": "f3d-weapon-card"
+    }
+  ]
+}

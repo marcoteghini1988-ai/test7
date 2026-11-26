@@ -57,8 +57,27 @@ il selettore della lingua.
   gradienti isolati per carta e integrità di basi/originali.
 - Suite logica completa: 2434 test passati durante lo sviluppo; i test
   mirati, preflight e build passano sulla versione preparata.
-- Il collaudo StackBlitz di questo inserimento è ancora da registrare.
-  Le prove precedenti del colpo non attestano il nuovo cambio lingua.
+- Collaudo StackBlitz effettuato sulla copia salvata `github-edu2s6xy`.
+  Le tre rarità caricano basi 3072×4608, con 17 campi SVG ciascuna:
+  EN/IT cambia le parole e mantiene identici URL dell'immagine e HP.
+  Report: `docs/collaudi/nucleo-localizzazione-2026-11-26/nucleo-localization-live.json`.
+- Corretto il livello dell'anteprima ingrandita, che inizialmente finiva
+  sotto la plancia. Immagine e testo ora occupano entrambi 380×570 CSS px.
+- Verificato anche il Nucleo Leggendario al terzo turno: stadio di carica 3,
+  una Energia consumata, un proiettile dal bordo giocatore e danno effettivo
+  172 HP nella specifica partita di prova (nominale stampato 181 HP, con
+  modificatori ordinari). Il livello testo del colpo/rivelazione e dello
+  slot è inglese; nessun cambiamento alla coreografia V2 approvata.
+  Metadata DOM in `nucleo-localization-combat.json` nella stessa cartella.
+- Ricaricamento completo della copia salvata riuscito: bootstrap e avvio
+  automatico fissati a `0c0fc79b07298e23115a1b31b2ba39e5c65d66a5`;
+  705 sorgenti verificati, 452 aggiornati nel riavvio finale. Dopo il riavvio
+  il fronte Leggendario e il selettore tornano in inglese, con il PNG dal
+  medesimo commit. Report: `nucleo-localization-final-reload.json`.
+- CI GitHub superata: 2434 test, preflight e build nel commit sorgente
+  `676509f66181e25daae944e1eedf4596711e2af0`; anche il controllo completo
+  della successiva rifinitura `0c0fc79b07298e23115a1b31b2ba39e5c65d66a5`
+  è concluso con successo (run `45907493646`).
 
 ## Riproduzione
 
@@ -67,3 +86,15 @@ il selettore della lingua.
 3. `node --test src/cardTextLayers.test.js`.
 4. `node scripts/export-card-text-review.mjs OUTPUT` produce le prove EN/IT.
 5. Avvio normale: inglese; collaudo in `/.maglio-review.html`, Card language.
+
+## Versioni pubblicate
+
+- Sorgenti e otto parti verificate: `676509f66181e25daae944e1eedf4596711e2af0`.
+- Tre basi PNG native, materializzate e ricontrollate tramite hash:
+  `93172ca721daf5c572201d5f0b6608fb2771c45f`.
+- Correzione dell'anteprima e versione salvata/collaudata:
+  `0c0fc79b07298e23115a1b31b2ba39e5c65d66a5`.
+
+La traduzione riguarda i fronti Nucleo e i metadati Energia indicati sopra;
+non costituisce una traduzione completa dell'interfaccia del gioco. La
+vibrazione fisica del dispositivo non è verificabile con questo collaudo.

@@ -1,0 +1,19 @@
+{
+  "appCommit": "0c0fc79b07298e23115a1b31b2ba39e5c65d66a5",
+  "sourceFiles": 705,
+  "updatedFiles": 452,
+  "savedFinalPin": true,
+  "automaticBoot": true,
+  "display": {
+    "locale": "en",
+    "rect": {
+      "height": 616.09375,
+      "width": 400,
+      "x": 481.5,
+      "y": 159.953125
+    },
+    "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/0c0fc79b07298e23115a1b31b2ba39e5c65d66a5/public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-l-text-base.png",
+    "width": 3072,
+    "z": "2147483647"
+  }
+}

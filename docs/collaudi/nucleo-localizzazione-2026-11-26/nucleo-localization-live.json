@@ -1,0 +1,251 @@
+[
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore",
+    "en": {
+      "hp": [
+        [
+          "HP Lince Solare",
+          "451"
+        ],
+        [
+          "HP Aurora-0",
+          "556"
+        ]
+      ],
+      "image": [
+        {
+          "height": 4608,
+          "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/0c0fc79b07298e23115a1b31b2ba39e5c65d66a5/public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-text-base.png",
+          "width": 3072
+        }
+      ],
+      "locale": "en",
+      "words": [
+        "GROWING THUNDER",
+        "CORE CANNON",
+        "WEAPON",
+        "RARE",
+        "ELEMENT",
+        "LIGHTNING",
+        "DURATION",
+        "3",
+        "TURNS",
+        "TURN DAMAGE / HP",
+        "24 / 36 / 54",
+        "RECHARGE T2 / T3",
+        "PLAY AND SPEND 1",
+        "NEW LIGHTNING",
+        "MISSED: STAYS MIN",
+        "1 TARGET",
+        "1 / TURN"
+      ]
+    },
+    "it": {
+      "hp": [
+        [
+          "HP Lince Solare",
+          "451"
+        ],
+        [
+          "HP Aurora-0",
+          "556"
+        ]
+      ],
+      "image": [
+        {
+          "height": 4608,
+          "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/0c0fc79b07298e23115a1b31b2ba39e5c65d66a5/public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-text-base.png",
+          "width": 3072
+        }
+      ],
+      "locale": "it",
+      "words": [
+        "CANNONE A NUCLEO",
+        "DI FOLGORE CRESCENTE",
+        "ARMA",
+        "RARA",
+        "ELEMENTO",
+        "FULMINE",
+        "DURATA",
+        "3",
+        "TURNI",
+        "DANNO / TURNO HP",
+        "24 / 36 / 54",
+        "RICARICA T2 / T3",
+        "GIOCA E SPENDI 1",
+        "NUOVA FULMINE",
+        "SALTATA: AL MINIMO",
+        "1 BERSAGLIO",
+        "1 / TURNO"
+      ]
+    },
+    "sameImage": true,
+    "sameHP": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore-rarity-e",
+    "en": {
+      "hp": [
+        [
+          "HP Lince Solare",
+          "631"
+        ],
+        [
+          "HP Aurora-0",
+          "809"
+        ]
+      ],
+      "image": [
+        {
+          "height": 4608,
+          "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/0c0fc79b07298e23115a1b31b2ba39e5c65d66a5/public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-e-text-base.png",
+          "width": 3072
+        }
+      ],
+      "locale": "en",
+      "words": [
+        "GROWING THUNDER",
+        "CORE CANNON",
+        "WEAPON",
+        "EPIC",
+        "ELEMENT",
+        "LIGHTNING",
+        "DURATION",
+        "3",
+        "TURNS",
+        "TURN DAMAGE / HP",
+        "58 / 85 / 129",
+        "RECHARGE T2 / T3",
+        "PLAY AND SPEND 1",
+        "NEW LIGHTNING",
+        "MISSED: STAYS MIN",
+        "1 TARGET",
+        "1 / TURN"
+      ]
+    },
+    "it": {
+      "hp": [
+        [
+          "HP Lince Solare",
+          "631"
+        ],
+        [
+          "HP Aurora-0",
+          "809"
+        ]
+      ],
+      "image": [
+        {
+          "height": 4608,
+          "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/0c0fc79b07298e23115a1b31b2ba39e5c65d66a5/public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-e-text-base.png",
+          "width": 3072
+        }
+      ],
+      "locale": "it",
+      "words": [
+        "CANNONE A NUCLEO",
+        "DI FOLGORE CRESCENTE",
+        "ARMA",
+        "EPICA",
+        "ELEMENTO",
+        "FULMINE",
+        "DURATA",
+        "3",
+        "TURNI",
+        "DANNO / TURNO HP",
+        "58 / 85 / 129",
+        "RICARICA T2 / T3",
+        "GIOCA E SPENDI 1",
+        "NUOVA FULMINE",
+        "SALTATA: AL MINIMO",
+        "1 BERSAGLIO",
+        "1 / TURNO"
+      ]
+    },
+    "sameImage": true,
+    "sameHP": true
+  },
+  {
+    "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+    "en": {
+      "hp": [
+        [
+          "HP Lince Solare",
+          "820"
+        ],
+        [
+          "HP Aurora-0",
+          "1050"
+        ]
+      ],
+      "image": [
+        {
+          "height": 4608,
+          "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/0c0fc79b07298e23115a1b31b2ba39e5c65d66a5/public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-l-text-base.png",
+          "width": 3072
+        }
+      ],
+      "locale": "en",
+      "words": [
+        "GROWING THUNDER",
+        "CORE CANNON",
+        "WEAPON",
+        "LEGENDARY",
+        "ELEMENT",
+        "LIGHTNING",
+        "DURATION",
+        "3",
+        "TURNS",
+        "TURN DAMAGE / HP",
+        "81 / 120 / 181",
+        "RECHARGE T2 / T3",
+        "PLAY AND SPEND 1",
+        "NEW LIGHTNING",
+        "MISSED: STAYS MIN",
+        "1 TARGET",
+        "1 / TURN"
+      ]
+    },
+    "it": {
+      "hp": [
+        [
+          "HP Lince Solare",
+          "820"
+        ],
+        [
+          "HP Aurora-0",
+          "1050"
+        ]
+      ],
+      "image": [
+        {
+          "height": 4608,
+          "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/0c0fc79b07298e23115a1b31b2ba39e5c65d66a5/public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-l-text-base.png",
+          "width": 3072
+        }
+      ],
+      "locale": "it",
+      "words": [
+        "CANNONE A NUCLEO",
+        "DI FOLGORE CRESCENTE",
+        "ARMA",
+        "LEGGENDARIA",
+        "ELEMENTO",
+        "FULMINE",
+        "DURATA",
+        "3",
+        "TURNI",
+        "DANNO / TURNO HP",
+        "81 / 120 / 181",
+        "RICARICA T2 / T3",
+        "GIOCA E SPENDI 1",
+        "NUOVA FULMINE",
+        "SALTATA: AL MINIMO",
+        "1 BERSAGLIO",
+        "1 / TURNO"
+      ]
+    },
+    "sameImage": true,
+    "sameHP": true
+  }
+]
