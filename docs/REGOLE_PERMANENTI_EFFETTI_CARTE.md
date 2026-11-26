@@ -1,5 +1,28 @@
 # Regole permanenti per gli effetti delle carte
 
+## Precisazioni vocali del 26 novembre 2026
+
+Riferimento dettagliato per riprendere in un'altra chat:
+[Regole effetti e ripresa del lavoro](REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md).
+
+**Ambito da rispettare:** i nuovi conteggi 2/3/5/7 e la serie di martelli
+rotanti appartengono soltanto al Maglio Ferrogravitazionale. Ogni altra
+carta conserva le proprie regole e attende una scelta grafica specifica
+dell'utente. Nessun conteggio o movimento del Maglio è un modello universale.
+
+I martelli partono a intervalli brevi, uno dopo l'altro: il successivo può
+partire prima dell'arrivo del precedente, ma le partenze non sono simultanee.
+Ogni martello ruota durante il volo e ha un contatto distinto sul vero
+bersaglio. Il numero esatto di millisecondi fra i lanci non è stato scelto
+dall'utente e non va presentato come un valore già approvato.
+
+La provenienza, invece, è una regola generale: il lato «porta USB» è tutto
+il bordo inferiore, quello avversario è tutto il bordo superiore. Variare
+i punti lungo il bordo pertinente; non usare un solo emettitore centrale.
+
+Questo salvataggio riguarda le istruzioni. L'attuazione dei chiarimenti
+nel codice e il relativo collaudo restano da completare.
+
 ## Ordine vincolante dal 26 novembre 2026
 
 **Carta → spiegazione del ruolo reale → indicazione grafica dell'utente →
@@ -13,8 +36,9 @@ prima della sua indicazione. Dopo la scelta, realizzare la sequenza con
 grafica, suoni e aptica sincronizzati, integrare e verificare quanto già
 autorizzato senza ulteriori conferme di routine.
 
-Per le carte esistenti, prima riportare **ruolo reale** e **grafica attuale**
-come informazioni distinte, poi applicare soltanto la revisione scelta.
+Per le carte esistenti, presentare **una carta alla volta**: nome, rarità,
+elemento e ruolo reale. Poi ascoltare la scelta dell'utente. Riportare la
+grafica attuale soltanto se richiesta, distinguendola dal ruolo di gioco.
 La fotografia iniziale è in
 [RUOLI_ED_EFFETTI_CARTE_APPROVATE_2026-11-26.md](RUOLI_ED_EFFETTI_CARTE_APPROVATE_2026-11-26.md).
 La richiesta di spiegazione non autorizza da sola altri cambiamenti grafici.
@@ -34,13 +58,17 @@ stesso singolo colpo per tutte le rarità. Non approvano nuove illustrazioni.
    articolate, emettitori, munizioni e movimento devono corrispondere
    all'illustrazione approvata. Non sostituire il modello con una figura
    piatta ruotata né ingrandire una testata squadrata fino a coprire lo scafo.
-3. **Origini variabili, sempre sul lato della flotta che spara.** Alternare
-   zone centrali, fianchi e profondità, con prospettiva speculare A/B e
-   determinismo nei replay. Non tornare a una partenza fissa per ogni tiro.
+3. **Origini variabili lungo il bordo della flotta che spara.** Per il
+   giocatore usare tutto il bordo inferiore; per l'avversario tutto il
+   bordo superiore, con prospettiva speculare A/B e determinismo nei replay.
+   «Porta USB» non significa l'unico punto centrale del telefono. La
+   precisazione del 26/11 prevale sulla vecchia formulazione sulle profondità.
    Un trasferimento previsto dalla carta riparte invece dalla nave colpita.
-4. **Variare l'azione, oltre alla sagoma.** Progettare raffiche, per esempio
-   3/6/9 colpi, alternanze, ventagli, curve, scie, rotazioni e finali speciali
-   dove coerenti. Ogni rarità sviluppa struttura e ritmo della sequenza,
+4. **Variare l'azione, oltre alla sagoma, secondo la scelta per quella carta.**
+   Raffiche, alternanze, ventagli, curve, scie, rotazioni e finali speciali
+   si definiscono carta per carta. 3/6/9 erano esempi precedenti, non una
+   regola universale; 2/3/5/7 sono la nuova scelta solo per il Maglio.
+   Ogni rarità sviluppa struttura e ritmo della sequenza,
    non solo colore o scala. Il conteggio deve essere codificato nel motore
    e indicato sulla carta; la somma dei danni resta il totale concordato,
    senza moltiplicare HP, costi Energia o controlli delle Difese.

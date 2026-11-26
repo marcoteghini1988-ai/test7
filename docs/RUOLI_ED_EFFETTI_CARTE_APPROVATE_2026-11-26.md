@@ -1,5 +1,13 @@
 # Ruoli ed effetti delle carte già realizzate
 
+> **Chiarimenti successivi nella conversazione del 26/11:** questo elenco
+> fotografa il codice precedente. La nuova direzione del solo Maglio è
+> 2/3/5/7 martelli rotanti lanciati uno dopo l'altro. Per tutte le armi,
+> i punti di partenza possono variare lungo tutto il bordo inferiore A e
+> superiore B. Direttive e stato effettivo sono nel
+> [documento di ripresa](REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md).
+> Queste nuove direttive sono documentate, non ancora implementate.
+
 Fotografia letta dal codice il 26 novembre 2026, base
 `c92e07e4d468e1c5eaeff8d6e9c76b8af27a6aaa`. Le ultime carte illustrate e
 dotate di effetti specifici sono otto Armi Metallo con 22 varianti di rarità.

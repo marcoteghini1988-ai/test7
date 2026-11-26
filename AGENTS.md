@@ -1,5 +1,39 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Ripresa obbligatoria — chiarimenti vocali del 26 novembre 2026
+
+Leggere prima `docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md`.
+L'utente ha chiesto espressamente un salvataggio dettagliato recuperabile
+in un'altra chat. Questo documento distingue decisioni, codice e collaudi.
+
+- **SOLO Maglio Ferrogravitazionale:** Comune 2 martelli, Rara 3, Epica 5,
+  Leggendaria 7. Non estendere questi conteggi o la sua coreografia ad altre
+  carte: gli effetti vengono decisi dall'utente carta per carta.
+- I martelli partono **uno dopo l'altro**, con un breve intervallo: non
+  tutti nello stesso istante e non aspettando l'impatto del precedente.
+  Si deve vedere una serie di martelli in volo, ciascuno in rotazione
+  effettiva e con un proprio contatto leggibile sulla nave bersaglio.
+  Non usare la parola «sovrapposizione» per indicare i lanci: l'utente
+  l'ha interpretata come una partenza simultanea e l'ha corretta.
+- **Regola generale di provenienza:** «porta USB» significa tutto il
+  bordo inferiore del lato giocatore; «sopra» tutto il bordo superiore
+  del lato avversario. Usare punti variabili lungo il rispettivo bordo,
+  senza concentrare i colpi nel punto centrale USB o cambiarne il lato.
+  Rimangono valide le eccezioni imposte da trasferimenti reali della carta.
+- Nella conversazione, presentare una carta alla volta: nome completo,
+  rarità, elemento e funzione reale. Poi ascoltare la scelta grafica
+  dell'utente. La grafica precedente si descrive soltanto se richiesta;
+  non interrompere una spiegazione in corso con la stessa domanda.
+- Il nuovo conteggio non moltiplica il danno totale, i costi o i controlli
+  difensivi. I pacchetti del motore, i testi, il renderer, l'audio e l'aptica
+  devono risultare coerenti prima di dichiarare completato l'inserimento.
+
+**Stato di questo salvataggio:** documentazione aggiornata; nessun codice
+di combattimento o renderer modificato. Il codice di partenza `ff600528`
+conta ancora 1/3/6/9 per il Maglio. Nuovi conteggi, rotazione e provenienza
+precisata vanno implementati e collaudati; non risultano già verificati.
+Le indicazioni precedenti contrastanti sono storiche e subordinate a queste.
+
 ## Ordine di lavoro deciso dall'utente — 26 novembre 2026
 
 Da ora l'utente sceglie la direzione dell'effetto grafico di ogni carta.
@@ -11,8 +45,8 @@ della sua indicazione. Quando la direzione è stata indicata/confermata,
 realizzare grafica, suoni e aptica coerenti, integrare, verificare e salvare
 quanto già autorizzato senza altre conferme di routine.
 
-Per le carte già fatte, descrivere separatamente ruolo reale ed effetto
-grafico attualmente codificato, poi attendere la scelta della revisione.
+Per le carte già fatte, spiegare il ruolo reale e attendere la scelta della
+revisione; descrivere la grafica attuale soltanto se l'utente la chiede.
 La richiesta del 26/11 è una ricognizione: non cambia ancora i loro effetti.
 Fotografia delle otto armi/22 varianti correnti in
 `docs/RUOLI_ED_EFFETTI_CARTE_APPROVATE_2026-11-26.md`.
