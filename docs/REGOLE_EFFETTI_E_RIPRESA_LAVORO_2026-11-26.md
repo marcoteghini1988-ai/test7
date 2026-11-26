@@ -1,11 +1,40 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — Fulmine, Lanciadardi a Spirale di Tesla
+## Revisione corrente — immagini arma e colpo; due famiglie Fulmine approvate
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Nuova regola generale — immagine della macchina e del suo colpo
+
+L'utente richiede che **tutte le future immagini delle carte Arma**
+mostrino, oltre all'arma, anche il tipo di colpo che deve partire da essa.
+L'indicazione riguarda tutte le famiglie e gli elementi, non soltanto
+il Lanciadardi o il Fulmine.
+
+La regola dettagliata è salvata nella procedura obbligatoria di creazione
+delle carte e richiamata nelle regole permanenti e in AGENTS.md.
+Arma e proiettile/scarica devono apparire insieme nella scena centrale
+e corrispondere alla futura resa in battaglia, senza modificare cornici,
+simboli e geometria degli spazi. Applicare anche la coerenza elementale.
+
+**Aggiornamento approvazioni:** l'utente ha approvato il Lanciadardi a
+Spirale di Tesla con «Vai, perfetto», poi «Okay» al riepilogo delle
+quattro rarità. La famiglia 2 è chiusa nella progettazione: un solo
+dardo elettrico blu-viola con due spirali, un bersaglio e un turno;
+danno e intensità scenica crescono con la rarità. Nessun nuovo impatto
+o effetto meccanico aggiuntivo. La proposta sotto è quindi superata
+nello stato «non ancora approvata», non nella descrizione accettata.
+
+L'utente ha chiarito che da queste famiglie il lavoro comprende anche
+le carte complete: illustrazione, cornice e simboli ufficiali, testi e
+caratteristiche dal catalogo, in PNG HD, più effetti, audio e vibrazione.
+Finora sono state concordate le prime due famiglie; **le nuove immagini
+complete non sono ancora state create**. Il nuovo requisito arma+colpo
+si applicherà alla loro produzione. La prossima famiglia della lista,
+quando si proseguirà, è Sferzatore Ionico di Rame Lunare.
 
 ### Punto attuale — Pettine approvato; famiglia 2, Lanciadardi di Tesla
 
