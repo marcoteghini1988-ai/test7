@@ -1,6 +1,18 @@
 # PROCEDURA OBBLIGATORIA — "crea la carta" (22 novembre 2026)
 
 
+
+## Regola obbligatoria — coordinazione visibile tra Energia ed effetto
+
+Prima di progettare o integrare un effetto che usa Energie, leggere
+la specifica in `REGOLE_PERMANENTI_EFFETTI_CARTE.md`: mostrare il
+contributo delle vere Carte Energia nei loro slot, sincronizzato con
+l'effetto, il suono e la vibrazione. Rappresentare consumo o permanenza
+secondo il motore. La provenienza del colpo resta fuori schermo;
+l'illustrazione macchina+colpo sulla carta resta la regola distinta.
+Non inventare nuovi costi o consumi per giustificare l'animazione.
+
+
 ## Regola corrente — in battaglia compaiono i colpi; macchina nella carta
 
 **Correzione esplicita dell'utente, 26 novembre 2026, confermata con «Sì».**
