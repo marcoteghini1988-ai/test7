@@ -1,5 +1,21 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Frantumatore a Induzione — chiarimento corrente: lame da realizzare
+
+L'utente sta definendo il colpo desiderato, NON descrivendo un effetto già
+inserito. Ha corretto esplicitamente l'assistente: «le lame vanno messe».
+Per il Frantumatore annotare lame metalliche rotanti verso la navicella
+bersaglio, convergenti sulla stessa nave, con contatto leggibile,
+incisioni, scintille e schegge; su scudo solo quando il colpo è bloccato.
+
+Ha aggiunto: «Primo turno si vede le lame colpiscono la navicella».
+Non dedurne altri turni: la durata corrente è un turno proprio.
+Conteggio delle lame e differenze grafiche per rarità non sono ancora
+stati scelti in questa indicazione. Per ora salvare la specifica;
+realizzazione e collaudo arriveranno al comando esplicito di creazione.
+Le Ganasce sono in pausa per volontà dell'utente. Gli appunti sono nel
+documento di ripresa già recuperato: non dichiararli mancanti.
+
 ## Revisione Ganasce e seconda macchina — chiarimento corrente del 26/11
 
 Le **Ganasce Magnetiche Metallo** sono autonome: una o due navi, anche la
