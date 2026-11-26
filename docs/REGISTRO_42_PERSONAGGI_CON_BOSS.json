@@ -1,0 +1,1124 @@
+{
+  "schemaVersion": 1,
+  "revision": "personaggi-42-v1",
+  "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
+  "total": 42,
+  "countsProposed": {
+    "Comune": 8,
+    "Rara": 8,
+    "Epica": 8,
+    "Leggendaria": 18
+  },
+  "genericSource": "docs/REGISTRO_30_PERSONAGGI_GENERICI.json",
+  "genericConfirmed": 3,
+  "genericProposed": 27,
+  "bossReworkProposed": 12,
+  "characters": [
+    {
+      "id": "character-general-01",
+      "name": "Medico da campo",
+      "rarity": "Comune",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "A ogni turno proprio cura la navicella alleata viva con percentuale HP più bassa, madre o supporto. Non resuscita e non ripara componenti."
+      ],
+      "status": "confirmed",
+      "playable": false,
+      "balancePending": true,
+      "number": 1
+    },
+    {
+      "id": "character-general-02",
+      "name": "Ingegnere dei sistemi",
+      "rarity": "Comune",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "instant"
+      },
+      "abilities": [
+        "Ripristina una quantità di secondi del timer di un componente alleato scelto (Centralina, Arsenale o Plancia), anche già esaurito. Dopo l'effetto va negli scarti."
+      ],
+      "status": "confirmed",
+      "playable": false,
+      "balancePending": true,
+      "open": [
+        "Quantità di secondi e limite del timer.",
+        "Conflitto con slot Personaggio disattivato quando è esaurita la Plancia: valutare eccezione istantanea senza installazione, non ancora approvata."
+      ],
+      "number": 2
+    },
+    {
+      "id": "character-general-03",
+      "name": "Tecnico del sacrificio",
+      "rarity": "Rara",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "instant"
+      },
+      "abilities": [
+        "Distrugge volontariamente un proprio componente ancora funzionante e trasferisce tutto il suo tempo residuo a un altro componente proprio scelto, anche esaurito. Va negli scarti."
+      ],
+      "status": "confirmed",
+      "playable": false,
+      "balancePending": true,
+      "open": [
+        "Trasferimento integrale oltre durata iniziale: non imporre un tetto che annulli parte del tempo senza decisione.",
+        "Se sacrifica la Plancia, risoluzione atomica proposta prima della disattivazione dello slot; giocabilità con Plancia già esaurita da chiarire."
+      ],
+      "number": 3
+    },
+    {
+      "id": "character-general-04",
+      "name": "Operatrice degli scudi",
+      "rarity": "Comune",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 2
+      },
+      "abilities": [
+        "Prolunga di un turno la prima Difesa temporanea giocata durante la permanenza; non aggiunge cariche o attivazioni."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 4
+    },
+    {
+      "id": "character-general-05",
+      "name": "Archivista",
+      "rarity": "Comune",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "instant"
+      },
+      "abilities": [
+        "Recupera una Carta Strategia scelta dai propri scarti nella mano; non la gioca gratuitamente."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 5
+    },
+    {
+      "id": "character-general-06",
+      "name": "Ricognitore",
+      "rarity": "Comune",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "instant"
+      },
+      "abilities": [
+        "Visualizza privatamente le prossime tre carte del mazzo avversario, o quelle effettivamente presenti. Non cambia l'ordine e non pesca."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 6
+    },
+    {
+      "id": "character-general-07",
+      "name": "Magazziniere",
+      "rarity": "Comune",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "permanent"
+      },
+      "abilities": [
+        "Una volta per turno proprio, prima della risoluzione, può mettere una carta in mano in fondo al proprio mazzo e pescare una carta; nessuna giocata extra."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 7
+    },
+    {
+      "id": "character-general-08",
+      "name": "Analista delle trappole",
+      "rarity": "Comune",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "instant"
+      },
+      "abilities": [
+        "Rivela l'identità di una Trappola avversaria scelta senza attivarla, consumarla o disarmarla."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 8
+    },
+    {
+      "id": "character-general-09",
+      "name": "Cronometrista",
+      "rarity": "Comune",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "instant"
+      },
+      "abilities": [
+        "Riduce di un turno il raffreddamento residuo del Generatore; minimo zero."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 9
+    },
+    {
+      "id": "character-general-10",
+      "name": "Coordinatore di scorta",
+      "rarity": "Rara",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Una volta per turno avversario devia il primo colpo singolo contro un supporto alleato verso l'altro supporto vivo e valido. Non devia area o colpi che per regola ignorano i supporti."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 10
+    },
+    {
+      "id": "character-general-11",
+      "name": "Recuperatrice energetica",
+      "rarity": "Rara",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Quando una Carta Energia esaurisce l'ultima carica, recupera una carica virtuale del suo elemento, massimo una volta per turno proprio. Non crea una nuova carta fisica."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 11
+    },
+    {
+      "id": "character-general-12",
+      "name": "Sabotatore",
+      "rarity": "Rara",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "instant"
+      },
+      "abilities": [
+        "Sottrae una quantità di secondi dal timer di un componente avversario a scelta ancora operativo, senza danni HP automatici."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 12
+    },
+    {
+      "id": "character-general-13",
+      "name": "Esperta di trappole",
+      "rarity": "Rara",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "La prima Trappola alleata attivata durante la permanenza può riarmarsi per un secondo utilizzo, non nello stesso turno. Dopo la seconda attivazione o alla normale scadenza modificata va negli scarti."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "open": [
+        "Se il Personaggio lascia lo slot prima della seconda attivazione, definire scadenza del riarmo."
+      ],
+      "number": 13
+    },
+    {
+      "id": "character-general-14",
+      "name": "Chirurgo meccanico",
+      "rarity": "Epica",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "A ogni turno proprio cura tutte le navicelle alleate vive.",
+        "Alla prima perdita di un supporto durante la permanenza, cura d'emergenza sui superstiti."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 14
+    },
+    {
+      "id": "character-general-15",
+      "name": "Capo manutenzione",
+      "rarity": "Epica",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "A ogni turno proprio ripristina tempo al componente ancora operativo più vicino alla scadenza.",
+        "Neutralizza il primo sabotaggio temporale avversario durante la permanenza; non congela il cronometro ordinario."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 15
+    },
+    {
+      "id": "character-general-16",
+      "name": "Stratega logistico",
+      "rarity": "Epica",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Alla prima pescata di ogni turno proprio sceglie una delle prime due carte del mazzo, senza pescate aggiuntive.",
+        "Una volta durante la permanenza può scambiare una carta in mano con una Carta Strategia nei propri scarti."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "number": 16
+    },
+    {
+      "id": "character-general-17",
+      "name": "Ufficiale d'interdizione",
+      "rarity": "Epica",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 2
+      },
+      "abilities": [
+        "Congela uno slot Arma avversario scelto per un turno avversario.",
+        "Sospende gli effetti di un Personaggio temporaneo avversario per un turno avversario; il suo timer continua, senza estensione."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "open": [
+        "Finestra di attivazione del secondo effetto se Personaggio nemico assente."
+      ],
+      "number": 17
+    },
+    {
+      "id": "character-general-18",
+      "name": "Maestro dei sistemi",
+      "rarity": "Leggendaria",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "All'ingresso distribuisce una riserva aggiuntiva di secondi tra i propri componenti.",
+        "Neutralizza il primo sabotaggio temporale subito durante la permanenza.",
+        "Riattiva brevemente, una sola volta, il primo componente che si esaurisce durante la permanenza."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "open": [
+        "Ordine di risoluzione se è la Plancia a scadere; non eludere la regola di disattivazione senza approvazione."
+      ],
+      "number": 18
+    },
+    {
+      "id": "character-general-19",
+      "name": "Ammiraglia delle scorte",
+      "rarity": "Leggendaria",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Coordina l'intercettazione tra supporti reali: una deviazione di colpo singolo per turno avversario.",
+        "Cura i superstiti alla perdita di un supporto.",
+        "Protegge la madre dal primo colpo ordinario dopo la perdita dell'ultimo supporto, una volta durante la permanenza. Non protegge da eccezioni esplicitamente perforanti."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "open": [
+        "Quantità cure e modalità della protezione da bilanciare."
+      ],
+      "number": 19
+    },
+    {
+      "id": "character-general-20",
+      "name": "Maestra delle manovre",
+      "rarity": "Leggendaria",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Consente di sostituire anticipatamente una propria Arma installata con un'altra giocata normalmente; l'arma sostituita finisce negli scarti, senza conservare effetti o creare una giocata extra.",
+        "Se ha giocato esattamente due carte, migliora la pescata di fine turno scegliendo fra due carte per la prima pescata, non aumenta il limite di giocate.",
+        "Una sola volta recupera una propria Difesa realmente consumata dai propri scarti nella mano."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "open": [
+        "Limite di utilizzo della sostituzione anticipata e interazione con sequenze e scadenze."
+      ],
+      "number": 20
+    },
+    {
+      "id": "character-general-21",
+      "name": "Artificiere di bordo",
+      "rarity": "Rara",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "permanent"
+      },
+      "abilities": [
+        "Riduce il danno da bruciature subite dalla flotta alleata.",
+        "Attiva il bonus già previsto della Torretta di Puntamento Piroclastico (+35% nel profilo attuale, valori soggetti a bilanciamento)."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Fuoco",
+      "existingWeapons": [
+        "weapon-designed-plasma-torretta-piroclastica"
+      ],
+      "number": 21
+    },
+    {
+      "id": "character-general-22",
+      "name": "Criotecnica",
+      "rarity": "Rara",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Rimuove una volta un congelamento già applicato alla propria mano.",
+        "Attiva una sinergia di congelamento con due Armi Ghiaccio compatibili; l'esatto congelamento e le due famiglie vanno riconciliati con le decisioni precedenti, non modificati alla cieca."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Ghiaccio",
+      "open": [
+        "Collegare le due famiglie Ghiaccio dopo verifica del registro e approvazione della sinergia."
+      ],
+      "number": 22
+    },
+    {
+      "id": "character-general-23",
+      "name": "Specialista idrostatica",
+      "rarity": "Rara",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Riduce i danni ad area ai supporti alleati reali.",
+        "Abilita i bersagli aggiuntivi già progettati della Torretta Crioguidata e del Disgregatore di Pressione Isobarica; nessuna sostituzione delle meccaniche deliberate."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Acqua",
+      "existingWeapons": [
+        "weapon-designed-refrigerant-torretta-crioguidata",
+        "weapon-design-20261126-refrigerant-pressione-isobarica"
+      ],
+      "open": [
+        "Isobarica: caso entrambi i bersagli distrutti; bersaglio aggiuntivo rispetto alla protezione."
+      ],
+      "number": 23
+    },
+    {
+      "id": "character-general-24",
+      "name": "Elettrotecnico",
+      "rarity": "Epica",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "permanent"
+      },
+      "abilities": [
+        "Recupera una carica virtuale Fulmine dopo una Speciale della madre effettivamente risolta, una sola volta per schieramento.",
+        "Attiva la Lancia del Comando Ionico con il bonus già previsto."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Fulmine",
+      "existingWeapons": [
+        "weapon-designed-ionic-lancia-comando-ionico"
+      ],
+      "number": 24
+    },
+    {
+      "id": "character-general-25",
+      "name": "Comandante d’Acciaio",
+      "rarity": "Epica",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "permanent"
+      },
+      "abilities": [
+        "Rimuove una volta il congelamento di un proprio slot Arma, senza riattivare Arsenale esaurito.",
+        "Attiva i potenziamenti dell'Impattatore del Comandante d'Acciaio alle soglie di HP già previste."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Metallo",
+      "existingWeapons": [
+        "weapon-designed-metallic-impatto-comandante"
+      ],
+      "number": 25
+    },
+    {
+      "id": "character-general-26",
+      "name": "Sismologo",
+      "rarity": "Epica",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Neutralizza una volta una disattivazione di un proprio supporto operativo causata da una carta; non annulla la scadenza della Centralina.",
+        "Le due future Armi Terra compatibili recuperano una carica Terra virtuale quando distruggono un supporto nemico, massimo una volta per turno proprio."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Terra",
+      "futureWeaponSlots": [
+        "Terra-Personaggio-A",
+        "Terra-Personaggio-B"
+      ],
+      "number": 26
+    },
+    {
+      "id": "character-general-27",
+      "name": "Pilota delle correnti",
+      "rarity": "Epica",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Ripristina una volta un'abilità passiva sospesa di un supporto ancora operativo; non resuscita supporti o ripara Centralina.",
+        "Le due future Armi Vento compatibili ricevono un bonus di danno quando cambiano bersaglio fra colpi consecutivi, massimo una volta per turno; rispettano la protezione."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Vento",
+      "futureWeaponSlots": [
+        "Vento-Personaggio-A",
+        "Vento-Personaggio-B"
+      ],
+      "number": 27
+    },
+    {
+      "id": "character-general-28",
+      "name": "Maestra dei fotoni",
+      "rarity": "Leggendaria",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Neutralizza una volta un occultamento avversario; non rivela Trappole non coinvolte.",
+        "La futura Arma Luce A può deviare un colpo bloccato verso un altro bersaglio valido, una sola deviazione per attivazione, con Difese normali.",
+        "La futura Arma Luce B genera una protezione alleata quando colpisce realmente; durata, bersaglio e valore da bilanciare."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Luce",
+      "futureWeaponSlots": [
+        "Luce-Personaggio-A",
+        "Luce-Personaggio-B"
+      ],
+      "number": 28
+    },
+    {
+      "id": "character-general-29",
+      "name": "Signore delle ombre",
+      "rarity": "Leggendaria",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "permanent"
+      },
+      "abilities": [
+        "Impedisce una sola volta per schieramento il recupero di una Carta dagli scarti nemici: la carta resta negli scarti.",
+        "La futura Arma Ombra A accumula una quota del danno nominale dei propri colpi bloccati per un successivo colpo, senza doppio conteggio.",
+        "La futura Arma Ombra B converte una quota del danno effettivamente inflitto in cura alleata."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Ombra",
+      "futureWeaponSlots": [
+        "Ombra-Personaggio-A",
+        "Ombra-Personaggio-B"
+      ],
+      "number": 29
+    },
+    {
+      "id": "character-general-30",
+      "name": "Architetto gravitazionale",
+      "rarity": "Leggendaria",
+      "category": "Personaggio",
+      "element": null,
+      "evolution": false,
+      "duration": {
+        "mode": "own-turns",
+        "turns": 3
+      },
+      "abilities": [
+        "Sospende per un turno proprio, una sola volta, il consumo temporale ordinario di un proprio componente scelto; non sospende il timer del turno.",
+        "La futura Arma Gravità A riceve un bonus collegato agli HP massimi del bersaglio, con limite da bilanciare.",
+        "La futura Arma Gravità B può consumare Energia Gravità per aumentare il colpo finale."
+      ],
+      "status": "proposed",
+      "playable": false,
+      "balancePending": true,
+      "specialization": "Gravità",
+      "futureWeaponSlots": [
+        "Gravità-Personaggio-A",
+        "Gravità-Personaggio-B"
+      ],
+      "number": 30
+    }
+  ],
+  "bosses": [
+    {
+      "number": 31,
+      "id": "boss-character-1",
+      "planetId": 1,
+      "planet": "Terra",
+      "name": "Guardiano di Gaia",
+      "sector": 10,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Riduce i danni ordinari subiti dalla flotta; ogni turno rinnova una protezione contro il primo colpo ordinario.",
+          "La prima Difesa schierata da Gaia non occupa una giocata aggiuntiva del giocatore: il bonus riguarda esclusivamente il Boss."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Riduce i danni del primo colpo ordinario per turno avversario.",
+          "All'ingresso protegge una navicella alleata scelta da un colpo ordinario.",
+          "Quando perde il primo supporto, cura la madre una sola volta."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 32,
+      "id": "boss-character-2",
+      "planetId": 2,
+      "planet": "Marte",
+      "name": "Colosso di Tharsis",
+      "sector": 20,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Dopo un turno in cui ha inflitto danni, accumula un bonus crescente alla potenza delle proprie Armi, entro un limite; un turno senza danni interrompe la serie.",
+          "Il giocatore non può schierare due nuove Difese nello stesso turno."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Potenzia il primo colpo Arma di ogni turno proprio.",
+          "Se infligge danni in due turni propri consecutivi, applica un bonus aggiuntivo limitato.",
+          "La prima Arma che distrugge un supporto nemico riduce di un turno il raffreddamento del Generatore."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 33,
+      "id": "boss-character-3",
+      "planetId": 3,
+      "planet": "Venere",
+      "name": "Matriarca Tossica",
+      "sector": 30,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Il primo colpo Arma dannoso di ogni turno applica corrosione temporanea al bersaglio.",
+          "Le cure del giocatore sono ridotte finché il bersaglio è corroso; un effetto di purificazione valido rimuove la corrosione."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Il primo colpo dannoso applica corrosione per due turni avversari.",
+          "Riduce le cure ricevute dal bersaglio corroso.",
+          "La prima cura nemica ridotta dalla corrosione genera una protezione temporanea su una propria nave viva."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 34,
+      "id": "boss-character-6",
+      "planetId": 6,
+      "planet": "Saturno",
+      "name": "Crono il Distruttore",
+      "sector": 40,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Una Difesa del Boss che blocca realmente un colpo carica il prossimo attacco.",
+          "A intervalli regolari accelera il consumo dei timer dei componenti avversari; non accelera gli HP."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Dopo il primo colpo bloccato, potenzia il successivo colpo Arma.",
+          "Una volta rallenta per un turno il consumo di un proprio componente.",
+          "Una volta sottrae tempo a un componente avversario scelto."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 35,
+      "id": "boss-character-7",
+      "planetId": 7,
+      "planet": "Urano",
+      "name": "Sentinella Ionica",
+      "sector": 50,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Riduce la durata dei disturbi elettrici sul Boss.",
+          "La prima Carta Energia fisica schierata dal giocatore in ciascun turno diventa disponibile solo dal proprio turno seguente; le risorse già disponibili restano utilizzabili."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Riduce la durata di congelamenti e disturbi agli slot Arma.",
+          "Rimuove una volta un blocco temporaneo su un proprio slot Arma.",
+          "Dopo aver consumato Energia per una propria Arma, recupera una carica virtuale del medesimo elemento, una sola volta."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 36,
+      "id": "boss-character-8",
+      "planetId": 8,
+      "planet": "Nettuno",
+      "name": "Leviatano Abissale",
+      "sector": 60,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Riduce i danni alla propria madre mentre sono presenti supporti vivi.",
+          "Potenzia gli attacchi contro navicelle già danneggiate; il giocatore deve scegliere se concentrare i colpi o distribuire il danno."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Riduce il danno alla propria madre quando almeno un supporto è vivo.",
+          "Potenzia un colpo contro una nave avversaria già ferita, una volta per turno.",
+          "Cura una volta un supporto alleato sopravvissuto a un attacco."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 37,
+      "id": "boss-character-9",
+      "planetId": 9,
+      "planet": "Plutone",
+      "name": "Signore delle Ombre",
+      "sector": 70,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Sacrifica periodicamente HP di un supporto vivo per potenziare il successivo colpo; interrompe il sacrificio se non ha supporti idonei.",
+          "Il giocatore non può recuperare carte dagli scarti mentre affronta il Boss."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Può sacrificare una quota degli HP di un supporto vivo, una sola volta, per aumentare un colpo Arma.",
+          "Potenzia il primo colpo quando la propria madre è sotto una soglia HP critica.",
+          "Blocca il primo recupero nemico di una carta dagli scarti durante la permanenza."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 38,
+      "id": "boss-character-11",
+      "planetId": 11,
+      "planet": "Europa",
+      "name": "Idra Criogenica",
+      "sector": 80,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Recupera HP a ogni proprio turno finché il Generatore è operativo.",
+          "Al primo colpo dannoso subito in ciascun turno avversario accumula una riparazione per il turno successivo; cure limitate e non applicabili a navi distrutte."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Cura la nave alleata più danneggiata a ogni turno proprio.",
+          "Dopo il primo danno subito, prepara una cura aggiuntiva per il proprio turno successivo, una volta.",
+          "Neutralizza una volta una riduzione delle cure alleate, non una distruzione."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 39,
+      "id": "boss-character-14",
+      "planetId": 14,
+      "planet": "Proxima b",
+      "name": "Generatore del Caos",
+      "sector": 90,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Alterna in sequenza pubblica un turno di potenziamento Armi, uno di potenziamento Difese e uno di potenziamento Energia.",
+          "Nella fase attiva una categoria diversa è temporaneamente limitata per il giocatore; ordine e icona annunciati prima della scelta delle carte."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Prima di risolvere il turno sceglie una modalità di potenziamento: Arma, Difesa o Energia, una modalità differente nei tre turni.",
+          "Nella modalità Difesa neutralizza una sola volta un sabotaggio.",
+          "Nella modalità Energia recupera una sola volta una carica virtuale del medesimo elemento effettivamente speso."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 40,
+      "id": "boss-character-17",
+      "planetId": 17,
+      "planet": "Haumea",
+      "name": "Cristallo di Risonanza",
+      "sector": 100,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Aumenta la potenza dei propri colpi con il numero di carte avversarie negli scarti, entro un limite.",
+          "Con supporti vivi coordina un bonus di Arma, non attacchi autonomi dei supporti."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Potenzia un colpo Arma in funzione delle carte negli scarti avversari, con limite.",
+          "Con due supporti vivi applica un piccolo bonus al primo colpo Arma di ogni turno.",
+          "Quando un supporto viene distrutto, trasferisce una carica virtuale dell'elemento di quel supporto alla flotta, una sola volta."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 41,
+      "id": "boss-character-19",
+      "planetId": 19,
+      "planet": "Io",
+      "name": "Nucleo Magmatico",
+      "sector": 110,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Ciclo pubblico a tre fasi: riscaldamento, sovraccarico con danni maggiorati, raffreddamento con penalità.",
+          "Durante il sovraccarico le Armi Fuoco del Boss applicano bruciatura al primo bersaglio realmente danneggiato."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Primo turno: prepara una carica termica.",
+          "Secondo turno: aumenta il primo colpo Arma Fuoco e può applicare una bruciatura se colpisce.",
+          "Terzo turno: riduce il danno da bruciature subito dalla propria flotta durante il raffreddamento."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    },
+    {
+      "number": 42,
+      "id": "boss-character-20",
+      "planetId": 20,
+      "planet": "Encelado",
+      "name": "Sovrano del Vuoto",
+      "sector": 120,
+      "element": null,
+      "rarity": "Leggendaria",
+      "rarityStatus": "proposed",
+      "evolution": false,
+      "acquisition": "victory-against-corresponding-boss",
+      "maxCopiesProposed": 1,
+      "status": "proposed-rework",
+      "encounter": {
+        "duration": "whole-battle",
+        "replaceable": false,
+        "abilities": [
+          "Ogni turno annuncia la famiglia Arma usata dal giocatore nel turno precedente; giocare nuovamente quella stessa famiglia è vietato soltanto nel turno successivo.",
+          "Blocca il primo colpo ordinario a intervalli prestabiliti; potenzia gli attacchi contro flotte con componenti già disattivati."
+        ]
+      },
+      "unlocked": {
+        "duration": {
+          "mode": "own-turns",
+          "turns": 3
+        },
+        "replaceable": true,
+        "abilities": [
+          "Se gioca un'Arma di famiglia diversa dall'ultima giocata, potenzia il primo colpo.",
+          "Blocca una sola volta un colpo ordinario diretto alla propria madre.",
+          "Potenzia un colpo contro un avversario con almeno un componente disattivato, una sola volta per turno."
+        ]
+      },
+      "balancePending": true,
+      "implemented": false
+    }
+  ],
+  "openDecisions": [
+    "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La classificazione Leggendaria dei trofei e le 3 abilità per ciascuno sono proposte da approvare, non modifiche già eseguite.",
+    "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
+    "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
+    "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite delle tre giocate. Non eseguire ancora le nuove abilità."
+  ]
+}

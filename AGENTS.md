@@ -1,5 +1,10 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Catalogo Personaggi — 42, inclusi 12 Boss
+
+Leggere `docs/CATALOGO_42_PERSONAGGI_CON_BOSS.md` e `docs/REGISTRO_42_PERSONAGGI_CON_BOSS.json`. Il registro riprende i 30 generici senza modificare le schede originarie e riconcilia i 12 Boss ufficiali con i loro ID e settori. Le nuove abilità dei Boss nello scontro e dopo lo sblocco, la rarità Leggendaria dei trofei e i valori sono proposte non ancora approvate o implementate. Conservare il sistema di ricompensa e le identità esistenti; distinguere Boss permanente della sfida da Personaggio giocabile. Il nome generico n.29 coincide con Plutone: proposta di rinomina Custode della Penombra, non ancora applicata. Gli esclusivi delle macchine restano separati.
+
+
 ## Progettazione Personaggi — 30 generici, rarità fissa
 
 Leggere `docs/PROGETTAZIONE_30_PERSONAGGI_GENERICI.md` e `docs/REGISTRO_30_PERSONAGGI_GENERICI.json` prima di creare o integrare Personaggi. Decisioni approvate: neutri, nessuna evoluzione, 4 rarità (Comune 1 abilità, Rara 1–2, Epica 2, Leggendaria 3), durata permanente/temporanea/istantanea, uno attivo ma sostituibile prima della scadenza usando una giocata, più copie/famiglie nel mazzo secondo futuri limiti; Plancia esaurita disattiva lo slot. 30 generici (20 strategici e 10 specializzati Arma); primi tre confermati, altre 27 proposte da verificare. Boss fisso e potenziato durante la sfida, versione sbloccabile adattata. Il motore non è stato cambiato: sostituzione, timer riparabili, scelta Plancia esaurita e sinergie richiedono integrazione e test. Non dichiarare le proposte già approvate o giocabili. Le dieci Armi Personaggio di Terra, Vento, Luce, Ombra e Gravità restano da progettare.
