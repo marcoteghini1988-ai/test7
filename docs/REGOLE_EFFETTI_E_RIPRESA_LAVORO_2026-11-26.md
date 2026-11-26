@@ -1,13 +1,131 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — Artiglieria confermata; Ganasce e Collassatore da chiudere
+## Revisione corrente — Ganasce A/B approvate; idea futura Super Combo
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
 
-### Punto attuale — Artiglieria confermata; riprendere le carte sospese
+### Idea futura da conservare — Super Combo fuori dalla quota delle Armi
+
+L'utente vuole introdurre **in futuro delle Super Combo**, aggiuntive e
+**al di fuori delle dieci Carte Arma per elemento**. Ha chiesto di tenere
+in memoria questa idea mentre prosegue la spiegazione.
+
+- Non conteggiarle nella quota delle dieci Armi di ciascun elemento e non
+  sostituire carte già approvate per fare loro posto.
+- È un'idea futura da sviluppare: numero, categorie, composizione,
+  condizioni, bersagli, costi, durata, effetti, valori e acquisizione
+  non sono ancora stati definiti.
+- Non classificarle automaticamente come Arma o Attacco e non assegnare
+  questa etichetta alle combinazioni già esistenti senza una scelta
+  dell'utente.
+- Nessuna creazione o modifica del gioco è richiesta ora. Ascoltare il
+  seguito dell'idea senza interromperlo con richieste di parametri.
+
+### Scelta approvata — due carte Ganascia A/B e due tipi di schianto
+
+L'utente ha approvato la soluzione con «Perfetto, aggiudicato» e ha
+chiesto di salvarla **compresi gli effetti dettagliati** prima di esporre
+una nuova idea. Questa versione sostituisce le precedenti ipotesi della
+prima carta con due ganasce e di una seconda macchina diversa.
+
+#### Struttura delle carte
+
+- **Due carte distinte e complementari**, A e B; non due copie della
+  stessa carta.
+- A lancia **una sola ganascia**; B diventa **la seconda ganascia** e
+  ne lancia anch'essa una sola.
+- Ciascuna deve funzionare anche da sola sul proprio bersaglio.
+  La combinazione si ottiene con A e B attive secondo la finestra
+  che verrà definita nel profilo di gioco.
+- Le due carte usano i due slot Arma. Non aggiungere un terzo dispositivo,
+  un'incudine autonoma o un'attrazione senza le catene.
+- «A» e «B» sono etichette di lavoro: nomi definitivi e distribuzione
+  delle rarità non sono stati ridefiniti. Non cancellare carte o asset
+  prima di predisporre la sostituzione coerente delle due famiglie.
+- La meccanica autonoma già scelta per le Ganasce dura tre turni propri:
+  danno base da trazione nei primi due, danno maggiore allo strappo del
+  terzo. La durata specifica della nuova B, la finestra della combo e il
+  destino degli agganci dopo lo schianto non sono stati fissati
+  separatamente; non trasformare dettagli mancanti in scelte approvate.
+
+#### Combinazione approvata
+
+**Due navicelle agganciate e vive:** le ganasce trascinano le due navi
+l'una verso l'altra fino allo scontro. Un solo schianto della coppia,
+con un solo evento visivo centrale anche se il danno riguarda due navi.
+
+**Una sola navicella presente, anche la sola madre:** entrambe le
+ganasce agganciano lo stesso scafo da lati diversi. Le catene lo
+inclinano e lo tirano verso il basso contro il **piano metallico
+dell'arena**. Un solo schianto contro la superficie. Questa è la
+soluzione esplicitamente approvata, non un palo o una nuova carta.
+
+La combo avviene **una volta sola**; non ripetere automaticamente lo
+schianto nei turni successivi. Il caso di una sola nave non comporta
+automaticamente il raddoppio del danno perché sono presenti due ganci.
+
+#### Sequenza visiva dettagliata da realizzare
+
+| Fase | Grafica e movimento | Suono e vibrazione |
+| --- | --- | --- |
+| Preparazione | Il dispositivo della carta attiva porta in posizione la singola ganascia. Rendere leggibili giunti, denti e cavo; usare il lato inferiore A o superiore B della flotta che gioca la carta. | Breve avvio meccanico e verricello. Un richiamo aptico leggero soltanto se previsto dall'evento. |
+| Lancio | Una ganascia per carta viaggia verso il vero punto sullo scafo scelto. La catena si svolge e segue la traiettoria; prospettiva e orientamento sono corretti per entrambi i lati. | Lancio metallico e scorrimento della catena; impulso breve sincronizzato alla partenza. |
+| Morso e aggancio | I denti si chiudono sul punto di contatto, con piccole scintille e reazione locale della corazza se l'attacco riesce. Il collegamento rimane attaccato al vero scafo anche quando la nave si muove. | Chiusura metallica secca e vibrazione di aggancio. Un blocco difensivo non usa il suono dello strappo riuscito. |
+| Trattenimento | Quando gli agganci persistono, mantenere ganascia e catena visibili, con peso e lieve flessione. Al danno da trazione previsto nei primi due turni, mostrare uno strattone della catena e una reazione dello scafo. | Scricchiolio e trazione del cavo soltanto nelle fasi effettive; impulso aptico al danno. Nessuna vibrazione continua per il solo fatto che la catena rimane in campo. |
+| Strappo autonomo finale | Nel terzo turno del ciclo già definito, la ganascia si stacca con uno strappo, portando via frammenti di corazza. Scintille e detriti restano localizzati; non simulare la morte se gli HP restano positivi. | Strappo metallico più marcato e impulso aptico finale più deciso del normale danno da trazione. |
+| Precarica della combo | Rendere visibili entrambe le catene che entrano in tensione prima del movimento. I ganci lavorano insieme, distinguibili dalle due estremità; liberare il tragitto da sovrapposizioni con altre navi o comandi. | Verricelli coordinati e tensione crescente; preparazione aptica breve legata all'attivazione effettiva. |
+| Trazione con due navi | Muovere i veri scafi, non soltanto un bagliore. Inclinazioni e torsioni seguono la direzione delle catene. Le navi accelerano verso il punto di collisione senza un lento arresto prima del contatto. | Tensione che cresce fino allo schianto; l'impulso principale coincide con il contatto, non con l'inizio del movimento. |
+| Trazione con una nave | Due punti di presa sullo stesso scafo. Il corpo si inclina e scende verso il piano dell'arena; le catene e i ganci seguono la posa, senza trascinare barre HP o slot. | Trazione coordinata e suono di discesa; vibrazione concentrata sull'urto con il piano. |
+| Schianto | Due navi: un impatto nel punto in cui si toccano. Una nave: impatto fra scafo e superficie metallica. Mostrare lampo breve, deformazione/reazione, scintille, frammenti di corazza e fumo coerenti con il materiale e il danno reale. Evitare esplosioni duplicate per la contabilità dei danni. | Un colpo metallico profondo, detriti e coda breve; un impulso aptico principale riconoscibile per lo schianto. |
+| Conseguenze | Se una nave raggiunge zero HP, mostrarne realmente rottura e distruzione; se sopravvive, mostrare contraccolpo e rientro nella posa coerente con il suo stato. Non inventare danni ad area sui terzi. | Rumore di rottura soltanto in caso di distruzione reale; coda dei detriti e fine della sequenza sincronizzate. |
+| Rilascio e ripristino | Ripristinare pose, inclinazioni e proprietà transitorie. Catene e ganci restano soltanto finché l'aggancio è valido; quando termina, rilasciarli/rimuoverli. Il momento di consumo della combo non è deciso dalla grafica. | Rilascio del cavo e spegnimento dei suoni persistenti; nessun residuo di audio o vibrazione dopo fine/interruzione. |
+
+#### Sincronizzazione e parametri tecnici di riferimento
+
+Tutti i canali seguono gli stessi eventi e punti di contatto del motore.
+Conservare come base tecnica i tempi già usati per le sequenze dedicate,
+da adattare alla nuova coreografia: volo delle ganasce circa 1.450 ms;
+precarica dello schianto 450 ms; trazione circa 1.000 ms con accelerazione
+marcata negli ultimi 380 ms; reazione/rientro circa 1.350 ms, con inizio
+del contraccolpo dopo il contatto. Questi sono riferimenti tecnici di
+realizzazione, non numeri scelti ora dall'utente né turni aggiuntivi.
+
+Coordinate di impatto, catene, particelle, audio e aptica devono usare
+l'istante effettivo del contatto. Adattare i punti sulle sagome anche
+quando saranno ingranditi i supporti o cambieranno le forme delle navi.
+Non accelerare un video per simulare la velocità del gioco.
+
+#### Fedeltà alle regole, Difese e interruzioni
+
+La sequenza si attiva soltanto con carte, ganci e bersagli realmente
+validi. Non confondere «una sola nave presente» con un secondo aggancio
+fallito su un'altra nave ancora viva. Se un colpo viene bloccato, mostrare
+la reazione sulla carta Difesa e sulla protezione, senza un falso morso
+o danno allo scafo. Protezioni parziali e danni seguono i risultati reali.
+
+Nessuna penalità di immobilizzazione, raddoppio di danni, nuovo bersaglio
+o distruzione viene aggiunta dalla sola animazione. Quantità di danno,
+costi, eventuale scelta dei bersagli e condizioni di combo rimangono
+parametri della meccanica da completare/bilanciare, non decisioni dello
+shader o del suono.
+
+Rispettare rarità, mute/volume, preferenze aptiche e movimento ridotto.
+Le rarità possono rifinire materiali e sequenza senza aggiungere ganci
+oltre a uno per carta o schianti non previsti. Distinguere programmazione
+della vibrazione da verifica fisica sul telefono. Garantire pulizia di
+pose, catene, suoni e timer in caso di fine partita, interruzione o nave
+distrutta prima della fase successiva.
+
+**Stato:** progettazione della coppia e direzione degli effetti salvate.
+Nessuna nuova carta, modifica al motore, animazione, illustrazione o
+collaudo è stata eseguita con questo salvataggio. L'utente vuole ora
+esporre una nuova idea: ascoltarla subito senza ripetere la conferma
+della soluzione appena approvata.
+
+### Revisione precedente — Artiglieria confermata e ripresa delle carte sospese
 
 L'utente ha confermato l'effetto attuale dell'**Artiglieria delle Schegge
 Erranti Metallo** con «Va bene. Procediamo alla prossima».
