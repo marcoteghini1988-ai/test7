@@ -2,6 +2,35 @@
 
 
 
+
+## Punto di ripresa — carte Fulmine ancora da produrre; correggere «Fulmine chiuso»
+
+L'utente domanda se mancano ancora le carte Fulmine. Rispondere **sì**:
+in questa fase sono state discusse specifiche a voce; la produzione delle
+nuove carte complete PNG HD nelle rarità previste, degli effetti/audio/
+aptica e il collaudo restano da eseguire. Non negare l'esistenza di
+illustrazioni o asset storici, e non dichiarare quelli già pronti senza
+verifica. La nuova sessione non ha prodotto fronti completi.
+
+**Correzione necessaria:** la frase dell'assistente «Fulmine chiuso» non
+è sostenuta dal catalogo. Sono collegate con certezza alle prime quattro
+voci reali le proposte di Pettine, Lanciadardi, Sferzatore e Lampo Bianco.
+Nella trascrizione successiva l'assistente ha presentato altre nove
+denominazioni non trovate nei due registri correnti
+`approvedBaseWeapons.js` e `designedWeaponCards.js`. Le loro proposte
+grafiche sono state accettate nel parlato e vanno conservate, ma non
+contate come nuove famiglie codificate o come sostituzioni automatiche
+delle sei famiglie reali rimanenti. Dettagli nel documento di ripresa.
+Prima di cambiare elemento riconciliare proposte, veri ID e meccaniche;
+non ripetere profili generici «un turno, un colpo, niente Energia»
+attribuendoli a carte speciali senza leggerne il profilo operativo.
+
+L'utente ha riconfermato il dettaglio fisico dell'arma nel materiale/
+colore della rarità: Comune grafite, Rara bronzo, Epica argento,
+Leggendaria cristallo diamantato prismatico. La regola già esiste nella
+procedura di creazione; applicarla senza chiederne ancora conferma.
+
+
 ## Regola obbligatoria — coordinazione visibile tra Energia ed effetto
 
 Per ogni elemento e carta che dipende da Energie, evidenziare sulle
