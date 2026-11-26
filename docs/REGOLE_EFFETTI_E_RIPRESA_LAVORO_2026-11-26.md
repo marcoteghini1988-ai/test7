@@ -1,11 +1,47 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — forme delle navi, fusioni, dimensioni e stadi di danno
+## Revisione corrente — grafica delle carte inserite: Perforatore a Cascata
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Punto attuale — grafica delle carte già inserite: Perforatore a Cascata
+
+L'utente chiede di tornare alla progettazione della **prossima carta già
+creata e inserita**, per finire la grafica di quelle esistenti.
+Non aprire un nuovo catalogo e non chiedere nuovamente da dove ripartire.
+Forme delle navi, fusioni grafiche, dimensioni dei supporti e stadi di
+danno restano annotati come lavoro successivo.
+
+Dopo il Frantumatore a Induzione viene il **Perforatore a Cascata**,
+Arma Metallo nelle versioni **Epica e Leggendaria**.
+
+Funzione verificata nel catalogo e nel risolutore attuali:
+- Dura **tre turni propri**, incluso quello in cui viene giocata.
+- Esegue un attacco per ciascuno dei tre turni. Il colpo base non richiede
+  Energia per partire.
+- Se distrugge una navicella di supporto e resta danno eccedente, può
+  trasferire quel residuo a un altro bersaglio ancora vivo.
+- Ogni trasferimento consuma **una carica Energia Metallo**. Se distrugge
+  anche un altro supporto con ulteriore eccedenza, può proseguire pagando
+  nuovamente il costo per quel passaggio.
+- Ogni bersaglio applica i propri controlli di Difesa. Senza eccedenza,
+  senza altro bersaglio valido o senza la carica necessaria, la cascata
+  non prosegue.
+- La Leggendaria conserva la meccanica e ha valori di danno superiori;
+  non trasformare le differenze grafiche in danni o passaggi gratuiti.
+
+Fonti: `src/fleetNext/provisionalWeaponProfiles.js` e
+`src/fleetNext/provisionalWeaponEngine.js` (ramo `cascade-piercer`),
+più le evoluzioni di rarità. Questo riepilogo descrive il ruolo della
+carta; non approva una nuova forma del proiettile o quantità di colpi.
+
+**Prossimo passo:** ascoltare come l'utente vuole raffigurare il colpo e
+il trasferimento fra navi, applicando la regola obbligatoria per grafica,
+suoni e vibrazione. Salvare la scelta; la realizzazione resta rinviata
+al comando esplicito. Le Ganasce restano in pausa.
 
 ### Navi — forme più varie e verifica delle immagini delle fusioni
 
