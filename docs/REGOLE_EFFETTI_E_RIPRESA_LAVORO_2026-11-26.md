@@ -1,11 +1,58 @@
 # Eclissi Stellare — regole degli effetti e ripresa del lavoro
 
-## Revisione corrente — Fulmine, Cannone a Pettine Ionico di Vega
+## Revisione corrente — Fulmine, Lanciadardi a Spirale di Tesla
 
 **26 novembre 2026, conversazione vocale.** Solo progettazione e
 documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
+
+### Punto attuale — Pettine approvato; famiglia 2, Lanciadardi di Tesla
+
+**Famiglia 1 chiusa nella progettazione:** l'utente ha approvato il
+Cannone a Pettine Ionico di Vega dalla Comune alla Leggendaria.
+La funzione resta un solo colpo Fulmine su un bersaglio in un turno.
+La differenza meccanica fra rarità è il danno; l'utente ha chiesto una
+variazione scenica soltanto lieve, non nuovi attacchi o condizioni.
+
+- Comune approvata: cinque archetti elettrici confluiscono in un'unica
+  scarica azzurro-bianca diretta al bersaglio; reticolo elettrico
+  transitorio all'impatto, crepitio, schiocco e vibrazione breve.
+- Rara: stessa dinamica e singolo impatto, danno maggiore. Non considerare
+  scelti rimbalzi aggiuntivi o più colpi dalla proposta poi corretta.
+- Epica approvata con «Sì»: scarica leggermente più densa e ramificata,
+  suono elettrico più corposo, unico impulso aptico più deciso.
+- Leggendaria accettata con «Mh, okay»: stesso effetto e stessa forma,
+  maggiore intensità di luce, suono e vibrazione e danno superiore.
+- Ogni rappresentazione resta coerente con Difese, Trappole, copertura,
+  affinità e reale danno. L'intensità non aggiunge Bruciatura, stordimento,
+  bersagli o durata. Questa è un'approvazione della specifica, non una
+  dichiarazione di implementazione o prova in partita.
+
+**Famiglia 2 da presentare adesso:** Lanciadardi a Spirale di Tesla,
+`weapon-base-ionic-02`, elemento Fulmine, con le quattro rarità.
+Fonte già verificata: `src/fleetNext/approvedBaseWeapons.js`.
+Funzione: un attacco autonomo su un singolo bersaglio, in un turno
+proprio, senza requisito o costo Energia aggiuntivo nel profilo base.
+Le evoluzioni conservano la funzione e hanno il proprio danno.
+
+**Proposta visiva dell'assistente, non ancora approvata:** un dardo
+di energia blu-violetta, appuntito e riconoscibile, ruota lungo il suo
+asse ed è avvolto da due spirali di scintille. Le eliche seguono lo
+stesso corpo durante il volo dal lato corretto della flotta verso
+il bersaglio. Al contatto il dardo si contrae in una scarica locale
+breve con scintille, senza rimbalzi o danni ad area.
+Se una protezione blocca il colpo, mostrare il contatto sulla protezione
+e la reazione della carta Difesa, senza un falso danno alla nave.
+Suono proposto: sibilo elettrico crescente durante il volo e schiocco
+al contatto. Aptica: singolo impulso breve sul reale impatto.
+Le due spirali sono struttura del medesimo colpo, non due impatti.
+Progressione visiva delle rarità da valutare con l'utente.
+
+L'utente vuole proseguire senza pause inutili: usare il catalogo già
+verificato e presentare direttamente la prossima carta e la proposta.
+Non richiedere una seconda conferma del Pettine e non ripartire da esso.
+Nessun nuovo effetto o asset è già stato creato con questo salvataggio.
 
 ### Nuova regola — colpi coerenti con tutti gli elementi
 
