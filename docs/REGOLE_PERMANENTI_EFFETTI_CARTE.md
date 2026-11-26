@@ -1,5 +1,34 @@
 # Regole permanenti per gli effetti delle carte
 
+
+## Regola corrente — in battaglia compaiono i colpi; macchina nella carta
+
+**Correzione esplicita dell'utente, 26 novembre 2026, confermata con «Sì».**
+Nella battaglia non mostrare il dispositivo/arma completo, la sua bocca
+o le sue parti mentre si aprono per sparare: il lancio iniziale proviene
+da fuori dello schermo del telefono.
+- Lato giocatore: ingresso da punti variabili lungo il bordo inferiore.
+- Lato avversario: ingresso da punti variabili lungo il bordo superiore.
+- Si animano proiettile, scarica, frusta, ganascia o altre parti realmente
+  emesse, traiettoria, contatto e conseguenze previste dalla carta.
+  Non aggiungere modelli o immagini delle macchine al campo.
+- Restano i trasferimenti successivi già previsti dalle meccaniche
+  approvate, come il colpo residuo del Perforatore dal bersaglio distrutto.
+- Nell'illustrazione della **carta** restano insieme macchina e suo colpo,
+  con cornici e simboli ufficiali. Il colpo illustrato deve corrispondere
+  a quello in battaglia. La coerenza tridimensionale della macchina nella
+  carta non richiede di crearne un modello o un'animazione in battaglia.
+Questa correzione prevale sulle vecchie indicazioni di mostrare macchine,
+bocche, diaframmi o armi montate durante il lancio. Non rimuovere asset o
+modificare codice di gioco ora: la fase corrente resta documentazione.
+
+**Effetti distinti per famiglia:** la medesima provenienza dal bordo e
+il medesimo elemento non autorizzano lo stesso sparo con un colore diverso.
+Ogni famiglia mantiene la forma, il movimento, il ritmo e il contatto
+approvati, con audio e aptica coerenti. Le rarità seguono la progressione
+specificamente concordata; non inventare colpi o nuove abilità.
+
+
 ## Regola obbligatoria: corrispondenza completa fra carta, grafica, suono e vibrazione
 
 **Richiesta permanente dell'utente — 26 novembre 2026:**
@@ -251,11 +280,13 @@ stesso singolo colpo per tutte le rarità. Non approvano nuove illustrazioni.
 1. **Leggere la carta e il motore prima di disegnare l'effetto.** Verificare
    ID e rarità correnti, condizioni, costi, turni, combo, copertura, Difese,
    bersagli e danni effettivi. Rappresentare tutti i passaggi che contano.
-2. **Inventiva e coerenza fisica.** Le Armi sono dispositivi 3D modellabili;
-   non fare tutte le macchine a forma di cannone o su quattro piedi. Parti
-   articolate, emettitori, munizioni e movimento devono corrispondere
-   all'illustrazione approvata. Non sostituire il modello con una figura
-   piatta ruotata né ingrandire una testata squadrata fino a coprire lo scafo.
+2. **Inventiva e coerenza del colpo.** Il proiettile o l'emissione devono
+   essere riconoscibili e coerenti con la carta. Il dispositivo completo
+   rimane nell'illustrazione della carta, fuori vista durante il lancio
+   in battaglia. La regola non impone di creare una macchina 3D per ogni
+   effetto. Proiettili, ganasce e parti realmente emesse conservano volumi,
+   orientamenti, materiali e contatti corretti; non ridurli a una faccia
+   piatta ruotata né coprire lo scafo con una testata fuori scala.
 3. **Origini variabili lungo il bordo della flotta che spara.** Per il
    giocatore usare tutto il bordo inferiore; per l'avversario tutto il
    bordo superiore, con prospettiva speculare A/B e determinismo nei replay.
