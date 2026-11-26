@@ -1,17 +1,24 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
-## Revisione della coppia Ganasce/Collassatore in discussione — 26/11
+## Revisione Ganasce/Collassatore — nuova proposta utente, 26/11
 
-L'utente accetta la meccanica della prima carta e chiede di rivedere la
-seconda: cosa succede con la sola madre, se le due carte vadano giocate
-contemporaneamente e se le catene debbano schiantare la/le navi contro
-qualcosa invece che fra loro. Questi punti sono ancora in discussione;
-non considerare già scelte la superficie o la finestra della combo.
-La proposta annotata all'inizio di
-`docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md` distingue codice,
-indicazioni dell'utente e ipotesi da confermare. Restare su questa coppia,
-documentare la decisione successiva e non implementare effetti o meccaniche
-prima del comando di creazione previsto dalla modalità corrente.
+La proposta corrente dell'utente rende **Arpioni a Ganasce Magnetiche**
+una carta Metallo autonoma: aggancia una o due navi presenti, anche la
+sola madre, per tre turni propri. Primi due turni: danno base da trazione.
+Terzo turno: danno maggiorato quando si stacca strappando metallo.
+
+La seconda carta Metallo (attuale Collassatore) deve far tirare e
+schiantare ciascuna nave agganciata contro un **palo/perno**, funzionando
+con una o due navi. L'utente ha menzionato anche altre due ganasce:
+disposizione, numero esatto dei perni, frequenza dello schianto, finestra
+della combo e destino degli agganci restano da precisare. Non riproporre
+automaticamente lo scontro fra due navi o il piano dell'arena.
+
+Leggere l'apertura aggiornata di
+`docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md`.
+Questa è la progettazione corrente; le vecchie regole di collisione sotto
+descrivono il codice precedente. **Solo documentare**, senza implementare
+effetti o meccaniche prima del successivo comando di creazione.
 
 ## Modalità corrente — solo raccolta degli effetti, 26 novembre 2026
 
@@ -28,10 +35,11 @@ Epica e Leggendaria. La risposta esplicita «Sei» chiude la scelta 5/6:
 non richiederla più e non distinguere i numeri in base alla rarità.
 
 Scelte documentate: Maglio, Cannone a Slitta, Termobalistica.
-**Punto di ripresa: Arpioni a Ganasce Magnetiche.** È stata presentata
-la funzione, ma l'utente non ha ancora scelto il nuovo effetto grafico.
-Spiegare singolarmente le sue funzioni reali e poi ascoltare l'utente.
-Una carta alla volta; non ritardare con il recupero di un elenco nuovo.
+**Punto di ripresa: revisione Ganasce/Collassatore.** Le Ganasce autonome
+per tre turni e il palo/perno d'impatto sono la proposta corrente.
+Ascoltare e definire i punti aperti della combinazione senza ripartire
+dalle spiegazioni precedenti. Una coppia alla volta; non recuperare un
+elenco nuovo.
 
 Il completamento richiesto prima di passare alla carta dopo, in questa
 fase, è la definizione e il salvataggio della scelta. Implementazione e
