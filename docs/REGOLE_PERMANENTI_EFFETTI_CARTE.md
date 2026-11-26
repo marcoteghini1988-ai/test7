@@ -19,6 +19,15 @@ Rara bronzo/sabbia bronzata, Epica argento, Leggendaria cristallo prismatico
 Conservare la palla riconoscibile; non estendere questa sequenza al Maglio
 o alle altre carte. Anche questa nuova direzione resta da implementare.
 
+**SOLO Artiglieria Termobalistica di Recupero:** granate metalliche a
+parabola, scie termiche ed esplosione distinta per ciascun impatto reale.
+Tre proiettili se il colpo è al danno base; più proiettili se il colpo è
+amplificato dal bonus degli HP persi dopo la posa. Il passaggio dipende dal
+bonus, non dalla rarità. Cinque oppure sei per il potenziato è ancora una
+scelta aperta: il «sì» alla grafica non ha selezionato un numero. Danno
+totale, due turni propri, copertura e Difese rimangono quelli del motore.
+Completare l'attività su questa carta prima di passare alla successiva.
+
 I martelli partono a intervalli brevi, uno dopo l'altro: il successivo può
 partire prima dell'arrivo del precedente, ma le partenze non sono simultanee.
 Ogni martello ruota durante il volo e ha un contatto distinto sul vero

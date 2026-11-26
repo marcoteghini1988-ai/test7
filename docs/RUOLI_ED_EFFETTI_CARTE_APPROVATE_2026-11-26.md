@@ -9,6 +9,10 @@
 > Successivamente l'utente ha scelto per il solo Cannone a Slitta una
 > sola palla in tutte le rarità, con dettagli nei colori della rarità
 > ufficiale. Anche questa scelta è nel documento di ripresa.
+> Per la Termobalistica è stata poi scelta una salva di granate metalliche
+> a parabola, con scie termiche ed esplosioni distinte: 3 nel caso base,
+> 5 oppure 6 ancora da scegliere nel caso potenziato, indipendentemente
+> dalla rarità. Il riepilogo completo è nel documento di ripresa.
 > Queste nuove direttive sono documentate, non ancora implementate.
 
 Fotografia letta dal codice il 26 novembre 2026, base

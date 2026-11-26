@@ -17,6 +17,19 @@ in un'altra chat. Questo documento distingue decisioni, codice e collaudi.
   (la base più recente del 24/11 prevale sulla vecchia Leggendaria oro).
   Conservare la palla riconoscibile; non estendere questa sequenza al Maglio
   o alle altre carte. Anche questa nuova direzione resta da implementare.
+- **SOLO Artiglieria Termobalistica di Recupero:** approvata la salva di
+  granate metalliche tozze, con punta e nucleo incandescente, traiettorie
+  a parabola, scie termiche ed esplosioni distinte sui veri impatti.
+  Tre proiettili nell'attacco senza bonus; raffica più numerosa quando
+  l'attacco è amplificato dagli HP realmente persi dalla flotta dopo la
+  posa (bonus del 60%, entro il massimo). Il cambio di conteggio dipende
+  dal bonus del colpo, NON dalla rarità Epica/Leggendaria. L'utente non ha
+  ancora scelto fra cinque e sei per il potenziato: il suo ultimo «sì»
+  conferma la rappresentazione della salva, non sceglie uno dei due numeri.
+  Non inventare il conteggio e non ripetere la lettura errata «tre Epica,
+  cinque Leggendaria». Due turni propri, danni totali e blocchi invariati.
+  La carta successiva si affronta dopo aver completato l'attività corrente;
+  documentazione salvata e implementazione/collaudo sono stati distinti.
 - I martelli partono **uno dopo l'altro**, con un breve intervallo: non
   tutti nello stesso istante e non aspettando l'impatto del precedente.
   Si deve vedere una serie di martelli in volo, ciascuno in rotazione
@@ -41,6 +54,8 @@ di combattimento o renderer modificato. Il codice di partenza `ff600528`
 conta ancora 1/3/6/9 per il Maglio e 3/6/9/7 per la Slitta. Nuovi conteggi,
 rotazione del Maglio, palla e dettagli di rarità della Slitta e provenienza
 precisata vanno implementati e collaudati; non risultano già verificati.
+Per la Termobalistica la direzione è salvata, ma mancano la scelta esatta
+5/6 per il potenziato, l'implementazione e il collaudo della revisione.
 Le indicazioni precedenti contrastanti sono storiche e subordinate a queste.
 
 ## Ordine di lavoro deciso dall'utente — 26 novembre 2026

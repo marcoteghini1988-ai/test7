@@ -21,6 +21,8 @@ presenza nel documento non significa che siano già eseguite in partita.
 | Nuova scelta per il solo Maglio | 2/3/5/7 martelli, partenze successive, rotazione e impatto di ciascuno: da implementare. |
 | Slitta nel codice di partenza | Conteggi precedenti: 3/6/9/7; non ancora adeguati alla nuova scelta. |
 | Nuova scelta per il solo Cannone a Slitta | Un'unica palla in tutte le rarità, con dettagli nei colori della rarità e possibili differenze dimensionali: da implementare. |
+| Termobalistica nel codice di partenza | Conteggi fissi precedenti: 3 Epica e 6 Leggendaria. Non sono la nuova scelta condizionata al bonus. |
+| Nuova scelta per la sola Termobalistica | Granate metalliche a parabola, scie termiche ed esplosioni distinte; 3 proiettili senza bonus, 5 o 6 ancora da scegliere con bonus, in entrambe le rarità. Revisione da implementare e collaudare. |
 | Precisazione generale sul punto di partenza | Tutto il bordo inferiore per il giocatore, tutto il superiore per l'avversario: istruzione salvata, adeguamento e prova ancora necessari. |
 | Nuovo collaudo della revisione richiesta in questa conversazione | Non eseguito. |
 | Ultima revisione precedente degli effetti | Test e studi offline documentati; il nuovo collaudo StackBlitz risultava ancora da eseguire. Non è stata ricontrollata qui la disponibilità attuale del sito. |
@@ -196,6 +198,69 @@ la palla, la sua finitura o il suo conteggio alle altre famiglie.
 Il catalogo precedente della Slitta usa 3/6/9/7 colpi: non presentarlo come
 attuazione della nuova scelta 1/1/1/1.
 
+## 4 ter. Artiglieria Termobalistica di Recupero: effetto condizionato al bonus
+
+### Carta e funzione già spiegate
+
+Arma Metallo disponibile in Epica e Leggendaria, attiva per due turni
+propri. Al danno base aggiunge il 60% degli HP realmente persi dalla propria
+flotta dopo la posa, entro il massimo della variante. Senza perdita di HP
+rilevante per il bonus, l'attacco rimane al danno base. La grafica deve
+leggere il bonus effettivo della singola attivazione dal motore, non
+ricostruire una condizione fittizia a partire dal colore o dalla rarità.
+
+La parola «recupero» qui riguarda il potenziamento offensivo; questa
+conversazione non ha introdotto una nuova cura, costi o abilità aggiuntive.
+
+### Forma e azione approvate
+
+Su richiesta di un riferimento coerente con l'elemento Metallo, è stata
+proposta una granata d'artiglieria: corpo metallico tozzo, punta e piccolo
+nucleo incandescente. L'utente ha accettato questa direzione.
+
+La conferma successiva riguarda una **vera salva d'artiglieria**: più
+granate con traiettoria a parabola, scia termica e un'esplosione distinta
+sullo scafo per ciascun impatto reale. Deve leggersi un bombardamento
+volumetrico e riconoscibile. L'utente ha chiesto un effetto «degno di
+artiglieria», non la sola traslazione dritta di un proiettile verso la nave.
+
+Applicare la provenienza dal bordo corretto, la prospettiva, la coerenza
+del modello con la carta e le regole di contatto, scudo, audio e aptica.
+Non applicare automaticamente a questa famiglia i colori scelti solo per
+la Slitta o le rotazioni dei martelli del Maglio.
+
+### Numero dei colpi: dipende dal bonus, non dalla rarità
+
+| Stato della singola attivazione | Numero richiesto | Stato della decisione |
+| --- | --- | --- |
+| Attacco al danno base, senza bonus dagli HP persi dopo la posa | 3 granate | Confermato. |
+| Attacco amplificato dal bonus effettivo degli HP persi dopo la posa | 5 oppure 6 granate | L'aumento è confermato; il numero esatto non è ancora stato scelto. |
+
+Questa distinzione vale sia nell'Epica sia nella Leggendaria. L'assistente
+aveva chiesto erroneamente se si intendessero tre nell'Epica e cinque
+nella Leggendaria: l'utente ha risposto «No, non hai capito» e ha chiarito
+che sta distinguendo danno base e danno amplificato. Non recuperare
+l'interpretazione per rarità come se fosse stata approvata.
+
+Dopo la domanda «cinque o sei?» seguita dalla descrizione della salva,
+l'utente ha risposto «Sì». Questo conferma la descrizione grafica e non
+seleziona cinque o sei. Mantenere aperta soltanto questa scelta numerica;
+non richiedere nuovamente la descrizione della grafica già confermata.
+
+Il danno totale base o amplificato viene ripartito fra le munizioni
+effettive. Non moltiplicarlo per tre, cinque o sei, non aggiungere reazioni
+difensive/costi per ogni elemento grafico e non creare danni ad area con
+le esplosioni. Durata, bersaglio e copertura seguono il combattimento.
+
+### Punto esatto in cui riprendere
+
+La direzione è salvata, non ancora implementata o collaudata. Chiarire
+soltanto il conteggio potenziato ancora aperto (5 oppure 6); poi realizzare
+e verificare l'effetto autorizzato. L'utente ha aggiunto: **quando è fatto
+si passa alla carta dopo**. Non dichiarare finito l'effetto per il solo
+salvataggio della documentazione, né saltare alla carta successiva mentre
+l'attività corrente è ancora da completare, salvo nuova indicazione.
+
 ## 5. Regole permanenti valide anche per le prossime carte
 
 - **Coerenza con la meccanica:** prima leggere carta e motore; grafica,
@@ -287,14 +352,14 @@ Riferimento: [PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md](PROCEDURA_OBBLIGATORIA_
 ## 8. Carte già presenti: indice per continuare
 
 L'elenco fotografa le otto famiglie/22 varianti già realizzate, non una
-nuova approvazione delle loro animazioni. Maglio e Cannone a Slitta sono stati
-ridiscussi in questa conversazione; le loro nuove direzioni sono sopra.
+nuova approvazione delle loro animazioni. Maglio, Cannone a Slitta e Artiglieria
+Termobalistica sono stati ridiscussi; le nuove direzioni sono sopra.
 
 | Famiglia | Rarità presenti | Ruolo reale in sintesi |
 | --- | --- | --- |
 | Maglio Ferrogravitazionale | Comune, Rara, Epica, Leggendaria | Danno concentrato su un bersaglio, un turno. Nuova direzione 2/3/5/7 descritta sopra. |
 | Cannone a Slitta d'Acciaio | Comune, Rara, Epica, Leggendaria | Danno diretto su un bersaglio, un turno; base inferiore al Maglio. Nuova direzione: una palla per tutte le rarità con dettagli nei colori della rarità. |
-| Artiglieria Termobalistica di Recupero | Epica, Leggendaria | Due turni; bonus dal 60% degli HP realmente persi dalla propria flotta dopo la posa, entro il massimo della variante. |
+| Artiglieria Termobalistica di Recupero | Epica, Leggendaria | Due turni; bonus dal 60% degli HP realmente persi dalla propria flotta dopo la posa, entro il massimo della variante. Nuova salva: 3 granate base, 5 o 6 da scegliere quando potenziata; la condizione non è la rarità. |
 | Arpioni a Ganasce Magnetiche | Rara, Epica, Leggendaria | Due agganci reali nel turno di posa; preparano il Collassatore nel turno proprio successivo. |
 | Cannone Collassatore di Lega | Epica, Leggendaria | Combo con Ganasce del turno proprio precedente e due bersagli agganciati ancora vivi; danni ai due bersagli, un solo urto visivo. |
 | Frantumatore a Induzione | Epica, Leggendaria | Un turno; con 1 Energia Metallo supera una Difesa, con 2 ne rimuove anche una visibile. Le Energie del bonus non vengono consumate. |
@@ -319,6 +384,9 @@ prescrizioni precedenti in conflitto. In particolare:
 - Raffiche 3/6/9/7 del vecchio Cannone a Slitta: superate come direzione
   richiesta da un solo colpo sferico in tutte le rarità, con finiture nei
   colori della rarità ufficiale; il codice non è ancora stato adeguato.
+- Termobalistica: la distinzione richiesta è tra attacco base e attacco
+  potenziato dagli HP persi dopo la posa, non tra Epica e Leggendaria.
+  Tre proiettili base confermati; cinque/sei potenziati ancora da scegliere.
 - Numeri o coreografia del Maglio applicati a tutte le carte: rifiutati
   espressamente. L'utente sceglie carta per carta.
 - Effetto inventato automaticamente dall'assistente dopo il solo fronte:
