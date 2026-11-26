@@ -7,6 +7,19 @@ documentazione: effetti, meccaniche e collaudi saranno realizzati al
 successivo comando esplicito dell'utente. I blocchi storici successivi
 non prevalgono su questa sintesi aggiornata.
 
+### Punto di ripresa aggiornato: Ganasce in pausa, prossima carta
+
+L'utente ha scelto di passare alla macchina successiva mentre pensa alla
+combinazione delle Ganasce. **Sospendere quindi la scelta della seconda
+Metallo**, senza richiedere una decisione ora. Il Percussore a Risonanza
+resta una proposta non approvata; la macchina Tuono resta da valutare.
+
+La prossima carta nell'elenco delle otto famiglie già illustrate è il
+**Frantumatore a Induzione**, Metallo, Epica e Leggendaria. Presentarne
+il ruolo reale dal catalogo e dal motore correnti, poi ascoltare l'utente.
+Questo passaggio non approva né crea un nuovo effetto e non modifica le
+Ganasce o le altre carte.
+
 ### Prima carta: Arpioni a Ganasce Magnetiche, elemento Metallo
 
 - Carta indipendente, utilizzabile anche da sola.
@@ -77,8 +90,9 @@ restano una proposta da discutere, non una carta già scelta.
 
 Non chiedere nuovamente se le Ganasce siano autonome, se durino tre turni
 o se lo schianto vada ripetuto: questi punti sono stati già specificati.
-Non passare alla carta successiva o iniziare l'implementazione mentre
-l'utente sta ancora scegliendo la seconda macchina.
+L'utente ha ora chiesto di passare alla carta successiva mentre riflette
+sulla seconda macchina: rispettare questa pausa, come indicato in apertura.
+Non avviare l'implementazione.
 
 ## Discussione precedente — Ganasce e Collassatore da rivedere
 
