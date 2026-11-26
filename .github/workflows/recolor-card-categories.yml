@@ -1,0 +1,44 @@
+name: Categorie Arma rossa e Strategia arancione — PNG HD
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/recolor-category-panels.py'
+      - '.github/workflows/recolor-card-categories.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: eclissi-category-panels
+  cancel-in-progress: false
+jobs:
+  recolor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pillow numpy
+      - run: node scripts/restore-weapon-fronts.mjs
+      - run: python scripts/recolor-category-panels.py --self-test
+      - run: python scripts/recolor-category-panels.py
+      - run: node --test src/fleetNextCardCategory.test.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verifica-pannelli-arme-rosse
+          path: docs/collaudi/categorie-2026-11-26/
+      - name: Salva i PNG verificati e il registro sul repository
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/assets/fleet-weapon-fronts-red docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/arma-rosso docs/collaudi/categorie-2026-11-26 src/fleetNext/redWeaponFronts.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Materializza i 22 fronti Arma con pannello rosso, PNG HD verificati'
+          git push origin HEAD:main

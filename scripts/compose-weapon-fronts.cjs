@@ -13,7 +13,8 @@ fs.writeFileSync(fontConfig,`<?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "f
 process.env.FONTCONFIG_FILE=fontConfig;
 const sharp=require('sharp');sharp.cache(false);sharp.concurrency(2);
 const refs=path.join(root,'docs/riferimenti-carte');
-const bases=path.join(refs,'basi-rarita-ufficiali-2026-11-24');
+const bases=path.join(refs,'basi-rarita-ufficiali-2026-11-24','arma-rosso');
+// Dal 26/11 le nuove Armi usano il fondo rosso derivato; le basi sorgente arancioni appartengono a Strategia.
 const stickers=path.join(refs,'adesivi-slot-2026-11-24');
 const slots=JSON.parse(fs.readFileSync(path.join(stickers,'manifest.json'))).rendering.centersPxAt3072Frame;
 const colors={comune:['#e5edf1','#a9b9c4','#d0dce2'],rara:['#fff0d6','#d38c5b','#f3c393'],epica:['#ffffff','#8799a9','#e4edf4'],leggendaria:['#ffffff','#74dafa','#d99ff3']};
