@@ -52,39 +52,45 @@ non dichiara nuove immagini già create.
 
 Il lavoro da queste famiglie include **carte complete PNG HD nelle
 rarità previste**, oltre agli effetti visivi, sonori e aptici.
-Pettine e Lanciadardi sono stati approvati nella progettazione degli
-effetti; le nuove immagini complete non sono ancora state prodotte.
+Pettine, Lanciadardi e Sferzatore sono stati approvati nella progettazione
+degli effetti; le nuove immagini complete non sono ancora state prodotte.
 Il Lanciadardi è ora confermato in tutte le rarità: medesimo dardo con
 due spirali, meccanica invariata e danno/intensità crescenti.
 
-## Lavoro corrente — Fulmine, seconda famiglia: Lanciadardi a Spirale di Tesla
+## Lavoro corrente — Fulmine, tre famiglie approvate; quarta da proporre
 
-L'utente ha approvato il **Cannone a Pettine Ionico di Vega** in tutte
-le quattro rarità. Restano un solo colpo, un bersaglio e un turno;
-le rarità aumentano il danno e differiscono solo lievemente nella resa.
-Comune: cinque archetti che confluiscono in una scarica e reticolo breve
-all'impatto. Epica approvata: scarica più densa e ramificata, suono più
-corposo e unico impulso aptico più deciso. Leggendaria accettata sullo
-stesso effetto con maggiore intensità, senza cambiare forma o meccanica.
-Non riaprire numero di colpi o nuove abilità e non dichiarare l'effetto
-già creato: è la definizione verbale approvata.
+Si procede una famiglia alla volta, completando le dieci Armi Fulmine.
+Le prime tre sono approvate nella progettazione, non ancora realizzate
+come nuove immagini o nuovi effetti:
+- Cannone a Pettine Ionico di Vega: cinque archi in una sola scarica,
+  reticolo breve all'impatto; quattro rarità, un colpo e danno crescente.
+- Lanciadardi a Spirale di Tesla: un dardo blu-violetto con due spirali
+  di scintille; quattro rarità, un colpo e danno/intensità crescenti.
+- Sferzatore Ionico di Rame Lunare, `weapon-base-ionic-03`: approvato
+  con «Sì, va bene», seguito da «Sì, procedi». Dai terminali di rame
+  parte una frusta elettrica a zigzag, con un solo impatto sulla
+  corazza, scintille, schiocco elettrico e un impulso aptico breve.
+  Stessa dinamica nelle quattro rarità, danno e intensità crescenti.
+  Nell'illustrazione devono apparire macchina e medesima frusta.
 
-Prossima famiglia del catalogo: **Lanciadardi a Spirale di Tesla**,
-`weapon-base-ionic-02`, Fulmine, Comune/Rara/Epica/Leggendaria.
-Un attacco autonomo su un solo bersaglio per un turno, senza costo
-Energia aggiuntivo; protezioni ordinarie applicabili.
-Presentare subito nome, funzione e proposta visiva, senza ricontrolli
-di dati già verificati. L'utente ha più volte detto «vai/procedi».
+Prossima famiglia: **Cannone del Lampo Bianco**, non «Arco del Lampo
+Bianco», `weapon-base-ionic-04`. Il catalogo lo colloca inizialmente
+in Rara. Un attacco su un solo bersaglio in un turno proprio, nessuna
+Energia aggiuntiva nel profilo base; normali Difese, Trappole e
+coperture. Non citare il danno grezzo come valore finale calibrato.
 
-Proposta da approvare: un unico dardo elettrico blu-violetto, ruotante,
-avvolto da una doppia elica di scintille. Al contatto si contrae in una
-scarica locale breve sulla nave o sulla protezione che lo blocca,
-con suono elettrico e un solo impulso aptico al vero impatto.
-Due spirali visive non significano due colpi. Non è già stato realizzato.
+Proposta visiva ancora da approvare: il condensatore apre quattro
+diaframmi e libera una sola scarica elettrica bianca rettilinea,
+brevissima; scintille e bagliore localizzato al vero contatto, uno
+schiocco e un impulso aptico. I quattro diaframmi non sono quattro
+colpi. La carta deve mostrare la macchina e la stessa emissione.
+Rappresentare le protezioni che intervengono secondo gli eventi reali.
+Non introdurre accecamento, stordimento o nuovi effetti meccanici.
 
-Si procede una famiglia alla volta, completando le dieci Armi Fulmine
-prima di cambiare elemento. Valgono la regola elementale e quella di
-corrispondenza completa fra meccanica, grafica, suono e vibrazione.
+Presentare subito nome, funzione e proposta. Usare i dati verificati,
+senza lunghe pause o richieste ripetute. Realizzazione al comando
+esplicito; rispettare le regole generali arma+colpo, elementali e
+visive/sonore/aptiche. Dettagli nel documento di ripresa.
 
 ## Stato corrente — otto armi riviste verbalmente; Super Combo in bozza
 
