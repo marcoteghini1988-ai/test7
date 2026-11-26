@@ -92,6 +92,16 @@ riscontro effettivo di ogni canale e gli eventuali controlli ancora aperti.
 L'ordine corrente resta raccolta e salvataggio delle specifiche; nessuna
 implementazione degli effetti parte prima del comando dell'utente.
 
+## Collegamento obbligatorio fra illustrazione e colpo in battaglia
+
+Ogni nuova immagine di Carta Arma deve mostrare la macchina e il suo
+proiettile, scarica o emissione, riconoscibili e coerenti con l'effetto
+che viene realizzato in gioco, per tutte le famiglie e rarità.
+Leggere la sezione «nell'illustrazione mostrare arma e colpo» della
+[procedura obbligatoria](PROCEDURA_OBBLIGATORIA_CREAZIONE_CARTE.md).
+Non introdurre due forme diverse del colpo fra illustrazione e partita
+né nuove abilità suggerite soltanto dalla figura.
+
 ## Regola obbligatoria — natura del colpo coerente con l'elemento
 
 **Richiesta dell'utente, 26 novembre 2026:** il tipo di sparo e l'effetto
