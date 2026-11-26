@@ -537,6 +537,8 @@ export default function OfficialFleetBattle3D({
  const [selectedTarget,setSelectedTarget]=useState(null);
  const [selectedOwnVital,setSelectedOwnVital]=useState('');
  const [chosenCards,setChosenCards]=useState([]);
+ const [eclipseDelay,setEclipseDelay]=useState('');
+ const [eclipseGuess,setEclipseGuess]=useState('');
  const [recoverHandCardIndex,setRecoverHandCardIndex]=useState(0);
  const [preparedSacrifice,setPreparedSacrifice]=useState(null);
  const [fusionSlot,setFusionSlot]=useState(0);
@@ -652,7 +654,7 @@ export default function OfficialFleetBattle3D({
   window.clearTimeout(resolutionTimeout.current);
   resolutionTimeout.current=window.setTimeout(()=>{
    setBattle(releaseFleetTurnAfterEffects(result.battle,Date.now()));
-   setChosenCards([]);setElementalPrepared(false);
+   setChosenCards([]);setEclipseDelay('');setEclipseGuess('');setElementalPrepared(false);
    resolutionInProgress.current=false;setResolving(false);
   },Math.max(fleetResolutionFxMs(result.events,selectedCards),selectedIndexes.length?2450:0));
  }
@@ -689,7 +691,7 @@ export default function OfficialFleetBattle3D({
   const next=newSession();
   setLastFx(null);
   setSession(next);setBattle(next.battle);
-  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setRecoverHandCardIndex(0);setPreparedSacrifice(null);setMessage('');
+  setSelectedVital('weapons');setSelectedTarget(null);setSelectedOwnVital('');setChosenCards([]);setEclipseDelay('');setEclipseGuess('');setRecoverHandCardIndex(0);setPreparedSacrifice(null);setMessage('');
   setElementalPrepared(false);setElementalChoice('');
   setDismantleOptions({first:'',second:''});
   setAuroraOptions({deckTopFlip:false,sacrificeSlot:'',exchangeCardId:'',peekPickId:'',cartographerPickId:'',reconfigureSelection:'',secondarySelection:''});
@@ -766,7 +768,11 @@ export default function OfficialFleetBattle3D({
  }
  function fire({endTurn=false,fromTimeout=false,chosenTarget=null,awaitingTargetSelection=false}={}){
   if(!battle||battle.phase!=='playing'||battle.turn!=='A'||resolutionInProgress.current)return;
-  const target=battle.sides.B.ships[0];
+  const requiresDelay=chosenCards.some(i=>card(battle.sides.A.hand[i])?.effectSpec?.weaponProfile?.slug==='eclissi-quantistica');
+   const requiresGuess=battle.sides.B.nextEclipsePending?.guess===null;
+   if(!fromTimeout&&requiresDelay&&!eclipseDelay){setMessage('Scegli segretamente il turno di riapparizione (1–3).');return;}
+   if(!fromTimeout&&requiresGuess&&!eclipseGuess){setMessage('Indovina il turno di riapparizione del proiettile nemico (1–3).');return;}
+   const target=battle.sides.B.ships[0];
   const partId=target.parts.find(p=>p.id===selectedVital&&!p.destroyed)?
    selectedVital:target.parts.find(p=>!p.destroyed)?.id;
   if(!partId){setMessage('Nessun componente disponibile');return;}
@@ -805,6 +811,8 @@ export default function OfficialFleetBattle3D({
     machineSlot:attackTarget?.kind==='machine'?attackTarget.slot:undefined,
     moduleSlot:attackTarget?.kind==='module'?attackTarget.slot:undefined,
     ownPartId:actualOwnVital,cards:chosenCards,
+     nextEclipseTurn:eclipseDelay?Number(eclipseDelay):undefined,
+     nextEclipseGuess:eclipseGuess?Number(eclipseGuess):undefined,
     recoverHandCardIndex:chosenCards.length===0&&battle.strategicNoDeterioration?
      recoverHandCardIndex:undefined,
     sacrificeEscortId:preparedSacrifice||undefined,
@@ -1166,6 +1174,8 @@ export default function OfficialFleetBattle3D({
  const secondsLeft=Math.ceil(remainingTurnMs/1000);
  const turnProgress=remainingTurnMs/(FLEET_TURN_SECONDS*1000);
  const myTurn=battle.turn==='A';
+ const eclipseChosen=chosenTypes.some(id=>card(id)?.effectSpec?.weaponProfile?.slug==='eclissi-quantistica');
+ const eclipseNeedsGuess=enemy.nextEclipsePending?.guess===null;
  return <div className="es-math-scope live-viewport" ref={viewportRef} aria-busy={resolving}>
   <div className="es-root official-duel-3d live-root f3d-original-arena f3d-approved-layout"
    style={{transform:'translate(-50%,-50%) scale('+scale+')',
@@ -1239,7 +1249,9 @@ export default function OfficialFleetBattle3D({
      unavailableReason={unavailable(type,index)}
      onClick={()=>chooseCard(index)}/>)}
    </div>
-   {showBattleCommands&&(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive||arkActive)&&!ended&&<div className="live-card-inspector" role="group" aria-label="Opzioni avanzate delle carte">
+   {((showBattleCommands&&(selectedType||forkActive||linceExtra||falcoActive||mantaActive||sharkActive||nebulaActive||stormActive||royalActive||obsidianActive||arkActive))||(myTurn&&(eclipseChosen||eclipseNeedsGuess)))&&!ended&&<div className="live-card-inspector" role="group" aria-label="Opzioni avanzate delle carte">
+     {myTurn&&eclipseChosen&&<label>Eclissi Quantistica — turno segreto di riapparizione <select aria-label="Turno segreto di riapparizione" value={eclipseDelay} disabled={resolving} onChange={e=>setEclipseDelay(e.target.value)}><option value="">Scegli turno</option>{[1,2,3].map(n=><option key={n} value={n}>{n}</option>)}</select></label>}
+     {myTurn&&eclipseNeedsGuess&&<label>Proiettile nemico nascosto — indovina il turno <select aria-label="Previsione turno avversario" value={eclipseGuess} disabled={resolving} onChange={e=>setEclipseGuess(e.target.value)}><option value="">Scegli previsione</option>{[1,2,3].map(n=><option key={n} value={n}>{n}</option>)}</select></label>}
    {!ended&&fusionSelected&&<label className="f3d-fusion-choice">
     <span>FONDI CON IL SUPPORTO MAX · </span>
     {fusionCandidates.length?<select aria-label="Supporto da fondere" value={actualFusionSlot}

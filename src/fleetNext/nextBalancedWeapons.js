@@ -20,7 +20,7 @@ const textFor=(slug,p,t)=>{switch(slug){
  case 'fotoni-riflessi':return p.baseDamage+' HP a un bersaglio. Se una Carta Difesa blocca il colpo, genera '+p.energyGain+' cariche Luce, non nuove carte fisiche.';
  case 'replicatore-olografico':return 'Tre turni: replica l’ultima arma avversaria a ogni turno; danno 70%, oppure 100% con Proiettore attivo.';
  case 'proiettore-olografico':return 'Tre turni: replica HP attuali di un supporto, rigenera e rimescola l’ologramma a ogni turno. Se colpito, contrattacco 70% degli HP copiati, 100% con Replicatore attivo; protezione rispettata.';
- case 'eclissi-quantistica':return 'Scelta segreta di uno dei prossimi tre turni propri. Se l’avversario indovina: '+p.baseDamage+' HP; altrimenti '+(p.baseDamage+p.bonusDamage)+' HP. Un solo colpo.';
+ case 'eclissi-quantistica':return 'Scelta segreta di uno dei prossimi tre turni propri. Se l’avversario indovina: '+p.baseDamage+' HP; altrimenti '+(p.baseDamage+p.bonusDamage)+' HP. Un solo colpo, lo slot si libera al lancio. Il bersaglio viene scelto alla riapparizione.';
  case 'inversione-vitale':return p.baseDamage+' HP + '+p.gapPercent+'% della differenza positiva fra HP attuali delle due madri (max bonus '+p.maxExtraDamage+' HP).';
  case 'drone-parassita':return 'Tre turni, '+p.baseDamage+' HP sul bersaglio agganciato. Accumula gli HP realmente sottratti; cessa se il bersaglio è distrutto.';
  case 'estrattore-materia-oscura':return 'Un turno: da solo '+p.baseDamage+' HP. Con Drone attivo di pari rarità, consuma invece la riserva del Drone per curare l’alleata viva più danneggiata in proporzione agli HP massimi.';
@@ -58,4 +58,4 @@ export const NEXT_BALANCED_BY_ID=Object.freeze(Object.fromEntries(NEXT_BALANCED_
 export const NEXT_BALANCED_FAMILIES=Object.freeze(Object.fromEntries(NEXT_BALANCED_WEAPON_CARDS.filter(c=>!c.isWeaponEvolution).map(c=>
  [c.id,Object.freeze(NEXT_BALANCED_WEAPON_CARDS.filter(x=>x.weaponFamilyId===c.id))])));
 if(new Set(NEXT_BALANCED_ALL.map(c=>c.id)).size!==NEXT_BALANCED_ALL.length||
- Object.keys(NEXT_BALANCED_FAMILIES).length!==19)throw Error('Catalogo 26/11 non valido');
+ Object.keys(NEXT_BALANCED_FAMILIES).length!==20)throw Error('Catalogo 26/11 non valido');

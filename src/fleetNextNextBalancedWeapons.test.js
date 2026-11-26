@@ -26,10 +26,10 @@ function play(b,who,ids=[],opts={}){
  assert.equal(r.ok,true,r.reason);return r;
 }
 const shot=(r,slug)=>r.events.find(e=>e.kind==='next-weapon-shot'&&e.cardId?.includes(slug));
-test('22 famiglie con valori espliciti; 19 collegate, 3 bloccate',()=>{
+test('22 famiglie con valori espliciti; 20 collegate, 2 bloccate',()=>{
  assert.equal(new Set(NEXT_BALANCED_ALL.map(c=>c.weaponFamilyId)).size,22);
- assert.equal(Object.keys(NEXT_BALANCED_FAMILIES).length,19);
- assert.equal(new Set(NEXT_BALANCED_LOCKED.map(c=>c.weaponFamilyId)).size,3);
+ assert.equal(Object.keys(NEXT_BALANCED_FAMILIES).length,20);
+ assert.equal(new Set(NEXT_BALANCED_LOCKED.map(c=>c.weaponFamilyId)).size,2);
  for(const c of NEXT_BALANCED_WEAPON_CARDS){
   assert.equal(card(c.id),c);assert.ok(cardCopyLimit(c.id)>0);assert.equal(cardRole(c.id),'support');
   assert.equal(validateEffectSpec(c.effectSpec),null);assert.equal(canSelectNewGeneric(c.id),true);
@@ -85,4 +85,26 @@ test('Singolarità assorbe il colpo dell’altra arma senza HP immediati',()=>{
  assert.equal(r.battle.sides.B.ships[0].hp,5000);
  r=play(r.battle,'B');r=play(r.battle,'A');
  assert.ok(shot(r,'implosore-singolarita')?.actualDamage>0);
+});
+
+test('Eclissi Quantistica: scelte bloccate, non pubblicate; riappare al turno scelto',()=>{
+ const a=id('eclissi-quantistica','Rara');let r=play(game(),'A',[a],{nextEclipseTurn:2});
+ assert.equal(r.battle.sides.A.machines.length,0);
+ const hidden=r.events.find(e=>e.kind==='next-weapon-eclipse-hidden');assert.ok(hidden);
+ assert.equal(hidden.chosenDelay,undefined);assert.equal(hidden.releasePly,undefined);
+ r=play(r.battle,'B',[],{nextEclipseGuess:1});
+ assert.equal(r.battle.sides.A.nextEclipsePending.guess,1);
+ const locked=r.events.find(e=>e.kind==='next-weapon-eclipse-guess-locked');assert.ok(locked);
+ assert.equal(locked.guess,undefined);
+ r=play(r.battle,'A');assert.equal(r.events.some(e=>e.kind==='next-weapon-eclipse-reveal'),false);
+ r=play(r.battle,'B',[],{nextEclipseGuess:2});assert.equal(r.battle.sides.A.nextEclipsePending.guess,1);
+ r=play(r.battle,'A');
+ const reveal=r.events.find(e=>e.kind==='next-weapon-eclipse-reveal');
+ assert.equal(reveal.chosenDelay,2);assert.equal(reveal.guess,1);assert.equal(reveal.correct,false);assert.ok(reveal.actualDamage>0);
+ assert.equal(r.battle.sides.A.nextEclipsePending,null);
+});
+test('Eclissi Quantistica: previsione corretta conserva danno base',()=>{
+ let r=play(game(),'A',[id('eclissi-quantistica','Rara')],{nextEclipseTurn:1});
+ r=play(r.battle,'B',[],{nextEclipseGuess:1});r=play(r.battle,'A');
+ const e=r.events.find(x=>x.kind==='next-weapon-eclipse-reveal');assert.equal(e.correct,true);assert.equal(e.nominalDamage,38);
 });

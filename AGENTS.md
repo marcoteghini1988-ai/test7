@@ -2,7 +2,7 @@
 
 ## Integrazione meccaniche 26/11 — nuovi nominali, collaudo pendente
 
-Leggere `docs/INTEGRAZIONE_ARMI_26_11_2026.md` e `src/fleetNext/nextWeaponBalance20261126.json`. Le 22 famiglie hanno una tabella per rarità; 19 famiglie sono collegate al motore HP e alla collezione, 3 restano bloccate (ologrammi A/B ed Eclissi Quantistica, interazioni speciali da completare). I nominali nuovi non subiscono il moltiplicatore strategico legacy. Non dichiarare bilanciamento definitivo collaudato né immagini/effetti approvati senza prove. Il registro storico 235 resta riproducibile; il catalogo corrente è CURRENT_WEAPON_CARDS. La sinergia Personaggio Isobarica aspetta la scheda Personaggio. Il lavoro parallelo grafico non viene modificato.
+Leggere `docs/INTEGRAZIONE_ARMI_26_11_2026.md` e `src/fleetNext/nextWeaponBalance20261126.json`. Le 22 famiglie hanno una tabella per rarità; 20 famiglie sono collegate al motore HP e alla collezione, 2 restano bloccate (ologrammi A/B, interazioni speciali da completare). Eclissi Quantistica è collegata alla scelta segreta nella partita locale; non dichiarare sicurezza PvP di rete. I nominali nuovi non subiscono il moltiplicatore strategico legacy. Non dichiarare bilanciamento definitivo collaudato né immagini/effetti approvati senza prove. Il registro storico 235 resta riproducibile; il catalogo corrente è CURRENT_WEAPON_CARDS. La sinergia Personaggio Isobarica aspetta la scheda Personaggio. Il lavoro parallelo grafico non viene modificato.
 
 
 ## Registro progettuale aggiornato — 22 nuove famiglie Arma (26/11/2026)

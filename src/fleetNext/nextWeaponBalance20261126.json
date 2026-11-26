@@ -333,7 +333,7 @@
           "bonusDamage": 70
         }
       ],
-      "blocked": "Scelte segrete in due turni separati, UI e risoluzione ritardata; non sostituire con una scelta automatica nel gioco del giocatore."
+      "blocked": null
     },
     {
       "slug": "inversione-vitale",

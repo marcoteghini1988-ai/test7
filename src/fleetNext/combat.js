@@ -31,7 +31,7 @@ import {fleetElements,activeFleetElements,FLEET_ELEMENTS} from './elementalAffin
 import {applyElementalDamage,elementalDamageDescription,terrainWeaponAttackBonus} from './elementalDamage.js';
 import {weaponFiresOnOwnTurn,planIceNeedle,planMagmaMortar,consumeMortarEnergy} from './confirmedAdvancedWeaponMechanics.js';
 import {nextWeaponUnavailableReason,prepareNextSingularity,absorbNextWeaponShot,finishNextSingularity,
- resolveNextBalancedWeaponShots,resolveNextOpponentReactions,advanceNextCommandAcceleration} from './nextBalancedWeaponEngine.js';
+ resolveNextBalancedWeaponShots,resolveNextOpponentReactions,advanceNextCommandAcceleration,lockNextEclipseGuess,releaseNextEclipse} from './nextBalancedWeaponEngine.js';
 import {reserveProvisionalMortarFuel,resolveProvisionalWeaponShots,tickProvisionalBurns} from './provisionalWeaponEngine.js';
 // La pila Energia non ha limite; i costi delle abilità restano indipendenti.
 import {elementalAbility,totalElementalEnergy,chargedElementalEnergy,
@@ -912,6 +912,9 @@ export function validateFleetTurn(b,who,order){
    t.kind===order?.targetKind&&t.unit.id===order?.targetId))
   return 'Frattura richiede una unità nemica viva';
  const machineCards=chosen.filter(c=>c.effectSpec.type==='deployMachine');
+ if(machineCards.filter(c=>c.effectSpec.weaponProfile?.slug==='eclissi-quantistica').length>1)
+  return 'Un solo proiettile a Eclissi Quantistica per volta';
+ for(const n of [order.nextEclipseTurn,order.nextEclipseGuess])if(n!=null&&(!Number.isInteger(n)||n<1||n>3))return 'Scegli un turno da 1 a 3';
  if(machineCards.filter(c=>c.effectSpec.damageMode==='sequence').length>1)
   return 'Puoi giocare solo una Carta Arma Sequenza per turno';
  const upgrades=machineCards.filter(c=>sequenceUpgradeTarget(side,c,b.ply));
@@ -5315,6 +5318,8 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
  const nextWeaponHooks={unitEnabled,unitSilenced,weaponSlotLocked,startNebulaVolley,protectingFleetUnits,
   selectedEnemyTarget,motherPart,arsenalBonus,linceHit,spendElementalEnergy,card,emit};
  prepareNextSingularity(b,ctx,nextWeaponHooks);
+ lockNextEclipseGuess(b,ctx,events,order,nextWeaponHooks);
+ const eclipseShot=releaseNextEclipse(b,ctx,events,order,nextWeaponHooks);
  applyBossPassive(b,ctx,events);escortPassive(b,side,ctx,events,order);
  side.stagedComboCards=[];side.attackSlots=ctx.fieldReset?[]:
   ctx.cards.filter(id=>cardRole(id)==='attack').slice(0,attackCardCapacity(side));
@@ -5326,7 +5331,7 @@ export function resolveFleetNextTurn(battle,who,order={},nowMs=0){
   mergeFalcoShots(resolveDesignedWeaponShots(b,ctx,events,order),
    mergeFalcoShots(resolveApprovedBaseWeaponShots(b,ctx,events,order),
     resolveMultiWeaponShots(b,ctx,events,order))));
- const weaponShot=mergeFalcoShots(nextShot,mergeFalcoShots(legacyWeaponShot,finishNextSingularity(b,ctx,events,order,nextWeaponHooks)));
+ const weaponShot=mergeFalcoShots(eclipseShot,mergeFalcoShots(nextShot,mergeFalcoShots(legacyWeaponShot,finishNextSingularity(b,ctx,events,order,nextWeaponHooks))));
  if(b.newGeneratorCombat)resolveModernGeneratorActivation(b,who,order,ctx,events);
  const ownShot=order.pass||side.ships[0].hp<=0?{damage:0,played:visiblePlayed(ctx.cards)}:
   ctx.generatorShotDamage!=null?resolveSalvo(b,ctx,events,order):

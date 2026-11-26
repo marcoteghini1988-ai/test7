@@ -90,6 +90,8 @@ export function nextWeaponUnavailableReason(def,side,b,selectedCardIds,lookup){
  if(!def.playable)return def.blockedReason||'Arma non ancora disponibile';
  if(side.ruleset!=='hp-sync-v2')return 'Richiede la partita con HP sincronizzati';
  const ply=b?.ply??0;
+ if(p.slug==='eclissi-quantistica'&&side.nextEclipsePending&&side.nextEclipsePending.releasePly>ply)
+  return 'È già presente un proiettile nascosto in attesa';
  if(p.slug==='convertitore-cinetico'){
   const present=selectedCardIds.some(id=>{const q=lookup(id)?.effectSpec?.weaponProfile;return q?.slug==='boato-cosmico'&&q.rarita===p.rarita;});
   const token=side.nextBoato;
@@ -237,6 +239,17 @@ export function resolveNextBalancedWeaponShots(b,ctx,events,order,h){
      event(b,ctx.who,events,m,h,'next-weapon-reflected-energy',{energyGain:p.energyGain,virtualCharges:true});
     }break;
    }
+   case 'eclissi-quantistica':{
+    const delay=validEclipseChoice(order.nextEclipseTurn)?order.nextEclipseTurn:eclipseRandom(b);
+    if(side.nextEclipsePending)break;
+    const base=h.arsenalBonus(side,m,ply,p.baseDamage),bonus=h.arsenalBonus(side,m,ply,p.baseDamage+p.bonusDamage);
+    side.nextEclipsePending={machine:{...m,untilPly:null},chosenDelay:delay,guess:null,
+     releasePly:ply+2*delay,basePower:base,bonusPower:bonus};
+    if(!m.cardDiscarded){side.discard.push(m.sourceCardId);m.cardDiscarded=true;}
+    side.machines=side.machines.filter(x=>x.id!==m.id);
+    event(b,ctx.who,events,m,h,'next-weapon-eclipse-hidden',{windowTurns:3});
+    break;
+   }
    case 'inversione-vitale':{
     const gap=Math.max(0,enemy.ships[0].hp-side.ships[0].hp);
     hit(p.baseDamage+Math.min(p.maxExtraDamage,Math.floor(gap*p.gapPercent/100)));break;
@@ -315,4 +328,36 @@ export function advanceNextCommandAcceleration(timed,nowMs,h){
  events.push(h.emit(b,who,'next-weapon-command-tick','Centralina · deterioramento accelerato',{component:'command',extraSeconds:extra,remainingSeconds:timer.remainingSeconds}));
  if(timer.expired){events.push(h.emit(b,who,'component-expired','Centralina esaurita',{component:'command'}));st.remaining=0;h.enforceDestroyedSystems(side,b.ply);}
  return {battle:b,events,changed:true};
+}
+
+ // Lo stato locale contiene i segreti; i soli eventi/UI non li rivelano.
+ // Il futuro PvP online dovrà custodirli sul server.
+const validEclipseChoice=n=>Number.isInteger(n)&&n>=1&&n<=3;
+const eclipseRandom=b=>{b.rng=(Math.imul(1664525,b.rng>>>0)+1013904223)>>>0;return 1+((b.rng>>>16)%3);};
+export function lockNextEclipseGuess(b,ctx,events,order,h){
+ const pending=b.sides[other(ctx.who)].nextEclipsePending;
+ if(!pending||pending.guess!==null)return;
+ pending.guess=validEclipseChoice(order.nextEclipseGuess)?order.nextEclipseGuess:eclipseRandom(b);
+ event(b,ctx.who,events,pending.machine,h,'next-weapon-eclipse-guess-locked',{predictionLocked:true});
+}
+export function releaseNextEclipse(b,ctx,events,order,h){
+ const side=b.sides[ctx.who],pending=side.nextEclipsePending;
+ if(!pending||pending.releasePly!==b.ply)return null;
+ side.nextEclipsePending=null;
+ const m=pending.machine,correct=pending.guess===pending.chosenDelay,
+  nominal=correct?pending.basePower:pending.bonusPower;
+ const enemy=b.sides[other(ctx.who)],target=ordinary(enemy,order,b.ply,h),out=empty();
+ h.startNebulaVolley(ctx);
+ let r={damage:0,target};
+ if(target&&alive(side.ships[0])&&alive(enemy.ships[0])&&nominal>0){
+  const prior=ctx.attackElement;ctx.attackElement=m.weaponElementId;
+  try{r=h.linceHit(b,ctx,events,target,nominal,m.sourceCardId,order,false,0);}
+  finally{ctx.attackElement=prior;}
+ }
+ record(out,r);
+ event(b,ctx.who,events,m,h,'next-weapon-eclipse-reveal',{chosenDelay:pending.chosenDelay,guess:pending.guess,
+  correct,nominalDamage:nominal,actualDamage:r.damage||0,targetId:r.target?.unit.id});
+ event(b,ctx.who,events,m,h,'next-weapon-shot',{pattern:profile(m).pattern,stage:1,actualDamage:r.damage||0,
+  impacts:target?[{targetKind:r.target?.kind,targetId:r.target?.unit.id,nominalDamage:nominal,actualDamage:r.damage||0}]:[]});
+ return out;
 }
