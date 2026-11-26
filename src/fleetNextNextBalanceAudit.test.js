@@ -36,12 +36,14 @@ const roster=(rarity,seed)=>{
 const median=x=>{const a=[...x].sort((u,v)=>u-v);return a.length?(a[(a.length-1)>>1]+a[a.length>>1])/2:null;};
 test('Audit nuova coorte 26/11: mazzi misti contro registro storico, semi e lati alternati',()=>{
  const results=[],seen=new Set();
- for(const rarity of tiers.slice(1))for(let seed=1;seed<=8;seed++){
-  const newSide=seed%2?'A':'B',shipA=seed%2?'N00':'C01',shipB=seed%2?'C01':'N00';
+ for(const rarity of tiers.slice(1))for(let seed=1;seed<=8;seed++)for(const newSide of ['A','B']){
+  // Stessi modelli e roster per entrambe le prove del seme: la coorte nuova
+  // scambia lato, senza essere sempre associata alla stessa nave madre.
+  const shipA=seed%2?'N00':'C01',shipB=seed%2?'C01':'N00';
   let b=createFleetNextBattle({shipA,shipB,raritaA:rarity,raritaB:rarity,mode:'pvp',
    ruleset:HP_SYNC_RULESET,newGeneratorCombat:true,strategicNoDeterioration:true,
-   deckA:pickDeck(rarity,seed,newSide==='A'),deckB:pickDeck(rarity,seed+3,newSide==='B'),
-   supportRosterA:roster(rarity,seed),supportRosterB:roster(rarity,seed+3),seed:20261126+seed*91,nowMs:0});
+   deckA:pickDeck(rarity,seed,newSide==='A'),deckB:pickDeck(rarity,seed,newSide==='B'),
+   supportRosterA:roster(rarity,seed),supportRosterB:roster(rarity,seed),seed:20261126+seed*91,nowMs:0});
   let turnCount=0,dropped=0,nominal=0;
   while(b.phase==='playing'&&turnCount<100){
    const who=b.turn,order=autoFleetTurn(b,who),r=resolvePreparedFleetTurn(b,who,order,b.turnStartedAtMs+10000);
@@ -65,7 +67,7 @@ test('Audit nuova coorte 26/11: mazzi misti contro registro storico, semi e lati
    dropped:games.reduce((n,x)=>n+x.dropped,0)};
  });
  console.log('NEXT_WEAPON_BALANCE_AUDIT='+JSON.stringify({rows,seen:[...seen],results}));
- assert.equal(results.length,24);assert.ok(seen.size>0,'Nessuna nuova arma effettivamente utilizzata');
+ assert.equal(results.length,48);assert.ok(seen.size>0,'Nessuna nuova arma effettivamente utilizzata');
  // Esito diagnostico, non una dichiarazione di equilibrio definitivo: la matrice
  // deve essere ampliata con combo deliberate, boss e Personaggi prima del lock.
 });
