@@ -340,6 +340,33 @@
       ],
       "redSha256": "6370ff08f32a285f37078b15314ffc95bd9ee59309dcaa0b6bf36fdc64804c65",
       "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "d39996219f9dbc22265defe17f794592e0c1d7871987aecc2d0846a4b247062e",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "c675e387e8063244b64e8c44d1b94c7a4474d06ea8974a0ba7e64a8ed8782a34",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-nucleo-folgore-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "3aa8e0fce40cb9ffe71f63660e94db9feb536b67713862cd71485bdd9d78c143",
+      "preservedApprovedRevision": true
     }
   ]
 }
