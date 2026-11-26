@@ -15,7 +15,7 @@ const CURRENT=[
 ];
 
 test('Maglio Ferrogravitazionale: quattro fronti HD montati, uno per rarità',()=>{
- assert.equal(Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).length,22);
+ assert.equal(Object.keys(OFFICIAL_WEAPON_FRONT_BY_ID).length,37);
  for(const [rarita,id,damage,expectedBlob] of CURRENT){
   const definition=card(id);
   assert.ok(definition,id);
@@ -39,7 +39,7 @@ test('Maglio Ferrogravitazionale: quattro fronti HD montati, uno per rarità',()
 });
 test('Le altre Carte Arma non cambiano immagine o meccaniche',()=>{
  for(const id of ['weapon-confirmed-plasma-nucleo',
-                   'weapon-base-ionic-01']){
+                   'weapon-base-mineral-01']){
   assert.ok(card(id),id);
   assert.equal(officialWeaponFacePathForTest(id),null,id);
   assert.equal(cardFacePath(id),null,id);

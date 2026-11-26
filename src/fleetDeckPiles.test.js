@@ -7,7 +7,7 @@ import ts from 'typescript';
 import {shuffleFleetCards,recycleFleetDiscard} from './fleetNext/deckCycle.js';
 import {createFleetNextBattle,resolvePreparedFleetTurn} from './fleetNext/combat.js';
 import {HP_SYNC_RULESET} from './fleetNext/hpSynchronization.js';
-import {card,cardRole,cardFacePath} from './fleetNext/rules.js';
+import {card,cardRole,cardDisplayFacePath as cardFacePath} from './fleetNext/rules.js';
 import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import {FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView} from './fleetDeckPiles.js';
 import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
@@ -102,8 +102,9 @@ const marksBody=marksAst.statements.filter(s=>!ts.isImportDeclaration(s)).map(s=
  s.getText(marksAst).replace(/^export default /,'').replace(/^export /,'')).join('\n');
 const marksCompiled=ts.transpileModule(marksBody,{compilerOptions:{target:ts.ScriptTarget.ES2022,
  jsx:ts.JsxEmit.React,module:ts.ModuleKind.CommonJS}}).outputText;
-const WeaponSalvoCardMarks=new Function('React','useId','approvedWeaponSalvo',marksCompiled+
- '\nreturn WeaponSalvoCardMarks;')(React,React.useId,approvedWeaponSalvo);
+const integratedFronts=JSON.parse(readFileSync(new URL('./fleetNext/approvedWeaponIntegration.json',import.meta.url),'utf8'));
+const WeaponSalvoCardMarks=new Function('React','useId','approvedWeaponSalvo','integratedFronts',marksCompiled+
+ '\nreturn WeaponSalvoCardMarks;')(React,React.useId,approvedWeaponSalvo,integratedFronts);
 const source=readFileSync(new URL('./FleetDeckPiles.jsx',import.meta.url),'utf8');
 const ast=ts.createSourceFile('FleetDeckPiles.jsx',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JSX);
 const body=ast.statements.filter(s=>!ts.isImportDeclaration(s)).map(s=>
@@ -131,8 +132,8 @@ test('Il renderer mostra il dorso configurato e le facce vere degli ultimi scart
  assert.match(fallback,/data-custom-back="false"/);
  assert.doesNotMatch(fallback,/src="null"|src="undefined"/);
 });
-test('The visible discard face composes the current salvo count over its approved art',()=>{
+test('The discard uses the complete approved red Slitta face without obsolete salvo overlays',()=>{
  const html=renderToStaticMarkup(React.createElement(FleetDeckPiles,{side:{deck:[],discard:['weapon-confirmed-metallic-slitta']}}));
- assert.match(html,/data-salvo-count="3"/);assert.match(html,/3 SHOTS/);assert.match(html,/TOTAL DAMAGE/);
- assert.match(html,/weapon-confirmed-metallic-slitta\.png/);
+ assert.doesNotMatch(html,/data-salvo-count|3 SHOTS|TOTAL DAMAGE/);
+ assert.match(html,/fleet-weapon-fronts-red\/weapon-confirmed-metallic-slitta\.png/);
 });

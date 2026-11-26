@@ -28,3 +28,25 @@ for(const card of manifest.cards){
  await writeFile(temporary,png);await rename(temporary,target);restored++;
 }
 console.log('Fronti Metallo HD verificati: '+manifest.cards.length+'; ricomposti: '+restored+'.');
+
+// Fronti ed effetti confermati: stessi byte dei PNG nativi approvati,
+// compreso il pannello Arma rosso e i conteggi rivisti delle salve.
+const approvedSources=path.join(root,'asset-sources/weapon-fronts/approved-2026-11-26');
+const approved=JSON.parse(await readFile(path.join(approvedSources,'manifest.json'),'utf8'));
+let approvedRestored=0;
+for(const card of approved.cards){
+ const target=path.join(root,card.destination);
+ try{const current=await readFile(target);if(current.length===card.bytes&&hash(current)===card.sha256)continue;}catch{/* Primo avvio. */}
+ const chunks=[];
+ for(const part of card.parts){
+  const data=await readFile(path.join(approvedSources,part.name));
+  if(data.length!==part.bytes||hash(data)!==part.sha256)throw Error('Parte approvata non integra: '+part.name);
+  chunks.push(data);
+ }
+ const png=Buffer.concat(chunks);
+ if(png.length!==card.bytes||hash(png)!==card.sha256)throw Error('PNG approvato non integro: '+card.id);
+ await mkdir(path.dirname(target),{recursive:true});
+ const temporary=target+'.restoring-'+process.pid;
+ await writeFile(temporary,png);await rename(temporary,target);approvedRestored++;
+}
+console.log('Fronti confermati HD verificati: '+approved.cards.length+'; ricomposti: '+approvedRestored+'.');

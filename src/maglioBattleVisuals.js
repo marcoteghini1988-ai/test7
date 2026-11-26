@@ -5,6 +5,7 @@ import {ALL_WEAPON_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 import {metalWeaponEffectProfile} from './metalWeaponBattleVisuals.js';
 import {chainWeaponEffectProfile} from './chainWeaponBattleVisuals.js';
 import {precisionWeaponEffectProfile,cascadeImpactPresentation} from './precisionWeaponBattleVisuals.js';
+import {ionicWeaponEffectProfile} from './ionicWeaponBattleVisuals.js';
 import {approvedWeaponSalvo} from './fleetNext/approvedWeaponSalvos.js';
 
 export const MAGLIO_CARD_ID='weapon-confirmed-metallic-maglio';
@@ -59,7 +60,7 @@ export function weaponEffectProfile(id,shot){
    sound:{charge:'maglio_charge_'+['common','rare','epic','legendary'][tier],
    fire:'maglio_fire_'+['common','rare','epic','legendary'][tier],
    impact:'maglio_impact_'+['common','rare','epic','legendary'][tier]}}:{sound:null}),
-  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id),...precisionWeaponEffectProfile(id,shot)
+  ...metalWeaponEffectProfile(id),...chainWeaponEffectProfile(id),...precisionWeaponEffectProfile(id,shot),...ionicWeaponEffectProfile(id)
  };
  const salvo=approvedWeaponSalvo(id);
  const flight=salvo?.count>1?salvo.flightMs:profile.flightMs;
@@ -70,8 +71,8 @@ export function weaponEffectProfile(id,shot){
   impactMs:shot?.salvoCount>1&&!last?Math.round(profile.impactMs*.48):profile.impactMs,
   chargeMs:charge,sound:profile.sound?{...profile.sound,charge:charge?profile.sound.charge:null}:profile.sound});
 }
-// Centro della porta USB del dispositivo locale, centro del bordo remoto.
-// Entrambe le parti usano la stessa coordinata x: nessun colpo nasce di lato.
+// Ancora centrale per i consumatori storici. La scena approvata usa
+// weaponLaunchOrigin, con coordinate variabili lungo il bordo corretto.
 export function weaponPortalOrigin(who){
  return who==='A'?Object.freeze({x:225,y:812,edge:'bottom-usb'}):
   who==='B'?Object.freeze({x:225,y:-12,edge:'top-opponent'}):null;
@@ -105,10 +106,10 @@ export function fleetWeaponShots(events=[]){
    const groupStart=shots.length*MAGLIO_SHOT_GAP_MS;
    for(const [impactIndex,hit] of (event.impacts||[]).entries())shots.push({...event,
     visualGroupId:event.who+':'+eventIndex,impactIndex,
-    defenseBlocked:event.pattern==='induction'&&hit.actualDamage===0&&
+    defenseBlocked:!!hit.defenseBlocked||event.pattern==='induction'&&hit.actualDamage===0&&
      events[eventIndex-1]?.kind==='block'&&events[eventIndex-1]?.who===event.who,
     targetKind:hit.targetKind,targetId:hit.targetId,actualDamage:hit.actualDamage,
-    nominalDamage:hit.nominalDamage,projectileHits:hit.projectileHits,
+    nominalDamage:hit.nominalDamage,projectileHits:hit.projectileHits,destroyed:!!hit.destroyed,
     delayMs:event.pattern==='alloy-collision'?groupStart:shots.length*MAGLIO_SHOT_GAP_MS,
     ...cascadeImpactPresentation(event,impactIndex,events,groupStart),
     fires:hit.actualDamage>0&&!!hit.targetKind&&!!hit.targetId});

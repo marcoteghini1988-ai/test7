@@ -1,12 +1,14 @@
 // Partiture brevi per ID di famiglia e rarità, sul bus SFX del gioco.
 // I piccoli arpeggi sono risonanze meccaniche, non altri colpi di danno.
+import {ionicWeaponSoundPlan} from './ionicWeaponSounds.js';
 import {chainWeaponSoundPlan} from './chainWeaponSounds.js';
 import {precisionWeaponSoundPlan} from './precisionWeaponSounds.js';
 import {maglioWeaponSoundPlan} from './maglioWeaponSounds.js';
 const rarityNames=['common','rare','epic','legendary'];
 function baseMetalWeaponSoundPlan(type){
+ if(type==='weapon_hull_destroyed')return {family:'hull',phase:'impact',tier:0,layers:[{wave:'noise',from:2300,to:230,duration:.55,gain:.13,delay:0},{wave:'sine',from:105,to:36,duration:.34,gain:.20,delay:0},{wave:'triangle',from:460,to:130,duration:.22,gain:.055,delay:.03}]};
  const match=/^(slitta|reclaimer)_(charge|fire|impact)_(common|rare|epic|legendary)$/.exec(type);
- if(!match)return maglioWeaponSoundPlan(type)||precisionWeaponSoundPlan(type)||chainWeaponSoundPlan(type);
+ if(!match)return ionicWeaponSoundPlan(type)||maglioWeaponSoundPlan(type)||precisionWeaponSoundPlan(type)||chainWeaponSoundPlan(type);
  const [,family,phase,rarity]=match,tier=rarityNames.indexOf(rarity),thermal=family==='reclaimer';
  if(thermal&&tier<2)return null;
  const layers=[];

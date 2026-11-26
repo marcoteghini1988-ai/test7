@@ -1,5 +1,6 @@
 import {Group,Mesh,MeshStandardMaterial,CylinderGeometry,TorusGeometry,
  BoxGeometry,OctahedronGeometry,Vector3} from 'three';
+import {newProjectile} from './approvedProjectileEffects.js';
 import {boardPointToWorld} from './maglioProjectile3D.js';
 
 export function metalProjectileFlightFrame(from,to,progress,camera,frontZ){
@@ -15,6 +16,7 @@ export function metalProjectileFlightFrame(from,to,progress,camera,frontZ){
 // Il dardo della Slitta non è la testata del Maglio; il Recuperatore porta
 // una capsula corta con tre dissipatori ispirati ai collettori della carta.
 export function createMetalProjectile(kind,tier,chargeRatio=0){
+ if(kind==='steel-rail'){const ball=newProjectile('cannonball',tier);ball.name='Palla di cannone';ball.userData={...ball.userData,kind,tier,trailRadius:.26,chargeRatio:0};return ball;}
  const root=new Group(),thermal=kind==='thermal-reclaimer';
  root.name=thermal?'Capsula termobalistica':'Dardo a slitta';
  const material=(name,color,emissive=null,strength=0)=>{

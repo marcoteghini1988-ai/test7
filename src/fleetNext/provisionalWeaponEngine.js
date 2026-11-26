@@ -1,5 +1,6 @@
 // Eclissi Stellare — effetti HP delle Carte Arma con bilanciamento PROVVISORIO.
 // Usa i medesimi controlli di Difese, Terreni, copertura e limiti della nave madre.
+import {weaponEnergyContributions} from './weaponEnergyFeedback.js';
 import {PROVISIONAL_ADVANCED_WEAPON_BY_ID} from './provisionalWeaponProfiles.js';
 import {weaponFiresOnOwnTurn,consumeMortarEnergy,mortarAmmunition} from './confirmedAdvancedWeaponMechanics.js';
 
@@ -111,8 +112,8 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    if(field)shot[field]+=damage;
    shot.targets.push({kind,id:unit.id,damage,destroyed:!!unit.destroyed});
   }
-  impacts.push({index:n+1,nominalDamage:nominal,actualDamage:damage,
-   targetKind:kind,targetId:unit?.id||null});
+  impacts.push({index:n+1,nominalDamage:nominal,actualDamage:damage,defenseBlocked:!!actual.blocked,
+   targetKind:kind,targetId:unit?.id||null,destroyed:kind==='part'?enemy.ships[0].hp<=0:!!unit?.destroyed});
   return {damage,target:actual.target||target,beforeHp,excessDamage:actual.excessDamage||0};
  };
  const event=(m,kind,label,data={})=>events.push(h.emit(b,ctx.who,kind,label,{
@@ -260,10 +261,11 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
    if(pattern==='cascade-piercer'&&r.target.kind==='escort'&&r.target.unit.hp<=0&&r.excessDamage>0){
     const used=new Set(hits.map(x=>x.targetKind+':'+x.targetId));
     const next=every().find(t=>!used.has(t.kind+':'+t.unit.id));
+    const energyContributions=next?weaponEnergyContributions(side,'metallic',{cost:p.energyTransferCost},h.card):[];
     if(next&&h.spendElementalEnergy(side,'metallic',p.energyTransferCost)){
      planned.push({target:next,base:r.excessDamage,ignoreCover:next.kind==='part'});
      event(m,'weapon-cascade',m.name+' · trasferimento del danno eccedente',
-      {energySpent:p.energyTransferCost});
+      {energySpent:p.energyTransferCost,cascadeIndex:hits.length,energyContributions});
     }
    }
   }
@@ -277,7 +279,7 @@ export function resolveProvisionalWeaponShots(b,ctx,events,order,h){
   shot.played.push(m.sourceCardId);
   const sum=hits.reduce((n,x)=>n+x.actualDamage,0);
   event(m,'weapon-provisional-shot',m.name+' · '+sum+' HP',{
-   pattern,stage,hitCount:hits.length,impacts:hits,actualDamage:sum,provisional:true
+   pattern,stage,baseNominalDamage:p.baseDamage,hitCount:hits.length,impacts:hits,actualDamage:sum,provisional:true
   });
  }
  return shot;

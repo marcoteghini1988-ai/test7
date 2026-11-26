@@ -77,10 +77,10 @@ test('Nessuno sparo in preparazione; due Magli separati e attesa fino alla fine 
  assert.equal(r.ok,true,r.reason);
  const shots=maglioShots(r.events);
  assert.equal(shots.length,2);assert.equal(shots[1].delayMs,260);
- assert.equal(maglioResolutionMs(r.events),4260);assert.equal(fleetResolutionFxMs(r.events),4260);
- assert.equal(fleetResolutionFxMs([...r.events,{kind:'trap-reveal'}]),4260);
+ assert.equal(maglioResolutionMs(r.events),4390);assert.equal(fleetResolutionFxMs(r.events),4390);
+ assert.equal(fleetResolutionFxMs([...r.events,{kind:'trap-reveal'}]),4390);
  const chosen=[{id:MAGLIO_CARD_ID},{id:MAGLIO_CARD_ID}];
- assert.equal(fleetResolutionFxMs(r.events,chosen),4780,'Due carte devono finire il volo e il loro impatto');
+ assert.equal(fleetResolutionFxMs(r.events,chosen),4910,'Entrambe le salve devono completare anche il secondo impatto');
  assert.equal(fleetResolutionFxMs([{kind:'impact'}]),1600);
  assert.equal(fleetResolutionFxMs([]),650);
 });
@@ -92,7 +92,7 @@ test('Proiettili approvati: quattro ritagli diversi dello stesso PNG RGBA, con v
  assert.deepEqual([...bytes.subarray(0,8)],[137,80,78,71,13,10,26,10]);
  assert.equal(bytes.readUInt32BE(16),1922);assert.equal(bytes.readUInt32BE(20),818);
  assert.equal(bytes[25],6,'Il fondo deve essere trasparente, senza rettangoli sulla plancia');
- assert.equal(weaponEffectProfile('weapon-confirmed-metallic-slitta').flightMs,720);
+ assert.equal(weaponEffectProfile('weapon-confirmed-metallic-slitta').flightMs,1030);
 });
 test('Tre carte e due Armi in campo: il turno non taglia il proiettile o l’ultimo impatto',()=>{
  const events=MAGLIO_VARIANTS.slice(0,2).map(v=>({kind:'weapon-base-shot',who:'A',
@@ -103,7 +103,7 @@ test('Tre carte e due Armi in campo: il turno non taglia il proiettile o l’ult
  const release=releaseFleetTurnAfterEffects({phase:'playing'},6340);
  assert.equal(release.deadlineMs,36340,'Restano disponibili tutti i 30 secondi del turno seguente');
 });
-test('Rarità Maglio: un impatto per ogni rarità, rifiniture visive progressive',()=>{
+test('Rarità Maglio: una attivazione HP per rarità, rifiniture visive progressive',()=>{
  const profiles=MAGLIO_VARIANTS.map(v=>weaponEffectProfile(v.id));
  assert.deepEqual(profiles.map(p=>p.trailBands),[1,2,3,4]);
  assert.deepEqual(profiles.map(p=>p.impactRings),[1,2,3,4]);
@@ -122,7 +122,7 @@ test('Rarità Maglio: un impatto per ogni rarità, rifiniture visive progressive
 });
 test('Le altre Armi attendono un profilo approvato; i due spari partono dai bordi centrali',()=>{
  const ids=['weapon-confirmed-plasma-nucleo','weapon-confirmed-refrigerant-compression',
-  'weapon-new-cryogenic-03','weapon-base-ionic-01','weapon-base-mineral-01',
+  'weapon-new-cryogenic-03','weapon-base-mineral-01',
   'weapon-base-aerial-01','weapon-base-radiant-01','weapon-base-void-01',
   'weapon-base-gravity-01'];
  const profiles=ids.map(weaponEffectProfile);

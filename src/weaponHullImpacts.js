@@ -3,6 +3,10 @@
 import {clamp01,weaponHullFrame} from './weaponCinematicStyle.js';
 
 const contacts=Object.freeze({
+ 'ionic-comb':{kind:'electric-grid',radius:.85,sparks:14,smoke:false},
+ 'ionic-dart':{kind:'helix-discharge',radius:.85,sparks:14,smoke:false},
+ 'ionic-whip':{kind:'electric-snap',radius:.85,sparks:14,smoke:false},
+ 'ionic-flash':{kind:'white-discharge',radius:.8,sparks:14,smoke:false},
  'gravity-maul':{kind:'compression-detonation',radius:1.13,sparks:18,smoke:true},
  'steel-rail':{kind:'armor-punch',radius:.85,sparks:17,smoke:false},
  'thermal-reclaimer':{kind:'plasma-bloom',radius:1.17,sparks:13,smoke:true},

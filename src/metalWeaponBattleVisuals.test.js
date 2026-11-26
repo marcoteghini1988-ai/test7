@@ -20,7 +20,7 @@ for(const v of METAL_WEAPON_VARIANTS){
   const png=readFileSync('public'+path);assert.equal(png.readUInt32BE(16),3072);
   assert.equal(png.readUInt32BE(20),4608);assert.equal(png[25],6);
   const p=weaponEffectProfile(v.id);assert.ok(p.approved);assert.equal(p.kind,v.kind);
-  assert.equal(p.flightMs,v.kind==='steel-rail'?720:1250);assert.ok(p.impactMs>=850);
+  assert.equal(p.flightMs,v.kind==='steel-rail'?1030:1250);assert.ok(p.impactMs>=850);
   for(const phase of ['charge','fire','impact']){
    const sound=metalWeaponSoundPlan(p.sound[phase]);assert.ok(sound);
    assert.equal(sound.tier,v.tier);assert.equal(sound.phase,phase);
@@ -78,12 +78,14 @@ test('Due geometrie distinte, componenti cumulativi e facce corrette dai due bor
  const camera=createProjectileCamera();
  for(const v of METAL_WEAPON_VARIANTS){
   const model=createMetalProjectile(v.kind,v.tier),names=[];model.traverse(o=>names.push(o.name));
-  assert.equal(names.includes('Ogiva acciaio'),v.kind==='steel-rail');
+  assert.equal(model.name==='Palla di cannone',v.kind==='steel-rail');
   assert.equal(names.includes('Nucleo di conversione'),v.kind==='thermal-reclaimer');
   if(v.kind==='steel-rail'){
-   assert.equal(names.includes('Pinna stabilizzatrice bronzo'),v.tier>=1);
-   assert.equal(names.includes('Collare di compressione argento'),v.tier>=2);
-   assert.equal(names.includes('Costa prismatica'),v.tier===3);
+   const meshes=[];model.traverse(o=>{if(o.isMesh)meshes.push(o);});
+   assert.equal(meshes.filter(o=>o.geometry.type==='SphereGeometry').length,1);
+   assert.equal(meshes.filter(o=>o.geometry.type==='TorusGeometry').length,v.tier>=1?1:0);
+   assert.equal(meshes.filter(o=>o.geometry.type==='BoxGeometry').length,v.tier>=2?3:0);
+   assert.equal(meshes.filter(o=>o.geometry.type==='OctahedronGeometry').length,v.tier===3?4:0);
   }
   const box=new Box3().setFromObject(model);assert.ok(box.max.z>0&&box.min.z<0);
   for(const who of ['A','B'])for(const x of [110,225,340]){

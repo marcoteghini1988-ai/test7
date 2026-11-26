@@ -1,4 +1,5 @@
 import React,{useEffect,useRef} from 'react';
+import {kineticImpact} from './approvedProjectileEffects.js';
 import {createProjectileCamera} from './maglioProjectile3D.js';
 import {combatTargetElement,boardHullPoint} from './chainWeaponCanvas.js';
 import {prepareCinematicEntry,drawCinematicWeapon} from './weaponCinematicRenderer.js';
@@ -25,7 +26,8 @@ export default function CinematicWeaponEffects({paths,startedAt}){
   const ships=[...root.querySelectorAll('.official-mother,.live-escort')].map(target=>({target,
    point:boardHullPoint(target,board),previous:Object.keys(properties).map(k=>
     [k,target.style.getPropertyValue('--weapon-'+k)]),
-   motion:target.getAttribute('data-weapon-motion'),light:target.getAttribute('data-weapon-light')}));
+   motion:target.getAttribute('data-weapon-motion'),light:target.getAttribute('data-weapon-light'),
+   hull:target.querySelector('.f3d-escort-visual')||target.querySelector('.f3d-craft-hover')||target,opacity:(target.querySelector('.f3d-escort-visual')||target.querySelector('.f3d-craft-hover')||target).style.opacity}));
   for(const entry of entries)entry.target=combatTargetElement(root,entry.shot);
   const restore=ship=>{
    if(!ship.active)return;
@@ -81,6 +83,14 @@ export default function CinematicWeaponEffects({paths,startedAt}){
    for(const entry of visible)drawCinematicWeapon(floor,air,entry,age,
     {reduced,contactPose:reactions.get(entry.target)});
    for(const ship of ships){
+    const destroyed=entries.filter(e=>e.target===ship.target&&e.shot.destroyed&&e.shot.fires);
+    if(destroyed.length){
+     const death=Math.max(...destroyed.map(e=>e.start+e.profile.flightMs)),ms=age-death;
+     if(ms>=0){const pose=reactions.get(ship.target)||{x:0,y:0,lift:0};
+      kineticImpact(air,{x:ship.point.x+pose.x,y:ship.point.y+pose.y+pose.lift},ms,{power:1.5,destroy:true});
+      ship.hull.style.opacity=String(1-clamp01(ms/320));
+     }
+    }
     const pose=reactions.get(ship.target);
     if(!pose){restore(ship);continue;}
     ship.active=true;
@@ -96,7 +106,7 @@ export default function CinematicWeaponEffects({paths,startedAt}){
    else{ships.forEach(restore);element.dataset.restored='true';}
   };
   raf=requestAnimationFrame(draw);
-  return ()=>{cancelAnimationFrame(raf);ships.forEach(restore);
+  return ()=>{cancelAnimationFrame(raf);ships.forEach(ship=>{restore(ship);ship.hull.style.opacity=ship.opacity;});
    floor.clearRect(0,0,450,800);air.clearRect(0,0,450,800);};
  },[paths,startedAt]);
  return <div ref={host} className="weapon-cinema" aria-hidden="true">

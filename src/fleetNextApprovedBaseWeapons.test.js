@@ -32,7 +32,7 @@ test('22 Carte Arma base registrate in sei elementi, con scheda e copia valide',
   {ionic:4,mineral:3,aerial:3,radiant:4,void:4,gravity:4});
  for(const def of APPROVED_BASE_WEAPONS){
   assert.equal(card(def.id),def);assert.equal(cardRole(def.id),'support');
-  assert.equal(cardFacePath(def.id),null);assert.equal(def.playable,true);
+  assert.equal(!!cardFacePath(def.id),def.elementId==='ionic');assert.equal(def.playable,true);
   assert.equal(def.effectSpec.damageMode,'base-shot');
   assert.equal(def.effectSpec.durationTurns,1);
   assert.equal(validateEffectSpec(def.effectSpec),null,def.id);

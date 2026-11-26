@@ -1,0 +1,1414 @@
+{
+  "approvalDate": "2026-11-26",
+  "source": "anteprime confermate, esclusi Ganasce e bonus Induzione non definiti",
+  "cards": [
+    {
+      "id": "weapon-confirmed-metallic-maglio",
+      "familyId": "weapon-confirmed-metallic-maglio",
+      "rarity": "Comune",
+      "elementId": "metallic",
+      "kind": "gravity-maul",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio.png",
+      "sha256": "e26528fab8a5fcd0e690a3cf354c3c47d878dbe43a6bb9a6aabc1f998c999784",
+      "bytes": 13222268,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "cf0dba706687683a1d1fcd1e479e566adbcb5caa2f2715f310011002ae601d8f",
+      "previousActiveSha256": "ac5b9a8f15ca8f378e186d66e46a796f827e95548dbd2052f970f9063de9bd4e",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio.png",
+      "blobSha": "babbd9a7e794a81f6f622947bb9367ce719889c3",
+      "parts": [
+        {
+          "name": "weapon-confirmed-metallic-maglio.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "0e4610436289533e3600f0b726f803b926daf53404f90cf15c6c84e2901f54e5",
+          "blobSha": "8b558970e444a3d279545ddda9a1998997367851"
+        },
+        {
+          "name": "weapon-confirmed-metallic-maglio.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "3f6c25ed289ec53859bbd45e784f637570f196f86017a96211ca506c0caa7fd5",
+          "blobSha": "0e92a0a360f0d14336e6323f14b2cc61ff766e63"
+        },
+        {
+          "name": "weapon-confirmed-metallic-maglio.part-003",
+          "offset": 12000000,
+          "bytes": 1222268,
+          "sha256": "4882ac540a56a7fea2f1bfbc7e9bea74143640efc45c6a1e33821d864f152cf3",
+          "blobSha": "e8e296b4075fb729310a540d2a047f212757aef2"
+        }
+      ]
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-r",
+      "familyId": "weapon-confirmed-metallic-maglio",
+      "rarity": "Rara",
+      "elementId": "metallic",
+      "kind": "gravity-maul",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-r.png",
+      "sha256": "1ae6760cb688501b86fc84b848b41f45cad2300ade05ff15d6d0212ddd2a2814",
+      "bytes": 13711557,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "25a57470dfeb2b276f9935af487210b194edeb07b7ddf9d9bfd22aab33aa19ff",
+      "previousActiveSha256": "208ed17eea496af5b06895ec32d283812fe6439368f5d430155e2665f8772e2f",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-r.png",
+      "blobSha": "1406715c82f810443f70e505e92cce4983f97931",
+      "parts": [
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-r.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "dc00169869f57ea069d961db468356f7d450fb7acc0ee5f967cc2c801f076fdc",
+          "blobSha": "80baabefa34251b7a299da0b2887193aa18193f8"
+        },
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-r.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "52abca3fea574b3a66019005f4951cfbdb1c31a87039e5a3128a152009bc363c",
+          "blobSha": "3086891d5bb1ef79acaaaeaa8996ff0d9b8f3ec0"
+        },
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-r.part-003",
+          "offset": 12000000,
+          "bytes": 1711557,
+          "sha256": "0108f7fc8c36d13c3d7ed8f5ae587fbc2e8c13c730551adaf193252f00334e54",
+          "blobSha": "0b835a2827d85383f0d7b1d5715e5503ceb7be02"
+        }
+      ]
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-e",
+      "familyId": "weapon-confirmed-metallic-maglio",
+      "rarity": "Epica",
+      "elementId": "metallic",
+      "kind": "gravity-maul",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-e.png",
+      "sha256": "d286cb01eee3359aa28856e8faac5a75b0366fa3716aed971a2cd779312c1061",
+      "bytes": 14214264,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "c4888e8ae84d3bcab837dd45669af4f2de1b106372c5b6fc0f9b0e4b00a298b9",
+      "previousActiveSha256": "e42cc251f1b447f9b8ee73e9653dff829a4d4800388d4a4066052a5d3c27be8f",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-e.png",
+      "blobSha": "bda1f09e90f0d256b3fb23c8b01c12180681b224",
+      "parts": [
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "e714886ad9cf8c41920b2f0bb96322bacd99d156c9da27252b13c6d188834ff0",
+          "blobSha": "2d2b1074df02eb36c167d02a8248f73fbe692596"
+        },
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "8338d5dad7fad72cba878d99a6deb567cc59ce52a7e05ed2e771e665d451e047",
+          "blobSha": "76a84fc5cb1145a947a5c417029182b362bf1614"
+        },
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 2214264,
+          "sha256": "03ad09d48de53c13ed8cf272eef6343d87d620660453563776dcab597a7156be",
+          "blobSha": "e0cbfcc13ba1c44c434d67d4166230b7f418eede"
+        }
+      ]
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-l",
+      "familyId": "weapon-confirmed-metallic-maglio",
+      "rarity": "Leggendaria",
+      "elementId": "metallic",
+      "kind": "gravity-maul",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-l.png",
+      "sha256": "8dd0f26ad478a0bf7f0d21077669d41507ef4fa025358bab87ca96bfcd0537e1",
+      "bytes": 15758537,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "363777008677abbf5a077124876863da016166d8dfa3af13b48d7d467abf637c",
+      "previousActiveSha256": "ac836ab14868db34ce895129dbacba1ae741d8f23bf2fc5589cf813172e139ee",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-l.png",
+      "blobSha": "042e70e132812e7e9d9aacaa6e3b808f8810cb69",
+      "parts": [
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "4598c03d39a73b54f66ee2df9ab12d28853b378353ae77531b002f77c72c0bc1",
+          "blobSha": "f720083ce87a338dcedcc745aff988d494118570"
+        },
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "b6e5c2bd9b9c7aa017f91b18b9b4c141c66103ec390b61a4fd5fb5d85d7e92af",
+          "blobSha": "be68b22da7748a65515527b543fe8462aedfb1d5"
+        },
+        {
+          "name": "weapon-confirmed-metallic-maglio-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 3758537,
+          "sha256": "5795f9e2afc3db36c93332a249fc6381c7329ed49ae3ec48df3e1fa2a591a449",
+          "blobSha": "aa45a9f26a8465be28ef8a34f789bfc028f2bf0e"
+        }
+      ]
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta",
+      "familyId": "weapon-confirmed-metallic-slitta",
+      "rarity": "Comune",
+      "elementId": "metallic",
+      "kind": "steel-rail",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta.png",
+      "sha256": "d55491129875505a1fd37af1b40937adadb1617a03050e2b6ac472357627bfd9",
+      "bytes": 12378830,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "812b0f1618e3d740ddaaaeb2e45ec1d1cb9b6b573326329eb66f7441b76488c9",
+      "previousActiveSha256": "017b59e4fa74ab850b8ee06cbb4cfe837afbccee283ebcfaf5dbf9bda8873765",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta.png",
+      "blobSha": "20f93d41def834e348f98b0e0f341d715fe075a4",
+      "parts": [
+        {
+          "name": "weapon-confirmed-metallic-slitta.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "f4ceb10c869c4067ac05425756d4b9bcd80603bd8fa9fc2fb9dde467edbe6eea",
+          "blobSha": "a195bc18b24a29003c9c4fed9b8106046bb42921"
+        },
+        {
+          "name": "weapon-confirmed-metallic-slitta.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "006f32c68a6968a15ffa65758b290a0e237a8cb3987465b7e7ec96a1b0d3d6b5",
+          "blobSha": "eecfeb6d69475223c7e7cdef4c014e1e43fdae0a"
+        },
+        {
+          "name": "weapon-confirmed-metallic-slitta.part-003",
+          "offset": 12000000,
+          "bytes": 378830,
+          "sha256": "519bcb6bd412f3d499a6903729cb5ee8be688636acf158680af34dbd6ec12094",
+          "blobSha": "cc0698cdefa5fbfa0a3ff03621b5cce479d901c0"
+        }
+      ]
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-r",
+      "familyId": "weapon-confirmed-metallic-slitta",
+      "rarity": "Rara",
+      "elementId": "metallic",
+      "kind": "steel-rail",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-r.png",
+      "sha256": "a9c099477e48e010aaa2bb74c3763265778ad04e8b1c13a7674776c0e13646bd",
+      "bytes": 12771831,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "d87504ce0ef3fc88d75096ae5a0c9cc002d17b5cce4074376aa29ddf4a080889",
+      "previousActiveSha256": "b545e549f20eb362eb582c3882204fefcd549c4c75ffc3455902a1597de8034e",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-r.png",
+      "blobSha": "ddb86cc9e9643cc2cfae4f0e9bc4d38b771b9017",
+      "parts": [
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-r.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "426de8d14ab9044fd4d539f411fe4749bea09bdf0c48bb1bc62f3adfefcc9f08",
+          "blobSha": "90f4a45280a214638615f304b18ac07dbef7ec2e"
+        },
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-r.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "937c09ce8157886ad357e5d26915d900f7cd30387846b766a9f0509da1bd66b4",
+          "blobSha": "199e1620da987a059e103cb933c5c64e18c995e0"
+        },
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-r.part-003",
+          "offset": 12000000,
+          "bytes": 771831,
+          "sha256": "45f288d0ed9d34144e58165b73e769c5f750d9891be0224378ffbd7c7e40ee2f",
+          "blobSha": "8dae442f4835e395d9168019dbdb166944454b60"
+        }
+      ]
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-e",
+      "familyId": "weapon-confirmed-metallic-slitta",
+      "rarity": "Epica",
+      "elementId": "metallic",
+      "kind": "steel-rail",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-e.png",
+      "sha256": "c5d4946cc87756090b004f3a9f2fd58277ad51595166822b05c90b991fc4c33a",
+      "bytes": 13158140,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "1fff5becc0413616fb22ebdc05f869aaee88eb1b054d7947d32f1477cb909c4d",
+      "previousActiveSha256": "86336f71dd31d68ecdb7219646cbc876b0ee5fa0f9d0fb399dc3cfa4cb451226",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-e.png",
+      "blobSha": "5c7a30516ae2f2056b1576f4972b9b173e1239de",
+      "parts": [
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "4256030fd912aa46182901ee407f6ca26854110a6d145c01bd487c9d5d5b2945",
+          "blobSha": "6b3c65a468a5d5b20cb93797f3339b747dab4f91"
+        },
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "b7d4216cdd7390297c18653515558971addad5c02c51645c1a848ea428979ff1",
+          "blobSha": "4872e80638ed0edde5a705707722b46c115b65ee"
+        },
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 1158140,
+          "sha256": "177a21d251afd0c83d00ac2e210008e61d8b709694e7f877c660d455c23d83d7",
+          "blobSha": "d523b1e5f27e68da0dfb815ac556920083837751"
+        }
+      ]
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-l",
+      "familyId": "weapon-confirmed-metallic-slitta",
+      "rarity": "Leggendaria",
+      "elementId": "metallic",
+      "kind": "steel-rail",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-l.png",
+      "sha256": "37d6e7fb3d79de5c24409cda2c9e43ec7a992a61ed642b60765e4932ac079e8e",
+      "bytes": 13962728,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "1544e3c9781d328cd3a0b0c9269f2bef800fd4ceaf23664810ddc7d3325fce13",
+      "previousActiveSha256": "50dc4af3670b6993afd2ef988c3dff8db46187bf31bcd2d1ad7d52fa669e6654",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-l.png",
+      "blobSha": "1dcb12241ae290d2a0bf0d1a9bcb598d3d307747",
+      "parts": [
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "e4283f4884b0368a30150173fe9dc99242c2df90f898c01cd42cc7961562c305",
+          "blobSha": "b571b33ca26dd5dcd37f2947572d2b50fff0b32a"
+        },
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "cccf0efbf365352901d96c4ff92f0ffb670ccd3f6735efd750bc404105962399",
+          "blobSha": "37e15b68c7721212a2843f5bd1cc1141f1ee312d"
+        },
+        {
+          "name": "weapon-confirmed-metallic-slitta-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 1962728,
+          "sha256": "1fe2d867ac3ac11b4ce0665048dc8b901e8706f6b6992066aedc82c33ed39b5a",
+          "blobSha": "59d67f38f07d38b2efefb916a98f4274a1bc5da9"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico",
+      "familyId": "weapon-designed-metallic-recuperatore-termobalistico",
+      "rarity": "Epica",
+      "elementId": "metallic",
+      "kind": "thermal-reclaimer",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-recuperatore-termobalistico.png",
+      "sha256": "cc66315dd6e31b141912768abb1143fd5900865e1be04fd0b5b208241723cda9",
+      "bytes": 13509008,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "4e6a4577ce383d3c174457bc60e9eeb314d279fd8b3c9d419f07543d86a87e39",
+      "previousActiveSha256": "87b2137364be4a15ea812495d415f3b9ad8990be0d43565daf24780b4c3d9860",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-recuperatore-termobalistico.png",
+      "blobSha": "af708169a6d1e644323cfb16de9a702b8c01371a",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-recuperatore-termobalistico.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "a07e35ef97e29c90ec6d1a0f5b4ee0d280a197b0ee154d926a50c2381e504bd3",
+          "blobSha": "541d6fe082f27462b702ab4e86a517b4e6305cb9"
+        },
+        {
+          "name": "weapon-designed-metallic-recuperatore-termobalistico.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "8b488fc76a65f63c9b6f0937fa9f5753d7aa62833be0a4197ce73c2ca5462d29",
+          "blobSha": "dbba6908e4e1e7e63436ad60a0ec94326e338239"
+        },
+        {
+          "name": "weapon-designed-metallic-recuperatore-termobalistico.part-003",
+          "offset": 12000000,
+          "bytes": 1509008,
+          "sha256": "6ec82cd24582ee28cf914b172aad573fa13392a5e823a6125b3a86b8a3fd57d2",
+          "blobSha": "55b7977db1171872d0c1f3217d1117d70937138c"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
+      "familyId": "weapon-designed-metallic-recuperatore-termobalistico",
+      "rarity": "Leggendaria",
+      "elementId": "metallic",
+      "kind": "thermal-reclaimer",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-recuperatore-termobalistico-rarity-l.png",
+      "sha256": "56dedfefd2d8b46ee81eb31c241e2d8cda9853cd4bb0acf0793b194021ff163b",
+      "bytes": 14436692,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "e05c407e1e6d0735b055834d683e6c101e07ca9673e2b90154b6d2c741a61c59",
+      "previousActiveSha256": "10777a569f3c2aa14be30d4081d3fca76cec2cd4588778805ff6e0e5515596a4",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-recuperatore-termobalistico-rarity-l.png",
+      "blobSha": "aa1b88db60ad1d1b685e60639e8745d8e1ee5ead",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "ee43ff4b173cd84ffdab9adacbbc89c67209d2842dfe444995f2a353e9b66480",
+          "blobSha": "165c3ffa679ce579012966f64c25273c1e673cbe"
+        },
+        {
+          "name": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "70aa32557f6367db2b50e272ef68fdd4df7b265a7aff099ff4e548538f05530e",
+          "blobSha": "a71486c2f8a7468e03c5fba7c2f811547cec6f90"
+        },
+        {
+          "name": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 2436692,
+          "sha256": "65a436ca24573d09fba24e3f2be09cd385f2f7283bfa0a6919ad81d70bd96f5d",
+          "blobSha": "2fbd56183033a0813f5a66687633cfe4bc0f1e40"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione",
+      "familyId": "weapon-designed-metallic-frantumatore-induzione",
+      "rarity": "Epica",
+      "elementId": "metallic",
+      "kind": "induction",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione.png",
+      "sha256": "e0c6ec711e72f6d31f174adbf5595b7d9b89291315ee888981666183ffc49d10",
+      "bytes": 13534842,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "d26a60f2f0e695d4c8687fd75751d54ec692d3a4614272821893dc08f9236f24",
+      "previousActiveSha256": "16ff52fe0fe2c0de4794971340d34116d104970b312718d1a6feae8f47c3ef5f",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione.png",
+      "blobSha": "3a14141ff5742658b7e69c958d311ef8c449e206",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-frantumatore-induzione.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "8b304b4ad1f0c1818ade45f6d29d4fff622a36ea3d246e0be8d77e0ae304bd99",
+          "blobSha": "e4a32ebabaa0b32e7709e838cd11b6fc28459dda"
+        },
+        {
+          "name": "weapon-designed-metallic-frantumatore-induzione.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "f55253384248fbcfb9834ff38508b61a7e6e089e95d346b7c87e01229a305f59",
+          "blobSha": "c8aa83d52e2c6802f225dce48dec04533157d45e"
+        },
+        {
+          "name": "weapon-designed-metallic-frantumatore-induzione.part-003",
+          "offset": 12000000,
+          "bytes": 1534842,
+          "sha256": "86c66d1ed788330670ed2e5edccadaf82b6d5f157d3603482d7a62e9267dfff2",
+          "blobSha": "3c7ffbaa967222ee30ce8bf4290f89ceba91928b"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "familyId": "weapon-designed-metallic-frantumatore-induzione",
+      "rarity": "Leggendaria",
+      "elementId": "metallic",
+      "kind": "induction",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione-rarity-l.png",
+      "sha256": "801e92251c24e693b823ec037c87dfd84ebb3a92f24f96da76a488f5f86ec19f",
+      "bytes": 15271807,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "70bebdb98b8354dce8a4160e9dd9c0978aa3f398f706fbedfd8efc7b24c6adf3",
+      "previousActiveSha256": "ff6c964e581110d58e80f4c0494d45fb4a56a822c5ca8043d0cbf2a1123fe81f",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione-rarity-l.png",
+      "blobSha": "5bbb6a554cd7c5c407e2982938ff4e663f930c69",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-frantumatore-induzione-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "573a6f97a4ab34471b5734324310fc38427000cde6ea01ea94ddda11a530b74e",
+          "blobSha": "1c52bf1269aeeba67dfeb438108f9c56a1645b7a"
+        },
+        {
+          "name": "weapon-designed-metallic-frantumatore-induzione-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "d8ed7e3f2db40631685046e0b4570866441f6457bfabc5b80ff277285db2439f",
+          "blobSha": "53fc9b06ddc2adaaf1fba06af11d8d25845e77e4"
+        },
+        {
+          "name": "weapon-designed-metallic-frantumatore-induzione-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 3271807,
+          "sha256": "237744c1fbfe1a7602c0d09787175e3f2bef687ae645dcd803e2af06c71eadd1",
+          "blobSha": "f5f486cae0819fe1df9d8852c1ed608edeee5635"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "familyId": "weapon-designed-metallic-perforatore-cascata",
+      "rarity": "Epica",
+      "elementId": "metallic",
+      "kind": "cascade-piercer",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-perforatore-cascata.png",
+      "sha256": "fcab9211245b08dcc1ccd06bca23c55c2bb4d2c3e1bd64ac84b8f04fcd9a29ae",
+      "bytes": 13628088,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "340dd39222bb4502d90c2036626b08cf2a3b5700c028e1cbb63226eca1d0fb96",
+      "previousActiveSha256": "a21550e3fd16bec75eb571699681e6fe414897617ef91c185e3ad5db316f89fd",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-perforatore-cascata.png",
+      "blobSha": "152d6a360c79772064f630b1f8af9419276331ed",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "4c5d0937f7e70b36a388a1651726c31e24b48a8cdb0cf116e5a9f8a7739435fc",
+          "blobSha": "87c76bb54e109908025f079c8db52f200184f276"
+        },
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "2b3af8735373bae793584022ff913a170a5e63b034be71f009c3e951628855d5",
+          "blobSha": "4e2b323bc4223d42f4451ee0a6690fa1f00b04fc"
+        },
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata.part-003",
+          "offset": 12000000,
+          "bytes": 1628088,
+          "sha256": "ca58c0f151461e6cc634d2ce035cfa373b39675d209c329c1961fe43ca2e8235",
+          "blobSha": "2cc45fde2c5cd580d4d9a4bc58510998a252eb9a"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "familyId": "weapon-designed-metallic-perforatore-cascata",
+      "rarity": "Leggendaria",
+      "elementId": "metallic",
+      "kind": "cascade-piercer",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-perforatore-cascata-rarity-l.png",
+      "sha256": "411a38c336b4ec45820cdec70ed4376c715c5779364a55f35b33c86ac247cb4a",
+      "bytes": 14987663,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "826da909341ed22a5d46b6c5afbc35b10cdb440be5f2c72987a9a3b7592bde99",
+      "previousActiveSha256": "4faf5438560757e7e47fd7ec19c77fb50207a18a797fe570a6e6e5ccd8de48bb",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-perforatore-cascata-rarity-l.png",
+      "blobSha": "49a6d86845d02fbb10f565aad8d262249762c551",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "980da58a9e5de8c401d609940cff4ba010917132e186609be68419d838142482",
+          "blobSha": "303bb1889f4ab59653aa9be46baa3f41dabb5cd6"
+        },
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "e6db8becfd2d9d57c20a46e58c47a97be62bb2fafcb534618652d6dc6540c974",
+          "blobSha": "d84950ae0f3c220bed1d4cfbc26ae00e2ffb49ac"
+        },
+        {
+          "name": "weapon-designed-metallic-perforatore-cascata-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 2987663,
+          "sha256": "7b672209f346c4252d75fe1078a5e3fba77fa118c0387bca9125d4bdf1a3a0ff",
+          "blobSha": "379a151ed55041f89f44ad38bd18257d7f421afe"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "familyId": "weapon-designed-metallic-artiglieria-schegge",
+      "rarity": "Rara",
+      "elementId": "metallic",
+      "kind": "wandering-shrapnel",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge.png",
+      "sha256": "b13bd1311a596e45654fa2c3ee5c9338d3cea829559c4e98bc9acf65a056412a",
+      "bytes": 13000663,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "054e693be67fcf9c89e97891800d2494015159e019063a4ffc5e251e449fd3a2",
+      "previousActiveSha256": "9fd65ad7423c1e8a13e6a2fd2bf1f1710fefb5d0c79a7bd8b923856232e2736a",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge.png",
+      "blobSha": "e99aefbd4e0f7daf51dd599011bd72454550697a",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "d731738596bbb13376185b29fa47e60364b3757b697ce036a392c1aa0f5d66a7",
+          "blobSha": "3b4ab1606d2e4451336fcc98eed30fe6ec73b987"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "e575d35459d671d02a9b60e2357596500243b90ff6058c939fd141f53700147a",
+          "blobSha": "ba45cbe5f57d0659b510dee5e38d1d829e0810a9"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge.part-003",
+          "offset": 12000000,
+          "bytes": 1000663,
+          "sha256": "00950810f2fb503cfb44401bc7e26bf803aafed66193a52ebe185115e46d2440",
+          "blobSha": "d9a3619607a0e6a194fa2aa9a4adfeefd5279dbc"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "familyId": "weapon-designed-metallic-artiglieria-schegge",
+      "rarity": "Epica",
+      "elementId": "metallic",
+      "kind": "wandering-shrapnel",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge-rarity-e.png",
+      "sha256": "426162d0351d3d4e87aed476f4c427119b6f87dec807643a077d8dcc7667dbfe",
+      "bytes": 13844880,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "eec51cb13410b2ba87461b5a5fb2eb73f588f5cd8e5e6450fd688f3c5365cdb0",
+      "previousActiveSha256": "b9b019fb9736bde670e29b817e654abfe86c2204d0764fe14e8df8ea8dbc67b1",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge-rarity-e.png",
+      "blobSha": "cdb58e16cfc7e24b678a74b7892403e1e8241715",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "7bf531ccfa47e66fe5b4fa3e0a4b5d9daf547c3f1584c14d0928b6dfb9d5af30",
+          "blobSha": "47d70d3f61d99d1a8761f2dce2322ac7a63309d5"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "f9931376941afff78b7479cf101b4baaae18720a5cf667603cc86f71d7c58428",
+          "blobSha": "ecc1e38d91b54be82de71258b83615002b08e09c"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 1844880,
+          "sha256": "ae4a2911f6c99a67c6f2a44e0a4a9bd6aa9daf0417c501049156c3c49bc1720b",
+          "blobSha": "638bfcc2b0c6e21e365631e0bad57fc652886fb3"
+        }
+      ]
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "familyId": "weapon-designed-metallic-artiglieria-schegge",
+      "rarity": "Leggendaria",
+      "elementId": "metallic",
+      "kind": "wandering-shrapnel",
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge-rarity-l.png",
+      "sha256": "25c91e51c41b33dae870c44281588621a5664cc16e6b2f33d7b5b299a180e82a",
+      "bytes": 15328965,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "582a6d224049a94ef3013408a3e6235363de36fa876bc72af8139997b3222044",
+      "previousActiveSha256": "d39be6c972cd6ba350c02c13afc1987dbdd514ac564b3704f085a65985ea142a",
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge-rarity-l.png",
+      "blobSha": "09b02c2dbe58e1423da7e4f38a74af07d5530211",
+      "parts": [
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "7e3913342434cb8298db42262f16b3020bbfc387f9e01438436989979a6aa04c",
+          "blobSha": "9ced05b4be9285f0a2b13e17e08be5669a4396f8"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "5566042226f1a5d3330eabc0fa2ab1a1f4f01cd583e5eec1e8f20e70104ce25d",
+          "blobSha": "a92bee07b0ed2eaf7327eba52ed8c26d91bc4267"
+        },
+        {
+          "name": "weapon-designed-metallic-artiglieria-schegge-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 3328965,
+          "sha256": "c6eca33457c751d4c22cd691dff79b922f97ec0ea31cedb8749e28a3b289f1fc",
+          "blobSha": "6614106b62546b5f01c4b04e144aae9508819c2e"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-01",
+      "familyId": "weapon-base-ionic-01",
+      "rarity": "Comune",
+      "elementId": "ionic",
+      "kind": "ionic-comb",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01.png",
+      "sha256": "dc57d1dd5444de7ea4315cfdc6c66cfe9e4739759b6dbb13ee7d87bc79409172",
+      "bytes": 13431638,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "5dee8846d11aa6c846bb0904f584a26cdb7b47f06979d085e5b3a3f57cfb9072",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01.png",
+      "blobSha": "c619b9f1a1d8fd2229ef124e0d7048dafa779cbd",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-01.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "08f54ca22642f74c9bd1e5adaffb4ba216d1774f92c9a4b2f57b1377fbf6a708",
+          "blobSha": "911d0dab1e3f1f3bd0b5181d1ada57e72aeba38f"
+        },
+        {
+          "name": "weapon-base-ionic-01.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "3b67283dfe60d49a844f63ba5fe1e67ad5f0ec3e4b4d089d03d01f8e18ddd2fb",
+          "blobSha": "eeea9d67d430499b04fd5f275b0b5e71228c8809"
+        },
+        {
+          "name": "weapon-base-ionic-01.part-003",
+          "offset": 12000000,
+          "bytes": 1431638,
+          "sha256": "8e33c4341e2676f8f610a931b09877d070258502a9b930a9da78d64835a1f067",
+          "blobSha": "34cd13d12b4c5feea9e2836b3a604caa3a96e3a8"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-r",
+      "familyId": "weapon-base-ionic-01",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "ionic-comb",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-r.png",
+      "sha256": "249cb84355a2ba671e3c439886714800cbe5d5003617a3797480ea761c14abf6",
+      "bytes": 14010930,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "fb39be817ebd64d157b95076eea379f7cea11c1c17b65780561359c5535566dc",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-r.png",
+      "blobSha": "eaf1794f4fe997e5e36ed06b4f4917330a5e13f6",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-01-rarity-r.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "d2754c03e8a8660afcfa2b2929fa1468f715e98ea191f7a3d80c4f1598547ab4",
+          "blobSha": "ae15c591d453ea8070f3e25a593d46a756fab708"
+        },
+        {
+          "name": "weapon-base-ionic-01-rarity-r.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "a0ad693c7cb6516e70acb691ac53988fd5821a941a01788529f39f584b4c0edb",
+          "blobSha": "32190a4e2c027c08b244748bec81cfd068be0685"
+        },
+        {
+          "name": "weapon-base-ionic-01-rarity-r.part-003",
+          "offset": 12000000,
+          "bytes": 2010930,
+          "sha256": "9c80d6cb3f8c2d8436888ee44906ae6acf6dce96c7ba1a0ac6e463fad91faf1a",
+          "blobSha": "2c717bb20ab1042150dff7d3ac700b97fafc51a9"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-e",
+      "familyId": "weapon-base-ionic-01",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "ionic-comb",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-e.png",
+      "sha256": "0ef8fa21ab27f8c675b8fb1588d23d919b972ff52d231ebd5c53a358f40720e0",
+      "bytes": 14542693,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "9467dab826ed97aae164ba5834fa13b7b79e8d4f544036345ccad0137f084413",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-e.png",
+      "blobSha": "ae2d7cde4b7df0f754022a46b569981f6de4a9cc",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-01-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "e41801dae354b505f4d30d99fc5fe85636084b90c752a73c7f9fb3044526a525",
+          "blobSha": "4b7d8b472cc19b5419570d0c5e134f44a0f940ca"
+        },
+        {
+          "name": "weapon-base-ionic-01-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "90e2ad412fd1d65001d79a8b5ac67b67f02180d616ce5db1f88213405ee5b213",
+          "blobSha": "9242dec8923a594c99318c82606aa0a06c85feb5"
+        },
+        {
+          "name": "weapon-base-ionic-01-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 2542693,
+          "sha256": "d6ee576303603e0934cf317aa65881bc29de5b599017be449e7c01ac020049d6",
+          "blobSha": "5bfea7b94a126e157ee347680a884e03ddd2d339"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-l",
+      "familyId": "weapon-base-ionic-01",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "ionic-comb",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-l.png",
+      "sha256": "1c6badbb46c6479e06c2a199eda7dbb3572e36a3ade267e746dbfb4682de32c5",
+      "bytes": 14956241,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "63694b076f49d6fa02d4ea8e28c10cb50d03305eeee56dd32e20f1ead41a3b55",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-l.png",
+      "blobSha": "e817b142a3ed288851ca724906b1a6de99cff6dc",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-01-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "a5d8840a9e9f441e616695e1cfb568bea9c525a0b277fece7e43b252ded18bbb",
+          "blobSha": "8e03c46499c1631794d7477ae4a50da62f346297"
+        },
+        {
+          "name": "weapon-base-ionic-01-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "4d62423ef2a4ee3589edb96850efa459b9a9982dd53145844779706834499dc1",
+          "blobSha": "01413e91e23ff370b2c56f74adfd329794901783"
+        },
+        {
+          "name": "weapon-base-ionic-01-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 2956241,
+          "sha256": "30b87fb8b722e6c97bf7a247ef47659777e1d7fdb50017c3ec0e0f7f4e73ce5e",
+          "blobSha": "7834a3416b606dadcdcbd4d248139e824db74fd3"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-02",
+      "familyId": "weapon-base-ionic-02",
+      "rarity": "Comune",
+      "elementId": "ionic",
+      "kind": "ionic-dart",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02.png",
+      "sha256": "40c6223bb4b14849c327bfb9d53d972da59d9bfbd0e266aac69c1f040b1566d8",
+      "bytes": 13268598,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "8862b03abe2470e3daec4e32fc87b2b5096a687e9159cd9b2664b1c4852e8f6b",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02.png",
+      "blobSha": "1186089b4b5833adb3254f28c373f1d36cfe85a2",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-02.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "4a0b1dc995c58d6e4ee1e81933659f353c2d399f2a387d74ac2a96412ce9e3dd",
+          "blobSha": "070dcabb1a9a8fe1cab394fa0b2393ab8f866e61"
+        },
+        {
+          "name": "weapon-base-ionic-02.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "a52f7914979d3a228bcb006aa4f610cf76e0933254bafd4e95531d408cc2458e",
+          "blobSha": "974db4d88be010d337eadf9c2ce1ec9e9d105859"
+        },
+        {
+          "name": "weapon-base-ionic-02.part-003",
+          "offset": 12000000,
+          "bytes": 1268598,
+          "sha256": "13a2e65feff1948e40e35e128f6473b6cd2b016db00858f0096a8e3fda47416f",
+          "blobSha": "1a2ab9c879b2a4189f7f85fed0d7767a980da868"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-r",
+      "familyId": "weapon-base-ionic-02",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "ionic-dart",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-r.png",
+      "sha256": "beb4e58798ba02d8750cb3475a05753cc5e05d222ee0cabb8cfdf0d2588722c9",
+      "bytes": 13104809,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "00bc49d14224c1e39874aee5f4b07b78c851945ffbd35ea8c98a87ea4f3cf544",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-r.png",
+      "blobSha": "cf63201a8b44b234bc7c5660f1b0b85f1bca37cf",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-02-rarity-r.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "76673d7b190294726d2e387d30ff1455f84186cc6778b92b66c94992a1ab277b",
+          "blobSha": "e37f0216095135fa45cc168f6b29e16e99697a9b"
+        },
+        {
+          "name": "weapon-base-ionic-02-rarity-r.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "dc54c3020fd1af24c8ca4085d4c9a348f3f650da5763df1d66bf434084961c7a",
+          "blobSha": "ebb310893c9f7414409addbb94d5b793b3009cf6"
+        },
+        {
+          "name": "weapon-base-ionic-02-rarity-r.part-003",
+          "offset": 12000000,
+          "bytes": 1104809,
+          "sha256": "bba9347f2d464dffd08a2434c7aa3402b9b6612b1fc9f2f19075e853387b62d9",
+          "blobSha": "1a0ce91facadbb36f514720549cc97d44eb6455f"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-e",
+      "familyId": "weapon-base-ionic-02",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "ionic-dart",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-e.png",
+      "sha256": "4e8d563e28808d0de2712f728184bfed8d51bb95cc3efde7f5f35e1be179f234",
+      "bytes": 14051708,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "5d37235ed73e9fd7ae7efd3fe987c48f44166cb2bc48447f9a35a14256eb83b8",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-e.png",
+      "blobSha": "03b0e793fc12b787d030b846ab60a8024566f6e9",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-02-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "9b21ad28379d185e23c07e4e9d33af9f5bce8ba9e6912cd64c67c6ba15d720ff",
+          "blobSha": "95ac7de7a8df90edec0e8ddd7e6de20da14a136f"
+        },
+        {
+          "name": "weapon-base-ionic-02-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "b87bb7a07b8022a505f2e8c078fc615670cf0a2604f85e714c11ce2b31bf714c",
+          "blobSha": "8ff481c6a5febdd7dfee77a5882e85261622e5f4"
+        },
+        {
+          "name": "weapon-base-ionic-02-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 2051708,
+          "sha256": "afe7fd6f54671c9af0861bcab9790b97c532f082b279f67e64503f3d97a9d4e1",
+          "blobSha": "4ba60eeda5c30b7d7ff028f66cd8d28669d6999f"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-l",
+      "familyId": "weapon-base-ionic-02",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "ionic-dart",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-l.png",
+      "sha256": "35736c7c83c3a5da45077e090e014376451e4a7c9679a59b753f2a6fa668e8ef",
+      "bytes": 14640041,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "b44a8f157735cb076bc4907e24b723b57b6bca7b5d2da18a0e7749c6d7c3f3de",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-l.png",
+      "blobSha": "042977e273b42d0f7b58678e71a4a158f0ce242c",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-02-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "5c5b92aed52c22c221a85f0dd83149af33defd101e3eedeb27377eff824ee418",
+          "blobSha": "6d728d1b77189d3ba22e03423dcd3da16083fc65"
+        },
+        {
+          "name": "weapon-base-ionic-02-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "7dfc41812d1721168f4a49e07cb41f7b3549fb53db59d980d25fd3c4991ab81f",
+          "blobSha": "a2b3074c0641b07025a0ef8c1d3cee2c78a35e4e"
+        },
+        {
+          "name": "weapon-base-ionic-02-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 2640041,
+          "sha256": "97ed0bb5f02eee8e02735692de96201a845eea551da13dca634ae1c87cab5df9",
+          "blobSha": "80f59c21fdbffd74efca012924721be3e3fe9fd4"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-03",
+      "familyId": "weapon-base-ionic-03",
+      "rarity": "Comune",
+      "elementId": "ionic",
+      "kind": "ionic-whip",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03.png",
+      "sha256": "9c6343d0dfca070844734eeaa28d61bea32ec58e4c97ff7871a9b40f1cc4ef3c",
+      "bytes": 12318520,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "30fe5b6c8e66925c3db0f2bb44cca1ebfd3273a413f3858e07bf05d3b2f11d72",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03.png",
+      "blobSha": "478570bcad9642a06d038de94e108fed2e0533d4",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-03.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "6b93d77b0eaf0a58cf54cece83f1144ebfb5c5b4795d5bee06dfd232894de7b7",
+          "blobSha": "0c9ab25c219d1ca16eae01a5380b315c2f7b5b48"
+        },
+        {
+          "name": "weapon-base-ionic-03.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "046b30d4a9949a2368f4a2567ac5b295bf5360ed5280d466d3faaa74fd819a20",
+          "blobSha": "1f8bd97b051ec0ff474230f0e09766e6a79621df"
+        },
+        {
+          "name": "weapon-base-ionic-03.part-003",
+          "offset": 12000000,
+          "bytes": 318520,
+          "sha256": "b181929dd41522e3098ef8d9644b35cc9907b3a9b208fa3504d95ff781cb0d3c",
+          "blobSha": "855ed34952ef919c1e1e572c785fa52ed6796e9d"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-r",
+      "familyId": "weapon-base-ionic-03",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "ionic-whip",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-r.png",
+      "sha256": "d7e39501a6635563af304f8295f1b6b54a2685e34db251c9fee673d2b0eb4739",
+      "bytes": 12689818,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "9e17e9bde8385e1768a76b9596a07896843b84ffa47ca21c97943c0b3366ba94",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-r.png",
+      "blobSha": "78420e11c75ce2ae2a5b719ee83d6f05a757e028",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-03-rarity-r.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "46595dd4a0559ea0906c6b0c789260be65632033a25db247849bbf960f84417d",
+          "blobSha": "156a0b67ae3c9b2e7256789a1123a3d30378ae6a"
+        },
+        {
+          "name": "weapon-base-ionic-03-rarity-r.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "5f6878147ddc2a9235393d1e2c56a4bbd9fb3a6b1a77e19b572d50e1684d49e5",
+          "blobSha": "0e26ba8efba3c326ac1b58909e22214f167ada57"
+        },
+        {
+          "name": "weapon-base-ionic-03-rarity-r.part-003",
+          "offset": 12000000,
+          "bytes": 689818,
+          "sha256": "af16b8bab68b7cf6dc80d84010a9d38baa954a35e43ecf1da9f8c761042d7e4b",
+          "blobSha": "0bebe7f8051207a21ad538ce993022adf64889aa"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-e",
+      "familyId": "weapon-base-ionic-03",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "ionic-whip",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-e.png",
+      "sha256": "563c7b9b5caabf6626ada9d362f4f09007f3e92959e79a8a1f18ab6b0464cabd",
+      "bytes": 13049105,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "d7efc896936b535334555e52dbe697cedef743f7c070d9e6ec78f35f4f1c78c8",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-e.png",
+      "blobSha": "f04c6ba381007eb28d8db81fa72b1a2a621e65df",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-03-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "61b6e3143d0a79da1ee9493ba76523ca96001ef3d35b1ca129d44fea828955f6",
+          "blobSha": "d0da4ad7d1e21e4c8d23e34deabb607541183a0c"
+        },
+        {
+          "name": "weapon-base-ionic-03-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "1ca60a9511208e5fcefe91dbdafe45c955d92053373e033d475a6be7a7a8e211",
+          "blobSha": "9e9f4b3529405d4a4ee7386e91d7cfd234b550e4"
+        },
+        {
+          "name": "weapon-base-ionic-03-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 1049105,
+          "sha256": "0f53c071fde8a55ac157a63977558e4020b41e8df99e8b13dfce7a521e9ea283",
+          "blobSha": "e17f1b2bc29c4abc4243ef476e5550b533e5b677"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-l",
+      "familyId": "weapon-base-ionic-03",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "ionic-whip",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-l.png",
+      "sha256": "762d990a203a670778824e8e6c0e49059ddaaa31453b63eaa4ae2c02e2630699",
+      "bytes": 13664777,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "7e5789fa6be379062ffd319afa4bad5d4840aa4ea5100d49ce76aab040b5b4a0",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-l.png",
+      "blobSha": "b7403266d87a70889cbdd746af9e637b6506f510",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-03-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "d7c624b618efe4821ebc5360f4150f7d486cc5f995f108c333d21d9f9e17790f",
+          "blobSha": "1591bfb4b2c03ce696e48111b63b266a91df67b1"
+        },
+        {
+          "name": "weapon-base-ionic-03-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "9a46193c7cf77dbae3cad2d5603ec98e0ffb6b4a2a254f08eecfe06d62cfc4c1",
+          "blobSha": "2e65826cfc2d1ad94cec33057f588a6ed748d228"
+        },
+        {
+          "name": "weapon-base-ionic-03-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 1664777,
+          "sha256": "c3798c004a50cd0772b434714da87739e789dd8f078d352a5acf91812eb7ecde",
+          "blobSha": "987c857691e17e81cae2f98ac776e9ef13383e2d"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-04",
+      "familyId": "weapon-base-ionic-04",
+      "rarity": "Rara",
+      "elementId": "ionic",
+      "kind": "ionic-flash",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04.png",
+      "sha256": "50af5596802f18d594b69a2d1ccec9534c59850e5b700fe206469b81341a9116",
+      "bytes": 13256074,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "362e5d07722883771f863f53eadfde48559bbfed3861e2e9d44f2ab4ddb2c8e8",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04.png",
+      "blobSha": "9156f2e13c083723a60298e4bddd0f36ade15c23",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-04.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "24115a235f432bd94fdbc4305fa0fe79eb74e3fa5332602dc2efb85dfd014015",
+          "blobSha": "ecccb9fabfde8c54da0bd0db9e30f9c9990f109f"
+        },
+        {
+          "name": "weapon-base-ionic-04.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "3447fcde7ae338336102f12c6537109e19b3c5d0cc02a4de548745c28dfec3fe",
+          "blobSha": "f6de1f7c5d00dc04dae7e22baf674e005008778c"
+        },
+        {
+          "name": "weapon-base-ionic-04.part-003",
+          "offset": 12000000,
+          "bytes": 1256074,
+          "sha256": "0b592b0d4102e613672c65791ec2483aa024acc34c9d8a515ac764e2f228f01c",
+          "blobSha": "9beb5ccd1ebea7dbaae4686ced7a3906096727d3"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-04-rarity-e",
+      "familyId": "weapon-base-ionic-04",
+      "rarity": "Epica",
+      "elementId": "ionic",
+      "kind": "ionic-flash",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04-rarity-e.png",
+      "sha256": "db5b5e6de3dec88d6ebc22bd7b2b70639cfeff8b2f426885de24cbf1ae48a623",
+      "bytes": 13622894,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "302e47f1933dc657698ba8b49db74e33cf47446e2b5000c2716a6443e3612792",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04-rarity-e.png",
+      "blobSha": "86eff90280d4318dc8a35563e69d381505330f69",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-04-rarity-e.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "ec2feaeefc4852e3c49226a05bafc2086f0280c193dda6aafc2152107d72b879",
+          "blobSha": "9bc432e0c22a41f043a603822e9257fbd9b5724d"
+        },
+        {
+          "name": "weapon-base-ionic-04-rarity-e.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "eca77473d6865d0cb60752b060be08ed612fc83d5772c2399e2db9dc2bae0087",
+          "blobSha": "c2e1435a4790920d4f01ee4500f505040eff5b33"
+        },
+        {
+          "name": "weapon-base-ionic-04-rarity-e.part-003",
+          "offset": 12000000,
+          "bytes": 1622894,
+          "sha256": "8ab55b4068281a8dbd357a8b504ffab9f2516b96deea8a3cee48b9e0f7f88c6b",
+          "blobSha": "b75c208ef92867c4aabbaf334081c62084d9927c"
+        }
+      ]
+    },
+    {
+      "id": "weapon-base-ionic-04-rarity-l",
+      "familyId": "weapon-base-ionic-04",
+      "rarity": "Leggendaria",
+      "elementId": "ionic",
+      "kind": "ionic-flash",
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04-rarity-l.png",
+      "sha256": "6370ff08f32a285f37078b15314ffc95bd9ee59309dcaa0b6bf36fdc64804c65",
+      "bytes": 14304002,
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "sourceApprovalSha256": "9226fa22b9f047674d3313051d0ad83e0d788c95fc12f146876b02793b0d58a7",
+      "previousActiveSha256": null,
+      "outsidePanelUnchanged": true,
+      "alphaUnchanged": true,
+      "protectedTextAndSymbolsUnchanged": true,
+      "destination": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04-rarity-l.png",
+      "blobSha": "662992f2380fbaa8063dad0cac46e1f15cc85c38",
+      "parts": [
+        {
+          "name": "weapon-base-ionic-04-rarity-l.part-001",
+          "offset": 0,
+          "bytes": 6000000,
+          "sha256": "12da832da4f50b1f5274081c7604f87dd21274d15a288251a670661fd3aec661",
+          "blobSha": "3fb741c27446b55242a46eb01eea3ba59cba1f39"
+        },
+        {
+          "name": "weapon-base-ionic-04-rarity-l.part-002",
+          "offset": 6000000,
+          "bytes": 6000000,
+          "sha256": "a5276d5fe53ea4f24bb79a553292245b0a15597f1652882f16af5802a27bad65",
+          "blobSha": "e1e039031884e667b1cc5a380f3be9dc86eb822f"
+        },
+        {
+          "name": "weapon-base-ionic-04-rarity-l.part-003",
+          "offset": 12000000,
+          "bytes": 2304002,
+          "sha256": "f3b5b318ce492af4ee74008cb80b86f44c40cd74a4e7c18c9eb6c5efd0a089dd",
+          "blobSha": "584618af85f102e2db2e37d9ea4663e3b3ae7ba9"
+        }
+      ]
+    }
+  ]
+}

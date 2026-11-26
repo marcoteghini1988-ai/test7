@@ -1,4 +1,5 @@
 import React,{useEffect,useRef} from 'react';
+import {newProjectile} from './approvedProjectileEffects.js';
 import {Scene} from 'three';
 import {MaglioSoftwareRenderer} from './maglioSoftwareRenderer.js';
 import {createProjectileCamera,worldPointToBoard,disposeProjectile} from './maglioProjectile3D.js';
@@ -146,7 +147,7 @@ export default function PrecisionWeaponEffects({paths=[],startedAt,cinematic=fal
   const board=root.getBoundingClientRect();
   const entries=special.map(path=>{
    const energy=root.querySelector(`[data-fleet-card-slot="${path.shot.who}-5"]`);
-   return {...path,model:createPrecisionProjectile(path.profile.kind,path.profile.tier),
+   return {...path,model:path.shot.cascadeTransfer?newProjectile('residual',path.profile.tier):createPrecisionProjectile(path.profile.kind,path.profile.tier),
     energyPoint:energy?boardHullPoint(energy,board):null};
   });
   for(const entry of entries)entry.model.scale.setScalar(entry.shot.visualScale||1);
@@ -157,7 +158,7 @@ export default function PrecisionWeaponEffects({paths=[],startedAt,cinematic=fal
    const age=now-startedAt;ctx.clearRect(0,0,450,800);scene.clear();let pending=false;
    for(const entry of entries){
     const {shot,profile,from,to,start,model}=entry,elapsed=age-start,t=elapsed/profile.flightMs;
-    if(elapsed<0){pending=true;if(!shot.cascadeTransfer&&elapsed>=-profile.chargeMs)charge(ctx,entry,elapsed,camera,reduced);continue;}
+    if(elapsed<0){pending=true;if(!cinematic&&!shot.cascadeTransfer&&elapsed>=-profile.chargeMs)charge(ctx,entry,elapsed,camera,reduced);continue;}
     if(elapsed>profile.flightMs+profile.impactMs)continue;pending=true;
     element.dataset.sequence=profile.sequence;element.dataset.shooter=shot.who;
     element.dataset.targetId=shot.targetId;element.dataset.sourceTargetId=shot.sourceTargetId||'';
@@ -166,7 +167,7 @@ export default function PrecisionWeaponEffects({paths=[],startedAt,cinematic=fal
     energyTransfer(ctx,entry,elapsed);
     if(t<1&&!reduced){
      const pose=cinematic?weaponFlightFrame(from,to,t,camera,model.userData.frontZ*model.scale.z,{shot,kind:profile.kind}):metalProjectileFlightFrame(from,to,t,camera,model.userData.frontZ);
-     articulatePrecisionProjectile(model,elapsed);
+     if(!shot.cascadeTransfer)articulatePrecisionProjectile(model,elapsed);
      if(cinematic)applyWeaponFlightPose(model,pose);else{model.position.copy(pose.center);model.rotation.y=pose.yaw;}
      scene.add(model);
      element.dataset.visibleEnd=pose.visibleEnd;element.dataset.nose=JSON.stringify(worldPointToBoard(pose.nose,camera));

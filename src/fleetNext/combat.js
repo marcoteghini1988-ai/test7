@@ -1,3 +1,4 @@
+import {weaponEnergyContributions} from './weaponEnergyFeedback.js';
 import {shuffleFleetCards as shuffled,recycleFleetDiscard} from './deckCycle.js';
 import {withWeaponSalvoEvent} from './approvedWeaponSalvos.js';
 // Eclissi Stellare — progressione strutturale e combattimento delle flotte.
@@ -3438,7 +3439,7 @@ function resolveApprovedBaseWeaponShots(b,ctx,events,order){
     comboTriggered:!!opposed&&!!hit.damage,comboNominalDamage:opposed?machine.comboBonus:0,
     comboActualDamage:combo,crystalPolarity:polar?machine.crystalPolarity:null,
     elementId:machine.weaponElementId,targetKind:kind||null,targetId:unit?.id||null,
-    blocked:!hit.damage&&!combo
+    destroyed:kind==='part'?enemy.ships[0].hp<=0:!!unit?.destroyed,defenseBlocked:!!target&&effective>0&&!blocked&&!!hit.blocked,blocked:!hit.damage&&!combo
    }));
   if(polar){
    // I due dardi sono scartati subito; il cristallo è uno stato distinto.
@@ -3610,12 +3611,13 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    // finché il loro costo preciso non viene deliberato.
    if(pattern==='induction'&&energy>=2){
     const defense=enemy.defenses.find(d=>!d.hidden&&d.id&&d.source);
-    if(defense){discardDefense(enemy,defense.source);
+    if(defense){const defenseSource=defense.source;discardDefense(enemy,defense.source);
      events.push(emit(b,ctx.who,'weapon-break-defense',
       machine.name+' distrugge una Difesa attiva',{cardId:machine.sourceCardId,
-      defenseCardId:defense.id,targetKind:target.kind}));}
+      defenseCardId:defense.id,defenseSource,targetKind:target.kind}));}
    }
    const piercing=pattern==='induction'&&energy>=1;
+   const previousPreserve=ctx.preserveBypassedDefense;ctx.preserveBypassedDefense=pattern==='induction'&&piercing;
    const previousNebulaPierce=ctx.nebulaPierceLeft||0;
    const previousIcePierce=ctx.iceNeedlePiercing||false;
    if(planned[n].ignoreOrdinaryDefenses)ctx.iceNeedlePiercing=true;
@@ -3624,6 +3626,7 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    const hit=side.fireBlocked||side.fireDisabledUntil>b.ply||!power?{damage:0,target}:
     linceHit(b,ctx,events,target,power,machine.sourceCardId,order,ignoreCover,
      planned[n].ignoreOrdinaryDefenses?99:piercing&&target.kind==='part'?1:0);
+   ctx.preserveBypassedDefense=previousPreserve;
    ctx.nebulaPierceLeft=previousNebulaPierce;
    ctx.iceNeedlePiercing=previousIcePierce;
    ctx.attackElement=priorElement;
@@ -3634,7 +3637,7 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
     if(field)shot[field]+=hit.damage;
     shot.targets.push({kind,id:unit.id,damage:hit.damage,destroyed:unit.destroyed});
    }
-   impacts.push({shot:n+1,nominalDamage:raw,actualDamage:hit.damage||0,
+   impacts.push({shot:n+1,nominalDamage:raw,actualDamage:hit.damage||0,defenseBlocked:!!hit.blocked,destroyed:kind==='part'?enemy.ships[0].hp<=0:!!unit?.destroyed,
     targetKind:kind||null,targetId:unit?.id||null});
    if(pattern==='weapon-slot-freeze'&&hit.damage>0){
     const requested=ctx.order?.weaponFreezeSlot;
@@ -3656,6 +3659,7 @@ function resolveDesignedWeaponShots(b,ctx,events,order){
    cardId:machine.sourceCardId,machineId:machine.id,machineSlot:machine.slot,
    pattern,hitCount:impacts.length,impacts,actualDamage:actual,
    energyCardsSeen:energy,energyChargesSeen:charges,energyConsumed:0,
+   energyContributions:pattern==='induction'&&!side.fireBlocked&&!(side.fireDisabledUntil>b.ply)?weaponEnergyContributions(side,'metallic',{physicalCount:Math.min(energy,2)},card):[],
    repeatTurn:pattern==='repeat'&&machine.deployedPly!==b.ply
   }));
  }
@@ -3940,7 +3944,7 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   const nebulaPierce=visible&&['escort','machine'].includes(targetKind)&&
    ctx.nebulaPierceLeft>0;
   const bypass=targetKind==='part'&&(ctx.pierceLeft>0||canBarrel)||canShard||sharkPierce||nebulaPierce||stormPierce||royalPierce||obsidianPierce;
-  p.remaining--;
+  if(!(bypass&&ctx.preserveBypassedDefense))p.remaining--;
   if(!bypass&&p.id==='nx-r02-03'){
    const energy=gainMantaEnergy(defender,b.ply,1);
    if(energy)events.push(emit(b,other(ctx.who),'manta-energy',
@@ -3983,7 +3987,7 @@ function blockHit(b,defender,targetKind,target,ctx,events){
   }
   events.push(emit(b,ctx.who,bypass?'pierce':'block',bypass?
    'Il colpo ignora una protezione scoperta':'La protezione blocca il colpo',
-   {cardId:p.id,partId:targetKind==='part'?target.id:null,
+   {cardId:p.id,sourceWeaponCardId:ctx.visualWeaponCardId||null,defenseSource:p.source,targetKind,targetId:target.id,partId:targetKind==='part'?target.id:null,
     escortSlot:targetKind==='escort'?target.slot:null}));
   if(p.remaining<=0)discardDefense(defender,p.source);
   if(!bypass){
@@ -4216,8 +4220,9 @@ function linceHit(b,ctx,events,target,amount,cardId,order={},bypass=false,pierce
  amount=stormConsumeHeavy(b,ctx,events,finalTarget,amount);
  if(blockNebulaRepeat(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  ctx.pierceLeft=pierce;
- if(!(ctx.iceNeedlePiercing&&finalTarget.kind==='part')&&
-  blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events))
+ const previousVisualSource=ctx.visualWeaponCardId;ctx.visualWeaponCardId=cardId;
+ let stopped=false;try{stopped=!(ctx.iceNeedlePiercing&&finalTarget.kind==='part')&&blockHit(b,enemy,finalTarget.kind,finalTarget.unit,ctx,events);}finally{ctx.visualWeaponCardId=previousVisualSource;}
+ if(stopped)
   return {damage:0,target:finalTarget,blocked:true};
  if(stormNetStops(b,ctx,events,finalTarget))return {damage:0,target:finalTarget,blocked:true};
  amount=obsidianTransformDamage(b,ctx,events,finalTarget,amount);

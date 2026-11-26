@@ -1,0 +1,15 @@
+.weapon-card-interactions{display:none}
+.weapon-energy-contributor{position:absolute;inset:0;z-index:6;pointer-events:none;transform:translate(var(--contributor-x),-5px) scale(.92);animation:weapon-energy-contributor .6s ease-out}
+.weapon-energy-contributor img{display:block;width:100%;height:100%;object-fit:contain}
+.weapon-energy-contributor[data-discarded="true"]{animation:weapon-energy-spent .6s ease-in forwards}
+.weapon-energy-charges{position:absolute;right:1px;bottom:1px;border-radius:50%;background:#152331;color:#f7e0ae;font-size:9px;line-height:12px;min-width:12px;text-align:center}
+@keyframes weapon-energy-contributor{0%,100%{opacity:0}20%,75%{opacity:1;filter:brightness(1.4) drop-shadow(0 0 4px #f0cf93)}}
+@keyframes weapon-energy-spent{0%{opacity:0}20%,40%{opacity:1;filter:brightness(1.6)}100%{opacity:0;transform:translate(calc(var(--contributor-x) + 16px),18px) rotate(12deg) scale(.65)}}
+.live-slot[data-weapon-energy="counted"],.live-slot[data-weapon-energy="spent"]{animation:weapon-energy-feedback .6s ease-out;--weapon-resource-color:#f0cf93}
+.live-slot[data-weapon-defense="protected"]{animation:weapon-defense-feedback .7s ease-out;--weapon-resource-color:#a3dbff}
+.live-slot[data-weapon-defense="bypassed"]{animation:weapon-defense-feedback .7s ease-out;--weapon-resource-color:#d3e4ff}
+.live-slot[data-weapon-defense="removed"] .f3d-slot-art{animation:weapon-defense-discard .65s ease-in forwards}
+@keyframes weapon-energy-feedback{0%,100%{filter:none}25%{filter:brightness(1.65) drop-shadow(0 0 5px var(--weapon-resource-color))}60%{filter:brightness(1.2) drop-shadow(0 0 3px var(--weapon-resource-color))}}
+@keyframes weapon-defense-feedback{0%,100%{filter:none}20%{filter:brightness(1.6) drop-shadow(0 0 6px var(--weapon-resource-color))}50%{filter:brightness(1.1)}}
+@keyframes weapon-defense-discard{0%{opacity:1;transform:none}35%{filter:brightness(2);opacity:.85}100%{opacity:0;transform:translate(18px,15px) rotate(16deg) scale(.7)}}
+@media(prefers-reduced-motion:reduce){.live-slot[data-weapon-energy],.live-slot[data-weapon-defense]{animation-duration:.2s}.live-slot[data-weapon-defense="removed"] .f3d-slot-art{animation:none;opacity:.25}.weapon-energy-contributor,.weapon-energy-contributor[data-discarded="true"]{animation:none;opacity:1;transform:translate(var(--contributor-x),0) scale(.92)}}

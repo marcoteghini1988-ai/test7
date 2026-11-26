@@ -104,9 +104,9 @@ def rarity(id):
 def main():
     # Il registro originale, non la directory, decide quali carte sono attive.
     module = (ROOT / "src/fleetNext/officialWeaponArt.js").read_text()
-    ids = list(dict.fromkeys(re.findall(r"'(weapon-[a-z0-9-]+)'", module)))
-    if len(ids) != 22:
-        raise ValueError(f"Attesi 22 fronti approvati, trovati {len(ids)}")
+    ids = list(dict.fromkeys(re.findall(r"[\"'](weapon-[a-z0-9-]+)[\"']", module)))
+    if len(ids) != 37:
+        raise ValueError(f"Attesi 37 fronti approvati, trovati {len(ids)}")
     OUT.mkdir(parents=True, exist_ok=True)
     AUDIT.mkdir(parents=True, exist_ok=True)
     models = {}
@@ -119,8 +119,16 @@ def main():
     # Contact sheet compatta per verifica visiva, non asset di gioco.
     sheet = Image.new("RGB", (1120, 4 * 302), "#111820")
     draw = ImageDraw.Draw(sheet)
+    sheet_updated = False
     report = []
+    revisions=json.loads((ROOT/'src/fleetNext/approvedWeaponIntegration.json').read_text())
+    integrated={c['id']:c for c in revisions['cards']}
     for id in ids:
+        if id in integrated:
+            item=integrated[id];destination=ROOT/item['path'];current,_=read_png(destination)
+            if item.get('sha256') and sha(destination)!=item['sha256']:raise ValueError('Revisione approvata diversa: '+id)
+            report.append({'id':id,'dimensions':list(SIZE),'redSha256':sha(destination),'preservedApprovedRevision':True})
+            continue
         tier = rarity(id)
         original = FRONTS / f"{id}.png"
         before, icc = read_png(original)
@@ -131,6 +139,7 @@ def main():
                        "changedPixels": n, "sourceSha256": sha(original),
                        "redSha256": sha(destination)})
         if "maglio" in id:
+            sheet_updated = True
             row = ("comune", "rara", "epica", "leggendaria").index(tier)
             # Mostra intera carta e dettaglio pannello prima/dopo per ogni rarita.
             for index, a in enumerate((before, after)):
@@ -142,11 +151,12 @@ def main():
                 sheet.paste(thumb, (x, y), thumb)
                 sheet.paste(detail, (x + 194, y + 45), detail)
                 draw.text((x + 198, y + 14), tier.upper() + (" / PRIMA" if index == 0 else " / DOPO"), fill="white")
-    sheet.save(AUDIT / "maglio-prima-dopo.jpg", quality=90)
+    if sheet_updated:
+        sheet.save(AUDIT / "maglio-prima-dopo.jpg", quality=90)
     (AUDIT / "verifica.json").write_text(json.dumps({"scope": "pannello caratteristiche",
         "box": list(BOX), "sourcesUnchanged": True, "cards": report}, indent=2) + "\n")
     # Si pubblica il registro solo dopo aver prodotto e verificato tutti i PNG.
-    REGISTRY.write_text(json.dumps(ids, indent=2) + "\n")
+    REGISTRY.write_text(json.dumps([id for id in ids if id not in integrated or '/fleet-weapon-fronts-red/' in integrated[id]['path']], indent=2) + "\n")
     print(f"Verificati {len(report)} fronti 3072x4608; modifiche soltanto al fondo del pannello.")
 
 if __name__ == "__main__":

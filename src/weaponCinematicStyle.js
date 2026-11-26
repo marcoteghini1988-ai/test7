@@ -1,6 +1,10 @@
 // Coreografia di presentazione: nessun evento HP viene creato qui.
 // Ogni riga corrisponde a una variante già approvata e a una dinamica diversa.
 const motifs=Object.freeze({
+ 'ionic-comb':Array(4).fill('five-arcs-one-discharge'),
+ 'ionic-dart':Array(4).fill('double-helix-dart'),
+ 'ionic-whip':Array(4).fill('single-zigzag-whip'),
+ 'ionic-flash':[null,'straight-white-flash','straight-white-flash','straight-white-flash'],
  'gravity-maul':['piston-pressure','orbital-sling','gravity-well','prismatic-implosion'],
  'steel-rail':['mach-cut','braided-rail','compression-tunnel','refracted-lance'],
  'thermal-reclaimer':[null,null,'three-flow-furnace','crystal-converter'],
@@ -11,6 +15,7 @@ const motifs=Object.freeze({
  'wandering-shrapnel':[null,'indexed-fragment','recoil-splinter','prismatic-fracture']
 });
 const weights=Object.freeze({
+ 'ionic-comb':.48,'ionic-dart':.48,'ionic-whip':.48,'ionic-flash':.48,
  'gravity-maul':1.3,'steel-rail':.62,'thermal-reclaimer':.95,
  'magnetic-grapple':.5,'alloy-collision':1.6,induction:.7,
  'cascade-piercer':.8,'wandering-shrapnel':.85
@@ -40,7 +45,9 @@ export function weaponHullFrame(kind,age,duration,{tier=0,direction=1,reduced=fa
  const t=age/duration,tail=(1-t)**2,kick=(1-Math.exp(-age/11))*Math.exp(-age/160);
  const w=weights[kind]*(1+tier*.07),r={...zero,light:Math.exp(-age/145)*.85};
  if(reduced)return {...r,light:r.light*.3};
- if(kind==='gravity-maul'){
+ if(kind.startsWith('ionic-')){
+  r.y=direction*3.2*kick;r.roll=Math.sin(age*.023)*kick*5;r.pitch=kick*6;r.light=Math.exp(-age/95)*.6;
+ }else if(kind==='gravity-maul'){
   r.y=direction*(10*kick-3*Math.sin(age/65)*tail);r.pitch=-direction*12*kick;
   r.roll=Math.sin(age/42)*3.5*tail;r.lift=-4*Math.sin(Math.min(1,t*2)*Math.PI)*tail;
  }else if(kind==='steel-rail'||kind==='cascade-piercer'){

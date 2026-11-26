@@ -434,7 +434,7 @@ function OriginalSpecialSlots({side,contents,upgrades={},inspectTrap,unit}){
    return <div key={i} className={'live-slot'+(side==='B'?' live-slot--enemy':'')+
     (entry?' live-slot--occupied':'')+(covered?' live-slot--covered':'')+(offline?' live-slot--offline':'')}
     title={title+(offline?' · Sistema distrutto':'')} data-offline={offline||undefined}
-    data-fleet-card-slot={side+'-'+i} data-pending-card={entry?.pending||undefined}
+    data-fleet-card-slot={side+'-'+i} data-card-id={covered?undefined:type} data-card-source={covered?undefined:unit?.defenses?.find(d=>d.id===type)?.source} data-pending-card={entry?.pending||undefined}
     data-slot-role={i===0?'personaggio':i===1?'difesa':i===2?'trappola':i===5?'energia':'attacco'}
      data-family={covered?'defense':type?(['weapon','strategy'].includes(cardVisualFamily(face,cardRole(type)))?cardVisualFamily(face,cardRole(type)):cardRole(type)):undefined}
      data-rarity={face?exclusiveRarityAtLevel(face,unit?.ships?.[0]?.level):undefined}>

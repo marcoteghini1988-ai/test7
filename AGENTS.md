@@ -8,20 +8,26 @@ ARMA è rossa (#ff594c), STRATEGIA è arancione (#ffb24d) e sostituisce la denom
 
 
 
-## Punto di ripresa — 37 fronti e 48 sequenze in anteprima, nessuna inserita
+## Punto di ripresa — 32 varianti confermate collegate al gioco
 
-Il 26 novembre l'utente ha autorizzato esplicitamente la produzione delle
-carte confermate e degli effetti, chiedendo **conferma visiva di entrambi
-prima dell'inserimento**. Questa richiesta supera la precedente pausa
-«solo documentazione». Sono ora prodotti 37 fronti PNG RGBA 3072×4608:
-22 varianti Metallo e 15 varianti delle quattro famiglie Fulmine identificate.
-Sono disponibili tre video con audio, complessivamente 48 sequenze offline.
-**Non sono registrazioni StackBlitz, né modifiche già attive nel gioco.**
-Il codice di revisione è isolato in `scripts/previews/20261126/`; nessun
-nuovo fronte o effetto è importato dall'app. Non rigenerare da zero le
-anteprime e non considerarle approvate finché l'utente non le conferma.
-Parametri aperti delle Ganasce e del bonus Induzione, collegamenti ai file,
-verifiche e istruzioni di ripresa: [consegna anteprime](docs/ANTEPRIME_CARTE_EFFETTI_2026-11-26.md).
+Il 26 novembre l'utente ha risposto «ok» dopo la consegna delle anteprime e
+ha chiesto se fossero già nel gioco. Questa conferma consente l'inserimento
+nelle parti definite: **17 varianti Metallo e 15 Fulmine**. I fronti completi
+3072×4608 e gli effetti ora sono importati dalla scena di battaglia effettiva.
+Conservare il pannello Arma rosso richiesto successivamente alle anteprime.
+Registro degli asset e degli hash: `src/fleetNext/approvedWeaponIntegration.json`.
+Dettagli e verifiche: `docs/INTEGRAZIONE_CARTE_EFFETTI_2026-11-26.md`.
+
+Le **cinque nuove varianti Ganasce A/B** restano fuori dall'inserimento:
+bersagli, durata e parametri della meccanica sono ancora aperti. Le cinque
+vecchie Ganasce/Collassatore già presenti non vengono sostituite. Anche il
+bonus del Frantumatore a Induzione in assenza di Difese resta da deliberare.
+Non inventare questi valori. Le vecchie anteprime sono conservate in
+`scripts/previews/20261126/` e nella [consegna originale](docs/ANTEPRIME_CARTE_EFFETTI_2026-11-26.md).
+Il materiale video esistente rimane una simulazione offline, non una
+registrazione StackBlitz. Non dichiarare collaudi visivi, audio o aptici
+su un dispositivo senza averli realmente osservati.
+
 Le altre sei famiglie Fulmine richiedono ancora riconciliazione con i nomi
 pronunciati; non dichiarare «Fulmine chiuso».
 

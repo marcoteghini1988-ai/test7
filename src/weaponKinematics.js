@@ -11,12 +11,12 @@ function seedOf(shot){
 }
 export function weaponLaunchOrigin(shot){
  if(!['A','B'].includes(shot?.who))return null;
- if(!approvedWeaponSalvo(shot.cardId))return shot.who==='A'?{x:225,y:812,edge:'bottom-usb'}:{x:225,y:-12,edge:'top-opponent'};
+ // Ogni colpo iniziale varia lungo l'intero bordo del proprio lato.
  const seed=seedOf(shot),anchor=shot.cardId.includes('ganasce-magnetiche');
  const index=anchor?(shot.impactIndex||0):(shot.salvoIndex??shot.impactIndex??0);
- const ports=[61,133,225,317,389],port=anchor?(shot.impactIndex||0)===0?0:4:(index*2+(seed%5))%5;
- const x=ports[port]+(((seed>>>8)%13)-6),depth=(index+(seed%3))%3;
- const y=[810,777,743][depth];
+ const port=anchor?(shot.impactIndex||0)===0?0:4:(index*2+(seed%5))%5;
+ const x=26+((seed+index*163)%398);
+ const y=812;
  return {x:shot.who==='A'?x:450-x,y:shot.who==='A'?y:800-y,
   edge:shot.who==='A'?'player-launch-band':'opponent-launch-band',port};
 }
@@ -31,7 +31,7 @@ function curvePosition(from,to,shot,t,camera,kind){
  const axis=b.clone().sub(a).normalize(),side=new Vector3(axis.z,0,-axis.x),length=a.distanceTo(b);
  const style=shot.salvoStyle||approvedWeaponSalvo(shot.cardId)?.style||'piston';
  const i=shot.salvoIndex??shot.impactIndex??0,count=shot.salvoCount||1,phase=i*Math.PI*2/Math.max(2,count),env=Math.sin(Math.PI*u);
- const radius=Math.min(2.2,length*.16),p=a.clone().lerp(b,u);
+ const radius=Math.min(2.2,length*.16),p=boardPointToWorld({x:from.x+(to.x-from.x)*u,y:from.y+(to.y-from.y)*u},camera);
  let spread=0,height=0;
  if(/orbit|gravity-storm/.test(style)){
   const turns=style==='gravity-storm'?1.25:style==='double-orbit'?1:.65,angle=phase+u*Math.PI*2*turns;

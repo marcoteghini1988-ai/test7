@@ -1,3 +1,4 @@
+import {electricFlight,electricImpact,kineticImpact} from './approvedProjectileEffects.js';
 import {Vector3} from 'three';
 import {boardPointToWorld,worldPointToBoard} from './maglioProjectile3D.js';
 import {thermalChargeForShot} from './metalWeaponBattleVisuals.js';
@@ -596,6 +597,16 @@ function impact(floor,air,entry,ms,reduced,contactPose){
 export function drawCinematicWeapon(floor,air,e,age,{reduced=false,contactPose=null}={}){
  const elapsed=age-e.start,p=e.profile;
  if(elapsed<0){if(!reduced)charge(floor,air,e,elapsed);return;}
+ if((p.kind.startsWith('ionic-')||p.kind==='steel-rail')&&elapsed>=0){
+  const ms=elapsed-p.flightMs;
+  if(ms<0){if(!reduced&&p.kind.startsWith('ionic-'))electricFlight(air,e,elapsed,e.camera);return;}
+  if(e.shot.defenseBlocked){impact(floor,air,e,ms,reduced,contactPose);return;}
+  const pose=contactPose||{x:0,y:0,lift:0};const contact=weaponHullContactPoint(e.to,pose);
+  if(!e.shot.fires)return;
+  if(p.kind==='steel-rail')kineticImpact(air,contact,ms,{power:reduced?.45:1+p.tier*.08});
+  else electricImpact(air,contact,p.kind,ms,p.tier);
+  return;
+ }
  if(elapsed>=p.flightMs){
   const end=weaponFlightFrame(e.from,e.to,1,e.camera,0,{shot:e.shot,kind:p.kind});
   e.axis.copy(end.direction);e.axis.y=0;e.axis.normalize();e.side.set(e.axis.z,0,-e.axis.x).normalize();

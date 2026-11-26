@@ -1,5 +1,5 @@
 import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
-import {card,cardRole,cardFacePath} from './fleetNext/rules.js';
+import {card,cardRole,cardDisplayFacePath as cardFacePath} from './fleetNext/rules.js';
 import {FLEET_ELEMENTS} from './fleetNext/elementalAffinities.js';
 import {OFFICIAL_FLEET_DRAW_BACK} from './officialDeckBackArt.js';
 import {FLEET_DECK_SHUFFLE_MS,fleetPileDepth,fleetPileView} from './fleetDeckPiles.js';

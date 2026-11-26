@@ -21,7 +21,7 @@ export function metalWeaponEffectProfile(id){
  return {
   kind:v.kind,approved:true,tier:t,
   sequence:rail?railSequences[t]:t===2?'three-collector-conversion':'prismatic-condenser',
-  flightMs:rail?1200:1550,impactMs:rail?850+t*70:1100,
+  flightMs:rail?1030:1250,impactMs:rail?850+t*70:1100,
   chargeMs:rail?180+t*90:600,
   core:t===3?'#f1f5ff':rail?'#e2edf5':'#fff1be',
   glow:t===3?'#b4b4ff':rail?'#ffb967':'#ff962f',

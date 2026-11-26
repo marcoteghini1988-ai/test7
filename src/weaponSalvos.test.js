@@ -14,8 +14,8 @@ import {requestWeaponHaptic} from './weaponHaptics.js';
 const order={cards:[0],targetKind:'part',targetId:'weapons',partId:'weapons'},pass={cards:[],pass:true};
 const isChain=p=>/ganasce|collassatore/.test(p.cardId),isCascade=p=>p.cardId.includes('perforatore-cascata');
 const other=who=>who==='A'?'B':'A';
-test('22 explicit salvo designs, with total damage and one defense check per activation',()=>{
- assert.equal(APPROVED_WEAPON_SALVOS.length,22);
+test('37 explicit salvo designs, with total damage and one defense check per activation',()=>{
+ assert.equal(APPROVED_WEAPON_SALVOS.length,37);
  for(const p of APPROVED_WEAPON_SALVOS){
   const c=ALL_WEAPON_BY_ID[p.cardId],print=WEAPON_NEAR_FINAL_BY_ID[p.cardId];
   assert.ok(c&&print);assert.equal(c.effectSpec.salvoCount,p.count);assert.equal(print.effectSpec.salvoCount,p.count);
@@ -26,8 +26,8 @@ test('22 explicit salvo designs, with total damage and one defense check per act
    assert.ok(parts.every(x=>Number.isInteger(x)&&x>=0));
   }
  }
- assert.deepEqual(APPROVED_WEAPON_SALVOS.slice(0,4).map(p=>p.count),[1,3,6,9]);
- assert.deepEqual(APPROVED_WEAPON_SALVOS.slice(4,8).map(p=>p.count),[3,6,9,7]);
+ assert.deepEqual(APPROVED_WEAPON_SALVOS.slice(0,4).map(p=>p.count),[2,3,5,7]);
+ assert.deepEqual(APPROVED_WEAPON_SALVOS.slice(4,8).map(p=>p.count),[1,1,1,1]);
 });
 for(const p of APPROVED_WEAPON_SALVOS)for(const who of ['A','B'])for(const slot of [0,1])
  test(`${p.cardId} · ${who} slot ${slot+1} · engine-issued projectiles preserve exact HP and targets`,()=>{
@@ -62,13 +62,13 @@ test('Variable launch bands are mirrored, deterministic and vary between activat
    const s={cardId:p.cardId,who:'A',machineSlot:0,ply,stage:1,salvoIndex:i,impactIndex:i};
    const a=weaponLaunchOrigin(s),b=weaponLaunchOrigin({...s,who:'B'});
    assert.deepEqual(a,weaponLaunchOrigin({...s}));assert.equal(a.x+b.x,450);assert.equal(a.y+b.y,800);
-   assert.ok(a.x>=45&&a.x<=405&&a.y>=730);assert.ok(b.y<=70);
+   assert.ok(a.x>=26&&a.x<=424);assert.equal(a.y,812);assert.equal(b.y,-12);
    origins.add(a.x+':'+a.y);
   }
   assert.ok(origins.size>=3,p.cardId+' must not use one fixed emitter');
  }
 });
-test('Curved and rotating flight keeps the 3D nose on the real target for all 22 designs, A and B',()=>{
+test('Curved and rotating flight keeps the 3D nose on the real target for all approved designs, A and B',()=>{
  const camera=createProjectileCamera();let curved=0,rotating=0;
  for(const p of APPROVED_WEAPON_SALVOS.filter(p=>p.count))for(const who of ['A','B']){
   const shot={cardId:p.cardId,who,ply:4,salvoIndex:Math.max(0,p.count-1),salvoCount:p.count,salvoStyle:p.style};

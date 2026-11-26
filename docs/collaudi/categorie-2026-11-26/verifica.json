@@ -10,113 +10,93 @@
   "cards": [
     {
       "id": "weapon-confirmed-metallic-maglio",
-      "rarity": "comune",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1945987,
-      "sourceSha256": "ffcc9b548cb81e7efd000b8676d3fa94c8f6b0754999ce16b5d6ece70bc931c8",
-      "redSha256": "ac5b9a8f15ca8f378e186d66e46a796f827e95548dbd2052f970f9063de9bd4e"
+      "redSha256": "e26528fab8a5fcd0e690a3cf354c3c47d878dbe43a6bb9a6aabc1f998c999784",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-confirmed-metallic-maglio-rarity-r",
-      "rarity": "rara",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1937989,
-      "sourceSha256": "732d18584d6a04886a72abe165986dd44f34b584e003486b002ea4b1da39fe17",
-      "redSha256": "208ed17eea496af5b06895ec32d283812fe6439368f5d430155e2665f8772e2f"
+      "redSha256": "1ae6760cb688501b86fc84b848b41f45cad2300ade05ff15d6d0212ddd2a2814",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-confirmed-metallic-maglio-rarity-e",
-      "rarity": "epica",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1932796,
-      "sourceSha256": "9b6b1eb6efd2959184291f023c2b8e252ec03f9eef1da06f99231ed4d57e629b",
-      "redSha256": "e42cc251f1b447f9b8ee73e9653dff829a4d4800388d4a4066052a5d3c27be8f"
+      "redSha256": "d286cb01eee3359aa28856e8faac5a75b0366fa3716aed971a2cd779312c1061",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-confirmed-metallic-maglio-rarity-l",
-      "rarity": "leggendaria",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1904043,
-      "sourceSha256": "65786345c13a140f8df7b888939972ee7634b85cdf2cd3b614829f32876cb532",
-      "redSha256": "ac836ab14868db34ce895129dbacba1ae741d8f23bf2fc5589cf813172e139ee"
+      "redSha256": "8dd0f26ad478a0bf7f0d21077669d41507ef4fa025358bab87ca96bfcd0537e1",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-confirmed-metallic-slitta",
-      "rarity": "comune",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1951131,
-      "sourceSha256": "edfce0e68fb4d1bbce2fb6dbfe8a9a604acc0e6fe4dec6ab9cb2b1b7bbad8978",
-      "redSha256": "017b59e4fa74ab850b8ee06cbb4cfe837afbccee283ebcfaf5dbf9bda8873765"
+      "redSha256": "d55491129875505a1fd37af1b40937adadb1617a03050e2b6ac472357627bfd9",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-confirmed-metallic-slitta-rarity-r",
-      "rarity": "rara",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1939293,
-      "sourceSha256": "4c738cb33483b26fd5e88109ea8470dfe6b5ac951ecf48942fedf9164a3561ff",
-      "redSha256": "b545e549f20eb362eb582c3882204fefcd549c4c75ffc3455902a1597de8034e"
+      "redSha256": "a9c099477e48e010aaa2bb74c3763265778ad04e8b1c13a7674776c0e13646bd",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-confirmed-metallic-slitta-rarity-e",
-      "rarity": "epica",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1945430,
-      "sourceSha256": "3cf6d06a31d8c5402ebf40ed3c95ccc41b62945cf9ae00aacf29dfaf20705987",
-      "redSha256": "86336f71dd31d68ecdb7219646cbc876b0ee5fa0f9d0fb399dc3cfa4cb451226"
+      "redSha256": "c5d4946cc87756090b004f3a9f2fd58277ad51595166822b05c90b991fc4c33a",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-confirmed-metallic-slitta-rarity-l",
-      "rarity": "leggendaria",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1904999,
-      "sourceSha256": "324852ac56f5409182e01c298d97c4ed60186913cf7709184fcecfcd9553203e",
-      "redSha256": "50dc4af3670b6993afd2ef988c3dff8db46187bf31bcd2d1ad7d52fa669e6654"
+      "redSha256": "37d6e7fb3d79de5c24409cda2c9e43ec7a992a61ed642b60765e4932ac079e8e",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-recuperatore-termobalistico",
-      "rarity": "epica",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1933049,
-      "sourceSha256": "1a47fd40de1287ce3bf99946e55d2be4b21f68cba5047fea497429386653fd60",
-      "redSha256": "87b2137364be4a15ea812495d415f3b9ad8990be0d43565daf24780b4c3d9860"
+      "redSha256": "cc66315dd6e31b141912768abb1143fd5900865e1be04fd0b5b208241723cda9",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
-      "rarity": "leggendaria",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1896513,
-      "sourceSha256": "b22fd91c0bc2c892aa343a2956e91f2ac1368a438e8adfa327290e8d7ce67f5f",
-      "redSha256": "10777a569f3c2aa14be30d4081d3fca76cec2cd4588778805ff6e0e5515596a4"
+      "redSha256": "56dedfefd2d8b46ee81eb31c241e2d8cda9853cd4bb0acf0793b194021ff163b",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-ganasce-magnetiche",
@@ -175,80 +155,201 @@
     },
     {
       "id": "weapon-designed-metallic-frantumatore-induzione",
-      "rarity": "epica",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1944943,
-      "sourceSha256": "2f971f9d34c96e264e342b43de2d15f6c85c5a9a9805775851b9c9c79ed6d457",
-      "redSha256": "16ff52fe0fe2c0de4794971340d34116d104970b312718d1a6feae8f47c3ef5f"
+      "redSha256": "e0c6ec711e72f6d31f174adbf5595b7d9b89291315ee888981666183ffc49d10",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
-      "rarity": "leggendaria",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1911695,
-      "sourceSha256": "d746bcb683eea3331e94ed9b86bd4773659025d2fbe206755f9e1b7c9f94d09d",
-      "redSha256": "ff6c964e581110d58e80f4c0494d45fb4a56a822c5ca8043d0cbf2a1123fe81f"
+      "redSha256": "801e92251c24e693b823ec037c87dfd84ebb3a92f24f96da76a488f5f86ec19f",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-perforatore-cascata",
-      "rarity": "epica",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1868686,
-      "sourceSha256": "0a392f7cb8a2013789839c376ad04b9cbdd9f146496991113e8c1d30cad36eb9",
-      "redSha256": "a21550e3fd16bec75eb571699681e6fe414897617ef91c185e3ad5db316f89fd"
+      "redSha256": "fcab9211245b08dcc1ccd06bca23c55c2bb4d2c3e1bd64ac84b8f04fcd9a29ae",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
-      "rarity": "leggendaria",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1842220,
-      "sourceSha256": "9bd81663d453d115dc4926923931fad1487e29f02298a8b6caf585131ff8b4de",
-      "redSha256": "4faf5438560757e7e47fd7ec19c77fb50207a18a797fe570a6e6e5ccd8de48bb"
+      "redSha256": "411a38c336b4ec45820cdec70ed4376c715c5779364a55f35b33c86ac247cb4a",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-artiglieria-schegge",
-      "rarity": "rara",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1885398,
-      "sourceSha256": "1ab704e160a125659c0e812dc3d1844d2cda60f330f3ad2dc645ac8811aa78af",
-      "redSha256": "9fd65ad7423c1e8a13e6a2fd2bf1f1710fefb5d0c79a7bd8b923856232e2736a"
+      "redSha256": "b13bd1311a596e45654fa2c3ee5c9338d3cea829559c4e98bc9acf65a056412a",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
-      "rarity": "epica",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1895276,
-      "sourceSha256": "71535f7fc8551ade2d8737e25a6df4a15f6d008e63156b742172b2888c9062d6",
-      "redSha256": "b9b019fb9736bde670e29b817e654abfe86c2204d0764fe14e8df8ea8dbc67b1"
+      "redSha256": "426162d0351d3d4e87aed476f4c427119b6f87dec807643a077d8dcc7667dbfe",
+      "preservedApprovedRevision": true
     },
     {
       "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
-      "rarity": "leggendaria",
       "dimensions": [
         3072,
         4608
       ],
-      "changedPixels": 1865129,
-      "sourceSha256": "c1c8e10c8b90e5107005ac35f17b79ffab042774c7b810b108c781b9cccfcd7c",
-      "redSha256": "d39be6c972cd6ba350c02c13afc1987dbdd514ac564b3704f085a65985ea142a"
+      "redSha256": "25c91e51c41b33dae870c44281588621a5664cc16e6b2f33d7b5b299a180e82a",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-01",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "dc57d1dd5444de7ea4315cfdc6c66cfe9e4739759b6dbb13ee7d87bc79409172",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-r",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "249cb84355a2ba671e3c439886714800cbe5d5003617a3797480ea761c14abf6",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "0ef8fa21ab27f8c675b8fb1588d23d919b972ff52d231ebd5c53a358f40720e0",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "1c6badbb46c6479e06c2a199eda7dbb3572e36a3ade267e746dbfb4682de32c5",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-02",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "40c6223bb4b14849c327bfb9d53d972da59d9bfbd0e266aac69c1f040b1566d8",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-r",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "beb4e58798ba02d8750cb3475a05753cc5e05d222ee0cabb8cfdf0d2588722c9",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "4e8d563e28808d0de2712f728184bfed8d51bb95cc3efde7f5f35e1be179f234",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "35736c7c83c3a5da45077e090e014376451e4a7c9679a59b753f2a6fa668e8ef",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-03",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "9c6343d0dfca070844734eeaa28d61bea32ec58e4c97ff7871a9b40f1cc4ef3c",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-r",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "d7e39501a6635563af304f8295f1b6b54a2685e34db251c9fee673d2b0eb4739",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "563c7b9b5caabf6626ada9d362f4f09007f3e92959e79a8a1f18ab6b0464cabd",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "762d990a203a670778824e8e6c0e49059ddaaa31453b63eaa4ae2c02e2630699",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-04",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "50af5596802f18d594b69a2d1ccec9534c59850e5b700fe206469b81341a9116",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-04-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "db5b5e6de3dec88d6ebc22bd7b2b70639cfeff8b2f426885de24cbf1ae48a623",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-base-ionic-04-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "6370ff08f32a285f37078b15314ffc95bd9ee59309dcaa0b6bf36fdc64804c65",
+      "preservedApprovedRevision": true
     }
   ]
 }

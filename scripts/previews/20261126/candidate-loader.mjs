@@ -4,6 +4,7 @@ import {registerHooks} from 'node:module';
 registerHooks({load(url,context,next){
  const r=next(url,context);
  if(url.endsWith('/src/fleetNext/combat.js')){
+  if(String(r.source).includes('ctx.preserveBypassedDefense'))return r;
   let s=typeof r.source==='string'?r.source:Buffer.from(r.source).toString();
   const edits=[
    ['  p.remaining--;\n  if(!bypass&&p.id=', '  if(!(bypass&&ctx.reviewKeepBypassedDefense))p.remaining--;\n  if(!bypass&&p.id='],
@@ -15,11 +16,12 @@ registerHooks({load(url,context,next){
  }
  if(url.endsWith('/src/weaponKinematics.js')){
   const text=typeof r.source==='string'?r.source:Buffer.from(r.source).toString();
-  const before='p=a.clone().lerp(b,u);';
+  const before='p=a.clone().lerp(b,u);';if(text.includes('p=boardPointToWorld({x:from.x+'))return r;
   if(!text.includes(before))throw Error('Curva cambiata: ricontrollare la prospettiva');
   return {...r,source:text.replace(before,'p=boardPointToWorld({x:from.x+(to.x-from.x)*u,y:from.y+(to.y-from.y)*u},camera);')};
  }
  if(!url.endsWith('/src/fleetNext/approvedWeaponSalvos.js'))return r;
+ if(String(r.source).includes('[2,3,5,7]'))return r;
  let s=typeof r.source==='string'?r.source:Buffer.from(r.source).toString();
  const replace=(before,after)=>{if(!s.includes(before))throw Error('Sorgente cambiato: '+before);s=s.replace(before,after);};
  replace("[1,3,6,9],['piston','orbital-trident','double-orbit','gravity-storm']","[2,3,5,7],['rotating-hammers','rotating-hammers','rotating-hammers','rotating-hammers']");

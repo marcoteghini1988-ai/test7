@@ -37,7 +37,7 @@ export default function MaglioProjectileScene({paths,startedAt,cinematic=false})
     if(progress<0){next=Math.min(next,start);continue;}
     if(progress>=1)continue;
     const pose=cinematic?weaponFlightFrame(from,to,progress,camera,MAGLIO_NOSE_Z*model.scale.z,{shot,kind:profile.kind}):projectileFlightFrame(from,to,progress,camera);
-    if(cinematic)applyWeaponFlightPose(model,pose);else{model.position.copy(pose.center);model.rotation.y=pose.yaw;}
+    if(cinematic){applyWeaponFlightPose(model,pose);model.rotation.x+=progress*Math.PI*4;}else{model.position.copy(pose.center);model.rotation.y=pose.yaw;}
     scene.add(model);active++;
     element.dataset.visibleEnd=pose.visibleEnd;element.dataset.shooter=shot.who;
     element.dataset.progress=progress.toFixed(3);

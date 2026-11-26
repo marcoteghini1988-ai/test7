@@ -1,7 +1,9 @@
 import React,{useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
-import {card,cardFacePath,cardRole} from './fleetNext/rules.js';
+import {card,cardDisplayFacePath as cardFacePath,cardRole} from './fleetNext/rules.js';
 import {projectFleetSlots,projectMachineBerths} from './fleetNext/battlePresentation.js';
 import {weaponEffectProfile,weaponPortalOrigin,weaponVisualCards,weaponShotStartMs} from './maglioBattleVisuals.js';
+import WeaponCardInteractions from './WeaponCardInteractions.jsx';
+import IonicWeaponProjectileScene from './IonicWeaponProjectileScene.jsx';
 import MaglioProjectileScene from './MaglioProjectileScene.jsx';
 import MetalWeaponProjectileScene from './MetalWeaponProjectileScene.jsx';
 import MetalWeaponShotAccents from './MetalWeaponShotAccents.jsx';
@@ -76,6 +78,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
  const startedAt=useRef(effectStartedAt??performance.now()).current;
  const projectilePaths=useMemo(()=>paths.filter(p=>p.profile.kind==='gravity-maul'),[paths]);
  const metalPaths=useMemo(()=>paths.filter(p=>['steel-rail','thermal-reclaimer'].includes(p.profile.kind)),[paths]);
+ const ionicPaths=useMemo(()=>paths.filter(p=>p.profile.kind==='ionic-dart'),[paths]);
  const reveals=visualCards(shots,selectedCards);
  const shotStart=weaponShotStartMs(reveals.length);
  // Il suono segue l'evento reale e gli stessi tempi della traiettoria visiva.
@@ -94,7 +97,7 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
    const cue=weaponSalvoAudioCue(profile,shot,phase);
    playSound(cue.type,cue.pitchSemitones,pan,cue.level,cue.timeScale);
    const result=requestWeaponHaptic(profile.kind,phase,profile.tier,{salvoCount:shot.salvoCount,
-    finisher:shot.finisher,salvoLast:shot.salvoLast});
+    finisher:shot.finisher,salvoLast:shot.salvoLast,destroyed:shot.destroyed});
    if(result.status==='requested')requested=true;
    if(ref.current){ref.current.dataset.hapticStatus=result.status;
     ref.current.dataset.hapticPhase=phase;ref.current.dataset.hapticPattern=JSON.stringify(result.pattern);}
@@ -179,7 +182,9 @@ export default function MaglioBattleEffects({shots=[],events=[],selectedCards=[]
     <WeaponSalvoCardMarks cardId={id} className="maglio-card-reveal" style={style}/>
    </React.Fragment>;
   })}
+  <WeaponCardInteractions events={events} paths={paths} startedAt={startedAt}/>
   <CinematicWeaponEffects paths={paths} startedAt={startedAt}/>
+  <IonicWeaponProjectileScene paths={ionicPaths} startedAt={startedAt}/>
   <MaglioProjectileScene paths={projectilePaths} startedAt={startedAt} cinematic/>
   <MetalWeaponProjectileScene paths={metalPaths} startedAt={startedAt} cinematic/>
   <MagneticWeaponEffects paths={paths} events={events} startedAt={startedAt}

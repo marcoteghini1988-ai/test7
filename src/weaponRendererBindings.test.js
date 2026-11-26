@@ -7,7 +7,9 @@ import ts from 'typescript';
 test('Live weapon renderers contain no unbound identifiers',()=>{
  const files=['CinematicWeaponEffects.jsx','MaglioBattleEffects.jsx','MaglioProjectileScene.jsx',
   'MetalWeaponProjectileScene.jsx','MagneticWeaponEffects.jsx','PrecisionWeaponEffects.jsx',
-  'WeaponSalvoCardMarks.jsx','weaponKinematics.js','weaponCinematicRenderer.js',
+  'WeaponSalvoCardMarks.jsx','WeaponCardInteractions.jsx','IonicWeaponProjectileScene.jsx',
+  'approvedProjectileEffects.js','ionicWeaponBattleVisuals.js','ionicWeaponSounds.js',
+  'weaponKinematics.js','weaponCinematicRenderer.js',
   'weaponCinematicStyle.js','weaponHullImpacts.js','weaponSalvoAudio.js','maglioPerspectiveRenderer.js',
   'metalWeaponSounds.js','weaponHaptics.js'].map(p=>'src/'+p);
  const program=ts.createProgram(files,{allowJs:true,checkJs:true,noEmit:true,skipLibCheck:true,
