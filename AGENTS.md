@@ -34,6 +34,26 @@ La regola non autorizza la creazione anticipata delle sequenze: nella
 modalità corrente si documentano le scelte; si realizzeranno al comando
 esplicito dell'utente. Dettagli vincolanti nel documento collegato.
 
+## Nuova specifica navi — dimensioni dei supporti e stadi di danno
+
+L'utente richiede **supporti più grandi** e tre-quattro stadi di rottura
+visibili su **supporti e navi madri**, fino alla distruzione.
+Lo stadio deve dipendere dalla percentuale reale di HP rimasta sulla
+singola nave, non dal tempo. L'utente ha menzionato il 25%.
+
+Schema operativo proposto dall'assistente, da discutere: quattro stadi
+alle soglie 75% / 50% / 25% / 0% residui, oltre all'aspetto integro.
+Non presentare le quattro percentuali o un fattore d'ingrandimento come
+numeri già scelti esplicitamente dall'utente. Specifica dettagliata in
+`docs/REGOLE_EFFETTI_E_RIPRESA_LAVORO_2026-11-26.md`.
+
+I cambi di stadio devono avere corrispondenza visiva, sonora e aptica
+secondo la regola obbligatoria sopra. Nessuna penalità o rottura di
+componenti di gioco può essere introdotta dal solo aspetto danneggiato.
+Per ora è una specifica: non dichiarare navi ingrandite o stadi realizzati.
+La modalità corrente resta raccolta e salvataggio; creare al comando
+esplicito dell'utente.
+
 ## Frantumatore a Induzione — chiarimento corrente: lame da realizzare
 
 L'utente sta definendo il colpo desiderato, NON descrivendo un effetto già
