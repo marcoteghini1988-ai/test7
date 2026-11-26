@@ -36,10 +36,32 @@ implementazione di combattimento/renderer o nuovo collaudo è autorizzato.
   aggiuntive restano da precisare; non trasformare la spiegazione ancora
   in corso in una coreografia già approvata.
 
+### Chiarimento successivo: uno schianto soltanto, dispositivo da proporre
+
+Alla domanda «una volta sola oppure ogni turno», l'utente ha risposto
+**«No, una volta sola»**. La combinazione deve quindi produrre **una sola
+attivazione dello schianto**, con un urto per ciascuna nave agganciata
+coinvolta; non ripeterlo nei turni successivi. Non richiedere questa scelta.
+
+L'utente ha inoltre precisato che la combo col palo è **un'idea** e ha
+chiesto altre proposte. Il palo/perno non è quindi una forma definitiva
+già approvata della seconda arma.
+
+**Due varianti proposte dall'assistente, ancora da scegliere:**
+1. Incudine magnetica: un blocco metallico viene disposto presso ciascun
+   bersaglio agganciato; le catene si accorciano di scatto e trascinano la
+   nave contro il blocco, con un unico schianto.
+2. Pressa magnetica: due piastre si chiudono una volta sulla nave trattenuta
+   dalle Ganasce. La sequenza viene applicata ai bersagli agganciati
+   coinvolti; deve funzionare anche sulla sola madre.
+
+L'assistente preferisce l'incudine perché rende chiaro il ruolo delle
+catene nella trazione e nell'urto. Sono alternative di progettazione,
+non nuove carte aggiuntive al catalogo e non effetti realizzati.
+Il mantenimento degli agganci dopo l'urto resta una decisione aperta.
+
 ### Punti ancora da definire
 
-- Uno schianto per bersaglio oppure schianti ripetuti nei turni in cui le
-  due carte sono attive.
 - Quando avviene lo schianto e quando si può giocare la seconda carta:
   stesso turno, turni successivi o entrambi.
 - Durata e funzionamento autonomo della seconda carta, se previsto.
@@ -49,7 +71,8 @@ implementazione di combattimento/renderer o nuovo collaudo è autorizzato.
   progressione per rarità.
 
 Non chiedere nuovamente se la prima carta sia autonoma, se duri tre turni
-o se debba funzionare sulla sola madre: l'utente lo ha già specificato.
+se debba funzionare sulla sola madre o se lo schianto sia ripetuto:
+l'utente ha già specificato questi punti.
 Restare su questa coppia e ascoltare il completamento della proposta.
 Il testo storico sotto documenta il codice precedente e proposte ormai
 superate; non prevale sulle nuove indicazioni dell'utente.
