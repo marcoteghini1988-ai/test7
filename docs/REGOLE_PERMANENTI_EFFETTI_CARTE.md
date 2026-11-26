@@ -1,6 +1,50 @@
 # Regole permanenti per gli effetti delle carte
 
 
+
+## Regola obbligatoria — coordinazione visibile tra Energia ed effetto
+
+**Richiesta dell'utente, 26 novembre 2026:** indipendentemente
+dall'elemento, quando una carta usa Carte Energia deve vedersi quali
+Energie sono coinvolte e la coordinazione con l'effetto prodotto.
+Vale per tutte le categorie, le rarità e i lati della partita.
+
+- All'attivazione reale, evidenziare sulle **Carte Energia interessate
+  nei loro slot** un bagliore/impulso riconoscibile e coerente con il
+  loro elemento. La sola animazione sul bersaglio non è sufficiente.
+  Se contribuiscono più Energie, mostrare quelle realmente coinvolte,
+  senza accendere risorse estranee all'azione.
+- Collegare temporalmente la sequenza: riscontro sull'Energia,
+  attivazione/potenziamento dell'effetto, lancio e contatto effettivo.
+  L'eventuale impulso di collegamento arriva al bordo di lancio;
+  il colpo iniziale continua a entrare da fuori schermo, dal lato
+  corretto. Non mostrare una macchina o uno sparo dalla carta Energia.
+  Per effetti senza sparo coordinare la risorsa col vero oggetto
+  coinvolto, senza inventare proiettili.
+- Coordinare suono e aptica con gli stessi eventi; distinguere
+  alimentazione e impatto senza duplicare colpi, danni o impulsi di
+  impatto soltanto perché sono coinvolte più Energie.
+- **Energia richiesta/conteggiata senza consumo:** evidenziarne il
+  contributo e far tornare normale la carta nel suo slot. Non
+  distruggerla, scaricarla o spostarla negli scarti per sola grafica.
+- **Consumo di una carica o quantità:** mostrare l'aggiornamento della
+  risorsa reale. L'intera carta si sposta negli scarti soltanto quando
+  questa è la conseguenza effettiva prevista dal motore.
+- Se mancano le condizioni, non simulare un bonus o una spesa riusciti.
+  Nelle sequenze su più turni o più attivazioni ripetere il riscontro
+  solo quando avviene un nuovo uso effettivo, non di continuo.
+- Applicare anche ai bonus di soglia o di potenziamento; la regola
+  grafica non trasforma automaticamente il conteggio in consumo,
+  né modifica requisiti, costi, quantità o durata.
+- Prima dell'integrazione identificare le vere risorse e i relativi
+  eventi nel motore. Verificare uso di una/più Energie, conteggio
+  senza spesa, consumo parziale/totale, lati A/B e interruzioni
+  pertinenti alla carta. Rispettare audio, aptica e movimento ridotto.
+
+Questa è una specifica da applicare quando saranno creati gli effetti,
+non una dichiarazione di animazioni già implementate o collaudate.
+
+
 ## Regola corrente — in battaglia compaiono i colpi; macchina nella carta
 
 **Correzione esplicita dell'utente, 26 novembre 2026, confermata con «Sì».**
