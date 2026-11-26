@@ -1,0 +1,579 @@
+{
+  "sourceCommit": "4d4e10f16a2dbd2dd7cb2a22997f420fdb3bd64c",
+  "status": "in attesa di conferma visiva",
+  "isGameplayIntegrated": false,
+  "nativeCardCanvas": [
+    3072,
+    4608
+  ],
+  "families": 12,
+  "variants": 37,
+  "newOrRefinedIllustrations": 20,
+  "offlineSequences": 48,
+  "realMechanicsFixtures": 42,
+  "newMechanicsTestsPassed": 7,
+  "preflightPassed": true,
+  "physicalHapticsVerified": false,
+  "openParameters": {
+    "jaws": [
+      "nomi definitivi e distribuzione rarità",
+      "danno dello strappo al terzo turno",
+      "durata autonoma di B",
+      "finestra della combo e stato dei ganci dopo lo schianto",
+      "danno finale combo"
+    ],
+    "induction": [
+      "valore e limite del bonus senza Difese"
+    ],
+    "unresolvedIonic": [
+      "nove nomi pronunciati non corrispondono alle sei famiglie Fulmine rimanenti nel catalogo: non assegnare meccaniche inventate"
+    ]
+  },
+  "artifacts": [
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_943647d5d7888191817e0b98d6c85be9",
+      "file_name": "Carte_Fulmine_15_varianti.png",
+      "current_version_number": 0,
+      "name": "Carte_Fulmine_15_varianti.png",
+      "bytes": 4596350,
+      "sha256": "605a85f8fdcdb03b9c4646274caadc209f535c13c3bcbb10125976b59fee08a0"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_5aff73e2441c8191b9c5ef31c584e027",
+      "file_name": "Carte_Metallo_22_varianti.png",
+      "current_version_number": 0,
+      "name": "Carte_Metallo_22_varianti.png",
+      "bytes": 6815051,
+      "sha256": "94f82fac696b3f69a708c4112e39798eff01676a27672c2827aecf4984d42e32"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_4165a634b978819180dc60f9430b4d04",
+      "file_name": "Effetti_Fulmine_15_varianti.mp4",
+      "current_version_number": 1,
+      "name": "Effetti_Fulmine_15_varianti.mp4",
+      "bytes": 6379653,
+      "sha256": "13e47a652bff2e98228291b2a92fa5393dd52674883b193b5add173515dba401"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_505a96f98e548191b84c281cd06dce96",
+      "file_name": "Effetti_Metallo_26_sequenze.mp4",
+      "current_version_number": 0,
+      "name": "Effetti_Metallo_26_sequenze.mp4",
+      "bytes": 16245394,
+      "sha256": "9b8d1928ec969d0152df34ac66629e2bcdbf80e4df3d22567a6babab79161207"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_1a80295df05c8191a05d18783e27dcb7",
+      "file_name": "Effetti_Ganasce_A_B.mp4",
+      "current_version_number": 1,
+      "name": "Effetti_Ganasce_A_B.mp4",
+      "bytes": 10272483,
+      "sha256": "58aec4609c37938833fc34e9f7c972cff525a2d6adc3ef6f2138272903797024"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_c0ba38cbe01881918842898ff7bfe7c4",
+      "file_name": "Metallo_Salve_10_carte_HD.zip",
+      "current_version_number": 0,
+      "name": "Metallo_Salve_10_carte_HD.zip",
+      "bytes": 202570516,
+      "sha256": "c5c584a46d00c077da43bf3f6df2e70f722d146bb78b6c3fe1db7848c28b6237"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_a983b4f6c0348191a0be4a169ea3f9c3",
+      "file_name": "Metallo_Speciali_7_carte_HD.zip",
+      "current_version_number": 0,
+      "name": "Metallo_Speciali_7_carte_HD.zip",
+      "bytes": 178314779,
+      "sha256": "6c762654d5f0725ad918efe5ced9a04ccabc4e2688dc0d6062aba5a1dd47d04f"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_14a32dc0db288191867903fadf9d4bbd",
+      "file_name": "Ganasce_A_B_5_carte_HD.zip",
+      "current_version_number": 0,
+      "name": "Ganasce_A_B_5_carte_HD.zip",
+      "bytes": 132754902,
+      "sha256": "cae97d50d21d7f9697f6a828ba01cb1df79d69cf4b188b3f4efe997211f52d54"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_342f20b7b584819193eb79bedfd68f19",
+      "file_name": "Fulmine_Pettine_Tesla_8_carte_HD.zip",
+      "current_version_number": 0,
+      "name": "Fulmine_Pettine_Tesla_8_carte_HD.zip",
+      "bytes": 223234493,
+      "sha256": "021139a4bd33ce331492daa61ac31e3f7e44e8a343411bdcd16e7cf1cd613497"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_99e56eeda42c8191957a04736d528625",
+      "file_name": "Fulmine_Sferzatore_Lampo_7_carte_HD.zip",
+      "current_version_number": 0,
+      "name": "Fulmine_Sferzatore_Lampo_7_carte_HD.zip",
+      "bytes": 184005818,
+      "sha256": "f29d4d93cf61556a9a68904f32c604d8ef9c0db9703529465b4cf895701a7cf0"
+    },
+    {
+      "status": "succeeded",
+      "library_file_id": "libfile_e66bb0f9b79c81919eac54a269d1e3eb",
+      "file_name": "LEGGIMI_anteprime.txt",
+      "current_version_number": 0,
+      "name": "LEGGIMI_anteprime.txt",
+      "bytes": 2044,
+      "sha256": "b6f3dc46d02c6bf149b275b09ed1d1c6ca27a3f98c044d448a46da78fe9aa2ff"
+    }
+  ],
+  "cards": [
+    {
+      "id": "weapon-confirmed-metallic-maglio",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "c85b253127ef00d46b669841a99558e46e90cefd89824544a46643960aadf329",
+      "bytes": 12868127,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-r",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "b012d85a3162ed3ce53949121b451df119ba58810427326724d9f24dfa5e57d8",
+      "bytes": 13345183,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-e",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "9a564b375b3eae41b86b3a395d544466f5e0e1c156913492f30b60e775d806d4",
+      "bytes": 13856946,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-confirmed-metallic-maglio-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "c7835ef32379759a4fa8eb1310d84be352fcfba692f8b2368f35a4da78d2501f",
+      "bytes": 15513797,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "e62db70cd16a2f7db263d0b1456a9951e29906edd39df28d7c410f2a29e6fb2c",
+      "bytes": 22171705,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-r",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "86d7822499b74eea01b24f72b79250d0e36d8d3a16ce1d99a3d7fe754f0a315a",
+      "bytes": 23320938,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-e",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "a3ff1324ec3291dd45d766280cbe99f60d6b54e8779fafcbd4604291924bca58",
+      "bytes": 24182833,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-confirmed-metallic-slitta-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "04b79d277d6ccb08dec2726c27c50c1e09ce1a150767510f81f17253ed9490f4",
+      "bytes": 26088847,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "568eded02104bcc633c91e875bc459d393188abab8bd539c99bf82d428cc4ba6",
+      "bytes": 25016263,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-recuperatore-termobalistico-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "85d8c21f7aab0edd1b331b967a80c5d9e91e6ef7e54bafe08046b917fad8903e",
+      "bytes": 26987176,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "63bf615665a0ed18aecb90377d4e1746145114ad1057f992195ae040f2815c91",
+      "bytes": 23485925,
+      "mechanicsPending": true
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "0281e4fc0963274e629b7dc04c084e9121747aafc8b8405d2c748d4531687f10",
+      "bytes": 24143445,
+      "mechanicsPending": true
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "28d39c1be0cea4ac16cd28b79a81c5686e4eb6aade2d90780b8b8387852c02ef",
+      "bytes": 25916549,
+      "mechanicsPending": true
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "2fb36f456d80ddb230eb7da8aa938d84aa332e7817cd9a0c7234aaad587e403b",
+      "bytes": 23490818,
+      "mechanicsPending": true
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "5c24afde21d7a423835c595bfdea4d1d98cc335318f3b99b1f7b6caf6b4b23fa",
+      "bytes": 25905673,
+      "mechanicsPending": true
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "b66ca0bb9afb39ed4300881c4488412e8c3056c10ec7651647aef8e00ad208d6",
+      "bytes": 24353569,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-frantumatore-induzione-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "9174f969350dc251363f5eb0b982921c1a710533db4f7fa289364b2e84880f8f",
+      "bytes": 27325912,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "c83c1247a8c9c52d7e0ae3ee11fef18d16cde7b49dd598364096391c15ac5390",
+      "bytes": 24994919,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-perforatore-cascata-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "fc9f59b8d28d4dc3595efa887f8af7372bb57e3cf90bb5ddeef28afbc1b208dc",
+      "bytes": 27651083,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "b5f276ff9cf12ccb443ef1e8c09f64ec26470c38883c3bef5265615887964166",
+      "bytes": 23023381,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-e",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "64f081e24182d61c5f942e1bd633f6aded54444a07fd57539852dbad084d8eef",
+      "bytes": 24348993,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-designed-metallic-artiglieria-schegge-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "cb9e469545c0798d0023eaae1b30ada3cb3b14d8f287c7b088fe3fb9b8d21aa1",
+      "bytes": 27250070,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-01",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "5dee8846d11aa6c846bb0904f584a26cdb7b47f06979d085e5b3a3f57cfb9072",
+      "bytes": 23993057,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-r",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "fb39be817ebd64d157b95076eea379f7cea11c1c17b65780561359c5535566dc",
+      "bytes": 25255665,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-e",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "9467dab826ed97aae164ba5834fa13b7b79e8d4f544036345ccad0137f084413",
+      "bytes": 26388067,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-01-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "63694b076f49d6fa02d4ea8e28c10cb50d03305eeee56dd32e20f1ead41a3b55",
+      "bytes": 27988897,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-02",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "8862b03abe2470e3daec4e32fc87b2b5096a687e9159cd9b2664b1c4852e8f6b",
+      "bytes": 23937122,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-r",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "00bc49d14224c1e39874aee5f4b07b78c851945ffbd35ea8c98a87ea4f3cf544",
+      "bytes": 24169758,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-e",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "5d37235ed73e9fd7ae7efd3fe987c48f44166cb2bc48447f9a35a14256eb83b8",
+      "bytes": 25891158,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-02-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "b44a8f157735cb076bc4907e24b723b57b6bca7b5d2da18a0e7749c6d7c3f3de",
+      "bytes": 27620569,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-03",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "30fe5b6c8e66925c3db0f2bb44cca1ebfd3273a413f3858e07bf05d3b2f11d72",
+      "bytes": 22141747,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-r",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "9e17e9bde8385e1768a76b9596a07896843b84ffa47ca21c97943c0b3366ba94",
+      "bytes": 23195493,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-e",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "d7efc896936b535334555e52dbe697cedef743f7c070d9e6ec78f35f4f1c78c8",
+      "bytes": 23837161,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-03-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "7e5789fa6be379062ffd319afa4bad5d4840aa4ea5100d49ce76aab040b5b4a0",
+      "bytes": 25420087,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-04",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "362e5d07722883771f863f53eadfde48559bbfed3861e2e9d44f2ab4ddb2c8e8",
+      "bytes": 24099472,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-04-rarity-e",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "302e47f1933dc657698ba8b49db74e33cf47446e2b5000c2716a6443e3612792",
+      "bytes": 24884534,
+      "mechanicsPending": false
+    },
+    {
+      "id": "weapon-base-ionic-04-rarity-l",
+      "size": [
+        3072,
+        4608
+      ],
+      "rgba": true,
+      "outerAlphaMatchesOriginal": true,
+      "sha256": "9226fa22b9f047674d3313051d0ad83e0d788c95fc12f146876b02793b0d58a7",
+      "bytes": 26359552,
+      "mechanicsPending": false
+    }
+  ]
+}

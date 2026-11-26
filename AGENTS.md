@@ -3,14 +3,22 @@
 
 
 
-## Punto di ripresa — carte Fulmine ancora da produrre; correggere «Fulmine chiuso»
+## Punto di ripresa — 37 fronti e 48 sequenze in anteprima, nessuna inserita
 
-L'utente domanda se mancano ancora le carte Fulmine. Rispondere **sì**:
-in questa fase sono state discusse specifiche a voce; la produzione delle
-nuove carte complete PNG HD nelle rarità previste, degli effetti/audio/
-aptica e il collaudo restano da eseguire. Non negare l'esistenza di
-illustrazioni o asset storici, e non dichiarare quelli già pronti senza
-verifica. La nuova sessione non ha prodotto fronti completi.
+Il 26 novembre l'utente ha autorizzato esplicitamente la produzione delle
+carte confermate e degli effetti, chiedendo **conferma visiva di entrambi
+prima dell'inserimento**. Questa richiesta supera la precedente pausa
+«solo documentazione». Sono ora prodotti 37 fronti PNG RGBA 3072×4608:
+22 varianti Metallo e 15 varianti delle quattro famiglie Fulmine identificate.
+Sono disponibili tre video con audio, complessivamente 48 sequenze offline.
+**Non sono registrazioni StackBlitz, né modifiche già attive nel gioco.**
+Il codice di revisione è isolato in `scripts/previews/20261126/`; nessun
+nuovo fronte o effetto è importato dall'app. Non rigenerare da zero le
+anteprime e non considerarle approvate finché l'utente non le conferma.
+Parametri aperti delle Ganasce e del bonus Induzione, collegamenti ai file,
+verifiche e istruzioni di ripresa: [consegna anteprime](docs/ANTEPRIME_CARTE_EFFETTI_2026-11-26.md).
+Le altre sei famiglie Fulmine richiedono ancora riconciliazione con i nomi
+pronunciati; non dichiarare «Fulmine chiuso».
 
 **Correzione necessaria:** la frase dell'assistente «Fulmine chiuso» non
 è sostenuta dal catalogo. Sono collegate con certezza alle prime quattro
