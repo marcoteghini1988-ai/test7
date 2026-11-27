@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Comune ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; Sentinella Ionica ha la meccanica di previsione delle prime tre carte confermata, Rara e durata sbloccata di tre turni propri confermate; le abilità degli altri 7 Boss restano proposte. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Comune ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; Sentinella Ionica ha la meccanica di previsione delle prime tre carte confermata, Rara e durata sbloccata di tre turni propri confermate; Leviatano Abissale Raro ha una sola abilità confermata di riduzione del raffreddamento del Generatore di un turno e dura tre turni propri dopo lo sblocco; le abilità degli altri 6 Boss restano proposte. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -345,14 +345,14 @@ ID conservato: `boss-character-7`.
 
 ### 36. Leviatano Abissale — Nettuno · settore 60 · Rara
 
-**Durante lo scontro (permanente):**
-- Riduce i danni alla propria madre mentre sono presenti supporti vivi.
-- Potenzia gli attacchi contro navicelle già danneggiate; il giocatore deve scegliere se concentrare i colpi o distribuire il danno.
+**Meccanica approvata il 27/11/2026:** una sola abilità di riduzione del raffreddamento. Madre Manta Ionica; due supporti Relè Ionico. Il Personaggio funziona anche senza supporti specifici.
 
-**Dopo lo sblocco (Rara confermata; 3 turni proposti, abilità da approvare):**
-- Riduce il danno alla propria madre quando almeno un supporto è vivo.
-- Potenzia un colpo contro una nave avversaria già ferita, una volta per turno.
-- Cura una volta un supporto alleato sopravvissuto a un attacco.
+**Durante lo scontro (permanente, sospendibile):**
+- Finché il Personaggio è attivo, riduce di un turno i tempi di raffreddamento del Generatore, sia per l'attacco rapido sia per quello potente, senza modificare il consumo di Energia.
+
+**Dopo lo sblocco:** stessa abilità mentre il Personaggio è attivo. Rara e durata di tre turni propri confermate.
+
+Definire e collaudare la cumulabilità con il Relè Ionico, il limite minimo del raffreddamento e il momento di applicazione in caso di attivazione, scadenza o sospensione durante un raffreddamento già in corso. Non implementato. Le precedenti proposte sono superate.
 
 ID conservato: `boss-character-8`.
 
