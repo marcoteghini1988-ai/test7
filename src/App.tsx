@@ -2306,7 +2306,7 @@ function CornerAceFan({ suitId, selectedDeck, currentDeckObj, corner = 'nw', onC
   const styleEl = document.createElement('style');
   styleEl.id = styleId;
   styleEl.innerHTML = `
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&display=swap');
 
     *, *::before, *::after {
       box-sizing: border-box;
