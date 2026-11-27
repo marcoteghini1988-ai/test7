@@ -615,7 +615,7 @@
       "shipId": "R01",
       "type": "Attacco",
       "minShipLevel": 2,
-      "name": "Doppia camera",
+      "name": "Camera Gemella Binaria",
       "effectText": "Prepara due colpi leggeri contro la stessa unità, da eseguire all’inizio del prossimo tuo turno.",
       "rules": "Costituiscono un unico attacco preparato e occupano una sola giocata al rilascio. Ogni colpo incontra separatamente le difese.",
       "requirements": "Nessun supporto o riserva aggiuntivi richiesti.",
