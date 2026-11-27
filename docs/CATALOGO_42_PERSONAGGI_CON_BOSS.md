@@ -272,7 +272,7 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 ## Personaggi Boss
 
-Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Signore delle Ombre sono confermate; l’Idra Criogenica ha entrambe le abilità e la durata della carta sbloccabile (cinque turni propri) confermate; restano dettagli operativi aperti; il Generatore del Caos ha la prima abilità di ricambio a inizio turno confermata; seconda abilità e versione sbloccabile da definire.
+Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Signore delle Ombre sono confermate; l’Idra Criogenica ha entrambe le abilità e la durata della carta sbloccabile (cinque turni propri) confermate; restano dettagli operativi aperti; il Generatore del Caos ha la prima abilità Caos imprevedibile con sette eventi sull'avversario confermata; seconda abilità e versione sbloccabile da definire.
 
 Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime otto schede, da Gaia all'Idra Criogenica, sono confermate nella meccanica e nella durata della carta sbloccabile, con parametri tecnici e dettagli operativi aperti; il Generatore del Caos è parzialmente confermato e gli altri tre sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
@@ -399,10 +399,17 @@ ID conservato: `boss-character-11`. Meccaniche e durata confermate, dettagli ope
 Nave madre: Tempesta (E02).
 
 **Durante lo scontro (permanente):**
-- Prima abilità, ricambio tattico: All'inizio di ogni proprio turno, il Personaggio può scegliere fino a due carte della propria mano, rimetterle in fondo al proprio mazzo e pescarne altrettante. Le nuove carte sono disponibili per le giocate di quello stesso turno; il limite ordinario di giocate non aumenta.
-- Da precisare l'ordine rispetto alla pesca ordinaria, l'avvio del timer e il caso di mazzo insufficiente. Seconda abilità e versione sbloccabile da definire.
+- Prima abilità confermata: Caos imprevedibile: finché il Personaggio è attivo, all'inizio di ogni turno dell'avversario il gioco estrae casualmente un solo evento applicabile, diverso da quello del turno avversario precedente. L'evento influenza soltanto l'avversario per il turno interessato; il proprietario del Personaggio non subisce il Caos. I sette eventi sono varianti di una sola abilità.
+  1. Blocca casualmente uno slot disponibile (Arma, Attacco, Difesa, Trappola o Personaggio) per il turno.
+  2. Disattiva temporaneamente l'abilità passiva di un supporto avversario operativo scelto casualmente, senza distruggerlo.
+  3. Rimette tutte le carte della mano avversaria nel suo mazzo, lo rimescola e fa pescare sette carte.
+  4. Riduce da tre a due il numero ordinario di carte giocabili nel turno avversario.
+  5. Blocca casualmente uno dei dieci elementi: le carte di quell'elemento non sono giocabili e i relativi attacchi non partono; navicelle e armi restano sul campo. Si sospendono solo le passive effettivamente dipendenti dall'elemento bloccato, non quelle indipendenti dall'elemento della navicella.
+  6. Disattiva temporaneamente un componente funzionante della madre avversaria scelto casualmente fra Arsenale, Generatore, Centralina e Plancia, con le normali conseguenze della disattivazione, senza distruggerlo né consumarne tempo residuo aggiuntivo.
+  7. Blocca una sola carta casuale della mano avversaria per il turno; rimane in mano, non è giocabile e torna disponibile alla scadenza.
+- Seconda abilità e durata/versione sbloccabile da definire. Da collaudare: classificazione delle passive secondo dipendenze elementali, ordine rispetto a pesca e timer, interazioni con slot occupati, Crono, sospensione del Personaggio, scelta casuale e casi senza eventi applicabili o con un solo evento applicabile. Nessuna implementazione.
 
-**Dopo lo sblocco:** Epica confermata; abilità e durata da definire. Le vecchie ipotesi di alternanza delle categorie sono archiviate nel registro JSON, non approvate.
+**Dopo lo sblocco:** Epica confermata; abilità e durata da definire. Il ricambio volontario della mano e le precedenti ipotesi di alternanza sono archiviate come non approvate.
 
 ID conservato: `boss-character-14`. Specifica parziale, non implementata.
 
