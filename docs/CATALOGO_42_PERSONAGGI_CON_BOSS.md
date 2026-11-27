@@ -297,9 +297,9 @@ ID conservato: `boss-character-1`. Le precedenti proposte di protezione e rarit�
 - Rimane fisso per tutta la battaglia. Madre: Lince Solare (C01); un solo supporto: Bastione Solare (C01), come da configurazione della campagna attuale.
 - A ogni proprio turno sacrifica una percentuale degli HP massimi del supporto per potenziare il primo attacco effettivamente eseguito. Il sacrificio può distruggere il supporto e attivare la sua passiva di cura della madre. Senza supporti vivi non può attivare nuovi potenziamenti.
 
-**Dopo lo sblocco (Comune, durata temporanea da decidere):**
+**Dopo lo sblocco (Comune, tre turni propri):**
 - Conserva la stessa abilità di sacrificio offensivo, ma è attivo soltanto durante la sua permanenza come normale Carta Personaggio.
-- Proposta non confermata: tre turni propri; con due supporti vivi il giocatore sceglie quale usare a ogni attivazione.
+- Durata confermata: tre turni propri; con due supporti vivi il giocatore sceglie quale usare a ogni attivazione.
 - Percentuali da bilanciare: il sacrificio del 10% degli HP massimi e il bonus del 30% al colpo erano solo esempi. Definire e collaudare la sequenza del costo reale, morte del supporto, passiva e attacco/reazioni.
 
 ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e rarità Leggendaria sono superate.
