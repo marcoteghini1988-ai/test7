@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca ha la stessa abilità confermata nello scontro e dopo lo sblocco, con rarità e durata giocabile aperte; gli altri 9 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Rara ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); gli altri 9 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -304,7 +304,7 @@ ID conservato: `boss-character-1`. Le precedenti proposte di protezione e rarit�
 
 ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e rarità Leggendaria sono superate.
 
-### 33. Matriarca Tossica — Venere · settore 30 · rarità da definire
+### 33. Matriarca Tossica — Venere · settore 30 · Rara
 
 **Abilità confermata il 27/11/2026: neutralizzazione delle debolezze elementali.** Madre Vespa di Vetro (Acqua); un supporto Prisma Silente (Acqua). La precedente proposta di veleno/corrosione è superata.
 
@@ -312,7 +312,7 @@ ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e
 - Rimane fissa nello slot per tutta la battaglia. Finché l'abilità è attiva, tutte le proprie navi (madre e supporti vivi) non subiscono il danno maggiorato dovuto alla propria debolezza elementale. Conservano i vantaggi offensivi.
 - Una Carta Strategia idonea che sospende l'abilità del Personaggio per un turno rende immediatamente vulnerabili di nuovo tutte le navi ai rispettivi elementi forti. Il Boss non viene rimosso; alla scadenza riprende automaticamente l'effetto.
 
-**Dopo lo sblocco:** confermata la stessa abilità sull'intera flotta del giocatore, con durata limitata invece di permanente. Valgono le sospensioni previste dalle Carte Strategia. Rarità e numero di turni restano da confermare. Dettagli della futura Strategia, interazioni con Terreno e collaudo ancora da definire. Non implementato.
+**Dopo lo sblocco:** confermata la stessa abilità sull'intera flotta del giocatore, con durata limitata invece di permanente. Valgono le sospensioni previste dalle Carte Strategia. Rarità Rara e durata di tre turni propri confermate. Dettagli della futura Strategia, interazioni con Terreno e collaudo ancora da definire. Non implementato.
 
 ID conservato: `boss-character-3`.
 
