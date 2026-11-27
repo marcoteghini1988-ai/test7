@@ -83,7 +83,7 @@ test('Ancoraggi d’assedio impedisce il ritiro delle macchine proprie finché o
  const released=recallLinceMachine(b.sides.A,b.sides.A.machines[0],0);
  assert.equal(released?.id,old);
 });
-test('Obice nero richiede un bersaglio macchina e conserva la carta fino al rilascio',()=>{
+test('Tiro d’Assedio Ossidiano richiede un bersaglio macchina e conserva la carta fino al rilascio',()=>{
  const b=make();b.sides.B.machines.push(machine());
  const m=b.sides.B.machines[0],hp=m.hp;
  const p=play(b,'A',['nx-l03-02'],target('machine',m));
@@ -93,7 +93,7 @@ test('Obice nero richiede un bersaglio macchina e conserva la carta fino al rila
  assert.equal(p.battle.sides.B.machines[0].hp,hp);
  assert.equal(p.battle.sides.A.discard.includes('nx-l03-02'),false);
 });
-test('Obice nero rilascia esattamente un colpo da tre nel turno successivo',()=>{
+test('Tiro d’Assedio Ossidiano rilascia esattamente un colpo da tre nel turno successivo',()=>{
  let b=make();b.sides.B.machines.push(machine());
  b=play(b,'A',['nx-l03-02'],target('machine',b.sides.B.machines[0])).battle;
  b=play(b,'B',[],{pass:true}).battle;
