@@ -92,7 +92,7 @@ test('Idra: limite del generatore e cooldown; scudo al massimo non produce vita 
  assert.equal(full.defense.shield.hp,full.defense.shield.max);
 });
 
-test('Generatore del Caos: tre veri colpi caricano, soltanto il quarto libera +10% e azzera',()=>{
+test('Sovvertitore del Caso: tre veri colpi caricano, soltanto il quarto libera +10% e azzera',()=>{
  let b=duel(14);
  const control=duel(null);
  let base=control;
@@ -114,7 +114,7 @@ test('Generatore del Caos: tre veri colpi caricano, soltanto il quarto libera +1
  assert.deepEqual(prior,[1,2,3,0,1]);
 });
 
-test('Generatore del Caos: zero danni conserva la carica e non produce scarica gratuita',()=>{
+test('Sovvertitore del Caso: zero danni conserva la carica e non produce scarica gratuita',()=>{
  const b=duel(14,{ah:0});
  b.sides.B.bossExclusive.chaosCharges=3;
  const x=cycle(b);
@@ -158,7 +158,7 @@ test('Cristallo: un solo scarto, barriera a zero o Sincronia piena non concedono
  assert.equal(side.sync,100);
 });
 
-test('Nucleo Magmatico: CARICA, ERUZIONE, RAFFREDDAMENTO in successione pubblica deterministica',()=>{
+test('Divoratore delle Scorie: CARICA, ERUZIONE, RAFFREDDAMENTO in successione pubblica deterministica',()=>{
  let a=duel(19),b=duel(null);
  assert.ok(a.lastEvents.some(e=>e.includes('fase CARICA per il ciclo 1')));
  let baseline=nativeBarrierPacket(a.sides.B);
@@ -184,7 +184,7 @@ test('Nucleo Magmatico: CARICA, ERUZIONE, RAFFREDDAMENTO in successione pubblica
  }
 });
 
-test('Sovrano del Vuoto: seme dominante ruota ogni tre cicli ed è comunicato in preparazione',()=>{
+test('Custode dell’Antispazio: seme dominante ruota ogni tre cicli ed è comunicato in preparazione',()=>{
  const expected=['♠','♠','♠','♥','♥','♥','♦','♦','♦','♣','♣','♣','♠'];
  expected.forEach((suit,i)=>assert.equal(exclusiveVoidDominantSuit(i+1),suit));
  const b=duel(20);
