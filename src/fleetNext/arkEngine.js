@@ -177,7 +177,7 @@ export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
  }
  if(order.arkArchive&&order.arkCustodianSwap){
   const remaining=(side.hand||[]).length-chosen.length;
-  if(remaining<2)return 'Archivio e Custode richiedono due carte distinte da spendere';
+  if(remaining<2)return 'Archivio e Vegliatore richiedono due carte distinte da spendere';
  }
  if(order.arkCustodianSwap){
   const active=(side.commander?.id==='ex-l04-01'&&
@@ -188,9 +188,9 @@ export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
   const left=(side.hand||[]).filter(id=>{
    const n=consumed.get(id)||0;if(n){consumed.set(id,n-1);return false;}return true;
   });
-  if(!left.length)return 'Custode: serve una carta rimasta in mano';
+  if(!left.length)return 'Vegliatore: serve una carta rimasta in mano';
   if(order.arkCustodianBottomId&&!left.includes(order.arkCustodianBottomId))
-   return 'Custode: carta scelta già giocata';
+   return 'Vegliatore: carta scelta già giocata';
  }
  return '';
 }
