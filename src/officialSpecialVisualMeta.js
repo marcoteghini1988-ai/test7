@@ -6,7 +6,7 @@ import {isTacticalEpic} from './tacticalEpicCards.js';
 import {isBossCharacterCard} from './bossCharacterCards.js';
 
 const FAMILY_NAMES=Object.freeze({
- offense:'ATTACCO',defense:'DIFESA',support:'SUPPORTO',fusion:'FUSIONE',
+ offense:'STRATEGIA',defense:'DIFESA',support:'SUPPORTO',fusion:'FUSIONE',
  reaction:'REAZIONE',intel:'SCANSIONE',control:'CONTROLLO',
  quantum:'DADO',sabotage:'MALUS',transmute:'DORATA',
  rift:'FAGLIA',mutation:'MUTAZIONE',volley:'RAFFICA',
