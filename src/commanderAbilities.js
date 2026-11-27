@@ -39,7 +39,7 @@ const definitions=[
  ['pilot_leg_6',"L'Amante del Nero",'Attacco','Calcolo valido con almeno due carte numeriche nere','black_pair',ELITE],
  ['pilot_boss_18','Entità della Discordia','Attacco','Nemico contemporaneamente ionizzato e corroso','double_status',FINAL],
  ['pilot_boss_19','Divoratore delle Scorie','Attacco','Terzo impatto efficace consecutivo del comandante alla madre','third_mother_hit',FINAL],
- ['pilot_boss_20','Custode dell'Antispazio','Attacco','Nemico con tre vitali distrutti','enemy_last_vital',FINAL],
+ ['pilot_boss_20','Custode dell’Antispazio','Attacco','Nemico con tre vitali distrutti','enemy_last_vital',FINAL],
 ];
 export const COMMANDER_ABILITIES=Object.freeze(Object.fromEntries(definitions.map(
  ([id,name,role,description,trigger,levels])=>[id,Object.freeze({
