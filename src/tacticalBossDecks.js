@@ -207,7 +207,7 @@ export function rememberTacticalLeviatanoHit(side,damage,bonus){
 }
 
 
-// Nucleo Magmatico numeric deck — three independently graded passive
+// Divoratore delle Scorie numeric deck — three independently graded passive
 // abilities. This is NOT the planet-19 enemy's Magma cycle.
 // Risonanza termica: bonus only on the 3rd REAL shield hit (counts 1,2,3).
 // Corrosione ardente: real Corrosione card actually committed this round.
