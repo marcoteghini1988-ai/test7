@@ -74,7 +74,7 @@ test('Leviatano: pressione quando la madre ha un vitale fratturato',()=>{
  const part=b.sides.A.ships[0].parts.find(p=>p.id==='engine');part.damage=1;
  assert.ok(round(b).battle.log.some(e=>e.text.includes('Pressione degli abissi sul sistema')));
 });
-test('Signore delle Ombre sacrifica HP della propria evoluzione L3',()=>{
+test('Predone della Penombra sacrifica HP della propria evoluzione L3',()=>{
  const b=match(9,'N00','R04',1,3);b.round=2;
  const before=b.sides.B.escorts[0].hp;
  const next=round(b);
