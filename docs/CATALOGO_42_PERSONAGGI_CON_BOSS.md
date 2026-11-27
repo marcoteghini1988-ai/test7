@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia Comune con una sola abilità è confermato in progettazione; le abilità e rarità degli altri 11 Boss sbloccabili restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; le abilità e rarità degli altri 10 Boss sbloccabili restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -272,7 +272,7 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 ## Personaggi Boss
 
-Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. La scheda Gaia è confermata in progettazione con parametri aperti; le altre undici sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
+Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le schede Gaia e Tharsis sono confermate in progettazione con parametri aperti; le altre dieci sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
 ### 31. Guardiano di Gaia — Terra · settore 10 · Comune
 
@@ -289,18 +289,20 @@ Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. La scheda 
 
 ID conservato: `boss-character-1`. Le precedenti proposte di protezione e rarità Leggendaria per Gaia sono superate.
 
-### 32. Colosso di Tharsis — Marte · settore 20
+### 32. Colosso di Tharsis — Marte · settore 20 · Comune
+
+**Meccanica confermata il 27/11/2026; bilanciamento e implementazione ancora da fare.** Una sola abilità: sacrificio offensivo.
 
 **Durante lo scontro (permanente):**
-- Dopo un turno in cui ha inflitto danni, accumula un bonus crescente alla potenza delle proprie Armi, entro un limite; un turno senza danni interrompe la serie.
-- Il giocatore non può schierare due nuove Difese nello stesso turno.
+- Rimane fisso per tutta la battaglia. Madre: Lince Solare (C01); un solo supporto: Bastione Solare (C01), come da configurazione della campagna attuale.
+- A ogni proprio turno sacrifica una percentuale degli HP massimi del supporto per potenziare il primo attacco effettivamente eseguito. Il sacrificio può distruggere il supporto e attivare la sua passiva di cura della madre. Senza supporti vivi non può attivare nuovi potenziamenti.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
-- Potenzia il primo colpo Arma di ogni turno proprio.
-- Se infligge danni in due turni propri consecutivi, applica un bonus aggiuntivo limitato.
-- La prima Arma che distrugge un supporto nemico riduce di un turno il raffreddamento del Generatore.
+**Dopo lo sblocco (Comune, durata temporanea da decidere):**
+- Conserva la stessa abilità di sacrificio offensivo, ma è attivo soltanto durante la sua permanenza come normale Carta Personaggio.
+- Proposta non confermata: tre turni propri; con due supporti vivi il giocatore sceglie quale usare a ogni attivazione.
+- Percentuali da bilanciare: il sacrificio del 10% degli HP massimi e il bonus del 30% al colpo erano solo esempi. Definire e collaudare la sequenza del costo reale, morte del supporto, passiva e attacco/reazioni.
 
-ID conservato: `boss-character-2`.
+ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e rarità Leggendaria sono superate.
 
 ### 33. Matriarca Tossica — Venere · settore 30
 
