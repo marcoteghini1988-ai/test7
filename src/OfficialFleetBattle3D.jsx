@@ -1470,7 +1470,7 @@ export default function OfficialFleetBattle3D({
      {player.fusionLimit>0&&' · Fusioni '+player.fusionsUsed+'/'+player.fusionLimit}
     </p>}
     {obsidianActive&&selectedActions.includes('black-howitzer')&&<p className="f3d-obsidian-readout">
-     Obice nero: seleziona una macchina nel menu bersagli. Il colpo pesante
+     Tiro d’Assedio Ossidiano: seleziona una macchina nel menu bersagli. Il colpo pesante
      partirà il prossimo turno e potrà ignorare una Difesa scoperta
     </p>}
     {obsidianActive&&selectedActions.includes('titan-verdict')&&<p className="f3d-obsidian-readout">
