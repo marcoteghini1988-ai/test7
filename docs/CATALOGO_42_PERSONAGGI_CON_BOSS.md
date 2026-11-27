@@ -272,9 +272,9 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 ## Personaggi Boss
 
-Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Signore delle Ombre sono confermate; l’Idra Criogenica ha entrambe le abilità e la durata della carta sbloccabile (cinque turni propri) confermate; restano dettagli operativi aperti; il Generatore del Caos ha la prima abilità Caos imprevedibile con sette eventi sull'avversario confermata; seconda abilità e versione sbloccabile da definire.
+Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Signore delle Ombre sono confermate; l’Idra Criogenica ha entrambe le abilità e la durata della carta sbloccabile (cinque turni propri) confermate; restano dettagli operativi aperti; il Generatore del Caos ha un'unica abilità Caos imprevedibile con sette eventi sull'avversario e cinque turni propri dopo lo sblocco confermati. Eccezione confermata il 27/11/2026: il Generatore del Caos (settore 90) è Epico con una sola abilità, Caos imprevedibile, articolata in sette eventi casuali alternativi. La regola delle due abilità resta valida per gli altri Boss Epici.
 
-Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime otto schede, da Gaia all'Idra Criogenica, sono confermate nella meccanica e nella durata della carta sbloccabile, con parametri tecnici e dettagli operativi aperti; il Generatore del Caos è parzialmente confermato e gli altri tre sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
+Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le prime nove schede, da Gaia al Generatore del Caos, sono confermate nella meccanica e nella durata della carta sbloccabile, con parametri tecnici e dettagli operativi aperti; gli altri tre Boss sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
 ### 31. Guardiano di Gaia — Terra · settore 10 · Comune
 
@@ -399,7 +399,7 @@ ID conservato: `boss-character-11`. Meccaniche e durata confermate, dettagli ope
 Nave madre: Tempesta (E02).
 
 **Durante lo scontro (permanente):**
-- Prima abilità confermata: Caos imprevedibile: finché il Personaggio è attivo, all'inizio di ogni turno dell'avversario il gioco estrae casualmente un solo evento applicabile, diverso da quello del turno avversario precedente. L'evento influenza soltanto l'avversario per il turno interessato; il proprietario del Personaggio non subisce il Caos. I sette eventi sono varianti di una sola abilità.
+- Unica abilità confermata (eccezione epica): Caos imprevedibile: finché il Personaggio è attivo, all'inizio di ogni turno dell'avversario il gioco estrae casualmente un solo evento applicabile, diverso da quello del turno avversario precedente. L'evento influenza soltanto l'avversario per il turno interessato; il proprietario del Personaggio non subisce il Caos. I sette eventi sono varianti di una sola abilità.
   1. Blocca casualmente uno slot disponibile (Arma, Attacco, Difesa, Trappola o Personaggio) per il turno.
   2. Disattiva temporaneamente l'abilità passiva di un supporto avversario operativo scelto casualmente, senza distruggerlo.
   3. Rimette tutte le carte della mano avversaria nel suo mazzo, lo rimescola e fa pescare sette carte.
@@ -407,11 +407,11 @@ Nave madre: Tempesta (E02).
   5. Blocca casualmente uno dei dieci elementi: le carte di quell'elemento non sono giocabili e i relativi attacchi non partono; navicelle e armi restano sul campo. Si sospendono solo le passive effettivamente dipendenti dall'elemento bloccato, non quelle indipendenti dall'elemento della navicella.
   6. Disattiva temporaneamente un componente funzionante della madre avversaria scelto casualmente fra Arsenale, Generatore, Centralina e Plancia, con le normali conseguenze della disattivazione, senza distruggerlo né consumarne tempo residuo aggiuntivo.
   7. Blocca una sola carta casuale della mano avversaria per il turno; rimane in mano, non è giocabile e torna disponibile alla scadenza.
-- Seconda abilità e durata/versione sbloccabile da definire. Da collaudare: classificazione delle passive secondo dipendenze elementali, ordine rispetto a pesca e timer, interazioni con slot occupati, Crono, sospensione del Personaggio, scelta casuale e casi senza eventi applicabili o con un solo evento applicabile. Nessuna implementazione.
+- Da definire e collaudare: classificazione delle passive secondo dipendenze elementali, ordine rispetto a pesca e timer, interazioni con slot occupati, Crono, sospensione del Personaggio, scelta casuale, casi senza eventi applicabili o con un solo evento applicabile, ed effetti già in corso alla rimozione anticipata. Nessuna implementazione.
 
-**Dopo lo sblocco:** Epica confermata; abilità e durata da definire. Il ricambio volontario della mano e le precedenti ipotesi di alternanza sono archiviate come non approvate.
+**Dopo lo sblocco (Epica, cinque turni propri confermati):** La carta Personaggio sbloccabile mantiene la stessa unica abilità e gli stessi sette eventi per cinque turni propri, con effetti soltanto sull'avversario. Alla scadenza, all'inizio del sesto turno proprio, va negli scarti e il Caos cessa; il Boss rimane attivo per tutto lo scontro. Il ricambio volontario della mano e le precedenti ipotesi di alternanza sono archiviate come non approvate.
 
-ID conservato: `boss-character-14`. Specifica parziale, non implementata.
+ID conservato: `boss-character-14`. Meccanica e durata confermate; dettagli operativi e bilanciamento aperti, non implementata.
 
 ### 40. Cristallo di Risonanza — Haumea · settore 100 · Leggendaria
 
@@ -455,7 +455,7 @@ ID conservato: `boss-character-20`.
 ## Decisioni aperte
 
 - Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.
-- Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La progressione delle quattro rarità è confermata; entrambe le abilità del Boss Idra e della carta sbloccabile di cinque turni sono confermate; i dettagli operativi e le abilità e durate dei Boss 9–12 restano da definire individualmente. Le proposte esistenti, incluse quelle con tre abilità, devono essere riesaminate secondo la rarità assegnata; nessuna nuova meccanica è implementata.
+- Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La progressione delle quattro rarità è confermata; entrambe le abilità del Boss Idra e della carta sbloccabile di cinque turni sono confermate; i dettagli operativi e le abilità e durate dei Boss 10–12 restano da definire individualmente. Le proposte esistenti, incluse quelle con tre abilità, devono essere riesaminate secondo la rarità assegnata; nessuna nuova meccanica è implementata.
 - Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.
 - Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.
 - I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.
