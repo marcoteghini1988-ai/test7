@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v14-2026-11-27",
+  "revision": "personaggi-42-v15-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
@@ -1040,34 +1040,48 @@
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
-      "status": "proposed-rework",
+      "status": "partially-confirmed-rework",
       "encounter": {
         "duration": "whole-battle",
         "replaceable": false,
         "abilities": [
-          "Recupera HP a ogni proprio turno finché il Generatore è operativo.",
-          "Al primo colpo dannoso subito in ciascun turno avversario accumula una riparazione per il turno successivo; cure limitate e non applicabili a navi distrutte."
-        ]
+          "Quando entrambe le navicelle di supporto sono distrutte, la nave madre Nebulosa diventa invisibile e si riposiziona casualmente in una delle tre posizioni già esistenti nella propria metà della plancia (sinistra, centro, destra: posizioni originarie dei due supporti e della madre). Nessuno slot aggiuntivo."
+        ],
+        "abilityStatus": "first-ability-confirmed-second-pending"
       },
       "unlocked": {
-        "duration": {
-          "mode": "own-turns",
-          "turns": 3
-        },
         "replaceable": true,
-        "abilities": [
-          "Cura la nave alleata più danneggiata a ogni turno proprio.",
-          "Dopo il primo danno subito, prepara una cura aggiuntiva per il proprio turno successivo, una volta.",
-          "Neutralizza una volta una riduzione delle cure alleate, non una distruzione."
-        ],
-        "durationStatus": "proposed",
-        "abilityStatus": "proposed"
+        "durationStatus": "pending",
+        "abilityStatus": "pending",
+        "abilities": []
       },
       "balancePending": true,
       "implemented": false,
       "open": [
-        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
-      ]
+        "Definire seconda abilità epica (due abilità complessive). Le precedenti proposte di cura restano archiviate, non approvate.",
+        "Definire la finestra di riposizionamento a inizio turno e l'eventuale rivelazione, la scelta del bersaglio e la risoluzione al pulsante ESEGUI, inclusi colpi multipli, area, difese e sospensione.",
+        "Definire le due abilità e la durata della carta Personaggio sbloccabile; non trasferire automaticamente le regole del Boss."
+      ],
+      "previousProposals": {
+        "encounterAbilities": [
+          "Recupera HP a ogni proprio turno finché il Generatore è operativo.",
+          "Al primo colpo dannoso subito in ciascun turno avversario accumula una riparazione per il turno successivo; cure limitate e non applicabili a navi distrutte."
+        ],
+        "unlocked": {
+          "duration": {
+            "mode": "own-turns",
+            "turns": 3
+          },
+          "replaceable": true,
+          "abilities": [
+            "Cura la nave alleata più danneggiata a ogni turno proprio.",
+            "Dopo il primo danno subito, prepara una cura aggiuntiva per il proprio turno successivo, una volta.",
+            "Neutralizza una volta una riduzione delle cure alleate, non una distruzione."
+          ],
+          "durationStatus": "proposed",
+          "abilityStatus": "proposed"
+        }
+      }
     },
     {
       "number": 39,
@@ -1240,13 +1254,14 @@
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Comune, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; Sentinella Ionica: visione delle prime tre carte del proprio mazzo a inizio turno confermata; Rara e durata giocabile di tre turni propri confermate; Leviatano Abissale: riduzione del raffreddamento del Generatore di un turno, Rara, tre turni propri dopo lo sblocco; Signore delle Ombre Epico: attacco progressivo +5% per turno (massimo +50%), resistenza progressiva 2% per turno (massimo 20%), entrambi dal primo turno; permanenza di dieci turni propri dopo lo sblocco, permanente come Boss; le abilità e durate degli altri 5 restano da approvare individualmente. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Comune, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; Sentinella Ionica: visione delle prime tre carte del proprio mazzo a inizio turno confermata; Rara e durata giocabile di tre turni propri confermate; Leviatano Abissale: riduzione del raffreddamento del Generatore di un turno, Rara, tre turni propri dopo lo sblocco; Signore delle Ombre Epico: attacco progressivo +5% per turno (massimo +50%), resistenza progressiva 2% per turno (massimo 20%), entrambi dal primo turno; permanenza di dieci turni propri dopo lo sblocco, permanente come Boss; Idra Criogenica: prima abilità confermata in parte; seconda abilità, dettagli e durata restano aperti, come le abilità e durate degli altri quattro. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.",
     "Per i generici vale la revisione 27/11: 14 confermati e 16 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione.",
     "Regola confermata: un Boss fisso può avere le abilità sospese temporaneamente da una Carta Strategia idonea senza lasciare lo slot. Per Matriarca, durante la sospensione tornano immediatamente le debolezze elementali di tutte le navi; alla fine l'effetto riprende. La futura Strategia resta da definire.",
-    "Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Signore delle Ombre sono confermate; quelle dei due Epici successivi restano da approvare."
+    "Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le abilità e la durata del Signore delle Ombre sono confermate; Idra Criogenica ha la prima abilità confermata, la seconda e i dettagli restano aperti; Generatore del Caos da approvare.",
+    "Idra Criogenica (settore 80, Epica, Nebulosa E01): invisibilità dopo la distruzione di entrambi i supporti e posizione casuale fra le tre posizioni nave già esistenti, prima abilità confermata in progettazione il 27/11/2026; seconda abilità, finestra esatta di riposizionamento, mira, ESEGUI e versione sbloccata da definire. Nessuna implementazione."
   ],
   "bossMechanicConfirmed": 7,
   "rarityPendingCount": 0,
