@@ -16,10 +16,10 @@ const definitions=[
  ['pilot_boss_3','Matriarca Tossica','Attacco','Colpo a un avversario con scudo corroso','corroded_enemy',STANDARD],
  ['pilot_boss_4','Arconte Solare','Attacco','Formula con tre numeriche verso un vitale','three_vital',STANDARD],
  ['pilot_boss_5','Occhio del Vortice','Attacco','Colpo potenziato da vera carta Impulso Ionico','ion_shot',STANDARD],
- ['pilot_boss_6','Crono il Distruttore','Attacco','Primo colpo efficace dopo un riciclo numerico','recycled_shot',STANDARD],
+ ['pilot_boss_6','Devastatore delle Ere','Attacco','Primo colpo efficace dopo un riciclo numerico','recycled_shot',STANDARD],
  ['pilot_boss_7','Sentinella Ionica','Difesa','Madre colpita mentre è ionizzata','ionized_self',STANDARD],
  ['pilot_boss_8','Leviatano Abissale','Difesa','Scudo madre ancora sopra il 50%','high_shield',STANDARD],
- ['pilot_boss_9','Signore delle Ombre','Attacco','Scudo proprio al 35% o meno','critical_shield',STANDARD],
+ ['pilot_boss_9','Predone della Penombra','Attacco','Scudo proprio al 35% o meno','critical_shield',STANDARD],
  ['pilot_boss_10','Colosso di Metano','Difesa','Almeno una scudiera distrutta','escort_lost',STANDARD],
  ['pilot_boss_11','Idra Criogenica','Attacco','Alternanza tra vitali nemici realmente colpiti','alternate_vital',STANDARD],
  ['pilot_boss_12',"Titano d'Acciaio",'Difesa','Un solo vitale alleato ancora operativo','last_vital',STANDARD],
@@ -30,7 +30,7 @@ const definitions=[
  ['pilot_epic_1',"L'Artificiere di Bordo",'Attacco','Colpo preparato con Perforante o Corrosione','special_attack',ELITE],
  ['pilot_epic_2',"L'Alchimista Aurico",'Attacco','Due diverse carte speciali offensive sullo stesso colpo','double_special',ELITE],
  ['pilot_epic_3','Il Viaggiatore del Tempo','Attacco','Primo colpo efficace contro un vitale mai raggiunto','new_vital',ELITE],
- ['pilot_epic_4','Il Re del Ghiaccio','Difesa','Madre esposta con scudo a zero','no_shield',ELITE],
+ ['pilot_epic_4','Comandante della Galaverna','Difesa','Madre esposta con scudo a zero','no_shield',ELITE],
  ['pilot_leg_1','Il Gran Maestro','Attacco','Operazione diversa da quella dell’ultimo colpo efficace','alternate_operation',ELITE],
  ['pilot_leg_2','Il Veggente Supremo','Attacco','Cambio scudiera bersaglio dopo un colpo efficace','alternate_escort',ELITE],
  ['pilot_leg_3','Il Fissatore','Attacco','Terzo colpo consecutivo allo stesso vitale','third_vital',ELITE],
@@ -38,8 +38,8 @@ const definitions=[
  ['pilot_leg_5',"L'Amante del Rosso",'Attacco','Calcolo valido con almeno due carte numeriche rosse','red_pair',ELITE],
  ['pilot_leg_6',"L'Amante del Nero",'Attacco','Calcolo valido con almeno due carte numeriche nere','black_pair',ELITE],
  ['pilot_boss_18','Entità della Discordia','Attacco','Nemico contemporaneamente ionizzato e corroso','double_status',FINAL],
- ['pilot_boss_19','Nucleo Magmatico','Attacco','Terzo impatto efficace consecutivo del comandante alla madre','third_mother_hit',FINAL],
- ['pilot_boss_20','Sovrano del Vuoto','Attacco','Nemico con tre vitali distrutti','enemy_last_vital',FINAL],
+ ['pilot_boss_19','Divoratore delle Scorie','Attacco','Terzo impatto efficace consecutivo del comandante alla madre','third_mother_hit',FINAL],
+ ['pilot_boss_20','Custode dell'Antispazio','Attacco','Nemico con tre vitali distrutti','enemy_last_vital',FINAL],
 ];
 export const COMMANDER_ABILITIES=Object.freeze(Object.fromEntries(definitions.map(
  ([id,name,role,description,trigger,levels])=>[id,Object.freeze({
