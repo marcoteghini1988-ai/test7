@@ -1,16 +1,19 @@
 // Presentation only: hit quantities, HP, mark validity and targets come from combat.
-import {ALL_WEAPON_BY_ID} from './fleetNext/weaponRarityEvolutions.js';
 export const PROBE_FAMILY='weapon-designed-ionic-sonda-ionica';
 export const HAMMER_FAMILY='weapon-designed-ionic-martello-tuono';
-export const PROBE_HAMMER_CARD_IDS=Object.freeze(Object.values(ALL_WEAPON_BY_ID)
- .filter(c=>[PROBE_FAMILY,HAMMER_FAMILY].includes(c.weaponFamilyId||c.id)).map(c=>c.id));
+// Keep asset and presentation imports independent of the complete rules catalog.
+export const PROBE_HAMMER_VARIANTS=Object.freeze([
+ [PROBE_FAMILY,'Comune','probe',0],
+ [PROBE_FAMILY+'-rarity-r','Rara','probe',1],
+ [PROBE_FAMILY+'-rarity-e','Epica','probe',2],
+ [PROBE_FAMILY+'-rarity-l','Leggendaria','probe',3],
+ [HAMMER_FAMILY,'Rara','hammer',1],
+ [HAMMER_FAMILY+'-rarity-e','Epica','hammer',2],
+ [HAMMER_FAMILY+'-rarity-l','Leggendaria','hammer',3]
+].map(([id,rarity,kind,tier])=>Object.freeze({id,rarity,kind,tier,familyId:kind==='probe'?PROBE_FAMILY:HAMMER_FAMILY})));
+export const PROBE_HAMMER_CARD_IDS=Object.freeze(PROBE_HAMMER_VARIANTS.map(v=>v.id));
 export const isProbeHammerKind=kind=>kind==='ionic-probe'||kind==='thunder-hammer';
-export function probeHammerVariant(id){
- const c=ALL_WEAPON_BY_ID[id],family=c&&(c.weaponFamilyId||c.id);
- return [PROBE_FAMILY,HAMMER_FAMILY].includes(family)?{
-  id,familyId:family,rarity:c.rarita,tier:['Comune','Rara','Epica','Leggendaria'].indexOf(c.rarita),
-  kind:family===PROBE_FAMILY?'probe':'hammer'}:null;
-}
+export const probeHammerVariant=id=>PROBE_HAMMER_VARIANTS.find(v=>v.id===id)||null;
 export const PROBE_HAMMER_TIMING=Object.freeze({probeFlight:1080,hammerFlight:1220,impact:1000,betweenActivations:850,betweenSlashes:1420});
 export function probeHammerEffectProfile(id,shot={}){
  const v=probeHammerVariant(id);if(!v)return null;

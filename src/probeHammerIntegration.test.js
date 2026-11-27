@@ -21,6 +21,7 @@ import {card} from './fleetNext/rules.js';
 const pngHash=b=>createHash('sha256').update(b).digest('hex');
 test('Seven approved fronts use their exact original HD bytes and separate English/Italian text bases',()=>{
  assert.equal(PROBE_HAMMER_CARD_IDS.length,7);
+ for(const id of PROBE_HAMMER_CARD_IDS)assert.equal(probeHammerVariant(id).rarity,card(id).rarita);
  const manifest=JSON.parse(readFileSync('asset-sources/card-text/sonda-martello/manifest.json'));
  assert.equal(manifest.cards.length,7);
  for(const c of manifest.cards){
