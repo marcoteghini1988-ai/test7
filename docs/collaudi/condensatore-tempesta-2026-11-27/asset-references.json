@@ -2,7 +2,7 @@
   "directionApproved": true,
   "cardVisualApproval": true,
   "inGame": true,
-  "actualBattleRecording": false,
+  "actualBattleRecording": true,
   "files": [
     {
       "filename": "condensatore-tempesta-epica-HD.png",
@@ -52,8 +52,31 @@
       "version": 0,
       "bytes": 2302780,
       "sha256": "6c971ef09e361e19635f62761b6a27335648445205feeb87ba9d6e94f7957dc8"
+    },
+    {
+      "filename": "condensatore-tempesta-battaglia-stackblitz-con-audio.mp4",
+      "library_file_id": "libfile_f9ff2f7314f481918c9768804805293a",
+      "file_id": "file_000000001ff88210ba6a75d5eccd1d0e",
+      "version": 0,
+      "bytes": 6501811,
+      "sha256": "cd1b7a0212f27860a8887db17cc68bd88dd6b41a4bf9e56b96d3561982b0529c",
+      "actualBattleRecording": true,
+      "tabAudio": true,
+      "retimed": false
+    },
+    {
+      "filename": "condensatore-tempesta-battaglia-stackblitz-originale.webm",
+      "library_file_id": "libfile_793215fcf42c8191ba01ea64a2c4dbfe",
+      "file_id": "file_000000000c6c81f497662268666dc8a2",
+      "version": 0,
+      "bytes": 60651442,
+      "sha256": "5a70d7ef5222218a657c423f5f83e04aa8b69447a5a7bcd4092a0ae43ac1af68",
+      "actualBattleRecording": true,
+      "tabAudio": true,
+      "retimed": false
     }
   ],
   "approvalQuote": "confermo",
-  "artworkRegenerated": false
+  "artworkRegenerated": false,
+  "preparationActualBattleRecording": false
 }

@@ -1,0 +1,1895 @@
+{
+  "commit": "5295fbe23800fb064be42b0b92aee2aab042bcd1",
+  "editorUrl": "https://stackblitz.com/edit/github-edu2s6xy",
+  "previewUrl": "https://githubedu2s6xy-bno4--5173--ca94085c.local-credentialless.webcontainer.io/.maglio-review.html",
+  "savedAndReloaded": true,
+  "verifiedSourceFiles": 790,
+  "approvedVariants": 52,
+  "physicalHapticsVerified": false,
+  "cases": [
+    {
+      "label": "Leggendaria A due supporti slot 2",
+      "sides": [
+        {
+          "who": "A",
+          "energy": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "14",
+                "impactIndex": "0",
+                "maxFrameMs": "100.0",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-B-0"
+              }
+            ],
+            "energy": [
+              {
+                "cardId": "energy-ionic",
+                "family": "support",
+                "fleetCardSlot": "A-5",
+                "pendingCard": "true",
+                "rarity": "Comune",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[5]",
+                "phase": "energy",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "101",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "escort:maglio-review-B-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "supports": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "17",
+                "impactIndex": "0",
+                "maxFrameMs": "100.0",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-B-0"
+              }
+            ],
+            "energy": [
+              {
+                "cardId": "energy-ionic",
+                "family": "support",
+                "fleetCardSlot": "A-5",
+                "pendingCard": "true",
+                "rarity": "Comune",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[3]",
+                "phase": "support",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "101",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "escort:maglio-review-B-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": [
+              {
+                "id": "escort:maglio-review-A-0",
+                "side": "A"
+              }
+            ]
+          },
+          "flight": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "34",
+                "impactIndex": "0",
+                "maxFrameMs": "100.0",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "flight",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-B-0"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[8,20,8]",
+                "phase": "fire",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "101",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "escort:maglio-review-B-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": [
+              {
+                "id": "escort:maglio-review-A-1",
+                "side": "A"
+              }
+            ]
+          },
+          "contact": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "66",
+                "impactIndex": "0",
+                "maxFrameMs": "183.3",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "contact",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-B-0"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[34,12,10]",
+                "phase": "impact",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "101",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "escort:maglio-review-B-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          }
+        }
+      ]
+    },
+    {
+      "label": "Epica A madre slot 1",
+      "sides": [
+        {
+          "who": "A",
+          "energy": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "5",
+                "impactIndex": "0",
+                "maxFrameMs": "249.9",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [
+              {
+                "cardId": "energy-ionic",
+                "family": "support",
+                "fleetCardSlot": "A-5",
+                "pendingCard": "true",
+                "rarity": "Comune",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[5]",
+                "phase": "energy",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "flight": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "12",
+                "impactIndex": "0",
+                "maxFrameMs": "316.6",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "flight",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[8,20,8]",
+                "phase": "fire",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "contact": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "33",
+                "impactIndex": "0",
+                "maxFrameMs": "316.6",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "contact",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[26]",
+                "phase": "impact",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          }
+        }
+      ],
+      "recordEndSeconds": 7.142
+    },
+    {
+      "label": "Epica B madre turno proprio 2",
+      "sides": [
+        {
+          "who": "B",
+          "energy": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "10",
+                "impactIndex": "0",
+                "maxFrameMs": "83.3",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "command"
+              }
+            ],
+            "energy": [
+              {
+                "fleetCardSlot": "B-5",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[5]",
+                "phase": "energy",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "2",
+                "targetId": "command",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "flight": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "18",
+                "impactIndex": "0",
+                "maxFrameMs": "583.2",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "flight",
+                "presentation": "hull-impacts-v4",
+                "targetId": "command"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[8,20,8]",
+                "phase": "fire",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "2",
+                "targetId": "command",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "contact": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "31",
+                "impactIndex": "0",
+                "maxFrameMs": "583.2",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "contact",
+                "presentation": "hull-impacts-v4",
+                "targetId": "command"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[26]",
+                "phase": "impact",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "2",
+                "targetId": "command",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          }
+        }
+      ],
+      "recordEndSeconds": 20.13
+    },
+    {
+      "label": "Leggendaria A due supporti slot 2 registrata",
+      "sides": [
+        {
+          "who": "A",
+          "energy": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "3",
+                "impactIndex": "0",
+                "maxFrameMs": "333.3",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-B-0"
+              }
+            ],
+            "energy": [
+              {
+                "cardId": "energy-ionic",
+                "family": "support",
+                "fleetCardSlot": "A-5",
+                "pendingCard": "true",
+                "rarity": "Comune",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[5]",
+                "phase": "energy",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "101",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "escort:maglio-review-B-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "supports": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "5",
+                "impactIndex": "0",
+                "maxFrameMs": "333.3",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-B-0"
+              }
+            ],
+            "energy": [
+              {
+                "cardId": "energy-ionic",
+                "family": "support",
+                "fleetCardSlot": "A-5",
+                "pendingCard": "true",
+                "rarity": "Comune",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[3]",
+                "phase": "support",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "101",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "escort:maglio-review-B-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": [
+              {
+                "id": "escort:maglio-review-A-0",
+                "side": "A"
+              }
+            ]
+          },
+          "flight": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "13",
+                "impactIndex": "0",
+                "maxFrameMs": "333.3",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "flight",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-B-0"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[8,20,8]",
+                "phase": "fire",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "101",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "escort:maglio-review-B-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "contact": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "24",
+                "impactIndex": "0",
+                "maxFrameMs": "333.3",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "contact",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-B-0"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[34,12,10]",
+                "phase": "impact",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "101",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "escort:maglio-review-B-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          }
+        }
+      ],
+      "recordEndSeconds": 52.422
+    },
+    {
+      "label": "Leggendaria B un supporto turno proprio 2",
+      "sides": [
+        {
+          "who": "B",
+          "energy": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "6",
+                "impactIndex": "0",
+                "maxFrameMs": "133.3",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-A-0"
+              }
+            ],
+            "energy": [
+              {
+                "fleetCardSlot": "B-5",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[5]",
+                "phase": "energy",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "78",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "2",
+                "targetId": "escort:maglio-review-A-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "supports": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "10",
+                "impactIndex": "0",
+                "maxFrameMs": "149.9",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-A-0"
+              }
+            ],
+            "energy": [
+              {
+                "fleetCardSlot": "B-5",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[3]",
+                "phase": "support",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "78",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "2",
+                "targetId": "escort:maglio-review-A-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": [
+              {
+                "id": "escort:maglio-review-B-0",
+                "side": "B"
+              }
+            ]
+          },
+          "flight": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "16",
+                "impactIndex": "0",
+                "maxFrameMs": "149.9",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "flight",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-A-0"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[8,20,8]",
+                "phase": "fire",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "78",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "2",
+                "targetId": "escort:maglio-review-A-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "contact": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "35",
+                "impactIndex": "0",
+                "maxFrameMs": "150.0",
+                "motif": "three-interwoven-cloud-currents",
+                "motifs": "[\"three-interwoven-cloud-currents\"]",
+                "phase": "contact",
+                "presentation": "hull-impacts-v4",
+                "targetId": "escort:maglio-review-A-0"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[34,12,10]",
+                "phase": "impact",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "78",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Leggendaria",
+                "sequence": "three-interwoven-currents-one-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "2",
+                "targetId": "escort:maglio-review-A-0",
+                "targetKind": "escort",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          }
+        }
+      ],
+      "recordEndSeconds": 73.152
+    },
+    {
+      "label": "Epica A Difesa sullo scudo zero danni",
+      "sides": [
+        {
+          "who": "A",
+          "energy": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"shield\"]",
+                "frames": "6",
+                "impactIndex": "0",
+                "maxFrameMs": "150.0",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [
+              {
+                "cardId": "energy-ionic",
+                "family": "support",
+                "fleetCardSlot": "A-5",
+                "pendingCard": "true",
+                "rarity": "Comune",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[5]",
+                "phase": "energy",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "0",
+                "cascadeIndex": "0",
+                "defenseBlocked": "true",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "flight": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"shield\"]",
+                "frames": "20",
+                "impactIndex": "0",
+                "maxFrameMs": "150.0",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "flight",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[8,20,8]",
+                "phase": "fire",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "0",
+                "cascadeIndex": "0",
+                "defenseBlocked": "true",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "contact": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"shield\"]",
+                "frames": "40",
+                "impactIndex": "0",
+                "maxFrameMs": "216.6",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "shield-contact",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[7,18,7]",
+                "phase": "block",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "0",
+                "cascadeIndex": "0",
+                "defenseBlocked": "true",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "1",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          }
+        }
+      ],
+      "recordEndSeconds": 91.528
+    },
+    {
+      "label": "Epica A senza Energia, nessuna nube",
+      "state": {
+        "cinema": [
+          {}
+        ],
+        "energy": [],
+        "haptics": [],
+        "shots": [],
+        "supports": []
+      },
+      "noCloud": true,
+      "recordEndSeconds": 132.469
+    },
+    {
+      "label": "Epica A solo riserva Energia vecchia, nessuna nube",
+      "state": {
+        "cinema": [
+          {}
+        ],
+        "energy": [],
+        "haptics": [],
+        "shots": [],
+        "supports": []
+      },
+      "noCloud": true,
+      "recordEndSeconds": 150.06
+    },
+    {
+      "label": "Epica A disabilitata, consumo reale ma nessuna nube",
+      "state": {
+        "cinema": [
+          {}
+        ],
+        "energy": [
+          {
+            "cardId": "energy-ionic",
+            "family": "support",
+            "fleetCardSlot": "A-5",
+            "pendingCard": "true",
+            "rarity": "Comune",
+            "slotRole": "energia",
+            "weaponEnergy": "spent",
+            "weaponEnergyAmount": "1",
+            "weaponEnergyCards": "energy-ionic",
+            "weaponEnergyIndices": "0"
+          }
+        ],
+        "haptics": [
+          {
+            "pattern": "[5]",
+            "phase": "energy",
+            "status": "requested"
+          }
+        ],
+        "shots": [
+          {
+            "actualDamage": "0",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "1",
+            "flightMs": "1500",
+            "impactAtMs": "3000",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Epica",
+            "sequence": "single-volumetric-thundercloud",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "weapons",
+            "targetKind": "part",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "storm-capacitor-cloud"
+          }
+        ],
+        "supports": []
+      },
+      "noCloud": true,
+      "recordEndSeconds": 154.394
+    },
+    {
+      "label": "Epica A salta il pagamento nel turno proprio 2",
+      "state": {
+        "cinema": [],
+        "energy": [],
+        "haptics": [],
+        "shots": [],
+        "supports": []
+      },
+      "noCloud": true
+    },
+    {
+      "label": "Epica riprende nel turno proprio 3 A/B dopo il salto",
+      "sides": [
+        {
+          "who": "A",
+          "energy": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "6",
+                "impactIndex": "0",
+                "maxFrameMs": "266.7",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [
+              {
+                "cardId": "energy-ionic",
+                "family": "support",
+                "fleetCardSlot": "A-5",
+                "pendingCard": "true",
+                "rarity": "Comune",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[5]",
+                "phase": "energy",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "3",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "flight": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "15",
+                "impactIndex": "0",
+                "maxFrameMs": "266.7",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "flight",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[8,20,8]",
+                "phase": "fire",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "3",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "contact": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "37",
+                "impactIndex": "0",
+                "maxFrameMs": "266.7",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "contact",
+                "presentation": "hull-impacts-v4",
+                "targetId": "weapons"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[26]",
+                "phase": "impact",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "player-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "A",
+                "sourceTargetId": "",
+                "stage": "3",
+                "targetId": "weapons",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "rear",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          }
+        },
+        {
+          "who": "B",
+          "energy": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "9",
+                "impactIndex": "0",
+                "maxFrameMs": "133.3",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "charge",
+                "presentation": "hull-impacts-v4",
+                "targetId": "command"
+              }
+            ],
+            "energy": [
+              {
+                "fleetCardSlot": "B-5",
+                "slotRole": "energia",
+                "weaponEnergy": "spent",
+                "weaponEnergyAmount": "1",
+                "weaponEnergyCards": "energy-ionic",
+                "weaponEnergyIndices": "0"
+              }
+            ],
+            "haptics": [
+              {
+                "pattern": "[5]",
+                "phase": "energy",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "3",
+                "targetId": "command",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "flight": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "19",
+                "impactIndex": "0",
+                "maxFrameMs": "133.3",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "flight",
+                "presentation": "hull-impacts-v4",
+                "targetId": "command"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[8,20,8]",
+                "phase": "fire",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "3",
+                "targetId": "command",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          },
+          "contact": {
+            "cinema": [
+              {
+                "active": "1",
+                "activeWeapon": "storm-capacitor-cloud",
+                "comboContact": "false",
+                "contacts": "[\"compressed-thundercloud-contact\"]",
+                "frames": "39",
+                "impactIndex": "0",
+                "maxFrameMs": "150.0",
+                "motif": "single-volumetric-thundercloud",
+                "motifs": "[\"single-volumetric-thundercloud\"]",
+                "phase": "contact",
+                "presentation": "hull-impacts-v4",
+                "targetId": "command"
+              }
+            ],
+            "energy": [],
+            "haptics": [
+              {
+                "pattern": "[26]",
+                "phase": "impact",
+                "status": "requested"
+              }
+            ],
+            "shots": [
+              {
+                "actualDamage": "28",
+                "cascadeIndex": "0",
+                "defenseBlocked": "false",
+                "energySpent": "1",
+                "flightMs": "1500",
+                "impactAtMs": "3000",
+                "originEdge": "opponent-launch-band",
+                "projectiles": "1",
+                "projection": "perspective-3d",
+                "rarity": "Epica",
+                "sequence": "single-volumetric-thundercloud",
+                "shooter": "B",
+                "sourceTargetId": "",
+                "stage": "3",
+                "targetId": "command",
+                "targetKind": "part",
+                "transferEnergy": "0",
+                "visibleEnd": "front",
+                "weaponKind": "storm-capacitor-cloud"
+              }
+            ],
+            "supports": []
+          }
+        }
+      ],
+      "recordEndSeconds": 192.647
+    },
+    {
+      "label": "Leggendaria A entrambi i supporti verificati contemporaneamente",
+      "supports": {
+        "cinema": [
+          {
+            "active": "1",
+            "activeWeapon": "storm-capacitor-cloud",
+            "comboContact": "false",
+            "contacts": "[\"compressed-thundercloud-contact\"]",
+            "frames": "5",
+            "impactIndex": "0",
+            "maxFrameMs": "416.6",
+            "motif": "three-interwoven-cloud-currents",
+            "motifs": "[\"three-interwoven-cloud-currents\"]",
+            "phase": "charge",
+            "presentation": "hull-impacts-v4",
+            "targetId": "escort:maglio-review-B-0"
+          }
+        ],
+        "energy": [],
+        "haptics": [
+          {
+            "pattern": "[3]",
+            "phase": "support",
+            "status": "requested"
+          }
+        ],
+        "shots": [
+          {
+            "actualDamage": "101",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "1",
+            "flightMs": "1500",
+            "impactAtMs": "3000",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "three-interwoven-currents-one-thundercloud",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "storm-capacitor-cloud"
+          }
+        ],
+        "supports": [
+          {
+            "id": "escort:maglio-review-A-0",
+            "side": "A"
+          },
+          {
+            "id": "escort:maglio-review-A-1",
+            "side": "A"
+          }
+        ]
+      },
+      "contact": {
+        "cinema": [
+          {
+            "active": "1",
+            "activeWeapon": "storm-capacitor-cloud",
+            "comboContact": "false",
+            "contacts": "[\"compressed-thundercloud-contact\"]",
+            "frames": "12",
+            "impactIndex": "0",
+            "maxFrameMs": "516.5",
+            "motif": "three-interwoven-cloud-currents",
+            "motifs": "[\"three-interwoven-cloud-currents\"]",
+            "phase": "contact",
+            "presentation": "hull-impacts-v4",
+            "targetId": "escort:maglio-review-B-0"
+          }
+        ],
+        "energy": [],
+        "haptics": [
+          {
+            "pattern": "[34,12,10]",
+            "phase": "impact",
+            "status": "requested"
+          }
+        ],
+        "shots": [
+          {
+            "actualDamage": "101",
+            "cascadeIndex": "0",
+            "defenseBlocked": "false",
+            "energySpent": "1",
+            "flightMs": "1500",
+            "impactAtMs": "3000",
+            "originEdge": "player-launch-band",
+            "projectiles": "1",
+            "projection": "perspective-3d",
+            "rarity": "Leggendaria",
+            "sequence": "three-interwoven-currents-one-thundercloud",
+            "shooter": "A",
+            "sourceTargetId": "",
+            "stage": "1",
+            "targetId": "escort:maglio-review-B-0",
+            "targetKind": "escort",
+            "transferEnergy": "0",
+            "visibleEnd": "rear",
+            "weaponKind": "storm-capacitor-cloud"
+          }
+        ],
+        "supports": []
+      },
+      "recordEndSeconds": 220.546
+    }
+  ],
+  "cards": [
+    {
+      "rarity": "Epica",
+      "image": {
+        "complete": true,
+        "height": 4608,
+        "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/5295fbe23800fb064be42b0b92aee2aab042bcd1/public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-text-base.png",
+        "width": 3072
+      },
+      "baseUnchanged": true,
+      "en": "Card language \nEnglish\nItaliano\nClose card\nSTELLAR STORM\nCAPACITOR CANNON\nWEAPON\nEPIC\nENERGY / ATTACK\n1 LIGHTNING\nDURATION\n3\nTURNS\nDAMAGE / HP\n31 BASE\n14 / LIVE SUPPORT\nEACH OWN TURN\nPLAY NEW LIGHTNING\nNO ENERGY: NO SHOT\nALLIES LOSE NO HP\n1 TARGET\n1 SHOT / TURN",
+      "it": "Card language \nEnglish\nItaliano\nClose card\nCANNONE CONDENSATORE\nDELLA TEMPESTA STELLARE\nARMA\nEPICA\nENERGIA / ATTACCO\n1 FULMINE\nDURATA\n3\nTURNI\nDANNO / HP\n31 BASE\n14 / SUPPORTO VIVO\nOGNI TURNO PROPRIO\nGIOCA NUOVA ENERGIA\nSENZA: NESSUN COLPO\nALLEATI: NESSUN COSTO HP\n1 BERSAGLIO\n1 COLPO / TURNO"
+    },
+    {
+      "rarity": "Leggendaria",
+      "image": {
+        "complete": true,
+        "height": 4608,
+        "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/5295fbe23800fb064be42b0b92aee2aab042bcd1/public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base.png",
+        "width": 3072
+      },
+      "baseUnchanged": true,
+      "en": "Card language \nEnglish\nItaliano\nClose card\nSTELLAR STORM\nCAPACITOR CANNON\nWEAPON\nLEGENDARY\nENERGY / ATTACK\n1 LIGHTNING\nDURATION\n3\nTURNS\nDAMAGE / HP\n43 BASE\n19 / LIVE SUPPORT\nEACH OWN TURN\nPLAY NEW LIGHTNING\nNO ENERGY: NO SHOT\nALLIES LOSE NO HP\n1 TARGET\n1 SHOT / TURN",
+      "it": "Card language \nEnglish\nItaliano\nClose card\nCANNONE CONDENSATORE\nDELLA TEMPESTA STELLARE\nARMA\nLEGGENDARIA\nENERGIA / ATTACCO\n1 FULMINE\nDURATA\n3\nTURNI\nDANNO / HP\n43 BASE\n19 / SUPPORTO VIVO\nOGNI TURNO PROPRIO\nGIOCA NUOVA ENERGIA\nSENZA: NESSUN COLPO\nALLEATI: NESSUN COSTO HP\n1 BERSAGLIO\n1 COLPO / TURNO"
+    }
+  ],
+  "expirationAfterThirdTurn": "⚔\nARMA 1\n⚔\nARMA 2",
+  "video": {
+    "actualBattleRecording": true,
+    "tabAudio": true,
+    "retimed": false,
+    "audioAdded": false,
+    "originalFilename": "condensatore-tempesta-battaglia-stackblitz-originale.webm",
+    "highlightsFilename": "condensatore-tempesta-battaglia-stackblitz-con-audio.mp4",
+    "dimensions": [
+      900,
+      1600
+    ],
+    "recordingVariableFrameRate": true,
+    "durationSeconds": 63.626,
+    "files": [
+      {
+        "filename": "condensatore-tempesta-battaglia-stackblitz-con-audio.mp4",
+        "library_file_id": "libfile_f9ff2f7314f481918c9768804805293a",
+        "file_id": "file_000000001ff88210ba6a75d5eccd1d0e",
+        "version": 0,
+        "bytes": 6501811,
+        "sha256": "cd1b7a0212f27860a8887db17cc68bd88dd6b41a4bf9e56b96d3561982b0529c",
+        "actualBattleRecording": true,
+        "tabAudio": true,
+        "retimed": false
+      },
+      {
+        "filename": "condensatore-tempesta-battaglia-stackblitz-originale.webm",
+        "library_file_id": "libfile_793215fcf42c8191ba01ea64a2c4dbfe",
+        "file_id": "file_000000000c6c81f497662268666dc8a2",
+        "version": 0,
+        "bytes": 60651442,
+        "sha256": "5a70d7ef5222218a657c423f5f83e04aa8b69447a5a7bcd4092a0ae43ac1af68",
+        "actualBattleRecording": true,
+        "tabAudio": true,
+        "retimed": false
+      }
+    ],
+    "highlightsCutList": [
+      {
+        "from": 16,
+        "to": 24,
+        "label": "Epica A"
+      },
+      {
+        "from": 29.5,
+        "to": 37.5,
+        "label": "Epica B"
+      },
+      {
+        "from": 61,
+        "to": 69.5,
+        "label": "Leggendaria A"
+      },
+      {
+        "from": 82,
+        "to": 90,
+        "label": "Leggendaria B"
+      },
+      {
+        "from": 100,
+        "to": 108.5,
+        "label": "Difesa"
+      },
+      {
+        "from": 195.5,
+        "to": 209.5,
+        "label": "Ripresa terzo turno A/B"
+      },
+      {
+        "from": 229,
+        "to": 237.5,
+        "label": "Due supporti"
+      }
+    ]
+  },
+  "finalCleanup": {
+    "energyContributors": 0,
+    "shipMotion": 0,
+    "supportPulses": 0
+  },
+  "sourceApprovalQuote": "confermo",
+  "fullSuite": {
+    "tests": 2485,
+    "passed": 2485,
+    "failed": 0
+  },
+  "buildPassed": true,
+  "preflightPassed": true
+}

@@ -11,8 +11,8 @@
   },
   "buildPassed": true,
   "preflightPassed": true,
-  "fullSuiteStatus": "RUNNING_INITIAL_PASS_TWO_OBSOLETE_EXPECTATIONS_FIXED_AND_38_TARGETED_RETESTS_PASSED",
-  "actualStackblitzBattleVerified": false,
+  "fullSuiteStatus": "PASSED",
+  "actualStackblitzBattleVerified": true,
   "physicalHapticsVerified": false,
   "nominalDamageByLivingSupports": {
     "Epica": [
@@ -30,5 +30,11 @@
   "originalFrontHashesRetained": true,
   "audioScoreSharedWithStudio": true,
   "hapticScoreSharedWithStudio": true,
-  "nativePngPublication": "GitHub workflow restores exact versioned parts; check native PNG commit before StackBlitz sync"
+  "nativePngPublication": "COMPLETED_BYTE_EXACT_GITHUB_WORKFLOW",
+  "fullSuite": {
+    "tests": 2485,
+    "passed": 2485,
+    "failed": 0
+  },
+  "stackblitzCommit": "5295fbe23800fb064be42b0b92aee2aab042bcd1"
 }

@@ -24,8 +24,18 @@ segnalati solo dagli eventi reali. Nominali allineati ai fronti per questa
 famiglia: Epica 31 +14/supporto, Leggendaria 43 +19/supporto; il fattore di
 rarità non viene applicato due volte. Le altre Armi restano invariate.
 Leggere `docs/FULMINE_09_CONDENSATORE_TEMPESTA_2026-11-27.md`.
-Il collaudo della partita StackBlitz è ancora da completare e registrare;
-non confondere il video dello studio con una cattura della partita.
+Il collaudo della partita StackBlitz è completato sulla revisione
+`5295fbe23800fb064be42b0b92aee2aab042bcd1`: dodici prove registrate, due
+rarità A/B, madre/supporti, entrambi gli slot, pagamento, riserva vecchia,
+Arma disabilitata, Difesa, salto/ripresa al terzo turno e scadenza. I due
+fronti nativi caricano a 3072×4608; EN/IT mantiene la stessa base. Salvataggio
+e reload verificati con 790 sorgenti e 52 varianti. Suite 2485/2485, build
+e preflight passati. Rapporto: `docs/collaudi/condensatore-tempesta-2026-11-27/verifica-partita-stackblitz.json`.
+Video REALE con audio della scheda, senza audio aggiunto né cambi di
+velocità; distinto dal vecchio studio. Filmato di 63,626 secondi:
+`condensatore-tempesta-battaglia-stackblitz-con-audio.mp4`,
+`libfile_f9ff2f7314f481918c9768804805293a`. La fluidità del browser cloud è
+variabile: non dichiarare 30 FPS costanti.
 La vibrazione fisica resta da verificare su telefono. La prossima famiglia
 sarà Giudizio Temporale, da leggere prima di proporne la direzione.
 

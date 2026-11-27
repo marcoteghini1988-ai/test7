@@ -26,7 +26,32 @@ Tempesta arrotonda base e bonus separatamente come i fronti approvati,
 poi applica Arsenale, Difesa, affinità e Terreno. I nominali finali non
 ricevono di nuovo il fattore strategico. Gli altri profili rimangono
 invariati. I numeri legacy e i rapporti dello studio sotto restano storia
-della preparazione. Il collaudo StackBlitz dell'inserimento è pendente.
+della preparazione. Il collaudo StackBlitz dell'inserimento è completato sulla revisione
+`5295fbe23800fb064be42b0b92aee2aab042bcd1`, dopo la pubblicazione del codice
+`748279560996cc9f9ef1e0f8e1232792060d3ade` e la materializzazione esatta dei
+quattro PNG. Verificati salvataggio e reload della copia esistente, 790
+sorgenti e 52 varianti. Le due basi caricano a 3072×4608 e il cambio EN/IT
+sostituisce i 18 campi conservando lo stesso PNG.
+
+Dodici prove registrate: Epica e Leggendaria A/B, madre e supporti, slot 1
+e 2; richiamo di entrambi i veri supporti; Difesa con contatto sullo scudo,
+zero danno e zero contraccolpo; nessuna Energia; sola riserva vecchia;
+Arma disabilitata con spesa reale e nessun lancio; salto del secondo
+pagamento, ripresa nel terzo turno e slot svuotati dopo la scadenza.
+Ripristino finale: zero segnalazioni risorsa, zero copie transitorie e
+zero pose residue. `verifica-partita-stackblitz.json` conserva i dati DOM.
+
+Suite completa 2485/2485, build e preflight passati. Il video è una
+registrazione della plancia ufficiale con audio della scheda, 900×1600,
+non un rendering offline. Gli estratti eliminano le pause fra le prove;
+nessuna variazione di velocità, nuovi fotogrammi o audio aggiunto. Il
+browser cloud ha fluidità variabile; non certificare 30 FPS costanti.
+Il filmato finale H.264/AAC mono 48 kHz dura 63,626 secondi e conserva
+900×1600. `condensatore-tempesta-battaglia-stackblitz-con-audio.mp4`,
+`libfile_f9ff2f7314f481918c9768804805293a`. Conservata anche la registrazione
+originale WebM/Opus, 60.651.442 byte,
+`libfile_793215fcf42c8191ba01ea64a2c4dbfe`. Hash e riferimenti sono nel rapporto.
+La vibrazione fisica richiede ancora un telefono compatibile.
 
 ## Archivio della preparazione prima della conferma
 
