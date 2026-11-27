@@ -46,3 +46,10 @@ test('Il profilo non crea carte, non modifica il loro tipo o la descrizione aute
  }
  assert.deepEqual(starter,TACTICAL_STARTER_TYPES);
 });
+
+test('La categoria visibile delle carte offensive è STRATEGIA, non ATTACCO',()=>{
+ const strategia=officialSpecialCardIdentity('tactic-kinetic',TACTICAL_SPECIALS['tactic-kinetic']);
+ const difesa=officialSpecialCardIdentity('tactic-reactive',TACTICAL_SPECIALS['tactic-reactive']);
+ assert.equal(strategia.category,'STRATEGIA');
+ assert.equal(difesa.category,'DIFESA');
+});
