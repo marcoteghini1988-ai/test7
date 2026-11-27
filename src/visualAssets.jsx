@@ -1418,7 +1418,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_20': // P20 Encelado (Custode dell'Antispazio)
+      case 'planet_char_20': // P20 Encelado (Custode dell’Antispazio)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="3" fill={`${c}20`} />
