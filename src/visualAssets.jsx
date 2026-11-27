@@ -1305,7 +1305,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_9': // P9 Plutone (Signore delle Ombre)
+      case 'planet_char_9': // P9 Plutone (Predone della Penombra)
         return (
           <g>
             <circle cx="44" cy="72" r="16" stroke={c} strokeWidth="2.5" fill={`${c}30`} />
@@ -1356,7 +1356,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_14': // P14 Proxima b (Generatore del Caos)
+      case 'planet_char_14': // P14 Proxima b (Sovvertitore del Caso)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="2.5" fill={`${c}15`} />
@@ -1408,7 +1408,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_19': // P19 Io (Nucleo Magmatico)
+      case 'planet_char_19': // P19 Io (Divoratore delle Scorie)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="3" fill="rgba(239, 68, 68, 0.25)" />
@@ -1418,7 +1418,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_20': // P20 Encelado (Sovrano del Vuoto)
+      case 'planet_char_20': // P20 Encelado (Custode dell'Antispazio)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="3" fill={`${c}20`} />
