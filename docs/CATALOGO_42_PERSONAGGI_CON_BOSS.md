@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Le nuove abilità e la rarità Leggendaria dei 12 Boss sbloccabili restano proposte; il codice conserva la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia Comune con una sola abilità è confermato in progettazione; le abilità e rarità degli altri 11 Boss sbloccabili restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -272,20 +272,22 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 ## Personaggi Boss
 
-Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le abilità seguenti sono nuove proposte di adattamento al sistema HP, non poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
+Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. La scheda Gaia è confermata in progettazione con parametri aperti; le altre undici sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
-### 31. Guardiano di Gaia — Terra · settore 10
+### 31. Guardiano di Gaia — Terra · settore 10 · Comune
+
+**Meccanica confermata il 27/11/2026; bilanciamento e implementazione ancora da fare.** Una sola abilità, rigenerazione HP.
 
 **Durante lo scontro (permanente):**
-- Riduce i danni ordinari subiti dalla flotta; ogni turno rinnova una protezione contro il primo colpo ordinario.
-- La prima Difesa schierata da Gaia non occupa una giocata aggiuntiva del giocatore: il bonus riguarda esclusivamente il Boss.
+- Rimane fisso per tutta la battaglia. Gaia non ha navicelle di supporto: il settore 10 precede il primo sblocco NPC al settore 20, come da `src/fleetNext/supportCampaign.js`.
+- A ogni proprio turno recupera una percentuale degli HP massimi della propria nave madre, senza oltrepassarne il massimo.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
-- Riduce i danni del primo colpo ordinario per turno avversario.
-- All'ingresso protegge una navicella alleata scelta da un colpo ordinario.
-- Quando perde il primo supporto, cura la madre una sola volta.
+**Dopo lo sblocco (Comune, durata temporanea da decidere):**
+- È giocabile come normale Personaggio; non è attivo per tutta la battaglia.
+- Durante la permanenza cura una sola navicella alleata viva scelta dal giocatore, madre oppure uno dei supporti presenti, della stessa percentuale dei suoi HP massimi. Non rianima.
+- Percentuale definitiva, numero di turni e scelta del bersaglio (fissa all'attivazione o rinnovabile ogni turno) da confermare. Il 5% era solo una proposta di bilanciamento. Definire il momento delle cure ricorrenti rispettando le regole degli effetti immediati.
 
-ID conservato: `boss-character-1`.
+ID conservato: `boss-character-1`. Le precedenti proposte di protezione e rarità Leggendaria per Gaia sono superate.
 
 ### 32. Colosso di Tharsis — Marte · settore 20
 
