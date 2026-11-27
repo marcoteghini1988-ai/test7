@@ -76,7 +76,7 @@ const PROFILES = Object.freeze({
   step(2,2,vital(4,5,2,3),[2,1],[],0,'Arsenale rinforzato: +1 integrità.'),
   step(2,2,vital(4,5,2,3),[2,2],[],0,'Il supporto da contrattacco raggiunge il grado 2.')
  ]),
- E01:profile('Nebulosa','Controllo difensivo',
+ E01:profile('Nefelarca','Controllo difensivo',
   'Mantiene il Personaggio operativo e sostiene i disturbi con una flotta resistente.',[
   step(2,1,vital(3,4,3,3),[2,1],[],0,'Supporto corazzato di grado 2 e supporto di disturbo di grado 1.'),
   step(2,1,vital(3,4,4,3),[2,1],[],0,'Plancia rinforzata: +1 integrità.'),
@@ -84,7 +84,7 @@ const PROFILES = Object.freeze({
   step(2,2,vital(3,4,4,3),[2,2],[],0,'Corazza nebulosa: riduce di 2 la potenza nemica.'),
   step(2,2,vital(4,4,4,3),[2,2],[],0,'Arsenale rinforzato: +1 integrità.')
  ]),
- E02:profile('Tempesta','Assalto ionico',
+ E02:profile('Vortiluce','Assalto ionico',
   'Una flotta aggressiva che migliora la protezione solo dopo aver completato il proprio attacco.',[
   step(4,0,vital(4,3,3,3),[1,2],[],0,'Supporto difensivo di grado 1 e supporto ionico di grado 2.'),
   step(4,0,vital(4,4,3,3),[1,2],[],0,'Generatore rinforzato: +1 integrità.'),

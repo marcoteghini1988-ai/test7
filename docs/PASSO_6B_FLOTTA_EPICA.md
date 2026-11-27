@@ -4,8 +4,8 @@ Il catalogo del duello integra le quattro epiche e le tredici armi del catalogo 
 
 | Nave | HP per motore L1 → L5 | Armamenti |
 | --- | --- | --- |
-| E01 Nebulosa | 104 → 169 | W17 Corona Solare ♥, W18 Nucleo Prismatico ♦ a soglia 16, W19 Arco Vettoriale ♣ con combo ♣ + ♦ |
-| E02 Tempesta | 99 → 166 | W20 Pioggia Scura ♠, W21 Onde Verdi ♣, W22 Rottura Magnetica ♥ con combo ♥ + ♠ |
+| E01 Nefelarca | 104 → 169 | W17 Corona Solare ♥, W18 Nucleo Prismatico ♦ a soglia 16, W19 Arco Vettoriale ♣ con combo ♣ + ♦ |
+| E02 Vortiluce | 99 → 166 | W20 Pioggia Scura ♠, W21 Onde Verdi ♣, W22 Rottura Magnetica ♥ con combo ♥ + ♠ |
 | E03 Fenice | 112 → 179 | W23 Artiglio Fenice ♥, W24 Reattore Impulso ♦ a soglia 18, W25 Lama della Rinascita ♠ con combo ♥ + ♠ |
 | E04 Orizzonte | 106 → 174 | W26 Cannone Esagonale ♣, W27 Condensatore Solare ♦ a soglia 16, W28 Frecce d’Ombra ♠, W29 Lancia Bipolare ♥ con combo ♥ + ♠ |
 
@@ -14,8 +14,8 @@ Per ogni combo, il seme primario fornisce tutte le munizioni. Il secondo seme se
 ## Verifiche locali
 
 - Build TypeScript/Vite, 78 test e preflight.
-- Aurora-0, Manta Ionica e Nebulosa a L4, con sei viste caricate e 18 letture dei motori senza sovrapposizioni. La Divisione era installata soltanto sulle due Nebulosa.
-- 6 ♦ ÷ 2 ♠ = 3, selezionando prima il 2. Il motore ÷ di Nebulosa è passato da 153 a 137 HP, l’Addizione è rimasta a 153 HP e il Nucleo Prismatico è rimasto in carica a 6/16.
+- Aurora-0, Manta Ionica e Nefelarca a L4, con sei viste caricate e 18 letture dei motori senza sovrapposizioni. La Divisione era installata soltanto sulle due Nefelarca.
+- 6 ♦ ÷ 2 ♠ = 3, selezionando prima il 2. Il motore ÷ di Nefelarca è passato da 153 a 137 HP, l’Addizione è rimasta a 153 HP e il Nucleo Prismatico è rimasto in carica a 6/16.
 - Test delle quattro combo, delle tre soglie e delle progressioni L1–L5. Il test su una flotta mista colpisce un solo motore ÷ con W01, W10 e W19.
 
 ## Asset e prompt
@@ -28,7 +28,7 @@ Production sprite for Eclissi Stellare, an existing tactical space battle game. 
 
 | Nome | Descrizione nel prompt |
 | --- | --- |
-| Nebulosa | Broad swept crescent carrier silhouette with layered angular blue-violet iridescent titanium, a small pale cyan cockpit and restrained lavender aurora lighting. Each wing extends outward and curves slightly forwards. Three compact hardpoint housings, one on the forward centerline and one on each side. |
-| Tempesta | Arrowhead interceptor with jagged swept lightning-shaped wings, deep navy titanium plating, electric lime and pale cyan accents, purple cockpit. Three compact hardpoint housings on the leading wing roots and nose. |
+| Nefelarca | Broad swept crescent carrier silhouette with layered angular blue-violet iridescent titanium, a small pale cyan cockpit and restrained lavender aurora lighting. Each wing extends outward and curves slightly forwards. Three compact hardpoint housings, one on the forward centerline and one on each side. |
+| Vortiluce | Arrowhead interceptor with jagged swept lightning-shaped wings, deep navy titanium plating, electric lime and pale cyan accents, purple cockpit. Three compact hardpoint housings on the leading wing roots and nose. |
 | Fenice | A strong swept double-feather silhouette in burnished copper and ember-red plates, gilded leading edges, dark inner plates, amber cockpit. The form reads as a spacecraft. Three compact hardpoint housings on the two sides and forward centerline. |
 | Orizzonte | A heavy wide hexagonal wedge hull in brushed gunmetal and pale titanium, angular tiered side plates, dark seam work, saturated emerald and warm amber accents. Four compact weapon hardpoint housings across the forward wing edges, evenly spaced and inset. |

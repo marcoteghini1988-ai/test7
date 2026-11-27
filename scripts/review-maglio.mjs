@@ -33,9 +33,9 @@ function Review(){
  const fleets=[
   {name:'Aurora / Lince',shipA:'N00',shipB:'C01',supportModels:['C02','C03']},
   {name:'Binaria / Manta',shipA:'R01',shipB:'R02',supportModels:['C04','E03']},
-  {name:'Squalo / Tempesta',shipA:'R04',shipB:'E02',supportModels:['E01','L02']},
+  {name:'Squalo / Vortiluce',shipA:'R04',shipB:'E02',supportModels:['E01','L02']},
   {name:'Regina / Titano',shipA:'L01',shipB:'L03',supportModels:['L04','N00']},
-  {name:'Nebula / Arca',shipA:'E01',shipB:'L04',supportModels:['L01','L03']},
+  {name:'Nefelarca / Arca',shipA:'E01',shipB:'L04',supportModels:['L01','L03']},
   {name:'Lince / Lince — Fuoco',shipA:'C01',shipB:'C01',supportModels:['C02','C03']}
  ];
  const capture=useRef(null);

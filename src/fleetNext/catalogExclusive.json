@@ -321,7 +321,7 @@
     },
     {
       "id": "E01",
-      "name": "Nebulosa",
+      "name": "Nefelarca",
       "rarity": "Epica",
       "l1Escorts": 2,
       "escort1UnlockLevel": 1,
@@ -372,7 +372,7 @@
     },
     {
       "id": "E02",
-      "name": "Tempesta",
+      "name": "Vortiluce",
       "rarity": "Epica",
       "l1Escorts": 2,
       "escort1UnlockLevel": 1,
@@ -776,7 +776,7 @@
     {
       "id": "ex-e01-01",
       "shipId": "E01",
-      "shipName": "Nebulosa",
+      "shipName": "Nefelarca",
       "rarityDraft": "Epica",
       "name": "Arconte della Bruma",
       "category": "Personaggio",
@@ -804,9 +804,9 @@
     {
       "id": "ex-e02-01",
       "shipId": "E02",
-      "shipName": "Tempesta",
+      "shipName": "Vortiluce",
       "rarityDraft": "Epica",
-      "name": "Capitano della Tempesta",
+      "name": "Capitano di Vortiluce",
       "category": "Personaggio",
       "families": [
         "mobilità",

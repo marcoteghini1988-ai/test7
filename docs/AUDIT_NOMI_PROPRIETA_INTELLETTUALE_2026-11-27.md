@@ -1,8 +1,10 @@
 # Eclissi Stellare — audit nomi e proprietà intellettuale
 **Data di ricognizione:** 27 novembre 2026. **Repository:** `marcoteghini1988-ai/test7`, ramo `main`.
 
+**Aggiornamento successivo:** dopo le ricerche UIBM/EUIPO, i nomi correnti di `E01`, `E02`, `pilot_rare_3` e `pilot_leg_3` sono **Nefelarca**, **Vortiluce**, **Mazziere dell'Etere** e **Armiere dei Tre Fronti**. Le voci storiche dei due piloti sotto vanno lette con questa correzione. L'inventario corrente completo è [qui](AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json); risultati e limiti della ricerca sono nella [verifica dei marchi](VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md). I nomi nuovi non sono certificati liberi.
+
 ## Esito sintetico
-- **Rinomine effettivamente applicate nei cataloghi attuali:** 7 Boss, 1 Personaggio generico, 2 Piloti (uno epico e uno leggendario). Gli ID sono rimasti invariati; in questa fase non sono state riprogettate le abilità.
+- **Rinomine effettivamente applicate nei cataloghi attuali:** 7 Boss, 1 Personaggio generico, 4 Piloti e 2 navi madri (comprese le quattro rinomine successive sopra). Gli ID sono rimasti invariati; in questa fase non sono state riprogettate le abilità.
 - **Inventario di lavoro esaminato:** 161 etichette, ricavate da 12 Boss, 30 Personaggi generici, 16 Piloti Fase 16G, 48 armi del catalogo Fase 1, 22 famiglie arma progettuali, 32 Carte Sistema e 1 carta «Buco Nero».
 - **Duplicazioni esatte interne** dopo normalizzazione di maiuscole, accenti, apostrofi e spazi: **0** in questi gruppi. Non equivale a escludere tutte le omonimie fra asset, varianti, giochi altrui e documenti storici.
 - **Proprietà intellettuale:** ricognizione di originalità e ricerca web preliminare; **non** è un parere legale o una certificazione di libertà d’uso commerciale. La ricerca diretta esaustiva dei marchi identici/simili nei registri ufficiali **non è stata completata**.
@@ -85,7 +87,7 @@ Questi elenchi sono un controllo **interno** dei cataloghi; l'indicizzazione web
 - `pilot_com_4` — Cecchino Quantico
 - `pilot_rare_1` — Corsaro della Rivalsa
 - `pilot_rare_2` — L'Adrenalinico
-- `pilot_rare_3` — Il Baro
+- `pilot_rare_3` — Mazziere dell'Etere
 - `pilot_rare_4` — Mercante dei Riflessi Gemelli
 - `pilot_epic_1` — L'Artificiere di Bordo
 - `pilot_epic_2` — L'Alchimista Aurico
@@ -93,7 +95,7 @@ Questi elenchi sono un controllo **interno** dei cataloghi; l'indicizzazione web
 - `pilot_epic_4` — Comandante della Galaverna
 - `pilot_leg_1` — Stratega delle Tre Figure
 - `pilot_leg_2` — Il Veggente Supremo
-- `pilot_leg_3` — Il Fissatore
+- `pilot_leg_3` — Armiere dei Tre Fronti
 - `pilot_leg_4` — Il Lottatore di Sumo
 
 ### Armi Fase 1 (48)

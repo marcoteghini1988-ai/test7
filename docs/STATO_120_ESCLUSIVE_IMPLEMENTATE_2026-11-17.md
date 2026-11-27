@@ -14,8 +14,8 @@ Le **120 definizioni univoche** delle carte esclusive sono ora eseguibili: **10 
 | 5 | Falco Binario | R01 | 10 |
 | 6 | Manta Ionica | R02 | 10 |
 | 7 | Squalo del Vuoto | R04 | 10 |
-| 8 | Nebulosa | E01 | 10 |
-| 9 | Tempesta | E02 | 10 |
+| 8 | Nefelarca | E01 | 10 |
+| 9 | Vortiluce | E02 | 10 |
 | 10 | Eclisse Reale | L01 | 10 |
 | 11 | Titano Ossidiana | L03 | 10 |
 | 12 | Arca Astrale | L04 | 10 |

@@ -100,8 +100,8 @@ export function validateEffectSpec(spec){
  if(spec.type==='falco'&&!Object.values(FALCO_ACTIONS).includes(spec.action))return 'Azione Falco non valida';
  if(spec.type==='manta'&&!Object.values(MANTA_ACTIONS).includes(spec.action))return 'Azione Manta non valida';
  if(spec.type==='shark'&&!Object.values(SHARK_ACTIONS).includes(spec.action))return 'Azione Squalo non valida';
- if(spec.type==='nebula'&&!Object.values(NEBULA_ACTIONS).includes(spec.action))return 'Azione Nebulosa non valida';
- if(spec.type==='storm'&&!Object.values(STORM_ACTIONS).includes(spec.action))return 'Azione Tempesta non valida';
+ if(spec.type==='nebula'&&!Object.values(NEBULA_ACTIONS).includes(spec.action))return 'Azione Nefelarca non valida';
+ if(spec.type==='storm'&&!Object.values(STORM_ACTIONS).includes(spec.action))return 'Azione Vortiluce non valida';
  if(spec.type==='royal'&&!Object.values(ROYAL_ACTIONS).includes(spec.action))return 'Azione Eclisse Reale non valida';
  if(spec.type==='obsidian'&&!Object.values(OBSIDIAN_ACTIONS).includes(spec.action))return 'Azione Titano Ossidiana non valida';
  if(spec.type==='ark'&&!Object.values(ARK_ACTIONS).includes(spec.action))return 'Azione Arca Astrale non valida';

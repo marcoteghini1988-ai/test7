@@ -27,7 +27,7 @@ const TRAITS=Object.freeze({
       ['ion','Sting di risonanza','command,generator','',2]],
  R04:[['bulwark','Scudo totale del Vuoto','generator,engine','',1],
       ['revenge','Contrattacco Squalo','weapons,command','',2]],
- E01:[['bulwark','Nebulosa corazzata','generator,engine','',1],
+ E01:[['bulwark','Nefelarca corazzata','generator,engine','',1],
       ['jam','Pulsar di soppressione','command,generator','',2]],
  E02:[['partCover','Fronte di tempesta','generator,engine','weapons',1],
       ['ion','Tuono risonante','weapons,command','',2]],

@@ -48,8 +48,8 @@ Non cambiare questa matrice senza testare nuovamente gli abbinamenti delle 17 na
 | R02 | Manta Ionica | L14 | **Fulmine** | Acqua · L10 |
 | R03 | Iride | L13 | **Luce** | Terra · L9 |
 | R04 | Squalo del Vuoto | L12 | **Ombra** | Terra · L8 |
-| E01 | Nebulosa | L11 | **Ghiaccio** | Ombra · L8 |
-| E02 | Tempesta | L10 | **Vento** | Fulmine · L7 |
+| E01 | Nefelarca | L11 | **Ghiaccio** | Ombra · L8 |
+| E02 | Vortiluce | L10 | **Vento** | Fulmine · L7 |
 | E03 | Fenice | L9 | **Fuoco** | Luce · L6 |
 | E04 | Orizzonte | L8 | **Terra** | Gravità · L6 |
 | L01 | Eclisse Reale | L7 | **Luce** | Ombra · L5 |

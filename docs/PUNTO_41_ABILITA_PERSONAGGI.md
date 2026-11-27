@@ -41,7 +41,7 @@
 | Eroi boss | Titano d'Acciaio | Difesa: ultimo vitale superstite |
 | Rare | Il Vendicatore | Attacco: almeno un proprio vitale danneggiato |
 | Rare | L'Adrenalinico | Attacco: proprio scudo a 60% o meno |
-| Rare | Il Baro | Attacco: tre numeriche con semi differenti |
+| Rare | Mazziere dell'Etere | Attacco: tre numeriche con semi differenti |
 | Rare | Il Collezionista di Specchi | Difesa: almeno due vitali propri danneggiati o KO |
 | Epiche | L'Artificiere di Bordo | Attacco: vera speciale Perforante/Corrosione sulla scarica |
 | Epiche | L'Alchimista Aurico | Attacco: due effetti speciali differenti sulla scarica |
@@ -49,7 +49,7 @@
 | Epiche | Comandante della Galaverna | Difesa: proprio scudo madre a zero |
 | Leggendarie | Stratega delle Tre Figure | Attacco: operazione diversa dall'ultima andata a segno |
 | Leggendarie | Il Veggente Supremo | Attacco: colpire una scudiera diversa dalla precedente |
-| Leggendarie | Il Fissatore | Attacco: terzo colpo consecutivo sullo stesso vitale |
+| Leggendarie | Armiere dei Tre Fronti | Attacco: terzo colpo consecutivo sullo stesso vitale |
 | Leggendarie | Il Lottatore di Sumo | Attacco: formula tripla con moltiplicazione o divisione |
 | Leggendarie | L'Amante del Rosso | Attacco: due carte numeriche rosse nel calcolo valido |
 | Leggendarie | L'Amante del Nero | Attacco: due carte numeriche nere nel calcolo valido |

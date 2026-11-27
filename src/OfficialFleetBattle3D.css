@@ -370,7 +370,7 @@
 }
 
 
-/* Nebulosa: solo stati visivi, nessuna sostituzione della plancia 3D. */
+/* Nefelarca: solo stati visivi, nessuna sostituzione della plancia 3D. */
 .es-math-scope .f3d-original-arena .f3d-nebula-status{
  position:absolute;top:146px;left:84px;right:84px;z-index:8;
  display:flex;gap:4px;align-items:center;justify-content:center;
@@ -394,7 +394,7 @@
 }
 
 
-/* Tempesta: indicatore di carica con la stessa plancia metallica 3D 9:16. */
+/* Vortiluce: indicatore di carica con la stessa plancia metallica 3D 9:16. */
 .es-math-scope .f3d-original-arena .f3d-storm-status{
  position:absolute;top:146px;left:84px;right:84px;z-index:8;
  display:flex;gap:4px;align-items:center;justify-content:center;

@@ -26,8 +26,8 @@
 | Falco Binario | R01 | 3:30 | 2:51 | 3:01 | Arsenale |
 | Manta Ionica | R02 | 2:54 | 3:30 | 3:18 | Centralina |
 | Squalo del Vuoto | R04 | 2:47 | 3:30 | 3:06 | Centralina |
-| Nebulosa | E01 | 2:52 | 3:30 | 3:17 | Centralina |
-| Tempesta | E02 | 3:30 | 2:47 | 3:05 | Arsenale |
+| Nefelarca | E01 | 2:52 | 3:30 | 3:17 | Centralina |
+| Vortiluce | E02 | 3:30 | 2:47 | 3:05 | Arsenale |
 | Eclisse Reale | L01 | 3:05 | 3:30 | 3:18 | Centralina |
 | Titano Ossidiana | L03 | 2:48 | 3:30 | 3:10 | Centralina |
 | Arca Astrale | L04 | 3:05 | 3:18 | 3:30 | Plancia |

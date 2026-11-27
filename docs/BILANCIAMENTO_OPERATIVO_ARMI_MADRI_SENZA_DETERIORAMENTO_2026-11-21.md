@@ -41,8 +41,8 @@ Gli HP e i due colpi qui sotto sono i valori NOMINALI della madre al grado Legge
 | Falco Binario | 850 | 243 | 453 |
 | Manta Ionica | 1.100 | 143 | 329 |
 | Squalo del Vuoto | 1.150 | 150 | 344 |
-| Nebulosa | 1.080 | 140 | 309 |
-| Tempesta | 870 | 260 | 486 |
+| Nefelarca | 1.080 | 140 | 309 |
+| Vortiluce | 870 | 260 | 486 |
 | Eclisse Reale | 990 | 206 | 425 |
 | Titano Ossidiana | 1.200 | 140 | 312 |
 | Arca Astrale | 1.000 | 195 | 390 |

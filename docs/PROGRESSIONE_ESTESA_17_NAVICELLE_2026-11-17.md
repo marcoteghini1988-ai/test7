@@ -15,8 +15,8 @@
 | `R02` | Manta Ionica | **14** | L1 | L1 | — |
 | `R03` | Iride | **13** | L1 | L1 | — |
 | `R04` | Squalo del Vuoto | **12** | L1 | L1 | — |
-| `E01` | Nebulosa | **11** | L1 | L1 | — |
-| `E02` | Tempesta | **10** | L1 | L1 | — |
+| `E01` | Nefelarca | **11** | L1 | L1 | — |
+| `E02` | Vortiluce | **10** | L1 | L1 | — |
 | `E03` | Fenice | **9** | L1 | L1 | — |
 | `E04` | Orizzonte | **8** | L1 | L1 | — |
 | `L01` | Eclisse Reale | **7** | L1 | L1 | L5 (una) |

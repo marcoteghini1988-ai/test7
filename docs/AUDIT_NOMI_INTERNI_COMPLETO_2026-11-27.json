@@ -58,6 +58,34 @@
       "currentName": "Mercante dei Riflessi Gemelli",
       "reason": "Omonimia esatta con titolo di romanzo 2024; nome di pilota rinominato",
       "source": "https://lanavediteseo.eu/portfolio/il-collezionista-di-specchi/"
+    },
+    {
+      "id": "E01",
+      "formerName": "Nebulosa",
+      "currentName": "Nefelarca",
+      "reason": "Rinomina precauzionale richiesta dopo ricerca UIBM e EUIPO; ricerche testuali senza risultati pubblicabili per il nuovo nome, non attestazione di disponibilità",
+      "source": "docs/VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md"
+    },
+    {
+      "id": "E02",
+      "formerName": "Tempesta",
+      "currentName": "Vortiluce",
+      "reason": "Rinomina precauzionale richiesta dopo ricerca UIBM e EUIPO; ricerche testuali senza risultati pubblicabili per il nuovo nome, non attestazione di disponibilità",
+      "source": "docs/VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md"
+    },
+    {
+      "id": "pilot_rare_3",
+      "formerName": "Il Baro",
+      "currentName": "Mazziere dell'Etere",
+      "reason": "Rinomina precauzionale richiesta dopo ricerca UIBM e EUIPO; ricerche testuali senza risultati pubblicabili per il nuovo nome, non attestazione di disponibilità",
+      "source": "docs/VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md"
+    },
+    {
+      "id": "pilot_leg_3",
+      "formerName": "Il Fissatore",
+      "currentName": "Armiere dei Tre Fronti",
+      "reason": "Rinomina precauzionale richiesta dopo ricerca UIBM e EUIPO; ricerche testuali senza risultati pubblicabili per il nuovo nome, non attestazione di disponibilità",
+      "source": "docs/VERIFICA_MARCHI_NOMI_PRIORITARI_2026-11-27.md"
     }
   ],
   "caveats": [
@@ -122,14 +150,14 @@
     {
       "group": "navi_madri",
       "id": "E01",
-      "name": "Nebulosa",
+      "name": "Nefelarca",
       "source": "src/phase1FleetCatalog.js",
       "kind": "current"
     },
     {
       "group": "navi_madri",
       "id": "E02",
-      "name": "Tempesta",
+      "name": "Vortiluce",
       "source": "src/phase1FleetCatalog.js",
       "kind": "current"
     },
@@ -920,14 +948,14 @@
     {
       "group": "carte_esclusive_madri",
       "id": "nx-e02-04",
-      "name": "Fronte di Tempesta",
+      "name": "Fronte di Vortiluce",
       "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
       "kind": "current"
     },
     {
       "group": "carte_esclusive_madri",
       "id": "nx-e02-05",
-      "name": "Capitano della Tempesta",
+      "name": "Capitano di Vortiluce",
       "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
       "kind": "current"
     },
@@ -955,14 +983,14 @@
     {
       "group": "carte_esclusive_madri",
       "id": "nx-e02-09",
-      "name": "Condensatore di Tempesta",
+      "name": "Condensatore di Vortiluce",
       "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
       "kind": "current"
     },
     {
       "group": "carte_esclusive_madri",
       "id": "nx-e02-10",
-      "name": "Quadrante di Tempesta",
+      "name": "Quadrante di Vortiluce",
       "source": "docs/NUOVO_CATALOGO_ESCLUSIVE_120_2026-11-16.json",
       "kind": "current"
     },
@@ -1515,7 +1543,7 @@
     {
       "group": "piloti",
       "id": "pilot_rare_3",
-      "name": "Il Baro",
+      "name": "Mazziere dell'Etere",
       "source": "src/newCombat/phase16GPilots.js",
       "kind": "current"
     },
@@ -1571,7 +1599,7 @@
     {
       "group": "piloti",
       "id": "pilot_leg_3",
-      "name": "Il Fissatore",
+      "name": "Armiere dei Tre Fronti",
       "source": "src/newCombat/phase16GPilots.js",
       "kind": "current"
     },
@@ -4524,6 +4552,38 @@
       "category": "Pilota",
       "reason": "Omonimia esatta con romanzo di Salvatore Niffoi, pubblicato da La nave di Teseo nel 2024; differenziazione precauzionale",
       "source": "https://lanavediteseo.eu/portfolio/il-collezionista-di-specchi/",
+      "status": "corretto"
+    },
+    {
+      "cardId": "E01",
+      "previousName": "Nebulosa",
+      "newName": "Nefelarca",
+      "category": "Nave madre",
+      "reason": "Rinomina precauzionale su richiesta; ID e meccaniche invariati; verificare ancora segni simili e territori",
+      "status": "corretto"
+    },
+    {
+      "cardId": "E02",
+      "previousName": "Tempesta",
+      "newName": "Vortiluce",
+      "category": "Nave madre",
+      "reason": "Rinomina precauzionale su richiesta; ID e meccaniche invariati; verificare ancora segni simili e territori",
+      "status": "corretto"
+    },
+    {
+      "cardId": "pilot_rare_3",
+      "previousName": "Il Baro",
+      "newName": "Mazziere dell'Etere",
+      "category": "Pilota",
+      "reason": "Rinomina precauzionale su richiesta; ID e meccaniche invariati; verificare ancora segni simili e territori",
+      "status": "corretto"
+    },
+    {
+      "cardId": "pilot_leg_3",
+      "previousName": "Il Fissatore",
+      "newName": "Armiere dei Tre Fronti",
+      "category": "Pilota",
+      "reason": "Rinomina precauzionale su richiesta; ID e meccaniche invariati; verificare ancora segni simili e territori",
       "status": "corretto"
     }
   ],

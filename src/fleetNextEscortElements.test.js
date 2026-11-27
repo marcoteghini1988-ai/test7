@@ -145,7 +145,7 @@ test('Una fusione Titano eredita Terra e subisce il vantaggio di Fuoco',()=>{
  assert.equal(event?.defenderElement,'mineral');
 });
 
-test('La seconda affinità Ionica di Tempesta non rimuove la debolezza Vento contro Ghiaccio',()=>{
+test('La seconda affinità Ionica di Vortiluce non rimuove la debolezza Vento contro Ghiaccio',()=>{
  const b=duel('E01','E02',11,10); // Ghiaccio prevale su Vento
  const escort=b.sides.B.escorts[0];
  assert.deepEqual(escort.elements,['aerial','ionic']);

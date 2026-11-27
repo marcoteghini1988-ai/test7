@@ -9,8 +9,8 @@ export const ESCORT_DOCTRINES=Object.freeze({
  R01:doctrine('Circuito Binario','motherShield',.08,.02),
  R02:doctrine('Marea Ionica','escortShield',.09,.018),
  R04:doctrine('Morsa del Vuoto','motherShield',.10,.022),
- E01:doctrine('Campo Nebulosa','motherVital',.10,.027),
- E02:doctrine('Scarica Tempesta','escortShield',.11,.021),
+ E01:doctrine('Campo Nefelarca','motherVital',.10,.027),
+ E02:doctrine('Scarica Vortiluce','escortShield',.11,.021),
  L01:doctrine('Corona di Guerra','motherVital',.13,.032),
  L03:doctrine('Giudizio d’Assedio','motherShield',.15,.035),
  L04:doctrine('Sovranità Stellare','motherVital',.16,.04)

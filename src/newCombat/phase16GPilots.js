@@ -19,7 +19,7 @@ export const PHASE16G_PILOTS=Object.freeze(Object.fromEntries([
  pilot('pilot_com_4','Cecchino Quantico','coppia_pura','Vinci con una Coppia senza Jolly: generi energia Boost.'),
  pilot('pilot_rare_1','Corsaro della Rivalsa','risposta_perdente','Perdi rispondendo ma resisti a una salva: recuperi una parte degli HP.'),
  pilot('pilot_rare_2',"L'Adrenalinico",'pressione_hp','Sotto il 40% HP, una salva valida rigenera munizioni e Boost.'),
- pilot('pilot_rare_3','Il Baro','jolly_vincente','Vinci sparando con un Jolly nella figura: guadagni Etere e Boost.'),
+ pilot('pilot_rare_3',"Mazziere dell'Etere",'jolly_vincente','Vinci sparando con un Jolly nella figura: guadagni Etere e Boost.'),
  pilot('pilot_rare_4','Mercante dei Riflessi Gemelli','pareggio_armato','Pareggio Poker con due salve valide: recuperi HP e Boost.'),
  pilot('pilot_epic_1',"L'Artificiere di Bordo",'risposta_dopo_colpo','Dopo aver subito una salva, vinci rispondendo: recuperi HP e munizioni.'),
  pilot('pilot_epic_2',"L'Alchimista Aurico",'tre_semi','Spari con almeno tre semi diversi: recuperi munizioni del serbatoio più scarico e Boost.'),
@@ -27,7 +27,7 @@ export const PHASE16G_PILOTS=Object.freeze(Object.fromEntries([
  pilot('pilot_epic_4','Comandante della Galaverna','semi_opposti','Entrambi sparate con colori di semi opposti: ripristini HP e munizioni.'),
  pilot('pilot_leg_1','Stratega delle Tre Figure','tre_figure','Spari usando tre figure Poker differenti: recuperi Boost, munizioni e HP.'),
  pilot('pilot_leg_2','Il Veggente Supremo','due_risposte','Vinci due risposte consecutive: guadagni Etere, Boost e HP.'),
- pilot('pilot_leg_3','Il Fissatore','tre_classi','Spari usando tutte e tre le classi d’arma: rifornisci munizioni, HP e Boost.'),
+ pilot('pilot_leg_3','Armiere dei Tre Fronti','tre_classi','Spari usando tutte e tre le classi d’arma: rifornisci munizioni, HP e Boost.'),
  pilot('pilot_leg_4','Il Lottatore di Sumo','resistenza_doppia','Resisti a due salve avversarie mentre giochi figure valide: ottieni HP, Boost e munizioni.')
 ].map(x=>[x.id,x])));
 export const PHASE16G_MAIN_IDS=Object.freeze(Object.keys(PHASE16G_PILOTS));

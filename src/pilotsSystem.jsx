@@ -365,7 +365,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_rare_3',
-    name: 'Il Baro',
+    name: "Mazziere dell'Etere",
     rarity: 'Rara',
     rarityColor: '#38bdf8',
     color: '#38bdf8',
@@ -723,7 +723,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_leg_3',
-    name: 'Il Fissatore',
+    name: 'Armiere dei Tre Fronti',
     rarity: 'Leggendaria',
     rarityColor: '#facc15',
     color: '#facc15',

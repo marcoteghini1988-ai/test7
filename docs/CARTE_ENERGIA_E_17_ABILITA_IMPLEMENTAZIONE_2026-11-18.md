@@ -32,8 +32,8 @@
 | R02 | Manta Ionica | Effetto | Sovraccarico Manta | 3 | Disattiva una scudiera |
 | R03 | Iride | Effetto | Rifrazione Vitale | 2 | Ripara HP della madre |
 | R04 | Squalo del Vuoto | Attacco | Morso Abissale | 3 | Salva elementale potenziata |
-| E01 | Nebulosa | Effetto | Nebbia Gelida | 2 | Indebolisce il prossimo attacco nemico |
-| E02 | Tempesta | Attacco | Tempesta a Catena | 3 | Salva elementale potenziata |
+| E01 | Nefelarca | Effetto | Nebbia Gelida | 2 | Indebolisce il prossimo attacco nemico |
+| E02 | Vortiluce | Attacco | Vortiluce a Catena | 3 | Salva elementale potenziata |
 | E03 | Fenice | Effetto | Cuore della Fenice | 3 | Ripara HP della madre |
 | E04 | Orizzonte | Effetto | Baluardo di Orizzonte | 3 | Protezione contro il prossimo attacco |
 | L01 | Eclisse Reale | Attacco | Giudizio Radiante | 3 | Salva elementale potenziata |

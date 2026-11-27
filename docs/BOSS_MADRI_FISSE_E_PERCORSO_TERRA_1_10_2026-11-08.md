@@ -14,8 +14,8 @@ Ora `src/officialBossMotherShips.js` associa ciascuno dei dodici boss a un **mod
 | Colosso di Tharsis · Marte | 20 | R01 · Falco Binario |
 | Matriarca Tossica · Venere | 30 | R03 · Iride |
 | Crono il Distruttore · Saturno | 40 | R04 · Squalo del Vuoto |
-| Sentinella Ionica · Urano | 50 | E01 · Nebulosa |
-| Leviatano Abissale · Nettuno | 60 | E02 · Tempesta |
+| Sentinella Ionica · Urano | 50 | E01 · Nefelarca |
+| Leviatano Abissale · Nettuno | 60 | E02 · Vortiluce |
 | Signore delle Ombre · Plutone | 70 | E03 · Fenice |
 | Idra Criogenica · Europa | 80 | E04 · Orizzonte |
 | Generatore del Caos · Proxima b | 90 | L01 · Eclisse Reale |

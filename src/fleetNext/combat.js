@@ -748,12 +748,12 @@ export function validateFleetTurn(b,who,order){
  if(sharkChoice)return sharkChoice;
  const nebulaCommands=chosen.filter(c=>c.effectSpec?.type==='nebula'&&
   NEBULA_ATTACK_ACTIONS.includes(c.effectSpec.action));
- if(nebulaCommands.length>1)return 'Scegli un solo attacco Nebulosa per turno';
+ if(nebulaCommands.length>1)return 'Scegli un solo attacco Nefelarca per turno';
  const nebulaChoice=nebulaChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
  if(nebulaChoice)return nebulaChoice;
  const stormCommands=chosen.filter(c=>c.effectSpec?.type==='storm'&&
   STORM_ATTACK_ACTIONS.includes(c.effectSpec.action));
- if(stormCommands.length>1)return 'Tempesta: un solo comando offensivo per turno';
+ if(stormCommands.length>1)return 'Vortiluce: un solo comando offensivo per turno';
  const stormReason=stormChoiceReason(side,b.sides[other(who)],chosen,order,b.ply);
  if(stormReason)return stormReason;
  const royalCommands=chosen.filter(c=>c.effectSpec?.type==='royal'&&
@@ -991,9 +991,9 @@ export function validateFleetTurn(b,who,order){
    !['escort','machine'].includes(selected.kind))
    return 'Attacco Squalo: scegli un supporto o una macchina nemici';
   if(nebulaCommands.length&&!['escort','machine'].includes(selected.kind))
-   return 'Attacco Nebulosa: scegli un supporto o una macchina nemici';
+   return 'Attacco Nefelarca: scegli un supporto o una macchina nemici';
   if(stormCommands.length&&!['escort','machine'].includes(selected.kind))
-   return 'Attacco Tempesta: scegli una macchina o un supporto nemico';
+   return 'Attacco Vortiluce: scegli una macchina o un supporto nemico';
   if(royalCommands.length&&!['escort','machine'].includes(selected.kind))
    return 'Comando Eclisse Reale: scegli una unità avversaria';
   if(obsidianCommands.length&&!['escort','machine'].includes(selected.kind))
@@ -2011,7 +2011,7 @@ function sharkCapDamage(b,defender,kind,unit,amount,events){
 }
 
 
-// Nebulosa: tutti i cambi di stato sono applicati al campo, senza carte gratuite.
+// Nefelarca: tutti i cambi di stato sono applicati al campo, senza carte gratuite.
 function activateNebulaCard(b,who,def,ctx,events,order={},source=null){
  const side=b.sides[who],action=def.effectSpec.action;
  const note=(message,extra={})=>events.push(emit(b,who,'card',
@@ -2086,7 +2086,7 @@ function activateNebulaCard(b,who,def,ctx,events,order={},source=null){
   note('Per il prossimo turno nemico: un solo bersaglio per attacco');
   return;
  }
- throw Error('Azione Nebulosa non eseguita: '+action);
+ throw Error('Azione Nefelarca non eseguita: '+action);
 }
 function nebulaHideForTurn(b,ctx,events,order={}){
  if(!order.nebulaHide)return;
@@ -2167,7 +2167,7 @@ function nebulaRevealOnOwnTurn(b,ctx,events){
 }
 
 
-// Tempesta E02: ogni carta produce un effetto reale; nessuna catena ricorsiva.
+// Vortiluce E02: ogni carta produce un effetto reale; nessuna catena ricorsiva.
 function activateStormCard(b,who,def,ctx,events,order={},source=null){
  const side=b.sides[who],action=def.effectSpec.action;
  const note=(message,extra={})=>events.push(emit(b,who,'card',
@@ -2192,7 +2192,7 @@ function activateStormCard(b,who,def,ctx,events,order={},source=null){
   const escort=stormSupports(side,b.ply).find(e=>e.id===order.stormFrontEscortId)||
    stormSupports(side,b.ply)[0];
   const defense=side.defenses.find(d=>d.source===source);
-  if(!escort||!defense)throw Error('Fronte di Tempesta: supporto non operativo');
+  if(!escort||!defense)throw Error('Fronte di Vortiluce: supporto non operativo');
   defense.stormFrontEscortId=escort.id;
   note(escort.name+' intercetterà il prossimo colpo su una macchina alleata',{
    escortId:escort.id});
@@ -2207,7 +2207,7 @@ function activateStormCard(b,who,def,ctx,events,order={},source=null){
    {cardId:def.id}));
   return;
  }
- throw Error('Azione Tempesta non riconosciuta: '+action);
+ throw Error('Azione Vortiluce non riconosciuta: '+action);
 }
 function stormRedirectFront(b,ctx,events,target){
  if(!target||target.kind!=='machine')return target;
@@ -2221,7 +2221,7 @@ function stormRedirectFront(b,ctx,events,target){
   t.unit.id===target.unit.id))return target;
  discardDefense(defender,defense.source);
  events.push(emit(b,other(ctx.who),'storm-front',
-  'Fronte di Tempesta: '+guard.name+' intercetta il colpo sulla macchina',{
+  'Fronte di Vortiluce: '+guard.name+' intercetta il colpo sulla macchina',{
    cardId:defense.id,fromTargetId:target.unit.id,targetId:guard.id,redirected:true}));
  return {kind:'escort',unit:guard,redirected:true,stormOriginKind:'machine'};
 }
@@ -2246,7 +2246,7 @@ function stormConsumeHeavy(b,ctx,events,target,amount){
  if(!state.charge||state.chargeStoredPly>=b.ply)return amount;
  state.charge=false;state.chargeStoredPly=-999;
  events.push(emit(b,ctx.who,'storm-heavy',
-  'Condensatore Tempesta scarica il prossimo colpo pesante',{
+  'Condensatore Vortiluce scarica il prossimo colpo pesante',{
    cardId:'nx-e02-09',targetKind:target.kind,targetId:target.unit.id}));
  return 3; // Il colpo pesante sostituisce la potenza, non la somma.
 }
@@ -2305,7 +2305,7 @@ function stormEndOwnTurn(b,ctx,events){
    if(drawn)side.hand.push(drawn);
    state.captainUsedPly=b.ply;
    events.push(emit(b,ctx.who,'storm-captain',
-    'Capitano della Tempesta: carta scartata e una pescata reale',{
+    'Capitano di Vortiluce: carta scartata e una pescata reale',{
      cardId:'ex-e02-01',discardedCardId:discarded,drawnCardId:drawn||null,
      damagedUnits:ids.length}));
   }
@@ -4644,7 +4644,7 @@ function mergeFalcoShots(a,b){
 
 // Gli attacchi ionici hanno un colpo proprio, senza duplicare la salva ordinaria.
 // Ogni comando Squalo sostituisce la salva ordinaria: mai due attacchi gratis.
-// Tempesta sostituisce la salva ordinaria con colpi esattamente dichiarati.
+// Vortiluce sostituisce la salva ordinaria con colpi esattamente dichiarati.
 function resolveStormShots(b,ctx,events,order){
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
@@ -4658,7 +4658,7 @@ function resolveStormShots(b,ctx,events,order){
  if(!command||!primary)return result;
  if(side.fireBlocked||side.fireDisabledUntil>b.ply){
   side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
-  events.push(emit(b,ctx.who,'no-shot','Tempesta: Attacco bloccato'));return result;
+  events.push(emit(b,ctx.who,'no-shot','Vortiluce: Attacco bloccato'));return result;
  }
  const jam=side.buffs.filter(x=>x.kind==='jam').reduce((v,x)=>v+(x.power||0),0);
  side.buffs=side.buffs.filter(x=>x.kind!=='jam');
@@ -4668,7 +4668,7 @@ function resolveStormShots(b,ctx,events,order){
   enemy.ships[0].defensePower)+ctx.power+
   terrainSalvoModifier(b.terrain,side.ships[0].id).value-jam-guard);
  if(!power){
-  events.push(emit(b,ctx.who,'block','Tempesta: potenza zero, nessun colpo'));return result;
+  events.push(emit(b,ctx.who,'block','Vortiluce: potenza zero, nessun colpo'));return result;
  }
  const record=(planned,amount,index=0)=>{
   if(!planned||!unitAlive(planned.unit))return {damage:0,target:planned};
@@ -4724,7 +4724,7 @@ function resolveStormShots(b,ctx,events,order){
    if(second){record(second,1,2);record(second,1,3);}
    break;
   }
-  default:throw Error('Comando Tempesta sconosciuto: '+command.action);
+  default:throw Error('Comando Vortiluce sconosciuto: '+command.action);
  }
  return result;
 }
@@ -4918,7 +4918,7 @@ function resolveSharkShots(b,ctx,events,order){
 }
 
 
-// Attacchi Nebulosa: nessuna salva normale aggiuntiva o danni automatici.
+// Attacchi Nefelarca: nessuna salva normale aggiuntiva o danni automatici.
 function resolveNebulaShots(b,ctx,events,order){
  startNebulaVolley(ctx);
  const side=b.sides[ctx.who],enemy=b.sides[other(ctx.who)];
@@ -4928,7 +4928,7 @@ function resolveNebulaShots(b,ctx,events,order){
  if(!target||!command||!['escort','machine'].includes(target.kind))return shot;
  if(side.fireBlocked||side.fireDisabledUntil>b.ply){
   side.fireBlocked=false;side.fireDisabledUntil=0;side.lastDisarmedPly=b.ply;
-  events.push(emit(b,ctx.who,'no-shot','Attacco Nebulosa annullato dal blocco Armi'));
+  events.push(emit(b,ctx.who,'no-shot','Attacco Nefelarca annullato dal blocco Armi'));
   return shot;
  }
  const jam=side.buffs.filter(x=>x.kind==='jam').reduce((n,x)=>n+(x.power||0),0);
@@ -4939,7 +4939,7 @@ function resolveNebulaShots(b,ctx,events,order){
   enemy.ships[0].defensePower)+ctx.power+
   terrainSalvoModifier(b.terrain,side.ships[0].id).value-jam-guard);
  if(!power){
-  events.push(emit(b,ctx.who,'block','Attacco Nebulosa annullato dai disturbi'));
+  events.push(emit(b,ctx.who,'block','Attacco Nefelarca annullato dai disturbi'));
   return shot;
  }
  const damage=command.action==='polar-mist'?1:power;

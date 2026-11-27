@@ -1,4 +1,4 @@
-// Eclissi Stellare — Tempesta (E02): attacchi a più unità reali.
+// Eclissi Stellare — Vortiluce (E02): attacchi a più unità reali.
 // Le azioni non inventano bersagli, carte, munizioni né danni ai vitali.
 export const STORM_ACTIONS=Object.freeze({
  'nx-e02-01':'chain-coil',
@@ -47,30 +47,30 @@ export const stormModuleActive=(side,id,ply=0)=>{
 export function stormPrecondition(def,side,battle=null){
  const action=STORM_ACTIONS[def?.id];if(!action)return '';
  const mother=side?.ships?.[0],ply=battle?.ply??0;
- if(mother?.id!=='E02')return 'Carta esclusiva di Tempesta';
- if(mother.level<(def.minShipLevelDraft||1))return 'Livello Tempesta insufficiente';
+ if(mother?.id!=='E02')return 'Carta esclusiva di Vortiluce';
+ if(mother.level<(def.minShipLevelDraft||1))return 'Livello Vortiluce insufficiente';
  if(isStormModule(def.id)){
   const slot=stormModuleSlot(def.id);
   if(!partReady(side,slot==='weapon'?'weapons':'generator'))
    return 'Sistema che alimenta il modulo non operativo';
-  if(side.modules?.[slot]?.cardId===def.id)return 'Modulo Tempesta già installato';
+  if(side.modules?.[slot]?.cardId===def.id)return 'Modulo Vortiluce già installato';
  }
  if(STORM_ATTACK_ACTIONS.includes(action)&&!partReady(side,'weapons'))
-  return 'Arsenale distrutto: comando Tempesta non disponibile';
+  return 'Arsenale distrutto: comando Vortiluce non disponibile';
  const enemy=battle?(battle.sides.A===side?battle.sides.B:battle.sides.A):null;
  const enemies=enemy?stormUnits(enemy,ply):[];
  if(STORM_ATTACK_ACTIONS.includes(action)&&enemy&&!enemies.length)
-  return 'Attacco Tempesta: nessuna unità nemica operativa';
+  return 'Attacco Vortiluce: nessuna unità nemica operativa';
  if(['rebound-lightning','selective-discharge','storm-quadrant'].includes(action)&&enemy&&
-  enemies.length<2)return 'Attacco Tempesta richiede due unità nemiche diverse';
+  enemies.length<2)return 'Attacco Vortiluce richiede due unità nemiche diverse';
  if(action==='storm-front'&&(!partReady(side,'command')||
   !stormSupports(side,ply).length||
   !(side.machines||[]).some(m=>stormAvailable(m,ply))))
-  return 'Fronte di Tempesta richiede Centralina, supporto e macchina alleata operativi';
+  return 'Fronte di Vortiluce richiede Centralina, supporto e macchina alleata operativi';
  if(action==='lightning-net'&&(!partReady(side,'command')||stormSupports(side,ply).length<2))
   return 'Rete parafulmine richiede Centralina e due supporti operativi';
  if(action==='storm-quadrant'&&(!partReady(side,'command')||stormSupports(side,ply).length<2))
-  return 'Quadrante di Tempesta richiede Centralina e due supporti operativi';
+  return 'Quadrante di Vortiluce richiede Centralina e due supporti operativi';
  return '';
 }
 export function stormChoiceReason(side,enemy,chosen=[],order={},ply=0){
@@ -80,15 +80,15 @@ export function stormChoiceReason(side,enemy,chosen=[],order={},ply=0){
   units[0];
  if(actions.includes('storm-front')&&order.stormFrontEscortId&&
   !own.some(e=>e.id===order.stormFrontEscortId))
-  return 'Fronte di Tempesta: supporto scelto non operativo';
+  return 'Fronte di Vortiluce: supporto scelto non operativo';
  if(actions.some(a=>['rebound-lightning','selective-discharge','storm-quadrant'].includes(a))){
-  if(!primary)return 'Attacco Tempesta: nessun bersaglio principale';
+  if(!primary)return 'Attacco Vortiluce: nessun bersaglio principale';
   const second=units.find(t=>t.kind===order.stormSecondKind&&
    t.unit.id===order.stormSecondId);
   if(order.stormSecondId&&(!second||second.unit.id===primary.unit.id))
-   return 'Secondo bersaglio Tempesta assente o uguale al primo';
+   return 'Secondo bersaglio Vortiluce assente o uguale al primo';
   if(!units.some(t=>t.unit.id!==primary.unit.id))
-   return 'Attacco Tempesta: due bersagli diversi obbligatori';
+   return 'Attacco Vortiluce: due bersagli diversi obbligatori';
  }
  if(order.stormChainTargetId&&stormModuleActive(side,'nx-e02-01',ply)){
   if(!units.some(t=>t.kind===order.stormChainTargetKind&&

@@ -61,7 +61,7 @@ test('Proiettore e Ago nello stesso turno: il supporto occultato abilita una sol
  assert.ok(r.events.some(e=>e.kind==='nebula-hide'));
  assert.ok(r.events.some(e=>e.kind==='pierce'));
 });
-test('IA Nebulosa usa il Proiettore disponibile senza carta inventata',()=>{
+test('IA Nefelarca usa il Proiettore disponibile senza carta inventata',()=>{
  const b=battle();equip(b.sides.A,'nx-e01-01');
  const order=autoFleetTurn(b,'A');
  assert.equal(order.nebulaHide,true);
@@ -70,7 +70,7 @@ test('IA Nebulosa usa il Proiettore disponibile senza carta inventata',()=>{
  assert.equal(r.ok,true,r.reason);
  assert.equal(nebulaHidden(r.battle.sides.A.escorts[0],r.battle.ply),true);
 });
-test('Nebulosa E01: dieci esclusive eseguibili solo con questa nave e livelli 6/7/8/9/10',()=>{
+test('Nefelarca E01: dieci esclusive eseguibili solo con questa nave e livelli 6/7/8/9/10',()=>{
  assert.equal(new Set(IDS).size,10);
  for(let level=1;level<=shipMaxLevel('E01');level++){
   assert.equal(eligibleExclusives('E01',level).filter(c=>IDS.includes(c.id)).length,4+EXCLUSIVE_UNLOCK_MILESTONES['E01'].filter(n=>n<=level).length);
@@ -246,7 +246,7 @@ test('Arconte senza Terreno non pesca gratis; richiesta di scambio priva di Terr
  assert.equal(r.battle.sides.A.commander?.id,'ex-e01-01');
  assert.equal(r.events.some(e=>e.terrainTrade),false);
 });
-test('IA Nebulosa genera un ordine eseguibile senza inventare carte o condizioni',()=>{
+test('IA Nefelarca genera un ordine eseguibile senza inventare carte o condizioni',()=>{
  const b=battle();const order=autoFleetTurn(b,'A');
  const r=resolveFleetNextTurn(b,'A',order,1000);
  assert.equal(r.ok,true,r.reason);

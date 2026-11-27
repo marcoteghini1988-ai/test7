@@ -40,7 +40,7 @@ test('Non si può selezionare un cannone non presente nella propria nave',()=>{
  assert.equal(a.battle.orders.A.weaponFocusId,'W02');
  assert.equal(sealTacticalOrder(a.battle,'A',choose('W02'),101).reason,'already_committed');
 });
-test('Plasma di Nebulosa scalda, cinetico del Falco supera più intercettazione',()=>{
+test('Plasma di Nefelarca scalda, cinetico del Falco supera più intercettazione',()=>{
  const nebula=()=>createTacticalDuel({shipA:'E01',shipB:'C01',levelA:5,levelB:5});
  const falco=()=>createTacticalDuel({shipA:'R01',shipB:'C01',levelA:5,levelB:5});
  assert.equal(tacticalWeaponTechnology({id:'W17',name:'Corona Solare'}),'plasma');

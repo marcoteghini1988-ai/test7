@@ -374,7 +374,7 @@ ID conservato: `boss-character-9`.
 
 ### 38. Idra Criogenica — Europa · settore 80 · Epica
 
-Nave madre: Nebulosa (E01), orientata al controllo difensivo, Ghiaccio con affinità secondaria Ombra. Associazione confermata il 27/11/2026.
+Nave madre: Nefelarca (E01), orientata al controllo difensivo, Ghiaccio con affinità secondaria Ombra. Associazione confermata il 27/11/2026.
 
 **Durante lo scontro (permanente):**
 - Prima abilità confermata in progettazione: quando entrambi i supporti sono distrutti, la madre diventa invisibile e si riposiziona casualmente in una delle tre posizioni nave già presenti nella propria metà della plancia (sinistra, centro, destra). Nessuno slot aggiuntivo.
@@ -396,7 +396,7 @@ ID conservato: `boss-character-11`. Meccaniche e durata confermate, dettagli ope
 
 ### 39. Sovvertitore del Caso — Proxima b · settore 90 · Epica
 
-Nave madre: Tempesta (E02).
+Nave madre: Vortiluce (E02).
 
 **Durante lo scontro (permanente):**
 - Unica abilità confermata (eccezione epica): Caos imprevedibile: finché il Personaggio è attivo, all'inizio di ogni turno dell'avversario il gioco estrae casualmente un solo evento applicabile, diverso da quello del turno avversario precedente. L'evento influenza soltanto l'avversario per il turno interessato; il proprietario del Personaggio non subisce il Caos. I sette eventi sono varianti di una sola abilità.

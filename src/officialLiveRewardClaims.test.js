@@ -37,7 +37,7 @@ test('Campagna 1..120: 12 madri, 2 supporti, 12 trofei e 120 pacchetti idempoten
   if(sector===70){
    const ships=readShipCollection(store);
    assert.ok(ships.cards.some(card=>card.shipId==='E02'),
-    'Tempesta è una madre ufficiale ottenibile prima del settore 70');
+    'Vortiluce è una madre ufficiale ottenibile prima del settore 70');
    assert.ok(['C04','R03','E03','E04','L02'].every(id=>
     !ships.cards.some(card=>card.shipId===id)),
     'nessuna delle cinque varianti eliminate deve essere riscattabile');

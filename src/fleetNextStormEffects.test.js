@@ -51,7 +51,7 @@ function shield(side,unit,source='shield-1'){
   target:'escort',escortSlot:unit.slot,untilPly:20});
 }
 
-test('Tempesta ha esattamente dieci esclusive native e sblocchi 6+1+1+1+1',()=>{
+test('Vortiluce ha esattamente dieci esclusive native e sblocchi 6+1+1+1+1',()=>{
  assert.equal(IDS.length,10);
  assert.equal(new Set(IDS).size,10);
  for(let level=1;level<=shipMaxLevel('E02');level++){
@@ -123,7 +123,7 @@ test('Fulmine senza eliminazione del primo bersaglio non genera secondo colpo',(
  assert.equal(x.battle.sides.B.escorts[1].hp,hp);
  assert.equal(x.shot.targets.length,1);
 });
-test('Fronte di Tempesta intercetta una macchina una volta e trasferisce il danno esatto',()=>{
+test('Fronte di Vortiluce intercetta una macchina una volta e trasferisce il danno esatto',()=>{
  let b=make({shipA:'C03',shipB:'E02'});b.sides.B.machines.push(machine('storm-machine',0));
  const escort=b.sides.B.escorts[0];
  b=play(b,'B',['nx-e02-04'],{pass:true,stormFrontEscortId:escort.id}).battle;
@@ -134,7 +134,7 @@ test('Fronte di Tempesta intercetta una macchina una volta e trasferisce il dann
  assert.equal(x.battle.sides.B.defenses.some(d=>d.id==='nx-e02-04'),false);
  assert.equal(x.events.filter(e=>e.kind==='storm-front').length,1);
 });
-test('Fronte di Tempesta non può essere giocato senza macchina alleata',()=>{
+test('Fronte di Vortiluce non può essere giocato senza macchina alleata',()=>{
  const b=make();
  const r=effectUnavailableReason(card('nx-e02-04'),b.sides.A,b);
  assert.match(r,/macchina/);
@@ -266,7 +266,7 @@ test('Bersaglio secondario dichiarato uguale al primo: turno rifiutato immutabil
  assert.equal(r.ok,false);assert.match(r.reason,/Secondo bersaglio/);
  assert.equal(JSON.stringify(b),snapshot);
 });
-test('IA Tempesta non pesca carte inesistenti e produce un ordine eseguibile',()=>{
+test('IA Vortiluce non pesca carte inesistenti e produce un ordine eseguibile',()=>{
  const b=make();b.sides.B.machines.push(machine('m1',0));
  b.sides.A.hand=['nx-e02-02','nx-e02-03','nx-e02-09'];
  const order=autoFleetTurn(b,'A');

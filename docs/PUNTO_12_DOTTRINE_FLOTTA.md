@@ -32,8 +32,8 @@ Aggiornamento del 6 novembre 2026.
 | R02 | Marea Ionica | Scudiere | 9% | 1,8% |
 | R03 | Frazione Iride | Vitali | 9% | 2% |
 | R04 | Morsa del Vuoto | Scudo madre | 10% | 2,2% |
-| E01 | Campo Nebulosa | Vitali | 10% | 2,7% |
-| E02 | Scarica Tempesta | Scudiere | 11% | 2,1% |
+| E01 | Campo Nefelarca | Vitali | 10% | 2,7% |
+| E02 | Scarica Vortiluce | Scudiere | 11% | 2,1% |
 | E03 | Forgia Fenice | Vitali | 12% | 2,6% |
 | E04 | Linea Orizzonte | Scudiere | 12% | 3% |
 | L01 | Corona di Guerra | Vitali | 13% | 3,2% |

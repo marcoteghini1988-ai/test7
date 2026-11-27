@@ -107,8 +107,8 @@ test('Il bonus si applica anche ai comandi di attacco con carte, senza alterare 
  assert.equal(r.battle.sides.B.escorts[0].maxHp,12);
 });
 
-test('Tempesta usa Fulmine come secondo elemento senza modificare il colpo normale',()=>{
- const b=duel('E02','C02',10,18); // Tempesta: Vento primario, Fulmine secondario
+test('Vortiluce usa Fulmine come secondo elemento senza modificare il colpo normale',()=>{
+ const b=duel('E02','C02',10,18); // Vortiluce: Vento primario, Fulmine secondario
  assert.deepEqual([...activeFleetElements('E02',10)],['aerial','ionic']);
  const normal=hit(b);
  assert.equal(normal.result.events.some(e=>e.kind==='elemental-matchup'),false,

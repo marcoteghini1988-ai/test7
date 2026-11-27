@@ -25,8 +25,8 @@
 | R02 | Manta Ionica | 14 | 3 · 5 · 7 · 10 · 12 · 14 | Elettricità | Acqua |
 | R03 | Iride | 13 | 3 · 5 · 7 · 9 · 11 · 13 | Acqua | Terra |
 | R04 | Squalo del Vuoto | 12 | 3 · 5 · 7 · 9 · 11 · 12 | Terra | — |
-| E01 | Nebulosa | 11 | 2 · 4 · 6 · 8 · 10 · 11 | Acqua | Elettricità |
-| E02 | Tempesta | 10 | 2 · 4 · 6 · 8 · 9 · 10 | Elettricità | Fuoco |
+| E01 | Nefelarca | 11 | 2 · 4 · 6 · 8 · 10 · 11 | Acqua | Elettricità |
+| E02 | Vortiluce | 10 | 2 · 4 · 6 · 8 · 9 · 10 | Elettricità | Fuoco |
 | E03 | Fenice | 9 | 2 · 3 · 5 · 6 · 8 · 9 | Fuoco | Acqua |
 | E04 | Orizzonte | 8 | 2 · 3 · 4 · 6 · 7 · 8 | Terra | Acqua |
 | L01 | Eclisse Reale | 7 | 2 · 3 · 4 · 5 · 6 · 7 | Fuoco | Terra |

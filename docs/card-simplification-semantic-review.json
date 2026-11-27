@@ -9683,7 +9683,7 @@
     {
       "id": "ex-e01-05",
       "pool": "exclusive",
-      "name": "Baluardo Nebulosa",
+      "name": "Baluardo di Nefelarca",
       "role": "support",
       "effectSpec": {
         "type": "protect",
@@ -9947,7 +9947,7 @@
     {
       "id": "ex-e02-01",
       "pool": "exclusive",
-      "name": "Capitano della Tempesta",
+      "name": "Capitano di Vortiluce",
       "role": "character",
       "effectSpec": {
         "type": "multishot",
@@ -10137,7 +10137,7 @@
     {
       "id": "ex-e02-04",
       "pool": "exclusive",
-      "name": "Fronte di Tempesta",
+      "name": "Fronte di Vortiluce",
       "role": "support",
       "effectSpec": {
         "type": "protect",
@@ -10389,7 +10389,7 @@
     {
       "id": "ex-e02-08",
       "pool": "exclusive",
-      "name": "Quadrante di Tempesta",
+      "name": "Quadrante di Vortiluce",
       "role": "attack",
       "effectSpec": {
         "type": "multishot",

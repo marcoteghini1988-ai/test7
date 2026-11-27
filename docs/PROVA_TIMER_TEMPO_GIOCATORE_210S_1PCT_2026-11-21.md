@@ -28,8 +28,8 @@
 | Falco Binario | R01 | 210 | 171 | 181 |
 | Manta Ionica | R02 | 174 | 210 | 198 |
 | Squalo del Vuoto | R04 | 167 | 210 | 186 |
-| Nebulosa | E01 | 172 | 210 | 197 |
-| Tempesta | E02 | 210 | 167 | 185 |
+| Nefelarca | E01 | 172 | 210 | 197 |
+| Vortiluce | E02 | 210 | 167 | 185 |
 | Eclisse Reale | L01 | 185 | 210 | 198 |
 | Titano Ossidiana | L03 | 168 | 210 | 190 |
 | Arca Astrale | L04 | 185 | 198 | 210 |

@@ -1347,7 +1347,7 @@
     },
     {
       "id": "ex-e01-05",
-      "name": "Baluardo Nebulosa",
+      "name": "Baluardo di Nefelarca",
       "shipId": "E01",
       "before": {
         "effect": "La scudiera assorbe l’intera salva se collegata e viva; il danno eccedente non raggiunge la madre nello stesso round. Consuma la propria resistenza.",
@@ -1434,7 +1434,7 @@
     },
     {
       "id": "ex-e02-01",
-      "name": "Capitano della Tempesta",
+      "name": "Capitano di Vortiluce",
       "shipId": "E02",
       "before": {
         "effect": "Una volta per round consente di spostare il secondo impulso su un bersaglio distinto.",
@@ -1497,10 +1497,10 @@
     },
     {
       "id": "ex-e02-04",
-      "name": "Fronte di Tempesta",
+      "name": "Fronte di Vortiluce",
       "shipId": "E02",
       "before": {
-        "effect": "Fronte Tempesta intercetta i colpi sulle Armi materne.",
+        "effect": "Fronte Vortiluce intercetta i colpi sulle Armi materne.",
         "category": "Scudiera 1",
         "comboRecipeId": null,
         "counterplay": "Esaurimento resistenza scudiera, manovra di aggiramento prevista, interruzione del collegamento"
@@ -1582,12 +1582,12 @@
     },
     {
       "id": "ex-e02-08",
-      "name": "Quadrante di Tempesta",
+      "name": "Quadrante di Vortiluce",
       "shipId": "E02",
       "before": {
         "effect": "Capitano + Onda a Pettine + Tuono: dopo preparazione, quattro impulsi su quattro vitali diversi disponibili, massimo una frattura ciascuno, senza duplicare sui pezzi assenti.",
         "category": "Combo",
-        "comboRecipeId": "Quadrante di Tempesta",
+        "comboRecipeId": "Quadrante di Vortiluce",
         "counterplay": "Mancanza delle carte effettive, di una risorsa preparata o di un supporto operativo; scadenza finestra combo"
       },
       "after": {

@@ -13,8 +13,8 @@ Tutte le 12 madri raggiungono una potenzialita' comparabile alla rarita' Leggend
 | Falco Binario | 850 | 150 | 4% |
 | Manta Ionica | 1100 | 108 | 11% |
 | Squalo del Vuoto | 1150 | 100 | 14% |
-| Nebulosa | 1080 | 105 | 15% |
-| Tempesta | 870 | 148 | 3% |
+| Nefelarca | 1080 | 105 | 15% |
+| Vortiluce | 870 | 148 | 3% |
 | Eclisse Reale | 990 | 125 | 7% |
 | Titano Ossidiana | 1200 | 95 | 15% |
 | Arca Astrale | 1000 | 120 | 10% |

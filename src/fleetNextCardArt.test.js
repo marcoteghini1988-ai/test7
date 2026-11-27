@@ -17,12 +17,14 @@ test('I fronti storici restano 2:3; nuove carte e Cartografo usano layout senza 
   assert.ok(!svg.includes('ECLISSI STELLARE'),c.id);
  }
 });
-test('Restano i dodici fronti Boss con ritratti originali',()=>{
+test('I dodici Personaggi Boss attendono fronti originali approvati',()=>{
  assert.equal(Object.keys(BOSS_CARDS).length,12);
  for(const boss of Object.values(BOSS_CARDS)){
-  const f=resolve('public'+cardFacePath(boss.id));assert.ok(existsSync(f),boss.id);
-  assert.ok(readFileSync(f,'utf8').includes('data-boss-portrait="'+boss.id+'"'));
+  assert.equal(cardFacePath(boss.id),null,boss.id);
+  assert.equal(existsSync(resolve('public/assets/boss-characters/'+boss.id+'.png')),false,boss.id);
  }
+ const fallback=readFileSync(resolve('src/BossCharacterPortrait.jsx'),'utf8');
+ assert.ok(fallback.includes('CARTA IN PREPARAZIONE'));
 });
 test('La plancia 3D e gli scenari ambientali non sono stati rimossi',()=>{
  const css=readFileSync(resolve('src/OfficialFleetBattle3D.css'),'utf8');

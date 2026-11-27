@@ -1,4 +1,4 @@
-// Nebulosa (E01): dieci esclusive native; occultamento senza invulnerabilita,
+// Nefelarca (E01): dieci esclusive native; occultamento senza invulnerabilita,
 // difese a raffica e Terreni rimossi senza cancellare lo scenario permanente.
 export const NEBULA_ACTIONS=Object.freeze({
  'nx-e01-01':'mist-projector',
@@ -57,16 +57,16 @@ export function nebulaHideReason(side,ply=0,id=null){
 export function nebulaPrecondition(def,side,battle=null){
  const action=NEBULA_ACTIONS[def?.id],ply=battle?.ply??0;
  if(!action)return '';
- if(side?.ships?.[0]?.id!=='E01')return 'Carta esclusiva della Nebulosa';
- if(side.ships[0].level<(def.minShipLevelDraft||1))return 'Livello Nebulosa insufficiente';
+ if(side?.ships?.[0]?.id!=='E01')return 'Carta esclusiva della Nefelarca';
+ if(side.ships[0].level<(def.minShipLevelDraft||1))return 'Livello Nefelarca insufficiente';
  if(isNebulaModule(def.id)){
   const slot=nebulaModuleSlot(def.id);
   if(!vitalActive(side,slot==='weapon'?'weapons':'generator'))
-   return 'Modulo Nebulosa privo di alimentazione';
-  if(side.modules?.[slot]?.cardId===def.id)return 'Modulo Nebulosa gia montato';
+   return 'Modulo Nefelarca privo di alimentazione';
+  if(side.modules?.[slot]?.cardId===def.id)return 'Modulo Nefelarca gia montato';
  }
  if(NEBULA_ATTACK_ACTIONS.includes(action)&&!vitalActive(side,'weapons'))
-  return 'Arsenale distrutto: comando Nebulosa bloccato';
+  return 'Arsenale distrutto: comando Nefelarca bloccato';
  const enemy=battle?(battle.sides.A===side?battle.sides.B:battle.sides.A):null;
  if(NEBULA_ATTACK_ACTIONS.includes(action)&&enemy&&!nebulaTargets(enemy).length)
   return 'Serve una macchina o un supporto avversario';

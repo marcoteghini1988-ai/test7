@@ -11,7 +11,7 @@ export const FLEET_SHIP_PASSIVES=Object.freeze({
  R02:{name:'Risonanza Manta',kind:'ion',parts:['weapons','generator'],interval:2},
  R04:{name:'Morso del Vuoto',kind:'artillery',parts:['weapons','engine'],interval:2},
  E01:{name:'Nebbia polare',kind:'freeze',parts:['generator','weapons'],interval:3},
- E02:{name:'Scarica Tempesta',kind:'precision',parts:['engine','weapons'],interval:2},
+ E02:{name:'Scarica Vortiluce',kind:'precision',parts:['engine','weapons'],interval:2},
  L01:{name:'Furia dell Eclisse',kind:'assault',parts:['weapons','engine'],interval:2},
  L03:{name:'Giudizio del Titano',kind:'artillery',parts:['weapons','engine'],interval:2},
  L04:{name:'Arca risonante',kind:'precision',parts:['command','weapons'],interval:3}

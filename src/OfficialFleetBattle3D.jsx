@@ -1618,7 +1618,7 @@ export default function OfficialFleetBattle3D({
      non entra alcuna riserva, le passive restano attive
     </p>}
     {stormActive&&<p className="f3d-storm-readout">
-     <b>Tempesta</b>
+     <b>Vortiluce</b>
      {' · '+(player.storm?.charge&&stormModuleActive(player,'nx-e02-09',battle.ply)?
       'Condensatore carico: prossimo colpo pesante':
       'Colpisci unità differenti per caricare il Condensatore')}
@@ -1626,7 +1626,7 @@ export default function OfficialFleetBattle3D({
       ' · '+(player.storm.lastHits?.length||0)+' unità danneggiate nel turno precedente'}
     </p>}
     {stormMultiple&&stormSecondChoices.length>0&&
-     <label>Tempesta — seconda unità distinta:
+     <label>Vortiluce — seconda unità distinta:
       <select value={stormOptions.second} onChange={e=>setStormOption('second',e.target.value)}>
        <option value="">Prima unità diversa disponibile</option>
        {stormSecondChoices.map(t=><option key={t.key} value={t.key}>
@@ -1643,7 +1643,7 @@ export default function OfficialFleetBattle3D({
       </select>
      </label>}
     {selectedActions.includes('storm-front')&&stormOwnSupports.length>0&&
-     <label>Fronte di Tempesta — supporto che intercetterà per la macchina:
+     <label>Fronte di Vortiluce — supporto che intercetterà per la macchina:
       <select value={stormOptions.front} onChange={e=>setStormOption('front',e.target.value)}>
        <option value="">Primo supporto operativo</option>
        {stormOwnSupports.map(e=><option key={e.id} value={e.id}>
@@ -1665,7 +1665,7 @@ export default function OfficialFleetBattle3D({
      </label>}
     </>}
     {nebulaActive&&<p className="f3d-nebula-readout">
-     <b>Nebulosa</b>
+     <b>Nefelarca</b>
      {' · '+(nebulaFog?'Occultato: '+nebulaFog.name:
       nebulaModuleActive(player,'nx-e01-01',battle.ply)?'Proiettore pronto':'Nessun supporto occultato')}
     </p>}

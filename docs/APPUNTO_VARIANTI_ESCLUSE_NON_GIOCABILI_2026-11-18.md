@@ -14,7 +14,7 @@
 
 Le definizioni originarie possono essere riesaminate **solo su richiesta futura** tramite la cronologia Git del progetto: `src/fleetNext/variantExclusives.js` al commit `a54317a9d9ce6105bf05d8c4c2f8b2458f256024` e `src/phase1FleetCatalog.js` allo stesso commit. Questo documento è un appunto, non un import eseguibile.
 
-**Le 12 madri ufficiali:** Aurora-0 (N00), Lince Solare (C01), Vespa di Vetro (C02), Corvo a Impulsi (C03), Falco Binario (R01), Manta Ionica (R02), Squalo del Vuoto (R04), Nebulosa (E01), Tempesta (E02), Eclisse Reale (L01), Titano Ossidiana (L03), Arca Astrale (L04).
+**Le 12 madri ufficiali:** Aurora-0 (N00), Lince Solare (C01), Vespa di Vetro (C02), Corvo a Impulsi (C03), Falco Binario (R01), Manta Ionica (R02), Squalo del Vuoto (R04), Nefelarca (E01), Vortiluce (E02), Eclisse Reale (L01), Titano Ossidiana (L03), Arca Astrale (L04).
 
 **I 13 supporti sono un catalogo separato.** Eventuali identificativi tecnici che somigliano a quelli di vecchie varianti devono riferirsi soltanto a supporti indipendenti, non a nuove madri o alle 50 carte ritirate.
 

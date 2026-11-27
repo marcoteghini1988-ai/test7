@@ -102,7 +102,7 @@ Assorbe la pressione con la corazza e prepara la risposta. L’attacco base rima
 | 4 | 4 | 2 | 2 | G2 + G1 | Nessuna | 0 | Arsenale rinforzato: +1 integrità. |
 | 5 | 4 | 2 | 2 | G2 + G2 | Nessuna | 0 | Il supporto da contrattacco raggiunge il grado 2. |
 
-### 8. Nebulosa — Controllo difensivo
+### 8. Nefelarca — Controllo difensivo
 
 Mantiene il Personaggio operativo e sostiene i disturbi con una flotta resistente.
 
@@ -114,7 +114,7 @@ Mantiene il Personaggio operativo e sostiene i disturbi con una flotta resistent
 | 4 | 4 | 2 | 2 | G2 + G2 | Nessuna | 0 | Corazza nebulosa: riduce di 2 la potenza nemica. |
 | 5 | 4 | 2 | 2 | G2 + G2 | Nessuna | 0 | Arsenale rinforzato: +1 integrità. |
 
-### 9. Tempesta — Assalto ionico
+### 9. Vortiluce — Assalto ionico
 
 Una flotta aggressiva che migliora la protezione solo dopo aver completato il proprio attacco.
 

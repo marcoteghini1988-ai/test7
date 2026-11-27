@@ -11,8 +11,8 @@ export const ESCORT_ARMORY=Object.freeze({
  R01:[p('Falco Sentinella','HD','Guardia',3,.25,.32),p('Cannone Binario','SC','Assedio',4,.06,.24,'Accumulo',14)],
  R02:[p('Manta Barriera','CS','Intercettore',3,.22,.28),p('Sting Ionico','DH','Incursore',4,.09,.22)],
  R04:[p('Scudo del Vuoto','DC','Guardia',3,.24,.32),p('Squalo Siluro','SH','Assedio',5,.05,.23,'Accumulo',13)],
- E01:[p('Baluardo Nebulosa','HDC','Baluardo',4,.28,.34),p('Pulsar Nebulosa','SDC','Artiglieria',5,.07,.26,'Accumulo',13)],
- E02:[p('Fronte Tempesta','SCH','Intercettore',4,.25,.32),p('Tuono Doppio','DHS','Assalto',5,.10,.25)],
+ E01:[p('Baluardo di Nefelarca','HDC','Baluardo',4,.28,.34),p('Pulsar di Nefelarca','SDC','Artiglieria',5,.07,.26,'Accumulo',13)],
+ E02:[p('Fronte Vortiluce','SCH','Intercettore',4,.25,.32),p('Tuono Doppio','DHS','Assalto',5,.10,.25)],
  L01:[p('Corona Reale','HDC','Baluardo',5,.29,.39),p('Verdetto Stellare','HDSC','Artiglieria',6,.10,.28,'Accumulo',15)],
  L03:[p('Ala del Giudizio','HSD','Guardia',5,.30,.40),p('Lancia dell’Alba','HDSC','Assedio',7,.08,.29,'Accumulo',16)],
  L04:[p('Arca Eterna','HDSC','Baluardo',5,.30,.42),p('Sovrana del Crepuscolo','HDSC','Artiglieria',7,.12,.30,'Accumulo',17)]

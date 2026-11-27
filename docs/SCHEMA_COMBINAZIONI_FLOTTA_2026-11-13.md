@@ -34,8 +34,8 @@ Le identità e le immagini sono quelle originali di `src/escortArmory.js`. La ta
 | R02 Manta Ionica | Manta Barriera | Difesa tattica | Sting Ionico | Risonanza ionica |
 | R03 Iride | Iride Scudo | Riparazione madre | Prisma Inverso | Puntamento Centralina |
 | R04 Squalo del Vuoto | Scudo del Vuoto | Corazza ad assorbimento totale | Squalo Siluro | Bonus di vendetta |
-| E01 Nebulosa | Baluardo Nebulosa | Corazza ad assorbimento totale | Pulsar Nebulosa | Soppressione |
-| E02 Tempesta | Fronte Tempesta | Difesa delle Armi | Tuono Doppio | Impulso ionico |
+| E01 Nefelarca | Baluardo di Nefelarca | Corazza ad assorbimento totale | Pulsar di Nefelarca | Soppressione |
+| E02 Vortiluce | Fronte Vortiluce | Difesa delle Armi | Tuono Doppio | Impulso ionico |
 | E03 Fenice | Scudo Fenice | Riparazione vitale | Rinascita Plasma | Bonus su madre ferita |
 | E04 Orizzonte | Orizzonte Aegis | Corazza ad assorbimento totale | Orizzonte Lance | Precisione |
 | L01 Eclisse Reale | Corona Reale | Corazza ad assorbimento totale | Verdetto Stellare | Corrosione |

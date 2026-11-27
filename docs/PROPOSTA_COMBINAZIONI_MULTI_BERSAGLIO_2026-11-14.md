@@ -61,8 +61,8 @@ Sono **orientamenti di bilanciamento**, non livelli di potenza già assegnati ne
 | R02 Manta Ionica | Risonanza con scudiera Sting Ionico | Doppie, quadrupla ionica L5 |
 | R03 Iride | Riparazione e concentrazione sulla Centralina | Doppie, difesa prolungata |
 | R04 Squalo del Vuoto | Scudiera che assorbe i colpi, assalto della madre | Doppie, protezione |
-| E01 Nebulosa | Controllo e soppressione avversaria | Doppie, triple situazionali |
-| E02 Tempesta | Ondate distribuite con impulso delle scudiere | Doppie, quadrupla L5 |
+| E01 Nefelarca | Controllo e soppressione avversaria | Doppie, triple situazionali |
+| E02 Vortiluce | Ondate distribuite con impulso delle scudiere | Doppie, quadrupla L5 |
 | E03 Fenice | Riscatto offensivo su madre danneggiata | Doppie, triple |
 | E04 Orizzonte | Colpi perforanti e bersagli scelti | Doppie, triple |
 | L01 Eclisse Reale | Corrosione coordinata e attacco su area | Doppie, quadrupla rara |
