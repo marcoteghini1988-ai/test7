@@ -478,7 +478,7 @@ export const PILOTS_DATABASE = Object.freeze([
   },
   {
     id: 'pilot_boss_8',
-    name: 'Leviatano Abissale',
+    name: 'Serpe delle Fosse Abissali',
     rarity: 'Rara',
     rarityColor: '#38bdf8',
     color: '#0369a1',
