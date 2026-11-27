@@ -1419,7 +1419,7 @@ export default function OfficialFleetBattle3D({
     {arkCustodianActive&&arkHandSpare.length>0&&<>
      <label><input type="checkbox" checked={arkOptions.custodian}
        onChange={e=>setArkOption('custodian',e.target.checked)}/>
-      Custode Astrale: scambia una carta soltanto dopo una riparazione reale di almeno 2 HP
+      Vegliatore delle Rotte Celesti: scambia una carta soltanto dopo una riparazione reale di almeno 2 HP
      </label>
      {arkOptions.custodian&&<label>Carta da mettere sotto il mazzo:
       <select value={arkOptions.custodianBottom}
