@@ -380,7 +380,8 @@ Nave madre: Nebulosa (E01), orientata al controllo difensivo, Ghiaccio con affin
 - Prima abilità confermata in progettazione: quando entrambi i supporti sono distrutti, la madre diventa invisibile e si riposiziona casualmente in una delle tre posizioni nave già presenti nella propria metà della plancia (sinistra, centro, destra). Nessuno slot aggiuntivo.
 - Seconda abilità ancora da progettare.
 - Puntamento confermato: Con la madre invisibile, alla pressione di ESEGUI il gioco apre automaticamente la scelta fra le tre posizioni nave esistenti. È il giocatore a scegliere manualmente lo slot, senza conoscere la posizione della madre; la fase offensiva non inizia prima della scelta. Nessuna selezione automatica del bersaglio.
-- Restano da definire la finestra esatta di riposizionamento, l'eventuale rivelazione, gli effetti ad area, i colpi multipli, le difese, la sospensione e la gestione dell'avvio automatico senza pressione di ESEGUI o della mancata scelta.
+- Sequenza di colpi confermata: La scelta dello slot è unica e vale per tutta la sequenza offensiva avviata da ESEGUI. Se lo slot scelto corrisponde alla posizione della madre invisibile, questa riceve tutti i colpi della sequenza a lei diretti, non soltanto il primo; nessuna nuova scelta o riposizionamento tra i colpi. Difese e altri modificatori ordinari restano da applicare secondo le rispettive regole.
+- Restano da definire la finestra esatta di riposizionamento fra sequenze, l'eventuale rivelazione visiva, l'esito dello slot errato, gli effetti ad area, le difese, la sospensione e la gestione dell'avvio automatico senza pressione di ESEGUI o della mancata scelta.
 
 **Dopo lo sblocco:** Epica confermata; le due abilità della carta giocabile e la durata restano da definire. Le precedenti ipotesi di cura sono archiviate nel registro JSON come proposte non approvate; non sono abilità aggiuntive attive.
 
