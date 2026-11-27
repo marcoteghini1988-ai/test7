@@ -126,7 +126,7 @@ test('Sovvertitore del Caso: zero danni conserva la carica e non produce scarica
  assert.equal(helper.bossExclusive.chaosCharges,3);
 });
 
-test('Cristallo: 2 vere carte numeriche consumate nel ciclo N danno +5 Sincronia dopo un colpo in N+1',()=>{
+test('Boss del Sacrificio: 2 vere carte numeriche consumate nel ciclo N danno +5 Sincronia dopo un colpo in N+1',()=>{
  let a=duel(17,{ah:500}),b=duel(null,{ah:500});
  const numeric={numericIndices:[3,2],vitalId:'weapons',op:'minus'};
  a=cycle(a,numeric);
@@ -142,7 +142,7 @@ test('Cristallo: 2 vere carte numeriche consumate nel ciclo N danno +5 Sincronia
  assert.equal(a.sides.B.bossExclusive.resonanceReadyRound,0);
 });
 
-test('Cristallo: un solo scarto, barriera a zero o Sincronia piena non concedono risorse false',()=>{
+test('Boss del Sacrificio: un solo scarto, barriera a zero o Sincronia piena non concedono risorse false',()=>{
  const side=duel(17).sides.B;
  assert.equal(rememberExclusiveResonanceDiscards(side,1,1),false);
  assert.equal(side.bossExclusive.resonanceReadyRound,0);
@@ -194,7 +194,7 @@ test('Custode dell’Antispazio: seme dominante ruota ogni tre cicli ed è comun
  assert.ok(nextPlanning.lastEvents.some(x=>x.includes('seme dominante ♠ per il ciclo 2')));
 });
 
-test('Sovrano: precisione valida con seme dominante +7%, Cuori o Picche avversari contrasta il ciclo SUCCESSIVO',()=>{
+test('Custode dell’Antispazio: precisione valida con seme dominante +7%, Cuori o Picche avversari contrasta il ciclo SUCCESSIVO',()=>{
  const b=duel(20,{ah:40,bh:40});
  b.sides.A.defense.parts.engine.hp=30;
  b.sides.A.defense.parts.engine.max=30;

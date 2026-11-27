@@ -52,7 +52,7 @@ test('Personaggio Risonanza: scudiera potenziata solo dopo colpo reale della mad
  assert.ok(baselineDamage>0,'Scudiera deve sparare davvero');
  assert.equal(boostedDamage,baselineDamage+1,'Bonus reale anche su salve piccole');
 });
-test('Personaggio Crono: la carta Contromisura deve davvero bloccare un vitale',()=>{
+test('Personaggio Devastatore delle Ere: la carta Contromisura deve davvero bloccare un vitale',()=>{
  let b=game(1,'C01');b.sides.B.defense.shield.hp=45;
  b=finishOfficialLiveTurn(b,1);
  b.sides.B.special.hand[0].type='boss-character-6';

@@ -55,7 +55,7 @@ export function liveBossNativeModifiers(attacker,defender,base,round){
   add('magma',magma.extra);penalty+=magma.penalty||0;
  }else if(kind===20){
   const state=attacker.bossExclusive;
-  // La vecchia precisione del Sovrano non fa danni aggiuntivi al
+  // La vecchia precisione del Custode dell’Antispazio non fa danni aggiuntivi al
   // vitale, che esplode alla firma corretta: prepara invece una
   // sola salva nativa reale nel ciclo dell'attacco o nel seguente.
   if(state.voidLiveArmedUntilRound>=round&&
@@ -88,7 +88,7 @@ export function liveBossOnVitalImpact(attacker,defender,damage,cards,round){
  if(!(damage>0))return;
  rememberExclusiveVenusPrecisionHit(attacker,defender,damage,round);
  cancelExclusiveIdraByHeart(defender,damage,cards,round);
- // Dominante pubblico del Sovrano: una firma vitale riuscita con
+ // Dominante pubblico del Custode dell’Antispazio: una firma vitale riuscita con
  // il seme del ciclo arma il prossimo proiettile. Una firma del
  // giocatore sul boss con quel seme contrasta il ciclo seguente.
  const voidBonus=exclusiveVoidPrecisionBonus(attacker,cards,damage,round);

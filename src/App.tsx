@@ -1290,7 +1290,7 @@ const ALL_ABILITIES = Object.freeze([
   // P6 SATURNO (Comune - Singolo - Max Livello 3)
   {
     id: 'planet_char_6',
-    name: 'Saturno (Anelli di Crono)',
+    name: 'Saturno · Contromossa degli Anelli',
     deckPassiveDesc: 'Mitiga la prima salva subita nella battaglia.',
     element: 'Cosmo',
     type: 'planet_char',
@@ -1354,7 +1354,7 @@ const ALL_ABILITIES = Object.freeze([
   // P8 NETTUNO (Rara - Doppio - Max Livello 6)
   {
     id: 'planet_char_8',
-    name: 'Nettuno (Leviatano)',
+    name: 'Nettuno (Serpe delle Fosse Abissali)',
     deckPassiveDesc: 'Un Jolly Quantico aggiuntivo nel mazzo; un altro dai livelli avanzati.',
     element: 'Cosmo',
     type: 'planet_char',
@@ -1392,7 +1392,7 @@ const ALL_ABILITIES = Object.freeze([
   // P9 PLUTONE (Rara - Doppio - Max Livello 6)
   {
     id: 'planet_char_9',
-    name: 'Plutone (Signore delle Ombre)',
+    name: 'Plutone (Predone della Penombra)',
     deckPassiveDesc: 'Sacrifica una piccola quantità di HP per danni aggiuntivi su una salva valida.',
     element: 'Cosmo',
     type: 'planet_char',
@@ -1579,7 +1579,7 @@ const ALL_ABILITIES = Object.freeze([
   // P14 PROXIMA B (Super Rara - Doppio - Max Livello 6)
   {
     id: 'planet_char_14',
-    name: 'Proxima b (Generatore del Caos)',
+    name: 'Proxima b (Sovvertitore del Caso)',
     deckPassiveDesc: 'Neutralizza una volta un Malus che riduce la mano.',
     element: 'Cosmo',
     type: 'planet_char',
@@ -1707,7 +1707,7 @@ const ALL_ABILITIES = Object.freeze([
   // P17 HAUMEA (Leggendaria - Triplo - Max Livello 9)
   {
     id: 'planet_char_17',
-    name: 'Haumea (Cristallo di Risonanza)',
+    name: 'Haumea (Boss del Sacrificio)',
     deckPassiveDesc: 'Usare armi di classi diverse consecutivamente concede Boost.',
     element: 'Cosmo',
     type: 'planet_char',
@@ -1794,7 +1794,7 @@ const ALL_ABILITIES = Object.freeze([
   // P19 IO (Leggendaria - Triplo - Max Livello 9)
   {
     id: 'planet_char_19',
-    name: 'Io (Nucleo Magmatico)',
+    name: 'Io (Divoratore delle Scorie)',
     deckPassiveDesc: 'Salve valide provocano ustione nel successivo scambio.',
     element: 'Cosmo',
     type: 'planet_char',
@@ -1839,7 +1839,7 @@ const ALL_ABILITIES = Object.freeze([
   // P20 ENCELADO (Leggendaria - Triplo - Max Livello 9)
   {
     id: 'planet_char_20',
-    name: 'Encelado (Sovrano del Vuoto)',
+    name: 'Encelado (Custode dell’Antispazio)',
     deckPassiveDesc: 'Una sola rianimazione automatica per battaglia.',
     element: 'Cosmo',
     type: 'planet_char',
@@ -1851,7 +1851,7 @@ const ALL_ABILITIES = Object.freeze([
     symbol: 'P20',
     color: '#06b6d4',
     glow: 'rgba(6, 182, 212, 0.75)',
-    desc: 'Modulo Ibrido: Sovrano del Vuoto (Auto-Rianimazione + Zero Assoluto Nemico + Scarica Plasma Puro).',
+    desc: 'Modulo Ibrido: Custode dell’Antispazio (Auto-Rianimazione + Zero Assoluto Nemico + Scarica Plasma Puro).',
     unlockCostDust: 750,
     unlockCostDiamonds: 30,
     baseCostDust: 350,
@@ -2010,21 +2010,21 @@ const PLANET_BOSS_RELICS = Object.freeze({
   3: { id: 'relic_p3', planetNum: 3, name: 'Reliquia Acida', planetName: 'Venere', color: '#ca8a04', glow: 'rgba(202, 138, 4, 0.75)', desc: 'Condensato chimico ultra-denso e corrosivo della Matriarca Tossica.' },
   4: { id: 'relic_p4', planetNum: 4, name: 'Reliquia Termica', planetName: 'Mercurio', color: '#fb923c', glow: 'rgba(251, 146, 60, 0.75)', desc: 'Lingotto esagonale forgiato all\'apice termico dell\'Arconte Solare.' },
   5: { id: 'relic_p5', planetNum: 5, name: 'Reliquia delle Tempeste', planetName: 'Giove', color: '#ea580c', glow: 'rgba(234, 88, 12, 0.75)', desc: 'Cella toroidale di vortice ciclonico stabilizzato estratta dalla Grande Macchia.' },
-  6: { id: 'relic_p6', planetNum: 6, name: 'Reliquia Anulare', planetName: 'Saturno', color: '#facc15', glow: 'rgba(250, 204, 21, 0.75)', desc: 'Prisma ottagonale di silicato di ghiaccio e polvere minerale di Crono.' },
+  6: { id: 'relic_p6', planetNum: 6, name: 'Reliquia Anulare', planetName: 'Saturno', color: '#facc15', glow: 'rgba(250, 204, 21, 0.75)', desc: 'Prisma ottagonale di silicato di ghiaccio e polvere minerale del Devastatore delle Ere.' },
   7: { id: 'relic_p7', planetNum: 7, name: 'Reliquia dei Ghiacci', planetName: 'Urano', color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.75)', desc: 'Monolite a freccia ionica in zaffiro polarizzato della Sentinella.' },
-  8: { id: 'relic_p8', planetNum: 8, name: 'Reliquia Abissale', planetName: 'Nettuno', color: '#1d4ed8', glow: 'rgba(29, 78, 216, 0.75)', desc: 'Scaglia idrodinamica subspaziale bioluminescente del Leviatano.' },
-  9: { id: 'relic_p9', planetNum: 9, name: 'Reliquia d\'Antimateria', planetName: 'Plutone', color: '#64748b', glow: 'rgba(100, 116, 139, 0.75)', desc: 'Tetraedro d\'ombra e materia oscura del Signore delle Ombre.' },
+  8: { id: 'relic_p8', planetNum: 8, name: 'Reliquia Abissale', planetName: 'Nettuno', color: '#1d4ed8', glow: 'rgba(29, 78, 216, 0.75)', desc: 'Scaglia idrodinamica subspaziale bioluminescente della Serpe delle Fosse Abissali.' },
+  9: { id: 'relic_p9', planetNum: 9, name: 'Reliquia d\'Antimateria', planetName: 'Plutone', color: '#64748b', glow: 'rgba(100, 116, 139, 0.75)', desc: 'Tetraedro d\'ombra e materia oscura del Predone della Penombra.' },
   10: { id: 'relic_p10', planetNum: 10, name: 'Reliquia di Metano', planetName: 'Titano', color: '#b45309', glow: 'rgba(180, 83, 9, 0.75)', desc: 'Goccia criogenica di idrocarburi liquidi pressurizzati del Colosso.' },
   11: { id: 'relic_p11', planetNum: 11, name: 'Reliquia Oceanica', planetName: 'Europa', color: '#0284c7', glow: 'rgba(2, 132, 199, 0.75)', desc: 'Nucleo idrotermale primordiale racchiuso nel ghiaccio tettonico dell\'Idra.' },
   12: { id: 'relic_p12', planetNum: 12, name: 'Reliquia Magnetica', planetName: 'Ganimede', color: '#475569', glow: 'rgba(71, 85, 105, 0.75)', desc: 'Doppio giroscopio in titanite fusa del Titano d\'Acciaio.' },
   13: { id: 'relic_p13', planetNum: 13, name: 'Reliquia Esoplanetaria', planetName: 'Kepler-186f', color: '#14b8a6', glow: 'rgba(20, 184, 166, 0.75)', desc: 'Matrice a diffrazione fotonica binaria dell\'Eco dei Mondi.' },
-  14: { id: 'relic_p14', planetNum: 14, name: 'Reliquia Primordiale', planetName: 'Proxima b', color: '#6366f1', glow: 'rgba(99, 102, 241, 0.75)', desc: 'Ancora dipolare gravitazionale del Generatore del Caos.' },
+  14: { id: 'relic_p14', planetNum: 14, name: 'Reliquia Primordiale', planetName: 'Proxima b', color: '#6366f1', glow: 'rgba(99, 102, 241, 0.75)', desc: 'Ancora dipolare gravitazionale del Sovvertitore del Caso.' },
   15: { id: 'relic_p15', planetNum: 15, name: 'Reliquia Armonica', planetName: 'TRAPPIST-1e', color: '#d946ef', glow: 'rgba(217, 70, 239, 0.75)', desc: 'Diapason a 7 risonatori polifonici orbitali dell\'Arconte.' },
   16: { id: 'relic_p16', planetNum: 16, name: 'Reliquia Neutrale', planetName: 'Gliese 581g', color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.75)', desc: 'Sfera a baricentro di equilibrio perenne del Custode di Lagrange.' },
-  17: { id: 'relic_p17', planetNum: 17, name: 'Reliquia Cinetica', planetName: 'Haumea', color: '#84cc16', glow: 'rgba(132, 204, 22, 0.75)', desc: 'Ellissoide cinetico ad asse di rotazione ultra-rapida del Cristallo.' },
+  17: { id: 'relic_p17', planetNum: 17, name: 'Reliquia Cinetica', planetName: 'Haumea', color: '#84cc16', glow: 'rgba(132, 204, 22, 0.75)', desc: 'Ellissoide cinetico ad asse di rotazione ultra-rapida del Boss del Sacrificio.' },
   18: { id: 'relic_p18', planetNum: 18, name: 'Reliquia della Discordia', planetName: 'Eris', color: '#f97316', glow: 'rgba(249, 115, 22, 0.75)', desc: 'Scheggia tachionica asimmetrica a campo entropico dell\'EntitÃ .' },
-  19: { id: 'relic_p19', planetNum: 19, name: 'Reliquia Vulcanica', planetName: 'Io', color: '#ef4444', glow: 'rgba(239, 68, 68, 0.75)', desc: 'Camera magmatica al plasma sulfureo attivo del Nucleo Magmatico.' },
-  20: { id: 'relic_p20', planetNum: 20, name: 'Reliquia del Vuoto', planetName: 'Encelado', color: '#00f2fe', glow: 'rgba(0, 242, 254, 0.75)', desc: 'SingolaritÃ  criomagnetica allo zero assoluto del Sovrano del Vuoto.' }
+  19: { id: 'relic_p19', planetNum: 19, name: 'Reliquia Vulcanica', planetName: 'Io', color: '#ef4444', glow: 'rgba(239, 68, 68, 0.75)', desc: 'Camera magmatica al plasma sulfureo attivo del Divoratore delle Scorie.' },
+  20: { id: 'relic_p20', planetNum: 20, name: 'Reliquia del Vuoto', planetName: 'Encelado', color: '#00f2fe', glow: 'rgba(0, 242, 254, 0.75)', desc: 'SingolaritÃ  criomagnetica allo zero assoluto del Custode dell’Antispazio.' }
 });
 
 
@@ -2226,21 +2226,21 @@ const PLANET_ZONE_NAMES = Object.freeze([
   ["Nuvole di Acido", "Valle dei Fiori", "Cratere Luminoso", "Tempio di Afrodite", "Piana di Zolfo", "Altopiano Dorato", "Sorgente Celeste", "Barriera Radiante", "Santuario del Sole", "Matriarca Tossica"],
   ["Bacino Solare", "Cratere di Mercurio", "Piana di Metallo", "Avamposto Termico", "Faglia di Calore", "Rovine di Piombo", "Sito di Fusione", "Santuario del Fuoco", "Tempio della Forgia", "Arconte Solare"],
   ["Oceano di Ammoniaca", "Tempesta Perenne", "Anello di Ghiaccio", "Nucleo di Metano", "Piattaforma Galleggiante", "Vortice di Nubi", "Abisso Elettrico", "Soglia della GravitÃ ", "Cuore Gassoso", "Occhio del Vortice"],
-  ["Anelli di Ghiaccio", "Tempesta di Pulviscolo", "Monolito Esagonale", "Fortezza di Titanite", "Piazzale dei Venti", "Avamposto Saturniano", "Landa Dorata", "Roccaforte di Crono", "Soglia Eterea", "Crono il Distruttore"],
+  ["Anelli di Ghiaccio", "Tempesta di Pulviscolo", "Monolito Esagonale", "Fortezza di Titanite", "Piazzale dei Venti", "Avamposto Saturniano", "Landa Dorata", "Roccaforte delle Ere", "Soglia Eterea", "Devastatore delle Ere"],
   ["Tempesta Polare", "Abisso di Ghiaccio", "Cratere di Urano", "Piana Magnetica", "Avamposto Blu", "Rifugio Glaciale", "Landa di Zaffiro", "Fortezza Celeste", "Tempio di Urania", "Sentinella Ionica"],
-  ["Abisso Blu", "Cratere di Nettuno", "Piana di Ghiaccio Scuro", "Avamposto Abissale", "Faglia Nettuniana", "Rovine Sommerse", "Landa di Neve", "Cittadella Marina", "Soglia Profonda", "Leviatano Abissale"],
-  ["Pianeta Nano", "Cratere di Plutone", "Landa di Ghiaccio Scuro", "Avamposto di Plutone", "Faglia Gelata", "Rovine di Ghiaccio", "Santuario del Buio", "Fortezza di Plutone", "Tempio dell'Oltretomba", "Signore delle Ombre"],
+  ["Abisso Blu", "Cratere di Nettuno", "Piana di Ghiaccio Scuro", "Avamposto Abissale", "Faglia Nettuniana", "Rovine Sommerse", "Landa di Neve", "Cittadella Marina", "Soglia Profonda", "Serpe delle Fosse Abissali"],
+  ["Pianeta Nano", "Cratere di Plutone", "Landa di Ghiaccio Scuro", "Avamposto di Plutone", "Faglia Gelata", "Rovine di Ghiaccio", "Santuario del Buio", "Fortezza di Plutone", "Tempio dell'Oltretomba", "Predone della Penombra"],
   ["Lago di Metano", "Cratere di Titano", "Piana di Neve", "Avamposto di Titano", "Faglia di Idrocarburi", "Atmosfera Densa", "Santuario del Freddo", "Cittadella di Titano", "Portale Titanico", "Colosso di Metano"],
   ["Oceano Sotterraneo", "Cratere di Europa", "Piana di Ghiaccio", "Avamposto di Europa", "Faglia Marina", "Rovine di Cristallo", "Santuario della Vita", "Fortezza Sotterranea", "Tempio delle Maree", "Idra Criogenica"],
   ["Valle dei Giganti", "Cratere di Ganimede", "Piana di Rupi", "Avamposto Ganimede", "Faglia dei Titani", "Rovine Antiche", "Santuario della Luna", "Cittadella di Ganimede", "Portale di Giove", "Titano d'Acciaio"],
   ["Valle di Ghiaccio", "Cratere di Kepler", "Piana Rossa", "Avamposto Kepler", "Faglia Esoplanetaria", "Rovine di Kepler", "Santuario della Terra", "Fortezza Esoterica", "Portale Stellare", "Eco dei Mondi"],
-  ["Valle Sconosciuta", "Cratere di Proxima", "Piana Centauri", "Avamposto Proxima", "Faglia Vicina", "Rovine Alfa", "Santuario di Centauri", "Cittadella di Proxima", "Portale di Alpha", "Generatore del Caos"],
+  ["Valle Sconosciuta", "Cratere di Proxima", "Piana Centauri", "Avamposto Proxima", "Faglia Vicina", "Rovine Alfa", "Santuario di Centauri", "Cittadella di Proxima", "Portale di Alpha", "Sovvertitore del Caso"],
   ["Valle di Vetro", "Cratere di Trappist", "Piana dei Sette", "Avamposto Trappist", "Faglia Armonica", "Rovine di Trappist", "Santuario di Trappist", "Cittadella Armonica", "Portale dei Sette", "Arconte dei Sette"],
   ["Valle di Gliese", "Cratere di Gliese", "Piana di Gliese", "Avamposto Gliese", "Faglia di Gliese", "Rovine di Gliese", "Santuario di Gliese", "Fortezza Gliese", "Portale Gliese", "Custode di Lagrange"],
-  ["Valle di Haumea", "Cratere di Haumea", "Piana di Haumea", "Avamposto Haumea", "Faglia di Haumea", "Rovine di Haumea", "Santuario di Haumea", "Fortezza Haumea", "Portale Haumea", "Cristallo di Risonanza"],
+  ["Valle di Haumea", "Cratere di Haumea", "Piana di Haumea", "Avamposto Haumea", "Faglia di Haumea", "Rovine di Haumea", "Santuario di Haumea", "Fortezza Haumea", "Portale Haumea", "Boss del Sacrificio"],
   ["Valle di Eris", "Cratere di Eris", "Piana di Eris", "Avamposto Eris", "Faglia di Eris", "Rovine di Eris", "Santuario di Eris", "Cittadella Eris", "Portale Eris", "EntitÃ  della Discordia"],
-  ["Valle di Io", "Cratere di Io", "Piana di Io", "Avamposto Io", "Faglia di Io", "Rovine di Io", "Santuario di Io", "Cittadella Io", "Portale Io", "Nucleo Magmatico"],
-  ["Valle di Encelado", "Cratere di Encelado", "Piana di Encelado", "Faglia Glaciale", "Rovine Criogeniche", "Sito Geyser", "Santuario del Gelo", "Cittadella di Encelado", "Portale dell'Oceano", "Sovrano del Vuoto (Boss Finale Multi-Fase)"]
+  ["Valle di Io", "Cratere di Io", "Piana di Io", "Avamposto Io", "Faglia di Io", "Rovine di Io", "Santuario di Io", "Cittadella Io", "Portale Io", "Divoratore delle Scorie"],
+  ["Valle di Encelado", "Cratere di Encelado", "Piana di Encelado", "Faglia Glaciale", "Rovine Criogeniche", "Sito Geyser", "Santuario del Gelo", "Cittadella di Encelado", "Portale dell'Oceano", "Custode dell’Antispazio (Boss Finale Multi-Fase)"]
 ]);
 
 

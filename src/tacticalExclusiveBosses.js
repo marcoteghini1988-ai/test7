@@ -92,7 +92,7 @@ export function expireExclusiveNeurotoxin(side,round){
  return side;
 }
 
-// Crono (Saturno): a real tactic-counter card must block a valid incoming
+// Devastatore delle Ere (Saturno): a real tactic-counter card must block a valid incoming
 // precision strike. Only then charge one native +5% volley. The shot must
 // hurt the barrier within the NEXT TWO cycles, otherwise charge expires.
 // No extra projectiles or retaliation if the boss has no real gun hit.

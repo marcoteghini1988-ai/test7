@@ -28,7 +28,7 @@ test('Frequenza multipla Risonanza: due semi reali L4+, bonus solo su successivo
  assert.equal(arm(b,'engine','plus',[P(3,'♥'),P(3,'♣')]),null,
   'nessuna formula inventata');
 });
-test('Leviatano Profondita: solo 3 numeriche e abilita sbloccata dal livello 4',()=>{
+test('Serpe delle Fosse Abissali Profondita: solo 3 numeriche e abilita sbloccata dal livello 4',()=>{
  const three=[P(1,'♣'),P(3,'♥'),P(5,'♦')];
  const low=game('planet_char_8',3);
  assert.equal(arm(low,'engine','plus',three),null);

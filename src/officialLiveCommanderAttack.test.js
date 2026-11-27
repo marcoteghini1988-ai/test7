@@ -101,7 +101,7 @@ test('Duello reale: combinazione autentica dà +6% alla successiva arma C01',()=
  assert.equal(b.history.some(e=>e.kind==='pilot_bonus'),true);
 });
 
-test('Crono pilota: un vero ricambio arma solo il primo colpo efficace',()=>{
+test('Devastatore delle Ere pilota: un vero ricambio arma solo il primo colpo efficace',()=>{
  const b=scenario('pilot_boss_6'),a=b.sides.A,z=b.sides.B;
  assert.equal(liveCommanderNativeBonus(a,z,50).active,false);
  a.numeric.recycleEvents=1;
@@ -117,7 +117,7 @@ test('Crono pilota: un vero ricambio arma solo il primo colpo efficace',()=>{
  a.numeric.recycleEvents=2;
  assert.equal(liveCommanderNativeBonus(a,z,50).active,true);
 });
-test('LIVE: la vera carta speciale Ricambio concede Crono solo dopo sostituzione autentica',()=>{
+test('LIVE: la vera carta speciale Ricambio concede Devastatore delle Ere solo dopo sostituzione autentica',()=>{
  let b=createOfficialLiveDuel(scenario('pilot_boss_6'),0);
  b.sides.A.special.hand[0].type='tactic-numeric-recycle';
  assert.equal(b.sides.A.numeric.recycleEvents||0,0);

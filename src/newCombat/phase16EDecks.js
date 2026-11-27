@@ -10,15 +10,15 @@ const descriptions={
   1:['Gaia','HP iniziali aggiuntivi; dal livello 3 una protezione al primo colpo.'],
   2:['Tharsis','Salve consecutive con danno crescente; una salva mancata interrompe la serie.'],
   3:['Afrodite','Il primo cambio reale di ogni preparazione recupera una piccola quantità di HP.'],
-  6:['Anelli di Crono','Riduce una volta per battaglia la prima salva avversaria subita.'],
+  6:['Contromossa degli Anelli','Riduce una volta per battaglia la prima salva avversaria subita.'],
   7:['Sentinella Ionica','Mitiga una volta per battaglia il primo colpo in un settore con anomalia o interdizione.'],
-  8:['Leviatano','Inserisce Jolly Quantici supplementari nel mazzo reale.'],
+  8:['Serpe delle Fosse Abissali','Inserisce Jolly Quantici supplementari nel mazzo reale.'],
   9:['Ombre','Una salva valida può consumare HP propri (mai l’ultimo) per aumentare il danno.'],
   11:['Idra','Riduce il costo in Etere dell’estrazione mirata.'],
   14:['Generatore','Blocca una volta per battaglia la riduzione della mano causata da un Malus.'],
   17:['Risonanza','Alternare classi di armi in salve valide ricarica parte del Boost.'],
   19:['Divoratore delle Scorie','Una salva valida può applicare ustione al successivo scambio, senza timer.'],
-  20:['Sovrano','Una rianimazione automatica una sola volta per battaglia.']
+  20:['Custode dell’Antispazio','Una rianimazione automatica una sola volta per battaglia.']
 };
 export const PHASE16E_DECKS=Object.freeze({
   ...Object.fromEntries(PHASE16A_CAMPAIGN_PLANETS.map(p=>[p.deck,Object.freeze({id:p.deck,planet:p.id,name:descriptions[p.id][0],description:descriptions[p.id][1]})])),
@@ -110,7 +110,7 @@ export function resolvePhase16EExchange(state){
       break;
     }
     case 'planet_char_6':{
-      if(enemyShot&&!memory.usedShield){const n=heal(3+Math.ceil(lv/2));memory.usedShield=true;if(n)emit(`Crono: prima salva attenuata di ${n} HP`);}
+      if(enemyShot&&!memory.usedShield){const n=heal(3+Math.ceil(lv/2));memory.usedShield=true;if(n)emit(`Devastatore delle Ere: prima salva attenuata di ${n} HP`);}
       break;
     }
     case 'planet_char_7':{
@@ -175,5 +175,5 @@ export function applyPhase16ERevival(state){
   if(!a||a.id!=='planet_char_20'||a.revived||state.hp.player>0||!state.initialHp?.player||state.phase===TURN_PHASES.FINISHED)return state;
   const restored=Math.max(1,Math.ceil(state.initialHp.player*(0.10+0.01*a.level)));
   return {...state,hp:{...state.hp,player:restored},winner:null,
-    phase16E:{...a,revived:true},history:[...state.history,`Sovrano: rinascita automatica con ${restored} HP`].slice(-20)};
+    phase16E:{...a,revived:true},history:[...state.history,`Custode dell’Antispazio: rinascita automatica con ${restored} HP`].slice(-20)};
 }

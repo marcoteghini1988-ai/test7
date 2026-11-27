@@ -613,7 +613,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    resonanceDeck.percentage+'% ('+appliedResonanceExtra+' HP effettivi)');
  const sovereignNative=rememberTacticalSovereignHit(atk,round,hit.damage,supremacy);
  if(sovereignNative.consumed)
-  log.push(key+': Sovrano (mazzo numerico) · Supremazia +'+
+  log.push(key+': Custode dell’Antispazio (mazzo numerico) · Supremazia +'+
    supremacy.percentage+'% ('+appliedSupremacyExtra+' HP applicati, carica consumata)');
  if(magmaDeck.active&&hit.damage>0)
   log.push(key+': Divoratore delle Scorie (mazzo numerico) · '+magmaDeck.abilities.join(' + ')+
@@ -640,7 +640,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    'bonus applicato '+appliedBloodPactExtra+' HP, danno barriera '+hit.damage+
    '; costo 4 HP già pagato anche se il colpo fallisce)');
  if(chronoNative.active&&chronoNative.extra>0&&hit.damage>0)
-  log.push(key+': Crono · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
+  log.push(key+': Devastatore delle Ere · Controtempo +5% sul pacchetto nativo reale (+'+chronoNative.extra+')');
  if(hit.damage>0&&exclusiveDefenseFactor<1)
   log.push(other(key)+': Gaia · Corazza tellurica consumata (−20% primo impatto alla barriera)');
  if(hit.damage>0&&characterNative.active)
@@ -660,7 +660,7 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
    ombre.percentage+'%, +'+ombre.extra+' HP, resto '+ombre.remainder+'/100)');
  if(hit.damage>0&&bossDefenseFactor<1)
   log.push(other(key)+': '+(def.bossNumericDeck?.id==='planet_char_20'?
-   'Sovrano · Ultimo presidio / Vuoto difensivo':'Primo anello')+
+   'Custode dell’Antispazio · Ultimo presidio / Vuoto difensivo':'Primo anello')+
    ' · impatto alla madre ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'barrier',by:key,target:other(key),packet:before,intercepted,splash,
   guardAbsorbed:barrierGuard.absorbed,
@@ -721,7 +721,7 @@ function applyEscortBarrierVolley(sides,key,plan,orders,status,log,impacts,modif
  if(bossCharacterRememberHit(def,round,hit.damage))
   log.push(other(key)+': Carta Idra · rigenerazione prevista al prossimo ciclo');
  if(characterExtra>0&&hit.damage>0)
-  log.push(key+': Carta Cristallo · scudiera +'+characterExtra+' HP potenziali');
+  log.push(key+': Carta Boss del Sacrificio · scudiera +'+characterExtra+' HP potenziali');
  impacts.push({kind:'escort_barrier',by:key,target:other(key),
   packet,intercepted,guardAbsorbed:barrierGuard.absorbed,damage:hit.damage,escortSlot:plan.escortSlot,
   cardId:plan.cardId,escortWeaponId:plan.escortWeaponId,
@@ -761,11 +761,11 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  }
  if(status[other(key)].newCounter===target){
   if(rememberExclusiveChronoCounter(def,round))
-   log.push(other(key)+': Crono · Controtempo caricato da Contromisura programmata effettiva, per i prossimi 2 cicli');
+   log.push(other(key)+': Devastatore delle Ere · Controtempo caricato da Contromisura programmata effettiva, per i prossimi 2 cicli');
   const counterSync=bossCharacterCounterSync(def,round,true);
   const awarded=Math.min(counterSync,Math.max(0,100-def.sync));
   def.sync+=awarded;
-  if(awarded>0)log.push(other(key)+': Carta Crono · Contromisura efficace +'+awarded+' Sincronia');
+  if(awarded>0)log.push(other(key)+': Carta Devastatore delle Ere · Contromisura efficace +'+awarded+' Sincronia');
   impacts.push({kind:'precision',by:key,target,damage:0,reason:'countered'});
   log.push(key+': attacco a '+target+' respinto da Contromisura programmata');
   return 0;
@@ -830,7 +830,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const consequence=hit.damage>0?tacticalVitalTransition(defense,hit.defense,target):null;
  def.defense=hit.defense;
  if(characterPrecision>0&&hit.damage>0)
-  log.push(key+': Carta Sovrano · precisione multi-seme +'+characterPrecision+' HP potenziali');
+  log.push(key+': Carta Custode dell’Antispazio · precisione multi-seme +'+characterPrecision+' HP potenziali');
  rememberTacticalBossCommanderImpact(atk,def,order,status[key].types,hit.damage,round,{vitalId:target});
  if(pilotDefense.active&&hit.damage>0)
   log.push(other(key)+': Pilota '+pilotDefense.pilotId+' · riduzione '+pilotDefense.percentage+'% sul vitale '+target);
@@ -847,9 +847,9 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
  const sovereignPrecision=rememberTacticalSovereignHit(atk,round,hit.damage,supremacy,
   {destroyedEnemyVital:hit.destroyed});
  if(sovereignPrecision.armed)
-  log.push(key+': Sovrano (mazzo numerico) · Supremazia armata dal KO di un vitale reale (prossimo ciclo)');
+  log.push(key+': Custode dell’Antispazio (mazzo numerico) · Supremazia armata dal KO di un vitale reale (prossimo ciclo)');
  if(sovereignPrecision.consumed)
-  log.push(key+': Sovrano (mazzo numerico) · Supremazia +'+supremacy.percentage+
+  log.push(key+': Custode dell’Antispazio (mazzo numerico) · Supremazia +'+supremacy.percentage+
    '% sul colpo valido (+'+supremacy.extra+' HP prima delle difese, carica consumata)');
  if(magmaVital.active&&hit.damage>0)
   log.push(key+': Divoratore delle Scorie (mazzo numerico) · Forgia moltiplicatrice +'+
@@ -866,7 +866,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(key+': Matriarca Tossica · Neurotossina inflitta a '+other(key)+
    ' (prossimo ciclo: −10% alla riparazione della barriera, rimovibile con Pulizia Sistemi)');
  if(leviatano.active&&hit.damage>0)
-  log.push(key+': Leviatano · '+leviatano.abilities.join(' + ')+' ('+
+  log.push(key+': Serpe delle Fosse Abissali · '+leviatano.abilities.join(' + ')+' ('+
    leviatano.percentage+'%, +'+leviatano.extra+' HP, resto '+leviatano.remainder+'/100)');
  if(idra.active&&hit.damage>0)
   log.push(key+': Idra · '+idra.abilities.join(' + ')+' ('+
@@ -879,7 +879,7 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
    tharsis.extra+' HP (resto '+tharsis.remainder+'/100)');
  if(hit.damage>0&&bossDefenseFactor<1)
   log.push(other(key)+': '+(def.bossNumericDeck?.id==='planet_char_20'?
-   'Sovrano · Ultimo presidio / Vuoto difensivo':'Primo anello')+
+   'Custode dell’Antispazio · Ultimo presidio / Vuoto difensivo':'Primo anello')+
    ' · colpo vitale ridotto del '+Math.round((1-bossDefenseFactor)*100)+'%');
  impacts.push({kind:'precision',by:key,target,damage:hit.damage||0,absorbed,reason:hit.reason,
   destroyed:!!hit.destroyed,rift:riftBypasses});

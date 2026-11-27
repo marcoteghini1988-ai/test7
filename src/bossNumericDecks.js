@@ -5,15 +5,15 @@ const design=[
  ['planet_char_1','Gaia',3,[['Baluardo terrestre','Scudo iniziale e massimo +%',[4,6,8]]]],
  ['planet_char_2','Tharsis',3,[['Pressione marziana','Danni +% sui vitali colpiti consecutivamente',[3,5,7]]]],
  ['planet_char_3','Afrodite',6,[['Ricambio armonico','Ricarica del ricambio numerico in secondi',[13,11,9]],['Sintesi curativa','Riparazione Scudo (carta reale) +%',[5,8,11]]]],
- ['planet_char_6','Anelli di Crono',3,[['Primo anello','Danno del primo impatto alla madre −%',[8,12,16]]]],
+ ['planet_char_6','Contromossa degli Anelli',3,[['Primo anello','Danno del primo impatto alla madre −%',[8,12,16]]]],
  ['planet_char_7','Sentinella Ionica',3,[['Isolamento ionico','Durata della ionizzazione subita −%',[15,25,35]]]],
- ['planet_char_8','Leviatano',6,[['Marea del riciclo','Primo colpo dopo riciclo numerico +%',[4,6,8]],['Profondità tattica','Calcoli validi da tre carte: danno +%',[3,5,7]]]],
+ ['planet_char_8','Serpe delle Fosse Abissali',6,[['Marea del riciclo','Primo colpo dopo riciclo numerico +%',[4,6,8]],['Profondità tattica','Calcoli validi da tre carte: danno +%',[3,5,7]]]],
  ['planet_char_9','Ombre',6,[['Potenza disperata','Danno +% quando lo scudo è ≤35%',[5,8,11]],['Oscurità terminale','Danno ai vitali +% con due propri vitali KO',[4,6,8]]]],
  ['planet_char_11','Idra',6,[['Precisione criogenica','Danno con divisione valida +%',[3,5,7]],['Teste alternate','Danno +% alternando vitali avversari',[4,6,8]]]],
  ['planet_char_14','Generatore',6,[['Schermatura instabile','Durata Ionizzazione e Corrosione subite −%',[15,25,35]],['Accumulo energetico','Sincronia acquisita da eventi reali +%',[10,20,30]]]],
  ['planet_char_17','Risonanza',9,[['Armi armoniche','Danno +% alternando armi che sparano',[4,6,8]],['Frequenza multipla','Danno +% con almeno due semi diversi',[3,5,7]],['Sinfonia di flotta','Danno +% se madre e scudiera sparano insieme',[3,5,7]]]],
  ['planet_char_19','Divoratore delle Scorie',9,[['Risonanza termica','Ogni terzo colpo efficace allo scudo +%',[6,9,12]],['Corrosione ardente','Colpo con vera carta Corrosione +%',[3,5,7]],['Forgia moltiplicatrice','Colpo valido con moltiplicazione +%',[4,6,8]]]],
- ['planet_char_20','Sovrano',9,[['Ultimo presidio','Danni subiti con un solo vitale vivo −%',[8,12,16]],['Vuoto difensivo','Danni alla madre con scudo ≤25% −%',[4,6,8]],['Supremazia','Colpo successivo a un vitale nemico KO +%',[4,6,8]]]]
+ ['planet_char_20','Custode dell’Antispazio',9,[['Ultimo presidio','Danni subiti con un solo vitale vivo −%',[8,12,16]],['Vuoto difensivo','Danni alla madre con scudo ≤25% −%',[4,6,8]],['Supremazia','Colpo successivo a un vitale nemico KO +%',[4,6,8]]]]
 ];
 export const BOSS_NUMERIC_DECKS=Object.freeze(Object.fromEntries(design.map(([id,name,maxLevel,raw])=>[
  id,Object.freeze({id,name,maxLevel,abilities:Object.freeze(raw.map(([name,description,grades])=>

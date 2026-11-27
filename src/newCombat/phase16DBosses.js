@@ -104,10 +104,10 @@ export function resolvePhase16DBossExchange(state){
        break;
      case 6: // Saturno: ricompensa il contrattacco superiore, senza riflettere colpi letali.
        if(shot&&bossWon&&bossReplied){
-         addBoost('enemy',5,'Crono anticipa la prossima mossa');
+         addBoost('enemy',5,'Il Devastatore delle Ere anticipa la prossima mossa');
          const suit=e?.suit;
          if(suit&&Number.isFinite(ammo.enemy[suit])){
-           ammo.enemy[suit]+=2;emit('ammo',2,'Crono recupera munizioni rispondendo');
+           ammo.enemy[suit]+=2;emit('ammo',2,'Il Devastatore delle Ere recupera munizioni rispondendo');
          }
        }
        break;
@@ -162,7 +162,7 @@ export function resolvePhase16DBossExchange(state){
          addBoost('player',3,`Il giocatore neutralizza il dominio ${SUIT_NAMES[dominant]}`);
          emit('status',0,`Dominio ${SUIT_NAMES[dominant]} neutralizzato`);
        }else if(shot&&enemySuits.has(dominant)){
-         damage(7,`Dominio ${SUIT_NAMES[dominant]} del Sovrano`);
+         damage(7,`Dominio ${SUIT_NAMES[dominant]} del Custode dell’Antispazio`);
        }
        break;
      }

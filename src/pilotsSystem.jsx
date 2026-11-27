@@ -1008,7 +1008,7 @@ export const PILOTS_DATABASE = Object.freeze([
     obtainable: false,
     image: null,
     portrait: { bg: '#1c1917', visor: '#facc15', accent: '#fde68a', symbol: 'SA' },
-    trait: 'Sentinella Saturniana: condensa polvere di ghiaccio e silicato negli anelli di Crono.',
+    trait: 'Sentinella Saturniana: condensa polvere di ghiaccio e silicato negli anelli di Saturno.',
     weakness: 'Cedevole sotto usura entropica.',
     upgradeTable: {
       1: { flatBonus: 3 },

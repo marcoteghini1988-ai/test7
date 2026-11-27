@@ -59,7 +59,7 @@ test('Matriarca Tossica: colpo valido applica status e poi danneggia un sistema'
  const next=round(first.battle,order('engine'),order('engine'));
  assert.ok(next.battle.log.some(e=>e.text.includes('Neurotossina')));
 });
-test('Crono punisce due speciali; Sifone ionico consuma solo il primo impulso',()=>{
+test('Devastatore delle Ere punisce due speciali; Sifone ionico consuma solo il primo impulso',()=>{
  const crono=match(6);
  assert.ok(round(crono,order('command',[0,1])).battle.log.some(e=>e.text.includes('Controtempo')));
  const ion=match(7);
@@ -67,7 +67,7 @@ test('Crono punisce due speciali; Sifone ionico consuma solo il primo impulso',(
  const first=round(ion,order('command',[0]));
  assert.equal(first.battle.bossState.ionSiphonUsed,true);
 });
-test('Leviatano: pressione quando la madre ha un vitale fratturato',()=>{
+test('Serpe delle Fosse Abissali: pressione quando la madre ha un vitale fratturato',()=>{
  const b=match(8);
  const fresh=round(b);
  assert.ok(!fresh.battle.log.some(e=>e.text.includes('Pressione degli abissi sul sistema')));

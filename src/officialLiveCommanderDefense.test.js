@@ -25,7 +25,7 @@ test('Guardiano di Gaia pilota: riduce solo primo colpo vero alla barriera madre
  assert.equal(result.prevented,0);
  assert.equal(result.active,false);
 });
-test('Leviatano pilota: difende madre sopra metà scudo con resto frazionato',()=>{
+test('Serpe delle Fosse Abissali pilota: difende madre sopra metà scudo con resto frazionato',()=>{
  const b=game('pilot_boss_8'),a=b.sides.A,z=b.sides.B;
  let first=liveCommanderDefensePacket(a,z,8);
  assert.equal(first.damage,8);

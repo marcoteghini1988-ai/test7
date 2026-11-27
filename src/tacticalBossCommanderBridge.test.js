@@ -72,7 +72,7 @@ test('Venere, Plutone e Io: stati/HP/contatore REALI, senza bonus a vuoto',()=>{
  b.sides.A.commander.successfulMotherHits=3;
  assert.equal(bonus(b).active,false);
 });
-test('Crono, Generatore e Cristallo: ricambio vero, due offensive, cambio di operazione',()=>{
+test('Devastatore delle Ere, Sovvertitore del Caso e Boss del Sacrificio: ricambio vero, due offensive, cambio di operazione',()=>{
  let b=create('pilot_boss_6');
  assert.equal(bonus(b).active,false);
  b.sides.A.numericRecyclesTotal=1;
@@ -89,7 +89,7 @@ test('Crono, Generatore e Cristallo: ricambio vero, due offensive, cambio di ope
  b.sides.A.commander.lastOp='plus';
  assert.equal(bonus(b).active,false);
 });
-test('Sovrano: +12% solo sull ultimo vitale vivo, tre KO autentici propri del nemico',()=>{
+test('Custode dell’Antispazio: +12% solo sull ultimo vitale vivo, tre KO autentici propri del nemico',()=>{
  const b=create('pilot_boss_20');
  assert.equal(bonus(b).active,false);
  for(const id of ['weapons','engine','command'])b.sides.B.defense.parts[id].hp=0;

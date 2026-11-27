@@ -14,7 +14,7 @@ test('Mazzo Gaia conserva gli HP autentici iniziali sulla barriera, non crea car
  assert.equal(b.sides.A.defense.shield.max,64); // 60 + floor(60*8%)
  assert.equal(b.sides.A.defense.shield.hp,64);
 });
-test('Anelli di Crono difende soltanto il primo pacchetto efficace',()=>{
+test('Contromossa degli Anelli difende soltanto il primo pacchetto efficace',()=>{
  const b=game('planet_char_6',3),a=b.sides.A;
  assert.equal(liveNumericBossShieldFactor(a),.84);
  liveNumericBossRememberShield(a,0);
@@ -53,7 +53,7 @@ test('Risonanza: bonus soltanto quando cambia il vero focus arma',()=>{
  liveNumericBossAfterShot(a,8,'W05',changed.bonus,1);
  assert.equal(a.bossNumericDeck.lastFocusedWeaponId,'W05');
 });
-test('Sovrano numerico: supremazia si attiva DOPO vitale KO, non nel ciclo del KO',()=>{
+test('Custode dell’Antispazio numerico: supremazia si attiva DOPO vitale KO, non nel ciclo del KO',()=>{
  const b=game('planet_char_20',9),a=b.sides.A;
  liveNumericBossAfterVital(a,10,true,1);
  assert.equal(a.bossNumericDeck.supremacyArmedAfterRound,1);
@@ -94,7 +94,7 @@ test('Sinfonia di flotta Risonanza: +7% solo dopo impatto efficace della madre e
   'Sinfonia non esiste prima di livello 7');
 });
 
-test('Leviatano Marea: solo vero riciclo delle 52 numeriche prepara bonus, colpo nullo non lo consuma',()=>{
+test('Serpe delle Fosse Abissali Marea: solo vero riciclo delle 52 numeriche prepara bonus, colpo nullo non lo consuma',()=>{
  const untouched=game('planet_char_8',3).sides.A;
  liveNumericBossBeforeDraw(untouched);
  assert.equal(untouched.bossNumericDeck.recyclePending,false);

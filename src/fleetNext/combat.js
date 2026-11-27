@@ -3360,13 +3360,13 @@ function applyBossPassive(b,ctx,events){
  if(n===1&&side.turnCount===0){addTemporaryGuard(side,b.ply);note('Gaia: prossimo attacco avversario −1 potenza');}
  if(n===2&&side.turnCount>0&&side.lastDamage>0){ctx.power++;note('Tharsis: +1 potenza');}
  if(n===3&&side.lastDamage>0){if(addWeaken(b,enemy,1,'boss-3',ctx.who,events))note('Venere: prossimo attacco avversario −1 potenza');}
- if(n===6&&ctx.cards.length>=2){addTemporaryGuard(side,b.ply);note('Crono: prossimo attacco avversario −1 potenza');}
+ if(n===6&&ctx.cards.length>=2){addTemporaryGuard(side,b.ply);note('Devastatore delle Ere: prossimo attacco avversario −1 potenza');}
  if(n===7&&enemy.buffs.some(x=>x.kind==='jam')){ctx.power++;note('Sentinella: +1 potenza contro una flotta disturbata');}
- if(n===8&&enemy.ships[0].parts.some(p=>!p.destroyed&&p.hp<p.maxHp)){ctx.power++;note('Leviatano: +1 potenza');}
+ if(n===8&&enemy.ships[0].parts.some(p=>!p.destroyed&&p.hp<p.maxHp)){ctx.power++;note('Serpe delle Fosse Abissali: +1 potenza');}
  if(n===9&&side.escorts.some(e=>e.hp>1)){const e=side.escorts.find(e=>e.hp>1);e.hp--;ctx.power++;note('Ombre: scudiera −1 punto, attacco +1 potenza');}
  if(n===11&&operational(mother,'generator')){const h=heal(b,side,1);if(h)note('Idra: ripara 1 punto a '+h.name);}
  if(n===14&&side.turnCount%3===2){ctx.power+=2;note('Caos: +2 potenza');}
- if(n===17&&enemy.discard.length>=4){ctx.power++;note('Cristallo: +1 potenza');}
+ if(n===17&&enemy.discard.length>=4){ctx.power++;note('Boss del Sacrificio: +1 potenza');}
  if(n===19){const phase=side.turnCount%3;if(phase===1){ctx.power+=2;note('Io: +2 potenza');}else if(phase===2){ctx.power--;note('Io: −1 potenza');}}
  if(n===20&&side.turnCount%2===1){addTemporaryGuard(side,b.ply);note('Vuoto: prossimo turno avversario −1 potenza');}
 }

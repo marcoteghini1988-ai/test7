@@ -1275,7 +1275,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_6': // P6 Saturno (Anelli di Crono)
+      case 'planet_char_6': // P6 Saturno (Devastatore delle Ere)
         return (
           <g>
             <circle cx="50" cy="75" r="18" fill={`${c}25`} stroke={c} strokeWidth="2.5" />
@@ -1295,7 +1295,7 @@ function TacticalVisual({
           </g>
         );
 
-      case 'planet_char_8': // P8 Nettuno (Leviatano)
+      case 'planet_char_8': // P8 Nettuno (Serpe delle Fosse Abissali)
         return (
           <g>
             <circle cx="50" cy="75" r="22" stroke={c} strokeWidth="2.5" fill={`${c}20`} />

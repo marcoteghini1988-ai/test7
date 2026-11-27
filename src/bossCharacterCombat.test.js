@@ -139,7 +139,7 @@ test('Venere: Corrosione nasce solo dal vero colpo nativo, non da una carta rive
  assert.equal(gun(withoutDamage).damage,0);
  assert.equal(withoutDamage.sides.B.statusUntil?.corroded??0,0);
 });
-test('Urano, Crono, Generatore e Sovrano: nessun beneficio senza stato/contromisura/calcolo',()=>{
+test('Urano, Devastatore delle Ere, Sovvertitore del Caso e Custode dell’Antispazio: nessun beneficio senza stato/contromisura/calcolo',()=>{
  const ion=withCharacter('boss-character-7').sides.A;
  activateBossCharacter(ion,'boss-character-7',1);
  assert.equal(bossCharacterIonFactor(ion,1),.70);
@@ -179,7 +179,7 @@ test('Idra si rigenera solo dopo colpo REALE e nel ciclo seguente, una sola volt
  bossCharacterRememberHit(ko,1,7);
  assert.equal(bossCharacterApplyRegen(ko,2),0);
 });
-test('Cristallo: solo scudiera vera, madre deve avere già danneggiato la barriera',()=>{
+test('Boss del Sacrificio: solo scudiera vera, madre deve avere già danneggiato la barriera',()=>{
  const side=withCharacter('boss-character-17').sides.A;
  activateBossCharacter(side,'boss-character-17',1);
  assert.equal(bossCharacterEscortExtra(side,1,20,0),0);

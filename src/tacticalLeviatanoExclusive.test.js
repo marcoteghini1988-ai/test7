@@ -35,7 +35,7 @@ function bringRealSpecialToHand(side,type,slot){
  [pile.hand[slot],pile.deck[j]]=[pile.deck[j],pile.hand[slot]];
 }
 
-test('Il Leviatano e il sesto potere ESCLUSIVO, distinto dal mazzo boss collezionabile',()=>{
+test('Il Serpe delle Fosse Abissali e il sesto potere ESCLUSIVO, distinto dal mazzo boss collezionabile',()=>{
  assert.equal(exclusiveBossReady(8),true);
  assert.equal(createExclusiveBossState(8)?.id,8);
  assert.equal(createExclusiveBossState(9)?.id,9);

@@ -63,7 +63,7 @@ test('31: Afrodite riduce il ricambio e aumenta SOLO la riparazione pagata',()=>
  assert.equal(restored.amount,22);
  assert.equal(restored.side.fleet[0].defense.shield.hp,72);
 });
-test('31: Crono riduce solo il primo impatto riuscito alla madre',()=>{
+test('31: Devastatore delle Ere riduce solo il primo impatto riuscito alla madre',()=>{
  const attacker=make('planet_char_1'),defender=make('planet_char_6',3);
  assert.equal(bossNumericDefenseFactor(defender,{}),.84);
  const none=rememberBossNumericImpact(attacker,defender,{}, {motherDamage:0,damage:0});
@@ -103,7 +103,7 @@ test('31: Tharsis premiato solo per due veri impatti sul medesimo vitale',()=>{
  assert.equal(bossNumericDamageFactor(hit.attacker,enemy,{vitalId:'engine'}),1.07);
  assert.equal(bossNumericDamageFactor(hit.attacker,enemy,{vitalId:'weapons'}),1);
 });
-test('31: Leviatano non accredita il riciclo avvenuto dopo il lancio',()=>{
+test('31: Serpe delle Fosse Abissali non accredita il riciclo avvenuto dopo il lancio',()=>{
  const s=make('planet_char_8',6),enemy=make('planet_char_6');
  const future={...s,reshuffles:1};
  assert.equal(bossNumericDamageFactor(future,enemy,{reshufflesAtLaunch:0,cards:[{suit:'♥'},{suit:'♠'}]}),1);
@@ -117,7 +117,7 @@ test('31: Risonanza richiede armi e semi reali, non inventati',()=>{
  assert.equal(bossNumericDamageFactor(shot.attacker,enemy,{weaponKey:'W02'}),1.08);
  assert.equal(bossNumericDamageFactor(shot.attacker,enemy,{weaponKey:'W01'}),1);
 });
-test('31: Sovrano non ripara un sistema KO, attenua l ultimo vitale vivo',()=>{
+test('31: Custode dell’Antispazio non ripara un sistema KO, attenua l ultimo vitale vivo',()=>{
  const s=make('planet_char_20',9);
  const original=s.fleet[0].defense;
  const parts={...original.parts};
@@ -139,7 +139,7 @@ test('31: il duello crea mazzi realmente equipaggiati senza alterare le sette nu
  assert.equal(b.player.hand.length+b.player.deck.length+b.player.discard.length,52);
  assert.equal(b.enemy.hand.length+b.enemy.deck.length+b.enemy.discard.length,52);
 });
-test('31: Crono attenua solo il danno arrivato alla madre, non crea HP',()=>{
+test('31: Devastatore delle Ere attenua solo il danno arrivato alla madre, non crea HP',()=>{
  const side=make('planet_char_6',3);
  const plain=applyPendingHit(side,0,'plus',10,{});
  const reduced=applyPendingHit(side,0,'plus',10,{motherDefenseFactor:.84});

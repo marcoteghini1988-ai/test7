@@ -226,7 +226,7 @@ test('Audit LIVE: sei seed e 3 modelli in campagna senza PvP e senza carte grati
  assert.equal(results.length,4);
  assert.ok(results.every(r=>r.actions>0));
 });
-test('Audit LIVE: ritmi e carte su tre boss canonici (Terra, Crono, Vuoto)',()=>{
+test('Audit LIVE: ritmi e carte su tre boss canonici (Terra, Devastatore delle Ere, Custode dell’Antispazio)',()=>{
  const chosen=[1,6,20];
  const results=chosen.map((id,i)=>{
   // Pianeti da catalogo storico: l'ID non equivale al loro indice.

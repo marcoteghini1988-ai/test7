@@ -32,7 +32,7 @@ test('Tharsis: la pressione cresce solo dopo veri colpi barriera',()=>{
  const third=liveBossNativeModifiers(a,z,30,1);
  assert.equal(third.damage,32);
 });
-test('Saturno: Crono carica solo dopo vera Contromisura, non prima',()=>{
+test('Saturno: Devastatore delle Ere carica solo dopo vera Contromisura, non prima',()=>{
  let b=game(6),a=b.sides.B,z=b.sides.A;
  assert.equal(liveBossNativeModifiers(a,z,40,1).damage,40);
  assert.equal(liveBossOnCounter(a,1),true);
@@ -118,7 +118,7 @@ test('Custode dell’Antispazio LIVE: seme dominante pubblico ruota a blocchi di
  assert.ok(b.lastEvents.some(x=>x.includes('seme dominante')&&x.includes('♠')));
  assert.equal(liveBossDominantSuit(b.sides.A,1),null);
 });
-test('Sovrano: solo vera formula vitale con seme dominante arma +7% su sparo successivo',()=>{
+test('Custode dell’Antispazio: solo vera formula vitale con seme dominante arma +7% su sparo successivo',()=>{
  const b=game(20),a=b.sides.B,z=b.sides.A;
  const dominated=[{value:4,suit:'♠'},{value:5,suit:'♥'}];
  liveBossOnVitalImpact(a,z,0,dominated,1);
@@ -136,7 +136,7 @@ test('Sovrano: solo vera formula vitale con seme dominante arma +7% su sparo suc
  assert.equal(a.bossExclusive.voidLiveArmedUntilRound,0);
  assert.equal(liveBossNativeModifiers(a,z,40,1).damage,40);
 });
-test('Sovrano: formula avversaria con dominante neutralizza solo il ciclo successivo',()=>{
+test('Custode dell’Antispazio: formula avversaria con dominante neutralizza solo il ciclo successivo',()=>{
  const b=game(20),a=b.sides.A,z=b.sides.B;
  const valid=[{value:4,suit:'♠'},{value:5,suit:'♥'}];
  liveBossOnVitalImpact(a,z,10,valid,1);
@@ -147,7 +147,7 @@ test('Sovrano: formula avversaria con dominante neutralizza solo il ciclo succes
  assert.equal(liveBossNativeModifiers(z,a,50,2).damage,50);
  assert.equal(liveBossNativeModifiers(z,a,50,3).damage,54);
 });
-test('Sovrano LIVE end-to-end: 2 numeriche vere distruggono il vitale, terza arma riceve +7%',()=>{
+test('Custode dell’Antispazio LIVE end-to-end: 2 numeriche vere distruggono il vitale, terza arma riceve +7%',()=>{
  let b=game(20);
  b.sides.A.defense.shield.hp=45;
  // Stato di battaglia reale successivo a pressione sulla barriera: il

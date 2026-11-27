@@ -39,9 +39,9 @@ export const PLANET_ENVIRONMENTS = Object.freeze([
   { id: 'planet_env_3', name: 'Venere (Afrodite)', planetNum: 3, fx: 'venus_realistic', planetRadius: 125, sphereColors: { c1: '#fde047', c2: '#ca8a04', c3: '#713f12', glow: 'rgba(250, 204, 21, 0.55)' }, neb1: 'rgba(202, 138, 4, 0.25)', neb2: 'rgba(234, 179, 8, 0.15)', pColors: ['#fef08a', '#facc15', '#fef9c3'], hasAtmosphereGlow: true, cost: 8 },
   { id: 'planet_env_4', name: 'Mercurio (Termico)', planetNum: 4, fx: 'mercury_realistic', planetRadius: 90, sphereColors: { c1: '#fb923c', c2: '#9a3412', c3: '#292524', glow: 'rgba(249, 115, 22, 0.5)' }, neb1: 'rgba(234, 88, 12, 0.2)', neb2: 'rgba(120, 53, 15, 0.2)', pColors: ['#fdba74', '#fbbf24', '#ffffff'], hasAtmosphereGlow: false, cost: 8 },
   { id: 'planet_env_5', name: 'Giove (Grande Macchia)', planetNum: 5, fx: 'jupiter_realistic', planetRadius: 155, sphereColors: { c1: '#fdba74', c2: '#ea580c', c3: '#7c2d12', glow: 'rgba(251, 146, 60, 0.6)' }, neb1: 'rgba(194, 65, 12, 0.25)', neb2: 'rgba(249, 115, 22, 0.15)', pColors: ['#fed7aa', '#ea580c', '#ffffff'], hasAtmosphereGlow: true, cost: 10 },
-  { id: 'planet_env_6', name: 'Saturno (Anelli di Crono)', planetNum: 6, fx: 'saturn_realistic', planetRadius: 135, hasRings: true, ringColor: 'rgba(253, 230, 138, 0.75)', sphereColors: { c1: '#fef08a', c2: '#d97706', c3: '#78350f', glow: 'rgba(250, 204, 21, 0.5)' }, neb1: 'rgba(217, 119, 6, 0.22)', neb2: 'rgba(180, 83, 9, 0.15)', pColors: ['#fef08a', '#fbbf24', '#fde68a'], hasAtmosphereGlow: true, cost: 10 },
+  { id: 'planet_env_6', name: 'Saturno (Devastatore delle Ere)', planetNum: 6, fx: 'saturn_realistic', planetRadius: 135, hasRings: true, ringColor: 'rgba(253, 230, 138, 0.75)', sphereColors: { c1: '#fef08a', c2: '#d97706', c3: '#78350f', glow: 'rgba(250, 204, 21, 0.5)' }, neb1: 'rgba(217, 119, 6, 0.22)', neb2: 'rgba(180, 83, 9, 0.15)', pColors: ['#fef08a', '#fbbf24', '#fde68a'], hasAtmosphereGlow: true, cost: 10 },
   { id: 'planet_env_7', name: 'Urano (Sentinella Ionica)', planetNum: 7, fx: 'uranus_realistic', planetRadius: 120, hasRings: true, ringColor: 'rgba(165, 243, 252, 0.65)', sphereColors: { c1: '#67e8f9', c2: '#0891b2', c3: '#164e63', glow: 'rgba(6, 182, 212, 0.6)' }, neb1: 'rgba(8, 145, 178, 0.25)', neb2: 'rgba(14, 116, 144, 0.15)', pColors: ['#a5f3fc', '#22d3ee', '#ffffff'], hasAtmosphereGlow: true, cost: 12 },
-  { id: 'planet_env_8', name: 'Nettuno (Leviatano)', planetNum: 8, fx: 'neptune_realistic', planetRadius: 120, sphereColors: { c1: '#38bdf8', c2: '#1d4ed8', c3: '#1e1b4b', glow: 'rgba(37, 99, 235, 0.65)' }, neb1: 'rgba(29, 78, 216, 0.28)', neb2: 'rgba(30, 58, 138, 0.2)', pColors: ['#93c5fd', '#60a5fa', '#ffffff'], hasAtmosphereGlow: true, cost: 12 },
+  { id: 'planet_env_8', name: 'Nettuno (Serpe delle Fosse Abissali)', planetNum: 8, fx: 'neptune_realistic', planetRadius: 120, sphereColors: { c1: '#38bdf8', c2: '#1d4ed8', c3: '#1e1b4b', glow: 'rgba(37, 99, 235, 0.65)' }, neb1: 'rgba(29, 78, 216, 0.28)', neb2: 'rgba(30, 58, 138, 0.2)', pColors: ['#93c5fd', '#60a5fa', '#ffffff'], hasAtmosphereGlow: true, cost: 12 },
   { id: 'planet_env_9', name: 'Plutone (Ombre Gelide)', planetNum: 9, fx: 'pluto_realistic', planetRadius: 80, sphereColors: { c1: '#e2e8f0', c2: '#64748b', c3: '#0f172a', glow: 'rgba(148, 163, 184, 0.45)' }, neb1: 'rgba(71, 85, 105, 0.22)', neb2: 'rgba(30, 41, 59, 0.18)', pColors: ['#f1f5f9', '#cbd5e1', '#ffffff'], hasAtmosphereGlow: false, cost: 14 },
   { id: 'planet_env_10', name: 'Titano (Mari di Metano)', planetNum: 10, fx: 'titan_realistic', planetRadius: 110, sphereColors: { c1: '#fbbf24', c2: '#b45309', c3: '#451a03', glow: 'rgba(245, 158, 11, 0.55)' }, neb1: 'rgba(180, 83, 9, 0.25)', neb2: 'rgba(120, 53, 15, 0.2)', pColors: ['#fde68a', '#f59e0b', '#fef08a'], hasAtmosphereGlow: true, cost: 14 },
   { id: 'planet_env_11', name: 'Europa (Idra Criogenica)', planetNum: 11, fx: 'europa_realistic', planetRadius: 95, sphereColors: { c1: '#bae6fd', c2: '#0284c7', c3: '#082f49', glow: 'rgba(56, 189, 248, 0.6)' }, neb1: 'rgba(2, 132, 199, 0.25)', neb2: 'rgba(3, 105, 161, 0.15)', pColors: ['#e0f2fe', '#7dd3fc', '#ffffff'], hasAtmosphereGlow: false, cost: 16 },
@@ -293,7 +293,7 @@ const drawPlanetFeatures11to20 = (ctx, pNum, cx, cy, radius, t) => {
     ctx.fill();
   }
 
-  // PIANETA 14: PROXIMA B (GENERATORE DEL CAOS) - Blocco mareale: Giorno/Notte a terminatore
+  // PIANETA 14: PROXIMA B (SOVVERTITORE DEL CASO) - Blocco mareale: Giorno/Notte a terminatore
   else if (pNum === 14) {
     ctx.fillStyle = '#082f49';
     ctx.beginPath();
@@ -403,7 +403,7 @@ const drawPlanetFeatures11to20 = (ctx, pNum, cx, cy, radius, t) => {
     });
   }
 
-  // PIANETA 20: ENCELADO (SOVRANO DEL VUOTO) - Strisce di tigre polari e criovulcani
+  // PIANETA 20: ENCELADO (CUSTODE DELL’ANTISPAZIO) - Strisce di tigre polari e criovulcani
   else if (pNum === 20) {
     ctx.strokeStyle = '#0284c7';
     ctx.lineWidth = radius * 0.05;

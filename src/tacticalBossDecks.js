@@ -32,7 +32,7 @@ export function equipTacticalBossDeck(side,selection=null){
  return {...side,defense,bossNumericDeck:{...state,shieldBonus:bonus}};
 }
 
-// Anelli di Crono: primo danno vero alla madre -8/-12/-16%.
+// Contromossa degli Anelli: primo danno vero alla madre -8/-12/-16%.
 // Scudiere e danni nulli non consumano la protezione.
 export function tacticalBossMotherFactor(side,snapshot=null){
  const state=side?.bossNumericDeck;
@@ -161,7 +161,7 @@ export function rememberTacticalIdraHit(side,damage,bonus,{vitalId=null}={}){
 }
 
 
-// Leviatano — Marea del riciclo / Profondità tattica.
+// Serpe delle Fosse Abissali — Marea del riciclo / Profondità tattica.
 // Il riciclo esiste solo quando le carte numeriche esauriscono il
 // mazzo fisico e lo scarto è DAVVERO rimescolato. Un semplice scarto
 // o una carta speciale non attivano la passiva.
@@ -264,7 +264,7 @@ export function rememberTacticalMagmaVitalHit(side,damage,bonus){
 }
 
 
-// Sovrano NUMERIC deck, not the Encelado exclusive dominant-suit ability.
+// Custode dell’Antispazio NUMERIC deck, not the Encelado exclusive dominant-suit ability.
 // Ultimo presidio: 3 OWN destroyed vitals, exactly one remaining;
 // Vuoto difensivo: <=25% mother barrier at cycle start (when available).
 // Both share a bounded defensive factor, already in tacticalBossMotherFactor.
