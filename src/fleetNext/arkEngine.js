@@ -182,7 +182,7 @@ export function arkChoiceReason(side,enemy,chosen=[],order={},ply=0){
  if(order.arkCustodianSwap){
   const active=(side.commander?.id==='ex-l04-01'&&
    side.commander.untilPly>ply)||actions.includes('astral-keeper');
-  if(!active)return 'Custode Astrale non attivo';
+  if(!active)return 'Vegliatore delle Rotte Celesti non attivo';
   const consumed=new Map();
   for(const c of chosen)consumed.set(c.id,(consumed.get(c.id)||0)+1);
   const left=(side.hand||[]).filter(id=>{
