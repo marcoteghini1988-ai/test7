@@ -22,8 +22,9 @@ function meshCrescent(ctx,p,r,angle,t,rarity){
   faces.push({p:[project(outer[i].x,outer[i].y,-r*.095),project(outer[i+1].x,outer[i+1].y,-r*.095),project(outer[i+1].x,outer[i+1].y,r*.095),project(outer[i].x,outer[i].y,r*.095)],color:i%3?'#62aaff':'#ad8cff'});
  }
  faces.sort((a,b)=>a.p.reduce((n,p)=>n+p.z,0)-b.p.reduce((n,p)=>n+p.z,0));
- ctx.save();ctx.shadowColor='#71b6ff';ctx.shadowBlur=8;for(const f of faces){ctx.fillStyle=f.color;ctx.beginPath();f.p.forEach((v,i)=>i?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y));ctx.closePath();ctx.fill();}ctx.restore();
- line(ctx,outer.map(v=>project(v.x,v.y,r*.105)),'#edfaff',1.2);
+ ctx.save();for(const f of faces){ctx.fillStyle=f.color;ctx.beginPath();f.p.forEach((v,i)=>i?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y));ctx.closePath();ctx.fill();}ctx.restore();
+ ctx.save();ctx.shadowColor='#71b6ff';ctx.shadowBlur=8;
+ line(ctx,outer.map(v=>project(v.x,v.y,r*.105)),'#edfaff',1.2);ctx.restore();
  for(let i=3;i<n;i+=3){const v=outer[i],a=project(v.x,v.y,r*.13),b=project(v.x*1.12+Math.sin(t*47+i)*r*.09,v.y*1.12,r*.16),c=project(v.x*1.22,v.y*1.19,r*.08);line(ctx,[a,b,c],i%2?'#ad97ff':'#84d3ff',.65,.85);}
  for(let j=0;j<2+tier(rarity);j++){const points=[];for(let i=0;i<=n;i++){const w=.25+j*.10+(i%2?-.035:.035),v={x:outer[i].x*(1-w)+inner[i].x*w,y:outer[i].y*(1-w)+inner[i].y*w};points.push(project(v.x,v.y,r*.12));}line(ctx,points,j%2?'#c1a0ff':'#48acff',.55,.85);}
  if(tier(rarity)===3)for(let j=4;j<n;j+=5){const v=project(outer[j].x,outer[j].y,r*.16);glow(ctx,v,2.6,j%2?'#f0a4ff':'#ceffff',.85);}

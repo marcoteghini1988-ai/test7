@@ -29,7 +29,7 @@ export default function ProbeHammerMarks({battle,resolving,fx}){
   const {canvas,ctx}=createEffectCanvas(element),media=window.matchMedia('(prefers-reduced-motion: reduce)');
   let raf=0,previousFrame=-Infinity;
   const draw=now=>{
-   if(now-previousFrame<1000/30){raf=requestAnimationFrame(draw);return;}previousFrame=now;
+   if(now-previousFrame<1000/30-.5){raf=requestAnimationFrame(draw);return;}previousFrame=now;
    ctx.clearRect(0,0,450,800);const age=resolving?now-fx.startedAt:300,board=root.getBoundingClientRect();let visible=0;
    if(document.visibilityState==='visible')for(const mark of marks){
     const opacity=probeMarkFade(mark,age);if(!opacity)continue;

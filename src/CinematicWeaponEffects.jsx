@@ -46,7 +46,7 @@ export default function CinematicWeaponEffects({paths,startedAt}){
   element.dataset.motifs=JSON.stringify(entries.map(e=>e.style.motif));
   element.dataset.contacts=JSON.stringify(entries.map(e=>weaponHullImpactProfile(e.profile,e.shot)?.kind||'shield'));
   const draw=now=>{
-   if(now-previous<1000/30){raf=requestAnimationFrame(draw);return;}
+   if(now-previous<1000/30-.5){raf=requestAnimationFrame(draw);return;}
    if(Number.isFinite(previous))maxFrame=Math.max(maxFrame,now-previous);
    previous=now;frames++;
    const age=now-startedAt,reduced=media.matches;let pending=false,active=0;
