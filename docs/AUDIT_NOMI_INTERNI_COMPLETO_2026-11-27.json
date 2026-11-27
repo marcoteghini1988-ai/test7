@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "asOf": "2026-11-27",
-  "scope": "Tutti i nomi delle 17 famiglie di cataloghi principali; non include il nome commerciale del gioco, che si deciderà solo al termine dello sviluppo",
+  "scope": "460 nomi correnti dei cataloghi individuati, più 167 bozze storiche; titolo commerciale escluso. La scansione non prova che ogni stringa e ogni asset del repository sia stato esaminato.",
   "repo": "marcoteghini1988-ai/test7",
-  "recordsCount": 453,
+  "recordsCount": 460,
   "proposalCount": 167,
   "coverage": {
     "navi_madri": 12,
@@ -22,7 +22,8 @@
     "carte_tattiche": 25,
     "carte_energia": 10,
     "armi_native": 27,
-    "carta_sistema_speciale": 1
+    "carta_sistema_speciale": 1,
+    "piloti_aggiuntivi_commander": 7
   },
   "identicalNamesAcrossDefinitions": [],
   "duplicateStableIds": [],
@@ -37,6 +38,19 @@
       "currentName": "Vegliatore delle Rotte Celesti",
       "reason": "Coincideva con titolo italiano di videogioco Steam 2023; rinomina prudenziale",
       "source": "https://store.steampowered.com/app/2346320/Astral_Guardian/?l=italian"
+    },
+    {
+      "id": "pilot_rare_1",
+      "formerName": "Il Vendicatore",
+      "currentName": "Corsaro della Rivalsa",
+      "reason": "Omonimia con titolo italiano di The Punisher; rinomina editoriale, non verifica marchio conclusa",
+      "source": "https://www.imdb.com/it/title/tt0098141/"
+    },
+    {
+      "id": "planet_char_6",
+      "formerName": "Saturno · Crono",
+      "currentName": "Saturno · Contromossa degli Anelli",
+      "reason": "Rinomina prudenziale del modulo; restano altre diciture legacy in log/test"
     }
   ],
   "caveats": [
@@ -44,7 +58,9 @@
     "La ricerca web non sostituisce UIBM/EUIPO/WIPO; nessuna certificazione legale di libertà commerciale.",
     "I nomi di varianti evolutive e rarità condividono intenzionalmente il nome della famiglia.",
     "Le proposte storiche non giocabili sono registrate separatamente.",
-    "Le 12 carte Personaggio del catalogo 120 hanno alias ID es- e nx-; la doppia rappresentazione non equivale a carte doppie."
+    "Le 12 carte Personaggio del catalogo 120 hanno alias ID es- e nx-; la doppia rappresentazione non equivale a carte doppie.",
+    "Altri riferimenti storici a Crono permangono in log, test e meccaniche legacy: da distinguere dalle stringhe effettivamente mostrate.",
+    "La provenienza degli asset grafici, dei video e del font non risulta certificata da questo audit."
   ],
   "currentNames": [
     {
@@ -1478,7 +1494,7 @@
     {
       "group": "piloti",
       "id": "pilot_rare_1",
-      "name": "Il Vendicatore",
+      "name": "Corsaro della Rivalsa",
       "source": "src/newCombat/phase16GPilots.js",
       "kind": "current"
     },
@@ -2654,7 +2670,7 @@
     {
       "group": "moduli_16F",
       "id": "planet_char_6",
-      "name": "Saturno · Crono",
+      "name": "Saturno · Contromossa degli Anelli",
       "source": "src/newCombat/phase16FModules.js",
       "kind": "current"
     },
@@ -3217,6 +3233,62 @@
       "name": "Buco Nero",
       "source": "src/fleetNext/newCardRegistry.js",
       "kind": "current"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_leg_5",
+      "name": "L'Amante del Rosso",
+      "source": "src/commanderAbilities.js",
+      "kind": "current",
+      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_leg_6",
+      "name": "L'Amante del Nero",
+      "source": "src/commanderAbilities.js",
+      "kind": "current",
+      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_4",
+      "name": "Arconte Solare",
+      "source": "src/commanderAbilities.js",
+      "kind": "current",
+      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_5",
+      "name": "Vegliardo del Vortice",
+      "source": "src/commanderAbilities.js",
+      "kind": "current",
+      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_10",
+      "name": "Colosso di Metano",
+      "source": "src/commanderAbilities.js",
+      "kind": "current",
+      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_12",
+      "name": "Titano d'Acciaio",
+      "source": "src/commanderAbilities.js",
+      "kind": "current",
+      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
+    },
+    {
+      "group": "piloti_aggiuntivi_commander",
+      "id": "pilot_boss_18",
+      "name": "Entità della Discordia",
+      "source": "src/commanderAbilities.js",
+      "kind": "current",
+      "note": "Pilota o personaggio comandante in fonte live fuori dai cataloghi principali già conteggiati"
     }
   ],
   "unapprovedDraftNames": [
@@ -4417,12 +4489,57 @@
       "cardId": "nx-l03-02",
       "previousName": "Obice nero",
       "newName": "Tiro d’Assedio Ossidiano",
-      "category": "Attacco",
+      "category": "Strategia",
       "reason": "Evitato duplicato con arma nativa W38 Obice Nero della medesima nave; nome Attacco diverso da macchina",
+      "status": "corretto"
+    },
+    {
+      "cardId": "pilot_rare_1",
+      "previousName": "Il Vendicatore",
+      "newName": "Corsaro della Rivalsa",
+      "category": "Pilota",
+      "reason": "Il nome precedente coincide con titolo italiano di The Punisher e un nome usato per il personaggio Marvel; rinomina prudenziale",
+      "source": "https://www.imdb.com/it/title/tt0098141/",
+      "status": "corretto"
+    },
+    {
+      "cardId": "planet_char_6",
+      "previousName": "Saturno · Crono",
+      "newName": "Saturno · Contromossa degli Anelli",
+      "category": "Modulo",
+      "reason": "Rimosso dal modulo un riferimento ambiguo a Crono; mantenuti ID, carica ed effetto",
       "status": "corretto"
     }
   ],
-  "namesCompared": 453,
-  "distinctCurrentNames": 453,
-  "titleExcluded": true
+  "namesCompared": 460,
+  "distinctCurrentNames": 460,
+  "titleExcluded": true,
+  "secondaryCatalogsReviewed": [
+    {
+      "source": "src/commanderAbilities.js",
+      "note": "33 record: 16 Piloti Fase 16G, 2 altri leggendari, 15 alias boss; i cinque non presenti nel catalogo di 12 Boss sono qui inventariati"
+    },
+    {
+      "source": "src/officialSpecialCardIdentity.js",
+      "note": "Il ruolo tecnico offense viene mostrato come STRATEGIA"
+    },
+    {
+      "source": "src/officialSpecialVisualMeta.js",
+      "note": "Il ruolo tecnico offense viene mostrato come STRATEGIA"
+    }
+  ],
+  "assetCopyrightReview": {
+    "status": "provenienza e diritto d'uso non ancora verificati",
+    "repoSnapshot": "main 153cd78a149945a49ada799476801ddc6cb7f1d3",
+    "observedFileCounts": {
+      "png": 320,
+      "jpg": 33,
+      "webp": 51,
+      "svg": 169,
+      "gif": 1,
+      "mp4": 3,
+      "ttf": 1
+    },
+    "note": "File sorgenti e collaudi inclusi; nessun file di licenza/attribuzione generale individuato per percorso. Verificare individualmente gli asset destinati alla distribuzione."
+  }
 }
