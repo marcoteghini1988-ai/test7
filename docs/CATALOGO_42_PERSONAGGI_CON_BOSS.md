@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Rara ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; Sentinella Ionica ha la meccanica di previsione delle prime tre carte confermata, rarità e durata sbloccata da confermare; gli altri 7 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Comune ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; Sentinella Ionica ha la meccanica di previsione delle prime tre carte confermata, Rara e durata sbloccata di tre turni propri confermate; le abilità degli altri 7 Boss restano proposte. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -304,7 +304,7 @@ ID conservato: `boss-character-1`. Le precedenti proposte di protezione e rarit�
 
 ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e rarità Leggendaria sono superate.
 
-### 33. Matriarca Tossica — Venere · settore 30 · Rara
+### 33. Matriarca Tossica — Venere · settore 30 · Comune
 
 **Abilità confermata il 27/11/2026: neutralizzazione delle debolezze elementali.** Madre Vespa di Vetro (Acqua); un supporto Prisma Silente (Acqua). La precedente proposta di veleno/corrosione è superata.
 
@@ -312,7 +312,7 @@ ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e
 - Rimane fissa nello slot per tutta la battaglia. Finché l'abilità è attiva, tutte le proprie navi (madre e supporti vivi) non subiscono il danno maggiorato dovuto alla propria debolezza elementale. Conservano i vantaggi offensivi.
 - Una Carta Strategia idonea che sospende l'abilità del Personaggio per un turno rende immediatamente vulnerabili di nuovo tutte le navi ai rispettivi elementi forti. Il Boss non viene rimosso; alla scadenza riprende automaticamente l'effetto.
 
-**Dopo lo sblocco:** confermata la stessa abilità sull'intera flotta del giocatore, con durata limitata invece di permanente. Valgono le sospensioni previste dalle Carte Strategia. Rarità Rara e durata di tre turni propri confermate. Dettagli della futura Strategia, interazioni con Terreno e collaudo ancora da definire. Non implementato.
+**Dopo lo sblocco:** confermata la stessa abilità sull'intera flotta del giocatore, con durata limitata invece di permanente. Valgono le sospensioni previste dalle Carte Strategia. Rarità Comune (correzione della precedente Rara) e durata di tre turni propri confermate. Dettagli della futura Strategia, interazioni con Terreno e collaudo ancora da definire. Non implementato.
 
 ID conservato: `boss-character-3`.
 
@@ -329,7 +329,7 @@ Da definire e collaudare: scelta manuale della carta sacrificata confermata; res
 
 ID conservato: `boss-character-6`.
 
-### 35. Sentinella Ionica — Urano · settore 50
+### 35. Sentinella Ionica — Urano · settore 50 · Rara
 
 **Meccanica approvata il 27/11/2026: previsione tattica delle prime tre carte del proprio mazzo.** Una sola abilità; nome dell'abilità provvisorio. Madre Falco Binario; un supporto Armeria Binaria. Nessuna dipendenza da uno specifico supporto.
 
@@ -337,97 +337,97 @@ ID conservato: `boss-character-6`.
 - All'inizio di ogni proprio turno, finché il Personaggio è attivo, può vedere le prime tre carte del proprio mazzo nell'ordine di pesca, senza pescarle né modificarne l'ordine. L'informazione è privata del proprietario e serve a pianificare le giocate successive.
 - Non aumenta direttamente il danno, non limita le azioni avversarie e non costa carte o Energia.
 
-**Dopo lo sblocco:** stessa abilità mentre il Personaggio rimane attivo. Rara e tre turni propri sono proposte, non ancora approvate.
+**Dopo lo sblocco:** stessa abilità mentre il Personaggio rimane attivo. Rara e tre turni propri confermati.
 
-Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel turno di schieramento, la sospensione e i casi con meno di tre carte o rimescolamento; non alterare la pesca normale. Rarità Rara e durata giocabile di tre turni propri sono proposte da confermare. Non implementato. Le precedenti proposte di mitigazione o interdizione sono superate.
+Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel turno di schieramento, la sospensione e i casi con meno di tre carte o rimescolamento; non alterare la pesca normale. Rarità Rara e durata giocabile di tre turni propri confermate. Non implementato. Le precedenti proposte di mitigazione o interdizione sono superate.
 
 ID conservato: `boss-character-7`.
 
-### 36. Leviatano Abissale — Nettuno · settore 60
+### 36. Leviatano Abissale — Nettuno · settore 60 · Rara
 
 **Durante lo scontro (permanente):**
 - Riduce i danni alla propria madre mentre sono presenti supporti vivi.
 - Potenzia gli attacchi contro navicelle già danneggiate; il giocatore deve scegliere se concentrare i colpi o distribuire il danno.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
+**Dopo lo sblocco (Rara confermata; 3 turni proposti, abilità da approvare):**
 - Riduce il danno alla propria madre quando almeno un supporto è vivo.
 - Potenzia un colpo contro una nave avversaria già ferita, una volta per turno.
 - Cura una volta un supporto alleato sopravvissuto a un attacco.
 
 ID conservato: `boss-character-8`.
 
-### 37. Signore delle Ombre — Plutone · settore 70
+### 37. Signore delle Ombre — Plutone · settore 70 · Epica
 
 **Durante lo scontro (permanente):**
 - Sacrifica periodicamente HP di un supporto vivo per potenziare il successivo colpo; interrompe il sacrificio se non ha supporti idonei.
 - Il giocatore non può recuperare carte dagli scarti mentre affronta il Boss.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
+**Dopo lo sblocco (Epica confermata; 3 turni proposti, abilità da approvare):**
 - Può sacrificare una quota degli HP di un supporto vivo, una sola volta, per aumentare un colpo Arma.
 - Potenzia il primo colpo quando la propria madre è sotto una soglia HP critica.
 - Blocca il primo recupero nemico di una carta dagli scarti durante la permanenza.
 
 ID conservato: `boss-character-9`.
 
-### 38. Idra Criogenica — Europa · settore 80
+### 38. Idra Criogenica — Europa · settore 80 · Epica
 
 **Durante lo scontro (permanente):**
 - Recupera HP a ogni proprio turno finché il Generatore è operativo.
 - Al primo colpo dannoso subito in ciascun turno avversario accumula una riparazione per il turno successivo; cure limitate e non applicabili a navi distrutte.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
+**Dopo lo sblocco (Epica confermata; 3 turni proposti, abilità da approvare):**
 - Cura la nave alleata più danneggiata a ogni turno proprio.
 - Dopo il primo danno subito, prepara una cura aggiuntiva per il proprio turno successivo, una volta.
 - Neutralizza una volta una riduzione delle cure alleate, non una distruzione.
 
 ID conservato: `boss-character-11`.
 
-### 39. Generatore del Caos — Proxima b · settore 90
+### 39. Generatore del Caos — Proxima b · settore 90 · Epica
 
 **Durante lo scontro (permanente):**
 - Alterna in sequenza pubblica un turno di potenziamento Armi, uno di potenziamento Difese e uno di potenziamento Energia.
 - Nella fase attiva una categoria diversa è temporaneamente limitata per il giocatore; ordine e icona annunciati prima della scelta delle carte.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
+**Dopo lo sblocco (Epica confermata; 3 turni proposti, abilità da approvare):**
 - Prima di risolvere il turno sceglie una modalità di potenziamento: Arma, Difesa o Energia, una modalità differente nei tre turni.
 - Nella modalità Difesa neutralizza una sola volta un sabotaggio.
 - Nella modalità Energia recupera una sola volta una carica virtuale del medesimo elemento effettivamente speso.
 
 ID conservato: `boss-character-14`.
 
-### 40. Cristallo di Risonanza — Haumea · settore 100
+### 40. Cristallo di Risonanza — Haumea · settore 100 · Leggendaria
 
 **Durante lo scontro (permanente):**
 - Aumenta la potenza dei propri colpi con il numero di carte avversarie negli scarti, entro un limite.
 - Con supporti vivi coordina un bonus di Arma, non attacchi autonomi dei supporti.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
+**Dopo lo sblocco (Leggendaria confermata; 3 turni proposti, abilità da approvare):**
 - Potenzia un colpo Arma in funzione delle carte negli scarti avversari, con limite.
 - Con due supporti vivi applica un piccolo bonus al primo colpo Arma di ogni turno.
 - Quando un supporto viene distrutto, trasferisce una carica virtuale dell'elemento di quel supporto alla flotta, una sola volta.
 
 ID conservato: `boss-character-17`.
 
-### 41. Nucleo Magmatico — Io · settore 110
+### 41. Nucleo Magmatico — Io · settore 110 · Leggendaria
 
 **Durante lo scontro (permanente):**
 - Ciclo pubblico a tre fasi: riscaldamento, sovraccarico con danni maggiorati, raffreddamento con penalità.
 - Durante il sovraccarico le Armi Fuoco del Boss applicano bruciatura al primo bersaglio realmente danneggiato.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
+**Dopo lo sblocco (Leggendaria confermata; 3 turni proposti, abilità da approvare):**
 - Primo turno: prepara una carica termica.
 - Secondo turno: aumenta il primo colpo Arma Fuoco e può applicare una bruciatura se colpisce.
 - Terzo turno: riduce il danno da bruciature subito dalla propria flotta durante il raffreddamento.
 
 ID conservato: `boss-character-19`.
 
-### 42. Sovrano del Vuoto — Encelado · settore 120
+### 42. Sovrano del Vuoto — Encelado · settore 120 · Leggendaria
 
 **Durante lo scontro (permanente):**
 - Ogni turno annuncia la famiglia Arma usata dal giocatore nel turno precedente; giocare nuovamente quella stessa famiglia è vietato soltanto nel turno successivo.
 - Blocca il primo colpo ordinario a intervalli prestabiliti; potenzia gli attacchi contro flotte con componenti già disattivati.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
+**Dopo lo sblocco (Leggendaria confermata; 3 turni proposti, abilità da approvare):**
 - Se gioca un'Arma di famiglia diversa dall'ultima giocata, potenzia il primo colpo.
 - Blocca una sola volta un colpo ordinario diretto alla propria madre.
 - Potenzia un colpo contro un avversario con almeno un componente disattivato, una sola volta per turno.
@@ -437,7 +437,7 @@ ID conservato: `boss-character-20`.
 ## Decisioni aperte
 
 - Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.
-- Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La classificazione Leggendaria dei trofei e le 3 abilità per ciascuno sono proposte da approvare, non modifiche già eseguite.
+- Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La progressione delle quattro rarità è confermata; le abilità proposte dei Boss 6–12 e le relative durate restano da approvare individualmente. Le proposte esistenti, incluse quelle con tre abilità, devono essere riesaminate secondo la rarità assegnata; nessuna nuova meccanica è implementata.
 - Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.
 - Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.
 - I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.

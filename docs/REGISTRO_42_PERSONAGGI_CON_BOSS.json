@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v10-2026-11-27",
+  "revision": "personaggi-42-v11-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
-    "Comune": 8,
+    "Comune": 9,
     "Rara": 13,
-    "Epica": 8,
-    "Leggendaria": 13
+    "Epica": 11,
+    "Leggendaria": 9
   },
   "genericSource": "docs/REGISTRO_30_PERSONAGGI_GENERICI.json",
   "genericConfirmed": 14,
@@ -819,7 +819,7 @@
       "name": "Matriarca Tossica",
       "sector": 30,
       "element": null,
-      "rarity": "Rara",
+      "rarity": "Comune",
       "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
@@ -908,7 +908,7 @@
       "sector": 50,
       "element": null,
       "rarity": "Rara",
-      "rarityStatus": "proposed",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -931,13 +931,13 @@
         "abilities": [
           "All'inizio di ogni proprio turno, finché il Personaggio è attivo, può vedere le prime tre carte del proprio mazzo nell'ordine di pesca, senza pescarle né modificarne l'ordine. L'informazione è privata del proprietario e serve a pianificare le giocate successive."
         ],
-        "durationStatus": "proposed",
+        "durationStatus": "confirmed",
         "abilityStatus": "confirmed"
       },
       "balancePending": true,
       "implemented": false,
       "open": [
-        "Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel turno di schieramento, la sospensione e i casi con meno di tre carte o rimescolamento; non alterare la pesca normale. Rarità Rara e durata giocabile di tre turni propri sono proposte da confermare.",
+        "Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel turno di schieramento, la sospensione e i casi con meno di tre carte o rimescolamento; non alterare la pesca normale. Rarità Rara e durata giocabile di tre turni propri confermate.",
         "Nessun nuovo danno, pesca aggiuntiva, riordino o dipendenza dal supporto. Visibilità limitata al proprietario. Le precedenti proposte sono superate."
       ]
     },
@@ -949,8 +949,8 @@
       "name": "Leviatano Abissale",
       "sector": 60,
       "element": null,
-      "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarity": "Rara",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -973,10 +973,15 @@
           "Riduce il danno alla propria madre quando almeno un supporto è vivo.",
           "Potenzia un colpo contro una nave avversaria già ferita, una volta per turno.",
           "Cura una volta un supporto alleato sopravvissuto a un attacco."
-        ]
+        ],
+        "durationStatus": "proposed",
+        "abilityStatus": "proposed"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+      ]
     },
     {
       "number": 37,
@@ -986,8 +991,8 @@
       "name": "Signore delle Ombre",
       "sector": 70,
       "element": null,
-      "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarity": "Epica",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -1010,10 +1015,15 @@
           "Può sacrificare una quota degli HP di un supporto vivo, una sola volta, per aumentare un colpo Arma.",
           "Potenzia il primo colpo quando la propria madre è sotto una soglia HP critica.",
           "Blocca il primo recupero nemico di una carta dagli scarti durante la permanenza."
-        ]
+        ],
+        "durationStatus": "proposed",
+        "abilityStatus": "proposed"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+      ]
     },
     {
       "number": 38,
@@ -1023,8 +1033,8 @@
       "name": "Idra Criogenica",
       "sector": 80,
       "element": null,
-      "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarity": "Epica",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -1047,10 +1057,15 @@
           "Cura la nave alleata più danneggiata a ogni turno proprio.",
           "Dopo il primo danno subito, prepara una cura aggiuntiva per il proprio turno successivo, una volta.",
           "Neutralizza una volta una riduzione delle cure alleate, non una distruzione."
-        ]
+        ],
+        "durationStatus": "proposed",
+        "abilityStatus": "proposed"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+      ]
     },
     {
       "number": 39,
@@ -1060,8 +1075,8 @@
       "name": "Generatore del Caos",
       "sector": 90,
       "element": null,
-      "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarity": "Epica",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -1084,10 +1099,15 @@
           "Prima di risolvere il turno sceglie una modalità di potenziamento: Arma, Difesa o Energia, una modalità differente nei tre turni.",
           "Nella modalità Difesa neutralizza una sola volta un sabotaggio.",
           "Nella modalità Energia recupera una sola volta una carica virtuale del medesimo elemento effettivamente speso."
-        ]
+        ],
+        "durationStatus": "proposed",
+        "abilityStatus": "proposed"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+      ]
     },
     {
       "number": 40,
@@ -1098,7 +1118,7 @@
       "sector": 100,
       "element": null,
       "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -1121,10 +1141,15 @@
           "Potenzia un colpo Arma in funzione delle carte negli scarti avversari, con limite.",
           "Con due supporti vivi applica un piccolo bonus al primo colpo Arma di ogni turno.",
           "Quando un supporto viene distrutto, trasferisce una carica virtuale dell'elemento di quel supporto alla flotta, una sola volta."
-        ]
+        ],
+        "durationStatus": "proposed",
+        "abilityStatus": "proposed"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+      ]
     },
     {
       "number": 41,
@@ -1135,7 +1160,7 @@
       "sector": 110,
       "element": null,
       "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -1158,10 +1183,15 @@
           "Primo turno: prepara una carica termica.",
           "Secondo turno: aumenta il primo colpo Arma Fuoco e può applicare una bruciatura se colpisce.",
           "Terzo turno: riduce il danno da bruciature subito dalla propria flotta durante il raffreddamento."
-        ]
+        ],
+        "durationStatus": "proposed",
+        "abilityStatus": "proposed"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+      ]
     },
     {
       "number": 42,
@@ -1172,7 +1202,7 @@
       "sector": 120,
       "element": null,
       "rarity": "Leggendaria",
-      "rarityStatus": "proposed",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -1195,15 +1225,20 @@
           "Se gioca un'Arma di famiglia diversa dall'ultima giocata, potenzia il primo colpo.",
           "Blocca una sola volta un colpo ordinario diretto alla propria madre.",
           "Potenzia un colpo contro un avversario con almeno un componente disattivato, una sola volta per turno."
-        ]
+        ],
+        "durationStatus": "proposed",
+        "abilityStatus": "proposed"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Rarità confermata dalla progressione; abilità e durata ancora da approvare, verificando coerenza con le regole della rarità."
+      ]
     }
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Rara, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; Sentinella Ionica: visione delle prime tre carte del proprio mazzo a inizio turno confermata; rarità e durata giocabile da confermare; per gli altri 7 la rarità e le abilità sono ancora da approvare individualmente.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Comune, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; Sentinella Ionica: visione delle prime tre carte del proprio mazzo a inizio turno confermata; Rara e durata giocabile di tre turni propri confermate; le abilità e durate degli altri 7 restano da approvare individualmente. Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 Comuni, 40–60 Rari, 70–90 Epici, 100–120 Leggendari (tre per rarità, nell'ordine della progressione). La rarità non implica approvazione di abilità o durate ancora in progettazione.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.",
@@ -1211,5 +1246,47 @@
     "Regola confermata: un Boss fisso può avere le abilità sospese temporaneamente da una Carta Strategia idonea senza lasciare lo slot. Per Matriarca, durante la sospensione tornano immediatamente le debolezze elementali di tutte le navi; alla fine l'effetto riprende. La futura Strategia resta da definire."
   ],
   "bossMechanicConfirmed": 5,
-  "rarityPendingCount": 0
+  "rarityPendingCount": 0,
+  "bossRarityProgression": [
+    {
+      "rarity": "Comune",
+      "sectors": [
+        10,
+        20,
+        30
+      ],
+      "count": 3,
+      "status": "confirmed"
+    },
+    {
+      "rarity": "Rara",
+      "sectors": [
+        40,
+        50,
+        60
+      ],
+      "count": 3,
+      "status": "confirmed"
+    },
+    {
+      "rarity": "Epica",
+      "sectors": [
+        70,
+        80,
+        90
+      ],
+      "count": 3,
+      "status": "confirmed"
+    },
+    {
+      "rarity": "Leggendaria",
+      "sectors": [
+        100,
+        110,
+        120
+      ],
+      "count": 3,
+      "status": "confirmed"
+    }
+  ]
 }
