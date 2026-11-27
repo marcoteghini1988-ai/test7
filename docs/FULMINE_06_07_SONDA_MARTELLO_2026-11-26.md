@@ -133,3 +133,7 @@ permette combo nello stesso turno/successivo, ordine inverso, segnale
 scaduto, doppia Difesa, bersaglio distrutto, primo colpo letale e segnale
 sul Generatore. Lo studio HTML/video precedente rimane un archivio della
 proposta; non sostituisce il nuovo collaudo della partita.
+
+La copia StackBlitz non ricostruisce più automaticamente il vecchio HTML
+di studio da 23 MB: l’avvio corrente prepara soltanto la partita ufficiale.
+I file precedenti rimangono conservati e recuperabili come archivio.
