@@ -1,5 +1,10 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+## Aggiornamento prioritario — 27/11/2026, secondo audit nomi
+
+La categoria di carte offensiva **non è più Carte Attacco**: le categorie editoriali sono **Carte Arma** e **Carte Strategia**. Lato motore, `attack` e `offense` possono continuare a indicare ruoli o azioni per compatibilità; la categoria visibile è **STRATEGIA**. L'audit è ampliato da 453 a **460** denominazioni correnti distinte (più 167 bozze storiche), includendo sette nomi pilota/comandante prima omessi. Rinomine precauzionali: `pilot_rare_1` = **Corsaro della Rivalsa** (ex Il Vendicatore), `planet_char_6` = **Saturno · Contromossa degli Anelli** (ex Saturno · Crono). Conservare sempre gli ID e le meccaniche. Non è un certificato di libertà d'uso: marchi simili, diritti su asset/font e alcune diciture legacy restano da verificare. Il titolo commerciale sarà scelto solo alla fine. Fonti operative aggiornate: `docs/AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json` e `docs/AUDIT_NOMI_PROPRIETA_INTELLETTUALE_2026-11-27.md`.
+
+
 ## Ambito audit dei nomi e decisione sul titolo — 27/11/2026
 
 Decisione dell'utente: **il titolo del gioco verrà scelto solo dopo che il progetto sarà finito**. «Eclissi Stellare» è un nome di lavorazione. Non avviare ricerche o proposte sul titolo adesso e non rinominare il progetto/il repository. Controllare invece tutti i nomi **interni**: personaggi (devono sembrare personaggi, non dispositivi), Boss, carte, armi, navi, supporti, moduli, esclusive, carte Fusione e loro etichette visibili. Conservare ID e abilità. Consultare il manifest `docs/AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json` e l'audit di interpretazione legale `docs/AUDIT_NOMI_PROPRIETA_INTELLETTUALE_2026-11-27.md`. Inventariate 453 etichette attuali e 167 bozze non approvate; zero duplicati esatti nei cataloghi censiti dopo le correzioni. Personaggio Arca Astrale `ex-l04-01` ora **Vegliatore delle Rotte Celesti**; Attacco `nx-l03-02` ora **Tiro d’Assedio Ossidiano** per differenziarlo dall'arma nativa W38 «Obice Nero». La verifica ufficiale dei marchi non è conclusa; non dichiarare mai i nomi «certificati liberi».
