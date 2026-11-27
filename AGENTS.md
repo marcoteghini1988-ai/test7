@@ -2,7 +2,7 @@
 
 ## Rinomine per originalità — 27/11/2026
 
-I nomi pubblici di sei Boss sono stati aggiornati senza cambiare ID, abilità, rarità o sblocchi: Devastatore delle Ere (ID 6), Predone della Penombra (9), Sovvertitore del Caso (14), Boss del Sacrificio (17), Divoratore delle Scorie (19), Custode dell'Antispazio (20). Il Personaggio generico n.29 è Tracciatore del Buio Astrale e il Pilota epico n.4 è Comandante della Galaverna. I riferimenti di documenti storici non modificati vanno interpretati tramite la mappatura contenuta nel registro `docs/AUDIT_NOMI_PROPRIETA_INTELLETTUALE_2026-11-27.md`. Le etichette non sono certificazione di libertà di marchio commerciale. Non ripristinare i nomi precedenti durante la progettazione.
+I nomi pubblici di sei Boss sono stati aggiornati senza cambiare ID, abilità, rarità o sblocchi: Devastatore delle Ere (ID 6), Predone della Penombra (9), Sovvertitore del Caso (14), Boss del Sacrificio (17), Divoratore delle Scorie (19), Custode dell’Antispazio (20). Il Personaggio generico n.29 è Tracciatore del Buio Astrale e il Pilota epico n.4 è Comandante della Galaverna. I riferimenti di documenti storici non modificati vanno interpretati tramite la mappatura contenuta nel registro `docs/AUDIT_NOMI_PROPRIETA_INTELLETTUALE_2026-11-27.md`. Le etichette non sono certificazione di libertà di marchio commerciale. Non ripristinare i nomi precedenti durante la progettazione.
 
 
 
