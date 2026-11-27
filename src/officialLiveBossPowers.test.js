@@ -77,7 +77,7 @@ test('Europa: l’Idra cura soltanto dopo attacco reale e nel ciclo seguente',()
  assert.equal(liveBossStartTurn(a,3).repaired,4);
  assert.equal(a.defense.shield.hp,44);
 });
-test('Proxima b: il Generatore del Caos non incrementa a danno zero',()=>{
+test('Proxima b: il Sovvertitore del Caso non incrementa a danno zero',()=>{
  let b=game(14),a=b.sides.B,z=b.sides.A;
  for(let i=0;i<3;i++)liveBossAfterNativeShot(a,z,1,5,{chaos:{active:false}});
  assert.equal(a.bossExclusive.chaosCharges,3);
@@ -108,7 +108,7 @@ test('Venere: una vera formula vitale applica Neurotossina, non uno sparo nullo'
  assert.equal(z.neurotoxinUntilRound,2);
 });
 
-test('Sovrano del Vuoto LIVE: seme dominante pubblico ruota a blocchi di 3 cicli',()=>{
+test('Custode dell’Antispazio LIVE: seme dominante pubblico ruota a blocchi di 3 cicli',()=>{
  const b=game(20);
  assert.equal(liveBossDominantSuit(b.sides.B,1),'♠');
  assert.equal(liveBossDominantSuit(b.sides.B,3),'♠');
