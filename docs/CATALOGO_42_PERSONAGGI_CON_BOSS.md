@@ -454,7 +454,7 @@ ID conservato: `boss-character-20`.
 
 ## Decisioni aperte
 
-- Il nome Tracciatore del Buio Astrale del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.
+- Il generico n.29 si chiama Tracciatore del Buio Astrale; il Boss di Plutone si chiama Predone della Penombra. La precedente nota di collisione e la proposta «Custode della Penombra» sono superate; le rinomine sono già applicate conservando gli ID.
 - Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La progressione delle quattro rarità è confermata; entrambe le abilità del Boss Idra e della carta sbloccabile di cinque turni sono confermate; i dettagli operativi e le abilità e durate dei Boss 10–12 restano da definire individualmente. Le proposte esistenti, incluse quelle con tre abilità, devono essere riesaminate secondo la rarità assegnata; nessuna nuova meccanica è implementata.
 - Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.
 - Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.
