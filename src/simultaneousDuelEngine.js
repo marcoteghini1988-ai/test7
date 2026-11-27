@@ -211,10 +211,10 @@ export function createTacticalDuel({shipA='C01',shipB='R04',levelA=3,levelB=3,se
   sides:{A:createSide('A',shipA,levelA,seed,specialDeckA,null,epicEntitlementsA,previewEpicOpeningA,shuffleNumericOpening,commanderA,bossNumericDeckA,equipmentLevelsA),
    B:createSide('B',shipB,levelB,seed+43,specialDeckB,bossPlanetB,epicEntitlementsB,null,shuffleNumericOpening,commanderB,bossNumericDeckB,equipmentLevelsB)},
   history:[],lastEvents:bossPlanetB===20?[
-   'B: Sovrano del Vuoto · seme dominante '+exclusiveVoidDominantSuit(1)+
+   'B: Custode dell'Antispazio · seme dominante '+exclusiveVoidDominantSuit(1)+
    ' (cicli 1–3, rotazione ogni 3 cicli)'
   ]:bossPlanetB===19?[
-   'B: Nucleo Magmatico · fase CARICA per il ciclo 1 (rotazione ogni 3 cicli)'
+   'B: Divoratore delle Scorie · fase CARICA per il ciclo 1 (rotazione ogni 3 cicli)'
   ]:[]};
  // This does not create any cards: it merely schedules the first legitimate
  // Afrodite numeric exchange after the real opening cooldown.
@@ -616,27 +616,27 @@ function applyBarrierAttack(sides,key,orders,status,log,impacts,modifiers,round,
   log.push(key+': Sovrano (mazzo numerico) · Supremazia +'+
    supremacy.percentage+'% ('+appliedSupremacyExtra+' HP applicati, carica consumata)');
  if(magmaDeck.active&&hit.damage>0)
-  log.push(key+': Nucleo Magmatico (mazzo numerico) · '+magmaDeck.abilities.join(' + ')+
+  log.push(key+': Divoratore delle Scorie (mazzo numerico) · '+magmaDeck.abilities.join(' + ')+
    ' +'+magmaDeck.percentage+'% ('+appliedMagmaDeckExtra+' HP effettivi)');
  const chaosProgress=rememberExclusiveChaosNativeHit(atk,hit.damage,chaos);
  if(rememberExclusiveIdraBarrierHit(atk,hit.damage,round))
   log.push(key+': Idra Criogenica · Rigenerazione +4 HP programmata per il ciclo successivo');
  if(chaosProgress.released&&hit.damage>0)
-  log.push(key+': Generatore del Caos · Scarica del reattore +10% (+'+appliedChaosExtra+
+  log.push(key+': Sovvertitore del Caso · Scarica del reattore +10% (+'+appliedChaosExtra+
    ' HP effettivi), cariche azzerate');
  else if(atk.bossExclusive?.id===14&&hit.damage>0)
-  log.push(key+': Generatore del Caos · Reattore carica '+chaosProgress.charges+'/3');
+  log.push(key+': Sovvertitore del Caso · Reattore carica '+chaosProgress.charges+'/3');
  if(magma.phase==='eruzione'&&hit.damage>0)
-  log.push(key+': Nucleo Magmatico · Eruzione +10% (+'+appliedMagmaExtra+
+  log.push(key+': Divoratore delle Scorie · Eruzione +10% (+'+appliedMagmaExtra+
    ' HP al pacchetto nativo, prima di intercettazione e difese; non danno garantito)');
  if(magma.phase==='raffreddamento')
-  log.push(key+': Nucleo Magmatico · Raffreddamento −10% armi native ('+magma.penalty+' HP)');
+  log.push(key+': Divoratore delle Scorie · Raffreddamento −10% armi native ('+magma.penalty+' HP)');
  if(abyss.active&&hit.damage>0)
   log.push(key+': Leviatano Abissale · Pressione degli abissi +8% sulla salva reale ('+
    'bonus applicato '+appliedAbyssExtra+' HP, resto '+abyss.remainder+
    '/100; barriera nemica <=40% all\'inizio del ciclo)');
  if(bloodPact.active)
-  log.push(key+': Signore delle Ombre · Patto di sangue +8% sul pacchetto nativo ('+
+  log.push(key+': Predone della Penombra · Patto di sangue +8% sul pacchetto nativo ('+
    'bonus applicato '+appliedBloodPactExtra+' HP, danno barriera '+hit.damage+
    '; costo 4 HP già pagato anche se il colpo fallisce)');
  if(chronoNative.active&&chronoNative.extra>0&&hit.damage>0)
@@ -852,13 +852,13 @@ function applyVitalAttack(sides,key,order,status,log,impacts,round,modifiers){
   log.push(key+': Sovrano (mazzo numerico) · Supremazia +'+supremacy.percentage+
    '% sul colpo valido (+'+supremacy.extra+' HP prima delle difese, carica consumata)');
  if(magmaVital.active&&hit.damage>0)
-  log.push(key+': Nucleo Magmatico (mazzo numerico) · Forgia moltiplicatrice +'+
+  log.push(key+': Divoratore delle Scorie (mazzo numerico) · Forgia moltiplicatrice +'+
    magmaVital.percentage+'% ('+magmaVital.extra+' HP prima delle difese)');
  if(rememberExclusiveVoidCounter(def,hit.damage,cards,round))
-  log.push(other(key)+': Sovrano del Vuoto · seme dominante '+exclusiveVoidDominantSuit(round)+
+  log.push(other(key)+': Custode dell'Antispazio · seme dominante '+exclusiveVoidDominantSuit(round)+
    ' contrastato da un vero colpo vitale, bonus disattivato nel prossimo ciclo');
  if(voidBonus.active&&hit.damage>0)
-  log.push(key+': Sovrano del Vuoto · '+voidBonus.suit+
+  log.push(key+': Custode dell'Antispazio · '+voidBonus.suit+
    ' dominante: +7% sul colpo valido ('+voidBonus.extra+' HP prima delle difese)');
  if(cancelExclusiveIdraByHeart(def,hit.damage,cards,round))
   log.push(other(key)+': Idra Criogenica · Rigenerazione annullata da Cuori su vitale esposto');
@@ -927,12 +927,12 @@ function resolveCycle(battle,nowMs){
  if(idraRegen.repaired>0)
   log.push('B: Idra Criogenica · Rigenerazione +'+idraRegen.repaired+' HP reali alla barriera');
  const magmaStage=exclusiveMagmaPhase(sides.B,battle.round);
- if(magmaStage)log.push('B: Nucleo Magmatico · fase '+magmaStage.toUpperCase()+' del ciclo');
+ if(magmaStage)log.push('B: Divoratore delle Scorie · fase '+magmaStage.toUpperCase()+' del ciclo');
  // Boss Plutone pays REAL shield HP at cycle start, BEFORE all card repairs,
  // native volleys and precision. This never reads the opponent's hidden order.
  const bloodPact=prepareExclusiveBloodPact(sides.B,battle.round,nativeBarrierPacket(sides.B));
  if(bloodPact.armed)
-  log.push('B: Signore delle Ombre · Patto di sangue: -'+bloodPact.paid+
+  log.push('B: Predone della Penombra · Patto di sangue: -'+bloodPact.paid+
    ' HP reali alla propria barriera, +8% armato per questo scontro');
  const status=applyPreparation(sides,orders,log,battle.round,modifiers);
  const legacyEffects=prepareLegacyTactics(sides,orders,playedSpecials,battle.round,battle.seed??18,log,modifiers);
@@ -963,7 +963,7 @@ function resolveCycle(battle,nowMs){
    ionicSiphon.transferred+' Sincronia reale da A a B');
  const resonance=collectExclusiveResonanceSync(sides.B,b,battle.round);
  if(resonance>0)
-  log.push('B: Cristallo di Risonanza · Memoria degli scarti +'+resonance+
+  log.push('B: Boss del Sacrificio · Memoria degli scarti +'+resonance+
    ' Sincronia reale (due o più carte numeriche scartate nel ciclo precedente)');
  // Bersaglio scelto e rivelato DOPO il vero impatto sulla barriera:
  // ogni lato decide senza conoscere carte o ordini avversari.
@@ -1064,7 +1064,7 @@ function resolveCycle(battle,nowMs){
  if(rememberExclusiveResonanceDiscards(sides.B,
    orders.A.numericIndices.length+orders.A.exchangeIndices.length+
     Number(orders.A.escortAmmoIndex!=null),battle.round))
-  log.push('B: Cristallo di Risonanza · Memoria degli scarti armata per il prossimo ciclo');
+  log.push('B: Boss del Sacrificio · Memoria degli scarti armata per il prossimo ciclo');
  resolveTacticalEpicAfterCombat(sides,battle.round,impacts,log);
  armLegacyBombs(sides,legacyEffects,battle.round,log);
  let winner=winState(sides);
@@ -1091,9 +1091,9 @@ export function advanceTacticalDuel(battle,nowMs=0){
   return {...battle,phase:'planning',round:nextRound,orders:{A:null,B:null},
    deadlineMs:nowMs+TACTICAL_TIMING.prepareMs,resolveUntilMs:null,
    lastEvents:bossSuit?[...battle.lastEvents,
-    'B: Sovrano del Vuoto · seme dominante '+bossSuit+' per il ciclo '+nextRound
+    'B: Custode dell'Antispazio · seme dominante '+bossSuit+' per il ciclo '+nextRound
    ]:bossMagma?[...battle.lastEvents,
-    'B: Nucleo Magmatico · fase '+bossMagma.toUpperCase()+' per il ciclo '+nextRound
+    'B: Divoratore delle Scorie · fase '+bossMagma.toUpperCase()+' per il ciclo '+nextRound
    ]:battle.lastEvents};
  }
  if(battle.phase!=='planning')return battle;
