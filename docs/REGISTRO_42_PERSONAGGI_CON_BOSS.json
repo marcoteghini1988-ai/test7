@@ -795,19 +795,19 @@
       "unlocked": {
         "duration": {
           "mode": "own-turns",
-          "turns": null
+          "turns": 3
         },
         "replaceable": true,
         "abilities": [
-          "Mantiene la stessa abilità di sacrificio degli HP di un supporto alleato per potenziare il primo attacco del turno; non è permanente, funziona solo durante la propria durata. Senza supporti vivi non si attiva."
+          "Per tre turni propri, una volta per turno può sacrificare una percentuale degli HP massimi di un supporto alleato vivo scelto dal giocatore per potenziare il primo attacco del turno. Se ha due supporti, può scegliere quale usare a ogni attivazione. Senza supporti vivi non si attiva."
         ],
-        "durationStatus": "pending"
+        "durationStatus": "confirmed",
+        "targetSelectionTiming": "each-own-turn"
       },
       "balancePending": true,
       "implemented": false,
       "open": [
         "Percentuali di sacrificio e potenziamento da bilanciare; 10% degli HP massimi e +30% danni erano esempi, non valori definitivi.",
-        "Proposta non confermata: durata della versione sbloccata tre turni propri; se il giocatore ha due supporti vivi, sceglie quale sacrificare a ogni attivazione.",
         "Definire l'ordine di pagamento e risoluzione del primo attacco, morte del supporto, passiva e annullamento del colpo; preservare il costo reale e verificare i casi limite."
       ]
     },
