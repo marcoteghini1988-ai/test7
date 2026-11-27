@@ -59,7 +59,7 @@ test('Pressione degli abissi: soglia esatta del 40% all INIZIO, 41% no; 0 non cr
  const base=nativeBarrierPacket(open().sides.B);
  assert.ok(base>0);
  assert.ok(gunB(exact).damage>0);
- assert.ok(exact.lastEvents.some(e=>e.includes('Leviatano Abissale · Pressione degli abissi')));
+ assert.ok(exact.lastEvents.some(e=>e.includes('Serpe delle Fosse Abissali · Pressione degli abissi')));
  assert.equal(exact.sides.B.bossExclusive.pressureRemainder,(base*8)%100);
  assert.equal(high.sides.B.bossExclusive.pressureRemainder,undefined);
  assert.ok(!high.lastEvents.some(e=>e.includes('Pressione degli abissi')));
