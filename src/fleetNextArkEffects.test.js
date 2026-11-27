@@ -177,7 +177,7 @@ test('Coro su supporto danneggiato di 1 punto ripara solo 1 HP reale',()=>{
  assert.ok(r.events.some(e=>e.kind==='ark-repair'&&e.healed===1));
  assert.notEqual(r.battle.sides.A.ark.qualifiedRepairPly,0);
 });
-test('Custode Astrale scambia una carta dopo una riparazione singola di almeno 2 HP',()=>{
+test('Vegliatore delle Rotte Celesti scambia una carta dopo una riparazione singola di almeno 2 HP',()=>{
  const b=make();b.sides.A.escorts[0].hp-=3;
  b.sides.A.deck=['gen-218','gen-235',...Array(18).fill('gen-216')];
  const r=play(b,'A',['ex-l04-01','nx-l04-06','gen-217'],{
