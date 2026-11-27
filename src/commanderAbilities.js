@@ -23,7 +23,7 @@ const definitions=[
  ['pilot_boss_10','Colosso di Metano','Difesa','Almeno una scudiera distrutta','escort_lost',STANDARD],
  ['pilot_boss_11','Idra Criogenica','Attacco','Alternanza tra vitali nemici realmente colpiti','alternate_vital',STANDARD],
  ['pilot_boss_12',"Titano d'Acciaio",'Difesa','Un solo vitale alleato ancora operativo','last_vital',STANDARD],
- ['pilot_rare_1','Il Vendicatore','Attacco','Un vitale alleato in avaria o distrutto','damaged_vital',STANDARD],
+ ['pilot_rare_1','Corsaro della Rivalsa','Attacco','Un vitale alleato in avaria o distrutto','damaged_vital',STANDARD],
  ['pilot_rare_2',"L'Adrenalinico",'Attacco','Scudo proprio al 60% o meno','strained_shield',STANDARD],
  ['pilot_rare_3','Il Baro','Attacco','Formula da tre numeriche con semi differenti','mixed_triple',STANDARD],
  ['pilot_rare_4','Il Collezionista di Specchi','Difesa','Almeno due vitali alleati in avaria','two_damaged_vitals',STANDARD],
