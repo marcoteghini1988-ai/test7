@@ -29,7 +29,7 @@ Rarità fisse dei 12 Personaggi Boss, confermate il 27/11/2026: settori 10–30 
 
 Regola confermata il 27/11/2026: ogni Personaggio Boss Epico (settori 70, 80 e 90) deve avere due abilità. Se una riprende un'abilità di un Personaggio Comune o Raro, deve essere potenziata rispetto all'originale; l'incremento concreto si definisce in progettazione e bilanciamento. Non è richiesta la ripresa di una meccanica esistente. La regola riguarda sia il Boss fisso sia la carta sbloccata, salvo futura decisione esplicita. Le singole abilità e durate dei tre Epici restano da approvare.
 
-### Eccezione approvata: Crono il Distruttore (Personaggio Boss 34)
+### Eccezione approvata: Devastatore delle Ere (Personaggio Boss 34)
 
 Una volta per proprio turno può sacrificare una carta scelta dal giocatore dalla propria mano (dal Boss quando controllato dall'IA), mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa. Lo schieramento del Personaggio sbloccato occupa una normale giocata. La quarta giocata è un'eccezione specifica, non un cambiamento del limite generale. L'attivazione va gestita prima della chiusura automatica alla terza giocata (o atomicamente con essa); la scelta manuale del sacrificio è confermata; interazioni con sospensione/sostituzione, esaurimento del timer e chiusura anticipata sono da definire e testare. Nessuna proroga, nessuna estensione cumulativa, nessuna carta creata. La risoluzione offensiva rimane sequenziale. Boss fisso, carta giocabile temporanea; rarità Rara e tre turni propri confermati. Specifica, non implementazione.
 
