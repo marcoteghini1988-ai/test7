@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Rara ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); gli altri 9 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Rara ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono ha l'abilità della quarta giocata confermata, rarità e durata proposte; gli altri 8 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -272,7 +272,7 @@ Da definire/verificare: Riesaminare la sinergia con le Armi effettivamente confe
 
 ## Personaggi Boss
 
-Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le schede Gaia, Tharsis e Matriarca sono confermate in progettazione con parametri aperti; le altre nove sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
+Identità, ID e ordine di campagna recuperati dal catalogo ufficiale. Le schede Gaia, Tharsis, Matriarca e Crono sono confermate nella meccanica con parametri aperti; le altre otto sono proposte di adattamento al sistema HP. Non sono poteri già attivi. Durante lo scontro sono fissi e non sostituibili; una volta sbloccati mediante vittoria, occupano il normale slot Personaggio, sono sostituibili e hanno durata propria.
 
 ### 31. Guardiano di Gaia — Terra · settore 10 · Comune
 
@@ -316,16 +316,16 @@ ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e
 
 ID conservato: `boss-character-3`.
 
-### 34. Crono il Distruttore — Saturno · settore 40
+### 34. Crono il Distruttore — Saturno · settore 40 · Rara proposta
 
-**Durante lo scontro (permanente):**
-- Una Difesa del Boss che blocca realmente un colpo carica il prossimo attacco.
-- A intervalli regolari accelera il consumo dei timer dei componenti avversari; non accelera gli HP.
+**Meccanica approvata il 27/11/2026: sacrificio per la quarta giocata.** Una sola abilità; la precedente proposta di trasferimento del tempo è rifiutata. Madre Corvo a Impulsi, un supporto Corvo Esploratore. La pesca aggiuntiva del supporto è una sinergia, non un requisito.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
-- Dopo il primo colpo bloccato, potenzia il successivo colpo Arma.
-- Una volta rallenta per un turno il consumo di un proprio componente.
-- Una volta sottrae tempo a un componente avversario scelto.
+**Durante lo scontro (permanente, sospendibile):**
+- Una volta per proprio turno può sacrificare una carta dalla propria mano, mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa.
+
+**Dopo lo sblocco:** stessa abilità indipendente dalla formazione. Durata proposta di tre turni propri e rarità Rara ancora da confermare. Il Personaggio occupa una giocata ordinaria quando viene schierato.
+
+Da definire e collaudare: scelta o casualità della carta sacrificata, attivazione prima della chiusura automatica alla terza giocata (o atomica con essa), sospensione/sostituzione, fine turno e mano vuota. Il sacrificio non è una giocata; la quarta carta deve essere realmente giocabile entro il timer. Nessuna estensione multipla nello stesso turno. Non implementato.
 
 ID conservato: `boss-character-6`.
 
@@ -439,4 +439,4 @@ ID conservato: `boss-character-20`.
 - Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). La classificazione Leggendaria dei trofei e le 3 abilità per ciascuno sono proposte da approvare, non modifiche già eseguite.
 - Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.
 - Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.
-- I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite delle tre giocate. Non eseguire ancora le nuove abilità.
+- I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.
