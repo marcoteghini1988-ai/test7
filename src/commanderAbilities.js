@@ -18,7 +18,7 @@ const definitions=[
  ['pilot_boss_5','Vegliardo del Vortice','Attacco','Colpo potenziato da vera carta Impulso Ionico','ion_shot',STANDARD],
  ['pilot_boss_6','Devastatore delle Ere','Attacco','Primo colpo efficace dopo un riciclo numerico','recycled_shot',STANDARD],
  ['pilot_boss_7','Sentinella Ionica','Difesa','Madre colpita mentre è ionizzata','ionized_self',STANDARD],
- ['pilot_boss_8','Leviatano Abissale','Difesa','Scudo madre ancora sopra il 50%','high_shield',STANDARD],
+ ['pilot_boss_8','Serpe delle Fosse Abissali','Difesa','Scudo madre ancora sopra il 50%','high_shield',STANDARD],
  ['pilot_boss_9','Predone della Penombra','Attacco','Scudo proprio al 35% o meno','critical_shield',STANDARD],
  ['pilot_boss_10','Colosso di Metano','Difesa','Almeno una scudiera distrutta','escort_lost',STANDARD],
  ['pilot_boss_11','Idra Criogenica','Attacco','Alternanza tra vitali nemici realmente colpiti','alternate_vital',STANDARD],
