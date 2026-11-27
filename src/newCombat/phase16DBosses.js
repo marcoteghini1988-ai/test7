@@ -19,7 +19,7 @@ const PROFILES=[
  [3,'Matriarca Tossica','Neurotossina','Le salve vincenti avvelenano lo scambio successivo.'],
  [6,'Devastatore delle Ere','Controtempo','Se risponde e vince il Poker, accumula Boost e munizioni.'],
  [7,'Sentinella Ionica','Sifone quantico','Intercetta l’energia Boost che conservi; sfruttarla comporta un rischio.'],
- [8,'Leviatano Abissale','Pressione degli abissi','Quando hai pochi HP, le sue salve diventano più pericolose.'],
+ [8,'Serpe delle Fosse Abissali','Pressione degli abissi','Quando hai pochi HP, le sue salve diventano più pericolose.'],
  [9,'Predone della Penombra','Patto di sangue','Sacrifica i propri HP per potenziare colpi con carte rosse.'],
  [11,'Idra Criogenica','Rigenerazione criogenica','Recupera HP dopo una salva; i Cuori interrompono la rigenerazione.'],
  [14,'Sovvertitore del Caso','Reattore crescente','Tre salve valide alimentano una scarica. La carica è visibile.'],
