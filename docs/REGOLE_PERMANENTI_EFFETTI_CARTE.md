@@ -1,5 +1,37 @@
 # Regole permanenti per gli effetti delle carte
 
+## Regola prioritaria — due fasi del turno: effetti immediati e combattimento sequenziale (27/11/2026)
+
+Decisione esplicita dell'utente. Vale per entrambi i lati e tutte le carte attuali e future; prevale sulle vecchie istruzioni incompatibili che rinviavano indiscriminatamente le carte a ESEGUI. Non modifica le meccaniche specifiche, i costi, il numero di giocate, i bersagli o le durate già approvati.
+
+### 1. Fase di gioco (timer di 30 secondi)
+
+- Una carta si considera giocata quando la giocata valida è confermata, non quando viene soltanto selezionata/visualizzata. I Personaggi entrano e attivano subito le proprie abilità d'ingresso o passive; gli istantanei risolvono subito. Gli effetti periodici, condizionali e di reazione conservano i loro trigger specifici (per esempio la cura esplicitamente prevista a fine turno). Non anticipare arbitrariamente effetti futuri.
+- Le Strategie con effetto immediato (es. pesca di due carte) risolvono subito, aggiornando mano, mazzo, scarti, risorse, stato e condizioni per la giocata successiva nello stesso turno. Una Strategia che prevede invece uno specifico attacco/reazione conserva il suo trigger.
+- Le Energie vengono installate e diventano disponibili subito, mostrando il loro effettivo ingresso/contributo alla risorsa o all'unità prevista. Rispettare eventuali eccezioni specifiche approvate, senza inventare consumi. Gli effetti di installazione, cure e altre modifiche immediate devono avere riscontro visivo, sonoro e aptico sincronizzato al momento reale.
+- Le Armi preparano i propri attacchi; gli spari e la risoluzione offensiva aspettano la fase successiva. Le Difese e Trappole reagiscono nel momento previsto dalla propria meccanica; una Trappola resta coperta fino al suo vero trigger.
+- Le giocate immediate possono creare combo nello stesso turno. Nessuna attesa di ESEGUI per ottenere o usare una carta appena pescata. Le pescate non concedono giocate extra. Il timer non viene allungato per selezioni o animazioni; conservare il limite di tre carte.
+
+### 2. Fase ESEGUI: attacchi e risposte
+
+- Inizia automaticamente al completamento della terza giocata oppure quando il giocatore chiude anticipatamente il turno con ESEGUI (esempio: due carte); si applica anche alla normale scadenza del turno, secondo le regole del motore. Nessuna nuova scelta che allunghi i 30 secondi di gioco.
+- Risolvere gli attacchi dovuti, compresi quelli delle Armi già attive e della madre quando previsti, in una coda ordinata. Per ogni azione: attivazione e risorse effettive → lancio → eventuale Difesa o Trappola/reazione avversaria al suo vero trigger → impatto/danno residuo o blocco → contrattacco/altre conseguenze, aggiornamento HP e stato, eventuale distruzione o scarti. Una reazione può precedere l'impatto e impedirlo: non mostrare un colpo riuscito se viene fermato.
+- **Non sovrapporre le sequenze offensive indipendenti.** Con più Armi o azioni, completare il botta e risposta della prima, poi mostrare la seconda, poi la successiva. Il motore deve usare lo stato risultante per le azioni seguenti, rispettando priorità, condizioni, bersagli, protezioni e annullamenti previsti; non imporre un ordine di priorità tra armi o reazioni incompatibile con le regole delle carte. L'ordine preciso fra azioni equivalenti e il ritmo in millisecondi restano da definire in implementazione.
+- Una singola Arma con raffica, area, colpi multipli, agganci persistenti o combo mantiene la sua coreografia approvata (inclusi eventuali proiettili in volo contemporanei della stessa raffica). Il divieto riguarda la sovrapposizione di azioni indipendenti, non la cancellazione di stati persistenti o delle emissioni interne previste.
+- Grafica, suono, aptica e aggiornamento di carte, scudi e scafi seguono gli stessi eventi. Evidenziare la carta Difesa/Trappola coinvolta, senza rivelare Trappole prima del trigger. Origine dei colpi, forma, rarità e altre regole permanenti restano valide. La presentazione deve essere rapida e leggibile, senza tempi morti gratuiti. Il turno successivo e il suo timer iniziano dopo la conclusione della risoluzione e della presentazione, non durante gli spari.
+- La pesca ordinaria di fine turno resta quella esistente (ritorno a sette carte in mano); applicare gli effetti espliciti di fine turno alla relativa scadenza. Le animazioni non devono ripetere le giocate o gli effetti immediati già risolti.
+
+### Caso di accettazione obbligatorio: Stratega di flotta (Personaggio 11)
+
+Decisione approvata nella revisione del 27/11: Leggendario, una sola abilità in deroga alla regola generale delle tre, durata due turni propri, incluso quello di attivazione. Durante la creazione del mazzo il giocatore preseleziona le carte della combinazione e il loro ordine di priorità, anche più di cinque, senza un ulteriore limite di selezione oltre alle carte del mazzo. Al momento della giocata lo Stratega porta automaticamente in cima al mazzo fino a cinque carte della selezione ancora realmente nel mazzo, nell'ordine preimpostato. Salta quelle in mano, sul campo, negli scarti o comunque non disponibili; nessuna scelta in battaglia, nessuna finestra che sospenda il timer, nessuna carta creata o pescata dall'abilità stessa. Esempio: sei preselezionate, tre già in mano, tre ancora nel mazzo → riordina soltanto queste tre.
+
+Giocando immediatamente dopo una Strategia che pesca due carte, le due pescate devono già essere quelle in cima al mazzo riordinato dallo Stratega (se disponibili), e le carte ricevute possono essere usate entro le giocate residue. Mostrare subito il riordino senza rivelare all'avversario l'identità delle carte segrete. Dopo la seconda pesca ordinaria di fine turno, o immediatamente se il Personaggio è rimosso, distrutto, sostituito o lascia il campo prima, rimescolare nel mazzo le carte ordinate non ancora pescate; non recuperare quelle già pescate né alterare carte non più nel mazzo. L'algoritmo esatto di rimescolamento e gestione dei duplicati deve essere definito e testato senza creare copie o esporre informazioni private.
+
+Verifiche richieste: Personaggio → Strategia di pesca → terza giocata; Energia → azione compatibile nello stesso turno; terza giocata con attivazione immediata prima di ESEGUI; chiusura anticipata; tre azioni offensive con almeno una risposta di Difesa/Trappola e un blocco; bersaglio o risorsa non più validi dopo una precedente azione; scadenza/rimozione dello Stratega con carte residue; lato A/B e coordinazione audio/aptica. I tempi specifici e la politica di priorità non espressamente scelti sono aperti, non decisioni approvate.
+
+**Stato:** regola di progettazione approvata e documentata, non ancora implementata o collaudata. Questa sezione non certifica che il motore attuale funzioni già in questo modo.
+
+
 ## Lingua dei testi delle carte
 
 Inglese predefinito per **tutti** i testi delle carte, inclusi i nomi.
