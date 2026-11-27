@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v8-2026-11-27",
+  "revision": "personaggi-42-v9-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
@@ -863,7 +863,7 @@
       "sector": 40,
       "element": null,
       "rarity": "Rara",
-      "rarityStatus": "proposed",
+      "rarityStatus": "confirmed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
@@ -883,7 +883,7 @@
           "mode": "own-turns",
           "turns": 3
         },
-        "durationStatus": "proposed",
+        "durationStatus": "confirmed",
         "replaceable": true,
         "abilityStatus": "confirmed",
         "abilities": [
@@ -894,7 +894,6 @@
       "balancePending": true,
       "implemented": false,
       "open": [
-        "Rarità Rara e durata giocabile di tre turni propri sono proposte da confermare, non decisioni definitive.",
         "Scelta manuale della carta dalla mano confermata, mai casuale. Definire quando si conferma il sacrificio. Per evitare la chiusura automatica dopo la terza giocata, l'attivazione deve precederla o essere atomica con essa; proposta operativa da verificare. Il sacrificio non è una giocata: la quarta deve essere effettivamente disponibile.",
         "Definire interazioni con sospensione del Personaggio, sostituzione, mano vuota, timer scaduto e chiusura anticipata. Non permettere più di una estensione per turno né rimborsare il costo dopo la risoluzione senza una decisione esplicita.",
         "La precedente proposta di sottrazione/trasferimento dei secondi è stata rifiutata. Non introdurre ulteriori abilità o dipendenze dal supporto."
@@ -1199,7 +1198,7 @@
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Rara, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono: abilità della quarta giocata confermata, rarità e durata proposte; per gli altri 8 la rarità e le abilità sono ancora da approvare individualmente.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Rara, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; per gli altri 8 la rarità e le abilità sono ancora da approvare individualmente.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.",

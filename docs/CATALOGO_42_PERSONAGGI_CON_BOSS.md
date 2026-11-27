@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Rara ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono ha l'abilità della quarta giocata confermata, rarità e durata proposte; gli altri 8 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Rara ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; gli altri 8 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -316,14 +316,14 @@ ID conservato: `boss-character-2`. Le precedenti proposte di bonus progressivo e
 
 ID conservato: `boss-character-3`.
 
-### 34. Crono il Distruttore — Saturno · settore 40 · Rara proposta
+### 34. Crono il Distruttore — Saturno · settore 40 · Rara
 
 **Meccanica approvata il 27/11/2026: sacrificio per la quarta giocata.** Una sola abilità; la precedente proposta di trasferimento del tempo è rifiutata. Madre Corvo a Impulsi, un supporto Corvo Esploratore. La pesca aggiuntiva del supporto è una sinergia, non un requisito.
 
 **Durante lo scontro (permanente, sospendibile):**
 - Una volta per proprio turno può sacrificare una carta scelta dal giocatore dalla propria mano (dal Boss quando controllato dall'IA), mandandola negli scarti senza giocarla, per aumentare da tre a quattro il massimo delle giocate di quel turno. Il timer rimane di 30 secondi. Non richiede alcun supporto specifico; la pesca aggiuntiva del Corvo Esploratore è una sinergia facoltativa.
 
-**Dopo lo sblocco:** stessa abilità indipendente dalla formazione. Durata proposta di tre turni propri e rarità Rara ancora da confermare. Il Personaggio occupa una giocata ordinaria quando viene schierato.
+**Dopo lo sblocco:** stessa abilità indipendente dalla formazione. Durata confermata di tre turni propri e rarità Rara confermata. Il Personaggio occupa una giocata ordinaria quando viene schierato.
 
 Da definire e collaudare: scelta manuale della carta sacrificata confermata; restano da definire attivazione prima della chiusura automatica alla terza giocata (o atomica con essa), sospensione/sostituzione, fine turno e mano vuota. Il sacrificio non è una giocata; la quarta carta deve essere realmente giocabile entro il timer. Nessuna estensione multipla nello stesso turno. Non implementato.
 
