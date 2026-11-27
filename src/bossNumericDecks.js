@@ -12,7 +12,7 @@ const design=[
  ['planet_char_11','Idra',6,[['Precisione criogenica','Danno con divisione valida +%',[3,5,7]],['Teste alternate','Danno +% alternando vitali avversari',[4,6,8]]]],
  ['planet_char_14','Generatore',6,[['Schermatura instabile','Durata Ionizzazione e Corrosione subite −%',[15,25,35]],['Accumulo energetico','Sincronia acquisita da eventi reali +%',[10,20,30]]]],
  ['planet_char_17','Risonanza',9,[['Armi armoniche','Danno +% alternando armi che sparano',[4,6,8]],['Frequenza multipla','Danno +% con almeno due semi diversi',[3,5,7]],['Sinfonia di flotta','Danno +% se madre e scudiera sparano insieme',[3,5,7]]]],
- ['planet_char_19','Nucleo Magmatico',9,[['Risonanza termica','Ogni terzo colpo efficace allo scudo +%',[6,9,12]],['Corrosione ardente','Colpo con vera carta Corrosione +%',[3,5,7]],['Forgia moltiplicatrice','Colpo valido con moltiplicazione +%',[4,6,8]]]],
+ ['planet_char_19','Divoratore delle Scorie',9,[['Risonanza termica','Ogni terzo colpo efficace allo scudo +%',[6,9,12]],['Corrosione ardente','Colpo con vera carta Corrosione +%',[3,5,7]],['Forgia moltiplicatrice','Colpo valido con moltiplicazione +%',[4,6,8]]]],
  ['planet_char_20','Sovrano',9,[['Ultimo presidio','Danni subiti con un solo vitale vivo −%',[8,12,16]],['Vuoto difensivo','Danni alla madre con scudo ≤25% −%',[4,6,8]],['Supremazia','Colpo successivo a un vitale nemico KO +%',[4,6,8]]]]
 ];
 export const BOSS_NUMERIC_DECKS=Object.freeze(Object.fromEntries(design.map(([id,name,maxLevel,raw])=>[
