@@ -81,7 +81,7 @@ export function createOfficialLiveDuel(initial,nowMs=0){
   actionUsed:{numeric:0,special:0},zones:{A:initialZones(),B:initialZones()},
   vitalBuilds:{A:initialBuilds(),B:initialBuilds()},pendingShot:{A:null,B:null},liveLegacy:createLiveLegacy(),liveModuleEffects:initialLiveModuleEffects(),
   history:[],winner:null,lastEvents:[...(liveBossDominantSuit(battle.sides.B,1)?
-   ['Custode dell'Antispazio · seme dominante del ciclo 1: '+liveBossDominantSuit(battle.sides.B,1)]:[]),
+   ['Custode dell’Antispazio · seme dominante del ciclo 1: '+liveBossDominantSuit(battle.sides.B,1)]:[]),
    'Turno 1 · TU · 30 secondi per agire in diretta'],
   orders:{A:null,B:null},aiReadyAtMs:nowMs+650};
 }
@@ -173,7 +173,7 @@ export function finishOfficialLiveTurn(battle,nowMs=0){
  }
  if(b.round!==previousRound){
   const suit=liveBossDominantSuit(b.sides.B,b.round);
-  if(suit)event(b,'Custode dell'Antispazio · seme dominante ciclo '+b.round+': '+suit,
+  if(suit)event(b,'Custode dell’Antispazio · seme dominante ciclo '+b.round+': '+suit,
    'boss_void_suit',{suit});
  }
  liveNumericBossExpireStatus(b.sides[b.activeSide],b.turn);
