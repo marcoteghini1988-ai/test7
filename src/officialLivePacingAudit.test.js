@@ -360,10 +360,10 @@ test('Audit 12 boss contro tre navicelle a parita di livello e due seed',()=>{
 // non attribuisce a un boss una speciale che non ha pescato.
 test('Diagnostica 4 boss critici: uso speciale reale su 48 duelli multi-seed',()=>{
  const cases=[
-  {sector:60,bossId:8,name:'Leviatano Abissale'},
-  {sector:70,bossId:9,name:'Signore delle Ombre'},
+  {sector:60,bossId:8,name:'Serpe delle Fosse Abissali'},
+  {sector:70,bossId:9,name:'Predone della Penombra'},
   {sector:80,bossId:11,name:'Idra Criogenica'},
-  {sector:100,bossId:17,name:'Cristallo di Risonanza'}
+  {sector:100,bossId:17,name:'Boss del Sacrificio'}
  ];
  const ships=['C01','E01','L04'],offsets=[1301,1531,1777,2017];
  const results=[];
