@@ -2816,7 +2816,7 @@ function arkCustodianTurn(b,ctx,events){
  if(drawn)side.hand.push(drawn);
  state.custodianUsedPly=b.ply;
  events.push(emit(b,ctx.who,'ark-custodian',
-  'Custode Astrale: una carta sotto il mazzo, una pescata solo dopo vera riparazione ≥2',{
+  'Vegliatore delle Rotte Celesti: una carta sotto il mazzo, una pescata solo dopo vera riparazione ≥2',{
    cardId:'ex-l04-01',putBottomCardId:recycled,
    drawnCardId:drawn||null,qualifiedRepairPly:b.ply,netCards:drawn?0:-1}));
 }
