@@ -1,0 +1,2914 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-27",
+  "repo": "marcoteghini1988-ai/test7",
+  "sourceCommit": "af9ad9bd33fec43933059eacef86618856908ec5",
+  "goal": "Mappare asset per documentare i diritti prima della distribuzione; nessun giudizio automatico di violazione",
+  "totals": {
+    "all": 578,
+    "publiclyServed": 445,
+    "designSources": 36,
+    "documentationAndTests": 97
+  },
+  "method": "Scansione delle sole estensioni visive/audio/font nei percorsi GitHub; non include generatori procedurali, CSS, URL remoti e licenze delle dipendenze software",
+  "defaultRightsStatus": "NON_VERIFICATO",
+  "items": [
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/en/weapon-designed-ionic-giudizio-temporale.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/en/weapon-designed-plasma-inceneritore-rotante-rarity-l.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/en/weapon-designed-plasma-inceneritore-rotante.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/en/weapon-designed-plasma-mortaio-magmatico-rarity-e.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/en/weapon-designed-plasma-mortaio-magmatico-rarity-l.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/en/weapon-designed-plasma-mortaio-magmatico.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/it/weapon-designed-ionic-giudizio-temporale.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/it/weapon-designed-plasma-inceneritore-rotante-rarity-l.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/it/weapon-designed-plasma-inceneritore-rotante.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/it/weapon-designed-plasma-mortaio-magmatico-rarity-e.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/it/weapon-designed-plasma-mortaio-magmatico-rarity-l.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/lotto-giudizio-fuoco/it/weapon-designed-plasma-mortaio-magmatico.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/nucleo-folgore/legacy-text/weapon-designed-ionic-nucleo-folgore-rarity-e.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/nucleo-folgore/legacy-text/weapon-designed-ionic-nucleo-folgore-rarity-l.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/card-text/nucleo-folgore/legacy-text/weapon-designed-ionic-nucleo-folgore.svg",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/condensatore-tempesta-2026-11-27/art/storm-epic.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/condensatore-tempesta-2026-11-27/art/storm-legendary.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lancia-comando-2026-11-27/art/lance-epic.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lancia-comando-2026-11-27/art/lance-legendary.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lancia-comando-2026-11-27/art/lance-rare.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lancia-comando-2026-11-27/references/crystal-decoration-reference.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27/art/incinerator-epica.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27/art/incinerator-leggendaria.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27/art/judgment-leggendaria.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27/art/mortar-epica.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27/art/mortar-leggendaria.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27/art/mortar-rara.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27/effects/magma-orb.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/art/hammer-epic.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/art/hammer-legendary.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/art/hammer-rare.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/art/probe-common.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/art/probe-epic.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/art/probe-legendary.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/art/probe-rare.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "asset-sources/weapon-previews/sonda-martello-2026-11-27/direction-b-storyboard.png",
+      "area": "sorgente_progettuale",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/categorie-2026-11-26/maglio-prima-dopo.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/effetti-2026-11-24/maglio-quattro-rarita-due-direzioni.mp4",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/effetti-2026-11-24/maglio-quattro-rarita-preview.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/attacco-avversario.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/attacco-giocatore.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/maglio-in-partita.gif",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/comune-avversario.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/comune-giocatore.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/confronto-comune.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/confronto-epica.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/confronto-leggendaria.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/confronto-rara.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/epica-avversario.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/epica-giocatore.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/leggendaria-avversario.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/leggendaria-giocatore.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/maglio-quattro-rarita.mp4",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/rara-avversario.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/rara-giocatore.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/stackblitz-test.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/rarita/supporti-distrutti.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/primo-piano-cpu-comune.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz-dopo-salvataggio.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/confronto-comune.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/confronto-epica.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/confronto-leggendaria.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/confronto-rara.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/leggendaria-primo-piano.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/aggiornamento-2026-11-23/plancia-attacco.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/confronto-comune.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/confronto-epica.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/confronto-leggendaria.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/confronto-rara.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/plancia-avversario.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/plancia-giocatore.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/primo-piano-comune.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/quattro-rarita-in-partita.mp4",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/stackblitz-test.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/collaudi/maglio/snodi/stackblitz/stato-sorgenti.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/BASE_UFFICIALE_CARTE_2026-11-21.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/SIMBOLI_CATEGORIE_ELEMENTI_2026-11-21.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/categorie/arma.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/categorie/attacco.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/categorie/difesa.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/categorie/personaggio.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/categorie/terreno.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/categorie/trappola.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/acqua.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/fulmine.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/fuoco.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/ghiaccio.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/gravita.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/luce.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/metallo.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/ombra.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/terra.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/adesivi-slot-2026-11-24/elementi/vento.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/arma-rosso/comune.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/arma-rosso/epica.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/arma-rosso/leggendaria.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/arma-rosso/rara.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/comune.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/epica.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/leggendaria.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/basi-rarita-ufficiali-2026-11-24/rara.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/font/EclissiVettore-Regular.ttf",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/illustrazioni/comune.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/illustrazioni/epica.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/illustrazioni/leggendaria.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/illustrazioni/rara.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/proiettili-approvati.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/testo-comune.svg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/testo-epica.svg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/testo-leggendaria.svg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/testo-rara.svg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/comune.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/epica.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/leggendaria.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/difesa/rara.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/comune.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/epica.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/leggendaria.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/personaggio/rara.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/terreno/comune.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/terreno/epica.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/terreno/leggendaria.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/terreno/rara.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/trappola/comune.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/trappola/epica.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/trappola/leggendaria.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/anteprime/trappola/rara.webp",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/attacco/comune.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/attacco/epica.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/attacco/leggendaria.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/riferimenti-carte/nuove-basi-2026-11-23/attacco/rara.png",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/screenshots/plancia-attuale-battaglia.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "docs/screenshots/plancia-vitali-danneggiati.jpg",
+      "area": "documentazione_collaudo",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/battle-fx/charge.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/battle-fx/shield-contact.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/battle-fx/shield-fracture.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/battle-fx/trap-wave.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/battle-fx/vital-command.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/battle-fx/vital-engine.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/battle-fx/vital-generator.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/battle-fx/vital-weapons.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-1.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-11.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-11.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-14.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-14.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-17.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-17.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-19.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-19.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-2.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-20.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-20.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-3.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-3.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-6.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-6.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-7.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-7.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-8.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-8.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-9.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/boss-characters/boss-character-9.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/neutral_starter.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_1.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_11.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_14.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_17.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_19.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_2.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_20.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_3.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_6.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_7.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_8.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/planet_char_9.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-backs/special_fixed.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/neutral_starter.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_1.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_11.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_14.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_17.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_19.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_2.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_20.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_3.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_6.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_7.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_8.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/deck-stacks/numeric/planet_char_9.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/C01_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/C01_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/C02_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/C02_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/C03_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/C03_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/C04_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/C04_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/E01_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/E01_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/E02_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/E02_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/E03_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/E03_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/E04_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/E04_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/L01_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/L01_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/L02_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/L02_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/L03_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/L03_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/L04_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/L04_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/N00_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/N00_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/R01_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/R01_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/R02_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/R02_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/R03_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/R03_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/R04_escort_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/escorts/R04_escort_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-card-marks/salvo-comune.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-card-marks/salvo-epica.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-card-marks/salvo-leggendaria.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-card-marks/salvo-rara.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-11.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-14.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-17.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-19.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-20.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-3.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-6.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-7.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-8.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-boss-cards/boss-character-9.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-216.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-217.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-218.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-226.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-227.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-228.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-234.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-235.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-236.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-241.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-242.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-next-cards/gen-243.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T01.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T02.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T03.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T04.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T05.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T06.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T07.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T08.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T09.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-terrain-scenes/T10.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-ui/category-symbols.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio-rarity-r.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-maglio.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta-rarity-r.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-confirmed-metallic-slitta.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-artiglieria-schegge.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-collassatore-lega-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-collassatore-lega.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-frantumatore-induzione.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-ganasce-magnetiche.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-perforatore-cascata-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-perforatore-cascata.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-recuperatore-termobalistico-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts-red/weapon-designed-metallic-recuperatore-termobalistico.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01-rarity-r.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-01.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02-rarity-r.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-02.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03-rarity-r.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-03.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-base-ionic-04.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-maglio-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-maglio-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-maglio-rarity-r.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-maglio.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-slitta-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-slitta-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-slitta-rarity-r.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-confirmed-metallic-slitta.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-rarity-l-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-condensatore-tempesta.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-e-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-l-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-lancia-comando-ionico.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-e-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-l-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-martello-tuono.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-e-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-l-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-nucleo-folgore.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-e-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-l-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-r-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-rarity-r.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-ionic-sonda-ionica.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-collassatore-lega-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-collassatore-lega.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-frantumatore-induzione.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-ganasce-magnetiche-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-ganasce-magnetiche-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-ganasce-magnetiche.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-recuperatore-termobalistico-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-metallic-recuperatore-termobalistico.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-e.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-l.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-text-base.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/batch/magma-orb.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/enemy.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/epica/enemy.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/epica/player.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/leggendaria/enemy.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/leggendaria/player.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/player.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/projectiles/approved-atlas.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/projectiles/perspective-0.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/projectiles/perspective-1.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/projectiles/perspective-2.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/projectiles/perspective-3.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/rara/enemy.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/fleet-weapons/maglio/rara/player.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/hud/command-console-shell.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/hud/opponent-console-shell.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathduel/arena_titanio_9x16.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathduel/card_number.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/C04_player.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/N00_player.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_divide_critical.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_divide_damaged.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_divide_destroyed.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_divide_intact.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_minus_critical.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_minus_damaged.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_minus_destroyed.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_minus_intact.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_plus_critical.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_plus_damaged.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_plus_destroyed.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_plus_intact.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_times_critical.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_times_damaged.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_times_destroyed.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/motor_times_intact.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/C01.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/C01_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/C02.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/C02_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/C03.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/C03_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/C04.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/C04_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/E01_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/E02_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/E03_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/E04_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/L01_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/L02_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/L03_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/L04_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/N00_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/R01_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/R02_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/R03_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/enemy_to_player/R04_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/C01.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/C01_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/C02.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/C02_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/C03.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/C03_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/C04.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/C04_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/E01_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/E02_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/E03_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/E04_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/L01_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/L02_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/L03_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/L04_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/N00_complete.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/R01_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/R02_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/R03_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/mathfleet/views/player_to_enemy/R04_complete.webp",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_1.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_3.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_3.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_6.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_6.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_7.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_7.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_8.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_8.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_9.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/epic_item_9.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/fusion-barrier.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/fusion-barrier.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/fusion-strike.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/fusion-strike.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/fusion-triad.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/fusion-triad.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/fusion-twin.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/fusion-twin.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-aquarius.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-aquarius.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-aries.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-aries.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-cancer.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-cancer.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-capricorn.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-capricorn.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-gemini.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-gemini.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-leo.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-leo.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-libra.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-libra.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-ophiuchus.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-ophiuchus.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-pisces.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-pisces.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_1.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_1.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_10.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_10.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_11.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_11.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_12.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_12.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_13.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_13.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_14.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_14.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_15.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_15.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_16.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_16.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_17.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_17.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_18.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_18.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_19.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_19.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_2.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_2.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_20.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_20.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_3.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_3.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_4.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_4.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_5.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_5.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_6.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_6.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_7.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_7.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_8.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_8.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_9.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-planet_char_9.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-sagittarius.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-sagittarius.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-scorpio.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-scorpio.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-singularity_core.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-singularity_core.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-supreme_eclipse.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-supreme_eclipse.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-taurus.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-taurus.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-virgo.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/module-card-virgo.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/shot-corrosion.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/shot-corrosion.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/shot-ion.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/shot-ion.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/shot-piercing.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/shot-piercing.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/support-escort-repair.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/support-escort-repair.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/support-shield-repair.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/support-shield-repair.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/support-status-purge.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/support-status-purge.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-bomb.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-bomb.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-counter.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-counter.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-golden.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-golden.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-impact.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-impact.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-kinetic.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-kinetic.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-malus.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-malus.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-numeric-recycle.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-numeric-recycle.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-power-shift.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-power-shift.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-quantum-dice.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-quantum-dice.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-reactive.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-reactive.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-scan.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-scan.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-signature-mutation.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-signature-mutation.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-suppress.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-suppress.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-vulnerability-rift.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactic-vulnerability-rift.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactical-cover.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/special-cards/tactical-cover.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/terrain-pvp/terrain-debris.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/terrain-pvp/terrain-debris.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/terrain-pvp/terrain-ionic.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/terrain-pvp/terrain-ionic.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/terrain-pvp/terrain-plasma.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/terrain-pvp/terrain-plasma.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/terrain-pvp/terrain-resonance.png",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    },
+    {
+      "path": "public/assets/terrain-pvp/terrain-resonance.svg",
+      "area": "distribuzione_web",
+      "rightsEvidence": "da_reperire"
+    }
+  ],
+  "nextActions": [
+    "Raccogliere per gli asset distribuiti autore, origine, data, licenza o prova di creazione autonoma e condizioni d'uso commerciale",
+    "Verificare risorse esterne richiamate a runtime e asset prodotti da servizi generativi secondo relativi termini",
+    "Rivedere il font TTF nei documenti ed eventuale inclusione futura nel prodotto",
+    "Reperire licenze delle dipendenze da package-lock e indicare eventuali obblighi di attribuzione",
+    "Esaminare separatamente copyright di codici audio generativi, registrazioni, musica, illustrazioni e scritte rasterizzate"
+  ]
+}
