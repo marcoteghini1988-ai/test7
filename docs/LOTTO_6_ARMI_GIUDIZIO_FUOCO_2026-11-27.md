@@ -1,157 +1,64 @@
 # Sei Carte Arma — Giudizio Temporale e Fuoco
 
-> Aggiornamento dopo la revisione: l’utente ha risposto «procedi» alla
-> conferma dei sei fronti e dell’inserimento su test7/main. Approvazione
-> definitiva, nessuna rigenerazione o nuova richiesta. I dodici PNG
-> (sei fronti EN e sei basi) sono conservati byte per byte nell’archivio
-> `asset-sources/weapon-fronts/lotto-giudizio-fuoco-2026-11-27`, con hash
-> per file e per parte. Registro a 58 varianti, 22 Metallo/31 Fulmine/5 Fuoco.
-> Partita e studio condividono renderer, suoni e piano aptico. I nominali
-> diretti Fuoco sono allineati ai fronti evitando il doppio fattore; la
-> Bruciatura conserva il valore fissato dal percorso eseguibile.
-> Le attese di approvazione sotto descrivono la preparazione storica.
-> Il collaudo reale StackBlitz deve essere registrato separatamente: non
-> confonderlo con il video dello studio già consegnato.
+**Stato al 27/11/2026: integrate e collaudate.** L’utente ha approvato le due direzioni Fuoco con «Confermo entrambe le direzioni» e poi i sei fronti e l’inserimento su test7/main con «procedi». Non richiedere una nuova approvazione e non rigenerare i PNG approvati.
 
-Il 27 novembre l’utente ha approvato il Giudizio Temporale con «ok, ma
-lavora su piu carte contemporaneamente». La lavorazione passa a più
-famiglie e rarità insieme. Ha poi confermato con «Confermo entrambe le
-direzioni» le proposte del Mortaio e dell’Inceneritore presentate insieme.
-Queste tre direzioni non devono essere riproposte per un’altra conferma.
+Il registro giocabile comprende **58 varianti: 22 Metallo, 31 Fulmine, 5 Fuoco**. Integrazione: `6ae9bfd178d8900e39b368f238db591a69d7c2d0`. Materializzazione dei dodici PNG originali e sorgente collaudato su StackBlitz: `cf381aaafd0a5b5f12239ef38e115f26cac4ef74`.
 
-**Stato:** sei fronti completi da revisionare, non ancora approvati né
-promossi nel gioco. Restano 52 varianti nel registro approvato, 22 Metallo
-e 30 Fulmine. Lo studio è distinto dal collaudo della partita StackBlitz.
-Nessun fronte già approvato o meccanica di combattimento è modificato.
+## Sei fronti e regole eseguite
 
-| Famiglia | Rarità | Testo EN sul fronte | Nominali diretti | Durata |
+| Famiglia | Rarità | Nome sul fronte EN | Nominali diretti | Durata |
 | --- | --- | --- | --- | --- |
-| Cannone del Giudizio Temporale | Leggendaria | Temporal Judgment Cannon | 20% degli HP massimi del bersaglio | 3 turni propri; un solo attacco alla posa |
-| Mortaio Magmatico | Rara | Magmatic Mortar | 20 base; 8 per extra | 3 turni propri |
-| Mortaio Magmatico | Epica | Magmatic Mortar | 48 base; 19 per extra | 3 turni propri |
-| Mortaio Magmatico | Leggendaria | Magmatic Mortar | 67 base; 28 per extra | 3 turni propri |
-| Inceneritore a Plasma Rotante | Epica | Rotating Plasma Incinerator | 37 al primo turno; 27 al secondo | 2 turni propri |
-| Inceneritore a Plasma Rotante | Leggendaria | Rotating Plasma Incinerator | 54 al primo turno; 39 al secondo | 2 turni propri |
+| Cannone del Giudizio Temporale | Leggendaria | Temporal Judgment Cannon | 20% HP massimi del bersaglio | 3 turni propri, un attacco alla posa |
+| Mortaio Magmatico | Rara | Magmatic Mortar | 20 base, 8 per extra | 3 turni propri |
+| Mortaio Magmatico | Epica | Magmatic Mortar | 48 base, 19 per extra | 3 turni propri |
+| Mortaio Magmatico | Leggendaria | Magmatic Mortar | 67 base, 28 per extra | 3 turni propri |
+| Inceneritore a Plasma Rotante | Epica | Rotating Plasma Incinerator | 37 al T1, 27 al T2 | 2 turni propri |
+| Inceneritore a Plasma Rotante | Leggendaria | Rotating Plasma Incinerator | 54 al T1, 39 al T2 | 2 turni propri |
 
-I valori diretti stampati sono i candidati strategici correnti di
-`WEAPON_NEAR_FINAL_VALUES`, prima dei modificatori ordinari. Il manifest
-conserva anche i profili legacy eseguiti, cui il motore applica già il
-fattore strategico. Non sostituire il profilo con il candidato stampato
-senza eliminare l’eventuale doppia applicazione. Non sono un nuovo
-bilanciamento definitivo. I PNG del lotto precedente restano intatti.
+I valori Fuoco stampati si applicano una volta sola attraverso `approvedBatchNominals.js`; coperture, resistenze e modificatori ordinari determinano il danno effettivo. Non è un nuovo bilanciamento definitivo.
 
-## Direzioni confermate
+- **Giudizio:** un solo attacco nel turno di posa; nessun tiro automatico ai turni 2 e 3. Nessun costo Energia. Per un componente della madre la percentuale usa gli HP massimi della madre; per un altro bersaglio usa i suoi HP massimi. Difese e coperture ordinarie si applicano. Scade al quarto turno proprio.
+- **Mortaio:** un colpo base gratuito, al massimo due extra per turno, ciascuno pagato con una carica Fuoco reale. Le cariche sono riservate prima del Generatore. Con 0/1/2/3 cariche iniziali produce 1/2/3/3 colpi; la carica residua del caso da tre consente un extra al T2. Il conteggio considera il consumo reale anche per carte a cariche multiple.
+- **Inceneritore:** il primo impatto che infligge danno fissa cinque tick di Bruciatura in base alle proprie Strategie negli scarti. Epica: 2 per Strategia, minimo 2 e massimo 12; Leggendaria: 3, minimo 3 e massimo 16, prima delle difese ordinarie della madre. Il secondo colpo non rinnova la Bruciatura. Se il primo è bloccato, non applica Bruciatura.
+- Il motore applica il primo tick alla chiusura del turno di posa e poi a ogni passaggio di turno. Sono cinque eventi, non cinque soli turni avversari. I tick residui continuano dopo la scadenza dell’Arma, senza nuova posa, rivelazione della carta o proiettile inventato.
 
-**Giudizio:** un nucleo elettrico compatto con tre anelli di fulmine in
-piani e ritmi diversi. Gli anelli si allineano sull’avvicinamento e
-collassano in una sola scarica concentrata sul bersaglio reale. Lampo
-prismatico locale, contraccolpo dello scafo solo con danno, suono crescente
-e tuono secco. La Difesa riceve la scarica sullo scudo, senza danno o
-contraccolpo dello scafo. Nessun rallentamento, blocco temporale o attacco
-aggiuntivo. Macchina a forcella con sei piastre di fase e stabilizzatori
-prismatici nell’illustrazione.
+## Effetti, suoni e aptica
 
-**Mortaio:** sfere di magma pesanti in traiettoria arcuata, un colpo base
-gratuito per turno e al massimo due extra pagati con cariche Fuoco reali.
-Le crepe di lava, la scia, il movimento, l’impatto e il timbro evolvono con
-la rarità. Rara bronzata; Epica mantiene tutte le parti e aggiunge
-dissipatori e rinforzo in argento; Leggendaria conserva l’Epica e aggiunge
-stabilizzatori fisici prismatici. Frammenti e filamenti sono decorazioni
-dello stesso colpo. Sprite del proiettile generato sul riferimento della
-sfera Rara, PNG trasparente, usato dallo studio.
+Giudizio avvicina un nucleo con tre anelli elettrici su piani e ritmi diversi, li allinea e li concentra in una sola scarica. Il Mortaio lancia sfere di magma con archi pesanti, crepe, frammenti e filamenti propri per R/E/L. L’Inceneritore emette un getto elicoidale: la Leggendaria intreccia più filamenti nello stesso contatto. Le decorazioni non aggiungono attacchi o danni.
 
-**Inceneritore:** un getto di plasma incandescente a spirale, emesso dal
-rotore illustrato. L’Epica ha rotore argentato, scambiatori e supporto;
-la Leggendaria conserva la macchina e aggiunge tre deviatori termici
-prismatici e rinforzi. Il getto mantiene un solo contatto per attacco,
-anche quando la Leggendaria intreccia più filamenti. Bruciatura, scintille,
-suono e impulso aptico compaiono soltanto per gli eventi reali. Nessun
-danno continuo inventato durante il volo del getto.
+Studio e partita condividono `weaponBatchSpec`, i renderer Giudizio/Fuoco e `weaponBatchAudio`; il punteggio sonoro determina anche il piano aptico. Energia, Bruciatura, contraccolpi dello scafo e scudi seguono gli eventi effettivi. Azioni indipendenti si concludono in sequenza; la raffica interna del Mortaio conserva i suoi 480 ms di distanza. Le origini A/B vengono dai rispettivi bordi. Nessun modello di macchina Arma viene montato sulla plancia.
 
-## Meccaniche verificate e limiti numerici
+## Originali e testi EN/IT
 
-- Giudizio è soltanto Leggendaria. Il resolver non provvisorio esegue
-  l’attacco nel turno di posa, poi nessun altro nei turni 2 e 3; occupa
-  comunque lo slot fino alla scadenza. Usa HP massimi della nave madre
-  quando mira a un suo componente, altrimenti quelli del bersaglio.
-  Coperture, Difese e modificatori ordinari si applicano. Non spende Energia.
-- Il Mortaio riserva le cariche prima dell’attacco del Generatore; ogni
-  extra richiede una carica fisica valida. I casi con 0/1/2/3 cariche
-  mostrano rispettivamente 1/2/3/3 colpi al primo turno, con una carica
-  residua utilizzabile al secondo nel caso iniziale da tre. Non è un’AOE.
-- L’Inceneritore corrente esiste solo Epico e Leggendario. Il primo
-  impatto riuscito applica la Bruciatura in funzione delle **proprie
-  Strategie negli scarti**. Il valore è fissato in quel momento, cinque
-  tick; il secondo colpo non applica una nuova Bruciatura. Se il primo
-  colpo è bloccato, non compare alcun incendio.
-- La Bruciatura eseguibile usa Epica 2 per Strategia, minimo 2 e massimo
-  12; Leggendaria 3 per Strategia, minimo 3 e massimo 16, prima dei limiti
-  ordinari della madre. `tickProvisionalBurns` usa il valore memorizzato
-  senza moltiplicatore strategico ulteriore. Per questo i fronti usano
-  questi campi eseguibili e non la diversa scalatura del candidato di stampa.
-- Il motore corrente applica il primo tick alla chiusura del turno di
-  posa e i successivi ad ogni passaggio di turno. Lo studio ne conserva
-  esattamente i cinque eventi: non li descrivere come cinque turni propri
-  o cinque soli turni avversari. La durata dell’Arma è comunque due turni.
-  Questa fotografia del codice non modifica le vecchie intenzioni di
-  progettazione: eventuali revisioni di tempistica sono un lavoro separato.
+I sei fronti EN e le sei basi senza testo sono RGBA 3072×4608, conservati byte per byte in `asset-sources/weapon-fronts/lotto-giudizio-fuoco-2026-11-27`. Il ripristino verifica parti, SHA-256 e formato. CI materializza i PNG nativi in `public/assets/fleet-weapon-fronts`. Le sei illustrazioni originali sono 1448×1086: la risoluzione del fronte non è quella nativa dell’illustrazione.
 
-## Asset e produzione
+Lo sprite magma trasparente, le illustrazioni e i prompt approvati sono in `asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27`. I testi sono SVG separati EN/IT sopra la stessa base. Cornici, simboli ed evoluzioni approvate sono preservati. `%` e `+`, assenti nel font ufficiale, usano i vettori del livello testo.
 
-Illustrazioni originali e sprite:
-`asset-sources/weapon-previews/lotto-giudizio-fuoco-2026-11-27`.
-Prompt e catena di riferimento sono nei due JSON della stessa directory.
-Le sei illustrazioni sono PNG nativi 1448×1086; i fronti e le basi sono
-RGBA 3072×4608, composti dalle cornici originali HD. La risoluzione del
-fronte non è la risoluzione nativa dell’illustrazione.
+## Collaudo della partita StackBlitz
 
-Cornici `basi-rarita-ufficiali-2026-11-24/arma-rosso`, simbolo Arma nello
-slot sinistro, Fuoco/Fulmine nello slot destro. Nessuna cornice o icona è
-ricreata. Testi inglesi predefiniti, dizionario italiano, SVG separati;
-il cambio lingua modifica soltanto le aree testo. Il font ufficiale non
-contiene `%` e `+`: questi due segni sono vettori nel livello testo.
+È stata aggiornata la copia esistente `github-edu2s6xy`, senza un nuovo progetto. Il bootstrap salvato carica il sorgente verificato e serve le immagini dal medesimo SHA. Dopo l’incolla con tastiera nativa, una nuova riga e Ctrl+S, il riferimento è rimasto presente anche al reload; l’avvio ha verificato **826 sorgenti** e il pannello mostra **58 varianti**. Il generatore del package ora ripristina il proprio comando salvato dopo il sync, così un aggiornamento dei sorgenti non lo sostituisce.
 
-```bash
-node scripts/previews/lotto-giudizio-fuoco-20261127/catalog.mjs OUTPUT
-python3 scripts/previews/20261126/make-masks.py . OUTPUT
-NODE_PATH="$CODEX_PRIMARY_RUNTIME_NODE_MODULES" node scripts/previews/lotto-giudizio-fuoco-20261127/compose-cards.mjs OUTPUT
-python3 scripts/previews/lotto-giudizio-fuoco-20261127/verify-frames.py . OUTPUT
-node --test scripts/previews/lotto-giudizio-fuoco-20261127/batch.test.mjs
-NODE_PATH="$CODEX_PRIMARY_RUNTIME_NODE_MODULES" node scripts/previews/lotto-giudizio-fuoco-20261127/export.mjs OUTPUT
-```
+Le prove usano stati iniziali preparati nel pannello di collaudo, poi risoluzione e presentazione della partita ufficiale con avversario AI:
 
-Aspettare la composizione prima della verifica e dell’esportazione.
-Non rigenerare l’arte per riprodurre i fronti. Il pacchetto di revisione
-conserva anche i PNG originali completi EN/IT e le basi senza testo.
+- tutte le sei varianti A/B, madre e supporti, entrambi gli slot;
+- Mortaio con 0/1/2/3 cariche, limite di due extra e residuo al T2;
+- Mortaio con due Energie Fuoco realmente selezionate dalla mano nello stesso turno, sulla flotta Fuoco compatibile;
+- Inceneritore al T2 e Bruciatura residua al T3 senza rimontare l’Arma;
+- Giudizio ai T2/T3 senza nuovi attacchi e scadenza al T4;
+- tre prove di Difesa: Giudizio bloccato, Mortaio con primo colpo bloccato e due extra reali, Inceneritore bloccato senza incendio;
+- sei Armi disabilitate senza colpi o animazioni offensive;
+- sei basi caricate realmente a 3072×4608; cambio EN/IT sugli stessi URL con soli testi diversi.
 
-## Verifiche completate
+Le flotte di prova vengono scelte per non confondere la selezione di Energie del Generatore da parte dell’AI con un attacco Arma. L’AI rimane quella reale. Le misure sono in `docs/collaudi/lotto-giudizio-fuoco-2026-11-27/verifica-partita-stackblitz.json`: 39 riscontri DOM conservati, sei coppie di letture EN/IT e tre letture di Difesa trascritte dai risultati CUA.
 
-Nove test mirati passati; 33 sequenze del resolver nell’HTML. Tutte le
-rarità, entrambi i lati, madre/supporti, secondo slot, cariche 0–3,
-Difesa, Arma disabilitata, attacchi unici/periodici, Bruciatura e scadenze.
-Nessun cambiamento al motore, ai collegamenti della partita o alle 52
-varianti approvate. I renderer dei tre effetti, audio e piano aptico
-rimangono isolati nello studio, pronti per la promozione dopo la revisione.
+Suite completa sul codice di integrazione: **2493/2493**; build e preflight passati. I tre test del sincronizzatore passano. Il collaudo riguarda questo lotto; non certifica la distinta nuova specifica Personaggi/Strategie/Energie immediate o lo Stratega.
 
-Per tutti i sei fronti: dimensioni RGBA 3072×4608, zero pixel protetti
-della cornice modificati, alfa esterna identica, zero modifiche EN/IT
-fuori dalle aree testo. SHA-256 dei fronti, basi e traduzioni nel rapporto.
+## Video reale con audio
 
-Il video dello studio comprende otto sequenze, tutte le sei varianti,
-Giudizio dai due lati e un blocco di Difesa: 62,9 secondi, 720×1280,
-H.264 e AAC stereo 48 kHz. Stessa sintesi PCM e stessi tempi dell’HTML;
-picco PCM 0,622, senza clipping. È un’esportazione dello studio con
-eventi reali, **non una registrazione della partita StackBlitz**.
-Nessuna vibrazione fisica su telefono è certificata.
+- [Estratto, 97,077 secondi](https://chatgpt.com/library?file_id=libfile_2130dc7cc2b48191a3a9f7eb76e24d3a&account_id=personal): 900×1600, H.264 High 4.0 e AAC mono 48 kHz. Tagliate soltanto attese fra le prove, senza cambiare la velocità dei colpi né aggiungere audio.
+- [Registrazione integrale, 196,665 secondi](https://chatgpt.com/library?file_id=libfile_cf6ad2563d1c8191b47292aada0c41b5&account_id=personal): MP4 H.264/AAC della scheda, con i tempi originali.
+- [Originale WebM](https://chatgpt.com/library?file_id=libfile_3c825c9ef1f08191b51edc8e791ed77e&account_id=personal): acquisizione VP9/Opus preservata.
 
-## Ripresa dopo la revisione
+Audio integrale: picco −4,5 dB, medio −33,3 dB. La fluidità è variabile nel browser cloud: non dichiarare 30 FPS costanti. Il valore 30 nel contenitore dell’estratto è nominale, non la frequenza effettiva dei fotogrammi. La vibrazione fisica resta da verificare su un telefono compatibile.
 
-1. Ottenere la conferma del gruppo di sei fronti e dell’aspetto concreto
-   mostrato nello studio; le tre direzioni generali sono già approvate.
-2. Conservare i PNG approvati byte per byte e collegare i moduli condivisi
-   a partita, effetti sonori e aptica senza duplicare i danni o i costi.
-3. Collaudare sulla copia StackBlitz esistente, entrambe le parti,
-   salvataggio e reload, quindi consegnare il video reale con audio.
-
-I riferimenti persistenti ai file consegnati e i risultati puntuali
-sono nel registro di collaudo di questo lotto.
+Lo studio precedente da 62,9 secondi rimane una consegna storica separata (`libfile_500baaedc43c8191aeabfee4e869fc75`). Il pacchetto HD EN/IT approvato resta `libfile_80d318638a4c81918b8b030583c534f3`. Nessuna delle carte approvate è stata rigenerata per questa integrazione.

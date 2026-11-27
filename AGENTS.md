@@ -24,11 +24,29 @@ L’utente ha confermato con «procedi» i sei fronti completi e l’inserimento
 nel gioco su test7/main. Approvazione definitiva: non rigenerare PNG,
 cornici, testi o simboli e non chiedere nuovamente conferma. Lo studio usa gli
 eventi reali del motore e suono/aptica propri; non è la partita StackBlitz.
-Promozione in corso a 58 varianti: 22 Metallo, 31 Fulmine e 5 Fuoco.
-Il collaudo reale e il video con audio vanno completati e registrati
-separatamente prima di dichiararli verificati. Fonti, hash, numeri e ripresa:
-`docs/LOTTO_6_ARMI_GIUDIZIO_FUOCO_2026-11-27.md` e
-`scripts/previews/lotto-giudizio-fuoco-20261127`.
+Promozione completata: 58 varianti, 22 Metallo, 31 Fulmine e 5 Fuoco.
+Il collaudo della partita StackBlitz è completato sul sorgente
+`cf381aaafd0a5b5f12239ef38e115f26cac4ef74`, che materializza i PNG
+originali del commit di integrazione `6ae9bfd178d8900e39b368f238db591a69d7c2d0`.
+Tutte le sei varianti dai due lati, madre/supporti, entrambi gli slot,
+cariche 0/1/2/3, carica residua al T2, due Energie Fuoco giocate dalla
+mano, secondo getto, Bruciatura dopo scadenza, Giudizio senza nuovi tiri
+al T2/T3 e scadenza T4, tre Difese e sei Armi disabilitate verificati.
+Sei basi native 3072×4608; EN/IT mantiene gli stessi URL e cambia i testi.
+Salvataggio e reload della copia esistente verificati: 826 sorgenti,
+58 varianti. Il bootstrap conserva il package salvato dopo il sync;
+incollare con la tastiera nativa, aggiungere una nuova riga, Ctrl+S,
+attendere il salvataggio e verificare lo SHA dopo reload.
+Suite 2493/2493, build e preflight passati; tre test del sync passati.
+Video REALE della partita con audio della scheda, 900×1600: integrale
+196,665 s (`libfile_cf6ad2563d1c8191b47292aada0c41b5`), estratto
+97,077 s con sole attese tagliate (`libfile_2130dc7cc2b48191a3a9f7eb76e24d3a`).
+Nessun audio aggiunto o cambio di velocità; originale WebM conservato.
+Fluidità cloud variabile; vibrazione fisica da verificare su telefono.
+Questo lotto non certifica la distinta specifica sugli effetti immediati.
+Fonti, valori e ripresa: `docs/LOTTO_6_ARMI_GIUDIZIO_FUOCO_2026-11-27.md`;
+riscontri e file in `docs/collaudi/lotto-giudizio-fuoco-2026-11-27/verifica-partita-stackblitz.json`.
+
 
 
 ## Regola prioritaria 27/11 — effetti immediati e combattimento sequenziale

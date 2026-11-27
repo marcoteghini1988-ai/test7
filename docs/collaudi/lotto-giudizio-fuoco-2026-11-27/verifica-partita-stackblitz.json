@@ -1,0 +1,2765 @@
+{
+  "commit": "cf381aaafd0a5b5f12239ef38e115f26cac4ef74",
+  "savedAndReloaded": true,
+  "verifiedSourceFiles": 826,
+  "approvedVariants": 58,
+  "physicalHapticsVerified": false,
+  "frontChecks": [
+    {
+      "id": "weapon-designed-ionic-giudizio-temporale",
+      "en": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "1 TARGET / SHOT",
+          "1 SHOT ON PLAY",
+          "TEMPORAL JUDGMENT",
+          "CANNON",
+          "WEAPON",
+          "LEGENDARY",
+          "ELEMENT",
+          "LIGHTNING",
+          "DURATION",
+          "3",
+          "TURNS",
+          "DAMAGE / HP",
+          "20",
+          " MAX HP",
+          "BEFORE MODIFIERS",
+          "FIRES ON DEPLOYMENT TURN",
+          "ONE ATTACK ONLY",
+          "NO LATER AUTOMATIC SHOT",
+          "DEFENSES APPLY",
+          "1 TARGET / SHOT",
+          "1 SHOT ON PLAY"
+        ]
+      },
+      "it": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-ionic-giudizio-temporale-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "1 BERSAGLIO / COLPO",
+          "1 COLPO ALLA POSA",
+          "CANNONE DEL",
+          "GIUDIZIO TEMPORALE",
+          "ARMA",
+          "LEGGENDARIA",
+          "ELEMENTO",
+          "FULMINE",
+          "DURATA",
+          "3",
+          "TURNI",
+          "DANNO / HP",
+          "20",
+          " MAX HP",
+          "PRIMA DEI MODIFICATORI",
+          "SPARA NEL TURNO DI POSA",
+          "UN SOLO ATTACCO",
+          "NESSUN TIRO SUCCESSIVO",
+          "DIFESE APPLICABILI",
+          "1 BERSAGLIO / COLPO",
+          "1 COLPO ALLA POSA"
+        ]
+      }
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico",
+      "en": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "DEFENSES APPLY",
+          "1 TARGET / SHOT",
+          "1-3 SHOTS / TURN",
+          "MAGMATIC",
+          "MORTAR",
+          "WEAPON",
+          "RARE",
+          "COST / EXTRA SHOT",
+          "1 FIRE",
+          "DURATION",
+          "3",
+          "TURNS",
+          "DAMAGE / HP",
+          "20 BASE",
+          "8 / EXTRA SHOT",
+          "1 FREE SHOT / TURN",
+          "UP TO 2 PAID EXTRAS",
+          "SPENDS REAL FIRE CHARGES",
+          "DEFENSES APPLY",
+          "1 TARGET / SHOT",
+          "1-3 SHOTS / TURN"
+        ]
+      },
+      "it": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "DIFESE APPLICABILI",
+          "1 BERSAGLIO / COLPO",
+          "1-3 COLPI / TURNO",
+          "MORTAIO",
+          "MAGMATICO",
+          "ARMA",
+          "RARA",
+          "COSTO / COLPO EXTRA",
+          "1 FUOCO",
+          "DURATA",
+          "3",
+          "TURNI",
+          "DANNO / HP",
+          "20 BASE",
+          "8 / COLPO EXTRA",
+          "1 COLPO GRATUITO / TURNO",
+          "FINO A 2 EXTRA A PAGAMENTO",
+          "CONSUMA CARICHE REALI",
+          "DIFESE APPLICABILI",
+          "1 BERSAGLIO / COLPO",
+          "1-3 COLPI / TURNO"
+        ]
+      }
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico-rarity-e",
+      "en": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "DEFENSES APPLY",
+          "1 TARGET / SHOT",
+          "1-3 SHOTS / TURN",
+          "MAGMATIC",
+          "MORTAR",
+          "WEAPON",
+          "EPIC",
+          "COST / EXTRA SHOT",
+          "1 FIRE",
+          "DURATION",
+          "3",
+          "TURNS",
+          "DAMAGE / HP",
+          "48 BASE",
+          "19 / EXTRA SHOT",
+          "1 FREE SHOT / TURN",
+          "UP TO 2 PAID EXTRAS",
+          "SPENDS REAL FIRE CHARGES",
+          "DEFENSES APPLY",
+          "1 TARGET / SHOT",
+          "1-3 SHOTS / TURN"
+        ]
+      },
+      "it": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-e-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "DIFESE APPLICABILI",
+          "1 BERSAGLIO / COLPO",
+          "1-3 COLPI / TURNO",
+          "MORTAIO",
+          "MAGMATICO",
+          "ARMA",
+          "EPICA",
+          "COSTO / COLPO EXTRA",
+          "1 FUOCO",
+          "DURATA",
+          "3",
+          "TURNI",
+          "DANNO / HP",
+          "48 BASE",
+          "19 / COLPO EXTRA",
+          "1 COLPO GRATUITO / TURNO",
+          "FINO A 2 EXTRA A PAGAMENTO",
+          "CONSUMA CARICHE REALI",
+          "DIFESE APPLICABILI",
+          "1 BERSAGLIO / COLPO",
+          "1-3 COLPI / TURNO"
+        ]
+      }
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico-rarity-l",
+      "en": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "DEFENSES APPLY",
+          "1 TARGET / SHOT",
+          "1-3 SHOTS / TURN",
+          "MAGMATIC",
+          "MORTAR",
+          "WEAPON",
+          "LEGENDARY",
+          "COST / EXTRA SHOT",
+          "1 FIRE",
+          "DURATION",
+          "3",
+          "TURNS",
+          "DAMAGE / HP",
+          "67 BASE",
+          "28 / EXTRA SHOT",
+          "1 FREE SHOT / TURN",
+          "UP TO 2 PAID EXTRAS",
+          "SPENDS REAL FIRE CHARGES",
+          "DEFENSES APPLY",
+          "1 TARGET / SHOT",
+          "1-3 SHOTS / TURN"
+        ]
+      },
+      "it": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-mortaio-magmatico-rarity-l-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "DIFESE APPLICABILI",
+          "1 BERSAGLIO / COLPO",
+          "1-3 COLPI / TURNO",
+          "MORTAIO",
+          "MAGMATICO",
+          "ARMA",
+          "LEGGENDARIA",
+          "COSTO / COLPO EXTRA",
+          "1 FUOCO",
+          "DURATA",
+          "3",
+          "TURNI",
+          "DANNO / HP",
+          "67 BASE",
+          "28 / COLPO EXTRA",
+          "1 COLPO GRATUITO / TURNO",
+          "FINO A 2 EXTRA A PAGAMENTO",
+          "CONSUMA CARICHE REALI",
+          "DIFESE APPLICABILI",
+          "1 BERSAGLIO / COLPO",
+          "1-3 COLPI / TURNO"
+        ]
+      }
+    },
+    {
+      "id": "weapon-designed-plasma-inceneritore-rotante",
+      "en": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "LOCKED WHEN APPLIED",
+          "1 TARGET / SHOT",
+          "1 SHOT / TURN",
+          "ROTATING PLASMA",
+          "INCINERATOR",
+          "WEAPON",
+          "EPIC",
+          "ELEMENT",
+          "FIRE",
+          "DURATION",
+          "2",
+          "TURNS",
+          "DAMAGE / HP",
+          "37 / 27 HP",
+          "TURN 1 / TURN 2",
+          "T1 HIT: 5 BURN TICKS",
+          "2 / STRATEGY DISCARDED",
+          "MIN 2 / MAX 12 HP",
+          "LOCKED WHEN APPLIED",
+          "1 TARGET / SHOT",
+          "1 SHOT / TURN"
+        ]
+      },
+      "it": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "VALORE FISSATO AL COLPO",
+          "1 BERSAGLIO / COLPO",
+          "1 COLPO / TURNO",
+          "INCENERITORE A",
+          "PLASMA ROTANTE",
+          "ARMA",
+          "EPICA",
+          "ELEMENTO",
+          "FUOCO",
+          "DURATA",
+          "2",
+          "TURNI",
+          "DANNO / HP",
+          "37 / 27 HP",
+          "TURNO 1 / TURNO 2",
+          "COLPO T1: 5 BRUCIATURE",
+          "2 / STRATEGIA SCARTATA",
+          "MIN 2 / MAX 12 HP",
+          "VALORE FISSATO AL COLPO",
+          "1 BERSAGLIO / COLPO",
+          "1 COLPO / TURNO"
+        ]
+      }
+    },
+    {
+      "id": "weapon-designed-plasma-inceneritore-rotante-rarity-l",
+      "en": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "LOCKED WHEN APPLIED",
+          "1 TARGET / SHOT",
+          "1 SHOT / TURN",
+          "ROTATING PLASMA",
+          "INCINERATOR",
+          "WEAPON",
+          "LEGENDARY",
+          "ELEMENT",
+          "FIRE",
+          "DURATION",
+          "2",
+          "TURNS",
+          "DAMAGE / HP",
+          "54 / 39 HP",
+          "TURN 1 / TURN 2",
+          "T1 HIT: 5 BURN TICKS",
+          "3 / STRATEGY DISCARDED",
+          "MIN 3 / MAX 16 HP",
+          "LOCKED WHEN APPLIED",
+          "1 TARGET / SHOT",
+          "1 SHOT / TURN"
+        ]
+      },
+      "it": {
+        "images": [
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.png",
+            "width": 3072
+          },
+          {
+            "height": 4608,
+            "src": "https://raw.githubusercontent.com/marcoteghini1988-ai/test7/cf381aaafd0a5b5f12239ef38e115f26cac4ef74/public/assets/fleet-weapon-fronts/weapon-designed-plasma-inceneritore-rotante-rarity-l-text-base.png",
+            "width": 3072
+          }
+        ],
+        "texts": [
+          "VALORE FISSATO AL COLPO",
+          "1 BERSAGLIO / COLPO",
+          "1 COLPO / TURNO",
+          "INCENERITORE A",
+          "PLASMA ROTANTE",
+          "ARMA",
+          "LEGGENDARIA",
+          "ELEMENTO",
+          "FUOCO",
+          "DURATA",
+          "2",
+          "TURNI",
+          "DANNO / HP",
+          "54 / 39 HP",
+          "TURNO 1 / TURNO 2",
+          "COLPO T1: 5 BRUCIATURE",
+          "3 / STRATEGIA SCARTATA",
+          "MIN 3 / MAX 16 HP",
+          "VALORE FISSATO AL COLPO",
+          "1 BERSAGLIO / COLPO",
+          "1 COLPO / TURNO"
+        ]
+      }
+    }
+  ],
+  "samples": [
+    {
+      "label": "Giudizio A supporto slot 2",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"three-rings-concentrated-discharge\"]",
+          "frames": "2",
+          "maxFrameMs": "200.0",
+          "motifs": "[\"three-electric-rings-one-discharge\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "43",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1950",
+          "impactAtMs": "3450",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "three-rotating-rings-one-discharge",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "temporal-judgment"
+        }
+      ]
+    },
+    {
+      "label": "Giudizio B supporto slot 2",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"three-rings-concentrated-discharge\"]",
+          "frames": "2",
+          "maxFrameMs": "66.6",
+          "motifs": "[\"three-electric-rings-one-discharge\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "43",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1950",
+          "impactAtMs": "3450",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "three-rotating-rings-one-discharge",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "temporal-judgment"
+        }
+      ]
+    },
+    {
+      "label": "Giudizio L madre slot 1 A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"three-rings-concentrated-discharge\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"three-electric-rings-one-discharge\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "156",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1950",
+          "impactAtMs": "3450",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "three-rotating-rings-one-discharge",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "temporal-judgment"
+        }
+      ]
+    },
+    {
+      "label": "Giudizio L madre slot 1 B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"three-rings-concentrated-discharge\"]",
+          "frames": "2",
+          "maxFrameMs": "100.0",
+          "motifs": "[\"three-electric-rings-one-discharge\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "187",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1950",
+          "impactAtMs": "3450",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "three-rotating-rings-one-discharge",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "command",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "temporal-judgment"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio R madre due cariche slot 1 A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"bronze-basalt-magma\",\"bronze-basalt-magma\",\"bronze-basalt-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "19",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "8",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "8",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio E A supporto slot 2 due cariche",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "2",
+          "maxFrameMs": "216.6",
+          "motifs": "[\"silver-fractured-magma\",\"silver-fractured-magma\",\"silver-fractured-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "36",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio E A supporto slot 2 due cariche volo",
+      "cinema": [
+        {
+          "active": "1",
+          "activeWeapon": "magmatic-mortar",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "16",
+          "impactIndex": "0",
+          "maxFrameMs": "216.6",
+          "motif": "silver-fractured-magma",
+          "motifs": "[\"silver-fractured-magma\",\"silver-fractured-magma\",\"silver-fractured-magma\"]",
+          "phase": "flight",
+          "presentation": "hull-impacts-v4",
+          "targetId": "escort:maglio-review-B-0"
+        }
+      ],
+      "energy": [
+        {
+          "cardId": "energy-plasma",
+          "family": "support",
+          "fleetCardSlot": "A-5",
+          "rarity": "Comune",
+          "slotRole": "energia",
+          "weaponEnergy": "spent",
+          "weaponEnergyAmount": "2",
+          "weaponEnergyCards": "energy-plasma,energy-plasma",
+          "weaponEnergyIndices": "0,1"
+        }
+      ],
+      "shots": [
+        {
+          "actualDamage": "36",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio L A madre tre cariche cap due extra",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"prismatic-white-core-magma\",\"prismatic-white-core-magma\",\"prismatic-white-core-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "64",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio L A madre tre cariche cap due extra volo",
+      "cinema": [
+        {
+          "active": "1",
+          "activeWeapon": "magmatic-mortar",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "12",
+          "impactIndex": "0",
+          "maxFrameMs": "533.2",
+          "motif": "prismatic-white-core-magma",
+          "motifs": "[\"prismatic-white-core-magma\",\"prismatic-white-core-magma\",\"prismatic-white-core-magma\"]",
+          "phase": "flight",
+          "presentation": "hull-impacts-v4",
+          "targetId": "weapons"
+        }
+      ],
+      "energy": [
+        {
+          "cardId": "energy-plasma",
+          "family": "support",
+          "fleetCardSlot": "A-5",
+          "rarity": "Comune",
+          "slotRole": "energia",
+          "weaponEnergy": "spent",
+          "weaponEnergyAmount": "2",
+          "weaponEnergyCards": "energy-plasma,energy-plasma",
+          "weaponEnergyIndices": "0,1"
+        }
+      ],
+      "shots": [
+        {
+          "actualDamage": "64",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Inceneritore E supporto slot 2 due Strategie A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"helical-plasma-contact\",\"locked-burn-tick\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"silver-helical-fire-jet\",\"epic-locked-burn\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1600",
+          "impactAtMs": "3100",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "single-helical-plasma-pulse",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "rotating-incinerator"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "4350",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "plasma-burn"
+        }
+      ]
+    },
+    {
+      "label": "Inceneritore E supporto slot 2 due Strategie B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"helical-plasma-contact\",\"locked-burn-tick\",\"locked-burn-tick\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"silver-helical-fire-jet\",\"epic-locked-burn\",\"epic-locked-burn\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1600",
+          "impactAtMs": "3100",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "single-helical-plasma-pulse",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "rotating-incinerator"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "4350",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "plasma-burn"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "5180",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "plasma-burn"
+        }
+      ]
+    },
+    {
+      "label": "Inceneritore L madre otto Strategie cap Bruciatura A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"helical-plasma-contact\",\"locked-burn-tick\"]",
+          "frames": "2",
+          "maxFrameMs": "50.0",
+          "motifs": "[\"prismatic-interwoven-fire-jet\",\"legendary-locked-burn\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "51",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1600",
+          "impactAtMs": "3100",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "single-helical-plasma-pulse",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "rotating-incinerator"
+        },
+        {
+          "actualDamage": "15",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "4350",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "real-burn-tick",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "plasma-burn"
+        }
+      ]
+    },
+    {
+      "label": "Inceneritore L madre otto Strategie cap Bruciatura B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"helical-plasma-contact\",\"locked-burn-tick\",\"locked-burn-tick\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"prismatic-interwoven-fire-jet\",\"legendary-locked-burn\",\"legendary-locked-burn\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "48",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1600",
+          "impactAtMs": "3100",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "single-helical-plasma-pulse",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "command",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "rotating-incinerator"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "4350",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "real-burn-tick",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "plasma-burn"
+        },
+        {
+          "actualDamage": "15",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "5180",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "real-burn-tick",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "plasma-burn"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio R Binaria Manta madre due cariche A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "2",
+          "maxFrameMs": "100.0",
+          "motifs": "[\"bronze-basalt-magma\",\"bronze-basalt-magma\",\"bronze-basalt-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "19",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "7",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "7",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio R Binaria Manta madre due cariche B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"bronze-basalt-magma\",\"bronze-basalt-magma\",\"bronze-basalt-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "19",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "8",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "8",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio E Binaria Manta supporti slot 2 due cariche A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"silver-fractured-magma\",\"silver-fractured-magma\",\"silver-fractured-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "36",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-B-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio E Binaria Manta supporti slot 2 due cariche B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "2",
+          "maxFrameMs": "83.3",
+          "motifs": "[\"silver-fractured-magma\",\"silver-fractured-magma\",\"silver-fractured-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "36",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "14",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "escort:maglio-review-A-0",
+          "targetKind": "escort",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio L Binaria Manta madre due cariche A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"prismatic-white-core-magma\",\"prismatic-white-core-magma\",\"prismatic-white-core-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "60",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "25",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "25",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio L Binaria Manta madre due cariche B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"prismatic-white-core-magma\",\"prismatic-white-core-magma\",\"prismatic-white-core-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "64",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio R con 0 cariche A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\"]",
+          "frames": "2",
+          "maxFrameMs": "66.7",
+          "motifs": "[\"bronze-basalt-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "19",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio R con 0 cariche B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"bronze-basalt-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "19",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio R con 1 cariche A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "2",
+          "maxFrameMs": "50.0",
+          "motifs": "[\"bronze-basalt-magma\",\"bronze-basalt-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "19",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "7",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio R con 1 cariche B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"bronze-basalt-magma\",\"bronze-basalt-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "19",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "8",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio L T2 con carica residua A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"prismatic-white-core-magma\",\"prismatic-white-core-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "60",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "25",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Mortaio L T2 con carica residua B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"prismatic-white-core-magma\",\"prismatic-white-core-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "64",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "27",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "1",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Leggendaria",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "generator",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    },
+    {
+      "label": "Inceneritore E T2 secondo getto e Bruciatura A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"helical-plasma-contact\",\"locked-burn-tick\",\"locked-burn-tick\"]",
+          "frames": "2",
+          "maxFrameMs": "33.2",
+          "motifs": "[\"silver-helical-fire-jet\",\"epic-locked-burn\",\"epic-locked-burn\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "26",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1600",
+          "impactAtMs": "3100",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "single-helical-plasma-pulse",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "rotating-incinerator"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "4350",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "plasma-burn"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "5180",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "plasma-burn"
+        }
+      ]
+    },
+    {
+      "label": "Inceneritore E T3 Arma scaduta sola Bruciatura A",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"locked-burn-tick\",\"locked-burn-tick\"]",
+          "frames": "2",
+          "maxFrameMs": "100.0",
+          "motifs": "[\"epic-locked-burn\",\"epic-locked-burn\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "1130",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "plasma-burn"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "1960",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "plasma-burn"
+        }
+      ]
+    },
+    {
+      "label": "Inceneritore E T3 Arma scaduta sola Bruciatura B",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"locked-burn-tick\",\"locked-burn-tick\"]",
+          "frames": "3",
+          "maxFrameMs": "100.0",
+          "motifs": "[\"epic-locked-burn\",\"epic-locked-burn\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "1130",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "plasma-burn"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "1960",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "plasma-burn"
+        }
+      ]
+    },
+    {
+      "label": "Giudizio T2 nessun attacco ripetuto",
+      "cinema": [],
+      "energy": [],
+      "shots": [],
+      "armaSlotLines": [
+        "\t\t\t\t148 checkbox (disabled) Description: Arma temporanea Arma temporanea · Cannone del Giudizio Temporale · supporto non bersagliabile, Value: 0",
+        "\t\t\t\t166 checkbox Value: 0, Description: Consulta Arma temporanea Arma temporanea · Cannone del Giudizio Temporale · supporto non bersagliabile",
+        "\t\t\t\t171 button CANNONE DEL GIUDIZIO TEMPORALE"
+      ]
+    },
+    {
+      "label": "Giudizio T3 nessun attacco ripetuto",
+      "cinema": [],
+      "energy": [],
+      "shots": [],
+      "armaSlotLines": [
+        "\t\t\t\t148 checkbox (disabled) Description: Arma temporanea Arma temporanea · Cannone del Giudizio Temporale · supporto non bersagliabile, Value: 0",
+        "\t\t\t\t166 checkbox Value: 0, Description: Consulta Arma temporanea Arma temporanea · Cannone del Giudizio Temporale · supporto non bersagliabile",
+        "\t\t\t\t171 button CANNONE DEL GIUDIZIO TEMPORALE"
+      ]
+    },
+    {
+      "label": "Giudizio T4 nessun attacco ripetuto",
+      "cinema": [],
+      "energy": [],
+      "shots": [],
+      "armaSlotLines": [
+        "\t\t\t\t148 checkbox (disabled) Description: Arma temporanea Arma temporanea · Cannone del Giudizio Temporale · supporto non bersagliabile, Value: 0"
+      ]
+    },
+    {
+      "label": "Inceneritore E T2 B vero secondo getto",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"helical-plasma-contact\",\"locked-burn-tick\",\"locked-burn-tick\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"silver-helical-fire-jet\",\"epic-locked-burn\",\"epic-locked-burn\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "25",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "1600",
+          "impactAtMs": "3100",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "single-helical-plasma-pulse",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "2",
+          "targetId": "command",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "rotating-incinerator"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "4350",
+          "originEdge": "opponent-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "B",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "front",
+          "weaponKind": "plasma-burn"
+        },
+        {
+          "actualDamage": "4",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "0",
+          "flightMs": "0",
+          "impactAtMs": "5180",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Epica",
+          "sequence": "real-burn-tick",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "plasma-burn"
+        }
+      ]
+    },
+    {
+      "label": "Arma disabilitata weapon-designed-ionic-giudizio-temporale",
+      "cinema": [],
+      "energy": [],
+      "shots": []
+    },
+    {
+      "label": "Arma disabilitata weapon-designed-plasma-mortaio-magmatico",
+      "cinema": [],
+      "energy": [],
+      "shots": []
+    },
+    {
+      "label": "Arma disabilitata weapon-designed-plasma-mortaio-magmatico-rarity-e",
+      "cinema": [],
+      "energy": [],
+      "shots": []
+    },
+    {
+      "label": "Arma disabilitata weapon-designed-plasma-mortaio-magmatico-rarity-l",
+      "cinema": [],
+      "energy": [],
+      "shots": []
+    },
+    {
+      "label": "Arma disabilitata weapon-designed-plasma-inceneritore-rotante",
+      "cinema": [],
+      "energy": [],
+      "shots": []
+    },
+    {
+      "label": "Arma disabilitata weapon-designed-plasma-inceneritore-rotante-rarity-l",
+      "cinema": [],
+      "energy": [],
+      "shots": []
+    },
+    {
+      "label": "Mortaio R con due Energie Fuoco realmente giocate nello stesso turno",
+      "cinema": [
+        {
+          "active": "0",
+          "comboContact": "false",
+          "contacts": "[\"basalt-magma-splash\",\"basalt-magma-splash\",\"basalt-magma-splash\"]",
+          "frames": "1",
+          "maxFrameMs": "0.0",
+          "motifs": "[\"bronze-basalt-magma\",\"bronze-basalt-magma\",\"bronze-basalt-magma\"]",
+          "phase": "waiting",
+          "presentation": "hull-impacts-v4"
+        }
+      ],
+      "energy": [],
+      "shots": [
+        {
+          "actualDamage": "19",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "2950",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "8",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3430",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        },
+        {
+          "actualDamage": "8",
+          "cascadeIndex": "0",
+          "defenseBlocked": "false",
+          "energySpent": "2",
+          "flightMs": "1450",
+          "impactAtMs": "3910",
+          "originEdge": "player-launch-band",
+          "projectiles": "1",
+          "projection": "perspective-3d",
+          "rarity": "Rara",
+          "sequence": "arcing-magma-paid-volley",
+          "shooter": "A",
+          "sourceTargetId": "",
+          "stage": "1",
+          "targetId": "weapons",
+          "targetKind": "part",
+          "transferEnergy": "0",
+          "visibleEnd": "rear",
+          "weaponKind": "magmatic-mortar"
+        }
+      ]
+    }
+  ],
+  "date": "2026-11-27",
+  "integrationCommit": "6ae9bfd178d8900e39b368f238db591a69d7c2d0",
+  "editorUrl": "https://stackblitz.com/edit/github-edu2s6xy",
+  "previewUrl": "https://githubedu2s6xy-bno4-lkpx39kb--5173--ca94085c.local-credentialless.webcontainer.io/.maglio-review.html",
+  "method": "Stati iniziali preparati nel pannello di collaudo; risoluzione e presentazione della partita ufficiale, avversario AI. Registrazione della scheda con audio, non esportazione dello studio.",
+  "tests": {
+    "fullSuite": {
+      "tests": 2493,
+      "pass": 2493,
+      "fail": 0,
+      "sourceCommit": "6ae9bfd178d8900e39b368f238db591a69d7c2d0"
+    },
+    "build": "passed",
+    "preflight": "passed",
+    "bootstrapTests": {
+      "pass": 3,
+      "fail": 0
+    }
+  },
+  "limits": [
+    "Fluidità variabile del browser cloud; nessuna certificazione di 30 FPS costanti.",
+    "Aptica software collegata e verificata; vibrazione fisica non provata su telefono.",
+    "Questo lotto non implementa né certifica la distinta specifica Personaggi/Strategie/Energie immediate e Stratega."
+  ],
+  "defenseChecks": [
+    {
+      "cardId": "weapon-designed-ionic-giudizio-temporale",
+      "actualDamages": [
+        0
+      ],
+      "defenseBlocked": [
+        true
+      ],
+      "contacts": [
+        "shield"
+      ]
+    },
+    {
+      "cardId": "weapon-designed-plasma-mortaio-magmatico-rarity-l",
+      "actualDamages": [
+        0,
+        27,
+        27
+      ],
+      "defenseBlocked": [
+        true,
+        false,
+        false
+      ],
+      "energySpent": 2,
+      "contacts": [
+        "shield",
+        "basalt-magma-splash",
+        "basalt-magma-splash"
+      ]
+    },
+    {
+      "cardId": "weapon-designed-plasma-inceneritore-rotante",
+      "actualDamages": [
+        0
+      ],
+      "defenseBlocked": [
+        true
+      ],
+      "burnTicks": 0,
+      "contacts": [
+        "shield"
+      ]
+    }
+  ],
+  "defenseEvidenceMethod": "Trascrizione delle tre letture DOM stampate dal collaudo CUA in questa sessione; il primo contatto bloccato dell’Inceneritore non applica Bruciatura.",
+  "videos": [
+    {
+      "file": "giudizio-fuoco-battaglia-stackblitz-estratto-con-audio.mp4",
+      "kind": "excerpt",
+      "library_file_id": "libfile_2130dc7cc2b48191a3a9f7eb76e24d3a",
+      "current_version_number": 0,
+      "size_bytes": 15133015,
+      "sha256": "59bb57faf25eb087f55dfe83e904e99a1a25d0338217c369dee454327aaa7809",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 900,
+            "height": 1600,
+            "avg_frame_rate": "1149/97",
+            "nb_frames": "1149"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 1,
+            "avg_frame_rate": "0/0",
+            "nb_frames": "4403"
+          }
+        ],
+        "format": {
+          "duration": "97.077000"
+        }
+      }
+    },
+    {
+      "file": "giudizio-fuoco-battaglia-stackblitz-con-audio.mp4",
+      "kind": "full",
+      "library_file_id": "libfile_cf6ad2563d1c8191b47292aada0c41b5",
+      "current_version_number": 0,
+      "size_bytes": 18911836,
+      "sha256": "6f4534a99c262678aefc6e5049d5213be405c450a27eff3b3b4593e6597bed2d",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 900,
+            "height": 1600,
+            "avg_frame_rate": "2780000/196169",
+            "nb_frames": "2780"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 1,
+            "avg_frame_rate": "0/0",
+            "nb_frames": "8965"
+          }
+        ],
+        "format": {
+          "duration": "196.665000"
+        }
+      }
+    },
+    {
+      "file": "giudizio-fuoco-battaglia-stackblitz-originale.webm",
+      "kind": "original",
+      "library_file_id": "libfile_3c825c9ef1f08191b51edc8e791ed77e",
+      "current_version_number": 0,
+      "size_bytes": 49020674,
+      "sha256": "6d63efd0a68887aef75aae2f72a28c9bea3dd02157c60e13f27aa95393c68623"
+    }
+  ],
+  "excerptEditing": {
+    "segments": [
+      [
+        0,
+        17.745771
+      ],
+      [
+        46.658521,
+        54.863667
+      ],
+      [
+        69.749062,
+        82.852771
+      ],
+      [
+        93.129958,
+        116.993917
+      ],
+      [
+        133.989646,
+        168.139312
+      ]
+    ],
+    "speed": 1,
+    "addedAudio": false,
+    "cuts": "attese senza azioni del lotto",
+    "duration": 97.068251
+  },
+  "audioVerification": {
+    "source": "audio della scheda acquisito da getDisplayMedia",
+    "sampleRate": 48000,
+    "channels": 1,
+    "fullMeanDb": -33.3,
+    "fullPeakDb": -4.5,
+    "addedAudio": false
+  }
+}

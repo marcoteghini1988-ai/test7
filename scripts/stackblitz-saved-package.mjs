@@ -1,5 +1,7 @@
 // Genera il package da incollare nell'editor della copia StackBlitz esistente.
 // Le scritture del terminale modificano il WebContainer, non la copia salvata.
+// Dopo l’incolla nativo, aggiungere una nuova riga e Ctrl+S; verificare lo SHA
+// dopo il reload, attendendo prima il completamento del salvataggio.
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
@@ -10,11 +12,12 @@ export function savedStackblitzPackage(original,ref){
  const code=[
   'import{readFile,writeFile}from"node:fs/promises";',
   'import{pathToFileURL}from"node:url";',
-  'const ref="'+ref+'",root="'+root+'",file="/tmp/eclissi-source-sync.mjs";',
+  'const saved=await readFile("package.json","utf8"),ref="'+ref+'",root="'+root+'",file="/tmp/eclissi-source-sync.mjs";',
   'const response=await fetch(root+ref+"/scripts/sync-stackblitz.mjs");',
   'if(!response.ok)throw Error("Sincronizzatore Test7 non disponibile: "+response.status);',
   'await writeFile(file,await response.text());',
   'await(await import(pathToFileURL(file))).syncStackblitz({ref,apply:true});',
+  'await writeFile("package.json",saved);',
   'const env=await readFile(".env.local","utf8"),line="VITE_ASSET_ROOT="+root+ref+"/public/assets";',
   'await writeFile(".env.local",env.replace(/^VITE_ASSET_ROOT\\s*=.*$/m,line));',
   'await import(pathToFileURL(process.cwd()+"/scripts/review-maglio.mjs"));'
