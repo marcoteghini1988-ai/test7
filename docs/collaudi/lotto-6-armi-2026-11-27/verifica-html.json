@@ -1,0 +1,8 @@
+{
+  "compiled": true,
+  "engineCases": 33,
+  "htmlHasSixCards": true,
+  "browserExecutionVerified": false,
+  "reason": "No working local Chromium binary; browser package download unavailable. Source bundled and the same renderer executed in the offline study.",
+  "actualBattleRecording": false
+}

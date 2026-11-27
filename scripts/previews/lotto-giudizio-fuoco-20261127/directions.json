@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-27",
+  "batchSize": 6,
+  "workflow": "Several weapon families and their rarity variants together; show the complete batch before promotion.",
+  "judgment": {
+    "approved": true,
+    "quote": "ok, ma lavora su piu carte contemporaneamente"
+  },
+  "mortar": {
+    "approved": true,
+    "quote": "Confermo entrambe le direzioni",
+    "date": "2026-11-27"
+  },
+  "incinerator": {
+    "approved": true,
+    "quote": "Confermo entrambe le direzioni",
+    "date": "2026-11-27"
+  },
+  "frontsApproved": false,
+  "inGame": false
+}

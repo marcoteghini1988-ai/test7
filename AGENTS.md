@@ -1,5 +1,25 @@
 # AGENT INSTRUCTIONS — ECLISSI STELLARE / test7
 
+
+## Carte Arma — lavoro in gruppi, 27/11/2026
+
+L’utente chiede «ok, ma lavora su piu carte contemporaneamente». Da questa
+conversazione si preparano più famiglie e rarità insieme, con un lotto di
+sei fronti completi; si propongono insieme le direzioni nuove. Giudizio
+Temporale Leggendaria: direzione dei tre anelli elettrici approvata. Mortaio
+Magmatico Rara/Epica/Leggendaria e Inceneritore a Plasma Rotante
+Epica/Leggendaria: entrambe le direzioni confermate esplicitamente con
+«Confermo entrambe le direzioni». Non richiederle di nuovo.
+
+I sei fronti PNG 3072×4608, le basi separate e i livelli EN/IT sono anteprime
+complete, ancora da approvare prima della promozione. Lo studio usa gli
+eventi reali del motore e suono/aptica propri; non è la partita StackBlitz.
+Registro giocabile invariato: 52 varianti. Non rigenerare i fronti per una
+semplice conferma. Fonti, hash, numeri e ripresa:
+`docs/LOTTO_6_ARMI_GIUDIZIO_FUOCO_2026-11-27.md` e
+`scripts/previews/lotto-giudizio-fuoco-20261127`.
+
+
 ## Regola prioritaria 27/11 — effetti immediati e combattimento sequenziale
 
 Leggere e applicare la nuova sezione in [Regole permanenti effetti carte](docs/REGOLE_PERMANENTI_EFFETTI_CARTE.md). Personaggi, Strategie con effetto immediato ed Energie si attivano al momento della giocata valida, durante i 30 secondi; rispettare i trigger periodici e condizionali specifici. Terza giocata (quarta con l'eccezione di Crono attivata) o ESEGUI avvia la fase offensiva: ogni azione con la propria risposta di Difesa/Trappola, impatto e conseguenze deve concludersi prima della successiva. Vietata la sovrapposizione di azioni indipendenti; preservare la coreografia interna delle raffiche e combo approvate. Grafica, suono e aptica seguono gli eventi reali; il timer successivo parte dopo la risoluzione. Le vecchie istruzioni incompatibili sono superate.

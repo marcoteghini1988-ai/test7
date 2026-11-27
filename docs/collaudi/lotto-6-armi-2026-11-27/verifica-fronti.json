@@ -1,0 +1,144 @@
+{
+  "cards": [
+    {
+      "id": "weapon-designed-ionic-giudizio-temporale",
+      "rarity": "Leggendaria",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "fe3f8e73099f9561b025da24dd10962bad7164f8904db1bfb6435abba860465c",
+      "bytes": 25239318,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "2450a84e434744c4f1944b52c7123abef19e5c46b99d4db712e5219462f0d2d3",
+      "frameGitBlob": "0ec319d347e6b31e32510caf3f570b6bc5b14689",
+      "protectedFramePixelsVerified": 1627,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0,
+      "enAndItChangedPixelsOutsideTextRegions": 0,
+      "baseSha256": "aef054e6384437c9980beb84e4c82355c06135746355d5adb008b10b8b6226f8",
+      "italianSha256": "addd86d8e59f26f1eaa7db6f5c67885b74bb84ae1370e64b8ee82952c7254f22"
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico",
+      "rarity": "Rara",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "99c4e89fac4099decf0c7d55011486f40865a9332198df8592e1b19c5d0e9b91",
+      "bytes": 22839411,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "f92e2287f13e8803fe181b84f6d544a4de7a344b97e8e240a6a4a4d389ceb86d",
+      "frameGitBlob": "59e256d1624695f4788c178ddbc589a41aeb73b1",
+      "protectedFramePixelsVerified": 5304,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0,
+      "enAndItChangedPixelsOutsideTextRegions": 0,
+      "baseSha256": "00080699b3647f0c32d6956f974038a49c7d772bfc3a0b7ccfb49b71fd6ae906",
+      "italianSha256": "af1860b3889cd5fded39f609eaf0e2261de26159de83225858bb42bd06a593f9"
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico-rarity-e",
+      "rarity": "Epica",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "ac488a8e823f45e6a768c447cb268796ffd6ed9b580749e83df892da5f2777ed",
+      "bytes": 23591446,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "4c4744d19b7f24873628e73852c9799af0922712a4e6e6c3db984187d2f6ad45",
+      "frameGitBlob": "3cb35e5e5fc219e171d219a3af87eb6ff42e1b1c",
+      "protectedFramePixelsVerified": 3833,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0,
+      "enAndItChangedPixelsOutsideTextRegions": 0,
+      "baseSha256": "0f9f172e531102b32fb745ba7c51954214579b41baff4df47551c6b44f2f6bb2",
+      "italianSha256": "633d21606e07e9f5e2d3ec097077f1039c55dbf02ce28a05eb4e1592198abf3e"
+    },
+    {
+      "id": "weapon-designed-plasma-mortaio-magmatico-rarity-l",
+      "rarity": "Leggendaria",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "3821e0f2c622f25d17dc0c161ee9fb7e103f5d7869c1770ebdfb70a3fd9e0f1c",
+      "bytes": 25379845,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "961afe2865b2c6387c7c0d3074bfe996400d0ce5552ad84763bd8fa7f02d459b",
+      "frameGitBlob": "0ec319d347e6b31e32510caf3f570b6bc5b14689",
+      "protectedFramePixelsVerified": 1627,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0,
+      "enAndItChangedPixelsOutsideTextRegions": 0,
+      "baseSha256": "e3bf84e0c157fc408b669585ed5d370e7160d520706bd712f1378c7dd65ddb3b",
+      "italianSha256": "55684668fe61679e5ba2bb27a634410c75cff3df4ee08d397224b7e4419a2480"
+    },
+    {
+      "id": "weapon-designed-plasma-inceneritore-rotante",
+      "rarity": "Epica",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "ad16e1ed415bdc99480e5d533cd834b4b68e677f27d7785a14c28c49a1a76e63",
+      "bytes": 25083774,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "39f688eab888db99a44e3fbb93714ea800b5193580ed2aa8ec1ae49b02c54a1e",
+      "frameGitBlob": "3cb35e5e5fc219e171d219a3af87eb6ff42e1b1c",
+      "protectedFramePixelsVerified": 3833,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0,
+      "enAndItChangedPixelsOutsideTextRegions": 0,
+      "baseSha256": "ace75731711e2a1006ca83d505d8a8d8b127c060677627ae29f0867280563dc3",
+      "italianSha256": "7705b1dd129703c61d11bba2e3cae2e6817c793cf4e722a3eb57887b869873a7"
+    },
+    {
+      "id": "weapon-designed-plasma-inceneritore-rotante-rarity-l",
+      "rarity": "Leggendaria",
+      "width": 3072,
+      "height": 4608,
+      "format": "PNG",
+      "mode": "RGBA",
+      "sha256": "44142b9930efb505bc5b8b1fa48148024ed3737deb2f9f4d3ad2c140461f70a2",
+      "bytes": 26647896,
+      "originalIllustrationSize": [
+        1448,
+        1086
+      ],
+      "originalIllustrationSha256": "df88d5a7142ee2555c08c6053ba9c936dfa41b36d79c5289f85c12406926e162",
+      "frameGitBlob": "0ec319d347e6b31e32510caf3f570b6bc5b14689",
+      "protectedFramePixelsVerified": 1627,
+      "changedProtectedFramePixels": 0,
+      "outerAlphaMatchesOfficial": true,
+      "newExteriorPixels": 0,
+      "enAndItChangedPixelsOutsideTextRegions": 0,
+      "baseSha256": "30c1e5a5ea74c38c64722607dbe193f95f1a5f9fbd83919d1b72efe63ff58a50",
+      "italianSha256": "a29920c4ec7abc99f23f769dfe365bedc98ea5402dbb3c07418653c064a2a558"
+    }
+  ],
+  "inGame": false,
+  "finalVisualApproval": false
+}

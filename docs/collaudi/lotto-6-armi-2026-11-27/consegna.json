@@ -1,0 +1,18 @@
+{
+  "date": "2026-11-27",
+  "status": "SIX_COMPLETE_FRONTS_AWAITING_VISUAL_APPROVAL",
+  "directionsApproved": true,
+  "frontsApproved": false,
+  "inGame": false,
+  "approvedPlayableVariants": 52,
+  "actualBattleRecording": false,
+  "physicalHapticsVerified": false,
+  "tests": {"passed": 9, "engineCases": 33},
+  "files": [
+    {"name": "sei-carte-fronti-completi.png", "library_file_id": "libfile_8498edcf1ee4819184ce2c88594a636e", "version": 0, "bytes": 9487666},
+    {"name": "sei-armi-studio-effetti-con-audio.mp4", "library_file_id": "libfile_500baaedc43c8191aeabfee4e869fc75", "version": 0, "bytes": 4921792},
+    {"name": "sei-armi-anteprima-interattiva.html", "library_file_id": "libfile_7b916925ec408191a003f0aaa36f0bc1", "version": 0, "bytes": 23703351},
+    {"name": "sei-carte-arma-png-hd-EN-IT.zip", "library_file_id": "libfile_80d318638a4c81918b8b030583c534f3", "version": 0, "bytes": 445633635, "sha256": "bbe2a0df6f6943959add190c638635b2c99ec42a4a5e5154458030c05908bb84", "nativePngFilesVerified": 18}
+  ],
+  "resume": "Use these exact full PNGs on approval. Six EN fronts, six IT fronts and six no-text bases are in the ZIP, byte-for-byte hashes in verifica-fronti.json. Original illustrations, prompts and reusable preview modules are in test7. Promote and verify the actual StackBlitz match only after front approval."
+}
