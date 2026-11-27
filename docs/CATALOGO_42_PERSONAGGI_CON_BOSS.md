@@ -439,7 +439,7 @@ ID conservato: `boss-character-17`.
 
 ID conservato: `boss-character-19`.
 
-### 42. Custode dell'Antispazio — Encelado · settore 120 · Leggendaria
+### 42. Custode dell’Antispazio — Encelado · settore 120 · Leggendaria
 
 **Durante lo scontro (permanente):**
 - Ogni turno annuncia la famiglia Arma usata dal giocatore nel turno precedente; giocare nuovamente quella stessa famiglia è vietato soltanto nel turno successivo.
