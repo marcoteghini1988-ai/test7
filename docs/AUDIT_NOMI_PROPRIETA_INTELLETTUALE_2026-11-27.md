@@ -83,7 +83,7 @@ Questi elenchi sono un controllo **interno** dei cataloghi; l'indicizzazione web
 - `pilot_com_2` — Calibratore Sottrattivo
 - `pilot_com_3` — Cannoniere Balistico
 - `pilot_com_4` — Cecchino Quantico
-- `pilot_rare_1` — Il Vendicatore
+- `pilot_rare_1` — Corsaro della Rivalsa
 - `pilot_rare_2` — L'Adrenalinico
 - `pilot_rare_3` — Il Baro
 - `pilot_rare_4` — Il Collezionista di Specchi
@@ -210,7 +210,7 @@ Questi elenchi sono un controllo **interno** dei cataloghi; l'indicizzazione web
 
 **Decisione editoriale dell'utente:** il **titolo commerciale del gioco è escluso** da questa fase; verrà scelto soltanto dopo il completamento del progetto. *Eclissi Stellare* resta un'etichetta interna di lavoro; non avviare la sua rinomina o un'altra ricerca sul titolo durante l'audit delle carte.
 
-È disponibile il [manifest strutturato di 453 nomi correnti e 167 bozze storiche non approvate](AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json). Le **453 denominazioni attuali** sono confrontate per grafia, maiuscole, accenti e apostrofi; **non restano duplicati testuali esatti tra i cataloghi esaminati**. Le dieci chiavi `shipId` condivise tra madri e supporti indicano l'origine del modello e non costituiscono un conflitto di identificativi delle carte.
+È disponibile il [manifest strutturato di 460 nomi correnti e 167 bozze storiche non approvate](AUDIT_NOMI_INTERNI_COMPLETO_2026-11-27.json). Le **460 denominazioni attuali** sono confrontate per grafia, maiuscole, accenti e apostrofi; **non restano duplicati testuali esatti tra i cataloghi esaminati**. Le dieci chiavi `shipId` condivise tra madri e supporti indicano l'origine del modello e non costituiscono un conflitto di identificativi delle carte.
 
 ### Cataloghi aggiunti al controllo
 
@@ -223,13 +223,13 @@ Questi elenchi sono un controllo **interno** dei cataloghi; l'indicizzazione web
 ### Correzioni effettuate sulla versione di gioco
 
 1. `ex-l04-01` (design `nx-l04-04`), carta Personaggio dell'Arca Astrale: **Custode Astrale → Vegliatore delle Rotte Celesti**. Esiste un videogioco con titolo italiano esatto «Custode Astrale», pubblicato il 12 aprile 2023 su Steam: https://store.steampowered.com/app/2346320/Astral_Guardian/?l=italian . Modificati cataloghi e testi UI/log/test, lasciando fissi ID e meccanica.
-2. `nx-l03-02`, carta **Attacco** del Titano Ossidiana: **Obice nero → Tiro d’Assedio Ossidiano**. Era duplicata con `W38`, arma nativa «Obice Nero». L'arma W38 è rimasta invariata; sono state aggiornate le etichette dell'Attacco in catalogo, UI/log e test.
+2. `nx-l03-02`, carta **Strategia** del Titano Ossidiana: **Obice nero → Tiro d’Assedio Ossidiano**. Era duplicata con `W38`, arma nativa «Obice Nero». L'arma W38 è rimasta invariata; sono state aggiornate le etichette della Strategia in catalogo, UI/log e test.
 
 Le descrizioni e le etichette storiche delle vecchie bozze possono conservare il nome precedente come documentazione; **non** sono approvazioni per carte nuove o per vendita. Nessun valore HP, costo, slot, durata, ID o abilità è stato intenzionalmente modificato.
 
 ### Esito giuridico e limiti
 
-Il controllo corrente documenta nomi e collisioni visibili, **non** attesta che 453 nomi siano legalmente liberi. Le ricerche esterne mirate non sostituiscono una ricerca per marchi identici/simili. Il modulo UIBM è accessibile, TMview non offre risultati consultabili da questa modalità e WIPO richiede una verifica automatica; nessuna ricerca esaustiva di classi 9/41 (e 28 se carte fisiche) è stata conclusa. È ancora aperto il controllo di eventuali scritte nei file grafici non presenti nei cataloghi e della licenza di immagini, musica ed effetti sonori.
+Il controllo corrente documenta nomi e collisioni visibili, **non** attesta che 460 nomi siano legalmente liberi. Le ricerche esterne mirate non sostituiscono una ricerca per marchi identici/simili. Il modulo UIBM è accessibile, TMview non offre risultati consultabili da questa modalità e WIPO richiede una verifica automatica; nessuna ricerca esaustiva di classi 9/41 (e 28 se carte fisiche) è stata conclusa. È ancora aperto il controllo di eventuali scritte nei file grafici non presenti nei cataloghi e della licenza di immagini, musica ed effetti sonori.
 
 ## Verifica commerciale ancora da completare
 1. Consultare effettivamente **UIBM**, **EUIPO/TMview** e **WIPO Global Brand Database** con nomi identici e simili (anche foneticamente e in inglese), soprattutto per **classe 9** (software e videogiochi) e **classe 41** (servizi di intrattenimento/gioco). Per un gioco di carte fisico considerare anche la **classe 28**.
@@ -240,3 +240,24 @@ Il controllo corrente documenta nomi e collisioni visibili, **non** attesta che 
 **Fonti ufficiali sulle ricerche di marchi:** https://www.euipo.europa.eu/en/trade-marks/before-applying/availability ; https://www.euipo.europa.eu/it/help-centre/tm/faq-search-availability ; https://www.uibm.gov.it/bancadati/ ; https://www.tmdn.org/tmview/ ; https://branddb.wipo.int/ .
 
 **Avvertenza metodologica:** l'assenza di risultati nei motori di ricerca non equivale all'assenza di marchi. Secondo EUIPO, anche un controllo senza coincidenze non esclude conflitti con diritti anteriori.
+
+## Seconda ricognizione — Strategia, cataloghi aggiuntivi e diritti (27/11/2026)
+
+**Nomenclatura approvata:** ci sono **Carte Arma** e **Carte Strategia**, non una categoria «Carte Attacco». Le chiavi tecniche `attack` e `offense` possono restare, così come «attacco» nella descrizione di un colpo, nei ruoli dei piloti e nei documenti storici. La categoria *visibile* per `offense` è stata corretta da ATTACCO a STRATEGIA in `src/officialSpecialCardIdentity.js` e `src/officialSpecialVisualMeta.js`, con test aggiornati.
+
+**Inventario ampliato a 460 etichette correnti** (+7): i 33 comandanti di `src/commanderAbilities.js` comprendono due Piloti aggiuntivi (L'Amante del Rosso, L'Amante del Nero) e cinque alias della famiglia comandante boss non inclusi nei 12 Boss giocabili (Arconte Solare, Vegliardo del Vortice, Colosso di Metano, Titano d'Acciaio, Entità della Discordia). Gli altri riferimenti allo stesso Boss sono alias e non nuove identità. Rimangono 167 nomi di bozze storiche separati. **Nessun duplicato normalizzato nel perimetro delle 460 definizioni**, ma non è la prova che tutto il codice e tutti gli asset siano stati controllati.
+
+### Rinomine precauzionali applicate
+
+| Identificativo stabile | Vecchio nome | Nome corrente | Motivo |
+|---|---|---|---|
+| `pilot_rare_1` | Il Vendicatore | **Corsaro della Rivalsa** | «Il vendicatore» è titolo italiano di *The Punisher*, associato al personaggio Marvel (https://www.imdb.com/it/title/tt0098141/). Il nuovo nome evita una coincidenza non necessaria, non certifica la disponibilità del marchio |
+| `planet_char_6` | Saturno · Crono | **Saturno · Contromossa degli Anelli** | Rimuove «Crono» dall'etichetta del modulo, differenziandolo dal personaggio omonimo del videogioco *Chrono Trigger*; il nome mitologico in sé non comporta automaticamente violazione |
+
+Il primo cambio è salvato nei cataloghi `newCombat/phase16GPilots.js`, `commanderAbilities.js` e `pilotsSystem.jsx` (anche monogramma del ritratto). Il secondo è soltanto la stringa del modulo in `newCombat/phase16FModules.js`: soglie, carica, effetto e ID sono invariati. Altri usi storici di «Crono» compaiono in testi, log e test di meccaniche: non sono stati sostituiti indistintamente per non modificare comportamenti.
+
+### Asset e copyright: verifica separata
+
+La scansione dei percorsi nel repository ha individuato **320 PNG, 33 JPG, 51 WebP, 169 SVG, 1 GIF, 3 MP4 e 1 font TTF** (inclusi file sorgenti, anteprime e collaudi). Non è stato individuato un file generale `LICENSE` o `ATTRIBUTION`: questo **non dimostra che gli asset siano illeciti**, ma non consente di verificarne automaticamente le licenze e la provenienza. Va compilato un registro dei soli elementi effettivamente inclusi nel prodotto distribuito: illustrazioni, font, musiche, effetti audio, video e risorse software di terze parti.
+
+**Conclusione commerciale al 27 novembre:** nomi e grafica non sono dichiarati «liberi da copyright». La ricerca delle anteriorità nei registri ufficiali per marchi identici/simili, classi 9 e 41 (e 28 per carte fisiche), e la verifica dei diritti degli asset restano aperte. L'<https://www.euipo.europa.eu/en/trade-marks/before-applying/availability> spiega che coincidono o possono confliggere anche segni simili e che una ricerca preliminare non garantisce piena disponibilità.
