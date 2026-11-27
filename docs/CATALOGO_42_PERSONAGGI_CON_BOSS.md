@@ -1,6 +1,6 @@
 # Eclissi Stellare — catalogo completo 42 Personaggi
 
-**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Rara ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; gli altri 8 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
+**Revisione 27/11/2026: 30 generici (14 confermati, 16 proposte) + 12 Boss.** Esclusivi delle macchine separati. Tutti i generici neutri, senza evoluzioni. Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; la Matriarca Rara ha la stessa abilità confermata nello scontro e dopo lo sblocco (tre turni propri); Crono Raro ha l'abilità della quarta giocata confermata e dura tre turni propri dopo lo sblocco; Sentinella Ionica ha la meccanica di previsione delle prime tre carte confermata, rarità e durata sbloccata da confermare; gli altri 7 Boss restano proposte. Il codice conserva ancora la rarità tecnica Boss. Nessuna nuova abilità è implementata da questo documento. Distribuzione generici corrente, non quota approvata: Comune: 6; Rara: 10; Epica: 8; Leggendaria: 6.
 
 ## Regole comuni già approvate
 
@@ -331,14 +331,15 @@ ID conservato: `boss-character-6`.
 
 ### 35. Sentinella Ionica — Urano · settore 50
 
-**Durante lo scontro (permanente):**
-- Riduce la durata dei disturbi elettrici sul Boss.
-- La prima Carta Energia fisica schierata dal giocatore in ciascun turno diventa disponibile solo dal proprio turno seguente; le risorse già disponibili restano utilizzabili.
+**Meccanica approvata il 27/11/2026: previsione tattica delle prime tre carte del proprio mazzo.** Una sola abilità; nome dell'abilità provvisorio. Madre Falco Binario; un supporto Armeria Binaria. Nessuna dipendenza da uno specifico supporto.
 
-**Dopo lo sblocco (Leggendaria proposta, 3 turni):**
-- Riduce la durata di congelamenti e disturbi agli slot Arma.
-- Rimuove una volta un blocco temporaneo su un proprio slot Arma.
-- Dopo aver consumato Energia per una propria Arma, recupera una carica virtuale del medesimo elemento, una sola volta.
+**Durante lo scontro (permanente, sospendibile):**
+- All'inizio di ogni proprio turno, finché il Personaggio è attivo, può vedere le prime tre carte del proprio mazzo nell'ordine di pesca, senza pescarle né modificarne l'ordine. L'informazione è privata del proprietario e serve a pianificare le giocate successive.
+- Non aumenta direttamente il danno, non limita le azioni avversarie e non costa carte o Energia.
+
+**Dopo lo sblocco:** stessa abilità mentre il Personaggio rimane attivo. Rara e tre turni propri sono proposte, non ancora approvate.
+
+Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel turno di schieramento, la sospensione e i casi con meno di tre carte o rimescolamento; non alterare la pesca normale. Rarità Rara e durata giocabile di tre turni propri sono proposte da confermare. Non implementato. Le precedenti proposte di mitigazione o interdizione sono superate.
 
 ID conservato: `boss-character-7`.
 

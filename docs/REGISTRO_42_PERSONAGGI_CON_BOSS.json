@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "revision": "personaggi-42-v9-2026-11-27",
+  "revision": "personaggi-42-v10-2026-11-27",
   "scope": "30 generici più 12 Boss; esclusivi delle 12 macchine separati",
   "total": 42,
   "countsProposed": {
     "Comune": 8,
-    "Rara": 12,
+    "Rara": 13,
     "Epica": 8,
-    "Leggendaria": 14
+    "Leggendaria": 13
   },
   "genericSource": "docs/REGISTRO_30_PERSONAGGI_GENERICI.json",
   "genericConfirmed": 14,
   "genericProposed": 16,
-  "bossReworkProposed": 8,
+  "bossReworkProposed": 7,
   "characters": [
     {
       "id": "character-general-01",
@@ -907,19 +907,20 @@
       "name": "Sentinella Ionica",
       "sector": 50,
       "element": null,
-      "rarity": "Leggendaria",
+      "rarity": "Rara",
       "rarityStatus": "proposed",
       "evolution": false,
       "acquisition": "victory-against-corresponding-boss",
       "maxCopiesProposed": 1,
-      "status": "proposed-rework",
+      "status": "mechanic-confirmed-balance-pending",
       "encounter": {
         "duration": "whole-battle",
         "replaceable": false,
         "abilities": [
-          "Riduce la durata dei disturbi elettrici sul Boss.",
-          "La prima Carta Energia fisica schierata dal giocatore in ciascun turno diventa disponibile solo dal proprio turno seguente; le risorse già disponibili restano utilizzabili."
-        ]
+          "All'inizio di ogni proprio turno, finché il Personaggio è attivo, può vedere le prime tre carte del proprio mazzo nell'ordine di pesca, senza pescarle né modificarne l'ordine. L'informazione è privata del proprietario e serve a pianificare le giocate successive."
+        ],
+        "supportCount": 1,
+        "temporarilySuppressible": true
       },
       "unlocked": {
         "duration": {
@@ -928,13 +929,17 @@
         },
         "replaceable": true,
         "abilities": [
-          "Riduce la durata di congelamenti e disturbi agli slot Arma.",
-          "Rimuove una volta un blocco temporaneo su un proprio slot Arma.",
-          "Dopo aver consumato Energia per una propria Arma, recupera una carica virtuale del medesimo elemento, una sola volta."
-        ]
+          "All'inizio di ogni proprio turno, finché il Personaggio è attivo, può vedere le prime tre carte del proprio mazzo nell'ordine di pesca, senza pescarle né modificarne l'ordine. L'informazione è privata del proprietario e serve a pianificare le giocate successive."
+        ],
+        "durationStatus": "proposed",
+        "abilityStatus": "confirmed"
       },
       "balancePending": true,
-      "implemented": false
+      "implemented": false,
+      "open": [
+        "Definire il momento esatto della visione rispetto alla pesca, l'attivazione nel turno di schieramento, la sospensione e i casi con meno di tre carte o rimescolamento; non alterare la pesca normale. Rarità Rara e durata giocabile di tre turni propri sono proposte da confermare.",
+        "Nessun nuovo danno, pesca aggiuntiva, riordino o dipendenza dal supporto. Visibilità limitata al proprietario. Le precedenti proposte sono superate."
+      ]
     },
     {
       "number": 36,
@@ -1198,13 +1203,13 @@
   ],
   "openDecisions": [
     "Il nome Signore delle ombre del generico n.29 coincide con il Boss di Plutone. Proposta: rinominare il generico Custode della Penombra, conservando il suo ID. Nessuna rinomina applicata al registro generici.",
-    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Rara, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; per gli altri 8 la rarità e le abilità sono ancora da approvare individualmente.",
+    "Il codice attuale usa la rarità tecnica Boss e abilità semplificate (src/fleetNext/bossCards.js). Gaia e Tharsis Comuni con una sola abilità sono confermati in progettazione; Matriarca Rara, stessa abilità confermata nello scontro e nella carta giocabile di tre turni propri; Crono Raro: abilità della quarta giocata confermata, durata della versione sbloccata di tre turni propri confermata; Sentinella Ionica: visione delle prime tre carte del proprio mazzo a inizio turno confermata; rarità e durata giocabile da confermare; per gli altri 7 la rarità e le abilità sono ancora da approvare individualmente.",
     "Il Personaggio Boss dell'incontro resta fisso per tutto lo scontro. Proposta: trattarlo come profilo speciale separato dallo slot del giocatore, così la Plancia esaurita non rimuove il Boss; le sue abilità possono avere condizioni e controgioco.",
     "Le restrizioni della sfida non vengono trasferite integralmente nella versione sbloccata. La rarità non modifica le regole del trofeo già assegnato: riutilizzare ID e salvataggi esistenti.",
     "I valori, le soglie, i cap, il tempo di corrosione, l'effettiva applicabilità dei poteri e gli effetti audiovisivi sono da approvare e collaudare, inclusa la coerenza con lo slot Personaggio e il limite ordinario delle tre giocate e l'eccezione confermata di Crono. Non eseguire ancora le nuove abilità.",
     "Per i generici vale la revisione 27/11: 14 confermati e 16 proposte. La distribuzione per rarità non è una quota approvata. Il nuovo svolgimento del turno e lo Stratega sono specifiche, non implementazione.",
     "Regola confermata: un Boss fisso può avere le abilità sospese temporaneamente da una Carta Strategia idonea senza lasciare lo slot. Per Matriarca, durante la sospensione tornano immediatamente le debolezze elementali di tutte le navi; alla fine l'effetto riprende. La futura Strategia resta da definire."
   ],
-  "bossMechanicConfirmed": 4,
+  "bossMechanicConfirmed": 5,
   "rarityPendingCount": 0
 }
