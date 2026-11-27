@@ -24,7 +24,7 @@ export const PHASE16G_PILOTS=Object.freeze(Object.fromEntries([
  pilot('pilot_epic_1',"L'Artificiere di Bordo",'risposta_dopo_colpo','Dopo aver subito una salva, vinci rispondendo: recuperi HP e munizioni.'),
  pilot('pilot_epic_2',"L'Alchimista Aurico",'tre_semi','Spari con almeno tre semi diversi: recuperi munizioni del serbatoio più scarico e Boost.'),
  pilot('pilot_epic_3','Il Viaggiatore del Tempo','figura_grande_persa','Perdi usando una figura valida di quattro o cinque carte: recuperi Etere e Boost.'),
- pilot('pilot_epic_4','Il Re del Ghiaccio','semi_opposti','Entrambi sparate con colori di semi opposti: ripristini HP e munizioni.'),
+ pilot('pilot_epic_4','Comandante della Galaverna','semi_opposti','Entrambi sparate con colori di semi opposti: ripristini HP e munizioni.'),
  pilot('pilot_leg_1','Il Gran Maestro','tre_figure','Spari usando tre figure Poker differenti: recuperi Boost, munizioni e HP.'),
  pilot('pilot_leg_2','Il Veggente Supremo','due_risposte','Vinci due risposte consecutive: guadagni Etere, Boost e HP.'),
  pilot('pilot_leg_3','Il Fissatore','tre_classi','Spari usando tutte e tre le classi d’arma: rifornisci munizioni, HP e Boost.'),
