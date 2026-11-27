@@ -999,7 +999,7 @@ export function validateFleetTurn(b,who,order){
   if(obsidianCommands.length&&!['escort','machine'].includes(selected.kind))
    return 'Comando Titano: scegli una macchina o un supporto nemico';
   if(obsidianCommands.some(c=>c.effectSpec.action==='black-howitzer')&&selected.kind!=='machine')
-   return 'Obice nero: bersaglio esclusivamente una macchina';
+   return 'Tiro d’Assedio Ossidiano: bersaglio esclusivamente una macchina';
   if(arkAttacks.length&&!['escort','machine'].includes(selected.kind))
    return 'Attacco Arca: scegli una macchina o un supporto nemico';
   const linceAction=linceCommands[0]?.effectSpec.action;
@@ -3975,7 +3975,7 @@ function blockHit(b,defender,targetKind,target,ctx,events){
    if(obsidianPierce){
     ctx.obsidianPierceLeft--;
     events.push(emit(b,ctx.who,'obsidian-pierce',
-     'Obice nero attraversa una Difesa scoperta sulla macchina',{
+     'Tiro d’Assedio Ossidiano attraversa una Difesa scoperta sulla macchina',{
       cardId:'nx-l03-02',targetKind,targetId:target.id}));
    }
    else if(royalPierce){
