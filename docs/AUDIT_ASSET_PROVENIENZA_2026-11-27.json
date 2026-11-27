@@ -521,7 +521,7 @@
     {
       "path": "docs/riferimenti-carte/font/EclissiVettore-Regular.ttf",
       "area": "documentazione_collaudo",
-      "rightsEvidence": "da_reperire"
+      "rightsEvidence": "sorgente ChatGPT in docs/riferimenti-carte/font/design_font.py; verifica in ORIGINE_ECLISSI_VETTORE.md"
     },
     {
       "path": "docs/riferimenti-carte/maglio-ferrogravitazionale-2026-11-24/illustrazioni/comune.png",
