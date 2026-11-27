@@ -52,6 +52,7 @@ export default function CinematicWeaponEffects({paths,startedAt}){
    const age=now-startedAt,reduced=media.matches;let pending=false,active=0;
    floor.clearRect(0,0,450,800);air.clearRect(0,0,450,800);
    const reactions=new Map(),visible=[];
+   element.dataset.phase='waiting';element.dataset.comboContact='false';
    for(const entry of entries){
     const {profile:p,start,shot}=entry,elapsed=age-start,hitAge=elapsed-p.flightMs;
     if(elapsed<p.flightMs+p.impactMs)pending=true;
@@ -59,6 +60,8 @@ export default function CinematicWeaponEffects({paths,startedAt}){
     active++;visible.push(entry);
     element.dataset.phase=elapsed<0?'charge':hitAge<0?'flight':shot.defenseBlocked?'shield-contact':'contact';
     element.dataset.motif=entry.style.motif;element.dataset.targetId=shot.targetId;
+    element.dataset.activeWeapon=p.kind;element.dataset.impactIndex=String(shot.impactIndex||0);
+    element.dataset.comboContact=String(p.kind==='thunder-hammer'&&shot.impactIndex===1&&hitAge>=0&&shot.fires&&!shot.defenseBlocked);
     const pair=isProbeHammerKind(p.kind),moving=pair?probeHammerFlightPosition(probeHammerVisualHit(p,shot,entry.from),elapsed,entry.to).point:(p.kind===CORE_KIND?coreScenicPose(coreFrame(p,shot),elapsed,entry.from,entry.to,p.flightMs).point:
      weaponFlightFrame(entry.from,entry.to,elapsed/p.flightMs,camera,0,{shot,kind:p.kind}).nose).project(camera);
     if(!pair){moving.x=(moving.x+1)*225;moving.y=(1-moving.y)*400;}

@@ -13,7 +13,7 @@ const METAL_FRONT_ROOT=(import.meta.env?.VITE_METAL_FRONT_ROOT||ASSET_ROOT).repl
 const CHAIN_FRONT_ROOT=(import.meta.env?.VITE_CHAIN_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 const PRECISION_FRONT_ROOT=(import.meta.env?.VITE_PRECISION_FRONT_ROOT||ASSET_ROOT).replace(/\/+$/,'');
 export const OFFICIAL_WEAPON_FRONT_BY_ID=Object.freeze({
- ...Object.fromEntries(PROBE_HAMMER_CARD_IDS.map(id=>[id,`/assets/fleet-weapon-fronts/${id}.png`])),
+ ...Object.fromEntries(PROBE_HAMMER_CARD_IDS.map(id=>[id,`${ASSET_ROOT}/fleet-weapon-fronts/${id}.png`])),
  'weapon-confirmed-metallic-maglio':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio.png`,
  'weapon-confirmed-metallic-maglio-rarity-r':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio-rarity-r.png`,
  'weapon-confirmed-metallic-maglio-rarity-e':`${ASSET_ROOT}/fleet-weapon-fronts/weapon-confirmed-metallic-maglio-rarity-e.png`,

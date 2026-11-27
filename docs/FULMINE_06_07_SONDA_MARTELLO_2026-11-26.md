@@ -111,7 +111,8 @@ La precedente attesa di conferma descrive il passaggio storico ed è superata.
 - Sette fronti PNG HD e sette basi senza testo: stessi byte del pacchetto
   approvato `libfile_3b7aecb835808191a5a67f33f557e2ab`. Nessuna rigenerazione.
 - Archivio versionato con ricomposizione e SHA-256 delle parti e dei file;
-  anche il WebContainer della copia esistente ricompone i PNG HD locali.
+  la CI pubblica i medesimi PNG nativi e StackBlitz li serve da GitHub
+  senza copiare 14 file HD nel WebContainer.
 - Dizionari inglese/italiano e metriche condivisi con lo studio. La carta
   completa inglese rimane recuperabile, la partita sovrappone il solo testo.
 - Renderer volumetrico condiviso: un impulso della Sonda, reticolo soltanto

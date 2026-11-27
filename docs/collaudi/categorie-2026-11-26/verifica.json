@@ -99,51 +99,6 @@
       "preservedApprovedRevision": true
     },
     {
-      "id": "weapon-designed-metallic-ganasce-magnetiche",
-      "dimensions": [
-        3072,
-        4608
-      ],
-      "redSha256": "8caef243d481eaddb725b0480da64baf8220517ebbe080fa778c8ef48b1dcd16",
-      "preservedApprovedRevision": true
-    },
-    {
-      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
-      "dimensions": [
-        3072,
-        4608
-      ],
-      "redSha256": "5bad23f99c29dd6f6bf74dae9e27c1e027d50f452fb8d9d4589f06c32ef614ce",
-      "preservedApprovedRevision": true
-    },
-    {
-      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
-      "dimensions": [
-        3072,
-        4608
-      ],
-      "redSha256": "8725fbaa5eea6a57ec7bffe70dee68244b4e2e39054d22afa6a80489936cd0af",
-      "preservedApprovedRevision": true
-    },
-    {
-      "id": "weapon-designed-metallic-collassatore-lega",
-      "dimensions": [
-        3072,
-        4608
-      ],
-      "redSha256": "e00a00b1081fe124f616c028476c04beda7cf3903c4c02a94a1dd09f23ad03e6",
-      "preservedApprovedRevision": true
-    },
-    {
-      "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
-      "dimensions": [
-        3072,
-        4608
-      ],
-      "redSha256": "fb4f077e8f77529f4ef8119bbb01f5267564756c9103abc51c543105be1ea02d",
-      "preservedApprovedRevision": true
-    },
-    {
       "id": "weapon-designed-metallic-frantumatore-induzione",
       "dimensions": [
         3072,
@@ -342,6 +297,51 @@
       "preservedApprovedRevision": true
     },
     {
+      "id": "weapon-designed-metallic-ganasce-magnetiche",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "8caef243d481eaddb725b0480da64baf8220517ebbe080fa778c8ef48b1dcd16",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "5bad23f99c29dd6f6bf74dae9e27c1e027d50f452fb8d9d4589f06c32ef614ce",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-metallic-ganasce-magnetiche-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "8725fbaa5eea6a57ec7bffe70dee68244b4e2e39054d22afa6a80489936cd0af",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "e00a00b1081fe124f616c028476c04beda7cf3903c4c02a94a1dd09f23ad03e6",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-metallic-collassatore-lega-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "fb4f077e8f77529f4ef8119bbb01f5267564756c9103abc51c543105be1ea02d",
+      "preservedApprovedRevision": true
+    },
+    {
       "id": "weapon-designed-ionic-nucleo-folgore",
       "dimensions": [
         3072,
@@ -366,6 +366,69 @@
         4608
       ],
       "redSha256": "3aa8e0fce40cb9ffe71f63660e94db9feb536b67713862cd71485bdd9d78c143",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "65901d01fdd2f577c2c3fd83e9f0ecc976028045bdf66fa632faf0394d2c10e9",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "09034757f7ea284b007226ba1864f585845b8a7ee7084a587eef8fd7a20e1033",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-r",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "389cbd38c341109e7bc7e91731d341b7ec15352a59e2c702692d971db45a126a",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "753f90e47b289c76d4d1a5b5b4c72094d7d1f0e6ec4acd5cd58a4e50aee651c3",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-sonda-ionica-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "fb0ba240920d1fed569f2706348f8a160d417e261cd580c345e16eba8e34d426",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-e",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "45ba7c963c90b6c3b0fd96d7f6e5ae6163f34d73e9ea1b7b7198c42aaf6d2a25",
+      "preservedApprovedRevision": true
+    },
+    {
+      "id": "weapon-designed-ionic-martello-tuono-rarity-l",
+      "dimensions": [
+        3072,
+        4608
+      ],
+      "redSha256": "b6f724b796805f6676e576ecad6343df6b87e4947ae9eaf2e549282812706ed8",
       "preservedApprovedRevision": true
     }
   ]

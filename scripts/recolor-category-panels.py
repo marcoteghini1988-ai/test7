@@ -103,10 +103,10 @@ def rarity(id):
 
 def main():
     # Il registro originale, non la directory, decide quali carte sono attive.
-    module = (ROOT / "src/fleetNext/officialWeaponArt.js").read_text()
-    ids = list(dict.fromkeys(re.findall(r"[\"'](weapon-[a-z0-9-]+)[\"']", module)))
-    if len(ids) != 40:
-        raise ValueError(f"Attesi 40 fronti approvati, trovati {len(ids)}")
+    revisions=json.loads((ROOT/'src/fleetNext/approvedWeaponIntegration.json').read_text())
+    ids = [entry['id'] for entry in revisions['cards']]
+    if not ids or len(ids) != len(set(ids)):
+        raise ValueError("Registro dei fronti approvati vuoto o con ID duplicati")
     OUT.mkdir(parents=True, exist_ok=True)
     AUDIT.mkdir(parents=True, exist_ok=True)
     models = {}
@@ -121,7 +121,6 @@ def main():
     draw = ImageDraw.Draw(sheet)
     sheet_updated = False
     report = []
-    revisions=json.loads((ROOT/'src/fleetNext/approvedWeaponIntegration.json').read_text())
     integrated={c['id']:c for c in revisions['cards']}
     for id in ids:
         if id in integrated:

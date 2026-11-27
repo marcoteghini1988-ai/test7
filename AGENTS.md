@@ -9,7 +9,9 @@ Sono promosse **47 varianti Arma: 22 Metallo e 25 Fulmine**. Sonda C/R/E/L;
 Martello R/E/L. I PNG HD originali approvati e le basi senza testo sono
 conservati byte per byte nell'archivio
 `asset-sources/weapon-fronts/sonda-martello-2026-11-27`; il ripristino
-verifica parti, file completo e RGBA 3072×4608 anche su StackBlitz.
+verifica parti, file completo e RGBA 3072×4608 nei checkout e in CI.
+StackBlitz serve i PNG nativi pubblicati da GitHub, senza copiarli in massa
+nel WebContainer: la copia completa di 14 PNG ne provocava l’arresto.
 I sette nuovi fronti hanno testo inglese predefinito e livelli EN/IT,
 insieme alle tre varianti già tradotte del Nucleo: dieci Armi localizzate.
 Reticolo persistente sul vero bersaglio, lama volumetrica rotante, secondo

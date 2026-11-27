@@ -1,4 +1,4 @@
-// Byte-exact HD PNG archive, shared by fresh checkouts and the saved WebContainer.
+// Byte-exact HD PNG archive for CI and fresh local checkouts. StackBlitz serves the published native files remotely.
 import {readFile,writeFile,mkdir,rename} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';

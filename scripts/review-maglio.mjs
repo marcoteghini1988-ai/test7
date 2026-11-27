@@ -1,7 +1,5 @@
 // Collaudo del Maglio nella partita ufficiale, senza modelli Arma sulla plancia.
 import {writeFileSync} from 'node:fs';
-import {restoreProbeHammerFronts} from './restore-probe-hammer-fronts.mjs';
-await restoreProbeHammerFronts();
 writeFileSync('.maglio-review.html',`<!doctype html><html lang="it"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Armi Metallo — plancia ufficiale</title><style>
