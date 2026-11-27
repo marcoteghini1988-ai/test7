@@ -31,7 +31,7 @@ const definitions=[
  ['pilot_epic_2',"L'Alchimista Aurico",'Attacco','Due diverse carte speciali offensive sullo stesso colpo','double_special',ELITE],
  ['pilot_epic_3','Il Viaggiatore del Tempo','Attacco','Primo colpo efficace contro un vitale mai raggiunto','new_vital',ELITE],
  ['pilot_epic_4','Comandante della Galaverna','Difesa','Madre esposta con scudo a zero','no_shield',ELITE],
- ['pilot_leg_1','Il Gran Maestro','Attacco','Operazione diversa da quella dell’ultimo colpo efficace','alternate_operation',ELITE],
+ ['pilot_leg_1','Stratega delle Tre Figure','Attacco','Operazione diversa da quella dell’ultimo colpo efficace','alternate_operation',ELITE],
  ['pilot_leg_2','Il Veggente Supremo','Attacco','Cambio scudiera bersaglio dopo un colpo efficace','alternate_escort',ELITE],
  ['pilot_leg_3','Il Fissatore','Attacco','Terzo colpo consecutivo allo stesso vitale','third_vital',ELITE],
  ['pilot_leg_4','Il Lottatore di Sumo','Attacco','Tre numeriche con moltiplicazione o divisione','complex_triple',ELITE],
